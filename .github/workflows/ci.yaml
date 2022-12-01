@@ -12,11 +12,20 @@ jobs:
     # needs: Formatting
     runs-on: ubuntu-latest
     steps:
+    - name: Install Spack
+      run: |
+        git clone https://github.com/spack/spack ~/.spack/Spack
+        . ~/.spack/Spack/share/spack/setup-env.sh
     - name: Clone
       uses: actions/checkout@v3
       with: 
         submodules: true
-
+    - name: Test
+      run: |
+        . ~/.spack/Spack/share/spack/setup-env.sh
+        spack --version
+        spack info kokkos
+        spack install kokkos
     # - name: Dependencies
     #   run: ${{matrix.install_deps}}
     # - name: Setup
