@@ -12,10 +12,21 @@ jobs:
     # needs: Formatting
     runs-on: ubuntu-latest
     steps:
-    - name: Install Spack
+
+    - name: Cache install Spack packages
+      id: cache-install
+      uses: actions/cache@v2
+      with:
+        path: |
+          . ~/.spack
+        key: install-spack-v0.20
+    - name: Install Spack packages
+      if: steps.cache-install.outputs.cache-hit != 'true'
       run: |
         git clone https://github.com/spack/spack ~/.spack/Spack
         . ~/.spack/Spack/share/spack/setup-env.sh
+        spack install kokkos
+
     - name: Clone
       uses: actions/checkout@v3
       with: 
@@ -23,7 +34,6 @@ jobs:
     - name: Test
       run: |
         . ~/.spack/Spack/share/spack/setup-env.sh
-        spack install kokkos
 
         git clone https://github.com/kokkos/kokkos-tutorials.git
         cd kokkos-tutorials/Exercises/01/Solution
