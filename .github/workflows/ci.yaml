@@ -34,14 +34,14 @@ jobs:
     - name: Test
       run: |
         . ~/.spack/Spack/share/spack/setup-env.sh
-
-        git clone https://github.com/kokkos/kokkos-tutorials.git
-        cd kokkos-tutorials/Exercises/01/Solution
-        mkdir build && cd build
         export Kokkos_DIR=/home/runner/.spack/Spack/opt/spack/linux-ubuntu20.04-x86_64_v4/gcc-10.3.0/kokkos-3.7.00-2vkd47kbrzkkcjpcys73mce7vtw6x37p
+
+        mkdir build
+        cd build
         cmake ..
         make
-        ./01_Exercise
+        ./test_kokkos
+
     # - name: Dependencies
     #   run: ${{matrix.install_deps}}
     # - name: Setup
