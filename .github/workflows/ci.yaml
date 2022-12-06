@@ -40,7 +40,7 @@ jobs:
         cd build
         cmake ..
         make
-        ./test_kokkos
+        ./openturbine
 
     # - name: Dependencies
     #   run: ${{matrix.install_deps}}
