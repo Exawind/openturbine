@@ -10,7 +10,7 @@ jobs:
 
   CPU:
     # needs: Formatting
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
 
     - name: Cache install Spack packages
@@ -27,6 +27,16 @@ jobs:
         . ~/.spack/Spack/share/spack/setup-env.sh
         spack install kokkos
 
+    - name: Install GoogleTest
+      run: |
+        sudo apt-get install libgtest-dev
+        cd /usr/src/gtest
+        sudo cmake CMakeLists.txt
+        sudo make
+        sudo cp lib/*.a /usr/lib
+        sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a
+        sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
+
     - name: Clone
       uses: actions/checkout@v3
       with: 
@@ -41,6 +51,7 @@ jobs:
         cmake ..
         make
         ./openturbine
+        ./openturbine_unit_tests
 
     # - name: Dependencies
     #   run: ${{matrix.install_deps}}

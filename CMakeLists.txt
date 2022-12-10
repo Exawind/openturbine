@@ -1,7 +1,7 @@
 
 ############################ BASE ######################################
 
-cmake_minimum_required (VERSION 3.14 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.20 FATAL_ERROR)
 project(OpenTurbine CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
@@ -20,7 +20,7 @@ option(OTURB_ENABLE_ALL_WARNINGS "Show most warnings for most compilers" ON)
 
 # Enabling tests overrides the executable options
 # option(OTURB_ENABLE_UNIT_TESTS "Enable unit testing" ON)
-# option(OTURB_ENABLE_TESTS "Enable testing suite" OFF)
+option(OTURB_ENABLE_TESTS "Enable testing suite" ON)
 # option(OTURB_TEST_WITH_FCOMPARE "Check test plots against gold files" OFF)
 # option(OTURB_SAVE_GOLDS "Provide a directory in which to save golds during testing" OFF)
 # option(OTURB_ENABLE_FPE_TRAP_FOR_TESTS "Enable FPE trapping in tests" ON)
@@ -191,8 +191,7 @@ if(OTURB_ENABLE_UNIT_TESTS OR OTURB_ENABLE_TESTS)
             PROPERTIES CXX_CLANG_TIDY ${CLANG_TIDY_EXE}
         )
     endif()
-    add_subdirectory("submods/googletest")
-    add_subdirectory("unit_tests")
+    add_subdirectory("tests/unit_tests")
     set_cuda_build_properties(${oturb_unit_test_exe_name})
     # if(OTURB_ENABLE_CUDA)
     #   get_target_property(UTEST_SOURCES ${oturb_unit_test_exe_name} SOURCES)
@@ -207,7 +206,7 @@ endif()
 if(OTURB_ENABLE_TESTS)
   enable_testing()
   include(CTest)
-  add_subdirectory(test)
+  add_subdirectory(tests)
 endif()
 
 # Define what we want to be installed during a make install
