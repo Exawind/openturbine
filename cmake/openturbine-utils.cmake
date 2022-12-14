@@ -65,7 +65,7 @@ macro(init_code_checks)
                 COMMAND cat cppcheck/cppcheck-short-report.txt | egrep "information:|error:|performance:|portability:|style:|warning:" | sort > cppcheck-ci-report.txt
                 COMMAND printf "Warnings: " >> cppcheck-ci-report.txt
                 COMMAND cat cppcheck-ci-report.txt | awk "END{print NR-1}" >> cppcheck-ci-report.txt
-                COMMENT "Filter cppcheck results to only AMR-Wind files with results in cppcheck-ci-report.txt"
+                COMMENT "Filter cppcheck results to only OpenTurbine files with results in cppcheck-ci-report.txt"
                 DEPENDS cppcheck
                 BYPRODUCTS cppcheck-ci-report.txt
                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR}

@@ -4,6 +4,8 @@ This is a demo Kokkos app taken from
 
 */
 
+#include "src/utilities/console_io.H"
+
 #include <limits>
 #include <cstdio>
 #include <cstdlib>
@@ -16,6 +18,27 @@ void checkSizes( int &N, int &M, int &S, int &nrepeat );
 
 int main( int argc, char* argv[] )
 {
+
+    if (argc < 2) {
+        // Print usage and exit with error code if no input file was provided.
+        openturbine::io::print_usage(std::cout);
+        openturbine::io::print_error("No input file provided. Exiting.");
+        return 1;
+    }
+
+    // cppcheck-suppress knownConditionTrueFalse
+    if (argc >= 2) {
+        // Look for "-h" or "--help" flag and print usage
+        for (auto i = 1; i < argc; i++) {
+            const std::string param(argv[i]);
+            if ((param == "--help") || (param == "-h")) {
+                openturbine::io::print_banner(std::cout);
+                openturbine::io::print_usage(std::cout);
+                return 0;
+            }
+        }
+    }
+
   int N = -1;         // number of rows 2^12
   int M = -1;         // number of columns 2^10
   int S = -1;         // total size 2^22

@@ -29,10 +29,10 @@ endif()
 
 # Add our extra flags according to language
 separate_arguments(OTURB_CXX_FLAGS)
-# target_compile_options(
-#     ${oturb_lib_name} PRIVATE
-#     $<$<COMPILE_LANGUAGE:CXX>:${OTURB_CXX_FLAGS}>
-# )
+target_compile_options(
+    ${oturb_lib_name} PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:${OTURB_CXX_FLAGS}>
+)
 
 # Building on CUDA requires additional considerations
 # if (OTURB_ENABLE_CUDA)

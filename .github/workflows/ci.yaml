@@ -50,7 +50,7 @@ jobs:
         cd build
         cmake ..
         make
-        ./openturbine
+        ./openturbine -h
         ./openturbine_unit_tests
 
     # - name: Dependencies

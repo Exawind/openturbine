@@ -76,13 +76,13 @@ set(oturb_api_lib "openturbine_api")
 
 # Create main target executable
 add_executable(${oturb_exe_name})
-# add_library(${oturb_lib_name} OBJECT)
+add_library(${oturb_lib_name} OBJECT)
 # add_library(${oturb_api_lib})
 
 init_code_checks()
 if(CLANG_TIDY_EXE)
     set_target_properties(
-        ${oturb_exe_name} # ${oturb_lib_name} ${oturb_api_lib}
+        ${oturb_exe_name} ${oturb_lib_name} # ${oturb_api_lib}
         PROPERTIES CXX_CLANG_TIDY ${CLANG_TIDY_EXE}
     )
 endif()
@@ -131,7 +131,7 @@ endif()
 
 # Define what we want to be installed during a make install
 install(
-  TARGETS ${oturb_exe_name} # ${oturb_api_lib} ${oturb_lib_name}
+  TARGETS ${oturb_exe_name} ${oturb_lib_name} # ${oturb_api_lib} 
   EXPORT ${PROJECT_NAME}Targets
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib
