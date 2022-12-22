@@ -44,14 +44,15 @@ jobs:
     - name: Test
       run: |
         . ~/.spack/Spack/share/spack/setup-env.sh
-        export Kokkos_DIR=/home/runner/.spack/Spack/opt/spack/linux-ubuntu20.04-x86_64_v4/gcc-10.3.0/kokkos-3.7.00-2vkd47kbrzkkcjpcys73mce7vtw6x37p
-
-        mkdir build
-        cd build
-        cmake ..
-        make
-        ./openturbine -h
-        ./openturbine_unit_tests
+        export Kokkos_DIR=/home/runner/.spack/Spack/opt/spack/linux-ubuntu22.04-x86_64_v4/gcc-12.1.0/kokkos-3.7.01-zhffzchmugzhigeekgnatfeikkrjwmfw
+        echo $Kokkos_DIR
+        ls $Kokkos_DIR
+        # mkdir build
+        # cd build
+        # cmake ..
+        # make
+        # ./openturbine -h
+        # ./openturbine_unit_tests
 
     # - name: Dependencies
     #   run: ${{matrix.install_deps}}
