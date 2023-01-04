@@ -31,7 +31,7 @@ int main( int argc, char* argv[] )
         }
     }
 
-    int axis_size = 10;                // Size of the 1D grid
+    int axis_size = 5;                 // Size of the 1D grid
     double side_length = 1.0;          // Length of the 1D domain
     double k = 1.011;                  // Thermal diffusivity of the material in units of cm^2/s
     double ic_x0 = 100.0;              // Initial temperature at the beginning of the domain

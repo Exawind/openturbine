@@ -46,6 +46,8 @@ double* heat_conduction_solver(
         // Copy values from U to U at i-1
         for ( int i = 0; i < axis_size; i++) U_im1[i] = U[i];
 
+        // TODO: use dx from axis_points to support irregular grid
+
         deltaU = openturbine::heat_solve::kokkos_laplacian(axis_size, U_im1, dx);
         U = openturbine::heat_solve::kokkos_1d_heat_conduction(axis_size, U_im1, dt, k, deltaU);
 

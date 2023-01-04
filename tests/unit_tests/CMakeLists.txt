@@ -4,6 +4,7 @@ target_sources(
     PRIVATE
     utest_main.cpp
     test_config.cpp
+    test_heat_solve.cpp
 )
 
 target_compile_options(
@@ -15,9 +16,10 @@ target_include_directories(${oturb_unit_test_exe_name} PRIVATE ${PROJECT_BINARY_
 
 # Link our unit test executable with GoogleTest
 find_package(GTest REQUIRED)
-target_link_libraries(${oturb_unit_test_exe_name} GTest::gtest GTest::gtest_main)
+target_link_libraries(${oturb_unit_test_exe_name} PRIVATE GTest::gtest GTest::gtest_main)
 
-# target_link_libraries(${oturb_unit_test_exe_name} PUBLIC ${oturb_lib_name})
+# Link to OpenTurbine test targets
+target_link_libraries(${oturb_unit_test_exe_name} PRIVATE ${oturb_lib_name})
 
 # Define what we want to be installed during a make install
 install(TARGETS ${oturb_unit_test_exe_name}
