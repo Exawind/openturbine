@@ -1,10 +1,7 @@
 
-/*
-This is a demo Kokkos app taken from
-
-*/
-
+#include "src/heat_solve.H"
 #include "src/utilities/console_io.H"
+#include "src/utilities/debug_utils.H"
 
 #include <limits>
 #include <cstdio>
@@ -14,12 +11,11 @@ This is a demo Kokkos app taken from
 
 #include <Kokkos_Core.hpp>
 
-void checkSizes( int &N, int &M, int &S, int &nrepeat );
 
 int main( int argc, char* argv[] )
 {
 
-    if (argc < 2) {
+    if (argc > 2) {
         // Print usage and exit with error code if no input file was provided.
         openturbine::io::print_usage(std::cout);
         openturbine::io::print_error("No input file provided. Exiting.");
@@ -27,170 +23,82 @@ int main( int argc, char* argv[] )
     }
 
     // cppcheck-suppress knownConditionTrueFalse
-    if (argc >= 2) {
-        // Look for "-h" or "--help" flag and print usage
-        for (auto i = 1; i < argc; i++) {
-            const std::string param(argv[i]);
-            if ((param == "--help") || (param == "-h")) {
-                openturbine::io::print_banner(std::cout);
-                openturbine::io::print_usage(std::cout);
-                return 0;
-            }
+    // Look for "-h" or "--help" flag and print usage
+    for (auto i = 1; i < argc; i++) {
+        const std::string param(argv[i]);
+        if ((param == "--help") || (param == "-h")) {
+            openturbine::io::print_banner(std::cout);
+            openturbine::io::print_usage(std::cout);
+            return 0;
         }
     }
 
-    int N = -1;         // number of rows 2^12
-    int M = -1;         // number of columns 2^10
-    int S = -1;         // total size 2^22
-    int nrepeat = 100;  // number of repeats of the test
-
-    // Read command line arguments.
-    for ( int i = 0; i < argc; i++ ) {
-        if ( ( strcmp( argv[ i ], "-N" ) == 0 ) || ( strcmp( argv[ i ], "-Rows" ) == 0 ) ) {
-            N = pow( 2, atoi( argv[ ++i ] ) );
-            printf( "  User N is %d\n", N );
-        }
-        else if ( ( strcmp( argv[ i ], "-M" ) == 0 ) || ( strcmp( argv[ i ], "-Columns" ) == 0 ) ) {
-            M = pow( 2, atof( argv[ ++i ] ) );
-            printf( "  User M is %d\n", M );
-        }
-        else if ( ( strcmp( argv[ i ], "-S" ) == 0 ) || ( strcmp( argv[ i ], "-Size" ) == 0 ) ) {
-            S = pow( 2, atof( argv[ ++i ] ) );
-            printf( "  User S is %d\n", S );
-        }
-        else if ( strcmp( argv[ i ], "-nrepeat" ) == 0 ) {
-            nrepeat = atoi( argv[ ++i ] );
-        }
-        else if ( ( strcmp( argv[ i ], "-h" ) == 0 ) || ( strcmp( argv[ i ], "-help" ) == 0 ) ) {
-            printf( "  y^T*A*x Options:\n" );
-            printf( "  -Rows (-N) <int>:      exponent num, determines number of rows 2^num (default: 2^12 = 4096)\n" );
-            printf( "  -Columns (-M) <int>:   exponent num, determines number of columns 2^num (default: 2^10 = 1024)\n" );
-            printf( "  -Size (-S) <int>:      exponent num, determines total matrix size 2^num (default: 2^22 = 4096*1024 )\n" );
-            printf( "  -nrepeat <int>:        number of repetitions (default: 100)\n" );
-            printf( "  -help (-h):            print this message\n\n" );
-            exit( 1 );
-        }
-    }
-
-    // Check sizes.
-    checkSizes( N, M, S, nrepeat );
+    int axis_size = 10;                                                         // Size of the 1D grid
+    double side_length = 1.0;                                                   // Length of the 1D domain
+    double dx = side_length/axis_size;                                          // Spatial step size
+    std::vector<double> axis_points = 
+        openturbine::heat_solve::linspace(0.0, side_length, axis_size);         // Spatial grid points for the plate
+    double k = 1.011;                                                           // Thermal diffusivity of the material in units of cm^2/s
+    int n_max = 500;                                                            // Max iterations
+    double dt = pow( 1.0 / axis_size, 2) / (2.0 * k);                           // Artificial time step to drive the solver until heat equilibrium
+    double residual_tolerance = 1e-5;                                           // Iterative residual tolerance
 
     Kokkos::initialize( argc, argv );
+
     {
+        auto U = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
+        auto U_im1 = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
+        auto deltaU = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
+        auto residual = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
 
-        // For the sake of simplicity in this exercise, we're using std::malloc directly, but
-        // later on we'll learn a better way, so generally don't do this in Kokkos programs.
-        // Allocate y, x vectors and Matrix A:
-        auto y = static_cast<double*>(std::malloc(N * sizeof(double)));
-        auto x = static_cast<double*>(std::malloc(M * sizeof(double)));
-        auto A = static_cast<double*>(std::malloc(N * M * sizeof(double)));
-
-        // Initialize y vector.
-        Kokkos::parallel_for( "y_init", N, KOKKOS_LAMBDA ( int i ) {
-            y[ i ] = 1;
+        // Initialize
+        Kokkos::parallel_for( "U_init", axis_size, KOKKOS_LAMBDA ( int i ) {
+            U[ i ] = 0.0;
+        });
+        Kokkos::parallel_for( "U_im1_init", axis_size, KOKKOS_LAMBDA ( int i ) {
+            U_im1[ i ] = 0.0;
+        });
+        Kokkos::parallel_for( "deltaU_init", axis_size, KOKKOS_LAMBDA ( int i ) {
+            deltaU[ i ] = 0.0;
+        });
+        Kokkos::parallel_for( "deltaU_init", axis_size, KOKKOS_LAMBDA ( int i ) {
+            residual[ i ] = 0.0;
         });
 
-        // Initialize x vector.
-        Kokkos::parallel_for( "x_init", M, KOKKOS_LAMBDA ( int i ) {
-            x[ i ] = 1;
-        });
+        // Apply IC
+        U[0] = 100.0;
+        U[axis_size-1] = 100.0;
 
-        // Initialize A matrix, note 2D indexing computation.
-        Kokkos::parallel_for( "matrix_init", N, KOKKOS_LAMBDA ( int j ) {
-            for ( int i = 0; i < M; ++i ) {
-                A[ j * M + i ] = 1;
-            }
-        });
+        // Solve
+        for ( int n = 0; n < n_max; n++ ) {
 
-        // Timer products.
-        Kokkos::Timer timer;
+            // Copy values from U to U at i-1
+            for ( int i = 0; i < axis_size; i++) U_im1[i] = U[i];
 
-        for ( int repeat = 0; repeat < nrepeat; repeat++ ) {
-            // Application: <y,Ax> = y^T*A*x
-            double result = 0;
+            deltaU = openturbine::heat_solve::kokkos_laplacian(axis_size, U_im1, dx);
+            U = openturbine::heat_solve::kokkos_1d_heat_conduction(axis_size, U_im1, dt, k, deltaU);
 
-            Kokkos::parallel_reduce( "yAx", N, KOKKOS_LAMBDA ( int j, double &update ) {
-                double temp2 = 0;
+            U[0] = U_im1[0];
+            U[axis_size-1] = U_im1[axis_size-1];
 
-                for ( int i = 0; i < M; ++i ) {
-                    temp2 += A[ j * M + i ] * x[ i ];
-                }
-
-                update += y[ j ] * temp2;
-            }, result );
-
-            // Output result.
-            if ( repeat == ( nrepeat - 1 ) ) {
-                printf( "  Computed result for %d x %d is %lf\n", N, M, result );
+            double residual = openturbine::heat_solve::kokkos_calculate_residual(axis_size, U, U_im1);
+            if (residual < residual_tolerance)
+            {
+                std::cout << "Converged in " << n << " iterations." << std::endl;
+                break;
             }
 
-            const double solution = (double) N * (double) M;
-
-            if ( result != solution ) {
-                printf( "  Error: result( %lf ) != solution( %lf )\n", result, solution );
-            }
+            openturbine::debug::print_array(U, axis_size);
         }
 
-        double time = timer.seconds();
-
-        // Calculate bandwidth.
-        // Each matrix A row (each of length M) is read once.
-        // The x vector (of length M) is read N times.
-        // The y vector (of length N) is read once.
-        // double Gbytes = 1.0e-9 * double( sizeof(double) * ( 2 * M * N + N ) );
-        double Gbytes = 1.0e-9 * double( sizeof(double) * ( M + M * N + N ) );
-
-        // Print results (problem size, time and bandwidth in GB/s).
-        printf( "  N( %d ) M( %d ) nrepeat ( %d ) problem( %g MB ) time( %g s ) bandwidth( %g GB/s )\n",
-            N, M, nrepeat, Gbytes * 1000, time, Gbytes * nrepeat / time );
-
-        std::free(A);
-        std::free(y);
-        std::free(x);
-
+        // Free memory
+        std::free(U);
+        std::free(U_im1);
+        std::free(deltaU);
+        std::free(residual);
     }
+
     Kokkos::finalize();
 
     return 0;
-}
-
-void checkSizes( int &N, int &M, int &S, int &nrepeat ) {
-    // If S is undefined and N or M is undefined, set S to 2^22 or the bigger of N and M.
-    if ( S == -1 && ( N == -1 || M == -1 ) ) {
-        S = pow( 2, 22 );
-        if ( S < N ) S = N;
-        if ( S < M ) S = M;
-    }
-
-    // If S is undefined and both N and M are defined, set S = N * M.
-    if ( S == -1 ) S = N * M;
-
-    // If both N and M are undefined, fix row length to the smaller of S and 2^10 = 1024.
-    if ( N == -1 && M == -1 ) {
-        if ( S > 1024 ) {
-            M = 1024;
-        }
-        else {
-            M = S;
-        }
-    }
-
-    // If only M is undefined, set it.
-    if ( M == -1 ) M = S / N;
-
-    // If N is undefined, set it.
-    if ( N == -1 ) N = S / M;
-
-    printf( "  Total size S = %d N = %d M = %d\n", S, N, M );
-
-    // Check sizes.
-    if ( ( S < 0 ) || ( N < 0 ) || ( M < 0 ) || ( nrepeat < 0 ) ) {
-        printf( "  Sizes must be greater than 0.\n" );
-        exit( 1 );
-    }
-
-    if ( ( N * M ) != S ) {
-        printf( "  N * M != S\n" );
-        exit( 1 );
-    }
 }
