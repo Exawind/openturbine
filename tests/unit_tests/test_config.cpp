@@ -11,11 +11,14 @@ namespace oturb_tests {
 
 TEST(Configuration, Build)
 {
-    const std::string dirty_tag = (openturbine::version::oturb_dirty_repo == "DIRTY") ? ("-" + openturbine::version::oturb_dirty_repo) : "";
-    const std::string ot_git_sha = openturbine::version::oturb_git_sha + dirty_tag;
+    const std::string dirty_tag =
+        (openturbine::version::oturb_dirty_repo == "DIRTY")
+            ? ("-" + openturbine::version::oturb_dirty_repo)
+            : "";
+    const std::string ot_git_sha =
+        openturbine::version::oturb_git_sha + dirty_tag;
     std::cout << "OpenTurbine SHA = " << ot_git_sha << std::endl;
 }
-
 
 // TEST(Configuration, GPU)
 // {
@@ -25,7 +28,8 @@ TEST(Configuration, Build)
 //     amrex::Print() << "GPU backend: CUDA" << std::endl;
 // #if defined(CUDA_VERSION)
 //     amrex::Print() << "CUDA_VERSION: " << CUDA_VERSION << " "
-//                    << CUDA_VERSION / 1000 << "." << (CUDA_VERSION % 1000) / 10
+//                    << CUDA_VERSION / 1000 << "." << (CUDA_VERSION % 1000) /
+//                    10
 //                    << std::endl;
 // #endif
 // #elif defined(AMREX_USE_HIP)
@@ -47,9 +51,11 @@ TEST(Configuration, Build)
 //         << (Dev::sharedMemPerBlock() / (1 << 10)) << "KB\n"
 //         << "    Max. threads/block : " << Dev::maxThreadsPerBlock()
 //         << " (" << Dev::maxThreadsPerBlock(0) << ", "
-//         << Dev::maxThreadsPerBlock(1) << ", " << Dev::maxThreadsPerBlock(2) << ")\n"
+//         << Dev::maxThreadsPerBlock(1) << ", " << Dev::maxThreadsPerBlock(2)
+//         << ")\n"
 //         << "    Max. blocks/grid   : (" << Dev::maxBlocksPerGrid(0)
-//         << ", " << Dev::maxBlocksPerGrid(1) << ", " << Dev::maxBlocksPerGrid(2) << ")\n"
+//         << ", " << Dev::maxBlocksPerGrid(1) << ", " <<
+//         Dev::maxBlocksPerGrid(2) << ")\n"
 //         << std::endl;
 //     // clang-format on
 //     amrex::OutStream() << ss.str();
@@ -59,9 +65,6 @@ TEST(Configuration, Build)
 // #endif
 // }
 
-TEST(Configuration, TPLs)
-{
-
-}
+TEST(Configuration, TPLs) {}
 
 } // namespace oturb_tests

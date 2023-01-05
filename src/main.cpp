@@ -9,8 +9,7 @@
 
 #include <Kokkos_Core.hpp>
 
-
-int main( int argc, char* argv[] )
+int main(int argc, char* argv[])
 {
 
     if (argc > 2) {
@@ -31,26 +30,19 @@ int main( int argc, char* argv[] )
         }
     }
 
-    int axis_size = 5;                 // Size of the 1D grid
-    double side_length = 1.0;          // Length of the 1D domain
-    double k = 1.011;                  // Thermal diffusivity of the material in units of cm^2/s
-    double ic_x0 = 100.0;              // Initial temperature at the beginning of the domain
-    double ic_x1 = 100.0;              // Initial temperature at the end of the domain
-    int n_max = 500;                   // Max iterations
-    double residual_tolerance = 1e-5;  // Iterative residual tolerance
-    
+    int axis_size = 5;        // Size of the 1D grid
+    double side_length = 1.0; // Length of the 1D domain
+    double k = 1.011; // Thermal diffusivity of the material in units of cm^2/s
+    double ic_x0 = 100.0; // Initial temperature at the beginning of the domain
+    double ic_x1 = 100.0; // Initial temperature at the end of the domain
+    int n_max = 500;      // Max iterations
+    double residual_tolerance = 1e-5; // Iterative residual tolerance
+
     auto U = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
 
-    Kokkos::initialize( argc, argv );
+    Kokkos::initialize(argc, argv);
     openturbine::heat_solve::heat_conduction_solver(
-        axis_size,
-        side_length,
-        n_max,
-        k,
-        ic_x0,
-        ic_x1,
-        residual_tolerance
-    );
+        axis_size, side_length, n_max, k, ic_x0, ic_x1, residual_tolerance);
     Kokkos::finalize();
 
     openturbine::debug::print_array(U, axis_size);

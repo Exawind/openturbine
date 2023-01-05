@@ -35,8 +35,8 @@ void print_banner(std::ostream& out)
     auto exec_time = std::chrono::system_clock::now();
     auto exect = std::chrono::system_clock::to_time_t(exec_time);
     const std::string dirty_tag = (version::oturb_dirty_repo == "DIRTY")
-        ? ("-" + version::oturb_dirty_repo)
-        : "";
+                                      ? ("-" + version::oturb_dirty_repo)
+                                      : "";
     const std::string awind_version = version::oturb_version + dirty_tag;
     const std::string awind_git_sha = version::oturb_git_sha + dirty_tag;
 
