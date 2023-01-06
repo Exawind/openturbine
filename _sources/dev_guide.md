@@ -1,6 +1,6 @@
 # Developer's Guide
 
-Developer's of OpenTurbine should understand the workflows described here.
+Developers of OpenTurbine should understand the workflows described here.
 Adherence to these processes ensures high quality code with minimal maintenance.
 
 ## Version control
@@ -31,7 +31,8 @@ Some tips:
   Construct the commit history so that someone can move through each
   commit in a series and understand why and how the changes were made
   in sequence.
-- Practice editing a branch's commit history with `git rebase -I`.
+- Practice editing a branch's commit history with interactive
+  rebase: `git rebase -i`.
 
 ## Pull Requests
 
