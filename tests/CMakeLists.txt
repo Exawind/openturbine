@@ -62,7 +62,7 @@ endfunction(add_test_r)
 function(add_test_u TEST_NAME)
     setup_test()
     # set(TEST_NP 1)
-    add_test(${TEST_NAME} sh -c "${MPI_COMMANDS} ${CMAKE_BINARY_DIR}/${OTURB_unit_test_exe_name}")
+    add_test(${TEST_NAME} sh -c "${MPI_COMMANDS} ${CMAKE_BINARY_DIR}/${oturb_unit_test_exe_name}")
     set_tests_properties(
         ${TEST_NAME} PROPERTIES
         TIMEOUT 500

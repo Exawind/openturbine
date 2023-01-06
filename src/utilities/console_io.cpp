@@ -37,15 +37,15 @@ void print_banner(std::ostream& out)
     const std::string dirty_tag = (version::oturb_dirty_repo == "DIRTY")
                                       ? ("-" + version::oturb_dirty_repo)
                                       : "";
-    const std::string awind_version = version::oturb_version + dirty_tag;
-    const std::string awind_git_sha = version::oturb_git_sha + dirty_tag;
+    const std::string full_version = version::oturb_version + dirty_tag;
+    const std::string full_sha = version::oturb_git_sha + dirty_tag;
 
     // clang-format off
     out << dbl_line
         << "                OpenTurbine (https://github.com/exawind/openturbine)"
         << std::endl << std::endl
-        << "  OpenTurbine version :: " << awind_version << std::endl
-        << "  OpenTurbine Git SHA :: " << awind_git_sha << std::endl
+        << "  OpenTurbine version :: " << full_version << std::endl
+        << "  OpenTurbine Git SHA :: " << full_sha << std::endl
         << "  Exec. time       :: " << std::ctime(&exect)
         // << "  Build time       :: " << amrex::buildInfoGetBuildDate() << std::endl
         // << "  C++ compiler     :: " << amrex::buildInfoGetComp()
