@@ -308,19 +308,170 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#version-control">
-   Version control
+  <a class="reference internal nav-link" href="#procedures-and-workflows-for-contributing">
+   Procedures and workflows for contributing
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#version-control">
+     Version control
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pull-requests">
+     Pull requests
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#developer-workflow">
+     Developer workflow
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#checklist-for-code-contributions">
+     Checklist for code contributions
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#pull-requests">
-   Pull Requests
+  <a class="reference internal nav-link" href="#compiling">
+   Compiling
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#developer-workflow">
-   Developer Workflow
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dependencies">
+     Dependencies
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#installing-kokkos">
+     Installing Kokkos
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#build-system">
+     Build system
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#architecture-options">
+       Architecture options
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-openmp">
+         OTURB_ENABLE_OPENMP
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-cuda">
+         OTURB_ENABLE_CUDA
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-rocm">
+         OTURB_ENABLE_ROCM
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-dpcpp">
+         OTURB_ENABLE_DPCPP
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-precision">
+         OTURB_PRECISION
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#other-openturbine-specific-options">
+       Other OpenTurbine specific options
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-tests">
+         OTURB_ENABLE_TESTS
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-all-warnings">
+         OTURB_ENABLE_ALL_WARNINGS
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#general-cmake-options">
+       General CMake options
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#cmake-install-prefix">
+         CMAKE_INSTALL_PREFIX
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#cmake-build-type">
+         CMAKE_BUILD_TYPE
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#cmake-cxx-compiler">
+         CMAKE_CXX_COMPILER
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#cmake-cxx-flags">
+         CMAKE_CXX_FLAGS
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#step-by-step">
+     Step by step
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#load-or-install-dependencies">
+       1. Load or install dependencies
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#clone-the-repository">
+       2. Clone the repository
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#configure-and-build">
+       3. Configure and build
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#test-your-build">
+       4. Test your build
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#quirks-and-issues">
+     Quirks and issues
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#gtest-from-conda-forge">
+       GTest from conda-forge
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -342,19 +493,170 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#version-control">
-   Version control
+  <a class="reference internal nav-link" href="#procedures-and-workflows-for-contributing">
+   Procedures and workflows for contributing
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#version-control">
+     Version control
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pull-requests">
+     Pull requests
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#developer-workflow">
+     Developer workflow
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#checklist-for-code-contributions">
+     Checklist for code contributions
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#pull-requests">
-   Pull Requests
+  <a class="reference internal nav-link" href="#compiling">
+   Compiling
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#developer-workflow">
-   Developer Workflow
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dependencies">
+     Dependencies
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#installing-kokkos">
+     Installing Kokkos
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#build-system">
+     Build system
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#architecture-options">
+       Architecture options
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-openmp">
+         OTURB_ENABLE_OPENMP
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-cuda">
+         OTURB_ENABLE_CUDA
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-rocm">
+         OTURB_ENABLE_ROCM
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-dpcpp">
+         OTURB_ENABLE_DPCPP
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-precision">
+         OTURB_PRECISION
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#other-openturbine-specific-options">
+       Other OpenTurbine specific options
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-tests">
+         OTURB_ENABLE_TESTS
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#oturb-enable-all-warnings">
+         OTURB_ENABLE_ALL_WARNINGS
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#general-cmake-options">
+       General CMake options
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#cmake-install-prefix">
+         CMAKE_INSTALL_PREFIX
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#cmake-build-type">
+         CMAKE_BUILD_TYPE
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#cmake-cxx-compiler">
+         CMAKE_CXX_COMPILER
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#cmake-cxx-flags">
+         CMAKE_CXX_FLAGS
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#step-by-step">
+     Step by step
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#load-or-install-dependencies">
+       1. Load or install dependencies
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#clone-the-repository">
+       2. Clone the repository
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#configure-and-build">
+       3. Configure and build
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#test-your-build">
+       4. Test your build
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#quirks-and-issues">
+     Quirks and issues
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#gtest-from-conda-forge">
+       GTest from conda-forge
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -370,8 +672,14 @@ title="Print to PDF"
 <h1>Developer’s Guide<a class="headerlink" href="#developer-s-guide" title="Permalink to this headline">#</a></h1>
 <p>Developers of OpenTurbine should understand the workflows described here.
 Adherence to these processes ensures high quality code with minimal maintenance.</p>
+<section id="procedures-and-workflows-for-contributing">
+<h2>Procedures and workflows for contributing<a class="headerlink" href="#procedures-and-workflows-for-contributing" title="Permalink to this headline">#</a></h2>
+<p>The development process involves orchestating a few different systems
+and people so that work is not duplicated or conflicting. The primary
+objective of these processes is communication and signaling to
+other developers and ourselves now and in the future.</p>
 <section id="version-control">
-<h2>Version control<a class="headerlink" href="#version-control" title="Permalink to this headline">#</a></h2>
+<h3>Version control<a class="headerlink" href="#version-control" title="Permalink to this headline">#</a></h3>
 <p>OpenTurbine uses git with a basic version of git-flow. The <code class="docutils literal notranslate"><span class="pre">main</span></code> branch is
 stable, contains release-ready code, and is updated least frequently. The
 <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch contains tested and well developed code. It is the staging
@@ -389,7 +697,7 @@ authoring a long lasting commit message with a well-scoped set of changes.</p>
 <p>Some tips:</p>
 <ul class="simple">
 <li><p>Each commit should encompass one well-scoped change. A smell test is
-whether you’ve used the work “and” in the commit message. For example,
+whether you’ve used the word “and” in the commit message. For example,
 a commit message of “Add a new CLI flag for XYZ and improve speed via
 ABC” should probably be split into two commits, “Add new CLI flag for
 XYZ” and “Improve speed via ABC”.</p></li>
@@ -402,7 +710,7 @@ rebase: <code class="docutils literal notranslate"><span class="pre">git</span> 
 </ul>
 </section>
 <section id="pull-requests">
-<h2>Pull Requests<a class="headerlink" href="#pull-requests" title="Permalink to this headline">#</a></h2>
+<h3>Pull requests<a class="headerlink" href="#pull-requests" title="Permalink to this headline">#</a></h3>
 <p>The driving question for each pull request should be “How can I
 convince reviewers that this pull request should be merged?”</p>
 <p>Pull requests should include a well-scoped set of changes. It is
@@ -419,7 +727,7 @@ body of information that can ultimately be compiled into more formal
 documentation or serve as an informal reference on GitHub itself.</p>
 </section>
 <section id="developer-workflow">
-<h2>Developer Workflow<a class="headerlink" href="#developer-workflow" title="Permalink to this headline">#</a></h2>
+<h3>Developer workflow<a class="headerlink" href="#developer-workflow" title="Permalink to this headline">#</a></h3>
 <p>Prior to starting work on a new project, a Discussion should be created
 to describe the scope of work and design the implementation. The original
 post (OP) should serve as the primary document and comments should be added
@@ -432,8 +740,292 @@ bug report or a feature request. In addition to the information from the
 Design Discussion, issues should include anticipated time frame and developer
 assignments. This is a great place to coordinate a team of developers as well
 as link issues to other issues to understand dependencies.</p>
-<p>Finally, when the work is complete, a pull request should be created. See the
-Pull Requests section.</p>
+<p>Finally, when the work is complete, a pull request should be created and
+reviewers assigned.</p>
+</section>
+<section id="checklist-for-code-contributions">
+<h3>Checklist for code contributions<a class="headerlink" href="#checklist-for-code-contributions" title="Permalink to this headline">#</a></h3>
+<p>Ensure that all of these steps are complete prior to submitting a pull request
+as ready for review.</p>
+<ul class="simple">
+<li><p>Context for the code changes (validation)</p></li>
+<li><p>Description of the code changes including how they relate to the
+project architecture and design</p></li>
+<li><p>Proof of correctness (verification)</p></li>
+<li><p>Tests for all changes included in the pull request included in the
+automated tests</p></li>
+<li><p>Documentation for changes</p></li>
+<li><p>Documentation for high level references that are impacted; for example,
+installation instructions, API reference, or user guides</p></li>
+</ul>
+</section>
+</section>
+<section id="compiling">
+<h2>Compiling<a class="headerlink" href="#compiling" title="Permalink to this headline">#</a></h2>
+<p>OpenTurbine is written in C++ and compiles into an both an executable and
+a static or shared library. The procedure and considerations for compiling
+are described here.</p>
+<section id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">#</a></h3>
+<p>The third party dependencies used in OpenTurbine are listed below.
+These can be installed by any means appropriate to the target
+use. For HPC, it is recommended to use vendor specific libraries
+when available. For workstations, package managers such as
+conda, APT, and Homebrew will provide the easiest experience
+for linking and runtime path searches.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://cmake.org/">CMake</a> version 3.20 or higher</p></li>
+<li><p>C++ compiler that supports the C++14 standard;</p>
+<ul>
+<li><p>GCC 5 or higher</p></li>
+<li><p>LLVM Clang 7 or higher</p></li>
+<li><p>Intel 2020 (oneAPI) or higher</p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a> math portability library (see <a class="reference external" href="#installing-kokkos">Installing Kokkos</a>)</p></li>
+<li><p>OS: OpenTurbine is regularly tested on Linux and macOS</p></li>
+<li><p>(Optional) Google Test (gtest) for the test infrastructure (conda-forge)</p></li>
+<li><p>(Optional) clang-format for linting (conda-forge or brew)</p></li>
+</ul>
+</section>
+<section id="installing-kokkos">
+<h3>Installing Kokkos<a class="headerlink" href="#installing-kokkos" title="Permalink to this headline">#</a></h3>
+<p>OpenTurbine relies heavily on Kokkos for portability between systems,
+compilers, and hardware types. It is at the core of the this software.
+Therefore, the Kokkos library used should be tuned to your specific
+use case. See the <a class="reference external" href="https://kokkos.github.io/kokkos-core-wiki/building.html">Kokkos documentation</a>
+for instructions on building that library.</p>
+<p>For use in OpenTurbine, the Kokkos library must be available
+within a typical search path or you must provide the search
+path via the <code class="docutils literal notranslate"><span class="pre">Kokkos_DIR</span></code> environment variable. This will
+typically be the install location from your Kokkos build.
+It should be set in the shell session where you’re compiling
+OpenTurbine. See the example below.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configure CMake in OpenTurbine without setting the environment variable</span>
+cmake<span class="w"> </span>..
+
+<span class="c1"># Results in this error:</span>
+<span class="c1"># CMake Error at src/CMakeLists.txt:3 (find_package):</span>
+<span class="c1">#   By not providing &quot;FindKokkos.cmake&quot; in CMAKE_MODULE_PATH this project has</span>
+<span class="c1">#   asked CMake to find a package configuration file provided by &quot;Kokkos&quot;, but</span>
+<span class="c1">#   CMake did not find one.</span>
+<span class="c1"># </span>
+<span class="c1">#   Could not find a package configuration file provided by &quot;Kokkos&quot; with any</span>
+<span class="c1">#   of the following names:</span>
+<span class="c1"># </span>
+<span class="c1">#     KokkosConfig.cmake</span>
+<span class="c1">#     kokkos-config.cmake</span>
+<span class="c1"># </span>
+<span class="c1">#   Add the installation prefix of &quot;Kokkos&quot; to CMAKE_PREFIX_PATH or set</span>
+<span class="c1">#   &quot;Kokkos_DIR&quot; to a directory containing one of the above files.  If &quot;Kokkos&quot;</span>
+<span class="c1">#   provides a separate development package or SDK, be sure it has been</span>
+<span class="c1">#   installed.</span>
+
+<span class="c1"># Set the environment variable</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">Kokkos_DIR</span><span class="o">=</span>~/Development/kokkos/install
+
+<span class="c1"># Test that is was set correctly</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$Kokkos_DIR</span>
+<span class="c1"># Displays:</span>
+<span class="c1"># ~/Development/kokkos/install</span>
+
+<span class="c1"># Reconfigure CMake in OpenTurbine</span>
+cmake<span class="w"> </span>..
+</pre></div>
+</div>
+</section>
+<section id="build-system">
+<h3>Build system<a class="headerlink" href="#build-system" title="Permalink to this headline">#</a></h3>
+<p>The build system is defined entirely within a CMake project.
+It is configured via configuration variables that accept either
+boolean (<code class="docutils literal notranslate"><span class="pre">ON</span></code>/<code class="docutils literal notranslate"><span class="pre">OFF</span></code>) or string arguments. This is typically
+done via the command line interface for CMake:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>..<span class="w"> </span>-DBOOL_FLAG<span class="o">=</span>ON<span class="w"> </span>-DSTRING_FLAG<span class="o">=</span><span class="s2">&quot;value&quot;</span>
+</pre></div>
+</div>
+<p>See the <a class="reference external" href="https://cmake.org/documentation/">CMake documentation</a>
+for a full reference on CMake. The primary targets available to build
+are listed below.</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Target</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>openturbine</p></td>
+<td><p>Exe</p></td>
+<td><p>Primary executable including the <code class="docutils literal notranslate"><span class="pre">main</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>openturbine_obj</p></td>
+<td><p>Lib</p></td>
+<td><p>Library including all code used by <code class="docutils literal notranslate"><span class="pre">main</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>openturbine_unit_tests</p></td>
+<td><p>Exe</p></td>
+<td><p>Unit test driver executable including all tests and links to the Google Test</p></td>
+</tr>
+</tbody>
+</table>
+<section id="architecture-options">
+<h4>Architecture options<a class="headerlink" href="#architecture-options" title="Permalink to this headline">#</a></h4>
+<section id="oturb-enable-openmp">
+<h5>OTURB_ENABLE_OPENMP<a class="headerlink" href="#oturb-enable-openmp" title="Permalink to this headline">#</a></h5>
+<p>Enable OpenMP threading support for CPU builds. It is not recommended to</p>
+<p>combine this with GPU builds. Default: OFF</p>
+</section>
+<section id="oturb-enable-cuda">
+<h5>OTURB_ENABLE_CUDA<a class="headerlink" href="#oturb-enable-cuda" title="Permalink to this headline">#</a></h5>
+<p>Enable <a class="reference external" href="https://developer.nvidia.com/cuda-zone">NVIDIA CUDA GPU</a> builds. Default: OFF</p>
+</section>
+<section id="oturb-enable-rocm">
+<h5>OTURB_ENABLE_ROCM<a class="headerlink" href="#oturb-enable-rocm" title="Permalink to this headline">#</a></h5>
+<p>Enable <a class="reference external" href="https://rocmdocs.amd.com/en/latest/">AMD ROCm GPU</a> builds. Default: OFF</p>
+</section>
+<section id="oturb-enable-dpcpp">
+<h5>OTURB_ENABLE_DPCPP<a class="headerlink" href="#oturb-enable-dpcpp" title="Permalink to this headline">#</a></h5>
+<p>Enable <a class="reference external" href="https://software.intel.com/content/www/us/en/develop/tools/oneapi.html">Intel OneAPI DPC++</a> builds. Default: OFF</p>
+</section>
+<section id="oturb-precision">
+<h5>OTURB_PRECISION<a class="headerlink" href="#oturb-precision" title="Permalink to this headline">#</a></h5>
+<p>Specifies the floating point precision; can be one of “SINGLE” or “DOUBLE”. Default: DOUBLE</p>
+</section>
+</section>
+<section id="other-openturbine-specific-options">
+<h4>Other OpenTurbine specific options<a class="headerlink" href="#other-openturbine-specific-options" title="Permalink to this headline">#</a></h4>
+<section id="oturb-enable-tests">
+<h5>OTURB_ENABLE_TESTS<a class="headerlink" href="#oturb-enable-tests" title="Permalink to this headline">#</a></h5>
+<p>Adds the testing infrastructure to the build. Default: OFF</p>
+</section>
+<section id="oturb-enable-all-warnings">
+<h5>OTURB_ENABLE_ALL_WARNINGS<a class="headerlink" href="#oturb-enable-all-warnings" title="Permalink to this headline">#</a></h5>
+<p>Enable compiler warnings during build. Default: OFF</p>
+</section>
+</section>
+<section id="general-cmake-options">
+<h4>General CMake options<a class="headerlink" href="#general-cmake-options" title="Permalink to this headline">#</a></h4>
+<section id="cmake-install-prefix">
+<h5>CMAKE_INSTALL_PREFIX<a class="headerlink" href="#cmake-install-prefix" title="Permalink to this headline">#</a></h5>
+<p>The directory where the compiled executables and libraries as well as headers
+are installed. For example, passing
+<code class="docutils literal notranslate"><span class="pre">-DCMAKE_INSTALL_PREFIX=${HOME}/software</span></code> will install the executables in
+<code class="docutils literal notranslate"><span class="pre">${HOME}/software/bin</span></code> when the user executes the <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code> command.</p>
+</section>
+<section id="cmake-build-type">
+<h5>CMAKE_BUILD_TYPE<a class="headerlink" href="#cmake-build-type" title="Permalink to this headline">#</a></h5>
+<p>Controls the optimization levels for compilation. This variable can take the
+following values:</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Typical flags</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>RELEASE</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-O3</span> <span class="pre">-DNDEBUG</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>DEBUG</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-g</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>RelWithDebInfo</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-O2</span> <span class="pre">-g</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">-DCMAKE_BUILD_TYPE:STRING=RELEASE</span></code></p>
+</section>
+<section id="cmake-cxx-compiler">
+<h5>CMAKE_CXX_COMPILER<a class="headerlink" href="#cmake-cxx-compiler" title="Permalink to this headline">#</a></h5>
+<p>Set the C++ compiler used for compiling the code.</p>
+<p>For Intel DPC++ builds (see <a class="reference external" href="#oturb-enable-dpcpp">OTURB_ENABLE_DPCPP</a>) this should be
+set to <code class="docutils literal notranslate"><span class="pre">dpcpp</span></code>.</p>
+</section>
+<section id="cmake-cxx-flags">
+<h5>CMAKE_CXX_FLAGS<a class="headerlink" href="#cmake-cxx-flags" title="Permalink to this headline">#</a></h5>
+<p>Additional flags to be passed to the C++ compiler during compilation.</p>
+</section>
+</section>
+</section>
+<section id="step-by-step">
+<h3>Step by step<a class="headerlink" href="#step-by-step" title="Permalink to this headline">#</a></h3>
+<section id="load-or-install-dependencies">
+<h4>1. Load or install dependencies<a class="headerlink" href="#load-or-install-dependencies" title="Permalink to this headline">#</a></h4>
+<p>If you are on an HPC system that provides Modules Environment, load the
+necessary dependencies. If targeting GPUs, load CUDA
+modules.</p>
+</section>
+<section id="clone-the-repository">
+<h4>2. Clone the repository<a class="headerlink" href="#clone-the-repository" title="Permalink to this headline">#</a></h4>
+<p>This creates a local copy of the software repository
+from GitHub.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/exawind/openturbine.git
+</pre></div>
+</div>
+</section>
+<section id="configure-and-build">
+<h4>3. Configure and build<a class="headerlink" href="#configure-and-build" title="Permalink to this headline">#</a></h4>
+<p>This step configures the CMake project and compiles the
+code into a “build/” directory within the repository directory.
+Be sure to note the location from where the commands are run.
+The final step can be run with no additional arguments
+to compile all targets or with a specific target. No arguments
+instructs to compile all targets.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>openturbine/build
+<span class="nb">cd</span><span class="w"> </span>openturbine/build
+
+cmake<span class="w"> </span>..<span class="w"> </span>-DOTURB_ENABLE_TESTS:BOOL<span class="o">=</span>ON
+make
+</pre></div>
+</div>
+<p>Upon successfully building, two executables should be available
+in the build directory:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">openturbine</span></code>: the main driver for the software</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">openturbine_unit_tests</span></code>: the driver for the unit tests</p></li>
+</ul>
+</section>
+<section id="test-your-build">
+<h4>4. Test your build<a class="headerlink" href="#test-your-build" title="Permalink to this headline">#</a></h4>
+<p>Ensure the code is compiled and linked correctly by running the
+included tests. These involve low-level unit tests as well
+as high-level regression tests. See Testing for more info.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ctest<span class="w"> </span>--output-on-failure
+</pre></div>
+</div>
+</section>
+</section>
+<section id="quirks-and-issues">
+<h3>Quirks and issues<a class="headerlink" href="#quirks-and-issues" title="Permalink to this headline">#</a></h3>
+<p>Here’s a list of known issues or oddities and workarounds.</p>
+<section id="gtest-from-conda-forge">
+<h4>GTest from conda-forge<a class="headerlink" href="#gtest-from-conda-forge" title="Permalink to this headline">#</a></h4>
+<p>If you’ve installed Google Test (GTest) with conda, you
+must also install Google Mock (GMock) as it is a dependency
+but it is not automatically included. The command below
+installs both.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>gtest<span class="w"> </span>gmock<span class="w"> </span>-c<span class="w"> </span>conda-forge
+</pre></div>
+</div>
+<p>On Linux with GTest from conda-forge and the GNU
+compiler, you may see this error:
+<code class="docutils literal notranslate"><span class="pre">undefined</span> <span class="pre">reference</span> <span class="pre">to</span> <span class="pre">'std::__throw_bad_array_new_length()&#64;GLIBCXX_3.4.29'</span></code>.
+In that case, upgrade to GCC 11 (<code class="docutils literal notranslate"><span class="pre">g++-11</span></code>). GTest in conda-forge is linked
+to <code class="docutils literal notranslate"><span class="pre">GLIBCXX_3.4.29</span></code> but GCC 10 has <code class="docutils literal notranslate"><span class="pre">GLIBCXX_3.4.28</span></code>.
+Check installed versions with this command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>strings<span class="w"> </span>/lib/x86_64-linux-gnu/libstdc++.so.6<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>GLIBCXX
+</pre></div>
+</div>
+<p>For Ubuntu 20.04, instructions on upgrading GCC are <a class="reference external" href="https://lindevs.com/install-gcc-on-ubuntu">here</a>.</p>
+<p>On macOS with GTest from conda-forge, you must include the
+GTest directory in the library search path since it will not
+be found automatically by rpath.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">DYLD_LIBRARY_PATH</span><span class="o">=</span>~/miniconda3/envs/openturbine/lib<span class="w">  </span><span class="c1"># customize this to your path</span>
+</pre></div>
+</div>
+</section>
+</section>
 </section>
 </section>
 
@@ -480,7 +1072,7 @@ Pull Requests section.</p>
   
     By National Renewable Energy Laboratory<br/>
   
-      &copy; Copyright 2022.<br/>
+      &copy; Copyright 2023.<br/>
 </p>
         </footer>
     </div>
