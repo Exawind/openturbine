@@ -20,7 +20,7 @@ option(OTURB_ENABLE_ALL_WARNINGS "Show most warnings for most compilers" ON)
 
 # Enabling tests overrides the executable options
 # option(OTURB_ENABLE_UNIT_TESTS "Enable unit testing" ON)
-option(OTURB_ENABLE_TESTS "Enable testing suite" ON)
+option(OTURB_ENABLE_TESTS "Enable testing suite" OFF)
 # option(OTURB_SAVE_GOLDS "Provide a directory in which to save golds during testing" OFF)
 # option(OTURB_ENABLE_FPE_TRAP_FOR_TESTS "Enable FPE trapping in tests" ON)
 
@@ -124,7 +124,6 @@ endif()
 # add_subdirectory(tools)
 
 if(OTURB_ENABLE_TESTS)
-  enable_testing()
   include(CTest)
   add_subdirectory(tests)
 endif()
