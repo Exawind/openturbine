@@ -62,7 +62,7 @@ jobs:
         # ls $Kokkos_DIR
         mkdir build
         cd build
-        cmake ..
+        cmake .. -DOTURB_ENABLE_TESTS:BOOL=ON
         make
         ./openturbine -h
         ./openturbine_unit_tests
