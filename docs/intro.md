@@ -1,4 +1,4 @@
-# OpenTurbine
+# OpenTurbine Wind Turbine Structural Model
 
 **OpenTurbine will be in active development throughout FY23**
 
@@ -29,6 +29,5 @@ and AI.
 OpenTurbine is written in modern C++ and leverages Kokkos as its
 performance-portability library with inspiration from the ExaWind stack.
 
-
-
-
+```{tableofcontents}
+```
