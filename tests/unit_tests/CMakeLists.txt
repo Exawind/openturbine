@@ -21,6 +21,10 @@ target_link_libraries(${oturb_unit_test_exe_name} PRIVATE GTest::gtest GTest::gt
 # Link to OpenTurbine test targets
 target_link_libraries(${oturb_unit_test_exe_name} PRIVATE ${oturb_lib_name})
 
+# Link Kokkos to test target
+find_package(Kokkos REQUIRED)
+target_link_libraries(${oturb_unit_test_exe_name} PRIVATE Kokkos::kokkos)
+
 # Define what we want to be installed during a make install
 install(TARGETS ${oturb_unit_test_exe_name}
     RUNTIME DESTINATION bin
