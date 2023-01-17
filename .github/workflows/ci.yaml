@@ -14,7 +14,7 @@ jobs:
     - name: Clone
       uses: actions/checkout@v3
     - name: Check formatting
-      uses: DoozyX/clang-format-lint-action@v0.14
+      uses: DoozyX/clang-format-lint-action@v0.15
       with:
         source: './src ./tests/unit_tests'
         exclude: '.'

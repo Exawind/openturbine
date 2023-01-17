@@ -9,9 +9,8 @@ chapters:
 - file: input_file
 - file: reference
 - file: dev_guide
-# - file: installation
-# - file: background_concepts
-# - file: examples
-# - file: input_reference
-# - file: api_docs
-# - file: code_quality
+  sections:
+  - file: compiling
+  - file: documentation
+  - file: tools
+  - file: api_docs
