@@ -4,6 +4,10 @@
 format: jb-book
 root: intro
 chapters:
+- file: getting_started
+- file: tutorials
+- file: input_file
+- file: reference
 - file: dev_guide
 # - file: installation
 # - file: background_concepts
