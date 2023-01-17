@@ -1,0 +1,92 @@
+name: OpenTurbine CI
+
+on: push
+  # push:
+  #   branches: [main]
+  # pull_request:
+  #   branches: [main]
+
+jobs:
+
+  Formatting:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Clone
+      uses: actions/checkout@v3
+    - name: Check formatting
+      uses: DoozyX/clang-format-lint-action@v0.15
+      with:
+        source: './src ./tests/unit_tests'
+        exclude: '.'
+        extensions: 'H,h,cpp'
+        clangFormatVersion: 14
+
+  CPU:
+    needs: Formatting
+    runs-on: ubuntu-22.04
+    steps:
+
+    - name: Cache install Spack packages
+      id: cache-install
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.spack
+        key: install-spack-v0.20
+    - name: Install Spack packages
+      if: steps.cache-install.outputs.cache-hit != 'true'
+      run: |
+        git clone https://github.com/spack/spack ~/.spack/Spack
+        . ~/.spack/Spack/share/spack/setup-env.sh
+        spack install kokkos
+
+    - name: Install GoogleTest
+      run: |
+        sudo apt-get install libgtest-dev
+        cd /usr/src/gtest
+        sudo cmake CMakeLists.txt
+        sudo make
+        sudo cp lib/*.a /usr/lib
+        sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a
+        sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
+
+    - name: Clone
+      uses: actions/checkout@v3
+      with: 
+        submodules: true
+    - name: Test
+      run: |
+        . ~/.spack/Spack/share/spack/setup-env.sh
+        export Kokkos_DIR=/home/runner/.spack/Spack/opt/spack/linux-ubuntu22.04-x86_64_v4/gcc-12.1.0/kokkos-3.7.01-zhffzchmugzhigeekgnatfeikkrjwmfw
+        # echo $Kokkos_DIR
+        # ls $Kokkos_DIR
+        mkdir build
+        cd build
+        cmake .. -DOTURB_ENABLE_TESTS:BOOL=ON
+        make
+        ./openturbine -h
+        ./openturbine_unit_tests
+
+    # - name: Dependencies
+    #   run: ${{matrix.install_deps}}
+    # - name: Setup
+    #   run: |
+    #     echo "NUM_PROCS=${{matrix.procs}}" >> $GITHUB_ENV
+    # - name: Configure
+    #   run: |
+    #     cmake -G Ninja \
+    #       -B ${{runner.workspace}}/build-ci-${{matrix.build_type}} \
+    #       -DCMAKE_INSTALL_PREFIX:PATH=${{runner.workspace}}/install-${{matrix.build_type}} \
+    #       -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} \
+    #       ${{github.workspace}}
+    # - name: Build
+    #   working-directory: ${{runner.workspace}}/build-ci-${{matrix.build_type}}
+    #   run: |
+    #     echo "::add-matcher::.github/problem-matchers/gcc.json"
+    #     cmake --build . -- -j ${{env.NUM_PROCS}} 2>&1 | tee -a build-output.txt
+    # - name: Test
+    #   working-directory: ${{runner.workspace}}/build-ci-${{matrix.build_type}}
+    #   run: |
+    #     ctest ${{matrix.ctest_args}} --output-on-failure
+
+

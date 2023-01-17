@@ -1,6 +1,9 @@
-# OpenTurbine
+# OpenTurbine Wind Turbine Structural Model
 
-**OpenTurbine will be in active development throughout FY23**
+:::{note}
+This page is under construction. Check back here throughout FY23
+for updates, and see activity at https://github.com/exawind/openturbine.
+:::
 
 OpenTurbine is a new, open-source wind turbine structural dynamics simulation
 code designed to meet the research needs of WETO and the broader wind energy
@@ -29,6 +32,5 @@ and AI.
 OpenTurbine is written in modern C++ and leverages Kokkos as its
 performance-portability library with inspiration from the ExaWind stack.
 
-
-
-
+```{tableofcontents}
+```
