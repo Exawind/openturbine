@@ -2,7 +2,7 @@
 ############################ BASE ######################################
 
 cmake_minimum_required (VERSION 3.20 FATAL_ERROR)
-project(OpenTurbine CXX)
+project(OpenTurbine VERSION 23.0.1 LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -58,6 +58,13 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
 endif()
 
 ############################# OpenTurbine ##############################
+
+# Add preprocessor defs to report project version
+add_definitions(
+  -DOpenTurbine_VERSION_MAJOR=${OpenTurbine_VERSION_MAJOR}
+  -DOpenTurbine_VERSION_MINOR=${OpenTurbine_VERSION_MINOR}
+  -DOpenTurbine_VERSION_PATCH=${OpenTurbine_VERSION_PATCH}
+)
 
 # General information about machine, compiler, and build type
 message(STATUS "OpenTurbine Information:")
@@ -130,7 +137,7 @@ endif()
 
 # Define what we want to be installed during a make install
 install(
-  TARGETS ${oturb_exe_name} ${oturb_lib_name} # ${oturb_api_lib} 
+  TARGETS ${oturb_exe_name} ${oturb_lib_name} # ${oturb_api_lib}
   EXPORT ${PROJECT_NAME}Targets
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib
@@ -161,6 +168,7 @@ configure_package_config_file(
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
   INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
 )
+
 install(
   FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
