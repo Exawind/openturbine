@@ -1,0 +1,13 @@
+/*! @mainpage
+ *
+ * @section intro_sec Introduction
+ *
+ * `OpenTurbine` is a new, open-source wind turbine structural dynamics simulation
+ * code designed to meet the research needs of Wind Energy Technologies Office (WETO)
+ * and the broader wind energy community for land-based and offshore wind turbines.
+ * `OpenTurbine` will provide high-fidelity, highly performant structural dynamics
+ * models that can couple with low-fidelity aerodynamic/hydrodynamic models like those
+ * in [OpenFAST](https://github.com/OpenFAST/openfast), as well as high-fidelity
+ * computational fluid dynamics (CFD) models like those in the WETO and Office
+ * of Science supported [ExaWind](https://github.com/Exawind) code suite.
+ */
