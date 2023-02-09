@@ -59,8 +59,11 @@ endif()
 
 ############################# OpenTurbine ##############################
 
+generate_version_info()
+
 # General information about machine, compiler, and build type
 message(STATUS "OpenTurbine Information:")
+message(STATUS "VERSION = ${OTURB_VERSION_TAG}-${OTURB_REPO_DIRTY}")
 message(STATUS "CMAKE_SYSTEM_NAME = ${CMAKE_SYSTEM_NAME}")
 message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "CMAKE_CXX_COMPILER_VERSION = ${CMAKE_CXX_COMPILER_VERSION}")
@@ -90,7 +93,6 @@ endif()
 include(set_compile_flags)
 
 # Build OpenTurbine
-generate_version_info()
 add_subdirectory(src)
 
 if(OTURB_ENABLE_CUDA)
