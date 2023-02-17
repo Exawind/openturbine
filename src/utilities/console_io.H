@@ -1,5 +1,4 @@
-#ifndef CONSOLE_IO_H
-#define CONSOLE_IO_H
+#pragma once
 
 #include <iostream>
 
@@ -17,4 +16,3 @@ void print_tpls(std::ostream& /*out*/);
 
 } // namespace openturbine::io
 
-#endif /* CONSOLE_IO_H */

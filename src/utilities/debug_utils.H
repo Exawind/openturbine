@@ -1,6 +1,4 @@
-
-#ifndef DEBUG_UTILS_H
-#define DEBUG_UTILS_H
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -12,4 +10,3 @@ void print_vector(std::vector<double> vec);
 
 } // namespace openturbine::debug
 
-#endif /* DEBUG_UTILS_H */

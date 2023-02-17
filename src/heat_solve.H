@@ -1,5 +1,4 @@
-#ifndef HEAT_SOLVE_H
-#define HEAT_SOLVE_H
+#pragma once
 
 #include <vector>
 
@@ -26,4 +25,3 @@ double kokkos_calculate_residual(int axis_size, double* U, double* U_im1);
 
 } // namespace openturbine::heat_solve
 
-#endif /* HEAT_SOLVE_H */
