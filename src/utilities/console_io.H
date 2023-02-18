@@ -14,5 +14,4 @@ void print_error(const std::string& msg);
 
 void print_tpls(std::ostream& /*out*/);
 
-} // namespace openturbine::io
-
+}  // namespace openturbine::io

@@ -1,7 +1,9 @@
+#include "src/utilities/console_io.H"
+
 #include <chrono>
 #include <ctime>
 #include <vector>
-#include "src/utilities/console_io.H"
+
 #include "src/OpenTurbineVersion.H"
 
 namespace openturbine::io {
@@ -9,11 +11,9 @@ namespace openturbine::io {
 namespace {
 const std::string dbl_line = std::string(78, '=') + "\n";
 const std::string dash_line = "\n" + std::string(78, '-') + "\n";
-} // namespace
+}  // namespace
 
-void print_usage(std::ostream& out)
-{
-
+void print_usage(std::ostream& out) {
     out << R"doc(Usage:
     openturbine <input_file> [param=value] [param=value] ...
 
@@ -25,18 +25,15 @@ Optional:
 )doc" << std::endl;
 }
 
-void print_error(const std::string& msg)
-{
+void print_error(const std::string& msg) {
     std::cout << "ERROR: " << msg << std::endl;
 }
 
-void print_banner(std::ostream& out)
-{
+void print_banner(std::ostream& out) {
     auto exec_time = std::chrono::system_clock::now();
     auto exect = std::chrono::system_clock::to_time_t(exec_time);
-    const std::string dirty_tag = (version::oturb_dirty_repo == "DIRTY")
-                                      ? ("-" + version::oturb_dirty_repo)
-                                      : "";
+    const std::string dirty_tag =
+        (version::oturb_dirty_repo == "DIRTY") ? ("-" + version::oturb_dirty_repo) : "";
     const std::string full_version = version::oturb_version + dirty_tag;
     const std::string full_sha = version::oturb_git_sha + dirty_tag;
 
@@ -81,8 +78,7 @@ void print_banner(std::ostream& out)
     // clang-format on
 }
 
-void print_tpls(std::ostream& out)
-{
+void print_tpls(std::ostream& out) {
     // TODO: Populate this with third party libraries
 
     std::vector<std::string> tpls;
@@ -94,9 +90,8 @@ void print_tpls(std::ostream& out)
         }
         out << std::endl << std::endl;
     } else {
-        out << "  No additional third-party libraries enabled" << std::endl
-            << std::endl;
+        out << "  No additional third-party libraries enabled" << std::endl << std::endl;
     }
 }
 
-} // namespace openturbine::io
+}  // namespace openturbine::io
