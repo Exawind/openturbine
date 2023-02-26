@@ -18,6 +18,14 @@ option(OTURB_ENABLE_ALL_WARNINGS "Show most warnings for most compilers" ON)
 # option(OTURB_ENABLE_CPPCHECK "Enable cppcheck static analysis target" OFF)
 # option(OTURB_ENABLE_FCOMPARE "Enable building fcompare when not testing" OFF)
 
+set(CMAKE_BUILD_TYPE "RELEASE")
+
+if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
+  add_definitions(-DDEBUG)
+elseif(CMAKE_BUILD_TYPE STREQUAL "RELEASE")
+  add_definitions(-DRELEASE)
+endif()
+
 # Enabling tests overrides the executable options
 # option(OTURB_ENABLE_UNIT_TESTS "Enable unit testing" ON)
 option(OTURB_ENABLE_TESTS "Enable testing suite" OFF)
