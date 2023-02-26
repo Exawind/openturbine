@@ -3,38 +3,34 @@
 # This file determines clang-format's style settings; for details, refer to
 # http://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
-Language: Cpp
+# The extra indent or outdent of access modifiers, e.g. public/private.
+# We are choosing to align the access modifiers to the same level as e.g.
+# the class/struct keyword
+AccessModifierOffset: -4
 
-# Use the Google C++ Style Guide with some modifications in this project
+# Do NOT allow short enums on a single line
+AllowShortEnumsOnASingleLine: false
+
+# Compress functions onto a single line (when they fit) iff they are defined
+# inline only i.e. inside a of class (it does not imply empty)
+AllowShortFunctionsOnASingleLine: InlineOnly
+
+# Compress lambdas onto a single line iff they are empty
+AllowShortLambdasOnASingleLine: Empty
+
+# Make loops more conspicuous
+AllowShortLoopsOnASingleLine: false
+
+# Use the Google C++ Style Guide (with some modifications as pointed out below)
+# in this project
 BasedOnStyle: Google
-
-# Increase the indentation to 4 columns
-IndentWidth: 4
 
 # Increase the column limit to 100
 ColumnLimit: 100
 
-# Force pointers to the type:
-# Some folks prefer to write "int& foo" while others prefer "int &foo". The
-# Google Style Guide only asks for consistency within a project, we choose
-# to use "int& foo" for this project
+# Do NOT analyze the formatted file for the most common alignment of & and *.
+# Used with the "PointerAlignment" option to force pointers to the type
 DerivePointerAlignment: false
-PointerAlignment: Left
-
-# The Google Style Guide only asks for consistency w.r.t. "left const" vs.
-# "const right" alignment of specifiers and qualifiers (e.g. const/volatile).
-# In this project we are choosing to use "left const"
-QualifierAlignment: Left
-
-# Compress functions onto a single line (when they fit) iff they are defined
-# inline (inside a of class) or are empty.
-AllowShortFunctionsOnASingleLine: Inline
-
-# Compress lambdas onto a single line iff they are empty.
-AllowShortLambdasOnASingleLine: Empty
-
-# C++ standard
-Standard: c++17
 
 # Specify the #include statement order. This implements the order mandated by
 # the Google C++ Style Guide: related header, C headers, C++ headers, library
@@ -63,3 +59,21 @@ IncludeCategories:
   - Regex:    '^"'
     Priority: 40
 
+# Increase the indentation width to 4 columns
+IndentWidth: 4
+
+Language: Cpp
+
+# Force pointers to the type:
+# Some folks prefer to write "int& foo" while others prefer "int &foo". The
+# Google Style Guide only asks for consistency within a project, we choose
+# to use "int& foo" for this project
+PointerAlignment: Left
+
+# The Google Style Guide only asks for consistency w.r.t. "right const" vs.
+# "const left" alignment of specifiers and qualifiers (e.g. const/volatile).
+# In this project we are choosing to use the "const left" style
+QualifierAlignment: Left
+
+# Language standard
+Standard: c++17
