@@ -5,5 +5,6 @@ target_sources(${oturb_lib_name}
     # io.cpp
     console_io.cpp
     debug_utils.cpp
+    log.cpp
     # IOManager.cpp
 )

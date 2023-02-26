@@ -2,19 +2,23 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
 
 #include <Kokkos_Core.hpp>
 
+#include "src/OpenTurbineVersion.H"
 #include "src/heat_solve.H"
 #include "src/utilities/console_io.H"
 #include "src/utilities/debug_utils.H"
-#include "src/utilities/logger.h"
+#include "src/utilities/log.h"
 
 int main(int argc, char* argv[]) {
+    using namespace openturbine;
+
     if (argc > 2) {
         // Print usage and exit with error code if no input file was provided.
-        openturbine::io::print_usage(std::cout);
-        openturbine::io::print_error("No input file provided. Exiting.");
+        io::print_usage(std::cout);
+        io::print_error("No input file provided. Exiting.");
         return 1;
     }
 
@@ -23,11 +27,28 @@ int main(int argc, char* argv[]) {
     for (auto i = 1; i < argc; i++) {
         const std::string param(argv[i]);
         if ((param == "--help") || (param == "-h")) {
-            openturbine::io::print_banner(std::cout);
-            openturbine::io::print_usage(std::cout);
+            io::print_banner(std::cout);
+            io::print_usage(std::cout);
             return 0;
         }
     }
+
+    // TODO Name the logging file based on the provided input file name
+    std::string log_file = "log.txt";
+    if (std::filesystem::exists(log_file)) {
+        std::cout << "Overwriting the previously existing log file" << std::endl;
+    }
+    std::ofstream{log_file};
+
+#ifdef DEBUG
+    auto log = debug::Log::Get(log_file, debug::SeverityLevel::kDebug);
+#elif defined RELEASE
+    auto log = debug::Log::Get(log_file, debug::SeverityLevel::kInfo);
+#else
+    auto log = debug::Log::Get(log_file, debug::SeverityLevel::kNone);
+#endif
+
+    log->Info("openturbine " + version::oturb_version + "\n");
 
     int axis_size{5};                 // Size of the 1D grid
     double side_length{1.0};          // Length of the 1D domain
@@ -40,11 +61,11 @@ int main(int argc, char* argv[]) {
     auto U = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
 
     Kokkos::initialize(argc, argv);
-    openturbine::heat_solve::heat_conduction_solver(axis_size, side_length, n_max, k, ic_x0, ic_x1,
-                                                    residual_tolerance);
+    heat_solve::heat_conduction_solver(axis_size, side_length, n_max, k, ic_x0, ic_x1,
+                                       residual_tolerance);
     Kokkos::finalize();
 
-    openturbine::debug::print_array(U, axis_size);
+    debug::print_array(U, axis_size);
 
     std::free(U);
 

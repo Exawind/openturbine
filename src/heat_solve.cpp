@@ -4,6 +4,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "src/utilities/debug_utils.H"
+#include "src/utilities/log.h"
 
 namespace openturbine::heat_solve {
 
@@ -33,10 +34,14 @@ double* heat_conduction_solver(int axis_size, double side_length, int n_max, dou
     U[0] = ic_x0;
     U[axis_size - 1] = ic_x1;
 
+    auto log = openturbine::debug::Log::Get();
+
     // Solve
     for (int n = 0; n < n_max; n++) {
         // Copy values from U to U at i-1
-        for (int i = 0; i < axis_size; i++) U_im1[i] = U[i];
+        for (int i = 0; i < axis_size; i++) {
+            U_im1[i] = U[i];
+        }
 
         // TODO: use dx from axis_points to support irregular grid
 
@@ -48,7 +53,7 @@ double* heat_conduction_solver(int axis_size, double side_length, int n_max, dou
 
         double residual = openturbine::heat_solve::kokkos_calculate_residual(axis_size, U, U_im1);
         if (residual < residual_tolerance) {
-            std::cout << "Converged in " << n << " iterations." << std::endl;
+            log->Info("Converged in " + std::to_string(n) + " iterations" + "\n");
             break;
         }
 
