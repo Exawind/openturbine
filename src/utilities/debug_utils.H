@@ -3,9 +3,9 @@
 #include <iostream>
 #include <vector>
 
-namespace openturbine::debug {
+namespace openturbine::util {
 
 void print_array(double* array, int array_len);
-void print_vector(std::vector<double> vec);
+void print_vector(const std::vector<double>& vec);
 
-}  // namespace openturbine::debug
+}  // namespace openturbine::util
