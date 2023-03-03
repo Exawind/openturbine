@@ -5,7 +5,7 @@ find_package(Kokkos REQUIRED)
 target_sources(${oturb_exe_name} PRIVATE main.cpp)
 target_link_libraries(${oturb_exe_name} PRIVATE Kokkos::kokkos)
 
-target_sources(${oturb_lib_name} PRIVATE heat_solve.cpp)
+target_sources(${oturb_lib_name} PRIVATE heat/heat_solve.cpp)
 target_link_libraries(${oturb_lib_name} PRIVATE Kokkos::kokkos)
 
 target_include_directories(${oturb_exe_name} PRIVATE ${PROJECT_BINARY_DIR})
@@ -25,6 +25,8 @@ target_include_directories(${oturb_lib_name}
 )
 
 # Get all source files
+add_subdirectory(heat)
+add_subdirectory(io)
 add_subdirectory(utilities)
 
 # Generate OpenTurbine version header
