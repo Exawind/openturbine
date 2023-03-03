@@ -4,19 +4,18 @@
  */
 
 #include <iostream>
+
 #include "gtest/gtest.h"
+
 #include "src/OpenTurbineVersion.H"
 
 namespace oturb_tests {
 
-TEST(Configuration, Build)
-{
-    const std::string dirty_tag =
-        (openturbine::version::oturb_dirty_repo == "DIRTY")
-            ? ("-" + openturbine::version::oturb_dirty_repo)
-            : "";
-    const std::string ot_git_sha =
-        openturbine::version::oturb_git_sha + dirty_tag;
+TEST(Configuration, Build) {
+    const std::string dirty_tag = (openturbine::version::oturb_dirty_repo == "DIRTY")
+                                      ? ("-" + openturbine::version::oturb_dirty_repo)
+                                      : "";
+    const std::string ot_git_sha = openturbine::version::oturb_git_sha + dirty_tag;
     std::cout << "OpenTurbine SHA = " << ot_git_sha << std::endl;
 }
 
@@ -65,6 +64,7 @@ TEST(Configuration, Build)
 // #endif
 // }
 
-TEST(Configuration, TPLs) {}
+TEST(Configuration, TPLs) {
+}
 
-} // namespace oturb_tests
+}  // namespace oturb_tests
