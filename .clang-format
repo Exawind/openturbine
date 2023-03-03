@@ -15,13 +15,16 @@ AllowShortEnumsOnASingleLine: false
 # inline only i.e. inside a of class (it does not imply empty)
 AllowShortFunctionsOnASingleLine: InlineOnly
 
+# Do NOT allow short if statements on a single line
+AllowShortIfStatementsOnASingleLine: Never
+
 # Compress lambdas onto a single line iff they are empty
 AllowShortLambdasOnASingleLine: Empty
 
 # Make loops more conspicuous
 AllowShortLoopsOnASingleLine: false
 
-# Use the Google C++ Style Guide (with some modifications as pointed out below)
+# Use the Google C++ Style Guide (with some modifications as pointed out here)
 # in this project
 BasedOnStyle: Google
 
