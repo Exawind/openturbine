@@ -7,8 +7,8 @@
 #include <Kokkos_Core.hpp>
 
 #include "src/OpenTurbineVersion.H"
-#include "src/heat_solve.H"
-#include "src/utilities/console_io.H"
+#include "src/heat/heat_solve.H"
+#include "src/io/console_io.H"
 #include "src/utilities/debug_utils.H"
 #include "src/utilities/log.h"
 
@@ -41,11 +41,11 @@ int main(int argc, char* argv[]) {
     std::ofstream{log_file};
 
 #ifdef DEBUG
-    auto log = debug::Log::Get(log_file, debug::SeverityLevel::kDebug);
+    auto log = util::Log::Get(log_file, util::SeverityLevel::kDebug);
 #elif defined RELEASE
-    auto log = debug::Log::Get(log_file, debug::SeverityLevel::kInfo);
+    auto log = util::Log::Get(log_file, util::SeverityLevel::kInfo);
 #else
-    auto log = debug::Log::Get(log_file, debug::SeverityLevel::kNone);
+    auto log = util::Log::Get(log_file, util::SeverityLevel::kNone);
 #endif
 
     log->Info("openturbine " + version::oturb_version + "\n");
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
                                        residual_tolerance);
     Kokkos::finalize();
 
-    debug::print_array(U, axis_size);
+    util::print_array(U, axis_size);
 
     std::free(U);
 
