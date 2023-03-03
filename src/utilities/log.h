@@ -4,9 +4,9 @@
 #include <iostream>
 #include <string>
 
-namespace openturbine::debug {
+namespace openturbine::util {
 
-/// @brief Log severity levels - lower value indicates higher priority of incident
+/// @brief Log severity levels - lower value indicates higher severity of incident
 enum class SeverityLevel {
     kNone = 0,
     kError = 1,
@@ -18,18 +18,12 @@ enum class SeverityLevel {
 /// @brief Convert provided SeverityLevel -> to a string
 std::string SeverityLevelToString(const SeverityLevel&);
 
-/// @brief Convert provided string -> SeverityLevel value
-SeverityLevel StringToSeverityLevel(const std::string&);
-
 /// @brief Log output types
 enum class OutputType {
     kConsole = 0,
     kFile = 1,
     kConsoleAndFile = 2
 };
-
-/// @brief Convert provided string -> OutputType value
-OutputType StringToOutputType(const std::string&);
 
 /*! \brief  A basic logging utility for OpenTurbine
  *
@@ -40,14 +34,16 @@ OutputType StringToOutputType(const std::string&);
  */
 class Log {
 public:
-    virtual ~Log() = delete;
+    ~Log() = default;
+    /// Explicitly delete the copy c-tor
     Log(const Log&) = delete;
+    /// Also delete the copy assignment c-tor
     Log& operator=(const Log&) = delete;
-    Log(Log&&) = delete;
-    Log& operator=(Log&&) = delete;
+    Log(Log&&) = default;
+    Log& operator=(Log&&) = default;
 
     /*!
-     *  This is the static method that controls the access to the singleton
+     *  This is a static method that controls the access to the singleton
      *  instance of Log. On the first run, it creates a singleton object and
      *  places it into the static field. On subsequent runs, it returns the
      *  existing object stored in the static field.
@@ -77,14 +73,14 @@ private:
     static Log* log_instance_;  //!< static instance of the ptr to Log
 
     /*!
-     *  A private c-tor to prevent direct construction of Log class.
+     *  A private c-tor to prevent direct construction of the Log class.
      *  The severity of the Log object indicates the max severity level of the logger -
-     *  any message with a severity level higher than the max severity level will be
-     *  printed. E.g. for max_severity_level_ = Info, None/Error/Warning messages will
-     *  also be printed.
+     *  any log message with a severity level higher than the max severity level will be
+     *  printed. E.g. for max severity level = Info -> None, Error, and Warning messages
+     *  will also be printed (but Debug messages will not).
      */
     Log(std::string name = "log.txt", SeverityLevel max_severity = SeverityLevel::kDebug,
         OutputType type = OutputType::kConsoleAndFile);
 };
 
-}  // namespace openturbine::debug
+}  // namespace openturbine::util

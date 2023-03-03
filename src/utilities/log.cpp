@@ -3,7 +3,7 @@
 #include <chrono>
 #include <ctime>
 
-namespace openturbine::debug {
+namespace openturbine::util {
 
 Log* Log::log_instance_ = nullptr;
 
@@ -32,56 +32,10 @@ std::string SeverityLevelToString(const SeverityLevel& level) {
     }
 }
 
-SeverityLevel StringToSeverityLevel(const std::string& string) {
-    switch (std::toupper(string[0])) {
-        case 'D': {
-            return SeverityLevel::kDebug;
-            break;
-        }
-        case 'E': {
-            return SeverityLevel::kError;
-            break;
-        }
-        case 'I': {
-            return SeverityLevel::kInfo;
-            break;
-        }
-        case 'W': {
-            return SeverityLevel::kWarning;
-            break;
-        }
-        default: {
-            return SeverityLevel::kNone;
-            break;
-        }
-    }
-}
-
-OutputType StringToOutputType(const std::string& type) {
-    switch (std::toupper(type[0])) {
-        case 'C': {
-            return OutputType::kConsole;
-            break;
-        }
-        case 'F': {
-            return OutputType::kFile;
-            break;
-        }
-        default: {
-            return OutputType::kConsoleAndFile;
-            break;
-        }
-    }
-}
-
 Log::Log(std::string name, SeverityLevel max_severity, OutputType type)
     : file_name_(name), max_severity_level_(max_severity), output_type_(type) {
 }
 
-/**
- * Get Single Logger Instance or Create new Object if Not Created
- * @return std::shared_ptr<Log>
- */
 Log* Log::Get(std::string name, SeverityLevel max_severity, OutputType type) {
     if (log_instance_ == nullptr) {
         log_instance_ = new Log(name, max_severity, type);
@@ -128,4 +82,4 @@ void Log::WriteMessage(const std::string& message, SeverityLevel severity) const
     }
 }
 
-}  // namespace openturbine::debug
+}  // namespace openturbine::util
