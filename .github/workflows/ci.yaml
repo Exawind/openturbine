@@ -1,4 +1,4 @@
-name: OpenTurbine CI
+name: OpenTurbine-CI
 
 on: push
   # push:
@@ -8,7 +8,7 @@ on: push
 
 jobs:
   Formatting:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: Clone
       uses: actions/checkout@v3
@@ -21,7 +21,7 @@ jobs:
         clangFormatVersion: 14
   CPU:
     needs: Formatting
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: Cache install Spack packages
       id: cache-install
@@ -52,7 +52,8 @@ jobs:
     - name: Test
       run: |
         . ~/.spack/Spack/share/spack/setup-env.sh
-        export Kokkos_DIR=$(spack find -p kokkos | grep -m1 kokkos | awk '{print $2}')
+        # Find the Kokkos installation directory via spack & extract the path via grep & awk
+        export Kokkos_DIR=$(spack find -p kokkos | grep -m 1 kokkos | awk '{print $2}')
         # echo $Kokkos_DIR
         # ls $Kokkos_DIR
         mkdir build
