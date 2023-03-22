@@ -5,6 +5,7 @@ target_sources(
     utest_main.cpp
     test_config.cpp
     test_heat_solve.cpp
+    test_log.cpp
 )
 
 target_compile_options(

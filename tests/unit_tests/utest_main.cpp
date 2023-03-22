@@ -2,15 +2,14 @@
  *  Entry point for unit tests
  */
 
-#include "gtest/gtest.h"
 #include "OpenTurbineTestEnv.H"
+#include "gtest/gtest.h"
 #include <Kokkos_Core.hpp>
 
 //! Global instance of the environment (for access in tests)
-openturbine_tests::OTurbTestEnv* utest_env = nullptr;
+openturbine_tests::OTurbTestEnv* utest_env{nullptr};
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
 
     utest_env = new openturbine_tests::OTurbTestEnv(argc, argv);

@@ -1,24 +1,31 @@
-
 #include "src/utilities/debug_utils.H"
 
-namespace openturbine::debug {
+#include "src/utilities/log.h"
 
-void print_array(double* array, int array_len)
-{
-    std::cout << "size: " << array_len << std::endl;
+namespace openturbine::util {
+
+void print_array(double* array, int array_len) {
+    auto log = Log::Get();
+    log->Debug("array size: " + std::to_string(array_len) + "\n");
+
+    std::string array_to_print{"array elements:"};
     for (int i = 0; i < array_len; i++) {
-        std::cout << array[i] << " ";
+        array_to_print += " " + std::to_string(array[i]);
     }
-    std::cout << std::endl;
+    log->Debug(array_to_print + "\n");
 }
 
-void print_vector(std::vector<double> vec)
-{
+void print_vector(const std::vector<double>& vec) {
     // Borrowed from @Akavall
     // https://stackoverflow.com/questions/27028226/python-linspace-in-c
-    std::cout << "size: " << vec.size() << std::endl;
-    for (double d : vec) std::cout << d << " ";
-    std::cout << std::endl;
+    auto log = Log::Get();
+    log->Debug("vector size: " + std::to_string(vec.size()) + "\n");
+
+    std::string vector_to_print{"vector elements:"};
+    for (const auto& d : vec) {
+        vector_to_print += " " + std::to_string(d);
+    }
+    log->Debug(vector_to_print + "\n");
 }
 
-} // namespace openturbine::debug
+}  // namespace openturbine::util
