@@ -19,7 +19,7 @@ option(OTURB_ENABLE_ALL_WARNINGS "Show most warnings for most compilers" ON)
 # option(OTURB_ENABLE_FCOMPARE "Enable building fcompare when not testing" OFF)
 
 # Set RELEASE as default build type if none provided
-set(SUPPORTED_BUILD_TYPES None Debug Release RelWithDebInfo MinSizeRel)
+set(SUPPORTED_BUILD_TYPES Debug Release RelWithDebInfo MinSizeRel)
 string(REPLACE ";" " " SUPPORTED_BUILD_TYPES_STRING "${SUPPORTED_BUILD_TYPES}")
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -45,9 +45,9 @@ if(NOT BUILD_TYPE_UPPER IN_LIST SUPPORTED_BUILD_TYPES_UPPER)
 endif()
 
 # Add some defs based on the build type
-if(BUILD_TYPE_UPPER STREQUAL "RELEASE")
+if(BUILD_TYPE_UPPER STREQUAL "RELEASE" OR BUILD_TYPE_UPPER STREQUAL "MINSIZEREL")
   add_definitions(-DRELEASE)
-elseif(BUILD_TYPE_UPPER STREQUAL "DEBUG")
+elseif(BUILD_TYPE_UPPER STREQUAL "DEBUG" OR BUILD_TYPE_UPPER STREQUAL "RELWITHDEBINFO")
   add_definitions(-DDEBUG)
 endif()
 
