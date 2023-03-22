@@ -6,7 +6,9 @@
 
 namespace openturbine::util {
 
-/// @brief Log severity levels - lower value indicates higher severity of incident
+/*! @brief Log severity levels - this is a hierarchial list, lower numeric value
+ *         indicates higher severity of incident
+ */
 enum class SeverityLevel {
     kNone = 0,
     kError = 1,
@@ -47,6 +49,15 @@ public:
      *  instance of Log. On the first run, it creates a singleton object and
      *  places it into the static field. On subsequent runs, it returns the
      *  existing object stored in the static field.
+     *
+     *  @param name: Name of the log file, default is "log.txt"
+     *  @param max_severity: Max severity level for logging, default is Debug.
+     *      The severity of the Log object indicates the cutoff severity level of the logger -
+     *      any log message with a severity level (numeric value) lower than the max severity
+     *      level will be printed. E.g. for max severity level = Info -> None, Error, Warning
+     *      and Info messages will be printed, but Debug messages will not.
+     *  @param type: Output type for logging, default is Console and File
+     *  @return The static instance of the ptr to Log
      */
     static Log* Get(std::string name = "log.txt",
                     SeverityLevel max_severity = SeverityLevel::kDebug,
@@ -67,18 +78,11 @@ public:
 
 private:
     std::string file_name_;
-    SeverityLevel max_severity_level_;  //!< max severity level for logging
+    SeverityLevel max_severity_level_;
     OutputType output_type_;
+    static Log* log_instance_;
 
-    static Log* log_instance_;  //!< static instance of the ptr to Log
-
-    /*!
-     *  A private c-tor to prevent direct construction of the Log class.
-     *  The severity of the Log object indicates the max severity level of the logger -
-     *  any log message with a severity level higher than the max severity level will be
-     *  printed. E.g. for max severity level = Info -> None, Error, and Warning messages
-     *  will also be printed (but Debug messages will not).
-     */
+    /// A private c-tor to prevent direct construction of the Log class
     Log(std::string name = "log.txt", SeverityLevel max_severity = SeverityLevel::kDebug,
         OutputType type = OutputType::kConsoleAndFile);
 };
