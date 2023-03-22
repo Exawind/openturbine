@@ -45,8 +45,9 @@ Log* Log::Get(std::string name, SeverityLevel max_severity, OutputType type) {
 
 void Log::WriteMessage(const std::string& message, SeverityLevel severity) const {
     if (severity <= this->max_severity_level_) {
-        // print the time stamp in YYYY-MM-DD HH:MM:SS format
-        auto t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        // print the time stamp in YYYY-MM-DD HH:MM:SS.ms format (where ms is milliseconds)
+        auto now = std::chrono::system_clock::now();
+        auto t = std::chrono::system_clock::to_time_t(now);
         auto local_t = std::localtime(&t);
 
         auto year = std::to_string(local_t->tm_year + 1900);
@@ -55,8 +56,11 @@ void Log::WriteMessage(const std::string& message, SeverityLevel severity) const
         auto hr = std::to_string(local_t->tm_hour);
         auto min = std::to_string(local_t->tm_min);
         auto sec = std::to_string(local_t->tm_sec);
+        auto ms =
+            std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
         auto time_stamp = year + std::string("-") + month + std::string("-") + day +
-                          std::string(" ") + hr + std::string(":") + min + std::string(":") + sec;
+                          std::string(" ") + hr + std::string(":") + min + std::string(":") + sec +
+                          std::string(".") + std::to_string(ms.count());
 
         // print the annotated log message in the following format:
         // [time stamp] [openturbine] [severity] message
