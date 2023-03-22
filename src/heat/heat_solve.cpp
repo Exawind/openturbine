@@ -52,7 +52,7 @@ double* heat_conduction_solver(int axis_size, double side_length, int n_max, dou
 
         double residual = heat_solve::kokkos_calculate_residual(axis_size, U, U_im1);
         if (residual < residual_tolerance) {
-            log->Info("Converged in " + std::to_string(n) + " iterations" + "\n");
+            log->Debug("Converged in " + std::to_string(n) + " iterations" + "\n");
             break;
         }
 
