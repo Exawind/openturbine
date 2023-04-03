@@ -3,7 +3,6 @@ target_sources(${oturb_lib_name}
     #C++
     # diagnostics.cpp
     # io.cpp
-    debug_utils.cpp
-    log.cpp
+    console_io.cpp
     # IOManager.cpp
 )

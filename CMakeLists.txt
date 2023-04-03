@@ -2,7 +2,7 @@
 ############################ BASE ######################################
 
 cmake_minimum_required (VERSION 3.20 FATAL_ERROR)
-project(OpenTurbine CXX)
+project(OpenTurbine LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -17,6 +17,39 @@ option(OTURB_ENABLE_ALL_WARNINGS "Show most warnings for most compilers" ON)
 # option(OTURB_ENABLE_CLANG_TIDY "Compile with clang-tidy static analysis" OFF)
 # option(OTURB_ENABLE_CPPCHECK "Enable cppcheck static analysis target" OFF)
 # option(OTURB_ENABLE_FCOMPARE "Enable building fcompare when not testing" OFF)
+
+# Set RELEASE as default build type if none provided
+set(SUPPORTED_BUILD_TYPES Debug Release RelWithDebInfo MinSizeRel)
+string(REPLACE ";" " " SUPPORTED_BUILD_TYPES_STRING "${SUPPORTED_BUILD_TYPES}")
+
+if(NOT CMAKE_BUILD_TYPE)
+  message(WARNING "No Build type provided - using RELEASE as default")
+  set(
+    CMAKE_BUILD_TYPE Release CACHE STRING
+    "Select the type of build from options: ${SUPPORTED_BUILD_TYPES_STRING}"
+    FORCE
+  )
+endif()
+
+# Make build type case-insensitive and check for supported values
+string(TOUPPER "${CMAKE_BUILD_TYPE}" BUILD_TYPE_UPPER)
+string(TOUPPER "${SUPPORTED_BUILD_TYPES}" SUPPORTED_BUILD_TYPES_UPPER)
+
+if(NOT BUILD_TYPE_UPPER IN_LIST SUPPORTED_BUILD_TYPES_UPPER)
+  message(WARNING "Build type ${CMAKE_BUILD_TYPE} is NOT supported - reverting to RELEASE")
+  set(
+    CMAKE_BUILD_TYPE RELEASE CACHE STRING
+    "Select the type of build from options: ${SUPPORTED_BUILD_TYPES_STRING}"
+    FORCE
+  )
+endif()
+
+# Add some defs based on the build type
+if(BUILD_TYPE_UPPER STREQUAL "RELEASE" OR BUILD_TYPE_UPPER STREQUAL "MINSIZEREL")
+  add_definitions(-DRELEASE)
+elseif(BUILD_TYPE_UPPER STREQUAL "DEBUG" OR BUILD_TYPE_UPPER STREQUAL "RELWITHDEBINFO")
+  add_definitions(-DDEBUG)
+endif()
 
 # Enabling tests overrides the executable options
 # option(OTURB_ENABLE_UNIT_TESTS "Enable unit testing" ON)
@@ -67,7 +100,7 @@ message(STATUS "VERSION = ${OTURB_VERSION_TAG}-${OTURB_REPO_DIRTY}")
 message(STATUS "CMAKE_SYSTEM_NAME = ${CMAKE_SYSTEM_NAME}")
 message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "CMAKE_CXX_COMPILER_VERSION = ${CMAKE_CXX_COMPILER_VERSION}")
-message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
+message(STATUS "CMAKE_BUILD_TYPE = ${BUILD_TYPE_UPPER}")
 
 include(set_rpath)
 
@@ -132,7 +165,7 @@ endif()
 
 # Define what we want to be installed during a make install
 install(
-  TARGETS ${oturb_exe_name} ${oturb_lib_name} # ${oturb_api_lib} 
+  TARGETS ${oturb_exe_name} ${oturb_lib_name} # ${oturb_api_lib}
   EXPORT ${PROJECT_NAME}Targets
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib
@@ -163,6 +196,7 @@ configure_package_config_file(
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
   INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
 )
+
 install(
   FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
