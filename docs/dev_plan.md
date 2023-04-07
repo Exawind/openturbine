@@ -25,10 +25,6 @@ those in the WETO and Office of Science supported ExaWind code suite.
 OpenTurbine will be designed to address shortcomings of wind turbine structural
 models and codes that are so important to the success of WETO modeling efforts.
 
-The computational
-algorithms will incorporate robust open-source libraries for mathematical
-operations, resource allocation, and data management. 
-
 ## Development priorities and use cases
 
 *Development priorities:* Considering lessons learned from nearly a decade of
@@ -90,22 +86,39 @@ discretization will be based on Legendre spectral finite elements (LSFEs; like
 those in BeamDyn), but with the explicit ability to use the subset of 2-node
 finite elements (a special case of LSFEs). 
 
-The choice of rotation representation is being determined.  BeamDyn relies
-Wiener-Milenkovic vectorial rotation parameterization (3 rotational degrees of
-freedom), which has singularities. The team is currently investigating the use
-of quanterions which do not have singularities, but require 4 rotational
+The choice of rotation representation is being determined.  BeamDyn relies on
+Wiener-Milenkovic vectorial rotation parameterization (three rotational degrees
+of freedom), which has singularities. The team is currently investigating the
+use of quanternions, which do not have singularities but require four rotational
 degrees of freedom.
 
 ## Verification and validation cases
 
+*Verification cases:*
+- rigid-body dynamics; three-dimensional pendulum
+- cantilever-beam nonlinear static roll up 
 
-
-
-
-
-
+*Validation cases:*
+- Princeton beam experiment
+- Twisted and curved beams where the benchmarks are highly resolved
+  solid-element Ansys models
+- IEA 15-megawatt where benchmark is a highly resolved shell-element Ansys
+  model
 
 ## Target baseline turbines
 
+- NREL 5-megawatt reference turbine
+- IEA 15-megawatt reference turbine
 
+## High-level development timeline
+
+CY23 Q2: The OpenTurbine team will implement a rigid-body dynamics solver following the concepts described above, i.e., DAE-3 coupling, quaternion rotation representation, and a generalized-alpha time integrator. This proof-of-concept implementation will in the main OpenTurbine repository and will inform next steps in OpenTurbine development.
+
+CY23 Q3: Implement a general GEBT-based beam element that is appropriate for constrained multi-body simulations of a wind turbine. Enable variable order finite elements and user-defined material property definition (appropriate for modern turbine blades).  Demonstrate performance for a dynamic cantilever beam problem and compare against BeamDyn.
+
+CY24 Q1: Demonstrate a wind turbine rotor simulation under prescribed loading and include code verification results and automated testing results. Include control system (e.g., ROSCO) and pitch control of blades. Compare simulation time against an equivalent model simulated with OpenFAST
+
+CY24 Q3: Demonstrate a rotor simulation with fluid-structure interaction and a pitch control system. Fluid will be represented in two ways. First, through a simple BEMT solver and, second, where the blades are represented as actuator lines in the fluid domain (solved with the ExaWind CFD code). 
+
+CY25 Q1: Release a robust, well documented, well tested version of OpenTurbine for land-based simulations. Demonstrate whole turbine simulation (tower, nacelle, drivetrain) with fluid-structure-interaction coupling to ExaWind.
 
