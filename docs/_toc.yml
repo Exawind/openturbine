@@ -10,6 +10,7 @@ chapters:
 - file: reference
 - file: dev_guide
   sections:
+  - file: dev_plan
   - file: compiling
   - file: documentation
   - file: tools

@@ -23,7 +23,7 @@ execute:
 
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/rafmudaf/openturbine
+  url: https://github.com/exawind/openturbine
   path_to_book: docs
   branch: main
 
