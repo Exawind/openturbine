@@ -45,9 +45,192 @@ Apple M-series chips.
 
 OpenTurbine is envisioned with a core written in C++ and leveraging Kokkos as its performance-portability library with inspiration from the ExaWind stack including Nalu-Wind CFD.
 
-## High-level design
+## Design drivers and considerations
 
+OpenTurbine is a relatively small, narrowly scoped software project.
+Organizationally, it is very lean with a minimal and focused development
+team. These factors are critical when considering the characteristics
+of the software design. The project is driven by an objective to be
+sustainable, extendable, accessible and performant for many years to come.
 
+Generally, this software should tend toward simplicity where possible
+with a consideration for how new developers, current developers
+in the future, and external stakeholders will be able to understand
+the nuances of the code. In short, **don't be clever** and **keep it simple**.
+
+### Lean Software
+
+The scope of this software should be defined early in the development process,
+and any expansion of the scope should be critically evaluated before accepting.
+The approach to the scope of OpenTurbine should be conservative. The default
+decision should be to retain the initial scope and change only if absolutely
+necessary.
+
+To limit the burden of development and responsibility of maintenance,
+workflows should leverage existing software as much as possible. For instance,
+input and output files should be handled by a third-party library. Similarly,
+visualization of results, derivations of statistics, and math portability
+are other areas where the ecosystem of open source scientific software
+should be leveraged, and preference should be given to software internal to
+NREL or funded by Department of Energy's Wind Energy Technology Office.
+
+### Modular
+
+The code architecture should be structured such that each portion of code
+is responsible for a minimal unit of work. Low-level units can be combined
+at an intermediate level to do more work, but the scope of each unit
+throughout the architecture hierarchy should be explicitly described.
+This design should ensure a modular architecture, and a test of success
+is to measure the difficulty and depth of changes required to swap a
+particular unit of the code.
+
+The graphic below depicts a generic but typical data pipeline in scientific
+software. A well encapsulated and modular architecture should support
+something like swapping the library for handling YAML input files or
+changing a solver type without modifying the modules around it.
+The flow of data should be considered in discrete steps in a pipeline
+rather than a monolithic system working on the data.
+
+```{mermaid}
+flowchart LR
+
+    Start(( ))
+
+    subgraph I/O
+        direction LR
+        io1{{YAML}}
+        io2{{JSON}}
+    end
+
+    DataModel[[Data Model]]
+
+    subgraph Solver
+        direction LR
+        solver1{{Type 1}}
+        solver2{{Type 2}}
+        solver3{{Type 3}}
+    end
+
+    Output[[Output Model]]
+
+    subgraph Export
+        direction LR
+        export1{{Visualization}}
+        export2{{ASCII}}
+        export3{{Commercial}}
+    end
+
+    Finish(( ))
+
+    Start --- I/O
+    I/O --- DataModel
+    DataModel --- Solver
+    Solver --- Output
+    Output --- Export
+    Export --- Finish
+```
+
+It is critical to the sustainability and stability of OpenTurbine
+to maintain independence from external software even though there
+will be reliance on existing libraries for common tasks. The modular
+design should include data structures and API's that are general enough
+to support integration of third party libraries as well as the ability
+to change any library for another that accomplishes a similar task
+even if by alternative methods.
+
+### Performance
+
+A key design consideration of OpenTurbine is computational efficiency
+or performance. Both the quantity of work and the efficiency of data should
+be considered and measured (profiled) during any development effort.
+A modular architecture should support offloading computationally expensive
+tasks to hardware accelerators or specialized libraries, and support
+multiple options for doing so depending on user configurations and
+the computational environment.
+
+Similar to modularity in the architecure, expensive tasks should be
+structured in a kernel form. This low-level design pattern combines
+expensive mathematical operations into an aggregate form, and structures
+them so that performance libraries or compilers can paralellize the
+computation. This pattern helps to encapsulate expensive operations and
+algorithms. Additionally, it follows the modular architecture design
+described above in that it supports swapping accelerators or parallelization
+methods.
+
+OpenTurbine developers designing new algorithms and data structures
+should become familiar with the idea of
+[data-oriented design](https://en.wikipedia.org/wiki/Data-oriented_design).
+The key concept of this paradigm is to structure data so that it maps
+closely to the form it will be represented and used within the relevant
+processing units. For example, it is a common mistake in object
+oriented design to represent data as arrays of structures (AoS),
+and this can lead to inefficiency in CPU cache
+usage since aggregate operations such as matrix math must load
+data from non-contiguous memory rather than perform the operations
+in a vector form. In a data oriented design, data is more
+commonly reprented as structures of arrays (SoA) where contiguous
+portions of memory are loaded into the cache and operated on
+either by the CPU or a hardware accelerator. The graphic below
+illustrates the difference in structures of arrays and arrays
+of structures.
+
+```{image} ./static/AoS_SoA.pdf
+:alt: aos_soa
+:width: 400px
+:align: center
+```
+
+The difference in usage in these two patterns is shown in
+sample Python math operation below where a series of points
+are shifted in one direction by a constant amount.
+
+```python
+class Point:
+    x: int
+    y: int
+    z: int
+
+# Initialize test data
+all_points = [Point(random(i), random(i), random(i)) for i in range(100)]
+
+# Array of Structures
+AOS = [all_points[i].y for i in range(100)]
+
+# Structure of Arrays
+SOA = all_points.y + 10
+```
+
+While the AoS vs SoA pattern is a typical example data oriented
+vs object oriented modeling, the concept extends to all areas
+of data modeling in software and is equally relevant to most
+programming languages.
+
+### Accessibility
+
+Access to the software is an important consideration for the
+longevity and relevance of OpenTurbine. In short, if the software is
+not accessible, it won't be used, extended, or maintained. All
+development efforts should always consider user and developer accessibility
+as a key driver. The distinction between "user" and "developer"
+is not always clear, but accessibility efforts should address concerns
+for both types of engagement with OpenTurbine.
+
+Documentation is the primary tool for addressing accessibility. As a
+guideline, the practice of documentation driven development should be
+widely adopted here. For any new feature or change, describe it first
+in the documentation. New features should be outlined in text to describe
+the high level objectives. Algorithmic development and design decisions
+should be included directly in the developer documentation. Before any
+code is written, the workflows in which the new code will be used should
+be expressed resulting in a proposed API. Finally, unit tests should be
+written to match the feature description in the documentation. Upon 
+mplementation and subsequent iteration, the unit tests should retain
+their close correlation to the documentation so that any deviation
+between the implementation and documentation is caught through the tests.
+
+The high level user interface should be expressive and easily accessible
+through common computational tools. For example, it is typical to include
+a Python interface to compiled code for easier data generation and scripting.
 
 
 ## Application Programming Interface (API)
