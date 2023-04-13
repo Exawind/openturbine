@@ -297,26 +297,27 @@ not form a minimum set.
 
 ## High-level development timeline
 
-**FY23 Q2**: The `OpenTurbine` team will implement a rigid-body dynamics solver following the
+**CY23 Q2**: The `OpenTurbine` team will implement a rigid-body dynamics solver following the
 concepts described above, i.e., DAE-3 coupling, quaternion-based rotation representation, and a
 generalized-alpha time integrator. This proof-of-concept implementation will be made available 
 in the `main` branch of `OpenTurbine` repository and will inform the next steps in `OpenTurbine`
 development.
 
-**FY23 Q3**: Implement a general GEBT-based beam element that is appropriate for constrained multi-body
+**CY23 Q3**: Implement a general GEBT-based beam element that is appropriate for constrained multi-body
 simulations of a wind turbine. Enable variable order finite elements and user-defined material property
 definition (appropriate for modern turbine blades). Demonstrate performance for a dynamic cantilever beam
 problem and compare against BeamDyn.
 
-**FY24 Q1**: Demonstrate a wind turbine rotor simulation under prescribed loading and include code verification
+**CY24 Q1**: Demonstrate a wind turbine rotor simulation under prescribed loading and include code verification
 results and automated testing results. Include control system (e.g., ROSCO) and pitch control of blades. Compare
 simulation time against an equivalent model simulated with OpenFAST.
 
-**FY24 Q3**: Demonstrate a rotor simulation with fluid-structure interaction and a pitch control system. Fluid
+**CY24 Q3**: Demonstrate a rotor simulation with fluid-structure interaction and a pitch control system. Fluid
 will be represented in two ways. First, through a simple BEMT solver and, second, where the blades are represented
 as actuator lines in the fluid domain (solved with the ExaWind CFD code). 
 
-**FY25 Q1**: Release a robust, well documented, well tested version of `OpenTurbine` for land-based wind turbine
+**CY25 Q1**: Release a robust, well documented, well tested version of `OpenTurbine` for land-based wind turbine
 simulations. Demonstrate whole turbine simulation (tower, nacelle, drivetrain) with fluid-structure-interaction
 coupling to ExaWind.
+
 
