@@ -19,11 +19,13 @@ for linking and runtime path searches.
   - GCC 5 or higher
   - LLVM Clang 7 or higher
   - Intel 2020 (oneAPI) or higher
-- [Kokkos](https://github.com/kokkos/kokkos) math portability library (see [Installing Kokkos](#installing-kokkos))
+- [Kokkos](https://github.com/kokkos/kokkos) math portability library (see {ref}`installing-kokkos`)
 - OS: OpenTurbine is regularly tested on Linux and macOS
 - (Optional) Google Test (gtest) for the test infrastructure (conda-forge)
 - (Optional) clang-format for linting (conda-forge or brew)
 
+
+(installing-kokkos)=
 ## Installing Kokkos
 
 OpenTurbine relies heavily on Kokkos for portability between systems,
@@ -109,6 +111,7 @@ are listed below.
 
    Enable [AMD ROCm GPU](https://rocmdocs.amd.com/en/latest/) builds. Default: OFF
 
+(oturb-enable-dpcpp)=
 #### OTURB_ENABLE_DPCPP
 
    Enable [Intel OneAPI DPC++](https://software.intel.com/content/www/us/en/develop/tools/oneapi.html) builds. Default: OFF
@@ -154,7 +157,7 @@ are listed below.
 
    Set the C++ compiler used for compiling the code.
 
-   For Intel DPC++ builds (see [OTURB_ENABLE_DPCPP](#oturb-enable-dpcpp)) this should be
+   For Intel DPC++ builds (see {ref}`oturb-enable-dpcpp`) this should be
    set to `dpcpp`.
 
 #### CMAKE_CXX_FLAGS
