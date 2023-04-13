@@ -42,11 +42,6 @@ Apple M-series chips.
 
 *Use-case priority:* Time-domain simulation of land-based wind turbine dynamics coupled to computational fluid dynamics for fluid-structure-interaction.
 
-## Programming language and models
-
-`OpenTurbine` is envisioned with a core written in C++ and leveraging [Kokkos](https://github.com/kokkos/kokkos)
-as its performance-portability library with inspiration from the ExaWind stack including Nalu-Wind CFD.
-
 ## Design drivers and considerations
 
 `OpenTurbine` is a relatively small, narrowly scoped software project.
@@ -234,6 +229,10 @@ The high level user interface should be expressive and easily accessible
 through common computational tools. For example, it is typical to include
 a Python interface to compiled code for easier data generation and scripting.
 
+## Programming language and models
+
+`OpenTurbine` is envisioned with a core written in C++ and leveraging [Kokkos](https://github.com/kokkos/kokkos)
+as its performance-portability library with inspiration from the ExaWind stack including Nalu-Wind CFD.
 
 ## Application Programming Interface (API)
 
