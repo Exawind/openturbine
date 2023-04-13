@@ -171,7 +171,7 @@ either by the CPU or a hardware accelerator. The graphic below
 illustrates the difference between structures of arrays and arrays
 of structures.
 
-```{image} ./static/AoS_SoA.pdf
+```{image} images/AoS_SoA.pdf
 :alt: aos_soa
 :width: 400px
 :align: center
