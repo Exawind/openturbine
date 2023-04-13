@@ -152,7 +152,7 @@ them so that performance libraries or compilers can parallelize the
 computation. This pattern helps to encapsulate expensive operations and
 algorithms. Additionally, it follows the modular architecture design
 described above in that it supports swapping accelerators or parallelization
-methods../
+methods.
 
 
 #### Data-oriented design
@@ -179,6 +179,32 @@ of structures.
 :width: 400px
 :align: center
 ```
+
+Additionally, the SoA pattern typically ensures that arrays are byte-aligned
+to the size of CPU registers for operations on the entire array. The effect
+is that compilers will add less padding to arrays in order to ensure
+alignment. Assuming all x, y, and z values are integers and the magnitude
+are floating point numbers, the array padding with AoS will be a function of
+the number of point-objects, whereas the array padding with SoA will be a
+function of the number of arrays within the structure - 4 in this case.
+The following diagram illustrates how padding is added to arrays to ensure
+byte-alignment after aggregating all required data for two point-objects.
+
+```
+AoS:
+-----------------------------------------------------------------------
+| int | int | int | double | *pad* | int | int | int | double | *pad* |
+-----------------------------------------------------------------------
+
+SoA:
+---------------------------------------------------------------------------------------
+| int | int | *pad* | int | int | *pad* | int | int | *pad* | double | double | *pad* |
+---------------------------------------------------------------------------------------
+```
+
+While the case of two point-objects actually has more padding with SoA,
+adding additional data will quickly show favor in the SoA case since no
+additional padding is required.
 
 The difference in usage for the above two patterns is illustrated via
 an example Python-based math operation below where a series of points
