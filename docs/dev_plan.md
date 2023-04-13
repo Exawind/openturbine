@@ -3,32 +3,33 @@
 # OpenTurbine Development Plan
 
 :::{warning}
-This page is under construction. Check back here throughout FY23
-for updates, and see activity at https://github.com/exawind/openturbine.
+This page is under construction. Please check back here throughout FY23
+for updates, and see development activity at https://github.com/exawind/openturbine.
 :::
 
 ## Background and overview
 
-OpenTurbine development started in early 2023 with primary funding from the
-U.S. Department of Energy (DOE) Wind Energy Technologies Office and with
+`OpenTurbine` development started in early 2023 with primary funding from the
+U.S. Department of Energy (DOE) Wind Energy Technologies Office (WETO) and with
 additional funding from the DOE Exascale Computing Project (ECP). It is being
-developed by researchers at the National Rewable Energy Laboratory and Sandia
-National Laboratories.
+developed by researchers at the National Renewable Energy Laboratory (NREL)
+and the Sandia National Laboratories (SNL).
 
-OpenTurbine is meant to be an open-source wind turbine structural dynamics
+`OpenTurbine` is envisioned to be an open-source wind turbine structural dynamics
 simulation code designed to meet the research needs of WETO and the broader
-wind energy community for land-based and offshore wind turbines. OpenTurbine
+wind energy community for land-based and offshore wind turbines. `OpenTurbine`
 will provide high-fidelity, highly performant structural dynamics models that
 can couple with low-fidelity aerodynamic/hydrodynamic models like those in
-OpenFAST, and high-fidelity computational fluid dynamics (CFD) models like
-those in the WETO and Office of Science supported ExaWind code suite.
-OpenTurbine will be designed to address shortcomings of wind turbine structural
-models and codes that are so important to the success of WETO modeling efforts.
+[OpenFAST](https://github.com/OpenFAST/openfast), and high-fidelity computational
+fluid dynamics (CFD) models like those in the WETO and Office of Science supported
+[ExaWind](https://github.com/Exawind) code suite. `OpenTurbine` will be designed
+deliberately to address shortcomings of wind turbine structural models and codes that
+are critical to the success of WETO modeling efforts.
 
 ## Development priorities and use cases
 
 *Development priorities:* Considering lessons learned from nearly a decade of
-OpenFAST development, OpenTurbine will follow modern software development best
+OpenFAST development, `OpenTurbine` will follow modern software development best
 practices. The development process will require test-driven development,
 version control, hierarchical automated testing, and continuous integration
 leading to a robust development environment. The core data structures will be
@@ -43,15 +44,16 @@ Apple M-series chips.
 
 ## Programming language and models
 
-OpenTurbine is envisioned with a core written in C++ and leveraging Kokkos as its performance-portability library with inspiration from the ExaWind stack including Nalu-Wind CFD.
+`OpenTurbine` is envisioned with a core written in C++ and leveraging [Kokkos](https://github.com/kokkos/kokkos)
+as its performance-portability library with inspiration from the ExaWind stack including Nalu-Wind CFD.
 
 ## Design drivers and considerations
 
-OpenTurbine is a relatively small, narrowly scoped software project.
+`OpenTurbine` is a relatively small, narrowly scoped software project.
 Organizationally, it is very lean with a minimal and focused development
 team. These factors are critical when considering the characteristics
 of the software design. The project is driven by an objective to be
-sustainable, extendable, accessible and performant for many years to come.
+sustainable, extendable, accessible, and performant for many years to come.
 
 Generally, this software should tend toward simplicity where possible
 with a consideration for how new developers, current developers
@@ -62,7 +64,7 @@ the nuances of the code. In short, **don't be clever** and **keep it simple**.
 
 The scope of this software should be defined early in the development process,
 and any expansion of the scope should be critically evaluated before accepting.
-The approach to the scope of OpenTurbine should be conservative. The default
+The approach to the scope of `OpenTurbine` should be conservative. The default
 decision should be to retain the initial scope and change only if absolutely
 necessary.
 
@@ -72,7 +74,7 @@ input and output files should be handled by a third-party library. Similarly,
 visualization of results, derivations of statistics, and math portability
 are other areas where the ecosystem of open source scientific software
 should be leveraged, and preference should be given to software internal to
-NREL or funded by Department of Energy's Wind Energy Technology Office.
+NREL or funded by WETO.
 
 ### Modular
 
@@ -130,7 +132,7 @@ flowchart LR
     Export --- Finish
 ```
 
-It is critical to the sustainability and stability of OpenTurbine
+It is critical to the sustainability and stability of `OpenTurbine`
 to maintain independence from external software even though there
 will be reliance on existing libraries for common tasks. The modular
 design should include data structures and API's that are general enough
@@ -140,9 +142,9 @@ even if by alternative methods.
 
 ### Performance
 
-A key design consideration of OpenTurbine is computational efficiency
+A key design consideration of `OpenTurbine` is computational efficiency
 or performance. Both the quantity of work and the efficiency of data should
-be considered and measured (profiled) during any development effort.
+be considered and measured (i.e. profiled) during any development effort.
 A modular architecture should support offloading computationally expensive
 tasks to hardware accelerators or specialized libraries, and support
 multiple options for doing so depending on user configurations and
@@ -155,23 +157,23 @@ them so that performance libraries or compilers can paralellize the
 computation. This pattern helps to encapsulate expensive operations and
 algorithms. Additionally, it follows the modular architecture design
 described above in that it supports swapping accelerators or parallelization
-methods.
+methods../
 
-OpenTurbine developers designing new algorithms and data structures
+`OpenTurbine` developers designing new algorithms and data structures
 should become familiar with the idea of
 [data-oriented design](https://en.wikipedia.org/wiki/Data-oriented_design).
 The key concept of this paradigm is to structure data so that it maps
 closely to the form it will be represented and used within the relevant
-processing units. For example, it is a common mistake in object
-oriented design to represent data as arrays of structures (AoS),
+processing units. For example, it is a common mistake in object-oriented
+design to represent data as arrays of structures (AoS),
 and this can lead to inefficiency in CPU cache
 usage since aggregate operations such as matrix math must load
 data from non-contiguous memory rather than perform the operations
-in a vector form. In a data oriented design, data is more
+in a vector form. In a data-oriented design, data is more
 commonly reprented as structures of arrays (SoA) where contiguous
 portions of memory are loaded into the cache and operated on
 either by the CPU or a hardware accelerator. The graphic below
-illustrates the difference in structures of arrays and arrays
+illustrates the difference between structures of arrays and arrays
 of structures.
 
 ```{image} ./static/AoS_SoA.pdf
@@ -180,8 +182,8 @@ of structures.
 :align: center
 ```
 
-The difference in usage in these two patterns is shown in
-sample Python math operation below where a series of points
+The difference in usage for the above two patterns is illustrated via
+a sample Python-based math operation below where a series of points
 are shifted in one direction by a constant amount.
 
 ```python
@@ -200,20 +202,20 @@ AOS = [all_points[i].y for i in range(100)]
 SOA = all_points.y + 10
 ```
 
-While the AoS vs SoA pattern is a typical example data oriented
-vs object oriented modeling, the concept extends to all areas
-of data modeling in software and is equally relevant to most
-programming languages.
+While the [AoS vs SoA pattern](https://stackoverflow.com/questions/17924705/structure-of-arrays-vs-array-of-structures)
+is a typical example of data-oriented vs object-oriented modeling,
+the concept extends to all areas of data modeling in software and is
+equally relevant to most programming languages.
 
 ### Accessibility
 
 Access to the software is an important consideration for the
-longevity and relevance of OpenTurbine. In short, if the software is
+longevity and relevance of `OpenTurbine`. In short, if the software is
 not accessible, it won't be used, extended, or maintained. All
 development efforts should always consider user and developer accessibility
 as a key driver. The distinction between "user" and "developer"
 is not always clear, but accessibility efforts should address concerns
-for both types of engagement with OpenTurbine.
+for both types of engagement with `OpenTurbine`.
 
 Documentation is the primary tool for addressing accessibility. As a
 guideline, the practice of documentation driven development should be
@@ -224,7 +226,7 @@ should be included directly in the developer documentation. Before any
 code is written, the workflows in which the new code will be used should
 be expressed resulting in a proposed API. Finally, unit tests should be
 written to match the feature description in the documentation. Upon 
-mplementation and subsequent iteration, the unit tests should retain
+implementation and subsequent iterations, the unit tests should retain
 their close correlation to the documentation so that any deviation
 between the implementation and documentation is caught through the tests.
 
@@ -236,10 +238,10 @@ a Python interface to compiled code for easier data generation and scripting.
 ## Application Programming Interface (API)
 
 The primary goal of the API is to provide data structures and interfaces
-necessary for coupling OpenTurbine to the ExaWind CFD codes for
-fluid-structure-interaction simulations. For land-based wind, the interface
+necessary for coupling `OpenTurbine` to the ExaWind CFD codes for
+fluid-structure-interaction (FSI) simulations. For land-based wind, the interface
 will be designed to couple the beam finite element models and point-mass
-elements (e.g., representation of the nacelle) to a CFD mesh.  We will leverage
+elements (e.g., representation of the nacelle) to a CFD mesh. We will leverage
 the mesh mapping that was implemented and tested in the ExaWind codes. The
 representation of the turbine geometry is handled within the fluid solver,
 either as a three-dimensional surface mesh for high-fidelity geometry-resolved
@@ -256,52 +258,66 @@ structural dynamics include linear and nonlinear finite-element models coupled
 through constraints equations. For example, turbine blades may be modeled with
 nonlinear beam finite elements, wherein the blade roots are constrained to
 rotate with the hub. These models together constitute a set of
-differential-algebraic equations (DAEs) in the time domain.  We will build on experiences gained with OpenFAST and the nonlinear-beam-dynamics module, BeamDyn.
+differential-algebraic equations (DAEs) in the time domain. We will build on the
+experiences gained with OpenFAST, particularly its nonlinear beam-dynamics module,
+[BeamDyn](https://github.com/OpenFAST/openfast/tree/main/modules/beamdyn).
 
-For time integration of the index-3 DAEs we will use the generalized-alpha
-algorithm now established in BeamDyn which allows user-controlled numerical
-damping.  See Arnold and Brüls (2007) for details.
+For time integration of the index-3 DAEs we will leverage the generalized-alpha
+algorithm now established in BeamDyn which allows for user-controlled numerical
+damping. See Arnold and Brüls (2007) for details.
 
-The primary model for turbine blades and tower, which are slender and flexible
-structures, will be nonlinear finite elements based on geometrically exact beam
-theory (GEBT), which includes include bend-twist coupling. Spatial
-discretization will be based on Legendre spectral finite elements (LSFEs; like
+The primary model for the turbine blades and the tower, which are slender and flexible
+structures, will be nonlinear finite elements based on the geometrically exact beam
+theory (GEBT), which includes bend-twist coupling. Spatial discretization
+will be based on the Legendre spectral finite elements (LSFEs; like
 those in BeamDyn), but with the explicit ability to use the subset of 2-node
 finite elements (a special case of LSFEs). 
 
-The choice of rotation representation is being determined.  BeamDyn relies on
+The choice of rotation representation is being determined. BeamDyn relies on the
 Wiener-Milenkovic vectorial rotation parameterization (three rotational degrees
-of freedom), which has singularities. The team is currently investigating the
-use of quanternions, which do not have singularities but require four rotational
-degrees of freedom.
+of freedom), which contains singularities. The team is currently investigating the
+use of [quaternions](https://en.wikipedia.org/wiki/Quaternion), which are
+singularity free but require four parameters to represent rotation, i.e., they do
+not form a minimum set.
 
 ## Verification and validation cases
 
-*Verification cases:*
+**Verification cases:**
 - rigid-body dynamics; three-dimensional pendulum
-- cantilever-beam nonlinear static roll up 
+- cantilever-beam nonlinear static roll up
 
-*Validation cases:*
+**Validation cases:**
 - Princeton beam experiment
-- Twisted and curved beams where the benchmarks are highly resolved
-  solid-element Ansys models
-- IEA 15-megawatt where benchmark is a highly resolved shell-element Ansys
-  model
+- Twisted and curved beams where the benchmarks are highly resolved solid-element Ansys models
+- IEA 15-megawatt turbine where benchmark is a highly resolved shell-element Ansys model
 
 ## Target baseline turbines
 
-- NREL 5-megawatt reference turbine
-- IEA 15-megawatt reference turbine
+- [NREL 5-megawatt reference turbine](https://www.nrel.gov/docs/fy09osti/38060.pdf)
+- [IEA 15-megawatt reference turbine](https://github.com/IEAWindTask37/IEA-15-240-RWT)
 
 ## High-level development timeline
 
-CY23 Q2: The OpenTurbine team will implement a rigid-body dynamics solver following the concepts described above, i.e., DAE-3 coupling, quaternion rotation representation, and a generalized-alpha time integrator. This proof-of-concept implementation will in the main OpenTurbine repository and will inform next steps in OpenTurbine development.
+**FY23 Q2**: The `OpenTurbine` team will implement a rigid-body dynamics solver following the
+concepts described above, i.e., DAE-3 coupling, quaternion-based rotation representation, and a
+generalized-alpha time integrator. This proof-of-concept implementation will be made available 
+in the `main` branch of `OpenTurbine` repository and will inform the next steps in `OpenTurbine`
+development.
 
-CY23 Q3: Implement a general GEBT-based beam element that is appropriate for constrained multi-body simulations of a wind turbine. Enable variable order finite elements and user-defined material property definition (appropriate for modern turbine blades).  Demonstrate performance for a dynamic cantilever beam problem and compare against BeamDyn.
+**FY23 Q3**: Implement a general GEBT-based beam element that is appropriate for constrained multi-body
+simulations of a wind turbine. Enable variable order finite elements and user-defined material property
+definition (appropriate for modern turbine blades). Demonstrate performance for a dynamic cantilever beam
+problem and compare against BeamDyn.
 
-CY24 Q1: Demonstrate a wind turbine rotor simulation under prescribed loading and include code verification results and automated testing results. Include control system (e.g., ROSCO) and pitch control of blades. Compare simulation time against an equivalent model simulated with OpenFAST
+**FY24 Q1**: Demonstrate a wind turbine rotor simulation under prescribed loading and include code verification
+results and automated testing results. Include control system (e.g., ROSCO) and pitch control of blades. Compare
+simulation time against an equivalent model simulated with OpenFAST.
 
-CY24 Q3: Demonstrate a rotor simulation with fluid-structure interaction and a pitch control system. Fluid will be represented in two ways. First, through a simple BEMT solver and, second, where the blades are represented as actuator lines in the fluid domain (solved with the ExaWind CFD code). 
+**FY24 Q3**: Demonstrate a rotor simulation with fluid-structure interaction and a pitch control system. Fluid
+will be represented in two ways. First, through a simple BEMT solver and, second, where the blades are represented
+as actuator lines in the fluid domain (solved with the ExaWind CFD code). 
 
-CY25 Q1: Release a robust, well documented, well tested version of OpenTurbine for land-based simulations. Demonstrate whole turbine simulation (tower, nacelle, drivetrain) with fluid-structure-interaction coupling to ExaWind.
+**FY25 Q1**: Release a robust, well documented, well tested version of `OpenTurbine` for land-based wind turbine
+simulations. Demonstrate whole turbine simulation (tower, nacelle, drivetrain) with fluid-structure-interaction
+coupling to ExaWind.
 
