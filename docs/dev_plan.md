@@ -150,10 +150,10 @@ tasks to hardware accelerators or specialized libraries, and support
 multiple options for doing so depending on user configurations and
 the computational environment.
 
-Similar to modularity in the architecure, expensive tasks should be
+Similar to modularity in the architecture, expensive tasks should be
 structured in a kernel form. This low-level design pattern combines
 expensive mathematical operations into an aggregate form, and structures
-them so that performance libraries or compilers can paralellize the
+them so that performance libraries or compilers can parallelize the
 computation. This pattern helps to encapsulate expensive operations and
 algorithms. Additionally, it follows the modular architecture design
 described above in that it supports swapping accelerators or parallelization
@@ -170,7 +170,7 @@ and this can lead to inefficiency in CPU cache
 usage since aggregate operations such as matrix math must load
 data from non-contiguous memory rather than perform the operations
 in a vector form. In a data-oriented design, data is more
-commonly reprented as structures of arrays (SoA) where contiguous
+commonly represented as structures of arrays (SoA) where contiguous
 portions of memory are loaded into the cache and operated on
 either by the CPU or a hardware accelerator. The graphic below
 illustrates the difference between structures of arrays and arrays
