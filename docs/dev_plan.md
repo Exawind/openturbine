@@ -162,17 +162,15 @@ should become familiar with the concepts of [data-oriented design](https://en.wi
 particularly [structures of arrays vs. arrays of structures](https://stackoverflow.com/questions/17924705/structure-of-arrays-vs-array-of-structures).
 The key concept of this paradigm is to structure data so that it maps
 closely to the form it will be represented and used within the relevant
-processing units. For example, it is a common mistake in object-oriented
-design to represent data as arrays of structures (AoS),
-and this can lead to inefficiency in CPU cache
-usage since aggregate operations such as matrix math must load
-data from non-contiguous memory rather than perform the operations
-in a vector form. In a data-oriented design, data is more
-commonly represented as structures of arrays (SoA) where contiguous
-portions of memory are loaded into the cache and operated on
-either by the CPU or a hardware accelerator. The graphic below
-illustrates the difference between structures of arrays and arrays
-of structures.
+algorithms and processing units. Specifically, developers should choose between
+a structure of arrays (SoA) and array of structures (AoS) representation.
+While there may be an inclination to construct a data model for best
+readability, it is important to consider the computational efficiency.
+A balance must be found, and documentation for any design decision is
+an important tool to resolve this tension. The graphic below illustrates the
+difference between structures of arrays and arrays of structures for a data
+type consisting of three components of a  location and a magnitude such as
+a point in 3D space (i.e. voxel or point in a fluid domain).
 
 ```{image} images/AoS_SoA.pdf
 :alt: aos_soa
@@ -180,55 +178,13 @@ of structures.
 :align: center
 ```
 
-Additionally, the SoA pattern typically ensures that arrays are byte-aligned
+For operations involving vector math or accessing the same attribute of many
+objects, the SoA pattern typically ensures that arrays are byte-aligned
 to the size of CPU registers for operations on the entire array. The effect
 is that compilers will add less padding to arrays in order to ensure
-alignment. Assuming all x, y, and z values are integers and the magnitude
-are floating point numbers, the array padding with AoS will be a function of
-the number of point-objects, whereas the array padding with SoA will be a
-function of the number of arrays within the structure - 4 in this case.
-The following diagram illustrates how padding is added to arrays to ensure
-byte-alignment after aggregating all required data for two point-objects.
-
-```
-AoS:
------------------------------------------------------------------------
-| int | int | int | double | *pad* | int | int | int | double | *pad* |
------------------------------------------------------------------------
-
-SoA:
----------------------------------------------------------------------------------------
-| int | int | *pad* | int | int | *pad* | int | int | *pad* | double | double | *pad* |
----------------------------------------------------------------------------------------
-```
-
-While the case of two point-objects actually has more padding with SoA,
-adding additional data will quickly show favor in the SoA case since no
-additional padding is required.
-
-The difference in usage for the above two patterns is illustrated via
-an example Python-based math operation below where a series of points
-are shifted in one direction by a constant amount.
-
-```python
-class Point:
-    x: int
-    y: int
-    z: int
-
-# Initialize test data
-all_points = [Point(random(i), random(i), random(i)) for i in range(100)]
-
-# Array of Structures
-AOS = [all_points[i].y for i in range(100)]
-
-# Structure of Arrays
-SOA = all_points.y + 10
-```
-
-While the AoS vs SoA pattern is a typical example of data-oriented vs object-oriented modeling,
-the concept extends to all areas of data modeling in software and is equally relevant to most
-programming languages.
+alignment. In operations that access all attributes of a particular object
+for a computation, the AoS pattern structures the memory in a contiguous
+form.
 
 ### Accessible software
 
