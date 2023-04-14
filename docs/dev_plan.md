@@ -196,18 +196,15 @@ as a key driver. The distinction between "user" and "developer"
 is not always clear, but accessibility efforts should address concerns
 for both types of engagement with OpenTurbine.
 
-Documentation is the primary tool for addressing accessibility. As a
-guideline, the practice of documentation driven development should be
-widely adopted here. For any new feature or change, describe it first
-in the documentation. New features should be outlined in text to describe
-the high level objectives. Algorithmic development and design decisions
-should be included directly in the developer documentation. Before any
-code is written, the workflows in which the new code will be used should
-be expressed resulting in a proposed API. Finally, unit tests should be
-written to match the feature description in the documentation. Upon 
-implementation and subsequent iterations, the unit tests should retain
-their close correlation to the documentation so that any deviation
-between the implementation and documentation is caught through the tests.
+Documentation is the primary tool for addressing accessibility. Documentation
+should be considered a first-priority for general design decisions,
+public API's, and input files. For internal code, new features and changes
+should be well described in words, diagrams, and math in their associated
+pull requests. In general, it is good practice to first describe a scope
+of work outlining objectives and methods. Then, public facing code should
+be prototypes in contextual workflows and internal code should be
+prototypes in unit tests following typical test driven development
+processes.
 
 The high level user interface should be expressive and easily accessible
 through common computational tools. For example, it is typical to include
