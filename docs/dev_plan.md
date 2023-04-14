@@ -9,27 +9,27 @@ for updates, and see development activity at https://github.com/exawind/openturb
 
 ## Background and overview
 
-`OpenTurbine` development started in early 2023 with primary funding from the
+OpenTurbine development started in early 2023 with primary funding from the
 U.S. Department of Energy (DOE) Wind Energy Technologies Office (WETO) and with
 additional funding from the DOE Exascale Computing Project (ECP). It is being
 developed by researchers at the National Renewable Energy Laboratory (NREL)
 and the Sandia National Laboratories (SNL).
 
-`OpenTurbine` is envisioned to be an open-source wind turbine structural dynamics
+OpenTurbine is envisioned to be an open-source wind turbine structural dynamics
 simulation code designed to meet the research needs of WETO and the broader
-wind energy community for land-based and offshore wind turbines. `OpenTurbine`
+wind energy community for land-based and offshore wind turbines. OpenTurbine
 will provide high-fidelity, highly performant structural dynamics models that
 can couple with low-fidelity aerodynamic/hydrodynamic models like those in
 [OpenFAST](https://github.com/OpenFAST/openfast), and high-fidelity computational
 fluid dynamics (CFD) models like those in the WETO and Office of Science supported
-[ExaWind](https://github.com/Exawind) code suite. `OpenTurbine` will be designed
+[ExaWind](https://github.com/Exawind) code suite. OpenTurbine will be designed
 deliberately to address shortcomings of wind turbine structural models and codes that
 are critical to the success of WETO modeling efforts.
 
 ## Development priorities and use cases
 
 *Development priorities:* Considering lessons learned from nearly a decade of
-`OpenFAST` development, `OpenTurbine` will follow modern software development best
+OpenFAST development, OpenTurbine will follow modern software development best
 practices. The development process will require test-driven development,
 version control, hierarchical automated testing, and continuous integration
 leading to a robust development environment. The core data structures will be
@@ -44,7 +44,7 @@ Apple M-series chips.
 
 ## Design drivers and considerations
 
-`OpenTurbine` is a relatively small, narrowly scoped software project.
+OpenTurbine is a relatively small, narrowly scoped software project.
 Organizationally, it is very lean with a minimal and focused development
 team. These factors are critical when considering the characteristics
 of the software design. The project is driven by an objective to be
@@ -59,7 +59,7 @@ the nuances of the code. In short, **don't be clever** and **keep it simple**.
 
 The scope of this software should be defined early in the development process,
 and any expansion of the scope should be critically evaluated before accepting.
-The approach to the scope of `OpenTurbine` should be conservative. The default
+The approach to the scope of OpenTurbine should be conservative. The default
 decision should be to retain the initial scope and change only if absolutely
 necessary.
 
@@ -127,7 +127,7 @@ flowchart LR
     Export --- Finish
 ```
 
-It is critical to the sustainability and stability of `OpenTurbine`
+It is critical to the sustainability and stability of OpenTurbine
 to maintain independence from external software even though there
 will be reliance on existing libraries for common tasks. The modular
 design should include data structures and API's that are general enough
@@ -137,7 +137,7 @@ even if by alternative methods.
 
 ### Performance first
 
-A key design consideration of `OpenTurbine` is computational efficiency
+A key design consideration of OpenTurbine is computational efficiency
 or performance. Both the quantity of work and the efficiency of data should
 be considered and measured (i.e., profiled) during any development effort.
 A modular architecture should support offloading computationally expensive
@@ -157,7 +157,7 @@ methods../
 
 #### Data-oriented design
 
-`OpenTurbine` developers designing new algorithms and data structures
+OpenTurbine developers designing new algorithms and data structures
 should become familiar with the concepts of [data-oriented design](https://en.wikipedia.org/wiki/Data-oriented_design),
 particularly [structures of arrays vs. arrays of structures](https://stackoverflow.com/questions/17924705/structure-of-arrays-vs-array-of-structures).
 The key concept of this paradigm is to structure data so that it maps
@@ -207,12 +207,12 @@ programming languages.
 ### Accessible software
 
 Access to the software is an important consideration for the
-longevity and relevance of `OpenTurbine`. In short, if the software is
+longevity and relevance of OpenTurbine. In short, if the software is
 not accessible, it won't be used, extended, or maintained. All
 development efforts should always consider user and developer accessibility
 as a key driver. The distinction between "user" and "developer"
 is not always clear, but accessibility efforts should address concerns
-for both types of engagement with `OpenTurbine`.
+for both types of engagement with OpenTurbine.
 
 Documentation is the primary tool for addressing accessibility. As a
 guideline, the practice of documentation driven development should be
@@ -233,17 +233,17 @@ a Python interface to compiled code for easier data generation and scripting.
 
 ## Programming language and models
 
-`OpenTurbine` is envisioned with a core written in C++ and leveraging [Kokkos](https://github.com/kokkos/kokkos)
-as its performance-portability library with inspiration from the `ExaWind` stack including [Nalu-Wind](https://github.com/Exawind/nalu-wind).
+OpenTurbine is envisioned with a core written in C++ and leveraging [Kokkos](https://github.com/kokkos/kokkos)
+as its performance-portability library with inspiration from the ExaWind stack including [Nalu-Wind](https://github.com/Exawind/nalu-wind).
 
 ## Application Programming Interface (API)
 
 The primary goal of the API is to provide data structures and interfaces
-necessary for coupling `OpenTurbine` to the `ExaWind` CFD codes for
+necessary for coupling OpenTurbine to the ExaWind CFD codes for
 fluid-structure-interaction (FSI) simulations. For land-based wind, the interface
 will be designed to couple the beam finite element models and point-mass
 elements (e.g., representation of the nacelle) to a CFD mesh. We will leverage
-the mesh mapping that was implemented and tested in the `ExaWind` codes. The
+the mesh mapping that was implemented and tested in the ExaWind codes. The
 representation of the turbine geometry is handled within the fluid solver,
 either as a three-dimensional surface mesh for high-fidelity geometry-resolved
 simulations, or as an actuator-line for mid-fidelity simulations. Those
@@ -260,7 +260,7 @@ through constraints equations. For example, turbine blades may be modeled with
 nonlinear beam finite elements, wherein the blade roots are constrained to
 rotate with the hub. These models together constitute a set of
 differential-algebraic equations (DAEs) in the time domain. We will build on the
-experiences gained with `OpenFAST`, particularly its nonlinear beam-dynamics module,
+experiences gained with OpenFAST, particularly its nonlinear beam-dynamics module,
 [BeamDyn](https://github.com/OpenFAST/openfast/tree/main/modules/beamdyn).
 
 For time integration of the index-3 DAEs we will leverage the generalized-alpha
@@ -299,10 +299,10 @@ not form a minimum set.
 
 ## High-level development timeline
 
-**CY23 Q2**: The `OpenTurbine` team will implement a rigid-body dynamics solver following the
+**CY23 Q2**: The OpenTurbine team will implement a rigid-body dynamics solver following the
 concepts described above, i.e., DAE-3 coupling, quaternion-based rotation representation, and a
 generalized-alpha time integrator. This proof-of-concept implementation will be made available 
-in the `main` branch of `OpenTurbine` repository and will inform the next steps in `OpenTurbine`
+in the `main` branch of OpenTurbine repository and will inform the next steps in OpenTurbine
 development.
 
 **CY23 Q3**: Implement a general GEBT-based beam element that is appropriate for constrained multi-body
@@ -312,14 +312,14 @@ problem and compare against BeamDyn.
 
 **CY24 Q1**: Demonstrate a wind turbine rotor simulation under prescribed loading and include code verification
 results and automated testing results. Include control system (e.g., ROSCO) and pitch control of blades. Compare
-simulation time against an equivalent model simulated with `OpenFAST`.
+simulation time against an equivalent model simulated with OpenFAST.
 
 **CY24 Q3**: Demonstrate a rotor simulation with fluid-structure interaction and a pitch control system. Fluid
 will be represented in two ways. First, through a simple BEMT solver and, second, where the blades are represented
-as actuator lines in the fluid domain (solved with the `ExaWind` CFD code). 
+as actuator lines in the fluid domain (solved with the ExaWind CFD code). 
 
-**CY25 Q1**: Release a robust, well documented, well tested version of `OpenTurbine` for land-based wind turbine
+**CY25 Q1**: Release a robust, well documented, well tested version of OpenTurbine for land-based wind turbine
 simulations. Demonstrate whole turbine simulation (tower, nacelle, drivetrain) with fluid-structure-interaction
-coupling to `ExaWind`.
+coupling to ExaWind.
 
 
