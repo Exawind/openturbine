@@ -283,6 +283,13 @@ not form a minimum set.
 
 ## Verification and validation cases
 
+The list of verification and validation cases is a work in progress. By way of 
+semantics, verification cases are those for which an analytical solution exists and 
+formal accuracy studies can be examined.  Validation cases are those for which
+we have solutions that are deemed to be better representations of reality.  For 
+example, validation results might be from experiments or from higher-fidelity 
+numerical simulations (e.g., shell or solid finite element models). 
+
 **Verification cases**
 - Rigid-body dynamics: three-dimensional pendulum
 - Cantilever-beam nonlinear static roll up
