@@ -90,6 +90,21 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
   message(WARNING "Disabling FPE trapping for tests when using AppleClang.")
 endif()
 
+#-----------------------------------------------------------------------------
+# Eigen library
+#-----------------------------------------------------------------------------
+
+message(STATUS "Searching for Eigen3...")
+find_package(Eigen3 3.3.0)
+if(EIGEN3_FOUND)
+  message(STATUS "  Eigen3 version: ${EIGEN3_VERSION}")
+  message(STATUS "  Eigen3 include directory: ${EIGEN3_INCLUDE_DIR}")
+else()
+  mark_as_advanced(CLEAR EIGEN3_INCLUDE_DIR)
+  mark_as_advanced(FORCE Eigen3_DIR)
+  message(FATAL_ERROR "  Eigen3 not found. Specify EIGEN3_INCLUDE_DIR")
+endif()
+
 ############################# OpenTurbine ##############################
 
 generate_version_info()

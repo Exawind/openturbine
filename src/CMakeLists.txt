@@ -2,11 +2,15 @@
 set(Kokkos_DIR "$ENV{Kokkos_ROOT}" CACHE STRING "Kokkos root directory")
 find_package(Kokkos REQUIRED)
 
+find_package(Eigen3 REQUIRED)
+
 target_sources(${oturb_exe_name} PRIVATE main.cpp)
 target_link_libraries(${oturb_exe_name} PRIVATE Kokkos::kokkos)
+target_link_libraries(${oturb_exe_name} PRIVATE Eigen3::Eigen)
 
 target_sources(${oturb_lib_name} PRIVATE heat/heat_solve.cpp)
 target_link_libraries(${oturb_lib_name} PRIVATE Kokkos::kokkos)
+target_link_libraries(${oturb_lib_name} PRIVATE Eigen3::Eigen)
 
 target_include_directories(${oturb_exe_name} PRIVATE ${PROJECT_BINARY_DIR})
 target_include_directories(${oturb_exe_name}
@@ -27,6 +31,7 @@ target_include_directories(${oturb_lib_name}
 # Get all source files
 add_subdirectory(heat)
 add_subdirectory(io)
+add_subdirectory(rigid_pendulum_poc)
 add_subdirectory(utilities)
 
 # Generate OpenTurbine version header
