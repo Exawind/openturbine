@@ -6,6 +6,7 @@ target_sources(
     test_config.cpp
     test_heat_solve.cpp
     test_log.cpp
+    test_solver.cpp
 )
 
 target_compile_options(
@@ -25,6 +26,8 @@ target_link_libraries(${oturb_unit_test_exe_name} PRIVATE ${oturb_lib_name})
 # Link Kokkos to test target
 find_package(Kokkos REQUIRED)
 target_link_libraries(${oturb_unit_test_exe_name} PRIVATE Kokkos::kokkos)
+find_package(KokkosKernels REQUIRED)
+target_link_libraries(${oturb_unit_test_exe_name} PRIVATE Kokkos::kokkoskernels)
 
 # Define what we want to be installed during a make install
 install(TARGETS ${oturb_unit_test_exe_name}
