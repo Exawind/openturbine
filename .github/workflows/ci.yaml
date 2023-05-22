@@ -52,8 +52,11 @@ jobs:
     - name: Test
       run: |
         . ~/.spack/Spack/share/spack/setup-env.sh
-        # Find the Kokkos installation directory via spack & extract the path via grep & awk
+        # Find the Kokkos and KokkosKernels installation directory via spack &
+        # extract the path via grep & awk
         export Kokkos_DIR=$(spack find -p kokkos | grep -m 1 kokkos | awk '{print $2}')
+        export KokkosKernels_DIR=$(spack find -p kokkos-kernels | grep -m 1 kokkos-kernels \
+          | awk '{print $2}')
         # echo $Kokkos_DIR
         # ls $Kokkos_DIR
         mkdir build
