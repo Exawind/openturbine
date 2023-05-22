@@ -437,7 +437,7 @@ practices. The development process will require test-driven development,
 version control, hierarchical automated testing, and continuous integration
 leading to a robust development environment. The core data structures will be
 memory efficient and will enable vectorization and parallelization at multiple
-levels. They will be data-oriented in order exploit methods for accelerated
+levels. They will be data-oriented in order to exploit methods for accelerated
 computing including high utilization of chip resources (e.g., single
 instruction multiple data [SIMD]), parallelization through GPU or other
 hardware, and support for memory-efficient architectures such as the ARM-based
@@ -598,14 +598,14 @@ a Python interface to compiled code for easier data generation and scripting.</p
 </section>
 <section id="programming-language-and-models">
 <h2>Programming language and models<a class="headerlink" href="#programming-language-and-models" title="Permalink to this heading">#</a></h2>
-<p>OpenTurbine is envisioned with a core written in C++ and leveraging <a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a>
-as its performance-portability library with inspiration from the ExaWind stack including <a class="reference external" href="https://github.com/Exawind/nalu-wind">Nalu-Wind</a>.</p>
+<p>OpenTurbine is envisioned with a core written in C++ and leveraging <a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a> as its performance-portability library with inspiration from the ExaWind
+stack including <a class="reference external" href="https://github.com/Exawind/nalu-wind">Nalu-Wind</a>.</p>
 </section>
 <section id="application-programming-interface-api">
 <h2>Application Programming Interface (API)<a class="headerlink" href="#application-programming-interface-api" title="Permalink to this heading">#</a></h2>
 <p>The primary goal of the API is to provide data structures and interfaces
 necessary for coupling OpenTurbine to the ExaWind CFD codes for
-fluid-structure-interaction (FSI) simulations. For land-based wind, the interface
+fluid-structure interaction simulations. For land-based wind, the interface
 will be designed to couple the beam finite element models and point-mass
 elements (e.g., representation of the nacelle) to a CFD mesh. We will leverage
 the mesh mapping that was implemented and tested in the ExaWind codes. The
@@ -627,9 +627,9 @@ rotate with the hub. These models together constitute a set of
 differential-algebraic equations (DAEs) in the time domain. We will build on the
 experiences gained with OpenFAST, particularly its nonlinear beam-dynamics module,
 <a class="reference external" href="https://github.com/OpenFAST/openfast/tree/main/modules/beamdyn">BeamDyn</a>.</p>
-<p>For time integration of the index-3 DAEs we will leverage the generalized-alpha
+<p>For time integration of the index-3 DAEs, we will leverage the generalized-alpha
 algorithm now established in BeamDyn which allows for user-controlled numerical
-damping. See Arnold and Brüls (2007) for details.</p>
+damping. See <a class="reference external" href="https://link.springer.com/article/10.1007/s11044-007-9084-0">Arnold and Brüls (2007)</a> for details.</p>
 <p>The primary model for the turbine blades and the tower, which are slender and flexible
 structures, will be nonlinear finite elements based on the geometrically exact beam
 theory (GEBT), which includes bend-twist coupling. Spatial discretization
@@ -648,15 +648,9 @@ not form a minimum set.</p>
 <p>The list of verification and validation cases is a work in progress. By way of
 semantics, verification cases are those for which an analytical solution exists and
 formal accuracy studies can be examined.  Validation cases are those for which
-we have solutions that are deemed to be better representations of reality.  For
+we have solutions that are deemed to be better representations of reality. For
 example, validation results might be from experiments or from higher-fidelity
-numerical simulations (e.g., shell or solid finite element models).</p>
-<p>The list of verification and validation cases is a work in progress. By way of
-semantics, verification cases are those for which an analytical solution exists and
-formal accuracy studies can be examined.  Validation cases are those for which
-we have solutions that are deemed to be better representations of reality.  For
-example, validation results might be from experiments or from higher-fidelity
-numerical simulations (e.g., shell or solid finite element models).</p>
+numerical simulations such as shell or solid finite element models.</p>
 <p><strong>Verification cases</strong></p>
 <ul class="simple">
 <li><p>Rigid-body dynamics: three-dimensional pendulum</p></li>
@@ -678,6 +672,8 @@ numerical simulations (e.g., shell or solid finite element models).</p>
 </section>
 <section id="high-level-development-timeline">
 <h2>High-level development timeline<a class="headerlink" href="#high-level-development-timeline" title="Permalink to this heading">#</a></h2>
+<p>CY = calendar year
+FY = fiscal year</p>
 <p><strong>CY23 Q2</strong>: The OpenTurbine team will implement a rigid-body dynamics solver following the
 concepts described above, i.e., DAE-3 coupling, quaternion-based rotation representation, and a
 generalized-alpha time integrator. This proof-of-concept implementation will be made available
@@ -686,16 +682,10 @@ development.</p>
 <p><strong>CY23 Q3</strong>: Implement a general GEBT-based beam element that is appropriate for constrained multi-body
 simulations of a wind turbine. Enable variable order finite elements and user-defined material property
 definition (appropriate for modern turbine blades). Demonstrate performance for a dynamic cantilever beam
-problem and compare against BeamDyn.</p>
-<p><strong>CY24 Q1</strong>: Demonstrate a wind turbine rotor simulation under prescribed loading and include code verification
-results and automated testing results. Include control system (e.g., ROSCO) and pitch control of blades. Compare
-simulation time against an equivalent model simulated with OpenFAST.</p>
-<p><strong>CY24 Q3</strong>: Demonstrate a rotor simulation with fluid-structure interaction and a pitch control system. Fluid
-will be represented in two ways. First, through a simple BEMT solver and, second, where the blades are represented
-as actuator lines in the fluid domain (solved with the ExaWind CFD code).</p>
-<p><strong>CY25 Q1</strong>: Release a robust, well documented, well tested version of OpenTurbine for land-based wind turbine
-simulations. Demonstrate whole turbine simulation (tower, nacelle, drivetrain) with fluid-structure-interaction
-coupling to ExaWind.</p>
+problem and compare against <a class="reference external" href="https://github.com/OpenFAST/openfast/tree/main/modules/beamdyn">BeamDyn</a>.</p>
+<p><strong>CY24 Q1</strong>: Demonstrate a wind turbine rotor simulation under prescribed loading and include code verification results and automated testing results. Include control system (e.g., <a class="reference external" href="https://github.com/NREL/ROSCO/tree/main/ROSCO">ROSCO</a>) and pitch control of blades. Compare simulation time against an equivalent model simulated with <a class="reference external" href="https://github.com/OpenFAST/openfast">OpenFAST</a>.</p>
+<p><strong>CY24 Q3</strong>: Demonstrate a rotor simulation with fluid-structure interaction (FSI) and a pitch control system. Fluid will be represented in two ways. First, through a simple Blade Element Momentum Theory (BEMT) solver and second, where the blades are represented as actuator lines in the fluid domain (solved with the ExaWind CFD code).</p>
+<p><strong>CY25 Q1</strong>: Release a robust, well-documented, well-tested version of OpenTurbine for land-based wind turbine simulations. Demonstrate whole turbine simulation (tower, nacelle, drivetrain) capabilities with FSI coupling to ExaWind.</p>
 </section>
 </section>
 
