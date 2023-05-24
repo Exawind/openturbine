@@ -4,55 +4,22 @@
 
 #include "src/rigid_pendulum_poc/solver.h"
 
-namespace oturb_tests {
+namespace openturbine::rigid_pendulum::tests {
 
-using namespace openturbine::rigid_pendulum;
+TEST(LinearSolverTest, solve_1x1_identity)
+{
+  auto identity = Kokkos::View<double**>("identity", 1, 1);
+  auto solution = Kokkos::View<double*>("solution", 1);
+  auto exactSolution = Kokkos::View<double*>("exact solution", 1);
 
-TEST(SolverType, DefaultValue) {
-    // Test that the default value of a SolverType object is kNone
-    SolverType type {};
-    EXPECT_EQ(type, SolverType::kNone);
-}
+  identity(0, 0) = 1.;
+  solution(0) = 1.;
+  
+  Kokkos::deep_copy(exactSolution, solution);
 
-TEST(SolverType, Comparison) {
-    // Test that different solver types can be compared
-    EXPECT_LT(SolverType::kNone, SolverType::kDirectLinearSolver);
-    EXPECT_EQ(SolverType::kDirectLinearSolver, SolverType::kDirectLinearSolver);
-    EXPECT_NE(SolverType::kDirectLinearSolver, SolverType::kNone);
-    EXPECT_LT(SolverType::kNone, SolverType::kIterativeLinearSolver);
-    EXPECT_EQ(SolverType::kIterativeLinearSolver, SolverType::kIterativeLinearSolver);
-    EXPECT_NE(SolverType::kIterativeLinearSolver, SolverType::kDirectLinearSolver);
-    EXPECT_NE(SolverType::kIterativeLinearSolver, SolverType::kNone);
-    EXPECT_LT(SolverType::kNone, SolverType::kIterativeNonlinearSolver);
-    EXPECT_EQ(SolverType::kIterativeNonlinearSolver, SolverType::kIterativeNonlinearSolver);
-    EXPECT_NE(SolverType::kIterativeNonlinearSolver, SolverType::kIterativeLinearSolver);
-    EXPECT_NE(SolverType::kIterativeNonlinearSolver, SolverType::kDirectLinearSolver);
-    EXPECT_NE(SolverType::kIterativeNonlinearSolver, SolverType::kNone);
-}
+  openturbine::rigid_pendulum::solve_linear_system(identity, solution);
 
-class LinearSolverTest : public ::testing::Test {
-protected:
-    virtual void SetUp() {
-        Kokkos::initialize();
-    }
-
-    virtual void TearDown() {
-        Kokkos::finalize();
-    }
-};
-
-TEST_F(LinearSolverTest, Test1) {
-    LinearSolver solver {};
-    EXPECT_EQ(solver.GetSolverType(), SolverType::kNone);
-
-    Kokkos::View<double*> x("x", 1);
-    x[0] = 1.0;
-    Kokkos::View<double*> A("A", 1);
-    A[0] = 1.0;
-    Kokkos::View<double*> b("b", 1);
-    Kokkos::deep_copy(b, solver.Solve(A, x));
-
-    ASSERT_EQ(b(0), 1.);
+  EXPECT_EQ(solution(0), exactSolution(0));
 }
 
 }  // namespace oturb_tests
