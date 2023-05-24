@@ -1,20 +1,18 @@
 
 set(Kokkos_DIR "$ENV{Kokkos_ROOT}" CACHE STRING "Kokkos root directory")
 find_package(Kokkos REQUIRED)
-
-set(KokkosKernels_DIR "$ENV{KokkosKernels_ROOT}" CACHE STRING "KokkosKernels root directory")
-find_package(KokkosKernels REQUIRED)
+find_package(LAPACK REQUIRED)
 
 target_sources(${oturb_exe_name} PRIVATE main.cpp)
 target_link_libraries(${oturb_exe_name} PRIVATE
     Kokkos::kokkos
-    Kokkos::kokkoskernels
+    LAPACK::LAPACK
 )
 
 target_sources(${oturb_lib_name} PRIVATE heat/heat_solve.cpp)
 target_link_libraries(${oturb_lib_name} PRIVATE
     Kokkos::kokkos
-    Kokkos::kokkoskernels
+    LAPACK::LAPACK
 )
 
 target_include_directories(${oturb_exe_name} PRIVATE ${PROJECT_BINARY_DIR})
