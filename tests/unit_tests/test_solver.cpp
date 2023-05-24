@@ -8,11 +8,11 @@
 namespace openturbine::rigid_pendulum::tests {
 
 Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace> 
-create_diagonal_matrix(std::vector<double> diagonal)
+create_diagonal_matrix(std::vector<double> values)
 {
-  auto matrix = Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>("matrix", diagonal.size(), diagonal.size());
-  auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, diagonal.size());
-  auto fill_diagonal = [matrix, diagonal](int index) { matrix(index, index) = diagonal[index]; };
+  auto matrix = Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>("matrix", values.size(), values.size());
+  auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, values.size());
+  auto fill_diagonal = [matrix, values](int index) { matrix(index, index) = values[index]; };
 
   Kokkos::deep_copy(matrix, 0);
   Kokkos::parallel_for(diagonal_entries, fill_diagonal);
@@ -32,13 +32,27 @@ create_vector(std::vector<double> values)
   return vector;
 }
 
+Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace> 
+create_matrix(std::vector<std::vector<double>> values)
+{
+  auto matrix = Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>("matrix", values.size(), values.size());
+  auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>({0, 0}, {values.size(), values.front().size()});
+  auto fill_matrix = [matrix, values](int row, int column) { matrix(row, column) = values[row][column]; };
+
+  Kokkos::parallel_for(entries, fill_matrix);
+
+  return matrix;
+}
+
 TEST(LinearSolverTest, solve_1x1_identity)
 {
   auto identity = create_diagonal_matrix({1});
   auto solution = create_vector({1});
   auto exactSolution = create_vector({1});
 
-  openturbine::rigid_pendulum::solve_linear_system(identity, solution);
+  auto info = openturbine::rigid_pendulum::solve_linear_system(identity, solution);
+
+  ASSERT_EQ(info, 0);
 
   EXPECT_EQ(solution(0), exactSolution(0));
 }
@@ -51,7 +65,9 @@ TEST(LinearSolverTest, solve_3x3_identity)
   
   Kokkos::deep_copy(exactSolution, solution);
 
-  openturbine::rigid_pendulum::solve_linear_system(identity, solution);
+  auto info = openturbine::rigid_pendulum::solve_linear_system(identity, solution);
+
+  ASSERT_EQ(info, 0);
 
   EXPECT_EQ(solution(0), exactSolution(0));
   EXPECT_EQ(solution(1), exactSolution(1));
@@ -60,26 +76,59 @@ TEST(LinearSolverTest, solve_3x3_identity)
 
 TEST(LinearSolverTest, solve_1x1_diagonal)
 {
-  auto identity = create_diagonal_matrix({2.});
+  auto diagonal = create_diagonal_matrix({2.});
   auto solution = create_vector({1.});
   auto exactSolution = create_vector({.5});
 
-  openturbine::rigid_pendulum::solve_linear_system(identity, solution);
+  auto info = openturbine::rigid_pendulum::solve_linear_system(diagonal, solution);
+
+  ASSERT_EQ(info, 0);
 
   EXPECT_NEAR(solution(0), exactSolution(0), std::numeric_limits<double>::epsilon());
 }
 
 TEST(LinearSolverTest, solve_3x3_diagonal)
 {
-  auto identity = create_diagonal_matrix({2., 8., 32.});
+  auto diagonal = create_diagonal_matrix({2., 8., 32.});
   auto solution = create_vector({1., 2., 4.});
   auto exactSolution = create_vector({.5, .25, .125});
 
-  openturbine::rigid_pendulum::solve_linear_system(identity, solution);
+  auto info = openturbine::rigid_pendulum::solve_linear_system(diagonal, solution);
+
+  ASSERT_EQ(info, 0);
 
   EXPECT_NEAR(solution(0), exactSolution(0), std::numeric_limits<double>::epsilon());
   EXPECT_NEAR(solution(1), exactSolution(1), std::numeric_limits<double>::epsilon());
   EXPECT_NEAR(solution(2), exactSolution(2), std::numeric_limits<double>::epsilon());
+}
+
+TEST(LinearSolverTest, solve_2x2_matrix)
+{
+  auto matrix = create_matrix({{1., 2.}, {3., 4.}});
+  auto solution = create_vector({17., 39.});
+  auto exactSolution = create_vector({5., 6.});
+
+  auto info = openturbine::rigid_pendulum::solve_linear_system(matrix, solution);
+
+  ASSERT_EQ(info, 0);
+
+  EXPECT_NEAR(solution(0), exactSolution(0), 10*std::numeric_limits<double>::epsilon());
+  EXPECT_NEAR(solution(1), exactSolution(1), 10*std::numeric_limits<double>::epsilon());
+}
+
+TEST(LinearSolverTest, solve_3x3_matrix)
+{
+  auto matrix = create_matrix({{2., 6., 3.}, {4., -1., 3.}, {1., 3., 2.}});
+  auto solution = create_vector({23., 11., 13.});
+  auto exactSolution = create_vector({1., 2., 3.});
+
+  auto info = openturbine::rigid_pendulum::solve_linear_system(matrix, solution);
+
+  ASSERT_EQ(info, 0);
+
+  EXPECT_NEAR(solution(0), exactSolution(0), 10*std::numeric_limits<double>::epsilon());
+  EXPECT_NEAR(solution(1), exactSolution(1), 10*std::numeric_limits<double>::epsilon());
+  EXPECT_NEAR(solution(2), exactSolution(2), 10*std::numeric_limits<double>::epsilon());
 }
 
 }  // namespace oturb_tests

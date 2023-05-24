@@ -4,7 +4,7 @@
 
 namespace openturbine::rigid_pendulum {
 
-void solve_linear_system(Kokkos::View<double**> system, Kokkos::View<double*> solution);
+[[nodiscard]] int solve_linear_system(Kokkos::View<double**> system, Kokkos::View<double*> solution);
 
 }  // namespace openturbine::rigid_pendulum
 
