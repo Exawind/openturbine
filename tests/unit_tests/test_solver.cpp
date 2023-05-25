@@ -39,7 +39,7 @@ Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace> create_vector(
 Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace> create_matrix(
     const std::vector<std::vector<double>>& values) {
     auto matrix = Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>("matrix", values.size(),
-                                                                            values.size());
+                                                                            values.front().size());
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {values.size(), values.front().size()});
     auto fill_matrix = [matrix, values](int row, int column) {
@@ -130,6 +130,43 @@ TEST(LinearSolverTest, Solve3x3Matrix) {
     EXPECT_NEAR(solution(0), exact_solution(0), 10 * std::numeric_limits<double>::epsilon());
     EXPECT_NEAR(solution(1), exact_solution(1), 10 * std::numeric_limits<double>::epsilon());
     EXPECT_NEAR(solution(2), exact_solution(2), 10 * std::numeric_limits<double>::epsilon());
+}
+
+TEST(LinearSolverTest, CheckMatrixShape) {
+    // Try to solve a non-square system
+    auto matrix_2x3 = create_matrix({{1., 2., 3.}, {4., 5., 6.}});
+    auto solution_2x1 = create_vector({1., 1.});
+
+    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(matrix_2x3, solution_2x1),
+                 std::invalid_argument);
+
+    // Try to solve another non-square system
+    auto matrix_5x3 = create_matrix({
+        {1., 2., 3.},
+        {4., 5., 6.},
+        {7., 8., 9.},
+        {10., 11., 12.},
+        {13., 14., 15.},
+    });
+    auto solution_5x1 = create_vector({1., 1., 1., 1., 1.});
+
+    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(matrix_5x3, solution_5x1),
+                 std::invalid_argument);
+}
+
+TEST(LinearSolverTest, CheckMatrixVectorCompatibility) {
+    // Try to solve a 1x1 system with a 2x1 vector
+    auto system_1x1 = create_diagonal_matrix({1.});
+    auto solution_2x1 = create_vector({1., 2.});
+
+    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(system_1x1, solution_2x1),
+                 std::invalid_argument);
+
+    // Try to solve a 3x3 system with a 2x1 vector
+    auto system_3x3 = create_diagonal_matrix({1., 1., 1.});
+
+    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(system_3x3, solution_2x1),
+                 std::invalid_argument);
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

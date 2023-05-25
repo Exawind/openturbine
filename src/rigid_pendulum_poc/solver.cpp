@@ -5,7 +5,18 @@
 namespace openturbine::rigid_pendulum {
 
 int solve_linear_system(Kokkos::View<double**> system, Kokkos::View<double*> solution) {
-    int rows = static_cast<int>(system.extent(0));
+    auto rows = static_cast<int>(system.extent(0));
+    auto columns = static_cast<int>(system.extent(1));
+
+    if (rows != columns) {
+        throw std::invalid_argument("Provided system must be a square matrix");
+    }
+
+    if (rows != static_cast<int>(solution.extent(0))) {
+        throw std::invalid_argument(
+            "Provided system and solution must contain the same number of rows");
+    }
+
     int right_hand_sides{1};
     int leading_dimension{rows};
 
