@@ -56,9 +56,7 @@ TEST(LinearSolverTest, Solve1x1Identity) {
     auto solution = create_vector({1});
     auto exact_solution = create_vector({1});
 
-    auto info = openturbine::rigid_pendulum::solve_linear_system(identity, solution);
-
-    ASSERT_EQ(info, 0);
+    openturbine::rigid_pendulum::solve_linear_system(identity, solution);
 
     EXPECT_EQ(solution(0), exact_solution(0));
 }
@@ -70,9 +68,7 @@ TEST(LinearSolverTest, Solve3x3Identity) {
 
     Kokkos::deep_copy(exact_solution, solution);
 
-    auto info = openturbine::rigid_pendulum::solve_linear_system(identity, solution);
-
-    ASSERT_EQ(info, 0);
+    openturbine::rigid_pendulum::solve_linear_system(identity, solution);
 
     EXPECT_EQ(solution(0), exact_solution(0));
     EXPECT_EQ(solution(1), exact_solution(1));
@@ -84,9 +80,7 @@ TEST(LinearSolverTest, Solve1x1Diagonal) {
     auto solution = create_vector({1.});
     auto exact_solution = create_vector({.5});
 
-    auto info = openturbine::rigid_pendulum::solve_linear_system(diagonal, solution);
-
-    ASSERT_EQ(info, 0);
+    openturbine::rigid_pendulum::solve_linear_system(diagonal, solution);
 
     EXPECT_NEAR(solution(0), exact_solution(0), std::numeric_limits<double>::epsilon());
 }
@@ -96,9 +90,7 @@ TEST(LinearSolverTest, Solve3x3Diagonal) {
     auto solution = create_vector({1., 2., 4.});
     auto exact_solution = create_vector({.5, .25, .125});
 
-    auto info = openturbine::rigid_pendulum::solve_linear_system(diagonal, solution);
-
-    ASSERT_EQ(info, 0);
+    openturbine::rigid_pendulum::solve_linear_system(diagonal, solution);
 
     EXPECT_NEAR(solution(0), exact_solution(0), std::numeric_limits<double>::epsilon());
     EXPECT_NEAR(solution(1), exact_solution(1), std::numeric_limits<double>::epsilon());
@@ -110,9 +102,7 @@ TEST(LinearSolverTest, Solve2x2Matrix) {
     auto solution = create_vector({17., 39.});
     auto exact_solution = create_vector({5., 6.});
 
-    auto info = openturbine::rigid_pendulum::solve_linear_system(matrix, solution);
-
-    ASSERT_EQ(info, 0);
+    openturbine::rigid_pendulum::solve_linear_system(matrix, solution);
 
     EXPECT_NEAR(solution(0), exact_solution(0), 10 * std::numeric_limits<double>::epsilon());
     EXPECT_NEAR(solution(1), exact_solution(1), 10 * std::numeric_limits<double>::epsilon());
@@ -123,24 +113,22 @@ TEST(LinearSolverTest, Solve3x3Matrix) {
     auto solution = create_vector({23., 11., 13.});
     auto exact_solution = create_vector({1., 2., 3.});
 
-    auto info = openturbine::rigid_pendulum::solve_linear_system(matrix, solution);
-
-    ASSERT_EQ(info, 0);
+    openturbine::rigid_pendulum::solve_linear_system(matrix, solution);
 
     EXPECT_NEAR(solution(0), exact_solution(0), 10 * std::numeric_limits<double>::epsilon());
     EXPECT_NEAR(solution(1), exact_solution(1), 10 * std::numeric_limits<double>::epsilon());
     EXPECT_NEAR(solution(2), exact_solution(2), 10 * std::numeric_limits<double>::epsilon());
 }
 
-TEST(LinearSolverTest, CheckMatrixShape) {
-    // Try to solve a non-square system
+TEST(LinearSolverTest, Check2x3MatrixShape) {
     auto matrix_2x3 = create_matrix({{1., 2., 3.}, {4., 5., 6.}});
     auto solution_2x1 = create_vector({1., 1.});
 
     EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(matrix_2x3, solution_2x1),
                  std::invalid_argument);
+}
 
-    // Try to solve another non-square system
+TEST(LinearSolverTest, Check5x3MatrixShape) {
     auto matrix_5x3 = create_matrix({
         {1., 2., 3.},
         {4., 5., 6.},
@@ -154,16 +142,17 @@ TEST(LinearSolverTest, CheckMatrixShape) {
                  std::invalid_argument);
 }
 
-TEST(LinearSolverTest, CheckMatrixVectorCompatibility) {
-    // Try to solve a 1x1 system with a 2x1 vector
+TEST(LinearSolverTest, Check1x1Matrix2x1VectorCompatibility) {
     auto system_1x1 = create_diagonal_matrix({1.});
     auto solution_2x1 = create_vector({1., 2.});
 
     EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(system_1x1, solution_2x1),
                  std::invalid_argument);
+}
 
-    // Try to solve a 3x3 system with a 2x1 vector
+TEST(LinearSolverTest, Check3x3Matrix2x1VectorCompatibility) {
     auto system_3x3 = create_diagonal_matrix({1., 1., 1.});
+    auto solution_2x1 = create_vector({1., 2.});
 
     EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(system_3x3, solution_2x1),
                  std::invalid_argument);
