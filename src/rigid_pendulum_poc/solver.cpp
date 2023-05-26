@@ -6,7 +6,8 @@
 
 namespace openturbine::rigid_pendulum {
 
-void solve_linear_system(Kokkos::View<double**> system, Kokkos::View<double*> solution) {
+void solve_linear_system(Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace> system,
+                         Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace> solution) {
     auto rows = static_cast<int>(system.extent(0));
     auto columns = static_cast<int>(system.extent(1));
 
