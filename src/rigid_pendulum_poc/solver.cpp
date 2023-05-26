@@ -18,13 +18,24 @@ int solve_linear_system(Kokkos::View<double**> system, Kokkos::View<double*> sol
     }
 
     int right_hand_sides{1};
-    int leading_dimension{rows};
-
-    // Array of pivot indices used for the LU factorization of system
+    int leading_dimension_sytem{rows};
     auto pivots = Kokkos::View<int*, Kokkos::DefaultHostExecutionSpace>("pivots", solution.size());
+    int leading_dimension_solution{1};
 
-    return LAPACKE_dgesv(LAPACK_ROW_MAJOR, rows, right_hand_sides, system.data(), leading_dimension,
-                         pivots.data(), solution.data(), 1);
+    // Call DGESV from LAPACK to compute the solution to a real system of linear
+    // equations A * x = b, returns 0 if successful
+    // https://www.netlib.org/lapack/lapacke.html
+    return LAPACKE_dgesv(LAPACK_ROW_MAJOR,  // input: matrix_layout
+                         rows,              // input: number of linear equations
+                         right_hand_sides,  // input: number of rhs
+                         system.data(),     // input/output: Upon entry, the nxn coefficient matrix
+                                            // Upon exit, the factors L and U from the factorization
+                         leading_dimension_sytem,  // input: leading dimension of system
+                         pivots.data(),            // output: pivot indices
+                         solution.data(),  // input/output: Upon entry, the right-hand side matrix
+                                           // Upon exit, the solution matrix
+                         leading_dimension_solution  // input: leading dimension of solution
+    );
 }
 
 }  // namespace openturbine::rigid_pendulum
