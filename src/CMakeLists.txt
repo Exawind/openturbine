@@ -4,7 +4,7 @@ find_package(Kokkos REQUIRED)
 
 # include("../FindLAPACKE.cmake")
 find_package(LAPACK REQUIRED)
-find_package(LAPACKE REQUIRED)
+# find_package(LAPACKE REQUIRED)
 
 target_sources(${oturb_exe_name} PRIVATE main.cpp)
 target_link_libraries(${oturb_exe_name} PRIVATE
