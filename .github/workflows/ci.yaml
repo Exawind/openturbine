@@ -39,6 +39,7 @@ jobs:
     - name: Install LAPACK
       run: |
         sudo apt-get install liblapack-dev
+        sudo apt-get install liblapacke-dev
     - name: Install GoogleTest
       run: |
         sudo apt-get install libgtest-dev
