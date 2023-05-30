@@ -36,6 +36,10 @@ jobs:
         git clone https://github.com/spack/spack ~/.spack/Spack
         . ~/.spack/Spack/share/spack/setup-env.sh
         spack install kokkos
+    - name: Install LAPACK
+      run: |
+        sudo apt-get install liblapack-dev
+        sudo apt-get install liblapacke-dev
     - name: Install GoogleTest
       run: |
         sudo apt-get install libgtest-dev

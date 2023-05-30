@@ -1,61 +1,54 @@
 #include "src/rigid_pendulum_poc/solver.h"
 
+#include <lapacke.h>
+
 #include "src/utilities/log.h"
 
 namespace openturbine::rigid_pendulum {
 
-GeneralizedAlphaSolver::GeneralizedAlphaSolver(
-    std::unique_ptr<LinearSystemSolver> linear_system_solver)
-    : linear_system_solver_(std::move(linear_system_solver)) {
-}
+void solve_linear_system(Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace> system,
+                         Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace> solution) {
+    auto rows = static_cast<int>(system.extent(0));
+    auto columns = static_cast<int>(system.extent(1));
 
-void GeneralizedAlphaSolver::AlphaStep(const Eigen::VectorXd& gen_coords,
-                                       const Eigen::VectorXd& gen_coords_dot,
-                                       const Eigen::VectorXd& gen_coords_ddot,
-                                       const Eigen::VectorXd& accelaration) {
+    if (rows != columns) {
+        throw std::invalid_argument("Provided system must be a square matrix");
+    }
+
+    if (rows != static_cast<int>(solution.extent(0))) {
+        throw std::invalid_argument(
+            "Provided system and solution must contain the same number of rows");
+    }
+
+    int right_hand_sides{1};
+    int leading_dimension_sytem{rows};
+    auto pivots = Kokkos::View<int*, Kokkos::DefaultHostExecutionSpace>("pivots", solution.size());
+    int leading_dimension_solution{1};
+
     auto log = util::Log::Get();
-    log->Debug("AlphaStep\n");
+    log->Debug("Solving a " + std::to_string(rows) + " x " + std::to_string(rows) +
+               " system of linear equations with LAPACKE_dgesv" + "\n");
 
-    // Some placeholders
-    float step_size = 0.1;
-    float alpha_f = 0.5;
-    float alpha_m = 0.5;
-    float beta = 0.25;
-    float gamma = 0.5;
-    int max_iterations = 10;
+    // Call DGESV from LAPACK to compute the solution to a real system of linear
+    // equations A * x = b, returns 0 if successful
+    // https://www.netlib.org/lapack/lapacke.html
+    auto info =
+        LAPACKE_dgesv(LAPACK_ROW_MAJOR,  // input: matrix_layout
+                      rows,              // input: number of linear equations
+                      right_hand_sides,  // input: number of rhs
+                      system.data(),     // input/output: Upon entry, the nxn coefficient matrix
+                                         // Upon exit, the factors L and U from the factorization
+                      leading_dimension_sytem,  // input: leading dimension of system
+                      pivots.data(),            // output: pivot indices
+                      solution.data(),  // input/output: Upon entry, the right-hand side matrix
+                                        // Upon exit, the solution matrix
+                      leading_dimension_solution  // input: leading dimension of solution
+        );
 
-    Eigen::VectorXd gen_coords_next = gen_coords + step_size * gen_coords_dot +
-                                      step_size * step_size * (0.5 - beta) * accelaration;
-    Eigen::VectorXd gen_coords_dot_next = gen_coords_dot + step_size * (1 - gamma) * accelaration;
-    Eigen::VectorXd lambda_next {};
-    Eigen::VectorXd accelaration_next =
-        (1 / (1 - alpha_m)) * (alpha_f * gen_coords_ddot - alpha_m * accelaration);
-    gen_coords_next = gen_coords_next + step_size * step_size * beta * accelaration_next;
-    gen_coords_dot_next = gen_coords_dot_next + step_size * beta * accelaration_next;
-    Eigen::VectorXd gen_coords_ddot_next {};
+    log->Debug("LAPACKE_dgesv returned exit code " + std::to_string(info) + "\n");
 
-    for (int i = 0; i < max_iterations; i++) {
-        // Compute the residuals
-        // TODO Define a function to compute the residuals
-        Eigen::VectorXd r1 = gen_coords_next - gen_coords - step_size * gen_coords_dot -
-                             step_size * step_size * (0.5 - beta) * accelaration;
-        Eigen::VectorXd r2 =
-            gen_coords_dot_next - gen_coords_dot - step_size * (1 - gamma) * accelaration;
-
-        // Compute the jacobian
-        Eigen::MatrixXd jacobian {};
-        // TODO Define a function to compute the jacobian
-        // jacobian = jacobian - step_size* step_size* (0.5 - beta) * alpha_f;
-
-        // Compute the iteration matrix
-        // TODO Define a function to compute the iteration matrix
-        Eigen::MatrixXd iteration_matrix {};
-        // iteration_matrix = iteration_matrix - step_size* step_size* (0.5 - beta) * alpha_m;
-
-        // gen_coords[i] = gen_coords_next[i];
-        // gen_coords_dot[i] = gen_coords_dot_next[i];
-        // gen_coords_ddot[i] = gen_coords_ddot_next[i];
-        // accelaration[i] = accelaration_next[i];
+    if (info != 0) {
+        throw std::runtime_error("LAPACKE_dgesv failed to solve the system!");
     }
 }
 

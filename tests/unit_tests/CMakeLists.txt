@@ -6,6 +6,7 @@ target_sources(
     test_config.cpp
     test_heat_solve.cpp
     test_log.cpp
+    test_solver.cpp
 )
 
 target_compile_options(
