@@ -23,6 +23,10 @@ jobs:
     needs: Formatting
     runs-on: ubuntu-latest
     steps:
+    - name: Install LAPACK
+      run: |
+        sudo apt-get install liblapack-dev
+        sudo apt-get install liblapacke-dev
     - name: Cache install Spack packages
       id: cache-install
       uses: actions/cache@v3
