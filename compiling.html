@@ -61,8 +61,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'compiling';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -424,9 +422,9 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="compiling">
 <span id="id1"></span><h1>Compiling<a class="headerlink" href="#compiling" title="Permalink to this heading">#</a></h1>
-<p>OpenTurbine is written in C++ and compiles into an both an executable and
+<p>OpenTurbine is written in C++ and compiles into both an executable and
 a static or shared library. The procedure and considerations for compiling
-are described here.</p>
+OpenTurbine are described here.</p>
 <section id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading">#</a></h2>
 <p>The third party dependencies used in OpenTurbine are listed below.
@@ -437,23 +435,24 @@ conda, APT, and Homebrew will provide the easiest experience
 for linking and runtime path searches.</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://cmake.org/">CMake</a> version 3.20 or higher</p></li>
-<li><p>C++ compiler that supports the C++14 standard;</p>
+<li><p>C++ compiler that supports the C++17 standard</p>
 <ul>
-<li><p>GCC 5 or higher</p></li>
+<li><p>GCC version 10 or higher</p></li>
 <li><p>LLVM Clang 7 or higher</p></li>
 <li><p>Intel 2020 (oneAPI) or higher</p></li>
 </ul>
 </li>
-<li><p><a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a> math portability library (see <a class="reference internal" href="#installing-kokkos"><span class="std std-ref">Installing Kokkos</span></a>)</p></li>
+<li><p><a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a> core programming model for performance portability (see <a class="reference internal" href="#installing-kokkos"><span class="std std-ref">Installing Kokkos</span></a>)</p></li>
+<li><p>[LAPACK] for linear algebra operations</p></li>
 <li><p>OS: OpenTurbine is regularly tested on Linux and macOS</p></li>
-<li><p>(Optional) Google Test (gtest) for the test infrastructure (conda-forge)</p></li>
-<li><p>(Optional) clang-format for linting (conda-forge or brew)</p></li>
+<li><p>(Optional) Google Test (gtest) for the test infrastructure (via conda-forge)</p></li>
+<li><p>(Optional) clang-format for linting (via conda-forge or brew)</p></li>
 </ul>
 </section>
 <section id="installing-kokkos">
 <span id="id2"></span><h2>Installing Kokkos<a class="headerlink" href="#installing-kokkos" title="Permalink to this heading">#</a></h2>
 <p>OpenTurbine relies heavily on Kokkos for portability between systems,
-compilers, and hardware types. It is at the core of the this software.
+compilers, and hardware types. It is at the core of this software.
 Therefore, the Kokkos library used should be tuned to your specific
 use case. See the <a class="reference external" href="https://kokkos.github.io/kokkos-core-wiki/building.html">Kokkos documentation</a>
 for instructions on building that library.</p>
@@ -471,13 +470,13 @@ cmake<span class="w"> </span>..
 <span class="c1">#   By not providing &quot;FindKokkos.cmake&quot; in CMAKE_MODULE_PATH this project has</span>
 <span class="c1">#   asked CMake to find a package configuration file provided by &quot;Kokkos&quot;, but</span>
 <span class="c1">#   CMake did not find one.</span>
-<span class="c1"># </span>
+<span class="c1">#</span>
 <span class="c1">#   Could not find a package configuration file provided by &quot;Kokkos&quot; with any</span>
 <span class="c1">#   of the following names:</span>
-<span class="c1"># </span>
+<span class="c1">#</span>
 <span class="c1">#     KokkosConfig.cmake</span>
 <span class="c1">#     kokkos-config.cmake</span>
-<span class="c1"># </span>
+<span class="c1">#</span>
 <span class="c1">#   Add the installation prefix of &quot;Kokkos&quot; to CMAKE_PREFIX_PATH or set</span>
 <span class="c1">#   &quot;Kokkos_DIR&quot; to a directory containing one of the above files.  If &quot;Kokkos&quot;</span>
 <span class="c1">#   provides a separate development package or SDK, be sure it has been</span>
@@ -493,6 +492,13 @@ cmake<span class="w"> </span>..
 
 <span class="c1"># Reconfigure CMake in OpenTurbine</span>
 cmake<span class="w"> </span>..
+</pre></div>
+</div>
+<p>If you installed Kokkos using Spack, you can find the installation
+directory via spack and extract the path via grep as follows.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find the Kokkos and KokkosKernels installation directory via spack and</span>
+<span class="c1"># extract the path via grep &amp; awk</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">Kokkos_DIR</span><span class="o">=</span><span class="k">$(</span>spack<span class="w"> </span>find<span class="w"> </span>-p<span class="w"> </span>kokkos<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-m<span class="w"> </span><span class="m">1</span><span class="w"> </span>kokkos<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
 </pre></div>
 </div>
 </section>
@@ -642,10 +648,10 @@ make
 </pre></div>
 </div>
 <p>Upon successfully building, two executables should be available
-in the build directory:</p>
+in the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">openturbine</span></code>: the main driver for the software</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">openturbine_unit_tests</span></code>: the driver for the unit tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">openturbine</span></code>: main driver for the software</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">openturbine_unit_tests</span></code>: driver for the unit tests</p></li>
 </ul>
 </section>
 <section id="test-your-build">
