@@ -2,6 +2,7 @@
 #include "src/heat/heat_solve.H"
 
 #include <Kokkos_Core.hpp>
+#include <lapacke.h>
 
 #include "src/utilities/debug_utils.H"
 #include "src/utilities/log.h"
