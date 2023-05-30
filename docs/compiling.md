@@ -20,7 +20,7 @@ for linking and runtime path searches.
   - LLVM Clang 7 or higher
   - Intel 2020 (oneAPI) or higher
 - [Kokkos](https://github.com/kokkos/kokkos) core programming model for performance portability (see {ref}`installing-kokkos`)
-- [LAPACK] for linear algebra operations
+- [LAPACK](https://www.netlib.org/lapack/) for linear algebra operations
 - OS: OpenTurbine is regularly tested on Linux and macOS
 - (Optional) Google Test (gtest) for the test infrastructure (via conda-forge)
 - (Optional) clang-format for linting (via conda-forge or brew)
