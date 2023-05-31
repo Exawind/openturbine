@@ -1,41 +1,42 @@
 (compiling)=
 # Compiling
 
-OpenTurbine is written in C++ and compiles into an both an executable and
+OpenTurbine is written in C++ and compiles into both an executable and
 a static or shared library. The procedure and considerations for compiling
-are described here.
+OpenTurbine are described here.
 
 ## Dependencies
 
 The third party dependencies used in OpenTurbine are listed below.
-These can be installed by any means appropriate to the target
+These can be installed by any means appropriate for the target
 use. For HPC, it is recommended to use vendor specific libraries
 when available. For workstations, package managers such as
 conda, APT, and Homebrew will provide the easiest experience
 for linking and runtime path searches.
 
 - [CMake](<https://cmake.org/>) version 3.20 or higher
-- C++ compiler that supports the C++14 standard; 
-  - GCC 5 or higher
+- C++ compiler that supports the C++17 standard
+  - GCC version 10 or higher
   - LLVM Clang 7 or higher
   - Intel 2020 (oneAPI) or higher
-- [Kokkos](https://github.com/kokkos/kokkos) math portability library (see {ref}`installing-kokkos`)
+- [Kokkos](https://github.com/kokkos/kokkos) core programming model for performance portability (see {ref}`installing-kokkos`)
+- [LAPACK](https://www.netlib.org/lapack/) for linear algebra operations
 - OS: OpenTurbine is regularly tested on Linux and macOS
-- (Optional) Google Test (gtest) for the test infrastructure (conda-forge)
-- (Optional) clang-format for linting (conda-forge or brew)
+- (Optional) Google Test (gtest) for the test infrastructure (via conda-forge)
+- (Optional) clang-format for linting (via conda-forge or brew)
 
 
 (installing-kokkos)=
 ## Installing Kokkos
 
 OpenTurbine relies heavily on Kokkos for portability between systems,
-compilers, and hardware types. It is at the core of the this software.
+compilers, and hardware types. It is at the core of this software.
 Therefore, the Kokkos library used should be tuned to your specific
 use case. See the [Kokkos documentation](https://kokkos.github.io/kokkos-core-wiki/building.html)
 for instructions on building that library.
 
 For use in OpenTurbine, the Kokkos library must be available
-within a typical search path or you must provide the search
+within a typical search path, or you must provide the search
 path via the `Kokkos_DIR` environment variable. This will
 typically be the install location from your Kokkos build.
 It should be set in the shell session where you're compiling
@@ -50,13 +51,13 @@ cmake ..
 #   By not providing "FindKokkos.cmake" in CMAKE_MODULE_PATH this project has
 #   asked CMake to find a package configuration file provided by "Kokkos", but
 #   CMake did not find one.
-# 
+#
 #   Could not find a package configuration file provided by "Kokkos" with any
 #   of the following names:
-# 
+#
 #     KokkosConfig.cmake
 #     kokkos-config.cmake
-# 
+#
 #   Add the installation prefix of "Kokkos" to CMAKE_PREFIX_PATH or set
 #   "Kokkos_DIR" to a directory containing one of the above files.  If "Kokkos"
 #   provides a separate development package or SDK, be sure it has been
@@ -74,12 +75,21 @@ echo $Kokkos_DIR
 cmake ..
 ```
 
+If you installed Kokkos using Spack, you can find the installation
+directory via spack and extract the path using grep as follows.
+
+```bash
+# Find the Kokkos and KokkosKernels installation directory via spack and
+# extract the path via grep & awk
+export Kokkos_DIR=$(spack find -p kokkos | grep -m 1 kokkos | awk '{print $2}')
+```
+
 ## Build system
 
 The build system is defined entirely within a CMake project.
 It is configured via configuration variables that accept either
 boolean (`ON`/`OFF`) or string arguments. This is typically
-done via the command line interface for CMake:
+done via the command line interface for CMake.
 
 ```bash
 cmake .. -DBOOL_FLAG=ON -DSTRING_FLAG="value"
@@ -100,7 +110,6 @@ are listed below.
 #### OTURB_ENABLE_OPENMP
 
    Enable OpenMP threading support for CPU builds. It is not recommended to
-
    combine this with GPU builds. Default: OFF
 
 #### OTURB_ENABLE_CUDA
@@ -200,9 +209,9 @@ make
 ```
 
 Upon successfully building, two executables should be available
-in the build directory:
-- `openturbine`: the main driver for the software
-- `openturbine_unit_tests`: the driver for the unit tests
+in the `build` directory:
+- `openturbine`: main driver for the software
+- `openturbine_unit_tests`: driver for the unit tests
 
 ### 4. Test your build
 
@@ -233,7 +242,7 @@ On Linux with GTest from conda-forge and the GNU
 compiler, you may see this error:
 `undefined reference to 'std::__throw_bad_array_new_length()@GLIBCXX_3.4.29'`.
 In that case, upgrade to GCC 11 (`g++-11`). GTest in conda-forge is linked
-to `GLIBCXX_3.4.29` but GCC 10 has `GLIBCXX_3.4.28`. 
+to `GLIBCXX_3.4.29` but GCC 10 has `GLIBCXX_3.4.28`.
 Check installed versions with this command:
 ```bash
 strings /lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX
@@ -242,7 +251,7 @@ For Ubuntu 20.04, instructions on upgrading GCC are [here](https://lindevs.com/i
 
 On macOS with GTest from conda-forge, you must include the
 GTest directory in the library search path since it will not
-be found automatically by rpath. 
+be found automatically by rpath.
 
 ```bash
 export DYLD_LIBRARY_PATH=~/miniconda3/envs/openturbine/lib  # customize this to your path

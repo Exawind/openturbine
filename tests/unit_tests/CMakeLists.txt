@@ -8,6 +8,9 @@ target_sources(
     test_log.cpp
 )
 
+# Add subdirectories for unit tests
+add_subdirectory(rigid_pendulum_poc)
+
 target_compile_options(
     ${oturb_unit_test_exe_name} PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:${OTURB_CXX_FLAGS}>

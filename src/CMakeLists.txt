@@ -1,6 +1,7 @@
 
 set(Kokkos_DIR "$ENV{Kokkos_ROOT}" CACHE STRING "Kokkos root directory")
 find_package(Kokkos REQUIRED)
+find_package(LAPACK REQUIRED)
 
 # include("../FindLAPACKE.cmake")
 find_package(LAPACK REQUIRED)
@@ -39,6 +40,7 @@ target_include_directories(${oturb_lib_name}
 # Get all source files
 add_subdirectory(heat)
 add_subdirectory(io)
+add_subdirectory(rigid_pendulum_poc)
 add_subdirectory(utilities)
 
 # Generate OpenTurbine version header
