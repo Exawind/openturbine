@@ -6,8 +6,10 @@ target_sources(
     test_config.cpp
     test_heat_solve.cpp
     test_log.cpp
-    test_solver.cpp
 )
+
+# Add subdirectories for unit tests
+add_subdirectory(rigid_pendulum_poc)
 
 target_compile_options(
     ${oturb_unit_test_exe_name} PRIVATE
