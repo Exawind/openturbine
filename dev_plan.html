@@ -562,7 +562,7 @@ A balance must be found, and documentation for any design decision is
 an important tool to resolve this tension. The graphic below illustrates the
 difference between structures of arrays and arrays of structures for a data
 type consisting of three components of a  location and a magnitude such as
-a point in 3D space (i.e. voxel or point in a fluid domain).</p>
+a point in 3D space (i.e., voxel or point in a fluid domain).</p>
 <a class="reference internal image-reference" href="_images/AoS_SoA.pdf"><img alt="aos_soa" class="align-center" src="_images/AoS_SoA.pdf" style="width: 400px;" /></a>
 <p>For operations involving vector math or accessing the same attribute of many
 objects, the SoA pattern typically ensures that arrays are byte-aligned
@@ -672,8 +672,7 @@ numerical simulations such as shell or solid finite element models.</p>
 </section>
 <section id="high-level-development-timeline">
 <h2>High-level development timeline<a class="headerlink" href="#high-level-development-timeline" title="Permalink to this heading">#</a></h2>
-<p>CY = calendar year
-FY = fiscal year</p>
+<p>CY = calendar year, FY = fiscal year</p>
 <p><strong>CY23 Q2</strong>: The OpenTurbine team will implement a rigid-body dynamics solver following the
 concepts described above, i.e., DAE-3 coupling, quaternion-based rotation representation, and a
 generalized-alpha time integrator. This proof-of-concept implementation will be made available

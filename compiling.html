@@ -428,7 +428,7 @@ OpenTurbine are described here.</p>
 <section id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading">#</a></h2>
 <p>The third party dependencies used in OpenTurbine are listed below.
-These can be installed by any means appropriate to the target
+These can be installed by any means appropriate for the target
 use. For HPC, it is recommended to use vendor specific libraries
 when available. For workstations, package managers such as
 conda, APT, and Homebrew will provide the easiest experience
@@ -457,7 +457,7 @@ Therefore, the Kokkos library used should be tuned to your specific
 use case. See the <a class="reference external" href="https://kokkos.github.io/kokkos-core-wiki/building.html">Kokkos documentation</a>
 for instructions on building that library.</p>
 <p>For use in OpenTurbine, the Kokkos library must be available
-within a typical search path or you must provide the search
+within a typical search path, or you must provide the search
 path via the <code class="docutils literal notranslate"><span class="pre">Kokkos_DIR</span></code> environment variable. This will
 typically be the install location from your Kokkos build.
 It should be set in the shell session where you’re compiling
@@ -495,7 +495,7 @@ cmake<span class="w"> </span>..
 </pre></div>
 </div>
 <p>If you installed Kokkos using Spack, you can find the installation
-directory via spack and extract the path via grep as follows.</p>
+directory via spack and extract the path using grep as follows.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find the Kokkos and KokkosKernels installation directory via spack and</span>
 <span class="c1"># extract the path via grep &amp; awk</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">Kokkos_DIR</span><span class="o">=</span><span class="k">$(</span>spack<span class="w"> </span>find<span class="w"> </span>-p<span class="w"> </span>kokkos<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-m<span class="w"> </span><span class="m">1</span><span class="w"> </span>kokkos<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
@@ -507,7 +507,7 @@ directory via spack and extract the path via grep as follows.</p>
 <p>The build system is defined entirely within a CMake project.
 It is configured via configuration variables that accept either
 boolean (<code class="docutils literal notranslate"><span class="pre">ON</span></code>/<code class="docutils literal notranslate"><span class="pre">OFF</span></code>) or string arguments. This is typically
-done via the command line interface for CMake:</p>
+done via the command line interface for CMake.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>..<span class="w"> </span>-DBOOL_FLAG<span class="o">=</span>ON<span class="w"> </span>-DSTRING_FLAG<span class="o">=</span><span class="s2">&quot;value&quot;</span>
 </pre></div>
 </div>
@@ -540,8 +540,8 @@ are listed below.</p>
 <h3>Architecture options<a class="headerlink" href="#architecture-options" title="Permalink to this heading">#</a></h3>
 <section id="oturb-enable-openmp">
 <h4>OTURB_ENABLE_OPENMP<a class="headerlink" href="#oturb-enable-openmp" title="Permalink to this heading">#</a></h4>
-<p>Enable OpenMP threading support for CPU builds. It is not recommended to</p>
-<p>combine this with GPU builds. Default: OFF</p>
+<p>Enable OpenMP threading support for CPU builds. It is not recommended to
+combine this with GPU builds. Default: OFF</p>
 </section>
 <section id="oturb-enable-cuda">
 <h4>OTURB_ENABLE_CUDA<a class="headerlink" href="#oturb-enable-cuda" title="Permalink to this heading">#</a></h4>
