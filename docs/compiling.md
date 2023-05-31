@@ -8,7 +8,7 @@ OpenTurbine are described here.
 ## Dependencies
 
 The third party dependencies used in OpenTurbine are listed below.
-These can be installed by any means appropriate to the target
+These can be installed by any means appropriate for the target
 use. For HPC, it is recommended to use vendor specific libraries
 when available. For workstations, package managers such as
 conda, APT, and Homebrew will provide the easiest experience
@@ -36,7 +36,7 @@ use case. See the [Kokkos documentation](https://kokkos.github.io/kokkos-core-wi
 for instructions on building that library.
 
 For use in OpenTurbine, the Kokkos library must be available
-within a typical search path or you must provide the search
+within a typical search path, or you must provide the search
 path via the `Kokkos_DIR` environment variable. This will
 typically be the install location from your Kokkos build.
 It should be set in the shell session where you're compiling
@@ -76,7 +76,7 @@ cmake ..
 ```
 
 If you installed Kokkos using Spack, you can find the installation
-directory via spack and extract the path via grep as follows.
+directory via spack and extract the path using grep as follows.
 
 ```bash
 # Find the Kokkos and KokkosKernels installation directory via spack and
@@ -89,7 +89,7 @@ export Kokkos_DIR=$(spack find -p kokkos | grep -m 1 kokkos | awk '{print $2}')
 The build system is defined entirely within a CMake project.
 It is configured via configuration variables that accept either
 boolean (`ON`/`OFF`) or string arguments. This is typically
-done via the command line interface for CMake:
+done via the command line interface for CMake.
 
 ```bash
 cmake .. -DBOOL_FLAG=ON -DSTRING_FLAG="value"
@@ -110,7 +110,6 @@ are listed below.
 #### OTURB_ENABLE_OPENMP
 
    Enable OpenMP threading support for CPU builds. It is not recommended to
-
    combine this with GPU builds. Default: OFF
 
 #### OTURB_ENABLE_CUDA

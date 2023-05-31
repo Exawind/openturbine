@@ -170,7 +170,7 @@ A balance must be found, and documentation for any design decision is
 an important tool to resolve this tension. The graphic below illustrates the
 difference between structures of arrays and arrays of structures for a data
 type consisting of three components of a  location and a magnitude such as
-a point in 3D space (i.e. voxel or point in a fluid domain).
+a point in 3D space (i.e., voxel or point in a fluid domain).
 
 ```{image} images/AoS_SoA.pdf
 :alt: aos_soa
@@ -285,8 +285,7 @@ numerical simulations such as shell or solid finite element models.
 
 ## High-level development timeline
 
-CY = calendar year
-FY = fiscal year
+CY = calendar year, FY = fiscal year
 
 **CY23 Q2**: The OpenTurbine team will implement a rigid-body dynamics solver following the
 concepts described above, i.e., DAE-3 coupling, quaternion-based rotation representation, and a
