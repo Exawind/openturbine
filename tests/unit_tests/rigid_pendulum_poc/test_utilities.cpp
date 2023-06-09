@@ -46,6 +46,7 @@ HostView2D create_matrix(const std::vector<std::vector<double>>& values) {
 }
 
 void expect_kokkos_view_1D_equal(HostView1D view, const std::vector<double>& expected) {
+    ASSERT_EQ(view.extent(0), expected.size());
     for (size_t i = 0; i < view.extent(0); ++i) {
         ASSERT_NEAR(view(i), expected[i], std::numeric_limits<double>::epsilon());
     }

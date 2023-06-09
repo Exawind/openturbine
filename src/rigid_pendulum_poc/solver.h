@@ -4,8 +4,8 @@
 
 namespace openturbine::rigid_pendulum {
 
-using HostView1D = Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace>;
-using HostView2D = Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>;
+using HostView1D = Kokkos::View<double*, Kokkos::HostSpace>;
+using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
 
 /// @brief Solve a linear system of equations using LAPACKE's dgesv
 /// @details This function solves a linear system of equations using LAPACKE's
@@ -27,21 +27,19 @@ public:
     inline HostView1D GetGeneralizedCoordinates() const { return generalized_coords_; }
 
     /// Get the generalized coordinates dot
-    inline HostView1D GetGeneralizedCoordinatesDot() const { return generalized_coords_dot_; }
+    inline HostView1D GetGeneralizedVelocity() const { return generalized_velocity_; }
 
     /// Get the generalized coordinates dot dot
-    inline HostView1D GetGeneralizedCoordinatesDotDot() const {
-        return generalized_coords_dot_dot_;
-    }
+    inline HostView1D GetGeneralizedAcceleration() const { return generalized_accelerations_; }
 
     /// Get the accelerations
-    inline HostView1D GetAccelerations() const { return accelerations_; }
+    inline HostView1D GetAccelerations() const { return algorithmic_accelerations_; }
 
 private:
     HostView1D generalized_coords_;
-    HostView1D generalized_coords_dot_;
-    HostView1D generalized_coords_dot_dot_;
-    HostView1D accelerations_;
+    HostView1D generalized_velocity_;
+    HostView1D generalized_accelerations_;
+    HostView1D algorithmic_accelerations_;
 };
 
 /*!

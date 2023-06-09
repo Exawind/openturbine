@@ -4,8 +4,8 @@
 
 namespace openturbine::rigid_pendulum::tests {
 
-using HostView1D = Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace>;
-using HostView2D = Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>;
+using HostView1D = Kokkos::View<double*, Kokkos::HostSpace>;
+using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
 
 HostView2D create_diagonal_matrix(const std::vector<double>& values);
 

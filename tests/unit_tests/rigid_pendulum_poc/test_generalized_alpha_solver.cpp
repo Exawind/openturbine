@@ -1,9 +1,9 @@
 #include <limits>
 
+#include "tests/unit_tests/rigid_pendulum_poc/test_utilities.h"
 #include <gtest/gtest.h>
 
 #include "src/rigid_pendulum_poc/solver.h"
-#include "tests/unit_tests/rigid_pendulum_poc/test_utilities.h"
 
 namespace openturbine::rigid_pendulum::tests {
 
@@ -51,11 +51,11 @@ TEST(StateTest, CreateDefaultState) {
     EXPECT_EQ(state.GetGeneralizedCoordinates().size(), 1);
     expect_kokkos_view_1D_equal(state.GetGeneralizedCoordinates(), {0.});
 
-    EXPECT_EQ(state.GetGeneralizedCoordinatesDot().size(), 1);
-    expect_kokkos_view_1D_equal(state.GetGeneralizedCoordinatesDot(), {0.});
+    EXPECT_EQ(state.GetGeneralizedVelocity().size(), 1);
+    expect_kokkos_view_1D_equal(state.GetGeneralizedVelocity(), {0.});
 
-    EXPECT_EQ(state.GetGeneralizedCoordinatesDotDot().size(), 1);
-    expect_kokkos_view_1D_equal(state.GetGeneralizedCoordinatesDotDot(), {0.});
+    EXPECT_EQ(state.GetGeneralizedAcceleration().size(), 1);
+    expect_kokkos_view_1D_equal(state.GetGeneralizedAcceleration(), {0.});
 
     EXPECT_EQ(state.GetAccelerations().size(), 1);
     expect_kokkos_view_1D_equal(state.GetAccelerations(), {0.});
@@ -68,11 +68,11 @@ TEST(StateTest, CreateState) {
     EXPECT_EQ(state.GetGeneralizedCoordinates().size(), 3);
     expect_kokkos_view_1D_equal(state.GetGeneralizedCoordinates(), {1., 2., 3.});
 
-    EXPECT_EQ(state.GetGeneralizedCoordinatesDot().size(), 3);
-    expect_kokkos_view_1D_equal(state.GetGeneralizedCoordinatesDot(), {1., 2., 3.});
+    EXPECT_EQ(state.GetGeneralizedVelocity().size(), 3);
+    expect_kokkos_view_1D_equal(state.GetGeneralizedVelocity(), {1., 2., 3.});
 
-    EXPECT_EQ(state.GetGeneralizedCoordinatesDotDot().size(), 3);
-    expect_kokkos_view_1D_equal(state.GetGeneralizedCoordinatesDotDot(), {1., 2., 3.});
+    EXPECT_EQ(state.GetGeneralizedAcceleration().size(), 3);
+    expect_kokkos_view_1D_equal(state.GetGeneralizedAcceleration(), {1., 2., 3.});
 
     EXPECT_EQ(state.GetAccelerations().size(), 3);
     expect_kokkos_view_1D_equal(state.GetAccelerations(), {1., 2., 3.});
@@ -86,8 +86,8 @@ TEST(StateTest, AddTwoStatesWithAdditionOperator) {
     auto state3 = state1 + state2;
 
     expect_kokkos_view_1D_equal(state3.GetGeneralizedCoordinates(), {2., 4., 6.});
-    expect_kokkos_view_1D_equal(state3.GetGeneralizedCoordinatesDot(), {2., 4., 6.});
-    expect_kokkos_view_1D_equal(state3.GetGeneralizedCoordinatesDotDot(), {2., 4., 6.});
+    expect_kokkos_view_1D_equal(state3.GetGeneralizedVelocity(), {2., 4., 6.});
+    expect_kokkos_view_1D_equal(state3.GetGeneralizedAcceleration(), {2., 4., 6.});
     expect_kokkos_view_1D_equal(state3.GetAccelerations(), {2., 4., 6.});
 }
 
@@ -100,8 +100,8 @@ TEST(StateTest, AddTwoStatesWithAdditionAssignmentOperator) {
     state1 += state2;
 
     expect_kokkos_view_1D_equal(state1.GetGeneralizedCoordinates(), {2.73, -0.24, -68.12});
-    expect_kokkos_view_1D_equal(state1.GetGeneralizedCoordinatesDot(), {2.73, -0.24, -68.12});
-    expect_kokkos_view_1D_equal(state1.GetGeneralizedCoordinatesDotDot(), {2.73, -0.24, -68.12});
+    expect_kokkos_view_1D_equal(state1.GetGeneralizedVelocity(), {2.73, -0.24, -68.12});
+    expect_kokkos_view_1D_equal(state1.GetGeneralizedAcceleration(), {2.73, -0.24, -68.12});
     expect_kokkos_view_1D_equal(state1.GetAccelerations(), {2.73, -0.24, -68.12});
 }
 

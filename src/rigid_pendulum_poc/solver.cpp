@@ -52,22 +52,22 @@ void solve_linear_system(HostView2D system, HostView1D solution) {
 }
 
 State::State()
-    : generalized_coords_("generalized_coords", 1),
-      generalized_coords_dot_("generalized_coords_dot", 1),
-      generalized_coords_dot_dot_("generalized_coords_dot_dot", 1),
-      accelerations_("accelerations", 1) {
+    : generalized_coords_("generalized_coordinates", 1),
+      generalized_velocity_("generalized_velocity", 1),
+      generalized_accelerations_("generalized_accelerations", 1),
+      algorithmic_accelerations_("algorithmic_accelerations", 1) {
 }
 
-State::State(HostView1D gen_coords, HostView1D gen_coords_dot, HostView1D gen_coords_ddot,
-             HostView1D accls)
-    : generalized_coords_("generalized_coords", gen_coords.size()),
-      generalized_coords_dot_("generalized_coords_dot", gen_coords_dot.size()),
-      generalized_coords_dot_dot_("generalized_coords_dot_dot", gen_coords_ddot.size()),
-      accelerations_("accelerations", accls.size()) {
+State::State(HostView1D gen_coords, HostView1D gen_velocity, HostView1D gen_accln,
+             HostView1D algo_accln)
+    : generalized_coords_("generalized_coordinates", gen_coords.size()),
+      generalized_velocity_("generalized_velocity", gen_velocity.size()),
+      generalized_accelerations_("generalized_accelerations", gen_accln.size()),
+      algorithmic_accelerations_("algorithmic_accelerations", algo_accln.size()) {
     Kokkos::deep_copy(generalized_coords_, gen_coords);
-    Kokkos::deep_copy(generalized_coords_dot_, gen_coords_dot);
-    Kokkos::deep_copy(generalized_coords_dot_dot_, gen_coords_ddot);
-    Kokkos::deep_copy(accelerations_, accls);
+    Kokkos::deep_copy(generalized_velocity_, gen_velocity);
+    Kokkos::deep_copy(generalized_accelerations_, gen_accln);
+    Kokkos::deep_copy(algorithmic_accelerations_, algo_accln);
 }
 
 HostView1D operator+(const HostView1D& view1, const HostView1D& view2) {
@@ -97,12 +97,11 @@ HostView1D operator*(double scalar, const HostView1D& view) {
 
 State operator+(const State& lhs, const State& rhs) {
     auto gen_coords = lhs.GetGeneralizedCoordinates() + rhs.GetGeneralizedCoordinates();
-    auto gen_coords_dot = lhs.GetGeneralizedCoordinatesDot() + rhs.GetGeneralizedCoordinatesDot();
-    auto gen_coords_ddot =
-        lhs.GetGeneralizedCoordinatesDotDot() + rhs.GetGeneralizedCoordinatesDotDot();
-    auto accls = lhs.GetAccelerations() + rhs.GetAccelerations();
+    auto gen_velocity = lhs.GetGeneralizedVelocity() + rhs.GetGeneralizedVelocity();
+    auto gen_accln = lhs.GetGeneralizedAcceleration() + rhs.GetGeneralizedAcceleration();
+    auto algo_accln = lhs.GetAccelerations() + rhs.GetAccelerations();
 
-    return State(gen_coords, gen_coords_dot, gen_coords_ddot, accls);
+    return State(gen_coords, gen_velocity, gen_accln, algo_accln);
 }
 
 State operator+=(State& lhs, const State& rhs) {
@@ -143,18 +142,18 @@ void GeneralizedAlphaTimeIntegrator::Integrate() {
 void GeneralizedAlphaTimeIntegrator::AlphaStep() {
     // Perform the linear update
     auto gen_coords = this->state_.GetGeneralizedCoordinates();
-    auto gen_coords_dot = this->state_.GetGeneralizedCoordinatesDot();
-    auto gen_coords_ddot = this->state_.GetGeneralizedCoordinatesDotDot();
-    auto accls = this->state_.GetAccelerations();
+    auto gen_velocity = this->state_.GetGeneralizedVelocity();
+    auto gen_accln = this->state_.GetGeneralizedAcceleration();
+    auto algo_accln = this->state_.GetAccelerations();
     auto h = this->time_step_;
 
-    auto gen_coords_next = gen_coords + h * gen_coords_dot + h * h * (0.5 - kBETA) * accls;
-    auto gen_coords_dot_next = gen_coords_dot + h * (1 - kGAMMA) * accls;
+    auto gen_coords_next = gen_coords + h * gen_velocity + h * h * (0.5 - kBETA) * algo_accln;
+    auto gen_velocity_next = gen_velocity + h * (1 - kGAMMA) * algo_accln;
 
-    auto acceleration_next = (1 / (1 - kALPHA_M)) * (kALPHA_F * gen_coords_ddot - kALPHA_M * accls);
+    auto acceleration_next = (1 / (1 - kALPHA_M)) * (kALPHA_F * gen_accln - kALPHA_M * algo_accln);
 
     gen_coords_next = gen_coords_next + h * h * kBETA * acceleration_next;
-    gen_coords_dot_next = gen_coords_dot_next + h * kBETA * acceleration_next;
+    gen_velocity_next = gen_velocity_next + h * kBETA * acceleration_next;
 
     // TODO: Perform the nonlinear update
 }
