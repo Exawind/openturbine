@@ -8,8 +8,10 @@
 
 namespace openturbine::heat_solve {
 
-double* heat_conduction_solver(int axis_size, double side_length, int n_max, double k, double ic_x0,
-                               double ic_x1, double residual_tolerance) {
+double* heat_conduction_solver(
+    int axis_size, double side_length, int n_max, double k, double ic_x0, double ic_x1,
+    double residual_tolerance
+) {
     // Spatial step size
     double dx{side_length / axis_size};
     // Spatial grid points for the plate
@@ -23,11 +25,14 @@ double* heat_conduction_solver(int axis_size, double side_length, int n_max, dou
 
     // Initialize
     Kokkos::parallel_for(
-        "U_init", axis_size, KOKKOS_LAMBDA(int i) { U[i] = 0.0; });
+        "U_init", axis_size, KOKKOS_LAMBDA(int i) { U[i] = 0.0; }
+    );
     Kokkos::parallel_for(
-        "U_im1_init", axis_size, KOKKOS_LAMBDA(int i) { U_im1[i] = 0.0; });
+        "U_im1_init", axis_size, KOKKOS_LAMBDA(int i) { U_im1[i] = 0.0; }
+    );
     Kokkos::parallel_for(
-        "deltaU_init", axis_size, KOKKOS_LAMBDA(int i) { deltaU[i] = 0.0; });
+        "deltaU_init", axis_size, KOKKOS_LAMBDA(int i) { deltaU[i] = 0.0; }
+    );
 
     // Apply IC
     U[0] = ic_x0;
@@ -107,7 +112,8 @@ double* kokkos_laplacian(int axis_size, double* U, double dx) {
     // not operate on the boundaries.
     auto laplacian = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
     Kokkos::parallel_for(
-        "laplacian", axis_size - 2, KOKKOS_LAMBDA(int i) {
+        "laplacian", axis_size - 2,
+        KOKKOS_LAMBDA(int i) {
             // std::cout << "Iteration: " << i << std::endl;
 
             i = i + 1;  // shift over 1 to enforce the BC
@@ -117,7 +123,8 @@ double* kokkos_laplacian(int axis_size, double* U, double dx) {
             // std::cout << "   " << left << " " << center << " " << right <<
             // std::endl;
             laplacian[i] = (left + right - 2 * center) / pow(dx, 2);
-        });
+        }
+    );
     return laplacian;
 }
 
@@ -126,10 +133,12 @@ double* kokkos_1d_heat_conduction(int axis_size, double* U_im1, double dt, doubl
     // NOTE: the boundaries are not computed and are left uninitialized.
     auto heat = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
     Kokkos::parallel_for(
-        "1d_heat_conduction", axis_size - 2, KOKKOS_LAMBDA(int i) {
+        "1d_heat_conduction", axis_size - 2,
+        KOKKOS_LAMBDA(int i) {
             i = i + 1;  // shift over 1 to enforce the BC
             heat[i] = U_im1[i] + dt * (k * dU[i]);
-        });
+        }
+    );
     return heat;
 }
 
@@ -137,7 +146,8 @@ double kokkos_calculate_residual(int axis_size, double* U, double* U_im1) {
     double residual;
     Kokkos::parallel_reduce(
         "residual", axis_size,
-        KOKKOS_LAMBDA(const int& i, double& iresidual) { iresidual += U[i] - U_im1[i]; }, residual);
+        KOKKOS_LAMBDA(const int& i, double& iresidual) { iresidual += U[i] - U_im1[i]; }, residual
+    );
     return residual;
 }
 

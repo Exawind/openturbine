@@ -64,12 +64,13 @@ TEST(HeatSolve, FullSolve) {
     // For all points at 0.0, the domain should be all 0.0 after a few
     // iterations. This tests for any numerical noise.
     auto U = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
-    U = openturbine::heat_solve::heat_conduction_solver(axis_size, side_length,
-                                                        5,  // number of iterations
-                                                        k,
-                                                        0.0,  // x=0 IC
-                                                        0.0,  // x=end IC
-                                                        1e-5  // tolerance
+    U = openturbine::heat_solve::heat_conduction_solver(
+        axis_size, side_length,
+        5,  // number of iterations
+        k,
+        0.0,  // x=0 IC
+        0.0,  // x=end IC
+        1e-5  // tolerance
     );
     ASSERT_EQ(std::accumulate(U, U + axis_size, 0.0), 0.0);
     std::free(U);
@@ -80,12 +81,13 @@ TEST(HeatSolve, FullSolve) {
     // a small amount of difference.
     double test_temp = 10.0;
     U = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
-    U = openturbine::heat_solve::heat_conduction_solver(axis_size, side_length,
-                                                        500,  // number of iterations
-                                                        k,
-                                                        test_temp,  // x=0 IC
-                                                        test_temp,  // x=end IC
-                                                        1e-8        // tolerance
+    U = openturbine::heat_solve::heat_conduction_solver(
+        axis_size, side_length,
+        500,  // number of iterations
+        k,
+        test_temp,  // x=0 IC
+        test_temp,  // x=end IC
+        1e-8        // tolerance
     );
     ASSERT_NEAR(std::accumulate(U, U + axis_size, 0.0), test_temp * axis_size / side_length, 1e-6);
 
@@ -94,12 +96,13 @@ TEST(HeatSolve, FullSolve) {
     // of the end points.
     test_temp = 10.0;
     U = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
-    U = openturbine::heat_solve::heat_conduction_solver(axis_size, side_length,
-                                                        500,  // number of iterations
-                                                        k,
-                                                        0.0,        // x=0 IC
-                                                        test_temp,  // x=end IC
-                                                        1e-8        // tolerance
+    U = openturbine::heat_solve::heat_conduction_solver(
+        axis_size, side_length,
+        500,  // number of iterations
+        k,
+        0.0,        // x=0 IC
+        test_temp,  // x=end IC
+        1e-8        // tolerance
     );
     ASSERT_NEAR(U[5], test_temp / 2.0, 1e-6);
 }
