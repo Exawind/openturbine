@@ -1,9 +1,9 @@
 #include <limits>
 
-#include "tests/unit_tests/rigid_pendulum_poc/test_utilities.h"
 #include <gtest/gtest.h>
 
 #include "src/rigid_pendulum_poc/solver.h"
+#include "tests/unit_tests/rigid_pendulum_poc/test_utilities.h"
 
 namespace openturbine::rigid_pendulum::tests {
 

@@ -1,15 +1,14 @@
 #include "tests/unit_tests/rigid_pendulum_poc/test_utilities.h"
 
-#include <gtest/gtest.h>
-
 #include <limits>
+
+#include <gtest/gtest.h>
 
 namespace openturbine::rigid_pendulum::tests {
 
 HostView2D create_diagonal_matrix(const std::vector<double>& values) {
     auto matrix = HostView2D("matrix", values.size(), values.size());
-    auto diagonal_entries =
-        Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, values.size());
+    auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, values.size());
     auto fill_diagonal = [matrix, values](int index) {
         matrix(index, index) = values[index];
     };
@@ -35,7 +34,8 @@ HostView1D create_vector(const std::vector<double>& values) {
 HostView2D create_matrix(const std::vector<std::vector<double>>& values) {
     auto matrix = HostView2D("matrix", values.size(), values.front().size());
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
-        {0, 0}, {values.size(), values.front().size()});
+        {0, 0}, {values.size(), values.front().size()}
+    );
     auto fill_matrix = [matrix, values](int row, int column) {
         matrix(row, column) = values[row][column];
     };

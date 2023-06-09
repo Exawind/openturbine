@@ -3,7 +3,6 @@
 #include <gtest/gtest.h>
 
 #include "src/rigid_pendulum_poc/solver.h"
-
 #include "tests/unit_tests/rigid_pendulum_poc/test_utilities.h"
 
 namespace openturbine::rigid_pendulum::tests {
@@ -81,8 +80,10 @@ TEST(LinearSolverTest, Check2x3MatrixShape) {
     auto matrix_2x3 = create_matrix({{1., 2., 3.}, {4., 5., 6.}});
     auto solution_2x1 = create_vector({1., 1.});
 
-    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(matrix_2x3, solution_2x1),
-                 std::invalid_argument);
+    EXPECT_THROW(
+        openturbine::rigid_pendulum::solve_linear_system(matrix_2x3, solution_2x1),
+        std::invalid_argument
+    );
 }
 
 TEST(LinearSolverTest, Check5x3MatrixShape) {
@@ -95,24 +96,30 @@ TEST(LinearSolverTest, Check5x3MatrixShape) {
     });
     auto solution_5x1 = create_vector({1., 1., 1., 1., 1.});
 
-    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(matrix_5x3, solution_5x1),
-                 std::invalid_argument);
+    EXPECT_THROW(
+        openturbine::rigid_pendulum::solve_linear_system(matrix_5x3, solution_5x1),
+        std::invalid_argument
+    );
 }
 
 TEST(LinearSolverTest, Check1x1Matrix2x1VectorCompatibility) {
     auto system_1x1 = create_diagonal_matrix({1.});
     auto solution_2x1 = create_vector({1., 2.});
 
-    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(system_1x1, solution_2x1),
-                 std::invalid_argument);
+    EXPECT_THROW(
+        openturbine::rigid_pendulum::solve_linear_system(system_1x1, solution_2x1),
+        std::invalid_argument
+    );
 }
 
 TEST(LinearSolverTest, Check3x3Matrix2x1VectorCompatibility) {
     auto system_3x3 = create_diagonal_matrix({1., 1., 1.});
     auto solution_2x1 = create_vector({1., 2.});
 
-    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(system_3x3, solution_2x1),
-                 std::invalid_argument);
+    EXPECT_THROW(
+        openturbine::rigid_pendulum::solve_linear_system(system_3x3, solution_2x1),
+        std::invalid_argument
+    );
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

@@ -16,7 +16,8 @@ void solve_linear_system(HostView2D system, HostView1D solution) {
 
     if (rows != static_cast<int>(solution.extent(0))) {
         throw std::invalid_argument(
-            "Provided system and solution must contain the same number of rows");
+            "Provided system and solution must contain the same number of rows"
+        );
     }
 
     int right_hand_sides{1};
@@ -25,24 +26,26 @@ void solve_linear_system(HostView2D system, HostView1D solution) {
     int leading_dimension_solution{1};
 
     auto log = util::Log::Get();
-    log->Debug("Solving a " + std::to_string(rows) + " x " + std::to_string(rows) +
-               " system of linear equations with LAPACKE_dgesv" + "\n");
+    log->Debug(
+        "Solving a " + std::to_string(rows) + " x " + std::to_string(rows) +
+        " system of linear equations with LAPACKE_dgesv" + "\n"
+    );
 
     // Call DGESV from LAPACK to compute the solution to a real system of linear
     // equations A * x = b, returns 0 if successful
     // https://www.netlib.org/lapack/lapacke.html
-    auto info =
-        LAPACKE_dgesv(LAPACK_ROW_MAJOR,  // input: matrix_layout
-                      rows,              // input: number of linear equations
-                      right_hand_sides,  // input: number of rhs
-                      system.data(),     // input/output: Upon entry, the nxn coefficient matrix
-                                         // Upon exit, the factors L and U from the factorization
-                      leading_dimension_sytem,  // input: leading dimension of system
-                      pivots.data(),            // output: pivot indices
-                      solution.data(),  // input/output: Upon entry, the right-hand side matrix
-                                        // Upon exit, the solution matrix
-                      leading_dimension_solution  // input: leading dimension of solution
-        );
+    auto info = LAPACKE_dgesv(
+        LAPACK_ROW_MAJOR,           // input: matrix_layout
+        rows,                       // input: number of linear equations
+        right_hand_sides,           // input: number of rhs
+        system.data(),              // input/output: Upon entry, the nxn coefficient matrix
+                                    // Upon exit, the factors L and U from the factorization
+        leading_dimension_sytem,    // input: leading dimension of system
+        pivots.data(),              // output: pivot indices
+        solution.data(),            // input/output: Upon entry, the right-hand side matrix
+                                    // Upon exit, the solution matrix
+        leading_dimension_solution  // input: leading dimension of solution
+    );
 
     log->Debug("LAPACKE_dgesv returned exit code " + std::to_string(info) + "\n");
 
@@ -58,8 +61,9 @@ State::State()
       algorithmic_accelerations_("algorithmic_accelerations", 1) {
 }
 
-State::State(HostView1D gen_coords, HostView1D gen_velocity, HostView1D gen_accln,
-             HostView1D algo_accln)
+State::State(
+    HostView1D gen_coords, HostView1D gen_velocity, HostView1D gen_accln, HostView1D algo_accln
+)
     : generalized_coords_("generalized_coordinates", gen_coords.size()),
       generalized_velocity_("generalized_velocity", gen_velocity.size()),
       generalized_accelerations_("generalized_accelerations", gen_accln.size()),
@@ -73,21 +77,24 @@ State::State(HostView1D gen_coords, HostView1D gen_velocity, HostView1D gen_accl
 HostView1D operator+(const HostView1D& view1, const HostView1D& view2) {
     HostView1D result("result", view1.size());
     Kokkos::parallel_for(
-        view1.size(), KOKKOS_LAMBDA(const int i) { result(i) = view1(i) + view2(i); });
+        view1.size(), KOKKOS_LAMBDA(const int i) { result(i) = view1(i) + view2(i); }
+    );
     return result;
 }
 
 HostView1D operator-(const HostView1D& view1, const HostView1D& view2) {
     HostView1D result("result", view1.size());
     Kokkos::parallel_for(
-        view1.size(), KOKKOS_LAMBDA(const int i) { result(i) = view1(i) - view2(i); });
+        view1.size(), KOKKOS_LAMBDA(const int i) { result(i) = view1(i) - view2(i); }
+    );
     return result;
 }
 
 HostView1D operator*(const HostView1D& view, double scalar) {
     HostView1D result("result", view.size());
     Kokkos::parallel_for(
-        view.size(), KOKKOS_LAMBDA(const int i) { result(i) = scalar * view(i); });
+        view.size(), KOKKOS_LAMBDA(const int i) { result(i) = scalar * view(i); }
+    );
     return result;
 }
 
@@ -108,11 +115,10 @@ State operator+=(State& lhs, const State& rhs) {
     return lhs = lhs + rhs;
 }
 
-GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(double initial_time,
-                                                               double time_step,
-                                                               size_t number_of_steps,
-                                                               State initial_state,
-                                                               State state_increment)
+GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
+    double initial_time, double time_step, size_t number_of_steps, State initial_state,
+    State state_increment
+)
     : initial_time_(initial_time),
       time_step_(time_step),
       number_of_steps_(number_of_steps),

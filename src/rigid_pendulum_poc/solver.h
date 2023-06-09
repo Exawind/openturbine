@@ -93,9 +93,10 @@ public:
     static constexpr double kGAMMA = 0.5;
     static constexpr size_t kMAX_ITERATIONS = 10;
 
-    GeneralizedAlphaTimeIntegrator(double initial_time = 0., double time_step = 1.,
-                                   size_t number_of_steps = 1, State state = State(),
-                                   State state_increment = State());
+    GeneralizedAlphaTimeIntegrator(
+        double initial_time = 0., double time_step = 1., size_t number_of_steps = 1,
+        State state = State(), State state_increment = State()
+    );
 
     /// Returns the initial time of the analysis
     inline double GetInitialTime() const { return initial_time_; }
