@@ -74,47 +74,6 @@ State::State(
     Kokkos::deep_copy(algorithmic_accelerations_, algo_accln);
 }
 
-HostView1D operator+(const HostView1D& view1, const HostView1D& view2) {
-    HostView1D result("result", view1.size());
-    Kokkos::parallel_for(
-        view1.size(), KOKKOS_LAMBDA(const int i) { result(i) = view1(i) + view2(i); }
-    );
-    return result;
-}
-
-HostView1D operator-(const HostView1D& view1, const HostView1D& view2) {
-    HostView1D result("result", view1.size());
-    Kokkos::parallel_for(
-        view1.size(), KOKKOS_LAMBDA(const int i) { result(i) = view1(i) - view2(i); }
-    );
-    return result;
-}
-
-HostView1D operator*(const HostView1D& view, double scalar) {
-    HostView1D result("result", view.size());
-    Kokkos::parallel_for(
-        view.size(), KOKKOS_LAMBDA(const int i) { result(i) = scalar * view(i); }
-    );
-    return result;
-}
-
-HostView1D operator*(double scalar, const HostView1D& view) {
-    return view * scalar;
-}
-
-State operator+(const State& lhs, const State& rhs) {
-    auto gen_coords = lhs.GetGeneralizedCoordinates() + rhs.GetGeneralizedCoordinates();
-    auto gen_velocity = lhs.GetGeneralizedVelocity() + rhs.GetGeneralizedVelocity();
-    auto gen_accln = lhs.GetGeneralizedAcceleration() + rhs.GetGeneralizedAcceleration();
-    auto algo_accln = lhs.GetAccelerations() + rhs.GetAccelerations();
-
-    return State(gen_coords, gen_velocity, gen_accln, algo_accln);
-}
-
-State operator+=(State& lhs, const State& rhs) {
-    return lhs = lhs + rhs;
-}
-
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double initial_time, double time_step, size_t number_of_steps, State initial_state,
     State state_increment
@@ -136,7 +95,7 @@ void GeneralizedAlphaTimeIntegrator::Integrate() {
 
         // Perform the alpha step and update the current state
         this->AlphaStep();
-        this->state_ += this->state_increment_;
+        // this->state_ += this->state_increment_;
 
         // Advance the time of the analysis
         this->AdvanceTimeStep();
@@ -145,21 +104,35 @@ void GeneralizedAlphaTimeIntegrator::Integrate() {
     log->Debug("Time integration completed successfully \n");
 }
 
-void GeneralizedAlphaTimeIntegrator::AlphaStep() {
-    // Perform the linear update
+void GeneralizedAlphaTimeIntegrator::UpdateLinearSolution() {
     auto gen_coords = this->state_.GetGeneralizedCoordinates();
     auto gen_velocity = this->state_.GetGeneralizedVelocity();
     auto gen_accln = this->state_.GetGeneralizedAcceleration();
     auto algo_accln = this->state_.GetAccelerations();
     auto h = this->time_step_;
 
-    auto gen_coords_next = gen_coords + h * gen_velocity + h * h * (0.5 - kBETA) * algo_accln;
-    auto gen_velocity_next = gen_velocity + h * (1 - kGAMMA) * algo_accln;
+    auto size = gen_coords.size();
+    HostView1D gen_coords_next("gen_coords_next", size);
+    HostView1D gen_velocity_next("gen_velocity_next", size);
+    HostView1D algo_accln_next("algo_accln_next", size);
 
-    auto acceleration_next = (1 / (1 - kALPHA_M)) * (kALPHA_F * gen_accln - kALPHA_M * algo_accln);
+    Kokkos::parallel_for(
+        size,
+        KOKKOS_LAMBDA(const int i) {
+            gen_coords_next(i) =
+                gen_coords(i) + h * gen_velocity(i) + h * h * (0.5 - kBETA) * algo_accln(i);
+            gen_velocity_next(i) = gen_velocity(i) + h * (1 - kGAMMA) * algo_accln(i);
+            algo_accln_next(i) =
+                (1.0 / (1.0 - kALPHA_M)) * (kALPHA_F * gen_accln(i) - kALPHA_M * algo_accln(i));
+            gen_coords_next(i) = gen_coords_next(i) + h * h * kBETA * algo_accln_next(i);
+            gen_velocity_next(i) = gen_velocity_next(i) + h * kBETA * algo_accln_next(i);
+        }
+    );
+}
 
-    gen_coords_next = gen_coords_next + h * h * kBETA * acceleration_next;
-    gen_velocity_next = gen_velocity_next + h * kBETA * acceleration_next;
+void GeneralizedAlphaTimeIntegrator::AlphaStep() {
+    // Perform the linear update
+    UpdateLinearSolution();
 
     // TODO: Perform the nonlinear update
 }

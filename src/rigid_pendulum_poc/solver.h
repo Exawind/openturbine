@@ -42,48 +42,6 @@ private:
     HostView1D algorithmic_accelerations_;
 };
 
-/*!
- * @brief Overload the addition (i.e. +) operator to add two State objects together
- * @param lhs The left hand side state
- * @param rhs The right hand side state
- * @return The sum of the two states as a new state
- */
-State operator+(const State&, const State&);
-
-/*! @brief Overload the addition assignment (i.e. +=) operator to add two State
- *         objects together
- *  @param lhs The left hand side state
- *  @param rhs The right hand side state
- *  @return The sum of the two states, assigned to the left hand side state
- */
-State operator+=(State&, const State&);
-
-/*!
- * @brief Add two 1D kokkos views together using an overloaded addition operator
- * @param lhs The left hand side view
- * @param rhs The right hand side view
- * @return The sum of the two views as a new view
- */
-HostView1D operator+(const HostView1D&, const HostView1D&);
-
-/*!
- * @brief Overload the subtraction (i.e. -) operator to subtract two State objects
- *        from each other
- * @param lhs The left hand side state
- * @param rhs The right hand side state
- * @return The difference of the two states as a new state
- */
-HostView1D operator-(const HostView1D&, const HostView1D&);
-
-/*!
- * @brief Multiply a 1D kokkos view by a scalar using an overloaded multiplication operator
- * @param lhs The left hand side view
- * @param rhs The right hand side scalar
- * @return The product of the view and the scalar
- */
-HostView1D operator*(const HostView1D&, double);
-HostView1D operator*(double, const HostView1D&);
-
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator {
 public:
@@ -138,6 +96,8 @@ private:
      * @return  The updated state of the system
      */
     void AlphaStep();
+
+    void UpdateLinearSolution();
 };
 
 }  // namespace openturbine::rigid_pendulum
