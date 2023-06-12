@@ -48,16 +48,9 @@ TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberofSteps) {
 TEST(StateTest, CreateDefaultState) {
     auto state = State();
 
-    EXPECT_EQ(state.GetGeneralizedCoordinates().size(), 1);
     expect_kokkos_view_1D_equal(state.GetGeneralizedCoordinates(), {0.});
-
-    EXPECT_EQ(state.GetGeneralizedVelocity().size(), 1);
     expect_kokkos_view_1D_equal(state.GetGeneralizedVelocity(), {0.});
-
-    EXPECT_EQ(state.GetGeneralizedAcceleration().size(), 1);
     expect_kokkos_view_1D_equal(state.GetGeneralizedAcceleration(), {0.});
-
-    EXPECT_EQ(state.GetAccelerations().size(), 1);
     expect_kokkos_view_1D_equal(state.GetAccelerations(), {0.});
 }
 
@@ -65,16 +58,9 @@ TEST(StateTest, CreateState) {
     auto v = create_vector({1., 2., 3.});
     auto state = State(v, v, v, v);
 
-    EXPECT_EQ(state.GetGeneralizedCoordinates().size(), 3);
     expect_kokkos_view_1D_equal(state.GetGeneralizedCoordinates(), {1., 2., 3.});
-
-    EXPECT_EQ(state.GetGeneralizedVelocity().size(), 3);
     expect_kokkos_view_1D_equal(state.GetGeneralizedVelocity(), {1., 2., 3.});
-
-    EXPECT_EQ(state.GetGeneralizedAcceleration().size(), 3);
     expect_kokkos_view_1D_equal(state.GetGeneralizedAcceleration(), {1., 2., 3.});
-
-    EXPECT_EQ(state.GetAccelerations().size(), 3);
     expect_kokkos_view_1D_equal(state.GetAccelerations(), {1., 2., 3.});
 }
 

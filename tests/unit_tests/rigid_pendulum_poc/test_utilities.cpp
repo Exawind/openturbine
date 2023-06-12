@@ -13,7 +13,6 @@ HostView2D create_diagonal_matrix(const std::vector<double>& values) {
         matrix(index, index) = values[index];
     };
 
-    Kokkos::deep_copy(matrix, 0);
     Kokkos::parallel_for(diagonal_entries, fill_diagonal);
 
     return matrix;
