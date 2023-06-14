@@ -156,6 +156,16 @@ State GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(const State& state) {
         }
     );
 
+    auto log = util::Log::Get();
+    log->Debug("Linear solution: gen_coords, gen_velocity, algo_acceleration\n");
+
+    for (size_t i = 0; i < size; i++) {
+        log->Debug(
+            "row " + std::to_string(i) + ": " + std::to_string(gen_coords_next(i)) + "\t" +
+            std::to_string(gen_velocity_next(i)) + "\t" + std::to_string(algo_accln_next(i)) + "\n"
+        );
+    }
+
     return State(gen_coords_next, gen_velocity_next, gen_accln, algo_accln_next);
 }
 

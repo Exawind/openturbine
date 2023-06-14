@@ -89,12 +89,6 @@ public:
     /// Performs the time integration and returns a vector of States over the time steps
     std::vector<State> Integrate(const State&);
 
-private:
-    double initial_time_;     //< Initial time of the analysis
-    double time_step_;        //< Time step of the analysis
-    size_t number_of_steps_;  //< Number of time steps to perform
-    double current_time_;     //< Current time of the analysis
-
     /*! @brief  Perform the alpha step of the generalized-alpha method as described
      *          in the paper by Arnold and Brüls (2007)
      *          https://link.springer.com/article/10.1007/s11044-007-9084-0
@@ -105,6 +99,12 @@ private:
 
     /// Perform the linear part of the generalized-alpha method
     State UpdateLinearSolution(const State&);
+
+private:
+    double initial_time_;     //< Initial time of the analysis
+    double time_step_;        //< Time step of the analysis
+    size_t number_of_steps_;  //< Number of time steps to perform
+    double current_time_;     //< Current time of the analysis
 };
 
 }  // namespace openturbine::rigid_pendulum

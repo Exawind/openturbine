@@ -76,6 +76,41 @@ TEST(TimeIntegratorTest, GetHistoryOfStatesFromTimeIntegrator) {
     EXPECT_EQ(state_history.size(), 18);
 }
 
+TEST(TimeIntegratorTest, LinearSolutionWithZeroAcceleration) {
+    auto initial_state = State();
+
+    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedCoordinates(), {0.});
+    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedVelocity(), {0.});
+    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedAcceleration(), {0.});
+    expect_kokkos_view_1D_equal(initial_state.GetAlgorithmicAcceleration(), {0.});
+
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1);
+    auto updated_state = time_integrator.UpdateLinearSolution(initial_state);
+
+    expect_kokkos_view_1D_equal(updated_state.GetGeneralizedCoordinates(), {0.});
+    expect_kokkos_view_1D_equal(updated_state.GetGeneralizedVelocity(), {0.});
+    expect_kokkos_view_1D_equal(updated_state.GetGeneralizedAcceleration(), {0.});
+    expect_kokkos_view_1D_equal(updated_state.GetAlgorithmicAcceleration(), {0.});
+}
+
+TEST(TimeIntegratorTest, LinearSolutionWithNonZeroAcceleration) {
+    auto v = create_vector({1., 2., 3.});
+    auto initial_state = State(v, v, v, v);
+
+    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedCoordinates(), {1., 2., 3.});
+    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedVelocity(), {1., 2., 3.});
+    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedAcceleration(), {1., 2., 3.});
+    expect_kokkos_view_1D_equal(initial_state.GetAlgorithmicAcceleration(), {1., 2., 3.});
+
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1);
+    auto updated_state = time_integrator.UpdateLinearSolution(initial_state);
+
+    expect_kokkos_view_1D_equal(updated_state.GetGeneralizedCoordinates(), {2.25, 4.5, 6.75});
+    expect_kokkos_view_1D_equal(updated_state.GetGeneralizedVelocity(), {1.5, 3., 4.5});
+    expect_kokkos_view_1D_equal(updated_state.GetGeneralizedAcceleration(), {1., 2., 3.});
+    expect_kokkos_view_1D_equal(updated_state.GetAlgorithmicAcceleration(), {0., 0., 0.});
+}
+
 TEST(StateTest, AddTwoStatesWithAdditionOperator) {
     auto v = create_vector({1., 2., 3.});
     auto state1 = State(v, v, v, v);
