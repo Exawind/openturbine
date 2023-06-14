@@ -57,8 +57,8 @@ void solve_linear_system(HostView2D system, HostView1D solution) {
 State::State()
     : generalized_coords_("generalized_coordinates", 1),
       generalized_velocity_("generalized_velocity", 1),
-      generalized_accelerations_("generalized_accelerations", 1),
-      algorithmic_accelerations_("algorithmic_accelerations", 1) {
+      generalized_acceleration_("generalized_accelerations", 1),
+      algorithmic_acceleration_("algorithmic_accelerations", 1) {
 }
 
 State::State(
@@ -66,12 +66,46 @@ State::State(
 )
     : generalized_coords_("generalized_coordinates", gen_coords.size()),
       generalized_velocity_("generalized_velocity", gen_velocity.size()),
-      generalized_accelerations_("generalized_accelerations", gen_accln.size()),
-      algorithmic_accelerations_("algorithmic_accelerations", algo_accln.size()) {
+      generalized_acceleration_("generalized_accelerations", gen_accln.size()),
+      algorithmic_acceleration_("algorithmic_accelerations", algo_accln.size()) {
     Kokkos::deep_copy(generalized_coords_, gen_coords);
     Kokkos::deep_copy(generalized_velocity_, gen_velocity);
-    Kokkos::deep_copy(generalized_accelerations_, gen_accln);
-    Kokkos::deep_copy(algorithmic_accelerations_, algo_accln);
+    Kokkos::deep_copy(generalized_acceleration_, gen_accln);
+    Kokkos::deep_copy(algorithmic_acceleration_, algo_accln);
+}
+
+State operator+(const State& lhs, const State& rhs) {
+    auto lhs_gen_coords = lhs.GetGeneralizedCoordinates();
+    auto lhs_gen_velocity = lhs.GetGeneralizedVelocity();
+    auto lhs_gen_accln = lhs.GetGeneralizedAcceleration();
+    auto lhs_algo_accln = lhs.GetAlgorithmicAcceleration();
+
+    auto rhs_gen_coords = rhs.GetGeneralizedCoordinates();
+    auto rhs_gen_velocity = rhs.GetGeneralizedVelocity();
+    auto rhs_gen_accln = rhs.GetGeneralizedAcceleration();
+    auto rhs_algo_accln = rhs.GetAlgorithmicAcceleration();
+
+    auto size = lhs.GetGeneralizedCoordinates().size();
+    HostView1D gen_coords("generalized_coordinates", size);
+    HostView1D gen_velocity("generalized_velocity", size);
+    HostView1D gen_accln("generalized_accelerations", size);
+    HostView1D algo_accln("algorithmic_accelerations", size);
+
+    Kokkos::parallel_for(
+        size,
+        KOKKOS_LAMBDA(const int i) {
+            gen_coords(i) = lhs_gen_coords(i) + rhs_gen_coords(i);
+            gen_velocity(i) = lhs_gen_velocity(i) + rhs_gen_velocity(i);
+            gen_accln(i) = lhs_gen_accln(i) + rhs_gen_accln(i);
+            algo_accln(i) = lhs_algo_accln(i) + rhs_algo_accln(i);
+        }
+    );
+
+    return State(gen_coords, gen_velocity, gen_accln, algo_accln);
+}
+
+State operator+=(State& lhs, const State& rhs) {
+    return lhs = lhs + rhs;
 }
 
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
@@ -101,7 +135,7 @@ State GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(const State& state) {
     auto gen_coords = state.GetGeneralizedCoordinates();
     auto gen_velocity = state.GetGeneralizedVelocity();
     auto gen_accln = state.GetGeneralizedAcceleration();
-    auto algo_accln = state.GetAccelerations();
+    auto algo_accln = state.GetAlgorithmicAcceleration();
     auto h = this->time_step_;
 
     auto size = gen_coords.size();
