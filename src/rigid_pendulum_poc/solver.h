@@ -26,13 +26,13 @@ public:
     /// Get the generalized coordinates
     inline HostView1D GetGeneralizedCoordinates() const { return generalized_coords_; }
 
-    /// Get the generalized coordinates dot
+    /// Get the first time derivative of the generalized coordinates
     inline HostView1D GetGeneralizedVelocity() const { return generalized_velocity_; }
 
-    /// Get the generalized coordinates dot dot
+    /// Get the second time derivative of the generalized coordinates
     inline HostView1D GetGeneralizedAcceleration() const { return generalized_accelerations_; }
 
-    /// Get the accelerations
+    /// Get the algorithmic accelerations (different than the generalized accelerations)
     inline HostView1D GetAccelerations() const { return algorithmic_accelerations_; }
 
 private:
@@ -52,8 +52,7 @@ public:
     static constexpr size_t kMAX_ITERATIONS = 10;
 
     GeneralizedAlphaTimeIntegrator(
-        double initial_time = 0., double time_step = 1., size_t number_of_steps = 1,
-        State state = State(), State state_increment = State()
+        double initial_time = 0., double time_step = 1., size_t number_of_steps = 1
     );
 
     /// Returns the initial time of the analysis
@@ -71,14 +70,8 @@ public:
     /// Returns the number of analysis time steps
     inline int GetNumberOfSteps() const { return number_of_steps_; }
 
-    /// Performs the time integration
-    void Integrate();
-
-    /// Returns the current state of the system
-    inline State GetState() const { return state_; }
-
-    /// Returns the incremental change in the state of the system
-    inline State GetStateIncrement() const { return state_increment_; }
+    /// Performs the time integration and returns a vector of States over the time steps
+    std::vector<State> Integrate(const State&);
 
 private:
     double initial_time_;     //< Initial time of the analysis
@@ -86,18 +79,16 @@ private:
     size_t number_of_steps_;  //< Number of time steps to perform
     double current_time_;     //< Current time of the analysis
 
-    State state_;            //< Current state of the system
-    State state_increment_;  //< Incremental change in the state of the system
-
     /*! @brief  Perform the alpha step of the generalized-alpha method as described
      *          in the paper by Arnold and Brüls (2007)
      *          https://link.springer.com/article/10.1007/s11044-007-9084-0
-     * @param   state The current state of the system
-     * @return  The updated state of the system
+     * @param   state Current state of the system at the beginning of the time step
+     * @return  Updated state of the system at the end of the time step
      */
-    void AlphaStep();
+    State AlphaStep(const State&);
 
-    void UpdateLinearSolution();
+    /// Perform the linear part of the generalized-alpha method
+    State UpdateLinearSolution(const State&);
 };
 
 }  // namespace openturbine::rigid_pendulum

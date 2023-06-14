@@ -34,17 +34,6 @@ TEST(TimeIntegratorTest, AdvanceAnalysisTime) {
     EXPECT_EQ(time_integrator.GetCurrentTime(), 1.);
 }
 
-TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberofSteps) {
-    auto state = State();
-    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1.0, 10, state);
-
-    EXPECT_EQ(time_integrator.GetCurrentTime(), 0.);
-
-    time_integrator.Integrate();
-
-    EXPECT_EQ(time_integrator.GetCurrentTime(), 10.0);
-}
-
 TEST(StateTest, CreateDefaultState) {
     auto state = State();
 
@@ -64,16 +53,27 @@ TEST(StateTest, CreateState) {
     expect_kokkos_view_1D_equal(state.GetAccelerations(), {1., 2., 3.});
 }
 
-TEST(TimeIntegratorTest, GetCurrentStateFromTimeIntegrator) {
-    auto state = State();
-    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 0.10, 10, state);
+TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberofSteps) {
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1.0, 10);
 
     EXPECT_EQ(time_integrator.GetCurrentTime(), 0.);
 
-    time_integrator.Integrate();
-    auto current_state = time_integrator.GetState();
+    auto initial_state = State();
+    time_integrator.Integrate(initial_state);
 
-    EXPECT_NEAR(time_integrator.GetCurrentTime(), 1., std::numeric_limits<double>::epsilon());
+    EXPECT_EQ(time_integrator.GetCurrentTime(), 10.0);
+}
+
+TEST(TimeIntegratorTest, GetHistoryOfStatesFromTimeIntegrator) {
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 0.10, 17);
+
+    EXPECT_EQ(time_integrator.GetCurrentTime(), 0.);
+
+    auto initial_state = State();
+    auto state_history = time_integrator.Integrate(initial_state);
+
+    EXPECT_NEAR(time_integrator.GetCurrentTime(), 1.70, 10 * std::numeric_limits<double>::epsilon());
+    EXPECT_EQ(state_history.size(), 18);
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

@@ -75,40 +75,33 @@ State::State(
 }
 
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
-    double initial_time, double time_step, size_t number_of_steps, State initial_state,
-    State state_increment
+    double initial_time, double time_step, size_t number_of_steps
 )
-    : initial_time_(initial_time),
-      time_step_(time_step),
-      number_of_steps_(number_of_steps),
-      state_(initial_state),
-      state_increment_(state_increment) {
+    : initial_time_(initial_time), time_step_(time_step), number_of_steps_(number_of_steps) {
     this->current_time_ = initial_time;
 }
 
-void GeneralizedAlphaTimeIntegrator::Integrate() {
+std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initial_state) {
     auto log = util::Log::Get();
 
-    // Perform the time integration sequentially
+    std::vector<State> states{initial_state};
+
     for (size_t i = 0; i < this->number_of_steps_; i++) {
         log->Debug("Integrating step " + std::to_string(i + 1) + "\n");
-
-        // Perform the alpha step and update the current state
-        this->AlphaStep();
-        // this->state_ += this->state_increment_;
-
-        // Advance the time of the analysis
+        states.emplace_back(this->AlphaStep(states[i]));
         this->AdvanceTimeStep();
     }
 
-    log->Debug("Time integration completed successfully \n");
+    log->Debug("Time integration completed successfully!\n");
+
+    return states;
 }
 
-void GeneralizedAlphaTimeIntegrator::UpdateLinearSolution() {
-    auto gen_coords = this->state_.GetGeneralizedCoordinates();
-    auto gen_velocity = this->state_.GetGeneralizedVelocity();
-    auto gen_accln = this->state_.GetGeneralizedAcceleration();
-    auto algo_accln = this->state_.GetAccelerations();
+State GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(const State& state) {
+    auto gen_coords = state.GetGeneralizedCoordinates();
+    auto gen_velocity = state.GetGeneralizedVelocity();
+    auto gen_accln = state.GetGeneralizedAcceleration();
+    auto algo_accln = state.GetAccelerations();
     auto h = this->time_step_;
 
     auto size = gen_coords.size();
@@ -128,13 +121,16 @@ void GeneralizedAlphaTimeIntegrator::UpdateLinearSolution() {
             gen_velocity_next(i) = gen_velocity_next(i) + h * kBETA * algo_accln_next(i);
         }
     );
+
+    return State(gen_coords_next, gen_velocity_next, gen_accln, algo_accln_next);
 }
 
-void GeneralizedAlphaTimeIntegrator::AlphaStep() {
-    // Perform the linear update
-    UpdateLinearSolution();
+State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
+    auto linear_update = UpdateLinearSolution(state);
 
-    // TODO: Perform the nonlinear update
+    // TODO: Implement nonlinear update
+
+    return state;
 }
 
 }  // namespace openturbine::rigid_pendulum
