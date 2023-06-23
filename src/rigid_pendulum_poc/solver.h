@@ -97,8 +97,9 @@ public:
      */
     State AlphaStep(const State&);
 
-    /// Perform the linear part of the generalized-alpha method
-    State UpdateLinearSolution(const State&);
+    /// Perform the linear update of the generalized-alpha method
+    std::tuple<HostView1D, HostView1D, HostView1D>
+    UpdateLinearSolution(const HostView1D&, const HostView1D&, const HostView1D&, const HostView1D&);
 
 private:
     double initial_time_;     //< Initial time of the analysis

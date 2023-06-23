@@ -35,14 +35,14 @@ void solve_linear_system(HostView2D system, HostView1D solution) {
     // equations A * x = b, returns 0 if successful
     // https://www.netlib.org/lapack/lapacke.html
     auto info = LAPACKE_dgesv(
-        LAPACK_ROW_MAJOR,           // input: matrix_layout
+        LAPACK_ROW_MAJOR,           // input: matrix layout
         rows,                       // input: number of linear equations
         right_hand_sides,           // input: number of rhs
-        system.data(),              // input/output: Upon entry, the nxn coefficient matrix
+        system.data(),              // input/output: Upon entry, the n x n coefficient matrix
                                     // Upon exit, the factors L and U from the factorization
         leading_dimension_sytem,    // input: leading dimension of system
         pivots.data(),              // output: pivot indices
-        solution.data(),            // input/output: Upon entry, the right-hand side matrix
+        solution.data(),            // input/output: Upon entry, the right hand side matrix
                                     // Upon exit, the solution matrix
         leading_dimension_solution  // input: leading dimension of solution
     );
@@ -131,17 +131,34 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initia
     return states;
 }
 
-State GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(const State& state) {
+State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
     auto gen_coords = state.GetGeneralizedCoordinates();
     auto gen_velocity = state.GetGeneralizedVelocity();
     auto gen_accln = state.GetGeneralizedAcceleration();
     auto algo_accln = state.GetAlgorithmicAcceleration();
-    auto h = this->time_step_;
 
+    auto [linear_coords, linear_velocity, algo_acceleration] =
+        UpdateLinearSolution(gen_coords, gen_velocity, gen_accln, algo_accln);
+
+    // TODO: Implement nonlinear update
+
+    return state;
+}
+
+std::tuple<HostView1D, HostView1D, HostView1D> GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(
+    const HostView1D& gen_coords, const HostView1D& gen_velocity, const HostView1D& gen_accln,
+    const HostView1D& algo_accln
+) {
     auto size = gen_coords.size();
     HostView1D gen_coords_next("gen_coords_next", size);
     HostView1D gen_velocity_next("gen_velocity_next", size);
     HostView1D algo_accln_next("algo_accln_next", size);
+
+    // Update generalized coordinates, generalized velocity, and algorithmic acceleration
+    // based on generalized coordinates, generalized velocity, generalized acceleration,
+    // and algorithmic acceleration from previous time step and algorithmic acceleration
+    // from current time step
+    auto h = this->time_step_;
 
     Kokkos::parallel_for(
         size,
@@ -166,15 +183,7 @@ State GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(const State& state) {
         );
     }
 
-    return State(gen_coords_next, gen_velocity_next, gen_accln, algo_accln_next);
-}
-
-State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
-    auto linear_update = UpdateLinearSolution(state);
-
-    // TODO: Implement nonlinear update
-
-    return state;
+    return {gen_coords_next, gen_velocity_next, algo_accln_next};
 }
 
 }  // namespace openturbine::rigid_pendulum
