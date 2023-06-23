@@ -68,7 +68,8 @@ public:
     static constexpr size_t kMAX_ITERATIONS = 10;
 
     GeneralizedAlphaTimeIntegrator(
-        double initial_time = 0., double time_step = 1., size_t number_of_steps = 1
+        double initial_time = 0., double time_step = 1., size_t number_of_steps = 1,
+        bool nonlinear_analysis = false
     );
 
     /// Returns the initial time of the analysis
@@ -85,6 +86,9 @@ public:
 
     /// Returns the number of analysis time steps
     inline int GetNumberOfSteps() const { return number_of_steps_; }
+
+    /// Returns true if the analysis is nonlinear
+    inline bool IsNonlinearAnalysis() const { return nonlinear_analysis_; }
 
     /// Performs the time integration and returns a vector of States over the time steps
     std::vector<State> Integrate(const State&);
@@ -106,6 +110,7 @@ private:
     double time_step_;        //< Time step of the analysis
     size_t number_of_steps_;  //< Number of time steps to perform
     double current_time_;     //< Current time of the analysis
+    bool nonlinear_analysis_; //< Flag to indicate if the analysis is nonlinear
 };
 
 }  // namespace openturbine::rigid_pendulum

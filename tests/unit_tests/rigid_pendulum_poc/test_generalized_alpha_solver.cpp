@@ -142,4 +142,14 @@ TEST(StateTest, AddTwoStatesWithAdditionAssignmentOperator) {
     expect_kokkos_view_1D_equal(state1.GetAlgorithmicAcceleration(), {2.73, -0.24, -68.12});
 }
 
+TEST(TimeIntegratorTest, ExpectLinearAnalysisByDefault) {
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1);
+    EXPECT_FALSE(time_integrator.IsNonlinearAnalysis());
+}
+
+TEST(TimeIntegratorTest, ExpectNonLinearAnalysisWhenSpecified) {
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1, true);
+    EXPECT_TRUE(time_integrator.IsNonlinearAnalysis());
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

@@ -109,9 +109,12 @@ State operator+=(State& lhs, const State& rhs) {
 }
 
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
-    double initial_time, double time_step, size_t number_of_steps
+    double initial_time, double time_step, size_t number_of_steps, bool nonlinear_analysis
 )
-    : initial_time_(initial_time), time_step_(time_step), number_of_steps_(number_of_steps) {
+    : initial_time_(initial_time),
+      time_step_(time_step),
+      number_of_steps_(number_of_steps),
+      nonlinear_analysis_(nonlinear_analysis) {
     this->current_time_ = initial_time;
 }
 
@@ -140,7 +143,10 @@ State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
     auto [linear_coords, linear_velocity, algo_acceleration] =
         UpdateLinearSolution(gen_coords, gen_velocity, gen_accln, algo_accln);
 
-    // TODO: Implement nonlinear update
+    // Perform Newton-Raphson iterations to perform nonlinear part of generalized alpha method
+    if (this->nonlinear_analysis_) {
+        // TODO: Implement nonlinear update
+    }
 
     return state;
 }
