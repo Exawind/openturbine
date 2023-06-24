@@ -116,6 +116,8 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
       number_of_steps_(number_of_steps),
       nonlinear_analysis_(nonlinear_analysis) {
     this->current_time_ = initial_time;
+    this->number_of_iterations_ = 0;
+    this->total_number_of_iterations_ = 0;
 }
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initial_state) {
@@ -145,7 +147,8 @@ State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
 
     // Perform Newton-Raphson iterations to perform nonlinear part of generalized alpha method
     if (this->nonlinear_analysis_) {
-        // TODO: Implement nonlinear update
+        auto [nonlinear_coords, nonlinear_velocity, nonlinear_acceleration] =
+            UpdateNonLinearSolution(gen_coords, gen_velocity, gen_accln);
     }
 
     return state;
@@ -190,6 +193,65 @@ std::tuple<HostView1D, HostView1D, HostView1D> GeneralizedAlphaTimeIntegrator::U
     }
 
     return {gen_coords_next, gen_velocity_next, algo_accln_next};
+}
+
+std::tuple<HostView1D, HostView1D, HostView1D>
+GeneralizedAlphaTimeIntegrator::UpdateNonLinearSolution(
+    const HostView1D& gen_coords, const HostView1D& gen_velocity, const HostView1D& gen_accln
+) {
+    auto log = util::Log::Get();
+    log->Debug("Attempting the nonlinear solution...\n");
+
+    auto size = gen_coords.size();
+    HostView1D gen_coords_delta("gen_coords_delta", size);
+    HostView1D gen_velocity_delta("gen_velocity_delta", size);
+    HostView1D gen_accln_delta("gen_accln_delta", size);
+
+    HostView1D gen_coords_next("gen_coords_next", size);
+    HostView1D gen_velocity_next("gen_velocity_next", size);
+    HostView1D gen_accln_next("gen_accln_next", size);
+
+    this->number_of_iterations_ = 0;
+    while (this->number_of_iterations_ < kMAX_ITERATIONS) {
+        this->number_of_iterations_++;
+        log->Debug("Iteration: " + std::to_string(this->number_of_iterations_) + "\n");
+        auto residuals = ComputeResiduals(gen_coords);
+
+        if (this->CheckConvergence(residuals)) {
+            break;
+        }
+
+        // TODO: Perform a linear solve to get actual values of the deltas
+
+        Kokkos::parallel_for(
+            size,
+            KOKKOS_LAMBDA(const int i) {
+                gen_coords_next(i) = gen_coords(i) + gen_coords_delta(i);
+                gen_velocity_next(i) = gen_velocity(i) + gen_velocity_delta(i);
+                gen_accln_next(i) = gen_accln(i) + gen_accln_delta(i);
+            }
+        );
+
+        this->number_of_iterations_++;
+    }
+
+    log->Debug("Converged in " + std::to_string(this->number_of_iterations_) + " iterations\n");
+
+    this->total_number_of_iterations_ += this->number_of_iterations_;
+
+    // TODO: Update the algorithmic accelerations
+
+    return {gen_coords_next, gen_velocity_next, gen_accln_next};
+}
+
+HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(const HostView1D& forces) {
+    // TODO: Compute the residuals
+    return forces;
+}
+
+bool GeneralizedAlphaTimeIntegrator::CheckConvergence(const HostView1D& residual_forces) {
+    // TODO: Check the convergence
+    return true;
 }
 
 }  // namespace openturbine::rigid_pendulum

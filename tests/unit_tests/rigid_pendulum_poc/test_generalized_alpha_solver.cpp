@@ -144,12 +144,42 @@ TEST(StateTest, AddTwoStatesWithAdditionAssignmentOperator) {
 
 TEST(TimeIntegratorTest, ExpectLinearAnalysisByDefault) {
     auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1);
+
     EXPECT_FALSE(time_integrator.IsNonlinearAnalysis());
 }
 
 TEST(TimeIntegratorTest, ExpectNonLinearAnalysisWhenSpecified) {
     auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1, true);
+
     EXPECT_TRUE(time_integrator.IsNonlinearAnalysis());
+}
+
+TEST(TimeIntegratorTest, LatestNumberOfIterationsInNonLinearSolution) {
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1, true);
+
+    EXPECT_EQ(time_integrator.GetNumberOfIterations(), 0);
+
+    auto initial_state = State();
+    auto [linear_coords, linear_velocity, algo_acceleration] =
+        time_integrator.UpdateNonLinearSolution(
+            initial_state.GetGeneralizedCoordinates(), initial_state.GetGeneralizedVelocity(),
+            initial_state.GetGeneralizedAcceleration()
+        );
+
+    EXPECT_EQ(time_integrator.GetNumberOfIterations(), 1);
+}
+
+TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1.0, 10, true);
+
+    EXPECT_EQ(time_integrator.GetNumberOfIterations(), 0);
+    EXPECT_EQ(time_integrator.GetTotalNumberOfIterations(), 0);
+
+    auto initial_state = State();
+    time_integrator.Integrate(initial_state);
+
+    EXPECT_EQ(time_integrator.GetNumberOfIterations(), 1);
+    EXPECT_EQ(time_integrator.GetTotalNumberOfIterations(), 10);
 }
 
 }  // namespace openturbine::rigid_pendulum::tests
