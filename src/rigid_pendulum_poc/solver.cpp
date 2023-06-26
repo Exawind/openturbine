@@ -202,10 +202,6 @@ GeneralizedAlphaTimeIntegrator::UpdateNonLinearSolution(
     log->Debug("Attempting the nonlinear solution...\n");
 
     auto size = gen_coords.size();
-    HostView1D gen_coords_delta("gen_coords_delta", size);
-    HostView1D gen_velocity_delta("gen_velocity_delta", size);
-    HostView1D gen_accln_delta("gen_accln_delta", size);
-
     HostView1D gen_coords_next("gen_coords_next", size);
     HostView1D gen_velocity_next("gen_velocity_next", size);
     HostView1D gen_accln_next("gen_accln_next", size);
@@ -223,14 +219,16 @@ GeneralizedAlphaTimeIntegrator::UpdateNonLinearSolution(
             break;
         }
 
-        // TODO: Perform a linear solve to get actual values of the deltas
+        auto iteration_matrix = ComputeIterationMatrix(gen_coords);
+        auto gen_coords_delta = residuals;
+        solve_linear_system(iteration_matrix, gen_coords_delta);
 
         Kokkos::parallel_for(
             size,
             KOKKOS_LAMBDA(const int i) {
                 gen_coords_next(i) = gen_coords(i) + gen_coords_delta(i);
-                gen_velocity_next(i) = gen_velocity(i) + gen_velocity_delta(i);
-                gen_accln_next(i) = gen_accln(i) + gen_accln_delta(i);
+                gen_velocity_next(i) = gen_velocity(i) + gen_coords_delta(i);
+                gen_accln_next(i) = gen_accln(i) + gen_coords_delta(i);
             }
         );
 
@@ -249,7 +247,6 @@ GeneralizedAlphaTimeIntegrator::UpdateNonLinearSolution(
 HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(const HostView1D& forces) {
     // TODO: Compute the residuals
     // r^q = M(q) * q'' - f + phi^T * lambda
-
     return forces;
 }
 
@@ -277,6 +274,22 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(
     increment_norm = std::sqrt(increment_norm);
 
     return (residual_norm / increment_norm) < kTOLERANCE ? true : false;
+}
+
+HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(const HostView1D& gen_coords) {
+    // TODO: S_t = [ (M * beta' + C_t * gamma' + K_t) Phi_q^T
+    //                  Phi_q                            0 ]
+    // This is a just a placeholder, returns an identity matrix for now
+    auto matrix = HostView2D("matrix", gen_coords.size(), gen_coords.size());
+    auto diagonal_entries =
+        Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, gen_coords.size());
+    auto fill_diagonal = [matrix](int index) {
+        matrix(index, index) = 1.;
+    };
+
+    Kokkos::parallel_for(diagonal_entries, fill_diagonal);
+
+    return matrix;
 }
 
 }  // namespace openturbine::rigid_pendulum

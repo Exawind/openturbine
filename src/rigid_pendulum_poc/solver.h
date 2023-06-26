@@ -122,6 +122,9 @@ public:
     /// Returns the total number of iterations performed to complete the analysis
     inline size_t GetTotalNumberOfIterations() const { return total_number_of_iterations_; }
 
+    /// Computes the iteration matrix for the non-linear update
+    HostView2D ComputeIterationMatrix(const HostView1D& gen_coords);
+
 private:
     double initial_time_;          //< Initial time of the analysis
     double time_step_;             //< Time step of the analysis
