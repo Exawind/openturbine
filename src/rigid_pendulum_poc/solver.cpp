@@ -145,7 +145,6 @@ State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
     auto [linear_coords, linear_velocity, algo_acceleration] =
         UpdateLinearSolution(gen_coords, gen_velocity, gen_accln, algo_accln);
 
-    // Perform Newton-Raphson iterations to perform nonlinear part of generalized alpha method
     if (this->nonlinear_analysis_) {
         auto [nonlinear_coords, nonlinear_velocity, nonlinear_acceleration] =
             UpdateNonLinearSolution(gen_coords, gen_velocity, gen_accln);
@@ -211,13 +210,16 @@ GeneralizedAlphaTimeIntegrator::UpdateNonLinearSolution(
     HostView1D gen_velocity_next("gen_velocity_next", size);
     HostView1D gen_accln_next("gen_accln_next", size);
 
+    // Perform Newton-Raphson iterations to update nonlinear part of generalized alpha
     this->number_of_iterations_ = 0;
     while (this->number_of_iterations_ < kMAX_ITERATIONS) {
         this->number_of_iterations_++;
         log->Debug("Iteration: " + std::to_string(this->number_of_iterations_) + "\n");
-        auto residuals = ComputeResiduals(gen_coords);
 
-        if (this->CheckConvergence(residuals)) {
+        auto residuals = ComputeResiduals(gen_coords);
+        auto increments = residuals;
+
+        if (this->CheckConvergence(residuals, increments)) {
             break;
         }
 
@@ -246,12 +248,35 @@ GeneralizedAlphaTimeIntegrator::UpdateNonLinearSolution(
 
 HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(const HostView1D& forces) {
     // TODO: Compute the residuals
+    // r^q = M(q) * q'' - f + phi^T * lambda
+
     return forces;
 }
 
-bool GeneralizedAlphaTimeIntegrator::CheckConvergence(const HostView1D& residual_forces) {
-    // TODO: Check the convergence
-    return true;
+bool GeneralizedAlphaTimeIntegrator::CheckConvergence(
+    const HostView1D& residual, const HostView1D& increment
+) {
+    // L2 norm of the residual load vector should be very small (< epsilon) compared to the
+    // L2 norm of the load vector increment for the solution to be converged
+    double residual_norm = 0.0;
+    double increment_norm = 0.0;
+
+    Kokkos::parallel_reduce(
+        residual.extent(0),
+        KOKKOS_LAMBDA(int i, double& residual_partial_sum, double& increment_partial_sum) {
+            double residual_value = residual(i);
+            double increment_value = increment(i);
+
+            residual_partial_sum += residual_value * residual_value;
+            increment_partial_sum += increment_value * increment_value;
+        },
+        Kokkos::Sum<double>(residual_norm), Kokkos::Sum<double>(increment_norm)
+    );
+
+    residual_norm = std::sqrt(residual_norm);
+    increment_norm = std::sqrt(increment_norm);
+
+    return (residual_norm / increment_norm) < kTOLERANCE ? true : false;
 }
 
 }  // namespace openturbine::rigid_pendulum

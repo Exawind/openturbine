@@ -66,6 +66,7 @@ public:
     static constexpr double kBETA = 0.25;
     static constexpr double kGAMMA = 0.5;
     static constexpr size_t kMAX_ITERATIONS = 10;
+    static constexpr double kTOLERANCE = 1e-6;
 
     GeneralizedAlphaTimeIntegrator(
         double initial_time = 0., double time_step = 1., size_t number_of_steps = 1,
@@ -113,7 +114,7 @@ public:
     HostView1D ComputeResiduals(const HostView1D&);
 
     /// Checks convergence of the non-linear solution based on the residuals
-    bool CheckConvergence(const HostView1D&);
+    bool CheckConvergence(const HostView1D&, const HostView1D&);
 
     /// Returns the number of iterations performed in the latest non-linear update
     inline size_t GetNumberOfIterations() const { return number_of_iterations_; }

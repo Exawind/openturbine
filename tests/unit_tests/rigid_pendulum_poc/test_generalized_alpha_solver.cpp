@@ -166,7 +166,7 @@ TEST(TimeIntegratorTest, LatestNumberOfIterationsInNonLinearSolution) {
             initial_state.GetGeneralizedAcceleration()
         );
 
-    EXPECT_EQ(time_integrator.GetNumberOfIterations(), 1);
+    EXPECT_LE(time_integrator.GetNumberOfIterations(), time_integrator.kMAX_ITERATIONS);
 }
 
 TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
@@ -178,8 +178,29 @@ TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
     auto initial_state = State();
     time_integrator.Integrate(initial_state);
 
-    EXPECT_EQ(time_integrator.GetNumberOfIterations(), 1);
-    EXPECT_EQ(time_integrator.GetTotalNumberOfIterations(), 10);
+    EXPECT_LE(time_integrator.GetNumberOfIterations(), time_integrator.kMAX_ITERATIONS);
+    EXPECT_LE(
+        time_integrator.GetTotalNumberOfIterations(),
+        time_integrator.GetNumberOfSteps() * time_integrator.kMAX_ITERATIONS
+    );
+}
+
+TEST(TimeIntegratorTest, ExpectConvergedSolution) {
+    auto residual_force = create_vector({1.e-7, 2.e-7, 3.e-7});
+    auto incremental_force = create_vector({1., 2., 3.});
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1);
+    auto converged = time_integrator.CheckConvergence(residual_force, incremental_force);
+
+    EXPECT_TRUE(converged);
+}
+
+TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
+    auto residual_force = create_vector({1.e-3, 2.e-3, 3.e-3});
+    auto incremental_force = create_vector({1., 2., 3.});
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1);
+    auto converged = time_integrator.CheckConvergence(residual_force, incremental_force);
+
+    EXPECT_FALSE(converged);
 }
 
 }  // namespace openturbine::rigid_pendulum::tests
