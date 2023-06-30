@@ -87,18 +87,20 @@ public:
     State AlphaStep(const State&);
 
     /// Performs the linear update of the generalized-alpha method
-    std::tuple<HostView1D, HostView1D, HostView1D>
-    UpdateLinearSolution(const HostView1D&, const HostView1D&, const HostView1D&, const HostView1D&);
+    std::tuple<HostView1D, HostView1D, HostView1D> UpdateLinearSolution(
+        HostView1D, HostView1D, HostView1D, HostView1D
+    );
 
     /// Performs the non-linear update of the generalized-alpha method iteratively
-    std::tuple<HostView1D, HostView1D, HostView1D>
-    UpdateNonLinearSolution(const HostView1D&, const HostView1D&, const HostView1D&);
+    std::tuple<HostView1D, HostView1D, HostView1D> UpdateNonLinearSolution(
+        HostView1D, HostView1D, HostView1D
+    );
 
     /// Computes residuals of the force array for the non-linear update
-    HostView1D ComputeResiduals(const HostView1D&);
+    HostView1D ComputeResiduals(HostView1D);
 
     /// Checks convergence of the non-linear solution based on the residuals
-    bool CheckConvergence(const HostView1D&, const HostView1D&);
+    bool CheckConvergence(HostView1D, HostView1D);
 
     /// Returns the number of iterations performed in the latest non-linear update
     inline size_t GetNumberOfIterations() const { return number_of_iterations_; }
@@ -107,7 +109,7 @@ public:
     inline size_t GetTotalNumberOfIterations() const { return total_number_of_iterations_; }
 
     /// Computes the iteration matrix for the non-linear update
-    HostView2D ComputeIterationMatrix(const HostView1D& gen_coords);
+    HostView2D ComputeIterationMatrix(HostView1D gen_coords);
 
 private:
     double initial_time_;          //< Initial time of the analysis

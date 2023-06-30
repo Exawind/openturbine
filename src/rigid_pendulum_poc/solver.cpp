@@ -120,8 +120,7 @@ State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
 }
 
 std::tuple<HostView1D, HostView1D, HostView1D> GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(
-    const HostView1D& gen_coords, const HostView1D& gen_velocity, const HostView1D& gen_accln,
-    const HostView1D& algo_accln
+    HostView1D gen_coords, HostView1D gen_velocity, HostView1D gen_accln, HostView1D algo_accln
 ) {
     auto size = gen_coords.size();
     HostView1D gen_coords_next("gen_coords_next", size);
@@ -162,7 +161,7 @@ std::tuple<HostView1D, HostView1D, HostView1D> GeneralizedAlphaTimeIntegrator::U
 
 std::tuple<HostView1D, HostView1D, HostView1D>
 GeneralizedAlphaTimeIntegrator::UpdateNonLinearSolution(
-    const HostView1D& gen_coords, const HostView1D& gen_velocity, const HostView1D& gen_accln
+    HostView1D gen_coords, HostView1D gen_velocity, HostView1D gen_accln
 ) {
     auto log = util::Log::Get();
     log->Debug("Attempting the nonlinear solution...\n");
@@ -210,15 +209,13 @@ GeneralizedAlphaTimeIntegrator::UpdateNonLinearSolution(
     return {gen_coords_next, gen_velocity_next, gen_accln_next};
 }
 
-HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(const HostView1D& forces) {
+HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(HostView1D forces) {
     // TODO: Compute the residuals
     // r^q = M(q) * q'' - f + phi^T * lambda
     return forces;
 }
 
-bool GeneralizedAlphaTimeIntegrator::CheckConvergence(
-    const HostView1D& residual, const HostView1D& increment
-) {
+bool GeneralizedAlphaTimeIntegrator::CheckConvergence(HostView1D residual, HostView1D increment) {
     // L2 norm of the residual load vector should be very small (< epsilon) compared to the
     // L2 norm of the load vector increment for the solution to be converged
     double residual_norm = 0.0;
@@ -242,7 +239,7 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(
     return (residual_norm / increment_norm) < kTOLERANCE ? true : false;
 }
 
-HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(const HostView1D& gen_coords) {
+HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(HostView1D gen_coords) {
     // TODO: S_t = [ (M * beta' + C_t * gamma' + K_t) Phi_q^T
     //                  Phi_q                            0 ]
     // This is a just a placeholder, returns an identity matrix for now
