@@ -8,6 +8,12 @@
 # the class/struct keyword
 AccessModifierOffset: -4
 
+# Bracket Alignment Style: Always break after an open bracket, if the
+# parameters don’t fit on a single line. Closing brackets will be placed
+# on a new line.
+# Applies to round (i.e. parentheses), square, and angle brackets
+AlignAfterOpenBracket: BlockIndent
+
 # Do NOT allow short enums on a single line
 AllowShortEnumsOnASingleLine: false
 
@@ -28,8 +34,8 @@ AllowShortLoopsOnASingleLine: false
 # in this project
 BasedOnStyle: Google
 
-# Increase the column limit to 100
-ColumnLimit: 100
+# Increase the column limit to 101
+ColumnLimit: 101
 
 # Do NOT analyze the formatted file for the most common alignment of & and *.
 # Used with the "PointerAlignment" option to force pointers to the type
@@ -55,12 +61,12 @@ IncludeCategories:
     Priority: 40
 
   # This project's h files
-  - Regex:    '^"src'
-    Priority: 50
+  - Regex:    '^"(src|tests|OpenTurbine)'
+    Priority: 60
 
   # Other libraries' h files (with quotes)
   - Regex:    '^"'
-    Priority: 40
+    Priority: 50
 
 # Increase the indentation width to 4 columns
 IndentWidth: 4

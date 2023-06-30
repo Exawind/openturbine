@@ -8,11 +8,12 @@
 namespace openturbine::rigid_pendulum::tests {
 
 Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace> create_diagonal_matrix(
-    const std::vector<double>& values) {
-    auto matrix = Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>("matrix", values.size(),
-                                                                            values.size());
-    auto diagonal_entries =
-        Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, values.size());
+    const std::vector<double>& values
+) {
+    auto matrix = Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>(
+        "matrix", values.size(), values.size()
+    );
+    auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, values.size());
     auto fill_diagonal = [matrix, values](int index) {
         matrix(index, index) = values[index];
     };
@@ -24,7 +25,8 @@ Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace> create_diagonal_matrix
 }
 
 Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace> create_vector(
-    const std::vector<double>& values) {
+    const std::vector<double>& values
+) {
     auto vector = Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace>("vector", values.size());
     auto entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, values.size());
     auto fill_vector = [vector, values](int index) {
@@ -37,11 +39,14 @@ Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace> create_vector(
 }
 
 Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace> create_matrix(
-    const std::vector<std::vector<double>>& values) {
-    auto matrix = Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>("matrix", values.size(),
-                                                                            values.front().size());
+    const std::vector<std::vector<double>>& values
+) {
+    auto matrix = Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>(
+        "matrix", values.size(), values.front().size()
+    );
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
-        {0, 0}, {values.size(), values.front().size()});
+        {0, 0}, {values.size(), values.front().size()}
+    );
     auto fill_matrix = [matrix, values](int row, int column) {
         matrix(row, column) = values[row][column];
     };
@@ -124,8 +129,10 @@ TEST(LinearSolverTest, Check2x3MatrixShape) {
     auto matrix_2x3 = create_matrix({{1., 2., 3.}, {4., 5., 6.}});
     auto solution_2x1 = create_vector({1., 1.});
 
-    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(matrix_2x3, solution_2x1),
-                 std::invalid_argument);
+    EXPECT_THROW(
+        openturbine::rigid_pendulum::solve_linear_system(matrix_2x3, solution_2x1),
+        std::invalid_argument
+    );
 }
 
 TEST(LinearSolverTest, Check5x3MatrixShape) {
@@ -138,24 +145,30 @@ TEST(LinearSolverTest, Check5x3MatrixShape) {
     });
     auto solution_5x1 = create_vector({1., 1., 1., 1., 1.});
 
-    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(matrix_5x3, solution_5x1),
-                 std::invalid_argument);
+    EXPECT_THROW(
+        openturbine::rigid_pendulum::solve_linear_system(matrix_5x3, solution_5x1),
+        std::invalid_argument
+    );
 }
 
 TEST(LinearSolverTest, Check1x1Matrix2x1VectorCompatibility) {
     auto system_1x1 = create_diagonal_matrix({1.});
     auto solution_2x1 = create_vector({1., 2.});
 
-    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(system_1x1, solution_2x1),
-                 std::invalid_argument);
+    EXPECT_THROW(
+        openturbine::rigid_pendulum::solve_linear_system(system_1x1, solution_2x1),
+        std::invalid_argument
+    );
 }
 
 TEST(LinearSolverTest, Check3x3Matrix2x1VectorCompatibility) {
     auto system_3x3 = create_diagonal_matrix({1., 1., 1.});
     auto solution_2x1 = create_vector({1., 2.});
 
-    EXPECT_THROW(openturbine::rigid_pendulum::solve_linear_system(system_3x3, solution_2x1),
-                 std::invalid_argument);
+    EXPECT_THROW(
+        openturbine::rigid_pendulum::solve_linear_system(system_3x3, solution_2x1),
+        std::invalid_argument
+    );
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

@@ -61,8 +61,9 @@ int main(int argc, char* argv[]) {
     auto U = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
 
     Kokkos::initialize(argc, argv);
-    heat_solve::heat_conduction_solver(axis_size, side_length, n_max, k, ic_x0, ic_x1,
-                                       residual_tolerance);
+    heat_solve::heat_conduction_solver(
+        axis_size, side_length, n_max, k, ic_x0, ic_x1, residual_tolerance
+    );
     Kokkos::finalize();
 
     util::print_array(U, axis_size);

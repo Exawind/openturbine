@@ -11,7 +11,7 @@ namespace openturbine::rigid_pendulum {
 ///     (nx1) of right-hand side values. The solution is stored in the vector b.
 /// @param system A matrix of coefficients
 /// @param solution A vector of right-hand side values
-void solve_linear_system(Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>,
-                         Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace>);
+void
+    solve_linear_system(Kokkos::View<double**, Kokkos::DefaultHostExecutionSpace>, Kokkos::View<double*, Kokkos::DefaultHostExecutionSpace>);
 
 }  // namespace openturbine::rigid_pendulum

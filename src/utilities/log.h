@@ -59,9 +59,10 @@ public:
      *  @param type: Output type for logging, default is Console and File
      *  @return The static instance of the ptr to Log
      */
-    static Log* Get(std::string name = "log.txt",
-                    SeverityLevel max_severity = SeverityLevel::kDebug,
-                    OutputType type = OutputType::kConsoleAndFile);
+    static Log* Get(
+        std::string name = "log.txt", SeverityLevel max_severity = SeverityLevel::kDebug,
+        OutputType type = OutputType::kConsoleAndFile
+    );
 
     std::string GetOutputFileName() const { return file_name_; }
     SeverityLevel GetMaxSeverityLevel() const { return max_severity_level_; }

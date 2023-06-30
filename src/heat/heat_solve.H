@@ -4,8 +4,10 @@
 
 namespace openturbine::heat_solve {
 
-double* heat_conduction_solver(int axis_size, double side_length, int n_max, double k, double ic_x0,
-                               double ic_x1, double residual_tolerance);
+double* heat_conduction_solver(
+    int axis_size, double side_length, int n_max, double k, double ic_x0, double ic_x1,
+    double residual_tolerance
+);
 
 template <typename T>
 std::vector<double> linspace(T start_in, T end_in, int num_in);

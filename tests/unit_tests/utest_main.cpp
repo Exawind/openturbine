@@ -2,9 +2,11 @@
  *  Entry point for unit tests
  */
 
-#include "OpenTurbineTestEnv.H"
-#include "gtest/gtest.h"
 #include <Kokkos_Core.hpp>
+
+#include "gtest/gtest.h"
+
+#include "OpenTurbineTestEnv.H"
 
 //! Global instance of the environment (for access in tests)
 openturbine_tests::OTurbTestEnv* utest_env{nullptr};
