@@ -127,21 +127,6 @@ TEST(TimeIntegratorTest, ExpectNonLinearAnalysisWhenSpecified) {
     EXPECT_TRUE(time_integrator.IsNonlinearAnalysis());
 }
 
-TEST(TimeIntegratorTest, LatestNumberOfIterationsInNonLinearSolution) {
-    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1, true);
-
-    EXPECT_EQ(time_integrator.GetNumberOfIterations(), 0);
-
-    auto initial_state = State();
-    auto [linear_coords, linear_velocity, algo_acceleration] =
-        time_integrator.UpdateNonLinearSolution(
-            initial_state.GetGeneralizedCoordinates(), initial_state.GetGeneralizedVelocity(),
-            initial_state.GetGeneralizedAcceleration()
-        );
-
-    EXPECT_LE(time_integrator.GetNumberOfIterations(), time_integrator.kMAX_ITERATIONS);
-}
-
 TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
     auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1.0, 10, true);
 

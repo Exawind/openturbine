@@ -91,11 +91,6 @@ public:
         HostView1D, HostView1D, HostView1D, HostView1D
     );
 
-    /// Performs the non-linear update of the generalized-alpha method iteratively
-    std::tuple<HostView1D, HostView1D, HostView1D> UpdateNonLinearSolution(
-        HostView1D, HostView1D, HostView1D
-    );
-
     /// Computes residuals of the force array for the non-linear update
     HostView1D ComputeResiduals(HostView1D);
 
@@ -103,23 +98,23 @@ public:
     bool CheckConvergence(HostView1D, HostView1D);
 
     /// Returns the number of iterations performed in the latest non-linear update
-    inline size_t GetNumberOfIterations() const { return number_of_iterations_; }
+    inline size_t GetNumberOfIterations() const { return n_iterations_; }
 
     /// Returns the total number of iterations performed to complete the analysis
-    inline size_t GetTotalNumberOfIterations() const { return total_number_of_iterations_; }
+    inline size_t GetTotalNumberOfIterations() const { return total_n_iterations_; }
 
     /// Computes the iteration matrix for the non-linear update
     HostView2D ComputeIterationMatrix(HostView1D gen_coords);
 
 private:
-    double initial_time_;          //< Initial time of the analysis
-    double time_step_;             //< Time step of the analysis
-    size_t number_of_steps_;       //< Number of time steps to perform
-    double current_time_;          //< Current time of the analysis
-    bool nonlinear_analysis_;      //< Flag to indicate if the analysis is nonlinear
-    size_t number_of_iterations_;  //< Number of iterations performed in the latest non-linear update
-    size_t total_number_of_iterations_;  //< Total number of non-linear iterations performed to
-                                         // complete the analysis
+    double initial_time_;        //< Initial time of the analysis
+    double time_step_;           //< Time step of the analysis
+    size_t number_of_steps_;     //< Number of time steps to perform
+    double current_time_;        //< Current time of the analysis
+    bool nonlinear_analysis_;    //< Flag to indicate if the analysis is nonlinear
+    size_t n_iterations_;        //< Number of iterations performed in the latest non-linear update
+    size_t total_n_iterations_;  //< Total number of non-linear iterations performed to
+                                 // complete the analysis
 };
 
 }  // namespace openturbine::rigid_pendulum
