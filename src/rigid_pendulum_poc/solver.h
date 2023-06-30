@@ -42,22 +42,6 @@ private:
     HostView1D algorithmic_acceleration_;
 };
 
-/*!
- * @brief Overload the addition (i.e. +) operator to add two State objects together
- * @param lhs The left hand side state
- * @param rhs The right hand side state
- * @return The sum of the two states as a new state
- */
-State operator+(const State&, const State&);
-
-/*! @brief Overload the addition assignment (i.e. +=) operator to add two State
- *         objects together
- *  @param lhs The left hand side state
- *  @param rhs The right hand side state
- *  @return The sum of the two states, assigned to the left hand side state
- */
-State operator+=(State&, const State&);
-
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator {
 public:

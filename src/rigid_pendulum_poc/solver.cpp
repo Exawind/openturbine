@@ -74,40 +74,6 @@ State::State(
     Kokkos::deep_copy(algorithmic_acceleration_, algo_accln);
 }
 
-State operator+(const State& lhs, const State& rhs) {
-    auto lhs_gen_coords = lhs.GetGeneralizedCoordinates();
-    auto lhs_gen_velocity = lhs.GetGeneralizedVelocity();
-    auto lhs_gen_accln = lhs.GetGeneralizedAcceleration();
-    auto lhs_algo_accln = lhs.GetAlgorithmicAcceleration();
-
-    auto rhs_gen_coords = rhs.GetGeneralizedCoordinates();
-    auto rhs_gen_velocity = rhs.GetGeneralizedVelocity();
-    auto rhs_gen_accln = rhs.GetGeneralizedAcceleration();
-    auto rhs_algo_accln = rhs.GetAlgorithmicAcceleration();
-
-    auto size = lhs.GetGeneralizedCoordinates().size();
-    HostView1D gen_coords("generalized_coordinates", size);
-    HostView1D gen_velocity("generalized_velocity", size);
-    HostView1D gen_accln("generalized_accelerations", size);
-    HostView1D algo_accln("algorithmic_accelerations", size);
-
-    Kokkos::parallel_for(
-        size,
-        KOKKOS_LAMBDA(const int i) {
-            gen_coords(i) = lhs_gen_coords(i) + rhs_gen_coords(i);
-            gen_velocity(i) = lhs_gen_velocity(i) + rhs_gen_velocity(i);
-            gen_accln(i) = lhs_gen_accln(i) + rhs_gen_accln(i);
-            algo_accln(i) = lhs_algo_accln(i) + rhs_algo_accln(i);
-        }
-    );
-
-    return State(gen_coords, gen_velocity, gen_accln, algo_accln);
-}
-
-State operator+=(State& lhs, const State& rhs) {
-    return lhs = lhs + rhs;
-}
-
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double initial_time, double time_step, size_t number_of_steps, bool nonlinear_analysis
 )
