@@ -115,20 +115,8 @@ TEST(TimeIntegratorTest, LinearSolutionWithNonZeroAcceleration) {
     expect_kokkos_view_1D_equal(algo_acceleration, {0., 0., 0.});
 }
 
-TEST(TimeIntegratorTest, ExpectLinearAnalysisByDefault) {
-    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1);
-
-    EXPECT_FALSE(time_integrator.IsNonlinearAnalysis());
-}
-
-TEST(TimeIntegratorTest, ExpectNonLinearAnalysisWhenSpecified) {
-    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1, true);
-
-    EXPECT_TRUE(time_integrator.IsNonlinearAnalysis());
-}
-
 TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
-    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1.0, 10, true);
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1.0, 10);
 
     EXPECT_EQ(time_integrator.GetNumberOfIterations(), 0);
     EXPECT_EQ(time_integrator.GetTotalNumberOfIterations(), 0);

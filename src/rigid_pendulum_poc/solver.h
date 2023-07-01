@@ -53,8 +53,7 @@ public:
     static constexpr double kTOLERANCE = 1e-6;
 
     GeneralizedAlphaTimeIntegrator(
-        double initial_time = 0., double time_step = 1., size_t number_of_steps = 1,
-        bool nonlinear_analysis = false
+        double initial_time = 0., double time_step = 1., size_t number_of_steps = 1
     );
 
     /// Returns the initial time of the analysis
@@ -71,9 +70,6 @@ public:
 
     /// Returns the number of analysis time steps
     inline int GetNumberOfSteps() const { return number_of_steps_; }
-
-    /// Returns true if the analysis is nonlinear
-    inline bool IsNonlinearAnalysis() const { return nonlinear_analysis_; }
 
     /// Performs the time integration and returns a vector of States over the time steps
     std::vector<State> Integrate(const State&);
@@ -111,7 +107,6 @@ private:
     double time_step_;           //< Time step of the analysis
     size_t number_of_steps_;     //< Number of time steps to perform
     double current_time_;        //< Current time of the analysis
-    bool nonlinear_analysis_;    //< Flag to indicate if the analysis is nonlinear
     size_t n_iterations_;        //< Number of iterations performed in the latest non-linear update
     size_t total_n_iterations_;  //< Total number of non-linear iterations performed to
                                  // complete the analysis

@@ -75,12 +75,9 @@ State::State(
 }
 
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
-    double initial_time, double time_step, size_t number_of_steps, bool nonlinear_analysis
+    double initial_time, double time_step, size_t number_of_steps
 )
-    : initial_time_(initial_time),
-      time_step_(time_step),
-      number_of_steps_(number_of_steps),
-      nonlinear_analysis_(nonlinear_analysis) {
+    : initial_time_(initial_time), time_step_(time_step), number_of_steps_(number_of_steps) {
     this->current_time_ = initial_time;
     this->n_iterations_ = 0;
     this->total_n_iterations_ = 0;
@@ -90,7 +87,6 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initia
     auto log = util::Log::Get();
 
     std::vector<State> states{initial_state};
-
     for (size_t i = 0; i < this->number_of_steps_; i++) {
         log->Debug("Integrating step " + std::to_string(i + 1) + "\n");
         states.emplace_back(this->AlphaStep(states[i]));
@@ -103,9 +99,6 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initia
 }
 
 State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
-    auto log = util::Log::Get();
-    log->Debug("Attempting the AlphaStep...\n");
-
     auto gen_coords = state.GetGeneralizedCoordinates();
     auto gen_velocity = state.GetGeneralizedVelocity();
     auto gen_accln = state.GetGeneralizedAcceleration();
@@ -122,6 +115,8 @@ State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
     const auto size = gen_coords.size();
     const double beta_prime = (1 - kALPHA_M) / (h * h * kBETA * (1 - kALPHA_F));
     const double gamma_prime = kGAMMA / (h * kBETA);
+
+    auto log = util::Log::Get();
 
     // Perform Newton-Raphson iterations to update nonlinear part of generalized-alpha algorithm
     for (n_iterations_ = 0; n_iterations_ < kMAX_ITERATIONS; n_iterations_++) {
@@ -155,7 +150,7 @@ State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const int i) {
-            // update algorithmic acceleration
+            // Update algorithmic acceleration once soln has converged
             algo_accln(i) += (1 - kALPHA_F) / (1 - kALPHA_M) * gen_accln(i);
         }
     );
