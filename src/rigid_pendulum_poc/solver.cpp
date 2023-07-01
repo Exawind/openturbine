@@ -89,7 +89,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initia
     std::vector<State> states{initial_state};
     for (size_t i = 0; i < this->number_of_steps_; i++) {
         log->Debug("Integrating step " + std::to_string(i + 1) + "\n");
-        states.emplace_back(this->AlphaStep(states[i]));
+        states.emplace_back(std::get<0>(this->AlphaStep(states[i])));
         this->AdvanceTimeStep();
     }
 
@@ -98,23 +98,23 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initia
     return states;
 }
 
-State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
-    auto gen_coords = state.GetGeneralizedCoordinates();
-    auto gen_velocity = state.GetGeneralizedVelocity();
-    auto gen_accln = state.GetGeneralizedAcceleration();
-    auto algo_accln = state.GetAlgorithmicAcceleration();
+std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
+    auto linear_update = UpdateLinearSolution(state);
 
-    auto [linear_coords, linear_velocity, linear_algo_accln] =
-        UpdateLinearSolution(gen_coords, gen_velocity, gen_accln, algo_accln);
+    auto gen_coords = linear_update.GetGeneralizedCoordinates();
+    auto gen_velocity = linear_update.GetGeneralizedVelocity();
+    auto gen_accln = linear_update.GetGeneralizedAcceleration();
+    auto algo_accln = linear_update.GetAlgorithmicAcceleration();
 
-    gen_coords = linear_coords;
-    gen_velocity = linear_velocity;
-    algo_accln = linear_algo_accln;
+    // Kokkos::deep_copy(constraints, 0.0);
 
     const auto h = this->time_step_;
     const auto size = gen_coords.size();
     const double beta_prime = (1 - kALPHA_M) / (h * h * kBETA * (1 - kALPHA_F));
     const double gamma_prime = kGAMMA / (h * kBETA);
+
+    // TODO: Provide actual constraints
+    auto constraints = HostView1D("constraints", size);
 
     auto log = util::Log::Get();
 
@@ -132,7 +132,9 @@ State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
 
         auto iteration_matrix = ComputeIterationMatrix(gen_coords);
         auto gen_coords_delta = residuals;
+        auto constraints_delta = constraints;
         solve_linear_system(iteration_matrix, gen_coords_delta);
+        solve_linear_system(iteration_matrix, constraints_delta);
 
         Kokkos::parallel_for(
             size,
@@ -140,6 +142,7 @@ State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
                 gen_coords(i) += gen_coords_delta(i);
                 gen_velocity(i) += gamma_prime * gen_coords_delta(i);
                 gen_accln(i) += beta_prime * gen_coords_delta(i);
+                constraints(i) += constraints_delta(i);
             }
         );
     }
@@ -155,12 +158,15 @@ State GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
         }
     );
 
-    return State(gen_coords, gen_velocity, gen_accln, algo_accln);
+    return {State(gen_coords, gen_velocity, gen_accln, algo_accln), constraints};
 }
 
-std::tuple<HostView1D, HostView1D, HostView1D> GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(
-    HostView1D gen_coords, HostView1D gen_velocity, HostView1D gen_accln, HostView1D algo_accln
-) {
+State GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(const State& state) {
+    auto gen_coords = state.GetGeneralizedCoordinates();
+    auto gen_velocity = state.GetGeneralizedVelocity();
+    auto gen_accln = state.GetGeneralizedAcceleration();
+    auto algo_accln = state.GetAlgorithmicAcceleration();
+
     // Update generalized coordinates, generalized velocity, and algorithmic acceleration
     // based on generalized coordinates, generalized velocity, generalized acceleration,
     // and algorithmic acceleration from previous time step and algorithmic acceleration
@@ -177,12 +183,12 @@ std::tuple<HostView1D, HostView1D, HostView1D> GeneralizedAlphaTimeIntegrator::U
                 (1.0 / (1.0 - kALPHA_M)) * (kALPHA_F * gen_accln(i) - kALPHA_M * algo_accln(i));
             gen_coords(i) += h * h * kBETA * algo_accln(i);
             gen_velocity(i) += h * kBETA * algo_accln(i);
+            gen_accln(i) = 0.;
         }
     );
 
     auto log = util::Log::Get();
     log->Debug("Linear solution: gen_coords, gen_velocity, algo_acceleration\n");
-
     for (size_t i = 0; i < size; i++) {
         log->Debug(
             "row " + std::to_string(i) + ": " + std::to_string(gen_coords(i)) + "\t" +
@@ -190,7 +196,7 @@ std::tuple<HostView1D, HostView1D, HostView1D> GeneralizedAlphaTimeIntegrator::U
         );
     }
 
-    return {gen_coords, gen_velocity, algo_accln};
+    return State(gen_coords, gen_velocity, gen_accln, algo_accln);
 }
 
 HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(HostView1D forces) {

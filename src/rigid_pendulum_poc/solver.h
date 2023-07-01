@@ -80,12 +80,10 @@ public:
      * @param   state Current state of the system at the beginning of the time step
      * @return  Updated state of the system at the end of the time step
      */
-    State AlphaStep(const State&);
+    std::tuple<State, HostView1D> AlphaStep(const State&);
 
     /// Performs the linear update of the generalized-alpha method
-    std::tuple<HostView1D, HostView1D, HostView1D> UpdateLinearSolution(
-        HostView1D, HostView1D, HostView1D, HostView1D
-    );
+    State UpdateLinearSolution(const State&);
 
     /// Computes residuals of the force array for the non-linear update
     HostView1D ComputeResiduals(HostView1D);

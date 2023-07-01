@@ -85,14 +85,11 @@ TEST(TimeIntegratorTest, LinearSolutionWithZeroAcceleration) {
     expect_kokkos_view_1D_equal(initial_state.GetAlgorithmicAcceleration(), {0.});
 
     auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1);
-    auto [linear_coords, linear_velocity, algo_acceleration] = time_integrator.UpdateLinearSolution(
-        initial_state.GetGeneralizedCoordinates(), initial_state.GetGeneralizedVelocity(),
-        initial_state.GetGeneralizedAcceleration(), initial_state.GetAlgorithmicAcceleration()
-    );
+    auto linear_update = time_integrator.UpdateLinearSolution(initial_state);
 
-    expect_kokkos_view_1D_equal(linear_coords, {0.});
-    expect_kokkos_view_1D_equal(linear_velocity, {0.});
-    expect_kokkos_view_1D_equal(algo_acceleration, {0.});
+    expect_kokkos_view_1D_equal(linear_update.GetGeneralizedCoordinates(), {0.});
+    expect_kokkos_view_1D_equal(linear_update.GetGeneralizedVelocity(), {0.});
+    expect_kokkos_view_1D_equal(linear_update.GetGeneralizedAcceleration(), {0.});
 }
 
 TEST(TimeIntegratorTest, LinearSolutionWithNonZeroAcceleration) {
@@ -105,14 +102,11 @@ TEST(TimeIntegratorTest, LinearSolutionWithNonZeroAcceleration) {
     expect_kokkos_view_1D_equal(initial_state.GetAlgorithmicAcceleration(), {1., 2., 3.});
 
     auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1);
-    auto [linear_coords, linear_velocity, algo_acceleration] = time_integrator.UpdateLinearSolution(
-        initial_state.GetGeneralizedCoordinates(), initial_state.GetGeneralizedVelocity(),
-        initial_state.GetGeneralizedAcceleration(), initial_state.GetAlgorithmicAcceleration()
-    );
+    auto linear_update = time_integrator.UpdateLinearSolution(initial_state);
 
-    expect_kokkos_view_1D_equal(linear_coords, {2.25, 4.5, 6.75});
-    expect_kokkos_view_1D_equal(linear_velocity, {1.5, 3., 4.5});
-    expect_kokkos_view_1D_equal(algo_acceleration, {0., 0., 0.});
+    expect_kokkos_view_1D_equal(linear_update.GetGeneralizedCoordinates(), {2.25, 4.5, 6.75});
+    expect_kokkos_view_1D_equal(linear_update.GetGeneralizedVelocity(), {1.5, 3., 4.5});
+    expect_kokkos_view_1D_equal(linear_update.GetGeneralizedAcceleration(), {0., 0., 0.});
 }
 
 TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
