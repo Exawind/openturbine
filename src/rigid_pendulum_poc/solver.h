@@ -49,7 +49,7 @@ public:
     static constexpr double kALPHA_M = 0.5;
     static constexpr double kBETA = 0.25;
     static constexpr double kGAMMA = 0.5;
-    static constexpr size_t kMAX_ITERATIONS = 10;
+    static constexpr size_t kMAX_ITERATIONS = 1;
     static constexpr double kTOLERANCE = 1e-6;
 
     GeneralizedAlphaTimeIntegrator(
@@ -69,7 +69,7 @@ public:
     inline void AdvanceTimeStep() { current_time_ += time_step_; }
 
     /// Returns the number of analysis time steps
-    inline int GetNumberOfSteps() const { return number_of_steps_; }
+    inline int GetNumberOfSteps() const { return n_steps_; }
 
     /// Performs the time integration and returns a vector of States over the time steps
     std::vector<State> Integrate(const State&);
@@ -103,7 +103,7 @@ public:
 private:
     double initial_time_;        //< Initial time of the analysis
     double time_step_;           //< Time step of the analysis
-    size_t number_of_steps_;     //< Number of time steps to perform
+    size_t n_steps_;             //< Number of time steps to perform
     double current_time_;        //< Current time of the analysis
     size_t n_iterations_;        //< Number of iterations performed in the latest non-linear update
     size_t total_n_iterations_;  //< Total number of non-linear iterations performed to
