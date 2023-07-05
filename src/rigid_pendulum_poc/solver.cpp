@@ -26,7 +26,7 @@ void solve_linear_system(HostView2D system, HostView1D solution) {
     int leading_dimension_solution{1};
 
     auto log = util::Log::Get();
-    log->Debug(
+    log->Info(
         "Solving a " + std::to_string(rows) + " x " + std::to_string(rows) +
         " system of linear equations with LAPACKE_dgesv" + "\n"
     );
@@ -47,7 +47,7 @@ void solve_linear_system(HostView2D system, HostView1D solution) {
         leading_dimension_solution  // input: leading dimension of solution
     );
 
-    log->Debug("LAPACKE_dgesv returned exit code " + std::to_string(info) + "\n");
+    log->Info("LAPACKE_dgesv returned exit code " + std::to_string(info) + "\n");
 
     if (info != 0) {
         throw std::runtime_error("LAPACKE_dgesv failed to solve the system!");
@@ -88,12 +88,12 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initia
 
     std::vector<State> states{initial_state};
     for (size_t i = 0; i < this->n_steps_; i++) {
-        log->Debug("Integrating step " + std::to_string(i + 1) + "\n");
+        log->Info("Integrating step number " + std::to_string(i + 1) + "\n");
         states.emplace_back(std::get<0>(this->AlphaStep(states[i])));
         this->AdvanceTimeStep();
     }
 
-    log->Debug("Time integration completed successfully!\n");
+    log->Info("Time integration completed successfully!\n");
 
     return states;
 }
@@ -112,11 +112,16 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const St
 
     // TODO: Provide actual constraints
     auto constraints = HostView1D("constraints", size);
-    auto log = util::Log::Get();
 
     // Perform Newton-Raphson iterations to update nonlinear part of generalized-alpha algorithm
+    auto log = util::Log::Get();
+    log->Info(
+        "Performing Newton-Raphson iterations to update the nonlinear part of generalized-alpha "
+        "algorithm\n"
+    );
+
     for (n_iterations_ = 0; n_iterations_ < kMAX_ITERATIONS; n_iterations_++) {
-        log->Debug("Iteration: " + std::to_string(this->n_iterations_ + 1) + "\n");
+        log->Debug("Iteration number: " + std::to_string(this->n_iterations_ + 1) + "\n");
 
         auto residuals = ComputeResiduals(gen_coords);
         // TODO: Provide actual force increments
@@ -143,7 +148,14 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const St
         );
     }
 
-    log->Debug("Converged in " + std::to_string(this->n_iterations_) + " iterations\n");
+    if (this->n_iterations_ < kMAX_ITERATIONS) {
+        log->Info("Converged in " + std::to_string(this->n_iterations_) + " iterations\n");
+    }
+
+    if (this->n_iterations_ == kMAX_ITERATIONS) {
+        log->Warning("Newton-Raphson iterations failed to converge on a solution!\n");
+    }
+
     this->total_n_iterations_ += this->n_iterations_;
 
     Kokkos::parallel_for(
@@ -205,7 +217,7 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(HostView1D forces) {
     );
 
     auto log = util::Log::Get();
-    log->Debug("Residual vector:\n");
+    log->Debug("Residual vector is " + std::to_string(size) + " x 1 with elements\n");
     for (size_t i = 0; i < size; i++) {
         log->Debug(std::to_string(residual_vector(i)) + "\n");
     }
@@ -235,8 +247,10 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(HostView1D residual, HostV
     increment_norm = std::sqrt(increment_norm);
 
     auto log = util::Log::Get();
-    log->Debug("Residual norm: " + std::to_string(residual_norm) + "\n");
-    log->Debug("Increment norm: " + std::to_string(increment_norm) + "\n");
+    log->Debug(
+        "Residual norm: " + std::to_string(residual_norm) + ", " +
+        "Increment norm: " + std::to_string(increment_norm) + "\n"
+    );
 
     return (residual_norm / increment_norm) < kTOLERANCE ? true : false;
 }
@@ -254,10 +268,16 @@ HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(HostView1D gen
     Kokkos::parallel_for(diagonal_entries, fill_diagonal);
 
     auto log = util::Log::Get();
-    log->Debug("Iteration matrix:\n");
+    log->Debug(
+        "Iteration matrix is " + std::to_string(size) + " x " + std::to_string(size) +
+        " with elements" + "\n"
+    );
     for (size_t i = 0; i < size; i++) {
         for (size_t j = 0; j < size; j++) {
-            log->Debug(std::to_string(iteration_matrix(i, j)) + "\n");
+            log->Debug(
+                "(" + std::to_string(i) + ", " + std::to_string(j) +
+                ") : " + std::to_string(iteration_matrix(i, j)) + "\n"
+            );
         }
     }
 
