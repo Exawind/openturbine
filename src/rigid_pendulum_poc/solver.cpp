@@ -75,12 +75,40 @@ State::State(
 }
 
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
-    double initial_time, double time_step, size_t n_steps
+    double initial_time, double time_step, size_t n_steps, double alpha_f, double alpha_m,
+    double beta, double gamma, size_t max_iterations
 )
-    : initial_time_(initial_time), time_step_(time_step), n_steps_(n_steps) {
+    : initial_time_(initial_time),
+      time_step_(time_step),
+      n_steps_(n_steps),
+      kALPHA_F(alpha_f),
+      kALPHA_M(alpha_m),
+      kBETA(beta),
+      kGAMMA(gamma),
+      kMAX_ITERATIONS(max_iterations) {
     this->current_time_ = initial_time;
     this->n_iterations_ = 0;
     this->total_n_iterations_ = 0;
+
+    if (this->kALPHA_F < 0 || this->kALPHA_F > 1) {
+        throw std::invalid_argument("Invalid value for alpha_f");
+    }
+
+    if (this->kALPHA_M < 0 || this->kALPHA_M > 1) {
+        throw std::invalid_argument("Invalid value for alpha_m");
+    }
+
+    if (this->kBETA < 0 || this->kBETA > 0.50) {
+        throw std::invalid_argument("Invalid value for beta");
+    }
+
+    if (this->kGAMMA < 0 || this->kGAMMA > 1) {
+        throw std::invalid_argument("Invalid value for gamma");
+    }
+
+    if (this->kMAX_ITERATIONS < 1) {
+        throw std::invalid_argument("Invalid value for max_iterations");
+    }
 }
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initial_state) {

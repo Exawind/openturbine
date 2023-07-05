@@ -118,10 +118,10 @@ TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
     auto initial_state = State();
     time_integrator.Integrate(initial_state);
 
-    EXPECT_LE(time_integrator.GetNumberOfIterations(), time_integrator.kMAX_ITERATIONS);
+    EXPECT_LE(time_integrator.GetNumberOfIterations(), time_integrator.GetMaxIterations());
     EXPECT_LE(
         time_integrator.GetTotalNumberOfIterations(),
-        time_integrator.GetNumberOfSteps() * time_integrator.kMAX_ITERATIONS
+        time_integrator.GetNumberOfSteps() * time_integrator.GetMaxIterations()
     );
 }
 
@@ -141,6 +141,54 @@ TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
     auto converged = time_integrator.CheckConvergence(residual_force, incremental_force);
 
     EXPECT_FALSE(converged);
+}
+
+TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidAlphaF) {
+    EXPECT_THROW(
+        GeneralizedAlphaTimeIntegrator(0., 1., 1, 1.1, 0.5, 0.25, 0.5, 10), std::invalid_argument
+    );
+}
+
+TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidAlphaM) {
+    EXPECT_THROW(
+        GeneralizedAlphaTimeIntegrator(0., 1., 1, 0.5, 1.1, 0.25, 0.5, 10), std::invalid_argument
+    );
+}
+
+TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidBeta) {
+    EXPECT_THROW(
+        GeneralizedAlphaTimeIntegrator(0., 1., 1, 0.5, 0.5, 0.75, 0.5, 10), std::invalid_argument
+    );
+}
+
+TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidGamma) {
+    EXPECT_THROW(
+        GeneralizedAlphaTimeIntegrator(0., 1., 1, 0.5, 0.5, 0.25, 1.1, 10), std::invalid_argument
+    );
+}
+
+TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidNumberOfSteps) {
+    EXPECT_THROW(
+        GeneralizedAlphaTimeIntegrator(0., 1., 1, 0.5, 0.5, 0.25, 0.5, 0), std::invalid_argument
+    );
+}
+
+TEST(GeneralizedAlphaTimeIntegratorTest, GetDefaultGAConstants) {
+    auto time_integrator = GeneralizedAlphaTimeIntegrator();
+    EXPECT_EQ(time_integrator.GetAlphaF(), 0.5);
+    EXPECT_EQ(time_integrator.GetAlphaM(), 0.5);
+    EXPECT_EQ(time_integrator.GetBeta(), 0.25);
+    EXPECT_EQ(time_integrator.GetGamma(), 0.5);
+    EXPECT_EQ(time_integrator.GetMaxIterations(), 10);
+}
+
+TEST(GeneralizedAlphaTimeIntegratorTest, GetSuppliedGAConstants) {
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1, 0.11, 0.29, 0.47, 0.93, 17);
+    EXPECT_EQ(time_integrator.GetAlphaF(), 0.11);
+    EXPECT_EQ(time_integrator.GetAlphaM(), 0.29);
+    EXPECT_EQ(time_integrator.GetBeta(), 0.47);
+    EXPECT_EQ(time_integrator.GetGamma(), 0.93);
+    EXPECT_EQ(time_integrator.GetMaxIterations(), 17);
 }
 
 }  // namespace openturbine::rigid_pendulum::tests
