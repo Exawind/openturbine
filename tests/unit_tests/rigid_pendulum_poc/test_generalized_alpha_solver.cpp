@@ -78,12 +78,6 @@ TEST(TimeIntegratorTest, GetHistoryOfStatesFromTimeIntegrator) {
 
 TEST(TimeIntegratorTest, LinearSolutionWithZeroAcceleration) {
     auto initial_state = State();
-
-    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedCoordinates(), {0.});
-    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedVelocity(), {0.});
-    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedAcceleration(), {0.});
-    expect_kokkos_view_1D_equal(initial_state.GetAlgorithmicAcceleration(), {0.});
-
     auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1);
     auto linear_update = time_integrator.UpdateLinearSolution(initial_state);
 
@@ -95,12 +89,6 @@ TEST(TimeIntegratorTest, LinearSolutionWithZeroAcceleration) {
 TEST(TimeIntegratorTest, LinearSolutionWithNonZeroAcceleration) {
     auto v = create_vector({1., 2., 3.});
     auto initial_state = State(v, v, v, v);
-
-    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedCoordinates(), {1., 2., 3.});
-    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedVelocity(), {1., 2., 3.});
-    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedAcceleration(), {1., 2., 3.});
-    expect_kokkos_view_1D_equal(initial_state.GetAlgorithmicAcceleration(), {1., 2., 3.});
-
     auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1);
     auto linear_update = time_integrator.UpdateLinearSolution(initial_state);
 
@@ -195,19 +183,7 @@ TEST(GeneralizedAlphaTimeIntegratorTest, GetSuppliedGAConstants) {
 
 TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
     auto initial_state = State();
-
-    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedCoordinates(), {0.});
-    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedVelocity(), {0.});
-    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedAcceleration(), {0.});
-    expect_kokkos_view_1D_equal(initial_state.GetAlgorithmicAcceleration(), {0.});
-
     auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1, 0., 0., 0.5, 1., 1);
-
-    EXPECT_EQ(time_integrator.GetAlphaF(), 0.);
-    EXPECT_EQ(time_integrator.GetAlphaM(), 0.);
-    EXPECT_EQ(time_integrator.GetBeta(), 0.5);
-    EXPECT_EQ(time_integrator.GetGamma(), 1.);
-    EXPECT_EQ(time_integrator.GetMaxIterations(), 1);
 
     EXPECT_EQ(time_integrator.GetNumberOfIterations(), 0);
     EXPECT_EQ(time_integrator.GetTotalNumberOfIterations(), 0);
