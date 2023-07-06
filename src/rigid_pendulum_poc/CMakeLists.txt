@@ -3,6 +3,7 @@ target_sources(${oturb_lib_name}
     #C++
     # diagnostics.cpp
     # io.cpp
+    quaternion.cpp
     solver.cpp
     # IOManager.cpp
 )
