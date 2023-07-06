@@ -109,6 +109,8 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     if (this->kMAX_ITERATIONS < 1) {
         throw std::invalid_argument("Invalid value for max_iterations");
     }
+
+    this->is_converged_ = false;
 }
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initial_state) {
@@ -156,6 +158,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const St
         auto increments = residuals;
 
         if (this->CheckConvergence(residuals, increments)) {
+            this->is_converged_ = true;
             break;
         }
 
@@ -176,14 +179,6 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const St
         );
     }
 
-    if (this->n_iterations_ < kMAX_ITERATIONS) {
-        log->Info("Converged in " + std::to_string(this->n_iterations_) + " iterations\n");
-    }
-
-    if (this->n_iterations_ == kMAX_ITERATIONS) {
-        log->Warning("Newton-Raphson iterations failed to converge on a solution!\n");
-    }
-
     this->total_n_iterations_ += this->n_iterations_;
 
     Kokkos::parallel_for(
@@ -193,6 +188,20 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const St
             algo_accln(i) += (1 - kALPHA_F) / (1 - kALPHA_M) * gen_accln(i);
         }
     );
+
+    if (this->is_converged_) {
+        log->Info("Converged in " + std::to_string(this->n_iterations_) + " iterations\n");
+    }
+
+    log->Warning("Newton-Raphson iterations failed to converge on a solution!\n");
+
+    log->Debug("Final state after performing Newton-Raphson iterations:\n");
+    for (size_t i = 0; i < size; i++) {
+        log->Debug(
+            std::to_string(gen_coords(i)) + "\t" + std::to_string(gen_velocity(i)) + "\t" +
+            std::to_string(gen_accln(i)) + "\t" + std::to_string(algo_accln(i)) + "\n"
+        );
+    }
 
     return {State(gen_coords, gen_velocity, gen_accln, algo_accln), constraints};
 }

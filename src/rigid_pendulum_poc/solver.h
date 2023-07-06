@@ -52,21 +52,6 @@ public:
         double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5, size_t max_iterations = 10
     );
 
-    /// Returns the alpha_f parameter
-    inline double GetAlphaF() const { return kALPHA_F; }
-
-    /// Returns the alpha_m parameter
-    inline double GetAlphaM() const { return kALPHA_M; }
-
-    /// Returns the beta parameter
-    inline double GetBeta() const { return kBETA; }
-
-    /// Returns the gamma parameter
-    inline double GetGamma() const { return kGAMMA; }
-
-    /// Returns the maximum number of iterations
-    inline size_t GetMaxIterations() const { return kMAX_ITERATIONS; }
-
     /// Returns the initial time of the analysis
     inline double GetInitialTime() const { return initial_time_; }
 
@@ -81,6 +66,21 @@ public:
 
     /// Returns the number of analysis time steps
     inline int GetNumberOfSteps() const { return n_steps_; }
+
+    /// Returns the alpha_f parameter
+    inline double GetAlphaF() const { return kALPHA_F; }
+
+    /// Returns the alpha_m parameter
+    inline double GetAlphaM() const { return kALPHA_M; }
+
+    /// Returns the beta parameter
+    inline double GetBeta() const { return kBETA; }
+
+    /// Returns the gamma parameter
+    inline double GetGamma() const { return kGAMMA; }
+
+    /// Returns the maximum number of iterations
+    inline size_t GetMaxIterations() const { return kMAX_ITERATIONS; }
 
     /// Performs the time integration and returns a vector of States over the time steps
     std::vector<State> Integrate(const State&);
@@ -108,6 +108,9 @@ public:
     /// Returns the total number of iterations performed to complete the analysis
     inline size_t GetTotalNumberOfIterations() const { return total_n_iterations_; }
 
+    /// Returns the flag to indicate if the latest non-linear update has converged
+    inline bool IsConverged() const { return is_converged_; }
+
     /// Computes the iteration matrix for the non-linear update
     HostView2D ComputeIterationMatrix(HostView1D gen_coords);
 
@@ -119,6 +122,7 @@ private:
     size_t n_iterations_;        //< Number of iterations performed in the latest non-linear update
     size_t total_n_iterations_;  //< Total number of non-linear iterations performed to
                                  // complete the analysis
+    bool is_converged_;          //< Flag to indicate if the latest non-linear update has converged
 
     const double kALPHA_F;         //< Alpha_f coefficient of the generalized-alpha method
     const double kALPHA_M;         //< Alpha_m coefficient of the generalized-alpha method

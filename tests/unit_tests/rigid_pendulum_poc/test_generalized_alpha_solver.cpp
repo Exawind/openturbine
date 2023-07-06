@@ -175,6 +175,7 @@ TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidNumberOfSteps) {
 
 TEST(GeneralizedAlphaTimeIntegratorTest, GetDefaultGAConstants) {
     auto time_integrator = GeneralizedAlphaTimeIntegrator();
+
     EXPECT_EQ(time_integrator.GetAlphaF(), 0.5);
     EXPECT_EQ(time_integrator.GetAlphaM(), 0.5);
     EXPECT_EQ(time_integrator.GetBeta(), 0.25);
@@ -184,11 +185,60 @@ TEST(GeneralizedAlphaTimeIntegratorTest, GetDefaultGAConstants) {
 
 TEST(GeneralizedAlphaTimeIntegratorTest, GetSuppliedGAConstants) {
     auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1, 0.11, 0.29, 0.47, 0.93, 17);
+
     EXPECT_EQ(time_integrator.GetAlphaF(), 0.11);
     EXPECT_EQ(time_integrator.GetAlphaM(), 0.29);
     EXPECT_EQ(time_integrator.GetBeta(), 0.47);
     EXPECT_EQ(time_integrator.GetGamma(), 0.93);
     EXPECT_EQ(time_integrator.GetMaxIterations(), 17);
+}
+
+TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
+    auto initial_state = State();
+
+    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedCoordinates(), {0.});
+    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedVelocity(), {0.});
+    expect_kokkos_view_1D_equal(initial_state.GetGeneralizedAcceleration(), {0.});
+    expect_kokkos_view_1D_equal(initial_state.GetAlgorithmicAcceleration(), {0.});
+
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1, 0., 0., 0.5, 1., 1);
+
+    EXPECT_EQ(time_integrator.GetAlphaF(), 0.);
+    EXPECT_EQ(time_integrator.GetAlphaM(), 0.);
+    EXPECT_EQ(time_integrator.GetBeta(), 0.5);
+    EXPECT_EQ(time_integrator.GetGamma(), 1.);
+    EXPECT_EQ(time_integrator.GetMaxIterations(), 1);
+
+    EXPECT_EQ(time_integrator.GetNumberOfIterations(), 0);
+    EXPECT_EQ(time_integrator.GetTotalNumberOfIterations(), 0);
+
+    auto results = time_integrator.Integrate(initial_state);
+
+    EXPECT_EQ(time_integrator.GetNumberOfIterations(), 1);
+    EXPECT_EQ(time_integrator.GetTotalNumberOfIterations(), 1);
+
+    auto final_state = results.back();
+
+    expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {1.});
+    expect_kokkos_view_1D_equal(final_state.GetGeneralizedVelocity(), {2.});
+    expect_kokkos_view_1D_equal(final_state.GetGeneralizedAcceleration(), {2.});
+    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {2.});
+}
+
+TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
+    auto initial_state = State();
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0., 1., 1, 0., 0., 0.5, 1., 2);
+    auto results = time_integrator.Integrate(initial_state);
+
+    EXPECT_EQ(time_integrator.GetNumberOfIterations(), 2);
+    EXPECT_EQ(time_integrator.GetTotalNumberOfIterations(), 2);
+
+    auto final_state = results.back();
+
+    expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {2.});
+    expect_kokkos_view_1D_equal(final_state.GetGeneralizedVelocity(), {4.});
+    expect_kokkos_view_1D_equal(final_state.GetGeneralizedAcceleration(), {4.});
+    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {4.});
 }
 
 }  // namespace openturbine::rigid_pendulum::tests
