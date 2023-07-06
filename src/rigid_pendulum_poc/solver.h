@@ -42,6 +42,9 @@ private:
     HostView1D algorithmic_acceleration_;
 };
 
+HostView2D create_identity_matrix(size_t size);
+HostView1D create_identity_vector(size_t size);
+
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator {
 public:
@@ -83,7 +86,10 @@ public:
     inline size_t GetMaxIterations() const { return kMAX_ITERATIONS_; }
 
     /// Performs the time integration and returns a vector of States over the time steps
-    std::vector<State> Integrate(const State&);
+    std::vector<State> Integrate(
+        const State&, std::function<HostView2D(size_t)> iteration_matrix = create_identity_matrix,
+        std::function<HostView1D(size_t)> residual_vector = create_identity_vector
+    );
 
     /*! @brief  Perform the alpha step of the generalized-alpha method as described
      *          in the paper by Arnold and Brüls (2007)
@@ -91,13 +97,14 @@ public:
      * @param   state Current state of the system at the beginning of the time step
      * @return  Updated state of the system at the end of the time step
      */
-    std::tuple<State, HostView1D> AlphaStep(const State&);
+    std::tuple<State, HostView1D>
+    AlphaStep(const State&, std::function<HostView2D(size_t)>, std::function<HostView1D(size_t)>);
 
     /// Performs the linear update of the generalized-alpha method
     State UpdateLinearSolution(const State&);
 
     /// Computes residuals of the force array for the non-linear update
-    HostView1D ComputeResiduals(HostView1D);
+    HostView1D ComputeResiduals(HostView1D, std::function<HostView1D(size_t)>);
 
     /// Checks convergence of the non-linear solution based on the residuals
     bool CheckConvergence(HostView1D, HostView1D);
@@ -112,7 +119,7 @@ public:
     inline bool IsConverged() const { return is_converged_; }
 
     /// Computes the iteration matrix for the non-linear update
-    HostView2D ComputeIterationMatrix(HostView1D gen_coords);
+    HostView2D ComputeIterationMatrix(HostView1D gen_coords, std::function<HostView2D(size_t)>);
 
 private:
     double initial_time_;        //< Initial time of the analysis

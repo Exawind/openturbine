@@ -74,6 +74,28 @@ State::State(
     Kokkos::deep_copy(algorithmic_acceleration_, algo_accln);
 }
 
+HostView2D create_identity_matrix(size_t size) {
+    auto matrix = HostView2D("matrix", size, size);
+    auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, size);
+    auto fill_diagonal = [matrix](int index) {
+        matrix(index, index) = 1.;
+    };
+
+    Kokkos::parallel_for(diagonal_entries, fill_diagonal);
+
+    return matrix;
+}
+
+HostView1D create_identity_vector(size_t size) {
+    auto vector = HostView1D("vector", size);
+
+    Kokkos::parallel_for(
+        size, KOKKOS_LAMBDA(int i) { vector(i) = 1.; }
+    );
+
+    return vector;
+}
+
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double initial_time, double time_step, size_t n_steps, double alpha_f, double alpha_m,
     double beta, double gamma, size_t max_iterations
@@ -113,13 +135,16 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     this->is_converged_ = false;
 }
 
-std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initial_state) {
+std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
+    const State& initial_state, std::function<HostView2D(size_t)> matrix,
+    std::function<HostView1D(size_t)> vector
+) {
     auto log = util::Log::Get();
 
     std::vector<State> states{initial_state};
     for (size_t i = 0; i < this->n_steps_; i++) {
         log->Info("Integrating step number " + std::to_string(i + 1) + "\n");
-        states.emplace_back(std::get<0>(this->AlphaStep(states[i])));
+        states.emplace_back(std::get<0>(this->AlphaStep(states[i], matrix, vector)));
         this->AdvanceTimeStep();
     }
 
@@ -128,7 +153,10 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(const State& initia
     return states;
 }
 
-std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const State& state) {
+std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
+    const State& state, std::function<HostView2D(size_t)> matrix,
+    std::function<HostView1D(size_t)> vector
+) {
     auto linear_update = UpdateLinearSolution(state);
     auto gen_coords = linear_update.GetGeneralizedCoordinates();
     auto gen_velocity = linear_update.GetGeneralizedVelocity();
@@ -153,7 +181,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const St
     for (n_iterations_ = 0; n_iterations_ < this->kMAX_ITERATIONS_; n_iterations_++) {
         log->Debug("Iteration number: " + std::to_string(this->n_iterations_ + 1) + "\n");
 
-        auto residuals = ComputeResiduals(gen_coords);
+        auto residuals = ComputeResiduals(gen_coords, vector);
         // TODO: Provide actual force increments
         auto increments = residuals;
 
@@ -162,7 +190,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const St
             break;
         }
 
-        auto iteration_matrix = ComputeIterationMatrix(gen_coords);
+        auto iteration_matrix = ComputeIterationMatrix(gen_coords, matrix);
         auto gen_coords_delta = residuals;
         auto constraints_delta = constraints;
         solve_linear_system(iteration_matrix, gen_coords_delta);
@@ -250,14 +278,13 @@ State GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(const State& state) {
     return State(gen_coords, gen_velocity, gen_accln, algo_accln);
 }
 
-HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(HostView1D forces) {
+HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
+    HostView1D forces, std::function<HostView1D(size_t)> vector
+) {
     // This is a just a placeholder, returns a vector of ones
     // TODO: r^q = M(q) * q'' - f + phi_q^T * lambda
     auto size = forces.extent(0);
-    auto residual_vector = HostView1D("residual_vector", size);
-    Kokkos::parallel_for(
-        size, KOKKOS_LAMBDA(int i) { residual_vector(i) = 1.; }
-    );
+    auto residual_vector = vector(size);
 
     auto log = util::Log::Get();
     log->Debug("Residual vector is " + std::to_string(size) + " x 1 with elements\n");
@@ -298,17 +325,14 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(HostView1D residual, HostV
     return (residual_norm / increment_norm) < kTOLERANCE ? true : false;
 }
 
-HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(HostView1D gen_coords) {
+HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
+    HostView1D gen_coords, std::function<HostView2D(size_t)> matrix
+) {
     // This is a just a placeholder, returns an identity matrix for now
     // TODO: S_t = [ (M * beta' + C_t * gamma' + K_t)       Phi_q^T
     //                          Phi_q                         0 ]
     auto size = gen_coords.extent(0);
-    auto iteration_matrix = HostView2D("iteration_matrix", size, size);
-    auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, size);
-    auto fill_diagonal = [iteration_matrix](int index) {
-        iteration_matrix(index, index) = 1.;
-    };
-    Kokkos::parallel_for(diagonal_entries, fill_diagonal);
+    auto iteration_matrix = matrix(size);
 
     auto log = util::Log::Get();
     log->Debug(
