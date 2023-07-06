@@ -68,19 +68,19 @@ public:
     inline int GetNumberOfSteps() const { return n_steps_; }
 
     /// Returns the alpha_f parameter
-    inline double GetAlphaF() const { return kALPHA_F; }
+    inline double GetAlphaF() const { return kALPHA_F_; }
 
     /// Returns the alpha_m parameter
-    inline double GetAlphaM() const { return kALPHA_M; }
+    inline double GetAlphaM() const { return kALPHA_M_; }
 
     /// Returns the beta parameter
-    inline double GetBeta() const { return kBETA; }
+    inline double GetBeta() const { return kBETA_; }
 
     /// Returns the gamma parameter
-    inline double GetGamma() const { return kGAMMA; }
+    inline double GetGamma() const { return kGAMMA_; }
 
     /// Returns the maximum number of iterations
-    inline size_t GetMaxIterations() const { return kMAX_ITERATIONS; }
+    inline size_t GetMaxIterations() const { return kMAX_ITERATIONS_; }
 
     /// Performs the time integration and returns a vector of States over the time steps
     std::vector<State> Integrate(const State&);
@@ -124,11 +124,11 @@ private:
                                  // complete the analysis
     bool is_converged_;          //< Flag to indicate if the latest non-linear update has converged
 
-    const double kALPHA_F;         //< Alpha_f coefficient of the generalized-alpha method
-    const double kALPHA_M;         //< Alpha_m coefficient of the generalized-alpha method
-    const double kBETA;            //< Beta coefficient of the generalized-alpha method
-    const double kGAMMA;           //< Gamma coefficient of the generalized-alpha method
-    const size_t kMAX_ITERATIONS;  //< Maximum number of iterations for the non-linear update
+    const double kALPHA_F_;         //< Alpha_f coefficient of the generalized-alpha method
+    const double kALPHA_M_;         //< Alpha_m coefficient of the generalized-alpha method
+    const double kBETA_;            //< Beta coefficient of the generalized-alpha method
+    const double kGAMMA_;           //< Gamma coefficient of the generalized-alpha method
+    const size_t kMAX_ITERATIONS_;  //< Maximum number of iterations for the non-linear update
 };
 
 }  // namespace openturbine::rigid_pendulum

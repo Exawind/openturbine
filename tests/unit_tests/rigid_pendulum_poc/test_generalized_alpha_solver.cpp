@@ -219,6 +219,7 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
 
     auto final_state = results.back();
 
+    // We expect the final state to contain the following values after one increment
     expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {1.});
     expect_kokkos_view_1D_equal(final_state.GetGeneralizedVelocity(), {2.});
     expect_kokkos_view_1D_equal(final_state.GetGeneralizedAcceleration(), {2.});
@@ -235,6 +236,7 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
 
     auto final_state = results.back();
 
+    // We expect the final state to contain the following values after two increments
     expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {2.});
     expect_kokkos_view_1D_equal(final_state.GetGeneralizedVelocity(), {4.});
     expect_kokkos_view_1D_equal(final_state.GetGeneralizedAcceleration(), {4.});

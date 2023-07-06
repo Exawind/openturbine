@@ -81,32 +81,32 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     : initial_time_(initial_time),
       time_step_(time_step),
       n_steps_(n_steps),
-      kALPHA_F(alpha_f),
-      kALPHA_M(alpha_m),
-      kBETA(beta),
-      kGAMMA(gamma),
-      kMAX_ITERATIONS(max_iterations) {
+      kALPHA_F_(alpha_f),
+      kALPHA_M_(alpha_m),
+      kBETA_(beta),
+      kGAMMA_(gamma),
+      kMAX_ITERATIONS_(max_iterations) {
     this->current_time_ = initial_time;
     this->n_iterations_ = 0;
     this->total_n_iterations_ = 0;
 
-    if (this->kALPHA_F < 0 || this->kALPHA_F > 1) {
+    if (this->kALPHA_F_ < 0 || this->kALPHA_F_ > 1) {
         throw std::invalid_argument("Invalid value for alpha_f");
     }
 
-    if (this->kALPHA_M < 0 || this->kALPHA_M > 1) {
+    if (this->kALPHA_M_ < 0 || this->kALPHA_M_ > 1) {
         throw std::invalid_argument("Invalid value for alpha_m");
     }
 
-    if (this->kBETA < 0 || this->kBETA > 0.50) {
+    if (this->kBETA_ < 0 || this->kBETA_ > 0.50) {
         throw std::invalid_argument("Invalid value for beta");
     }
 
-    if (this->kGAMMA < 0 || this->kGAMMA > 1) {
+    if (this->kGAMMA_ < 0 || this->kGAMMA_ > 1) {
         throw std::invalid_argument("Invalid value for gamma");
     }
 
-    if (this->kMAX_ITERATIONS < 1) {
+    if (this->kMAX_ITERATIONS_ < 1) {
         throw std::invalid_argument("Invalid value for max_iterations");
     }
 
@@ -137,8 +137,8 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const St
 
     const auto h = this->time_step_;
     const auto size = gen_coords.size();
-    const double beta_prime = (1 - kALPHA_M) / (h * h * kBETA * (1 - kALPHA_F));
-    const double gamma_prime = kGAMMA / (h * kBETA);
+    const double beta_prime = (1 - kALPHA_M_) / (h * h * kBETA_ * (1 - kALPHA_F_));
+    const double gamma_prime = kGAMMA_ / (h * kBETA_);
 
     // TODO: Provide actual constraints
     auto constraints = HostView1D("constraints", size);
@@ -150,7 +150,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const St
         "algorithm\n"
     );
 
-    for (n_iterations_ = 0; n_iterations_ < kMAX_ITERATIONS; n_iterations_++) {
+    for (n_iterations_ = 0; n_iterations_ < this->kMAX_ITERATIONS_; n_iterations_++) {
         log->Debug("Iteration number: " + std::to_string(this->n_iterations_ + 1) + "\n");
 
         auto residuals = ComputeResiduals(gen_coords);
@@ -185,15 +185,21 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(const St
         size,
         KOKKOS_LAMBDA(const int i) {
             // Update algorithmic acceleration once soln has converged
-            algo_accln(i) += (1 - kALPHA_F) / (1 - kALPHA_M) * gen_accln(i);
+            algo_accln(i) += (1 - kALPHA_F_) / (1 - kALPHA_M_) * gen_accln(i);
         }
     );
 
     if (this->is_converged_) {
-        log->Info("Converged in " + std::to_string(this->n_iterations_) + " iterations\n");
+        log->Info(
+            "Newton-Raphson iterations converged in " + std::to_string(this->n_iterations_) +
+            " iterations\n"
+        );
+    } else {
+        log->Warning(
+            "Newton-Raphson iterations failed to converge on a solution after " +
+            std::to_string(this->n_iterations_) + " iterations!\n"
+        );
     }
-
-    log->Warning("Newton-Raphson iterations failed to converge on a solution!\n");
 
     log->Debug("Final state after performing Newton-Raphson iterations:\n");
     for (size_t i = 0; i < size; i++) {
@@ -222,12 +228,12 @@ State GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(const State& state) {
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const int i) {
-            gen_coords(i) += h * gen_velocity(i) + h * h * (0.5 - kBETA) * algo_accln(i);
-            gen_velocity(i) += h * (1 - kGAMMA) * algo_accln(i);
+            gen_coords(i) += h * gen_velocity(i) + h * h * (0.5 - kBETA_) * algo_accln(i);
+            gen_velocity(i) += h * (1 - kGAMMA_) * algo_accln(i);
             algo_accln(i) =
-                (1.0 / (1.0 - kALPHA_M)) * (kALPHA_F * gen_accln(i) - kALPHA_M * algo_accln(i));
-            gen_coords(i) += h * h * kBETA * algo_accln(i);
-            gen_velocity(i) += h * kBETA * algo_accln(i);
+                (1.0 / (1.0 - kALPHA_M_)) * (kALPHA_F_ * gen_accln(i) - kALPHA_M_ * algo_accln(i));
+            gen_coords(i) += h * h * kBETA_ * algo_accln(i);
+            gen_velocity(i) += h * kBETA_ * algo_accln(i);
             gen_accln(i) = 0.;
         }
     );
