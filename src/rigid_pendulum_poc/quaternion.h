@@ -70,6 +70,20 @@ public:
         );
     }
 
+    /// Multiplies the quaternion by a scalar and returns the result
+    inline Quaternion operator*(double scalar) const {
+        return Quaternion(
+            values_[0] * scalar, values_[1] * scalar, values_[2] * scalar, values_[3] * scalar
+        );
+    }
+
+    /// Divides the quaternion by a scalar and returns the result
+    inline Quaternion operator/(double scalar) const {
+        return Quaternion(
+            values_[0] / scalar, values_[1] / scalar, values_[2] / scalar, values_[3] / scalar
+        );
+    }
+
     /// Returns the length/Euclidean/L2 norm of the quaternion
     inline double Length() const {
         return std::sqrt(
@@ -83,6 +97,14 @@ public:
 
     /// Returns a unit quaternion based on the current quaternion
     Quaternion GetUnitQuaternion() const;
+
+    /// Returns the conjugate of the quaternion
+    inline Quaternion GetConjugate() const {
+        return Quaternion(values_[0], -values_[1], -values_[2], -values_[3]);
+    }
+
+    /// Returns the inverse of the quaternion
+    inline Quaternion GetInverse() const { return GetConjugate() / (Length() * Length()); }
 
 private:
     std::array<double, 4> values_;

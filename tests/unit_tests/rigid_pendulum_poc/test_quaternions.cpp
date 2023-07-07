@@ -157,4 +157,32 @@ TEST(QuaternionTest, MultiplicationOfTwoQuaternions_2) {
     ASSERT_EQ((q1 * q2).GetComponents(), expected.GetComponents());
 }
 
+TEST(QuaternionTest, MultiplicationOfQuaternionAndScalar) {
+    Quaternion q(std::array{1., 2., 3., 4.});
+    Quaternion expected(std::array{2., 4., 6., 8.});
+
+    ASSERT_EQ((q * 2.).GetComponents(), expected.GetComponents());
+}
+
+TEST(QuaternionTest, DivisionOfQuaternionAndScalar) {
+    Quaternion q(std::array{1., 2., 3., 4.});
+    Quaternion expected(std::array{0.5, 1., 1.5, 2.});
+
+    ASSERT_EQ((q / 2.).GetComponents(), expected.GetComponents());
+}
+
+TEST(QuaternionTest, GetConjugate) {
+    Quaternion q(std::array{1., 2., 3., 4.});
+    Quaternion expected(std::array{1., -2., -3., -4.});
+
+    ASSERT_EQ(q.GetConjugate().GetComponents(), expected.GetComponents());
+}
+
+TEST(QuaternionTest, GetInverse) {
+    Quaternion q(std::array{1., 2., 3., 4.});
+    Quaternion expected(std::array{1. / 30., -2. / 30., -3. / 30., -4. / 30.});
+
+    ASSERT_EQ(q.GetInverse().GetComponents(), expected.GetComponents());
+}
+
 }  // namespace openturbine::rigid_pendulum::tests
