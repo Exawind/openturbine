@@ -141,4 +141,20 @@ TEST(QuaternionTest, AdditionAndSubtractionOfThreeQuaternions) {
     ASSERT_EQ((q1 + q2 - q3).GetComponents(), expected.GetComponents());
 }
 
+TEST(QuaternionTest, MultiplicationOfTwoQuaternions_1) {
+    Quaternion q1(std::array{3., 1., -2., 1.});
+    Quaternion q2(std::array{2., -1., 2., 3.});
+    Quaternion expected(std::array{8., -9., -2., 11.});
+
+    ASSERT_EQ((q1 * q2).GetComponents(), expected.GetComponents());
+}
+
+TEST(QuaternionTest, MultiplicationOfTwoQuaternions_2) {
+    Quaternion q1(std::array{1., 2., 3., 4.});
+    Quaternion q2(std::array{5., 6., 7., 8.});
+    Quaternion expected(std::array{-60., 12., 30., 24.});
+
+    ASSERT_EQ((q1 * q2).GetComponents(), expected.GetComponents());
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

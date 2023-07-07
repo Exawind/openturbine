@@ -40,20 +40,6 @@ public:
         return {values_[1], values_[2], values_[3]};
     }
 
-    /// Returns the length/Euclidean/L2 norm of the quaternion
-    inline double Length() const {
-        return std::sqrt(
-            values_[0] * values_[0] + values_[1] * values_[1] + values_[2] * values_[2] +
-            values_[3] * values_[3]
-        );
-    }
-
-    /// Returns if the quaternion is a unit quaternion
-    bool IsUnitQuaternion() const;
-
-    /// Returns a unit quaternion based on the current quaternion
-    Quaternion GetUnitQuaternion() const;
-
     /// Adds two quaternions and returns the result
     inline Quaternion operator+(const Quaternion& other) const {
         return Quaternion(
@@ -69,6 +55,34 @@ public:
             values_[2] - other.values_[2], values_[3] - other.values_[3]
         );
     }
+
+    /// Multiplies two quaternions and returns the result
+    inline Quaternion operator*(const Quaternion& other) const {
+        return Quaternion(
+            values_[0] * other.values_[0] - values_[1] * other.values_[1] -
+                values_[2] * other.values_[2] - values_[3] * other.values_[3],
+            values_[0] * other.values_[1] + values_[1] * other.values_[0] +
+                values_[2] * other.values_[3] - values_[3] * other.values_[2],
+            values_[0] * other.values_[2] - values_[1] * other.values_[3] +
+                values_[2] * other.values_[0] + values_[3] * other.values_[1],
+            values_[0] * other.values_[3] + values_[1] * other.values_[2] -
+                values_[2] * other.values_[1] + values_[3] * other.values_[0]
+        );
+    }
+
+    /// Returns the length/Euclidean/L2 norm of the quaternion
+    inline double Length() const {
+        return std::sqrt(
+            values_[0] * values_[0] + values_[1] * values_[1] + values_[2] * values_[2] +
+            values_[3] * values_[3]
+        );
+    }
+
+    /// Returns if the quaternion is a unit quaternion
+    bool IsUnitQuaternion() const;
+
+    /// Returns a unit quaternion based on the current quaternion
+    Quaternion GetUnitQuaternion() const;
 
 private:
     std::array<double, 4> values_;
