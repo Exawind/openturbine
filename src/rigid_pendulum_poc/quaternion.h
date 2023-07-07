@@ -54,6 +54,22 @@ public:
     /// Returns a unit quaternion based on the current quaternion
     Quaternion GetUnitQuaternion() const;
 
+    /// Adds two quaternions and returns the result
+    inline Quaternion operator+(const Quaternion& other) const {
+        return Quaternion(
+            values_[0] + other.values_[0], values_[1] + other.values_[1],
+            values_[2] + other.values_[2], values_[3] + other.values_[3]
+        );
+    }
+
+    /// Subtracts two quaternions and returns the result
+    inline Quaternion operator-(const Quaternion& other) const {
+        return Quaternion(
+            values_[0] - other.values_[0], values_[1] - other.values_[1],
+            values_[2] - other.values_[2], values_[3] - other.values_[3]
+        );
+    }
+
 private:
     std::array<double, 4> values_;
 };

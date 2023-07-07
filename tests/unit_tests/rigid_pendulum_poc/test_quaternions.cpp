@@ -107,4 +107,38 @@ TEST(QuaternionTest, GetUnitQuaternion) {
     ASSERT_EQ(q.GetUnitQuaternion().GetComponents(), expected.GetComponents());
 }
 
+TEST(QuaternionTest, AdditionOfTwoQuaternions) {
+    Quaternion q1(std::array{1., 2., 3., 4.});
+    Quaternion q2(std::array{5., 6., 7., 8.});
+    Quaternion expected(std::array{6., 8., 10., 12.});
+
+    ASSERT_EQ((q1 + q2).GetComponents(), expected.GetComponents());
+}
+
+TEST(QuaternionTest, AdditionOfThreeQuaternions) {
+    Quaternion q1(std::array{1., 2., 3., 4.});
+    Quaternion q2(std::array{5., 6., 7., 8.});
+    Quaternion q3(std::array{9., 10., 11., 12.});
+    Quaternion expected(std::array{15., 18., 21., 24.});
+
+    ASSERT_EQ((q1 + q2 + q3).GetComponents(), expected.GetComponents());
+}
+
+TEST(QuaternionTest, SubtractionOfTwoQuaternions) {
+    Quaternion q1(std::array{1., 2., 3., 4.});
+    Quaternion q2(std::array{5., 6., 7., 8.});
+    Quaternion expected(std::array{-4., -4., -4., -4.});
+
+    ASSERT_EQ((q1 - q2).GetComponents(), expected.GetComponents());
+}
+
+TEST(QuaternionTest, AdditionAndSubtractionOfThreeQuaternions) {
+    Quaternion q1(std::array{1., 2., 3., 4.});
+    Quaternion q2(std::array{5., 6., 7., 8.});
+    Quaternion q3(std::array{9., 10., 11., 12.});
+    Quaternion expected(std::array{-3., -2., -1., 0.});
+
+    ASSERT_EQ((q1 + q2 - q3).GetComponents(), expected.GetComponents());
+}
+
 }  // namespace openturbine::rigid_pendulum::tests
