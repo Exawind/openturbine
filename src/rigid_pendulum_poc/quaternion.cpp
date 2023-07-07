@@ -5,6 +5,7 @@
 namespace openturbine::rigid_pendulum {
 
 bool close_to(double a, double b) {
+    auto delta = std::abs(a - b);
     a = std::abs(a);
     b = std::abs(b);
 
@@ -15,7 +16,7 @@ bool close_to(double a, double b) {
         return false;
     }
 
-    if ((std::abs(a - b) / a) < 1e-6) {
+    if ((delta / a) < 1e-6) {
         return true;
     }
     return false;

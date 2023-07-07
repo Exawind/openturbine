@@ -66,12 +66,24 @@ TEST(QuaternionTest, CloseTo) {
     ASSERT_FALSE(close_to(1., 1. + 1e-5));
     ASSERT_FALSE(close_to(1., 1. - 1e-5));
     ASSERT_TRUE(close_to(1e-7, 1e-7));
+
     ASSERT_TRUE(close_to(-1., -1.));
     ASSERT_TRUE(close_to(-1., -1. + 1e-7));
     ASSERT_TRUE(close_to(-1., -1. - 1e-7));
     ASSERT_FALSE(close_to(-1., -1. + 1e-5));
     ASSERT_FALSE(close_to(-1., -1. - 1e-5));
     ASSERT_TRUE(close_to(-1e-7, -1e-7));
+
+    ASSERT_FALSE(close_to(1., -1.));
+    ASSERT_FALSE(close_to(-1., 1.));
+    ASSERT_FALSE(close_to(1., -1. + 1e-7));
+    ASSERT_FALSE(close_to(-1., 1. + 1e-7));
+    ASSERT_FALSE(close_to(1., -1. - 1e-7));
+    ASSERT_FALSE(close_to(-1., 1. - 1e-7));
+    ASSERT_FALSE(close_to(1., -1. + 1e-5));
+    ASSERT_FALSE(close_to(-1., 1. + 1e-5));
+    ASSERT_FALSE(close_to(1., -1. - 1e-5));
+    ASSERT_FALSE(close_to(-1., 1. - 1e-5));
 }
 
 TEST(QuaternionTest, ExpectNonUnitQuaternion) {

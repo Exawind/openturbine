@@ -4,7 +4,7 @@
 
 namespace openturbine::rigid_pendulum {
 
-/// Returns a boolean indicating if two doubles are close to each other
+/// Returns a boolean indicating if two provided doubles are close to each other
 bool close_to(double a, double b);
 
 /// @brief Class to represent a quaternion
