@@ -4,6 +4,9 @@
 
 namespace openturbine::rigid_pendulum {
 
+/// Returns a boolean indicating if two doubles are close to each other
+bool close_to(double a, double b);
+
 /// @brief Class to represent a quaternion
 class Quaternion {
 public:
@@ -44,6 +47,12 @@ public:
             values_[3] * values_[3]
         );
     }
+
+    /// Returns if the quaternion is a unit quaternion
+    bool IsUnitQuaternion() const;
+
+    /// Returns a unit quaternion based on the current quaternion
+    Quaternion GetUnitQuaternion() const;
 
 private:
     std::array<double, 4> values_;

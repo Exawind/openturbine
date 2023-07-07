@@ -59,5 +59,40 @@ TEST(QuaternionTest, GetVectorComponent) {
     ASSERT_EQ(q.GetVectorComponent(), expected);
 }
 
+TEST(QuaternionTest, CloseTo) {
+    ASSERT_TRUE(close_to(1., 1.));
+    ASSERT_TRUE(close_to(1., 1. + 1e-7));
+    ASSERT_TRUE(close_to(1., 1. - 1e-7));
+    ASSERT_FALSE(close_to(1., 1. + 1e-5));
+    ASSERT_FALSE(close_to(1., 1. - 1e-5));
+    ASSERT_TRUE(close_to(1e-7, 1e-7));
+    ASSERT_TRUE(close_to(-1., -1.));
+    ASSERT_TRUE(close_to(-1., -1. + 1e-7));
+    ASSERT_TRUE(close_to(-1., -1. - 1e-7));
+    ASSERT_FALSE(close_to(-1., -1. + 1e-5));
+    ASSERT_FALSE(close_to(-1., -1. - 1e-5));
+    ASSERT_TRUE(close_to(-1e-7, -1e-7));
+}
+
+TEST(QuaternionTest, ExpectNonUnitQuaternion) {
+    Quaternion q(std::array{1., 2., 3., 4.});
+
+    ASSERT_FALSE(q.IsUnitQuaternion());
+}
+
+TEST(QuaternionTest, ExpectUnitQuaternion) {
+    double l = std::sqrt(30.);
+    Quaternion q(std::array{1. / l, 2. / l, 3. / l, 4. / l});
+
+    ASSERT_TRUE(q.IsUnitQuaternion());
+}
+
+TEST(QuaternionTest, GetUnitQuaternion) {
+    Quaternion q(std::array{1., 2., 3., 4.});
+    Quaternion expected(std::array{
+        1. / std::sqrt(30.), 2. / std::sqrt(30.), 3. / std::sqrt(30.), 4. / std::sqrt(30.)});
+
+    ASSERT_EQ(q.GetUnitQuaternion().GetComponents(), expected.GetComponents());
+}
 
 }  // namespace openturbine::rigid_pendulum::tests
