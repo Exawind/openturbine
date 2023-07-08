@@ -43,30 +43,30 @@ public:
     /// Adds two quaternions and returns the result
     inline Quaternion operator+(const Quaternion& other) const {
         return Quaternion(
-            values_[0] + other.values_[0], values_[1] + other.values_[1],
-            values_[2] + other.values_[2], values_[3] + other.values_[3]
+            this->values_[0] + other.values_[0], this->values_[1] + other.values_[1],
+            this->values_[2] + other.values_[2], this->values_[3] + other.values_[3]
         );
     }
 
     /// Subtracts two quaternions and returns the result
     inline Quaternion operator-(const Quaternion& other) const {
         return Quaternion(
-            values_[0] - other.values_[0], values_[1] - other.values_[1],
-            values_[2] - other.values_[2], values_[3] - other.values_[3]
+            this->values_[0] - other.values_[0], this->values_[1] - other.values_[1],
+            this->values_[2] - other.values_[2], this->values_[3] - other.values_[3]
         );
     }
 
     /// Multiplies two quaternions and returns the result
     inline Quaternion operator*(const Quaternion& other) const {
         return Quaternion(
-            values_[0] * other.values_[0] - values_[1] * other.values_[1] -
-                values_[2] * other.values_[2] - values_[3] * other.values_[3],
-            values_[0] * other.values_[1] + values_[1] * other.values_[0] +
-                values_[2] * other.values_[3] - values_[3] * other.values_[2],
-            values_[0] * other.values_[2] - values_[1] * other.values_[3] +
-                values_[2] * other.values_[0] + values_[3] * other.values_[1],
-            values_[0] * other.values_[3] + values_[1] * other.values_[2] -
-                values_[2] * other.values_[1] + values_[3] * other.values_[0]
+            this->values_[0] * other.values_[0] - this->values_[1] * other.values_[1] -
+                this->values_[2] * other.values_[2] - this->values_[3] * other.values_[3],
+            this->values_[0] * other.values_[1] + this->values_[1] * other.values_[0] +
+                this->values_[2] * other.values_[3] - this->values_[3] * other.values_[2],
+            this->values_[0] * other.values_[2] - this->values_[1] * other.values_[3] +
+                this->values_[2] * other.values_[0] + this->values_[3] * other.values_[1],
+            this->values_[0] * other.values_[3] + this->values_[1] * other.values_[2] -
+                this->values_[2] * other.values_[1] + this->values_[3] * other.values_[0]
         );
     }
 
@@ -109,5 +109,11 @@ public:
 private:
     std::array<double, 4> values_;
 };
+
+/// Returns a 4-D quaternion from provided 3-D rotation vector
+Quaternion quaternion_from_rotation_vector(const std::array<double, 3>& rotation_vector);
+
+/// Returns a 3-D rotation vector from provided 4-D quaternion
+std::array<double, 3> rotation_vector_from_quaternion(const Quaternion& quaternion);
 
 }  // namespace openturbine::rigid_pendulum

@@ -39,7 +39,7 @@ bool Quaternion::IsUnitQuaternion() const {
 Quaternion Quaternion::GetUnitQuaternion() const {
     double length = Length();
 
-    // Return the quaternion itself if it is already a unit quaternion or null
+    // Return the quaternion itself if unit quaternion or null
     if (close_to(length, 0.) || close_to(length, 1.)) {
         return *this;
     }
@@ -47,6 +47,43 @@ Quaternion Quaternion::GetUnitQuaternion() const {
     return Quaternion(
         values_[0] / length, values_[1] / length, values_[2] / length, values_[3] / length
     );
+}
+
+Quaternion quaternion_from_rotation_vector(const std::array<double, 3>& rotation_vector) {
+    double angle = std::sqrt(
+        rotation_vector[0] * rotation_vector[0] + rotation_vector[1] * rotation_vector[1] +
+        rotation_vector[2] * rotation_vector[2]
+    );
+
+    // Return the quaternion {1, 0, 0, 0} if rotation vector is null
+    if (close_to(angle, 0.)) {
+        return Quaternion(1.0, 0.0, 0.0, 0.0);
+    }
+
+    double sin_angle = std::sin(angle / 2.0);
+    double cos_angle = std::cos(angle / 2.0);
+    auto factor = sin_angle / angle;
+
+    return Quaternion(
+        cos_angle, rotation_vector[0] * factor, rotation_vector[1] * factor,
+        rotation_vector[2] * factor
+    );
+}
+
+std::array<double, 3> rotation_vector_from_quaternion(const Quaternion& quaternion) {
+    auto components = quaternion.GetComponents();
+    auto sin_angle_squared = components[1] * components[1] + components[2] * components[2] +
+                             components[3] * components[3];
+
+    // Return the rotation vector {0, 0, 0} if quaternion is null
+    if (close_to(sin_angle_squared, 0.)) {
+        return {0., 0., 0.};
+    }
+
+    double sin_angle = std::sqrt(sin_angle_squared);
+    double k = 2. * std::atan2(sin_angle, components[0]) / sin_angle;
+
+    return {components[1] * k, components[2] * k, components[3] * k};
 }
 
 }  // namespace openturbine::rigid_pendulum
