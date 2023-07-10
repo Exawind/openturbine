@@ -4,6 +4,8 @@
 
 namespace openturbine::rigid_pendulum {
 
+static constexpr double kTOLERANCE = 1e-6;
+
 /// Returns a boolean indicating if two provided doubles are close to each other
 bool close_to(double a, double b);
 
@@ -27,9 +29,8 @@ public:
     inline double operator[](size_t index) const {
         if (index <= 3) {
             return values_[index];
-        } else {
-            throw std::out_of_range("Quaternion index out of range");
         }
+        throw std::out_of_range("Quaternion index out of range");
     }
 
     /// Returns the first value of the quaternion
@@ -40,7 +41,7 @@ public:
         return {values_[1], values_[2], values_[3]};
     }
 
-    /// Adds two quaternions and returns the result
+    /// Adds provided quaternion to this quaternion and returns the result
     inline Quaternion operator+(const Quaternion& other) const {
         return Quaternion(
             this->values_[0] + other.values_[0], this->values_[1] + other.values_[1],
@@ -48,7 +49,7 @@ public:
         );
     }
 
-    /// Subtracts two quaternions and returns the result
+    /// Subtracts provided quaternion from this quaternion and returns the result
     inline Quaternion operator-(const Quaternion& other) const {
         return Quaternion(
             this->values_[0] - other.values_[0], this->values_[1] - other.values_[1],
@@ -56,7 +57,7 @@ public:
         );
     }
 
-    /// Multiplies two quaternions and returns the result
+    /// Multiplies provided quaternion with this quaternion and returns the result
     inline Quaternion operator*(const Quaternion& other) const {
         return Quaternion(
             this->values_[0] * other.values_[0] - this->values_[1] * other.values_[1] -
@@ -70,14 +71,14 @@ public:
         );
     }
 
-    /// Multiplies the quaternion by a scalar and returns the result
+    /// Multiplies this quaternion with a scalar and returns the result
     inline Quaternion operator*(double scalar) const {
         return Quaternion(
             values_[0] * scalar, values_[1] * scalar, values_[2] * scalar, values_[3] * scalar
         );
     }
 
-    /// Divides the quaternion by a scalar and returns the result
+    /// Divides this quaternion with a scalar and returns the result
     inline Quaternion operator/(double scalar) const {
         return Quaternion(
             values_[0] / scalar, values_[1] / scalar, values_[2] / scalar, values_[3] / scalar
@@ -95,15 +96,15 @@ public:
     /// Returns if the quaternion is a unit quaternion
     bool IsUnitQuaternion() const;
 
-    /// Returns a unit quaternion based on the current quaternion
+    /// Returns a unit quaternion based on the this quaternion
     Quaternion GetUnitQuaternion() const;
 
-    /// Returns the conjugate of the quaternion
+    /// Returns the conjugate of this quaternion
     inline Quaternion GetConjugate() const {
         return Quaternion(values_[0], -values_[1], -values_[2], -values_[3]);
     }
 
-    /// Returns the inverse of the quaternion
+    /// Returns the inverse of this quaternion
     inline Quaternion GetInverse() const { return GetConjugate() / (Length() * Length()); }
 
 private:

@@ -86,27 +86,6 @@ TEST(QuaternionTest, CloseTo) {
     ASSERT_FALSE(close_to(-1., 1. - 1e-5));
 }
 
-TEST(QuaternionTest, ExpectNonUnitQuaternion) {
-    Quaternion q(std::array{1., 2., 3., 4.});
-
-    ASSERT_FALSE(q.IsUnitQuaternion());
-}
-
-TEST(QuaternionTest, ExpectUnitQuaternion) {
-    double l = std::sqrt(30.);
-    Quaternion q(std::array{1. / l, 2. / l, 3. / l, 4. / l});
-
-    ASSERT_TRUE(q.IsUnitQuaternion());
-}
-
-TEST(QuaternionTest, GetUnitQuaternion) {
-    Quaternion q(std::array{1., 2., 3., 4.});
-    Quaternion expected(std::array{
-        1. / std::sqrt(30.), 2. / std::sqrt(30.), 3. / std::sqrt(30.), 4. / std::sqrt(30.)});
-
-    ASSERT_EQ(q.GetUnitQuaternion().GetComponents(), expected.GetComponents());
-}
-
 TEST(QuaternionTest, AdditionOfTwoQuaternions) {
     Quaternion q1(std::array{1., 2., 3., 4.});
     Quaternion q2(std::array{5., 6., 7., 8.});
@@ -169,6 +148,27 @@ TEST(QuaternionTest, DivisionOfQuaternionAndScalar) {
     Quaternion expected(std::array{0.5, 1., 1.5, 2.});
 
     ASSERT_EQ((q / 2.).GetComponents(), expected.GetComponents());
+}
+
+TEST(QuaternionTest, ExpectNonUnitQuaternion) {
+    Quaternion q(std::array{1., 2., 3., 4.});
+
+    ASSERT_FALSE(q.IsUnitQuaternion());
+}
+
+TEST(QuaternionTest, ExpectUnitQuaternion) {
+    double l = std::sqrt(30.);
+    Quaternion q(std::array{1. / l, 2. / l, 3. / l, 4. / l});
+
+    ASSERT_TRUE(q.IsUnitQuaternion());
+}
+
+TEST(QuaternionTest, GetUnitQuaternion) {
+    Quaternion q(std::array{1., 2., 3., 4.});
+    Quaternion expected(q / std::sqrt(30.));
+
+    ASSERT_EQ(q.GetUnitQuaternion().GetComponents(), expected.GetComponents());
+    ASSERT_TRUE(expected.IsUnitQuaternion());
 }
 
 TEST(QuaternionTest, GetConjugate) {
