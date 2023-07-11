@@ -158,11 +158,16 @@ TEST(QuaternionTest, GetInverse) {
     Quaternion expected(1. / 30., -2. / 30., -3. / 30., -4. / 30.);
 
     ASSERT_EQ(q.GetInverse().GetComponents(), expected.GetComponents());
+
+    auto q_inv = q.GetInverse();
+    ASSERT_TRUE((q * q_inv).IsUnitQuaternion());
 }
 
 TEST(QuaternionTest, GetQuaternionFromRotationVector_Set1) {
     std::tuple<double, double, double> rotation_vector{1., 2., 3.};
     auto q = quaternion_from_rotation_vector(rotation_vector);
+
+    // We will use the following quaternion as input in the log conversion
     Quaternion expected(-0.295551, 0.255322, 0.510644, 0.765966);
 
     ASSERT_NEAR(q.GetScalarComponent(), expected.GetScalarComponent(), 1e-6);
@@ -174,6 +179,9 @@ TEST(QuaternionTest, GetQuaternionFromRotationVector_Set1) {
 TEST(QuaternionTest, GetRotationVectorFromQuaternion_Set1) {
     Quaternion q(-0.295551, 0.255322, 0.510644, 0.765966);
     auto v = rotation_vector_from_quaternion(q);
+
+    // We expect the rotation vector to be same as provided in above exp conversion
+    // i.e. {1., 2., 3.}
     std::tuple<double, double, double> expected{1., 2., 3.};
 
     ASSERT_NEAR(std::get<0>(v), std::get<0>(expected), 1e-6);
@@ -184,6 +192,8 @@ TEST(QuaternionTest, GetRotationVectorFromQuaternion_Set1) {
 TEST(QuaternionTest, GetQuaternionFromRotationVector_Set2) {
     std::tuple<double, double, double> rotation_vector{0., 0., 1.570796};
     auto q = quaternion_from_rotation_vector(rotation_vector);
+
+    // We will use the following quaternion as input in the log conversion
     Quaternion expected(0.707107, 0., 0., 0.707107);
 
     ASSERT_NEAR(q.GetScalarComponent(), expected.GetScalarComponent(), 1e-6);
@@ -195,6 +205,9 @@ TEST(QuaternionTest, GetQuaternionFromRotationVector_Set2) {
 TEST(QuaternionTest, GetRotationVectorFromQuaternion_Set2) {
     Quaternion q(0.707107, 0., 0., 0.707107);
     auto v = rotation_vector_from_quaternion(q);
+
+    // We expect the rotation vector to be same as provided in above exp conversion
+    // i.e. {0., 0., 1.570796}
     std::tuple<double, double, double> expected{0., 0., 1.570796};
 
     ASSERT_NEAR(std::get<0>(v), std::get<0>(expected), 1e-6);

@@ -1,7 +1,5 @@
 #include "src/rigid_pendulum_poc/quaternion.h"
 
-#include "src/utilities/log.h"
-
 namespace openturbine::rigid_pendulum {
 
 bool close_to(double a, double b) {

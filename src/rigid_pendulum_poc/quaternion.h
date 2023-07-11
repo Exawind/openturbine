@@ -105,10 +105,10 @@ private:
     double q3_;
 };
 
-/// Returns a 4-D quaternion from provided 3-D rotation vector
+/// Returns a 4-D quaternion from provided 3-D rotation vector, i.e. exponential map
 Quaternion quaternion_from_rotation_vector(const std::tuple<double, double, double>&);
 
-/// Returns a 3-D rotation vector from provided 4-D quaternion
+/// Returns a 3-D rotation vector from provided 4-D quaternion, i.e. logarithmic map
 std::tuple<double, double, double> rotation_vector_from_quaternion(const Quaternion&);
 
 }  // namespace openturbine::rigid_pendulum
