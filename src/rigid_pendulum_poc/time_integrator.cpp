@@ -28,21 +28,13 @@ HostView1D create_identity_vector(size_t size) {
 }
 
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
-    double initial_time, double time_step, size_t n_steps, double alpha_f, double alpha_m,
-    double beta, double gamma, size_t max_iterations
+    double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper
 )
-    : initial_time_(initial_time),
-      time_step_(time_step),
-      n_steps_(n_steps),
-      kALPHA_F_(alpha_f),
+    : kALPHA_F_(alpha_f),
       kALPHA_M_(alpha_m),
       kBETA_(beta),
       kGAMMA_(gamma),
-      kMAX_ITERATIONS_(max_iterations) {
-    this->current_time_ = initial_time;
-    this->n_iterations_ = 0;
-    this->total_n_iterations_ = 0;
-
+      time_stepper_(std::move(time_stepper)) {
     if (this->kALPHA_F_ < 0 || this->kALPHA_F_ > 1) {
         throw std::invalid_argument("Invalid value for alpha_f");
     }
@@ -59,10 +51,6 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
         throw std::invalid_argument("Invalid value for gamma");
     }
 
-    if (this->kMAX_ITERATIONS_ < 1) {
-        throw std::invalid_argument("Invalid value for max_iterations");
-    }
-
     this->is_converged_ = false;
 }
 
@@ -73,10 +61,11 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     auto log = util::Log::Get();
 
     std::vector<State> states{initial_state};
-    for (size_t i = 0; i < this->n_steps_; i++) {
+    auto n_steps = this->time_stepper_.GetNumberOfSteps();
+    for (size_t i = 0; i < n_steps; i++) {
         log->Info("Integrating step number " + std::to_string(i + 1) + "\n");
         states.emplace_back(std::get<0>(this->AlphaStep(states[i], matrix, vector)));
-        this->AdvanceTimeStep();
+        this->time_stepper_.AdvanceTimeStep();
     }
 
     log->Info("Time integration completed successfully!\n");
@@ -94,7 +83,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     auto gen_accln = linear_update.GetGeneralizedAcceleration();
     auto algo_accln = linear_update.GetAlgorithmicAcceleration();
 
-    const auto h = this->time_step_;
+    const auto h = this->time_stepper_.GetTimeStep();
     const auto size = gen_coords.size();
     const double beta_prime = (1 - kALPHA_M_) / (h * h * kBETA_ * (1 - kALPHA_F_));
     const double gamma_prime = kGAMMA_ / (h * kBETA_);
@@ -109,8 +98,13 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         "algorithm\n"
     );
 
-    for (n_iterations_ = 0; n_iterations_ < this->kMAX_ITERATIONS_; n_iterations_++) {
-        log->Debug("Iteration number: " + std::to_string(this->n_iterations_ + 1) + "\n");
+    auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
+    for (time_stepper_.SetNumberOfIterations(0);
+         time_stepper_.GetNumberOfIterations() < max_iterations;
+         time_stepper_.IncrementNumberOfIterations()) {
+        log->Debug(
+            "Iteration number: " + std::to_string(time_stepper_.GetNumberOfIterations() + 1) + "\n"
+        );
 
         auto residuals = ComputeResiduals(gen_coords, vector);
         // TODO: Provide actual force increments
@@ -138,7 +132,8 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         );
     }
 
-    this->total_n_iterations_ += this->n_iterations_;
+    auto n_iterations = time_stepper_.GetNumberOfIterations();
+    this->time_stepper_.IncrementTotalNumberOfIterations(n_iterations);
 
     Kokkos::parallel_for(
         size,
@@ -150,13 +145,13 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
 
     if (this->is_converged_) {
         log->Info(
-            "Newton-Raphson iterations converged in " + std::to_string(this->n_iterations_) +
+            "Newton-Raphson iterations converged in " + std::to_string(n_iterations) +
             " iterations\n"
         );
     } else {
         log->Warning(
             "Newton-Raphson iterations failed to converge on a solution after " +
-            std::to_string(this->n_iterations_) + " iterations!\n"
+            std::to_string(n_iterations) + " iterations!\n"
         );
     }
 
@@ -181,7 +176,7 @@ State GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(const State& state) {
     // based on generalized coordinates, generalized velocity, generalized acceleration,
     // and algorithmic acceleration from previous time step and algorithmic acceleration
     // from current time step
-    const auto h = this->time_step_;
+    const auto h = this->time_stepper_.GetTimeStep();
     const auto size = gen_coords.size();
 
     Kokkos::parallel_for(

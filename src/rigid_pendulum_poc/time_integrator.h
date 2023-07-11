@@ -3,6 +3,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "src/rigid_pendulum_poc/state.h"
+#include "src/rigid_pendulum_poc/time_stepper.h"
 
 namespace openturbine::rigid_pendulum {
 
@@ -18,24 +19,9 @@ public:
     static constexpr double kTOLERANCE = 1e-6;
 
     GeneralizedAlphaTimeIntegrator(
-        double initial_time = 0., double time_step = 1., size_t n_steps = 1, double alpha_f = 0.5,
-        double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5, size_t max_iterations = 10
+        double alpha_f = 0.5, double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5,
+        TimeStepper time_stepper = TimeStepper()
     );
-
-    /// Returns the initial time of the analysis
-    inline double GetInitialTime() const { return initial_time_; }
-
-    /// Returns the current time of the analysis
-    inline double GetCurrentTime() const { return current_time_; }
-
-    /// Returns the time step of the analysis
-    inline double GetTimeStep() const { return time_step_; }
-
-    /// Advances the current analysis time by one time step
-    inline void AdvanceTimeStep() { current_time_ += time_step_; }
-
-    /// Returns the number of analysis time steps
-    inline int GetNumberOfSteps() const { return n_steps_; }
 
     /// Returns the alpha_f parameter
     inline double GetAlphaF() const { return kALPHA_F_; }
@@ -49,8 +35,8 @@ public:
     /// Returns the gamma parameter
     inline double GetGamma() const { return kGAMMA_; }
 
-    /// Returns the maximum number of iterations
-    inline size_t GetMaxIterations() const { return kMAX_ITERATIONS_; }
+    /// Returns a const reference to the time stepper
+    inline const TimeStepper& GetTimeStepper() const { return time_stepper_; }
 
     /// Performs the time integration and returns a vector of States over the time steps
     std::vector<State> Integrate(
@@ -76,12 +62,6 @@ public:
     /// Checks convergence of the non-linear solution based on the residuals
     bool CheckConvergence(HostView1D, HostView1D);
 
-    /// Returns the number of iterations performed in the latest non-linear update
-    inline size_t GetNumberOfIterations() const { return n_iterations_; }
-
-    /// Returns the total number of iterations performed to complete the analysis
-    inline size_t GetTotalNumberOfIterations() const { return total_n_iterations_; }
-
     /// Returns the flag to indicate if the latest non-linear update has converged
     inline bool IsConverged() const { return is_converged_; }
 
@@ -89,20 +69,14 @@ public:
     HostView2D ComputeIterationMatrix(HostView1D gen_coords, std::function<HostView2D(size_t)>);
 
 private:
-    double initial_time_;        //< Initial time of the analysis
-    double time_step_;           //< Time step of the analysis
-    size_t n_steps_;             //< Number of time steps to perform
-    double current_time_;        //< Current time of the analysis
-    size_t n_iterations_;        //< Number of iterations performed in the latest non-linear update
-    size_t total_n_iterations_;  //< Total number of non-linear iterations performed to
-                                 // complete the analysis
-    bool is_converged_;          //< Flag to indicate if the latest non-linear update has converged
+    const double kALPHA_F_;  //< Alpha_f coefficient of the generalized-alpha method
+    const double kALPHA_M_;  //< Alpha_m coefficient of the generalized-alpha method
+    const double kBETA_;     //< Beta coefficient of the generalized-alpha method
+    const double kGAMMA_;    //< Gamma coefficient of the generalized-alpha method
 
-    const double kALPHA_F_;         //< Alpha_f coefficient of the generalized-alpha method
-    const double kALPHA_M_;         //< Alpha_m coefficient of the generalized-alpha method
-    const double kBETA_;            //< Beta coefficient of the generalized-alpha method
-    const double kGAMMA_;           //< Gamma coefficient of the generalized-alpha method
-    const size_t kMAX_ITERATIONS_;  //< Maximum number of iterations for the non-linear update
+    bool is_converged_;  //< Flag to indicate if the latest non-linear update has converged
+
+    TimeStepper time_stepper_;  //< Time stepper object to perform the time integration
 };
 
 }  // namespace openturbine::rigid_pendulum
