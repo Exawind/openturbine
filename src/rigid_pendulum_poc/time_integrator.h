@@ -13,8 +13,30 @@ using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
 HostView2D create_identity_matrix(size_t size);
 HostView1D create_identity_vector(size_t size);
 
+// An enum class to indicate the type of time integrator
+enum class TimeIntegratorType {
+    NEWMARK_BETA = 0,   //< Newmark-beta method
+    HHT = 1,            //< Hilber-Hughes-Taylor method
+    GENERALIZED_ALPHA,  //< Generalized-alpha method
+};
+
+/// @brief An abstract class to provide a common interface for time integrators
+class TimeIntegrator {
+public:
+    virtual ~TimeIntegrator() = default;
+
+    /// Performs the time integration and returns a vector of States over the time steps
+    virtual std::vector<State> Integrate(
+        const State&, std::function<HostView2D(size_t)> iteration_matrix = create_identity_matrix,
+        std::function<HostView1D(size_t)> residual_vector = create_identity_vector
+    ) = 0;
+
+    /// Returns the type of the time integrator
+    virtual TimeIntegratorType GetType() const = 0;
+};
+
 /// @brief A time integrator class based on the generalized-alpha method
-class GeneralizedAlphaTimeIntegrator {
+class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
 public:
     static constexpr double kTOLERANCE = 1e-6;
 
@@ -22,6 +44,11 @@ public:
         double alpha_f = 0.5, double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5,
         TimeStepper time_stepper = TimeStepper()
     );
+
+    /// Returns the type of the time integrator
+    inline TimeIntegratorType GetType() const override {
+        return TimeIntegratorType::GENERALIZED_ALPHA;
+    }
 
     /// Returns the alpha_f parameter
     inline double GetAlphaF() const { return kALPHA_F_; }
@@ -39,10 +66,10 @@ public:
     inline const TimeStepper& GetTimeStepper() const { return time_stepper_; }
 
     /// Performs the time integration and returns a vector of States over the time steps
-    std::vector<State> Integrate(
+    virtual std::vector<State> Integrate(
         const State&, std::function<HostView2D(size_t)> iteration_matrix = create_identity_matrix,
         std::function<HostView1D(size_t)> residual_vector = create_identity_vector
-    );
+    ) override;
 
     /*! @brief  Perform the alpha step of the generalized-alpha method as described
      *          in the paper by Arnold and Brüls (2007)

@@ -4,7 +4,7 @@
 
 namespace openturbine::rigid_pendulum {
 
-// Separate out the time stepping tasks from the time integrator class
+/// @brief A class to store and manage the states of a dynamic system
 class TimeStepper {
 public:
     TimeStepper(

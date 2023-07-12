@@ -27,6 +27,13 @@ TEST(StateTest, CreateState) {
     expect_kokkos_view_1D_equal(state.GetAlgorithmicAcceleration(), {1., 2., 3.});
 }
 
+TEST(TimeIntegratorTest, GetTimeIntegratorType) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
+
+    EXPECT_EQ(time_integrator.GetType(), TimeIntegratorType::GENERALIZED_ALPHA);
+}
+
 TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
     auto time_integrator =
         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
