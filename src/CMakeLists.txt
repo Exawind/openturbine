@@ -8,6 +8,8 @@ target_link_libraries(${oturb_exe_name} PRIVATE
     Kokkos::kokkos
     LAPACK::LAPACK
     lapacke
+    lapack
+    blas
 )
 
 target_sources(${oturb_lib_name} PRIVATE heat/heat_solve.cpp)
