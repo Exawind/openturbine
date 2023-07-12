@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include "src/rigid_pendulum_poc/generalized_alpha_time_integrator.h"
 #include "src/rigid_pendulum_poc/state.h"
 #include "src/rigid_pendulum_poc/time_integrator.h"
 #include "tests/unit_tests/rigid_pendulum_poc/test_utilities.h"
