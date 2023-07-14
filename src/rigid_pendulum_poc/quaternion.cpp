@@ -118,4 +118,18 @@ std::tuple<double, Vector> axis_angle_from_quaternion(const Quaternion& quaterni
     return {angle, normalized_axis};
 }
 
+Vector rotate_vector(const Quaternion& quaternion, const Vector& vector) {
+    auto [v0, v1, v2] = vector;
+    auto [q0, q1, q2, q3] = quaternion.GetComponents();
+
+    return Vector(
+        (q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3) * v0 + 2. * (q1 * q2 - q0 * q3) * v1 +
+            2. * (q1 * q3 + q0 * q2) * v2,
+        2. * (q1 * q2 + q0 * q3) * v0 + (q0 * q0 - q1 * q1 + q2 * q2 - q3 * q3) * v1 +
+            2. * (q2 * q3 - q0 * q1) * v2,
+        2. * (q1 * q3 - q0 * q2) * v0 + 2. * (q2 * q3 + q0 * q1) * v1 +
+            (q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3) * v2
+    );
+}
+
 }  // namespace openturbine::rigid_pendulum

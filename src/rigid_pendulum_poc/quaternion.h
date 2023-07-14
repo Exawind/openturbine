@@ -143,4 +143,7 @@ Quaternion quaternion_from_axis_angle(double angle, const Vector&);
  */
 std::tuple<double, Vector> axis_angle_from_quaternion(const Quaternion&);
 
+/// Rotates provided vector by provided quaternion and returns the result
+Vector rotate_vector(const Quaternion&, const Vector&);
+
 }  // namespace openturbine::rigid_pendulum

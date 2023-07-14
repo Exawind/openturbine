@@ -398,4 +398,74 @@ TEST(QuaternionTest, AxisAngleFromQuaternion_60Degrees_ZAxis) {
     ASSERT_NEAR(std::get<2>(axis), 1., 1e-6);
 }
 
+TEST(QuaternionTest, RotateXAXIS_90Degrees_AboutYAxis) {
+    double angle = kPI / 2.;
+    Vector axis{0., 1., 0.};
+    Quaternion q = quaternion_from_axis_angle(angle, axis);
+
+    Vector v{1., 0., 0.};
+    Vector rotated = rotate_vector(q, v);
+    Vector expected{0., 0., -1.};
+
+    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
+    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
+    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+}
+
+TEST(QuaternionTest, RotateYAXIS_90Degrees_AboutXAxis) {
+    double angle = kPI / 2.;
+    Vector axis{1., 0., 0.};
+    Quaternion q = quaternion_from_axis_angle(angle, axis);
+
+    Vector v{0., 1., 0.};
+    Vector rotated = rotate_vector(q, v);
+    Vector expected{0., 0., 1.};
+
+    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
+    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
+    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+}
+
+TEST(QuaternionTest, RotateZAXIS_90Degrees_AboutXAxis) {
+    double angle = kPI / 2.;
+    Vector axis{1., 0., 0.};
+    Quaternion q = quaternion_from_axis_angle(angle, axis);
+
+    Vector v{0., 0., 1.};
+    Vector rotated = rotate_vector(q, v);
+    Vector expected{0., -1., 0.};
+
+    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
+    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
+    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+}
+
+TEST(QuaternionTest, RotateXAXIS_45Degrees_AboutZAxis) {
+    double angle = kPI / 4.;
+    Vector axis{0., 0., 1.};
+    Quaternion q = quaternion_from_axis_angle(angle, axis);
+
+    Vector v{1., 0., 0.};
+    Vector rotated = rotate_vector(q, v);
+    Vector expected{0.707107, 0.707107, 0.};
+
+    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
+    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
+    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+}
+
+TEST(QuaternionTest, RotateXAXIS_Neg45Degrees_AboutZAxis) {
+    double angle = -kPI / 4.;
+    Vector axis{0., 0., 1.};
+    Quaternion q = quaternion_from_axis_angle(angle, axis);
+
+    Vector v{1., 0., 0.};
+    Vector rotated = rotate_vector(q, v);
+    Vector expected{0.707107, -0.707107, 0.};
+
+    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
+    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
+    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+}
+
 }  // namespace openturbine::rigid_pendulum::tests
