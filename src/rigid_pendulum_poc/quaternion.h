@@ -5,10 +5,19 @@
 
 namespace openturbine::rigid_pendulum {
 
+using Vector = std::tuple<double, double, double>;
+
+// TODO: Move the following definitions to a constants.h file in a common math directory
 static constexpr double kTOLERANCE = 1e-6;
 
-/// Returns a boolean indicating if two provided doubles are close to each other
-bool close_to(double a, double b);
+// TODO: Move the following math related functions to a common math directory
+/*!
+ * @brief  Returns a boolean indicating if two provided doubles are close to each other
+ * @param  a: First double
+ * @param  b: Second double
+ * @param  epsilon: Tolerance for closeness
+ */
+bool close_to(double a, double b, double epsilon = kTOLERANCE);
 
 /// @brief Class to represent a quaternion
 class Quaternion {
@@ -106,9 +115,9 @@ private:
 };
 
 /// Returns a 4-D quaternion from provided 3-D rotation vector, i.e. exponential map
-Quaternion quaternion_from_rotation_vector(const std::tuple<double, double, double>&);
+Quaternion quaternion_from_rotation_vector(const Vector&);
 
 /// Returns a 3-D rotation vector from provided 4-D quaternion, i.e. logarithmic map
-std::tuple<double, double, double> rotation_vector_from_quaternion(const Quaternion&);
+Vector rotation_vector_from_quaternion(const Quaternion&);
 
 }  // namespace openturbine::rigid_pendulum

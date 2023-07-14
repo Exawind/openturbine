@@ -2,19 +2,19 @@
 
 namespace openturbine::rigid_pendulum {
 
-bool close_to(double a, double b) {
+bool close_to(double a, double b, double epsilon) {
     auto delta = std::abs(a - b);
     a = std::abs(a);
     b = std::abs(b);
 
-    if (a < 1e-6) {
-        if (b < 1e-6) {
+    if (a < epsilon) {
+        if (b < epsilon) {
             return true;
         }
         return false;
     }
 
-    return (delta / a) < kTOLERANCE ? true : false;
+    return (delta / a) < epsilon ? true : false;
 }
 
 Quaternion::Quaternion(double q0, double q1, double q2, double q3)
@@ -36,11 +36,8 @@ Quaternion Quaternion::GetUnitQuaternion() const {
     return *this / length;
 }
 
-Quaternion quaternion_from_rotation_vector(const std::tuple<double, double, double>& vector) {
-    auto v0 = std::get<0>(vector);
-    auto v1 = std::get<1>(vector);
-    auto v2 = std::get<2>(vector);
-
+Quaternion quaternion_from_rotation_vector(const Vector& vector) {
+    auto [v0, v1, v2] = vector;
     double angle = std::sqrt(v0 * v0 + v1 * v1 + v2 * v2);
 
     // Return the quaternion {1, 0, 0, 0} if provided rotation vector is null
@@ -55,7 +52,7 @@ Quaternion quaternion_from_rotation_vector(const std::tuple<double, double, doub
     return Quaternion(cos_angle, v0 * factor, v1 * factor, v2 * factor);
 }
 
-std::tuple<double, double, double> rotation_vector_from_quaternion(const Quaternion& quaternion) {
+Vector rotation_vector_from_quaternion(const Quaternion& quaternion) {
     auto [q0, q1, q2, q3] = quaternion.GetComponents();
     auto sin_angle_squared = q1 * q1 + q2 * q2 + q3 * q3;
 
