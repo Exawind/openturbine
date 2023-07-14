@@ -236,4 +236,74 @@ TEST(QuaternionTest, GetRotationVectorFromNullQuaternion) {
     ASSERT_NEAR(std::get<2>(v), std::get<2>(expected), 1e-6);
 }
 
+TEST(QuaternionTest, WrapAngleToPi) {
+    auto angle = 0.;  // 0 degrees
+    auto wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, 0., 1e-6);
+
+    angle = kPI / 2.;  // 90 degrees
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, 0.5 * kPI, 1e-6);
+
+    angle = -kPI / 2.;  // -90 degrees
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, -0.5 * kPI, 1e-6);
+
+    angle = kPI / 2. + kPI / 4.;  // 135 degrees
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, 0.75 * kPI, 1e-6);
+
+    angle = -kPI / 2. - kPI / 4.;  // -135 degrees
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, -0.75 * kPI, 1e-6);
+
+    angle = kPI;  // 180 degrees
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, kPI, 1e-6);
+
+    angle = -kPI;
+    wrapped_angle = wrap_angle_to_pi(angle);  // -180 degrees
+    ASSERT_NEAR(wrapped_angle, -kPI, 1e-6);
+
+    angle = 3. * kPI / 2.;  // 270 degrees
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, -0.5 * kPI, 1e-6);
+
+    angle = -3. * kPI / 2.;  // -270 degrees
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, 0.5 * kPI, 1e-6);
+
+    angle = 2. * kPI;  // 360 degrees
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, 0., 1e-6);
+
+    angle = -2. * kPI;  // -360 degrees
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, 0., 1e-6);
+
+    angle = 2. * kPI + kPI / 4.;  // 405 degrees = 360 + 45
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, kPI / 4., 1e-6);
+
+    angle = -2. * kPI - kPI / 4.;  // -405 degrees = -360 - 45
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, -kPI / 4., 1e-6);
+
+    angle = 29. * kPI;  // 14 * 2 * kPI + kPI
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, kPI, 1e-6);
+
+    angle = -29. * kPI;  // -14 * 2 * kPI - kPI
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, -kPI, 1e-6);
+
+    angle = 200. * kPI + kPI / 6.;
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, kPI / 6., 1e-6);
+
+    angle = -200. * kPI - kPI / 6.;
+    wrapped_angle = wrap_angle_to_pi(angle);
+    ASSERT_NEAR(wrapped_angle, -kPI / 6., 1e-6);
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

@@ -17,6 +17,27 @@ bool close_to(double a, double b, double epsilon) {
     return (delta / a) < epsilon ? true : false;
 }
 
+double wrap_angle_to_pi(double angle) {
+    double wrapped_angle = std::fmod(angle, 2. * kPI);
+
+    // Check if the angle is close to PI or -PI to avoid numerical issues
+    if (close_to(wrapped_angle, kPI)) {
+        return kPI;
+    }
+    if (close_to(wrapped_angle, -kPI)) {
+        return -kPI;
+    }
+
+    if (wrapped_angle > kPI) {
+        wrapped_angle -= 2. * kPI;
+    }
+    if (wrapped_angle < -kPI) {
+        wrapped_angle += 2. * kPI;
+    }
+
+    return wrapped_angle;
+}
+
 Quaternion::Quaternion(double q0, double q1, double q2, double q3)
     : q0_(q0), q1_(q1), q2_(q2), q3_(q3) {
 }

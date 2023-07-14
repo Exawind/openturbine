@@ -9,6 +9,7 @@ using Vector = std::tuple<double, double, double>;
 
 // TODO: Move the following definitions to a constants.h file in a common math directory
 static constexpr double kTOLERANCE = 1e-6;
+static constexpr double kPI = 3.14159265358979323846;
 
 // TODO: Move the following math related functions to a common math directory
 /*!
@@ -18,6 +19,12 @@ static constexpr double kTOLERANCE = 1e-6;
  * @param  epsilon: Tolerance for closeness
  */
 bool close_to(double a, double b, double epsilon = kTOLERANCE);
+
+/*!
+ * @brief  Takes an angle and returns the equivalent angle in the range [-pi, pi]
+ * @param  angle: Angle to be wrapped, in radians
+ */
+double wrap_angle_to_pi(double angle);
 
 /// @brief Class to represent a quaternion
 class Quaternion {
