@@ -88,4 +88,34 @@ Vector rotation_vector_from_quaternion(const Quaternion& quaternion) {
     return {q1 * k, q2 * k, q3 * k};
 }
 
+Quaternion quaternion_from_axis_angle(double angle, const Vector& axis) {
+    auto [v0, v1, v2] = axis;
+    double sin_angle = std::sin(angle / 2.0);
+    double cos_angle = std::cos(angle / 2.0);
+
+    return Quaternion(cos_angle, v0 * sin_angle, v1 * sin_angle, v2 * sin_angle);
+}
+
+std::tuple<double, Vector> axis_angle_from_quaternion(const Quaternion& quaternion) {
+    auto [q0, q1, q2, q3] = quaternion.GetComponents();
+    double angle = 2. * std::atan2(std::sqrt(q1 * q1 + q2 * q2 + q3 * q3), q0);
+
+    // If angle is null, return the angle 0 and axis {1, 0, 0}
+    if (close_to(angle, 0.)) {
+        return {0., {1., 0., 0.}};
+    }
+
+    angle = wrap_angle_to_pi(angle);
+    double k = 1. / std::sqrt(q1 * q1 + q2 * q2 + q3 * q3);
+
+    // normalize the axis
+    // TODO: Take care of the tech debt (Vector class) and use its normalize method
+    auto axis = Vector{q1 * k, q2 * k, q3 * k};
+    auto [v0, v1, v2] = axis;
+    auto length = std::sqrt(v0 * v0 + v1 * v1 + v2 * v2);
+    auto normalized_axis = Vector{v0 / length, v1 / length, v2 / length};
+
+    return {angle, normalized_axis};
+}
+
 }  // namespace openturbine::rigid_pendulum

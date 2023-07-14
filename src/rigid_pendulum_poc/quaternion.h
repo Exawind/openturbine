@@ -5,6 +5,7 @@
 
 namespace openturbine::rigid_pendulum {
 
+// TECH DEBT: We need to introduce a Vector class to represent 3D vectors
 using Vector = std::tuple<double, double, double>;
 
 // TODO: Move the following definitions to a constants.h file in a common math directory
@@ -126,5 +127,20 @@ Quaternion quaternion_from_rotation_vector(const Vector&);
 
 /// Returns a 3-D rotation vector from provided 4-D quaternion, i.e. logarithmic map
 Vector rotation_vector_from_quaternion(const Quaternion&);
+
+/*!
+ * @brief Returns a quaternion from provided Euler parameters/axis-angle representation of rotation
+ * @param angle Angle of rotation in radians, in radians
+ * @param axis Axis of rotation, a unit vector
+ * @return Quaternion representing the rotation
+ */
+Quaternion quaternion_from_axis_angle(double angle, const Vector&);
+
+/*!
+ * @brief Returns Euler parameters/axis-angle representation of rotation from provided quaternion
+ * @param quaternion Quaternion to be converted
+ * @return Tuple of angle of rotation in radians and axis of rotation as a unit vector
+ */
+std::tuple<double, Vector> axis_angle_from_quaternion(const Quaternion&);
 
 }  // namespace openturbine::rigid_pendulum
