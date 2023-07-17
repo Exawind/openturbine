@@ -79,4 +79,20 @@ TEST(VectorTest, CrossProduct_Set2) {
     ASSERT_EQ(v3.GetComponents(), expected);
 }
 
+TEST(VectorTest, ScalarMultiplication) {
+    Vector v1(1., 2., 3.);
+    Vector v2 = v1 * 2.;
+    std::tuple<double, double, double> expected = {2., 4., 6.};
+
+    ASSERT_EQ(v2.GetComponents(), expected);
+}
+
+TEST(VectorTest, ScalarDivision) {
+    Vector v1(1., 2., 3.);
+    Vector v2 = v1 / 2.;
+    std::tuple<double, double, double> expected = {0.5, 1., 1.5};
+
+    ASSERT_EQ(v2.GetComponents(), expected);
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

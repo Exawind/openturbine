@@ -46,6 +46,18 @@ public:
         );
     }
 
+    /// Multiplies provided scalar with this vector and returns the result, i.e. element-wise
+    /// multiplication
+    inline Vector operator*(double scalar) const {
+        return Vector(this->x_ * scalar, this->y_ * scalar, this->z_ * scalar);
+    }
+
+    /// Divides this vector by provided scalar and returns the result, i.e. element-wise
+    /// division
+    inline Vector operator/(double scalar) const {
+        return Vector(this->x_ / scalar, this->y_ / scalar, this->z_ / scalar);
+    }
+
 private:
     double x_;  ///< First component of the vector
     double y_;  ///< Second component of the vector
