@@ -26,4 +26,22 @@ TEST(VectorTest, GetIndividualComponents) {
     ASSERT_EQ(v.GetZComponent(), 3.);
 }
 
+TEST(VectorTest, Addition) {
+    Vector v1(1., 2., 3.);
+    Vector v2(4., 5., 6.);
+    Vector v3 = v1 + v2;
+    std::tuple<double, double, double> expected = {5., 7., 9.};
+
+    ASSERT_EQ(v3.GetComponents(), expected);
+}
+
+TEST(VectorTest, Subtraction) {
+    Vector v1(1., 2., 3.);
+    Vector v2(4., 5., 6.);
+    Vector v3 = v1 - v2;
+    std::tuple<double, double, double> expected = {-3., -3., -3.};
+
+    ASSERT_EQ(v3.GetComponents(), expected);
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

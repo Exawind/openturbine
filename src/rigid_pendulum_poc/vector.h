@@ -23,6 +23,16 @@ public:
     /// Returns the third component of the vector
     inline double GetZComponent() const { return z_; }
 
+    /// Adds provided vector to this vector and returns the result
+    inline Vector operator+(const Vector& other) const {
+        return Vector(this->x_ + other.x_, this->y_ + other.y_, this->z_ + other.z_);
+    }
+
+    /// Subtracts provided vector from this vector and returns the result
+    inline Vector operator-(const Vector& other) const {
+        return Vector(this->x_ - other.x_, this->y_ - other.y_, this->z_ - other.z_);
+    }
+
 private:
     double x_;  ///< First component of the vector
     double y_;  ///< Second component of the vector
