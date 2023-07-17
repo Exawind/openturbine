@@ -9,5 +9,6 @@ target_sources(${oturb_lib_name}
     state.cpp
     time_integrator.cpp
     time_stepper.cpp
+    vector.cpp
     # IOManager.cpp
 )

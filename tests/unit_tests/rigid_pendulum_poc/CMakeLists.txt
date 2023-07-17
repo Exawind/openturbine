@@ -7,4 +7,5 @@ target_sources(
     test_quaternions.cpp
     test_time_stepper.cpp
     test_utilities.cpp
+    test_vectors.cpp
 )
