@@ -114,6 +114,12 @@ TEST(VectorTest, ExpectUnitVector) {
     ASSERT_TRUE(v1.IsUnitVector());
 }
 
+TEST(VectorTest, ExpectNullVector) {
+    Vector v1(0., 0., 0.);
+
+    ASSERT_TRUE(v1.IsNullVector());
+}
+
 TEST(VectorTest, GetUnitVectorFromAProvidedVector) {
     Vector v1(1., 2., 3.);
     Vector v2 = v1.GetUnitVector();
@@ -122,6 +128,12 @@ TEST(VectorTest, GetUnitVectorFromAProvidedVector) {
     std::tuple<double, double, double> expected = {1. / l, 2. / l, 3. / l};
 
     ASSERT_EQ(v2.GetComponents(), expected);
+}
+
+TEST(VectorTest, ExpectExceptionWhenGettingUnitVectorFromNullVector) {
+    Vector v1(0., 0., 0.);
+
+    ASSERT_THROW(v1.GetUnitVector(), std::runtime_error);
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

@@ -1,7 +1,10 @@
 #pragma once
 
 #include <cmath>
+#include <stdexcept>
 #include <tuple>
+
+#include "src/rigid_pendulum_poc/quaternion.h"
 
 namespace openturbine::rigid_pendulum {
 /// @brief Class to represent a 3-D vector
@@ -64,10 +67,18 @@ public:
     }
 
     /// Returns if the vector is a unit vector, i.e. its length is 1
-    inline bool IsUnitVector() const { return this->Length() == 1.; }
+    inline bool IsUnitVector() const { return close_to(this->Length(), 1.); }
+
+    /// Returns if the vector is a null vector, i.e. its length is 0
+    inline bool IsNullVector() const { return close_to(this->Length(), 0.); }
 
     /// Returns a unit vector in the same direction as this vector
-    inline Vector GetUnitVector() const { return *this / this->Length(); }
+    inline Vector GetUnitVector() const {
+        if (this->IsNullVector()) {
+            throw std::runtime_error("Cannot get unit vector of null vector");
+        }
+        return *this / this->Length();
+    }
 
 private:
     double x_;  ///< First component of the vector
