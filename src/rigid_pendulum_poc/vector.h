@@ -36,19 +36,6 @@ public:
         return Vector(this->x_ - other.x_, this->y_ - other.y_, this->z_ - other.z_);
     }
 
-    /// Returns dot product of provided vector with this vector
-    inline double DotProduct(const Vector& other) const {
-        return this->x_ * other.x_ + this->y_ * other.y_ + this->z_ * other.z_;
-    }
-
-    /// Returns cross product of provided vector with this vector
-    inline Vector CrossProduct(const Vector& other) const {
-        return Vector(
-            this->y_ * other.z_ - this->z_ * other.y_, this->z_ * other.x_ - this->x_ * other.z_,
-            this->x_ * other.y_ - this->y_ * other.x_
-        );
-    }
-
     /// Multiplies provided scalar with this vector and returns the result, i.e. element-wise
     /// multiplication
     inline Vector operator*(double scalar) const {
@@ -61,7 +48,14 @@ public:
         return Vector(this->x_ / scalar, this->y_ / scalar, this->z_ / scalar);
     }
 
-    /// Returns the magnitude/length of this vector
+    /// Returns if this vector is close to provided vector, i.e. if the difference between
+    /// their components is less than a small number
+    inline bool operator==(const Vector& other) const {
+        return close_to(this->x_, other.x_) && close_to(this->y_, other.y_) &&
+               close_to(this->z_, other.z_);
+    }
+
+    /// Returns the magnitude/length/Euclidean norm of the vector
     inline double Length() const {
         return std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
     }
@@ -78,6 +72,29 @@ public:
             throw std::runtime_error("Cannot get unit vector of null vector");
         }
         return *this / this->Length();
+    }
+
+    /// Calculates the dot product of provided vector with this vector
+    inline double DotProduct(const Vector& other) const {
+        return this->x_ * other.x_ + this->y_ * other.y_ + this->z_ * other.z_;
+    }
+
+    /// Calculates the cross product of provided vector with this vector
+    inline Vector CrossProduct(const Vector& other) const {
+        return Vector(
+            this->y_ * other.z_ - this->z_ * other.y_, this->z_ * other.x_ - this->x_ * other.z_,
+            this->x_ * other.y_ - this->y_ * other.x_
+        );
+    }
+
+    /// Returns if this vector is normal to provided vector, i.e. if their dot product is 0
+    inline bool IsNormalTo(const Vector& other) const {
+        return close_to(this->DotProduct(other), 0.);
+    }
+
+    /// Returns if this vector is parallel to provided vector, i.e. if their cross product is 0
+    inline bool IsParallelTo(const Vector& other) const {
+        return this->CrossProduct(other).IsNullVector();
     }
 
 private:
