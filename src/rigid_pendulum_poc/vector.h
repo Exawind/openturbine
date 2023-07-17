@@ -58,6 +58,17 @@ public:
         return Vector(this->x_ / scalar, this->y_ / scalar, this->z_ / scalar);
     }
 
+    /// Returns the magnitude/length of this vector
+    inline double Length() const {
+        return std::sqrt(this->x_ * this->x_ + this->y_ * this->y_ + this->z_ * this->z_);
+    }
+
+    /// Returns if the vector is a unit vector, i.e. its length is 1
+    inline bool IsUnitVector() const { return this->Length() == 1.; }
+
+    /// Returns a unit vector in the same direction as this vector
+    inline Vector GetUnitVector() const { return *this / this->Length(); }
+
 private:
     double x_;  ///< First component of the vector
     double y_;  ///< Second component of the vector

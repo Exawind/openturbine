@@ -95,4 +95,33 @@ TEST(VectorTest, ScalarDivision) {
     ASSERT_EQ(v2.GetComponents(), expected);
 }
 
+TEST(VectorTest, Length) {
+    Vector v1(1., 2., 3.);
+    double length = v1.Length();
+
+    ASSERT_EQ(length, std::sqrt(1. * 1. + 2. * 2. + 3. * 3.));
+}
+
+TEST(VectorTest, ExpectNonUnitVector) {
+    Vector v1(1., 1., 1.);
+
+    ASSERT_FALSE(v1.IsUnitVector());
+}
+
+TEST(VectorTest, ExpectUnitVector) {
+    Vector v1(1., 0., 0.);
+
+    ASSERT_TRUE(v1.IsUnitVector());
+}
+
+TEST(VectorTest, GetUnitVectorFromAProvidedVector) {
+    Vector v1(1., 2., 3.);
+    Vector v2 = v1.GetUnitVector();
+
+    auto l = v1.Length();
+    std::tuple<double, double, double> expected = {1. / l, 2. / l, 3. / l};
+
+    ASSERT_EQ(v2.GetComponents(), expected);
+}
+
 }  // namespace openturbine::rigid_pendulum::tests
