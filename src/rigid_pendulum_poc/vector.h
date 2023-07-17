@@ -14,6 +14,15 @@ public:
     /// Returns the values of the vector
     std::tuple<double, double, double> GetComponents() const { return {x_, y_, z_}; }
 
+    /// Returns the first component of the vector
+    inline double GetXComponent() const { return x_; }
+
+    /// Returns the second component of the vector
+    inline double GetYComponent() const { return y_; }
+
+    /// Returns the third component of the vector
+    inline double GetZComponent() const { return z_; }
+
 private:
     double x_;  ///< First component of the vector
     double y_;  ///< Second component of the vector

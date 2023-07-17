@@ -18,4 +18,12 @@ TEST(VectorTest, ConstructorWithProvidedComponents) {
     ASSERT_EQ(v.GetComponents(), expected);
 }
 
+TEST(VectorTest, GetIndividualComponents) {
+    Vector v(1., 2., 3.);
+
+    ASSERT_EQ(v.GetXComponent(), 1.);
+    ASSERT_EQ(v.GetYComponent(), 2.);
+    ASSERT_EQ(v.GetZComponent(), 3.);
+}
+
 }  // namespace openturbine::rigid_pendulum::tests
