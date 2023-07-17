@@ -33,6 +33,19 @@ public:
         return Vector(this->x_ - other.x_, this->y_ - other.y_, this->z_ - other.z_);
     }
 
+    /// Returns dot product of provided vector with this vector
+    inline double DotProduct(const Vector& other) const {
+        return this->x_ * other.x_ + this->y_ * other.y_ + this->z_ * other.z_;
+    }
+
+    /// Returns cross product of provided vector with this vector
+    inline Vector CrossProduct(const Vector& other) const {
+        return Vector(
+            this->y_ * other.z_ - this->z_ * other.y_, this->z_ * other.x_ - this->x_ * other.z_,
+            this->x_ * other.y_ - this->y_ * other.x_
+        );
+    }
+
 private:
     double x_;  ///< First component of the vector
     double y_;  ///< Second component of the vector

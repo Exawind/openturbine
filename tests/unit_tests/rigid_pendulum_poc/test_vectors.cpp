@@ -44,4 +44,39 @@ TEST(VectorTest, Subtraction) {
     ASSERT_EQ(v3.GetComponents(), expected);
 }
 
+TEST(VectorTest, DotProduct_Set1) {
+    Vector v1(1., 2., 3.);
+    Vector v2(4., 5., 6.);
+    double dot_product = v1.DotProduct(v2);
+
+    ASSERT_EQ(dot_product, 32.);
+}
+
+TEST(VectorTest, DotProduct_Set2) {
+    Vector v1(-3.23, 17.19, 0.);
+    Vector v2(0.37, -7.57, 1.11);
+    double dot_product = v1.DotProduct(v2);
+
+    ASSERT_EQ(dot_product, -3.23 * 0.37 + 17.19 * -7.57 + 0. * 1.11);
+}
+
+TEST(VectorTest, CrossProduct_Set1) {
+    Vector v1(1., 2., 3.);
+    Vector v2(4., 5., 6.);
+    Vector v3 = v1.CrossProduct(v2);
+    std::tuple<double, double, double> expected = {-3., 6., -3.};
+
+    ASSERT_EQ(v3.GetComponents(), expected);
+}
+
+TEST(VectorTest, CrossProduct_Set2) {
+    Vector v1(0.19, -5.03, 2.71);
+    Vector v2(1.16, 0.09, 0.37);
+    Vector v3 = v1.CrossProduct(v2);
+    std::tuple<double, double, double> expected = {
+        -5.03 * 0.37 - 2.71 * 0.09, 2.71 * 1.16 - 0.19 * 0.37, 0.19 * 0.09 - -5.03 * 1.16};
+
+    ASSERT_EQ(v3.GetComponents(), expected);
+}
+
 }  // namespace openturbine::rigid_pendulum::tests
