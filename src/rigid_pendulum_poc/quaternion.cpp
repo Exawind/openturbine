@@ -1,5 +1,7 @@
 #include "src/rigid_pendulum_poc/quaternion.h"
 
+#include <stdexcept>
+
 namespace openturbine::rigid_pendulum {
 
 Quaternion::Quaternion(double q0, double q1, double q2, double q3)
@@ -13,8 +15,11 @@ bool Quaternion::IsUnitQuaternion() const {
 Quaternion Quaternion::GetUnitQuaternion() const {
     double length = Length();
 
-    // Return the quaternion itself if unit or null quaternion
-    if (close_to(length, 0.) || close_to(length, 1.)) {
+    if (close_to(length, 0.)) {
+        throw std::runtime_error("Quaternion length is zero, cannot normalize!");
+    }
+
+    if (close_to(length, 1.)) {
         return *this;
     }
 
@@ -57,6 +62,7 @@ Quaternion quaternion_from_angle_axis(double angle, const Vector& axis) {
     double sin_angle = std::sin(angle / 2.0);
     double cos_angle = std::cos(angle / 2.0);
 
+    // We should always get a unit quaternion from the following components
     return Quaternion(cos_angle, v0 * sin_angle, v1 * sin_angle, v2 * sin_angle);
 }
 
@@ -72,7 +78,7 @@ std::tuple<double, Vector> angle_axis_from_quaternion(const Quaternion& quaterni
     angle = wrap_angle_to_pi(angle);
     double k = 1. / std::sqrt(q1 * q1 + q2 * q2 + q3 * q3);
 
-    // normalize the axis
+    // Normalize the axis
     // TODO: Take care of the tech debt (Vector class) and use its normalize method
     auto axis = Vector{q1 * k, q2 * k, q3 * k};
     auto [v0, v1, v2] = axis;
@@ -83,6 +89,10 @@ std::tuple<double, Vector> angle_axis_from_quaternion(const Quaternion& quaterni
 }
 
 Vector rotate_vector(const Quaternion& quaternion, const Vector& vector) {
+    if (!quaternion.IsUnitQuaternion()) {
+        throw std::invalid_argument("Must be a unit quaternion to rotate a vector");
+    }
+
     auto [v0, v1, v2] = vector;
     auto [q0, q1, q2, q3] = quaternion.GetComponents();
 

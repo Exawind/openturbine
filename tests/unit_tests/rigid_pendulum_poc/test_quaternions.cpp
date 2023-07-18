@@ -372,4 +372,11 @@ TEST(QuaternionTest, RotateXAXIS_Neg45Degrees_AboutZAxis) {
     ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
 }
 
+TEST(QuaternionTest, ExpectErrorWhenRotatingVectorWithNonUnitQuaternion) {
+    Quaternion q(1., 1., 0., 0.);
+    Vector v{1., 0., 0.};
+
+    ASSERT_THROW(rotate_vector(q, v), std::invalid_argument);
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

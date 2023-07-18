@@ -115,7 +115,7 @@ Vector rotation_vector_from_quaternion(const Quaternion&);
  * @brief Returns a quaternion from provided Euler parameters/angle-axis representation of rotation
  * @param angle Angle of rotation in radians, in radians
  * @param axis Axis of rotation, a unit vector
- * @return Quaternion representing the rotation
+ * @return Unit quaternion representing the rotation
  */
 Quaternion quaternion_from_angle_axis(double angle, const Vector&);
 
@@ -126,7 +126,7 @@ Quaternion quaternion_from_angle_axis(double angle, const Vector&);
  */
 std::tuple<double, Vector> angle_axis_from_quaternion(const Quaternion&);
 
-/// Rotates provided vector by provided quaternion and returns the result
+/// Rotates provided vector by provided *unit* quaternion and returns the result
 Vector rotate_vector(const Quaternion&, const Vector&);
 
 }  // namespace openturbine::rigid_pendulum
