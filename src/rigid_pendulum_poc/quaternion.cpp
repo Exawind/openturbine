@@ -2,42 +2,6 @@
 
 namespace openturbine::rigid_pendulum {
 
-bool close_to(double a, double b, double epsilon) {
-    auto delta = std::abs(a - b);
-    a = std::abs(a);
-    b = std::abs(b);
-
-    if (a < epsilon) {
-        if (b < epsilon) {
-            return true;
-        }
-        return false;
-    }
-
-    return (delta / a) < epsilon ? true : false;
-}
-
-double wrap_angle_to_pi(double angle) {
-    double wrapped_angle = std::fmod(angle, 2. * kPI);
-
-    // Check if the angle is close to PI or -PI to avoid numerical issues
-    if (close_to(wrapped_angle, kPI)) {
-        return kPI;
-    }
-    if (close_to(wrapped_angle, -kPI)) {
-        return -kPI;
-    }
-
-    if (wrapped_angle > kPI) {
-        wrapped_angle -= 2. * kPI;
-    }
-    if (wrapped_angle < -kPI) {
-        wrapped_angle += 2. * kPI;
-    }
-
-    return wrapped_angle;
-}
-
 Quaternion::Quaternion(double q0, double q1, double q2, double q3)
     : q0_(q0), q1_(q1), q2_(q2), q3_(q3) {
 }
@@ -88,7 +52,7 @@ Vector rotation_vector_from_quaternion(const Quaternion& quaternion) {
     return {q1 * k, q2 * k, q3 * k};
 }
 
-Quaternion quaternion_from_axis_angle(double angle, const Vector& axis) {
+Quaternion quaternion_from_angle_axis(double angle, const Vector& axis) {
     auto [v0, v1, v2] = axis;
     double sin_angle = std::sin(angle / 2.0);
     double cos_angle = std::cos(angle / 2.0);
@@ -96,7 +60,7 @@ Quaternion quaternion_from_axis_angle(double angle, const Vector& axis) {
     return Quaternion(cos_angle, v0 * sin_angle, v1 * sin_angle, v2 * sin_angle);
 }
 
-std::tuple<double, Vector> axis_angle_from_quaternion(const Quaternion& quaternion) {
+std::tuple<double, Vector> angle_axis_from_quaternion(const Quaternion& quaternion) {
     auto [q0, q1, q2, q3] = quaternion.GetComponents();
     double angle = 2. * std::atan2(std::sqrt(q1 * q1 + q2 * q2 + q3 * q3), q0);
 

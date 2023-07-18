@@ -3,29 +3,12 @@
 #include <cmath>
 #include <tuple>
 
+#include "src/rigid_pendulum_poc/utilities.h"
+
 namespace openturbine::rigid_pendulum {
 
 // TECH DEBT: We need to introduce a Vector class to represent 3D vectors
 using Vector = std::tuple<double, double, double>;
-
-// TODO: Move the following definitions to a constants.h file in a common math directory
-static constexpr double kTOLERANCE = 1e-6;
-static constexpr double kPI = 3.14159265358979323846;
-
-// TODO: Move the following math related functions to a common math directory
-/*!
- * @brief  Returns a boolean indicating if two provided doubles are close to each other
- * @param  a: First double
- * @param  b: Second double
- * @param  epsilon: Tolerance for closeness
- */
-bool close_to(double a, double b, double epsilon = kTOLERANCE);
-
-/*!
- * @brief  Takes an angle and returns the equivalent angle in the range [-pi, pi]
- * @param  angle: Angle to be wrapped, in radians
- */
-double wrap_angle_to_pi(double angle);
 
 /// @brief Class to represent a quaternion
 class Quaternion {
@@ -129,19 +112,19 @@ Quaternion quaternion_from_rotation_vector(const Vector&);
 Vector rotation_vector_from_quaternion(const Quaternion&);
 
 /*!
- * @brief Returns a quaternion from provided Euler parameters/axis-angle representation of rotation
+ * @brief Returns a quaternion from provided Euler parameters/angle-axis representation of rotation
  * @param angle Angle of rotation in radians, in radians
  * @param axis Axis of rotation, a unit vector
  * @return Quaternion representing the rotation
  */
-Quaternion quaternion_from_axis_angle(double angle, const Vector&);
+Quaternion quaternion_from_angle_axis(double angle, const Vector&);
 
 /*!
- * @brief Returns Euler parameters/axis-angle representation of rotation from provided quaternion
+ * @brief Returns Euler parameters/angle-axis representation of rotation from provided quaternion
  * @param quaternion Quaternion to be converted
  * @return Tuple of angle of rotation in radians and axis of rotation as a unit vector
  */
-std::tuple<double, Vector> axis_angle_from_quaternion(const Quaternion&);
+std::tuple<double, Vector> angle_axis_from_quaternion(const Quaternion&);
 
 /// Rotates provided vector by provided quaternion and returns the result
 Vector rotate_vector(const Quaternion&, const Vector&);

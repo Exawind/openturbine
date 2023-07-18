@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "src/rigid_pendulum_poc/quaternion.h"
+#include "src/rigid_pendulum_poc/utilities.h"
 
 namespace openturbine::rigid_pendulum::tests {
 
@@ -31,33 +32,6 @@ TEST(QuaternionTest, Length) {
     Quaternion q(1., 2., 3., 4.);
 
     ASSERT_EQ(q.Length(), std::sqrt(30.));
-}
-
-TEST(QuaternionTest, CloseTo) {
-    ASSERT_TRUE(close_to(1., 1.));
-    ASSERT_TRUE(close_to(1., 1. + 1e-7));
-    ASSERT_TRUE(close_to(1., 1. - 1e-7));
-    ASSERT_FALSE(close_to(1., 1. + 1e-5));
-    ASSERT_FALSE(close_to(1., 1. - 1e-5));
-    ASSERT_TRUE(close_to(1e-7, 1e-7));
-
-    ASSERT_TRUE(close_to(-1., -1.));
-    ASSERT_TRUE(close_to(-1., -1. + 1e-7));
-    ASSERT_TRUE(close_to(-1., -1. - 1e-7));
-    ASSERT_FALSE(close_to(-1., -1. + 1e-5));
-    ASSERT_FALSE(close_to(-1., -1. - 1e-5));
-    ASSERT_TRUE(close_to(-1e-7, -1e-7));
-
-    ASSERT_FALSE(close_to(1., -1.));
-    ASSERT_FALSE(close_to(-1., 1.));
-    ASSERT_FALSE(close_to(1., -1. + 1e-7));
-    ASSERT_FALSE(close_to(-1., 1. + 1e-7));
-    ASSERT_FALSE(close_to(1., -1. - 1e-7));
-    ASSERT_FALSE(close_to(-1., 1. - 1e-7));
-    ASSERT_FALSE(close_to(1., -1. + 1e-5));
-    ASSERT_FALSE(close_to(-1., 1. + 1e-5));
-    ASSERT_FALSE(close_to(1., -1. - 1e-5));
-    ASSERT_FALSE(close_to(-1., 1. - 1e-5));
 }
 
 TEST(QuaternionTest, AdditionOfTwoQuaternions) {
@@ -236,80 +210,10 @@ TEST(QuaternionTest, GetRotationVectorFromNullQuaternion) {
     ASSERT_NEAR(std::get<2>(v), std::get<2>(expected), 1e-6);
 }
 
-TEST(QuaternionTest, WrapAngleToPi) {
-    auto angle = 0.;  // 0 degrees
-    auto wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, 0., 1e-6);
-
-    angle = kPI / 2.;  // 90 degrees
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, 0.5 * kPI, 1e-6);
-
-    angle = -kPI / 2.;  // -90 degrees
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, -0.5 * kPI, 1e-6);
-
-    angle = kPI / 2. + kPI / 4.;  // 135 degrees
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, 0.75 * kPI, 1e-6);
-
-    angle = -kPI / 2. - kPI / 4.;  // -135 degrees
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, -0.75 * kPI, 1e-6);
-
-    angle = kPI;  // 180 degrees
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, kPI, 1e-6);
-
-    angle = -kPI;
-    wrapped_angle = wrap_angle_to_pi(angle);  // -180 degrees
-    ASSERT_NEAR(wrapped_angle, -kPI, 1e-6);
-
-    angle = 3. * kPI / 2.;  // 270 degrees
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, -0.5 * kPI, 1e-6);
-
-    angle = -3. * kPI / 2.;  // -270 degrees
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, 0.5 * kPI, 1e-6);
-
-    angle = 2. * kPI;  // 360 degrees
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, 0., 1e-6);
-
-    angle = -2. * kPI;  // -360 degrees
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, 0., 1e-6);
-
-    angle = 2. * kPI + kPI / 4.;  // 405 degrees = 360 + 45
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, kPI / 4., 1e-6);
-
-    angle = -2. * kPI - kPI / 4.;  // -405 degrees = -360 - 45
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, -kPI / 4., 1e-6);
-
-    angle = 29. * kPI;  // 14 * 2 * kPI + kPI
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, kPI, 1e-6);
-
-    angle = -29. * kPI;  // -14 * 2 * kPI - kPI
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, -kPI, 1e-6);
-
-    angle = 200. * kPI + kPI / 6.;
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, kPI / 6., 1e-6);
-
-    angle = -200. * kPI - kPI / 6.;
-    wrapped_angle = wrap_angle_to_pi(angle);
-    ASSERT_NEAR(wrapped_angle, -kPI / 6., 1e-6);
-}
-
-TEST(QuaternionTest, QuaternionFromAxisAngle_ZeroAngle) {
+TEST(QuaternionTest, QuaternionFromAngleAxis_ZeroAngle) {
     double angle = 0.;
     Vector axis{1., 0., 0.};
-    Quaternion q = quaternion_from_axis_angle(angle, axis);
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
 
     Quaternion expected(1., 0., 0., 0.);
 
@@ -319,9 +223,9 @@ TEST(QuaternionTest, QuaternionFromAxisAngle_ZeroAngle) {
     ASSERT_NEAR(q.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
-TEST(QuaternionTest, AxisAngleFromQuaternion_ZeroAngle) {
+TEST(QuaternionTest, AngleAxisFromQuaternion_ZeroAngle) {
     Quaternion q(1., 0., 0., 0.);
-    auto [angle, axis] = axis_angle_from_quaternion(q);
+    auto [angle, axis] = angle_axis_from_quaternion(q);
 
     ASSERT_NEAR(angle, 0., 1e-6);
     ASSERT_NEAR(std::get<0>(axis), 1., 1e-6);
@@ -329,10 +233,10 @@ TEST(QuaternionTest, AxisAngleFromQuaternion_ZeroAngle) {
     ASSERT_NEAR(std::get<2>(axis), 0., 1e-6);
 }
 
-TEST(QuaternionTest, QuaternionFromAxisAngle_90Degrees_XAxis) {
+TEST(QuaternionTest, QuaternionFromAngleAxis_90Degrees_XAxis) {
     double angle = kPI / 2.;
     Vector axis{1., 0., 0.};
-    Quaternion q = quaternion_from_axis_angle(angle, axis);
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
 
     Quaternion expected(0.707107, 0.707107, 0., 0.);
 
@@ -342,9 +246,9 @@ TEST(QuaternionTest, QuaternionFromAxisAngle_90Degrees_XAxis) {
     ASSERT_NEAR(q.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
-TEST(QuaternionTest, AxisAngleFromQuaternion_90Degrees_XAxis) {
+TEST(QuaternionTest, AngleAxisFromQuaternion_90Degrees_XAxis) {
     Quaternion q(0.707107, 0.707107, 0., 0.);
-    auto [angle, axis] = axis_angle_from_quaternion(q);
+    auto [angle, axis] = angle_axis_from_quaternion(q);
 
     ASSERT_NEAR(angle, kPI / 2., 1e-6);
     ASSERT_NEAR(std::get<0>(axis), 1., 1e-6);
@@ -352,10 +256,10 @@ TEST(QuaternionTest, AxisAngleFromQuaternion_90Degrees_XAxis) {
     ASSERT_NEAR(std::get<2>(axis), 0., 1e-6);
 }
 
-TEST(QuaternionTest, QuaternionFromAxisAngle_45Degrees_YAxis) {
+TEST(QuaternionTest, QuaternionFromAngleAxis_45Degrees_YAxis) {
     double angle = kPI / 4.;
     Vector axis{0., 1., 0.};
-    Quaternion q = quaternion_from_axis_angle(angle, axis);
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
 
     Quaternion expected(0.923879, 0., 0.382683, 0.);
 
@@ -365,9 +269,9 @@ TEST(QuaternionTest, QuaternionFromAxisAngle_45Degrees_YAxis) {
     ASSERT_NEAR(q.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
-TEST(QuaternionTest, AxisAngleFromQuaternion_45Degrees_YAxis) {
+TEST(QuaternionTest, AngleAxisFromQuaternion_45Degrees_YAxis) {
     Quaternion q(0.923879, 0., 0.382683, 0.);
-    auto [angle, axis] = axis_angle_from_quaternion(q);
+    auto [angle, axis] = angle_axis_from_quaternion(q);
 
     ASSERT_NEAR(angle, kPI / 4., 1e-6);
     ASSERT_NEAR(std::get<0>(axis), 0., 1e-6);
@@ -375,10 +279,10 @@ TEST(QuaternionTest, AxisAngleFromQuaternion_45Degrees_YAxis) {
     ASSERT_NEAR(std::get<2>(axis), 0., 1e-6);
 }
 
-TEST(QuaternionTest, QuaternionFromAxisAngle_60Degrees_ZAxis) {
+TEST(QuaternionTest, QuaternionFromAngleAxis_60Degrees_ZAxis) {
     double angle = kPI / 3.;
     Vector axis{0., 0., 1.};
-    Quaternion q = quaternion_from_axis_angle(angle, axis);
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
 
     Quaternion expected(0.866025, 0., 0., 0.5);
 
@@ -388,9 +292,9 @@ TEST(QuaternionTest, QuaternionFromAxisAngle_60Degrees_ZAxis) {
     ASSERT_NEAR(q.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
-TEST(QuaternionTest, AxisAngleFromQuaternion_60Degrees_ZAxis) {
+TEST(QuaternionTest, AngleAxisFromQuaternion_60Degrees_ZAxis) {
     Quaternion q(0.866025, 0., 0., 0.5);
-    auto [angle, axis] = axis_angle_from_quaternion(q);
+    auto [angle, axis] = angle_axis_from_quaternion(q);
 
     ASSERT_NEAR(angle, kPI / 3., 1e-6);
     ASSERT_NEAR(std::get<0>(axis), 0., 1e-6);
@@ -401,7 +305,7 @@ TEST(QuaternionTest, AxisAngleFromQuaternion_60Degrees_ZAxis) {
 TEST(QuaternionTest, RotateXAXIS_90Degrees_AboutYAxis) {
     double angle = kPI / 2.;
     Vector axis{0., 1., 0.};
-    Quaternion q = quaternion_from_axis_angle(angle, axis);
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
 
     Vector v{1., 0., 0.};
     Vector rotated = rotate_vector(q, v);
@@ -415,7 +319,7 @@ TEST(QuaternionTest, RotateXAXIS_90Degrees_AboutYAxis) {
 TEST(QuaternionTest, RotateYAXIS_90Degrees_AboutXAxis) {
     double angle = kPI / 2.;
     Vector axis{1., 0., 0.};
-    Quaternion q = quaternion_from_axis_angle(angle, axis);
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
 
     Vector v{0., 1., 0.};
     Vector rotated = rotate_vector(q, v);
@@ -429,7 +333,7 @@ TEST(QuaternionTest, RotateYAXIS_90Degrees_AboutXAxis) {
 TEST(QuaternionTest, RotateZAXIS_90Degrees_AboutXAxis) {
     double angle = kPI / 2.;
     Vector axis{1., 0., 0.};
-    Quaternion q = quaternion_from_axis_angle(angle, axis);
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
 
     Vector v{0., 0., 1.};
     Vector rotated = rotate_vector(q, v);
@@ -443,7 +347,7 @@ TEST(QuaternionTest, RotateZAXIS_90Degrees_AboutXAxis) {
 TEST(QuaternionTest, RotateXAXIS_45Degrees_AboutZAxis) {
     double angle = kPI / 4.;
     Vector axis{0., 0., 1.};
-    Quaternion q = quaternion_from_axis_angle(angle, axis);
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
 
     Vector v{1., 0., 0.};
     Vector rotated = rotate_vector(q, v);
@@ -457,7 +361,7 @@ TEST(QuaternionTest, RotateXAXIS_45Degrees_AboutZAxis) {
 TEST(QuaternionTest, RotateXAXIS_Neg45Degrees_AboutZAxis) {
     double angle = -kPI / 4.;
     Vector axis{0., 0., 1.};
-    Quaternion q = quaternion_from_axis_angle(angle, axis);
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
 
     Vector v{1., 0., 0.};
     Vector rotated = rotate_vector(q, v);
