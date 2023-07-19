@@ -4,11 +4,9 @@
 #include <tuple>
 
 #include "src/rigid_pendulum_poc/utilities.h"
+#include "src/rigid_pendulum_poc/vector.h"
 
 namespace openturbine::rigid_pendulum {
-
-// TECH DEBT: We need to introduce a Vector class to represent 3D vectors
-using Vector = std::tuple<double, double, double>;
 
 /// @brief Class to represent a quaternion
 class Quaternion {

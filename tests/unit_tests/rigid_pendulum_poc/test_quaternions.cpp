@@ -138,7 +138,7 @@ TEST(QuaternionTest, GetInverse) {
 }
 
 TEST(QuaternionTest, GetQuaternionFromRotationVector_Set1) {
-    std::tuple<double, double, double> rotation_vector{1., 2., 3.};
+    Vector rotation_vector{1., 2., 3.};
     auto q = quaternion_from_rotation_vector(rotation_vector);
 
     // We will use the following quaternion as input in the log conversion
@@ -156,15 +156,15 @@ TEST(QuaternionTest, GetRotationVectorFromQuaternion_Set1) {
 
     // We expect the rotation vector to be same as provided in above exp conversion
     // i.e. {1., 2., 3.}
-    std::tuple<double, double, double> expected{1., 2., 3.};
+    Vector expected{1., 2., 3.};
 
-    ASSERT_NEAR(std::get<0>(v), std::get<0>(expected), 1e-6);
-    ASSERT_NEAR(std::get<1>(v), std::get<1>(expected), 1e-6);
-    ASSERT_NEAR(std::get<2>(v), std::get<2>(expected), 1e-6);
+    ASSERT_NEAR(v.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(v.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(v.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
 TEST(QuaternionTest, GetQuaternionFromRotationVector_Set2) {
-    std::tuple<double, double, double> rotation_vector{0., 0., 1.570796};
+    Vector rotation_vector{0., 0., 1.570796};
     auto q = quaternion_from_rotation_vector(rotation_vector);
 
     // We will use the following quaternion as input in the log conversion
@@ -182,15 +182,15 @@ TEST(QuaternionTest, GetRotationVectorFromQuaternion_Set2) {
 
     // We expect the rotation vector to be same as provided in above exp conversion
     // i.e. {0., 0., 1.570796}
-    std::tuple<double, double, double> expected{0., 0., 1.570796};
+    Vector expected{0., 0., 1.570796};
 
-    ASSERT_NEAR(std::get<0>(v), std::get<0>(expected), 1e-6);
-    ASSERT_NEAR(std::get<1>(v), std::get<1>(expected), 1e-6);
-    ASSERT_NEAR(std::get<2>(v), std::get<2>(expected), 1e-6);
+    ASSERT_NEAR(v.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(v.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(v.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
 TEST(QuaternionTest, GetQuaternionFromNullRotationVector) {
-    std::tuple<double, double, double> rotation_vector{0., 0., 0.};
+    Vector rotation_vector{0., 0., 0.};
     auto q = quaternion_from_rotation_vector(rotation_vector);
     Quaternion expected(1., 0., 0., 0.);
 
@@ -203,11 +203,11 @@ TEST(QuaternionTest, GetQuaternionFromNullRotationVector) {
 TEST(QuaternionTest, GetRotationVectorFromNullQuaternion) {
     Quaternion q(1., 0., 0., 0.);
     auto v = rotation_vector_from_quaternion(q);
-    std::tuple<double, double, double> expected{0., 0., 0.};
+    Vector expected{0., 0., 0.};
 
-    ASSERT_NEAR(std::get<0>(v), std::get<0>(expected), 1e-6);
-    ASSERT_NEAR(std::get<1>(v), std::get<1>(expected), 1e-6);
-    ASSERT_NEAR(std::get<2>(v), std::get<2>(expected), 1e-6);
+    ASSERT_NEAR(v.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(v.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(v.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
 TEST(QuaternionTest, QuaternionFromAngleAxis_ZeroAngle) {
@@ -228,9 +228,9 @@ TEST(QuaternionTest, AngleAxisFromQuaternion_ZeroAngle) {
     auto [angle, axis] = angle_axis_from_quaternion(q);
 
     ASSERT_NEAR(angle, 0., 1e-6);
-    ASSERT_NEAR(std::get<0>(axis), 1., 1e-6);
-    ASSERT_NEAR(std::get<1>(axis), 0., 1e-6);
-    ASSERT_NEAR(std::get<2>(axis), 0., 1e-6);
+    ASSERT_NEAR(axis.GetXComponent(), 1., 1e-6);
+    ASSERT_NEAR(axis.GetYComponent(), 0., 1e-6);
+    ASSERT_NEAR(axis.GetZComponent(), 0., 1e-6);
 }
 
 TEST(QuaternionTest, QuaternionFromAngleAxis_90Degrees_XAxis) {
@@ -251,9 +251,9 @@ TEST(QuaternionTest, AngleAxisFromQuaternion_90Degrees_XAxis) {
     auto [angle, axis] = angle_axis_from_quaternion(q);
 
     ASSERT_NEAR(angle, kPI / 2., 1e-6);
-    ASSERT_NEAR(std::get<0>(axis), 1., 1e-6);
-    ASSERT_NEAR(std::get<1>(axis), 0., 1e-6);
-    ASSERT_NEAR(std::get<2>(axis), 0., 1e-6);
+    ASSERT_NEAR(axis.GetXComponent(), 1., 1e-6);
+    ASSERT_NEAR(axis.GetYComponent(), 0., 1e-6);
+    ASSERT_NEAR(axis.GetZComponent(), 0., 1e-6);
 }
 
 TEST(QuaternionTest, QuaternionFromAngleAxis_45Degrees_YAxis) {
@@ -274,9 +274,9 @@ TEST(QuaternionTest, AngleAxisFromQuaternion_45Degrees_YAxis) {
     auto [angle, axis] = angle_axis_from_quaternion(q);
 
     ASSERT_NEAR(angle, kPI / 4., 1e-6);
-    ASSERT_NEAR(std::get<0>(axis), 0., 1e-6);
-    ASSERT_NEAR(std::get<1>(axis), 1., 1e-6);
-    ASSERT_NEAR(std::get<2>(axis), 0., 1e-6);
+    ASSERT_NEAR(axis.GetXComponent(), 0., 1e-6);
+    ASSERT_NEAR(axis.GetYComponent(), 1., 1e-6);
+    ASSERT_NEAR(axis.GetZComponent(), 0., 1e-6);
 }
 
 TEST(QuaternionTest, QuaternionFromAngleAxis_60Degrees_ZAxis) {
@@ -297,9 +297,9 @@ TEST(QuaternionTest, AngleAxisFromQuaternion_60Degrees_ZAxis) {
     auto [angle, axis] = angle_axis_from_quaternion(q);
 
     ASSERT_NEAR(angle, kPI / 3., 1e-6);
-    ASSERT_NEAR(std::get<0>(axis), 0., 1e-6);
-    ASSERT_NEAR(std::get<1>(axis), 0., 1e-6);
-    ASSERT_NEAR(std::get<2>(axis), 1., 1e-6);
+    ASSERT_NEAR(axis.GetXComponent(), 0., 1e-6);
+    ASSERT_NEAR(axis.GetYComponent(), 0., 1e-6);
+    ASSERT_NEAR(axis.GetZComponent(), 1., 1e-6);
 }
 
 TEST(QuaternionTest, RotateXAXIS_90Degrees_AboutYAxis) {
@@ -311,9 +311,9 @@ TEST(QuaternionTest, RotateXAXIS_90Degrees_AboutYAxis) {
     Vector rotated = rotate_vector(q, v);
     Vector expected{0., 0., -1.};
 
-    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
-    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
-    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+    ASSERT_NEAR(rotated.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(rotated.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(rotated.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
 TEST(QuaternionTest, RotateYAXIS_90Degrees_AboutXAxis) {
@@ -325,9 +325,9 @@ TEST(QuaternionTest, RotateYAXIS_90Degrees_AboutXAxis) {
     Vector rotated = rotate_vector(q, v);
     Vector expected{0., 0., 1.};
 
-    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
-    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
-    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+    ASSERT_NEAR(rotated.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(rotated.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(rotated.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
 TEST(QuaternionTest, RotateZAXIS_90Degrees_AboutXAxis) {
@@ -339,9 +339,9 @@ TEST(QuaternionTest, RotateZAXIS_90Degrees_AboutXAxis) {
     Vector rotated = rotate_vector(q, v);
     Vector expected{0., -1., 0.};
 
-    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
-    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
-    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+    ASSERT_NEAR(rotated.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(rotated.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(rotated.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
 TEST(QuaternionTest, RotateXAXIS_45Degrees_AboutZAxis) {
@@ -353,9 +353,9 @@ TEST(QuaternionTest, RotateXAXIS_45Degrees_AboutZAxis) {
     Vector rotated = rotate_vector(q, v);
     Vector expected{0.707107, 0.707107, 0.};
 
-    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
-    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
-    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+    ASSERT_NEAR(rotated.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(rotated.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(rotated.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
 TEST(QuaternionTest, RotateXAXIS_Neg45Degrees_AboutZAxis) {
@@ -367,9 +367,9 @@ TEST(QuaternionTest, RotateXAXIS_Neg45Degrees_AboutZAxis) {
     Vector rotated = rotate_vector(q, v);
     Vector expected{0.707107, -0.707107, 0.};
 
-    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
-    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
-    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+    ASSERT_NEAR(rotated.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(rotated.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(rotated.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
 TEST(QuaternionTest, ExpectErrorWhenRotatingVectorWithNonUnitQuaternion) {
