@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <tuple>
 
-#include "src/rigid_pendulum_poc/quaternion.h"
+#include "src/rigid_pendulum_poc/utilities.h"
 
 namespace openturbine::rigid_pendulum {
 /// @brief Class to represent a 3-D vector

@@ -3,12 +3,12 @@
 #include <cmath>
 #include <tuple>
 
+#include "src/rigid_pendulum_poc/utilities.h"
+
 namespace openturbine::rigid_pendulum {
 
-static constexpr double kTOLERANCE = 1e-6;
-
-/// Returns a boolean indicating if two provided doubles are close to each other
-bool close_to(double a, double b);
+// TECH DEBT: We need to introduce a Vector class to represent 3D vectors
+using Vector = std::tuple<double, double, double>;
 
 /// @brief Class to represent a quaternion
 class Quaternion {
@@ -106,9 +106,27 @@ private:
 };
 
 /// Returns a 4-D quaternion from provided 3-D rotation vector, i.e. exponential map
-Quaternion quaternion_from_rotation_vector(const std::tuple<double, double, double>&);
+Quaternion quaternion_from_rotation_vector(const Vector&);
 
 /// Returns a 3-D rotation vector from provided 4-D quaternion, i.e. logarithmic map
-std::tuple<double, double, double> rotation_vector_from_quaternion(const Quaternion&);
+Vector rotation_vector_from_quaternion(const Quaternion&);
+
+/*!
+ * @brief Returns a quaternion from provided Euler parameters/angle-axis representation of rotation
+ * @param angle Angle of rotation in radians, in radians
+ * @param axis Axis of rotation, a unit vector
+ * @return Unit quaternion representing the rotation
+ */
+Quaternion quaternion_from_angle_axis(double angle, const Vector&);
+
+/*!
+ * @brief Returns Euler parameters/angle-axis representation of rotation from provided quaternion
+ * @param quaternion Quaternion to be converted
+ * @return Tuple of angle of rotation in radians and axis of rotation as a unit vector
+ */
+std::tuple<double, Vector> angle_axis_from_quaternion(const Quaternion&);
+
+/// Rotates provided vector by provided *unit* quaternion and returns the result
+Vector rotate_vector(const Quaternion&, const Vector&);
 
 }  // namespace openturbine::rigid_pendulum

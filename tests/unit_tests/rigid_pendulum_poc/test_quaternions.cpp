@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "src/rigid_pendulum_poc/quaternion.h"
+#include "src/rigid_pendulum_poc/utilities.h"
 
 namespace openturbine::rigid_pendulum::tests {
 
@@ -31,33 +32,6 @@ TEST(QuaternionTest, Length) {
     Quaternion q(1., 2., 3., 4.);
 
     ASSERT_EQ(q.Length(), std::sqrt(30.));
-}
-
-TEST(QuaternionTest, CloseTo) {
-    ASSERT_TRUE(close_to(1., 1.));
-    ASSERT_TRUE(close_to(1., 1. + 1e-7));
-    ASSERT_TRUE(close_to(1., 1. - 1e-7));
-    ASSERT_FALSE(close_to(1., 1. + 1e-5));
-    ASSERT_FALSE(close_to(1., 1. - 1e-5));
-    ASSERT_TRUE(close_to(1e-7, 1e-7));
-
-    ASSERT_TRUE(close_to(-1., -1.));
-    ASSERT_TRUE(close_to(-1., -1. + 1e-7));
-    ASSERT_TRUE(close_to(-1., -1. - 1e-7));
-    ASSERT_FALSE(close_to(-1., -1. + 1e-5));
-    ASSERT_FALSE(close_to(-1., -1. - 1e-5));
-    ASSERT_TRUE(close_to(-1e-7, -1e-7));
-
-    ASSERT_FALSE(close_to(1., -1.));
-    ASSERT_FALSE(close_to(-1., 1.));
-    ASSERT_FALSE(close_to(1., -1. + 1e-7));
-    ASSERT_FALSE(close_to(-1., 1. + 1e-7));
-    ASSERT_FALSE(close_to(1., -1. - 1e-7));
-    ASSERT_FALSE(close_to(-1., 1. - 1e-7));
-    ASSERT_FALSE(close_to(1., -1. + 1e-5));
-    ASSERT_FALSE(close_to(-1., 1. + 1e-5));
-    ASSERT_FALSE(close_to(1., -1. - 1e-5));
-    ASSERT_FALSE(close_to(-1., 1. - 1e-5));
 }
 
 TEST(QuaternionTest, AdditionOfTwoQuaternions) {
@@ -234,6 +208,175 @@ TEST(QuaternionTest, GetRotationVectorFromNullQuaternion) {
     ASSERT_NEAR(std::get<0>(v), std::get<0>(expected), 1e-6);
     ASSERT_NEAR(std::get<1>(v), std::get<1>(expected), 1e-6);
     ASSERT_NEAR(std::get<2>(v), std::get<2>(expected), 1e-6);
+}
+
+TEST(QuaternionTest, QuaternionFromAngleAxis_ZeroAngle) {
+    double angle = 0.;
+    Vector axis{1., 0., 0.};
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
+
+    Quaternion expected(1., 0., 0., 0.);
+
+    ASSERT_NEAR(q.GetScalarComponent(), expected.GetScalarComponent(), 1e-6);
+    ASSERT_NEAR(q.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(q.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(q.GetZComponent(), expected.GetZComponent(), 1e-6);
+}
+
+TEST(QuaternionTest, AngleAxisFromQuaternion_ZeroAngle) {
+    Quaternion q(1., 0., 0., 0.);
+    auto [angle, axis] = angle_axis_from_quaternion(q);
+
+    ASSERT_NEAR(angle, 0., 1e-6);
+    ASSERT_NEAR(std::get<0>(axis), 1., 1e-6);
+    ASSERT_NEAR(std::get<1>(axis), 0., 1e-6);
+    ASSERT_NEAR(std::get<2>(axis), 0., 1e-6);
+}
+
+TEST(QuaternionTest, QuaternionFromAngleAxis_90Degrees_XAxis) {
+    double angle = kPI / 2.;
+    Vector axis{1., 0., 0.};
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
+
+    Quaternion expected(0.707107, 0.707107, 0., 0.);
+
+    ASSERT_NEAR(q.GetScalarComponent(), expected.GetScalarComponent(), 1e-6);
+    ASSERT_NEAR(q.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(q.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(q.GetZComponent(), expected.GetZComponent(), 1e-6);
+}
+
+TEST(QuaternionTest, AngleAxisFromQuaternion_90Degrees_XAxis) {
+    Quaternion q(0.707107, 0.707107, 0., 0.);
+    auto [angle, axis] = angle_axis_from_quaternion(q);
+
+    ASSERT_NEAR(angle, kPI / 2., 1e-6);
+    ASSERT_NEAR(std::get<0>(axis), 1., 1e-6);
+    ASSERT_NEAR(std::get<1>(axis), 0., 1e-6);
+    ASSERT_NEAR(std::get<2>(axis), 0., 1e-6);
+}
+
+TEST(QuaternionTest, QuaternionFromAngleAxis_45Degrees_YAxis) {
+    double angle = kPI / 4.;
+    Vector axis{0., 1., 0.};
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
+
+    Quaternion expected(0.923879, 0., 0.382683, 0.);
+
+    ASSERT_NEAR(q.GetScalarComponent(), expected.GetScalarComponent(), 1e-6);
+    ASSERT_NEAR(q.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(q.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(q.GetZComponent(), expected.GetZComponent(), 1e-6);
+}
+
+TEST(QuaternionTest, AngleAxisFromQuaternion_45Degrees_YAxis) {
+    Quaternion q(0.923879, 0., 0.382683, 0.);
+    auto [angle, axis] = angle_axis_from_quaternion(q);
+
+    ASSERT_NEAR(angle, kPI / 4., 1e-6);
+    ASSERT_NEAR(std::get<0>(axis), 0., 1e-6);
+    ASSERT_NEAR(std::get<1>(axis), 1., 1e-6);
+    ASSERT_NEAR(std::get<2>(axis), 0., 1e-6);
+}
+
+TEST(QuaternionTest, QuaternionFromAngleAxis_60Degrees_ZAxis) {
+    double angle = kPI / 3.;
+    Vector axis{0., 0., 1.};
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
+
+    Quaternion expected(0.866025, 0., 0., 0.5);
+
+    ASSERT_NEAR(q.GetScalarComponent(), expected.GetScalarComponent(), 1e-6);
+    ASSERT_NEAR(q.GetXComponent(), expected.GetXComponent(), 1e-6);
+    ASSERT_NEAR(q.GetYComponent(), expected.GetYComponent(), 1e-6);
+    ASSERT_NEAR(q.GetZComponent(), expected.GetZComponent(), 1e-6);
+}
+
+TEST(QuaternionTest, AngleAxisFromQuaternion_60Degrees_ZAxis) {
+    Quaternion q(0.866025, 0., 0., 0.5);
+    auto [angle, axis] = angle_axis_from_quaternion(q);
+
+    ASSERT_NEAR(angle, kPI / 3., 1e-6);
+    ASSERT_NEAR(std::get<0>(axis), 0., 1e-6);
+    ASSERT_NEAR(std::get<1>(axis), 0., 1e-6);
+    ASSERT_NEAR(std::get<2>(axis), 1., 1e-6);
+}
+
+TEST(QuaternionTest, RotateXAXIS_90Degrees_AboutYAxis) {
+    double angle = kPI / 2.;
+    Vector axis{0., 1., 0.};
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
+
+    Vector v{1., 0., 0.};
+    Vector rotated = rotate_vector(q, v);
+    Vector expected{0., 0., -1.};
+
+    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
+    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
+    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+}
+
+TEST(QuaternionTest, RotateYAXIS_90Degrees_AboutXAxis) {
+    double angle = kPI / 2.;
+    Vector axis{1., 0., 0.};
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
+
+    Vector v{0., 1., 0.};
+    Vector rotated = rotate_vector(q, v);
+    Vector expected{0., 0., 1.};
+
+    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
+    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
+    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+}
+
+TEST(QuaternionTest, RotateZAXIS_90Degrees_AboutXAxis) {
+    double angle = kPI / 2.;
+    Vector axis{1., 0., 0.};
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
+
+    Vector v{0., 0., 1.};
+    Vector rotated = rotate_vector(q, v);
+    Vector expected{0., -1., 0.};
+
+    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
+    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
+    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+}
+
+TEST(QuaternionTest, RotateXAXIS_45Degrees_AboutZAxis) {
+    double angle = kPI / 4.;
+    Vector axis{0., 0., 1.};
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
+
+    Vector v{1., 0., 0.};
+    Vector rotated = rotate_vector(q, v);
+    Vector expected{0.707107, 0.707107, 0.};
+
+    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
+    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
+    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+}
+
+TEST(QuaternionTest, RotateXAXIS_Neg45Degrees_AboutZAxis) {
+    double angle = -kPI / 4.;
+    Vector axis{0., 0., 1.};
+    Quaternion q = quaternion_from_angle_axis(angle, axis);
+
+    Vector v{1., 0., 0.};
+    Vector rotated = rotate_vector(q, v);
+    Vector expected{0.707107, -0.707107, 0.};
+
+    ASSERT_NEAR(std::get<0>(rotated), std::get<0>(expected), 1e-6);
+    ASSERT_NEAR(std::get<1>(rotated), std::get<1>(expected), 1e-6);
+    ASSERT_NEAR(std::get<2>(rotated), std::get<2>(expected), 1e-6);
+}
+
+TEST(QuaternionTest, ExpectErrorWhenRotatingVectorWithNonUnitQuaternion) {
+    Quaternion q(1., 1., 0., 0.);
+    Vector v{1., 0., 0.};
+
+    ASSERT_THROW(rotate_vector(q, v), std::invalid_argument);
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

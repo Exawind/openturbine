@@ -4,6 +4,7 @@ target_sources(
     PRIVATE
     test_generalized_alpha_solver.cpp
     test_linear_systems_solver.cpp
+    test_math_utilities.cpp
     test_quaternions.cpp
     test_time_stepper.cpp
     test_utilities.cpp
