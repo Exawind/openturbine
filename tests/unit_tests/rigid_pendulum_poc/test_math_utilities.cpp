@@ -9,23 +9,23 @@ TEST(MathUtilitiesTest, CloseTo_Set1) {
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set2) {
-    ASSERT_TRUE(close_to(1., 1. + 1e-7));
+    ASSERT_TRUE(close_to(1., 1. + kTOLERANCE / 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set3) {
-    ASSERT_TRUE(close_to(1., 1. - 1e-7));
+    ASSERT_TRUE(close_to(1., 1. - kTOLERANCE / 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set4) {
-    ASSERT_FALSE(close_to(1., 1. + 1e-5));
+    ASSERT_FALSE(close_to(1., 1. + kTOLERANCE * 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set5) {
-    ASSERT_FALSE(close_to(1., 1. - 1e-5));
+    ASSERT_FALSE(close_to(1., 1. - kTOLERANCE * 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set6) {
-    ASSERT_TRUE(close_to(1e-7, 1e-7));
+    ASSERT_TRUE(close_to(kTOLERANCE / 10., kTOLERANCE / 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set7) {
@@ -33,23 +33,23 @@ TEST(MathUtilitiesTest, CloseTo_Set7) {
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set8) {
-    ASSERT_TRUE(close_to(-1., -1. + 1e-7));
+    ASSERT_TRUE(close_to(-1., -1. + kTOLERANCE / 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set9) {
-    ASSERT_TRUE(close_to(-1., -1. - 1e-7));
+    ASSERT_TRUE(close_to(-1., -1. - kTOLERANCE / 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set10) {
-    ASSERT_FALSE(close_to(-1., -1. + 1e-5));
+    ASSERT_FALSE(close_to(-1., -1. + kTOLERANCE * 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set11) {
-    ASSERT_FALSE(close_to(-1., -1. - 1e-5));
+    ASSERT_FALSE(close_to(-1., -1. - kTOLERANCE * 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set12) {
-    ASSERT_TRUE(close_to(-1e-7, -1e-7));
+    ASSERT_TRUE(close_to(-1e-7, -kTOLERANCE / 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set13) {
@@ -61,35 +61,35 @@ TEST(MathUtilitiesTest, CloseTo_Set14) {
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set15) {
-    ASSERT_FALSE(close_to(1., -1. + 1e-7));
+    ASSERT_FALSE(close_to(1., -1. + kTOLERANCE / 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set16) {
-    ASSERT_FALSE(close_to(-1., 1. + 1e-7));
+    ASSERT_FALSE(close_to(-1., 1. + kTOLERANCE / 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set17) {
-    ASSERT_FALSE(close_to(1., -1. - 1e-7));
+    ASSERT_FALSE(close_to(1., -1. - kTOLERANCE / 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set18) {
-    ASSERT_FALSE(close_to(-1., 1. - 1e-7));
+    ASSERT_FALSE(close_to(-1., 1. - kTOLERANCE / 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set19) {
-    ASSERT_FALSE(close_to(1., -1. + 1e-5));
+    ASSERT_FALSE(close_to(1., -1. + kTOLERANCE * 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set20) {
-    ASSERT_FALSE(close_to(-1., 1. + 1e-5));
+    ASSERT_FALSE(close_to(-1., 1. + kTOLERANCE * 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set21) {
-    ASSERT_FALSE(close_to(1., -1. - 1e-5));
+    ASSERT_FALSE(close_to(1., -1. - kTOLERANCE * 10.));
 }
 
 TEST(MathUtilitiesTest, CloseTo_Set22) {
-    ASSERT_FALSE(close_to(-1., 1. - 1e-5));
+    ASSERT_FALSE(close_to(-1., 1. - kTOLERANCE * 10.));
 }
 
 TEST(MathUtilitiesTest, WrapAngleToPi_ZeroDegree) {
