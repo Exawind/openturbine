@@ -2,6 +2,7 @@
 
 #include "src/rigid_pendulum_poc/quaternion.h"
 #include "src/rigid_pendulum_poc/utilities.h"
+#include "tests/unit_tests/rigid_pendulum_poc/test_utilities.h"
 
 namespace openturbine::rigid_pendulum::tests {
 
@@ -377,6 +378,294 @@ TEST(QuaternionTest, ExpectErrorWhenRotatingVectorWithNonUnitQuaternion) {
     Vector v{1., 0., 0.};
 
     ASSERT_THROW(rotate_vector(q, v), std::invalid_argument);
+}
+
+TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_Set1) {
+    // 90 degree rotation about x axis
+    Quaternion q{0.707107, 0.707107, 0., 0.};
+    RotationMatrix R = quaternion_to_rotation_matrix(q);
+
+    EXPECT_NEAR(std::get<0>(R).GetXComponent(), 1., 1e-6);
+    EXPECT_NEAR(std::get<0>(R).GetYComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<0>(R).GetZComponent(), 0., 1e-6);
+
+    EXPECT_NEAR(std::get<1>(R).GetXComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<1>(R).GetYComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<1>(R).GetZComponent(), -1., 1e-6);
+
+    EXPECT_NEAR(std::get<2>(R).GetXComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<2>(R).GetYComponent(), 1., 1e-6);
+    EXPECT_NEAR(std::get<2>(R).GetZComponent(), 0., 1e-6);
+
+    Vector v{1., 1., 1.};
+    Vector rotated_by_quaternion = rotate_vector(q, v);
+    Vector rotated_by_rotation_matrix = multiply_rotation_matrix_with_vector(R, v);
+
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetXComponent(), rotated_by_rotation_matrix.GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetYComponent(), rotated_by_rotation_matrix.GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetZComponent(), rotated_by_rotation_matrix.GetZComponent(), 1e-6
+    );
+
+    auto q_from_rotation_matrix = rotation_matrix_to_quaternion(R);
+
+    EXPECT_NEAR(q_from_rotation_matrix.GetScalarComponent(), q.GetScalarComponent(), 1e-6);
+    EXPECT_NEAR(q_from_rotation_matrix.GetXComponent(), q.GetXComponent(), 1e-6);
+    EXPECT_NEAR(q_from_rotation_matrix.GetYComponent(), q.GetYComponent(), 1e-6);
+    EXPECT_NEAR(q_from_rotation_matrix.GetZComponent(), q.GetZComponent(), 1e-6);
+}
+
+TEST(QuaternionTest, ConvertRotationMatrixToQuaternion_Set1) {
+    // 90 degree rotation about x axis
+    RotationMatrix R{Vector{1., 0., 0.}, Vector{0., 0., -1.}, Vector{0., 1., 0.}};
+    Quaternion q = rotation_matrix_to_quaternion(R);
+
+    EXPECT_NEAR(q.GetScalarComponent(), 0.707107, 1e-6);
+    EXPECT_NEAR(q.GetXComponent(), 0.707107, 1e-6);
+    EXPECT_NEAR(q.GetYComponent(), 0., 1e-6);
+    EXPECT_NEAR(q.GetZComponent(), 0., 1e-6);
+
+    Vector v{1., 1., 1.};
+    Vector rotated_by_quaternion = rotate_vector(q, v);
+    Vector rotated_by_rotation_matrix = multiply_rotation_matrix_with_vector(R, v);
+
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetXComponent(), rotated_by_rotation_matrix.GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetYComponent(), rotated_by_rotation_matrix.GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetZComponent(), rotated_by_rotation_matrix.GetZComponent(), 1e-6
+    );
+
+    auto R_from_quaternion = quaternion_to_rotation_matrix(q);
+
+    EXPECT_NEAR(
+        std::get<0>(R_from_quaternion).GetXComponent(), std::get<0>(R).GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<0>(R_from_quaternion).GetYComponent(), std::get<0>(R).GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<0>(R_from_quaternion).GetZComponent(), std::get<0>(R).GetZComponent(), 1e-6
+    );
+
+    EXPECT_NEAR(
+        std::get<1>(R_from_quaternion).GetXComponent(), std::get<1>(R).GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<1>(R_from_quaternion).GetYComponent(), std::get<1>(R).GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<1>(R_from_quaternion).GetZComponent(), std::get<1>(R).GetZComponent(), 1e-6
+    );
+
+    EXPECT_NEAR(
+        std::get<2>(R_from_quaternion).GetXComponent(), std::get<2>(R).GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<2>(R_from_quaternion).GetYComponent(), std::get<2>(R).GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<2>(R_from_quaternion).GetZComponent(), std::get<2>(R).GetZComponent(), 1e-6
+    );
+}
+
+TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_Set2) {
+    // 90 degree rotation about Z axis
+    Quaternion q{0.707107, 0., 0., 0.707107};
+    RotationMatrix R = quaternion_to_rotation_matrix(q);
+
+    EXPECT_NEAR(std::get<0>(R).GetXComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<0>(R).GetYComponent(), -1., 1e-6);
+    EXPECT_NEAR(std::get<0>(R).GetZComponent(), 0., 1e-6);
+
+    EXPECT_NEAR(std::get<1>(R).GetXComponent(), 1., 1e-6);
+    EXPECT_NEAR(std::get<1>(R).GetYComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<1>(R).GetZComponent(), 0., 1e-6);
+
+    EXPECT_NEAR(std::get<2>(R).GetXComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<2>(R).GetYComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<2>(R).GetZComponent(), 1., 1e-6);
+
+    Vector v{1., 1., 1.};
+    Vector rotated_by_quaternion = rotate_vector(q, v);
+    Vector rotated_by_rotation_matrix = multiply_rotation_matrix_with_vector(R, v);
+
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetXComponent(), rotated_by_rotation_matrix.GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetYComponent(), rotated_by_rotation_matrix.GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetZComponent(), rotated_by_rotation_matrix.GetZComponent(), 1e-6
+    );
+
+    auto q_from_rotation_matrix = rotation_matrix_to_quaternion(R);
+
+    EXPECT_NEAR(q_from_rotation_matrix.GetScalarComponent(), q.GetScalarComponent(), 1e-6);
+    EXPECT_NEAR(q_from_rotation_matrix.GetXComponent(), q.GetXComponent(), 1e-6);
+    EXPECT_NEAR(q_from_rotation_matrix.GetYComponent(), q.GetYComponent(), 1e-6);
+    EXPECT_NEAR(q_from_rotation_matrix.GetZComponent(), q.GetZComponent(), 1e-6);
+}
+
+TEST(QuaternionTest, ConvertRotationMatrixToQuaternion_Set2) {
+    // 90 degree rotation about Z axis
+    RotationMatrix R{Vector{0., -1., 0.}, Vector{1., 0., 0.}, Vector{0., 0., 1.}};
+    Quaternion q = rotation_matrix_to_quaternion(R);
+
+    EXPECT_NEAR(q.GetScalarComponent(), 0.707107, 1e-6);
+    EXPECT_NEAR(q.GetXComponent(), 0., 1e-6);
+    EXPECT_NEAR(q.GetYComponent(), 0., 1e-6);
+    EXPECT_NEAR(q.GetZComponent(), 0.707107, 1e-6);
+
+    Vector v{1., 1., 1.};
+    Vector rotated_by_quaternion = rotate_vector(q, v);
+    Vector rotated_by_rotation_matrix = multiply_rotation_matrix_with_vector(R, v);
+
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetXComponent(), rotated_by_rotation_matrix.GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetYComponent(), rotated_by_rotation_matrix.GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetZComponent(), rotated_by_rotation_matrix.GetZComponent(), 1e-6
+    );
+
+    auto R_from_quaternion = quaternion_to_rotation_matrix(q);
+
+    EXPECT_NEAR(
+        std::get<0>(R_from_quaternion).GetXComponent(), std::get<0>(R).GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<0>(R_from_quaternion).GetYComponent(), std::get<0>(R).GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<0>(R_from_quaternion).GetZComponent(), std::get<0>(R).GetZComponent(), 1e-6
+    );
+
+    EXPECT_NEAR(
+        std::get<1>(R_from_quaternion).GetXComponent(), std::get<1>(R).GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<1>(R_from_quaternion).GetYComponent(), std::get<1>(R).GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<1>(R_from_quaternion).GetZComponent(), std::get<1>(R).GetZComponent(), 1e-6
+    );
+
+    EXPECT_NEAR(
+        std::get<2>(R_from_quaternion).GetXComponent(), std::get<2>(R).GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<2>(R_from_quaternion).GetYComponent(), std::get<2>(R).GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<2>(R_from_quaternion).GetZComponent(), std::get<2>(R).GetZComponent(), 1e-6
+    );
+}
+
+TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_Set3) {
+    // 90 degree rotation about Y axis
+    Quaternion q{0.707107, 0., 0.707107, 0.};
+    RotationMatrix R = quaternion_to_rotation_matrix(q);
+
+    EXPECT_NEAR(std::get<0>(R).GetXComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<0>(R).GetYComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<0>(R).GetZComponent(), 1., 1e-6);
+
+    EXPECT_NEAR(std::get<1>(R).GetXComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<1>(R).GetYComponent(), 1., 1e-6);
+    EXPECT_NEAR(std::get<1>(R).GetZComponent(), 0., 1e-6);
+
+    EXPECT_NEAR(std::get<2>(R).GetXComponent(), -1., 1e-6);
+    EXPECT_NEAR(std::get<2>(R).GetYComponent(), 0., 1e-6);
+    EXPECT_NEAR(std::get<2>(R).GetZComponent(), 0., 1e-6);
+
+    Vector v{1., 1., 1.};
+    Vector rotated_by_quaternion = rotate_vector(q, v);
+    Vector rotated_by_rotation_matrix = multiply_rotation_matrix_with_vector(R, v);
+
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetXComponent(), rotated_by_rotation_matrix.GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetYComponent(), rotated_by_rotation_matrix.GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetZComponent(), rotated_by_rotation_matrix.GetZComponent(), 1e-6
+    );
+
+    auto q_from_rotation_matrix = rotation_matrix_to_quaternion(R);
+
+    EXPECT_NEAR(q_from_rotation_matrix.GetScalarComponent(), q.GetScalarComponent(), 1e-6);
+    EXPECT_NEAR(q_from_rotation_matrix.GetXComponent(), q.GetXComponent(), 1e-6);
+    EXPECT_NEAR(q_from_rotation_matrix.GetYComponent(), q.GetYComponent(), 1e-6);
+    EXPECT_NEAR(q_from_rotation_matrix.GetZComponent(), q.GetZComponent(), 1e-6);
+}
+
+TEST(QuaternionTest, ConvertRotationMatrixToQuaternion_Set3) {
+    // 90 degree rotation about Y axis
+    RotationMatrix R{Vector{0., 0., 1.}, Vector{0., 1., 0.}, Vector{-1., 0., 0.}};
+    Quaternion q = rotation_matrix_to_quaternion(R);
+
+    EXPECT_NEAR(q.GetScalarComponent(), 0.707107, 1e-6);
+    EXPECT_NEAR(q.GetXComponent(), 0., 1e-6);
+    EXPECT_NEAR(q.GetYComponent(), 0.707107, 1e-6);
+    EXPECT_NEAR(q.GetZComponent(), 0., 1e-6);
+
+    Vector v{1., 1., 1.};
+    Vector rotated_by_quaternion = rotate_vector(q, v);
+    Vector rotated_by_rotation_matrix = multiply_rotation_matrix_with_vector(R, v);
+
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetXComponent(), rotated_by_rotation_matrix.GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetYComponent(), rotated_by_rotation_matrix.GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        rotated_by_quaternion.GetZComponent(), rotated_by_rotation_matrix.GetZComponent(), 1e-6
+    );
+
+    auto R_from_quaternion = quaternion_to_rotation_matrix(q);
+
+    EXPECT_NEAR(
+        std::get<0>(R_from_quaternion).GetXComponent(), std::get<0>(R).GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<0>(R_from_quaternion).GetYComponent(), std::get<0>(R).GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<0>(R_from_quaternion).GetZComponent(), std::get<0>(R).GetZComponent(), 1e-6
+    );
+
+    EXPECT_NEAR(
+        std::get<1>(R_from_quaternion).GetXComponent(), std::get<1>(R).GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<1>(R_from_quaternion).GetYComponent(), std::get<1>(R).GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<1>(R_from_quaternion).GetZComponent(), std::get<1>(R).GetZComponent(), 1e-6
+    );
+
+    EXPECT_NEAR(
+        std::get<2>(R_from_quaternion).GetXComponent(), std::get<2>(R).GetXComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<2>(R_from_quaternion).GetYComponent(), std::get<2>(R).GetYComponent(), 1e-6
+    );
+    EXPECT_NEAR(
+        std::get<2>(R_from_quaternion).GetZComponent(), std::get<2>(R).GetZComponent(), 1e-6
+    );
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

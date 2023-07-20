@@ -8,6 +8,8 @@
 
 namespace openturbine::rigid_pendulum {
 
+using RotationMatrix = std::tuple<Vector, Vector, Vector>;
+
 /// @brief Class to represent a quaternion
 class Quaternion {
 public:
@@ -126,5 +128,11 @@ std::tuple<double, Vector> angle_axis_from_quaternion(const Quaternion&);
 
 /// Rotates provided vector by provided *unit* quaternion and returns the result
 Vector rotate_vector(const Quaternion&, const Vector&);
+
+/// Converts a 4x1 quaternion to a 3x3 rotation matrix
+RotationMatrix quaternion_to_rotation_matrix(const Quaternion&);
+
+/// Converts a 3x3 rotation matrix to a 4x1 quaternion
+Quaternion rotation_matrix_to_quaternion(const RotationMatrix&);
 
 }  // namespace openturbine::rigid_pendulum
