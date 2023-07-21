@@ -42,9 +42,9 @@ public:
         std::function<HostView1D(size_t)> residual_vector = create_identity_vector
     ) override;
 
-    /*! @brief  Perform the alpha step of the generalized-alpha method as described
-     *          in the paper by Arnold and Brüls (2007)
-     *          https://link.springer.com/article/10.1007/s11044-007-9084-0
+    /*! @brief  Perform the SolveTimeStep() of the Lie group based generalized-alpha method
+     *          as described in the paper by Brüls and Cardona (2010)
+     *          https://doi.org/10.1115/1.4001370
      * @param   state Current state of the system at the beginning of the time step
      * @return  Updated state of the system at the end of the time step
      */
