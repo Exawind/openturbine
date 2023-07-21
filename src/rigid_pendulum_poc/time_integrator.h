@@ -1,13 +1,9 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
-
 #include "src/rigid_pendulum_poc/state.h"
+#include "src/rigid_pendulum_poc/utilities.h"
 
 namespace openturbine::rigid_pendulum {
-
-HostView2D create_identity_matrix(size_t size);
-HostView1D create_identity_vector(size_t size);
 
 // An enum class to indicate the type of time integrator
 enum class TimeIntegratorType {

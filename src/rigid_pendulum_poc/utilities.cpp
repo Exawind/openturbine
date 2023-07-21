@@ -40,4 +40,26 @@ double wrap_angle_to_pi(double angle) {
     return wrapped_angle;
 }
 
+HostView1D create_identity_vector(size_t size) {
+    auto vector = HostView1D("vector", size);
+
+    Kokkos::parallel_for(
+        size, KOKKOS_LAMBDA(int i) { vector(i) = 1.; }
+    );
+
+    return vector;
+}
+
+HostView2D create_identity_matrix(size_t size) {
+    auto matrix = HostView2D("matrix", size, size);
+    auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, size);
+    auto fill_diagonal = [matrix](int index) {
+        matrix(index, index) = 1.;
+    };
+
+    Kokkos::parallel_for(diagonal_entries, fill_diagonal);
+
+    return matrix;
+}
+
 }  // namespace openturbine::rigid_pendulum

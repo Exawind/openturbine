@@ -1,18 +1,10 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
-
 #include "src/rigid_pendulum_poc/state.h"
 #include "src/rigid_pendulum_poc/time_integrator.h"
 #include "src/rigid_pendulum_poc/time_stepper.h"
 
 namespace openturbine::rigid_pendulum {
-
-using HostView1D = Kokkos::View<double*, Kokkos::HostSpace>;
-using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
-
-HostView2D create_identity_matrix(size_t size);
-HostView1D create_identity_vector(size_t size);
 
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
