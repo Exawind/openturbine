@@ -51,9 +51,6 @@ public:
     std::tuple<State, HostView1D>
     AlphaStep(const State&, std::function<HostView2D(size_t)>, std::function<HostView1D(size_t)>);
 
-    /// Performs the linear update of the generalized-alpha method
-    State UpdateLinearSolution(const State&);
-
     /// Computes residuals of the force array for the non-linear update
     HostView1D ComputeResiduals(HostView1D, std::function<HostView1D(size_t)>);
 
@@ -75,6 +72,9 @@ private:
     bool is_converged_;  //< Flag to indicate if the latest non-linear update has converged
 
     TimeStepper time_stepper_;  //< Time stepper object to perform the time integration
+
+    /// Computes the updated generalized coordinates based on the non-linear update
+    HostView1D ComputeUpdatedGeneralizedCoordinates(HostView1D, HostView1D);
 };
 
 }  // namespace openturbine::rigid_pendulum
