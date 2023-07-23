@@ -31,4 +31,29 @@ private:
     HostView1D algorithmic_acceleration_;  //< Algorithmic accelerations
 };
 
+/// Class to store and manage a 6 x 6 mass matrix of a rigid body
+class MassMatrix {
+public:
+    /// Default constructor that initializes the mass matrix to the identity matrix
+    MassMatrix(double mass = 1., double moment_of_inertia = 1.);
+
+    /// Constructor that initializes the mass matrix to the given matrix
+    MassMatrix(HostView2D);
+
+    /// Returns the mass of the rigid body
+    inline double GetMass() const { return mass_; }
+
+    /// Returns the moment of inertia of the rigid body
+    inline double GetMomentOfInertia() const { return moment_of_inertia_; }
+
+    /// Returns the mass matrix of the rigid body
+    inline HostView2D GetMassMatrix() const { return mass_matrix_; }
+
+private:
+    double mass_;               //< Mass of the rigid body
+    double moment_of_inertia_;  //< Moment of inertia of the rigid body
+
+    HostView2D mass_matrix_;  //< Mass matrix of the rigid body
+};
+
 }  // namespace openturbine::rigid_pendulum
