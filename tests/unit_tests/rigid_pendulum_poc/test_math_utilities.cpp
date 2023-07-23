@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "src/rigid_pendulum_poc/utilities.h"
+#include "tests/unit_tests/rigid_pendulum_poc/test_utilities.h"
 
 namespace openturbine::rigid_pendulum::tests {
 
@@ -258,6 +259,25 @@ TEST(MathUtilitiesTest, WrapAngleToPi_NegativeThirtySixThousandThirtyDegrees) {
     auto expected = -kPI / 6.;
 
     ASSERT_NEAR(wrap_angle_to_pi(angle), expected, 1e-6);
+}
+
+TEST(MathUtilitiesTest, CreateKokkosView1DFromGivenVector) {
+    std::vector<double> values = {1., 2., 3., 4., 5.};
+    auto vector = create_vector(values);
+
+    expect_kokkos_view_1D_equal(vector, values);
+}
+
+TEST(MathUtilitiesTest, CreateKokkosView2DFromGivenMatrix) {
+    std::vector<std::vector<double>> values = {
+        {1., 2., 3., 4., 5.},
+        {6., 7., 8., 9., 10.},
+        {11., 12., 13., 14., 15.},
+        {16., 17., 18., 19., 20.},
+        {21., 22., 23., 24., 25.}};
+    auto matrix = create_matrix(values);
+
+    expect_kokkos_view_2D_equal(matrix, values);
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

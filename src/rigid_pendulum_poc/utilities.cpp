@@ -62,4 +62,30 @@ HostView2D create_identity_matrix(size_t size) {
     return matrix;
 }
 
+HostView1D create_vector(const std::vector<double>& values) {
+    auto vector = HostView1D("vector", values.size());
+    auto entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, values.size());
+    auto fill_vector = [vector, values](int index) {
+        vector(index) = values[index];
+    };
+
+    Kokkos::parallel_for(entries, fill_vector);
+
+    return vector;
+}
+
+HostView2D create_matrix(const std::vector<std::vector<double>>& values) {
+    auto matrix = HostView2D("matrix", values.size(), values.front().size());
+    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
+        {0, 0}, {values.size(), values.front().size()}
+    );
+    auto fill_matrix = [matrix, values](int row, int column) {
+        matrix(row, column) = values[row][column];
+    };
+
+    Kokkos::parallel_for(entries, fill_matrix);
+
+    return matrix;
+}
+
 }  // namespace openturbine::rigid_pendulum

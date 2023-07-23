@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <Kokkos_Core.hpp>
 
 namespace openturbine::rigid_pendulum {
@@ -27,15 +29,28 @@ bool close_to(double a, double b, double epsilon = kTOLERANCE);
 double wrap_angle_to_pi(double angle);
 
 /*!
- * @brief  Creates an identity vector of size (size x 1)
+ * @brief  Creates an identity vector (i.e. a vector with all entries equal to 1)
  * @param  size: Size of the identity vector
  */
 HostView1D create_identity_vector(size_t size);
 
 /*!
- * @brief  Creates an identity matrix of size (size x size)
+ * @brief  Creates an identity matrix (i.e. a diagonal matrix with all diagonal entries equal
+ * to 1)
  * @param  size: Size of the identity matrix
  */
 HostView2D create_identity_matrix(size_t size);
+
+/*!
+ * @brief  Returns a HostView1D with provided values from a vector
+ * @param  Values to be used in the vector
+ */
+HostView1D create_vector(const std::vector<double>&);
+
+/*!
+ * @brief  Creates a HostView2D with provided values from a 2D vector
+ * @param  Values to be used in the matrix
+ */
+HostView2D create_matrix(const std::vector<std::vector<double>>&);
 
 }  // namespace openturbine::rigid_pendulum

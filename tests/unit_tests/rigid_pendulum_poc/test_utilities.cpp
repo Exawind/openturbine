@@ -18,36 +18,20 @@ HostView2D create_diagonal_matrix(const std::vector<double>& values) {
     return matrix;
 }
 
-HostView1D create_vector(const std::vector<double>& values) {
-    auto vector = HostView1D("vector", values.size());
-    auto entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, values.size());
-    auto fill_vector = [vector, values](int index) {
-        vector(index) = values[index];
-    };
-
-    Kokkos::parallel_for(entries, fill_vector);
-
-    return vector;
-}
-
-HostView2D create_matrix(const std::vector<std::vector<double>>& values) {
-    auto matrix = HostView2D("matrix", values.size(), values.front().size());
-    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
-        {0, 0}, {values.size(), values.front().size()}
-    );
-    auto fill_matrix = [matrix, values](int row, int column) {
-        matrix(row, column) = values[row][column];
-    };
-
-    Kokkos::parallel_for(entries, fill_matrix);
-
-    return matrix;
-}
-
 void expect_kokkos_view_1D_equal(HostView1D view, const std::vector<double>& expected) {
-    ASSERT_EQ(view.extent(0), expected.size());
+    EXPECT_EQ(view.extent(0), expected.size());
     for (size_t i = 0; i < view.extent(0); ++i) {
-        ASSERT_NEAR(view(i), expected[i], std::numeric_limits<double>::epsilon());
+        EXPECT_NEAR(view(i), expected[i], std::numeric_limits<double>::epsilon());
+    }
+}
+
+void expect_kokkos_view_2D_equal(HostView2D view, const std::vector<std::vector<double>>& expected) {
+    EXPECT_EQ(view.extent(0), expected.size());
+    EXPECT_EQ(view.extent(1), expected.front().size());
+    for (size_t i = 0; i < view.extent(0); ++i) {
+        for (size_t j = 0; j < view.extent(1); ++j) {
+            EXPECT_NEAR(view(i, j), expected[i][j], std::numeric_limits<double>::epsilon());
+        }
     }
 }
 
