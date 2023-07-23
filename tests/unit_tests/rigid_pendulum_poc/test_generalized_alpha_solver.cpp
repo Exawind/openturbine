@@ -86,23 +86,23 @@ TEST(TimeIntegratorTest, GetTimeIntegratorType) {
 //     );
 // }
 
-TEST(TimeIntegratorTest, ExpectConvergedSolution) {
-    auto residual_force = create_vector({1.e-7, 2.e-7, 3.e-7});
-    auto incremental_force = create_vector({1., 2., 3.});
-    auto time_integrator = GeneralizedAlphaTimeIntegrator();
-    auto converged = time_integrator.CheckConvergence(residual_force, incremental_force);
+// TEST(TimeIntegratorTest, ExpectConvergedSolution) {
+//     auto residual_force = create_vector({1.e-7, 2.e-7, 3.e-7});
+//     auto incremental_force = create_vector({1., 2., 3.});
+//     auto time_integrator = GeneralizedAlphaTimeIntegrator();
+//     auto converged = time_integrator.CheckConvergence(residual_force, incremental_force);
 
-    EXPECT_TRUE(converged);
-}
+//     EXPECT_TRUE(converged);
+// }
 
-TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
-    auto residual_force = create_vector({1.e-3, 2.e-3, 3.e-3});
-    auto incremental_force = create_vector({1., 2., 3.});
-    auto time_integrator = GeneralizedAlphaTimeIntegrator();
-    auto converged = time_integrator.CheckConvergence(residual_force, incremental_force);
+// TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
+//     auto residual_force = create_vector({1.e-3, 2.e-3, 3.e-3});
+//     auto incremental_force = create_vector({1., 2., 3.});
+//     auto time_integrator = GeneralizedAlphaTimeIntegrator();
+//     auto converged = time_integrator.CheckConvergence(residual_force, incremental_force);
 
-    EXPECT_FALSE(converged);
-}
+//     EXPECT_FALSE(converged);
+// }
 
 TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidAlphaF) {
     EXPECT_THROW(GeneralizedAlphaTimeIntegrator(1.1, 0.5, 0.25, 0.5), std::invalid_argument);

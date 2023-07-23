@@ -12,16 +12,16 @@ public:
 
     State(HostView1D, HostView1D, HostView1D, HostView1D);
 
-    /// Get the generalized coordinates
+    /// Returns the generalized coordinates vector
     inline HostView1D GetGeneralizedCoordinates() const { return generalized_coords_; }
 
-    /// Get the velocity vector
+    /// Returns the velocity vector
     inline HostView1D GetVelocity() const { return velocity_; }
 
-    /// Get the acceleration vector
+    /// Returns the acceleration vector
     inline HostView1D GetAcceleration() const { return acceleration_; }
 
-    /// Get the algorithmic accelerations (different than the acceleration vector)
+    /// Returns the algorithmic accelerations vector
     inline HostView1D GetAlgorithmicAcceleration() const { return algorithmic_acceleration_; }
 
 private:

@@ -42,8 +42,8 @@ public:
         std::function<HostView1D(size_t)> residual_vector = create_identity_vector
     ) override;
 
-    /*! @brief  Perform the SolveTimeStep() of the Lie group based generalized-alpha method
-     *          as described in the paper by Brüls and Cardona (2010)
+    /*! @brief  Performs the SolveTimeStep() algorithm of the Lie group based generalized-alpha
+     *          method as described in the paper by Brüls and Cardona (2010)
      *          https://doi.org/10.1115/1.4001370
      * @param   state Current state of the system at the beginning of the time step
      * @return  Updated state of the system at the end of the time step
@@ -58,7 +58,7 @@ public:
     HostView1D ComputeResiduals(HostView1D, std::function<HostView1D(size_t)>);
 
     /// Checks convergence of the non-linear solution based on the residuals
-    bool CheckConvergence(HostView1D, HostView1D);
+    bool CheckConvergence(HostView1D);
 
     /// Returns the flag to indicate if the latest non-linear update has converged
     inline bool IsConverged() const { return is_converged_; }
