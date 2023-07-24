@@ -34,8 +34,8 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
 }
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
-    const State& initial_state, std::function<HostView2D(size_t)> matrix,
-    std::function<HostView1D(size_t)> vector
+    const State& initial_state, const MassMatrix& mass_matrix,
+    const GeneralizedForces& generalized_forces, std::function<HostView2D(size_t)> iteration_matrix
 ) {
     auto log = util::Log::Get();
 
@@ -43,7 +43,9 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     auto n_steps = this->time_stepper_.GetNumberOfSteps();
     for (size_t i = 0; i < n_steps; i++) {
         log->Info("Integrating step number " + std::to_string(i + 1) + "\n");
-        states.emplace_back(std::get<0>(this->AlphaStep(states[i], matrix, vector)));
+        states.emplace_back(std::get<0>(
+            this->AlphaStep(states[i], mass_matrix, generalized_forces, iteration_matrix)
+        ));
         this->time_stepper_.AdvanceTimeStep();
     }
 
@@ -53,8 +55,8 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
 }
 
 std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
-    const State& state, std::function<HostView2D(size_t)> matrix,
-    std::function<HostView1D(size_t)> vector
+    const State& state, const MassMatrix& mass_matrix, const GeneralizedForces& generalized_forces,
+    std::function<HostView2D(size_t)> matrix
 ) {
     auto gen_coords = state.GetGeneralizedCoordinates();
     auto velocity = state.GetVelocity();
@@ -107,7 +109,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         auto gen_coords_next = ComputeUpdatedGeneralizedCoordinates(gen_coords, x);
 
         // Compute the residuals and check for convergence
-        auto residuals = ComputeResiduals(gen_coords, vector);
+        auto residuals = ComputeResiduals(acceleration, mass_matrix, generalized_forces);
         if (this->CheckConvergence(residuals)) {
             this->is_converged_ = true;
             break;
@@ -193,12 +195,29 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeUpdatedGeneralizedCoordinates(
 }
 
 HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
-    HostView1D forces, std::function<HostView1D(size_t)> vector
+    HostView1D acceleration, const MassMatrix& mass_matrix,
+    const GeneralizedForces& generalized_forces
 ) {
-    // This is a just a placeholder, returns a vector of ones
-    // TODO: r^q = M(q) * q'' - f + phi_q^T * lambda
-    auto size = forces.extent(0);
-    auto residual_vector = vector(size);
+    // {residual} = [M(q)] {v'} + {g(q,v,t)} + [B(q)]T {lambda}
+    auto size = acceleration.extent(0);
+    auto first_term = HostView1D("first_term", size);
+    Kokkos::parallel_for(
+        size,
+        KOKKOS_LAMBDA(const int i) {
+            auto sum = 0.;
+            for (size_t j = 0; j < size; j++) {
+                sum += mass_matrix.GetMassMatrix()(i, j) * acceleration(j);
+            }
+            first_term(i) = sum;
+        }
+    );
+    auto second_term = generalized_forces.GetGeneralizedForces();
+
+    // residual_vector = first_term + second_term;
+    auto residual_vector = HostView1D("residual_vector", size);
+    Kokkos::parallel_for(
+        size, KOKKOS_LAMBDA(const int i) { residual_vector(i) = first_term(i) + second_term(i); }
+    );
 
     auto log = util::Log::Get();
     log->Debug("Residual vector is " + std::to_string(size) + " x 1 with elements\n");
