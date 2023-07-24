@@ -40,7 +40,32 @@ MassMatrix::MassMatrix(double mass, double moment_of_inertia)
     this->mass_matrix_ = create_matrix(mass_matrix);
 }
 
-MassMatrix::MassMatrix(HostView2D mass_matrix) : mass_matrix_(std::move(mass_matrix)) {
+MassMatrix::MassMatrix(HostView2D mass_matrix)
+    : mass_matrix_("mass_matrix", mass_matrix.extent(0), mass_matrix.extent(1)) {
+    if (mass_matrix_.extent(0) != 6 || mass_matrix_.extent(1) != 6) {
+        throw std::invalid_argument("Mass matrix must be 6 x 6");
+    }
+    Kokkos::deep_copy(mass_matrix_, mass_matrix);
+}
+
+GeneralizedForces::GeneralizedForces(const Vector& forces, const Vector& moments)
+    : forces_(forces), moments_(moments) {
+    this->generalized_forces_ = create_vector({
+        forces.GetXComponent(),   // row 1
+        forces.GetYComponent(),   // row 2
+        forces.GetZComponent(),   // row 3
+        moments.GetXComponent(),  // row 4
+        moments.GetYComponent(),  // row 5
+        moments.GetZComponent()   // row 6
+    });
+}
+
+GeneralizedForces::GeneralizedForces(HostView1D generalized_forces)
+    : generalized_forces_("generalized_forces_vector", generalized_forces.size()) {
+    if (generalized_forces_.extent(0) != 6) {
+        throw std::invalid_argument("Generalized forces must be 6 x 1");
+    }
+    Kokkos::deep_copy(generalized_forces_, generalized_forces);
 }
 
 }  // namespace openturbine::rigid_pendulum

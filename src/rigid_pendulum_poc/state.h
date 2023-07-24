@@ -1,6 +1,7 @@
 #pragma once
 
 #include "src/rigid_pendulum_poc/utilities.h"
+#include "src/rigid_pendulum_poc/vector.h"
 
 namespace openturbine::rigid_pendulum {
 
@@ -31,7 +32,7 @@ private:
     HostView1D algorithmic_acceleration_;  //< Algorithmic accelerations
 };
 
-/// Class to store and manage a 6 x 6 mass matrix of a rigid body
+/// Class to create and store a 6 x 6 mass matrix of a rigid body
 class MassMatrix {
 public:
     /// Default constructor that initializes the mass matrix to the identity matrix
@@ -54,6 +55,31 @@ private:
     double moment_of_inertia_;  //< Moment of inertia of the rigid body
 
     HostView2D mass_matrix_;  //< Mass matrix of the rigid body
+};
+
+/// Class for managing the generalized forces on a dynamic system
+class GeneralizedForces {
+public:
+    /// Default constructor that initializes all generalized forces to zero
+    GeneralizedForces(const Vector& forces = Vector(), const Vector& moments = Vector());
+
+    /// Constructor that initializes the generalized forces to the given vectors
+    GeneralizedForces(HostView1D);
+
+    /// Returns the force vector
+    inline Vector GetForces() const { return forces_; }
+
+    /// Returns the moment vector
+    inline Vector GetMoments() const { return moments_; }
+
+    /// Returns the generalized forces vector
+    inline HostView1D GetGeneralizedForces() const { return generalized_forces_; }
+
+private:
+    Vector forces_;   //< force vector
+    Vector moments_;  //< moment vector
+
+    HostView1D generalized_forces_;  //< Generalized forces (combined forces and moments vector)
 };
 
 }  // namespace openturbine::rigid_pendulum

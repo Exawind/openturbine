@@ -85,4 +85,43 @@ TEST(MassMatrixTest, CreateMassMatrixWithGiven2DVector) {
     );
 }
 
+TEST(MassMatrixTest, ExpectMassMatrixToThrowWhenGiven2DVectorIsInvalid) {
+    EXPECT_THROW(
+        MassMatrix(create_matrix({
+            {1., 2., 3., 4., 5., 6.},        // row 1
+            {7., 8., 9., 10., 11., 12.},     // row 2
+            {13., 14., 15., 16., 17., 18.},  // row 3
+            {19., 20., 21., 22., 23., 24.},  // row 4
+            {25., 26., 27., 28., 29., 30.},  // row 5
+            {31., 32., 33., 34., 35., 36.},  // row 6
+            {37., 38., 39., 40., 41., 42.}   // row 7
+        })),
+        std::invalid_argument
+    );
+}
+
+TEST(GeneralizedForcesTest, CreateGeneralizedForcesWithDefaultValues) {
+    auto generalized_forces = GeneralizedForces();
+
+    expect_kokkos_view_1D_equal(generalized_forces.GetGeneralizedForces(), {0., 0., 0., 0., 0., 0.});
+}
+
+TEST(GeneralizedForcesTest, CreateGeneralizedForcesWithGivenValues) {
+    auto forces = Vector{1., 2., 3.};
+    auto moments = Vector{4., 5., 6.};
+    auto generalized_forces = GeneralizedForces(forces, moments);
+
+    expect_kokkos_view_1D_equal(generalized_forces.GetGeneralizedForces(), {1., 2., 3., 4., 5., 6.});
+}
+
+TEST(GeneralizedForcesTest, CreateGeneralizedForcesWithGiven1DVector) {
+    auto generalized_forces = GeneralizedForces(create_vector({1., 2., 3., 4., 5., 6.}));
+
+    expect_kokkos_view_1D_equal(generalized_forces.GetGeneralizedForces(), {1., 2., 3., 4., 5., 6.});
+}
+
+TEST(GeneralizedForcesTest, ExpectGeneralizedForcesToThrowWhenGiven1DVectorIsInvalid) {
+    EXPECT_THROW(GeneralizedForces(create_vector({1., 2., 3., 4., 5.})), std::invalid_argument);
+}
+
 }  // namespace openturbine::rigid_pendulum::tests
