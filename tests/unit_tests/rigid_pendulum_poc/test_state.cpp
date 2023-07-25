@@ -124,6 +124,21 @@ TEST(MassMatrixTest, ExpectMassMatrixToThrowWhenGiven2DVectorIsInvalid) {
     );
 }
 
+TEST(MassMatrixTest, HeavyTopProblemFromBrulsAndCardona2010Paper) {
+    auto mass_matrix = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
+    expect_kokkos_view_2D_equal(
+        mass_matrix.GetMassMatrix(),
+        {
+            {15., 0., 0., 0., 0., 0.},       // row 1
+            {0., 15., 0., 0., 0., 0.},       // row 2
+            {0., 0., 15., 0., 0., 0.},       // row 3
+            {0., 0., 0., 0.234375, 0., 0.},  // row 4
+            {0., 0., 0., 0., 0.46875, 0.},   // row 5
+            {0., 0., 0., 0., 0., 0.234375}   // row 6
+        }
+    );
+}
+
 TEST(GeneralizedForcesTest, CreateGeneralizedForcesWithDefaultValues) {
     auto generalized_forces = GeneralizedForces();
 
