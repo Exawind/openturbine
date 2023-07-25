@@ -72,6 +72,8 @@ GeneralizedForces::GeneralizedForces(HostView1D generalized_forces)
         throw std::invalid_argument("Generalized forces must be 6 x 1");
     }
     Kokkos::deep_copy(generalized_forces_, generalized_forces);
+    this->forces_ = Vector(generalized_forces_(0), generalized_forces_(1), generalized_forces_(2));
+    this->moments_ = Vector(generalized_forces_(3), generalized_forces_(4), generalized_forces_(5));
 }
 
 }  // namespace openturbine::rigid_pendulum

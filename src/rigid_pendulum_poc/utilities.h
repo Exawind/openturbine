@@ -35,8 +35,7 @@ double wrap_angle_to_pi(double angle);
 HostView1D create_identity_vector(size_t size);
 
 /*!
- * @brief  Creates an identity matrix (i.e. a diagonal matrix with all diagonal entries equal
- * to 1)
+ * @brief  Creates an identity matrix (i.e. a diagonal matrix with all diagonal entries equal to 1)
  * @param  size: Size of the identity matrix
  */
 HostView2D create_identity_matrix(size_t size);

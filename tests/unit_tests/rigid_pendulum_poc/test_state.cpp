@@ -109,6 +109,18 @@ TEST(MassMatrixTest, CreateMassMatrixWithGiven2DVector) {
     expect_kokkos_view_1D_equal(principal_moments_of_inertia, {22., 29., 36.});
 }
 
+TEST(MassMatrixTest, GetMomentOfInertiaMatrixFromMassMatrix) {
+    auto mass_matrix = MassMatrix(1., Vector(1., 2., 3.));
+    expect_kokkos_view_2D_equal(
+        mass_matrix.GetMomentOfInertiaMatrix(),
+        {
+            {1., 0., 0.},  // row 1
+            {0., 2., 0.},  // row 2
+            {0., 0., 3.}   // row 3
+        }
+    );
+}
+
 TEST(MassMatrixTest, ExpectMassMatrixToThrowWhenGiven2DVectorIsInvalid) {
     EXPECT_THROW(
         MassMatrix(create_matrix({
@@ -157,10 +169,46 @@ TEST(GeneralizedForcesTest, CreateGeneralizedForcesWithGiven1DVector) {
     auto generalized_forces = GeneralizedForces(create_vector({1., 2., 3., 4., 5., 6.}));
 
     expect_kokkos_view_1D_equal(generalized_forces.GetGeneralizedForces(), {1., 2., 3., 4., 5., 6.});
+
+    auto f = generalized_forces.GetForces();
+    auto forces = HostView1D("forces", 3);
+    forces(0) = f.GetXComponent();
+    forces(1) = f.GetYComponent();
+    forces(2) = f.GetZComponent();
+    expect_kokkos_view_1D_equal(forces, {1., 2., 3.});
+
+    auto m = generalized_forces.GetMoments();
+    auto moments = HostView1D("moments", 3);
+    moments(0) = m.GetXComponent();
+    moments(1) = m.GetYComponent();
+    moments(2) = m.GetZComponent();
+    expect_kokkos_view_1D_equal(moments, {4., 5., 6.});
 }
 
 TEST(GeneralizedForcesTest, ExpectGeneralizedForcesToThrowWhenGiven1DVectorIsInvalid) {
     EXPECT_THROW(GeneralizedForces(create_vector({1., 2., 3., 4., 5.})), std::invalid_argument);
+}
+
+TEST(GeneralizedForcesTest, HeavyTopProblemFromBrulsAndCardona2010Paper) {
+    auto mass = 15.;
+    auto mass_matrix = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
+
+    auto gravity = Vector(0., 0., -9.81);
+    auto forces = gravity * mass;
+
+    auto angular_velocity = create_vector({0.3, 0.1, 0.8});
+    auto J = mass_matrix.GetMomentOfInertiaMatrix();
+    auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
+
+    auto angular_velocity_vector =
+        Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
+    auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
+    auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
+
+    auto generalized_forces = GeneralizedForces(forces, moments);
+    expect_kokkos_view_1D_equal(
+        generalized_forces.GetGeneralizedForces(), {0., 0., -147.15, -0.01875, 0., 0.00703125}
+    );
 }
 
 }  // namespace openturbine::rigid_pendulum::tests
