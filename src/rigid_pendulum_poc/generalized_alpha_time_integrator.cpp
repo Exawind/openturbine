@@ -6,14 +6,24 @@
 
 namespace openturbine::rigid_pendulum {
 
+HostView2D heavy_top_iteration_matrix(size_t size) {
+    return create_identity_matrix(size);
+}
+
+HostView2D rigid_pendulum_iteration_matrix(size_t size) {
+    return create_identity_matrix(size);
+}
+
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
-    double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper
+    double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper,
+    ProblemType problem_type
 )
     : kALPHA_F_(alpha_f),
       kALPHA_M_(alpha_m),
       kBETA_(beta),
       kGAMMA_(gamma),
-      time_stepper_(std::move(time_stepper)) {
+      time_stepper_(std::move(time_stepper)),
+      problem_type_(problem_type) {
     if (this->kALPHA_F_ < 0 || this->kALPHA_F_ > 1) {
         throw std::invalid_argument("Invalid value for alpha_f");
     }
@@ -34,8 +44,8 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
 }
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
-    const State& initial_state, const MassMatrix& mass_matrix,
-    const GeneralizedForces& generalized_forces, std::function<HostView2D(size_t)> iteration_matrix
+    const State& initial_state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
+    std::function<HostView2D(size_t)> iteration_matrix
 ) {
     auto log = util::Log::Get();
 
@@ -43,9 +53,9 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     auto n_steps = this->time_stepper_.GetNumberOfSteps();
     for (size_t i = 0; i < n_steps; i++) {
         log->Info("Integrating step number " + std::to_string(i + 1) + "\n");
-        states.emplace_back(std::get<0>(
-            this->AlphaStep(states[i], mass_matrix, generalized_forces, iteration_matrix)
-        ));
+        states.emplace_back(
+            std::get<0>(this->AlphaStep(states[i], mass_matrix, gen_forces, iteration_matrix))
+        );
         this->time_stepper_.AdvanceTimeStep();
     }
 
@@ -55,7 +65,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
 }
 
 std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
-    const State& state, const MassMatrix& mass_matrix, const GeneralizedForces& generalized_forces,
+    const State& state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
     std::function<HostView2D(size_t)> matrix
 ) {
     auto gen_coords = state.GetGeneralizedCoordinates();
@@ -109,7 +119,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         auto gen_coords_next = ComputeUpdatedGeneralizedCoordinates(gen_coords, x);
 
         // Compute the residuals and check for convergence
-        auto residuals = ComputeResiduals(acceleration, mass_matrix, generalized_forces);
+        auto residuals = ComputeResiduals(acceleration, mass_matrix, gen_forces);
         if (this->CheckConvergence(residuals)) {
             this->is_converged_ = true;
             break;
@@ -195,8 +205,7 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeUpdatedGeneralizedCoordinates(
 }
 
 HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
-    HostView1D acceleration, const MassMatrix& mass_matrix,
-    const GeneralizedForces& generalized_forces
+    HostView1D acceleration, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces
 ) {
     // {residual} = [M(q)] {v'} + {g(q,v,t)} + [B(q)]T {lambda}
     auto size = acceleration.extent(0);
@@ -211,9 +220,9 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
             first_term(i) = sum;
         }
     );
-    auto second_term = generalized_forces.GetGeneralizedForces();
+    auto second_term = gen_forces.GetGeneralizedForces();
 
-    // residual_vector = first_term + second_term;
+    // residual_vector = first_term + second_term
     auto residual_vector = HostView1D("residual_vector", size);
     Kokkos::parallel_for(
         size, KOKKOS_LAMBDA(const int i) { residual_vector(i) = first_term(i) + second_term(i); }
@@ -235,11 +244,19 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(HostView1D residual) {
 HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
     HostView1D gen_coords, std::function<HostView2D(size_t)> matrix
 ) {
-    // This is a just a placeholder, returns an identity matrix for now
-    // TODO: S_t = [ (M * beta' + C_t * gamma' + K_t)       Phi_q^T
-    //                          Phi_q                         0 ]
     auto size = gen_coords.extent(0);
     auto iteration_matrix = matrix(size);
+
+    switch (this->problem_type_) {
+        case ProblemType::kHeavyTop:
+            iteration_matrix = heavy_top_iteration_matrix(size);
+            break;
+        case ProblemType::kRigidPendulum:
+            iteration_matrix = rigid_pendulum_iteration_matrix(size);
+            break;
+        default:
+            throw std::runtime_error("Problem type not supported!");
+    }
 
     auto log = util::Log::Get();
     log->Debug(

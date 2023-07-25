@@ -17,8 +17,7 @@ class TimeIntegrator {
 public:
     virtual ~TimeIntegrator() = default;
 
-    /// Performs the time integration and returns a vector of States over the
-    /// time steps
+    /// Performs the time integration and returns a vector of States over the time steps
     virtual std::vector<State> Integrate(
         const State&, const MassMatrix&, const GeneralizedForces&,
         std::function<HostView2D(size_t)> matrix
