@@ -35,7 +35,10 @@ private:
 /// Class to create and store a 6 x 6 mass matrix of a rigid body
 class MassMatrix {
 public:
-    /// Default constructor that initializes the mass matrix to the identity matrix
+    /// Constructor that initializes the mass matrix with the given mass and moments of inertia
+    MassMatrix(double, Vector);
+
+    /// Constructor that initializes the mass matrix with the same moment of inertia about all axes
     MassMatrix(double mass = 1., double moment_of_inertia = 1.);
 
     /// Constructor that initializes the mass matrix to the given matrix
@@ -44,15 +47,15 @@ public:
     /// Returns the mass of the rigid body
     inline double GetMass() const { return mass_; }
 
-    /// Returns the moment of inertia of the rigid body
-    inline double GetMomentOfInertia() const { return moment_of_inertia_; }
+    /// Returns the principal moments of inertia of the rigid body
+    inline Vector GetPrincipalMomentsOfInertia() const { return principal_moment_of_inertia_; }
 
     /// Returns the mass matrix of the rigid body
     inline HostView2D GetMassMatrix() const { return mass_matrix_; }
 
 private:
-    double mass_;               //< Mass of the rigid body
-    double moment_of_inertia_;  //< Moment of inertia of the rigid body
+    double mass_;                         //< Mass of the rigid body
+    Vector principal_moment_of_inertia_;  //< Moments of inertia about the principal axes
 
     HostView2D mass_matrix_;  //< Mass matrix of the rigid body
 };

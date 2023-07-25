@@ -40,7 +40,7 @@ TEST(MassMatrixTest, CreateMassMatrixWithDefaultValues) {
     );
 }
 
-TEST(MassMatrixTest, CreateMassMatrixWithGivenValues) {
+TEST(MassMatrixTest, CreateMassMatrixWithGivenMassAndMomentOfInertia) {
     auto mass_matrix = MassMatrix(1., 2.);
     expect_kokkos_view_2D_equal(
         mass_matrix.GetMassMatrix(),
@@ -51,6 +51,21 @@ TEST(MassMatrixTest, CreateMassMatrixWithGivenValues) {
             {0., 0., 0., 2., 0., 0.},  // row 4
             {0., 0., 0., 0., 2., 0.},  // row 5
             {0., 0., 0., 0., 0., 2.}   // row 6
+        }
+    );
+}
+
+TEST(MassMatrixTest, CreateMassMatrixWithGivenMassAndPrincipalMomentsOfInertia) {
+    auto mass_matrix = MassMatrix(1., Vector(1., 2., 3.));
+    expect_kokkos_view_2D_equal(
+        mass_matrix.GetMassMatrix(),
+        {
+            {1., 0., 0., 0., 0., 0.},  // row 1
+            {0., 1., 0., 0., 0., 0.},  // row 2
+            {0., 0., 1., 0., 0., 0.},  // row 3
+            {0., 0., 0., 1., 0., 0.},  // row 4
+            {0., 0., 0., 0., 2., 0.},  // row 5
+            {0., 0., 0., 0., 0., 3.}   // row 6
         }
     );
 }
@@ -83,6 +98,15 @@ TEST(MassMatrixTest, CreateMassMatrixWithGiven2DVector) {
             {31., 32., 33., 34., 35., 36.}   // row 6
         }
     );
+
+    EXPECT_NEAR(mass_matrix.GetMass(), 1., 1e-15);
+
+    auto J = mass_matrix.GetPrincipalMomentsOfInertia();
+    auto principal_moments_of_inertia = HostView1D("principal_moments_of_inertia", 3);
+    principal_moments_of_inertia(0) = J.GetXComponent();
+    principal_moments_of_inertia(1) = J.GetYComponent();
+    principal_moments_of_inertia(2) = J.GetZComponent();
+    expect_kokkos_view_1D_equal(principal_moments_of_inertia, {22., 29., 36.});
 }
 
 TEST(MassMatrixTest, ExpectMassMatrixToThrowWhenGiven2DVectorIsInvalid) {
