@@ -280,4 +280,11 @@ TEST(MathUtilitiesTest, CreateKokkosView2DFromGivenMatrix) {
     expect_kokkos_view_2D_equal(matrix, values);
 }
 
+TEST(MathUtilitiesTest, CreateCrossProductMatrixFromGivenVector) {
+    auto vector = create_vector({1., 2., 3.});
+    auto matrix = create_cross_product_matrix(vector);
+
+    expect_kokkos_view_2D_equal(matrix, {{0., -3., 2.}, {3., 0., -1.}, {-2., 1., 0.}});
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

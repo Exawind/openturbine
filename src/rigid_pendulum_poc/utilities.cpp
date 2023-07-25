@@ -88,4 +88,23 @@ HostView2D create_matrix(const std::vector<std::vector<double>>& values) {
     return matrix;
 }
 
+HostView2D create_cross_product_matrix(HostView1D vector) {
+    if (vector.extent(0) != 3) {
+        throw std::invalid_argument("The provided vector must have 3 elements");
+    }
+
+    auto matrix = HostView2D("cross_product_matrix", 3, 3);
+    matrix(0, 0) = 0.;
+    matrix(0, 1) = -vector(2);
+    matrix(0, 2) = vector(1);
+    matrix(1, 0) = vector(2);
+    matrix(1, 1) = 0.;
+    matrix(1, 2) = -vector(0);
+    matrix(2, 0) = -vector(1);
+    matrix(2, 1) = vector(0);
+    matrix(2, 2) = 0.;
+
+    return matrix;
+}
+
 }  // namespace openturbine::rigid_pendulum

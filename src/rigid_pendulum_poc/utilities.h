@@ -43,14 +43,17 @@ HostView2D create_identity_matrix(size_t size);
 
 /*!
  * @brief  Returns a HostView1D with provided values from a vector
- * @param  Values to be used in the vector
+ * @param  vector: Values to be used in the vector
  */
 HostView1D create_vector(const std::vector<double>&);
 
 /*!
  * @brief  Creates a HostView2D with provided values from a 2D vector
- * @param  Values to be used in the matrix
+ * @param  vector: Values to be used in the matrix
  */
 HostView2D create_matrix(const std::vector<std::vector<double>>&);
+
+/// Generates and returns the 3 x 3 cross product matrix from a provided 3D vector
+HostView2D create_cross_product_matrix(HostView1D);
 
 }  // namespace openturbine::rigid_pendulum
