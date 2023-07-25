@@ -107,4 +107,26 @@ HostView2D create_cross_product_matrix(HostView1D vector) {
     return matrix;
 }
 
+HostView1D multiply_matrix_with_vector(HostView2D matrix, HostView1D vector) {
+    if (matrix.extent(1) != vector.extent(0)) {
+        throw std::invalid_argument(
+            "The number of columns of the matrix must be equal to the number of rows of the vector"
+        );
+    }
+
+    auto result = HostView1D("result", matrix.extent(0));
+    auto rows = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, matrix.extent(0));
+    auto multiply_row = [matrix, vector, result](int row) {
+        double sum = 0.;
+        for (size_t column = 0; column < matrix.extent(1); ++column) {
+            sum += matrix(row, column) * vector(column);
+        }
+        result(row) = sum;
+    };
+
+    Kokkos::parallel_for(rows, multiply_row);
+
+    return result;
+}
+
 }  // namespace openturbine::rigid_pendulum

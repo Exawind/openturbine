@@ -56,4 +56,7 @@ HostView2D create_matrix(const std::vector<std::vector<double>>&);
 /// Generates and returns the 3 x 3 cross product matrix from a provided 3D vector
 HostView2D create_cross_product_matrix(HostView1D);
 
+/// Multiplies an m x n matrix with an n x 1 vector and returns an m x 1 vector
+HostView1D multiply_matrix_with_vector(HostView2D, HostView1D);
+
 }  // namespace openturbine::rigid_pendulum
