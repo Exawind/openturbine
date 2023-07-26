@@ -52,6 +52,9 @@ HostView1D create_vector(const std::vector<double>&);
  */
 HostView2D create_matrix(const std::vector<std::vector<double>>&);
 
+/// Transposes a provided m x n matrix and returns an n x m matrix
+HostView2D transpose_matrix(HostView2D);
+
 /// Generates and returns the 3 x 3 cross product matrix from a provided 3D vector
 HostView2D create_cross_product_matrix(HostView1D);
 

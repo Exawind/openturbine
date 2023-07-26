@@ -88,6 +88,20 @@ HostView2D create_matrix(const std::vector<std::vector<double>>& values) {
     return matrix;
 }
 
+HostView2D transpose_matrix(HostView2D matrix) {
+    auto transposed_matrix = HostView2D("transposed_matrix", matrix.extent(1), matrix.extent(0));
+    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
+        {0, 0}, {matrix.extent(1), matrix.extent(0)}
+    );
+    auto transpose = [matrix, transposed_matrix](int row, int column) {
+        transposed_matrix(row, column) = matrix(column, row);
+    };
+
+    Kokkos::parallel_for(entries, transpose);
+
+    return transposed_matrix;
+}
+
 HostView2D create_cross_product_matrix(HostView1D vector) {
     if (vector.extent(0) != 3) {
         throw std::invalid_argument("The provided vector must have 3 elements");

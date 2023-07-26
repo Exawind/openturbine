@@ -280,6 +280,13 @@ TEST(MathUtilitiesTest, CreateKokkosView2DFromGivenMatrix) {
     expect_kokkos_view_2D_equal(matrix, values);
 }
 
+TEST(MathUtilitiesTest, Transpose3x3Matrix) {
+    auto matrix = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
+    auto transposed_matrix = transpose_matrix(matrix);
+
+    expect_kokkos_view_2D_equal(transposed_matrix, {{1., 4., 7.}, {2., 5., 8.}, {3., 6., 9.}});
+}
+
 TEST(MathUtilitiesTest, CreateCrossProductMatrixFromGivenVector) {
     auto vector = create_vector({1., 2., 3.});
     auto matrix = create_cross_product_matrix(vector);
