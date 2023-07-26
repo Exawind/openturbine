@@ -226,4 +226,25 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentStiffnessM
     );
 }
 
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateConstraintGradientMatrix) {
+    auto position_vector = create_vector({0., 1., 0.});
+    auto rotation_matrix = create_matrix(
+        {{0.617251, -0.757955, 0.210962},
+         {0.775967, 0.63076, -0.00416521},
+         {-0.129909, 0.166271, 0.977485}}
+    );
+
+    auto constraint_gradient_matrix =
+        heavy_top_constraint_gradient_matrix(position_vector, rotation_matrix);
+
+    expect_kokkos_view_2D_equal(
+        constraint_gradient_matrix,
+        {
+            {-1., 0., 0., 0.210962, 0., -0.617251},     // row 1
+            {0., -1., 0., -0.00416521, 0., -0.775967},  // row 2
+            {0., 0., -1., 0.977485, 0., 0.129909}       // row 3
+        }
+    );
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

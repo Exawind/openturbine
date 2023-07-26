@@ -94,6 +94,7 @@ private:
 HostView2D heavy_top_iteration_matrix(size_t size);
 HostView2D heavy_top_tangent_damping_matrix(HostView1D, HostView2D);
 HostView2D heavy_top_tangent_stiffness_matrix(HostView1D, HostView2D, HostView1D);
+HostView2D heavy_top_constraint_gradient_matrix(HostView1D, HostView2D);
 
 HostView2D rigid_pendulum_iteration_matrix(size_t size);
 

@@ -353,6 +353,33 @@ HostView2D heavy_top_tangent_stiffness_matrix(
     return tangent_stiffness_matrix;
 }
 
+HostView2D heavy_top_constraint_gradient_matrix(
+    HostView1D position_vector, HostView2D rotation_matrix
+) {
+    // Constraint gradient matrix for the heavy top problem is given by
+    // [B] = [ -I_3x3    -[R ~{X}] ]
+    auto I_3x3 = create_identity_matrix(3);
+
+    auto X = create_cross_product_matrix(position_vector);
+    auto RX = multiply_matrix_with_matrix(rotation_matrix, X);
+
+    auto constraint_gradient_matrix = HostView2D("constraint_gradient_matrix", 3, 6);
+    Kokkos::parallel_for(
+        3,
+        KOKKOS_LAMBDA(const int i) {
+            for (size_t j = 0; j < 6; j++) {
+                if (j < 3) {
+                    constraint_gradient_matrix(i, j) = -I_3x3(i, j);
+                } else {
+                    constraint_gradient_matrix(i, j) = -RX(i, j - 3);
+                }
+            }
+        }
+    );
+
+    return constraint_gradient_matrix;
+}
+
 HostView2D heavy_top_iteration_matrix(size_t size) {
     // Iteration matrix for the heavy top problem is given by
     // [iteration matrix] = [
