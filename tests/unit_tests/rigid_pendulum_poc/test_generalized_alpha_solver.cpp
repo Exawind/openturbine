@@ -201,4 +201,29 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentDampingMat
     );
 }
 
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentStiffnessMatrix) {
+    auto position_vector = create_vector({0., 1., 0.});
+    auto rotation_matrix = create_matrix(
+        {{0.617251, -0.757955, 0.210962},
+         {0.775967, 0.63076, -0.00416521},
+         {-0.129909, 0.166271, 0.977485}}
+    );
+    auto lagrange_multipliers = create_vector({1., 2., 3.});
+
+    auto tangent_stiffness_matrix =
+        heavy_top_tangent_stiffness_matrix(position_vector, rotation_matrix, lagrange_multipliers);
+
+    expect_kokkos_view_2D_equal(
+        tangent_stiffness_matrix,
+        {
+            {0., 0., 0., 0., 0., 0.},               // row 1
+            {0., 0., 0., 0., 0., 0.},               // row 2
+            {0., 0., 0., 0., 0., 0.},               // row 3
+            {0., 0., 0., -1.002378, 1.779458, 0.},  // row 4
+            {0., 0., 0., 0., 0., 0.},               // row 5
+            {0., 0., 0., 0., 3.135086, -1.002378}   // row 6
+        }
+    );
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

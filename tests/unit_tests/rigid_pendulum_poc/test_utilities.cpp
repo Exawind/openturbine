@@ -18,19 +18,23 @@ HostView2D create_diagonal_matrix(const std::vector<double>& values) {
     return matrix;
 }
 
-void expect_kokkos_view_1D_equal(HostView1D view, const std::vector<double>& expected) {
+void expect_kokkos_view_1D_equal(
+    HostView1D view, const std::vector<double>& expected, double epsilon
+) {
     EXPECT_EQ(view.extent(0), expected.size());
     for (size_t i = 0; i < view.extent(0); ++i) {
-        EXPECT_NEAR(view(i), expected[i], std::numeric_limits<double>::epsilon());
+        EXPECT_NEAR(view(i), expected[i], epsilon);
     }
 }
 
-void expect_kokkos_view_2D_equal(HostView2D view, const std::vector<std::vector<double>>& expected) {
+void expect_kokkos_view_2D_equal(
+    HostView2D view, const std::vector<std::vector<double>>& expected, double epsilon
+) {
     EXPECT_EQ(view.extent(0), expected.size());
     EXPECT_EQ(view.extent(1), expected.front().size());
     for (size_t i = 0; i < view.extent(0); ++i) {
         for (size_t j = 0; j < view.extent(1); ++j) {
-            EXPECT_NEAR(view(i, j), expected[i][j], std::numeric_limits<double>::epsilon());
+            EXPECT_NEAR(view(i, j), expected[i][j], epsilon);
         }
     }
 }

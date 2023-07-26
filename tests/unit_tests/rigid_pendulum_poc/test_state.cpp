@@ -137,7 +137,9 @@ TEST(MassMatrixTest, ExpectMassMatrixToThrowWhenGiven2DVectorIsInvalid) {
 }
 
 TEST(MassMatrixTest, HeavyTopProblemFromBrulsAndCardona2010Paper) {
-    auto mass_matrix = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
+    auto mass = 15.;
+    auto J = Vector(0.234375, 0.46875, 0.234375);
+    auto mass_matrix = MassMatrix(mass, J);
     expect_kokkos_view_2D_equal(
         mass_matrix.GetMassMatrix(),
         {
@@ -207,7 +209,15 @@ TEST(GeneralizedForcesTest, HeavyTopProblemFromBrulsAndCardona2010Paper) {
 
     auto generalized_forces = GeneralizedForces(forces, moments);
     expect_kokkos_view_1D_equal(
-        generalized_forces.GetGeneralizedForces(), {0., 0., -147.15, -0.01875, 0., 0.00703125}
+        generalized_forces.GetGeneralizedForces(),
+        {
+            0.,         // force x
+            0.,         // force y
+            -147.15,    // force z
+            -0.01875,   // moment x
+            0.,         // moment y
+            0.00703125  // moment z
+        }
     );
 }
 

@@ -275,7 +275,7 @@ HostView2D heavy_top_tangent_damping_matrix(
 ) {
     // Tangent damping matrix for the heavy top problem is given by
     // [C_t] = [ [0]_3x3                     [0]_3x3
-    //           [0]_3x3    [~{OMEGA}] * [J] - ~([J] * {OMEGA}) ]
+    //           [0]_3x3    [ ~{OMEGA}] * [J] - ~([J] * {OMEGA}) ]
     auto angular_velocity_matrix = create_cross_product_matrix(angular_velocity_vector);
 
     auto nonzero_block_first_part =
@@ -315,6 +315,42 @@ HostView2D heavy_top_tangent_damping_matrix(
     );
 
     return tangent_damping_matrix;
+}
+
+HostView2D heavy_top_tangent_stiffness_matrix(
+    HostView1D position_vector, HostView2D rotation_matrix, HostView1D lagrange_multipliers
+) {
+    // Tangent stiffness matrix for the heavy top problem is given by
+    // [K_t] = [ [0]_3x3              [0]_3x3
+    //           [0]_3x3    [ ~{X} * ~([R^T] * {Lambda}) ] ]
+    auto X = create_cross_product_matrix(position_vector);
+
+    auto RT_Lambda =
+        multiply_matrix_with_vector(transpose_matrix(rotation_matrix), lagrange_multipliers);
+    auto RT_Lambda_matrix = create_cross_product_matrix(RT_Lambda);
+
+    auto non_zero_block = multiply_matrix_with_matrix(X, RT_Lambda_matrix);
+
+    // Only the 3 x 3 lower right block of the tangent stiffness matrix is non-zero
+    auto tangent_stiffness_matrix = HostView2D("tangent_stiffness_matrix", 6, 6);
+    Kokkos::parallel_for(
+        6,
+        KOKKOS_LAMBDA(const int i) {
+            for (size_t j = 0; j < 6; j++) {
+                if (i < 3 && j < 3) {
+                    tangent_stiffness_matrix(i, j) = 0.;
+                } else if (i < 3 && j >= 3) {
+                    tangent_stiffness_matrix(i, j) = 0.;
+                } else if (i >= 3 && j < 3) {
+                    tangent_stiffness_matrix(i, j) = 0.;
+                } else {
+                    tangent_stiffness_matrix(i, j) = non_zero_block(i - 3, j - 3);
+                }
+            }
+        }
+    );
+
+    return tangent_stiffness_matrix;
 }
 
 HostView2D heavy_top_iteration_matrix(size_t size) {
