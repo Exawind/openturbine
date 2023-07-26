@@ -6,14 +6,6 @@
 
 namespace openturbine::rigid_pendulum {
 
-HostView2D heavy_top_iteration_matrix(size_t size) {
-    return create_identity_matrix(size);
-}
-
-HostView2D rigid_pendulum_iteration_matrix(size_t size) {
-    return create_identity_matrix(size);
-}
-
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper,
     ProblemType problem_type
@@ -248,12 +240,15 @@ HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
     auto iteration_matrix = matrix(size);
 
     switch (this->problem_type_) {
+        // Heavy top problem
         case ProblemType::kHeavyTop:
             iteration_matrix = heavy_top_iteration_matrix(size);
             break;
+        // Rigid pendulum problem
         case ProblemType::kRigidPendulum:
             iteration_matrix = rigid_pendulum_iteration_matrix(size);
             break;
+        // Rigid body problem
         default:
             throw std::runtime_error("Problem type not supported!");
     }
@@ -273,6 +268,101 @@ HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
     }
 
     return iteration_matrix;
+}
+
+HostView2D heavy_top_tangent_damping_matrix(
+    HostView1D angular_velocity_vector, HostView2D inertia_matrix
+) {
+    // Tangent damping matrix for the heavy top problem is given by
+    // [C_t] = [ [0]_3x3                     [0]_3x3
+    //           [0]_3x3    [~{OMEGA}] * [J] - ~([J] * {OMEGA}) ]
+    auto angular_velocity_matrix = create_cross_product_matrix(angular_velocity_vector);
+
+    auto nonzero_block_first_part =
+        multiply_matrix_with_matrix(angular_velocity_matrix, inertia_matrix);
+
+    auto J_Omega = multiply_matrix_with_vector(inertia_matrix, angular_velocity_vector);
+    auto nonzero_block_second_part = create_cross_product_matrix(J_Omega);
+
+    auto nonzero_block = HostView2D("nonzero_block", 3, 3);
+    Kokkos::parallel_for(
+        3,
+        KOKKOS_LAMBDA(const int i) {
+            for (size_t j = 0; j < 3; j++) {
+                nonzero_block(i, j) =
+                    nonzero_block_first_part(i, j) - nonzero_block_second_part(i, j);
+            }
+        }
+    );
+
+    // Only the 3 x 3 lower right block of the tangent damping matrix is non-zero
+    auto tangent_damping_matrix = HostView2D("tangent_damping_matrix", 6, 6);
+    Kokkos::parallel_for(
+        6,
+        KOKKOS_LAMBDA(const int i) {
+            for (size_t j = 0; j < 6; j++) {
+                if (i < 3 && j < 3) {
+                    tangent_damping_matrix(i, j) = 0.;
+                } else if (i < 3 && j >= 3) {
+                    tangent_damping_matrix(i, j) = 0.;
+                } else if (i >= 3 && j < 3) {
+                    tangent_damping_matrix(i, j) = 0.;
+                } else {
+                    tangent_damping_matrix(i, j) = nonzero_block(i - 3, j - 3);
+                }
+            }
+        }
+    );
+
+    return tangent_damping_matrix;
+}
+
+HostView2D heavy_top_iteration_matrix(size_t size) {
+    // Iteration matrix for the heavy top problem is given by
+    // [iteration matrix] = [
+    //     [M(q)] * beta' + [C_t(q,v,t)] * gamma' + [K_t(q,v,v',lambda,t)]    [B(q)^T]]
+    //                            [ B(q) ]                                       [0]
+    // ]
+    // where,
+    // [M(q)] = mass matrix
+    // [C_t(q,v,t)] = Tangent damping matrix = [ 0            0
+    //                                           0    OMEGA * J - J * OMEGA ]
+    // [K_t(q,v,v',lambda,t)] = Tangent stiffness matrix = [ 0          0
+    //                                                       0  X * R^T * Lambda ]
+    // [B(q)] = Constraint matrix = [ -I_3    -R * X ]
+
+    // auto tangent_damping matrix = create_tangent_damping_matrix_heavy_top(size);
+    // auto tangent_stiffness_matrix = create_tangent_stiffness_matrix_heavy_top(size);
+    // auto constraint_matrix = create_constraint_matrix_heavy_top(size);
+    //
+    // auto element1 = mass_matrix * beta_prime + tangent_damping_matrix * gamma_prime +
+    //     tangent_stiffness_matrix;
+    // auto element2 = constraint_matrix.transpose();
+    // auto element3 = constraint_matrix;
+    // auto element4 = 0;
+    //
+    // auto iteration_matrix = HostView2D("iteration_matrix", size, size);
+    // Kokkos::parallel_for(
+    //     size, KOKKOS_LAMBDA(const int i) {
+    //         for (size_t j = 0; j < size; j++) {
+    //             if (i < size / 2 && j < size / 2) {
+    //                 iteration_matrix(i, j) = element1(i, j);
+    //             } else if (i < size / 2 && j >= size / 2) {
+    //                 iteration_matrix(i, j) = element2(i, j);
+    //             } else if (i >= size / 2 && j < size / 2) {
+    //                 iteration_matrix(i, j) = element3(i, j);
+    //             } else {
+    //                 iteration_matrix(i, j) = element4;
+    //             }
+    //         }
+    //     }
+    // );
+
+    return create_identity_matrix(size);
+}
+
+HostView2D rigid_pendulum_iteration_matrix(size_t size) {
+    return create_identity_matrix(size);
 }
 
 }  // namespace openturbine::rigid_pendulum

@@ -191,7 +191,7 @@ TEST(GeneralizedForcesTest, ExpectGeneralizedForcesToThrowWhenGiven1DVectorIsInv
 
 TEST(GeneralizedForcesTest, HeavyTopProblemFromBrulsAndCardona2010Paper) {
     auto mass = 15.;
-    auto mass_matrix = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
+    auto mass_matrix = MassMatrix(mass, Vector(0.234375, 0.46875, 0.234375));
 
     auto gravity = Vector(0., 0., -9.81);
     auto forces = gravity * mass;

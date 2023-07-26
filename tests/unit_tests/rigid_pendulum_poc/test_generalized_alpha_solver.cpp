@@ -178,4 +178,27 @@ TEST(GeneralizedAlphaTimeIntegratorTest, GetSuppliedGAConstants) {
 //     expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {4.});
 // }
 
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentDampingMatrix) {
+    auto angular_velocity_vector = create_vector({0.3, 0.1, 0.8});
+
+    auto mass = 15.;
+    auto mass_matrix = MassMatrix(mass, Vector(0.234375, 0.46875, 0.234375));
+    auto inertia_matrix = mass_matrix.GetMomentOfInertiaMatrix();
+
+    auto tangent_damping_matrix =
+        heavy_top_tangent_damping_matrix(angular_velocity_vector, inertia_matrix);
+
+    expect_kokkos_view_2D_equal(
+        tangent_damping_matrix,
+        {
+            {0., 0., 0., 0., 0., 0.},               // row 1
+            {0., 0., 0., 0., 0., 0.},               // row 2
+            {0., 0., 0., 0., 0., 0.},               // row 3
+            {0., 0., 0., 0., -0.1875, -0.0234375},  // row 4
+            {0., 0., 0., 0., 0., 0.},               // row 5
+            {0., 0., 0., 0.0234375, 0.0703125, 0.}  // row 6
+        }
+    );
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

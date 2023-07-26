@@ -6,9 +6,6 @@
 
 namespace openturbine::rigid_pendulum {
 
-HostView2D heavy_top_iteration_matrix(size_t size);
-HostView2D rigid_pendulum_iteration_matrix(size_t size);
-
 // TODO: Following is a hack to get around the fact we don't have a way to perform automatic
 // differentiation to calculate the iteration matrix. This is a temporary solution until we
 // implement something more robust
@@ -93,5 +90,10 @@ private:
     /// Computes the iteration matrix for the non-linear update
     HostView2D ComputeIterationMatrix(HostView1D, std::function<HostView2D(size_t)>);
 };
+
+HostView2D heavy_top_iteration_matrix(size_t size);
+HostView2D heavy_top_tangent_damping_matrix(HostView1D, HostView2D);
+
+HostView2D rigid_pendulum_iteration_matrix(size_t size);
 
 }  // namespace openturbine::rigid_pendulum
