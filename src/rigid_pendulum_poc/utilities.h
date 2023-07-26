@@ -58,4 +58,7 @@ HostView2D create_cross_product_matrix(HostView1D);
 /// Multiplies an m x n matrix with an n x 1 vector and returns an m x 1 vector
 HostView1D multiply_matrix_with_vector(HostView2D, HostView1D);
 
+/// Multiplies an m x n matrix with an n x p matrix and returns an m x p matrix
+HostView2D multiply_matrix_with_matrix(HostView2D, HostView2D);
+
 }  // namespace openturbine::rigid_pendulum

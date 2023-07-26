@@ -295,4 +295,12 @@ TEST(MathUtilitiesTest, Multiply3x3MatrixWith3x1Vector) {
     expect_kokkos_view_1D_equal(result, {14., 32., 50.});
 }
 
+TEST(MathUtilitiesTest, Multiply3x3MatrixWith3x3Matrix) {
+    auto matrix_a = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
+    auto matrix_b = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
+    auto result = multiply_matrix_with_matrix(matrix_a, matrix_b);
+
+    expect_kokkos_view_2D_equal(result, {{30., 36., 42.}, {66., 81., 96.}, {102., 126., 150.}});
+}
+
 }  // namespace openturbine::rigid_pendulum::tests
