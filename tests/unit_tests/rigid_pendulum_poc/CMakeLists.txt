@@ -3,6 +3,7 @@ target_sources(
     ${oturb_unit_test_exe_name}
     PRIVATE
     test_generalized_alpha_solver.cpp
+    test_heavy_top.cpp
     test_linear_systems_solver.cpp
     test_math_utilities.cpp
     test_quaternions.cpp
