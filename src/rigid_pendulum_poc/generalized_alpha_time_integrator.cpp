@@ -242,7 +242,7 @@ HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
     switch (this->problem_type_) {
         // Heavy top problem
         case ProblemType::kHeavyTop:
-            iteration_matrix = heavy_top_iteration_matrix(size);
+            // iteration_matrix = heavy_top_iteration_matrix(size);
             break;
         // Rigid pendulum problem
         case ProblemType::kRigidPendulum:
@@ -380,7 +380,11 @@ HostView2D heavy_top_constraint_gradient_matrix(
     return constraint_gradient_matrix;
 }
 
-HostView2D heavy_top_iteration_matrix(size_t size) {
+HostView2D heavy_top_iteration_matrix(
+    HostView2D mass_matrix, HostView2D inertia_matrix, HostView2D rotation_matrix,
+    HostView1D angular_velocity_vector, HostView1D position_vector, HostView1D lagrange_multipliers,
+    const double BETA_PRIME, const double GAMMA_PRIME
+) {
     // Iteration matrix for the heavy top problem is given by
     // [iteration matrix] = [
     //     [M(q)] * beta' + [C_t(q,v,t)] * gamma' + [K_t(q,v,v',lambda,t)]    [B(q)^T]]
@@ -392,39 +396,56 @@ HostView2D heavy_top_iteration_matrix(size_t size) {
     //                                           0    OMEGA * J - J * OMEGA ]
     // [K_t(q,v,v',lambda,t)] = Tangent stiffness matrix = [ 0          0
     //                                                       0  X * R^T * Lambda ]
-    // [B(q)] = Constraint matrix = [ -I_3    -R * X ]
+    // [B(q)] = Constraint gradeint matrix = [ -I_3    -R * X ]
 
-    // auto tangent_damping matrix = create_tangent_damping_matrix_heavy_top(size);
-    // auto tangent_stiffness_matrix = create_tangent_stiffness_matrix_heavy_top(size);
-    // auto constraint_matrix = create_constraint_matrix_heavy_top(size);
-    //
-    // auto element1 = mass_matrix * beta_prime + tangent_damping_matrix * gamma_prime +
-    //     tangent_stiffness_matrix;
-    // auto element2 = constraint_matrix.transpose();
-    // auto element3 = constraint_matrix;
-    // auto element4 = 0;
-    //
-    // auto iteration_matrix = HostView2D("iteration_matrix", size, size);
-    // Kokkos::parallel_for(
-    //     size, KOKKOS_LAMBDA(const int i) {
-    //         for (size_t j = 0; j < size; j++) {
-    //             if (i < size / 2 && j < size / 2) {
-    //                 iteration_matrix(i, j) = element1(i, j);
-    //             } else if (i < size / 2 && j >= size / 2) {
-    //                 iteration_matrix(i, j) = element2(i, j);
-    //             } else if (i >= size / 2 && j < size / 2) {
-    //                 iteration_matrix(i, j) = element3(i, j);
-    //             } else {
-    //                 iteration_matrix(i, j) = element4;
-    //             }
-    //         }
-    //     }
-    // );
+    auto tangent_damping_matrix =
+        heavy_top_tangent_damping_matrix(angular_velocity_vector, inertia_matrix);
+    auto tangent_stiffness_matrix =
+        heavy_top_tangent_stiffness_matrix(position_vector, rotation_matrix, lagrange_multipliers);
+    auto constraint_matrix = heavy_top_constraint_gradient_matrix(position_vector, rotation_matrix);
 
-    return create_identity_matrix(size);
+    auto size_dofs = mass_matrix.extent(0);
+    auto size_constraints = constraint_matrix.extent(0);
+    auto size_it_matrix = size_dofs + size_constraints;
+
+    auto element1 = HostView2D("element1", size_dofs, size_dofs);
+    Kokkos::parallel_for(
+        size_dofs,
+        KOKKOS_LAMBDA(const int i) {
+            for (size_t j = 0; j < size_dofs; j++) {
+                element1(i, j) = mass_matrix(i, j) * BETA_PRIME +
+                                 tangent_damping_matrix(i, j) * GAMMA_PRIME +
+                                 tangent_stiffness_matrix(i, j);
+            }
+        }
+    );
+    auto element2 = transpose_matrix(constraint_matrix);
+    auto element3 = constraint_matrix;
+    auto element4 = HostView2D("element4", 3, 3);
+
+    auto iteration_matrix = HostView2D("iteration_matrix", size_it_matrix, size_it_matrix);
+    Kokkos::parallel_for(
+        size_it_matrix,
+        KOKKOS_LAMBDA(const size_t i) {
+            for (size_t j = 0; j < size_it_matrix; j++) {
+                if (i < size_dofs && j < size_dofs) {
+                    iteration_matrix(i, j) = element1(i, j);
+                } else if (i < size_dofs && j >= size_dofs) {
+                    iteration_matrix(i, j) = element2(i, j - size_dofs);
+                } else if (i >= size_dofs && j < size_dofs) {
+                    iteration_matrix(i, j) = element3(i - size_dofs, j);
+                } else {
+                    iteration_matrix(i, j) = element4(i - size_dofs, j - size_dofs);
+                }
+            }
+        }
+    );
+
+    return iteration_matrix;
 }
 
 HostView2D rigid_pendulum_iteration_matrix(size_t size) {
+    // TODO: Implement this
     return create_identity_matrix(size);
 }
 

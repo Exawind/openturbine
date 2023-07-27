@@ -6,9 +6,10 @@
 
 namespace openturbine::rigid_pendulum {
 
-// TODO: Following is a hack to get around the fact we don't have a way to perform automatic
-// differentiation to calculate the iteration matrix. This is a temporary solution until we
-// implement something more robust
+// TECHDEBT: Following is a hack to get around the fact that we don't have a way/scope to perform
+// automatic differentiation yet to calculate the iteration matrix. This is a temporary solution
+// until we implement something more robust.
+
 /// Create an enum for the problem type
 enum class ProblemType {
     kRigidBody = 0,     //< Arbitrary rigid body
@@ -91,7 +92,10 @@ private:
     HostView2D ComputeIterationMatrix(HostView1D, std::function<HostView2D(size_t)>);
 };
 
-HostView2D heavy_top_iteration_matrix(size_t size);
+HostView2D heavy_top_iteration_matrix(
+    HostView2D, HostView2D, HostView2D, HostView1D, HostView1D, HostView1D, const double,
+    const double
+);
 HostView2D heavy_top_tangent_damping_matrix(HostView1D, HostView2D);
 HostView2D heavy_top_tangent_stiffness_matrix(HostView1D, HostView2D, HostView1D);
 HostView2D heavy_top_constraint_gradient_matrix(HostView1D, HostView2D);

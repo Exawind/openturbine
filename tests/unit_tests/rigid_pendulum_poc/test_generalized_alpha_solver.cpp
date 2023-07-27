@@ -247,4 +247,40 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateConstraintGradien
     );
 }
 
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateIterationMatrix) {
+    auto M = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
+    auto mass_matrix = M.GetMassMatrix();
+    auto inertia_matrix = M.GetMomentOfInertiaMatrix();
+    auto rotation_matrix = create_matrix(
+        {{0.617251, -0.757955, 0.210962},
+         {0.775967, 0.63076, -0.00416521},
+         {-0.129909, 0.166271, 0.977485}}
+    );
+    auto angular_velocity_vector = create_vector({0.3, 0.1, 0.8});
+    auto position_vector = create_vector({0., 1., 0.});
+    auto lagrange_multipliers = create_vector({1., 2., 3.});
+    const auto BETA_PRIME = 1.;
+    const auto GAMMA_PRIME = 2.;
+
+    auto iteration_matrix = heavy_top_iteration_matrix(
+        mass_matrix, inertia_matrix, rotation_matrix, angular_velocity_vector, position_vector,
+        lagrange_multipliers, BETA_PRIME, GAMMA_PRIME
+    );
+
+    expect_kokkos_view_2D_equal(
+        iteration_matrix,
+        {
+            {15., 0., 0., 0., 0., 0., -1., 0., 0.},                                       // row 1
+            {0., 15., 0., 0., 0., 0., 0., -1., 0.},                                       // row 2
+            {0., 0., 15., 0., 0., 0., 0., 0., -1.},                                       // row 3
+            {0., 0., 0., -0.768003, 1.404458, -0.046875, 0.210962, -0.004165, 0.977485},  // row 4
+            {0., 0., 0., 0., 0.46875, 0., 0., 0., 0.},                                    // row 5
+            {0., 0., 0., 0.046875, 3.275712, -0.768003, -0.617251, -0.775967, 0.129909},  // row 6
+            {-1., 0., 0., 0.210962, 0., -0.617251, 0., 0., 0.},                           // row 7
+            {0., -1., 0., -0.004165, 0., -0.775967, 0., 0., 0.},                          // row 8
+            {0., 0., -1., 0.977485, 0., 0.129909, 0., 0., 0.}                             // row 9
+        }
+    );
+}
+
 }  // namespace openturbine::rigid_pendulum::tests
