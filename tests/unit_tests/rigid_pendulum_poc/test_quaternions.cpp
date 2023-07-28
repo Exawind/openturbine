@@ -400,15 +400,25 @@ TEST_P(QuaternionTest, ConvertQuaternionToRotationMatrix) {
     EXPECT_NEAR(std::get<2>(R_from_q).GetXComponent(), std::get<2>(R).GetXComponent(), 1e-6);
     EXPECT_NEAR(std::get<2>(R_from_q).GetYComponent(), std::get<2>(R).GetYComponent(), 1e-6);
     EXPECT_NEAR(std::get<2>(R_from_q).GetZComponent(), std::get<2>(R).GetZComponent(), 1e-6);
+}
+
+TEST_P(QuaternionTest, RotateSameVectorWithQuaternionAndRotationMatrix) {
+    auto q = std::get<0>(GetParam());  // Provided quaternion
+    auto R = std::get<1>(GetParam());  // Expected rotation matrix
 
     // Rotate Vector {1., 1., 1.} by both quaternion and rotation matrix and compare results
     Vector v{1., 1., 1.};
     Vector rotated_by_q = rotate_vector(q, v);
-    Vector rotated_by_R = multiply_rotation_matrix_with_vector(R_from_q, v);
+    Vector rotated_by_R = multiply_rotation_matrix_with_vector(R, v);
 
     EXPECT_NEAR(rotated_by_q.GetXComponent(), rotated_by_R.GetXComponent(), 1e-6);
     EXPECT_NEAR(rotated_by_q.GetYComponent(), rotated_by_R.GetYComponent(), 1e-6);
     EXPECT_NEAR(rotated_by_q.GetZComponent(), rotated_by_R.GetZComponent(), 1e-6);
+}
+
+TEST_P(QuaternionTest, ConvertRotationMatrixBackToQuaternion) {
+    auto q = std::get<0>(GetParam());  // Provided quaternion
+    auto R = std::get<1>(GetParam());  // Expected rotation matrix
 
     // Convert rotation matrix back to quaternion and compare with original
     auto q_from_R = rotation_matrix_to_quaternion(R);
@@ -430,15 +440,25 @@ TEST_P(QuaternionTest, ConvertRotationMatrixToQuaternion) {
     EXPECT_NEAR(q_from_R.GetXComponent(), q.GetXComponent(), 1e-6);
     EXPECT_NEAR(q_from_R.GetYComponent(), q.GetYComponent(), 1e-6);
     EXPECT_NEAR(q_from_R.GetZComponent(), q.GetZComponent(), 1e-6);
+}
+
+TEST_P(QuaternionTest, RotateSameVectorWithRotationMatrixAndQuaternion) {
+    auto q = std::get<0>(GetParam());  // Expected quaternion
+    auto R = std::get<1>(GetParam());  // Provided rotation matrix
 
     // Rotate Vector {1., 1., 1.} by both quaternion and rotation matrix and compare results
     Vector v{1., 1., 1.};
     Vector rotated_by_R = multiply_rotation_matrix_with_vector(R, v);
-    Vector rotated_by_q = rotate_vector(q_from_R, v);
+    Vector rotated_by_q = rotate_vector(q, v);
 
     EXPECT_NEAR(rotated_by_R.GetXComponent(), rotated_by_q.GetXComponent(), 1e-6);
     EXPECT_NEAR(rotated_by_R.GetYComponent(), rotated_by_q.GetYComponent(), 1e-6);
     EXPECT_NEAR(rotated_by_R.GetZComponent(), rotated_by_q.GetZComponent(), 1e-6);
+}
+
+TEST_P(QuaternionTest, ConvertQuaternionBackToRotationMatrix) {
+    auto q = std::get<0>(GetParam());  // Expected quaternion
+    auto R = std::get<1>(GetParam());  // Provided rotation matrix
 
     // Convert quaternion back to rotation matrix and compare with original
     auto R_from_q = quaternion_to_rotation_matrix(q);

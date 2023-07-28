@@ -8,6 +8,7 @@
 
 namespace openturbine::rigid_pendulum {
 
+// TODO: Refactor to create a Matrix class
 using RotationMatrix = std::tuple<Vector, Vector, Vector>;
 
 /// @brief Class to represent a quaternion
