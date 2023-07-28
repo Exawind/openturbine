@@ -51,4 +51,18 @@ void expect_kokkos_view_1D_equal(HostView1D view, const std::vector<double>& exp
     }
 }
 
+Vector multiply_rotation_matrix_with_vector(const RotationMatrix& R, const Vector& v) {
+    return Vector{
+        std::get<0>(R).GetXComponent() * v.GetXComponent() +
+            std::get<0>(R).GetYComponent() * v.GetYComponent() +
+            std::get<0>(R).GetZComponent() * v.GetZComponent(),
+        std::get<1>(R).GetXComponent() * v.GetXComponent() +
+            std::get<1>(R).GetYComponent() * v.GetYComponent() +
+            std::get<1>(R).GetZComponent() * v.GetZComponent(),
+        std::get<2>(R).GetXComponent() * v.GetXComponent() +
+            std::get<2>(R).GetYComponent() * v.GetYComponent() +
+            std::get<2>(R).GetZComponent() * v.GetZComponent(),
+    };
+};
+
 }  // namespace openturbine::rigid_pendulum::tests

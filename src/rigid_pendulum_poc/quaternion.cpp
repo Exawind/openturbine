@@ -99,4 +99,45 @@ Vector rotate_vector(const Quaternion& quaternion, const Vector& vector) {
             (q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3) * v2};
 }
 
+RotationMatrix quaternion_to_rotation_matrix(const Quaternion& quaternion) {
+    if (!quaternion.IsUnitQuaternion()) {
+        throw std::invalid_argument("Must be a unit quaternion to rotate a vector");
+    }
+
+    auto [q0, q1, q2, q3] = quaternion.GetComponents();
+
+    return RotationMatrix{
+        Vector{
+            q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3, 2. * (q1 * q2 - q0 * q3),
+            2. * (q1 * q3 + q0 * q2)},
+        Vector{
+            2. * (q1 * q2 + q0 * q3), q0 * q0 - q1 * q1 + q2 * q2 - q3 * q3,
+            2. * (q2 * q3 - q0 * q1)},
+        Vector{
+            2. * (q1 * q3 - q0 * q2), 2. * (q2 * q3 + q0 * q1),
+            q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3}};
+}
+
+Quaternion rotation_matrix_to_quaternion(const RotationMatrix& rotation_matrix) {
+    auto [m00, m01, m02] = std::get<0>(rotation_matrix).GetComponents();
+    auto [m10, m11, m12] = std::get<1>(rotation_matrix).GetComponents();
+    auto [m20, m21, m22] = std::get<2>(rotation_matrix).GetComponents();
+
+    auto trace = m00 + m11 + m22;
+
+    if (trace > 0) {
+        auto s = 0.5 / std::sqrt(trace + 1.0);
+        return Quaternion{0.25 / s, (m21 - m12) * s, (m02 - m20) * s, (m10 - m01) * s};
+    } else if (m00 > m11 && m00 > m22) {
+        auto s = 2.0 * std::sqrt(1.0 + m00 - m11 - m22);
+        return Quaternion((m21 - m12) / s, 0.25 * s, (m01 + m10) / s, (m02 + m20) / s);
+    } else if (m11 > m22) {
+        auto s = 2.0 * std::sqrt(1.0 + m11 - m00 - m22);
+        return Quaternion((m02 - m20) / s, (m01 + m10) / s, 0.25 * s, (m12 + m21) / s);
+    } else {
+        auto s = 2.0 * std::sqrt(1.0 + m22 - m00 - m11);
+        return Quaternion((m10 - m01) / s, (m02 + m20) / s, (m12 + m21) / s, 0.25 * s);
+    }
+}
+
 }  // namespace openturbine::rigid_pendulum
