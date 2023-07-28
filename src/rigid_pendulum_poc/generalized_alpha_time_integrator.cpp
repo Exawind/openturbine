@@ -38,7 +38,7 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     const State& initial_state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    HostView1D lagrange_multipliers, std::function<HostView2D(size_t)> iteration_matrix,
+    HostView1D lagrange_mults, std::function<HostView2D(size_t)> iteration_matrix,
     std::function<HostView1D(size_t)> residual_vector
 ) {
     auto log = util::Log::Get();
@@ -48,8 +48,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     for (size_t i = 0; i < n_steps; i++) {
         log->Info("Integrating step number " + std::to_string(i + 1) + "\n");
         states.emplace_back(std::get<0>(this->AlphaStep(
-            states[i], mass_matrix, gen_forces, lagrange_multipliers, iteration_matrix,
-            residual_vector
+            states[i], mass_matrix, gen_forces, lagrange_mults, iteration_matrix, residual_vector
         )));
         this->time_stepper_.AdvanceTimeStep();
     }
@@ -61,7 +60,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
 
 std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const State& state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    HostView1D lagrange_multipliers, std::function<HostView2D(size_t)> matrix,
+    HostView1D lagrange_mults, std::function<HostView2D(size_t)> matrix,
     std::function<HostView1D(size_t)> vector
 ) {
     auto gen_coords = state.GetGeneralizedCoordinates();
@@ -74,9 +73,6 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     auto algo_accleration_next =
         HostView1D("algorithmic_acceleration_next", algo_accleration.size());
     auto x = HostView1D("increment", velocity.size());
-
-    // TODO: Provide actual constraints
-    auto constraints = HostView1D("constraints", velocity.size());
 
     // Perform the linear update part of the generalized alpha algorithm
     const auto h = this->time_stepper_.GetTimeStep();
@@ -116,8 +112,9 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
 
         // Compute the residuals and check for convergence
         auto residuals = ComputeResiduals(
-            mass_matrix, gen_forces, gen_coords_next, acceleration, lagrange_multipliers, vector
+            mass_matrix, gen_forces, gen_coords_next, acceleration, lagrange_mults, vector
         );
+
         if (this->CheckConvergence(residuals)) {
             this->is_converged_ = true;
             break;
@@ -126,13 +123,24 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         // Compute the iteration matrix and solve the linear system to get the increments
         auto iteration_matrix = ComputeIterationMatrix(
             BETA_PRIME, GAMMA_PRIME, mass_matrix, gen_forces, gen_coords_next, velocity,
-            acceleration, lagrange_multipliers, matrix
+            lagrange_mults, matrix
         );
-        auto delta_x = residuals;
-        auto delta_constraints = constraints;
 
-        solve_linear_system(iteration_matrix, delta_x);
-        solve_linear_system(iteration_matrix, delta_constraints);
+        auto delta_x_delta_lambda = residuals;
+        solve_linear_system(iteration_matrix, delta_x_delta_lambda);
+
+        HostView1D delta_x("delta_x", x.size());
+        Kokkos::parallel_for(
+            x.size(), KOKKOS_LAMBDA(const int i) { delta_x(i) = delta_x_delta_lambda(i); }
+        );
+
+        HostView1D delta_lagrange_mults("delta_lagrange_mults", lagrange_mults.size());
+        Kokkos::parallel_for(
+            lagrange_mults.size(),
+            KOKKOS_LAMBDA(const int i) {
+                delta_lagrange_mults(i) = delta_x_delta_lambda(i + x.size());
+            }
+        );
 
         // Update the velocity, acceleration, and constraints based on the increments
         Kokkos::parallel_for(
@@ -141,7 +149,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
                 x(i) += delta_x(i);
                 velocity(i) += GAMMA_PRIME * delta_x(i);
                 acceleration(i) += BETA_PRIME * delta_x(i);
-                constraints(i) += delta_constraints(i);
+                lagrange_mults(i) += delta_lagrange_mults(i);
             }
         );
     }
@@ -170,7 +178,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             "Newton-Raphson iterations converged in " + std::to_string(n_iterations) +
             " iterations\n"
         );
-        return {State(gen_coords, velocity, acceleration, algo_accleration), constraints};
+        return {State(gen_coords, velocity, acceleration, algo_accleration), lagrange_mults};
     }
 
     log->Warning(
@@ -178,7 +186,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         std::to_string(n_iterations) + " iterations!\n"
     );
 
-    return {State(gen_coords, velocity, acceleration, algo_accleration), constraints};
+    return {State(gen_coords, velocity, acceleration, algo_accleration), lagrange_mults};
 }
 
 HostView1D GeneralizedAlphaTimeIntegrator::ComputeUpdatedGeneralizedCoordinates(
@@ -207,8 +215,7 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeUpdatedGeneralizedCoordinates(
 
 HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
     const MassMatrix& mass, const GeneralizedForces& gen_forces, HostView1D gen_coords,
-    HostView1D acceleration, HostView1D lagrange_multipliers,
-    std::function<HostView1D(size_t)> vector
+    HostView1D acceleration, HostView1D lagrange_mults, std::function<HostView1D(size_t)> vector
 ) {
     auto size = acceleration.extent(0);
     auto residual_vector = vector(size);
@@ -234,7 +241,7 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
 
             residual_vector = heavy_top_residual_vector(
                 mass_matrix, rotation_matrix, acceleration, gen_forces_vector, position_vector,
-                lagrange_multipliers
+                lagrange_mults
             );
         } break;
         // Rigid pendulum problem
@@ -266,8 +273,7 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(HostView1D residual) {
 HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
     const double& BETA_PRIME, const double& GAMMA_PRIME, const MassMatrix& mass,
     const GeneralizedForces& gen_forces, HostView1D gen_coords, HostView1D velocity,
-    HostView1D acceleration, HostView1D lagrange_multipliers,
-    std::function<HostView2D(size_t)> matrix
+    HostView1D lagrange_mults, std::function<HostView2D(size_t)> matrix
 ) {
     auto size = gen_coords.extent(0);
     auto iteration_matrix = matrix(size);
@@ -295,7 +301,7 @@ HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
 
             iteration_matrix = heavy_top_iteration_matrix(
                 BETA_PRIME, GAMMA_PRIME, mass_matrix, inertia_matrix, rotation_matrix,
-                angular_velocity_vector, position_vector, lagrange_multipliers
+                angular_velocity_vector, position_vector, lagrange_mults
             );
         } break;
         // Rigid pendulum problem

@@ -92,7 +92,7 @@ private:
 
     HostView2D ComputeIterationMatrix(
         const double&, const double&, const MassMatrix&, const GeneralizedForces&, HostView1D,
-        HostView1D, HostView1D, HostView1D, std::function<HostView2D(size_t)> matrix
+        HostView1D, HostView1D, std::function<HostView2D(size_t)> matrix
     );
 };
 
