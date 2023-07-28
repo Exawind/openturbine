@@ -86,23 +86,43 @@ TEST(TimeIntegratorTest, GetTimeIntegratorType) {
 //     );
 // }
 
-// TEST(TimeIntegratorTest, ExpectConvergedSolution) {
-//     auto residual_force = create_vector({1.e-7, 2.e-7, 3.e-7});
-//     auto incremental_force = create_vector({1., 2., 3.});
-//     auto time_integrator = GeneralizedAlphaTimeIntegrator();
-//     auto converged = time_integrator.CheckConvergence(residual_force, incremental_force);
+// bool GeneralizedAlphaTimeIntegrator::CheckConvergence(HostView1D residual) {
+//     // L2 norm of the residual vector should be very small (< epsilon) for the solution
+//     // to be considered converged
+//     double residual_norm = 0.;
+//     Kokkos::parallel_reduce(
+//         residual.extent(0),
+//         KOKKOS_LAMBDA(int i, double& residual_partial_sum) {
+//             double residual_value = residual(i);
+//             residual_partial_sum += residual_value * residual_value;
+//         },
+//         Kokkos::Sum<double>(residual_norm)
+//     );
+//     residual_norm = std::sqrt(residual_norm);
 
-//     EXPECT_TRUE(converged);
+//     auto log = util::Log::Get();
+//     log->Debug(
+//         "Residual norm: " + std::to_string(residual_norm) + "\n"
+//     );
+
+//     return (residual_norm) < kTOLERANCE ? true : false;
 // }
 
-// TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
-//     auto residual_force = create_vector({1.e-3, 2.e-3, 3.e-3});
-//     auto incremental_force = create_vector({1., 2., 3.});
-//     auto time_integrator = GeneralizedAlphaTimeIntegrator();
-//     auto converged = time_integrator.CheckConvergence(residual_force, incremental_force);
+TEST(TimeIntegratorTest, ExpectConvergedSolution) {
+    auto residual = create_vector({1.e-7, 2.e-7, 3.e-7});
+    auto time_integrator = GeneralizedAlphaTimeIntegrator();
+    auto converged = time_integrator.CheckConvergence(residual);
 
-//     EXPECT_FALSE(converged);
-// }
+    EXPECT_TRUE(converged);
+}
+
+TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
+    auto residual = create_vector({1.e-5, 2.e-5, 3.e-5});
+    auto time_integrator = GeneralizedAlphaTimeIntegrator();
+    auto converged = time_integrator.CheckConvergence(residual);
+
+    EXPECT_FALSE(converged);
+}
 
 TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidAlphaF) {
     EXPECT_THROW(GeneralizedAlphaTimeIntegrator(1.1, 0.5, 0.25, 0.5), std::invalid_argument);

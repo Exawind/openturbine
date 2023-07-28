@@ -108,7 +108,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             "Iteration number: " + std::to_string(time_stepper_.GetNumberOfIterations() + 1) + "\n"
         );
 
-        auto gen_coords_next = ComputeUpdatedGeneralizedCoordinates(gen_coords, x);
+        auto gen_coords_next = UpdateGeneralizedCoordinates(gen_coords, x);
 
         // Compute the residuals and check for convergence
         auto residuals = ComputeResiduals(
@@ -146,7 +146,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         Kokkos::parallel_for(
             size,
             KOKKOS_LAMBDA(const int i) {
-                x(i) += delta_x(i);
+                x(i) += delta_x(i) / h;
                 velocity(i) += GAMMA_PRIME * delta_x(i);
                 acceleration(i) += BETA_PRIME * delta_x(i);
                 lagrange_mults(i) += delta_lagrange_mults(i);
@@ -189,7 +189,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     return {State(gen_coords, velocity, acceleration, algo_accleration), lagrange_mults};
 }
 
-HostView1D GeneralizedAlphaTimeIntegrator::ComputeUpdatedGeneralizedCoordinates(
+HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
     HostView1D gen_coords, HostView1D x
 ) {
     // Construct the updated generalized coordinates from position and orientation vectors
@@ -267,7 +267,23 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
 }
 
 bool GeneralizedAlphaTimeIntegrator::CheckConvergence(HostView1D residual) {
-    return false;
+    // L2 norm of the residual vector should be very small (< epsilon) for the solution
+    // to be considered converged
+    double residual_norm = 0.;
+    Kokkos::parallel_reduce(
+        residual.extent(0),
+        KOKKOS_LAMBDA(int i, double& residual_partial_sum) {
+            double residual_value = residual(i);
+            residual_partial_sum += residual_value * residual_value;
+        },
+        Kokkos::Sum<double>(residual_norm)
+    );
+    residual_norm = std::sqrt(residual_norm);
+
+    auto log = util::Log::Get();
+    log->Debug("Residual norm: " + std::to_string(residual_norm) + "\n");
+
+    return (residual_norm) < kTOLERANCE ? true : false;
 }
 
 HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(

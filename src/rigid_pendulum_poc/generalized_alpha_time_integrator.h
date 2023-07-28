@@ -24,7 +24,7 @@ public:
 
     GeneralizedAlphaTimeIntegrator(
         double alpha_f = 0.5, double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5,
-        TimeStepper time_stepper = TimeStepper(), ProblemType problem_type = ProblemType::kHeavyTop
+        TimeStepper time_stepper = TimeStepper(), ProblemType problem_type = ProblemType::kRigidBody
     );
 
     /// Returns the type of the time integrator
@@ -65,18 +65,8 @@ public:
         std::function<HostView2D(size_t)>, std::function<HostView1D(size_t)> residual_vector
     );
 
-private:
-    const double kALPHA_F_;  //< Alpha_f coefficient of the generalized-alpha method
-    const double kALPHA_M_;  //< Alpha_m coefficient of the generalized-alpha method
-    const double kBETA_;     //< Beta coefficient of the generalized-alpha method
-    const double kGAMMA_;    //< Gamma coefficient of the generalized-alpha method
-
-    bool is_converged_;         //< Flag to indicate if the latest non-linear update has converged
-    TimeStepper time_stepper_;  //< Time stepper object to perform the time integration
-    ProblemType problem_type_;  //< Type of the problem to be solved
-
     /// Computes the updated generalized coordinates based on the non-linear update
-    HostView1D ComputeUpdatedGeneralizedCoordinates(HostView1D, HostView1D);
+    HostView1D UpdateGeneralizedCoordinates(HostView1D, HostView1D);
 
     /// Computes residuals of the force array for the non-linear update
     HostView1D ComputeResiduals(
@@ -90,10 +80,21 @@ private:
     /// Returns the flag to indicate if the latest non-linear update has converged
     inline bool IsConverged() const { return is_converged_; }
 
+    /// Computes the iteration matrix for the non-linear update
     HostView2D ComputeIterationMatrix(
         const double&, const double&, const MassMatrix&, const GeneralizedForces&, HostView1D,
         HostView1D, HostView1D, std::function<HostView2D(size_t)> matrix
     );
+
+private:
+    const double kALPHA_F_;  //< Alpha_f coefficient of the generalized-alpha method
+    const double kALPHA_M_;  //< Alpha_m coefficient of the generalized-alpha method
+    const double kBETA_;     //< Beta coefficient of the generalized-alpha method
+    const double kGAMMA_;    //< Gamma coefficient of the generalized-alpha method
+
+    bool is_converged_;         //< Flag to indicate if the latest non-linear update has converged
+    TimeStepper time_stepper_;  //< Time stepper object to perform the time integration
+    ProblemType problem_type_;  //< Type of the problem to be solved
 };
 
 }  // namespace openturbine::rigid_pendulum
