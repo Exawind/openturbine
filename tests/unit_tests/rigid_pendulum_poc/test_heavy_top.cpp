@@ -6,6 +6,37 @@
 
 namespace openturbine::rigid_pendulum::tests {
 
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateResidualVector) {
+    auto M = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
+    auto mass_matrix = M.GetMassMatrix();
+    auto rotation_matrix = create_matrix(
+        {{0.617251, -0.757955, 0.210962},
+         {0.775967, 0.63076, -0.00416521},
+         {-0.129909, 0.166271, 0.977485}}
+    );
+    auto acceleration_vector = create_vector({1., 1., 1., 1., 1., 1.});
+    auto gen_forces_vector = create_vector({0., 0., -147.150000, -0.234375, 0., 0.234375});
+    auto position_vector = create_vector({0., 1., 0.});
+    auto lagrange_multipliers = create_vector({1., 2., 3.});
+
+    auto residual_vector = heavy_top_residual_vector(
+        mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector, position_vector,
+        lagrange_multipliers
+    );
+
+    expect_kokkos_view_1D_equal(
+        residual_vector,
+        {
+            14.,          // row 1
+            13.,          // row 2
+            -135.150000,  // row 3
+            3.135087,     // row 4
+            0.46875,      // row 5
+            -1.310708     // row 6
+        }
+    );
+}
+
 TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentDampingMatrix) {
     auto angular_velocity_vector = create_vector({0.3, 0.1, 0.8});
 
