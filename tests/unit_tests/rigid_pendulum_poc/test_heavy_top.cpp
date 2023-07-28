@@ -122,8 +122,8 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateIterationMatrix) 
     const auto GAMMA_PRIME = 2.;
 
     auto iteration_matrix = heavy_top_iteration_matrix(
-        mass_matrix, inertia_matrix, rotation_matrix, angular_velocity_vector, position_vector,
-        lagrange_multipliers, BETA_PRIME, GAMMA_PRIME
+        BETA_PRIME, GAMMA_PRIME, mass_matrix, inertia_matrix, rotation_matrix,
+        angular_velocity_vector, position_vector, lagrange_multipliers
     );
 
     expect_kokkos_view_2D_equal(

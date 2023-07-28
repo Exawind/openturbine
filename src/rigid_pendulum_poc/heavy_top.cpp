@@ -69,9 +69,9 @@ HostView2D heavy_top_constraint_gradient_matrix(
 }
 
 HostView2D heavy_top_iteration_matrix(
-    HostView2D mass_matrix, HostView2D inertia_matrix, HostView2D rotation_matrix,
-    HostView1D angular_velocity_vector, HostView1D position_vector, HostView1D lagrange_multipliers,
-    const double BETA_PRIME, const double GAMMA_PRIME
+    const double& BETA_PRIME, const double& GAMMA_PRIME, HostView2D mass_matrix,
+    HostView2D inertia_matrix, HostView2D rotation_matrix, HostView1D angular_velocity_vector,
+    HostView1D position_vector, HostView1D lagrange_multipliers
 ) {
     // Iteration matrix for the heavy top problem is given by
     // [iteration matrix] = [
@@ -219,6 +219,11 @@ HostView2D heavy_top_tangent_stiffness_matrix(
 HostView2D rigid_pendulum_iteration_matrix(size_t size) {
     // TODO: Implement this
     return create_identity_matrix(size);
+}
+
+HostView1D rigid_pendulum_residual_vector(size_t size) {
+    // TODO: Implement this
+    return create_identity_vector(size);
 }
 
 }  // namespace openturbine::rigid_pendulum

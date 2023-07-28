@@ -19,8 +19,8 @@ public:
 
     /// Performs the time integration and returns a vector of States over the time steps
     virtual std::vector<State> Integrate(
-        const State&, const MassMatrix&, const GeneralizedForces&,
-        std::function<HostView2D(size_t)> matrix
+        const State&, const MassMatrix&, const GeneralizedForces&, HostView1D,
+        std::function<HostView2D(size_t)>, std::function<HostView1D(size_t)> vector
     ) = 0;
 
     /// Returns the type of the time integrator

@@ -49,8 +49,9 @@ public:
 
     /// Performs the time integration and returns a vector of States over the time steps
     virtual std::vector<State> Integrate(
-        const State&, const MassMatrix&, const GeneralizedForces&,
-        std::function<HostView2D(size_t)> iteration_matrix = create_identity_matrix
+        const State&, const MassMatrix&, const GeneralizedForces&, HostView1D,
+        std::function<HostView2D(size_t)> iteration_matrix = create_identity_matrix,
+        std::function<HostView1D(size_t)> residual_vector = create_identity_vector
     ) override;
 
     /*! @brief  Performs the SolveTimeStep() algorithm of the Lie group based generalized-alpha
@@ -60,8 +61,8 @@ public:
      * @return  Updated state of the system at the end of the time step
      */
     std::tuple<State, HostView1D> AlphaStep(
-        const State&, const MassMatrix&, const GeneralizedForces&,
-        std::function<HostView2D(size_t)> iteration_matrix
+        const State&, const MassMatrix&, const GeneralizedForces&, HostView1D,
+        std::function<HostView2D(size_t)>, std::function<HostView1D(size_t)> residual_vector
     );
 
 private:
@@ -70,17 +71,18 @@ private:
     const double kBETA_;     //< Beta coefficient of the generalized-alpha method
     const double kGAMMA_;    //< Gamma coefficient of the generalized-alpha method
 
-    bool is_converged_;  //< Flag to indicate if the latest non-linear update has converged
-
+    bool is_converged_;         //< Flag to indicate if the latest non-linear update has converged
     TimeStepper time_stepper_;  //< Time stepper object to perform the time integration
-
     ProblemType problem_type_;  //< Type of the problem to be solved
 
     /// Computes the updated generalized coordinates based on the non-linear update
     HostView1D ComputeUpdatedGeneralizedCoordinates(HostView1D, HostView1D);
 
     /// Computes residuals of the force array for the non-linear update
-    HostView1D ComputeResiduals(HostView1D, const MassMatrix&, const GeneralizedForces&);
+    HostView1D ComputeResiduals(
+        const MassMatrix&, const GeneralizedForces&, HostView1D, HostView1D, HostView1D,
+        std::function<HostView1D(size_t)> vector
+    );
 
     /// Checks convergence of the non-linear solution based on the residuals
     bool CheckConvergence(HostView1D);
@@ -88,8 +90,10 @@ private:
     /// Returns the flag to indicate if the latest non-linear update has converged
     inline bool IsConverged() const { return is_converged_; }
 
-    /// Computes the iteration matrix for the non-linear update
-    HostView2D ComputeIterationMatrix(HostView1D, std::function<HostView2D(size_t)>);
+    HostView2D ComputeIterationMatrix(
+        const double&, const double&, const MassMatrix&, const GeneralizedForces&, HostView1D,
+        HostView1D, HostView1D, HostView1D, std::function<HostView2D(size_t)> matrix
+    );
 };
 
 }  // namespace openturbine::rigid_pendulum

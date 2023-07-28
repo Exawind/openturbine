@@ -38,7 +38,8 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     const State& initial_state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    std::function<HostView2D(size_t)> iteration_matrix
+    HostView1D lagrange_multipliers, std::function<HostView2D(size_t)> iteration_matrix,
+    std::function<HostView1D(size_t)> residual_vector
 ) {
     auto log = util::Log::Get();
 
@@ -46,9 +47,10 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     auto n_steps = this->time_stepper_.GetNumberOfSteps();
     for (size_t i = 0; i < n_steps; i++) {
         log->Info("Integrating step number " + std::to_string(i + 1) + "\n");
-        states.emplace_back(
-            std::get<0>(this->AlphaStep(states[i], mass_matrix, gen_forces, iteration_matrix))
-        );
+        states.emplace_back(std::get<0>(this->AlphaStep(
+            states[i], mass_matrix, gen_forces, lagrange_multipliers, iteration_matrix,
+            residual_vector
+        )));
         this->time_stepper_.AdvanceTimeStep();
     }
 
@@ -59,7 +61,8 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
 
 std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const State& state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    std::function<HostView2D(size_t)> matrix
+    HostView1D lagrange_multipliers, std::function<HostView2D(size_t)> matrix,
+    std::function<HostView1D(size_t)> vector
 ) {
     auto gen_coords = state.GetGeneralizedCoordinates();
     auto velocity = state.GetVelocity();
@@ -112,14 +115,19 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         auto gen_coords_next = ComputeUpdatedGeneralizedCoordinates(gen_coords, x);
 
         // Compute the residuals and check for convergence
-        auto residuals = ComputeResiduals(acceleration, mass_matrix, gen_forces);
+        auto residuals = ComputeResiduals(
+            mass_matrix, gen_forces, gen_coords_next, acceleration, lagrange_multipliers, vector
+        );
         if (this->CheckConvergence(residuals)) {
             this->is_converged_ = true;
             break;
         }
 
         // Compute the iteration matrix and solve the linear system to get the increments
-        auto iteration_matrix = ComputeIterationMatrix(gen_coords, matrix);
+        auto iteration_matrix = ComputeIterationMatrix(
+            BETA_PRIME, GAMMA_PRIME, mass_matrix, gen_forces, gen_coords_next, velocity,
+            acceleration, lagrange_multipliers, matrix
+        );
         auto delta_x = residuals;
         auto delta_constraints = constraints;
 
@@ -198,36 +206,49 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeUpdatedGeneralizedCoordinates(
 }
 
 HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
-    HostView1D acceleration, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces
+    const MassMatrix& mass, const GeneralizedForces& gen_forces, HostView1D gen_coords,
+    HostView1D acceleration, HostView1D lagrange_multipliers,
+    std::function<HostView1D(size_t)> vector
 ) {
-    // The residual vector is defined as:
-    // {residual} = [M(q)] {v'} + {g(q,v,t)} + [B(q)]T {Lambda}
-    // where,
-    // [M(q)] = mass matrix
-    // {v'} = acceleration vector
-    // {g(q,v,t)} = generalized forces vector
-    // [B(q)] = constraint gradient matrix
-    // {Lambda} = Lagrange multipliers vector
-
     auto size = acceleration.extent(0);
-    auto first_term = HostView1D("first_term", size);
-    Kokkos::parallel_for(
-        size,
-        KOKKOS_LAMBDA(const int i) {
-            auto sum = 0.;
-            for (size_t j = 0; j < size; j++) {
-                sum += mass_matrix.GetMassMatrix()(i, j) * acceleration(j);
-            }
-            first_term(i) = sum;
-        }
-    );
-    auto second_term = gen_forces.GetGeneralizedForces();
+    auto residual_vector = vector(size);
 
-    // residual_vector = first_term + second_term
-    auto residual_vector = HostView1D("residual_vector", size);
-    Kokkos::parallel_for(
-        size, KOKKOS_LAMBDA(const int i) { residual_vector(i) = first_term(i) + second_term(i); }
-    );
+    switch (this->problem_type_) {
+        // Heavy top problem
+        case ProblemType::kHeavyTop: {
+            auto mass_matrix = mass.GetMassMatrix();
+
+            // Convert the quaternion representing orientation -> rotation matrix
+            auto RM = quaternion_to_rotation_matrix(
+                // Create quaternion from appropriate components of generalized coordinates
+                Quaternion{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)}
+            );
+            auto [m00, m01, m02] = std::get<0>(RM).GetComponents();
+            auto [m10, m11, m12] = std::get<1>(RM).GetComponents();
+            auto [m20, m21, m22] = std::get<2>(RM).GetComponents();
+            auto rotation_matrix =
+                create_matrix({{m00, m01, m02}, {m10, m11, m12}, {m20, m21, m22}});
+
+            auto gen_forces_vector = gen_forces.GetGeneralizedForces();
+            auto position_vector = create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
+
+            residual_vector = heavy_top_residual_vector(
+                mass_matrix, rotation_matrix, acceleration, gen_forces_vector, position_vector,
+                lagrange_multipliers
+            );
+        } break;
+        // Rigid pendulum problem
+        case ProblemType::kRigidPendulum: {
+            residual_vector = rigid_pendulum_residual_vector(size);
+        } break;
+        // Rigid body problem
+        case ProblemType::kRigidBody: {
+            // Do nothing, we're using it for unit testing at the moment
+        } break;
+        // Default case
+        default:
+            throw std::runtime_error("Invalid problem type!");
+    }
 
     auto log = util::Log::Get();
     log->Debug("Residual vector is " + std::to_string(size) + " x 1 with elements\n");
@@ -243,21 +264,49 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(HostView1D residual) {
 }
 
 HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
-    HostView1D gen_coords, std::function<HostView2D(size_t)> matrix
+    const double& BETA_PRIME, const double& GAMMA_PRIME, const MassMatrix& mass,
+    const GeneralizedForces& gen_forces, HostView1D gen_coords, HostView1D velocity,
+    HostView1D acceleration, HostView1D lagrange_multipliers,
+    std::function<HostView2D(size_t)> matrix
 ) {
     auto size = gen_coords.extent(0);
     auto iteration_matrix = matrix(size);
 
     switch (this->problem_type_) {
         // Heavy top problem
-        case ProblemType::kHeavyTop:
-            // iteration_matrix = heavy_top_iteration_matrix(size);
-            break;
+        case ProblemType::kHeavyTop: {
+            auto mass_matrix = mass.GetMassMatrix();
+            auto inertia_matrix = mass.GetMomentOfInertiaMatrix();
+
+            // Convert the quaternion representing orientation -> rotation matrix
+            auto RM = quaternion_to_rotation_matrix(
+                // Create quaternion from appropriate components of generalized coordinates
+                Quaternion{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)}
+            );
+            auto [m00, m01, m02] = std::get<0>(RM).GetComponents();
+            auto [m10, m11, m12] = std::get<1>(RM).GetComponents();
+            auto [m20, m21, m22] = std::get<2>(RM).GetComponents();
+            auto rotation_matrix =
+                create_matrix({{m00, m01, m02}, {m10, m11, m12}, {m20, m21, m22}});
+
+            auto gen_forces_vector = gen_forces.GetGeneralizedForces();
+            auto angular_velocity_vector = create_vector({velocity(3), velocity(4), velocity(5)});
+            auto position_vector = create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
+
+            iteration_matrix = heavy_top_iteration_matrix(
+                BETA_PRIME, GAMMA_PRIME, mass_matrix, inertia_matrix, rotation_matrix,
+                angular_velocity_vector, position_vector, lagrange_multipliers
+            );
+        } break;
         // Rigid pendulum problem
-        case ProblemType::kRigidPendulum:
+        case ProblemType::kRigidPendulum: {
             iteration_matrix = rigid_pendulum_iteration_matrix(size);
-            break;
+        } break;
         // Rigid body problem
+        case ProblemType::kRigidBody: {
+            // Do nothing, we're using it for unit testing at the moment
+        } break;
+        // Default case
         default:
             throw std::runtime_error("Problem type not supported!");
     }

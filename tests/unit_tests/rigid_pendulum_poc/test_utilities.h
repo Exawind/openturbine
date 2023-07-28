@@ -1,8 +1,7 @@
 #pragma once
 
-#include "src/rigid_pendulum_poc/utilities.h"
-
 #include "src/rigid_pendulum_poc/quaternion.h"
+#include "src/rigid_pendulum_poc/utilities.h"
 
 namespace openturbine::rigid_pendulum::tests {
 

@@ -32,6 +32,8 @@ private:
     HostView1D algorithmic_acceleration_;  //< Algorithmic accelerations
 };
 
+// TODO Move the following classes to their own source files
+
 /// Class to create and store a 6 x 6 mass matrix of a rigid body
 class MassMatrix {
 public:
