@@ -15,7 +15,7 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateResidualVector) {
          {-0.129909, 0.166271, 0.977485}}
     );
     auto acceleration_vector = create_vector({1., 1., 1., 1., 1., 1.});
-    auto gen_forces_vector = create_vector({0., 0., -147.150000, -0.234375, 0., 0.234375});
+    auto gen_forces_vector = create_vector({0., 0., 147.150000, -0.234375, 0., 0.234375});
     auto position_vector = create_vector({0., 1., 0.});
     auto lagrange_multipliers = create_vector({1., 2., 3.});
 
@@ -27,12 +27,12 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateResidualVector) {
     expect_kokkos_view_1D_equal(
         residual_vector,
         {
-            14.,          // row 1
-            13.,          // row 2
-            -135.150000,  // row 3
-            3.135087,     // row 4
-            0.46875,      // row 5
-            -1.310708     // row 6
+            14.,         // row 1
+            13.,         // row 2
+            159.150000,  // row 3
+            3.135087,    // row 4
+            0.46875,     // row 5
+            -1.310708    // row 6
         }
     );
 }
