@@ -6,7 +6,7 @@
 
 namespace openturbine::rigid_pendulum::tests {
 
-TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateResidualVector) {
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateGenCoordsResidualVector) {
     auto M = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
     auto mass_matrix = M.GetMassMatrix();
     auto rotation_matrix = create_matrix(
@@ -19,7 +19,7 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateResidualVector) {
     auto position_vector = create_vector({0., 1., 0.});
     auto lagrange_multipliers = create_vector({1., 2., 3.});
 
-    auto residual_vector = heavy_top_residual_vector(
+    auto residual_vector = heavy_top_gen_coords_residual_vector(
         mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector, position_vector,
         lagrange_multipliers
     );
@@ -33,6 +33,26 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateResidualVector) {
             3.135087,    // row 4
             0.46875,     // row 5
             -1.310708    // row 6
+        }
+    );
+}
+
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateConstraintsResidualVector) {
+    auto rotation_matrix = create_matrix(
+        {{0.617251, -0.757955, 0.210962},
+         {0.775967, 0.63076, -0.00416521},
+         {-0.129909, 0.166271, 0.977485}}
+    );
+    auto position_vector = create_vector({1., 2., 3.});
+
+    auto residual_vector = heavy_top_constraints_residual_vector(rotation_matrix, position_vector);
+
+    expect_kokkos_view_1D_equal(
+        residual_vector,
+        {
+            -1.757955,  // row 1
+            -1.369240,  // row 2
+            -2.833729   // row 3
         }
     );
 }
