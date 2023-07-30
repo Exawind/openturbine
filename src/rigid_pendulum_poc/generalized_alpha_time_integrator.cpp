@@ -46,14 +46,14 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     std::vector<State> states{initial_state};
     auto n_steps = this->time_stepper_.GetNumberOfSteps();
     for (size_t i = 0; i < n_steps; i++) {
-        log->Info("Integrating step number " + std::to_string(i + 1) + "\n");
+        log->Info("** Integrating step number " + std::to_string(i + 1) + " **\n");
         states.emplace_back(std::get<0>(this->AlphaStep(
             states[i], mass_matrix, gen_forces, lagrange_mults, iteration_matrix, residual_vector
         )));
         this->time_stepper_.AdvanceTimeStep();
     }
 
-    log->Info("Time integration completed successfully!\n");
+    log->Info("Time integration has completed!\n");
 
     return states;
 }
@@ -68,51 +68,60 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     auto acceleration = state.GetAcceleration();
     auto algo_accleration = state.GetAlgorithmicAcceleration();
 
-    // Initialize the updated algorithmic acceleration and an intermediate vector to assist
-    // in updating the State
+    // Initialize some X_next variables to assist in updating the State - only for ones that
+    // require the current and next values
+    auto gen_coords_next = HostView1D("gen_coords_next", gen_coords.size());
     auto algo_accleration_next =
         HostView1D("algorithmic_acceleration_next", algo_accleration.size());
-    auto x = HostView1D("increment", velocity.size());
+    auto delta_gen_coords = HostView1D("gen_coords_increment", velocity.size());
+    auto lagrange_mults_next = HostView1D("lagrange_mults_next", lagrange_mults.size());
 
     // Perform the linear update part of the generalized alpha algorithm
     const auto h = this->time_stepper_.GetTimeStep();
     const auto size = velocity.size();
     Kokkos::parallel_for(
         size,
-        KOKKOS_LAMBDA(const int i) {
+        KOKKOS_LAMBDA(const size_t i) {
             acceleration(i) = 0.;
+            lagrange_mults_next(i) = 0.;
             algo_accleration_next(i) =
                 (kALPHA_F_ * acceleration(i) - kALPHA_M_ * algo_accleration(i)) / (1. - kALPHA_M_);
             velocity(i) +=
                 h * (1 - kGAMMA_) * algo_accleration(i) + h * kGAMMA_ * algo_accleration_next(i);
-            x(i) = h * velocity(i) + h * h * (0.5 - kBETA_) * algo_accleration(i) +
-                   h * h * kBETA_ * algo_accleration_next(i);
+            delta_gen_coords(i) = velocity(i) + h * (0.5 - kBETA_) * algo_accleration(i) +
+                                  h * kBETA_ * algo_accleration_next(i);
         }
     );
 
     // Perform Newton-Raphson iterations to update nonlinear part of generalized-alpha algorithm
     auto log = util::Log::Get();
     log->Info(
-        "Performing Newton-Raphson iterations to update the nonlinear part of generalized-alpha "
+        "Performing Newton-Raphson iterations to update solution using the generalized-alpha "
         "algorithm\n"
     );
 
     const auto BETA_PRIME = (1 - kALPHA_M_) / (h * h * kBETA_ * (1 - kALPHA_F_));
     const auto GAMMA_PRIME = kGAMMA_ / (h * kBETA_);
 
+    log->Debug(
+        "BETA_PRIME = " + std::to_string(BETA_PRIME) +
+        ", GAMMA_PRIME = " + std::to_string(GAMMA_PRIME) + "\n"
+    );
+
     auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
     for (time_stepper_.SetNumberOfIterations(0);
          time_stepper_.GetNumberOfIterations() < max_iterations;
          time_stepper_.IncrementNumberOfIterations()) {
         log->Debug(
-            "Iteration number: " + std::to_string(time_stepper_.GetNumberOfIterations() + 1) + "\n"
+            "* Iteration number: " + std::to_string(time_stepper_.GetNumberOfIterations() + 1) +
+            " *\n"
         );
 
-        auto gen_coords_next = UpdateGeneralizedCoordinates(gen_coords, x);
+        gen_coords_next = UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords);
 
         // Compute the residuals and check for convergence
         auto residuals = ComputeResiduals(
-            mass_matrix, gen_forces, gen_coords_next, acceleration, lagrange_mults, vector
+            mass_matrix, gen_forces, gen_coords_next, acceleration, lagrange_mults_next, vector
         );
 
         if (this->CheckConvergence(residuals)) {
@@ -123,33 +132,36 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         // Compute the iteration matrix and solve the linear system to get the increments
         auto iteration_matrix = ComputeIterationMatrix(
             BETA_PRIME, GAMMA_PRIME, mass_matrix, gen_forces, gen_coords_next, velocity,
-            lagrange_mults, matrix
+            lagrange_mults_next, matrix
         );
 
-        auto delta_x_delta_lambda = residuals;
-        solve_linear_system(iteration_matrix, delta_x_delta_lambda);
+        auto soln_increments = residuals;
+        solve_linear_system(iteration_matrix, soln_increments);
 
-        HostView1D delta_x("delta_x", x.size());
+        HostView1D delta_x("delta_x", delta_gen_coords.size());
         Kokkos::parallel_for(
-            x.size(), KOKKOS_LAMBDA(const int i) { delta_x(i) = delta_x_delta_lambda(i); }
+            delta_gen_coords.size(),
+            KOKKOS_LAMBDA(const size_t i) { delta_x(i) = soln_increments(i); }
         );
 
-        HostView1D delta_lagrange_mults("delta_lagrange_mults", lagrange_mults.size());
-        Kokkos::parallel_for(
-            lagrange_mults.size(),
-            KOKKOS_LAMBDA(const int i) {
-                delta_lagrange_mults(i) = delta_x_delta_lambda(i + x.size());
-            }
-        );
+        if (lagrange_mults.size() > 0) {
+            HostView1D delta_lagrange_mults("delta_lagrange_mults", lagrange_mults.size());
+            Kokkos::parallel_for(
+                lagrange_mults.size(),
+                KOKKOS_LAMBDA(const size_t i) {
+                    delta_lagrange_mults(i) = soln_increments(i + delta_gen_coords.size());
+                    lagrange_mults_next(i) += delta_lagrange_mults(i);
+                }
+            );
+        }
 
         // Update the velocity, acceleration, and constraints based on the increments
         Kokkos::parallel_for(
             size,
-            KOKKOS_LAMBDA(const int i) {
-                x(i) += delta_x(i) / h;
+            KOKKOS_LAMBDA(const size_t i) {
+                delta_gen_coords(i) += delta_x(i) / h;
                 velocity(i) += GAMMA_PRIME * delta_x(i);
                 acceleration(i) += BETA_PRIME * delta_x(i);
-                lagrange_mults(i) += delta_lagrange_mults(i);
             }
         );
     }
@@ -160,55 +172,83 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     // Update algorithmic acceleration once Newton-Raphson iterations have ended
     Kokkos::parallel_for(
         size,
-        KOKKOS_LAMBDA(const int i) {
+        KOKKOS_LAMBDA(const size_t i) {
             algo_accleration_next(i) += (1. - kALPHA_F_) / (1. - kALPHA_M_) * acceleration(i);
         }
     );
 
-    log->Debug("Final state after performing Newton-Raphson iterations:\n");
+    log->Debug("Final state upon performing Newton-Raphson iterations:\n");
     for (size_t i = 0; i < size; i++) {
         log->Debug(
-            std::to_string(gen_coords(i)) + "\t" + std::to_string(velocity(i)) + "\t" +
-            std::to_string(acceleration(i)) + "\t" + std::to_string(algo_accleration(i)) + "\n"
+            std::to_string(gen_coords_next(i)) + ", " + std::to_string(velocity(i)) + ", " +
+            std::to_string(acceleration(i)) + ", " + std::to_string(algo_accleration_next(i)) + "\n"
         );
     }
+
+    auto results = std::make_tuple(
+        State{gen_coords_next, velocity, acceleration, algo_accleration_next}, lagrange_mults_next
+    );
 
     if (this->is_converged_) {
         log->Info(
             "Newton-Raphson iterations converged in " + std::to_string(n_iterations) +
             " iterations\n"
         );
-        return {State(gen_coords, velocity, acceleration, algo_accleration), lagrange_mults};
+        return results;
     }
 
     log->Warning(
         "Newton-Raphson iterations failed to converge on a solution after " +
         std::to_string(n_iterations) + " iterations!\n"
     );
-
-    return {State(gen_coords, velocity, acceleration, algo_accleration), lagrange_mults};
+    return results;
 }
 
 HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
-    HostView1D gen_coords, HostView1D x
+    HostView1D gen_coords, HostView1D delta_gen_coords
 ) {
-    // Construct the updated generalized coordinates from position and orientation vectors
+    // {gen_coords_next} = {gen_coords} + h * {delta_gen_coords}
+    //
+    // Step 1: R^3 update, done with vector addition
     auto current_position = Vector{gen_coords(0), gen_coords(1), gen_coords(2)};
-    auto updated_position = Vector{x(0), x(1), x(2)};
-    auto r = current_position + updated_position;
+    auto updated_position = Vector{delta_gen_coords(0), delta_gen_coords(1), delta_gen_coords(2)};
+    const auto h = this->time_stepper_.GetTimeStep();
+    auto r = current_position + (updated_position * h);
 
+    auto log = util::Log::Get();
+    log->Debug(
+        "Updated position: " + std::to_string(r.GetXComponent()) + ", " +
+        std::to_string(r.GetYComponent()) + ", " + std::to_string(r.GetZComponent()) + "\n"
+    );
+    // Step 2: SO(3) update, done with quaternion composition
     Quaternion current_orientation{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)};
-    auto update_orientation = quaternion_from_rotation_vector(Vector{x(3), x(4), x(5)});
+    auto update_orientation = quaternion_from_rotation_vector(
+        // Convert Vector -> Quaternion via exponential mapping
+        Vector{delta_gen_coords(3), delta_gen_coords(4), delta_gen_coords(5)} * h
+    );
     auto q = current_orientation * update_orientation;
 
+    log->Debug(
+        "Updated orientation: " + std::to_string(q.GetScalarComponent()) + ", " +
+        std::to_string(q.GetXComponent()) + ", " + std::to_string(q.GetYComponent()) + ", " +
+        std::to_string(q.GetZComponent()) + "\n"
+    );
+
+    // Construct the updated generalized coordinates from position and orientation vectors
     auto gen_coords_next = HostView1D("generalized_coordinates_next", gen_coords.size());
-    gen_coords_next(0) = r.GetXComponent();
-    gen_coords_next(1) = r.GetYComponent();
-    gen_coords_next(2) = r.GetZComponent();
-    gen_coords_next(3) = q.GetScalarComponent();
-    gen_coords_next(4) = q.GetXComponent();
-    gen_coords_next(5) = q.GetYComponent();
-    gen_coords_next(6) = q.GetZComponent();
+    auto components = std::vector<double>{
+        r.GetXComponent(),       // component 1
+        r.GetYComponent(),       // component 2
+        r.GetZComponent(),       // component 3
+        q.GetScalarComponent(),  // component 4
+        q.GetXComponent(),       // component 5
+        q.GetYComponent(),       // component 6
+        q.GetZComponent()        // component 7
+    };
+
+    Kokkos::parallel_for(
+        gen_coords.size(), KOKKOS_LAMBDA(const size_t i) { gen_coords_next(i) = components[i]; }
+    );
 
     return gen_coords_next;
 }
@@ -217,7 +257,25 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
     const MassMatrix& mass, const GeneralizedForces& gen_forces, HostView1D gen_coords,
     HostView1D acceleration, HostView1D lagrange_mults, std::function<HostView1D(size_t)> vector
 ) {
-    auto size = acceleration.extent(0);
+    // The residual vector consists of two parts
+    // {residual} = {
+    //     {residual_gen_coords},
+    //     {residual_constraints}
+    // }
+    //
+    // {residual_gen_coords} = [M(q)] {v'} + {g(q,v,t)} + [B(q)]T {Lambda}
+    // where,
+    // [M(q)] = mass matrix
+    // {v'} = acceleration vector
+    // {g(q,v,t)} = generalized forces vector
+    // [B(q)] = constraint gradient matrix
+    // {Lambda} = Lagrange multipliers vector
+    //
+    // {residual_constraints} = {Phi(q)}
+    // where,
+    // {Phi(q)} = constraint vector
+
+    auto size = acceleration.extent(0) + lagrange_mults.extent(0);
     auto residual_vector = vector(size);
 
     switch (this->problem_type_) {
@@ -237,7 +295,10 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
                 create_matrix({{m00, m01, m02}, {m10, m11, m12}, {m20, m21, m22}});
 
             auto gen_forces_vector = gen_forces.GetGeneralizedForces();
-            auto position_vector = create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
+            auto position_vector = create_vector(
+                // Create vector from appropriate components of generalized coordinates
+                {gen_coords(0), gen_coords(1), gen_coords(2)}
+            );
 
             residual_vector = heavy_top_residual_vector(
                 mass_matrix, rotation_matrix, acceleration, gen_forces_vector, position_vector,
@@ -283,7 +344,7 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(HostView1D residual) {
     auto log = util::Log::Get();
     log->Debug("Residual norm: " + std::to_string(residual_norm) + "\n");
 
-    return (residual_norm) < kTOLERANCE ? true : false;
+    return (residual_norm) < kCONVERGENCETOLERANCE ? true : false;
 }
 
 HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
@@ -291,6 +352,17 @@ HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
     const GeneralizedForces& gen_forces, HostView1D gen_coords, HostView1D velocity,
     HostView1D lagrange_mults, std::function<HostView2D(size_t)> matrix
 ) {
+    // Iteration matrix for the generalized alpha algorithm is given by
+    // [iteration matrix] = [
+    //     [M(q)] * beta' + [C_t(q,v,t)] * gamma' + [K_t(q,v,v',Lambda,t)]    [B(q)^T]]
+    //                            [ B(q) ]                                       [0]
+    // ]
+    // where,
+    // [M(q)] = mass matrix
+    // [C_t(q,v,t)] = Tangent damping matrix
+    // [K_t(q,v,v',Lambda,t)] = Tangent stiffness matrix
+    // [B(q)] = Constraint gradeint matrix
+
     auto size = gen_coords.extent(0);
     auto iteration_matrix = matrix(size);
 

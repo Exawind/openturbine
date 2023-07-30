@@ -7,9 +7,9 @@ namespace openturbine::rigid_pendulum {
 
 // An enum class to indicate the type of time integrator
 enum class TimeIntegratorType {
-    NEWMARK_BETA = 0,   //< Newmark-beta method
-    HHT = 1,            //< Hilber-Hughes-Taylor method
-    GENERALIZED_ALPHA,  //< Generalized-alpha method
+    kNEWMARK_BETA = 0,   //< Newmark-beta method
+    kHHT = 1,            //< Hilber-Hughes-Taylor method
+    kGENERALIZED_ALPHA,  //< Generalized-alpha method
 };
 
 /// @brief An abstract class to provide a common interface for time integrators

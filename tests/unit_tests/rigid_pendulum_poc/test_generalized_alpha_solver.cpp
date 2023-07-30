@@ -7,109 +7,120 @@
 
 namespace openturbine::rigid_pendulum::tests {
 
+TEST(ProblemTypeTest, DefaultValue) {
+    auto problem_type = ProblemType();
+
+    EXPECT_EQ(problem_type, ProblemType::kRigidBody);
+}
+
 TEST(TimeIntegratorTest, GetTimeIntegratorType) {
     auto time_integrator =
         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
 
-    EXPECT_EQ(time_integrator.GetType(), TimeIntegratorType::GENERALIZED_ALPHA);
+    EXPECT_EQ(time_integrator.GetType(), TimeIntegratorType::kGENERALIZED_ALPHA);
 }
 
-// TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
+TEST(TimeIntegratorTest, GetTimeIntegratorProblemType) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
 
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.);
+    EXPECT_EQ(time_integrator.GetProblemType(), ProblemType::kRigidBody);
+}
 
-//     auto initial_state = State();
-//     time_integrator.Integrate(initial_state);
+TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
 
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 10.0);
-// }
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.);
 
-// TEST(TimeIntegratorTest, GetHistoryOfStatesFromTimeIntegrator) {
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 0.1, 17));
+    auto initial_state = State();
+    auto mass_matrix = MassMatrix();
+    auto gen_forces = GeneralizedForces();
+    auto lagrange_mults = HostView1D();
+    time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
 
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 10.0);
+}
 
-//     auto initial_state = State();
-//     auto state_history = time_integrator.Integrate(initial_state);
+TEST(TimeIntegratorTest, GetHistoryOfStatesFromTimeIntegrator) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 0.1, 17));
 
-//     EXPECT_NEAR(
-//         time_integrator.GetTimeStepper().GetCurrentTime(), 1.70,
-//         10 * std::numeric_limits<double>::epsilon()
-//     );
-//     EXPECT_EQ(state_history.size(), 18);
-// }
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.);
 
-// TEST(TimeIntegratorTest, LinearSolutionWithZeroAcceleration) {
-//     auto initial_state = State();
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1., 1));
-//     auto linear_update = time_integrator.UpdateLinearSolution(initial_state);
+    auto initial_state = State();
+    auto mass_matrix = MassMatrix();
+    auto gen_forces = GeneralizedForces();
+    auto lagrange_mults = HostView1D();
+    auto state_history =
+        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
 
-//     expect_kokkos_view_1D_equal(linear_update.GetGeneralizedCoordinates(), {0.});
-//     expect_kokkos_view_1D_equal(linear_update.GetGeneralizedVelocity(), {0.});
-//     expect_kokkos_view_1D_equal(linear_update.GetGeneralizedAcceleration(), {0.});
-// }
+    EXPECT_NEAR(
+        time_integrator.GetTimeStepper().GetCurrentTime(), 1.70,
+        10 * std::numeric_limits<double>::epsilon()
+    );
+    EXPECT_EQ(state_history.size(), 18);
+}
 
-// TEST(TimeIntegratorTest, LinearSolutionWithNonZeroAcceleration) {
-//     auto v = create_vector({1., 2., 3.});
-//     auto initial_state = State(v, v, v, v);
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1., 1));
-//     auto linear_update = time_integrator.UpdateLinearSolution(initial_state);
+TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1., 10));
 
-//     expect_kokkos_view_1D_equal(linear_update.GetGeneralizedCoordinates(), {2.25, 4.5, 6.75});
-//     expect_kokkos_view_1D_equal(linear_update.GetGeneralizedVelocity(), {1.5, 3., 4.5});
-//     expect_kokkos_view_1D_equal(linear_update.GetGeneralizedAcceleration(), {0., 0., 0.});
-// }
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 0);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 0);
 
-// TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1., 10));
+    auto initial_state = State();
+    auto mass_matrix = MassMatrix();
+    auto gen_forces = GeneralizedForces();
+    auto lagrange_mults = HostView1D();
+    time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
 
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 0);
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 0);
+    EXPECT_LE(
+        time_integrator.GetTimeStepper().GetNumberOfIterations(),
+        time_integrator.GetTimeStepper().GetMaximumNumberOfIterations()
+    );
+    EXPECT_LE(
+        time_integrator.GetTimeStepper().GetTotalNumberOfIterations(),
+        time_integrator.GetTimeStepper().GetNumberOfSteps() *
+            time_integrator.GetTimeStepper().GetMaximumNumberOfIterations()
+    );
+}
 
-//     auto initial_state = State();
-//     time_integrator.Integrate(initial_state);
+TEST(TimeIntegratorTest, TestUpdateGeneralizedCoordinates) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
 
-//     EXPECT_LE(
-//         time_integrator.GetTimeStepper().GetNumberOfIterations(),
-//         time_integrator.GetTimeStepper().GetMaximumNumberOfIterations()
-//     );
-//     EXPECT_LE(
-//         time_integrator.GetTimeStepper().GetTotalNumberOfIterations(),
-//         time_integrator.GetTimeStepper().GetNumberOfSteps() *
-//             time_integrator.GetTimeStepper().GetMaximumNumberOfIterations()
-//     );
-// }
+    auto gen_coords = create_vector({0., -1., 0., 1., 0., 0., 0.});
+    auto delta_gen_coords = create_vector({1., 1., 1., 1., 2., 3.});
+    auto gen_coords_next =
+        time_integrator.UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords);
 
-// bool GeneralizedAlphaTimeIntegrator::CheckConvergence(HostView1D residual) {
-//     // L2 norm of the residual vector should be very small (< epsilon) for the solution
-//     // to be considered converged
-//     double residual_norm = 0.;
-//     Kokkos::parallel_reduce(
-//         residual.extent(0),
-//         KOKKOS_LAMBDA(int i, double& residual_partial_sum) {
-//             double residual_value = residual(i);
-//             residual_partial_sum += residual_value * residual_value;
-//         },
-//         Kokkos::Sum<double>(residual_norm)
-//     );
-//     residual_norm = std::sqrt(residual_norm);
+    Vector r1{0., -1., 0.};
+    Vector r2{1., 1., 1.};
+    Vector position = r1 + r2;
 
-//     auto log = util::Log::Get();
-//     log->Debug(
-//         "Residual norm: " + std::to_string(residual_norm) + "\n"
-//     );
+    Quaternion q1{1., 0., 0., 0.};
+    Vector rotation_vector{1., 2., 3.};
+    auto q2 = quaternion_from_rotation_vector(rotation_vector);
+    Quaternion orientation = q1 * q2;
 
-//     return (residual_norm) < kTOLERANCE ? true : false;
-// }
+    expect_kokkos_view_1D_equal(
+        gen_coords_next,
+        {
+            position.GetXComponent(),          // component 1
+            position.GetYComponent(),          // component 2
+            position.GetZComponent(),          // component 3
+            orientation.GetScalarComponent(),  // component 4
+            orientation.GetXComponent(),       // component 5
+            orientation.GetYComponent(),       // component 6
+            orientation.GetZComponent()        // component 7
+        }
+    );
+}
 
 TEST(TimeIntegratorTest, ExpectConvergedSolution) {
-    auto residual = create_vector({1.e-7, 2.e-7, 3.e-7});
+    auto tol = GeneralizedAlphaTimeIntegrator::kCONVERGENCETOLERANCE;
+    auto residual = create_vector({tol * 1e-1, tol * 2e-1, tol * 3e-1});
     auto time_integrator = GeneralizedAlphaTimeIntegrator();
     auto converged = time_integrator.CheckConvergence(residual);
 
@@ -117,7 +128,8 @@ TEST(TimeIntegratorTest, ExpectConvergedSolution) {
 }
 
 TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
-    auto residual = create_vector({1.e-5, 2.e-5, 3.e-5});
+    auto tol = GeneralizedAlphaTimeIntegrator::kCONVERGENCETOLERANCE;
+    auto residual = create_vector({tol * 1e1, tol * 2e1, tol * 3e1});
     auto time_integrator = GeneralizedAlphaTimeIntegrator();
     auto converged = time_integrator.CheckConvergence(residual);
 
@@ -158,44 +170,52 @@ TEST(GeneralizedAlphaTimeIntegratorTest, GetSuppliedGAConstants) {
     EXPECT_EQ(time_integrator.GetGamma(), 0.93);
 }
 
-// TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
-//     auto initial_state = State();
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 1));
+TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 1));
 
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 0);
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 0);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 0);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 0);
 
-//     auto results = time_integrator.Integrate(initial_state);
+    auto initial_state = State();
+    auto mass_matrix = MassMatrix();
+    auto gen_forces = GeneralizedForces();
+    auto lagrange_mults = HostView1D();
+    auto results = time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
 
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);
 
-//     auto final_state = results.back();
+    auto final_state = results.back();
 
-//     // We expect the final state to contain the following values after one increment
-//     expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {1.});
-//     expect_kokkos_view_1D_equal(final_state.GetGeneralizedVelocity(), {2.});
-//     expect_kokkos_view_1D_equal(final_state.GetGeneralizedAcceleration(), {2.});
-//     expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {2.});
-// }
+    // We expect the final state to contain the following values after one increment
+    // via hand calculations
+    expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {0.});
+    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {2.});
+    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {2.});
+    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {2.});
+}
 
-// TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
-//     auto initial_state = State();
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 2));
-//     auto results = time_integrator.Integrate(initial_state);
+TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 2));
+    auto initial_state = State();
+    auto mass_matrix = MassMatrix();
+    auto gen_forces = GeneralizedForces();
+    auto lagrange_mults = HostView1D();
+    auto results = time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
 
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 2);
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 2);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 2);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 2);
 
-//     auto final_state = results.back();
+    auto final_state = results.back();
 
-//     // We expect the final state to contain the following values after two increments
-//     expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {2.});
-//     expect_kokkos_view_1D_equal(final_state.GetGeneralizedVelocity(), {4.});
-//     expect_kokkos_view_1D_equal(final_state.GetGeneralizedAcceleration(), {4.});
-//     expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {4.});
-// }
+    // We expect the final state to contain the following values after two increments
+    // via hand calculations
+    expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {1.});
+    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {4.});
+    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {4.});
+    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {4.});
+}
 
 }  // namespace openturbine::rigid_pendulum::tests

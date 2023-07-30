@@ -20,7 +20,7 @@ enum class ProblemType {
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
 public:
-    static constexpr double kTOLERANCE = 1e-6;
+    static constexpr double kCONVERGENCETOLERANCE = 1e-12;
 
     GeneralizedAlphaTimeIntegrator(
         double alpha_f = 0.5, double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5,
@@ -29,8 +29,11 @@ public:
 
     /// Returns the type of the time integrator
     inline TimeIntegratorType GetType() const override {
-        return TimeIntegratorType::GENERALIZED_ALPHA;
+        return TimeIntegratorType::kGENERALIZED_ALPHA;
     }
+
+    /// Returns the problem type solved by the time integrator
+    inline ProblemType GetProblemType() const { return problem_type_; }
 
     /// Returns the alpha_f parameter
     inline double GetAlphaF() const { return kALPHA_F_; }
@@ -54,11 +57,11 @@ public:
         std::function<HostView1D(size_t)> residual_vector = create_identity_vector
     ) override;
 
-    /*! @brief  Performs the SolveTimeStep() algorithm of the Lie group based generalized-alpha
-     * method as described in the paper by Brüls and Cardona (2010)
-     * https://doi.org/10.1115/1.4001370
-     * @param   state Current state of the system at the beginning of the time step
-     * @return  Updated state of the system at the end of the time step
+    /*! Implements the solveTimeStep() algorithm of the Lie group based generalized-alpha
+     *  method as described in Brüls, Cardona, Arnold, "Lie group generalized-alpha time
+     *  integration of constrained flexible multibody systems," 2012, Mechanism and
+     *  Machine Theory, Vol 48, 121-137
+     *  https://doi.org/10.1016/j.mechmachtheory.2011.07.017
      */
     std::tuple<State, HostView1D> AlphaStep(
         const State&, const MassMatrix&, const GeneralizedForces&, HostView1D,
