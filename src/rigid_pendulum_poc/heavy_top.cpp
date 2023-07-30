@@ -128,6 +128,20 @@ HostView2D heavy_top_constraint_gradient_matrix(
         }
     );
 
+    auto log = util::Log::Get();
+    log->Debug(
+        "Constraint gradient matrix is " + std::to_string(3) + " x " + std::to_string(6) +
+        " with elements" + "\n"
+    );
+    for (size_t i = 0; i < 3; i++) {
+        for (size_t j = 0; j < 6; j++) {
+            log->Debug(
+                "(" + std::to_string(i) + ", " + std::to_string(j) +
+                ") : " + std::to_string(constraint_gradient_matrix(i, j)) + "\n"
+            );
+        }
+    }
+
     return constraint_gradient_matrix;
 }
 
@@ -193,6 +207,20 @@ HostView2D heavy_top_iteration_matrix(
         }
     );
 
+    auto log = util::Log::Get();
+    log->Debug(
+        "Iteration matrix is " + std::to_string(size) + " x " + std::to_string(size) +
+        " with elements" + "\n"
+    );
+    for (size_t i = 0; i < size; i++) {
+        for (size_t j = 0; j < size; j++) {
+            log->Debug(
+                "(" + std::to_string(i) + ", " + std::to_string(j) +
+                ") : " + std::to_string(iteration_matrix(i, j)) + "\n"
+            );
+        }
+    }
+
     return iteration_matrix;
 }
 
@@ -227,18 +255,26 @@ HostView2D heavy_top_tangent_damping_matrix(
         6,
         KOKKOS_LAMBDA(const size_t i) {
             for (size_t j = 0; j < 6; j++) {
-                if (i < 3 && j < 3) {
-                    tangent_damping_matrix(i, j) = 0.;
-                } else if (i < 3 && j >= 3) {
-                    tangent_damping_matrix(i, j) = 0.;
-                } else if (i >= 3 && j < 3) {
-                    tangent_damping_matrix(i, j) = 0.;
-                } else {
+                if (i >= 3 && j >= 3) {
                     tangent_damping_matrix(i, j) = nonzero_block(i - 3, j - 3);
                 }
             }
         }
     );
+
+    auto log = util::Log::Get();
+    log->Debug(
+        "Tangent damping matrix is " + std::to_string(6) + " x " + std::to_string(6) +
+        " with elements" + "\n"
+    );
+    for (size_t i = 0; i < 6; i++) {
+        for (size_t j = 0; j < 6; j++) {
+            log->Debug(
+                "(" + std::to_string(i) + ", " + std::to_string(j) +
+                ") : " + std::to_string(tangent_damping_matrix(i, j)) + "\n"
+            );
+        }
+    }
 
     return tangent_damping_matrix;
 }
@@ -263,18 +299,26 @@ HostView2D heavy_top_tangent_stiffness_matrix(
         6,
         KOKKOS_LAMBDA(const size_t i) {
             for (size_t j = 0; j < 6; j++) {
-                if (i < 3 && j < 3) {
-                    tangent_stiffness_matrix(i, j) = 0.;
-                } else if (i < 3 && j >= 3) {
-                    tangent_stiffness_matrix(i, j) = 0.;
-                } else if (i >= 3 && j < 3) {
-                    tangent_stiffness_matrix(i, j) = 0.;
-                } else {
+                if (i >= 3 && j >= 3) {
                     tangent_stiffness_matrix(i, j) = non_zero_block(i - 3, j - 3);
                 }
             }
         }
     );
+
+    auto log = util::Log::Get();
+    log->Debug(
+        "Tangent stiffness matrix is " + std::to_string(6) + " x " + std::to_string(6) +
+        " with elements" + "\n"
+    );
+    for (size_t i = 0; i < 6; i++) {
+        for (size_t j = 0; j < 6; j++) {
+            log->Debug(
+                "(" + std::to_string(i) + ", " + std::to_string(j) +
+                ") : " + std::to_string(tangent_stiffness_matrix(i, j)) + "\n"
+            );
+        }
+    }
 
     return tangent_stiffness_matrix;
 }
