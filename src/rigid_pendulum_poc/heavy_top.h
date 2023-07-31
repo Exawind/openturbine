@@ -16,7 +16,7 @@ HostView1D heavy_top_residual_vector(
 /// Calculates the iteration matrix for the heavy top problem
 HostView2D heavy_top_iteration_matrix(
     const double&, const double&, HostView2D, HostView2D, HostView2D, HostView1D, HostView1D,
-    HostView1D
+    HostView1D, double h = 1., HostView1D = create_vector({1., 1., 1.})
 );
 
 /// Calculates the generalized coordinates residual vector for the heavy top problem
@@ -37,6 +37,8 @@ HostView2D heavy_top_tangent_damping_matrix(HostView1D, HostView2D);
 
 /// Calculates the tangent stiffness matrix for the heavy top problem
 HostView2D heavy_top_tangent_stiffness_matrix(HostView1D, HostView2D, HostView1D);
+
+HostView2D heavy_top_tangent_operator(HostView1D psi);
 
 // TODO: Move this to its own source files when implemented
 HostView1D rigid_pendulum_residual_vector(size_t size);

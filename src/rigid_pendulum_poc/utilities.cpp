@@ -144,8 +144,8 @@ HostView1D multiply_matrix_with_vector(HostView2D matrix, HostView1D vector) {
 }
 
 HostView2D multiply_matrix_with_matrix(HostView2D matrix_a, HostView2D matrix_b) {
-    auto n_rows = matrix_a.extent(0);
-    auto n_columns = matrix_b.extent(1);
+    auto n_columns = matrix_a.extent(1);
+    auto n_rows = matrix_b.extent(0);
 
     if (n_rows != n_columns) {
         throw std::invalid_argument(
@@ -164,6 +164,20 @@ HostView2D multiply_matrix_with_matrix(HostView2D matrix_a, HostView2D matrix_b)
             sum += matrix_a(row, i) * matrix_b(i, column);
         }
         result(row, column) = sum;
+    };
+
+    Kokkos::parallel_for(entries, multiply_row_column);
+
+    return result;
+}
+
+HostView2D multiply_matrix_with_scalar(HostView2D matrix, double scalar) {
+    auto result = HostView2D("result", matrix.extent(0), matrix.extent(1));
+    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
+        {0, 0}, {matrix.extent(0), matrix.extent(1)}
+    );
+    auto multiply_row_column = [matrix, result, scalar](int row, int column) {
+        result(row, column) = matrix(row, column) * scalar;
     };
 
     Kokkos::parallel_for(entries, multiply_row_column);

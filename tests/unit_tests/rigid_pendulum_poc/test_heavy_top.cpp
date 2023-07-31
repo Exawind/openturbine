@@ -162,4 +162,145 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateIterationMatrix) 
     );
 }
 
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentOperatorWithPhiAsZero) {
+    auto psi = create_vector({0., 0., 0.});
+    auto tangent_operator = heavy_top_tangent_operator(psi);
+
+    expect_kokkos_view_2D_equal(
+        tangent_operator,
+        {
+            {1., 0., 0., 0., 0., 0.},  // row 1
+            {0., 1., 0., 0., 0., 0.},  // row 2
+            {0., 0., 1., 0., 0., 0.},  // row 3
+            {0., 0., 0., 1., 0., 0.},  // row 4
+            {0., 0., 0., 0., 1., 0.},  // row 5
+            {0., 0., 0., 0., 0., 1.}   // row 6
+        }
+    );
+}
+
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentOperatorWithPhiNotZero) {
+    auto psi = create_vector({1., 2., 3.});
+    auto tangent_operator = heavy_top_tangent_operator(psi);
+
+    expect_kokkos_view_2D_equal(
+        tangent_operator,
+        {
+            {1., 0., 0., 0., 0., 0.},                                                      // row 1
+            {0., 1., 0., 0., 0., 0.},                                                      // row 2
+            {0., 0., 1., 0., 0., 0.},                                                      // row 3
+            {0., 0., 0., -0.06871266098996709, 0.555552845761836, -0.014131010177901665},  // row 4
+            {0., 0., 0., -0.2267181808418461, 0.1779133377000255, 0.6236305018139318},     // row 5
+            {0., 0., 0., 0.5073830075578865, 0.36287349294603777, 0.5889566688500127}      // row 6
+        }
+    );
+}
+
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneInc) {
+    // Calculate the required properties and initial conditions for the heavy top problem
+    auto mass = 15.;
+    auto mass_matrix = MassMatrix(mass, Vector(0.234375, 0.46875, 0.234375));
+
+    auto gravity = Vector(0., 0., -9.81);
+    auto forces = gravity * mass;
+
+    auto angular_velocity = create_vector({0.3, 0.1, 0.8});
+    auto J = mass_matrix.GetMomentOfInertiaMatrix();
+    auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
+    auto angular_velocity_vector =
+        Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
+    auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
+    auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
+
+    auto gen_forces = GeneralizedForces(forces, moments);
+
+    auto X0 = create_vector({0., 1., 0.});
+    auto rot0 = create_matrix({{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}});
+
+    // Convert the above into initial State for the heavy top problem
+    auto initial_position = multiply_matrix_with_vector(rot0, X0);
+    auto initial_orientation =
+        rotation_matrix_to_quaternion(RotationMatrix{{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}});
+    auto q0 = create_vector({
+        initial_position(0),                       // component 1
+        initial_position(1),                       // component 2
+        initial_position(2),                       // component 3
+        initial_orientation.GetScalarComponent(),  // component 4
+        initial_orientation.GetXComponent(),       // component 5
+        initial_orientation.GetYComponent(),       // component 6
+        initial_orientation.GetZComponent()        // component 7
+    });
+
+    auto omega0 = Vector({0., 150., -4.61538});
+    auto x_0 = Vector({0., 1., 0.});
+    auto initial_velocity = omega0.CrossProduct(x_0);
+
+    auto v0 = create_vector({
+        initial_velocity.GetXComponent(),  // component 1
+        initial_velocity.GetYComponent(),  // component 2
+        initial_velocity.GetZComponent(),  // component 3
+        omega0.GetXComponent(),            // component 4
+        omega0.GetYComponent(),            // component 5
+        omega0.GetZComponent()             // component 6
+    });
+
+    auto a0 =
+        create_vector({0., -21.301732544400004, -30.960830769230938, 661.3461692307692, 0., 0.});
+    auto aa0 = create_vector({0., 0., 0., 0., 0., 0.});  // algorithmic acceleration
+
+    auto initial_state = State(q0, v0, a0, aa0);
+
+    // Calculate properties for the time integrator
+    double initial_time{0.};
+    // double final_time{2.};
+    double final_time{0.002};
+    double time_step{0.002};
+    size_t num_steps = size_t(final_time / time_step);
+    size_t max_iterations{10};
+    // size_t max_iterations{1};
+
+    auto time_stepper = TimeStepper(initial_time, time_step, num_steps, max_iterations);
+
+    // Calculate the generalized alpha parameters
+    auto rho_inf = 0.6;
+    auto alpha_m = (2. * rho_inf - 1.) / (rho_inf + 1.);
+    auto alpha_f = rho_inf / (rho_inf + 1.);
+    auto gamma = 0.5 + alpha_f - alpha_m;
+    auto beta = 0.25 * std::pow(gamma + 0.5, 2);
+
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(
+        alpha_f, alpha_m, beta, gamma, time_stepper, ProblemType::kHeavyTop
+    );
+
+    // Initialize the lagrange multipliers to zero
+    auto lagrange_mults = create_vector({0., 0., 0.});
+
+    // Perform the time integration
+    auto results = time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
+
+    // Expected values of alpham, alphaf, beta, gamma, betap, gammap from prototype fortran code
+    // 0.12499999999999997       0.37499999999999994       0.39062500000000000 0.75000000000000000
+    // 896000.00000000000        960.00000000000000
+    EXPECT_EQ(time_integrator.GetAlphaF(), 0.37499999999999994);
+    EXPECT_EQ(time_integrator.GetAlphaM(), 0.12499999999999997);
+    EXPECT_EQ(time_integrator.GetBeta(), 0.39062500000000000);
+    EXPECT_EQ(time_integrator.GetGamma(), 0.75000000000000000);
+
+    // EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
+    // EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);
+
+    // auto final_state = results.back();
+
+    // // We expect the final state to contain the following values after one increment
+    // // via hand calculations
+    // expect_kokkos_view_1D_equal(
+    //     final_state.GetGeneralizedCoordinates(), {0., 0., 0., 1., 0., 0., 0.}
+    // );
+    // expect_kokkos_view_1D_equal(final_state.GetVelocity(), {0., 0., 0., 0., 0., 0., 0.});
+    // expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {0., 0., 0., 0., 0., 0., 0.});
+    // expect_kokkos_view_1D_equal(
+    //     final_state.GetAlgorithmicAcceleration(), {0., 0., 0., 0., 0., 0., 0.}
+    // );
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

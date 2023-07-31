@@ -13,14 +13,15 @@ HostView1D heavy_top_residual_vector(
     //     {residual_gen_coords},
     //     {residual_constraints}
     // }
+    HostView1D reference_position_vector = create_vector({0., 1., 0});
 
     auto residual_gen_coords = heavy_top_gen_coords_residual_vector(
-        mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector, position_vector,
-        lagrange_multipliers
+        mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector,
+        reference_position_vector, lagrange_multipliers
     );
 
     auto residual_constraints =
-        heavy_top_constraints_residual_vector(rotation_matrix, position_vector);
+        heavy_top_constraints_residual_vector(rotation_matrix, reference_position_vector);
 
     auto size_res_gen_coords = residual_gen_coords.extent(0);
     auto size_res_constraints = residual_constraints.extent(0);
@@ -148,12 +149,13 @@ HostView2D heavy_top_constraint_gradient_matrix(
 HostView2D heavy_top_iteration_matrix(
     const double& BETA_PRIME, const double& GAMMA_PRIME, HostView2D mass_matrix,
     HostView2D inertia_matrix, HostView2D rotation_matrix, HostView1D angular_velocity_vector,
-    HostView1D position_vector, HostView1D lagrange_multipliers
+    HostView1D position_vector, HostView1D lagrange_multipliers, double h,
+    HostView1D delta_gen_coords
 ) {
     // Iteration matrix for the heavy top problem is given by
     // [iteration matrix] = [
-    //     [M(q)] * beta' + [C_t(q,v,t)] * gamma' + [K_t(q,v,v',Lambda,t)]    [B(q)^T]]
-    //                            [ B(q) ]                                       [0]
+    //     [M(q)] * beta' + [C_t(q,v,t)] * gamma' + [K_t(q,v,v',Lambda,t)] * [T(h dq)]    [B(q)^T]]
+    //                         [ B(q) ] * [T(h dq)]                                         [0]
     // ]
     // where,
     // [M(q)] = mass matrix
@@ -163,30 +165,42 @@ HostView2D heavy_top_iteration_matrix(
     //                                                       0  X * R^T * Lambda ]
     // [B(q)] = Constraint gradeint matrix = [ -I_3    -R * X ]
 
+    HostView1D reference_position_vector = create_vector({0., 1., 0});
+
     auto tangent_damping_matrix =
         heavy_top_tangent_damping_matrix(angular_velocity_vector, inertia_matrix);
-    auto tangent_stiffness_matrix =
-        heavy_top_tangent_stiffness_matrix(position_vector, rotation_matrix, lagrange_multipliers);
+    auto tangent_stiffness_matrix = heavy_top_tangent_stiffness_matrix(
+        reference_position_vector, rotation_matrix, lagrange_multipliers
+    );
     auto constraint_gradient_matrix =
-        heavy_top_constraint_gradient_matrix(position_vector, rotation_matrix);
+        heavy_top_constraint_gradient_matrix(reference_position_vector, rotation_matrix);
+
+    auto h_delta_gen_coords = HostView1D("h_delta_gen_coords", 3);
+    Kokkos::parallel_for(
+        3, KOKKOS_LAMBDA(const size_t i) { h_delta_gen_coords(i) = h * delta_gen_coords(i + 3); }
+    );
+    auto tangent_operator = heavy_top_tangent_operator(h_delta_gen_coords);
 
     auto size_dofs = mass_matrix.extent(0);
     auto size_constraints = constraint_gradient_matrix.extent(0);
     auto size = size_dofs + size_constraints;
 
     auto element1 = HostView2D("element1", size_dofs, size_dofs);
+    auto K_T_hdq = multiply_matrix_with_matrix(tangent_stiffness_matrix, tangent_operator);
     Kokkos::parallel_for(
         size_dofs,
         KOKKOS_LAMBDA(const size_t i) {
             for (size_t j = 0; j < size_dofs; j++) {
                 element1(i, j) = mass_matrix(i, j) * BETA_PRIME +
-                                 tangent_damping_matrix(i, j) * GAMMA_PRIME +
-                                 tangent_stiffness_matrix(i, j);
+                                 tangent_damping_matrix(i, j) * GAMMA_PRIME + K_T_hdq(i, j);
             }
         }
     );
     auto element2 = transpose_matrix(constraint_gradient_matrix);
-    auto element3 = constraint_gradient_matrix;
+
+    auto B_T_hdq = multiply_matrix_with_matrix(constraint_gradient_matrix, tangent_operator);
+    auto element3 = B_T_hdq;
+
     auto element4 = HostView2D("element4", 3, 3);
 
     auto iteration_matrix = HostView2D("iteration_matrix", size, size);
@@ -321,6 +335,43 @@ HostView2D heavy_top_tangent_stiffness_matrix(
     }
 
     return tangent_stiffness_matrix;
+}
+
+HostView2D heavy_top_tangent_operator(HostView1D psi) {
+    const double tol = 1e-16;
+    const double phi = std::sqrt(psi(0) * psi(0) + psi(1) * psi(1) + psi(2) * psi(2));
+
+    auto tangent_operator = HostView2D("tangent_operator", 6, 6);
+    tangent_operator(0, 0) = 1.0;
+    tangent_operator(1, 1) = 1.0;
+    tangent_operator(2, 2) = 1.0;
+    tangent_operator(3, 3) = 1.0;
+    tangent_operator(4, 4) = 1.0;
+    tangent_operator(5, 5) = 1.0;
+
+    if (std::abs(phi) > tol) {
+        auto psi_matrix = create_cross_product_matrix(psi);
+        auto psi_psi_matrix = multiply_matrix_with_matrix(psi_matrix, psi_matrix);
+
+        auto tangent_operator_1 =
+            multiply_matrix_with_scalar(psi_matrix, (std::cos(phi) - 1.0) / (phi * phi));
+        auto tangent_operator_2 =
+            multiply_matrix_with_scalar(psi_psi_matrix, (1.0 - std::sin(phi) / phi) / (phi * phi));
+
+        Kokkos::parallel_for(
+            6,
+            KOKKOS_LAMBDA(const size_t i) {
+                for (size_t j = 0; j < 6; j++) {
+                    if (i >= 3 && j >= 3) {
+                        tangent_operator(i, j) += tangent_operator_1(i - 3, j - 3);
+                        tangent_operator(i, j) += tangent_operator_2(i - 3, j - 3);
+                    }
+                }
+            }
+        );
+    }
+
+    return tangent_operator;
 }
 
 HostView2D rigid_pendulum_iteration_matrix(size_t size) {

@@ -218,4 +218,27 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
     expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {4.});
 }
 
+TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroAccelerationVector) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 1));
+    auto v = create_vector({1., 2., 3.});
+    auto initial_state = State(v, v, v, v);
+    auto mass_matrix = MassMatrix();
+    auto gen_forces = GeneralizedForces();
+    auto lagrange_mults = HostView1D(v);
+    auto results = time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
+
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);
+
+    auto final_state = results.back();
+
+    // We expect the final state to contain the following values after one increment
+    // via hand calculations
+    expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {2., 4., 6.});
+    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {3., 4., 5.});
+    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {2., 2., 2.});
+    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {2., 2., 2.});
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

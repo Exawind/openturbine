@@ -58,7 +58,7 @@ public:
     ) override;
 
     /*! Implements the solveTimeStep() algorithm of the Lie group based generalized-alpha
-     *  method as described in Brüls, Cardona, Arnold, "Lie group generalized-alpha time
+     *  method as described in Brüls, Cardona, and Arnold, "Lie group generalized-alpha time
      *  integration of constrained flexible multibody systems," 2012, Mechanism and
      *  Machine Theory, Vol 48, 121-137
      *  https://doi.org/10.1016/j.mechmachtheory.2011.07.017
@@ -73,7 +73,7 @@ public:
 
     /// Computes residuals of the force array for the non-linear update
     HostView1D ComputeResiduals(
-        const MassMatrix&, const GeneralizedForces&, HostView1D, HostView1D, HostView1D,
+        const MassMatrix&, const GeneralizedForces&, HostView1D, HostView1D, HostView1D, HostView1D,
         std::function<HostView1D(size_t)> vector
     );
 
@@ -86,7 +86,7 @@ public:
     /// Computes the iteration matrix for the non-linear update
     HostView2D ComputeIterationMatrix(
         const double&, const double&, const MassMatrix&, const GeneralizedForces&, HostView1D,
-        HostView1D, HostView1D, std::function<HostView2D(size_t)> matrix
+        HostView1D, HostView1D, double, HostView1D, std::function<HostView2D(size_t)> matrix
     );
 
 private:

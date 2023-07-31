@@ -310,4 +310,25 @@ TEST(MathUtilitiesTest, Multiply3x3MatrixWith3x3Matrix) {
     expect_kokkos_view_2D_equal(result, {{30., 36., 42.}, {66., 81., 96.}, {102., 126., 150.}});
 }
 
+// HostView2D multiply_matrix_with_scalar(HostView2D matrix, double scalar) {
+//     auto result = HostView2D("result", matrix.extent(0), matrix.extent(1));
+//     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
+//         {0, 0}, {matrix.extent(0), matrix.extent(1)}
+//     );
+//     auto multiply_row_column = [matrix, result, scalar](int row, int column) {
+//         result(row, column) = matrix(row, column) * scalar;
+//     };
+
+//     Kokkos::parallel_for(entries, multiply_row_column);
+
+//     return result;
+// }
+
+TEST(MathUtilitiesTest, Multiply3x3MatrixWithAScalar) {
+    auto matrix = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
+    auto result = multiply_matrix_with_scalar(matrix, 2.);
+
+    expect_kokkos_view_2D_equal(result, {{2., 4., 6.}, {8., 10., 12.}, {14., 16., 18.}});
+}
+
 }  // namespace openturbine::rigid_pendulum::tests

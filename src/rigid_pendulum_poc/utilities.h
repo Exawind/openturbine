@@ -64,4 +64,7 @@ HostView1D multiply_matrix_with_vector(HostView2D, HostView1D);
 /// Multiplies an m x n matrix with an n x p matrix and returns an m x p matrix
 HostView2D multiply_matrix_with_matrix(HostView2D, HostView2D);
 
+/// Multiplies an m x n matrix with a scalar and returns an m x n matrix
+HostView2D multiply_matrix_with_scalar(HostView2D, double);
+
 }  // namespace openturbine::rigid_pendulum
