@@ -20,8 +20,8 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateGenCoordsResidual
     auto lagrange_multipliers = create_vector({1., 2., 3.});
 
     auto residual_vector = heavy_top_gen_coords_residual_vector(
-        mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector, position_vector,
-        lagrange_multipliers
+        mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector, lagrange_multipliers,
+        position_vector
     );
 
     expect_kokkos_view_1D_equal(
@@ -90,7 +90,7 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentStiffnessM
     auto lagrange_multipliers = create_vector({1., 2., 3.});
 
     auto tangent_stiffness_matrix =
-        heavy_top_tangent_stiffness_matrix(position_vector, rotation_matrix, lagrange_multipliers);
+        heavy_top_tangent_stiffness_matrix(rotation_matrix, lagrange_multipliers, position_vector);
 
     expect_kokkos_view_2D_equal(
         tangent_stiffness_matrix,
@@ -114,7 +114,7 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateConstraintGradien
     );
 
     auto constraint_gradient_matrix =
-        heavy_top_constraint_gradient_matrix(position_vector, rotation_matrix);
+        heavy_top_constraint_gradient_matrix(rotation_matrix, position_vector);
 
     expect_kokkos_view_2D_equal(
         constraint_gradient_matrix,
@@ -143,7 +143,7 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateIterationMatrix) 
 
     auto iteration_matrix = heavy_top_iteration_matrix(
         BETA_PRIME, GAMMA_PRIME, mass_matrix, inertia_matrix, rotation_matrix,
-        angular_velocity_vector, position_vector, lagrange_multipliers
+        angular_velocity_vector, lagrange_multipliers, position_vector
     );
 
     expect_kokkos_view_2D_equal(

@@ -10,18 +10,21 @@ namespace openturbine::rigid_pendulum {
  *  Ref: https://doi.org/10.1115/1.4001370
  */
 HostView1D heavy_top_residual_vector(
-    HostView2D, HostView2D, HostView1D, HostView1D, HostView1D, HostView1D
+    HostView2D, HostView2D, HostView1D, HostView1D, HostView1D, HostView1D,
+    HostView1D reference_position_vector = create_vector({0., 1., 0})
 );
 
 /// Calculates the iteration matrix for the heavy top problem
 HostView2D heavy_top_iteration_matrix(
     const double&, const double&, HostView2D, HostView2D, HostView2D, HostView1D, HostView1D,
-    HostView1D, double h = 1., HostView1D = create_vector({1., 1., 1.})
+    HostView1D reference_position_vector = create_vector({0., 1., 0}), double h = 1.,
+    HostView1D = create_vector({1., 1., 1.})
 );
 
 /// Calculates the generalized coordinates residual vector for the heavy top problem
 HostView1D heavy_top_gen_coords_residual_vector(
-    HostView2D, HostView2D, HostView1D, HostView1D, HostView1D, HostView1D
+    HostView2D, HostView2D, HostView1D, HostView1D, HostView1D,
+    HostView1D reference_position_vector = create_vector({0., 1., 0})
 );
 
 /// Calculates the constraint residual vector for the heavy top problem
@@ -30,13 +33,17 @@ HostView1D heavy_top_constraints_residual_vector(
 );
 
 /// Calculates the constraint gradient matrix for the heavy top problem
-HostView2D heavy_top_constraint_gradient_matrix(HostView1D, HostView2D);
+HostView2D heavy_top_constraint_gradient_matrix(
+    HostView2D, HostView1D reference_position_vector = create_vector({0., 1., 0})
+);
 
 /// Calculates the tangent damping matrix for the heavy top problem
 HostView2D heavy_top_tangent_damping_matrix(HostView1D, HostView2D);
 
 /// Calculates the tangent stiffness matrix for the heavy top problem
-HostView2D heavy_top_tangent_stiffness_matrix(HostView1D, HostView2D, HostView1D);
+HostView2D heavy_top_tangent_stiffness_matrix(
+    HostView2D, HostView1D, HostView1D reference_position_vector = create_vector({0., 1., 0})
+);
 
 HostView2D heavy_top_tangent_operator(HostView1D psi);
 
