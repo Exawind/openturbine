@@ -71,14 +71,14 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     auto gen_coords = state.GetGeneralizedCoordinates();
     auto velocity = state.GetVelocity();
     auto acceleration = state.GetAcceleration();
-    auto algo_accleration = state.GetAlgorithmicAcceleration();
+    auto algo_acceleration = state.GetAlgorithmicAcceleration();
 
     auto log = util::Log::Get();
     log->Debug("Initial state of gen_coords, velocity, acceleration, algo_acceleration:\n");
     for (size_t i = 0; i < 6; i++) {
         log->Debug(
             std::to_string(gen_coords(i)) + ", " + std::to_string(velocity(i)) + ", " +
-            std::to_string(acceleration(i)) + ", " + std::to_string(algo_accleration(i)) + "\n"
+            std::to_string(acceleration(i)) + ", " + std::to_string(algo_acceleration(i)) + "\n"
         );
     }
     log->Debug(std::to_string(gen_coords(6)) + "\n");
@@ -86,8 +86,8 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     // Initialize some X_next variables to assist in updating the State - only for ones that
     // require both the current and next values
     auto gen_coords_next = HostView1D("gen_coords_next", gen_coords.size());
-    auto algo_accleration_next =
-        HostView1D("algorithmic_acceleration_next", algo_accleration.size());
+    auto algo_acceleration_next =
+        HostView1D("algorithmic_acceleration_next", algo_acceleration.size());
     auto delta_gen_coords = HostView1D("gen_coords_increment", velocity.size());
     auto lagrange_mults_next = HostView1D("lagrange_mults_next", lagrange_mults.size());
 
@@ -104,30 +104,35 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     //     dq = dq + h*(1.d0 - gamma)*a + gamma*h*ahold
 
     //     a = ahold
+
+    //     ddq = 0.
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const size_t i) {
-            algo_accleration(i) =
-                (kALPHA_F_ * acceleration(i) - kALPHA_M_ * algo_accleration(i)) / (1. - kALPHA_M_);
-            delta_gen_coords(i) = velocity(i) + h * (0.5 - kBETA_) * algo_accleration(i) +
-                                  h * kBETA_ * algo_accleration(i);
+            algo_acceleration_next(i) =
+                (kALPHA_F_ * acceleration(i) - kALPHA_M_ * algo_acceleration(i)) / (1. - kALPHA_M_);
+
+            delta_gen_coords(i) = velocity(i) + h * (0.5 - kBETA_) * algo_acceleration(i) +
+                                  h * kBETA_ * algo_acceleration_next(i);
             velocity(i) +=
-                h * (1 - kGAMMA_) * algo_accleration_next(i) + h * kGAMMA_ * algo_accleration(i);
-            algo_accleration_next(i) = algo_accleration(i);
+                h * (1 - kGAMMA_) * algo_acceleration(i) + h * kGAMMA_ * algo_acceleration_next(i);
 
             lagrange_mults_next(i) = 0.;
+
+            algo_acceleration(i) = algo_acceleration_next(i);
+
             acceleration(i) = 0.;
         }
     );
 
     // auto log = util::Log::Get();
     log->Debug(
-        "Initial update of algo_accleration, algo_accleration_next, velocity, and "
+        "Initial update of algo_acceleration, algo_acceleration_next, velocity, and "
         "delta_gen_coords:\n"
     );
     for (size_t i = 0; i < size; i++) {
         log->Debug(
-            std::to_string(algo_accleration(i)) + " " + std::to_string(algo_accleration_next(i)) +
+            std::to_string(algo_acceleration(i)) + " " + std::to_string(algo_acceleration_next(i)) +
             " " + std::to_string(velocity(i)) + " " + std::to_string(delta_gen_coords(i)) + "\n"
         );
     }
@@ -212,7 +217,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const size_t i) {
-            algo_accleration_next(i) += (1. - kALPHA_F_) / (1. - kALPHA_M_) * acceleration(i);
+            algo_acceleration_next(i) += (1. - kALPHA_F_) / (1. - kALPHA_M_) * acceleration(i);
         }
     );
 
@@ -221,13 +226,13 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     for (size_t i = 0; i < size; i++) {
         log->Debug(
             std::to_string(gen_coords_next(i)) + ", " + std::to_string(velocity(i)) + ", " +
-            std::to_string(acceleration(i)) + ", " + std::to_string(algo_accleration_next(i)) + "\n"
+            std::to_string(acceleration(i)) + ", " + std::to_string(algo_acceleration_next(i)) + "\n"
         );
     }
     log->Debug(std::to_string(gen_coords_next(6)) + "\n");
 
     auto results = std::make_tuple(
-        State{gen_coords_next, velocity, acceleration, algo_accleration_next}, lagrange_mults_next
+        State{gen_coords_next, velocity, acceleration, algo_acceleration_next}, lagrange_mults_next
     );
 
     if (this->is_converged_) {
