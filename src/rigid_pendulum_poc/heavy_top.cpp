@@ -355,12 +355,16 @@ HostView2D heavy_top_tangent_operator(const HostView1D psi) {
     const double phi = std::sqrt(psi(0) * psi(0) + psi(1) * psi(1) + psi(2) * psi(2));
 
     auto tangent_operator = HostView2D("tangent_operator", 6, 6);
-    tangent_operator(0, 0) = 1.0;
-    tangent_operator(1, 1) = 1.0;
-    tangent_operator(2, 2) = 1.0;
-    tangent_operator(3, 3) = 1.0;
-    tangent_operator(4, 4) = 1.0;
-    tangent_operator(5, 5) = 1.0;
+    Kokkos::parallel_for(
+        6,
+        KOKKOS_LAMBDA(const size_t i) {
+            for (size_t j = 0; j < 6; j++) {
+                if (i == j) {
+                    tangent_operator(i, j) = 1.0;
+                }
+            }
+        }
+    );
 
     if (std::abs(phi) > tol) {
         auto psi_matrix = create_cross_product_matrix(psi);

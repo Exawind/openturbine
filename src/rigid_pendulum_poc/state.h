@@ -53,13 +53,7 @@ public:
     inline Vector GetPrincipalMomentsOfInertia() const { return principal_moment_of_inertia_; }
 
     /// Returns the moment of inertia matrix as a 2D Kokkos view
-    inline HostView2D GetMomentOfInertiaMatrix() const {
-        HostView2D moment_of_inertia_matrix("Moment of inertia matrix", 3, 3);
-        moment_of_inertia_matrix(0, 0) = principal_moment_of_inertia_.GetXComponent();
-        moment_of_inertia_matrix(1, 1) = principal_moment_of_inertia_.GetYComponent();
-        moment_of_inertia_matrix(2, 2) = principal_moment_of_inertia_.GetZComponent();
-        return moment_of_inertia_matrix;
-    }
+    HostView2D GetMomentOfInertiaMatrix() const;
 
     /// Returns the mass matrix of the rigid body
     inline HostView2D GetMassMatrix() const { return mass_matrix_; }

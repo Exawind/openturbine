@@ -254,9 +254,9 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneI
 
     // Calculate properties for the time integrator
     double initial_time{0.};
-    double final_time{0.2};
+    double final_time{0.02};
     double time_step{0.002};
-    size_t num_steps = size_t(final_time / time_step);
+    size_t num_steps = size_t(final_time / time_step);  // 10 steps
     size_t max_iterations{10};
 
     auto time_stepper = TimeStepper(initial_time, time_step, num_steps, max_iterations);
@@ -286,21 +286,25 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneI
     EXPECT_EQ(time_integrator.GetBeta(), 0.39062500000000000);
     EXPECT_EQ(time_integrator.GetGamma(), 0.75000000000000000);
 
-    // EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
-    // EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);
+    auto final_state = results.back();
 
-    // auto final_state = results.back();
-
-    // // We expect the final state to contain the following values after one increment
-    // // via hand calculations
-    // expect_kokkos_view_1D_equal(
-    //     final_state.GetGeneralizedCoordinates(), {0., 0., 0., 1., 0., 0., 0.}
-    // );
-    // expect_kokkos_view_1D_equal(final_state.GetVelocity(), {0., 0., 0., 0., 0., 0., 0.});
-    // expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {0., 0., 0., 0., 0., 0., 0.});
-    // expect_kokkos_view_1D_equal(
-    //     final_state.GetAlgorithmicAcceleration(), {0., 0., 0., 0., 0., 0., 0.}
-    // );
+    // We expect the final state to contain the following values after one increment
+    // via a pilot fortran code
+    expect_kokkos_view_1D_equal(
+        final_state.GetGeneralizedCoordinates(),
+        {0.091943, 0.995745, -0.006167, 0.070604, 0.045687, 0.996438, -0.006332}
+    );
+    expect_kokkos_view_1D_equal(
+        final_state.GetVelocity(), {4.564702, -0.425498, -0.620310, 1.287734, 150., 4.522188}
+    );
+    expect_kokkos_view_1D_equal(
+        final_state.GetAcceleration(),
+        {-6.272347, -24.111949, -29.783310, -560.293932, 0., 244.069741}
+    );
+    expect_kokkos_view_1D_equal(
+        final_state.GetAlgorithmicAcceleration(),
+        {-4.850215, -21.808817, -30.587676, -616.404070, 0., 241.543883}
+    );
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

@@ -108,6 +108,8 @@ HostView2D create_cross_product_matrix(const HostView1D vector) {
     }
 
     auto matrix = HostView2D("cross_product_matrix", 3, 3);
+
+    // Is this a problem to assign the values directly to Kokkos::View?
     matrix(0, 0) = 0.;
     matrix(0, 1) = -vector(2);
     matrix(0, 2) = vector(1);
@@ -144,16 +146,18 @@ HostView1D multiply_matrix_with_vector(const HostView2D matrix, const HostView1D
 }
 
 HostView2D multiply_matrix_with_matrix(const HostView2D matrix_a, const HostView2D matrix_b) {
-    auto n_columns = matrix_a.extent(1);
-    auto n_rows = matrix_b.extent(0);
+    auto a_n_columns = matrix_a.extent(1);
+    auto b_n_rows = matrix_b.extent(0);
 
-    if (n_rows != n_columns) {
+    if (b_n_rows != a_n_columns) {
         throw std::invalid_argument(
             "The number of columns of the first matrix must be equal to the number of rows of the "
             "second matrix"
         );
     }
 
+    auto n_rows = matrix_a.extent(0);
+    auto n_columns = matrix_b.extent(1);
     auto result = HostView2D("result", n_rows, n_columns);
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {n_rows, n_columns}

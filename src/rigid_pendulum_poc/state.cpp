@@ -54,6 +54,22 @@ MassMatrix::MassMatrix(HostView2D mass_matrix)
         Vector(mass_matrix_(3, 3), mass_matrix_(4, 4), mass_matrix_(5, 5));
 }
 
+HostView2D MassMatrix::GetMomentOfInertiaMatrix() const {
+    HostView2D moment_of_inertia_matrix("Moment of inertia matrix", 3, 3);
+
+    std::vector<double> J = {
+        this->principal_moment_of_inertia_.GetXComponent(),
+        this->principal_moment_of_inertia_.GetYComponent(),
+        this->principal_moment_of_inertia_.GetZComponent()};
+
+    Kokkos::parallel_for(
+        "Moment of inertia matrix", 3,
+        KOKKOS_LAMBDA(const int i) { moment_of_inertia_matrix(i, i) = J[i]; }
+    );
+
+    return moment_of_inertia_matrix;
+}
+
 GeneralizedForces::GeneralizedForces(const Vector& forces, const Vector& moments)
     : forces_(forces), moments_(moments) {
     this->generalized_forces_ = create_vector({

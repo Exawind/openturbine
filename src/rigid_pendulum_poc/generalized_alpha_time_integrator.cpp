@@ -105,12 +105,15 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             velocity(i) +=
                 h * (1 - kGAMMA_) * algo_acceleration(i) + h * kGAMMA_ * algo_acceleration_next(i);
 
-            lagrange_mults_next(i) = 0.;
-
             algo_acceleration(i) = algo_acceleration_next(i);
 
             acceleration(i) = 0.;
         }
+    );
+
+    // Initialize lagrange_mults_next to zero separately since it is of different size
+    Kokkos::parallel_for(
+        lagrange_mults_next.size(), KOKKOS_LAMBDA(const size_t i) { lagrange_mults_next(i) = 0.; }
     );
 
     auto log = util::Log::Get();
