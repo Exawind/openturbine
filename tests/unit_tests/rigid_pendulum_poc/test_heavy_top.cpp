@@ -44,8 +44,10 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateConstraintsResidu
          {-0.129909, 0.166271, 0.977485}}
     );
     auto position_vector = create_vector({1., 2., 3.});
+    auto ref_position_vector = create_vector({0., 1., 0.});
 
-    auto residual_vector = heavy_top_constraints_residual_vector(rotation_matrix, position_vector);
+    auto residual_vector =
+        heavy_top_constraints_residual_vector(rotation_matrix, position_vector, ref_position_vector);
 
     expect_kokkos_view_1D_equal(
         residual_vector,
@@ -256,7 +258,7 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneI
     double final_time{0.002};
     double time_step{0.002};
     size_t num_steps = size_t(final_time / time_step);
-    size_t max_iterations{10};
+    size_t max_iterations{1};
     // size_t max_iterations{1};
 
     auto time_stepper = TimeStepper(initial_time, time_step, num_steps, max_iterations);
@@ -269,7 +271,7 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneI
     auto beta = 0.25 * std::pow(gamma + 0.5, 2);
 
     auto time_integrator = GeneralizedAlphaTimeIntegrator(
-        alpha_f, alpha_m, beta, gamma, time_stepper, ProblemType::kHeavyTop
+        alpha_f, alpha_m, beta, gamma, time_stepper, ProblemType::kHeavyTop, true
     );
 
     // Initialize the lagrange multipliers to zero

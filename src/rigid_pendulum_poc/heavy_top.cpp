@@ -16,12 +16,13 @@ HostView1D heavy_top_residual_vector(
     // }
 
     auto residual_gen_coords = heavy_top_gen_coords_residual_vector(
-        mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector,
-        reference_position_vector, lagrange_multipliers
+        mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector, lagrange_multipliers,
+        reference_position_vector
     );
 
-    auto residual_constraints =
-        heavy_top_constraints_residual_vector(rotation_matrix, position_vector);
+    auto residual_constraints = heavy_top_constraints_residual_vector(
+        rotation_matrix, position_vector, reference_position_vector
+    );
 
     auto size_res_gen_coords = residual_gen_coords.extent(0);
     auto size_res_constraints = residual_constraints.extent(0);
@@ -31,10 +32,11 @@ HostView1D heavy_top_residual_vector(
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const size_t i) {
-            if (i < size_res_gen_coords) {
+            if (i >= size_res_gen_coords) {
+                residual_vector(i) = residual_constraints(i - size_res_gen_coords);
+            } else {
                 residual_vector(i) = residual_gen_coords(i);
             }
-            residual_vector(i) = residual_constraints(i - 6);
         }
     );
 
@@ -72,7 +74,9 @@ HostView1D heavy_top_gen_coords_residual_vector(
     );
 
     auto log = util::Log::Get();
-    log->Debug("Residual vector is " + std::to_string(6) + " x 1 with elements\n");
+    log->Debug(
+        "heavy_top_gen_coords_residual_vector is " + std::to_string(6) + " x 1 with elements\n"
+    );
     for (size_t i = 0; i < 6; i++) {
         log->Debug(std::to_string(residual_gen_coords(i)) + "\n");
     }
@@ -98,7 +102,10 @@ HostView1D heavy_top_constraints_residual_vector(
     );
 
     auto log = util::Log::Get();
-    log->Debug("Residual vector is " + std::to_string(3) + " x 1 with elements\n");
+    log->Debug(
+        "heavy_top_constraints_residual_vector vector is " + std::to_string(3) +
+        " x 1 with elements\n"
+    );
     for (size_t i = 0; i < 3; i++) {
         log->Debug(std::to_string(residual_constraints(i)) + "\n");
     }
@@ -195,6 +202,7 @@ HostView2D heavy_top_iteration_matrix(
             }
         }
     );
+
     auto element2 = transpose_matrix(constraint_gradient_matrix);
 
     auto B_T_hdq = multiply_matrix_with_matrix(constraint_gradient_matrix, tangent_operator);

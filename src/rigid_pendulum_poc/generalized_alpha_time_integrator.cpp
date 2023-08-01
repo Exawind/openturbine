@@ -9,14 +9,15 @@ namespace openturbine::rigid_pendulum {
 
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper,
-    ProblemType problem_type
+    ProblemType problem_type, bool precondition
 )
     : kALPHA_F_(alpha_f),
       kALPHA_M_(alpha_m),
       kBETA_(beta),
       kGAMMA_(gamma),
       time_stepper_(std::move(time_stepper)),
-      problem_type_(problem_type) {
+      problem_type_(problem_type),
+      precondition_(precondition) {
     if (this->kALPHA_F_ < 0 || this->kALPHA_F_ > 1) {
         throw std::invalid_argument("Invalid value for alpha_f");
     }
@@ -73,16 +74,6 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     auto acceleration = state.GetAcceleration();
     auto algo_acceleration = state.GetAlgorithmicAcceleration();
 
-    auto log = util::Log::Get();
-    log->Debug("Initial state of gen_coords, velocity, acceleration, algo_acceleration:\n");
-    for (size_t i = 0; i < 6; i++) {
-        log->Debug(
-            std::to_string(gen_coords(i)) + ", " + std::to_string(velocity(i)) + ", " +
-            std::to_string(acceleration(i)) + ", " + std::to_string(algo_acceleration(i)) + "\n"
-        );
-    }
-    log->Debug(std::to_string(gen_coords(6)) + "\n");
-
     // Initialize some X_next variables to assist in updating the State - only for ones that
     // require both the current and next values
     auto gen_coords_next = HostView1D("gen_coords_next", gen_coords.size());
@@ -95,17 +86,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const auto h = this->time_stepper_.GetTimeStep();
     const auto size = velocity.size();
 
-    //   ! Algorithm from Table 1, Bruls Cardona Arnold 2012
-
-    //     ahold = (alphaf*ddq - alpham*a) / (1.d0 - alpham)
-
-    //     delta_q = dq + (0.5d0 - beta)*h*a + beta*h*ahold
-
-    //     dq = dq + h*(1.d0 - gamma)*a + gamma*h*ahold
-
-    //     a = ahold
-
-    //     ddq = 0.
+    // Algorithm from Table 1, Brüls, Cardona, and Arnold 2012
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const size_t i) {
@@ -125,7 +106,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         }
     );
 
-    // auto log = util::Log::Get();
+    auto log = util::Log::Get();
     log->Debug(
         "Initial update of algo_acceleration, algo_acceleration_next, velocity, and "
         "delta_gen_coords:\n"
@@ -145,11 +126,39 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
 
     const auto BETA_PRIME = (1 - kALPHA_M_) / (h * h * kBETA_ * (1 - kALPHA_F_));
     const auto GAMMA_PRIME = kGAMMA_ / (h * kBETA_);
-
     log->Debug(
         "BETA_PRIME = " + std::to_string(BETA_PRIME) +
         ", GAMMA_PRIME = " + std::to_string(GAMMA_PRIME) + "\n"
     );
+
+    // Precondition the linear solve (Bottasso et al 2008)
+    auto dl = HostView2D("dl", size + lagrange_mults.size(), size + lagrange_mults.size());
+    auto dr = HostView2D("dr", size + lagrange_mults.size(), size + lagrange_mults.size());
+
+    if (this->precondition_) {
+        Kokkos::parallel_for(
+            size + lagrange_mults.size(),
+            KOKKOS_LAMBDA(const size_t i) {
+                for (size_t j = 0; j < size + lagrange_mults.size(); j++) {
+                    dl(i, j) = 0.;
+                    dr(i, j) = 0.;
+                }
+                dl(i, i) = 1.;
+                dr(i, i) = 1.;
+            }
+        );
+
+        Kokkos::parallel_for(
+            size + lagrange_mults.size(),
+            KOKKOS_LAMBDA(const size_t i) {
+                if (i >= size) {
+                    dr(i, i) = 1. / (kBETA_ * h * h);
+                } else {
+                    dl(i, i) = kBETA_ * h * h;
+                }
+            }
+        );
+    }
 
     auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
     for (time_stepper_.SetNumberOfIterations(0);
@@ -179,21 +188,66 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             lagrange_mults_next, h, delta_gen_coords, matrix
         );
 
+        log->Debug("residuals is " + std::to_string(residuals.extent(0)) + " x 1 with elements\n");
+        for (size_t i = 0; i < residuals.size(); i++) {
+            log->Debug(std::to_string(residuals(i)) + "\n");
+        }
+
+        log->Debug(
+            "Iteration matrix is " + std::to_string(iteration_matrix.extent(0)) + " x " +
+            " with elements" + "\n"
+        );
+        for (size_t i = 0; i < iteration_matrix.extent(0); i++) {
+            for (size_t j = 0; j < iteration_matrix.extent(1); j++) {
+                log->Debug(
+                    "(" + std::to_string(i) + ", " + std::to_string(j) +
+                    ") : " + std::to_string(iteration_matrix(i, j)) + "\n"
+                );
+            }
+        }
+
+        if (this->precondition_) {
+            iteration_matrix = multiply_matrix_with_matrix(iteration_matrix, dr);
+            iteration_matrix = multiply_matrix_with_matrix(dl, iteration_matrix);
+
+            Kokkos::parallel_for(
+                6, KOKKOS_LAMBDA(const size_t i) { residuals(i) = residuals(i) * kBETA_ * h * h; }
+            );
+        }
+
         auto soln_increments = residuals;
         solve_linear_system(iteration_matrix, soln_increments);
+
+        log->Debug("Solution increments:\n");
+        for (size_t i = 0; i < soln_increments.size(); i++) {
+            log->Debug(std::to_string(soln_increments(i)) + "\n");
+        }
 
         HostView1D delta_x("delta_x", delta_gen_coords.size());
         Kokkos::parallel_for(
             delta_gen_coords.size(),
-            KOKKOS_LAMBDA(const size_t i) { delta_x(i) = soln_increments(i); }
+            // Take negative of the solution increments to update generalized coordinates
+            KOKKOS_LAMBDA(const size_t i) { delta_x(i) = -soln_increments(i); }
         );
 
         if (lagrange_mults.size() > 0) {
             HostView1D delta_lagrange_mults("delta_lagrange_mults", lagrange_mults.size());
+
+            if (this->precondition_) {
+                Kokkos::parallel_for(
+                    lagrange_mults.size(),
+                    KOKKOS_LAMBDA(const size_t i) {
+                        soln_increments(i + delta_gen_coords.size()) =
+                            -soln_increments(i + delta_gen_coords.size()) / (kBETA_ * h * h);
+                    }
+                );
+            }
+
             Kokkos::parallel_for(
                 lagrange_mults.size(),
                 KOKKOS_LAMBDA(const size_t i) {
-                    delta_lagrange_mults(i) = soln_increments(i + delta_gen_coords.size());
+                    // Take negative of the solution increments to update Lagrange multipliers
+                    delta_lagrange_mults(i) = -soln_increments(i + delta_gen_coords.size());
                     lagrange_mults_next(i) += delta_lagrange_mults(i);
                 }
             );
@@ -325,30 +379,6 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
     auto size = acceleration.extent(0) + lagrange_mults.extent(0);
     auto residual_vector = vector(size);
 
-    // Lambda to calculate the forces vector
-    auto forces = [mass, velocity]() {
-        auto m = 15.;
-        auto gravity = Vector(0., 0., 9.81);
-        auto forces = gravity * m;
-
-        auto angular_velocity = create_vector({
-            velocity(0),  // component 1
-            velocity(1),  // component 2
-            velocity(2)   // component 3
-        });
-        auto J = mass.GetMomentOfInertiaMatrix();
-        auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
-
-        auto angular_velocity_vector =
-            Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
-        auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
-        auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
-
-        auto generalized_forces = GeneralizedForces(forces, moments);
-
-        return generalized_forces.GetGeneralizedForces();
-    };
-
     switch (this->problem_type_) {
         // Heavy top problem
         case ProblemType::kHeavyTop: {
@@ -365,15 +395,42 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
             auto rotation_matrix =
                 create_matrix({{m00, m01, m02}, {m10, m11, m12}, {m20, m21, m22}});
 
+            // Generalized forces as defined in Brüls and Cardona 2010
+            auto forces = [mass, velocity]() {
+                auto m = 15.;
+                auto gravity = Vector(0., 0., 9.81);
+                auto forces = gravity * m;
+
+                auto angular_velocity = create_vector({
+                    velocity(3),  // velocity component 4 -> component 1
+                    velocity(4),  // velocity component 5 -> component 2
+                    velocity(5)   // velocity component 6 -> component 3
+                });
+                auto J = mass.GetMomentOfInertiaMatrix();
+                auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
+
+                auto angular_velocity_vector =
+                    Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
+                auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
+                auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
+
+                auto generalized_forces = GeneralizedForces(forces, moments);
+
+                return generalized_forces.GetGeneralizedForces();
+            };
+
             auto gen_forces_vector = forces();
+
             auto position_vector = create_vector(
                 // Create vector from appropriate components of generalized coordinates
                 {gen_coords(0), gen_coords(1), gen_coords(2)}
             );
 
+            HostView1D reference_position_vector = create_vector({0., 1., 0});
+
             residual_vector = heavy_top_residual_vector(
                 mass_matrix, rotation_matrix, acceleration, gen_forces_vector, position_vector,
-                lagrange_mults
+                lagrange_mults, reference_position_vector
             );
         } break;
         // Rigid pendulum problem
@@ -459,9 +516,12 @@ HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
             auto angular_velocity_vector = create_vector({velocity(3), velocity(4), velocity(5)});
             auto position_vector = create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
 
+            HostView1D reference_position_vector = create_vector({0., 1., 0});
+
             iteration_matrix = heavy_top_iteration_matrix(
                 BETA_PRIME, GAMMA_PRIME, mass_matrix, inertia_matrix, rotation_matrix,
-                angular_velocity_vector, position_vector, lagrange_mults, h, delta_gen_coords
+                angular_velocity_vector, lagrange_mults, reference_position_vector, h,
+                delta_gen_coords
             );
         } break;
         // Rigid pendulum problem

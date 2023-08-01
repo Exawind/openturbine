@@ -191,9 +191,9 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
     // We expect the final state to contain the following values after one increment
     // via hand calculations
     expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {0.});
-    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {2.});
-    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {2.});
-    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {2.});
+    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-2.});
+    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-2.});
+    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {-2.});
 }
 
 TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
@@ -212,10 +212,10 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
 
     // We expect the final state to contain the following values after two increments
     // via hand calculations
-    expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {1.});
-    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {4.});
-    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {4.});
-    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {4.});
+    expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {-1.});
+    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-4.});
+    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-4.});
+    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {-4.});
 }
 
 TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroAccelerationVector) {
@@ -236,9 +236,9 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroAccelerationVect
     // We expect the final state to contain the following values after one increment
     // via hand calculations
     expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {2., 4., 6.});
-    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {3., 4., 5.});
-    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {2., 2., 2.});
-    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {2., 2., 2.});
+    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-1., 0., 1.});
+    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-2., -2., -2.});
+    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {-2., -2., -2.});
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

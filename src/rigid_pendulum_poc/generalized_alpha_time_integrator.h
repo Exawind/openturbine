@@ -24,7 +24,8 @@ public:
 
     GeneralizedAlphaTimeIntegrator(
         double alpha_f = 0.5, double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5,
-        TimeStepper time_stepper = TimeStepper(), ProblemType problem_type = ProblemType::kRigidBody
+        TimeStepper time_stepper = TimeStepper(), ProblemType problem_type = ProblemType::kRigidBody,
+        bool precondition = false
     );
 
     /// Returns the type of the time integrator
@@ -98,6 +99,7 @@ private:
     bool is_converged_;         //< Flag to indicate if the latest non-linear update has converged
     TimeStepper time_stepper_;  //< Time stepper object to perform the time integration
     ProblemType problem_type_;  //< Type of the problem to be solved
+    bool precondition_;         //< Flag to indicate if the iteration matrix is preconditioned
 };
 
 }  // namespace openturbine::rigid_pendulum

@@ -11,38 +11,34 @@ namespace openturbine::rigid_pendulum {
  */
 HostView1D heavy_top_residual_vector(
     HostView2D, HostView2D, HostView1D, HostView1D, HostView1D, HostView1D,
-    HostView1D reference_position_vector = create_vector({0., 1., 0})
+    HostView1D reference_position_vector
 );
 
 /// Calculates the iteration matrix for the heavy top problem
 HostView2D heavy_top_iteration_matrix(
     const double&, const double&, HostView2D, HostView2D, HostView2D, HostView1D, HostView1D,
-    HostView1D reference_position_vector = create_vector({0., 1., 0}), double h = 1.,
-    HostView1D = create_vector({1., 1., 1.})
+    HostView1D reference_position_vector, double h = 1., HostView1D dq = create_vector({1., 1., 1.})
 );
 
 /// Calculates the generalized coordinates residual vector for the heavy top problem
 HostView1D heavy_top_gen_coords_residual_vector(
-    HostView2D, HostView2D, HostView1D, HostView1D, HostView1D,
-    HostView1D reference_position_vector = create_vector({0., 1., 0})
+    HostView2D, HostView2D, HostView1D, HostView1D, HostView1D, HostView1D reference_position_vector
 );
 
 /// Calculates the constraint residual vector for the heavy top problem
 HostView1D heavy_top_constraints_residual_vector(
-    HostView2D, HostView1D, HostView1D reference_position_vector = create_vector({0., 1., 0})
+    HostView2D, HostView1D, HostView1D reference_position_vector
 );
 
 /// Calculates the constraint gradient matrix for the heavy top problem
-HostView2D heavy_top_constraint_gradient_matrix(
-    HostView2D, HostView1D reference_position_vector = create_vector({0., 1., 0})
-);
+HostView2D heavy_top_constraint_gradient_matrix(HostView2D, HostView1D reference_position_vector);
 
 /// Calculates the tangent damping matrix for the heavy top problem
 HostView2D heavy_top_tangent_damping_matrix(HostView1D, HostView2D);
 
 /// Calculates the tangent stiffness matrix for the heavy top problem
 HostView2D heavy_top_tangent_stiffness_matrix(
-    HostView2D, HostView1D, HostView1D reference_position_vector = create_vector({0., 1., 0})
+    HostView2D, HostView1D, HostView1D reference_position_vector
 );
 
 HostView2D heavy_top_tangent_operator(HostView1D psi);
