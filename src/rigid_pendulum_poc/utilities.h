@@ -53,18 +53,18 @@ HostView1D create_vector(const std::vector<double>&);
 HostView2D create_matrix(const std::vector<std::vector<double>>&);
 
 /// Transposes a provided m x n matrix and returns an n x m matrix
-HostView2D transpose_matrix(HostView2D);
+HostView2D transpose_matrix(const HostView2D);
 
 /// Generates and returns the 3 x 3 cross product matrix from a provided 3D vector
-HostView2D create_cross_product_matrix(HostView1D);
+HostView2D create_cross_product_matrix(const HostView1D);
 
 /// Multiplies an m x n matrix with an n x 1 vector and returns an m x 1 vector
-HostView1D multiply_matrix_with_vector(HostView2D, HostView1D);
+HostView1D multiply_matrix_with_vector(const HostView2D, const HostView1D);
 
 /// Multiplies an m x n matrix with an n x p matrix and returns an m x p matrix
-HostView2D multiply_matrix_with_matrix(HostView2D, HostView2D);
+HostView2D multiply_matrix_with_matrix(const HostView2D, const HostView2D);
 
 /// Multiplies an m x n matrix with a scalar and returns an m x n matrix
-HostView2D multiply_matrix_with_scalar(HostView2D, double);
+HostView2D multiply_matrix_with_scalar(const HostView2D, double);
 
 }  // namespace openturbine::rigid_pendulum

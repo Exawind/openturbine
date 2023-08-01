@@ -5,9 +5,10 @@
 namespace openturbine::rigid_pendulum {
 
 HostView1D heavy_top_residual_vector(
-    HostView2D mass_matrix, HostView2D rotation_matrix, HostView1D acceleration_vector,
-    HostView1D gen_forces_vector, HostView1D position_vector, HostView1D lagrange_multipliers,
-    HostView1D reference_position_vector
+    const HostView2D mass_matrix, const HostView2D rotation_matrix,
+    const HostView1D acceleration_vector, const HostView1D gen_forces_vector,
+    const HostView1D position_vector, const HostView1D lagrange_multipliers,
+    const HostView1D reference_position_vector
 ) {
     // The residual vector for the generalized coordinates is given by
     // {residual} = {
@@ -44,9 +45,9 @@ HostView1D heavy_top_residual_vector(
 }
 
 HostView1D heavy_top_gen_coords_residual_vector(
-    HostView2D mass_matrix, HostView2D rotation_matrix, HostView1D acceleration_vector,
-    HostView1D gen_forces_vector, HostView1D lagrange_multipliers,
-    HostView1D reference_position_vector
+    const HostView2D mass_matrix, const HostView2D rotation_matrix,
+    const HostView1D acceleration_vector, const HostView1D gen_forces_vector,
+    const HostView1D lagrange_multipliers, const HostView1D reference_position_vector
 ) {
     // The residual vector for the generalized coordinates is given by
     // {residual_gen_coords} = [M(q)] {v'} + {g(q,v,t)} + [B(q)]T {Lambda}
@@ -62,7 +63,10 @@ HostView1D heavy_top_gen_coords_residual_vector(
         heavy_top_constraint_gradient_matrix(rotation_matrix, reference_position_vector);
 
     auto first_term = multiply_matrix_with_vector(mass_matrix, acceleration_vector);
-    auto second_term = gen_forces_vector;
+
+    auto second_term = HostView1D("second_term", 6);
+    Kokkos::deep_copy(second_term, gen_forces_vector);
+
     auto third_term = multiply_matrix_with_vector(
         transpose_matrix(constraint_gradient_matrix), lagrange_multipliers
     );
@@ -85,7 +89,8 @@ HostView1D heavy_top_gen_coords_residual_vector(
 }
 
 HostView1D heavy_top_constraints_residual_vector(
-    HostView2D rotation_matrix, HostView1D position_vector, HostView1D reference_position_vector
+    const HostView2D rotation_matrix, const HostView1D position_vector,
+    const HostView1D reference_position_vector
 ) {
     // The residual vector for the constraints is given by
     // {residual_constraints} = -{x} + [R] {X}
@@ -114,7 +119,7 @@ HostView1D heavy_top_constraints_residual_vector(
 }
 
 HostView2D heavy_top_constraint_gradient_matrix(
-    HostView2D rotation_matrix, HostView1D reference_position_vector
+    const HostView2D rotation_matrix, const HostView1D reference_position_vector
 ) {
     // Constraint gradient matrix for the heavy top problem is given by
     // [B] = [ -I_3x3    -[R ~{X}] ]
@@ -155,10 +160,10 @@ HostView2D heavy_top_constraint_gradient_matrix(
 }
 
 HostView2D heavy_top_iteration_matrix(
-    const double& BETA_PRIME, const double& GAMMA_PRIME, HostView2D mass_matrix,
-    HostView2D inertia_matrix, HostView2D rotation_matrix, HostView1D angular_velocity_vector,
-    HostView1D lagrange_multipliers, HostView1D reference_position_vector, double h,
-    HostView1D delta_gen_coords
+    const double& BETA_PRIME, const double& GAMMA_PRIME, const HostView2D mass_matrix,
+    const HostView2D inertia_matrix, const HostView2D rotation_matrix,
+    const HostView1D angular_velocity_vector, const HostView1D lagrange_multipliers,
+    const HostView1D reference_position_vector, const double& h, const HostView1D delta_gen_coords
 ) {
     // Iteration matrix for the heavy top problem is given by
     // [iteration matrix] = [
@@ -246,7 +251,7 @@ HostView2D heavy_top_iteration_matrix(
 }
 
 HostView2D heavy_top_tangent_damping_matrix(
-    HostView1D angular_velocity_vector, HostView2D inertia_matrix
+    const HostView1D angular_velocity_vector, const HostView2D inertia_matrix
 ) {
     // Tangent damping matrix for the heavy top problem is given by
     // [C_t] = [ [0]_3x3                     [0]_3x3
@@ -301,7 +306,8 @@ HostView2D heavy_top_tangent_damping_matrix(
 }
 
 HostView2D heavy_top_tangent_stiffness_matrix(
-    HostView2D rotation_matrix, HostView1D lagrange_multipliers, HostView1D reference_position_vector
+    const HostView2D rotation_matrix, const HostView1D lagrange_multipliers,
+    const HostView1D reference_position_vector
 ) {
     // Tangent stiffness matrix for the heavy top problem is given by
     // [K_t] = [ [0]_3x3              [0]_3x3
@@ -344,7 +350,7 @@ HostView2D heavy_top_tangent_stiffness_matrix(
     return tangent_stiffness_matrix;
 }
 
-HostView2D heavy_top_tangent_operator(HostView1D psi) {
+HostView2D heavy_top_tangent_operator(const HostView1D psi) {
     const double tol = 1e-16;
     const double phi = std::sqrt(psi(0) * psi(0) + psi(1) * psi(1) + psi(2) * psi(2));
 

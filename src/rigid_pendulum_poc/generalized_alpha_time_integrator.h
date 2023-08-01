@@ -70,24 +70,25 @@ public:
     );
 
     /// Computes the updated generalized coordinates based on the non-linear update
-    HostView1D UpdateGeneralizedCoordinates(HostView1D, HostView1D);
+    HostView1D UpdateGeneralizedCoordinates(const HostView1D, const HostView1D);
 
     /// Computes residuals of the force array for the non-linear update
     HostView1D ComputeResiduals(
-        const MassMatrix&, const GeneralizedForces&, HostView1D, HostView1D, HostView1D, HostView1D,
-        std::function<HostView1D(size_t)> vector
+        const MassMatrix&, const GeneralizedForces&, const HostView1D, const HostView1D,
+        const HostView1D, const HostView1D, std::function<HostView1D(size_t)> vector
     );
 
     /// Checks convergence of the non-linear solution based on the residuals
-    bool CheckConvergence(HostView1D);
+    bool CheckConvergence(const HostView1D);
 
     /// Returns the flag to indicate if the latest non-linear update has converged
     inline bool IsConverged() const { return is_converged_; }
 
     /// Computes the iteration matrix for the non-linear update
     HostView2D ComputeIterationMatrix(
-        const double&, const double&, const MassMatrix&, const GeneralizedForces&, HostView1D,
-        HostView1D, HostView1D, double, HostView1D, std::function<HostView2D(size_t)> matrix
+        const double&, const double&, const MassMatrix&, const GeneralizedForces&, const HostView1D,
+        const HostView1D, const HostView1D, const double&, const HostView1D,
+        std::function<HostView2D(size_t)> matrix
     );
 
 private:

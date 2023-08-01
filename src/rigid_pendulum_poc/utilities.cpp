@@ -88,7 +88,7 @@ HostView2D create_matrix(const std::vector<std::vector<double>>& values) {
     return matrix;
 }
 
-HostView2D transpose_matrix(HostView2D matrix) {
+HostView2D transpose_matrix(const HostView2D matrix) {
     auto transposed_matrix = HostView2D("transposed_matrix", matrix.extent(1), matrix.extent(0));
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {matrix.extent(1), matrix.extent(0)}
@@ -102,7 +102,7 @@ HostView2D transpose_matrix(HostView2D matrix) {
     return transposed_matrix;
 }
 
-HostView2D create_cross_product_matrix(HostView1D vector) {
+HostView2D create_cross_product_matrix(const HostView1D vector) {
     if (vector.extent(0) != 3) {
         throw std::invalid_argument("The provided vector must have 3 elements");
     }
@@ -121,7 +121,7 @@ HostView2D create_cross_product_matrix(HostView1D vector) {
     return matrix;
 }
 
-HostView1D multiply_matrix_with_vector(HostView2D matrix, HostView1D vector) {
+HostView1D multiply_matrix_with_vector(const HostView2D matrix, const HostView1D vector) {
     if (matrix.extent(1) != vector.extent(0)) {
         throw std::invalid_argument(
             "The number of columns of the matrix must be equal to the number of rows of the vector"
@@ -143,7 +143,7 @@ HostView1D multiply_matrix_with_vector(HostView2D matrix, HostView1D vector) {
     return result;
 }
 
-HostView2D multiply_matrix_with_matrix(HostView2D matrix_a, HostView2D matrix_b) {
+HostView2D multiply_matrix_with_matrix(const HostView2D matrix_a, const HostView2D matrix_b) {
     auto n_columns = matrix_a.extent(1);
     auto n_rows = matrix_b.extent(0);
 
@@ -171,7 +171,7 @@ HostView2D multiply_matrix_with_matrix(HostView2D matrix_a, HostView2D matrix_b)
     return result;
 }
 
-HostView2D multiply_matrix_with_scalar(HostView2D matrix, double scalar) {
+HostView2D multiply_matrix_with_scalar(const HostView2D matrix, double scalar) {
     auto result = HostView2D("result", matrix.extent(0), matrix.extent(1));
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {matrix.extent(0), matrix.extent(1)}
