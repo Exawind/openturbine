@@ -237,20 +237,22 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
                 Kokkos::parallel_for(
                     lagrange_mults.size(),
                     KOKKOS_LAMBDA(const size_t i) {
-                        soln_increments(i + delta_gen_coords.size()) =
+                        // Take negative of the solution increments to update Lagrange multipliers
+                        delta_lagrange_mults(i) =
                             -soln_increments(i + delta_gen_coords.size()) / (kBETA_ * h * h);
+                        lagrange_mults_next(i) += delta_lagrange_mults(i);
+                    }
+                );
+            } else {
+                Kokkos::parallel_for(
+                    lagrange_mults.size(),
+                    KOKKOS_LAMBDA(const size_t i) {
+                        // Take negative of the solution increments to update Lagrange multipliers
+                        delta_lagrange_mults(i) = -soln_increments(i + delta_gen_coords.size());
+                        lagrange_mults_next(i) += delta_lagrange_mults(i);
                     }
                 );
             }
-
-            Kokkos::parallel_for(
-                lagrange_mults.size(),
-                KOKKOS_LAMBDA(const size_t i) {
-                    // Take negative of the solution increments to update Lagrange multipliers
-                    delta_lagrange_mults(i) = -soln_increments(i + delta_gen_coords.size());
-                    lagrange_mults_next(i) += delta_lagrange_mults(i);
-                }
-            );
         }
 
         // Update the velocity, acceleration, and constraints based on the increments
@@ -276,11 +278,15 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     );
 
     log->Debug("Final state upon performing Newton-Raphson iterations:\n");
-    log->Debug("Generalized coordinates, velocity, acceleration, and algorithmic acceleration:\n");
+    log->Debug(
+        "Generalized coordinates, velocity, acceleration, algorithmic acceleration and lagrange "
+        "multipliers\n"
+    );
     for (size_t i = 0; i < size; i++) {
         log->Debug(
             std::to_string(gen_coords_next(i)) + ", " + std::to_string(velocity(i)) + ", " +
-            std::to_string(acceleration(i)) + ", " + std::to_string(algo_acceleration_next(i)) + "\n"
+            std::to_string(acceleration(i)) + ", " + std::to_string(algo_acceleration_next(i)) +
+            ", " + std::to_string(lagrange_mults_next(i)) + "\n"
         );
     }
     log->Debug(std::to_string(gen_coords_next(6)) + "\n");

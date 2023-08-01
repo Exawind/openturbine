@@ -254,12 +254,10 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneI
 
     // Calculate properties for the time integrator
     double initial_time{0.};
-    // double final_time{2.};
     double final_time{0.002};
     double time_step{0.002};
     size_t num_steps = size_t(final_time / time_step);
     size_t max_iterations{1};
-    // size_t max_iterations{1};
 
     auto time_stepper = TimeStepper(initial_time, time_step, num_steps, max_iterations);
 
