@@ -130,14 +130,12 @@ HostView2D heavy_top_constraint_gradient_matrix(
 
     auto constraint_gradient_matrix = HostView2D("constraint_gradient_matrix", 3, 6);
     Kokkos::parallel_for(
-        3,
-        KOKKOS_LAMBDA(const size_t i) {
-            for (size_t j = 0; j < 6; j++) {
-                if (j < 3) {
-                    constraint_gradient_matrix(i, j) = -I_3x3(i, j);
-                } else {
-                    constraint_gradient_matrix(i, j) = -RX(i, j - 3);
-                }
+        Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>({0, 0}, {3, 6}),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            if (j < 3) {
+                constraint_gradient_matrix(i, j) = -I_3x3(i, j);
+            } else {
+                constraint_gradient_matrix(i, j) = -RX(i, j - 3);
             }
         }
     );
@@ -199,9 +197,11 @@ HostView2D heavy_top_iteration_matrix(
     auto element1 = HostView2D("element1", size_dofs, size_dofs);
     auto K_T_hdq = multiply_matrix_with_matrix(tangent_stiffness_matrix, tangent_operator);
     Kokkos::parallel_for(
-        size_dofs,
-        KOKKOS_LAMBDA(const size_t i) {
-            for (size_t j = 0; j < size_dofs; j++) {
+        Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
+            {0, 0}, {size_dofs, size_dofs}
+        ),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            if (i < size_dofs && j < size_dofs) {
                 element1(i, j) = mass_matrix(i, j) * BETA_PRIME +
                                  tangent_damping_matrix(i, j) * GAMMA_PRIME + K_T_hdq(i, j);
             }
@@ -217,18 +217,18 @@ HostView2D heavy_top_iteration_matrix(
 
     auto iteration_matrix = HostView2D("iteration_matrix", size, size);
     Kokkos::parallel_for(
-        size,
-        KOKKOS_LAMBDA(const size_t i) {
-            for (size_t j = 0; j < size; j++) {
-                if (i < size_dofs && j < size_dofs) {
-                    iteration_matrix(i, j) = element1(i, j);
-                } else if (i < size_dofs && j >= size_dofs) {
-                    iteration_matrix(i, j) = element2(i, j - size_dofs);
-                } else if (i >= size_dofs && j < size_dofs) {
-                    iteration_matrix(i, j) = element3(i - size_dofs, j);
-                } else {
-                    iteration_matrix(i, j) = element4(i - size_dofs, j - size_dofs);
-                }
+        Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
+            {0, 0}, {size, size}
+        ),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            if (i < size_dofs && j < size_dofs) {
+                iteration_matrix(i, j) = element1(i, j);
+            } else if (i < size_dofs && j >= size_dofs) {
+                iteration_matrix(i, j) = element2(i, j - size_dofs);
+            } else if (i >= size_dofs && j < size_dofs) {
+                iteration_matrix(i, j) = element3(i - size_dofs, j);
+            } else {
+                iteration_matrix(i, j) = element4(i - size_dofs, j - size_dofs);
             }
         }
     );
@@ -266,9 +266,9 @@ HostView2D heavy_top_tangent_damping_matrix(
 
     auto nonzero_block = HostView2D("nonzero_block", 3, 3);
     Kokkos::parallel_for(
-        3,
-        KOKKOS_LAMBDA(const size_t i) {
-            for (size_t j = 0; j < 3; j++) {
+        Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>({0, 0}, {3, 3}),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            if (i < 3 && j < 3) {
                 nonzero_block(i, j) =
                     nonzero_block_first_part(i, j) - nonzero_block_second_part(i, j);
             }
@@ -278,12 +278,10 @@ HostView2D heavy_top_tangent_damping_matrix(
     // Only the 3 x 3 lower right block of the tangent damping matrix is non-zero
     auto tangent_damping_matrix = HostView2D("tangent_damping_matrix", 6, 6);
     Kokkos::parallel_for(
-        6,
-        KOKKOS_LAMBDA(const size_t i) {
-            for (size_t j = 0; j < 6; j++) {
-                if (i >= 3 && j >= 3) {
-                    tangent_damping_matrix(i, j) = nonzero_block(i - 3, j - 3);
-                }
+        Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>({0, 0}, {6, 6}),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            if (i >= 3 && j >= 3) {
+                tangent_damping_matrix(i, j) = nonzero_block(i - 3, j - 3);
             }
         }
     );
@@ -323,12 +321,10 @@ HostView2D heavy_top_tangent_stiffness_matrix(
     // Only the 3 x 3 lower right block of the tangent stiffness matrix is non-zero
     auto tangent_stiffness_matrix = HostView2D("tangent_stiffness_matrix", 6, 6);
     Kokkos::parallel_for(
-        6,
-        KOKKOS_LAMBDA(const size_t i) {
-            for (size_t j = 0; j < 6; j++) {
-                if (i >= 3 && j >= 3) {
-                    tangent_stiffness_matrix(i, j) = non_zero_block(i - 3, j - 3);
-                }
+        Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>({0, 0}, {6, 6}),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            if (i >= 3 && j >= 3) {
+                tangent_stiffness_matrix(i, j) = non_zero_block(i - 3, j - 3);
             }
         }
     );
@@ -356,12 +352,10 @@ HostView2D heavy_top_tangent_operator(const HostView1D psi) {
 
     auto tangent_operator = HostView2D("tangent_operator", 6, 6);
     Kokkos::parallel_for(
-        6,
-        KOKKOS_LAMBDA(const size_t i) {
-            for (size_t j = 0; j < 6; j++) {
-                if (i == j) {
-                    tangent_operator(i, j) = 1.0;
-                }
+        Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>({0, 0}, {6, 6}),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            if (i == j) {
+                tangent_operator(i, j) = 1.0;
             }
         }
     );

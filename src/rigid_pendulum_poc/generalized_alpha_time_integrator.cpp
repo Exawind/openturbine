@@ -69,17 +69,10 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     size_t n_constraints, std::function<HostView2D(size_t)> matrix,
     std::function<HostView1D(size_t)> vector
 ) {
-    auto gen_coords = HostView1D("gen_coords", state.GetGeneralizedCoordinates().size());
-    Kokkos::deep_copy(gen_coords, state.GetGeneralizedCoordinates());
-
-    auto velocity = HostView1D("velocity", state.GetVelocity().size());
-    Kokkos::deep_copy(velocity, state.GetVelocity());
-
-    auto acceleration = HostView1D("acceleration", state.GetAcceleration().size());
-    Kokkos::deep_copy(acceleration, state.GetAcceleration());
-
-    auto algo_acceleration = HostView1D("algorithmic_acceleration", acceleration.size());
-    Kokkos::deep_copy(algo_acceleration, state.GetAlgorithmicAcceleration());
+    auto gen_coords = state.GetGeneralizedCoordinates();
+    auto velocity = state.GetVelocity();
+    auto acceleration = state.GetAcceleration();
+    auto algo_acceleration = state.GetAlgorithmicAcceleration();
 
     // Initialize some X_next variables to assist in updating the State - only for ones that
     // require both the current and next values in a calculation
@@ -112,9 +105,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     );
 
     // Initialize lagrange_mults_next to zero separately since it might be of different size
-    Kokkos::parallel_for(
-        lagrange_mults_next.size(), KOKKOS_LAMBDA(const size_t i) { lagrange_mults_next(i) = 0.; }
-    );
+    Kokkos::deep_copy(lagrange_mults_next, 0.);
 
     auto log = util::Log::Get();
     log->Debug(
@@ -144,15 +135,13 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     // Precondition the linear solve (Bottasso et al 2008)
     const auto dl = HostView2D("dl", size + n_constraints, size + n_constraints);
     const auto dr = HostView2D("dr", size + n_constraints, size + n_constraints);
+    Kokkos::deep_copy(dl, 0.);
+    Kokkos::deep_copy(dr, 0.);
 
     if (this->precondition_) {
         Kokkos::parallel_for(
             size + n_constraints,
             KOKKOS_LAMBDA(const size_t i) {
-                for (size_t j = 0; j < size + n_constraints; j++) {
-                    dl(i, j) = 0.;
-                    dr(i, j) = 0.;
-                }
                 dl(i, i) = 1.;
                 dr(i, i) = 1.;
             }
