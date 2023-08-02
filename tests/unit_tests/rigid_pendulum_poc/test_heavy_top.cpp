@@ -6,6 +6,12 @@
 
 namespace openturbine::rigid_pendulum::tests {
 
+/*! All properties used for the heavy top problem taken from Brüls and Cardona (2010)
+ *  "On the use of Lie group time integrators in multibody dynamics," 2010, Journal of
+ *  Computational and Nonlinear Dynamics, Vol 5.
+ *  Ref: https://doi.org/10.1115/1.4001370
+ */
+
 TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateGenCoordsResidualVector) {
     auto M = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
     auto mass_matrix = M.GetMassMatrix();
@@ -273,14 +279,15 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneI
     );
 
     // Initialize the lagrange multipliers to zero
-    auto lagrange_mults = create_vector({0., 0., 0.});
+    size_t n_lagrange_mults{3};
 
     // Perform the time integration
-    auto results = time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
+    auto results =
+        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
 
     // Expected values of alpham, alphaf, beta, gamma, betap, gammap from prototype fortran code
-    // 0.12499999999999997       0.37499999999999994       0.39062500000000000 0.75000000000000000
-    // 896000.00000000000        960.00000000000000
+    // 0.12499999999999997       0.37499999999999994       0.39062500000000000
+    // 0.75000000000000000       896000.00000000000        960.00000000000000
     EXPECT_EQ(time_integrator.GetAlphaF(), 0.37499999999999994);
     EXPECT_EQ(time_integrator.GetAlphaM(), 0.12499999999999997);
     EXPECT_EQ(time_integrator.GetBeta(), 0.39062500000000000);

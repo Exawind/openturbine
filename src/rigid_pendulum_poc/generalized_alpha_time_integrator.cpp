@@ -39,7 +39,7 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     const State& initial_state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    HostView1D lagrange_mults, std::function<HostView2D(size_t)> iteration_matrix,
+    size_t n_constraints, std::function<HostView2D(size_t)> iteration_matrix,
     std::function<HostView1D(size_t)> residual_vector
 ) {
     auto log = util::Log::Get();
@@ -52,11 +52,11 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     std::vector<State> states{initial_state};
     auto n_steps = this->time_stepper_.GetNumberOfSteps();
     for (size_t i = 0; i < n_steps; i++) {
+        this->time_stepper_.AdvanceTimeStep();
         log->Info("** Integrating step number " + std::to_string(i + 1) + " **\n");
         states.emplace_back(std::get<0>(this->AlphaStep(
-            states[i], mass_matrix, gen_forces, lagrange_mults, iteration_matrix, residual_vector
+            states[i], mass_matrix, gen_forces, n_constraints, iteration_matrix, residual_vector
         )));
-        this->time_stepper_.AdvanceTimeStep();
     }
 
     log->Info("Time integration has completed!\n");
@@ -66,7 +66,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
 
 std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const State& state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    HostView1D lagrange_mults, std::function<HostView2D(size_t)> matrix,
+    size_t n_constraints, std::function<HostView2D(size_t)> matrix,
     std::function<HostView1D(size_t)> vector
 ) {
     auto gen_coords = HostView1D("gen_coords", state.GetGeneralizedCoordinates().size());
@@ -82,12 +82,12 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     Kokkos::deep_copy(algo_acceleration, state.GetAlgorithmicAcceleration());
 
     // Initialize some X_next variables to assist in updating the State - only for ones that
-    // require both the current and next values
+    // require both the current and next values in a calculation
     auto gen_coords_next = HostView1D("gen_coords_next", gen_coords.size());
     auto algo_acceleration_next =
         HostView1D("algorithmic_acceleration_next", algo_acceleration.size());
     auto delta_gen_coords = HostView1D("gen_coords_increment", velocity.size());
-    auto lagrange_mults_next = HostView1D("lagrange_mults_next", lagrange_mults.size());
+    auto lagrange_mults_next = HostView1D("lagrange_mults_next", n_constraints);
 
     // Perform the linear update part of the generalized alpha algorithm
     const auto h = this->time_stepper_.GetTimeStep();
@@ -111,7 +111,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         }
     );
 
-    // Initialize lagrange_mults_next to zero separately since it is of different size
+    // Initialize lagrange_mults_next to zero separately since it might be of different size
     Kokkos::parallel_for(
         lagrange_mults_next.size(), KOKKOS_LAMBDA(const size_t i) { lagrange_mults_next(i) = 0.; }
     );
@@ -142,14 +142,14 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     );
 
     // Precondition the linear solve (Bottasso et al 2008)
-    const auto dl = HostView2D("dl", size + lagrange_mults.size(), size + lagrange_mults.size());
-    const auto dr = HostView2D("dr", size + lagrange_mults.size(), size + lagrange_mults.size());
+    const auto dl = HostView2D("dl", size + n_constraints, size + n_constraints);
+    const auto dr = HostView2D("dr", size + n_constraints, size + n_constraints);
 
     if (this->precondition_) {
         Kokkos::parallel_for(
-            size + lagrange_mults.size(),
+            size + n_constraints,
             KOKKOS_LAMBDA(const size_t i) {
-                for (size_t j = 0; j < size + lagrange_mults.size(); j++) {
+                for (size_t j = 0; j < size + n_constraints; j++) {
                     dl(i, j) = 0.;
                     dr(i, j) = 0.;
                 }
@@ -159,7 +159,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         );
 
         Kokkos::parallel_for(
-            size + lagrange_mults.size(),
+            size + n_constraints,
             KOKKOS_LAMBDA(const size_t i) {
                 if (i >= size) {
                     dr(i, i) = 1. / (kBETA_ * h * h);
@@ -241,12 +241,12 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             KOKKOS_LAMBDA(const size_t i) { delta_x(i) = -soln_increments(i); }
         );
 
-        if (lagrange_mults.size() > 0) {
-            HostView1D delta_lagrange_mults("delta_lagrange_mults", lagrange_mults.size());
+        if (n_constraints > 0) {
+            HostView1D delta_lagrange_mults("delta_lagrange_mults", n_constraints);
 
             if (this->precondition_) {
                 Kokkos::parallel_for(
-                    lagrange_mults.size(),
+                    n_constraints,
                     KOKKOS_LAMBDA(const size_t i) {
                         // Take negative of the solution increments to update Lagrange multipliers
                         delta_lagrange_mults(i) =
@@ -256,7 +256,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
                 );
             } else {
                 Kokkos::parallel_for(
-                    lagrange_mults.size(),
+                    n_constraints,
                     KOKKOS_LAMBDA(const size_t i) {
                         // Take negative of the solution increments to update Lagrange multipliers
                         delta_lagrange_mults(i) = -soln_increments(i + delta_gen_coords.size());
@@ -289,18 +289,17 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     );
 
     log->Debug("Final state upon performing Newton-Raphson iterations:\n");
-    log->Debug(
-        "Generalized coordinates, velocity, acceleration, algorithmic acceleration and lagrange "
-        "multipliers\n"
-    );
+    log->Debug("Generalized coordinates, velocity, acceleration, and algorithmic acceleration \n");
     for (size_t i = 0; i < size; i++) {
         log->Debug(
             std::to_string(gen_coords_next(i)) + ", " + std::to_string(velocity(i)) + ", " +
-            std::to_string(acceleration(i)) + ", " + std::to_string(algo_acceleration_next(i)) +
-            ", " + std::to_string(lagrange_mults_next(i)) + "\n"
+            std::to_string(acceleration(i)) + ", " + std::to_string(algo_acceleration_next(i)) + "\n"
         );
     }
-    log->Debug(std::to_string(gen_coords_next(6)) + "\n");
+    log->Debug("Lagrange multipliers:\n");
+    for (size_t i = 0; i < n_constraints; i++) {
+        log->Debug(std::to_string(lagrange_mults_next(i)) + "\n");
+    }
 
     auto results = std::make_tuple(
         State{gen_coords_next, velocity, acceleration, algo_acceleration_next}, lagrange_mults_next

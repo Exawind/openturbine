@@ -36,8 +36,8 @@ TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
     auto initial_state = State();
     auto mass_matrix = MassMatrix();
     auto gen_forces = GeneralizedForces();
-    auto lagrange_mults = HostView1D();
-    time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
+    size_t n_lagrange_mults{0};
+    time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
 
     EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 10.0);
 }
@@ -51,9 +51,9 @@ TEST(TimeIntegratorTest, GetHistoryOfStatesFromTimeIntegrator) {
     auto initial_state = State();
     auto mass_matrix = MassMatrix();
     auto gen_forces = GeneralizedForces();
-    auto lagrange_mults = HostView1D();
+    size_t n_lagrange_mults{0};
     auto state_history =
-        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
+        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
 
     EXPECT_NEAR(
         time_integrator.GetTimeStepper().GetCurrentTime(), 1.70,
@@ -72,8 +72,8 @@ TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
     auto initial_state = State();
     auto mass_matrix = MassMatrix();
     auto gen_forces = GeneralizedForces();
-    auto lagrange_mults = HostView1D();
-    time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
+    size_t n_lagrange_mults{0};
+    time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
 
     EXPECT_LE(
         time_integrator.GetTimeStepper().GetNumberOfIterations(),
@@ -180,8 +180,9 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
     auto initial_state = State();
     auto mass_matrix = MassMatrix();
     auto gen_forces = GeneralizedForces();
-    auto lagrange_mults = HostView1D();
-    auto results = time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
+    size_t n_lagrange_mults{0};
+    auto results =
+        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
 
     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);
@@ -202,8 +203,9 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
     auto initial_state = State();
     auto mass_matrix = MassMatrix();
     auto gen_forces = GeneralizedForces();
-    auto lagrange_mults = HostView1D();
-    auto results = time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
+    size_t n_lagrange_mults{0};
+    auto results =
+        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
 
     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 2);
     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 2);
@@ -225,8 +227,9 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroAccelerationVect
     auto initial_state = State(v, v, v, v);
     auto mass_matrix = MassMatrix();
     auto gen_forces = GeneralizedForces();
-    auto lagrange_mults = HostView1D(v);
-    auto results = time_integrator.Integrate(initial_state, mass_matrix, gen_forces, lagrange_mults);
+    size_t n_lagrange_mults{v.extent(0)};
+    auto results =
+        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
 
     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);

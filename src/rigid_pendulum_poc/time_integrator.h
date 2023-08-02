@@ -19,7 +19,7 @@ public:
 
     /// Performs the time integration and returns a vector of States over the time steps
     virtual std::vector<State> Integrate(
-        const State&, const MassMatrix&, const GeneralizedForces&, HostView1D,
+        const State&, const MassMatrix&, const GeneralizedForces&, size_t,
         std::function<HostView2D(size_t)>, std::function<HostView1D(size_t)> vector
     ) = 0;
 

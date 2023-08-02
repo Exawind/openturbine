@@ -53,7 +53,7 @@ public:
 
     /// Performs the time integration and returns a vector of States over the time steps
     virtual std::vector<State> Integrate(
-        const State&, const MassMatrix&, const GeneralizedForces&, HostView1D,
+        const State&, const MassMatrix&, const GeneralizedForces&, size_t,
         std::function<HostView2D(size_t)> iteration_matrix = create_identity_matrix,
         std::function<HostView1D(size_t)> residual_vector = create_identity_vector
     ) override;
@@ -65,7 +65,7 @@ public:
      *  https://doi.org/10.1016/j.mechmachtheory.2011.07.017
      */
     std::tuple<State, HostView1D> AlphaStep(
-        const State&, const MassMatrix&, const GeneralizedForces&, HostView1D,
+        const State&, const MassMatrix&, const GeneralizedForces&, size_t,
         std::function<HostView2D(size_t)>, std::function<HostView1D(size_t)> residual_vector
     );
 
