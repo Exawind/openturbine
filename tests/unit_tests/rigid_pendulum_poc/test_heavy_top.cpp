@@ -282,8 +282,10 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneI
     size_t n_lagrange_mults{3};
 
     // Perform the time integration
-    auto results =
-        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
+    auto results = time_integrator.Integrate(
+        initial_state, mass_matrix, gen_forces, n_lagrange_mults, create_identity_matrix,
+        heavy_top_residual_vector
+    );
 
     // Expected values of alpham, alphaf, beta, gamma, betap, gammap from prototype fortran code
     // 0.12499999999999997       0.37499999999999994       0.39062500000000000

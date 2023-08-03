@@ -7,6 +7,14 @@
 
 namespace openturbine::rigid_pendulum {
 
+HostView1D create_identity_residual_vector(
+    const HostView1D gen_coords, const HostView1D velocity, const HostView1D acceleration,
+    const HostView1D lagrange_mults
+) {
+    auto size = acceleration.size() + lagrange_mults.size();
+    return create_identity_vector(size);
+}
+
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper,
     ProblemType problem_type, bool precondition
@@ -39,8 +47,7 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     const State& initial_state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    size_t n_constraints, std::function<HostView2D(size_t)> iteration_matrix,
-    std::function<HostView1D(size_t)> residual_vector
+    size_t n_constraints, std::function<HostView2D(size_t)> iteration_matrix, ResidualVector residual
 ) {
     auto log = util::Log::Get();
     log->Debug(
@@ -55,7 +62,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
         this->time_stepper_.AdvanceTimeStep();
         log->Info("** Integrating step number " + std::to_string(i + 1) + " **\n");
         states.emplace_back(std::get<0>(this->AlphaStep(
-            states[i], mass_matrix, gen_forces, n_constraints, iteration_matrix, residual_vector
+            states[i], mass_matrix, gen_forces, n_constraints, iteration_matrix, residual
         )));
     }
 
@@ -66,8 +73,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
 
 std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const State& state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    size_t n_constraints, std::function<HostView2D(size_t)> matrix,
-    std::function<HostView1D(size_t)> vector
+    size_t n_constraints, std::function<HostView2D(size_t)> matrix, ResidualVector residual
 ) {
     auto gen_coords = state.GetGeneralizedCoordinates();
     auto velocity = state.GetVelocity();
@@ -171,10 +177,8 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         gen_coords_next = UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords);
 
         // Compute the residuals and check for convergence
-        const auto residuals = ComputeResiduals(
-            mass_matrix, gen_forces, gen_coords_next, velocity, acceleration, lagrange_mults_next,
-            vector
-        );
+        const auto residuals =
+            ComputeResiduals(gen_coords_next, velocity, acceleration, lagrange_mults_next, residual);
 
         if (this->CheckConvergence(residuals)) {
             this->is_converged_ = true;
@@ -359,9 +363,8 @@ HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
 }
 
 HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
-    const MassMatrix& mass, const GeneralizedForces& gen_forces, const HostView1D gen_coords,
-    const HostView1D velocity, const HostView1D acceleration, const HostView1D lagrange_mults,
-    std::function<HostView1D(size_t)> vector
+    const HostView1D gen_coords, const HostView1D velocity, const HostView1D acceleration,
+    const HostView1D lagrange_mults, ResidualVector residual
 ) {
     // The residual vector consists of two parts
     // {residual} = {
@@ -382,74 +385,8 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
     // {Phi(q)} = constraint vector
 
     auto size = acceleration.extent(0) + lagrange_mults.extent(0);
-    auto residual_vector = vector(size);
-
-    switch (this->problem_type_) {
-        // Heavy top problem
-        case ProblemType::kHeavyTop: {
-            auto mass_matrix = mass.GetMassMatrix();
-
-            // Convert the quaternion representing orientation -> rotation matrix
-            auto RM = quaternion_to_rotation_matrix(
-                // Create quaternion from appropriate components of generalized coordinates
-                Quaternion{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)}
-            );
-            auto [m00, m01, m02] = std::get<0>(RM).GetComponents();
-            auto [m10, m11, m12] = std::get<1>(RM).GetComponents();
-            auto [m20, m21, m22] = std::get<2>(RM).GetComponents();
-            auto rotation_matrix =
-                create_matrix({{m00, m01, m02}, {m10, m11, m12}, {m20, m21, m22}});
-
-            // Generalized forces as defined in Brüls and Cardona 2010
-            auto forces = [mass, velocity]() {
-                auto m = 15.;
-                auto gravity = Vector(0., 0., 9.81);
-                auto forces = gravity * m;
-
-                auto angular_velocity = create_vector({
-                    velocity(3),  // velocity component 4 -> component 1
-                    velocity(4),  // velocity component 5 -> component 2
-                    velocity(5)   // velocity component 6 -> component 3
-                });
-                auto J = mass.GetMomentOfInertiaMatrix();
-                auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
-
-                auto angular_velocity_vector =
-                    Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
-                auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
-                auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
-
-                auto generalized_forces = GeneralizedForces(forces, moments);
-
-                return generalized_forces.GetGeneralizedForces();
-            };
-
-            auto gen_forces_vector = forces();
-
-            auto position_vector = create_vector(
-                // Create vector from appropriate components of generalized coordinates
-                {gen_coords(0), gen_coords(1), gen_coords(2)}
-            );
-
-            const auto reference_position_vector = create_vector({0., 1., 0});
-
-            residual_vector = heavy_top_residual_vector(
-                mass_matrix, rotation_matrix, acceleration, gen_forces_vector, position_vector,
-                lagrange_mults, reference_position_vector
-            );
-        } break;
-        // Rigid pendulum problem
-        case ProblemType::kRigidPendulum: {
-            residual_vector = rigid_pendulum_residual_vector(size);
-        } break;
-        // Rigid body problem
-        case ProblemType::kRigidBody: {
-            // Do nothing, we're using it for unit testing at the moment
-        } break;
-        // Default case
-        default:
-            throw std::runtime_error("Invalid problem type!");
-    }
+    // auto residual_vector = vector(size);
+    auto residual_vector = residual(gen_coords, velocity, acceleration, lagrange_mults);
 
     auto log = util::Log::Get();
     log->Debug("Residual vector is " + std::to_string(size) + " x 1 with elements\n");

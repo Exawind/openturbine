@@ -6,6 +6,12 @@
 
 namespace openturbine::rigid_pendulum {
 
+HostView1D create_identity_residual_vector(
+    const HostView1D, const HostView1D, const HostView1D, const HostView1D
+);
+
+HostView2D create_identity_iteration_matrix();
+
 // TECHDEBT: Following is a hack to get around the fact that we don't have a way/scope to perform
 // automatic differentiation yet to calculate the iteration matrix. This is a temporary solution
 // until we implement something more robust.
@@ -55,7 +61,7 @@ public:
     virtual std::vector<State> Integrate(
         const State&, const MassMatrix&, const GeneralizedForces&, size_t,
         std::function<HostView2D(size_t)> iteration_matrix = create_identity_matrix,
-        std::function<HostView1D(size_t)> residual_vector = create_identity_vector
+        ResidualVector residual = create_identity_residual_vector
     ) override;
 
     /*! Implements the solveTimeStep() algorithm of the Lie group based generalized-alpha
@@ -66,7 +72,7 @@ public:
      */
     std::tuple<State, HostView1D> AlphaStep(
         const State&, const MassMatrix&, const GeneralizedForces&, size_t,
-        std::function<HostView2D(size_t)>, std::function<HostView1D(size_t)> residual_vector
+        std::function<HostView2D(size_t)>, ResidualVector residual
     );
 
     /// Computes the updated generalized coordinates based on the non-linear update
@@ -74,8 +80,8 @@ public:
 
     /// Computes residuals of the force array for the non-linear update
     HostView1D ComputeResiduals(
-        const MassMatrix&, const GeneralizedForces&, const HostView1D, const HostView1D,
-        const HostView1D, const HostView1D, std::function<HostView1D(size_t)> vector
+        const HostView1D, const HostView1D, const HostView1D, const HostView1D,
+        ResidualVector residual = create_identity_residual_vector
     );
 
     /// Checks convergence of the non-linear solution based on the residuals

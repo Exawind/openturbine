@@ -1,14 +1,13 @@
 #include "src/rigid_pendulum_poc/heavy_top.h"
 
+#include "src/rigid_pendulum_poc/quaternion.h"
 #include "src/utilities/log.h"
 
 namespace openturbine::rigid_pendulum {
 
 HostView1D heavy_top_residual_vector(
-    const HostView2D mass_matrix, const HostView2D rotation_matrix,
-    const HostView1D acceleration_vector, const HostView1D gen_forces_vector,
-    const HostView1D position_vector, const HostView1D lagrange_multipliers,
-    const HostView1D reference_position_vector
+    const HostView1D gen_coords, const HostView1D velocity, const HostView1D acceleration_vector,
+    const HostView1D lagrange_multipliers
 ) {
     // The residual vector for the generalized coordinates is given by
     // {residual} = {
@@ -16,9 +15,54 @@ HostView1D heavy_top_residual_vector(
     //     {residual_constraints}
     // }
 
+    auto mass = 15.;
+    auto mass_matrix = MassMatrix(mass, Vector(0.234375, 0.46875, 0.234375));
+
+    // Convert the quaternion representing orientation -> rotation matrix
+    auto RM = quaternion_to_rotation_matrix(
+        // Create quaternion from appropriate components of generalized coordinates
+        Quaternion{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)}
+    );
+    auto [m00, m01, m02] = std::get<0>(RM).GetComponents();
+    auto [m10, m11, m12] = std::get<1>(RM).GetComponents();
+    auto [m20, m21, m22] = std::get<2>(RM).GetComponents();
+    auto rotation_matrix = create_matrix({{m00, m01, m02}, {m10, m11, m12}, {m20, m21, m22}});
+
+    // Generalized forces as defined in Brüls and Cardona 2010
+    auto forces = [mass, mass_matrix, velocity]() {
+        auto gravity = Vector(0., 0., 9.81);
+        auto forces = gravity * mass;
+
+        auto angular_velocity = create_vector({
+            velocity(3),  // velocity component 4 -> component 1
+            velocity(4),  // velocity component 5 -> component 2
+            velocity(5)   // velocity component 6 -> component 3
+        });
+        auto J = mass_matrix.GetMomentOfInertiaMatrix();
+        auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
+
+        auto angular_velocity_vector =
+            Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
+        auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
+        auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
+
+        auto generalized_forces = GeneralizedForces(forces, moments);
+
+        return generalized_forces.GetGeneralizedForces();
+    };
+
+    auto gen_forces_vector = forces();
+
+    auto position_vector = create_vector(
+        // Create vector from appropriate components of generalized coordinates
+        {gen_coords(0), gen_coords(1), gen_coords(2)}
+    );
+
+    const auto reference_position_vector = create_vector({0., 1., 0});
+
     auto residual_gen_coords = heavy_top_gen_coords_residual_vector(
-        mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector, lagrange_multipliers,
-        reference_position_vector
+        mass_matrix.GetMassMatrix(), rotation_matrix, acceleration_vector, gen_forces_vector,
+        lagrange_multipliers, reference_position_vector
     );
 
     auto residual_constraints = heavy_top_constraints_residual_vector(

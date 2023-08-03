@@ -1,5 +1,6 @@
 #pragma once
 
+#include "src/rigid_pendulum_poc/state.h"
 #include "src/rigid_pendulum_poc/utilities.h"
 
 namespace openturbine::rigid_pendulum {
@@ -10,8 +11,7 @@ namespace openturbine::rigid_pendulum {
  *  Ref: https://doi.org/10.1115/1.4001370
  */
 HostView1D heavy_top_residual_vector(
-    const HostView2D, const HostView2D, const HostView1D, const HostView1D, const HostView1D,
-    const HostView1D, const HostView1D reference_position_vector
+    const HostView1D, const HostView1D, const HostView1D, const HostView1D
 );
 
 /// Calculates the iteration matrix for the heavy top problem
