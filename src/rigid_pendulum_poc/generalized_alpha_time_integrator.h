@@ -81,23 +81,11 @@ public:
     /// Computes the updated generalized coordinates based on the non-linear update
     HostView1D UpdateGeneralizedCoordinates(const HostView1D, const HostView1D);
 
-    /// Computes residuals of the force array for the non-linear update
-    HostView1D ComputeResiduals(
-        const HostView1D, const HostView1D, const HostView1D, const HostView1D,
-        ResidualVector residual = create_identity_residual_vector
-    );
-
     /// Checks convergence of the non-linear solution based on the residuals
     bool CheckConvergence(const HostView1D);
 
     /// Returns the flag to indicate if the latest non-linear update has converged
     inline bool IsConverged() const { return is_converged_; }
-
-    /// Computes the iteration matrix for the non-linear update
-    HostView2D ComputeIterationMatrix(
-        const double&, const double&, const HostView1D, const HostView1D, const HostView1D,
-        const double&, const HostView1D, IterationMatrix it_matrix
-    );
 
 private:
     const double kALPHA_F_;  //< Alpha_f coefficient of the generalized-alpha method

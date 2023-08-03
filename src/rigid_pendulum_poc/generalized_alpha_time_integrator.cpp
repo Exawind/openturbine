@@ -59,12 +59,6 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     size_t n_constraints, IterationMatrix iteration_matrix, ResidualVector residual
 ) {
     auto log = util::Log::Get();
-    log->Debug(
-        "ALPHA_F = " + std::to_string(this->kALPHA_F_) + ", " + "ALPHA_M = " +
-        std::to_string(this->kALPHA_M_) + ", " + "BETA = " + std::to_string(this->kBETA_) + ", " +
-        "GAMMA = " + std::to_string(this->kGAMMA_) + "\n"
-    );
-
     std::vector<State> states{initial_state};
     auto n_steps = this->time_stepper_.GetNumberOfSteps();
     for (size_t i = 0; i < n_steps; i++) {
@@ -122,19 +116,8 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     // Initialize lagrange_mults_next to zero separately since it might be of different size
     Kokkos::deep_copy(lagrange_mults_next, 0.);
 
-    auto log = util::Log::Get();
-    log->Debug(
-        "Initial update of algo_acceleration, algo_acceleration_next, velocity, and "
-        "delta_gen_coords:\n"
-    );
-    for (size_t i = 0; i < size; i++) {
-        log->Debug(
-            std::to_string(algo_acceleration(i)) + " " + std::to_string(algo_acceleration_next(i)) +
-            " " + std::to_string(velocity(i)) + " " + std::to_string(delta_gen_coords(i)) + "\n"
-        );
-    }
-
     // Perform Newton-Raphson iterations to update nonlinear part of generalized-alpha algorithm
+    auto log = util::Log::Get();
     log->Info(
         "Performing Newton-Raphson iterations to update solution using the generalized-alpha "
         "algorithm\n"
@@ -142,10 +125,6 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
 
     const auto BETA_PRIME = (1 - kALPHA_M_) / (h * h * kBETA_ * (1 - kALPHA_F_));
     const auto GAMMA_PRIME = kGAMMA_ / (h * kBETA_);
-    log->Debug(
-        "BETA_PRIME = " + std::to_string(BETA_PRIME) +
-        ", GAMMA_PRIME = " + std::to_string(GAMMA_PRIME) + "\n"
-    );
 
     // Precondition the linear solve (Bottasso et al 2008)
     const auto dl = HostView2D("dl", size + n_constraints, size + n_constraints);
@@ -178,16 +157,11 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     for (time_stepper_.SetNumberOfIterations(0);
          time_stepper_.GetNumberOfIterations() < max_iterations;
          time_stepper_.IncrementNumberOfIterations()) {
-        log->Debug(
-            "* Iteration number: " + std::to_string(time_stepper_.GetNumberOfIterations() + 1) +
-            " *\n"
-        );
-
         gen_coords_next = UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords);
 
         // Compute the residuals and check for convergence
         const auto residuals =
-            ComputeResiduals(gen_coords_next, velocity, acceleration, lagrange_mults_next, residual);
+            residual(gen_coords_next, velocity, acceleration, lagrange_mults_next);
 
         if (this->CheckConvergence(residuals)) {
             this->is_converged_ = true;
@@ -195,34 +169,10 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         }
 
         // Compute the iteration matrix and solve the linear system to get the increments
-        auto iteration_matrix = ComputeIterationMatrix(
+        auto iteration_matrix = it_matrix(
             BETA_PRIME, GAMMA_PRIME, gen_coords_next, velocity, lagrange_mults_next, h,
-            delta_gen_coords, it_matrix
+            delta_gen_coords
         );
-
-        // HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
-        //     const double& BETA_PRIME, const double& GAMMA_PRIME, const HostView1D gen_coords,
-        //     const HostView1D velocity, const HostView1D lagrange_mults, const double& h,
-        //     const HostView1D delta_gen_coords, std::function<HostView2D(size_t)> matrix
-        // ) {
-
-        log->Debug("residuals is " + std::to_string(residuals.extent(0)) + " x 1 with elements\n");
-        for (size_t i = 0; i < residuals.size(); i++) {
-            log->Debug(std::to_string(residuals(i)) + "\n");
-        }
-
-        log->Debug(
-            "Iteration matrix is " + std::to_string(iteration_matrix.extent(0)) + " x " +
-            " with elements" + "\n"
-        );
-        for (size_t i = 0; i < iteration_matrix.extent(0); i++) {
-            for (size_t j = 0; j < iteration_matrix.extent(1); j++) {
-                log->Debug(
-                    "(" + std::to_string(i) + ", " + std::to_string(j) +
-                    ") : " + std::to_string(iteration_matrix(i, j)) + "\n"
-                );
-            }
-        }
 
         if (this->precondition_) {
             iteration_matrix = multiply_matrix_with_matrix(iteration_matrix, dr);
@@ -236,11 +186,6 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         auto soln_increments = HostView1D("soln_increments", residuals.size());
         Kokkos::deep_copy(soln_increments, residuals);
         solve_linear_system(iteration_matrix, soln_increments);
-
-        log->Debug("Solution increments:\n");
-        for (size_t i = 0; i < soln_increments.size(); i++) {
-            log->Debug(std::to_string(soln_increments(i)) + "\n");
-        }
 
         HostView1D delta_x("delta_x", delta_gen_coords.size());
         Kokkos::parallel_for(
@@ -296,19 +241,6 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         }
     );
 
-    log->Debug("Final state upon performing Newton-Raphson iterations:\n");
-    log->Debug("Generalized coordinates, velocity, acceleration, and algorithmic acceleration \n");
-    for (size_t i = 0; i < size; i++) {
-        log->Debug(
-            std::to_string(gen_coords_next(i)) + ", " + std::to_string(velocity(i)) + ", " +
-            std::to_string(acceleration(i)) + ", " + std::to_string(algo_acceleration_next(i)) + "\n"
-        );
-    }
-    log->Debug("Lagrange multipliers:\n");
-    for (size_t i = 0; i < n_constraints; i++) {
-        log->Debug(std::to_string(lagrange_mults_next(i)) + "\n");
-    }
-
     auto results = std::make_tuple(
         State{gen_coords_next, velocity, acceleration, algo_acceleration_next}, lagrange_mults_next
     );
@@ -339,11 +271,6 @@ HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
     const auto h = this->time_stepper_.GetTimeStep();
     auto r = current_position + (updated_position * h);
 
-    auto log = util::Log::Get();
-    log->Debug(
-        "Updated position: " + std::to_string(r.GetXComponent()) + ", " +
-        std::to_string(r.GetYComponent()) + ", " + std::to_string(r.GetZComponent()) + "\n"
-    );
     // Step 2: SO(3) update, done with quaternion composition
     Quaternion current_orientation{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)};
     auto update_orientation = quaternion_from_rotation_vector(
@@ -351,12 +278,6 @@ HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
         Vector{delta_gen_coords(3), delta_gen_coords(4), delta_gen_coords(5)} * h
     );
     auto q = current_orientation * update_orientation;
-
-    log->Debug(
-        "Updated orientation: " + std::to_string(q.GetScalarComponent()) + ", " +
-        std::to_string(q.GetXComponent()) + ", " + std::to_string(q.GetYComponent()) + ", " +
-        std::to_string(q.GetZComponent()) + "\n"
-    );
 
     // Construct the updated generalized coordinates from position and orientation vectors
     auto gen_coords_next = HostView1D("generalized_coordinates_next", gen_coords.size());
@@ -377,40 +298,6 @@ HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
     return gen_coords_next;
 }
 
-HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
-    const HostView1D gen_coords, const HostView1D velocity, const HostView1D acceleration,
-    const HostView1D lagrange_mults, ResidualVector residual
-) {
-    // The residual vector consists of two parts
-    // {residual} = {
-    //     {residual_gen_coords},
-    //     {residual_constraints}
-    // }
-    //
-    // {residual_gen_coords} = [M(q)] {v'} + {g(q,v,t)} + [B(q)]T {Lambda}
-    // where,
-    // [M(q)] = mass matrix
-    // {v'} = acceleration vector
-    // {g(q,v,t)} = generalized forces vector
-    // [B(q)] = constraint gradient matrix
-    // {Lambda} = Lagrange multipliers vector
-    //
-    // {residual_constraints} = {Phi(q)}
-    // where,
-    // {Phi(q)} = constraint vector
-
-    auto size = acceleration.extent(0) + lagrange_mults.extent(0);
-    auto residual_vector = residual(gen_coords, velocity, acceleration, lagrange_mults);
-
-    auto log = util::Log::Get();
-    log->Debug("Residual vector is " + std::to_string(size) + " x 1 with elements\n");
-    for (size_t i = 0; i < size; i++) {
-        log->Debug(std::to_string(residual_vector(i)) + "\n");
-    }
-
-    return residual_vector;
-}
-
 bool GeneralizedAlphaTimeIntegrator::CheckConvergence(const HostView1D residual) {
     // L2 norm of the residual vector should be very small (< epsilon) for the solution
     // to be considered converged
@@ -429,44 +316,6 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(const HostView1D residual)
     log->Debug("Residual norm: " + std::to_string(residual_norm) + "\n");
 
     return (residual_norm) < kCONVERGENCETOLERANCE ? true : false;
-}
-
-HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
-    const double& BETA_PRIME, const double& GAMMA_PRIME, const HostView1D gen_coords,
-    const HostView1D velocity, const HostView1D lagrange_mults, const double& h,
-    const HostView1D delta_gen_coords, IterationMatrix it_matrix
-) {
-    // Iteration matrix for the generalized alpha algorithm is given by
-    // [iteration matrix] = [
-    //     [M(q)] * beta' + [C_t(q,v,t)] * gamma' + [K_t(q,v,v',Lambda,t)]    [B(q)^T]]
-    //                            [ B(q) ]                                       [0]
-    // ]
-    // where,
-    // [M(q)] = mass matrix
-    // [C_t(q,v,t)] = Tangent damping matrix
-    // [K_t(q,v,v',Lambda,t)] = Tangent stiffness matrix
-    // [B(q)] = Constraint gradeint matrix
-
-    auto size = velocity.extent(0) + lagrange_mults.extent(0);
-    auto iteration_matrix = it_matrix(
-        BETA_PRIME, GAMMA_PRIME, gen_coords, velocity, lagrange_mults, h, delta_gen_coords
-    );
-
-    auto log = util::Log::Get();
-    log->Debug(
-        "Iteration matrix is " + std::to_string(size) + " x " + std::to_string(size) +
-        " with elements" + "\n"
-    );
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = 0; j < size; j++) {
-            log->Debug(
-                "(" + std::to_string(i) + ", " + std::to_string(j) +
-                ") : " + std::to_string(iteration_matrix(i, j)) + "\n"
-            );
-        }
-    }
-
-    return iteration_matrix;
 }
 
 }  // namespace openturbine::rigid_pendulum
