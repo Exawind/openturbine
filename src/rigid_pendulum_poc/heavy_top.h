@@ -16,9 +16,8 @@ HostView1D heavy_top_residual_vector(
 
 /// Calculates the iteration matrix for the heavy top problem
 HostView2D heavy_top_iteration_matrix(
-    const double&, const double&, const HostView2D, const HostView2D, const HostView2D,
-    const HostView1D, const HostView1D, const HostView1D reference_position_vector,
-    const double& h = 1., const HostView1D dq = create_vector({1., 1., 1.})
+    const double&, const double&, const HostView1D, const HostView1D, const HostView1D,
+    const double& = 1., const HostView1D = create_vector({1., 1., 1.})
 );
 
 /// Calculates the generalized coordinates residual vector for the heavy top problem

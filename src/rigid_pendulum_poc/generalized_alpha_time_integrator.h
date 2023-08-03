@@ -10,7 +10,10 @@ HostView1D create_identity_residual_vector(
     const HostView1D, const HostView1D, const HostView1D, const HostView1D
 );
 
-HostView2D create_identity_iteration_matrix();
+HostView2D create_identity_iteration_matrix(
+    const double&, const double&, const HostView1D, const HostView1D, const HostView1D,
+    const double&, const HostView1D
+);
 
 // TECHDEBT: Following is a hack to get around the fact that we don't have a way/scope to perform
 // automatic differentiation yet to calculate the iteration matrix. This is a temporary solution
@@ -60,7 +63,7 @@ public:
     /// Performs the time integration and returns a vector of States over the time steps
     virtual std::vector<State> Integrate(
         const State&, const MassMatrix&, const GeneralizedForces&, size_t,
-        std::function<HostView2D(size_t)> iteration_matrix = create_identity_matrix,
+        IterationMatrix it_matrix = create_identity_iteration_matrix,
         ResidualVector residual = create_identity_residual_vector
     ) override;
 
@@ -71,8 +74,8 @@ public:
      *  https://doi.org/10.1016/j.mechmachtheory.2011.07.017
      */
     std::tuple<State, HostView1D> AlphaStep(
-        const State&, const MassMatrix&, const GeneralizedForces&, size_t,
-        std::function<HostView2D(size_t)>, ResidualVector residual
+        const State&, const MassMatrix&, const GeneralizedForces&, size_t, IterationMatrix it_matrix,
+        ResidualVector residual
     );
 
     /// Computes the updated generalized coordinates based on the non-linear update
@@ -92,9 +95,8 @@ public:
 
     /// Computes the iteration matrix for the non-linear update
     HostView2D ComputeIterationMatrix(
-        const double&, const double&, const MassMatrix&, const GeneralizedForces&, const HostView1D,
-        const HostView1D, const HostView1D, const double&, const HostView1D,
-        std::function<HostView2D(size_t)> matrix
+        const double&, const double&, const HostView1D, const HostView1D, const HostView1D,
+        const double&, const HostView1D, IterationMatrix it_matrix
     );
 
 private:

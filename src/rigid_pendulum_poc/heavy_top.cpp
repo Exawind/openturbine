@@ -202,10 +202,9 @@ HostView2D heavy_top_constraint_gradient_matrix(
 }
 
 HostView2D heavy_top_iteration_matrix(
-    const double& BETA_PRIME, const double& GAMMA_PRIME, const HostView2D mass_matrix,
-    const HostView2D inertia_matrix, const HostView2D rotation_matrix,
-    const HostView1D angular_velocity_vector, const HostView1D lagrange_multipliers,
-    const HostView1D reference_position_vector, const double& h, const HostView1D delta_gen_coords
+    const double& BETA_PRIME, const double& GAMMA_PRIME, const HostView1D gen_coords,
+    const HostView1D velocity, const HostView1D lagrange_mults, const double& h,
+    const HostView1D delta_gen_coords
 ) {
     // Iteration matrix for the heavy top problem is given by
     // [iteration matrix] = [
@@ -220,10 +219,54 @@ HostView2D heavy_top_iteration_matrix(
     //                                                       0  X * R^T * Lambda ]
     // [B(q)] = Constraint gradeint matrix = [ -I_3    -R * X ]
 
+    auto mass = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
+    auto mass_matrix = mass.GetMassMatrix();
+    auto inertia_matrix = mass.GetMomentOfInertiaMatrix();
+
+    // Generalized forces as defined in Brüls and Cardona 2010
+    auto forces = [mass, velocity]() {
+        auto gravity = Vector(0., 0., 9.81);
+        auto forces = gravity * 15.;
+
+        auto angular_velocity = create_vector({
+            velocity(3),  // velocity component 4 -> component 1
+            velocity(4),  // velocity component 5 -> component 2
+            velocity(5)   // velocity component 6 -> component 3
+        });
+        auto J = mass.GetMomentOfInertiaMatrix();
+        auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
+
+        auto angular_velocity_vector =
+            Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
+        auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
+        auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
+
+        auto generalized_forces = GeneralizedForces(forces, moments);
+
+        return generalized_forces.GetGeneralizedForces();
+    };
+
+    auto gen_forces_vector = forces();
+
+    // Convert the quaternion representing orientation -> rotation matrix
+    auto RM = quaternion_to_rotation_matrix(
+        // Create quaternion from appropriate components of generalized coordinates
+        Quaternion{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)}
+    );
+    auto [m00, m01, m02] = std::get<0>(RM).GetComponents();
+    auto [m10, m11, m12] = std::get<1>(RM).GetComponents();
+    auto [m20, m21, m22] = std::get<2>(RM).GetComponents();
+    auto rotation_matrix = create_matrix({{m00, m01, m02}, {m10, m11, m12}, {m20, m21, m22}});
+
+    auto angular_velocity_vector = create_vector({velocity(3), velocity(4), velocity(5)});
+    auto position_vector = create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
+
+    const HostView1D reference_position_vector = create_vector({0., 1., 0});
+
     auto tangent_damping_matrix =
         heavy_top_tangent_damping_matrix(angular_velocity_vector, inertia_matrix);
     auto tangent_stiffness_matrix = heavy_top_tangent_stiffness_matrix(
-        rotation_matrix, lagrange_multipliers, reference_position_vector
+        rotation_matrix, lagrange_mults, reference_position_vector
     );
     auto constraint_gradient_matrix =
         heavy_top_constraint_gradient_matrix(rotation_matrix, reference_position_vector);

@@ -15,6 +15,15 @@ HostView1D create_identity_residual_vector(
     return create_identity_vector(size);
 }
 
+HostView2D create_identity_iteration_matrix(
+    const double& BETA_PRIME, const double& GAMMA_PRIME, const HostView1D gen_coords,
+    const HostView1D velocity, const HostView1D lagrange_mults, const double& h,
+    const HostView1D delta_gen_coords
+) {
+    auto size = velocity.size() + lagrange_mults.size();
+    return create_identity_matrix(size);
+}
+
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper,
     ProblemType problem_type, bool precondition
@@ -47,7 +56,7 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     const State& initial_state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    size_t n_constraints, std::function<HostView2D(size_t)> iteration_matrix, ResidualVector residual
+    size_t n_constraints, IterationMatrix iteration_matrix, ResidualVector residual
 ) {
     auto log = util::Log::Get();
     log->Debug(
@@ -73,7 +82,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
 
 std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const State& state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    size_t n_constraints, std::function<HostView2D(size_t)> matrix, ResidualVector residual
+    size_t n_constraints, IterationMatrix it_matrix, ResidualVector residual
 ) {
     auto gen_coords = state.GetGeneralizedCoordinates();
     auto velocity = state.GetVelocity();
@@ -187,9 +196,15 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
 
         // Compute the iteration matrix and solve the linear system to get the increments
         auto iteration_matrix = ComputeIterationMatrix(
-            BETA_PRIME, GAMMA_PRIME, mass_matrix, gen_forces, gen_coords_next, velocity,
-            lagrange_mults_next, h, delta_gen_coords, matrix
+            BETA_PRIME, GAMMA_PRIME, gen_coords_next, velocity, lagrange_mults_next, h,
+            delta_gen_coords, it_matrix
         );
+
+        // HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
+        //     const double& BETA_PRIME, const double& GAMMA_PRIME, const HostView1D gen_coords,
+        //     const HostView1D velocity, const HostView1D lagrange_mults, const double& h,
+        //     const HostView1D delta_gen_coords, std::function<HostView2D(size_t)> matrix
+        // ) {
 
         log->Debug("residuals is " + std::to_string(residuals.extent(0)) + " x 1 with elements\n");
         for (size_t i = 0; i < residuals.size(); i++) {
@@ -385,7 +400,6 @@ HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
     // {Phi(q)} = constraint vector
 
     auto size = acceleration.extent(0) + lagrange_mults.extent(0);
-    // auto residual_vector = vector(size);
     auto residual_vector = residual(gen_coords, velocity, acceleration, lagrange_mults);
 
     auto log = util::Log::Get();
@@ -418,10 +432,9 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(const HostView1D residual)
 }
 
 HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
-    const double& BETA_PRIME, const double& GAMMA_PRIME, const MassMatrix& mass,
-    const GeneralizedForces& gen_forces, const HostView1D gen_coords, const HostView1D velocity,
-    const HostView1D lagrange_mults, const double& h, const HostView1D delta_gen_coords,
-    std::function<HostView2D(size_t)> matrix
+    const double& BETA_PRIME, const double& GAMMA_PRIME, const HostView1D gen_coords,
+    const HostView1D velocity, const HostView1D lagrange_mults, const double& h,
+    const HostView1D delta_gen_coords, IterationMatrix it_matrix
 ) {
     // Iteration matrix for the generalized alpha algorithm is given by
     // [iteration matrix] = [
@@ -435,49 +448,9 @@ HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
     // [B(q)] = Constraint gradeint matrix
 
     auto size = velocity.extent(0) + lagrange_mults.extent(0);
-    auto iteration_matrix = matrix(size);
-
-    switch (this->problem_type_) {
-        // Heavy top problem
-        case ProblemType::kHeavyTop: {
-            auto mass_matrix = mass.GetMassMatrix();
-            auto inertia_matrix = mass.GetMomentOfInertiaMatrix();
-
-            // Convert the quaternion representing orientation -> rotation matrix
-            auto RM = quaternion_to_rotation_matrix(
-                // Create quaternion from appropriate components of generalized coordinates
-                Quaternion{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)}
-            );
-            auto [m00, m01, m02] = std::get<0>(RM).GetComponents();
-            auto [m10, m11, m12] = std::get<1>(RM).GetComponents();
-            auto [m20, m21, m22] = std::get<2>(RM).GetComponents();
-            auto rotation_matrix =
-                create_matrix({{m00, m01, m02}, {m10, m11, m12}, {m20, m21, m22}});
-
-            auto gen_forces_vector = gen_forces.GetGeneralizedForces();
-            auto angular_velocity_vector = create_vector({velocity(3), velocity(4), velocity(5)});
-            auto position_vector = create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
-
-            const HostView1D reference_position_vector = create_vector({0., 1., 0});
-
-            iteration_matrix = heavy_top_iteration_matrix(
-                BETA_PRIME, GAMMA_PRIME, mass_matrix, inertia_matrix, rotation_matrix,
-                angular_velocity_vector, lagrange_mults, reference_position_vector, h,
-                delta_gen_coords
-            );
-        } break;
-        // Rigid pendulum problem
-        case ProblemType::kRigidPendulum: {
-            iteration_matrix = rigid_pendulum_iteration_matrix(size);
-        } break;
-        // Rigid body problem
-        case ProblemType::kRigidBody: {
-            // Do nothing, we're using it for unit testing at the moment
-        } break;
-        // Default case
-        default:
-            throw std::runtime_error("Problem type not supported!");
-    }
+    auto iteration_matrix = it_matrix(
+        BETA_PRIME, GAMMA_PRIME, gen_coords, velocity, lagrange_mults, h, delta_gen_coords
+    );
 
     auto log = util::Log::Get();
     log->Debug(
