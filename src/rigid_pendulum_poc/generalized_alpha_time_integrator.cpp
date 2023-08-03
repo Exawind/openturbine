@@ -26,14 +26,13 @@ HostView2D create_identity_iteration_matrix(
 
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper,
-    ProblemType problem_type, bool precondition
+    bool precondition
 )
     : kALPHA_F_(alpha_f),
       kALPHA_M_(alpha_m),
       kBETA_(beta),
       kGAMMA_(gamma),
       time_stepper_(std::move(time_stepper)),
-      problem_type_(problem_type),
       precondition_(precondition) {
     if (this->kALPHA_F_ < 0 || this->kALPHA_F_ > 1) {
         throw std::invalid_argument("Invalid value for alpha_f");

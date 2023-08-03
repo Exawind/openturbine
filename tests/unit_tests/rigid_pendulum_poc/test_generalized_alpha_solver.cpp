@@ -7,24 +7,11 @@
 
 namespace openturbine::rigid_pendulum::tests {
 
-TEST(ProblemTypeTest, DefaultValue) {
-    auto problem_type = ProblemType();
-
-    EXPECT_EQ(problem_type, ProblemType::kRigidBody);
-}
-
 TEST(TimeIntegratorTest, GetTimeIntegratorType) {
     auto time_integrator =
         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
 
     EXPECT_EQ(time_integrator.GetType(), TimeIntegratorType::kGENERALIZED_ALPHA);
-}
-
-TEST(TimeIntegratorTest, GetTimeIntegratorProblemType) {
-    auto time_integrator =
-        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
-
-    EXPECT_EQ(time_integrator.GetProblemType(), ProblemType::kRigidBody);
 }
 
 TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
@@ -242,6 +229,62 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroAccelerationVect
     expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-1., 0., 1.});
     expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-2., -2., -2.});
     expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {-2., -2., -2.});
+}
+
+TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroStates) {
+    // Initial State for the heavy top problem
+    auto q0 = create_vector({1., 1., 1., 1., 1., 1., 1.});
+    auto v0 = create_vector({2., 2., 2., 2., 2., 2.});
+    auto a0 = create_vector({3., 3., 3., 3., 3., 3.});
+    auto lag_mult = create_vector({4., 4., 4.});
+    auto aa0 = create_vector({5., 5., 5., 5., 5., 5.});
+
+    auto initial_state = State(q0, v0, a0, aa0);
+
+    // Calculate properties for the time integrator
+    double initial_time{0.};
+    double final_time{0.1};
+    double time_step{0.1};
+    size_t num_steps = size_t(final_time / time_step);
+    size_t max_iterations{1};
+
+    auto time_stepper = TimeStepper(initial_time, time_step, num_steps, max_iterations);
+
+    // Calculate the generalized alpha parameters
+    auto rho_inf = 0.5;
+    auto alpha_m = (2. * rho_inf - 1.) / (rho_inf + 1.);
+    auto alpha_f = rho_inf / (rho_inf + 1.);
+    auto gamma = 0.5 + alpha_f - alpha_m;
+    auto beta = 0.25 * std::pow(gamma + 0.5, 2);
+
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(alpha_f, alpha_m, beta, gamma, time_stepper, true);
+
+    // Calculate the required properties and initial conditions for the heavy top problem
+    auto mass_matrix = MassMatrix();
+    auto gen_forces = GeneralizedForces();
+
+    // Perform the time integration
+    auto results = time_integrator.Integrate(initial_state, mass_matrix, gen_forces, 3);
+
+    auto final_state = results.back();
+
+    // We expect the final state to contain the following values after one increment
+    // via a pilot fortran code
+    expect_kokkos_view_1D_equal(
+        final_state.GetGeneralizedCoordinates(),
+        {1.207222, 1.207222, 1.207222, 0.674773, 1.086996, 1.086996, 1.086996}
+    );
+    expect_kokkos_view_1D_equal(
+        final_state.GetVelocity(),
+        {-16.583333, -16.583333, -16.583333, -16.583333, -16.583333, -16.583333}
+    );
+    expect_kokkos_view_1D_equal(
+        final_state.GetAcceleration(), {-337.5, -337.5, -337.5, -337.5, -337.5, -337.5}
+    );
+    expect_kokkos_view_1D_equal(
+        final_state.GetAlgorithmicAcceleration(), {-224., -224., -224., -224., -224., -224.}
+    );
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

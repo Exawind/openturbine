@@ -282,9 +282,8 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneI
     auto gamma = 0.5 + alpha_f - alpha_m;
     auto beta = 0.25 * std::pow(gamma + 0.5, 2);
 
-    auto time_integrator = GeneralizedAlphaTimeIntegrator(
-        alpha_f, alpha_m, beta, gamma, time_stepper, ProblemType::kHeavyTop, true
-    );
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(alpha_f, alpha_m, beta, gamma, time_stepper, true);
 
     // Initialize the lagrange multipliers to zero
     size_t n_lagrange_mults{3};

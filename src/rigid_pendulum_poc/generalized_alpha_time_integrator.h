@@ -15,17 +15,6 @@ HostView2D create_identity_iteration_matrix(
     const double&, const HostView1D
 );
 
-// TECHDEBT: Following is a hack to get around the fact that we don't have a way/scope to perform
-// automatic differentiation yet to calculate the iteration matrix. This is a temporary solution
-// until we implement something more robust.
-
-/// Create an enum for the problem type
-enum class ProblemType {
-    kRigidBody = 0,     //< Arbitrary rigid body
-    kHeavyTop = 1,      //< Heavy top problem
-    kRigidPendulum = 2  //< Rigid pendulum problem
-};
-
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
 public:
@@ -33,17 +22,13 @@ public:
 
     GeneralizedAlphaTimeIntegrator(
         double alpha_f = 0.5, double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5,
-        TimeStepper time_stepper = TimeStepper(), ProblemType problem_type = ProblemType::kRigidBody,
-        bool precondition = false
+        TimeStepper time_stepper = TimeStepper(), bool precondition = false
     );
 
     /// Returns the type of the time integrator
     inline TimeIntegratorType GetType() const override {
         return TimeIntegratorType::kGENERALIZED_ALPHA;
     }
-
-    /// Returns the problem type solved by the time integrator
-    inline ProblemType GetProblemType() const { return problem_type_; }
 
     /// Returns the alpha_f parameter
     inline double GetAlphaF() const { return kALPHA_F_; }
@@ -95,7 +80,6 @@ private:
 
     bool is_converged_;         //< Flag to indicate if the latest non-linear update has converged
     TimeStepper time_stepper_;  //< Time stepper object to perform the time integration
-    ProblemType problem_type_;  //< Type of the problem to be solved
     bool precondition_;         //< Flag to indicate if the iteration matrix is preconditioned
 };
 
