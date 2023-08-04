@@ -40,6 +40,25 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     const State& initial_state, size_t n_constraints,
     std::shared_ptr<LinearizationParameters> linearization_parameters
 ) {
+    auto n_gen_coords = initial_state.GetGeneralizedCoordinates().size();
+    auto n_velocities = initial_state.GetVelocity().size();
+    auto n_accelerations = initial_state.GetAcceleration().size();
+    auto n_algo_accelerations = initial_state.GetAlgorithmicAcceleration().size();
+
+    if (n_velocities != n_accelerations || n_velocities != n_algo_accelerations) {
+        throw std::invalid_argument(
+            "The number of velocities, accelerations, and algorithmic accelerations in the "
+            "initial state must be equal"
+        );
+    }
+
+    if (n_gen_coords != n_velocities + 1) {
+        throw std::invalid_argument(
+            "The number of generalized coordinates in the initial state must be equal to the "
+            "number of velocities plus one for lie group based generalized alpha integrator"
+        );
+    }
+
     auto log = util::Log::Get();
     std::vector<State> states{initial_state};
     auto n_steps = this->time_stepper_.GetNumberOfSteps();
@@ -293,9 +312,6 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(const HostView1D residual)
         Kokkos::Sum<double>(residual_norm)
     );
     residual_norm = std::sqrt(residual_norm);
-
-    auto log = util::Log::Get();
-    log->Debug("Residual norm: " + std::to_string(residual_norm) + "\n");
 
     return (residual_norm) < kCONVERGENCETOLERANCE ? true : false;
 }
