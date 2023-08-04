@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "src/rigid_pendulum_poc/utilities.h"
+#include "tests/unit_tests/rigid_pendulum_poc/test_utilities.h"
 
 namespace openturbine::rigid_pendulum::tests {
 
@@ -258,6 +259,62 @@ TEST(MathUtilitiesTest, WrapAngleToPi_NegativeThirtySixThousandThirtyDegrees) {
     auto expected = -kPI / 6.;
 
     ASSERT_NEAR(wrap_angle_to_pi(angle), expected, 1e-6);
+}
+
+TEST(MathUtilitiesTest, CreateKokkosView1DFromGivenVector) {
+    std::vector<double> values = {1., 2., 3., 4., 5.};
+    auto vector = create_vector(values);
+
+    expect_kokkos_view_1D_equal(vector, values);
+}
+
+TEST(MathUtilitiesTest, CreateKokkosView2DFromGivenMatrix) {
+    std::vector<std::vector<double>> values = {
+        {1., 2., 3., 4., 5.},
+        {6., 7., 8., 9., 10.},
+        {11., 12., 13., 14., 15.},
+        {16., 17., 18., 19., 20.},
+        {21., 22., 23., 24., 25.}};
+    auto matrix = create_matrix(values);
+
+    expect_kokkos_view_2D_equal(matrix, values);
+}
+
+TEST(MathUtilitiesTest, Transpose3x3Matrix) {
+    auto matrix = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
+    auto transposed_matrix = transpose_matrix(matrix);
+
+    expect_kokkos_view_2D_equal(transposed_matrix, {{1., 4., 7.}, {2., 5., 8.}, {3., 6., 9.}});
+}
+
+TEST(MathUtilitiesTest, CreateCrossProductMatrixFromGivenVector) {
+    auto vector = create_vector({1., 2., 3.});
+    auto matrix = create_cross_product_matrix(vector);
+
+    expect_kokkos_view_2D_equal(matrix, {{0., -3., 2.}, {3., 0., -1.}, {-2., 1., 0.}});
+}
+
+TEST(MathUtilitiesTest, Multiply3x3MatrixWith3x1Vector) {
+    auto matrix = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
+    auto vector = create_vector({1., 2., 3.});
+    auto result = multiply_matrix_with_vector(matrix, vector);
+
+    expect_kokkos_view_1D_equal(result, {14., 32., 50.});
+}
+
+TEST(MathUtilitiesTest, Multiply3x3MatrixWith3x3Matrix) {
+    auto matrix_a = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
+    auto matrix_b = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
+    auto result = multiply_matrix_with_matrix(matrix_a, matrix_b);
+
+    expect_kokkos_view_2D_equal(result, {{30., 36., 42.}, {66., 81., 96.}, {102., 126., 150.}});
+}
+
+TEST(MathUtilitiesTest, Multiply3x3MatrixWithAScalar) {
+    auto matrix = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
+    auto result = multiply_matrix_with_scalar(matrix, 2.);
+
+    expect_kokkos_view_2D_equal(result, {{2., 4., 6.}, {8., 10., 12.}, {14., 16., 18.}});
 }
 
 }  // namespace openturbine::rigid_pendulum::tests

@@ -1,40 +1,22 @@
 #include "src/rigid_pendulum_poc/generalized_alpha_time_integrator.h"
 
+#include "src/rigid_pendulum_poc/heavy_top.h"
+#include "src/rigid_pendulum_poc/quaternion.h"
 #include "src/rigid_pendulum_poc/solver.h"
 #include "src/utilities/log.h"
 
 namespace openturbine::rigid_pendulum {
 
-HostView2D create_identity_matrix(size_t size) {
-    auto matrix = HostView2D("matrix", size, size);
-    auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, size);
-    auto fill_diagonal = [matrix](int index) {
-        matrix(index, index) = 1.;
-    };
-
-    Kokkos::parallel_for(diagonal_entries, fill_diagonal);
-
-    return matrix;
-}
-
-HostView1D create_identity_vector(size_t size) {
-    auto vector = HostView1D("vector", size);
-
-    Kokkos::parallel_for(
-        size, KOKKOS_LAMBDA(int i) { vector(i) = 1.; }
-    );
-
-    return vector;
-}
-
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
-    double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper
+    double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper,
+    bool precondition
 )
     : kALPHA_F_(alpha_f),
       kALPHA_M_(alpha_m),
       kBETA_(beta),
       kGAMMA_(gamma),
-      time_stepper_(std::move(time_stepper)) {
+      time_stepper_(std::move(time_stepper)),
+      precondition_(precondition) {
     if (this->kALPHA_F_ < 0 || this->kALPHA_F_ > 1) {
         throw std::invalid_argument("Invalid value for alpha_f");
     }
@@ -55,226 +37,283 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
 }
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
-    const State& initial_state, std::function<HostView2D(size_t)> matrix,
-    std::function<HostView1D(size_t)> vector
+    const State& initial_state, size_t n_constraints,
+    std::shared_ptr<LinearizationParameters> linearization_parameters
 ) {
-    auto log = util::Log::Get();
+    auto n_gen_coords = initial_state.GetGeneralizedCoordinates().size();
+    auto n_velocities = initial_state.GetVelocity().size();
+    auto n_accelerations = initial_state.GetAcceleration().size();
+    auto n_algo_accelerations = initial_state.GetAlgorithmicAcceleration().size();
 
+    if (n_velocities != 6 || n_accelerations != 6 || n_algo_accelerations != 6) {
+        throw std::invalid_argument(
+            "The number of velocities, accelerations, and algorithmic accelerations in the "
+            "initial state must be of size 6 for lie group based generalized alpha integrator"
+        );
+    }
+
+    if (n_gen_coords != 7) {
+        throw std::invalid_argument(
+            "The number of generalized coordinates in the initial state must be of size "
+            "7 for lie group based generalized alpha integrator"
+        );
+    }
+
+    auto log = util::Log::Get();
     std::vector<State> states{initial_state};
     auto n_steps = this->time_stepper_.GetNumberOfSteps();
     for (size_t i = 0; i < n_steps; i++) {
-        log->Info("Integrating step number " + std::to_string(i + 1) + "\n");
-        states.emplace_back(std::get<0>(this->AlphaStep(states[i], matrix, vector)));
         this->time_stepper_.AdvanceTimeStep();
+        log->Info("** Integrating step number " + std::to_string(i + 1) + " **\n");
+        states.emplace_back(
+            std::get<0>(this->AlphaStep(states[i], n_constraints, linearization_parameters))
+        );
     }
 
-    log->Info("Time integration completed successfully!\n");
+    log->Info("Time integration has completed!\n");
 
     return states;
 }
 
 std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
-    const State& state, std::function<HostView2D(size_t)> matrix,
-    std::function<HostView1D(size_t)> vector
+    const State& state, size_t n_constraints,
+    std::shared_ptr<LinearizationParameters> linearization_parameters
 ) {
-    auto linear_update = UpdateLinearSolution(state);
-    auto gen_coords = linear_update.GetGeneralizedCoordinates();
-    auto gen_velocity = linear_update.GetGeneralizedVelocity();
-    auto gen_accln = linear_update.GetGeneralizedAcceleration();
-    auto algo_accln = linear_update.GetAlgorithmicAcceleration();
+    auto gen_coords = state.GetGeneralizedCoordinates();
+    auto velocity = state.GetVelocity();
+    auto acceleration = state.GetAcceleration();
+    auto algo_acceleration = state.GetAlgorithmicAcceleration();
 
+    // Initialize some X_next variables to assist in updating the State - only for ones that
+    // require both the current and next values in a calculation
+    auto gen_coords_next = HostView1D("gen_coords_next", gen_coords.size());
+    auto algo_acceleration_next =
+        HostView1D("algorithmic_acceleration_next", algo_acceleration.size());
+    auto delta_gen_coords = HostView1D("gen_coords_increment", velocity.size());
+    auto lagrange_mults_next = HostView1D("lagrange_mults_next", n_constraints);
+
+    // Perform the linear update part of the generalized alpha algorithm
     const auto h = this->time_stepper_.GetTimeStep();
-    const auto size = gen_coords.size();
-    const double beta_prime = (1 - kALPHA_M_) / (h * h * kBETA_ * (1 - kALPHA_F_));
-    const double gamma_prime = kGAMMA_ / (h * kBETA_);
+    const auto size = velocity.size();
 
-    // TODO: Provide actual constraints
-    auto constraints = HostView1D("constraints", size);
+    // Algorithm from Table 1, Brüls, Cardona, and Arnold 2012
+    Kokkos::parallel_for(
+        size,
+        KOKKOS_LAMBDA(const size_t i) {
+            algo_acceleration_next(i) =
+                (kALPHA_F_ * acceleration(i) - kALPHA_M_ * algo_acceleration(i)) / (1. - kALPHA_M_);
+
+            delta_gen_coords(i) = velocity(i) + h * (0.5 - kBETA_) * algo_acceleration(i) +
+                                  h * kBETA_ * algo_acceleration_next(i);
+            velocity(i) +=
+                h * (1 - kGAMMA_) * algo_acceleration(i) + h * kGAMMA_ * algo_acceleration_next(i);
+
+            algo_acceleration(i) = algo_acceleration_next(i);
+
+            acceleration(i) = 0.;
+        }
+    );
+
+    // Initialize lagrange_mults_next to zero separately since it might be of different size
+    Kokkos::deep_copy(lagrange_mults_next, 0.);
 
     // Perform Newton-Raphson iterations to update nonlinear part of generalized-alpha algorithm
     auto log = util::Log::Get();
     log->Info(
-        "Performing Newton-Raphson iterations to update the nonlinear part of generalized-alpha "
+        "Performing Newton-Raphson iterations to update solution using the generalized-alpha "
         "algorithm\n"
     );
 
-    auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
-    for (time_stepper_.SetNumberOfIterations(0);
-         time_stepper_.GetNumberOfIterations() < max_iterations;
-         time_stepper_.IncrementNumberOfIterations()) {
-        log->Debug(
-            "Iteration number: " + std::to_string(time_stepper_.GetNumberOfIterations() + 1) + "\n"
+    const auto BETA_PRIME = (1 - kALPHA_M_) / (h * h * kBETA_ * (1 - kALPHA_F_));
+    const auto GAMMA_PRIME = kGAMMA_ / (h * kBETA_);
+
+    // Precondition the linear solve (Bottasso et al 2008)
+    const auto dl = HostView2D("dl", size + n_constraints, size + n_constraints);
+    const auto dr = HostView2D("dr", size + n_constraints, size + n_constraints);
+    Kokkos::deep_copy(dl, 0.);
+    Kokkos::deep_copy(dr, 0.);
+
+    if (this->precondition_) {
+        Kokkos::parallel_for(
+            size + n_constraints,
+            KOKKOS_LAMBDA(const size_t i) {
+                dl(i, i) = 1.;
+                dr(i, i) = 1.;
+            }
         );
 
-        auto residuals = ComputeResiduals(gen_coords, vector);
-        // TODO: Provide actual force increments
-        auto increments = residuals;
-
-        if (this->CheckConvergence(residuals, increments)) {
-            this->is_converged_ = true;
-            break;
-        }
-
-        auto iteration_matrix = ComputeIterationMatrix(gen_coords, matrix);
-        auto gen_coords_delta = residuals;
-        auto constraints_delta = constraints;
-        solve_linear_system(iteration_matrix, gen_coords_delta);
-        solve_linear_system(iteration_matrix, constraints_delta);
-
         Kokkos::parallel_for(
-            size,
-            KOKKOS_LAMBDA(const int i) {
-                gen_coords(i) += gen_coords_delta(i);
-                gen_velocity(i) += gamma_prime * gen_coords_delta(i);
-                gen_accln(i) += beta_prime * gen_coords_delta(i);
-                constraints(i) += constraints_delta(i);
+            size + n_constraints,
+            KOKKOS_LAMBDA(const size_t i) {
+                if (i >= size) {
+                    dr(i, i) = 1. / (kBETA_ * h * h);
+                } else {
+                    dl(i, i) = kBETA_ * h * h;
+                }
             }
         );
     }
 
-    auto n_iterations = time_stepper_.GetNumberOfIterations();
+    const auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
+    for (time_stepper_.SetNumberOfIterations(0);
+         time_stepper_.GetNumberOfIterations() < max_iterations;
+         time_stepper_.IncrementNumberOfIterations()) {
+        gen_coords_next = UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords);
+
+        // Compute the residuals and check for convergence
+        const auto residuals = linearization_parameters->ResidualVector(
+            gen_coords_next, velocity, acceleration, lagrange_mults_next
+        );
+
+        if (this->CheckConvergence(residuals)) {
+            this->is_converged_ = true;
+            break;
+        }
+
+        auto iteration_matrix = linearization_parameters->IterationMatrix(
+            h, BETA_PRIME, GAMMA_PRIME, gen_coords_next, delta_gen_coords, velocity, acceleration,
+            lagrange_mults_next
+        );
+
+        if (this->precondition_) {
+            iteration_matrix = multiply_matrix_with_matrix(iteration_matrix, dr);
+            iteration_matrix = multiply_matrix_with_matrix(dl, iteration_matrix);
+
+            Kokkos::parallel_for(
+                6, KOKKOS_LAMBDA(const size_t i) { residuals(i) = residuals(i) * kBETA_ * h * h; }
+            );
+        }
+
+        auto soln_increments = HostView1D("soln_increments", residuals.size());
+        Kokkos::deep_copy(soln_increments, residuals);
+        solve_linear_system(iteration_matrix, soln_increments);
+
+        HostView1D delta_x("delta_x", delta_gen_coords.size());
+        Kokkos::parallel_for(
+            delta_gen_coords.size(),
+            // Take negative of the solution increments to update generalized coordinates
+            KOKKOS_LAMBDA(const size_t i) { delta_x(i) = -soln_increments(i); }
+        );
+
+        if (n_constraints > 0) {
+            HostView1D delta_lagrange_mults("delta_lagrange_mults", n_constraints);
+
+            if (this->precondition_) {
+                Kokkos::parallel_for(
+                    n_constraints,
+                    KOKKOS_LAMBDA(const size_t i) {
+                        // Take negative of the solution increments to update Lagrange multipliers
+                        delta_lagrange_mults(i) =
+                            -soln_increments(i + delta_gen_coords.size()) / (kBETA_ * h * h);
+                        lagrange_mults_next(i) += delta_lagrange_mults(i);
+                    }
+                );
+            } else {
+                Kokkos::parallel_for(
+                    n_constraints,
+                    KOKKOS_LAMBDA(const size_t i) {
+                        // Take negative of the solution increments to update Lagrange multipliers
+                        delta_lagrange_mults(i) = -soln_increments(i + delta_gen_coords.size());
+                        lagrange_mults_next(i) += delta_lagrange_mults(i);
+                    }
+                );
+            }
+        }
+
+        // Update the velocity, acceleration, and constraints based on the increments
+        Kokkos::parallel_for(
+            size,
+            KOKKOS_LAMBDA(const size_t i) {
+                delta_gen_coords(i) += delta_x(i) / h;
+                velocity(i) += GAMMA_PRIME * delta_x(i);
+                acceleration(i) += BETA_PRIME * delta_x(i);
+            }
+        );
+    }
+
+    const auto n_iterations = time_stepper_.GetNumberOfIterations();
     this->time_stepper_.IncrementTotalNumberOfIterations(n_iterations);
 
+    // Update algorithmic acceleration once Newton-Raphson iterations have ended
     Kokkos::parallel_for(
         size,
-        KOKKOS_LAMBDA(const int i) {
-            // Update algorithmic acceleration once soln has converged
-            algo_accln(i) += (1 - kALPHA_F_) / (1 - kALPHA_M_) * gen_accln(i);
+        KOKKOS_LAMBDA(const size_t i) {
+            algo_acceleration_next(i) += (1. - kALPHA_F_) / (1. - kALPHA_M_) * acceleration(i);
         }
+    );
+
+    auto results = std::make_tuple(
+        State{gen_coords_next, velocity, acceleration, algo_acceleration_next}, lagrange_mults_next
     );
 
     if (this->is_converged_) {
         log->Info(
-            "Newton-Raphson iterations converged in " + std::to_string(n_iterations) +
+            "Newton-Raphson iterations converged in " + std::to_string(n_iterations + 1) +
             " iterations\n"
         );
-    } else {
-        log->Warning(
-            "Newton-Raphson iterations failed to converge on a solution after " +
-            std::to_string(n_iterations) + " iterations!\n"
-        );
+        return results;
     }
 
-    log->Debug("Final state after performing Newton-Raphson iterations:\n");
-    for (size_t i = 0; i < size; i++) {
-        log->Debug(
-            std::to_string(gen_coords(i)) + "\t" + std::to_string(gen_velocity(i)) + "\t" +
-            std::to_string(gen_accln(i)) + "\t" + std::to_string(algo_accln(i)) + "\n"
-        );
-    }
-
-    return {State(gen_coords, gen_velocity, gen_accln, algo_accln), constraints};
+    log->Warning(
+        "Newton-Raphson iterations failed to converge on a solution after " +
+        std::to_string(n_iterations + 1) + " iterations!\n"
+    );
+    return results;
 }
 
-State GeneralizedAlphaTimeIntegrator::UpdateLinearSolution(const State& state) {
-    auto gen_coords = state.GetGeneralizedCoordinates();
-    auto gen_velocity = state.GetGeneralizedVelocity();
-    auto gen_accln = state.GetGeneralizedAcceleration();
-    auto algo_accln = state.GetAlgorithmicAcceleration();
-
-    // Update generalized coordinates, generalized velocity, and algorithmic acceleration
-    // based on generalized coordinates, generalized velocity, generalized acceleration,
-    // and algorithmic acceleration from previous time step and algorithmic acceleration
-    // from current time step
+HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
+    const HostView1D gen_coords, const HostView1D delta_gen_coords
+) {
+    // {gen_coords_next} = {gen_coords} + h * {delta_gen_coords}
+    //
+    // Step 1: R^3 update, done with vector addition
+    auto current_position = Vector{gen_coords(0), gen_coords(1), gen_coords(2)};
+    auto updated_position = Vector{delta_gen_coords(0), delta_gen_coords(1), delta_gen_coords(2)};
     const auto h = this->time_stepper_.GetTimeStep();
-    const auto size = gen_coords.size();
+    auto r = current_position + (updated_position * h);
+
+    // Step 2: SO(3) update, done with quaternion composition
+    Quaternion current_orientation{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)};
+    auto updated_orientation = quaternion_from_rotation_vector(
+        // Convert Vector -> Quaternion via exponential mapping
+        Vector{delta_gen_coords(3), delta_gen_coords(4), delta_gen_coords(5)} * h
+    );
+    auto q = current_orientation * updated_orientation;
+
+    // Construct the updated generalized coordinates from position and orientation vectors
+    auto gen_coords_next = HostView1D("generalized_coordinates_next", gen_coords.size());
+    auto components = std::vector<double>{
+        r.GetXComponent(),       // component 1
+        r.GetYComponent(),       // component 2
+        r.GetZComponent(),       // component 3
+        q.GetScalarComponent(),  // component 4
+        q.GetXComponent(),       // component 5
+        q.GetYComponent(),       // component 6
+        q.GetZComponent()        // component 7
+    };
 
     Kokkos::parallel_for(
-        size,
-        KOKKOS_LAMBDA(const int i) {
-            gen_coords(i) += h * gen_velocity(i) + h * h * (0.5 - kBETA_) * algo_accln(i);
-            gen_velocity(i) += h * (1 - kGAMMA_) * algo_accln(i);
-            algo_accln(i) =
-                (1.0 / (1.0 - kALPHA_M_)) * (kALPHA_F_ * gen_accln(i) - kALPHA_M_ * algo_accln(i));
-            gen_coords(i) += h * h * kBETA_ * algo_accln(i);
-            gen_velocity(i) += h * kBETA_ * algo_accln(i);
-            gen_accln(i) = 0.;
-        }
+        gen_coords.size(), KOKKOS_LAMBDA(const size_t i) { gen_coords_next(i) = components[i]; }
     );
 
-    auto log = util::Log::Get();
-    log->Debug("Linear solution: gen_coords, gen_velocity, algo_acceleration\n");
-    for (size_t i = 0; i < size; i++) {
-        log->Debug(
-            "row " + std::to_string(i) + ": " + std::to_string(gen_coords(i)) + "\t" +
-            std::to_string(gen_velocity(i)) + "\t" + std::to_string(algo_accln(i)) + "\n"
-        );
-    }
-
-    return State(gen_coords, gen_velocity, gen_accln, algo_accln);
+    return gen_coords_next;
 }
 
-HostView1D GeneralizedAlphaTimeIntegrator::ComputeResiduals(
-    HostView1D forces, std::function<HostView1D(size_t)> vector
-) {
-    // This is a just a placeholder, returns a vector of ones
-    // TODO: r^q = M(q) * q'' - f + phi_q^T * lambda
-    auto size = forces.extent(0);
-    auto residual_vector = vector(size);
-
-    auto log = util::Log::Get();
-    log->Debug("Residual vector is " + std::to_string(size) + " x 1 with elements\n");
-    for (size_t i = 0; i < size; i++) {
-        log->Debug(std::to_string(residual_vector(i)) + "\n");
-    }
-
-    return residual_vector;
-}
-
-bool GeneralizedAlphaTimeIntegrator::CheckConvergence(HostView1D residual, HostView1D increment) {
-    // L2 norm of the residual load vector should be very small (< epsilon) compared to the
-    // L2 norm of the load vector increment for the solution to be converged
+bool GeneralizedAlphaTimeIntegrator::CheckConvergence(const HostView1D residual) {
+    // L2 norm of the residual vector should be very small (< epsilon) for the solution
+    // to be considered converged
     double residual_norm = 0.;
-    double increment_norm = 0.;
-
     Kokkos::parallel_reduce(
         residual.extent(0),
-        KOKKOS_LAMBDA(int i, double& residual_partial_sum, double& increment_partial_sum) {
+        KOKKOS_LAMBDA(int i, double& residual_partial_sum) {
             double residual_value = residual(i);
-            double increment_value = increment(i);
-
             residual_partial_sum += residual_value * residual_value;
-            increment_partial_sum += increment_value * increment_value;
         },
-        Kokkos::Sum<double>(residual_norm), Kokkos::Sum<double>(increment_norm)
+        Kokkos::Sum<double>(residual_norm)
     );
-
     residual_norm = std::sqrt(residual_norm);
-    increment_norm = std::sqrt(increment_norm);
 
-    auto log = util::Log::Get();
-    log->Debug(
-        "Residual norm: " + std::to_string(residual_norm) + ", " +
-        "Increment norm: " + std::to_string(increment_norm) + "\n"
-    );
-
-    return (residual_norm / increment_norm) < kTOLERANCE ? true : false;
-}
-
-HostView2D GeneralizedAlphaTimeIntegrator::ComputeIterationMatrix(
-    HostView1D gen_coords, std::function<HostView2D(size_t)> matrix
-) {
-    // This is a just a placeholder, returns an identity matrix for now
-    // TODO: S_t = [ (M * beta' + C_t * gamma' + K_t)       Phi_q^T
-    //                          Phi_q                         0 ]
-    auto size = gen_coords.extent(0);
-    auto iteration_matrix = matrix(size);
-
-    auto log = util::Log::Get();
-    log->Debug(
-        "Iteration matrix is " + std::to_string(size) + " x " + std::to_string(size) +
-        " with elements" + "\n"
-    );
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = 0; j < size; j++) {
-            log->Debug(
-                "(" + std::to_string(i) + ", " + std::to_string(j) +
-                ") : " + std::to_string(iteration_matrix(i, j)) + "\n"
-            );
-        }
-    }
-
-    return iteration_matrix;
+    return (residual_norm) < kCONVERGENCETOLERANCE ? true : false;
 }
 
 }  // namespace openturbine::rigid_pendulum

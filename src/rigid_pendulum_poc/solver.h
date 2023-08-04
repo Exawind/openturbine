@@ -1,11 +1,8 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
+#include "src/rigid_pendulum_poc/utilities.h"
 
 namespace openturbine::rigid_pendulum {
-
-using HostView1D = Kokkos::View<double*, Kokkos::HostSpace>;
-using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
 
 /// @brief Solve a linear system of equations using LAPACKE's dgesv
 /// @details This function solves a linear system of equations using LAPACKE's

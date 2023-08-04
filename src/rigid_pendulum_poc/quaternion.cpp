@@ -101,7 +101,10 @@ Vector rotate_vector(const Quaternion& quaternion, const Vector& vector) {
 
 RotationMatrix quaternion_to_rotation_matrix(const Quaternion& quaternion) {
     if (!quaternion.IsUnitQuaternion()) {
-        throw std::invalid_argument("Must be a unit quaternion to rotate a vector");
+        throw std::invalid_argument(
+            "CANNOT convert quaternion to rotation matrix - must be a unit quaternion to rotate a "
+            "vector"
+        );
     }
 
     auto [q0, q1, q2, q3] = quaternion.GetComponents();
