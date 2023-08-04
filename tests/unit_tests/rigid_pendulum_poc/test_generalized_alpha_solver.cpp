@@ -226,11 +226,11 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 0);
     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 0);
 
-    // gen coords is a 2x1 vector while the rest are 1x1 vectors
-    auto q0 = create_vector({0., 0.});
-    auto v0 = create_vector({0.});
-    auto a0 = create_vector({0.});
-    auto aa0 = create_vector({0.});
+    // gen coords is a 7x1 vector while the rest are 6x1 vectors
+    auto q0 = create_vector({0., 0., 0., 0., 0., 0., 0.});
+    auto v0 = create_vector({0., 0., 0., 0., 0., 0.});
+    auto a0 = create_vector({0., 0., 0., 0., 0., 0.});
+    auto aa0 = create_vector({0., 0., 0., 0., 0., 0.});
     auto initial_state = State(q0, v0, a0, aa0);
 
     size_t n_lagrange_mults{0};
@@ -247,21 +247,25 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
 
     // We expect the final state to contain the following values after one increment
     // via hand calculations
-    expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {0., 0.});
-    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-2.});
-    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-2.});
-    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {-2.});
+    expect_kokkos_view_1D_equal(
+        final_state.GetGeneralizedCoordinates(), {0., 0., 0., 0., 0., 0., 0.}
+    );
+    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-2., -2., -2., -2., -2., -2.});
+    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-2., -2., -2., -2., -2., -2.});
+    expect_kokkos_view_1D_equal(
+        final_state.GetAlgorithmicAcceleration(), {-2., -2., -2., -2., -2., -2.}
+    );
 }
 
 TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
     auto time_integrator =
         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 2));
 
-    // gen coords is a 2x1 vector while the rest are 1x1 vectors
-    auto q0 = create_vector({0., 0.});
-    auto v0 = create_vector({0.});
-    auto a0 = create_vector({0.});
-    auto aa0 = create_vector({0.});
+    // gen coords is a 7x1 vector while the rest are 6x1 vectors
+    auto q0 = create_vector({0., 0., 0., 0., 0., 0., 0.});
+    auto v0 = create_vector({0., 0., 0., 0., 0., 0.});
+    auto a0 = create_vector({0., 0., 0., 0., 0., 0.});
+    auto aa0 = create_vector({0., 0., 0., 0., 0., 0.});
     auto initial_state = State(q0, v0, a0, aa0);
 
     size_t n_lagrange_mults{0};
@@ -278,19 +282,23 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
 
     // We expect the final state to contain the following values after two increments
     // via hand calculations
-    expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {-1., 0.});
-    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-4.});
-    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-4.});
-    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {-4.});
+    expect_kokkos_view_1D_equal(
+        final_state.GetGeneralizedCoordinates(), {-1., -1., -1., 0., 0., 0., 0.}
+    );
+    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-4., -4., -4., -4., -4., -4.});
+    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-4., -4., -4., -4., -4., -4.});
+    expect_kokkos_view_1D_equal(
+        final_state.GetAlgorithmicAcceleration(), {-4., -4., -4., -4., -4., -4.}
+    );
 }
 
 TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroAccelerationVector) {
     auto time_integrator =
         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 1));
 
-    // gen coords is a 4x1 vector while the rest are 3x1 vectors
-    auto q0 = create_vector({1., 2., 3., 4.});
-    auto v = create_vector({1., 2., 3.});
+    // gen coords is a 7x1 vector while the rest are 6x1 vectors
+    auto q0 = create_vector({0., 0., 0., 0., 0., 0., 0.});
+    auto v = create_vector({1., 2., 3., 4., 5., 6.});
     auto v0 = v;
     auto a0 = v;
     auto aa0 = v;
@@ -310,10 +318,14 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroAccelerationVect
 
     // We expect the final state to contain the following values after one increment
     // via hand calculations
-    expect_kokkos_view_1D_equal(final_state.GetGeneralizedCoordinates(), {2., 4., 6., 4.});
-    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-1., 0., 1.});
-    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-2., -2., -2.});
-    expect_kokkos_view_1D_equal(final_state.GetAlgorithmicAcceleration(), {-2., -2., -2.});
+    expect_kokkos_view_1D_equal(
+        final_state.GetGeneralizedCoordinates(), {1., 2., 3., 0., 0., 0., 0.}
+    );
+    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-1., 0., 1., 2., 3., 4.});
+    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-2., -2., -2., -2., -2., -2.});
+    expect_kokkos_view_1D_equal(
+        final_state.GetAlgorithmicAcceleration(), {-2., -2., -2., -2., -2., -2.}
+    );
 }
 
 TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroStates) {

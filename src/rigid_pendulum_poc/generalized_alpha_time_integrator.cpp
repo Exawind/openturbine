@@ -45,17 +45,17 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     auto n_accelerations = initial_state.GetAcceleration().size();
     auto n_algo_accelerations = initial_state.GetAlgorithmicAcceleration().size();
 
-    if (n_velocities != n_accelerations || n_velocities != n_algo_accelerations) {
+    if (n_velocities != 6 || n_accelerations != 6 || n_algo_accelerations != 6) {
         throw std::invalid_argument(
             "The number of velocities, accelerations, and algorithmic accelerations in the "
-            "initial state must be equal"
+            "initial state must be of size 6 for lie group based generalized alpha integrator"
         );
     }
 
-    if (n_gen_coords != n_velocities + 1) {
+    if (n_gen_coords != 7) {
         throw std::invalid_argument(
-            "The number of generalized coordinates in the initial state must be equal to the "
-            "number of velocities plus one for lie group based generalized alpha integrator"
+            "The number of generalized coordinates in the initial state must be of size "
+            "7 for lie group based generalized alpha integrator"
         );
     }
 
@@ -274,11 +274,11 @@ HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
 
     // Step 2: SO(3) update, done with quaternion composition
     Quaternion current_orientation{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)};
-    auto update_orientation = quaternion_from_rotation_vector(
+    auto updated_orientation = quaternion_from_rotation_vector(
         // Convert Vector -> Quaternion via exponential mapping
         Vector{delta_gen_coords(3), delta_gen_coords(4), delta_gen_coords(5)} * h
     );
-    auto q = current_orientation * update_orientation;
+    auto q = current_orientation * updated_orientation;
 
     // Construct the updated generalized coordinates from position and orientation vectors
     auto gen_coords_next = HostView1D("generalized_coordinates_next", gen_coords.size());
