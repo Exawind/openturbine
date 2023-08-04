@@ -267,7 +267,7 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentOperatorWi
     );
 }
 
-TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneInc) {
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterTenSteps) {
     // Initial conditions for the heavy top problem
     auto X0 = create_vector({0., 1., 0.});
     auto rot0 = create_matrix({{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}});
