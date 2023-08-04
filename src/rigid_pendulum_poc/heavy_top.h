@@ -13,7 +13,7 @@ namespace openturbine::rigid_pendulum {
  */
 class HeavyTopLinearizationParameters : public LinearizationParameters {
 public:
-    HeavyTopLinearizationParameters(){};
+    HeavyTopLinearizationParameters();
 
     virtual HostView1D ResidualVector(
         const HostView1D, const HostView1D, const HostView1D, const HostView1D
@@ -51,6 +51,10 @@ public:
     HostView2D TangentOperator(const HostView1D psi);
 
 private:
+    MassMatrix mass_matrix_;
+
+    HostView2D CaculateRotationMatrix(const HostView1D);
+    HostView1D CalculateForces(MassMatrix, const HostView1D);
 };
 
 }  // namespace openturbine::rigid_pendulum

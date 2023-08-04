@@ -5,19 +5,11 @@
 
 namespace openturbine::rigid_pendulum {
 
-HostView1D HeavyTopLinearizationParameters::ResidualVector(
-    const HostView1D gen_coords, const HostView1D velocity, const HostView1D acceleration_vector,
-    const HostView1D lagrange_multipliers
-) {
-    // The residual vector for the generalized coordinates is given by
-    // {residual} = {
-    //     {residual_gen_coords},
-    //     {residual_constraints}
-    // }
+HeavyTopLinearizationParameters::HeavyTopLinearizationParameters() {
+    this->mass_matrix_ = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
+}
 
-    auto mass = 15.;
-    auto mass_matrix = MassMatrix(mass, Vector(0.234375, 0.46875, 0.234375));
-
+HostView2D HeavyTopLinearizationParameters::CaculateRotationMatrix(const HostView1D gen_coords) {
     // Convert the quaternion representing orientation -> rotation matrix
     auto RM = quaternion_to_rotation_matrix(
         // Create quaternion from appropriate components of generalized coordinates
@@ -28,49 +20,63 @@ HostView1D HeavyTopLinearizationParameters::ResidualVector(
     auto [m20, m21, m22] = std::get<2>(RM).GetComponents();
     auto rotation_matrix = create_matrix({{m00, m01, m02}, {m10, m11, m12}, {m20, m21, m22}});
 
+    return rotation_matrix;
+}
+
+HostView1D HeavyTopLinearizationParameters::CalculateForces(
+    MassMatrix mass_matrix, const HostView1D velocity
+) {
     // Generalized forces as defined in Brüls and Cardona 2010
-    auto forces = [mass, mass_matrix, velocity]() {
-        auto gravity = Vector(0., 0., 9.81);
-        auto forces = gravity * mass;
+    auto mass = 15.;
+    auto gravity = Vector(0., 0., 9.81);
+    auto forces = gravity * mass;
 
-        auto angular_velocity = create_vector({
-            velocity(3),  // velocity component 4 -> component 1
-            velocity(4),  // velocity component 5 -> component 2
-            velocity(5)   // velocity component 6 -> component 3
-        });
-        auto J = mass_matrix.GetMomentOfInertiaMatrix();
-        auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
+    auto angular_velocity = create_vector({
+        velocity(3),  // velocity component 4 -> component 1
+        velocity(4),  // velocity component 5 -> component 2
+        velocity(5)   // velocity component 6 -> component 3
+    });
+    auto J = mass_matrix.GetMomentOfInertiaMatrix();
+    auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
 
-        auto angular_velocity_vector =
-            Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
-        auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
-        auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
+    auto angular_velocity_vector =
+        Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
+    auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
+    auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
 
-        auto generalized_forces = GeneralizedForces(forces, moments);
+    auto generalized_forces = GeneralizedForces(forces, moments);
 
-        return generalized_forces.GetGeneralizedForces();
-    };
+    return generalized_forces.GetGeneralizedForces();
+}
 
-    auto gen_forces_vector = forces();
+HostView1D HeavyTopLinearizationParameters::ResidualVector(
+    const HostView1D gen_coords, const HostView1D velocity, const HostView1D acceleration_vector,
+    const HostView1D lagrange_multipliers
+) {
+    // The residual vector for the generalized coordinates is given by
+    // {residual} = {
+    //     {residual_gen_coords},
+    //     {residual_constraints}
+    // }
 
+    auto mass_matrix = this->mass_matrix_.GetMassMatrix();
+    auto rotation_matrix = CaculateRotationMatrix(gen_coords);
+    auto gen_forces_vector = CalculateForces(this->mass_matrix_, velocity);
     auto position_vector = create_vector(
         // Create vector from appropriate components of generalized coordinates
         {gen_coords(0), gen_coords(1), gen_coords(2)}
     );
-
     const auto reference_position_vector = create_vector({0., 1., 0});
 
     auto residual_gen_coords = GeneralizedCoordinatesResidualVector(
-        mass_matrix.GetMassMatrix(), rotation_matrix, acceleration_vector, gen_forces_vector,
-        lagrange_multipliers, reference_position_vector
+        mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector, lagrange_multipliers,
+        reference_position_vector
     );
-
     auto residual_constraints =
         ConstraintsResidualVector(rotation_matrix, position_vector, reference_position_vector);
 
     auto size_res_gen_coords = residual_gen_coords.extent(0);
     auto size_res_constraints = residual_constraints.extent(0);
-
     auto size = size_res_gen_coords + size_res_constraints;
     auto residual_vector = HostView1D("residual_vector", size);
     Kokkos::parallel_for(
@@ -120,14 +126,6 @@ HostView1D HeavyTopLinearizationParameters::GeneralizedCoordinatesResidualVector
            ) { residual_gen_coords(i) = first_term(i) + second_term(i) + third_term(i); }
     );
 
-    auto log = util::Log::Get();
-    log->Debug(
-        "GeneralizedCoordinatesResidualVector is " + std::to_string(6) + " x 1 with elements\n"
-    );
-    for (size_t i = 0; i < 6; i++) {
-        log->Debug(std::to_string(residual_gen_coords(i)) + "\n");
-    }
-
     return residual_gen_coords;
 }
 
@@ -148,12 +146,6 @@ HostView1D HeavyTopLinearizationParameters::ConstraintsResidualVector(
     Kokkos::parallel_for(
         3, KOKKOS_LAMBDA(const size_t i) { residual_constraints(i) = -position_vector(i) + RX(i); }
     );
-
-    auto log = util::Log::Get();
-    log->Debug("ConstraintsResidualVector vector is " + std::to_string(3) + " x 1 with elements\n");
-    for (size_t i = 0; i < 3; i++) {
-        log->Debug(std::to_string(residual_constraints(i)) + "\n");
-    }
 
     return residual_constraints;
 }
@@ -180,20 +172,6 @@ HostView2D HeavyTopLinearizationParameters::ConstraintsGradientMatrix(
         }
     );
 
-    auto log = util::Log::Get();
-    log->Debug(
-        "Constraint gradient matrix is " + std::to_string(3) + " x " + std::to_string(6) +
-        " with elements" + "\n"
-    );
-    for (size_t i = 0; i < 3; i++) {
-        for (size_t j = 0; j < 6; j++) {
-            log->Debug(
-                "(" + std::to_string(i) + ", " + std::to_string(j) +
-                ") : " + std::to_string(constraint_gradient_matrix(i, j)) + "\n"
-            );
-        }
-    }
-
     return constraint_gradient_matrix;
 }
 
@@ -215,51 +193,16 @@ HostView2D HeavyTopLinearizationParameters::IterationMatrix(
     //                                                       0  X * R^T * Lambda ]
     // [B(q)] = Constraint gradeint matrix = [ -I_3    -R * X ]
 
-    auto mass = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
-    auto mass_matrix = mass.GetMassMatrix();
-    auto inertia_matrix = mass.GetMomentOfInertiaMatrix();
-
-    // Generalized forces as defined in Brüls and Cardona 2010
-    auto forces = [mass, velocity]() {
-        auto gravity = Vector(0., 0., 9.81);
-        auto forces = gravity * 15.;
-
-        auto angular_velocity = create_vector({
-            velocity(3),  // velocity component 4 -> component 1
-            velocity(4),  // velocity component 5 -> component 2
-            velocity(5)   // velocity component 6 -> component 3
-        });
-        auto J = mass.GetMomentOfInertiaMatrix();
-        auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
-
-        auto angular_velocity_vector =
-            Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
-        auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
-        auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
-
-        auto generalized_forces = GeneralizedForces(forces, moments);
-
-        return generalized_forces.GetGeneralizedForces();
-    };
-
-    auto gen_forces_vector = forces();
-
-    // Convert the quaternion representing orientation -> rotation matrix
-    auto RM = quaternion_to_rotation_matrix(
-        // Create quaternion from appropriate components of generalized coordinates
-        Quaternion{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)}
-    );
-    auto [m00, m01, m02] = std::get<0>(RM).GetComponents();
-    auto [m10, m11, m12] = std::get<1>(RM).GetComponents();
-    auto [m20, m21, m22] = std::get<2>(RM).GetComponents();
-    auto rotation_matrix = create_matrix({{m00, m01, m02}, {m10, m11, m12}, {m20, m21, m22}});
-
+    auto mass_matrix = this->mass_matrix_.GetMassMatrix();
+    auto moment_of_inertia_matrix = this->mass_matrix_.GetMomentOfInertiaMatrix();
+    auto rotation_matrix = CaculateRotationMatrix(gen_coords);
+    auto gen_forces_vector = CalculateForces(this->mass_matrix_, velocity);
     auto angular_velocity_vector = create_vector({velocity(3), velocity(4), velocity(5)});
     auto position_vector = create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
-
     const HostView1D reference_position_vector = create_vector({0., 1., 0});
 
-    auto tangent_damping_matrix = TangentDampingMatrix(angular_velocity_vector, inertia_matrix);
+    auto tangent_damping_matrix =
+        TangentDampingMatrix(angular_velocity_vector, moment_of_inertia_matrix);
     auto tangent_stiffness_matrix =
         TangentStiffnessMatrix(rotation_matrix, lagrange_mults, reference_position_vector);
     auto constraint_gradient_matrix =
@@ -314,20 +257,6 @@ HostView2D HeavyTopLinearizationParameters::IterationMatrix(
         }
     );
 
-    auto log = util::Log::Get();
-    log->Debug(
-        "Iteration matrix is " + std::to_string(size) + " x " + std::to_string(size) +
-        " with elements" + "\n"
-    );
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = 0; j < size; j++) {
-            log->Debug(
-                "(" + std::to_string(i) + ", " + std::to_string(j) +
-                ") : " + std::to_string(iteration_matrix(i, j)) + "\n"
-            );
-        }
-    }
-
     return iteration_matrix;
 }
 
@@ -367,20 +296,6 @@ HostView2D HeavyTopLinearizationParameters::TangentDampingMatrix(
         }
     );
 
-    auto log = util::Log::Get();
-    log->Debug(
-        "Tangent damping matrix is " + std::to_string(6) + " x " + std::to_string(6) +
-        " with elements" + "\n"
-    );
-    for (size_t i = 0; i < 6; i++) {
-        for (size_t j = 0; j < 6; j++) {
-            log->Debug(
-                "(" + std::to_string(i) + ", " + std::to_string(j) +
-                ") : " + std::to_string(tangent_damping_matrix(i, j)) + "\n"
-            );
-        }
-    }
-
     return tangent_damping_matrix;
 }
 
@@ -409,20 +324,6 @@ HostView2D HeavyTopLinearizationParameters::TangentStiffnessMatrix(
             }
         }
     );
-
-    auto log = util::Log::Get();
-    log->Debug(
-        "Tangent stiffness matrix is " + std::to_string(6) + " x " + std::to_string(6) +
-        " with elements" + "\n"
-    );
-    for (size_t i = 0; i < 6; i++) {
-        for (size_t j = 0; j < 6; j++) {
-            log->Debug(
-                "(" + std::to_string(i) + ", " + std::to_string(j) +
-                ") : " + std::to_string(tangent_stiffness_matrix(i, j)) + "\n"
-            );
-        }
-    }
 
     return tangent_stiffness_matrix;
 }
