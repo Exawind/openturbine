@@ -25,7 +25,9 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateGenCoordsResidual
     auto position_vector = create_vector({0., 1., 0.});
     auto lagrange_multipliers = create_vector({1., 2., 3.});
 
-    auto residual_vector = heavy_top_gen_coords_residual_vector(
+    HeavyTopLinearizationParameters heavy_top_lin_params{};
+
+    auto residual_vector = heavy_top_lin_params.GeneralizedCoordinatesResidualVector(
         mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector, lagrange_multipliers,
         position_vector
     );
@@ -52,8 +54,11 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateConstraintsResidu
     auto position_vector = create_vector({1., 2., 3.});
     auto ref_position_vector = create_vector({0., 1., 0.});
 
-    auto residual_vector =
-        heavy_top_constraints_residual_vector(rotation_matrix, position_vector, ref_position_vector);
+    HeavyTopLinearizationParameters heavy_top_lin_params{};
+
+    auto residual_vector = heavy_top_lin_params.ConstraintsResidualVector(
+        rotation_matrix, position_vector, ref_position_vector
+    );
 
     expect_kokkos_view_1D_equal(
         residual_vector,
@@ -72,8 +77,10 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentDampingMat
     auto mass_matrix = MassMatrix(mass, Vector(0.234375, 0.46875, 0.234375));
     auto inertia_matrix = mass_matrix.GetMomentOfInertiaMatrix();
 
+    HeavyTopLinearizationParameters heavy_top_lin_params{};
+
     auto tangent_damping_matrix =
-        heavy_top_tangent_damping_matrix(angular_velocity_vector, inertia_matrix);
+        heavy_top_lin_params.TangentDampingMatrix(angular_velocity_vector, inertia_matrix);
 
     expect_kokkos_view_2D_equal(
         tangent_damping_matrix,
@@ -97,8 +104,11 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentStiffnessM
     );
     auto lagrange_multipliers = create_vector({1., 2., 3.});
 
-    auto tangent_stiffness_matrix =
-        heavy_top_tangent_stiffness_matrix(rotation_matrix, lagrange_multipliers, position_vector);
+    HeavyTopLinearizationParameters heavy_top_lin_params{};
+
+    auto tangent_stiffness_matrix = heavy_top_lin_params.TangentStiffnessMatrix(
+        rotation_matrix, lagrange_multipliers, position_vector
+    );
 
     expect_kokkos_view_2D_equal(
         tangent_stiffness_matrix,
@@ -121,8 +131,10 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateConstraintGradien
          {-0.129909, 0.166271, 0.977485}}
     );
 
+    HeavyTopLinearizationParameters heavy_top_lin_params{};
+
     auto constraint_gradient_matrix =
-        heavy_top_constraint_gradient_matrix(rotation_matrix, position_vector);
+        heavy_top_lin_params.ConstraintsGradientMatrix(rotation_matrix, position_vector);
 
     expect_kokkos_view_2D_equal(
         constraint_gradient_matrix,
@@ -158,7 +170,9 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateIterationMatrix) 
     auto h = 0.1;
     auto delta_gen_coords = create_vector({1., 1., 1.});
 
-    auto iteration_matrix = heavy_top_iteration_matrix(
+    HeavyTopLinearizationParameters heavy_top_lin_params{};
+
+    auto iteration_matrix = heavy_top_lin_params.IterationMatrix(
         BETA_PRIME, GAMMA_PRIME, gen_coords, velocity, lagrange_mults, h, delta_gen_coords
     );
 
@@ -180,7 +194,9 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateIterationMatrix) 
 
 TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentOperatorWithPhiAsZero) {
     auto psi = create_vector({0., 0., 0.});
-    auto tangent_operator = heavy_top_tangent_operator(psi);
+    HeavyTopLinearizationParameters heavy_top_lin_params{};
+
+    auto tangent_operator = heavy_top_lin_params.TangentOperator(psi);
 
     expect_kokkos_view_2D_equal(
         tangent_operator,
@@ -197,7 +213,9 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentOperatorWi
 
 TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentOperatorWithPhiNotZero) {
     auto psi = create_vector({1., 2., 3.});
-    auto tangent_operator = heavy_top_tangent_operator(psi);
+    HeavyTopLinearizationParameters heavy_top_lin_params{};
+
+    auto tangent_operator = heavy_top_lin_params.TangentOperator(psi);
 
     expect_kokkos_view_2D_equal(
         tangent_operator,
@@ -213,23 +231,7 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateTangentOperatorWi
 }
 
 TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneInc) {
-    // Calculate the required properties and initial conditions for the heavy top problem
-    auto mass = 15.;
-    auto mass_matrix = MassMatrix(mass, Vector(0.234375, 0.46875, 0.234375));
-
-    auto gravity = Vector(0., 0., -9.81);
-    auto forces = gravity * mass;
-
-    auto angular_velocity = create_vector({0.3, 0.1, 0.8});
-    auto J = mass_matrix.GetMomentOfInertiaMatrix();
-    auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
-    auto angular_velocity_vector =
-        Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
-    auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
-    auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
-
-    auto gen_forces = GeneralizedForces(forces, moments);
-
+    // Initial conditions for the heavy top problem
     auto X0 = create_vector({0., 1., 0.});
     auto rot0 = create_matrix({{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}});
 
@@ -288,11 +290,11 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterOneI
     // Initialize the lagrange multipliers to zero
     size_t n_lagrange_mults{3};
 
+    std::shared_ptr<LinearizationParameters> heavy_top_lin_params =
+        std::make_shared<HeavyTopLinearizationParameters>();
+
     // Perform the time integration
-    auto results = time_integrator.Integrate(
-        initial_state, mass_matrix, gen_forces, n_lagrange_mults, heavy_top_iteration_matrix,
-        heavy_top_residual_vector
-    );
+    auto results = time_integrator.Integrate(initial_state, n_lagrange_mults, heavy_top_lin_params);
 
     // Expected values of alpham, alphaf, beta, gamma, betap, gammap from prototype fortran code
     // 0.12499999999999997       0.37499999999999994       0.39062500000000000

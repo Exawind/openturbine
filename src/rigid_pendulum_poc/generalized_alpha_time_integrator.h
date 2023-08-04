@@ -1,19 +1,11 @@
 #pragma once
 
+#include "src/rigid_pendulum_poc/linearization_parameters.h"
 #include "src/rigid_pendulum_poc/state.h"
 #include "src/rigid_pendulum_poc/time_integrator.h"
 #include "src/rigid_pendulum_poc/time_stepper.h"
 
 namespace openturbine::rigid_pendulum {
-
-HostView1D create_identity_residual_vector(
-    const HostView1D, const HostView1D, const HostView1D, const HostView1D
-);
-
-HostView2D create_identity_iteration_matrix(
-    const double&, const double&, const HostView1D, const HostView1D, const HostView1D,
-    const double&, const HostView1D
-);
 
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
@@ -47,9 +39,7 @@ public:
 
     /// Performs the time integration and returns a vector of States over the time steps
     virtual std::vector<State> Integrate(
-        const State&, const MassMatrix&, const GeneralizedForces&, size_t,
-        IterationMatrix it_matrix = create_identity_iteration_matrix,
-        ResidualVector residual = create_identity_residual_vector
+        const State&, size_t, std::shared_ptr<LinearizationParameters> lin_params
     ) override;
 
     /*! Implements the solveTimeStep() algorithm of the Lie group based generalized-alpha
@@ -59,8 +49,7 @@ public:
      *  https://doi.org/10.1016/j.mechmachtheory.2011.07.017
      */
     std::tuple<State, HostView1D> AlphaStep(
-        const State&, const MassMatrix&, const GeneralizedForces&, size_t, IterationMatrix it_matrix,
-        ResidualVector residual
+        const State&, size_t, std::shared_ptr<LinearizationParameters> lin_params
     );
 
     /// Computes the updated generalized coordinates based on the non-linear update

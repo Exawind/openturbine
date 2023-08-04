@@ -7,23 +7,6 @@
 
 namespace openturbine::rigid_pendulum {
 
-HostView1D create_identity_residual_vector(
-    const HostView1D gen_coords, const HostView1D velocity, const HostView1D acceleration,
-    const HostView1D lagrange_mults
-) {
-    auto size = acceleration.size() + lagrange_mults.size();
-    return create_identity_vector(size);
-}
-
-HostView2D create_identity_iteration_matrix(
-    const double& BETA_PRIME, const double& GAMMA_PRIME, const HostView1D gen_coords,
-    const HostView1D velocity, const HostView1D lagrange_mults, const double& h,
-    const HostView1D delta_gen_coords
-) {
-    auto size = velocity.size() + lagrange_mults.size();
-    return create_identity_matrix(size);
-}
-
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper,
     bool precondition
@@ -54,8 +37,8 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
 }
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
-    const State& initial_state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    size_t n_constraints, IterationMatrix iteration_matrix, ResidualVector residual
+    const State& initial_state, size_t n_constraints,
+    std::shared_ptr<LinearizationParameters> linearization_parameters
 ) {
     auto log = util::Log::Get();
     std::vector<State> states{initial_state};
@@ -63,9 +46,9 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     for (size_t i = 0; i < n_steps; i++) {
         this->time_stepper_.AdvanceTimeStep();
         log->Info("** Integrating step number " + std::to_string(i + 1) + " **\n");
-        states.emplace_back(std::get<0>(this->AlphaStep(
-            states[i], mass_matrix, gen_forces, n_constraints, iteration_matrix, residual
-        )));
+        states.emplace_back(
+            std::get<0>(this->AlphaStep(states[i], n_constraints, linearization_parameters))
+        );
     }
 
     log->Info("Time integration has completed!\n");
@@ -74,8 +57,8 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
 }
 
 std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
-    const State& state, const MassMatrix& mass_matrix, const GeneralizedForces& gen_forces,
-    size_t n_constraints, IterationMatrix it_matrix, ResidualVector residual
+    const State& state, size_t n_constraints,
+    std::shared_ptr<LinearizationParameters> linearization_parameters
 ) {
     auto gen_coords = state.GetGeneralizedCoordinates();
     auto velocity = state.GetVelocity();
@@ -159,16 +142,16 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         gen_coords_next = UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords);
 
         // Compute the residuals and check for convergence
-        const auto residuals =
-            residual(gen_coords_next, velocity, acceleration, lagrange_mults_next);
+        const auto residuals = linearization_parameters->ResidualVector(
+            gen_coords_next, velocity, acceleration, lagrange_mults_next
+        );
 
         if (this->CheckConvergence(residuals)) {
             this->is_converged_ = true;
             break;
         }
 
-        // Compute the iteration matrix and solve the linear system to get the increments
-        auto iteration_matrix = it_matrix(
+        auto iteration_matrix = linearization_parameters->IterationMatrix(
             BETA_PRIME, GAMMA_PRIME, gen_coords_next, velocity, lagrange_mults_next, h,
             delta_gen_coords
         );

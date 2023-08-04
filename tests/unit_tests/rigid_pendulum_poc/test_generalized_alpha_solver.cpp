@@ -21,10 +21,11 @@ TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
     EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.);
 
     auto initial_state = State();
-    auto mass_matrix = MassMatrix();
-    auto gen_forces = GeneralizedForces();
     size_t n_lagrange_mults{0};
-    time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
+    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
+        std::make_shared<UnityLinearizationParameters>();
+
+    time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
 
     EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 10.0);
 }
@@ -36,11 +37,12 @@ TEST(TimeIntegratorTest, GetHistoryOfStatesFromTimeIntegrator) {
     EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.);
 
     auto initial_state = State();
-    auto mass_matrix = MassMatrix();
-    auto gen_forces = GeneralizedForces();
     size_t n_lagrange_mults{0};
+    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
+        std::make_shared<UnityLinearizationParameters>();
+
     auto state_history =
-        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
+        time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
 
     EXPECT_NEAR(
         time_integrator.GetTimeStepper().GetCurrentTime(), 1.70,
@@ -57,10 +59,11 @@ TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 0);
 
     auto initial_state = State();
-    auto mass_matrix = MassMatrix();
-    auto gen_forces = GeneralizedForces();
     size_t n_lagrange_mults{0};
-    time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
+    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
+        std::make_shared<UnityLinearizationParameters>();
+
+    time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
 
     EXPECT_LE(
         time_integrator.GetTimeStepper().GetNumberOfIterations(),
@@ -165,11 +168,12 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 0);
 
     auto initial_state = State();
-    auto mass_matrix = MassMatrix();
-    auto gen_forces = GeneralizedForces();
     size_t n_lagrange_mults{0};
+    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
+        std::make_shared<UnityLinearizationParameters>();
+
     auto results =
-        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
+        time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
 
     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);
@@ -188,11 +192,12 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
     auto time_integrator =
         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 2));
     auto initial_state = State();
-    auto mass_matrix = MassMatrix();
-    auto gen_forces = GeneralizedForces();
     size_t n_lagrange_mults{0};
+    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
+        std::make_shared<UnityLinearizationParameters>();
+
     auto results =
-        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
+        time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
 
     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 2);
     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 2);
@@ -212,11 +217,12 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroAccelerationVect
         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 1));
     auto v = create_vector({1., 2., 3.});
     auto initial_state = State(v, v, v, v);
-    auto mass_matrix = MassMatrix();
-    auto gen_forces = GeneralizedForces();
     size_t n_lagrange_mults{v.extent(0)};
+    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
+        std::make_shared<UnityLinearizationParameters>();
+
     auto results =
-        time_integrator.Integrate(initial_state, mass_matrix, gen_forces, n_lagrange_mults);
+        time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
 
     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);
@@ -261,11 +267,12 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroStates) {
         GeneralizedAlphaTimeIntegrator(alpha_f, alpha_m, beta, gamma, time_stepper, true);
 
     // Calculate the required properties and initial conditions for the heavy top problem
-    auto mass_matrix = MassMatrix();
-    auto gen_forces = GeneralizedForces();
+    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
+        std::make_shared<UnityLinearizationParameters>();
 
     // Perform the time integration
-    auto results = time_integrator.Integrate(initial_state, mass_matrix, gen_forces, 3);
+    auto results =
+        time_integrator.Integrate(initial_state, lag_mult.size(), unity_linearization_parameters);
 
     auto final_state = results.back();
 

@@ -5,7 +5,7 @@
 
 namespace openturbine::rigid_pendulum {
 
-HostView1D heavy_top_residual_vector(
+HostView1D HeavyTopLinearizationParameters::ResidualVector(
     const HostView1D gen_coords, const HostView1D velocity, const HostView1D acceleration_vector,
     const HostView1D lagrange_multipliers
 ) {
@@ -60,14 +60,13 @@ HostView1D heavy_top_residual_vector(
 
     const auto reference_position_vector = create_vector({0., 1., 0});
 
-    auto residual_gen_coords = heavy_top_gen_coords_residual_vector(
+    auto residual_gen_coords = GeneralizedCoordinatesResidualVector(
         mass_matrix.GetMassMatrix(), rotation_matrix, acceleration_vector, gen_forces_vector,
         lagrange_multipliers, reference_position_vector
     );
 
-    auto residual_constraints = heavy_top_constraints_residual_vector(
-        rotation_matrix, position_vector, reference_position_vector
-    );
+    auto residual_constraints =
+        ConstraintsResidualVector(rotation_matrix, position_vector, reference_position_vector);
 
     auto size_res_gen_coords = residual_gen_coords.extent(0);
     auto size_res_constraints = residual_constraints.extent(0);
@@ -88,7 +87,7 @@ HostView1D heavy_top_residual_vector(
     return residual_vector;
 }
 
-HostView1D heavy_top_gen_coords_residual_vector(
+HostView1D HeavyTopLinearizationParameters::GeneralizedCoordinatesResidualVector(
     const HostView2D mass_matrix, const HostView2D rotation_matrix,
     const HostView1D acceleration_vector, const HostView1D gen_forces_vector,
     const HostView1D lagrange_multipliers, const HostView1D reference_position_vector
@@ -104,7 +103,7 @@ HostView1D heavy_top_gen_coords_residual_vector(
 
     // Calculate residual vector for the generalized coordinates
     auto constraint_gradient_matrix =
-        heavy_top_constraint_gradient_matrix(rotation_matrix, reference_position_vector);
+        ConstraintsGradientMatrix(rotation_matrix, reference_position_vector);
 
     auto first_term = multiply_matrix_with_vector(mass_matrix, acceleration_vector);
 
@@ -123,7 +122,7 @@ HostView1D heavy_top_gen_coords_residual_vector(
 
     auto log = util::Log::Get();
     log->Debug(
-        "heavy_top_gen_coords_residual_vector is " + std::to_string(6) + " x 1 with elements\n"
+        "GeneralizedCoordinatesResidualVector is " + std::to_string(6) + " x 1 with elements\n"
     );
     for (size_t i = 0; i < 6; i++) {
         log->Debug(std::to_string(residual_gen_coords(i)) + "\n");
@@ -132,7 +131,7 @@ HostView1D heavy_top_gen_coords_residual_vector(
     return residual_gen_coords;
 }
 
-HostView1D heavy_top_constraints_residual_vector(
+HostView1D HeavyTopLinearizationParameters::ConstraintsResidualVector(
     const HostView2D rotation_matrix, const HostView1D position_vector,
     const HostView1D reference_position_vector
 ) {
@@ -151,10 +150,7 @@ HostView1D heavy_top_constraints_residual_vector(
     );
 
     auto log = util::Log::Get();
-    log->Debug(
-        "heavy_top_constraints_residual_vector vector is " + std::to_string(3) +
-        " x 1 with elements\n"
-    );
+    log->Debug("ConstraintsResidualVector vector is " + std::to_string(3) + " x 1 with elements\n");
     for (size_t i = 0; i < 3; i++) {
         log->Debug(std::to_string(residual_constraints(i)) + "\n");
     }
@@ -162,7 +158,7 @@ HostView1D heavy_top_constraints_residual_vector(
     return residual_constraints;
 }
 
-HostView2D heavy_top_constraint_gradient_matrix(
+HostView2D HeavyTopLinearizationParameters::ConstraintsGradientMatrix(
     const HostView2D rotation_matrix, const HostView1D reference_position_vector
 ) {
     // Constraint gradient matrix for the heavy top problem is given by
@@ -201,7 +197,7 @@ HostView2D heavy_top_constraint_gradient_matrix(
     return constraint_gradient_matrix;
 }
 
-HostView2D heavy_top_iteration_matrix(
+HostView2D HeavyTopLinearizationParameters::IterationMatrix(
     const double& BETA_PRIME, const double& GAMMA_PRIME, const HostView1D gen_coords,
     const HostView1D velocity, const HostView1D lagrange_mults, const double& h,
     const HostView1D delta_gen_coords
@@ -263,19 +259,17 @@ HostView2D heavy_top_iteration_matrix(
 
     const HostView1D reference_position_vector = create_vector({0., 1., 0});
 
-    auto tangent_damping_matrix =
-        heavy_top_tangent_damping_matrix(angular_velocity_vector, inertia_matrix);
-    auto tangent_stiffness_matrix = heavy_top_tangent_stiffness_matrix(
-        rotation_matrix, lagrange_mults, reference_position_vector
-    );
+    auto tangent_damping_matrix = TangentDampingMatrix(angular_velocity_vector, inertia_matrix);
+    auto tangent_stiffness_matrix =
+        TangentStiffnessMatrix(rotation_matrix, lagrange_mults, reference_position_vector);
     auto constraint_gradient_matrix =
-        heavy_top_constraint_gradient_matrix(rotation_matrix, reference_position_vector);
+        ConstraintsGradientMatrix(rotation_matrix, reference_position_vector);
 
     auto h_delta_gen_coords = HostView1D("h_delta_gen_coords", 3);
     Kokkos::parallel_for(
         3, KOKKOS_LAMBDA(const size_t i) { h_delta_gen_coords(i) = h * delta_gen_coords(i + 3); }
     );
-    auto tangent_operator = heavy_top_tangent_operator(h_delta_gen_coords);
+    auto tangent_operator = TangentOperator(h_delta_gen_coords);
 
     auto size_dofs = mass_matrix.extent(0);
     auto size_constraints = constraint_gradient_matrix.extent(0);
@@ -337,7 +331,7 @@ HostView2D heavy_top_iteration_matrix(
     return iteration_matrix;
 }
 
-HostView2D heavy_top_tangent_damping_matrix(
+HostView2D HeavyTopLinearizationParameters::TangentDampingMatrix(
     const HostView1D angular_velocity_vector, const HostView2D inertia_matrix
 ) {
     // Tangent damping matrix for the heavy top problem is given by
@@ -390,7 +384,7 @@ HostView2D heavy_top_tangent_damping_matrix(
     return tangent_damping_matrix;
 }
 
-HostView2D heavy_top_tangent_stiffness_matrix(
+HostView2D HeavyTopLinearizationParameters::TangentStiffnessMatrix(
     const HostView2D rotation_matrix, const HostView1D lagrange_multipliers,
     const HostView1D reference_position_vector
 ) {
@@ -433,7 +427,7 @@ HostView2D heavy_top_tangent_stiffness_matrix(
     return tangent_stiffness_matrix;
 }
 
-HostView2D heavy_top_tangent_operator(const HostView1D psi) {
+HostView2D HeavyTopLinearizationParameters::TangentOperator(const HostView1D psi) {
     const double tol = 1e-16;
     const double phi = std::sqrt(psi(0) * psi(0) + psi(1) * psi(1) + psi(2) * psi(2));
 
@@ -470,16 +464,6 @@ HostView2D heavy_top_tangent_operator(const HostView1D psi) {
     }
 
     return tangent_operator;
-}
-
-HostView2D rigid_pendulum_iteration_matrix(size_t size) {
-    // TODO: Implement this
-    return create_identity_matrix(size);
-}
-
-HostView1D rigid_pendulum_residual_vector(size_t size) {
-    // TODO: Implement this
-    return create_identity_vector(size);
 }
 
 }  // namespace openturbine::rigid_pendulum

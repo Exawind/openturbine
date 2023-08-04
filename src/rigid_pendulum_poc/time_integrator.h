@@ -1,5 +1,6 @@
 #pragma once
 
+#include "src/rigid_pendulum_poc/linearization_parameters.h"
 #include "src/rigid_pendulum_poc/state.h"
 #include "src/rigid_pendulum_poc/utilities.h"
 
@@ -27,8 +28,7 @@ public:
 
     /// Performs the time integration and returns a vector of States over the time steps
     virtual std::vector<State> Integrate(
-        const State&, const MassMatrix&, const GeneralizedForces&, size_t, IterationMatrix it_matrix,
-        ResidualVector res_vector
+        const State&, size_t, std::shared_ptr<LinearizationParameters> lin_params
     ) = 0;
 
     /// Returns the type of the time integrator
