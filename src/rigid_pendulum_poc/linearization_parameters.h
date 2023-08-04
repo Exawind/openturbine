@@ -14,8 +14,8 @@ public:
     ) = 0;
 
     virtual HostView2D IterationMatrix(
-        const double&, const double&, const HostView1D, const HostView1D, const HostView1D,
-        const double& = 1., const HostView1D = create_vector({1., 1., 1.})
+        const double&, const double&, const double&, const HostView1D, const HostView1D,
+        const HostView1D, const HostView1D, const HostView1D
     ) = 0;
 };
 
@@ -29,8 +29,8 @@ public:
     ) override;
 
     virtual HostView2D IterationMatrix(
-        const double&, const double&, const HostView1D, const HostView1D, const HostView1D,
-        const double& = 1., const HostView1D = create_vector({1., 1., 1.})
+        const double&, const double&, const double&, const HostView1D, const HostView1D,
+        const HostView1D, const HostView1D, const HostView1D
     ) override;
 };
 

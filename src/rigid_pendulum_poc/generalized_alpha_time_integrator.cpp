@@ -171,8 +171,8 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         }
 
         auto iteration_matrix = linearization_parameters->IterationMatrix(
-            BETA_PRIME, GAMMA_PRIME, gen_coords_next, velocity, lagrange_mults_next, h,
-            delta_gen_coords
+            h, BETA_PRIME, GAMMA_PRIME, gen_coords_next, delta_gen_coords, velocity, acceleration,
+            lagrange_mults_next
         );
 
         if (this->precondition_) {

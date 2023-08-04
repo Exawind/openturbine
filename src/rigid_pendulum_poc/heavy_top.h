@@ -20,8 +20,8 @@ public:
     ) override;
 
     virtual HostView2D IterationMatrix(
-        const double&, const double&, const HostView1D, const HostView1D, const HostView1D,
-        const double& = 1., const HostView1D = create_vector({1., 1., 1.})
+        const double&, const double&, const double&, const HostView1D, const HostView1D,
+        const HostView1D, const HostView1D, const HostView1D
     ) override;
 
     /// Calculates the generalized coordinates residual vector for the heavy top problem
@@ -53,7 +53,7 @@ public:
 private:
     MassMatrix mass_matrix_;
 
-    HostView2D CaculateRotationMatrix(const HostView1D);
+    HostView2D CalculateRotationMatrix(const HostView1D);
     HostView1D CalculateForces(MassMatrix, const HostView1D);
 };
 

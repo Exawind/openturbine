@@ -12,6 +12,41 @@ namespace openturbine::rigid_pendulum::tests {
  *  Ref: https://doi.org/10.1115/1.4001370
  */
 
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, ExpectThrowIfGenCoordsIsNotSize7) {
+    auto gen_coords = create_vector({1., 2., 3., 4., 5., 6., 7., 8.});  // 8 elements
+    auto velocity = create_vector({1., 2., 3., 4., 5., 6.});            // 6 elements
+    auto acceleration = create_vector({1., 2., 3., 4., 5., 6.});        // 6 elements
+    auto lagrange_mults = create_vector({1., 2., 3.});
+
+    HeavyTopLinearizationParameters heavy_top_lin_params{};
+
+    EXPECT_THROW(
+        heavy_top_lin_params.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults),
+        std::invalid_argument
+    );
+}
+
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, ExpectThrowIfDeltaGenCoordsIsNotSize6) {
+    auto h = 0.1;
+    auto BETA_PRIME = 1.;
+    auto GAMMA_PRIME = 1.;
+    auto gen_coords = create_vector({1., 2., 3., 4., 5., 6., 7.});        // 7 elements
+    auto delta_gen_coords = create_vector({1., 2., 3., 4., 5., 6., 7.});  // 7 elements
+    auto velocity = create_vector({1., 2., 3., 4., 5., 6.});              // 6 elements
+    auto acceleration = create_vector({1., 2., 3., 4., 5., 6.});          // 6 elements
+    auto lagrange_mults = create_vector({1., 2., 3.});
+
+    HeavyTopLinearizationParameters heavy_top_lin_params{};
+
+    EXPECT_THROW(
+        heavy_top_lin_params.IterationMatrix(
+            h, BETA_PRIME, GAMMA_PRIME, gen_coords, delta_gen_coords, velocity, acceleration,
+            lagrange_mults
+        ),
+        std::invalid_argument
+    );
+}
+
 TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateGenCoordsResidualVector) {
     auto M = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
     auto mass_matrix = M.GetMassMatrix();
@@ -166,28 +201,30 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateIterationMatrix) 
     });
 
     auto velocity = create_vector({0., 0., 0., 0.3, 0.1, 0.8});
+    auto acceleration = create_vector({0., 0., 0., 0., 0., 0.});
     auto lagrange_mults = create_vector({1., 2., 3.});
     auto h = 0.1;
-    auto delta_gen_coords = create_vector({1., 1., 1.});
+    auto delta_gen_coords = create_vector({0., 0., 0., 1., 1., 1.});
 
     HeavyTopLinearizationParameters heavy_top_lin_params{};
 
     auto iteration_matrix = heavy_top_lin_params.IterationMatrix(
-        BETA_PRIME, GAMMA_PRIME, gen_coords, velocity, lagrange_mults, h, delta_gen_coords
+        h, BETA_PRIME, GAMMA_PRIME, gen_coords, delta_gen_coords, velocity, acceleration,
+        lagrange_mults
     );
 
     expect_kokkos_view_2D_equal(
         iteration_matrix,
         {
-            {15., 0., 0., 0., 0., 0., -1., 0., 0.},                    // row 1
-            {0., 15., 0., 0., 0., 0., 0., -1., 0.},                    // row 2
-            {0., 0., 15., 0., 0., 0., 0., 0., -1.},                    // row 3
-            {0., 0., 0., -1.765625, 0.625000, -0.046875, 0., 0., 1.},  // row 4
-            {0., 0., 0., 0., 0.46875, 0., 0., 0., 0.},                 // row 5
-            {0., 0., 0., 0.046875, 3.140625, -1.765625, -1., 0., 0.},  // row 6
-            {-1., 0., 0., 0., 0., -1., 0., 0., 0.},                    // row 7
-            {0., -1., 0., 0., 0., 0., 0., 0., 0.},                     // row 8
-            {0., 0., -1., 1., 0., 0., 0., 0., 0.}                      // row 9
+            {15., 0., 0., 0., 0., 0., -1., 0., 0.},                     // row 1
+            {0., 15., 0., 0., 0., 0., 0., -1., 0.},                     // row 2
+            {0., 0., 15., 0., 0., 0., 0., 0., -1.},                     // row 3
+            {0., 0., 0., -1.807179, 0.518593, 0.101086, 0., 0., 1.},    // row 4
+            {0., 0., 0., 0., 0.46875, 0., 0., 0., 0.},                  // row 5
+            {0., 0., 0., -0.200836, 3.227062, -1.604350, -1., 0., 0.},  // row 6
+            {-1., 0., 0., -0.051539, 0.048211, -0.996672, 0., 0., 0.},  // row 7
+            {0., -1., 0., 0., 0., 0., 0., 0., 0.},                      // row 8
+            {0., 0., -1., 0.996672, 0.051539, -0.048211, 0., 0., 0.}    // row 9
         }
     );
 }

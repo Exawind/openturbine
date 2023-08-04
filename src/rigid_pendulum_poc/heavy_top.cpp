@@ -9,7 +9,7 @@ HeavyTopLinearizationParameters::HeavyTopLinearizationParameters() {
     this->mass_matrix_ = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
 }
 
-HostView2D HeavyTopLinearizationParameters::CaculateRotationMatrix(const HostView1D gen_coords) {
+HostView2D HeavyTopLinearizationParameters::CalculateRotationMatrix(const HostView1D gen_coords) {
     // Convert the quaternion representing orientation -> rotation matrix
     auto RM = quaternion_to_rotation_matrix(
         // Create quaternion from appropriate components of generalized coordinates
@@ -50,7 +50,7 @@ HostView1D HeavyTopLinearizationParameters::CalculateForces(
 }
 
 HostView1D HeavyTopLinearizationParameters::ResidualVector(
-    const HostView1D gen_coords, const HostView1D velocity, const HostView1D acceleration_vector,
+    const HostView1D gen_coords, const HostView1D velocity, const HostView1D acceleration,
     const HostView1D lagrange_multipliers
 ) {
     // The residual vector for the generalized coordinates is given by
@@ -59,8 +59,16 @@ HostView1D HeavyTopLinearizationParameters::ResidualVector(
     //     {residual_constraints}
     // }
 
+    if (gen_coords.extent(0) != 7) {
+        throw std::invalid_argument("gen_coords must be of size 7");
+    }
+
+    if (velocity.extent(0) != 6 || acceleration.extent(0) != 6) {
+        throw std::invalid_argument("delta_gen_coords, velocity, acceleration must be of size 6");
+    }
+
     auto mass_matrix = this->mass_matrix_.GetMassMatrix();
-    auto rotation_matrix = CaculateRotationMatrix(gen_coords);
+    auto rotation_matrix = CalculateRotationMatrix(gen_coords);
     auto gen_forces_vector = CalculateForces(this->mass_matrix_, velocity);
     auto position_vector = create_vector(
         // Create vector from appropriate components of generalized coordinates
@@ -69,7 +77,7 @@ HostView1D HeavyTopLinearizationParameters::ResidualVector(
     const auto reference_position_vector = create_vector({0., 1., 0});
 
     auto residual_gen_coords = GeneralizedCoordinatesResidualVector(
-        mass_matrix, rotation_matrix, acceleration_vector, gen_forces_vector, lagrange_multipliers,
+        mass_matrix, rotation_matrix, acceleration, gen_forces_vector, lagrange_multipliers,
         reference_position_vector
     );
     auto residual_constraints =
@@ -176,9 +184,9 @@ HostView2D HeavyTopLinearizationParameters::ConstraintsGradientMatrix(
 }
 
 HostView2D HeavyTopLinearizationParameters::IterationMatrix(
-    const double& BETA_PRIME, const double& GAMMA_PRIME, const HostView1D gen_coords,
-    const HostView1D velocity, const HostView1D lagrange_mults, const double& h,
-    const HostView1D delta_gen_coords
+    const double& h, const double& BETA_PRIME, const double& GAMMA_PRIME,
+    const HostView1D gen_coords, const HostView1D delta_gen_coords, const HostView1D velocity,
+    [[maybe_unused]] const HostView1D acceleration, const HostView1D lagrange_mults
 ) {
     // Iteration matrix for the heavy top problem is given by
     // [iteration matrix] = [
@@ -193,9 +201,17 @@ HostView2D HeavyTopLinearizationParameters::IterationMatrix(
     //                                                       0  X * R^T * Lambda ]
     // [B(q)] = Constraint gradeint matrix = [ -I_3    -R * X ]
 
+    if (gen_coords.extent(0) != 7) {
+        throw std::invalid_argument("gen_coords must be of size 7");
+    }
+
+    if (delta_gen_coords.extent(0) != 6 || velocity.extent(0) != 6 || acceleration.extent(0) != 6) {
+        throw std::invalid_argument("delta_gen_coords, velocity, acceleration must be of size 6");
+    }
+
     auto mass_matrix = this->mass_matrix_.GetMassMatrix();
     auto moment_of_inertia_matrix = this->mass_matrix_.GetMomentOfInertiaMatrix();
-    auto rotation_matrix = CaculateRotationMatrix(gen_coords);
+    auto rotation_matrix = CalculateRotationMatrix(gen_coords);
     auto gen_forces_vector = CalculateForces(this->mass_matrix_, velocity);
     auto angular_velocity_vector = create_vector({velocity(3), velocity(4), velocity(5)});
     auto position_vector = create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
