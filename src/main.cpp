@@ -51,7 +51,8 @@ int main(int argc, char* argv[]) {
 
     Kokkos::initialize(argc, argv);
 
-    std::cout << "Hello from Open Turbine! (Note to Faisal: What should the program do here?)" << std::endl;
+    std::cout << "Hello from Open Turbine! (Note to Faisal: What should the program do here?)"
+              << std::endl;
 
     Kokkos::finalize();
 
