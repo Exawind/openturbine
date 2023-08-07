@@ -96,17 +96,22 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const auto h = this->time_stepper_.GetTimeStep();
     const auto size = velocity.size();
 
+    const double kALPHA_F_local = kALPHA_F_;
+    const double kALPHA_M_local = kALPHA_M_;
+    const double kBETA_local = kBETA_;
+    const double kGAMMA_local = kGAMMA_;
+
     // Algorithm from Table 1, Brüls, Cardona, and Arnold 2012
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const size_t i) {
             algo_acceleration_next(i) =
-                (kALPHA_F_ * acceleration(i) - kALPHA_M_ * algo_acceleration(i)) / (1. - kALPHA_M_);
+                (kALPHA_F_local * acceleration(i) - kALPHA_M_local * algo_acceleration(i)) / (1. - kALPHA_M_local);
 
-            delta_gen_coords(i) = velocity(i) + h * (0.5 - kBETA_) * algo_acceleration(i) +
-                                  h * kBETA_ * algo_acceleration_next(i);
+            delta_gen_coords(i) = velocity(i) + h * (0.5 - kBETA_local) * algo_acceleration(i) +
+                                  h * kBETA_local * algo_acceleration_next(i);
             velocity(i) +=
-                h * (1 - kGAMMA_) * algo_acceleration(i) + h * kGAMMA_ * algo_acceleration_next(i);
+                h * (1 - kGAMMA_local) * algo_acceleration(i) + h * kGAMMA_local * algo_acceleration_next(i);
 
             algo_acceleration(i) = algo_acceleration_next(i);
 
@@ -146,9 +151,9 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             size + n_constraints,
             KOKKOS_LAMBDA(const size_t i) {
                 if (i >= size) {
-                    dr(i, i) = 1. / (kBETA_ * h * h);
+                    dr(i, i) = 1. / (kBETA_local * h * h);
                 } else {
-                    dl(i, i) = kBETA_ * h * h;
+                    dl(i, i) = kBETA_local * h * h;
                 }
             }
         );
@@ -180,7 +185,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             iteration_matrix = multiply_matrix_with_matrix(dl, iteration_matrix);
 
             Kokkos::parallel_for(
-                6, KOKKOS_LAMBDA(const size_t i) { residuals(i) = residuals(i) * kBETA_ * h * h; }
+                6, KOKKOS_LAMBDA(const size_t i) { residuals(i) = residuals(i) * kBETA_local * h * h; }
             );
         }
 
@@ -204,7 +209,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
                     KOKKOS_LAMBDA(const size_t i) {
                         // Take negative of the solution increments to update Lagrange multipliers
                         delta_lagrange_mults(i) =
-                            -soln_increments(i + delta_gen_coords.size()) / (kBETA_ * h * h);
+                            -soln_increments(i + delta_gen_coords.size()) / (kBETA_local * h * h);
                         lagrange_mults_next(i) += delta_lagrange_mults(i);
                     }
                 );
@@ -238,7 +243,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const size_t i) {
-            algo_acceleration_next(i) += (1. - kALPHA_F_) / (1. - kALPHA_M_) * acceleration(i);
+            algo_acceleration_next(i) += (1. - kALPHA_F_local) / (1. - kALPHA_M_local) * acceleration(i);
         }
     );
 
@@ -282,7 +287,8 @@ HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
 
     // Construct the updated generalized coordinates from position and orientation vectors
     auto gen_coords_next = HostView1D("generalized_coordinates_next", gen_coords.size());
-    auto components = std::vector<double>{
+    constexpr int numComponents = 7;
+    double components[numComponents] = {
         r.GetXComponent(),       // component 1
         r.GetYComponent(),       // component 2
         r.GetZComponent(),       // component 3
