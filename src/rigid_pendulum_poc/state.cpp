@@ -57,13 +57,14 @@ MassMatrix::MassMatrix(HostView2D mass_matrix)
 HostView2D MassMatrix::GetMomentOfInertiaMatrix() const {
     HostView2D moment_of_inertia_matrix("Moment of inertia matrix", 3, 3);
 
-    std::vector<double> J = {
+    constexpr int numComponents = 3;
+    double J[numComponents] = {
         this->principal_moment_of_inertia_.GetXComponent(),
         this->principal_moment_of_inertia_.GetYComponent(),
         this->principal_moment_of_inertia_.GetZComponent()};
 
     Kokkos::parallel_for(
-        "Moment of inertia matrix", 3,
+        "Moment of inertia matrix", numComponents,
         KOKKOS_LAMBDA(const int i) { moment_of_inertia_matrix(i, i) = J[i]; }
     );
 
