@@ -7,7 +7,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "src/OpenTurbineVersion.H"
-#include "src/heat/heat_solve.H"
 #include "src/io/console_io.H"
 #include "src/utilities/debug_utils.H"
 #include "src/utilities/log.h"
@@ -50,25 +49,11 @@ int main(int argc, char* argv[]) {
 
     log->Info("openturbine " + version::oturb_version + "\n");
 
-    int axis_size{5};                 // Size of the 1D grid
-    double side_length{1.0};          // Length of the 1D domain
-    double k{1.011};                  // Thermal diffusivity of the material in units of cm^2/s
-    double ic_x0{100.0};              // Initial temperature at the beginning of the domain
-    double ic_x1{100.0};              // Initial temperature at the end of the domain
-    int n_max{500};                   // Max iterations
-    double residual_tolerance{1e-5};  // Iterative residual tolerance
-
-    auto U = static_cast<double*>(std::malloc(axis_size * sizeof(double)));
-
     Kokkos::initialize(argc, argv);
-    heat_solve::heat_conduction_solver(
-        axis_size, side_length, n_max, k, ic_x0, ic_x1, residual_tolerance
-    );
+
+    std::cout << "Hello from Open Turbine! (Note to Faisal: What should the program do here?)" << std::endl;
+
     Kokkos::finalize();
-
-    util::print_array(U, axis_size);
-
-    std::free(U);
 
     return 0;
 }
