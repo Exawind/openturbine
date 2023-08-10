@@ -6,7 +6,10 @@
 
 namespace openturbine::gen_alpha_solver {
 
+// Used to store a 1D Kokkos View of doubles on the host
 using HostView1D = Kokkos::View<double*, Kokkos::HostSpace>;
+
+// Used to store a 2D Kokkos View of doubles on the host
 using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
 
 static constexpr double kTolerance = 1e-6;
@@ -27,40 +30,30 @@ bool close_to(double a, double b, double epsilon = kTolerance);
 double wrap_angle_to_pi(double angle);
 
 /// Creates an identity vector (i.e. a vector with all entries equal to 1)
-Kokkos::View<double*, Kokkos::HostSpace> create_identity_vector(size_t size);
+HostView1D create_identity_vector(size_t size);
 
 /// Creates an identity matrix (i.e. a diagonal matrix with all diagonal entries equal to 1)
-Kokkos::View<double**, Kokkos::HostSpace> create_identity_matrix(size_t size);
+HostView2D create_identity_matrix(size_t size);
 
 /// Returns an n x 1 vector with provided values from a vector
-Kokkos::View<double*, Kokkos::HostSpace> create_vector(const std::vector<double>&);
+HostView1D create_vector(const std::vector<double>&);
 
 /// Creates a m x n matrix with provided values from a 2D vector
-Kokkos::View<double**, Kokkos::HostSpace> create_matrix(const std::vector<std::vector<double>>&);
+HostView2D create_matrix(const std::vector<std::vector<double>>&);
 
 /// Transposes a provided m x n matrix and returns an n x m matrix
-Kokkos::View<double**, Kokkos::HostSpace>
-transpose_matrix(const Kokkos::View<double**, Kokkos::HostSpace>);
+HostView2D transpose_matrix(const HostView2D);
 
 /// Generates and returns the 3 x 3 cross product matrix from a provided 3D vector
-Kokkos::View<double**, Kokkos::HostSpace>
-create_cross_product_matrix(const Kokkos::View<double*, Kokkos::HostSpace>);
+HostView2D create_cross_product_matrix(const HostView1D);
 
 /// Multiplies an m x n matrix with a scalar and returns an m x n matrix
-Kokkos::View<double**, Kokkos::HostSpace> multiply_matrix_with_scalar(
-    const Kokkos::View<double**, Kokkos::HostSpace>, double
-);
+HostView2D multiply_matrix_with_scalar(const HostView2D, double);
 
 /// Multiplies an m x n matrix with an n x 1 vector and returns an m x 1 vector
-Kokkos::View<double*, Kokkos::HostSpace> multiply_matrix_with_vector(
-    const Kokkos::View<double**, Kokkos::HostSpace> /* matrix */,
-    const Kokkos::View<double*, Kokkos::HostSpace> /* vector */
-);
+HostView1D multiply_matrix_with_vector(const HostView2D, const HostView1D);
 
 /// Multiplies an m x n matrix with an n x p matrix and returns an m x p matrix
-Kokkos::View<double**, Kokkos::HostSpace> multiply_matrix_with_matrix(
-    const Kokkos::View<double**, Kokkos::HostSpace> /* matrix_a */,
-    const Kokkos::View<double**, Kokkos::HostSpace> /* matrix_b */
-);
+HostView2D multiply_matrix_with_matrix(const HostView2D, const HostView2D);
 
 }  // namespace openturbine::gen_alpha_solver

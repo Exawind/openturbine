@@ -2,17 +2,8 @@
 
 #include "src/gen_alpha_poc/linearization_parameters.h"
 #include "src/gen_alpha_poc/state.h"
-#include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gen_alpha_solver {
-
-using ResidualVector = std::function<
-    HostView1D(const HostView1D, const HostView1D, const HostView1D, const HostView1D)>;
-
-using IterationMatrix = std::function<HostView2D(
-    const double&, const double&, const HostView1D, const HostView1D, const HostView1D,
-    const double&, const HostView1D
-)>;
 
 // An enum class to indicate the type of time integrator
 enum class TimeIntegratorType {

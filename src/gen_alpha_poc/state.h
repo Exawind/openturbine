@@ -1,9 +1,14 @@
 #pragma once
 
-#include "src/gen_alpha_poc/utilities.h"
 #include "src/gen_alpha_poc/vector.h"
 
 namespace openturbine::gen_alpha_solver {
+
+// Used to store a 1D Kokkos View of doubles on the host
+using HostView1D = Kokkos::View<double*, Kokkos::HostSpace>;
+
+// Used to store a 2D Kokkos View of doubles on the host
+using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
 
 /// @brief Class to store and manage the states of a dynamic system
 class State {
@@ -11,7 +16,10 @@ public:
     /// Default constructor that initializes all states to zero with size one
     State();
 
-    State(HostView1D, HostView1D, HostView1D, HostView1D);
+    State(
+        HostView1D generalized_coords_, HostView1D velocity_, HostView1D acceleration_,
+        HostView1D algorithmic_acceleration_
+    );
 
     /// Returns the generalized coordinates vector
     inline HostView1D GetGeneralizedCoordinates() const { return generalized_coords_; }
@@ -38,7 +46,7 @@ private:
 class MassMatrix {
 public:
     /// Constructor that initializes the mass matrix with the given mass and moments of inertia
-    MassMatrix(double, Vector);
+    MassMatrix(double mass, Vector principal_moment_of_inertia);
 
     /// Constructor that initializes the mass matrix with the same moment of inertia about all axes
     MassMatrix(double mass = 1., double moment_of_inertia = 1.);
@@ -69,7 +77,7 @@ private:
 class GeneralizedForces {
 public:
     /// Default constructor that initializes all generalized forces to zero
-    GeneralizedForces(const Vector& = Vector(), const Vector& = Vector());
+    GeneralizedForces(const Vector& forces = Vector(), const Vector& moments = Vector());
 
     /// Constructor that initializes the generalized forces to the given vectors
     GeneralizedForces(HostView1D);

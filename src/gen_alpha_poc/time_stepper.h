@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
+#include <cstddef>
 
 namespace openturbine::gen_alpha_solver {
 
