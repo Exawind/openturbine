@@ -27,26 +27,20 @@ public:
     /// Calculates the generalized coordinates residual vector for the heavy top problem
     HostView1D GeneralizedCoordinatesResidualVector(
         const HostView2D, const HostView2D, const HostView1D, const HostView1D, const HostView1D,
-        const HostView1D reference_position_vector
+        const HostView1D
     );
 
     /// Calculates the constraint residual vector for the heavy top problem
-    HostView1D ConstraintsResidualVector(
-        const HostView2D, const HostView1D, const HostView1D reference_position_vector
-    );
+    HostView1D ConstraintsResidualVector(const HostView2D, const HostView1D, const HostView1D);
 
     /// Calculates the constraint gradient matrix for the heavy top problem
-    HostView2D ConstraintsGradientMatrix(
-        const HostView2D, const HostView1D reference_position_vector
-    );
+    HostView2D ConstraintsGradientMatrix(const HostView2D, const HostView1D);
 
     /// Calculates the tangent damping matrix for the heavy top problem
     HostView2D TangentDampingMatrix(const HostView1D, const HostView2D);
 
     /// Calculates the tangent stiffness matrix for the heavy top problem
-    HostView2D TangentStiffnessMatrix(
-        const HostView2D, const HostView1D, const HostView1D reference_position_vector
-    );
+    HostView2D TangentStiffnessMatrix(const HostView2D, const HostView1D, const HostView1D);
 
     HostView2D TangentOperator(const HostView1D psi);
 

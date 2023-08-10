@@ -112,28 +112,19 @@ Quaternion quaternion_from_rotation_vector(const Vector&);
 /// Returns a 3-D rotation vector from provided 4-D quaternion, i.e. logarithmic map
 Vector rotation_vector_from_quaternion(const Quaternion&);
 
-/*!
- * @brief Returns a quaternion from provided Euler parameters/angle-axis representation of rotation
- * @param angle Angle of rotation in radians, in radians
- * @param axis Axis of rotation, a unit vector
- * @return Unit quaternion representing the rotation
- */
-Quaternion quaternion_from_angle_axis(double angle, const Vector&);
+/// Returns a quaternion from provided Euler parameters/angle-axis representation of rotation
+Quaternion quaternion_from_angle_axis(double, const Vector&);
 
-/*!
- * @brief Returns Euler parameters/angle-axis representation of rotation from provided quaternion
- * @param quaternion Quaternion to be converted
- * @return Tuple of angle of rotation in radians and axis of rotation as a unit vector
- */
+/// Returns Euler parameters/angle-axis representation of rotation from provided quaternion
 std::tuple<double, Vector> angle_axis_from_quaternion(const Quaternion&);
 
-/// Rotates provided vector by provided *unit* quaternion and returns the result
+/// Rotates provided 3 x 1 vector by provided 4 x 1 *unit* quaternion and returns the result
 Vector rotate_vector(const Quaternion&, const Vector&);
 
-/// Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result
+/// Converts a 4 x 1 quaternion to a 3 x 3 rotation matrix and returns the result
 RotationMatrix quaternion_to_rotation_matrix(const Quaternion&);
 
-/// Converts a 3x3 rotation matrix to a 4x1 quaternion and returns the result
+/// Converts a 3 x 3 rotation matrix to a 4 x 1 quaternion and returns the result
 Quaternion rotation_matrix_to_quaternion(const RotationMatrix&);
 
 }  // namespace openturbine::rigid_pendulum

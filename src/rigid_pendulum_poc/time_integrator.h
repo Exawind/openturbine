@@ -27,9 +27,8 @@ public:
     virtual ~TimeIntegrator() = default;
 
     /// Performs the time integration and returns a vector of States over the time steps
-    virtual std::vector<State> Integrate(
-        const State&, size_t, std::shared_ptr<LinearizationParameters> lin_params
-    ) = 0;
+    virtual std::vector<State>
+    Integrate(const State&, size_t, std::shared_ptr<LinearizationParameters>) = 0;
 
     /// Returns the type of the time integrator
     virtual TimeIntegratorType GetType() const = 0;

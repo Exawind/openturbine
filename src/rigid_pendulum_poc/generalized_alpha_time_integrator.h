@@ -38,9 +38,8 @@ public:
     inline const TimeStepper& GetTimeStepper() const { return time_stepper_; }
 
     /// Performs the time integration and returns a vector of States over the time steps
-    virtual std::vector<State> Integrate(
-        const State&, size_t, std::shared_ptr<LinearizationParameters> lin_params
-    ) override;
+    virtual std::vector<State>
+    Integrate(const State&, size_t, std::shared_ptr<LinearizationParameters>) override;
 
     /*! Implements the solveTimeStep() algorithm of the Lie group based generalized-alpha
      *  method as described in Brüls, Cardona, and Arnold, "Lie group generalized-alpha time
@@ -48,9 +47,8 @@ public:
      *  Machine Theory, Vol 48, 121-137
      *  https://doi.org/10.1016/j.mechmachtheory.2011.07.017
      */
-    std::tuple<State, HostView1D> AlphaStep(
-        const State&, size_t, std::shared_ptr<LinearizationParameters> lin_params
-    );
+    std::tuple<State, HostView1D>
+    AlphaStep(const State&, size_t, std::shared_ptr<LinearizationParameters>);
 
     /// Computes the updated generalized coordinates based on the non-linear update
     HostView1D UpdateGeneralizedCoordinates(const HostView1D, const HostView1D);

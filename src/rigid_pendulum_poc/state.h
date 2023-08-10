@@ -65,11 +65,11 @@ private:
     HostView2D mass_matrix_;  //< Mass matrix of the rigid body
 };
 
-/// Class for managing the generalized forces on a dynamic system
+/// Class for managing the generalized forces applied on a dynamic system
 class GeneralizedForces {
 public:
     /// Default constructor that initializes all generalized forces to zero
-    GeneralizedForces(const Vector& forces = Vector(), const Vector& moments = Vector());
+    GeneralizedForces(const Vector& = Vector(), const Vector& = Vector());
 
     /// Constructor that initializes the generalized forces to the given vectors
     GeneralizedForces(HostView1D);
