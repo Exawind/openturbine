@@ -11,7 +11,7 @@ TEST(TimeIntegratorTest, GetTimeIntegratorType) {
     auto time_integrator =
         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
 
-    EXPECT_EQ(time_integrator.GetType(), TimeIntegratorType::kGENERALIZED_ALPHA);
+    EXPECT_EQ(time_integrator.GetType(), TimeIntegratorType::kGeneralized_Alpha);
 }
 
 TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
@@ -168,7 +168,7 @@ TEST(TimeIntegratorTest, TestUpdateGeneralizedCoordinates) {
 }
 
 TEST(TimeIntegratorTest, ExpectConvergedSolution) {
-    auto tol = GeneralizedAlphaTimeIntegrator::kCONVERGENCETOLERANCE;
+    auto tol = GeneralizedAlphaTimeIntegrator::kConvergenceTolerance;
     auto residual = create_vector({tol * 1e-1, tol * 2e-1, tol * 3e-1});
     auto time_integrator = GeneralizedAlphaTimeIntegrator();
     auto converged = time_integrator.CheckConvergence(residual);
@@ -177,7 +177,7 @@ TEST(TimeIntegratorTest, ExpectConvergedSolution) {
 }
 
 TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
-    auto tol = GeneralizedAlphaTimeIntegrator::kCONVERGENCETOLERANCE;
+    auto tol = GeneralizedAlphaTimeIntegrator::kConvergenceTolerance;
     auto residual = create_vector({tol * 1e1, tol * 2e1, tol * 3e1});
     auto time_integrator = GeneralizedAlphaTimeIntegrator();
     auto converged = time_integrator.CheckConvergence(residual);

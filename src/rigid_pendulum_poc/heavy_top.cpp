@@ -129,10 +129,14 @@ HostView1D HeavyTopLinearizationParameters::GeneralizedCoordinatesResidualVector
     );
 
     auto residual_gen_coords = HostView1D("residual_gen_coords", 6);
+    // clang-format off
     Kokkos::parallel_for(
-        6, KOKKOS_LAMBDA(const size_t i
-           ) { residual_gen_coords(i) = first_term(i) + second_term(i) + third_term(i); }
+        6,
+        KOKKOS_LAMBDA(const size_t i) {
+           residual_gen_coords(i) = first_term(i) + second_term(i) + third_term(i);
+        }
     );
+    // clang-format on
 
     return residual_gen_coords;
 }

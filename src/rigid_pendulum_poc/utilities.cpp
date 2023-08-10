@@ -20,21 +20,21 @@ bool close_to(double a, double b, double epsilon) {
 }
 
 double wrap_angle_to_pi(double angle) {
-    double wrapped_angle = std::fmod(angle, 2. * kPI);
+    double wrapped_angle = std::fmod(angle, 2. * kPi);
 
     // Check if the angle is close to PI or -PI to avoid numerical issues
-    if (close_to(wrapped_angle, kPI)) {
-        return kPI;
+    if (close_to(wrapped_angle, kPi)) {
+        return kPi;
     }
-    if (close_to(wrapped_angle, -kPI)) {
-        return -kPI;
+    if (close_to(wrapped_angle, -kPi)) {
+        return -kPi;
     }
 
-    if (wrapped_angle > kPI) {
-        wrapped_angle -= 2. * kPI;
+    if (wrapped_angle > kPi) {
+        wrapped_angle -= 2. * kPi;
     }
-    if (wrapped_angle < -kPI) {
-        wrapped_angle += 2. * kPI;
+    if (wrapped_angle < -kPi) {
+        wrapped_angle += 2. * kPi;
     }
 
     return wrapped_angle;

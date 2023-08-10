@@ -235,7 +235,7 @@ TEST(QuaternionTest, AngleAxisFromQuaternion_ZeroAngle) {
 }
 
 TEST(QuaternionTest, QuaternionFromAngleAxis_90Degrees_XAxis) {
-    double angle = kPI / 2.;
+    double angle = kPi / 2.;
     Vector axis{1., 0., 0.};
     Quaternion q = quaternion_from_angle_axis(angle, axis);
 
@@ -251,14 +251,14 @@ TEST(QuaternionTest, AngleAxisFromQuaternion_90Degrees_XAxis) {
     Quaternion q(0.707107, 0.707107, 0., 0.);
     auto [angle, axis] = angle_axis_from_quaternion(q);
 
-    ASSERT_NEAR(angle, kPI / 2., 1e-6);
+    ASSERT_NEAR(angle, kPi / 2., 1e-6);
     ASSERT_NEAR(axis.GetXComponent(), 1., 1e-6);
     ASSERT_NEAR(axis.GetYComponent(), 0., 1e-6);
     ASSERT_NEAR(axis.GetZComponent(), 0., 1e-6);
 }
 
 TEST(QuaternionTest, QuaternionFromAngleAxis_45Degrees_YAxis) {
-    double angle = kPI / 4.;
+    double angle = kPi / 4.;
     Vector axis{0., 1., 0.};
     Quaternion q = quaternion_from_angle_axis(angle, axis);
 
@@ -274,14 +274,14 @@ TEST(QuaternionTest, AngleAxisFromQuaternion_45Degrees_YAxis) {
     Quaternion q(0.923879, 0., 0.382683, 0.);
     auto [angle, axis] = angle_axis_from_quaternion(q);
 
-    ASSERT_NEAR(angle, kPI / 4., 1e-6);
+    ASSERT_NEAR(angle, kPi / 4., 1e-6);
     ASSERT_NEAR(axis.GetXComponent(), 0., 1e-6);
     ASSERT_NEAR(axis.GetYComponent(), 1., 1e-6);
     ASSERT_NEAR(axis.GetZComponent(), 0., 1e-6);
 }
 
 TEST(QuaternionTest, QuaternionFromAngleAxis_60Degrees_ZAxis) {
-    double angle = kPI / 3.;
+    double angle = kPi / 3.;
     Vector axis{0., 0., 1.};
     Quaternion q = quaternion_from_angle_axis(angle, axis);
 
@@ -297,14 +297,14 @@ TEST(QuaternionTest, AngleAxisFromQuaternion_60Degrees_ZAxis) {
     Quaternion q(0.866025, 0., 0., 0.5);
     auto [angle, axis] = angle_axis_from_quaternion(q);
 
-    ASSERT_NEAR(angle, kPI / 3., 1e-6);
+    ASSERT_NEAR(angle, kPi / 3., 1e-6);
     ASSERT_NEAR(axis.GetXComponent(), 0., 1e-6);
     ASSERT_NEAR(axis.GetYComponent(), 0., 1e-6);
     ASSERT_NEAR(axis.GetZComponent(), 1., 1e-6);
 }
 
 TEST(QuaternionTest, RotateXAXIS_90Degrees_AboutYAxis) {
-    double angle = kPI / 2.;
+    double angle = kPi / 2.;
     Vector axis{0., 1., 0.};
     Quaternion q = quaternion_from_angle_axis(angle, axis);
 
@@ -318,7 +318,7 @@ TEST(QuaternionTest, RotateXAXIS_90Degrees_AboutYAxis) {
 }
 
 TEST(QuaternionTest, RotateYAXIS_90Degrees_AboutXAxis) {
-    double angle = kPI / 2.;
+    double angle = kPi / 2.;
     Vector axis{1., 0., 0.};
     Quaternion q = quaternion_from_angle_axis(angle, axis);
 
@@ -332,7 +332,7 @@ TEST(QuaternionTest, RotateYAXIS_90Degrees_AboutXAxis) {
 }
 
 TEST(QuaternionTest, RotateZAXIS_90Degrees_AboutXAxis) {
-    double angle = kPI / 2.;
+    double angle = kPi / 2.;
     Vector axis{1., 0., 0.};
     Quaternion q = quaternion_from_angle_axis(angle, axis);
 
@@ -346,7 +346,7 @@ TEST(QuaternionTest, RotateZAXIS_90Degrees_AboutXAxis) {
 }
 
 TEST(QuaternionTest, RotateXAXIS_45Degrees_AboutZAxis) {
-    double angle = kPI / 4.;
+    double angle = kPi / 4.;
     Vector axis{0., 0., 1.};
     Quaternion q = quaternion_from_angle_axis(angle, axis);
 
@@ -360,7 +360,7 @@ TEST(QuaternionTest, RotateXAXIS_45Degrees_AboutZAxis) {
 }
 
 TEST(QuaternionTest, RotateXAXIS_Neg45Degrees_AboutZAxis) {
-    double angle = -kPI / 4.;
+    double angle = -kPi / 4.;
     Vector axis{0., 0., 1.};
     Quaternion q = quaternion_from_angle_axis(angle, axis);
 

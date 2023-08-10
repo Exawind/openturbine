@@ -11,25 +11,25 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double alpha_f, double alpha_m, double beta, double gamma, TimeStepper time_stepper,
     bool precondition
 )
-    : kALPHA_F_(alpha_f),
-      kALPHA_M_(alpha_m),
-      kBETA_(beta),
-      kGAMMA_(gamma),
+    : kAlphaF_(alpha_f),
+      kAlphaM_(alpha_m),
+      kBeta_(beta),
+      kGamma_(gamma),
       time_stepper_(std::move(time_stepper)),
       precondition_(precondition) {
-    if (this->kALPHA_F_ < 0 || this->kALPHA_F_ > 1) {
+    if (this->kAlphaF_ < 0 || this->kAlphaF_ > 1) {
         throw std::invalid_argument("Invalid value for alpha_f");
     }
 
-    if (this->kALPHA_M_ < 0 || this->kALPHA_M_ > 1) {
+    if (this->kAlphaM_ < 0 || this->kAlphaM_ > 1) {
         throw std::invalid_argument("Invalid value for alpha_m");
     }
 
-    if (this->kBETA_ < 0 || this->kBETA_ > 0.50) {
+    if (this->kBeta_ < 0 || this->kBeta_ > 0.50) {
         throw std::invalid_argument("Invalid value for beta");
     }
 
-    if (this->kGAMMA_ < 0 || this->kGAMMA_ > 1) {
+    if (this->kGamma_ < 0 || this->kGamma_ > 1) {
         throw std::invalid_argument("Invalid value for gamma");
     }
 
@@ -96,23 +96,23 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const auto h = this->time_stepper_.GetTimeStep();
     const auto size = velocity.size();
 
-    const double kALPHA_F_local = kALPHA_F_;
-    const double kALPHA_M_local = kALPHA_M_;
-    const double kBETA_local = kBETA_;
-    const double kGAMMA_local = kGAMMA_;
+    const auto kAlphaFLocal = kAlphaF_;
+    const auto kAlphaMLocal = kAlphaM_;
+    const auto kBetaLocal = kBeta_;
+    const auto kGammaLocal = kGamma_;
 
     // Algorithm from Table 1, Brüls, Cardona, and Arnold 2012
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const size_t i) {
             algo_acceleration_next(i) =
-                (kALPHA_F_local * acceleration(i) - kALPHA_M_local * algo_acceleration(i)) /
-                (1. - kALPHA_M_local);
+                (kAlphaFLocal * acceleration(i) - kAlphaMLocal * algo_acceleration(i)) /
+                (1. - kAlphaMLocal);
 
-            delta_gen_coords(i) = velocity(i) + h * (0.5 - kBETA_local) * algo_acceleration(i) +
-                                  h * kBETA_local * algo_acceleration_next(i);
-            velocity(i) += h * (1 - kGAMMA_local) * algo_acceleration(i) +
-                           h * kGAMMA_local * algo_acceleration_next(i);
+            delta_gen_coords(i) = velocity(i) + h * (0.5 - kBetaLocal) * algo_acceleration(i) +
+                                  h * kBetaLocal * algo_acceleration_next(i);
+            velocity(i) += h * (1 - kGammaLocal) * algo_acceleration(i) +
+                           h * kGammaLocal * algo_acceleration_next(i);
 
             algo_acceleration(i) = algo_acceleration_next(i);
 
@@ -130,8 +130,8 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         "algorithm\n"
     );
 
-    const auto BETA_PRIME = (1 - kALPHA_M_) / (h * h * kBETA_ * (1 - kALPHA_F_));
-    const auto GAMMA_PRIME = kGAMMA_ / (h * kBETA_);
+    const auto kBetaPrime = (1 - kAlphaM_) / (h * h * kBeta_ * (1 - kAlphaF_));
+    const auto kGammaPrime = kGamma_ / (h * kBeta_);
 
     // Precondition the linear solve (Bottasso et al 2008)
     const auto dl = HostView2D("dl", size + n_constraints, size + n_constraints);
@@ -152,9 +152,9 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             size + n_constraints,
             KOKKOS_LAMBDA(const size_t i) {
                 if (i >= size) {
-                    dr(i, i) = 1. / (kBETA_local * h * h);
+                    dr(i, i) = 1. / (kBetaLocal * h * h);
                 } else {
-                    dl(i, i) = kBETA_local * h * h;
+                    dl(i, i) = kBetaLocal * h * h;
                 }
             }
         );
@@ -177,7 +177,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         }
 
         auto iteration_matrix = linearization_parameters->IterationMatrix(
-            h, BETA_PRIME, GAMMA_PRIME, gen_coords_next, delta_gen_coords, velocity, acceleration,
+            h, kBetaPrime, kGammaPrime, gen_coords_next, delta_gen_coords, velocity, acceleration,
             lagrange_mults_next
         );
 
@@ -187,7 +187,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
 
             Kokkos::parallel_for(
                 6,
-                KOKKOS_LAMBDA(const size_t i) { residuals(i) = residuals(i) * kBETA_local * h * h; }
+                KOKKOS_LAMBDA(const size_t i) { residuals(i) = residuals(i) * kBetaLocal * h * h; }
             );
         }
 
@@ -211,7 +211,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
                     KOKKOS_LAMBDA(const size_t i) {
                         // Take negative of the solution increments to update Lagrange multipliers
                         delta_lagrange_mults(i) =
-                            -soln_increments(i + delta_gen_coords.size()) / (kBETA_local * h * h);
+                            -soln_increments(i + delta_gen_coords.size()) / (kBetaLocal * h * h);
                         lagrange_mults_next(i) += delta_lagrange_mults(i);
                     }
                 );
@@ -232,8 +232,8 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             size,
             KOKKOS_LAMBDA(const size_t i) {
                 delta_gen_coords(i) += delta_x(i) / h;
-                velocity(i) += GAMMA_PRIME * delta_x(i);
-                acceleration(i) += BETA_PRIME * delta_x(i);
+                velocity(i) += kGammaPrime * delta_x(i);
+                acceleration(i) += kBetaPrime * delta_x(i);
             }
         );
     }
@@ -245,8 +245,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const size_t i) {
-            algo_acceleration_next(i) +=
-                (1. - kALPHA_F_local) / (1. - kALPHA_M_local) * acceleration(i);
+            algo_acceleration_next(i) += (1. - kAlphaFLocal) / (1. - kAlphaMLocal) * acceleration(i);
         }
     );
 
@@ -283,8 +282,12 @@ HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
     // Step 2: SO(3) update, done with quaternion composition
     Quaternion current_orientation{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)};
     auto updated_orientation = quaternion_from_rotation_vector(
-        // Convert Vector -> Quaternion via exponential mapping
-        Vector{delta_gen_coords(3), delta_gen_coords(4), delta_gen_coords(5)} * h
+        Vector{
+            delta_gen_coords(3),  // delta_q component 4 -> orientation vector x-component
+            delta_gen_coords(4),  // delta_q component 5 -> orientation vector y-component
+            delta_gen_coords(5)   // delta_q component 6 -> orientation vector z-component
+        } *
+        h
     );
     auto q = current_orientation * updated_orientation;
 
@@ -322,7 +325,7 @@ bool GeneralizedAlphaTimeIntegrator::CheckConvergence(const HostView1D residual)
     );
     residual_norm = std::sqrt(residual_norm);
 
-    return (residual_norm) < kCONVERGENCETOLERANCE ? true : false;
+    return (residual_norm) < kConvergenceTolerance ? true : false;
 }
 
 }  // namespace openturbine::rigid_pendulum

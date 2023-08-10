@@ -10,7 +10,7 @@ namespace openturbine::rigid_pendulum {
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
 public:
-    static constexpr double kCONVERGENCETOLERANCE = 1e-12;
+    static constexpr double kConvergenceTolerance = 1e-12;
 
     GeneralizedAlphaTimeIntegrator(
         double alpha_f = 0.5, double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5,
@@ -19,20 +19,20 @@ public:
 
     /// Returns the type of the time integrator
     inline TimeIntegratorType GetType() const override {
-        return TimeIntegratorType::kGENERALIZED_ALPHA;
+        return TimeIntegratorType::kGeneralized_Alpha;
     }
 
     /// Returns the alpha_f parameter
-    inline double GetAlphaF() const { return kALPHA_F_; }
+    inline double GetAlphaF() const { return kAlphaF_; }
 
     /// Returns the alpha_m parameter
-    inline double GetAlphaM() const { return kALPHA_M_; }
+    inline double GetAlphaM() const { return kAlphaM_; }
 
     /// Returns the beta parameter
-    inline double GetBeta() const { return kBETA_; }
+    inline double GetBeta() const { return kBeta_; }
 
     /// Returns the gamma parameter
-    inline double GetGamma() const { return kGAMMA_; }
+    inline double GetGamma() const { return kGamma_; }
 
     /// Returns a const reference to the time stepper
     inline const TimeStepper& GetTimeStepper() const { return time_stepper_; }
@@ -60,10 +60,10 @@ public:
     inline bool IsConverged() const { return is_converged_; }
 
 private:
-    const double kALPHA_F_;  //< Alpha_f coefficient of the generalized-alpha method
-    const double kALPHA_M_;  //< Alpha_m coefficient of the generalized-alpha method
-    const double kBETA_;     //< Beta coefficient of the generalized-alpha method
-    const double kGAMMA_;    //< Gamma coefficient of the generalized-alpha method
+    const double kAlphaF_;  //< Alpha_f coefficient of the generalized-alpha method
+    const double kAlphaM_;  //< Alpha_m coefficient of the generalized-alpha method
+    const double kBeta_;    //< Beta coefficient of the generalized-alpha method
+    const double kGamma_;   //< Gamma coefficient of the generalized-alpha method
 
     bool is_converged_;         //< Flag to indicate if the latest non-linear update has converged
     TimeStepper time_stepper_;  //< Time stepper object to perform the time integration

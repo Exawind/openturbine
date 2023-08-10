@@ -16,9 +16,9 @@ using IterationMatrix = std::function<HostView2D(
 
 // An enum class to indicate the type of time integrator
 enum class TimeIntegratorType {
-    kNEWMARK_BETA = 0,   //< Newmark-beta method
+    kNewmarkBeta = 0,    //< Newmark-beta method
     kHHT = 1,            //< Hilber-Hughes-Taylor method
-    kGENERALIZED_ALPHA,  //< Generalized-alpha method
+    kGeneralized_Alpha,  //< Generalized-alpha method
 };
 
 /// @brief An abstract class to provide a common interface for time integrators

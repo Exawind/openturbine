@@ -9,8 +9,8 @@ namespace openturbine::rigid_pendulum {
 using HostView1D = Kokkos::View<double*, Kokkos::HostSpace>;
 using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
 
-static constexpr double kTOLERANCE = 1e-6;
-static constexpr double kPI = 3.14159265358979323846;
+static constexpr double kTolerance = 1e-6;
+static constexpr double kPi = 3.14159265358979323846;
 
 /*!
  * @brief  Returns a boolean indicating if two provided doubles are close to each other
@@ -18,7 +18,7 @@ static constexpr double kPI = 3.14159265358979323846;
  * @param  b: Second double
  * @param  epsilon: Tolerance for closeness
  */
-bool close_to(double a, double b, double epsilon = kTOLERANCE);
+bool close_to(double a, double b, double epsilon = kTolerance);
 
 /*!
  * @brief  Takes an angle and returns the equivalent angle in the range [-pi, pi]
@@ -52,11 +52,15 @@ Kokkos::View<double**, Kokkos::HostSpace> multiply_matrix_with_scalar(
 );
 
 /// Multiplies an m x n matrix with an n x 1 vector and returns an m x 1 vector
-Kokkos::View<double*, Kokkos::HostSpace>
-multiply_matrix_with_vector(const Kokkos::View<double**, Kokkos::HostSpace>, const Kokkos::View<double*, Kokkos::HostSpace>);
+Kokkos::View<double*, Kokkos::HostSpace> multiply_matrix_with_vector(
+    const Kokkos::View<double**, Kokkos::HostSpace> /* matrix */,
+    const Kokkos::View<double*, Kokkos::HostSpace> /* vector */
+);
 
 /// Multiplies an m x n matrix with an n x p matrix and returns an m x p matrix
-Kokkos::View<double**, Kokkos::HostSpace>
-multiply_matrix_with_matrix(const Kokkos::View<double**, Kokkos::HostSpace>, const Kokkos::View<double**, Kokkos::HostSpace>);
+Kokkos::View<double**, Kokkos::HostSpace> multiply_matrix_with_matrix(
+    const Kokkos::View<double**, Kokkos::HostSpace> /* matrix_a */,
+    const Kokkos::View<double**, Kokkos::HostSpace> /* matrix_b */
+);
 
 }  // namespace openturbine::rigid_pendulum
