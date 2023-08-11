@@ -13,9 +13,9 @@ namespace openturbine::gen_alpha_solver::tests {
  */
 
 TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, ExpectThrowIfGenCoordsIsNotSize7) {
-    auto gen_coords = create_vector({1., 2., 3., 4., 5., 6., 7., 8.});  // 8 elements
-    auto velocity = create_vector({1., 2., 3., 4., 5., 6.});            // 6 elements
-    auto acceleration = create_vector({1., 2., 3., 4., 5., 6.});        // 6 elements
+    auto gen_coords = create_vector({0., 0., 0., 1., 0., 0.});    // 6 elements
+    auto velocity = create_vector({1., 2., 3., 4., 5., 6.});      // 6 elements
+    auto acceleration = create_vector({1., 2., 3., 4., 5., 6.});  // 6 elements
     auto lagrange_mults = create_vector({1., 2., 3.});
 
     HeavyTopLinearizationParameters heavy_top_lin_params{};
@@ -30,10 +30,31 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, ExpectThrowIfDeltaGenCoord
     auto h = 0.1;
     auto BETA_PRIME = 1.;
     auto GAMMA_PRIME = 1.;
-    auto gen_coords = create_vector({1., 2., 3., 4., 5., 6., 7.});        // 7 elements
+    auto gen_coords = create_vector({0., 0., 0., 1., 0., 0., 0.});        // 7 elements
     auto delta_gen_coords = create_vector({1., 2., 3., 4., 5., 6., 7.});  // 7 elements
     auto velocity = create_vector({1., 2., 3., 4., 5., 6.});              // 6 elements
     auto acceleration = create_vector({1., 2., 3., 4., 5., 6.});          // 6 elements
+    auto lagrange_mults = create_vector({1., 2., 3.});
+
+    HeavyTopLinearizationParameters heavy_top_lin_params{};
+
+    EXPECT_THROW(
+        heavy_top_lin_params.IterationMatrix(
+            h, BETA_PRIME, GAMMA_PRIME, gen_coords, delta_gen_coords, velocity, acceleration,
+            lagrange_mults
+        ),
+        std::invalid_argument
+    );
+}
+
+TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, ExpectThrowIfVelocityAndAccelnAreNotSize6) {
+    auto h = 0.1;
+    auto BETA_PRIME = 1.;
+    auto GAMMA_PRIME = 1.;
+    auto gen_coords = create_vector({0., 0., 0., 1., 0., 0., 0.});    // 7 elements
+    auto delta_gen_coords = create_vector({1., 2., 3., 4., 5., 6.});  // 6 elements
+    auto velocity = create_vector({1., 2., 3., 4., 5.});              // 5 elements
+    auto acceleration = create_vector({1., 2., 3., 4., 5.});          // 5 elements
     auto lagrange_mults = create_vector({1., 2., 3.});
 
     HeavyTopLinearizationParameters heavy_top_lin_params{};

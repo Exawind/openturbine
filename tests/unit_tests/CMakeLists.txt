@@ -27,20 +27,6 @@ target_link_libraries(${oturb_unit_test_exe_name} PRIVATE ${oturb_lib_name})
 # Link Kokkos to test target
 find_package(Kokkos REQUIRED)
 find_package(LAPACK REQUIRED)
-
-set(CMAKE_PREFIX_PATH "/opt/homebrew/opt/lapack/" ${CMAKE_PREFIX_PATH})
-include("../../FindLAPACKE.cmake")
-find_package(LAPACKE REQUIRED HINTS "/opt/homebrew/Cellar/lapack/")
-
-# Check if LAPACKE was found
-if (LAPACKE_FOUND)
-    message(STATUS "LAPACKE library found!")
-    message(STATUS "LAPACKE include directories: ${LAPACKE_INCLUDE_DIRS}")
-    message(STATUS "LAPACKE libraries: ${LAPACKE_LIBRARIES}")
-else()
-    message(FATAL_ERROR "LAPACKE library not found!")
-endif()
-
 target_link_libraries(${oturb_unit_test_exe_name} PRIVATE
     Kokkos::kokkos
     LAPACK::LAPACK

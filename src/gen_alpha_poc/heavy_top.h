@@ -19,6 +19,10 @@ public:
     // Used to store a 2D Kokkos View of doubles on the host
     using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
 
+    constexpr static size_t kNumberOfLieGroupComponents = 7;
+    constexpr static size_t kNumberOfLieAlgebraComponents = 6;
+    constexpr static size_t kNumberOfConstraints = 3;
+
     HeavyTopLinearizationParameters();
 
     virtual HostView1D ResidualVector(
@@ -28,7 +32,7 @@ public:
 
     /// Calculates the iteration matrix for the heavy top problem
     virtual HostView2D IterationMatrix(
-        const double& h, const double& BetaPrime, const double& GammaPrime,
+        const double& h, const double& beta_prime, const double& gamma_prime,
         const HostView1D gen_coords, const HostView1D delta_gen_coords, const HostView1D velocity,
         const HostView1D acceleration, const HostView1D lagrange_mults
     ) override;
@@ -65,6 +69,9 @@ public:
     HostView2D TangentOperator(const HostView1D psi);
 
 private:
+    double mass_;
+    Vector gravity_;
+    Vector principal_moment_of_inertia_;
     MassMatrix mass_matrix_;
 
     HostView2D CalculateRotationMatrix(const HostView1D);
