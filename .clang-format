@@ -1,7 +1,13 @@
-# -*- mode: yaml -*-
-
+# --------------------------------------------------------------------------------
 # This file determines clang-format's style settings; for details, refer to
 # http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+
+# Essentially, we use the Google C++ Style Guide (with some modifications as
+# explicitly pointed out here) in this project
+# https://google.github.io/styleguide/cppguide.html
+# --------------------------------------------------------------------------------
+
+# -*- mode: yaml -*-
 
 # The extra indent or outdent of access modifiers, e.g. public/private.
 # We are choosing to align the access modifiers to the same level as e.g.
