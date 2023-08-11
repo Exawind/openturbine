@@ -13,12 +13,6 @@ namespace openturbine::gen_alpha_solver {
  */
 class HeavyTopLinearizationParameters : public LinearizationParameters {
 public:
-    // Used to store a 1D Kokkos View of doubles on the host
-    using HostView1D = Kokkos::View<double*, Kokkos::HostSpace>;
-
-    // Used to store a 2D Kokkos View of doubles on the host
-    using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
-
     constexpr static size_t kNumberOfLieGroupComponents = 7;
     constexpr static size_t kNumberOfLieAlgebraComponents = 6;
     constexpr static size_t kNumberOfConstraints = 3;

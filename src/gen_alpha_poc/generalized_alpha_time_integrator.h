@@ -10,12 +10,6 @@ namespace openturbine::gen_alpha_solver {
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
 public:
-    // Used to store a 1D Kokkos View of doubles on the host
-    using HostView1D = Kokkos::View<double*, Kokkos::HostSpace>;
-
-    // Used to store a 2D Kokkos View of doubles on the host
-    using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
-
     static constexpr double kConvergenceTolerance = 1e-12;
 
     GeneralizedAlphaTimeIntegrator(

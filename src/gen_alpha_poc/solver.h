@@ -2,13 +2,12 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "src/utilities/openturbine_types.h"
+
 namespace openturbine::gen_alpha_solver {
 
-// Used to store a 1D Kokkos View of doubles on the host
-using HostView1D = Kokkos::View<double*, Kokkos::HostSpace>;
-
-// Used to store a 2D Kokkos View of doubles on the host
-using HostView2D = Kokkos::View<double**, Kokkos::HostSpace>;
+using openturbine::util::HostView1D;
+using openturbine::util::HostView2D;
 
 /// @brief Solve a linear system of equations using LAPACKE's dgesv
 /// @details This function solves a linear system of equations using LAPACKE's
