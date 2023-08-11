@@ -11,6 +11,8 @@ namespace openturbine::gen_alpha_solver {
 class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
 public:
     static constexpr double kConvergenceTolerance = 1e-12;
+    static constexpr size_t kNumberOfLieGroupComponents = 7;
+    static constexpr size_t kNumberOfLieAlgebraComponents = 6;
 
     GeneralizedAlphaTimeIntegrator(
         double alpha_f = 0.5, double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5,

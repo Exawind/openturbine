@@ -13,9 +13,9 @@ namespace openturbine::gen_alpha_solver {
  */
 class HeavyTopLinearizationParameters : public LinearizationParameters {
 public:
-    constexpr static size_t kNumberOfLieGroupComponents = 7;
-    constexpr static size_t kNumberOfLieAlgebraComponents = 6;
-    constexpr static size_t kNumberOfConstraints = 3;
+    static constexpr size_t kNumberOfLieGroupComponents = 7;
+    static constexpr size_t kNumberOfLieAlgebraComponents = 6;
+    static constexpr size_t kNumberOfConstraints = 3;
 
     HeavyTopLinearizationParameters();
 

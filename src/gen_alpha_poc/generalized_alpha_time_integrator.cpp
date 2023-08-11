@@ -45,14 +45,16 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     auto n_accelerations = initial_state.GetAcceleration().size();
     auto n_algo_accelerations = initial_state.GetAlgorithmicAcceleration().size();
 
-    if (n_velocities != 6 || n_accelerations != 6 || n_algo_accelerations != 6) {
+    if (n_velocities != kNumberOfLieAlgebraComponents ||
+        n_accelerations != kNumberOfLieAlgebraComponents ||
+        n_algo_accelerations != kNumberOfLieAlgebraComponents) {
         throw std::invalid_argument(
             "The number of velocities, accelerations, and algorithmic accelerations in the "
             "initial state must be of size 6 for lie group based generalized alpha integrator"
         );
     }
 
-    if (n_gen_coords != 7) {
+    if (n_gen_coords != kNumberOfLieGroupComponents) {
         throw std::invalid_argument(
             "The number of generalized coordinates in the initial state must be of size "
             "7 for lie group based generalized alpha integrator"
@@ -186,7 +188,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             iteration_matrix = multiply_matrix_with_matrix(dl, iteration_matrix);
 
             Kokkos::parallel_for(
-                6,
+                size,
                 KOKKOS_LAMBDA(const size_t i) { residuals(i) = residuals(i) * kBetaLocal * h * h; }
             );
         }
@@ -293,7 +295,7 @@ HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
 
     // Construct the updated generalized coordinates from position and orientation vectors
     auto gen_coords_next = HostView1D("generalized_coordinates_next", gen_coords.size());
-    constexpr int numComponents = 7;
+    constexpr int numComponents = kNumberOfLieGroupComponents;
     double components[numComponents] = {
         r.GetXComponent(),       // component 1
         r.GetYComponent(),       // component 2
