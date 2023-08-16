@@ -70,7 +70,7 @@ public:
     /// Returns a unit vector in the same direction as this vector
     inline Vector GetUnitVector() const {
         if (this->IsNullVector()) {
-            throw std::runtime_error("Cannot get unit vector of null vector");
+            throw std::runtime_error("CANNOT get unit vector of null vector");
         }
         return *this / this->Length();
     }

@@ -16,7 +16,7 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
       kBeta_(beta),
       kGamma_(gamma),
       time_stepper_(std::move(time_stepper)),
-      precondition_(precondition) {
+      is_preconditioned_(precondition) {
     if (this->kAlphaF_ < 0 || this->kAlphaF_ > 1) {
         throw std::invalid_argument("Invalid value for alpha_f");
     }
@@ -66,9 +66,12 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     auto n_steps = this->time_stepper_.GetNumberOfSteps();
     for (size_t i = 0; i < n_steps; i++) {
         this->time_stepper_.AdvanceTimeStep();
+        auto input_state = State{
+            states[i].GetGeneralizedCoordinates(), states[i].GetVelocity(),
+            states[i].GetAcceleration(), states[i].GetAlgorithmicAcceleration()};
         log->Info("** Integrating step number " + std::to_string(i + 1) + " **\n");
         states.emplace_back(
-            std::get<0>(this->AlphaStep(states[i], n_constraints, linearization_parameters))
+            std::get<0>(this->AlphaStep(input_state, n_constraints, linearization_parameters))
         );
     }
 
@@ -141,7 +144,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     Kokkos::deep_copy(dl, 0.);
     Kokkos::deep_copy(dr, 0.);
 
-    if (this->precondition_) {
+    if (this->is_preconditioned_) {
         Kokkos::parallel_for(
             size + n_constraints,
             KOKKOS_LAMBDA(const size_t i) {
@@ -183,7 +186,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             lagrange_mults_next
         );
 
-        if (this->precondition_) {
+        if (this->is_preconditioned_) {
             iteration_matrix = multiply_matrix_with_matrix(iteration_matrix, dr);
             iteration_matrix = multiply_matrix_with_matrix(dl, iteration_matrix);
 
@@ -207,7 +210,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         if (n_constraints > 0) {
             HostView1D delta_lagrange_mults("delta_lagrange_mults", n_constraints);
 
-            if (this->precondition_) {
+            if (this->is_preconditioned_) {
                 Kokkos::parallel_for(
                     n_constraints,
                     KOKKOS_LAMBDA(const size_t i) {

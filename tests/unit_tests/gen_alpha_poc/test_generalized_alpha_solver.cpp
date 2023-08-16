@@ -11,7 +11,47 @@ TEST(TimeIntegratorTest, GetTimeIntegratorType) {
     auto time_integrator =
         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
 
-    EXPECT_EQ(time_integrator.GetType(), TimeIntegratorType::kGeneralized_Alpha);
+    EXPECT_EQ(time_integrator.GetType(), TimeIntegratorType::kGeneralizedAlpha);
+}
+
+class CheckTimeIntegratorInputsTest : public ::testing::Test {
+protected:
+    GeneralizedAlphaTimeIntegrator time_integrator{0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10)};
+
+    void SetUp() override { EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.); }
+
+    void PerformIntegrationTest(
+        const HostView1D& q0, const HostView1D& v0, const HostView1D& a0, const HostView1D& aa0,
+        size_t n_lagrange_mults, const std::shared_ptr<LinearizationParameters>& lin_params
+    ) {
+        auto initial_state = State(q0, v0, a0, aa0);
+        EXPECT_THROW(
+            time_integrator.Integrate(initial_state, n_lagrange_mults, lin_params),
+            std::invalid_argument
+        );
+    }
+};
+
+TEST_F(CheckTimeIntegratorInputsTest, ExpectFailureIfNumberOfVelocitiesNotEqualToSix) {
+    auto q0 = create_vector({1., 1., 1., 1., 1., 1., 1.});  // 7 components
+    auto v0 = create_vector({2., 2., 2., 2., 2., 2.});      // 6 components
+    auto a0 = create_vector({3., 3., 3., 3., 3.});          // 5 components
+    auto aa0 = create_vector({4., 4., 4., 4., 4., 4.});     // 6 components
+    size_t n_lagrange_mults{0};
+    auto unity_lin_params = std::make_shared<UnityLinearizationParameters>();
+
+    PerformIntegrationTest(q0, v0, a0, aa0, n_lagrange_mults, unity_lin_params);
+}
+
+TEST_F(CheckTimeIntegratorInputsTest, ExpectFailureIfNumberOfGenCoordsNotEqualToSeven) {
+    auto q0 = create_vector({1., 1., 1., 1., 1., 1.});   // 6 components
+    auto v0 = create_vector({2., 2., 2., 2., 2., 2.});   // 6 components
+    auto a0 = create_vector({3., 3., 3., 3., 3., 3.});   // 6 components
+    auto aa0 = create_vector({4., 4., 4., 4., 4., 4.});  // 6 components
+    size_t n_lagrange_mults{0};
+    auto unity_lin_params = std::make_shared<UnityLinearizationParameters>();
+
+    PerformIntegrationTest(q0, v0, a0, aa0, n_lagrange_mults, unity_lin_params);
 }
 
 TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
@@ -30,100 +70,11 @@ TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
     std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
         std::make_shared<UnityLinearizationParameters>();
 
-    time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
-
-    EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 10.0);
-}
-
-TEST(TimeIntegratorTest, ExpectFailureIfNumberOfVelocitiesAndAccelerationsAreNotEqual) {
-    auto time_integrator =
-        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
-
-    EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.);
-
-    auto q0 = create_vector({1., 1., 1., 1., 1., 1., 1.});  // 7 components
-    auto v0 = create_vector({2., 2., 2., 2., 2., 2.});      // 6 components
-    auto a0 = create_vector({3., 3., 3., 3., 3.});          // 5 components
-    auto aa0 = create_vector({4., 4., 4., 4., 4., 4.});     // 6 components
-    auto initial_state = State(q0, v0, a0, aa0);
-
-    size_t n_lagrange_mults{0};
-    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
-        std::make_shared<UnityLinearizationParameters>();
-
-    EXPECT_THROW(
-        time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters),
-        std::invalid_argument
-    );
-}
-
-TEST(TimeIntegratorTest, ExpectFailureIfNumberOfGenCoordsIsNotEqualToNumberOfVelocitiesPlusOne) {
-    auto time_integrator =
-        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
-
-    EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.);
-
-    auto q0 = create_vector({1., 1., 1., 1., 1., 1.});   // 6 components
-    auto v0 = create_vector({2., 2., 2., 2., 2., 2.});   // 6 components
-    auto a0 = create_vector({3., 3., 3., 3., 3., 3.});   // 6 components
-    auto aa0 = create_vector({4., 4., 4., 4., 4., 4.});  // 6 components
-    auto initial_state = State(q0, v0, a0, aa0);
-
-    size_t n_lagrange_mults{0};
-    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
-        std::make_shared<UnityLinearizationParameters>();
-
-    EXPECT_THROW(
-        time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters),
-        std::invalid_argument
-    );
-}
-
-TEST(TimeIntegratorTest, GetHistoryOfStatesFromTimeIntegrator) {
-    auto time_integrator =
-        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 0.1, 17));
-
-    EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.);
-
-    auto q0 = create_vector({1., 1., 1., 1., 1., 1., 1.});
-    auto v0 = create_vector({2., 2., 2., 2., 2., 2.});
-    auto a0 = create_vector({3., 3., 3., 3., 3., 3.});
-    auto aa0 = create_vector({4., 4., 4., 4., 4., 4.});
-    auto initial_state = State(q0, v0, a0, aa0);
-
-    size_t n_lagrange_mults{0};
-    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
-        std::make_shared<UnityLinearizationParameters>();
-
     auto state_history =
         time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
 
-    EXPECT_NEAR(
-        time_integrator.GetTimeStepper().GetCurrentTime(), 1.70,
-        10 * std::numeric_limits<double>::epsilon()
-    );
-    EXPECT_EQ(state_history.size(), 18);
-}
-
-TEST(TimeIntegratorTest, TotalNumberOfIterationsInNonLinearSolution) {
-    auto time_integrator =
-        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1., 10));
-
-    EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 0);
-    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 0);
-
-    auto q0 = create_vector({1., 1., 1., 1., 1., 1., 1.});
-    auto v0 = create_vector({2., 2., 2., 2., 2., 2.});
-    auto a0 = create_vector({3., 3., 3., 3., 3., 3.});
-    auto aa0 = create_vector({4., 4., 4., 4., 4., 4.});
-    auto initial_state = State(q0, v0, a0, aa0);
-
-    size_t n_lagrange_mults{0};
-    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
-        std::make_shared<UnityLinearizationParameters>();
-
-    time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
-
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 10.0);
+    EXPECT_EQ(state_history.size(), 11);
     EXPECT_LE(
         time_integrator.GetTimeStepper().GetNumberOfIterations(),
         time_integrator.GetTimeStepper().GetMaximumNumberOfIterations()
@@ -219,12 +170,9 @@ TEST(GeneralizedAlphaTimeIntegratorTest, GetSuppliedGAConstants) {
     EXPECT_EQ(time_integrator.GetGamma(), 0.93);
 }
 
-TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
+TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
     auto time_integrator =
-        GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 1));
-
-    EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 0);
-    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 0);
+        GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 2, 1));
 
     // gen coords is a 7x1 vector while the rest are 6x1 vectors
     auto q0 = create_vector({0., 0., 0., 0., 0., 0., 0.});
@@ -241,54 +189,33 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithZeroAcceleration) {
         time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
 
     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
-    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 2);
+    EXPECT_EQ(results.size(), 3);
 
+    // We expect the results State to contain the following values after one increments
+    // via hand calculations
+    auto first_state = results[1];
+
+    expect_kokkos_view_1D_equal(
+        first_state.GetGeneralizedCoordinates(), {0., 0., 0., 0., 0., 0., 0.}
+    );
+    expect_kokkos_view_1D_equal(first_state.GetVelocity(), {-2., -2., -2., -2., -2., -2.});
+    expect_kokkos_view_1D_equal(first_state.GetAcceleration(), {-2., -2., -2., -2., -2., -2.});
+    expect_kokkos_view_1D_equal(
+        first_state.GetAlgorithmicAcceleration(), {-2., -2., -2., -2., -2., -2.}
+    );
+
+    // We expect the results state to contain the following values after two increments
+    // via hand calculations
     auto final_state = results.back();
 
-    // We expect the final state to contain the following values after one increment
-    // via hand calculations
     expect_kokkos_view_1D_equal(
-        final_state.GetGeneralizedCoordinates(), {0., 0., 0., 0., 0., 0., 0.}
+        final_state.GetGeneralizedCoordinates(), {-2., -2., -2., 0., 0., 0., 0.}
     );
-    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-2., -2., -2., -2., -2., -2.});
+    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-4., -4., -4., -4., -4., -4.});
     expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-2., -2., -2., -2., -2., -2.});
     expect_kokkos_view_1D_equal(
         final_state.GetAlgorithmicAcceleration(), {-2., -2., -2., -2., -2., -2.}
-    );
-}
-
-TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
-    auto time_integrator =
-        GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 2));
-
-    // gen coords is a 7x1 vector while the rest are 6x1 vectors
-    auto q0 = create_vector({0., 0., 0., 0., 0., 0., 0.});
-    auto v0 = create_vector({0., 0., 0., 0., 0., 0.});
-    auto a0 = create_vector({0., 0., 0., 0., 0., 0.});
-    auto aa0 = create_vector({0., 0., 0., 0., 0., 0.});
-    auto initial_state = State(q0, v0, a0, aa0);
-
-    size_t n_lagrange_mults{0};
-    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
-        std::make_shared<UnityLinearizationParameters>();
-
-    auto results =
-        time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
-
-    EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 2);
-    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 2);
-
-    auto final_state = results.back();
-
-    // We expect the final state to contain the following values after two increments
-    // via hand calculations
-    expect_kokkos_view_1D_equal(
-        final_state.GetGeneralizedCoordinates(), {-1., -1., -1., 0., 0., 0., 0.}
-    );
-    expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-4., -4., -4., -4., -4., -4.});
-    expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-4., -4., -4., -4., -4., -4.});
-    expect_kokkos_view_1D_equal(
-        final_state.GetAlgorithmicAcceleration(), {-4., -4., -4., -4., -4., -4.}
     );
 }
 

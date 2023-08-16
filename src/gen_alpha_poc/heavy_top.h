@@ -6,7 +6,8 @@
 
 namespace openturbine::gen_alpha_solver {
 
-/*! Calculates the residual vector and iteration matrix for the heavy top problem from Brüls and
+/*!
+ * Calculates the residual vector and iteration matrix for the heavy top problem from Brüls and
  * Cardona (2010) "On the use of Lie group time integrators in multibody dynamics," 2010, Journal
  * of Computational and Nonlinear Dynamics, Vol 5.
  * Ref: https://doi.org/10.1115/1.4001370

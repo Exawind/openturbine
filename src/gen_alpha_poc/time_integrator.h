@@ -7,9 +7,9 @@ namespace openturbine::gen_alpha_solver {
 
 // An enum class to indicate the type of time integrator
 enum class TimeIntegratorType {
-    kNewmarkBeta = 0,    //< Newmark-beta method
-    kHHT = 1,            //< Hilber-Hughes-Taylor method
-    kGeneralized_Alpha,  //< Generalized-alpha method
+    kNewmarkBeta = 0,      //< Newmark-beta method
+    kHHT = 1,              //< Hilber-Hughes-Taylor method
+    kGeneralizedAlpha = 2  //< Generalized-alpha method
 };
 
 /// @brief An abstract class to provide a common interface for time integrators

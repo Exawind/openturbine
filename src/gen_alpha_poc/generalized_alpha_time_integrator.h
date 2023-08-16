@@ -21,7 +21,7 @@ public:
 
     /// Returns the type of the time integrator
     inline TimeIntegratorType GetType() const override {
-        return TimeIntegratorType::kGeneralized_Alpha;
+        return TimeIntegratorType::kGeneralizedAlpha;
     }
 
     /// Returns the alpha_f parameter
@@ -69,7 +69,7 @@ private:
 
     bool is_converged_;         //< Flag to indicate if the latest non-linear update has converged
     TimeStepper time_stepper_;  //< Time stepper object to perform the time integration
-    bool precondition_;         //< Flag to indicate if the iteration matrix is preconditioned
+    bool is_preconditioned_;    //< Flag to indicate if the iteration matrix is preconditioned
 };
 
 }  // namespace openturbine::gen_alpha_solver

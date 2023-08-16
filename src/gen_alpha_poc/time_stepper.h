@@ -43,18 +43,18 @@ public:
     inline void IncrementTotalNumberOfIterations(size_t n) { total_n_iterations_ += n; }
 
     /// Returns the maximum number of iterations for the non-linear update
-    inline size_t GetMaximumNumberOfIterations() const { return kMAX_ITERATIONS_; }
+    inline size_t GetMaximumNumberOfIterations() const { return kMaxIterations_; }
 
 private:
-    double initial_time_;        //< Initial time of the analysis
-    double time_step_;           //< Time step (delta t) of the analysis
-    size_t n_steps_;             //< Number of time steps to perform in the analysis
-    double current_time_;        //< Current time of the analysis
-    size_t n_iterations_;        //< Number of iterations performed in the latest non-linear update
-    size_t total_n_iterations_;  //< Total number of non-linear iterations performed to
-                                 // complete the analysis
-    const size_t kMAX_ITERATIONS_;  //< Maximum number of iterations permitted for each
-                                    // non-linear update
+    double initial_time_;          //< Initial time of the analysis
+    double time_step_;             //< Time step (delta t) of the analysis
+    size_t n_steps_;               //< Number of time steps to perform in the analysis
+    double current_time_;          //< Current time of the analysis
+    size_t n_iterations_;          //< Number of iterations performed in the latest non-linear update
+    size_t total_n_iterations_;    //< Total number of non-linear iterations performed to
+                                   // complete the analysis
+    const size_t kMaxIterations_;  //< Maximum number of iterations permitted for each
+                                   // non-linear update
 };
 
 }  // namespace openturbine::gen_alpha_solver
