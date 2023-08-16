@@ -2,18 +2,23 @@
 set(Kokkos_DIR "$ENV{Kokkos_ROOT}" CACHE STRING "Kokkos root directory")
 find_package(Kokkos REQUIRED)
 find_package(LAPACK REQUIRED)
+find_package(KokkosKernels REQUIRED)
 
 target_sources(${oturb_exe_name} PRIVATE main.cpp)
+set_target_properties(${oturb_exe_name} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${oturb_exe_name} PRIVATE
     Kokkos::kokkos
+    Kokkos::kokkoskernels
     LAPACK::LAPACK
     lapacke
     lapack
     blas
 )
 
+set_target_properties(${oturb_lib_name} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${oturb_lib_name} PRIVATE
     Kokkos::kokkos
+    Kokkos::kokkoskernels
     LAPACK::LAPACK
     lapacke
     lapack

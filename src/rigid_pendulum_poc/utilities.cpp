@@ -4,6 +4,7 @@
 
 namespace openturbine::rigid_pendulum {
 
+KOKKOS_FUNCTION
 bool close_to(double a, double b, double epsilon) {
     auto delta = std::abs(a - b);
     a = std::abs(a);
@@ -40,8 +41,8 @@ double wrap_angle_to_pi(double angle) {
     return wrapped_angle;
 }
 
-HostView1D create_identity_vector(size_t size) {
-    auto vector = HostView1D("vector", size);
+Kokkos::View<double*> create_identity_vector(size_t size) {
+    auto vector = Kokkos::View<double*>("vector", size);
 
     Kokkos::parallel_for(
         size, KOKKOS_LAMBDA(int i) { vector(i) = 1.; }
@@ -50,10 +51,10 @@ HostView1D create_identity_vector(size_t size) {
     return vector;
 }
 
-HostView2D create_identity_matrix(size_t size) {
-    auto matrix = HostView2D("matrix", size, size);
-    auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, size);
-    auto fill_diagonal = [matrix](int index) {
+Kokkos::View<double**> create_identity_matrix(size_t size) {
+    auto matrix = Kokkos::View<double**>("matrix", size, size);
+    auto diagonal_entries = Kokkos::RangePolicy(0, size);
+    auto fill_diagonal = KOKKOS_LAMBDA(int index) {
         matrix(index, index) = 1.;
     };
 
@@ -62,38 +63,38 @@ HostView2D create_identity_matrix(size_t size) {
     return matrix;
 }
 
-HostView1D create_vector(const std::vector<double>& values) {
-    auto vector = HostView1D("vector", values.size());
-    auto entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, values.size());
-    auto fill_vector = [vector, values](int index) {
-        vector(index) = values[index];
-    };
+Kokkos::View<double*> create_vector(const std::vector<double>& values) {
+    auto vector = Kokkos::View<double*>("vector", values.size());
+    auto vector_host = Kokkos::create_mirror(vector);
 
-    Kokkos::parallel_for(entries, fill_vector);
+    for(unsigned index = 0; index < values.size(); ++index) {
+        vector_host(index) = values[index];
+    }
+    Kokkos::deep_copy(vector, vector_host);
 
     return vector;
 }
 
-HostView2D create_matrix(const std::vector<std::vector<double>>& values) {
-    auto matrix = HostView2D("matrix", values.size(), values.front().size());
-    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
-        {0, 0}, {values.size(), values.front().size()}
-    );
-    auto fill_matrix = [matrix, values](int row, int column) {
-        matrix(row, column) = values[row][column];
-    };
+Kokkos::View<double**> create_matrix(const std::vector<std::vector<double>>& values) {
+    auto matrix = Kokkos::View<double**>("matrix", values.size(), values.front().size());
+    auto matrix_host = Kokkos::create_mirror(matrix);
 
-    Kokkos::parallel_for(entries, fill_matrix);
+    for(unsigned row = 0; row < values.size(); ++row) {
+        for(unsigned column = 0; column < values.front().size(); ++column) {
+            matrix_host(row, column) = values[row][column];
+        }
+    }
+    Kokkos::deep_copy(matrix, matrix_host);
 
     return matrix;
 }
 
-HostView2D transpose_matrix(const HostView2D matrix) {
-    auto transposed_matrix = HostView2D("transposed_matrix", matrix.extent(1), matrix.extent(0));
-    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
+Kokkos::View<double**> transpose_matrix(const Kokkos::View<double**> matrix) {
+    auto transposed_matrix = Kokkos::View<double**>("transposed_matrix", matrix.extent(1), matrix.extent(0));
+    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {matrix.extent(1), matrix.extent(0)}
     );
-    auto transpose = [matrix, transposed_matrix](int row, int column) {
+    auto transpose = KOKKOS_LAMBDA(int row, int column) {
         transposed_matrix(row, column) = matrix(column, row);
     };
 
@@ -102,37 +103,39 @@ HostView2D transpose_matrix(const HostView2D matrix) {
     return transposed_matrix;
 }
 
-HostView2D create_cross_product_matrix(const HostView1D vector) {
+Kokkos::View<double**> create_cross_product_matrix(const Kokkos::View<double*> vector) {
     if (vector.extent(0) != 3) {
         throw std::invalid_argument("The provided vector must have 3 elements");
     }
 
-    auto matrix = HostView2D("cross_product_matrix", 3, 3);
-
-    // Is this a problem to assign the values directly to Kokkos::View?
-    matrix(0, 0) = 0.;
-    matrix(0, 1) = -vector(2);
-    matrix(0, 2) = vector(1);
-    matrix(1, 0) = vector(2);
-    matrix(1, 1) = 0.;
-    matrix(1, 2) = -vector(0);
-    matrix(2, 0) = -vector(1);
-    matrix(2, 1) = vector(0);
-    matrix(2, 2) = 0.;
+    auto matrix = Kokkos::View<double**>("cross_product_matrix", 3, 3);
+    auto populate_matrix = KOKKOS_LAMBDA(int) {
+        matrix(0, 0) = 0.;
+        matrix(0, 1) = -vector(2);
+        matrix(0, 2) = vector(1);
+        matrix(1, 0) = vector(2);
+        matrix(1, 1) = 0.;
+        matrix(1, 2) = -vector(0);
+        matrix(2, 0) = -vector(1);
+        matrix(2, 1) = vector(0);
+        matrix(2, 2) = 0.;
+    };
+    
+    Kokkos::parallel_for(1, populate_matrix);
 
     return matrix;
 }
 
-HostView1D multiply_matrix_with_vector(const HostView2D matrix, const HostView1D vector) {
+Kokkos::View<double*> multiply_matrix_with_vector(const Kokkos::View<double**> matrix, const Kokkos::View<double*> vector) {
     if (matrix.extent(1) != vector.extent(0)) {
         throw std::invalid_argument(
             "The number of columns of the matrix must be equal to the number of rows of the vector"
         );
     }
 
-    auto result = HostView1D("result", matrix.extent(0));
-    auto entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, matrix.extent(0));
-    auto multiply_row = [matrix, vector, result](int row) {
+    auto result = Kokkos::View<double*>("result", matrix.extent(0));
+    auto entries = Kokkos::RangePolicy(0, matrix.extent(0));
+    auto multiply_row = KOKKOS_LAMBDA(int row) {
         double sum = 0.;
         for (size_t column = 0; column < matrix.extent(1); ++column) {
             sum += matrix(row, column) * vector(column);
@@ -145,7 +148,7 @@ HostView1D multiply_matrix_with_vector(const HostView2D matrix, const HostView1D
     return result;
 }
 
-HostView2D multiply_matrix_with_matrix(const HostView2D matrix_a, const HostView2D matrix_b) {
+Kokkos::View<double**> multiply_matrix_with_matrix(const Kokkos::View<double**> matrix_a, const Kokkos::View<double**> matrix_b) {
     auto a_n_columns = matrix_a.extent(1);
     auto b_n_rows = matrix_b.extent(0);
 
@@ -158,11 +161,11 @@ HostView2D multiply_matrix_with_matrix(const HostView2D matrix_a, const HostView
 
     auto n_rows = matrix_a.extent(0);
     auto n_columns = matrix_b.extent(1);
-    auto result = HostView2D("result", n_rows, n_columns);
-    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
+    auto result = Kokkos::View<double**>("result", n_rows, n_columns);
+    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {n_rows, n_columns}
     );
-    auto multiply_row_column = [matrix_a, matrix_b, result](int row, int column) {
+    auto multiply_row_column = KOKKOS_LAMBDA(int row, int column) {
         double sum = 0.;
         for (size_t i = 0; i < matrix_a.extent(1); ++i) {
             sum += matrix_a(row, i) * matrix_b(i, column);
@@ -175,12 +178,12 @@ HostView2D multiply_matrix_with_matrix(const HostView2D matrix_a, const HostView
     return result;
 }
 
-HostView2D multiply_matrix_with_scalar(const HostView2D matrix, double scalar) {
-    auto result = HostView2D("result", matrix.extent(0), matrix.extent(1));
-    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
+Kokkos::View<double**> multiply_matrix_with_scalar(const Kokkos::View<double**> matrix, double scalar) {
+    auto result = Kokkos::View<double**>("result", matrix.extent(0), matrix.extent(1));
+    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {matrix.extent(0), matrix.extent(1)}
     );
-    auto multiply_row_column = [matrix, result, scalar](int row, int column) {
+    auto multiply_row_column = KOKKOS_LAMBDA(int row, int column) {
         result(row, column) = matrix(row, column) * scalar;
     };
 

@@ -9,7 +9,7 @@ State::State()
       algorithmic_acceleration_("algorithmic_accelerations", 1) {
 }
 
-State::State(HostView1D q, HostView1D v, HostView1D v_dot, HostView1D a)
+State::State(Kokkos::View<double*> q, Kokkos::View<double*> v, Kokkos::View<double*> v_dot, Kokkos::View<double*> a)
     : generalized_coords_("generalized_coordinates", q.size()),
       velocity_("velocities", v.size()),
       acceleration_("accelerations", v_dot.size()),
@@ -43,19 +43,21 @@ MassMatrix::MassMatrix(double mass, double moment_of_inertia)
     : MassMatrix(mass, {moment_of_inertia, moment_of_inertia, moment_of_inertia}) {
 }
 
-MassMatrix::MassMatrix(HostView2D mass_matrix)
+MassMatrix::MassMatrix(Kokkos::View<double**> mass_matrix)
     : mass_matrix_("mass_matrix", mass_matrix.extent(0), mass_matrix.extent(1)) {
     if (mass_matrix_.extent(0) != 6 || mass_matrix_.extent(1) != 6) {
         throw std::invalid_argument("Mass matrix must be 6 x 6");
     }
     Kokkos::deep_copy(mass_matrix_, mass_matrix);
-    this->mass_ = mass_matrix_(0, 0);
+    auto mass_matrix_host = Kokkos::create_mirror(mass_matrix_);
+    Kokkos::deep_copy(mass_matrix_host, mass_matrix_);
+    this->mass_ = mass_matrix_host(0, 0);
     this->principal_moment_of_inertia_ =
-        Vector(mass_matrix_(3, 3), mass_matrix_(4, 4), mass_matrix_(5, 5));
+        Vector(mass_matrix_host(3, 3), mass_matrix_host(4, 4), mass_matrix_host(5, 5));
 }
 
-HostView2D MassMatrix::GetMomentOfInertiaMatrix() const {
-    HostView2D moment_of_inertia_matrix("Moment of inertia matrix", 3, 3);
+Kokkos::View<double**> MassMatrix::GetMomentOfInertiaMatrix() const {
+    Kokkos::View<double**> moment_of_inertia_matrix("Moment of inertia matrix", 3, 3);
 
     constexpr int numComponents = 3;
     double J[numComponents] = {
@@ -83,14 +85,16 @@ GeneralizedForces::GeneralizedForces(const Vector& forces, const Vector& moments
     });
 }
 
-GeneralizedForces::GeneralizedForces(HostView1D generalized_forces)
+GeneralizedForces::GeneralizedForces(Kokkos::View<double*> generalized_forces)
     : generalized_forces_("generalized_forces_vector", generalized_forces.size()) {
     if (generalized_forces_.extent(0) != 6) {
         throw std::invalid_argument("Generalized forces must be 6 x 1");
     }
     Kokkos::deep_copy(generalized_forces_, generalized_forces);
-    this->forces_ = Vector(generalized_forces_(0), generalized_forces_(1), generalized_forces_(2));
-    this->moments_ = Vector(generalized_forces_(3), generalized_forces_(4), generalized_forces_(5));
+    auto generalized_forces_host = Kokkos::create_mirror(generalized_forces_);
+    Kokkos::deep_copy(generalized_forces_host, generalized_forces_);
+    this->forces_ = Vector(generalized_forces_host(0), generalized_forces_host(1), generalized_forces_host(2));
+    this->moments_ = Vector(generalized_forces_host(3), generalized_forces_host(4), generalized_forces_host(5));
 }
 
 }  // namespace openturbine::rigid_pendulum

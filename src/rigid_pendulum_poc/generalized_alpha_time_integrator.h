@@ -48,15 +48,15 @@ public:
      *  Machine Theory, Vol 48, 121-137
      *  https://doi.org/10.1016/j.mechmachtheory.2011.07.017
      */
-    std::tuple<State, HostView1D> AlphaStep(
+    std::tuple<State, Kokkos::View<double*>> AlphaStep(
         const State&, size_t, std::shared_ptr<LinearizationParameters> lin_params
     );
 
     /// Computes the updated generalized coordinates based on the non-linear update
-    HostView1D UpdateGeneralizedCoordinates(const HostView1D, const HostView1D);
+    Kokkos::View<double*> UpdateGeneralizedCoordinates(const Kokkos::View<double*>, const Kokkos::View<double*>);
 
     /// Checks convergence of the non-linear solution based on the residuals
-    bool CheckConvergence(const HostView1D);
+    bool CheckConvergence(const Kokkos::View<double*>);
 
     /// Returns the flag to indicate if the latest non-linear update has converged
     inline bool IsConverged() const { return is_converged_; }

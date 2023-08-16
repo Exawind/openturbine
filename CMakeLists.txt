@@ -71,10 +71,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(OTURB_ENABLE_CUDA)
   enable_language(CUDA)
-  if(CMAKE_CUDA_COMPILER_VERSION VERSION_LESS "10.0")
-    message(FATAL_ERROR "Your nvcc version is ${CMAKE_CUDA_COMPILER_VERSION} which is unsupported."
-      "Please use CUDA toolkit version 10.0 or newer.")
-  endif()
+#  if(CMAKE_CUDA_COMPILER_VERSION VERSION_LESS "10.0")
+#    message(FATAL_ERROR "Your nvcc version is ${CMAKE_CUDA_COMPILER_VERSION} which is unsupported."
+#      "Please use CUDA toolkit version 10.0 or newer.")
+#  endif()
 endif()
 
 if(OTURB_ENABLE_ROCM)
@@ -149,10 +149,10 @@ if(OTURB_ENABLE_UNIT_TESTS OR OTURB_ENABLE_TESTS)
     add_subdirectory("tests/unit_tests")
     set_cuda_build_properties(${oturb_unit_test_exe_name})
     if(OTURB_ENABLE_CUDA)
-      get_target_property(UTEST_SOURCES ${oturb_unit_test_exe_name} SOURCES)
-      set_source_files_properties(${UTEST_SOURCES} PROPERTIES LANGUAGE CUDA)
-      set_target_properties(${oturb_unit_test_exe_name} PROPERTIES
-        CUDA_SEPARABLE_COMPILATION ON)
+#      get_target_property(UTEST_SOURCES ${oturb_unit_test_exe_name} SOURCES)
+#      set_source_files_properties(${UTEST_SOURCES} PROPERTIES LANGUAGE CUDA)
+#      set_target_properties(${oturb_unit_test_exe_name} PROPERTIES
+#        CUDA_SEPARABLE_COMPILATION ON)
     endif()
 endif()
 

@@ -7,11 +7,11 @@
 namespace openturbine::rigid_pendulum {
 
 using ResidualVector = std::function<
-    HostView1D(const HostView1D, const HostView1D, const HostView1D, const HostView1D)>;
+    Kokkos::View<double*>(const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>)>;
 
-using IterationMatrix = std::function<HostView2D(
-    const double&, const double&, const HostView1D, const HostView1D, const HostView1D,
-    const double&, const HostView1D
+using IterationMatrix = std::function<Kokkos::View<double**>(
+    const double&, const double&, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>,
+    const double&, const Kokkos::View<double*>
 )>;
 
 // An enum class to indicate the type of time integrator

@@ -2,7 +2,8 @@
 
 namespace openturbine::rigid_pendulum {
 
-Vector::Vector(double x, double y, double z) : x_(x), y_(y), z_(z) {
-}
+// KOKKOS_FUNCTION
+// Vector::Vector(double x, double y, double z) : x_(x), y_(y), z_(z) {
+// }
 
 }  // namespace openturbine::rigid_pendulum

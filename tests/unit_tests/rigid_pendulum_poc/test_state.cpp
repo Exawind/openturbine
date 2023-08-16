@@ -102,11 +102,10 @@ TEST(MassMatrixTest, CreateMassMatrixWithGiven2DVector) {
     EXPECT_NEAR(mass_matrix.GetMass(), 1., 1e-15);
 
     auto J = mass_matrix.GetPrincipalMomentsOfInertia();
-    auto principal_moments_of_inertia = HostView1D("principal_moments_of_inertia", 3);
-    principal_moments_of_inertia(0) = J.GetXComponent();
-    principal_moments_of_inertia(1) = J.GetYComponent();
-    principal_moments_of_inertia(2) = J.GetZComponent();
-    expect_kokkos_view_1D_equal(principal_moments_of_inertia, {22., 29., 36.});
+
+    EXPECT_NEAR(J.GetXComponent(), 22., 1.e-15);
+    EXPECT_NEAR(J.GetYComponent(), 29., 1.e-15);
+    EXPECT_NEAR(J.GetZComponent(), 36., 1.e-15);
 }
 
 TEST(MassMatrixTest, GetMomentOfInertiaMatrixFromMassMatrix) {
@@ -173,18 +172,14 @@ TEST(GeneralizedForcesTest, CreateGeneralizedForcesWithGiven1DVector) {
     expect_kokkos_view_1D_equal(generalized_forces.GetGeneralizedForces(), {1., 2., 3., 4., 5., 6.});
 
     auto f = generalized_forces.GetForces();
-    auto forces = HostView1D("forces", 3);
-    forces(0) = f.GetXComponent();
-    forces(1) = f.GetYComponent();
-    forces(2) = f.GetZComponent();
-    expect_kokkos_view_1D_equal(forces, {1., 2., 3.});
+    EXPECT_NEAR(f.GetXComponent(), 1., 1.e-15);
+    EXPECT_NEAR(f.GetYComponent(), 2., 1.e-15);
+    EXPECT_NEAR(f.GetZComponent(), 3., 1.e-15);
 
     auto m = generalized_forces.GetMoments();
-    auto moments = HostView1D("moments", 3);
-    moments(0) = m.GetXComponent();
-    moments(1) = m.GetYComponent();
-    moments(2) = m.GetZComponent();
-    expect_kokkos_view_1D_equal(moments, {4., 5., 6.});
+    EXPECT_NEAR(m.GetXComponent(), 4., 1.e-15);
+    EXPECT_NEAR(m.GetYComponent(), 5., 1.e-15);
+    EXPECT_NEAR(m.GetZComponent(), 6., 1.e-15);
 }
 
 TEST(GeneralizedForcesTest, ExpectGeneralizedForcesToThrowWhenGiven1DVectorIsInvalid) {
@@ -202,9 +197,16 @@ TEST(GeneralizedForcesTest, HeavyTopProblemFromBrulsAndCardona2010Paper) {
     auto J = mass_matrix.GetMomentOfInertiaMatrix();
     auto J_omega = multiply_matrix_with_vector(J, angular_velocity);
 
+    auto angular_velocity_host = Kokkos::create_mirror(angular_velocity);
+    Kokkos::deep_copy(angular_velocity_host, angular_velocity);
+
+    auto J_omega_host = Kokkos::create_mirror(J_omega);
+    Kokkos::deep_copy(J_omega_host, J_omega);
+
     auto angular_velocity_vector =
-        Vector(angular_velocity(0), angular_velocity(1), angular_velocity(2));
-    auto J_omega_vector = Vector(J_omega(0), J_omega(1), J_omega(2));
+        Vector(angular_velocity_host(0), angular_velocity_host(1), angular_velocity_host(2));
+    auto J_omega_vector = Vector(J_omega_host(0), J_omega_host(1), J_omega_host(2));
+
     auto moments = angular_velocity_vector.CrossProduct(J_omega_vector);
 
     auto generalized_forces = GeneralizedForces(forces, moments);

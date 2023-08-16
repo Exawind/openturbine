@@ -15,46 +15,46 @@ class HeavyTopLinearizationParameters : public LinearizationParameters {
 public:
     HeavyTopLinearizationParameters();
 
-    virtual HostView1D ResidualVector(
-        const HostView1D, const HostView1D, const HostView1D, const HostView1D
+    virtual Kokkos::View<double*> ResidualVector(
+        const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>
     ) override;
 
-    virtual HostView2D IterationMatrix(
-        const double&, const double&, const double&, const HostView1D, const HostView1D,
-        const HostView1D, const HostView1D, const HostView1D
+    virtual Kokkos::View<double**> IterationMatrix(
+        const double&, const double&, const double&, const Kokkos::View<double*>, const Kokkos::View<double*>,
+        const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>
     ) override;
 
     /// Calculates the generalized coordinates residual vector for the heavy top problem
-    HostView1D GeneralizedCoordinatesResidualVector(
-        const HostView2D, const HostView2D, const HostView1D, const HostView1D, const HostView1D,
-        const HostView1D reference_position_vector
+    Kokkos::View<double*> GeneralizedCoordinatesResidualVector(
+        const Kokkos::View<double**>, const Kokkos::View<double**>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>,
+        const Kokkos::View<double*> reference_position_vector
     );
 
     /// Calculates the constraint residual vector for the heavy top problem
-    HostView1D ConstraintsResidualVector(
-        const HostView2D, const HostView1D, const HostView1D reference_position_vector
+    Kokkos::View<double*> ConstraintsResidualVector(
+        const Kokkos::View<double**>, const Kokkos::View<double*>, const Kokkos::View<double*> reference_position_vector
     );
 
     /// Calculates the constraint gradient matrix for the heavy top problem
-    HostView2D ConstraintsGradientMatrix(
-        const HostView2D, const HostView1D reference_position_vector
+    Kokkos::View<double**> ConstraintsGradientMatrix(
+        const Kokkos::View<double**>, const Kokkos::View<double*> reference_position_vector
     );
 
     /// Calculates the tangent damping matrix for the heavy top problem
-    HostView2D TangentDampingMatrix(const HostView1D, const HostView2D);
+    Kokkos::View<double**> TangentDampingMatrix(const Kokkos::View<double*>, const Kokkos::View<double**>);
 
     /// Calculates the tangent stiffness matrix for the heavy top problem
-    HostView2D TangentStiffnessMatrix(
-        const HostView2D, const HostView1D, const HostView1D reference_position_vector
+    Kokkos::View<double**> TangentStiffnessMatrix(
+        const Kokkos::View<double**>, const Kokkos::View<double*>, const Kokkos::View<double*> reference_position_vector
     );
 
-    HostView2D TangentOperator(const HostView1D psi);
+    Kokkos::View<double**> TangentOperator(const Kokkos::View<double*> psi);
 
 private:
     MassMatrix mass_matrix_;
 
-    HostView2D CalculateRotationMatrix(const HostView1D);
-    HostView1D CalculateForces(MassMatrix, const HostView1D);
+    Kokkos::View<double**> CalculateRotationMatrix(const Kokkos::View<double*>);
+    Kokkos::View<double*> CalculateForces(MassMatrix, const Kokkos::View<double*>);
 };
 
 }  // namespace openturbine::rigid_pendulum

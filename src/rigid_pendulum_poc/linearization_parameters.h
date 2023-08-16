@@ -9,13 +9,13 @@ class LinearizationParameters {
 public:
     virtual ~LinearizationParameters() = default;
 
-    virtual HostView1D ResidualVector(
-        const HostView1D, const HostView1D, const HostView1D, const HostView1D
+    virtual Kokkos::View<double*> ResidualVector(
+        const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>
     ) = 0;
 
-    virtual HostView2D IterationMatrix(
-        const double&, const double&, const double&, const HostView1D, const HostView1D,
-        const HostView1D, const HostView1D, const HostView1D
+    virtual Kokkos::View<double**> IterationMatrix(
+        const double&, const double&, const double&, const Kokkos::View<double*>, const Kokkos::View<double*>,
+        const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>
     ) = 0;
 };
 
@@ -24,13 +24,13 @@ class UnityLinearizationParameters : public LinearizationParameters {
 public:
     UnityLinearizationParameters(){};
 
-    virtual HostView1D ResidualVector(
-        const HostView1D, const HostView1D, const HostView1D, const HostView1D
+    virtual Kokkos::View<double*> ResidualVector(
+        const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>
     ) override;
 
-    virtual HostView2D IterationMatrix(
-        const double&, const double&, const double&, const HostView1D, const HostView1D,
-        const HostView1D, const HostView1D, const HostView1D
+    virtual Kokkos::View<double**> IterationMatrix(
+        const double&, const double&, const double&, const Kokkos::View<double*>, const Kokkos::View<double*>,
+        const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>
     ) override;
 };
 
