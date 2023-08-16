@@ -170,7 +170,7 @@ TEST(GeneralizedAlphaTimeIntegratorTest, GetSuppliedGAConstants) {
     EXPECT_EQ(time_integrator.GetGamma(), 0.93);
 }
 
-TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
+TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceleration) {
     auto time_integrator =
         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 2, 1));
 
@@ -219,7 +219,7 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterTwoIncsWithZeroAcceleration) {
     );
 }
 
-TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroAccelerationVector) {
+TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialState) {
     auto time_integrator =
         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 1));
 
@@ -255,7 +255,7 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroAccelerationVect
     );
 }
 
-TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroStates) {
+TEST(TimeIntegratorTest, AlphaStepSolutionOfHeavyTopAfterOneInc) {
     // Initial State for the heavy top problem
     auto q0 = create_vector({1., 1., 1., 1., 1., 1., 1.});
     auto v0 = create_vector({2., 2., 2., 2., 2., 2.});
