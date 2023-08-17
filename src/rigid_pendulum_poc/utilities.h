@@ -57,10 +57,12 @@ Kokkos::View<double**> transpose_matrix(const Kokkos::View<double**>);
 Kokkos::View<double**> create_cross_product_matrix(const Kokkos::View<double*>);
 
 /// Multiplies an m x n matrix with an n x 1 vector and returns an m x 1 vector
-Kokkos::View<double*> multiply_matrix_with_vector(const Kokkos::View<double**>, const Kokkos::View<double*>);
+Kokkos::View<double*>
+multiply_matrix_with_vector(const Kokkos::View<double**>, const Kokkos::View<double*>);
 
 /// Multiplies an m x n matrix with an n x p matrix and returns an m x p matrix
-Kokkos::View<double**> multiply_matrix_with_matrix(const Kokkos::View<double**>, const Kokkos::View<double**>);
+Kokkos::View<double**>
+multiply_matrix_with_matrix(const Kokkos::View<double**>, const Kokkos::View<double**>);
 
 /// Multiplies an m x n matrix with a scalar and returns an m x n matrix
 Kokkos::View<double**> multiply_matrix_with_scalar(const Kokkos::View<double**>, double);

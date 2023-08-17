@@ -53,7 +53,8 @@ public:
     );
 
     /// Computes the updated generalized coordinates based on the non-linear update
-    Kokkos::View<double*> UpdateGeneralizedCoordinates(const Kokkos::View<double*>, const Kokkos::View<double*>);
+    Kokkos::View<double*>
+    UpdateGeneralizedCoordinates(const Kokkos::View<double*>, const Kokkos::View<double*>);
 
     /// Checks convergence of the non-linear solution based on the residuals
     bool CheckConvergence(const Kokkos::View<double*>);

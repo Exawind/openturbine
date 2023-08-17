@@ -6,13 +6,11 @@
 
 namespace openturbine::rigid_pendulum {
 
-using ResidualVector = std::function<
-    Kokkos::View<double*>(const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>)>;
+using ResidualVector = std::function<Kokkos::View<
+    double*>(const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>)>;
 
-using IterationMatrix = std::function<Kokkos::View<double**>(
-    const double&, const double&, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>,
-    const double&, const Kokkos::View<double*>
-)>;
+using IterationMatrix = std::function<Kokkos::View<
+    double**>(const double&, const double&, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const double&, const Kokkos::View<double*>)>;
 
 // An enum class to indicate the type of time integrator
 enum class TimeIntegratorType {

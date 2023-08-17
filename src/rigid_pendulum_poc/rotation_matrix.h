@@ -3,9 +3,8 @@
 #include <Kokkos_Core.hpp>
 
 namespace openturbine::rigid_pendulum {
-    
-class RotationMatrix
-{
+
+class RotationMatrix {
 public:
     KOKKOS_FUNCTION
     RotationMatrix() {
@@ -23,7 +22,10 @@ public:
     }
 
     KOKKOS_FUNCTION
-    RotationMatrix(double d00, double d01, double d02, double d10, double d11, double d12, double d20, double d21, double d22) {
+    RotationMatrix(
+        double d00, double d01, double d02, double d10, double d11, double d12, double d20,
+        double d21, double d22
+    ) {
         data[0][0] = d00;
         data[0][1] = d01;
         data[0][2] = d02;
@@ -38,15 +40,11 @@ public:
     }
 
     KOKKOS_FUNCTION
-    const double& operator()(int i, int j) const {
-        return data[i][j];
-    }
+    const double& operator()(int i, int j) const { return data[i][j]; }
 
     KOKKOS_FUNCTION
-    double& operator()(int i, int j) {
-        return data[i][j];
-    }
+    double& operator()(int i, int j) { return data[i][j]; }
     double data[3][3];
 };
 
-}
+}  // namespace openturbine::rigid_pendulum

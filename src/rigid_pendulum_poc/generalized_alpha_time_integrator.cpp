@@ -2,8 +2,8 @@
 
 #include "src/rigid_pendulum_poc/heavy_top.h"
 #include "src/rigid_pendulum_poc/quaternion.h"
-#include "src/rigid_pendulum_poc/vector.h"
 #include "src/rigid_pendulum_poc/solver.h"
+#include "src/rigid_pendulum_poc/vector.h"
 #include "src/utilities/log.h"
 
 namespace openturbine::rigid_pendulum {
@@ -282,14 +282,15 @@ Kokkos::View<double*> GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinat
         //
         // Step 1: R^3 update, done with vector addition
         auto current_position = Vector{gen_coords(0), gen_coords(1), gen_coords(2)};
-        auto updated_position = Vector{delta_gen_coords(0), delta_gen_coords(1), delta_gen_coords(2)};
+        auto updated_position =
+            Vector{delta_gen_coords(0), delta_gen_coords(1), delta_gen_coords(2)};
         auto r = current_position + (updated_position * h);
 
         // Step 2: SO(3) update, done with quaternion composition
         Quaternion current_orientation{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)};
         auto updated_orientation = quaternion_from_rotation_vector(
-        // Convert Vector -> Quaternion via exponential mapping
-        Vector{delta_gen_coords(3), delta_gen_coords(4), delta_gen_coords(5)} * h
+            // Convert Vector -> Quaternion via exponential mapping
+            Vector{delta_gen_coords(3), delta_gen_coords(4), delta_gen_coords(5)} * h
         );
         auto q = current_orientation * updated_orientation;
 
@@ -321,9 +322,8 @@ Kokkos::View<double*> GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinat
     // auto q = current_orientation * updated_orientation;
 
     // // Construct the updated generalized coordinates from position and orientation vectors
-    // auto gen_coords_next = Kokkos::View<double*>("generalized_coordinates_next", gen_coords.size());
-    // constexpr int numComponents = 7;
-    // double components[numComponents] = {
+    // auto gen_coords_next = Kokkos::View<double*>("generalized_coordinates_next",
+    // gen_coords.size()); constexpr int numComponents = 7; double components[numComponents] = {
     //     r.GetXComponent(),       // component 1
     //     r.GetYComponent(),       // component 2
     //     r.GetZComponent(),       // component 3

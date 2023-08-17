@@ -10,7 +10,9 @@ HeavyTopLinearizationParameters::HeavyTopLinearizationParameters() {
     this->mass_matrix_ = MassMatrix(15., Vector(0.234375, 0.46875, 0.234375));
 }
 
-Kokkos::View<double**> HeavyTopLinearizationParameters::CalculateRotationMatrix(const Kokkos::View<double*> gen_coords) {
+Kokkos::View<double**> HeavyTopLinearizationParameters::CalculateRotationMatrix(
+    const Kokkos::View<double*> gen_coords
+) {
     auto gen_coords_host = Kokkos::create_mirror(gen_coords);
     Kokkos::deep_copy(gen_coords_host, gen_coords);
     // Convert the quaternion representing orientation -> rotation matrix
@@ -18,9 +20,11 @@ Kokkos::View<double**> HeavyTopLinearizationParameters::CalculateRotationMatrix(
         // Create quaternion from appropriate components of generalized coordinates
         Quaternion{gen_coords_host(3), gen_coords_host(4), gen_coords_host(5), gen_coords_host(6)}
     );
-    auto rotation_matrix = create_matrix({{RM(0,0), RM(0,1), RM(0,2)}, 
-                                          {RM(1,0), RM(1,1), RM(1,2)},
-                                          {RM(2,0), RM(2,1), RM(2,2)}});
+    auto rotation_matrix = create_matrix(
+        {{RM(0, 0), RM(0, 1), RM(0, 2)},
+         {RM(1, 0), RM(1, 1), RM(1, 2)},
+         {RM(2, 0), RM(2, 1), RM(2, 2)}}
+    );
 
     return rotation_matrix;
 }
@@ -61,8 +65,8 @@ Kokkos::View<double*> HeavyTopLinearizationParameters::CalculateForces(
 }
 
 Kokkos::View<double*> HeavyTopLinearizationParameters::ResidualVector(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
-    const Kokkos::View<double*> lagrange_multipliers
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> velocity,
+    const Kokkos::View<double*> acceleration, const Kokkos::View<double*> lagrange_multipliers
 ) {
     // The residual vector for the generalized coordinates is given by
     // {residual} = {
@@ -119,7 +123,8 @@ Kokkos::View<double*> HeavyTopLinearizationParameters::ResidualVector(
 Kokkos::View<double*> HeavyTopLinearizationParameters::GeneralizedCoordinatesResidualVector(
     const Kokkos::View<double**> mass_matrix, const Kokkos::View<double**> rotation_matrix,
     const Kokkos::View<double*> acceleration_vector, const Kokkos::View<double*> gen_forces_vector,
-    const Kokkos::View<double*> lagrange_multipliers, const Kokkos::View<double*> reference_position_vector
+    const Kokkos::View<double*> lagrange_multipliers,
+    const Kokkos::View<double*> reference_position_vector
 ) {
     // The residual vector for the generalized coordinates is given by
     // {residual_gen_coords} = [M(q)] {v'} + {g(q,v,t)} + [B(q)]T {Lambda}
@@ -174,7 +179,8 @@ Kokkos::View<double*> HeavyTopLinearizationParameters::ConstraintsResidualVector
 }
 
 Kokkos::View<double**> HeavyTopLinearizationParameters::ConstraintsGradientMatrix(
-    const Kokkos::View<double**> rotation_matrix, const Kokkos::View<double*> reference_position_vector
+    const Kokkos::View<double**> rotation_matrix,
+    const Kokkos::View<double*> reference_position_vector
 ) {
     // Constraint gradient matrix for the heavy top problem is given by
     // [B] = [ -I_3x3    -[R ~{X}] ]
@@ -200,8 +206,9 @@ Kokkos::View<double**> HeavyTopLinearizationParameters::ConstraintsGradientMatri
 
 Kokkos::View<double**> HeavyTopLinearizationParameters::IterationMatrix(
     const double& h, const double& BETA_PRIME, const double& GAMMA_PRIME,
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> delta_gen_coords, const Kokkos::View<double*> velocity,
-    [[maybe_unused]] const Kokkos::View<double*> acceleration, const Kokkos::View<double*> lagrange_mults
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> delta_gen_coords,
+    const Kokkos::View<double*> velocity, [[maybe_unused]] const Kokkos::View<double*> acceleration,
+    const Kokkos::View<double*> lagrange_mults
 ) {
     // Iteration matrix for the heavy top problem is given by
     // [iteration matrix] = [
@@ -234,8 +241,10 @@ Kokkos::View<double**> HeavyTopLinearizationParameters::IterationMatrix(
     auto gen_coords_host = Kokkos::create_mirror(gen_coords);
     Kokkos::deep_copy(gen_coords_host, gen_coords);
 
-    auto angular_velocity_vector = create_vector({velocity_host(3), velocity_host(4), velocity_host(5)});
-    auto position_vector = create_vector({gen_coords_host(0), gen_coords_host(1), gen_coords_host(2)});
+    auto angular_velocity_vector =
+        create_vector({velocity_host(3), velocity_host(4), velocity_host(5)});
+    auto position_vector =
+        create_vector({gen_coords_host(0), gen_coords_host(1), gen_coords_host(2)});
     const Kokkos::View<double*> reference_position_vector = create_vector({0., 1., 0});
 
     auto tangent_damping_matrix =
@@ -278,9 +287,7 @@ Kokkos::View<double**> HeavyTopLinearizationParameters::IterationMatrix(
 
     auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", size, size);
     Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {size, size}
-        ),
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {size, size}),
         KOKKOS_LAMBDA(const size_t i, const size_t j) {
             if (i < size_dofs && j < size_dofs) {
                 iteration_matrix(i, j) = element1(i, j);
@@ -365,12 +372,15 @@ Kokkos::View<double**> HeavyTopLinearizationParameters::TangentStiffnessMatrix(
     return tangent_stiffness_matrix;
 }
 
-Kokkos::View<double**> HeavyTopLinearizationParameters::TangentOperator(const Kokkos::View<double*> psi) {
+Kokkos::View<double**> HeavyTopLinearizationParameters::TangentOperator(
+    const Kokkos::View<double*> psi
+) {
     const double tol = 1e-16;
-    
+
     auto psi_host = Kokkos::create_mirror(psi);
     Kokkos::deep_copy(psi_host, psi);
-    const double phi = std::sqrt(psi_host(0) * psi_host(0) + psi_host(1) * psi_host(1) + psi_host(2) * psi_host(2));
+    const double phi =
+        std::sqrt(psi_host(0) * psi_host(0) + psi_host(1) * psi_host(1) + psi_host(2) * psi_host(2));
 
     auto tangent_operator = Kokkos::View<double**>("tangent_operator", 6, 6);
     Kokkos::parallel_for(

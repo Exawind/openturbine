@@ -67,7 +67,7 @@ Kokkos::View<double*> create_vector(const std::vector<double>& values) {
     auto vector = Kokkos::View<double*>("vector", values.size());
     auto vector_host = Kokkos::create_mirror(vector);
 
-    for(unsigned index = 0; index < values.size(); ++index) {
+    for (unsigned index = 0; index < values.size(); ++index) {
         vector_host(index) = values[index];
     }
     Kokkos::deep_copy(vector, vector_host);
@@ -79,8 +79,8 @@ Kokkos::View<double**> create_matrix(const std::vector<std::vector<double>>& val
     auto matrix = Kokkos::View<double**>("matrix", values.size(), values.front().size());
     auto matrix_host = Kokkos::create_mirror(matrix);
 
-    for(unsigned row = 0; row < values.size(); ++row) {
-        for(unsigned column = 0; column < values.front().size(); ++column) {
+    for (unsigned row = 0; row < values.size(); ++row) {
+        for (unsigned column = 0; column < values.front().size(); ++column) {
             matrix_host(row, column) = values[row][column];
         }
     }
@@ -90,7 +90,8 @@ Kokkos::View<double**> create_matrix(const std::vector<std::vector<double>>& val
 }
 
 Kokkos::View<double**> transpose_matrix(const Kokkos::View<double**> matrix) {
-    auto transposed_matrix = Kokkos::View<double**>("transposed_matrix", matrix.extent(1), matrix.extent(0));
+    auto transposed_matrix =
+        Kokkos::View<double**>("transposed_matrix", matrix.extent(1), matrix.extent(0));
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {matrix.extent(1), matrix.extent(0)}
     );
@@ -120,13 +121,15 @@ Kokkos::View<double**> create_cross_product_matrix(const Kokkos::View<double*> v
         matrix(2, 1) = vector(0);
         matrix(2, 2) = 0.;
     };
-    
+
     Kokkos::parallel_for(1, populate_matrix);
 
     return matrix;
 }
 
-Kokkos::View<double*> multiply_matrix_with_vector(const Kokkos::View<double**> matrix, const Kokkos::View<double*> vector) {
+Kokkos::View<double*> multiply_matrix_with_vector(
+    const Kokkos::View<double**> matrix, const Kokkos::View<double*> vector
+) {
     if (matrix.extent(1) != vector.extent(0)) {
         throw std::invalid_argument(
             "The number of columns of the matrix must be equal to the number of rows of the vector"
@@ -148,7 +151,9 @@ Kokkos::View<double*> multiply_matrix_with_vector(const Kokkos::View<double**> m
     return result;
 }
 
-Kokkos::View<double**> multiply_matrix_with_matrix(const Kokkos::View<double**> matrix_a, const Kokkos::View<double**> matrix_b) {
+Kokkos::View<double**> multiply_matrix_with_matrix(
+    const Kokkos::View<double**> matrix_a, const Kokkos::View<double**> matrix_b
+) {
     auto a_n_columns = matrix_a.extent(1);
     auto b_n_rows = matrix_b.extent(0);
 
@@ -178,7 +183,9 @@ Kokkos::View<double**> multiply_matrix_with_matrix(const Kokkos::View<double**> 
     return result;
 }
 
-Kokkos::View<double**> multiply_matrix_with_scalar(const Kokkos::View<double**> matrix, double scalar) {
+Kokkos::View<double**> multiply_matrix_with_scalar(
+    const Kokkos::View<double**> matrix, double scalar
+) {
     auto result = Kokkos::View<double**>("result", matrix.extent(0), matrix.extent(1));
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {matrix.extent(0), matrix.extent(1)}

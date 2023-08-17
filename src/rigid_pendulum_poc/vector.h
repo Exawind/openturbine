@@ -14,8 +14,7 @@ public:
     /// Constructs a vector based on provided values - if none provided, the vector is
     /// initialized to a null vector
     KOKKOS_FUNCTION
-    Vector(double x = 0., double y = 0., double z = 0.) : x_(x), y_(y), z_(z) {
-    }
+    Vector(double x = 0., double y = 0., double z = 0.) : x_(x), y_(y), z_(z) {}
 
     /// Returns the values of the vector
     std::tuple<double, double, double> GetComponents() const { return {x_, y_, z_}; }
@@ -82,9 +81,7 @@ public:
 
     /// Returns a unit vector in the same direction as this vector
     KOKKOS_FUNCTION
-    inline Vector GetUnitVector() const {
-        return *this / this->Length();
-    }
+    inline Vector GetUnitVector() const { return *this / this->Length(); }
 
     /// Calculates the dot product of provided vector with this vector
     KOKKOS_FUNCTION

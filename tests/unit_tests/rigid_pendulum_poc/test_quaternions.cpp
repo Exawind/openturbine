@@ -382,17 +382,17 @@ TEST_P(QuaternionTest, ConvertQuaternionToRotationMatrix) {
     // Convert quaternion to rotation matrix and compare to expected rotation matrix
     auto R_from_q = quaternion_to_rotation_matrix(q);
 
-    EXPECT_NEAR(R_from_q(0,0), R(0,0), 1e-6);
-    EXPECT_NEAR(R_from_q(0,1), R(0,1), 1e-6);
-    EXPECT_NEAR(R_from_q(0,2), R(0,2), 1e-6);
+    EXPECT_NEAR(R_from_q(0, 0), R(0, 0), 1e-6);
+    EXPECT_NEAR(R_from_q(0, 1), R(0, 1), 1e-6);
+    EXPECT_NEAR(R_from_q(0, 2), R(0, 2), 1e-6);
 
-    EXPECT_NEAR(R_from_q(1,0), R(1,0), 1e-6);
-    EXPECT_NEAR(R_from_q(1,1), R(1,1), 1e-6);
-    EXPECT_NEAR(R_from_q(1,2), R(1,2), 1e-6);
+    EXPECT_NEAR(R_from_q(1, 0), R(1, 0), 1e-6);
+    EXPECT_NEAR(R_from_q(1, 1), R(1, 1), 1e-6);
+    EXPECT_NEAR(R_from_q(1, 2), R(1, 2), 1e-6);
 
-    EXPECT_NEAR(R_from_q(2,0), R(2,0), 1e-6);
-    EXPECT_NEAR(R_from_q(2,1), R(2,1), 1e-6);
-    EXPECT_NEAR(R_from_q(2,2), R(2,2), 1e-6);
+    EXPECT_NEAR(R_from_q(2, 0), R(2, 0), 1e-6);
+    EXPECT_NEAR(R_from_q(2, 1), R(2, 1), 1e-6);
+    EXPECT_NEAR(R_from_q(2, 2), R(2, 2), 1e-6);
 }
 
 TEST_P(QuaternionTest, RotateSameVectorWithQuaternionAndRotationMatrix) {
@@ -456,17 +456,17 @@ TEST_P(QuaternionTest, ConvertQuaternionBackToRotationMatrix) {
     // Convert quaternion back to rotation matrix and compare with original
     auto R_from_q = quaternion_to_rotation_matrix(q);
 
-    EXPECT_NEAR(R_from_q(0,0), R(0,0), 1e-6);
-    EXPECT_NEAR(R_from_q(0,1), R(0,1), 1e-6);
-    EXPECT_NEAR(R_from_q(0,2), R(0,2), 1e-6);
+    EXPECT_NEAR(R_from_q(0, 0), R(0, 0), 1e-6);
+    EXPECT_NEAR(R_from_q(0, 1), R(0, 1), 1e-6);
+    EXPECT_NEAR(R_from_q(0, 2), R(0, 2), 1e-6);
 
-    EXPECT_NEAR(R_from_q(1,0), R(1,0), 1e-6);
-    EXPECT_NEAR(R_from_q(1,1), R(1,1), 1e-6);
-    EXPECT_NEAR(R_from_q(1,2), R(1,2), 1e-6);
+    EXPECT_NEAR(R_from_q(1, 0), R(1, 0), 1e-6);
+    EXPECT_NEAR(R_from_q(1, 1), R(1, 1), 1e-6);
+    EXPECT_NEAR(R_from_q(1, 2), R(1, 2), 1e-6);
 
-    EXPECT_NEAR(R_from_q(2,0), R(2,0), 1e-6);
-    EXPECT_NEAR(R_from_q(2,1), R(2,1), 1e-6);
-    EXPECT_NEAR(R_from_q(2,2), R(2,2), 1e-6);
+    EXPECT_NEAR(R_from_q(2, 0), R(2, 0), 1e-6);
+    EXPECT_NEAR(R_from_q(2, 1), R(2, 1), 1e-6);
+    EXPECT_NEAR(R_from_q(2, 2), R(2, 2), 1e-6);
 }
 
 INSTANTIATE_TEST_SUITE_P(

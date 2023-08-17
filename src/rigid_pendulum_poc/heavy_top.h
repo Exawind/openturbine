@@ -15,24 +15,25 @@ class HeavyTopLinearizationParameters : public LinearizationParameters {
 public:
     HeavyTopLinearizationParameters();
 
-    virtual Kokkos::View<double*> ResidualVector(
-        const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>
-    ) override;
+    virtual Kokkos::View<double*>
+    ResidualVector(const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>)
+        override;
 
-    virtual Kokkos::View<double**> IterationMatrix(
-        const double&, const double&, const double&, const Kokkos::View<double*>, const Kokkos::View<double*>,
-        const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>
-    ) override;
+    virtual Kokkos::View<double**>
+    IterationMatrix(const double&, const double&, const double&, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>)
+        override;
 
     /// Calculates the generalized coordinates residual vector for the heavy top problem
     Kokkos::View<double*> GeneralizedCoordinatesResidualVector(
-        const Kokkos::View<double**>, const Kokkos::View<double**>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>,
+        const Kokkos::View<double**>, const Kokkos::View<double**>, const Kokkos::View<double*>,
+        const Kokkos::View<double*>, const Kokkos::View<double*>,
         const Kokkos::View<double*> reference_position_vector
     );
 
     /// Calculates the constraint residual vector for the heavy top problem
     Kokkos::View<double*> ConstraintsResidualVector(
-        const Kokkos::View<double**>, const Kokkos::View<double*>, const Kokkos::View<double*> reference_position_vector
+        const Kokkos::View<double**>, const Kokkos::View<double*>,
+        const Kokkos::View<double*> reference_position_vector
     );
 
     /// Calculates the constraint gradient matrix for the heavy top problem
@@ -41,11 +42,13 @@ public:
     );
 
     /// Calculates the tangent damping matrix for the heavy top problem
-    Kokkos::View<double**> TangentDampingMatrix(const Kokkos::View<double*>, const Kokkos::View<double**>);
+    Kokkos::View<double**>
+    TangentDampingMatrix(const Kokkos::View<double*>, const Kokkos::View<double**>);
 
     /// Calculates the tangent stiffness matrix for the heavy top problem
     Kokkos::View<double**> TangentStiffnessMatrix(
-        const Kokkos::View<double**>, const Kokkos::View<double*>, const Kokkos::View<double*> reference_position_vector
+        const Kokkos::View<double**>, const Kokkos::View<double*>,
+        const Kokkos::View<double*> reference_position_vector
     );
 
     Kokkos::View<double**> TangentOperator(const Kokkos::View<double*> psi);

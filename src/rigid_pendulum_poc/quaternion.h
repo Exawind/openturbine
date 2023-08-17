@@ -3,9 +3,9 @@
 #include <cmath>
 #include <tuple>
 
+#include "src/rigid_pendulum_poc/rotation_matrix.h"
 #include "src/rigid_pendulum_poc/utilities.h"
 #include "src/rigid_pendulum_poc/vector.h"
-#include "src/rigid_pendulum_poc/rotation_matrix.h"
 
 namespace openturbine::rigid_pendulum {
 
@@ -15,9 +15,8 @@ public:
     /// Constructs a quaternion based on provided values - if none provided, the quaternion is
     /// initialized to a null quaternion
     KOKKOS_FUNCTION
-    Quaternion(double q0 = 0., double q1 = 0., double q2 = 0., double q3 = 0.) 
-    : q0_(q0), q1_(q1), q2_(q2), q3_(q3) {
-    }  
+    Quaternion(double q0 = 0., double q1 = 0., double q2 = 0., double q3 = 0.)
+        : q0_(q0), q1_(q1), q2_(q2), q3_(q3) {}
 
     /// Returns the values of the quaternion
     std::tuple<double, double, double, double> GetComponents() const { return {q0_, q1_, q2_, q3_}; }

@@ -9,7 +9,10 @@ State::State()
       algorithmic_acceleration_("algorithmic_accelerations", 1) {
 }
 
-State::State(Kokkos::View<double*> q, Kokkos::View<double*> v, Kokkos::View<double*> v_dot, Kokkos::View<double*> a)
+State::State(
+    Kokkos::View<double*> q, Kokkos::View<double*> v, Kokkos::View<double*> v_dot,
+    Kokkos::View<double*> a
+)
     : generalized_coords_("generalized_coordinates", q.size()),
       velocity_("velocities", v.size()),
       acceleration_("accelerations", v_dot.size()),
@@ -93,8 +96,10 @@ GeneralizedForces::GeneralizedForces(Kokkos::View<double*> generalized_forces)
     Kokkos::deep_copy(generalized_forces_, generalized_forces);
     auto generalized_forces_host = Kokkos::create_mirror(generalized_forces_);
     Kokkos::deep_copy(generalized_forces_host, generalized_forces_);
-    this->forces_ = Vector(generalized_forces_host(0), generalized_forces_host(1), generalized_forces_host(2));
-    this->moments_ = Vector(generalized_forces_host(3), generalized_forces_host(4), generalized_forces_host(5));
+    this->forces_ =
+        Vector(generalized_forces_host(0), generalized_forces_host(1), generalized_forces_host(2));
+    this->moments_ =
+        Vector(generalized_forces_host(3), generalized_forces_host(4), generalized_forces_host(5));
 }
 
 }  // namespace openturbine::rigid_pendulum

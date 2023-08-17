@@ -23,12 +23,14 @@ public:
     inline Kokkos::View<double*> GetAcceleration() const { return acceleration_; }
 
     /// Returns the algorithmic accelerations vector
-    inline Kokkos::View<double*> GetAlgorithmicAcceleration() const { return algorithmic_acceleration_; }
+    inline Kokkos::View<double*> GetAlgorithmicAcceleration() const {
+        return algorithmic_acceleration_;
+    }
 
 private:
-    Kokkos::View<double*> generalized_coords_;        //< Generalized coordinates
-    Kokkos::View<double*> velocity_;                  //< Velocity vector
-    Kokkos::View<double*> acceleration_;              //< First time derivative of the velocity vector
+    Kokkos::View<double*> generalized_coords_;  //< Generalized coordinates
+    Kokkos::View<double*> velocity_;            //< Velocity vector
+    Kokkos::View<double*> acceleration_;        //< First time derivative of the velocity vector
     Kokkos::View<double*> algorithmic_acceleration_;  //< Algorithmic accelerations
 };
 
@@ -87,7 +89,8 @@ private:
     Vector forces_;   //< force vector
     Vector moments_;  //< moment vector
 
-    Kokkos::View<double*> generalized_forces_;  //< Generalized forces (combined forces and moments vector)
+    Kokkos::View<double*>
+        generalized_forces_;  //< Generalized forces (combined forces and moments vector)
 };
 
 }  // namespace openturbine::rigid_pendulum

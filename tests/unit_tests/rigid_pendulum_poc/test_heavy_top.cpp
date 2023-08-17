@@ -195,9 +195,9 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateIterationMatrix) 
     auto initial_position_host = Kokkos::create_mirror(initial_position);
     Kokkos::deep_copy(initial_position_host, initial_position);
     auto gen_coords = create_vector({
-        initial_position_host(0),                       // component 1
-        initial_position_host(1),                       // component 2
-        initial_position_host(2),                       // component 3
+        initial_position_host(0),                  // component 1
+        initial_position_host(1),                  // component 2
+        initial_position_host(2),                  // component 3
         initial_orientation.GetScalarComponent(),  // component 4
         initial_orientation.GetXComponent(),       // component 5
         initial_orientation.GetYComponent(),       // component 6
@@ -280,14 +280,14 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterTenS
     auto initial_position = multiply_matrix_with_vector(rot0, X0);
     auto initial_orientation =
         rotation_matrix_to_quaternion(RotationMatrix(1., 0., 0., 0., 1., 0., 0., 0., 1.));
-    
+
     auto initial_position_host = Kokkos::create_mirror(initial_position);
     Kokkos::deep_copy(initial_position_host, initial_position);
 
     auto q0 = create_vector({
-        initial_position_host(0),                       // component 1
-        initial_position_host(1),                       // component 2
-        initial_position_host(2),                       // component 3
+        initial_position_host(0),                  // component 1
+        initial_position_host(1),                  // component 2
+        initial_position_host(2),                  // component 3
         initial_orientation.GetScalarComponent(),  // component 4
         initial_orientation.GetXComponent(),       // component 5
         initial_orientation.GetYComponent(),       // component 6
