@@ -305,38 +305,6 @@ Kokkos::View<double*> GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinat
 
     Kokkos::parallel_for(1, update_generalized_coordinates);
 
-    // {gen_coords_next} = {gen_coords} + h * {delta_gen_coords}
-    //
-    // Step 1: R^3 update, done with vector addition
-    // auto current_position = Vector{gen_coords(0), gen_coords(1), gen_coords(2)};
-    // auto updated_position = Vector{delta_gen_coords(0), delta_gen_coords(1), delta_gen_coords(2)};
-    // const auto h = this->time_stepper_.GetTimeStep();
-    // auto r = current_position + (updated_position * h);
-
-    // // Step 2: SO(3) update, done with quaternion composition
-    // Quaternion current_orientation{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)};
-    // auto updated_orientation = quaternion_from_rotation_vector(
-    //     // Convert Vector -> Quaternion via exponential mapping
-    //     Vector{delta_gen_coords(3), delta_gen_coords(4), delta_gen_coords(5)} * h
-    // );
-    // auto q = current_orientation * updated_orientation;
-
-    // // Construct the updated generalized coordinates from position and orientation vectors
-    // auto gen_coords_next = Kokkos::View<double*>("generalized_coordinates_next",
-    // gen_coords.size()); constexpr int numComponents = 7; double components[numComponents] = {
-    //     r.GetXComponent(),       // component 1
-    //     r.GetYComponent(),       // component 2
-    //     r.GetZComponent(),       // component 3
-    //     q.GetScalarComponent(),  // component 4
-    //     q.GetXComponent(),       // component 5
-    //     q.GetYComponent(),       // component 6
-    //     q.GetZComponent()        // component 7
-    // };
-
-    // Kokkos::parallel_for(
-    //     gen_coords.size(), KOKKOS_LAMBDA(const size_t i) { gen_coords_next(i) = components[i]; }
-    // );
-
     return gen_coords_next;
 }
 
