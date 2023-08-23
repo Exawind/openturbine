@@ -1,5 +1,6 @@
 
 # Add subdirectories for unit tests
+add_subdirectory(gebt_poc)
 add_subdirectory(rigid_pendulum_poc)
 
 target_sources(
