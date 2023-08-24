@@ -2,6 +2,7 @@
 
 #include "src/rigid_pendulum_poc/generalized_alpha_time_integrator.h"
 #include "src/rigid_pendulum_poc/heavy_top.h"
+#include "src/rigid_pendulum_poc/rotation_matrix.h"
 #include "tests/unit_tests/rigid_pendulum_poc/test_utilities.h"
 
 namespace openturbine::rigid_pendulum::tests {
@@ -189,11 +190,14 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, CalculateIterationMatrix) 
     auto rot0 = create_matrix({{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}});
     auto initial_position = multiply_matrix_with_vector(rot0, X0);
     auto initial_orientation =
-        rotation_matrix_to_quaternion(RotationMatrix{{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}});
+        rotation_matrix_to_quaternion(RotationMatrix(1., 0., 0., 0., 1., 0., 0., 0., 1.));
+
+    auto initial_position_host = Kokkos::create_mirror(initial_position);
+    Kokkos::deep_copy(initial_position_host, initial_position);
     auto gen_coords = create_vector({
-        initial_position(0),                       // component 1
-        initial_position(1),                       // component 2
-        initial_position(2),                       // component 3
+        initial_position_host(0),                  // component 1
+        initial_position_host(1),                  // component 2
+        initial_position_host(2),                  // component 3
         initial_orientation.GetScalarComponent(),  // component 4
         initial_orientation.GetXComponent(),       // component 5
         initial_orientation.GetYComponent(),       // component 6
@@ -275,11 +279,15 @@ TEST(HeavyTopProblemFromBrulsAndCardona2010PaperTest, AlphaStepSolutionAfterTenS
     // Convert the above into initial State for the heavy top problem
     auto initial_position = multiply_matrix_with_vector(rot0, X0);
     auto initial_orientation =
-        rotation_matrix_to_quaternion(RotationMatrix{{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}});
+        rotation_matrix_to_quaternion(RotationMatrix(1., 0., 0., 0., 1., 0., 0., 0., 1.));
+
+    auto initial_position_host = Kokkos::create_mirror(initial_position);
+    Kokkos::deep_copy(initial_position_host, initial_position);
+
     auto q0 = create_vector({
-        initial_position(0),                       // component 1
-        initial_position(1),                       // component 2
-        initial_position(2),                       // component 3
+        initial_position_host(0),                  // component 1
+        initial_position_host(1),                  // component 2
+        initial_position_host(2),                  // component 3
         initial_orientation.GetScalarComponent(),  // component 4
         initial_orientation.GetXComponent(),       // component 5
         initial_orientation.GetYComponent(),       // component 6

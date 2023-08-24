@@ -8,6 +8,7 @@ target_sources(
     test_linear_systems_solver.cpp
     test_math_utilities.cpp
     test_quaternions.cpp
+    test_rotation_matrix.cpp
     test_state.cpp
     test_time_stepper.cpp
     test_utilities.cpp

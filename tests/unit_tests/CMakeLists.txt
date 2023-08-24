@@ -26,8 +26,9 @@ target_link_libraries(${oturb_unit_test_exe_name} PRIVATE ${oturb_lib_name})
 
 # Link Kokkos to test target
 find_package(Kokkos REQUIRED)
+find_package(KokkosKernels REQUIRED)
 find_package(LAPACK REQUIRED)
-target_link_libraries(${oturb_unit_test_exe_name} PRIVATE Kokkos::kokkos LAPACK::LAPACK lapacke lapack blas)
+target_link_libraries(${oturb_unit_test_exe_name} PRIVATE Kokkos::kokkos Kokkos::kokkoskernels LAPACK::LAPACK lapacke lapack blas)
 
 # Define what we want to be installed during a make install
 install(TARGETS ${oturb_unit_test_exe_name}

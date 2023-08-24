@@ -9,14 +9,11 @@ class LinearizationParameters {
 public:
     virtual ~LinearizationParameters() = default;
 
-    virtual HostView1D ResidualVector(
-        const HostView1D, const HostView1D, const HostView1D, const HostView1D
-    ) = 0;
+    virtual Kokkos::View<double*>
+    ResidualVector(const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>) = 0;
 
-    virtual HostView2D IterationMatrix(
-        const double&, const double&, const double&, const HostView1D, const HostView1D,
-        const HostView1D, const HostView1D, const HostView1D
-    ) = 0;
+    virtual Kokkos::View<double**>
+    IterationMatrix(const double&, const double&, const double&, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>) = 0;
 };
 
 /// Defines a unity residual vector and identity iteration matrix
@@ -24,14 +21,13 @@ class UnityLinearizationParameters : public LinearizationParameters {
 public:
     UnityLinearizationParameters(){};
 
-    virtual HostView1D ResidualVector(
-        const HostView1D, const HostView1D, const HostView1D, const HostView1D
-    ) override;
+    virtual Kokkos::View<double*>
+    ResidualVector(const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>)
+        override;
 
-    virtual HostView2D IterationMatrix(
-        const double&, const double&, const double&, const HostView1D, const HostView1D,
-        const HostView1D, const HostView1D, const HostView1D
-    ) override;
+    virtual Kokkos::View<double**>
+    IterationMatrix(const double&, const double&, const double&, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>, const Kokkos::View<double*>)
+        override;
 };
 
 }  // namespace openturbine::rigid_pendulum

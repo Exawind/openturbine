@@ -109,12 +109,6 @@ TEST(VectorTest, GetUnitVectorFromAProvidedVector) {
     ASSERT_EQ(v2.GetComponents(), expected);
 }
 
-TEST(VectorTest, ExpectExceptionWhenGettingUnitVectorFromNullVector) {
-    Vector v1(0., 0., 0.);
-
-    ASSERT_THROW(v1.GetUnitVector(), std::runtime_error);
-}
-
 TEST(VectorTest, DotProduct_Set1) {
     Vector v1(1., 2., 3.);
     Vector v2(4., 5., 6.);

@@ -6,50 +6,48 @@
 
 namespace openturbine::rigid_pendulum::tests {
 
-HostView2D create_diagonal_matrix(const std::vector<double>& values) {
-    auto matrix = HostView2D("matrix", values.size(), values.size());
-    auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultHostExecutionSpace>(0, values.size());
-    auto fill_diagonal = [matrix, values](int index) {
-        matrix(index, index) = values[index];
-    };
+Kokkos::View<double**> create_diagonal_matrix(const std::vector<double>& values) {
+    auto matrix = Kokkos::View<double**>("matrix", values.size(), values.size());
+    auto matrix_host = Kokkos::create_mirror(matrix);
 
-    Kokkos::parallel_for(diagonal_entries, fill_diagonal);
+    for (size_t index = 0; index < values.size(); ++index) {
+        matrix_host(index, index) = values[index];
+    }
+    Kokkos::deep_copy(matrix, matrix_host);
 
     return matrix;
 }
 
 void expect_kokkos_view_1D_equal(
-    HostView1D view, const std::vector<double>& expected, double epsilon
+    Kokkos::View<double*> view, const std::vector<double>& expected, double epsilon
 ) {
     EXPECT_EQ(view.extent(0), expected.size());
-    for (size_t i = 0; i < view.extent(0); ++i) {
-        EXPECT_NEAR(view(i), expected[i], epsilon);
+    auto view_host = Kokkos::create_mirror(view);
+    Kokkos::deep_copy(view_host, view);
+    for (size_t i = 0; i < view_host.extent(0); ++i) {
+        EXPECT_NEAR(view_host(i), expected[i], epsilon);
     }
 }
 
 void expect_kokkos_view_2D_equal(
-    HostView2D view, const std::vector<std::vector<double>>& expected, double epsilon
+    Kokkos::View<double**> view, const std::vector<std::vector<double>>& expected, double epsilon
 ) {
     EXPECT_EQ(view.extent(0), expected.size());
     EXPECT_EQ(view.extent(1), expected.front().size());
-    for (size_t i = 0; i < view.extent(0); ++i) {
-        for (size_t j = 0; j < view.extent(1); ++j) {
-            EXPECT_NEAR(view(i, j), expected[i][j], epsilon);
+    auto view_host = Kokkos::create_mirror(view);
+    Kokkos::deep_copy(view_host, view);
+    for (size_t i = 0; i < view_host.extent(0); ++i) {
+        for (size_t j = 0; j < view_host.extent(1); ++j) {
+            EXPECT_NEAR(view_host(i, j), expected[i][j], epsilon);
         }
     }
 }
 
 Vector multiply_rotation_matrix_with_vector(const RotationMatrix& R, const Vector& v) {
     return Vector{
-        std::get<0>(R).GetXComponent() * v.GetXComponent() +
-            std::get<0>(R).GetYComponent() * v.GetYComponent() +
-            std::get<0>(R).GetZComponent() * v.GetZComponent(),
-        std::get<1>(R).GetXComponent() * v.GetXComponent() +
-            std::get<1>(R).GetYComponent() * v.GetYComponent() +
-            std::get<1>(R).GetZComponent() * v.GetZComponent(),
-        std::get<2>(R).GetXComponent() * v.GetXComponent() +
-            std::get<2>(R).GetYComponent() * v.GetYComponent() +
-            std::get<2>(R).GetZComponent() * v.GetZComponent(),
+        R(0, 0) * v.GetXComponent() + R(0, 1) * v.GetYComponent() + R(0, 2) * v.GetZComponent(),
+        R(1, 0) * v.GetXComponent() + R(1, 1) * v.GetYComponent() + R(1, 2) * v.GetZComponent(),
+        R(2, 0) * v.GetXComponent() + R(2, 1) * v.GetYComponent() + R(2, 2) * v.GetZComponent(),
     };
 };
 

@@ -3,6 +3,7 @@
 #include "src/rigid_pendulum_poc/heavy_top.h"
 #include "src/rigid_pendulum_poc/quaternion.h"
 #include "src/rigid_pendulum_poc/solver.h"
+#include "src/rigid_pendulum_poc/vector.h"
 #include "src/utilities/log.h"
 
 namespace openturbine::rigid_pendulum {
@@ -62,6 +63,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     auto log = util::Log::Get();
     std::vector<State> states{initial_state};
     auto n_steps = this->time_stepper_.GetNumberOfSteps();
+
     for (size_t i = 0; i < n_steps; i++) {
         this->time_stepper_.AdvanceTimeStep();
         log->Info("** Integrating step number " + std::to_string(i + 1) + " **\n");
@@ -75,7 +77,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     return states;
 }
 
-std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
+std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const State& state, size_t n_constraints,
     std::shared_ptr<LinearizationParameters> linearization_parameters
 ) {
@@ -86,11 +88,11 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
 
     // Initialize some X_next variables to assist in updating the State - only for ones that
     // require both the current and next values in a calculation
-    auto gen_coords_next = HostView1D("gen_coords_next", gen_coords.size());
+    auto gen_coords_next = Kokkos::View<double*>("gen_coords_next", gen_coords.size());
     auto algo_acceleration_next =
-        HostView1D("algorithmic_acceleration_next", algo_acceleration.size());
-    auto delta_gen_coords = HostView1D("gen_coords_increment", velocity.size());
-    auto lagrange_mults_next = HostView1D("lagrange_mults_next", n_constraints);
+        Kokkos::View<double*>("algorithmic_acceleration_next", algo_acceleration.size());
+    auto delta_gen_coords = Kokkos::View<double*>("gen_coords_increment", velocity.size());
+    auto lagrange_mults_next = Kokkos::View<double*>("lagrange_mults_next", n_constraints);
 
     // Perform the linear update part of the generalized alpha algorithm
     const auto h = this->time_stepper_.GetTimeStep();
@@ -134,8 +136,8 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const auto GAMMA_PRIME = kGAMMA_ / (h * kBETA_);
 
     // Precondition the linear solve (Bottasso et al 2008)
-    const auto dl = HostView2D("dl", size + n_constraints, size + n_constraints);
-    const auto dr = HostView2D("dr", size + n_constraints, size + n_constraints);
+    const auto dl = Kokkos::View<double**>("dl", size + n_constraints, size + n_constraints);
+    const auto dr = Kokkos::View<double**>("dr", size + n_constraints, size + n_constraints);
     Kokkos::deep_copy(dl, 0.);
     Kokkos::deep_copy(dr, 0.);
 
@@ -191,11 +193,11 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
             );
         }
 
-        auto soln_increments = HostView1D("soln_increments", residuals.size());
+        auto soln_increments = Kokkos::View<double*>("soln_increments", residuals.size());
         Kokkos::deep_copy(soln_increments, residuals);
         solve_linear_system(iteration_matrix, soln_increments);
 
-        HostView1D delta_x("delta_x", delta_gen_coords.size());
+        Kokkos::View<double*> delta_x("delta_x", delta_gen_coords.size());
         Kokkos::parallel_for(
             delta_gen_coords.size(),
             // Take negative of the solution increments to update generalized coordinates
@@ -203,7 +205,7 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
         );
 
         if (n_constraints > 0) {
-            HostView1D delta_lagrange_mults("delta_lagrange_mults", n_constraints);
+            Kokkos::View<double*> delta_lagrange_mults("delta_lagrange_mults", n_constraints);
 
             if (this->precondition_) {
                 Kokkos::parallel_for(
@@ -269,46 +271,44 @@ std::tuple<State, HostView1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     return results;
 }
 
-HostView1D GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
-    const HostView1D gen_coords, const HostView1D delta_gen_coords
+Kokkos::View<double*> GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> delta_gen_coords
 ) {
-    // {gen_coords_next} = {gen_coords} + h * {delta_gen_coords}
-    //
-    // Step 1: R^3 update, done with vector addition
-    auto current_position = Vector{gen_coords(0), gen_coords(1), gen_coords(2)};
-    auto updated_position = Vector{delta_gen_coords(0), delta_gen_coords(1), delta_gen_coords(2)};
+    auto gen_coords_next = Kokkos::View<double*>("generalized_coordinates_next", gen_coords.size());
     const auto h = this->time_stepper_.GetTimeStep();
-    auto r = current_position + (updated_position * h);
 
-    // Step 2: SO(3) update, done with quaternion composition
-    Quaternion current_orientation{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)};
-    auto updated_orientation = quaternion_from_rotation_vector(
-        // Convert Vector -> Quaternion via exponential mapping
-        Vector{delta_gen_coords(3), delta_gen_coords(4), delta_gen_coords(5)} * h
-    );
-    auto q = current_orientation * updated_orientation;
+    auto update_generalized_coordinates = KOKKOS_LAMBDA(size_t index) {
+        // {gen_coords_next} = {gen_coords} + h * {delta_gen_coords}
+        //
+        // Step 1: R^3 update, done with vector addition
+        auto current_position = Vector{gen_coords(0), gen_coords(1), gen_coords(2)};
+        auto updated_position =
+            Vector{delta_gen_coords(0), delta_gen_coords(1), delta_gen_coords(2)};
+        auto r = current_position + (updated_position * h);
 
-    // Construct the updated generalized coordinates from position and orientation vectors
-    auto gen_coords_next = HostView1D("generalized_coordinates_next", gen_coords.size());
-    constexpr int numComponents = 7;
-    double components[numComponents] = {
-        r.GetXComponent(),       // component 1
-        r.GetYComponent(),       // component 2
-        r.GetZComponent(),       // component 3
-        q.GetScalarComponent(),  // component 4
-        q.GetXComponent(),       // component 5
-        q.GetYComponent(),       // component 6
-        q.GetZComponent()        // component 7
+        // Step 2: SO(3) update, done with quaternion composition
+        Quaternion current_orientation{gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)};
+        auto updated_orientation = quaternion_from_rotation_vector(
+            // Convert Vector -> Quaternion via exponential mapping
+            Vector{delta_gen_coords(3), delta_gen_coords(4), delta_gen_coords(5)} * h
+        );
+        auto q = current_orientation * updated_orientation;
+
+        gen_coords_next(0) = r.GetXComponent();
+        gen_coords_next(1) = r.GetYComponent();
+        gen_coords_next(2) = r.GetZComponent();
+        gen_coords_next(3) = q.GetScalarComponent();
+        gen_coords_next(4) = q.GetXComponent();
+        gen_coords_next(5) = q.GetYComponent();
+        gen_coords_next(6) = q.GetZComponent();
     };
 
-    Kokkos::parallel_for(
-        gen_coords.size(), KOKKOS_LAMBDA(const size_t i) { gen_coords_next(i) = components[i]; }
-    );
+    Kokkos::parallel_for(1, update_generalized_coordinates);
 
     return gen_coords_next;
 }
 
-bool GeneralizedAlphaTimeIntegrator::CheckConvergence(const HostView1D residual) {
+bool GeneralizedAlphaTimeIntegrator::CheckConvergence(const Kokkos::View<double*> residual) {
     // L2 norm of the residual vector should be very small (< epsilon) for the solution
     // to be considered converged
     double residual_norm = 0.;
