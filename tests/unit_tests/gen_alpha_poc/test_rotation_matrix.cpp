@@ -34,4 +34,4 @@ TEST(RotationMatrixTest, CreateFromComponents) {
     ASSERT_EQ(matrix(2, 2), 9.);
 }
 
-} // namespace openturbine::gen_alpha_solver::tests
+}  // namespace openturbine::gen_alpha_solver::tests

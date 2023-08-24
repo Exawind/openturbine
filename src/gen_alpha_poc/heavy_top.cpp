@@ -155,12 +155,14 @@ Kokkos::View<double*> HeavyTopLinearizationParameters::GeneralizedCoordinatesRes
     );
 
     auto residual_gen_coords = Kokkos::View<double*>("residual_gen_coords", 6);
+    // clang-format off
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const size_t i) {
            residual_gen_coords(i) = first_term(i) + second_term(i) + third_term(i);
         }
     );
+    // clang-format on
 
     return residual_gen_coords;
 }
@@ -339,7 +341,8 @@ Kokkos::View<double**> HeavyTopLinearizationParameters::TangentDampingMatrix(
     auto nonzero_block_second_part = create_cross_product_matrix(J_Omega);
 
     auto size_nonzero_block = nonzero_block_first_part.extent(0);
-    auto nonzero_block = Kokkos::View<double**>("nonzero_block", size_nonzero_block, size_nonzero_block);
+    auto nonzero_block =
+        Kokkos::View<double**>("nonzero_block", size_nonzero_block, size_nonzero_block);
     Kokkos::parallel_for(
         Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
             {0, 0}, {size_nonzero_block, size_nonzero_block}
@@ -412,9 +415,7 @@ Kokkos::View<double**> HeavyTopLinearizationParameters::TangentOperator(
     auto size = kNumberOfLieAlgebraComponents;
     auto tangent_operator = Kokkos::View<double**>("tangent_operator", size, size);
     Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {size, size}
-        ),
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {size, size}),
         KOKKOS_LAMBDA(const size_t i, const size_t j) {
             if (i == j) {
                 tangent_operator(i, j) = 1.0;
