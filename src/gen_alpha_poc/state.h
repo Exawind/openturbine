@@ -11,27 +11,30 @@ public:
     State();
 
     State(
-        HostView1D generalized_coords_, HostView1D velocity_, HostView1D acceleration_,
-        HostView1D algorithmic_acceleration_
+        Kokkos::View<double*> generalized_coords, Kokkos::View<double*> velocity,
+        Kokkos::View<double*> acceleration, Kokkos::View<double*> algorithmic_acceleration
     );
+    State(Kokkos::View<double*>, Kokkos::View<double*>, Kokkos::View<double*>, Kokkos::View<double*>);
 
     /// Returns the generalized coordinates vector
-    inline HostView1D GetGeneralizedCoordinates() const { return generalized_coords_; }
+    inline Kokkos::View<double*> GetGeneralizedCoordinates() const { return generalized_coords_; }
 
     /// Returns the velocity vector
-    inline HostView1D GetVelocity() const { return velocity_; }
+    inline Kokkos::View<double*> GetVelocity() const { return velocity_; }
 
     /// Returns the acceleration vector
-    inline HostView1D GetAcceleration() const { return acceleration_; }
+    inline Kokkos::View<double*> GetAcceleration() const { return acceleration_; }
 
     /// Returns the algorithmic accelerations vector
-    inline HostView1D GetAlgorithmicAcceleration() const { return algorithmic_acceleration_; }
+    inline Kokkos::View<double*> GetAlgorithmicAcceleration() const {
+        return algorithmic_acceleration_;
+    }
 
 private:
-    HostView1D generalized_coords_;        //< Generalized coordinates
-    HostView1D velocity_;                  //< Velocity vector
-    HostView1D acceleration_;              //< First time derivative of the velocity vector
-    HostView1D algorithmic_acceleration_;  //< Algorithmic accelerations
+    Kokkos::View<double*> generalized_coords_;  //< Generalized coordinates
+    Kokkos::View<double*> velocity_;            //< Velocity vector
+    Kokkos::View<double*> acceleration_;        //< First time derivative of the velocity vector
+    Kokkos::View<double*> algorithmic_acceleration_;  //< Algorithmic accelerations
 };
 
 // TODO Move the following classes to their own source files
@@ -46,7 +49,7 @@ public:
     MassMatrix(double mass = 1., double moment_of_inertia = 1.);
 
     /// Constructor that initializes the mass matrix to the given matrix
-    MassMatrix(HostView2D);
+    MassMatrix(Kokkos::View<double**>);
 
     /// Returns the mass of the rigid body
     inline double GetMass() const { return mass_; }
@@ -55,16 +58,16 @@ public:
     inline Vector GetPrincipalMomentsOfInertia() const { return principal_moment_of_inertia_; }
 
     /// Returns the moment of inertia matrix as a 2D Kokkos view
-    HostView2D GetMomentOfInertiaMatrix() const;
+    Kokkos::View<double**> GetMomentOfInertiaMatrix() const;
 
     /// Returns the mass matrix of the rigid body
-    inline HostView2D GetMassMatrix() const { return mass_matrix_; }
+    inline Kokkos::View<double**> GetMassMatrix() const { return mass_matrix_; }
 
 private:
     double mass_;                         //< Mass of the rigid body
     Vector principal_moment_of_inertia_;  //< Moments of inertia about the principal axes
 
-    HostView2D mass_matrix_;  //< Mass matrix of the rigid body
+    Kokkos::View<double**> mass_matrix_;  //< Mass matrix of the rigid body
 };
 
 /// Class for managing the generalized forces applied on a dynamic system
@@ -74,7 +77,7 @@ public:
     GeneralizedForces(const Vector& forces = Vector(), const Vector& moments = Vector());
 
     /// Constructor that initializes the generalized forces to the given vectors
-    GeneralizedForces(HostView1D);
+    GeneralizedForces(Kokkos::View<double*>);
 
     /// Returns the force vector
     inline Vector GetForces() const { return forces_; }
@@ -83,13 +86,14 @@ public:
     inline Vector GetMoments() const { return moments_; }
 
     /// Returns the generalized forces vector
-    inline HostView1D GetGeneralizedForces() const { return generalized_forces_; }
+    inline Kokkos::View<double*> GetGeneralizedForces() const { return generalized_forces_; }
 
 private:
     Vector forces_;   //< force vector
     Vector moments_;  //< moment vector
 
-    HostView1D generalized_forces_;  //< Generalized forces (combined forces and moments vector)
+    Kokkos::View<double*>
+        generalized_forces_;  //< Generalized forces (combined forces and moments vector)
 };
 
 }  // namespace openturbine::gen_alpha_solver
