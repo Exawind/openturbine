@@ -14,7 +14,6 @@ public:
         Kokkos::View<double*> generalized_coords, Kokkos::View<double*> velocity,
         Kokkos::View<double*> acceleration, Kokkos::View<double*> algorithmic_acceleration
     );
-    State(Kokkos::View<double*>, Kokkos::View<double*>, Kokkos::View<double*>, Kokkos::View<double*>);
 
     /// Returns the generalized coordinates vector
     inline Kokkos::View<double*> GetGeneralizedCoordinates() const { return generalized_coords_; }

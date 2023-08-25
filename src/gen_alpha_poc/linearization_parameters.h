@@ -11,17 +11,19 @@ public:
     virtual ~LinearizationParameters() = default;
 
     /// Interface for calculating the residual vector for the problem
-    virtual HostView1D ResidualVector(
-        const HostView1D /* gen_coords */, const HostView1D /* velocity */,
-        const HostView1D /* acceleration */, const HostView1D /* lagrange_multipliers */
+    virtual Kokkos::View<double*> ResidualVector(
+        const Kokkos::View<double*> /* gen_coords */, const Kokkos::View<double*> /* velocity */,
+        const Kokkos::View<double*> /* acceleration */,
+        const Kokkos::View<double*> /* lagrange_multipliers */
     ) = 0;
 
     /// Interface for calculating the iteration matrix for the problem
-    virtual HostView2D IterationMatrix(
+    virtual Kokkos::View<double**> IterationMatrix(
         const double& /* h */, const double& /* BetaPrime */, const double& /* GammaPrime */,
-        const HostView1D /* gen_coords */, const HostView1D /* delta_gen_coords */,
-        const HostView1D /* velocity */, const HostView1D /* acceleration */,
-        const HostView1D /* lagrange_mults */
+        const Kokkos::View<double*> /* gen_coords */,
+        const Kokkos::View<double*> /* delta_gen_coords */,
+        const Kokkos::View<double*> /* velocity */, const Kokkos::View<double*> /* acceleration */,
+        const Kokkos::View<double*> /* lagrange_mults */
     ) = 0;
 };
 
@@ -31,16 +33,17 @@ public:
     UnityLinearizationParameters(){};
 
     /// Returns a unity residual vector
-    virtual HostView1D ResidualVector(
-        const HostView1D gen_coords, const HostView1D velocity, const HostView1D acceleration,
-        const HostView1D lagrange_mults
+    virtual Kokkos::View<double*> ResidualVector(
+        const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> velocity,
+        const Kokkos::View<double*> acceleration, const Kokkos::View<double*> lagrange_mults
     ) override;
 
     /// Returns an identity iteration matrix
-    virtual HostView2D IterationMatrix(
+    virtual Kokkos::View<double**> IterationMatrix(
         const double& h, const double& BetaPrime, const double& GammaPrime,
-        const HostView1D gen_coords, const HostView1D delta_gen_coords, const HostView1D velocity,
-        const HostView1D acceleration, const HostView1D lagrange_mults
+        const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> delta_gen_coords,
+        const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
+        const Kokkos::View<double*> lagrange_mults
     ) override;
 };
 

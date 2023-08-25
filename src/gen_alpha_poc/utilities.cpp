@@ -53,7 +53,7 @@ Kokkos::View<double*> create_identity_vector(size_t size) {
 
 Kokkos::View<double**> create_identity_matrix(size_t size) {
     auto matrix = Kokkos::View<double**>("matrix", size, size);
-    auto diagonal_entries = Kokkos::RangePolicy(0, size);
+    auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0, size);
     auto fill_diagonal = KOKKOS_LAMBDA(int index) {
         matrix(index, index) = 1.;
     };
@@ -137,7 +137,7 @@ Kokkos::View<double*> multiply_matrix_with_vector(
     }
 
     auto result = Kokkos::View<double*>("result", matrix.extent(0));
-    auto entries = Kokkos::RangePolicy(0, matrix.extent(0));
+    auto entries = Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0, matrix.extent(0));
     auto multiply_row = KOKKOS_LAMBDA(int row) {
         double sum = 0.;
         for (size_t column = 0; column < matrix.extent(1); ++column) {

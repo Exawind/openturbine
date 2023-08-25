@@ -4,11 +4,6 @@
 
 namespace openturbine::gen_alpha_solver {
 
-// KOKKOS_FUNCTION
-// Quaternion::Quaternion(double q0, double q1, double q2, double q3)
-//     : q0_(q0), q1_(q1), q2_(q2), q3_(q3) {
-// }
-
 KOKKOS_FUNCTION
 bool Quaternion::IsUnitQuaternion() const {
     return close_to(Length(), 1.);

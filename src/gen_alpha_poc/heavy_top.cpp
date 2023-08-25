@@ -1,7 +1,7 @@
 #include "src/gen_alpha_poc/heavy_top.h"
 
-#include "src/rigid_pendulum_poc/quaternion.h"
-#include "src/rigid_pendulum_poc/rotation_matrix.h"
+#include "src/gen_alpha_poc/quaternion.h"
+#include "src/gen_alpha_poc/rotation_matrix.h"
 #include "src/utilities/log.h"
 
 namespace openturbine::gen_alpha_solver {
@@ -147,14 +147,15 @@ Kokkos::View<double*> HeavyTopLinearizationParameters::GeneralizedCoordinatesRes
 
     auto first_term = multiply_matrix_with_vector(mass_matrix, acceleration_vector);
 
-    auto second_term = Kokkos::View<double*>("second_term", 6);
+    auto size = first_term.extent(0);
+    auto second_term = Kokkos::View<double*>("second_term", size);
     Kokkos::deep_copy(second_term, gen_forces_vector);
 
     auto third_term = multiply_matrix_with_vector(
         transpose_matrix(constraint_gradient_matrix), lagrange_multipliers
     );
 
-    auto residual_gen_coords = Kokkos::View<double*>("residual_gen_coords", 6);
+    auto residual_gen_coords = Kokkos::View<double*>("residual_gen_coords", size);
     // clang-format off
     Kokkos::parallel_for(
         size,
@@ -180,7 +181,8 @@ Kokkos::View<double*> HeavyTopLinearizationParameters::ConstraintsResidualVector
 
     auto RX = multiply_matrix_with_vector(rotation_matrix, reference_position_vector);
 
-    auto residual_constraints = Kokkos::View<double*>("constraint_residual_vector", 3);
+    auto size = position_vector.extent(0);
+    auto residual_constraints = Kokkos::View<double*>("constraint_residual_vector", size);
     Kokkos::parallel_for(
         size,
         KOKKOS_LAMBDA(const size_t i) { residual_constraints(i) = -position_vector(i) + RX(i); }
@@ -219,7 +221,7 @@ Kokkos::View<double**> HeavyTopLinearizationParameters::ConstraintsGradientMatri
     return constraint_gradient_matrix;
 }
 
-HostView2D HeavyTopLinearizationParameters::IterationMatrix(
+Kokkos::View<double**> HeavyTopLinearizationParameters::IterationMatrix(
     const double& h, const double& beta_prime, const double& gamma_prime,
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> delta_gen_coords,
     const Kokkos::View<double*> velocity, [[maybe_unused]] const Kokkos::View<double*> acceleration,

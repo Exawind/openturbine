@@ -21,8 +21,9 @@ protected:
     void SetUp() override { EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.); }
 
     void PerformIntegrationTest(
-        const HostView1D& q0, const HostView1D& v0, const HostView1D& a0, const HostView1D& aa0,
-        size_t n_lagrange_mults, const std::shared_ptr<LinearizationParameters>& lin_params
+        const Kokkos::View<double*>& q0, const Kokkos::View<double*>& v0,
+        const Kokkos::View<double*>& a0, const Kokkos::View<double*>& aa0, size_t n_lagrange_mults,
+        const std::shared_ptr<LinearizationParameters>& lin_params
     ) {
         auto initial_state = State(q0, v0, a0, aa0);
         EXPECT_THROW(

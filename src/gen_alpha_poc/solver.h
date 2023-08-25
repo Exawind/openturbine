@@ -2,12 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "src/utilities/openturbine_types.h"
-
 namespace openturbine::gen_alpha_solver {
-
-using openturbine::util::HostView1D;
-using openturbine::util::HostView2D;
 
 /// @brief Solve a linear system of equations using LAPACKE's dgesv
 /// @details This function solves a linear system of equations using LAPACKE's
@@ -16,6 +11,6 @@ using openturbine::util::HostView2D;
 ///     (n x 1) of right hand side values. The solution is stored in the vector b.
 /// @param system An (n x n) matrix of coefficients
 /// @param solution An (n x 1) vector of right hand side values
-void solve_linear_system(HostView2D, HostView1D);
+void solve_linear_system(Kokkos::View<double**>, Kokkos::View<double*>);
 
 }  // namespace openturbine::gen_alpha_solver

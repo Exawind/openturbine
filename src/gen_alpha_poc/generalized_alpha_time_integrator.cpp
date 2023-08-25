@@ -1,9 +1,9 @@
 #include "src/gen_alpha_poc/generalized_alpha_time_integrator.h"
 
-#include "src/rigid_pendulum_poc/heavy_top.h"
-#include "src/rigid_pendulum_poc/quaternion.h"
-#include "src/rigid_pendulum_poc/solver.h"
-#include "src/rigid_pendulum_poc/vector.h"
+#include "src/gen_alpha_poc/heavy_top.h"
+#include "src/gen_alpha_poc/quaternion.h"
+#include "src/gen_alpha_poc/solver.h"
+#include "src/gen_alpha_poc/vector.h"
 #include "src/utilities/log.h"
 
 namespace openturbine::gen_alpha_solver {

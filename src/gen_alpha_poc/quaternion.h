@@ -3,9 +3,9 @@
 #include <cmath>
 #include <tuple>
 
-#include "src/rigid_pendulum_poc/rotation_matrix.h"
-#include "src/rigid_pendulum_poc/utilities.h"
-#include "src/rigid_pendulum_poc/vector.h"
+#include "src/gen_alpha_poc/rotation_matrix.h"
+#include "src/gen_alpha_poc/utilities.h"
+#include "src/gen_alpha_poc/vector.h"
 
 namespace openturbine::gen_alpha_solver {
 
