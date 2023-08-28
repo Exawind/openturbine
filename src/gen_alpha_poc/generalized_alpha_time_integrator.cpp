@@ -281,7 +281,7 @@ Kokkos::View<double*> GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinat
     auto gen_coords_next = Kokkos::View<double*>("generalized_coordinates_next", gen_coords.size());
     const auto h = this->time_stepper_.GetTimeStep();
 
-    auto update_generalized_coordinates = KOKKOS_LAMBDA(size_t index) {
+    auto update_generalized_coordinates = KOKKOS_LAMBDA(size_t) {
         // {gen_coords_next} = {gen_coords} + h * {delta_gen_coords}
         //
         // Step 1: R^3 update, done with vector addition

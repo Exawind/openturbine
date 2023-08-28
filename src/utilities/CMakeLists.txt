@@ -5,6 +5,5 @@ target_sources(${oturb_lib_name}
     # io.cpp
     debug_utils.cpp
     log.cpp
-    openturbine_types.cpp
     # IOManager.cpp
 )

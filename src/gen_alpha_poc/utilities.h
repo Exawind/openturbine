@@ -4,8 +4,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "src/utilities/openturbine_types.h"
-
 namespace openturbine::gen_alpha_solver {
 
 static constexpr double kTolerance = 1e-6;

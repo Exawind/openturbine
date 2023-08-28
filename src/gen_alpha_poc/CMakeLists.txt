@@ -7,7 +7,6 @@ target_sources(${oturb_lib_name}
     quaternion.cpp
     solver.cpp
     state.cpp
-    time_integrator.cpp
     time_stepper.cpp
     utilities.cpp
 )

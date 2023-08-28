@@ -45,7 +45,7 @@ Kokkos::View<double*> create_identity_vector(size_t size) {
     auto vector = Kokkos::View<double*>("vector", size);
 
     Kokkos::parallel_for(
-        size, KOKKOS_LAMBDA(int i) { vector(i) = 1.; }
+        size, KOKKOS_LAMBDA(size_t i) { vector(i) = 1.; }
     );
 
     return vector;
@@ -54,7 +54,7 @@ Kokkos::View<double*> create_identity_vector(size_t size) {
 Kokkos::View<double**> create_identity_matrix(size_t size) {
     auto matrix = Kokkos::View<double**>("matrix", size, size);
     auto diagonal_entries = Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0, size);
-    auto fill_diagonal = KOKKOS_LAMBDA(int index) {
+    auto fill_diagonal = KOKKOS_LAMBDA(size_t index) {
         matrix(index, index) = 1.;
     };
 
@@ -95,7 +95,7 @@ Kokkos::View<double**> transpose_matrix(const Kokkos::View<double**> matrix) {
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {matrix.extent(1), matrix.extent(0)}
     );
-    auto transpose = KOKKOS_LAMBDA(int row, int column) {
+    auto transpose = KOKKOS_LAMBDA(size_t row, size_t column) {
         transposed_matrix(row, column) = matrix(column, row);
     };
 
@@ -110,7 +110,7 @@ Kokkos::View<double**> create_cross_product_matrix(const Kokkos::View<double*> v
     }
 
     auto matrix = Kokkos::View<double**>("cross_product_matrix", 3, 3);
-    auto populate_matrix = KOKKOS_LAMBDA(int) {
+    auto populate_matrix = KOKKOS_LAMBDA(size_t) {
         matrix(0, 0) = 0.;
         matrix(0, 1) = -vector(2);
         matrix(0, 2) = vector(1);
@@ -138,7 +138,7 @@ Kokkos::View<double*> multiply_matrix_with_vector(
 
     auto result = Kokkos::View<double*>("result", matrix.extent(0));
     auto entries = Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0, matrix.extent(0));
-    auto multiply_row = KOKKOS_LAMBDA(int row) {
+    auto multiply_row = KOKKOS_LAMBDA(size_t row) {
         double sum = 0.;
         for (size_t column = 0; column < matrix.extent(1); ++column) {
             sum += matrix(row, column) * vector(column);
@@ -170,7 +170,7 @@ Kokkos::View<double**> multiply_matrix_with_matrix(
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {n_rows, n_columns}
     );
-    auto multiply_row_column = KOKKOS_LAMBDA(int row, int column) {
+    auto multiply_row_column = KOKKOS_LAMBDA(size_t row, size_t column) {
         double sum = 0.;
         for (size_t i = 0; i < matrix_a.extent(1); ++i) {
             sum += matrix_a(row, i) * matrix_b(i, column);
@@ -190,7 +190,7 @@ Kokkos::View<double**> multiply_matrix_with_scalar(
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {matrix.extent(0), matrix.extent(1)}
     );
-    auto multiply_row_column = KOKKOS_LAMBDA(int row, int column) {
+    auto multiply_row_column = KOKKOS_LAMBDA(size_t row, size_t column) {
         result(row, column) = matrix(row, column) * scalar;
     };
 
