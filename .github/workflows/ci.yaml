@@ -62,3 +62,64 @@ jobs:
         make
         ./openturbine -h
         ./openturbine_unit_tests
+  CUDA:
+    needs: Formatting
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install CUDA
+      run: |
+        sudo apt install nvidia-cuda-toolkit
+    - name: Install LAPACK
+      run: |
+        sudo apt-get install liblapack-dev
+        sudo apt-get install liblapacke-dev
+    - name: Install MAGMA
+      run: |
+        git clone https://bitbucket.org/icl/magma.git
+        cd magma
+        echo -e 'BACKEND=cuda\nGPU_TARGET=sm_70\nFORT=true' > make.inc
+        make generate
+        mkdir build
+        cd build
+        cmake ../
+        make
+        sudo make install
+    - name: Install Kokkos
+      run: |
+        git clone https://github.com/kokkos/kokkos
+        cd kokkos
+        mkdir build
+        cd build
+        cmake ../ -DCMAKE_CXX_COMPILER=~/kokkos/bin/nvcc_wrapper -DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_CUDA_LAMBDA=ON -DKokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON 
+        make
+        sudo make install
+    - name: Install Kokkos-Kernels
+      run: |
+        git clone https://github.com/kokkos/kokkos-kernels
+        cd kokkos-kernels
+        mkdir build
+        cd build
+        cmake ../ -DCMAKE_CXX_COMPILER=~/kokkos/bin/nvcc_wrapper -DKokkosKernels_ENABLE_TPL_BLAS=ON -DKokkosKernels_ENABLE_TPL_MAGMA=ON
+        make
+        sudo make install
+    - name: Install GoogleTest
+      run: |
+        sudo apt-get install libgtest-dev
+        cd /usr/src/gtest
+        sudo cmake CMakeLists.txt
+        sudo make
+        sudo cp lib/*.a /usr/lib
+        sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a
+        sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
+    - name: Clone
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+    - name: Test
+      run: |
+        mkdir build
+        cd build
+        cmake ../ -DOTURB_ENABLE_TESTS=on -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=~/kokkos/bin/nvcc_wrapper
+        make
+        ./openturbine -h
+        ./openturbine_unit_tests
