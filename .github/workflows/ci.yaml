@@ -82,7 +82,7 @@ jobs:
         mkdir build
         cd build
         cmake ../
-        make
+        make -j 2
         sudo make install
     - name: Install Kokkos
       run: |
@@ -90,8 +90,8 @@ jobs:
         cd kokkos
         mkdir build
         cd build
-        cmake ../ -DCMAKE_CXX_COMPILER=~/kokkos/bin/nvcc_wrapper -DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_CUDA_LAMBDA=ON -DKokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON 
-        make
+        cmake ../ -DCMAKE_CXX_COMPILER=$GITHUB_WORKSPACE/kokkos/bin/nvcc_wrapper -DKokkos_ENABLE_CUDA=ON -DKokkos_ENABLE_CUDA_LAMBDA=ON -DKokkos_ENABLE_CUDA_RELOCATABLE_DEVICE_CODE=ON 
+        make -j 2
         sudo make install
     - name: Install Kokkos-Kernels
       run: |
@@ -99,15 +99,15 @@ jobs:
         cd kokkos-kernels
         mkdir build
         cd build
-        cmake ../ -DCMAKE_CXX_COMPILER=~/kokkos/bin/nvcc_wrapper -DKokkosKernels_ENABLE_TPL_BLAS=ON -DKokkosKernels_ENABLE_TPL_MAGMA=ON
-        make
+        cmake ../ -DCMAKE_CXX_COMPILER=$GITHUB_WORKSPACE/kokkos/bin/nvcc_wrapper -DKokkosKernels_ENABLE_TPL_BLAS=ON -DKokkosKernels_ENABLE_TPL_MAGMA=ON
+        make -j 2
         sudo make install
     - name: Install GoogleTest
       run: |
         sudo apt-get install libgtest-dev
         cd /usr/src/gtest
         sudo cmake CMakeLists.txt
-        sudo make
+        sudo make -j 2
         sudo cp lib/*.a /usr/lib
         sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a
         sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
@@ -119,7 +119,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake ../ -DOTURB_ENABLE_TESTS=on -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=~/kokkos/bin/nvcc_wrapper
-        make
+        cmake ../ -DOTURB_ENABLE_TESTS=on -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=$GITHUB_WORKSPACE/kokkos/bin/nvcc_wrapper
+        make -j 2
         ./openturbine -h
         ./openturbine_unit_tests
