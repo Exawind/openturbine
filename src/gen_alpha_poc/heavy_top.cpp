@@ -2,7 +2,6 @@
 
 #include "src/gen_alpha_poc/quaternion.h"
 #include "src/gen_alpha_poc/rotation_matrix.h"
-#include "src/utilities/log.h"
 
 namespace openturbine::gen_alpha_solver {
 
@@ -350,7 +349,10 @@ Kokkos::View<double**> HeavyTopLinearizationParameters::TangentDampingMatrix(
             {0, 0}, {size_nonzero_block, size_nonzero_block}
         ),
         KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            nonzero_block(i, j) = nonzero_block_first_part(i, j) - nonzero_block_second_part(i, j);
+            if (i < 3 && j < 3) {
+                nonzero_block(i, j) =
+                    nonzero_block_first_part(i, j) - nonzero_block_second_part(i, j);
+            }
         }
     );
 
