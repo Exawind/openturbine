@@ -1,23 +1,16 @@
 
 set(Kokkos_DIR "$ENV{Kokkos_ROOT}" CACHE STRING "Kokkos root directory")
-find_package(Kokkos REQUIRED)
-find_package(LAPACK REQUIRED)
+find_package(KokkosKernels REQUIRED)
 
 target_sources(${oturb_exe_name} PRIVATE main.cpp)
+set_target_properties(${oturb_exe_name} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${oturb_exe_name} PRIVATE
-    Kokkos::kokkos
-    LAPACK::LAPACK
-    lapacke
-    lapack
-    blas
+    Kokkos::kokkoskernels
 )
 
+set_target_properties(${oturb_lib_name} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${oturb_lib_name} PRIVATE
-    Kokkos::kokkos
-    LAPACK::LAPACK
-    lapacke
-    lapack
-    blas
+    Kokkos::kokkoskernels
 )
 
 target_include_directories(${oturb_exe_name} PRIVATE ${PROJECT_BINARY_DIR})
@@ -39,7 +32,7 @@ target_include_directories(${oturb_lib_name}
 # Get all source files
 add_subdirectory(gebt_poc)
 add_subdirectory(io)
-add_subdirectory(rigid_pendulum_poc)
+add_subdirectory(gen_alpha_poc)
 add_subdirectory(utilities)
 
 # Generate OpenTurbine version header

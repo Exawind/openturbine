@@ -1,10 +1,6 @@
 name: OpenTurbine-CI
 
 on: push
-  # push:
-  #   branches: [main, develop]
-  # pull_request:
-  #   branches: [main, develop]
 
 jobs:
   Formatting:
@@ -13,77 +9,80 @@ jobs:
     - name: Clone
       uses: actions/checkout@v3
     - name: Check formatting
-      uses: DoozyX/clang-format-lint-action@v0.15
+      uses: DoozyX/clang-format-lint-action@v0.16.2
       with:
         source: './src ./tests/unit_tests'
         exclude: '.'
         extensions: 'H,h,cpp'
-        clangFormatVersion: 14
+        clangFormatVersion: 16
   CPU:
     needs: Formatting
-    runs-on: ubuntu-latest
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            install_deps: sudo apt-get install liblapack-dev liblapacke-dev libgtest-dev
+          - os: macos-latest
+            install_deps: brew install gfortran lapack googletest
     steps:
-    - name: Cache install Spack packages
-      id: cache-install
+    - name: Install dependencies
+      run: |
+        ${{matrix.install_deps}}
+    - name: Cache install Kokkos
+      id: cache-kokkos
       uses: actions/cache@v3
       with:
-        path: |
-          ~/.spack
-        key: install-spack-v0.20
-    - name: Install Spack packages
-      if: steps.cache-install.outputs.cache-hit != 'true'
+        path: ~/dependencies/kokkos
+        key: ${{runner.os}}-kokkos
+    - name: Install Kokkos
+      if: steps.cache-kokkos.outputs.cache-hit != 'true'
       run: |
-        git clone https://github.com/spack/spack ~/.spack/Spack
-        . ~/.spack/Spack/share/spack/setup-env.sh
-        spack install kokkos
-    - name: Install LAPACK
+        sudo mkdir -p ~/dependencies/kokkos
+        git clone https://github.com/kokkos/kokkos
+        cd kokkos
+        mkdir build
+        cd build
+        cmake .. -D CMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos
+        make
+        sudo make install
+    - name: Cache install Kokkos-Kernels
+      id: cache-kokkos-kernels
+      uses: actions/cache@v3
+      with:
+        path: ~/dependencies/kokkos_kernels
+        key: ${{runner.os}}-kokkos-kernels
+    - name: Install Kokkos-Kernels
+      if: steps.cache-kokkos-kernels.outputs.cache-hit != 'true'
       run: |
-        sudo apt-get install liblapack-dev
-        sudo apt-get install liblapacke-dev
-    - name: Install GoogleTest
-      run: |
-        sudo apt-get install libgtest-dev
-        cd /usr/src/gtest
-        sudo cmake CMakeLists.txt
-        sudo make
-        sudo cp lib/*.a /usr/lib
-        sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a
-        sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
+        sudo mkdir -p ~/dependencies/kokkos_kernels
+        export Kokkos_DIR=~/dependencies/kokkos
+        if [ ${{matrix.os}} = 'ubuntu-latest' ]; then
+          git clone https://github.com/kokkos/kokkos-kernels
+        fi
+        if [ ${{matrix.os}} = 'macos-latest' ]; then
+          export FC=$(brew --prefix gcc)/bin/gfortran
+          git clone -b 3.7.00 https://github.com/kokkos/kokkos-kernels
+        fi
+        cd kokkos-kernels
+        mkdir build
+        cd build
+        cmake .. \
+          -D CMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
+          -D KokkosKernels_ENABLE_TPL_BLAS=ON
+        make
+        sudo make install
     - name: Clone
       uses: actions/checkout@v3
       with:
         submodules: true
     - name: Test
       run: |
-        . ~/.spack/Spack/share/spack/setup-env.sh
-        # Find the Kokkos installation directory via spack & extract the path via grep & awk
-        export Kokkos_DIR=$(spack find -p kokkos | grep -m 1 kokkos | awk '{print $2}')
-        # echo $Kokkos_DIR
-        # ls $Kokkos_DIR
+        export KokkosKernels_DIR=~/dependencies/kokkos_kernels
         mkdir build
         cd build
         cmake .. -DOTURB_ENABLE_TESTS:BOOL=ON
         make
         ./openturbine -h
         ./openturbine_unit_tests
-    # - name: Dependencies
-    #   run: ${{matrix.install_deps}}
-    # - name: Setup
-    #   run: |
-    #     echo "NUM_PROCS=${{matrix.procs}}" >> $GITHUB_ENV
-    # - name: Configure
-    #   run: |
-    #     cmake -G Ninja \
-    #       -B ${{runner.workspace}}/build-ci-${{matrix.build_type}} \
-    #       -DCMAKE_INSTALL_PREFIX:PATH=${{runner.workspace}}/install-${{matrix.build_type}} \
-    #       -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} \
-    #       ${{github.workspace}}
-    # - name: Build
-    #   working-directory: ${{runner.workspace}}/build-ci-${{matrix.build_type}}
-    #   run: |
-    #     echo "::add-matcher::.github/problem-matchers/gcc.json"
-    #     cmake --build . -- -j ${{env.NUM_PROCS}} 2>&1 | tee -a build-output.txt
-    # - name: Test
-    #   working-directory: ${{runner.workspace}}/build-ci-${{matrix.build_type}}
-    #   run: |
-    #     ctest ${{matrix.ctest_args}} --output-on-failure

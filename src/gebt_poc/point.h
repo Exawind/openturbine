@@ -1,8 +1,8 @@
 #pragma once
 
-#include "src/rigid_pendulum_poc/vector.h"
+#include "src/gen_alpha_poc/vector.h"
 
-using Vector = openturbine::rigid_pendulum::Vector;
+using Vector = openturbine::gen_alpha_solver::Vector;
 
 namespace openturbine::gebt_poc {
 
