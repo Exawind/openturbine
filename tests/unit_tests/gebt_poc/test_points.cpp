@@ -35,4 +35,13 @@ TEST(PointTest, GetPositionVector) {
     EXPECT_EQ(vector.GetComponents(), expected);
 }
 
+TEST(PointTest, EqualityOperator) {
+    Point point1(1., 2., 3.);
+    Point point2(1., 2., 3.);
+    Point point3(4., 5., 6.);
+
+    EXPECT_TRUE(point1 == point2);
+    EXPECT_FALSE(point1 == point3);
+}
+
 }  // namespace openturbine::gebt_poc::tests
