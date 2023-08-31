@@ -361,9 +361,7 @@ Kokkos::View<double**> HeavyTopLinearizationParameters::TangentDampingMatrix(
     auto size_zero_block = size - size_nonzero_block;
     auto tangent_damping_matrix = Kokkos::View<double**>("tangent_damping_matrix", size, size);
     Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {size, size}
-        ),
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {size, size}),
         KOKKOS_LAMBDA(const size_t i, const size_t j) {
             if (i >= size_zero_block && j >= size_zero_block) {
                 tangent_damping_matrix(i, j) = nonzero_block(i - 3, j - 3);
@@ -393,9 +391,7 @@ Kokkos::View<double**> HeavyTopLinearizationParameters::TangentStiffnessMatrix(
     auto size = kNumberOfLieAlgebraComponents;
     auto tangent_stiffness_matrix = Kokkos::View<double**>("tangent_stiffness_matrix", size, size);
     Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultHostExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {size, size}
-        ),
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {size, size}),
         KOKKOS_LAMBDA(const size_t i, const size_t j) {
             if (i >= 3 && j >= 3) {
                 tangent_stiffness_matrix(i, j) = non_zero_block(i - 3, j - 3);
