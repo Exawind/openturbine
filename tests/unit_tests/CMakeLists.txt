@@ -1,5 +1,6 @@
 
 # Add subdirectories for unit tests
+add_subdirectory(gebt_poc)
 add_subdirectory(gen_alpha_poc)
 
 target_sources(

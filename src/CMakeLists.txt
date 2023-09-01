@@ -30,8 +30,9 @@ target_include_directories(${oturb_lib_name}
 )
 
 # Get all source files
-add_subdirectory(io)
+add_subdirectory(gebt_poc)
 add_subdirectory(gen_alpha_poc)
+add_subdirectory(io)
 add_subdirectory(utilities)
 
 # Generate OpenTurbine version header
