@@ -15,8 +15,21 @@ static constexpr double kPi = 3.14159265358979323846;
  * @param  b: Second double
  * @param  epsilon: Tolerance for closeness
  */
-KOKKOS_FUNCTION
-bool close_to(double a, double b, double epsilon = kTolerance);
+KOKKOS_INLINE_FUNCTION
+bool close_to(double a, double b, double epsilon = kTolerance) {
+    auto delta = std::abs(a - b);
+    a = std::abs(a);
+    b = std::abs(b);
+
+    if (a < epsilon) {
+        if (b < epsilon) {
+            return true;
+        }
+        return false;
+    }
+
+    return (delta / a) < epsilon ? true : false;
+}
 
 /*!
  * @brief  Takes an angle and returns the equivalent angle in the range [-pi, pi]

@@ -4,22 +4,6 @@
 
 namespace openturbine::gen_alpha_solver {
 
-KOKKOS_FUNCTION
-bool close_to(double a, double b, double epsilon) {
-    auto delta = std::abs(a - b);
-    a = std::abs(a);
-    b = std::abs(b);
-
-    if (a < epsilon) {
-        if (b < epsilon) {
-            return true;
-        }
-        return false;
-    }
-
-    return (delta / a) < epsilon ? true : false;
-}
-
 double wrap_angle_to_pi(double angle) {
     double wrapped_angle = std::fmod(angle, 2. * kPi);
 
