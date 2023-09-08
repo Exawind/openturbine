@@ -4,7 +4,6 @@ target_sources(${oturb_lib_name}
     generalized_alpha_time_integrator.cpp
     heavy_top.cpp
     linearization_parameters.cpp
-    quaternion.cpp
     solver.cpp
     state.cpp
     time_stepper.cpp
