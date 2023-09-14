@@ -57,14 +57,7 @@ TEST(StiffnessMatrixTest, ConstructorWithProvidedRandomMatrix) {
 
 TEST(SectionTest, ConstructUnitSection) {
     auto mass_matrix = gen_alpha_solver::MassMatrix(1., 1.);
-    auto stiffness_matrix = StiffnessMatrix(gen_alpha_solver::create_matrix({
-        {1., 0., 0., 0., 0., 0.},  // row 1
-        {0., 1., 0., 0., 0., 0.},  // row 2
-        {0., 0., 1., 0., 0., 0.},  // row 3
-        {0., 0., 0., 1., 0., 0.},  // row 4
-        {0., 0., 0., 0., 1., 0.},  // row 5
-        {0., 0., 0., 0., 0., 1.}   // row 6
-    }));
+    auto stiffness_matrix = gen_alpha_solver::create_identity_matrix(6);
     auto location = 0.;
 
     auto section = Section(location, mass_matrix, stiffness_matrix);
@@ -96,14 +89,7 @@ TEST(SectionTest, ConstructUnitSection) {
 
 TEST(SectionTest, ExpectThrowIfLocationIsOutOfBounds) {
     auto mass_matrix = gen_alpha_solver::MassMatrix(1., 1.);
-    auto stiffness_matrix = StiffnessMatrix(gen_alpha_solver::create_matrix({
-        {1., 0., 0., 0., 0., 0.},  // row 1
-        {0., 1., 0., 0., 0., 0.},  // row 2
-        {0., 0., 1., 0., 0., 0.},  // row 3
-        {0., 0., 0., 1., 0., 0.},  // row 4
-        {0., 0., 0., 0., 1., 0.},  // row 5
-        {0., 0., 0., 0., 0., 1.}   // row 6
-    }));
+    auto stiffness_matrix = gen_alpha_solver::create_identity_matrix(6);
     auto location_less_than_zero = -0.1;
     auto location_greater_than_one = 1.1;
 

@@ -21,7 +21,7 @@ private:
 class Section {
 public:
     /// Constructor that initializes section with given location, mass, and stiffness
-    Section(double location, gen_alpha_solver::MassMatrix, StiffnessMatrix);
+    Section(double location, gen_alpha_solver::MassMatrix, StiffnessMatrix, std::string name = "");
 
     /// Returns the normalized location of the section
     inline double GetNormalizedLocation() const { return location_; }
@@ -36,6 +36,7 @@ private:
     double location_;                           //< Normalized location of the section (0 <= l <= 1)
     gen_alpha_solver::MassMatrix mass_matrix_;  //< Mass matrix of the section
     StiffnessMatrix stiffness_matrix_;          //< Stiffness matrix of the section
+    std::string name_;                          //< Name of the section
 };
 
 }  // namespace openturbine::gebt_poc

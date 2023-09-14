@@ -12,9 +12,13 @@ StiffnessMatrix::StiffnessMatrix(const Kokkos::View<double**> stiffness)
 }
 
 Section::Section(
-    double location, gen_alpha_solver::MassMatrix mass_matrix, StiffnessMatrix stiffness_matrix
+    double location, gen_alpha_solver::MassMatrix mass_matrix, StiffnessMatrix stiffness_matrix,
+    std::string name
 )
-    : location_(location), mass_matrix_(mass_matrix), stiffness_matrix_(stiffness_matrix) {
+    : location_(location),
+      mass_matrix_(mass_matrix),
+      stiffness_matrix_(stiffness_matrix),
+      name_(name) {
     if (location_ < 0. || location_ > 1.) {
         throw std::invalid_argument("Section location must be between 0 and 1");
     }
