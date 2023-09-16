@@ -39,4 +39,21 @@ std::vector<Point> FindkNearestNeighbors(
     return k_nearest_neighbors;
 }
 
+Kokkos::View<double**> LinearInterpolation(
+    const Kokkos::View<double**> m1, const Kokkos::View<double**> m2, const double alpha
+) {
+    if (m1.extent(0) != m2.extent(0) || m1.extent(1) != m2.extent(1)) {
+        throw std::invalid_argument("Matrices must have the same dimensions");
+    }
+
+    Kokkos::View<double**> interpolated_matrix("interpolated_matrix", m1.extent(0), m1.extent(1));
+    for (size_t i = 0; i < m1.extent(0); i++) {
+        for (size_t j = 0; j < m1.extent(1); j++) {
+            interpolated_matrix(i, j) = (1. - alpha) * m1(i, j) + alpha * m2(i, j);
+        }
+    }
+
+    return interpolated_matrix;
+}
+
 }  // namespace openturbine::gebt_poc
