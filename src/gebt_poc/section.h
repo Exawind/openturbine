@@ -7,6 +7,8 @@ namespace openturbine::gebt_poc {
 /// Class to create and store a 6 x 6 stiffness matrix for a section
 class StiffnessMatrix {
 public:
+    StiffnessMatrix();
+
     /// Constructor that initializes the stiffness matrix to the given matrix
     StiffnessMatrix(const Kokkos::View<double**>);
 
@@ -20,6 +22,8 @@ private:
 /// Class to manage normalized location, mass matrix, and stiffness matrix of a beam section
 class Section {
 public:
+    Section() : location_(0.), mass_matrix_(), stiffness_matrix_(), name_("") {}
+
     /// Constructor that initializes section with given location, mass, and stiffness
     Section(double location, gen_alpha_solver::MassMatrix, StiffnessMatrix, std::string name = "");
 
@@ -31,6 +35,9 @@ public:
 
     /// Returns the stiffness matrix of the section
     inline const StiffnessMatrix& GetStiffnessMatrix() const { return stiffness_matrix_; }
+
+    /// Returns the name of the section
+    inline std::string GetName() const { return name_; }
 
 private:
     double location_;                           //< Normalized location of the section (0 <= l <= 1)
