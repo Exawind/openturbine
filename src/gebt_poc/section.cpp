@@ -2,8 +2,7 @@
 
 namespace openturbine::gebt_poc {
 
-StiffnessMatrix::StiffnessMatrix()
-    : stiffness_matrix_("stiffness_matrix", 6, 6) {
+StiffnessMatrix::StiffnessMatrix() : stiffness_matrix_("stiffness_matrix", 6, 6) {
     stiffness_matrix_ = gen_alpha_solver::create_identity_matrix(6);
 }
 
