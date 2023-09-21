@@ -68,9 +68,10 @@ TEST(StiffnessMatrixTest, ConstructorWithProvidedRandomMatrix) {
 TEST(SectionTest, DefaultConstructor) {
     Section section;
 
+    EXPECT_EQ(section.GetName(), "");
     EXPECT_EQ(section.GetNormalizedLocation(), 0.);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        section.GetMass().GetMassMatrix(),
+        section.GetMassMatrix().GetMassMatrix(),
         {
             {1., 0., 0., 0., 0., 0.},  // row 1
             {0., 1., 0., 0., 0., 0.},  // row 2
@@ -91,7 +92,6 @@ TEST(SectionTest, DefaultConstructor) {
             {0., 0., 0., 0., 0., 1.}   // row 6
         }
     );
-    EXPECT_EQ(section.GetName(), "");
 }
 
 TEST(SectionTest, ConstructUnitSection) {
@@ -99,11 +99,11 @@ TEST(SectionTest, ConstructUnitSection) {
     auto stiffness_matrix = gen_alpha_solver::create_identity_matrix(6);
     auto location = 0.;
 
-    auto section = Section(location, mass_matrix, stiffness_matrix, "section_1");
+    auto section = Section("section_1", location, mass_matrix, stiffness_matrix);
 
     EXPECT_EQ(section.GetNormalizedLocation(), location);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        section.GetMass().GetMassMatrix(),
+        section.GetMassMatrix().GetMassMatrix(),
         {
             {1., 0., 0., 0., 0., 0.},  // row 1
             {0., 1., 0., 0., 0., 0.},  // row 2
@@ -128,16 +128,18 @@ TEST(SectionTest, ConstructUnitSection) {
 }
 
 TEST(SectionTest, ExpectThrowIfLocationIsOutOfBounds) {
+    auto name = "section_1";
     auto mass_matrix = gen_alpha_solver::MassMatrix(1., 1.);
     auto stiffness_matrix = gen_alpha_solver::create_identity_matrix(6);
     auto location_less_than_zero = -0.1;
     auto location_greater_than_one = 1.1;
 
     EXPECT_THROW(
-        Section(location_less_than_zero, mass_matrix, stiffness_matrix), std::invalid_argument
+        Section(name, location_less_than_zero, mass_matrix, stiffness_matrix), std::invalid_argument
     );
     EXPECT_THROW(
-        Section(location_greater_than_one, mass_matrix, stiffness_matrix), std::invalid_argument
+        Section(name, location_greater_than_one, mass_matrix, stiffness_matrix),
+        std::invalid_argument
     );
 }
 
