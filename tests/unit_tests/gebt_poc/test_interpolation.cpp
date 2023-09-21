@@ -97,49 +97,56 @@ TEST(MatrixInterpolationTest, Find2NearestNeighborOnALine) {
 }
 
 TEST(MatrixInterpolationTest, LinearlyInterpolate1x1Matrices) {
-    Kokkos::View<double**> m1("m1", 1, 1);
-    Kokkos::View<double**> m2("m2", 1, 1);
-    m1(0, 0) = 1.;
-    m2(0, 0) = 2.;
+    auto m1 = Kokkos::View<double**>("m1", 1, 1);
+    auto m1_host = Kokkos::create_mirror(m1);
+    m1_host(0, 0) = 1.;
+    Kokkos::deep_copy(m1, m1_host);
+
+    auto m2 = Kokkos::View<double**>("m2", 1, 1);
+    auto m2_host = Kokkos::create_mirror(m2);
+    m2_host(0, 0) = 2.;
+    Kokkos::deep_copy(m2, m2_host);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        LinearInterpolation(m1, m2, 0.), {{1.}}
+        LinearlyInterpolateMatrices(m1, m2, 0.), {{1.}}
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        LinearInterpolation(m1, m2, 0.5), {{1.5}}
+        LinearlyInterpolateMatrices(m1, m2, 0.5), {{1.5}}
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        LinearInterpolation(m1, m2, 0.25), {{1.25}}
+        LinearlyInterpolateMatrices(m1, m2, 0.25), {{1.25}}
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        LinearInterpolation(m1, m2, 0.75), {{1.75}}
+        LinearlyInterpolateMatrices(m1, m2, 0.75), {{1.75}}
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        LinearInterpolation(m1, m2, 1.), {{2.}}
+        LinearlyInterpolateMatrices(m1, m2, 1.), {{2.}}
     );
 }
 
 TEST(MatrixInterpolationTest, LinearlyInterpolate6x6Matrices) {
-    Kokkos::View<double**> m1("m1", 6, 6);
-    Kokkos::deep_copy(m1, 0.);
-    m1(0, 0) = 1.;
-    m1(1, 1) = 2.;
-    m1(2, 2) = 3.;
-    m1(3, 3) = 4.;
-    m1(4, 4) = 5.;
-    m1(5, 5) = 6.;
+    auto m1 = Kokkos::View<double**>("m1", 6, 6);
+    auto m1_host = Kokkos::create_mirror(m1);
+    m1_host(0, 0) = 1.;
+    m1_host(1, 1) = 2.;
+    m1_host(2, 2) = 3.;
+    m1_host(3, 3) = 4.;
+    m1_host(4, 4) = 5.;
+    m1_host(5, 5) = 6.;
+    Kokkos::deep_copy(m1, m1_host);
 
-    Kokkos::View<double**> m2("m2", 6, 6);
-    Kokkos::deep_copy(m2, 0.);
-    m2(0, 0) = 7.;
-    m2(1, 1) = 8.;
-    m2(2, 2) = 9.;
-    m2(3, 3) = 10.;
-    m2(4, 4) = 11.;
-    m2(5, 5) = 12.;
+    auto m2 = Kokkos::View<double**>("m2", 6, 6);
+    auto m2_host = Kokkos::create_mirror(m2);
+    m2_host(0, 0) = 7.;
+    m2_host(1, 1) = 8.;
+    m2_host(2, 2) = 9.;
+    m2_host(3, 3) = 10.;
+    m2_host(4, 4) = 11.;
+    m2_host(5, 5) = 12.;
+    Kokkos::deep_copy(m2, m2_host);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        LinearInterpolation(m1, m2, 0.),
+        LinearlyInterpolateMatrices(m1, m2, 0.),
         {
             {1., 0., 0., 0., 0., 0.},  // row 1
             {0., 2., 0., 0., 0., 0.},  // row 2
@@ -150,7 +157,7 @@ TEST(MatrixInterpolationTest, LinearlyInterpolate6x6Matrices) {
         }
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        LinearInterpolation(m1, m2, 0.25),
+        LinearlyInterpolateMatrices(m1, m2, 0.25),
         {
             {2.5, 0., 0., 0., 0., 0.},  // row 1
             {0., 3.5, 0., 0., 0., 0.},  // row 2
@@ -161,7 +168,7 @@ TEST(MatrixInterpolationTest, LinearlyInterpolate6x6Matrices) {
         }
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        LinearInterpolation(m1, m2, 0.5),
+        LinearlyInterpolateMatrices(m1, m2, 0.5),
         {
             {4., 0., 0., 0., 0., 0.},  // row 1
             {0., 5., 0., 0., 0., 0.},  // row 2
@@ -172,7 +179,7 @@ TEST(MatrixInterpolationTest, LinearlyInterpolate6x6Matrices) {
         }
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        LinearInterpolation(m1, m2, 0.75),
+        LinearlyInterpolateMatrices(m1, m2, 0.75),
         {
             {5.5, 0., 0., 0., 0., 0.},  // row 1
             {0., 6.5, 0., 0., 0., 0.},  // row 2
@@ -183,7 +190,7 @@ TEST(MatrixInterpolationTest, LinearlyInterpolate6x6Matrices) {
         }
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        LinearInterpolation(m1, m2, 1.),
+        LinearlyInterpolateMatrices(m1, m2, 1.),
         {
             {7., 0., 0., 0., 0., 0.},   // row 1
             {0., 8., 0., 0., 0., 0.},   // row 2
