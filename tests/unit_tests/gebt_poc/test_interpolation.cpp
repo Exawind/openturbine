@@ -202,4 +202,81 @@ TEST(MatrixInterpolationTest, LinearlyInterpolate6x6Matrices) {
     );
 }
 
+TEST(ShapeFunctionsTest, LegendrePolynomialForZeroOrder) {
+    EXPECT_EQ(LegendrePolynomial(0, -1.), 1.);
+    EXPECT_EQ(LegendrePolynomial(0, 0.), 1.);
+    EXPECT_EQ(LegendrePolynomial(0, 1.), 1.);
+}
+
+TEST(ShapeFunctionsTest, LegendrePolynomialForFirstOrder) {
+    EXPECT_EQ(LegendrePolynomial(1, -1.), -1.);
+    EXPECT_EQ(LegendrePolynomial(1, 0.), 0.);
+    EXPECT_EQ(LegendrePolynomial(1, 1.), 1.);
+}
+
+TEST(ShapeFunctionsTest, LegendrePolynomialForSecondOrder) {
+    EXPECT_EQ(LegendrePolynomial(2, -1.), 1.);
+    EXPECT_EQ(LegendrePolynomial(2, 0.), -0.5);
+    EXPECT_EQ(LegendrePolynomial(2, 1.), 1.);
+}
+
+TEST(ShapeFunctionsTest, LegendrePolynomialForN3) {
+    EXPECT_EQ(LegendrePolynomial(3, -1.), -1.);
+    EXPECT_EQ(LegendrePolynomial(3, 0.), 0.);
+    EXPECT_EQ(LegendrePolynomial(3, 1.), 1.);
+}
+
+TEST(ShapeFunctionsTest, FindGLLPointsForFirstOrderPolynomial) {
+    auto gll_points = GenerateGLLPoints(1);
+    std::vector<Point> expected = {Point(-1., 0., 0.), Point(1., 0., 0.)};
+
+    EXPECT_EQ(gll_points.size(), expected.size());
+    for (size_t i = 0; i < gll_points.size(); ++i) {
+        EXPECT_NEAR(gll_points[i].GetXComponent(), expected[i].GetXComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i].GetYComponent(), expected[i].GetYComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i].GetZComponent(), expected[i].GetZComponent(), 1e-15);
+    }
+}
+
+TEST(ShapeFunctionsTest, FindGLLPointsForSecondOrderPolynomial) {
+    auto gll_points = GenerateGLLPoints(2);
+    std::vector<Point> expected = {Point(-1., 0., 0.), Point(0., 0., 0.), Point(1., 0., 0.)};
+
+    EXPECT_EQ(gll_points.size(), expected.size());
+    for (size_t i = 0; i < gll_points.size(); ++i) {
+        EXPECT_NEAR(gll_points[i].GetXComponent(), expected[i].GetXComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i].GetYComponent(), expected[i].GetYComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i].GetZComponent(), expected[i].GetZComponent(), 1e-15);
+    }
+}
+
+TEST(ShapeFunctionsTest, FindGLLPointsForFourthOrderPolynomial) {
+    auto gll_points = GenerateGLLPoints(4);
+    std::vector<Point> expected = {
+        Point(-1., 0., 0.), Point(-0.6546536707079771437983, 0., 0.), Point(0., 0., 0.),
+        Point(0.654653670707977143798, 0., 0.), Point(1., 0., 0.)};
+
+    EXPECT_EQ(gll_points.size(), expected.size());
+    for (size_t i = 0; i < gll_points.size(); ++i) {
+        EXPECT_NEAR(gll_points[i].GetXComponent(), expected[i].GetXComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i].GetYComponent(), expected[i].GetYComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i].GetZComponent(), expected[i].GetZComponent(), 1e-15);
+    }
+}
+
+TEST(ShapeFunctionsTest, FindGLLPointsForSixthOrderPolynomial) {
+    auto gll_points = GenerateGLLPoints(6);
+    std::vector<Point> expected = {
+        Point(-1., 0., 0.), Point(-0.8302238962785669, 0., 0.), Point(-0.46884879347071423, 0., 0.),
+        Point(0., 0., 0.),  Point(0.46884879347071423, 0., 0.), Point(0.8302238962785669, 0., 0.),
+        Point(1., 0., 0.)};
+
+    EXPECT_EQ(gll_points.size(), expected.size());
+    for (size_t i = 0; i < gll_points.size(); ++i) {
+        EXPECT_NEAR(gll_points[i].GetXComponent(), expected[i].GetXComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i].GetYComponent(), expected[i].GetYComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i].GetZComponent(), expected[i].GetZComponent(), 1e-15);
+    }
+}
+
 }  // namespace openturbine::gebt_poc::tests
