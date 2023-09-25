@@ -74,15 +74,15 @@ double LegendrePolynomial(const size_t n, const double x) {
     );
 }
 
-std::vector<Point> GenerateGLLPoints(const size_t order) {
+std::vector<double> GenerateGLLPoints(const size_t order) {
     if (order < 1) {
         throw std::invalid_argument("Polynomial order must be greater than or equal to 1");
     }
 
     auto n_nodes = order + 1;  // number of nodes = order + 1
-    std::vector<Point> gll_points(n_nodes);
-    gll_points[0] = Point(-1., 0., 0.);     // left end point
-    gll_points[order] = Point(1., 0., 0.);  // right end point
+    std::vector<double> gll_points(n_nodes);
+    gll_points[0] = -1.;     // left end point
+    gll_points[order] = 1.;  // right end point
 
     for (size_t i = 1; i < n_nodes; ++i) {
         // Use the Chebyshev-Gauss-Lobatto nodes as the initial guess
@@ -104,15 +104,7 @@ std::vector<Point> GenerateGLLPoints(const size_t order) {
                 break;
             }
         }
-        gll_points[i] = Point(x_it, 0., 0.);
-    }
-
-    auto log = util::Log::Get();
-    for (size_t i = 0; i <= order; ++i) {
-        log->Debug(
-            "GLL point " + std::to_string(i + 1) + ": " +
-            std::to_string(gll_points[i].GetXComponent()) + "\n"
-        );
+        gll_points[i] = x_it;
     }
 
     return gll_points;
@@ -129,6 +121,22 @@ double LegendrePolynomialDerivative(const size_t n, const double x) {
         return (3. * x);
     }
     return ((2 * n - 1) * LegendrePolynomial(n - 1, x) + LegendrePolynomialDerivative(n - 2, x));
+}
+
+std::vector<double> LagrangePolynomial(const size_t n, const double x) {
+    auto gll_points = GenerateGLLPoints(n);
+    auto lagrange_poly = std::vector<double>(n + 1, 1.);
+
+    for (size_t i = 0; i < n + 1; ++i) {
+        if (gen_alpha_solver::close_to(gll_points[i], x)) {
+            continue;
+        }
+        lagrange_poly[i] =
+            ((-1. / (n * (n + 1))) * ((1 - x * x) / (x - gll_points[i])) *
+             (LegendrePolynomialDerivative(n, x) / LegendrePolynomial(n, gll_points[i])));
+    }
+
+    return lagrange_poly;
 }
 
 }  // namespace openturbine::gebt_poc
