@@ -202,25 +202,25 @@ TEST(MatrixInterpolationTest, LinearlyInterpolate6x6Matrices) {
     );
 }
 
-TEST(ShapeFunctionsTest, LegendrePolynomialForZeroOrder) {
+TEST(ShapeFunctionsTest, ZerothOrderLegendrePolynomial) {
     EXPECT_EQ(LegendrePolynomial(0, -1.), 1.);
     EXPECT_EQ(LegendrePolynomial(0, 0.), 1.);
     EXPECT_EQ(LegendrePolynomial(0, 1.), 1.);
 }
 
-TEST(ShapeFunctionsTest, LegendrePolynomialForFirstOrder) {
+TEST(ShapeFunctionsTest, FirstOrderLegendrePolynomial) {
     EXPECT_EQ(LegendrePolynomial(1, -1.), -1.);
     EXPECT_EQ(LegendrePolynomial(1, 0.), 0.);
     EXPECT_EQ(LegendrePolynomial(1, 1.), 1.);
 }
 
-TEST(ShapeFunctionsTest, LegendrePolynomialForSecondOrder) {
+TEST(ShapeFunctionsTest, SecondOrderLegendrePolynomial) {
     EXPECT_EQ(LegendrePolynomial(2, -1.), 1.);
     EXPECT_EQ(LegendrePolynomial(2, 0.), -0.5);
     EXPECT_EQ(LegendrePolynomial(2, 1.), 1.);
 }
 
-TEST(ShapeFunctionsTest, LegendrePolynomialForN3) {
+TEST(ShapeFunctionsTest, ThirdOrderLegendrePolynomial) {
     EXPECT_EQ(LegendrePolynomial(3, -1.), -1.);
     EXPECT_EQ(LegendrePolynomial(3, 0.), 0.);
     EXPECT_EQ(LegendrePolynomial(3, 1.), 1.);
@@ -277,6 +277,36 @@ TEST(ShapeFunctionsTest, FindGLLPointsForSixthOrderPolynomial) {
         EXPECT_NEAR(gll_points[i].GetYComponent(), expected[i].GetYComponent(), 1e-15);
         EXPECT_NEAR(gll_points[i].GetZComponent(), expected[i].GetZComponent(), 1e-15);
     }
+}
+
+TEST(ShapeFunctionsTest, ZerothOrderLegendrePolynomialDerivative) {
+    EXPECT_EQ(LegendrePolynomialDerivative(0, -1.), 0.);
+    EXPECT_EQ(LegendrePolynomialDerivative(0, 0.), 0.);
+    EXPECT_EQ(LegendrePolynomialDerivative(0, 1.), 0.);
+}
+
+TEST(ShapeFunctionsTest, FirstOrderLegendrePolynomialDerivative) {
+    EXPECT_EQ(LegendrePolynomialDerivative(1, -1.), 1.);
+    EXPECT_EQ(LegendrePolynomialDerivative(1, 0.), 1.);
+    EXPECT_EQ(LegendrePolynomialDerivative(1, 1.), 1.);
+}
+
+TEST(ShapeFunctionsTest, SecondOrderLegendrePolynomialDerivative) {
+    EXPECT_EQ(LegendrePolynomialDerivative(2, -1.), -3.);
+    EXPECT_EQ(LegendrePolynomialDerivative(2, 0.), 0.);
+    EXPECT_EQ(LegendrePolynomialDerivative(2, 1.), 3.);
+}
+
+TEST(ShapeFunctionsTest, ThirdOrderLegendrePolynomialDerivative) {
+    EXPECT_EQ(LegendrePolynomialDerivative(3, -1.), 6.);
+    EXPECT_EQ(LegendrePolynomialDerivative(3, 0.), -1.5);
+    EXPECT_EQ(LegendrePolynomialDerivative(3, 1.), 6.);
+}
+
+TEST(ShapeFunctionsTest, SixthOrderLegendrePolynomialDerivative) {
+    EXPECT_EQ(LegendrePolynomialDerivative(6, -1.), -21.);
+    EXPECT_EQ(LegendrePolynomialDerivative(6, 0.), 0.);
+    EXPECT_EQ(LegendrePolynomialDerivative(6, 1.), 21.);
 }
 
 }  // namespace openturbine::gebt_poc::tests

@@ -41,4 +41,11 @@ double LegendrePolynomial(const size_t n, const double x);
  */
 std::vector<Point> GenerateGLLPoints(const size_t order);
 
+/*!
+ * @brief  Evaluates the first derivative of Legendre polynomial of order n at point x recursively
+ * @param  n: Order of the Legendre polynomial
+ * @param  x: Point at which the derivative of the Legendre polynomial is to be evaluated
+ */
+double LegendrePolynomialDerivative(const size_t n, const double x);
+
 }  // namespace openturbine::gebt_poc
