@@ -1,14 +1,16 @@
 #pragma once
 
+#include <limits>
+
 #include "src/gebt_poc/point.h"
 
 namespace openturbine::gebt_poc {
 
-///< Maximum number of iterations allowed for Newton's method
+/// Maximum number of iterations allowed for Newton's method
 static constexpr size_t kMaxIterations{1000};
 
-///< Tolerance for Newton's method to machine precision
-static constexpr double kTolerance{1e-15};
+/// Tolerance for Newton's method to machine precision
+static constexpr double kConvergenceTolerance{std::numeric_limits<double>::epsilon()};
 
 /// Finds the nearest neighbor of a point from a list
 Point FindNearestNeighbor(const std::vector<Point>&, const Point&);
@@ -29,16 +31,44 @@ Kokkos::View<double**> LinearlyInterpolateMatrices(
 
 /*!
  * @brief  Calculates the value of Legendre polynomial of order n at point x recursively
+   @details  Uses the recurrence relation for Legendre polynomials provided in
+             Eq. B.1.15 (Page 446) of "High-Order Methods for Incompressible Fluid Flow"
+             by Deville et al. 2002
+             Ref: https://doi.org/10.1017/CBO9780511546792
  * @param  n: Order of the Legendre polynomial
  * @param  x: Point at which the Legendre polynomial is to be evaluated
  */
 double LegendrePolynomial(const size_t n, const double x);
 
 /*!
+ * @brief  Evaluates the first derivative of Legendre polynomial of order n at point x recursively
+ * @details  Uses the recurrence relation for Legendre polynomials provided in
+             Eq. B.1.20 (Page 446) of "High-Order Methods for Incompressible Fluid Flow"
+             by Deville et al. 2002
+             Ref: https://doi.org/10.1017/CBO9780511546792
+ * @param  n: Order of the Legendre polynomial
+ * @param  x: Point at which the derivative of the Legendre polynomial is to be evaluated
+ */
+double LegendrePolynomialDerivative(const size_t n, const double x);
+
+/*!
  * @brief  Determines the (n+1) Gauss-Lobatto-Legendre points required for nodal locations
  *         using polynomial shape/interpolation functions of order n
+ * @details  Uses the Newton's method to find the roots of the Legendre polynomial which are
+             the Gauss-Lobatto-Legendre points
  * @param  order: Order of the polynomial shape/interpolation functions
  */
-std::vector<Point> GenerateGLLPoints(const size_t order);
+std::vector<double> GenerateGLLPoints(const size_t order);
+
+/*!
+ * @brief Calculates the Lagrangian interpolation functions for order n at a given point x
+   @details  Uses the relationship based on GLL points, Legendre polynomials and its
+             derivative provided in Eq. 2.4.3 (Page 63) of "High-Order Methods for Incompressible
+             Fluid Flow" by Deville et al. 2002
+             Ref: https://doi.org/10.1017/CBO9780511546792
+ * @param n: Order of the Legendre polynomial
+ * @param x: Point at which the Lagrangian interpolation function is to be evaluated
+ */
+std::vector<double> LagrangePolynomial(const size_t n, const double x);
 
 }  // namespace openturbine::gebt_poc

@@ -202,25 +202,25 @@ TEST(MatrixInterpolationTest, LinearlyInterpolate6x6Matrices) {
     );
 }
 
-TEST(ShapeFunctionsTest, LegendrePolynomialForZeroOrder) {
+TEST(ShapeFunctionsTest, ZerothOrderLegendrePolynomial) {
     EXPECT_EQ(LegendrePolynomial(0, -1.), 1.);
     EXPECT_EQ(LegendrePolynomial(0, 0.), 1.);
     EXPECT_EQ(LegendrePolynomial(0, 1.), 1.);
 }
 
-TEST(ShapeFunctionsTest, LegendrePolynomialForFirstOrder) {
+TEST(ShapeFunctionsTest, FirstOrderLegendrePolynomial) {
     EXPECT_EQ(LegendrePolynomial(1, -1.), -1.);
     EXPECT_EQ(LegendrePolynomial(1, 0.), 0.);
     EXPECT_EQ(LegendrePolynomial(1, 1.), 1.);
 }
 
-TEST(ShapeFunctionsTest, LegendrePolynomialForSecondOrder) {
+TEST(ShapeFunctionsTest, SecondOrderLegendrePolynomial) {
     EXPECT_EQ(LegendrePolynomial(2, -1.), 1.);
     EXPECT_EQ(LegendrePolynomial(2, 0.), -0.5);
     EXPECT_EQ(LegendrePolynomial(2, 1.), 1.);
 }
 
-TEST(ShapeFunctionsTest, LegendrePolynomialForN3) {
+TEST(ShapeFunctionsTest, ThirdOrderLegendrePolynomial) {
     EXPECT_EQ(LegendrePolynomial(3, -1.), -1.);
     EXPECT_EQ(LegendrePolynomial(3, 0.), 0.);
     EXPECT_EQ(LegendrePolynomial(3, 1.), 1.);
@@ -228,54 +228,195 @@ TEST(ShapeFunctionsTest, LegendrePolynomialForN3) {
 
 TEST(ShapeFunctionsTest, FindGLLPointsForFirstOrderPolynomial) {
     auto gll_points = GenerateGLLPoints(1);
-    std::vector<Point> expected = {Point(-1., 0., 0.), Point(1., 0., 0.)};
+    std::vector<double> expected = {-1., 1.};
 
     EXPECT_EQ(gll_points.size(), expected.size());
     for (size_t i = 0; i < gll_points.size(); ++i) {
-        EXPECT_NEAR(gll_points[i].GetXComponent(), expected[i].GetXComponent(), 1e-15);
-        EXPECT_NEAR(gll_points[i].GetYComponent(), expected[i].GetYComponent(), 1e-15);
-        EXPECT_NEAR(gll_points[i].GetZComponent(), expected[i].GetZComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
     }
 }
 
 TEST(ShapeFunctionsTest, FindGLLPointsForSecondOrderPolynomial) {
     auto gll_points = GenerateGLLPoints(2);
-    std::vector<Point> expected = {Point(-1., 0., 0.), Point(0., 0., 0.), Point(1., 0., 0.)};
+    std::vector<double> expected = {-1., 0., 1.};
 
     EXPECT_EQ(gll_points.size(), expected.size());
     for (size_t i = 0; i < gll_points.size(); ++i) {
-        EXPECT_NEAR(gll_points[i].GetXComponent(), expected[i].GetXComponent(), 1e-15);
-        EXPECT_NEAR(gll_points[i].GetYComponent(), expected[i].GetYComponent(), 1e-15);
-        EXPECT_NEAR(gll_points[i].GetZComponent(), expected[i].GetZComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
     }
 }
 
 TEST(ShapeFunctionsTest, FindGLLPointsForFourthOrderPolynomial) {
     auto gll_points = GenerateGLLPoints(4);
-    std::vector<Point> expected = {
-        Point(-1., 0., 0.), Point(-0.6546536707079771437983, 0., 0.), Point(0., 0., 0.),
-        Point(0.654653670707977143798, 0., 0.), Point(1., 0., 0.)};
+    std::vector<double> expected = {-1., -0.6546536707079771437983, 0., 0.654653670707977143798, 1.};
 
     EXPECT_EQ(gll_points.size(), expected.size());
     for (size_t i = 0; i < gll_points.size(); ++i) {
-        EXPECT_NEAR(gll_points[i].GetXComponent(), expected[i].GetXComponent(), 1e-15);
-        EXPECT_NEAR(gll_points[i].GetYComponent(), expected[i].GetYComponent(), 1e-15);
-        EXPECT_NEAR(gll_points[i].GetZComponent(), expected[i].GetZComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
     }
 }
 
 TEST(ShapeFunctionsTest, FindGLLPointsForSixthOrderPolynomial) {
     auto gll_points = GenerateGLLPoints(6);
-    std::vector<Point> expected = {
-        Point(-1., 0., 0.), Point(-0.8302238962785669, 0., 0.), Point(-0.46884879347071423, 0., 0.),
-        Point(0., 0., 0.),  Point(0.46884879347071423, 0., 0.), Point(0.8302238962785669, 0., 0.),
-        Point(1., 0., 0.)};
+    std::vector<double> expected = {-1., -0.8302238962785669, -0.46884879347071423,
+                                    0.,  0.46884879347071423, 0.8302238962785669,
+                                    1.};
 
     EXPECT_EQ(gll_points.size(), expected.size());
     for (size_t i = 0; i < gll_points.size(); ++i) {
-        EXPECT_NEAR(gll_points[i].GetXComponent(), expected[i].GetXComponent(), 1e-15);
-        EXPECT_NEAR(gll_points[i].GetYComponent(), expected[i].GetYComponent(), 1e-15);
-        EXPECT_NEAR(gll_points[i].GetZComponent(), expected[i].GetZComponent(), 1e-15);
+        EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
+    }
+}
+
+TEST(ShapeFunctionsTest, ZerothOrderLegendrePolynomialDerivative) {
+    EXPECT_EQ(LegendrePolynomialDerivative(0, -1.), 0.);
+    EXPECT_EQ(LegendrePolynomialDerivative(0, 0.), 0.);
+    EXPECT_EQ(LegendrePolynomialDerivative(0, 1.), 0.);
+}
+
+TEST(ShapeFunctionsTest, FirstOrderLegendrePolynomialDerivative) {
+    EXPECT_EQ(LegendrePolynomialDerivative(1, -1.), 1.);
+    EXPECT_EQ(LegendrePolynomialDerivative(1, 0.), 1.);
+    EXPECT_EQ(LegendrePolynomialDerivative(1, 1.), 1.);
+}
+
+TEST(ShapeFunctionsTest, SecondOrderLegendrePolynomialDerivative) {
+    EXPECT_EQ(LegendrePolynomialDerivative(2, -1.), -3.);
+    EXPECT_EQ(LegendrePolynomialDerivative(2, 0.), 0.);
+    EXPECT_EQ(LegendrePolynomialDerivative(2, 1.), 3.);
+}
+
+TEST(ShapeFunctionsTest, ThirdOrderLegendrePolynomialDerivative) {
+    EXPECT_EQ(LegendrePolynomialDerivative(3, -1.), 6.);
+    EXPECT_EQ(LegendrePolynomialDerivative(3, 0.), -1.5);
+    EXPECT_EQ(LegendrePolynomialDerivative(3, 1.), 6.);
+}
+
+TEST(ShapeFunctionsTest, SixthOrderLegendrePolynomialDerivative) {
+    EXPECT_EQ(LegendrePolynomialDerivative(6, -1.), -21.);
+    EXPECT_EQ(LegendrePolynomialDerivative(6, 0.), 0.);
+    EXPECT_EQ(LegendrePolynomialDerivative(6, 1.), 21.);
+}
+
+TEST(ShapeFunctionsTest, FirstOrderLagrangePolynomial) {
+    auto lagrange_poly_1 = LagrangePolynomial(1, -1.);
+    std::vector<double> expected = {1., 0.};
+
+    EXPECT_EQ(lagrange_poly_1.size(), expected.size());
+    for (size_t i = 0; i < lagrange_poly_1.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_1[i], expected[i], 1e-15);
+    }
+
+    auto lagrange_poly_2 = LagrangePolynomial(1, 0.);
+    std::vector<double> expected_2 = {0.5, 0.5};
+
+    EXPECT_EQ(lagrange_poly_2.size(), expected_2.size());
+    for (size_t i = 0; i < lagrange_poly_2.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_2[i], expected_2[i], 1e-15);
+    }
+
+    auto lagrange_poly_3 = LagrangePolynomial(1, 1.);
+    std::vector<double> expected_3 = {0., 1.};
+
+    EXPECT_EQ(lagrange_poly_3.size(), expected_3.size());
+    for (size_t i = 0; i < lagrange_poly_3.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_3[i], expected_3[i], 1e-15);
+    }
+}
+
+TEST(ShapeFunctionsTest, SecondOrderLagrangePolynomial) {
+    auto lagrange_poly_1 = LagrangePolynomial(2, -1.);
+    std::vector<double> expected = {1., 0., 0.};
+
+    EXPECT_EQ(lagrange_poly_1.size(), expected.size());
+    for (size_t i = 0; i < lagrange_poly_1.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_1[i], expected[i], 1e-15);
+    }
+
+    auto lagrange_poly_2 = LagrangePolynomial(2, 0.);
+    std::vector<double> expected_2 = {0., 1., 0.};
+
+    EXPECT_EQ(lagrange_poly_2.size(), expected_2.size());
+    for (size_t i = 0; i < lagrange_poly_2.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_2[i], expected_2[i], 1e-15);
+    }
+
+    auto lagrange_poly_3 = LagrangePolynomial(2, 1.);
+    std::vector<double> expected_3 = {0., 0., 1.};
+
+    EXPECT_EQ(lagrange_poly_3.size(), expected_3.size());
+    for (size_t i = 0; i < lagrange_poly_3.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_3[i], expected_3[i], 1e-15);
+    }
+}
+
+TEST(ShapeFunctionsTest, FourthOrderLagrangePolynomial) {
+    auto lagrange_poly_1 = LagrangePolynomial(4, -1.);
+    std::vector<double> expected = {1., 0., 0., 0., 0.};
+
+    EXPECT_EQ(lagrange_poly_1.size(), expected.size());
+    for (size_t i = 0; i < lagrange_poly_1.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_1[i], expected[i], 1e-15);
+    }
+
+    auto lagrange_poly_2 = LagrangePolynomial(4, -0.6546536707079771);
+    std::vector<double> expected_2 = {0., 1., 0., 0., 0.};
+
+    EXPECT_EQ(lagrange_poly_2.size(), expected_2.size());
+    for (size_t i = 0; i < lagrange_poly_2.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_2[i], expected_2[i], 1e-15);
+    }
+
+    auto lagrange_poly_3 = LagrangePolynomial(4, 0.);
+    std::vector<double> expected_3 = {0., 0., 1., 0., 0.};
+
+    EXPECT_EQ(lagrange_poly_3.size(), expected_3.size());
+    for (size_t i = 0; i < lagrange_poly_3.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_3[i], expected_3[i], 1e-15);
+    }
+
+    auto lagrange_poly_4 = LagrangePolynomial(4, 0.6546536707079771);
+    std::vector<double> expected_4 = {0., 0., 0., 1., 0.};
+
+    EXPECT_EQ(lagrange_poly_4.size(), expected_4.size());
+    for (size_t i = 0; i < lagrange_poly_4.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_4[i], expected_4[i], 1e-15);
+    }
+
+    auto lagrange_poly_5 = LagrangePolynomial(4, 1.);
+    std::vector<double> expected_5 = {0., 0., 0., 0., 1.};
+
+    EXPECT_EQ(lagrange_poly_5.size(), expected_5.size());
+    for (size_t i = 0; i < lagrange_poly_5.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_5[i], expected_5[i], 1e-15);
+    }
+
+    auto lagrange_poly_6 = LagrangePolynomial(4, -0.8);
+    std::vector<double> expected_6 = {
+        0.266400000000000, 0.855336358376291, -0.1776000000000001, 0.0854636416237095,
+        -0.0296000000000000};
+
+    EXPECT_EQ(lagrange_poly_6.size(), expected_6.size());
+    for (size_t i = 0; i < lagrange_poly_6.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_6[i], expected_6[i], 1e-15);
+    }
+
+    auto lagrange_poly_7 = LagrangePolynomial(4, 0.1);
+    std::vector<double> expected_7 = {
+        0.0329625, -0.1121093731918499, 0.9669, 0.1525343731918499, -0.0402875};
+
+    EXPECT_EQ(lagrange_poly_7.size(), expected_7.size());
+    for (size_t i = 0; i < lagrange_poly_7.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_7[i], expected_7[i], 1e-15);
+    }
+
+    auto lagrange_poly_8 = LagrangePolynomial(4, 0.4);
+    std::vector<double> expected_8 = {
+        0.0564, -0.1746924181056723, 0.5263999999999998, 0.7234924181056726, -0.1316};
+
+    EXPECT_EQ(lagrange_poly_8.size(), expected_8.size());
+    for (size_t i = 0; i < lagrange_poly_8.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_8[i], expected_8[i], 1e-15);
     }
 }
 

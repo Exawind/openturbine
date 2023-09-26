@@ -74,15 +74,28 @@ double LegendrePolynomial(const size_t n, const double x) {
     );
 }
 
-std::vector<Point> GenerateGLLPoints(const size_t order) {
+double LegendrePolynomialDerivative(const size_t n, const double x) {
+    if (n == 0) {
+        return 0.;
+    }
+    if (n == 1) {
+        return 1.;
+    }
+    if (n == 2) {
+        return (3. * x);
+    }
+    return ((2 * n - 1) * LegendrePolynomial(n - 1, x) + LegendrePolynomialDerivative(n - 2, x));
+}
+
+std::vector<double> GenerateGLLPoints(const size_t order) {
     if (order < 1) {
         throw std::invalid_argument("Polynomial order must be greater than or equal to 1");
     }
 
     auto n_nodes = order + 1;  // number of nodes = order + 1
-    std::vector<Point> gll_points(n_nodes);
-    gll_points[0] = Point(-1., 0., 0.);     // left end point
-    gll_points[order] = Point(1., 0., 0.);  // right end point
+    std::vector<double> gll_points(n_nodes);
+    gll_points[0] = -1.;     // left end point
+    gll_points[order] = 1.;  // right end point
 
     for (size_t i = 1; i < n_nodes; ++i) {
         // Use the Chebyshev-Gauss-Lobatto nodes as the initial guess
@@ -100,22 +113,31 @@ std::vector<Point> GenerateGLLPoints(const size_t order) {
             x_it -= (x_it * legendre_poly[n_nodes - 1] - legendre_poly[n_nodes - 2]) /
                     (n_nodes * legendre_poly[n_nodes - 1]);
 
-            if (std::abs(x_it - x_old) <= kTolerance) {
+            if (std::abs(x_it - x_old) <= kConvergenceTolerance) {
                 break;
             }
         }
-        gll_points[i] = Point(x_it, 0., 0.);
-    }
-
-    auto log = util::Log::Get();
-    for (size_t i = 0; i <= order; ++i) {
-        log->Debug(
-            "GLL point " + std::to_string(i + 1) + ": " +
-            std::to_string(gll_points[i].GetXComponent()) + "\n"
-        );
+        gll_points[i] = x_it;
     }
 
     return gll_points;
+}
+
+std::vector<double> LagrangePolynomial(const size_t n, const double x) {
+    auto gll_points = GenerateGLLPoints(n);  // n+1 GLL points for n+1 nodes
+    auto lagrange_poly = std::vector<double>(n + 1, 1.);
+
+    for (size_t i = 0; i < n + 1; ++i) {
+        if (gen_alpha_solver::close_to(gll_points[i], x)) {
+            // If x is close to a GLL point, then Lagrange polynomial is 1.0 at that point
+            continue;
+        }
+        lagrange_poly[i] =
+            ((-1. / (n * (n + 1))) * ((1 - x * x) / (x - gll_points[i])) *
+             (LegendrePolynomialDerivative(n, x) / LegendrePolynomial(n, gll_points[i])));
+    }
+
+    return lagrange_poly;
 }
 
 }  // namespace openturbine::gebt_poc
