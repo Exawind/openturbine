@@ -5,18 +5,32 @@
 
 namespace openturbine::gebt_poc::tests {
 
-TEST(ModelTest, ConstructModelWithZeroSections) {
-    Model model("model", CreateSections({}));
+TEST(ModelTest, ConstructDefaultModel) {
+    Model model("model");
 
     EXPECT_EQ(model.GetName(), "model");
-    EXPECT_EQ(model.GetSections().extent(0), 0);
+    EXPECT_EQ(model.GetSections().size(), 0);
 }
 
-TEST(ModelTest, ConstructModelWithOneSection) {
-    Model model("model", CreateSections({Section()}));
+TEST(ModelTest, ConstructModelWithSections) {
+    auto section_1 = Section();
+    auto section_2 = Section();
+
+    Model model("model", {section_1, section_2});
 
     EXPECT_EQ(model.GetName(), "model");
-    EXPECT_EQ(model.GetSections().extent(0), 1);
+    EXPECT_EQ(model.GetSections().size(), 2);
+}
+
+TEST(ModelTest, AddASectionToModel) {
+    Model model("model");
+    auto section = Section(
+        "s_1", 0., gen_alpha_solver::MassMatrix(1., 1.), gen_alpha_solver::create_identity_matrix(6)
+    );
+
+    model.AddSection(section);
+
+    EXPECT_EQ(model.GetSections().size(), 1);
 }
 
 }  // namespace openturbine::gebt_poc::tests
