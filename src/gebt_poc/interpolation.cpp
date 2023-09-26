@@ -74,6 +74,19 @@ double LegendrePolynomial(const size_t n, const double x) {
     );
 }
 
+double LegendrePolynomialDerivative(const size_t n, const double x) {
+    if (n == 0) {
+        return 0.;
+    }
+    if (n == 1) {
+        return 1.;
+    }
+    if (n == 2) {
+        return (3. * x);
+    }
+    return ((2 * n - 1) * LegendrePolynomial(n - 1, x) + LegendrePolynomialDerivative(n - 2, x));
+}
+
 std::vector<double> GenerateGLLPoints(const size_t order) {
     if (order < 1) {
         throw std::invalid_argument("Polynomial order must be greater than or equal to 1");
@@ -100,7 +113,7 @@ std::vector<double> GenerateGLLPoints(const size_t order) {
             x_it -= (x_it * legendre_poly[n_nodes - 1] - legendre_poly[n_nodes - 2]) /
                     (n_nodes * legendre_poly[n_nodes - 1]);
 
-            if (std::abs(x_it - x_old) <= kTolerance) {
+            if (std::abs(x_it - x_old) <= kConvergenceTolerance) {
                 break;
             }
         }
@@ -110,25 +123,13 @@ std::vector<double> GenerateGLLPoints(const size_t order) {
     return gll_points;
 }
 
-double LegendrePolynomialDerivative(const size_t n, const double x) {
-    if (n == 0) {
-        return 0.;
-    }
-    if (n == 1) {
-        return 1.;
-    }
-    if (n == 2) {
-        return (3. * x);
-    }
-    return ((2 * n - 1) * LegendrePolynomial(n - 1, x) + LegendrePolynomialDerivative(n - 2, x));
-}
-
 std::vector<double> LagrangePolynomial(const size_t n, const double x) {
-    auto gll_points = GenerateGLLPoints(n);
+    auto gll_points = GenerateGLLPoints(n);  // n+1 GLL points for n+1 nodes
     auto lagrange_poly = std::vector<double>(n + 1, 1.);
 
     for (size_t i = 0; i < n + 1; ++i) {
         if (gen_alpha_solver::close_to(gll_points[i], x)) {
+            // If x is close to a GLL point, then Lagrange polynomial is 1.0 at that point
             continue;
         }
         lagrange_poly[i] =
