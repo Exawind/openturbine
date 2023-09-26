@@ -4,21 +4,41 @@
 
 namespace openturbine::gebt_poc {
 
-/// Find the nearest neighbor of a point from a list
+///< Maximum number of iterations allowed for Newton's method
+static constexpr size_t kMaxIterations{1000};
+
+///< Tolerance for Newton's method to machine precision
+static constexpr double kTolerance{1e-15};
+
+/// Finds the nearest neighbor of a point from a list
 Point FindNearestNeighbor(const std::vector<Point>&, const Point&);
 
 /*!
- * @brief  Find the k nearest neighbors of a point from a list
+ * @brief  Finds the k nearest neighbors of a point from a list
  * @param  k: Number of nearest neighbors to find
  */
 std::vector<Point> FindkNearestNeighbors(const std::vector<Point>&, const Point&, const size_t k);
 
 /*!
- * @brief  Perform linear interpolation between two matrices with the same dimensions
+ * @brief  Performs linear interpolation between two matrices with the same dimensions
  * @param  alpha: Normalized distance of the interpolation point from the first matrix
  */
 Kokkos::View<double**> LinearlyInterpolateMatrices(
     const Kokkos::View<double**>, const Kokkos::View<double**>, const double alpha
 );
+
+/*!
+ * @brief  Calculates the value of Legendre polynomial of order n at point x recursively
+ * @param  n: Order of the Legendre polynomial
+ * @param  x: Point at which the Legendre polynomial is to be evaluated
+ */
+double LegendrePolynomial(const size_t n, const double x);
+
+/*!
+ * @brief  Determines the (n+1) Gauss-Lobatto-Legendre points required for nodal locations
+ *         using polynomial shape/interpolation functions of order n
+ * @param  order: Order of the polynomial shape/interpolation functions
+ */
+std::vector<Point> GenerateGLLPoints(const size_t order);
 
 }  // namespace openturbine::gebt_poc
