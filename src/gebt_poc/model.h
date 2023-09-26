@@ -4,23 +4,24 @@
 
 namespace openturbine::gebt_poc {
 
-/// Creates a Kokkos view of sections from a provided std::vector of sections
-Kokkos::View<Section*> CreateSections(std::vector<Section>);
-
 /// Class to manage different aspects of the beam finite element model creation
 class Model {
 public:
-    Model(std::string name, Kokkos::View<Section*>);
+    Model(std::string name);
+    Model(std::string name, std::vector<Section>);
 
     /// Returns the name of the model
     inline std::string GetName() const { return name_; }
 
-    /// Returns the sections of the model
-    inline Kokkos::View<Section*> GetSections() const { return sections_; }
+    /// Adds a section to the model
+    void AddSection(Section section) { sections_.emplace_back(section); }
+
+    /// Returns the sections of the model as a read-only vector
+    inline const std::vector<Section>& GetSections() const { return sections_; }
 
 private:
-    std::string name_;                 //< Name of the model
-    Kokkos::View<Section*> sections_;  //< Sections of the beam
+    std::string name_;               //< Name of the model
+    std::vector<Section> sections_;  //< Sections of the beam
 };
 
 }  // namespace openturbine::gebt_poc
