@@ -226,6 +226,14 @@ TEST(ShapeFunctionsTest, ThirdOrderLegendrePolynomial) {
     EXPECT_EQ(LegendrePolynomial(3, 1.), 1.);
 }
 
+TEST(ShapeFunctionsTest, FourthOrderLegendrePolynomial) {
+    EXPECT_EQ(LegendrePolynomial(4, -1.), 1.);
+    EXPECT_EQ(LegendrePolynomial(4, -0.6546536707079771), -0.4285714285714286);
+    EXPECT_EQ(LegendrePolynomial(4, 0.), 0.375);
+    EXPECT_EQ(LegendrePolynomial(4, 0.6546536707079771), -0.4285714285714286);
+    EXPECT_EQ(LegendrePolynomial(4, 1.), 1.);
+}
+
 TEST(ShapeFunctionsTest, FindGLLPointsForFirstOrderPolynomial) {
     auto gll_points = GenerateGLLPoints(1);
     std::vector<double> expected = {-1., 1.};
@@ -417,6 +425,98 @@ TEST(ShapeFunctionsTest, FourthOrderLagrangePolynomial) {
     EXPECT_EQ(lagrange_poly_8.size(), expected_8.size());
     for (size_t i = 0; i < lagrange_poly_8.size(); ++i) {
         EXPECT_NEAR(lagrange_poly_8[i], expected_8[i], 1e-15);
+    }
+}
+
+TEST(ShapeFunctionsTest, FirstOrderLagrangePolynomialDerivative) {
+    auto lagrange_poly_der_1 = LagrangePolynomialDerivative(1, -1.);
+    std::vector<double> expected = {-0.5, 0.5};
+
+    EXPECT_EQ(lagrange_poly_der_1.size(), expected.size());
+    for (size_t i = 0; i < lagrange_poly_der_1.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_der_1[i], expected[i], 1e-15);
+    }
+
+    auto lagrange_poly_der_2 = LagrangePolynomialDerivative(1, 1.);
+    std::vector<double> expected_2 = {-0.5, 0.5};
+
+    EXPECT_EQ(lagrange_poly_der_2.size(), expected_2.size());
+    for (size_t i = 0; i < lagrange_poly_der_2.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_der_2[i], expected_2[i], 1e-15);
+    }
+}
+
+TEST(ShapeFunctionsTest, FourthOrderLagrangePolynomialDerivative) {
+    auto lagrange_poly_der_1 = LagrangePolynomialDerivative(4, -1.);
+    std::vector<double> expected = {
+        -5., 6.75650248872424, -2.666666666666667, 1.410164177942427, -0.5};
+
+    EXPECT_EQ(lagrange_poly_der_1.size(), expected.size());
+    for (size_t i = 0; i < lagrange_poly_der_1.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_der_1[i], expected[i], 1e-15);
+    }
+
+    auto lagrange_poly_der_2 = LagrangePolynomialDerivative(4, -0.6546536707079771);
+    std::vector<double> expected_2 = {
+        -1.240990253030983, 0., 1.74574312188794, -0.7637626158259736, 0.2590097469690172};
+
+    EXPECT_EQ(lagrange_poly_der_2.size(), expected_2.size());
+    for (size_t i = 0; i < lagrange_poly_der_2.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_der_2[i], expected_2[i], 1e-15);
+    }
+
+    auto lagrange_poly_der_3 = LagrangePolynomialDerivative(4, 0.);
+    std::vector<double> expected_3 = {0.375, -1.336584577695454, 0., 1.336584577695454, -0.375};
+
+    EXPECT_EQ(lagrange_poly_der_3.size(), expected_3.size());
+    for (size_t i = 0; i < lagrange_poly_der_3.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_der_3[i], expected_3[i], 1e-15);
+    }
+
+    auto lagrange_poly_der_4 = LagrangePolynomialDerivative(4, 0.6546536707079771);
+    std::vector<double> expected_4 = {
+        -0.2590097469690172, 0.7637626158259736, -1.74574312188794, 0., 1.240990253030983};
+
+    EXPECT_EQ(lagrange_poly_der_4.size(), expected_4.size());
+    for (size_t i = 0; i < lagrange_poly_der_4.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_der_4[i], expected_4[i], 1e-15);
+    }
+
+    auto lagrange_poly_der_5 = LagrangePolynomialDerivative(4, 1.);
+    std::vector<double> expected_5 = {
+        0.5, -1.410164177942427, 2.666666666666667, -6.756502488724241, 5.};
+
+    EXPECT_EQ(lagrange_poly_der_5.size(), expected_5.size());
+    for (size_t i = 0; i < lagrange_poly_der_5.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_der_5[i], expected_5[i], 1e-15);
+    }
+
+    auto lagrange_poly_der_6 = LagrangePolynomialDerivative(4, -0.8);
+    std::vector<double> expected_6 = {
+        -2.497, 2.144324478146484, 0.5546666666666656, -0.31499114481315, 0.1129999999999999};
+
+    EXPECT_EQ(lagrange_poly_der_6.size(), expected_6.size());
+    for (size_t i = 0; i < lagrange_poly_der_6.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_der_6[i], expected_6[i], 1e-15);
+    }
+
+    auto lagrange_poly_der_7 = LagrangePolynomialDerivative(4, 0.1);
+    std::vector<double> expected_7 = {
+        0.27725, -0.896320373697923, -0.6573333333333338, 1.696653707031257, -0.42025};
+
+    EXPECT_EQ(lagrange_poly_der_7.size(), expected_7.size());
+    for (size_t i = 0; i < lagrange_poly_der_7.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_der_7[i], expected_7[i], 1e-15);
+    }
+
+    auto lagrange_poly_der_8 = LagrangePolynomialDerivative(4, 0.4);
+    std::vector<double> expected_8 = {
+        -0.1210000000000001, 0.4156426862650312, -2.069333333333333, 1.805690647068303,
+        -0.03099999999999978};
+
+    EXPECT_EQ(lagrange_poly_der_8.size(), expected_8.size());
+    for (size_t i = 0; i < lagrange_poly_der_8.size(); ++i) {
+        EXPECT_NEAR(lagrange_poly_der_8[i], expected_8[i], 1e-15);
     }
 }
 
