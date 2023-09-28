@@ -6,4 +6,5 @@ target_sources(
     test_model.cpp
     test_point.cpp
     test_section.cpp
+    test_mesh.cpp
 )
