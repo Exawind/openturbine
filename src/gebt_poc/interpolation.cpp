@@ -69,8 +69,12 @@ double LegendrePolynomial(const size_t n, const double x) {
     if (n == 1) {
         return x;
     }
+
+    auto n_double = static_cast<double>(n);
     return (
-        ((2 * n - 1) * x * LegendrePolynomial(n - 1, x) - (n - 1) * LegendrePolynomial(n - 2, x)) / n
+        ((2. * n_double - 1.) * x * LegendrePolynomial(n - 1, x) -
+         (n_double - 1.) * LegendrePolynomial(n - 2, x)) /
+        n_double
     );
 }
 
@@ -84,7 +88,11 @@ double LegendrePolynomialDerivative(const size_t n, const double x) {
     if (n == 2) {
         return (3. * x);
     }
-    return ((2 * n - 1) * LegendrePolynomial(n - 1, x) + LegendrePolynomialDerivative(n - 2, x));
+
+    auto n_double = static_cast<double>(n);
+    return (
+        (2. * n_double - 1.) * LegendrePolynomial(n - 1, x) + LegendrePolynomialDerivative(n - 2, x)
+    );
 }
 
 std::vector<double> GenerateGLLPoints(const size_t order) {
@@ -129,7 +137,6 @@ std::vector<double> LagrangePolynomial(const size_t n, const double x) {
 
     for (size_t i = 0; i < n + 1; ++i) {
         if (gen_alpha_solver::close_to(gll_points[i], x)) {
-            // If x is close to a GLL point, then Lagrange polynomial is 1.0 at that point
             continue;
         }
         lagrange_poly[i] =
@@ -138,6 +145,53 @@ std::vector<double> LagrangePolynomial(const size_t n, const double x) {
     }
 
     return lagrange_poly;
+}
+
+std::vector<double> LagrangePolynomialDerivative(const size_t n, const double x) {
+    auto gll_points = GenerateGLLPoints(n);  // n+1 GLL points for n+1 nodes
+    auto lagrange_poly_derivative = std::vector<double>(n + 1, 0.);
+
+    auto n_double = static_cast<double>(n);
+    for (size_t i = 0; i < n + 1; ++i) {
+        if (gen_alpha_solver::close_to(gll_points[0], x) && i == 0) {
+            lagrange_poly_derivative[0] = -n_double * (n_double + 1.) / 4.;
+            continue;
+        }
+        if (gen_alpha_solver::close_to(gll_points[n], x) && i == n) {
+            lagrange_poly_derivative[n] = n_double * (n_double + 1.) / 4.;
+            continue;
+        }
+        if (gen_alpha_solver::close_to(gll_points[i], x)) {
+            continue;
+        }
+        // Calculates derivative based on Legendre polynomial - works for only at GLL points
+        // lagrange_poly_derivative[i] =
+        //     (1. / (x - gll_points[i])) *
+        //     (LegendrePolynomial(n, x) / LegendrePolynomial(n, gll_points[i]));
+
+        // Calculates derivative based on general def. of Lagrange interpolants - works for GLL
+        // points and any other point
+        auto denominator = 1.;
+        auto numerator = 1.;
+        for (size_t j = 0; j < n + 1; ++j) {
+            if (j != i) {
+                denominator *= (gll_points[i] - gll_points[j]);
+            }
+            numerator = 1.;
+            for (size_t k = 0; k < n + 1; ++k) {
+                if (k != j && k != i && j != i) {
+                    numerator *= (x - gll_points[k]);
+                }
+                if (j == i) {
+                    numerator = 0.;
+                }
+            }
+            lagrange_poly_derivative[i] += numerator;
+        }
+        lagrange_poly_derivative[i] /= denominator;
+    }
+
+    return lagrange_poly_derivative;
 }
 
 }  // namespace openturbine::gebt_poc
