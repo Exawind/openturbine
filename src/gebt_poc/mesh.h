@@ -5,12 +5,12 @@
 namespace openturbine::gebt_poc {
 class Mesh {
 public:
-    int GetNumberOfElements() { return number_of_elements_; }
+    int GetNumberOfElements() const { return number_of_elements_; }
 
-    int GetNumberOfNodes() { return number_of_nodes_; }
+    int GetNumberOfNodes() const { return number_of_nodes_; }
 
     KOKKOS_FUNCTION
-    Kokkos::View<const int*> GetNodesForElement(int elementID) {
+    Kokkos::View<const int*> GetNodesForElement(int elementID) const {
         return Kokkos::subview(connectivity_, elementID, Kokkos::ALL);
     }
 
