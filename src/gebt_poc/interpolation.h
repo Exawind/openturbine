@@ -67,7 +67,7 @@ std::vector<double> GenerateGLLPoints(const size_t order);
              derivative provided in Eq. 2.4.3 (Page 63) of "High-Order Methods for Incompressible
              Fluid Flow" by Deville et al. 2002
              Ref: https://doi.org/10.1017/CBO9780511546792
- * @param n: Order of the Legendre polynomial
+ * @param n: Order of the Lagrange polynomial
  * @param x: Point at which the Lagrangian interpolation function is to be evaluated
  * @return  Vector of Lagrangian interpolation functions with size n+1 for n+1 nodes
  */
@@ -76,13 +76,12 @@ std::vector<double> LagrangePolynomial(const size_t n, const double x);
 /*!
  * @brief Calculates the derivative of the Lagrangian interpolation functions for order n at a
           given point x
- * @details  Uses the relationship based on GLL points, Legendre polynomials and its
-             derivative provided in Eq. 2.4.9 (Page 64) of "High-Order Methods for Incompressible
-             Fluid Flow" by Deville et al. 2002
+ * @details  Uses the relationship provided in Eq. 2.4.9 (Page 64) of "High-Order Methods for
+             Incompressible Fluid Flow" by Deville et al. 2002
              Ref: https://doi.org/10.1017/CBO9780511546792
-             And the generel formula for the derivative of a Lagrangian interpolation function
+             And the general formula for the derivative of a Lagrangian interpolation function
              provided here: https://en.wikipedia.org/wiki/Lagrange_polynomial#Derivatives
- * @param n: Order of the Legendre polynomial
+ * @param n: Order of the Lagrange polynomial
  * @param x: Point at which the derivative of the Lagrangian interpolation function is to be
  *           evaluated
  * @return  Vector of derivative of Lagrangian interpolation functions with size n+1 for n+1 nodes
