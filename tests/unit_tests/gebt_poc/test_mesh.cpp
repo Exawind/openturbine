@@ -6,7 +6,7 @@
 TEST(MeshTest, Create1DMesh_1Element_2Node) {
     int numberOfElements = 1;
     int nodesPerElement = 2;
-    auto mesh = openturbine::create1DMesh(numberOfElements, nodesPerElement);
+    auto mesh = openturbine::gebt_poc::create1DMesh(numberOfElements, nodesPerElement);
 
     EXPECT_EQ(mesh.GetNumberOfElements(), numberOfElements);
     EXPECT_EQ(mesh.GetNumberOfNodes(), 2);
@@ -23,7 +23,7 @@ TEST(MeshTest, Create1DMesh_1Element_2Node) {
 TEST(MeshTest, Create1DMesh_1Element_5Node) {
     int numberOfElements = 1;
     int nodesPerElement = 5;
-    auto mesh = openturbine::create1DMesh(numberOfElements, nodesPerElement);
+    auto mesh = openturbine::gebt_poc::create1DMesh(numberOfElements, nodesPerElement);
 
     EXPECT_EQ(mesh.GetNumberOfElements(), numberOfElements);
     EXPECT_EQ(mesh.GetNumberOfNodes(), 5);
@@ -43,7 +43,7 @@ TEST(MeshTest, Create1DMesh_1Element_5Node) {
 TEST(MeshTest, Create1DMesh_2Element_5Node) {
     int numberOfElements = 2;
     int nodesPerElement = 5;
-    auto mesh = openturbine::create1DMesh(numberOfElements, nodesPerElement);
+    auto mesh = openturbine::gebt_poc::create1DMesh(numberOfElements, nodesPerElement);
 
     EXPECT_EQ(mesh.GetNumberOfElements(), numberOfElements);
     EXPECT_EQ(mesh.GetNumberOfNodes(), 9);
@@ -78,7 +78,7 @@ TEST(MeshTest, Create1DMesh_2Element_5Node) {
 TEST(MeshTest, Create1DMesh_3Element_3Node) {
     int numberOfElements = 3;
     int nodesPerElement = 3;
-    auto mesh = openturbine::create1DMesh(numberOfElements, nodesPerElement);
+    auto mesh = openturbine::gebt_poc::create1DMesh(numberOfElements, nodesPerElement);
 
     EXPECT_EQ(mesh.GetNumberOfElements(), numberOfElements);
     EXPECT_EQ(mesh.GetNumberOfNodes(), 7);
@@ -117,8 +117,8 @@ TEST(MeshTest, Create1DMesh_3Element_3Node) {
     }
 }
 
-namespace openturbine::impl {
-class TestMesh : public openturbine::Mesh {
+namespace openturbine::gebt_poc::impl {
+class TestMesh : public openturbine::gebt_poc::Mesh {
 public:
     void TestSetNumberOfElements(int number_of_elements) { SetNumberOfElements(number_of_elements); }
     void TestSetNumberOfNodes(int number_of_nodes) { SetNumberOfNodes(number_of_nodes); }
@@ -131,10 +131,10 @@ public:
 
     Kokkos::View<int**> TestGetConnectivity() { return connectivity_; }
 };
-}  // namespace openturbine::impl
+}  // namespace openturbine::gebt_poc::impl
 
 TEST(MeshTest, CheckConsistency_WrongNumberOfElements) {
-    openturbine::impl::TestMesh mesh;
+    openturbine::gebt_poc::impl::TestMesh mesh;
 
     mesh.TestSetNumberOfElements(2);
     mesh.TestSetNumberOfNodes(5);
@@ -145,7 +145,7 @@ TEST(MeshTest, CheckConsistency_WrongNumberOfElements) {
 }
 
 TEST(MeshTest, CheckConsistency_InvalidNode) {
-    openturbine::impl::TestMesh mesh;
+    openturbine::gebt_poc::impl::TestMesh mesh;
 
     mesh.TestSetNumberOfElements(1);
     mesh.TestSetNumberOfNodes(2);
@@ -165,7 +165,7 @@ TEST(MeshTest, CheckConsistency_InvalidNode) {
 }
 
 TEST(MeshTest, CheckConsistency_NonUniqueNode) {
-    openturbine::impl::TestMesh mesh;
+    openturbine::gebt_poc::impl::TestMesh mesh;
 
     mesh.TestSetNumberOfElements(1);
     mesh.TestSetNumberOfNodes(3);
@@ -186,7 +186,7 @@ TEST(MeshTest, CheckConsistency_NonUniqueNode) {
 }
 
 TEST(MeshTest, CheckConsistency_NonUniqueNode_2Element) {
-    openturbine::impl::TestMesh mesh;
+    openturbine::gebt_poc::impl::TestMesh mesh;
 
     mesh.TestSetNumberOfElements(2);
     mesh.TestSetNumberOfNodes(5);
@@ -210,7 +210,7 @@ TEST(MeshTest, CheckConsistency_NonUniqueNode_2Element) {
 }
 
 TEST(MeshTest, CheckConsistency_Pass_Bar) {
-    openturbine::impl::TestMesh mesh;
+    openturbine::gebt_poc::impl::TestMesh mesh;
 
     mesh.TestSetNumberOfElements(2);
     mesh.TestSetNumberOfNodes(5);
@@ -234,7 +234,7 @@ TEST(MeshTest, CheckConsistency_Pass_Bar) {
 }
 
 TEST(MeshTest, CheckConsistency_Pass_Plus) {
-    openturbine::impl::TestMesh mesh;
+    openturbine::gebt_poc::impl::TestMesh mesh;
 
     mesh.TestSetNumberOfElements(4);
     mesh.TestSetNumberOfNodes(9);

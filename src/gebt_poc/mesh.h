@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::gebt_poc {
 class Mesh {
 public:
     int GetNumberOfElements() { return number_of_elements_; }
