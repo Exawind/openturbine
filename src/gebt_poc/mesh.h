@@ -97,4 +97,4 @@ inline Mesh create1DMesh(int number_of_elements, int nodes_per_element) {
     mesh.CheckConsistency();
     return mesh;
 }
-}  // namespace openturbine
+}  // namespace openturbine::gebt_poc
