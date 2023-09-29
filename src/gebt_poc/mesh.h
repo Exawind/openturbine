@@ -17,6 +17,7 @@ public:
     friend Mesh create1DMesh(int number_of_elements, int nodes_per_element);
 
 protected:
+    Mesh() = default;
     void SetNumberOfElements(int number_of_elements) { number_of_elements_ = number_of_elements; }
     void SetNumberOfNodes(int number_of_nodes) { number_of_nodes_ = number_of_nodes; }
 
