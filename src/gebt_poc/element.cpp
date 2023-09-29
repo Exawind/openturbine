@@ -15,10 +15,6 @@ double CalculateJacobian(
         return result;
     };
 
-    auto two_norm = [](const std::array<double, 3>& vector) {
-        return std::sqrt(std::pow(vector[0], 2) + std::pow(vector[1], 2) + std::pow(vector[2], 2));
-    };
-
     // Get all the x, y, z components of the nodes in three separate vectors
     std::vector<double> x_components{};
     std::vector<double> y_components{};
@@ -29,13 +25,15 @@ double CalculateJacobian(
         z_components.push_back(node.GetZComponent());
     }
 
+    auto v = gen_alpha_solver::Vector();
     auto jacobian = 0.;
-    auto gup0 = std::array<double, 3>{0., 0., 0.};
     for (size_t i = 0; i < nodes.size(); ++i) {
-        gup0[0] = dot_product(shape_derivatives, x_components);
-        gup0[1] = dot_product(shape_derivatives, y_components);
-        gup0[2] = dot_product(shape_derivatives, z_components);
-        jacobian = two_norm(gup0);
+        auto v0 = dot_product(shape_derivatives, x_components);
+        auto v1 = dot_product(shape_derivatives, y_components);
+        auto v2 = dot_product(shape_derivatives, z_components);
+
+        v = gen_alpha_solver::Vector(v0, v1, v2);
+        jacobian = v.Length();
     }
     return jacobian;
 }

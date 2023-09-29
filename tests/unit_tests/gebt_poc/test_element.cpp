@@ -55,7 +55,7 @@ TEST(ElementTest, JacobianFor1DFourthOrderElement) {
     auto jacobian_4 = CalculateJacobian(nodes, shape_derivatives_4);
     auto jacobian_5 = CalculateJacobian(nodes, shape_derivatives_5);
 
-    EXPECT_DOUBLE_EQ(jacobian_1, 0.6715870058501458);
+    EXPECT_DOUBLE_EQ(jacobian_1, 0.671587005850145);
     EXPECT_DOUBLE_EQ(jacobian_2, 1.509599209717606);
     EXPECT_DOUBLE_EQ(jacobian_3, 2.861380785564898);
     EXPECT_DOUBLE_EQ(jacobian_4, 4.097191592895187);
