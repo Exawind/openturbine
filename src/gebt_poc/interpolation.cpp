@@ -1,7 +1,5 @@
 #include "src/gebt_poc/interpolation.h"
 
-#include "src/utilities/log.h"
-
 namespace openturbine::gebt_poc {
 
 Point FindNearestNeighbor(const std::vector<Point>& points_list, const Point& point) {
