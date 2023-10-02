@@ -10,11 +10,11 @@ public:
     int GetNumberOfNodes() const { return number_of_nodes_; }
 
     KOKKOS_FUNCTION
-    Kokkos::View<const int*> GetNodesForElement(int elementID) const {
-        return Kokkos::subview(connectivity_, elementID, Kokkos::ALL);
+    Kokkos::View<const int*> GetNodesForElement(int element_id) const {
+        return Kokkos::subview(connectivity_, element_id, Kokkos::ALL);
     }
 
-    friend Mesh create1DMesh(int number_of_elements, int nodes_per_element);
+    friend Mesh Create1DMesh(int number_of_elements, int nodes_per_element);
 
 protected:
     Mesh() = default;
@@ -26,7 +26,7 @@ protected:
     }
 
     void CheckElementConsistency() {
-        if (static_cast<unsigned>(number_of_elements_) != connectivity_.extent(0)) {
+        if (static_cast<std::size_t>(number_of_elements_) != connectivity_.extent(0)) {
             throw std::domain_error("Connectivity does not contain expected number of elements");
         }
     }
@@ -80,15 +80,15 @@ protected:
     Kokkos::View<int**> connectivity_;
 };
 
-inline Mesh create1DMesh(int number_of_elements, int nodes_per_element) {
+inline Mesh Create1DMesh(int number_of_elements, int nodes_per_element) {
     Mesh mesh;
     mesh.SetNumberOfElements(number_of_elements);
     mesh.SetNumberOfNodes(number_of_elements * nodes_per_element - (number_of_elements - 1));
     mesh.InitializeElementNodeConnectivity(number_of_elements, nodes_per_element);
 
-    auto set_element_connectivity = KOKKOS_LAMBDA(int elementID) {
+    auto set_element_connectivity = KOKKOS_LAMBDA(int element_id) {
         for (int node = 0; node < nodes_per_element; ++node) {
-            mesh.connectivity_(elementID, node) = node + (nodes_per_element - 1) * (elementID);
+            mesh.connectivity_(element_id, node) = node + (nodes_per_element - 1) * (element_id);
         }
     };
 

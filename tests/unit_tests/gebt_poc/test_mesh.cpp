@@ -6,7 +6,7 @@
 TEST(MeshTest, Create1DMesh_1Element_2Node) {
     int numberOfElements = 1;
     int nodesPerElement = 2;
-    auto mesh = openturbine::gebt_poc::create1DMesh(numberOfElements, nodesPerElement);
+    auto mesh = openturbine::gebt_poc::Create1DMesh(numberOfElements, nodesPerElement);
 
     EXPECT_EQ(mesh.GetNumberOfElements(), numberOfElements);
     EXPECT_EQ(mesh.GetNumberOfNodes(), 2);
@@ -23,7 +23,7 @@ TEST(MeshTest, Create1DMesh_1Element_2Node) {
 TEST(MeshTest, Create1DMesh_1Element_5Node) {
     int numberOfElements = 1;
     int nodesPerElement = 5;
-    auto mesh = openturbine::gebt_poc::create1DMesh(numberOfElements, nodesPerElement);
+    auto mesh = openturbine::gebt_poc::Create1DMesh(numberOfElements, nodesPerElement);
 
     EXPECT_EQ(mesh.GetNumberOfElements(), numberOfElements);
     EXPECT_EQ(mesh.GetNumberOfNodes(), 5);
@@ -43,7 +43,7 @@ TEST(MeshTest, Create1DMesh_1Element_5Node) {
 TEST(MeshTest, Create1DMesh_2Element_5Node) {
     int numberOfElements = 2;
     int nodesPerElement = 5;
-    auto mesh = openturbine::gebt_poc::create1DMesh(numberOfElements, nodesPerElement);
+    auto mesh = openturbine::gebt_poc::Create1DMesh(numberOfElements, nodesPerElement);
 
     EXPECT_EQ(mesh.GetNumberOfElements(), numberOfElements);
     EXPECT_EQ(mesh.GetNumberOfNodes(), 9);
@@ -78,7 +78,7 @@ TEST(MeshTest, Create1DMesh_2Element_5Node) {
 TEST(MeshTest, Create1DMesh_3Element_3Node) {
     int numberOfElements = 3;
     int nodesPerElement = 3;
-    auto mesh = openturbine::gebt_poc::create1DMesh(numberOfElements, nodesPerElement);
+    auto mesh = openturbine::gebt_poc::Create1DMesh(numberOfElements, nodesPerElement);
 
     EXPECT_EQ(mesh.GetNumberOfElements(), numberOfElements);
     EXPECT_EQ(mesh.GetNumberOfNodes(), 7);
