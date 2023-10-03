@@ -4,4 +4,5 @@ target_sources(${oturb_lib_name}
     interpolation.cpp
     model.cpp
     section.cpp
+    solver.cpp
 )

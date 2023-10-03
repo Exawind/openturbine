@@ -145,4 +145,18 @@ TEST(SolverTest, AssignGeneralizedCoordinatesToNodes) {
     EXPECT_DOUBLE_EQ(generalized_coords(4, 6), 0.);
 }
 
+TEST(SolverTest, UserDefinedQuadratureRule) {
+    auto quadrature_points =
+        std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
+                            0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
+    auto quadrature_weights = std::vector<double>{
+        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
+    auto quadrature_rule = UserDefinedQuadratureRule(quadrature_points, quadrature_weights);
+
+    EXPECT_EQ(quadrature_rule.GetNumQuadraturePoints(), 7);
+    EXPECT_EQ(quadrature_rule.GetQuadraturePoints(), quadrature_points);
+    EXPECT_EQ(quadrature_rule.GetQuadratureWeights(), quadrature_weights);
+}
+
 }  // namespace openturbine::gebt_poc::tests
