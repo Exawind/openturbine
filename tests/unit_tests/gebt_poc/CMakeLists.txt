@@ -4,8 +4,9 @@ target_sources(
     PRIVATE
     test_element.cpp
     test_interpolation.cpp
+    test_mesh.cpp
     test_model.cpp
     test_point.cpp
     test_section.cpp
-    test_mesh.cpp
+    test_solver.cpp
 )
