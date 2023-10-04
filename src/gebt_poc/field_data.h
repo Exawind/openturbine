@@ -23,17 +23,19 @@ public:
     FieldData(const Mesh& mesh, int number_of_quadrature_points) {
         auto number_of_nodes = mesh.GetNumberOfNodes();
         auto number_of_elements = mesh.GetNumberOfElements();
+        auto lie_group_size = 7;
+        auto lie_algebra_size = 6;
 
-        coordinates_ = Kokkos::View<double**>("coordinates", number_of_nodes, 3);
-        velocity_ = Kokkos::View<double**>("velocity", number_of_nodes, 3);
-        acceleration_ = Kokkos::View<double**>("acceleration", number_of_nodes, 3);
+        coordinates_ = Kokkos::View<double**>("coordinates", number_of_nodes, lie_group_size);
+        velocity_ = Kokkos::View<double**>("velocity", number_of_nodes, lie_algebra_size);
+        acceleration_ = Kokkos::View<double**>("acceleration", number_of_nodes, lie_algebra_size);
         algorithmic_acceleration_ =
-            Kokkos::View<double**>("algorithmic_acceleration", number_of_nodes, 3);
+            Kokkos::View<double**>("algorithmic_acceleration", number_of_nodes, lie_algebra_size);
 
-        coordinates_next_ = Kokkos::View<double**>("coordinates_next", number_of_nodes, 3);
+        coordinates_next_ = Kokkos::View<double**>("coordinates_next", number_of_nodes, lie_group_size);
         algorithmic_acceleration_next_ =
-            Kokkos::View<double**>("algorithmic_acceleration_next", number_of_nodes, 3);
-        delta_coordinates_ = Kokkos::View<double**>("delta_coordinates", number_of_nodes, 3);
+            Kokkos::View<double**>("algorithmic_acceleration_next", number_of_nodes, lie_algebra_size);
+        delta_coordinates_ = Kokkos::View<double**>("delta_coordinates", number_of_nodes, lie_algebra_size);
 
         weight_ = Kokkos::View<double**>("weight", number_of_elements, number_of_quadrature_points);
         stiffness_matrix_ = Kokkos::View<double****>(
