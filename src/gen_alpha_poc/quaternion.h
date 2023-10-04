@@ -249,7 +249,10 @@ RotationMatrix quaternion_to_rotation_matrix(const Quaternion& quaternion) {
 /// Converts a 3x3 rotation matrix to a 4x1 quaternion and returns the result
 KOKKOS_INLINE_FUNCTION
 Quaternion rotation_matrix_to_quaternion(const RotationMatrix& rotation_matrix) {
-    auto trace = rotation_matrix(0, 0) + rotation_matrix(1, 1) + rotation_matrix(2, 2);
+    auto rot_00 = rotation_matrix(0, 0);
+    auto rot_11 = rotation_matrix(1, 1);
+    auto rot_22 = rotation_matrix(2, 2);
+    auto trace = rot_00 + rot_11 + rot_22;
 
     if (trace > 0) {
         auto s = 0.5 / std::sqrt(trace + 1.0);
@@ -257,34 +260,58 @@ Quaternion rotation_matrix_to_quaternion(const RotationMatrix& rotation_matrix) 
             0.25 / s, (rotation_matrix(2, 1) - rotation_matrix(1, 2)) * s,
             (rotation_matrix(0, 2) - rotation_matrix(2, 0)) * s,
             (rotation_matrix(1, 0) - rotation_matrix(0, 1)) * s};
-    } else if (rotation_matrix(0, 0) > rotation_matrix(1, 1) && rotation_matrix(0, 0) > rotation_matrix(2, 2)) {
-        auto s =
-            2.0 *
-            std::sqrt(1.0 + rotation_matrix(0, 0) - rotation_matrix(1, 1) - rotation_matrix(2, 2));
+    } else if (rot_00 > rot_11 && rot_00 > rot_22) {
+        auto s = 2.0 * std::sqrt(1.0 + rot_00 - rot_11 - rot_22);
         return Quaternion(
             (rotation_matrix(2, 1) - rotation_matrix(1, 2)) / s, 0.25 * s,
             (rotation_matrix(0, 1) + rotation_matrix(1, 0)) / s,
             (rotation_matrix(0, 2) + rotation_matrix(2, 0)) / s
         );
-    } else if (rotation_matrix(1, 1) > rotation_matrix(2, 2)) {
-        auto s =
-            2.0 *
-            std::sqrt(1.0 + rotation_matrix(1, 1) - rotation_matrix(0, 0) - rotation_matrix(2, 2));
+    } else if (rot_11 > rot_22) {
+        auto s = 2.0 * std::sqrt(1.0 + rot_11 - rot_00 - rot_22);
         return Quaternion(
             (rotation_matrix(0, 2) - rotation_matrix(2, 0)) / s,
             (rotation_matrix(0, 1) + rotation_matrix(1, 0)) / s, 0.25 * s,
             (rotation_matrix(1, 2) + rotation_matrix(2, 1)) / s
         );
     } else {
-        auto s =
-            2.0 *
-            std::sqrt(1.0 + rotation_matrix(2, 2) - rotation_matrix(0, 0) - rotation_matrix(1, 1));
+        auto s = 2.0 * std::sqrt(1.0 + rot_22 - rot_00 - rot_11);
         return Quaternion(
             (rotation_matrix(1, 0) - rotation_matrix(0, 1)) / s,
             (rotation_matrix(0, 2) + rotation_matrix(2, 0)) / s,
             (rotation_matrix(1, 2) + rotation_matrix(2, 1)) / s, 0.25 * s
         );
     }
+}
+
+/// Returns the B derivative matrix given four Euler parameters, ie unit quaternions
+KOKKOS_INLINE_FUNCTION
+Kokkos::View<double**> BMatrixForQuaternions(const Quaternion& quaternion) {
+    auto q0 = quaternion.GetScalarComponent();
+    auto q1 = quaternion.GetXComponent();
+    auto q2 = quaternion.GetYComponent();
+    auto q3 = quaternion.GetZComponent();
+
+    Kokkos::View<double**> bmatrix("bmatrix", 3, 4);
+    auto populate_bmatrix = KOKKOS_LAMBDA(size_t) {
+        bmatrix(0, 0) = -q1;
+        bmatrix(0, 1) = q0;
+        bmatrix(0, 2) = -q3;
+        bmatrix(0, 3) = q2;
+
+        bmatrix(1, 0) = -q2;
+        bmatrix(1, 1) = q3;
+        bmatrix(1, 2) = q0;
+        bmatrix(1, 3) = -q1;
+
+        bmatrix(2, 0) = -q3;
+        bmatrix(2, 1) = -q2;
+        bmatrix(2, 2) = q1;
+        bmatrix(2, 3) = q0;
+    };
+    Kokkos::parallel_for(1, populate_bmatrix);
+
+    return bmatrix;
 }
 
 }  // namespace openturbine::gen_alpha_solver
