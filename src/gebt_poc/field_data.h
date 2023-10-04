@@ -32,10 +32,13 @@ public:
         algorithmic_acceleration_ =
             Kokkos::View<double**>("algorithmic_acceleration", number_of_nodes, lie_algebra_size);
 
-        coordinates_next_ = Kokkos::View<double**>("coordinates_next", number_of_nodes, lie_group_size);
-        algorithmic_acceleration_next_ =
-            Kokkos::View<double**>("algorithmic_acceleration_next", number_of_nodes, lie_algebra_size);
-        delta_coordinates_ = Kokkos::View<double**>("delta_coordinates", number_of_nodes, lie_algebra_size);
+        coordinates_next_ =
+            Kokkos::View<double**>("coordinates_next", number_of_nodes, lie_group_size);
+        algorithmic_acceleration_next_ = Kokkos::View<double**>(
+            "algorithmic_acceleration_next", number_of_nodes, lie_algebra_size
+        );
+        delta_coordinates_ =
+            Kokkos::View<double**>("delta_coordinates", number_of_nodes, lie_algebra_size);
 
         weight_ = Kokkos::View<double**>("weight", number_of_elements, number_of_quadrature_points);
         stiffness_matrix_ = Kokkos::View<double****>(
@@ -65,7 +68,8 @@ public:
     }
 
     template <Field field>
-    KOKKOS_FUNCTION auto ReadNodalData(int node) const -> typename decltype(GetNodalData<field>(node))::const_type {
+    KOKKOS_FUNCTION auto ReadNodalData(int node) const ->
+        typename decltype(GetNodalData<field>(node))::const_type {
         return GetNodalData<field>(node);
     }
 
@@ -84,7 +88,8 @@ public:
     }
 
     template <Field field>
-    KOKKOS_FUNCTION auto ReadElementData(int element) const -> typename decltype(GetElementData<field>(element))::const_type {
+    KOKKOS_FUNCTION auto ReadElementData(int element) const ->
+        typename decltype(GetElementData<field>(element))::const_type {
         return GetElementData<field>(element);
     }
 

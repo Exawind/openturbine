@@ -12,8 +12,8 @@ void initializeNodalData(
         mesh.GetNumberOfNodes(),
         KOKKOS_LAMBDA(int node) {
             auto nodal_values = field_data.GetNodalData<field>(node);
-            for(std::size_t component = 0; component < nodal_values.extent(0); ++component) {
-              nodal_values(component) = multiplier * (node * nodal_values.extent(0) + component);
+            for (std::size_t component = 0; component < nodal_values.extent(0); ++component) {
+                nodal_values(component) = multiplier * (node * nodal_values.extent(0) + component);
             }
         }
     );
@@ -28,8 +28,10 @@ void readNodalData(
         auto nodal_values = field_data.ReadNodalData<field>(node);
         auto host_values = Kokkos::create_mirror(nodal_values);
         Kokkos::deep_copy(host_values, nodal_values);
-        for(std::size_t component = 0; component < host_values.extent(0); ++ component) {
-          EXPECT_EQ(host_values(component), multiplier * (node * host_values.extent(0) + component));
+        for (std::size_t component = 0; component < host_values.extent(0); ++component) {
+            EXPECT_EQ(
+                host_values(component), multiplier * (node * host_values.extent(0) + component)
+            );
         }
     }
 }
