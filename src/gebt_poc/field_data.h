@@ -42,7 +42,7 @@ public:
     }
 
     template <Field field>
-    KOKKOS_FUNCTION Kokkos::View<double*> GetNodalData(int node) const {
+    KOKKOS_FUNCTION auto GetNodalData(int node) const {
         if constexpr (field == Field::Coordinates) {
             return Kokkos::subview(coordinates_, node, Kokkos::ALL);
         } else if constexpr (field == Field::Velocity) {
@@ -57,12 +57,13 @@ public:
             return Kokkos::subview(algorithmic_acceleration_next_, node, Kokkos::ALL);
         } else if constexpr (field == Field::DeltaCoordinates) {
             return Kokkos::subview(delta_coordinates_, node, Kokkos::ALL);
-        } else
+        } else {
             Kokkos::abort("Provided Field is not a Nodal Field");
+        }
     }
 
     template <Field field>
-    KOKKOS_FUNCTION Kokkos::View<const double*> ReadNodalData(int node) const {
+    KOKKOS_FUNCTION auto ReadNodalData(int node) const -> typename decltype(GetNodalData<field>(node))::const_type {
         return GetNodalData<field>(node);
     }
 
@@ -81,7 +82,7 @@ public:
     }
 
     template <Field field>
-    KOKKOS_FUNCTION auto ReadElementData(int element) const {
+    KOKKOS_FUNCTION auto ReadElementData(int element) const -> typename decltype(GetElementData<field>(element))::const_type {
         return GetElementData<field>(element);
     }
 
