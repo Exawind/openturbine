@@ -145,14 +145,88 @@ TEST(SolverTest, AssignGeneralizedCoordinatesToNodes) {
     EXPECT_DOUBLE_EQ(generalized_coords(4, 6), 0.);
 }
 
-TEST(SolverTest, UserDefinedQuadratureRule) {
-    auto quadrature_points =
-        std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
-                            0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
+Kokkos::View<double*> CreatePositionVectors(double t) {
+    auto rx = 5. * t;
+    auto ry = -2. * t + 3. * t * t;
+    auto rz = t - 2. * (t * t);
+
+    Kokkos::View<double*> position_vector("position_vector", 3);
+    position_vector(0) = rx;
+    position_vector(1) = ry;
+    position_vector(2) = rz;
+
+    return position_vector;
+}
+
+TEST(SolverTest, CreatePositionVectors) {
+    // Use linear shape functions to interpolate the position vector
+    auto pt_1 = LagrangePolynomial(1, -1.);
+    auto pt_2 = LagrangePolynomial(1, -0.6546536707079771);
+    auto pt_3 = LagrangePolynomial(1, 0.);
+    auto pt_4 = LagrangePolynomial(1, 0.6546536707079771);
+    auto pt_5 = LagrangePolynomial(1, 1.);
+
+    {
+        auto position_vector = CreatePositionVectors(pt_1[1]);
+
+        EXPECT_DOUBLE_EQ(position_vector(0), 0.);
+        EXPECT_DOUBLE_EQ(position_vector(1), 0.);
+        EXPECT_DOUBLE_EQ(position_vector(2), 0.);
+    }
+
+    {
+        auto position_vector = CreatePositionVectors(pt_2[1]);
+
+        EXPECT_DOUBLE_EQ(position_vector(0), 0.86336582323005728);
+        EXPECT_DOUBLE_EQ(position_vector(1), -0.25589826392541715);
+        EXPECT_DOUBLE_EQ(position_vector(2), 0.1130411210682743);
+    }
+
+    {
+        auto position_vector = CreatePositionVectors(pt_3[1]);
+
+        EXPECT_DOUBLE_EQ(position_vector(0), 2.5);
+        EXPECT_DOUBLE_EQ(position_vector(1), -0.25);
+        EXPECT_DOUBLE_EQ(position_vector(2), 0.);
+    }
+
+    {
+        auto position_vector = CreatePositionVectors(pt_4[1]);
+
+        EXPECT_DOUBLE_EQ(position_vector(0), 4.1366341767699426);
+        EXPECT_DOUBLE_EQ(position_vector(1), 0.39875540678255983);
+        EXPECT_DOUBLE_EQ(position_vector(2), -0.54161254963970273);
+    }
+
+    {
+        auto position_vector = CreatePositionVectors(pt_5[1]);
+
+        EXPECT_DOUBLE_EQ(position_vector(0), 5.);
+        EXPECT_DOUBLE_EQ(position_vector(1), 1.);
+        EXPECT_DOUBLE_EQ(position_vector(2), -1.);
+    }
+}
+
+TEST(SolverTest, UserDefinedQuadrature) {
+    auto quadrature_points = std::vector<double>{
+        -0.9491079123427585,  // point 1
+        -0.7415311855993945,  // point 2
+        -0.4058451513773972,  // point 3
+        0.,                   // point 4
+        0.4058451513773972,   // point 5
+        0.7415311855993945,   // point 6
+        0.9491079123427585    // point 7
+    };
     auto quadrature_weights = std::vector<double>{
-        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
-    auto quadrature_rule = UserDefinedQuadratureRule(quadrature_points, quadrature_weights);
+        0.1294849661688697,  // weight 1
+        0.2797053914892766,  // weight 2
+        0.3818300505051189,  // weight 3
+        0.4179591836734694,  // weight 4
+        0.3818300505051189,  // weight 5
+        0.2797053914892766,  // weight 6
+        0.1294849661688697   // weight 7
+    };
+    auto quadrature_rule = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
     EXPECT_EQ(quadrature_rule.GetNumQuadraturePoints(), 7);
     EXPECT_EQ(quadrature_rule.GetQuadraturePoints(), quadrature_points);
