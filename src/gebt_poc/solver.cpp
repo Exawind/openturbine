@@ -49,6 +49,36 @@ Kokkos::View<double*> CalculateCurvature(
     return curvature;
 }
 
+Kokkos::View<double**> CalculateSectionalStiffness(
+    const StiffnessMatrix& stiffness, gen_alpha_solver::RotationMatrix rotation_0,
+    gen_alpha_solver::RotationMatrix rotation
+) {
+    auto total_rotation = gen_alpha_solver::multiply_matrix_with_matrix(
+        rotation.GetRotationMatrix(), rotation_0.GetRotationMatrix()
+    );
+
+    // rotation_matrix__6x6 = [total_rotation [0]_3x3; [0]_3x3 total_rotation]
+    auto rotation_matrix = Kokkos::View<double**>("rotation_matrix", 6, 6);
+    Kokkos::parallel_for(
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
+            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
+        ),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            rotation_matrix(i, j) = total_rotation(i, j);
+            rotation_matrix(i + 3, j + 3) = total_rotation(i, j);
+        }
+    );
+
+    auto sectional_stiffness = gen_alpha_solver::multiply_matrix_with_matrix(
+        gen_alpha_solver::multiply_matrix_with_matrix(
+            rotation_matrix, stiffness.GetStiffnessMatrix()
+        ),
+        gen_alpha_solver::transpose_matrix(rotation_matrix)
+    );
+
+    return sectional_stiffness;
+}
+
 Kokkos::View<double*> CalculateStaticResidual(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature
@@ -61,7 +91,7 @@ Kokkos::View<double*> CalculateStaticResidual(
     Kokkos::deep_copy(residual, 0.);
     for (size_t i = 0; i < n_nodes; ++i) {
         for (size_t j = 0; j < n_quad_pts; ++j) {
-            // Calculate the interpolated values at the quadrature point of the element
+            // Calculate several required interpolated values at the quadrature point
             const auto qp = quadrature.GetQuadraturePoints()[j];
             const auto qw = quadrature.GetQuadratureWeights()[j];
             auto shape_function = gen_alpha_solver::create_vector(LagrangePolynomial(order, qp));
@@ -74,10 +104,11 @@ Kokkos::View<double*> CalculateStaticResidual(
             auto position_vector_derivatives_qp =
                 Interpolate(position_vectors, shape_function_derivative, qp);
 
-            // Calculate the curvature vector at the quadrature point
+            // Calculate the curvature at the quadrature point
             auto curvature = CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp);
 
-            // Calculate the strain vector at the quadrature point
+            // Calculate the sectional strain at the quadrature point based on Eq. (35)
+            // in the SO(3)-based GEBT Beam document in theory guide
             auto strain = Kokkos::View<double*>("strain", 6);
             Kokkos::parallel_for(
                 3,
@@ -87,7 +118,7 @@ Kokkos::View<double*> CalculateStaticResidual(
                 }
             );
 
-            // Calculate the stiffness matrix at the quadrature point
+            // Calculate the sectional stiffness matrix in inertial basis
             auto q = gen_alpha_solver::Quaternion(
                 gen_coords_qp(3), gen_coords_qp(4), gen_coords_qp(5), gen_coords_qp(6)
             );
@@ -97,16 +128,8 @@ Kokkos::View<double*> CalculateStaticResidual(
                     position_vector_qp(6)
                 ));
             auto rotation = gen_alpha_solver::quaternion_to_rotation_matrix(q);
-            auto total_rotation = gen_alpha_solver::multiply_matrix_with_matrix(
-                rotation.GetRotationMatrix(), rotation_0.GetRotationMatrix()
-            );
 
-            auto stiffness_qp = gen_alpha_solver::multiply_matrix_with_matrix(
-                gen_alpha_solver::multiply_matrix_with_matrix(
-                    total_rotation, stiffness.GetStiffnessMatrix()
-                ),
-                gen_alpha_solver::transpose_matrix(total_rotation)
-            );
+            auto sectional_stiffness = CalculateSectionalStiffness(stiffness, rotation_0, rotation);
 
             // Calculate F_c vector at the quadrature point
             auto strain_next = Kokkos::View<double*>("strain_next", 6);
@@ -122,7 +145,8 @@ Kokkos::View<double*> CalculateStaticResidual(
                 3, KOKKOS_LAMBDA(const size_t k) { strain_next(k) -= R_x0(k); }
             );
 
-            auto fc = gen_alpha_solver::multiply_matrix_with_vector(stiffness_qp, strain_next);
+            auto fc =
+                gen_alpha_solver::multiply_matrix_with_vector(sectional_stiffness, strain_next);
 
             // Calculate F_d vector at the quadrature point
             auto x0_prime_tilde =

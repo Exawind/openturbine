@@ -2,6 +2,7 @@
 
 #include "src/gebt_poc/element.h"
 #include "src/gebt_poc/section.h"
+#include "src/gen_alpha_poc/rotation_matrix.h"
 
 namespace openturbine::gebt_poc {
 
@@ -59,6 +60,13 @@ Kokkos::View<double*> Interpolate(
 /// Calculates the curvature from generalized coordinates and their derivatives
 Kokkos::View<double*> CalculateCurvature(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> gen_coords_derivative
+);
+
+/// Calculates the given sectional stiffness matrix in inertial basis based on the given
+/// rotation matrix
+Kokkos::View<double**> CalculateSectionalStiffness(
+    const StiffnessMatrix& stiffness, gen_alpha_solver::RotationMatrix rotation_0,
+    gen_alpha_solver::RotationMatrix rotation
 );
 
 /// Calculates the static residual vector for a beam element
