@@ -12,10 +12,11 @@ UserDefinedQuadrature::UserDefinedQuadrature(
       quadrature_weights_(std::move(quadrature_weights)) {
 }
 
-Kokkos::View<double*> Interpolate(Kokkos::View<double*> nodal_values, double quadrature_pt) {
+Kokkos::View<double*> Interpolate(
+    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
+    double quadrature_pt
+) {
     const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
-    auto shape_function = LagrangePolynomial(n_nodes - 1, quadrature_pt);
-
     auto interpolated_values = Kokkos::View<double*>("interpolated_values", 7);
     Kokkos::deep_copy(interpolated_values, 0.);
     Kokkos::parallel_for(
@@ -23,10 +24,9 @@ Kokkos::View<double*> Interpolate(Kokkos::View<double*> nodal_values, double qua
             {0, 0}, {kNumberOfLieAlgebraComponents, n_nodes}
         ),
         KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            interpolated_values(i) += shape_function[j] * nodal_values(j * 7 + i);
+            interpolated_values(i) += interpolation_function(j) * nodal_values(j * 7 + i);
         }
     );
-
     return interpolated_values;
 }
 
@@ -64,34 +64,15 @@ Kokkos::View<double*> CalculateStaticResidual(
             // Calculate the interpolated values at the quadrature point of the element
             const auto qp = quadrature.GetQuadraturePoints()[j];
             const auto qw = quadrature.GetQuadratureWeights()[j];
-            auto shape_function = LagrangePolynomial(order, qp);
-            auto shape_function_derivative = LagrangePolynomialDerivative(order, qp);
+            auto shape_function = gen_alpha_solver::create_vector(LagrangePolynomial(order, qp));
+            auto shape_function_derivative =
+                gen_alpha_solver::create_vector(LagrangePolynomialDerivative(order, qp));
 
-            auto gen_coords_qp = Kokkos::View<double*>(
-                "gen_coords_at_quadrature_point", kNumberOfLieAlgebraComponents
-            );
-            auto gen_coords_derivatives_qp = Kokkos::View<double*>(
-                "gen_coords_derivatives_at_quadrature_point", kNumberOfLieAlgebraComponents
-            );
-            auto position_vector_qp = Kokkos::View<double*>(
-                "position_vector_at_quadrature_point", kNumberOfLieAlgebraComponents
-            );
-            auto position_vector_derivatives_qp = Kokkos::View<double*>(
-                "position_vector_derivatives_at_quadrature_point", kNumberOfLieAlgebraComponents
-            );
-            Kokkos::parallel_for(
-                Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-                    {0, 0}, {kNumberOfLieAlgebraComponents, n_nodes}
-                ),
-                KOKKOS_LAMBDA(const size_t i, const size_t j) {
-                    gen_coords_qp(i) += shape_function[j] * gen_coords(j * 7 + i);
-                    gen_coords_derivatives_qp(i) +=
-                        shape_function_derivative[j] * gen_coords(j * 7 + i);
-                    position_vector_qp(i) += shape_function[j] * position_vectors(j * 7 + i);
-                    position_vector_derivatives_qp(i) +=
-                        shape_function_derivative[j] * position_vectors(j * 7 + i);
-                }
-            );
+            auto gen_coords_qp = Interpolate(gen_coords, shape_function, qp);
+            auto gen_coords_derivatives_qp = Interpolate(gen_coords, shape_function_derivative, qp);
+            auto position_vector_qp = Interpolate(position_vectors, shape_function, qp);
+            auto position_vector_derivatives_qp =
+                Interpolate(position_vectors, shape_function_derivative, qp);
 
             // Calculate the curvature vector at the quadrature point
             auto curvature = CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp);
