@@ -9,7 +9,7 @@ constexpr size_t kNumberOfLieAlgebraComponents = 7;
 constexpr size_t kNumberOfLieGroupComponents = 6;
 constexpr size_t kNumberOfVectorComponents = 3;
 
-/// An abstract for providing common interface for numerical quadrature rules
+/// An abstract class for providing common interface to numerical quadrature rules
 class Quadrature {
 public:
     virtual ~Quadrature() = default;
@@ -48,6 +48,10 @@ private:
     std::vector<double> quadrature_points_;
     std::vector<double> quadrature_weights_;
 };
+
+/// Calculates the interpolated values for a nodal quantity (e.g. displacement or position vector) at
+/// a given quadrature point
+Kokkos::View<double*> Interpolate(Kokkos::View<double*> nodal_values, double quadrature_pt);
 
 /// Calculates the static residual vector for a beam element
 Kokkos::View<double*> CalculateStaticResidual(

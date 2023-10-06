@@ -32,6 +32,34 @@ TEST(SolverTest, UserDefinedQuadrature) {
     EXPECT_EQ(quadrature.GetQuadratureWeights(), quadrature_weights);
 }
 
+TEST(SolverTest, CalculateInterpolatedValues) {
+    auto generalized_coords = Kokkos::View<double*>("generalized_coords", 14);
+    auto populate_generalized_coords = KOKKOS_LAMBDA(size_t) {
+        // node 1
+        generalized_coords(0) = 1.;
+        generalized_coords(1) = 2.;
+        generalized_coords(2) = 3.;
+        generalized_coords(3) = 0.;
+        generalized_coords(4) = -1.;
+        generalized_coords(5) = -2.;
+        generalized_coords(6) = -3.;
+        // node 2
+        generalized_coords(7) = 2.;
+        generalized_coords(8) = 3.;
+        generalized_coords(9) = 4.;
+        generalized_coords(10) = 0.;
+        generalized_coords(11) = 1.;
+        generalized_coords(12) = 4.;
+        generalized_coords(13) = 9.;
+    };
+    Kokkos::parallel_for(1, populate_generalized_coords);
+    auto quadrature_pt = 0.;
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        Interpolate(generalized_coords, quadrature_pt), {1.5, 2.5, 3.5, 0., 0., 1., 3.}
+    );
+}
+
 TEST(SolverTest, CalculateStaticResidual) {
     auto position_vectors = Kokkos::View<double*>("position_vectors", 35);
     auto populate_position_vector = KOKKOS_LAMBDA(size_t) {

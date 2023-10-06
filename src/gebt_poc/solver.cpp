@@ -1,6 +1,7 @@
 #include "src/gebt_poc/solver.h"
 
 #include "src/gen_alpha_poc/quaternion.h"
+#include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
 
@@ -9,6 +10,24 @@ UserDefinedQuadrature::UserDefinedQuadrature(
 )
     : quadrature_points_(std::move(quadrature_points)),
       quadrature_weights_(std::move(quadrature_weights)) {
+}
+
+Kokkos::View<double*> Interpolate(Kokkos::View<double*> nodal_values, double quadrature_pt) {
+    const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
+    auto shape_function = LagrangePolynomial(n_nodes - 1, quadrature_pt);
+
+    auto interpolated_values = Kokkos::View<double*>("interpolated_values", 7);
+    Kokkos::deep_copy(interpolated_values, 0.);
+    Kokkos::parallel_for(
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
+            {0, 0}, {kNumberOfLieAlgebraComponents, n_nodes}
+        ),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            interpolated_values(i) += shape_function[j] * nodal_values(j * 7 + i);
+        }
+    );
+
+    return interpolated_values;
 }
 
 Kokkos::View<double*> CalculateStaticResidual(
