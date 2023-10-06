@@ -284,7 +284,7 @@ Quaternion rotation_matrix_to_quaternion(const RotationMatrix& rotation_matrix) 
     }
 }
 
-/// Returns the B derivative matrix given four Euler parameters, ie unit quaternions
+/// Returns the B derivative matrix given for Euler parameters, i.e. unit quaternions
 KOKKOS_INLINE_FUNCTION
 Kokkos::View<double**> BMatrixForQuaternions(const Quaternion& quaternion) {
     auto q0 = quaternion.GetScalarComponent();

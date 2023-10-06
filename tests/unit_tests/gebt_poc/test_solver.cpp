@@ -228,9 +228,85 @@ TEST(SolverTest, UserDefinedQuadrature) {
     };
     auto quadrature_rule = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
-    EXPECT_EQ(quadrature_rule.GetNumQuadraturePoints(), 7);
+    EXPECT_EQ(quadrature_rule.GetNumberOfQuadraturePoints(), 7);
     EXPECT_EQ(quadrature_rule.GetQuadraturePoints(), quadrature_points);
     EXPECT_EQ(quadrature_rule.GetQuadratureWeights(), quadrature_weights);
+}
+
+TEST(SolverTest, CalculateStaticResidual) {
+    auto order = 4;
+    auto gll_points = GenerateGLLPoints(order);
+    auto position_vectors = Kokkos::View<double*>("position_vectors", (order + 1) * 7);
+    Kokkos::parallel_for(
+        Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0, order + 1),
+        KOKKOS_LAMBDA(const int i) {
+            auto xi = (gll_points[i] + 1.) / 2.;
+            auto position_vector = CreatePositionVectors(xi);
+            for (std::size_t j = 0; j < 7; ++j) {
+                position_vectors(i * 7 + j) = position_vector(j);
+            }
+        }
+    );
+    auto generalized_coords = Kokkos::View<double*>("generalized_coords", (order + 1) * 7);
+    Kokkos::parallel_for(
+        Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0, order + 1),
+        KOKKOS_LAMBDA(const int i) {
+            auto xi = (gll_points[i] + 1.) / 2.;
+            auto gen_coords = CreateGeneralizedCoordinates(xi);
+            for (std::size_t j = 0; j < 7; ++j) {
+                generalized_coords(i * 7 + j) = gen_coords(j);
+            }
+        }
+    );
+    auto stiffness = StiffnessMatrix(gen_alpha_solver::create_matrix({
+        {1., 2., 3., 4., 5., 6.},       // row 1
+        {2., 4., 6., 8., 10., 12.},     // row 2
+        {3., 6., 9., 12., 15., 18.},    // row 3
+        {4., 8., 12., 16., 20., 24.},   // row 4
+        {5., 10., 15., 20., 25., 30.},  // row 5
+        {6., 12., 18., 24., 30., 36.}   // row 6
+    }));
+    auto quadrature_points =
+        std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
+                            0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
+    auto quadrature_weights = std::vector<double>{
+        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
+    auto quadrature_rule = UserDefinedQuadrature(quadrature_points, quadrature_weights);
+
+    auto residual =
+        CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature_rule);
+
+    // EXPECT_NEAR(residual(0), -0.111227, 1e-6);
+    // EXPECT_NEAR(residual(1), -0.161488, 1e-6);
+    // EXPECT_NEAR(residual(2), -0.304395, 1e-6);
+    // EXPECT_NEAR(residual(3), -0.403897, 1e-6);
+    // EXPECT_NEAR(residual(4), -0.292703, 1e-6);
+    // EXPECT_NEAR(residual(5), -0.683898, 1e-6);
+    // EXPECT_NEAR(residual(6), -0.0526776, 1e-6);
+    // EXPECT_NEAR(residual(7), -0.0988211, 1e-6);
+    // EXPECT_NEAR(residual(8), -0.103198, 1e-6);
+    // EXPECT_NEAR(residual(9), -0.0469216, 1e-6);
+    // EXPECT_NEAR(residual(10), 0.20028, 1e-6);
+    // EXPECT_NEAR(residual(11), -0.493743, 1e-6);
+    // EXPECT_NEAR(residual(12), 0.11946, 1e-6);
+    // EXPECT_NEAR(residual(13), 0.143433, 1e-6);
+    // EXPECT_NEAR(residual(14), 0.278972, 1e-6);
+    // EXPECT_NEAR(residual(15), 0.288189, 1e-6);
+    // EXPECT_NEAR(residual(16), 0.903484, 1e-6);
+    // EXPECT_NEAR(residual(17), 0.213179, 1e-6);
+    // EXPECT_NEAR(residual(18), 0.0854734, 1e-6);
+    // EXPECT_NEAR(residual(19), 0.2978, 1e-6);
+    // EXPECT_NEAR(residual(20), 0.307201, 1e-6);
+    // EXPECT_NEAR(residual(21), 0.34617, 1e-6);
+    // EXPECT_NEAR(residual(22), 0.752895, 1e-6);
+    // EXPECT_NEAR(residual(23), 0.592624, 1e-6);
+    // EXPECT_NEAR(residual(24), -0.0410293, 1e-6);
+    // EXPECT_NEAR(residual(25), -0.180923, 1e-6);
+    // EXPECT_NEAR(residual(26), -0.17858, 1e-6);
+    // EXPECT_NEAR(residual(27), -0.0631152, 1e-6);
+    // EXPECT_NEAR(residual(28), -0.561707, 1e-6);
+    // EXPECT_NEAR(residual(29), -0.259986, 1e-6);
 }
 
 }  // namespace openturbine::gebt_poc::tests
