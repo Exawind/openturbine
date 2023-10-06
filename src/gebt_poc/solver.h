@@ -53,6 +53,11 @@ private:
 /// a given quadrature point
 Kokkos::View<double*> Interpolate(Kokkos::View<double*> nodal_values, double quadrature_pt);
 
+/// Calculates the curvature from generalized coordinates and their derivatives
+Kokkos::View<double*> CalculateCurvature(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> gen_coords_derivative
+);
+
 /// Calculates the static residual vector for a beam element
 Kokkos::View<double*> CalculateStaticResidual(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,

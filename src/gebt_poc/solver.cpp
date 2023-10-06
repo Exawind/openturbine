@@ -30,6 +30,25 @@ Kokkos::View<double*> Interpolate(Kokkos::View<double*> nodal_values, double qua
     return interpolated_values;
 }
 
+Kokkos::View<double*> CalculateCurvature(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> gen_coords_derivative
+) {
+    auto q =
+        gen_alpha_solver::Quaternion(gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6));
+    auto b_matrix = gen_alpha_solver::BMatrixForQuaternions(q);
+
+    auto q_prime = gen_alpha_solver::create_vector(
+        {gen_coords_derivative(3), gen_coords_derivative(4), gen_coords_derivative(5),
+         gen_coords_derivative(6)}
+    );
+
+    auto curvature = gen_alpha_solver::multiply_vector_with_scalar(
+        gen_alpha_solver::multiply_matrix_with_vector(b_matrix, q_prime), 2.
+    );
+
+    return curvature;
+}
+
 Kokkos::View<double*> CalculateStaticResidual(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature
@@ -75,16 +94,7 @@ Kokkos::View<double*> CalculateStaticResidual(
             );
 
             // Calculate the curvature vector at the quadrature point
-            auto q = gen_alpha_solver::Quaternion(
-                gen_coords_qp(3), gen_coords_qp(4), gen_coords_qp(5), gen_coords_qp(6)
-            );
-            auto b_matrix_quaternion = gen_alpha_solver::BMatrixForQuaternions(q);
-            auto q_prime = gen_alpha_solver::create_vector(
-                {gen_coords_derivatives_qp(3), gen_coords_derivatives_qp(4),
-                 gen_coords_derivatives_qp(5), gen_coords_derivatives_qp(6)}
-            );
-            auto curvature =
-                gen_alpha_solver::multiply_matrix_with_vector(b_matrix_quaternion, q_prime);
+            auto curvature = CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp);
 
             // Calculate the strain vector at the quadrature point
             auto strain = Kokkos::View<double*>("strain", 6);
@@ -97,6 +107,9 @@ Kokkos::View<double*> CalculateStaticResidual(
             );
 
             // Calculate the stiffness matrix at the quadrature point
+            auto q = gen_alpha_solver::Quaternion(
+                gen_coords_qp(3), gen_coords_qp(4), gen_coords_qp(5), gen_coords_qp(6)
+            );
             auto rotation_0 =
                 gen_alpha_solver::quaternion_to_rotation_matrix(gen_alpha_solver::Quaternion(
                     position_vector_qp(3), position_vector_qp(4), position_vector_qp(5),

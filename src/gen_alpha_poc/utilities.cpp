@@ -111,6 +111,20 @@ Kokkos::View<double**> create_cross_product_matrix(const Kokkos::View<double*> v
     return matrix;
 }
 
+Kokkos::View<double*> multiply_vector_with_scalar(
+    const Kokkos::View<double*> vector, double scalar
+) {
+    auto result = Kokkos::View<double*>("result", vector.extent(0));
+    auto entries = Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0, vector.extent(0));
+    auto multiply_entry = KOKKOS_LAMBDA(size_t index) {
+        result(index) = vector(index) * scalar;
+    };
+
+    Kokkos::parallel_for(entries, multiply_entry);
+
+    return result;
+}
+
 Kokkos::View<double**> multiply_matrix_with_scalar(
     const Kokkos::View<double**> matrix, double scalar
 ) {

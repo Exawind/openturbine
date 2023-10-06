@@ -60,9 +60,49 @@ TEST(SolverTest, CalculateInterpolatedValues) {
     );
 }
 
+TEST(SolverTest, CalculateCurvature) {
+    auto rotation_matrix = gen_alpha_solver::RotationMatrix(
+        0.8146397707387071, -0.4884001129794905, 0.31277367787652416, 0.45607520213614394,
+        0.8726197541000288, 0.17472886066955512, -0.3582700851693625, 0.00030723936311904954,
+        0.933617936672551
+    );
+    auto q = gen_alpha_solver::rotation_matrix_to_quaternion(rotation_matrix);
+
+    auto gen_coords = Kokkos::View<double*>("gen_coords", 7);
+    auto populate_gen_coords = KOKKOS_LAMBDA(size_t) {
+        gen_coords(0) = 0.;
+        gen_coords(1) = 0.;
+        gen_coords(2) = 0.;
+        gen_coords(3) = q.GetScalarComponent();
+        gen_coords(4) = q.GetXComponent();
+        gen_coords(5) = q.GetYComponent();
+        gen_coords(6) = q.GetZComponent();
+    };
+    Kokkos::parallel_for(1, populate_gen_coords);
+
+    auto gen_coords_derivative = Kokkos::View<double*>("gen_coords_derivative", 7);
+    auto populate_gen_coords_derivative = KOKKOS_LAMBDA(size_t) {
+        gen_coords_derivative(0) = 0.;
+        gen_coords_derivative(1) = 0.;
+        gen_coords_derivative(2) = 0.;
+        gen_coords_derivative(3) = -0.0257045;
+        gen_coords_derivative(4) = -0.0230032;
+        gen_coords_derivative(5) = 0.030486;
+        gen_coords_derivative(6) = 0.0694527;
+    };
+    Kokkos::parallel_for(1, populate_gen_coords_derivative);
+
+    auto curvature = CalculateCurvature(gen_coords, gen_coords_derivative);
+
+    EXPECT_NEAR(curvature(0), -0.03676700256944363, 1e-6);
+    EXPECT_NEAR(curvature(1), 0.062023963818612256, 1e-6);
+    EXPECT_NEAR(curvature(2), 0.15023478838786522, 1e-6);
+}
+
 TEST(SolverTest, CalculateStaticResidual) {
     auto position_vectors = Kokkos::View<double*>("position_vectors", 35);
     auto populate_position_vector = KOKKOS_LAMBDA(size_t) {
+        // node 1
         position_vectors(0) = 0.;
         position_vectors(1) = 0.;
         position_vectors(2) = 0.;
@@ -70,6 +110,7 @@ TEST(SolverTest, CalculateStaticResidual) {
         position_vectors(4) = -0.01733607539094763;
         position_vectors(5) = -0.09001900002195001;
         position_vectors(6) = -0.18831121859148398;
+        // node 2
         position_vectors(7) = 0.8633658232300573;
         position_vectors(8) = -0.25589826392541715;
         position_vectors(9) = 0.1130411210682743;
@@ -77,6 +118,7 @@ TEST(SolverTest, CalculateStaticResidual) {
         position_vectors(11) = -0.002883848832932071;
         position_vectors(12) = -0.030192109815745303;
         position_vectors(13) = -0.09504013471947484;
+        // node 3
         position_vectors(14) = 2.5;
         position_vectors(15) = -0.25;
         position_vectors(16) = 0.;
@@ -84,6 +126,7 @@ TEST(SolverTest, CalculateStaticResidual) {
         position_vectors(18) = -0.009526411091536478;
         position_vectors(19) = 0.09620741150793366;
         position_vectors(20) = 0.09807604012323785;
+        // node 4
         position_vectors(21) = 4.136634176769943;
         position_vectors(22) = 0.39875540678255983;
         position_vectors(23) = -0.5416125496397027;
@@ -91,6 +134,7 @@ TEST(SolverTest, CalculateStaticResidual) {
         position_vectors(25) = -0.049692141629315074;
         position_vectors(26) = 0.18127630174800594;
         position_vectors(27) = 0.25965858850765167;
+        // node 5
         position_vectors(28) = 5.;
         position_vectors(29) = 1.;
         position_vectors(30) = -1.;
@@ -103,6 +147,7 @@ TEST(SolverTest, CalculateStaticResidual) {
 
     auto generalized_coords = Kokkos::View<double*>("generalized_coords", 35);
     auto populate_generalized_coords = KOKKOS_LAMBDA(size_t) {
+        // node 1
         generalized_coords(0) = 0.;
         generalized_coords(1) = 0.;
         generalized_coords(2) = 0.;
@@ -110,6 +155,7 @@ TEST(SolverTest, CalculateStaticResidual) {
         generalized_coords(4) = 0.;
         generalized_coords(5) = 0.;
         generalized_coords(6) = 0.;
+        // node 2
         generalized_coords(7) = 0.0029816021788868583;
         generalized_coords(8) = -0.0024667594949430213;
         generalized_coords(9) = 0.0030845707156756256;
@@ -117,6 +163,7 @@ TEST(SolverTest, CalculateStaticResidual) {
         generalized_coords(11) = 0.008633550973807838;
         generalized_coords(12) = 0.;
         generalized_coords(13) = 0.;
+        // node 3
         generalized_coords(14) = 0.025;
         generalized_coords(15) = 0.0125;
         generalized_coords(16) = 0.027500000000000004;
@@ -124,6 +171,7 @@ TEST(SolverTest, CalculateStaticResidual) {
         generalized_coords(18) = 0.024997395914712332;
         generalized_coords(19) = 0.;
         generalized_coords(20) = 0.;
+        // node 4
         generalized_coords(21) = 0.06844696924968456;
         generalized_coords(22) = -0.011818954790771264;
         generalized_coords(23) = 0.07977257214146723;
@@ -131,6 +179,7 @@ TEST(SolverTest, CalculateStaticResidual) {
         generalized_coords(25) = 0.04135454527402519;
         generalized_coords(26) = 0.;
         generalized_coords(27) = 0.;
+        // node 5
         generalized_coords(28) = 0.1;
         generalized_coords(29) = 0.;
         generalized_coords(30) = 0.12;

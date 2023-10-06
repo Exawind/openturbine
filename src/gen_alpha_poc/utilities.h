@@ -55,6 +55,9 @@ Kokkos::View<double**> transpose_matrix(const Kokkos::View<double**>);
 /// Generates and returns the 3 x 3 cross product matrix from a provided 3D vector
 Kokkos::View<double**> create_cross_product_matrix(const Kokkos::View<double*>);
 
+/// Multiplies an n x 1 vector with a scalar and returns an n x 1 vector
+Kokkos::View<double*> multiply_vector_with_scalar(const Kokkos::View<double*>, double);
+
 /// Multiplies an m x n matrix with a scalar and returns an m x n matrix
 Kokkos::View<double**> multiply_matrix_with_scalar(const Kokkos::View<double**>, double);
 

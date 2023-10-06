@@ -310,6 +310,13 @@ TEST(MathUtilitiesTest, Multiply3x3MatrixWith3x3Matrix) {
     expect_kokkos_view_2D_equal(result, {{30., 36., 42.}, {66., 81., 96.}, {102., 126., 150.}});
 }
 
+TEST(MathUtilitiesTest, Multiply3x1VectorWithAScalar) {
+    auto vector = create_vector({1., 2., 3.});
+    auto result = multiply_vector_with_scalar(vector, 2.);
+
+    expect_kokkos_view_1D_equal(result, {2., 4., 6.});
+}
+
 TEST(MathUtilitiesTest, Multiply3x3MatrixWithAScalar) {
     auto matrix = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
     auto result = multiply_matrix_with_scalar(matrix, 2.);
