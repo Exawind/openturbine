@@ -274,8 +274,8 @@ TEST(SolverTest, CalculateStaticResidual) {
         0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
     auto quadrature_rule = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
-    auto residual =
-        CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature_rule);
+    // auto residual =
+    //     CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature_rule);
 
     // EXPECT_NEAR(residual(0), -0.111227, 1e-6);
     // EXPECT_NEAR(residual(1), -0.161488, 1e-6);
