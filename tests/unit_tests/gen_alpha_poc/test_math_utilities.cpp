@@ -317,4 +317,20 @@ TEST(MathUtilitiesTest, Multiply3x3MatrixWithAScalar) {
     expect_kokkos_view_2D_equal(result, {{2., 4., 6.}, {8., 10., 12.}, {14., 16., 18.}});
 }
 
+TEST(MathUtilitiesTest, Add3x3MatrixTo3x3Matrix) {
+    auto matrix_a = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
+    auto matrix_b = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
+    auto result = add_matrix_with_matrix(matrix_a, matrix_b);
+
+    expect_kokkos_view_2D_equal(result, {{2., 4., 6.}, {8., 10., 12.}, {14., 16., 18.}});
+}
+
+TEST(MathUtilitiesTest, CalculateDotProduct) {
+    auto vector_a = create_vector({1., 2., 3.});
+    auto vector_b = create_vector({4., 5., 6.});
+    auto result = dot_product(vector_a, vector_b);
+
+    expect_kokkos_view_1D_equal(result, {32.});
+}
+
 }  // namespace openturbine::gen_alpha_solver::tests
