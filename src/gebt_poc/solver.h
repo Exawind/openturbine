@@ -53,8 +53,7 @@ private:
 /// Calculates the interpolated values for a nodal quantity (e.g. displacement or position vector) at
 /// a given quadrature point
 Kokkos::View<double*> Interpolate(
-    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
-    double quadrature_pt
+    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function
 );
 
 /// Calculates the curvature from generalized coordinates and their derivatives
@@ -67,6 +66,15 @@ Kokkos::View<double*> CalculateCurvature(
 Kokkos::View<double**> CalculateSectionalStiffness(
     const StiffnessMatrix& stiffness, gen_alpha_solver::RotationMatrix rotation_0,
     gen_alpha_solver::RotationMatrix rotation
+);
+
+/// Calculates the elastic forces based on the sectional strain, derivative of the position
+/// vector and the generalized coordinates, and the sectional stiffness matrix
+Kokkos::View<double*> CalculateElasticForces(
+    const Kokkos::View<double*> strain, gen_alpha_solver::RotationMatrix rotation,
+    const Kokkos::View<double*> position_vector_derivatives,
+    const Kokkos::View<double*> gen_coords_derivatives,
+    const Kokkos::View<double**> sectional_stiffness
 );
 
 /// Calculates the static residual vector for a beam element

@@ -57,8 +57,7 @@ TEST(SolverTest, CalculateInterpolatedValues) {
     auto shape_function = gen_alpha_solver::create_vector(LagrangePolynomial(1, quadrature_pt));
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-        Interpolate(generalized_coords, shape_function, quadrature_pt),
-        {1.5, 2.5, 3.5, 0., 0., 1., 3.}
+        Interpolate(generalized_coords, shape_function), {1.5, 2.5, 3.5, 0., 0., 1., 3.}
     );
 }
 
@@ -125,6 +124,61 @@ TEST(SolverTest, CalculateSectionalStiffness) {
             {1078., 2464., 3850., 2464., 5929., 9394.},  // row 5
             {1708., 3904., 6100., 3904., 9394., 14884.}  // row 6
         }
+    );
+}
+
+TEST(SolverTest, CalculateElasticForces) {
+    auto sectional_strain = Kokkos::View<double*>("sectional_strain", 6);
+    auto populate_sectional_strain = KOKKOS_LAMBDA(size_t) {
+        sectional_strain(0) = 1.1;
+        sectional_strain(1) = 2.2;
+        sectional_strain(2) = 3.3;
+        sectional_strain(3) = 1.;
+        sectional_strain(4) = 1.;
+        sectional_strain(5) = 1.;
+    };
+    Kokkos::parallel_for(1, populate_sectional_strain);
+
+    auto rotation = gen_alpha_solver::RotationMatrix(1., 2., 3., 4., 5., 6., 7., 8., 9.);
+
+    auto position_vector_derivatives = Kokkos::View<double*>("position_vector_derivatives", 7);
+    auto populate_position_vector_derivatives = KOKKOS_LAMBDA(size_t) {
+        position_vector_derivatives(0) = 1.;
+        position_vector_derivatives(1) = 2.;
+        position_vector_derivatives(2) = 3.;
+        position_vector_derivatives(3) = 1.;
+        position_vector_derivatives(4) = 0.;
+        position_vector_derivatives(5) = 0.;
+        position_vector_derivatives(6) = 0.;
+    };
+    Kokkos::parallel_for(1, populate_position_vector_derivatives);
+
+    auto gen_coords_derivatives = Kokkos::View<double*>("gen_coords_derivatives", 7);
+    auto populate_gen_coords_derivatives = KOKKOS_LAMBDA(size_t) {
+        gen_coords_derivatives(0) = 0.1;
+        gen_coords_derivatives(1) = 0.2;
+        gen_coords_derivatives(2) = 0.3;
+        gen_coords_derivatives(3) = 1.;
+        gen_coords_derivatives(4) = 0.;
+        gen_coords_derivatives(5) = 0.;
+        gen_coords_derivatives(6) = 0.;
+    };
+    Kokkos::parallel_for(1, populate_gen_coords_derivatives);
+
+    auto stiffness = gen_alpha_solver::create_matrix({
+        {1., 2., 3., 4., 5., 6.},       // row 1
+        {2., 4., 6., 8., 10., 12.},     // row 2
+        {3., 6., 9., 12., 15., 18.},    // row 3
+        {4., 8., 12., 16., 20., 24.},   // row 4
+        {5., 10., 15., 20., 25., 30.},  // row 5
+        {6., 12., 18., 24., 30., 36.}   // row 6
+    });
+    auto elastic_forces = CalculateElasticForces(
+        sectional_strain, rotation, position_vector_derivatives, gen_coords_derivatives, stiffness
+    );
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        elastic_forces, {-197.6, -395.2, -592.8, -790.4, -988., -1185.6, 0., 0., 0., 0., 0., 0.}
     );
 }
 
