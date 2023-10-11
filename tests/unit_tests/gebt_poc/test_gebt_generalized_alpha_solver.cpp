@@ -35,7 +35,7 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialStat
 
     auto time_step = 1.;
     auto max_nonlinear_iterations = 1;
-    bool step_converged =
+    [[maybe_unused]] bool step_converged =
         stepper.Step(mesh, field_data, n_lagrange_mults, time_step, max_nonlinear_iterations);
 
     using openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal;

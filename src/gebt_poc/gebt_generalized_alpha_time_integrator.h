@@ -8,7 +8,9 @@
 
 #include "src/gebt_poc/field_data.h"
 #include "src/gebt_poc/mesh.h"
+#include "src/gen_alpha_poc/quaternion.h"
 #include "src/gen_alpha_poc/solver.h"
+#include "src/gen_alpha_poc/vector.h"
 
 namespace openturbine::gebt_poc {
 
@@ -27,17 +29,13 @@ public:
 
 class UnityLinearizationParameters : public LinearizationParameters {
 public:
-    void ComputeResidualVector(
-        Kokkos::View<double*> residuals, Mesh& mesh, FieldData& field_data,
-        Kokkos::View<double*> lagrange_mults
-    ) {
+    void
+    ComputeResidualVector(Kokkos::View<double*> residuals, Mesh&, FieldData&, Kokkos::View<double*>) {
         KokkosBlas::fill(residuals, 1.);
     }
 
-    void ComputeIterationMatrix(
-        Kokkos::View<double**> iteration_matrix, double h, double betaPrime, double gammaPrime,
-        Mesh& mesh, FieldData& field_data, Kokkos::View<double*> lagrange_mults
-    ) {
+    void
+    ComputeIterationMatrix(Kokkos::View<double**> iteration_matrix, double, double, double, Mesh&, FieldData&, Kokkos::View<double*>) {
         Kokkos::parallel_for(
             iteration_matrix.extent(0),
             KOKKOS_LAMBDA(std::size_t i) {
