@@ -246,6 +246,29 @@ RotationMatrix quaternion_to_rotation_matrix(const Quaternion& quaternion) {
         q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3};
 }
 
+/// Converts a 4x1 unit quaternion to a 3x3 rotation matrix and returns the result
+KOKKOS_INLINE_FUNCTION
+Kokkos::View<double**> EulerParameterToRotationMatrix(const Kokkos::View<double*> euler_param) {
+    auto c0 = euler_param(0);
+    auto c = Kokkos::View<double*>("c", 3);
+    Kokkos::parallel_for(
+        3, KOKKOS_LAMBDA(const size_t i) { c(i) = euler_param(i + 1); }
+    );
+    auto identity_matrix = gen_alpha_solver::create_identity_matrix(3);
+    auto tilde_c = gen_alpha_solver::create_cross_product_matrix(c);
+    auto tilde_c_tilde_c = gen_alpha_solver::multiply_matrix_with_matrix(tilde_c, tilde_c);
+
+    auto rotation_matrix = Kokkos::View<double**>("rotation_matrix", 3, 3);
+    Kokkos::parallel_for(
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {3, 3}),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            rotation_matrix(i, j) =
+                identity_matrix(i, j) + 2 * c0 * tilde_c(i, j) + 2 * tilde_c_tilde_c(i, j);
+        }
+    );
+    return rotation_matrix;
+}
+
 /// Converts a 3x3 rotation matrix to a 4x1 quaternion and returns the result
 KOKKOS_INLINE_FUNCTION
 Quaternion rotation_matrix_to_quaternion(const RotationMatrix& rotation_matrix) {

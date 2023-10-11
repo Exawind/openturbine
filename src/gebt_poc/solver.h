@@ -32,15 +32,15 @@ public:
         std::vector<double> quadrature_points, std::vector<double> quadrature_weights
     );
 
-    // Returns the number of quadrature points
+    /// Returns the number of quadrature points
     virtual size_t GetNumberOfQuadraturePoints() const override { return quadrature_points_.size(); }
 
-    // Returns the quadrature points (read only)
+    /// Returns the quadrature points (read only)
     virtual const std::vector<double>& GetQuadraturePoints() const override {
         return quadrature_points_;
     }
 
-    // Returns the quadrature weights (read only)
+    /// Returns the quadrature weights (read only)
     virtual const std::vector<double>& GetQuadratureWeights() const override {
         return quadrature_weights_;
     }
@@ -50,10 +50,11 @@ private:
     std::vector<double> quadrature_weights_;
 };
 
-/// Calculates the interpolated values for a nodal quantity (e.g. displacement or position vector) at
-/// a given quadrature point
+/// Calculates the interpolated values for a nodal quantity (e.g. displacement or position vector)
+/// at a given quadrature point
 Kokkos::View<double*> Interpolate(
-    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function
+    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
+    double jacobian = 1.
 );
 
 /// Calculates the curvature from generalized coordinates and their derivatives
@@ -62,16 +63,16 @@ Kokkos::View<double*> CalculateCurvature(
 );
 
 /// Calculates the given sectional stiffness matrix in inertial basis based on the given
-/// rotation matrix
+/// rotation matrices
 Kokkos::View<double**> CalculateSectionalStiffness(
-    const StiffnessMatrix& stiffness, gen_alpha_solver::RotationMatrix rotation_0,
-    gen_alpha_solver::RotationMatrix rotation
+    const StiffnessMatrix& stiffness, Kokkos::View<double**> rotation_0,
+    Kokkos::View<double**> rotation
 );
 
 /// Calculates the elastic forces based on the sectional strain, derivative of the position
 /// vector and the generalized coordinates, and the sectional stiffness matrix
 Kokkos::View<double*> CalculateElasticForces(
-    const Kokkos::View<double*> strain, gen_alpha_solver::RotationMatrix rotation,
+    const Kokkos::View<double*> strain, Kokkos::View<double**> rotation,
     const Kokkos::View<double*> position_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
     const Kokkos::View<double**> sectional_stiffness

@@ -101,8 +101,16 @@ TEST(SolverTest, CalculateCurvature) {
 }
 
 TEST(SolverTest, CalculateSectionalStiffness) {
-    auto rotation_0 = gen_alpha_solver::RotationMatrix(1., 2., 3., 4., 5., 6., 7., 8., 9.);
-    auto rotation = gen_alpha_solver::RotationMatrix(1., 0., 0., 0., 1., 0., 0., 0., 1.);
+    auto rotation_0 = gen_alpha_solver::create_matrix({
+        {1., 2., 3.},  // row 1
+        {4., 5., 6.},  // row 2
+        {7., 8., 9.}   // row 3
+    });
+    auto rotation = gen_alpha_solver::create_matrix({
+        {1., 0., 0.},  // row 1
+        {0., 1., 0.},  // row 2
+        {0., 0., 1.}   // row 3
+    });
     auto stiffness = StiffnessMatrix(gen_alpha_solver::create_matrix({
         {1., 2., 3., 4., 5., 6.},       // row 1
         {2., 4., 6., 8., 10., 12.},     // row 2
@@ -139,7 +147,11 @@ TEST(SolverTest, CalculateElasticForces) {
     };
     Kokkos::parallel_for(1, populate_sectional_strain);
 
-    auto rotation = gen_alpha_solver::RotationMatrix(1., 2., 3., 4., 5., 6., 7., 8., 9.);
+    auto rotation = gen_alpha_solver::create_matrix({
+        {1., 2., 3.},  // row 1
+        {4., 5., 6.},  // row 2
+        {7., 8., 9.}   // row 3
+    });
 
     auto position_vector_derivatives = Kokkos::View<double*>("position_vector_derivatives", 7);
     auto populate_position_vector_derivatives = KOKKOS_LAMBDA(size_t) {
@@ -248,7 +260,7 @@ TEST(SolverTest, CalculateStaticResidual) {
         generalized_coords(13) = 0.;
         // node 3
         generalized_coords(14) = 0.025;
-        generalized_coords(15) = 0.0125;
+        generalized_coords(15) = -0.0125;
         generalized_coords(16) = 0.027500000000000004;
         generalized_coords(17) = 0.9996875162757026;
         generalized_coords(18) = 0.024997395914712332;
@@ -290,39 +302,39 @@ TEST(SolverTest, CalculateStaticResidual) {
         0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
     auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
-    // auto residual =
-    //     CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature);
+    auto residual =
+        CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature);
 
-    // EXPECT_NEAR(residual(0), -0.111227, 1e-6);
-    // EXPECT_NEAR(residual(1), -0.161488, 1e-6);
-    // EXPECT_NEAR(residual(2), -0.304395, 1e-6);
-    // EXPECT_NEAR(residual(3), -0.403897, 1e-6);
-    // EXPECT_NEAR(residual(4), -0.292703, 1e-6);
-    // EXPECT_NEAR(residual(5), -0.683898, 1e-6);
-    // EXPECT_NEAR(residual(6), -0.0526776, 1e-6);
-    // EXPECT_NEAR(residual(7), -0.0988211, 1e-6);
-    // EXPECT_NEAR(residual(8), -0.103198, 1e-6);
-    // EXPECT_NEAR(residual(9), -0.0469216, 1e-6);
-    // EXPECT_NEAR(residual(10), 0.20028, 1e-6);
-    // EXPECT_NEAR(residual(11), -0.493743, 1e-6);
-    // EXPECT_NEAR(residual(12), 0.11946, 1e-6);
-    // EXPECT_NEAR(residual(13), 0.143433, 1e-6);
-    // EXPECT_NEAR(residual(14), 0.278972, 1e-6);
-    // EXPECT_NEAR(residual(15), 0.288189, 1e-6);
-    // EXPECT_NEAR(residual(16), 0.903484, 1e-6);
-    // EXPECT_NEAR(residual(17), 0.213179, 1e-6);
-    // EXPECT_NEAR(residual(18), 0.0854734, 1e-6);
-    // EXPECT_NEAR(residual(19), 0.2978, 1e-6);
-    // EXPECT_NEAR(residual(20), 0.307201, 1e-6);
-    // EXPECT_NEAR(residual(21), 0.34617, 1e-6);
-    // EXPECT_NEAR(residual(22), 0.752895, 1e-6);
-    // EXPECT_NEAR(residual(23), 0.592624, 1e-6);
-    // EXPECT_NEAR(residual(24), -0.0410293, 1e-6);
-    // EXPECT_NEAR(residual(25), -0.180923, 1e-6);
-    // EXPECT_NEAR(residual(26), -0.17858, 1e-6);
-    // EXPECT_NEAR(residual(27), -0.0631152, 1e-6);
-    // EXPECT_NEAR(residual(28), -0.561707, 1e-6);
-    // EXPECT_NEAR(residual(29), -0.259986, 1e-6);
+    EXPECT_NEAR(residual(0), -0.111227, 1e-6);
+    EXPECT_NEAR(residual(1), -0.161488, 1e-6);
+    EXPECT_NEAR(residual(2), -0.304395, 1e-6);
+    EXPECT_NEAR(residual(3), -0.403897, 1e-6);
+    EXPECT_NEAR(residual(4), -0.292703, 1e-6);
+    EXPECT_NEAR(residual(5), -0.683898, 1e-6);
+    EXPECT_NEAR(residual(6), -0.0526776, 1e-6);
+    EXPECT_NEAR(residual(7), -0.0988211, 1e-6);
+    EXPECT_NEAR(residual(8), -0.103198, 1e-6);
+    EXPECT_NEAR(residual(9), -0.0469216, 1e-6);
+    EXPECT_NEAR(residual(10), 0.20028, 1e-6);
+    EXPECT_NEAR(residual(11), -0.493743, 1e-6);
+    EXPECT_NEAR(residual(12), 0.11946, 1e-6);
+    EXPECT_NEAR(residual(13), 0.143433, 1e-6);
+    EXPECT_NEAR(residual(14), 0.278972, 1e-6);
+    EXPECT_NEAR(residual(15), 0.288189, 1e-6);
+    EXPECT_NEAR(residual(16), 0.903484, 1e-6);
+    EXPECT_NEAR(residual(17), 0.213179, 1e-6);
+    EXPECT_NEAR(residual(18), 0.0854734, 1e-6);
+    EXPECT_NEAR(residual(19), 0.2978, 1e-6);
+    EXPECT_NEAR(residual(20), 0.307201, 1e-6);
+    EXPECT_NEAR(residual(21), 0.34617, 1e-6);
+    EXPECT_NEAR(residual(22), 0.752895, 1e-6);
+    EXPECT_NEAR(residual(23), 0.592624, 1e-6);
+    EXPECT_NEAR(residual(24), -0.0410293, 1e-6);
+    EXPECT_NEAR(residual(25), -0.180923, 1e-6);
+    EXPECT_NEAR(residual(26), -0.17858, 1e-6);
+    EXPECT_NEAR(residual(27), -0.0631152, 1e-6);
+    EXPECT_NEAR(residual(28), -0.561707, 1e-6);
+    EXPECT_NEAR(residual(29), -0.259986, 1e-6);
 }
 
 }  // namespace openturbine::gebt_poc::tests
