@@ -97,6 +97,7 @@ public:
             Kokkos::View<double**>("iteration matrix", residual_size, residual_size);
         auto left_pre = Kokkos::View<double**>("left preconditioner", residual_size, residual_size);
         auto right_pre = Kokkos::View<double**>("left preconditioner", residual_size, residual_size);
+        auto helper = Kokkos::View<double**>("helper", residual_size, residual_size);
 
         auto dof_residuals = Kokkos::subview(residuals, Kokkos::pair<int, int>(0, dof_size));
         auto lagrange_residuals =
@@ -159,7 +160,7 @@ public:
                     auto updated_orientation = Kokkos::View<double[4]>("updated_orientation");
                     exponential_mapping_with_scale(
                         updated_orientation, orientation_vector, h
-                    );  // must use orientation_vector * h
+                    );  
                     auto current_orientation =
                         Kokkos::subview(coordinates, Kokkos::pair<int, int>(3, 7));
                     auto next_orientation =
@@ -178,12 +179,10 @@ public:
                 iteration_matrix, h, betaPrime, gammaPrime, mesh, field_data, lagrange_mults
             );
 
-            KokkosBlas::gemm("N", "N", 1., iteration_matrix, right_pre, 0., iteration_matrix);
-            KokkosBlas::gemm("N", "N", 1., left_pre, iteration_matrix, 0., iteration_matrix);
+            KokkosBlas::gemm("N", "N", 1., iteration_matrix, right_pre, 0., helper);
+            KokkosBlas::gemm("N", "N", 1., left_pre, helper, 0., iteration_matrix);
             KokkosBlas::scal(dof_residuals, scalar_pre, dof_residuals);
-
             openturbine::gen_alpha_solver::solve_linear_system(iteration_matrix, residuals);
-
             KokkosBlas::scal(residuals, -1., residuals);
 
             KokkosBlas::axpby(-1. / scalar_pre, lagrange_residuals, 1., lagrange_mults);
@@ -236,6 +235,7 @@ public:
     }
 
     friend GeneralizedAlphaStepper CreateBasicStepper();
+    friend GeneralizedAlphaStepper CreateUnityStepper(double alpha_f, double alpha_m, double beta, double gamma, bool preconditioner);
 
 protected:
     GeneralizedAlphaStepper() = default;
@@ -266,14 +266,18 @@ protected:
     bool is_preconditioned_;
 };
 
-GeneralizedAlphaStepper CreateBasicStepper() {
+GeneralizedAlphaStepper CreateUnityStepper(double alpha_f, double alpha_m, double beta, double gamma, bool preconditioner) {
     GeneralizedAlphaStepper stepper;
-    stepper.SetParameters(0., 0., .5, 1.);
-    stepper.SetPreconditioner(false);
+    stepper.SetParameters(alpha_f, alpha_m, beta, gamma);
+    stepper.SetPreconditioner(preconditioner);
 
     stepper.SetSystemAssembler(std::make_shared<UnityLinearizationParameters>());
 
     return stepper;
 }
+GeneralizedAlphaStepper CreateBasicStepper() {
+  return CreateUnityStepper(0., 0., .5, 1., false);
+}
+
 
 }  // namespace openturbine::gebt_poc
