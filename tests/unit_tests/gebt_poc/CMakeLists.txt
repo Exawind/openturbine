@@ -8,4 +8,5 @@ target_sources(
     test_point.cpp
     test_section.cpp
     test_mesh.cpp
+    test_field_data.cpp
 )
