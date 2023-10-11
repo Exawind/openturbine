@@ -305,36 +305,41 @@ TEST(SolverTest, CalculateStaticResidual) {
     auto residual =
         CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature);
 
-    EXPECT_NEAR(residual(0), -0.111227, 1e-6);
-    EXPECT_NEAR(residual(1), -0.161488, 1e-6);
-    EXPECT_NEAR(residual(2), -0.304395, 1e-6);
-    EXPECT_NEAR(residual(3), -0.403897, 1e-6);
-    EXPECT_NEAR(residual(4), -0.292703, 1e-6);
-    EXPECT_NEAR(residual(5), -0.683898, 1e-6);
-    EXPECT_NEAR(residual(6), -0.0526776, 1e-6);
-    EXPECT_NEAR(residual(7), -0.0988211, 1e-6);
-    EXPECT_NEAR(residual(8), -0.103198, 1e-6);
-    EXPECT_NEAR(residual(9), -0.0469216, 1e-6);
-    EXPECT_NEAR(residual(10), 0.20028, 1e-6);
-    EXPECT_NEAR(residual(11), -0.493743, 1e-6);
-    EXPECT_NEAR(residual(12), 0.11946, 1e-6);
-    EXPECT_NEAR(residual(13), 0.143433, 1e-6);
-    EXPECT_NEAR(residual(14), 0.278972, 1e-6);
-    EXPECT_NEAR(residual(15), 0.288189, 1e-6);
-    EXPECT_NEAR(residual(16), 0.903484, 1e-6);
-    EXPECT_NEAR(residual(17), 0.213179, 1e-6);
-    EXPECT_NEAR(residual(18), 0.0854734, 1e-6);
-    EXPECT_NEAR(residual(19), 0.2978, 1e-6);
-    EXPECT_NEAR(residual(20), 0.307201, 1e-6);
-    EXPECT_NEAR(residual(21), 0.34617, 1e-6);
-    EXPECT_NEAR(residual(22), 0.752895, 1e-6);
-    EXPECT_NEAR(residual(23), 0.592624, 1e-6);
-    EXPECT_NEAR(residual(24), -0.0410293, 1e-6);
-    EXPECT_NEAR(residual(25), -0.180923, 1e-6);
-    EXPECT_NEAR(residual(26), -0.17858, 1e-6);
-    EXPECT_NEAR(residual(27), -0.0631152, 1e-6);
-    EXPECT_NEAR(residual(28), -0.561707, 1e-6);
-    EXPECT_NEAR(residual(29), -0.259986, 1e-6);
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        residual,
+        {
+            -0.11122699207269554,   // node 1, generalized_coords 1
+            -0.16148820316250462,   // node 1, generalized_coords 2
+            -0.304394950802795,     // node 1, generalized_coords 3
+            -0.4038973586442003,    // node 1, generalized_coords 4
+            -0.29270280250404546,   // node 1, generalized_coords 5
+            -0.6838980603426406,    // node 1, generalized_coords 6
+            -0.05267755488345887,   // node 1, generalized_coords 7
+            -0.09882114478157883,   // node 2, generalized_coords 1
+            -0.10319848820842535,   // node 2, generalized_coords 2
+            -0.046921581717388396,  // node 2, generalized_coords 3
+            0.20028020169482658,    // node 2, generalized_coords 4
+            -0.49374296507736715,   // node 2, generalized_coords 5
+            0.11946039620134324,    // node 2, generalized_coords 6
+            0.1434326233631381,     // node 2, generalized_coords 7
+            0.2789717998424498,     // node 3, generalized_coords 1
+            0.28818850009642966,    // node 3, generalized_coords 2
+            0.9034841540190914,     // node 3, generalized_coords 3
+            0.21317918283700327,    // node 3, generalized_coords 4
+            0.08547342278468156,    // node 3, generalized_coords 5
+            0.2977996717461346,     // node 3, generalized_coords 6
+            0.30720135556692413,    // node 3, generalized_coords 7
+            0.34617026813588375,    // node 4, generalized_coords 1
+            0.7528946278642024,     // node 4, generalized_coords 2
+            0.5926242286597619,     // node 4, generalized_coords 3
+            -0.04102927202987112,   // node 4, generalized_coords 4
+            -0.18092294716519058,   // node 4, generalized_coords 5
+            -0.17857971639815556,   // node 4, generalized_coords 6
+            -0.06311517325798338,   // node 4, generalized_coords 7
+            -0.5617067154657261,    // node 5, generalized_coords 1
+            -0.259985875498865      // node 5, generalized_coords 2
+        }
+    );
 }
 
 }  // namespace openturbine::gebt_poc::tests
