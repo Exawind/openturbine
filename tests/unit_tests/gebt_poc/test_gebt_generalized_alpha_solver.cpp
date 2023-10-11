@@ -37,46 +37,50 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceler
     auto max_nonlinear_iterations = 1;
 
     {
-      [[maybe_unused]] bool step_converged =
-          stepper.Step(mesh, field_data, n_lagrange_mults, time_step, max_nonlinear_iterations);
+        [[maybe_unused]] bool step_converged =
+            stepper.Step(mesh, field_data, n_lagrange_mults, time_step, max_nonlinear_iterations);
 
-      using openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal;
-      auto coordinates = Kokkos::View<double*>("coordinates", lie_group_size);
-      Kokkos::deep_copy(coordinates, field_data.GetNodalData<Field::Coordinates>(0));
-      expect_kokkos_view_1D_equal(coordinates, {0., 0., 0., 0., 0., 0., 0.});
+        using openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal;
+        auto coordinates = Kokkos::View<double*>("coordinates", lie_group_size);
+        Kokkos::deep_copy(coordinates, field_data.GetNodalData<Field::Coordinates>(0));
+        expect_kokkos_view_1D_equal(coordinates, {0., 0., 0., 0., 0., 0., 0.});
 
-      auto velocity = Kokkos::View<double*>("velocity", lie_algebra_size);
-      Kokkos::deep_copy(velocity, field_data.GetNodalData<Field::Velocity>(0));
-      expect_kokkos_view_1D_equal(velocity, {-2., -2., -2., -2., -2., -2.});
+        auto velocity = Kokkos::View<double*>("velocity", lie_algebra_size);
+        Kokkos::deep_copy(velocity, field_data.GetNodalData<Field::Velocity>(0));
+        expect_kokkos_view_1D_equal(velocity, {-2., -2., -2., -2., -2., -2.});
 
-      auto acceleration = Kokkos::View<double*>("acceleration", lie_algebra_size);
-      Kokkos::deep_copy(acceleration, field_data.GetNodalData<Field::Acceleration>(0));
-      expect_kokkos_view_1D_equal(acceleration, {-2., -2., -2., -2., -2., -2.});
+        auto acceleration = Kokkos::View<double*>("acceleration", lie_algebra_size);
+        Kokkos::deep_copy(acceleration, field_data.GetNodalData<Field::Acceleration>(0));
+        expect_kokkos_view_1D_equal(acceleration, {-2., -2., -2., -2., -2., -2.});
 
-      auto algo_acceleration = Kokkos::View<double*>("algo acceleration", lie_algebra_size);
-      Kokkos::deep_copy(algo_acceleration, field_data.GetNodalData<Field::AlgorithmicAcceleration>(0));
-      expect_kokkos_view_1D_equal(algo_acceleration, {-2., -2., -2., -2., -2., -2.});
+        auto algo_acceleration = Kokkos::View<double*>("algo acceleration", lie_algebra_size);
+        Kokkos::deep_copy(
+            algo_acceleration, field_data.GetNodalData<Field::AlgorithmicAcceleration>(0)
+        );
+        expect_kokkos_view_1D_equal(algo_acceleration, {-2., -2., -2., -2., -2., -2.});
     }
     {
-      [[maybe_unused]] bool step_converged =
-          stepper.Step(mesh, field_data, n_lagrange_mults, time_step, max_nonlinear_iterations);
+        [[maybe_unused]] bool step_converged =
+            stepper.Step(mesh, field_data, n_lagrange_mults, time_step, max_nonlinear_iterations);
 
-      using openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal;
-      auto coordinates = Kokkos::View<double*>("coordinates", lie_group_size);
-      Kokkos::deep_copy(coordinates, field_data.GetNodalData<Field::Coordinates>(0));
-      expect_kokkos_view_1D_equal(coordinates, {-2., -2., -2., 0., 0., 0., 0.});
+        using openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal;
+        auto coordinates = Kokkos::View<double*>("coordinates", lie_group_size);
+        Kokkos::deep_copy(coordinates, field_data.GetNodalData<Field::Coordinates>(0));
+        expect_kokkos_view_1D_equal(coordinates, {-2., -2., -2., 0., 0., 0., 0.});
 
-      auto velocity = Kokkos::View<double*>("velocity", lie_algebra_size);
-      Kokkos::deep_copy(velocity, field_data.GetNodalData<Field::Velocity>(0));
-      expect_kokkos_view_1D_equal(velocity, {-4., -4., -4., -4., -4., -4.});
+        auto velocity = Kokkos::View<double*>("velocity", lie_algebra_size);
+        Kokkos::deep_copy(velocity, field_data.GetNodalData<Field::Velocity>(0));
+        expect_kokkos_view_1D_equal(velocity, {-4., -4., -4., -4., -4., -4.});
 
-      auto acceleration = Kokkos::View<double*>("acceleration", lie_algebra_size);
-      Kokkos::deep_copy(acceleration, field_data.GetNodalData<Field::Acceleration>(0));
-      expect_kokkos_view_1D_equal(acceleration, {-2., -2., -2., -2., -2., -2.});
+        auto acceleration = Kokkos::View<double*>("acceleration", lie_algebra_size);
+        Kokkos::deep_copy(acceleration, field_data.GetNodalData<Field::Acceleration>(0));
+        expect_kokkos_view_1D_equal(acceleration, {-2., -2., -2., -2., -2., -2.});
 
-      auto algo_acceleration = Kokkos::View<double*>("algo acceleration", lie_algebra_size);
-      Kokkos::deep_copy(algo_acceleration, field_data.GetNodalData<Field::AlgorithmicAcceleration>(0));
-      expect_kokkos_view_1D_equal(algo_acceleration, {-2., -2., -2., -2., -2., -2.});
+        auto algo_acceleration = Kokkos::View<double*>("algo acceleration", lie_algebra_size);
+        Kokkos::deep_copy(
+            algo_acceleration, field_data.GetNodalData<Field::AlgorithmicAcceleration>(0)
+        );
+        expect_kokkos_view_1D_equal(algo_acceleration, {-2., -2., -2., -2., -2., -2.});
     }
 }
 
@@ -159,7 +163,7 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionOfHeavyTopAfterOneInc) {
             }
         }
     );
-    
+
     // Calculate properties for the time integrator
     double time_step = 0.1;
     std::size_t max_nonlinear_iterations = 1;
@@ -180,11 +184,15 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionOfHeavyTopAfterOneInc) {
     using openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal;
     auto coordinates = Kokkos::View<double*>("coordinates", lie_group_size);
     Kokkos::deep_copy(coordinates, field_data.GetNodalData<Field::Coordinates>(0));
-    expect_kokkos_view_1D_equal(coordinates, {1.207222, 1.207222, 1.207222, 0.674773, 1.086996, 1.086996, 1.086996});
+    expect_kokkos_view_1D_equal(
+        coordinates, {1.207222, 1.207222, 1.207222, 0.674773, 1.086996, 1.086996, 1.086996}
+    );
 
     auto velocity = Kokkos::View<double*>("velocity", lie_algebra_size);
     Kokkos::deep_copy(velocity, field_data.GetNodalData<Field::Velocity>(0));
-    expect_kokkos_view_1D_equal(velocity, {-16.583333, -16.583333, -16.583333, -16.583333, -16.583333, -16.583333});
+    expect_kokkos_view_1D_equal(
+        velocity, {-16.583333, -16.583333, -16.583333, -16.583333, -16.583333, -16.583333}
+    );
 
     auto acceleration = Kokkos::View<double*>("acceleration", lie_algebra_size);
     Kokkos::deep_copy(acceleration, field_data.GetNodalData<Field::Acceleration>(0));

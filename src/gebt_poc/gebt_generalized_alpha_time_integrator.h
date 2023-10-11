@@ -158,9 +158,7 @@ public:
                     auto orientation_vector =
                         Kokkos::subview(delta_coordinates, Kokkos::pair<int, int>(3, 6));
                     auto updated_orientation = Kokkos::View<double[4]>("updated_orientation");
-                    exponential_mapping_with_scale(
-                        updated_orientation, orientation_vector, h
-                    );  
+                    exponential_mapping_with_scale(updated_orientation, orientation_vector, h);
                     auto current_orientation =
                         Kokkos::subview(coordinates, Kokkos::pair<int, int>(3, 7));
                     auto next_orientation =
@@ -235,7 +233,9 @@ public:
     }
 
     friend GeneralizedAlphaStepper CreateBasicStepper();
-    friend GeneralizedAlphaStepper CreateUnityStepper(double alpha_f, double alpha_m, double beta, double gamma, bool preconditioner);
+    friend GeneralizedAlphaStepper CreateUnityStepper(
+        double alpha_f, double alpha_m, double beta, double gamma, bool preconditioner
+    );
 
 protected:
     GeneralizedAlphaStepper() = default;
@@ -266,7 +266,9 @@ protected:
     bool is_preconditioned_;
 };
 
-GeneralizedAlphaStepper CreateUnityStepper(double alpha_f, double alpha_m, double beta, double gamma, bool preconditioner) {
+GeneralizedAlphaStepper CreateUnityStepper(
+    double alpha_f, double alpha_m, double beta, double gamma, bool preconditioner
+) {
     GeneralizedAlphaStepper stepper;
     stepper.SetParameters(alpha_f, alpha_m, beta, gamma);
     stepper.SetPreconditioner(preconditioner);
@@ -276,8 +278,7 @@ GeneralizedAlphaStepper CreateUnityStepper(double alpha_f, double alpha_m, doubl
     return stepper;
 }
 GeneralizedAlphaStepper CreateBasicStepper() {
-  return CreateUnityStepper(0., 0., .5, 1., false);
+    return CreateUnityStepper(0., 0., .5, 1., false);
 }
-
 
 }  // namespace openturbine::gebt_poc
