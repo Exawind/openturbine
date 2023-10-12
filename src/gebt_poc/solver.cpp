@@ -16,16 +16,19 @@ Kokkos::View<double*> Interpolate(
     Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function, double jacobian
 ) {
     const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
-    auto interpolated_values = Kokkos::View<double*>("interpolated_values", 7);
+    auto interpolated_values =
+        Kokkos::View<double*>("interpolated_values", kNumberOfLieAlgebraComponents);
     Kokkos::deep_copy(interpolated_values, 0.);
-    Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {kNumberOfLieAlgebraComponents, n_nodes}
-        ),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            interpolated_values(i) += interpolation_function(j) * nodal_values(j * 7 + i) / jacobian;
-        }
-    );
+    for (std::size_t i = 0; i < kNumberOfLieAlgebraComponents; ++i) {
+        Kokkos::parallel_reduce(
+            n_nodes,
+            KOKKOS_LAMBDA(const size_t j, double& value) {
+                value += interpolation_function(j) *
+                         nodal_values(j * kNumberOfLieAlgebraComponents + i) / jacobian;
+            },
+            interpolated_values(i)
+        );
+    }
     return interpolated_values;
 }
 
@@ -55,7 +58,9 @@ Kokkos::View<double**> CalculateSectionalStiffness(
     auto total_rotation = gen_alpha_solver::multiply_matrix_with_matrix(rotation, rotation_0);
 
     // rotation_matrix_6x6 = [total_rotation [0]_3x3; [0]_3x3 total_rotation]
-    auto rotation_matrix = Kokkos::View<double**>("rotation_matrix", 6, 6);
+    auto rotation_matrix = Kokkos::View<double**>(
+        "rotation_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
+    );
     Kokkos::parallel_for(
         Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
             {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
@@ -78,57 +83,54 @@ Kokkos::View<double**> CalculateSectionalStiffness(
 
 Kokkos::View<double*> CalculateElasticForces(
     const Kokkos::View<double*> sectional_strain, Kokkos::View<double**> rotation,
-    const Kokkos::View<double*> position_vector_derivatives,
+    const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
     const Kokkos::View<double**> sectional_stiffness
 ) {
     // Calculate first part of the elastic forces i.e. F^C vector
-    auto sectional_strain_next = Kokkos::View<double*>("sectional_strain_next", 6);
+    auto sectional_strain_next =
+        Kokkos::View<double*>("sectional_strain_next", kNumberOfLieGroupComponents);
     Kokkos::deep_copy(sectional_strain_next, sectional_strain);
-    auto R_x0 = gen_alpha_solver::multiply_matrix_with_vector(
-        rotation, gen_alpha_solver::create_vector(
-                      {position_vector_derivatives(0), position_vector_derivatives(1),
-                       position_vector_derivatives(2)}
-                  )
+    auto x0_prime = gen_alpha_solver::create_vector(
+        {pos_vector_derivatives(0), pos_vector_derivatives(1), pos_vector_derivatives(2)}
     );
+    auto R_x0_prime = gen_alpha_solver::multiply_matrix_with_vector(rotation, x0_prime);
     Kokkos::parallel_for(
-        3, KOKKOS_LAMBDA(const size_t k) { sectional_strain_next(k) -= R_x0(k); }
+        3, KOKKOS_LAMBDA(const size_t k) { sectional_strain_next(k) -= R_x0_prime(k); }
     );
 
     auto elastic_force_fc =
         gen_alpha_solver::multiply_matrix_with_vector(sectional_stiffness, sectional_strain_next);
 
     // Calculate second part of the elastic forces i.e. F^D vector
-    auto x0_prime_tilde =
-        gen_alpha_solver::create_cross_product_matrix(gen_alpha_solver::create_vector(
-            {position_vector_derivatives(0), position_vector_derivatives(1),
-             position_vector_derivatives(2)}
-        ));
-    auto u_prime_tilde =
-        gen_alpha_solver::create_cross_product_matrix(gen_alpha_solver::create_vector(
+    auto x0_prime_tilde = gen_alpha_solver::create_cross_product_matrix(x0_prime);
+    auto u_prime_tilde = gen_alpha_solver::create_cross_product_matrix(
+        // create a Vector from the generalized coordinates derivatives
+        gen_alpha_solver::create_vector(
             {gen_coords_derivatives(0), gen_coords_derivatives(1), gen_coords_derivatives(2)}
-        ));
+        )
+    );
     auto fd_values = gen_alpha_solver::transpose_matrix(
         gen_alpha_solver::add_matrix_with_matrix(x0_prime_tilde, u_prime_tilde)
     );
 
-    auto elastic_force_fd = Kokkos::View<double*>("elastic_force_fd", 6);
+    auto elastic_force_fd = Kokkos::View<double*>("elastic_force_fd", kNumberOfLieGroupComponents);
     Kokkos::deep_copy(elastic_force_fd, 0.);
     Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
-        ),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            elastic_force_fd(i + 3) += fd_values(i, j) * elastic_force_fc(j);
+        kNumberOfVectorComponents,
+        KOKKOS_LAMBDA(const size_t i) {
+            elastic_force_fd(i + 3) += fd_values(i, 0) * elastic_force_fc(0) +
+                                       fd_values(i, 1) * elastic_force_fc(1) +
+                                       fd_values(i, 2) * elastic_force_fc(2);
         }
     );
 
-    auto elastic_forces = Kokkos::View<double*>("elastic_forces", 12);
+    auto elastic_forces = Kokkos::View<double*>("elastic_forces", 2 * kNumberOfLieGroupComponents);
     Kokkos::parallel_for(
-        6,
+        kNumberOfLieGroupComponents,
         KOKKOS_LAMBDA(const size_t k) {
             elastic_forces(k) = elastic_force_fc(k);
-            elastic_forces(k + 6) = elastic_force_fd(k);
+            elastic_forces(k + kNumberOfLieGroupComponents) = elastic_force_fd(k);
         }
     );
     return elastic_forces;
@@ -168,7 +170,7 @@ Kokkos::View<double*> CalculateStaticResidual(
             auto gen_coords_derivatives_qp =
                 Interpolate(gen_coords, shape_function_derivative, jacobian);
             auto position_vector_qp = Interpolate(position_vectors, shape_function);
-            auto position_vector_derivatives_qp =
+            auto pos_vector_derivatives_qp =
                 Interpolate(position_vectors, shape_function_derivative, jacobian);
 
             // Calculate the curvature at the quadrature point
@@ -176,13 +178,14 @@ Kokkos::View<double*> CalculateStaticResidual(
 
             // Calculate the sectional strain at the quadrature point based on Eq. (35)
             // in the "SO(3)-based GEBT Beam" document in theory guide
-            auto sectional_strain = Kokkos::View<double*>("sectional_strain", 6);
+            auto sectional_strain =
+                Kokkos::View<double*>("sectional_strain", kNumberOfLieGroupComponents);
             Kokkos::parallel_for(
-                3,
+                kNumberOfVectorComponents,
                 KOKKOS_LAMBDA(const size_t k) {
                     sectional_strain(k) =
-                        position_vector_derivatives_qp(k) + gen_coords_derivatives_qp(k);
-                    sectional_strain(k + 3) = curvature(k);
+                        pos_vector_derivatives_qp(k) + gen_coords_derivatives_qp(k);
+                    sectional_strain(k + kNumberOfVectorComponents) = curvature(k);
                 }
             );
 
@@ -201,23 +204,25 @@ Kokkos::View<double*> CalculateStaticResidual(
 
             // Calculate elastic forces i.e. F^C and F^D vectors at the quadrature point
             auto elastic_forces = CalculateElasticForces(
-                sectional_strain, rotation, position_vector_derivatives_qp,
-                gen_coords_derivatives_qp, sectional_stiffness
+                sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
+                sectional_stiffness
             );
-            auto elastic_force_fc = Kokkos::View<double*>("elastic_force_fc", 6);
-            auto elastic_force_fd = Kokkos::View<double*>("elastic_force_fd", 6);
+            auto elastic_force_fc =
+                Kokkos::View<double*>("elastic_force_fc", kNumberOfLieGroupComponents);
+            auto elastic_force_fd =
+                Kokkos::View<double*>("elastic_force_fd", kNumberOfLieGroupComponents);
             Kokkos::parallel_for(
-                6,
+                kNumberOfLieGroupComponents,
                 KOKKOS_LAMBDA(const size_t k) {
                     elastic_force_fc(k) = elastic_forces(k);
-                    elastic_force_fd(k) = elastic_forces(k + 6);
+                    elastic_force_fd(k) = elastic_forces(k + kNumberOfLieGroupComponents);
                 }
             );
 
             // Calculate the residual at the quadrature point
             const auto q_weight = quadrature.GetQuadratureWeights()[j];
             Kokkos::parallel_for(
-                6,
+                kNumberOfLieGroupComponents,
                 KOKKOS_LAMBDA(const size_t i) {
                     residual(node_count * kNumberOfLieGroupComponents + i) +=
                         q_weight * (shape_function_derivative(node_count) * elastic_force_fc(i) +

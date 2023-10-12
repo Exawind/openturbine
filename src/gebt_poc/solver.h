@@ -6,9 +6,9 @@
 
 namespace openturbine::gebt_poc {
 
-constexpr size_t kNumberOfLieAlgebraComponents = 7;
-constexpr size_t kNumberOfLieGroupComponents = 6;
-constexpr size_t kNumberOfVectorComponents = 3;
+constexpr std::size_t kNumberOfLieAlgebraComponents = 7;
+constexpr std::size_t kNumberOfLieGroupComponents = 6;
+constexpr std::size_t kNumberOfVectorComponents = 3;
 
 /// An abstract class for providing common interface to numerical quadrature rules
 class Quadrature {
@@ -73,7 +73,7 @@ Kokkos::View<double**> CalculateSectionalStiffness(
 /// vector and the generalized coordinates, and the sectional stiffness matrix
 Kokkos::View<double*> CalculateElasticForces(
     const Kokkos::View<double*> strain, Kokkos::View<double**> rotation,
-    const Kokkos::View<double*> position_vector_derivatives,
+    const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
     const Kokkos::View<double**> sectional_stiffness
 );
