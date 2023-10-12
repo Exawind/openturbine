@@ -488,4 +488,28 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
+TEST(QuaternionTest, CreateBMatrixForUnitQuaternions) {
+    {
+        Quaternion q(1., 0., 0., 0.);
+        auto bmatrix = BMatrixForQuaternions(q);
+
+        expect_kokkos_view_2D_equal(
+            bmatrix, {{0., 1., 0., 0.}, {0., 0., 1., -0.}, {0., 0., 0., 1.}}
+        );
+    }
+    {
+        auto l = std::sqrt(30.);
+        auto q0 = 1. / l;
+        auto q1 = 2. / l;
+        auto q2 = 3. / l;
+        auto q3 = 4. / l;
+        Quaternion q(q0, q1, q2, q3);
+        auto bmatrix = BMatrixForQuaternions(q);
+
+        expect_kokkos_view_2D_equal(
+            bmatrix, {{-q1, q0, -q3, q2}, {-q2, q3, q0, -q1}, {-q3, -q2, q1, q0}}
+        );
+    }
+}
+
 }  // namespace openturbine::gen_alpha_solver::tests
