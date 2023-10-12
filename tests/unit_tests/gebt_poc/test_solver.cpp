@@ -194,7 +194,55 @@ TEST(SolverTest, CalculateElasticForces) {
     );
 }
 
-TEST(SolverTest, CalculateStaticResidual) {
+TEST(SolverTest, CalculateStaticResidualZeroValues) {
+    // 5 nodes on a line
+    auto position_vectors = gen_alpha_solver::create_vector({
+        0., 0., 0., 1., 0., 0., 0.,  // node 1
+        1., 0., 0., 1., 0., 0., 0.,  // node 2
+        2., 0., 0., 1., 0., 0., 0.,  // node 3
+        3., 0., 0., 1., 0., 0., 0.,  // node 4
+        4., 0., 0., 1., 0., 0., 0.   // node 5
+    });
+
+    // zero displacement and rotation
+    auto generalized_coords = gen_alpha_solver::create_vector({
+        0., 0., 0., 0., 0., 0., 0.,  // node 1
+        0., 0., 0., 0., 0., 0., 0.,  // node 2
+        0., 0., 0., 0., 0., 0., 0.,  // node 3
+        0., 0., 0., 0., 0., 0., 0.,  // node 4
+        0., 0., 0., 0., 0., 0., 0.   // node 5
+    });
+
+    // identity stiffness matrix
+    auto stiffness = gen_alpha_solver::create_matrix({
+        {1., 0., 0., 0., 0., 0.},  // row 1
+        {0., 1., 0., 0., 0., 0.},  // row 2
+        {0., 0., 1., 0., 0., 0.},  // row 3
+        {0., 0., 0., 1., 0., 0.},  // row 4
+        {0., 0., 0., 0., 1., 0.},  // row 5
+        {0., 0., 0., 0., 0., 1.}   // row 6
+    });
+
+    // 7-point Gauss-Legendre quadrature
+    auto quadrature = UserDefinedQuadrature(
+        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
+         0.7415311855993945, 0.9491079123427585},
+        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
+    );
+
+    auto residual =
+        CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        residual,
+        // residuals expected to be all zeros
+        {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+         0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.}
+    );
+}
+
+TEST(SolverTest, CalculateStaticResidualNonZeroValues) {
     auto position_vectors = Kokkos::View<double*>("position_vectors", 35);
     auto populate_position_vector = KOKKOS_LAMBDA(size_t) {
         // node 1
@@ -308,36 +356,36 @@ TEST(SolverTest, CalculateStaticResidual) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         residual,
         {
-            -0.11122699207269554,   // node 1, generalized_coords 1
-            -0.16148820316250462,   // node 1, generalized_coords 2
-            -0.304394950802795,     // node 1, generalized_coords 3
-            -0.4038973586442003,    // node 1, generalized_coords 4
-            -0.29270280250404546,   // node 1, generalized_coords 5
-            -0.6838980603426406,    // node 1, generalized_coords 6
-            -0.05267755488345887,   // node 1, generalized_coords 7
-            -0.09882114478157883,   // node 2, generalized_coords 1
-            -0.10319848820842535,   // node 2, generalized_coords 2
-            -0.046921581717388396,  // node 2, generalized_coords 3
-            0.20028020169482658,    // node 2, generalized_coords 4
-            -0.49374296507736715,   // node 2, generalized_coords 5
-            0.11946039620134324,    // node 2, generalized_coords 6
-            0.1434326233631381,     // node 2, generalized_coords 7
-            0.2789717998424498,     // node 3, generalized_coords 1
-            0.28818850009642966,    // node 3, generalized_coords 2
-            0.9034841540190914,     // node 3, generalized_coords 3
-            0.21317918283700327,    // node 3, generalized_coords 4
-            0.08547342278468156,    // node 3, generalized_coords 5
-            0.2977996717461346,     // node 3, generalized_coords 6
-            0.30720135556692413,    // node 3, generalized_coords 7
-            0.34617026813588375,    // node 4, generalized_coords 1
-            0.7528946278642024,     // node 4, generalized_coords 2
-            0.5926242286597619,     // node 4, generalized_coords 3
-            -0.04102927202987112,   // node 4, generalized_coords 4
-            -0.18092294716519058,   // node 4, generalized_coords 5
-            -0.17857971639815556,   // node 4, generalized_coords 6
-            -0.06311517325798338,   // node 4, generalized_coords 7
-            -0.5617067154657261,    // node 5, generalized_coords 1
-            -0.259985875498865      // node 5, generalized_coords 2
+            -0.11122699207269554,   // node 1, dof 1
+            -0.16148820316250462,   // node 1, dof 2
+            -0.304394950802795,     // node 1, dof 3
+            -0.4038973586442003,    // node 1, dof 4
+            -0.29270280250404546,   // node 1, dof 5
+            -0.6838980603426406,    // node 1, dof 6
+            -0.05267755488345887,   // node 2, dof 1
+            -0.09882114478157883,   // node 2, dof 2
+            -0.10319848820842535,   // node 2, dof 3
+            -0.046921581717388396,  // node 2, dof 4
+            0.20028020169482658,    // node 2, dof 5
+            -0.49374296507736715,   // node 2, dof 6
+            0.11946039620134324,    // node 3, dof 1
+            0.1434326233631381,     // node 3, dof 2
+            0.2789717998424498,     // node 3, dof 3
+            0.28818850009642966,    // node 3, dof 4
+            0.9034841540190914,     // node 3, dof 5
+            0.21317918283700327,    // node 3, dof 6
+            0.08547342278468156,    // node 4, dof 1
+            0.2977996717461346,     // node 4, dof 2
+            0.30720135556692413,    // node 4, dof 3
+            0.34617026813588375,    // node 4, dof 4
+            0.7528946278642024,     // node 4, dof 5
+            0.5926242286597619,     // node 4, dof 6
+            -0.04102927202987112,   // node 5, dof 1
+            -0.18092294716519058,   // node 5, dof 2
+            -0.17857971639815556,   // node 5, dof 3
+            -0.06311517325798338,   // node 5, dof 4
+            -0.5617067154657261,    // node 5, dof 5
+            -0.259985875498865      // node 5, dof 6
         }
     );
 }
