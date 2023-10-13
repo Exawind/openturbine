@@ -111,6 +111,36 @@ Kokkos::View<double**> create_cross_product_matrix(const Kokkos::View<double*> v
     return matrix;
 }
 
+Kokkos::View<double*> multiply_vector_with_scalar(
+    const Kokkos::View<double*> vector, double scalar
+) {
+    auto result = Kokkos::View<double*>("result", vector.extent(0));
+    auto entries = Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0, vector.extent(0));
+    auto multiply_entry = KOKKOS_LAMBDA(size_t index) {
+        result(index) = vector(index) * scalar;
+    };
+
+    Kokkos::parallel_for(entries, multiply_entry);
+
+    return result;
+}
+
+Kokkos::View<double**> multiply_matrix_with_scalar(
+    const Kokkos::View<double**> matrix, double scalar
+) {
+    auto result = Kokkos::View<double**>("result", matrix.extent(0), matrix.extent(1));
+    auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
+        {0, 0}, {matrix.extent(0), matrix.extent(1)}
+    );
+    auto multiply_row_column = KOKKOS_LAMBDA(size_t row, size_t column) {
+        result(row, column) = matrix(row, column) * scalar;
+    };
+
+    Kokkos::parallel_for(entries, multiply_row_column);
+
+    return result;
+}
+
 Kokkos::View<double*> multiply_matrix_with_vector(
     const Kokkos::View<double**> matrix, const Kokkos::View<double*> vector
 ) {
@@ -133,6 +163,16 @@ Kokkos::View<double*> multiply_matrix_with_vector(
     Kokkos::parallel_for(entries, multiply_row);
 
     return result;
+}
+
+Kokkos::View<double*> multiply_matrix_with_vector(
+    const Kokkos::View<const double**> matrix, const Kokkos::View<double*> vector
+) {
+    // Convert Kokkos view -> non-const
+    auto matrix_copy = Kokkos::View<double**>("matrix_copy", matrix.extent(0), matrix.extent(1));
+    Kokkos::deep_copy(matrix_copy, matrix);
+
+    return multiply_matrix_with_vector(matrix_copy, vector);
 }
 
 Kokkos::View<double**> multiply_matrix_with_matrix(
@@ -167,18 +207,69 @@ Kokkos::View<double**> multiply_matrix_with_matrix(
     return result;
 }
 
-Kokkos::View<double**> multiply_matrix_with_scalar(
-    const Kokkos::View<double**> matrix, double scalar
+Kokkos::View<double**> multiply_matrix_with_matrix(
+    const Kokkos::View<const double**> matrix_a, const Kokkos::View<const double**> matrix_b
 ) {
-    auto result = Kokkos::View<double**>("result", matrix.extent(0), matrix.extent(1));
+    // Convert Kokkos view -> non-const
+    auto matrix_a_copy =
+        Kokkos::View<double**>("matrix_a_copy", matrix_a.extent(0), matrix_a.extent(1));
+    Kokkos::deep_copy(matrix_a_copy, matrix_a);
+
+    auto matrix_b_copy =
+        Kokkos::View<double**>("matrix_b_copy", matrix_b.extent(0), matrix_b.extent(1));
+    Kokkos::deep_copy(matrix_b_copy, matrix_b);
+
+    return multiply_matrix_with_matrix(matrix_a_copy, matrix_b_copy);
+}
+
+Kokkos::View<double**> add_matrix_with_matrix(
+    const Kokkos::View<double**> matrix_a, const Kokkos::View<double**> matrix_b
+) {
+    if (matrix_a.extent(0) != matrix_b.extent(0) || matrix_a.extent(1) != matrix_b.extent(1)) {
+        throw std::invalid_argument("The dimensions of the matrices must be equal to each other");
+    }
+
+    auto result = Kokkos::View<double**>("result", matrix_a.extent(0), matrix_a.extent(1));
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-        {0, 0}, {matrix.extent(0), matrix.extent(1)}
+        {0, 0}, {matrix_a.extent(0), matrix_a.extent(1)}
     );
-    auto multiply_row_column = KOKKOS_LAMBDA(size_t row, size_t column) {
-        result(row, column) = matrix(row, column) * scalar;
+    auto add_row_column = KOKKOS_LAMBDA(size_t row, size_t column) {
+        result(row, column) = matrix_a(row, column) + matrix_b(row, column);
     };
 
-    Kokkos::parallel_for(entries, multiply_row_column);
+    Kokkos::parallel_for(entries, add_row_column);
+
+    return result;
+}
+
+Kokkos::View<double**> add_matrix_with_matrix(
+    const Kokkos::View<const double**> matrix_a, const Kokkos::View<const double**> matrix_b
+) {
+    // Convert Kokkos view -> non-const
+    auto matrix_a_copy =
+        Kokkos::View<double**>("matrix_a_copy", matrix_a.extent(0), matrix_a.extent(1));
+    Kokkos::deep_copy(matrix_a_copy, matrix_a);
+
+    auto matrix_b_copy =
+        Kokkos::View<double**>("matrix_b_copy", matrix_b.extent(0), matrix_b.extent(1));
+    Kokkos::deep_copy(matrix_b_copy, matrix_b);
+
+    return add_matrix_with_matrix(matrix_a_copy, matrix_b_copy);
+}
+
+Kokkos::View<double[1]> dot_product(
+    const Kokkos::View<double*> vector_a, const Kokkos::View<double*> vector_b
+) {
+    if (vector_a.extent(0) != vector_b.extent(0)) {
+        throw std::invalid_argument("The dimensions of the vectors must be equal to each other");
+    }
+
+    auto result = Kokkos::View<double[1]>("result", 1);
+    auto entries = Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0, vector_a.extent(0));
+    auto dot_product = KOKKOS_LAMBDA(size_t index) {
+        result(0) += vector_a(index) * vector_b(index);
+    };
+    Kokkos::parallel_for(entries, dot_product);
 
     return result;
 }
