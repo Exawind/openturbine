@@ -14,28 +14,39 @@
 
 namespace openturbine::gebt_poc {
 
+/// Abstract base class to provide problem-specific residual vector and iteration matrix
+/// for the generalized-alpha solver
 class LinearizationParameters {
 public:
+    /// Interface for calculating the residual vector for the problem
     virtual void ComputeResidualVector(
         Kokkos::View<double*> residuals, Mesh& mesh, FieldData& field_data,
         Kokkos::View<double*> lagrange_mults
     ) = 0;
 
+    /// Interface for calculating the iteration matrix for the problem
     virtual void ComputeIterationMatrix(
-        Kokkos::View<double**> iteration_matrix, double h, double betaPrime, double gammaPrime,
+        Kokkos::View<double**> iteration_matrix, double h, double beta_prime, double gamma_prime,
         Mesh& mesh, FieldData& field_data, Kokkos::View<double*> lagrange_mults
     ) = 0;
 };
 
+/// Defines a unity residual vector and identity iteration matrix
 class UnityLinearizationParameters : public LinearizationParameters {
 public:
-    void
-    ComputeResidualVector(Kokkos::View<double*> residuals, Mesh&, FieldData&, Kokkos::View<double*>) {
+    /// Returns a unity residual vector
+    void ComputeResidualVector(
+        Kokkos::View<double*> residuals, Mesh&, FieldData&,
+        Kokkos::View<double*> /* lagrange_mults */
+    ) override {
         KokkosBlas::fill(residuals, 1.);
     }
 
-    void
-    ComputeIterationMatrix(Kokkos::View<double**> iteration_matrix, double, double, double, Mesh&, FieldData&, Kokkos::View<double*>) {
+    /// Returns an identity iteration matrix
+    void ComputeIterationMatrix(
+        Kokkos::View<double**> iteration_matrix, double, double, double, Mesh&, FieldData&,
+        Kokkos::View<double*> /* lagrange_mults */
+    ) override {
         Kokkos::parallel_for(
             iteration_matrix.extent(0),
             KOKKOS_LAMBDA(std::size_t i) {
@@ -48,13 +59,11 @@ public:
 };
 
 KOKKOS_FUNCTION
-void exponential_mapping_with_scale(
+void ScaleExponentialMapping(
     Kokkos::View<double*> quaternion, Kokkos::View<double*> vector, double scale
 ) {
-    auto a = openturbine::gen_alpha_solver::Vector(
-        vector(0) * scale, vector(1) * scale, vector(2) * scale
-    );
-    auto b = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(a);
+    auto a = gen_alpha_solver::Vector(vector(0) * scale, vector(1) * scale, vector(2) * scale);
+    auto b = gen_alpha_solver::quaternion_from_rotation_vector(a);
     quaternion(0) = b.GetScalarComponent();
     quaternion(1) = b.GetXComponent();
     quaternion(2) = b.GetYComponent();
@@ -62,9 +71,11 @@ void exponential_mapping_with_scale(
 }
 
 KOKKOS_FUNCTION
-void quaternion_mult(Kokkos::View<double*> out, Kokkos::View<double*> q1, Kokkos::View<double*> q2) {
-    auto a = openturbine::gen_alpha_solver::Quaternion(q1(0), q1(1), q1(2), q1(3));
-    auto b = openturbine::gen_alpha_solver::Quaternion(q2(0), q2(1), q2(2), q2(3));
+void MultiplyQuaternions(
+    Kokkos::View<double*> out, Kokkos::View<double*> q1, Kokkos::View<double*> q2
+) {
+    auto a = gen_alpha_solver::Quaternion(q1(0), q1(1), q1(2), q1(3));
+    auto b = gen_alpha_solver::Quaternion(q2(0), q2(1), q2(2), q2(3));
     auto c = a * b;
     out(0) = c.GetScalarComponent();
     out(1) = c.GetXComponent();
@@ -80,8 +91,8 @@ public:
     ) {
         constexpr auto lie_algebra_size = 6;
         constexpr auto lie_group_size = 7;
-        auto alphaF = alphaF_;
-        auto alphaM = alphaM_;
+        auto alphaF = alpha_f_;
+        auto alphaM = alpha_m_;
         auto beta = beta_;
         auto gamma = gamma_;
         auto h = time_step_size;
@@ -128,8 +139,8 @@ public:
         );
         Kokkos::deep_copy(lagrange_mults, 0.);
 
-        auto betaPrime = (1. - alphaM) / (h * h * beta * (1 - alphaF));
-        auto gammaPrime = gamma / (h * beta);
+        auto beta_prime = (1. - alphaM) / (h * h * beta * (1 - alphaF));
+        auto gamma_prime = gamma / (h * beta);
         auto scalar_pre = (is_preconditioned_) ? beta * h * h : 1.;
 
         Kokkos::deep_copy(left_pre, 0.);
@@ -158,12 +169,12 @@ public:
                     auto orientation_vector =
                         Kokkos::subview(delta_coordinates, Kokkos::pair<int, int>(3, 6));
                     auto updated_orientation = Kokkos::View<double[4]>("updated_orientation");
-                    exponential_mapping_with_scale(updated_orientation, orientation_vector, h);
+                    ScaleExponentialMapping(updated_orientation, orientation_vector, h);
                     auto current_orientation =
                         Kokkos::subview(coordinates, Kokkos::pair<int, int>(3, 7));
                     auto next_orientation =
                         Kokkos::subview(coordinates_next, Kokkos::pair<int, int>(3, 7));
-                    quaternion_mult(next_orientation, current_orientation, updated_orientation);
+                    MultiplyQuaternions(next_orientation, current_orientation, updated_orientation);
                 }
             );
 
@@ -174,13 +185,13 @@ public:
             }
 
             assembler_->ComputeIterationMatrix(
-                iteration_matrix, h, betaPrime, gammaPrime, mesh, field_data, lagrange_mults
+                iteration_matrix, h, beta_prime, gamma_prime, mesh, field_data, lagrange_mults
             );
 
             KokkosBlas::gemm("N", "N", 1., iteration_matrix, right_pre, 0., helper);
             KokkosBlas::gemm("N", "N", 1., left_pre, helper, 0., iteration_matrix);
             KokkosBlas::scal(dof_residuals, scalar_pre, dof_residuals);
-            openturbine::gen_alpha_solver::solve_linear_system(iteration_matrix, residuals);
+            gen_alpha_solver::solve_linear_system(iteration_matrix, residuals);
             KokkosBlas::scal(residuals, -1., residuals);
 
             KokkosBlas::axpby(-1. / scalar_pre, lagrange_residuals, 1., lagrange_mults);
@@ -199,8 +210,8 @@ public:
                     );
                     for (int i = 0; i < lie_algebra_size; ++i) {
                         delta_coordinates(i) += update(i) / h;
-                        velocity(i) += gammaPrime * update(i);
-                        acceleration(i) += betaPrime * update(i);
+                        velocity(i) += gamma_prime * update(i);
+                        acceleration(i) += beta_prime * update(i);
                     }
                 }
             );
@@ -233,7 +244,8 @@ public:
     }
 
     friend GeneralizedAlphaStepper CreateBasicStepper();
-    friend GeneralizedAlphaStepper CreateUnityStepper(
+
+    friend GeneralizedAlphaStepper CreateStepper(
         double alpha_f, double alpha_m, double beta, double gamma, bool preconditioner
     );
 
@@ -241,10 +253,10 @@ protected:
     GeneralizedAlphaStepper() = default;
 
     void SetParameters(double alpha_f, double alpha_m, double beta, double gamma) {
-        alphaF_ = alpha_f;
-        alphaM_ = alpha_m;
-        beta_ = beta;
-        gamma_ = gamma;
+        this->alpha_f_ = alpha_f;
+        this->alpha_m_ = alpha_m;
+        this->beta_ = beta;
+        this->gamma_ = gamma;
     }
 
     void SetPreconditioner(bool is_preconditioned) { is_preconditioned_ = is_preconditioned; }
@@ -259,14 +271,15 @@ protected:
 
     std::shared_ptr<LinearizationParameters> assembler_;
 
-    double alphaF_;
-    double alphaM_;
+    double alpha_f_;
+    double alpha_m_;
     double beta_;
     double gamma_;
     bool is_preconditioned_;
 };
 
-GeneralizedAlphaStepper CreateUnityStepper(
+/// Creates a generalized-alpha time stepper with provided parameters
+GeneralizedAlphaStepper CreateStepper(
     double alpha_f, double alpha_m, double beta, double gamma, bool preconditioner
 ) {
     GeneralizedAlphaStepper stepper;
@@ -277,8 +290,10 @@ GeneralizedAlphaStepper CreateUnityStepper(
 
     return stepper;
 }
+
+/// Creates a basic generalized-alpha time stepper with default parameters
 GeneralizedAlphaStepper CreateBasicStepper() {
-    return CreateUnityStepper(0., 0., .5, 1., false);
+    return CreateStepper(0., 0., .5, 1., false);
 }
 
 }  // namespace openturbine::gebt_poc

@@ -176,7 +176,7 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionOfHeavyTopAfterOneInc) {
     auto gamma = 0.5 + alpha_f - alpha_m;
     auto beta = 0.25 * std::pow(gamma + 0.5, 2);
 
-    auto stepper = CreateUnityStepper(alpha_f, alpha_m, beta, gamma, true);
+    auto stepper = CreateStepper(alpha_f, alpha_m, beta, gamma, true);
 
     [[maybe_unused]] bool step_converged =
         stepper.Step(mesh, field_data, n_lagrange_mults, time_step, max_nonlinear_iterations);
