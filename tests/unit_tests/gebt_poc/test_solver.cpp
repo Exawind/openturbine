@@ -390,7 +390,7 @@ TEST(SolverTest, CalculateStaticResidualNonZeroValues) {
     );
 }
 
-TEST(SolverTest, CalculateOMatrix) {
+TEST(SolverTest, CalculateIterationMatrixComponents) {
     auto elastic_force_fc = Kokkos::View<double*>("elastic_force_fc", 6);
     auto populate_elastic_force_fc = KOKKOS_LAMBDA(size_t) {
         elastic_force_fc(0) = 0.1023527958818833;
@@ -440,9 +440,16 @@ TEST(SolverTest, CalculateOMatrix) {
           24.054825962838, 43.50305858028866}}
     );
 
-    auto o_matrix = CalculateOMatrix(
+    auto O_P_Q_matrices = CalculateIterationMatrixComponents(
         elastic_force_fc, position_vector_derivatives, gen_coords_derivatives, stiffness
     );
+    auto o_matrix = Kokkos::View<double**>("o_matrix", 6, 6);
+    auto populate_o_matrix = KOKKOS_LAMBDA(size_t i) {
+        for (size_t j = 0; j < 6; ++j) {
+            o_matrix(i, j) = O_P_Q_matrices(i, j);
+        }
+    };
+    Kokkos::parallel_for(6, populate_o_matrix);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         o_matrix,
@@ -453,6 +460,50 @@ TEST(SolverTest, CalculateOMatrix) {
             {0., 0., 0., 6.095343338095462, 12.750819804192329, -9.15751050858455},    // row 4
             {0., 0., 0., 4.358834898453007, 9.870620837027674, -6.767382896430996},    // row 5
             {0., 0., 0., 9.270600163100875, 17.450580610135344, -12.962904649290419}   // row 6
+        }
+    );
+
+    auto p_matrix = Kokkos::View<double**>("p_matrix", 6, 6);
+    auto populate_p_matrix = KOKKOS_LAMBDA(size_t i) {
+        for (size_t j = 0; j < 6; ++j) {
+            p_matrix(i, j) = O_P_Q_matrices(i + 6, j);
+        }
+    };
+    Kokkos::parallel_for(6, populate_p_matrix);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        p_matrix,
+        {
+            {0., 0., 0., 0., 0., 0.},  // row 1
+            {0., 0., 0., 0., 0., 0.},  // row 2
+            {0., 0., 0., 0., 0., 0.},  // row 3
+            {1.558136168865961, 2.023343846951859, 4.396865920548022, 6.095343338095461,
+             4.946469269161818, 8.945670308086335},  // row 4
+            {3.388134764374206, 4.594085351204066, 8.369759049055988, 12.163185433483518,
+             9.870620837027678, 17.85097914075167},  // row 5
+            {-2.409080935189973, -3.233749380295583, -6.152221520070027, -8.83258065357001,
+             -7.16778142704732, -12.962904649290419}  // row 6
+        }
+    );
+
+    auto q_matrix = Kokkos::View<double**>("q_matrix", 6, 6);
+    auto populate_q_matrix = KOKKOS_LAMBDA(size_t i) {
+        for (size_t j = 0; j < 6; ++j) {
+            q_matrix(i, j) = O_P_Q_matrices(i + 12, j);
+        }
+    };
+    Kokkos::parallel_for(6, populate_q_matrix);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        q_matrix,
+        {
+            {0., 0., 0., 0., 0., 0.},                                                  // row 1
+            {0., 0., 0., 0., 0., 0.},                                                  // row 2
+            {0., 0., 0., 0., 0., 0.},                                                  // row 3
+            {0., 0., 0., 1.844739298856163, 3.6356811370948883, -2.648497950457901},   // row 4
+            {0., 0., 0., 3.8107825797230066, 7.1835652949545645, -5.293905367130955},  // row 5
+            {0., 0., 0., -2.4073689531817264, -5.414742464880276, 3.8196948928089887}  // row 6
+
         }
     );
 }

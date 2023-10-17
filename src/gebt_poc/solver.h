@@ -84,7 +84,7 @@ Kokkos::View<double*> CalculateStaticResidual(
     const StiffnessMatrix& stiffness, const Quadrature& quadrature
 );
 
-Kokkos::View<double**> CalculateOMatrix(
+Kokkos::View<double**> CalculateIterationMatrixComponents(
     const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
     const Kokkos::View<double**> sectional_stiffness
