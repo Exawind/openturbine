@@ -2,6 +2,7 @@
 
 #include "src/gebt_poc/element.h"
 #include "src/gen_alpha_poc/quaternion.h"
+#include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gebt_poc {
 
@@ -144,7 +145,6 @@ Kokkos::View<double*> CalculateStaticResidual(
     const auto order = n_nodes - 1;
     const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
 
-    // Collect the nodal position into a std::vector<Point>
     std::vector<Point> nodes;
     for (size_t i = 0; i < n_nodes; ++i) {
         nodes.emplace_back(
@@ -232,6 +232,87 @@ Kokkos::View<double*> CalculateStaticResidual(
         }
     }
     return residual;
+}
+
+Kokkos::View<double**> CalculateOMatrix(
+    const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
+    const Kokkos::View<double*> gen_coords_derivatives,
+    const Kokkos::View<double**> sectional_stiffness
+) {
+    // [O]_6x6 = [
+    //     [0]_3x3      -N_tilde + [C11] * (x_0_prime_tilde + u_prime_tilde)
+    //     [0]_3x3      -M_tilde + [C21] * (x_0_prime_tilde  + u_prime_tilde)
+    // ]
+
+    // N consists of first three components of the fc vector
+    auto N = Kokkos::View<double*>("N", kNumberOfVectorComponents);
+    Kokkos::parallel_for(
+        kNumberOfVectorComponents, KOKKOS_LAMBDA(const size_t i) { N(i) = elastic_force_fc(i); }
+    );
+
+    // M consists of last three components of the fc vector
+    auto M = Kokkos::View<double*>("M", kNumberOfVectorComponents);
+    Kokkos::parallel_for(
+        kNumberOfVectorComponents,
+        KOKKOS_LAMBDA(const size_t i) { M(i) = elastic_force_fc(i + kNumberOfVectorComponents); }
+    );
+
+    // C11 consists of the (0, 0) -> (2, 2) components of the sectional stiffness matrix
+    auto C11 = Kokkos::View<double**>("C11", 3, 3);
+    Kokkos::parallel_for(
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {3, 3}),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) { C11(i, j) = sectional_stiffness(i, j); }
+    );
+
+    // C21 consists of the (3, 0) -> (5, 2) components of the sectional stiffness matrix
+    auto C21 = Kokkos::View<double**>("C21", 3, 3);
+    Kokkos::parallel_for(
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {3, 3}),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            C21(i, j) = sectional_stiffness(i + kNumberOfVectorComponents, j);
+        }
+    );
+
+    // Calculate the two non-zero submatrices
+    auto x0_prime_tilde =
+        gen_alpha_solver::create_cross_product_matrix(gen_alpha_solver::create_vector(
+            {pos_vector_derivatives(0), pos_vector_derivatives(1), pos_vector_derivatives(2)}
+        ));
+    auto u_prime_tilde =
+        gen_alpha_solver::create_cross_product_matrix(gen_alpha_solver::create_vector(
+            {gen_coords_derivatives(0), gen_coords_derivatives(1), gen_coords_derivatives(2)}
+        ));
+    auto values = gen_alpha_solver::add_matrix_with_matrix(x0_prime_tilde, u_prime_tilde);
+    auto N_tilde = gen_alpha_solver::multiply_matrix_with_scalar(
+        gen_alpha_solver::create_cross_product_matrix(N), -1.
+    );
+    auto M_tilde = gen_alpha_solver::multiply_matrix_with_scalar(
+        gen_alpha_solver::create_cross_product_matrix(M), -1.
+    );
+
+    auto non_zero_terms_part_1 = gen_alpha_solver::add_matrix_with_matrix(
+        N_tilde, gen_alpha_solver::multiply_matrix_with_matrix(C11, values)
+    );
+    auto non_zero_terms_part_2 = gen_alpha_solver::add_matrix_with_matrix(
+        M_tilde, gen_alpha_solver::multiply_matrix_with_matrix(C21, values)
+    );
+
+    // Assemble the O matrix
+    auto O_matrix =
+        Kokkos::View<double**>("O_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
+    Kokkos::parallel_for(
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
+            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
+        ),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            O_matrix(i, j) = 0.;
+            O_matrix(i + kNumberOfVectorComponents, j) = 0.;
+            O_matrix(i, j + kNumberOfVectorComponents) = non_zero_terms_part_1(i, j);
+            O_matrix(i + kNumberOfVectorComponents, j + kNumberOfVectorComponents) =
+                non_zero_terms_part_2(i, j);
+        }
+    );
+    return O_matrix;
 }
 
 }  // namespace openturbine::gebt_poc

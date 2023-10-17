@@ -390,4 +390,71 @@ TEST(SolverTest, CalculateStaticResidualNonZeroValues) {
     );
 }
 
+TEST(SolverTest, CalculateOMatrix) {
+    auto elastic_force_fc = Kokkos::View<double*>("elastic_force_fc", 6);
+    auto populate_elastic_force_fc = KOKKOS_LAMBDA(size_t) {
+        elastic_force_fc(0) = 0.1023527958818833;
+        elastic_force_fc(1) = 0.1512321779691288;
+        elastic_force_fc(2) = 0.2788924951018168;
+        elastic_force_fc(3) = 0.4003985306163255;
+        elastic_force_fc(4) = 0.3249298550145402;
+        elastic_force_fc(5) = 0.5876343707088096;
+    };
+    Kokkos::parallel_for(1, populate_elastic_force_fc);
+
+    auto position_vector_derivatives = Kokkos::View<double*>("position_vector_derivatives", 7);
+    auto populate_position_vector_derivatives = KOKKOS_LAMBDA(size_t) {
+        position_vector_derivatives(0) = 0.924984344499876;
+        position_vector_derivatives(1) = -0.3417491071948322;
+        position_vector_derivatives(2) = 0.16616711516322974;
+        position_vector_derivatives(3) = 0.023197240723436388;
+        position_vector_derivatives(4) = 0.0199309451611758;
+        position_vector_derivatives(5) = 0.0569650074322926;
+    };
+    Kokkos::parallel_for(1, populate_position_vector_derivatives);
+
+    auto gen_coords_derivatives = Kokkos::View<double*>("gen_coords_derivatives", 7);
+    auto populate_gen_coords_derivatives = KOKKOS_LAMBDA(size_t) {
+        gen_coords_derivatives(0) = 0.0009414876868372689;
+        gen_coords_derivatives(1) = -0.0009055519814222231;
+        gen_coords_derivatives(2) = 0.000948674827920281;
+        gen_coords_derivatives(3) = -0.000011768592509980857;
+        gen_coords_derivatives(4) = 0.009249835939573452;
+        gen_coords_derivatives(5) = 0.;
+        gen_coords_derivatives(6) = 0.;
+    };
+    Kokkos::parallel_for(1, populate_gen_coords_derivatives);
+
+    auto stiffness = gen_alpha_solver::create_matrix(
+        {{1.3197900000789533, 1.9500660871457987, 3.596184383250417, 5.162946182374572,
+          4.189813963364337, 7.577262149821259},
+         {1.9500660871457987, 2.881335473074227, 5.313570498700886, 7.628551708533343,
+          6.190692550267803, 11.19584324089132},
+         {3.5961843832504163, 5.313570498700887, 9.798939314254936, 14.068076308736293,
+          11.416470455810389, 20.64664212439219},
+         {5.16294618237457, 7.628551708533343, 14.068076308736295, 20.197162639890838,
+          16.390322707186375, 29.641834448609774},
+         {4.189813963364336, 6.190692550267804, 11.416470455810385, 16.39032270718637,
+          13.301010802137164, 24.054825962838},
+         {7.577262149821259, 11.19584324089132, 20.64664212439219, 29.64183444860977,
+          24.054825962838, 43.50305858028866}}
+    );
+
+    auto o_matrix = CalculateOMatrix(
+        elastic_force_fc, position_vector_derivatives, gen_coords_derivatives, stiffness
+    );
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        o_matrix,
+        {
+            {0., 0., 0., 1.5581361688659614, 3.3881347643742066, -2.409080935189973},  // row 1
+            {0., 0., 0., 2.023343846951859, 4.594085351204066, -3.233749380295583},    // row 2
+            {0., 0., 0., 4.396865920548022, 8.369759049055988, -6.152221520070027},    // row 3
+            {0., 0., 0., 6.095343338095462, 12.750819804192329, -9.15751050858455},    // row 4
+            {0., 0., 0., 4.358834898453007, 9.870620837027674, -6.767382896430996},    // row 5
+            {0., 0., 0., 9.270600163100875, 17.450580610135344, -12.962904649290419}   // row 6
+        }
+    );
+}
+
 }  // namespace openturbine::gebt_poc::tests

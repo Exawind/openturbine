@@ -2,7 +2,7 @@
 
 #include "src/gebt_poc/element.h"
 #include "src/gebt_poc/section.h"
-#include "src/gen_alpha_poc/rotation_matrix.h"
+#include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
 
@@ -80,6 +80,18 @@ Kokkos::View<double*> CalculateElasticForces(
 
 /// Calculates the static residual vector for a beam element
 Kokkos::View<double*> CalculateStaticResidual(
+    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+    const StiffnessMatrix& stiffness, const Quadrature& quadrature
+);
+
+Kokkos::View<double**> CalculateOMatrix(
+    const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
+    const Kokkos::View<double*> gen_coords_derivatives,
+    const Kokkos::View<double**> sectional_stiffness
+);
+
+/// Calculates the static iteration matrix for a beam element
+Kokkos::View<double**> CalculateStaticIterationMatrix(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature
 );
