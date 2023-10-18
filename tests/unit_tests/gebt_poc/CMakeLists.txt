@@ -9,5 +9,8 @@ target_sources(
     test_model.cpp
     test_point.cpp
     test_section.cpp
+    test_mesh.cpp
+    test_field_data.cpp
+    test_gebt_generalized_alpha_solver.cpp
     test_solver.cpp
 )
