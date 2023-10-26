@@ -533,4 +533,32 @@ Kokkos::View<double**> CalculateStaticIterationMatrix(
     return iteration_matrix;
 }
 
+Kokkos::View<double*> ConstraintsResidualVector(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector
+) {
+    auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
+        gen_alpha_solver::create_vector({gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)})
+    );
+    auto x0 =
+        gen_alpha_solver::create_vector({position_vector(0), position_vector(1), position_vector(2)}
+        );
+    auto u0 = gen_alpha_solver::create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
+    auto x0_u0 = Kokkos::View<double*>("x0_u0", kNumberOfVectorComponents);
+    Kokkos::parallel_for(
+        kNumberOfVectorComponents, KOKKOS_LAMBDA(const size_t i) { x0_u0(i) = x0(i) + u0(i); }
+    );
+    auto R_x0u0 = gen_alpha_solver::multiply_matrix_with_vector(rotation_0, x0_u0);
+
+    auto constraint_residual =
+        Kokkos::View<double*>("constraints_residual_vector", kNumberOfLieGroupComponents);
+    Kokkos::parallel_for(
+        kNumberOfVectorComponents,
+        KOKKOS_LAMBDA(const size_t i) {
+            constraint_residual(i) = gen_coords(i);
+            constraint_residual(kNumberOfVectorComponents + i) = R_x0u0(i) - x0(i);
+        }
+    );
+    return constraint_residual;
+}
+
 }  // namespace openturbine::gebt_poc

@@ -876,4 +876,36 @@ TEST(SolverTest, CalculateStaticIterationMatrixNonZeroValues) {
     );
 }
 
+TEST(SolverTest, ConstraintsResidualVector) {
+    auto position_vectors = Kokkos::View<double*>("position_vectors", 7);
+    auto populate_position_vector = KOKKOS_LAMBDA(size_t) {
+        position_vectors(0) = 0.;
+        position_vectors(1) = 0.;
+        position_vectors(2) = 0.;
+        position_vectors(3) = 0.9778215200524469;
+        position_vectors(4) = -0.01733607539094763;
+        position_vectors(5) = -0.09001900002195001;
+        position_vectors(6) = -0.18831121859148398;
+    };
+    Kokkos::parallel_for(1, populate_position_vector);
+
+    auto generalized_coords = Kokkos::View<double*>("generalized_coords", 7);
+    auto populate_generalized_coords = KOKKOS_LAMBDA(size_t) {
+        generalized_coords(0) = 0.1;
+        generalized_coords(1) = 0.;
+        generalized_coords(2) = 0.12;
+        generalized_coords(3) = 0.9987502603949662;
+        generalized_coords(4) = 0.049979169270678324;
+        generalized_coords(5) = 0.;
+        generalized_coords(6) = 0.;
+    };
+    Kokkos::parallel_for(1, populate_generalized_coords);
+
+    auto constraints_residual = ConstraintsResidualVector(generalized_coords, position_vectors);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        constraints_residual, {0.1, 0., 0.12, 0.1, -0.01198, 0.1194}
+    );
+}
+
 }  // namespace openturbine::gebt_poc::tests

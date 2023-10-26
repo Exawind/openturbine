@@ -96,4 +96,9 @@ Kokkos::View<double**> CalculateStaticIterationMatrix(
     const StiffnessMatrix& stiffness, const Quadrature& quadrature
 );
 
+/// Calculates the constraint residual vector for a beam element
+Kokkos::View<double*> ConstraintsResidualVector(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector
+);
+
 }  // namespace openturbine::gebt_poc
