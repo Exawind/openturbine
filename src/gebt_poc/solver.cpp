@@ -561,4 +561,39 @@ Kokkos::View<double*> ConstraintsResidualVector(
     return constraint_residual;
 }
 
+Kokkos::View<double**> ConstraintsGradientMatrix(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector
+) {
+    auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
+        gen_alpha_solver::create_vector({gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)})
+    );
+    auto x0 =
+        gen_alpha_solver::create_vector({position_vector(0), position_vector(1), position_vector(2)}
+        );
+    auto x0_tilde = gen_alpha_solver::create_cross_product_matrix(x0);
+    auto u0 = gen_alpha_solver::create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
+    auto u0_tilde = gen_alpha_solver::create_cross_product_matrix(u0);
+    auto x0_u0_tilde = gen_alpha_solver::add_matrix_with_matrix(x0_tilde, u0_tilde);
+    auto R_x0u0 = gen_alpha_solver::multiply_matrix_with_matrix(rotation_0, x0_u0_tilde);
+    auto I = gen_alpha_solver::create_identity_matrix(3);
+
+    const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
+    auto B = Kokkos::View<double**>(
+        "constraints_gradient_matrix", kNumberOfLieGroupComponents,
+        kNumberOfLieGroupComponents * n_nodes
+    );
+    Kokkos::deep_copy(B, 0.);
+    Kokkos::parallel_for(
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
+            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
+        ),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            B(i, j) = I(i, j);
+            B(i + kNumberOfVectorComponents, j) = -rotation_0(i, j);
+            B(i + kNumberOfVectorComponents, j + kNumberOfVectorComponents) = -R_x0u0(i, j);
+        }
+    );
+    return B;
+}
+
 }  // namespace openturbine::gebt_poc

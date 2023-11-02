@@ -908,4 +908,118 @@ TEST(SolverTest, ConstraintsResidualVector) {
     );
 }
 
+TEST(SolverTest, ConstraintsGradientMatrix) {
+    auto position_vectors = Kokkos::View<double*>("position_vectors", 35);
+    auto populate_position_vector = KOKKOS_LAMBDA(size_t) {
+        // node 1
+        position_vectors(0) = 0.;
+        position_vectors(1) = 0.;
+        position_vectors(2) = 0.;
+        position_vectors(3) = 0.9778215200524469;
+        position_vectors(4) = -0.01733607539094763;
+        position_vectors(5) = -0.09001900002195001;
+        position_vectors(6) = -0.18831121859148398;
+        // node 2
+        position_vectors(7) = 0.8633658232300573;
+        position_vectors(8) = -0.25589826392541715;
+        position_vectors(9) = 0.1130411210682743;
+        position_vectors(10) = 0.9950113028068008;
+        position_vectors(11) = -0.002883848832932071;
+        position_vectors(12) = -0.030192109815745303;
+        position_vectors(13) = -0.09504013471947484;
+        // node 3
+        position_vectors(14) = 2.5;
+        position_vectors(15) = -0.25;
+        position_vectors(16) = 0.;
+        position_vectors(17) = 0.9904718430204884;
+        position_vectors(18) = -0.009526411091536478;
+        position_vectors(19) = 0.09620741150793366;
+        position_vectors(20) = 0.09807604012323785;
+        // node 4
+        position_vectors(21) = 4.136634176769943;
+        position_vectors(22) = 0.39875540678255983;
+        position_vectors(23) = -0.5416125496397027;
+        position_vectors(24) = 0.9472312341234699;
+        position_vectors(25) = -0.049692141629315074;
+        position_vectors(26) = 0.18127630174800594;
+        position_vectors(27) = 0.25965858850765167;
+        // node 5
+        position_vectors(28) = 5.;
+        position_vectors(29) = 1.;
+        position_vectors(30) = -1.;
+        position_vectors(31) = 0.9210746582719719;
+        position_vectors(32) = -0.07193653093139739;
+        position_vectors(33) = 0.20507529985516368;
+        position_vectors(34) = 0.32309554437664584;
+    };
+    Kokkos::parallel_for(1, populate_position_vector);
+
+    auto generalized_coords = Kokkos::View<double*>("generalized_coords", 35);
+    auto populate_generalized_coords = KOKKOS_LAMBDA(size_t) {
+        // node 1
+        generalized_coords(0) = 0.1;
+        generalized_coords(1) = 0.;
+        generalized_coords(2) = 0.12;
+        generalized_coords(3) = 0.9987502603949662;
+        generalized_coords(4) = 0.049979169270678324;
+        generalized_coords(5) = 0.;
+        generalized_coords(6) = 0.;
+        // node 2
+        generalized_coords(7) = 0.13751623510808916;
+        generalized_coords(8) = 0.023745363506318708;
+        generalized_coords(9) = 0.16976855483097075;
+        generalized_coords(10) = 0.9982815394712516;
+        generalized_coords(11) = 0.05860006784047278;
+        generalized_coords(12) = 0.;
+        generalized_coords(13) = 0.;
+        // node 3
+        generalized_coords(14) = 0.225;
+        generalized_coords(15) = 0.1125;
+        generalized_coords(16) = 0.2925;
+        generalized_coords(17) = 0.9971888181122074;
+        generalized_coords(18) = 0.07492970727274234;
+        generalized_coords(19) = 0.;
+        generalized_coords(20) = 0.;
+        // node 4
+        generalized_coords(21) = 0.3339123363204823;
+        generalized_coords(22) = 0.27625463649368126;
+        generalized_coords(23) = 0.45594573088331497;
+        generalized_coords(24) = 0.9958289985675476;
+        generalized_coords(25) = 0.09123927669570399;
+        generalized_coords(26) = 0.;
+        generalized_coords(27) = 0.;
+        // node 5
+        generalized_coords(28) = 0.4;
+        generalized_coords(29) = 0.4;
+        generalized_coords(30) = 0.5599999999999999;
+        generalized_coords(31) = 0.9950041652780258;
+        generalized_coords(32) = 0.09983341664682815;
+        generalized_coords(33) = 0.;
+        generalized_coords(34) = 0.;
+    };
+    Kokkos::parallel_for(1, populate_generalized_coords);
+
+    auto constraint_gradients = ConstraintsGradientMatrix(generalized_coords, position_vectors);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        constraint_gradients,
+        {
+            {1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 1
+            {0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 2
+            {0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 3
+            {-1., 0., 0., 0., 0.12, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0.,  0., 0., 0., 0.,   0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 4
+            {0., -0.995004, 0.0998334, -0.1194, 0.00998334, 0.0995004, 0., 0., 0., 0.,
+             0., 0.,        0.,        0.,      0.,         0.,        0., 0., 0., 0.,
+             0., 0.,        0.,        0.,      0.,         0.,        0., 0., 0., 0.},  // row 5
+            {0., -0.0998334, -0.995004, -0.01198, -0.0995004, 0.00998334, 0., 0., 0., 0.,
+             0., 0.,         0.,        0.,       0.,         0.,         0., 0., 0., 0.,
+             0., 0.,         0.,        0.,       0.,         0.,         0., 0., 0., 0.}  // row 6
+        }
+    );
+}
+
 }  // namespace openturbine::gebt_poc::tests
