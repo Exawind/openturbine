@@ -234,6 +234,117 @@ Kokkos::View<double*> CalculateStaticResidual(
     return residual;
 }
 
+Kokkos::View<double**> CalculateOMatrix(
+    const Kokkos::View<double**> N_tilde, const Kokkos::View<double**> M_tilde,
+    const Kokkos::View<double**> C11, const Kokkos::View<double**> C21,
+    const Kokkos::View<double**> values
+) {
+    // Assemble the O matrix
+    // [O]_6x6 = [
+    //     [0]_3x3      -N_tilde + [C11] * (x_0_prime_tilde + u_prime_tilde)
+    //     [0]_3x3      -M_tilde + [C21] * (x_0_prime_tilde  + u_prime_tilde)
+    // ]
+
+    // Calculate the two non-zero submatrices
+    auto non_zero_terms_part_1 = gen_alpha_solver::add_matrix_with_matrix(
+        gen_alpha_solver::multiply_matrix_with_scalar(N_tilde, -1.),
+        gen_alpha_solver::multiply_matrix_with_matrix(C11, values)
+    );
+    auto non_zero_terms_part_2 = gen_alpha_solver::add_matrix_with_matrix(
+        gen_alpha_solver::multiply_matrix_with_scalar(M_tilde, -1.),
+        gen_alpha_solver::multiply_matrix_with_matrix(C21, values)
+    );
+
+    auto O_matrix =
+        Kokkos::View<double**>("O_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
+    Kokkos::parallel_for(
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
+            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
+        ),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            O_matrix(i, j) = 0.;
+            O_matrix(i + kNumberOfVectorComponents, j) = 0.;
+            O_matrix(i, j + kNumberOfVectorComponents) = non_zero_terms_part_1(i, j);
+            O_matrix(i + kNumberOfVectorComponents, j + kNumberOfVectorComponents) =
+                non_zero_terms_part_2(i, j);
+        }
+    );
+    return O_matrix;
+}
+
+Kokkos::View<double**> CalculatePMatrix(
+    const Kokkos::View<double**> N_tilde, const Kokkos::View<double**> C11,
+    const Kokkos::View<double**> C12, const Kokkos::View<double**> values
+) {
+    // Assemble the P matrix
+    // [P]_6x6 = [
+    //                         [0]_3x3                                      [0]_3x3
+    //     N_tilde + (x_0_prime_tilde + u_prime_tilde)^T * [C11]     (x_0_prime_tilde  +
+    //     u_prime_tilde)^T * [C12]
+    // ]
+
+    // Calculate the two non-zero submatrices
+    auto values_transopse = gen_alpha_solver::transpose_matrix(values);
+    auto non_zero_terms_part_3 = gen_alpha_solver::add_matrix_with_matrix(
+        N_tilde, gen_alpha_solver::multiply_matrix_with_matrix(values_transopse, C11)
+    );
+    auto non_zero_terms_part_4 =
+        gen_alpha_solver::multiply_matrix_with_matrix(values_transopse, C12);
+
+    auto P_matrix =
+        Kokkos::View<double**>("P_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
+    Kokkos::parallel_for(
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
+            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
+        ),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            P_matrix(i, j) = 0.;
+            P_matrix(i + kNumberOfVectorComponents, j) = non_zero_terms_part_3(i, j);
+            P_matrix(i, j + kNumberOfVectorComponents) = 0.;
+            P_matrix(i + kNumberOfVectorComponents, j + kNumberOfVectorComponents) =
+                non_zero_terms_part_4(i, j);
+        }
+    );
+    return P_matrix;
+}
+
+Kokkos::View<double**> CalculateQMatrix(
+    const Kokkos::View<double**> N_tilde, const Kokkos::View<double**> C11,
+    const Kokkos::View<double**> values
+) {
+    // Assemble the Q matrix
+    // [Q]_6x6 = [
+    //     [0]_3x3                                          [0]_3x3
+    //     [0]_3x3      (x_0_prime_tilde + u_prime_tilde)^T * (-N_tilde + [C11] * (x_0_prime_tilde  +
+    //     u_prime_tilde))
+    // ]
+
+    // Calculate the one non-zero submatrix
+    auto values_transopse = gen_alpha_solver::transpose_matrix(values);
+    auto temp = gen_alpha_solver::add_matrix_with_matrix(
+        gen_alpha_solver::multiply_matrix_with_scalar(N_tilde, -1.),
+        gen_alpha_solver::multiply_matrix_with_matrix(C11, values)
+    );
+    auto non_zero_terms_part_5 =
+        gen_alpha_solver::multiply_matrix_with_matrix(values_transopse, temp);
+
+    auto Q_matrix =
+        Kokkos::View<double**>("Q_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
+    Kokkos::parallel_for(
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
+            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
+        ),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            Q_matrix(i, j) = 0.;
+            Q_matrix(i + kNumberOfVectorComponents, j) = 0.;
+            Q_matrix(i, j + kNumberOfVectorComponents) = 0.;
+            Q_matrix(i + kNumberOfVectorComponents, j + kNumberOfVectorComponents) =
+                non_zero_terms_part_5(i, j);
+        }
+    );
+    return Q_matrix;
+}
+
 Kokkos::View<double**> CalculateIterationMatrixComponents(
     const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
@@ -291,96 +402,9 @@ Kokkos::View<double**> CalculateIterationMatrixComponents(
     auto N_tilde = gen_alpha_solver::create_cross_product_matrix(N);
     auto M_tilde = gen_alpha_solver::create_cross_product_matrix(M);
 
-    // Assemble the O matrix
-    // [O]_6x6 = [
-    //     [0]_3x3      -N_tilde + [C11] * (x_0_prime_tilde + u_prime_tilde)
-    //     [0]_3x3      -M_tilde + [C21] * (x_0_prime_tilde  + u_prime_tilde)
-    // ]
-
-    // Calculate the two non-zero submatrices
-    auto non_zero_terms_part_1 = gen_alpha_solver::add_matrix_with_matrix(
-        gen_alpha_solver::multiply_matrix_with_scalar(N_tilde, -1.),
-        gen_alpha_solver::multiply_matrix_with_matrix(C11, values)
-    );
-    auto non_zero_terms_part_2 = gen_alpha_solver::add_matrix_with_matrix(
-        gen_alpha_solver::multiply_matrix_with_scalar(M_tilde, -1.),
-        gen_alpha_solver::multiply_matrix_with_matrix(C21, values)
-    );
-
-    auto O_matrix =
-        Kokkos::View<double**>("O_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
-    Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
-        ),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            O_matrix(i, j) = 0.;
-            O_matrix(i + kNumberOfVectorComponents, j) = 0.;
-            O_matrix(i, j + kNumberOfVectorComponents) = non_zero_terms_part_1(i, j);
-            O_matrix(i + kNumberOfVectorComponents, j + kNumberOfVectorComponents) =
-                non_zero_terms_part_2(i, j);
-        }
-    );
-
-    // Assemble the P matrix
-    // [P]_6x6 = [
-    //                         [0]_3x3                                      [0]_3x3
-    //     N_tilde + (x_0_prime_tilde + u_prime_tilde)^T * [C11]     (x_0_prime_tilde  +
-    //     u_prime_tilde)^T * [C12]
-    // ]
-
-    // Calculate the two non-zero submatrices
-    auto values_transopse = gen_alpha_solver::transpose_matrix(values);
-    auto non_zero_terms_part_3 = gen_alpha_solver::add_matrix_with_matrix(
-        N_tilde, gen_alpha_solver::multiply_matrix_with_matrix(values_transopse, C11)
-    );
-    auto non_zero_terms_part_4 =
-        gen_alpha_solver::multiply_matrix_with_matrix(values_transopse, C12);
-
-    auto P_matrix =
-        Kokkos::View<double**>("P_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
-    Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
-        ),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            P_matrix(i, j) = 0.;
-            P_matrix(i + kNumberOfVectorComponents, j) = non_zero_terms_part_3(i, j);
-            P_matrix(i, j + kNumberOfVectorComponents) = 0.;
-            P_matrix(i + kNumberOfVectorComponents, j + kNumberOfVectorComponents) =
-                non_zero_terms_part_4(i, j);
-        }
-    );
-
-    // Assemble the Q matrix
-    // [Q]_6x6 = [
-    //     [0]_3x3                                          [0]_3x3
-    //     [0]_3x3      (x_0_prime_tilde + u_prime_tilde)^T * (-N_tilde + [C11] * (x_0_prime_tilde  +
-    //     u_prime_tilde))
-    // ]
-
-    // Calculate the one non-zero submatrix
-    auto temp = gen_alpha_solver::add_matrix_with_matrix(
-        gen_alpha_solver::multiply_matrix_with_scalar(N_tilde, -1.),
-        gen_alpha_solver::multiply_matrix_with_matrix(C11, values)
-    );
-    auto non_zero_terms_part_5 =
-        gen_alpha_solver::multiply_matrix_with_matrix(values_transopse, temp);
-
-    auto Q_matrix =
-        Kokkos::View<double**>("Q_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
-    Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
-        ),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            Q_matrix(i, j) = 0.;
-            Q_matrix(i + kNumberOfVectorComponents, j) = 0.;
-            Q_matrix(i, j + kNumberOfVectorComponents) = 0.;
-            Q_matrix(i + kNumberOfVectorComponents, j + kNumberOfVectorComponents) =
-                non_zero_terms_part_5(i, j);
-        }
-    );
+    auto O_matrix = CalculateOMatrix(N_tilde, M_tilde, C11, C21, values);
+    auto P_matrix = CalculatePMatrix(N_tilde, C11, C12, values);
+    auto Q_matrix = CalculateQMatrix(N_tilde, C11, values);
 
     // Pack the O, P, and Q matrices into a single view
     auto O_P_Q_matrices = Kokkos::View<double**>(
