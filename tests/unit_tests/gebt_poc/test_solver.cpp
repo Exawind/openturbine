@@ -195,7 +195,7 @@ TEST(SolverTest, CalculateElasticForces) {
     );
 }
 
-TEST(SolverTest, CalculateStaticResidualZeroValues) {
+TEST(SolverTest, CalculateStaticResidualWithZeroValues) {
     // 5 nodes on a line
     auto position_vectors = gen_alpha_solver::create_vector({
         0., 0., 0., 1., 0., 0., 0.,  // node 1
@@ -243,7 +243,7 @@ TEST(SolverTest, CalculateStaticResidualZeroValues) {
     );
 }
 
-TEST(SolverTest, CalculateStaticResidualNonZeroValues) {
+TEST(SolverTest, CalculateStaticResidualWithNonZeroValues) {
     auto position_vectors = Kokkos::View<double*>("position_vectors", 35);
     auto populate_position_vector = KOKKOS_LAMBDA(size_t) {
         // node 1
@@ -475,7 +475,50 @@ TEST(SolverTest, CalculateIterationMatrixComponents) {
     );
 }
 
-TEST(SolverTest, CalculateStaticIterationMatrixNonZeroValues) {
+TEST(SolverTest, CalculateStaticIterationMatrixWithZeroValues) {
+    // 5 nodes on a line
+    auto position_vectors = gen_alpha_solver::create_vector({
+        0., 0., 0., 1., 0., 0., 0.,  // node 1
+        1., 0., 0., 1., 0., 0., 0.,  // node 2
+        2., 0., 0., 1., 0., 0., 0.,  // node 3
+        3., 0., 0., 1., 0., 0., 0.,  // node 4
+        4., 0., 0., 1., 0., 0., 0.   // node 5
+    });
+
+    // zero displacement and rotation
+    auto generalized_coords = gen_alpha_solver::create_vector({
+        0., 0., 0., 0., 0., 0., 0.,  // node 1
+        0., 0., 0., 0., 0., 0., 0.,  // node 2
+        0., 0., 0., 0., 0., 0., 0.,  // node 3
+        0., 0., 0., 0., 0., 0., 0.,  // node 4
+        0., 0., 0., 0., 0., 0., 0.   // node 5
+    });
+
+    // identity stiffness matrix
+    auto stiffness = gen_alpha_solver::create_matrix({
+        {0., 0., 0., 0., 0., 0.},  // row 1
+        {0., 0., 0., 0., 0., 0.},  // row 2
+        {0., 0., 0., 0., 0., 0.},  // row 3
+        {0., 0., 0., 0., 0., 0.},  // row 4
+        {0., 0., 0., 0., 0., 0.},  // row 5
+        {0., 0., 0., 0., 0., 0.}   // row 6
+    });
+
+    // 7-point Gauss-Legendre quadrature
+    auto quadrature = UserDefinedQuadrature(
+        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
+         0.7415311855993945, 0.9491079123427585},
+        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
+    );
+
+    auto iteration_matrix =
+        CalculateStaticIterationMatrix(position_vectors, generalized_coords, stiffness, quadrature);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(iteration_matrix, zeros_30x30);
+}
+
+TEST(SolverTest, CalculateStaticIterationMatrixWithNonZeroValues) {
     auto position_vectors = Kokkos::View<double*>("position_vectors", 35);
     auto populate_position_vector = KOKKOS_LAMBDA(size_t) {
         // node 1
