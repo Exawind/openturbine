@@ -1,5 +1,11 @@
 #include "src/gebt_poc/solver.h"
 
+#include <KokkosBlas1_axpby.hpp>
+#include <KokkosBlas1_fill.hpp>
+#include <KokkosBlas1_nrm2.hpp>
+#include <KokkosBlas1_scal.hpp>
+#include <KokkosBlas3_gemm.hpp>
+
 #include "src/gebt_poc/element.h"
 #include "src/gen_alpha_poc/quaternion.h"
 #include "src/gen_alpha_poc/utilities.h"
@@ -560,28 +566,33 @@ Kokkos::View<double**> CalculateStaticIterationMatrix(
 Kokkos::View<double*> ConstraintsResidualVector(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector
 ) {
-    auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
-        gen_alpha_solver::create_vector({gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)})
-    );
-    auto x0 =
-        gen_alpha_solver::create_vector({position_vector(0), position_vector(1), position_vector(2)}
-        );
-    auto u0 = gen_alpha_solver::create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
-    auto x0_u0 = Kokkos::View<double*>("x0_u0", kNumberOfVectorComponents);
-    Kokkos::parallel_for(
-        kNumberOfVectorComponents, KOKKOS_LAMBDA(const size_t i) { x0_u0(i) = x0(i) + u0(i); }
-    );
-    auto R_x0u0 = gen_alpha_solver::multiply_matrix_with_vector(rotation_0, x0_u0);
+    auto translation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(0, 3));
+    auto rotation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7));
+    auto rotation_matrix_0 = gen_alpha_solver::EulerParameterToRotationMatrix(rotation_0);
+    auto position_0 = Kokkos::subview(position_vector, Kokkos::make_pair(0, 3));
 
+    // position = position_0 + translation_0
+    auto position = Kokkos::View<double*>("position", kNumberOfVectorComponents);
+    Kokkos::deep_copy(position, position_0);
+    KokkosBlas::axpy(1., translation_0, position);
+
+    // rotated_position = rotation_matrix_0 * position
+    auto rotated_position = Kokkos::View<double*>("rotated_position", kNumberOfVectorComponents);
+    KokkosBlas::gemv("N", 1., rotation_matrix_0, position, 0., rotated_position);
+
+    // Assemble the constraint residual vector
+    // {constraint_residual}_6x1 = {
+    //    {translation_0}_3x1
+    //    {rotated_position - position_0}_3x1
+    // }
     auto constraint_residual =
         Kokkos::View<double*>("constraints_residual_vector", kNumberOfLieGroupComponents);
-    Kokkos::parallel_for(
-        kNumberOfVectorComponents,
-        KOKKOS_LAMBDA(const size_t i) {
-            constraint_residual(i) = gen_coords(i);
-            constraint_residual(kNumberOfVectorComponents + i) = R_x0u0(i) - x0(i);
-        }
-    );
+    auto constraint_residual_1 = Kokkos::subview(constraint_residual, Kokkos::make_pair(0, 3));
+    auto constraint_residual_2 = Kokkos::subview(constraint_residual, Kokkos::make_pair(3, 6));
+    Kokkos::deep_copy(constraint_residual_1, translation_0);
+    Kokkos::deep_copy(constraint_residual_2, rotated_position);
+    KokkosBlas::axpy(-1., position_0, constraint_residual_2);
+
     return constraint_residual;
 }
 
