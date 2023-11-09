@@ -615,6 +615,8 @@ void ConstraintsGradientMatrix(
     // [B11]_3x3 = [1]_3x3
     // [B21]_3x3 = -[rotation_matrix_0]_3x3
     // [B22]_3x3 = -[rotation_matrix_0]_3x3 * [position_cross_prod_matrix]_3x3
+    // n = order of the element
+    Kokkos::deep_copy(constraint_gradient_matrix, 0.);
     auto B11 = Kokkos::subview(
         constraint_gradient_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3)
     );
