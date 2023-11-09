@@ -659,7 +659,9 @@ TEST(SolverTest, ConstraintsResidualVector) {
     };
     Kokkos::parallel_for(1, populate_generalized_coords);
 
-    auto constraints_residual = ConstraintsResidualVector(generalized_coords, position_vectors);
+    auto constraints_residual = Kokkos::View<double*>("constraints_residual", 6);
+
+    ConstraintsResidualVector(generalized_coords, position_vectors, constraints_residual);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         constraints_residual, {0.1, 0., 0.12, 0.1, -0.01198, 0.1194}
@@ -757,7 +759,9 @@ TEST(SolverTest, ConstraintsGradientMatrix) {
     };
     Kokkos::parallel_for(1, populate_generalized_coords);
 
-    auto constraint_gradients = ConstraintsGradientMatrix(generalized_coords, position_vectors);
+    auto constraint_gradients = Kokkos::View<double**>("constraint_gradients", 6, 30);
+
+    ConstraintsGradientMatrix(generalized_coords, position_vectors, constraint_gradients);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         constraint_gradients,

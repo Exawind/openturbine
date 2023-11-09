@@ -97,13 +97,15 @@ Kokkos::View<double**> CalculateStaticIterationMatrix(
 );
 
 /// Calculates the constraint residual vector for a beam element
-Kokkos::View<double*> ConstraintsResidualVector(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector
+void ConstraintsResidualVector(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
+    const Kokkos::View<double*> constraint_residual
 );
 
 /// Calculates the constraint gradient matrix for a beam element
-Kokkos::View<double**> ConstraintsGradientMatrix(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector
+void ConstraintsGradientMatrix(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
+    Kokkos::View<double**> constraint_gradient_matrix
 );
 
 }  // namespace openturbine::gebt_poc

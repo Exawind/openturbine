@@ -563,8 +563,9 @@ Kokkos::View<double**> CalculateStaticIterationMatrix(
     return iteration_matrix;
 }
 
-Kokkos::View<double*> ConstraintsResidualVector(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector
+void ConstraintsResidualVector(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
+    Kokkos::View<double*> constraint_residual
 ) {
     auto translation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(0, 3));
     auto rotation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7));
@@ -585,50 +586,57 @@ Kokkos::View<double*> ConstraintsResidualVector(
     //    {translation_0}_3x1
     //    {rotated_position - position_0}_3x1
     // }
-    auto constraint_residual =
-        Kokkos::View<double*>("constraints_residual_vector", kNumberOfLieGroupComponents);
     auto constraint_residual_1 = Kokkos::subview(constraint_residual, Kokkos::make_pair(0, 3));
     auto constraint_residual_2 = Kokkos::subview(constraint_residual, Kokkos::make_pair(3, 6));
     Kokkos::deep_copy(constraint_residual_1, translation_0);
     Kokkos::deep_copy(constraint_residual_2, rotated_position);
     KokkosBlas::axpy(-1., position_0, constraint_residual_2);
-
-    return constraint_residual;
 }
 
-Kokkos::View<double**> ConstraintsGradientMatrix(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector
+void ConstraintsGradientMatrix(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
+    Kokkos::View<double**> constraint_gradient_matrix
 ) {
-    auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
-        gen_alpha_solver::create_vector({gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)})
-    );
-    auto x0 =
-        gen_alpha_solver::create_vector({position_vector(0), position_vector(1), position_vector(2)}
-        );
-    auto x0_tilde = gen_alpha_solver::create_cross_product_matrix(x0);
-    auto u0 = gen_alpha_solver::create_vector({gen_coords(0), gen_coords(1), gen_coords(2)});
-    auto u0_tilde = gen_alpha_solver::create_cross_product_matrix(u0);
-    auto x0_u0_tilde = gen_alpha_solver::add_matrix_with_matrix(x0_tilde, u0_tilde);
-    auto R_x0u0 = gen_alpha_solver::multiply_matrix_with_matrix(rotation_0, x0_u0_tilde);
-    auto I = gen_alpha_solver::create_identity_matrix(3);
+    auto translation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(0, 3));
+    auto rotation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7));
+    auto rotation_matrix_0 = gen_alpha_solver::EulerParameterToRotationMatrix(rotation_0);
+    auto position_0 = Kokkos::subview(position_vector, Kokkos::make_pair(0, 3));
 
-    const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
-    auto B = Kokkos::View<double**>(
-        "constraints_gradient_matrix", kNumberOfLieGroupComponents,
-        kNumberOfLieGroupComponents * n_nodes
+    // position_cross_prod_matrix = ~{position_0} + ~{translation_0}
+    auto position_0_cross_prod_matrix = gen_alpha_solver::create_cross_product_matrix(position_0);
+    auto translation_0_cross_prod_matrix =
+        gen_alpha_solver::create_cross_product_matrix(translation_0);
+    auto position_cross_prod_matrix = Kokkos::View<double**>("position_cross_prod_matrix", 3, 3);
+    Kokkos::deep_copy(position_cross_prod_matrix, position_0_cross_prod_matrix);
+    KokkosBlas::axpy(1., translation_0_cross_prod_matrix, position_cross_prod_matrix);
+
+    // Assemble the constraint gradient matrix i.e. B matrix
+    // [B]_6x(n+1) = [
+    //     [B11]_3x3              0            0   ....  0
+    //     [B21]_3x3          [B22]_3x3        0   ....  0
+    // ]
+    // where
+    // [B11]_3x3 = [1]_3x3
+    // [B21]_3x3 = -[rotation_matrix_0]_3x3
+    // [B22]_3x3 = -[rotation_matrix_0]_3x3 * [position_cross_prod_matrix]_3x3
+    auto B11 = Kokkos::subview(
+        constraint_gradient_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3)
     );
-    Kokkos::deep_copy(B, 0.);
-    Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
-        ),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            B(i, j) = I(i, j);
-            B(i + kNumberOfVectorComponents, j) = -rotation_0(i, j);
-            B(i + kNumberOfVectorComponents, j + kNumberOfVectorComponents) = -R_x0u0(i, j);
-        }
+    auto B21 = Kokkos::subview(
+        constraint_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3)
     );
-    return B;
+    auto B22 = Kokkos::subview(
+        constraint_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6)
+    );
+
+    auto hostB11 = Kokkos::create_mirror_view(B11);
+    hostB11(0, 0) = 1.0;
+    hostB11(1, 1) = 1.0;
+    hostB11(2, 2) = 1.0;
+    Kokkos::deep_copy(B11, hostB11);
+
+    KokkosBlas::scal(B21, -1.0, rotation_matrix_0);
+    KokkosBlas::gemm("N", "N", -1.0, rotation_matrix_0, position_cross_prod_matrix, 0.0, B22);
 }
 
 }  // namespace openturbine::gebt_poc
