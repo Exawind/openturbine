@@ -1,10 +1,6 @@
 #include "src/gebt_poc/solver.h"
 
-#include <KokkosBlas1_axpby.hpp>
-#include <KokkosBlas1_fill.hpp>
-#include <KokkosBlas1_nrm2.hpp>
-#include <KokkosBlas1_scal.hpp>
-#include <KokkosBlas3_gemm.hpp>
+#include <KokkosBlas.hpp>
 
 #include "src/gebt_poc/element.h"
 #include "src/gen_alpha_poc/quaternion.h"
