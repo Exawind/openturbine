@@ -1,5 +1,7 @@
 #include "src/gebt_poc/solver.h"
 
+#include <KokkosBlas.hpp>
+
 #include "src/gebt_poc/element.h"
 #include "src/gen_alpha_poc/quaternion.h"
 #include "src/gen_alpha_poc/utilities.h"
@@ -555,6 +557,84 @@ Kokkos::View<double**> CalculateStaticIterationMatrix(
     }
 
     return iteration_matrix;
+}
+
+void ConstraintsResidualVector(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
+    Kokkos::View<double*> constraint_residual
+) {
+    auto translation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(0, 3));
+    auto rotation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7));
+    auto rotation_matrix_0 = gen_alpha_solver::EulerParameterToRotationMatrix(rotation_0);
+    auto position_0 = Kokkos::subview(position_vector, Kokkos::make_pair(0, 3));
+
+    // position = position_0 + translation_0
+    auto position = Kokkos::View<double*>("position", kNumberOfVectorComponents);
+    Kokkos::deep_copy(position, position_0);
+    KokkosBlas::axpy(1., translation_0, position);
+
+    // rotated_position = rotation_matrix_0 * position
+    auto rotated_position = Kokkos::View<double*>("rotated_position", kNumberOfVectorComponents);
+    KokkosBlas::gemv("N", 1., rotation_matrix_0, position, 0., rotated_position);
+
+    // Assemble the constraint residual vector
+    // {constraint_residual}_6x1 = {
+    //    {translation_0}_3x1
+    //    {rotated_position - position_0}_3x1
+    // }
+    auto constraint_residual_1 = Kokkos::subview(constraint_residual, Kokkos::make_pair(0, 3));
+    auto constraint_residual_2 = Kokkos::subview(constraint_residual, Kokkos::make_pair(3, 6));
+    Kokkos::deep_copy(constraint_residual_1, translation_0);
+    Kokkos::deep_copy(constraint_residual_2, rotated_position);
+    KokkosBlas::axpy(-1., position_0, constraint_residual_2);
+}
+
+void ConstraintsGradientMatrix(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
+    Kokkos::View<double**> constraint_gradient_matrix
+) {
+    auto translation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(0, 3));
+    auto rotation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7));
+    auto rotation_matrix_0 = gen_alpha_solver::EulerParameterToRotationMatrix(rotation_0);
+    auto position_0 = Kokkos::subview(position_vector, Kokkos::make_pair(0, 3));
+
+    // position_cross_prod_matrix = ~{position_0} + ~{translation_0}
+    auto position_0_cross_prod_matrix = gen_alpha_solver::create_cross_product_matrix(position_0);
+    auto translation_0_cross_prod_matrix =
+        gen_alpha_solver::create_cross_product_matrix(translation_0);
+    auto position_cross_prod_matrix = Kokkos::View<double**>("position_cross_prod_matrix", 3, 3);
+    Kokkos::deep_copy(position_cross_prod_matrix, position_0_cross_prod_matrix);
+    KokkosBlas::axpy(1., translation_0_cross_prod_matrix, position_cross_prod_matrix);
+
+    // Assemble the constraint gradient matrix i.e. B matrix
+    // [B]_6x(n+1) = [
+    //     [B11]_3x3              0            0   ....  0
+    //     [B21]_3x3          [B22]_3x3        0   ....  0
+    // ]
+    // where
+    // [B11]_3x3 = [1]_3x3
+    // [B21]_3x3 = -[rotation_matrix_0]_3x3
+    // [B22]_3x3 = -[rotation_matrix_0]_3x3 * [position_cross_prod_matrix]_3x3
+    // n = order of the element
+    Kokkos::deep_copy(constraint_gradient_matrix, 0.);
+    auto B11 = Kokkos::subview(
+        constraint_gradient_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3)
+    );
+    auto B21 = Kokkos::subview(
+        constraint_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3)
+    );
+    auto B22 = Kokkos::subview(
+        constraint_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6)
+    );
+
+    auto hostB11 = Kokkos::create_mirror_view(B11);
+    hostB11(0, 0) = 1.0;
+    hostB11(1, 1) = 1.0;
+    hostB11(2, 2) = 1.0;
+    Kokkos::deep_copy(B11, hostB11);
+
+    KokkosBlas::scal(B21, -1.0, rotation_matrix_0);
+    KokkosBlas::gemm("N", "N", -1.0, rotation_matrix_0, position_cross_prod_matrix, 0.0, B22);
 }
 
 }  // namespace openturbine::gebt_poc
