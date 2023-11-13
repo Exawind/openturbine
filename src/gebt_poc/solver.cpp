@@ -15,12 +15,11 @@ UserDefinedQuadrature::UserDefinedQuadrature(
       quadrature_weights_(std::move(quadrature_weights)) {
 }
 
-Kokkos::View<double*> Interpolate(
-    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function, double jacobian
+void Interpolate(
+    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
+    const double jacobian, Kokkos::View<double*> interpolated_values
 ) {
     const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
-    auto interpolated_values =
-        Kokkos::View<double*>("interpolated_values", kNumberOfLieAlgebraComponents);
     Kokkos::deep_copy(interpolated_values, 0.);
     for (std::size_t i = 0; i < kNumberOfLieAlgebraComponents; ++i) {
         Kokkos::parallel_reduce(
@@ -32,7 +31,6 @@ Kokkos::View<double*> Interpolate(
             interpolated_values(i)
         );
     }
-    return interpolated_values;
 }
 
 void CalculateCurvature(
@@ -184,12 +182,19 @@ Kokkos::View<double*> CalculateStaticResidual(
                 gen_alpha_solver::create_vector(LagrangePolynomialDerivative(order, q_pt));
 
             auto jacobian = CalculateJacobian(nodes, LagrangePolynomialDerivative(order, q_pt));
-            auto gen_coords_qp = Interpolate(gen_coords, shape_function);
+            auto gen_coords_qp = Kokkos::View<double*>("gen_coords_qp", kNumberOfLieGroupComponents);
+            Interpolate(gen_coords, shape_function, 1., gen_coords_qp);
             auto gen_coords_derivatives_qp =
-                Interpolate(gen_coords, shape_function_derivative, jacobian);
-            auto position_vector_qp = Interpolate(position_vectors, shape_function);
+                Kokkos::View<double*>("gen_coords_derivatives_qp", kNumberOfLieGroupComponents);
+            Interpolate(gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp);
+            auto position_vector_qp =
+                Kokkos::View<double*>("position_vector_qp", kNumberOfLieAlgebraComponents);
+            Interpolate(position_vectors, shape_function, 1., position_vector_qp);
             auto pos_vector_derivatives_qp =
-                Interpolate(position_vectors, shape_function_derivative, jacobian);
+                Kokkos::View<double*>("pos_vector_derivatives_qp", kNumberOfLieAlgebraComponents);
+            Interpolate(
+                position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
+            );
 
             // Calculate the curvature at the quadrature point
             auto curvature = Kokkos::View<double*>("curvature", kNumberOfVectorComponents);
@@ -392,6 +397,17 @@ void CalculateStaticIterationMatrix(
         );
     }
 
+    auto curvature = Kokkos::View<double[kNumberOfVectorComponents]>("curvature");
+    auto sectional_strain = Kokkos::View<double[kNumberOfLieGroupComponents]>("sectional_strain");
+    auto sectional_stiffness =
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+            "sectional_stiffness"
+        );
+    auto O_P_Q_matrices =
+        Kokkos::View<double[3 * kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+            "O_P_Q_matrices"
+        );
+
     Kokkos::deep_copy(iteration_matrix, 0.);
     for (size_t i = 0; i < n_nodes; ++i) {
         for (size_t j = 0; j < n_nodes; ++j) {
@@ -404,20 +420,26 @@ void CalculateStaticIterationMatrix(
                     gen_alpha_solver::create_vector(LagrangePolynomialDerivative(order, q_pt));
 
                 auto jacobian = CalculateJacobian(nodes, LagrangePolynomialDerivative(order, q_pt));
-                auto gen_coords_qp = Interpolate(gen_coords, shape_function);
+                auto gen_coords_qp =
+                    Kokkos::View<double*>("gen_coords_qp", kNumberOfLieGroupComponents);
+                Interpolate(gen_coords, shape_function, 1., gen_coords_qp);
                 auto gen_coords_derivatives_qp =
-                    Interpolate(gen_coords, shape_function_derivative, jacobian);
-                auto position_vector_qp = Interpolate(position_vectors, shape_function);
-                auto pos_vector_derivatives_qp =
-                    Interpolate(position_vectors, shape_function_derivative, jacobian);
+                    Kokkos::View<double*>("gen_coords_derivatives_qp", kNumberOfLieGroupComponents);
+                Interpolate(
+                    gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
+                );
+                auto position_vector_qp =
+                    Kokkos::View<double*>("position_vector_qp", kNumberOfLieAlgebraComponents);
+                Interpolate(position_vectors, shape_function, 1., position_vector_qp);
+                auto pos_vector_derivatives_qp = Kokkos::View<double*>(
+                    "pos_vector_derivatives_qp", kNumberOfLieAlgebraComponents
+                );
+                Interpolate(
+                    position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
+                );
 
-                // Calculate the curvature at the quadrature point
-                auto curvature = Kokkos::View<double*>("curvature", kNumberOfVectorComponents);
+                // Calculate the curvature and sectional strain
                 CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp, curvature);
-
-                // Calculate the sectional strain at the quadrature point
-                auto sectional_strain =
-                    Kokkos::View<double*>("sectional_strain", kNumberOfLieGroupComponents);
                 CalculateSectionalStrain(
                     pos_vector_derivatives_qp, gen_coords_derivatives_qp, curvature, sectional_strain
                 );
@@ -429,22 +451,16 @@ void CalculateStaticIterationMatrix(
                 auto rotation = gen_alpha_solver::EulerParameterToRotationMatrix(
                     Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
                 );
-                auto sectional_stiffness = Kokkos::View<double**>(
-                    "sectional_stiffness", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
-                );
                 CalculateSectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
 
-                // Calculate elastic forces i.e. F^C and F^D vectors at the quadrature point
+                // Calculate elastic forces i.e. F^C and F^D vectors
                 auto elastic_forces = CalculateElasticForces(
                     sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
                     sectional_stiffness
                 );
                 auto elastic_force_fc = Kokkos::subview(elastic_forces, Kokkos::make_pair(0, 3));
 
-                // Calculate the iteration matrix components at the quadrature point
-                auto O_P_Q_matrices = Kokkos::View<double**>(
-                    "O_P_Q_matrices", 3 * kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
-                );
+                // Calculate the iteration matrix components
                 CalculateIterationMatrixComponents(
                     elastic_force_fc, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
                     sectional_stiffness, O_P_Q_matrices
@@ -459,7 +475,6 @@ void CalculateStaticIterationMatrix(
                     O_P_Q_matrices, Kokkos::make_pair(12, 18), Kokkos::make_pair(0, 6)
                 );
 
-                // Calculate the iteration matrix at the quadrature point
                 const auto q_weight = quadrature.GetQuadratureWeights()[k];
                 Kokkos::parallel_for(
                     Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
@@ -506,8 +521,8 @@ void ConstraintsResidualVector(
     //    {rotated_position - position_0}_3x1
     // }
     auto constraint_residual_1 = Kokkos::subview(constraint_residual, Kokkos::make_pair(0, 3));
-    auto constraint_residual_2 = Kokkos::subview(constraint_residual, Kokkos::make_pair(3, 6));
     Kokkos::deep_copy(constraint_residual_1, translation_0);
+    auto constraint_residual_2 = Kokkos::subview(constraint_residual, Kokkos::make_pair(3, 6));
     Kokkos::deep_copy(constraint_residual_2, rotated_position);
     KokkosBlas::axpy(-1., position_0, constraint_residual_2);
 }
@@ -551,13 +566,13 @@ void ConstraintsGradientMatrix(
     );
 
     auto hostB11 = Kokkos::create_mirror_view(B11);
-    hostB11(0, 0) = 1.0;
-    hostB11(1, 1) = 1.0;
-    hostB11(2, 2) = 1.0;
+    hostB11(0, 0) = 1.;
+    hostB11(1, 1) = 1.;
+    hostB11(2, 2) = 1.;
     Kokkos::deep_copy(B11, hostB11);
 
-    KokkosBlas::scal(B21, -1.0, rotation_matrix_0);
-    KokkosBlas::gemm("N", "N", -1.0, rotation_matrix_0, position_cross_prod_matrix, 0.0, B22);
+    KokkosBlas::scal(B21, -1., rotation_matrix_0);
+    KokkosBlas::gemm("N", "N", -1., rotation_matrix_0, position_cross_prod_matrix, 0., B22);
 }
 
 }  // namespace openturbine::gebt_poc

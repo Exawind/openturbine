@@ -52,9 +52,9 @@ private:
 
 /// Calculates the interpolated values for a nodal quantity (e.g. displacement or position vector)
 /// at a given quadrature point
-Kokkos::View<double*> Interpolate(
+void Interpolate(
     Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
-    double jacobian = 1.
+    const double jacobian, Kokkos::View<double*> interpolated_values
 );
 
 /// Calculates the curvature from generalized coordinates and their derivatives

@@ -57,8 +57,11 @@ TEST(SolverTest, CalculateInterpolatedValues) {
     auto quadrature_pt = 0.;
     auto shape_function = gen_alpha_solver::create_vector(LagrangePolynomial(1, quadrature_pt));
 
+    auto interpolated_values = Kokkos::View<double*>("interpolated_values", 7);
+    Interpolate(generalized_coords, shape_function, 1., interpolated_values);
+
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-        Interpolate(generalized_coords, shape_function), {1.5, 2.5, 3.5, 0., 0., 1., 3.}
+        interpolated_values, {1.5, 2.5, 3.5, 0., 0., 1., 3.}
     );
 }
 
