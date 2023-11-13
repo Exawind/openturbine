@@ -54,6 +54,23 @@ Kokkos::View<double*> CalculateCurvature(
     return curvature;
 }
 
+void CalculateSectionalStrain(
+    Kokkos::View<double*> pos_vector_derivatives_qp, Kokkos::View<double*> gen_coords_derivatives_qp,
+    Kokkos::View<double*> curvature, Kokkos::View<double*> sectional_strain
+) {
+    // Calculate the sectional strain based on Eq. (35) in the "SO(3)-based GEBT Beam" document
+    // in theory guide
+    auto sectional_strain_1 = Kokkos::subview(sectional_strain, Kokkos::make_pair(0, 3));
+    Kokkos::deep_copy(
+        sectional_strain_1, Kokkos::subview(pos_vector_derivatives_qp, Kokkos::make_pair(0, 3))
+    );
+    KokkosBlas::axpy(
+        1., Kokkos::subview(gen_coords_derivatives_qp, Kokkos::make_pair(0, 3)), sectional_strain_1
+    );
+    auto sectional_strain_2 = Kokkos::subview(sectional_strain, Kokkos::make_pair(3, 6));
+    Kokkos::deep_copy(sectional_strain_2, curvature);
+}
+
 void CalculateSectionalStiffness(
     const StiffnessMatrix& stiffness, Kokkos::View<double**> rotation_0,
     Kokkos::View<double**> rotation, Kokkos::View<double**> sectional_stiffness
@@ -184,17 +201,11 @@ Kokkos::View<double*> CalculateStaticResidual(
             // Calculate the curvature at the quadrature point
             auto curvature = CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp);
 
-            // Calculate the sectional strain at the quadrature point based on Eq. (35)
-            // in the "SO(3)-based GEBT Beam" document in theory guide
+            // Calculate the sectional strain at the quadrature point
             auto sectional_strain =
                 Kokkos::View<double*>("sectional_strain", kNumberOfLieGroupComponents);
-            Kokkos::parallel_for(
-                kNumberOfVectorComponents,
-                KOKKOS_LAMBDA(const size_t k) {
-                    sectional_strain(k) =
-                        pos_vector_derivatives_qp(k) + gen_coords_derivatives_qp(k);
-                    sectional_strain(k + kNumberOfVectorComponents) = curvature(k);
-                }
+            CalculateSectionalStrain(
+                pos_vector_derivatives_qp, gen_coords_derivatives_qp, curvature, sectional_strain
             );
 
             // Calculate the sectional stiffness matrix in inertial basis
@@ -409,21 +420,12 @@ void CalculateStaticIterationMatrix(
                 // Calculate the curvature at the quadrature point
                 auto curvature = CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp);
 
-                // Calculate the sectional strain at the quadrature point based on Eq. (35)
-                // in the "SO(3)-based GEBT Beam" document in theory guide
+                // Calculate the sectional strain at the quadrature point
                 auto sectional_strain =
                     Kokkos::View<double*>("sectional_strain", kNumberOfLieGroupComponents);
-                auto sectional_strain_1 = Kokkos::subview(sectional_strain, Kokkos::make_pair(0, 3));
-                Kokkos::deep_copy(
-                    sectional_strain_1,
-                    Kokkos::subview(pos_vector_derivatives_qp, Kokkos::make_pair(0, 3))
+                CalculateSectionalStrain(
+                    pos_vector_derivatives_qp, gen_coords_derivatives_qp, curvature, sectional_strain
                 );
-                KokkosBlas::axpy(
-                    1., Kokkos::subview(gen_coords_derivatives_qp, Kokkos::make_pair(0, 3)),
-                    sectional_strain_1
-                );
-                auto sectional_strain_2 = Kokkos::subview(sectional_strain, Kokkos::make_pair(3, 6));
-                Kokkos::deep_copy(sectional_strain_2, curvature);
 
                 // Calculate the sectional stiffness matrix in inertial basis
                 auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
