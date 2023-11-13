@@ -121,7 +121,8 @@ TEST(SolverTest, CalculateSectionalStiffness) {
         {6., 12., 18., 24., 30., 36.}   // row 6
     }));
 
-    auto sectional_stiffness = CalculateSectionalStiffness(stiffness, rotation_0, rotation);
+    auto sectional_stiffness = Kokkos::View<double**>("sectional_stiffness", 6, 6);
+    CalculateSectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         sectional_stiffness,
@@ -514,8 +515,10 @@ TEST(SolverTest, CalculateStaticIterationMatrixWithZeroValues) {
          0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
     );
 
-    auto iteration_matrix =
-        CalculateStaticIterationMatrix(position_vectors, generalized_coords, stiffness, quadrature);
+    auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", 30, 30);
+    CalculateStaticIterationMatrix(
+        position_vectors, generalized_coords, stiffness, quadrature, iteration_matrix
+    );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(iteration_matrix, zeros_30x30);
 }
@@ -628,8 +631,10 @@ TEST(SolverTest, CalculateStaticIterationMatrixWithNonZeroValues) {
         0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
     auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
-    auto iteration_matrix =
-        CalculateStaticIterationMatrix(position_vectors, generalized_coords, stiffness, quadrature);
+    auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", 30, 30);
+    CalculateStaticIterationMatrix(
+        position_vectors, generalized_coords, stiffness, quadrature, iteration_matrix
+    );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         iteration_matrix, expected_iteration_matrix

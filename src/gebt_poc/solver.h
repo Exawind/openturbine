@@ -64,9 +64,9 @@ Kokkos::View<double*> CalculateCurvature(
 
 /// Calculates the given sectional stiffness matrix in inertial basis based on the given
 /// rotation matrices
-Kokkos::View<double**> CalculateSectionalStiffness(
+void CalculateSectionalStiffness(
     const StiffnessMatrix& stiffness, Kokkos::View<double**> rotation_0,
-    Kokkos::View<double**> rotation
+    Kokkos::View<double**> rotation, Kokkos::View<double**> sectional_stiffness
 );
 
 /// Calculates the elastic forces based on the sectional strain, derivative of the position
@@ -91,9 +91,10 @@ void CalculateIterationMatrixComponents(
 );
 
 /// Calculates the static iteration matrix for a beam element
-Kokkos::View<double**> CalculateStaticIterationMatrix(
+void CalculateStaticIterationMatrix(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-    const StiffnessMatrix& stiffness, const Quadrature& quadrature
+    const StiffnessMatrix& stiffness, const Quadrature& quadrature,
+    Kokkos::View<double**> iteration_matrix
 );
 
 /// Calculates the constraint residual vector for a beam element

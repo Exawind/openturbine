@@ -54,34 +54,40 @@ Kokkos::View<double*> CalculateCurvature(
     return curvature;
 }
 
-Kokkos::View<double**> CalculateSectionalStiffness(
+void CalculateSectionalStiffness(
     const StiffnessMatrix& stiffness, Kokkos::View<double**> rotation_0,
-    Kokkos::View<double**> rotation
+    Kokkos::View<double**> rotation, Kokkos::View<double**> sectional_stiffness
 ) {
-    auto total_rotation = gen_alpha_solver::multiply_matrix_with_matrix(rotation, rotation_0);
+    auto total_rotation = Kokkos::View<double**>(
+        "total_rotation", kNumberOfVectorComponents, kNumberOfVectorComponents
+    );
+    KokkosBlas::gemm("N", "N", 1., rotation, rotation_0, 0., total_rotation);
 
-    // rotation_matrix_6x6 = [total_rotation [0]_3x3; [0]_3x3 total_rotation]
+    // rotation_matrix_6x6 = [
+    //    [total_rotation]          [0]_3x3
+    //        [0]_3x3           total_rotation
+    // ]
     auto rotation_matrix = Kokkos::View<double**>(
         "rotation_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
     );
-    Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {kNumberOfVectorComponents, kNumberOfVectorComponents}
-        ),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            rotation_matrix(i, j) = total_rotation(i, j);
-            rotation_matrix(i + 3, j + 3) = total_rotation(i, j);
-        }
-    );
+    Kokkos::deep_copy(rotation_matrix, 0.);
+    auto rotation_matrix_1 =
+        Kokkos::subview(rotation_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
+    Kokkos::deep_copy(rotation_matrix_1, total_rotation);
+    auto rotation_matrix_2 =
+        Kokkos::subview(rotation_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+    Kokkos::deep_copy(rotation_matrix_2, total_rotation);
 
-    auto sectional_stiffness = gen_alpha_solver::multiply_matrix_with_matrix(
-        gen_alpha_solver::multiply_matrix_with_matrix(
-            rotation_matrix, stiffness.GetStiffnessMatrix()
-        ),
-        gen_alpha_solver::transpose_matrix(rotation_matrix)
+    // Calculate the sectional stiffness matrix in inertial basis
+    Kokkos::deep_copy(sectional_stiffness, 0.);
+    auto stiffness_matrix_left_rot =
+        Kokkos::View<double**>("temp", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
+    KokkosBlas::gemm(
+        "N", "N", 1., rotation_matrix, stiffness.GetStiffnessMatrix(), 0., stiffness_matrix_left_rot
     );
-
-    return sectional_stiffness;
+    KokkosBlas::gemm(
+        "N", "T", 1., stiffness_matrix_left_rot, rotation_matrix, 0., sectional_stiffness
+    );
 }
 
 Kokkos::View<double*> CalculateElasticForces(
@@ -202,7 +208,10 @@ Kokkos::View<double*> CalculateStaticResidual(
                     {gen_coords_qp(3), gen_coords_qp(4), gen_coords_qp(5), gen_coords_qp(6)}
                 ));
 
-            auto sectional_stiffness = CalculateSectionalStiffness(stiffness, rotation_0, rotation);
+            auto sectional_stiffness = Kokkos::View<double**>(
+                "sectional_stiffness", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
+            );
+            CalculateSectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
 
             // Calculate elastic forces i.e. F^C and F^D vectors at the quadrature point
             auto elastic_forces = CalculateElasticForces(
@@ -360,9 +369,10 @@ void CalculateIterationMatrixComponents(
     CalculateQMatrix(N_tilde, C11, values, Q_matrix);
 }
 
-Kokkos::View<double**> CalculateStaticIterationMatrix(
+void CalculateStaticIterationMatrix(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-    const StiffnessMatrix& stiffness, const Quadrature& quadrature
+    const StiffnessMatrix& stiffness, const Quadrature& quadrature,
+    Kokkos::View<double**> iteration_matrix
 ) {
     const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
     const auto order = n_nodes - 1;
@@ -377,10 +387,6 @@ Kokkos::View<double**> CalculateStaticIterationMatrix(
         );
     }
 
-    auto iteration_matrix = Kokkos::View<double**>(
-        "static_iteration_matrix", n_nodes * kNumberOfLieGroupComponents,
-        n_nodes * kNumberOfLieGroupComponents
-    );
     Kokkos::deep_copy(iteration_matrix, 0.);
     for (size_t i = 0; i < n_nodes; ++i) {
         for (size_t j = 0; j < n_nodes; ++j) {
@@ -417,18 +423,17 @@ Kokkos::View<double**> CalculateStaticIterationMatrix(
                 );
 
                 // Calculate the sectional stiffness matrix in inertial basis
-                auto rotation_0 =
-                    gen_alpha_solver::EulerParameterToRotationMatrix(gen_alpha_solver::create_vector(
-                        {position_vector_qp(3), position_vector_qp(4), position_vector_qp(5),
-                         position_vector_qp(6)}
-                    ));
-                auto rotation =
-                    gen_alpha_solver::EulerParameterToRotationMatrix(gen_alpha_solver::create_vector(
-                        {gen_coords_qp(3), gen_coords_qp(4), gen_coords_qp(5), gen_coords_qp(6)}
-                    ));
+                auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
+                    Kokkos::subview(position_vector_qp, Kokkos::make_pair(3, 7))
+                );
+                auto rotation = gen_alpha_solver::EulerParameterToRotationMatrix(
+                    Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
+                );
 
-                auto sectional_stiffness =
-                    CalculateSectionalStiffness(stiffness, rotation_0, rotation);
+                auto sectional_stiffness = Kokkos::View<double**>(
+                    "sectional_stiffness", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
+                );
+                CalculateSectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
 
                 // Calculate elastic forces i.e. F^C and F^D vectors at the quadrature point
                 auto elastic_forces = CalculateElasticForces(
@@ -450,26 +455,14 @@ Kokkos::View<double**> CalculateStaticIterationMatrix(
                     elastic_force_fc, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
                     sectional_stiffness, iteration_matrix_components
                 );
-                auto O_matrix = Kokkos::View<double**>(
-                    "O_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
+                auto O_matrix = Kokkos::subview(
+                    iteration_matrix_components, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)
                 );
-                auto P_matrix = Kokkos::View<double**>(
-                    "P_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
+                auto P_matrix = Kokkos::subview(
+                    iteration_matrix_components, Kokkos::make_pair(6, 12), Kokkos::make_pair(0, 6)
                 );
-                auto Q_matrix = Kokkos::View<double**>(
-                    "Q_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
-                );
-                Kokkos::parallel_for(
-                    Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-                        {0, 0}, {kNumberOfLieGroupComponents, kNumberOfLieGroupComponents}
-                    ),
-                    KOKKOS_LAMBDA(const size_t i, const size_t j) {
-                        O_matrix(i, j) = iteration_matrix_components(i, j);
-                        P_matrix(i, j) =
-                            iteration_matrix_components(i + kNumberOfLieGroupComponents, j);
-                        Q_matrix(i, j) =
-                            iteration_matrix_components(i + 2 * kNumberOfLieGroupComponents, j);
-                    }
+                auto Q_matrix = Kokkos::subview(
+                    iteration_matrix_components, Kokkos::make_pair(12, 18), Kokkos::make_pair(0, 6)
                 );
 
                 // Calculate the iteration matrix at the quadrature point
@@ -493,8 +486,6 @@ Kokkos::View<double**> CalculateStaticIterationMatrix(
             }
         }
     }
-
-    return iteration_matrix;
 }
 
 void ConstraintsResidualVector(
