@@ -413,14 +413,17 @@ void CalculateStaticIterationMatrix(
                 // in the "SO(3)-based GEBT Beam" document in theory guide
                 auto sectional_strain =
                     Kokkos::View<double*>("sectional_strain", kNumberOfLieGroupComponents);
-                Kokkos::parallel_for(
-                    kNumberOfVectorComponents,
-                    KOKKOS_LAMBDA(const size_t k) {
-                        sectional_strain(k) =
-                            pos_vector_derivatives_qp(k) + gen_coords_derivatives_qp(k);
-                        sectional_strain(k + kNumberOfVectorComponents) = curvature(k);
-                    }
+                auto sectional_strain_1 = Kokkos::subview(sectional_strain, Kokkos::make_pair(0, 3));
+                Kokkos::deep_copy(
+                    sectional_strain_1,
+                    Kokkos::subview(pos_vector_derivatives_qp, Kokkos::make_pair(0, 3))
                 );
+                KokkosBlas::axpy(
+                    1., Kokkos::subview(gen_coords_derivatives_qp, Kokkos::make_pair(0, 3)),
+                    sectional_strain_1
+                );
+                auto sectional_strain_2 = Kokkos::subview(sectional_strain, Kokkos::make_pair(3, 6));
+                Kokkos::deep_copy(sectional_strain_2, curvature);
 
                 // Calculate the sectional stiffness matrix in inertial basis
                 auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
@@ -429,7 +432,6 @@ void CalculateStaticIterationMatrix(
                 auto rotation = gen_alpha_solver::EulerParameterToRotationMatrix(
                     Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
                 );
-
                 auto sectional_stiffness = Kokkos::View<double**>(
                     "sectional_stiffness", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
                 );
@@ -440,29 +442,24 @@ void CalculateStaticIterationMatrix(
                     sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
                     sectional_stiffness
                 );
-                auto elastic_force_fc =
-                    Kokkos::View<double*>("elastic_force_fc", kNumberOfLieGroupComponents);
-                Kokkos::parallel_for(
-                    kNumberOfLieGroupComponents,
-                    KOKKOS_LAMBDA(const size_t k) { elastic_force_fc(k) = elastic_forces(k); }
-                );
+                auto elastic_force_fc = Kokkos::subview(elastic_forces, Kokkos::make_pair(0, 3));
 
                 // Calculate the iteration matrix components at the quadrature point
-                auto iteration_matrix_components = Kokkos::View<double**>(
+                auto O_P_Q_matrices = Kokkos::View<double**>(
                     "O_P_Q_matrices", 3 * kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
                 );
                 CalculateIterationMatrixComponents(
                     elastic_force_fc, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
-                    sectional_stiffness, iteration_matrix_components
+                    sectional_stiffness, O_P_Q_matrices
                 );
                 auto O_matrix = Kokkos::subview(
-                    iteration_matrix_components, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)
+                    O_P_Q_matrices, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)
                 );
                 auto P_matrix = Kokkos::subview(
-                    iteration_matrix_components, Kokkos::make_pair(6, 12), Kokkos::make_pair(0, 6)
+                    O_P_Q_matrices, Kokkos::make_pair(6, 12), Kokkos::make_pair(0, 6)
                 );
                 auto Q_matrix = Kokkos::subview(
-                    iteration_matrix_components, Kokkos::make_pair(12, 18), Kokkos::make_pair(0, 6)
+                    O_P_Q_matrices, Kokkos::make_pair(12, 18), Kokkos::make_pair(0, 6)
                 );
 
                 // Calculate the iteration matrix at the quadrature point
