@@ -407,8 +407,10 @@ TEST(SolverTest, CalculateIterationMatrixComponents) {
           24.054825962838, 43.50305858028866}}
     );
 
-    auto O_P_Q_matrices = CalculateIterationMatrixComponents(
-        elastic_force_fc, position_vector_derivatives, gen_coords_derivatives, stiffness
+    auto O_P_Q_matrices = Kokkos::View<double**>("O_P_Q_matrices", 18, 6);
+    CalculateIterationMatrixComponents(
+        elastic_force_fc, position_vector_derivatives, gen_coords_derivatives, stiffness,
+        O_P_Q_matrices
     );
     auto o_matrix = Kokkos::View<double**>("o_matrix", 6, 6);
     auto populate_o_matrix = KOKKOS_LAMBDA(size_t i) {

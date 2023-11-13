@@ -317,90 +317,47 @@ void CalculateQMatrix(
     KokkosBlas::gemm("T", "N", 1., values, val, 0., non_zero_term);
 }
 
-Kokkos::View<double**> CalculateIterationMatrixComponents(
+void CalculateIterationMatrixComponents(
     const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
-    const Kokkos::View<double**> sectional_stiffness
+    const Kokkos::View<double**> sectional_stiffness, Kokkos::View<double**> O_P_Q_matrices
 ) {
-    // N consists of first three components of the fc vector
-    auto N = Kokkos::View<double*>("N", kNumberOfVectorComponents);
-    Kokkos::parallel_for(
-        kNumberOfVectorComponents, KOKKOS_LAMBDA(const size_t i) { N(i) = elastic_force_fc(i); }
+    auto x0_prime_tilde = gen_alpha_solver::create_cross_product_matrix(
+        Kokkos::subview(pos_vector_derivatives, Kokkos::make_pair(0, 3))
+    );
+    auto u_prime_tilde = gen_alpha_solver::create_cross_product_matrix(
+        Kokkos::subview(gen_coords_derivatives, Kokkos::make_pair(0, 3))
     );
 
-    // M consists of last three components of the fc vector
-    auto M = Kokkos::View<double*>("M", kNumberOfVectorComponents);
-    Kokkos::parallel_for(
-        kNumberOfVectorComponents,
-        KOKKOS_LAMBDA(const size_t i) { M(i) = elastic_force_fc(i + kNumberOfVectorComponents); }
-    );
+    auto values =
+        Kokkos::View<double**>("values", kNumberOfVectorComponents, kNumberOfVectorComponents);
+    Kokkos::deep_copy(values, x0_prime_tilde);
+    KokkosBlas::axpy(1., u_prime_tilde, values);
 
-    // C11 consists of the (0, 0) -> (2, 2) components of the sectional stiffness matrix
-    auto C11 = Kokkos::View<double**>("C11", 3, 3);
-    Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {3, 3}),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) { C11(i, j) = sectional_stiffness(i, j); }
-    );
-
-    // C12 consists of the (0, 3) -> (2, 5) components of the sectional stiffness matrix
-    auto C12 = Kokkos::View<double**>("C12", 3, 3);
-    Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {3, 3}),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            C12(i, j) = sectional_stiffness(i, j + kNumberOfVectorComponents);
-        }
-    );
-
-    // C21 consists of the (3, 0) -> (5, 2) components of the sectional stiffness matrix
-    auto C21 = Kokkos::View<double**>("C21", 3, 3);
-    Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {3, 3}),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            C21(i, j) = sectional_stiffness(i + kNumberOfVectorComponents, j);
-        }
-    );
-
-    // Calculate the two non-zero submatrices
-    auto x0_prime_tilde =
-        gen_alpha_solver::create_cross_product_matrix(gen_alpha_solver::create_vector(
-            {pos_vector_derivatives(0), pos_vector_derivatives(1), pos_vector_derivatives(2)}
-        ));
-    auto u_prime_tilde =
-        gen_alpha_solver::create_cross_product_matrix(gen_alpha_solver::create_vector(
-            {gen_coords_derivatives(0), gen_coords_derivatives(1), gen_coords_derivatives(2)}
-        ));
-    auto values = gen_alpha_solver::add_matrix_with_matrix(x0_prime_tilde, u_prime_tilde);
-
+    auto N = Kokkos::subview(elastic_force_fc, Kokkos::make_pair(0, 3));
     auto N_tilde = gen_alpha_solver::create_cross_product_matrix(N);
+    auto M = Kokkos::subview(elastic_force_fc, Kokkos::make_pair(3, 6));
     auto M_tilde = gen_alpha_solver::create_cross_product_matrix(M);
 
+    auto C11 =
+        Kokkos::subview(sectional_stiffness, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
+    auto C12 =
+        Kokkos::subview(sectional_stiffness, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
+    auto C21 =
+        Kokkos::subview(sectional_stiffness, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
+
+    // Calculate the O, P, and Q matrices
     auto O_matrix =
-        Kokkos::View<double**>("O_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
+        Kokkos::subview(O_P_Q_matrices, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6));
     CalculateOMatrix(N_tilde, M_tilde, C11, C21, values, O_matrix);
 
     auto P_matrix =
-        Kokkos::View<double**>("P_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
+        Kokkos::subview(O_P_Q_matrices, Kokkos::make_pair(6, 12), Kokkos::make_pair(0, 6));
     CalculatePMatrix(N_tilde, C11, C12, values, P_matrix);
 
     auto Q_matrix =
-        Kokkos::View<double**>("Q_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
+        Kokkos::subview(O_P_Q_matrices, Kokkos::make_pair(12, 18), Kokkos::make_pair(0, 6));
     CalculateQMatrix(N_tilde, C11, values, Q_matrix);
-
-    // Pack the O, P, and Q matrices into a single view
-    auto O_P_Q_matrices = Kokkos::View<double**>(
-        "O_P_Q_matrices", kNumberOfLieGroupComponents * 3, kNumberOfLieGroupComponents
-    );
-    Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {kNumberOfLieGroupComponents, kNumberOfLieGroupComponents}
-        ),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            O_P_Q_matrices(i, j) = O_matrix(i, j);
-            O_P_Q_matrices(i + kNumberOfLieGroupComponents, j) = P_matrix(i, j);
-            O_P_Q_matrices(i + 2 * kNumberOfLieGroupComponents, j) = Q_matrix(i, j);
-        }
-    );
-    return O_P_Q_matrices;
 }
 
 Kokkos::View<double**> CalculateStaticIterationMatrix(
@@ -486,9 +443,12 @@ Kokkos::View<double**> CalculateStaticIterationMatrix(
                 );
 
                 // Calculate the iteration matrix components at the quadrature point
-                auto iteration_matrix_components = CalculateIterationMatrixComponents(
+                auto iteration_matrix_components = Kokkos::View<double**>(
+                    "O_P_Q_matrices", 3 * kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
+                );
+                CalculateIterationMatrixComponents(
                     elastic_force_fc, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
-                    sectional_stiffness
+                    sectional_stiffness, iteration_matrix_components
                 );
                 auto O_matrix = Kokkos::View<double**>(
                     "O_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents

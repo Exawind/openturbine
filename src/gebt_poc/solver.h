@@ -84,10 +84,10 @@ Kokkos::View<double*> CalculateStaticResidual(
     const StiffnessMatrix& stiffness, const Quadrature& quadrature
 );
 
-Kokkos::View<double**> CalculateIterationMatrixComponents(
+void CalculateIterationMatrixComponents(
     const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
-    const Kokkos::View<double**> sectional_stiffness
+    const Kokkos::View<double**> sectional_stiffness, Kokkos::View<double**> O_P_Q_matrices
 );
 
 /// Calculates the static iteration matrix for a beam element
