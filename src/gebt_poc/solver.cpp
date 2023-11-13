@@ -35,23 +35,16 @@ Kokkos::View<double*> Interpolate(
     return interpolated_values;
 }
 
-Kokkos::View<double*> CalculateCurvature(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> gen_coords_derivative
+void CalculateCurvature(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> gen_coords_derivative,
+    Kokkos::View<double*> curvature
 ) {
-    auto q =
-        gen_alpha_solver::Quaternion(gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6));
-    auto b_matrix = gen_alpha_solver::BMatrixForQuaternions(q);
-
-    auto q_prime = gen_alpha_solver::create_vector(
-        {gen_coords_derivative(3), gen_coords_derivative(4), gen_coords_derivative(5),
-         gen_coords_derivative(6)}
+    // curvature = B * q_prime
+    auto b_matrix = gen_alpha_solver::BMatrixForQuaternions(
+        gen_alpha_solver::Quaternion(gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6))
     );
-
-    auto curvature = gen_alpha_solver::multiply_vector_with_scalar(
-        gen_alpha_solver::multiply_matrix_with_vector(b_matrix, q_prime), 2.
-    );
-
-    return curvature;
+    auto q_prime = Kokkos::subview(gen_coords_derivative, Kokkos::make_pair(3, 7));
+    KokkosBlas::gemv("N", 2., b_matrix, q_prime, 0., curvature);
 }
 
 void CalculateSectionalStrain(
@@ -199,7 +192,8 @@ Kokkos::View<double*> CalculateStaticResidual(
                 Interpolate(position_vectors, shape_function_derivative, jacobian);
 
             // Calculate the curvature at the quadrature point
-            auto curvature = CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp);
+            auto curvature = Kokkos::View<double*>("curvature", kNumberOfVectorComponents);
+            CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp, curvature);
 
             // Calculate the sectional strain at the quadrature point
             auto sectional_strain =
@@ -418,7 +412,8 @@ void CalculateStaticIterationMatrix(
                     Interpolate(position_vectors, shape_function_derivative, jacobian);
 
                 // Calculate the curvature at the quadrature point
-                auto curvature = CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp);
+                auto curvature = Kokkos::View<double*>("curvature", kNumberOfVectorComponents);
+                CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp, curvature);
 
                 // Calculate the sectional strain at the quadrature point
                 auto sectional_strain =

@@ -58,8 +58,9 @@ Kokkos::View<double*> Interpolate(
 );
 
 /// Calculates the curvature from generalized coordinates and their derivatives
-Kokkos::View<double*> CalculateCurvature(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> gen_coords_derivative
+void CalculateCurvature(
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> gen_coords_derivative,
+    const Kokkos::View<double*> curvature
 );
 
 /// Calculates the given sectional stiffness matrix in inertial basis based on the given
