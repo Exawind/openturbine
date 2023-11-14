@@ -80,9 +80,9 @@ void CalculateElasticForces(
 );
 
 /// Calculates the static residual vector for a beam element
-Kokkos::View<double*> CalculateStaticResidual(
+void CalculateStaticResidual(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-    const StiffnessMatrix& stiffness, const Quadrature& quadrature
+    const StiffnessMatrix& stiffness, const Quadrature& quadrature, Kokkos::View<double*> residual
 );
 
 void CalculateIterationMatrixComponents(

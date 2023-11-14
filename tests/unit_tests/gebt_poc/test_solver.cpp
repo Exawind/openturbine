@@ -239,8 +239,8 @@ TEST(SolverTest, CalculateStaticResidualWithZeroValues) {
          0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
     );
 
-    auto residual =
-        CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature);
+    auto residual = Kokkos::View<double*>("residual", 30);
+    CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature, residual);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         residual,
@@ -358,8 +358,8 @@ TEST(SolverTest, CalculateStaticResidualWithNonZeroValues) {
         0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
     auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
-    auto residual =
-        CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature);
+    auto residual = Kokkos::View<double*>("residual", 30);
+    CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature, residual);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(residual, expected_residual);
 }

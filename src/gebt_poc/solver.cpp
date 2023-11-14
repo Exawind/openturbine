@@ -149,9 +149,9 @@ void CalculateElasticForces(
     Kokkos::deep_copy(elastic_forces_2, elastic_force_fd);
 }
 
-Kokkos::View<double*> CalculateStaticResidual(
+void CalculateStaticResidual(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-    const StiffnessMatrix& stiffness, const Quadrature& quadrature
+    const StiffnessMatrix& stiffness, const Quadrature& quadrature, Kokkos::View<double*> residual
 ) {
     const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
     const auto order = n_nodes - 1;
@@ -166,7 +166,21 @@ Kokkos::View<double*> CalculateStaticResidual(
         );
     }
 
-    auto residual = Kokkos::View<double*>("static_residual", n_nodes * kNumberOfLieGroupComponents);
+    // Allocate Views for some required intermediate variables
+    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_qp");
+    auto gen_coords_derivatives_qp =
+        Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_derivatives_qp");
+    auto position_vector_qp =
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("position_vector_qp");
+    auto pos_vector_derivatives_qp =
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("pos_vector_derivatives_qp");
+    auto curvature = Kokkos::View<double[kNumberOfVectorComponents]>("curvature");
+    auto sectional_strain = Kokkos::View<double[kNumberOfLieGroupComponents]>("sectional_strain");
+    auto sectional_stiffness =
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+            "sectional_stiffness"
+        );
+
     Kokkos::deep_copy(residual, 0.);
     for (size_t i = 0; i < n_nodes; ++i) {
         const auto node_count = i;
@@ -178,65 +192,37 @@ Kokkos::View<double*> CalculateStaticResidual(
                 gen_alpha_solver::create_vector(LagrangePolynomialDerivative(order, q_pt));
 
             auto jacobian = CalculateJacobian(nodes, LagrangePolynomialDerivative(order, q_pt));
-            auto gen_coords_qp = Kokkos::View<double*>("gen_coords_qp", kNumberOfLieGroupComponents);
             Interpolate(gen_coords, shape_function, 1., gen_coords_qp);
-            auto gen_coords_derivatives_qp =
-                Kokkos::View<double*>("gen_coords_derivatives_qp", kNumberOfLieGroupComponents);
             Interpolate(gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp);
-            auto position_vector_qp =
-                Kokkos::View<double*>("position_vector_qp", kNumberOfLieAlgebraComponents);
             Interpolate(position_vectors, shape_function, 1., position_vector_qp);
-            auto pos_vector_derivatives_qp =
-                Kokkos::View<double*>("pos_vector_derivatives_qp", kNumberOfLieAlgebraComponents);
             Interpolate(
                 position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
             );
 
-            // Calculate the curvature at the quadrature point
-            auto curvature = Kokkos::View<double*>("curvature", kNumberOfVectorComponents);
+            // Calculate the curvature and sectional strain
             CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp, curvature);
-
-            // Calculate the sectional strain at the quadrature point
-            auto sectional_strain =
-                Kokkos::View<double*>("sectional_strain", kNumberOfLieGroupComponents);
             CalculateSectionalStrain(
                 pos_vector_derivatives_qp, gen_coords_derivatives_qp, curvature, sectional_strain
             );
 
             // Calculate the sectional stiffness matrix in inertial basis
-            auto rotation_0 =
-                gen_alpha_solver::EulerParameterToRotationMatrix(gen_alpha_solver::create_vector(
-                    {position_vector_qp(3), position_vector_qp(4), position_vector_qp(5),
-                     position_vector_qp(6)}
-                ));
-            auto rotation =
-                gen_alpha_solver::EulerParameterToRotationMatrix(gen_alpha_solver::create_vector(
-                    {gen_coords_qp(3), gen_coords_qp(4), gen_coords_qp(5), gen_coords_qp(6)}
-                ));
-
-            auto sectional_stiffness = Kokkos::View<double**>(
-                "sectional_stiffness", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
+            auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
+                Kokkos::subview(position_vector_qp, Kokkos::make_pair(3, 7))
+            );
+            auto rotation = gen_alpha_solver::EulerParameterToRotationMatrix(
+                Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
             );
             CalculateSectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
 
-            // Calculate elastic forces i.e. F^C and F^D vectors at the quadrature point
+            // Calculate elastic forces i.e. F^C and F^D vectors
             auto elastic_forces =
                 Kokkos::View<double*>("elastic_forces", 2 * kNumberOfLieGroupComponents);
             CalculateElasticForces(
                 sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
                 sectional_stiffness, elastic_forces
             );
-            auto elastic_force_fc =
-                Kokkos::View<double*>("elastic_force_fc", kNumberOfLieGroupComponents);
-            auto elastic_force_fd =
-                Kokkos::View<double*>("elastic_force_fd", kNumberOfLieGroupComponents);
-            Kokkos::parallel_for(
-                kNumberOfLieGroupComponents,
-                KOKKOS_LAMBDA(const size_t k) {
-                    elastic_force_fc(k) = elastic_forces(k);
-                    elastic_force_fd(k) = elastic_forces(k + kNumberOfLieGroupComponents);
-                }
-            );
+            auto elastic_force_fc = Kokkos::subview(elastic_forces, Kokkos::make_pair(0, 6));
+            auto elastic_force_fd = Kokkos::subview(elastic_forces, Kokkos::make_pair(6, 12));
 
             // Calculate the residual at the quadrature point
             const auto q_weight = quadrature.GetQuadratureWeights()[j];
@@ -250,7 +236,6 @@ Kokkos::View<double*> CalculateStaticResidual(
             );
         }
     }
-    return residual;
 }
 
 void CalculateOMatrix(
