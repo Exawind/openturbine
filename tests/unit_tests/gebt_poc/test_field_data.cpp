@@ -60,6 +60,35 @@ TEST(FieldDataTest, CreateNodalDataAndAccess) {
     readNodalData<Field::DeltaCoordinates>(mesh, field_data, 7.);
 }
 
+struct SetElementWeights {
+  openturbine::gebt_poc::FieldData field_data;
+
+  KOKKOS_FUNCTION
+  void operator()(int element) {
+    auto weights = field_data.GetElementData<openturbine::gebt_poc::Field::Weight>(element);
+    weights(0) = element * 4.;
+    weights(1) = element * 4. + 1.;
+    weights(2) = element * 4. + 2.;
+    weights(3) = element * 4. + 3.;
+  }
+};
+
+struct SetStiffnessMatrix {
+  openturbine::gebt_poc::FieldData field_data;
+
+  KOKKOS_FUNCTION
+  void operator()(int element) {
+    auto stiffness = field_data.GetElementData<openturbine::gebt_poc::Field::StiffnessMatrix>(element);
+    for (int point = 0; point < stiffness.extent(0); ++point) {
+      for (int row = 0; row < 6; ++row) {
+        for (int column = 0; column < 6; ++column) {
+          stiffness(point, row, column) = point * row * column;
+        }
+      }
+    }
+  }
+};
+
 TEST(FieldDataTest, CreateElementDataAndAccess) {
     int number_of_elements = 2;
     int nodes_per_element = 3;
@@ -68,16 +97,7 @@ TEST(FieldDataTest, CreateElementDataAndAccess) {
     auto field_data = openturbine::gebt_poc::FieldData(mesh, quadrature_points_per_element);
     using openturbine::gebt_poc::Field;
 
-    Kokkos::parallel_for(
-        mesh.GetNumberOfElements(),
-        KOKKOS_LAMBDA(int element) {
-            auto weights = field_data.GetElementData<Field::Weight>(element);
-            weights(0) = element * 4.;
-            weights(1) = element * 4. + 1.;
-            weights(2) = element * 4. + 2.;
-            weights(3) = element * 4. + 3.;
-        }
-    );
+    Kokkos::parallel_for(mesh.GetNumberOfElements(), SetElementWeights{field_data});
 
     for (int element = 0; element < number_of_elements; ++element) {
         auto weights = field_data.ReadElementData<Field::Weight>(element);
@@ -90,19 +110,7 @@ TEST(FieldDataTest, CreateElementDataAndAccess) {
         EXPECT_EQ(host_weights(3), element * 4. + 3.);
     }
 
-    Kokkos::parallel_for(
-        mesh.GetNumberOfElements(),
-        KOKKOS_LAMBDA(int element) {
-            auto stiffness = field_data.GetElementData<Field::StiffnessMatrix>(element);
-            for (int point = 0; point < quadrature_points_per_element; ++point) {
-                for (int row = 0; row < 6; ++row) {
-                    for (int column = 0; column < 6; ++column) {
-                        stiffness(point, row, column) = point * row * column;
-                    }
-                }
-            }
-        }
-    );
+    Kokkos::parallel_for(mesh.GetNumberOfElements(), SetStiffnessMatrix{field_data});
 
     for (int element = 0; element < number_of_elements; ++element) {
         auto stiffness = field_data.ReadElementData<Field::StiffnessMatrix>(element);
