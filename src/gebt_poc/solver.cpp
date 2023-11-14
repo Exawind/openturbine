@@ -22,6 +22,7 @@ void Interpolate(
     const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
     Kokkos::deep_copy(interpolated_values, 0.);
     for (std::size_t i = 0; i < kNumberOfLieAlgebraComponents; ++i) {
+        // TODO How to remove this parallel_reduce?
         Kokkos::parallel_reduce(
             n_nodes,
             KOKKOS_LAMBDA(const size_t j, double& value) {
@@ -268,9 +269,10 @@ void CalculateOMatrix(
     KokkosBlas::axpy(-1., N_tilde, non_zero_terms_part_1);
 
     // non_zero_terms_part_2 = -M_tilde + [C21] * (x_0_prime_tilde  + u_prime_tilde)
-    auto non_zero_terms_part_2 = Kokkos::View<double**>(
-        "non_zero_terms_part_2", kNumberOfVectorComponents, kNumberOfVectorComponents
-    );
+    auto non_zero_terms_part_2 =
+        Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]>(
+            "non_zero_terms_part_2"
+        );
     KokkosBlas::gemm("N", "N", 1., C21, values, 0., non_zero_terms_part_2);
     KokkosBlas::axpy(-1., M_tilde, non_zero_terms_part_2);
 
@@ -292,16 +294,18 @@ void CalculatePMatrix(
     Kokkos::View<double**> P_matrix
 ) {
     // non_zero_terms_part_3 = (x_0_prime_tilde + u_prime_tilde)^T * [C11]
-    auto non_zero_terms_part_3 = Kokkos::View<double**>(
-        "non_zero_terms_part_3", kNumberOfVectorComponents, kNumberOfVectorComponents
-    );
+    auto non_zero_terms_part_3 =
+        Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]>(
+            "non_zero_terms_part_3"
+        );
     KokkosBlas::gemm("T", "N", 1., values, C11, 0., non_zero_terms_part_3);
     KokkosBlas::axpy(1., N_tilde, non_zero_terms_part_3);
 
     // non_zero_terms_part_4 = (x_0_prime_tilde  + u_prime_tilde)^T * [C12]
-    auto non_zero_terms_part_4 = Kokkos::View<double**>(
-        "non_zero_terms_part_4", kNumberOfVectorComponents, kNumberOfVectorComponents
-    );
+    auto non_zero_terms_part_4 =
+        Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]>(
+            "non_zero_terms_part_4"
+        );
     KokkosBlas::gemm("T", "N", 1., values, C12, 0., non_zero_terms_part_4);
 
     // Assemble the P matrix
@@ -327,7 +331,7 @@ void CalculateQMatrix(
     //     [0]_3x3      (x_0_prime_tilde + u_prime_tilde)^T * (-N_tilde + [C11] * (x_0_prime_tilde  +
     //     u_prime_tilde))
     // ]
-    auto val = Kokkos::View<double**>("val", kNumberOfVectorComponents, kNumberOfVectorComponents);
+    auto val = Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]>("val");
     KokkosBlas::gemm("N", "N", 1., C11, values, 0., val);
     KokkosBlas::axpy(-1., N_tilde, val);
 
@@ -349,7 +353,7 @@ void CalculateIterationMatrixComponents(
     );
 
     auto values =
-        Kokkos::View<double**>("values", kNumberOfVectorComponents, kNumberOfVectorComponents);
+        Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]>("values");
     Kokkos::deep_copy(values, x0_prime_tilde);
     KokkosBlas::axpy(1., u_prime_tilde, values);
 
@@ -397,6 +401,14 @@ void CalculateStaticIterationMatrix(
         );
     }
 
+    // Allocate Views for some required intermediate variables
+    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_qp");
+    auto gen_coords_derivatives_qp =
+        Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_derivatives_qp");
+    auto position_vector_qp =
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("position_vector_qp");
+    auto pos_vector_derivatives_qp =
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("pos_vector_derivatives_qp");
     auto curvature = Kokkos::View<double[kNumberOfVectorComponents]>("curvature");
     auto sectional_strain = Kokkos::View<double[kNumberOfLieGroupComponents]>("sectional_strain");
     auto sectional_stiffness =
@@ -420,20 +432,11 @@ void CalculateStaticIterationMatrix(
                     gen_alpha_solver::create_vector(LagrangePolynomialDerivative(order, q_pt));
 
                 auto jacobian = CalculateJacobian(nodes, LagrangePolynomialDerivative(order, q_pt));
-                auto gen_coords_qp =
-                    Kokkos::View<double*>("gen_coords_qp", kNumberOfLieGroupComponents);
                 Interpolate(gen_coords, shape_function, 1., gen_coords_qp);
-                auto gen_coords_derivatives_qp =
-                    Kokkos::View<double*>("gen_coords_derivatives_qp", kNumberOfLieGroupComponents);
                 Interpolate(
                     gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
                 );
-                auto position_vector_qp =
-                    Kokkos::View<double*>("position_vector_qp", kNumberOfLieAlgebraComponents);
                 Interpolate(position_vectors, shape_function, 1., position_vector_qp);
-                auto pos_vector_derivatives_qp = Kokkos::View<double*>(
-                    "pos_vector_derivatives_qp", kNumberOfLieAlgebraComponents
-                );
                 Interpolate(
                     position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
                 );
@@ -507,12 +510,12 @@ void ConstraintsResidualVector(
     auto position_0 = Kokkos::subview(position_vector, Kokkos::make_pair(0, 3));
 
     // position = position_0 + translation_0
-    auto position = Kokkos::View<double*>("position", kNumberOfVectorComponents);
+    auto position = Kokkos::View<double[kNumberOfVectorComponents]>("position");
     Kokkos::deep_copy(position, position_0);
     KokkosBlas::axpy(1., translation_0, position);
 
     // rotated_position = rotation_matrix_0 * position
-    auto rotated_position = Kokkos::View<double*>("rotated_position", kNumberOfVectorComponents);
+    auto rotated_position = Kokkos::View<double[kNumberOfVectorComponents]>("rotated_position");
     KokkosBlas::gemv("N", 1., rotation_matrix_0, position, 0., rotated_position);
 
     // Assemble the constraint residual vector
@@ -540,7 +543,10 @@ void ConstraintsGradientMatrix(
     auto position_0_cross_prod_matrix = gen_alpha_solver::create_cross_product_matrix(position_0);
     auto translation_0_cross_prod_matrix =
         gen_alpha_solver::create_cross_product_matrix(translation_0);
-    auto position_cross_prod_matrix = Kokkos::View<double**>("position_cross_prod_matrix", 3, 3);
+    auto position_cross_prod_matrix =
+        Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]>(
+            "position_cross_prod_matrix"
+        );
     Kokkos::deep_copy(position_cross_prod_matrix, position_0_cross_prod_matrix);
     KokkosBlas::axpy(1., translation_0_cross_prod_matrix, position_cross_prod_matrix);
 
