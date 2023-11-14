@@ -36,9 +36,11 @@ Kokkos::View<double*> Interpolate(
 Kokkos::View<double*> CalculateCurvature(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> gen_coords_derivative
 ) {
-    auto q =
-        gen_alpha_solver::Quaternion(gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6));
-    auto b_matrix = gen_alpha_solver::BMatrixForQuaternions(q);
+    auto b_matrix = Kokkos::View<double[3][4]>("b_matrix");
+    Kokkos::parallel_for(1, KOKKOS_LAMBDA(std::size_t) {
+      auto q = gen_alpha_solver::Quaternion(gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6));
+      gen_alpha_solver::BMatrixForQuaternions<Kokkos::DefaultExecutionSpace>(q, b_matrix);
+    });
 
     auto q_prime = gen_alpha_solver::create_vector(
         {gen_coords_derivative(3), gen_coords_derivative(4), gen_coords_derivative(5),

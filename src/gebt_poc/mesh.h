@@ -14,23 +14,6 @@ public:
         return Kokkos::subview(connectivity_, element_id, Kokkos::ALL);
     }
 
-    friend Mesh Create1DMesh(int number_of_elements, int nodes_per_element);
-
-protected:
-    Mesh() = default;
-    void SetNumberOfElements(int number_of_elements) { number_of_elements_ = number_of_elements; }
-    void SetNumberOfNodes(int number_of_nodes) { number_of_nodes_ = number_of_nodes; }
-
-    void InitializeElementNodeConnectivity(int number_of_elements, int nodes_per_element) {
-        connectivity_ = Kokkos::View<int**>("connectivity", number_of_elements, nodes_per_element);
-    }
-
-    void CheckElementConsistency() {
-        if (static_cast<std::size_t>(number_of_elements_) != connectivity_.extent(0)) {
-            throw std::domain_error("Connectivity does not contain expected number of elements");
-        }
-    }
-
     void CheckNodeIDConsistency() {
         auto range_policy = Kokkos::MDRangePolicy<Kokkos::Rank<2>>(
             {0, 0}, {connectivity_.extent(0), connectivity_.extent(1)}
@@ -48,6 +31,23 @@ protected:
 
         if (max_node_id >= number_of_nodes_) {
             throw std::domain_error("Connectivity references node ID above the expected range");
+        }
+    }
+
+    friend Mesh Create1DMesh(int number_of_elements, int nodes_per_element);
+
+protected:
+    Mesh() = default;
+    void SetNumberOfElements(int number_of_elements) { number_of_elements_ = number_of_elements; }
+    void SetNumberOfNodes(int number_of_nodes) { number_of_nodes_ = number_of_nodes; }
+
+    void InitializeElementNodeConnectivity(int number_of_elements, int nodes_per_element) {
+        connectivity_ = Kokkos::View<int**>("connectivity", number_of_elements, nodes_per_element);
+    }
+
+    void CheckElementConsistency() {
+        if (static_cast<std::size_t>(number_of_elements_) != connectivity_.extent(0)) {
+            throw std::domain_error("Connectivity does not contain expected number of elements");
         }
     }
 
