@@ -191,8 +191,10 @@ TEST(SolverTest, CalculateElasticForces) {
         {5., 10., 15., 20., 25., 30.},  // row 5
         {6., 12., 18., 24., 30., 36.}   // row 6
     });
-    auto elastic_forces = CalculateElasticForces(
-        sectional_strain, rotation, position_vector_derivatives, gen_coords_derivatives, stiffness
+    auto elastic_forces = Kokkos::View<double*>("elastic_forces", 12);
+    CalculateElasticForces(
+        sectional_strain, rotation, position_vector_derivatives, gen_coords_derivatives, stiffness,
+        elastic_forces
     );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(

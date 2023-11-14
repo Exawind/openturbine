@@ -99,59 +99,54 @@ void CalculateSectionalStiffness(
     );
 }
 
-Kokkos::View<double*> CalculateElasticForces(
+void CalculateElasticForces(
     const Kokkos::View<double*> sectional_strain, Kokkos::View<double**> rotation,
     const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
-    const Kokkos::View<double**> sectional_stiffness
+    const Kokkos::View<double**> sectional_stiffness, Kokkos::View<double*> elastic_forces
 ) {
     // Calculate first part of the elastic forces i.e. F^C vector
     auto sectional_strain_next =
-        Kokkos::View<double*>("sectional_strain_next", kNumberOfLieGroupComponents);
+        Kokkos::View<double[kNumberOfLieGroupComponents]>("sectional_strain_next");
     Kokkos::deep_copy(sectional_strain_next, sectional_strain);
-    auto x0_prime = gen_alpha_solver::create_vector(
-        {pos_vector_derivatives(0), pos_vector_derivatives(1), pos_vector_derivatives(2)}
-    );
-    auto R_x0_prime = gen_alpha_solver::multiply_matrix_with_vector(rotation, x0_prime);
-    Kokkos::parallel_for(
-        3, KOKKOS_LAMBDA(const size_t k) { sectional_strain_next(k) -= R_x0_prime(k); }
-    );
 
-    auto elastic_force_fc =
-        gen_alpha_solver::multiply_matrix_with_vector(sectional_stiffness, sectional_strain_next);
+    auto sectional_strain_next_1 = Kokkos::subview(sectional_strain_next, Kokkos::make_pair(0, 3));
+    auto x0_prime = Kokkos::subview(pos_vector_derivatives, Kokkos::make_pair(0, 3));
+    auto R_x0_prime = Kokkos::View<double[kNumberOfVectorComponents]>("R_x0_prime");
+    KokkosBlas::gemv("N", -1., rotation, x0_prime, 0., R_x0_prime);
+    KokkosBlas::axpy(1., R_x0_prime, sectional_strain_next_1);
+
+    auto elastic_force_fc = Kokkos::View<double[kNumberOfLieGroupComponents]>("elastic_force_fc");
+    KokkosBlas::gemv("N", 1., sectional_stiffness, sectional_strain_next, 0., elastic_force_fc);
 
     // Calculate second part of the elastic forces i.e. F^D vector
     auto x0_prime_tilde = gen_alpha_solver::create_cross_product_matrix(x0_prime);
     auto u_prime_tilde = gen_alpha_solver::create_cross_product_matrix(
-        // create a Vector from the generalized coordinates derivatives
-        gen_alpha_solver::create_vector(
-            {gen_coords_derivatives(0), gen_coords_derivatives(1), gen_coords_derivatives(2)}
-        )
+        Kokkos::subview(gen_coords_derivatives, Kokkos::make_pair(0, 3))
     );
-    auto fd_values = gen_alpha_solver::transpose_matrix(
-        gen_alpha_solver::add_matrix_with_matrix(x0_prime_tilde, u_prime_tilde)
-    );
+    auto fd_values =
+        Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]>("fd_values");
+    Kokkos::deep_copy(fd_values, x0_prime_tilde);
+    KokkosBlas::axpy(1., u_prime_tilde, fd_values);
 
-    auto elastic_force_fd = Kokkos::View<double*>("elastic_force_fd", kNumberOfLieGroupComponents);
+    auto elastic_force_fd = Kokkos::View<double[kNumberOfLieGroupComponents]>("elastic_force_fd");
     Kokkos::deep_copy(elastic_force_fd, 0.);
-    Kokkos::parallel_for(
-        kNumberOfVectorComponents,
-        KOKKOS_LAMBDA(const size_t i) {
-            elastic_force_fd(i + 3) += fd_values(i, 0) * elastic_force_fc(0) +
-                                       fd_values(i, 1) * elastic_force_fc(1) +
-                                       fd_values(i, 2) * elastic_force_fc(2);
-        }
+    auto elastic_force_fd_1 = Kokkos::subview(elastic_force_fd, Kokkos::make_pair(3, 6));
+    KokkosBlas::gemv(
+        "T", 1., fd_values, Kokkos::subview(elastic_force_fc, Kokkos::make_pair(0, 3)), 0.,
+        elastic_force_fd_1
     );
 
-    auto elastic_forces = Kokkos::View<double*>("elastic_forces", 2 * kNumberOfLieGroupComponents);
-    Kokkos::parallel_for(
-        kNumberOfLieGroupComponents,
-        KOKKOS_LAMBDA(const size_t k) {
-            elastic_forces(k) = elastic_force_fc(k);
-            elastic_forces(k + kNumberOfLieGroupComponents) = elastic_force_fd(k);
-        }
-    );
-    return elastic_forces;
+    // Assemble the elastic forces vector
+    // {elastic_forces}_12x1 = {
+    //     {F^C}_6x1
+    //     {F^D}_6x1
+    // }
+    Kokkos::deep_copy(elastic_forces, 0.);
+    auto elastic_forces_1 = Kokkos::subview(elastic_forces, Kokkos::make_pair(0, 6));
+    Kokkos::deep_copy(elastic_forces_1, elastic_force_fc);
+    auto elastic_forces_2 = Kokkos::subview(elastic_forces, Kokkos::make_pair(6, 12));
+    Kokkos::deep_copy(elastic_forces_2, elastic_force_fd);
 }
 
 Kokkos::View<double*> CalculateStaticResidual(
@@ -225,9 +220,11 @@ Kokkos::View<double*> CalculateStaticResidual(
             CalculateSectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
 
             // Calculate elastic forces i.e. F^C and F^D vectors at the quadrature point
-            auto elastic_forces = CalculateElasticForces(
+            auto elastic_forces =
+                Kokkos::View<double*>("elastic_forces", 2 * kNumberOfLieGroupComponents);
+            CalculateElasticForces(
                 sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
-                sectional_stiffness
+                sectional_stiffness, elastic_forces
             );
             auto elastic_force_fc =
                 Kokkos::View<double*>("elastic_force_fc", kNumberOfLieGroupComponents);
@@ -457,9 +454,11 @@ void CalculateStaticIterationMatrix(
                 CalculateSectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
 
                 // Calculate elastic forces i.e. F^C and F^D vectors
-                auto elastic_forces = CalculateElasticForces(
+                auto elastic_forces =
+                    Kokkos::View<double*>("elastic_forces", 2 * kNumberOfLieGroupComponents);
+                CalculateElasticForces(
                     sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
-                    sectional_stiffness
+                    sectional_stiffness, elastic_forces
                 );
                 auto elastic_force_fc = Kokkos::subview(elastic_forces, Kokkos::make_pair(0, 3));
 

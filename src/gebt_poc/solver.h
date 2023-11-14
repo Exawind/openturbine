@@ -72,11 +72,11 @@ void CalculateSectionalStiffness(
 
 /// Calculates the elastic forces based on the sectional strain, derivative of the position
 /// vector and the generalized coordinates, and the sectional stiffness matrix
-Kokkos::View<double*> CalculateElasticForces(
+void CalculateElasticForces(
     const Kokkos::View<double*> strain, Kokkos::View<double**> rotation,
     const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
-    const Kokkos::View<double**> sectional_stiffness
+    const Kokkos::View<double**> sectional_stiffness, Kokkos::View<double*> elastic_forces
 );
 
 /// Calculates the static residual vector for a beam element
