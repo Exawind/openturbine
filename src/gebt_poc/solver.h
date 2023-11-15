@@ -67,7 +67,9 @@ void CalculateCurvature(
 /// rotation matrices
 void CalculateSectionalStiffness(
     const StiffnessMatrix& stiffness, Kokkos::View<double**> rotation_0,
-    Kokkos::View<double**> rotation, Kokkos::View<double**> sectional_stiffness
+    Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
+        sectional_stiffness
 );
 
 /// Calculates the elastic forces based on the sectional strain, derivative of the position
@@ -76,7 +78,9 @@ void CalculateElasticForces(
     const Kokkos::View<double*> strain, Kokkos::View<double**> rotation,
     const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
-    const Kokkos::View<double**> sectional_stiffness, Kokkos::View<double*> elastic_forces
+    const Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
+        sectional_stiffness,
+    Kokkos::View<double*> elastic_forces
 );
 
 /// Calculates the static residual vector for a beam element
@@ -88,7 +92,9 @@ void CalculateStaticResidual(
 void CalculateIterationMatrixComponents(
     const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
-    const Kokkos::View<double**> sectional_stiffness, Kokkos::View<double**> O_P_Q_matrices
+    const Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
+        sectional_stiffness,
+    Kokkos::View<double**> O_P_Q_matrices
 );
 
 /// Calculates the static iteration matrix for a beam element
@@ -101,13 +107,13 @@ void CalculateStaticIterationMatrix(
 /// Calculates the constraint residual vector for a beam element
 void ConstraintsResidualVector(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
-    const Kokkos::View<double*> constraint_residual
+    const Kokkos::View<double*> constraints_residual
 );
 
 /// Calculates the constraint gradient matrix for a beam element
 void ConstraintsGradientMatrix(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
-    Kokkos::View<double**> constraint_gradient_matrix
+    Kokkos::View<double**> constraints_gradient_matrix
 );
 
 }  // namespace openturbine::gebt_poc

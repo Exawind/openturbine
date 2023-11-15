@@ -65,20 +65,22 @@ void CalculateSectionalStrain(
 
 void CalculateSectionalStiffness(
     const StiffnessMatrix& stiffness, Kokkos::View<double**> rotation_0,
-    Kokkos::View<double**> rotation, Kokkos::View<double**> sectional_stiffness
+    Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
+        sectional_stiffness
 ) {
-    auto total_rotation = Kokkos::View<double**>(
-        "total_rotation", kNumberOfVectorComponents, kNumberOfVectorComponents
-    );
+    auto total_rotation =
+        Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]>("total_rotation");
     KokkosBlas::gemm("N", "N", 1., rotation, rotation_0, 0., total_rotation);
 
     // rotation_matrix_6x6 = [
     //    [total_rotation]          [0]_3x3
     //        [0]_3x3           total_rotation
     // ]
-    auto rotation_matrix = Kokkos::View<double**>(
-        "rotation_matrix", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents
-    );
+    auto rotation_matrix =
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+            "rotation_matrix"
+        );
     Kokkos::deep_copy(rotation_matrix, 0.);
     auto rotation_matrix_1 =
         Kokkos::subview(rotation_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
@@ -90,7 +92,7 @@ void CalculateSectionalStiffness(
     // Calculate the sectional stiffness matrix in inertial basis
     Kokkos::deep_copy(sectional_stiffness, 0.);
     auto stiffness_matrix_left_rot =
-        Kokkos::View<double**>("temp", kNumberOfLieGroupComponents, kNumberOfLieGroupComponents);
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>("temp");
     KokkosBlas::gemm(
         "N", "N", 1., rotation_matrix, stiffness.GetStiffnessMatrix(), 0., stiffness_matrix_left_rot
     );
@@ -103,7 +105,9 @@ void CalculateElasticForces(
     const Kokkos::View<double*> sectional_strain, Kokkos::View<double**> rotation,
     const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
-    const Kokkos::View<double**> sectional_stiffness, Kokkos::View<double*> elastic_forces
+    const Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
+        sectional_stiffness,
+    Kokkos::View<double*> elastic_forces
 ) {
     // Calculate first part of the elastic forces i.e. F^C vector
     auto sectional_strain_next =
@@ -216,7 +220,7 @@ void CalculateStaticResidual(
 
             // Calculate elastic forces i.e. F^C and F^D vectors
             auto elastic_forces =
-                Kokkos::View<double*>("elastic_forces", 2 * kNumberOfLieGroupComponents);
+                Kokkos::View<double[2 * kNumberOfLieGroupComponents]>("elastic_forces");
             CalculateElasticForces(
                 sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
                 sectional_stiffness, elastic_forces
@@ -244,9 +248,10 @@ void CalculateOMatrix(
     const Kokkos::View<double**> values, Kokkos::View<double**> O_matrix
 ) {
     // non_zero_terms_part_1 = -N_tilde + [C11] * (x_0_prime_tilde + u_prime_tilde)
-    auto non_zero_terms_part_1 = Kokkos::View<double**>(
-        "non_zero_terms_part_1", kNumberOfVectorComponents, kNumberOfVectorComponents
-    );
+    auto non_zero_terms_part_1 =
+        Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]>(
+            "non_zero_terms_part_1"
+        );
     KokkosBlas::gemm("N", "N", 1., C11, values, 0., non_zero_terms_part_1);
     KokkosBlas::axpy(-1., N_tilde, non_zero_terms_part_1);
 
@@ -325,7 +330,9 @@ void CalculateQMatrix(
 void CalculateIterationMatrixComponents(
     const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
-    const Kokkos::View<double**> sectional_stiffness, Kokkos::View<double**> O_P_Q_matrices
+    const Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
+        sectional_stiffness,
+    Kokkos::View<double**> O_P_Q_matrices
 ) {
     auto x0_prime_tilde = gen_alpha_solver::create_cross_product_matrix(
         Kokkos::subview(pos_vector_derivatives, Kokkos::make_pair(0, 3))
@@ -440,7 +447,7 @@ void CalculateStaticIterationMatrix(
 
                 // Calculate elastic forces i.e. F^C and F^D vectors
                 auto elastic_forces =
-                    Kokkos::View<double*>("elastic_forces", 2 * kNumberOfLieGroupComponents);
+                    Kokkos::View<double[2 * kNumberOfLieGroupComponents]>("elastic_forces");
                 CalculateElasticForces(
                     sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
                     sectional_stiffness, elastic_forces
@@ -486,7 +493,7 @@ void CalculateStaticIterationMatrix(
 
 void ConstraintsResidualVector(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
-    Kokkos::View<double*> constraint_residual
+    Kokkos::View<double*> constraints_residual
 ) {
     auto translation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(0, 3));
     auto rotation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7));
@@ -503,20 +510,20 @@ void ConstraintsResidualVector(
     KokkosBlas::gemv("N", 1., rotation_matrix_0, position, 0., rotated_position);
 
     // Assemble the constraint residual vector
-    // {constraint_residual}_6x1 = {
+    // {constraints_residual}_6x1 = {
     //    {translation_0}_3x1
     //    {rotated_position - position_0}_3x1
     // }
-    auto constraint_residual_1 = Kokkos::subview(constraint_residual, Kokkos::make_pair(0, 3));
-    Kokkos::deep_copy(constraint_residual_1, translation_0);
-    auto constraint_residual_2 = Kokkos::subview(constraint_residual, Kokkos::make_pair(3, 6));
-    Kokkos::deep_copy(constraint_residual_2, rotated_position);
-    KokkosBlas::axpy(-1., position_0, constraint_residual_2);
+    auto constraints_residual_1 = Kokkos::subview(constraints_residual, Kokkos::make_pair(0, 3));
+    Kokkos::deep_copy(constraints_residual_1, translation_0);
+    auto constraints_residual_2 = Kokkos::subview(constraints_residual, Kokkos::make_pair(3, 6));
+    Kokkos::deep_copy(constraints_residual_2, rotated_position);
+    KokkosBlas::axpy(-1., position_0, constraints_residual_2);
 }
 
 void ConstraintsGradientMatrix(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
-    Kokkos::View<double**> constraint_gradient_matrix
+    Kokkos::View<double**> constraints_gradient_matrix
 ) {
     auto translation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(0, 3));
     auto rotation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7));
@@ -544,15 +551,15 @@ void ConstraintsGradientMatrix(
     // [B21]_3x3 = -[rotation_matrix_0]_3x3
     // [B22]_3x3 = -[rotation_matrix_0]_3x3 * [position_cross_prod_matrix]_3x3
     // n = order of the element
-    Kokkos::deep_copy(constraint_gradient_matrix, 0.);
+    Kokkos::deep_copy(constraints_gradient_matrix, 0.);
     auto B11 = Kokkos::subview(
-        constraint_gradient_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3)
+        constraints_gradient_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3)
     );
     auto B21 = Kokkos::subview(
-        constraint_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3)
+        constraints_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3)
     );
     auto B22 = Kokkos::subview(
-        constraint_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6)
+        constraints_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6)
     );
 
     auto hostB11 = Kokkos::create_mirror_view(B11);
