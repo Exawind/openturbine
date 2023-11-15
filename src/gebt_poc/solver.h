@@ -95,7 +95,9 @@ void CalculateIterationMatrixComponents(
     const Kokkos::View<double*> gen_coords_derivatives,
     const Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
         sectional_stiffness,
-    Kokkos::View<double**> O_P_Q_matrices
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> O_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> P_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> Q_matrix
 );
 
 /// Calculates the static iteration matrix for a beam element

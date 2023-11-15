@@ -418,21 +418,16 @@ TEST(SolverTest, CalculateIterationMatrixComponents) {
           24.054825962838, 43.50305858028866}}
     );
 
-    auto O_P_Q_matrices = Kokkos::View<double**>("O_P_Q_matrices", 18, 6);
+    auto O_matrix = Kokkos::View<double**>("O_matrix", 6, 6);
+    auto P_matrix = Kokkos::View<double**>("P_matrix", 6, 6);
+    auto Q_matrix = Kokkos::View<double**>("Q_matrix", 6, 6);
     CalculateIterationMatrixComponents(
-        elastic_force_fc, position_vector_derivatives, gen_coords_derivatives, stiffness,
-        O_P_Q_matrices
+        elastic_force_fc, position_vector_derivatives, gen_coords_derivatives, stiffness, O_matrix,
+        P_matrix, Q_matrix
     );
-    auto o_matrix = Kokkos::View<double**>("o_matrix", 6, 6);
-    auto populate_o_matrix = KOKKOS_LAMBDA(size_t i) {
-        for (size_t j = 0; j < 6; ++j) {
-            o_matrix(i, j) = O_P_Q_matrices(i, j);
-        }
-    };
-    Kokkos::parallel_for(6, populate_o_matrix);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        o_matrix,
+        O_matrix,
         {
             {0., 0., 0., 1.5581361688659614, 3.3881347643742066, -2.409080935189973},  // row 1
             {0., 0., 0., 2.023343846951859, 4.594085351204066, -3.233749380295583},    // row 2
@@ -442,17 +437,8 @@ TEST(SolverTest, CalculateIterationMatrixComponents) {
             {0., 0., 0., 9.270600163100875, 17.450580610135344, -12.962904649290419}   // row 6
         }
     );
-
-    auto p_matrix = Kokkos::View<double**>("p_matrix", 6, 6);
-    auto populate_p_matrix = KOKKOS_LAMBDA(size_t i) {
-        for (size_t j = 0; j < 6; ++j) {
-            p_matrix(i, j) = O_P_Q_matrices(i + 6, j);
-        }
-    };
-    Kokkos::parallel_for(6, populate_p_matrix);
-
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        p_matrix,
+        P_matrix,
         {
             {0., 0., 0., 0., 0., 0.},  // row 1
             {0., 0., 0., 0., 0., 0.},  // row 2
@@ -465,17 +451,8 @@ TEST(SolverTest, CalculateIterationMatrixComponents) {
              -7.16778142704732, -12.962904649290419}  // row 6
         }
     );
-
-    auto q_matrix = Kokkos::View<double**>("q_matrix", 6, 6);
-    auto populate_q_matrix = KOKKOS_LAMBDA(size_t i) {
-        for (size_t j = 0; j < 6; ++j) {
-            q_matrix(i, j) = O_P_Q_matrices(i + 12, j);
-        }
-    };
-    Kokkos::parallel_for(6, populate_q_matrix);
-
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        q_matrix,
+        Q_matrix,
         {
             {0., 0., 0., 0., 0., 0.},                                                  // row 1
             {0., 0., 0., 0., 0., 0.},                                                  // row 2

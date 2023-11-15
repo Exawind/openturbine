@@ -321,7 +321,9 @@ void CalculateIterationMatrixComponents(
     const Kokkos::View<double*> gen_coords_derivatives,
     const Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
         sectional_stiffness,
-    Kokkos::View<double**> O_P_Q_matrices
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> O_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> P_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> Q_matrix
 ) {
     auto x0_prime_tilde = gen_alpha_solver::create_cross_product_matrix(
         Kokkos::subview(pos_vector_derivatives, Kokkos::make_pair(0, 3))
@@ -348,16 +350,8 @@ void CalculateIterationMatrixComponents(
         Kokkos::subview(sectional_stiffness, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
 
     // Calculate the O, P, and Q matrices
-    auto O_matrix =
-        Kokkos::subview(O_P_Q_matrices, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6));
     CalculateOMatrix(N_tilde, M_tilde, C11, C21, values, O_matrix);
-
-    auto P_matrix =
-        Kokkos::subview(O_P_Q_matrices, Kokkos::make_pair(6, 12), Kokkos::make_pair(0, 6));
     CalculatePMatrix(N_tilde, C11, C12, values, P_matrix);
-
-    auto Q_matrix =
-        Kokkos::subview(O_P_Q_matrices, Kokkos::make_pair(12, 18), Kokkos::make_pair(0, 6));
     CalculateQMatrix(N_tilde, C11, values, Q_matrix);
 }
 
@@ -393,10 +387,12 @@ void CalculateStaticIterationMatrix(
         Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
             "sectional_stiffness"
         );
-    auto O_P_Q_matrices =
-        Kokkos::View<double[3 * kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
-            "O_P_Q_matrices"
-        );
+    auto O_matrix =
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>("O_matrix");
+    auto P_matrix =
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>("P_matrix");
+    auto Q_matrix =
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>("Q_matrix");
 
     Kokkos::deep_copy(iteration_matrix, 0.);
     for (size_t i = 0; i < n_nodes; ++i) {
@@ -444,19 +440,10 @@ void CalculateStaticIterationMatrix(
                     sectional_stiffness, elastic_forces_fc, elastic_forces_fd
                 );
 
-                // Calculate the iteration matrix components
+                // Calculate the iteration matrix components, i.e. O, P, and Q matrices
                 CalculateIterationMatrixComponents(
                     elastic_forces_fc, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
-                    sectional_stiffness, O_P_Q_matrices
-                );
-                auto O_matrix = Kokkos::subview(
-                    O_P_Q_matrices, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)
-                );
-                auto P_matrix = Kokkos::subview(
-                    O_P_Q_matrices, Kokkos::make_pair(6, 12), Kokkos::make_pair(0, 6)
-                );
-                auto Q_matrix = Kokkos::subview(
-                    O_P_Q_matrices, Kokkos::make_pair(12, 18), Kokkos::make_pair(0, 6)
+                    sectional_stiffness, O_matrix, P_matrix, Q_matrix
                 );
 
                 const auto q_weight = quadrature.GetQuadratureWeights()[k];
