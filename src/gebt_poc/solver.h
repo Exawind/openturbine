@@ -80,7 +80,8 @@ void CalculateElasticForces(
     const Kokkos::View<double*> gen_coords_derivatives,
     const Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
         sectional_stiffness,
-    Kokkos::View<double*> elastic_forces
+    Kokkos::View<double[kNumberOfLieGroupComponents]> elastic_forces_fc,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> elastic_forces_fd
 );
 
 /// Calculates the static residual vector for a beam element
