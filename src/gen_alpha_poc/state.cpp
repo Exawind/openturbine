@@ -3,24 +3,26 @@
 namespace openturbine::gen_alpha_solver {
 
 State::State()
-    : generalized_coords_("generalized_coordinates", 1),
-      velocity_("velocities", 1),
-      acceleration_("accelerations", 1),
-      algorithmic_acceleration_("algorithmic_accelerations", 1) {
+    : generalized_coords_("generalized_coordinates", 1, 7),
+      velocity_("velocities", 1, 6),
+      acceleration_("accelerations", 1, 6),
+      algorithmic_acceleration_("algorithmic_accelerations", 1, 6) {
 }
 
 State::State(
-    Kokkos::View<double*> q, Kokkos::View<double*> v, Kokkos::View<double*> v_dot,
-    Kokkos::View<double*> a
+    Kokkos::View<double* [7]> gen_coords, Kokkos::View<double* [6]> velocity,
+    Kokkos::View<double* [6]> accln, Kokkos::View<double* [6]> algo_accln
 )
-    : generalized_coords_("generalized_coordinates", q.size()),
-      velocity_("velocities", v.size()),
-      acceleration_("accelerations", v_dot.size()),
-      algorithmic_acceleration_("algorithmic_accelerations", a.size()) {
-    Kokkos::deep_copy(generalized_coords_, q);
-    Kokkos::deep_copy(velocity_, v);
-    Kokkos::deep_copy(acceleration_, v_dot);
-    Kokkos::deep_copy(algorithmic_acceleration_, a);
+    : generalized_coords_("generalized_coordinates", gen_coords.extent(0), gen_coords.extent(1)),
+      velocity_("velocities", velocity.extent(0), velocity.extent(1)),
+      acceleration_("accelerations", accln.extent(0), accln.extent(1)),
+      algorithmic_acceleration_(
+          "algorithmic_accelerations", algo_accln.extent(0), algo_accln.extent(1)
+      ) {
+    Kokkos::deep_copy(generalized_coords_, gen_coords);
+    Kokkos::deep_copy(velocity_, velocity);
+    Kokkos::deep_copy(acceleration_, accln);
+    Kokkos::deep_copy(algorithmic_acceleration_, algo_accln);
 }
 
 MassMatrix::MassMatrix(double mass, Vector J) : mass_(mass), principal_moment_of_inertia_(J) {

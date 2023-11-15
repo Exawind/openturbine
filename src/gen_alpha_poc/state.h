@@ -11,32 +11,35 @@ public:
     State();
 
     State(
-        Kokkos::View<double*> generalized_coords, Kokkos::View<double*> velocity,
-        Kokkos::View<double*> acceleration, Kokkos::View<double*> algorithmic_acceleration
+        Kokkos::View<double* [7]> gen_coords, Kokkos::View<double* [6]> velocity,
+        Kokkos::View<double* [6]> accln, Kokkos::View<double* [6]> algo_accln
     );
 
-    /// Returns the generalized coordinates vector
-    inline Kokkos::View<double*> GetGeneralizedCoordinates() const { return generalized_coords_; }
+    /// Returns the generalized coordinates vector (read only)
+    inline Kokkos::View<const double* [7]> GetGeneralizedCoordinates() const {
+        return generalized_coords_;
+    }
 
-    /// Returns the velocity vector
-    inline Kokkos::View<double*> GetVelocity() const { return velocity_; }
+    /// Returns the velocity vector (read only)
+    inline Kokkos::View<const double* [6]> GetVelocity() const {
+        return velocity_;
+    }
 
-    /// Returns the acceleration vector
-    inline Kokkos::View<double*> GetAcceleration() const { return acceleration_; }
+    /// Returns the acceleration vector (read only)
+    inline Kokkos::View<const double* [6]> GetAcceleration() const {
+        return acceleration_;
+    }
 
-    /// Returns the algorithmic accelerations vector
-    inline Kokkos::View<double*> GetAlgorithmicAcceleration() const {
+    /// Returns the algorithmic accelerations vector (read only)
+    inline Kokkos::View<const double* [6]> GetAlgorithmicAcceleration() const {
         return algorithmic_acceleration_;
     }
 
-private:
-    Kokkos::View<double*> generalized_coords_;  //< Generalized coordinates
-    Kokkos::View<double*> velocity_;            //< Velocity vector
-    Kokkos::View<double*> acceleration_;        //< First time derivative of the velocity vector
-    Kokkos::View<double*> algorithmic_acceleration_;  //< Algorithmic accelerations
+    private : Kokkos::View<double* [7]> generalized_coords_;  //< Generalized coordinates
+    Kokkos::View<double* [6]> velocity_;                      //< Velocity vector
+    Kokkos::View<double* [6]> acceleration_;  //< First time derivative of the velocity vector
+    Kokkos::View<double* [6]> algorithmic_acceleration_;  //< Algorithmic accelerations
 };
-
-// TODO Move the following classes to their own source files
 
 /// Class to create and store a 6 x 6 mass matrix of a rigid body
 class MassMatrix {
