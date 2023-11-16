@@ -61,32 +61,33 @@ TEST(FieldDataTest, CreateNodalDataAndAccess) {
 }
 
 struct SetElementWeights {
-  openturbine::gebt_poc::FieldData field_data;
+    openturbine::gebt_poc::FieldData field_data;
 
-  KOKKOS_FUNCTION
-  void operator()(int element) const {
-    auto weights = field_data.GetElementData<openturbine::gebt_poc::Field::Weight>(element);
-    weights(0) = element * 4.;
-    weights(1) = element * 4. + 1.;
-    weights(2) = element * 4. + 2.;
-    weights(3) = element * 4. + 3.;
-  }
+    KOKKOS_FUNCTION
+    void operator()(int element) const {
+        auto weights = field_data.GetElementData<openturbine::gebt_poc::Field::Weight>(element);
+        weights(0) = element * 4.;
+        weights(1) = element * 4. + 1.;
+        weights(2) = element * 4. + 2.;
+        weights(3) = element * 4. + 3.;
+    }
 };
 
 struct SetStiffnessMatrix {
-  openturbine::gebt_poc::FieldData field_data;
+    openturbine::gebt_poc::FieldData field_data;
 
-  KOKKOS_FUNCTION
-  void operator()(int element) const {
-    auto stiffness = field_data.GetElementData<openturbine::gebt_poc::Field::StiffnessMatrix>(element);
-    for (std::size_t point = 0; point < stiffness.extent(0); ++point) {
-      for (int row = 0; row < 6; ++row) {
-        for (int column = 0; column < 6; ++column) {
-          stiffness(point, row, column) = point * row * column;
+    KOKKOS_FUNCTION
+    void operator()(int element) const {
+        auto stiffness =
+            field_data.GetElementData<openturbine::gebt_poc::Field::StiffnessMatrix>(element);
+        for (std::size_t point = 0; point < stiffness.extent(0); ++point) {
+            for (int row = 0; row < 6; ++row) {
+                for (int column = 0; column < 6; ++column) {
+                    stiffness(point, row, column) = point * row * column;
+                }
+            }
         }
-      }
     }
-  }
 };
 
 TEST(FieldDataTest, CreateElementDataAndAccess) {

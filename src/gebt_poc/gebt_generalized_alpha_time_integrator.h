@@ -169,7 +169,10 @@ public:
                     auto orientation_vector =
                         Kokkos::subview(delta_coordinates, Kokkos::pair<int, int>(3, 6));
                     double updated_orientation_data[4];
-                    auto updated_orientation = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(updated_orientation_data);
+                    auto updated_orientation =
+                        Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
+                            updated_orientation_data
+                        );
                     ScaleExponentialMapping(updated_orientation, orientation_vector, h);
                     auto current_orientation =
                         Kokkos::subview(coordinates, Kokkos::pair<int, int>(3, 7));

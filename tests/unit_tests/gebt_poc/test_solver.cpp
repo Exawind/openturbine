@@ -33,10 +33,10 @@ TEST(SolverTest, UserDefinedQuadrature) {
     EXPECT_EQ(quadrature.GetQuadratureWeights(), quadrature_weights);
 }
 struct CalculateInterpolatedValues_populate_coords {
-  Kokkos::View<double[14]> generalized_coords; 
+    Kokkos::View<double[14]> generalized_coords;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
         // node 1
         generalized_coords(0) = 1.;
         generalized_coords(1) = 2.;
@@ -53,7 +53,7 @@ struct CalculateInterpolatedValues_populate_coords {
         generalized_coords(11) = 1.;
         generalized_coords(12) = 4.;
         generalized_coords(13) = 9.;
-  }
+    }
 };
 
 TEST(SolverTest, CalculateInterpolatedValues) {
@@ -71,11 +71,11 @@ TEST(SolverTest, CalculateInterpolatedValues) {
 }
 
 struct CalculateCurvature_populate_coords {
-  Kokkos::View<double[7]> gen_coords;
-  gen_alpha_solver::Quaternion q;
+    Kokkos::View<double[7]> gen_coords;
+    gen_alpha_solver::Quaternion q;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
         gen_coords(0) = 0.;
         gen_coords(1) = 0.;
         gen_coords(2) = 0.;
@@ -83,14 +83,14 @@ struct CalculateCurvature_populate_coords {
         gen_coords(4) = q.GetXComponent();
         gen_coords(5) = q.GetYComponent();
         gen_coords(6) = q.GetZComponent();
-  }
+    }
 };
 
 struct CalculateCurvature_populate_derivative {
-  Kokkos::View<double[7]> gen_coords_derivative;
+    Kokkos::View<double[7]> gen_coords_derivative;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
         gen_coords_derivative(0) = 0.;
         gen_coords_derivative(1) = 0.;
         gen_coords_derivative(2) = 0.;
@@ -98,8 +98,8 @@ struct CalculateCurvature_populate_derivative {
         gen_coords_derivative(4) = -0.0230032;
         gen_coords_derivative(5) = 0.030486;
         gen_coords_derivative(6) = 0.0694527;
-  }
-}; 
+    }
+};
 
 TEST(SolverTest, CalculateCurvature) {
     auto rotation_matrix = gen_alpha_solver::RotationMatrix(
@@ -161,24 +161,24 @@ TEST(SolverTest, CalculateSectionalStiffness) {
 }
 
 struct CalculateElasticForces_populate_strain {
-  Kokkos::View<double[6]> sectional_strain;
+    Kokkos::View<double[6]> sectional_strain;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
-    sectional_strain(0) = 1.1;
-    sectional_strain(1) = 2.2;
-    sectional_strain(2) = 3.3;
-    sectional_strain(3) = 1.;
-    sectional_strain(4) = 1.;
-    sectional_strain(5) = 1.;
-  }
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        sectional_strain(0) = 1.1;
+        sectional_strain(1) = 2.2;
+        sectional_strain(2) = 3.3;
+        sectional_strain(3) = 1.;
+        sectional_strain(4) = 1.;
+        sectional_strain(5) = 1.;
+    }
 };
 
 struct CalculateElasticForces_populate_position_derivatives {
-  Kokkos::View<double[7]> position_vector_derivatives;
+    Kokkos::View<double[7]> position_vector_derivatives;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
         position_vector_derivatives(0) = 1.;
         position_vector_derivatives(1) = 2.;
         position_vector_derivatives(2) = 3.;
@@ -186,14 +186,14 @@ struct CalculateElasticForces_populate_position_derivatives {
         position_vector_derivatives(4) = 0.;
         position_vector_derivatives(5) = 0.;
         position_vector_derivatives(6) = 0.;
-  }
+    }
 };
 
 struct CalculateElasticForces_populate_coords_derivatives {
-  Kokkos::View<double[7]> gen_coords_derivatives;
+    Kokkos::View<double[7]> gen_coords_derivatives;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
         gen_coords_derivatives(0) = 0.1;
         gen_coords_derivatives(1) = 0.2;
         gen_coords_derivatives(2) = 0.3;
@@ -201,7 +201,7 @@ struct CalculateElasticForces_populate_coords_derivatives {
         gen_coords_derivatives(4) = 0.;
         gen_coords_derivatives(5) = 0.;
         gen_coords_derivatives(6) = 0.;
-  }
+    }
 };
 
 TEST(SolverTest, CalculateElasticForces) {
@@ -215,10 +215,14 @@ TEST(SolverTest, CalculateElasticForces) {
     });
 
     auto position_vector_derivatives = Kokkos::View<double*>("position_vector_derivatives", 7);
-    Kokkos::parallel_for(1, CalculateElasticForces_populate_position_derivatives{position_vector_derivatives});
+    Kokkos::parallel_for(
+        1, CalculateElasticForces_populate_position_derivatives{position_vector_derivatives}
+    );
 
     auto gen_coords_derivatives = Kokkos::View<double*>("gen_coords_derivatives", 7);
-    Kokkos::parallel_for(1, CalculateElasticForces_populate_coords_derivatives{gen_coords_derivatives});
+    Kokkos::parallel_for(
+        1, CalculateElasticForces_populate_coords_derivatives{gen_coords_derivatives}
+    );
 
     auto stiffness = gen_alpha_solver::create_matrix({
         {1., 2., 3., 4., 5., 6.},       // row 1
@@ -288,10 +292,10 @@ TEST(SolverTest, CalculateStaticResidualWithZeroValues) {
 }
 
 struct NonZeroValues_populate_position {
-  Kokkos::View<double[35]> position_vectors;
+    Kokkos::View<double[35]> position_vectors;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
         // node 1
         position_vectors(0) = 0.;
         position_vectors(1) = 0.;
@@ -332,14 +336,14 @@ struct NonZeroValues_populate_position {
         position_vectors(32) = -0.07193653093139739;
         position_vectors(33) = 0.20507529985516368;
         position_vectors(34) = 0.32309554437664584;
-  }
+    }
 };
 
 struct NonZeroValues_populate_coords {
-  Kokkos::View<double[35]> generalized_coords;
+    Kokkos::View<double[35]> generalized_coords;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
         // node 1
         generalized_coords(0) = 0.;
         generalized_coords(1) = 0.;
@@ -380,7 +384,7 @@ struct NonZeroValues_populate_coords {
         generalized_coords(32) = 0.049979169270678324;
         generalized_coords(33) = 0.;
         generalized_coords(34) = 0.;
-  }
+    }
 };
 
 TEST(SolverTest, CalculateStaticResidualWithNonZeroValues) {
@@ -414,34 +418,20 @@ TEST(SolverTest, CalculateStaticResidualWithNonZeroValues) {
 }
 
 TEST(SolverTest, CalculateIterationMatrixComponents) {
-    auto elastic_force_fc = gen_alpha_solver::create_vector({
-        0.1023527958818833, 
-        0.1512321779691288, 
-        0.2788924951018168, 
-        0.4003985306163255, 
-        0.3249298550145402, 
-        0.5876343707088096
-    });
+    auto elastic_force_fc = gen_alpha_solver::create_vector(
+        {0.1023527958818833, 0.1512321779691288, 0.2788924951018168, 0.4003985306163255,
+         0.3249298550145402, 0.5876343707088096}
+    );
 
-    auto position_vector_derivatives = gen_alpha_solver::create_vector({
-        0.924984344499876,
-        -0.3417491071948322,
-        0.16616711516322974,
-        0.023197240723436388,
-        0.0199309451611758,
-        0.0569650074322926
-    });
+    auto position_vector_derivatives = gen_alpha_solver::create_vector(
+        {0.924984344499876, -0.3417491071948322, 0.16616711516322974, 0.023197240723436388,
+         0.0199309451611758, 0.0569650074322926}
+    );
 
-
-    auto gen_coords_derivatives = gen_alpha_solver::create_vector({
-        0.0009414876868372689,
-        -0.0009055519814222231,
-        0.000948674827920281,
-        -0.000011768592509980857,
-        0.009249835939573452,
-        0.,
-        0.
-    });
+    auto gen_coords_derivatives = gen_alpha_solver::create_vector(
+        {0.0009414876868372689, -0.0009055519814222231, 0.000948674827920281,
+         -0.000011768592509980857, 0.009249835939573452, 0., 0.}
+    );
 
     auto stiffness = gen_alpha_solver::create_matrix(
         {{1.3197900000789533, 1.9500660871457987, 3.596184383250417, 5.162946182374572,
@@ -478,7 +468,7 @@ TEST(SolverTest, CalculateIterationMatrixComponents) {
     );
 
     auto p_matrix = Kokkos::subview(O_P_Q_matrices, Kokkos::make_pair(6, 12), Kokkos::ALL);
-    
+
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         p_matrix,
         {
@@ -556,91 +546,38 @@ TEST(SolverTest, CalculateStaticIterationMatrixWithZeroValues) {
 }
 
 TEST(SolverTest, CalculateStaticIterationMatrixWithNonZeroValues) {
-    auto position_vectors = gen_alpha_solver::create_vector({
-        // node 1
-        0.,
-        0.,
-        0.,
-        0.9778215200524469,
-        -0.01733607539094763,
-        -0.09001900002195001,
-        -0.18831121859148398,
-        // node 2
-        0.8633658232300573,
-        -0.25589826392541715,
-        0.1130411210682743,
-        0.9950113028068008,
-        -0.002883848832932071,
-        -0.030192109815745303,
-        -0.09504013471947484,
-        // node 3
-        2.5,
-        -0.25,
-        0.,
-        0.9904718430204884,
-        -0.009526411091536478,
-        0.09620741150793366,
-        0.09807604012323785,
-        // node 4
-        4.136634176769943,
-        0.39875540678255983,
-        -0.5416125496397027,
-        0.9472312341234699,
-        -0.049692141629315074,
-        0.18127630174800594,
-        0.25965858850765167,
-        // node 5
-        5.,
-        1.,
-        -1.,
-        0.9210746582719719,
-        -0.07193653093139739,
-        0.20507529985516368,
-        0.32309554437664584
-    });
+    auto position_vectors = gen_alpha_solver::create_vector(
+        {// node 1
+         0., 0., 0., 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
+         -0.18831121859148398,
+         // node 2
+         0.8633658232300573, -0.25589826392541715, 0.1130411210682743, 0.9950113028068008,
+         -0.002883848832932071, -0.030192109815745303, -0.09504013471947484,
+         // node 3
+         2.5, -0.25, 0., 0.9904718430204884, -0.009526411091536478, 0.09620741150793366,
+         0.09807604012323785,
+         // node 4
+         4.136634176769943, 0.39875540678255983, -0.5416125496397027, 0.9472312341234699,
+         -0.049692141629315074, 0.18127630174800594, 0.25965858850765167,
+         // node 5
+         5., 1., -1., 0.9210746582719719, -0.07193653093139739, 0.20507529985516368,
+         0.32309554437664584}
+    );
 
-    auto generalized_coords = gen_alpha_solver::create_vector({
-        // node 1
-        0.,
-        0.,
-        0.,
-        1.,
-        0.,
-        0.,
-        0.,
-        // node 2
-        0.0029816021788868583,
-        -0.0024667594949430213,
-        0.0030845707156756256,
-        0.9999627302042724,
-        0.008633550973807838,
-        0.,
-        0.,
-        // node 3
-        0.025,
-        -0.0125,
-        0.027500000000000004,
-        0.9996875162757026,
-        0.024997395914712332,
-        0.,
-        0.,
-        // node 4
-        0.06844696924968456,
-        -0.011818954790771264,
-        0.07977257214146723,
-        0.9991445348823056,
-        0.04135454527402519,
-        0.,
-        0.,
-        // node 5
-        0.1,
-        0.,
-        0.12,
-        0.9987502603949662,
-        0.049979169270678324,
-        0.,
-        0.
-    });
+    auto generalized_coords = gen_alpha_solver::create_vector(
+        {// node 1
+         0., 0., 0., 1., 0., 0., 0.,
+         // node 2
+         0.0029816021788868583, -0.0024667594949430213, 0.0030845707156756256, 0.9999627302042724,
+         0.008633550973807838, 0., 0.,
+         // node 3
+         0.025, -0.0125, 0.027500000000000004, 0.9996875162757026, 0.024997395914712332, 0., 0.,
+         // node 4
+         0.06844696924968456, -0.011818954790771264, 0.07977257214146723, 0.9991445348823056,
+         0.04135454527402519, 0., 0.,
+         // node 5
+         0.1, 0., 0.12, 0.9987502603949662, 0.049979169270678324, 0., 0.}
+    );
 
     auto stiffness = StiffnessMatrix(gen_alpha_solver::create_matrix({
         {1., 2., 3., 4., 5., 6.},       // row 1
@@ -670,25 +607,14 @@ TEST(SolverTest, CalculateStaticIterationMatrixWithNonZeroValues) {
 }
 
 TEST(SolverTest, ConstraintsResidualVector) {
-    auto position_vectors = gen_alpha_solver::create_vector({
-        0.,
-        0.,
-        0.,
-        0.9778215200524469,
-        -0.01733607539094763,
-        -0.09001900002195001,
-        -0.18831121859148398
-    });
+    auto position_vectors = gen_alpha_solver::create_vector(
+        {0., 0., 0., 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
+         -0.18831121859148398}
+    );
 
-    auto generalized_coords = gen_alpha_solver::create_vector({
-        0.1,
-        0.,
-        0.12,
-        0.9987502603949662,
-        0.049979169270678324,
-        0.,
-        0.
-    });
+    auto generalized_coords = gen_alpha_solver::create_vector(
+        {0.1, 0., 0.12, 0.9987502603949662, 0.049979169270678324, 0., 0.}
+    );
 
     auto constraints_residual = Kokkos::View<double[6]>("constraints_residual");
 
@@ -700,91 +626,38 @@ TEST(SolverTest, ConstraintsResidualVector) {
 }
 
 TEST(SolverTest, ConstraintsGradientMatrix) {
-    auto position_vectors = gen_alpha_solver::create_vector({
-        // node 1
-        0.,
-        0.,
-        0.,
-        0.9778215200524469,
-        -0.01733607539094763,
-        -0.09001900002195001,
-        -0.18831121859148398,
-        // node 2
-        0.8633658232300573,
-        -0.25589826392541715,
-        0.1130411210682743,
-        0.9950113028068008,
-        -0.002883848832932071,
-        -0.030192109815745303,
-        -0.09504013471947484,
-        // node 3
-        2.5,
-        -0.25,
-        0.,
-        0.9904718430204884,
-        -0.009526411091536478,
-        0.09620741150793366,
-        0.09807604012323785,
-        // node 4
-        4.136634176769943,
-        0.39875540678255983,
-        -0.5416125496397027,
-        0.9472312341234699,
-        -0.049692141629315074,
-        0.18127630174800594,
-        0.25965858850765167,
-        // node 5
-        5.,
-        1.,
-        -1.,
-        0.9210746582719719,
-        -0.07193653093139739,
-        0.20507529985516368,
-        0.3230955443766458
-    });
+    auto position_vectors = gen_alpha_solver::create_vector(
+        {// node 1
+         0., 0., 0., 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
+         -0.18831121859148398,
+         // node 2
+         0.8633658232300573, -0.25589826392541715, 0.1130411210682743, 0.9950113028068008,
+         -0.002883848832932071, -0.030192109815745303, -0.09504013471947484,
+         // node 3
+         2.5, -0.25, 0., 0.9904718430204884, -0.009526411091536478, 0.09620741150793366,
+         0.09807604012323785,
+         // node 4
+         4.136634176769943, 0.39875540678255983, -0.5416125496397027, 0.9472312341234699,
+         -0.049692141629315074, 0.18127630174800594, 0.25965858850765167,
+         // node 5
+         5., 1., -1., 0.9210746582719719, -0.07193653093139739, 0.20507529985516368,
+         0.3230955443766458}
+    );
 
-    auto generalized_coords = gen_alpha_solver::create_vector({
-        // node 1
-        0.1,
-        0.,
-        0.12,
-        0.9987502603949662,
-        0.049979169270678324,
-        0.,
-        0.,
-        // node 2
-        0.13751623510808916,
-        0.023745363506318708,
-        0.16976855483097075,
-        0.9982815394712516,
-        0.05860006784047278,
-        0.,
-        0.,
-        // node 3
-        0.225,
-        0.1125,
-        0.2925,
-        0.9971888181122074,
-        0.07492970727274234,
-        0.,
-        0.,
-        // node 4
-        0.3339123363204823,
-        0.27625463649368126,
-        0.45594573088331497,
-        0.9958289985675476,
-        0.09123927669570399,
-        0.,
-        0.,
-        // node 5
-        0.4,
-        0.4,
-        0.5599999999999999,
-        0.9950041652780258,
-        0.09983341664682815,
-        0.,
-        0.
-    });
+    auto generalized_coords = gen_alpha_solver::create_vector(
+        {// node 1
+         0.1, 0., 0.12, 0.9987502603949662, 0.049979169270678324, 0., 0.,
+         // node 2
+         0.13751623510808916, 0.023745363506318708, 0.16976855483097075, 0.9982815394712516,
+         0.05860006784047278, 0., 0.,
+         // node 3
+         0.225, 0.1125, 0.2925, 0.9971888181122074, 0.07492970727274234, 0., 0.,
+         // node 4
+         0.3339123363204823, 0.27625463649368126, 0.45594573088331497, 0.9958289985675476,
+         0.09123927669570399, 0., 0.,
+         // node 5
+         0.4, 0.4, 0.5599999999999999, 0.9950041652780258, 0.09983341664682815, 0., 0.}
+    );
 
     auto constraint_gradients = Kokkos::View<double[6][30]>("constraint_gradients");
 

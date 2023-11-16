@@ -37,14 +37,14 @@ TEST(RotationMatrixTest, CreateFromComponents) {
 
 Kokkos::View<double[3][3]> GetRotationMatrix(RotationMatrix matrix) {
     Kokkos::View<double[3][3]> rotation_matrix("rotation matrix");
-    Kokkos::parallel_for(1, KOKKOS_LAMBDA(std::size_t) {
-        matrix.GetRotationMatrix<Kokkos::DefaultExecutionSpace>(rotation_matrix);
-    });
+    Kokkos::parallel_for(
+        1, KOKKOS_LAMBDA(std::size_t
+           ) { matrix.GetRotationMatrix<Kokkos::DefaultExecutionSpace>(rotation_matrix); }
+    );
     return rotation_matrix;
 }
 TEST(RotationMatrixTest, GetComponents) {
     RotationMatrix matrix(1., 2., 3., 4., 5., 6., 7., 8., 9.);
-
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         GetRotationMatrix(matrix),

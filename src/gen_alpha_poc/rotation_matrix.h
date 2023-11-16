@@ -31,11 +31,11 @@ public:
     double& operator()(int i, int j) { return data_[i][j]; }
 
     /// Returns the rotation matrix as a Kokkos view (read-only)
-    template<typename MemorySpace>
-    KOKKOS_FUNCTION
-    void GetRotationMatrix(Kokkos::View<double[3][3], MemorySpace> rotation_matrix) const {
-        for(int i = 0; i < 3; ++i) {
-            for(int j = 0; j < 3; ++j) {
+    template <typename MemorySpace>
+    KOKKOS_FUNCTION void GetRotationMatrix(Kokkos::View<double[3][3], MemorySpace> rotation_matrix
+    ) const {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
                 rotation_matrix(i, j) = data_[i][j];
             }
         }

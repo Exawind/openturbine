@@ -145,13 +145,13 @@ TEST(MeshTest, CheckConsistency_WrongNumberOfElements) {
 }
 
 struct InvalidNodeConnectivity {
-  Kokkos::View<int**> connectivity;
+    Kokkos::View<int**> connectivity;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
-    connectivity(0, 0) = 0;
-    connectivity(0, 1) = 2;
-  }
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        connectivity(0, 0) = 0;
+        connectivity(0, 1) = 2;
+    }
 };
 
 TEST(MeshTest, CheckConsistency_InvalidNode) {
@@ -171,12 +171,12 @@ TEST(MeshTest, CheckConsistency_InvalidNode) {
 struct NonuniqueNodeConnectivity {
     Kokkos::View<int**> connectivity;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
-            connectivity(0, 0) = 0;
-            connectivity(0, 1) = 1;
-            connectivity(0, 2) = 0;
-  }
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        connectivity(0, 0) = 0;
+        connectivity(0, 1) = 1;
+        connectivity(0, 2) = 0;
+    }
 };
 
 TEST(MeshTest, CheckConsistency_NonUniqueNode) {
@@ -196,15 +196,15 @@ TEST(MeshTest, CheckConsistency_NonUniqueNode) {
 struct NonUniqueNode_2Element_Connectivity {
     Kokkos::View<int**> connectivity;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
-            connectivity(0, 0) = 0;
-            connectivity(0, 1) = 1;
-            connectivity(0, 2) = 2;
-            connectivity(1, 0) = 2;
-            connectivity(1, 1) = 3;
-            connectivity(1, 2) = 3;
-  }
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        connectivity(0, 0) = 0;
+        connectivity(0, 1) = 1;
+        connectivity(0, 2) = 2;
+        connectivity(1, 0) = 2;
+        connectivity(1, 1) = 3;
+        connectivity(1, 2) = 3;
+    }
 };
 
 TEST(MeshTest, CheckConsistency_NonUniqueNode_2Element) {
@@ -224,15 +224,15 @@ TEST(MeshTest, CheckConsistency_NonUniqueNode_2Element) {
 struct Pass_Bar_Connectivity {
     Kokkos::View<int**> connectivity;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
-            connectivity(0, 0) = 0;
-            connectivity(0, 1) = 1;
-            connectivity(0, 2) = 2;
-            connectivity(1, 0) = 2;
-            connectivity(1, 1) = 3;
-            connectivity(1, 2) = 4;
-  }
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        connectivity(0, 0) = 0;
+        connectivity(0, 1) = 1;
+        connectivity(0, 2) = 2;
+        connectivity(1, 0) = 2;
+        connectivity(1, 1) = 3;
+        connectivity(1, 2) = 4;
+    }
 };
 
 TEST(MeshTest, CheckConsistency_Pass_Bar) {
@@ -252,21 +252,21 @@ TEST(MeshTest, CheckConsistency_Pass_Bar) {
 struct Pass_Plus_Connectivity {
     Kokkos::View<int**> connectivity;
 
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
-            connectivity(0, 0) = 0;
-            connectivity(0, 1) = 1;
-            connectivity(0, 2) = 2;
-            connectivity(1, 0) = 2;
-            connectivity(1, 1) = 3;
-            connectivity(1, 2) = 4;
-            connectivity(2, 0) = 2;
-            connectivity(2, 1) = 5;
-            connectivity(2, 2) = 6;
-            connectivity(3, 0) = 2;
-            connectivity(3, 1) = 7;
-            connectivity(3, 2) = 8;
-  }
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        connectivity(0, 0) = 0;
+        connectivity(0, 1) = 1;
+        connectivity(0, 2) = 2;
+        connectivity(1, 0) = 2;
+        connectivity(1, 1) = 3;
+        connectivity(1, 2) = 4;
+        connectivity(2, 0) = 2;
+        connectivity(2, 1) = 5;
+        connectivity(2, 2) = 6;
+        connectivity(3, 0) = 2;
+        connectivity(3, 1) = 7;
+        connectivity(3, 2) = 8;
+    }
 };
 
 TEST(MeshTest, CheckConsistency_Pass_Plus) {

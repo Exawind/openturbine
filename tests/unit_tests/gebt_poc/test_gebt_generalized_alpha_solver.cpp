@@ -4,26 +4,26 @@
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 struct ZeroAccel_PopulateFieldData {
-  openturbine::gebt_poc::FieldData field_data;
+    openturbine::gebt_poc::FieldData field_data;
 
-  KOKKOS_FUNCTION
-  void operator()(int node) const {
-    using namespace openturbine::gebt_poc;
-    constexpr auto lie_group_size = 7;
-    constexpr auto lie_algebra_size = 6;
-    auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
-    for (int i = 0; i < lie_group_size; ++i) {
-        coordinates(i) = 0.;
+    KOKKOS_FUNCTION
+    void operator()(int node) const {
+        using namespace openturbine::gebt_poc;
+        constexpr auto lie_group_size = 7;
+        constexpr auto lie_algebra_size = 6;
+        auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
+        for (int i = 0; i < lie_group_size; ++i) {
+            coordinates(i) = 0.;
+        }
+        auto velocity = field_data.GetNodalData<Field::Velocity>(node);
+        auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
+        auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
+        for (int i = 0; i < lie_algebra_size; ++i) {
+            velocity(i) = 0.;
+            acceleration(i) = 0.;
+            algo_acceleration(i) = 0.;
+        }
     }
-            auto velocity = field_data.GetNodalData<Field::Velocity>(node);
-            auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
-            auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
-            for (int i = 0; i < lie_algebra_size; ++i) {
-                velocity(i) = 0.;
-                acceleration(i) = 0.;
-                algo_acceleration(i) = 0.;
-            }
-  }
 };
 
 TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceleration) {
@@ -91,27 +91,27 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceler
 }
 
 struct ZeroInitialState_PopulateFieldData {
-  openturbine::gebt_poc::FieldData field_data;
+    openturbine::gebt_poc::FieldData field_data;
 
-  KOKKOS_FUNCTION
-  void operator()(int node) const {
-    using namespace openturbine::gebt_poc;
-    constexpr auto lie_group_size = 7;
-    constexpr auto lie_algebra_size = 6;
-    auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
-    for (int i = 0; i < lie_group_size; ++i) {
-      coordinates(i) = 0.;
-    }
+    KOKKOS_FUNCTION
+    void operator()(int node) const {
+        using namespace openturbine::gebt_poc;
+        constexpr auto lie_group_size = 7;
+        constexpr auto lie_algebra_size = 6;
+        auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
+        for (int i = 0; i < lie_group_size; ++i) {
+            coordinates(i) = 0.;
+        }
 
-    auto velocity = field_data.GetNodalData<Field::Velocity>(node);
-    auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
-    auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
-    for (int i = 0; i < lie_algebra_size; ++i) {
-      velocity(i) = i + 1.;
-      acceleration(i) = i + 1.;
-      algo_acceleration(i) = i + 1.;
+        auto velocity = field_data.GetNodalData<Field::Velocity>(node);
+        auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
+        auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
+        for (int i = 0; i < lie_algebra_size; ++i) {
+            velocity(i) = i + 1.;
+            acceleration(i) = i + 1.;
+            algo_acceleration(i) = i + 1.;
+        }
     }
-  }
 };
 
 TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialState) {
@@ -151,27 +151,27 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialStat
 }
 
 struct HeavyTop_PopulateFieldData {
-  openturbine::gebt_poc::FieldData field_data;
+    openturbine::gebt_poc::FieldData field_data;
 
-  KOKKOS_FUNCTION
-  void operator()(int node) const {
-    using namespace openturbine::gebt_poc;
-    constexpr auto lie_group_size = 7;
-    constexpr auto lie_algebra_size = 6;
-    auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
-    for (int i = 0; i < lie_group_size; ++i) {
-        coordinates(i) = 1.;
-    }
+    KOKKOS_FUNCTION
+    void operator()(int node) const {
+        using namespace openturbine::gebt_poc;
+        constexpr auto lie_group_size = 7;
+        constexpr auto lie_algebra_size = 6;
+        auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
+        for (int i = 0; i < lie_group_size; ++i) {
+            coordinates(i) = 1.;
+        }
 
-    auto velocity = field_data.GetNodalData<Field::Velocity>(node);
-    auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
-    auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
-    for (int i = 0; i < lie_algebra_size; ++i) {
-        velocity(i) = 2.;
-        acceleration(i) = 3.;
-        algo_acceleration(i) = 5.;
+        auto velocity = field_data.GetNodalData<Field::Velocity>(node);
+        auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
+        auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
+        for (int i = 0; i < lie_algebra_size; ++i) {
+            velocity(i) = 2.;
+            acceleration(i) = 3.;
+            algo_acceleration(i) = 5.;
+        }
     }
-  }
 };
 
 TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionOfHeavyTopAfterOneInc) {
