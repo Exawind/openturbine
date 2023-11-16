@@ -40,7 +40,17 @@ void CalculateCurvature(
 ) {
     // curvature = B * q_prime
     auto b_matrix = gen_alpha_solver::BMatrixForQuaternions(
-        gen_alpha_solver::Quaternion(gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6));
+        gen_alpha_solver::Quaternion(gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6))
+    );
+    auto q_prime = Kokkos::subview(gen_coords_derivative, Kokkos::make_pair(3, 7));
+    KokkosBlas::gemv("N", 2., b_matrix, q_prime, 0., curvature);
+}
+
+void CalculateSectionalStrain(
+    Kokkos::View<double*> pos_vector_derivatives_qp, Kokkos::View<double*> gen_coords_derivatives_qp,
+    Kokkos::View<double*> curvature, Kokkos::View<double*> sectional_strain
+) {
+    // Calculate the sectional strain based on Eq. (35) in the "SO(3)-based GEBT Beam" document
     // in theory guide
     auto sectional_strain_1 = Kokkos::subview(sectional_strain, Kokkos::make_pair(0, 3));
     Kokkos::deep_copy(

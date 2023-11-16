@@ -3,6 +3,29 @@
 #include "src/gebt_poc/gebt_generalized_alpha_time_integrator.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
+struct ZeroAccel_PopulateFieldData {
+  openturbine::gebt_poc::FieldData field_data;
+
+  KOKKOS_FUNCTION
+  void operator()(int node) const {
+    using namespace openturbine::gebt_poc;
+    constexpr auto lie_group_size = 7;
+    constexpr auto lie_algebra_size = 6;
+    auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
+    for (int i = 0; i < lie_group_size; ++i) {
+        coordinates(i) = 0.;
+    }
+            auto velocity = field_data.GetNodalData<Field::Velocity>(node);
+            auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
+            auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
+            for (int i = 0; i < lie_algebra_size; ++i) {
+                velocity(i) = 0.;
+                acceleration(i) = 0.;
+                algo_acceleration(i) = 0.;
+            }
+  }
+};
+
 TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceleration) {
     using namespace openturbine::gebt_poc;
     auto stepper = CreateBasicStepper();
@@ -12,24 +35,7 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceler
     constexpr auto lie_group_size = 7;
     constexpr auto lie_algebra_size = 6;
 
-    Kokkos::parallel_for(
-        mesh.GetNumberOfNodes(),
-        KOKKOS_LAMBDA(int node) {
-            auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
-            for (int i = 0; i < lie_group_size; ++i) {
-                coordinates(i) = 0.;
-            }
-
-            auto velocity = field_data.GetNodalData<Field::Velocity>(node);
-            auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
-            auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
-            for (int i = 0; i < lie_algebra_size; ++i) {
-                velocity(i) = 0.;
-                acceleration(i) = 0.;
-                algo_acceleration(i) = 0.;
-            }
-        }
-    );
+    Kokkos::parallel_for(mesh.GetNumberOfNodes(), ZeroAccel_PopulateFieldData{field_data});
 
     std::size_t n_lagrange_mults = 0;
 
@@ -84,6 +90,30 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceler
     }
 }
 
+struct ZeroInitialState_PopulateFieldData {
+  openturbine::gebt_poc::FieldData field_data;
+
+  KOKKOS_FUNCTION
+  void operator()(int node) const {
+    using namespace openturbine::gebt_poc;
+    constexpr auto lie_group_size = 7;
+    constexpr auto lie_algebra_size = 6;
+    auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
+    for (int i = 0; i < lie_group_size; ++i) {
+      coordinates(i) = 0.;
+    }
+
+    auto velocity = field_data.GetNodalData<Field::Velocity>(node);
+    auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
+    auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
+    for (int i = 0; i < lie_algebra_size; ++i) {
+      velocity(i) = i + 1.;
+      acceleration(i) = i + 1.;
+      algo_acceleration(i) = i + 1.;
+    }
+  }
+};
+
 TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialState) {
     using namespace openturbine::gebt_poc;
     auto stepper = CreateBasicStepper();
@@ -93,24 +123,7 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialStat
     constexpr auto lie_group_size = 7;
     constexpr auto lie_algebra_size = 6;
 
-    Kokkos::parallel_for(
-        mesh.GetNumberOfNodes(),
-        KOKKOS_LAMBDA(int node) {
-            auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
-            for (int i = 0; i < lie_group_size; ++i) {
-                coordinates(i) = 0.;
-            }
-
-            auto velocity = field_data.GetNodalData<Field::Velocity>(node);
-            auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
-            auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
-            for (int i = 0; i < lie_algebra_size; ++i) {
-                velocity(i) = i + 1.;
-                acceleration(i) = i + 1.;
-                algo_acceleration(i) = i + 1.;
-            }
-        }
-    );
+    Kokkos::parallel_for(mesh.GetNumberOfNodes(), ZeroInitialState_PopulateFieldData{field_data});
 
     std::size_t n_lagrange_mults = 0;
 
@@ -137,6 +150,30 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialStat
     expect_kokkos_view_1D_equal(algo_acceleration, {-2., -2., -2., -2., -2., -2.});
 }
 
+struct HeavyTop_PopulateFieldData {
+  openturbine::gebt_poc::FieldData field_data;
+
+  KOKKOS_FUNCTION
+  void operator()(int node) const {
+    using namespace openturbine::gebt_poc;
+    constexpr auto lie_group_size = 7;
+    constexpr auto lie_algebra_size = 6;
+    auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
+    for (int i = 0; i < lie_group_size; ++i) {
+        coordinates(i) = 1.;
+    }
+
+    auto velocity = field_data.GetNodalData<Field::Velocity>(node);
+    auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
+    auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
+    for (int i = 0; i < lie_algebra_size; ++i) {
+        velocity(i) = 2.;
+        acceleration(i) = 3.;
+        algo_acceleration(i) = 5.;
+    }
+  }
+};
+
 TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionOfHeavyTopAfterOneInc) {
     using namespace openturbine::gebt_poc;
 
@@ -145,24 +182,7 @@ TEST(GEBT_TimeIntegratorTest, AlphaStepSolutionOfHeavyTopAfterOneInc) {
     constexpr auto lie_group_size = 7;
     constexpr auto lie_algebra_size = 6;
 
-    Kokkos::parallel_for(
-        mesh.GetNumberOfNodes(),
-        KOKKOS_LAMBDA(int node) {
-            auto coordinates = field_data.GetNodalData<Field::Coordinates>(node);
-            for (int i = 0; i < lie_group_size; ++i) {
-                coordinates(i) = 1.;
-            }
-
-            auto velocity = field_data.GetNodalData<Field::Velocity>(node);
-            auto acceleration = field_data.GetNodalData<Field::Acceleration>(node);
-            auto algo_acceleration = field_data.GetNodalData<Field::AlgorithmicAcceleration>(node);
-            for (int i = 0; i < lie_algebra_size; ++i) {
-                velocity(i) = 2.;
-                acceleration(i) = 3.;
-                algo_acceleration(i) = 5.;
-            }
-        }
-    );
+    Kokkos::parallel_for(mesh.GetNumberOfNodes(), HeavyTop_PopulateFieldData{field_data});
 
     // Calculate properties for the time integrator
     double time_step = 0.1;

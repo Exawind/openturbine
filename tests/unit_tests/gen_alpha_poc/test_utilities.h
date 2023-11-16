@@ -14,10 +14,6 @@ void expect_kokkos_view_1D_equal(
 
 // Check if members of the provided 2D Kokkos view is equal to the provided expected matrix
 void expect_kokkos_view_2D_equal(
-    Kokkos::View<double**>, const std::vector<std::vector<double>>&, double epsilon = kTolerance
-);
-
-void expect_kokkos_view_2D_equal(
     Kokkos::View<const double**>, const std::vector<std::vector<double>>&,
     double epsilon = kTolerance
 );

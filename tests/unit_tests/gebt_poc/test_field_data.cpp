@@ -64,7 +64,7 @@ struct SetElementWeights {
   openturbine::gebt_poc::FieldData field_data;
 
   KOKKOS_FUNCTION
-  void operator()(int element) {
+  void operator()(int element) const {
     auto weights = field_data.GetElementData<openturbine::gebt_poc::Field::Weight>(element);
     weights(0) = element * 4.;
     weights(1) = element * 4. + 1.;
@@ -77,9 +77,9 @@ struct SetStiffnessMatrix {
   openturbine::gebt_poc::FieldData field_data;
 
   KOKKOS_FUNCTION
-  void operator()(int element) {
+  void operator()(int element) const {
     auto stiffness = field_data.GetElementData<openturbine::gebt_poc::Field::StiffnessMatrix>(element);
-    for (int point = 0; point < stiffness.extent(0); ++point) {
+    for (std::size_t point = 0; point < stiffness.extent(0); ++point) {
       for (int row = 0; row < 6; ++row) {
         for (int column = 0; column < 6; ++column) {
           stiffness(point, row, column) = point * row * column;

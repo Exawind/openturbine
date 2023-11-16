@@ -19,11 +19,12 @@ public:
             {0, 0}, {connectivity_.extent(0), connectivity_.extent(1)}
         );
         int max_node_id;
+        auto connectivity = connectivity_;
         Kokkos::parallel_reduce(
             range_policy,
             KOKKOS_LAMBDA(int i, int j, int& local_max) {
-                if (connectivity_(i, j) > local_max) {
-                    local_max = connectivity_(i, j);
+                if (connectivity(i, j) > local_max) {
+                    local_max = connectivity(i, j);
                 }
             },
             Kokkos::Max<int>(max_node_id)

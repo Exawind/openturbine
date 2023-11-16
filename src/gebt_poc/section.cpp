@@ -2,14 +2,8 @@
 
 namespace openturbine::gebt_poc {
 
-void init(Kokkos::View<double[6][6]> stiffness_matrix) {
-    Kokkos::parallel_for(1, KOKKOS_LAMBDA(std::size_t) {
-      gen_alpha_solver::create_identity_matrix<Kokkos::DefaultExecutionSpace>(stiffness_matrix);
-    });
-}
-
 StiffnessMatrix::StiffnessMatrix() : stiffness_matrix_("stiffness_matrix", 6, 6) {
-    init(stiffness_matrix_);
+    stiffness_matrix_ = gen_alpha_solver::create_identity_matrix(6);
 }
 
 StiffnessMatrix::StiffnessMatrix(const Kokkos::View<double**> stiffness)

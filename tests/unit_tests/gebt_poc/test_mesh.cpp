@@ -144,6 +144,16 @@ TEST(MeshTest, CheckConsistency_WrongNumberOfElements) {
     EXPECT_THROW(mesh.TestCheckConsistency(), std::domain_error);
 }
 
+struct InvalidNodeConnectivity {
+  Kokkos::View<int**> connectivity;
+
+  KOKKOS_FUNCTION
+  void operator()(std::size_t) const {
+    connectivity(0, 0) = 0;
+    connectivity(0, 1) = 2;
+  }
+};
+
 TEST(MeshTest, CheckConsistency_InvalidNode) {
     openturbine::gebt_poc::impl::TestMesh mesh;
 
@@ -153,16 +163,21 @@ TEST(MeshTest, CheckConsistency_InvalidNode) {
     mesh.TestInitializeConnectivity(1, 2);
 
     auto connectivity = mesh.TestGetConnectivity();
-    Kokkos::parallel_for(
-        1,
-        KOKKOS_LAMBDA(int) {
-            connectivity(0, 0) = 0;
-            connectivity(0, 1) = 2;
-        }
-    );
+    Kokkos::parallel_for(1, InvalidNodeConnectivity{connectivity});
 
     EXPECT_THROW(mesh.TestCheckConsistency(), std::domain_error);
 }
+
+struct NonuniqueNodeConnectivity {
+    Kokkos::View<int**> connectivity;
+
+  KOKKOS_FUNCTION
+  void operator()(std::size_t) const {
+            connectivity(0, 0) = 0;
+            connectivity(0, 1) = 1;
+            connectivity(0, 2) = 0;
+  }
+};
 
 TEST(MeshTest, CheckConsistency_NonUniqueNode) {
     openturbine::gebt_poc::impl::TestMesh mesh;
@@ -173,17 +188,24 @@ TEST(MeshTest, CheckConsistency_NonUniqueNode) {
     mesh.TestInitializeConnectivity(1, 3);
 
     auto connectivity = mesh.TestGetConnectivity();
-    Kokkos::parallel_for(
-        1,
-        KOKKOS_LAMBDA(int) {
-            connectivity(0, 0) = 0;
-            connectivity(0, 1) = 1;
-            connectivity(0, 2) = 0;
-        }
-    );
+    Kokkos::parallel_for(1, NonuniqueNodeConnectivity{connectivity});
 
     EXPECT_THROW(mesh.TestCheckConsistency(), std::domain_error);
 }
+
+struct NonUniqueNode_2Element_Connectivity {
+    Kokkos::View<int**> connectivity;
+
+  KOKKOS_FUNCTION
+  void operator()(std::size_t) const {
+            connectivity(0, 0) = 0;
+            connectivity(0, 1) = 1;
+            connectivity(0, 2) = 2;
+            connectivity(1, 0) = 2;
+            connectivity(1, 1) = 3;
+            connectivity(1, 2) = 3;
+  }
+};
 
 TEST(MeshTest, CheckConsistency_NonUniqueNode_2Element) {
     openturbine::gebt_poc::impl::TestMesh mesh;
@@ -194,20 +216,24 @@ TEST(MeshTest, CheckConsistency_NonUniqueNode_2Element) {
     mesh.TestInitializeConnectivity(2, 3);
 
     auto connectivity = mesh.TestGetConnectivity();
-    Kokkos::parallel_for(
-        1,
-        KOKKOS_LAMBDA(int) {
+    Kokkos::parallel_for(1, NonUniqueNode_2Element_Connectivity{connectivity});
+
+    EXPECT_THROW(mesh.TestCheckConsistency(), std::domain_error);
+}
+
+struct Pass_Bar_Connectivity {
+    Kokkos::View<int**> connectivity;
+
+  KOKKOS_FUNCTION
+  void operator()(std::size_t) const {
             connectivity(0, 0) = 0;
             connectivity(0, 1) = 1;
             connectivity(0, 2) = 2;
             connectivity(1, 0) = 2;
             connectivity(1, 1) = 3;
-            connectivity(1, 2) = 3;
-        }
-    );
-
-    EXPECT_THROW(mesh.TestCheckConsistency(), std::domain_error);
-}
+            connectivity(1, 2) = 4;
+  }
+};
 
 TEST(MeshTest, CheckConsistency_Pass_Bar) {
     openturbine::gebt_poc::impl::TestMesh mesh;
@@ -218,33 +244,16 @@ TEST(MeshTest, CheckConsistency_Pass_Bar) {
     mesh.TestInitializeConnectivity(2, 3);
 
     auto connectivity = mesh.TestGetConnectivity();
-    Kokkos::parallel_for(
-        1,
-        KOKKOS_LAMBDA(int) {
-            connectivity(0, 0) = 0;
-            connectivity(0, 1) = 1;
-            connectivity(0, 2) = 2;
-            connectivity(1, 0) = 2;
-            connectivity(1, 1) = 3;
-            connectivity(1, 2) = 4;
-        }
-    );
+    Kokkos::parallel_for(1, Pass_Bar_Connectivity{connectivity});
 
     EXPECT_NO_THROW(mesh.TestCheckConsistency());
 }
 
-TEST(MeshTest, CheckConsistency_Pass_Plus) {
-    openturbine::gebt_poc::impl::TestMesh mesh;
+struct Pass_Plus_Connectivity {
+    Kokkos::View<int**> connectivity;
 
-    mesh.TestSetNumberOfElements(4);
-    mesh.TestSetNumberOfNodes(9);
-
-    mesh.TestInitializeConnectivity(4, 3);
-
-    auto connectivity = mesh.TestGetConnectivity();
-    Kokkos::parallel_for(
-        1,
-        KOKKOS_LAMBDA(int) {
+  KOKKOS_FUNCTION
+  void operator()(std::size_t) const {
             connectivity(0, 0) = 0;
             connectivity(0, 1) = 1;
             connectivity(0, 2) = 2;
@@ -257,8 +266,19 @@ TEST(MeshTest, CheckConsistency_Pass_Plus) {
             connectivity(3, 0) = 2;
             connectivity(3, 1) = 7;
             connectivity(3, 2) = 8;
-        }
-    );
+  }
+};
+
+TEST(MeshTest, CheckConsistency_Pass_Plus) {
+    openturbine::gebt_poc::impl::TestMesh mesh;
+
+    mesh.TestSetNumberOfElements(4);
+    mesh.TestSetNumberOfNodes(9);
+
+    mesh.TestInitializeConnectivity(4, 3);
+
+    auto connectivity = mesh.TestGetConnectivity();
+    Kokkos::parallel_for(1, Pass_Plus_Connectivity{connectivity});
 
     EXPECT_NO_THROW(mesh.TestCheckConsistency());
 }
