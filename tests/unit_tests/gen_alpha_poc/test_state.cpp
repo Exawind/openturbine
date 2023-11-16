@@ -76,6 +76,48 @@ TEST(StateTest, CreateStateWithGivenValues) {
     );
 }
 
+TEST(StateTest, ExpectFailureIfNumberOfInputsDoNotMatchInGeneralizedCoordinates) {
+    EXPECT_THROW(
+        State(
+            create_matrix({
+                {1., 1., 1., 1., 1., 1., 1.},  // row 1
+                {1., 1., 1., 1., 1., 1., 1.}   // row 2
+            }),
+            create_matrix({
+                {2., 2., 2., 2., 2., 2.}  // row 1
+            }),
+            create_matrix({
+                {3., 3., 3., 3., 3., 3.}  // row 1
+            }),
+            create_matrix({
+                {4., 4., 4., 4., 4., 4.}  // row 1
+            })
+        ),
+        std::invalid_argument
+    );
+}
+
+TEST(StateTest, ExpectFailureIfNumberOfInputsDoNotMatchInAcceleration) {
+    EXPECT_THROW(
+        State(
+            create_matrix({
+                {1., 1., 1., 1., 1., 1., 1.},  // row 1
+            }),
+            create_matrix({
+                {2., 2., 2., 2., 2., 2.}  // row 1
+            }),
+            create_matrix({
+                {3., 3., 3., 3., 3., 3.},  // row 1
+                {4., 4., 4., 4., 4., 4.}   // row 2
+            }),
+            create_matrix({
+                {5., 5., 5., 5., 5., 5.}  // row 1
+            })
+        ),
+        std::invalid_argument
+    );
+}
+
 TEST(MassMatrixTest, CreateMassMatrixWithDefaultValues) {
     auto mass_matrix = MassMatrix();
     expect_kokkos_view_2D_equal(
