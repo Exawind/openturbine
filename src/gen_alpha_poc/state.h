@@ -13,6 +13,7 @@ public:
     /// Default constructor that initializes all states to zero (assuming a single node)
     State();
 
+    /// Constructor that initializes the states to the given 2D Kokkos views
     State(
         Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
         Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,

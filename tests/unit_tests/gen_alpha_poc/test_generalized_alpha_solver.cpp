@@ -1,92 +1,50 @@
-// #include <limits>
+#include <limits>
 
-// #include <gtest/gtest.h>
+#include <gtest/gtest.h>
 
-// #include "src/gen_alpha_poc/generalized_alpha_time_integrator.h"
-// #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
+#include "src/gen_alpha_poc/generalized_alpha_time_integrator.h"
+#include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
-// namespace openturbine::gen_alpha_solver::tests {
+namespace openturbine::gen_alpha_solver::tests {
 
-// TEST(TimeIntegratorTest, GetTimeIntegratorType) {
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
+TEST(TimeIntegratorTest, GetTimeIntegratorType) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
 
-//     EXPECT_EQ(time_integrator.GetType(), TimeIntegratorType::kGeneralizedAlpha);
-// }
+    EXPECT_EQ(time_integrator.GetType(), TimeIntegratorType::kGeneralizedAlpha);
+}
 
-// class CheckTimeIntegratorInputsTest : public ::testing::Test {
-// protected:
-//     GeneralizedAlphaTimeIntegrator time_integrator{0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10)};
+TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
 
-//     void SetUp() override { EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.); }
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.);
 
-//     void PerformIntegrationTest(
-//         const Kokkos::View<double*>& q0, const Kokkos::View<double*>& v0,
-//         const Kokkos::View<double*>& a0, const Kokkos::View<double*>& aa0, size_t
-//         n_lagrange_mults, const std::shared_ptr<LinearizationParameters>& lin_params
-//     ) {
-//         auto initial_state = State(q0, v0, a0, aa0);
-//         EXPECT_THROW(
-//             time_integrator.Integrate(initial_state, n_lagrange_mults, lin_params),
-//             std::invalid_argument
-//         );
-//     }
-// };
+    auto q0 = create_matrix({{1., 1., 1., 1., 1., 1., 1.}});
+    auto v0 = create_matrix({{2., 2., 2., 2., 2., 2.}});
+    auto a0 = create_matrix({{3., 3., 3., 3., 3., 3.}});
+    auto aa0 = create_matrix({{4., 4., 4., 4., 4., 4.}});
+    auto initial_state = State(q0, v0, a0, aa0);
 
-// TEST_F(CheckTimeIntegratorInputsTest, ExpectFailureIfNumberOfVelocitiesNotEqualToSix) {
-//     auto q0 = create_vector({1., 1., 1., 1., 1., 1., 1.});  // 7 components
-//     auto v0 = create_vector({2., 2., 2., 2., 2., 2.});      // 6 components
-//     auto a0 = create_vector({3., 3., 3., 3., 3.});          // 5 components
-//     auto aa0 = create_vector({4., 4., 4., 4., 4., 4.});     // 6 components
-//     size_t n_lagrange_mults{0};
-//     auto unity_lin_params = std::make_shared<UnityLinearizationParameters>();
+    size_t n_lagrange_mults{0};
+    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
+        std::make_shared<UnityLinearizationParameters>();
 
-//     PerformIntegrationTest(q0, v0, a0, aa0, n_lagrange_mults, unity_lin_params);
-// }
+    auto state_history =
+        time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
 
-// TEST_F(CheckTimeIntegratorInputsTest, ExpectFailureIfNumberOfGenCoordsNotEqualToSeven) {
-//     auto q0 = create_vector({1., 1., 1., 1., 1., 1.});   // 6 components
-//     auto v0 = create_vector({2., 2., 2., 2., 2., 2.});   // 6 components
-//     auto a0 = create_vector({3., 3., 3., 3., 3., 3.});   // 6 components
-//     auto aa0 = create_vector({4., 4., 4., 4., 4., 4.});  // 6 components
-//     size_t n_lagrange_mults{0};
-//     auto unity_lin_params = std::make_shared<UnityLinearizationParameters>();
-
-//     PerformIntegrationTest(q0, v0, a0, aa0, n_lagrange_mults, unity_lin_params);
-// }
-
-// TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
-
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 0.);
-
-//     auto q0 = create_vector({1., 1., 1., 1., 1., 1., 1.});
-//     auto v0 = create_vector({2., 2., 2., 2., 2., 2.});
-//     auto a0 = create_vector({3., 3., 3., 3., 3., 3.});
-//     auto aa0 = create_vector({4., 4., 4., 4., 4., 4.});
-//     auto initial_state = State(q0, v0, a0, aa0);
-
-//     size_t n_lagrange_mults{0};
-//     std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
-//         std::make_shared<UnityLinearizationParameters>();
-
-//     auto state_history =
-//         time_integrator.Integrate(initial_state, n_lagrange_mults,
-//         unity_linearization_parameters);
-
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 10.0);
-//     EXPECT_EQ(state_history.size(), 11);
-//     EXPECT_LE(
-//         time_integrator.GetTimeStepper().GetNumberOfIterations(),
-//         time_integrator.GetTimeStepper().GetMaximumNumberOfIterations()
-//     );
-//     EXPECT_LE(
-//         time_integrator.GetTimeStepper().GetTotalNumberOfIterations(),
-//         time_integrator.GetTimeStepper().GetNumberOfSteps() *
-//             time_integrator.GetTimeStepper().GetMaximumNumberOfIterations()
-//     );
-// }
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetCurrentTime(), 10.0);
+    EXPECT_EQ(state_history.size(), 11);
+    EXPECT_LE(
+        time_integrator.GetTimeStepper().GetNumberOfIterations(),
+        time_integrator.GetTimeStepper().GetMaximumNumberOfIterations()
+    );
+    EXPECT_LE(
+        time_integrator.GetTimeStepper().GetTotalNumberOfIterations(),
+        time_integrator.GetTimeStepper().GetNumberOfSteps() *
+            time_integrator.GetTimeStepper().GetMaximumNumberOfIterations()
+    );
+}
 
 // TEST(TimeIntegratorTest, TestUpdateGeneralizedCoordinates) {
 //     auto time_integrator =
@@ -316,4 +274,4 @@
 //     );
 // }
 
-// }  // namespace openturbine::gen_alpha_solver::tests
+}  // namespace openturbine::gen_alpha_solver::tests
