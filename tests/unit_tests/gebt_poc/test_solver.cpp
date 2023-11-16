@@ -452,7 +452,6 @@ TEST(SolverTest, CalculateIterationMatrixComponents) {
           24.054825962838, 43.50305858028866}}
     );
 
-
     auto O_matrix = Kokkos::View<double**>("O_matrix", 6, 6);
     auto P_matrix = Kokkos::View<double**>("P_matrix", 6, 6);
     auto Q_matrix = Kokkos::View<double**>("Q_matrix", 6, 6);
