@@ -53,25 +53,25 @@ TEST(StateTest, CreateStateWithGivenValues) {
     expect_kokkos_view_2D_equal(
         state.GetGeneralizedCoordinates(),
         {
-            {1., 2., 3., 4., 0., 0., 0.}  // row 1
+            {1., 2., 3., 4., 0., 0., 0.}  // 7 elements
         }
     );
     expect_kokkos_view_2D_equal(
         state.GetVelocity(),
         {
-            {5., 6., 7., 0., 0., 0.}  // row 1
+            {5., 6., 7., 0., 0., 0.}  // 6 elements
         }
     );
     expect_kokkos_view_2D_equal(
         state.GetAcceleration(),
         {
-            {5., 6., 7., 0., 0., 0.}  // row 1
+            {5., 6., 7., 0., 0., 0.}  // 6 elements
         }
     );
     expect_kokkos_view_2D_equal(
         state.GetAlgorithmicAcceleration(),
         {
-            {5., 6., 7., 0., 0., 0.}  // row 1
+            {5., 6., 7., 0., 0., 0.}  // 6 elements
         }
     );
 }

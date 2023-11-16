@@ -3,15 +3,17 @@
 namespace openturbine::gen_alpha_solver {
 
 State::State()
-    : generalized_coords_("generalized_coordinates", 1, 7),
-      velocity_("velocities", 1, 6),
-      acceleration_("accelerations", 1, 6),
-      algorithmic_acceleration_("algorithmic_accelerations", 1, 6) {
+    : generalized_coords_("generalized_coordinates", 1, kNumberOfLieGroupComponents),
+      velocity_("velocities", 1, kNumberOfLieAlgebraComponents),
+      acceleration_("accelerations", 1, kNumberOfLieAlgebraComponents),
+      algorithmic_acceleration_("algorithmic_accelerations", 1, kNumberOfLieAlgebraComponents) {
 }
 
 State::State(
-    Kokkos::View<double* [7]> gen_coords, Kokkos::View<double* [6]> velocity,
-    Kokkos::View<double* [6]> accln, Kokkos::View<double* [6]> algo_accln
+    Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
+    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
+    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> accln,
+    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> algo_accln
 )
     : generalized_coords_("generalized_coordinates", gen_coords.extent(0), gen_coords.extent(1)),
       velocity_("velocities", velocity.extent(0), velocity.extent(1)),
