@@ -1,5 +1,7 @@
 #include "src/gen_alpha_poc/generalized_alpha_time_integrator.h"
 
+#include <KokkosBlas.hpp>
+
 #include "src/gen_alpha_poc/heavy_top.h"
 #include "src/gen_alpha_poc/quaternion.h"
 #include "src/gen_alpha_poc/solver.h"
@@ -56,49 +58,60 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     const State& state, size_t n_constraints,
     std::shared_ptr<LinearizationParameters> linearization_parameters
 ) {
-    // auto gen_coords = state.GetGeneralizedCoordinates();
-    // auto velocity = state.GetVelocity();
-    // auto acceleration = state.GetAcceleration();
-    // auto algo_acceleration = state.GetAlgorithmicAcceleration();
+    auto gen_coords = state.GetGeneralizedCoordinates();
+    auto velocity = state.GetVelocity();
+    auto acceleration = state.GetAcceleration();
+    auto algo_acceleration = state.GetAlgorithmicAcceleration();
 
-    // // Define some constants that will be used in the algorithm
-    // const auto h = this->time_stepper_.GetTimeStep();
-    // const auto size = velocity.size();
+    // Define some constants that will be used in the algorithm
+    const auto h = this->time_stepper_.GetTimeStep();
+    const auto n_nodes = state.GetNumberOfNodes();
+    const auto size = velocity.size();
 
-    // const auto kAlphaFLocal = kAlphaF_;
-    // const auto kAlphaMLocal = kAlphaM_;
-    // const auto kBetaLocal = kBeta_;
-    // const auto kGammaLocal = kGamma_;
+    const auto kAlphaFLocal = kAlphaF_;
+    const auto kAlphaMLocal = kAlphaM_;
+    const auto kBetaLocal = kBeta_;
+    const auto kGammaLocal = kGamma_;
 
-    // // Initialize some X_next variables to assist in updating the State
-    // auto gen_coords_next = Kokkos::View<double*>("gen_coords_next", kNumberOfLieGroupComponents);
-    // auto velocity_next = Kokkos::View<double*>("velocity_next", kNumberOfLieAlgebraComponents);
-    // auto acceleration_next =
-    //     Kokkos::View<double*>("acceleration_next", kNumberOfLieAlgebraComponents);
-    // auto algo_acceleration_next =
-    //     Kokkos::View<double*>("algorithmic_acceleration_next", kNumberOfLieAlgebraComponents);
-    // auto delta_gen_coords =
-    //     Kokkos::View<double*>("gen_coords_increment", kNumberOfLieAlgebraComponents);
-    // auto lagrange_mults_next = Kokkos::View<double*>("lagrange_mults_next", n_constraints);
+    // Initialize some X_next variables to assist in updating the State
+    auto gen_coords_next =
+        Kokkos::View<double**>("gen_coords_next", n_nodes, kNumberOfLieGroupComponents);
+    auto velocity_next =
+        Kokkos::View<double**>("velocity_next", n_nodes, kNumberOfLieAlgebraComponents);
+    auto acceleration_next =
+        Kokkos::View<double**>("acceleration_next", n_nodes, kNumberOfLieAlgebraComponents);
+    auto algo_acceleration_next =
+        Kokkos::View<double**>("algo_acceleration_next", n_nodes, kNumberOfLieAlgebraComponents);
+    auto delta_gen_coords =
+        Kokkos::View<double**>("delta_gen_coords", n_nodes, kNumberOfLieAlgebraComponents);
+    auto lagrange_mults_next = Kokkos::View<double*>("lagrange_mults_next", n_constraints);
 
-    // for (size_t node = 0; node < gen_coords.extent(0); node++) {
+    // Loop over all nodes in the system and update the generalized coordinates, velocities,
+    // accelerations, and algorithmic accelerations
+    auto log = util::Log::Get();
+    log->Info(
+        "Performing Newton-Raphson iterations to update solution using the generalized-alpha "
+        "algorithm\n"
+    );
+    // for (size_t node = 0; node < n_nodes; node++) {
     //     // Perform the linear update part of the generalized alpha algorithm
     //     // Algorithm from Table 1, Brüls, Cardona, and Arnold 2012
     //     Kokkos::parallel_for(
     //         size,
     //         KOKKOS_LAMBDA(const size_t i) {
-    //             algo_acceleration_next(i) = (kAlphaFLocal * acceleration(node, i) -
-    //                                          kAlphaMLocal * algo_acceleration(node, i)) /
-    //                                         (1. - kAlphaMLocal);
+    //             algo_acceleration_next(node, i) = (kAlphaFLocal * acceleration(node, i) -
+    //                                                kAlphaMLocal * algo_acceleration(node, i)) /
+    //                                               (1. - kAlphaMLocal);
 
-    //             delta_gen_coords(i) = velocity(node, i) * h +
-    //                                   h * h * (0.5 - kBetaLocal) * algo_acceleration(node, i) +
-    //                                   h * h * kBetaLocal * algo_acceleration_next(i);
+    //             delta_gen_coords(node, i) = velocity(node, i) * h +
+    //                                         h * h * (0.5 - kBetaLocal) * algo_acceleration(node,
+    //                                         i) + h * h * kBetaLocal * algo_acceleration_next(node,
+    //                                         i);
 
-    //             velocity_next(i) += h * (1 - kGammaLocal) * algo_acceleration(node, i) +
-    //                                 h * kGammaLocal * algo_acceleration_next(i);
+    //             velocity_next(node, i) += h * (1 - kGammaLocal) * algo_acceleration(node, i) +
+    //                                       h * kGammaLocal * algo_acceleration_next(node, i);
 
-    //             acceleration_next(i) = 0.;
+    //             acceleration_next(node, i) = 0.;
     //         }
     //     );
 
@@ -106,11 +119,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     //     Kokkos::deep_copy(lagrange_mults_next, 0.);
 
     //     // Perform Newton-Raphson iterations to update nonlinear part of generalized-alpha
-    //     algorithm auto log = util::Log::Get(); log->Info(
-    //         "Performing Newton-Raphson iterations to update solution using the generalized-alpha "
-    //         "algorithm\n"
-    //     );
-
+    //     // algorithm
     //     const auto kBetaPrime = (1 - kAlphaM_) / (h * h * kBeta_ * (1 - kAlphaF_));
     //     const auto kGammaPrime = kGamma_ / (h * kBeta_);
 
@@ -147,13 +156,15 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     //          time_stepper_.IncrementNumberOfIterations()) {
     //         UpdateGeneralizedCoordinates(
     //             Kokkos::subview(gen_coords, node, Kokkos::ALL),
-    //             Kokkos::subview(delta_gen_coords, Kokkos::ALL),
-    //             gen_coords_next
+    //             Kokkos::subview(delta_gen_coords, node, Kokkos::ALL),
+    //             Kokkos::subview(gen_coords_next, node, Kokkos::ALL)
     //         );
 
     //         // Compute the residuals and check for convergence
     //         const auto residuals = linearization_parameters->ResidualVector(
-    //             gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next
+    //             Kokkos::subview(gen_coords_next, node, Kokkos::ALL),
+    //             Kokkos::subview(velocity_next, node, Kokkos::ALL),
+    //             Kokkos::subview(acceleration_next, node, Kokkos::ALL), lagrange_mults_next
     //         );
 
     //         if (this->CheckConvergence(residuals)) {
@@ -162,8 +173,10 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     //         }
 
     //         auto iteration_matrix = linearization_parameters->IterationMatrix(
-    //             h, kBetaPrime, kGammaPrime, gen_coords_next, delta_gen_coords, velocity_next,
-    //             acceleration_next, lagrange_mults_next
+    //             h, kBetaPrime, kGammaPrime, Kokkos::subview(gen_coords_next, node, Kokkos::ALL),
+    //             Kokkos::subview(delta_gen_coords, node, Kokkos::ALL),
+    //             Kokkos::subview(velocity_next, node, Kokkos::ALL),
+    //             Kokkos::subview(acceleration_next, node, Kokkos::ALL), lagrange_mults_next
     //         );
 
     //         if (this->is_preconditioned_) {
@@ -220,44 +233,43 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     //         Kokkos::parallel_for(
     //             size,
     //             KOKKOS_LAMBDA(const size_t i) {
-    //                 delta_gen_coords(i) += delta_x(i) / h;
-    //                 velocity_next(i) += kGammaPrime * delta_x(i);
-    //                 acceleration_next(i) += kBetaPrime * delta_x(i);
+    //                 delta_gen_coords(node, i) += delta_x(i) / h;
+    //                 velocity_next(node, i) += kGammaPrime * delta_x(i);
+    //                 acceleration_next(node, i) += kBetaPrime * delta_x(i);
     //             }
     //         );
     //     }
-    // }
 
-    // const auto n_iterations = time_stepper_.GetNumberOfIterations();
-    // this->time_stepper_.IncrementTotalNumberOfIterations(n_iterations);
-
-    // // Update algorithmic acceleration once Newton-Raphson iterations have ended
-    // Kokkos::parallel_for(
-    //     size,
-    //     KOKKOS_LAMBDA(const size_t i) {
-    //         algo_acceleration_next(i) +=
-    //             (1. - kAlphaFLocal) / (1. - kAlphaMLocal) * acceleration_next(i);
-    //     }
-    // );
-
-    // auto results = std::make_tuple(
-    //     State{gen_coords_next, velocity_next, acceleration_next, algo_acceleration_next},
-    //     lagrange_mults_next
-    // );
-
-    // if (this->is_converged_) {
-    //     log->Info(
-    //         "Newton-Raphson iterations converged in " + std::to_string(n_iterations + 1) +
-    //         " iterations\n"
+    //     // Update algorithmic acceleration once Newton-Raphson iterations have ended
+    //     Kokkos::parallel_for(
+    //         size,
+    //         KOKKOS_LAMBDA(const size_t i) {
+    //             algo_acceleration_next(node, i) +=
+    //                 (1. - kAlphaFLocal) / (1. - kAlphaMLocal) * acceleration_next(node, i);
+    //         }
     //     );
-    //     return results;
     // }
 
-    // log->Warning(
-    //     "Newton-Raphson iterations failed to converge on a solution after " +
-    //     std::to_string(n_iterations + 1) + " iterations!\n"
-    // );
-    auto results = std::make_tuple(State(), Kokkos::View<double*>("lagrange_mults_next", 1));
+    const auto n_iterations = time_stepper_.GetNumberOfIterations();
+    this->time_stepper_.IncrementTotalNumberOfIterations(n_iterations);
+
+    auto results = std::make_tuple(
+        State{gen_coords_next, velocity_next, acceleration_next, algo_acceleration_next},
+        lagrange_mults_next
+    );
+
+    if (this->is_converged_) {
+        log->Info(
+            "Newton-Raphson iterations converged in " + std::to_string(n_iterations + 1) +
+            " iterations\n"
+        );
+        return results;
+    }
+
+    log->Warning(
+        "Newton-Raphson iterations failed to converge on a solution after " +
+        std::to_string(n_iterations + 1) + " iterations!\n"
+    );
 
     return results;
 }

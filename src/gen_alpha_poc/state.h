@@ -43,6 +43,11 @@ public:
         return algorithmic_acceleration_;
     }
 
+    /// Returns the number of nodes in the system
+    inline size_t GetNumberOfNodes() const {
+        return generalized_coords_.extent(0);
+    }
+
     // clang-format off
 private :
     Kokkos::View<double*[kNumberOfLieGroupComponents]> generalized_coords_;

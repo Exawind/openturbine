@@ -78,57 +78,57 @@ TEST(TimeIntegratorTest, TestUpdateGeneralizedCoordinates) {
     );
 }
 
-// TEST(TimeIntegratorTest, ExpectConvergedSolution) {
-//     auto tol = GeneralizedAlphaTimeIntegrator::kConvergenceTolerance;
-//     auto residual = create_vector({tol * 1e-1, tol * 2e-1, tol * 3e-1});
-//     auto time_integrator = GeneralizedAlphaTimeIntegrator();
-//     auto converged = time_integrator.CheckConvergence(residual);
+TEST(TimeIntegratorTest, ExpectConvergedSolution) {
+    auto tol = GeneralizedAlphaTimeIntegrator::kConvergenceTolerance;
+    auto residual = create_vector({tol * 1e-1, tol * 2e-1, tol * 3e-1});
+    auto time_integrator = GeneralizedAlphaTimeIntegrator();
+    auto converged = time_integrator.CheckConvergence(residual);
 
-//     EXPECT_TRUE(converged);
-// }
+    EXPECT_TRUE(converged);
+}
 
-// TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
-//     auto tol = GeneralizedAlphaTimeIntegrator::kConvergenceTolerance;
-//     auto residual = create_vector({tol * 1e1, tol * 2e1, tol * 3e1});
-//     auto time_integrator = GeneralizedAlphaTimeIntegrator();
-//     auto converged = time_integrator.CheckConvergence(residual);
+TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
+    auto tol = GeneralizedAlphaTimeIntegrator::kConvergenceTolerance;
+    auto residual = create_vector({tol * 1e1, tol * 2e1, tol * 3e1});
+    auto time_integrator = GeneralizedAlphaTimeIntegrator();
+    auto converged = time_integrator.CheckConvergence(residual);
 
-//     EXPECT_FALSE(converged);
-// }
+    EXPECT_FALSE(converged);
+}
 
-// TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidAlphaF) {
-//     EXPECT_THROW(GeneralizedAlphaTimeIntegrator(1.1, 0.5, 0.25, 0.5), std::invalid_argument);
-// }
+TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidAlphaF) {
+    EXPECT_THROW(GeneralizedAlphaTimeIntegrator(1.1, 0.5, 0.25, 0.5), std::invalid_argument);
+}
 
-// TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidAlphaM) {
-//     EXPECT_THROW(GeneralizedAlphaTimeIntegrator(0.5, 1.1, 0.25, 0.5), std::invalid_argument);
-// }
+TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidAlphaM) {
+    EXPECT_THROW(GeneralizedAlphaTimeIntegrator(0.5, 1.1, 0.25, 0.5), std::invalid_argument);
+}
 
-// TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidBeta) {
-//     EXPECT_THROW(GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.75, 0.5), std::invalid_argument);
-// }
+TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidBeta) {
+    EXPECT_THROW(GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.75, 0.5), std::invalid_argument);
+}
 
-// TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidGamma) {
-//     EXPECT_THROW(GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 1.1), std::invalid_argument);
-// }
+TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidGamma) {
+    EXPECT_THROW(GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 1.1), std::invalid_argument);
+}
 
-// TEST(GeneralizedAlphaTimeIntegratorTest, GetDefaultGAConstants) {
-//     auto time_integrator = GeneralizedAlphaTimeIntegrator();
+TEST(GeneralizedAlphaTimeIntegratorTest, GetDefaultGAConstants) {
+    auto time_integrator = GeneralizedAlphaTimeIntegrator();
 
-//     EXPECT_EQ(time_integrator.GetAlphaF(), 0.5);
-//     EXPECT_EQ(time_integrator.GetAlphaM(), 0.5);
-//     EXPECT_EQ(time_integrator.GetBeta(), 0.25);
-//     EXPECT_EQ(time_integrator.GetGamma(), 0.5);
-// }
+    EXPECT_EQ(time_integrator.GetAlphaF(), 0.5);
+    EXPECT_EQ(time_integrator.GetAlphaM(), 0.5);
+    EXPECT_EQ(time_integrator.GetBeta(), 0.25);
+    EXPECT_EQ(time_integrator.GetGamma(), 0.5);
+}
 
-// TEST(GeneralizedAlphaTimeIntegratorTest, GetSuppliedGAConstants) {
-//     auto time_integrator = GeneralizedAlphaTimeIntegrator(0.11, 0.29, 0.47, 0.93);
+TEST(GeneralizedAlphaTimeIntegratorTest, GetSuppliedGAConstants) {
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(0.11, 0.29, 0.47, 0.93);
 
-//     EXPECT_EQ(time_integrator.GetAlphaF(), 0.11);
-//     EXPECT_EQ(time_integrator.GetAlphaM(), 0.29);
-//     EXPECT_EQ(time_integrator.GetBeta(), 0.47);
-//     EXPECT_EQ(time_integrator.GetGamma(), 0.93);
-// }
+    EXPECT_EQ(time_integrator.GetAlphaF(), 0.11);
+    EXPECT_EQ(time_integrator.GetAlphaM(), 0.29);
+    EXPECT_EQ(time_integrator.GetBeta(), 0.47);
+    EXPECT_EQ(time_integrator.GetGamma(), 0.93);
+}
 
 // TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceleration) {
 //     auto time_integrator =
