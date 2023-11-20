@@ -54,8 +54,11 @@ public:
     );
 
     /// Computes the updated generalized coordinates based on the non-linear update
-    Kokkos::View<double*>
-    UpdateGeneralizedCoordinates(const Kokkos::View<double*>, const Kokkos::View<double*>);
+    void UpdateGeneralizedCoordinates(
+        Kokkos::View<const double[kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<const double[kNumberOfLieAlgebraComponents]> delta_gen_coords,
+        Kokkos::View<double[kNumberOfLieGroupComponents]> gen_coords_next
+    );
 
     /// Checks convergence of the non-linear solution based on the residuals
     bool CheckConvergence(const Kokkos::View<double*>);

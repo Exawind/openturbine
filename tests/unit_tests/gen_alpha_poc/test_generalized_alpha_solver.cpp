@@ -46,37 +46,37 @@ TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
     );
 }
 
-// TEST(TimeIntegratorTest, TestUpdateGeneralizedCoordinates) {
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
+TEST(TimeIntegratorTest, TestUpdateGeneralizedCoordinates) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 0.5, TimeStepper(0., 1.0, 10));
 
-//     auto gen_coords = create_vector({0., -1., 0., 1., 0., 0., 0.});
-//     auto delta_gen_coords = create_vector({1., 1., 1., 1., 2., 3.});
-//     auto gen_coords_next =
-//         time_integrator.UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords);
+    auto gen_coords = create_vector({0., -1., 0., 1., 0., 0., 0.});
+    auto delta_gen_coords = create_vector({1., 1., 1., 1., 2., 3.});
+    auto gen_coords_next = Kokkos::View<double*>("gen_coords_next", 7);
+    time_integrator.UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords, gen_coords_next);
 
-//     Vector r1{0., -1., 0.};
-//     Vector r2{1., 1., 1.};
-//     Vector position = r1 + r2;
+    Vector r1{0., -1., 0.};
+    Vector r2{1., 1., 1.};
+    Vector position = r1 + r2;
 
-//     Quaternion q1{1., 0., 0., 0.};
-//     Vector rotation_vector{1., 2., 3.};
-//     auto q2 = quaternion_from_rotation_vector(rotation_vector);
-//     Quaternion orientation = q1 * q2;
+    Quaternion q1{1., 0., 0., 0.};
+    Vector rotation_vector{1., 2., 3.};
+    auto q2 = quaternion_from_rotation_vector(rotation_vector);
+    Quaternion orientation = q1 * q2;
 
-//     expect_kokkos_view_1D_equal(
-//         gen_coords_next,
-//         {
-//             position.GetXComponent(),          // component 1
-//             position.GetYComponent(),          // component 2
-//             position.GetZComponent(),          // component 3
-//             orientation.GetScalarComponent(),  // component 4
-//             orientation.GetXComponent(),       // component 5
-//             orientation.GetYComponent(),       // component 6
-//             orientation.GetZComponent()        // component 7
-//         }
-//     );
-// }
+    expect_kokkos_view_1D_equal(
+        gen_coords_next,
+        {
+            position.GetXComponent(),          // component 1
+            position.GetYComponent(),          // component 2
+            position.GetZComponent(),          // component 3
+            orientation.GetScalarComponent(),  // component 4
+            orientation.GetXComponent(),       // component 5
+            orientation.GetYComponent(),       // component 6
+            orientation.GetZComponent()        // component 7
+        }
+    );
+}
 
 // TEST(TimeIntegratorTest, ExpectConvergedSolution) {
 //     auto tol = GeneralizedAlphaTimeIntegrator::kConvergenceTolerance;
