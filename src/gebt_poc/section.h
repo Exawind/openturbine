@@ -13,8 +13,8 @@ public:
     /// Constructor that initializes the stiffness matrix to the given matrix
     StiffnessMatrix(const Kokkos::View<double**>);
 
-    /// Returns the stiffness matrix as read-only 2D Kokkos view
-    inline Kokkos::View<const double**> GetStiffnessMatrix() const { return stiffness_matrix_; }
+    /// Returns the stiffness matrix as 2D Kokkos view
+    inline Kokkos::View<double**> GetStiffnessMatrix() const { return stiffness_matrix_; }
 
 private:
     Kokkos::View<double**> stiffness_matrix_;  //< Stiffness matrix (6 x 6)

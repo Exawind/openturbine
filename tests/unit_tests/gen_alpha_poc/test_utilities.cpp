@@ -45,15 +45,15 @@ void expect_kokkos_view_2D_equal(
     }
 }
 
-void expect_kokkos_view_2D_equal(
-    Kokkos::View<const double**> view, const std::vector<std::vector<double>>& expected,
-    double epsilon
-) {
-    // Convert Kokkos view -> non-const
-    auto view_copy = Kokkos::View<double**>("view_copy", view.extent(0), view.extent(1));
-    Kokkos::deep_copy(view_copy, view);
-    expect_kokkos_view_2D_equal(view_copy, expected, epsilon);
-}
+// void expect_kokkos_view_2D_equal(
+//     Kokkos::View<const double**> view, const std::vector<std::vector<double>>& expected,
+//     double epsilon
+// ) {
+//     // Convert Kokkos view -> non-const
+//     auto view_copy = Kokkos::View<double**>("view_copy", view.extent(0), view.extent(1));
+//     Kokkos::deep_copy(view_copy, view);
+//     expect_kokkos_view_2D_equal(view_copy, expected, epsilon);
+// }
 
 Vector multiply_rotation_matrix_with_vector(const RotationMatrix& R, const Vector& v) {
     return Vector{

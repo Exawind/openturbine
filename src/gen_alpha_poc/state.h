@@ -22,24 +22,22 @@ public:
     );
 
     /// Returns the generalized coordinates vector (read only)
-    inline Kokkos::View<const double* [kNumberOfLieGroupComponents]> GetGeneralizedCoordinates(
-    ) const {
+    inline Kokkos::View<double* [kNumberOfLieGroupComponents]> GetGeneralizedCoordinates() const {
         return generalized_coords_;
     }
 
     /// Returns the velocity vector (read only)
-    inline Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> GetVelocity() const {
+    inline Kokkos::View<double* [kNumberOfLieAlgebraComponents]> GetVelocity() const {
         return velocity_;
     }
 
     /// Returns the acceleration vector (read only)
-    inline Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> GetAcceleration() const {
+    inline Kokkos::View<double* [kNumberOfLieAlgebraComponents]> GetAcceleration() const {
         return acceleration_;
     }
 
     /// Returns the algorithmic acceleration vector (read only)
-    inline Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> GetAlgorithmicAcceleration(
-    ) const {
+    inline Kokkos::View<double* [kNumberOfLieAlgebraComponents]> GetAlgorithmicAcceleration() const {
         return algorithmic_acceleration_;
     }
 

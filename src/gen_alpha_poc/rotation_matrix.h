@@ -30,9 +30,9 @@ public:
     KOKKOS_FUNCTION
     double& operator()(int i, int j) { return data_[i][j]; }
 
-    /// Returns the rotation matrix as a Kokkos view (read-only)
+    /// Returns the rotation matrix as a Kokkos view
     KOKKOS_FUNCTION
-    Kokkos::View<const double**> GetRotationMatrix() {
+    Kokkos::View<double**> GetRotationMatrix() {
         Kokkos::View<double**> rotation_matrix("rotation_matrix", 3, 3);
         auto populate_rotation_matrix = KOKKOS_LAMBDA(size_t) {
             rotation_matrix(0, 0) = data_[0][0];

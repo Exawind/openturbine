@@ -130,148 +130,144 @@ TEST(GeneralizedAlphaTimeIntegratorTest, GetSuppliedGAConstants) {
     EXPECT_EQ(time_integrator.GetGamma(), 0.93);
 }
 
-// TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceleration) {
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 2, 1));
+TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceleration) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 2, 1));
 
-//     // gen coords is a 7x1 vector while the rest are 6x1 vectors
-//     auto q0 = create_vector({0., 0., 0., 0., 0., 0., 0.});
-//     auto v0 = create_vector({0., 0., 0., 0., 0., 0.});
-//     auto a0 = create_vector({0., 0., 0., 0., 0., 0.});
-//     auto aa0 = create_vector({0., 0., 0., 0., 0., 0.});
-//     auto initial_state = State(q0, v0, a0, aa0);
+    auto q0 = create_matrix({{0., 0., 0., 0., 0., 0., 0.}});
+    auto v0 = create_matrix({{0., 0., 0., 0., 0., 0.}});
+    auto a0 = create_matrix({{0., 0., 0., 0., 0., 0.}});
+    auto aa0 = create_matrix({{0., 0., 0., 0., 0., 0.}});
+    auto initial_state = State(q0, v0, a0, aa0);
 
-//     size_t n_lagrange_mults{0};
-//     std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
-//         std::make_shared<UnityLinearizationParameters>();
+    size_t n_lagrange_mults{0};
+    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
+        std::make_shared<UnityLinearizationParameters>();
 
-//     auto results =
-//         time_integrator.Integrate(initial_state, n_lagrange_mults,
-//         unity_linearization_parameters);
+    auto results =
+        time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
 
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 2);
-//     EXPECT_EQ(results.size(), 3);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 2);
+    EXPECT_EQ(results.size(), 3);
 
-//     // We expect the results State to contain the following values after one increments
-//     // via hand calculations
-//     auto first_state = results[1];
+    // We expect the results State to contain the following values after one increments
+    // via hand calculations
+    auto first_state = results[1];
 
-//     expect_kokkos_view_1D_equal(
-//         first_state.GetGeneralizedCoordinates(), {0., 0., 0., 0., 0., 0., 0.}
-//     );
-//     expect_kokkos_view_1D_equal(first_state.GetVelocity(), {-2., -2., -2., -2., -2., -2.});
-//     expect_kokkos_view_1D_equal(first_state.GetAcceleration(), {-2., -2., -2., -2., -2., -2.});
-//     expect_kokkos_view_1D_equal(
-//         first_state.GetAlgorithmicAcceleration(), {-2., -2., -2., -2., -2., -2.}
-//     );
+    expect_kokkos_view_2D_equal(
+        first_state.GetGeneralizedCoordinates(), {{0., 0., 0., 0., 0., 0., 0.}}
+    );
+    expect_kokkos_view_2D_equal(first_state.GetVelocity(), {{-2., -2., -2., -2., -2., -2.}});
+    expect_kokkos_view_2D_equal(first_state.GetAcceleration(), {{-2., -2., -2., -2., -2., -2.}});
+    expect_kokkos_view_2D_equal(
+        first_state.GetAlgorithmicAcceleration(), {{-2., -2., -2., -2., -2., -2.}}
+    );
 
-//     // We expect the results state to contain the following values after two increments
-//     // via hand calculations
-//     auto final_state = results.back();
+    // We expect the results state to contain the following values after two increments
+    // via hand calculations
+    auto final_state = results.back();
 
-//     expect_kokkos_view_1D_equal(
-//         final_state.GetGeneralizedCoordinates(), {-2., -2., -2., 0., 0., 0., 0.}
-//     );
-//     expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-4., -4., -4., -4., -4., -4.});
-//     expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-2., -2., -2., -2., -2., -2.});
-//     expect_kokkos_view_1D_equal(
-//         final_state.GetAlgorithmicAcceleration(), {-2., -2., -2., -2., -2., -2.}
-//     );
-// }
+    expect_kokkos_view_2D_equal(
+        final_state.GetGeneralizedCoordinates(), {{-2., -2., -2., 0., 0., 0., 0.}}
+    );
+    expect_kokkos_view_2D_equal(final_state.GetVelocity(), {{-4., -4., -4., -4., -4., -4.}});
+    expect_kokkos_view_2D_equal(final_state.GetAcceleration(), {{-2., -2., -2., -2., -2., -2.}});
+    expect_kokkos_view_2D_equal(
+        final_state.GetAlgorithmicAcceleration(), {{-2., -2., -2., -2., -2., -2.}}
+    );
+}
 
-// TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialState) {
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 1));
+TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialState) {
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., TimeStepper(0., 1., 1, 1));
 
-//     // gen coords is a 7x1 vector while the rest are 6x1 vectors
-//     auto q0 = create_vector({0., 0., 0., 0., 0., 0., 0.});
-//     auto v = create_vector({1., 2., 3., 4., 5., 6.});
-//     auto v0 = v;
-//     auto a0 = v;
-//     auto aa0 = v;
-//     auto initial_state = State(q0, v0, a0, aa0);
+    auto q0 = create_matrix({{0., 0., 0., 0., 0., 0., 0.}});
+    auto v = create_matrix({{1., 2., 3., 4., 5., 6.}});
+    auto v0 = v;
+    auto a0 = v;
+    auto aa0 = v;
+    auto initial_state = State(q0, v0, a0, aa0);
 
-//     size_t n_lagrange_mults{0};
-//     std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
-//         std::make_shared<UnityLinearizationParameters>();
+    size_t n_lagrange_mults{0};
+    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
+        std::make_shared<UnityLinearizationParameters>();
 
-//     auto results =
-//         time_integrator.Integrate(initial_state, n_lagrange_mults,
-//         unity_linearization_parameters);
+    auto results =
+        time_integrator.Integrate(initial_state, n_lagrange_mults, unity_linearization_parameters);
 
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
-//     EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetNumberOfIterations(), 1);
+    EXPECT_EQ(time_integrator.GetTimeStepper().GetTotalNumberOfIterations(), 1);
 
-//     auto final_state = results.back();
+    auto final_state = results.back();
 
-//     // We expect the final state to contain the following values after one increment
-//     // via hand calculations
-//     expect_kokkos_view_1D_equal(
-//         final_state.GetGeneralizedCoordinates(), {1., 2., 3., 0., 0., 0., 0.}
-//     );
-//     expect_kokkos_view_1D_equal(final_state.GetVelocity(), {-1., 0., 1., 2., 3., 4.});
-//     expect_kokkos_view_1D_equal(final_state.GetAcceleration(), {-2., -2., -2., -2., -2., -2.});
-//     expect_kokkos_view_1D_equal(
-//         final_state.GetAlgorithmicAcceleration(), {-2., -2., -2., -2., -2., -2.}
-//     );
-// }
+    // We expect the final state to contain the following values after one increment
+    // via hand calculations
+    expect_kokkos_view_2D_equal(
+        final_state.GetGeneralizedCoordinates(), {{1., 2., 3., 0., 0., 0., 0.}}
+    );
+    expect_kokkos_view_2D_equal(final_state.GetVelocity(), {{-1., 0., 1., 2., 3., 4.}});
+    expect_kokkos_view_2D_equal(final_state.GetAcceleration(), {{-2., -2., -2., -2., -2., -2.}});
+    expect_kokkos_view_2D_equal(
+        final_state.GetAlgorithmicAcceleration(), {{-2., -2., -2., -2., -2., -2.}}
+    );
+}
 
-// TEST(TimeIntegratorTest, AlphaStepSolutionOfHeavyTopAfterOneInc) {
-//     // Initial State for the heavy top problem
-//     auto q0 = create_vector({1., 1., 1., 1., 1., 1., 1.});
-//     auto v0 = create_vector({2., 2., 2., 2., 2., 2.});
-//     auto a0 = create_vector({3., 3., 3., 3., 3., 3.});
-//     auto lag_mult = create_vector({4., 4., 4.});
-//     auto aa0 = create_vector({5., 5., 5., 5., 5., 5.});
+TEST(TimeIntegratorTest, AlphaStepSolutionOfHeavyTopAfterOneInc) {
+    // Initial State for the heavy top problem
+    auto q0 = create_matrix({{1., 1., 1., 1., 1., 1., 1.}});
+    auto v0 = create_matrix({{2., 2., 2., 2., 2., 2.}});
+    auto a0 = create_matrix({{3., 3., 3., 3., 3., 3.}});
+    auto lag_mult = create_matrix({{4., 4., 4.}});
+    auto aa0 = create_matrix({{5., 5., 5., 5., 5., 5.}});
 
-//     auto initial_state = State(q0, v0, a0, aa0);
+    auto initial_state = State(q0, v0, a0, aa0);
 
-//     // Calculate properties for the time integrator
-//     double initial_time{0.};
-//     double final_time{0.1};
-//     double time_step{0.1};
-//     size_t num_steps = size_t(final_time / time_step);
-//     size_t max_iterations{1};
+    // Calculate properties for the time integrator
+    double initial_time{0.};
+    double final_time{0.1};
+    double time_step{0.1};
+    size_t num_steps = size_t(final_time / time_step);
+    size_t max_iterations{1};
 
-//     auto time_stepper = TimeStepper(initial_time, time_step, num_steps, max_iterations);
+    auto time_stepper = TimeStepper(initial_time, time_step, num_steps, max_iterations);
 
-//     // Calculate the generalized alpha parameters
-//     auto rho_inf = 0.5;
-//     auto alpha_m = (2. * rho_inf - 1.) / (rho_inf + 1.);
-//     auto alpha_f = rho_inf / (rho_inf + 1.);
-//     auto gamma = 0.5 + alpha_f - alpha_m;
-//     auto beta = 0.25 * std::pow(gamma + 0.5, 2);
+    // Calculate the generalized alpha parameters
+    auto rho_inf = 0.5;
+    auto alpha_m = (2. * rho_inf - 1.) / (rho_inf + 1.);
+    auto alpha_f = rho_inf / (rho_inf + 1.);
+    auto gamma = 0.5 + alpha_f - alpha_m;
+    auto beta = 0.25 * std::pow(gamma + 0.5, 2);
 
-//     auto time_integrator =
-//         GeneralizedAlphaTimeIntegrator(alpha_f, alpha_m, beta, gamma, time_stepper, true);
+    auto time_integrator =
+        GeneralizedAlphaTimeIntegrator(alpha_f, alpha_m, beta, gamma, time_stepper, true);
 
-//     // Calculate the required properties and initial conditions for the heavy top problem
-//     std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
-//         std::make_shared<UnityLinearizationParameters>();
+    // Calculate the required properties and initial conditions for the heavy top problem
+    std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
+        std::make_shared<UnityLinearizationParameters>();
 
-//     // Perform the time integration
-//     auto results =
-//         time_integrator.Integrate(initial_state, lag_mult.size(), unity_linearization_parameters);
+    // Perform the time integration
+    auto results =
+        time_integrator.Integrate(initial_state, lag_mult.size(), unity_linearization_parameters);
 
-//     auto final_state = results.back();
+    auto final_state = results.back();
 
-//     // We expect the final state to contain the following values after one increment
-//     // via a pilot fortran code
-//     expect_kokkos_view_1D_equal(
-//         final_state.GetGeneralizedCoordinates(),
-//         {1.207222, 1.207222, 1.207222, 0.674773, 1.086996, 1.086996, 1.086996}
-//     );
-//     expect_kokkos_view_1D_equal(
-//         final_state.GetVelocity(),
-//         {-16.583333, -16.583333, -16.583333, -16.583333, -16.583333, -16.583333}
-//     );
-//     expect_kokkos_view_1D_equal(
-//         final_state.GetAcceleration(), {-337.5, -337.5, -337.5, -337.5, -337.5, -337.5}
-//     );
-//     expect_kokkos_view_1D_equal(
-//         final_state.GetAlgorithmicAcceleration(), {-224., -224., -224., -224., -224., -224.}
-//     );
-// }
+    // We expect the final state to contain the following values after one increment
+    // via a pilot fortran code
+    expect_kokkos_view_2D_equal(
+        final_state.GetGeneralizedCoordinates(),
+        {{1.207222, 1.207222, 1.207222, 0.674773, 1.086996, 1.086996, 1.086996}}
+    );
+    expect_kokkos_view_2D_equal(
+        final_state.GetVelocity(),
+        {{-16.583333, -16.583333, -16.583333, -16.583333, -16.583333, -16.583333}}
+    );
+    expect_kokkos_view_2D_equal(
+        final_state.GetAcceleration(), {{-337.5, -337.5, -337.5, -337.5, -337.5, -337.5}}
+    );
+    expect_kokkos_view_2D_equal(
+        final_state.GetAlgorithmicAcceleration(), {{-224., -224., -224., -224., -224., -224.}}
+    );
+}
 
 }  // namespace openturbine::gen_alpha_solver::tests
