@@ -60,223 +60,215 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     const State& state, size_t n_constraints,
     std::shared_ptr<LinearizationParameters> linearization_parameters
 ) {
-    // auto gen_coords = state.GetGeneralizedCoordinates();
-    // auto velocity = state.GetVelocity();
-    // auto acceleration = state.GetAcceleration();
-    // auto algo_acceleration = state.GetAlgorithmicAcceleration();
+    auto gen_coords = state.GetGeneralizedCoordinates();
+    auto velocity = state.GetVelocity();
+    auto acceleration = state.GetAcceleration();
+    auto algo_acceleration = state.GetAlgorithmicAcceleration();
 
-    // // Define some constants that will be used in the algorithm
-    // const auto h = this->time_stepper_.GetTimeStep();
-    // const auto n_nodes = state.GetNumberOfNodes();
-    // const auto size = velocity.size();
+    // Define some constants that will be used in the algorithm
+    const auto h = this->time_stepper_.GetTimeStep();
+    const auto n_nodes = state.GetNumberOfNodes();
+    const auto size = velocity.size();
 
-    // const auto kAlphaFLocal = kAlphaF_;
-    // const auto kAlphaMLocal = kAlphaM_;
-    // const auto kBetaLocal = kBeta_;
-    // const auto kGammaLocal = kGamma_;
+    const auto kAlphaFLocal = kAlphaF_;
+    const auto kAlphaMLocal = kAlphaM_;
+    const auto kBetaLocal = kBeta_;
+    const auto kGammaLocal = kGamma_;
 
-    // // Initialize some X_next variables to assist in updating the State
-    // auto gen_coords_next =
-    //     Kokkos::View<double**>("gen_coords_next", n_nodes, kNumberOfLieGroupComponents);
-    // auto velocity_next =
-    //     Kokkos::View<double**>("velocity_next", n_nodes, kNumberOfLieAlgebraComponents);
-    // auto acceleration_next =
-    //     Kokkos::View<double**>("acceleration_next", n_nodes, kNumberOfLieAlgebraComponents);
-    // auto algo_acceleration_next =
-    //     Kokkos::View<double**>("algo_acceleration_next", n_nodes, kNumberOfLieAlgebraComponents);
-    // auto delta_gen_coords =
-    //     Kokkos::View<double**>("delta_gen_coords", n_nodes, kNumberOfLieAlgebraComponents);
-    // auto lagrange_mults_next = Kokkos::View<double*>("lagrange_mults_next", n_constraints);
+    // Initialize some X_next variables to assist in updating the State
+    auto gen_coords_next =
+        Kokkos::View<double**>("gen_coords_next", n_nodes, kNumberOfLieGroupComponents);
+    auto velocity_next =
+        Kokkos::View<double**>("velocity_next", n_nodes, kNumberOfLieAlgebraComponents);
+    auto acceleration_next =
+        Kokkos::View<double**>("acceleration_next", n_nodes, kNumberOfLieAlgebraComponents);
+    auto algo_acceleration_next =
+        Kokkos::View<double**>("algo_acceleration_next", n_nodes, kNumberOfLieAlgebraComponents);
+    auto delta_gen_coords =
+        Kokkos::View<double**>("delta_gen_coords", n_nodes, kNumberOfLieAlgebraComponents);
+    auto lagrange_mults_next = Kokkos::View<double*>("lagrange_mults_next", n_constraints);
 
-    // // Loop over all nodes in the system and update the generalized coordinates, velocities,
-    // // accelerations, and algorithmic accelerations
-    // auto log = util::Log::Get();
-    // log->Info(
-    //     "Performing Newton-Raphson iterations to update solution using the generalized-alpha "
-    //     "algorithm\n"
-    // );
+    // Loop over all nodes in the system and update the generalized coordinates, velocities,
+    // accelerations, and algorithmic accelerations
+    auto log = util::Log::Get();
+    log->Info(
+        "Performing Newton-Raphson iterations to update solution using the generalized-alpha "
+        "algorithm\n"
+    );
 
-    // for (size_t node = 0; node < n_nodes; node++) {
-    //     // Perform the linear update part of the generalized alpha algorithm
-    //     // Algorithm from Table 1, Brüls, Cardona, and Arnold 2012
-    //     Kokkos::parallel_for(
-    //         size,
-    //         KOKKOS_LAMBDA(const size_t i) {
-    //             algo_acceleration_next(node, i) = (kAlphaFLocal * acceleration(node, i) -
-    //                                                kAlphaMLocal * algo_acceleration(node, i)) /
-    //                                               (1. - kAlphaMLocal);
+    for (size_t node = 0; node < n_nodes; node++) {
+        // Perform the linear update part of the generalized alpha algorithm
+        // Algorithm from Table 1, Brüls, Cardona, and Arnold 2012
+        Kokkos::parallel_for(
+            size,
+            KOKKOS_LAMBDA(const size_t i) {
+                algo_acceleration_next(node, i) = (kAlphaFLocal * acceleration(node, i) -
+                                                   kAlphaMLocal * algo_acceleration(node, i)) /
+                                                  (1. - kAlphaMLocal);
 
-    //             delta_gen_coords(node, i) = velocity(node, i) +
-    //                                         h * (0.5 - kBetaLocal) * algo_acceleration(node, i) +
-    //                                         h * kBetaLocal * algo_acceleration_next(node, i);
+                delta_gen_coords(node, i) = velocity(node, i) +
+                                            h * (0.5 - kBetaLocal) * algo_acceleration(node, i) +
+                                            h * kBetaLocal * algo_acceleration_next(node, i);
 
-    //             velocity_next(node, i) = velocity(node, i) +
-    //                                      h * (1 - kGammaLocal) * algo_acceleration(node, i) +
-    //                                      h * kGammaLocal * algo_acceleration_next(node, i);
+                velocity_next(node, i) = velocity(node, i) +
+                                         h * (1 - kGammaLocal) * algo_acceleration(node, i) +
+                                         h * kGammaLocal * algo_acceleration_next(node, i);
 
-    //             algo_acceleration(node, i) = algo_acceleration_next(node, i);
+                algo_acceleration(node, i) = algo_acceleration_next(node, i);
 
-    //             acceleration_next(node, i) = 0.;
-    //         }
-    //     );
+                acceleration_next(node, i) = 0.;
+            }
+        );
+    }
 
-    //     // Initialize lagrange_mults_next to zero separately since it might be of different size
-    //     Kokkos::deep_copy(lagrange_mults_next, 0.);
+    // Initialize lagrange_mults_next to zero separately since it might be of different size
+    Kokkos::deep_copy(lagrange_mults_next, 0.);
 
-    //     // Perform Newton-Raphson iterations to update nonlinear part of generalized-alpha
-    //     // algorithm
-    //     const auto kBetaPrime = (1 - kAlphaM_) / (h * h * kBeta_ * (1 - kAlphaF_));
-    //     const auto kGammaPrime = kGamma_ / (h * kBeta_);
+    // Perform Newton-Raphson iterations to update nonlinear part of generalized-alpha
+    // algorithm
+    const auto kBetaPrime = (1 - kAlphaM_) / (h * h * kBeta_ * (1 - kAlphaF_));
+    const auto kGammaPrime = kGamma_ / (h * kBeta_);
 
-    //     // Precondition the linear solve (Bottasso et al 2008)
-    //     const auto dl = Kokkos::View<double**>("dl", size + n_constraints, size + n_constraints);
-    //     const auto dr = Kokkos::View<double**>("dr", size + n_constraints, size + n_constraints);
-    //     Kokkos::deep_copy(dl, 0.);
-    //     Kokkos::deep_copy(dr, 0.);
+    // Precondition the linear solve (Bottasso et al 2008)
+    const auto dl = Kokkos::View<double**>("dl", size + n_constraints, size + n_constraints);
+    const auto dr = Kokkos::View<double**>("dr", size + n_constraints, size + n_constraints);
+    Kokkos::deep_copy(dl, 0.);
+    Kokkos::deep_copy(dr, 0.);
 
-    //     if (this->is_preconditioned_) {
-    //         Kokkos::parallel_for(
-    //             size + n_constraints,
-    //             KOKKOS_LAMBDA(const size_t i) {
-    //                 dl(i, i) = 1.;
-    //                 dr(i, i) = 1.;
-    //             }
-    //         );
+    if (this->is_preconditioned_) {
+        Kokkos::parallel_for(
+            size + n_constraints,
+            KOKKOS_LAMBDA(const size_t i) {
+                dl(i, i) = 1.;
+                dr(i, i) = 1.;
+            }
+        );
 
-    //         Kokkos::parallel_for(
-    //             size + n_constraints,
-    //             KOKKOS_LAMBDA(const size_t i) {
-    //                 if (i >= size) {
-    //                     dr(i, i) = 1. / (kBetaLocal * h * h);
-    //                 } else {
-    //                     dl(i, i) = kBetaLocal * h * h;
-    //                 }
-    //             }
-    //         );
-    //     }
+        Kokkos::parallel_for(
+            size + n_constraints,
+            KOKKOS_LAMBDA(const size_t i) {
+                if (i >= size) {
+                    dr(i, i) = 1. / (kBetaLocal * h * h);
+                } else {
+                    dl(i, i) = kBetaLocal * h * h;
+                }
+            }
+        );
+    }
 
-    //     const auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
-    //     for (time_stepper_.SetNumberOfIterations(0);
-    //          time_stepper_.GetNumberOfIterations() < max_iterations;
-    //          time_stepper_.IncrementNumberOfIterations()) {
-    //         UpdateGeneralizedCoordinates(
-    //             Kokkos::subview(gen_coords, node, Kokkos::ALL),
-    //             Kokkos::subview(delta_gen_coords, node, Kokkos::ALL),
-    //             Kokkos::subview(gen_coords_next, node, Kokkos::ALL)
-    //         );
+    const auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
+    for (time_stepper_.SetNumberOfIterations(0);
+         time_stepper_.GetNumberOfIterations() < max_iterations;
+         time_stepper_.IncrementNumberOfIterations()) {
+        UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords, gen_coords_next);
 
-    //         // Compute the residuals and check for convergence
-    //         const auto residuals = linearization_parameters->ResidualVector(
-    //             Kokkos::subview(gen_coords_next, node, Kokkos::ALL),
-    //             Kokkos::subview(velocity_next, node, Kokkos::ALL),
-    //             Kokkos::subview(acceleration_next, node, Kokkos::ALL), lagrange_mults_next
-    //         );
+        // Compute the residuals and check for convergence
+        const auto residuals = linearization_parameters->ResidualVector(
+            gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next
+        );
 
-    //         if (this->CheckConvergence(residuals)) {
-    //             this->is_converged_ = true;
-    //             break;
-    //         }
+        if (this->CheckConvergence(residuals)) {
+            this->is_converged_ = true;
+            break;
+        }
 
-    //         auto iteration_matrix = linearization_parameters->IterationMatrix(
-    //             h, kBetaPrime, kGammaPrime, Kokkos::subview(gen_coords_next, node, Kokkos::ALL),
-    //             Kokkos::subview(delta_gen_coords, node, Kokkos::ALL),
-    //             Kokkos::subview(velocity_next, node, Kokkos::ALL),
-    //             Kokkos::subview(acceleration_next, node, Kokkos::ALL), lagrange_mults_next
-    //         );
+        auto iteration_matrix = linearization_parameters->IterationMatrix(
+            h, kBetaPrime, kGammaPrime, gen_coords_next, delta_gen_coords, velocity_next,
+            acceleration_next, lagrange_mults_next
+        );
 
-    //         if (this->is_preconditioned_) {
-    //             iteration_matrix = multiply_matrix_with_matrix(iteration_matrix, dr);
-    //             iteration_matrix = multiply_matrix_with_matrix(dl, iteration_matrix);
+        if (this->is_preconditioned_) {
+            iteration_matrix = multiply_matrix_with_matrix(iteration_matrix, dr);
+            iteration_matrix = multiply_matrix_with_matrix(dl, iteration_matrix);
 
-    //             Kokkos::parallel_for(
-    //                 size, KOKKOS_LAMBDA(const size_t i
-    //                       ) { residuals(i) = residuals(i) * kBetaLocal * h * h; }
-    //             );
-    //         }
+            Kokkos::parallel_for(
+                size,
+                KOKKOS_LAMBDA(const size_t i) { residuals(i) = residuals(i) * kBetaLocal * h * h; }
+            );
+        }
 
-    //         auto soln_increments = Kokkos::View<double*>("soln_increments", residuals.size());
-    //         Kokkos::deep_copy(soln_increments, residuals);
-    //         solve_linear_system(iteration_matrix, soln_increments);
+        auto soln_increments = Kokkos::View<double*>("soln_increments", residuals.size());
+        Kokkos::deep_copy(soln_increments, residuals);
+        solve_linear_system(iteration_matrix, soln_increments);
 
-    //         Kokkos::View<double*> delta_x("delta_x", delta_gen_coords.size());
-    //         Kokkos::parallel_for(
-    //             delta_gen_coords.size(),
-    //             // Take negative of the solution increments to update generalized coordinates
-    //             KOKKOS_LAMBDA(const size_t i) { delta_x(i) = -soln_increments(i); }
-    //         );
+        Kokkos::View<double*> delta_x("delta_x", delta_gen_coords.size());
+        Kokkos::parallel_for(
+            delta_gen_coords.size(),
+            // Take negative of the solution increments to update generalized coordinates
+            KOKKOS_LAMBDA(const size_t i) { delta_x(i) = -soln_increments(i); }
+        );
 
-    //         if (n_constraints > 0) {
-    //             Kokkos::View<double*> delta_lagrange_mults("delta_lagrange_mults", n_constraints);
+        if (n_constraints > 0) {
+            Kokkos::View<double*> delta_lagrange_mults("delta_lagrange_mults", n_constraints);
 
-    //             if (this->is_preconditioned_) {
-    //                 Kokkos::parallel_for(
-    //                     n_constraints,
-    //                     KOKKOS_LAMBDA(const size_t i) {
-    //                         // Take negative of the solution increments to update Lagrange
-    //                         // multipliers
-    //                         delta_lagrange_mults(i) =
-    //                             -soln_increments(i + delta_gen_coords.size()) / (kBetaLocal * h *
-    //                             h);
-    //                         lagrange_mults_next(i) += delta_lagrange_mults(i);
-    //                     }
-    //                 );
-    //             } else {
-    //                 Kokkos::parallel_for(
-    //                     n_constraints,
-    //                     KOKKOS_LAMBDA(const size_t i) {
-    //                         // Take negative of the solution increments to update Lagrange
-    //                         // multipliers
-    //                         delta_lagrange_mults(i) = -soln_increments(i +
-    //                         delta_gen_coords.size()); lagrange_mults_next(i) +=
-    //                         delta_lagrange_mults(i);
-    //                     }
-    //                 );
-    //             }
-    //         }
+            if (this->is_preconditioned_) {
+                Kokkos::parallel_for(
+                    n_constraints,
+                    KOKKOS_LAMBDA(const size_t i) {
+                        // Take negative of the solution increments to update Lagrange
+                        // multipliers
+                        delta_lagrange_mults(i) =
+                            -soln_increments(i + delta_gen_coords.size()) / (kBetaLocal * h * h);
+                        lagrange_mults_next(i) += delta_lagrange_mults(i);
+                    }
+                );
+            } else {
+                Kokkos::parallel_for(
+                    n_constraints,
+                    KOKKOS_LAMBDA(const size_t i) {
+                        // Take negative of the solution increments to update Lagrange
+                        // multipliers
+                        delta_lagrange_mults(i) = -soln_increments(i + delta_gen_coords.size());
+                        lagrange_mults_next(i) += delta_lagrange_mults(i);
+                    }
+                );
+            }
+        }
 
-    //         // Update the velocity, acceleration, and constraints based on the increments
-    //         Kokkos::parallel_for(
-    //             size,
-    //             KOKKOS_LAMBDA(const size_t i) {
-    //                 delta_gen_coords(node, i) += delta_x(i) / h;
-    //                 velocity_next(node, i) += kGammaPrime * delta_x(i);
-    //                 acceleration_next(node, i) += kBetaPrime * delta_x(i);
-    //             }
-    //         );
-    //     }
+        for (size_t node = 0; node < n_nodes; node++) {
+            // Update the velocity, acceleration, and constraints based on the increments
+            Kokkos::parallel_for(
+                size,
+                KOKKOS_LAMBDA(const size_t i) {
+                    delta_gen_coords(node, i) += delta_x(i) / h;
+                    velocity_next(node, i) += kGammaPrime * delta_x(i);
+                    acceleration_next(node, i) += kBetaPrime * delta_x(i);
+                }
+            );
 
-    //     // Update algorithmic acceleration once Newton-Raphson iterations have ended
-    //     Kokkos::parallel_for(
-    //         size,
-    //         KOKKOS_LAMBDA(const size_t i) {
-    //             algo_acceleration_next(node, i) +=
-    //                 (1. - kAlphaFLocal) / (1. - kAlphaMLocal) * acceleration_next(node, i);
-    //         }
-    //     );
-    // }
+            // Update algorithmic acceleration once Newton-Raphson iterations have ended
+            Kokkos::parallel_for(
+                size,
+                KOKKOS_LAMBDA(const size_t i) {
+                    algo_acceleration_next(node, i) +=
+                        (1. - kAlphaFLocal) / (1. - kAlphaMLocal) * acceleration_next(node, i);
+                }
+            );
+        }
+    }
 
-    // const auto n_iterations = time_stepper_.GetNumberOfIterations();
-    // this->time_stepper_.IncrementTotalNumberOfIterations(n_iterations);
+    const auto n_iterations = time_stepper_.GetNumberOfIterations();
+    this->time_stepper_.IncrementTotalNumberOfIterations(n_iterations);
 
-    // auto results = std::make_tuple(
-    //     State{gen_coords_next, velocity_next, acceleration_next, algo_acceleration_next},
-    //     lagrange_mults_next
-    // );
+    auto results = std::make_tuple(
+        State{gen_coords_next, velocity_next, acceleration_next, algo_acceleration_next},
+        lagrange_mults_next
+    );
 
-    // if (this->is_converged_) {
-    //     log->Info(
-    //         "Newton-Raphson iterations converged in " + std::to_string(n_iterations + 1) +
-    //         " iterations\n"
-    //     );
-    //     return results;
-    // }
+    if (this->is_converged_) {
+        log->Info(
+            "Newton-Raphson iterations converged in " + std::to_string(n_iterations + 1) +
+            " iterations\n"
+        );
+        return results;
+    }
 
-    // log->Warning(
-    //     "Newton-Raphson iterations failed to converge on a solution after " +
-    //     std::to_string(n_iterations + 1) + " iterations!\n"
-    // );
+    log->Warning(
+        "Newton-Raphson iterations failed to converge on a solution after " +
+        std::to_string(n_iterations + 1) + " iterations!\n"
+    );
 
-    // return results;
+    return results;
 }
 
 void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
