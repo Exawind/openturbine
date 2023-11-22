@@ -6,8 +6,8 @@
 namespace openturbine::gen_alpha_solver::tests {
 
 TEST(UnityLinearizationParametersTest, ResidualVector) {
-    auto gen_coords = create_vector({1., 2., 3., 4., 5., 6., 7.});
-    auto v = create_vector({1., 2., 3., 4., 5., 6.});
+    auto gen_coords = create_matrix({{1., 2., 3., 4., 5., 6., 7.}});
+    auto v = create_matrix({{1., 2., 3., 4., 5., 6.}});
     auto velocity = v;
     auto acceleration = v;
     auto lagrange_mults = create_vector({1., 2., 3.});
@@ -27,8 +27,8 @@ TEST(UnityLinearizationParametersTest, ResidualVector) {
 }
 
 TEST(UnityLinearizationParametersTest, IterationMatrix) {
-    auto gen_coords = create_vector({1., 2., 3., 4., 5., 6., 7.});
-    auto v = create_vector({1., 2., 3., 4., 5., 6.});
+    auto gen_coords = create_matrix({{1., 2., 3., 4., 5., 6., 7.}});
+    auto v = create_matrix({{1., 2., 3., 4., 5., 6.}});
     auto delta_gen_coords = v;
     auto velocity = v;
     auto acceleration = v;
