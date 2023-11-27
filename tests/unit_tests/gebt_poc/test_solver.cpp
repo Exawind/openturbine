@@ -2,6 +2,7 @@
 
 #include "src/gebt_poc/quadrature.h"
 #include "src/gebt_poc/solver.h"
+#include "src/gebt_poc/static_beam_element.h"
 #include "src/gen_alpha_poc/quaternion.h"
 #include "tests/unit_tests/gebt_poc/test_data.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
@@ -685,6 +686,18 @@ TEST(SolverTest, ConstraintsGradientMatrix) {
              0., 0.,         0.,        0.,       0.,         0.,         0., 0., 0., 0.}  // row 6
         }
     );
+}
+
+TEST(SolverTest, StaticBeamLinearizationParameters) {
+    StaticBeamLinearizationParameters static_beam{};
+    auto gen_coords = gen_alpha_solver::create_matrix(
+        {{1., 2., 3., 4., 5., 6., 7.}, {8., 9., 10., 11., 12., 13., 14.}}
+    );
+    auto velocity = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});      // 6 elements
+    auto acceleration = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});  // 6 elements
+    auto lagrange_mults = gen_alpha_solver::create_vector({1., 2., 3.});
+
+    static_beam.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults);
 }
 
 }  // namespace openturbine::gebt_poc::tests
