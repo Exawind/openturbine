@@ -247,8 +247,8 @@ RotationMatrix quaternion_to_rotation_matrix(const Quaternion& quaternion) {
 }
 
 /// Converts a 4x1 unit quaternion to a 3x3 rotation matrix and returns the result
-KOKKOS_INLINE_FUNCTION
-Kokkos::View<double**> EulerParameterToRotationMatrix(const Kokkos::View<double*> euler_param) {
+inline Kokkos::View<double**> EulerParameterToRotationMatrix(const Kokkos::View<double*> euler_param
+) {
     auto c0 = euler_param(0);
     auto c = Kokkos::View<double*>("c", 3);
     Kokkos::parallel_for(
@@ -308,8 +308,7 @@ Quaternion rotation_matrix_to_quaternion(const RotationMatrix& rotation_matrix) 
 }
 
 /// Returns the B derivative matrix given for Euler parameters, i.e. unit quaternions
-KOKKOS_INLINE_FUNCTION
-Kokkos::View<double**> BMatrixForQuaternions(const Quaternion& quaternion) {
+inline Kokkos::View<double**> BMatrixForQuaternions(const Quaternion& quaternion) {
     auto q0 = quaternion.GetScalarComponent();
     auto q1 = quaternion.GetXComponent();
     auto q2 = quaternion.GetYComponent();

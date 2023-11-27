@@ -14,6 +14,27 @@ public:
         return Kokkos::subview(connectivity_, element_id, Kokkos::ALL);
     }
 
+    void CheckNodeIDConsistency() {
+        auto range_policy = Kokkos::MDRangePolicy<Kokkos::Rank<2>>(
+            {0, 0}, {connectivity_.extent(0), connectivity_.extent(1)}
+        );
+        int max_node_id;
+        auto connectivity = connectivity_;
+        Kokkos::parallel_reduce(
+            range_policy,
+            KOKKOS_LAMBDA(int i, int j, int& local_max) {
+                if (connectivity(i, j) > local_max) {
+                    local_max = connectivity(i, j);
+                }
+            },
+            Kokkos::Max<int>(max_node_id)
+        );
+
+        if (max_node_id >= number_of_nodes_) {
+            throw std::domain_error("Connectivity references node ID above the expected range");
+        }
+    }
+
     friend Mesh Create1DMesh(int number_of_elements, int nodes_per_element);
 
 protected:
@@ -28,26 +49,6 @@ protected:
     void CheckElementConsistency() {
         if (static_cast<std::size_t>(number_of_elements_) != connectivity_.extent(0)) {
             throw std::domain_error("Connectivity does not contain expected number of elements");
-        }
-    }
-
-    void CheckNodeIDConsistency() {
-        auto range_policy = Kokkos::MDRangePolicy<Kokkos::Rank<2>>(
-            {0, 0}, {connectivity_.extent(0), connectivity_.extent(1)}
-        );
-        int max_node_id;
-        Kokkos::parallel_reduce(
-            range_policy,
-            KOKKOS_LAMBDA(int i, int j, int& local_max) {
-                if (connectivity_(i, j) > local_max) {
-                    local_max = connectivity_(i, j);
-                }
-            },
-            Kokkos::Max<int>(max_node_id)
-        );
-
-        if (max_node_id >= number_of_nodes_) {
-            throw std::domain_error("Connectivity references node ID above the expected range");
         }
     }
 
