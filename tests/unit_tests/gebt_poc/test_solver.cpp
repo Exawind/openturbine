@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "src/gebt_poc/quadrature.h"
 #include "src/gebt_poc/solver.h"
 #include "src/gen_alpha_poc/quaternion.h"
 #include "tests/unit_tests/gebt_poc/test_data.h"
