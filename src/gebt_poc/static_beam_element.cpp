@@ -1,5 +1,7 @@
 #include "src/gebt_poc/static_beam_element.h"
 
+#include <KokkosBlas.hpp>
+
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
@@ -145,7 +147,7 @@ Kokkos::View<double**> StaticBeamLinearizationParameters::IterationMatrix(
     // where,
     // [K_t(q,v,v',Lambda,t)] = Tangent stiffness matrix
     // [T(h dq)] = Tangent operator
-    // [B(q)] = Constraint gradeint matrix
+    // [B(q)] = Constraint gradient matrix
     const size_t zero{0};
     const auto size_dofs = velocity.extent(0) * velocity.extent(1);
     const auto size_constraints = lagrange_multipliers.extent(0);
@@ -182,20 +184,26 @@ Kokkos::View<double**> StaticBeamLinearizationParameters::IterationMatrix(
     );
 }
 
+// auto log = util::Log::Get();
+// log->Debug("tanget_operator:\n");
+// for (size_t i = 0; i < kNumberOfLieAlgebraComponents; ++i) {
+//     for (size_t j = 0; j < kNumberOfLieAlgebraComponents; ++j) {
+//         log->Debug(std::to_string(tangent_operator(i, j)) + "\n");
+//     }
+//     log->Debug("\n");
+// }
+
 Kokkos::View<double**> StaticBeamLinearizationParameters::TangentOperator(
     const Kokkos::View<double*> psi
 ) {
-    const double tol = 1e-16;
-
-    auto psi_host = Kokkos::create_mirror(psi);
-    Kokkos::deep_copy(psi_host, psi);
-    const double phi =
-        std::sqrt(psi_host(0) * psi_host(0) + psi_host(1) * psi_host(1) + psi_host(2) * psi_host(2));
-
-    auto size = kNumberOfLieAlgebraComponents;
-    auto tangent_operator = Kokkos::View<double**>("tangent_operator", size, size);
+    auto tangent_operator = Kokkos::View<double**>(
+        "tangent_operator", kNumberOfLieAlgebraComponents, kNumberOfLieAlgebraComponents
+    );
+    Kokkos::deep_copy(tangent_operator, 0.);
     Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {size, size}),
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
+            {0, 0}, {kNumberOfLieAlgebraComponents, kNumberOfLieAlgebraComponents}
+        ),
         KOKKOS_LAMBDA(const size_t i, const size_t j) {
             if (i == j) {
                 tangent_operator(i, j) = 1.0;
@@ -203,21 +211,29 @@ Kokkos::View<double**> StaticBeamLinearizationParameters::TangentOperator(
         }
     );
 
-    if (std::abs(phi) > tol) {
-        auto psi_matrix = gen_alpha_solver::create_cross_product_matrix(psi);
-        auto psi_psi_matrix = gen_alpha_solver::multiply_matrix_with_matrix(psi_matrix, psi_matrix);
+    auto psi_host = Kokkos::create_mirror(psi);
+    Kokkos::deep_copy(psi_host, psi);
+    const double phi =
+        std::sqrt(psi_host(0) * psi_host(0) + psi_host(1) * psi_host(1) + psi_host(2) * psi_host(2));
+
+    // TODO clean up the following to use subviews and Blas calls
+    if (std::abs(phi) > kTolerance) {
+        auto psi_cross_prod_matrix = gen_alpha_solver::create_cross_product_matrix(psi);
+        auto psi_times_psi = gen_alpha_solver::multiply_matrix_with_matrix(
+            psi_cross_prod_matrix, psi_cross_prod_matrix
+        );
 
         auto tangent_operator_1 = gen_alpha_solver::multiply_matrix_with_scalar(
-            psi_matrix, (std::cos(phi) - 1.0) / (phi * phi)
+            psi_times_psi, (std::cos(phi) - 1.0) / (phi * phi)
         );
         auto tangent_operator_2 = gen_alpha_solver::multiply_matrix_with_scalar(
-            psi_psi_matrix, (1.0 - std::sin(phi) / phi) / (phi * phi)
+            psi_times_psi, (1.0 - std::sin(phi) / phi) / (phi * phi)
         );
 
         Kokkos::parallel_for(
-            size,
+            kNumberOfLieAlgebraComponents,
             KOKKOS_LAMBDA(const size_t i) {
-                for (size_t j = 0; j < size; j++) {
+                for (size_t j = 0; j < kNumberOfLieAlgebraComponents; j++) {
                     if (i >= 3 && j >= 3) {
                         tangent_operator(i, j) += tangent_operator_1(i - 3, j - 3);
                         tangent_operator(i, j) += tangent_operator_2(i - 3, j - 3);

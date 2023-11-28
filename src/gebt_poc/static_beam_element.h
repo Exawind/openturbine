@@ -15,6 +15,7 @@ public:
     static constexpr size_t kNumberOfLieGroupComponents = 7;
     static constexpr size_t kNumberOfLieAlgebraComponents = 6;
     static constexpr size_t kNumberOfConstraints = 3;
+    static constexpr double kTolerance = 1e-16;
 
     /// Default constructor with a 5 node beam element, 6x6 stiffness matrix, and 7 point
     /// Gauss-Legendre quadrature rule used for unit testing

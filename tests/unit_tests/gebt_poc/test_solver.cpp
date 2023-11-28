@@ -688,16 +688,42 @@ TEST(SolverTest, ConstraintsGradientMatrix) {
     );
 }
 
+// virtual Kokkos::View<double**> IterationMatrix(
+//         const double& h, const double& beta_prime, const double& gamma_prime,
+//         const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
+//         const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
+//         const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
+//         const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+//         const Kokkos::View<double*> lagrange_multipliers
+//     ) override;
+
 TEST(SolverTest, StaticBeamLinearizationParameters) {
     StaticBeamLinearizationParameters static_beam{};
     auto gen_coords = gen_alpha_solver::create_matrix(
         {{1., 2., 3., 4., 5., 6., 7.}, {8., 9., 10., 11., 12., 13., 14.}}
     );
-    auto velocity = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});      // 6 elements
-    auto acceleration = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});  // 6 elements
+    auto velocity =
+        gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}, {7., 8., 9., 10., 11., 12.}});
+    auto acceleration =
+        gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}, {7., 8., 9., 10., 11., 12.}});
     auto lagrange_mults = gen_alpha_solver::create_vector({1., 2., 3., 4., 5., 6.});  // 6 elements
 
     static_beam.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults);
+
+    // auto h = 1.;
+    // auto beta_prime = 2.;
+    // auto gamma_prime = 3.;
+    // auto delta_gen_coords = gen_alpha_solver::create_matrix(
+    //     {{1., 2., 3., 4., 5., 6., 7.}, {8., 9., 10., 11., 12., 13., 14.}}
+    // );
+    // static_beam.IterationMatrix(
+    //     h, beta_prime, gamma_prime, gen_coords, delta_gen_coords, velocity, acceleration,
+    //     lagrange_mults
+    // );
+
+    // Kokkos::View<double**> TangentOperator(const Kokkos::View<double*> psi);
+    auto psi = gen_alpha_solver::create_vector({1., 2., 3., 4., 5., 6.});  // 6 elements
+    static_beam.TangentOperator(psi);
 }
 
 }  // namespace openturbine::gebt_poc::tests
