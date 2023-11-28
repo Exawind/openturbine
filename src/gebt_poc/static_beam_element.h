@@ -41,6 +41,8 @@ public:
         const Kokkos::View<double*> lagrange_mults
     ) override;
 
+    Kokkos::View<double**> TangentOperator(const Kokkos::View<double*> psi);
+
 private:
     Kokkos::View<double*> position_vectors_;
     StiffnessMatrix stiffness_matrix_;

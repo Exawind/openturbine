@@ -695,7 +695,7 @@ TEST(SolverTest, StaticBeamLinearizationParameters) {
     );
     auto velocity = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});      // 6 elements
     auto acceleration = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});  // 6 elements
-    auto lagrange_mults = gen_alpha_solver::create_vector({1., 2., 3.});
+    auto lagrange_mults = gen_alpha_solver::create_vector({1., 2., 3., 4., 5., 6.});  // 6 elements
 
     static_beam.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults);
 }

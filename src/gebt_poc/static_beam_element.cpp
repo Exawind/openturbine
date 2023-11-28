@@ -78,6 +78,8 @@ StaticBeamLinearizationParameters::StaticBeamLinearizationParameters(
       quadrature_(quadrature) {
 }
 
+// TODO Following is a hack to make things work temporarily - we should move over to
+// using 2D views for the solver functions
 Kokkos::View<double*> Convert2DViewTo1DView(Kokkos::View<double**> view) {
     auto size = view.extent(0) * view.extent(1);
     auto result = Kokkos::View<double*>("result", size);
@@ -91,7 +93,7 @@ Kokkos::View<double*> Convert2DViewTo1DView(Kokkos::View<double**> view) {
 Kokkos::View<double*> StaticBeamLinearizationParameters::ResidualVector(
     const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
     const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+    [[maybe_unused]] const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
     const Kokkos::View<double*> lagrange_multipliers
 ) {
     // The residual vector for the generalized coordinates is given by
@@ -99,30 +101,20 @@ Kokkos::View<double*> StaticBeamLinearizationParameters::ResidualVector(
     //     {residual_gen_coords},
     //     {residual_constraints}
     // }
+    const size_t zero{0};
+    const size_t size_dofs{velocity.extent(0) * velocity.extent(1)};
+    const size_t size_constraints{lagrange_multipliers.extent(0)};
+    const size_t size_residual{size_dofs + size_constraints};
 
-    const auto size_dofs = velocity.extent(0) * velocity.extent(1);
-    const auto size_constraints = lagrange_multipliers.extent(0);
-
-    // Following is a hack to make things work for now
+    auto residual = Kokkos::View<double*>("residual", size_residual);
+    auto residual_gen_coords = Kokkos::subview(residual, Kokkos::make_pair(zero, size_dofs));
     auto gen_coords_1D = Convert2DViewTo1DView(gen_coords);
-
-    auto residual_gen_coords = Kokkos::View<double*>("residual_gen_coords", size_dofs);
     CalculateStaticResidual(
         position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_gen_coords
     );
-    auto residual_constraints = Kokkos::View<double*>("residual_constraints", size_constraints);
+    auto residual_constraints =
+        Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
     ConstraintsResidualVector(gen_coords_1D, position_vectors_, residual_constraints);
-
-    const auto size_residual = size_dofs + size_constraints;
-    auto residual = Kokkos::View<double*>("residual", size_residual);
-    auto populate_residual = KOKKOS_LAMBDA(size_t i) {
-        if (i < size_dofs) {
-            residual(i) = residual_gen_coords(i);
-        } else {
-            residual(i) = residual_constraints(i - size_dofs);
-        }
-    };
-    Kokkos::parallel_for(size_residual, populate_residual);
     return residual;
 }
 
