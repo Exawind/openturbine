@@ -126,6 +126,97 @@ Kokkos::View<double**> StaticBeamLinearizationParameters::IterationMatrix(
     const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
     const Kokkos::View<double*> lagrange_mults
 ) {
+    // Iteration matrix for the static beam element is given by
+    // [iteration matrix] = [
+    //     [K_t(q,v,v',Lambda,t)] * [T(h dq)]                   [B(q)^T]]
+    //          [ B(q) ] * [T(h dq)]                               [0]
+    // ]
+    // where,
+    // [K_t(q,v,v',Lambda,t)] = Tangent stiffness matrix
+    // [T(h dq)] = Tangent operator
+    // [B(q)] = Constraint gradeint matrix
+    const size_t zero{0};
+    const auto size_dofs = velocity.extent(0) * velocity.extent(1);
+    const auto size_constraints = lagrange_mults.extent(0);
+    const auto size = size_dofs + size_constraints;
+
+    auto gen_coords_1D =
+        Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
+    Convert2DViewTo1DView(gen_coords, gen_coords_1D);
+
+    auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", size, size);
+    Kokkos::deep_copy(iteration_matrix, 0.0);
+
+    auto quadrant_1 = Kokkos::subview(
+        iteration_matrix, Kokkos::make_pair(zero, size_dofs), Kokkos::make_pair(zero, size_dofs)
+    );
+    CalculateStaticIterationMatrix(
+        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, quadrant_1
+    );
+    // TODO: Add tangent operator
+
+    auto quadrant_2 = Kokkos::subview(
+        iteration_matrix, Kokkos::make_pair(size_dofs, size), Kokkos::make_pair(zero, size_dofs)
+    );
+    ConstraintsGradientMatrix(gen_coords_1D, position_vectors_, quadrant_2);
+
+    auto quadrant_3 = Kokkos::subview(
+        iteration_matrix, Kokkos::make_pair(zero, size_dofs), Kokkos::make_pair(size_dofs, size)
+    );
+    Kokkos::deep_copy(quadrant_3, 0.0);
+    // TODO: Add tangent operator
+
+    auto quadrant_4 = Kokkos::subview(
+        iteration_matrix, Kokkos::make_pair(size_dofs, size), Kokkos::make_pair(size_dofs, size)
+    );
+}
+
+Kokkos::View<double**> StaticBeamLinearizationParameters::TangentOperator(
+    const Kokkos::View<double*> psi
+) {
+    const double tol = 1e-16;
+
+    auto psi_host = Kokkos::create_mirror(psi);
+    Kokkos::deep_copy(psi_host, psi);
+    const double phi =
+        std::sqrt(psi_host(0) * psi_host(0) + psi_host(1) * psi_host(1) + psi_host(2) * psi_host(2));
+
+    auto size = kNumberOfLieAlgebraComponents;
+    auto tangent_operator = Kokkos::View<double**>("tangent_operator", size, size);
+    Kokkos::parallel_for(
+        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {size, size}),
+        KOKKOS_LAMBDA(const size_t i, const size_t j) {
+            if (i == j) {
+                tangent_operator(i, j) = 1.0;
+            }
+        }
+    );
+
+    if (std::abs(phi) > tol) {
+        auto psi_matrix = gen_alpha_solver::create_cross_product_matrix(psi);
+        auto psi_psi_matrix = gen_alpha_solver::multiply_matrix_with_matrix(psi_matrix, psi_matrix);
+
+        auto tangent_operator_1 = gen_alpha_solver::multiply_matrix_with_scalar(
+            psi_matrix, (std::cos(phi) - 1.0) / (phi * phi)
+        );
+        auto tangent_operator_2 = gen_alpha_solver::multiply_matrix_with_scalar(
+            psi_psi_matrix, (1.0 - std::sin(phi) / phi) / (phi * phi)
+        );
+
+        Kokkos::parallel_for(
+            size,
+            KOKKOS_LAMBDA(const size_t i) {
+                for (size_t j = 0; j < size; j++) {
+                    if (i >= 3 && j >= 3) {
+                        tangent_operator(i, j) += tangent_operator_1(i - 3, j - 3);
+                        tangent_operator(i, j) += tangent_operator_2(i - 3, j - 3);
+                    }
+                }
+            }
+        );
+    }
+
+    return tangent_operator;
 }
 
 }  // namespace openturbine::gebt_poc
