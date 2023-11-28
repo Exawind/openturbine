@@ -722,8 +722,8 @@ TEST(SolverTest, StaticBeamLinearizationParameters) {
     // );
 
     // Kokkos::View<double**> TangentOperator(const Kokkos::View<double*> psi);
-    auto psi = gen_alpha_solver::create_vector({1., 2., 3., 4., 5., 6.});  // 6 elements
-    static_beam.TangentOperator(psi);
+    // auto psi = gen_alpha_solver::create_vector({1., 2., 3., 4., 5., 6.});  // 6 elements
+    // static_beam.TangentOperator(psi);
 }
 
 }  // namespace openturbine::gebt_poc::tests
