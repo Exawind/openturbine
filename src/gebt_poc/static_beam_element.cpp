@@ -132,11 +132,12 @@ Kokkos::View<double*> StaticBeamLinearizationParameters::ResidualVector(
 }
 
 Kokkos::View<double**> StaticBeamLinearizationParameters::IterationMatrix(
-    const double& h, const double& beta_prime, const double& gamma_prime,
+    const double& h, [[maybe_unused]] const double& beta_prime,
+    [[maybe_unused]] const double& gamma_prime,
     const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
     const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
     const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+    [[maybe_unused]] const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
     const Kokkos::View<double*> lagrange_multipliers
 ) {
     // Iteration matrix for the static beam element is given by
@@ -151,50 +152,73 @@ Kokkos::View<double**> StaticBeamLinearizationParameters::IterationMatrix(
     const size_t zero{0};
     const auto size_dofs = velocity.extent(0) * velocity.extent(1);
     const auto size_constraints = lagrange_multipliers.extent(0);
-    const auto size = size_dofs + size_constraints;
+    const auto size_iteration = size_dofs + size_constraints;
+    const auto n_nodes = velocity.extent(0);
 
     auto gen_coords_1D =
         Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
     Convert2DViewTo1DView(gen_coords, gen_coords_1D);
 
-    auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", size, size);
+    auto iteration_matrix =
+        Kokkos::View<double**>("iteration_matrix", size_iteration, size_iteration);
     Kokkos::deep_copy(iteration_matrix, 0.0);
 
+    // Assemble the tangent operator (same size as the stiffness matrix)
+    auto tangent_operator = Kokkos::View<double**>("tangent_operator", size_dofs, size_dofs);
+    Kokkos::deep_copy(tangent_operator, 0.0);
+    for (size_t i = 0; i < n_nodes; ++i) {
+        auto delta_gen_coords_node = Kokkos::subview(delta_gen_coords, i, Kokkos::ALL);
+        KokkosBlas::scal(delta_gen_coords_node, h, delta_gen_coords_node);
+        auto tangent_operator_node = Kokkos::subview(
+            tangent_operator,
+            Kokkos::make_pair(
+                i * kNumberOfLieAlgebraComponents, (i + 1) * kNumberOfLieAlgebraComponents
+            ),
+            Kokkos::make_pair(
+                i * kNumberOfLieAlgebraComponents, (i + 1) * kNumberOfLieAlgebraComponents
+            )
+        );
+        TangentOperator(delta_gen_coords_node, tangent_operator_node);
+    }
+
+    // quadrant_1 = K_t(q,v,v',Lambda,t) * T(h dq)
     auto quadrant_1 = Kokkos::subview(
         iteration_matrix, Kokkos::make_pair(zero, size_dofs), Kokkos::make_pair(zero, size_dofs)
     );
     CalculateStaticIterationMatrix(
         position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, quadrant_1
     );
-    // TODO: Add tangent operator
+    KokkosBlas::gemm("N", "N", 1.0, quadrant_1, tangent_operator, 0.0, quadrant_1);
 
+    // quadrant_2 = Transpose([B(q)])
     auto quadrant_2 = Kokkos::subview(
-        iteration_matrix, Kokkos::make_pair(size_dofs, size), Kokkos::make_pair(zero, size_dofs)
+        iteration_matrix, Kokkos::make_pair(zero, size_dofs),
+        Kokkos::make_pair(size_dofs, size_iteration)
     );
-    ConstraintsGradientMatrix(gen_coords_1D, position_vectors_, quadrant_2);
+    auto constraints_gradient_matrix =
+        Kokkos::View<double**>("constraints_gradient_matrix", size_constraints, size_dofs);
+    ConstraintsGradientMatrix(gen_coords_1D, position_vectors_, constraints_gradient_matrix);
+    // TODO ** Question for reviewers **
+    // How to transpose a matrix using KokkosBlas?
+    auto temp = gen_alpha_solver::transpose_matrix(constraints_gradient_matrix);
+    Kokkos::deep_copy(quadrant_2, temp);
 
+    // quadrant_3 = B(q) * T(h dq)
     auto quadrant_3 = Kokkos::subview(
-        iteration_matrix, Kokkos::make_pair(zero, size_dofs), Kokkos::make_pair(size_dofs, size)
+        iteration_matrix, Kokkos::make_pair(size_dofs, size_iteration),
+        Kokkos::make_pair(zero, size_dofs)
     );
-    Kokkos::deep_copy(quadrant_3, 0.0);
-    // TODO: Add tangent operator
+    KokkosBlas::gemm("N", "N", 1.0, constraints_gradient_matrix, tangent_operator, 0.0, quadrant_3);
 
-    auto quadrant4 = Kokkos::subview(
-        iteration_matrix, Kokkos::make_pair(size_dofs, size), Kokkos::make_pair(size_dofs, size)
-    );
+    return iteration_matrix;
 }
 
-Kokkos::View<double**> StaticBeamLinearizationParameters::TangentOperator(
-    const Kokkos::View<double*> psi
+void StaticBeamLinearizationParameters::TangentOperator(
+    const Kokkos::View<double*> psi, Kokkos::View<double**> tangent_operator
 ) {
-    auto tangent_operator =
-        Kokkos::View<double[kNumberOfLieAlgebraComponents][kNumberOfLieAlgebraComponents]>(
-            "tangent_operator"
-        );
-    Kokkos::deep_copy(tangent_operator, 0.);
     // TODO ** Question for reviewers **
     // Any better way to create the identity matrix than parallel_for?
-    auto populate_matrix = KOKKOS_LAMBDA(size_t i) {
+    auto populate_matrix = KOKKOS_LAMBDA(size_t) {
         tangent_operator(0, 0) = 1.;
         tangent_operator(1, 1) = 1.;
         tangent_operator(2, 2) = 1.;
@@ -224,7 +248,6 @@ Kokkos::View<double**> StaticBeamLinearizationParameters::TangentOperator(
         KokkosBlas::scal(temp, (1.0 - std::sin(phi) / phi) / (phi * phi), psi_times_psi);
         KokkosBlas::axpy(1.0, temp, quadrant4);
     }
-    return tangent_operator;
 }
 
 }  // namespace openturbine::gebt_poc

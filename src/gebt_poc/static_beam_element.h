@@ -45,7 +45,7 @@ public:
     ) override;
 
     /// Tangent operator for a single node of the static beam element
-    Kokkos::View<double**> TangentOperator(const Kokkos::View<double*> psi);
+    void TangentOperator(const Kokkos::View<double*> psi, Kokkos::View<double**> tangent_operator);
 
 private:
     Kokkos::View<double*> position_vectors_;

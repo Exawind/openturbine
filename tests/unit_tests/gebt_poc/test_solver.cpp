@@ -726,7 +726,8 @@ TEST(SolverTest, CalculateTangentOperatorWithPhiAsZero) {
     auto psi = gen_alpha_solver::create_vector({0., 0., 0.});
     StaticBeamLinearizationParameters static_beam{};
 
-    auto tangent_operator = static_beam.TangentOperator(psi);
+    auto tangent_operator = Kokkos::View<double[6][6]>("tangent_operator");
+    static_beam.TangentOperator(psi, tangent_operator);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         tangent_operator,
@@ -745,7 +746,8 @@ TEST(SolverTest, CalculateTangentOperatorWithPhiNotZero) {
     auto psi = gen_alpha_solver::create_vector({1., 2., 3.});
     StaticBeamLinearizationParameters static_beam{};
 
-    auto tangent_operator = static_beam.TangentOperator(psi);
+    auto tangent_operator = Kokkos::View<double[6][6]>("tangent_operator");
+    static_beam.TangentOperator(psi, tangent_operator);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         tangent_operator,
@@ -757,6 +759,54 @@ TEST(SolverTest, CalculateTangentOperatorWithPhiNotZero) {
             {0., 0., 0., -0.2267181808418461, 0.1779133377000255, 0.6236305018139318},     // row 5
             {0., 0., 0., 0.5073830075578865, 0.36287349294603777, 0.5889566688500127}      // row 6
         }
+    );
+}
+
+TEST(SolverTest, StaticBeamIterationMatrix) {
+    StaticBeamLinearizationParameters static_beam{};
+    auto h = 1.;
+    auto beta_prime = 2.;
+    auto gamma_prime = 3.;
+    auto gen_coords = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 1., 0., 0., 0.},
+         {0.0029816021788868583, -0.0024667594949430213, 0.0030845707156756256, 0.9999627302042724,
+          0.008633550973807838, 0., 0.},
+         {0.025, -0.0125, 0.027500000000000004, 0.9996875162757026, 0.024997395914712332, 0., 0.},
+         {0.06844696924968456, -0.011818954790771264, 0.07977257214146723, 0.9991445348823056,
+          0.04135454527402519, 0., 0.},
+         {0.1, 0., 0.12, 0.9987502603949662, 0.049979169270678324, 0., 0.}}
+    );
+    auto velocity = gen_alpha_solver::create_matrix(
+        {{1., 2., 3., 4., 5., 6.},
+         {7., 8., 9., 10., 11., 12.},
+         {13., 14., 15., 16., 17., 18.},
+         {19., 20., 21., 22., 23., 24.},
+         {25., 26., 27., 28., 29., 30.}}
+    );
+    auto acceleration = gen_alpha_solver::create_matrix(
+        {{1., 2., 3., 4., 5., 6.},
+         {7., 8., 9., 10., 11., 12.},
+         {13., 14., 15., 16., 17., 18.},
+         {19., 20., 21., 22., 23., 24.},
+         {25., 26., 27., 28., 29., 30.}}
+    );
+    auto lagrange_mults = gen_alpha_solver::create_vector({1., 2., 3., 4., 5., 6.});
+    auto delta_gen_coords = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.}}
+    );
+
+    auto iteration_matrix = static_beam.IterationMatrix(
+        h, beta_prime, gamma_prime, gen_coords, delta_gen_coords, velocity, acceleration,
+        lagrange_mults
+    );
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        Kokkos::subview(iteration_matrix, Kokkos::make_pair(0, 30), Kokkos::make_pair(0, 30)),
+        expected_iteration_matrix
     );
 }
 
