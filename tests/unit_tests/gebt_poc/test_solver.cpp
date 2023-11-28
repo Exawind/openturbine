@@ -688,31 +688,38 @@ TEST(SolverTest, ConstraintsGradientMatrix) {
     );
 }
 
-TEST(SolverTest, StaticBeamLinearizationParameters) {
+TEST(SolverTest, StaticBeamElementResidual) {
     StaticBeamLinearizationParameters static_beam{};
     auto gen_coords = gen_alpha_solver::create_matrix(
-        {{1., 2., 3., 4., 5., 6., 7.}, {8., 9., 10., 11., 12., 13., 14.}}
+        {{0., 0., 0., 1., 0., 0., 0.},
+         {0.0029816021788868583, -0.0024667594949430213, 0.0030845707156756256, 0.9999627302042724,
+          0.008633550973807838, 0., 0.},
+         {0.025, -0.0125, 0.027500000000000004, 0.9996875162757026, 0.024997395914712332, 0., 0.},
+         {0.06844696924968456, -0.011818954790771264, 0.07977257214146723, 0.9991445348823056,
+          0.04135454527402519, 0., 0.},
+         {0.1, 0., 0.12, 0.9987502603949662, 0.049979169270678324, 0., 0.}}
     );
-    auto velocity =
-        gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}, {7., 8., 9., 10., 11., 12.}});
-    auto acceleration =
-        gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}, {7., 8., 9., 10., 11., 12.}});
-    auto lagrange_mults = gen_alpha_solver::create_vector({1., 2., 3., 4., 5., 6.});  // 6 elements
+    auto velocity = gen_alpha_solver::create_matrix(
+        {{1., 2., 3., 4., 5., 6.},
+         {7., 8., 9., 10., 11., 12.},
+         {13., 14., 15., 16., 17., 18.},
+         {19., 20., 21., 22., 23., 24.},
+         {25., 26., 27., 28., 29., 30.}}
+    );
+    auto acceleration = gen_alpha_solver::create_matrix(
+        {{1., 2., 3., 4., 5., 6.},
+         {7., 8., 9., 10., 11., 12.},
+         {13., 14., 15., 16., 17., 18.},
+         {19., 20., 21., 22., 23., 24.},
+         {25., 26., 27., 28., 29., 30.}}
+    );
+    auto lagrange_mults = gen_alpha_solver::create_vector({1., 2., 3., 4., 5., 6.});
 
-    static_beam.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults);
+    auto residual = static_beam.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults);
 
-    // auto h = 1.;
-    // auto beta_prime = 2.;
-    // auto gamma_prime = 3.;
-    // auto delta_gen_coords = gen_alpha_solver::create_matrix(
-    //     {{1., 2., 3., 4., 5., 6., 7.}, {8., 9., 10., 11., 12., 13., 14.}}
-    // );
-    // static_beam.IterationMatrix(
-    //     h, beta_prime, gamma_prime, gen_coords, delta_gen_coords, velocity, acceleration,
-    //     lagrange_mults
-    // );
-
-    // Kokkos::View<double**> TangentOperator(const Kokkos::View<double*> psi);
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        Kokkos::subview(residual, Kokkos::make_pair(0, 30)), expected_residual
+    );
 }
 
 TEST(SolverTest, CalculateTangentOperatorWithPhiAsZero) {
