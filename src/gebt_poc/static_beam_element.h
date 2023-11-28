@@ -44,6 +44,7 @@ public:
         const Kokkos::View<double*> lagrange_multipliers
     ) override;
 
+    /// Tangent operator for a single node of the static beam element
     Kokkos::View<double**> TangentOperator(const Kokkos::View<double*> psi);
 
 private:

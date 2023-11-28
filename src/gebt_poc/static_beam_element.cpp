@@ -179,70 +179,51 @@ Kokkos::View<double**> StaticBeamLinearizationParameters::IterationMatrix(
     Kokkos::deep_copy(quadrant_3, 0.0);
     // TODO: Add tangent operator
 
-    auto quadrant_4 = Kokkos::subview(
+    auto quadrant4 = Kokkos::subview(
         iteration_matrix, Kokkos::make_pair(size_dofs, size), Kokkos::make_pair(size_dofs, size)
     );
 }
 
-// auto log = util::Log::Get();
-// log->Debug("tanget_operator:\n");
-// for (size_t i = 0; i < kNumberOfLieAlgebraComponents; ++i) {
-//     for (size_t j = 0; j < kNumberOfLieAlgebraComponents; ++j) {
-//         log->Debug(std::to_string(tangent_operator(i, j)) + "\n");
-//     }
-//     log->Debug("\n");
-// }
-
 Kokkos::View<double**> StaticBeamLinearizationParameters::TangentOperator(
     const Kokkos::View<double*> psi
 ) {
-    auto tangent_operator = Kokkos::View<double**>(
-        "tangent_operator", kNumberOfLieAlgebraComponents, kNumberOfLieAlgebraComponents
-    );
+    auto tangent_operator =
+        Kokkos::View<double[kNumberOfLieAlgebraComponents][kNumberOfLieAlgebraComponents]>(
+            "tangent_operator"
+        );
     Kokkos::deep_copy(tangent_operator, 0.);
-    Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
-            {0, 0}, {kNumberOfLieAlgebraComponents, kNumberOfLieAlgebraComponents}
-        ),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            if (i == j) {
-                tangent_operator(i, j) = 1.0;
-            }
-        }
-    );
+    // TODO ** Question for reviewers **
+    // Any better way to create the identity matrix than parallel_for?
+    auto populate_matrix = KOKKOS_LAMBDA(size_t i) {
+        tangent_operator(0, 0) = 1.;
+        tangent_operator(1, 1) = 1.;
+        tangent_operator(2, 2) = 1.;
+        tangent_operator(3, 3) = 1.;
+        tangent_operator(4, 4) = 1.;
+        tangent_operator(5, 5) = 1.;
+    };
+    Kokkos::parallel_for(1, populate_matrix);
 
-    auto psi_host = Kokkos::create_mirror(psi);
-    Kokkos::deep_copy(psi_host, psi);
-    const double phi =
-        std::sqrt(psi_host(0) * psi_host(0) + psi_host(1) * psi_host(1) + psi_host(2) * psi_host(2));
+    auto psi_0 = Kokkos::subview(psi, Kokkos::make_pair(0, 1));
+    auto psi_1 = Kokkos::subview(psi, Kokkos::make_pair(1, 2));
+    auto psi_2 = Kokkos::subview(psi, Kokkos::make_pair(2, 3));
+    const double phi = std::sqrt(psi_0(0) * psi_0(0) + psi_1(0) * psi_1(0) + psi_2(0) * psi_2(0));
 
-    // TODO clean up the following to use subviews and Blas calls
     if (std::abs(phi) > kTolerance) {
         auto psi_cross_prod_matrix = gen_alpha_solver::create_cross_product_matrix(psi);
-        auto psi_times_psi = gen_alpha_solver::multiply_matrix_with_matrix(
-            psi_cross_prod_matrix, psi_cross_prod_matrix
+        auto psi_times_psi = Kokkos::View<double**>("psi_times_psi", 3, 3);
+        KokkosBlas::gemm(
+            "N", "N", 1.0, psi_cross_prod_matrix, psi_cross_prod_matrix, 0.0, psi_times_psi
         );
 
-        auto tangent_operator_1 = gen_alpha_solver::multiply_matrix_with_scalar(
-            psi_times_psi, (std::cos(phi) - 1.0) / (phi * phi)
-        );
-        auto tangent_operator_2 = gen_alpha_solver::multiply_matrix_with_scalar(
-            psi_times_psi, (1.0 - std::sin(phi) / phi) / (phi * phi)
-        );
-
-        Kokkos::parallel_for(
-            kNumberOfLieAlgebraComponents,
-            KOKKOS_LAMBDA(const size_t i) {
-                for (size_t j = 0; j < kNumberOfLieAlgebraComponents; j++) {
-                    if (i >= 3 && j >= 3) {
-                        tangent_operator(i, j) += tangent_operator_1(i - 3, j - 3);
-                        tangent_operator(i, j) += tangent_operator_2(i - 3, j - 3);
-                    }
-                }
-            }
-        );
+        auto quadrant4 =
+            Kokkos::subview(tangent_operator, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+        auto temp = Kokkos::View<double**>("temp", 3, 3);
+        KokkosBlas::scal(temp, (std::cos(phi) - 1.0) / (phi * phi), psi_cross_prod_matrix);
+        KokkosBlas::axpy(1.0, temp, quadrant4);
+        KokkosBlas::scal(temp, (1.0 - std::sin(phi) / phi) / (phi * phi), psi_times_psi);
+        KokkosBlas::axpy(1.0, temp, quadrant4);
     }
-
     return tangent_operator;
 }
 

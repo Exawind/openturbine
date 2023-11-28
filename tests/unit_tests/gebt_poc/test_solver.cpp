@@ -688,15 +688,6 @@ TEST(SolverTest, ConstraintsGradientMatrix) {
     );
 }
 
-// virtual Kokkos::View<double**> IterationMatrix(
-//         const double& h, const double& beta_prime, const double& gamma_prime,
-//         const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-//         const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-//         const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-//         const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-//         const Kokkos::View<double*> lagrange_multipliers
-//     ) override;
-
 TEST(SolverTest, StaticBeamLinearizationParameters) {
     StaticBeamLinearizationParameters static_beam{};
     auto gen_coords = gen_alpha_solver::create_matrix(
@@ -722,8 +713,44 @@ TEST(SolverTest, StaticBeamLinearizationParameters) {
     // );
 
     // Kokkos::View<double**> TangentOperator(const Kokkos::View<double*> psi);
-    // auto psi = gen_alpha_solver::create_vector({1., 2., 3., 4., 5., 6.});  // 6 elements
-    // static_beam.TangentOperator(psi);
+}
+
+TEST(SolverTest, CalculateTangentOperatorWithPhiAsZero) {
+    auto psi = gen_alpha_solver::create_vector({0., 0., 0.});
+    StaticBeamLinearizationParameters static_beam{};
+
+    auto tangent_operator = static_beam.TangentOperator(psi);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        tangent_operator,
+        {
+            {1., 0., 0., 0., 0., 0.},  // row 1
+            {0., 1., 0., 0., 0., 0.},  // row 2
+            {0., 0., 1., 0., 0., 0.},  // row 3
+            {0., 0., 0., 1., 0., 0.},  // row 4
+            {0., 0., 0., 0., 1., 0.},  // row 5
+            {0., 0., 0., 0., 0., 1.}   // row 6
+        }
+    );
+}
+
+TEST(SolverTest, CalculateTangentOperatorWithPhiNotZero) {
+    auto psi = gen_alpha_solver::create_vector({1., 2., 3.});
+    StaticBeamLinearizationParameters static_beam{};
+
+    auto tangent_operator = static_beam.TangentOperator(psi);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        tangent_operator,
+        {
+            {1., 0., 0., 0., 0., 0.},                                                      // row 1
+            {0., 1., 0., 0., 0., 0.},                                                      // row 2
+            {0., 0., 1., 0., 0., 0.},                                                      // row 3
+            {0., 0., 0., -0.06871266098996709, 0.555552845761836, -0.014131010177901665},  // row 4
+            {0., 0., 0., -0.2267181808418461, 0.1779133377000255, 0.6236305018139318},     // row 5
+            {0., 0., 0., 0.5073830075578865, 0.36287349294603777, 0.5889566688500127}      // row 6
+        }
+    );
 }
 
 }  // namespace openturbine::gebt_poc::tests
