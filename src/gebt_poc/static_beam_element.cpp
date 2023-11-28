@@ -78,16 +78,13 @@ StaticBeamLinearizationParameters::StaticBeamLinearizationParameters(
       quadrature_(quadrature) {
 }
 
-// TODO Following is a hack to make things work temporarily - we should move over to
+// TECHDEBT Following is a hack to make things work temporarily - we should move over to
 // using 2D views for the solver functions
-Kokkos::View<double*> Convert2DViewTo1DView(Kokkos::View<double**> view) {
-    auto size = view.extent(0) * view.extent(1);
-    auto result = Kokkos::View<double*>("result", size);
+void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> result) {
     auto populate_result = KOKKOS_LAMBDA(size_t i) {
         result(i) = view(i / view.extent(1), i % view.extent(1));
     };
-    Kokkos::parallel_for(size, populate_result);
-    return result;
+    Kokkos::parallel_for(result.extent(0), populate_result);
 }
 
 Kokkos::View<double*> StaticBeamLinearizationParameters::ResidualVector(
@@ -102,13 +99,16 @@ Kokkos::View<double*> StaticBeamLinearizationParameters::ResidualVector(
     //     {residual_constraints}
     // }
     const size_t zero{0};
-    const size_t size_dofs{velocity.extent(0) * velocity.extent(1)};
-    const size_t size_constraints{lagrange_multipliers.extent(0)};
-    const size_t size_residual{size_dofs + size_constraints};
+    const auto size_dofs = velocity.extent(0) * velocity.extent(1);
+    const auto size_constraints = lagrange_multipliers.extent(0);
+    const auto size_residual = size_dofs + size_constraints;
+
+    auto gen_coords_1D =
+        Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
+    Convert2DViewTo1DView(gen_coords, gen_coords_1D);
 
     auto residual = Kokkos::View<double*>("residual", size_residual);
     auto residual_gen_coords = Kokkos::subview(residual, Kokkos::make_pair(zero, size_dofs));
-    auto gen_coords_1D = Convert2DViewTo1DView(gen_coords);
     CalculateStaticResidual(
         position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_gen_coords
     );
