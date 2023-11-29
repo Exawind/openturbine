@@ -258,14 +258,18 @@ inline Kokkos::View<double**> EulerParameterToRotationMatrix(const Kokkos::View<
     auto tilde_c_tilde_c = gen_alpha_solver::multiply_matrix_with_matrix(tilde_c, tilde_c);
 
     auto rotation_matrix = Kokkos::View<double[3][3]>("rotation_matrix");
-    Kokkos::parallel_for(1, KOKKOS_LAMBDA(std::size_t) {
-      for(std::size_t i = 0; i < 3; ++i) {
-        for(std::size_t j = 0; j < 3; ++j) {
-            rotation_matrix(i, j) =
-                identity_matrix(i, j) + 2 * euler_param(0) * tilde_c(i, j) + 2 * tilde_c_tilde_c(i, j);
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(std::size_t) {
+            for (std::size_t i = 0; i < 3; ++i) {
+                for (std::size_t j = 0; j < 3; ++j) {
+                    rotation_matrix(i, j) = identity_matrix(i, j) +
+                                            2 * euler_param(0) * tilde_c(i, j) +
+                                            2 * tilde_c_tilde_c(i, j);
+                }
+            }
         }
-      }
-    });
+    );
     return rotation_matrix;
 }
 
@@ -308,7 +312,9 @@ Quaternion rotation_matrix_to_quaternion(const RotationMatrix& rotation_matrix) 
 }
 
 /// Returns the B derivative matrix given for Euler parameters, i.e. unit quaternions
-inline void BMatrixForQuaternions(Kokkos::View<double[3][4]> bmatrix, Kokkos::View<const double[4]> quaternion) {
+inline void BMatrixForQuaternions(
+    Kokkos::View<double[3][4]> bmatrix, Kokkos::View<const double[4]> quaternion
+) {
     auto populate_bmatrix = KOKKOS_LAMBDA(size_t) {
         bmatrix(0, 0) = -quaternion(1);
         bmatrix(0, 1) = quaternion(0);

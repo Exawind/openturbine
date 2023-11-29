@@ -56,10 +56,10 @@ TEST(MeshTest, Create1DMesh_2Element_5Node) {
         auto nodeList = mesh.GetNodesForElement(0);
         EXPECT_EQ(nodeList.extent(0), nodesPerElement);
 
-            auto tmpNodeList = Kokkos::View<double[5]>("tmp");
-    auto hostNodeList = Kokkos::create_mirror(tmpNodeList);
-    Kokkos::deep_copy(tmpNodeList, nodeList);
-    Kokkos::deep_copy(hostNodeList, tmpNodeList);
+        auto tmpNodeList = Kokkos::View<double[5]>("tmp");
+        auto hostNodeList = Kokkos::create_mirror(tmpNodeList);
+        Kokkos::deep_copy(tmpNodeList, nodeList);
+        Kokkos::deep_copy(hostNodeList, tmpNodeList);
         EXPECT_EQ(hostNodeList(0), 0);
         EXPECT_EQ(hostNodeList(1), 1);
         EXPECT_EQ(hostNodeList(2), 2);
@@ -71,10 +71,10 @@ TEST(MeshTest, Create1DMesh_2Element_5Node) {
         auto nodeList = mesh.GetNodesForElement(1);
         EXPECT_EQ(nodeList.extent(0), nodesPerElement);
 
-    auto tmpNodeList = Kokkos::View<double[5]>("tmp");
-    auto hostNodeList = Kokkos::create_mirror(tmpNodeList);
-    Kokkos::deep_copy(tmpNodeList, nodeList);
-    Kokkos::deep_copy(hostNodeList, tmpNodeList);
+        auto tmpNodeList = Kokkos::View<double[5]>("tmp");
+        auto hostNodeList = Kokkos::create_mirror(tmpNodeList);
+        Kokkos::deep_copy(tmpNodeList, nodeList);
+        Kokkos::deep_copy(hostNodeList, tmpNodeList);
         EXPECT_EQ(hostNodeList(0), 4);
         EXPECT_EQ(hostNodeList(1), 5);
         EXPECT_EQ(hostNodeList(2), 6);
@@ -95,10 +95,10 @@ TEST(MeshTest, Create1DMesh_3Element_3Node) {
         auto nodeList = mesh.GetNodesForElement(0);
         EXPECT_EQ(nodeList.extent(0), nodesPerElement);
 
-    auto tmpNodeList = Kokkos::View<double[3]>("tmp");
-    auto hostNodeList = Kokkos::create_mirror(tmpNodeList);
-    Kokkos::deep_copy(tmpNodeList, nodeList);
-    Kokkos::deep_copy(hostNodeList, tmpNodeList);
+        auto tmpNodeList = Kokkos::View<double[3]>("tmp");
+        auto hostNodeList = Kokkos::create_mirror(tmpNodeList);
+        Kokkos::deep_copy(tmpNodeList, nodeList);
+        Kokkos::deep_copy(hostNodeList, tmpNodeList);
         EXPECT_EQ(hostNodeList(0), 0);
         EXPECT_EQ(hostNodeList(1), 1);
         EXPECT_EQ(hostNodeList(2), 2);
@@ -108,10 +108,10 @@ TEST(MeshTest, Create1DMesh_3Element_3Node) {
         auto nodeList = mesh.GetNodesForElement(1);
         EXPECT_EQ(nodeList.extent(0), nodesPerElement);
 
-    auto tmpNodeList = Kokkos::View<double[3]>("tmp");
-    auto hostNodeList = Kokkos::create_mirror(tmpNodeList);
-    Kokkos::deep_copy(tmpNodeList, nodeList);
-    Kokkos::deep_copy(hostNodeList, tmpNodeList);
+        auto tmpNodeList = Kokkos::View<double[3]>("tmp");
+        auto hostNodeList = Kokkos::create_mirror(tmpNodeList);
+        Kokkos::deep_copy(tmpNodeList, nodeList);
+        Kokkos::deep_copy(hostNodeList, tmpNodeList);
         EXPECT_EQ(hostNodeList(0), 2);
         EXPECT_EQ(hostNodeList(1), 3);
         EXPECT_EQ(hostNodeList(2), 4);
@@ -121,10 +121,10 @@ TEST(MeshTest, Create1DMesh_3Element_3Node) {
         auto nodeList = mesh.GetNodesForElement(2);
         EXPECT_EQ(nodeList.extent(0), nodesPerElement);
 
-    auto tmpNodeList = Kokkos::View<double[3]>("tmp");
-    auto hostNodeList = Kokkos::create_mirror(tmpNodeList);
-    Kokkos::deep_copy(tmpNodeList, nodeList);
-    Kokkos::deep_copy(hostNodeList, tmpNodeList);
+        auto tmpNodeList = Kokkos::View<double[3]>("tmp");
+        auto hostNodeList = Kokkos::create_mirror(tmpNodeList);
+        Kokkos::deep_copy(tmpNodeList, nodeList);
+        Kokkos::deep_copy(hostNodeList, tmpNodeList);
         EXPECT_EQ(hostNodeList(0), 4);
         EXPECT_EQ(hostNodeList(1), 5);
         EXPECT_EQ(hostNodeList(2), 6);

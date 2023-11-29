@@ -1,23 +1,24 @@
-#include <gtest/gtest.h>
 #include <initializer_list>
+
+#include <gtest/gtest.h>
 
 #include "src/gebt_poc/element.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc::tests {
 
-auto MakePointVector(std::initializer_list<Point> point_list ) {
-  auto points = Kokkos::View<double*[3]>("points", point_list.size());
-  auto host_points = Kokkos::create_mirror(points);
-  std::size_t i = 0;
-  for(auto& point : point_list) {
-    host_points(i, 0) = point.GetXComponent();
-    host_points(i, 1) = point.GetYComponent();
-    host_points(i, 2) = point.GetZComponent();
-    ++i;
-  }
-  Kokkos::deep_copy(points, host_points);
-  return points;
+auto MakePointVector(std::initializer_list<Point> point_list) {
+    auto points = Kokkos::View<double* [3]>("points", point_list.size());
+    auto host_points = Kokkos::create_mirror(points);
+    std::size_t i = 0;
+    for (auto& point : point_list) {
+        host_points(i, 0) = point.GetXComponent();
+        host_points(i, 1) = point.GetYComponent();
+        host_points(i, 2) = point.GetZComponent();
+        ++i;
+    }
+    Kokkos::deep_copy(points, host_points);
+    return points;
 }
 
 TEST(ElementTest, JacobianFor1DLinearElement) {
@@ -51,11 +52,15 @@ TEST(ElementTest, JacobianFor1DLinearElement) {
 }
 
 TEST(ElementTest, JacobianFor1DFourthOrderElement) {
-    auto shape_derivatives_1 = gen_alpha_solver::create_vector(LagrangePolynomialDerivative(4, -0.9061798459386640));
-    auto shape_derivatives_2 = gen_alpha_solver::create_vector(LagrangePolynomialDerivative(4, -0.5384693101056831));
+    auto shape_derivatives_1 =
+        gen_alpha_solver::create_vector(LagrangePolynomialDerivative(4, -0.9061798459386640));
+    auto shape_derivatives_2 =
+        gen_alpha_solver::create_vector(LagrangePolynomialDerivative(4, -0.5384693101056831));
     auto shape_derivatives_3 = gen_alpha_solver::create_vector(LagrangePolynomialDerivative(4, 0.));
-    auto shape_derivatives_4 = gen_alpha_solver::create_vector(LagrangePolynomialDerivative(4, 0.5384693101056831));
-    auto shape_derivatives_5 = gen_alpha_solver::create_vector(LagrangePolynomialDerivative(4, 0.9061798459386640));
+    auto shape_derivatives_4 =
+        gen_alpha_solver::create_vector(LagrangePolynomialDerivative(4, 0.5384693101056831));
+    auto shape_derivatives_5 =
+        gen_alpha_solver::create_vector(LagrangePolynomialDerivative(4, 0.9061798459386640));
 
     auto node_1 = Point(0.0, 0.0, 0.0);
     auto node_2 = Point(0.16237631096713473, 0.17578464768961147, 0.1481911137890286);
