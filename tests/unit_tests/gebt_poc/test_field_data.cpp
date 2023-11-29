@@ -26,8 +26,10 @@ void readNodalData(
 ) {
     for (int node = 0; node < mesh.GetNumberOfNodes(); ++node) {
         auto nodal_values = field_data.ReadNodalData<field>(node);
-        auto host_values = Kokkos::create_mirror(nodal_values);
-        Kokkos::deep_copy(host_values, nodal_values);
+        auto tmp_values = Kokkos::View<double*>("tmp", nodal_values.extent(0));
+        auto host_values = Kokkos::create_mirror(tmp_values);
+        Kokkos::deep_copy(tmp_values, nodal_values);
+        Kokkos::deep_copy(host_values, tmp_values);
         for (std::size_t component = 0; component < host_values.extent(0); ++component) {
             EXPECT_EQ(
                 host_values(component), multiplier * (node * host_values.extent(0) + component)
@@ -103,8 +105,10 @@ TEST(FieldDataTest, CreateElementDataAndAccess) {
     for (int element = 0; element < number_of_elements; ++element) {
         auto weights = field_data.ReadElementData<Field::Weight>(element);
         EXPECT_EQ(weights.extent(0), 4);
-        auto host_weights = Kokkos::create_mirror(weights);
-        Kokkos::deep_copy(host_weights, weights);
+        auto tmp_weights = Kokkos::View<double[4]>("tmp");
+        auto host_weights = Kokkos::create_mirror(tmp_weights);
+        Kokkos::deep_copy(tmp_weights, weights);
+        Kokkos::deep_copy(host_weights, tmp_weights);
         EXPECT_EQ(host_weights(0), element * 4.);
         EXPECT_EQ(host_weights(1), element * 4. + 1.);
         EXPECT_EQ(host_weights(2), element * 4. + 2.);
@@ -118,8 +122,10 @@ TEST(FieldDataTest, CreateElementDataAndAccess) {
         EXPECT_EQ(stiffness.extent(0), 4);
         EXPECT_EQ(stiffness.extent(1), 6);
         EXPECT_EQ(stiffness.extent(2), 6);
-        auto host_stiffness = Kokkos::create_mirror(stiffness);
-        Kokkos::deep_copy(host_stiffness, stiffness);
+        auto tmp_stiffness = Kokkos::View<double[4][6][6]>("tmp");
+        auto host_stiffness = Kokkos::create_mirror(tmp_stiffness);
+        Kokkos::deep_copy(tmp_stiffness, stiffness);
+        Kokkos::deep_copy(host_stiffness, tmp_stiffness);
         for (int point = 0; point < quadrature_points_per_element; ++point) {
             for (int row = 0; row < 6; ++row) {
                 for (int column = 0; column < 6; ++column) {

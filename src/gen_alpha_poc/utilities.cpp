@@ -257,21 +257,4 @@ Kokkos::View<double**> add_matrix_with_matrix(
     return add_matrix_with_matrix(matrix_a_copy, matrix_b_copy);
 }
 
-Kokkos::View<double[1]> dot_product(
-    const Kokkos::View<double*> vector_a, const Kokkos::View<double*> vector_b
-) {
-    if (vector_a.extent(0) != vector_b.extent(0)) {
-        throw std::invalid_argument("The dimensions of the vectors must be equal to each other");
-    }
-
-    auto result = Kokkos::View<double[1]>("result", 1);
-    auto entries = Kokkos::RangePolicy<Kokkos::DefaultExecutionSpace>(0, vector_a.extent(0));
-    auto dot_product = KOKKOS_LAMBDA(size_t index) {
-        result(0) += vector_a(index) * vector_b(index);
-    };
-    Kokkos::parallel_for(entries, dot_product);
-
-    return result;
-}
-
 }  // namespace openturbine::gen_alpha_solver

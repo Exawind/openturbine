@@ -29,7 +29,7 @@ void Interpolate(
                 value += interpolation_function(j) *
                          nodal_values(j * kNumberOfLieAlgebraComponents + i) / jacobian;
             },
-            interpolated_values(i)
+            Kokkos::Sum(Kokkos::subview(interpolated_values, i))
         );
     }
 }
@@ -39,9 +39,8 @@ void CalculateCurvature(
     Kokkos::View<double*> curvature
 ) {
     // curvature = B * q_prime
-    auto b_matrix = gen_alpha_solver::BMatrixForQuaternions(
-        gen_alpha_solver::Quaternion(gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6))
-    );
+    auto b_matrix = Kokkos::View<double[3][4]>("b_matrix");
+    gen_alpha_solver::BMatrixForQuaternions(b_matrix, Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7)));
     auto q_prime = Kokkos::subview(gen_coords_derivative, Kokkos::make_pair(3, 7));
     KokkosBlas::gemv("N", 2., b_matrix, q_prime, 0., curvature);
 }
@@ -150,13 +149,10 @@ void CalculateStaticResidual(
     const auto order = n_nodes - 1;
     const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
 
-    std::vector<Point> nodes;
-    for (size_t i = 0; i < n_nodes; ++i) {
-        nodes.emplace_back(
-            position_vectors(i * kNumberOfLieAlgebraComponents),
-            position_vectors(i * kNumberOfLieAlgebraComponents + 1),
-            position_vectors(i * kNumberOfLieAlgebraComponents + 2)
-        );
+    auto nodes = Kokkos::View<double*[3]>("nodes", n_nodes);
+    for(std::size_t i = 0; i < n_nodes; ++i) {
+        auto index = i*kNumberOfLieAlgebraComponents;
+        Kokkos::deep_copy(Kokkos::subview(nodes, i, Kokkos::ALL), Kokkos::subview(position_vectors, Kokkos::make_pair(index, index+3)));
     }
 
     // Allocate Views for some required intermediate variables
@@ -184,7 +180,7 @@ void CalculateStaticResidual(
             auto shape_function_derivative =
                 gen_alpha_solver::create_vector(LagrangePolynomialDerivative(order, q_pt));
 
-            auto jacobian = CalculateJacobian(nodes, LagrangePolynomialDerivative(order, q_pt));
+            auto jacobian = CalculateJacobian(nodes, shape_function_derivative);
             Interpolate(gen_coords, shape_function, 1., gen_coords_qp);
             Interpolate(gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp);
             Interpolate(position_vectors, shape_function, 1., position_vector_qp);
@@ -364,13 +360,10 @@ void CalculateStaticIterationMatrix(
     const auto order = n_nodes - 1;
     const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
 
-    std::vector<Point> nodes;
-    for (size_t i = 0; i < n_nodes; ++i) {
-        nodes.emplace_back(
-            position_vectors(i * kNumberOfLieAlgebraComponents),
-            position_vectors(i * kNumberOfLieAlgebraComponents + 1),
-            position_vectors(i * kNumberOfLieAlgebraComponents + 2)
-        );
+    auto nodes = Kokkos::View<double*[3]>("nodes", n_nodes);
+    for(std::size_t i = 0; i < n_nodes; ++i) {
+        auto index = i*kNumberOfLieAlgebraComponents;
+        Kokkos::deep_copy(Kokkos::subview(nodes, i, Kokkos::ALL), Kokkos::subview(position_vectors, Kokkos::make_pair(index, index+3)));
     }
 
     // Allocate Views for some required intermediate variables
@@ -405,7 +398,7 @@ void CalculateStaticIterationMatrix(
                 auto shape_function_derivative =
                     gen_alpha_solver::create_vector(LagrangePolynomialDerivative(order, q_pt));
 
-                auto jacobian = CalculateJacobian(nodes, LagrangePolynomialDerivative(order, q_pt));
+                auto jacobian = CalculateJacobian(nodes, shape_function_derivative);
                 Interpolate(gen_coords, shape_function, 1., gen_coords_qp);
                 Interpolate(
                     gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
@@ -539,11 +532,11 @@ void ConstraintsGradientMatrix(
         constraints_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6)
     );
 
-    auto hostB11 = Kokkos::create_mirror_view(B11);
-    hostB11(0, 0) = 1.;
-    hostB11(1, 1) = 1.;
-    hostB11(2, 2) = 1.;
-    Kokkos::deep_copy(B11, hostB11);
+    Kokkos::parallel_for(1, KOKKOS_LAMBDA(std::size_t) {
+      B11(0, 0) = 1.;
+      B11(1, 1) = 1.;
+      B11(2, 2) = 1.;
+    });
 
     KokkosBlas::scal(B21, -1., rotation_matrix_0);
     KokkosBlas::gemm("N", "N", -1., rotation_matrix_0, position_cross_prod_matrix, 0., B22);

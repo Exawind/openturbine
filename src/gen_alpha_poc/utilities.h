@@ -82,7 +82,4 @@ add_matrix_with_matrix(const Kokkos::View<double**>, const Kokkos::View<double**
 Kokkos::View<double**>
 add_matrix_with_matrix(const Kokkos::View<const double**>, const Kokkos::View<const double**>);
 
-/// Multiplies an 1 x n vector with an n x 1 vector and returns a double
-Kokkos::View<double[1]> dot_product(const Kokkos::View<double*>, const Kokkos::View<double*>);
-
 }  // namespace openturbine::gen_alpha_solver

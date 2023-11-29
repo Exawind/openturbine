@@ -1,3 +1,5 @@
+#include <KokkosBlas.hpp>
+
 #include "src/gebt_poc/element.h"
 
 #include "src/utilities/log.h"
@@ -36,6 +38,14 @@ double CalculateJacobian(
         jacobian = v.Length();
     }
     return jacobian;
+}
+
+double CalculateJacobian(Kokkos::View<const double*[3]> nodes, Kokkos::View<const double*> shape_derivatives) {
+    auto v0 = KokkosBlas::dot(shape_derivatives, Kokkos::subview(nodes, Kokkos::ALL, 0));
+    auto v1 = KokkosBlas::dot(shape_derivatives, Kokkos::subview(nodes, Kokkos::ALL, 1));
+    auto v2 = KokkosBlas::dot(shape_derivatives, Kokkos::subview(nodes, Kokkos::ALL, 2));
+
+    return std::sqrt(v0*v0 + v1*v1 + v2*v2);
 }
 
 }  // namespace openturbine::gebt_poc

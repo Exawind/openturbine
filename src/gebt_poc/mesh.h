@@ -10,7 +10,7 @@ public:
     int GetNumberOfNodes() const { return number_of_nodes_; }
 
     KOKKOS_FUNCTION
-    Kokkos::View<const int*> GetNodesForElement(int element_id) const {
+    auto GetNodesForElement(int element_id) const {
         return Kokkos::subview(connectivity_, element_id, Kokkos::ALL);
     }
 
@@ -55,8 +55,10 @@ protected:
     void CheckNodeUniquenessConsistency() {
         for (std::size_t element = 0; element < connectivity_.extent(0); ++element) {
             auto node_list = GetNodesForElement(element);
-            auto host_node_list = Kokkos::create_mirror(node_list);
-            Kokkos::deep_copy(host_node_list, node_list);
+            auto tmp_node_list = Kokkos::View<double*>("tmp", node_list.extent(0));
+            auto host_node_list = Kokkos::create_mirror(tmp_node_list);
+            Kokkos::deep_copy(tmp_node_list, node_list);
+            Kokkos::deep_copy(host_node_list, tmp_node_list);
             auto node_list_vector = std::vector<int>(host_node_list.extent(0));
             for (std::size_t node = 0; node < node_list_vector.size(); ++node) {
                 node_list_vector[node] = host_node_list(node);
