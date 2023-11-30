@@ -2,8 +2,10 @@
 set(Kokkos_DIR "$ENV{Kokkos_ROOT}" CACHE STRING "Kokkos root directory")
 find_package(KokkosKernels REQUIRED)
 
-if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
-  set(FS_LIB stdc++fs)
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+    set(FS_LIB stdc++fs)
+  endif()
 endif()
 
 target_sources(${oturb_exe_name} PRIVATE main.cpp)

@@ -18,8 +18,10 @@ target_compile_options(
 target_include_directories(${oturb_unit_test_exe_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(${oturb_unit_test_exe_name} PRIVATE ${PROJECT_BINARY_DIR})
 
-if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
-  set(FS_LIB stdc++fs)
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+    set(FS_LIB stdc++fs)
+  endif()
 endif()
 
 # Link our unit test executable with GoogleTest
