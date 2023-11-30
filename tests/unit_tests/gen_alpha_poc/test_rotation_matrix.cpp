@@ -55,5 +55,4 @@ TEST(RotationMatrixTest, GetComponents) {
         }
     );
 }
-
 }  // namespace openturbine::gen_alpha_solver::tests
