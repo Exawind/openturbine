@@ -17,21 +17,45 @@ UserDefinedQuadrature::UserDefinedQuadrature(
 
 void Interpolate(
     Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
+    Kokkos::View<double*> interpolated_values
+) {
+    const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
+    KokkosBlas::fill(interpolated_values, 0.);
+    for (std::size_t i = 0; i < n_nodes; ++i) {
+        auto index = i * kNumberOfLieAlgebraComponents;
+        KokkosBlas::axpy(
+            interpolation_function(i),
+            Kokkos::subview(
+                nodal_values, Kokkos::pair(index, index + kNumberOfLieAlgebraComponents)
+            ),
+            interpolated_values
+        );
+    }
+    // Normalize the rotation quaternion
+    auto q = Kokkos::subview(interpolated_values, Kokkos::pair(3, 7));
+    auto norm = KokkosBlas::nrm2(q);
+    if (norm != 0.0) {
+        KokkosBlas::scal(q, 1. / norm, q);
+    }
+}
+
+void InterpolateDerivative(
+    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
     const double jacobian, Kokkos::View<double*> interpolated_values
 ) {
     const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
-    Kokkos::deep_copy(interpolated_values, 0.);
-    for (std::size_t i = 0; i < kNumberOfLieAlgebraComponents; ++i) {
-        // TODO How to remove this parallel_reduce?
-        Kokkos::parallel_reduce(
-            n_nodes,
-            KOKKOS_LAMBDA(const size_t j, double& value) {
-                value += interpolation_function(j) *
-                         nodal_values(j * kNumberOfLieAlgebraComponents + i) / jacobian;
-            },
-            Kokkos::Sum(Kokkos::subview(interpolated_values, i))
+    KokkosBlas::fill(interpolated_values, 0.);
+    for (std::size_t i = 0; i < n_nodes; ++i) {
+        auto index = i * kNumberOfLieAlgebraComponents;
+        KokkosBlas::axpy(
+            interpolation_function(i),
+            Kokkos::subview(
+                nodal_values, Kokkos::pair(index, index + kNumberOfLieAlgebraComponents)
+            ),
+            interpolated_values
         );
     }
+    KokkosBlas::scal(interpolated_values, 1. / jacobian, interpolated_values);
 }
 
 void CalculateCurvature(
@@ -186,10 +210,12 @@ void CalculateStaticResidual(
                 gen_alpha_solver::create_vector(LagrangePolynomialDerivative(order, q_pt));
 
             auto jacobian = CalculateJacobian(nodes, shape_function_derivative);
-            Interpolate(gen_coords, shape_function, 1., gen_coords_qp);
-            Interpolate(gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp);
-            Interpolate(position_vectors, shape_function, 1., position_vector_qp);
-            Interpolate(
+            Interpolate(gen_coords, shape_function, gen_coords_qp);
+            InterpolateDerivative(
+                gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
+            );
+            Interpolate(position_vectors, shape_function, position_vector_qp);
+            InterpolateDerivative(
                 position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
             );
 
@@ -407,12 +433,12 @@ void CalculateStaticIterationMatrix(
                     gen_alpha_solver::create_vector(LagrangePolynomialDerivative(order, q_pt));
 
                 auto jacobian = CalculateJacobian(nodes, shape_function_derivative);
-                Interpolate(gen_coords, shape_function, 1., gen_coords_qp);
-                Interpolate(
+                Interpolate(gen_coords, shape_function, gen_coords_qp);
+                InterpolateDerivative(
                     gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
                 );
-                Interpolate(position_vectors, shape_function, 1., position_vector_qp);
-                Interpolate(
+                Interpolate(position_vectors, shape_function, position_vector_qp);
+                InterpolateDerivative(
                     position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
                 );
 
