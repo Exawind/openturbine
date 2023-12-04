@@ -185,9 +185,9 @@ void CalculateStaticResidual(
     }
 
     // Allocate Views for some required intermediate variables
-    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_qp");
+    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_qp");
     auto gen_coords_derivatives_qp =
-        Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_derivatives_qp");
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_derivatives_qp");
     auto position_vector_qp =
         Kokkos::View<double[kNumberOfLieAlgebraComponents]>("position_vector_qp");
     auto pos_vector_derivatives_qp =
@@ -401,9 +401,9 @@ void CalculateStaticIterationMatrix(
     }
 
     // Allocate Views for some required intermediate variables
-    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_qp");
+    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_qp");
     auto gen_coords_derivatives_qp =
-        Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_derivatives_qp");
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_derivatives_qp");
     auto position_vector_qp =
         Kokkos::View<double[kNumberOfLieAlgebraComponents]>("position_vector_qp");
     auto pos_vector_derivatives_qp =
