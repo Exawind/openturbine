@@ -97,5 +97,7 @@ TEST(GEBT_LinearSolverTest, Solve2x2Matrix_fail) {
     auto solution = Kokkos::View<double[2]>("solution");
     auto exact_solution = std::vector<double>{17., 39.};
 
-    EXPECT_THROW(openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), std::runtime_error);
+    EXPECT_THROW(
+        openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), std::runtime_error
+    );
 }

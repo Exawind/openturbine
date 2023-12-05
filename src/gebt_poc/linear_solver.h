@@ -32,7 +32,7 @@ inline void solve_linear_system(
     Kokkos::fence();
 
     auto sum = KokkosBlas::sum(x);
-    if(sum != sum) {
+    if (sum != sum) {
         throw std::runtime_error("Solution contains NaN values.");
     }
 }
