@@ -5,7 +5,7 @@
 #include "src/gebt_poc/linear_solver.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
-TEST(Gebt_LinearSolverTest, Solve1x1Identity) {
+TEST(GEBT_LinearSolverTest, Solve1x1Identity) {
     auto identity = openturbine::gen_alpha_solver::tests::create_diagonal_matrix({1});
     auto rhs = openturbine::gen_alpha_solver::create_vector({1});
     auto solution = Kokkos::View<double[1]>("solution");
@@ -18,7 +18,7 @@ TEST(Gebt_LinearSolverTest, Solve1x1Identity) {
     EXPECT_EQ(solution_host(0), exact_solution[0]);
 }
 
-TEST(LinearSolverTest, Solve3x3Identity) {
+TEST(GEBT_LinearSolverTest, Solve3x3Identity) {
     auto identity = openturbine::gen_alpha_solver::tests::create_diagonal_matrix({1., 1., 1.});
     auto rhs = openturbine::gen_alpha_solver::create_vector({1., 2., 3.});
     auto solution = Kokkos::View<double[3]>("solution");
@@ -33,7 +33,7 @@ TEST(LinearSolverTest, Solve3x3Identity) {
     EXPECT_EQ(solution_host(2), exact_solution[2]);
 }
 
-TEST(LinearSolverTest, Solve1x1Diagonal) {
+TEST(GEBT_LinearSolverTest, Solve1x1Diagonal) {
     auto diagonal = openturbine::gen_alpha_solver::tests::create_diagonal_matrix({2.});
     auto rhs = openturbine::gen_alpha_solver::create_vector({1.});
     auto solution = Kokkos::View<double[1]>("solution");
@@ -46,7 +46,7 @@ TEST(LinearSolverTest, Solve1x1Diagonal) {
     EXPECT_NEAR(solution_host(0), exact_solution[0], std::numeric_limits<double>::epsilon());
 }
 
-TEST(LinearSolverTest, Solve3x3Diagonal) {
+TEST(GEBT_LinearSolverTest, Solve3x3Diagonal) {
     auto diagonal = openturbine::gen_alpha_solver::tests::create_diagonal_matrix({2., 8., 32.});
     auto rhs = openturbine::gen_alpha_solver::create_vector({1., 2., 4.});
     auto solution = Kokkos::View<double[3]>("solution");
@@ -61,7 +61,7 @@ TEST(LinearSolverTest, Solve3x3Diagonal) {
     EXPECT_NEAR(solution_host(2), exact_solution[2], std::numeric_limits<double>::epsilon());
 }
 
-TEST(LinearSolverTest, Solve2x2Matrix) {
+TEST(GEBT_LinearSolverTest, Solve2x2Matrix) {
     auto matrix = openturbine::gen_alpha_solver::create_matrix({{1., 2.}, {3., 4.}});
     auto rhs = openturbine::gen_alpha_solver::create_vector({17., 39.});
     auto solution = Kokkos::View<double[2]>("solution");
@@ -75,7 +75,7 @@ TEST(LinearSolverTest, Solve2x2Matrix) {
     EXPECT_NEAR(solution_host(1), exact_solution[1], 10 * std::numeric_limits<double>::epsilon());
 }
 
-TEST(LinearSolverTest, Solve3x3Matrix) {
+TEST(GEBT_LinearSolverTest, Solve3x3Matrix) {
     auto matrix =
         openturbine::gen_alpha_solver::create_matrix({{2., 6., 3.}, {4., -1., 3.}, {1., 3., 2.}});
     auto rhs = openturbine::gen_alpha_solver::create_vector({23., 11., 13.});
@@ -89,4 +89,13 @@ TEST(LinearSolverTest, Solve3x3Matrix) {
     EXPECT_NEAR(solution_host(0), exact_solution[0], 10 * std::numeric_limits<double>::epsilon());
     EXPECT_NEAR(solution_host(1), exact_solution[1], 10 * std::numeric_limits<double>::epsilon());
     EXPECT_NEAR(solution_host(2), exact_solution[2], 10 * std::numeric_limits<double>::epsilon());
+}
+
+TEST(GEBT_LinearSolverTest, Solve2x2Matrix_fail) {
+    auto matrix = openturbine::gen_alpha_solver::create_matrix({{0., 0.}, {0., 0.}});
+    auto rhs = openturbine::gen_alpha_solver::create_vector({17., 39.});
+    auto solution = Kokkos::View<double[2]>("solution");
+    auto exact_solution = std::vector<double>{17., 39.};
+
+    EXPECT_THROW(openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), std::runtime_error);
 }

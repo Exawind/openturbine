@@ -1,6 +1,9 @@
 #pragma once
 
+#include <stdexcept>
+
 #include <KokkosBatched_Gesv.hpp>
+#include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
 namespace openturbine::gebt_poc {
@@ -26,5 +29,11 @@ inline void solve_linear_system(
             }
         }
     );
+    Kokkos::fence();
+
+    auto sum = KokkosBlas::sum(x);
+    if(sum != sum) {
+        throw std::runtime_error("Solution contains NaN values.");
+    }
 }
 }  // namespace openturbine::gebt_poc
