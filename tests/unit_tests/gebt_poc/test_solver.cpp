@@ -410,10 +410,9 @@ TEST(SolverTest, CalculateStaticResidualWithNonZeroValues) {
     auto quadrature_points =
         std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
                             0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
-    auto quadrature_weights =
-        std::vector<double>{0.1294849661688697, 0.2797053914892766, 0.3818300505051189,
-                            0.4179591836734694, 0.3818300505051189, 0.2797053914892766,
-                            0.1294849661688697};
+    auto quadrature_weights = std::vector<double>{
+        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
     auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
     auto residual = Kokkos::View<double*>("residual", 30);
@@ -564,8 +563,7 @@ TEST(SolverTest, CalculateStaticIterationMatrixWithNonZeroValues) {
          -0.049692141629315074, 0.18127630174800594, 0.25965858850765167,
          // node 5
          5., 1., -1., 0.9210746582719719, -0.07193653093139739, 0.20507529985516368,
-         0.32309554437664584
-        }
+         0.32309554437664584}
     );
 
     auto generalized_coords = gen_alpha_solver::create_vector(
@@ -580,8 +578,7 @@ TEST(SolverTest, CalculateStaticIterationMatrixWithNonZeroValues) {
          0.06844696924968456, -0.011818954790771264, 0.07977257214146723, 0.9991445348823056,
          0.04135454527402519, 0., 0.,
          // node 5
-         0.1, 0., 0.12, 0.9987502603949662, 0.049979169270678324, 0., 0.
-        }
+         0.1, 0., 0.12, 0.9987502603949662, 0.049979169270678324, 0., 0.}
     );
 
     auto stiffness = StiffnessMatrix(gen_alpha_solver::create_matrix({
@@ -596,10 +593,9 @@ TEST(SolverTest, CalculateStaticIterationMatrixWithNonZeroValues) {
     auto quadrature_points =
         std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
                             0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
-    auto quadrature_weights =
-        std::vector<double>{0.1294849661688697, 0.2797053914892766, 0.3818300505051189,
-                            0.4179591836734694, 0.3818300505051189, 0.2797053914892766,
-                            0.1294849661688697};
+    auto quadrature_weights = std::vector<double>{
+        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
     auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
     auto iteration_matrix = Kokkos::View<double[30][30]>("iteration_matrix");
@@ -647,8 +643,7 @@ TEST(SolverTest, ConstraintsGradientMatrix) {
          -0.049692141629315074, 0.18127630174800594, 0.25965858850765167,
          // node 5
          5., 1., -1., 0.9210746582719719, -0.07193653093139739, 0.20507529985516368,
-         0.3230955443766458
-        }
+         0.3230955443766458}
     );
 
     auto generalized_coords = gen_alpha_solver::create_vector(
@@ -663,8 +658,7 @@ TEST(SolverTest, ConstraintsGradientMatrix) {
          0.3339123363204823, 0.27625463649368126, 0.45594573088331497, 0.9958289985675476,
          0.09123927669570399, 0., 0.,
          // node 5
-         0.4, 0.4, 0.5599999999999999, 0.9950041652780258, 0.09983341664682815, 0., 0.
-        }
+         0.4, 0.4, 0.5599999999999999, 0.9950041652780258, 0.09983341664682815, 0., 0.}
     );
 
     auto constraint_gradients = Kokkos::View<double[6][30]>("constraint_gradients");
