@@ -13,4 +13,5 @@ target_sources(
     test_field_data.cpp
     test_gebt_generalized_alpha_solver.cpp
     test_solver.cpp
+    test_linear_solver.cpp
 )
