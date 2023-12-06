@@ -7,9 +7,9 @@
 #include <KokkosBlas3_gemm.hpp>
 
 #include "src/gebt_poc/field_data.h"
+#include "src/gebt_poc/linear_solver.h"
 #include "src/gebt_poc/mesh.h"
 #include "src/gen_alpha_poc/quaternion.h"
-#include "src/gebt_poc/linear_solver.h"
 #include "src/gen_alpha_poc/vector.h"
 
 namespace openturbine::gebt_poc {
