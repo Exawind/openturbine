@@ -2,6 +2,7 @@ target_sources(${oturb_lib_name}
     PRIVATE
     element.cpp
     interpolation.cpp
+    linearization_parameters.cpp
     model.cpp
     section.cpp
     solver.cpp
