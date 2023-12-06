@@ -62,10 +62,7 @@ public:
     );
 
     /// Checks convergence of the non-linear solution based on the residuals
-    bool CheckConvergence(const Kokkos::View<double*>);
-
-    /// Returns the flag to indicate if the latest non-linear update has converged
-    inline bool IsConverged() const { return is_converged_; }
+    bool IsConverged(const Kokkos::View<double*>);
 
 private:
     const double kAlphaF_;  //< Alpha_f coefficient of the generalized-alpha method

@@ -167,7 +167,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next
         );
 
-        if (this->CheckConvergence(residuals)) {
+        if (this->IsConverged(residuals)) {
             this->is_converged_ = true;
             break;
         }
@@ -314,21 +314,10 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
     }
 }
 
-bool GeneralizedAlphaTimeIntegrator::CheckConvergence(const Kokkos::View<double*> residual) {
+bool GeneralizedAlphaTimeIntegrator::IsConverged(const Kokkos::View<double*> residual) {
     // L2 norm of the residual vector should be very small (< epsilon) for the solution
     // to be considered converged
-    double residual_norm = 0.;
-    Kokkos::parallel_reduce(
-        residual.extent(0),
-        KOKKOS_LAMBDA(int i, double& residual_partial_sum) {
-            double residual_value = residual(i);
-            residual_partial_sum += residual_value * residual_value;
-        },
-        Kokkos::Sum<double>(residual_norm)
-    );
-    residual_norm = std::sqrt(residual_norm);
-
-    return (residual_norm) < kConvergenceTolerance ? true : false;
+    return KokkosBlas::nrm2(residual) < kConvergenceTolerance;
 }
 
 }  // namespace openturbine::gebt_poc

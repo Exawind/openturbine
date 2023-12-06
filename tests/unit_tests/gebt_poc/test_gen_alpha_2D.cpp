@@ -85,7 +85,7 @@ TEST(TimeIntegratorTest, ExpectConvergedSolution) {
     auto tol = GeneralizedAlphaTimeIntegrator::kConvergenceTolerance;
     auto residual = gen_alpha_solver::create_vector({tol * 1e-1, tol * 2e-1, tol * 3e-1});
     auto time_integrator = GeneralizedAlphaTimeIntegrator();
-    auto converged = time_integrator.CheckConvergence(residual);
+    auto converged = time_integrator.IsConverged(residual);
 
     EXPECT_TRUE(converged);
 }
@@ -94,7 +94,7 @@ TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
     auto tol = GeneralizedAlphaTimeIntegrator::kConvergenceTolerance;
     auto residual = gen_alpha_solver::create_vector({tol * 1e1, tol * 2e1, tol * 3e1});
     auto time_integrator = GeneralizedAlphaTimeIntegrator();
-    auto converged = time_integrator.CheckConvergence(residual);
+    auto converged = time_integrator.IsConverged(residual);
 
     EXPECT_FALSE(converged);
 }
