@@ -77,15 +77,15 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
 
     // Initialize some X_next variables to assist in updating the State
     auto gen_coords_next =
-        Kokkos::View<double**>("gen_coords_next", n_nodes, kNumberOfLieGroupComponents);
+        Kokkos::View<double* [kNumberOfLieGroupComponents]>("gen_coords_next", n_nodes);
     auto velocity_next =
-        Kokkos::View<double**>("velocity_next", n_nodes, kNumberOfLieAlgebraComponents);
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]>("velocity_next", n_nodes);
     auto acceleration_next =
-        Kokkos::View<double**>("acceleration_next", n_nodes, kNumberOfLieAlgebraComponents);
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]>("acceleration_next", n_nodes);
     auto algo_acceleration_next =
-        Kokkos::View<double**>("algo_acceleration_next", n_nodes, kNumberOfLieAlgebraComponents);
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]>("algo_acceleration_next", n_nodes);
     auto delta_gen_coords =
-        Kokkos::View<double**>("delta_gen_coords", n_nodes, kNumberOfLieAlgebraComponents);
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]>("delta_gen_coords", n_nodes);
     auto lagrange_mults_next = Kokkos::View<double*>("lagrange_mults_next", n_constraints);
 
     // Loop over all nodes in the system and update the generalized coordinates, velocities,
