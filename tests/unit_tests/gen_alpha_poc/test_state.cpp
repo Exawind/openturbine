@@ -8,114 +8,21 @@ namespace openturbine::gen_alpha_solver::tests {
 TEST(StateTest, CreateDefaultState) {
     auto state = State();
 
-    expect_kokkos_view_2D_equal(
-        state.GetGeneralizedCoordinates(),
-        {
-            {0., 0., 0., 0., 0., 0., 0.}  // 7 elements
-        }
-    );
-    expect_kokkos_view_2D_equal(
-        state.GetVelocity(),
-        {
-            {0., 0., 0., 0., 0., 0.}  // 6 elements
-        }
-    );
-    expect_kokkos_view_2D_equal(
-        state.GetAcceleration(),
-        {
-            {0., 0., 0., 0., 0., 0.}  // 6 elements
-        }
-    );
-    expect_kokkos_view_2D_equal(
-        state.GetAlgorithmicAcceleration(),
-        {
-            {0., 0., 0., 0., 0., 0.}  // 6 elements
-        }
-    );
+    expect_kokkos_view_1D_equal(state.GetGeneralizedCoordinates(), {0.});
+    expect_kokkos_view_1D_equal(state.GetVelocity(), {0.});
+    expect_kokkos_view_1D_equal(state.GetAcceleration(), {0.});
+    expect_kokkos_view_1D_equal(state.GetAlgorithmicAcceleration(), {0.});
 }
 
 TEST(StateTest, CreateStateWithGivenValues) {
-    auto state = State(
-        create_matrix({
-            {1., 2., 3., 4., 0., 0., 0.},  // 7 elements
-        }),
-        create_matrix({
-            {5., 6., 7., 0., 0., 0.},  // 6 elements
-        }),
-        create_matrix({
-            {5., 6., 7., 0., 0., 0.},  // 6 elements
-        }),
-        create_matrix({
-            {5., 6., 7., 0., 0., 0.},  // 6 elements
-        })
-    );
+    auto q = create_vector({1., 2., 3., 4.});
+    auto v = create_vector({5., 6., 7.});
+    auto state = State(q, v, v, v);
 
-    expect_kokkos_view_2D_equal(
-        state.GetGeneralizedCoordinates(),
-        {
-            {1., 2., 3., 4., 0., 0., 0.}  // 7 elements
-        }
-    );
-    expect_kokkos_view_2D_equal(
-        state.GetVelocity(),
-        {
-            {5., 6., 7., 0., 0., 0.}  // 6 elements
-        }
-    );
-    expect_kokkos_view_2D_equal(
-        state.GetAcceleration(),
-        {
-            {5., 6., 7., 0., 0., 0.}  // 6 elements
-        }
-    );
-    expect_kokkos_view_2D_equal(
-        state.GetAlgorithmicAcceleration(),
-        {
-            {5., 6., 7., 0., 0., 0.}  // 6 elements
-        }
-    );
-}
-
-TEST(StateTest, ExpectFailureIfNumberOfInputsDoNotMatchInGeneralizedCoordinates) {
-    EXPECT_THROW(
-        State(
-            create_matrix({
-                {1., 1., 1., 1., 1., 1., 1.},  // row 1
-                {1., 1., 1., 1., 1., 1., 1.}   // row 2
-            }),
-            create_matrix({
-                {2., 2., 2., 2., 2., 2.}  // row 1
-            }),
-            create_matrix({
-                {3., 3., 3., 3., 3., 3.}  // row 1
-            }),
-            create_matrix({
-                {4., 4., 4., 4., 4., 4.}  // row 1
-            })
-        ),
-        std::invalid_argument
-    );
-}
-
-TEST(StateTest, ExpectFailureIfNumberOfInputsDoNotMatchInAcceleration) {
-    EXPECT_THROW(
-        State(
-            create_matrix({
-                {1., 1., 1., 1., 1., 1., 1.},  // row 1
-            }),
-            create_matrix({
-                {2., 2., 2., 2., 2., 2.}  // row 1
-            }),
-            create_matrix({
-                {3., 3., 3., 3., 3., 3.},  // row 1
-                {4., 4., 4., 4., 4., 4.}   // row 2
-            }),
-            create_matrix({
-                {5., 5., 5., 5., 5., 5.}  // row 1
-            })
-        ),
-        std::invalid_argument
-    );
+    expect_kokkos_view_1D_equal(state.GetGeneralizedCoordinates(), {1., 2., 3., 4.});
+    expect_kokkos_view_1D_equal(state.GetVelocity(), {5., 6., 7.});
+    expect_kokkos_view_1D_equal(state.GetAcceleration(), {5., 6., 7.});
+    expect_kokkos_view_1D_equal(state.GetAlgorithmicAcceleration(), {5., 6., 7.});
 }
 
 TEST(MassMatrixTest, CreateMassMatrixWithDefaultValues) {
