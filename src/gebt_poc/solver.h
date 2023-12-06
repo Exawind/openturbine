@@ -52,15 +52,15 @@ private:
 
 /// Calculates the interpolated values for a nodal quantity (e.g. displacement or position vector)
 /// at a given quadrature point and normalizes the rotation quaternion
-void Interpolate(
-    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
+void InterpolateNodalValues(
+    Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
     Kokkos::View<double*> interpolated_values
 );
 
 /// Calculates the interpolated derivative values for a nodal quantity (e.g. displacement or position
 /// vector) at a given quadrature point
-void InterpolateDerivative(
-    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
+void InterpolateNodalValueDerivatives(
+    Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
     const double jacobian, Kokkos::View<double*> interpolated_values
 );
 

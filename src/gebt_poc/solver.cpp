@@ -15,8 +15,8 @@ UserDefinedQuadrature::UserDefinedQuadrature(
       quadrature_weights_(std::move(quadrature_weights)) {
 }
 
-void Interpolate(
-    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
+void InterpolateNodalValues(
+    Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
     Kokkos::View<double*> interpolated_values
 ) {
     const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
@@ -24,7 +24,7 @@ void Interpolate(
     for (std::size_t i = 0; i < n_nodes; ++i) {
         auto index = i * kNumberOfLieAlgebraComponents;
         KokkosBlas::axpy(
-            interpolation_function(i),
+            interpolation_function[i],
             Kokkos::subview(
                 nodal_values, Kokkos::pair(index, index + kNumberOfLieAlgebraComponents)
             ),
@@ -39,16 +39,19 @@ void Interpolate(
     }
 }
 
-void InterpolateDerivative(
-    Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
+void InterpolateNodalValueDerivatives(
+    Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
     const double jacobian, Kokkos::View<double*> interpolated_values
 ) {
+    if (jacobian == 0.) {
+        throw std::invalid_argument("jacobian must be nonzero");
+    }
     const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
     KokkosBlas::fill(interpolated_values, 0.);
     for (std::size_t i = 0; i < n_nodes; ++i) {
         auto index = i * kNumberOfLieAlgebraComponents;
         KokkosBlas::axpy(
-            interpolation_function(i),
+            interpolation_function[i],
             Kokkos::subview(
                 nodal_values, Kokkos::pair(index, index + kNumberOfLieAlgebraComponents)
             ),
@@ -205,17 +208,19 @@ void CalculateStaticResidual(
         for (size_t j = 0; j < n_quad_pts; ++j) {
             // Calculate required interpolated values at the quadrature point
             const auto q_pt = quadrature.GetQuadraturePoints()[j];
-            auto shape_function = gen_alpha_solver::create_vector(LagrangePolynomial(order, q_pt));
-            auto shape_function_derivative =
-                gen_alpha_solver::create_vector(LagrangePolynomialDerivative(order, q_pt));
+            auto shape_function = LagrangePolynomial(order, q_pt);
+            auto shape_function_derivative = LagrangePolynomialDerivative(order, q_pt);
+            auto shape_function_vector = gen_alpha_solver::create_vector(shape_function);
+            auto shape_function_derivative_vector =
+                gen_alpha_solver::create_vector(shape_function_derivative);
 
-            auto jacobian = CalculateJacobian(nodes, shape_function_derivative);
-            Interpolate(gen_coords, shape_function, gen_coords_qp);
-            InterpolateDerivative(
+            auto jacobian = CalculateJacobian(nodes, shape_function_derivative_vector);
+            InterpolateNodalValues(gen_coords, shape_function, gen_coords_qp);
+            InterpolateNodalValueDerivatives(
                 gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
             );
-            Interpolate(position_vectors, shape_function, position_vector_qp);
-            InterpolateDerivative(
+            InterpolateNodalValues(position_vectors, shape_function, position_vector_qp);
+            InterpolateNodalValueDerivatives(
                 position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
             );
 
@@ -250,8 +255,9 @@ void CalculateStaticResidual(
                 kNumberOfLieGroupComponents,
                 KOKKOS_LAMBDA(const size_t i) {
                     residual(node_count * kNumberOfLieGroupComponents + i) +=
-                        q_weight * (shape_function_derivative(node_count) * elastic_forces_fc(i) +
-                                    jacobian * shape_function(node_count) * elastic_forces_fd(i));
+                        q_weight *
+                        (shape_function_derivative_vector(node_count) * elastic_forces_fc(i) +
+                         jacobian * shape_function_vector(node_count) * elastic_forces_fd(i));
                 }
             );
         }
@@ -427,18 +433,19 @@ void CalculateStaticIterationMatrix(
             for (size_t k = 0; k < n_quad_pts; ++k) {
                 // Calculate required interpolated values at the quadrature point
                 const auto q_pt = quadrature.GetQuadraturePoints()[k];
-                auto shape_function =
-                    gen_alpha_solver::create_vector(LagrangePolynomial(order, q_pt));
-                auto shape_function_derivative =
-                    gen_alpha_solver::create_vector(LagrangePolynomialDerivative(order, q_pt));
+                auto shape_function = LagrangePolynomial(order, q_pt);
+                auto shape_function_derivative = LagrangePolynomialDerivative(order, q_pt);
+                auto shape_function_vector = gen_alpha_solver::create_vector(shape_function);
+                auto shape_function_derivative_vector =
+                    gen_alpha_solver::create_vector(shape_function_derivative);
 
-                auto jacobian = CalculateJacobian(nodes, shape_function_derivative);
-                Interpolate(gen_coords, shape_function, gen_coords_qp);
-                InterpolateDerivative(
+                auto jacobian = CalculateJacobian(nodes, shape_function_derivative_vector);
+                InterpolateNodalValues(gen_coords, shape_function, gen_coords_qp);
+                InterpolateNodalValueDerivatives(
                     gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
                 );
-                Interpolate(position_vectors, shape_function, position_vector_qp);
-                InterpolateDerivative(
+                InterpolateNodalValues(position_vectors, shape_function, position_vector_qp);
+                InterpolateNodalValueDerivatives(
                     position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
                 );
 
@@ -483,11 +490,14 @@ void CalculateStaticIterationMatrix(
                             i * kNumberOfLieGroupComponents + ii,
                             j * kNumberOfLieGroupComponents + jj
                         ) += q_weight *
-                             (shape_function(i) * P_matrix(ii, jj) * shape_function_derivative(j) +
-                              shape_function(i) * Q_matrix(ii, jj) * shape_function(j) * jacobian +
-                              shape_function_derivative(i) * sectional_stiffness(ii, jj) *
-                                  shape_function_derivative(j) / jacobian +
-                              shape_function_derivative(i) * O_matrix(ii, jj) * shape_function(j));
+                             (shape_function_vector(i) * P_matrix(ii, jj) *
+                                  shape_function_derivative_vector(j) +
+                              shape_function_vector(i) * Q_matrix(ii, jj) *
+                                  shape_function_vector(j) * jacobian +
+                              shape_function_derivative_vector(i) * sectional_stiffness(ii, jj) *
+                                  shape_function_derivative_vector(j) / jacobian +
+                              shape_function_derivative_vector(i) * O_matrix(ii, jj) *
+                                  shape_function_vector(j));
                     }
                 );
             }

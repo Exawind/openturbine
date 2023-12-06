@@ -60,10 +60,10 @@ TEST(SolverTest, CalculateInterpolatedValues) {
     auto generalized_coords = Kokkos::View<double[14]>("generalized_coords");
     Kokkos::parallel_for(1, CalculateInterpolatedValues_populate_coords{generalized_coords});
     auto quadrature_pt = 0.;
-    auto shape_function = gen_alpha_solver::create_vector(LagrangePolynomial(1, quadrature_pt));
+    auto shape_function = LagrangePolynomial(1, quadrature_pt);
 
     auto interpolated_values = Kokkos::View<double[7]>("interpolated_values");
-    Interpolate(generalized_coords, shape_function, interpolated_values);
+    InterpolateNodalValues(generalized_coords, shape_function, interpolated_values);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         interpolated_values, {1.5, 2.5, 3.5, 0.8109631195052179, 0.5850972729404622, 0., 0.}
