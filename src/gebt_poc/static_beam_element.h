@@ -1,7 +1,7 @@
 #pragma once
 
+#include "src/gebt_poc/linearization_parameters.h"
 #include "src/gebt_poc/solver.h"
-#include "src/gen_alpha_poc/linearization_parameters.h"
 #include "src/gen_alpha_poc/state.h"
 #include "src/gen_alpha_poc/utilities.h"
 
@@ -10,7 +10,7 @@ namespace openturbine::gebt_poc {
 /*!
  * Calculates the residual vector and iteration matrix for a static beam element
  */
-class StaticBeamLinearizationParameters : public gen_alpha_solver::LinearizationParameters {
+class StaticBeamLinearizationParameters : public LinearizationParameters {
 public:
     static constexpr size_t kNumberOfLieGroupComponents = 7;
     static constexpr size_t kNumberOfLieAlgebraComponents = 6;
