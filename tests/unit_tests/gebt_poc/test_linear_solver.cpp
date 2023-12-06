@@ -106,7 +106,7 @@ TEST(GEBT_LinearSolverTest, Solve3x2Matrix_fail_death) {
     auto rhs = openturbine::gen_alpha_solver::create_vector({17., 39.});
     auto solution = Kokkos::View<double[2]>("solution");
 
-    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    (void)(::testing::GTEST_FLAG(death_test_style) = "threadsafe");
     EXPECT_DEATH(openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), "");
 }
 
@@ -115,7 +115,7 @@ TEST(GEBT_LinearSolverTest, Solve2x3Matrix_fail_death) {
     auto rhs = openturbine::gen_alpha_solver::create_vector({17., 39., 13.});
     auto solution = Kokkos::View<double[2]>("solution");
 
-    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    (void)(::testing::GTEST_FLAG(death_test_style) = "threadsafe");
     EXPECT_DEATH(openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), "");
 }
 
@@ -125,7 +125,7 @@ TEST(GEBT_LinearSolverTest, Solve3x3Matrix_4x1RHS_fail_death) {
     auto rhs = openturbine::gen_alpha_solver::create_vector({23., 11., 13., 20.});
     auto solution = Kokkos::View<double[3]>("solution");
 
-    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    (void)(::testing::GTEST_FLAG(death_test_style) = "threadsafe");
     EXPECT_DEATH(openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), "");
 }
 
@@ -135,6 +135,6 @@ TEST(GEBT_LinearSolverTest, Solve3x3Matrix_4x1Solution_fail_death) {
     auto rhs = openturbine::gen_alpha_solver::create_vector({23., 11., 13.});
     auto solution = Kokkos::View<double[4]>("solution");
 
-    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    (void)(::testing::GTEST_FLAG(death_test_style) = "threadsafe");
     EXPECT_DEATH(openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), "");
 }
