@@ -3,10 +3,10 @@
 namespace openturbine::gen_alpha_solver {
 
 State::State()
-    : generalized_coords_("generalized_coordinates", 1, kNumberOfLieGroupComponents),
-      velocity_("velocities", 1, kNumberOfLieAlgebraComponents),
-      acceleration_("accelerations", 1, kNumberOfLieAlgebraComponents),
-      algorithmic_acceleration_("algorithmic_accelerations", 1, kNumberOfLieAlgebraComponents) {
+    : generalized_coords_("generalized_coordinates", 1),
+      velocity_("velocities", 1),
+      acceleration_("accelerations", 1),
+      algorithmic_acceleration_("algorithmic_accelerations", 1) {
 }
 
 State::State(
@@ -15,12 +15,10 @@ State::State(
     Kokkos::View<double* [kNumberOfLieAlgebraComponents]> accln,
     Kokkos::View<double* [kNumberOfLieAlgebraComponents]> algo_accln
 )
-    : generalized_coords_("generalized_coordinates", gen_coords.extent(0), gen_coords.extent(1)),
-      velocity_("velocities", velocity.extent(0), velocity.extent(1)),
-      acceleration_("accelerations", accln.extent(0), accln.extent(1)),
-      algorithmic_acceleration_(
-          "algorithmic_accelerations", algo_accln.extent(0), algo_accln.extent(1)
-      ) {
+    : generalized_coords_("generalized_coordinates", gen_coords.extent(0)),
+      velocity_("velocities", velocity.extent(0)),
+      acceleration_("accelerations", accln.extent(0)),
+      algorithmic_acceleration_("algorithmic_accelerations", algo_accln.extent(0)) {
     auto n_gen_coords = gen_coords.extent(0);
     auto n_velocities = velocity.extent(0);
     auto n_accelerations = accln.extent(0);
@@ -29,8 +27,8 @@ State::State(
     if (n_gen_coords != n_velocities || n_gen_coords != n_accelerations ||
         n_gen_coords != n_algo_accelerations) {
         throw std::invalid_argument(
-            "The number rows of generalized coordinates, velocities, accelerations, and "
-            "algorithmic accelerations in the initial state must be the same"
+            "The number rows (i.e. nodes) of generalized coordinates, velocities, accelerations, "
+            "and algorithmic accelerations in the initial state must be the same"
         );
     }
 
