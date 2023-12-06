@@ -1,8 +1,11 @@
 target_sources(${oturb_lib_name}
     PRIVATE
     element.cpp
+    gen_alpha_2D.cpp
     interpolation.cpp
+    linearization_parameters.cpp
     model.cpp
     section.cpp
     solver.cpp
+    state.cpp
 )
