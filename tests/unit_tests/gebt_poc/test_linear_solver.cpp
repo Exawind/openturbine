@@ -91,13 +91,50 @@ TEST(GEBT_LinearSolverTest, Solve3x3Matrix) {
     EXPECT_NEAR(solution_host(2), exact_solution[2], 10 * std::numeric_limits<double>::epsilon());
 }
 
-TEST(GEBT_LinearSolverTest, Solve2x2Matrix_fail) {
+TEST(GEBT_LinearSolverTest, Solve2x2Matrix_fail_singluar) {
     auto matrix = openturbine::gen_alpha_solver::create_matrix({{0., 0.}, {0., 0.}});
     auto rhs = openturbine::gen_alpha_solver::create_vector({17., 39.});
     auto solution = Kokkos::View<double[2]>("solution");
-    auto exact_solution = std::vector<double>{17., 39.};
 
     EXPECT_THROW(
         openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), std::runtime_error
     );
+}
+
+TEST(GEBT_LinearSolverTest, Solve3x2Matrix_fail_death) {
+    auto matrix = openturbine::gen_alpha_solver::create_matrix({{2., 6.}, {4., -1.}, {1., 3.}});
+    auto rhs = openturbine::gen_alpha_solver::create_vector({17., 39.});
+    auto solution = Kokkos::View<double[2]>("solution");
+
+    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    EXPECT_DEATH(openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), "");
+}
+
+TEST(GEBT_LinearSolverTest, Solve2x3Matrix_fail_death) {
+    auto matrix = openturbine::gen_alpha_solver::create_matrix({{2., 6., 3.}, {4., -1., 3.}});
+    auto rhs = openturbine::gen_alpha_solver::create_vector({17., 39., 13.});
+    auto solution = Kokkos::View<double[2]>("solution");
+
+    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    EXPECT_DEATH(openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), "");
+}
+
+TEST(GEBT_LinearSolverTest, Solve3x3Matrix_4x1RHS_fail_death) {
+    auto matrix =
+        openturbine::gen_alpha_solver::create_matrix({{2., 6., 3.}, {4., -1., 3.}, {1., 3., 2.}});
+    auto rhs = openturbine::gen_alpha_solver::create_vector({23., 11., 13., 20.});
+    auto solution = Kokkos::View<double[3]>("solution");
+
+    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    EXPECT_DEATH(openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), "");
+}
+
+TEST(GEBT_LinearSolverTest, Solve3x3Matrix_4x1Solution_fail_death) {
+    auto matrix =
+        openturbine::gen_alpha_solver::create_matrix({{2., 6., 3.}, {4., -1., 3.}, {1., 3., 2.}});
+    auto rhs = openturbine::gen_alpha_solver::create_vector({23., 11., 13.});
+    auto solution = Kokkos::View<double[4]>("solution");
+
+    GTEST_FLAG_SET(death_test_style, "threadsafe");
+    EXPECT_DEATH(openturbine::gebt_poc::solve_linear_system(matrix, solution, rhs), "");
 }
