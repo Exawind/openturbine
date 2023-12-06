@@ -280,36 +280,37 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
 
     // Loop over all nodes in the system and update the generalized coordinates
     for (size_t node = 0; node < gen_coords.extent(0); node++) {
-        // {gen_coords_next} = {gen_coords} + h * {delta_gen_coords}
-        //
-        // Step 1: R^3 update, done with vector addition
-        auto current_position =
-            gen_alpha_solver::Vector{gen_coords(node, 0), gen_coords(node, 1), gen_coords(node, 2)};
-        auto updated_position = gen_alpha_solver::Vector{
-            delta_gen_coords(node, 0), delta_gen_coords(node, 1), delta_gen_coords(node, 2)};
-        auto r = current_position + updated_position * h;
+        auto update_generalized_coordinates = KOKKOS_LAMBDA(size_t) {
+            // {gen_coords_next} = {gen_coords} + h * {delta_gen_coords}
+            //
+            // Step 1: R^3 update, done with vector addition
+            auto current_position = gen_alpha_solver::Vector{
+                gen_coords(node, 0), gen_coords(node, 1), gen_coords(node, 2)};
+            auto updated_position = gen_alpha_solver::Vector{
+                delta_gen_coords(node, 0), delta_gen_coords(node, 1), delta_gen_coords(node, 2)};
+            auto r = current_position + (updated_position * h);
 
-        // Step 2: SO(3) update, done with quaternion composition
-        gen_alpha_solver::Quaternion current_orientation{
-            gen_coords(node, 3), gen_coords(node, 4), gen_coords(node, 5), gen_coords(node, 6)};
-        auto updated_orientation = gen_alpha_solver::quaternion_from_rotation_vector(
-            // Convert Vector -> Quaternion via exponential mapping
-            gen_alpha_solver::Vector{
-                delta_gen_coords(node, 3), delta_gen_coords(node, 4), delta_gen_coords(node, 5)} *
-            h
-        );
-        auto q = current_orientation * updated_orientation;
+            // Step 2: SO(3) update, done with quaternion composition
+            gen_alpha_solver::Quaternion current_orientation{
+                gen_coords(node, 3), gen_coords(node, 4), gen_coords(node, 5), gen_coords(node, 6)};
+            auto updated_orientation = gen_alpha_solver::quaternion_from_rotation_vector(
+                // Convert Vector -> Quaternion via exponential mapping
+                gen_alpha_solver::Vector{
+                    delta_gen_coords(node, 3), delta_gen_coords(node, 4),
+                    delta_gen_coords(node, 5)} *
+                h
+            );
+            auto q = current_orientation * updated_orientation;
 
-        auto host_gen_coords_next =
-            Kokkos::create_mirror_view(Kokkos::subview(gen_coords_next, node, Kokkos::ALL));
-        host_gen_coords_next(0) = r.GetXComponent();
-        host_gen_coords_next(1) = r.GetYComponent();
-        host_gen_coords_next(2) = r.GetZComponent();
-        host_gen_coords_next(3) = q.GetScalarComponent();
-        host_gen_coords_next(4) = q.GetXComponent();
-        host_gen_coords_next(5) = q.GetYComponent();
-        host_gen_coords_next(6) = q.GetZComponent();
-        Kokkos::deep_copy(Kokkos::subview(gen_coords_next, node, Kokkos::ALL), host_gen_coords_next);
+            gen_coords_next(node, 0) = r.GetXComponent();
+            gen_coords_next(node, 1) = r.GetYComponent();
+            gen_coords_next(node, 2) = r.GetZComponent();
+            gen_coords_next(node, 3) = q.GetScalarComponent();
+            gen_coords_next(node, 4) = q.GetXComponent();
+            gen_coords_next(node, 5) = q.GetYComponent();
+            gen_coords_next(node, 6) = q.GetZComponent();
+        };
+        Kokkos::parallel_for(1, update_generalized_coordinates);
     }
 }
 
