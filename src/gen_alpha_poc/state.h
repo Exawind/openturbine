@@ -7,53 +7,36 @@ namespace openturbine::gen_alpha_solver {
 /// @brief Class to store and manage the states of a dynamic system
 class State {
 public:
-    static constexpr size_t kNumberOfLieGroupComponents = 7;
-    static constexpr size_t kNumberOfLieAlgebraComponents = 6;
-
-    /// Default constructor that initializes all states to zero (assuming a single node)
+    /// Default constructor that initializes all states to zero with size one
     State();
 
-    /// Constructor that initializes the states to the given 2D Kokkos views
     State(
-        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> accln,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> algo_accln
+        Kokkos::View<double*> generalized_coords, Kokkos::View<double*> velocity,
+        Kokkos::View<double*> acceleration, Kokkos::View<double*> algorithmic_acceleration
     );
 
-    /// Returns the generalized coordinates vector (read only)
-    inline Kokkos::View<double* [kNumberOfLieGroupComponents]> GetGeneralizedCoordinates() const {
-        return generalized_coords_;
-    }
+    /// Returns the generalized coordinates vector
+    inline Kokkos::View<double*> GetGeneralizedCoordinates() const { return generalized_coords_; }
 
-    /// Returns the velocity vector (read only)
-    inline Kokkos::View<double* [kNumberOfLieAlgebraComponents]> GetVelocity() const {
-        return velocity_;
-    }
+    /// Returns the velocity vector
+    inline Kokkos::View<double*> GetVelocity() const { return velocity_; }
 
-    /// Returns the acceleration vector (read only)
-    inline Kokkos::View<double* [kNumberOfLieAlgebraComponents]> GetAcceleration() const {
-        return acceleration_;
-    }
+    /// Returns the acceleration vector
+    inline Kokkos::View<double*> GetAcceleration() const { return acceleration_; }
 
-    /// Returns the algorithmic acceleration vector (read only)
-    inline Kokkos::View<double* [kNumberOfLieAlgebraComponents]> GetAlgorithmicAcceleration() const {
+    /// Returns the algorithmic accelerations vector
+    inline Kokkos::View<double*> GetAlgorithmicAcceleration() const {
         return algorithmic_acceleration_;
     }
 
-    /// Returns the number of nodes in the system
-    inline size_t GetNumberOfNodes() const {
-        return generalized_coords_.extent(0);
-    }
-
-    // clang-format off
-private :
-    Kokkos::View<double*[kNumberOfLieGroupComponents]> generalized_coords_;
-    Kokkos::View<double*[kNumberOfLieAlgebraComponents]> velocity_;
-    Kokkos::View<double*[kNumberOfLieAlgebraComponents]> acceleration_;
-    Kokkos::View<double*[kNumberOfLieAlgebraComponents]> algorithmic_acceleration_;
-    // clang-format on
+private:
+    Kokkos::View<double*> generalized_coords_;  //< Generalized coordinates
+    Kokkos::View<double*> velocity_;            //< Velocity vector
+    Kokkos::View<double*> acceleration_;        //< First time derivative of the velocity vector
+    Kokkos::View<double*> algorithmic_acceleration_;  //< Algorithmic accelerations
 };
+
+// TODO Move the following classes to their own source files
 
 /// Class to create and store a 6 x 6 mass matrix of a rigid body
 class MassMatrix {

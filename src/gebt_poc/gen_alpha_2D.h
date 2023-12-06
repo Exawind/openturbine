@@ -1,11 +1,11 @@
 #pragma once
 
-#include "src/gen_alpha_poc/linearization_parameters.h"
-#include "src/gen_alpha_poc/state.h"
-#include "src/gen_alpha_poc/time_integrator.h"
+#include "src/gebt_poc/linearization_parameters.h"
+#include "src/gebt_poc/state.h"
+#include "src/gebt_poc/time_integrator.h"
 #include "src/gen_alpha_poc/time_stepper.h"
 
-namespace openturbine::gen_alpha_solver {
+namespace openturbine::gebt_poc {
 
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
@@ -16,7 +16,8 @@ public:
 
     GeneralizedAlphaTimeIntegrator(
         double alpha_f = 0.5, double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5,
-        TimeStepper time_stepper = TimeStepper(), bool precondition = false
+        gen_alpha_solver::TimeStepper time_stepper = gen_alpha_solver::TimeStepper(),
+        bool precondition = false
     );
 
     /// Returns the type of the time integrator
@@ -37,7 +38,7 @@ public:
     inline double GetGamma() const { return kGamma_; }
 
     /// Returns a const reference to the time stepper
-    inline const TimeStepper& GetTimeStepper() const { return time_stepper_; }
+    inline const gen_alpha_solver::TimeStepper& GetTimeStepper() const { return time_stepper_; }
 
     /// Performs the time integration and returns a vector of States over the time steps
     virtual std::vector<State>
@@ -54,14 +55,14 @@ public:
     );
 
     /// Computes the updated generalized coordinates based on the non-linear update
-    Kokkos::View<double*>
-    UpdateGeneralizedCoordinates(const Kokkos::View<double*>, const Kokkos::View<double*>);
+    void UpdateGeneralizedCoordinates(
+        Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
+        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords_next
+    );
 
     /// Checks convergence of the non-linear solution based on the residuals
-    bool CheckConvergence(const Kokkos::View<double*>);
-
-    /// Returns the flag to indicate if the latest non-linear update has converged
-    inline bool IsConverged() const { return is_converged_; }
+    bool IsConverged(const Kokkos::View<double*>);
 
 private:
     const double kAlphaF_;  //< Alpha_f coefficient of the generalized-alpha method
@@ -69,9 +70,10 @@ private:
     const double kBeta_;    //< Beta coefficient of the generalized-alpha method
     const double kGamma_;   //< Gamma coefficient of the generalized-alpha method
 
-    bool is_converged_;         //< Flag to indicate if the latest non-linear update has converged
-    TimeStepper time_stepper_;  //< Time stepper object to perform the time integration
-    bool is_preconditioned_;    //< Flag to indicate if the iteration matrix is preconditioned
+    bool is_converged_;  //< Flag to indicate if the latest non-linear update has converged
+    gen_alpha_solver::TimeStepper
+        time_stepper_;        //< Time stepper object to perform the time integration
+    bool is_preconditioned_;  //< Flag to indicate if the iteration matrix is preconditioned
 };
 
-}  // namespace openturbine::gen_alpha_solver
+}  // namespace openturbine::gebt_poc

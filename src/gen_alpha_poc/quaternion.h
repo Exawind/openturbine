@@ -249,8 +249,7 @@ RotationMatrix quaternion_to_rotation_matrix(const Quaternion& quaternion) {
 /// Converts a 4x1 unit quaternion to a 3x3 rotation matrix and returns the result
 inline Kokkos::View<double**> EulerParameterToRotationMatrix(const Kokkos::View<double*> euler_param
 ) {
-    auto c0 = euler_param(0);
-    auto c = Kokkos::View<double*>("c", 3);
+    auto c = Kokkos::View<double[3]>("c");
     Kokkos::parallel_for(
         3, KOKKOS_LAMBDA(const size_t i) { c(i) = euler_param(i + 1); }
     );
@@ -258,12 +257,17 @@ inline Kokkos::View<double**> EulerParameterToRotationMatrix(const Kokkos::View<
     auto tilde_c = gen_alpha_solver::create_cross_product_matrix(c);
     auto tilde_c_tilde_c = gen_alpha_solver::multiply_matrix_with_matrix(tilde_c, tilde_c);
 
-    auto rotation_matrix = Kokkos::View<double**>("rotation_matrix", 3, 3);
+    auto rotation_matrix = Kokkos::View<double[3][3]>("rotation_matrix");
     Kokkos::parallel_for(
-        Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {3, 3}),
-        KOKKOS_LAMBDA(const size_t i, const size_t j) {
-            rotation_matrix(i, j) =
-                identity_matrix(i, j) + 2 * c0 * tilde_c(i, j) + 2 * tilde_c_tilde_c(i, j);
+        1,
+        KOKKOS_LAMBDA(std::size_t) {
+            for (std::size_t i = 0; i < 3; ++i) {
+                for (std::size_t j = 0; j < 3; ++j) {
+                    rotation_matrix(i, j) = identity_matrix(i, j) +
+                                            2 * euler_param(0) * tilde_c(i, j) +
+                                            2 * tilde_c_tilde_c(i, j);
+                }
+            }
         }
     );
     return rotation_matrix;
@@ -308,32 +312,26 @@ Quaternion rotation_matrix_to_quaternion(const RotationMatrix& rotation_matrix) 
 }
 
 /// Returns the B derivative matrix given for Euler parameters, i.e. unit quaternions
-inline Kokkos::View<double**> BMatrixForQuaternions(const Quaternion& quaternion) {
-    auto q0 = quaternion.GetScalarComponent();
-    auto q1 = quaternion.GetXComponent();
-    auto q2 = quaternion.GetYComponent();
-    auto q3 = quaternion.GetZComponent();
-
-    Kokkos::View<double**> bmatrix("bmatrix", 3, 4);
+inline void BMatrixForQuaternions(
+    Kokkos::View<double[3][4]> bmatrix, Kokkos::View<const double[4]> quaternion
+) {
     auto populate_bmatrix = KOKKOS_LAMBDA(size_t) {
-        bmatrix(0, 0) = -q1;
-        bmatrix(0, 1) = q0;
-        bmatrix(0, 2) = -q3;
-        bmatrix(0, 3) = q2;
+        bmatrix(0, 0) = -quaternion(1);
+        bmatrix(0, 1) = quaternion(0);
+        bmatrix(0, 2) = -quaternion(3);
+        bmatrix(0, 3) = quaternion(2);
 
-        bmatrix(1, 0) = -q2;
-        bmatrix(1, 1) = q3;
-        bmatrix(1, 2) = q0;
-        bmatrix(1, 3) = -q1;
+        bmatrix(1, 0) = -quaternion(2);
+        bmatrix(1, 1) = quaternion(3);
+        bmatrix(1, 2) = quaternion(0);
+        bmatrix(1, 3) = -quaternion(1);
 
-        bmatrix(2, 0) = -q3;
-        bmatrix(2, 1) = -q2;
-        bmatrix(2, 2) = q1;
-        bmatrix(2, 3) = q0;
+        bmatrix(2, 0) = -quaternion(3);
+        bmatrix(2, 1) = -quaternion(2);
+        bmatrix(2, 2) = quaternion(1);
+        bmatrix(2, 3) = quaternion(0);
     };
     Kokkos::parallel_for(1, populate_bmatrix);
-
-    return bmatrix;
 }
 
 }  // namespace openturbine::gen_alpha_solver

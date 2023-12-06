@@ -121,9 +121,9 @@ TEST(SolverTest, CalculateCurvature) {
     auto curvature = Kokkos::View<double[3]>("curvature");
     CalculateCurvature(gen_coords, gen_coords_derivative, curvature);
 
-    EXPECT_NEAR(curvature(0), -0.03676700256944363, 1e-6);
-    EXPECT_NEAR(curvature(1), 0.062023963818612256, 1e-6);
-    EXPECT_NEAR(curvature(2), 0.15023478838786522, 1e-6);
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        curvature, {-0.03676700256944363, 0.062023963818612256, 0.15023478838786522}
+    );
 }
 
 TEST(SolverTest, CalculateSectionalStiffness) {
