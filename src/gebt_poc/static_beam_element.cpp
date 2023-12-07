@@ -120,6 +120,7 @@ void StaticBeamLinearizationParameters::ResidualVector(
         Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
     Convert2DViewTo1DView(gen_coords, gen_coords_1D);
 
+    Kokkos::deep_copy(residual, 0.0);
     auto residual_gen_coords = Kokkos::subview(residual, Kokkos::make_pair(zero, size_dofs));
     CalculateStaticResidual(
         position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_gen_coords
@@ -157,8 +158,6 @@ void StaticBeamLinearizationParameters::IterationMatrix(
         Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
     Convert2DViewTo1DView(gen_coords, gen_coords_1D);
 
-    Kokkos::deep_copy(iteration_matrix, 0.0);
-
     // Assemble the tangent operator (same size as the stiffness matrix)
     auto tangent_operator = Kokkos::View<double**>("tangent_operator", size_dofs, size_dofs);
     Kokkos::deep_copy(tangent_operator, 0.0);
@@ -177,6 +176,7 @@ void StaticBeamLinearizationParameters::IterationMatrix(
         TangentOperator(delta_gen_coords_node, tangent_operator_node);
     }
 
+    Kokkos::deep_copy(iteration_matrix, 0.0);
     // quadrant_1 = K_t(q,v,v',Lambda,t) * T(h dq)
     auto quadrant_1 = Kokkos::subview(
         iteration_matrix, Kokkos::make_pair(zero, size_dofs), Kokkos::make_pair(zero, size_dofs)
