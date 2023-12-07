@@ -40,13 +40,17 @@ jobs:
       if: steps.cache-kokkos.outputs.cache-hit != 'true'
       run: |
         sudo mkdir -p ~/dependencies/kokkos
-        git clone https://github.com/kokkos/kokkos
+        git clone --depth 1 --branch 4.2.00 https://github.com/kokkos/kokkos
         cd kokkos
         mkdir build
         cd build
-        cmake .. -D CMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos
-        make
-        sudo make install
+        cmake .. \
+          -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DKokkos_ENABLE_COMPILER_WARNINGS=ON \
+          -DKokkos_ENABLE_DEBUG=ON \
+          -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON 
+        sudo cmake --build . --target install -j 2
     - name: Cache install Kokkos-Kernels
       id: cache-kokkos-kernels
       uses: actions/cache@v3
@@ -63,16 +67,16 @@ jobs:
         fi
         if [ ${{matrix.os}} = 'macos-latest' ]; then
           export FC=$(brew --prefix gcc)/bin/gfortran
-          git clone -b 3.7.00 https://github.com/kokkos/kokkos-kernels
+          git clone --depth 1 --branch 4.2.00 https://github.com/kokkos/kokkos-kernels
         fi
         cd kokkos-kernels
         mkdir build
         cd build
         cmake .. \
-          -D CMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
-          -D KokkosKernels_ENABLE_TPL_BLAS=ON
-        make
-        sudo make install
+          -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DKokkosKernels_ENABLE_TPL_BLAS=ON 
+        sudo cmake --build . --target install -j 2
     - name: Clone
       uses: actions/checkout@v3
       with:
@@ -83,6 +87,6 @@ jobs:
         mkdir build
         cd build
         cmake .. -DOTURB_ENABLE_TESTS:BOOL=ON
-        make
+        cmake --build . -j 2
         ./openturbine -h
         ./openturbine_unit_tests
