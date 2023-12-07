@@ -14,7 +14,7 @@ class StaticBeamLinearizationParameters : public LinearizationParameters {
 public:
     static constexpr size_t kNumberOfLieGroupComponents = 7;
     static constexpr size_t kNumberOfLieAlgebraComponents = 6;
-    static constexpr size_t kNumberOfConstraints = 3;
+    static constexpr size_t kNumberOfVectorComponents = 3;
     static constexpr double kTolerance = 1e-16;
 
     /// Default constructor with a 5 node beam element, 6x6 stiffness matrix, and 7 point
@@ -45,7 +45,10 @@ public:
     ) override;
 
     /// Tangent operator for a single node of the static beam element
-    void TangentOperator(const Kokkos::View<double*> psi, Kokkos::View<double**> tangent_operator);
+    void TangentOperator(
+        const Kokkos::View<double[kNumberOfVectorComponents]> psi,
+        Kokkos::View<double**> tangent_operator
+    );
 
 private:
     Kokkos::View<double*> position_vectors_;

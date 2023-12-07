@@ -167,7 +167,7 @@ Kokkos::View<double**> StaticBeamLinearizationParameters::IterationMatrix(
     auto tangent_operator = Kokkos::View<double**>("tangent_operator", size_dofs, size_dofs);
     Kokkos::deep_copy(tangent_operator, 0.0);
     for (size_t i = 0; i < n_nodes; ++i) {
-        auto delta_gen_coords_node = Kokkos::subview(delta_gen_coords, i, Kokkos::ALL);
+        auto delta_gen_coords_node = Kokkos::subview(delta_gen_coords, i, Kokkos::make_pair(3, 6));
         KokkosBlas::scal(delta_gen_coords_node, h, delta_gen_coords_node);
         auto tangent_operator_node = Kokkos::subview(
             tangent_operator,
@@ -214,10 +214,9 @@ Kokkos::View<double**> StaticBeamLinearizationParameters::IterationMatrix(
 }
 
 void StaticBeamLinearizationParameters::TangentOperator(
-    const Kokkos::View<double*> psi, Kokkos::View<double**> tangent_operator
+    const Kokkos::View<double[kNumberOfVectorComponents]> psi,
+    Kokkos::View<double**> tangent_operator
 ) {
-    // TODO ** Question for reviewers **
-    // Any better way to create the identity matrix than parallel_for?
     auto populate_matrix = KOKKOS_LAMBDA(size_t) {
         tangent_operator(0, 0) = 1.;
         tangent_operator(1, 1) = 1.;
@@ -228,11 +227,7 @@ void StaticBeamLinearizationParameters::TangentOperator(
     };
     Kokkos::parallel_for(1, populate_matrix);
 
-    auto psi_0 = Kokkos::subview(psi, Kokkos::make_pair(0, 1));
-    auto psi_1 = Kokkos::subview(psi, Kokkos::make_pair(1, 2));
-    auto psi_2 = Kokkos::subview(psi, Kokkos::make_pair(2, 3));
-    const double phi = std::sqrt(psi_0(0) * psi_0(0) + psi_1(0) * psi_1(0) + psi_2(0) * psi_2(0));
-
+    const double phi = KokkosBlas::nrm2(psi);
     if (std::abs(phi) > kTolerance) {
         auto psi_cross_prod_matrix = gen_alpha_solver::create_cross_product_matrix(psi);
         auto psi_times_psi = Kokkos::View<double**>("psi_times_psi", 3, 3);
@@ -242,11 +237,15 @@ void StaticBeamLinearizationParameters::TangentOperator(
 
         auto quadrant4 =
             Kokkos::subview(tangent_operator, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        auto temp = Kokkos::View<double**>("temp", 3, 3);
-        KokkosBlas::scal(temp, (std::cos(phi) - 1.0) / (phi * phi), psi_cross_prod_matrix);
-        KokkosBlas::axpy(1.0, temp, quadrant4);
-        KokkosBlas::scal(temp, (1.0 - std::sin(phi) / phi) / (phi * phi), psi_times_psi);
-        KokkosBlas::axpy(1.0, temp, quadrant4);
+        auto factor_1 = (std::cos(phi) - 1.0) / (phi * phi);
+        auto factor_2 = (1.0 - std::sin(phi) / phi) / (phi * phi);
+        Kokkos::parallel_for(
+            Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {3, 3}),
+            KOKKOS_LAMBDA(const size_t i, const size_t j) {
+                quadrant4(i, j) += factor_1 * psi_cross_prod_matrix(i, j);
+                quadrant4(i, j) += factor_2 * psi_times_psi(i, j);
+            }
+        );
     }
 }
 
