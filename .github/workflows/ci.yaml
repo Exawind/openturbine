@@ -44,9 +44,13 @@ jobs:
         cd kokkos
         mkdir build
         cd build
-        cmake .. -D CMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos
-        make
-        sudo make install
+        cmake .. \
+          -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DKokkos_ENABLE_COMPILER_WARNINGS=ON \
+          -DKokkos_ENABLE_DEBUG=ON \
+          -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON 
+        sudo cmake --build . --target install
     - name: Cache install Kokkos-Kernels
       id: cache-kokkos-kernels
       uses: actions/cache@v3
@@ -69,10 +73,10 @@ jobs:
         mkdir build
         cd build
         cmake .. \
-          -D CMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
-          -D KokkosKernels_ENABLE_TPL_BLAS=ON
-        make
-        sudo make install
+          -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DKokkosKernels_ENABLE_TPL_BLAS=ON 
+        sudo cmake --build . --target install
     - name: Clone
       uses: actions/checkout@v3
       with:
@@ -83,6 +87,6 @@ jobs:
         mkdir build
         cd build
         cmake .. -DOTURB_ENABLE_TESTS:BOOL=ON
-        make
+        cmake --build .
         ./openturbine -h
         ./openturbine_unit_tests
