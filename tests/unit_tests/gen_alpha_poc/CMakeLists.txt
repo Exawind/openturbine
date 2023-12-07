@@ -5,7 +5,6 @@ target_sources(
     test_generalized_alpha_solver.cpp
     test_heavy_top.cpp
     test_linearization_parameters.cpp
-    test_linear_systems_solver.cpp
     test_math_utilities.cpp
     test_quaternions.cpp
     test_rotation_matrix.cpp

@@ -7,9 +7,9 @@
 #include <KokkosBlas3_gemm.hpp>
 
 #include "src/gebt_poc/field_data.h"
+#include "src/gebt_poc/linear_solver.h"
 #include "src/gebt_poc/mesh.h"
 #include "src/gen_alpha_poc/quaternion.h"
-#include "src/gen_alpha_poc/solver.h"
 #include "src/gen_alpha_poc/vector.h"
 
 namespace openturbine::gebt_poc {
@@ -195,7 +195,9 @@ public:
             KokkosBlas::gemm("N", "N", 1., iteration_matrix, right_pre, 0., helper);
             KokkosBlas::gemm("N", "N", 1., left_pre, helper, 0., iteration_matrix);
             KokkosBlas::scal(dof_residuals, scalar_pre, dof_residuals);
-            gen_alpha_solver::solve_linear_system(iteration_matrix, residuals);
+            auto rhs = Kokkos::View<double*>("rhs", residuals.extent(0));
+            Kokkos::deep_copy(rhs, residuals);
+            gebt_poc::solve_linear_system(iteration_matrix, residuals, rhs);
             KokkosBlas::scal(residuals, -1., residuals);
 
             KokkosBlas::axpby(-1. / scalar_pre, lagrange_residuals, 1., lagrange_mults);
