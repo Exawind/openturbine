@@ -2,9 +2,9 @@
 
 #include <KokkosBlas.hpp>
 
+#include "src/gebt_poc/linear_solver.h"
 #include "src/gen_alpha_poc/heavy_top.h"
 #include "src/gen_alpha_poc/quaternion.h"
-#include "src/gebt_poc/linear_solver.h"
 #include "src/gen_alpha_poc/vector.h"
 #include "src/utilities/log.h"
 
