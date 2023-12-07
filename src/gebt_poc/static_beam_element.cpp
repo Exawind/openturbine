@@ -100,11 +100,11 @@ void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> re
     Kokkos::parallel_for(result.extent(0), populate_result);
 }
 
-Kokkos::View<double*> StaticBeamLinearizationParameters::ResidualVector(
-    const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-    const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    [[maybe_unused]] const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-    const Kokkos::View<double*> lagrange_multipliers
+void StaticBeamLinearizationParameters::ResidualVector(
+    Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
+    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
+    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+    Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual
 ) {
     // The residual vector for the generalized coordinates is given by
     // {residual} = {
@@ -120,7 +120,6 @@ Kokkos::View<double*> StaticBeamLinearizationParameters::ResidualVector(
         Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
     Convert2DViewTo1DView(gen_coords, gen_coords_1D);
 
-    auto residual = Kokkos::View<double*>("residual", size_residual);
     auto residual_gen_coords = Kokkos::subview(residual, Kokkos::make_pair(zero, size_dofs));
     CalculateStaticResidual(
         position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_gen_coords
@@ -128,17 +127,16 @@ Kokkos::View<double*> StaticBeamLinearizationParameters::ResidualVector(
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
     ConstraintsResidualVector(gen_coords_1D, position_vectors_, residual_constraints);
-    return residual;
 }
 
-Kokkos::View<double**> StaticBeamLinearizationParameters::IterationMatrix(
+void StaticBeamLinearizationParameters::IterationMatrix(
     const double& h, [[maybe_unused]] const double& beta_prime,
     [[maybe_unused]] const double& gamma_prime,
-    const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-    const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-    const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    [[maybe_unused]] const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-    const Kokkos::View<double*> lagrange_multipliers
+    Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
+    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
+    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
+    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+    Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
 ) {
     // Iteration matrix for the static beam element is given by
     // [iteration matrix] = [
@@ -159,8 +157,6 @@ Kokkos::View<double**> StaticBeamLinearizationParameters::IterationMatrix(
         Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
     Convert2DViewTo1DView(gen_coords, gen_coords_1D);
 
-    auto iteration_matrix =
-        Kokkos::View<double**>("iteration_matrix", size_iteration, size_iteration);
     Kokkos::deep_copy(iteration_matrix, 0.0);
 
     // Assemble the tangent operator (same size as the stiffness matrix)
@@ -209,13 +205,10 @@ Kokkos::View<double**> StaticBeamLinearizationParameters::IterationMatrix(
         Kokkos::make_pair(zero, size_dofs)
     );
     KokkosBlas::gemm("N", "N", 1.0, constraints_gradient_matrix, tangent_operator, 0.0, quadrant_3);
-
-    return iteration_matrix;
 }
 
 void StaticBeamLinearizationParameters::TangentOperator(
-    const Kokkos::View<double[kNumberOfVectorComponents]> psi,
-    Kokkos::View<double**> tangent_operator
+    Kokkos::View<double[kNumberOfVectorComponents]> psi, Kokkos::View<double**> tangent_operator
 ) {
     auto populate_matrix = KOKKOS_LAMBDA(size_t) {
         tangent_operator(0, 0) = 1.;

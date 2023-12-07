@@ -715,7 +715,8 @@ TEST(SolverTest, StaticBeamElementResidual) {
     );
     auto lagrange_mults = gen_alpha_solver::create_vector({1., 2., 3., 4., 5., 6.});
 
-    auto residual = static_beam.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults);
+    auto residual = Kokkos::View<double[30]>("residual");
+    static_beam.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults, residual);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         Kokkos::subview(residual, Kokkos::make_pair(0, 30)), expected_residual
@@ -799,9 +800,10 @@ TEST(SolverTest, StaticBeamIterationMatrix) {
          {0., 0., 0., 0., 0., 0.}}
     );
 
-    auto iteration_matrix = static_beam.IterationMatrix(
+    auto iteration_matrix = Kokkos::View<double[30][30]>("iteration_matrix");
+    static_beam.IterationMatrix(
         h, beta_prime, gamma_prime, gen_coords, delta_gen_coords, velocity, acceleration,
-        lagrange_mults
+        lagrange_mults, iteration_matrix
     );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(

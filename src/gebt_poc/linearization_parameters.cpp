@@ -2,27 +2,33 @@
 
 namespace openturbine::gebt_poc {
 
-Kokkos::View<double*> UnityLinearizationParameters::ResidualVector(
-    [[maybe_unused]] const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-    [[maybe_unused]] const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-    const Kokkos::View<double*> lagrange_mults
+void UnityLinearizationParameters::ResidualVector(
+    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
+    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
+    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+    [[maybe_unused]] Kokkos::View<double*> lagrange_mults, Kokkos::View<double*> residual_vector
 ) {
-    auto size = acceleration.extent(0) * acceleration.extent(1) + lagrange_mults.extent(0);
-    return gen_alpha_solver::create_identity_vector(size);
+    Kokkos::deep_copy(residual_vector, 0.);
+    auto size = residual_vector.extent(0);
+    Kokkos::parallel_for(
+        size, KOKKOS_LAMBDA(size_t i) { residual_vector(i) = 1.; }
+    );
 }
 
-Kokkos::View<double**> UnityLinearizationParameters::IterationMatrix(
+void UnityLinearizationParameters::IterationMatrix(
     [[maybe_unused]] const double& h, [[maybe_unused]] const double& BETA_PRIME,
     [[maybe_unused]] const double& GAMMA_PRIME,
-    [[maybe_unused]] const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-    [[maybe_unused]] const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-    [[maybe_unused]] const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    [[maybe_unused]] const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-    const Kokkos::View<double*> lagrange_mults
+    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
+    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
+    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
+    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+    [[maybe_unused]] Kokkos::View<double*> lagrange_mults, Kokkos::View<double**> iteration_matrix
 ) {
-    auto size = velocity.extent(0) * velocity.extent(1) + lagrange_mults.extent(0);
-    return gen_alpha_solver::create_identity_matrix(size);
+    Kokkos::deep_copy(iteration_matrix, 0.);
+    auto size = iteration_matrix.extent(0);
+    Kokkos::parallel_for(
+        size, KOKKOS_LAMBDA(size_t i) { iteration_matrix(i, i) = 1.; }
+    );
 }
 
 }  // namespace openturbine::gebt_poc

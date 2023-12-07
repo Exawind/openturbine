@@ -28,26 +28,25 @@ public:
         UserDefinedQuadrature quadrature
     );
 
-    virtual Kokkos::View<double*> ResidualVector(
-        const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        const Kokkos::View<double*> lagrange_multipliers
+    virtual void ResidualVector(
+        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual_vector
     ) override;
 
-    virtual Kokkos::View<double**> IterationMatrix(
+    virtual void IterationMatrix(
         const double& h, const double& beta_prime, const double& gamma_prime,
-        const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        const Kokkos::View<double*> lagrange_multipliers
+        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
     ) override;
 
     /// Tangent operator for a single node of the static beam element
     void TangentOperator(
-        const Kokkos::View<double[kNumberOfVectorComponents]> psi,
-        Kokkos::View<double**> tangent_operator
+        Kokkos::View<double[kNumberOfVectorComponents]> psi, Kokkos::View<double**> tangent_operator
     );
 
 private:
