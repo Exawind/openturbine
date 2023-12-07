@@ -8,13 +8,6 @@
 
 namespace openturbine::gebt_poc {
 
-UserDefinedQuadrature::UserDefinedQuadrature(
-    std::vector<double> quadrature_points, std::vector<double> quadrature_weights
-)
-    : quadrature_points_(std::move(quadrature_points)),
-      quadrature_weights_(std::move(quadrature_weights)) {
-}
-
 void InterpolateNodalValues(
     Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
     Kokkos::View<double*> interpolated_values
