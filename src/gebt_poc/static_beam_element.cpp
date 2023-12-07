@@ -221,7 +221,7 @@ void StaticBeamLinearizationParameters::TangentOperator(
     Kokkos::parallel_for(1, populate_matrix);
 
     const double phi = KokkosBlas::nrm2(psi);
-    if (std::abs(phi) > kTolerance) {
+    if (phi > kTolerance) {
         auto psi_cross_prod_matrix = gen_alpha_solver::create_cross_product_matrix(psi);
         auto psi_times_psi = Kokkos::View<double**>("psi_times_psi", 3, 3);
         KokkosBlas::gemm(
