@@ -177,14 +177,20 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     }
 
     Kokkos::deep_copy(iteration_matrix, 0.0);
+
+    // Calculate the beam element static iteration matrix
+    auto iteration_matrix_local =
+        Kokkos::View<double**>("iteration_matrix_local", size_dofs, size_dofs);
+    CalculateStaticIterationMatrix(
+        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, iteration_matrix_local
+    );
+
+    // Combine beam element static iteration matrix with constraints into quadrant 1
     // quadrant_1 = K_t(q,v,v',Lambda,t) * T(h dq)
     auto quadrant_1 = Kokkos::subview(
         iteration_matrix, Kokkos::make_pair(zero, size_dofs), Kokkos::make_pair(zero, size_dofs)
     );
-    CalculateStaticIterationMatrix(
-        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, quadrant_1
-    );
-    KokkosBlas::gemm("N", "N", 1.0, quadrant_1, tangent_operator, 0.0, quadrant_1);
+    KokkosBlas::gemm("N", "N", 1.0, iteration_matrix_local, tangent_operator, 0.0, quadrant_1);
 
     // quadrant_2 = Transpose([B(q)])
     auto quadrant_2 = Kokkos::subview(
