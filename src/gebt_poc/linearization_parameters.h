@@ -14,21 +14,21 @@ public:
     virtual ~LinearizationParameters() = default;
 
     /// Interface for calculating the residual vector for the problem
-    virtual Kokkos::View<double*> ResidualVector(
-        const Kokkos::View<double* [kNumberOfLieGroupComponents]> /* gen_coords */,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* velocity */,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* acceleration */,
-        const Kokkos::View<double*> /* lagrange_multipliers */
+    virtual void ResidualVector(
+        Kokkos::View<double* [kNumberOfLieGroupComponents]> /* gen_coords */,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* velocity */,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* acceleration */,
+        Kokkos::View<double*> /* lagrange_multipliers */, Kokkos::View<double*> /* residual_vector */
     ) = 0;
 
     /// Interface for calculating the iteration matrix for the problem
-    virtual Kokkos::View<double**> IterationMatrix(
+    virtual void IterationMatrix(
         const double& /* h */, const double& /* BetaPrime */, const double& /* GammaPrime */,
-        const Kokkos::View<double* [kNumberOfLieGroupComponents]> /* gen_coords */,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* delta_gen_coords */,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* velocity */,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* acceleration */,
-        const Kokkos::View<double*> /* lagrange_mults */
+        Kokkos::View<double* [kNumberOfLieGroupComponents]> /* gen_coords */,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* delta_gen_coords */,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* velocity */,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* acceleration */,
+        Kokkos::View<double*> /* lagrange_mults */, Kokkos::View<double**> /* iteration_matrix */
     ) = 0;
 };
 
@@ -38,21 +38,21 @@ public:
     UnityLinearizationParameters(){};
 
     /// Returns a unity residual vector
-    virtual Kokkos::View<double*> ResidualVector(
-        const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        const Kokkos::View<double*> lagrange_mults
+    virtual void ResidualVector(
+        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+        Kokkos::View<double*> lagrange_mults, Kokkos::View<double*> residual_vector
     ) override;
 
     /// Returns an identity iteration matrix
-    virtual Kokkos::View<double**> IterationMatrix(
+    virtual void IterationMatrix(
         const double& h, const double& BetaPrime, const double& GammaPrime,
-        const Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-        const Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        const Kokkos::View<double*> lagrange_mults
+        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
+        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+        Kokkos::View<double*> lagrange_mults, Kokkos::View<double**> iteration_matrix
     ) override;
 };
 

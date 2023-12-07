@@ -163,8 +163,9 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords, gen_coords_next);
 
         // Compute the residuals and check for convergence
-        const auto residuals = linearization_parameters->ResidualVector(
-            gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next
+        const auto residuals = Kokkos::View<double*>("residuals", size + n_constraints);
+        linearization_parameters->ResidualVector(
+            gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next, residuals
         );
 
         if (this->IsConverged(residuals)) {
@@ -172,9 +173,11 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             break;
         }
 
-        auto iteration_matrix = linearization_parameters->IterationMatrix(
+        auto iteration_matrix =
+            Kokkos::View<double**>("iteration_matrix", size + n_constraints, size + n_constraints);
+        linearization_parameters->IterationMatrix(
             h, kBetaPrime, kGammaPrime, gen_coords_next, delta_gen_coords, velocity_next,
-            acceleration_next, lagrange_mults_next
+            acceleration_next, lagrange_mults_next, iteration_matrix
         );
 
         if (this->is_preconditioned_) {

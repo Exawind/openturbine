@@ -8,4 +8,5 @@ target_sources(${oturb_lib_name}
     section.cpp
     solver.cpp
     state.cpp
+    static_beam_element.cpp
 )

@@ -14,8 +14,9 @@ TEST(UnityLinearizationParametersTest, ResidualVector) {
 
     UnityLinearizationParameters unity_linearization_parameters;
 
-    auto residual_vector = unity_linearization_parameters.ResidualVector(
-        gen_coords, velocity, acceleration, lagrange_mults
+    auto residual_vector = Kokkos::View<double*>("residual_vector", 9);
+    unity_linearization_parameters.ResidualVector(
+        gen_coords, velocity, acceleration, lagrange_mults, residual_vector
     );
 
     gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
@@ -36,8 +37,10 @@ TEST(UnityLinearizationParametersTest, IterationMatrix) {
 
     UnityLinearizationParameters unity_linearization_parameters;
 
-    auto iteration_matrix = unity_linearization_parameters.IterationMatrix(
-        1., 1., 1., gen_coords, delta_gen_coords, velocity, acceleration, lagrange_mults
+    auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", 9, 9);
+    unity_linearization_parameters.IterationMatrix(
+        1., 1., 1., gen_coords, delta_gen_coords, velocity, acceleration, lagrange_mults,
+        iteration_matrix
     );
 
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(

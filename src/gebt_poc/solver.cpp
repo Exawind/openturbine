@@ -8,13 +8,6 @@
 
 namespace openturbine::gebt_poc {
 
-UserDefinedQuadrature::UserDefinedQuadrature(
-    std::vector<double> quadrature_points, std::vector<double> quadrature_weights
-)
-    : quadrature_points_(std::move(quadrature_points)),
-      quadrature_weights_(std::move(quadrature_weights)) {
-}
-
 void Interpolate(
     Kokkos::View<double*> nodal_values, Kokkos::View<double*> interpolation_function,
     const double jacobian, Kokkos::View<double*> interpolated_values
@@ -161,9 +154,9 @@ void CalculateStaticResidual(
     }
 
     // Allocate Views for some required intermediate variables
-    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_qp");
+    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_qp");
     auto gen_coords_derivatives_qp =
-        Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_derivatives_qp");
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_derivatives_qp");
     auto position_vector_qp =
         Kokkos::View<double[kNumberOfLieAlgebraComponents]>("position_vector_qp");
     auto pos_vector_derivatives_qp =
@@ -375,9 +368,9 @@ void CalculateStaticIterationMatrix(
     }
 
     // Allocate Views for some required intermediate variables
-    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_qp");
+    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_qp");
     auto gen_coords_derivatives_qp =
-        Kokkos::View<double[kNumberOfLieGroupComponents]>("gen_coords_derivatives_qp");
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_derivatives_qp");
     auto position_vector_qp =
         Kokkos::View<double[kNumberOfLieAlgebraComponents]>("position_vector_qp");
     auto pos_vector_derivatives_qp =
