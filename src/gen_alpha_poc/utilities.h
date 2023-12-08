@@ -6,6 +6,7 @@
 
 namespace openturbine::gen_alpha_solver {
 
+static constexpr double kEpsilon{std::numeric_limits<double>::epsilon()};
 static constexpr double kTolerance = 1e-6;
 static constexpr double kPi = 3.14159265358979323846;
 

@@ -2,9 +2,9 @@
 
 #include <KokkosBlas.hpp>
 
+#include "src/gebt_poc/linear_solver.h"
 #include "src/gen_alpha_poc/heavy_top.h"
 #include "src/gen_alpha_poc/quaternion.h"
-#include "src/gen_alpha_poc/solver.h"
 #include "src/gen_alpha_poc/vector.h"
 #include "src/utilities/log.h"
 
@@ -192,7 +192,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
 
         auto soln_increments = Kokkos::View<double*>("soln_increments", residuals.size());
         Kokkos::deep_copy(soln_increments, residuals);
-        gen_alpha_solver::solve_linear_system(iteration_matrix, soln_increments);
+        openturbine::gebt_poc::solve_linear_system(iteration_matrix, soln_increments, residuals);
 
         Kokkos::View<double*> delta_x("delta_x", delta_gen_coords.size());
         Kokkos::parallel_for(

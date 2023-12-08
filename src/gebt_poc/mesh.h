@@ -55,7 +55,7 @@ protected:
     void CheckNodeUniquenessConsistency() {
         for (std::size_t element = 0; element < connectivity_.extent(0); ++element) {
             auto node_list = GetNodesForElement(element);
-            auto tmp_node_list = Kokkos::View<double*>("tmp", node_list.extent(0));
+            auto tmp_node_list = Kokkos::View<int*>("tmp", node_list.extent(0));
             auto host_node_list = Kokkos::create_mirror(tmp_node_list);
             Kokkos::deep_copy(tmp_node_list, node_list);
             Kokkos::deep_copy(host_node_list, tmp_node_list);

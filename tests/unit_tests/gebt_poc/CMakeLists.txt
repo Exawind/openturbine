@@ -13,5 +13,6 @@ target_sources(
     test_point.cpp
     test_section.cpp
     test_solver.cpp
+    test_linear_solver.cpp
     test_state.cpp
 )

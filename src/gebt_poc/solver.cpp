@@ -502,30 +502,28 @@ void ConstraintsResidualVector(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
     Kokkos::View<double*> constraints_residual
 ) {
-    auto translation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(0, 3));
-    auto rotation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7));
-    auto rotation_matrix_0 = gen_alpha_solver::EulerParameterToRotationMatrix(rotation_0);
-    auto position_0 = Kokkos::subview(position_vector, Kokkos::make_pair(0, 3));
-
-    // position = position_0 + translation_0
-    auto position = Kokkos::View<double[kNumberOfVectorComponents]>("position");
-    Kokkos::deep_copy(position, position_0);
-    KokkosBlas::axpy(1., translation_0, position);
-
-    // rotated_position = rotation_matrix_0 * position
-    auto rotated_position = Kokkos::View<double[kNumberOfVectorComponents]>("rotated_position");
-    KokkosBlas::gemv("N", 1., rotation_matrix_0, position, 0., rotated_position);
-
-    // Assemble the constraint residual vector
-    // {constraints_residual}_6x1 = {
-    //    {translation_0}_3x1
-    //    {rotated_position - position_0}_3x1
-    // }
-    auto constraints_residual_1 = Kokkos::subview(constraints_residual, Kokkos::make_pair(0, 3));
-    Kokkos::deep_copy(constraints_residual_1, translation_0);
-    auto constraints_residual_2 = Kokkos::subview(constraints_residual, Kokkos::make_pair(3, 6));
-    Kokkos::deep_copy(constraints_residual_2, rotated_position);
-    KokkosBlas::axpy(-1., position_0, constraints_residual_2);
+    // For the GEBT proof of concept problem (i.e. the clamped beam), the dofs are enforced to be
+    // zero at the left end of the beam, so the constraint residual is simply based on the
+    // generalized coordinates at the first node
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(std::size_t) {
+            // Construct rotation vector from root node rotation quaternion
+            auto rotation_vector = openturbine::gen_alpha_solver::rotation_vector_from_quaternion(
+                openturbine::gen_alpha_solver::Quaternion(
+                    gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)
+                )
+            );
+            // Set residual as translation and rotation of root node
+            // TODO: update when position & rotation are prescribed
+            constraints_residual(0) = gen_coords(0);
+            constraints_residual(1) = gen_coords(1);
+            constraints_residual(2) = gen_coords(2);
+            constraints_residual(3) = rotation_vector.GetXComponent();
+            constraints_residual(4) = rotation_vector.GetYComponent();
+            constraints_residual(5) = rotation_vector.GetZComponent();
+        }
+    );
 }
 
 void ConstraintsGradientMatrix(
