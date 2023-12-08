@@ -466,9 +466,6 @@ void ConstraintsResidualVector(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
     Kokkos::View<double*> constraints_residual
 ) {
-    auto translation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(0, 3));
-    auto rotation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7));
-
     // For the GEBT proof of concept problem (i.e. the clamped beam), the dofs are enforced to be
     // zero at the left end of the beam, so the constraint residual is simply based on the
     // generalized coordinates at the first node
