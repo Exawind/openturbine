@@ -163,8 +163,8 @@ Vector rotation_vector_from_quaternion(const Quaternion& quaternion) {
 
     return (
         n_length < kEpsilon
-            ? (2. / q0 - 2. / 3. * n_length_squared / (q0 * q0 * q0))
-            : 4. * std::atan(n_length / (q0 + std::sqrt(q0 * q0 + n_length_squared))) / n_length
+            ? n * (2. / q0 - 2. / 3. * n_length_squared / (q0 * q0 * q0))
+            : n * 4. * std::atan(n_length / (q0 + std::sqrt(q0 * q0 + n_length_squared))) / n_length
     );
 }
 
