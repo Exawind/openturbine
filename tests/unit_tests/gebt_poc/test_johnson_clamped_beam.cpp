@@ -1,11 +1,34 @@
 #include <gtest/gtest.h>
 
+#include "src/gebt_poc/clamped_beam.h"
 #include "src/gebt_poc/gen_alpha_2D.h"
 #include "src/gebt_poc/solver.h"
-#include "src/gebt_poc/static_beam_element.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc::tests {
+
+TEST(ClampedBeamTest, ConstraintsGradientMatrix) {
+    auto constraint_gradients = Kokkos::View<double[6][30]>("constraint_gradients");
+    BMatrix(constraint_gradients);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        constraint_gradients,
+        {
+            {1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 1
+            {0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 2
+            {0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 3
+            {0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 4
+            {0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 5
+            {0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.}  // row 6
+        }
+    );
+}
 
 struct PopulatePositionVectors {
     Kokkos::View<double[35]> position_vectors;

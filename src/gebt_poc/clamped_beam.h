@@ -7,25 +7,22 @@
 
 namespace openturbine::gebt_poc {
 
-void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> result);
+/// Calculates the constraint gradient matrix for the clamped beam problem
+void BMatrix(Kokkos::View<double**> constraints_gradient_matrix);
 
 /*!
  * Calculates the residual vector and iteration matrix for a static beam element
  */
-class StaticBeamLinearizationParameters : public LinearizationParameters {
+class ClampedBeamLinearizationParameters : public LinearizationParameters {
 public:
     static constexpr size_t kNumberOfLieGroupComponents = 7;
     static constexpr size_t kNumberOfLieAlgebraComponents = 6;
     static constexpr size_t kNumberOfVectorComponents = 3;
     static constexpr double kTolerance = 1e-16;
 
-    /// Default constructor with a 5 node beam element, 6x6 stiffness matrix, and 7 point
-    /// Gauss-Legendre quadrature rule used for unit testing
-    StaticBeamLinearizationParameters();
-
     /// Define a static beam element with the given position vector for the nodes, 6x6
     /// stiffness matrix, and a quadrature rule
-    StaticBeamLinearizationParameters(
+    ClampedBeamLinearizationParameters(
         Kokkos::View<double*> position_vectors, StiffnessMatrix stiffness_matrix,
         UserDefinedQuadrature quadrature
     );
