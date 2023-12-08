@@ -157,17 +157,15 @@ Vector rotation_vector_from_quaternion(const Quaternion& quaternion) {
     auto q2 = quaternion.GetYComponent();
     auto q3 = quaternion.GetZComponent();
 
-    auto sin_angle_squared = q1 * q1 + q2 * q2 + q3 * q3;
+    Vector n(q1, q2, q3);                           // Vector part of quaternion
+    double n_length = n.Length();                   // magnitude of vector
+    double n_length_squared = n_length * n_length;  // magnitude squared
 
-    // Return the rotation vector {0, 0, 0} if provided quaternion is null
-    if (close_to(sin_angle_squared, 0.)) {
-        return Vector{0.0, 0.0, 0.0};
-    }
-
-    double sin_angle = std::sqrt(sin_angle_squared);
-    double k = 2. * std::atan2(sin_angle, q0) / sin_angle;
-
-    return {q1 * k, q2 * k, q3 * k};
+    return (
+        n_length < kEpsilon
+            ? n * (2. / q0 - 2. / 3. * n_length_squared / (q0 * q0 * q0))
+            : n * 4. * std::atan(n_length / (q0 + std::sqrt(q0 * q0 + n_length_squared))) / n_length
+    );
 }
 
 /// Returns a quaternion from provided Euler parameters/angle-axis representation of rotation
