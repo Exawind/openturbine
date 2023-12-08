@@ -161,14 +161,11 @@ Vector rotation_vector_from_quaternion(const Quaternion& quaternion) {
     double n_length = n.Length();                   // magnitude of vector
     double n_length_squared = n_length * n_length;  // magnitude squared
 
-    // If the length of the vector is less than machine precision,
-    // calculate and return rotation vector using method stable for small angles
-    if (n_length < kEpsilon) {
-        return n * (2. / q0 - 2. / 3. * n_length_squared / (q0 * q0 * q0));
-    }
-
-    // Otherwise, calculate and return rotation vector using this method
-    return n * 4. * std::atan(n_length / (q0 + std::sqrt(q0 * q0 + n_length_squared))) / n_length;
+    return (
+        n_length < kEpsilon
+            ? (2. / q0 - 2. / 3. * n_length_squared / (q0 * q0 * q0))
+            : 4. * std::atan(n_length / (q0 + std::sqrt(q0 * q0 + n_length_squared))) / n_length
+    );
 }
 
 /// Returns a quaternion from provided Euler parameters/angle-axis representation of rotation

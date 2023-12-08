@@ -211,16 +211,14 @@ TEST(QuaternionTest, GetRotationVectorFromNullQuaternion) {
     ASSERT_NEAR(v.GetZComponent(), expected.GetZComponent(), 1e-6);
 }
 
-TEST(QuaternionTest, QuaternionToRotationVectorToQuaternion) {
-    Quaternion q(0.707107, 0., 0., 0.707107);
+TEST(QuaternionTest, GetRotationVectorQuaternionWithVerySmallRotation) {
+    Quaternion q(1.0, -1.0e-18, 0.0, 0.0);
     auto v = rotation_vector_from_quaternion(q);
-    auto q2 = quaternion_from_rotation_vector(v);
-    Quaternion expected(0.707107, 0., 0., 0.707107);
+    Vector expected{-2.0e-18, 0.0, 0.0};
 
-    ASSERT_NEAR(q2.GetScalarComponent(), expected.GetScalarComponent(), 1e-6);
-    ASSERT_NEAR(q2.GetXComponent(), expected.GetXComponent(), 1e-6);
-    ASSERT_NEAR(q2.GetYComponent(), expected.GetYComponent(), 1e-6);
-    ASSERT_NEAR(q2.GetZComponent(), expected.GetZComponent(), 1e-6);
+    ASSERT_NEAR(v.GetXComponent(), expected.GetXComponent(), 1e-20);
+    ASSERT_NEAR(v.GetYComponent(), expected.GetYComponent(), 1e-20);
+    ASSERT_NEAR(v.GetZComponent(), expected.GetZComponent(), 1e-20);
 }
 
 TEST(QuaternionTest, QuaternionFromAngleAxis_ZeroAngle) {

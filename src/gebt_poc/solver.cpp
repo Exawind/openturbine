@@ -469,8 +469,9 @@ void ConstraintsResidualVector(
     auto translation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(0, 3));
     auto rotation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7));
 
-    // For the GEBT, proof of concept problem, the target translation and rotation is zero,
-    // so the residual vector is based on the generalized coordinates at the first node
+    // For the GEBT proof of concept problem (i.e. the clamped beam), the dofs are enforced to be
+    // zero at the left end of the beam, so the constraint residual is simply based on the
+    // generalized coordinates at the first node
     Kokkos::parallel_for(
         1,
         KOKKOS_LAMBDA(std::size_t) {
