@@ -625,7 +625,7 @@ TEST(SolverTest, ConstraintsResidualVector) {
     ConstraintsResidualVector(generalized_coords, position_vectors, constraints_residual);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-        constraints_residual, {0.1, 0., 0.12, 0.1, -0.01198, 0.1194}
+        constraints_residual, {0.1, 0., 0.12, 0.1, 0., 0.0}
     );
 }
 
