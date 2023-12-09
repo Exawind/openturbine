@@ -77,6 +77,80 @@ struct PopulatePositionVectors {
     }
 };
 
+TEST(ClampedBeamTest, ClampedBeamResidual) {
+    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
+    Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});
+
+    // Stiffness matrix for uniform composite beam section (in material csys)
+    auto stiffness = gen_alpha_solver::create_matrix({
+        {1.36817e6, 0., 0., 0., 0., 0.},      // row 1
+        {0., 88560., 0., 0., 0., 0.},         // row 2
+        {0., 0., 38780., 0., 0., 0.},         // row 3
+        {0., 0., 0., 16960., 17610., -351.},  // row 4
+        {0., 0., 0., 17610., 59120., -370.},  // row 5
+        {0., 0., 0., -351., -370., 141470.}   // row 6
+    });
+
+    // Use a 7-point Gauss-Legendre quadrature for integration
+    auto quadrature = UserDefinedQuadrature(
+        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
+         0.7415311855993945, 0.9491079123427585},
+        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
+    );
+
+    ClampedBeamLinearizationParameters clamped_beam{position_vectors, stiffness, quadrature};
+
+    auto gen_coords = gen_alpha_solver::create_matrix({
+        {0., 0., 0., 1., 0., 0., 0.},    // node 1
+        {0., 0., 0., 1., 0., 0., 0.},    // node 2
+        {0., 0., 0., 1., 0., 0., 0.},    // node 3
+        {0., 0., 0., 1., 0., 0., 0.},    // node 4
+        {0., 0.001, 0., 1., 0., 0., 0.}  // node 5
+    });
+
+    auto velocity = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.}}
+    );
+
+    auto acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.}}
+    );
+
+    auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
+
+    auto residual = Kokkos::View<double[36]>("residual");
+    clamped_beam.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults, residual);
+
+    std::vector<double> expected = {0., 0.8856000000000164,
+                                    0., 0.,
+                                    0., 4.428,
+                                    0., -3.018979543801465,
+                                    0., 0.,
+                                    0., -12.488413959858132,
+                                    0., 9.446400000000166,
+                                    0., 0.,
+                                    0., 23.61600000000001,
+                                    0., -69.30502045619781,
+                                    0., 0.,
+                                    0., -59.83558604014186,
+                                    0., 61.99199999999924,
+                                    0., 0.,
+                                    0., -44.28000000000008,
+                                    0., 0.,
+                                    0., 0.,
+                                    0., 0.};
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(residual, expected);
+}
+
 TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndZeroInitialGuess) {
     auto position_vectors = Kokkos::View<double[35]>("position_vectors");
     Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});

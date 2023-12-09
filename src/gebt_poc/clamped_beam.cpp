@@ -90,6 +90,12 @@ void ClampedBeamLinearizationParameters::ResidualVector(
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
     ConstraintsResidualVector(gen_coords_1D, position_vectors_, residual_constraints);
+
+    auto log = util::Log::Get();
+    log->Debug("residual vector: \n");
+    for (size_t i = 0; i < residual.extent(0); ++i) {
+        log->Debug(std::to_string(residual(i)) + "\n");
+    }
 }
 
 void ClampedBeamLinearizationParameters::IterationMatrix(
