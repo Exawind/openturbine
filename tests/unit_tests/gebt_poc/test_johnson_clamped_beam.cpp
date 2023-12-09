@@ -1,3 +1,5 @@
+#include "tests/unit_tests/gebt_poc/test_johnson_clamped_beam.h"
+
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/clamped_beam.h"
@@ -149,6 +151,79 @@ TEST(ClampedBeamTest, ClampedBeamResidual) {
                                     0., 0.,
                                     0., 0.};
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(residual, expected);
+}
+
+TEST(ClampedBeamTest, ClampedBeamIterationMatrix) {
+    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
+    Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});
+
+    // Stiffness matrix for uniform composite beam section (in material csys)
+    auto stiffness = gen_alpha_solver::create_matrix({
+        {1.36817e6, 0., 0., 0., 0., 0.},      // row 1
+        {0., 88560., 0., 0., 0., 0.},         // row 2
+        {0., 0., 38780., 0., 0., 0.},         // row 3
+        {0., 0., 0., 16960., 17610., -351.},  // row 4
+        {0., 0., 0., 17610., 59120., -370.},  // row 5
+        {0., 0., 0., -351., -370., 141470.}   // row 6
+    });
+
+    // Use a 7-point Gauss-Legendre quadrature for integration
+    auto quadrature = UserDefinedQuadrature(
+        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
+         0.7415311855993945, 0.9491079123427585},
+        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
+    );
+
+    ClampedBeamLinearizationParameters clamped_beam{position_vectors, stiffness, quadrature};
+
+    auto gen_coords = gen_alpha_solver::create_matrix({
+        {0., 0., 0., 1., 0., 0., 0.},    // node 1
+        {0., 0., 0., 1., 0., 0., 0.},    // node 2
+        {0., 0., 0., 1., 0., 0., 0.},    // node 3
+        {0., 0., 0., 1., 0., 0., 0.},    // node 4
+        {0., 0.001, 0., 1., 0., 0., 0.}  // node 5
+    });
+
+    auto delta_gen_coords = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.}}
+    );
+
+    auto velocity = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.}}
+    );
+
+    auto acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.},
+         {0., 0., 0., 0., 0., 0.}}
+    );
+
+    auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
+
+    auto h = 1.;
+    auto beta_prime = 0.25;
+    auto gamma_prime = 0.5;
+
+    auto iteration_matrix = Kokkos::View<double[36][36]>("iteration_matrix");
+    clamped_beam.IterationMatrix(
+        h, beta_prime, gamma_prime, gen_coords, delta_gen_coords, velocity, acceleration,
+        lagrange_mults, iteration_matrix
+    );
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        iteration_matrix, expected_iteration
+    );
 }
 
 TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndZeroInitialGuess) {
