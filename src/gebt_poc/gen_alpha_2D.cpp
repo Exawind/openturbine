@@ -159,6 +159,13 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         );
     }
 
+    // Allocate some Views to assist in performing the Newton-Raphson iterations
+    auto residuals = Kokkos::View<double*>("residuals", size_problem);
+    auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", size_problem, size_problem);
+    auto soln_increments = Kokkos::View<double*>("soln_increments", size_problem);
+    auto delta_x = Kokkos::View<double*>("delta_x", size_problem);
+    auto delta_lagrange_mults = Kokkos::View<double*>("delta_lagrange_mults", size_constraints);
+
     const auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
     for (time_stepper_.SetNumberOfIterations(0);
          time_stepper_.GetNumberOfIterations() < max_iterations;
@@ -171,7 +178,6 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords, gen_coords_next);
 
         // Compute the residuals and check for convergence
-        const auto residuals = Kokkos::View<double*>("residuals", size_problem);
         linearization_parameters->ResidualVector(
             gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next, residuals
         );
@@ -181,8 +187,6 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             break;
         }
 
-        auto iteration_matrix =
-            Kokkos::View<double**>("iteration_matrix", size_problem, size_problem);
         linearization_parameters->IterationMatrix(
             h, kBetaPrime, kGammaPrime, gen_coords_next, delta_gen_coords, velocity_next,
             acceleration_next, lagrange_mults_next, iteration_matrix
@@ -198,11 +202,9 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             );
         }
 
-        auto soln_increments = Kokkos::View<double*>("soln_increments", residuals.size());
         Kokkos::deep_copy(soln_increments, residuals);
         openturbine::gebt_poc::solve_linear_system(iteration_matrix, soln_increments, residuals);
 
-        Kokkos::View<double*> delta_x("delta_x", delta_gen_coords.size());
         Kokkos::parallel_for(
             delta_gen_coords.size(),
             // Take negative of the solution increments to update generalized coordinates
@@ -210,8 +212,6 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         );
 
         if (n_constraints > 0) {
-            Kokkos::View<double*> delta_lagrange_mults("delta_lagrange_mults", n_constraints);
-
             if (this->is_preconditioned_) {
                 Kokkos::parallel_for(
                     n_constraints,
@@ -241,9 +241,11 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             Kokkos::parallel_for(
                 kNumberOfLieAlgebraComponents,
                 KOKKOS_LAMBDA(const size_t i) {
-                    delta_gen_coords(node, i) += delta_x(i) / h;
-                    velocity_next(node, i) += kGammaPrime * delta_x(i);
-                    acceleration_next(node, i) += kBetaPrime * delta_x(i);
+                    delta_gen_coords(node, i) += delta_x(node * kNumberOfLieAlgebraComponents + i);
+                    velocity_next(node, i) +=
+                        kGammaPrime * delta_x(node * kNumberOfLieAlgebraComponents + i);
+                    acceleration_next(node, i) +=
+                        kBetaPrime * delta_x(node * kNumberOfLieAlgebraComponents + i);
                 }
             );
         }
