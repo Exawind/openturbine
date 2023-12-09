@@ -66,9 +66,12 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     auto algo_acceleration = state.GetAlgorithmicAcceleration();
 
     // Define some constants that will be used in the algorithm
+    const auto size_dofs = velocity.extent(0) * velocity.extent(1);
+    const auto size_constraints = n_constraints;
+    const auto size_problem = size_dofs + size_constraints;
+
     const auto h = this->time_stepper_.GetTimeStep();
     const auto n_nodes = state.GetNumberOfNodes();
-    const auto size = velocity.size();
 
     const auto kAlphaFLocal = kAlphaF_;
     const auto kAlphaMLocal = kAlphaM_;
@@ -100,7 +103,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         // Perform the linear update part of the generalized alpha algorithm
         // Algorithm from Table 1, Brüls, Cardona, and Arnold 2012
         Kokkos::parallel_for(
-            size,
+            kNumberOfLieAlgebraComponents,
             KOKKOS_LAMBDA(const size_t i) {
                 algo_acceleration_next(node, i) = (kAlphaFLocal * acceleration(node, i) -
                                                    kAlphaMLocal * algo_acceleration(node, i)) /
@@ -130,14 +133,14 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     const auto kGammaPrime = kGamma_ / (h * kBeta_);
 
     // Precondition the linear solve (Bottasso et al 2008)
-    const auto dl = Kokkos::View<double**>("dl", size + n_constraints, size + n_constraints);
-    const auto dr = Kokkos::View<double**>("dr", size + n_constraints, size + n_constraints);
+    const auto dl = Kokkos::View<double**>("dl", size_problem, size_problem);
+    const auto dr = Kokkos::View<double**>("dr", size_problem, size_problem);
     Kokkos::deep_copy(dl, 0.);
     Kokkos::deep_copy(dr, 0.);
 
     if (this->is_preconditioned_) {
         Kokkos::parallel_for(
-            size + n_constraints,
+            size_problem,
             KOKKOS_LAMBDA(const size_t i) {
                 dl(i, i) = 1.;
                 dr(i, i) = 1.;
@@ -145,9 +148,9 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         );
 
         Kokkos::parallel_for(
-            size + n_constraints,
+            size_problem,
             KOKKOS_LAMBDA(const size_t i) {
-                if (i >= size) {
+                if (i >= size_dofs) {
                     dr(i, i) = 1. / (kBetaLocal * h * h);
                 } else {
                     dl(i, i) = kBetaLocal * h * h;
@@ -156,14 +159,25 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         );
     }
 
+    // Allocate some Views to assist in performing the Newton-Raphson iterations
+    auto residuals = Kokkos::View<double*>("residuals", size_problem);
+    auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", size_problem, size_problem);
+    auto soln_increments = Kokkos::View<double*>("soln_increments", size_problem);
+    auto delta_x = Kokkos::View<double*>("delta_x", size_problem);
+    auto delta_lagrange_mults = Kokkos::View<double*>("delta_lagrange_mults", size_constraints);
+
     const auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
     for (time_stepper_.SetNumberOfIterations(0);
          time_stepper_.GetNumberOfIterations() < max_iterations;
          time_stepper_.IncrementNumberOfIterations()) {
+        log->Debug(
+            "Performing Newton-Raphson iteration number " +
+            std::to_string(time_stepper_.GetNumberOfIterations() + 1) + "\n"
+        );
+
         UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords, gen_coords_next);
 
         // Compute the residuals and check for convergence
-        const auto residuals = Kokkos::View<double*>("residuals", size + n_constraints);
         linearization_parameters->ResidualVector(
             gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next, residuals
         );
@@ -173,8 +187,6 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             break;
         }
 
-        auto iteration_matrix =
-            Kokkos::View<double**>("iteration_matrix", size + n_constraints, size + n_constraints);
         linearization_parameters->IterationMatrix(
             h, kBetaPrime, kGammaPrime, gen_coords_next, delta_gen_coords, velocity_next,
             acceleration_next, lagrange_mults_next, iteration_matrix
@@ -185,16 +197,14 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             iteration_matrix = gen_alpha_solver::multiply_matrix_with_matrix(dl, iteration_matrix);
 
             Kokkos::parallel_for(
-                size,
+                size_dofs,
                 KOKKOS_LAMBDA(const size_t i) { residuals(i) = residuals(i) * kBetaLocal * h * h; }
             );
         }
 
-        auto soln_increments = Kokkos::View<double*>("soln_increments", residuals.size());
         Kokkos::deep_copy(soln_increments, residuals);
         openturbine::gebt_poc::solve_linear_system(iteration_matrix, soln_increments, residuals);
 
-        Kokkos::View<double*> delta_x("delta_x", delta_gen_coords.size());
         Kokkos::parallel_for(
             delta_gen_coords.size(),
             // Take negative of the solution increments to update generalized coordinates
@@ -202,8 +212,6 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         );
 
         if (n_constraints > 0) {
-            Kokkos::View<double*> delta_lagrange_mults("delta_lagrange_mults", n_constraints);
-
             if (this->is_preconditioned_) {
                 Kokkos::parallel_for(
                     n_constraints,
@@ -231,23 +239,27 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         for (size_t node = 0; node < n_nodes; node++) {
             // Update the velocity, acceleration, and constraints based on the increments
             Kokkos::parallel_for(
-                size,
+                kNumberOfLieAlgebraComponents,
                 KOKKOS_LAMBDA(const size_t i) {
-                    delta_gen_coords(node, i) += delta_x(i) / h;
-                    velocity_next(node, i) += kGammaPrime * delta_x(i);
-                    acceleration_next(node, i) += kBetaPrime * delta_x(i);
-                }
-            );
-
-            // Update algorithmic acceleration once Newton-Raphson iterations have ended
-            Kokkos::parallel_for(
-                size,
-                KOKKOS_LAMBDA(const size_t i) {
-                    algo_acceleration_next(node, i) +=
-                        (1. - kAlphaFLocal) / (1. - kAlphaMLocal) * acceleration_next(node, i);
+                    delta_gen_coords(node, i) += delta_x(node * kNumberOfLieAlgebraComponents + i);
+                    velocity_next(node, i) +=
+                        kGammaPrime * delta_x(node * kNumberOfLieAlgebraComponents + i);
+                    acceleration_next(node, i) +=
+                        kBetaPrime * delta_x(node * kNumberOfLieAlgebraComponents + i);
                 }
             );
         }
+    }
+
+    // Update algorithmic acceleration once Newton-Raphson iterations have ended
+    for (size_t node = 0; node < n_nodes; node++) {
+        Kokkos::parallel_for(
+            kNumberOfLieAlgebraComponents,
+            KOKKOS_LAMBDA(const size_t i) {
+                algo_acceleration_next(node, i) +=
+                    (1. - kAlphaFLocal) / (1. - kAlphaMLocal) * acceleration_next(node, i);
+            }
+        );
     }
 
     const auto n_iterations = time_stepper_.GetNumberOfIterations();
@@ -260,7 +272,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
 
     if (this->is_converged_) {
         log->Info(
-            "Newton-Raphson iterations converged in " + std::to_string(n_iterations + 1) +
+            "Newton-Raphson iterations converged in " + std::to_string(n_iterations) +
             " iterations\n"
         );
         return results;
@@ -268,7 +280,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
 
     log->Warning(
         "Newton-Raphson iterations failed to converge on a solution after " +
-        std::to_string(n_iterations + 1) + " iterations!\n"
+        std::to_string(n_iterations) + " iterations!\n"
     );
 
     return results;
