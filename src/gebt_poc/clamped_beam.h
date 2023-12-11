@@ -44,9 +44,20 @@ public:
     ) override;
 
     /// Tangent operator for a single node of the static beam element
-    void TangentOperator(
-        Kokkos::View<double[kNumberOfVectorComponents]> psi, Kokkos::View<double**> tangent_operator
-    );
+    template <typename VectorView, typename MatrixView>
+    void TangentOperator(VectorView psi, MatrixView tangent_operator) {
+        static_assert(VectorView::rank == 1);
+        static_assert(MatrixView::rank == 2);
+        auto populate_matrix = KOKKOS_LAMBDA(size_t) {
+            tangent_operator(0, 0) = 1.;
+            tangent_operator(1, 1) = 1.;
+            tangent_operator(2, 2) = 1.;
+            tangent_operator(3, 3) = 1.;
+            tangent_operator(4, 4) = 1.;
+            tangent_operator(5, 5) = 1.;
+        };
+        Kokkos::parallel_for(1, populate_matrix);
+    }
 
 private:
     Kokkos::View<double*> position_vectors_;

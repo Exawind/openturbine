@@ -100,16 +100,13 @@ void ClampedBeamLinearizationParameters::ResidualVector(
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
     ConstraintsResidualVector(gen_coords_1D, position_vectors_, residual_constraints);
 
-    // auto log = util::Log::Get();
-    // log->Debug("residual vector: \n");
-    // for (size_t i = 0; i < residual.extent(0); ++i) {
-    //     // print numbers in scientific notation
-    //     // log->Debug(std::to_string(residual(i)) + "\n");
-    // }
-    std::cout << "residual vector: \n";
-    for (size_t i = 0; i < residual.extent(0); ++i) {
-        // print numbers in scientific notation
-        std::cout << std::scientific << residual(i) << "\n";
+    if constexpr (Kokkos::SpaceAccessibility<
+                      Kokkos::DefaultExecutionSpace, Kokkos::HostSpace>::accessible) {
+        std::cout << "residual vector: \n";
+        for (size_t i = 0; i < residual.extent(0); ++i) {
+            // print numbers in scientific notation
+            std::cout << std::scientific << residual(i) << "\n";
+        }
     }
 }
 
@@ -202,19 +199,4 @@ void ClampedBeamLinearizationParameters::IterationMatrix(
     //     log->Debug("\n");
     // }
 }
-
-void ClampedBeamLinearizationParameters::TangentOperator(
-    Kokkos::View<double[kNumberOfVectorComponents]> psi, Kokkos::View<double**> tangent_operator
-) {
-    auto populate_matrix = KOKKOS_LAMBDA(size_t) {
-        tangent_operator(0, 0) = 1.;
-        tangent_operator(1, 1) = 1.;
-        tangent_operator(2, 2) = 1.;
-        tangent_operator(3, 3) = 1.;
-        tangent_operator(4, 4) = 1.;
-        tangent_operator(5, 5) = 1.;
-    };
-    Kokkos::parallel_for(1, populate_matrix);
-}
-
 }  // namespace openturbine::gebt_poc
