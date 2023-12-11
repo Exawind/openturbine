@@ -91,8 +91,10 @@ void ClampedBeamLinearizationParameters::ResidualVector(
 
     // Add concentrated force to the residual - set the Y component of the
     // last node to 150.0
-    auto concentrated_force = Kokkos::subview(residual, Kokkos::make_pair(25, 26));
-    Kokkos::deep_copy(concentrated_force, 150.0);
+    auto concentrated_force = Kokkos::subview(residual, Kokkos::make_pair(26, 27));
+    Kokkos::parallel_for(
+        1, KOKKOS_LAMBDA(std::size_t) { concentrated_force(0) += -150.; }
+    );
 
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
