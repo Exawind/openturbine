@@ -226,17 +226,9 @@ TEST(ClampedBeamTest, ClampedBeamIterationMatrix) {
     );
 }
 
-TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndZeroInitialGuess) {
+TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess) {
     auto position_vectors = Kokkos::View<double[35]>("position_vectors");
     Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});
-
-    // Use a 7-point Gauss-Legendre quadrature for integration
-    auto quadrature = UserDefinedQuadrature(
-        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
-         0.7415311855993945, 0.9491079123427585},
-        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
-    );
 
     // Stiffness matrix for uniform composite beam section (in material csys)
     auto stiffness = gen_alpha_solver::create_matrix({
@@ -247,6 +239,46 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndZeroInitialGuess) {
         {0., 0., 0., 17610., 59120., -370.},  // row 5
         {0., 0., 0., -351., -370., 141470.}   // row 6
     });
+
+    // Use a 7-point Gauss-Legendre quadrature for integration
+    auto quadrature = UserDefinedQuadrature(
+        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
+         0.7415311855993945, 0.9491079123427585},
+        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
+    );
+
+    auto gen_coords = gen_alpha_solver::create_matrix({
+        {0., 0., 0., 1., 0., 0., 0.},  // node 1
+        {0., 0., 0., 1., 0., 0., 0.},  // node 2
+        {0., 0., 0., 1., 0., 0., 0.},  // node 3
+        {0., 0., 0., 1., 0., 0., 0.},  // node 4
+        {0., 0., 0., 1., 0., 0., 0.}   // node 5
+    });
+
+    auto v = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+
+    auto velocity = v;
+    auto acceleration = v;
+    auto algo_acceleration = v;
+    auto initial_state = State(gen_coords, velocity, acceleration, algo_acceleration);
+
+    auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(
+        0., 0., 0.5, 1., gen_alpha_solver::TimeStepper(0., 1., 1, 1), false
+    );
+    std::shared_ptr<LinearizationParameters> clamped_beam_lin_params =
+        std::make_shared<ClampedBeamLinearizationParameters>(
+            position_vectors, stiffness, quadrature
+        );
+    auto results =
+        time_integrator.Integrate(initial_state, lagrange_mults.extent(0), clamped_beam_lin_params);
 }
 
 }  // namespace openturbine::gebt_poc::tests

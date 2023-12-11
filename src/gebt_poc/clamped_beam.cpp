@@ -1,5 +1,7 @@
 #include "src/gebt_poc/clamped_beam.h"
 
+#include <iostream>
+
 #include <KokkosBlas.hpp>
 
 #include "static_beam_element.h"
@@ -87,14 +89,25 @@ void ClampedBeamLinearizationParameters::ResidualVector(
 
     KokkosBlas::axpy(1., constraints_part2, residual_gen_coords);
 
+    // Add concentrated force to the residual - set the Y component of the
+    // last node to 150.0
+    auto concentrated_force = Kokkos::subview(residual, Kokkos::make_pair(25, 26));
+    Kokkos::deep_copy(concentrated_force, 150.0);
+
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
     ConstraintsResidualVector(gen_coords_1D, position_vectors_, residual_constraints);
 
-    auto log = util::Log::Get();
-    log->Debug("residual vector: \n");
+    // auto log = util::Log::Get();
+    // log->Debug("residual vector: \n");
+    // for (size_t i = 0; i < residual.extent(0); ++i) {
+    //     // print numbers in scientific notation
+    //     // log->Debug(std::to_string(residual(i)) + "\n");
+    // }
+    std::cout << "residual vector: \n";
     for (size_t i = 0; i < residual.extent(0); ++i) {
-        log->Debug(std::to_string(residual(i)) + "\n");
+        // print numbers in scientific notation
+        std::cout << std::scientific << residual(i) << "\n";
     }
 }
 
