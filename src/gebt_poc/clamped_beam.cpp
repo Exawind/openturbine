@@ -89,25 +89,9 @@ void ClampedBeamLinearizationParameters::ResidualVector(
 
     KokkosBlas::axpy(1., constraints_part2, residual_gen_coords);
 
-    // Add concentrated force to the residual - set the Y component of the
-    // last node to 150.0
-    auto concentrated_force = Kokkos::subview(residual, Kokkos::make_pair(26, 27));
-    Kokkos::parallel_for(
-        1, KOKKOS_LAMBDA(std::size_t) { concentrated_force(0) += -150.; }
-    );
-
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
     ConstraintsResidualVector(gen_coords_1D, position_vectors_, residual_constraints);
-
-    if constexpr (Kokkos::SpaceAccessibility<
-                      Kokkos::DefaultExecutionSpace, Kokkos::HostSpace>::accessible) {
-        std::cout << "residual vector: \n";
-        for (size_t i = 0; i < residual.extent(0); ++i) {
-            // print numbers in scientific notation
-            std::cout << std::scientific << residual(i) << "\n";
-        }
-    }
 }
 
 void ClampedBeamLinearizationParameters::IterationMatrix(
@@ -189,14 +173,5 @@ void ClampedBeamLinearizationParameters::IterationMatrix(
         Kokkos::make_pair(zero, size_dofs)
     );
     KokkosBlas::gemm("N", "N", 1.0, constraints_gradient_matrix, tangent_operator, 0.0, quadrant_3);
-
-    // auto log = util::Log::Get();
-    // log->Debug("iteration matrix: \n");
-    // for (size_t i = 0; i < iteration_matrix.extent(0); ++i) {
-    //     for (size_t j = 0; j < iteration_matrix.extent(1); ++j) {
-    //         log->Debug(std::to_string(iteration_matrix(i, j)) + "\n");
-    //     }
-    //     log->Debug("\n");
-    // }
 }
 }  // namespace openturbine::gebt_poc

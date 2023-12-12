@@ -10,7 +10,7 @@ namespace openturbine::gebt_poc {
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
 public:
-    static constexpr double kConvergenceTolerance = 1e-12;
+    static constexpr double kConvergenceTolerance = 1e-9;
     static constexpr size_t kNumberOfLieGroupComponents = 7;
     static constexpr size_t kNumberOfLieAlgebraComponents = 6;
 

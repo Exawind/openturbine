@@ -249,11 +249,11 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
     );
 
     auto gen_coords = gen_alpha_solver::create_matrix({
-        {0., 0., 0., 1., 0., 0., 0.},  // node 1
-        {0., 0., 0., 1., 0., 0., 0.},  // node 2
-        {0., 0., 0., 1., 0., 0., 0.},  // node 3
-        {0., 0., 0., 1., 0., 0., 0.},  // node 4
-        {0., 0., 0., 1., 0., 0., 0.}   // node 5
+        {0., 0., 0., 1., 0., 0., 0.},    // node 1
+        {0., 0., 0., 1., 0., 0., 0.},    // node 2
+        {0., 0., 0., 1., 0., 0., 0.},    // node 3
+        {0., 0., 0., 1., 0., 0., 0.},    // node 4
+        {0., 0.001, 0., 1., 0., 0., 0.}  // node 5
     });
 
     auto v = gen_alpha_solver::create_matrix(
@@ -279,6 +279,18 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
         );
     auto results =
         time_integrator.Integrate(initial_state, lagrange_mults.extent(0), clamped_beam_lin_params);
+    auto final_state = results.back();
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        final_state.GetGeneralizedCoordinates(),
+        {
+            {0., 0., 0., 1., 0., 0., 0.},  // node 1
+            {0., 0., 0., 1., 0., 0., 0.},  // node 2
+            {0., 0., 0., 1., 0., 0., 0.},  // node 3
+            {0., 0., 0., 1., 0., 0., 0.},  // node 4
+            {0., 0., 0., 1., 0., 0., 0.}   // node 5
+        }
+    );
 }
 
 }  // namespace openturbine::gebt_poc::tests
