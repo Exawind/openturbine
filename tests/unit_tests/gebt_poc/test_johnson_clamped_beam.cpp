@@ -271,7 +271,7 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
 
     auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
     auto time_integrator = GeneralizedAlphaTimeIntegrator(
-        0., 0., 0.5, 1., gen_alpha_solver::TimeStepper(0., 1., 1, 1), false
+        0., 0., 0.5, 1., gen_alpha_solver::TimeStepper(0., 1., 1, 20), false
     );
     std::shared_ptr<LinearizationParameters> clamped_beam_lin_params =
         std::make_shared<ClampedBeamLinearizationParameters>(
