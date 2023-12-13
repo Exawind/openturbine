@@ -16,12 +16,18 @@ inline void solve_linear_system(Kokkos::View<double**> system, Kokkos::View<doub
     auto A =
         Kokkos::View<double**, Kokkos::LayoutLeft>("system", system.extent(0), system.extent(1));
     Kokkos::deep_copy(A, system);
+    auto A_host = Kokkos::create_mirror(A);
+    Kokkos::deep_copy(A_host, A);
     auto b = Kokkos::View<double*, Kokkos::LayoutLeft>("solution", solution.extent(0));
     Kokkos::deep_copy(b, solution);
+    auto b_host = Kokkos::create_mirror(b);
+    Kokkos::deep_copy(b_host, b);
     auto pivots =
         Kokkos::View<int*, Kokkos::LayoutLeft, Kokkos::HostSpace>("pivots", solution.extent(0));
 
-    KokkosLapack::gesv(A, b, pivots);
+    KokkosLapack::gesv(A_host, b_host, pivots);
+    Kokkos::deep_copy(A, A_host);
+    Kokkos::deep_copy(b, b_host);
 
     // Here we add some safety checks to make sure the returned solution and/or the provided
     // linear system is valid

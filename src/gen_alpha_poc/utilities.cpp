@@ -88,29 +88,6 @@ Kokkos::View<double**> transpose_matrix(const Kokkos::View<double**> matrix) {
     return transposed_matrix;
 }
 
-Kokkos::View<double**> create_cross_product_matrix(const Kokkos::View<double*> vector) {
-    if (vector.extent(0) != 3) {
-        throw std::invalid_argument("The provided vector must have 3 elements");
-    }
-
-    auto matrix = Kokkos::View<double**>("cross_product_matrix", 3, 3);
-    auto populate_matrix = KOKKOS_LAMBDA(size_t) {
-        matrix(0, 0) = 0.;
-        matrix(0, 1) = -vector(2);
-        matrix(0, 2) = vector(1);
-        matrix(1, 0) = vector(2);
-        matrix(1, 1) = 0.;
-        matrix(1, 2) = -vector(0);
-        matrix(2, 0) = -vector(1);
-        matrix(2, 1) = vector(0);
-        matrix(2, 2) = 0.;
-    };
-
-    Kokkos::parallel_for(1, populate_matrix);
-
-    return matrix;
-}
-
 Kokkos::View<double*> multiply_vector_with_scalar(
     const Kokkos::View<double*> vector, double scalar
 ) {
