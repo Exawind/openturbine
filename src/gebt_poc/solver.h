@@ -68,6 +68,13 @@ void CalculateSectionalMassMatrix(
         sectional_mass_matrix
 );
 
+/// Calculates the inertial forces based on the sectional mass matrix, velocity, and acceleration
+void CalculateInertialForces(
+    Kokkos::View<double*> velocity, Kokkos::View<double*> acceleration,
+    const MassMatrix& sectional_mass_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> inertial_forces_fc
+);
+
 void CalculateIterationMatrixComponents(
     const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
     const Kokkos::View<double*> gen_coords_derivatives,
