@@ -3,6 +3,7 @@
 #include "src/gebt_poc/element.h"
 #include "src/gebt_poc/quadrature.h"
 #include "src/gebt_poc/section.h"
+#include "src/gebt_poc/state.h"
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
@@ -56,6 +57,15 @@ void CalculateElasticForces(
 void CalculateStaticResidual(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature, Kokkos::View<double*> residual
+);
+
+/// Calculates the given sectional mass matrix in inertial basis based on the given
+/// rotation matrices
+void CalculateSectionalMassMatrix(
+    const MassMatrix& mass_matrix, Kokkos::View<double**> rotation_0,
+    Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
+        sectional_mass_matrix
 );
 
 void CalculateIterationMatrixComponents(
