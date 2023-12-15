@@ -118,4 +118,25 @@ TEST(StateTest, ExpectFailureIfNumberOfInputsDoNotMatchInAcceleration) {
     );
 }
 
+TEST(MassMatrixTest, CreateMassMatrixWithGivenProperties) {
+    auto mass = 2.;
+    auto center_of_mass = gen_alpha_solver::create_vector({0.1, 0.2, 0.3});
+    auto moment_of_inertia =
+        gen_alpha_solver::create_matrix({{1., 2., 3.}, {2., 4., 6.}, {3., 6., 9.}});
+
+    auto mass_matrix = MassMatrix(mass, center_of_mass, moment_of_inertia);
+
+    gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        mass_matrix.GetMassMatrix(),
+        {
+            {2., 0., 0., 0., 0.6, -0.4},  // row 1
+            {0., 2., 0., -0.6, 0., 0.2},  // row 2
+            {0., 0., 2., 0.4, -0.2, 0.},  // row 3
+            {0., -0.6, 0.4, 1., 2., 3.},  // row 4
+            {0.6, 0., -0.2, 2., 4., 6.},  // row 5
+            {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
+        }
+    );
+}
+
 }  // namespace openturbine::gebt_poc::tests
