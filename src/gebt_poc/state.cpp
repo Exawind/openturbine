@@ -93,4 +93,24 @@ MassMatrix::MassMatrix(
     Kokkos::deep_copy(rho, moment_of_inertia_);
 }
 
+MassMatrix::MassMatrix(Kokkos::View<double[6][6]> mass_matrix)
+    : mass_(0.),
+      center_of_mass_("center_of_mass"),
+      moment_of_inertia_("moment_of_inertia"),
+      mass_matrix_("mass_matrix") {
+    Kokkos::deep_copy(mass_matrix_, mass_matrix);
+
+    // Calculate mass, center of mass, and moment of inertia from the mass matrix
+    auto m = Kokkos::subview(mass_matrix_, Kokkos::make_pair(0, 1), Kokkos::make_pair(0, 1));
+    this->mass_ = m(0, 0);
+
+    auto m_eta = Kokkos::subview(mass_matrix_, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
+    auto temp = Kokkos::View<double[3][3]>("temp");
+    KokkosBlas::scal(temp, 1. / this->mass_, m_eta);
+    center_of_mass_ = gen_alpha_solver::convert_cross_product_matrix_to_vector(temp);
+
+    auto rho = Kokkos::subview(mass_matrix_, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+    Kokkos::deep_copy(moment_of_inertia_, rho);
+}
+
 }  // namespace openturbine::gebt_poc

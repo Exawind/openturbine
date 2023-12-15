@@ -66,8 +66,20 @@ public:
         Kokkos::View<double[3][3]> moment_of_inertia
     );
 
+    /// Constructor that initializes the mass matrix with the given mass matrix
+    MassMatrix(Kokkos::View<double[6][6]> mass_matrix);
+
     /// Returns the mass matrix of the rigid body
     inline Kokkos::View<double**> GetMassMatrix() const { return mass_matrix_; }
+
+    /// Returns the mass of the rigid body
+    inline double GetMass() const { return mass_; }
+
+    /// Returns the center of mass of the rigid body
+    inline Kokkos::View<double[3]> GetCenterOfMass() const { return center_of_mass_; }
+
+    /// Returns the moments of inertia of the rigid body
+    inline Kokkos::View<double[3][3]> GetMomentOfInertia() const { return moment_of_inertia_; }
 
 private:
     double mass_;                                   //< Mass of the rigid body
