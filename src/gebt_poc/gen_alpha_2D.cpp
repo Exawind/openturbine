@@ -1,6 +1,7 @@
 #include "src/gebt_poc/gen_alpha_2D.h"
 
 #include <KokkosBlas.hpp>
+#include <KokkosBatched_Gemm_Decl.hpp>
 
 #include "src/gebt_poc/linear_solver.h"
 #include "src/gen_alpha_poc/heavy_top.h"
@@ -56,6 +57,27 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     return states;
 }
 
+template<typename M1, typename M2, typename M3>
+void ApplyPreconditioner(M1 A, M2 R, M3 L) {
+  using member_type = Kokkos::TeamPolicy<>::member_type;
+  using scratch_space = Kokkos::DefaultExecutionSpace::scratch_memory_space;
+  using unmanaged_memory = Kokkos::MemoryTraits<Kokkos::Unmanaged>;
+  using matrix = Kokkos::View<double**, scratch_space, unmanaged_memory>;
+  using no_transpose = KokkosBatched::Trans::NoTranspose;
+  using unblocked = KokkosBatched::Algo::Gemm::Unblocked;
+  using gemm = KokkosBatched::TeamVectorGemm<member_type, no_transpose, no_transpose, unblocked>;
+  auto policy = Kokkos::TeamPolicy<>(1, Kokkos::AUTO(), Kokkos::AUTO());
+  auto n = A.extent(0);
+  auto m = A.extent(1);
+  auto scratch_size = matrix::shmem_size(n, m);
+  policy.set_scratch_size(0, Kokkos::PerTeam(scratch_size));
+  Kokkos::parallel_for(policy, KOKKOS_LAMBDA(const member_type& member) { 
+    auto tmp = matrix(member.team_scratch(0), n, m);
+    gemm::invoke(member, 1., A, R, 0., tmp);
+    gemm::invoke(member, 1., L, tmp, 0., A);
+  });
+}
+
 std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const State& state, size_t n_constraints,
     std::shared_ptr<LinearizationParameters> linearization_parameters
@@ -79,16 +101,13 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     const auto kGammaLocal = kGamma_;
 
     // Initialize some X_next variables to assist in updating the State
-    auto gen_coords_next =
-        Kokkos::View<double* [kNumberOfLieGroupComponents]>("gen_coords_next", n_nodes);
-    auto velocity_next =
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]>("velocity_next", n_nodes);
-    auto acceleration_next =
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]>("acceleration_next", n_nodes);
-    auto algo_acceleration_next =
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]>("algo_acceleration_next", n_nodes);
-    auto delta_gen_coords =
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]>("delta_gen_coords", n_nodes);
+    using LieGroupField = Kokkos::View<double* [kNumberOfLieGroupComponents]>;
+    using LieAlgebraField = Kokkos::View<double* [kNumberOfLieAlgebraComponents]>;
+    auto gen_coords_next = LieGroupField("gen_coords_next", n_nodes);
+    auto velocity_next = LieAlgebraField("velocity_next", n_nodes);
+    auto acceleration_next = LieAlgebraField("acceleration_next", n_nodes);
+    auto algo_acceleration_next = LieAlgebraField("algo_acceleration_next", n_nodes);
+    auto delta_gen_coords = LieAlgebraField("delta_gen_coords", n_nodes);
     auto lagrange_mults_next = Kokkos::View<double*>("lagrange_mults_next", n_constraints);
 
     // Loop over all nodes in the system and update the generalized coordinates, velocities,
@@ -99,30 +118,33 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         "algorithm\n"
     );
 
-    for (size_t node = 0; node < n_nodes; node++) {
-        // Perform the linear update part of the generalized alpha algorithm
-        // Algorithm from Table 1, Brüls, Cardona, and Arnold 2012
-        Kokkos::parallel_for(
-            kNumberOfLieAlgebraComponents,
-            KOKKOS_LAMBDA(const size_t i) {
-                algo_acceleration_next(node, i) = (kAlphaFLocal * acceleration(node, i) -
-                                                   kAlphaMLocal * algo_acceleration(node, i)) /
-                                                  (1. - kAlphaMLocal);
-
+    using member_type = Kokkos::TeamPolicy<>::member_type;
+    auto node_team_policy = Kokkos::TeamPolicy<>(n_nodes, Kokkos::AUTO(), Kokkos::AUTO());
+    Kokkos::parallel_for(node_team_policy, KOKKOS_LAMBDA(const member_type& member) {
+      auto node = member.league_rank();
+      constexpr auto components = kNumberOfLieAlgebraComponents;
+        Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
+          algo_acceleration_next(node, i) = (kAlphaFLocal * acceleration(node, i) -
+                                             kAlphaMLocal * algo_acceleration(node, i)) /
+                                            (1. - kAlphaMLocal);
+        });
+        Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 delta_gen_coords(node, i) = velocity(node, i) +
                                             h * (0.5 - kBetaLocal) * algo_acceleration(node, i) +
                                             h * kBetaLocal * algo_acceleration_next(node, i);
-
+        });
+        Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 velocity_next(node, i) = velocity(node, i) +
                                          h * (1 - kGammaLocal) * algo_acceleration(node, i) +
                                          h * kGammaLocal * algo_acceleration_next(node, i);
-
+        });
+        Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 algo_acceleration(node, i) = algo_acceleration_next(node, i);
-
+        });
+        Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 acceleration_next(node, i) = 0.;
-            }
-        );
-    }
+        });
+    });
 
     // Initialize lagrange_mults_next to zero separately since it might be of different size
     Kokkos::deep_copy(lagrange_mults_next, 0.);
@@ -133,38 +155,19 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     const auto kGammaPrime = kGamma_ / (h * kBeta_);
 
     // Precondition the linear solve (Bottasso et al 2008)
-    const auto dl = Kokkos::View<double**>("dl", size_problem, size_problem);
-    const auto dr = Kokkos::View<double**>("dr", size_problem, size_problem);
-    Kokkos::deep_copy(dl, 0.);
-    Kokkos::deep_copy(dr, 0.);
+    auto preconditioning_factor = (is_preconditioned_) ? (kBetaLocal * h * h) : 1.;
+    auto dl = Kokkos::View<double**>("dl", size_problem, size_problem);
+    auto dr = Kokkos::View<double**>("dr", size_problem, size_problem);
 
-    if (this->is_preconditioned_) {
-        Kokkos::parallel_for(
-            size_problem,
-            KOKKOS_LAMBDA(const size_t i) {
-                dl(i, i) = 1.;
-                dr(i, i) = 1.;
+        Kokkos::parallel_for(size_problem, KOKKOS_LAMBDA(const size_t i) {
+                dl(i, i) = (i < size_dofs) ? preconditioning_factor : 1.;
+                dr(i, i) = (i >= size_dofs) ? 1. / preconditioning_factor : 1.;
             }
         );
-
-        Kokkos::parallel_for(
-            size_problem,
-            KOKKOS_LAMBDA(const size_t i) {
-                if (i >= size_dofs) {
-                    dr(i, i) = 1. / (kBetaLocal * h * h);
-                } else {
-                    dl(i, i) = kBetaLocal * h * h;
-                }
-            }
-        );
-    }
 
     // Allocate some Views to assist in performing the Newton-Raphson iterations
     auto residuals = Kokkos::View<double*>("residuals", size_problem);
     auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", size_problem, size_problem);
-    auto soln_increments = Kokkos::View<double*>("soln_increments", size_problem);
-    auto delta_x = Kokkos::View<double*>("delta_x", size_problem);
-    auto delta_lagrange_mults = Kokkos::View<double*>("delta_lagrange_mults", size_constraints);
 
     const auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
     for (time_stepper_.SetNumberOfIterations(0);
@@ -177,13 +180,11 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
 
         UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords, gen_coords_next);
 
-        // Compute the residuals and check for convergence
         linearization_parameters->ResidualVector(
             gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next, residuals
         );
 
-        if (this->IsConverged(residuals)) {
-            this->is_converged_ = true;
+        if (is_converged_ = IsConverged(residuals)) {
             break;
         }
 
@@ -192,75 +193,41 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             acceleration_next, lagrange_mults_next, iteration_matrix
         );
 
-        if (this->is_preconditioned_) {
-            iteration_matrix = gen_alpha_solver::multiply_matrix_with_matrix(iteration_matrix, dr);
-            iteration_matrix = gen_alpha_solver::multiply_matrix_with_matrix(dl, iteration_matrix);
+        // Solve the Linear System
+        ApplyPreconditioner(iteration_matrix, dr, dl);
+        auto solution_residual = Kokkos::subview(residuals, Kokkos::make_pair(0ul, size_dofs));
+        KokkosBlas::scal(solution_residual, preconditioning_factor, solution_residual);
+        openturbine::gebt_poc::solve_linear_system(iteration_matrix, residuals);
+        KokkosBlas::scal(residuals, -1, residuals);
 
-            Kokkos::parallel_for(
-                size_dofs,
-                KOKKOS_LAMBDA(const size_t i) { residuals(i) = residuals(i) * kBetaLocal * h * h; }
-            );
-        }
+        // Update constraints based on the increments
+        auto delta_lagrange_mults = Kokkos::subview(residuals, Kokkos::make_pair(size_dofs, size_problem));
+        KokkosBlas::axpy(1. / preconditioning_factor, delta_lagrange_mults, lagrange_mults_next);
 
-        Kokkos::deep_copy(soln_increments, residuals);
-        openturbine::gebt_poc::solve_linear_system(iteration_matrix, soln_increments);
-
-        Kokkos::parallel_for(
-            delta_gen_coords.size(),
-            // Take negative of the solution increments to update generalized coordinates
-            KOKKOS_LAMBDA(const size_t i) { delta_x(i) = -soln_increments(i); }
-        );
-
-        if (n_constraints > 0) {
-            if (this->is_preconditioned_) {
-                Kokkos::parallel_for(
-                    n_constraints,
-                    KOKKOS_LAMBDA(const size_t i) {
-                        // Take negative of the solution increments to update Lagrange
-                        // multipliers
-                        delta_lagrange_mults(i) =
-                            -soln_increments(i + delta_gen_coords.size()) / (kBetaLocal * h * h);
-                        lagrange_mults_next(i) += delta_lagrange_mults(i);
-                    }
-                );
-            } else {
-                Kokkos::parallel_for(
-                    n_constraints,
-                    KOKKOS_LAMBDA(const size_t i) {
-                        // Take negative of the solution increments to update Lagrange
-                        // multipliers
-                        delta_lagrange_mults(i) = -soln_increments(i + delta_gen_coords.size());
-                        lagrange_mults_next(i) += delta_lagrange_mults(i);
-                    }
-                );
-            }
-        }
-
-        for (size_t node = 0; node < n_nodes; node++) {
-            // Update the velocity, acceleration, and constraints based on the increments
-            Kokkos::parallel_for(
-                kNumberOfLieAlgebraComponents,
-                KOKKOS_LAMBDA(const size_t i) {
-                    delta_gen_coords(node, i) += delta_x(node * kNumberOfLieAlgebraComponents + i);
-                    velocity_next(node, i) +=
-                        kGammaPrime * delta_x(node * kNumberOfLieAlgebraComponents + i);
-                    acceleration_next(node, i) +=
-                        kBetaPrime * delta_x(node * kNumberOfLieAlgebraComponents + i);
-                }
-            );
-        }
+        // Update states based on the increments
+        Kokkos::parallel_for(node_team_policy, KOKKOS_LAMBDA(const member_type& member) {
+          auto node = member.league_rank();
+          constexpr auto components = kNumberOfLieAlgebraComponents;
+          Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
+            delta_gen_coords(node, i) += residuals(node * components + i);
+          });
+          Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
+            velocity_next(node, i) += kGammaPrime * residuals(node * components + i);
+          });
+          Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
+            acceleration_next(node, i) += kBetaPrime * residuals(node * components + i);
+          });
+        });
     }
 
     // Update algorithmic acceleration once Newton-Raphson iterations have ended
-    for (size_t node = 0; node < n_nodes; node++) {
-        Kokkos::parallel_for(
-            kNumberOfLieAlgebraComponents,
-            KOKKOS_LAMBDA(const size_t i) {
-                algo_acceleration_next(node, i) +=
-                    (1. - kAlphaFLocal) / (1. - kAlphaMLocal) * acceleration_next(node, i);
-            }
-        );
-    }
+    Kokkos::parallel_for(node_team_policy, KOKKOS_LAMBDA(const member_type& member) {
+      auto node = member.league_rank();
+      constexpr auto components = kNumberOfLieAlgebraComponents;
+      Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
+        algo_acceleration_next(node, i) += (1. - kAlphaFLocal) / (1. - kAlphaMLocal) * acceleration_next(node, i);
+      });
+    });
 
     const auto n_iterations = time_stepper_.GetNumberOfIterations();
     this->time_stepper_.IncrementTotalNumberOfIterations(n_iterations);
@@ -286,47 +253,67 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     return results;
 }
 
+template<typename MemberType, typename QuaternionView, typename VectorView>
+KOKKOS_FUNCTION
+void compute_orientation_quaternion(MemberType& member, QuaternionView orientation, VectorView vector, double h) {
+    auto angle = KokkosBlas::serial_nrm2(vector) * h;
+    auto is_small_angle = std::abs(angle) < 1.e-6;
+    auto factor = h * std::sin(angle / 2.0) / angle;
+    Kokkos::single(Kokkos::PerTeam(member), [=]() {
+      orientation(0) = (is_small_angle) ? 1. : std::cos(angle / 2.0);
+    });
+    Kokkos::parallel_for(Kokkos::TeamVectorRange(member, 3), [=](std::size_t i) {
+      orientation(i+1) = (is_small_angle) ? 0. : vector(i) * factor;
+    });
+}
+
+template<typename MemberType, typename QOut, typename Q1, typename Q2>
+KOKKOS_FUNCTION
+void compose_quaternions(MemberType& member, QOut q_out, Q1 q1, Q2 q2) {
+  Kokkos::single(Kokkos::PerTeam(member), [=]() {
+        q_out(0) = q1(0) * q2(0) - q1(1) * q2(1) - q1(2) * q2(2) - q1(3) * q2(3);
+        q_out(1) = q1(0) * q2(1) + q1(1) * q2(0) + q1(2) * q2(3) - q1(3) * q2(2);
+        q_out(2) = q1(0) * q2(2) - q1(1) * q2(3) + q1(2) * q2(0) + q1(3) * q2(1);
+        q_out(3) = q1(0) * q2(3) + q1(1) * q2(2) - q1(2) * q2(1) + q1(3) * q2(0);
+  });
+}
+
 void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
     Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
     Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
     Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords_next
 ) {
     const auto h = this->time_stepper_.GetTimeStep();
+    const auto n_nodes = gen_coords.extent(0);
+    using scratch_space = Kokkos::DefaultExecutionSpace::scratch_memory_space;
+    using unmanaged_memory = Kokkos::MemoryTraits<Kokkos::Unmanaged>;
+    using vector = Kokkos::View<double[4], scratch_space, unmanaged_memory>;
+    using member_type = Kokkos::TeamPolicy<>::member_type;
+    auto node_team_policy = Kokkos::TeamPolicy<>(n_nodes, Kokkos::AUTO(), Kokkos::AUTO());
+    auto scratch_size = Kokkos::View<double[4]>::shmem_size();
+    node_team_policy.set_scratch_size(0, Kokkos::PerTeam(scratch_size));
 
-    // Loop over all nodes in the system and update the generalized coordinates
-    for (size_t node = 0; node < gen_coords.extent(0); node++) {
-        auto update_generalized_coordinates = KOKKOS_LAMBDA(size_t) {
-            // {gen_coords_next} = {gen_coords} + h * {delta_gen_coords}
-            //
-            // Step 1: R^3 update, done with vector addition
-            auto current_position = gen_alpha_solver::Vector{
-                gen_coords(node, 0), gen_coords(node, 1), gen_coords(node, 2)};
-            auto updated_position = gen_alpha_solver::Vector{
-                delta_gen_coords(node, 0), delta_gen_coords(node, 1), delta_gen_coords(node, 2)};
-            auto r = current_position + (updated_position * h);
+    Kokkos::parallel_for(node_team_policy, KOKKOS_LAMBDA(const member_type& member) {
+      auto node = member.league_rank();
 
-            // Step 2: SO(3) update, done with quaternion composition
-            gen_alpha_solver::Quaternion current_orientation{
-                gen_coords(node, 3), gen_coords(node, 4), gen_coords(node, 5), gen_coords(node, 6)};
-            auto updated_orientation = gen_alpha_solver::quaternion_from_rotation_vector(
-                // Convert Vector -> Quaternion via exponential mapping
-                gen_alpha_solver::Vector{
-                    delta_gen_coords(node, 3), delta_gen_coords(node, 4),
-                    delta_gen_coords(node, 5)} *
-                h
-            );
-            auto q = current_orientation * updated_orientation;
+      //R^3 Update
+      auto current_position = Kokkos::subview(gen_coords, node, Kokkos::make_pair(0, 3));
+      auto updated_position = Kokkos::subview(delta_gen_coords, node, Kokkos::make_pair(0, 3));
+      auto r = Kokkos::subview(gen_coords_next, node, Kokkos::make_pair(0, 3));
 
-            gen_coords_next(node, 0) = r.GetXComponent();
-            gen_coords_next(node, 1) = r.GetYComponent();
-            gen_coords_next(node, 2) = r.GetZComponent();
-            gen_coords_next(node, 3) = q.GetScalarComponent();
-            gen_coords_next(node, 4) = q.GetXComponent();
-            gen_coords_next(node, 5) = q.GetYComponent();
-            gen_coords_next(node, 6) = q.GetZComponent();
-        };
-        Kokkos::parallel_for(1, update_generalized_coordinates);
-    }
+      Kokkos::parallel_for(Kokkos::TeamVectorRange(member, 3), [=](std::size_t i) {
+        r(i) = current_position(i) + updated_position(i) * h;
+      });
+
+      //SO(3) Update
+      auto current_orientation = Kokkos::subview(gen_coords, node, Kokkos::make_pair(3, 7));
+      auto updated_orientation_vector = Kokkos::subview(delta_gen_coords, node, Kokkos::make_pair(3, 6));
+      auto updated_orientation = vector(member.team_scratch(0));
+      auto q = Kokkos::subview(gen_coords_next, node, Kokkos::make_pair(3, 7));
+
+      compute_orientation_quaternion(member, updated_orientation, updated_orientation_vector, h);
+      compose_quaternions(member, q, current_orientation, updated_orientation);
+    });
 }
 
 bool GeneralizedAlphaTimeIntegrator::IsConverged(const Kokkos::View<double*> residual) {
