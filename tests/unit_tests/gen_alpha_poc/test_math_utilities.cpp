@@ -294,6 +294,13 @@ TEST(MathUtilitiesTest, CreateCrossProductMatrixFromGivenVector) {
     expect_kokkos_view_2D_equal(matrix, {{0., -3., 2.}, {3., 0., -1.}, {-2., 1., 0.}});
 }
 
+TEST(MathUtilitiesTest, CreateVectorFromGivenCrossProductMatrix) {
+    auto matrix = create_matrix({{0., -3., 2.}, {3., 0., -1.}, {-2., 1., 0.}});
+    auto vector = convert_cross_product_matrix_to_vector(matrix);
+
+    expect_kokkos_view_1D_equal(vector, {1., 2., 3.});
+}
+
 TEST(MathUtilitiesTest, Multiply3x3MatrixWith3x1Vector) {
     auto matrix = create_matrix({{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}});
     auto vector = create_vector({1., 2., 3.});
