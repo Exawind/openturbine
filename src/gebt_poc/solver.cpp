@@ -10,24 +10,26 @@ namespace openturbine::gebt_poc {
 
 void InterpolateNodalValues(
     Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
-    Kokkos::View<double*> interpolated_values
+    Kokkos::View<double*> interpolated_values, const size_t n_components
 ) {
-    const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
-    KokkosBlas::fill(interpolated_values, 0.);
+    const auto n_nodes = nodal_values.extent(0) / n_components;
+    Kokkos::deep_copy(interpolated_values, 0.);
     for (std::size_t i = 0; i < n_nodes; ++i) {
-        auto index = i * kNumberOfLieAlgebraComponents;
+        auto index = i * n_components;
         KokkosBlas::axpy(
             interpolation_function[i],
-            Kokkos::subview(
-                nodal_values, Kokkos::pair(index, index + kNumberOfLieAlgebraComponents)
-            ),
+            Kokkos::subview(nodal_values, Kokkos::pair(index, index + n_components)),
             interpolated_values
         );
     }
-    // Normalize the rotation quaternion
+
+    // Normalize the rotation quaternion if it is not already normalized
+    if (n_components != kNumberOfLieAlgebraComponents) {
+        return;
+    }
+
     auto q = Kokkos::subview(interpolated_values, Kokkos::pair(3, 7));
-    auto norm = KokkosBlas::nrm2(q);
-    if (norm != 0.0) {
+    if (auto norm = KokkosBlas::nrm2(q); norm != 0. && norm != 1.) {
         KokkosBlas::scal(q, 1. / norm, q);
     }
 }
@@ -346,6 +348,83 @@ void CalculateInertialForces(
     KokkosBlas::gemm("N", "N", 1., angular_velocity_tilde, rho, 0., temp2);
     KokkosBlas::gemv("N", 1., temp2, angular_velocity, 1., inertial_forces_fc_2);
     KokkosBlas::gemv("N", mass, center_of_mass_tilde, accelaration, 1., inertial_forces_fc_2);
+}
+
+void CalculateInertialResidual(
+    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+    const Quadrature& quadrature, const Kokkos::View<double*> velocity,
+    const Kokkos::View<double*> acceleration, const MassMatrix& mass_matrix,
+    Kokkos::View<double*> residual
+) {
+    const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
+    const auto order = n_nodes - 1;
+    const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
+
+    auto nodes = Kokkos::View<double* [3]>("nodes", n_nodes);
+    for (std::size_t i = 0; i < n_nodes; ++i) {
+        auto index = i * kNumberOfLieAlgebraComponents;
+        Kokkos::deep_copy(
+            Kokkos::subview(nodes, i, Kokkos::ALL),
+            Kokkos::subview(position_vectors, Kokkos::make_pair(index, index + 3))
+        );
+    }
+
+    // Allocate Views for some required intermediate variables
+    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_qp");
+    auto position_vector_qp =
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("position_vector_qp");
+    auto velocity_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("velocity_qp");
+    auto acceleration_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("acceleration_qp");
+    auto sectional_mass_matrix =
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+            "sectional_mass_matrix"
+        );
+    auto inertial_f = Kokkos::View<double[kNumberOfLieGroupComponents]>("inertial_f");
+
+    for (size_t i = 0; i < n_nodes; ++i) {
+        const auto node_count = i;
+        for (size_t j = 0; j < n_quad_pts; ++j) {
+            // Calculate required interpolated values at the quadrature point
+            const auto q_pt = quadrature.GetQuadraturePoints()[j];
+            auto shape_function = LagrangePolynomial(order, q_pt);
+            auto shape_function_derivative = LagrangePolynomialDerivative(order, q_pt);
+            auto shape_function_vector = gen_alpha_solver::create_vector(shape_function);
+            auto shape_function_derivative_vector =
+                gen_alpha_solver::create_vector(shape_function_derivative);
+
+            auto jacobian = CalculateJacobian(nodes, shape_function_derivative_vector);
+            InterpolateNodalValues(gen_coords, shape_function, gen_coords_qp);
+            InterpolateNodalValues(position_vectors, shape_function, position_vector_qp);
+            InterpolateNodalValues(
+                velocity, shape_function, velocity_qp, kNumberOfLieGroupComponents
+            );
+            InterpolateNodalValues(
+                acceleration, shape_function, acceleration_qp, kNumberOfLieGroupComponents
+            );
+
+            // Calculate the sectional mass matrix in inertial basis
+            auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
+                Kokkos::subview(position_vector_qp, Kokkos::make_pair(3, 7))
+            );
+            auto rotation = gen_alpha_solver::EulerParameterToRotationMatrix(
+                Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
+            );
+            CalculateSectionalMassMatrix(mass_matrix, rotation_0, rotation, sectional_mass_matrix);
+
+            auto mm = MassMatrix(sectional_mass_matrix);
+            CalculateInertialForces(velocity_qp, acceleration_qp, mm, inertial_f);
+
+            // Calculate the residual at the quadrature point
+            const auto q_weight = quadrature.GetQuadratureWeights()[j];
+            Kokkos::parallel_for(
+                kNumberOfLieGroupComponents,
+                KOKKOS_LAMBDA(const size_t i) {
+                    residual(node_count * kNumberOfLieGroupComponents + i) +=
+                        q_weight * (jacobian * shape_function_vector(node_count) * inertial_f(i));
+                }
+            );
+        }
+    }
 }
 
 void CalculateOMatrix(

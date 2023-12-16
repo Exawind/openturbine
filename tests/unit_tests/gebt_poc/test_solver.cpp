@@ -450,6 +450,190 @@ TEST(SolverTest, CalculateInertialForces) {
     );
 }
 
+struct PopulatePositionVectors {
+    Kokkos::View<double[35]> position_vectors;
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        // node 1
+        position_vectors(0) = 1.;
+        position_vectors(1) = 0.;
+        position_vectors(2) = 0.;
+        position_vectors(3) = 1.;
+        position_vectors(4) = 0.;
+        position_vectors(5) = 0.;
+        position_vectors(6) = 0.;
+        // node 2
+        position_vectors(7) = 2.7267316464601146;
+        position_vectors(8) = 0.;
+        position_vectors(9) = 0.;
+        position_vectors(10) = 1.;
+        position_vectors(11) = 0.;
+        position_vectors(12) = 0.;
+        position_vectors(13) = 0.;
+        // node 3
+        position_vectors(14) = 6.;
+        position_vectors(15) = 0.;
+        position_vectors(16) = 0.;
+        position_vectors(17) = 1.;
+        position_vectors(18) = 0.;
+        position_vectors(19) = 0.;
+        position_vectors(20) = 0.;
+        // node 4
+        position_vectors(21) = 9.273268353539885;
+        position_vectors(22) = 0.;
+        position_vectors(23) = 0.;
+        position_vectors(24) = 1.;
+        position_vectors(25) = 0.;
+        position_vectors(26) = 0.;
+        position_vectors(27) = 0.;
+        // node 5
+        position_vectors(28) = 11.;
+        position_vectors(29) = 0.;
+        position_vectors(30) = 0.;
+        position_vectors(31) = 1.;
+        position_vectors(32) = 0.;
+        position_vectors(33) = 0.;
+        position_vectors(34) = 0.;
+    }
+};
+
+struct NonZeroValues_PopulateVelocity {
+    Kokkos::View<double[30]> velocity;
+
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        // node 1
+        velocity(0) = 0.;
+        velocity(1) = 0.;
+        velocity(2) = 0.;
+        velocity(3) = 0.;
+        velocity(4) = 0.;
+        velocity(5) = 0.;
+        // node 2
+        velocity(6) = 0.017267316464601147;
+        velocity(7) = -0.014285714285714289;
+        velocity(8) = 0.0030845707156756256;
+        velocity(9) = 0.017267316464601147;
+        velocity(10) = -0.014285714285714289;
+        velocity(11) = 0.0030845707156756256;
+        // node 3
+        velocity(12) = 0.05;
+        velocity(13) = -0.025;
+        velocity(14) = 0.0275;
+        velocity(15) = 0.05;
+        velocity(16) = -0.025;
+        velocity(17) = 0.0275;
+        // node 4
+        velocity(18) = 0.08273268353539887;
+        velocity(19) = -0.01428571428571429;
+        velocity(20) = 0.07977257214146723;
+        velocity(21) = 0.08273268353539887;
+        velocity(22) = -0.01428571428571429;
+        velocity(23) = 0.07977257214146723;
+        // node 5
+        velocity(24) = 0.1;
+        velocity(25) = 0.;
+        velocity(26) = 0.12;
+        velocity(27) = 0.1;
+        velocity(28) = 0.;
+        velocity(29) = 0.12;
+    }
+};
+
+struct NonZeroValues_PopulateAcceleration {
+    Kokkos::View<double[30]> acceleration;
+
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        // node 1
+        acceleration(0) = 0.;
+        acceleration(1) = 0.;
+        acceleration(2) = 0.;
+        acceleration(3) = 0.;
+        acceleration(4) = 0.;
+        acceleration(5) = 0.;
+        // node 2
+        acceleration(6) = 0.017267316464601147;
+        acceleration(7) = -0.01130411210682743;
+        acceleration(8) = 0.006066172894562484;
+        acceleration(9) = 0.017267316464601147;
+        acceleration(10) = -0.014285714285714289;
+        acceleration(11) = -0.014285714285714289;
+        // node 3
+        acceleration(12) = 0.05;
+        acceleration(13) = 0.;
+        acceleration(14) = 0.0525;
+        acceleration(15) = 0.05;
+        acceleration(16) = -0.025;
+        acceleration(17) = -0.025;
+        // node 4
+        acceleration(18) = 0.08273268353539887;
+        acceleration(19) = 0.05416125496397028;
+        acceleration(20) = 0.1482195413911518;
+        acceleration(21) = 0.08273268353539887;
+        acceleration(22) = -0.01428571428571429;
+        acceleration(23) = -0.01428571428571429;
+        // node 5
+        acceleration(24) = 0.1;
+        acceleration(25) = 0.1;
+        acceleration(26) = 0.22;
+        acceleration(27) = 0.1;
+        acceleration(28) = 0.;
+        acceleration(29) = 0.;
+    }
+};
+
+TEST(SolverTest, CalculateInertialResidualWithNonZeroValues) {
+    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
+    Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});
+
+    auto generalized_coords = Kokkos::View<double[35]>("generalized_coords");
+    Kokkos::parallel_for(1, NonZeroValues_populate_coords{generalized_coords});
+
+    auto quadrature_points =
+        std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
+                            0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
+    auto quadrature_weights = std::vector<double>{
+        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
+    auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
+
+    auto velocity = Kokkos::View<double[30]>("velocity");
+    Kokkos::parallel_for(1, NonZeroValues_PopulateVelocity{velocity});
+
+    auto acceleration = Kokkos::View<double[30]>("acceleration");
+    Kokkos::parallel_for(1, NonZeroValues_PopulateAcceleration{acceleration});
+
+    auto mm = gen_alpha_solver::create_matrix({
+        {2., 0., 0., 0., 0.6, -0.4},  // row 1
+        {0., 2., 0., -0.6, 0., 0.2},  // row 2
+        {0., 0., 2., 0.4, -0.2, 0.},  // row 3
+        {0., -0.6, 0.4, 1., 2., 3.},  // row 4
+        {0.6, 0., -0.2, 2., 4., 6.},  // row 5
+        {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
+    });
+    auto sectional_mass_matrix = MassMatrix(mm);
+
+    auto residual = Kokkos::View<double*>("residual", 30);
+    CalculateInertialResidual(
+        position_vectors, generalized_coords, quadrature, velocity, acceleration,
+        sectional_mass_matrix, residual
+    );
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        residual, {0.000019335545416297728, -8.055294491481199e-6,   5.8329494155382605e-6,
+                   -0.00020648077815379697, -0.00020959356681323187, 0.00033777077473230634,
+                   0.08522626625910806,     -0.09835916383567325,    0.05825556406316555,
+                   -0.12095958080829729,    -0.25993054452584735,    -0.47064114129206475,
+                   0.33381717000150146,     -0.1345729157610545,     0.45001396308519026,
+                   -0.23390115455877442,    -0.45162435470066886,    -0.837804883153298,
+                   0.44605348487661345,     0.12986360412447723,     0.8837480082509565,
+                   -0.07216606430881851,    -0.030169162903059987,   0.19303434295115673,
+                   0.10240509758843608,     0.0640157062624005,      0.23492804501504103,
+                   0.0061435409189522765,   0.04623580137429702,     0.1934523213311831}
+    );
+}
+
 TEST(SolverTest, CalculateIterationMatrixComponents) {
     auto elastic_force_fc = gen_alpha_solver::create_vector(
         {0.1023527958818833, 0.1512321779691288, 0.2788924951018168, 0.4003985306163255,

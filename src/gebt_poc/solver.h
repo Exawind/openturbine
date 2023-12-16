@@ -16,7 +16,8 @@ constexpr std::size_t kNumberOfVectorComponents = 3;
 /// at a given quadrature point and normalizes the rotation quaternion
 void InterpolateNodalValues(
     Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
-    Kokkos::View<double*> interpolated_values
+    Kokkos::View<double*> interpolated_values,
+    const size_t n_components = kNumberOfLieAlgebraComponents
 );
 
 /// Calculates the interpolated derivative values for a nodal quantity (e.g. displacement or position
@@ -73,6 +74,14 @@ void CalculateInertialForces(
     Kokkos::View<double*> velocity, Kokkos::View<double*> acceleration,
     const MassMatrix& sectional_mass_matrix,
     Kokkos::View<double[kNumberOfLieGroupComponents]> inertial_forces_fc
+);
+
+/// Calculates the dynamic residual vector for a beam element
+void CalculateInertialResidual(
+    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+    const Quadrature& quadrature, const Kokkos::View<double*> velocity,
+    const Kokkos::View<double*> acceleration, const MassMatrix& mass_matrix,
+    Kokkos::View<double*> residual
 );
 
 void CalculateIterationMatrixComponents(
