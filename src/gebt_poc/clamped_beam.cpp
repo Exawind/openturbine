@@ -4,8 +4,6 @@
 
 #include <KokkosBlas.hpp>
 
-#include "static_beam_element.h"
-
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {

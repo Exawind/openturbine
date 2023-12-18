@@ -95,15 +95,6 @@ StaticBeamLinearizationParameters::StaticBeamLinearizationParameters(
       quadrature_(quadrature) {
 }
 
-// TECHDEBT Following is a hack to make things work temporarily - we should move over to
-// using 2D views for the solver functions
-void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> result) {
-    auto populate_result = KOKKOS_LAMBDA(size_t i) {
-        result(i) = view(i / view.extent(1), i % view.extent(1));
-    };
-    Kokkos::parallel_for(result.extent(0), populate_result);
-}
-
 void StaticBeamLinearizationParameters::ResidualVector(
     Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
     Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,

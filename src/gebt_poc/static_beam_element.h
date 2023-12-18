@@ -8,9 +8,6 @@
 #include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gebt_poc {
-
-void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> result);
-
 /*!
  * Calculates the residual vector and iteration matrix for a static beam element
  */
