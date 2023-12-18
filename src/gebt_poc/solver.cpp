@@ -666,7 +666,7 @@ void CalculateStaticIterationMatrix(
     }
 }
 
-void CalculateGyroscopicMatrix(
+void CalculateGyroscopicMatrixComponents(
     Kokkos::View<double*> velocity, const MassMatrix& sectional_mass_matrix,
     Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> gyroscopic_matrix
 ) {
@@ -716,7 +716,7 @@ void CalculateGyroscopicMatrix(
     KokkosBlas::axpy(-1., gyroscopic_matrix_q4_part2, gyroscopic_matrix_q4);
 }
 
-void CalculateDynamicIterationMatrix(
+void CalculateDynamicStiffnessMatrixComponents(
     Kokkos::View<double*> velocity, Kokkos::View<double*> acceleration,
     const MassMatrix& sectional_mass_matrix, Kokkos::View<double**> iteration_matrix
 ) {
