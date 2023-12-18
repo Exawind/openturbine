@@ -716,6 +716,80 @@ void CalculateGyroscopicMatrix(
     KokkosBlas::axpy(-1., gyroscopic_matrix_q4_part2, gyroscopic_matrix_q4);
 }
 
+void CalculateDynamicIterationMatrix(
+    Kokkos::View<double*> velocity, Kokkos::View<double*> acceleration,
+    const MassMatrix& sectional_mass_matrix, Kokkos::View<double**> iteration_matrix
+) {
+    // The dynamic iteration matrix is defined as
+    // {dyn_iteration_matrix}_6x6 = [
+    //     [0]_3x3      (omega_dot_tilde + omega_tilde * omega_tilde) * mass * eta_tilde^T
+    //
+    //     [0]_3x3               acceleration_tilde * mass * eta_tilde + (rho * omega_dot_tilde  -
+    //                      ~[rho * omega_dot]) + omega_tilde * (rho * omega_tilde - ~[rho * omega])
+    // ]
+    // where,
+    // mass - 1x1 = scalar mass of the beam element (from the sectional mass matrix)
+    // u_dot_dot - 3x1 = translational acceleration of the center of mass of the beam element
+    // omega - 3x1 = angular velocity of the beam element
+    // omega_dot - 3x1 = angular acceleration of the beam element
+    // omega_tilde - 3x3 = skew symmetric matrix of omega
+    // eta - 3x1 = center of mass of the beam element
+    // eta_tilde - 3x3 = skew symmetric matrix of eta
+    // rho - 3x3 = moment of inertia matrix of the beam element (from the sectional mass matrix)
+
+    Kokkos::deep_copy(iteration_matrix, 0.);
+
+    // Calculate mass, {eta}, and [rho] from the sectional mass matrix
+    auto mass = sectional_mass_matrix.GetMass();
+    auto eta = sectional_mass_matrix.GetCenterOfMass();
+    auto rho = sectional_mass_matrix.GetMomentOfInertia();
+
+    // Calculate the top right block i.e. quadrant 1 of the dynamic iteration matrix
+    auto iteration_matrix_q1 =
+        Kokkos::subview(iteration_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
+    auto angular_velocity = Kokkos::subview(velocity, Kokkos::make_pair(3, 6));
+    auto angular_velocity_tilde = gen_alpha_solver::create_cross_product_matrix(angular_velocity);
+    auto angular_acceleration = Kokkos::subview(acceleration, Kokkos::make_pair(3, 6));
+    auto angular_acceleration_tilde =
+        gen_alpha_solver::create_cross_product_matrix(angular_acceleration);
+    auto center_of_mass_tilde = gen_alpha_solver::create_cross_product_matrix(eta);
+
+    auto temp1 = Kokkos::View<double[3][3]>("temp1");
+    KokkosBlas::gemm("N", "N", 1., angular_velocity_tilde, angular_velocity_tilde, 0., temp1);
+    KokkosBlas::axpy(1., angular_acceleration_tilde, temp1);
+    KokkosBlas::gemm("N", "T", mass, temp1, center_of_mass_tilde, 0., iteration_matrix_q1);
+
+    // Calculate the bottom right block i.e. quadrant 4 of the dynamic iteration matrix
+    auto iteration_matrix_q4 =
+        Kokkos::subview(iteration_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+    auto accelaration = Kokkos::subview(acceleration, Kokkos::make_pair(0, 3));
+    auto accelaration_tilde = gen_alpha_solver::create_cross_product_matrix(accelaration);
+
+    // part 1: acceleration_tilde * mass * eta_tilde
+    auto temp2 = Kokkos::View<double[3][3]>("temp2");
+    KokkosBlas::gemm("N", "N", mass, accelaration_tilde, center_of_mass_tilde, 0., temp2);
+
+    // part 2: (rho * omega_dot_tilde  - ~[rho * omega_dot])
+    auto temp3 = Kokkos::View<double[3][3]>("temp3");
+    KokkosBlas::gemm("N", "N", 1., rho, angular_acceleration_tilde, 0., temp3);
+    auto temp4 = Kokkos::View<double[3]>("temp4");
+    KokkosBlas::gemv("N", 1., rho, angular_acceleration, 1., temp4);
+    auto temp5 = gen_alpha_solver::create_cross_product_matrix(temp4);
+    KokkosBlas::axpy(-1., temp5, temp3);
+
+    // part 3: omega_tilde * (rho * omega_tilde - ~[rho * omega])
+    auto temp6 = Kokkos::View<double[3][3]>("temp6");
+    KokkosBlas::gemm("N", "N", 1., rho, angular_velocity_tilde, 0., temp6);
+    auto temp7 = Kokkos::View<double[3]>("temp7");
+    KokkosBlas::gemv("N", 1., rho, angular_velocity, 1., temp7);
+    auto temp8 = gen_alpha_solver::create_cross_product_matrix(temp7);
+    KokkosBlas::axpy(-1., temp8, temp6);
+    KokkosBlas::gemm("N", "N", 1., angular_velocity_tilde, temp6, 0., iteration_matrix_q4);
+
+    KokkosBlas::axpy(1., temp2, iteration_matrix_q4);
+    KokkosBlas::axpy(1., temp3, iteration_matrix_q4);
+}
+
 void ConstraintsResidualVector(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
     Kokkos::View<double*> constraints_residual

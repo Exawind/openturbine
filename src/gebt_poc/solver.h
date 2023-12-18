@@ -106,6 +106,11 @@ void CalculateGyroscopicMatrix(
     Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> gyroscopic_matrix
 );
 
+void CalculateDynamicIterationMatrix(
+    Kokkos::View<double*> velocity, Kokkos::View<double*> acceleration,
+    const MassMatrix& sectional_mass_matrix, Kokkos::View<double**> iteration_matrix
+);
+
 /// Calculates the constraint residual vector for a beam element
 void ConstraintsResidualVector(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
