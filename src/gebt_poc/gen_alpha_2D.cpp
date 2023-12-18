@@ -143,6 +143,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
                                          h * (1 - kGammaLocal) * algo_acceleration(node, i) +
                                          h * kGammaLocal * algo_acceleration_next(node, i);
             });
+            member.team_barrier();
             Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 algo_acceleration(node, i) = algo_acceleration_next(node, i);
             });
@@ -219,24 +220,16 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             KOKKOS_LAMBDA(const member_type& member) {
                 auto node = member.league_rank();
                 constexpr auto components = kNumberOfLieAlgebraComponents;
-                Kokkos::parallel_for(
-                    Kokkos::TeamVectorRange(member, components),
-                    [=](std::size_t i) {
-                        delta_gen_coords(node, i) += residuals(node * components + i);
-                    }
-                );
-                Kokkos::parallel_for(
-                    Kokkos::TeamVectorRange(member, components),
-                    [=](std::size_t i) {
-                        velocity_next(node, i) += kGammaPrime * residuals(node * components + i);
-                    }
-                );
-                Kokkos::parallel_for(
-                    Kokkos::TeamVectorRange(member, components),
-                    [=](std::size_t i) {
-                        acceleration_next(node, i) += kBetaPrime * residuals(node * components + i);
-                    }
-                );
+                auto component_range = Kokkos::TeamVectorRange(member, components);
+                Kokkos::parallel_for(component_range, [=](std::size_t i) {
+                    delta_gen_coords(node, i) += residuals(node * components + i);
+                });
+                Kokkos::parallel_for(component_range, [=](std::size_t i) {
+                    velocity_next(node, i) += kGammaPrime * residuals(node * components + i);
+                });
+                Kokkos::parallel_for(component_range, [=](std::size_t i) {
+                    acceleration_next(node, i) += kBetaPrime * residuals(node * components + i);
+                });
             }
         );
     }
