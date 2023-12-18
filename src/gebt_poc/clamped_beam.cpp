@@ -42,7 +42,7 @@ void BMatrix(Kokkos::View<double**> constraints_gradient_matrix) {
 }
 
 ClampedBeamLinearizationParameters::ClampedBeamLinearizationParameters(
-    Kokkos::View<double*> position_vectors, StiffnessMatrix stiffness_matrix,
+    Kokkos::View<double**> position_vectors, StiffnessMatrix stiffness_matrix,
     UserDefinedQuadrature quadrature
 )
     : position_vectors_(position_vectors),
@@ -67,14 +67,10 @@ void ClampedBeamLinearizationParameters::ResidualVector(
     const auto size_residual = size_dofs + size_constraints;
 
     // Part 1: Calculate the residual vector for the generalized coordinates
-    auto gen_coords_1D =
-        Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
-    Convert2DViewTo1DView(gen_coords, gen_coords_1D);
-
     Kokkos::deep_copy(residual, 0.0);
     auto residual_gen_coords = Kokkos::subview(residual, Kokkos::make_pair(zero, size_dofs));
     CalculateStaticResidual(
-        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_gen_coords
+        position_vectors_, gen_coords, stiffness_matrix_, quadrature_, residual_gen_coords
     );
 
     // Part 2: Calculate the residual vector for the constraints
@@ -91,7 +87,7 @@ void ClampedBeamLinearizationParameters::ResidualVector(
 
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
-    ConstraintsResidualVector(gen_coords_1D, position_vectors_, residual_constraints);
+    ConstraintsResidualVector(gen_coords, position_vectors_, residual_constraints);
 }
 
 void ClampedBeamLinearizationParameters::IterationMatrix(
@@ -118,10 +114,6 @@ void ClampedBeamLinearizationParameters::IterationMatrix(
     const auto size_iteration = size_dofs + size_constraints;
     const auto n_nodes = velocity.extent(0);
 
-    auto gen_coords_1D =
-        Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
-    Convert2DViewTo1DView(gen_coords, gen_coords_1D);
-
     // Assemble the tangent operator (same size as the stiffness matrix)
     auto tangent_operator = Kokkos::View<double**>("tangent_operator", size_dofs, size_dofs);
     Kokkos::deep_copy(tangent_operator, 0.0);
@@ -146,7 +138,7 @@ void ClampedBeamLinearizationParameters::IterationMatrix(
     auto iteration_matrix_local =
         Kokkos::View<double**>("iteration_matrix_local", size_dofs, size_dofs);
     CalculateStaticIterationMatrix(
-        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, iteration_matrix_local
+        position_vectors_, gen_coords, stiffness_matrix_, quadrature_, iteration_matrix_local
     );
 
     // Combine beam element static iteration matrix with constraints into quadrant 1

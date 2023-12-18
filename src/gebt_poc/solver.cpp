@@ -9,18 +9,14 @@
 namespace openturbine::gebt_poc {
 
 void InterpolateNodalValues(
-    Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
+    Kokkos::View<double**> nodal_values, std::vector<double> interpolation_function,
     Kokkos::View<double*> interpolated_values
 ) {
-    const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
+    const auto n_nodes = nodal_values.extent(0);
     KokkosBlas::fill(interpolated_values, 0.);
     for (std::size_t i = 0; i < n_nodes; ++i) {
-        auto index = i * kNumberOfLieAlgebraComponents;
         KokkosBlas::axpy(
-            interpolation_function[i],
-            Kokkos::subview(
-                nodal_values, Kokkos::pair(index, index + kNumberOfLieAlgebraComponents)
-            ),
+            interpolation_function[i], Kokkos::subview(nodal_values, i, Kokkos::ALL),
             interpolated_values
         );
     }
@@ -33,21 +29,17 @@ void InterpolateNodalValues(
 }
 
 void InterpolateNodalValueDerivatives(
-    Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
+    Kokkos::View<double**> nodal_values, std::vector<double> interpolation_function,
     const double jacobian, Kokkos::View<double*> interpolated_values
 ) {
     if (jacobian == 0.) {
         throw std::invalid_argument("jacobian must be nonzero");
     }
-    const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
+    const auto n_nodes = nodal_values.extent(0);
     KokkosBlas::fill(interpolated_values, 0.);
     for (std::size_t i = 0; i < n_nodes; ++i) {
-        auto index = i * kNumberOfLieAlgebraComponents;
         KokkosBlas::axpy(
-            interpolation_function[i],
-            Kokkos::subview(
-                nodal_values, Kokkos::pair(index, index + kNumberOfLieAlgebraComponents)
-            ),
+            interpolation_function[i], Kokkos::subview(nodal_values, i, Kokkos::ALL),
             interpolated_values
         );
     }
@@ -164,21 +156,14 @@ void CalculateElasticForces(
 }
 
 void CalculateStaticResidual(
-    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+    const Kokkos::View<double**> position_vectors, const Kokkos::View<double**> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature, Kokkos::View<double*> residual
 ) {
-    const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
+    const auto n_nodes = gen_coords.extent(0);
     const auto order = n_nodes - 1;
     const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
 
-    auto nodes = Kokkos::View<double* [3]>("nodes", n_nodes);
-    for (std::size_t i = 0; i < n_nodes; ++i) {
-        auto index = i * kNumberOfLieAlgebraComponents;
-        Kokkos::deep_copy(
-            Kokkos::subview(nodes, i, Kokkos::ALL),
-            Kokkos::subview(position_vectors, Kokkos::make_pair(index, index + 3))
-        );
-    }
+    auto nodes = Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3));
 
     // Allocate Views for some required intermediate variables
     auto gen_coords_qp = Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_qp");
@@ -196,8 +181,7 @@ void CalculateStaticResidual(
         );
 
     Kokkos::deep_copy(residual, 0.);
-    for (size_t i = 0; i < n_nodes; ++i) {
-        const auto node_count = i;
+    for (size_t node = 0; node < n_nodes; ++node) {
         for (size_t j = 0; j < n_quad_pts; ++j) {
             // Calculate required interpolated values at the quadrature point
             const auto q_pt = quadrature.GetQuadraturePoints()[j];
@@ -247,10 +231,9 @@ void CalculateStaticResidual(
             Kokkos::parallel_for(
                 kNumberOfLieGroupComponents,
                 KOKKOS_LAMBDA(const size_t i) {
-                    residual(node_count * kNumberOfLieGroupComponents + i) +=
-                        q_weight *
-                        (shape_function_derivative_vector(node_count) * elastic_forces_fc(i) +
-                         jacobian * shape_function_vector(node_count) * elastic_forces_fd(i));
+                    residual(node * kNumberOfLieGroupComponents + i) +=
+                        q_weight * (shape_function_derivative_vector(node) * elastic_forces_fc(i) +
+                                    jacobian * shape_function_vector(node) * elastic_forces_fd(i));
                 }
             );
         }
@@ -382,22 +365,15 @@ void CalculateIterationMatrixComponents(
 }
 
 void CalculateStaticIterationMatrix(
-    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+    const Kokkos::View<double**> position_vectors, const Kokkos::View<double**> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature,
     Kokkos::View<double**> iteration_matrix
 ) {
-    const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
+    const auto n_nodes = gen_coords.extent(0);
     const auto order = n_nodes - 1;
     const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
 
-    auto nodes = Kokkos::View<double* [3]>("nodes", n_nodes);
-    for (std::size_t i = 0; i < n_nodes; ++i) {
-        auto index = i * kNumberOfLieAlgebraComponents;
-        Kokkos::deep_copy(
-            Kokkos::subview(nodes, i, Kokkos::ALL),
-            Kokkos::subview(position_vectors, Kokkos::make_pair(index, index + 3))
-        );
-    }
+    auto nodes = Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3));
 
     // Allocate Views for some required intermediate variables
     auto gen_coords_qp = Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_qp");
@@ -433,10 +409,12 @@ void CalculateStaticIterationMatrix(
                     gen_alpha_solver::create_vector(shape_function_derivative);
 
                 auto jacobian = CalculateJacobian(nodes, shape_function_derivative_vector);
+
                 InterpolateNodalValues(gen_coords, shape_function, gen_coords_qp);
                 InterpolateNodalValueDerivatives(
                     gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
                 );
+
                 InterpolateNodalValues(position_vectors, shape_function, position_vector_qp);
                 InterpolateNodalValueDerivatives(
                     position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
@@ -499,7 +477,7 @@ void CalculateStaticIterationMatrix(
 }
 
 void ConstraintsResidualVector(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
+    const Kokkos::View<double**> gen_coords, const Kokkos::View<double**> position_vector,
     Kokkos::View<double*> constraints_residual
 ) {
     // For the GEBT proof of concept problem (i.e. the clamped beam), the dofs are enforced to be
@@ -511,14 +489,14 @@ void ConstraintsResidualVector(
             // Construct rotation vector from root node rotation quaternion
             auto rotation_vector = openturbine::gen_alpha_solver::rotation_vector_from_quaternion(
                 openturbine::gen_alpha_solver::Quaternion(
-                    gen_coords(3), gen_coords(4), gen_coords(5), gen_coords(6)
+                    gen_coords(0, 3), gen_coords(0, 4), gen_coords(0, 5), gen_coords(0, 6)
                 )
             );
             // Set residual as translation and rotation of root node
             // TODO: update when position & rotation are prescribed
-            constraints_residual(0) = gen_coords(0);
-            constraints_residual(1) = gen_coords(1);
-            constraints_residual(2) = gen_coords(2);
+            constraints_residual(0) = gen_coords(0, 0);
+            constraints_residual(1) = gen_coords(0, 1);
+            constraints_residual(2) = gen_coords(0, 2);
             constraints_residual(3) = rotation_vector.GetXComponent();
             constraints_residual(4) = rotation_vector.GetYComponent();
             constraints_residual(5) = rotation_vector.GetZComponent();
@@ -527,13 +505,13 @@ void ConstraintsResidualVector(
 }
 
 void ConstraintsGradientMatrix(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
+    const Kokkos::View<double**> gen_coords, const Kokkos::View<double**> position_vector,
     Kokkos::View<double**> constraints_gradient_matrix
 ) {
-    auto translation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(0, 3));
-    auto rotation_0 = Kokkos::subview(gen_coords, Kokkos::make_pair(3, 7));
+    auto translation_0 = Kokkos::subview(gen_coords, 0, Kokkos::make_pair(0, 3));
+    auto rotation_0 = Kokkos::subview(gen_coords, 0, Kokkos::make_pair(3, 7));
     auto rotation_matrix_0 = gen_alpha_solver::EulerParameterToRotationMatrix(rotation_0);
-    auto position_0 = Kokkos::subview(position_vector, Kokkos::make_pair(0, 3));
+    auto position_0 = Kokkos::subview(position_vector, 0, Kokkos::make_pair(0, 3));
 
     // position_cross_prod_matrix = ~{position_0} + ~{translation_0}
     auto position_0_cross_prod_matrix = gen_alpha_solver::create_cross_product_matrix(position_0);
@@ -543,6 +521,7 @@ void ConstraintsGradientMatrix(
         Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]>(
             "position_cross_prod_matrix"
         );
+
     Kokkos::deep_copy(position_cross_prod_matrix, position_0_cross_prod_matrix);
     KokkosBlas::axpy(1., translation_0_cross_prod_matrix, position_cross_prod_matrix);
 

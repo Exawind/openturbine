@@ -245,8 +245,8 @@ RotationMatrix quaternion_to_rotation_matrix(const Quaternion& quaternion) {
 }
 
 /// Converts a 4x1 unit quaternion to a 3x3 rotation matrix and returns the result
-inline Kokkos::View<double**> EulerParameterToRotationMatrix(const Kokkos::View<double*> euler_param
-) {
+template <typename VectorType>
+inline Kokkos::View<double**> EulerParameterToRotationMatrix(VectorType euler_param) {
     auto c = Kokkos::View<double[3]>("c");
     Kokkos::parallel_for(
         3, KOKKOS_LAMBDA(const size_t i) { c(i) = euler_param(i + 1); }

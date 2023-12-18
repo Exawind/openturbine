@@ -10,51 +10,51 @@ struct DefinePositionVector_5NodeBeamElement {
     KOKKOS_FUNCTION
     void operator()(std::size_t) const {
         // node 1
-        position_vectors_(0) = 0.;
-        position_vectors_(1) = 0.;
-        position_vectors_(2) = 0.;
-        position_vectors_(3) = 0.9778215200524469;
-        position_vectors_(4) = -0.01733607539094763;
-        position_vectors_(5) = -0.09001900002195001;
-        position_vectors_(6) = -0.18831121859148398;
+        position_vectors_(0, 0) = 0.;
+        position_vectors_(0, 1) = 0.;
+        position_vectors_(0, 2) = 0.;
+        position_vectors_(0, 3) = 0.9778215200524469;
+        position_vectors_(0, 4) = -0.01733607539094763;
+        position_vectors_(0, 5) = -0.09001900002195001;
+        position_vectors_(0, 6) = -0.18831121859148398;
         // node 2
-        position_vectors_(7) = 0.8633658232300573;
-        position_vectors_(8) = -0.25589826392541715;
-        position_vectors_(9) = 0.1130411210682743;
-        position_vectors_(10) = 0.9950113028068008;
-        position_vectors_(11) = -0.002883848832932071;
-        position_vectors_(12) = -0.030192109815745303;
-        position_vectors_(13) = -0.09504013471947484;
+        position_vectors_(1, 0) = 0.8633658232300573;
+        position_vectors_(1, 1) = -0.25589826392541715;
+        position_vectors_(1, 2) = 0.1130411210682743;
+        position_vectors_(1, 3) = 0.9950113028068008;
+        position_vectors_(1, 4) = -0.002883848832932071;
+        position_vectors_(1, 5) = -0.030192109815745303;
+        position_vectors_(1, 6) = -0.09504013471947484;
         // node 3
-        position_vectors_(14) = 2.5;
-        position_vectors_(15) = -0.25;
-        position_vectors_(16) = 0.;
-        position_vectors_(17) = 0.9904718430204884;
-        position_vectors_(18) = -0.009526411091536478;
-        position_vectors_(19) = 0.09620741150793366;
-        position_vectors_(20) = 0.09807604012323785;
+        position_vectors_(2, 0) = 2.5;
+        position_vectors_(2, 1) = -0.25;
+        position_vectors_(2, 2) = 0.;
+        position_vectors_(2, 3) = 0.9904718430204884;
+        position_vectors_(2, 4) = -0.009526411091536478;
+        position_vectors_(2, 5) = 0.09620741150793366;
+        position_vectors_(2, 6) = 0.09807604012323785;
         // node 4
-        position_vectors_(21) = 4.136634176769943;
-        position_vectors_(22) = 0.39875540678255983;
-        position_vectors_(23) = -0.5416125496397027;
-        position_vectors_(24) = 0.9472312341234699;
-        position_vectors_(25) = -0.049692141629315074;
-        position_vectors_(26) = 0.18127630174800594;
-        position_vectors_(27) = 0.25965858850765167;
+        position_vectors_(3, 0) = 4.136634176769943;
+        position_vectors_(3, 1) = 0.39875540678255983;
+        position_vectors_(3, 2) = -0.5416125496397027;
+        position_vectors_(3, 3) = 0.9472312341234699;
+        position_vectors_(3, 4) = -0.049692141629315074;
+        position_vectors_(3, 5) = 0.18127630174800594;
+        position_vectors_(3, 6) = 0.25965858850765167;
         // node 5
-        position_vectors_(28) = 5.;
-        position_vectors_(29) = 1.;
-        position_vectors_(30) = -1.;
-        position_vectors_(31) = 0.9210746582719719;
-        position_vectors_(32) = -0.07193653093139739;
-        position_vectors_(33) = 0.20507529985516368;
-        position_vectors_(34) = 0.32309554437664584;
+        position_vectors_(4, 0) = 5.;
+        position_vectors_(4, 1) = 1.;
+        position_vectors_(4, 2) = -1.;
+        position_vectors_(4, 3) = 0.9210746582719719;
+        position_vectors_(4, 4) = -0.07193653093139739;
+        position_vectors_(4, 5) = 0.20507529985516368;
+        position_vectors_(4, 6) = 0.32309554437664584;
     }
-    Kokkos::View<double[35]> position_vectors_;
+    Kokkos::View<double[5][7]> position_vectors_;
 };
 
 StaticBeamLinearizationParameters::StaticBeamLinearizationParameters()
-    : position_vectors_(Kokkos::View<double[35]>("position_vectors")),
+    : position_vectors_(Kokkos::View<double[5][7]>("position_vectors")),
       stiffness_matrix_(StiffnessMatrix(gen_alpha_solver::create_matrix({
           {1., 2., 3., 4., 5., 6.},       // row 1
           {2., 4., 6., 8., 10., 12.},     // row 2
@@ -87,7 +87,7 @@ StaticBeamLinearizationParameters::StaticBeamLinearizationParameters()
 }
 
 StaticBeamLinearizationParameters::StaticBeamLinearizationParameters(
-    Kokkos::View<double*> position_vectors, StiffnessMatrix stiffness_matrix,
+    Kokkos::View<double**> position_vectors, StiffnessMatrix stiffness_matrix,
     UserDefinedQuadrature quadrature
 )
     : position_vectors_(position_vectors),
@@ -120,18 +120,14 @@ void StaticBeamLinearizationParameters::ResidualVector(
     const auto size_constraints = lagrange_multipliers.extent(0);
     const auto size_residual = size_dofs + size_constraints;
 
-    auto gen_coords_1D =
-        Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
-    Convert2DViewTo1DView(gen_coords, gen_coords_1D);
-
     Kokkos::deep_copy(residual, 0.0);
     auto residual_gen_coords = Kokkos::subview(residual, Kokkos::make_pair(zero, size_dofs));
     CalculateStaticResidual(
-        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_gen_coords
+        position_vectors_, gen_coords, stiffness_matrix_, quadrature_, residual_gen_coords
     );
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
-    ConstraintsResidualVector(gen_coords_1D, position_vectors_, residual_constraints);
+    ConstraintsResidualVector(gen_coords, position_vectors_, residual_constraints);
 }
 
 void StaticBeamLinearizationParameters::IterationMatrix(
@@ -158,10 +154,6 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     const auto size_iteration = size_dofs + size_constraints;
     const auto n_nodes = velocity.extent(0);
 
-    auto gen_coords_1D =
-        Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
-    Convert2DViewTo1DView(gen_coords, gen_coords_1D);
-
     // Assemble the tangent operator (same size as the stiffness matrix)
     auto tangent_operator = Kokkos::View<double**>("tangent_operator", size_dofs, size_dofs);
     Kokkos::deep_copy(tangent_operator, 0.0);
@@ -186,7 +178,7 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     auto iteration_matrix_local =
         Kokkos::View<double**>("iteration_matrix_local", size_dofs, size_dofs);
     CalculateStaticIterationMatrix(
-        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, iteration_matrix_local
+        position_vectors_, gen_coords, stiffness_matrix_, quadrature_, iteration_matrix_local
     );
 
     // Combine beam element static iteration matrix with constraints into quadrant 1
@@ -203,9 +195,8 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     );
     auto constraints_gradient_matrix =
         Kokkos::View<double**>("constraints_gradient_matrix", size_constraints, size_dofs);
-    ConstraintsGradientMatrix(gen_coords_1D, position_vectors_, constraints_gradient_matrix);
-    // TODO ** Question for reviewers **
-    // How to transpose a matrix using KokkosBlas?
+    ConstraintsGradientMatrix(gen_coords, position_vectors_, constraints_gradient_matrix);
+
     auto temp = gen_alpha_solver::transpose_matrix(constraints_gradient_matrix);
     Kokkos::deep_copy(quadrant_2, temp);
 

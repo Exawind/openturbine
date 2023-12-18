@@ -14,14 +14,14 @@ constexpr std::size_t kNumberOfVectorComponents = 3;
 /// Calculates the interpolated values for a nodal quantity (e.g. displacement or position vector)
 /// at a given quadrature point and normalizes the rotation quaternion
 void InterpolateNodalValues(
-    Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
+    Kokkos::View<double**> nodal_values, std::vector<double> interpolation_function,
     Kokkos::View<double*> interpolated_values
 );
 
 /// Calculates the interpolated derivative values for a nodal quantity (e.g. displacement or position
 /// vector) at a given quadrature point
 void InterpolateNodalValueDerivatives(
-    Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
+    Kokkos::View<double**> nodal_values, std::vector<double> interpolation_function,
     const double jacobian, Kokkos::View<double*> interpolated_values
 );
 
@@ -54,7 +54,7 @@ void CalculateElasticForces(
 
 /// Calculates the static residual vector for a beam element
 void CalculateStaticResidual(
-    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+    const Kokkos::View<double**> position_vectors, const Kokkos::View<double**> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature, Kokkos::View<double*> residual
 );
 
@@ -70,20 +70,20 @@ void CalculateIterationMatrixComponents(
 
 /// Calculates the static iteration matrix for a beam element
 void CalculateStaticIterationMatrix(
-    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+    const Kokkos::View<double**> position_vectors, const Kokkos::View<double**> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature,
     Kokkos::View<double**> iteration_matrix
 );
 
 /// Calculates the constraint residual vector for a beam element
 void ConstraintsResidualVector(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
+    const Kokkos::View<double**> gen_coords, const Kokkos::View<double**> position_vector,
     const Kokkos::View<double*> constraints_residual
 );
 
 /// Calculates the constraint gradient matrix for a beam element
 void ConstraintsGradientMatrix(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
+    const Kokkos::View<double**> gen_coords, const Kokkos::View<double**> position_vector,
     Kokkos::View<double**> constraints_gradient_matrix
 );
 
