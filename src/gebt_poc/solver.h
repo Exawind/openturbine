@@ -114,6 +114,12 @@ void NodalDynamicStiffnessMatrix(
     const MassMatrix& sectional_mass_matrix, Kokkos::View<double**> iteration_matrix
 );
 
+void ElementalMassMatrix(
+    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+    const MassMatrix& mass_matrix, const Quadrature& quadrature,
+    Kokkos::View<double**> element_mass_matrix
+);
+
 /// Calculates the constraint residual vector for a beam element
 void ElementalConstraintForcesResidual(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> constraints_residual
