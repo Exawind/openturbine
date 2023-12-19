@@ -91,7 +91,7 @@ void ClampedBeamLinearizationParameters::ResidualVector(
 
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
-    ElementalConstraintForcesResidual(gen_coords_1D, position_vectors_, residual_constraints);
+    ElementalConstraintForcesResidual(gen_coords_1D, residual_constraints);
 }
 
 void ClampedBeamLinearizationParameters::IterationMatrix(

@@ -871,18 +871,13 @@ TEST(SolverTest, ElementalStaticStiffnessMatrixWithNonZeroValues) {
 }
 
 TEST(SolverTest, ElementalConstraintForcesResidual) {
-    auto position_vectors = gen_alpha_solver::create_vector(
-        {0., 0., 0., 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
-         -0.18831121859148398}
-    );
-
     auto generalized_coords = gen_alpha_solver::create_vector(
         {0.1, 0., 0.12, 0.9987502603949662, 0.049979169270678324, 0., 0.}
     );
 
     auto constraints_residual = Kokkos::View<double[6]>("constraints_residual");
 
-    ElementalConstraintForcesResidual(generalized_coords, position_vectors, constraints_residual);
+    ElementalConstraintForcesResidual(generalized_coords, constraints_residual);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         // constraints_residual should be same as the generalized_coords where

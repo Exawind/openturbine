@@ -116,8 +116,7 @@ void NodalDynamicStiffnessMatrix(
 
 /// Calculates the constraint residual vector for a beam element
 void ElementalConstraintForcesResidual(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
-    const Kokkos::View<double*> constraints_residual
+    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> constraints_residual
 );
 
 /// Calculates the constraint gradient matrix for a beam element
