@@ -710,7 +710,7 @@ void NodalGyroscopicMatrix(
     auto gyroscopic_matrix_q1_part1 =
         gen_alpha_solver::transpose_matrix(gen_alpha_solver::create_cross_product_matrix(temp1));
     KokkosBlas::gemm(
-        "N", "N", mass, angular_velocity_tilde, center_of_mass_tilde, 0., gyroscopic_matrix_q1
+        "N", "T", mass, angular_velocity_tilde, center_of_mass_tilde, 0., gyroscopic_matrix_q1
     );
     KokkosBlas::axpy(1., gyroscopic_matrix_q1_part1, gyroscopic_matrix_q1);
 

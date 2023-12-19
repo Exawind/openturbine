@@ -162,48 +162,6 @@ TEST(SolverTest, SectionalStiffness) {
     );
 }
 
-TEST(SolverTest, SectionalMassMatrix) {
-    auto rotation_0 = gen_alpha_solver::create_matrix({
-        {0.92468736109510075, 0.34700636042507571, -0.156652066872805},
-        {-0.34223371517230472, 0.93786259974465924, 0.05735702397746531},
-        {0.16682136682793711, 0.00057430369330956077, 0.98598696834437271},
-    });
-    auto rotation = gen_alpha_solver::create_matrix({
-        {1.0000000000000002, 0, 0},
-        {0, 0.99999676249603286, -0.0025446016295712901},
-        {0, 0.0025446016295712901, 0.99999676249603286},
-    });
-    auto Mass = MassMatrix(gen_alpha_solver::create_matrix({
-        {2., 0., 0., 0., 0.6, -0.4},  // row 1
-        {0., 2., 0., -0.6, 0., 0.2},  // row 2
-        {0., 0., 2., 0.4, -0.2, 0.},  // row 3
-        {0., -0.6, 0.4, 1., 2., 3.},  // row 4
-        {0.6, 0., -0.2, 2., 4., 6.},  // row 5
-        {-0.4, 0.2, 0., 3., 6., 9.},  // row 6
-    }));
-
-    auto sectional_mass = Kokkos::View<double[6][6]>("sectional_mass");
-    SectionalMassMatrix(Mass, rotation_0, rotation, sectional_mass);
-
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        sectional_mass,
-        {
-            {2.0000000000000009, 5.2041704279304213E-17, -5.5511151231257827E-17,
-             4.163336342344337E-17, 0.62605214725880387, -0.33952055713492146},
-            {5.2041704279304213E-17, 2.0000000000000018, 1.3877787807814457E-17,
-             -0.62605214725880398, 3.4694469519536142E-18, 0.22974877626536772},
-            {-5.5511151231257827E-17, 1.3877787807814457E-17, 2.0000000000000013,
-             0.33952055713492141, -0.22974877626536766, 1.3877787807814457E-17},
-            {-4.163336342344337E-17, -0.62605214725880387, 0.33952055713492146, 1.3196125048858467,
-             1.9501108129670985, 3.5958678677753957},
-            {0.62605214725880398, -3.4694469519536142E-18, -0.22974877626536772, 1.9501108129670985,
-             2.881855217930184, 5.3139393458205735},
-            {-0.33952055713492141, 0.22974877626536766, -1.3877787807814457E-17, 3.5958678677753957,
-             5.3139393458205726, 9.7985322771839804},
-        }
-    );
-}
-
 struct NodalElasticForces_populate_strain {
     Kokkos::View<double[6]> sectional_strain;
 
@@ -467,6 +425,48 @@ TEST(SolverTest, ElementalStaticForcesResidualWithNonZeroValues) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(residual, expected_residual);
 }
 
+TEST(SolverTest, SectionalMassMatrix) {
+    auto rotation_0 = gen_alpha_solver::create_matrix({
+        {0.92468736109510075, 0.34700636042507571, -0.156652066872805},
+        {-0.34223371517230472, 0.93786259974465924, 0.05735702397746531},
+        {0.16682136682793711, 0.00057430369330956077, 0.98598696834437271},
+    });
+    auto rotation = gen_alpha_solver::create_matrix({
+        {1.0000000000000002, 0, 0},
+        {0, 0.99999676249603286, -0.0025446016295712901},
+        {0, 0.0025446016295712901, 0.99999676249603286},
+    });
+    auto Mass = MassMatrix(gen_alpha_solver::create_matrix({
+        {2., 0., 0., 0., 0.6, -0.4},  // row 1
+        {0., 2., 0., -0.6, 0., 0.2},  // row 2
+        {0., 0., 2., 0.4, -0.2, 0.},  // row 3
+        {0., -0.6, 0.4, 1., 2., 3.},  // row 4
+        {0.6, 0., -0.2, 2., 4., 6.},  // row 5
+        {-0.4, 0.2, 0., 3., 6., 9.},  // row 6
+    }));
+
+    auto sectional_mass = Kokkos::View<double[6][6]>("sectional_mass");
+    SectionalMassMatrix(Mass, rotation_0, rotation, sectional_mass);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        sectional_mass,
+        {
+            {2.0000000000000009, 5.2041704279304213E-17, -5.5511151231257827E-17,
+             4.163336342344337E-17, 0.62605214725880387, -0.33952055713492146},
+            {5.2041704279304213E-17, 2.0000000000000018, 1.3877787807814457E-17,
+             -0.62605214725880398, 3.4694469519536142E-18, 0.22974877626536772},
+            {-5.5511151231257827E-17, 1.3877787807814457E-17, 2.0000000000000013,
+             0.33952055713492141, -0.22974877626536766, 1.3877787807814457E-17},
+            {-4.163336342344337E-17, -0.62605214725880387, 0.33952055713492146, 1.3196125048858467,
+             1.9501108129670985, 3.5958678677753957},
+            {0.62605214725880398, -3.4694469519536142E-18, -0.22974877626536772, 1.9501108129670985,
+             2.881855217930184, 5.3139393458205735},
+            {-0.33952055713492141, 0.22974877626536766, -1.3877787807814457E-17, 3.5958678677753957,
+             5.3139393458205726, 9.7985322771839804},
+        }
+    );
+}
+
 TEST(SolverTest, NodalInertialForces) {
     auto mm = gen_alpha_solver::create_matrix({
         {2., 0., 0., 0., 0.601016, -0.398472},                   // row 1
@@ -580,6 +580,12 @@ struct NonZeroValues_PopulateAcceleration {
     }
 };
 
+// void ElementalInertialForcesResidual(
+//     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+//     const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
+//     const MassMatrix& mass_matrix, const Quadrature& quadrature, Kokkos::View<double*> residual
+// ) {
+
 TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
     auto position_vectors = Kokkos::View<double[35]>("position_vectors");
     Kokkos::parallel_for(1, NonZeroValues_populate_position{position_vectors});
@@ -613,8 +619,8 @@ TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
 
     auto residual = Kokkos::View<double*>("residual", 30);
     ElementalInertialForcesResidual(
-        position_vectors, generalized_coords, quadrature, velocity, acceleration,
-        sectional_mass_matrix, residual
+        position_vectors, generalized_coords, velocity, acceleration, sectional_mass_matrix,
+        quadrature, residual
     );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
@@ -628,6 +634,48 @@ TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
                    -0.03722226802421836,   -0.08186055756075582,   -0.023972312767030792,
                    0.07251940986370664,    0.047582193710461386,   0.1727148583550359,
                    -0.007667261048492517,  0.02731289347020833,    0.05581821163081137}
+    );
+}
+
+TEST(SolverTest, NodalGyroscopicMatrix) {
+    auto mm = gen_alpha_solver::create_matrix({
+        {2.0000000000000009, 5.2041704279304213E-17, -5.5511151231257827E-17, 4.163336342344337E-17,
+         0.62605214725880387, -0.33952055713492146},
+        {5.2041704279304213E-17, 2.0000000000000018, 1.3877787807814457E-17, -0.62605214725880398,
+         3.4694469519536142E-18, 0.22974877626536772},
+        {-5.5511151231257827E-17, 1.3877787807814457E-17, 2.0000000000000013, 0.33952055713492141,
+         -0.22974877626536766, 1.3877787807814457E-17},
+        {-4.163336342344337E-17, -0.62605214725880387, 0.33952055713492146, 1.3196125048858467,
+         1.9501108129670985, 3.5958678677753957},
+        {0.62605214725880398, -3.4694469519536142E-18, -0.22974877626536772, 1.9501108129670985,
+         2.881855217930184, 5.3139393458205735},
+        {-0.33952055713492141, 0.22974877626536766, -1.3877787807814457E-17, 3.5958678677753957,
+         5.3139393458205726, 9.7985322771839804},
+    });
+    auto sectional_mass_matrix = MassMatrix(mm);
+
+    auto velocity = gen_alpha_solver::create_vector(
+        {0.0025446043828620765, -0.0024798542682092665, 0.000065079641503883005,
+         0.0025446043828620765, -0.0024798542682092665, 0.000065079641503883005}
+    );
+
+    auto gyroscopic_matrix = Kokkos::View<double**>("gyroscopic_matrix", 6, 6);
+    NodalGyroscopicMatrix(velocity, sectional_mass_matrix, gyroscopic_matrix);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        gyroscopic_matrix,
+        {// row 1
+         {0., 0., 0., -0.00080121825344948408, 0.0020034324646323511, 0.0015631511018243545},
+         // row 2
+         {0., 0., 0., -0.0022976344789521182, 0.00062536299234839244, -0.0015967098417843995},
+         // row 3
+         {0., 0., 0., -0.0031711581076346268, 0.0031271320551441812, -0.00025734175971376988},
+         // row 4
+         {0., 0., 0., -0.0090441407924201148, -0.016755394335528064, -0.022806270184157214},
+         // row 5
+         {0., 0., 0., -0.0056741321644514023, -0.013394960837037522, -0.025943451454082944},
+         // row 6
+         {0., 0., 0., 0.006396216051163168, 0.013413253109011812, 0.022439101629457635}}
     );
 }
 
@@ -683,48 +731,6 @@ TEST(SolverTest, NodalDynamicStiffnessMatrix) {
     );
 }
 
-TEST(SolverTest, NodalGyroscopicMatrix) {
-    auto mm = gen_alpha_solver::create_matrix({
-        {2.0000000000000009, 5.2041704279304213E-17, -5.5511151231257827E-17, 4.163336342344337E-17,
-         0.62605214725880387, -0.33952055713492146},
-        {5.2041704279304213E-17, 2.0000000000000018, 1.3877787807814457E-17, -0.62605214725880398,
-         3.4694469519536142E-18, 0.22974877626536772},
-        {-5.5511151231257827E-17, 1.3877787807814457E-17, 2.0000000000000013, 0.33952055713492141,
-         -0.22974877626536766, 1.3877787807814457E-17},
-        {-4.163336342344337E-17, -0.62605214725880387, 0.33952055713492146, 1.3196125048858467,
-         1.9501108129670985, 3.5958678677753957},
-        {0.62605214725880398, -3.4694469519536142E-18, -0.22974877626536772, 1.9501108129670985,
-         2.881855217930184, 5.3139393458205735},
-        {-0.33952055713492141, 0.22974877626536766, -1.3877787807814457E-17, 3.5958678677753957,
-         5.3139393458205726, 9.7985322771839804},
-    });
-    auto sectional_mass_matrix = MassMatrix(mm);
-
-    auto velocity = gen_alpha_solver::create_vector(
-        {0.0025446043828620765, -0.0024798542682092665, 0.000065079641503883005,
-         0.0025446043828620765, -0.0024798542682092665, 0.000065079641503883005}
-    );
-
-    auto gyroscopic_matrix = Kokkos::View<double**>("gyroscopic_matrix", 6, 6);
-    NodalGyroscopicMatrix(velocity, sectional_mass_matrix, gyroscopic_matrix);
-
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        gyroscopic_matrix,
-        {// row 1
-         {0., 0., 0., -0.00080121825344948408, 0.0020034324646323511, 0.0015631511018243545},
-         // row 2
-         {0., 0., 0., -0.0022976344789521182, 0.00062536299234839244, -0.0015967098417843995},
-         // row 3
-         {0., 0., 0., -0.0031711581076346268, 0.0031271320551441812, -0.00025734175971376988},
-         // row 4
-         {0., 0., 0., -0.0090441407924201148, -0.016755394335528064, -0.022806270184157214},
-         // row 5
-         {0., 0., 0., -0.0056741321644514023, -0.013394960837037522, -0.025943451454082944},
-         // row 6
-         {0., 0., 0., 0.006396216051163168, 0.013413253109011812, 0.022439101629457635}}
-    );
-}
-
 TEST(SolverTest, ElementalInertialMatrices) {
     auto position_vectors = Kokkos::View<double[35]>("position_vectors");
     Kokkos::parallel_for(1, NonZeroValues_populate_position{position_vectors});
@@ -774,7 +780,7 @@ TEST(SolverTest, NodalStaticStiffnessMatrixComponents) {
 
     auto position_vector_derivatives = gen_alpha_solver::create_vector(
         {0.924984344499876, -0.3417491071948322, 0.16616711516322974, 0.023197240723436388,
-         0.0199309451611758, 0.0569650074322926}
+         0.0199309451611758, 0.0569650074322926, 0.}
     );
 
     auto gen_coords_derivatives = gen_alpha_solver::create_vector(
