@@ -132,22 +132,13 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
                 algo_acceleration_next(node, i) = (kAlphaFLocal * acceleration(node, i) -
                                                    kAlphaMLocal * algo_acceleration(node, i)) /
                                                   (1. - kAlphaMLocal);
-            });
-            Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 delta_gen_coords(node, i) = velocity(node, i) +
                                             h * (0.5 - kBetaLocal) * algo_acceleration(node, i) +
                                             h * kBetaLocal * algo_acceleration_next(node, i);
-            });
-            Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 velocity_next(node, i) = velocity(node, i) +
                                          h * (1 - kGammaLocal) * algo_acceleration(node, i) +
                                          h * kGammaLocal * algo_acceleration_next(node, i);
-            });
-            member.team_barrier();
-            Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 algo_acceleration(node, i) = algo_acceleration_next(node, i);
-            });
-            Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 acceleration_next(node, i) = 0.;
             });
         }
@@ -223,11 +214,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
                 auto component_range = Kokkos::TeamVectorRange(member, components);
                 Kokkos::parallel_for(component_range, [=](std::size_t i) {
                     delta_gen_coords(node, i) += residuals(node * components + i);
-                });
-                Kokkos::parallel_for(component_range, [=](std::size_t i) {
                     velocity_next(node, i) += kGammaPrime * residuals(node * components + i);
-                });
-                Kokkos::parallel_for(component_range, [=](std::size_t i) {
                     acceleration_next(node, i) += kBetaPrime * residuals(node * components + i);
                 });
             }
@@ -317,12 +304,8 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
             auto node = member.league_rank();
 
             // R^3 Update
-            auto current_position = Kokkos::subview(gen_coords, node, Kokkos::make_pair(0, 3));
-            auto updated_position = Kokkos::subview(delta_gen_coords, node, Kokkos::make_pair(0, 3));
-            auto r = Kokkos::subview(gen_coords_next, node, Kokkos::make_pair(0, 3));
-
             Kokkos::parallel_for(Kokkos::TeamVectorRange(member, 3), [=](std::size_t i) {
-                r(i) = current_position(i) + updated_position(i) * h;
+                gen_coords_next(node, i) = gen_coords(node, i) + delta_gen_coords(node, i) * h;
             });
 
             // SO(3) Update
