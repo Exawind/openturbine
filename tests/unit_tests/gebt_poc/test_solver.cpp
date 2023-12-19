@@ -452,53 +452,6 @@ TEST(SolverTest, NodalInertialForces) {
     );
 }
 
-struct PopulatePositionVectors {
-    Kokkos::View<double[35]> position_vectors;
-    KOKKOS_FUNCTION
-    void operator()(std::size_t) const {
-        // node 1
-        position_vectors(0) = 1.;
-        position_vectors(1) = 0.;
-        position_vectors(2) = 0.;
-        position_vectors(3) = 1.;
-        position_vectors(4) = 0.;
-        position_vectors(5) = 0.;
-        position_vectors(6) = 0.;
-        // node 2
-        position_vectors(7) = 2.7267316464601146;
-        position_vectors(8) = 0.;
-        position_vectors(9) = 0.;
-        position_vectors(10) = 1.;
-        position_vectors(11) = 0.;
-        position_vectors(12) = 0.;
-        position_vectors(13) = 0.;
-        // node 3
-        position_vectors(14) = 6.;
-        position_vectors(15) = 0.;
-        position_vectors(16) = 0.;
-        position_vectors(17) = 1.;
-        position_vectors(18) = 0.;
-        position_vectors(19) = 0.;
-        position_vectors(20) = 0.;
-        // node 4
-        position_vectors(21) = 9.273268353539885;
-        position_vectors(22) = 0.;
-        position_vectors(23) = 0.;
-        position_vectors(24) = 1.;
-        position_vectors(25) = 0.;
-        position_vectors(26) = 0.;
-        position_vectors(27) = 0.;
-        // node 5
-        position_vectors(28) = 11.;
-        position_vectors(29) = 0.;
-        position_vectors(30) = 0.;
-        position_vectors(31) = 1.;
-        position_vectors(32) = 0.;
-        position_vectors(33) = 0.;
-        position_vectors(34) = 0.;
-    }
-};
-
 struct NonZeroValues_PopulateVelocity {
     Kokkos::View<double[30]> velocity;
 
@@ -587,7 +540,7 @@ struct NonZeroValues_PopulateAcceleration {
 
 TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
     auto position_vectors = Kokkos::View<double[35]>("position_vectors");
-    Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});
+    Kokkos::parallel_for(1, NonZeroValues_populate_position{position_vectors});
 
     auto generalized_coords = Kokkos::View<double[35]>("generalized_coords");
     Kokkos::parallel_for(1, NonZeroValues_populate_coords{generalized_coords});
@@ -623,16 +576,16 @@ TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
     );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-        residual, {0.000019335545416297728, -8.055294491481199e-6,   5.8329494155382605e-6,
-                   -0.00020648077815379697, -0.00020959356681323187, 0.00033777077473230634,
-                   0.08522626625910806,     -0.09835916383567325,    0.05825556406316555,
-                   -0.12095958080829729,    -0.25993054452584735,    -0.47064114129206475,
-                   0.33381717000150146,     -0.1345729157610545,     0.45001396308519026,
-                   -0.23390115455877442,    -0.45162435470066886,    -0.837804883153298,
-                   0.44605348487661345,     0.12986360412447723,     0.8837480082509565,
-                   -0.07216606430881851,    -0.030169162903059987,   0.19303434295115673,
-                   0.10240509758843608,     0.0640157062624005,      0.23492804501504103,
-                   0.0061435409189522765,   0.04623580137429702,     0.1934523213311831}
+        residual, {0.00011604556408927589, -0.0006507362696177887, -0.0006134866787567209,
+                   0.0006142322011935119,  -0.002199479688149071,  -0.0024868433546726618,
+                   0.04224129527348785,    -0.04970288500953028,   0.03088887284431359,
+                   -0.06975512417597271,   -0.1016119340697192,    -0.21457597550060847,
+                   0.17821954823792258,    -0.06852557905980934,   0.23918323280829631,
+                   -0.11742114482709062,   -0.25775479677677565,   -0.3851496964119588,
+                   0.2842963634125304,     0.09461848004333043,    0.5753721231363035,
+                   -0.03722226802421836,   -0.08186055756075582,   -0.023972312767030792,
+                   0.07251940986370664,    0.047582193710461386,   0.1727148583550359,
+                   -0.007667261048492517,  0.02731289347020833,    0.05581821163081137}
     );
 }
 

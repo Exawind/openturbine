@@ -557,7 +557,7 @@ void NodalStaticStiffnessMatrixComponents(
 void ElementalStaticStiffnessMatrix(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature,
-    Kokkos::View<double**> iteration_matrix
+    Kokkos::View<double**> stiffness_matrix
 ) {
     const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
     const auto order = n_nodes - 1;
@@ -593,7 +593,7 @@ void ElementalStaticStiffnessMatrix(
     auto Q_matrix =
         Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>("Q_matrix");
 
-    Kokkos::deep_copy(iteration_matrix, 0.);
+    Kokkos::deep_copy(stiffness_matrix, 0.);
     for (size_t i = 0; i < n_nodes; ++i) {
         for (size_t j = 0; j < n_nodes; ++j) {
             for (size_t k = 0; k < n_quad_pts; ++k) {
@@ -640,7 +640,7 @@ void ElementalStaticStiffnessMatrix(
                     sectional_stiffness, elastic_forces_fc, elastic_forces_fd
                 );
 
-                // Calculate the iteration matrix components, i.e. O, P, and Q matrices
+                // Calculate the stiffness matrix components, i.e. O, P, and Q matrices
                 NodalStaticStiffnessMatrixComponents(
                     elastic_forces_fc, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
                     sectional_stiffness, O_matrix, P_matrix, Q_matrix
@@ -652,7 +652,7 @@ void ElementalStaticStiffnessMatrix(
                         {0, 0}, {kNumberOfLieGroupComponents, kNumberOfLieGroupComponents}
                     ),
                     KOKKOS_LAMBDA(const size_t ii, const size_t jj) {
-                        iteration_matrix(
+                        stiffness_matrix(
                             i * kNumberOfLieGroupComponents + ii,
                             j * kNumberOfLieGroupComponents + jj
                         ) += q_weight *
