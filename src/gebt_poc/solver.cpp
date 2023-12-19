@@ -793,10 +793,12 @@ void NodalDynamicStiffnessMatrix(
     KokkosBlas::axpy(1., temp3, stiffness_matrix_q4);
 }
 
-void ElementalMassMatrix(
+void ElementalInertialMatrices(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+    const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
     const MassMatrix& mass_matrix, const Quadrature& quadrature,
-    Kokkos::View<double**> element_mass_matrix
+    Kokkos::View<double**> element_mass_matrix, Kokkos::View<double**> element_gyroscopic_matrix,
+    Kokkos::View<double**> element_dynamic_stiffness_matrix
 ) {
     const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
     const auto order = n_nodes - 1;
@@ -819,6 +821,8 @@ void ElementalMassMatrix(
         Kokkos::View<double[kNumberOfLieAlgebraComponents]>("position_vector_qp");
     auto pos_vector_derivatives_qp =
         Kokkos::View<double[kNumberOfLieAlgebraComponents]>("pos_vector_derivatives_qp");
+    auto velocity_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("velocity_qp");
+    auto acceleration_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("acceleration_qp");
     auto sectional_mass_matrix =
         Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
             "sectional_mass_matrix"
@@ -845,6 +849,12 @@ void ElementalMassMatrix(
                 InterpolateNodalValueDerivatives(
                     position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
                 );
+                InterpolateNodalValues(
+                    velocity, shape_function, velocity_qp, kNumberOfLieGroupComponents
+                );
+                InterpolateNodalValues(
+                    acceleration, shape_function, acceleration_qp, kNumberOfLieGroupComponents
+                );
 
                 // Calculate the sectional mass matrix in inertial basis
                 auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
@@ -854,6 +864,22 @@ void ElementalMassMatrix(
                     Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
                 );
                 SectionalMassMatrix(mass_matrix, rotation_0, rotation, sectional_mass_matrix);
+
+                // Calculate the gyroscopic matrix in inertial basis
+                auto gyroscopic_matrix =
+                    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+                        "gyroscopic_matrix"
+                    );
+                NodalGyroscopicMatrix(velocity_qp, sectional_mass_matrix, gyroscopic_matrix);
+
+                // Calculate the dynamic stiffness matrix in inertial basis
+                auto dynamic_stiffness_matrix =
+                    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+                        "dynamic_stiffness_matrix"
+                    );
+                NodalDynamicStiffnessMatrix(
+                    velocity_qp, acceleration_qp, sectional_mass_matrix, dynamic_stiffness_matrix
+                );
 
                 const auto q_weight = quadrature.GetQuadratureWeights()[k];
                 Kokkos::parallel_for(
@@ -866,20 +892,48 @@ void ElementalMassMatrix(
                             j * kNumberOfLieGroupComponents + jj
                         ) += q_weight * shape_function_vector(i) * sectional_mass_matrix(ii, jj) *
                              shape_function_vector(j) * jacobian;
+                        element_gyroscopic_matrix(
+                            i * kNumberOfLieGroupComponents + ii,
+                            j * kNumberOfLieGroupComponents + jj
+                        ) += q_weight * shape_function_vector(i) * gyroscopic_matrix(ii, jj) *
+                             shape_function_vector(j) * jacobian;
+                        element_dynamic_stiffness_matrix(
+                            i * kNumberOfLieGroupComponents + ii,
+                            j * kNumberOfLieGroupComponents + jj
+                        ) += q_weight * shape_function_vector(i) * dynamic_stiffness_matrix(ii, jj) *
+                             shape_function_vector(j) * jacobian;
                     }
                 );
             }
         }
     }
 
-    std::cout << "element_mass_matrix: \n";
-    // Print in scientific notation
-    for (size_t i = 0; i < element_mass_matrix.extent(0); ++i) {
-        for (size_t j = 0; j < element_mass_matrix.extent(1); ++j) {
-            std::cout << std::scientific << element_mass_matrix(i, j) << " ";
-        }
-        std::cout << "\n";
-    }
+    // std::cout << "element_mass_matrix: \n";
+    // // Print in scientific notation
+    // for (size_t i = 0; i < element_mass_matrix.extent(0); ++i) {
+    //     for (size_t j = 0; j < element_mass_matrix.extent(1); ++j) {
+    //         std::cout << std::scientific << element_mass_matrix(i, j) << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
+
+    // std::cout << "element_gyroscopic_matrix: \n";
+    // // Print in scientific notation
+    // for (size_t i = 0; i < element_gyroscopic_matrix.extent(0); ++i) {
+    //     for (size_t j = 0; j < element_gyroscopic_matrix.extent(1); ++j) {
+    //         std::cout << std::scientific << element_gyroscopic_matrix(i, j) << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
+
+    // std::cout << "element_dynamic_stiffness_matrix: \n";
+    // // Print in scientific notation
+    // for (size_t i = 0; i < element_dynamic_stiffness_matrix.extent(0); ++i) {
+    //     for (size_t j = 0; j < element_dynamic_stiffness_matrix.extent(1); ++j) {
+    //         std::cout << std::scientific << element_dynamic_stiffness_matrix(i, j) << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
 }
 
 void ElementalConstraintForcesResidual(

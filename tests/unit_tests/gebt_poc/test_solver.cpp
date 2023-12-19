@@ -641,6 +641,47 @@ TEST(SolverTest, NodalDynamicStiffnessMatrix) {
     );
 }
 
+TEST(SolverTest, ElementalInertialMatrices) {
+    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
+    Kokkos::parallel_for(1, NonZeroValues_populate_position{position_vectors});
+
+    auto generalized_coords = Kokkos::View<double[35]>("generalized_coords");
+    Kokkos::parallel_for(1, NonZeroValues_populate_coords{generalized_coords});
+
+    auto velocity = Kokkos::View<double[30]>("velocity");
+    Kokkos::parallel_for(1, NonZeroValues_PopulateVelocity{velocity});
+
+    auto acceleration = Kokkos::View<double[30]>("acceleration");
+    Kokkos::parallel_for(1, NonZeroValues_PopulateAcceleration{acceleration});
+
+    auto quadrature_points =
+        std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
+                            0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
+    auto quadrature_weights = std::vector<double>{
+        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
+    auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
+
+    auto mm = gen_alpha_solver::create_matrix({
+        {2., 0., 0., 0., 0.6, -0.4},  // row 1
+        {0., 2., 0., -0.6, 0., 0.2},  // row 2
+        {0., 0., 2., 0.4, -0.2, 0.},  // row 3
+        {0., -0.6, 0.4, 1., 2., 3.},  // row 4
+        {0.6, 0., -0.2, 2., 4., 6.},  // row 5
+        {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
+    });
+    auto sectional_mass_matrix = MassMatrix(mm);
+
+    auto element_mass_matrix = Kokkos::View<double[30][30]>("element_mass_matrix");
+    auto element_gyroscopic_matrix = Kokkos::View<double[30][30]>("element_gyroscopic_matrix");
+    auto element_dynamic_stiffness_matrix =
+        Kokkos::View<double[30][30]>("element_dynamic_stiffness_matrix");
+    ElementalInertialMatrices(
+        position_vectors, generalized_coords, velocity, acceleration, sectional_mass_matrix,
+        quadrature, element_mass_matrix, element_gyroscopic_matrix, element_dynamic_stiffness_matrix
+    );
+}
+
 TEST(SolverTest, NodalStaticStiffnessMatrixComponents) {
     auto elastic_force_fc = gen_alpha_solver::create_vector(
         {0.1023527958818833, 0.1512321779691288, 0.2788924951018168, 0.4003985306163255,
