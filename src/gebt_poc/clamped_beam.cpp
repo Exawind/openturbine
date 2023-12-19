@@ -73,7 +73,7 @@ void ClampedBeamLinearizationParameters::ResidualVector(
 
     Kokkos::deep_copy(residual, 0.0);
     auto residual_gen_coords = Kokkos::subview(residual, Kokkos::make_pair(zero, size_dofs));
-    CalculateStaticResidual(
+    ElementalStaticForcesResidual(
         position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_gen_coords
     );
 
@@ -91,7 +91,7 @@ void ClampedBeamLinearizationParameters::ResidualVector(
 
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
-    ConstraintsResidualVector(gen_coords_1D, position_vectors_, residual_constraints);
+    ElementalConstraintForcesResidual(gen_coords_1D, position_vectors_, residual_constraints);
 }
 
 void ClampedBeamLinearizationParameters::IterationMatrix(
@@ -145,7 +145,7 @@ void ClampedBeamLinearizationParameters::IterationMatrix(
     // Calculate the beam element static iteration matrix
     auto iteration_matrix_local =
         Kokkos::View<double**>("iteration_matrix_local", size_dofs, size_dofs);
-    CalculateStaticIterationMatrix(
+    ElementalStaticStiffnessMatrix(
         position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, iteration_matrix_local
     );
 

@@ -72,7 +72,7 @@ TEST(SolverTest, CalculateInterpolatedValues) {
     );
 }
 
-struct CalculateCurvature_populate_coords {
+struct NodalCurvature_populate_coords {
     Kokkos::View<double[7]> gen_coords;
     gen_alpha_solver::Quaternion q;
 
@@ -88,7 +88,7 @@ struct CalculateCurvature_populate_coords {
     }
 };
 
-struct CalculateCurvature_populate_derivative {
+struct NodalCurvature_populate_derivative {
     Kokkos::View<double[7]> gen_coords_derivative;
 
     KOKKOS_FUNCTION
@@ -103,7 +103,7 @@ struct CalculateCurvature_populate_derivative {
     }
 };
 
-TEST(SolverTest, CalculateCurvature) {
+TEST(SolverTest, NodalCurvature) {
     auto rotation_matrix = gen_alpha_solver::RotationMatrix(
         0.8146397707387071, -0.4884001129794905, 0.31277367787652416, 0.45607520213614394,
         0.8726197541000288, 0.17472886066955512, -0.3582700851693625, 0.00030723936311904954,
@@ -112,21 +112,21 @@ TEST(SolverTest, CalculateCurvature) {
     auto q = gen_alpha_solver::rotation_matrix_to_quaternion(rotation_matrix);
 
     auto gen_coords = Kokkos::View<double[7]>("gen_coords");
-    Kokkos::parallel_for(1, CalculateCurvature_populate_coords{gen_coords, q});
+    Kokkos::parallel_for(1, NodalCurvature_populate_coords{gen_coords, q});
 
     auto gen_coords_derivative = Kokkos::View<double[7]>("gen_coords_derivative");
 
-    Kokkos::parallel_for(1, CalculateCurvature_populate_derivative{gen_coords_derivative});
+    Kokkos::parallel_for(1, NodalCurvature_populate_derivative{gen_coords_derivative});
 
     auto curvature = Kokkos::View<double[3]>("curvature");
-    CalculateCurvature(gen_coords, gen_coords_derivative, curvature);
+    NodalCurvature(gen_coords, gen_coords_derivative, curvature);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         curvature, {-0.03676700256944363, 0.062023963818612256, 0.15023478838786522}
     );
 }
 
-TEST(SolverTest, CalculateSectionalStiffness) {
+TEST(SolverTest, SectionalStiffness) {
     auto rotation_0 = gen_alpha_solver::create_matrix({
         {1., 2., 3.},  // row 1
         {4., 5., 6.},  // row 2
@@ -147,7 +147,7 @@ TEST(SolverTest, CalculateSectionalStiffness) {
     }));
 
     auto sectional_stiffness = Kokkos::View<double[6][6]>("sectional_stiffness");
-    CalculateSectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
+    SectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         sectional_stiffness,
@@ -162,7 +162,7 @@ TEST(SolverTest, CalculateSectionalStiffness) {
     );
 }
 
-struct CalculateElasticForces_populate_strain {
+struct NodalElasticForces_populate_strain {
     Kokkos::View<double[6]> sectional_strain;
 
     KOKKOS_FUNCTION
@@ -176,7 +176,7 @@ struct CalculateElasticForces_populate_strain {
     }
 };
 
-struct CalculateElasticForces_populate_position_derivatives {
+struct NodalElasticForces_populate_position_derivatives {
     Kokkos::View<double[7]> position_vector_derivatives;
 
     KOKKOS_FUNCTION
@@ -191,7 +191,7 @@ struct CalculateElasticForces_populate_position_derivatives {
     }
 };
 
-struct CalculateElasticForces_populate_coords_derivatives {
+struct NodalElasticForces_populate_coords_derivatives {
     Kokkos::View<double[7]> gen_coords_derivatives;
 
     KOKKOS_FUNCTION
@@ -206,9 +206,9 @@ struct CalculateElasticForces_populate_coords_derivatives {
     }
 };
 
-TEST(SolverTest, CalculateElasticForces) {
+TEST(SolverTest, NodalElasticForces) {
     auto sectional_strain = Kokkos::View<double*>("sectional_strain", 6);
-    Kokkos::parallel_for(1, CalculateElasticForces_populate_strain{sectional_strain});
+    Kokkos::parallel_for(1, NodalElasticForces_populate_strain{sectional_strain});
 
     auto rotation = gen_alpha_solver::create_matrix({
         {1., 2., 3.},  // row 1
@@ -218,13 +218,11 @@ TEST(SolverTest, CalculateElasticForces) {
 
     auto position_vector_derivatives = Kokkos::View<double*>("position_vector_derivatives", 7);
     Kokkos::parallel_for(
-        1, CalculateElasticForces_populate_position_derivatives{position_vector_derivatives}
+        1, NodalElasticForces_populate_position_derivatives{position_vector_derivatives}
     );
 
     auto gen_coords_derivatives = Kokkos::View<double*>("gen_coords_derivatives", 7);
-    Kokkos::parallel_for(
-        1, CalculateElasticForces_populate_coords_derivatives{gen_coords_derivatives}
-    );
+    Kokkos::parallel_for(1, NodalElasticForces_populate_coords_derivatives{gen_coords_derivatives});
 
     auto stiffness = gen_alpha_solver::create_matrix({
         {1., 2., 3., 4., 5., 6.},       // row 1
@@ -236,7 +234,7 @@ TEST(SolverTest, CalculateElasticForces) {
     });
     auto elastic_forces_fc = Kokkos::View<double*>("elastic_forces_fc", 6);
     auto elastic_forces_fd = Kokkos::View<double*>("elastic_forces_fd", 6);
-    CalculateElasticForces(
+    NodalElasticForces(
         sectional_strain, rotation, position_vector_derivatives, gen_coords_derivatives, stiffness,
         elastic_forces_fc, elastic_forces_fd
     );
@@ -249,7 +247,7 @@ TEST(SolverTest, CalculateElasticForces) {
     );
 }
 
-TEST(SolverTest, CalculateStaticResidualWithZeroValues) {
+TEST(SolverTest, ElementalStaticForcesResidualWithZeroValues) {
     // 5 nodes on a line
     auto position_vectors = gen_alpha_solver::create_vector({
         0., 0., 0., 1., 0., 0., 0.,  // node 1
@@ -287,7 +285,9 @@ TEST(SolverTest, CalculateStaticResidualWithZeroValues) {
     );
 
     auto residual = Kokkos::View<double*>("residual", 30);
-    CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature, residual);
+    ElementalStaticForcesResidual(
+        position_vectors, generalized_coords, stiffness, quadrature, residual
+    );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         residual,
@@ -393,7 +393,7 @@ struct NonZeroValues_populate_coords {
     }
 };
 
-TEST(SolverTest, CalculateStaticResidualWithNonZeroValues) {
+TEST(SolverTest, ElementalStaticForcesResidualWithNonZeroValues) {
     auto position_vectors = Kokkos::View<double[35]>("position_vectors");
     Kokkos::parallel_for(1, NonZeroValues_populate_position{position_vectors});
 
@@ -418,12 +418,14 @@ TEST(SolverTest, CalculateStaticResidualWithNonZeroValues) {
     auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
     auto residual = Kokkos::View<double*>("residual", 30);
-    CalculateStaticResidual(position_vectors, generalized_coords, stiffness, quadrature, residual);
+    ElementalStaticForcesResidual(
+        position_vectors, generalized_coords, stiffness, quadrature, residual
+    );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(residual, expected_residual);
 }
 
-TEST(SolverTest, CalculateInertialForces) {
+TEST(SolverTest, NodalInertialForces) {
     auto mm = gen_alpha_solver::create_matrix({
         {2., 0., 0., 0., 0.601016, -0.398472},                   // row 1
         {0., 2., -1.45094e-19, -0.601016, -5.78775e-20, 0.2},    // row 2
@@ -442,7 +444,7 @@ TEST(SolverTest, CalculateInertialForces) {
     );
 
     auto inertial_forces_fc = Kokkos::View<double[6]>("inertial_forces_fc");
-    CalculateInertialForces(velocity, acceleration, sectional_mass_matrix, inertial_forces_fc);
+    NodalInertialForces(velocity, acceleration, sectional_mass_matrix, inertial_forces_fc);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         inertial_forces_fc,
@@ -583,7 +585,7 @@ struct NonZeroValues_PopulateAcceleration {
     }
 };
 
-TEST(SolverTest, CalculateInertialResidualWithNonZeroValues) {
+TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
     auto position_vectors = Kokkos::View<double[35]>("position_vectors");
     Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});
 
@@ -615,7 +617,7 @@ TEST(SolverTest, CalculateInertialResidualWithNonZeroValues) {
     auto sectional_mass_matrix = MassMatrix(mm);
 
     auto residual = Kokkos::View<double*>("residual", 30);
-    CalculateInertialResidual(
+    ElementalInertialForcesResidual(
         position_vectors, generalized_coords, quadrature, velocity, acceleration,
         sectional_mass_matrix, residual
     );
@@ -634,7 +636,7 @@ TEST(SolverTest, CalculateInertialResidualWithNonZeroValues) {
     );
 }
 
-TEST(SolverTest, CalculateDynamicStiffnessMatrixComponents) {
+TEST(SolverTest, NodalDynamicStiffnessMatrix) {
     auto mm = gen_alpha_solver::create_matrix({
         {2.000156542777611, -4.933235029103291e-6, -0.000010581400820696204, 3.625826972906067e-17,
          0.6261167960986409, -0.33951401747769855},  // row 1
@@ -660,13 +662,11 @@ TEST(SolverTest, CalculateDynamicStiffnessMatrixComponents) {
          -0.002479854268209268, 0.00006507964150388257}
     );
 
-    auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", 6, 6);
-    CalculateDynamicStiffnessMatrixComponents(
-        velocity, acceleration, sectional_mass_matrix, iteration_matrix
-    );
+    auto stiffness_matrix = Kokkos::View<double**>("stiffness_matrix", 6, 6);
+    NodalDynamicStiffnessMatrix(velocity, acceleration, sectional_mass_matrix, stiffness_matrix);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        iteration_matrix,
+        stiffness_matrix,
         {
             {0., 0., 0., -0.0007971906522637619, 0.0005659012196057377,
              -0.000014313806600944243},  // row 1
@@ -683,7 +683,7 @@ TEST(SolverTest, CalculateDynamicStiffnessMatrixComponents) {
     );
 }
 
-TEST(SolverTest, CalculateIterationMatrixComponents) {
+TEST(SolverTest, NodalStaticStiffnessMatrixComponents) {
     auto elastic_force_fc = gen_alpha_solver::create_vector(
         {0.1023527958818833, 0.1512321779691288, 0.2788924951018168, 0.4003985306163255,
          0.3249298550145402, 0.5876343707088096}
@@ -718,7 +718,7 @@ TEST(SolverTest, CalculateIterationMatrixComponents) {
     auto P_matrix = Kokkos::View<double**>("P_matrix", 6, 6);
     auto Q_matrix = Kokkos::View<double**>("Q_matrix", 6, 6);
 
-    CalculateIterationMatrixComponents(
+    NodalStaticStiffnessMatrixComponents(
         elastic_force_fc, position_vector_derivatives, gen_coords_derivatives, stiffness, O_matrix,
         P_matrix, Q_matrix
     );
@@ -764,7 +764,7 @@ TEST(SolverTest, CalculateIterationMatrixComponents) {
     );
 }
 
-TEST(SolverTest, CalculateStaticIterationMatrixWithZeroValues) {
+TEST(SolverTest, ElementalStaticStiffnessMatrixWithZeroValues) {
     // 5 nodes on a line
     auto position_vectors = gen_alpha_solver::create_vector({
         0., 0., 0., 1., 0., 0., 0.,  // node 1
@@ -802,14 +802,14 @@ TEST(SolverTest, CalculateStaticIterationMatrixWithZeroValues) {
     );
 
     auto iteration_matrix = Kokkos::View<double[30][30]>("iteration_matrix");
-    CalculateStaticIterationMatrix(
+    ElementalStaticStiffnessMatrix(
         position_vectors, generalized_coords, stiffness, quadrature, iteration_matrix
     );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(iteration_matrix, zeros_30x30);
 }
 
-TEST(SolverTest, CalculateStaticIterationMatrixWithNonZeroValues) {
+TEST(SolverTest, ElementalStaticStiffnessMatrixWithNonZeroValues) {
     auto position_vectors = gen_alpha_solver::create_vector(
         {// node 1
          0., 0., 0., 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
@@ -861,7 +861,7 @@ TEST(SolverTest, CalculateStaticIterationMatrixWithNonZeroValues) {
     auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
     auto iteration_matrix = Kokkos::View<double[30][30]>("iteration_matrix");
-    CalculateStaticIterationMatrix(
+    ElementalStaticStiffnessMatrix(
         position_vectors, generalized_coords, stiffness, quadrature, iteration_matrix
     );
 
@@ -870,7 +870,7 @@ TEST(SolverTest, CalculateStaticIterationMatrixWithNonZeroValues) {
     );
 }
 
-TEST(SolverTest, ConstraintsResidualVector) {
+TEST(SolverTest, ElementalConstraintForcesResidual) {
     auto position_vectors = gen_alpha_solver::create_vector(
         {0., 0., 0., 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
          -0.18831121859148398}
@@ -882,7 +882,7 @@ TEST(SolverTest, ConstraintsResidualVector) {
 
     auto constraints_residual = Kokkos::View<double[6]>("constraints_residual");
 
-    ConstraintsResidualVector(generalized_coords, position_vectors, constraints_residual);
+    ElementalConstraintForcesResidual(generalized_coords, position_vectors, constraints_residual);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         // constraints_residual should be same as the generalized_coords where
@@ -891,7 +891,7 @@ TEST(SolverTest, ConstraintsResidualVector) {
     );
 }
 
-TEST(SolverTest, ConstraintsGradientMatrix) {
+TEST(SolverTest, ElementalConstraintForcesGradientMatrix) {
     auto position_vectors = gen_alpha_solver::create_vector(
         {// node 1
          0., 0., 0., 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
@@ -927,7 +927,9 @@ TEST(SolverTest, ConstraintsGradientMatrix) {
 
     auto constraint_gradients = Kokkos::View<double[6][30]>("constraint_gradients");
 
-    ConstraintsGradientMatrix(generalized_coords, position_vectors, constraint_gradients);
+    ElementalConstraintForcesGradientMatrix(
+        generalized_coords, position_vectors, constraint_gradients
+    );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         constraint_gradients,
