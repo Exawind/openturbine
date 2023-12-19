@@ -66,7 +66,8 @@ void ElementalStaticForcesResidual(
 /// Transforms the provided 6 x 6 mass matrix in material/current configuration -> inertial basis
 /// based on the given rotation matrices
 void SectionalMassMatrix(
-    const MassMatrix& mass_matrix, Kokkos::View<double**> rotation_0,
+    const MassMatrix& mass_matrix,
+    Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation_0,
     Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation,
     Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
         sectional_mass_matrix
@@ -74,7 +75,8 @@ void SectionalMassMatrix(
 
 /// Calculates the inertial forces based on the sectional mass matrix, velocity, and acceleration
 void NodalInertialForces(
-    Kokkos::View<double*> velocity, Kokkos::View<double*> acceleration,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> velocity,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> acceleration,
     const MassMatrix& sectional_mass_matrix,
     Kokkos::View<double[kNumberOfLieGroupComponents]> inertial_forces_fc
 );
@@ -82,14 +84,14 @@ void NodalInertialForces(
 /// Calculates the dynamic residual vector for a beam element
 void ElementalInertialForcesResidual(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-    const Quadrature& quadrature, const Kokkos::View<double*> velocity,
-    const Kokkos::View<double*> acceleration, const MassMatrix& mass_matrix,
-    Kokkos::View<double*> residual
+    const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
+    const MassMatrix& mass_matrix, const Quadrature& quadrature, Kokkos::View<double*> residual
 );
 
 void NodalStaticStiffnessMatrixComponents(
-    const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
-    const Kokkos::View<double*> gen_coords_derivatives,
+    const Kokkos::View<double[kNumberOfLieGroupComponents]> elastic_force_fc,
+    const Kokkos::View<double[kNumberOfLieAlgebraComponents]> pos_vector_derivatives,
+    const Kokkos::View<double[kNumberOfLieAlgebraComponents]> gen_coords_derivatives,
     const Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
         sectional_stiffness,
     Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> O_matrix,
@@ -97,21 +99,24 @@ void NodalStaticStiffnessMatrixComponents(
     Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> Q_matrix
 );
 
-/// Calculates the static iteration matrix for a beam element
+/// Calculates the static stiffness matrix for a beam element
 void ElementalStaticStiffnessMatrix(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature,
-    Kokkos::View<double**> iteration_matrix
+    Kokkos::View<double**> stiffness_matrix
 );
 
 void NodalGyroscopicMatrix(
-    Kokkos::View<double*> velocity, const MassMatrix& sectional_mass_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> velocity,
+    const MassMatrix& sectional_mass_matrix,
     Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> gyroscopic_matrix
 );
 
 void NodalDynamicStiffnessMatrix(
-    Kokkos::View<double*> velocity, Kokkos::View<double*> acceleration,
-    const MassMatrix& sectional_mass_matrix, Kokkos::View<double**> iteration_matrix
+    Kokkos::View<double[kNumberOfLieGroupComponents]> velocity,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> acceleration,
+    const MassMatrix& sectional_mass_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> stiffness_matrix
 );
 
 void ElementalInertialMatrices(

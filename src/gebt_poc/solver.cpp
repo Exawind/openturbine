@@ -264,7 +264,8 @@ void ElementalStaticForcesResidual(
 }
 
 void SectionalMassMatrix(
-    const MassMatrix& mass_matrix, Kokkos::View<double**> rotation_0,
+    const MassMatrix& mass_matrix,
+    Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation_0,
     Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation,
     Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
         sectional_mass_matrix
@@ -300,7 +301,8 @@ void SectionalMassMatrix(
 }
 
 void NodalInertialForces(
-    Kokkos::View<double*> velocity, Kokkos::View<double*> acceleration,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> velocity,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> acceleration,
     const MassMatrix& sectional_mass_matrix,
     Kokkos::View<double[kNumberOfLieGroupComponents]> inertial_forces_fc
 ) {
@@ -354,9 +356,8 @@ void NodalInertialForces(
 
 void ElementalInertialForcesResidual(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-    const Quadrature& quadrature, const Kokkos::View<double*> velocity,
-    const Kokkos::View<double*> acceleration, const MassMatrix& mass_matrix,
-    Kokkos::View<double*> residual
+    const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
+    const MassMatrix& mass_matrix, const Quadrature& quadrature, Kokkos::View<double*> residual
 ) {
     const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
     const auto order = n_nodes - 1;
@@ -516,8 +517,9 @@ void CalculateQMatrix(
 }
 
 void NodalStaticStiffnessMatrixComponents(
-    const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
-    const Kokkos::View<double*> gen_coords_derivatives,
+    const Kokkos::View<double[kNumberOfLieGroupComponents]> elastic_force_fc,
+    const Kokkos::View<double[kNumberOfLieAlgebraComponents]> pos_vector_derivatives,
+    const Kokkos::View<double[kNumberOfLieAlgebraComponents]> gen_coords_derivatives,
     const Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
         sectional_stiffness,
     Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> O_matrix,
@@ -672,7 +674,8 @@ void ElementalStaticStiffnessMatrix(
 }
 
 void NodalGyroscopicMatrix(
-    Kokkos::View<double*> velocity, const MassMatrix& sectional_mass_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> velocity,
+    const MassMatrix& sectional_mass_matrix,
     Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> gyroscopic_matrix
 ) {
     // The Gyroscopic matrix is defined as
@@ -722,8 +725,10 @@ void NodalGyroscopicMatrix(
 }
 
 void NodalDynamicStiffnessMatrix(
-    Kokkos::View<double*> velocity, Kokkos::View<double*> acceleration,
-    const MassMatrix& sectional_mass_matrix, Kokkos::View<double**> stiffness_matrix
+    Kokkos::View<double[kNumberOfLieGroupComponents]> velocity,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> acceleration,
+    const MassMatrix& sectional_mass_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> stiffness_matrix
 ) {
     // The dynamic stiffness matrix is defined as
     // {dyn_stiffness_matrix}_6x6 = [
