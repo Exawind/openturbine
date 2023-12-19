@@ -764,6 +764,16 @@ TEST(SolverTest, ElementalInertialMatrices) {
         position_vectors, generalized_coords, velocity, acceleration, sectional_mass_matrix,
         quadrature, element_mass_matrix, element_gyroscopic_matrix, element_dynamic_stiffness_matrix
     );
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        element_mass_matrix, expected_mass_matrix_30x30
+    );
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        element_gyroscopic_matrix, expected_gyroscopic_matrix_30x30
+    );
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        element_dynamic_stiffness_matrix, expected_dynamic_stiffness_matrix_30x30
+    );
 }
 
 TEST(SolverTest, NodalStaticStiffnessMatrixComponents) {

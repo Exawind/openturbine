@@ -884,7 +884,6 @@ void ElementalInertialMatrices(
         );
 
         const auto q_weight = quadrature.GetQuadratureWeights()[k];
-
         for (size_t i = 0; i < n_nodes; ++i) {
             for (size_t j = 0; j < n_nodes; ++j) {
                 const auto pair6 = Kokkos::make_pair(0, 6);
@@ -911,33 +910,6 @@ void ElementalInertialMatrices(
             }
         }
     }
-
-    // std::cout << "element_mass_matrix: \n";
-    // // Print in scientific notation
-    // for (size_t i = 0; i < element_mass_matrix.extent(0); ++i) {
-    //     for (size_t j = 0; j < element_mass_matrix.extent(1); ++j) {
-    //         std::cout << std::scientific << element_mass_matrix(i, j) << " ";
-    //     }
-    //     std::cout << "\n";
-    // }
-
-    // std::cout << "element_gyroscopic_matrix: \n";
-    // // Print in scientific notation
-    // for (size_t i = 0; i < element_gyroscopic_matrix.extent(0); ++i) {
-    //     for (size_t j = 0; j < element_gyroscopic_matrix.extent(1); ++j) {
-    //         std::cout << std::scientific << element_gyroscopic_matrix(i, j) << " ";
-    //     }
-    //     std::cout << "\n";
-    // }
-
-    // std::cout << "element_dynamic_stiffness_matrix: \n";
-    // // Print in scientific notation
-    // for (size_t i = 0; i < element_dynamic_stiffness_matrix.extent(0); ++i) {
-    //     for (size_t j = 0; j < element_dynamic_stiffness_matrix.extent(1); ++j) {
-    //         std::cout << std::scientific << element_dynamic_stiffness_matrix(i, j) << " ";
-    //     }
-    //     std::cout << "\n";
-    // }
 }
 
 void ElementalConstraintForcesResidual(
