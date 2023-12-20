@@ -73,7 +73,7 @@ public:
     }
 
 private:
-    Kokkos::View<double**> position_vectors_;
+    Kokkos::View<double* [7]> position_vectors_;
     StiffnessMatrix stiffness_matrix_;
     UserDefinedQuadrature quadrature_;
 };

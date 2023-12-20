@@ -40,7 +40,7 @@ void BMatrix(Kokkos::View<double**> constraints_gradient_matrix) {
 }
 
 ClampedBeamLinearizationParameters::ClampedBeamLinearizationParameters(
-    Kokkos::View<double**> position_vectors, StiffnessMatrix stiffness_matrix,
+    Kokkos::View<double* [7]> position_vectors, StiffnessMatrix stiffness_matrix,
     UserDefinedQuadrature quadrature
 )
     : position_vectors_(position_vectors),
