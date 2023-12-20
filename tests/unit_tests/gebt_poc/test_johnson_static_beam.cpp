@@ -2,9 +2,9 @@
 
 #include <gtest/gtest.h>
 
-#include "src/gebt_poc/static_beam_element.h"
 #include "src/gebt_poc/gen_alpha_2D.h"
 #include "src/gebt_poc/solver.h"
+#include "src/gebt_poc/static_beam_element.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc::tests {
@@ -314,9 +314,7 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
         0., 0., 0.5, 1., gen_alpha_solver::TimeStepper(0., 1., 1, 20), false
     );
     std::shared_ptr<LinearizationParameters> static_beam_lin_params =
-        std::make_shared<StaticBeamLinearizationParameters>(
-            position_vectors, stiffness, quadrature
-        );
+        std::make_shared<StaticBeamLinearizationParameters>(position_vectors, stiffness, quadrature);
     auto results =
         time_integrator.Integrate(initial_state, lagrange_mults.extent(0), static_beam_lin_params);
     auto final_state = results.back();
