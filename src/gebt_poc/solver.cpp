@@ -10,24 +10,25 @@ namespace openturbine::gebt_poc {
 
 void InterpolateNodalValues(
     Kokkos::View<double*> nodal_values, std::vector<double> interpolation_function,
-    Kokkos::View<double*> interpolated_values
+    Kokkos::View<double*> interpolated_values, const size_t n_components
 ) {
-    const auto n_nodes = nodal_values.extent(0) / kNumberOfLieAlgebraComponents;
-    KokkosBlas::fill(interpolated_values, 0.);
+    Kokkos::deep_copy(interpolated_values, 0.);
+    const auto n_nodes = nodal_values.extent(0) / n_components;
     for (std::size_t i = 0; i < n_nodes; ++i) {
-        auto index = i * kNumberOfLieAlgebraComponents;
+        auto index = i * n_components;
         KokkosBlas::axpy(
             interpolation_function[i],
-            Kokkos::subview(
-                nodal_values, Kokkos::pair(index, index + kNumberOfLieAlgebraComponents)
-            ),
+            Kokkos::subview(nodal_values, Kokkos::pair(index, index + n_components)),
             interpolated_values
         );
     }
-    // Normalize the rotation quaternion
+
+    // Normalize the rotation quaternion if it is not already normalized
+    if (n_components != kNumberOfLieAlgebraComponents) {
+        return;
+    }
     auto q = Kokkos::subview(interpolated_values, Kokkos::pair(3, 7));
-    auto norm = KokkosBlas::nrm2(q);
-    if (norm != 0.0) {
+    if (auto norm = KokkosBlas::nrm2(q); norm != 0. && norm != 1.) {
         KokkosBlas::scal(q, 1. / norm, q);
     }
 }
@@ -54,10 +55,12 @@ void InterpolateNodalValueDerivatives(
     KokkosBlas::scal(interpolated_values, 1. / jacobian, interpolated_values);
 }
 
-void CalculateCurvature(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> gen_coords_derivative,
-    Kokkos::View<double*> curvature
+void NodalCurvature(
+    const Kokkos::View<double[kNumberOfLieAlgebraComponents]> gen_coords,
+    const Kokkos::View<double[kNumberOfLieAlgebraComponents]> gen_coords_derivative,
+    const Kokkos::View<double[kNumberOfVectorComponents]> curvature
 ) {
+    Kokkos::deep_copy(curvature, 0.);
     // curvature = B * q_prime
     auto b_matrix = Kokkos::View<double[3][4]>("b_matrix");
     gen_alpha_solver::BMatrixForQuaternions(
@@ -71,6 +74,7 @@ void CalculateSectionalStrain(
     Kokkos::View<double*> pos_vector_derivatives_qp, Kokkos::View<double*> gen_coords_derivatives_qp,
     Kokkos::View<double*> curvature, Kokkos::View<double*> sectional_strain
 ) {
+    Kokkos::deep_copy(sectional_strain, 0.);
     // Calculate the sectional strain based on Eq. (35) in the "SO(3)-based GEBT Beam" document
     // in theory guide
     auto sectional_strain_1 = Kokkos::subview(sectional_strain, Kokkos::make_pair(0, 3));
@@ -84,8 +88,9 @@ void CalculateSectionalStrain(
     Kokkos::deep_copy(sectional_strain_2, curvature);
 }
 
-void CalculateSectionalStiffness(
-    const StiffnessMatrix& stiffness, Kokkos::View<double**> rotation_0,
+void SectionalStiffness(
+    const StiffnessMatrix& stiffness,
+    Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation_0,
     Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation,
     Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
         sectional_stiffness
@@ -122,10 +127,11 @@ void CalculateSectionalStiffness(
     );
 }
 
-void CalculateElasticForces(
-    const Kokkos::View<double*> sectional_strain, Kokkos::View<double**> rotation,
-    const Kokkos::View<double*> pos_vector_derivatives,
-    const Kokkos::View<double*> gen_coords_derivatives,
+void NodalElasticForces(
+    const Kokkos::View<double[kNumberOfLieGroupComponents]> sectional_strain,
+    Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation,
+    const Kokkos::View<double[kNumberOfLieAlgebraComponents]> pos_vector_derivatives,
+    const Kokkos::View<double[kNumberOfLieAlgebraComponents]> gen_coords_derivatives,
     const Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
         sectional_stiffness,
     Kokkos::View<double[kNumberOfLieGroupComponents]> elastic_forces_fc,
@@ -163,7 +169,7 @@ void CalculateElasticForces(
     );
 }
 
-void CalculateStaticResidual(
+void ElementalStaticForcesResidual(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature, Kokkos::View<double*> residual
 ) {
@@ -218,7 +224,7 @@ void CalculateStaticResidual(
             );
 
             // Calculate the curvature and sectional strain
-            CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp, curvature);
+            NodalCurvature(gen_coords_qp, gen_coords_derivatives_qp, curvature);
             CalculateSectionalStrain(
                 pos_vector_derivatives_qp, gen_coords_derivatives_qp, curvature, sectional_strain
             );
@@ -230,14 +236,14 @@ void CalculateStaticResidual(
             auto rotation = gen_alpha_solver::EulerParameterToRotationMatrix(
                 Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
             );
-            CalculateSectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
+            SectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
 
             // Calculate elastic forces i.e. F^C and F^D vectors
             auto elastic_forces_fc =
                 Kokkos::View<double[kNumberOfLieGroupComponents]>("elastic_forces_fc");
             auto elastic_forces_fd =
                 Kokkos::View<double[kNumberOfLieGroupComponents]>("elastic_forces_fd");
-            CalculateElasticForces(
+            NodalElasticForces(
                 sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
                 sectional_stiffness, elastic_forces_fc, elastic_forces_fd
             );
@@ -251,6 +257,174 @@ void CalculateStaticResidual(
                         q_weight *
                         (shape_function_derivative_vector(node_count) * elastic_forces_fc(i) +
                          jacobian * shape_function_vector(node_count) * elastic_forces_fd(i));
+                }
+            );
+        }
+    }
+}
+
+void SectionalMassMatrix(
+    const MassMatrix& mass_matrix,
+    Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation_0,
+    Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]> rotation,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
+        sectional_mass_matrix
+) {
+    auto total_rotation =
+        Kokkos::View<double[kNumberOfVectorComponents][kNumberOfVectorComponents]>("total_rotation");
+    KokkosBlas::gemm("N", "N", 1., rotation, rotation_0, 0., total_rotation);
+
+    // rotation_matrix_6x6 = [
+    //    [total_rotation]          [0]_3x3
+    //        [0]_3x3           total_rotation
+    // ]
+    auto rotation_matrix =
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+            "rotation_matrix"
+        );
+    Kokkos::deep_copy(rotation_matrix, 0.);
+    auto rotation_matrix_1 =
+        Kokkos::subview(rotation_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
+    Kokkos::deep_copy(rotation_matrix_1, total_rotation);
+    auto rotation_matrix_2 =
+        Kokkos::subview(rotation_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+    Kokkos::deep_copy(rotation_matrix_2, total_rotation);
+
+    // Calculate the sectional mass matrix in inertial basis
+    Kokkos::deep_copy(sectional_mass_matrix, 0.);
+    auto mass_matrix_left_rot =
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>("temp");
+    KokkosBlas::gemm(
+        "N", "N", 1., rotation_matrix, mass_matrix.GetMassMatrix(), 0., mass_matrix_left_rot
+    );
+    KokkosBlas::gemm("N", "T", 1., mass_matrix_left_rot, rotation_matrix, 0., sectional_mass_matrix);
+}
+
+void NodalInertialForces(
+    Kokkos::View<double[kNumberOfLieGroupComponents]> velocity,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> acceleration,
+    const MassMatrix& sectional_mass_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> inertial_forces_fc
+) {
+    // The inertial forces vector is defined as
+    // {inertial_forces}_6x1 = {
+    //     mass * { u_dot_dot + (omega_dot_tilde + omega_tilde * omega_tilde) * eta }_3x1,
+    //     { mass * eta_tilde * u_dot_dot + [rho] * omega_dot + omega_tilde * [rho] * omega }_3x1
+    // }
+    // where,
+    // mass - 1x1 = scalar mass of the beam element (from the sectional mass matrix)
+    // u_dot_dot - 3x1 = translational acceleration of the center of mass of the beam element
+    // omega - 3x1 = angular velocity of the beam element
+    // omega_dot - 3x1 = angular acceleration of the beam element
+    // omega_tilde - 3x3 = skew symmetric matrix of omega
+    // eta - 3x1 = center of mass of the beam element
+    // eta_tilde - 3x3 = skew symmetric matrix of eta
+    // rho - 3x3 = moment of inertia matrix of the beam element (from the sectional mass matrix)
+
+    Kokkos::deep_copy(inertial_forces_fc, 0.);
+
+    // Calculate mass, {eta}, and [rho] from the sectional mass matrix
+    auto mass = sectional_mass_matrix.GetMass();
+    auto eta = sectional_mass_matrix.GetCenterOfMass();
+    auto rho = sectional_mass_matrix.GetMomentOfInertia();
+
+    // Calculate the first 3 elements of the inertial forces vector
+    auto inertial_forces_fc_1 = Kokkos::subview(inertial_forces_fc, Kokkos::make_pair(0, 3));
+    auto angular_velocity = Kokkos::subview(velocity, Kokkos::make_pair(3, 6));
+    auto angular_velocity_tilde = gen_alpha_solver::create_cross_product_matrix(angular_velocity);
+    auto accelaration = Kokkos::subview(acceleration, Kokkos::make_pair(0, 3));
+    auto angular_acceleration = Kokkos::subview(acceleration, Kokkos::make_pair(3, 6));
+    auto angular_acceleration_tilde =
+        gen_alpha_solver::create_cross_product_matrix(angular_acceleration);
+
+    auto temp = Kokkos::View<double[3][3]>("temp");
+    KokkosBlas::gemm("N", "N", 1., angular_velocity_tilde, angular_velocity_tilde, 0., temp);
+    KokkosBlas::axpy(1., angular_acceleration_tilde, temp);
+    KokkosBlas::gemv("N", mass, temp, eta, 0., inertial_forces_fc_1);
+    KokkosBlas::axpy(mass, accelaration, inertial_forces_fc_1);
+
+    // Calculate the last 3 elements of the inertial forces vector
+    auto inertial_forces_fc_2 = Kokkos::subview(inertial_forces_fc, Kokkos::make_pair(3, 6));
+    auto center_of_mass_tilde = gen_alpha_solver::create_cross_product_matrix(eta);
+
+    KokkosBlas::gemv("N", 1., rho, angular_acceleration, 0., inertial_forces_fc_2);
+    auto temp2 = Kokkos::View<double[3][3]>("temp2");
+    KokkosBlas::gemm("N", "N", 1., angular_velocity_tilde, rho, 0., temp2);
+    KokkosBlas::gemv("N", 1., temp2, angular_velocity, 1., inertial_forces_fc_2);
+    KokkosBlas::gemv("N", mass, center_of_mass_tilde, accelaration, 1., inertial_forces_fc_2);
+}
+
+void ElementalInertialForcesResidual(
+    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+    const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
+    const MassMatrix& mass_matrix, const Quadrature& quadrature, Kokkos::View<double*> residual
+) {
+    const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
+    const auto order = n_nodes - 1;
+    const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
+
+    auto nodes = Kokkos::View<double* [3]>("nodes", n_nodes);
+    for (std::size_t i = 0; i < n_nodes; ++i) {
+        auto index = i * kNumberOfLieAlgebraComponents;
+        Kokkos::deep_copy(
+            Kokkos::subview(nodes, i, Kokkos::ALL),
+            Kokkos::subview(position_vectors, Kokkos::make_pair(index, index + 3))
+        );
+    }
+
+    // Allocate Views for some required intermediate variables
+    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_qp");
+    auto position_vector_qp =
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("position_vector_qp");
+    auto velocity_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("velocity_qp");
+    auto acceleration_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("acceleration_qp");
+    auto sectional_mass_matrix =
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+            "sectional_mass_matrix"
+        );
+    auto inertial_f = Kokkos::View<double[kNumberOfLieGroupComponents]>("inertial_f");
+
+    Kokkos::deep_copy(residual, 0.);
+    for (size_t i = 0; i < n_nodes; ++i) {
+        const auto node_count = i;
+        for (size_t j = 0; j < n_quad_pts; ++j) {
+            // Calculate required interpolated values at the quadrature point
+            const auto q_pt = quadrature.GetQuadraturePoints()[j];
+            auto shape_function = LagrangePolynomial(order, q_pt);
+            auto shape_function_derivative = LagrangePolynomialDerivative(order, q_pt);
+            auto shape_function_vector = gen_alpha_solver::create_vector(shape_function);
+            auto shape_function_derivative_vector =
+                gen_alpha_solver::create_vector(shape_function_derivative);
+
+            auto jacobian = CalculateJacobian(nodes, shape_function_derivative_vector);
+            InterpolateNodalValues(gen_coords, shape_function, gen_coords_qp);
+            InterpolateNodalValues(position_vectors, shape_function, position_vector_qp);
+            InterpolateNodalValues(
+                velocity, shape_function, velocity_qp, kNumberOfLieGroupComponents
+            );
+            InterpolateNodalValues(
+                acceleration, shape_function, acceleration_qp, kNumberOfLieGroupComponents
+            );
+
+            // Calculate the sectional mass matrix in inertial basis
+            auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
+                Kokkos::subview(position_vector_qp, Kokkos::make_pair(3, 7))
+            );
+            auto rotation = gen_alpha_solver::EulerParameterToRotationMatrix(
+                Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
+            );
+            SectionalMassMatrix(mass_matrix, rotation_0, rotation, sectional_mass_matrix);
+
+            auto mm = MassMatrix(sectional_mass_matrix);
+            NodalInertialForces(velocity_qp, acceleration_qp, mm, inertial_f);
+
+            // Calculate the residual at the quadrature point
+            const auto q_weight = quadrature.GetQuadratureWeights()[j];
+            Kokkos::parallel_for(
+                kNumberOfLieGroupComponents,
+                KOKKOS_LAMBDA(const size_t i) {
+                    residual(node_count * kNumberOfLieGroupComponents + i) +=
+                        q_weight * (jacobian * shape_function_vector(node_count) * inertial_f(i));
                 }
             );
         }
@@ -342,9 +516,10 @@ void CalculateQMatrix(
     KokkosBlas::gemm("T", "N", 1., values, val, 0., non_zero_term);
 }
 
-void CalculateIterationMatrixComponents(
-    const Kokkos::View<double*> elastic_force_fc, const Kokkos::View<double*> pos_vector_derivatives,
-    const Kokkos::View<double*> gen_coords_derivatives,
+void NodalStaticStiffnessMatrixComponents(
+    const Kokkos::View<double[kNumberOfLieGroupComponents]> elastic_force_fc,
+    const Kokkos::View<double[kNumberOfLieAlgebraComponents]> pos_vector_derivatives,
+    const Kokkos::View<double[kNumberOfLieAlgebraComponents]> gen_coords_derivatives,
     const Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>
         sectional_stiffness,
     Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> O_matrix,
@@ -381,10 +556,10 @@ void CalculateIterationMatrixComponents(
     CalculateQMatrix(N_tilde, C11, values, Q_matrix);
 }
 
-void CalculateStaticIterationMatrix(
+void ElementalStaticStiffnessMatrix(
     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature,
-    Kokkos::View<double**> iteration_matrix
+    Kokkos::View<double**> stiffness_matrix
 ) {
     const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
     const auto order = n_nodes - 1;
@@ -420,7 +595,7 @@ void CalculateStaticIterationMatrix(
     auto Q_matrix =
         Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>("Q_matrix");
 
-    Kokkos::deep_copy(iteration_matrix, 0.);
+    Kokkos::deep_copy(stiffness_matrix, 0.);
     for (size_t i = 0; i < n_nodes; ++i) {
         for (size_t j = 0; j < n_nodes; ++j) {
             for (size_t k = 0; k < n_quad_pts; ++k) {
@@ -443,7 +618,7 @@ void CalculateStaticIterationMatrix(
                 );
 
                 // Calculate the curvature and sectional strain
-                CalculateCurvature(gen_coords_qp, gen_coords_derivatives_qp, curvature);
+                NodalCurvature(gen_coords_qp, gen_coords_derivatives_qp, curvature);
                 CalculateSectionalStrain(
                     pos_vector_derivatives_qp, gen_coords_derivatives_qp, curvature, sectional_strain
                 );
@@ -455,20 +630,20 @@ void CalculateStaticIterationMatrix(
                 auto rotation = gen_alpha_solver::EulerParameterToRotationMatrix(
                     Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
                 );
-                CalculateSectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
+                SectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
 
                 // Calculate elastic forces i.e. F^C and F^D vectors
                 auto elastic_forces_fc =
                     Kokkos::View<double[kNumberOfLieGroupComponents]>("elastic_forces_fc");
                 auto elastic_forces_fd =
                     Kokkos::View<double[kNumberOfLieGroupComponents]>("elastic_forces_fd");
-                CalculateElasticForces(
+                NodalElasticForces(
                     sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
                     sectional_stiffness, elastic_forces_fc, elastic_forces_fd
                 );
 
-                // Calculate the iteration matrix components, i.e. O, P, and Q matrices
-                CalculateIterationMatrixComponents(
+                // Calculate the stiffness matrix components, i.e. O, P, and Q matrices
+                NodalStaticStiffnessMatrixComponents(
                     elastic_forces_fc, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
                     sectional_stiffness, O_matrix, P_matrix, Q_matrix
                 );
@@ -479,7 +654,7 @@ void CalculateStaticIterationMatrix(
                         {0, 0}, {kNumberOfLieGroupComponents, kNumberOfLieGroupComponents}
                     ),
                     KOKKOS_LAMBDA(const size_t ii, const size_t jj) {
-                        iteration_matrix(
+                        stiffness_matrix(
                             i * kNumberOfLieGroupComponents + ii,
                             j * kNumberOfLieGroupComponents + jj
                         ) += q_weight *
@@ -498,10 +673,249 @@ void CalculateStaticIterationMatrix(
     }
 }
 
-void ConstraintsResidualVector(
-    const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
-    Kokkos::View<double*> constraints_residual
+void NodalGyroscopicMatrix(
+    Kokkos::View<double[kNumberOfLieGroupComponents]> velocity,
+    const MassMatrix& sectional_mass_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> gyroscopic_matrix
 ) {
+    // The Gyroscopic matrix is defined as
+    // {gyroscopic_matrix}_6x6 = [
+    //     [0]_3x3      ~[omega_tilde * mass * eta]^T + omega_tilde * mass * eta_tilde^T
+    //     [0]_3x3                  omega_tilde * rho - ~[rho * omega]
+    // ]
+    // where,
+    // mass - 1x1 = scalar mass of the beam element (from the sectional mass matrix)
+    // eta - 3x1 = center of mass of the beam element
+    // omega - 3x1 = angular velocity of the beam element
+    // omega_tilde - 3x3 = skew symmetric matrix of omega
+    // eta_tilde - 3x3 = skew symmetric matrix of eta
+    // rho - 3x3 = moment of inertia matrix of the beam element (from the sectional mass matrix)
+
+    Kokkos::deep_copy(gyroscopic_matrix, 0.);
+
+    // Calculate mass, {eta}, and [rho] from the sectional mass matrix
+    auto mass = sectional_mass_matrix.GetMass();
+    auto eta = sectional_mass_matrix.GetCenterOfMass();
+    auto rho = sectional_mass_matrix.GetMomentOfInertia();
+
+    // Calculate the top right block i.e. quadrant 1 of the gyroscopic matrix
+    auto gyroscopic_matrix_q1 =
+        Kokkos::subview(gyroscopic_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
+    auto angular_velocity = Kokkos::subview(velocity, Kokkos::make_pair(3, 6));
+    auto angular_velocity_tilde = gen_alpha_solver::create_cross_product_matrix(angular_velocity);
+    auto center_of_mass_tilde = gen_alpha_solver::create_cross_product_matrix(eta);
+
+    auto temp1 = Kokkos::View<double[3]>("temp1");
+    KokkosBlas::gemv("N", mass, angular_velocity_tilde, eta, 0., temp1);
+    auto gyroscopic_matrix_q1_part1 =
+        gen_alpha_solver::transpose_matrix(gen_alpha_solver::create_cross_product_matrix(temp1));
+    KokkosBlas::gemm(
+        "N", "T", mass, angular_velocity_tilde, center_of_mass_tilde, 0., gyroscopic_matrix_q1
+    );
+    KokkosBlas::axpy(1., gyroscopic_matrix_q1_part1, gyroscopic_matrix_q1);
+
+    // Calculate the bottom right block i.e. quadrant 4 of the gyroscopic matrix
+    auto gyroscopic_matrix_q4 =
+        Kokkos::subview(gyroscopic_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+    KokkosBlas::gemm("N", "N", 1., angular_velocity_tilde, rho, 0., gyroscopic_matrix_q4);
+    auto temp2 = Kokkos::View<double[3]>("temp2");
+    KokkosBlas::gemv("N", 1., rho, angular_velocity, 1., temp2);
+    auto gyroscopic_matrix_q4_part2 = gen_alpha_solver::create_cross_product_matrix(temp2);
+    KokkosBlas::axpy(-1., gyroscopic_matrix_q4_part2, gyroscopic_matrix_q4);
+}
+
+void NodalDynamicStiffnessMatrix(
+    Kokkos::View<double[kNumberOfLieGroupComponents]> velocity,
+    Kokkos::View<double[kNumberOfLieGroupComponents]> acceleration,
+    const MassMatrix& sectional_mass_matrix,
+    Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]> stiffness_matrix
+) {
+    // The dynamic stiffness matrix is defined as
+    // {dyn_stiffness_matrix}_6x6 = [
+    //     [0]_3x3      (omega_dot_tilde + omega_tilde * omega_tilde) * mass * eta_tilde^T
+    //
+    //     [0]_3x3               acceleration_tilde * mass * eta_tilde + (rho * omega_dot_tilde  -
+    //                      ~[rho * omega_dot]) + omega_tilde * (rho * omega_tilde - ~[rho * omega])
+    // ]
+    // where,
+    // mass - 1x1 = scalar mass of the beam element (from the sectional mass matrix)
+    // u_dot_dot - 3x1 = translational acceleration of the center of mass of the beam element
+    // omega - 3x1 = angular velocity of the beam element
+    // omega_dot - 3x1 = angular acceleration of the beam element
+    // omega_tilde - 3x3 = skew symmetric matrix of omega
+    // eta - 3x1 = center of mass of the beam element
+    // eta_tilde - 3x3 = skew symmetric matrix of eta
+    // rho - 3x3 = moment of inertia matrix of the beam element (from the sectional mass matrix)
+
+    Kokkos::deep_copy(stiffness_matrix, 0.);
+
+    // Calculate mass, {eta}, and [rho] from the sectional mass matrix
+    auto mass = sectional_mass_matrix.GetMass();
+    auto eta = sectional_mass_matrix.GetCenterOfMass();
+    auto rho = sectional_mass_matrix.GetMomentOfInertia();
+
+    // Calculate the top right block i.e. quadrant 1 of the dynamic stiffness matrix
+    auto stiffness_matrix_q1 =
+        Kokkos::subview(stiffness_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
+    auto angular_velocity = Kokkos::subview(velocity, Kokkos::make_pair(3, 6));
+    auto angular_velocity_tilde = gen_alpha_solver::create_cross_product_matrix(angular_velocity);
+    auto angular_acceleration = Kokkos::subview(acceleration, Kokkos::make_pair(3, 6));
+    auto angular_acceleration_tilde =
+        gen_alpha_solver::create_cross_product_matrix(angular_acceleration);
+    auto center_of_mass_tilde = gen_alpha_solver::create_cross_product_matrix(eta);
+
+    auto temp1 = Kokkos::View<double[3][3]>("temp1");
+    KokkosBlas::gemm("N", "N", 1., angular_velocity_tilde, angular_velocity_tilde, 0., temp1);
+    KokkosBlas::axpy(1., angular_acceleration_tilde, temp1);
+    KokkosBlas::gemm("N", "T", mass, temp1, center_of_mass_tilde, 0., stiffness_matrix_q1);
+
+    // Calculate the bottom right block i.e. quadrant 4 of the dynamic stiffness matrix
+    auto stiffness_matrix_q4 =
+        Kokkos::subview(stiffness_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+    auto accelaration = Kokkos::subview(acceleration, Kokkos::make_pair(0, 3));
+    auto accelaration_tilde = gen_alpha_solver::create_cross_product_matrix(accelaration);
+
+    // part 1: acceleration_tilde * mass * eta_tilde
+    auto temp2 = Kokkos::View<double[3][3]>("temp2");
+    KokkosBlas::gemm("N", "N", mass, accelaration_tilde, center_of_mass_tilde, 0., temp2);
+    // part 2: (rho * omega_dot_tilde  - ~[rho * omega_dot])
+    auto temp3 = Kokkos::View<double[3][3]>("temp3");
+    KokkosBlas::gemm("N", "N", 1., rho, angular_acceleration_tilde, 0., temp3);
+    auto temp4 = Kokkos::View<double[3]>("temp4");
+    KokkosBlas::gemv("N", 1., rho, angular_acceleration, 1., temp4);
+    auto temp5 = gen_alpha_solver::create_cross_product_matrix(temp4);
+    KokkosBlas::axpy(-1., temp5, temp3);
+    // part 3: omega_tilde * (rho * omega_tilde - ~[rho * omega])
+    auto temp6 = Kokkos::View<double[3][3]>("temp6");
+    KokkosBlas::gemm("N", "N", 1., rho, angular_velocity_tilde, 0., temp6);
+    auto temp7 = Kokkos::View<double[3]>("temp7");
+    KokkosBlas::gemv("N", 1., rho, angular_velocity, 1., temp7);
+    auto temp8 = gen_alpha_solver::create_cross_product_matrix(temp7);
+    KokkosBlas::axpy(-1., temp8, temp6);
+    KokkosBlas::gemm("N", "N", 1., angular_velocity_tilde, temp6, 0., stiffness_matrix_q4);
+
+    KokkosBlas::axpy(1., temp2, stiffness_matrix_q4);
+    KokkosBlas::axpy(1., temp3, stiffness_matrix_q4);
+}
+
+void ElementalInertialMatrices(
+    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
+    const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
+    const MassMatrix& mass_matrix, const Quadrature& quadrature,
+    Kokkos::View<double**> element_mass_matrix, Kokkos::View<double**> element_gyroscopic_matrix,
+    Kokkos::View<double**> element_dynamic_stiffness_matrix
+) {
+    const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
+    const auto order = n_nodes - 1;
+    const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
+
+    auto nodes = Kokkos::View<double* [3]>("nodes", n_nodes);
+    for (std::size_t i = 0; i < n_nodes; ++i) {
+        auto index = i * kNumberOfLieAlgebraComponents;
+        Kokkos::deep_copy(
+            Kokkos::subview(nodes, i, Kokkos::ALL),
+            Kokkos::subview(position_vectors, Kokkos::make_pair(index, index + 3))
+        );
+    }
+
+    // Allocate Views for some required intermediate variables
+    auto gen_coords_qp = Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_qp");
+    auto gen_coords_derivatives_qp =
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("gen_coords_derivatives_qp");
+    auto position_vector_qp =
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("position_vector_qp");
+    auto pos_vector_derivatives_qp =
+        Kokkos::View<double[kNumberOfLieAlgebraComponents]>("pos_vector_derivatives_qp");
+    auto velocity_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("velocity_qp");
+    auto acceleration_qp = Kokkos::View<double[kNumberOfLieGroupComponents]>("acceleration_qp");
+    auto sectional_mass_matrix =
+        Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+            "sectional_mass_matrix"
+        );
+
+    Kokkos::deep_copy(element_mass_matrix, 0.);
+
+    for (size_t k = 0; k < n_quad_pts; ++k) {
+        // Calculate required interpolated values at the quadrature point
+        const auto q_pt = quadrature.GetQuadraturePoints()[k];
+        auto shape_function = LagrangePolynomial(order, q_pt);
+        auto shape_function_derivative = LagrangePolynomialDerivative(order, q_pt);
+        auto shape_function_vector = gen_alpha_solver::create_vector(shape_function);
+        auto shape_function_derivative_vector =
+            gen_alpha_solver::create_vector(shape_function_derivative);
+
+        auto jacobian = CalculateJacobian(nodes, shape_function_derivative_vector);
+        InterpolateNodalValues(gen_coords, shape_function, gen_coords_qp);
+        InterpolateNodalValueDerivatives(
+            gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
+        );
+        InterpolateNodalValues(position_vectors, shape_function, position_vector_qp);
+        InterpolateNodalValueDerivatives(
+            position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
+        );
+        InterpolateNodalValues(velocity, shape_function, velocity_qp, kNumberOfLieGroupComponents);
+        InterpolateNodalValues(
+            acceleration, shape_function, acceleration_qp, kNumberOfLieGroupComponents
+        );
+
+        // Calculate the sectional mass matrix in inertial basis
+        auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
+            Kokkos::subview(position_vector_qp, Kokkos::make_pair(3, 7))
+        );
+        auto rotation = gen_alpha_solver::EulerParameterToRotationMatrix(
+            Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
+        );
+        SectionalMassMatrix(mass_matrix, rotation_0, rotation, sectional_mass_matrix);
+
+        // Calculate the gyroscopic matrix in inertial basis
+        auto gyroscopic_matrix =
+            Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+                "gyroscopic_matrix"
+            );
+        NodalGyroscopicMatrix(velocity_qp, sectional_mass_matrix, gyroscopic_matrix);
+
+        // Calculate the dynamic stiffness matrix in inertial basis
+        auto dynamic_stiffness_matrix =
+            Kokkos::View<double[kNumberOfLieGroupComponents][kNumberOfLieGroupComponents]>(
+                "dynamic_stiffness_matrix"
+            );
+        NodalDynamicStiffnessMatrix(
+            velocity_qp, acceleration_qp, sectional_mass_matrix, dynamic_stiffness_matrix
+        );
+
+        const auto q_weight = quadrature.GetQuadratureWeights()[k];
+        for (size_t i = 0; i < n_nodes; ++i) {
+            for (size_t j = 0; j < n_nodes; ++j) {
+                const auto pair6 = Kokkos::make_pair(0, 6);
+                const auto pair_i = Kokkos::make_pair(
+                    i * kNumberOfLieGroupComponents, (i + 1) * kNumberOfLieGroupComponents
+                );
+                const auto pair_j = Kokkos::make_pair(
+                    j * kNumberOfLieGroupComponents, (j + 1) * kNumberOfLieGroupComponents
+                );
+                const auto a =
+                    q_weight * shape_function_vector(i) * shape_function_vector(j) * jacobian;
+                KokkosBlas::axpy(
+                    a, Kokkos::subview(sectional_mass_matrix, pair6, pair6),
+                    Kokkos::subview(element_mass_matrix, pair_i, pair_j)
+                );
+                KokkosBlas::axpy(
+                    a, Kokkos::subview(gyroscopic_matrix, pair6, pair6),
+                    Kokkos::subview(element_gyroscopic_matrix, pair_i, pair_j)
+                );
+                KokkosBlas::axpy(
+                    a, Kokkos::subview(dynamic_stiffness_matrix, pair6, pair6),
+                    Kokkos::subview(element_dynamic_stiffness_matrix, pair_i, pair_j)
+                );
+            }
+        }
+    }
+}
+
+void ElementalConstraintForcesResidual(
+    const Kokkos::View<double*> gen_coords, Kokkos::View<double*> constraints_residual
+) {
+    Kokkos::deep_copy(constraints_residual, 0.);
     // For the GEBT proof of concept problem (i.e. the clamped beam), the dofs are enforced to be
     // zero at the left end of the beam, so the constraint residual is simply based on the
     // generalized coordinates at the first node
@@ -515,7 +929,7 @@ void ConstraintsResidualVector(
                 )
             );
             // Set residual as translation and rotation of root node
-            // TODO: update when position & rotation are prescribed
+            // TODO: update when position & rotations are prescribed
             constraints_residual(0) = gen_coords(0);
             constraints_residual(1) = gen_coords(1);
             constraints_residual(2) = gen_coords(2);
@@ -526,7 +940,7 @@ void ConstraintsResidualVector(
     );
 }
 
-void ConstraintsGradientMatrix(
+void ElementalConstraintForcesGradientMatrix(
     const Kokkos::View<double*> gen_coords, const Kokkos::View<double*> position_vector,
     Kokkos::View<double**> constraints_gradient_matrix
 ) {
@@ -546,7 +960,7 @@ void ConstraintsGradientMatrix(
     Kokkos::deep_copy(position_cross_prod_matrix, position_0_cross_prod_matrix);
     KokkosBlas::axpy(1., translation_0_cross_prod_matrix, position_cross_prod_matrix);
 
-    // Assemble the constraint gradient matrix i.e. B matrix
+    // Assemble the constraint gradient matrix i.e. B matrix for the beam element
     // [B]_6x(n+1) = [
     //     [B11]_3x3              0            0   ....  0
     //     [B21]_3x3          [B22]_3x3        0   ....  0

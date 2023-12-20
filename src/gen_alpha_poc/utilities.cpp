@@ -111,6 +111,17 @@ Kokkos::View<double**> create_cross_product_matrix(const Kokkos::View<double*> v
     return matrix;
 }
 
+Kokkos::View<double*> convert_cross_product_matrix_to_vector(Kokkos::View<double[3][3]> matrix) {
+    auto vector = Kokkos::View<double[3]>("vector");
+    auto populate_vector = KOKKOS_LAMBDA(size_t) {
+        vector(0) = (matrix(2, 1) - matrix(1, 2)) / 2.;
+        vector(1) = (matrix(0, 2) - matrix(2, 0)) / 2.;
+        vector(2) = (matrix(1, 0) - matrix(0, 1)) / 2.;
+    };
+    Kokkos::parallel_for(1, populate_vector);
+    return vector;
+}
+
 Kokkos::View<double*> multiply_vector_with_scalar(
     const Kokkos::View<double*> vector, double scalar
 ) {

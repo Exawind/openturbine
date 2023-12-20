@@ -9,6 +9,7 @@ class State {
 public:
     static constexpr size_t kNumberOfLieGroupComponents = 7;
     static constexpr size_t kNumberOfLieAlgebraComponents = 6;
+    static constexpr size_t kNumberOfVectorComponents = 3;
 
     /// Default constructor that initializes all states to zero (assuming a single node)
     State();
@@ -53,6 +54,38 @@ private :
     Kokkos::View<double*[kNumberOfLieAlgebraComponents]> acceleration_;
     Kokkos::View<double*[kNumberOfLieAlgebraComponents]> algorithmic_acceleration_;
     // clang-format on
+};
+
+/// Class to create and store a 6 x 6 mass matrix of a rigid body
+class MassMatrix {
+public:
+    /// Constructor that initializes the mass matrix with the given mass, moments of inertia,
+    /// and center of mass
+    MassMatrix(
+        double mass, Kokkos::View<double[3]> center_of_mass,
+        Kokkos::View<double[3][3]> moment_of_inertia
+    );
+
+    /// Constructor that initializes the mass matrix with the given mass matrix
+    MassMatrix(Kokkos::View<double[6][6]> mass_matrix);
+
+    /// Returns the mass matrix of the rigid body
+    inline Kokkos::View<double**> GetMassMatrix() const { return mass_matrix_; }
+
+    /// Returns the mass of the rigid body
+    inline double GetMass() const { return mass_; }
+
+    /// Returns the center of mass of the rigid body
+    inline Kokkos::View<double[3]> GetCenterOfMass() const { return center_of_mass_; }
+
+    /// Returns the moments of inertia of the rigid body
+    inline Kokkos::View<double[3][3]> GetMomentOfInertia() const { return moment_of_inertia_; }
+
+private:
+    double mass_;                                   //< Mass of the rigid body
+    Kokkos::View<double[3]> center_of_mass_;        //< Center of mass of the rigid body
+    Kokkos::View<double[3][3]> moment_of_inertia_;  //< Moments of inertia
+    Kokkos::View<double[6][6]> mass_matrix_;        //< Mass matrix of the rigid body
 };
 
 }  // namespace openturbine::gebt_poc
