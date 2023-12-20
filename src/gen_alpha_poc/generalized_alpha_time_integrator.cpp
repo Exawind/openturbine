@@ -199,7 +199,8 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         }
 
         auto soln_increments = Kokkos::View<double*>("soln_increments", residuals.size());
-        openturbine::gebt_poc::solve_linear_system(iteration_matrix, soln_increments, residuals);
+        Kokkos::deep_copy(soln_increments, residuals);
+        openturbine::gebt_poc::solve_linear_system(iteration_matrix, soln_increments);
 
         Kokkos::View<double*> delta_x("delta_x", delta_gen_coords.size());
         Kokkos::parallel_for(

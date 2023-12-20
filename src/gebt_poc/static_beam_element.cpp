@@ -6,38 +6,49 @@
 
 namespace openturbine::gebt_poc {
 
-StaticBeamLinearizationParameters::StaticBeamLinearizationParameters()
-    : position_vectors_(Kokkos::View<double[35]>("position_vectors")),
-      stiffness_matrix_(StiffnessMatrix(gen_alpha_solver::create_matrix({
-          {1., 2., 3., 4., 5., 6.},       // row 1
-          {2., 4., 6., 8., 10., 12.},     // row 2
-          {3., 6., 9., 12., 15., 18.},    // row 3
-          {4., 8., 12., 16., 20., 24.},   // row 4
-          {5., 10., 15., 20., 25., 30.},  // row 5
-          {6., 12., 18., 24., 30., 36.}   // row 6
-      }))),
-      quadrature_(UserDefinedQuadrature(
-          std::vector<double>{
-              -0.9491079123427585,  // point 1
-              -0.7415311855993945,  // point 2
-              -0.4058451513773972,  // point 3
-              0.,                   // point 4
-              0.4058451513773972,   // point 5
-              0.7415311855993945,   // point 6
-              0.9491079123427585    // point 7
-          },
-          std::vector<double>{
-              0.1294849661688697,  // weight 1
-              0.2797053914892766,  // weight 2
-              0.3818300505051189,  // weight 3
-              0.4179591836734694,  // weight 4
-              0.3818300505051189,  // weight 5
-              0.2797053914892766,  // weight 6
-              0.1294849661688697   // weight 7
-          }
-      )) {
-    // Define the position vectors for the 5 node beam element
-    auto populate_position_vector = KOKKOS_LAMBDA(size_t) {
+// TECHDEBT Following is a hack to make things work temporarily - we should move over to
+// using 2D views for the solver functions
+void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> result) {
+    auto populate_result = KOKKOS_LAMBDA(size_t i) {
+        result(i) = view(i / view.extent(1), i % view.extent(1));
+    };
+    Kokkos::parallel_for(result.extent(0), populate_result);
+}
+
+void BMatrix(Kokkos::View<double**> constraints_gradient_matrix) {
+    // Assemble the constraint gradient matrix i.e. B matrix
+    // [B]_6x(n+1) = [
+    //     [I]_3x3        [0]       [0]   ....  [0]
+    //        [0]       [I]_3x3     [0]   ....  [0]
+    // ]
+    // where
+    // [I]_3x3 = [1]_3x3
+    // [0] = [0]_3x3
+
+    Kokkos::deep_copy(constraints_gradient_matrix, 0.);
+    auto B11 = Kokkos::subview(
+        constraints_gradient_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3)
+    );
+    auto B22 = Kokkos::subview(
+        constraints_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6)
+    );
+
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(std::size_t) {
+            B11(0, 0) = 1.;
+            B11(1, 1) = 1.;
+            B11(2, 2) = 1.;
+            B22(0, 0) = 1.;
+            B22(1, 1) = 1.;
+            B22(2, 2) = 1.;
+        }
+    );
+}
+
+struct DefinePositionVector_5NodeBeamElement {
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
         // node 1
         position_vectors_(0) = 0.;
         position_vectors_(1) = 0.;
@@ -78,8 +89,41 @@ StaticBeamLinearizationParameters::StaticBeamLinearizationParameters()
         position_vectors_(32) = -0.07193653093139739;
         position_vectors_(33) = 0.20507529985516368;
         position_vectors_(34) = 0.32309554437664584;
-    };
-    Kokkos::parallel_for(1, populate_position_vector);
+    }
+    Kokkos::View<double[35]> position_vectors_;
+};
+
+StaticBeamLinearizationParameters::StaticBeamLinearizationParameters()
+    : position_vectors_(Kokkos::View<double[35]>("position_vectors")),
+      stiffness_matrix_(StiffnessMatrix(gen_alpha_solver::create_matrix({
+          {1., 2., 3., 4., 5., 6.},       // row 1
+          {2., 4., 6., 8., 10., 12.},     // row 2
+          {3., 6., 9., 12., 15., 18.},    // row 3
+          {4., 8., 12., 16., 20., 24.},   // row 4
+          {5., 10., 15., 20., 25., 30.},  // row 5
+          {6., 12., 18., 24., 30., 36.}   // row 6
+      }))),
+      quadrature_(UserDefinedQuadrature(
+          std::vector<double>{
+              -0.9491079123427585,  // point 1
+              -0.7415311855993945,  // point 2
+              -0.4058451513773972,  // point 3
+              0.,                   // point 4
+              0.4058451513773972,   // point 5
+              0.7415311855993945,   // point 6
+              0.9491079123427585    // point 7
+          },
+          std::vector<double>{
+              0.1294849661688697,  // weight 1
+              0.2797053914892766,  // weight 2
+              0.3818300505051189,  // weight 3
+              0.4179591836734694,  // weight 4
+              0.3818300505051189,  // weight 5
+              0.2797053914892766,  // weight 6
+              0.1294849661688697   // weight 7
+          }
+      )) {
+    Kokkos::parallel_for(1, DefinePositionVector_5NodeBeamElement{position_vectors_});
 }
 
 StaticBeamLinearizationParameters::StaticBeamLinearizationParameters(
@@ -91,15 +135,6 @@ StaticBeamLinearizationParameters::StaticBeamLinearizationParameters(
       quadrature_(quadrature) {
 }
 
-// TECHDEBT Following is a hack to make things work temporarily - we should move over to
-// using 2D views for the solver functions
-void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> result) {
-    auto populate_result = KOKKOS_LAMBDA(size_t i) {
-        result(i) = view(i / view.extent(1), i % view.extent(1));
-    };
-    Kokkos::parallel_for(result.extent(0), populate_result);
-}
-
 void StaticBeamLinearizationParameters::ResidualVector(
     Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
     Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
@@ -108,7 +143,7 @@ void StaticBeamLinearizationParameters::ResidualVector(
 ) {
     // The residual vector for the generalized coordinates is given by
     // {residual} = {
-    //     {residual_gen_coords},
+    //     {residual_gen_coords} + {constraints_part2},
     //     {residual_constraints}
     // }
     const size_t zero{0};
@@ -116,6 +151,7 @@ void StaticBeamLinearizationParameters::ResidualVector(
     const auto size_constraints = lagrange_multipliers.extent(0);
     const auto size_residual = size_dofs + size_constraints;
 
+    // Part 1: Calculate the residual vector for the generalized coordinates
     auto gen_coords_1D =
         Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
     Convert2DViewTo1DView(gen_coords, gen_coords_1D);
@@ -125,6 +161,19 @@ void StaticBeamLinearizationParameters::ResidualVector(
     CalculateStaticResidual(
         position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_gen_coords
     );
+
+    // Part 2: Calculate the residual vector for the constraints
+    // {R_c} = {B(q)}^T * {lambda}
+    auto constraints_gradient_matrix =
+        Kokkos::View<double**>("constraints_gradient_matrix", size_constraints, size_dofs);
+    BMatrix(constraints_gradient_matrix);
+    auto constraints_part2 = Kokkos::View<double*>("constraints_part2", size_dofs);
+    KokkosBlas::gemv(
+        "T", 1., constraints_gradient_matrix, lagrange_multipliers, 0., constraints_part2
+    );
+
+    KokkosBlas::axpy(1., constraints_part2, residual_gen_coords);
+
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
     ConstraintsResidualVector(gen_coords_1D, position_vectors_, residual_constraints);
@@ -186,7 +235,7 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     );
 
     // Combine beam element static iteration matrix with constraints into quadrant 1
-    // quadrant_1 = K_t(q,v,v',Lambda,t) * T(h dq)
+    // quadrant_1 = K_t + K_t_part2
     auto quadrant_1 = Kokkos::subview(
         iteration_matrix, Kokkos::make_pair(zero, size_dofs), Kokkos::make_pair(zero, size_dofs)
     );
@@ -199,9 +248,7 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     );
     auto constraints_gradient_matrix =
         Kokkos::View<double**>("constraints_gradient_matrix", size_constraints, size_dofs);
-    ConstraintsGradientMatrix(gen_coords_1D, position_vectors_, constraints_gradient_matrix);
-    // TODO ** Question for reviewers **
-    // How to transpose a matrix using KokkosBlas?
+    BMatrix(constraints_gradient_matrix);
     auto temp = gen_alpha_solver::transpose_matrix(constraints_gradient_matrix);
     Kokkos::deep_copy(quadrant_2, temp);
 
@@ -211,41 +258,6 @@ void StaticBeamLinearizationParameters::IterationMatrix(
         Kokkos::make_pair(zero, size_dofs)
     );
     KokkosBlas::gemm("N", "N", 1.0, constraints_gradient_matrix, tangent_operator, 0.0, quadrant_3);
-}
-
-void StaticBeamLinearizationParameters::TangentOperator(
-    Kokkos::View<double[kNumberOfVectorComponents]> psi, Kokkos::View<double**> tangent_operator
-) {
-    auto populate_matrix = KOKKOS_LAMBDA(size_t) {
-        tangent_operator(0, 0) = 1.;
-        tangent_operator(1, 1) = 1.;
-        tangent_operator(2, 2) = 1.;
-        tangent_operator(3, 3) = 1.;
-        tangent_operator(4, 4) = 1.;
-        tangent_operator(5, 5) = 1.;
-    };
-    Kokkos::parallel_for(1, populate_matrix);
-
-    const double phi = KokkosBlas::nrm2(psi);
-    if (phi > kTolerance) {
-        auto psi_cross_prod_matrix = gen_alpha_solver::create_cross_product_matrix(psi);
-        auto psi_times_psi = Kokkos::View<double**>("psi_times_psi", 3, 3);
-        KokkosBlas::gemm(
-            "N", "N", 1.0, psi_cross_prod_matrix, psi_cross_prod_matrix, 0.0, psi_times_psi
-        );
-
-        auto quadrant4 =
-            Kokkos::subview(tangent_operator, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        auto factor_1 = (std::cos(phi) - 1.0) / (phi * phi);
-        auto factor_2 = (1.0 - std::sin(phi) / phi) / (phi * phi);
-        Kokkos::parallel_for(
-            Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>({0, 0}, {3, 3}),
-            KOKKOS_LAMBDA(const size_t i, const size_t j) {
-                quadrant4(i, j) += factor_1 * psi_cross_prod_matrix(i, j);
-                quadrant4(i, j) += factor_2 * psi_times_psi(i, j);
-            }
-        );
-    }
 }
 
 }  // namespace openturbine::gebt_poc

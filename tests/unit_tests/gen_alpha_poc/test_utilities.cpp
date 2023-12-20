@@ -36,24 +36,16 @@ void expect_kokkos_view_2D_equal(
     EXPECT_EQ(view.extent(0), expected.size());
     EXPECT_EQ(view.extent(1), expected.front().size());
 
-    auto view_host = Kokkos::create_mirror(view);
-    Kokkos::deep_copy(view_host, view);
+    Kokkos::View<double**> view_contiguous("view_contiguous", view.extent(0), view.extent(1));
+    Kokkos::deep_copy(view_contiguous, view);
+    auto view_host = Kokkos::create_mirror(view_contiguous);
+    Kokkos::deep_copy(view_host, view_contiguous);
     for (size_t i = 0; i < view_host.extent(0); ++i) {
         for (size_t j = 0; j < view_host.extent(1); ++j) {
             EXPECT_NEAR(view_host(i, j), expected[i][j], epsilon);
         }
     }
 }
-
-// void expect_kokkos_view_2D_equal(
-//     Kokkos::View<const double**> view, const std::vector<std::vector<double>>& expected,
-//     double epsilon
-// ) {
-//     // Convert Kokkos view -> non-const
-//     auto view_copy = Kokkos::View<double**>("view_copy", view.extent(0), view.extent(1));
-//     Kokkos::deep_copy(view_copy, view);
-//     expect_kokkos_view_2D_equal(view_copy, expected, epsilon);
-// }
 
 Vector multiply_rotation_matrix_with_vector(const RotationMatrix& R, const Vector& v) {
     return Vector{
