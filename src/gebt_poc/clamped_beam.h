@@ -25,7 +25,7 @@ public:
     /// Define a static beam element with the given position vector for the nodes, 6x6
     /// stiffness matrix, and a quadrature rule
     ClampedBeamLinearizationParameters(
-        Kokkos::View<double**> position_vectors, StiffnessMatrix stiffness_matrix,
+        Kokkos::View<double*[7]> position_vectors, StiffnessMatrix stiffness_matrix,
         UserDefinedQuadrature quadrature
     );
 
