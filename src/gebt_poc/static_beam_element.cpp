@@ -6,6 +6,46 @@
 
 namespace openturbine::gebt_poc {
 
+// TECHDEBT Following is a hack to make things work temporarily - we should move over to
+// using 2D views for the solver functions
+void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> result) {
+    auto populate_result = KOKKOS_LAMBDA(size_t i) {
+        result(i) = view(i / view.extent(1), i % view.extent(1));
+    };
+    Kokkos::parallel_for(result.extent(0), populate_result);
+}
+
+void BMatrix(Kokkos::View<double**> constraints_gradient_matrix) {
+    // Assemble the constraint gradient matrix i.e. B matrix
+    // [B]_6x(n+1) = [
+    //     [I]_3x3        [0]       [0]   ....  [0]
+    //        [0]       [I]_3x3     [0]   ....  [0]
+    // ]
+    // where
+    // [I]_3x3 = [1]_3x3
+    // [0] = [0]_3x3
+
+    Kokkos::deep_copy(constraints_gradient_matrix, 0.);
+    auto B11 = Kokkos::subview(
+        constraints_gradient_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3)
+    );
+    auto B22 = Kokkos::subview(
+        constraints_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6)
+    );
+
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(std::size_t) {
+            B11(0, 0) = 1.;
+            B11(1, 1) = 1.;
+            B11(2, 2) = 1.;
+            B22(0, 0) = 1.;
+            B22(1, 1) = 1.;
+            B22(2, 2) = 1.;
+        }
+    );
+}
+
 struct DefinePositionVector_5NodeBeamElement {
     KOKKOS_FUNCTION
     void operator()(std::size_t) const {
@@ -95,15 +135,6 @@ StaticBeamLinearizationParameters::StaticBeamLinearizationParameters(
       quadrature_(quadrature) {
 }
 
-// TECHDEBT Following is a hack to make things work temporarily - we should move over to
-// using 2D views for the solver functions
-void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> result) {
-    auto populate_result = KOKKOS_LAMBDA(size_t i) {
-        result(i) = view(i / view.extent(1), i % view.extent(1));
-    };
-    Kokkos::parallel_for(result.extent(0), populate_result);
-}
-
 void StaticBeamLinearizationParameters::ResidualVector(
     Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
     Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
@@ -112,7 +143,7 @@ void StaticBeamLinearizationParameters::ResidualVector(
 ) {
     // The residual vector for the generalized coordinates is given by
     // {residual} = {
-    //     {residual_gen_coords},
+    //     {residual_gen_coords} + {constraints_part2},
     //     {residual_constraints}
     // }
     const size_t zero{0};
@@ -120,6 +151,7 @@ void StaticBeamLinearizationParameters::ResidualVector(
     const auto size_constraints = lagrange_multipliers.extent(0);
     const auto size_residual = size_dofs + size_constraints;
 
+    // Part 1: Calculate the residual vector for the generalized coordinates
     auto gen_coords_1D =
         Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
     Convert2DViewTo1DView(gen_coords, gen_coords_1D);
@@ -129,6 +161,19 @@ void StaticBeamLinearizationParameters::ResidualVector(
     CalculateStaticResidual(
         position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_gen_coords
     );
+
+    // Part 2: Calculate the residual vector for the constraints
+    // {R_c} = {B(q)}^T * {lambda}
+    auto constraints_gradient_matrix =
+        Kokkos::View<double**>("constraints_gradient_matrix", size_constraints, size_dofs);
+    BMatrix(constraints_gradient_matrix);
+    auto constraints_part2 = Kokkos::View<double*>("constraints_part2", size_dofs);
+    KokkosBlas::gemv(
+        "T", 1., constraints_gradient_matrix, lagrange_multipliers, 0., constraints_part2
+    );
+
+    KokkosBlas::axpy(1., constraints_part2, residual_gen_coords);
+
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
     ConstraintsResidualVector(gen_coords_1D, position_vectors_, residual_constraints);
@@ -190,7 +235,7 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     );
 
     // Combine beam element static iteration matrix with constraints into quadrant 1
-    // quadrant_1 = K_t(q,v,v',Lambda,t) * T(h dq)
+    // quadrant_1 = K_t + K_t_part2
     auto quadrant_1 = Kokkos::subview(
         iteration_matrix, Kokkos::make_pair(zero, size_dofs), Kokkos::make_pair(zero, size_dofs)
     );
@@ -203,9 +248,7 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     );
     auto constraints_gradient_matrix =
         Kokkos::View<double**>("constraints_gradient_matrix", size_constraints, size_dofs);
-    ConstraintsGradientMatrix(gen_coords_1D, position_vectors_, constraints_gradient_matrix);
-    // TODO ** Question for reviewers **
-    // How to transpose a matrix using KokkosBlas?
+    BMatrix(constraints_gradient_matrix);
     auto temp = gen_alpha_solver::transpose_matrix(constraints_gradient_matrix);
     Kokkos::deep_copy(quadrant_2, temp);
 

@@ -11,6 +11,9 @@ namespace openturbine::gebt_poc {
 
 void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> result);
 
+/// Calculates the constraint gradient matrix for the clamped beam problem
+void BMatrix(Kokkos::View<double**> constraints_gradient_matrix);
+
 /*!
  * Calculates the residual vector and iteration matrix for a static beam element
  */
