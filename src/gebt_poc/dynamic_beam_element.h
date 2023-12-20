@@ -23,7 +23,7 @@ public:
     /// stiffness matrix, and a quadrature rule
     DynamicBeamLinearizationParameters(
         Kokkos::View<double*> position_vectors, StiffnessMatrix stiffness_matrix,
-        UserDefinedQuadrature quadrature
+        MassMatrix mass_matrix, UserDefinedQuadrature quadrature
     );
 
     virtual void ResidualVector(
@@ -72,6 +72,7 @@ public:
 private:
     Kokkos::View<double*> position_vectors_;
     StiffnessMatrix stiffness_matrix_;
+    MassMatrix mass_matrix_;
     UserDefinedQuadrature quadrature_;
 };
 
