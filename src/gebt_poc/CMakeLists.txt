@@ -1,5 +1,6 @@
 target_sources(${oturb_lib_name}
     PRIVATE
+    dynamic_beam_element.cpp
     element.cpp
     gen_alpha_2D.cpp
     interpolation.cpp
