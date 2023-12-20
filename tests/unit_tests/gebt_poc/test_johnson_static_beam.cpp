@@ -1,15 +1,55 @@
-#include "tests/unit_tests/gebt_poc/test_johnson_clamped_beam.h"
+#include "tests/unit_tests/gebt_poc/test_johnson_static_beam.h"
 
 #include <gtest/gtest.h>
 
-#include "src/gebt_poc/clamped_beam.h"
 #include "src/gebt_poc/gen_alpha_2D.h"
 #include "src/gebt_poc/solver.h"
+#include "src/gebt_poc/static_beam_element.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc::tests {
 
-TEST(ClampedBeamTest, ConstraintsGradientMatrix) {
+TEST(StaticBeamTest, CalculateTangentOperatorWithPhiAsZero) {
+    auto psi = gen_alpha_solver::create_vector({0., 0., 0.});
+    StaticBeamLinearizationParameters static_beam{};
+
+    auto tangent_operator = Kokkos::View<double[6][6]>("tangent_operator");
+    static_beam.TangentOperator(psi, tangent_operator);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        tangent_operator,
+        {
+            {1., 0., 0., 0., 0., 0.},  // row 1
+            {0., 1., 0., 0., 0., 0.},  // row 2
+            {0., 0., 1., 0., 0., 0.},  // row 3
+            {0., 0., 0., 1., 0., 0.},  // row 4
+            {0., 0., 0., 0., 1., 0.},  // row 5
+            {0., 0., 0., 0., 0., 1.}   // row 6
+        }
+    );
+}
+
+TEST(StaticBeamTest, CalculateTangentOperatorWithPhiNotZero) {
+    auto psi = gen_alpha_solver::create_vector({1., 2., 3.});
+    StaticBeamLinearizationParameters static_beam{};
+
+    auto tangent_operator = Kokkos::View<double[6][6]>("tangent_operator");
+    static_beam.TangentOperator(psi, tangent_operator);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        tangent_operator,
+        {
+            {1., 0., 0., 0., 0., 0.},                                                      // row 1
+            {0., 1., 0., 0., 0., 0.},                                                      // row 2
+            {0., 0., 1., 0., 0., 0.},                                                      // row 3
+            {0., 0., 0., -0.06871266098996709, 0.555552845761836, -0.014131010177901665},  // row 4
+            {0., 0., 0., -0.2267181808418461, 0.1779133377000255, 0.6236305018139318},     // row 5
+            {0., 0., 0., 0.5073830075578865, 0.36287349294603777, 0.5889566688500127}      // row 6
+        }
+    );
+}
+
+TEST(StaticBeamTest, ConstraintsGradientMatrix) {
     auto constraint_gradients = Kokkos::View<double[6][30]>("constraint_gradients");
     BMatrix(constraint_gradients);
 
@@ -79,7 +119,7 @@ struct PopulatePositionVectors {
     }
 };
 
-TEST(ClampedBeamTest, ClampedBeamResidual) {
+TEST(StaticBeamTest, StaticBeamResidual) {
     auto position_vectors = Kokkos::View<double[35]>("position_vectors");
     Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});
 
@@ -101,7 +141,7 @@ TEST(ClampedBeamTest, ClampedBeamResidual) {
          0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
     );
 
-    ClampedBeamLinearizationParameters clamped_beam{position_vectors, stiffness, quadrature};
+    StaticBeamLinearizationParameters static_beam{position_vectors, stiffness, quadrature};
 
     auto gen_coords = gen_alpha_solver::create_matrix({
         {0., 0., 0., 1., 0., 0., 0.},    // node 1
@@ -130,7 +170,7 @@ TEST(ClampedBeamTest, ClampedBeamResidual) {
     auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
 
     auto residual = Kokkos::View<double[36]>("residual");
-    clamped_beam.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults, residual);
+    static_beam.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults, residual);
 
     std::vector<double> expected = {0., 0.8856000000000164,
                                     0., 0.,
@@ -153,7 +193,7 @@ TEST(ClampedBeamTest, ClampedBeamResidual) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(residual, expected);
 }
 
-TEST(ClampedBeamTest, ClampedBeamIterationMatrix) {
+TEST(StaticBeamTest, StaticBeamIterationMatrix) {
     auto position_vectors = Kokkos::View<double[35]>("position_vectors");
     Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});
 
@@ -175,7 +215,7 @@ TEST(ClampedBeamTest, ClampedBeamIterationMatrix) {
          0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
     );
 
-    ClampedBeamLinearizationParameters clamped_beam{position_vectors, stiffness, quadrature};
+    StaticBeamLinearizationParameters static_beam{position_vectors, stiffness, quadrature};
 
     auto gen_coords = gen_alpha_solver::create_matrix({
         {0., 0., 0., 1., 0., 0., 0.},    // node 1
@@ -216,7 +256,7 @@ TEST(ClampedBeamTest, ClampedBeamIterationMatrix) {
     auto gamma_prime = 0.5;
 
     auto iteration_matrix = Kokkos::View<double[36][36]>("iteration_matrix");
-    clamped_beam.IterationMatrix(
+    static_beam.IterationMatrix(
         h, beta_prime, gamma_prime, gen_coords, delta_gen_coords, velocity, acceleration,
         lagrange_mults, iteration_matrix
     );
@@ -273,12 +313,10 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
     auto time_integrator = GeneralizedAlphaTimeIntegrator(
         0., 0., 0.5, 1., gen_alpha_solver::TimeStepper(0., 1., 1, 20), false
     );
-    std::shared_ptr<LinearizationParameters> clamped_beam_lin_params =
-        std::make_shared<ClampedBeamLinearizationParameters>(
-            position_vectors, stiffness, quadrature
-        );
+    std::shared_ptr<LinearizationParameters> static_beam_lin_params =
+        std::make_shared<StaticBeamLinearizationParameters>(position_vectors, stiffness, quadrature);
     auto results =
-        time_integrator.Integrate(initial_state, lagrange_mults.extent(0), clamped_beam_lin_params);
+        time_integrator.Integrate(initial_state, lagrange_mults.extent(0), static_beam_lin_params);
     auto final_state = results.back();
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
