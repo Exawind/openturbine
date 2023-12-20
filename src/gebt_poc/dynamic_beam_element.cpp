@@ -22,7 +22,7 @@ DynamicBeamLinearizationParameters::DynamicBeamLinearizationParameters(
 void DynamicBeamLinearizationParameters::ResidualVector(
     Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
     Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
     Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual
 ) {
     // Residual vector for a dynamic beam element is assembled as follows
@@ -88,14 +88,108 @@ void DynamicBeamLinearizationParameters::ResidualVector(
 }
 
 void DynamicBeamLinearizationParameters::IterationMatrix(
-    const double& h, [[maybe_unused]] const double& beta_prime,
-    [[maybe_unused]] const double& gamma_prime,
+    const double& h, const double& beta_prime, const double& gamma_prime,
     Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
     Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
     Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
+    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
     Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
 ) {
+    // Iteration matrix for the static beam element is given by
+    // [iteration matrix] = [
+    //     [M] * beta' + G * gamma' + [K_t(q,v,v',Lambda,t)] * [T(h dq)]       [B(q)^T]]
+    //                   [B(q)] * [T(h dq)]                                       [0]
+    // ]
+    // where,
+    // [M] = Mass matrix of the beam element
+    // beta' = beta prime (scalar)
+    // [G] = Gyroscopic matrix of the beam element
+    // gamma' = gamma prime (scalar)
+    // [K_t(q,v,v',Lambda,t)] = Tangent stiffness matrix of the beam element
+    // [T(h dq)] = Tangent operator
+    // [B(q)] = Constraint gradient matrix
+
+    Kokkos::deep_copy(iteration_matrix, 0.0);
+
+    const size_t zero{0};
+    const auto size_dofs = velocity.extent(0) * velocity.extent(1);
+    const auto size_constraints = lagrange_multipliers.extent(0);
+    const auto size_iteration = size_dofs + size_constraints;
+    const auto n_nodes = velocity.extent(0);
+
+    auto gen_coords_1D =
+        Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
+    Convert2DViewTo1DView(gen_coords, gen_coords_1D);
+    auto velocity_1D = Kokkos::View<double*>("velocity_1D", velocity.extent(0) * velocity.extent(1));
+    Convert2DViewTo1DView(velocity, velocity_1D);
+    auto accelaration_1D =
+        Kokkos::View<double*>("accelaration_1D", acceleration.extent(0) * acceleration.extent(1));
+    Convert2DViewTo1DView(acceleration, accelaration_1D);
+
+    // Assemble the tangent operator (same size as the stiffness matrix)
+    auto tangent_operator = Kokkos::View<double**>("tangent_operator", size_dofs, size_dofs);
+    Kokkos::deep_copy(tangent_operator, 0.0);
+    for (size_t i = 0; i < n_nodes; ++i) {
+        auto delta_gen_coords_node = Kokkos::subview(delta_gen_coords, i, Kokkos::make_pair(3, 6));
+        KokkosBlas::scal(delta_gen_coords_node, h, delta_gen_coords_node);
+        auto tangent_operator_node = Kokkos::subview(
+            tangent_operator,
+            Kokkos::make_pair(
+                i * kNumberOfLieAlgebraComponents, (i + 1) * kNumberOfLieAlgebraComponents
+            ),
+            Kokkos::make_pair(
+                i * kNumberOfLieAlgebraComponents, (i + 1) * kNumberOfLieAlgebraComponents
+            )
+        );
+        TangentOperator(delta_gen_coords_node, tangent_operator_node);
+    }
+
+    // Assemble the top left partition of the iteration matrix consisting of 3 parts
+    auto mass_matrix = Kokkos::View<double**>("mass_matrix", size_dofs, size_dofs);
+    auto gyroscopic_matrix = Kokkos::View<double**>("gyroscopic_matrix", size_dofs, size_dofs);
+    auto dynamic_stiffness_matrix =
+        Kokkos::View<double**>("dynamic_stiffness_matrix", size_dofs, size_dofs);
+    ElementalInertialMatrices(
+        position_vectors_, gen_coords_1D, velocity_1D, accelaration_1D, mass_matrix_, quadrature_,
+        mass_matrix, gyroscopic_matrix, dynamic_stiffness_matrix
+    );
+    // Part 1: [M] * beta'
+    auto quadrant_1 = Kokkos::subview(
+        iteration_matrix, Kokkos::make_pair(zero, size_dofs), Kokkos::make_pair(zero, size_dofs)
+    );
+    KokkosBlas::axpy(beta_prime, mass_matrix, quadrant_1);
+    // Part 2: [G] * gamma'
+    auto G_gamma = Kokkos::View<double**>("G_gamma", size_dofs, size_dofs);
+    KokkosBlas::axpy(gamma_prime, gyroscopic_matrix, G_gamma);
+    KokkosBlas::axpy(1., G_gamma, quadrant_1);
+    // Part 3: [K_t(q,v,v',Lambda,t)] * [T(h dq)]
+    // K_t = K_t_elastic + K_t_inertial
+    auto stiffness_matrix = Kokkos::View<double**>("stiffness_matrix", size_dofs, size_dofs);
+    ElementalStaticStiffnessMatrix(
+        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, stiffness_matrix
+    );
+    KokkosBlas::axpy(1., dynamic_stiffness_matrix, stiffness_matrix);
+    auto K_t_T = Kokkos::View<double**>("K_t_T", size_dofs, size_dofs);
+    KokkosBlas::gemm("N", "N", 1.0, stiffness_matrix, tangent_operator, 0.0, K_t_T);
+    KokkosBlas::axpy(1., K_t_T, quadrant_1);
+
+    // Top right partition of the iteration matrix = Transpose([B(q)])
+    auto quadrant_2 = Kokkos::subview(
+        iteration_matrix, Kokkos::make_pair(zero, size_dofs),
+        Kokkos::make_pair(size_dofs, size_iteration)
+    );
+    auto constraints_gradient_matrix =
+        Kokkos::View<double**>("constraints_gradient_matrix", size_constraints, size_dofs);
+    BMatrix(constraints_gradient_matrix);
+    auto temp = gen_alpha_solver::transpose_matrix(constraints_gradient_matrix);
+    Kokkos::deep_copy(quadrant_2, temp);
+
+    // Bottom left partition of the iteration matrix = [B(q)] * [T(h dq)]
+    auto quadrant_3 = Kokkos::subview(
+        iteration_matrix, Kokkos::make_pair(size_dofs, size_iteration),
+        Kokkos::make_pair(zero, size_dofs)
+    );
+    KokkosBlas::gemm("N", "N", 1.0, constraints_gradient_matrix, tangent_operator, 0.0, quadrant_3);
 }
 
 }  // namespace openturbine::gebt_poc
