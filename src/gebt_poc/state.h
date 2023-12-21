@@ -88,4 +88,32 @@ private:
     Kokkos::View<double[6][6]> mass_matrix_;        //< Mass matrix of the rigid body
 };
 
+/// Class for managing the generalized forces applied on a dynamic system
+class GeneralizedForces {
+public:
+    /// Default constructor that initializes all generalized forces to zero
+    GeneralizedForces(
+        const gen_alpha_solver::Vector& forces = gen_alpha_solver::Vector(),
+        const gen_alpha_solver::Vector& moments = gen_alpha_solver::Vector()
+    );
+
+    /// Constructor that initializes the generalized forces to the given vectors
+    GeneralizedForces(Kokkos::View<double[6]>);
+
+    /// Returns the 3 x 1 force vector
+    inline gen_alpha_solver::Vector GetForces() const { return forces_; }
+
+    /// Returns the 3 x 1 moment vector
+    inline gen_alpha_solver::Vector GetMoments() const { return moments_; }
+
+    /// Returns the 6 x 1 generalized forces vector
+    inline Kokkos::View<double*> GetGeneralizedForces() const { return generalized_forces_; }
+
+private:
+    gen_alpha_solver::Vector forces_;   //< force vector
+    gen_alpha_solver::Vector moments_;  //< moment vector
+    Kokkos::View<double[6]>
+        generalized_forces_;  //< Generalized forces (combined forces and moments vector)
+};
+
 }  // namespace openturbine::gebt_poc

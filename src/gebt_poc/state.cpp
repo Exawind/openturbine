@@ -113,4 +113,31 @@ MassMatrix::MassMatrix(Kokkos::View<double[6][6]> mass_matrix)
     Kokkos::deep_copy(moment_of_inertia_, rho);
 }
 
+GeneralizedForces::GeneralizedForces(
+    const gen_alpha_solver::Vector& forces, const gen_alpha_solver::Vector& moments
+)
+    : forces_(forces), moments_(moments), generalized_forces_("generalized_forces") {
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(std::size_t) {
+            generalized_forces_(0) = forces.GetXComponent();
+            generalized_forces_(1) = forces.GetYComponent();
+            generalized_forces_(2) = forces.GetZComponent();
+            generalized_forces_(3) = moments.GetXComponent();
+            generalized_forces_(4) = moments.GetYComponent();
+            generalized_forces_(5) = moments.GetZComponent();
+        }
+    );
+}
+
+GeneralizedForces::GeneralizedForces(Kokkos::View<double[6]> generalized_forces)
+    : generalized_forces_("generalized_forces") {
+    Kokkos::deep_copy(generalized_forces_, generalized_forces);
+
+    auto forces = Kokkos::subview(generalized_forces_, Kokkos::make_pair(0, 3));
+    auto moments = Kokkos::subview(generalized_forces_, Kokkos::make_pair(3, 6));
+    this->forces_ = gen_alpha_solver::Vector(forces(0), forces(1), forces(2));
+    this->moments_ = gen_alpha_solver::Vector(moments(0), moments(1), moments(2));
+}
+
 }  // namespace openturbine::gebt_poc
