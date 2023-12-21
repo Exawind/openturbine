@@ -23,15 +23,15 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     if (this->kAlphaF_ < 0 || this->kAlphaF_ > 1) {
         throw std::invalid_argument("Invalid value provided for alpha_f");
     }
-    if (this->kAlphaM_ < 0 || this->kAlphaM_ > 1) {
-        throw std::invalid_argument("Invalid value provided for alpha_m");
-    }
-    if (this->kBeta_ < 0 || this->kBeta_ > 0.50) {
-        throw std::invalid_argument("Invalid value provided for beta");
-    }
-    if (this->kGamma_ < 0 || this->kGamma_ > 1) {
-        throw std::invalid_argument("Invalid value provided for gamma");
-    }
+    // if (this->kAlphaM_ < 0 || this->kAlphaM_ > 1) {
+    //     throw std::invalid_argument("Invalid value provided for alpha_m");
+    // }
+    // if (this->kBeta_ < 0 || this->kBeta_ > 0.50) {
+    //     throw std::invalid_argument("Invalid value provided for beta");
+    // }
+    // if (this->kGamma_ < 0 || this->kGamma_ > 1) {
+    //     throw std::invalid_argument("Invalid value provided for gamma");
+    // }
     this->is_converged_ = false;
 }
 

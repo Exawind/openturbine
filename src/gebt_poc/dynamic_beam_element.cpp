@@ -39,11 +39,6 @@ void DynamicBeamLinearizationParameters::ApplyExternalForces(
             KOKKOS_LAMBDA(size_t i) { external_forces_node(i) = gen_forces(i); }
         );
     }
-
-    std::cout << "External forces: " << std::endl;
-    for (size_t i = 0; i < external_forces.extent(0); ++i) {
-        std::cout << std::scientific << external_forces(i) << std::endl;
-    }
 }
 
 void DynamicBeamLinearizationParameters::ResidualVector(
@@ -87,12 +82,6 @@ void DynamicBeamLinearizationParameters::ResidualVector(
         position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_elastic
     );
     // Part 2: dynamic/inertial forces residual
-    // void ElementalInertialForcesResidual(
-    //     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-    //     const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
-    //     const MassMatrix& mass_matrix, const Quadrature& quadrature, Kokkos::View<double*>
-    //     residual
-    // );
     auto residual_inertial = Kokkos::View<double*>("residual_inertial", residual_elastic.extent(0));
     ElementalInertialForcesResidual(
         position_vectors_, gen_coords_1D, velocity_1D, acceleration_1D, mass_matrix_, quadrature_,
@@ -102,6 +91,7 @@ void DynamicBeamLinearizationParameters::ResidualVector(
     // Part 3: external forces
     auto external_forces = Kokkos::View<double*>("external_forces", residual_elastic.extent(0));
     ApplyExternalForces(this->external_forces_, external_forces);
+    KokkosBlas::axpy(-1., external_forces, residual_elastic);
     // Part 4: Calculate the contribution for the constraints
     auto constraints_gradient_matrix =
         Kokkos::View<double**>("constraints_gradient_matrix", size_constraints, size_dofs);

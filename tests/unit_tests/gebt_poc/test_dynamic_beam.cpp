@@ -181,7 +181,8 @@ struct NonZeroValues_populate_position {
     }
 };
 
-TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
+TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
+    // Set up the initial state for the problem
     auto gen_coords = gen_alpha_solver::create_matrix({
         {0., 0., 0., 1., 0., 0., 0.},  // node 1
         {0., 0., 0., 1., 0., 0., 0.},  // node 2
@@ -189,7 +190,6 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
         {0., 0., 0., 1., 0., 0., 0.},  // node 4
         {0., 0., 0., 1., 0., 0., 0.}   // node 5
     });
-
     auto v = gen_alpha_solver::create_matrix(
         {{0., 0., 0., 0., 0., 0.},  // node 1
          {0., 0., 0., 0., 0., 0.},  // node 2
@@ -197,16 +197,13 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
          {0., 0., 0., 0., 0., 0.},  // node 4
          {0., 0., 0., 0., 0., 0.}}  // node 5
     );
-
     auto velocity = v;
     auto acceleration = v;
     auto algo_acceleration = v;
+
     auto initial_state = State(gen_coords, velocity, acceleration, algo_acceleration);
 
-    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
-    Kokkos::parallel_for(1, NonZeroValues_populate_position{position_vectors});
-
-    // Stiffness matrix for uniform composite beam section (in material csys)
+    // Set up the linearization parameters for the problem
     auto stiffness = gen_alpha_solver::create_matrix({
         {1368.17e3, 0., 0., 0., 0., 0.},      // row 1
         {0., 88560., 0., 0., 0., 0.},         // row 2
@@ -234,15 +231,23 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
          0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
     );
 
+    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
+    Kokkos::parallel_for(1, NonZeroValues_populate_position{position_vectors});
+
+    auto external_forces = std::vector<GeneralizedForces>{};
+    auto constant_tip_force =
+        GeneralizedForces(gen_alpha_solver::create_vector({0., 0., -1., 0., 0., 0.}), 5);
+    external_forces.push_back(constant_tip_force);
+
     std::shared_ptr<LinearizationParameters> dynamic_beam_lin_params =
         std::make_shared<DynamicBeamLinearizationParameters>(
-            position_vectors, stiffness_matrix, mass_matrix, quadrature
+            position_vectors, stiffness_matrix, mass_matrix, quadrature, external_forces
         );
 
     // time step size = 0.005 and number of steps = 200
-    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 200, 10);
+    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 1, 10);
 
-    // Calculate the generalized alpha parameters
+    // Calculate the generalized alpha parameters for rho_inf = 0
     auto rho_inf = 0.;
     auto alpha_m = (2. * rho_inf - 1.) / (rho_inf + 1.);
     auto alpha_f = rho_inf / (rho_inf + 1.);
