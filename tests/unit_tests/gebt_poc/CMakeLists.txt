@@ -2,6 +2,7 @@
 target_sources(
     ${oturb_unit_test_exe_name}
     PRIVATE
+    test_dynamic_beam.cpp
     test_element.cpp
     test_field_data.cpp
     test_gebt_generalized_alpha_solver.cpp

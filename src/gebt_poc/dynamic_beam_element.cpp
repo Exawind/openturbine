@@ -11,12 +11,39 @@ namespace openturbine::gebt_poc {
 
 DynamicBeamLinearizationParameters::DynamicBeamLinearizationParameters(
     Kokkos::View<double*> position_vectors, StiffnessMatrix stiffness_matrix, MassMatrix mass_matrix,
-    UserDefinedQuadrature quadrature
+    UserDefinedQuadrature quadrature, std::vector<GeneralizedForces> external_forces
 )
     : position_vectors_(position_vectors),
       stiffness_matrix_(stiffness_matrix),
       mass_matrix_(mass_matrix),
-      quadrature_(quadrature) {
+      quadrature_(quadrature),
+      external_forces_(std::move(external_forces)) {
+}
+
+void DynamicBeamLinearizationParameters::ApplyExternalForces(
+    const std::vector<GeneralizedForces>& generalized_forces, Kokkos::View<double*> external_forces
+) {
+    Kokkos::deep_copy(external_forces, 0.0);
+
+    for (const auto& force : generalized_forces) {
+        auto gen_forces = force.GetGeneralizedForces();
+        auto node = force.GetNode();
+        auto external_forces_node = Kokkos::subview(
+            external_forces,
+            Kokkos::make_pair(
+                (node - 1) * kNumberOfLieAlgebraComponents, node * kNumberOfLieAlgebraComponents
+            )
+        );
+        Kokkos::parallel_for(
+            kNumberOfLieAlgebraComponents,
+            KOKKOS_LAMBDA(size_t i) { external_forces_node(i) = gen_forces(i); }
+        );
+    }
+
+    std::cout << "External forces: " << std::endl;
+    for (size_t i = 0; i < external_forces.extent(0); ++i) {
+        std::cout << std::scientific << external_forces(i) << std::endl;
+    }
 }
 
 void DynamicBeamLinearizationParameters::ResidualVector(
@@ -27,12 +54,13 @@ void DynamicBeamLinearizationParameters::ResidualVector(
 ) {
     // Residual vector for a dynamic beam element is assembled as follows
     // {residual} = {
-    //     {residual_elastic} + {residual_inertial} + {constraints}
+    //     {residual_elastic} + {residual_inertial} - {external_forces} + {constraints}
     //     {residual_constraints}
     // }
     // where,
     // {residual_elastic} = elastic/static forces residual vector
     // {residual_inertial} = dynamic/inertial forces residual vector
+    // {external_forces} = external forces applied on the beam element
     // {constraints} = [constraints_gradient_matrix] * {lagrange_multipliers}
     // {residual_constraints} = constraint forces residual vector
 
@@ -52,7 +80,7 @@ void DynamicBeamLinearizationParameters::ResidualVector(
         Kokkos::View<double*>("acceleration_1D", acceleration.extent(0) * acceleration.extent(1));
     Convert2DViewTo1DView(acceleration, acceleration_1D);
 
-    // Assemble the top partition of the residual vector consisting of 3 parts
+    // Assemble the top partition of the residual vector consisting of 4 parts
     // Part 1: elastic/static forces residual
     auto residual_elastic = Kokkos::subview(residual, Kokkos::make_pair(zero, size_dofs));
     ElementalStaticForcesResidual(
@@ -71,7 +99,10 @@ void DynamicBeamLinearizationParameters::ResidualVector(
         residual_inertial
     );
     KokkosBlas::axpy(1., residual_inertial, residual_elastic);
-    // Part 3: Calculate the contribution for the constraints
+    // Part 3: external forces
+    auto external_forces = Kokkos::View<double*>("external_forces", residual_elastic.extent(0));
+    ApplyExternalForces(this->external_forces_, external_forces);
+    // Part 4: Calculate the contribution for the constraints
     auto constraints_gradient_matrix =
         Kokkos::View<double**>("constraints_gradient_matrix", size_constraints, size_dofs);
     BMatrix(constraints_gradient_matrix);

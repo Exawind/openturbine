@@ -23,7 +23,8 @@ public:
     /// stiffness matrix, and a quadrature rule
     DynamicBeamLinearizationParameters(
         Kokkos::View<double*> position_vectors, StiffnessMatrix stiffness_matrix,
-        MassMatrix mass_matrix, UserDefinedQuadrature quadrature
+        MassMatrix mass_matrix, UserDefinedQuadrature quadrature,
+        std::vector<GeneralizedForces> external_forces = {}
     );
 
     virtual void ResidualVector(
@@ -32,6 +33,11 @@ public:
         Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
         Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual_vector
     ) override;
+
+    void ApplyExternalForces(
+        const std::vector<GeneralizedForces>& generalized_forces,
+        Kokkos::View<double*> external_forces
+    );
 
     virtual void IterationMatrix(
         const double& h, const double& beta_prime, const double& gamma_prime,
@@ -74,6 +80,7 @@ private:
     StiffnessMatrix stiffness_matrix_;
     MassMatrix mass_matrix_;
     UserDefinedQuadrature quadrature_;
+    std::vector<GeneralizedForces> external_forces_;
 };
 
 }  // namespace openturbine::gebt_poc
