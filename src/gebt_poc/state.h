@@ -94,11 +94,11 @@ public:
     /// Default constructor that initializes all generalized forces to zero
     GeneralizedForces(
         const gen_alpha_solver::Vector& forces = gen_alpha_solver::Vector(),
-        const gen_alpha_solver::Vector& moments = gen_alpha_solver::Vector()
+        const gen_alpha_solver::Vector& moments = gen_alpha_solver::Vector(), size_t node = 1
     );
 
     /// Constructor that initializes the generalized forces to the given vectors
-    GeneralizedForces(Kokkos::View<double[6]>);
+    GeneralizedForces(Kokkos::View<double[6]> generalized_forces, size_t node);
 
     /// Returns the 3 x 1 force vector
     inline gen_alpha_solver::Vector GetForces() const { return forces_; }
@@ -109,11 +109,15 @@ public:
     /// Returns the 6 x 1 generalized forces vector
     inline Kokkos::View<double*> GetGeneralizedForces() const { return generalized_forces_; }
 
+    /// Returns the node number on which the generalized forces are applied
+    inline size_t GetNode() const { return node_; }
+
 private:
     gen_alpha_solver::Vector forces_;   //< force vector
     gen_alpha_solver::Vector moments_;  //< moment vector
     Kokkos::View<double[6]>
         generalized_forces_;  //< Generalized forces (combined forces and moments vector)
+    size_t node_;             //< Node number on which the generalized forces are applied
 };
 
 }  // namespace openturbine::gebt_poc

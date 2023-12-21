@@ -114,9 +114,9 @@ MassMatrix::MassMatrix(Kokkos::View<double[6][6]> mass_matrix)
 }
 
 GeneralizedForces::GeneralizedForces(
-    const gen_alpha_solver::Vector& forces, const gen_alpha_solver::Vector& moments
+    const gen_alpha_solver::Vector& forces, const gen_alpha_solver::Vector& moments, size_t node
 )
-    : forces_(forces), moments_(moments), generalized_forces_("generalized_forces") {
+    : forces_(forces), moments_(moments), generalized_forces_("generalized_forces"), node_(node) {
     Kokkos::parallel_for(
         1,
         KOKKOS_LAMBDA(std::size_t) {
@@ -130,8 +130,8 @@ GeneralizedForces::GeneralizedForces(
     );
 }
 
-GeneralizedForces::GeneralizedForces(Kokkos::View<double[6]> generalized_forces)
-    : generalized_forces_("generalized_forces") {
+GeneralizedForces::GeneralizedForces(Kokkos::View<double[6]> generalized_forces, size_t node)
+    : generalized_forces_("generalized_forces"), node_(node) {
     Kokkos::deep_copy(generalized_forces_, generalized_forces);
 
     auto forces = Kokkos::subview(generalized_forces_, Kokkos::make_pair(0, 3));
