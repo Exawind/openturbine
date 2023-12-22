@@ -12,14 +12,15 @@ namespace openturbine::gebt_poc {
 
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double alpha_f, double alpha_m, double beta, double gamma,
-    gen_alpha_solver::TimeStepper time_stepper, bool precondition
+    gen_alpha_solver::TimeStepper time_stepper, bool precondition, ProblemType problem_type
 )
     : kAlphaF_(alpha_f),
       kAlphaM_(alpha_m),
       kBeta_(beta),
       kGamma_(gamma),
       time_stepper_(std::move(time_stepper)),
-      is_preconditioned_(precondition) {
+      is_preconditioned_(precondition),
+      problem_type_(problem_type) {
     if (this->kAlphaF_ < 0 || this->kAlphaF_ > 1) {
         throw std::invalid_argument("Invalid value provided for alpha_f");
     }
@@ -33,6 +34,7 @@ GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     //     throw std::invalid_argument("Invalid value provided for gamma");
     // }
     this->is_converged_ = false;
+    this->reference_energy_ = 0.;
 }
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
@@ -205,6 +207,14 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         Kokkos::deep_copy(soln_increments, residuals);
         openturbine::gebt_poc::solve_linear_system(iteration_matrix, soln_increments);
 
+        if (this->problem_type_ == ProblemType::kDynamic) {
+            // Check for convergence based on energy criterion
+            if (this->IsConverged(residuals, soln_increments)) {
+                this->is_converged_ = true;
+                break;
+            }
+        }
+
         Kokkos::parallel_for(
             delta_gen_coords.size(),
             // Take negative of the solution increments to update generalized coordinates
@@ -332,7 +342,27 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
 bool GeneralizedAlphaTimeIntegrator::IsConverged(const Kokkos::View<double*> residual) {
     // L2 norm of the residual vector should be very small (< epsilon) for the solution
     // to be considered converged
+    std::cout << "Residual norm: " << KokkosBlas::nrm2(residual) << std::endl;
     return KokkosBlas::nrm2(residual) < kConvergenceTolerance;
+}
+
+bool GeneralizedAlphaTimeIntegrator::IsConverged(
+    Kokkos::View<double*> residual, Kokkos::View<double*> solution_increment
+) {
+    auto energy_increment = std::abs(KokkosBlas::dot(residual, solution_increment));
+
+    if (this->time_stepper_.GetNumberOfIterations() == 0) {
+        this->reference_energy_ = energy_increment;
+    }
+    auto energy_ratio = energy_increment / reference_energy_;
+
+    std::cout << "Energy increment: " << energy_increment << std::endl;
+    std::cout << "Energy ratio: " << energy_ratio << std::endl;
+
+    if (energy_increment < 1e-8 || energy_ratio < 1e-5) {
+        return true;
+    }
+    return false;
 }
 
 }  // namespace openturbine::gebt_poc
