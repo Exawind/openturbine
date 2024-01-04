@@ -6,7 +6,8 @@ void UnityLinearizationParameters::ResidualVector(
     [[maybe_unused]] Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
     [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
     [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-    [[maybe_unused]] Kokkos::View<double*> lagrange_mults, Kokkos::View<double*> residual_vector
+    [[maybe_unused]] Kokkos::View<double*> lagrange_mults, Kokkos::View<double*> residual_vector,
+    [[maybe_unused]] const gen_alpha_solver::TimeStepper& time_stepper
 ) {
     Kokkos::deep_copy(residual_vector, 0.);
     auto size = residual_vector.extent(0);

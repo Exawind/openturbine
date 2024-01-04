@@ -5,6 +5,7 @@
 #include "src/gebt_poc/linearization_parameters.h"
 #include "src/gebt_poc/solver.h"
 #include "src/gen_alpha_poc/state.h"
+#include "src/gen_alpha_poc/time_stepper.h"
 #include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gebt_poc {
@@ -31,7 +32,8 @@ public:
         Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
         Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
         Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual_vector
+        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual_vector,
+        const gen_alpha_solver::TimeStepper& time_stepper
     ) override;
 
     void ApplyExternalForces(

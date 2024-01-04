@@ -39,7 +39,8 @@ public:
         Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
         Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
         Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual_vector
+        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual_vector,
+        const gen_alpha_solver::TimeStepper& time_stepper
     ) override;
 
     virtual void IterationMatrix(

@@ -24,7 +24,6 @@ void DynamicBeamLinearizationParameters::ApplyExternalForces(
     const std::vector<GeneralizedForces>& generalized_forces, Kokkos::View<double*> external_forces
 ) {
     Kokkos::deep_copy(external_forces, 0.0);
-
     for (const auto& force : generalized_forces) {
         auto gen_forces = force.GetGeneralizedForces();
         auto node = force.GetNode();
@@ -45,7 +44,8 @@ void DynamicBeamLinearizationParameters::ResidualVector(
     Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
     Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
     Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-    Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual
+    Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual,
+    const gen_alpha_solver::TimeStepper& time_stepper
 ) {
     // Residual vector for a dynamic beam element is assembled as follows
     // {residual} = {

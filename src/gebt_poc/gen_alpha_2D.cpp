@@ -38,6 +38,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
             states[i].GetGeneralizedCoordinates(), states[i].GetVelocity(),
             states[i].GetAcceleration(), states[i].GetAlgorithmicAcceleration()};
         log->Info("** Integrating step number " + std::to_string(i + 1) + " **\n");
+        log->Info("Current time: " + std::to_string(this->time_stepper_.GetCurrentTime()) + "\n");
         states.emplace_back(
             std::get<0>(this->AlphaStep(input_state, n_constraints, linearization_parameters))
         );
@@ -171,7 +172,8 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         }
 
         linearization_parameters->ResidualVector(
-            gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next, residuals
+            gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next, residuals,
+            this->time_stepper_
         );
 
         // Check for convergence based on L2 norm of the residual vector for all problems

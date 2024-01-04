@@ -139,7 +139,8 @@ void StaticBeamLinearizationParameters::ResidualVector(
     Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
     Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
     [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-    Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual
+    Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual,
+    [[maybe_unused]] const gen_alpha_solver::TimeStepper& time_stepper
 ) {
     // The residual vector for the generalized coordinates is given by
     // {residual} = {

@@ -16,7 +16,8 @@ TEST(UnityLinearizationParametersTest, ResidualVector) {
 
     auto residual_vector = Kokkos::View<double*>("residual_vector", 9);
     unity_linearization_parameters.ResidualVector(
-        gen_coords, velocity, acceleration, lagrange_mults, residual_vector
+        gen_coords, velocity, acceleration, lagrange_mults, residual_vector,
+        gen_alpha_solver::TimeStepper()
     );
 
     gen_alpha_solver::tests::expect_kokkos_view_1D_equal(

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "src/gen_alpha_poc/time_stepper.h"
 #include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gebt_poc {
@@ -18,7 +19,9 @@ public:
         Kokkos::View<double* [kNumberOfLieGroupComponents]> /* gen_coords */,
         Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* velocity */,
         Kokkos::View<double* [kNumberOfLieAlgebraComponents]> /* acceleration */,
-        Kokkos::View<double*> /* lagrange_multipliers */, Kokkos::View<double*> /* residual_vector */
+        Kokkos::View<double*> /* lagrange_multipliers */,
+        Kokkos::View<double*> /* residual_vector */,
+        const gen_alpha_solver::TimeStepper& /* time_stepper */
     ) = 0;
 
     /// Interface for calculating the iteration matrix for the problem
@@ -42,7 +45,8 @@ public:
         Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
         Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
         Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        Kokkos::View<double*> lagrange_mults, Kokkos::View<double*> residual_vector
+        Kokkos::View<double*> lagrange_mults, Kokkos::View<double*> residual_vector,
+        const gen_alpha_solver::TimeStepper& time_stepper
     ) override;
 
     /// Returns an identity iteration matrix
