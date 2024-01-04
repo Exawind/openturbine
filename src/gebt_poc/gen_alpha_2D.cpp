@@ -215,7 +215,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
                 kNumberOfLieAlgebraComponents,
                 KOKKOS_LAMBDA(const size_t i) {
                     delta_gen_coords(node, i) +=
-                        soln_increments(node * kNumberOfLieAlgebraComponents + i);
+                        soln_increments(node * kNumberOfLieAlgebraComponents + i) / h;
                     velocity_next(node, i) +=
                         kGammaPrime * soln_increments(node * kNumberOfLieAlgebraComponents + i);
                     acceleration_next(node, i) +=
