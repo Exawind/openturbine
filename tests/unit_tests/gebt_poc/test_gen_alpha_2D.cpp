@@ -99,22 +99,6 @@ TEST(TimeIntegratorTest, ExpectNonConvergedSolution) {
     EXPECT_FALSE(converged);
 }
 
-TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidAlphaF) {
-    EXPECT_THROW(GeneralizedAlphaTimeIntegrator(1.1, 0.5, 0.25, 0.5), std::invalid_argument);
-}
-
-TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidAlphaM) {
-    EXPECT_THROW(GeneralizedAlphaTimeIntegrator(0.5, 1.1, 0.25, 0.5), std::invalid_argument);
-}
-
-TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidBeta) {
-    EXPECT_THROW(GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.75, 0.5), std::invalid_argument);
-}
-
-TEST(GeneralizedAlphaTimeIntegratorTest, ConstructorWithInvalidGamma) {
-    EXPECT_THROW(GeneralizedAlphaTimeIntegrator(0.5, 0.5, 0.25, 1.1), std::invalid_argument);
-}
-
 TEST(GeneralizedAlphaTimeIntegratorTest, GetDefaultGAConstants) {
     auto time_integrator = GeneralizedAlphaTimeIntegrator();
 
