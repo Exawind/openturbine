@@ -330,7 +330,8 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
 bool GeneralizedAlphaTimeIntegrator::IsConverged(const Kokkos::View<double*> residual) {
     // L2 norm of the residual vector should be very small (< epsilon) for the solution
     // to be considered converged
-    std::cout << "Residual norm: " << KokkosBlas::nrm2(residual) << std::endl;
+    auto log = util::Log::Get();
+    log->Debug("Norm of residual: " + std::to_string(KokkosBlas::nrm2(residual)) + "\n");
     return KokkosBlas::nrm2(residual) < kConvergenceTolerance;
 }
 
@@ -339,15 +340,20 @@ bool GeneralizedAlphaTimeIntegrator::IsConverged(
 ) {
     auto energy_increment = std::abs(KokkosBlas::dot(residual, solution_increment));
 
-    if (this->time_stepper_.GetNumberOfIterations() == 0) {
+    // Store the first energy increment as the reference energy
+    if (this->time_stepper_.GetNumberOfIterations() == 1) {
         this->reference_energy_ = energy_increment;
     }
     auto energy_ratio = energy_increment / reference_energy_;
 
-    std::cout << "Energy increment: " << energy_increment << std::endl;
-    std::cout << "Energy ratio: " << energy_ratio << std::endl;
+    auto log = util::Log::Get();
+    log->Debug(
+        "Energy increment: " + std::to_string(energy_increment) + "\n" +
+        "Energy ratio: " + std::to_string(energy_ratio) + "\n"
+    );
 
     if (energy_increment < 1e-8 || energy_ratio < 1e-5) {
+        log->Debug("Solution converged for dynamic problem!\n");
         return true;
     }
     return false;
