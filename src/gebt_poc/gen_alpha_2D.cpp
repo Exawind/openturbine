@@ -180,8 +180,12 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             break;
         }
 
+        // Make a copy of delta_gen_coords and send it to the linearization parameters
+        auto delta_gen_coords_copy =
+            Kokkos::View<double* [kNumberOfLieAlgebraComponents]>("delta_gen_coords_copy", n_nodes);
+        Kokkos::deep_copy(delta_gen_coords_copy, delta_gen_coords);
         linearization_parameters->IterationMatrix(
-            h, kBetaPrime, kGammaPrime, gen_coords_next, delta_gen_coords, velocity_next,
+            h, kBetaPrime, kGammaPrime, gen_coords_next, delta_gen_coords_copy, velocity_next,
             acceleration_next, lagrange_mults_next, iteration_matrix
         );
 
