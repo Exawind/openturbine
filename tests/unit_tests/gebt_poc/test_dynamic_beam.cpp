@@ -231,12 +231,21 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
          0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
     );
 
-    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
-    Kokkos::parallel_for(1, NonZeroValues_populate_position{position_vectors});
+    auto position_vectors =
+        gen_alpha_solver::create_vector({// node 1
+                                         0., 0., 0., 1., 0., 0., 0.,
+                                         // node 2
+                                         1.7267316464601146, 0., 0., 1., 0., 0., 0.,
+                                         // node 3
+                                         5., 0., 0., 1., 0., 0., 0.,
+                                         // node 4
+                                         8.273268353539885, 0., 0., 1., 0., 0., 0.,
+                                         // node 5
+                                         10., 0., 0., 1., 0., 0., 0.});
 
     auto external_forces = std::vector<GeneralizedForces>{};
     auto constant_tip_force =
-        GeneralizedForces(gen_alpha_solver::create_vector({0., 0., -1., 0., 0., 0.}), 5);
+        GeneralizedForces(gen_alpha_solver::create_vector({0., 0., 1., 0., 0., 0.}), 5);
     external_forces.push_back(constant_tip_force);
 
     std::shared_ptr<LinearizationParameters> dynamic_beam_lin_params =
@@ -244,8 +253,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
             position_vectors, stiffness_matrix, mass_matrix, quadrature, external_forces
         );
 
-    // time step size = 0.005 and number of steps = 200
-    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 1, 10);
+    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 10, 10);
 
     // Calculate the generalized alpha parameters for rho_inf = 0
     auto rho_inf = 0.;
@@ -254,12 +262,14 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
     auto gamma = 0.5 + alpha_f - alpha_m;
     auto beta = 0.25 * std::pow(gamma + 0.5, 2);
 
-    auto time_integrator =
-        GeneralizedAlphaTimeIntegrator(alpha_f, alpha_m, beta, gamma, time_stepper, false);
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(
+        alpha_f, alpha_m, beta, gamma, time_stepper, true, ProblemType::kDynamic
+    );
 
     auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
     auto results =
-        time_integrator.Integrate(initial_state, lagrange_mults.extent(0), dynamic_beam_lin_params);
+        time_integrator.Integrate(initial_state, lagrange_mults.extent(0),
+        dynamic_beam_lin_params);
     auto final_state = results.back();
 }
 
