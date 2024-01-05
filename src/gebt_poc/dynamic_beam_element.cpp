@@ -11,7 +11,7 @@ namespace openturbine::gebt_poc {
 
 DynamicBeamLinearizationParameters::DynamicBeamLinearizationParameters(
     Kokkos::View<double*> position_vectors, StiffnessMatrix stiffness_matrix, MassMatrix mass_matrix,
-    UserDefinedQuadrature quadrature, std::vector<GeneralizedForces> external_forces
+    UserDefinedQuadrature quadrature, std::vector<Forces*> external_forces
 )
     : position_vectors_(position_vectors),
       stiffness_matrix_(stiffness_matrix),
@@ -21,12 +21,12 @@ DynamicBeamLinearizationParameters::DynamicBeamLinearizationParameters(
 }
 
 void DynamicBeamLinearizationParameters::ApplyExternalForces(
-    const std::vector<GeneralizedForces>& generalized_forces, Kokkos::View<double*> external_forces
+    double time, Kokkos::View<double*> external_forces
 ) {
     Kokkos::deep_copy(external_forces, 0.0);
-    for (const auto& force : generalized_forces) {
-        auto gen_forces = force.GetGeneralizedForces();
-        auto node = force.GetNode();
+    for (const auto force : this->external_forces_) {
+        auto gen_forces = force->GetGeneralizedForces(time);
+        auto node = force->GetNode();
         auto external_forces_node = Kokkos::subview(
             external_forces,
             Kokkos::make_pair(
@@ -90,7 +90,7 @@ void DynamicBeamLinearizationParameters::ResidualVector(
     KokkosBlas::axpy(1., residual_inertial, residual_elastic);
     // Part 3: external forces
     auto external_forces = Kokkos::View<double*>("external_forces", residual_elastic.extent(0));
-    ApplyExternalForces(this->external_forces_, external_forces);
+    ApplyExternalForces(time_stepper.GetCurrentTime(), external_forces);
     KokkosBlas::axpy(-1., external_forces, residual_elastic);
     // Part 4: Calculate the contribution for the constraints
     auto constraints_gradient_matrix =

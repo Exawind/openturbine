@@ -2,6 +2,7 @@
 
 #include <KokkosBlas.hpp>
 
+#include "src/gebt_poc/force.h"
 #include "src/gebt_poc/linearization_parameters.h"
 #include "src/gebt_poc/solver.h"
 #include "src/gen_alpha_poc/state.h"

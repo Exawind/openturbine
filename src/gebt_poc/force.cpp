@@ -33,4 +33,15 @@ GeneralizedForces::GeneralizedForces(Kokkos::View<double[6]> generalized_forces,
     this->moments_ = gen_alpha_solver::Vector(moments(0), moments(1), moments(2));
 }
 
+TimeVaryingForces::TimeVaryingForces(
+    std::function<Kokkos::View<double[6]>(double time)> generalized_forces_function, size_t node
+)
+    : generalized_forces_function_(generalized_forces_function), node_(node) {
+}
+
+Kokkos::View<double*> TimeVaryingForces::GetGeneralizedForces(double time) const {
+    std::cout << "time: " << time << std::endl;
+    return generalized_forces_function_(time);
+}
+
 }  // namespace openturbine::gebt_poc

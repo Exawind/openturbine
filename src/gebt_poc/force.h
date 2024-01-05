@@ -4,7 +4,7 @@
 
 namespace openturbine::gebt_poc {
 
-// Create an abstract class for  different types of forces
+/// Create an abstract class for providing common interface for different types of forces
 class Forces {
 public:
     virtual ~Forces() = default;
@@ -49,6 +49,25 @@ private:
     Kokkos::View<double[6]>
         generalized_forces_;  //< Generalized forces (combined forces and moments vector)
     size_t node_;             //< Node number on which the generalized forces are applied
+};
+
+/// Class for managing the time varying generalized forces applied on a dynamic system
+class TimeVaryingForces : public Forces {
+public:
+    /// Constructor that creates the generalized forces from a given function of time
+    TimeVaryingForces(
+        std::function<Kokkos::View<double[6]>(double time)> generalized_forces_function, size_t node
+    );
+
+    /// Returns the 6 x 1 generalized forces vector
+    Kokkos::View<double*> GetGeneralizedForces(double time = 0.) const override;
+
+    /// Returns the node number on which the generalized forces are applied
+    inline size_t GetNode() const override { return node_; }
+
+private:
+    std::function<Kokkos::View<double[6]>(double)> generalized_forces_function_;
+    size_t node_;
 };
 
 }  // namespace openturbine::gebt_poc

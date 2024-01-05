@@ -2,6 +2,7 @@
 
 #include "KokkosBlas.hpp"
 
+#include "src/gebt_poc/force.h"
 #include "src/gebt_poc/linearization_parameters.h"
 #include "src/gebt_poc/solver.h"
 #include "src/gen_alpha_poc/state.h"
@@ -25,7 +26,7 @@ public:
     DynamicBeamLinearizationParameters(
         Kokkos::View<double*> position_vectors, StiffnessMatrix stiffness_matrix,
         MassMatrix mass_matrix, UserDefinedQuadrature quadrature,
-        std::vector<GeneralizedForces> external_forces = {}
+        std::vector<Forces*> external_forces = {}
     );
 
     virtual void ResidualVector(
@@ -36,10 +37,7 @@ public:
         const gen_alpha_solver::TimeStepper& time_stepper
     ) override;
 
-    void ApplyExternalForces(
-        const std::vector<GeneralizedForces>& generalized_forces,
-        Kokkos::View<double*> external_forces
-    );
+    void ApplyExternalForces(double time, Kokkos::View<double*> external_forces);
 
     virtual void IterationMatrix(
         const double& h, const double& beta_prime, const double& gamma_prime,
@@ -82,7 +80,7 @@ private:
     StiffnessMatrix stiffness_matrix_;
     MassMatrix mass_matrix_;
     UserDefinedQuadrature quadrature_;
-    std::vector<GeneralizedForces> external_forces_;
+    std::vector<Forces*> external_forces_;
 };
 
 }  // namespace openturbine::gebt_poc
