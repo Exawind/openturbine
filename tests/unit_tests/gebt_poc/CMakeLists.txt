@@ -5,6 +5,7 @@ target_sources(
     test_dynamic_beam.cpp
     test_element.cpp
     test_field_data.cpp
+    test_force.cpp
     test_gebt_generalized_alpha_solver.cpp
     test_gen_alpha_2D.cpp
     test_interpolation.cpp
