@@ -334,7 +334,8 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
                                          // node 5
                                          10., 0., 0., 1., 0., 0., 0.});
 
-    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 10, 10);
+    // Run the dynamic analysis for 4.0 seconds with a time step of 0.005 seconds
+    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 800, 20);
 
     auto external_forces = std::vector<Forces*>{};
     auto create_sin_varying_force = [](double t) {

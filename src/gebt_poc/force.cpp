@@ -40,7 +40,6 @@ TimeVaryingForces::TimeVaryingForces(
 }
 
 Kokkos::View<double*> TimeVaryingForces::GetGeneralizedForces(double time) const {
-    std::cout << "time: " << time << std::endl;
     return generalized_forces_function_(time);
 }
 
