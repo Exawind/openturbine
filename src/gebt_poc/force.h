@@ -9,10 +9,10 @@ class Forces {
 public:
     virtual ~Forces() = default;
 
-    /// Returns the generalized forces vector
+    /// Returns the 6 x 1 force vector
     virtual Kokkos::View<double*> GetGeneralizedForces(double /*time*/) const = 0;
 
-    /// Returns the node number on which the generalized forces are applied
+    /// Returns the node number on which the force is being applied
     virtual size_t GetNode() const = 0;
 };
 
@@ -51,7 +51,7 @@ private:
     size_t node_;             //< Node number on which the generalized forces are applied
 };
 
-/// Class for managing the time varying generalized forces applied on a dynamic system
+/// Class for managing the time-varying generalized forces applied on a dynamic system
 class TimeVaryingForces : public Forces {
 public:
     /// Constructor that creates the generalized forces from a given function of time
@@ -66,7 +66,7 @@ public:
     inline size_t GetNode() const override { return node_; }
 
 private:
-    std::function<Kokkos::View<double[6]>(double)> generalized_forces_function_;
+    std::function<Kokkos::View<double[6]>(double)> function_;
     size_t node_;
 };
 

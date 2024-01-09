@@ -47,4 +47,22 @@ TEST(GeneralizedForcesTest, CreateGeneralizedForcesWithGiven1DVector) {
     EXPECT_EQ(generalized_forces.GetNode(), 5);
 }
 
+TEST(TimeVaryingForcesTest, CreateTimeVaryingForcesWithGivenFunction) {
+    auto create_time_varying_force = [](double time) {
+        return gen_alpha_solver::create_vector(
+            {1. + time, 2. + time, 3. + time, 4. + time, 5. + time, 6. + time}
+        );
+    };
+    auto node = 1;
+    auto time_varying_forces = TimeVaryingForces(create_time_varying_force, node);
+
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        time_varying_forces.GetGeneralizedForces(0.), {1., 2., 3., 4., 5., 6.}
+    );
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        time_varying_forces.GetGeneralizedForces(1.), {2., 3., 4., 5., 6., 7.}
+    );
+    EXPECT_EQ(time_varying_forces.GetNode(), 1);
+}
+
 }  // namespace openturbine::gebt_poc::tests
