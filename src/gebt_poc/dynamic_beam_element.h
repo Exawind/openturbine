@@ -30,22 +30,22 @@ public:
     );
 
     virtual void ResidualVector(
-        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual_vector,
-        const gen_alpha_solver::TimeStepper& time_stepper
+        Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
+        Kokkos::View<const double*> lagrange_multipliers,
+        const gen_alpha_solver::TimeStepper& time_stepper, Kokkos::View<double*> residual_vector
     ) override;
 
     void ApplyExternalForces(double time, Kokkos::View<double*> external_forces);
 
     virtual void IterationMatrix(
         const double& h, const double& beta_prime, const double& gamma_prime,
-        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
+        Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
+        Kokkos::View<const double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
     ) override;
 
     /// Tangent operator for a single node of the dynamic beam element

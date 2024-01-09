@@ -41,11 +41,11 @@ void DynamicBeamLinearizationParameters::ApplyExternalForces(
 }
 
 void DynamicBeamLinearizationParameters::ResidualVector(
-    Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-    Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual,
-    const gen_alpha_solver::TimeStepper& time_stepper
+    Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
+    Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
+    Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
+    Kokkos::View<const double*> lagrange_multipliers,
+    const gen_alpha_solver::TimeStepper& time_stepper, Kokkos::View<double*> residual
 ) {
     // Residual vector for a dynamic beam element is assembled as follows
     // {residual} = {
@@ -110,11 +110,11 @@ void DynamicBeamLinearizationParameters::ResidualVector(
 
 void DynamicBeamLinearizationParameters::IterationMatrix(
     const double& h, const double& beta_prime, const double& gamma_prime,
-    Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-    Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
+    Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
+    Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
+    Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
+    Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
+    Kokkos::View<const double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
 ) {
     // Iteration matrix for the static beam element is given by
     // [iteration matrix] = [
@@ -148,10 +148,14 @@ void DynamicBeamLinearizationParameters::IterationMatrix(
     Convert2DViewTo1DView(acceleration, accelaration_1D);
 
     // Assemble the tangent operator (same size as the stiffness matrix)
+    auto delta_gen_coords_node =
+        Kokkos::View<double*>("delta_gen_coords_node", kNumberOfVectorComponents);
     auto tangent_operator = Kokkos::View<double**>("tangent_operator", size_dofs, size_dofs);
     Kokkos::deep_copy(tangent_operator, 0.0);
     for (size_t i = 0; i < n_nodes; ++i) {
-        auto delta_gen_coords_node = Kokkos::subview(delta_gen_coords, i, Kokkos::make_pair(3, 6));
+        Kokkos::deep_copy(
+            delta_gen_coords_node, Kokkos::subview(delta_gen_coords, i, Kokkos::make_pair(3, 6))
+        );
         KokkosBlas::scal(delta_gen_coords_node, h, delta_gen_coords_node);
         auto tangent_operator_node = Kokkos::subview(
             tangent_operator,

@@ -10,7 +10,7 @@
 
 namespace openturbine::gebt_poc {
 
-void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> result);
+void Convert2DViewTo1DView(Kokkos::View<const double**> view, Kokkos::View<double*> result);
 
 /// Calculates the constraint gradient matrix for the clamped beam problem
 void BMatrix(Kokkos::View<double**> constraints_gradient_matrix);
@@ -37,20 +37,20 @@ public:
     );
 
     virtual void ResidualVector(
-        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual_vector,
-        const gen_alpha_solver::TimeStepper& time_stepper
+        Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
+        Kokkos::View<const double*> lagrange_multipliers,
+        const gen_alpha_solver::TimeStepper& time_stepper, Kokkos::View<double*> residual_vector
     ) override;
 
     virtual void IterationMatrix(
         const double& h, const double& beta_prime, const double& gamma_prime,
-        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
+        Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
+        Kokkos::View<const double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
     ) override;
 
     /// Tangent operator for a single node of the static beam element

@@ -172,8 +172,8 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         }
 
         linearization_parameters->ResidualVector(
-            gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next, residuals,
-            this->time_stepper_
+            gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next,
+            this->time_stepper_, residuals
         );
 
         // Check for convergence based on L2 norm of the residual vector for all problems
@@ -182,12 +182,8 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             break;
         }
 
-        // Make a copy of delta_gen_coords and send it to the linearization parameters
-        auto delta_gen_coords_copy =
-            Kokkos::View<double* [kNumberOfLieAlgebraComponents]>("delta_gen_coords_copy", n_nodes);
-        Kokkos::deep_copy(delta_gen_coords_copy, delta_gen_coords);
         linearization_parameters->IterationMatrix(
-            h, kBetaPrime, kGammaPrime, gen_coords_next, delta_gen_coords_copy, velocity_next,
+            h, kBetaPrime, kGammaPrime, gen_coords_next, delta_gen_coords, velocity_next,
             acceleration_next, lagrange_mults_next, iteration_matrix
         );
 
