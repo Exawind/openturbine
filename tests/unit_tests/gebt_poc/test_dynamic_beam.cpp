@@ -253,7 +253,8 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
             position_vectors, stiffness_matrix, mass_matrix, quadrature, external_forces
         );
 
-    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 10, 10);
+    // Run the dynamic analysis for 1 iteration with a time step of 0.005 seconds
+    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 1, 10);
 
     // Calculate the generalized alpha parameters for rho_inf = 0
     auto rho_inf = 0.;
@@ -270,6 +271,16 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
     auto results =
         time_integrator.Integrate(initial_state, lagrange_mults.extent(0), dynamic_beam_lin_params);
     auto final_state = results.back();
+
+    // We expect the state to contain the following values after 0.005s via validation results
+    // from BeamDyn at the tip node
+    auto state_1 = results[1];
+    auto position_1 = Kokkos::subview(
+        state_1.GetGeneralizedCoordinates(), Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
+    );
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        position_1, {{-3.26341443E-09, -3.50249888E-08, 1.39513747E-04}}
+    );
 }
 
 TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
@@ -335,7 +346,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
                                          10., 0., 0., 1., 0., 0., 0.});
 
     // Run the dynamic analysis for 3 iterations with a time step of 0.005 seconds
-    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 3, 5);
+    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 3, 10);
 
     auto external_forces = std::vector<Forces*>{};
     auto create_sin_varying_force = [](double t) {
