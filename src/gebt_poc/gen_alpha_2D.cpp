@@ -291,7 +291,8 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
                     delta_gen_coords(node, 5)} *
                 h
             );
-            auto q = current_orientation * updated_orientation;
+            // auto q = current_orientation * updated_orientation;
+            auto q = updated_orientation * current_orientation;
 
             gen_coords_next(node, 0) = r.GetXComponent();
             gen_coords_next(node, 1) = r.GetYComponent();
