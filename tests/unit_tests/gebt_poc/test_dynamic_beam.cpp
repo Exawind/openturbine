@@ -334,8 +334,8 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
                                          // node 5
                                          10., 0., 0., 1., 0., 0., 0.});
 
-    // Run the dynamic analysis for 4.0 seconds with a time step of 0.005 seconds
-    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 800, 20);
+    // Run the dynamic analysis for 3 iterations with a time step of 0.005 seconds
+    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 3, 5);
 
     auto external_forces = std::vector<Forces*>{};
     auto create_sin_varying_force = [](double t) {
@@ -363,7 +363,36 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
     auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
     auto results =
         time_integrator.Integrate(initial_state, lagrange_mults.extent(0), dynamic_beam_lin_params);
-    auto final_state = results.back();
+
+    // We expect the state to contain the following values after 0.005s via validation results
+    // from BeamDyn at the tip node
+    auto state_1 = results[1];
+    auto position_1 = Kokkos::subview(
+        state_1.GetGeneralizedCoordinates(), Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
+    );
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        position_1, {{-8.15173937E-08, -1.86549248E-07, 6.97278045E-04}}
+    );
+
+    // We expect the state to contain the following values after 0.010s via validation results
+    // from BeamDyn at the tip node
+    auto state_2 = results[2];
+    auto position_2 = Kokkos::subview(
+        state_2.GetGeneralizedCoordinates(), Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
+    );
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        position_2, {{-1.00926258E-06, -7.91711079E-07, 2.65017558E-03}}
+    );
+
+    // We expect the state to contain the following values after 0.015s via validation results
+    // from BeamDyn at the tip node
+    auto state_3 = results[3];
+    auto position_3 = Kokkos::subview(
+        state_3.GetGeneralizedCoordinates(), Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
+    );
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        position_3, {{-5.05830945E-06, -2.29457246E-06, 6.30508154E-03}}
+    );
 }
 
 }  // namespace openturbine::gebt_poc::tests
