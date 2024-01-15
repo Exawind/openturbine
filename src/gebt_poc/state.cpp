@@ -42,6 +42,17 @@ State::State(
     Kokkos::deep_copy(algorithmic_acceleration_, algo_accln);
 }
 
+struct InitializeMassQuadrantOne {
+  KOKKOS_FUNCTION
+  void operator()(std::size_t) const {
+    for(std::size_t i = 0; i < 3; ++i) {
+      m(i, i) = mass_;
+    }
+  }
+  Kokkos::View<double[3][3], Kokkos::LayoutStride> m;
+  double mass_;
+};
+
 MassMatrix::MassMatrix(
     double mass, Kokkos::View<double[3]> center_of_mass, Kokkos::View<double[3][3]> moment_of_inertia
 )
@@ -73,14 +84,7 @@ MassMatrix::MassMatrix(
     auto rho = Kokkos::subview(mass_matrix_, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
 
     // Top left quadrant
-    Kokkos::parallel_for(
-        1,
-        KOKKOS_LAMBDA(std::size_t) {
-            m(0, 0) = mass_;
-            m(1, 1) = mass_;
-            m(2, 2) = mass_;
-        }
-    );
+    Kokkos::parallel_for(1, InitializeMassQuadrantOne{m, mass_});
 
     // Top right quadrant
     auto eta_cross_prod_matrix = gen_alpha_solver::create_cross_product_matrix(center_of_mass_);
@@ -101,8 +105,8 @@ MassMatrix::MassMatrix(Kokkos::View<double[6][6]> mass_matrix)
     Kokkos::deep_copy(mass_matrix_, mass_matrix);
 
     // Calculate mass, center of mass, and moment of inertia from the mass matrix
-    auto m = Kokkos::subview(mass_matrix_, Kokkos::make_pair(0, 1), Kokkos::make_pair(0, 1));
-    this->mass_ = m(0, 0);
+    auto m = Kokkos::subview(mass_matrix_, 0, 0);
+    Kokkos::deep_copy(this->mass_, m);
 
     auto m_eta = Kokkos::subview(mass_matrix_, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
     auto temp = Kokkos::View<double[3][3]>("temp");
