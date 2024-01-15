@@ -159,6 +159,8 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     // Allocate some Views to assist in performing the Newton-Raphson iterations
     auto residuals = Kokkos::View<double*>("residuals", size_problem);
     auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", size_problem, size_problem);
+    auto soln_increments = Kokkos::View<double*>("soln_increments", size_problem);
+    auto temp_vector = Kokkos::View<double*>("temp_vector", size_problem);
 
     const auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
     for (time_stepper_.SetNumberOfIterations(0);
@@ -171,11 +173,10 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
 
         UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords, gen_coords_next);
 
+        // Check for convergence based on energy criterion for dynamic problems
         if (this->problem_type_ == ProblemType::kDynamic &&
             time_stepper_.GetNumberOfIterations() > 0) {
-            // Check for convergence based on energy criterion for dynamic problems
-            if (this->IsConverged(residuals, soln_increments)) {
-                this->is_converged_ = true;
+            if (is_converged_ = IsConverged(residuals, soln_increments)) {
                 break;
             }
         }
@@ -195,16 +196,20 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         );
 
         // Solve the Linear System
+        Kokkos::deep_copy(soln_increments, residuals);
         ApplyPreconditioner(iteration_matrix, dr, dl);
-        auto solution_residual = Kokkos::subview(residuals, Kokkos::make_pair(0ul, size_dofs));
-        KokkosBlas::scal(solution_residual, preconditioning_factor, solution_residual);
-        openturbine::gebt_poc::solve_linear_system(iteration_matrix, residuals);
-        KokkosBlas::scal(residuals, -1, residuals);
+        KokkosBlas::gemv("N", 1., dl, residuals, 0., soln_increments);
+        openturbine::gebt_poc::solve_linear_system(iteration_matrix, soln_increments);
+        KokkosBlas::scal(soln_increments, -1, soln_increments);
+
+        // Un-condition the solution increments
+        Kokkos::deep_copy(temp_vector, soln_increments);
+        KokkosBlas::gemv("N", 1., dr, temp_vector, 0., soln_increments);
 
         // Update constraints based on the increments
         auto delta_lagrange_mults =
-            Kokkos::subview(residuals, Kokkos::make_pair(size_dofs, size_problem));
-        KokkosBlas::axpy(1. / preconditioning_factor, delta_lagrange_mults, lagrange_mults_next);
+            Kokkos::subview(soln_increments, Kokkos::make_pair(size_dofs, size_problem));
+        KokkosBlas::axpy(1., delta_lagrange_mults, lagrange_mults_next);
 
         // Update states based on the increments
         Kokkos::parallel_for(
@@ -214,9 +219,10 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
                 constexpr auto components = kNumberOfLieAlgebraComponents;
                 auto component_range = Kokkos::TeamVectorRange(member, components);
                 Kokkos::parallel_for(component_range, [=](std::size_t i) {
-                    delta_gen_coords(node, i) += residuals(node * components + i);
-                    velocity_next(node, i) += kGammaPrime * residuals(node * components + i);
-                    acceleration_next(node, i) += kBetaPrime * residuals(node * components + i);
+                    delta_gen_coords(node, i) += soln_increments(node * components + i) / h;
+                    velocity_next(node, i) += kGammaPrime * soln_increments(node * components + i);
+                    acceleration_next(node, i) +=
+                        kBetaPrime * soln_increments(node * components + i);
                 });
             }
         );
@@ -319,7 +325,7 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
             compute_orientation_quaternion(
                 member, updated_orientation, updated_orientation_vector, h
             );
-            compose_quaternions(member, q, current_orientation, updated_orientation);
+            compose_quaternions(member, q, updated_orientation, current_orientation);
         }
     );
 }
