@@ -88,7 +88,7 @@ Kokkos::View<double**> transpose_matrix(const Kokkos::View<double**> matrix) {
     return transposed_matrix;
 }
 
-Kokkos::View<double**> create_cross_product_matrix(const Kokkos::View<double*> vector) {
+Kokkos::View<double**> create_cross_product_matrix(Kokkos::View<const double*> vector) {
     if (vector.extent(0) != 3) {
         throw std::invalid_argument("The provided vector must have 3 elements");
     }

@@ -580,12 +580,6 @@ struct NonZeroValues_PopulateAcceleration {
     }
 };
 
-// void ElementalInertialForcesResidual(
-//     const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-//     const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
-//     const MassMatrix& mass_matrix, const Quadrature& quadrature, Kokkos::View<double*> residual
-// ) {
-
 TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
     auto position_vectors = Kokkos::View<double[35]>("position_vectors");
     Kokkos::parallel_for(1, NonZeroValues_populate_position{position_vectors});

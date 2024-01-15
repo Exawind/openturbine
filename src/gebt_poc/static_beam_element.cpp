@@ -8,7 +8,7 @@ namespace openturbine::gebt_poc {
 
 // TECHDEBT Following is a hack to make things work temporarily - we should move over to
 // using 2D views for the solver functions
-void Convert2DViewTo1DView(Kokkos::View<double**> view, Kokkos::View<double*> result) {
+void Convert2DViewTo1DView(Kokkos::View<const double**> view, Kokkos::View<double*> result) {
     auto populate_result = KOKKOS_LAMBDA(size_t i) {
         result(i) = view(i / view.extent(1), i % view.extent(1));
     };
@@ -136,10 +136,12 @@ StaticBeamLinearizationParameters::StaticBeamLinearizationParameters(
 }
 
 void StaticBeamLinearizationParameters::ResidualVector(
-    Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-    Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual
+    Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
+    Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
+    [[maybe_unused]] Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
+    Kokkos::View<const double*> lagrange_multipliers,
+    [[maybe_unused]] const gen_alpha_solver::TimeStepper& time_stepper,
+    Kokkos::View<double*> residual
 ) {
     // The residual vector for the generalized coordinates is given by
     // {residual} = {
@@ -182,11 +184,11 @@ void StaticBeamLinearizationParameters::ResidualVector(
 void StaticBeamLinearizationParameters::IterationMatrix(
     const double& h, [[maybe_unused]] const double& beta_prime,
     [[maybe_unused]] const double& gamma_prime,
-    Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    [[maybe_unused]] Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-    Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
+    Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
+    Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
+    Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
+    [[maybe_unused]] Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
+    Kokkos::View<const double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
 ) {
     // Iteration matrix for the static beam element is given by
     // [iteration matrix] = [
@@ -208,10 +210,14 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     Convert2DViewTo1DView(gen_coords, gen_coords_1D);
 
     // Assemble the tangent operator (same size as the stiffness matrix)
+    auto delta_gen_coords_node =
+        Kokkos::View<double*>("delta_gen_coords_node", kNumberOfVectorComponents);
     auto tangent_operator = Kokkos::View<double**>("tangent_operator", size_dofs, size_dofs);
     Kokkos::deep_copy(tangent_operator, 0.0);
     for (size_t i = 0; i < n_nodes; ++i) {
-        auto delta_gen_coords_node = Kokkos::subview(delta_gen_coords, i, Kokkos::make_pair(3, 6));
+        Kokkos::deep_copy(
+            delta_gen_coords_node, Kokkos::subview(delta_gen_coords, i, Kokkos::make_pair(3, 6))
+        );
         KokkosBlas::scal(delta_gen_coords_node, h, delta_gen_coords_node);
         auto tangent_operator_node = Kokkos::subview(
             tangent_operator,
