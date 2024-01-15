@@ -2,50 +2,53 @@
 
 #include "KokkosBlas.hpp"
 
+#include "src/gebt_poc/force.h"
 #include "src/gebt_poc/linearization_parameters.h"
 #include "src/gebt_poc/solver.h"
 #include "src/gen_alpha_poc/state.h"
+#include "src/gen_alpha_poc/time_stepper.h"
 #include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gebt_poc {
 
-/// Calculates the constraint gradient matrix for the clamped beam problem
-void BMatrix(Kokkos::View<double**> constraints_gradient_matrix);
-
 /*!
- * Calculates the residual vector and iteration matrix for a static beam element
+ * Calculates the residual vector and iteration matrix for a dynamic beam element
  */
-class ClampedBeamLinearizationParameters : public LinearizationParameters {
+class DynamicBeamLinearizationParameters : public LinearizationParameters {
 public:
     static constexpr size_t kNumberOfLieGroupComponents = 7;
     static constexpr size_t kNumberOfLieAlgebraComponents = 6;
     static constexpr size_t kNumberOfVectorComponents = 3;
     static constexpr double kTolerance = 1e-16;
 
-    /// Define a static beam element with the given position vector for the nodes, 6x6
+    /// Define a dynamic beam element with the given position vector for the nodes, 6 x 6
     /// stiffness matrix, and a quadrature rule
-    ClampedBeamLinearizationParameters(
+    DynamicBeamLinearizationParameters(
         Kokkos::View<double*> position_vectors, StiffnessMatrix stiffness_matrix,
-        UserDefinedQuadrature quadrature
+        MassMatrix mass_matrix, UserDefinedQuadrature quadrature,
+        std::vector<Forces*> external_forces = {}
     );
 
     virtual void ResidualVector(
-        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double*> residual_vector
+        Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
+        Kokkos::View<const double*> lagrange_multipliers,
+        const gen_alpha_solver::TimeStepper& time_stepper, Kokkos::View<double*> residual_vector
     ) override;
+
+    void ApplyExternalForces(double time, Kokkos::View<double*> external_forces);
 
     virtual void IterationMatrix(
         const double& h, const double& beta_prime, const double& gamma_prime,
-        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-        Kokkos::View<double* [kNumberOfLieAlgebraComponents]> acceleration,
-        Kokkos::View<double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
+        Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
+        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
+        Kokkos::View<const double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
     ) override;
 
-    /// Tangent operator for a single node of the static beam element
+    /// Tangent operator for a single node of the dynamic beam element
     template <typename VectorView, typename MatrixView>
     void TangentOperator(VectorView psi, MatrixView tangent_operator) {
         static_assert(VectorView::rank == 1);
@@ -75,7 +78,9 @@ public:
 private:
     Kokkos::View<double*> position_vectors_;
     StiffnessMatrix stiffness_matrix_;
+    MassMatrix mass_matrix_;
     UserDefinedQuadrature quadrature_;
+    std::vector<Forces*> external_forces_;
 };
 
 }  // namespace openturbine::gebt_poc

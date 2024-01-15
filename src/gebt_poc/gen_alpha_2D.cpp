@@ -13,27 +13,17 @@ namespace openturbine::gebt_poc {
 
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double alpha_f, double alpha_m, double beta, double gamma,
-    gen_alpha_solver::TimeStepper time_stepper, bool precondition
+    gen_alpha_solver::TimeStepper time_stepper, bool precondition, ProblemType problem_type
 )
     : kAlphaF_(alpha_f),
       kAlphaM_(alpha_m),
       kBeta_(beta),
       kGamma_(gamma),
       time_stepper_(std::move(time_stepper)),
-      is_preconditioned_(precondition) {
-    if (this->kAlphaF_ < 0 || this->kAlphaF_ > 1) {
-        throw std::invalid_argument("Invalid value provided for alpha_f");
-    }
-    if (this->kAlphaM_ < 0 || this->kAlphaM_ > 1) {
-        throw std::invalid_argument("Invalid value provided for alpha_m");
-    }
-    if (this->kBeta_ < 0 || this->kBeta_ > 0.50) {
-        throw std::invalid_argument("Invalid value provided for beta");
-    }
-    if (this->kGamma_ < 0 || this->kGamma_ > 1) {
-        throw std::invalid_argument("Invalid value provided for gamma");
-    }
+      is_preconditioned_(precondition),
+      problem_type_(problem_type) {
     this->is_converged_ = false;
+    this->reference_energy_ = 0.;
 }
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
@@ -49,6 +39,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
             states[i].GetGeneralizedCoordinates(), states[i].GetVelocity(),
             states[i].GetAcceleration(), states[i].GetAlgorithmicAcceleration()};
         log->Info("** Integrating step number " + std::to_string(i + 1) + " **\n");
+        log->Info("Current time: " + std::to_string(this->time_stepper_.GetCurrentTime()) + "\n");
         states.emplace_back(
             std::get<0>(this->AlphaStep(input_state, n_constraints, linearization_parameters))
         );
@@ -180,8 +171,18 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
 
         UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords, gen_coords_next);
 
+        if (this->problem_type_ == ProblemType::kDynamic &&
+            time_stepper_.GetNumberOfIterations() > 0) {
+            // Check for convergence based on energy criterion for dynamic problems
+            if (this->IsConverged(residuals, soln_increments)) {
+                this->is_converged_ = true;
+                break;
+            }
+        }
+
         linearization_parameters->ResidualVector(
-            gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next, residuals
+            gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next,
+            this->time_stepper_, residuals
         );
 
         if (is_converged_ = IsConverged(residuals)) {
@@ -326,7 +327,33 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
 bool GeneralizedAlphaTimeIntegrator::IsConverged(const Kokkos::View<double*> residual) {
     // L2 norm of the residual vector should be very small (< epsilon) for the solution
     // to be considered converged
+    auto log = util::Log::Get();
+    log->Debug("Norm of residual: " + std::to_string(KokkosBlas::nrm2(residual)) + "\n");
     return KokkosBlas::nrm2(residual) < kConvergenceTolerance;
+}
+
+bool GeneralizedAlphaTimeIntegrator::IsConverged(
+    Kokkos::View<double*> residual, Kokkos::View<double*> solution_increment
+) {
+    auto energy_increment = std::abs(KokkosBlas::dot(residual, solution_increment));
+
+    // Store the first energy increment as the reference energy
+    if (this->time_stepper_.GetNumberOfIterations() == 1) {
+        this->reference_energy_ = energy_increment;
+    }
+    auto energy_ratio = energy_increment / reference_energy_;
+
+    auto log = util::Log::Get();
+    log->Debug(
+        "Energy increment: " + std::to_string(energy_increment) + "\n" +
+        "Energy ratio: " + std::to_string(energy_ratio) + "\n"
+    );
+
+    if (energy_increment < 1e-8 || energy_ratio < 1e-5) {
+        log->Debug("Solution converged for dynamic problem!\n");
+        return true;
+    }
+    return false;
 }
 
 }  // namespace openturbine::gebt_poc
