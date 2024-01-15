@@ -43,14 +43,14 @@ State::State(
 }
 
 struct InitializeMassQuadrantOne {
-  KOKKOS_FUNCTION
-  void operator()(std::size_t) const {
-    for(std::size_t i = 0; i < 3; ++i) {
-      m(i, i) = mass_;
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        for (std::size_t i = 0; i < 3; ++i) {
+            m(i, i) = mass_;
+        }
     }
-  }
-  Kokkos::View<double[3][3], Kokkos::LayoutStride> m;
-  double mass_;
+    Kokkos::View<double[3][3], Kokkos::LayoutStride> m;
+    double mass_;
 };
 
 MassMatrix::MassMatrix(

@@ -893,8 +893,7 @@ void ElementalInertialMatrices(
                 const auto pair_j = Kokkos::make_pair(
                     j * kNumberOfLieGroupComponents, (j + 1) * kNumberOfLieGroupComponents
                 );
-                const auto a =
-                    q_weight * shape_function[i] * shape_function[j] * jacobian;
+                const auto a = q_weight * shape_function[i] * shape_function[j] * jacobian;
                 KokkosBlas::axpy(
                     a, Kokkos::subview(sectional_mass_matrix, pair6, pair6),
                     Kokkos::subview(element_mass_matrix, pair_i, pair_j)
