@@ -6,21 +6,26 @@
 
 namespace openturbine::gebt_poc {
 
+struct InitializeGeneralizedForces {
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        generalized_forces_(0) = forces.GetXComponent();
+        generalized_forces_(1) = forces.GetYComponent();
+        generalized_forces_(2) = forces.GetZComponent();
+        generalized_forces_(3) = moments.GetXComponent();
+        generalized_forces_(4) = moments.GetYComponent();
+        generalized_forces_(5) = moments.GetZComponent();
+    }
+    gen_alpha_solver::Vector forces;
+    gen_alpha_solver::Vector moments;
+    Kokkos::View<double[6]> generalized_forces_;
+};
+
 GeneralizedForces::GeneralizedForces(
     const gen_alpha_solver::Vector& forces, const gen_alpha_solver::Vector& moments, size_t node
 )
     : forces_(forces), moments_(moments), generalized_forces_("generalized_forces"), node_(node) {
-    Kokkos::parallel_for(
-        1,
-        KOKKOS_LAMBDA(std::size_t) {
-            generalized_forces_(0) = forces.GetXComponent();
-            generalized_forces_(1) = forces.GetYComponent();
-            generalized_forces_(2) = forces.GetZComponent();
-            generalized_forces_(3) = moments.GetXComponent();
-            generalized_forces_(4) = moments.GetYComponent();
-            generalized_forces_(5) = moments.GetZComponent();
-        }
-    );
+    Kokkos::parallel_for(1, InitializeGeneralizedForces{forces, moments, generalized_forces_});
 }
 
 GeneralizedForces::GeneralizedForces(Kokkos::View<double[6]> generalized_forces, size_t node)
@@ -28,9 +33,14 @@ GeneralizedForces::GeneralizedForces(Kokkos::View<double[6]> generalized_forces,
     Kokkos::deep_copy(generalized_forces_, generalized_forces);
 
     auto forces = Kokkos::subview(generalized_forces_, Kokkos::make_pair(0, 3));
+    auto forces_host = Kokkos::create_mirror(forces);
+    Kokkos::deep_copy(forces_host, forces);
+    this->forces_ = gen_alpha_solver::Vector(forces_host(0), forces_host(1), forces_host(2));
+
     auto moments = Kokkos::subview(generalized_forces_, Kokkos::make_pair(3, 6));
-    this->forces_ = gen_alpha_solver::Vector(forces(0), forces(1), forces(2));
-    this->moments_ = gen_alpha_solver::Vector(moments(0), moments(1), moments(2));
+    auto moments_host = Kokkos::create_mirror(moments);
+    Kokkos::deep_copy(moments_host, moments);
+    this->moments_ = gen_alpha_solver::Vector(moments_host(0), moments_host(1), moments_host(2));
 }
 
 TimeVaryingForces::TimeVaryingForces(

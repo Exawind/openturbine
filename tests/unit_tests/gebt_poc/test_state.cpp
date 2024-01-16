@@ -123,9 +123,7 @@ TEST(MassMatrixTest, CreateMassMatrixWithGivenProperties) {
     auto center_of_mass = gen_alpha_solver::create_vector({0.1, 0.2, 0.3});
     auto moment_of_inertia =
         gen_alpha_solver::create_matrix({{1., 2., 3.}, {2., 4., 6.}, {3., 6., 9.}});
-
     auto mass_matrix = MassMatrix(mass, center_of_mass, moment_of_inertia);
-
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         mass_matrix.GetMassMatrix(),
         {

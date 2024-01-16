@@ -54,7 +54,29 @@ Kokkos::View<double**> create_matrix(const std::vector<std::vector<double>>&);
 Kokkos::View<double**> transpose_matrix(const Kokkos::View<double**>);
 
 /// Generates and returns the 3 x 3 cross product matrix from a provided 3D vector
-Kokkos::View<double**> create_cross_product_matrix(Kokkos::View<const double*>);
+template <typename VectorType>
+inline Kokkos::View<double**> create_cross_product_matrix(VectorType vector) {
+    if (vector.extent(0) != 3) {
+        throw std::invalid_argument("The provided vector must have 3 elements");
+    }
+
+    auto matrix = Kokkos::View<double[3][3]>("cross_product_matrix");
+    auto populate_matrix = KOKKOS_LAMBDA(size_t) {
+        matrix(0, 0) = 0.;
+        matrix(0, 1) = -vector(2);
+        matrix(0, 2) = vector(1);
+        matrix(1, 0) = vector(2);
+        matrix(1, 1) = 0.;
+        matrix(1, 2) = -vector(0);
+        matrix(2, 0) = -vector(1);
+        matrix(2, 1) = vector(0);
+        matrix(2, 2) = 0.;
+    };
+
+    Kokkos::parallel_for(1, populate_matrix);
+
+    return matrix;
+}
 
 /// Convert a 3x3 cross product matrix to a 3D vector
 Kokkos::View<double*> convert_cross_product_matrix_to_vector(Kokkos::View<double[3][3]>);
