@@ -170,7 +170,9 @@ TEST(StaticBeamTest, StaticBeamResidual) {
     auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
 
     auto residual = Kokkos::View<double[36]>("residual");
-    static_beam.ResidualVector(gen_coords, velocity, acceleration, lagrange_mults, residual);
+    static_beam.ResidualVector(
+        gen_coords, velocity, acceleration, lagrange_mults, gen_alpha_solver::TimeStepper(), residual
+    );
 
     std::vector<double> expected = {0., 0.8856000000000164,
                                     0., 0.,

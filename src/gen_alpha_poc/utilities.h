@@ -54,7 +54,7 @@ Kokkos::View<double**> create_matrix(const std::vector<std::vector<double>>&);
 Kokkos::View<double**> transpose_matrix(const Kokkos::View<double**>);
 
 /// Generates and returns the 3 x 3 cross product matrix from a provided 3D vector
-Kokkos::View<double**> create_cross_product_matrix(const Kokkos::View<double*>);
+Kokkos::View<double**> create_cross_product_matrix(Kokkos::View<const double*>);
 
 /// Convert a 3x3 cross product matrix to a 3D vector
 Kokkos::View<double*> convert_cross_product_matrix_to_vector(Kokkos::View<double[3][3]>);
