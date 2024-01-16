@@ -7,6 +7,12 @@
 
 namespace openturbine::gebt_poc {
 
+// An enum class to indicate the problem type
+enum class ProblemType {
+    kStatic = 0,  //< Static problem
+    kDynamic = 1  //< Dynamic problem
+};
+
 /// @brief A time integrator class based on the generalized-alpha method
 class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
 public:
@@ -17,7 +23,7 @@ public:
     GeneralizedAlphaTimeIntegrator(
         double alpha_f = 0.5, double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5,
         gen_alpha_solver::TimeStepper time_stepper = gen_alpha_solver::TimeStepper(),
-        bool precondition = false
+        bool precondition = false, ProblemType problem_type = ProblemType::kStatic
     );
 
     /// Returns the type of the time integrator
@@ -64,6 +70,12 @@ public:
     /// Checks convergence of the non-linear solution based on the residuals
     bool IsConverged(const Kokkos::View<double*>);
 
+    /// Checks convergence of dynamic problems based on an energy criterion
+    bool IsConverged(Kokkos::View<double*> residual, Kokkos::View<double*> solution_increment);
+
+    /// Returns the problem type
+    inline ProblemType GetProblemType() const { return problem_type_; }
+
 private:
     const double kAlphaF_;  //< Alpha_f coefficient of the generalized-alpha method
     const double kAlphaM_;  //< Alpha_m coefficient of the generalized-alpha method
@@ -74,6 +86,9 @@ private:
     gen_alpha_solver::TimeStepper
         time_stepper_;        //< Time stepper object to perform the time integration
     bool is_preconditioned_;  //< Flag to indicate if the iteration matrix is preconditioned
+
+    ProblemType problem_type_;  //< Enumerator to indicate the type of the problem
+    double reference_energy_;   //< Energy of the system
 };
 
 }  // namespace openturbine::gebt_poc

@@ -13,27 +13,17 @@ namespace openturbine::gebt_poc {
 
 GeneralizedAlphaTimeIntegrator::GeneralizedAlphaTimeIntegrator(
     double alpha_f, double alpha_m, double beta, double gamma,
-    gen_alpha_solver::TimeStepper time_stepper, bool precondition
+    gen_alpha_solver::TimeStepper time_stepper, bool precondition, ProblemType problem_type
 )
     : kAlphaF_(alpha_f),
       kAlphaM_(alpha_m),
       kBeta_(beta),
       kGamma_(gamma),
       time_stepper_(std::move(time_stepper)),
-      is_preconditioned_(precondition) {
-    if (this->kAlphaF_ < 0 || this->kAlphaF_ > 1) {
-        throw std::invalid_argument("Invalid value provided for alpha_f");
-    }
-    if (this->kAlphaM_ < 0 || this->kAlphaM_ > 1) {
-        throw std::invalid_argument("Invalid value provided for alpha_m");
-    }
-    if (this->kBeta_ < 0 || this->kBeta_ > 0.50) {
-        throw std::invalid_argument("Invalid value provided for beta");
-    }
-    if (this->kGamma_ < 0 || this->kGamma_ > 1) {
-        throw std::invalid_argument("Invalid value provided for gamma");
-    }
+      is_preconditioned_(precondition),
+      problem_type_(problem_type) {
     this->is_converged_ = false;
+    this->reference_energy_ = 0.;
 }
 
 std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
@@ -49,6 +39,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
             states[i].GetGeneralizedCoordinates(), states[i].GetVelocity(),
             states[i].GetAcceleration(), states[i].GetAlgorithmicAcceleration()};
         log->Info("** Integrating step number " + std::to_string(i + 1) + " **\n");
+        log->Info("Current time: " + std::to_string(this->time_stepper_.GetCurrentTime()) + "\n");
         states.emplace_back(
             std::get<0>(this->AlphaStep(input_state, n_constraints, linearization_parameters))
         );
@@ -132,22 +123,13 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
                 algo_acceleration_next(node, i) = (kAlphaFLocal * acceleration(node, i) -
                                                    kAlphaMLocal * algo_acceleration(node, i)) /
                                                   (1. - kAlphaMLocal);
-            });
-            Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 delta_gen_coords(node, i) = velocity(node, i) +
                                             h * (0.5 - kBetaLocal) * algo_acceleration(node, i) +
                                             h * kBetaLocal * algo_acceleration_next(node, i);
-            });
-            Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 velocity_next(node, i) = velocity(node, i) +
                                          h * (1 - kGammaLocal) * algo_acceleration(node, i) +
                                          h * kGammaLocal * algo_acceleration_next(node, i);
-            });
-            member.team_barrier();
-            Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 algo_acceleration(node, i) = algo_acceleration_next(node, i);
-            });
-            Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 acceleration_next(node, i) = 0.;
             });
         }
@@ -177,6 +159,8 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     // Allocate some Views to assist in performing the Newton-Raphson iterations
     auto residuals = Kokkos::View<double*>("residuals", size_problem);
     auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", size_problem, size_problem);
+    auto soln_increments = Kokkos::View<double*>("soln_increments", size_problem);
+    auto temp_vector = Kokkos::View<double*>("temp_vector", size_problem);
 
     const auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
     for (time_stepper_.SetNumberOfIterations(0);
@@ -189,8 +173,17 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
 
         UpdateGeneralizedCoordinates(gen_coords, delta_gen_coords, gen_coords_next);
 
+        // Check for convergence based on energy criterion for dynamic problems
+        if (this->problem_type_ == ProblemType::kDynamic &&
+            time_stepper_.GetNumberOfIterations() > 0) {
+            if (is_converged_ = IsConverged(residuals, soln_increments)) {
+                break;
+            }
+        }
+
         linearization_parameters->ResidualVector(
-            gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next, residuals
+            gen_coords_next, velocity_next, acceleration_next, lagrange_mults_next,
+            this->time_stepper_, residuals
         );
 
         if (is_converged_ = IsConverged(residuals)) {
@@ -203,16 +196,20 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         );
 
         // Solve the Linear System
+        Kokkos::deep_copy(soln_increments, residuals);
         ApplyPreconditioner(iteration_matrix, dr, dl);
-        auto solution_residual = Kokkos::subview(residuals, Kokkos::make_pair(0ul, size_dofs));
-        KokkosBlas::scal(solution_residual, preconditioning_factor, solution_residual);
-        openturbine::gebt_poc::solve_linear_system(iteration_matrix, residuals);
-        KokkosBlas::scal(residuals, -1, residuals);
+        KokkosBlas::gemv("N", 1., dl, residuals, 0., soln_increments);
+        openturbine::gebt_poc::solve_linear_system(iteration_matrix, soln_increments);
+        KokkosBlas::scal(soln_increments, -1, soln_increments);
+
+        // Un-condition the solution increments
+        Kokkos::deep_copy(temp_vector, soln_increments);
+        KokkosBlas::gemv("N", 1., dr, temp_vector, 0., soln_increments);
 
         // Update constraints based on the increments
         auto delta_lagrange_mults =
-            Kokkos::subview(residuals, Kokkos::make_pair(size_dofs, size_problem));
-        KokkosBlas::axpy(1. / preconditioning_factor, delta_lagrange_mults, lagrange_mults_next);
+            Kokkos::subview(soln_increments, Kokkos::make_pair(size_dofs, size_problem));
+        KokkosBlas::axpy(1., delta_lagrange_mults, lagrange_mults_next);
 
         // Update states based on the increments
         Kokkos::parallel_for(
@@ -222,13 +219,10 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
                 constexpr auto components = kNumberOfLieAlgebraComponents;
                 auto component_range = Kokkos::TeamVectorRange(member, components);
                 Kokkos::parallel_for(component_range, [=](std::size_t i) {
-                    delta_gen_coords(node, i) += residuals(node * components + i);
-                });
-                Kokkos::parallel_for(component_range, [=](std::size_t i) {
-                    velocity_next(node, i) += kGammaPrime * residuals(node * components + i);
-                });
-                Kokkos::parallel_for(component_range, [=](std::size_t i) {
-                    acceleration_next(node, i) += kBetaPrime * residuals(node * components + i);
+                    delta_gen_coords(node, i) += soln_increments(node * components + i) / h;
+                    velocity_next(node, i) += kGammaPrime * soln_increments(node * components + i);
+                    acceleration_next(node, i) +=
+                        kBetaPrime * soln_increments(node * components + i);
                 });
             }
         );
@@ -317,12 +311,8 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
             auto node = member.league_rank();
 
             // R^3 Update
-            auto current_position = Kokkos::subview(gen_coords, node, Kokkos::make_pair(0, 3));
-            auto updated_position = Kokkos::subview(delta_gen_coords, node, Kokkos::make_pair(0, 3));
-            auto r = Kokkos::subview(gen_coords_next, node, Kokkos::make_pair(0, 3));
-
             Kokkos::parallel_for(Kokkos::TeamVectorRange(member, 3), [=](std::size_t i) {
-                r(i) = current_position(i) + updated_position(i) * h;
+                gen_coords_next(node, i) = gen_coords(node, i) + delta_gen_coords(node, i) * h;
             });
 
             // SO(3) Update
@@ -335,7 +325,7 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
             compute_orientation_quaternion(
                 member, updated_orientation, updated_orientation_vector, h
             );
-            compose_quaternions(member, q, current_orientation, updated_orientation);
+            compose_quaternions(member, q, updated_orientation, current_orientation);
         }
     );
 }
@@ -343,7 +333,33 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
 bool GeneralizedAlphaTimeIntegrator::IsConverged(const Kokkos::View<double*> residual) {
     // L2 norm of the residual vector should be very small (< epsilon) for the solution
     // to be considered converged
+    auto log = util::Log::Get();
+    log->Debug("Norm of residual: " + std::to_string(KokkosBlas::nrm2(residual)) + "\n");
     return KokkosBlas::nrm2(residual) < kConvergenceTolerance;
+}
+
+bool GeneralizedAlphaTimeIntegrator::IsConverged(
+    Kokkos::View<double*> residual, Kokkos::View<double*> solution_increment
+) {
+    auto energy_increment = std::abs(KokkosBlas::dot(residual, solution_increment));
+
+    // Store the first energy increment as the reference energy
+    if (this->time_stepper_.GetNumberOfIterations() == 1) {
+        this->reference_energy_ = energy_increment;
+    }
+    auto energy_ratio = energy_increment / reference_energy_;
+
+    auto log = util::Log::Get();
+    log->Debug(
+        "Energy increment: " + std::to_string(energy_increment) + "\n" +
+        "Energy ratio: " + std::to_string(energy_ratio) + "\n"
+    );
+
+    if (energy_increment < 1e-8 || energy_ratio < 1e-5) {
+        log->Debug("Solution converged for dynamic problem!\n");
+        return true;
+    }
+    return false;
 }
 
 }  // namespace openturbine::gebt_poc

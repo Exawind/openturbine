@@ -1,7 +1,8 @@
 target_sources(${oturb_lib_name}
     PRIVATE
-    clamped_beam.cpp
+    dynamic_beam_element.cpp
     element.cpp
+    force.cpp
     gen_alpha_2D.cpp
     interpolation.cpp
     linearization_parameters.cpp
