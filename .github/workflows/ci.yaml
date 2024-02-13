@@ -3,20 +3,7 @@ name: OpenTurbine-CI
 on: push
 
 jobs:
-  Formatting:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone
-      uses: actions/checkout@v3
-    - name: Check formatting
-      uses: DoozyX/clang-format-lint-action@v0.16.2
-      with:
-        source: './src ./tests/unit_tests'
-        exclude: '.'
-        extensions: 'H,h,cpp'
-        clangFormatVersion: 16
   CPU:
-    needs: Formatting
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
@@ -90,3 +77,15 @@ jobs:
         cmake --build . -j 2
         ./openturbine -h
         ./openturbine_unit_tests
+  Formatting:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v3
+    - name: Check formatting
+      uses: DoozyX/clang-format-lint-action@v0.16.2
+      with:
+        source: './src ./tests/unit_tests'
+        exclude: '.'
+        extensions: 'H,h,cpp'
+        clangFormatVersion: 16
