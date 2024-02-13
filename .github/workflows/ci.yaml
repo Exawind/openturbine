@@ -75,7 +75,7 @@ jobs:
         cmake --build . -j 2
         ./openturbine -h
         ./openturbine_unit_tests
-  Debug-GCC:
+  Debug:
     runs-on: ubuntu-latest
     steps:
     - name: Install dependencies
@@ -130,6 +130,7 @@ jobs:
         cd build
         cmake .. \
           -DOTURB_ENABLE_TESTS:BOOL=ON \
+          -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
           -DCMAKE_BUILD_TYPE=Debug
         cmake --build . -j 2
         ./openturbine -h
