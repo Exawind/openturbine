@@ -131,7 +131,8 @@ jobs:
         cmake .. \
           -DOTURB_ENABLE_TESTS:BOOL=ON \
           -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
-          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_CLANG_TIDY="clang-tidy;-header-filter=.;-checks=*;-warnings-as-errors=*;"
         cmake --build . -j 2
         ./openturbine -h
         ./openturbine_unit_tests
