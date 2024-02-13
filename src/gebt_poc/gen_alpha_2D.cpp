@@ -176,7 +176,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         // Check for convergence based on energy criterion for dynamic problems
         if (this->problem_type_ == ProblemType::kDynamic &&
             time_stepper_.GetNumberOfIterations() > 0) {
-            if (is_converged_ = IsConverged(residuals, soln_increments)) {
+            if ((is_converged_ = IsConverged(residuals, soln_increments))) {
                 break;
             }
         }
@@ -186,7 +186,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             this->time_stepper_, residuals
         );
 
-        if (is_converged_ = IsConverged(residuals)) {
+        if ((is_converged_ = IsConverged(residuals))) {
             break;
         }
 
