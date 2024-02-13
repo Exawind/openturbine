@@ -24,7 +24,7 @@ public:
     /// Define a dynamic beam element with the given position vector for the nodes, 6 x 6
     /// stiffness matrix, and a quadrature rule
     DynamicBeamLinearizationParameters(
-        Kokkos::View<double* [7]> position_vectors, StiffnessMatrix stiffness_matrix,
+        Kokkos::View<double* [7]> position_vectors, StiffnessMatrix stiffness_matrix, MassMatrix mass_matrix,
         UserDefinedQuadrature quadrature,
         std::vector<Forces*> external_forces = {}
     );

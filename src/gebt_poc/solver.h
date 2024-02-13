@@ -15,14 +15,14 @@ constexpr std::size_t kNumberOfVectorComponents = 3;
 /// Calculates the interpolated values for a nodal quantity (e.g. displacement or position vector)
 /// at a given quadrature point and normalizes the rotation quaternion
 void InterpolateNodalValues(
-    Kokkos::View<double**> nodal_values, std::vector<double> interpolation_function,
+    Kokkos::View<const double**> nodal_values, std::vector<double> interpolation_function,
     Kokkos::View<double*> interpolated_value
 );
 
 /// Calculates the interpolated derivative values for a nodal quantity (e.g. displacement
 /// or position vector) at a given quadrature point
 void InterpolateNodalValueDerivatives(
-    Kokkos::View<double**> nodal_values, std::vector<double> interpolation_function,
+    Kokkos::View<const double**> nodal_values, std::vector<double> interpolation_function,
     const double jacobian, Kokkos::View<double*> interpolated_values
 );
 
@@ -58,7 +58,7 @@ void NodalElasticForces(
 
 /// Calculates the static residual vector for a beam element
 void ElementalStaticForcesResidual(
-    const Kokkos::View<double**> position_vectors, const Kokkos::View<double**> gen_coords, const StiffnessMatrix& stiffness, const Quadrature& quadrature, Kokkos::View<double*> residual
+    Kokkos::View<const double**> position_vectors, Kokkos::View<const double**> gen_coords, const StiffnessMatrix& stiffness, const Quadrature& quadrature, Kokkos::View<double*> residual
 );
 
 /// Transforms the provided 6 x 6 mass matrix in material/current configuration -> inertial basis
@@ -81,8 +81,8 @@ void NodalInertialForces(
 
 /// Calculates the dynamic residual vector for a beam element
 void ElementalInertialForcesResidual(
-    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-    const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
+    Kokkos::View<const double**> position_vectors, Kokkos::View<const double**> gen_coords,
+    Kokkos::View<const double**> velocity, const Kokkos::View<const double**> acceleration,
     const MassMatrix& mass_matrix, const Quadrature& quadrature, Kokkos::View<double*> residual
 );
 
@@ -99,7 +99,7 @@ void NodalStaticStiffnessMatrixComponents(
 
 /// Calculates the static iteration matrix for a beam element
 void ElementalStaticStiffnessMatrix(
-    const Kokkos::View<double**> position_vectors, const Kokkos::View<double**> gen_coords,
+    Kokkos::View<const double**> position_vectors, Kokkos::View<const double**> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature,
     Kokkos::View<double**> stiffness_matrix
 );
@@ -118,8 +118,8 @@ void NodalDynamicStiffnessMatrix(
 );
 
 void ElementalInertialMatrices(
-    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-    const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
+    Kokkos::View<const double**> position_vectors, Kokkos::View<const double**> gen_coords,
+    Kokkos::View<const double**> velocity, Kokkos::View<const double**> acceleration,
     const MassMatrix& mass_matrix, const Quadrature& quadrature,
     Kokkos::View<double**> element_mass_matrix, Kokkos::View<double**> element_gyroscopic_matrix,
     Kokkos::View<double**> element_dynamic_stiffness_matrix
@@ -127,12 +127,12 @@ void ElementalInertialMatrices(
 
 /// Calculates the constraint residual vector for a beam element
 void ElementalConstraintForcesResidual(
-    const Kokkos::View<double**> gen_coords, const Kokkos::View<double**> position_vector,
+    Kokkos::View<const double**> gen_coords, Kokkos::View<double*> constraints_residual
 );
 
 /// Calculates the constraint gradient matrix for a beam element
 void ElementalConstraintForcesGradientMatrix(
-    const Kokkos::View<double**> gen_coords, const Kokkos::View<double**> position_vector,
+    Kokkos::View<const double**> gen_coords, Kokkos::View<const double**> position_vector,
     Kokkos::View<double**> constraints_gradient_matrix
 );
 

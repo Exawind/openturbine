@@ -66,25 +66,17 @@ void DynamicBeamLinearizationParameters::ResidualVector(
     const auto size_constraints = lagrange_multipliers.extent(0);
     const auto size_residual = size_dofs + size_constraints;
 
-    auto gen_coords_1D =
-        Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
-    Convert2DViewTo1DView(gen_coords, gen_coords_1D);
-    auto velocity_1D = Kokkos::View<double*>("velocity_1D", velocity.extent(0) * velocity.extent(1));
-    Convert2DViewTo1DView(velocity, velocity_1D);
-    auto acceleration_1D =
-        Kokkos::View<double*>("acceleration_1D", acceleration.extent(0) * acceleration.extent(1));
-    Convert2DViewTo1DView(acceleration, acceleration_1D);
 
     // Assemble the top partition of the residual vector consisting of 4 parts
     // Part 1: elastic/static forces residual
     auto residual_elastic = Kokkos::subview(residual, Kokkos::make_pair(zero, size_dofs));
     ElementalStaticForcesResidual(
-        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_elastic
+        position_vectors_, gen_coords, stiffness_matrix_, quadrature_, residual_elastic
     );
     // Part 2: dynamic/inertial forces residual
     auto residual_inertial = Kokkos::View<double*>("residual_inertial", residual_elastic.extent(0));
     ElementalInertialForcesResidual(
-        position_vectors_, gen_coords_1D, velocity_1D, acceleration_1D, mass_matrix_, quadrature_,
+        position_vectors_, gen_coords, velocity, acceleration, mass_matrix_, quadrature_,
         residual_inertial
     );
     KokkosBlas::axpy(1., residual_inertial, residual_elastic);
@@ -105,7 +97,7 @@ void DynamicBeamLinearizationParameters::ResidualVector(
     // Assemble the bottom partition of the residual vector i.e. the constraints residual
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
-    ElementalConstraintForcesResidual(gen_coords_1D, residual_constraints);
+    ElementalConstraintForcesResidual(gen_coords, residual_constraints);
 }
 
 void DynamicBeamLinearizationParameters::IterationMatrix(
@@ -138,15 +130,6 @@ void DynamicBeamLinearizationParameters::IterationMatrix(
     const auto size_iteration = size_dofs + size_constraints;
     const auto n_nodes = velocity.extent(0);
 
-    auto gen_coords_1D =
-        Kokkos::View<double*>("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
-    Convert2DViewTo1DView(gen_coords, gen_coords_1D);
-    auto velocity_1D = Kokkos::View<double*>("velocity_1D", velocity.extent(0) * velocity.extent(1));
-    Convert2DViewTo1DView(velocity, velocity_1D);
-    auto accelaration_1D =
-        Kokkos::View<double*>("accelaration_1D", acceleration.extent(0) * acceleration.extent(1));
-    Convert2DViewTo1DView(acceleration, accelaration_1D);
-
     // Assemble the tangent operator (same size as the stiffness matrix)
     auto delta_gen_coords_node =
         Kokkos::View<double*>("delta_gen_coords_node", kNumberOfVectorComponents);
@@ -175,7 +158,7 @@ void DynamicBeamLinearizationParameters::IterationMatrix(
     auto dynamic_stiffness_matrix =
         Kokkos::View<double**>("dynamic_stiffness_matrix", size_dofs, size_dofs);
     ElementalInertialMatrices(
-        position_vectors_, gen_coords_1D, velocity_1D, accelaration_1D, mass_matrix_, quadrature_,
+        position_vectors_, gen_coords, velocity, acceleration, mass_matrix_, quadrature_,
         mass_matrix, gyroscopic_matrix, dynamic_stiffness_matrix
     );
     // Part 1: [M] * beta'
@@ -191,7 +174,7 @@ void DynamicBeamLinearizationParameters::IterationMatrix(
     // K_t = K_t_elastic + K_t_inertial
     auto stiffness_matrix = Kokkos::View<double**>("stiffness_matrix", size_dofs, size_dofs);
     ElementalStaticStiffnessMatrix(
-        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, stiffness_matrix
+        position_vectors_, gen_coords, stiffness_matrix_, quadrature_, stiffness_matrix
     );
     KokkosBlas::axpy(1., dynamic_stiffness_matrix, stiffness_matrix);
     auto K_t_T = Kokkos::View<double**>("K_t_T", size_dofs, size_dofs);

@@ -9,7 +9,7 @@
 namespace openturbine::gebt_poc {
 
 void InterpolateNodalValues(
-    Kokkos::View<double**> nodal_values, std::vector<double> interpolation_function,
+    Kokkos::View<const double**> nodal_values, std::vector<double> interpolation_function,
     Kokkos::View<double*> interpolated_values
 ) {
     const auto n_nodes = nodal_values.extent(0);
@@ -32,7 +32,7 @@ void InterpolateNodalValues(
 }
 
 void InterpolateNodalValueDerivatives(
-    Kokkos::View<double**> nodal_values, std::vector<double> interpolation_function,
+    Kokkos::View<const double**> nodal_values, std::vector<double> interpolation_function,
     const double jacobian, Kokkos::View<double*> interpolated_values
 ) {
     if (jacobian == 0.) {
@@ -340,20 +340,19 @@ void NodalInertialForces(
 }
 
 void ElementalInertialForcesResidual(
-    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-    const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
+    Kokkos::View<const double**> position_vectors, Kokkos::View<const double**> gen_coords,
+    Kokkos::View<const double**> velocity, const Kokkos::View<const double**> acceleration,
     const MassMatrix& mass_matrix, const Quadrature& quadrature, Kokkos::View<double*> residual
 ) {
-    const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
+    const auto n_nodes = gen_coords.extent(0);
     const auto order = n_nodes - 1;
     const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
 
     auto nodes = Kokkos::View<double* [3]>("nodes", n_nodes);
     for (std::size_t i = 0; i < n_nodes; ++i) {
-        auto index = i * kNumberOfLieAlgebraComponents;
         Kokkos::deep_copy(
             Kokkos::subview(nodes, i, Kokkos::ALL),
-            Kokkos::subview(position_vectors, Kokkos::make_pair(index, index + 3))
+            Kokkos::subview(position_vectors, i, Kokkos::make_pair(0, 3))
         );
     }
 
@@ -384,12 +383,8 @@ void ElementalInertialForcesResidual(
             auto jacobian = CalculateJacobian(nodes, shape_function_derivative_vector);
             InterpolateNodalValues(gen_coords, shape_function, gen_coords_qp);
             InterpolateNodalValues(position_vectors, shape_function, position_vector_qp);
-            InterpolateNodalValues(
-                velocity, shape_function, velocity_qp, kNumberOfLieGroupComponents
-            );
-            InterpolateNodalValues(
-                acceleration, shape_function, acceleration_qp, kNumberOfLieGroupComponents
-            );
+            InterpolateNodalValues(velocity, shape_function, velocity_qp);
+            InterpolateNodalValues(acceleration, shape_function, acceleration_qp);
 
             // Calculate the sectional mass matrix in inertial basis
             auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
@@ -542,7 +537,7 @@ void NodalStaticStiffnessMatrixComponents(
 }
 
 void ElementalStaticStiffnessMatrix(
-    const Kokkos::View<double**> position_vectors, const Kokkos::View<double**> gen_coords,
+    Kokkos::View<const double**> position_vectors, Kokkos::View<const double**> gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature,
     Kokkos::View<double**> stiffness_matrix
 ) {
@@ -779,22 +774,21 @@ void NodalDynamicStiffnessMatrix(
 }
 
 void ElementalInertialMatrices(
-    const Kokkos::View<double*> position_vectors, const Kokkos::View<double*> gen_coords,
-    const Kokkos::View<double*> velocity, const Kokkos::View<double*> acceleration,
+    Kokkos::View<const double**> position_vectors, Kokkos::View<const double**> gen_coords,
+    const Kokkos::View<const double**> velocity, const Kokkos::View<const double**> acceleration,
     const MassMatrix& mass_matrix, const Quadrature& quadrature,
     Kokkos::View<double**> element_mass_matrix, Kokkos::View<double**> element_gyroscopic_matrix,
     Kokkos::View<double**> element_dynamic_stiffness_matrix
 ) {
-    const auto n_nodes = gen_coords.extent(0) / kNumberOfLieAlgebraComponents;
+    const auto n_nodes = gen_coords.extent(0);
     const auto order = n_nodes - 1;
     const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
 
     auto nodes = Kokkos::View<double* [3]>("nodes", n_nodes);
     for (std::size_t i = 0; i < n_nodes; ++i) {
-        auto index = i * kNumberOfLieAlgebraComponents;
         Kokkos::deep_copy(
             Kokkos::subview(nodes, i, Kokkos::ALL),
-            Kokkos::subview(position_vectors, Kokkos::make_pair(index, index + 3))
+            Kokkos::subview(position_vectors, i, Kokkos::make_pair(0, 3))
         );
     }
 
@@ -833,10 +827,8 @@ void ElementalInertialMatrices(
         InterpolateNodalValueDerivatives(
             position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
         );
-        InterpolateNodalValues(velocity, shape_function, velocity_qp, kNumberOfLieGroupComponents);
-        InterpolateNodalValues(
-            acceleration, shape_function, acceleration_qp, kNumberOfLieGroupComponents
-        );
+        InterpolateNodalValues(velocity, shape_function, velocity_qp);
+        InterpolateNodalValues(acceleration, shape_function, acceleration_qp);
 
         // Calculate the sectional mass matrix in inertial basis
         auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
@@ -892,7 +884,7 @@ void ElementalInertialMatrices(
 }
 
 void ElementalConstraintForcesResidual(
-    const Kokkos::View<double**> gen_coords, Kokkos::View<double**> constraints_residual
+    Kokkos::View<const double**> gen_coords, Kokkos::View<double*> constraints_residual
 ) {
     Kokkos::deep_copy(constraints_residual, 0.);
     // For the GEBT proof of concept problem (i.e. the clamped beam), the dofs are enforced to be
@@ -920,7 +912,7 @@ void ElementalConstraintForcesResidual(
 }
 
 void ElementalConstraintForcesGradientMatrix(
-    const Kokkos::View<double**> gen_coords, const Kokkos::View<double**> position_vector,
+    Kokkos::View<const double**> gen_coords, Kokkos::View<const double**> position_vector,
     Kokkos::View<double**> constraints_gradient_matrix
 ) {
     auto translation_0 = Kokkos::subview(gen_coords, 0, Kokkos::make_pair(0, 3));

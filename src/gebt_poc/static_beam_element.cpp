@@ -248,7 +248,7 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     );
     auto constraints_gradient_matrix =
         Kokkos::View<double**>("constraints_gradient_matrix", size_constraints, size_dofs);
-    ConstraintsGradientMatrix(gen_coords, position_vectors_, constraints_gradient_matrix);
+    ElementalConstraintForcesGradientMatrix(gen_coords, position_vectors_, constraints_gradient_matrix);
 
     auto temp = gen_alpha_solver::transpose_matrix(constraints_gradient_matrix);
     Kokkos::deep_copy(quadrant_2, temp);
