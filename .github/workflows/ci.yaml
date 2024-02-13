@@ -3,16 +3,16 @@ name: OpenTurbine-CI
 on: push
 
 jobs:
-  CPU:
+  Release:
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
         include:
           - os: ubuntu-latest
-            install_deps: sudo apt-get install liblapack-dev liblapacke-dev libgtest-dev
+            install_deps: sudo apt-get install libgtest-dev
           - os: macos-latest
-            install_deps: brew install gfortran lapack googletest
+            install_deps: brew install googletest
     steps:
     - name: Install dependencies
       run: |
@@ -33,10 +33,7 @@ jobs:
         cd build
         cmake .. \
           -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DKokkos_ENABLE_COMPILER_WARNINGS=ON \
-          -DKokkos_ENABLE_DEBUG=ON \
-          -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON 
+          -DCMAKE_BUILD_TYPE=Release 
         sudo cmake --build . --target install -j 2
     - name: Cache install Kokkos-Kernels
       id: cache-kokkos-kernels
@@ -61,19 +58,20 @@ jobs:
         cd build
         cmake .. \
           -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DKokkosKernels_ENABLE_TPL_BLAS=ON 
+          -DCMAKE_BUILD_TYPE=Release
         sudo cmake --build . --target install -j 2
     - name: Clone
       uses: actions/checkout@v3
       with:
         submodules: true
-    - name: Test
+    - name: Test OpenTurbine
       run: |
         export KokkosKernels_DIR=~/dependencies/kokkos_kernels
         mkdir build
         cd build
-        cmake .. -DOTURB_ENABLE_TESTS:BOOL=ON
+        cmake .. \
+          -DOTURB_ENABLE_TESTS:BOOL=ON \
+          -DCMAKE_BUILD_TYPE=Release
         cmake --build . -j 2
         ./openturbine -h
         ./openturbine_unit_tests
