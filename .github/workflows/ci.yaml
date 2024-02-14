@@ -194,6 +194,65 @@ jobs:
           -DCMAKE_BUILD_TYPE=Debug \
           -DCMAKE_CXX_CLANG_TIDY="clang-tidy"
         cmake --build . 
+  CppCheck:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install dependencies
+      run: sudo apt-get install libgtest-dev cppcheck 
+    - name: Cache install Kokkos
+      id: cache-kokkos
+      uses: actions/cache@v3
+      with:
+        path: ~/dependencies/kokkos
+        key: ${{runner.os}}-kokkos
+    - name: Install Kokkos
+      if: steps.cache-kokkos.outputs.cache-hit != 'true'
+      run: |
+        sudo mkdir -p ~/dependencies/kokkos
+        git clone --depth 1 --branch 4.2.00 https://github.com/kokkos/kokkos
+        cd kokkos
+        mkdir build
+        cd build
+        cmake .. \
+          -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DKokkos_ENABLE_DEBUG=ON \
+          -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON
+        sudo cmake --build . --target install -j 2
+    - name: Cache install Kokkos-Kernels
+      id: cache-kokkos-kernels
+      uses: actions/cache@v3
+      with:
+        path: ~/dependencies/kokkos_kernels
+        key: ${{runner.os}}-kokkos-kernels
+    - name: Install Kokkos-Kernels
+      if: steps.cache-kokkos-kernels.outputs.cache-hit != 'true'
+      run: |
+        sudo mkdir -p ~/dependencies/kokkos_kernels
+        export Kokkos_DIR=~/dependencies/kokkos
+          git clone https://github.com/kokkos/kokkos-kernels
+        cd kokkos-kernels
+        mkdir build
+        cd build
+        cmake .. \
+          -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
+          -DCMAKE_BUILD_TYPE=Debug
+        sudo cmake --build . --target install -j 2
+    - name: Clone
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+    - name: Test OpenTurbine
+      run: |
+        export KokkosKernels_DIR=~/dependencies/kokkos_kernels
+        mkdir build
+        cd build
+        cmake .. \
+          -DOTURB_ENABLE_TESTS:BOOL=ON \
+          -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_CPPCHECK="cppcheck;--enable=all;--force;"
+        cmake --build . 
   Formatting:
     runs-on: ubuntu-latest
     steps:
