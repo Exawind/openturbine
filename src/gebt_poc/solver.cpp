@@ -254,9 +254,10 @@ void ElementalStaticForcesResidual(
                 kNumberOfLieGroupComponents,
                 KOKKOS_LAMBDA(const size_t component) {
                     residual(node_count * kNumberOfLieGroupComponents + component) +=
-                        q_weight *
-                        (shape_function_derivative_vector(node_count) * elastic_forces_fc(component) +
-                         jacobian * shape_function_vector(node_count) * elastic_forces_fd(component));
+                        q_weight * (shape_function_derivative_vector(node_count) *
+                                        elastic_forces_fc(component) +
+                                    jacobian * shape_function_vector(node_count) *
+                                        elastic_forces_fd(component));
                 }
             );
         }
@@ -424,7 +425,8 @@ void ElementalInertialForcesResidual(
                 kNumberOfLieGroupComponents,
                 KOKKOS_LAMBDA(const size_t component) {
                     residual(node_count * kNumberOfLieGroupComponents + component) +=
-                        q_weight * (jacobian * shape_function_vector(node_count) * inertial_f(component));
+                        q_weight *
+                        (jacobian * shape_function_vector(node_count) * inertial_f(component));
                 }
             );
         }
