@@ -309,6 +309,7 @@ std::vector<std::vector<double>> expected_iteration = {
      0.,
      0.,
      0.,
+     0.,
      0.},
 
     // row 10
@@ -346,6 +347,7 @@ std::vector<std::vector<double>> expected_iteration = {
      0.,
      0.,
      0.,
+     0.,
      0.},
 
     // row 11
@@ -379,6 +381,7 @@ std::vector<std::vector<double>> expected_iteration = {
      -598.8568878284098,
      3011.6568357098067,
      12.613171084084712,
+     0.,
      0.,
      0.,
      0.,
@@ -687,7 +690,6 @@ std::vector<std::vector<double>> expected_iteration = {
      0., -69305.0204561978,
      0., 0.,
      0., 59835.5860401419,
-     0., 0.,
      0., 0.,
      0., 0.,
      0., 0.},

@@ -3,30 +3,32 @@ name: OpenTurbine-CI
 on: push
 
 jobs:
-  Formatting:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone
-      uses: actions/checkout@v3
-    - name: Check formatting
-      uses: DoozyX/clang-format-lint-action@v0.16.2
-      with:
-        source: './src ./tests/unit_tests'
-        exclude: '.'
-        extensions: 'H,h,cpp'
-        clangFormatVersion: 16
-  CPU:
-    needs: Formatting
+  Correctness:
     runs-on: ${{matrix.os}}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
+        compiler: [gcc, llvm]
+        build_type: [Release, Debug]
+        exclude: 
+          - os: macos-latest
+            compiler: gcc
         include:
           - os: ubuntu-latest
-            install_deps: sudo apt-get install liblapack-dev liblapacke-dev libgtest-dev
+            install_deps: sudo apt-get install libgtest-dev
           - os: macos-latest
-            install_deps: brew install gfortran lapack googletest
+            install_deps: brew install googletest
     steps:
+    - name: Setup Cpp
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: ${{ matrix.compiler }}
+        cmake: true
+        ninja: true
+        clangtidy: true
+        cppcheck: true
+        ccache: true
     - name: Install dependencies
       run: |
         ${{matrix.install_deps}}
@@ -46,10 +48,9 @@ jobs:
         cd build
         cmake .. \
           -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DKokkos_ENABLE_COMPILER_WARNINGS=ON \
-          -DKokkos_ENABLE_DEBUG=ON \
-          -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=ON 
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DKokkos_ENABLE_DEBUG=${{ matrix.build_type == 'Debug' }} \
+          -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=${{ matrix.build_type == 'Debug' }}
         sudo cmake --build . --target install -j 2
     - name: Cache install Kokkos-Kernels
       id: cache-kokkos-kernels
@@ -66,7 +67,6 @@ jobs:
           git clone https://github.com/kokkos/kokkos-kernels
         fi
         if [ ${{matrix.os}} = 'macos-latest' ]; then
-          export FC=$(brew --prefix gcc)/bin/gfortran
           git clone --depth 1 --branch 4.2.00 https://github.com/kokkos/kokkos-kernels
         fi
         cd kokkos-kernels
@@ -74,19 +74,56 @@ jobs:
         cd build
         cmake .. \
           -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DKokkosKernels_ENABLE_TPL_BLAS=ON 
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         sudo cmake --build . --target install -j 2
     - name: Clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: true
-    - name: Test
+    - name: Test OpenTurbine
       run: |
         export KokkosKernels_DIR=~/dependencies/kokkos_kernels
         mkdir build
         cd build
-        cmake .. -DOTURB_ENABLE_TESTS:BOOL=ON
+        cmake .. \
+          -DOTURB_ENABLE_TESTS:BOOL=ON \
+          -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} 
         cmake --build . -j 2
-        ./openturbine -h
-        ./openturbine_unit_tests
+        ctest -C ${{ matrix.build_type }}
+    - name: Run CppCheck
+      if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'llvm'
+      run: |
+        export KokkosKernels_DIR=~/dependencies/kokkos_kernels
+        mkdir build-cppcheck
+        cd build-cppcheck
+        cmake .. \
+          -DOTURB_ENABLE_TESTS:BOOL=ON \
+          -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DCMAKE_CXX_CPPCHECK="cppcheck;--enable=all;--force;--suppress=missingIncludeSystem;--library=googletest;--clang"
+        cmake --build . -j 1
+    - name: Run Clang-Tidy
+      if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'llvm'
+      run: |
+        export KokkosKernels_DIR=~/dependencies/kokkos_kernels
+        mkdir build-clangtidy
+        cd build-clangtidy
+        cmake .. \
+          -DOTURB_ENABLE_TESTS:BOOL=ON \
+          -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DCMAKE_CXX_CLANG_TIDY="clang-tidy"
+        cmake --build . -j 1
+  Formatting:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v4
+    - name: Check formatting
+      uses: DoozyX/clang-format-lint-action@v0.16.2
+      with:
+        source: './src ./tests/unit_tests'
+        exclude: '.'
+        extensions: 'H,h,cpp'
+        clangFormatVersion: 16

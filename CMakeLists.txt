@@ -13,7 +13,13 @@ include(openturbine-utils)
 ########################## OPTIONS #####################################
 
 # General options for the project
-option(OTURB_ENABLE_ALL_WARNINGS "Show most warnings for most compilers" ON)
+add_compile_options(-Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wpedantic -Werror)
+option(OTURB_ENABLE_BASIC_SANITIZERS "Compile with addrss and undefined behavior sanitizers" OFF)
+if(OTURB_ENABLE_BASIC_SANITIZERS)
+  add_compile_options(-fsanitize=address,undefined)
+  add_link_options(-fsanitize=address,undefined)
+endif()
+
 # option(OTURB_ENABLE_CLANG_TIDY "Compile with clang-tidy static analysis" OFF)
 # option(OTURB_ENABLE_CPPCHECK "Enable cppcheck static analysis target" OFF)
 # option(OTURB_ENABLE_FCOMPARE "Enable building fcompare when not testing" OFF)
@@ -52,10 +58,7 @@ elseif(BUILD_TYPE_UPPER STREQUAL "DEBUG" OR BUILD_TYPE_UPPER STREQUAL "RELWITHDE
 endif()
 
 # Enabling tests overrides the executable options
-# option(OTURB_ENABLE_UNIT_TESTS "Enable unit testing" ON)
 option(OTURB_ENABLE_TESTS "Enable testing suite" OFF)
-# option(OTURB_SAVE_GOLDS "Provide a directory in which to save golds during testing" OFF)
-# option(OTURB_ENABLE_FPE_TRAP_FOR_TESTS "Enable FPE trapping in tests" ON)
 
 # Options for the executable
 option(OTURB_ENABLE_OPENMP "Enable OpenMP" OFF)
@@ -122,8 +125,6 @@ if(CLANG_TIDY_EXE)
         PROPERTIES CXX_CLANG_TIDY ${CLANG_TIDY_EXE}
     )
 endif()
-
-include(set_compile_flags)
 
 # Build OpenTurbine
 add_subdirectory(src)
