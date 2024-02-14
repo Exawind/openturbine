@@ -3,7 +3,7 @@ name: OpenTurbine-CI
 on: push
 
 jobs:
-  Release:
+  Correctness:
     runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false
