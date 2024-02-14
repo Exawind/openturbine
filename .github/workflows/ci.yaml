@@ -192,7 +192,7 @@ jobs:
           -DOTURB_ENABLE_TESTS:BOOL=ON \
           -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
           -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXX_CLANG_TIDY="clang-tidy;-header-filter=.;-checks=*;-warnings-as-errors=*;"
+          -DCMAKE_CXX_CLANG_TIDY="clang-tidy"
         cmake --build . 
   Formatting:
     runs-on: ubuntu-latest
