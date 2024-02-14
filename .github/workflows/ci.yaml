@@ -11,6 +11,9 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         compiler: [gcc, llvm]
         build_type: [Release, Debug]
+        exclude: 
+          - os: macos-latest
+            compiler: gcc
         include:
           - os: ubuntu-latest
             install_deps: sudo apt-get install libgtest-dev
