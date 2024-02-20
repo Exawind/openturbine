@@ -37,7 +37,7 @@ public:
         const gen_alpha_solver::TimeStepper& time_stepper, Kokkos::View<double*> residual_vector
     ) override;
 
-    void ApplyExternalForces(double time, Kokkos::View<double*> external_forces);
+    void ApplyExternalForces(double time, const Kokkos::View<double*>& external_forces);
 
     virtual void IterationMatrix(
         const double& h, const double& beta_prime, const double& gamma_prime,

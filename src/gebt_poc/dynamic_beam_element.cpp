@@ -13,18 +13,18 @@ DynamicBeamLinearizationParameters::DynamicBeamLinearizationParameters(
     Kokkos::View<double*> position_vectors, StiffnessMatrix stiffness_matrix, MassMatrix mass_matrix,
     UserDefinedQuadrature quadrature, std::vector<Forces*> external_forces
 )
-    : position_vectors_(position_vectors),
-      stiffness_matrix_(stiffness_matrix),
-      mass_matrix_(mass_matrix),
-      quadrature_(quadrature),
+    : position_vectors_(std::move(position_vectors)),
+      stiffness_matrix_(std::move(stiffness_matrix)),
+      mass_matrix_(std::move(mass_matrix)),
+      quadrature_(std::move(quadrature)),
       external_forces_(std::move(external_forces)) {
 }
 
 void DynamicBeamLinearizationParameters::ApplyExternalForces(
-    double time, Kokkos::View<double*> external_forces
+    double time, const Kokkos::View<double*>& external_forces
 ) {
     Kokkos::deep_copy(external_forces, 0.0);
-    for (const auto force : this->external_forces_) {
+    for (const auto* force : this->external_forces_) {
         auto gen_forces = force->GetGeneralizedForces(time);
         auto node = force->GetNode();
         auto external_forces_node = Kokkos::subview(
@@ -35,7 +35,7 @@ void DynamicBeamLinearizationParameters::ApplyExternalForces(
         );
         Kokkos::parallel_for(
             kNumberOfLieAlgebraComponents,
-            KOKKOS_LAMBDA(size_t i) { external_forces_node(i) = gen_forces(i); }
+            KOKKOS_LAMBDA(size_t component) { external_forces_node(component) = gen_forces(component); }
         );
     }
 }
