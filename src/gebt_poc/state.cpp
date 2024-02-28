@@ -14,10 +14,8 @@ State::State()
 }
 
 State::State(
-    Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords,
-    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> velocity,
-    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> accln,
-    Kokkos::View<double* [kNumberOfLieAlgebraComponents]> algo_accln
+    LieGroupFieldView gen_coords, LieAlgebraFieldView velocity, LieAlgebraFieldView accln,
+    LieAlgebraFieldView algo_accln
 )
     : generalized_coords_("generalized_coordinates", gen_coords.extent(0)),
       velocity_("velocities", velocity.extent(0)),
@@ -53,9 +51,7 @@ struct InitializeMassQuadrantOne {
     double mass_;
 };
 
-MassMatrix::MassMatrix(
-    double mass, Kokkos::View<double[3]> center_of_mass, Kokkos::View<double[3][3]> moment_of_inertia
-)
+MassMatrix::MassMatrix(double mass, View1D_Vector center_of_mass, View2D_3x3 moment_of_inertia)
     : mass_(mass),
       center_of_mass_("center_of_mass"),
       moment_of_inertia_("moment_of_inertia"),
@@ -97,7 +93,7 @@ MassMatrix::MassMatrix(
     Kokkos::deep_copy(rho, moment_of_inertia_);
 }
 
-MassMatrix::MassMatrix(Kokkos::View<double[6][6]> mass_matrix)
+MassMatrix::MassMatrix(View2D_6x6 mass_matrix)
     : mass_(0.),
       center_of_mass_("center_of_mass"),
       moment_of_inertia_("moment_of_inertia"),

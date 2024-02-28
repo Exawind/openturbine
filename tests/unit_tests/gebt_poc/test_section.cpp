@@ -73,12 +73,12 @@ TEST(SectionTest, DefaultConstructor) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         section.GetMassMatrix().GetMassMatrix(),
         {
-            {1., 0., 0., 0., 0., 0.},  // row 1
-            {0., 1., 0., 0., 0., 0.},  // row 2
-            {0., 0., 1., 0., 0., 0.},  // row 3
-            {0., 0., 0., 1., 0., 0.},  // row 4
-            {0., 0., 0., 0., 1., 0.},  // row 5
-            {0., 0., 0., 0., 0., 1.}   // row 6
+            {0., 0., 0., 0., 0., 0.},  // row 1
+            {0., 0., 0., 0., 0., 0.},  // row 2
+            {0., 0., 0., 0., 0., 0.},  // row 3
+            {0., 0., 0., 0., 0., 0.},  // row 4
+            {0., 0., 0., 0., 0., 0.},  // row 5
+            {0., 0., 0., 0., 0., 0.}   // row 6
         }
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
@@ -95,11 +95,11 @@ TEST(SectionTest, DefaultConstructor) {
 }
 
 TEST(SectionTest, ConstructUnitSection) {
-    auto mass_matrix = gen_alpha_solver::MassMatrix(1., 1.);
-    auto stiffness_matrix = gen_alpha_solver::create_identity_matrix(6);
+    auto mass = MassMatrix(gen_alpha_solver::create_identity_matrix(6));
+    auto stiffness = StiffnessMatrix(gen_alpha_solver::create_identity_matrix(6));
     auto location = 0.;
 
-    auto section = Section("section_1", location, mass_matrix, stiffness_matrix);
+    auto section = Section("section_1", location, mass, stiffness);
 
     EXPECT_EQ(section.GetNormalizedLocation(), location);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
@@ -129,18 +129,13 @@ TEST(SectionTest, ConstructUnitSection) {
 
 TEST(SectionTest, ExpectThrowIfLocationIsOutOfBounds) {
     auto name = "section_1";
-    auto mass_matrix = gen_alpha_solver::MassMatrix(1., 1.);
-    auto stiffness_matrix = gen_alpha_solver::create_identity_matrix(6);
+    auto mass = MassMatrix(gen_alpha_solver::create_identity_matrix(6));
+    auto stiffness = StiffnessMatrix(gen_alpha_solver::create_identity_matrix(6));
     auto location_less_than_zero = -0.1;
     auto location_greater_than_one = 1.1;
 
-    EXPECT_THROW(
-        Section(name, location_less_than_zero, mass_matrix, stiffness_matrix), std::invalid_argument
-    );
-    EXPECT_THROW(
-        Section(name, location_greater_than_one, mass_matrix, stiffness_matrix),
-        std::invalid_argument
-    );
+    EXPECT_THROW(Section(name, location_less_than_zero, mass, stiffness), std::invalid_argument);
+    EXPECT_THROW(Section(name, location_greater_than_one, mass, stiffness), std::invalid_argument);
 }
 
 }  // namespace openturbine::gebt_poc::tests

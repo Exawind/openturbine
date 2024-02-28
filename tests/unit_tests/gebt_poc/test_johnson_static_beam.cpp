@@ -141,7 +141,8 @@ TEST(StaticBeamTest, StaticBeamResidual) {
          0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
     );
 
-    StaticBeamLinearizationParameters static_beam{position_vectors, stiffness, quadrature};
+    StaticBeamLinearizationParameters static_beam{
+        position_vectors, StiffnessMatrix(stiffness), quadrature};
 
     auto gen_coords = gen_alpha_solver::create_matrix({
         {0., 0., 0., 1., 0., 0., 0.},    // node 1
@@ -217,7 +218,8 @@ TEST(StaticBeamTest, StaticBeamIterationMatrix) {
          0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
     );
 
-    StaticBeamLinearizationParameters static_beam{position_vectors, stiffness, quadrature};
+    StaticBeamLinearizationParameters static_beam{
+        position_vectors, StiffnessMatrix(stiffness), quadrature};
 
     auto gen_coords = gen_alpha_solver::create_matrix({
         {0., 0., 0., 1., 0., 0., 0.},    // node 1
@@ -316,7 +318,9 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
         0., 0., 0.5, 1., gen_alpha_solver::TimeStepper(0., 1., 1, 20), false
     );
     std::shared_ptr<LinearizationParameters> static_beam_lin_params =
-        std::make_shared<StaticBeamLinearizationParameters>(position_vectors, stiffness, quadrature);
+        std::make_shared<StaticBeamLinearizationParameters>(
+            position_vectors, StiffnessMatrix(stiffness), quadrature
+        );
     auto results =
         time_integrator.Integrate(initial_state, lagrange_mults.extent(0), static_beam_lin_params);
     auto final_state = results.back();

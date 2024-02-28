@@ -1,5 +1,6 @@
 #pragma once
 
+#include "src/gebt_poc/types.hpp"
 #include "src/gen_alpha_poc/vector.h"
 
 namespace openturbine::gebt_poc {
@@ -10,7 +11,7 @@ public:
     virtual ~Forces() = default;
 
     /// Returns the 6 x 1 force vector
-    virtual Kokkos::View<double*> GetGeneralizedForces(double /*time*/) const = 0;
+    virtual View1D_LieAlgebra GetGeneralizedForces(double /*time*/) const = 0;
 
     /// Returns the node number on which the force is being applied
     virtual size_t GetNode() const = 0;
@@ -26,7 +27,7 @@ public:
     );
 
     /// Constructor that initializes the generalized forces to the given vectors
-    GeneralizedForces(Kokkos::View<double[6]> generalized_forces, size_t node);
+    GeneralizedForces(View1D_LieAlgebra generalized_forces, size_t node);
 
     /// Returns the 3 x 1 force vector
     inline gen_alpha_solver::Vector GetForces() const { return forces_; }
@@ -35,8 +36,7 @@ public:
     inline gen_alpha_solver::Vector GetMoments() const { return moments_; }
 
     /// Returns the 6 x 1 generalized forces vector
-    inline Kokkos::View<double*> GetGeneralizedForces([[maybe_unused]] double time = 0.)
-        const override {
+    inline View1D_LieAlgebra GetGeneralizedForces([[maybe_unused]] double time = 0.) const override {
         return generalized_forces_;
     }
 
@@ -46,7 +46,7 @@ public:
 private:
     gen_alpha_solver::Vector forces_;   //< force vector
     gen_alpha_solver::Vector moments_;  //< moment vector
-    Kokkos::View<double[6]>
+    View1D_LieAlgebra
         generalized_forces_;  //< Generalized forces (combined forces and moments vector)
     size_t node_;             //< Node number on which the generalized forces are applied
 };
@@ -56,17 +56,17 @@ class TimeVaryingForces : public Forces {
 public:
     /// Constructor that creates the generalized forces from a given function of time
     TimeVaryingForces(
-        std::function<Kokkos::View<double[6]>(double time)> generalized_forces_function, size_t node
+        std::function<View1D_LieAlgebra(double time)> generalized_forces_function, size_t node
     );
 
     /// Returns the 6 x 1 generalized forces vector
-    Kokkos::View<double*> GetGeneralizedForces(double time = 0.) const override;
+    View1D_LieAlgebra GetGeneralizedForces(double time = 0.) const override;
 
     /// Returns the node number on which the generalized forces are applied
     inline size_t GetNode() const override { return node_; }
 
 private:
-    std::function<Kokkos::View<double[6]>(double)> function_;
+    std::function<View1D_LieAlgebra(double)> function_;
     size_t node_;
 };
 

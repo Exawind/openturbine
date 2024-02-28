@@ -3,6 +3,7 @@
 #include "src/gebt_poc/linearization_parameters.h"
 #include "src/gebt_poc/state.h"
 #include "src/gebt_poc/time_integrator.h"
+#include "src/gebt_poc/types.hpp"
 #include "src/gen_alpha_poc/time_stepper.h"
 
 namespace openturbine::gebt_poc {
@@ -17,8 +18,6 @@ enum class ProblemType {
 class GeneralizedAlphaTimeIntegrator : public TimeIntegrator {
 public:
     static constexpr double kConvergenceTolerance = 1e-9;
-    static constexpr size_t kNumberOfLieGroupComponents = 7;
-    static constexpr size_t kNumberOfLieAlgebraComponents = 6;
 
     GeneralizedAlphaTimeIntegrator(
         double alpha_f = 0.5, double alpha_m = 0.5, double beta = 0.25, double gamma = 0.5,
@@ -56,22 +55,21 @@ public:
      *  Machine Theory, Vol 48, 121-137
      *  https://doi.org/10.1016/j.mechmachtheory.2011.07.017
      */
-    std::tuple<State, Kokkos::View<double*>> AlphaStep(
+    std::tuple<State, View1D> AlphaStep(
         const State&, size_t, std::shared_ptr<LinearizationParameters> lin_params
     );
 
     /// Computes the updated generalized coordinates based on the non-linear update
     void UpdateGeneralizedCoordinates(
-        Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
-        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-        Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords_next
+        LieGroupFieldView gen_coords, LieAlgebraFieldView delta_gen_coords,
+        LieGroupFieldView gen_coords_next
     );
 
     /// Checks convergence of the non-linear solution based on the residuals
-    bool IsConverged(const Kokkos::View<double*>);
+    bool IsConverged(View1D::const_type residual);
 
     /// Checks convergence of dynamic problems based on an energy criterion
-    bool IsConverged(Kokkos::View<double*> residual, Kokkos::View<double*> solution_increment);
+    bool IsConverged(View1D::const_type residual, View1D::const_type solution_increment);
 
     /// Returns the problem type
     inline ProblemType GetProblemType() const { return problem_type_; }

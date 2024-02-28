@@ -3,6 +3,7 @@
 #include <cmath>
 #include <tuple>
 
+#include "src/gebt_poc/types.hpp"
 #include "src/gen_alpha_poc/rotation_matrix.h"
 #include "src/gen_alpha_poc/utilities.h"
 #include "src/gen_alpha_poc/vector.h"
@@ -245,8 +246,7 @@ RotationMatrix quaternion_to_rotation_matrix(const Quaternion& quaternion) {
 }
 
 /// Converts a 4x1 unit quaternion to a 3x3 rotation matrix and returns the result
-inline Kokkos::View<double**> EulerParameterToRotationMatrix(const Kokkos::View<double*> euler_param
-) {
+inline Kokkos::View<double**> EulerParameterToRotationMatrix(View1D::const_type euler_param) {
     auto c = Kokkos::View<double[3]>("c");
     Kokkos::parallel_for(
         3, KOKKOS_LAMBDA(const size_t i) { c(i) = euler_param(i + 1); }

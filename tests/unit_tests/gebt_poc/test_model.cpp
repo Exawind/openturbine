@@ -24,9 +24,9 @@ TEST(ModelTest, ConstructModelWithSections) {
 
 TEST(ModelTest, AddASectionToModel) {
     Model model("model");
-    auto section = Section(
-        "s_1", 0., gen_alpha_solver::MassMatrix(1., 1.), gen_alpha_solver::create_identity_matrix(6)
-    );
+    auto mass = MassMatrix(gen_alpha_solver::create_identity_matrix(6));
+    auto stiffness = StiffnessMatrix(gen_alpha_solver::create_identity_matrix(6));
+    auto section = Section("s_1", 0., mass, stiffness);
 
     model.AddSection(section);
 

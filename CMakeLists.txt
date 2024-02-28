@@ -155,6 +155,8 @@ if(OTURB_ENABLE_UNIT_TESTS OR OTURB_ENABLE_TESTS)
 #      set_target_properties(${oturb_unit_test_exe_name} PROPERTIES
 #        CUDA_SEPARABLE_COMPILATION ON)
     endif()
+    include(GoogleTest)
+    gtest_discover_tests(${oturb_unit_test_exe_name})
 endif()
 
 # add_subdirectory(tools)
