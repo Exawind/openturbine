@@ -30,9 +30,7 @@ public:
     auto GetAlgorithmicAcceleration() const { return algorithmic_acceleration_; }
 
     /// Returns the number of nodes in the system
-    inline size_t GetNumberOfNodes() const {
-        return generalized_coords_.extent(0);
-    }
+    inline size_t GetNumberOfNodes() const { return generalized_coords_.extent(0); }
 
     // clang-format off
 private :
@@ -66,10 +64,10 @@ public:
     auto GetMomentOfInertia() const { return moment_of_inertia_; }
 
 private:
-    double mass_;                                   //< Mass of the rigid body
-    View1D_Vector center_of_mass_;                  //< Center of mass of the rigid body
-    View2D_3x3 moment_of_inertia_;                  //< Moments of inertia
-    View2D_6x6 mass_matrix_;                        //< Mass matrix of the rigid body
+    double mass_;                   //< Mass of the rigid body
+    View1D_Vector center_of_mass_;  //< Center of mass of the rigid body
+    View2D_3x3 moment_of_inertia_;  //< Moments of inertia
+    View2D_6x6 mass_matrix_;        //< Mass matrix of the rigid body
 };
 
 }  // namespace openturbine::gebt_poc

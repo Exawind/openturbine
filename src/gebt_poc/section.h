@@ -44,10 +44,10 @@ public:
     inline const StiffnessMatrix& GetStiffnessMatrix() const { return stiffness_matrix_; }
 
 private:
-    std::string name_;                          //< Name of the section
-    double location_;                           //< Normalized location of the section (0 <= l <= 1)
-    MassMatrix mass_matrix_;                    //< Mass matrix of the section
-    StiffnessMatrix stiffness_matrix_;          //< Stiffness matrix of the section
+    std::string name_;                  //< Name of the section
+    double location_;                   //< Normalized location of the section (0 <= l <= 1)
+    MassMatrix mass_matrix_;            //< Mass matrix of the section
+    StiffnessMatrix stiffness_matrix_;  //< Stiffness matrix of the section
 };
 
 }  // namespace openturbine::gebt_poc
