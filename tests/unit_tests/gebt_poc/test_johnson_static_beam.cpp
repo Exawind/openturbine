@@ -13,51 +13,51 @@ struct DefinePositionVector_5NodeBeamElement {
     KOKKOS_FUNCTION
     void operator()(std::size_t) const {
         // node 1
-        position_vectors_(0) = 0.;
-        position_vectors_(1) = 0.;
-        position_vectors_(2) = 0.;
-        position_vectors_(3) = 0.9778215200524469;
-        position_vectors_(4) = -0.01733607539094763;
-        position_vectors_(5) = -0.09001900002195001;
-        position_vectors_(6) = -0.18831121859148398;
+        position_vectors_(0, 0) = 0.;
+        position_vectors_(0, 1) = 0.;
+        position_vectors_(0, 2) = 0.;
+        position_vectors_(0, 3) = 0.9778215200524469;
+        position_vectors_(0, 4) = -0.01733607539094763;
+        position_vectors_(0, 5) = -0.09001900002195001;
+        position_vectors_(0, 6) = -0.18831121859148398;
         // node 2
-        position_vectors_(7) = 0.8633658232300573;
-        position_vectors_(8) = -0.25589826392541715;
-        position_vectors_(9) = 0.1130411210682743;
-        position_vectors_(10) = 0.9950113028068008;
-        position_vectors_(11) = -0.002883848832932071;
-        position_vectors_(12) = -0.030192109815745303;
-        position_vectors_(13) = -0.09504013471947484;
+        position_vectors_(1, 0) = 0.8633658232300573;
+        position_vectors_(1, 1) = -0.25589826392541715;
+        position_vectors_(1, 2) = 0.1130411210682743;
+        position_vectors_(1, 3) = 0.9950113028068008;
+        position_vectors_(1, 4) = -0.002883848832932071;
+        position_vectors_(1, 5) = -0.030192109815745303;
+        position_vectors_(1, 6) = -0.09504013471947484;
         // node 3
-        position_vectors_(14) = 2.5;
-        position_vectors_(15) = -0.25;
-        position_vectors_(16) = 0.;
-        position_vectors_(17) = 0.9904718430204884;
-        position_vectors_(18) = -0.009526411091536478;
-        position_vectors_(19) = 0.09620741150793366;
-        position_vectors_(20) = 0.09807604012323785;
+        position_vectors_(2, 0) = 2.5;
+        position_vectors_(2, 1) = -0.25;
+        position_vectors_(2, 2) = 0.;
+        position_vectors_(2, 3) = 0.9904718430204884;
+        position_vectors_(2, 4) = -0.009526411091536478;
+        position_vectors_(2, 5) = 0.09620741150793366;
+        position_vectors_(2, 6) = 0.09807604012323785;
         // node 4
-        position_vectors_(21) = 4.136634176769943;
-        position_vectors_(22) = 0.39875540678255983;
-        position_vectors_(23) = -0.5416125496397027;
-        position_vectors_(24) = 0.9472312341234699;
-        position_vectors_(25) = -0.049692141629315074;
-        position_vectors_(26) = 0.18127630174800594;
-        position_vectors_(27) = 0.25965858850765167;
+        position_vectors_(3, 0) = 4.136634176769943;
+        position_vectors_(3, 1) = 0.39875540678255983;
+        position_vectors_(3, 2) = -0.5416125496397027;
+        position_vectors_(3, 3) = 0.9472312341234699;
+        position_vectors_(3, 4) = -0.049692141629315074;
+        position_vectors_(3, 5) = 0.18127630174800594;
+        position_vectors_(3, 6) = 0.25965858850765167;
         // node 5
-        position_vectors_(28) = 5.;
-        position_vectors_(29) = 1.;
-        position_vectors_(30) = -1.;
-        position_vectors_(31) = 0.9210746582719719;
-        position_vectors_(32) = -0.07193653093139739;
-        position_vectors_(33) = 0.20507529985516368;
-        position_vectors_(34) = 0.32309554437664584;
+        position_vectors_(4, 0) = 5.;
+        position_vectors_(4, 1) = 1.;
+        position_vectors_(4, 2) = -1.;
+        position_vectors_(4, 3) = 0.9210746582719719;
+        position_vectors_(4, 4) = -0.07193653093139739;
+        position_vectors_(4, 5) = 0.20507529985516368;
+        position_vectors_(4, 6) = 0.32309554437664584;
     }
-    Kokkos::View<double[35]> position_vectors_;
+    Kokkos::View<double[5][7]> position_vectors_;
 };
 
 StaticBeamLinearizationParameters create_test_static_beam_parameters() {
-    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
+    auto position_vectors = Kokkos::View<double[5][7]>("position_vectors");
     Kokkos::parallel_for(1, DefinePositionVector_5NodeBeamElement{position_vectors});
 
     auto stiffness_matrix = StiffnessMatrix(gen_alpha_solver::create_matrix({
@@ -156,54 +156,54 @@ TEST(StaticBeamTest, ConstraintsGradientMatrix) {
 }
 
 struct PopulatePositionVectors {
-    Kokkos::View<double[35]> position_vectors;
+    Kokkos::View<double[5][7]> position_vectors;
     KOKKOS_FUNCTION
     void operator()(std::size_t) const {
         // node 1
-        position_vectors(0) = 1.;
-        position_vectors(1) = 0.;
-        position_vectors(2) = 0.;
-        position_vectors(3) = 1.;
-        position_vectors(4) = 0.;
-        position_vectors(5) = 0.;
-        position_vectors(6) = 0.;
+        position_vectors(0, 0) = 1.;
+        position_vectors(0, 1) = 0.;
+        position_vectors(0, 2) = 0.;
+        position_vectors(0, 3) = 1.;
+        position_vectors(0, 4) = 0.;
+        position_vectors(0, 5) = 0.;
+        position_vectors(0, 6) = 0.;
         // node 2
-        position_vectors(7) = 2.7267316464601146;
-        position_vectors(8) = 0.;
-        position_vectors(9) = 0.;
-        position_vectors(10) = 1.;
-        position_vectors(11) = 0.;
-        position_vectors(12) = 0.;
-        position_vectors(13) = 0.;
+        position_vectors(1, 0) = 2.7267316464601146;
+        position_vectors(1, 1) = 0.;
+        position_vectors(1, 2) = 0.;
+        position_vectors(1, 3) = 1.;
+        position_vectors(1, 4) = 0.;
+        position_vectors(1, 5) = 0.;
+        position_vectors(1, 6) = 0.;
         // node 3
-        position_vectors(14) = 6.;
-        position_vectors(15) = 0.;
-        position_vectors(16) = 0.;
-        position_vectors(17) = 1.;
-        position_vectors(18) = 0.;
-        position_vectors(19) = 0.;
-        position_vectors(20) = 0.;
+        position_vectors(2, 0) = 6.;
+        position_vectors(2, 1) = 0.;
+        position_vectors(2, 2) = 0.;
+        position_vectors(2, 3) = 1.;
+        position_vectors(2, 4) = 0.;
+        position_vectors(2, 5) = 0.;
+        position_vectors(2, 6) = 0.;
         // node 4
-        position_vectors(21) = 9.273268353539885;
-        position_vectors(22) = 0.;
-        position_vectors(23) = 0.;
-        position_vectors(24) = 1.;
-        position_vectors(25) = 0.;
-        position_vectors(26) = 0.;
-        position_vectors(27) = 0.;
+        position_vectors(3, 0) = 9.273268353539885;
+        position_vectors(3, 1) = 0.;
+        position_vectors(3, 2) = 0.;
+        position_vectors(3, 3) = 1.;
+        position_vectors(3, 4) = 0.;
+        position_vectors(3, 5) = 0.;
+        position_vectors(3, 6) = 0.;
         // node 5
-        position_vectors(28) = 11.;
-        position_vectors(29) = 0.;
-        position_vectors(30) = 0.;
-        position_vectors(31) = 1.;
-        position_vectors(32) = 0.;
-        position_vectors(33) = 0.;
-        position_vectors(34) = 0.;
+        position_vectors(4, 0) = 11.;
+        position_vectors(4, 1) = 0.;
+        position_vectors(4, 2) = 0.;
+        position_vectors(4, 3) = 1.;
+        position_vectors(4, 4) = 0.;
+        position_vectors(4, 5) = 0.;
+        position_vectors(4, 6) = 0.;
     }
 };
 
 TEST(StaticBeamTest, StaticBeamResidual) {
-    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
+    auto position_vectors = Kokkos::View<double[5][7]>("position_vectors");
     Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});
 
     // Stiffness matrix for uniform composite beam section (in material csys)
@@ -280,7 +280,7 @@ TEST(StaticBeamTest, StaticBeamResidual) {
 }
 
 TEST(StaticBeamTest, StaticBeamIterationMatrix) {
-    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
+    auto position_vectors = Kokkos::View<double[5][7]>("position_vectors");
     Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});
 
     // Stiffness matrix for uniform composite beam section (in material csys)
@@ -354,7 +354,7 @@ TEST(StaticBeamTest, StaticBeamIterationMatrix) {
 }
 
 TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess) {
-    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
+    auto position_vectors = Kokkos::View<double[5][7]>("position_vectors");
     Kokkos::parallel_for(1, PopulatePositionVectors{position_vectors});
 
     // Stiffness matrix for uniform composite beam section (in material csys)
