@@ -40,7 +40,8 @@ void BMatrix(View2D constraints_gradient_matrix) {
 }
 
 StaticBeamLinearizationParameters::StaticBeamLinearizationParameters(
-    LieGroupFieldView position_vectors, StiffnessMatrix stiffness_matrix, UserDefinedQuadrature quadrature
+    LieGroupFieldView position_vectors, StiffnessMatrix stiffness_matrix,
+    UserDefinedQuadrature quadrature
 )
     : position_vectors_(position_vectors),
       stiffness_matrix_(stiffness_matrix),
@@ -104,24 +105,10 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     const auto size_dofs = velocity.extent(0) * velocity.extent(1);
     const auto size_constraints = lagrange_multipliers.extent(0);
     const auto size_iteration = size_dofs + size_constraints;
-    const auto n_nodes = velocity.extent(0);
 
     // Assemble the tangent operator (same size as the stiffness matrix)
-    auto delta_gen_coords_node = View1D("delta_gen_coords_node", VectorComponents);
     auto tangent_operator = View2D("tangent_operator", size_dofs, size_dofs);
-    Kokkos::deep_copy(tangent_operator, 0.0);
-    for (size_t i = 0; i < n_nodes; ++i) {
-        Kokkos::deep_copy(
-            delta_gen_coords_node, Kokkos::subview(delta_gen_coords, i, Kokkos::make_pair(3, 6))
-        );
-        KokkosBlas::scal(delta_gen_coords_node, h, delta_gen_coords_node);
-        auto tangent_operator_node = Kokkos::subview(
-            tangent_operator,
-            Kokkos::make_pair(i * LieAlgebraComponents, (i + 1) * LieAlgebraComponents),
-            Kokkos::make_pair(i * LieAlgebraComponents, (i + 1) * LieAlgebraComponents)
-        );
-        TangentOperator(delta_gen_coords_node, tangent_operator_node);
-    }
+    TangentOperator(delta_gen_coords, h, tangent_operator);
 
     Kokkos::deep_copy(iteration_matrix, 0.0);
 

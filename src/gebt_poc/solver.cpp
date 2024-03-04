@@ -41,18 +41,17 @@ void InterpolateNodalValues(
     const auto n_nodes = nodal_values.extent(0);
     for (std::size_t i = 0; i < n_nodes; ++i) {
         KokkosBlas::axpy(
-            interpolation_function[i],
-            Kokkos::subview(nodal_values, i, Kokkos::ALL),
+            interpolation_function[i], Kokkos::subview(nodal_values, i, Kokkos::ALL),
             interpolated_values
         );
     }
 
     // Normalize the rotation quaternion if it is not already normalized
     if (nodal_values.extent(1) == LieGroupComponents) {
-      auto q = Kokkos::subview(interpolated_values, Kokkos::pair(3, 7));
-      if (auto norm = KokkosBlas::nrm2(q); norm != 0. && norm != 1.) {
-          KokkosBlas::scal(q, 1. / norm, q);
-      }
+        auto q = Kokkos::subview(interpolated_values, Kokkos::pair(3, 7));
+        if (auto norm = KokkosBlas::nrm2(q); norm != 0. && norm != 1.) {
+            KokkosBlas::scal(q, 1. / norm, q);
+        }
     }
 }
 
@@ -87,8 +86,7 @@ void InterpolateNodalValueDerivatives(
     KokkosBlas::fill(interpolated_values, 0.);
     for (std::size_t i = 0; i < n_nodes; ++i) {
         KokkosBlas::axpy(
-            interpolation_function[i],
-            Kokkos::subview(nodal_values, i, Kokkos::ALL),
+            interpolation_function[i], Kokkos::subview(nodal_values, i, Kokkos::ALL),
             interpolated_values
         );
     }
@@ -207,7 +205,7 @@ void ElementalStaticForcesResidual(
         auto index = i * LieGroupComponents;
         Kokkos::deep_copy(
             Kokkos::subview(nodes, i, Kokkos::ALL),
-            Kokkos::subview(position_vectors, Kokkos::make_pair(index, index+3))
+            Kokkos::subview(position_vectors, Kokkos::make_pair(index, index + 3))
         );
     }
 
@@ -290,7 +288,9 @@ void ElementalStaticForcesResidual(
     const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
 
     auto nodes = VectorFieldView("nodes", n_nodes);
-    Kokkos::deep_copy(nodes, Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3)));
+    Kokkos::deep_copy(
+        nodes, Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3))
+    );
 
     // Allocate Views for some required intermediate variables
     auto gen_coords_qp = View1D_LieGroup("gen_coords_qp");
@@ -733,7 +733,9 @@ void ElementalStaticStiffnessMatrix(
     const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
 
     auto nodes = VectorFieldView("nodes", n_nodes);
-    Kokkos::deep_copy(nodes, Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3)));
+    Kokkos::deep_copy(
+        nodes, Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3))
+    );
 
     // Allocate Views for some required intermediate variables
     auto gen_coords_qp = View1D_LieGroup("gen_coords_qp");
@@ -1066,7 +1068,9 @@ void ElementalConstraintForcesResidual(View1D::const_type gen_coords, View1D con
     );
 }
 
-void ElementalConstraintForcesResidual(LieGroupFieldView::const_type gen_coords, View1D constraints_residual) {
+void ElementalConstraintForcesResidual(
+    LieGroupFieldView::const_type gen_coords, View1D constraints_residual
+) {
     Kokkos::deep_copy(constraints_residual, 0.);
     // For the GEBT proof of concept problem (i.e. the clamped beam), the dofs are enforced to be
     // zero at the left end of the beam, so the constraint residual is simply based on the
