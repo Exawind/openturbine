@@ -61,43 +61,43 @@ StaticBeamLinearizationParameters create_test_static_beam_parameters() {
     Kokkos::parallel_for(1, DefinePositionVector_5NodeBeamElement{position_vectors});
 
     auto stiffness_matrix = StiffnessMatrix(gen_alpha_solver::create_matrix({
-          {1., 2., 3., 4., 5., 6.},       // row 1
-          {2., 4., 6., 8., 10., 12.},     // row 2
-          {3., 6., 9., 12., 15., 18.},    // row 3
-          {4., 8., 12., 16., 20., 24.},   // row 4
-          {5., 10., 15., 20., 25., 30.},  // row 5
-          {6., 12., 18., 24., 30., 36.}   // row 6
+        {1., 2., 3., 4., 5., 6.},       // row 1
+        {2., 4., 6., 8., 10., 12.},     // row 2
+        {3., 6., 9., 12., 15., 18.},    // row 3
+        {4., 8., 12., 16., 20., 24.},   // row 4
+        {5., 10., 15., 20., 25., 30.},  // row 5
+        {6., 12., 18., 24., 30., 36.}   // row 6
     }));
 
     auto quadrature = UserDefinedQuadrature(
-          std::vector<double>{
-              -0.9491079123427585,  // point 1
-              -0.7415311855993945,  // point 2
-              -0.4058451513773972,  // point 3
-              0.,                   // point 4
-              0.4058451513773972,   // point 5
-              0.7415311855993945,   // point 6
-              0.9491079123427585    // point 7
-          },
-          std::vector<double>{
-              0.1294849661688697,  // weight 1
-              0.2797053914892766,  // weight 2
-              0.3818300505051189,  // weight 3
-              0.4179591836734694,  // weight 4
-              0.3818300505051189,  // weight 5
-              0.2797053914892766,  // weight 6
-              0.1294849661688697   // weight 7
-          }
-      );
+        std::vector<double>{
+            -0.9491079123427585,  // point 1
+            -0.7415311855993945,  // point 2
+            -0.4058451513773972,  // point 3
+            0.,                   // point 4
+            0.4058451513773972,   // point 5
+            0.7415311855993945,   // point 6
+            0.9491079123427585    // point 7
+        },
+        std::vector<double>{
+            0.1294849661688697,  // weight 1
+            0.2797053914892766,  // weight 2
+            0.3818300505051189,  // weight 3
+            0.4179591836734694,  // weight 4
+            0.3818300505051189,  // weight 5
+            0.2797053914892766,  // weight 6
+            0.1294849661688697   // weight 7
+        }
+    );
     return StaticBeamLinearizationParameters{position_vectors, stiffness_matrix, quadrature};
 }
 
 TEST(StaticBeamTest, CalculateTangentOperatorWithPhiAsZero) {
-    auto psi = gen_alpha_solver::create_vector({0., 0., 0.});
+    auto psi = gen_alpha_solver::create_matrix({{0., 0., 0., 0., 0., 0.}});
     auto static_beam = create_test_static_beam_parameters();
 
     auto tangent_operator = Kokkos::View<double[6][6]>("tangent_operator");
-    static_beam.TangentOperator(psi, tangent_operator);
+    static_beam.TangentOperator(psi, 1., tangent_operator);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         tangent_operator,
@@ -113,11 +113,11 @@ TEST(StaticBeamTest, CalculateTangentOperatorWithPhiAsZero) {
 }
 
 TEST(StaticBeamTest, CalculateTangentOperatorWithPhiNotZero) {
-    auto psi = gen_alpha_solver::create_vector({1., 2., 3.});
+    auto psi = gen_alpha_solver::create_matrix({{0., 0., 0., 1., 2., 3.}});
     auto static_beam = create_test_static_beam_parameters();
 
     auto tangent_operator = Kokkos::View<double[6][6]>("tangent_operator");
-    static_beam.TangentOperator(psi, tangent_operator);
+    static_beam.TangentOperator(psi, 1., tangent_operator);
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         tangent_operator,

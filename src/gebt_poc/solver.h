@@ -121,7 +121,9 @@ void ElementalInertialMatrices(
 
 /// Calculates the constraint residual vector for a beam element
 void ElementalConstraintForcesResidual(View1D::const_type gen_coords, View1D constraints_residual);
-void ElementalConstraintForcesResidual(LieGroupFieldView::const_type gen_coords, View1D constraints_residual);
+void ElementalConstraintForcesResidual(
+    LieGroupFieldView::const_type gen_coords, View1D constraints_residual
+);
 
 /// Calculates the constraint gradient matrix for a beam element
 void ElementalConstraintForcesGradientMatrix(
