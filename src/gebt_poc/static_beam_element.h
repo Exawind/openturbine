@@ -21,10 +21,6 @@ void BMatrix(View2D constraints_gradient_matrix);
  */
 class StaticBeamLinearizationParameters : public LinearizationParameters {
 public:
-    /// Default constructor with a 5 node beam element, 6x6 stiffness matrix, and 7 point
-    /// Gauss-Legendre quadrature rule used for unit testing
-    StaticBeamLinearizationParameters();
-
     /// Define a static beam element with the given position vector for the nodes, 6x6
     /// stiffness matrix, and a quadrature rule
     StaticBeamLinearizationParameters(
