@@ -26,28 +26,21 @@ void BMatrix(View2D constraints_gradient_matrix) {
     // [0] = [0]_3x3
 
     Kokkos::deep_copy(constraints_gradient_matrix, 0.);
-    auto B11 = Kokkos::subview(
-        constraints_gradient_matrix, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3)
-    );
-    auto B22 = Kokkos::subview(
-        constraints_gradient_matrix, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6)
-    );
-
     Kokkos::parallel_for(
         1,
         KOKKOS_LAMBDA(std::size_t) {
-            B11(0, 0) = 1.;
-            B11(1, 1) = 1.;
-            B11(2, 2) = 1.;
-            B22(0, 0) = 1.;
-            B22(1, 1) = 1.;
-            B22(2, 2) = 1.;
+            constraints_gradient_matrix(0, 0) = 1.;
+            constraints_gradient_matrix(1, 1) = 1.;
+            constraints_gradient_matrix(2, 2) = 1.;
+            constraints_gradient_matrix(3, 3) = 1.;
+            constraints_gradient_matrix(4, 4) = 1.;
+            constraints_gradient_matrix(5, 5) = 1.;
         }
     );
 }
 
 StaticBeamLinearizationParameters::StaticBeamLinearizationParameters(
-    View1D position_vectors, StiffnessMatrix stiffness_matrix, UserDefinedQuadrature quadrature
+    LieGroupFieldView position_vectors, StiffnessMatrix stiffness_matrix, UserDefinedQuadrature quadrature
 )
     : position_vectors_(position_vectors),
       stiffness_matrix_(stiffness_matrix),
@@ -71,13 +64,10 @@ void StaticBeamLinearizationParameters::ResidualVector(
     const auto size_residual = size_dofs + size_constraints;
 
     // Part 1: Calculate the residual vector for the generalized coordinates
-    auto gen_coords_1D = View1D("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
-    Convert2DViewTo1DView(gen_coords, gen_coords_1D);
-
     Kokkos::deep_copy(residual, 0.0);
     auto residual_gen_coords = Kokkos::subview(residual, Kokkos::make_pair(zero, size_dofs));
     ElementalStaticForcesResidual(
-        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, residual_gen_coords
+        position_vectors_, gen_coords, stiffness_matrix_, quadrature_, residual_gen_coords
     );
 
     // Part 2: Calculate the residual vector for the constraints
@@ -85,16 +75,13 @@ void StaticBeamLinearizationParameters::ResidualVector(
     auto constraints_gradient_matrix =
         View2D("constraints_gradient_matrix", size_constraints, size_dofs);
     BMatrix(constraints_gradient_matrix);
-    auto constraints_part2 = View1D("constraints_part2", size_dofs);
     KokkosBlas::gemv(
-        "T", 1., constraints_gradient_matrix, lagrange_multipliers, 0., constraints_part2
+        "T", 1., constraints_gradient_matrix, lagrange_multipliers, 1., residual_gen_coords
     );
-
-    KokkosBlas::axpy(1., constraints_part2, residual_gen_coords);
 
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
-    ElementalConstraintForcesResidual(gen_coords_1D, residual_constraints);
+    ElementalConstraintForcesResidual(gen_coords, residual_constraints);
 }
 
 void StaticBeamLinearizationParameters::IterationMatrix(
@@ -119,9 +106,6 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     const auto size_iteration = size_dofs + size_constraints;
     const auto n_nodes = velocity.extent(0);
 
-    auto gen_coords_1D = View1D("gen_coords_1D", gen_coords.extent(0) * gen_coords.extent(1));
-    Convert2DViewTo1DView(gen_coords, gen_coords_1D);
-
     // Assemble the tangent operator (same size as the stiffness matrix)
     auto delta_gen_coords_node = View1D("delta_gen_coords_node", VectorComponents);
     auto tangent_operator = View2D("tangent_operator", size_dofs, size_dofs);
@@ -144,7 +128,7 @@ void StaticBeamLinearizationParameters::IterationMatrix(
     // Calculate the beam element static iteration matrix
     auto iteration_matrix_local = View2D("iteration_matrix_local", size_dofs, size_dofs);
     ElementalStaticStiffnessMatrix(
-        position_vectors_, gen_coords_1D, stiffness_matrix_, quadrature_, iteration_matrix_local
+        position_vectors_, gen_coords, stiffness_matrix_, quadrature_, iteration_matrix_local
     );
 
     // Combine beam element static iteration matrix with constraints into quadrant 1

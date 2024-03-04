@@ -24,7 +24,7 @@ public:
     /// Define a static beam element with the given position vector for the nodes, 6x6
     /// stiffness matrix, and a quadrature rule
     StaticBeamLinearizationParameters(
-        View1D position_vectors, StiffnessMatrix stiffness_matrix, UserDefinedQuadrature quadrature
+        LieGroupFieldView position_vectors, StiffnessMatrix stiffness_matrix, UserDefinedQuadrature quadrature
     );
 
     virtual void ResidualVector(
@@ -80,7 +80,7 @@ public:
     }
 
 private:
-    View1D position_vectors_;
+    LieGroupFieldView position_vectors_;
     StiffnessMatrix stiffness_matrix_;
     UserDefinedQuadrature quadrature_;
 };

@@ -16,10 +16,19 @@ void InterpolateNodalValues(
     View1D interpolated_values, std::size_t n_components = LieGroupComponents
 );
 
+void InterpolateNodalValues(
+    View2D::const_type nodal_values, std::vector<double> interpolation_function,
+    View1D interpolated_values
+);
+
 /// Calculates the interpolated derivative values for a nodal quantity (e.g. displacement
 /// or position vector) at a given quadrature point
 void InterpolateNodalValueDerivatives(
     View1D::const_type nodal_values, std::vector<double> interpolation_function, double jacobian,
+    View1D interpolated_values
+);
+void InterpolateNodalValueDerivatives(
+    View2D::const_type nodal_values, std::vector<double> interpolation_function, double jacobian,
     View1D interpolated_values
 );
 
@@ -48,6 +57,11 @@ void NodalElasticForces(
 /// Calculates the static residual vector for a beam element
 void ElementalStaticForcesResidual(
     View1D::const_type position_vectors, View1D::const_type gen_coords,
+    const StiffnessMatrix& stiffness, const Quadrature& quadrature, View1D residual
+);
+
+void ElementalStaticForcesResidual(
+    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature, View1D residual
 );
 
@@ -83,6 +97,10 @@ void ElementalStaticStiffnessMatrix(
     View1D::const_type position_vectors, View1D::const_type gen_coords,
     const StiffnessMatrix& stiffness, const Quadrature& quadrature, View2D stiffness_matrix
 );
+void ElementalStaticStiffnessMatrix(
+    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
+    const StiffnessMatrix& stiffness, const Quadrature& quadrature, View2D stiffness_matrix
+);
 
 void NodalGyroscopicMatrix(
     View1D_LieAlgebra::const_type velocity, const MassMatrix& sectional_mass_matrix,
@@ -103,6 +121,7 @@ void ElementalInertialMatrices(
 
 /// Calculates the constraint residual vector for a beam element
 void ElementalConstraintForcesResidual(View1D::const_type gen_coords, View1D constraints_residual);
+void ElementalConstraintForcesResidual(LieGroupFieldView::const_type gen_coords, View1D constraints_residual);
 
 /// Calculates the constraint gradient matrix for a beam element
 void ElementalConstraintForcesGradientMatrix(

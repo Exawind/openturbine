@@ -33,6 +33,29 @@ void InterpolateNodalValues(
     }
 }
 
+void InterpolateNodalValues(
+    View2D::const_type nodal_values, std::vector<double> interpolation_function,
+    View1D interpolated_values
+) {
+    Kokkos::deep_copy(interpolated_values, 0.);
+    const auto n_nodes = nodal_values.extent(0);
+    for (std::size_t i = 0; i < n_nodes; ++i) {
+        KokkosBlas::axpy(
+            interpolation_function[i],
+            Kokkos::subview(nodal_values, i, Kokkos::ALL),
+            interpolated_values
+        );
+    }
+
+    // Normalize the rotation quaternion if it is not already normalized
+    if (nodal_values.extent(1) == LieGroupComponents) {
+      auto q = Kokkos::subview(interpolated_values, Kokkos::pair(3, 7));
+      if (auto norm = KokkosBlas::nrm2(q); norm != 0. && norm != 1.) {
+          KokkosBlas::scal(q, 1. / norm, q);
+      }
+    }
+}
+
 void InterpolateNodalValueDerivatives(
     View1D::const_type nodal_values, std::vector<double> interpolation_function, double jacobian,
     View1D interpolated_values
@@ -47,6 +70,25 @@ void InterpolateNodalValueDerivatives(
         KokkosBlas::axpy(
             interpolation_function[i],
             Kokkos::subview(nodal_values, Kokkos::pair(index, index + LieGroupComponents)),
+            interpolated_values
+        );
+    }
+    KokkosBlas::scal(interpolated_values, 1. / jacobian, interpolated_values);
+}
+
+void InterpolateNodalValueDerivatives(
+    View2D::const_type nodal_values, std::vector<double> interpolation_function, double jacobian,
+    View1D interpolated_values
+) {
+    if (jacobian == 0.) {
+        throw std::invalid_argument("jacobian must be nonzero");
+    }
+    const auto n_nodes = nodal_values.extent(0);
+    KokkosBlas::fill(interpolated_values, 0.);
+    for (std::size_t i = 0; i < n_nodes; ++i) {
+        KokkosBlas::axpy(
+            interpolation_function[i],
+            Kokkos::subview(nodal_values, i, Kokkos::ALL),
             interpolated_values
         );
     }
@@ -165,9 +207,90 @@ void ElementalStaticForcesResidual(
         auto index = i * LieGroupComponents;
         Kokkos::deep_copy(
             Kokkos::subview(nodes, i, Kokkos::ALL),
-            Kokkos::subview(position_vectors, Kokkos::make_pair(index, index + 3))
+            Kokkos::subview(position_vectors, Kokkos::make_pair(index, index+3))
         );
     }
+
+    // Allocate Views for some required intermediate variables
+    auto gen_coords_qp = View1D_LieGroup("gen_coords_qp");
+    auto gen_coords_derivatives_qp = View1D_LieGroup("gen_coords_derivatives_qp");
+    auto position_vector_qp = View1D_LieGroup("position_vector_qp");
+    auto pos_vector_derivatives_qp = View1D_LieGroup("pos_vector_derivatives_qp");
+    auto curvature = View1D_Vector("curvature");
+    auto sectional_strain = View1D_LieAlgebra("sectional_strain");
+    auto sectional_stiffness = View2D_6x6("sectional_stiffness");
+
+    Kokkos::deep_copy(residual, 0.);
+    for (size_t i = 0; i < n_nodes; ++i) {
+        const auto node_count = i;
+        for (size_t j = 0; j < n_quad_pts; ++j) {
+            // Calculate required interpolated values at the quadrature point
+            const auto q_pt = quadrature.GetQuadraturePoints()[j];
+            auto shape_function = LagrangePolynomial(order, q_pt);
+            auto shape_function_derivative = LagrangePolynomialDerivative(order, q_pt);
+            auto shape_function_vector = gen_alpha_solver::create_vector(shape_function);
+            auto shape_function_derivative_vector =
+                gen_alpha_solver::create_vector(shape_function_derivative);
+
+            auto jacobian = CalculateJacobian(nodes, shape_function_derivative_vector);
+            InterpolateNodalValues(gen_coords, shape_function, gen_coords_qp);
+            InterpolateNodalValueDerivatives(
+                gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
+            );
+            InterpolateNodalValues(position_vectors, shape_function, position_vector_qp);
+            InterpolateNodalValueDerivatives(
+                position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
+            );
+
+            // Calculate the curvature and sectional strain
+            NodalCurvature(gen_coords_qp, gen_coords_derivatives_qp, curvature);
+            CalculateSectionalStrain(
+                pos_vector_derivatives_qp, gen_coords_derivatives_qp, curvature, sectional_strain
+            );
+
+            // Calculate the sectional stiffness matrix in inertial basis
+            auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
+                Kokkos::subview(position_vector_qp, Kokkos::make_pair(3, 7))
+            );
+            auto rotation = gen_alpha_solver::EulerParameterToRotationMatrix(
+                Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
+            );
+            SectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
+
+            // Calculate elastic forces i.e. F^C and F^D vectors
+            auto elastic_forces_fc = View1D_LieAlgebra("elastic_forces_fc");
+            auto elastic_forces_fd = View1D_LieAlgebra("elastic_forces_fd");
+            NodalElasticForces(
+                sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
+                sectional_stiffness, elastic_forces_fc, elastic_forces_fd
+            );
+
+            // Calculate the residual at the quadrature point
+            const auto q_weight = quadrature.GetQuadratureWeights()[j];
+            Kokkos::parallel_for(
+                LieAlgebraComponents,
+                KOKKOS_LAMBDA(const size_t component) {
+                    residual(node_count * LieAlgebraComponents + component) +=
+                        q_weight * (shape_function_derivative_vector(node_count) *
+                                        elastic_forces_fc(component) +
+                                    jacobian * shape_function_vector(node_count) *
+                                        elastic_forces_fd(component));
+                }
+            );
+        }
+    }
+}
+
+void ElementalStaticForcesResidual(
+    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
+    const StiffnessMatrix& stiffness, const Quadrature& quadrature, View1D residual
+) {
+    const auto n_nodes = gen_coords.extent(0);
+    const auto order = n_nodes - 1;
+    const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
+
+    auto nodes = VectorFieldView("nodes", n_nodes);
+    Kokkos::deep_copy(nodes, Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3)));
 
     // Allocate Views for some required intermediate variables
     auto gen_coords_qp = View1D_LieGroup("gen_coords_qp");
@@ -601,6 +724,104 @@ void ElementalStaticStiffnessMatrix(
     }
 }
 
+void ElementalStaticStiffnessMatrix(
+    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
+    const StiffnessMatrix& stiffness, const Quadrature& quadrature, View2D stiffness_matrix
+) {
+    const auto n_nodes = gen_coords.extent(0);
+    const auto order = n_nodes - 1;
+    const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
+
+    auto nodes = VectorFieldView("nodes", n_nodes);
+    Kokkos::deep_copy(nodes, Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3)));
+
+    // Allocate Views for some required intermediate variables
+    auto gen_coords_qp = View1D_LieGroup("gen_coords_qp");
+    auto gen_coords_derivatives_qp = View1D_LieGroup("gen_coords_derivatives_qp");
+    auto position_vector_qp = View1D_LieGroup("position_vector_qp");
+    auto pos_vector_derivatives_qp = View1D_LieGroup("pos_vector_derivatives_qp");
+    auto curvature = View1D_Vector("curvature");
+    auto sectional_strain = View1D_LieAlgebra("sectional_strain");
+    auto sectional_stiffness = View2D_6x6("sectional_stiffness");
+    auto O_matrix = View2D_6x6("O_matrix");
+    auto P_matrix = View2D_6x6("P_matrix");
+    auto Q_matrix = View2D_6x6("Q_matrix");
+
+    Kokkos::deep_copy(stiffness_matrix, 0.);
+    for (size_t i = 0; i < n_nodes; ++i) {
+        for (size_t j = 0; j < n_nodes; ++j) {
+            for (size_t k = 0; k < n_quad_pts; ++k) {
+                // Calculate required interpolated values at the quadrature point
+                const auto q_pt = quadrature.GetQuadraturePoints()[k];
+                auto shape_function = LagrangePolynomial(order, q_pt);
+                auto shape_function_derivative = LagrangePolynomialDerivative(order, q_pt);
+                auto shape_function_vector = gen_alpha_solver::create_vector(shape_function);
+                auto shape_function_derivative_vector =
+                    gen_alpha_solver::create_vector(shape_function_derivative);
+
+                auto jacobian = CalculateJacobian(nodes, shape_function_derivative_vector);
+                InterpolateNodalValues(gen_coords, shape_function, gen_coords_qp);
+                InterpolateNodalValueDerivatives(
+                    gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
+                );
+                InterpolateNodalValues(position_vectors, shape_function, position_vector_qp);
+                InterpolateNodalValueDerivatives(
+                    position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
+                );
+
+                // Calculate the curvature and sectional strain
+                NodalCurvature(gen_coords_qp, gen_coords_derivatives_qp, curvature);
+                CalculateSectionalStrain(
+                    pos_vector_derivatives_qp, gen_coords_derivatives_qp, curvature, sectional_strain
+                );
+
+                // Calculate the sectional stiffness matrix in inertial basis
+                auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
+                    Kokkos::subview(position_vector_qp, Kokkos::make_pair(3, 7))
+                );
+                auto rotation = gen_alpha_solver::EulerParameterToRotationMatrix(
+                    Kokkos::subview(gen_coords_qp, Kokkos::make_pair(3, 7))
+                );
+                SectionalStiffness(stiffness, rotation_0, rotation, sectional_stiffness);
+
+                // Calculate elastic forces i.e. F^C and F^D vectors
+                auto elastic_forces_fc = View1D_LieAlgebra("elastic_forces_fc");
+                auto elastic_forces_fd = View1D_LieAlgebra("elastic_forces_fd");
+                NodalElasticForces(
+                    sectional_strain, rotation, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
+                    sectional_stiffness, elastic_forces_fc, elastic_forces_fd
+                );
+
+                // Calculate the stiffness matrix components, i.e. O, P, and Q matrices
+                NodalStaticStiffnessMatrixComponents(
+                    elastic_forces_fc, pos_vector_derivatives_qp, gen_coords_derivatives_qp,
+                    sectional_stiffness, O_matrix, P_matrix, Q_matrix
+                );
+
+                const auto q_weight = quadrature.GetQuadratureWeights()[k];
+                Kokkos::parallel_for(
+                    Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
+                        {0, 0}, {LieAlgebraComponents, LieAlgebraComponents}
+                    ),
+                    KOKKOS_LAMBDA(const size_t ii, const size_t jj) {
+                        stiffness_matrix(
+                            i * LieAlgebraComponents + ii, j * LieAlgebraComponents + jj
+                        ) += q_weight *
+                             (shape_function_vector(i) * P_matrix(ii, jj) *
+                                  shape_function_derivative_vector(j) +
+                              shape_function_vector(i) * Q_matrix(ii, jj) *
+                                  shape_function_vector(j) * jacobian +
+                              shape_function_derivative_vector(i) * sectional_stiffness(ii, jj) *
+                                  shape_function_derivative_vector(j) / jacobian +
+                              shape_function_derivative_vector(i) * O_matrix(ii, jj) *
+                                  shape_function_vector(j));
+                    }
+                );
+            }
+        }
+    }
+}
+
 void NodalGyroscopicMatrix(
     View1D_LieAlgebra::const_type velocity, const MassMatrix& sectional_mass_matrix,
     View2D_6x6 gyroscopic_matrix
@@ -838,6 +1059,32 @@ void ElementalConstraintForcesResidual(View1D::const_type gen_coords, View1D con
             constraints_residual(0) = gen_coords(0);
             constraints_residual(1) = gen_coords(1);
             constraints_residual(2) = gen_coords(2);
+            constraints_residual(3) = rotation_vector.GetXComponent();
+            constraints_residual(4) = rotation_vector.GetYComponent();
+            constraints_residual(5) = rotation_vector.GetZComponent();
+        }
+    );
+}
+
+void ElementalConstraintForcesResidual(LieGroupFieldView::const_type gen_coords, View1D constraints_residual) {
+    Kokkos::deep_copy(constraints_residual, 0.);
+    // For the GEBT proof of concept problem (i.e. the clamped beam), the dofs are enforced to be
+    // zero at the left end of the beam, so the constraint residual is simply based on the
+    // generalized coordinates at the first node
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(std::size_t) {
+            // Construct rotation vector from root node rotation quaternion
+            auto rotation_vector = openturbine::gen_alpha_solver::rotation_vector_from_quaternion(
+                openturbine::gen_alpha_solver::Quaternion(
+                    gen_coords(0, 3), gen_coords(0, 4), gen_coords(0, 5), gen_coords(0, 6)
+                )
+            );
+            // Set residual as translation and rotation of root node
+            // TODO: update when position & rotations are prescribed
+            constraints_residual(0) = gen_coords(0, 0);
+            constraints_residual(1) = gen_coords(0, 1);
+            constraints_residual(2) = gen_coords(0, 2);
             constraints_residual(3) = rotation_vector.GetXComponent();
             constraints_residual(4) = rotation_vector.GetYComponent();
             constraints_residual(5) = rotation_vector.GetZComponent();
