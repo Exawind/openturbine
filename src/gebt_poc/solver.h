@@ -9,19 +9,6 @@
 
 namespace openturbine::gebt_poc {
 
-void ElementalInertialMatrices(
-    View1D::const_type position_vectors, View1D::const_type gen_coords, View1D::const_type velocity,
-    View1D::const_type acceleration, const MassMatrix& mass_matrix, const Quadrature& quadrature,
-    View2D element_mass_matrix, View2D element_gyroscopic_matrix,
-    View2D element_dynamic_stiffness_matrix
-);
-void ElementalInertialMatrices(
-    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
-    LieAlgebraFieldView::const_type velocity, LieAlgebraFieldView::const_type acceleration,
-    const MassMatrix& mass_matrix, const Quadrature& quadrature, View2D element_mass_matrix,
-    View2D element_gyroscopic_matrix, View2D element_dynamic_stiffness_matrix
-);
-
 /// Calculates the constraint residual vector for a beam element
 void ElementalConstraintForcesResidual(View1D::const_type gen_coords, View1D constraints_residual);
 void ElementalConstraintForcesResidual(

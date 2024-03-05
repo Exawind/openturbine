@@ -5,6 +5,7 @@ target_sources(
     test_dynamic_beam.cpp
     test_element.cpp
     test_ElementalInertialForcesResidual.cpp
+    test_ElementalInertialMatrices.cpp
     test_ElementalStaticForcesResidual.cpp
     test_ElementalStaticStiffnessMatrix.cpp
     test_field_data.cpp
