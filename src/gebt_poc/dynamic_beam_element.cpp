@@ -122,24 +122,13 @@ void DynamicBeamLinearizationParameters::IterationMatrix(
     const auto size_dofs = velocity.extent(0) * velocity.extent(1);
     const auto size_constraints = lagrange_multipliers.extent(0);
     const auto size_iteration = size_dofs + size_constraints;
-    const auto n_nodes = velocity.extent(0);
+    // const auto n_nodes = velocity.extent(0);
 
     // Assemble the tangent operator (same size as the stiffness matrix)
     auto delta_gen_coords_node = View1D_Vector("delta_gen_coords_node");
     auto tangent_operator = View2D("tangent_operator", size_dofs, size_dofs);
     Kokkos::deep_copy(tangent_operator, 0.0);
-    for (size_t i = 0; i < n_nodes; ++i) {
-        Kokkos::deep_copy(
-            delta_gen_coords_node, Kokkos::subview(delta_gen_coords, i, Kokkos::make_pair(3, 6))
-        );
-        KokkosBlas::scal(delta_gen_coords_node, h, delta_gen_coords_node);
-        auto tangent_operator_node = Kokkos::subview(
-            tangent_operator,
-            Kokkos::make_pair(i * LieAlgebraComponents, (i + 1) * LieAlgebraComponents),
-            Kokkos::make_pair(i * LieAlgebraComponents, (i + 1) * LieAlgebraComponents)
-        );
-        TangentOperator(delta_gen_coords_node, tangent_operator_node);
-    }
+    TangentOperator(delta_gen_coords, h, tangent_operator);
 
     // Assemble the top left partition of the iteration matrix consisting of 3 parts
     auto mass_matrix = View2D("mass_matrix", size_dofs, size_dofs);
