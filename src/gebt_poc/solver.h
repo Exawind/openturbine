@@ -8,19 +8,6 @@
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
-
-/// Calculates the interpolated values for a nodal quantity (e.g. displacement or position vector)
-/// at a given quadrature point and normalizes the rotation quaternion
-void InterpolateNodalValues(
-    View1D::const_type nodal_values, std::vector<double> interpolation_function,
-    View1D interpolated_values, std::size_t n_components = LieGroupComponents
-);
-
-void InterpolateNodalValues(
-    View2D::const_type nodal_values, std::vector<double> interpolation_function,
-    View1D interpolated_values
-);
-
 /// Calculates the interpolated derivative values for a nodal quantity (e.g. displacement
 /// or position vector) at a given quadrature point
 void InterpolateNodalValueDerivatives(
