@@ -20,6 +20,7 @@ target_sources(
     test_model.cpp
     test_NodalCurvature.cpp
     test_NodalElasticForces.cpp
+    test_NodalGyroscopicMatrix.cpp
     test_NodalInertialForces.cpp
     test_NodalStaticStiffnessMatrixComponents.cpp
     test_point.cpp
