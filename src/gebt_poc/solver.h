@@ -8,13 +8,6 @@
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
-/// Transforms the given 6 x 6 stiffness matrix in material basis -> inertial basis based on the
-/// given rotation matrices
-void SectionalStiffness(
-    const StiffnessMatrix& stiffness, View2D_3x3::const_type rotation_0,
-    View2D_3x3::const_type rotation, View2D_6x6 sectional_stiffness
-);
-
 /// Calculates the elastic forces based on the sectional strain, derivative of the position
 /// vector and the generalized coordinates, and the sectional stiffness matrix
 void NodalElasticForces(

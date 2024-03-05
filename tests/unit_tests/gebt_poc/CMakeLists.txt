@@ -18,6 +18,7 @@ target_sources(
     test_NodalCurvature.cpp
     test_point.cpp
     test_section.cpp
+    test_SectionalStiffness.cpp
     test_solver.cpp
     test_state.cpp
 )
