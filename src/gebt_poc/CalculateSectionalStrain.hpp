@@ -24,4 +24,4 @@ inline void CalculateSectionalStrain(
     Kokkos::deep_copy(sectional_strain_2, curvature);
 }
 
-}
+}  // namespace openturbine::gebt_poc

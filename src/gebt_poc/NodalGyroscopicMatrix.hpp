@@ -1,11 +1,11 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
-#include "src/gen_alpha_poc/utilities.h"
-#include "src/gebt_poc/types.hpp"
 #include "src/gebt_poc/state.h"
+#include "src/gebt_poc/types.hpp"
+#include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gebt_poc {
 
@@ -59,4 +59,4 @@ inline void NodalGyroscopicMatrix(
     KokkosBlas::axpy(-1., gyroscopic_matrix_q4_part2, gyroscopic_matrix_q4);
 }
 
-}
+}  // namespace openturbine::gebt_poc

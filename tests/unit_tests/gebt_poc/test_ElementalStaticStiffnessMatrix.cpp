@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/ElementalStaticStiffnessMatrix.hpp"
-
 #include "tests/unit_tests/gebt_poc/test_data.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
@@ -50,7 +49,9 @@ TEST(SolverTest, ElementalStaticStiffnessMatrixWithZeroValues) {
         iteration_matrix
     );
 
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(iteration_matrix, tests::zeros_30x30);
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        iteration_matrix, tests::zeros_30x30
+    );
 }
 
 TEST(SolverTest, ElementalStaticStiffnessMatrixWithNonZeroValues) {
@@ -157,7 +158,9 @@ TEST(SolverTest, ElementalStaticStiffnessMatrixWithZeroValues2D) {
         iteration_matrix
     );
 
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(iteration_matrix, tests::zeros_30x30);
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        iteration_matrix, tests::zeros_30x30
+    );
 }
 
 TEST(SolverTest, ElementalStaticStiffnessMatrixWithNonZeroValues2D) {
@@ -221,4 +224,4 @@ TEST(SolverTest, ElementalStaticStiffnessMatrixWithNonZeroValues2D) {
     );
 }
 
-}
+}  // namespace openturbine::gebt_poc

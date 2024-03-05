@@ -1,11 +1,10 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/NodalInertialForces.hpp"
-
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc {
-    
+
 TEST(SolverTest, NodalInertialForces) {
     auto mm = gen_alpha_solver::create_matrix({
         {2., 0., 0., 0., 0.601016, -0.398472},                   // row 1
@@ -33,4 +32,4 @@ TEST(SolverTest, NodalInertialForces) {
     );
 }
 
-}
+}  // namespace openturbine::gebt_poc

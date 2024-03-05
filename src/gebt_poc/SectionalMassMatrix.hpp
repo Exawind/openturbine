@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
-#include "src/gebt_poc/types.hpp"
 #include "src/gebt_poc/state.h"
+#include "src/gebt_poc/types.hpp"
 
 namespace openturbine::gebt_poc {
 
@@ -37,4 +37,4 @@ inline void SectionalMassMatrix(
     KokkosBlas::gemm("N", "T", 1., mass_matrix_left_rot, rotation_matrix, 0., sectional_mass_matrix);
 }
 
-}
+}  // namespace openturbine::gebt_poc

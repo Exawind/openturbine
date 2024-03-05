@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "src/gebt_poc/types.hpp"
 
@@ -47,4 +47,4 @@ inline void InterpolateNodalValueDerivatives(
     KokkosBlas::scal(interpolated_values, 1. / jacobian, interpolated_values);
 }
 
-}
+}  // namespace openturbine::gebt_poc

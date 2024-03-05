@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/ElementalConstraintForcesGradientMatrix.hpp"
-
 #include "tests/unit_tests/gebt_poc/test_data.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
@@ -66,4 +65,4 @@ TEST(SolverTest, ElementalConstraintForcesGradientMatrix) {
         }
     );
 }
-}
+}  // namespace openturbine::gebt_poc

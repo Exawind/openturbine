@@ -1,11 +1,10 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/NodalStaticStiffnessMatrixComponents.hpp"
-
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc {
-    
+
 TEST(SolverTest, NodalStaticStiffnessMatrixComponents) {
     auto elastic_force_fc = gen_alpha_solver::create_vector(
         {0.1023527958818833, 0.1512321779691288, 0.2788924951018168, 0.4003985306163255,
@@ -87,4 +86,4 @@ TEST(SolverTest, NodalStaticStiffnessMatrixComponents) {
     );
 }
 
-}
+}  // namespace openturbine::gebt_poc

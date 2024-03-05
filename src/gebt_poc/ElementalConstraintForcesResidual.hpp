@@ -1,15 +1,17 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
+#include "src/gebt_poc/types.hpp"
 #include "src/gen_alpha_poc/quaternion.h"
 #include "src/gen_alpha_poc/utilities.h"
-#include "src/gebt_poc/types.hpp"
 
 namespace openturbine::gebt_poc {
 
-inline void ElementalConstraintForcesResidual(View1D::const_type gen_coords, View1D constraints_residual) {
+inline void ElementalConstraintForcesResidual(
+    View1D::const_type gen_coords, View1D constraints_residual
+) {
     Kokkos::deep_copy(constraints_residual, 0.);
     // For the GEBT proof of concept problem (i.e. the clamped beam), the dofs are enforced to be
     // zero at the left end of the beam, so the constraint residual is simply based on the
@@ -63,4 +65,4 @@ inline void ElementalConstraintForcesResidual(
     );
 }
 
-}
+}  // namespace openturbine::gebt_poc

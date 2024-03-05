@@ -1,17 +1,17 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
-#include "src/gen_alpha_poc/quaternion.h"
-#include "src/gebt_poc/types.hpp"
-#include "src/gebt_poc/SectionalMassMatrix.hpp"
-#include "src/gebt_poc/NodalInertialForces.hpp"
-#include "src/gebt_poc/InterpolateNodalValues.hpp"
 #include "src/gebt_poc/InterpolateNodalValueDerivatives.hpp"
+#include "src/gebt_poc/InterpolateNodalValues.hpp"
+#include "src/gebt_poc/NodalInertialForces.hpp"
+#include "src/gebt_poc/SectionalMassMatrix.hpp"
 #include "src/gebt_poc/interpolation.h"
 #include "src/gebt_poc/quadrature.h"
 #include "src/gebt_poc/section.h"
+#include "src/gebt_poc/types.hpp"
+#include "src/gen_alpha_poc/quaternion.h"
 
 namespace openturbine::gebt_poc {
 
@@ -153,4 +153,4 @@ inline void ElementalInertialForcesResidual(
     }
 }
 
-}
+}  // namespace openturbine::gebt_poc

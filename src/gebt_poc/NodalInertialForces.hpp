@@ -1,12 +1,11 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
-#include "src/gen_alpha_poc/utilities.h"
-#include "src/gebt_poc/types.hpp"
 #include "src/gebt_poc/state.h"
-
+#include "src/gebt_poc/types.hpp"
+#include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gebt_poc {
 
@@ -62,4 +61,4 @@ inline void NodalInertialForces(
     KokkosBlas::gemv("N", mass, center_of_mass_tilde, accelaration, 1., inertial_forces_fc_2);
 }
 
-}
+}  // namespace openturbine::gebt_poc
