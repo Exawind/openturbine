@@ -16,6 +16,7 @@ target_sources(
     test_mesh.cpp
     test_model.cpp
     test_NodalCurvature.cpp
+    test_NodalElasticForces.cpp
     test_point.cpp
     test_section.cpp
     test_SectionalStiffness.cpp
