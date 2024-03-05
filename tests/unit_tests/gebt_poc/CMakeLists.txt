@@ -32,6 +32,5 @@ target_sources(
     test_section.cpp
     test_SectionalMassMatrix.cpp
     test_SectionalStiffness.cpp
-    test_solver.cpp
     test_state.cpp
 )

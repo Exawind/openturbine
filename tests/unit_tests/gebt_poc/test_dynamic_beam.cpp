@@ -4,7 +4,6 @@
 
 #include "src/gebt_poc/dynamic_beam_element.h"
 #include "src/gebt_poc/gen_alpha_2D.h"
-#include "src/gebt_poc/solver.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc::tests {

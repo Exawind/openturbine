@@ -3,7 +3,6 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/gen_alpha_2D.h"
-#include "src/gebt_poc/solver.h"
 #include "src/gebt_poc/static_beam_element.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
