@@ -847,6 +847,143 @@ TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
     );
 }
 
+struct NonZeroValues_PopulateVelocity_2D {
+    Kokkos::View<double[5][6]> velocity;
+
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        // node 1
+        velocity(0, 0) = 0.;
+        velocity(0, 1) = 0.;
+        velocity(0, 2) = 0.;
+        velocity(0, 3) = 0.;
+        velocity(0, 4) = 0.;
+        velocity(0, 5) = 0.;
+        // node 2
+        velocity(1, 0) = 0.017267316464601147;
+        velocity(1, 1) = -0.014285714285714289;
+        velocity(1, 2) = 0.0030845707156756256;
+        velocity(1, 3) = 0.017267316464601147;
+        velocity(1, 4) = -0.014285714285714289;
+        velocity(1, 5) = 0.0030845707156756256;
+        // node 3
+        velocity(2, 0) = 0.05;
+        velocity(2, 1) = -0.025;
+        velocity(2, 2) = 0.0275;
+        velocity(2, 3) = 0.05;
+        velocity(2, 4) = -0.025;
+        velocity(2, 5) = 0.0275;
+        // node 4
+        velocity(3, 0) = 0.08273268353539887;
+        velocity(3, 1) = -0.01428571428571429;
+        velocity(3, 2) = 0.07977257214146723;
+        velocity(3, 3) = 0.08273268353539887;
+        velocity(3, 4) = -0.01428571428571429;
+        velocity(3, 5) = 0.07977257214146723;
+        // node 5
+        velocity(4, 0) = 0.1;
+        velocity(4, 1) = 0.;
+        velocity(4, 2) = 0.12;
+        velocity(4, 3) = 0.1;
+        velocity(4, 4) = 0.;
+        velocity(4, 5) = 0.12;
+    }
+};
+
+struct NonZeroValues_PopulateAcceleration_2D {
+    Kokkos::View<double[5][6]> acceleration;
+
+    KOKKOS_FUNCTION
+    void operator()(std::size_t) const {
+        // node 1
+        acceleration(0, 0) = 0.;
+        acceleration(0, 1) = 0.;
+        acceleration(0, 2) = 0.;
+        acceleration(0, 3) = 0.;
+        acceleration(0, 4) = 0.;
+        acceleration(0, 5) = 0.;
+        // node 2
+        acceleration(1, 0) = 0.017267316464601147;
+        acceleration(1, 1) = -0.01130411210682743;
+        acceleration(1, 2) = 0.006066172894562484;
+        acceleration(1, 3) = 0.017267316464601147;
+        acceleration(1, 4) = -0.014285714285714289;
+        acceleration(1, 5) = -0.014285714285714289;
+        // node 3
+        acceleration(2, 0) = 0.05;
+        acceleration(2, 1) = 0.;
+        acceleration(2, 2) = 0.0525;
+        acceleration(2, 3) = 0.05;
+        acceleration(2, 4) = -0.025;
+        acceleration(2, 5) = -0.025;
+        // node 4
+        acceleration(3, 0) = 0.08273268353539887;
+        acceleration(3, 1) = 0.05416125496397028;
+        acceleration(3, 2) = 0.1482195413911518;
+        acceleration(3, 3) = 0.08273268353539887;
+        acceleration(3, 4) = -0.01428571428571429;
+        acceleration(3, 5) = -0.01428571428571429;
+        // node 5
+        acceleration(4, 0) = 0.1;
+        acceleration(4, 1) = 0.1;
+        acceleration(4, 2) = 0.22;
+        acceleration(4, 3) = 0.1;
+        acceleration(4, 4) = 0.;
+        acceleration(4, 5) = 0.;
+    }
+};
+
+TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues2D) {
+    auto position_vectors = Kokkos::View<double[5][7]>("position_vectors");
+    Kokkos::parallel_for(1, NonZeroValues_populate_position_2D{position_vectors});
+
+    auto generalized_coords = Kokkos::View<double[5][7]>("generalized_coords");
+    Kokkos::parallel_for(1, NonZeroValues_populate_coords_2D{generalized_coords});
+
+    auto quadrature_points =
+        std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
+                            0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
+    auto quadrature_weights = std::vector<double>{
+        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
+    auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
+
+    auto velocity = Kokkos::View<double[5][6]>("velocity");
+    Kokkos::parallel_for(1, NonZeroValues_PopulateVelocity_2D{velocity});
+
+    auto acceleration = Kokkos::View<double[5][6]>("acceleration");
+    Kokkos::parallel_for(1, NonZeroValues_PopulateAcceleration_2D{acceleration});
+
+    auto mm = gen_alpha_solver::create_matrix({
+        {2., 0., 0., 0., 0.6, -0.4},  // row 1
+        {0., 2., 0., -0.6, 0., 0.2},  // row 2
+        {0., 0., 2., 0.4, -0.2, 0.},  // row 3
+        {0., -0.6, 0.4, 1., 2., 3.},  // row 4
+        {0.6, 0., -0.2, 2., 4., 6.},  // row 5
+        {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
+    });
+    auto sectional_mass_matrix = MassMatrix(mm);
+
+    auto residual = Kokkos::View<double*>("residual", 30);
+    ElementalInertialForcesResidual(
+        position_vectors, generalized_coords, velocity, acceleration, sectional_mass_matrix,
+        quadrature, residual
+    );
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        residual, {0.00011604556408927589, -0.0006507362696177887, -0.0006134866787567209,
+                   0.0006142322011935119,  -0.002199479688149071,  -0.0024868433546726618,
+                   0.04224129527348785,    -0.04970288500953028,   0.03088887284431359,
+                   -0.06975512417597271,   -0.1016119340697192,    -0.21457597550060847,
+                   0.17821954823792258,    -0.06852557905980934,   0.23918323280829631,
+                   -0.11742114482709062,   -0.25775479677677565,   -0.3851496964119588,
+                   0.2842963634125304,     0.09461848004333043,    0.5753721231363035,
+                   -0.03722226802421836,   -0.08186055756075582,   -0.023972312767030792,
+                   0.07251940986370664,    0.047582193710461386,   0.1727148583550359,
+                   -0.007667261048492517,  0.02731289347020833,    0.05581821163081137}
+    );
+}
+
 TEST(SolverTest, NodalGyroscopicMatrix) {
     auto mm = gen_alpha_solver::create_matrix({
         {2.0000000000000009, 5.2041704279304213E-17, -5.5511151231257827E-17, 4.163336342344337E-17,
@@ -947,6 +1084,57 @@ TEST(SolverTest, ElementalInertialMatrices) {
 
     auto acceleration = Kokkos::View<double[30]>("acceleration");
     Kokkos::parallel_for(1, NonZeroValues_PopulateAcceleration{acceleration});
+
+    auto quadrature_points =
+        std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
+                            0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
+    auto quadrature_weights = std::vector<double>{
+        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
+    auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
+
+    auto mm = gen_alpha_solver::create_matrix({
+        {2., 0., 0., 0., 0.6, -0.4},  // row 1
+        {0., 2., 0., -0.6, 0., 0.2},  // row 2
+        {0., 0., 2., 0.4, -0.2, 0.},  // row 3
+        {0., -0.6, 0.4, 1., 2., 3.},  // row 4
+        {0.6, 0., -0.2, 2., 4., 6.},  // row 5
+        {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
+    });
+    auto sectional_mass_matrix = MassMatrix(mm);
+
+    auto element_mass_matrix = Kokkos::View<double[30][30]>("element_mass_matrix");
+    auto element_gyroscopic_matrix = Kokkos::View<double[30][30]>("element_gyroscopic_matrix");
+    auto element_dynamic_stiffness_matrix =
+        Kokkos::View<double[30][30]>("element_dynamic_stiffness_matrix");
+    ElementalInertialMatrices(
+        position_vectors, generalized_coords, velocity, acceleration, sectional_mass_matrix,
+        quadrature, element_mass_matrix, element_gyroscopic_matrix, element_dynamic_stiffness_matrix
+    );
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        element_mass_matrix, expected_mass_matrix_30x30
+    );
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        element_gyroscopic_matrix, expected_gyroscopic_matrix_30x30
+    );
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        element_dynamic_stiffness_matrix, expected_dynamic_stiffness_matrix_30x30
+    );
+}
+
+TEST(SolverTest, ElementalInertialMatrices2D) {
+    auto position_vectors = Kokkos::View<double[5][7]>("position_vectors");
+    Kokkos::parallel_for(1, NonZeroValues_populate_position_2D{position_vectors});
+
+    auto generalized_coords = Kokkos::View<double[5][7]>("generalized_coords");
+    Kokkos::parallel_for(1, NonZeroValues_populate_coords_2D{generalized_coords});
+
+    auto velocity = Kokkos::View<double[5][6]>("velocity");
+    Kokkos::parallel_for(1, NonZeroValues_PopulateVelocity_2D{velocity});
+
+    auto acceleration = Kokkos::View<double[5][6]>("acceleration");
+    Kokkos::parallel_for(1, NonZeroValues_PopulateAcceleration_2D{acceleration});
 
     auto quadrature_points =
         std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,

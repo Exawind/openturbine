@@ -84,6 +84,11 @@ void ElementalInertialForcesResidual(
     View1D::const_type acceleration, const MassMatrix& mass_matrix, const Quadrature& quadrature,
     View1D residual
 );
+void ElementalInertialForcesResidual(
+    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords, LieAlgebraFieldView::const_type velocity,
+    LieAlgebraFieldView::const_type acceleration, const MassMatrix& mass_matrix, const Quadrature& quadrature,
+    View1D residual
+);
 
 void NodalStaticStiffnessMatrixComponents(
     View1D_LieAlgebra::const_type elastic_force_fc,
@@ -115,6 +120,12 @@ void NodalDynamicStiffnessMatrix(
 void ElementalInertialMatrices(
     View1D::const_type position_vectors, View1D::const_type gen_coords, View1D::const_type velocity,
     View1D::const_type acceleration, const MassMatrix& mass_matrix, const Quadrature& quadrature,
+    View2D element_mass_matrix, View2D element_gyroscopic_matrix,
+    View2D element_dynamic_stiffness_matrix
+);
+void ElementalInertialMatrices(
+    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords, LieAlgebraFieldView::const_type velocity,
+    LieAlgebraFieldView::const_type acceleration, const MassMatrix& mass_matrix, const Quadrature& quadrature,
     View2D element_mass_matrix, View2D element_gyroscopic_matrix,
     View2D element_dynamic_stiffness_matrix
 );
