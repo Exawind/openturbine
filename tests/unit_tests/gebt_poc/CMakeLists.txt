@@ -15,6 +15,7 @@ target_sources(
     test_linear_solver.cpp
     test_mesh.cpp
     test_model.cpp
+    test_NodalCurvature.cpp
     test_point.cpp
     test_section.cpp
     test_solver.cpp
