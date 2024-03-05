@@ -8,13 +8,6 @@
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
-/// Transforms the provided 6 x 6 mass matrix in material/current configuration -> inertial basis
-/// based on the given rotation matrices
-void SectionalMassMatrix(
-    const MassMatrix& mass_matrix, View2D_3x3 rotation_0, View2D_3x3 rotation,
-    View2D_6x6 sectional_mass_matrix
-);
-
 /// Calculates the inertial forces based on the sectional mass matrix, velocity, and acceleration
 void NodalInertialForces(
     View1D_LieAlgebra::const_type velocity, View1D_LieAlgebra::const_type acceleration,
