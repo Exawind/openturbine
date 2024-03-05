@@ -4,6 +4,7 @@ target_sources(
     PRIVATE
     test_dynamic_beam.cpp
     test_element.cpp
+    test_ElementalStaticForcesResidual.cpp
     test_field_data.cpp
     test_force.cpp
     test_gebt_generalized_alpha_solver.cpp
