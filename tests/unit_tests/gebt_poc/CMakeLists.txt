@@ -4,6 +4,7 @@ target_sources(
     PRIVATE
     test_dynamic_beam.cpp
     test_element.cpp
+    test_ElementalConstraintForcesResidual.cpp
     test_ElementalInertialForcesResidual.cpp
     test_ElementalInertialMatrices.cpp
     test_ElementalStaticForcesResidual.cpp
