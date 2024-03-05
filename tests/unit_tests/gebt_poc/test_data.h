@@ -5,7 +5,7 @@
 namespace openturbine::gebt_poc::tests {
 
 /// A 30 x 1 vector that is used to test the static residual vector
-static auto expected_residual = std::vector {
+static auto expected_residual = std::vector{
     -0.11121183449279262,   // node 1, dof 1
     -0.16149482899687981,   // node 1, dof 2
     -0.30437442031624939,   // node 1, dof 3

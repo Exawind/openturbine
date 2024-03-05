@@ -28,4 +28,4 @@ TEST(SolverTest, UserDefinedQuadrature) {
     EXPECT_EQ(quadrature.GetQuadraturePoints(), quadrature_points);
     EXPECT_EQ(quadrature.GetQuadratureWeights(), quadrature_weights);
 }
-}
+}  // namespace openturbine::gebt_poc

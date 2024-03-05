@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/ElementalStaticForcesResidual.hpp"
-
 #include "tests/unit_tests/gebt_poc/test_data.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
@@ -182,7 +181,9 @@ TEST(SolverTest, ElementalStaticForcesResidualWithNonZeroValues) {
         position_vectors, generalized_coords, stiffness, quadrature, residual
     );
 
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(residual, tests::expected_residual);
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        residual, tests::expected_residual
+    );
 }
 
 TEST(SolverTest, ElementalStaticForcesResidualWithZeroValues2D) {
@@ -360,6 +361,8 @@ TEST(SolverTest, ElementalStaticForcesResidualWithNonZeroValues2D) {
         position_vectors, generalized_coords, stiffness, quadrature, residual
     );
 
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(residual, tests::expected_residual);
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        residual, tests::expected_residual
+    );
 }
-}
+}  // namespace openturbine::gebt_poc

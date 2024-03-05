@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/ElementalConstraintForcesResidual.hpp"
-
 #include "tests/unit_tests/gebt_poc/test_data.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
@@ -37,4 +36,4 @@ TEST(SolverTest, ElementalConstraintForcesResidual2D) {
         constraints_residual, {0.1, 0., 0.12, 0.1, 0., 0.0}
     );
 }
-}
+}  // namespace openturbine::gebt_poc

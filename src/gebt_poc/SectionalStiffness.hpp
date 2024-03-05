@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
-#include "src/gebt_poc/types.hpp"
 #include "src/gebt_poc/section.h"
+#include "src/gebt_poc/types.hpp"
 
 namespace openturbine::gebt_poc {
 
@@ -40,4 +40,4 @@ inline void SectionalStiffness(
     );
 }
 
-}
+}  // namespace openturbine::gebt_poc

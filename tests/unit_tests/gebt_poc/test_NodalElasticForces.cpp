@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/NodalElasticForces.hpp"
-
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc {
@@ -89,4 +88,4 @@ TEST(SolverTest, NodalElasticForces) {
         elastic_forces_fd, {0., 0., 0., 0., 0., 0.}
     );
 }
-}
+}  // namespace openturbine::gebt_poc

@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/ElementalInertialForcesResidual.hpp"
-
 #include "tests/unit_tests/gebt_poc/test_data.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
@@ -472,4 +471,4 @@ TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues2D) {
     );
 }
 
-}
+}  // namespace openturbine::gebt_poc

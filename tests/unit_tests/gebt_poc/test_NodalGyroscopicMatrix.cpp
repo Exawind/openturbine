@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/NodalGyroscopicMatrix.hpp"
-
 #include "tests/unit_tests/gebt_poc/test_data.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
@@ -47,4 +46,4 @@ TEST(SolverTest, NodalGyroscopicMatrix) {
          {0., 0., 0., 0.006396216051163168, 0.013413253109011812, 0.022439101629457635}}
     );
 }
-}
+}  // namespace openturbine::gebt_poc

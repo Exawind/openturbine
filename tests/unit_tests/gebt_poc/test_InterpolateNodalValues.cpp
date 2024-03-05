@@ -2,7 +2,6 @@
 
 #include "src/gebt_poc/InterpolateNodalValues.hpp"
 #include "src/gebt_poc/interpolation.h"
-
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc {
@@ -83,4 +82,4 @@ TEST(SolverTest, CalculateInterpolatedValues_2D) {
     );
 }
 
-}
+}  // namespace openturbine::gebt_poc

@@ -1,11 +1,10 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/SectionalStiffness.hpp"
-
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc {
-    
+
 TEST(SolverTest, SectionalStiffness) {
     auto rotation_0 = gen_alpha_solver::create_matrix({
         {1., 2., 3.},  // row 1
@@ -42,4 +41,4 @@ TEST(SolverTest, SectionalStiffness) {
     );
 }
 
-}
+}  // namespace openturbine::gebt_poc

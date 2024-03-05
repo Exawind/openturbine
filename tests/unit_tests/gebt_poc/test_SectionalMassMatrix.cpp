@@ -1,11 +1,10 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/SectionalMassMatrix.hpp"
-
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc {
-    
+
 TEST(SolverTest, SectionalMassMatrix) {
     auto rotation_0 = gen_alpha_solver::create_matrix({
         {0.92468736109510075, 0.34700636042507571, -0.156652066872805},
@@ -48,4 +47,4 @@ TEST(SolverTest, SectionalMassMatrix) {
     );
 }
 
-}
+}  // namespace openturbine::gebt_poc

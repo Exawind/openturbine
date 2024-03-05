@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/NodalDynamicStiffnessMatrix.hpp"
-
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc {
@@ -50,4 +49,4 @@ TEST(SolverTest, NodalDynamicStiffnessMatrix) {
          {0., 0., 0., -0.0025828596476940593, 0.042782118352914907, -0.022253736971069835}}
     );
 }
-}
+}  // namespace openturbine::gebt_poc

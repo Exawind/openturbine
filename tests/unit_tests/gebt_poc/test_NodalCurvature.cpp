@@ -2,7 +2,6 @@
 
 #include "src/gebt_poc/NodalCurvature.hpp"
 #include "src/gebt_poc/interpolation.h"
-
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc {
@@ -59,4 +58,4 @@ TEST(SolverTest, NodalCurvature) {
         curvature, {-0.03676700256944363, 0.062023963818612256, 0.15023478838786522}
     );
 }
-}
+}  // namespace openturbine::gebt_poc

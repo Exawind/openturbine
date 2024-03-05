@@ -1,11 +1,11 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
+#include "src/gebt_poc/types.hpp"
 #include "src/gen_alpha_poc/quaternion.h"
 #include "src/gen_alpha_poc/utilities.h"
-#include "src/gebt_poc/types.hpp"
 
 namespace openturbine::gebt_poc {
 inline void ElementalConstraintForcesGradientMatrix(
@@ -59,4 +59,4 @@ inline void ElementalConstraintForcesGradientMatrix(
     KokkosBlas::gemm("N", "N", -1., rotation_matrix_0, position_cross_prod_matrix, 0., B22);
 }
 
-}
+}  // namespace openturbine::gebt_poc

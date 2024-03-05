@@ -1,18 +1,18 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
-#include "src/gebt_poc/types.hpp"
+#include "src/gebt_poc/CalculateSectionalStrain.hpp"
+#include "src/gebt_poc/InterpolateNodalValueDerivatives.hpp"
+#include "src/gebt_poc/InterpolateNodalValues.hpp"
+#include "src/gebt_poc/NodalCurvature.hpp"
 #include "src/gebt_poc/NodalElasticForces.hpp"
 #include "src/gebt_poc/SectionalStiffness.hpp"
-#include "src/gebt_poc/CalculateSectionalStrain.hpp"
-#include "src/gebt_poc/NodalCurvature.hpp"
-#include "src/gebt_poc/InterpolateNodalValues.hpp"
-#include "src/gebt_poc/InterpolateNodalValueDerivatives.hpp"
 #include "src/gebt_poc/interpolation.h"
 #include "src/gebt_poc/quadrature.h"
 #include "src/gebt_poc/section.h"
+#include "src/gebt_poc/types.hpp"
 
 namespace openturbine::gebt_poc {
 
@@ -186,4 +186,4 @@ inline void ElementalStaticForcesResidual(
     }
 }
 
-}
+}  // namespace openturbine::gebt_poc
