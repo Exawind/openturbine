@@ -8,12 +8,6 @@
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
-/// Calculates the curvature from generalized coordinates and their derivatives
-void NodalCurvature(
-    View1D_LieGroup::const_type gen_coords, View1D_LieGroup::const_type gen_coords_derivative,
-    View1D_Vector curvature
-);
-
 /// Transforms the given 6 x 6 stiffness matrix in material basis -> inertial basis based on the
 /// given rotation matrices
 void SectionalStiffness(
