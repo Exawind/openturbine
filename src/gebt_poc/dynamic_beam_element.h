@@ -1,7 +1,7 @@
 #pragma once
 
-#include <KokkosBlas.hpp>
 #include <KokkosBatched_Gemm_Decl.hpp>
+#include <KokkosBlas.hpp>
 
 #include "src/gebt_poc/force.h"
 #include "src/gebt_poc/linearization_parameters.h"
@@ -40,7 +40,9 @@ public:
         View2D iteration_matrix
     ) override;
 
-    void TangentOperator(LieAlgebraFieldView::const_type delta_gen_coords, double h, View2D tangent_operator) {
+    void TangentOperator(
+        LieAlgebraFieldView::const_type delta_gen_coords, double h, View2D tangent_operator
+    ) {
         using member_type = Kokkos::TeamPolicy<>::member_type;
         using no_transpose = KokkosBatched::Trans::NoTranspose;
         using unblocked = KokkosBatched::Algo::Gemm::Unblocked;

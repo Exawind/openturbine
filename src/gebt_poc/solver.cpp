@@ -516,16 +516,18 @@ void ElementalInertialForcesResidual(
 }
 
 void ElementalInertialForcesResidual(
-    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords, LieAlgebraFieldView::const_type velocity,
-    LieAlgebraFieldView::const_type acceleration, const MassMatrix& mass_matrix, const Quadrature& quadrature,
-    View1D residual
+    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
+    LieAlgebraFieldView::const_type velocity, LieAlgebraFieldView::const_type acceleration,
+    const MassMatrix& mass_matrix, const Quadrature& quadrature, View1D residual
 ) {
     const auto n_nodes = gen_coords.extent(0);
     const auto order = n_nodes - 1;
     const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
 
     auto nodes = VectorFieldView("nodes", n_nodes);
-    Kokkos::deep_copy(nodes, Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3)));
+    Kokkos::deep_copy(
+        nodes, Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3))
+    );
 
     // Allocate Views for some required intermediate variables
     auto gen_coords_qp = View1D_LieGroup("gen_coords_qp");
@@ -1107,17 +1109,19 @@ void ElementalInertialMatrices(
 }
 
 void ElementalInertialMatrices(
-    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords, LieAlgebraFieldView::const_type velocity,
-    LieAlgebraFieldView::const_type acceleration, const MassMatrix& mass_matrix, const Quadrature& quadrature,
-    View2D element_mass_matrix, View2D element_gyroscopic_matrix,
-    View2D element_dynamic_stiffness_matrix
+    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
+    LieAlgebraFieldView::const_type velocity, LieAlgebraFieldView::const_type acceleration,
+    const MassMatrix& mass_matrix, const Quadrature& quadrature, View2D element_mass_matrix,
+    View2D element_gyroscopic_matrix, View2D element_dynamic_stiffness_matrix
 ) {
     const auto n_nodes = gen_coords.extent(0);
     const auto order = n_nodes - 1;
     const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
 
     auto nodes = Kokkos::View<double* [3]>("nodes", n_nodes);
-    Kokkos::deep_copy(nodes, Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3)));
+    Kokkos::deep_copy(
+        nodes, Kokkos::subview(position_vectors, Kokkos::ALL, Kokkos::make_pair(0, 3))
+    );
 
     // Allocate Views for some required intermediate variables
     auto gen_coords_qp = View1D_LieGroup("gen_coords_qp");

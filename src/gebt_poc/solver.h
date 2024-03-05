@@ -85,9 +85,9 @@ void ElementalInertialForcesResidual(
     View1D residual
 );
 void ElementalInertialForcesResidual(
-    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords, LieAlgebraFieldView::const_type velocity,
-    LieAlgebraFieldView::const_type acceleration, const MassMatrix& mass_matrix, const Quadrature& quadrature,
-    View1D residual
+    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
+    LieAlgebraFieldView::const_type velocity, LieAlgebraFieldView::const_type acceleration,
+    const MassMatrix& mass_matrix, const Quadrature& quadrature, View1D residual
 );
 
 void NodalStaticStiffnessMatrixComponents(
@@ -124,10 +124,10 @@ void ElementalInertialMatrices(
     View2D element_dynamic_stiffness_matrix
 );
 void ElementalInertialMatrices(
-    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords, LieAlgebraFieldView::const_type velocity,
-    LieAlgebraFieldView::const_type acceleration, const MassMatrix& mass_matrix, const Quadrature& quadrature,
-    View2D element_mass_matrix, View2D element_gyroscopic_matrix,
-    View2D element_dynamic_stiffness_matrix
+    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
+    LieAlgebraFieldView::const_type velocity, LieAlgebraFieldView::const_type acceleration,
+    const MassMatrix& mass_matrix, const Quadrature& quadrature, View2D element_mass_matrix,
+    View2D element_gyroscopic_matrix, View2D element_dynamic_stiffness_matrix
 );
 
 /// Calculates the constraint residual vector for a beam element
