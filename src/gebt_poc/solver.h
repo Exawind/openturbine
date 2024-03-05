@@ -8,17 +8,6 @@
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
-/// Calculates the static residual vector for a beam element
-void ElementalStaticForcesResidual(
-    View1D::const_type position_vectors, View1D::const_type gen_coords,
-    const StiffnessMatrix& stiffness, const Quadrature& quadrature, View1D residual
-);
-
-void ElementalStaticForcesResidual(
-    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
-    const StiffnessMatrix& stiffness, const Quadrature& quadrature, View1D residual
-);
-
 /// Transforms the provided 6 x 6 mass matrix in material/current configuration -> inertial basis
 /// based on the given rotation matrices
 void SectionalMassMatrix(

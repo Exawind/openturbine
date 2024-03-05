@@ -5,7 +5,7 @@
 namespace openturbine::gebt_poc::tests {
 
 /// A 30 x 1 vector that is used to test the static residual vector
-std::vector<double> expected_residual = {
+static auto expected_residual = std::vector {
     -0.11121183449279262,   // node 1, dof 1
     -0.16149482899687981,   // node 1, dof 2
     -0.30437442031624939,   // node 1, dof 3
@@ -39,7 +39,7 @@ std::vector<double> expected_residual = {
 };
 
 /// A 30 x 30 matrix that is used to test the static iteration matrix
-std::vector<std::vector<double>> expected_iteration_matrix = {
+static std::vector<std::vector<double>> expected_iteration_matrix = {
     {1.7424036187210086,    2.5965022193597127,    4.7072269920763903,     6.038208635026578,
      4.0087619571770459,    11.041003289560509,    -1.9105294193016442,    -2.8916422395696428,
      -5.1721630255416837,   -8.2394767557158595,   -8.8855262387343892,    -9.1088386803258778,
@@ -283,7 +283,7 @@ std::vector<std::vector<double>> expected_iteration_matrix = {
 };
 
 /// A 30 x 30 matrix of zeros
-std::vector<std::vector<double>> zeros_30x30 = {
+static std::vector<std::vector<double>> zeros_30x30 = {
     {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
      0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 1
     {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
@@ -346,7 +346,7 @@ std::vector<std::vector<double>> zeros_30x30 = {
      0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 30
 };
 
-std::vector<std::vector<double>> expected_mass_matrix_30x30 = {
+static std::vector<std::vector<double>> expected_mass_matrix_30x30 = {
     {0.477242989,  9.71303E-18,  -1.22955E-17, -8.21215E-18, 0.148588502,  -0.082249658,
      0.144351268,  1.32536E-17,  -4.86176E-18, -1.60051E-18, 0.047908096,  -0.020235106,
      -0.143654111, -8.4831E-18,  -3.64756E-19, 7.77259E-19,  -0.046367664, 0.021570699,
@@ -498,7 +498,7 @@ std::vector<std::vector<double>> expected_mass_matrix_30x30 = {
      -0.062338284, 0.003880859,  -5.48632E-21, 0.034388954,  0.772773547,  0.631927646,
      -0.159255718, 0.032395347,  1.93468E-21,  0.422328839,  2.064212837,  2.034474551}};
 
-std::vector<std::vector<double>> expected_gyroscopic_matrix_30x30 = {
+static std::vector<std::vector<double>> expected_gyroscopic_matrix_30x30 = {
     {0, 0, 0, -0.000142666, 0.001061043,  0.000712814,
      0, 0, 0, -0.000423432, -0.001384641, -0.000651729,
      0, 0, 0, 0.00099651,   -7.6614E-05,  -0.000380147,
@@ -650,7 +650,7 @@ std::vector<std::vector<double>> expected_gyroscopic_matrix_30x30 = {
      0, 0, 0, 0.143013383,  0.073959466,  0.086328463,
      0, 0, 0, 0.293074019,  0.153025304,  0.197645247}};
 
-std::vector<std::vector<double>> expected_dynamic_stiffness_matrix_30x30 = {
+static std::vector<std::vector<double>> expected_dynamic_stiffness_matrix_30x30 = {
     {0, 0, 0, -0.001031228, 0.000228283,  0.000257882,
      0, 0, 0, 0.000828639,  -0.00014544,  -0.000236929,
      0, 0, 0, 0.000893302,  -0.000328103, -0.000190277,
