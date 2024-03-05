@@ -18,6 +18,7 @@ target_sources(
     test_model.cpp
     test_NodalCurvature.cpp
     test_NodalElasticForces.cpp
+    test_NodalInertialForces.cpp
     test_point.cpp
     test_section.cpp
     test_SectionalMassMatrix.cpp

@@ -8,12 +8,6 @@
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
-/// Calculates the inertial forces based on the sectional mass matrix, velocity, and acceleration
-void NodalInertialForces(
-    View1D_LieAlgebra::const_type velocity, View1D_LieAlgebra::const_type acceleration,
-    const MassMatrix& sectional_mass_matrix, View1D_LieAlgebra inertial_forces_fc
-);
-
 /// Calculates the dynamic residual vector for a beam element
 void ElementalInertialForcesResidual(
     View1D::const_type position_vectors, View1D::const_type gen_coords, View1D::const_type velocity,
