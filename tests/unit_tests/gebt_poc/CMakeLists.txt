@@ -19,6 +19,7 @@ target_sources(
     test_mesh.cpp
     test_model.cpp
     test_NodalCurvature.cpp
+    test_NodalDynamicStiffnessMatrix.cpp
     test_NodalElasticForces.cpp
     test_NodalGyroscopicMatrix.cpp
     test_NodalInertialForces.cpp
