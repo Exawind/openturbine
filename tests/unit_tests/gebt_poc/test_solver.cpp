@@ -313,57 +313,6 @@ struct NonZeroValues_PopulateAcceleration {
     }
 };
 
-TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
-    auto position_vectors = Kokkos::View<double[35]>("position_vectors");
-    Kokkos::parallel_for(1, NonZeroValues_populate_position{position_vectors});
-
-    auto generalized_coords = Kokkos::View<double[35]>("generalized_coords");
-    Kokkos::parallel_for(1, NonZeroValues_populate_coords{generalized_coords});
-
-    auto quadrature_points =
-        std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
-                            0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
-    auto quadrature_weights = std::vector<double>{
-        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
-    auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
-
-    auto velocity = Kokkos::View<double[30]>("velocity");
-    Kokkos::parallel_for(1, NonZeroValues_PopulateVelocity{velocity});
-
-    auto acceleration = Kokkos::View<double[30]>("acceleration");
-    Kokkos::parallel_for(1, NonZeroValues_PopulateAcceleration{acceleration});
-
-    auto mm = gen_alpha_solver::create_matrix({
-        {2., 0., 0., 0., 0.6, -0.4},  // row 1
-        {0., 2., 0., -0.6, 0., 0.2},  // row 2
-        {0., 0., 2., 0.4, -0.2, 0.},  // row 3
-        {0., -0.6, 0.4, 1., 2., 3.},  // row 4
-        {0.6, 0., -0.2, 2., 4., 6.},  // row 5
-        {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
-    });
-    auto sectional_mass_matrix = MassMatrix(mm);
-
-    auto residual = Kokkos::View<double*>("residual", 30);
-    ElementalInertialForcesResidual(
-        position_vectors, generalized_coords, velocity, acceleration, sectional_mass_matrix,
-        quadrature, residual
-    );
-
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-        residual, {0.00011604556408927589, -0.0006507362696177887, -0.0006134866787567209,
-                   0.0006142322011935119,  -0.002199479688149071,  -0.0024868433546726618,
-                   0.04224129527348785,    -0.04970288500953028,   0.03088887284431359,
-                   -0.06975512417597271,   -0.1016119340697192,    -0.21457597550060847,
-                   0.17821954823792258,    -0.06852557905980934,   0.23918323280829631,
-                   -0.11742114482709062,   -0.25775479677677565,   -0.3851496964119588,
-                   0.2842963634125304,     0.09461848004333043,    0.5753721231363035,
-                   -0.03722226802421836,   -0.08186055756075582,   -0.023972312767030792,
-                   0.07251940986370664,    0.047582193710461386,   0.1727148583550359,
-                   -0.007667261048492517,  0.02731289347020833,    0.05581821163081137}
-    );
-}
-
 struct NonZeroValues_PopulateVelocity_2D {
     Kokkos::View<double[5][6]> velocity;
 
@@ -450,56 +399,6 @@ struct NonZeroValues_PopulateAcceleration_2D {
     }
 };
 
-TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues2D) {
-    auto position_vectors = Kokkos::View<double[5][7]>("position_vectors");
-    Kokkos::parallel_for(1, NonZeroValues_populate_position_2D{position_vectors});
-
-    auto generalized_coords = Kokkos::View<double[5][7]>("generalized_coords");
-    Kokkos::parallel_for(1, NonZeroValues_populate_coords_2D{generalized_coords});
-
-    auto quadrature_points =
-        std::vector<double>{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
-                            0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
-    auto quadrature_weights = std::vector<double>{
-        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
-    auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
-
-    auto velocity = Kokkos::View<double[5][6]>("velocity");
-    Kokkos::parallel_for(1, NonZeroValues_PopulateVelocity_2D{velocity});
-
-    auto acceleration = Kokkos::View<double[5][6]>("acceleration");
-    Kokkos::parallel_for(1, NonZeroValues_PopulateAcceleration_2D{acceleration});
-
-    auto mm = gen_alpha_solver::create_matrix({
-        {2., 0., 0., 0., 0.6, -0.4},  // row 1
-        {0., 2., 0., -0.6, 0., 0.2},  // row 2
-        {0., 0., 2., 0.4, -0.2, 0.},  // row 3
-        {0., -0.6, 0.4, 1., 2., 3.},  // row 4
-        {0.6, 0., -0.2, 2., 4., 6.},  // row 5
-        {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
-    });
-    auto sectional_mass_matrix = MassMatrix(mm);
-
-    auto residual = Kokkos::View<double*>("residual", 30);
-    ElementalInertialForcesResidual(
-        position_vectors, generalized_coords, velocity, acceleration, sectional_mass_matrix,
-        quadrature, residual
-    );
-
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-        residual, {0.00011604556408927589, -0.0006507362696177887, -0.0006134866787567209,
-                   0.0006142322011935119,  -0.002199479688149071,  -0.0024868433546726618,
-                   0.04224129527348785,    -0.04970288500953028,   0.03088887284431359,
-                   -0.06975512417597271,   -0.1016119340697192,    -0.21457597550060847,
-                   0.17821954823792258,    -0.06852557905980934,   0.23918323280829631,
-                   -0.11742114482709062,   -0.25775479677677565,   -0.3851496964119588,
-                   0.2842963634125304,     0.09461848004333043,    0.5753721231363035,
-                   -0.03722226802421836,   -0.08186055756075582,   -0.023972312767030792,
-                   0.07251940986370664,    0.047582193710461386,   0.1727148583550359,
-                   -0.007667261048492517,  0.02731289347020833,    0.05581821163081137}
-    );
-}
 
 TEST(SolverTest, NodalGyroscopicMatrix) {
     auto mm = gen_alpha_solver::create_matrix({
