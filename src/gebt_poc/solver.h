@@ -8,15 +8,6 @@
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
-/// Calculates the elastic forces based on the sectional strain, derivative of the position
-/// vector and the generalized coordinates, and the sectional stiffness matrix
-void NodalElasticForces(
-    View1D_LieAlgebra::const_type sectional_strain, View2D_3x3::const_type rotation,
-    View1D_LieGroup::const_type pos_vector_derivatives,
-    View1D_LieGroup::const_type gen_coords_derivatives, View2D_6x6::const_type sectional_stiffness,
-    View1D_LieAlgebra elastic_forces_fc, View1D_LieAlgebra elastic_forces_fd
-);
-
 /// Calculates the static residual vector for a beam element
 void ElementalStaticForcesResidual(
     View1D::const_type position_vectors, View1D::const_type gen_coords,
