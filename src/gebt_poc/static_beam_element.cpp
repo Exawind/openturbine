@@ -4,6 +4,7 @@
 
 #include "src/gebt_poc/ElementalStaticForcesResidual.hpp"
 #include "src/gebt_poc/ElementalStaticStiffnessMatrix.hpp"
+#include "src/gebt_poc/ElementalConstraintForcesResidual.hpp"
 
 #include "src/utilities/log.h"
 

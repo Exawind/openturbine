@@ -10,6 +10,7 @@
 #include "src/gebt_poc/ElementalStaticStiffnessMatrix.hpp"
 #include "src/gebt_poc/ElementalInertialForcesResidual.hpp"
 #include "src/gebt_poc/ElementalInertialMatrices.hpp"
+#include "src/gebt_poc/ElementalConstraintForcesResidual.hpp"
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
