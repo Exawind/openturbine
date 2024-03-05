@@ -8,25 +8,9 @@
 #include "src/gebt_poc/InterpolateNodalValues.hpp"
 #include "src/gebt_poc/InterpolateNodalValueDerivatives.hpp"
 #include "src/gebt_poc/NodalCurvature.hpp"
+#include "src/gebt_poc/CalculateSectionalStrain.hpp"
 
 namespace openturbine::gebt_poc {
-void CalculateSectionalStrain(
-    View1D::const_type pos_vector_derivatives_qp, View1D::const_type gen_coords_derivatives_qp,
-    View1D::const_type curvature, View1D sectional_strain
-) {
-    Kokkos::deep_copy(sectional_strain, 0.);
-    // Calculate the sectional strain based on Eq. (35) in the "SO(3)-based GEBT Beam" document
-    // in theory guide
-    auto sectional_strain_1 = Kokkos::subview(sectional_strain, Kokkos::make_pair(0, 3));
-    Kokkos::deep_copy(
-        sectional_strain_1, Kokkos::subview(pos_vector_derivatives_qp, Kokkos::make_pair(0, 3))
-    );
-    KokkosBlas::axpy(
-        1., Kokkos::subview(gen_coords_derivatives_qp, Kokkos::make_pair(0, 3)), sectional_strain_1
-    );
-    auto sectional_strain_2 = Kokkos::subview(sectional_strain, Kokkos::make_pair(3, 6));
-    Kokkos::deep_copy(sectional_strain_2, curvature);
-}
 
 void SectionalStiffness(
     const StiffnessMatrix& stiffness, View2D_3x3::const_type rotation_0,
