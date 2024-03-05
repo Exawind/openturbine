@@ -8,17 +8,6 @@
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
-/// Calculates the interpolated derivative values for a nodal quantity (e.g. displacement
-/// or position vector) at a given quadrature point
-void InterpolateNodalValueDerivatives(
-    View1D::const_type nodal_values, std::vector<double> interpolation_function, double jacobian,
-    View1D interpolated_values
-);
-void InterpolateNodalValueDerivatives(
-    View2D::const_type nodal_values, std::vector<double> interpolation_function, double jacobian,
-    View1D interpolated_values
-);
-
 /// Calculates the curvature from generalized coordinates and their derivatives
 void NodalCurvature(
     View1D_LieGroup::const_type gen_coords, View1D_LieGroup::const_type gen_coords_derivative,
