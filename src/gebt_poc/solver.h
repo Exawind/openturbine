@@ -9,11 +9,6 @@
 
 namespace openturbine::gebt_poc {
 
-void NodalGyroscopicMatrix(
-    View1D_LieAlgebra::const_type velocity, const MassMatrix& sectional_mass_matrix,
-    View2D_6x6 gyroscopic_matrix
-);
-
 void NodalDynamicStiffnessMatrix(
     View1D_LieAlgebra::const_type velocity, View1D_LieAlgebra::const_type acceleration,
     const MassMatrix& sectional_mass_matrix, View2D_6x6 stiffness_matrix
