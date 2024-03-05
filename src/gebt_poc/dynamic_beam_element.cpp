@@ -7,6 +7,7 @@
 #include "src/gebt_poc/static_beam_element.h"
 #include "src/gebt_poc/types.hpp"
 #include "src/gebt_poc/ElementalStaticForcesResidual.hpp"
+#include "src/gebt_poc/ElementalStaticStiffnessMatrix.hpp"
 #include "src/gebt_poc/ElementalInertialForcesResidual.hpp"
 #include "src/utilities/log.h"
 

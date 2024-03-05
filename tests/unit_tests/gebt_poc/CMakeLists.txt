@@ -6,6 +6,7 @@ target_sources(
     test_element.cpp
     test_ElementalInertialForcesResidual.cpp
     test_ElementalStaticForcesResidual.cpp
+    test_ElementalStaticStiffnessMatrix.cpp
     test_field_data.cpp
     test_force.cpp
     test_gebt_generalized_alpha_solver.cpp
@@ -20,6 +21,7 @@ target_sources(
     test_NodalCurvature.cpp
     test_NodalElasticForces.cpp
     test_NodalInertialForces.cpp
+    test_NodalStaticStiffnessMatrixComponents.cpp
     test_point.cpp
     test_section.cpp
     test_SectionalMassMatrix.cpp

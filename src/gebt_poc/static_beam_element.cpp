@@ -3,6 +3,7 @@
 #include <KokkosBlas.hpp>
 
 #include "src/gebt_poc/ElementalStaticForcesResidual.hpp"
+#include "src/gebt_poc/ElementalStaticStiffnessMatrix.hpp"
 
 #include "src/utilities/log.h"
 
