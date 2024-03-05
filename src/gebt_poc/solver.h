@@ -8,18 +8,6 @@
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
-/// Calculates the dynamic residual vector for a beam element
-void ElementalInertialForcesResidual(
-    View1D::const_type position_vectors, View1D::const_type gen_coords, View1D::const_type velocity,
-    View1D::const_type acceleration, const MassMatrix& mass_matrix, const Quadrature& quadrature,
-    View1D residual
-);
-void ElementalInertialForcesResidual(
-    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
-    LieAlgebraFieldView::const_type velocity, LieAlgebraFieldView::const_type acceleration,
-    const MassMatrix& mass_matrix, const Quadrature& quadrature, View1D residual
-);
-
 void NodalStaticStiffnessMatrixComponents(
     View1D_LieAlgebra::const_type elastic_force_fc,
     View1D_LieGroup::const_type pos_vector_derivatives,
