@@ -8,22 +8,6 @@
 #include "src/utilities/log.h"
 
 namespace openturbine::gebt_poc {
-void NodalStaticStiffnessMatrixComponents(
-    View1D_LieAlgebra::const_type elastic_force_fc,
-    View1D_LieGroup::const_type pos_vector_derivatives,
-    View1D_LieGroup::const_type gen_coords_derivatives, View2D_6x6::const_type sectional_stiffness,
-    View2D_6x6 O_matrix, View2D_6x6 P_matrix, View2D_6x6 Q_matrix
-);
-
-/// Calculates the static stiffness matrix for a beam element
-void ElementalStaticStiffnessMatrix(
-    View1D::const_type position_vectors, View1D::const_type gen_coords,
-    const StiffnessMatrix& stiffness, const Quadrature& quadrature, View2D stiffness_matrix
-);
-void ElementalStaticStiffnessMatrix(
-    LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
-    const StiffnessMatrix& stiffness, const Quadrature& quadrature, View2D stiffness_matrix
-);
 
 void NodalGyroscopicMatrix(
     View1D_LieAlgebra::const_type velocity, const MassMatrix& sectional_mass_matrix,
