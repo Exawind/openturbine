@@ -5,8 +5,10 @@
 
 #include "src/gebt_poc/force.h"
 #include "src/gebt_poc/linearization_parameters.h"
-#include "src/gebt_poc/solver.h"
 #include "src/gebt_poc/types.hpp"
+#include "src/gebt_poc/section.h"
+#include "src/gebt_poc/quadrature.h"
+#include "src/gebt_poc/state.h"
 #include "src/gen_alpha_poc/state.h"
 #include "src/gen_alpha_poc/utilities.h"
 

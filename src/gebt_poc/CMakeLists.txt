@@ -8,7 +8,6 @@ target_sources(${oturb_lib_name}
     linearization_parameters.cpp
     model.cpp
     section.cpp
-    solver.cpp
     state.cpp
     static_beam_element.cpp
 )
