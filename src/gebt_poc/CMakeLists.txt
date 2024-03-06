@@ -7,7 +7,6 @@ target_sources(${oturb_lib_name}
     interpolation.cpp
     linearization_parameters.cpp
     model.cpp
-    section.cpp
     state.cpp
     static_beam_element.cpp
 )

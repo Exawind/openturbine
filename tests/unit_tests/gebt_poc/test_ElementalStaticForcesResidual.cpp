@@ -45,7 +45,7 @@ TEST(SolverTest, ElementalStaticForcesResidualWithZeroValues) {
 
     auto residual = Kokkos::View<double[30]>("residual");
     ElementalStaticForcesResidual(
-        position_vectors, generalized_coords, StiffnessMatrix(stiffness), quadrature, residual
+        position_vectors, generalized_coords, stiffness, quadrature, residual
     );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
@@ -159,14 +159,14 @@ TEST(SolverTest, ElementalStaticForcesResidualWithNonZeroValues) {
     auto generalized_coords = Kokkos::View<double[5][7]>("generalized_coords");
     Kokkos::parallel_for(1, NonZeroValues_populate_coords{generalized_coords});
 
-    auto stiffness = StiffnessMatrix(gen_alpha_solver::create_matrix({
+    auto stiffness = gen_alpha_solver::create_matrix({
         {1., 2., 3., 4., 5., 6.},       // row 1
         {2., 4., 6., 8., 10., 12.},     // row 2
         {3., 6., 9., 12., 15., 18.},    // row 3
         {4., 8., 12., 16., 20., 24.},   // row 4
         {5., 10., 15., 20., 25., 30.},  // row 5
         {6., 12., 18., 24., 30., 36.}   // row 6
-    }));
+    });
 
     auto quadrature_points =
                std::vector{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,

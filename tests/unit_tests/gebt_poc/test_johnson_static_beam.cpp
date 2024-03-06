@@ -59,14 +59,14 @@ StaticBeamLinearizationParameters create_test_static_beam_parameters() {
     auto position_vectors = Kokkos::View<double[5][7]>("position_vectors");
     Kokkos::parallel_for(1, DefinePositionVector_5NodeBeamElement{position_vectors});
 
-    auto stiffness_matrix = StiffnessMatrix(gen_alpha_solver::create_matrix({
+    auto stiffness_matrix = gen_alpha_solver::create_matrix({
         {1., 2., 3., 4., 5., 6.},       // row 1
         {2., 4., 6., 8., 10., 12.},     // row 2
         {3., 6., 9., 12., 15., 18.},    // row 3
         {4., 8., 12., 16., 20., 24.},   // row 4
         {5., 10., 15., 20., 25., 30.},  // row 5
         {6., 12., 18., 24., 30., 36.}   // row 6
-    }));
+    });
 
     auto quadrature = UserDefinedQuadrature(
         std::vector<double>{
@@ -224,7 +224,7 @@ TEST(StaticBeamTest, StaticBeamResidual) {
     );
 
     StaticBeamLinearizationParameters static_beam{
-        position_vectors, StiffnessMatrix(stiffness), quadrature};
+        position_vectors, stiffness, quadrature};
 
     auto gen_coords = gen_alpha_solver::create_matrix({
         {0., 0., 0., 1., 0., 0., 0.},    // node 1
@@ -301,7 +301,7 @@ TEST(StaticBeamTest, StaticBeamIterationMatrix) {
     );
 
     StaticBeamLinearizationParameters static_beam{
-        position_vectors, StiffnessMatrix(stiffness), quadrature};
+        position_vectors, stiffness, quadrature};
 
     auto gen_coords = gen_alpha_solver::create_matrix({
         {0., 0., 0., 1., 0., 0., 0.},    // node 1
@@ -401,7 +401,7 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
     );
     std::shared_ptr<LinearizationParameters> static_beam_lin_params =
         std::make_shared<StaticBeamLinearizationParameters>(
-            position_vectors, StiffnessMatrix(stiffness), quadrature
+            position_vectors, stiffness, quadrature
         );
     auto results =
         time_integrator.Integrate(initial_state, lagrange_mults.extent(0), static_beam_lin_params);

@@ -45,7 +45,7 @@ TEST(SolverTest, ElementalStaticStiffnessMatrixWithZeroValues) {
 
     auto iteration_matrix = Kokkos::View<double[30][30]>("iteration_matrix");
     ElementalStaticStiffnessMatrix(
-        position_vectors, generalized_coords, StiffnessMatrix(stiffness), quadrature,
+        position_vectors, generalized_coords, stiffness, quadrature,
         iteration_matrix
     );
 
@@ -88,14 +88,14 @@ TEST(SolverTest, ElementalStaticStiffnessMatrixWithNonZeroValues2D) {
          {0.1, 0., 0.12, 0.9987502603949662, 0.049979169270678324, 0., 0.}}
     );
 
-    auto stiffness = StiffnessMatrix(gen_alpha_solver::create_matrix({
+    auto stiffness = gen_alpha_solver::create_matrix({
         {1., 2., 3., 4., 5., 6.},       // row 1
         {2., 4., 6., 8., 10., 12.},     // row 2
         {3., 6., 9., 12., 15., 18.},    // row 3
         {4., 8., 12., 16., 20., 24.},   // row 4
         {5., 10., 15., 20., 25., 30.},  // row 5
         {6., 12., 18., 24., 30., 36.}   // row 6
-    }));
+    });
 
     auto quadrature_points =
                std::vector{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,

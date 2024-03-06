@@ -23,7 +23,7 @@ public:
     /// Define a dynamic beam element with the given position vector for the nodes, 6 x 6
     /// stiffness matrix, and a quadrature rule
     DynamicBeamLinearizationParameters(
-        LieGroupFieldView position_vectors, StiffnessMatrix stiffness_matrix, MassMatrix mass_matrix,
+        LieGroupFieldView position_vectors, View2D_6x6 stiffness_matrix, MassMatrix mass_matrix,
         UserDefinedQuadrature quadrature, std::vector<Forces*> external_forces = {}
     );
 
@@ -154,7 +154,7 @@ public:
 
 private:
     LieGroupFieldView position_vectors_;
-    StiffnessMatrix stiffness_matrix_;
+    View2D_6x6 stiffness_matrix_;
     MassMatrix mass_matrix_;
     UserDefinedQuadrature quadrature_;
     std::vector<Forces*> external_forces_;

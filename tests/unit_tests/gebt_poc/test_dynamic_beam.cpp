@@ -68,7 +68,6 @@ TEST(DynamicBeamTest, DynamicAnalysisWithZeroForce) {
         {0., 0., 0., 17610., 59120., -370.},  // row 5
         {0., 0., 0., -351., -370., 141470.}   // row 6
     });
-    auto stiffness_matrix = StiffnessMatrix(stiffness);
 
     auto mm = gen_alpha_solver::create_matrix({
         {2., 0., 0., 0., 0.6, -0.4},  // row 1
@@ -114,7 +113,7 @@ TEST(DynamicBeamTest, DynamicAnalysisWithZeroForce) {
     );
     std::shared_ptr<LinearizationParameters> dynamic_beam_lin_params =
         std::make_shared<DynamicBeamLinearizationParameters>(
-            position_vectors, stiffness_matrix, mass_matrix, quadrature
+            position_vectors, stiffness, mass_matrix, quadrature
         );
     auto results =
         time_integrator.Integrate(initial_state, lagrange_mults.extent(0), dynamic_beam_lin_params);
@@ -211,7 +210,6 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
         {0., 0., 0., 17610., 59120., -370.},  // row 5
         {0., 0., 0., -351., -370., 141470.}   // row 6
     });
-    auto stiffness_matrix = StiffnessMatrix(stiffness);
 
     auto mm = gen_alpha_solver::create_matrix({
         {8.538e-2, 0., 0., 0., 0., 0.},    // row 1
@@ -249,7 +247,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
 
     std::shared_ptr<LinearizationParameters> dynamic_beam_lin_params =
         std::make_shared<DynamicBeamLinearizationParameters>(
-            position_vectors, stiffness_matrix, mass_matrix, quadrature, external_forces
+            position_vectors, stiffness, mass_matrix, quadrature, external_forces
         );
 
     // Run the dynamic analysis for 1 iteration with a time step of 0.005 seconds
@@ -313,7 +311,6 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
         {0., 0., 0., 17610., 59120., -370.},  // row 5
         {0., 0., 0., -351., -370., 141470.}   // row 6
     });
-    auto stiffness_matrix = StiffnessMatrix(stiffness);
 
     auto mm = gen_alpha_solver::create_matrix({
         {8.538e-2, 0., 0., 0., 0., 0.},    // row 1
@@ -356,7 +353,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
 
     std::shared_ptr<LinearizationParameters> dynamic_beam_lin_params =
         std::make_shared<DynamicBeamLinearizationParameters>(
-            position_vectors, stiffness_matrix, mass_matrix, quadrature, external_forces
+            position_vectors, stiffness, mass_matrix, quadrature, external_forces
         );
 
     // Calculate the generalized alpha parameters for rho_inf = 0

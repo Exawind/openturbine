@@ -21,7 +21,7 @@ namespace openturbine::gebt_poc {
 
 inline void ElementalStaticStiffnessMatrix(
     LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
-    const StiffnessMatrix& stiffness, const Quadrature& quadrature, View2D stiffness_matrix
+    View2D_6x6::const_type stiffness, const Quadrature& quadrature, View2D stiffness_matrix
 ) {
     const auto n_nodes = gen_coords.extent(0);
     const auto order = n_nodes - 1;

@@ -34,7 +34,7 @@ void BMatrix(View2D constraints_gradient_matrix) {
 }
 
 StaticBeamLinearizationParameters::StaticBeamLinearizationParameters(
-    LieGroupFieldView position_vectors, StiffnessMatrix stiffness_matrix,
+    LieGroupFieldView position_vectors, View2D_6x6 stiffness_matrix,
     UserDefinedQuadrature quadrature
 )
     : position_vectors_(position_vectors),
