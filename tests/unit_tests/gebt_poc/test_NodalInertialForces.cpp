@@ -6,7 +6,7 @@
 namespace openturbine::gebt_poc {
 
 TEST(SolverTest, NodalInertialForces) {
-    auto mm = gen_alpha_solver::create_matrix({
+    auto sectional_mass_matrix = gen_alpha_solver::create_matrix({
         {2., 0., 0., 0., 0.601016, -0.398472},                   // row 1
         {0., 2., -1.45094e-19, -0.601016, -5.78775e-20, 0.2},    // row 2
         {0., -1.45094e-19, 2., 0.398472, -0.2, -7.22267e-20},    // row 3
@@ -14,7 +14,6 @@ TEST(SolverTest, NodalInertialForces) {
         {0.601016, 5.78775e-20, -0.2, 1.99236, 3.9695, 5.9872},  // row 5
         {-0.398472, 0.2, 7.22267e-20, 3.00508, 5.9872, 9.0305}   // row 6
     });
-    auto sectional_mass_matrix = MassMatrix(mm);
 
     auto velocity = gen_alpha_solver::create_vector(
         {0.0025446, -0.00247985, 0.0000650796, 0.0025446, -0.00247985, 0.0000650796}

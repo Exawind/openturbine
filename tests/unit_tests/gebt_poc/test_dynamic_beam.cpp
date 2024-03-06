@@ -69,7 +69,7 @@ TEST(DynamicBeamTest, DynamicAnalysisWithZeroForce) {
         {0., 0., 0., -351., -370., 141470.}   // row 6
     });
 
-    auto mm = gen_alpha_solver::create_matrix({
+    auto mass_matrix = gen_alpha_solver::create_matrix({
         {2., 0., 0., 0., 0.6, -0.4},  // row 1
         {0., 2., 0., -0.6, 0., 0.2},  // row 2
         {0., 0., 2., 0.4, -0.2, 0.},  // row 3
@@ -77,7 +77,6 @@ TEST(DynamicBeamTest, DynamicAnalysisWithZeroForce) {
         {0.6, 0., -0.2, 2., 4., 6.},  // row 5
         {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
     });
-    auto mass_matrix = MassMatrix(mm);
 
     auto quadrature = UserDefinedQuadrature(
         {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
@@ -211,7 +210,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
         {0., 0., 0., -351., -370., 141470.}   // row 6
     });
 
-    auto mm = gen_alpha_solver::create_matrix({
+    auto mass_matrix = gen_alpha_solver::create_matrix({
         {8.538e-2, 0., 0., 0., 0., 0.},    // row 1
         {0., 8.538e-2, 0., 0., 0., 0.},    // row 2
         {0., 0., 8.538e-2, 0., 0., 0.},    // row 3
@@ -219,7 +218,6 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
         {0., 0., 0., 0., 0.40972e-2, 0.},  // row 5
         {0., 0., 0., 0., 0., 1.0336e-2}    // row 6
     });
-    auto mass_matrix = MassMatrix(mm);
 
     auto quadrature = UserDefinedQuadrature(
         {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
@@ -312,7 +310,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
         {0., 0., 0., -351., -370., 141470.}   // row 6
     });
 
-    auto mm = gen_alpha_solver::create_matrix({
+    auto mass_matrix = gen_alpha_solver::create_matrix({
         {8.538e-2, 0., 0., 0., 0., 0.},    // row 1
         {0., 8.538e-2, 0., 0., 0., 0.},    // row 2
         {0., 0., 8.538e-2, 0., 0., 0.},    // row 3
@@ -320,7 +318,6 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
         {0., 0., 0., 0., 0.40972e-2, 0.},  // row 5
         {0., 0., 0., 0., 0., 1.0336e-2}    // row 6
     });
-    auto mass_matrix = MassMatrix(mm);
 
     auto quadrature = UserDefinedQuadrature(
         {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,

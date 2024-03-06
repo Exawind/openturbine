@@ -9,7 +9,7 @@
 namespace openturbine::gebt_poc {
 
 inline void SectionalMassMatrix(
-    const MassMatrix& mass_matrix, View2D_3x3 rotation_0, View2D_3x3 rotation,
+    View2D_6x6::const_type mass_matrix, View2D_3x3::const_type rotation_0, View2D_3x3::const_type rotation,
     View2D_6x6 sectional_mass_matrix
 ) {
     auto total_rotation = View2D_3x3("total_rotation");
@@ -32,7 +32,7 @@ inline void SectionalMassMatrix(
     Kokkos::deep_copy(sectional_mass_matrix, 0.);
     auto mass_matrix_left_rot = View2D_6x6("temp");
     KokkosBlas::gemm(
-        "N", "N", 1., rotation_matrix, mass_matrix.GetMassMatrix(), 0., mass_matrix_left_rot
+        "N", "N", 1., rotation_matrix, mass_matrix, 0., mass_matrix_left_rot
     );
     KokkosBlas::gemm("N", "T", 1., mass_matrix_left_rot, rotation_matrix, 0., sectional_mass_matrix);
 }

@@ -20,7 +20,7 @@ namespace openturbine::gebt_poc {
 inline void ElementalInertialMatrices(
     LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
     LieAlgebraFieldView::const_type velocity, LieAlgebraFieldView::const_type acceleration,
-    const MassMatrix& mass_matrix, const Quadrature& quadrature, View2D element_mass_matrix,
+    View2D_6x6::const_type mass_matrix, const Quadrature& quadrature, View2D element_mass_matrix,
     View2D element_gyroscopic_matrix, View2D element_dynamic_stiffness_matrix
 ) {
     const auto n_nodes = gen_coords.extent(0);

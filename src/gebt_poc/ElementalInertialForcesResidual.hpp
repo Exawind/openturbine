@@ -18,7 +18,7 @@ namespace openturbine::gebt_poc {
 inline void ElementalInertialForcesResidual(
     LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
     LieAlgebraFieldView::const_type velocity, LieAlgebraFieldView::const_type acceleration,
-    const MassMatrix& mass_matrix, const Quadrature& quadrature, View1D residual
+    View2D_6x6::const_type mass_matrix, const Quadrature& quadrature, View1D residual
 ) {
     const auto n_nodes = gen_coords.extent(0);
     const auto order = n_nodes - 1;
@@ -64,8 +64,7 @@ inline void ElementalInertialForcesResidual(
             );
             SectionalMassMatrix(mass_matrix, rotation_0, rotation, sectional_mass_matrix);
 
-            auto mm = MassMatrix(sectional_mass_matrix);
-            NodalInertialForces(velocity_qp, acceleration_qp, mm, inertial_f);
+            NodalInertialForces(velocity_qp, acceleration_qp, sectional_mass_matrix, inertial_f);
 
             // Calculate the residual at the quadrature point
             const auto q_weight = quadrature.GetQuadratureWeights()[j];

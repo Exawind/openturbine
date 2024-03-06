@@ -16,7 +16,7 @@
 namespace openturbine::gebt_poc {
 
 DynamicBeamLinearizationParameters::DynamicBeamLinearizationParameters(
-    LieGroupFieldView position_vectors, View2D_6x6 stiffness_matrix, MassMatrix mass_matrix,
+    LieGroupFieldView position_vectors, View2D_6x6 stiffness_matrix, View2D_6x6 mass_matrix,
     UserDefinedQuadrature quadrature, std::vector<Forces*> external_forces
 )
     : position_vectors_(std::move(position_vectors)),
@@ -27,7 +27,7 @@ DynamicBeamLinearizationParameters::DynamicBeamLinearizationParameters(
 }
 
 void DynamicBeamLinearizationParameters::ApplyExternalForces(
-    double time, const Kokkos::View<double*>& external_forces
+    double time, View1D external_forces
 ) {
     Kokkos::deep_copy(external_forces, 0.0);
     for (const auto* force : this->external_forces_) {

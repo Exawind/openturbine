@@ -208,7 +208,7 @@ TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
     auto acceleration = Kokkos::View<double[5][6]>("acceleration");
     Kokkos::parallel_for(1, NonZeroValues_PopulateAcceleration{acceleration});
 
-    auto mm = gen_alpha_solver::create_matrix({
+    auto sectional_mass_matrix = gen_alpha_solver::create_matrix({
         {2., 0., 0., 0., 0.6, -0.4},  // row 1
         {0., 2., 0., -0.6, 0., 0.2},  // row 2
         {0., 0., 2., 0.4, -0.2, 0.},  // row 3
@@ -216,7 +216,6 @@ TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
         {0.6, 0., -0.2, 2., 4., 6.},  // row 5
         {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
     });
-    auto sectional_mass_matrix = MassMatrix(mm);
 
     auto residual = Kokkos::View<double[30]>("residual");
     ElementalInertialForcesResidual(

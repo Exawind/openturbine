@@ -208,7 +208,7 @@ TEST(SolverTest, ElementalInertialMatrices) {
         0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
     auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
-    auto mm = gen_alpha_solver::create_matrix({
+    auto sectional_mass_matrix = gen_alpha_solver::create_matrix({
         {2., 0., 0., 0., 0.6, -0.4},  // row 1
         {0., 2., 0., -0.6, 0., 0.2},  // row 2
         {0., 0., 2., 0.4, -0.2, 0.},  // row 3
@@ -216,7 +216,6 @@ TEST(SolverTest, ElementalInertialMatrices) {
         {0.6, 0., -0.2, 2., 4., 6.},  // row 5
         {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
     });
-    auto sectional_mass_matrix = MassMatrix(mm);
 
     auto element_mass_matrix = Kokkos::View<double[30][30]>("element_mass_matrix");
     auto element_gyroscopic_matrix = Kokkos::View<double[30][30]>("element_gyroscopic_matrix");

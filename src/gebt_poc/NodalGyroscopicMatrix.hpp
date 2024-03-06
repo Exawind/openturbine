@@ -5,12 +5,13 @@
 
 #include "src/gebt_poc/state.h"
 #include "src/gebt_poc/types.hpp"
+#include "src/gebt_poc/MassMatrix.hpp"
 #include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gebt_poc {
 
 inline void NodalGyroscopicMatrix(
-    View1D_LieAlgebra::const_type velocity, const MassMatrix& sectional_mass_matrix,
+    View1D_LieAlgebra::const_type velocity, View2D_6x6::const_type sectional_mass_matrix,
     View2D_6x6 gyroscopic_matrix
 ) {
     // The Gyroscopic matrix is defined as
@@ -29,9 +30,9 @@ inline void NodalGyroscopicMatrix(
     Kokkos::deep_copy(gyroscopic_matrix, 0.);
 
     // Calculate mass, {eta}, and [rho] from the sectional mass matrix
-    auto mass = sectional_mass_matrix.GetMass();
-    auto eta = sectional_mass_matrix.GetCenterOfMass();
-    auto rho = sectional_mass_matrix.GetMomentOfInertia();
+    auto mass = GetMass(sectional_mass_matrix);
+    auto eta = GetCenterOfMass(sectional_mass_matrix);
+    auto rho = GetMomentOfInertia(sectional_mass_matrix);
 
     // Calculate the top right block i.e. quadrant 1 of the gyroscopic matrix
     auto gyroscopic_matrix_q1 =

@@ -40,34 +40,4 @@ private :
     LieAlgebraFieldView algorithmic_acceleration_;
     // clang-format on
 };
-
-/// Class to create and store a 6 x 6 mass matrix of a rigid body
-class MassMatrix {
-public:
-    /// Constructor that initializes the mass matrix with the given mass, moments of inertia,
-    /// and center of mass
-    MassMatrix(double mass, View1D_Vector center_of_mass, View2D_3x3 moment_of_inertia);
-
-    /// Constructor that initializes the mass matrix with the given mass matrix
-    MassMatrix(View2D_6x6 mass_matrix);
-
-    /// Returns the mass matrix of the rigid body
-    auto GetMassMatrix() const { return mass_matrix_; }
-
-    /// Returns the mass of the rigid body
-    inline double GetMass() const { return mass_; }
-
-    /// Returns the center of mass of the rigid body
-    auto GetCenterOfMass() const { return center_of_mass_; }
-
-    /// Returns the moments of inertia of the rigid body
-    auto GetMomentOfInertia() const { return moment_of_inertia_; }
-
-private:
-    double mass_;                   //< Mass of the rigid body
-    View1D_Vector center_of_mass_;  //< Center of mass of the rigid body
-    View2D_3x3 moment_of_inertia_;  //< Moments of inertia
-    View2D_6x6 mass_matrix_;        //< Mass matrix of the rigid body
-};
-
 }  // namespace openturbine::gebt_poc

@@ -11,7 +11,7 @@ TEST(SectionTest, DefaultConstructor) {
     EXPECT_EQ(section.GetName(), "");
     EXPECT_EQ(section.GetNormalizedLocation(), 0.);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        section.GetMassMatrix().GetMassMatrix(),
+        section.GetMassMatrix(),
         {
             {0., 0., 0., 0., 0., 0.},  // row 1
             {0., 0., 0., 0., 0., 0.},  // row 2
@@ -35,7 +35,7 @@ TEST(SectionTest, DefaultConstructor) {
 }
 
 TEST(SectionTest, ConstructUnitSection) {
-    auto mass = MassMatrix(gen_alpha_solver::create_identity_matrix(6));
+    auto mass = gen_alpha_solver::create_identity_matrix(6);
     auto stiffness = gen_alpha_solver::create_identity_matrix(6);
     auto location = 0.;
 
@@ -43,7 +43,7 @@ TEST(SectionTest, ConstructUnitSection) {
 
     EXPECT_EQ(section.GetNormalizedLocation(), location);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        section.GetMassMatrix().GetMassMatrix(),
+        section.GetMassMatrix(),
         {
             {1., 0., 0., 0., 0., 0.},  // row 1
             {0., 1., 0., 0., 0., 0.},  // row 2
@@ -69,7 +69,7 @@ TEST(SectionTest, ConstructUnitSection) {
 
 TEST(SectionTest, ExpectThrowIfLocationIsOutOfBounds) {
     auto name = "section_1";
-    auto mass = MassMatrix(gen_alpha_solver::create_identity_matrix(6));
+    auto mass = gen_alpha_solver::create_identity_matrix(6);
     auto stiffness = gen_alpha_solver::create_identity_matrix(6);
     auto location_less_than_zero = -0.1;
     auto location_greater_than_one = 1.1;
