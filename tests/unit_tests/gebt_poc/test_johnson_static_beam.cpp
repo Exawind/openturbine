@@ -382,7 +382,7 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
         {0., 0.001, 0., 1., 0., 0., 0.}  // node 5
     });
 
-    auto v = gen_alpha_solver::create_matrix(
+    auto velocity = gen_alpha_solver::create_matrix(
         {{0., 0., 0., 0., 0., 0.},  // node 1
          {0., 0., 0., 0., 0., 0.},  // node 2
          {0., 0., 0., 0., 0., 0.},  // node 3
@@ -390,10 +390,23 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
          {0., 0., 0., 0., 0., 0.}}  // node 5
     );
 
-    auto velocity = v;
-    auto acceleration = v;
-    auto algo_acceleration = v;
-    auto initial_state = State(gen_coords, velocity, acceleration, algo_acceleration);
+    auto acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+
+    auto algo_acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+
+    auto initial_state = State{gen_coords, velocity, acceleration, algo_acceleration};
 
     auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
     auto time_integrator = GeneralizedAlphaTimeIntegrator(
@@ -408,7 +421,7 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
     auto final_state = results.back();
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetGeneralizedCoordinates(),
+        final_state.generalized_coordinates,
         {
             {0., 0., 0., 1., 0., 0., 0.},  // node 1
             {0., 0., 0., 1., 0., 0., 0.},  // node 2

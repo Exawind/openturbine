@@ -93,7 +93,7 @@ TEST(DynamicBeamTest, DynamicAnalysisWithZeroForce) {
         {0., 0., 0., 1., 0., 0., 0.}   // node 5
     });
 
-    auto v = gen_alpha_solver::create_matrix(
+    auto velocity = gen_alpha_solver::create_matrix(
         {{0., 0., 0., 0., 0., 0.},  // node 1
          {0., 0., 0., 0., 0., 0.},  // node 2
          {0., 0., 0., 0., 0., 0.},  // node 3
@@ -101,10 +101,23 @@ TEST(DynamicBeamTest, DynamicAnalysisWithZeroForce) {
          {0., 0., 0., 0., 0., 0.}}  // node 5
     );
 
-    auto velocity = v;
-    auto acceleration = v;
-    auto algo_acceleration = v;
-    auto initial_state = State(gen_coords, velocity, acceleration, algo_acceleration);
+    auto acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+
+    auto algo_acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+
+    auto initial_state = State{gen_coords, velocity, acceleration, algo_acceleration};
 
     auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
     auto time_integrator = GeneralizedAlphaTimeIntegrator(
@@ -119,7 +132,7 @@ TEST(DynamicBeamTest, DynamicAnalysisWithZeroForce) {
     auto final_state = results.back();
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetGeneralizedCoordinates(),
+        final_state.generalized_coordinates,
         {
             {0., 0., 0., 1., 0., 0., 0.},  // node 1
             {0., 0., 0., 1., 0., 0., 0.},  // node 2
@@ -187,18 +200,29 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
         {0., 0., 0., 1., 0., 0., 0.},  // node 4
         {0., 0., 0., 1., 0., 0., 0.}   // node 5
     });
-    auto v = gen_alpha_solver::create_matrix(
+    auto velocity = gen_alpha_solver::create_matrix(
         {{0., 0., 0., 0., 0., 0.},  // node 1
          {0., 0., 0., 0., 0., 0.},  // node 2
          {0., 0., 0., 0., 0., 0.},  // node 3
          {0., 0., 0., 0., 0., 0.},  // node 4
          {0., 0., 0., 0., 0., 0.}}  // node 5
     );
-    auto velocity = v;
-    auto acceleration = v;
-    auto algo_acceleration = v;
+    auto acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+    auto algo_acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
 
-    auto initial_state = State(gen_coords, velocity, acceleration, algo_acceleration);
+    auto initial_state = State{gen_coords, velocity, acceleration, algo_acceleration};
 
     // Set up the linearization parameters for the problem
     auto stiffness = gen_alpha_solver::create_matrix({
@@ -271,7 +295,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
     // from BeamDyn at the tip node
     auto state_1 = results[1];
     auto position_1 = Kokkos::subview(
-        state_1.GetGeneralizedCoordinates(), Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
+        state_1.generalized_coordinates, Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         position_1, {{-3.26341443E-09, -3.50249888E-08, 1.39513747E-04}}
@@ -287,18 +311,29 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
         {0., 0., 0., 1., 0., 0., 0.},  // node 4
         {0., 0., 0., 1., 0., 0., 0.}   // node 5
     });
-    auto v = gen_alpha_solver::create_matrix(
+    auto velocity = gen_alpha_solver::create_matrix(
         {{0., 0., 0., 0., 0., 0.},  // node 1
          {0., 0., 0., 0., 0., 0.},  // node 2
          {0., 0., 0., 0., 0., 0.},  // node 3
          {0., 0., 0., 0., 0., 0.},  // node 4
          {0., 0., 0., 0., 0., 0.}}  // node 5
     );
-    auto velocity = v;
-    auto acceleration = v;
-    auto algo_acceleration = v;
+    auto acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+    auto algo_acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
 
-    auto initial_state = State(gen_coords, velocity, acceleration, algo_acceleration);
+    auto initial_state = State{gen_coords, velocity, acceleration, algo_acceleration};
 
     // Set up the linearization parameters for the problem
     auto stiffness = gen_alpha_solver::create_matrix({
@@ -372,7 +407,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
     // from BeamDyn at the tip node
     auto state_1 = results[1];
     auto position_1 = Kokkos::subview(
-        state_1.GetGeneralizedCoordinates(), Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
+        state_1.generalized_coordinates, Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         position_1, {{-8.15173937E-08, -1.86549248E-07, 6.97278045E-04}}
@@ -382,7 +417,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
     // from BeamDyn at the tip node
     auto state_2 = results[2];
     auto position_2 = Kokkos::subview(
-        state_2.GetGeneralizedCoordinates(), Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
+        state_2.generalized_coordinates, Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         position_2, {{-1.00926258E-06, -7.91711079E-07, 2.65017558E-03}}
@@ -392,7 +427,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
     // from BeamDyn at the tip node
     auto state_3 = results[3];
     auto position_3 = Kokkos::subview(
-        state_3.GetGeneralizedCoordinates(), Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
+        state_3.generalized_coordinates, Kokkos::make_pair(4, 5), Kokkos::make_pair(0, 3)
     );
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         position_3, {{-5.05830945E-06, -2.29457246E-06, 6.30508154E-03}}

@@ -26,7 +26,7 @@ TEST(TimeIntegratorTest, AdvanceAnalysisTimeByNumberOfSteps) {
     auto v0 = gen_alpha_solver::create_matrix({{2., 2., 2., 2., 2., 2.}});
     auto a0 = gen_alpha_solver::create_matrix({{3., 3., 3., 3., 3., 3.}});
     auto aa0 = gen_alpha_solver::create_matrix({{4., 4., 4., 4., 4., 4.}});
-    auto initial_state = State(q0, v0, a0, aa0);
+    auto initial_state = State{q0, v0, a0, aa0};
 
     size_t n_lagrange_mults{0};
     std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
@@ -125,7 +125,7 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceleration
     auto v0 = gen_alpha_solver::create_matrix({{0., 0., 0., 0., 0., 0.}});
     auto a0 = gen_alpha_solver::create_matrix({{0., 0., 0., 0., 0., 0.}});
     auto aa0 = gen_alpha_solver::create_matrix({{0., 0., 0., 0., 0., 0.}});
-    auto initial_state = State(q0, v0, a0, aa0);
+    auto initial_state = State{q0, v0, a0, aa0};
 
     size_t n_lagrange_mults{0};
     std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
@@ -141,35 +141,34 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceleration
     // We expect the results State to contain the following values after one increments
     // via hand calculations
     auto first_state = results[1];
+    gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        first_state.generalized_coordinates, {{0., 0., 0., 0., 0., 0., 0.}}
+    );
+    gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        first_state.velocity, {{-2., -2., -2., -2., -2., -2.}}
+    );
+    gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        first_state.acceleration, {{-2., -2., -2., -2., -2., -2.}}
+    );
+    gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        first_state.algorithmic_acceleration, {{-2., -2., -2., -2., -2., -2.}}
+    );
 
-    gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        first_state.GetGeneralizedCoordinates(), {{0., 0., 0., 0., 0., 0., 0.}}
-    );
-    gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        first_state.GetVelocity(), {{-2., -2., -2., -2., -2., -2.}}
-    );
-    gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        first_state.GetAcceleration(), {{-2., -2., -2., -2., -2., -2.}}
-    );
-    gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        first_state.GetAlgorithmicAcceleration(), {{-2., -2., -2., -2., -2., -2.}}
-    );
 
     // We expect the results state to contain the following values after two increments
     // via hand calculations
     auto final_state = results.back();
-
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetGeneralizedCoordinates(), {{-2., -2., -2., 0., 0., 0., 0.}}
+        final_state.generalized_coordinates, {{-2., -2., -2., 0., 0., 0., 0.}}
     );
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetVelocity(), {{-4., -4., -4., -4., -4., -4.}}
+        final_state.velocity, {{-4., -4., -4., -4., -4., -4.}}
     );
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetAcceleration(), {{-2., -2., -2., -2., -2., -2.}}
+        final_state.acceleration, {{-2., -2., -2., -2., -2., -2.}}
     );
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetAlgorithmicAcceleration(), {{-2., -2., -2., -2., -2., -2.}}
+        final_state.algorithmic_acceleration, {{-2., -2., -2., -2., -2., -2.}}
     );
 }
 
@@ -178,11 +177,10 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialState) {
         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., gen_alpha_solver::TimeStepper(0., 1., 1, 1));
 
     auto q0 = gen_alpha_solver::create_matrix({{0., 0., 0., 0., 0., 0., 0.}});
-    auto v = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});
-    auto v0 = v;
-    auto a0 = v;
-    auto aa0 = v;
-    auto initial_state = State(q0, v0, a0, aa0);
+    auto v0 = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});;
+    auto a0 = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});;
+    auto aa0 = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});;
+    auto initial_state = State{q0, v0, a0, aa0};
 
     size_t n_lagrange_mults{0};
     std::shared_ptr<LinearizationParameters> unity_linearization_parameters =
@@ -199,16 +197,16 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialState) {
     // We expect the final state to contain the following values after one increment
     // via hand calculations
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetGeneralizedCoordinates(), {{1., 2., 3., 0., 0., 0., 0.}}
+        final_state.generalized_coordinates, {{1., 2., 3., 0., 0., 0., 0.}}
     );
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetVelocity(), {{-1., 0., 1., 2., 3., 4.}}
+        final_state.velocity, {{-1., 0., 1., 2., 3., 4.}}
     );
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetAcceleration(), {{-2., -2., -2., -2., -2., -2.}}
+        final_state.acceleration, {{-2., -2., -2., -2., -2., -2.}}
     );
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetAlgorithmicAcceleration(), {{-2., -2., -2., -2., -2., -2.}}
+        final_state.algorithmic_acceleration, {{-2., -2., -2., -2., -2., -2.}}
     );
 }
 
@@ -220,7 +218,7 @@ TEST(TimeIntegratorTest, AlphaStepSolutionOfHeavyTopAfterOneInc) {
     auto lag_mult = gen_alpha_solver::create_matrix({{4., 4., 4.}});
     auto aa0 = gen_alpha_solver::create_matrix({{5., 5., 5., 5., 5., 5.}});
 
-    auto initial_state = State(q0, v0, a0, aa0);
+    auto initial_state = State{q0, v0, a0, aa0};
 
     // Calculate properties for the time integrator
     double initial_time{0.};
@@ -255,18 +253,18 @@ TEST(TimeIntegratorTest, AlphaStepSolutionOfHeavyTopAfterOneInc) {
     // We expect the final state to contain the following values after one increment
     // via a pilot fortran code
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetGeneralizedCoordinates(),
+        final_state.generalized_coordinates,
         {{1.207222, 1.207222, 1.207222, 0.674773, 1.086996, 1.086996, 1.086996}}
     );
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetVelocity(),
+        final_state.velocity,
         {{-16.583333, -16.583333, -16.583333, -16.583333, -16.583333, -16.583333}}
     );
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetAcceleration(), {{-337.5, -337.5, -337.5, -337.5, -337.5, -337.5}}
+        final_state.acceleration, {{-337.5, -337.5, -337.5, -337.5, -337.5, -337.5}}
     );
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetAlgorithmicAcceleration(), {{-224., -224., -224., -224., -224., -224.}}
+        final_state.algorithmic_acceleration, {{-224., -224., -224., -224., -224., -224.}}
     );
 }
 

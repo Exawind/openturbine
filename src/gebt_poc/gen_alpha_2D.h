@@ -56,7 +56,7 @@ public:
      *  https://doi.org/10.1016/j.mechmachtheory.2011.07.017
      */
     std::tuple<State, View1D> AlphaStep(
-        const State&, size_t, std::shared_ptr<LinearizationParameters> lin_params
+        State, size_t, std::shared_ptr<LinearizationParameters> lin_params
     );
 
     /// Computes the updated generalized coordinates based on the non-linear update
