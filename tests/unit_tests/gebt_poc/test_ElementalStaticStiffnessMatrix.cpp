@@ -45,8 +45,7 @@ TEST(SolverTest, ElementalStaticStiffnessMatrixWithZeroValues) {
 
     auto iteration_matrix = Kokkos::View<double[30][30]>("iteration_matrix");
     ElementalStaticStiffnessMatrix(
-        position_vectors, generalized_coords, stiffness, quadrature,
-        iteration_matrix
+        position_vectors, generalized_coords, stiffness, quadrature, iteration_matrix
     );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
@@ -98,11 +97,11 @@ TEST(SolverTest, ElementalStaticStiffnessMatrixWithNonZeroValues2D) {
     });
 
     auto quadrature_points =
-               std::vector{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
-                            0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
-    auto quadrature_weights = std::vector{
-        0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-        0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
+        std::vector{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
+                    0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
+    auto quadrature_weights =
+        std::vector{0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+                    0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
     auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
     auto iteration_matrix = Kokkos::View<double[30][30]>("iteration_matrix");

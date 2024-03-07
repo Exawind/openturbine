@@ -26,9 +26,7 @@ DynamicBeamLinearizationParameters::DynamicBeamLinearizationParameters(
       external_forces_(std::move(external_forces)) {
 }
 
-void DynamicBeamLinearizationParameters::ApplyExternalForces(
-    double time, View1D external_forces
-) {
+void DynamicBeamLinearizationParameters::ApplyExternalForces(double time, View1D external_forces) {
     Kokkos::deep_copy(external_forces, 0.0);
     for (const auto* force : this->external_forces_) {
         auto gen_forces = force->GetGeneralizedForces(time);

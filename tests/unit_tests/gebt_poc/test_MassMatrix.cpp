@@ -27,9 +27,9 @@ TEST(MassMatrixTest, GetCenterOfMass) {
         {0.6, 0., -0.2, 2., 4., 6.},  // row 5
         {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
     });
-    
+
     gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-        GetCenterOfMass(mass_matrix), { 0.1, 0.2, 0.3 }
+        GetCenterOfMass(mass_matrix), {0.1, 0.2, 0.3}
     );
 }
 
@@ -53,4 +53,4 @@ TEST(MassMatrixTest, GetMomentOfInertia) {
     );
 }
 
-}
+}  // namespace openturbine::gebt_poc

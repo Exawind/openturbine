@@ -154,7 +154,6 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneAndTwoIncsWithZeroAcceleration
         first_state.algorithmic_acceleration, {{-2., -2., -2., -2., -2., -2.}}
     );
 
-
     // We expect the results state to contain the following values after two increments
     // via hand calculations
     auto final_state = results.back();
@@ -177,9 +176,12 @@ TEST(TimeIntegratorTest, AlphaStepSolutionAfterOneIncWithNonZeroInitialState) {
         GeneralizedAlphaTimeIntegrator(0., 0., 0.5, 1., gen_alpha_solver::TimeStepper(0., 1., 1, 1));
 
     auto q0 = gen_alpha_solver::create_matrix({{0., 0., 0., 0., 0., 0., 0.}});
-    auto v0 = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});;
-    auto a0 = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});;
-    auto aa0 = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});;
+    auto v0 = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});
+    ;
+    auto a0 = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});
+    ;
+    auto aa0 = gen_alpha_solver::create_matrix({{1., 2., 3., 4., 5., 6.}});
+    ;
     auto initial_state = State{q0, v0, a0, aa0};
 
     size_t n_lagrange_mults{0};

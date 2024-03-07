@@ -18,8 +18,7 @@ TEST(StateTest, CreateStateWithGivenValues) {
         }),
         gen_alpha_solver::create_matrix({
             {5., 6., 7., 0., 0., 0.},  // 6 elements
-        })
-    };
+        })};
 
     gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         state.generalized_coordinates,

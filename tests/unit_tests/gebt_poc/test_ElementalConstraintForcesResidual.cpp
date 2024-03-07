@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "src/gebt_poc/ElementalConstraintForcesResidual.hpp"
-
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc {
