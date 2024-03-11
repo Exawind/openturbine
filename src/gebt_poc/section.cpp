@@ -6,7 +6,7 @@ StiffnessMatrix::StiffnessMatrix() : stiffness_matrix_("stiffness_matrix", 6, 6)
     stiffness_matrix_ = gen_alpha_solver::create_identity_matrix(6);
 }
 
-StiffnessMatrix::StiffnessMatrix(const Kokkos::View<double**> stiffness)
+StiffnessMatrix::StiffnessMatrix(View2D::const_type stiffness)
     : stiffness_matrix_("stiffness_matrix", stiffness.extent(0), stiffness.extent(1)) {
     if (stiffness_matrix_.extent(0) != 6 || stiffness_matrix_.extent(1) != 6) {
         throw std::invalid_argument("Stiffness matrix must be 6 x 6");
@@ -16,8 +16,7 @@ StiffnessMatrix::StiffnessMatrix(const Kokkos::View<double**> stiffness)
 }
 
 Section::Section(
-    std::string name, double location, gen_alpha_solver::MassMatrix mass_matrix,
-    StiffnessMatrix stiffness_matrix
+    std::string name, double location, MassMatrix mass_matrix, StiffnessMatrix stiffness_matrix
 )
     : name_(name),
       location_(location),

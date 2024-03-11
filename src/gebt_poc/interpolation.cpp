@@ -41,14 +41,12 @@ std::vector<Point> FindkNearestNeighbors(
     return k_nearest_neighbors;
 }
 
-Kokkos::View<double**> LinearlyInterpolateMatrices(
-    const Kokkos::View<double**> m1, const Kokkos::View<double**> m2, const double alpha
-) {
+View2D LinearlyInterpolateMatrices(View2D::const_type m1, View2D::const_type m2, double alpha) {
     if (m1.extent(0) != m2.extent(0) || m1.extent(1) != m2.extent(1)) {
         throw std::invalid_argument("Matrices must have the same dimensions");
     }
 
-    Kokkos::View<double**> interpolated_matrix("interpolated_matrix", m1.extent(0), m1.extent(1));
+    auto interpolated_matrix = View2D("interpolated_matrix", m1.extent(0), m1.extent(1));
     auto entries = Kokkos::MDRangePolicy<Kokkos::DefaultExecutionSpace, Kokkos::Rank<2>>(
         {0, 0}, {m1.extent(0), m1.extent(1)}
     );

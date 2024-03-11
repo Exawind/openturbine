@@ -53,6 +53,6 @@ Vector multiply_rotation_matrix_with_vector(const RotationMatrix& R, const Vecto
         R(1, 0) * v.GetXComponent() + R(1, 1) * v.GetYComponent() + R(1, 2) * v.GetZComponent(),
         R(2, 0) * v.GetXComponent() + R(2, 1) * v.GetYComponent() + R(2, 2) * v.GetZComponent(),
     };
-};
+}
 
 }  // namespace openturbine::gen_alpha_solver::tests

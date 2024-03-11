@@ -286,7 +286,7 @@ TEST(SolverTest, ElementalStaticForcesResidualWithZeroValues) {
 
     auto residual = Kokkos::View<double*>("residual", 30);
     ElementalStaticForcesResidual(
-        position_vectors, generalized_coords, stiffness, quadrature, residual
+        position_vectors, generalized_coords, StiffnessMatrix(stiffness), quadrature, residual
     );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
@@ -890,7 +890,8 @@ TEST(SolverTest, ElementalStaticStiffnessMatrixWithZeroValues) {
 
     auto iteration_matrix = Kokkos::View<double[30][30]>("iteration_matrix");
     ElementalStaticStiffnessMatrix(
-        position_vectors, generalized_coords, stiffness, quadrature, iteration_matrix
+        position_vectors, generalized_coords, StiffnessMatrix(stiffness), quadrature,
+        iteration_matrix
     );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(iteration_matrix, zeros_30x30);

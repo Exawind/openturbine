@@ -5,26 +5,22 @@
 #include "src/gebt_poc/force.h"
 #include "src/gebt_poc/linearization_parameters.h"
 #include "src/gebt_poc/solver.h"
+#include "src/gebt_poc/types.hpp"
 #include "src/gen_alpha_poc/state.h"
 #include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gebt_poc {
 
-void Convert2DViewTo1DView(Kokkos::View<const double**> view, Kokkos::View<double*> result);
+void Convert2DViewTo1DView(View2D::const_type view, View1D result);
 
 /// Calculates the constraint gradient matrix for the clamped beam problem
-void BMatrix(Kokkos::View<double**> constraints_gradient_matrix);
+void BMatrix(View2D constraints_gradient_matrix);
 
 /*!
  * Calculates the residual vector and iteration matrix for a static beam element
  */
 class StaticBeamLinearizationParameters : public LinearizationParameters {
 public:
-    static constexpr size_t kNumberOfLieGroupComponents = 7;
-    static constexpr size_t kNumberOfLieAlgebraComponents = 6;
-    static constexpr size_t kNumberOfVectorComponents = 3;
-    static constexpr double kTolerance = 1e-16;
-
     /// Default constructor with a 5 node beam element, 6x6 stiffness matrix, and 7 point
     /// Gauss-Legendre quadrature rule used for unit testing
     StaticBeamLinearizationParameters();
@@ -32,25 +28,20 @@ public:
     /// Define a static beam element with the given position vector for the nodes, 6x6
     /// stiffness matrix, and a quadrature rule
     StaticBeamLinearizationParameters(
-        Kokkos::View<double*> position_vectors, StiffnessMatrix stiffness_matrix,
-        UserDefinedQuadrature quadrature
+        View1D position_vectors, StiffnessMatrix stiffness_matrix, UserDefinedQuadrature quadrature
     );
 
     virtual void ResidualVector(
-        Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
-        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
-        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
-        Kokkos::View<const double*> lagrange_multipliers,
-        const gen_alpha_solver::TimeStepper& time_stepper, Kokkos::View<double*> residual_vector
+        LieGroupFieldView::const_type gen_coords, LieAlgebraFieldView::const_type velocity,
+        LieAlgebraFieldView::const_type acceleration, View1D::const_type lagrange_multipliers,
+        const gen_alpha_solver::TimeStepper& time_stepper, View1D residual_vector
     ) override;
 
     virtual void IterationMatrix(
-        const double& h, const double& beta_prime, const double& gamma_prime,
-        Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
-        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
-        Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
-        Kokkos::View<const double*> lagrange_multipliers, Kokkos::View<double**> iteration_matrix
+        double h, double beta_prime, double gamma_prime, LieGroupFieldView::const_type gen_coords,
+        LieAlgebraFieldView::const_type delta_gen_coords, LieAlgebraFieldView::const_type velocity,
+        LieAlgebraFieldView::const_type acceleration, View1D::const_type lagrange_multipliers,
+        View2D iteration_matrix
     ) override;
 
     /// Tangent operator for a single node of the static beam element
@@ -69,9 +60,9 @@ public:
         Kokkos::parallel_for(1, populate_matrix);
 
         const double phi = KokkosBlas::nrm2(psi);
-        if (phi > kTolerance) {
+        if (phi > Tolerance) {
             auto psi_cross_prod_matrix = gen_alpha_solver::create_cross_product_matrix(psi);
-            auto psi_times_psi = Kokkos::View<double**>("psi_times_psi", 3, 3);
+            auto psi_times_psi = View2D_3x3("psi_times_psi");
             KokkosBlas::gemm(
                 "N", "N", 1.0, psi_cross_prod_matrix, psi_cross_prod_matrix, 0.0, psi_times_psi
             );
@@ -93,7 +84,7 @@ public:
     }
 
 private:
-    Kokkos::View<double*> position_vectors_;
+    View1D position_vectors_;
     StiffnessMatrix stiffness_matrix_;
     UserDefinedQuadrature quadrature_;
 };

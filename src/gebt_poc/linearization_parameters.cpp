@@ -3,12 +3,11 @@
 namespace openturbine::gebt_poc {
 
 void UnityLinearizationParameters::ResidualVector(
-    [[maybe_unused]] Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
-    [[maybe_unused]] Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
-    [[maybe_unused]] Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
-    [[maybe_unused]] Kokkos::View<const double*> lagrange_mults,
-    [[maybe_unused]] const gen_alpha_solver::TimeStepper& time_stepper,
-    Kokkos::View<double*> residual_vector
+    [[maybe_unused]] LieGroupFieldView::const_type gen_coords,
+    [[maybe_unused]] LieAlgebraFieldView::const_type velocity,
+    [[maybe_unused]] LieAlgebraFieldView::const_type acceleration,
+    [[maybe_unused]] View1D::const_type lagrange_mults,
+    [[maybe_unused]] const gen_alpha_solver::TimeStepper& time_stepper, View1D residual_vector
 ) {
     Kokkos::deep_copy(residual_vector, 0.);
     auto size = residual_vector.extent(0);
@@ -18,14 +17,12 @@ void UnityLinearizationParameters::ResidualVector(
 }
 
 void UnityLinearizationParameters::IterationMatrix(
-    [[maybe_unused]] const double& h, [[maybe_unused]] const double& BETA_PRIME,
-    [[maybe_unused]] const double& GAMMA_PRIME,
-    [[maybe_unused]] Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
-    [[maybe_unused]] Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-    [[maybe_unused]] Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> velocity,
-    [[maybe_unused]] Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> acceleration,
-    [[maybe_unused]] Kokkos::View<const double*> lagrange_mults,
-    Kokkos::View<double**> iteration_matrix
+    [[maybe_unused]] double h, [[maybe_unused]] double BETA_PRIME,
+    [[maybe_unused]] double GAMMA_PRIME, [[maybe_unused]] LieGroupFieldView::const_type gen_coords,
+    [[maybe_unused]] LieAlgebraFieldView::const_type delta_gen_coords,
+    [[maybe_unused]] LieAlgebraFieldView::const_type velocity,
+    [[maybe_unused]] LieAlgebraFieldView::const_type acceleration,
+    [[maybe_unused]] View1D::const_type lagrange_mults, View2D iteration_matrix
 ) {
     Kokkos::deep_copy(iteration_matrix, 0.);
     auto size = iteration_matrix.extent(0);

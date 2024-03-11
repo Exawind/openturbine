@@ -43,3 +43,4 @@ install(TARGETS ${oturb_unit_test_exe_name}
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
 )
+

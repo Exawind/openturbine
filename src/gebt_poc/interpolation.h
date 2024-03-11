@@ -3,6 +3,7 @@
 #include <limits>
 
 #include "src/gebt_poc/point.h"
+#include "src/gebt_poc/types.hpp"
 
 namespace openturbine::gebt_poc {
 
@@ -25,9 +26,7 @@ std::vector<Point> FindkNearestNeighbors(const std::vector<Point>&, const Point&
  * @brief  Performs linear interpolation between two matrices with the same dimensions
  * @param  alpha: Normalized distance of the interpolation point from the first matrix
  */
-Kokkos::View<double**> LinearlyInterpolateMatrices(
-    const Kokkos::View<double**>, const Kokkos::View<double**>, const double alpha
-);
+View2D LinearlyInterpolateMatrices(View2D::const_type, View2D::const_type, double alpha);
 
 /*!
  * @brief  Calculates the value of Legendre polynomial of order n at point x recursively

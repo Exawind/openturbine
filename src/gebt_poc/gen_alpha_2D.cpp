@@ -72,7 +72,7 @@ void ApplyPreconditioner(M1 A, M2 R, M3 L) {
     );
 }
 
-std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaStep(
+std::tuple<State, View1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const State& state, size_t n_constraints,
     std::shared_ptr<LinearizationParameters> linearization_parameters
 ) {
@@ -95,14 +95,12 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     const auto kGammaLocal = kGamma_;
 
     // Initialize some X_next variables to assist in updating the State
-    using LieGroupField = Kokkos::View<double* [kNumberOfLieGroupComponents]>;
-    using LieAlgebraField = Kokkos::View<double* [kNumberOfLieAlgebraComponents]>;
-    auto gen_coords_next = LieGroupField("gen_coords_next", n_nodes);
-    auto velocity_next = LieAlgebraField("velocity_next", n_nodes);
-    auto acceleration_next = LieAlgebraField("acceleration_next", n_nodes);
-    auto algo_acceleration_next = LieAlgebraField("algo_acceleration_next", n_nodes);
-    auto delta_gen_coords = LieAlgebraField("delta_gen_coords", n_nodes);
-    auto lagrange_mults_next = Kokkos::View<double*>("lagrange_mults_next", n_constraints);
+    auto gen_coords_next = LieGroupFieldView("gen_coords_next", n_nodes);
+    auto velocity_next = LieAlgebraFieldView("velocity_next", n_nodes);
+    auto acceleration_next = LieAlgebraFieldView("acceleration_next", n_nodes);
+    auto algo_acceleration_next = LieAlgebraFieldView("algo_acceleration_next", n_nodes);
+    auto delta_gen_coords = LieAlgebraFieldView("delta_gen_coords", n_nodes);
+    auto lagrange_mults_next = View1D("lagrange_mults_next", n_constraints);
 
     // Loop over all nodes in the system and update the generalized coordinates, velocities,
     // accelerations, and algorithmic accelerations
@@ -118,7 +116,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         node_team_policy,
         KOKKOS_LAMBDA(const member_type& member) {
             auto node = member.league_rank();
-            constexpr auto components = kNumberOfLieAlgebraComponents;
+            constexpr auto components = LieAlgebraComponents;
             Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 algo_acceleration_next(node, i) = (kAlphaFLocal * acceleration(node, i) -
                                                    kAlphaMLocal * algo_acceleration(node, i)) /
@@ -145,8 +143,8 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
 
     // Precondition the linear solve (Bottasso et al 2008)
     auto preconditioning_factor = (is_preconditioned_) ? (kBetaLocal * h * h) : 1.;
-    auto dl = Kokkos::View<double**>("dl", size_problem, size_problem);
-    auto dr = Kokkos::View<double**>("dr", size_problem, size_problem);
+    auto dl = View2D("dl", size_problem, size_problem);
+    auto dr = View2D("dr", size_problem, size_problem);
 
     Kokkos::parallel_for(
         size_problem,
@@ -157,10 +155,10 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
     );
 
     // Allocate some Views to assist in performing the Newton-Raphson iterations
-    auto residuals = Kokkos::View<double*>("residuals", size_problem);
-    auto iteration_matrix = Kokkos::View<double**>("iteration_matrix", size_problem, size_problem);
-    auto soln_increments = Kokkos::View<double*>("soln_increments", size_problem);
-    auto temp_vector = Kokkos::View<double*>("temp_vector", size_problem);
+    auto residuals = View1D("residuals", size_problem);
+    auto iteration_matrix = View2D("iteration_matrix", size_problem, size_problem);
+    auto soln_increments = View1D("soln_increments", size_problem);
+    auto temp_vector = View1D("temp_vector", size_problem);
 
     const auto max_iterations = this->time_stepper_.GetMaximumNumberOfIterations();
     for (time_stepper_.SetNumberOfIterations(0);
@@ -216,7 +214,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
             node_team_policy,
             KOKKOS_LAMBDA(const member_type& member) {
                 auto node = member.league_rank();
-                constexpr auto components = kNumberOfLieAlgebraComponents;
+                constexpr auto components = LieAlgebraComponents;
                 auto component_range = Kokkos::TeamVectorRange(member, components);
                 Kokkos::parallel_for(component_range, [=](std::size_t i) {
                     delta_gen_coords(node, i) += soln_increments(node * components + i) / h;
@@ -233,7 +231,7 @@ std::tuple<State, Kokkos::View<double*>> GeneralizedAlphaTimeIntegrator::AlphaSt
         node_team_policy,
         KOKKOS_LAMBDA(const member_type& member) {
             auto node = member.league_rank();
-            constexpr auto components = kNumberOfLieAlgebraComponents;
+            constexpr auto components = LieAlgebraComponents;
             Kokkos::parallel_for(Kokkos::TeamVectorRange(member, components), [=](std::size_t i) {
                 algo_acceleration_next(node, i) +=
                     (1. - kAlphaFLocal) / (1. - kAlphaMLocal) * acceleration_next(node, i);
@@ -291,9 +289,8 @@ KOKKOS_FUNCTION void compose_quaternions(MemberType& member, QOut q_out, Q1 q1, 
 }
 
 void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
-    Kokkos::View<const double* [kNumberOfLieGroupComponents]> gen_coords,
-    Kokkos::View<const double* [kNumberOfLieAlgebraComponents]> delta_gen_coords,
-    Kokkos::View<double* [kNumberOfLieGroupComponents]> gen_coords_next
+    LieGroupFieldView gen_coords, LieAlgebraFieldView delta_gen_coords,
+    LieGroupFieldView gen_coords_next
 ) {
     const auto h = this->time_stepper_.GetTimeStep();
     const auto n_nodes = gen_coords.extent(0);
@@ -330,7 +327,7 @@ void GeneralizedAlphaTimeIntegrator::UpdateGeneralizedCoordinates(
     );
 }
 
-bool GeneralizedAlphaTimeIntegrator::IsConverged(const Kokkos::View<double*> residual) {
+bool GeneralizedAlphaTimeIntegrator::IsConverged(View1D::const_type residual) {
     // L2 norm of the residual vector should be very small (< epsilon) for the solution
     // to be considered converged
     auto log = util::Log::Get();
@@ -339,7 +336,7 @@ bool GeneralizedAlphaTimeIntegrator::IsConverged(const Kokkos::View<double*> res
 }
 
 bool GeneralizedAlphaTimeIntegrator::IsConverged(
-    Kokkos::View<double*> residual, Kokkos::View<double*> solution_increment
+    View1D::const_type residual, View1D::const_type solution_increment
 ) {
     auto energy_increment = std::abs(KokkosBlas::dot(residual, solution_increment));
 

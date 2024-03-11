@@ -40,9 +40,7 @@ double CalculateJacobian(
     return jacobian;
 }
 
-double CalculateJacobian(
-    Kokkos::View<const double* [3]> nodes, Kokkos::View<const double*> shape_derivatives
-) {
+double CalculateJacobian(VectorFieldView::const_type nodes, View1D::const_type shape_derivatives) {
     auto v0 = KokkosBlas::dot(shape_derivatives, Kokkos::subview(nodes, Kokkos::ALL, 0));
     auto v1 = KokkosBlas::dot(shape_derivatives, Kokkos::subview(nodes, Kokkos::ALL, 1));
     auto v2 = KokkosBlas::dot(shape_derivatives, Kokkos::subview(nodes, Kokkos::ALL, 2));

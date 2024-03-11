@@ -1,6 +1,7 @@
 #pragma once
 
 #include "src/gebt_poc/interpolation.h"
+#include "src/gebt_poc/types.hpp"
 
 namespace openturbine::gebt_poc {
 
@@ -8,8 +9,6 @@ namespace openturbine::gebt_poc {
 // and the nodal coordinates of the element in the global csys
 // Physically, the Jacobian represents the following (In 1-D):
 // Length of element in the global csys / Length of element in the natural csys
-double CalculateJacobian(
-    Kokkos::View<const double* [3]> nodes, Kokkos::View<const double*> shape_derivatives
-);
+double CalculateJacobian(VectorFieldView::const_type nodes, View1D::const_type shape_derivatives);
 
 }  // namespace openturbine::gebt_poc

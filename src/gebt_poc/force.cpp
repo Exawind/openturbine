@@ -18,7 +18,7 @@ struct InitializeGeneralizedForces {
     }
     gen_alpha_solver::Vector forces;
     gen_alpha_solver::Vector moments;
-    Kokkos::View<double[6]> generalized_forces_;
+    View1D_LieAlgebra generalized_forces_;
 };
 
 GeneralizedForces::GeneralizedForces(
@@ -28,7 +28,7 @@ GeneralizedForces::GeneralizedForces(
     Kokkos::parallel_for(1, InitializeGeneralizedForces{forces, moments, generalized_forces_});
 }
 
-GeneralizedForces::GeneralizedForces(Kokkos::View<double[6]> generalized_forces, size_t node)
+GeneralizedForces::GeneralizedForces(View1D_LieAlgebra generalized_forces, size_t node)
     : generalized_forces_("generalized_forces"), node_(node) {
     Kokkos::deep_copy(generalized_forces_, generalized_forces);
 
@@ -44,12 +44,12 @@ GeneralizedForces::GeneralizedForces(Kokkos::View<double[6]> generalized_forces,
 }
 
 TimeVaryingForces::TimeVaryingForces(
-    std::function<Kokkos::View<double[6]>(double time)> generalized_forces_function, size_t node
+    std::function<View1D_LieAlgebra(double time)> generalized_forces_function, size_t node
 )
     : function_(generalized_forces_function), node_(node) {
 }
 
-Kokkos::View<double*> TimeVaryingForces::GetGeneralizedForces(double time) const {
+View1D_LieAlgebra TimeVaryingForces::GetGeneralizedForces(double time) const {
     return function_(time);
 }
 
