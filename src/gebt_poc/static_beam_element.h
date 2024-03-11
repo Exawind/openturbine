@@ -12,8 +12,6 @@
 
 namespace openturbine::gebt_poc {
 
-void Convert2DViewTo1DView(View2D::const_type view, View1D result);
-
 /// Calculates the constraint gradient matrix for the clamped beam problem
 void BMatrix(View2D constraints_gradient_matrix);
 
