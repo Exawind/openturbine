@@ -16,6 +16,7 @@ TEST(SolverTest, SectionalStiffness) {
         {0., 1., 0.},  // row 2
         {0., 0., 1.}   // row 3
     });
+
     auto stiffness = gen_alpha_solver::create_matrix({
         {1., 2., 3., 4., 5., 6.},       // row 1
         {2., 4., 6., 8., 10., 12.},     // row 2

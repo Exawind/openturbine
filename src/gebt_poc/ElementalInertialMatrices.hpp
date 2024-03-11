@@ -16,7 +16,6 @@
 #include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gebt_poc {
-
 inline void ElementalInertialMatrices(
     LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
     LieAlgebraFieldView::const_type velocity, LieAlgebraFieldView::const_type acceleration,

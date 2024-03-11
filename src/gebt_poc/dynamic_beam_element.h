@@ -88,9 +88,12 @@ public:
 
         auto get_initial_operator = KOKKOS_LAMBDA(auto& member) {
             auto initial_operator = ScratchView2D_6x6(member.team_scratch(0));
-            Kokkos::parallel_for(Kokkos::ThreadVectorRange(member, 6), [&](std::size_t i) {
-                initial_operator(i, i) = 1.;
-            });
+            Kokkos::parallel_for(
+                Kokkos::ThreadVectorMDRange(member, 6, 6),
+                [&](std::size_t i, std::size_t j) {
+                    initial_operator(i, j) = i == j;
+                }
+            );
             return initial_operator;
         };
 

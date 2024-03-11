@@ -5,6 +5,7 @@
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc {
+
 struct CalculateInterpolatedValues_populate_coords {
     Kokkos::View<double[2][7]> generalized_coords;
 

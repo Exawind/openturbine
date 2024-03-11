@@ -18,7 +18,6 @@
 #include "src/gen_alpha_poc/utilities.h"
 
 namespace openturbine::gebt_poc {
-
 inline void ElementalStaticStiffnessMatrix(
     LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
     View2D_6x6::const_type stiffness, const Quadrature& quadrature, View2D stiffness_matrix

@@ -217,6 +217,7 @@ TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
     });
 
     auto residual = Kokkos::View<double[30]>("residual");
+
     ElementalInertialForcesResidual(
         position_vectors, generalized_coords, velocity, acceleration, sectional_mass_matrix,
         quadrature, residual
