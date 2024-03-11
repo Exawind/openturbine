@@ -26,7 +26,7 @@ public:
     /// stiffness matrix, and a quadrature rule
     StaticBeamLinearizationParameters(
         LieGroupFieldView position_vectors, View2D_6x6 stiffness_matrix,
-        UserDefinedQuadrature quadrature
+        Quadrature quadrature
     );
 
     virtual void ResidualVector(
@@ -159,7 +159,7 @@ public:
 private:
     LieGroupFieldView position_vectors_;
     View2D_6x6 stiffness_matrix_;
-    UserDefinedQuadrature quadrature_;
+    Quadrature quadrature_;
 };
 
 }  // namespace openturbine::gebt_poc

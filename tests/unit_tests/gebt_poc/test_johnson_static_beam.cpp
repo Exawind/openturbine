@@ -68,26 +68,8 @@ StaticBeamLinearizationParameters create_test_static_beam_parameters() {
         {6., 12., 18., 24., 30., 36.}   // row 6
     });
 
-    auto quadrature = UserDefinedQuadrature(
-        std::vector<double>{
-            -0.9491079123427585,  // point 1
-            -0.7415311855993945,  // point 2
-            -0.4058451513773972,  // point 3
-            0.,                   // point 4
-            0.4058451513773972,   // point 5
-            0.7415311855993945,   // point 6
-            0.9491079123427585    // point 7
-        },
-        std::vector<double>{
-            0.1294849661688697,  // weight 1
-            0.2797053914892766,  // weight 2
-            0.3818300505051189,  // weight 3
-            0.4179591836734694,  // weight 4
-            0.3818300505051189,  // weight 5
-            0.2797053914892766,  // weight 6
-            0.1294849661688697   // weight 7
-        }
-    );
+    auto quadrature = CreateGaussLegendreQuadrature(7);
+    
     return StaticBeamLinearizationParameters{position_vectors, stiffness_matrix, quadrature};
 }
 
@@ -216,12 +198,7 @@ TEST(StaticBeamTest, StaticBeamResidual) {
     });
 
     // Use a 7-point Gauss-Legendre quadrature for integration
-    auto quadrature = UserDefinedQuadrature(
-        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
-         0.7415311855993945, 0.9491079123427585},
-        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
-    );
+    auto quadrature = CreateGaussLegendreQuadrature(7);
 
     StaticBeamLinearizationParameters static_beam{position_vectors, stiffness, quadrature};
 
@@ -292,12 +269,7 @@ TEST(StaticBeamTest, StaticBeamIterationMatrix) {
     });
 
     // Use a 7-point Gauss-Legendre quadrature for integration
-    auto quadrature = UserDefinedQuadrature(
-        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
-         0.7415311855993945, 0.9491079123427585},
-        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
-    );
+    auto quadrature = CreateGaussLegendreQuadrature(7);
 
     StaticBeamLinearizationParameters static_beam{position_vectors, stiffness, quadrature};
 
@@ -365,12 +337,7 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
     });
 
     // Use a 7-point Gauss-Legendre quadrature for integration
-    auto quadrature = UserDefinedQuadrature(
-        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
-         0.7415311855993945, 0.9491079123427585},
-        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
-    );
+    auto quadrature = CreateGaussLegendreQuadrature(7);
 
     auto gen_coords = gen_alpha_solver::create_matrix({
         {0., 0., 0., 1., 0., 0., 0.},    // node 1

@@ -3,6 +3,7 @@
 #include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
+#include "src/gebt_poc/element.h"
 #include "src/gebt_poc/InterpolateNodalValueDerivatives.hpp"
 #include "src/gebt_poc/InterpolateNodalValues.hpp"
 #include "src/gebt_poc/NodalInertialForces.hpp"
@@ -22,7 +23,7 @@ inline void ElementalInertialForcesResidual(
 ) {
     const auto n_nodes = gen_coords.extent(0);
     const auto order = n_nodes - 1;
-    const auto n_quad_pts = quadrature.GetNumberOfQuadraturePoints();
+    const auto n_quad_pts = quadrature.points.extent(0);
 
     auto nodes = VectorFieldView("nodes", n_nodes);
     Kokkos::deep_copy(
@@ -42,7 +43,7 @@ inline void ElementalInertialForcesResidual(
         const auto node_count = i;
         for (size_t j = 0; j < n_quad_pts; ++j) {
             // Calculate required interpolated values at the quadrature point
-            const auto q_pt = quadrature.GetQuadraturePoints()[j];
+            const auto q_pt = quadrature.points(j);
             auto shape_function = LagrangePolynomial(order, q_pt);
             auto shape_function_derivative = LagrangePolynomialDerivative(order, q_pt);
             auto shape_function_vector = gen_alpha_solver::create_vector(shape_function);
@@ -67,7 +68,7 @@ inline void ElementalInertialForcesResidual(
             NodalInertialForces(velocity_qp, acceleration_qp, sectional_mass_matrix, inertial_f);
 
             // Calculate the residual at the quadrature point
-            const auto q_weight = quadrature.GetQuadratureWeights()[j];
+            const auto q_weight = quadrature.weights(j);
             Kokkos::parallel_for(
                 LieAlgebraComponents,
                 KOKKOS_LAMBDA(const size_t component) {

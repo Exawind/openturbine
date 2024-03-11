@@ -24,7 +24,7 @@ public:
     /// stiffness matrix, and a quadrature rule
     DynamicBeamLinearizationParameters(
         LieGroupFieldView position_vectors, View2D_6x6 stiffness_matrix, View2D_6x6 mass_matrix,
-        UserDefinedQuadrature quadrature, std::vector<Forces*> external_forces = {}
+        Quadrature quadrature, std::vector<Forces*> external_forces = {}
     );
 
     virtual void ResidualVector(
@@ -159,7 +159,7 @@ private:
     LieGroupFieldView position_vectors_;
     View2D_6x6 stiffness_matrix_;
     View2D_6x6 mass_matrix_;
-    UserDefinedQuadrature quadrature_;
+    Quadrature quadrature_;
     std::vector<Forces*> external_forces_;
 };
 

@@ -193,13 +193,7 @@ TEST(SolverTest, ElementalInertialForcesResidualWithNonZeroValues) {
     auto generalized_coords = Kokkos::View<double[5][7]>("generalized_coords");
     Kokkos::parallel_for(1, NonZeroValues_populate_coords{generalized_coords});
 
-    auto quadrature_points =
-        std::vector{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0.,
-                    0.4058451513773972,  0.7415311855993945,  0.9491079123427585};
-    auto quadrature_weights =
-        std::vector{0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-                    0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
-    auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
+    auto quadrature = CreateGaussLegendreQuadrature(7);
 
     auto velocity = Kokkos::View<double[5][6]>("velocity");
     Kokkos::parallel_for(1, NonZeroValues_PopulateVelocity{velocity});

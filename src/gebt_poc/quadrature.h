@@ -1,49 +1,31 @@
 #pragma once
 
-#include "src/gebt_poc/element.h"
+#include <array>
+
+#include "src/gebt_poc/types.hpp"
 
 namespace openturbine::gebt_poc {
 
-/// An abstract class for providing common interface to numerical quadrature rules
-class Quadrature {
-public:
-    virtual ~Quadrature() = default;
-
-    /// Returns the number of quadrature points
-    virtual size_t GetNumberOfQuadraturePoints() const = 0;
-
-    /// Returns the quadrature points (read only)
-    virtual const std::vector<double>& GetQuadraturePoints() const = 0;
-
-    /// Returns the quadrature weights (read only)
-    virtual const std::vector<double>& GetQuadratureWeights() const = 0;
+struct Quadrature {
+  View1D points;
+  View1D weights;
 };
 
-/// A concrete quadrature rule where the quadrature points and weights are provided by the user
-class UserDefinedQuadrature : public Quadrature {
-public:
-    UserDefinedQuadrature(
-        std::vector<double> quadrature_points, std::vector<double> quadrature_weights
-    )
-        : quadrature_points_(std::move(quadrature_points)),
-          quadrature_weights_(std::move(quadrature_weights)) {}
+inline Quadrature CreateGaussLegendreQuadrature(int order) {
+    if(order != 7) throw;
+    static constexpr auto point_data = std::array{-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972, 0.7415311855993945, 0.9491079123427585};
+    static constexpr auto weight_data = std::array{0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694, 0.3818300505051189, 0.2797053914892766, 0.1294849661688697};
 
-    /// Returns the number of quadrature points
-    virtual size_t GetNumberOfQuadraturePoints() const override { return quadrature_points_.size(); }
+    auto points = View1D("points", order);
+    auto weights = View1D("weights", order);
 
-    /// Returns the quadrature points (read only)
-    virtual const std::vector<double>& GetQuadraturePoints() const override {
-        return quadrature_points_;
-    }
+    using UnmanagedView1D = Kokkos::View<const double*, Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged> >;
+    auto host_points = UnmanagedView1D(point_data.data(), point_data.size());
+    auto host_weights = UnmanagedView1D(weight_data.data(), weight_data.size());
+    Kokkos::deep_copy(points, host_points);
+    Kokkos::deep_copy(weights, host_weights);
 
-    /// Returns the quadrature weights (read only)
-    virtual const std::vector<double>& GetQuadratureWeights() const override {
-        return quadrature_weights_;
-    }
-
-private:
-    std::vector<double> quadrature_points_;
-    std::vector<double> quadrature_weights_;
-};
+    return {points, weights};
+}
 
 }  // namespace openturbine::gebt_poc
