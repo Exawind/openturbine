@@ -7,29 +7,24 @@
 
 namespace openturbine::gebt_poc {
 
-/// Class to create and store a 6 x 6 stiffness matrix for a section
-class StiffnessMatrix {
-public:
-    /// Default constructor that initializes the stiffness matrix to the identity matrix
-    StiffnessMatrix();
-
-    /// Constructor that initializes the stiffness matrix to the given matrix
-    StiffnessMatrix(View2D::const_type stiffness);
-
-    /// Returns the stiffness matrix as 2D Kokkos view
-    inline View2D GetStiffnessMatrix() const { return stiffness_matrix_; }
-
-private:
-    View2D stiffness_matrix_;  //< Stiffness matrix (6 x 6)
-};
-
 /// Class to manage normalized location, mass matrix, and stiffness matrix of a beam section
 class Section {
 public:
     Section()
-        : name_(""), location_(0.), mass_matrix_(View2D_6x6("mass matrix")), stiffness_matrix_() {}
+        : name_(""),
+          location_(0.),
+          mass_matrix_("mass matrix"),
+          stiffness_matrix_("stiffness matrix") {}
 
-    Section(std::string name, double location, MassMatrix, StiffnessMatrix);
+    Section(std::string name, double location, View2D_6x6 mass_matrix, View2D_6x6 stiffness_matrix)
+        : name_(name),
+          location_(location),
+          mass_matrix_(mass_matrix),
+          stiffness_matrix_(stiffness_matrix) {
+        if (location_ < 0. || location_ > 1.) {
+            throw std::invalid_argument("Section location must be between 0 and 1");
+        }
+    }
 
     /// Returns the name of the section
     inline std::string GetName() const { return name_; }
@@ -38,16 +33,16 @@ public:
     inline double GetNormalizedLocation() const { return location_; }
 
     /// Returns the mass matrix of the section
-    inline const MassMatrix& GetMassMatrix() const { return mass_matrix_; }
+    inline const View2D_6x6 GetMassMatrix() const { return mass_matrix_; }
 
     /// Returns the stiffness matrix of the section
-    inline const StiffnessMatrix& GetStiffnessMatrix() const { return stiffness_matrix_; }
+    inline const View2D_6x6 GetStiffnessMatrix() const { return stiffness_matrix_; }
 
 private:
-    std::string name_;                  //< Name of the section
-    double location_;                   //< Normalized location of the section (0 <= l <= 1)
-    MassMatrix mass_matrix_;            //< Mass matrix of the section
-    StiffnessMatrix stiffness_matrix_;  //< Stiffness matrix of the section
+    std::string name_;             //< Name of the section
+    double location_;              //< Normalized location of the section (0 <= l <= 1)
+    View2D_6x6 mass_matrix_;       //< Mass matrix of the section
+    View2D_6x6 stiffness_matrix_;  //< Stiffness matrix of the section
 };
 
 }  // namespace openturbine::gebt_poc

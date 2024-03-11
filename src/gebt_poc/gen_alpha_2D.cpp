@@ -35,9 +35,7 @@ std::vector<State> GeneralizedAlphaTimeIntegrator::Integrate(
     auto n_steps = this->time_stepper_.GetNumberOfSteps();
     for (size_t i = 0; i < n_steps; i++) {
         this->time_stepper_.AdvanceTimeStep();
-        auto input_state = State{
-            states[i].GetGeneralizedCoordinates(), states[i].GetVelocity(),
-            states[i].GetAcceleration(), states[i].GetAlgorithmicAcceleration()};
+        auto input_state = states[i];
         log->Info("** Integrating step number " + std::to_string(i + 1) + " **\n");
         log->Info("Current time: " + std::to_string(this->time_stepper_.GetCurrentTime()) + "\n");
         states.emplace_back(
@@ -73,13 +71,13 @@ void ApplyPreconditioner(M1 A, M2 R, M3 L) {
 }
 
 std::tuple<State, View1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
-    const State& state, size_t n_constraints,
+    State state, size_t n_constraints,
     std::shared_ptr<LinearizationParameters> linearization_parameters
 ) {
-    auto gen_coords = state.GetGeneralizedCoordinates();
-    auto velocity = state.GetVelocity();
-    auto acceleration = state.GetAcceleration();
-    auto algo_acceleration = state.GetAlgorithmicAcceleration();
+    auto gen_coords = state.generalized_coordinates;
+    auto velocity = state.velocity;
+    auto acceleration = state.acceleration;
+    auto algo_acceleration = state.algorithmic_acceleration;
 
     // Define some constants that will be used in the algorithm
     const auto size_dofs = velocity.extent(0) * velocity.extent(1);
@@ -87,7 +85,7 @@ std::tuple<State, View1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
     const auto size_problem = size_dofs + size_constraints;
 
     const auto h = this->time_stepper_.GetTimeStep();
-    const auto n_nodes = state.GetNumberOfNodes();
+    const auto n_nodes = gen_coords.extent(0);
 
     const auto kAlphaFLocal = kAlphaF_;
     const auto kAlphaMLocal = kAlphaM_;
@@ -127,7 +125,6 @@ std::tuple<State, View1D> GeneralizedAlphaTimeIntegrator::AlphaStep(
                 velocity_next(node, i) = velocity(node, i) +
                                          h * (1 - kGammaLocal) * algo_acceleration(node, i) +
                                          h * kGammaLocal * algo_acceleration_next(node, i);
-                algo_acceleration(node, i) = algo_acceleration_next(node, i);
                 acceleration_next(node, i) = 0.;
             });
         }

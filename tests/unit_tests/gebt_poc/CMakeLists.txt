@@ -19,6 +19,7 @@ target_sources(
     test_johnson_static_beam.cpp
     test_linearization_parameters.cpp
     test_linear_solver.cpp
+    test_MassMatrix.cpp
     test_mesh.cpp
     test_model.cpp
     test_NodalCurvature.cpp

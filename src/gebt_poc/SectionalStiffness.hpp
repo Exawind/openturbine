@@ -10,7 +10,7 @@
 namespace openturbine::gebt_poc {
 
 inline void SectionalStiffness(
-    const StiffnessMatrix& stiffness, View2D_3x3::const_type rotation_0,
+    View2D_6x6::const_type stiffness, View2D_3x3::const_type rotation_0,
     View2D_3x3::const_type rotation, View2D_6x6 sectional_stiffness
 ) {
     auto total_rotation = View2D_3x3("total_rotation");
@@ -32,9 +32,7 @@ inline void SectionalStiffness(
     // Calculate the sectional stiffness matrix in inertial basis
     Kokkos::deep_copy(sectional_stiffness, 0.);
     auto stiffness_matrix_left_rot = View2D_6x6("temp");
-    KokkosBlas::gemm(
-        "N", "N", 1., rotation_matrix, stiffness.GetStiffnessMatrix(), 0., stiffness_matrix_left_rot
-    );
+    KokkosBlas::gemm("N", "N", 1., rotation_matrix, stiffness, 0., stiffness_matrix_left_rot);
     KokkosBlas::gemm(
         "N", "T", 1., stiffness_matrix_left_rot, rotation_matrix, 0., sectional_stiffness
     );

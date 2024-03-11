@@ -23,7 +23,7 @@ public:
     /// Define a dynamic beam element with the given position vector for the nodes, 6 x 6
     /// stiffness matrix, and a quadrature rule
     DynamicBeamLinearizationParameters(
-        LieGroupFieldView position_vectors, StiffnessMatrix stiffness_matrix, MassMatrix mass_matrix,
+        LieGroupFieldView position_vectors, View2D_6x6 stiffness_matrix, View2D_6x6 mass_matrix,
         UserDefinedQuadrature quadrature, std::vector<Forces*> external_forces = {}
     );
 
@@ -33,7 +33,7 @@ public:
         const gen_alpha_solver::TimeStepper& time_stepper, View1D residual_vector
     ) override;
 
-    void ApplyExternalForces(double time, const Kokkos::View<double*>& external_forces);
+    void ApplyExternalForces(double time, View1D external_forces);
 
     virtual void IterationMatrix(
         double h, double beta_prime, double gamma_prime, LieGroupFieldView::const_type gen_coords,
@@ -157,8 +157,8 @@ public:
 
 private:
     LieGroupFieldView position_vectors_;
-    StiffnessMatrix stiffness_matrix_;
-    MassMatrix mass_matrix_;
+    View2D_6x6 stiffness_matrix_;
+    View2D_6x6 mass_matrix_;
     UserDefinedQuadrature quadrature_;
     std::vector<Forces*> external_forces_;
 };

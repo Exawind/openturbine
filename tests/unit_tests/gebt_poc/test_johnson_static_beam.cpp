@@ -59,14 +59,14 @@ StaticBeamLinearizationParameters create_test_static_beam_parameters() {
     auto position_vectors = Kokkos::View<double[5][7]>("position_vectors");
     Kokkos::parallel_for(1, DefinePositionVector_5NodeBeamElement{position_vectors});
 
-    auto stiffness_matrix = StiffnessMatrix(gen_alpha_solver::create_matrix({
+    auto stiffness_matrix = gen_alpha_solver::create_matrix({
         {1., 2., 3., 4., 5., 6.},       // row 1
         {2., 4., 6., 8., 10., 12.},     // row 2
         {3., 6., 9., 12., 15., 18.},    // row 3
         {4., 8., 12., 16., 20., 24.},   // row 4
         {5., 10., 15., 20., 25., 30.},  // row 5
         {6., 12., 18., 24., 30., 36.}   // row 6
-    }));
+    });
 
     auto quadrature = UserDefinedQuadrature(
         std::vector<double>{
@@ -223,8 +223,7 @@ TEST(StaticBeamTest, StaticBeamResidual) {
          0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
     );
 
-    StaticBeamLinearizationParameters static_beam{
-        position_vectors, StiffnessMatrix(stiffness), quadrature};
+    StaticBeamLinearizationParameters static_beam{position_vectors, stiffness, quadrature};
 
     auto gen_coords = gen_alpha_solver::create_matrix({
         {0., 0., 0., 1., 0., 0., 0.},    // node 1
@@ -300,8 +299,7 @@ TEST(StaticBeamTest, StaticBeamIterationMatrix) {
          0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
     );
 
-    StaticBeamLinearizationParameters static_beam{
-        position_vectors, StiffnessMatrix(stiffness), quadrature};
+    StaticBeamLinearizationParameters static_beam{position_vectors, stiffness, quadrature};
 
     auto gen_coords = gen_alpha_solver::create_matrix({
         {0., 0., 0., 1., 0., 0., 0.},    // node 1
@@ -382,7 +380,7 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
         {0., 0.001, 0., 1., 0., 0., 0.}  // node 5
     });
 
-    auto v = gen_alpha_solver::create_matrix(
+    auto velocity = gen_alpha_solver::create_matrix(
         {{0., 0., 0., 0., 0., 0.},  // node 1
          {0., 0., 0., 0., 0., 0.},  // node 2
          {0., 0., 0., 0., 0., 0.},  // node 3
@@ -390,25 +388,36 @@ TEST(StaticCompositeBeamTest, StaticAnalysisWithZeroForceAndNonZeroInitialGuess)
          {0., 0., 0., 0., 0., 0.}}  // node 5
     );
 
-    auto velocity = v;
-    auto acceleration = v;
-    auto algo_acceleration = v;
-    auto initial_state = State(gen_coords, velocity, acceleration, algo_acceleration);
+    auto acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+
+    auto algo_acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+
+    auto initial_state = State{gen_coords, velocity, acceleration, algo_acceleration};
 
     auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
     auto time_integrator = GeneralizedAlphaTimeIntegrator(
         0., 0., 0.5, 1., gen_alpha_solver::TimeStepper(0., 1., 1, 20), false
     );
     std::shared_ptr<LinearizationParameters> static_beam_lin_params =
-        std::make_shared<StaticBeamLinearizationParameters>(
-            position_vectors, StiffnessMatrix(stiffness), quadrature
-        );
+        std::make_shared<StaticBeamLinearizationParameters>(position_vectors, stiffness, quadrature);
     auto results =
         time_integrator.Integrate(initial_state, lagrange_mults.extent(0), static_beam_lin_params);
     auto final_state = results.back();
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        final_state.GetGeneralizedCoordinates(),
+        final_state.generalized_coordinates,
         {
             {0., 0., 0., 1., 0., 0., 0.},  // node 1
             {0., 0., 0., 1., 0., 0., 0.},  // node 2

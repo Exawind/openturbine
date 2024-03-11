@@ -5,7 +5,7 @@
 
 namespace openturbine::gebt_poc {
 TEST(SolverTest, NodalDynamicStiffnessMatrix) {
-    auto mm = gen_alpha_solver::create_matrix({
+    auto sectional_mass_matrix = gen_alpha_solver::create_matrix({
         {2.0000000000000009, 5.2041704279304213E-17, -5.5511151231257827E-17, 4.163336342344337E-17,
          0.62605214725880387, -0.33952055713492146},
         {5.2041704279304213E-17, 2.0000000000000018, 1.3877787807814457E-17, -0.62605214725880398,
@@ -19,7 +19,6 @@ TEST(SolverTest, NodalDynamicStiffnessMatrix) {
         {-0.33952055713492141, 0.22974877626536766, -1.3877787807814457E-17, 3.5958678677753957,
          5.3139393458205726, 9.7985322771839804},
     });
-    auto sectional_mass_matrix = MassMatrix(mm);
 
     auto velocity = gen_alpha_solver::create_vector(
         {0.0025446043828620765, -0.0024798542682092665, 0.000065079641503883005,

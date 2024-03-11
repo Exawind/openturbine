@@ -5,7 +5,7 @@
 namespace openturbine::gebt_poc::tests {
 
 // A 36 x 36 matrix for expected iteration
-std::vector<std::vector<double>> expected_iteration = {
+const static std::vector<std::vector<double>> expected_iteration = {
     // row 1
     {957719.0000000029,
      0.,
