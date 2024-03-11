@@ -24,7 +24,7 @@ TEST(SolverTest, SectionalMassMatrix) {
         {0., -0.6, 0.4, 1., 2., 3.},  // row 4
         {0.6, 0., -0.2, 2., 4., 6.},  // row 5
         {-0.4, 0.2, 0., 3., 6., 9.},  // row 6
-    }));
+    });
 
     auto sectional_mass = Kokkos::View<double[6][6]>("sectional_mass");
     SectionalMassMatrix(Mass, rotation_0, rotation, sectional_mass);

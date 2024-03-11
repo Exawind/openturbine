@@ -177,7 +177,7 @@ TEST(SolverTest, ElementalStaticForcesResidualWithNonZeroValues) {
     auto quadrature = UserDefinedQuadrature(quadrature_points, quadrature_weights);
 
     auto residual = Kokkos::View<double[30]>("residual");
-  
+
     ElementalStaticForcesResidual(
         position_vectors, generalized_coords, stiffness, quadrature, residual
     );
