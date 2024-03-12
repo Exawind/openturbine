@@ -69,7 +69,7 @@ StaticBeamLinearizationParameters create_test_static_beam_parameters() {
     });
 
     auto quadrature = CreateGaussLegendreQuadrature(7);
-    
+
     return StaticBeamLinearizationParameters{position_vectors, stiffness_matrix, quadrature};
 }
 

@@ -3,12 +3,12 @@
 #include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "src/gebt_poc/element.h"
 #include "src/gebt_poc/InterpolateNodalValueDerivatives.hpp"
 #include "src/gebt_poc/InterpolateNodalValues.hpp"
 #include "src/gebt_poc/NodalDynamicStiffnessMatrix.hpp"
 #include "src/gebt_poc/NodalGyroscopicMatrix.hpp"
 #include "src/gebt_poc/SectionalMassMatrix.hpp"
+#include "src/gebt_poc/element.h"
 #include "src/gebt_poc/interpolation.h"
 #include "src/gebt_poc/quadrature.h"
 #include "src/gebt_poc/section.h"
@@ -20,7 +20,7 @@ namespace openturbine::gebt_poc {
 inline void ElementalInertialMatrices(
     LieGroupFieldView::const_type position_vectors, LieGroupFieldView::const_type gen_coords,
     LieAlgebraFieldView::const_type velocity, LieAlgebraFieldView::const_type acceleration,
-    View2D_6x6::const_type mass_matrix, const Quadrature& quadrature, View2D element_mass_matrix,
+    View2D_6x6::const_type mass_matrix, Quadrature quadrature, View2D element_mass_matrix,
     View2D element_gyroscopic_matrix, View2D element_dynamic_stiffness_matrix
 ) {
     const auto n_nodes = gen_coords.extent(0);
@@ -41,28 +41,87 @@ inline void ElementalInertialMatrices(
     auto acceleration_qp = View1D_LieAlgebra("acceleration_qp");
     auto sectional_mass_matrix = View2D_6x6("sectional_mass_matrix");
 
+    auto policy = Kokkos::TeamPolicy<>(1, Kokkos::AUTO(), Kokkos::AUTO());
+    using scratch_space = Kokkos::DefaultExecutionSpace::scratch_memory_space;
+    using unmanaged_memory = Kokkos::MemoryTraits<Kokkos::Unmanaged>;
+    using ScratchView1D = Kokkos::View<double*, scratch_space, unmanaged_memory>;
+    using ScratchView2D = Kokkos::View<double**, scratch_space, unmanaged_memory>;
+    const auto team_scratch_size =
+        5 * ScratchView2D::shmem_size(n_quad_pts, n_nodes) + ScratchView1D::shmem_size(n_nodes);
+    const auto thread_scratch_size = ScratchView1D::shmem_size(n_nodes);
+    auto shape_functions = View2D("shape functions", n_quad_pts, n_nodes);
+    auto shape_function_derivatives = View2D("shape function derivatives", n_quad_pts, n_nodes);
+    policy.set_scratch_size(
+        0, Kokkos::PerTeam(team_scratch_size), Kokkos::PerThread(thread_scratch_size)
+    );
+    Kokkos::parallel_for(
+        policy,
+        KOKKOS_LAMBDA(const Kokkos::TeamPolicy<>::member_type& member) {
+            auto shapes = ComputeLagrangePolynomials(member, order, quadrature.points);
+            auto derivatives =
+                ComputeLagrangePolynomialDerivatives(member, order, quadrature.points);
+            member.team_barrier();
+            Kokkos::parallel_for(
+                Kokkos::ThreadVectorMDRange(member, shapes.extent(0), shapes.extent(1)),
+                [&](std::size_t i, std::size_t j) {
+                    shape_functions(i, j) = shapes(i, j);
+                    shape_function_derivatives(i, j) = derivatives(i, j);
+                }
+            );
+        }
+    );
+
     Kokkos::deep_copy(element_mass_matrix, 0.);
 
     for (size_t k = 0; k < n_quad_pts; ++k) {
         // Calculate required interpolated values at the quadrature point
-        const auto q_pt = quadrature.points(k);
-        auto shape_function = LagrangePolynomial(order, q_pt);
-        auto shape_function_derivative = LagrangePolynomialDerivative(order, q_pt);
-        auto shape_function_vector = gen_alpha_solver::create_vector(shape_function);
-        auto shape_function_derivative_vector =
-            gen_alpha_solver::create_vector(shape_function_derivative);
+        auto shape_function_vector = View1D("sfv", n_nodes);
+        auto shape_function_derivative_vector = View1D("sfv", n_nodes);
+        Kokkos::parallel_for(
+            n_nodes,
+            KOKKOS_LAMBDA(std::size_t l) {
+                shape_function_vector(l) = shape_functions(k, l);
+                shape_function_derivative_vector(l) = shape_function_derivatives(k, l);
+            }
+        );
 
         auto jacobian = CalculateJacobian(nodes, shape_function_derivative_vector);
-        InterpolateNodalValues(gen_coords, shape_function, gen_coords_qp);
-        InterpolateNodalValueDerivatives(
-            gen_coords, shape_function_derivative, jacobian, gen_coords_derivatives_qp
+        Kokkos::parallel_for(
+            policy,
+            KOKKOS_LAMBDA(const Kokkos::TeamPolicy<>::member_type& member) {
+                auto gen_coords_interp =
+                    InterpolateNodalValues(member, gen_coords, shape_function_vector);
+                auto gen_coord_deriv_interp = InterpolateNodalValueDerivatives(
+                    member, gen_coords, shape_function_derivative_vector, jacobian
+                );
+                auto position_interp =
+                    InterpolateNodalValues(member, position_vectors, shape_function_vector);
+                auto position_deriv_interp = InterpolateNodalValueDerivatives(
+                    member, position_vectors, shape_function_derivative_vector, jacobian
+                );
+                auto velocity_interp =
+                    InterpolateNodalValues(member, velocity, shape_function_vector);
+                auto acceleration_interp =
+                    InterpolateNodalValues(member, acceleration, shape_function_vector);
+                member.team_barrier();
+                Kokkos::parallel_for(
+                    Kokkos::ThreadVectorRange(member, LieGroupComponents),
+                    [&](std::size_t component) {
+                        gen_coords_qp(component) = gen_coords_interp(component);
+                        position_vector_qp(component) = position_interp(component);
+                        gen_coords_derivatives_qp(component) = gen_coord_deriv_interp(component);
+                        pos_vector_derivatives_qp(component) = position_deriv_interp(component);
+                    }
+                );
+                Kokkos::parallel_for(
+                    Kokkos::ThreadVectorRange(member, LieAlgebraComponents),
+                    [&](std::size_t component) {
+                        velocity_qp(component) = velocity_interp(component);
+                        acceleration_qp(component) = acceleration_interp(component);
+                    }
+                );
+            }
         );
-        InterpolateNodalValues(position_vectors, shape_function, position_vector_qp);
-        InterpolateNodalValueDerivatives(
-            position_vectors, shape_function_derivative, jacobian, pos_vector_derivatives_qp
-        );
-        InterpolateNodalValues(velocity, shape_function, velocity_qp);
-        InterpolateNodalValues(acceleration, shape_function, acceleration_qp);
 
         // Calculate the sectional mass matrix in inertial basis
         auto rotation_0 = gen_alpha_solver::EulerParameterToRotationMatrix(
@@ -83,29 +142,54 @@ inline void ElementalInertialMatrices(
             velocity_qp, acceleration_qp, sectional_mass_matrix, dynamic_stiffness_matrix
         );
 
-        const auto q_weight = quadrature.weights(k);
-        for (size_t i = 0; i < n_nodes; ++i) {
-            for (size_t j = 0; j < n_nodes; ++j) {
-                const auto pair6 = Kokkos::make_pair(0, 6);
-                const auto pair_i =
-                    Kokkos::make_pair(i * LieAlgebraComponents, (i + 1) * LieAlgebraComponents);
-                const auto pair_j =
-                    Kokkos::make_pair(j * LieAlgebraComponents, (j + 1) * LieAlgebraComponents);
-                const auto a = q_weight * shape_function[i] * shape_function[j] * jacobian;
-                KokkosBlas::axpy(
-                    a, Kokkos::subview(sectional_mass_matrix, pair6, pair6),
-                    Kokkos::subview(element_mass_matrix, pair_i, pair_j)
-                );
-                KokkosBlas::axpy(
-                    a, Kokkos::subview(gyroscopic_matrix, pair6, pair6),
-                    Kokkos::subview(element_gyroscopic_matrix, pair_i, pair_j)
-                );
-                KokkosBlas::axpy(
-                    a, Kokkos::subview(dynamic_stiffness_matrix, pair6, pair6),
-                    Kokkos::subview(element_dynamic_stiffness_matrix, pair_i, pair_j)
+        Kokkos::parallel_for(
+            policy,
+            KOKKOS_LAMBDA(const Kokkos::TeamPolicy<>::member_type& member) {
+                Kokkos::parallel_for(
+                    Kokkos::ThreadVectorMDRange(member, n_nodes, n_nodes, 6, 6),
+                    [&](std::size_t i, std::size_t j, std::size_t m, std::size_t n) {
+                        const auto a = quadrature.weights(k) * shape_function_vector(i) *
+                                       shape_function_vector(j) * jacobian;
+                        const auto mass_contribution = a * sectional_mass_matrix(m, n);
+                        const auto gyroscopic_contribution = a * gyroscopic_matrix(m, n);
+                        const auto stiffness_contribution = a * dynamic_stiffness_matrix(m, n);
+                        Kokkos::atomic_add(
+                            &element_mass_matrix(i * 6 + m, j * 6 + n), mass_contribution
+                        );
+                        Kokkos::atomic_add(
+                            &element_gyroscopic_matrix(i * 6 + m, j * 6 + n), gyroscopic_contribution
+                        );
+                        Kokkos::atomic_add(
+                            &element_dynamic_stiffness_matrix(i * 6 + m, j * 6 + n),
+                            stiffness_contribution
+                        );
+                    }
                 );
             }
-        }
+        );
+        // const auto q_weight = quadrature.weights(k);
+        // for (size_t i = 0; i < n_nodes; ++i) {
+        //     for (size_t j = 0; j < n_nodes; ++j) {
+        //         const auto pair6 = Kokkos::make_pair(0, 6);
+        //         const auto pair_i =
+        //             Kokkos::make_pair(i * LieAlgebraComponents, (i + 1) * LieAlgebraComponents);
+        //         const auto pair_j =
+        //             Kokkos::make_pair(j * LieAlgebraComponents, (j + 1) * LieAlgebraComponents);
+        //         const auto a = q_weight * shape_function[i] * shape_function[j] * jacobian;
+        //         KokkosBlas::axpy(
+        //             a, Kokkos::subview(sectional_mass_matrix, pair6, pair6),
+        //             Kokkos::subview(element_mass_matrix, pair_i, pair_j)
+        //         );
+        //         KokkosBlas::axpy(
+        //             a, Kokkos::subview(gyroscopic_matrix, pair6, pair6),
+        //             Kokkos::subview(element_gyroscopic_matrix, pair_i, pair_j)
+        //         );
+        //         KokkosBlas::axpy(
+        //             a, Kokkos::subview(dynamic_stiffness_matrix, pair6, pair6),
+        //             Kokkos::subview(element_dynamic_stiffness_matrix, pair_i, pair_j)
+        //         );
+        //     }
+        // }
     }
 }
 }  // namespace openturbine::gebt_poc
