@@ -17,7 +17,7 @@ namespace openturbine::gebt_poc {
 
 DynamicBeamLinearizationParameters::DynamicBeamLinearizationParameters(
     LieGroupFieldView position_vectors, View2D_6x6 stiffness_matrix, View2D_6x6 mass_matrix,
-    UserDefinedQuadrature quadrature, std::vector<Forces*> external_forces
+    Quadrature quadrature, std::vector<Forces*> external_forces
 )
     : position_vectors_(std::move(position_vectors)),
       stiffness_matrix_(std::move(stiffness_matrix)),

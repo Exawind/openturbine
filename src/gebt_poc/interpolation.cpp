@@ -58,39 +58,6 @@ View2D LinearlyInterpolateMatrices(View2D::const_type m1, View2D::const_type m2,
     return interpolated_matrix;
 }
 
-double LegendrePolynomial(const size_t n, const double x) {
-    if (n == 0) {
-        return 1.;
-    }
-    if (n == 1) {
-        return x;
-    }
-
-    auto n_double = static_cast<double>(n);
-    return (
-        ((2. * n_double - 1.) * x * LegendrePolynomial(n - 1, x) -
-         (n_double - 1.) * LegendrePolynomial(n - 2, x)) /
-        n_double
-    );
-}
-
-double LegendrePolynomialDerivative(const size_t n, const double x) {
-    if (n == 0) {
-        return 0.;
-    }
-    if (n == 1) {
-        return 1.;
-    }
-    if (n == 2) {
-        return (3. * x);
-    }
-
-    auto n_double = static_cast<double>(n);
-    return (
-        (2. * n_double - 1.) * LegendrePolynomial(n - 1, x) + LegendrePolynomialDerivative(n - 2, x)
-    );
-}
-
 std::vector<double> GenerateGLLPoints(const size_t order) {
     if (order < 1) {
         throw std::invalid_argument("Polynomial order must be greater than or equal to 1");

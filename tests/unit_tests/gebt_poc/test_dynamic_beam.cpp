@@ -78,12 +78,7 @@ TEST(DynamicBeamTest, DynamicAnalysisWithZeroForce) {
         {-0.4, 0.2, 0., 3., 6., 9.}   // row 6
     });
 
-    auto quadrature = UserDefinedQuadrature(
-        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
-         0.7415311855993945, 0.9491079123427585},
-        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
-    );
+    auto quadrature = CreateGaussLegendreQuadrature(7);
 
     auto gen_coords = gen_alpha_solver::create_matrix({
         {0., 0., 0., 1., 0., 0., 0.},  // node 1
@@ -243,12 +238,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithConstantForceAtTip) {
         {0., 0., 0., 0., 0., 1.0336e-2}    // row 6
     });
 
-    auto quadrature = UserDefinedQuadrature(
-        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
-         0.7415311855993945, 0.9491079123427585},
-        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
-    );
+    auto quadrature = CreateGaussLegendreQuadrature(7);
 
     auto position_vectors =
         gen_alpha_solver::create_matrix({// node 1
@@ -354,12 +344,7 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
         {0., 0., 0., 0., 0., 1.0336e-2}    // row 6
     });
 
-    auto quadrature = UserDefinedQuadrature(
-        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
-         0.7415311855993945, 0.9491079123427585},
-        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
-         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
-    );
+    auto quadrature = CreateGaussLegendreQuadrature(7);
 
     auto position_vectors =
         gen_alpha_solver::create_matrix({// node 1

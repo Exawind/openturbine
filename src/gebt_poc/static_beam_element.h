@@ -25,8 +25,7 @@ public:
     /// Define a static beam element with the given position vector for the nodes, 6x6
     /// stiffness matrix, and a quadrature rule
     StaticBeamLinearizationParameters(
-        LieGroupFieldView position_vectors, View2D_6x6 stiffness_matrix,
-        UserDefinedQuadrature quadrature
+        LieGroupFieldView position_vectors, View2D_6x6 stiffness_matrix, Quadrature quadrature
     );
 
     virtual void ResidualVector(
@@ -159,7 +158,7 @@ public:
 private:
     LieGroupFieldView position_vectors_;
     View2D_6x6 stiffness_matrix_;
-    UserDefinedQuadrature quadrature_;
+    Quadrature quadrature_;
 };
 
 }  // namespace openturbine::gebt_poc

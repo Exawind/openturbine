@@ -27,4 +27,34 @@ inline void InterpolateNodalValueDerivatives(
     KokkosBlas::scal(interpolated_values, 1. / jacobian, interpolated_values);
 }
 
+KOKKOS_INLINE_FUNCTION
+auto InterpolateNodalValueDerivatives(
+    const Kokkos::TeamPolicy<>::member_type& member, View2D::const_type nodal_values,
+    View1D::const_type interpolation_function, double jacobian
+) {
+    using scratch_space = Kokkos::DefaultExecutionSpace::scratch_memory_space;
+    using unmanaged_memory = Kokkos::MemoryTraits<Kokkos::Unmanaged>;
+    using ScratchView1D = Kokkos::View<double*, scratch_space, unmanaged_memory>;
+    auto interpolated_values = ScratchView1D(member.team_scratch(0), nodal_values.extent(1));
+    const auto n_nodes = nodal_values.extent(0);
+    const auto n_values = interpolated_values.extent(0);
+    Kokkos::parallel_for(Kokkos::ThreadVectorRange(member, n_values), [&](std::size_t i) {
+        interpolated_values(i) = 0.;
+    });
+    member.team_barrier();
+    Kokkos::parallel_for(
+        Kokkos::ThreadVectorMDRange(member, n_nodes, n_values),
+        [&](std::size_t i, std::size_t j) {
+            auto result = nodal_values(i, j) * interpolation_function(i);
+            Kokkos::atomic_add(&interpolated_values(j), result);
+        }
+    );
+    member.team_barrier();
+    Kokkos::parallel_for(Kokkos::ThreadVectorRange(member, n_values), [&](std::size_t i) {
+        interpolated_values(i) /= jacobian;
+    });
+    member.team_barrier();
+    return interpolated_values;
+}
+
 }  // namespace openturbine::gebt_poc
