@@ -434,4 +434,102 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithSinusoidalForceAtTip) {
     );
 }
 
+TEST(DynamicBeamTest, DynamicAnalysisCatileverWithRotatingBeam) {
+    // Set up the initial state for the problem
+    auto gen_coords = gen_alpha_solver::create_matrix({
+        {0., 0., 0., 1., 0., 0., 0.},  // node 1
+        {0., 0., 0., 1., 0., 0., 0.},  // node 2
+        {0., 0., 0., 1., 0., 0., 0.},  // node 3
+        {0., 0., 0., 1., 0., 0., 0.},  // node 4
+        {0., 0., 0., 1., 0., 0., 0.}   // node 5
+    });
+    auto velocity = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+    auto acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+    auto algo_acceleration = gen_alpha_solver::create_matrix(
+        {{0., 0., 0., 0., 0., 0.},  // node 1
+         {0., 0., 0., 0., 0., 0.},  // node 2
+         {0., 0., 0., 0., 0., 0.},  // node 3
+         {0., 0., 0., 0., 0., 0.},  // node 4
+         {0., 0., 0., 0., 0., 0.}}  // node 5
+    );
+
+    auto initial_state = State{gen_coords, velocity, acceleration, algo_acceleration};
+
+    // Set up the linearization parameters for the problem
+    auto stiffness = gen_alpha_solver::create_matrix({
+        {1368.17e3, 0., 0., 0., 0., 0.},      // row 1
+        {0., 88560., 0., 0., 0., 0.},         // row 2
+        {0., 0., 38780., 0., 0., 0.},         // row 3
+        {0., 0., 0., 16960., 17610., -351.},  // row 4
+        {0., 0., 0., 17610., 59120., -370.},  // row 5
+        {0., 0., 0., -351., -370., 141470.}   // row 6
+    });
+
+    auto mass_matrix = gen_alpha_solver::create_matrix({
+        {8.538e-2, 0., 0., 0., 0., 0.},    // row 1
+        {0., 8.538e-2, 0., 0., 0., 0.},    // row 2
+        {0., 0., 8.538e-2, 0., 0., 0.},    // row 3
+        {0., 0., 0., 1.4433e-2, 0., 0.},   // row 4
+        {0., 0., 0., 0., 0.40972e-2, 0.},  // row 5
+        {0., 0., 0., 0., 0., 1.0336e-2}    // row 6
+    });
+
+    auto quadrature = UserDefinedQuadrature(
+        {-0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
+         0.7415311855993945, 0.9491079123427585},
+        {0.1294849661688697, 0.2797053914892766, 0.3818300505051189, 0.4179591836734694,
+         0.3818300505051189, 0.2797053914892766, 0.1294849661688697}
+    );
+
+    auto position_vectors =
+        gen_alpha_solver::create_matrix({// node 1
+                                         {0., 0., 0., 1., 0., 0., 0.},
+                                         // node 2
+                                         {1.7267316464601146, 0., 0., 1., 0., 0., 0.},
+                                         // node 3
+                                         {5., 0., 0., 1., 0., 0., 0.},
+                                         // node 4
+                                         {8.273268353539885, 0., 0., 1., 0., 0., 0.},
+                                         // node 5
+                                         {10., 0., 0., 1., 0., 0., 0.}});
+
+    // Run the dynamic analysis for 3 iterations with a time step of 0.005 seconds
+    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 3, 10);
+
+    std::shared_ptr<LinearizationParameters> dynamic_beam_lin_params =
+        std::make_shared<DynamicBeamLinearizationParameters>(
+            position_vectors, stiffness, mass_matrix, quadrature
+        );
+
+    // Calculate the generalized alpha parameters for rho_inf = 0
+    auto rho_inf = 0.;
+    auto alpha_m = (2. * rho_inf - 1.) / (rho_inf + 1.);
+    auto alpha_f = rho_inf / (rho_inf + 1.);
+    auto gamma = 0.5 + alpha_f - alpha_m;
+    auto beta = 0.25 * std::pow(gamma + 0.5, 2);
+
+    auto time_integrator = GeneralizedAlphaTimeIntegrator(
+        alpha_f, alpha_m, beta, gamma, time_stepper, true, ProblemType::kDynamic
+    );
+
+    auto lagrange_mults = gen_alpha_solver::create_vector({0., 0., 0., 0., 0., 0.});
+    auto results =
+        time_integrator.Integrate(initial_state, lagrange_mults.extent(0), dynamic_beam_lin_params);
+
+    // We expect the state to contain the following values after 0.005s via validation results
+    // from BeamDyn at the tip node
+}
+
 }  // namespace openturbine::gebt_poc::tests
