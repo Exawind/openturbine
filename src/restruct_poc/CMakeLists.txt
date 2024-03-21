@@ -5,4 +5,6 @@ target_sources(${oturb_lib_name}
     beams.cpp
     interpolation.h
     interpolation.cpp
+    math_util.hpp
+    math_util.cpp
 )

@@ -5,6 +5,7 @@
 
 #include <KokkosBlas.hpp>
 
+#include "math_util.hpp"
 #include "types.hpp"
 
 #include "src/gebt_poc/quadrature.h"
@@ -23,11 +24,22 @@ struct BeamElemIndices {
 //------------------------------------------------------------------------------
 
 struct BeamNode {
-    double s;
-    std::array<double, 3> x;
-    std::array<double, 4> r;
-    BeamNode(std::array<double, 3> x_, std::array<double, 4> r_)
-        : s(0.), x(std::move(x_)), r(std::move(r_)) {}
+    double s_;
+    std::array<double, 7> x_;
+    std::array<double, 7> q_;
+    std::array<double, 6> v_;
+    std::array<double, 6> a_;
+    BeamNode(std::array<double, 7> x) : s_(0.), x_(std::move(x)), q_({0.}), v_({0.}), a_({0.}) {}
+    BeamNode(
+        std::array<double, 7> x, std::array<double, 7> q, std::array<double, 6> v,
+        std::array<double, 6> a
+    )
+        : s_(0.), x_(std::move(x)), q_(std::move(q)), v_(std::move(v)), a_(std::move(a)) {}
+    BeamNode(
+        double s, std::array<double, 7> x, std::array<double, 7> q, std::array<double, 6> v,
+        std::array<double, 6> a
+    )
+        : s_(s), x_(std::move(x)), q_(std::move(q)), v_(std::move(v)), a_(std::move(a)) {}
 };
 
 struct BeamSection {
@@ -53,14 +65,17 @@ struct BeamInput {
         : quadrature(std::move(quadrature_)),
           nodes(std::move(nodes_)),
           sections(std::move(sections_)) {
-        //
+        // If node positions already set, return
+        if (nodes.back().s_ != 0.)
+            return;
+
         // Calculate distances between nodes in element
         std::vector<double> node_distances({0.});
         for (size_t i = 1; i < this->nodes.size(); i++) {
             node_distances.push_back(sqrt(
-                pow(this->nodes[i].x[0] - this->nodes[i - 1].x[0], 2) +
-                pow(this->nodes[i].x[1] - this->nodes[i - 1].x[1], 2) +
-                pow(this->nodes[i].x[2] - this->nodes[i - 1].x[2], 2)
+                pow(this->nodes[i].x_[0] - this->nodes[i - 1].x_[0], 2) +
+                pow(this->nodes[i].x_[1] - this->nodes[i - 1].x_[1], 2) +
+                pow(this->nodes[i].x_[2] - this->nodes[i - 1].x_[2], 2)
             ));
         }
 
@@ -74,7 +89,7 @@ struct BeamInput {
         );
 
         for (size_t i = 0; i < this->nodes.size(); i++) {
-            this->nodes[i].s = node_cumulative_distances[i] / length;
+            this->nodes[i].s_ = node_cumulative_distances[i] / length;
         }
     }
 };
@@ -114,81 +129,6 @@ struct InterpolateQPPosition {
     }
 };
 
-KOKKOS_FUNCTION
-void InterpMatMul3(View_NxN shape_matrix, View_Nx3 node_v, View_Nx3 qp_v);
-
-KOKKOS_FUNCTION
-void InterpMatMul4(View_NxN shape_matrix, View_Nx4 node_v, View_Nx4 qp_v);
-
-KOKKOS_FUNCTION
-void InterpQuaternion(View_NxN shape_matrix, View_Nx4 node_v, View_Nx4 qp_v);
-
-KOKKOS_FUNCTION
-void InterpDeriv3(View_NxN shape_matrix, View_N jacobian, View_Nx3 node_v, View_Nx3 qp_v);
-
-KOKKOS_FUNCTION
-void InterpDeriv4(View_NxN shape_matrix, View_N jacobian, View_Nx4 node_v, View_Nx4 qp_v);
-
-struct InterpolateQPState {
-    Kokkos::View<BeamElemIndices*> elem_indices;  // Element indices
-
-    oturb::View_NxN shape_interp_;  // Num Nodes x Num Quadrature points
-    oturb::View_NxN shape_deriv_;   // Num Nodes x Num Quadrature points
-    oturb::View_N qp_jacobian_;     // Num Nodes x Num Quadrature points
-    oturb::View_Nx7 node_u_;        // Node translation & rotation displacement
-    oturb::View_Nx6 node_u_dot_;    // Node translation & angular velocity
-    oturb::View_Nx6 node_u_ddot_;   // Node translation & angular acceleration
-
-    oturb::View_Nx3 qp_u_;          // qp translation displacement
-    oturb::View_Nx4 qp_r_;          // qp rotation displacement
-    oturb::View_Nx3 qp_u_dot_;      // qp translation velocity
-    oturb::View_Nx3 qp_omega_;      // qp angular velocity
-    oturb::View_Nx3 qp_u_ddot_;     // qp translation acceleration
-    oturb::View_Nx3 qp_omega_dot_;  // qp angular acceleration
-
-    KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
-        // Element specific views
-        auto& idx = elem_indices[i_elem];
-        auto shape_interp =
-            Kokkos::subview(shape_interp_, idx.node_range, Kokkos::make_pair(0, idx.num_qps));
-        auto shape_deriv =
-            Kokkos::subview(shape_deriv_, idx.node_range, Kokkos::make_pair(0, idx.num_qps));
-
-        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
-
-        // Interpolate translation displacement
-        auto node_u = Kokkos::subview(node_u_, idx.node_range, Kokkos::make_pair(0, 3));
-        auto qp_u = Kokkos::subview(qp_u_, idx.qp_range, Kokkos::ALL);
-        InterpMatMul3(shape_interp, node_u, qp_u);
-
-        // Interpolate rotation displacement
-        auto node_r = Kokkos::subview(node_u_, idx.node_range, Kokkos::make_pair(3, 7));
-        auto qp_r = Kokkos::subview(qp_r_, idx.qp_range, Kokkos::ALL);
-        InterpQuaternion(shape_interp, node_r, qp_r);
-
-        // Interpolate translation velocity
-        auto node_u_dot = Kokkos::subview(node_u_dot_, idx.node_range, Kokkos::make_pair(0, 3));
-        auto qp_u_dot = Kokkos::subview(qp_u_dot_, idx.qp_range, Kokkos::ALL);
-        InterpMatMul3(shape_interp, node_u_dot, qp_u_dot);
-
-        // Interpolate angular velocity
-        auto node_omega = Kokkos::subview(node_u_dot_, idx.node_range, Kokkos::make_pair(3, 6));
-        auto qp_omega = Kokkos::subview(qp_omega_, idx.qp_range, Kokkos::ALL);
-        InterpMatMul3(shape_interp, node_omega, qp_omega);
-
-        // Interpolate translation acceleration
-        auto node_u_ddot = Kokkos::subview(node_u_ddot_, idx.node_range, Kokkos::make_pair(0, 3));
-        auto qp_u_ddot = Kokkos::subview(qp_u_ddot_, idx.qp_range, Kokkos::ALL);
-        InterpMatMul3(shape_interp, node_u_ddot, qp_u_ddot);
-
-        // Interpolate angular acceleration
-        auto node_omega_dot = Kokkos::subview(node_u_ddot_, idx.node_range, Kokkos::make_pair(3, 6));
-        auto qp_omega_dot = Kokkos::subview(qp_omega_dot_, idx.qp_range, Kokkos::ALL);
-        InterpMatMul3(shape_interp, node_omega_dot, qp_omega_dot);
-    }
-};
-
 struct InterpolateQPRotation {
     Kokkos::View<BeamElemIndices*> elem_indices;  // Element indices
     oturb::View_NxN shape_interp_;                // Num Nodes x Num Quadrature points
@@ -206,99 +146,7 @@ struct InterpolateQPRotation {
             Kokkos::subview(node_pos_rot_, elem_indices[i_elem].node_range, Kokkos::make_pair(3, 7));
         auto qp_rot = Kokkos::subview(qp_rot_, elem_indices[i_elem].qp_range, Kokkos::ALL);
 
-        InterpMatMul4(shape_interp, node_rot, qp_rot);
-
-        // Normalize quaternions (rows)
-        for (int j = 0; j < elem_indices[i_elem].num_qps; ++j) {
-            auto length = Kokkos::sqrt(
-                Kokkos::pow(qp_rot(j, 0), 2) + Kokkos::pow(qp_rot(j, 1), 2) +
-                Kokkos::pow(qp_rot(j, 2), 2) + Kokkos::pow(qp_rot(j, 3), 2)
-            );
-            if (length == 0.) {
-                qp_rot(j, 0) = 1.;
-                qp_rot(j, 3) = 0.;
-                qp_rot(j, 2) = 0.;
-                qp_rot(j, 1) = 0.;
-            } else {
-                qp_rot(j, 0) /= length;
-                qp_rot(j, 3) /= length;
-                qp_rot(j, 2) /= length;
-                qp_rot(j, 1) /= length;
-            }
-        }
-    }
-};
-
-struct InterpolateQPAngularVelocityAcceleration {
-    Kokkos::View<BeamElemIndices*> elem_indices;  // Element indices
-    oturb::View_NxN shape_interp_;                // Num Nodes x Num Quadrature points
-    oturb::View_Nx6 node_trans_ang_;              // Node translation & angular velocity/acceleration
-    oturb::View_Nx3 qp_ang_;                      // quadrature point angular velocity/acceleration
-
-    KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
-        // Element specific views
-        auto shape_interp = Kokkos::subview(
-            shape_interp_, elem_indices[i_elem].node_range,
-            Kokkos::make_pair(0, elem_indices[i_elem].num_qps)
-        );
-        auto node_rot = Kokkos::subview(
-            node_trans_ang_, elem_indices[i_elem].node_range, Kokkos::make_pair(3, 6)
-        );
-        auto qp_rot = Kokkos::subview(qp_ang_, elem_indices[i_elem].qp_range, Kokkos::ALL);
-
-        // Initialize qp_rot
-        Kokkos::deep_copy(qp_rot, 0.);
-
-        // Perform matrix-matrix multiplication
-        for (int i = 0; i < elem_indices[i_elem].num_nodes; ++i) {
-            for (int j = 0; j < elem_indices[i_elem].num_qps; ++j) {
-                for (int k = 0; k < 3; ++k) {
-                    qp_rot(j, k) += node_rot(i, k) * shape_interp(i, j);
-                }
-            }
-        }
-    }
-};
-
-struct InterpolateQPPositionDerivative {
-    Kokkos::View<BeamElemIndices*> elem_indices;  // Element indices
-    oturb::View_NxN shape_deriv_;                 // Num Nodes x Num Quadrature points
-    oturb::View_N qp_jacobian_;                   // Jacobians
-    oturb::View_Nx7 node_pos_rot_;                // Node global position/rotation vector
-    oturb::View_Nx3 qp_pos_deriv_;                // quadrature point position derivative
-
-    KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
-        // Element specific views
-        oturb::View_NxN shape_deriv = Kokkos::subview(
-            shape_deriv_, elem_indices[i_elem].node_range,
-            Kokkos::make_pair(0, elem_indices[i_elem].num_qps)
-        );
-        auto qp_pos_deriv =
-            Kokkos::subview(qp_pos_deriv_, elem_indices[i_elem].qp_range, Kokkos::ALL);
-        auto node_pos =
-            Kokkos::subview(node_pos_rot_, elem_indices[i_elem].node_range, Kokkos::make_pair(0, 3));
-        auto qp_jacobian = Kokkos::subview(qp_jacobian_, elem_indices[i_elem].qp_range);
-
-        // Initialize qp_pos_deriv
-        Kokkos::deep_copy(qp_pos_deriv, 0.);
-
-        // Perform matrix-matrix multiplication
-        for (int i = 0; i < elem_indices[i_elem].num_nodes; ++i) {
-            for (int j = 0; j < elem_indices[i_elem].num_qps; ++j) {
-                for (int k = 0; k < 3; ++k) {
-                    qp_pos_deriv(j, k) += node_pos(i, k) * shape_deriv(i, j);
-                }
-            }
-        }
-
-        // Divide each row by jacobian
-        for (int j = 0; j < elem_indices[i_elem].num_qps; ++j) {
-            qp_pos_deriv(j, 0) /= qp_jacobian(j);
-            qp_pos_deriv(j, 1) /= qp_jacobian(j);
-            qp_pos_deriv(j, 2) /= qp_jacobian(j);
-        }
+        InterpQuaternion(shape_interp, node_rot, qp_rot);
     }
 };
 
@@ -322,24 +170,7 @@ struct InterpolateQPRotationDerivative {
             Kokkos::subview(node_pos_rot_, elem_indices[i_elem].node_range, Kokkos::make_pair(3, 7));
         auto qp_jacobian = Kokkos::subview(qp_jacobian_, elem_indices[i_elem].qp_range);
 
-        // Initialize qp_rot_deriv
-        Kokkos::deep_copy(qp_rot_deriv, 0.);
-
-        // Perform matrix-matrix multiplication
-        for (int i = 0; i < elem_indices[i_elem].num_nodes; ++i) {
-            for (int j = 0; j < elem_indices[i_elem].num_qps; ++j) {
-                for (int k = 0; k < 4; ++k) {
-                    qp_rot_deriv(j, k) += node_rot(i, k) * shape_deriv(i, j);
-                }
-            }
-        }
-
-        // Divide each row by jacobian
-        for (int j = 0; j < elem_indices[i_elem].num_qps; ++j) {
-            qp_rot_deriv(j, 0) /= qp_jacobian(j);
-            qp_rot_deriv(j, 1) /= qp_jacobian(j);
-            qp_rot_deriv(j, 2) /= qp_jacobian(j);
-        }
+        InterpVector4Deriv(shape_deriv, qp_jacobian, node_rot, qp_rot_deriv);
     }
 };
 
@@ -352,42 +183,101 @@ struct CalculateJacobian {
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {
+        auto idx = elem_indices[i_elem];
         // Element specific views
-        oturb::View_NxN shape_deriv = Kokkos::subview(
-            shape_deriv_, elem_indices[i_elem].node_range,
-            Kokkos::make_pair(0, elem_indices[i_elem].num_qps)
-        );
-        auto qp_pos_deriv =
-            Kokkos::subview(qp_pos_deriv_, elem_indices[i_elem].qp_range, Kokkos::ALL);
-        auto node_pos =
-            Kokkos::subview(node_pos_rot_, elem_indices[i_elem].node_range, Kokkos::make_pair(0, 3));
-        auto qp_jacobian = Kokkos::subview(qp_jacobian_, elem_indices[i_elem].qp_range);
+        oturb::View_NxN shape_deriv =
+            Kokkos::subview(shape_deriv_, idx.node_range, Kokkos::make_pair(0, idx.num_qps));
+        auto qp_pos_deriv = Kokkos::subview(qp_pos_deriv_, idx.qp_range, Kokkos::ALL);
+        auto node_pos = Kokkos::subview(node_pos_rot_, idx.node_range, Kokkos::make_pair(0, 3));
+        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
 
-        // Initialize qp_pos_deriv
-        Kokkos::deep_copy(qp_pos_deriv, 0.);
-
-        // Perform matrix-matrix multiplication
-        for (int i = 0; i < elem_indices[i_elem].num_nodes; ++i) {
-            for (int j = 0; j < elem_indices[i_elem].num_qps; ++j) {
-                for (int k = 0; k < 3; ++k) {
-                    qp_pos_deriv(j, k) += node_pos(i, k) * shape_deriv(i, j);
-                }
-            }
-        }
+        // Interpolate quadrature point position derivative from node position
+        InterpVector3(shape_deriv, node_pos, qp_pos_deriv);
 
         //  Loop through quadrature points
-        for (int j = 0; j < elem_indices[i_elem].num_qps; ++j) {
+        for (int j = 0; j < idx.num_qps; ++j) {
             // Calculate Jacobian as norm of derivative
             qp_jacobian(j) = Kokkos::sqrt(
                 Kokkos::pow(qp_pos_deriv(j, 0), 2.) + Kokkos::pow(qp_pos_deriv(j, 1), 2.) +
                 Kokkos::pow(qp_pos_deriv(j, 2), 2.)
             );
 
+            printf("%f\n", qp_jacobian(j));
+
             // Apply Jacobian to row
             qp_pos_deriv(j, 0) /= qp_jacobian(j);
             qp_pos_deriv(j, 1) /= qp_jacobian(j);
             qp_pos_deriv(j, 2) /= qp_jacobian(j);
         }
+    }
+};
+
+struct InterpolateQPState {
+    Kokkos::View<BeamElemIndices*> elem_indices;  // Element indices
+
+    oturb::View_NxN shape_interp_;  // Num Nodes x Num Quadrature points
+    oturb::View_NxN shape_deriv_;   // Num Nodes x Num Quadrature points
+    oturb::View_N qp_jacobian_;     // Num Nodes x Num Quadrature points
+    oturb::View_Nx7 node_u_;        // Node translation & rotation displacement
+    oturb::View_Nx6 node_u_dot_;    // Node translation & angular velocity
+    oturb::View_Nx6 node_u_ddot_;   // Node translation & angular acceleration
+
+    oturb::View_Nx3 qp_u_;          // qp translation displacement
+    oturb::View_Nx3 qp_u_prime_;    // qp translation displacement derivative
+    oturb::View_Nx4 qp_r_;          // qp rotation displacement
+    oturb::View_Nx4 qp_r_prime_;    // qp rotation displacement derivative
+    oturb::View_Nx3 qp_u_dot_;      // qp translation velocity
+    oturb::View_Nx3 qp_omega_;      // qp angular velocity
+    oturb::View_Nx3 qp_u_ddot_;     // qp translation acceleration
+    oturb::View_Nx3 qp_omega_dot_;  // qp angular acceleration
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem) const {
+        // Element specific views
+        auto& idx = elem_indices[i_elem];
+        auto shape_interp =
+            Kokkos::subview(shape_interp_, idx.node_range, Kokkos::make_pair(0, idx.num_qps));
+        auto shape_deriv =
+            Kokkos::subview(shape_deriv_, idx.node_range, Kokkos::make_pair(0, idx.num_qps));
+        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
+        auto node_u = Kokkos::subview(node_u_, idx.node_range, Kokkos::make_pair(0, 3));
+        auto node_r = Kokkos::subview(node_u_, idx.node_range, Kokkos::make_pair(3, 7));
+
+        // Interpolate translation displacement
+        auto qp_u = Kokkos::subview(qp_u_, idx.qp_range, Kokkos::ALL);
+        InterpVector3(shape_interp, node_u, qp_u);
+
+        // Interpolate translation displacement derivative
+        auto qp_u_prime = Kokkos::subview(qp_u_prime_, idx.qp_range, Kokkos::ALL);
+        InterpVector3Deriv(shape_deriv, qp_jacobian, node_u, qp_u_prime);
+
+        // Interpolate rotation displacement
+        auto qp_r = Kokkos::subview(qp_r_, idx.qp_range, Kokkos::ALL);
+        InterpQuaternion(shape_interp, node_r, qp_r);
+
+        // Interpolate rotation displacement derivative
+        auto qp_r_prime = Kokkos::subview(qp_r_prime_, idx.qp_range, Kokkos::ALL);
+        InterpVector4Deriv(shape_deriv, qp_jacobian, node_r, qp_r_prime);
+
+        // Interpolate translation velocity
+        auto node_u_dot = Kokkos::subview(node_u_dot_, idx.node_range, Kokkos::make_pair(0, 3));
+        auto qp_u_dot = Kokkos::subview(qp_u_dot_, idx.qp_range, Kokkos::ALL);
+        InterpVector3(shape_interp, node_u_dot, qp_u_dot);
+
+        // Interpolate angular velocity
+        auto node_omega = Kokkos::subview(node_u_dot_, idx.node_range, Kokkos::make_pair(3, 6));
+        auto qp_omega = Kokkos::subview(qp_omega_, idx.qp_range, Kokkos::ALL);
+        InterpVector3(shape_interp, node_omega, qp_omega);
+
+        // Interpolate translation acceleration
+        auto node_u_ddot = Kokkos::subview(node_u_ddot_, idx.node_range, Kokkos::make_pair(0, 3));
+        auto qp_u_ddot = Kokkos::subview(qp_u_ddot_, idx.qp_range, Kokkos::ALL);
+        InterpVector3(shape_interp, node_u_ddot, qp_u_ddot);
+
+        // Interpolate angular acceleration
+        auto node_omega_dot = Kokkos::subview(node_u_ddot_, idx.node_range, Kokkos::make_pair(3, 6));
+        auto qp_omega_dot = Kokkos::subview(qp_omega_dot_, idx.qp_range, Kokkos::ALL);
+        InterpVector3(shape_interp, node_omega_dot, qp_omega_dot);
     }
 };
 
@@ -415,22 +305,22 @@ struct Beams {
     oturb::View_NxN node_iteration;       // Iteration matrix
 
     // Quadrature point data
-    oturb::View_N qp_weight;       //
-    oturb::View_N qp_jacobian;     //
-    oturb::View_Nx3 qp_x0;         // initial position
-    oturb::View_Nx3 qp_x0_prime;   // initial position derivative
-    oturb::View_Nx4 qp_r0;         // initial rotation
-    oturb::View_Nx6x6 qp_Mstar;    // Mass matrix in reference
-    oturb::View_Nx6x6 qp_Cstar;    // Stiffness matrix in reference
-    oturb::View_Nx3 qp_u;          // current translation displacement
-    oturb::View_Nx3 qp_u_prime;    // current translation displacement derivative
-    oturb::View_Nx3 qp_u_dot;      // current translation velocity
-    oturb::View_Nx3 qp_u_ddot;     // current translation acceleration
-    oturb::View_Nx4 qp_r;          // current rotation
-    oturb::View_Nx4 qp_r_prime;    // current rotation derivative
-    oturb::View_Nx3 qp_omega;      // current angular velocity
-    oturb::View_Nx3 qp_omega_dot;  // current position/rotation
-    oturb::View_Nx6 qp_strain;     // current translation/angular velocity
+    oturb::View_N qp_weight;       // Integration weights
+    oturb::View_N qp_jacobian;     // Jacobian vector
+    oturb::View_Nx6x6 qp_Mstar;    // Mass matrix in material frame
+    oturb::View_Nx6x6 qp_Cstar;    // Stiffness matrix in material frame
+    oturb::View_Nx3 qp_x0;         // Initial position
+    oturb::View_Nx3 qp_x0_prime;   // Initial position derivative
+    oturb::View_Nx4 qp_r0;         // Initial rotation
+    oturb::View_Nx3 qp_u;          // State: translation displacement
+    oturb::View_Nx3 qp_u_prime;    // State: translation displacement derivative
+    oturb::View_Nx3 qp_u_dot;      // State: translation velocity
+    oturb::View_Nx3 qp_u_ddot;     // State: translation acceleration
+    oturb::View_Nx4 qp_r;          // State: rotation
+    oturb::View_Nx4 qp_r_prime;    // State: rotation derivative
+    oturb::View_Nx3 qp_omega;      // State: angular velocity
+    oturb::View_Nx3 qp_omega_dot;  // State: position/rotation
+    oturb::View_Nx6 qp_strain;     //
     oturb::View_Nx6 qp_Fc;         //
     oturb::View_Nx6 qp_Fd;         //
     oturb::View_Nx6 qp_Fi;         //
@@ -468,11 +358,11 @@ struct Beams {
           // Quadrature Point data
           qp_weight("qp_weight", NumQPs),
           qp_jacobian("qp_jacobian", NumQPs),
+          qp_Mstar("qp_Mstar", NumQPs),
+          qp_Cstar("qp_Cstar", NumQPs),
           qp_x0("qp_x0", NumQPs),
           qp_x0_prime("qp_x0_prime", NumQPs),
           qp_r0("qp_r0", NumQPs),
-          qp_Mstar("qp_Mstar", NumQPs),
-          qp_Cstar("qp_Cstar", NumQPs),
           qp_u("qp_u", NumQPs),
           qp_u_prime("qp_u_prime", NumQPs),
           qp_u_dot("qp_u_dot", NumQPs),
@@ -498,10 +388,9 @@ struct Beams {
           shape_interp("shape_interp", NumNodes, MaxElemQPs),
           shape_deriv("deriv_interp", NumNodes, MaxElemQPs) {}
 
-    // Update node states (displacement, velocity, acceleration)
-
+    // Update node states (displacement, velocity, acceleration) and interpolate to quadrature points
     void UpdateState(View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
-        // Update node displacement, velocity, and acceleration
+        // Copy displacement, velocity, and acceleration to nodes
         Kokkos::parallel_for(
             "UpdateNodeState", this->node_u.extent(0),
             KOKKOS_LAMBDA(size_t i) {
@@ -518,24 +407,14 @@ struct Beams {
             }
         );
 
-        // Interpolate node positions to quadrature points
+        // Interpolate node state to quadrature points
         Kokkos::parallel_for(
-            "InterpolateQPPosition", this->num,
-            InterpolateQPPosition{this->elem_indices, this->shape_interp, this->node_u, this->qp_u}
-        );
-
-        // Interpolate node rotations to quadrature points
-        Kokkos::parallel_for(
-            "InterpolateQPRotation", this->num,
-            InterpolateQPRotation{this->elem_indices, this->shape_interp, this->node_u, this->qp_r}
-        );
-
-        // Interpolate node rotations to quadrature points
-        Kokkos::parallel_for(
-            "InterpolateQPRotationDerivative", this->num,
-            InterpolateQPRotationDerivative{
-                this->elem_indices, this->shape_interp, this->qp_jacobian, this->node_u,
-                this->qp_r_prime}
+            "InterpolateQPState", this->num,
+            InterpolateQPState{
+                this->elem_indices, this->shape_interp, this->shape_deriv, this->qp_jacobian,
+                this->node_u, this->node_u_dot, this->node_u_ddot, this->qp_u, this->qp_u_prime,
+                this->qp_r, this->qp_r_prime, this->qp_u_dot, this->qp_omega, this->qp_u_ddot,
+                this->qp_omega_dot}
         );
     }
 };

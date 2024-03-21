@@ -5,8 +5,9 @@
 namespace oturb {
 
 void PopulateElementViews(
-    const BeamInput& input, View_Nx7 node_x0, View_N qp_weight, View_Nx6x6 qp_Mstar,
-    View_Nx6x6 qp_Cstar, View_NxN shape_interp, View_NxN shape_deriv
+    const BeamInput& input, View_Nx7 node_x0, View_Nx7 node_u, View_Nx6 node_u_dot,
+    View_Nx6 node_u_ddot, View_N qp_weight, View_Nx6x6 qp_Mstar, View_Nx6x6 qp_Cstar,
+    View_NxN shape_interp, View_NxN shape_deriv
 ) {
     //--------------------------------------------------------------------------
     // Calculate element's node and quadrature point positions [-1,1]
@@ -16,22 +17,34 @@ void PopulateElementViews(
 
     // Loop through nodes and convert 's' [0,1] position to xi
     for (size_t i = 0; i < input.nodes.size(); ++i) {
-        node_xi[i] = 2 * input.nodes[i].s - 1;
+        node_xi[i] = 2 * input.nodes[i].s_ - 1;
     }
 
     //--------------------------------------------------------------------------
-    // Populate node initial position / rotation
+    // Populate node data
     //--------------------------------------------------------------------------
 
-    // Loop through nodes and save initial position and rotation
+    // Loop through nodes
     for (size_t j = 0; j < input.nodes.size(); ++j) {
-        node_x0(j, 0) = input.nodes[j].x[0];
-        node_x0(j, 1) = input.nodes[j].x[1];
-        node_x0(j, 2) = input.nodes[j].x[2];
-        node_x0(j, 3) = input.nodes[j].r[0];
-        node_x0(j, 4) = input.nodes[j].r[1];
-        node_x0(j, 5) = input.nodes[j].r[2];
-        node_x0(j, 6) = input.nodes[j].r[3];
+        // Transfer initial position
+        for (size_t k = 0; k < input.nodes[j].x_.size(); ++k) {
+            node_x0(j, k) = input.nodes[j].x_[k];
+        }
+
+        // Transfer initial displacement
+        for (size_t k = 0; k < input.nodes[j].q_.size(); ++k) {
+            node_u(j, k) = input.nodes[j].q_[k];
+        }
+
+        // Transfer initial velocity
+        for (size_t k = 0; k < input.nodes[j].v_.size(); ++k) {
+            node_u_dot(j, k) = input.nodes[j].v_[k];
+        }
+
+        // Transfer initial acceleration
+        for (size_t k = 0; k < input.nodes[j].a_.size(); ++k) {
+            node_u_ddot(j, k) = input.nodes[j].a_[k];
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -138,6 +151,9 @@ Beams InitializeBeams(std::vector<BeamInput> elem_inputs) {
 
     auto host_elem_indices = Kokkos::create_mirror(beams.elem_indices);
     auto host_node_x0 = Kokkos::create_mirror(beams.node_x0);
+    auto host_node_u = Kokkos::create_mirror(beams.node_u);
+    auto host_node_u_dot = Kokkos::create_mirror(beams.node_u_dot);
+    auto host_node_u_ddot = Kokkos::create_mirror(beams.node_u_ddot);
 
     auto host_qp_weight = Kokkos::create_mirror(beams.qp_weight);
     auto host_qp_Mstar = Kokkos::create_mirror(beams.qp_Mstar);
@@ -166,14 +182,18 @@ Beams InitializeBeams(std::vector<BeamInput> elem_inputs) {
         qp_counter += num_qps;
 
         // Populate element index
-        beams.elem_indices[i].num_nodes = num_nodes;
-        beams.elem_indices[i].node_range = node_range;
-        beams.elem_indices[i].num_qps = num_qps;
-        beams.elem_indices[i].qp_range = qp_range;
+        host_elem_indices[i].num_nodes = num_nodes;
+        host_elem_indices[i].node_range = node_range;
+        host_elem_indices[i].num_qps = num_qps;
+        host_elem_indices[i].qp_range = qp_range;
 
         // Populate views for this element
         PopulateElementViews(
-            elem_inputs[i], Kokkos::subview(host_node_x0, node_range, Kokkos::ALL),
+            elem_inputs[i],  // Element inputs
+            Kokkos::subview(host_node_x0, node_range, Kokkos::ALL),
+            Kokkos::subview(host_node_u, node_range, Kokkos::ALL),
+            Kokkos::subview(host_node_u_dot, node_range, Kokkos::ALL),
+            Kokkos::subview(host_node_u_ddot, node_range, Kokkos::ALL),
             Kokkos::subview(host_qp_weight, qp_range),
             Kokkos::subview(host_qp_Mstar, qp_range, Kokkos::ALL, Kokkos::ALL),
             Kokkos::subview(host_qp_Cstar, qp_range, Kokkos::ALL, Kokkos::ALL),
@@ -189,6 +209,9 @@ Beams InitializeBeams(std::vector<BeamInput> elem_inputs) {
     // Copy from host to device
     Kokkos::deep_copy(beams.elem_indices, host_elem_indices);
     Kokkos::deep_copy(beams.node_x0, host_node_x0);
+    Kokkos::deep_copy(beams.node_u, host_node_u);
+    Kokkos::deep_copy(beams.node_u_dot, host_node_u_dot);
+    Kokkos::deep_copy(beams.node_u_ddot, host_node_u_ddot);
     Kokkos::deep_copy(beams.qp_weight, host_qp_weight);
     Kokkos::deep_copy(beams.qp_Mstar, host_qp_Mstar);
     Kokkos::deep_copy(beams.qp_Cstar, host_qp_Cstar);
@@ -218,7 +241,7 @@ Beams InitializeBeams(std::vector<BeamInput> elem_inputs) {
         InterpolateQPRotation{beams.elem_indices, beams.shape_interp, beams.node_x0, beams.qp_r0}
     );
 
-    // Calculate derivative of position and get x0_prime
+    // Calculate derivative of position (Jacobian) and x0_prime
     Kokkos::parallel_for(
         "CalculateJacobian", beams.num,
         CalculateJacobian{
@@ -230,86 +253,17 @@ Beams InitializeBeams(std::vector<BeamInput> elem_inputs) {
         }
     );
 
+    // Interpolate initial state to quadrature points
+    Kokkos::parallel_for(
+        "InterpolateQPState", beams.num,
+        InterpolateQPState{
+            beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
+            beams.node_u, beams.node_u_dot, beams.node_u_ddot, beams.qp_u, beams.qp_u_prime,
+            beams.qp_r, beams.qp_r_prime, beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot,
+            beams.qp_omega_dot}
+    );
+
     return beams;
-}
-
-KOKKOS_FUNCTION
-void InterpMatMul3(View_NxN shape_matrix, View_Nx3 node_v, View_Nx3 qp_v) {
-    Kokkos::deep_copy(qp_v, 0.);
-    for (size_t i = 0; i < node_v.extent(0); ++i) {
-        for (size_t j = 0; j < qp_v.extent(0); ++j) {
-            for (size_t k = 0; k < 3; ++k) {
-                qp_v(j, k) += node_v(i, k) * shape_matrix(i, j);
-            }
-        }
-    }
-}
-
-KOKKOS_FUNCTION
-void InterpMatMul4(View_NxN shape_matrix, View_Nx4 node_v, View_Nx4 qp_v) {
-    Kokkos::deep_copy(qp_v, 0.);
-    for (size_t i = 0; i < node_v.extent(0); ++i) {
-        for (size_t j = 0; j < qp_v.extent(0); ++j) {
-            for (size_t k = 0; k < 4; ++k) {
-                qp_v(j, k) += node_v(i, k) * shape_matrix(i, j);
-            }
-        }
-    }
-}
-
-KOKKOS_FUNCTION
-void InterpQuaternion(View_NxN shape_matrix, View_Nx4 node_v, View_Nx4 qp_v) {
-    // Initialize to zero
-    Kokkos::deep_copy(qp_v, 0.);
-
-    // Interpolate quaternion components
-    for (size_t i = 0; i < node_v.extent(0); ++i) {
-        for (size_t j = 0; j < qp_v.extent(0); ++j) {
-            for (size_t k = 0; k < 4; ++k) {
-                qp_v(j, k) += node_v(i, k) * shape_matrix(i, j);
-            }
-        }
-    }
-
-    // Normalize quaternions (rows)
-    for (size_t j = 0; j < qp_v.extent(0); ++j) {
-        auto length = Kokkos::sqrt(
-            Kokkos::pow(qp_v(j, 0), 2) + Kokkos::pow(qp_v(j, 1), 2) + Kokkos::pow(qp_v(j, 2), 2) +
-            Kokkos::pow(qp_v(j, 3), 2)
-        );
-        if (length == 0.) {
-            qp_v(j, 0) = 1.;
-            qp_v(j, 3) = 0.;
-            qp_v(j, 2) = 0.;
-            qp_v(j, 1) = 0.;
-        } else {
-            qp_v(j, 0) /= length;
-            qp_v(j, 3) /= length;
-            qp_v(j, 2) /= length;
-            qp_v(j, 1) /= length;
-        }
-    }
-}
-
-KOKKOS_FUNCTION
-void InterpDeriv3(View_NxN shape_matrix, View_N jacobian, View_Nx3 node_v, View_Nx3 qp_v) {
-    InterpMatMul3(shape_matrix, node_v, qp_v);
-    for (size_t j = 0; j < qp_v.extent(0); ++j) {
-        qp_v(j, 0) /= jacobian(j);
-        qp_v(j, 1) /= jacobian(j);
-        qp_v(j, 2) /= jacobian(j);
-    }
-}
-
-KOKKOS_FUNCTION
-void InterpDeriv4(View_NxN shape_matrix, View_N jacobian, View_Nx4 node_v, View_Nx4 qp_v) {
-    InterpMatMul4(shape_matrix, node_v, qp_v);
-    for (size_t j = 0; j < qp_v.extent(0); ++j) {
-        qp_v(j, 0) /= jacobian(j);
-        qp_v(j, 1) /= jacobian(j);
-        qp_v(j, 2) /= jacobian(j);
-        qp_v(j, 4) /= jacobian(j);
-    }
 }
 
 }  // namespace oturb
