@@ -19,16 +19,22 @@ using View1D_Vector = Kokkos::View<double[VectorComponents]>;
 using View1D_LieAlgebra = Kokkos::View<double[LieAlgebraComponents]>;
 using View1D_LieGroup = Kokkos::View<double[LieGroupComponents]>;
 
+using View_Rot = Kokkos::View<double[3][3]>;
 using View_3x3 = Kokkos::View<double[3][3]>;
+using View_3x4 = Kokkos::View<double[3][4]>;
 using View_6x6 = Kokkos::View<double[6][6]>;
 
 using View_N = Kokkos::View<double*>;
+using View_3 = Kokkos::View<double[3]>;
+using View_Quat = Kokkos::View<double[4]>;
+
 using View_NxN = Kokkos::View<double**>;
 using View_Nx3 = Kokkos::View<double* [3]>;
 using View_Nx4 = Kokkos::View<double* [4]>;
 using View_Nx6 = Kokkos::View<double* [6]>;
 using View_Nx7 = Kokkos::View<double* [7]>;
 
+using View_Nx3x4 = Kokkos::View<double* [3][4]>;
 using View_Nx3x3 = Kokkos::View<double* [3][3]>;
 using View_Nx6x6 = Kokkos::View<double* [6][6]>;
 

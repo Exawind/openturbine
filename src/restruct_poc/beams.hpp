@@ -202,8 +202,6 @@ struct CalculateJacobian {
                 Kokkos::pow(qp_pos_deriv(j, 2), 2.)
             );
 
-            printf("%f\n", qp_jacobian(j));
-
             // Apply Jacobian to row
             qp_pos_deriv(j, 0) /= qp_jacobian(j);
             qp_pos_deriv(j, 1) /= qp_jacobian(j);
@@ -281,12 +279,98 @@ struct InterpolateQPState {
     }
 };
 
+struct CalculateRR0 {
+    oturb::View_Nx4 qp_r0_;     // quadrature point initial rotation
+    oturb::View_Nx4 qp_r_;      // quadrature rotation displacement
+    oturb::View_Nx4 qRR0_;      // quaternion composition of RR0
+    oturb::View_Nx6x6 qp_RR0_;  // quadrature global rotation
+
+    KOKKOS_FUNCTION void operator()(const size_t i_qp) const {
+        auto qR = Kokkos::subview(qp_r_, i_qp, Kokkos::ALL);
+        auto qR0 = Kokkos::subview(qp_r0_, i_qp, Kokkos::ALL);
+        auto qRR0 = Kokkos::subview(qRR0_, i_qp, Kokkos::ALL);
+        auto RR0_11 =
+            Kokkos::subview(qp_RR0_, i_qp, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
+        auto RR0_22 =
+            Kokkos::subview(qp_RR0_, i_qp, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+        QuaternionCompose(qR, qR0, qRR0);
+        QuaternionToRotationMatrix(qRR0, RR0_11);
+        Kokkos::deep_copy(RR0_22, RR0_11);
+    }
+};
+
+struct CalculateMuu {
+    oturb::View_Nx6x6 qp_RR0_;    //
+    oturb::View_Nx6x6 qp_Mstar_;  //
+    oturb::View_Nx6x6 qp_Muu_;    //
+    oturb::View_Nx6x6 qp_Mtmp_;   //
+
+    KOKKOS_FUNCTION
+    void operator()(const size_t i_qp) const {
+        auto RR0 = Kokkos::subview(qp_RR0_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Mstar = Kokkos::subview(qp_Mstar_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Muu = Kokkos::subview(qp_Muu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Mtmp = Kokkos::subview(qp_Mtmp_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        MatMulAB(RR0, Mstar, Mtmp);
+        MatMulABT(Mtmp, RR0, Muu);
+    }
+};
+
+struct CalculateCuu {
+    oturb::View_Nx6x6 qp_RR0_;    //
+    oturb::View_Nx6x6 qp_Cstar_;  //
+    oturb::View_Nx6x6 qp_Cuu_;    //
+    oturb::View_Nx6x6 qp_Ctmp_;   //
+
+    KOKKOS_FUNCTION
+    void operator()(const size_t i_qp) const {
+        auto RR0 = Kokkos::subview(qp_RR0_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Cstar = Kokkos::subview(qp_Cstar_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Cuu = Kokkos::subview(qp_Cuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Ctmp = Kokkos::subview(qp_Ctmp_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        MatMulAB(RR0, Cstar, Ctmp);
+        MatMulABT(Ctmp, RR0, Cuu);
+    }
+};
+
+struct CalculateStrain {
+    oturb::View_Nx3 qp_x0_prime_;  //
+    oturb::View_Nx3 qp_u_prime_;   //
+    oturb::View_Nx4 qp_r_;         //
+    oturb::View_Nx4 qp_r_prime_;   //
+    oturb::View_Nx3x4 qp_E_;       //
+    oturb::View_Nx3 qp_V_;         //
+    oturb::View_Nx6 qp_strain_;    //
+
+    KOKKOS_FUNCTION
+    void operator()(const size_t i_qp) const {
+        auto x0_prime = Kokkos::subview(qp_x0_prime_, i_qp, Kokkos::ALL);
+        auto u_prime = Kokkos::subview(qp_u_prime_, i_qp, Kokkos::ALL);
+        auto R = Kokkos::subview(qp_r_, i_qp, Kokkos::ALL);
+        auto R_prime = Kokkos::subview(qp_r_prime_, i_qp, Kokkos::ALL);
+        auto E = Kokkos::subview(qp_E_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto R_x0_prime = Kokkos::subview(qp_V_, i_qp, Kokkos::ALL);
+        auto e1 = Kokkos::subview(qp_strain_, i_qp, Kokkos::make_pair(0, 3));
+        auto e2 = Kokkos::subview(qp_strain_, i_qp, Kokkos::make_pair(3, 6));
+
+        QuaternionRotateVector(R, x0_prime, R_x0_prime);
+        QuaternionDerivative(R, E);
+        MatVecMulAB(E, R_prime, e2);
+        for (size_t i = 0; i < 3; i++) {
+            e1(i) = x0_prime(i) + u_prime(i) - R_x0_prime(i);
+            e2(i) *= 2.;
+        }
+    }
+};
+
 //------------------------------------------------------------------------------
 // Beams data structure
 //------------------------------------------------------------------------------
 
 struct Beams {
-    size_t num;  // Number of beams
+    size_t num_beams_;  // Number of beams
+    size_t num_nodes_;  // Number of nodes
+    size_t num_qps_;    // Number of quadrature points
 
     Kokkos::View<BeamElemIndices*> elem_indices;  // View of element node and qp indices into views
     Kokkos::View<int*> node_state_indices;        // State row index for each node
@@ -338,55 +422,74 @@ struct Beams {
     oturb::View_NxN shape_interp;  // shape function matrix for interpolation [Nodes x QPs]
     oturb::View_NxN shape_deriv;   // shape function matrix for derivative interp [Nodes x QPs]
 
-    Beams(const size_t NumBeams, const size_t NumNodes, const size_t NumQPs, const size_t MaxElemQPs)
-        : num(NumBeams),
+    // Scratch variables to be replaced later
+    oturb::View_Nx6x6 M1_6x6;  //
+    oturb::View_Nx3x4 M_3x4;   //
+    oturb::View_Nx3x3 R1_3x3;  //
+    oturb::View_Nx3x3 R2_3x3;  //
+    oturb::View_Nx3 V_3;       //
+    oturb::View_Nx4 qp_quat;   //
+
+    Beams(
+        const size_t num_beams, const size_t num_nodes, const size_t num_qps,
+        const size_t max_elem_qps
+    )
+        : num_beams_(num_beams),
+          num_nodes_(num_nodes),
+          num_qps_(num_qps),
           // Element Data
-          elem_indices("elem_indices", NumBeams),
-          node_state_indices("node_state_indices", NumNodes),
+          elem_indices("elem_indices", num_beams),
+          node_state_indices("node_state_indices", num_nodes),
           // Node Data
-          node_x0("node_x0", NumNodes),
-          node_u("node_u", NumNodes),
-          node_u_dot("node_u_dot", NumNodes),
-          node_u_ddot("node_u_ddot", NumNodes),
-          node_force_app("node_force_app", NumNodes),
-          node_force_elastic("node_force_elastic", NumNodes),
-          node_force_gravity("node_force_gravity", NumNodes),
-          node_force_inertial("node_force_inertial", NumNodes),
-          node_force_external("node_force_external", NumNodes),
-          node_residual("node_residual", NumNodes),
-          node_iteration("node_iteration", NumNodes, NumNodes),
+          node_x0("node_x0", num_nodes),
+          node_u("node_u", num_nodes),
+          node_u_dot("node_u_dot", num_nodes),
+          node_u_ddot("node_u_ddot", num_nodes),
+          node_force_app("node_force_app", num_nodes),
+          node_force_elastic("node_force_elastic", num_nodes),
+          node_force_gravity("node_force_gravity", num_nodes),
+          node_force_inertial("node_force_inertial", num_nodes),
+          node_force_external("node_force_external", num_nodes),
+          node_residual("node_residual", num_nodes),
+          node_iteration("node_iteration", num_nodes, num_nodes),
           // Quadrature Point data
-          qp_weight("qp_weight", NumQPs),
-          qp_jacobian("qp_jacobian", NumQPs),
-          qp_Mstar("qp_Mstar", NumQPs),
-          qp_Cstar("qp_Cstar", NumQPs),
-          qp_x0("qp_x0", NumQPs),
-          qp_x0_prime("qp_x0_prime", NumQPs),
-          qp_r0("qp_r0", NumQPs),
-          qp_u("qp_u", NumQPs),
-          qp_u_prime("qp_u_prime", NumQPs),
-          qp_u_dot("qp_u_dot", NumQPs),
-          qp_u_ddot("qp_u_ddot", NumQPs),
-          qp_r("qp_r", NumQPs),
-          qp_r_prime("qp_r_prime", NumQPs),
-          qp_omega("qp_omega", NumQPs),
-          qp_omega_dot("qp_omega_dot", NumQPs),
-          qp_strain("qp_strain", NumQPs),
-          qp_Fc("qp_Fc", NumQPs),
-          qp_Fd("qp_Fd", NumQPs),
-          qp_Fi("qp_Fi", NumQPs),
-          qp_Fg("qp_Fg", NumQPs),
-          qp_Fext("qp_Fext", NumQPs),
-          qp_RR0("qp_RR0", NumQPs),
-          qp_Muu("qp_Muu", NumQPs),
-          qp_Cuu("qp_Cuu", NumQPs),
-          qp_Ouu("qp_Ouu", NumQPs),
-          qp_Puu("qp_Puu", NumQPs),
-          qp_Quu("qp_Quu", NumQPs),
-          qp_Guu("qp_Guu", NumQPs),
-          qp_Kuu("qp_Kuu", NumQPs),
-          shape_interp("shape_interp", NumNodes, MaxElemQPs),
-          shape_deriv("deriv_interp", NumNodes, MaxElemQPs) {}
+          qp_weight("qp_weight", num_qps),
+          qp_jacobian("qp_jacobian", num_qps),
+          qp_Mstar("qp_Mstar", num_qps),
+          qp_Cstar("qp_Cstar", num_qps),
+          qp_x0("qp_x0", num_qps),
+          qp_x0_prime("qp_x0_prime", num_qps),
+          qp_r0("qp_r0", num_qps),
+          qp_u("qp_u", num_qps),
+          qp_u_prime("qp_u_prime", num_qps),
+          qp_u_dot("qp_u_dot", num_qps),
+          qp_u_ddot("qp_u_ddot", num_qps),
+          qp_r("qp_r", num_qps),
+          qp_r_prime("qp_r_prime", num_qps),
+          qp_omega("qp_omega", num_qps),
+          qp_omega_dot("qp_omega_dot", num_qps),
+          qp_strain("qp_strain", num_qps),
+          qp_Fc("qp_Fc", num_qps),
+          qp_Fd("qp_Fd", num_qps),
+          qp_Fi("qp_Fi", num_qps),
+          qp_Fg("qp_Fg", num_qps),
+          qp_Fext("qp_Fext", num_qps),
+          qp_RR0("qp_RR0", num_qps),
+          qp_Muu("qp_Muu", num_qps),
+          qp_Cuu("qp_Cuu", num_qps),
+          qp_Ouu("qp_Ouu", num_qps),
+          qp_Puu("qp_Puu", num_qps),
+          qp_Quu("qp_Quu", num_qps),
+          qp_Guu("qp_Guu", num_qps),
+          qp_Kuu("qp_Kuu", num_qps),
+          shape_interp("shape_interp", num_nodes, max_elem_qps),
+          shape_deriv("deriv_interp", num_nodes, max_elem_qps),
+          M1_6x6("M1_6x6", num_qps),
+          M_3x4("M_3x4", num_qps),
+          R1_3x3("R1_3x3", num_qps),
+          R2_3x3("R2_3x3", num_qps),
+          V_3("V_3", num_qps),
+          qp_quat("Quat_4", num_qps) {}
 
     // Update node states (displacement, velocity, acceleration) and interpolate to quadrature points
     void UpdateState(View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
@@ -409,12 +512,51 @@ struct Beams {
 
         // Interpolate node state to quadrature points
         Kokkos::parallel_for(
-            "InterpolateQPState", this->num,
+            "InterpolateQPState", this->num_beams_,
             InterpolateQPState{
                 this->elem_indices, this->shape_interp, this->shape_deriv, this->qp_jacobian,
                 this->node_u, this->node_u_dot, this->node_u_ddot, this->qp_u, this->qp_u_prime,
                 this->qp_r, this->qp_r_prime, this->qp_u_dot, this->qp_omega, this->qp_u_ddot,
                 this->qp_omega_dot}
+        );
+    }
+
+    void CalculateQPData() {
+        // Calculate RR0 matrix
+        Kokkos::parallel_for(
+            "CalculateRR0", this->num_qps_,
+            CalculateRR0{
+                this->qp_r0,
+                this->qp_r,
+                this->qp_quat,
+                this->qp_RR0,
+            }
+        );
+
+        // Calculate Muu matrix
+        Kokkos::parallel_for(
+            "CalculateMuu", this->num_qps_,
+            CalculateMuu{this->qp_RR0, this->qp_Mstar, this->qp_Muu, this->M1_6x6}
+        );
+
+        // Calculate Cuu matrix
+        Kokkos::parallel_for(
+            "CalculateCuu", this->num_qps_,
+            CalculateCuu{this->qp_RR0, this->qp_Cstar, this->qp_Cuu, this->M1_6x6}
+        );
+
+        // Calculate strain
+        Kokkos::parallel_for(
+            "CalculateStrain", this->num_qps_,
+            CalculateStrain{
+                this->qp_x0_prime,
+                this->qp_u_prime,
+                this->qp_r,
+                this->qp_r_prime,
+                this->M_3x4,
+                this->V_3,
+                this->qp_strain,
+            }
         );
     }
 };

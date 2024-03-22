@@ -231,19 +231,19 @@ Beams InitializeBeams(std::vector<BeamInput> elem_inputs) {
 
     // Interpolate node positions to quadrature points
     Kokkos::parallel_for(
-        "InterpolateQPPosition", beams.num,
+        "InterpolateQPPosition", beams.num_beams_,
         InterpolateQPPosition{beams.elem_indices, beams.shape_interp, beams.node_x0, beams.qp_x0}
     );
 
     // Interpolate node rotations to quadrature points
     Kokkos::parallel_for(
-        "InterpolateQPRotation", beams.num,
+        "InterpolateQPRotation", beams.num_beams_,
         InterpolateQPRotation{beams.elem_indices, beams.shape_interp, beams.node_x0, beams.qp_r0}
     );
 
     // Calculate derivative of position (Jacobian) and x0_prime
     Kokkos::parallel_for(
-        "CalculateJacobian", beams.num,
+        "CalculateJacobian", beams.num_beams_,
         CalculateJacobian{
             beams.elem_indices,
             beams.shape_deriv,
@@ -255,7 +255,7 @@ Beams InitializeBeams(std::vector<BeamInput> elem_inputs) {
 
     // Interpolate initial state to quadrature points
     Kokkos::parallel_for(
-        "InterpolateQPState", beams.num,
+        "InterpolateQPState", beams.num_beams_,
         InterpolateQPState{
             beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
             beams.node_u, beams.node_u_dot, beams.node_u_ddot, beams.qp_u, beams.qp_u_prime,
