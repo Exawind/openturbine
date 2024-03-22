@@ -76,12 +76,68 @@ void InterpVector4Deriv(
     }
 }
 
+//------------------------------------------------------------------------------
+// Vector
+//------------------------------------------------------------------------------
+
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatVecMulAB(View_A A, View_B B, View_C C) {
     Kokkos::deep_copy(C, 0.);
     for (size_t i = 0; i < A.extent(0); ++i) {
         for (size_t k = 0; k < B.extent(0); ++k) {
             C(i) += A(i, k) * B(k);
+        }
+    }
+}
+
+template <typename View_A, typename View_B, typename View_C>
+KOKKOS_INLINE_FUNCTION void MatVecMulATB(View_A A, View_B B, View_C C) {
+    Kokkos::deep_copy(C, 0.);
+    for (size_t i = 0; i < A.extent(1); ++i) {
+        for (size_t k = 0; k < B.extent(0); ++k) {
+            C(i) += A(k, i) * B(k);
+        }
+    }
+}
+
+template <typename View_3x3>
+KOKKOS_INLINE_FUNCTION void VecTilde(View_3 vector, View_3x3 matrix) {
+    matrix(0, 0) = 0.;
+    matrix(0, 1) = -vector(2);
+    matrix(0, 2) = vector(1);
+    matrix(1, 0) = vector(2);
+    matrix(1, 1) = 0.;
+    matrix(1, 2) = -vector(0);
+    matrix(2, 0) = -vector(1);
+    matrix(2, 1) = vector(0);
+    matrix(2, 2) = 0.;
+}
+
+template <typename V1, typename V2>
+KOKKOS_INLINE_FUNCTION void VecScale(V1 v_in, double scale, V2 v_out) {
+    for (size_t i = 0; i < v_in.extent(0); ++i) {
+        v_out(i) = v_in(i) * scale;
+    }
+}
+
+//------------------------------------------------------------------------------
+// Matrix
+//------------------------------------------------------------------------------
+
+template <typename A, typename B>
+KOKKOS_INLINE_FUNCTION void MatScale(A m_in, double scale, B m_out) {
+    for (size_t i = 0; i < m_in.extent(0); ++i) {
+        for (size_t j = 0; j < m_in.extent(1); ++j) {
+            m_out(i) = m_in(i) * scale;
+        }
+    }
+}
+
+template <typename View_A, typename View_B, typename View_C>
+KOKKOS_INLINE_FUNCTION void MatAdd(View_A M_A, View_B M_B, View_C M_C) {
+    for (size_t i = 0; i < M_A.extent(0); ++i) {
+        for (size_t j = 0; j < M_A.extent(1); ++j) {
+            M_C(i, j) = M_A(i, j) + M_B(i, j);
         }
     }
 }
@@ -120,19 +176,6 @@ KOKKOS_INLINE_FUNCTION void MatMulABT(View_A A, View_B BT, View_C C) {
             }
         }
     }
-}
-
-template <typename View_3x3>
-KOKKOS_INLINE_FUNCTION void VecTilde(View_3 vector, View_3x3 matrix) {
-    matrix(0, 0) = 0.;
-    matrix(0, 1) = -vector(2);
-    matrix(0, 2) = vector(1);
-    matrix(1, 0) = vector(2);
-    matrix(1, 1) = 0.;
-    matrix(1, 2) = -vector(0);
-    matrix(2, 0) = -vector(1);
-    matrix(2, 1) = vector(0);
-    matrix(2, 2) = 0.;
 }
 
 /// Populates a 3x3 rotation matrix from a 4x1 quaternion

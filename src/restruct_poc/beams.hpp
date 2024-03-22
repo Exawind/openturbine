@@ -363,6 +363,197 @@ struct CalculateStrain {
     }
 };
 
+struct CalculateForces {
+    oturb::View_3 gravity;               //
+    oturb::View_Nx6x6 qp_Muu_;           //
+    oturb::View_Nx6x6 qp_Cuu_;           //
+    oturb::View_Nx3 qp_x0_prime_;        //
+    oturb::View_Nx3 qp_u_prime_;         //
+    oturb::View_Nx3 qp_u_ddot_;          //
+    oturb::View_Nx3 qp_omega_;           //
+    oturb::View_Nx3 qp_omega_dot_;       //
+    oturb::View_Nx6 qp_strain_;          //
+    oturb::View_Nx3x3 eta_tilde_;        //
+    oturb::View_Nx3x3 omega_tilde_;      //
+    oturb::View_Nx3x3 omega_dot_tilde_;  //
+    oturb::View_Nx3x3 x0pupSS_;          //
+    oturb::View_Nx3x3 M_tilde_;          //
+    oturb::View_Nx3x3 N_tilde_;          //
+    oturb::View_Nx3x3 rho_;              //
+    oturb::View_Nx3 eta_;                //
+    oturb::View_Nx3 v_;                  // temporary vector
+    oturb::View_Nx3x3 m3_;               // temporary matrix
+    oturb::View_Nx6 qp_FC_;              //
+    oturb::View_Nx6 qp_FD_;              //
+    oturb::View_Nx6 qp_FI_;              //
+    oturb::View_Nx6 qp_FG_;              //
+    oturb::View_Nx6x6 qp_Ouu_;           //
+    oturb::View_Nx6x6 qp_Puu_;           //
+    oturb::View_Nx6x6 qp_Quu_;           //
+    oturb::View_Nx6x6 qp_Guu_;           //
+    oturb::View_Nx6x6 qp_Kuu_;           //
+
+    KOKKOS_FUNCTION
+    void operator()(const size_t i_qp) const {
+        auto Muu = Kokkos::subview(qp_Muu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Cuu = Kokkos::subview(qp_Cuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto x0_prime = Kokkos::subview(qp_x0_prime_, i_qp, Kokkos::ALL);
+        auto u_prime = Kokkos::subview(qp_u_prime_, i_qp, Kokkos::ALL);
+        auto u_ddot = Kokkos::subview(qp_u_ddot_, i_qp, Kokkos::ALL);
+        auto omega = Kokkos::subview(qp_omega_, i_qp, Kokkos::ALL);
+        auto omega_dot = Kokkos::subview(qp_omega_dot_, i_qp, Kokkos::ALL);
+        auto strain = Kokkos::subview(qp_strain_, i_qp, Kokkos::ALL);
+        auto eta_tilde = Kokkos::subview(eta_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto omega_tilde = Kokkos::subview(omega_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto omega_dot_tilde = Kokkos::subview(omega_dot_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto x0pupSS = Kokkos::subview(x0pupSS_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto M_tilde = Kokkos::subview(M_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto N_tilde = Kokkos::subview(N_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
+        auto v = Kokkos::subview(v_, i_qp, Kokkos::ALL);
+        auto m3 = Kokkos::subview(m3_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto FC = Kokkos::subview(qp_FC_, i_qp, Kokkos::ALL);
+        auto FD = Kokkos::subview(qp_FD_, i_qp, Kokkos::ALL);
+        auto FI = Kokkos::subview(qp_FI_, i_qp, Kokkos::ALL);
+        auto FG = Kokkos::subview(qp_FG_, i_qp, Kokkos::ALL);
+        auto Ouu = Kokkos::subview(qp_Ouu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Puu = Kokkos::subview(qp_Puu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Quu = Kokkos::subview(qp_Quu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Guu = Kokkos::subview(qp_Guu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Kuu = Kokkos::subview(qp_Kuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+
+        auto C11 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
+        auto C12 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
+        auto C21 = Kokkos::subview(Cuu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
+
+        // Mass matrix components
+        auto m = Muu(0, 0);
+        if (m == 0.) {
+            Kokkos::deep_copy(eta, 0.);
+        } else {
+            eta(0) = Muu(5, 1) / m;
+            eta(1) = -Muu(5, 0) / m;
+            eta(2) = Muu(4, 0) / m;
+        }
+        Kokkos::deep_copy(
+            rho, Kokkos::subview(Muu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6))
+        );
+        VecTilde(eta, eta_tilde);
+
+        // Temporary variable used in many other calcs
+        for (size_t i = 0; i < 3; i++) {
+            v(i) = x0_prime(i) + u_prime(i);
+        }
+        VecTilde(v, x0pupSS);
+
+        // Elastic Force FC and it's components
+        MatVecMulAB(Cuu, strain, FC);
+        auto N = Kokkos::subview(FC, Kokkos::make_pair(0, 3));
+        auto M = Kokkos::subview(FC, Kokkos::make_pair(3, 6));
+        VecTilde(M, M_tilde);
+        VecTilde(N, N_tilde);
+
+        // Elastic Force FD and it's components
+        Kokkos::deep_copy(FD, 0.);
+        MatVecMulATB(x0pupSS, N, Kokkos::subview(FD, Kokkos::make_pair(3, 6)));
+
+        // Inertial forces
+        VecTilde(omega, omega_tilde);
+        VecTilde(omega_dot, omega_dot_tilde);
+        auto FI_1 = Kokkos::subview(FI, Kokkos::make_pair(0, 3));
+        MatMulAB(omega_tilde, omega_tilde, m3);
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                m3(i, j) += omega_dot_tilde(i, j);
+                m3(i, j) *= m;
+            }
+        }
+        MatVecMulAB(m3, eta, FI_1);
+        for (size_t i = 0; i < 3; i++) {
+            FI_1(i) += u_ddot(i) * m;
+        }
+        auto FI_2 = Kokkos::subview(FI, Kokkos::make_pair(3, 6));
+        VecScale(u_ddot, m, v);
+        MatVecMulAB(eta_tilde, v, FI_2);
+        MatVecMulAB(rho, omega_dot, v);
+        for (size_t i = 0; i < 3; i++) {
+            FI_2(i) += v(i);
+        }
+        MatMulAB(omega_tilde, rho, m3);
+        MatVecMulAB(m3, omega, v);
+        for (size_t i = 0; i < 3; i++) {
+            FI_2(i) += v(i);
+        }
+
+        // Gravity force
+        VecScale(gravity, m, v);
+        Kokkos::deep_copy(Kokkos::subview(FG, Kokkos::make_pair(0, 3)), v);
+        MatVecMulAB(eta_tilde, v, Kokkos::subview(FG, Kokkos::make_pair(3, 6)));
+
+        // Ouu
+        Kokkos::deep_copy(Ouu, 0.);
+        auto Ouu_12 = Kokkos::subview(Ouu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
+        auto Ouu_22 = Kokkos::subview(Ouu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+        MatMulAB(C11, x0pupSS, Ouu_12);
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                Ouu_12(i, j) -= N_tilde(i, j);
+            }
+        }
+        MatMulAB(C21, x0pupSS, Ouu_22);
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                Ouu_22(i, j) -= M_tilde(i, j);
+            }
+        }
+
+        // Puu
+        Kokkos::deep_copy(Puu, 0.);
+        auto Puu_21 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
+        MatMulATB(x0pupSS, C11, Puu_21);
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                Puu_21(i, j) += N_tilde(i, j);
+            }
+        }
+        auto Puu_22 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+        MatMulATB(x0pupSS, C12, Puu_22);
+
+        // Quu
+        Kokkos::deep_copy(Quu, 0.);
+        auto Quu_22 = Kokkos::subview(Quu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+        MatMulAB(C11, x0pupSS, m3);
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                m3(i, j) -= N_tilde(i, j);
+            }
+        }
+        MatMulATB(x0pupSS, m3, Quu_22);
+
+        // Inertia gyroscopic matrix
+        Kokkos::deep_copy(Guu, 0.);
+        // self.Guu.fixed_view_mut::<3, 3>(0, 3).copy_from(
+        //     &((omega.tilde() * m * eta).tilde().transpose()
+        //         + omega.tilde() * m * eta.tilde().transpose()),
+        // );
+        // self.Guu
+        //     .fixed_view_mut::<3, 3>(3, 3)
+        //     .copy_from(&(omega.tilde() * rho - (rho * omega).tilde()));
+
+        // Inertia stiffness matrix
+        Kokkos::deep_copy(Kuu, 0.);
+        // self.Kuu.fixed_view_mut::<3, 3>(0, 3).copy_from(
+        //     &((omega_dot.tilde() + omega.tilde() * omega.tilde()) * m * eta.tilde().transpose()),
+        // );
+        // self.Kuu.fixed_view_mut::<3, 3>(3, 3).copy_from(
+        //     &(u_ddot.tilde() * m * eta.tilde()
+        //         + (rho * omega_dot.tilde() - (rho * omega_dot).tilde())
+        //         + omega.tilde() * (rho * omega.tilde() - (rho * omega).tilde())),
+        // );
+    }
+};
+
 //------------------------------------------------------------------------------
 // Beams data structure
 //------------------------------------------------------------------------------
@@ -374,6 +565,8 @@ struct Beams {
 
     Kokkos::View<BeamElemIndices*> elem_indices;  // View of element node and qp indices into views
     Kokkos::View<int*> node_state_indices;        // State row index for each node
+
+    oturb::View_3 gravity;
 
     // Node-based data
     oturb::View_Nx7 node_x0;              // Inital position/rotation
@@ -423,11 +616,19 @@ struct Beams {
     oturb::View_NxN shape_deriv;   // shape function matrix for derivative interp [Nodes x QPs]
 
     // Scratch variables to be replaced later
-    oturb::View_Nx6x6 M1_6x6;  //
+    oturb::View_Nx6x6 M_6x6;   //
     oturb::View_Nx3x4 M_3x4;   //
-    oturb::View_Nx3x3 R1_3x3;  //
-    oturb::View_Nx3x3 R2_3x3;  //
-    oturb::View_Nx3 V_3;       //
+    oturb::View_Nx3x3 M1_3x3;  //
+    oturb::View_Nx3x3 M2_3x3;  //
+    oturb::View_Nx3x3 M3_3x3;  //
+    oturb::View_Nx3x3 M4_3x3;  //
+    oturb::View_Nx3x3 M5_3x3;  //
+    oturb::View_Nx3x3 M6_3x3;  //
+    oturb::View_Nx3x3 M7_3x3;  //
+    oturb::View_Nx3x3 M8_3x3;  //
+    oturb::View_Nx3 V1_3;      //
+    oturb::View_Nx3 V2_3;      //
+    oturb::View_Nx3 V3_3;      //
     oturb::View_Nx4 qp_quat;   //
 
     Beams(
@@ -440,6 +641,7 @@ struct Beams {
           // Element Data
           elem_indices("elem_indices", num_beams),
           node_state_indices("node_state_indices", num_nodes),
+          gravity("gravity"),
           // Node Data
           node_x0("node_x0", num_nodes),
           node_u("node_u", num_nodes),
@@ -484,11 +686,20 @@ struct Beams {
           qp_Kuu("qp_Kuu", num_qps),
           shape_interp("shape_interp", num_nodes, max_elem_qps),
           shape_deriv("deriv_interp", num_nodes, max_elem_qps),
-          M1_6x6("M1_6x6", num_qps),
+          // Scratch
+          M_6x6("M1_6x6", num_qps),
           M_3x4("M_3x4", num_qps),
-          R1_3x3("R1_3x3", num_qps),
-          R2_3x3("R2_3x3", num_qps),
-          V_3("V_3", num_qps),
+          M1_3x3("R1_3x3", num_qps),
+          M2_3x3("R1_3x3", num_qps),
+          M3_3x3("R1_3x3", num_qps),
+          M4_3x3("R1_3x3", num_qps),
+          M5_3x3("R1_3x3", num_qps),
+          M6_3x3("R1_3x3", num_qps),
+          M7_3x3("R1_3x3", num_qps),
+          M8_3x3("R1_3x3", num_qps),
+          V1_3("V_3", num_qps),
+          V2_3("V_3", num_qps),
+          V3_3("V_3", num_qps),
           qp_quat("Quat_4", num_qps) {}
 
     // Update node states (displacement, velocity, acceleration) and interpolate to quadrature points
@@ -536,13 +747,13 @@ struct Beams {
         // Calculate Muu matrix
         Kokkos::parallel_for(
             "CalculateMuu", this->num_qps_,
-            CalculateMuu{this->qp_RR0, this->qp_Mstar, this->qp_Muu, this->M1_6x6}
+            CalculateMuu{this->qp_RR0, this->qp_Mstar, this->qp_Muu, this->M_6x6}
         );
 
         // Calculate Cuu matrix
         Kokkos::parallel_for(
             "CalculateCuu", this->num_qps_,
-            CalculateCuu{this->qp_RR0, this->qp_Cstar, this->qp_Cuu, this->M1_6x6}
+            CalculateCuu{this->qp_RR0, this->qp_Cstar, this->qp_Cuu, this->M_6x6}
         );
 
         // Calculate strain
@@ -554,8 +765,22 @@ struct Beams {
                 this->qp_r,
                 this->qp_r_prime,
                 this->M_3x4,
-                this->V_3,
+                this->V1_3,
                 this->qp_strain,
+            }
+        );
+
+        // Calculate Forces
+        Kokkos::parallel_for(
+            "CalculateForces", this->num_qps_,
+            CalculateForces{
+                this->gravity,    this->qp_Muu,    this->qp_Cuu,   this->qp_x0_prime,
+                this->qp_u_prime, this->qp_u_ddot, this->qp_omega, this->qp_omega_dot,
+                this->qp_strain,  this->M1_3x3,    this->M2_3x3,   this->M3_3x3,
+                this->M4_3x3,     this->M5_3x3,    this->M6_3x3,   this->M7_3x3,
+                this->V1_3,       this->V2_3,      this->M8_3x3,   this->qp_Fc,
+                this->qp_Fd,      this->qp_Fi,     this->qp_Fg,    this->qp_Ouu,
+                this->qp_Puu,     this->qp_Quu,    this->qp_Guu,   this->qp_Kuu,
             }
         );
     }
