@@ -381,7 +381,8 @@ struct CalculateForces {
     oturb::View_Nx3x3 N_tilde_;          //
     oturb::View_Nx3x3 rho_;              //
     oturb::View_Nx3 eta_;                //
-    oturb::View_Nx3 v_;                  // temporary vector
+    oturb::View_Nx3 v1_;                 // temporary vector
+    oturb::View_Nx3 v2_;                 // temporary vector
     oturb::View_Nx3x3 m3_;               // temporary matrix
     oturb::View_Nx6 qp_FC_;              //
     oturb::View_Nx6 qp_FD_;              //
@@ -411,8 +412,9 @@ struct CalculateForces {
         auto N_tilde = Kokkos::subview(N_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
-        auto v = Kokkos::subview(v_, i_qp, Kokkos::ALL);
-        auto m3 = Kokkos::subview(m3_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto V1 = Kokkos::subview(v1_, i_qp, Kokkos::ALL);
+        auto V2 = Kokkos::subview(v2_, i_qp, Kokkos::ALL);
+        auto Mt = Kokkos::subview(m3_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto FC = Kokkos::subview(qp_FC_, i_qp, Kokkos::ALL);
         auto FD = Kokkos::subview(qp_FD_, i_qp, Kokkos::ALL);
         auto FI = Kokkos::subview(qp_FI_, i_qp, Kokkos::ALL);
@@ -443,9 +445,9 @@ struct CalculateForces {
 
         // Temporary variable used in many other calcs
         for (size_t i = 0; i < 3; i++) {
-            v(i) = x0_prime(i) + u_prime(i);
+            V1(i) = x0_prime(i) + u_prime(i);
         }
-        VecTilde(v, x0pupSS);
+        VecTilde(V1, x0pupSS);
 
         // Elastic Force FC and it's components
         MatVecMulAB(Cuu, strain, FC);
@@ -462,34 +464,34 @@ struct CalculateForces {
         VecTilde(omega, omega_tilde);
         VecTilde(omega_dot, omega_dot_tilde);
         auto FI_1 = Kokkos::subview(FI, Kokkos::make_pair(0, 3));
-        MatMulAB(omega_tilde, omega_tilde, m3);
+        MatMulAB(omega_tilde, omega_tilde, Mt);
         for (size_t i = 0; i < 3; i++) {
             for (size_t j = 0; j < 3; j++) {
-                m3(i, j) += omega_dot_tilde(i, j);
-                m3(i, j) *= m;
+                Mt(i, j) += omega_dot_tilde(i, j);
+                Mt(i, j) *= m;
             }
         }
-        MatVecMulAB(m3, eta, FI_1);
+        MatVecMulAB(Mt, eta, FI_1);
         for (size_t i = 0; i < 3; i++) {
             FI_1(i) += u_ddot(i) * m;
         }
         auto FI_2 = Kokkos::subview(FI, Kokkos::make_pair(3, 6));
-        VecScale(u_ddot, m, v);
-        MatVecMulAB(eta_tilde, v, FI_2);
-        MatVecMulAB(rho, omega_dot, v);
+        VecScale(u_ddot, m, V1);
+        MatVecMulAB(eta_tilde, V1, FI_2);
+        MatVecMulAB(rho, omega_dot, V1);
         for (size_t i = 0; i < 3; i++) {
-            FI_2(i) += v(i);
+            FI_2(i) += V1(i);
         }
-        MatMulAB(omega_tilde, rho, m3);
-        MatVecMulAB(m3, omega, v);
+        MatMulAB(omega_tilde, rho, Mt);
+        MatVecMulAB(Mt, omega, V1);
         for (size_t i = 0; i < 3; i++) {
-            FI_2(i) += v(i);
+            FI_2(i) += V1(i);
         }
 
         // Gravity force
-        VecScale(gravity, m, v);
-        Kokkos::deep_copy(Kokkos::subview(FG, Kokkos::make_pair(0, 3)), v);
-        MatVecMulAB(eta_tilde, v, Kokkos::subview(FG, Kokkos::make_pair(3, 6)));
+        VecScale(gravity, m, V1);
+        Kokkos::deep_copy(Kokkos::subview(FG, Kokkos::make_pair(0, 3)), V1);
+        MatVecMulAB(eta_tilde, V1, Kokkos::subview(FG, Kokkos::make_pair(3, 6)));
 
         // Ouu
         Kokkos::deep_copy(Ouu, 0.);
@@ -523,23 +525,38 @@ struct CalculateForces {
         // Quu
         Kokkos::deep_copy(Quu, 0.);
         auto Quu_22 = Kokkos::subview(Quu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        MatMulAB(C11, x0pupSS, m3);
+        MatMulAB(C11, x0pupSS, Mt);
         for (size_t i = 0; i < 3; i++) {
             for (size_t j = 0; j < 3; j++) {
-                m3(i, j) -= N_tilde(i, j);
+                Mt(i, j) -= N_tilde(i, j);
             }
         }
-        MatMulATB(x0pupSS, m3, Quu_22);
+        MatMulATB(x0pupSS, Mt, Quu_22);
 
         // Inertia gyroscopic matrix
         Kokkos::deep_copy(Guu, 0.);
-        // self.Guu.fixed_view_mut::<3, 3>(0, 3).copy_from(
-        //     &((omega.tilde() * m * eta).tilde().transpose()
-        //         + omega.tilde() * m * eta.tilde().transpose()),
-        // );
-        // self.Guu
-        //     .fixed_view_mut::<3, 3>(3, 3)
-        //     .copy_from(&(omega.tilde() * rho - (rho * omega).tilde()));
+        // omega.tilde() * m * eta.tilde().t() + (omega.tilde() * m * eta).tilde().t()
+        auto Guu_12 = Kokkos::subview(Guu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
+        VecScale(eta, m, V1);
+        VecTilde(V1, Mt);
+        MatMulABT(omega_tilde, Mt, Guu_12);
+        MatVecMulAB(omega_tilde, V1, V2);
+        VecTilde(V2, Mt);
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                Guu_12(i, j) += Mt(j, i);
+            }
+        }
+        // Guu_22 = omega.tilde() * rho - (rho * omega).tilde()
+        auto Guu_22 = Kokkos::subview(Guu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+        MatMulAB(omega_tilde, rho, Guu_22);
+        MatVecMulAB(rho, omega, V1);
+        VecTilde(V1, Mt);
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                Guu_22(i, j) -= Mt(i, j);
+            }
+        }
 
         // Inertia stiffness matrix
         Kokkos::deep_copy(Kuu, 0.);
@@ -778,9 +795,10 @@ struct Beams {
                 this->qp_u_prime, this->qp_u_ddot, this->qp_omega, this->qp_omega_dot,
                 this->qp_strain,  this->M1_3x3,    this->M2_3x3,   this->M3_3x3,
                 this->M4_3x3,     this->M5_3x3,    this->M6_3x3,   this->M7_3x3,
-                this->V1_3,       this->V2_3,      this->M8_3x3,   this->qp_Fc,
-                this->qp_Fd,      this->qp_Fi,     this->qp_Fg,    this->qp_Ouu,
-                this->qp_Puu,     this->qp_Quu,    this->qp_Guu,   this->qp_Kuu,
+                this->V1_3,       this->V2_3,      this->V3_3,     this->M8_3x3,
+                this->qp_Fc,      this->qp_Fd,     this->qp_Fi,    this->qp_Fg,
+                this->qp_Ouu,     this->qp_Puu,    this->qp_Quu,   this->qp_Guu,
+                this->qp_Kuu,
             }
         );
     }
