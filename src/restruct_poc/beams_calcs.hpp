@@ -538,7 +538,8 @@ struct CalculateForces {
     oturb::View_Nx3 eta_;                //
     oturb::View_Nx3 v1_;                 // temporary vector
     oturb::View_Nx3 v2_;                 // temporary vector
-    oturb::View_Nx3x3 m3_;               // temporary matrix
+    oturb::View_Nx3x3 M1_;               // temporary matrix
+    oturb::View_Nx3x3 M2_;               // temporary matrix
     oturb::View_Nx6 qp_FC_;              //
     oturb::View_Nx6 qp_FD_;              //
     oturb::View_Nx6 qp_FI_;              //
@@ -569,7 +570,8 @@ struct CalculateForces {
         auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
         auto V1 = Kokkos::subview(v1_, i_qp, Kokkos::ALL);
         auto V2 = Kokkos::subview(v2_, i_qp, Kokkos::ALL);
-        auto Mt = Kokkos::subview(m3_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto M1 = Kokkos::subview(M1_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto M2 = Kokkos::subview(M2_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto FC = Kokkos::subview(qp_FC_, i_qp, Kokkos::ALL);
         auto FD = Kokkos::subview(qp_FD_, i_qp, Kokkos::ALL);
         auto FI = Kokkos::subview(qp_FI_, i_qp, Kokkos::ALL);
@@ -619,14 +621,14 @@ struct CalculateForces {
         VecTilde(omega, omega_tilde);
         VecTilde(omega_dot, omega_dot_tilde);
         auto FI_1 = Kokkos::subview(FI, Kokkos::make_pair(0, 3));
-        MatMulAB(omega_tilde, omega_tilde, Mt);
+        MatMulAB(omega_tilde, omega_tilde, M1);
         for (size_t i = 0; i < 3; i++) {
             for (size_t j = 0; j < 3; j++) {
-                Mt(i, j) += omega_dot_tilde(i, j);
-                Mt(i, j) *= m;
+                M1(i, j) += omega_dot_tilde(i, j);
+                M1(i, j) *= m;
             }
         }
-        MatVecMulAB(Mt, eta, FI_1);
+        MatVecMulAB(M1, eta, FI_1);
         for (size_t i = 0; i < 3; i++) {
             FI_1(i) += u_ddot(i) * m;
         }
@@ -637,8 +639,8 @@ struct CalculateForces {
         for (size_t i = 0; i < 3; i++) {
             FI_2(i) += V1(i);
         }
-        MatMulAB(omega_tilde, rho, Mt);
-        MatVecMulAB(Mt, omega, V1);
+        MatMulAB(omega_tilde, rho, M1);
+        MatVecMulAB(M1, omega, V1);
         for (size_t i = 0; i < 3; i++) {
             FI_2(i) += V1(i);
         }
@@ -680,49 +682,78 @@ struct CalculateForces {
         // Quu
         Kokkos::deep_copy(Quu, 0.);
         auto Quu_22 = Kokkos::subview(Quu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        MatMulAB(C11, x0pupSS, Mt);
+        MatMulAB(C11, x0pupSS, M1);
         for (size_t i = 0; i < 3; i++) {
             for (size_t j = 0; j < 3; j++) {
-                Mt(i, j) -= N_tilde(i, j);
+                M1(i, j) -= N_tilde(i, j);
             }
         }
-        MatMulATB(x0pupSS, Mt, Quu_22);
+        MatMulATB(x0pupSS, M1, Quu_22);
 
         // Inertia gyroscopic matrix
         Kokkos::deep_copy(Guu, 0.);
         // omega.tilde() * m * eta.tilde().t() + (omega.tilde() * m * eta).tilde().t()
         auto Guu_12 = Kokkos::subview(Guu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         VecScale(eta, m, V1);
-        VecTilde(V1, Mt);
-        MatMulABT(omega_tilde, Mt, Guu_12);
+        VecTilde(V1, M1);
+        MatMulABT(omega_tilde, M1, Guu_12);
         MatVecMulAB(omega_tilde, V1, V2);
-        VecTilde(V2, Mt);
+        VecTilde(V2, M1);
         for (size_t i = 0; i < 3; i++) {
             for (size_t j = 0; j < 3; j++) {
-                Guu_12(i, j) += Mt(j, i);
+                Guu_12(i, j) += M1(j, i);
             }
         }
         // Guu_22 = omega.tilde() * rho - (rho * omega).tilde()
         auto Guu_22 = Kokkos::subview(Guu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         MatMulAB(omega_tilde, rho, Guu_22);
         MatVecMulAB(rho, omega, V1);
-        VecTilde(V1, Mt);
+        VecTilde(V1, M1);
         for (size_t i = 0; i < 3; i++) {
             for (size_t j = 0; j < 3; j++) {
-                Guu_22(i, j) -= Mt(i, j);
+                Guu_22(i, j) -= M1(i, j);
             }
         }
 
         // Inertia stiffness matrix
         Kokkos::deep_copy(Kuu, 0.);
-        // self.Kuu.fixed_view_mut::<3, 3>(0, 3).copy_from(
-        //     &((omega_dot.tilde() + omega.tilde() * omega.tilde()) * m * eta.tilde().transpose()),
-        // );
-        // self.Kuu.fixed_view_mut::<3, 3>(3, 3).copy_from(
-        //     &(u_ddot.tilde() * m * eta.tilde()
-        //         + (rho * omega_dot.tilde() - (rho * omega_dot).tilde())
-        //         + omega.tilde() * (rho * omega.tilde() - (rho * omega).tilde())),
-        // );
+        auto Kuu_12 = Kokkos::subview(Kuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
+        MatMulAB(omega_tilde, omega_tilde, M1);
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                M1(i, j) += omega_dot_tilde(i, j);
+            }
+        }
+        VecScale(eta, m, V1);
+        VecTilde(V1, M2);
+        MatMulABT(M1, M2, Kuu_12);
+        auto Kuu_22 = Kokkos::subview(Kuu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+        VecTilde(u_ddot, M1);
+        VecScale(eta, m, V1);
+        VecTilde(V1, M2);
+        MatMulAB(M1, M2, Kuu_22);
+        MatMulAB(rho, omega_dot_tilde, M1);
+        MatVecMulAB(rho, omega_dot, V1);
+        VecTilde(V1, M2);
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                Kuu_22(i, j) += M1(i, j) - M2(i, j);
+            }
+        }
+        MatMulAB(rho, omega_tilde, M1);
+        MatVecMulAB(rho, omega, V1);
+        VecTilde(V1, M2);
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                M1(i, j) -= M2(i, j);
+            }
+        }
+        MatMulAB(omega_tilde, M1, M2);
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = 0; j < 3; j++) {
+                Kuu_22(i, j) += M2(i, j);
+            }
+        }
     }
 };
 

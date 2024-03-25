@@ -116,6 +116,10 @@ struct BeamsInit {
     }
 };
 
+//------------------------------------------------------------------------------
+// Element initialization
+//------------------------------------------------------------------------------
+
 void PopulateElementViews(
     const BeamInput& input, View_Nx7 node_x0, View_Nx7 node_u, View_Nx6 node_u_dot,
     View_Nx6 node_u_ddot, View_N qp_weight, View_Nx6x6 qp_Mstar, View_Nx6x6 qp_Cstar,
@@ -304,6 +308,7 @@ struct Beams {
     oturb::View_Nx3x3 M6_3x3;  //
     oturb::View_Nx3x3 M7_3x3;  //
     oturb::View_Nx3x3 M8_3x3;  //
+    oturb::View_Nx3x3 M9_3x3;  //
     oturb::View_Nx3 V1_3;      //
     oturb::View_Nx3 V2_3;      //
     oturb::View_Nx3 V3_3;      //
@@ -510,6 +515,7 @@ struct Beams {
           M6_3x3("R1_3x3", num_qps),
           M7_3x3("R1_3x3", num_qps),
           M8_3x3("R1_3x3", num_qps),
+          M9_3x3("R1_3x3", num_qps),
           V1_3("V_3", num_qps),
           V2_3("V_3", num_qps),
           V3_3("V_3", num_qps),
@@ -592,9 +598,9 @@ struct Beams {
                 this->qp_strain,  this->M1_3x3,    this->M2_3x3,   this->M3_3x3,
                 this->M4_3x3,     this->M5_3x3,    this->M6_3x3,   this->M7_3x3,
                 this->V1_3,       this->V2_3,      this->V3_3,     this->M8_3x3,
-                this->qp_Fc,      this->qp_Fd,     this->qp_Fi,    this->qp_Fg,
-                this->qp_Ouu,     this->qp_Puu,    this->qp_Quu,   this->qp_Guu,
-                this->qp_Kuu,
+                this->M9_3x3,     this->qp_Fc,     this->qp_Fd,    this->qp_Fi,
+                this->qp_Fg,      this->qp_Ouu,    this->qp_Puu,   this->qp_Quu,
+                this->qp_Guu,     this->qp_Kuu,
             }
         );
     }
