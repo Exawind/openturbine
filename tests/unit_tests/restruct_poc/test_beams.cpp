@@ -7,154 +7,179 @@
 
 namespace oturb::restruct_poc::tests {
 
-std::vector<std::vector<double>> Array6x6ToVector(std::array<std::array<double, 6>, 6> A) {
-    std::vector<std::vector<double>> B(6);
-    for (int i = 0; i < 6; ++i) {
-        B[i] = std::vector<double>(6);
-        for (int j = 0; j < 6; ++j) {
-            B[i][j] = A[i][j];
-        }
+class BeamsTest : public testing::Test {
+protected:
+    // Per-test-suite set-up.
+    // Called before the first test in this test suite.
+    // Can be omitted if not needed.
+    static void SetUpTestSuite() {
+        // Stiffness matrix for uniform composite beam section
+        std::array<std::array<double, 6>, 6> stiffness_matrix = {{
+            {1., 2., 3., 4., 5., 6.},
+            {2., 4., 6., 8., 10., 12.},
+            {3., 6., 9., 12., 15., 18.},
+            {4., 8., 12., 16., 20., 24.},
+            {5., 10., 15., 20., 25., 30.},
+            {6., 12., 18., 24., 30., 36.},
+        }};
+
+        // Mass matrix for uniform composite beam section
+        std::array<std::array<double, 6>, 6> mass_matrix = {{
+            {2., 0., 0., 0., 0.6, -0.4},
+            {0., 2., 0., -0.6, 0., 0.2},
+            {0., 0., 2., 0.4, -0.2, 0.},
+            {0., -0.6, 0.4, 1., 2., 3.},
+            {0.6, 0., -0.2, 2., 4., 6.},
+            {-0.4, 0.2, 0., 3., 6., 9.},
+        }};
+
+        std::array<double, 3> gravity = {0., 0., 9.81};
+
+        // Define beam initialization
+        BeamsInit beams_init{
+            gravity,
+            {
+                BeamInput(
+                    openturbine::gebt_poc::UserDefinedQuadrature(
+                        {-0.9491079123427585, -0.7415311855993943, -0.40584515137739696,
+                         6.123233995736766e-17, 0.4058451513773971, 0.7415311855993945,
+                         0.9491079123427585},
+                        {0.1294849661688697, 0.27970539148927664, 0.3818300505051189,
+                         0.4179591836734694, 0.3818300505051189, 0.27970539148927664,
+                         0.1294849661688697}
+                    ),
+                    {
+                        BeamNode(
+                            0.,
+                            {0, 0, 0, 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
+                             -0.18831121859148398},  // x0
+                            {0, 0, 0, 1, 0, 0, 0},   // q
+                            {0, 0, 0, 0, 0, 0},      // v
+                            {0, 0, 0, 0, 0, 0}       // a
+                        ),
+                        BeamNode(
+                            0.1726731646460114,
+                            {0.863365823230057, -0.2558982639254171, 0.11304112106827427,
+                             0.9950113028068008, -0.002883848832932071, -0.030192109815745303,
+                             -0.09504013471947484},  // x0
+                            {0.002981602178886856, -0.00246675949494302, 0.003084570715675624,
+                             0.9999627302042724, 0.008633550973807708, 0, 0},  // q
+                            {0.01726731646460114, -0.014285714285714285, 0.003084570715675624,
+                             0.01726731646460114, -0.014285714285714285, 0.003084570715675624},  // v
+                            {0.01726731646460114, -0.011304112106827427, 0.00606617289456248,
+                             0.01726731646460114, -0.014285714285714285, -0.014285714285714285}  // a
+                        ),
+                        BeamNode(
+                            0.5,
+                            {2.5, -0.25, 0, 0.9904718430204884, -0.009526411091536478,
+                             0.09620741150793366, 0.09807604012323785},  // x0
+                            {0.025, -0.0125, 0.027500000000000004, 0.9996875162757026,
+                             0.02499739591471221, 0, 0},  // q
+                            {0.05, -0.025, 0.027500000000000004, 0.05, -0.025,
+                             0.027500000000000004},                                // v
+                            {0.05, 0, 0.052500000000000005, 0.05, -0.025, -0.025}  // a
+
+                        ),
+                        BeamNode(
+                            0.82732683535398865,
+                            {4.1366341767699435, 0.39875540678256005, -0.5416125496397031,
+                             0.9472312341234699, -0.04969214162931507, 0.18127630174800594,
+                             0.25965858850765167},  // x0
+                            {0.06844696924968459, -0.011818954790771264, 0.07977257214146725,
+                             0.9991445348823055, 0.04135454527402512, 0, 0},  // q
+                            {0.08273268353539887, -0.01428571428571428, 0.07977257214146725,
+                             0.08273268353539887, -0.01428571428571428, 0.07977257214146725},  // v
+                            {0.08273268353539887, 0.05416125496397031, 0.14821954139115184,
+                             0.08273268353539887, -0.01428571428571428, -0.01428571428571428}  // a
+
+                        ),
+                        BeamNode(
+                            1.,
+                            {5, 1, -1, 0.9210746582719719, -0.07193653093139739, 0.20507529985516368,
+                             0.32309554437664584},                                          // x0
+                            {0.1, 0, 0.12, 0.9987502603949663, 0.04997916927067825, 0, 0},  // q
+                            {0.1, 0, 0.12, 0.1, 0, 0.12},                                   // v
+                            {0.1, 0.1, 0.22000000000000003, 0.1, 0, 0}                      // a
+                        ),
+                    },
+                    {
+                        BeamSection(0., mass_matrix, stiffness_matrix),
+                        BeamSection(1., mass_matrix, stiffness_matrix),
+                    }
+                ),
+            }};
+
+        // Initialize beams from element inputs
+        beams_ = new Beams(beams_init);
+
+        // Calculate the quadrature point data
+        beams_->CalculateQPData();
     }
-    return B;
-}
 
-TEST(BeamsTest, InitializeBeamsStruct) {
-    // Stiffness matrix for uniform composite beam section
-    std::array<std::array<double, 6>, 6> stiffness_matrix = {{
-        {1., 2., 3., 4., 5., 6.},
-        {2., 4., 6., 8., 10., 12.},
-        {3., 6., 9., 12., 15., 18.},
-        {4., 8., 12., 16., 20., 24.},
-        {5., 10., 15., 20., 25., 30.},
-        {6., 12., 18., 24., 30., 36.},
-    }};
+    // Per-test-suite tear-down.
+    // Called after the last test in this test suite.
+    // Can be omitted if not needed.
+    static void TearDownTestSuite() {
+        delete beams_;
+        beams_ = nullptr;
+    }
 
-    // Mass matrix for uniform composite beam section
-    std::array<std::array<double, 6>, 6> mass_matrix = {{
-        {2., 0., 0., 0., 0.6, -0.4},
-        {0., 2., 0., -0.6, 0., 0.2},
-        {0., 0., 2., 0.4, -0.2, 0.},
-        {0., -0.6, 0.4, 1., 2., 3.},
-        {0.6, 0., -0.2, 2., 4., 6.},
-        {-0.4, 0.2, 0., 3., 6., 9.},
-    }};
+    // You can define per-test set-up logic as usual.
+    //   void SetUp() override { ... }
 
-    // Define beam initialization
-    std::vector<BeamInput> beam_elem_inputs = {BeamInput(
-        openturbine::gebt_poc::UserDefinedQuadrature(
-            {-0.9491079123427585, -0.7415311855993943, -0.40584515137739696, 6.123233995736766e-17,
-             0.4058451513773971, 0.7415311855993945, 0.9491079123427585},
-            {0.1294849661688697, 0.27970539148927664, 0.3818300505051189, 0.4179591836734694,
-             0.3818300505051189, 0.27970539148927664, 0.1294849661688697}
-        ),
-        {
-            BeamNode(
-                0.,
-                {0, 0, 0, 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
-                 -0.18831121859148398},  // x0
-                {0, 0, 0, 1, 0, 0, 0},   // q
-                {0, 0, 0, 0, 0, 0},      // v
-                {0, 0, 0, 0, 0, 0}       // a
-            ),
-            BeamNode(
-                0.1726731646460114,
-                {0.863365823230057, -0.2558982639254171, 0.11304112106827427, 0.9950113028068008,
-                 -0.002883848832932071, -0.030192109815745303, -0.09504013471947484},  // x0
-                {0.002981602178886856, -0.00246675949494302, 0.003084570715675624,
-                 0.9999627302042724, 0.008633550973807708, 0, 0},  // q
-                {0.01726731646460114, -0.014285714285714285, 0.003084570715675624,
-                 0.01726731646460114, -0.014285714285714285, 0.003084570715675624},  // v
-                {0.01726731646460114, -0.011304112106827427, 0.00606617289456248,
-                 0.01726731646460114, -0.014285714285714285, -0.014285714285714285}  // a
-            ),
-            BeamNode(
-                0.5,
-                {2.5, -0.25, 0, 0.9904718430204884, -0.009526411091536478, 0.09620741150793366,
-                 0.09807604012323785},  // x0
-                {0.025, -0.0125, 0.027500000000000004, 0.9996875162757026, 0.02499739591471221, 0,
-                 0},                                                                       // q
-                {0.05, -0.025, 0.027500000000000004, 0.05, -0.025, 0.027500000000000004},  // v
-                {0.05, 0, 0.052500000000000005, 0.05, -0.025, -0.025}                      // a
+    // You can define per-test tear-down logic as usual.
+    //   void TearDown() override { ... }
 
-            ),
-            BeamNode(
-                0.82732683535398865,
-                {4.1366341767699435, 0.39875540678256005, -0.5416125496397031, 0.9472312341234699,
-                 -0.04969214162931507, 0.18127630174800594, 0.25965858850765167},  // x0
-                {0.06844696924968459, -0.011818954790771264, 0.07977257214146725, 0.9991445348823055,
-                 0.04135454527402512, 0, 0},  // q
-                {0.08273268353539887, -0.01428571428571428, 0.07977257214146725, 0.08273268353539887,
-                 -0.01428571428571428, 0.07977257214146725},  // v
-                {0.08273268353539887, 0.05416125496397031, 0.14821954139115184, 0.08273268353539887,
-                 -0.01428571428571428, -0.01428571428571428}  // a
+    // Some expensive resource shared by all tests.
+    static Beams* beams_;
+};
 
-            ),
-            BeamNode(
-                1.,
-                {5, 1, -1, 0.9210746582719719, -0.07193653093139739, 0.20507529985516368,
-                 0.32309554437664584},                                          // x0
-                {0.1, 0, 0.12, 0.9987502603949663, 0.04997916927067825, 0, 0},  // q
-                {0.1, 0, 0.12, 0.1, 0, 0.12},                                   // v
-                {0.1, 0.1, 0.22000000000000003, 0.1, 0, 0}                      // a
-            ),
-        },
-        {
-            BeamSection(0., mass_matrix, stiffness_matrix),
-            BeamSection(1., mass_matrix, stiffness_matrix),
-        }
-    )};
+Beams* BeamsTest::beams_ = nullptr;
 
-    std::array<double, 3> gravity = {0., 0., 9.81};
-
-    // Initialize beams from element inputs
-    auto beams = InitializeBeams(beam_elem_inputs, gravity);
-
-    // Calculate the quadrature point data
-    beams.CalculateQPData();
-
+TEST_F(BeamsTest, InitializeBeamsStruct) {
     //--------------------------------------------------------------------------
     // Check that node values are properly initialized from inputs
     //--------------------------------------------------------------------------
 
-    // Node x0
-    std::vector<std::vector<double>> exp_node_x0;
-    for (const auto& node : beam_elem_inputs[0].nodes) {
-        exp_node_x0.push_back(std::vector<double>(std::begin(node.x_), std::end(node.x_)));
-    }
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(beams.node_x0, exp_node_x0);
+    // // Node x0
+    // std::vector<std::vector<double>> exp_node_x0;
+    // for (const auto& node : beam_elem_inputs[0].nodes) {
+    //     exp_node_x0.push_back(std::vector<double>(std::begin(node.x_), std::end(node.x_)));
+    // }
+    // openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(beams.node_x0,
+    // exp_node_x0);
 
-    // Node u
-    std::vector<std::vector<double>> exp_node_u;
-    for (const auto& node : beam_elem_inputs[0].nodes) {
-        exp_node_u.push_back(std::vector<double>(std::begin(node.q_), std::end(node.q_)));
-    }
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(beams.node_u, exp_node_u);
+    // // Node u
+    // std::vector<std::vector<double>> exp_node_u;
+    // for (const auto& node : beam_elem_inputs[0].nodes) {
+    //     exp_node_u.push_back(std::vector<double>(std::begin(node.q_), std::end(node.q_)));
+    // }
+    // openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(beams.node_u,
+    // exp_node_u);
 
-    // Node u_dot
-    std::vector<std::vector<double>> exp_node_u_dot;
-    for (const auto& node : beam_elem_inputs[0].nodes) {
-        exp_node_u_dot.push_back(std::vector<double>(std::begin(node.v_), std::end(node.v_)));
-    }
+    // // Node u_dot
+    // std::vector<std::vector<double>> exp_node_u_dot;
+    // for (const auto& node : beam_elem_inputs[0].nodes) {
+    //     exp_node_u_dot.push_back(std::vector<double>(std::begin(node.v_), std::end(node.v_)));
+    // }
+    // openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    //     beams.node_u_dot, exp_node_u_dot
+    // );
+
+    // // Node u_ddot
+    // std::vector<std::vector<double>> exp_node_u_ddot;
+    // for (const auto& node : beam_elem_inputs[0].nodes) {
+    //     exp_node_u_ddot.push_back(std::vector<double>(std::begin(node.a_),
+    //     std::end(node.a_)));
+    // }
+    // openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    //     beams.node_u_ddot, exp_node_u_ddot
+    // );
+}
+
+TEST_F(BeamsTest, ShapeFunctionInterpolationMatrix) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.node_u_dot, exp_node_u_dot
-    );
-
-    // Node u_ddot
-    std::vector<std::vector<double>> exp_node_u_ddot;
-    for (const auto& node : beam_elem_inputs[0].nodes) {
-        exp_node_u_ddot.push_back(std::vector<double>(std::begin(node.a_), std::end(node.a_)));
-    }
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.node_u_ddot, exp_node_u_ddot
-    );
-
-    //--------------------------------------------------------------------------
-    // Check that shape function matrices and jacobian are correct
-    //--------------------------------------------------------------------------
-
-    // Shape function interpolation matrix
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.shape_interp,
+        beams_->shape_interp,
         {{0.7643937937285443, 0.13706262395004942, -0.13172898316530468,
           0.000000000000000022962127484012874, 0.05567285555959517, -0.020342107108930366,
           -0.01995866709520774},
@@ -170,10 +195,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
           -0.000000000000000022962127484012877, -0.1317289831653047, 0.13706262395004964,
           0.7643937937285443}}
     );
+}
 
-    // Shape function derivative matrix
+TEST_F(BeamsTest, ShapeFunctionDerivativeMatrix) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.shape_deriv,
+        beams_->shape_deriv,
         {{-4.2701511577426, -1.9393626617606694, 0.013055310813328586, 0.375, -0.12778431702017545,
           -0.1974469591256584, 0.29092055406654616},
          {5.3820901606566505, 1.1702482430865344, -1.7874218089539982, -1.3365845776954526,
@@ -186,42 +212,56 @@ TEST(BeamsTest, InitializeBeamsStruct) {
          {-0.2909205540665461, 0.1974469591256585, 0.12778431702017526, -0.3750000000000001,
           -0.013055310813328114, 1.9393626617606703, 4.2701511577426}}
     );
+}
 
-    // Jacobian array
+TEST_F(BeamsTest, JacobianArray) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-        beams.qp_jacobian,
+        beams_->qp_jacobian,
         {2.7027484463552844, 2.585197218483525, 2.5041356900076877, 2.5980762113533173,
          2.8809584014451253, 3.2234919864103784, 3.4713669823269462}
     );
+}
 
-    //--------------------------------------------------------------------------
-    // Check that quadrature point values are properly initialized from inputs
-    //--------------------------------------------------------------------------
-
-    // Quadrature point weights
+TEST_F(BeamsTest, QuadraturePointWeights) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-        beams.qp_weight, beam_elem_inputs[0].quadrature.GetQuadratureWeights()
+        beams_->qp_weight,
+        {0.1294849661688697, 0.27970539148927664, 0.3818300505051189, 0.4179591836734694,
+         0.3818300505051189, 0.27970539148927664, 0.1294849661688697}
     );
+}
 
-    //--------------------------------------------------------------------------
-    // Check that quadrature point data is interpolated correctly
-    //--------------------------------------------------------------------------
-
-    // Interpolated mass matrix at quadrature point
+TEST_F(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.qp_Mstar, 0, Kokkos::ALL, Kokkos::ALL),
-        Array6x6ToVector(beam_elem_inputs[0].sections[0].M_star)
+        Kokkos::subview(beams_->qp_Mstar, 0, Kokkos::ALL, Kokkos::ALL),
+        {
+            {2., 0., 0., 0., 0.6, -0.4},
+            {0., 2., 0., -0.6, 0., 0.2},
+            {0., 0., 2., 0.4, -0.2, 0.},
+            {0., -0.6, 0.4, 1., 2., 3.},
+            {0.6, 0., -0.2, 2., 4., 6.},
+            {-0.4, 0.2, 0., 3., 6., 9.},
+
+        }
     );
+}
 
-    // Interpolated stiffness matrix at quadrature point
+TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInMaterialFrame) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.qp_Cstar, 0, Kokkos::ALL, Kokkos::ALL),
-        Array6x6ToVector(beam_elem_inputs[0].sections[0].C_star)
+        Kokkos::subview(beams_->qp_Cstar, 0, Kokkos::ALL, Kokkos::ALL),
+        {
+            {1., 2., 3., 4., 5., 6.},
+            {2., 4., 6., 8., 10., 12.},
+            {3., 6., 9., 12., 15., 18.},
+            {4., 8., 12., 16., 20., 24.},
+            {5., 10., 15., 20., 25., 30.},
+            {6., 12., 18., 24., 30., 36.},
+        }
     );
+}
 
-    // Quadrature point initial position
+TEST_F(BeamsTest, QuadraturePointInitialPosition) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_x0,
+        beams_->qp_x0,
         {
             {0.12723021914310378, -0.04894958421765723, 0.024151041535564563},
             {0.6461720360015141, -0.20836421838736455, 0.09583134319147545},
@@ -232,10 +272,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {4.8727697808568955, 0.9001583281251011, -0.9249568708071938},
         }
     );
+}
 
-    // Quadrature point initial position derivative
+TEST_F(BeamsTest, QuadraturePointInitialPositionDerivative) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_x0_prime,
+        beams_->qp_x0_prime,
         {
             {0.924984344499876, -0.3417491071948319, 0.16616711516322952},
             {0.9670442092872504, -0.23684722156643212, 0.09342853375847142},
@@ -246,10 +287,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.7201773862365269, 0.5541511105877541, -0.4174458994742709},
         }
     );
+}
 
-    // Quadrature point initial rotation
+TEST_F(BeamsTest, QuadraturePointInitialRotation) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_r0,
+        beams_->qp_r0,
         {
             {0.980884413320975, -0.0144723270940525, -0.0824443301646419, -0.1756680160876},
             {0.991669584564107, -0.005383778767255235, -0.04674982717307109, -0.11990372653059925},
@@ -260,10 +302,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.9248004133377579, -0.06909685323377392, 0.20225483002403755, 0.3147424408869105},
         }
     );
+}
 
-    // Quadrature point translation displacement
+TEST_F(BeamsTest, QuadraturePointTranslationalDisplacement) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_u,
+        beams_->qp_u,
         {
             {6.475011465280995e-5, -6.310248039744534e-5, 6.5079641503883e-5},
             {0.001670153200441368, -0.0014543119416486395, 0.0017133214521999145},
@@ -274,10 +317,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.09497554134892866, -0.002416751787811821, 0.113487299261152},
         }
     );
+}
 
-    // Quadrature point translation displacement derivative
+TEST_F(BeamsTest, QuadraturePointTranslationalDisplacementDerivative) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_u_prime,
+        beams_->qp_u_prime,
         {
             {0.0009414876868372848, -0.0009055519814222241, 0.0009486748279202956},
             {0.0049990154049489330, -0.0040299482162833, 0.00519282884268206},
@@ -288,10 +332,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.0280740688360788040, 0.012965473438963544, 0.03628197729108727},
         }
     );
+}
 
-    // Quadrature point rotation displacement
+TEST_F(BeamsTest, QuadraturePointRotationalDisplacement) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_r,
+        beams_->qp_r,
         {
             {0.9999991906236807, 0.001272301844556629, 0.0, 0.0},
             {0.9999791231576566, 0.006461675389885671, 0.0, 0.0},
@@ -302,10 +347,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.9988130406194091, 0.048708417020170240, 0.0, 0.0},
         }
     );
+}
 
-    // Quadrature point rotation displacement derivative
+TEST_F(BeamsTest, QuadraturePointRotationalDisplacementDerivative) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_r_prime,
+        beams_->qp_r_prime,
         {
             {-1.1768592508490864e-5, 0.009249835939573259, 0.0, 0.0},
             {-6.24872579944091e-5, 0.009670240217676533, 0.0, 0.0},
@@ -316,10 +362,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {-0.00035078700412695185, 0.0071932256346726306, 0.0, 0.0},
         }
     );
+}
 
-    // Quadrature point translation velocity
+TEST_F(BeamsTest, QuadraturePointInitialTranslationalVelocity) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_u_dot,
+        beams_->qp_u_dot,
         {
             {0.0025446043828620765, -0.0024798542682092665, 6.5079641503883e-5},
             {0.0129234407200302820, -0.0112532875195889140, 0.0017133214521999145},
@@ -330,10 +377,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.0974553956171379200, -0.0024798542682092648, 0.113487299261152},
         }
     );
+}
 
-    // Quadrature point angular velocity
+TEST_F(BeamsTest, QuadraturePointInitialAngularVelocity) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_omega,
+        beams_->qp_omega,
         {
             {0.0025446043828620765, -0.0024798542682092665, 6.5079641503883e-5},
             {0.0129234407200302820, -0.011253287519588914, 0.0017133214521999145},
@@ -344,10 +392,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.0974553956171379200, -0.0024798542682092648, 0.113487299261152},
         }
     );
+}
 
-    // Quadrature point translation acceleration
+TEST_F(BeamsTest, QuadraturePointTranslationalAcceleration) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_u_ddot,
+        beams_->qp_u_ddot,
         {
             {0.0025446043828620765, -0.0024151041535564553, 0.0001298297561566934},
             {0.012923440720030282, -0.009583134319147544, 0.003383474652641283},
@@ -358,10 +407,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.09745539561713792, 0.0924956870807194, 0.2084628406100807},
         }
     );
+}
 
-    // Quadrature point angular acceleration
+TEST_F(BeamsTest, QuadraturePointAngularAcceleration) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_omega_dot,
+        beams_->qp_omega_dot,
         {
             {0.0025446043828620765, -0.0024798542682092665, -0.0024798542682092665},
             {0.012923440720030282, -0.011253287519588914, -0.011253287519588914},
@@ -372,17 +422,15 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.09745539561713792, -0.0024798542682092648, -0.0024798542682092648},
         }
     );
+}
 
-    //--------------------------------------------------------------------------
-    // Check that quadrature point data is calculated correctly
-    //--------------------------------------------------------------------------
-
+TEST_F(BeamsTest, QuadraturePointRR0) {
     auto v = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(
-        Kokkos::subview(beams.qp_RR0, 0, Kokkos::ALL, Kokkos::ALL)
+        Kokkos::subview(beams_->qp_RR0, 0, Kokkos::ALL, Kokkos::ALL)
     );
 
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.qp_RR0, 0, Kokkos::ALL, Kokkos::ALL),
+        Kokkos::subview(beams_->qp_RR0, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {0.9246873610951006, 0.34700636042507577, -0.156652066872805, 0.0, 0.0, 0.0},
             {-0.3426571011111718, 0.937858102036658, 0.05484789423748749, 0.0, 0.0, 0.0},
@@ -392,10 +440,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.0, 0.0, 0.0, 0.16594997827377847, 0.002960788533623304, 0.9861297269843315},
         }
     );
+}
 
-    // Mass matrix in global frame
+TEST_F(BeamsTest, QuadraturePointMassMatrixInGlobalFrame) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.qp_Muu, 0, Kokkos::ALL, Kokkos::ALL),
+        Kokkos::subview(beams_->qp_Muu, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {2.000000000000001, 5.204170427930421e-17, -5.551115123125783e-17,
              -4.163336342344337e-17, 0.626052147258804, -0.3395205571349214},
@@ -411,10 +460,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
              5.3139393458205735, 9.79853227718398},
         }
     );
+}
 
-    // Stiffness matrix in global frame
+TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInGlobalFrame) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.qp_Cuu, 0, Kokkos::ALL, Kokkos::ALL),
+        Kokkos::subview(beams_->qp_Cuu, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {1.3196125048858467, 1.9501108129670985, 3.5958678677753957, 5.1623043394880055,
              4.190329885612304, 7.576404967559343},
@@ -430,10 +480,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
              24.058301996624223, 43.499066597147355},
         }
     );
+}
 
-    // Stiffness matrix in global frame
+TEST_F(BeamsTest, QuadraturePointStrain) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_strain,
+        beams_->qp_strain,
         {
             {0.0009414876868373279, -0.00048382928348705834, 0.0018188281296873943,
              0.0184996868523541, 0.0, 0.0},
@@ -451,10 +502,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
              0.0, 0.0},
         }
     );
+}
 
-    // Elastic force Fc
+TEST_F(BeamsTest, QuadraturePointElasticForceFC) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_Fc,
+        beams_->qp_Fc,
         {
             {0.10234015755301404, 0.15123731179112573, 0.2788710191555731, 0.4003531623743687,
              0.3249734441776631, 0.587574363833825},
@@ -472,10 +524,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
              -0.565277913007998, -0.34909700109374714},
         }
     );
+}
 
-    // Elastic force Fd
+TEST_F(BeamsTest, QuadraturePointElasticForceFD) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_Fd,
+        beams_->qp_Fd,
         {
             {0.0, 0.0, 0.0, 0.12083059685899937, 0.2411112242070902, -0.1751018655842517},
             {0.0, 0.0, 0.0, 0.10453073708428946, 0.33031057987442725, -0.22352273933363598},
@@ -486,10 +539,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.0, 0.0, 0.0, 0.19181469531917145, -0.16383215490377, 0.13278720752010728},
         }
     );
+}
 
-    // Inertial force Fi
+TEST_F(BeamsTest, QuadraturePointInternalForceFI) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_Fi,
+        beams_->qp_Fi,
         {
             {0.004375199541621397, -0.006996757474943007, 0.0016854280323566574,
              -0.008830739650908434, -0.01379034342897087, -0.02975324221499824},
@@ -507,10 +561,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
              0.0575214328048846, 0.13433832751076802},
         }
     );
+}
 
-    // Gravity force Fg
+TEST_F(BeamsTest, QuadraturePointGravityForceFg) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        beams.qp_Fg,
+        beams_->qp_Fg,
         {
             {0.0, 0.0, 19.620000000000008, 3.33069666549358, -2.2538354951632575, 0.0},
             {0.0, 0.0, 19.620000000000005, 3.395755863205606, -2.293994529332462, 0.0},
@@ -521,10 +576,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0.0, 0.0, 19.620000000000015, 5.230522791902463, -0.964616792447741, 0.0},
         }
     );
+}
 
-    // Matrix Ouu
+TEST_F(BeamsTest, QuadraturePointMatrixOuu) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.qp_Ouu, 0, Kokkos::ALL, Kokkos::ALL),
+        Kokkos::subview(beams_->qp_Ouu, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {0., 0., 0., 1.558035187754702, 3.3878498808227704, -2.4090666622503774},
             {0., 0., 0., 2.023578567654382, 4.594419401889352, -3.2342585893237827},
@@ -534,10 +590,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0., 0., 0., 9.270255102567306, 17.449495035002304, -12.963070176574703},
         }
     );
+}
 
-    // Matrix Puu
+TEST_F(BeamsTest, QuadraturePointMatrixPuu) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.qp_Puu, 0, Kokkos::ALL, Kokkos::ALL),
+        Kokkos::subview(beams_->qp_Puu, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {0., 0., 0., 0., 0., 0.},
             {0., 0., 0., 0., 0., 0.},
@@ -550,10 +607,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
              -7.169566648400663, -12.963070176574703},
         }
     );
+}
 
-    // Matrix Quu
+TEST_F(BeamsTest, QuadraturePointMatrixQuu) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.qp_Quu, 0, Kokkos::ALL, Kokkos::ALL),
+        Kokkos::subview(beams_->qp_Quu, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {0., 0., 0., 0., 0., 0.},
             {0., 0., 0., 0., 0., 0.},
@@ -563,10 +621,11 @@ TEST(BeamsTest, InitializeBeamsStruct) {
             {0., 0., 0., -2.4075516854952794, -5.414954154362819, 3.820161491912928},
         }
     );
+}
 
-    // Matrix Guu
+TEST_F(BeamsTest, QuadraturePointMatrixGuu) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.qp_Guu, 0, Kokkos::ALL, Kokkos::ALL),
+        Kokkos::subview(beams_->qp_Guu, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {0., 0., 0., -0.0008012182534494841, 0.002003432464632351, 0.0015631511018243545},
             {0., 0., 0., -0.002297634478952118, 0.0006253629923483924, -0.0015967098417843995},
