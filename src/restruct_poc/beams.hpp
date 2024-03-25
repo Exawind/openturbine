@@ -805,6 +805,9 @@ struct Beams {
 };
 
 // Initialize structure from array of beam element inputs
-Beams InitializeBeams(std::vector<BeamInput> elem_inputs);
+Beams InitializeBeams(
+    std::vector<BeamInput> elem_inputs,
+    std::array<double, 3> gravity = std::array<double, 3>({0., 0., 0.})
+);
 
 }  // namespace oturb

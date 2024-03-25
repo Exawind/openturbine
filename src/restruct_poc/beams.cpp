@@ -120,7 +120,7 @@ void PopulateElementViews(
     }
 }
 
-Beams InitializeBeams(std::vector<BeamInput> elem_inputs) {
+Beams InitializeBeams(std::vector<BeamInput> elem_inputs, std::array<double, 3> gravity) {
     //--------------------------------------------------------------------------
     // Calc number of beams, nodes, quadrature points for sizing Beams views
     //--------------------------------------------------------------------------
@@ -149,6 +149,8 @@ Beams InitializeBeams(std::vector<BeamInput> elem_inputs) {
     // Create host mirror of relevant views for initialization from input data
     //--------------------------------------------------------------------------
 
+    auto host_gravity = Kokkos::create_mirror(beams.gravity);
+
     auto host_elem_indices = Kokkos::create_mirror(beams.elem_indices);
     auto host_node_x0 = Kokkos::create_mirror(beams.node_x0);
     auto host_node_u = Kokkos::create_mirror(beams.node_u);
@@ -161,6 +163,14 @@ Beams InitializeBeams(std::vector<BeamInput> elem_inputs) {
 
     auto host_shape_interp = Kokkos::create_mirror(beams.shape_interp);
     auto host_shape_deriv = Kokkos::create_mirror(beams.shape_deriv);
+
+    //--------------------------------------------------------------------------
+    // Set gravity
+    //--------------------------------------------------------------------------
+
+    host_gravity(0) = gravity[0];
+    host_gravity(1) = gravity[1];
+    host_gravity(2) = gravity[2];
 
     //--------------------------------------------------------------------------
     // Populate indices and element host views from input data
@@ -207,6 +217,7 @@ Beams InitializeBeams(std::vector<BeamInput> elem_inputs) {
     //--------------------------------------------------------------------------
 
     // Copy from host to device
+    Kokkos::deep_copy(beams.gravity, host_gravity);
     Kokkos::deep_copy(beams.elem_indices, host_elem_indices);
     Kokkos::deep_copy(beams.node_x0, host_node_x0);
     Kokkos::deep_copy(beams.node_u, host_node_u);

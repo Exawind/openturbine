@@ -104,14 +104,10 @@ TEST(BeamsTest, InitializeBeamsStruct) {
         }
     )};
 
-    // Initialize beams from element inputs
-    auto beams = InitializeBeams(beam_elem_inputs);
+    std::array<double, 3> gravity = {0., 0., 9.81};
 
-    auto gravity = Kokkos::create_mirror(beams.gravity);
-    gravity(0) = 0.;
-    gravity(1) = 0.;
-    gravity(2) = 9.81;
-    Kokkos::deep_copy(beams.gravity, gravity);
+    // Initialize beams from element inputs
+    auto beams = InitializeBeams(beam_elem_inputs, gravity);
 
     // Calculate the quadrature point data
     beams.CalculateQPData();
