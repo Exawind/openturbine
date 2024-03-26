@@ -601,9 +601,7 @@ struct Beams {
                 this->qp_Guu,     this->qp_Kuu,
             }
         );
-    }
 
-    void CalculateResidualVector(View_N residual_vector) {
         // Calculate nodal force vectors
         Kokkos::parallel_for(
             "CalculateNodeForces", this->num_beams_,
@@ -612,7 +610,9 @@ struct Beams {
                 this->shape_deriv, this->qp_Fc, this->qp_Fd, this->qp_Fi, this->qp_Fg, this->node_FE,
                 this->node_FI, this->node_FG}
         );
+    }
 
+    void CalculateResidualVector(View_N residual_vector) {
         // Sum node force vectors into residual vector
         // TODO: this should be a reduce operation, but can't figure out how to do it
         for (size_t i = 0; i < this->num_nodes_; ++i) {
@@ -631,6 +631,70 @@ struct Beams {
         //     ),
         //     residual_vector
         // );
+    }
+
+    void CalculateMassMatrix(View_NxN M) {
+        Kokkos::parallel_for(
+            "IntegrateMatrix", this->num_beams_,
+            IntegrateMatrix{
+                this->elem_indices,
+                this->node_state_indices,
+                this->qp_weight,
+                this->qp_jacobian,
+                this->shape_interp,
+                this->qp_Muu,
+                M,
+            }
+        );
+    }
+
+    void CalculateGyroscopicInertiaMatrix(View_NxN G) {
+        Kokkos::parallel_for(
+            "IntegrateMatrix", this->num_beams_,
+            IntegrateMatrix{
+                this->elem_indices,
+                this->node_state_indices,
+                this->qp_weight,
+                this->qp_jacobian,
+                this->shape_interp,
+                this->qp_Guu,
+                G,
+            }
+        );
+    }
+
+    void CalculateInertialStiffnessMatrix(View_NxN K) {
+        Kokkos::parallel_for(
+            "IntegrateMatrix", this->num_beams_,
+            IntegrateMatrix{
+                this->elem_indices,
+                this->node_state_indices,
+                this->qp_weight,
+                this->qp_jacobian,
+                this->shape_interp,
+                this->qp_Kuu,
+                K,
+            }
+        );
+    }
+
+    void CalculateElasticStiffnessMatrix(View_NxN K) {
+        Kokkos::parallel_for(
+            "IntegrateElasticStiffnessMatrix", this->num_beams_,
+            IntegrateElasticStiffnessMatrix{
+                this->elem_indices,
+                this->node_state_indices,
+                this->qp_weight,
+                this->qp_jacobian,
+                this->shape_interp,
+                this->shape_deriv,
+                this->qp_Puu,
+                this->qp_Cuu,
+                this->qp_Ouu,
+                this->qp_Quu,
+                K,
+            }
+        );
     }
 };
 

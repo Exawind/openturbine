@@ -9,6 +9,7 @@
 #include "types.hpp"
 
 #include "src/gebt_poc/quadrature.h"
+#include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace oturb {
 
@@ -822,6 +823,100 @@ struct CalculateNodeForces {
             for (size_t j = 0; j < idx.num_qps; ++j) {  // QPs
                 for (size_t k = 0; k < 6; ++k) {        // Components
                     node_FG(i, k) += weight(j) * qp_jacobian(j) * shape_interp(i, j) * qp_Fg(j, k);
+                }
+            }
+        }
+    }
+};
+
+struct IntegrateMatrix {
+    Kokkos::View<BeamElemIndices*> elem_indices;  // Element indices
+    Kokkos::View<size_t*> node_state_indices;     // Element indices
+    oturb::View_N qp_weight_;                     //
+    oturb::View_N qp_jacobian_;                   // Jacobians
+    oturb::View_NxN shape_interp_;                // Num Nodes x Num Quadrature points
+    oturb::View_Nx6x6 qp_M_;                      //
+    oturb::View_NxN gbl_M_;                       //
+
+    KOKKOS_FUNCTION
+    void operator()(const size_t i_elem) const {
+        auto idx = elem_indices[i_elem];
+        auto shape_qp_range = Kokkos::make_pair((size_t)0, idx.num_qps);
+        auto weight = Kokkos::subview(qp_weight_, idx.qp_range);
+        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
+        auto shape_interp = Kokkos::subview(shape_interp_, idx.node_range, shape_qp_range);
+        auto qp_M = Kokkos::subview(qp_M_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
+
+        for (size_t i = 0; i < idx.num_nodes; ++i) {  // Nodes
+            auto i_gbl_start = 6 * node_state_indices(i);
+            for (size_t j = 0; j < idx.num_nodes; ++j) {  // Nodes
+                auto j_gbl_start = 6 * node_state_indices(j);
+                auto gbl_M = Kokkos::subview(
+                    gbl_M_, Kokkos::make_pair(i_gbl_start, i_gbl_start + 6),
+                    Kokkos::make_pair(j_gbl_start, j_gbl_start + 6)
+                );
+                for (size_t k = 0; k < idx.num_qps; ++k) {  // QPs
+                    for (size_t m = 0; m < 6; ++m) {        // Components
+                        for (size_t n = 0; n < 6; ++n) {    // Components
+                            gbl_M(m, n) += weight(k) * shape_interp(i, k) * qp_M(k, m, n) *
+                                           shape_interp(j, k) * qp_jacobian(k);
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
+
+struct IntegrateElasticStiffnessMatrix {
+    Kokkos::View<BeamElemIndices*> elem_indices;  // Element indices
+    Kokkos::View<size_t*> node_state_indices;     // Element indices
+    oturb::View_N qp_weight_;                     //
+    oturb::View_N qp_jacobian_;                   // Jacobians
+    oturb::View_NxN shape_interp_;                // Num Nodes x Num Quadrature points
+    oturb::View_NxN shape_deriv_;                 // Num Nodes x Num Quadrature points
+    oturb::View_Nx6x6 qp_Puu_;                    //
+    oturb::View_Nx6x6 qp_Cuu_;                    //
+    oturb::View_Nx6x6 qp_Ouu_;                    //
+    oturb::View_Nx6x6 qp_Quu_;                    //
+    oturb::View_NxN gbl_M_;                       //
+
+    KOKKOS_FUNCTION
+    void operator()(const size_t i_elem) const {
+        auto idx = elem_indices[i_elem];
+        auto shape_qp_range = Kokkos::make_pair((size_t)0, idx.num_qps);
+        auto weight = Kokkos::subview(qp_weight_, idx.qp_range);
+        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
+        auto shape_interp = Kokkos::subview(shape_interp_, idx.node_range, shape_qp_range);
+        auto shape_deriv = Kokkos::subview(shape_deriv_, idx.node_range, shape_qp_range);
+        auto qp_Puu = Kokkos::subview(qp_Puu_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
+        auto qp_Cuu = Kokkos::subview(qp_Cuu_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
+        auto qp_Ouu = Kokkos::subview(qp_Ouu_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
+        auto qp_Quu = Kokkos::subview(qp_Quu_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
+
+        for (size_t i = 0; i < idx.num_nodes; ++i) {  // Nodes
+            auto i_gbl_start = 6 * node_state_indices(i);
+            for (size_t j = 0; j < idx.num_nodes; ++j) {  // Nodes
+                auto j_gbl_start = 6 * node_state_indices(j);
+                auto gbl_M = Kokkos::subview(
+                    gbl_M_, Kokkos::make_pair(i_gbl_start, i_gbl_start + 6),
+                    Kokkos::make_pair(j_gbl_start, j_gbl_start + 6)
+                );
+                for (size_t k = 0; k < idx.num_qps; ++k) {  // QPs
+                    auto phi_i = shape_interp(i, k);
+                    auto phi_j = shape_interp(j, k);
+                    auto phi_prime_i = shape_deriv(i, k);
+                    auto phi_prime_j = shape_deriv(j, k);
+                    for (size_t m = 0; m < 6; ++m) {      // Matrix components
+                        for (size_t n = 0; n < 6; ++n) {  // Matrix components
+                            gbl_M(m, n) +=
+                                weight(k) *
+                                (phi_i * qp_Puu(k, m, n) * phi_prime_j +
+                                 phi_i * qp_Quu(k, m, n) * phi_j * qp_jacobian(k) +
+                                 phi_prime_i * qp_Cuu(k, m, n) * phi_prime_j / qp_jacobian(k) +
+                                 phi_prime_i * qp_Ouu(k, m, n) * phi_j);
+                        }
+                    }
                 }
             }
         }
