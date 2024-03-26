@@ -246,73 +246,71 @@ struct Beams {
     size_t num_qps_;    // Number of quadrature points
 
     Kokkos::View<BeamElemIndices*> elem_indices;  // View of element node and qp indices into views
-    Kokkos::View<int*> node_state_indices;        // State row index for each node
+    Kokkos::View<size_t*> node_state_indices;     // State row index for each node
 
-    oturb::View_3 gravity;
+    View_3 gravity;
 
     // Node-based data
-    oturb::View_Nx7 node_x0;              // Inital position/rotation
-    oturb::View_Nx7 node_u;               // State: translation/rotation displacement
-    oturb::View_Nx6 node_u_dot;           // State: translation/rotation velocity
-    oturb::View_Nx6 node_u_ddot;          // State: translation/rotation acceleration
-    oturb::View_Nx6 node_force_app;       // Applied forces
-    oturb::View_Nx6 node_force_elastic;   // Elastic forces
-    oturb::View_Nx6 node_force_gravity;   // Gravity forces
-    oturb::View_Nx6 node_force_inertial;  // Inertial forces
-    oturb::View_Nx6 node_force_external;  // External forces
-    oturb::View_Nx6 node_residual;        // Residual forces
-    oturb::View_NxN node_iteration;       // Iteration matrix
+    View_Nx7 node_x0;         // Inital position/rotation
+    View_Nx7 node_u;          // State: translation/rotation displacement
+    View_Nx6 node_u_dot;      // State: translation/rotation velocity
+    View_Nx6 node_u_ddot;     // State: translation/rotation acceleration
+    View_Nx6 node_FE;         // Elastic forces
+    View_Nx6 node_FG;         // Gravity forces
+    View_Nx6 node_FI;         // Inertial forces
+    View_Nx6 node_FX;         // External forces
+    View_N node_residual;     // Residual forces
+    View_NxN node_iteration;  // Iteration matrix
 
     // Quadrature point data
-    oturb::View_N qp_weight;       // Integration weights
-    oturb::View_N qp_jacobian;     // Jacobian vector
-    oturb::View_Nx6x6 qp_Mstar;    // Mass matrix in material frame
-    oturb::View_Nx6x6 qp_Cstar;    // Stiffness matrix in material frame
-    oturb::View_Nx3 qp_x0;         // Initial position
-    oturb::View_Nx3 qp_x0_prime;   // Initial position derivative
-    oturb::View_Nx4 qp_r0;         // Initial rotation
-    oturb::View_Nx3 qp_u;          // State: translation displacement
-    oturb::View_Nx3 qp_u_prime;    // State: translation displacement derivative
-    oturb::View_Nx3 qp_u_dot;      // State: translation velocity
-    oturb::View_Nx3 qp_u_ddot;     // State: translation acceleration
-    oturb::View_Nx4 qp_r;          // State: rotation
-    oturb::View_Nx4 qp_r_prime;    // State: rotation derivative
-    oturb::View_Nx3 qp_omega;      // State: angular velocity
-    oturb::View_Nx3 qp_omega_dot;  // State: position/rotation
-    oturb::View_Nx6 qp_strain;     //
-    oturb::View_Nx6 qp_Fc;         //
-    oturb::View_Nx6 qp_Fd;         //
-    oturb::View_Nx6 qp_Fi;         //
-    oturb::View_Nx6 qp_Fg;         //
-    oturb::View_Nx6 qp_Fext;       //
-    oturb::View_Nx6x6 qp_RR0;      //
-    oturb::View_Nx6x6 qp_Muu;      //
-    oturb::View_Nx6x6 qp_Cuu;      //
-    oturb::View_Nx6x6 qp_Ouu;      //
-    oturb::View_Nx6x6 qp_Puu;      //
-    oturb::View_Nx6x6 qp_Quu;      //
-    oturb::View_Nx6x6 qp_Guu;      //
-    oturb::View_Nx6x6 qp_Kuu;      //
+    View_N qp_weight;       // Integration weights
+    View_N qp_jacobian;     // Jacobian vector
+    View_Nx6x6 qp_Mstar;    // Mass matrix in material frame
+    View_Nx6x6 qp_Cstar;    // Stiffness matrix in material frame
+    View_Nx3 qp_x0;         // Initial position
+    View_Nx3 qp_x0_prime;   // Initial position derivative
+    View_Nx4 qp_r0;         // Initial rotation
+    View_Nx3 qp_u;          // State: translation displacement
+    View_Nx3 qp_u_prime;    // State: translation displacement derivative
+    View_Nx3 qp_u_dot;      // State: translation velocity
+    View_Nx3 qp_u_ddot;     // State: translation acceleration
+    View_Nx4 qp_r;          // State: rotation
+    View_Nx4 qp_r_prime;    // State: rotation derivative
+    View_Nx3 qp_omega;      // State: angular velocity
+    View_Nx3 qp_omega_dot;  // State: position/rotation
+    View_Nx6 qp_strain;     //
+    View_Nx6 qp_Fc;         //
+    View_Nx6 qp_Fd;         //
+    View_Nx6 qp_Fi;         //
+    View_Nx6 qp_Fg;
+    View_Nx6x6 qp_RR0;  //
+    View_Nx6x6 qp_Muu;  //
+    View_Nx6x6 qp_Cuu;  //
+    View_Nx6x6 qp_Ouu;  //
+    View_Nx6x6 qp_Puu;  //
+    View_Nx6x6 qp_Quu;  //
+    View_Nx6x6 qp_Guu;  //
+    View_Nx6x6 qp_Kuu;  //
 
-    oturb::View_NxN shape_interp;  // shape function matrix for interpolation [Nodes x QPs]
-    oturb::View_NxN shape_deriv;   // shape function matrix for derivative interp [Nodes x QPs]
+    View_NxN shape_interp;  // shape function matrix for interpolation [Nodes x QPs]
+    View_NxN shape_deriv;   // shape function matrix for derivative interp [Nodes x QPs]
 
     // Scratch variables to be replaced later
-    oturb::View_Nx6x6 M_6x6;   //
-    oturb::View_Nx3x4 M_3x4;   //
-    oturb::View_Nx3x3 M1_3x3;  //
-    oturb::View_Nx3x3 M2_3x3;  //
-    oturb::View_Nx3x3 M3_3x3;  //
-    oturb::View_Nx3x3 M4_3x3;  //
-    oturb::View_Nx3x3 M5_3x3;  //
-    oturb::View_Nx3x3 M6_3x3;  //
-    oturb::View_Nx3x3 M7_3x3;  //
-    oturb::View_Nx3x3 M8_3x3;  //
-    oturb::View_Nx3x3 M9_3x3;  //
-    oturb::View_Nx3 V1_3;      //
-    oturb::View_Nx3 V2_3;      //
-    oturb::View_Nx3 V3_3;      //
-    oturb::View_Nx4 qp_quat;   //
+    View_Nx6x6 M_6x6;   //
+    View_Nx3x4 M_3x4;   //
+    View_Nx3x3 M1_3x3;  //
+    View_Nx3x3 M2_3x3;  //
+    View_Nx3x3 M3_3x3;  //
+    View_Nx3x3 M4_3x3;  //
+    View_Nx3x3 M5_3x3;  //
+    View_Nx3x3 M6_3x3;  //
+    View_Nx3x3 M7_3x3;  //
+    View_Nx3x3 M8_3x3;  //
+    View_Nx3x3 M9_3x3;  //
+    View_Nx3 V1_3;      //
+    View_Nx3 V2_3;      //
+    View_Nx3 V3_3;      //
+    View_Nx4 qp_quat;   //
 
     Beams(const BeamsInit beams_init)
         : Beams(
@@ -350,18 +348,18 @@ struct Beams {
         // Populate indices and element host views from input data
         //----------------------------------------------------------------------
 
-        int node_counter = 0;
-        int qp_counter = 0;
+        size_t node_counter = 0;
+        size_t qp_counter = 0;
 
         // Loop through element inputs
         for (size_t i = 0; i < beams_init.inputs_.size(); i++) {
             // Calculate node indices for this element
-            int num_nodes = beams_init.inputs_[i].nodes.size();
+            size_t num_nodes = beams_init.inputs_[i].nodes.size();
             auto node_range = Kokkos::make_pair(node_counter, node_counter + num_nodes);
             node_counter += num_nodes;
 
             // Calculate quadrature point indices for this element
-            int num_qps = beams_init.inputs_[i].quadrature.GetNumberOfQuadraturePoints();
+            size_t num_qps = beams_init.inputs_[i].quadrature.GetNumberOfQuadraturePoints();
             auto qp_range = Kokkos::make_pair(qp_counter, qp_counter + num_qps);
             qp_counter += num_qps;
 
@@ -381,8 +379,10 @@ struct Beams {
                 Kokkos::subview(host_qp_weight, qp_range),
                 Kokkos::subview(host_qp_Mstar, qp_range, Kokkos::ALL, Kokkos::ALL),
                 Kokkos::subview(host_qp_Cstar, qp_range, Kokkos::ALL, Kokkos::ALL),
-                Kokkos::subview(host_shape_interp, node_range, Kokkos::make_pair(0, num_qps)),
-                Kokkos::subview(host_shape_deriv, node_range, Kokkos::make_pair(0, num_qps))
+                Kokkos::subview(
+                    host_shape_interp, node_range, Kokkos::make_pair((size_t)0, num_qps)
+                ),
+                Kokkos::subview(host_shape_deriv, node_range, Kokkos::make_pair((size_t)0, num_qps))
             );
         }
 
@@ -465,13 +465,12 @@ struct Beams {
           node_u("node_u", num_nodes),
           node_u_dot("node_u_dot", num_nodes),
           node_u_ddot("node_u_ddot", num_nodes),
-          node_force_app("node_force_app", num_nodes),
-          node_force_elastic("node_force_elastic", num_nodes),
-          node_force_gravity("node_force_gravity", num_nodes),
-          node_force_inertial("node_force_inertial", num_nodes),
-          node_force_external("node_force_external", num_nodes),
-          node_residual("node_residual", num_nodes),
-          node_iteration("node_iteration", num_nodes, num_nodes),
+          node_FE("node_force_elastic", num_nodes),
+          node_FG("node_force_gravity", num_nodes),
+          node_FI("node_force_inertial", num_nodes),
+          node_FX("node_force_external", num_nodes),
+          node_residual("node_residual", num_nodes * 6),
+          node_iteration("node_iteration", num_nodes * 6, num_nodes * 6),
           // Quadrature Point data
           qp_weight("qp_weight", num_qps),
           qp_jacobian("qp_jacobian", num_qps),
@@ -493,7 +492,6 @@ struct Beams {
           qp_Fd("qp_Fd", num_qps),
           qp_Fi("qp_Fi", num_qps),
           qp_Fg("qp_Fg", num_qps),
-          qp_Fext("qp_Fext", num_qps),
           qp_RR0("qp_RR0", num_qps),
           qp_Muu("qp_Muu", num_qps),
           qp_Cuu("qp_Cuu", num_qps),
@@ -592,7 +590,7 @@ struct Beams {
         // Calculate Forces
         Kokkos::parallel_for(
             "CalculateForces", this->num_qps_,
-            CalculateForces{
+            CalculateForcesAndMatrices{
                 this->gravity,    this->qp_Muu,    this->qp_Cuu,   this->qp_x0_prime,
                 this->qp_u_prime, this->qp_u_ddot, this->qp_omega, this->qp_omega_dot,
                 this->qp_strain,  this->M1_3x3,    this->M2_3x3,   this->M3_3x3,
@@ -603,6 +601,36 @@ struct Beams {
                 this->qp_Guu,     this->qp_Kuu,
             }
         );
+    }
+
+    void CalculateResidualVector(View_N residual_vector) {
+        // Calculate nodal force vectors
+        Kokkos::parallel_for(
+            "CalculateNodeForces", this->num_beams_,
+            CalculateNodeForces{
+                this->elem_indices, this->qp_weight, this->qp_jacobian, this->shape_interp,
+                this->shape_deriv, this->qp_Fc, this->qp_Fd, this->qp_Fi, this->qp_Fg, this->node_FE,
+                this->node_FI, this->node_FG}
+        );
+
+        // Sum node force vectors into residual vector
+        // TODO: this should be a reduce operation, but can't figure out how to do it
+        for (size_t i = 0; i < this->num_nodes_; ++i) {
+            auto i_rv_start = 6 * this->node_state_indices(i);
+            for (size_t j = 0; j < 6; j++) {
+                residual_vector(i_rv_start + j) += this->node_FE(i, j) + this->node_FI(i, j) -
+                                                   this->node_FX(i, j) - this->node_FG(i, j);
+            }
+        }
+
+        // Kokkos::parallel_reduce(
+        //     this->num_nodes_,
+        //     AssembleResidualVector(
+        //         residual_vector.extent(0), this->node_state_indices, this->node_force_elastic,
+        //         this->node_force_inertial, this->node_force_gravity, this->node_force_external
+        //     ),
+        //     residual_vector
+        // );
     }
 };
 

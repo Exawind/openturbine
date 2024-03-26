@@ -13,10 +13,10 @@
 namespace oturb {
 
 struct BeamElemIndices {
-    int num_nodes;
-    int num_qps;
-    Kokkos::pair<int, int> node_range;
-    Kokkos::pair<int, int> qp_range;
+    size_t num_nodes;
+    size_t num_qps;
+    Kokkos::pair<size_t, size_t> node_range;
+    Kokkos::pair<size_t, size_t> qp_range;
 };
 
 //------------------------------------------------------------------------------
@@ -260,23 +260,24 @@ struct InterpolateQPPosition {
     oturb::View_Nx3 qp_pos_;                      // quadrature point position
 
     KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
+    void operator()(const size_t i_elem) const {
         // Element specific views
         auto shape_interp = Kokkos::subview(
             shape_interp_, elem_indices[i_elem].node_range,
-            Kokkos::make_pair(0, elem_indices[i_elem].num_qps)
+            Kokkos::make_pair((size_t)0, elem_indices[i_elem].num_qps)
         );
-        auto node_pos =
-            Kokkos::subview(node_pos_rot_, elem_indices[i_elem].node_range, Kokkos::make_pair(0, 3));
+        auto node_pos = Kokkos::subview(
+            node_pos_rot_, elem_indices[i_elem].node_range, Kokkos::make_pair((size_t)0, (size_t)3)
+        );
         auto qp_pos = Kokkos::subview(qp_pos_, elem_indices[i_elem].qp_range, Kokkos::ALL);
 
         // Initialize qp_pos
         Kokkos::deep_copy(qp_pos, 0.);
 
         // Perform matrix-matrix multiplication
-        for (int i = 0; i < elem_indices[i_elem].num_nodes; ++i) {
-            for (int j = 0; j < elem_indices[i_elem].num_qps; ++j) {
-                for (int k = 0; k < 3; ++k) {
+        for (size_t i = 0; i < elem_indices[i_elem].num_nodes; ++i) {
+            for (size_t j = 0; j < elem_indices[i_elem].num_qps; ++j) {
+                for (size_t k = 0; k < 3; ++k) {
                     qp_pos(j, k) += node_pos(i, k) * shape_interp(i, j);
                 }
             }
@@ -291,11 +292,11 @@ struct InterpolateQPRotation {
     oturb::View_Nx4 qp_rot_;                      // quadrature point rotation
 
     KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
+    void operator()(const size_t i_elem) const {
         // Element specific views
         auto shape_interp = Kokkos::subview(
             shape_interp_, elem_indices[i_elem].node_range,
-            Kokkos::make_pair(0, elem_indices[i_elem].num_qps)
+            Kokkos::make_pair((size_t)0, elem_indices[i_elem].num_qps)
         );
         auto node_rot =
             Kokkos::subview(node_pos_rot_, elem_indices[i_elem].node_range, Kokkos::make_pair(3, 7));
@@ -313,11 +314,11 @@ struct InterpolateQPRotationDerivative {
     oturb::View_Nx4 qp_rot_deriv_;                // quadrature point rotation derivative
 
     KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
+    void operator()(const size_t i_elem) const {
         // Element specific views
         auto shape_deriv = Kokkos::subview(
             shape_deriv_, elem_indices[i_elem].node_range,
-            Kokkos::make_pair(0, elem_indices[i_elem].num_qps)
+            Kokkos::make_pair((size_t)0, elem_indices[i_elem].num_qps)
         );
         auto qp_rot_deriv =
             Kokkos::subview(qp_rot_deriv_, elem_indices[i_elem].qp_range, Kokkos::ALL);
@@ -337,11 +338,11 @@ struct CalculateJacobian {
     oturb::View_N qp_jacobian_;                   // Jacobians
 
     KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
+    void operator()(const size_t i_elem) const {
         auto idx = elem_indices[i_elem];
         // Element specific views
         oturb::View_NxN shape_deriv =
-            Kokkos::subview(shape_deriv_, idx.node_range, Kokkos::make_pair(0, idx.num_qps));
+            Kokkos::subview(shape_deriv_, idx.node_range, Kokkos::make_pair((size_t)0, idx.num_qps));
         auto qp_pos_deriv = Kokkos::subview(qp_pos_deriv_, idx.qp_range, Kokkos::ALL);
         auto node_pos = Kokkos::subview(node_pos_rot_, idx.node_range, Kokkos::make_pair(0, 3));
         auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
@@ -350,7 +351,7 @@ struct CalculateJacobian {
         InterpVector3(shape_deriv, node_pos, qp_pos_deriv);
 
         //  Loop through quadrature points
-        for (int j = 0; j < idx.num_qps; ++j) {
+        for (size_t j = 0; j < idx.num_qps; ++j) {
             // Calculate Jacobian as norm of derivative
             qp_jacobian(j) = Kokkos::sqrt(
                 Kokkos::pow(qp_pos_deriv(j, 0), 2.) + Kokkos::pow(qp_pos_deriv(j, 1), 2.) +
@@ -385,13 +386,14 @@ struct InterpolateQPState {
     oturb::View_Nx3 qp_omega_dot_;  // qp angular acceleration
 
     KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
+    void operator()(const size_t i_elem) const {
         // Element specific views
         auto& idx = elem_indices[i_elem];
-        auto shape_interp =
-            Kokkos::subview(shape_interp_, idx.node_range, Kokkos::make_pair(0, idx.num_qps));
+        auto shape_interp = Kokkos::subview(
+            shape_interp_, idx.node_range, Kokkos::make_pair((size_t)0, idx.num_qps)
+        );
         auto shape_deriv =
-            Kokkos::subview(shape_deriv_, idx.node_range, Kokkos::make_pair(0, idx.num_qps));
+            Kokkos::subview(shape_deriv_, idx.node_range, Kokkos::make_pair((size_t)0, idx.num_qps));
         auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
         auto node_u = Kokkos::subview(node_u_, idx.node_range, Kokkos::make_pair(0, 3));
         auto node_r = Kokkos::subview(node_u_, idx.node_range, Kokkos::make_pair(3, 7));
@@ -518,7 +520,7 @@ struct CalculateStrain {
     }
 };
 
-struct CalculateForces {
+struct CalculateForcesAndMatrices {
     oturb::View_3 gravity;               //
     oturb::View_Nx6x6 qp_Muu_;           //
     oturb::View_Nx6x6 qp_Cuu_;           //
@@ -754,6 +756,126 @@ struct CalculateForces {
                 Kuu_22(i, j) += M2(i, j);
             }
         }
+    }
+};
+
+struct CalculateNodeForces {
+    Kokkos::View<BeamElemIndices*> elem_indices;  // Element indices
+    oturb::View_N qp_weight_;                     //
+    oturb::View_N qp_jacobian_;                   // Jacobians
+    oturb::View_NxN shape_interp_;                // Num Nodes x Num Quadrature points
+    oturb::View_NxN shape_deriv_;                 // Num Nodes x Num Quadrature points
+    oturb::View_Nx6 qp_Fc_;                       //
+    oturb::View_Nx6 qp_Fd_;                       //
+    oturb::View_Nx6 qp_Fi_;                       //
+    oturb::View_Nx6 qp_Fg_;                       //
+    oturb::View_Nx6 node_FE_;                     // Elastic force
+    oturb::View_Nx6 node_FI_;                     // Inertial force
+    oturb::View_Nx6 node_FG_;                     // Gravity force
+
+    KOKKOS_FUNCTION
+    void operator()(const size_t i_elem) const {
+        auto idx = elem_indices[i_elem];
+        auto shape_qp_range = Kokkos::make_pair((size_t)0, idx.num_qps);
+        auto weight = Kokkos::subview(qp_weight_, idx.qp_range);
+        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
+        auto shape_interp = Kokkos::subview(shape_interp_, idx.node_range, shape_qp_range);
+        auto shape_deriv = Kokkos::subview(shape_deriv_, idx.node_range, shape_qp_range);
+
+        auto qp_Fc = Kokkos::subview(qp_Fc_, idx.qp_range, Kokkos::ALL);
+        auto qp_Fd = Kokkos::subview(qp_Fd_, idx.qp_range, Kokkos::ALL);
+        auto qp_Fi = Kokkos::subview(qp_Fi_, idx.qp_range, Kokkos::ALL);
+        auto qp_Fg = Kokkos::subview(qp_Fg_, idx.qp_range, Kokkos::ALL);
+
+        auto node_FE = Kokkos::subview(node_FE_, idx.node_range, Kokkos::ALL);
+        auto node_FG = Kokkos::subview(node_FG_, idx.node_range, Kokkos::ALL);
+        auto node_FI = Kokkos::subview(node_FI_, idx.node_range, Kokkos::ALL);
+
+        Kokkos::deep_copy(node_FE, 0.);
+        Kokkos::deep_copy(node_FG, 0.);
+        Kokkos::deep_copy(node_FI, 0.);
+
+        // The following calculations are reduction operations which would
+        // likely benefit from parallelization
+
+        // Calculate elastic forces
+        for (size_t i = 0; i < idx.num_nodes; ++i) {    // Nodes
+            for (size_t j = 0; j < idx.num_qps; ++j) {  // QPs
+                for (size_t k = 0; k < 6; ++k) {        // Components
+                    node_FE(i, k) += weight(j) * (shape_deriv(i, j) * qp_Fc(j, k) +
+                                                  qp_jacobian(j) * shape_interp(i, j) * qp_Fd(j, k));
+                }
+            }
+        }
+
+        // Calculate internal forces
+        for (size_t i = 0; i < idx.num_nodes; ++i) {    // Nodes
+            for (size_t j = 0; j < idx.num_qps; ++j) {  // QPs
+                for (size_t k = 0; k < 6; ++k) {        // Components
+                    node_FI(i, k) += weight(j) * qp_jacobian(j) * shape_interp(i, j) * qp_Fi(j, k);
+                }
+            }
+        }
+
+        // Calculate gravity forces
+        for (size_t i = 0; i < idx.num_nodes; ++i) {    // Nodes
+            for (size_t j = 0; j < idx.num_qps; ++j) {  // QPs
+                for (size_t k = 0; k < 6; ++k) {        // Components
+                    node_FG(i, k) += weight(j) * qp_jacobian(j) * shape_interp(i, j) * qp_Fg(j, k);
+                }
+            }
+        }
+    }
+};
+
+struct AssembleResidualVector {
+    // In this case, the reduction result is an array of float.
+    using value_type = View_N;
+
+    using size_type = View_N::size_type;
+
+    // Tell Kokkos the result array's number of entries.
+    // This must be a public value in the functor.
+    size_type value_count;
+    Kokkos::View<size_t*> node_state_indices_;
+    View_Nx6 node_FE_;  // Elastic force
+    View_Nx6 node_FI_;  // Inertial force
+    View_Nx6 node_FG_;  // Gravity force
+    View_Nx6 node_FX_;  // External force
+
+    // As with the above examples, you may supply an
+    // execution_space typedef. If not supplied, Kokkos
+    // will use the default execution space for this functor.
+
+    // Be sure to set value_count in the constructor.
+    AssembleResidualVector(
+        size_type residual_vector_size, Kokkos::View<size_t*> node_state_indices, View_Nx6 node_FE,
+        View_Nx6 node_FI, View_Nx6 node_FG, View_Nx6 node_FX
+    )
+        : value_count(residual_vector_size),
+          node_state_indices_(node_state_indices),
+          node_FE_(node_FE),
+          node_FI_(node_FI),
+          node_FG_(node_FG),
+          node_FX_(node_FX) {}
+
+    KOKKOS_INLINE_FUNCTION void operator()(const size_type i_node, value_type residual_vector)
+        const {
+        auto i_rv_start = 6 * node_state_indices_(i_node);
+        for (size_t j = 0; j < 6; j++) {
+            residual_vector(i_rv_start + j) += node_FE_(i_node, j) + node_FI_(i_node, j) -
+                                               node_FX_(i_node, j) - node_FG_(i_node, j);
+        }
+    }
+
+    KOKKOS_INLINE_FUNCTION void join(value_type dst, const value_type src) const {
+        for (size_type j = 0; j < value_count; ++j) {
+            dst[j] += src[j];
+        }
+    }
+
+    KOKKOS_INLINE_FUNCTION void init(value_type& residual_vector) const {
+        Kokkos::deep_copy(residual_vector, 0.);
     }
 };
 

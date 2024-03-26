@@ -114,6 +114,10 @@ protected:
 
         // Calculate the quadrature point data
         beams_->CalculateQPData();
+
+        View_N residual_vector("residual_vector", beams_->num_nodes_ * 6);
+
+        beams_->CalculateResidualVector(residual_vector);
     }
 
     // Per-test-suite tear-down.
@@ -650,5 +654,27 @@ TEST_F(BeamsTest, QuadraturePointMatrixKuu) {
         }
     );
 }
+
+// TEST_F(BeamsTest, NodalForceVectorFG) {
+//     auto tmp = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams_->node_FG);
+//     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+//         beams_->node_FG,
+//         {
+//             {-0.11121183449279078, -0.16149482899687723, -0.30437442031624473,
+//             -0.40385243171727625,
+//              -0.29275354335733944, -0.6838427114868826},
+//             {-0.05271722510789922, -0.09881895866851326, -0.10322757369767363,
+//             -0.04702535280786492,
+//              0.200307040286711, -0.4938097677451396},
+//             {0.11947220141210066, 0.1434066009624302, 0.2789250942058333, 0.2881567336891544,
+//              0.9034846722720415, 0.21303887057613874},
+//             {0.08548666343411367, 0.29791784250206643, 0.30730427651111236, 0.3462309471335382,
+//              0.7532480845688548, 0.5928285701260374},
+//             {-0.04102980524552424, -0.18101065579910605, -0.1786273767030272,
+//             -0.06307503428118048,
+//              -0.5619802667455869, -0.2600125012438039},
+//         }
+//     );
+// }
 
 }  // namespace oturb::restruct_poc::tests
