@@ -613,24 +613,12 @@ struct Beams {
     }
 
     void CalculateResidualVector(View_N residual_vector) {
-        // Sum node force vectors into residual vector
-        // TODO: this should be a reduce operation, but can't figure out how to do it
-        for (size_t i = 0; i < this->num_nodes_; ++i) {
-            auto i_rv_start = 6 * this->node_state_indices(i);
-            for (size_t j = 0; j < 6; j++) {
-                residual_vector(i_rv_start + j) += this->node_FE(i, j) + this->node_FI(i, j) -
-                                                   this->node_FX(i, j) - this->node_FG(i, j);
-            }
-        }
-
-        // Kokkos::parallel_reduce(
-        //     this->num_nodes_,
-        //     AssembleResidualVector(
-        //         residual_vector.extent(0), this->node_state_indices, this->node_force_elastic,
-        //         this->node_force_inertial, this->node_force_gravity, this->node_force_external
-        //     ),
-        //     residual_vector
-        // );
+        Kokkos::parallel_for(
+            this->num_nodes_, AssembleResidualVector(
+                                  this->node_state_indices, this->node_FE, this->node_FI,
+                                  this->node_FG, this->node_FX, residual_vector
+                              )
+        );
     }
 
     void CalculateMassMatrix(View_NxN M) {

@@ -836,7 +836,7 @@ struct IntegrateMatrix {
     oturb::View_N qp_jacobian_;                   // Jacobians
     oturb::View_NxN shape_interp_;                // Num Nodes x Num Quadrature points
     oturb::View_Nx6x6 qp_M_;                      //
-    oturb::View_NxN gbl_M_;                       //
+    Kokkos::View<double**, Kokkos::MemoryTraits<Kokkos::Atomic>> gbl_M_;  //
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_elem) const {
@@ -879,7 +879,7 @@ struct IntegrateElasticStiffnessMatrix {
     oturb::View_Nx6x6 qp_Cuu_;                    //
     oturb::View_Nx6x6 qp_Ouu_;                    //
     oturb::View_Nx6x6 qp_Quu_;                    //
-    oturb::View_NxN gbl_M_;                       //
+    Kokkos::View<double**, Kokkos::MemoryTraits<Kokkos::Atomic>> gbl_M_;  //
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_elem) const {
@@ -924,53 +924,30 @@ struct IntegrateElasticStiffnessMatrix {
 };
 
 struct AssembleResidualVector {
-    // In this case, the reduction result is an array of float.
-    using value_type = View_N;
-
-    using size_type = View_N::size_type;
-
-    // Tell Kokkos the result array's number of entries.
-    // This must be a public value in the functor.
-    size_type value_count;
     Kokkos::View<size_t*> node_state_indices_;
     View_Nx6 node_FE_;  // Elastic force
     View_Nx6 node_FI_;  // Inertial force
     View_Nx6 node_FG_;  // Gravity force
     View_Nx6 node_FX_;  // External force
+    Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>> residual_vector_;
 
-    // As with the above examples, you may supply an
-    // execution_space typedef. If not supplied, Kokkos
-    // will use the default execution space for this functor.
-
-    // Be sure to set value_count in the constructor.
     AssembleResidualVector(
-        size_type residual_vector_size, Kokkos::View<size_t*> node_state_indices, View_Nx6 node_FE,
-        View_Nx6 node_FI, View_Nx6 node_FG, View_Nx6 node_FX
+        Kokkos::View<size_t*> node_state_indices, View_Nx6 node_FE, View_Nx6 node_FI,
+        View_Nx6 node_FG, View_Nx6 node_FX, View_N residual_vector
     )
-        : value_count(residual_vector_size),
-          node_state_indices_(node_state_indices),
+        : node_state_indices_(node_state_indices),
           node_FE_(node_FE),
           node_FI_(node_FI),
           node_FG_(node_FG),
-          node_FX_(node_FX) {}
+          node_FX_(node_FX),
+          residual_vector_(residual_vector) {}
 
-    KOKKOS_INLINE_FUNCTION void operator()(const size_type i_node, value_type residual_vector)
-        const {
+    KOKKOS_INLINE_FUNCTION void operator()(const size_t i_node) const {
         auto i_rv_start = 6 * node_state_indices_(i_node);
         for (size_t j = 0; j < 6; j++) {
-            residual_vector(i_rv_start + j) += node_FE_(i_node, j) + node_FI_(i_node, j) -
-                                               node_FX_(i_node, j) - node_FG_(i_node, j);
+            residual_vector_(i_rv_start + j) += node_FE_(i_node, j) + node_FI_(i_node, j) -
+                                                node_FX_(i_node, j) - node_FG_(i_node, j);
         }
-    }
-
-    KOKKOS_INLINE_FUNCTION void join(value_type dst, const value_type src) const {
-        for (size_type j = 0; j < value_count; ++j) {
-            dst[j] += src[j];
-        }
-    }
-
-    KOKKOS_INLINE_FUNCTION void init(value_type& residual_vector) const {
-        Kokkos::deep_copy(residual_vector, 0.);
     }
 };
 
