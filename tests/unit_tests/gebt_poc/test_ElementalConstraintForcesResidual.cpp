@@ -45,8 +45,8 @@ TEST(SolverTest, TestConstraintResidualForRotatingBeam) {
         {0., 0., 0., 1., 0., 0., 0.}   // node 5
     });
     auto applied_motion = gen_alpha_solver::create_vector({0., 0., 0., 0.999997, 0., 0., 0.0025});
-    auto constraints_residual = Kokkos::View<double[6]>("constraints_residual");
 
+    auto constraints_residual = Kokkos::View<double[6]>("constraints_residual");
     ConstraintResidualForRotatingBeam(
         initial_position, gen_coords, applied_motion, constraints_residual
     );

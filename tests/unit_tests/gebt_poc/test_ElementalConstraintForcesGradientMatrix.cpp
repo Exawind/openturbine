@@ -5,6 +5,7 @@
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::gebt_poc {
+
 TEST(SolverTest, ElementalConstraintForcesGradientMatrix) {
     auto position_vectors = gen_alpha_solver::create_vector(
         {// node 1
@@ -65,4 +66,97 @@ TEST(SolverTest, ElementalConstraintForcesGradientMatrix) {
         }
     );
 }
+
+// Tests for ConstraintGradientMatrixForRotatingBeam
+TEST(SolverTest, ConstraintGradientMatrixForRotatingBeam) {
+    auto gen_coords = gen_alpha_solver::create_matrix({
+        {0., 0., 0., 1., 0., 0., 0.},  // node 1
+        {0., 0., 0., 1., 0., 0., 0.},  // node 2
+        {0., 0., 0., 1., 0., 0., 0.},  // node 3
+        {0., 0., 0., 1., 0., 0., 0.},  // node 4
+        {0., 0., 0., 1., 0., 0., 0.}   // node 5
+    });
+    auto applied_motion = gen_alpha_solver::create_vector({0., 0., 0., 0.999997, 0., 0., 0.0025});
+
+    auto constraints_gradient_matrix = Kokkos::View<double[6][30]>("constraints_gradient_matrix");
+    ConstraintGradientMatrixForRotatingBeam(gen_coords, applied_motion, constraints_gradient_matrix);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        constraints_gradient_matrix,
+        {
+            {1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 1
+            {0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 2
+            {0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.},  // row 3
+            {0.,
+             0.,
+             0.,
+             0.9999937500130208,
+             -0.002499989583346354,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.},  // row 4
+            {0.,
+             0.,
+             0.,
+             0.002499989583346354,
+             0.9999937500130208,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.,
+             0.},  // row 5
+            {0., 0., 0., 0., 0., 0.9999875000260416,
+             0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0.,
+             0., 0., 0., 0., 0., 0.}  // row 6
+        }
+    );
+}
+
 }  // namespace openturbine::gebt_poc
