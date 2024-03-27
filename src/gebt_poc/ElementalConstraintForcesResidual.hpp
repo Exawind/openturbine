@@ -3,6 +3,10 @@
 #include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
+#include <iostream>
+// Include for ofstream
+#include <fstream>
+
 #include "src/gebt_poc/types.hpp"
 #include "src/gen_alpha_poc/quaternion.h"
 #include "src/gen_alpha_poc/utilities.h"
@@ -33,6 +37,19 @@ inline void ElementalConstraintForcesResidual(
             constraints_residual(3) = rotation_vector.GetXComponent();
             constraints_residual(4) = rotation_vector.GetYComponent();
             constraints_residual(5) = rotation_vector.GetZComponent();
+        }
+    );
+}
+
+inline void AxialVector(
+    View2D_3x3 matrix, View1D_Vector axial_vector
+) {
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(std::size_t) {
+            axial_vector(0) = (matrix(2,1) - matrix(1,2)) / 2.;
+            axial_vector(1) = (matrix(0,2) - matrix(2,0)) / 2.;
+            axial_vector(2) = (matrix(1,0) - matrix(0,1)) / 2.;
         }
     );
 }

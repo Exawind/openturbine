@@ -20,4 +20,17 @@ TEST(SolverTest, ElementalConstraintForcesResidual) {
         constraints_residual, {0.1, 0., 0.12, 0.1, 0., 0.0}
     );
 }
+
+TEST(SolverTest, TestAxialVectorOfARotationMatrix) {
+    auto matrix = gen_alpha_solver::create_matrix(
+        {{1., 0., 0.}, {0., 0., -1.}, {0., 1., 0.}}
+    );
+    auto axial_vector = Kokkos::View<double[3]>("axial_vector");
+    AxialVector(matrix, axial_vector);
+
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        axial_vector, {1., 0., 0.}
+    );
+}
+
 }  // namespace openturbine::gebt_poc
