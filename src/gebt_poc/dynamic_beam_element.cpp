@@ -4,6 +4,7 @@
 
 #include <KokkosBlas.hpp>
 
+#include "src/gebt_poc/ElementalConstraintForcesGradientMatrix.hpp"
 #include "src/gebt_poc/ElementalConstraintForcesResidual.hpp"
 #include "src/gebt_poc/ElementalInertialForcesResidual.hpp"
 #include "src/gebt_poc/ElementalInertialMatrices.hpp"
@@ -83,10 +84,29 @@ void DynamicBeamLinearizationParameters::ResidualVector(
     auto external_forces = View1D("external_forces", residual_elastic.extent(0));
     ApplyExternalForces(time_stepper.GetCurrentTime(), external_forces);
     KokkosBlas::axpy(-1., external_forces, residual_elastic);
+
+    auto applied_motion = Kokkos::View<double*>("applied_motion", 7);
+
+    // Prescribe the rotation at the root node of the beam element
+    auto theta_0 = 0.;
+    auto angular_velocity_ = 0.50;
+    auto theta = theta_0 + angular_velocity_ * time_stepper.GetCurrentTime();
+    auto updated_orientation =
+        gen_alpha_solver::quaternion_from_rotation_vector(gen_alpha_solver::Vector{0., 0., theta});
+
+    auto update_applied_motion = KOKKOS_LAMBDA(size_t) {
+        applied_motion(3) = updated_orientation.GetScalarComponent();
+        applied_motion(4) = updated_orientation.GetXComponent();
+        applied_motion(5) = updated_orientation.GetYComponent();
+        applied_motion(6) = updated_orientation.GetZComponent();
+    };
+    Kokkos::parallel_for(1, update_applied_motion);
+
     // Part 4: Calculate the contribution for the constraints
     auto constraints_gradient_matrix =
         View2D("constraints_gradient_matrix", size_constraints, size_dofs);
-    BMatrix(constraints_gradient_matrix);
+    // BMatrix(constraints_gradient_matrix);
+    ConstraintGradientMatrixForRotatingBeam(gen_coords, applied_motion, constraints_gradient_matrix);
     auto constraints_part2 = View1D("constraints_part2", size_dofs);
     KokkosBlas::gemv(
         "T", 1., constraints_gradient_matrix, lagrange_multipliers, 0., constraints_part2
@@ -96,7 +116,10 @@ void DynamicBeamLinearizationParameters::ResidualVector(
     // Assemble the bottom partition of the residual vector i.e. the constraints residual
     auto residual_constraints =
         Kokkos::subview(residual, Kokkos::make_pair(size_dofs, size_residual));
-    ElementalConstraintForcesResidual(gen_coords, residual_constraints);
+    // ElementalConstraintForcesResidual(gen_coords, applied_motion, residual_constraints);
+    ConstraintResidualForRotatingBeam(
+        position_vectors_, gen_coords, applied_motion, residual_constraints
+    );
 }
 
 void DynamicBeamLinearizationParameters::IterationMatrix(

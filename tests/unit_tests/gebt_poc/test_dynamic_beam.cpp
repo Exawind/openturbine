@@ -495,26 +495,26 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithRotatingBeam) {
 
     auto position_vectors =
         gen_alpha_solver::create_matrix({// node 1
-                                         {0., 0., 0., 1., 0., 0., 0.},
+                                         {2., 0., 0., 1., 0., 0., 0.},
                                          // node 2
-                                         {1.7267316464601146, 0., 0., 1., 0., 0., 0.},
+                                         {3.7267316464601146, 0., 0., 1., 0., 0., 0.},
                                          // node 3
-                                         {5., 0., 0., 1., 0., 0., 0.},
+                                         {7., 0., 0., 1., 0., 0., 0.},
                                          // node 4
-                                         {8.273268353539885, 0., 0., 1., 0., 0., 0.},
+                                         {10.273268353539885, 0., 0., 1., 0., 0., 0.},
                                          // node 5
-                                         {10., 0., 0., 1., 0., 0., 0.}});
+                                         {12., 0., 0., 1., 0., 0., 0.}});
 
     // Run the dynamic analysis for 3 iterations with a time step of 0.005 seconds
-    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.005, 3, 10);
+    auto time_stepper = gen_alpha_solver::TimeStepper(0., 0.01, 3, 20);
 
     std::shared_ptr<LinearizationParameters> dynamic_beam_lin_params =
         std::make_shared<DynamicBeamLinearizationParameters>(
             position_vectors, stiffness, mass_matrix, quadrature
         );
 
-    // Calculate the generalized alpha parameters for rho_inf = 0
-    auto rho_inf = 0.;
+    // Calculate the generalized alpha parameters for rho_inf = 0.9
+    auto rho_inf = 0.9;
     auto alpha_m = (2. * rho_inf - 1.) / (rho_inf + 1.);
     auto alpha_f = rho_inf / (rho_inf + 1.);
     auto gamma = 0.5 + alpha_f - alpha_m;
@@ -528,8 +528,14 @@ TEST(DynamicBeamTest, DynamicAnalysisCatileverWithRotatingBeam) {
     auto results =
         time_integrator.Integrate(initial_state, lagrange_mults.extent(0), dynamic_beam_lin_params);
 
-    // We expect the state to contain the following values after 0.005s via validation results
-    // from BeamDyn at the tip node
+    // We expect the state to contain the following values after first increment via validation
+    auto state_1 = results[1];
+    auto rotation_1 = Kokkos::subview(
+        state_1.generalized_coordinates, Kokkos::make_pair(0, 1), Kokkos::make_pair(3, 7)
+    );
+    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        rotation_1, {{9.999968750e-01, 0., 0., 2.499997396e-03}}
+    );
 }
 
 }  // namespace openturbine::gebt_poc::tests
