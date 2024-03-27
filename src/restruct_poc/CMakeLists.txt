@@ -1,8 +1,14 @@
 target_sources(${oturb_lib_name}
     PRIVATE
-    types.hpp
+    beams_data.hpp
+    beams_functors.hpp
+    beams_input.cpp
+    beams_input.hpp
+    beams_methods.cpp
+    beams_methods.hpp
     beams.hpp
-    beams_calcs.hpp
-    interpolation.h
-    interpolation.cpp
+    dynamic_beam.cpp
+    solver.hpp
+    solver.cpp
+    types.hpp
 )

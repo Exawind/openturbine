@@ -36,10 +36,10 @@ protected:
         std::array<double, 3> gravity = {0., 0., 9.81};
 
         // Define beam initialization
-        BeamsInit beams_init{
-            gravity,
+        BeamsInput beams_input(
+
             {
-                BeamInput(
+                BeamElement(
                     openturbine::gebt_poc::UserDefinedQuadrature(
                         {-0.9491079123427585, -0.7415311855993943, -0.40584515137739696,
                          6.123233995736766e-17, 0.4058451513773971, 0.7415311855993945,
@@ -107,13 +107,17 @@ protected:
                         BeamSection(1., mass_matrix, stiffness_matrix),
                     }
                 ),
-            }};
+            },
+            gravity
+        );
 
         // Initialize beams from element inputs
-        beams_ = new Beams(beams_init);
+        beams_ = new Beams();
+
+        *beams_ = CreateBeams(beams_input);
 
         // Calculate the quadrature point data
-        beams_->CalculateQPData();
+        CalculateQPData(*beams_);
     }
 
     // Per-test-suite tear-down.
@@ -727,8 +731,8 @@ TEST_F(BeamsTest, NodalForceVectorFG) {
 }
 
 TEST_F(BeamsTest, ResidualForceVector) {
-    View_N residual_vector("residual_vector", beams_->num_nodes_ * 6);
-    beams_->CalculateResidualVector(residual_vector);
+    View_N residual_vector("residual_vector", beams_->num_nodes * 6);
+    CalculateResidualVector(*beams_, residual_vector);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         residual_vector,
         {
@@ -745,8 +749,8 @@ TEST_F(BeamsTest, ResidualForceVector) {
 }
 
 TEST_F(BeamsTest, MassMatrix) {
-    View_NxN mass_matrix("mass_matrix", beams_->num_nodes_ * 6, beams_->num_nodes_ * 6);
-    beams_->CalculateMassMatrix(mass_matrix);
+    View_NxN mass_matrix("mass_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
+    CalculateMassMatrix(*beams_, mass_matrix);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(mass_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {{0.4772429894755368, 9.713031930841838e-18, -1.2295544475412003e-17, -8.212152094108017e-18,
@@ -783,8 +787,8 @@ TEST_F(BeamsTest, MassMatrix) {
 }
 
 TEST_F(BeamsTest, GyroscopicInertiaMatrix) {
-    View_NxN gyro_matrix("gyro_matrix", beams_->num_nodes_ * 6, beams_->num_nodes_ * 6);
-    beams_->CalculateGyroscopicInertiaMatrix(gyro_matrix);
+    View_NxN gyro_matrix("gyro_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
+    CalculateGyroscopicInertiaMatrix(*beams_, gyro_matrix);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(gyro_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {
@@ -813,8 +817,8 @@ TEST_F(BeamsTest, GyroscopicInertiaMatrix) {
 }
 
 TEST_F(BeamsTest, InertialStiffnessMatrix) {
-    View_NxN stiffness_matrix("stiffness_matrix", beams_->num_nodes_ * 6, beams_->num_nodes_ * 6);
-    beams_->CalculateInertialStiffnessMatrix(stiffness_matrix);
+    View_NxN stiffness_matrix("stiffness_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
+    CalculateInertialStiffnessMatrix(*beams_, stiffness_matrix);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(stiffness_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {
@@ -843,8 +847,8 @@ TEST_F(BeamsTest, InertialStiffnessMatrix) {
 }
 
 TEST_F(BeamsTest, ElasticStiffnessMatrix) {
-    View_NxN stiffness_matrix("stiffness_matrix", beams_->num_nodes_ * 6, beams_->num_nodes_ * 6);
-    beams_->CalculateElasticStiffnessMatrix(stiffness_matrix);
+    View_NxN stiffness_matrix("stiffness_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
+    CalculateElasticStiffnessMatrix(*beams_, stiffness_matrix);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(stiffness_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {
