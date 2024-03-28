@@ -84,8 +84,8 @@ struct BeamsInput {
     std::vector<BeamElement> elements;
     Array_3 gravity;
 
-    BeamsInput(std::vector<BeamElement> elements, Array_3 gravity)
-        : elements(elements), gravity(gravity) {}
+    BeamsInput(std::vector<BeamElement> elements_, Array_3 gravity_)
+        : elements(elements_), gravity(gravity_) {}
 
     // Returns the number of elements
     size_t NumElements() const { return elements.size(); };
