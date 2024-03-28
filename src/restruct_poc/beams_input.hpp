@@ -10,7 +10,7 @@
 namespace oturb {
 
 using Array_6x6 = std::array<std::array<double, 6>, 6>;
-using Array_3 = std::array<double, 3>;
+using Array_3 = std::array<double, kVectorComponents>;
 using Array_6 = std::array<double, kLieAlgebraComponents>;
 using Array_7 = std::array<double, kLieGroupComponents>;
 
@@ -22,11 +22,11 @@ struct BeamNode {
     Array_6 v;  // Node initial translational and rotational velocity
     Array_6 a;  // Node initial translational and rotational acceleration
 
-    BeamNode(Array_7 x) : s(0.), x(std::move(x)), q({}), v({}), a({}) {}
-    BeamNode(Array_7 x, Array_7 q, Array_6 v, Array_6 a)
-        : s(0.), x(std::move(x)), q(std::move(q)), v(std::move(v)), a(std::move(a)) {}
-    BeamNode(double s, Array_7 x, Array_7 q, Array_6 v, Array_6 a)
-        : s(s), x(std::move(x)), q(std::move(q)), v(std::move(v)), a(std::move(a)) {}
+    BeamNode(Array_7 x_) : s(0.), x(std::move(x_)), q({}), v({}), a({}) {}
+    BeamNode(Array_7 x_, Array_7 q_, Array_6 v_, Array_6 a_)
+        : s(0.), x(std::move(x_)), q(std::move(q_)), v(std::move(v_)), a(std::move(a_)) {}
+    BeamNode(double s_, Array_7 x_, Array_7 q_, Array_6 v_, Array_6 a_)
+        : s(s_), x(std::move(x_)), q(std::move(q_)), v(std::move(v_)), a(std::move(a_)) {}
 };
 
 // Beam section initialization data
