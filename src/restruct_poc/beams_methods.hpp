@@ -15,16 +15,14 @@ void LagrangePolynomialDerivWeights(
 
 void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A);
 
-void CalculateQPData(Beams& beams);
+void AssembleResidualVector(Beams& beams, View_N residual_vector);
 
-void CalculateResidualVector(Beams& beams, View_N residual_vector);
+void AssembleMassMatrix(Beams& beams, View_NxN M);
 
-void CalculateMassMatrix(Beams& beams, View_NxN M);
+void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G);
 
-void CalculateGyroscopicInertiaMatrix(Beams& beams, View_NxN G);
+void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K);
 
-void CalculateInertialStiffnessMatrix(Beams& beams, View_NxN K);
-
-void CalculateElasticStiffnessMatrix(Beams& beams, View_NxN K);
+void AssembleElasticStiffnessMatrix(Beams& beams, View_NxN K);
 
 }  // namespace oturb

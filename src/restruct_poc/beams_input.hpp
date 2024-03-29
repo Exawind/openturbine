@@ -4,12 +4,12 @@
 
 #include "beams_data.hpp"
 
-#include "src/gebt_poc/quadrature.h"
 #include "src/restruct_poc/types.hpp"
 
 namespace oturb {
 
 using Array_6x6 = std::array<std::array<double, 6>, 6>;
+using Array_2 = std::array<double, 2>;
 using Array_3 = std::array<double, kVectorComponents>;
 using Array_6 = std::array<double, kLieAlgebraComponents>;
 using Array_7 = std::array<double, kLieGroupComponents>;
@@ -18,15 +18,9 @@ using Array_7 = std::array<double, kLieGroupComponents>;
 struct BeamNode {
     double s;   // Position of node in element on range [0, 1]
     Array_7 x;  // Node initial positions and rotations
-    Array_7 q;  // Node initial translational and rotational displacement
-    Array_6 v;  // Node initial translational and rotational velocity
-    Array_6 a;  // Node initial translational and rotational acceleration
 
-    BeamNode(Array_7 x_) : s(0.), x(std::move(x_)), q({}), v({}), a({}) {}
-    BeamNode(Array_7 x_, Array_7 q_, Array_6 v_, Array_6 a_)
-        : s(0.), x(std::move(x_)), q(std::move(q_)), v(std::move(v_)), a(std::move(a_)) {}
-    BeamNode(double s_, Array_7 x_, Array_7 q_, Array_6 v_, Array_6 a_)
-        : s(s_), x(std::move(x_)), q(std::move(q_)), v(std::move(v_)), a(std::move(a_)) {}
+    BeamNode(Array_7 x_) : s(0.), x(std::move(x_)) {}
+    BeamNode(double s_, Array_7 x_) : s(s_), x(std::move(x_)) {}
 };
 
 // Beam section initialization data
@@ -39,18 +33,22 @@ struct BeamSection {
         : s(s_), M_star(M_star_), C_star(C_star_) {}
 };
 
+using BeamQuadrature = std::vector<Array_2>;
+
 struct BeamElement {
-    openturbine::gebt_poc::UserDefinedQuadrature quadrature;
-    std::vector<BeamNode> nodes;
-    std::vector<BeamSection> sections;
+    std::vector<BeamNode> nodes;        // Element node positions/rotations in material frame
+    std::vector<BeamSection> sections;  // Element mass/stiffness in material frame
+    BeamQuadrature quadrature;          // Element quadrature points and weights
+    Array_7 root_x;                     // Element root node position and rotation
 
     BeamElement(
-        openturbine::gebt_poc::UserDefinedQuadrature quadrature_, std::vector<BeamNode> nodes_,
-        std::vector<BeamSection> sections_
+        std::vector<BeamNode> nodes_, std::vector<BeamSection> sections_, BeamQuadrature quadrature_,
+        Array_7 root_x_
     )
-        : quadrature(std::move(quadrature_)),
-          nodes(std::move(nodes_)),
-          sections(std::move(sections_)) {
+        : nodes(std::move(nodes_)),
+          sections(std::move(sections_)),
+          quadrature(std::move(quadrature_)),
+          root_x(std::move(root_x_)) {
         // // If node positions already set, return
         // if (nodes.back().s_ != 0.)
         //     return;
@@ -103,7 +101,7 @@ struct BeamsInput {
     size_t NumQuadraturePoints() const {
         size_t num_qps = 0;
         for (const auto& input : this->elements) {
-            num_qps += input.quadrature.GetNumberOfQuadraturePoints();
+            num_qps += input.quadrature.size();
         }
         return num_qps;
     }
@@ -112,7 +110,7 @@ struct BeamsInput {
     size_t MaxElemQuadraturePoints() const {
         size_t max_elem_qps = 0;
         for (const auto& input : this->elements) {
-            max_elem_qps = std::max(max_elem_qps, input.quadrature.GetNumberOfQuadraturePoints());
+            max_elem_qps = std::max(max_elem_qps, input.quadrature.size());
         }
         return max_elem_qps;
     }

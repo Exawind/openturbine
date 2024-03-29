@@ -897,7 +897,7 @@ struct IntegrateElasticStiffnessMatrix {
     }
 };
 
-struct AssembleResidualVector {
+struct IntegrateResidualVector {
     Kokkos::View<size_t*> node_state_indices_;
     View_Nx6 node_FE_;  // Elastic force
     View_Nx6 node_FI_;  // Inertial force
@@ -905,7 +905,7 @@ struct AssembleResidualVector {
     View_Nx6 node_FX_;  // External force
     Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>> residual_vector_;
 
-    AssembleResidualVector(
+    IntegrateResidualVector(
         Kokkos::View<size_t*> node_state_indices, View_Nx6 node_FE, View_Nx6 node_FI,
         View_Nx6 node_FG, View_Nx6 node_FX, View_N residual_vector
     )

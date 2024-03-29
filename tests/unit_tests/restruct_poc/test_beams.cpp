@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/solver.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace oturb::restruct_poc::tests {
@@ -37,75 +38,48 @@ protected:
 
         // Define beam initialization
         BeamsInput beams_input(
-
             {
                 BeamElement(
-                    openturbine::gebt_poc::UserDefinedQuadrature(
-                        {-0.9491079123427585, -0.7415311855993943, -0.40584515137739696,
-                         6.123233995736766e-17, 0.4058451513773971, 0.7415311855993945,
-                         0.9491079123427585},
-                        {0.1294849661688697, 0.27970539148927664, 0.3818300505051189,
-                         0.4179591836734694, 0.3818300505051189, 0.27970539148927664,
-                         0.1294849661688697}
-                    ),
                     {
                         BeamNode(
-                            0.,
-                            {0, 0, 0, 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
-                             -0.18831121859148398},  // x0
-                            {0, 0, 0, 1, 0, 0, 0},   // q
-                            {0, 0, 0, 0, 0, 0},      // v
-                            {0, 0, 0, 0, 0, 0}       // a
+                            0., {0, 0, 0, 0.9778215200524469, -0.01733607539094763,
+                                 -0.09001900002195001, -0.18831121859148398}
                         ),
                         BeamNode(
                             0.1726731646460114,
                             {0.863365823230057, -0.2558982639254171, 0.11304112106827427,
                              0.9950113028068008, -0.002883848832932071, -0.030192109815745303,
-                             -0.09504013471947484},  // x0
-                            {0.002981602178886856, -0.00246675949494302, 0.003084570715675624,
-                             0.9999627302042724, 0.008633550973807708, 0, 0},  // q
-                            {0.01726731646460114, -0.014285714285714285, 0.003084570715675624,
-                             0.01726731646460114, -0.014285714285714285, 0.003084570715675624},  // v
-                            {0.01726731646460114, -0.011304112106827427, 0.00606617289456248,
-                             0.01726731646460114, -0.014285714285714285, -0.014285714285714285}  // a
+                             -0.09504013471947484}
                         ),
                         BeamNode(
-                            0.5,
-                            {2.5, -0.25, 0, 0.9904718430204884, -0.009526411091536478,
-                             0.09620741150793366, 0.09807604012323785},  // x0
-                            {0.025, -0.0125, 0.027500000000000004, 0.9996875162757026,
-                             0.02499739591471221, 0, 0},  // q
-                            {0.05, -0.025, 0.027500000000000004, 0.05, -0.025,
-                             0.027500000000000004},                                // v
-                            {0.05, 0, 0.052500000000000005, 0.05, -0.025, -0.025}  // a
-
+                            0.5, {2.5, -0.25, 0, 0.9904718430204884, -0.009526411091536478,
+                                  0.09620741150793366, 0.09807604012323785}
                         ),
                         BeamNode(
                             0.82732683535398865,
                             {4.1366341767699435, 0.39875540678256005, -0.5416125496397031,
                              0.9472312341234699, -0.04969214162931507, 0.18127630174800594,
-                             0.25965858850765167},  // x0
-                            {0.06844696924968459, -0.011818954790771264, 0.07977257214146725,
-                             0.9991445348823055, 0.04135454527402512, 0, 0},  // q
-                            {0.08273268353539887, -0.01428571428571428, 0.07977257214146725,
-                             0.08273268353539887, -0.01428571428571428, 0.07977257214146725},  // v
-                            {0.08273268353539887, 0.05416125496397031, 0.14821954139115184,
-                             0.08273268353539887, -0.01428571428571428, -0.01428571428571428}  // a
-
+                             0.25965858850765167}
                         ),
                         BeamNode(
-                            1.,
-                            {5, 1, -1, 0.9210746582719719, -0.07193653093139739, 0.20507529985516368,
-                             0.32309554437664584},                                          // x0
-                            {0.1, 0, 0.12, 0.9987502603949663, 0.04997916927067825, 0, 0},  // q
-                            {0.1, 0, 0.12, 0.1, 0, 0.12},                                   // v
-                            {0.1, 0.1, 0.22000000000000003, 0.1, 0, 0}                      // a
+                            1., {5, 1, -1, 0.9210746582719719, -0.07193653093139739,
+                                 0.20507529985516368, 0.32309554437664584}
                         ),
                     },
                     {
                         BeamSection(0., mass_matrix, stiffness_matrix),
                         BeamSection(1., mass_matrix, stiffness_matrix),
-                    }
+                    },
+                    BeamQuadrature{
+                        {-0.9491079123427585, 0.1294849661688697},
+                        {-0.7415311855993943, 0.27970539148927664},
+                        {-0.40584515137739696, 0.3818300505051189},
+                        {6.123233995736766e-17, 0.4179591836734694},
+                        {0.4058451513773971, 0.3818300505051189},
+                        {0.7415311855993945, 0.27970539148927664},
+                        {0.9491079123427585, 0.1294849661688697},
+                    },
+                    {0., 0., 0., 1., 0., 0., 0}  // Root node position and rotation
                 ),
             },
             gravity
@@ -113,11 +87,47 @@ protected:
 
         // Initialize beams from element inputs
         beams_ = new Beams();
-
         *beams_ = CreateBeams(beams_input);
 
-        // Calculate the quadrature point data
-        CalculateQPData(*beams_);
+        // Create initial state
+        State state(
+            beams_->num_nodes,  // Number of nodes
+            0,                  // Number of constraints
+            // displacement
+            {
+                {0, 0, 0, 1, 0, 0, 0},
+                {0.002981602178886856, -0.00246675949494302, 0.003084570715675624,
+                 0.9999627302042724, 0.008633550973807708, 0, 0},
+                {0.025, -0.0125, 0.027500000000000004, 0.9996875162757026, 0.02499739591471221, 0,
+                 0},
+                {0.06844696924968459, -0.011818954790771264, 0.07977257214146725, 0.9991445348823055,
+                 0.04135454527402512, 0, 0},
+                {0.1, 0, 0.12, 0.9987502603949663, 0.04997916927067825, 0, 0},
+            },
+            // velocity
+            {
+                {0, 0, 0, 0, 0, 0},
+                {0.01726731646460114, -0.014285714285714285, 0.003084570715675624,
+                 0.01726731646460114, -0.014285714285714285, 0.003084570715675624},
+                {0.05, -0.025, 0.027500000000000004, 0.05, -0.025, 0.027500000000000004},
+                {0.08273268353539887, -0.01428571428571428, 0.07977257214146725, 0.08273268353539887,
+                 -0.01428571428571428, 0.07977257214146725},
+                {0.1, 0, 0.12, 0.1, 0, 0.12},
+            },
+            // acceleration
+            {
+                {0, 0, 0, 0, 0, 0},
+                {0.01726731646460114, -0.011304112106827427, 0.00606617289456248,
+                 0.01726731646460114, -0.014285714285714285, -0.014285714285714285},
+                {0.05, 0, 0.052500000000000005, 0.05, -0.025, -0.025},
+                {0.08273268353539887, 0.05416125496397031, 0.14821954139115184, 0.08273268353539887,
+                 -0.01428571428571428, -0.01428571428571428},
+                {0.1, 0.1, 0.22000000000000003, 0.1, 0, 0},
+            }
+        );
+
+        // Set the beam's initial state
+        UpdateState(*beams_, state.q, state.v, state.vd);
     }
 
     // Per-test-suite tear-down.
@@ -732,7 +742,7 @@ TEST_F(BeamsTest, NodalForceVectorFG) {
 
 TEST_F(BeamsTest, ResidualForceVector) {
     View_N residual_vector("residual_vector", beams_->num_nodes * 6);
-    CalculateResidualVector(*beams_, residual_vector);
+    AssembleResidualVector(*beams_, residual_vector);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         residual_vector,
         {
@@ -750,7 +760,7 @@ TEST_F(BeamsTest, ResidualForceVector) {
 
 TEST_F(BeamsTest, MassMatrix) {
     View_NxN mass_matrix("mass_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
-    CalculateMassMatrix(*beams_, mass_matrix);
+    AssembleMassMatrix(*beams_, mass_matrix);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(mass_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {{0.4772429894755368, 9.713031930841838e-18, -1.2295544475412003e-17, -8.212152094108017e-18,
@@ -788,7 +798,7 @@ TEST_F(BeamsTest, MassMatrix) {
 
 TEST_F(BeamsTest, GyroscopicInertiaMatrix) {
     View_NxN gyro_matrix("gyro_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
-    CalculateGyroscopicInertiaMatrix(*beams_, gyro_matrix);
+    AssembleGyroscopicInertiaMatrix(*beams_, gyro_matrix);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(gyro_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {
@@ -818,7 +828,7 @@ TEST_F(BeamsTest, GyroscopicInertiaMatrix) {
 
 TEST_F(BeamsTest, InertialStiffnessMatrix) {
     View_NxN stiffness_matrix("stiffness_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
-    CalculateInertialStiffnessMatrix(*beams_, stiffness_matrix);
+    AssembleInertialStiffnessMatrix(*beams_, stiffness_matrix);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(stiffness_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {
@@ -848,7 +858,7 @@ TEST_F(BeamsTest, InertialStiffnessMatrix) {
 
 TEST_F(BeamsTest, ElasticStiffnessMatrix) {
     View_NxN stiffness_matrix("stiffness_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
-    CalculateElasticStiffnessMatrix(*beams_, stiffness_matrix);
+    AssembleElasticStiffnessMatrix(*beams_, stiffness_matrix);
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(stiffness_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {

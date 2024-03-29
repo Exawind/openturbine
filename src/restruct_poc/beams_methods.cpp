@@ -34,9 +34,7 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
             beams.qp_r, beams.qp_r_prime, beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot,
             beams.qp_omega_dot}
     );
-}
 
-void CalculateQPData(Beams& beams) {
     // Calculate RR0 matrix
     Kokkos::parallel_for(
         "CalculateRR0", beams.num_qps,
@@ -97,16 +95,16 @@ void CalculateQPData(Beams& beams) {
     );
 }
 
-void CalculateResidualVector(Beams& beams, View_N residual_vector) {
+void AssembleResidualVector(Beams& beams, View_N residual_vector) {
     Kokkos::parallel_for(
-        beams.num_nodes, AssembleResidualVector(
+        beams.num_nodes, IntegrateResidualVector(
                              beams.node_state_indices, beams.node_FE, beams.node_FI, beams.node_FG,
                              beams.node_FX, residual_vector
                          )
     );
 }
 
-void CalculateMassMatrix(Beams& beams, View_NxN M) {
+void AssembleMassMatrix(Beams& beams, View_NxN M) {
     Kokkos::parallel_for(
         "IntegrateMatrix", beams.num_elems,
         IntegrateMatrix{
@@ -121,7 +119,7 @@ void CalculateMassMatrix(Beams& beams, View_NxN M) {
     );
 }
 
-void CalculateGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
+void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
     Kokkos::parallel_for(
         "IntegrateMatrix", beams.num_elems,
         IntegrateMatrix{
@@ -136,7 +134,7 @@ void CalculateGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
     );
 }
 
-void CalculateInertialStiffnessMatrix(Beams& beams, View_NxN K) {
+void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K) {
     Kokkos::parallel_for(
         "IntegrateMatrix", beams.num_elems,
         IntegrateMatrix{
@@ -151,7 +149,7 @@ void CalculateInertialStiffnessMatrix(Beams& beams, View_NxN K) {
     );
 }
 
-void CalculateElasticStiffnessMatrix(Beams& beams, View_NxN K) {
+void AssembleElasticStiffnessMatrix(Beams& beams, View_NxN K) {
     Kokkos::parallel_for(
         "IntegrateElasticStiffnessMatrix", beams.num_elems,
         IntegrateElasticStiffnessMatrix{

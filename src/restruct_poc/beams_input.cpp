@@ -51,9 +51,8 @@ void LagrangePolynomialDerivWeights(
 }
 
 void PopulateElementViews(
-    const BeamElement& elem, View_Nx7 node_x0, View_Nx7 node_u, View_Nx6 node_u_dot,
-    View_Nx6 node_u_ddot, View_N qp_weight, View_Nx6x6 qp_Mstar, View_Nx6x6 qp_Cstar,
-    View_NxN shape_interp, View_NxN shape_deriv
+    const BeamElement& elem, View_Nx7 node_x0, View_N qp_weight, View_Nx6x6 qp_Mstar,
+    View_Nx6x6 qp_Cstar, View_NxN shape_interp, View_NxN shape_deriv
 ) {
     //--------------------------------------------------------------------------
     // Calculate element's node and quadrature point positions [-1,1]
@@ -76,21 +75,6 @@ void PopulateElementViews(
         for (size_t k = 0; k < elem.nodes[j].x.size(); ++k) {
             node_x0(j, k) = elem.nodes[j].x[k];
         }
-
-        // Transfer initial displacement
-        for (size_t k = 0; k < elem.nodes[j].q.size(); ++k) {
-            node_u(j, k) = elem.nodes[j].q[k];
-        }
-
-        // Transfer initial velocity
-        for (size_t k = 0; k < elem.nodes[j].v.size(); ++k) {
-            node_u_dot(j, k) = elem.nodes[j].v[k];
-        }
-
-        // Transfer initial acceleration
-        for (size_t k = 0; k < elem.nodes[j].a.size(); ++k) {
-            node_u_ddot(j, k) = elem.nodes[j].a[k];
-        }
     }
 
     //--------------------------------------------------------------------------
@@ -98,10 +82,8 @@ void PopulateElementViews(
     //--------------------------------------------------------------------------
 
     // Get vector of quadrature weights
-    auto qp_w = elem.quadrature.GetQuadratureWeights();
-
-    for (size_t j = 0; j < qp_w.size(); ++j) {
-        qp_weight(j) = qp_w[j];
+    for (size_t j = 0; j < elem.quadrature.size(); ++j) {
+        qp_weight(j) = elem.quadrature[j][1];
     }
 
     //--------------------------------------------------------------------------
@@ -110,13 +92,12 @@ void PopulateElementViews(
 
     std::vector<double> weights;
 
-    // Get vector of quadrature points
-    auto qp_xi = elem.quadrature.GetQuadraturePoints();
-
     // Loop through quadrature points
-    for (size_t j = 0; j < qp_xi.size(); ++j) {
+    for (size_t j = 0; j < elem.quadrature.size(); ++j) {
+        auto qp_xi = elem.quadrature[j][0];
+
         // Get interpolation weights to go from nodes to this QP
-        LagrangePolynomialInterpWeights(qp_xi[j], node_xi, weights);
+        LagrangePolynomialInterpWeights(qp_xi, node_xi, weights);
 
         // Copy interp weights to host matrix
         for (size_t k = 0; k < node_xi.size(); ++k) {
@@ -124,7 +105,7 @@ void PopulateElementViews(
         }
 
         // Get derivative weights to go from nodes to this QP
-        LagrangePolynomialDerivWeights(qp_xi[j], node_xi, weights);
+        LagrangePolynomialDerivWeights(qp_xi, node_xi, weights);
 
         // Copy deriv weights to host matrix
         for (size_t k = 0; k < node_xi.size(); ++k) {
@@ -150,9 +131,11 @@ void PopulateElementViews(
     Kokkos::deep_copy(qp_Cstar, 0.);
 
     // Loop through quadrature points and calculate section weights for interp
-    for (size_t i = 0; i < qp_xi.size(); ++i) {
+    for (size_t i = 0; i < elem.quadrature.size(); ++i) {
+        auto qp_xi = elem.quadrature[i][0];
+
         // Calculate weights
-        LagrangePolynomialInterpWeights(qp_xi[i], section_xi, weights);
+        LagrangePolynomialInterpWeights(qp_xi, section_xi, weights);
 
         // Loop through sections
         for (size_t j = 0; j < section_xi.size(); ++j) {
@@ -210,7 +193,7 @@ Beams CreateBeams(const BeamsInput& beams_input) {
     for (size_t i = 0; i < beams_input.NumElements(); i++) {
         // Define node and quadrature point index data for element
         size_t num_nodes = beams_input.elements[i].nodes.size();
-        size_t num_qps = beams_input.elements[i].quadrature.GetNumberOfQuadraturePoints();
+        size_t num_qps = beams_input.elements[i].quadrature.size();
         host_elem_indices[i] = Beams::ElemIndices(num_nodes, num_qps, node_counter, qp_counter);
         node_counter += num_nodes;
         qp_counter += num_qps;
@@ -220,9 +203,6 @@ Beams CreateBeams(const BeamsInput& beams_input) {
         PopulateElementViews(
             beams_input.elements[i],  // Element inputs
             Kokkos::subview(host_node_x0, idx.node_range, Kokkos::ALL),
-            Kokkos::subview(host_node_u, idx.node_range, Kokkos::ALL),
-            Kokkos::subview(host_node_u_dot, idx.node_range, Kokkos::ALL),
-            Kokkos::subview(host_node_u_ddot, idx.node_range, Kokkos::ALL),
             Kokkos::subview(host_qp_weight, idx.qp_range),
             Kokkos::subview(host_qp_Mstar, idx.qp_range, Kokkos::ALL, Kokkos::ALL),
             Kokkos::subview(host_qp_Cstar, idx.qp_range, Kokkos::ALL, Kokkos::ALL),
