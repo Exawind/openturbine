@@ -13,7 +13,7 @@ include(openturbine-utils)
 ########################## OPTIONS #####################################
 
 # General options for the project
-add_compile_options(-Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wpedantic -Werror)
+add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-Werror;-Wall;-Wextra;-Wshadow;-Wnon-virtual-dtor;-Wpedantic>")
 option(OTURB_ENABLE_BASIC_SANITIZERS "Compile with addrss and undefined behavior sanitizers" OFF)
 if(OTURB_ENABLE_BASIC_SANITIZERS)
   add_compile_options(-fsanitize=address,undefined)

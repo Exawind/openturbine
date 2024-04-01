@@ -164,7 +164,6 @@ auto ComputeLagrangePolynomials(
     using unmanaged_memory = Kokkos::MemoryTraits<Kokkos::Unmanaged>;
     using ScratchView2D = Kokkos::View<double**, scratch_space, unmanaged_memory>;
     auto gll_points = GenerateGLLPoints(member, n);
-    auto gll_point_v = GenerateGLLPoints(n);
     auto poly = ScratchView2D(member.team_scratch(0), points.extent(0), n + 1);
     member.team_barrier();
 
@@ -173,7 +172,7 @@ auto ComputeLagrangePolynomials(
         [&](std::size_t i, std::size_t j) {
             const auto x = points(i);
             const auto gll = gll_points(j);
-            if (std::abs(x - gll) < 1.e-15) {
+            if (Kokkos::abs(x - gll) < 1.e-15) {
                 poly(i, j) = 1.;
             } else {
                 poly(i, j) =
