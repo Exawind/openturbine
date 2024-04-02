@@ -16,9 +16,16 @@ namespace oturb {
 // Vector Functions
 //------------------------------------------------------------------------------
 
+template <typename View_A>
+KOKKOS_INLINE_FUNCTION void FillVector(View_A A, double value) {
+    for (size_t i = 0; i < A.extent(0); ++i) {
+        A(i) = value;
+    }
+}
+
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatVecMulAB(View_A A, View_B B, View_C C) {
-    Kokkos::deep_copy(C, 0.);
+    FillVector(C, 0.);
     for (size_t i = 0; i < A.extent(0); ++i) {
         for (size_t k = 0; k < B.extent(0); ++k) {
             C(i) += A(i, k) * B(k);
@@ -28,7 +35,7 @@ KOKKOS_INLINE_FUNCTION void MatVecMulAB(View_A A, View_B B, View_C C) {
 
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatVecMulATB(View_A A, View_B B, View_C C) {
-    Kokkos::deep_copy(C, 0.);
+    FillVector(C, 0.);
     for (size_t i = 0; i < A.extent(1); ++i) {
         for (size_t k = 0; k < B.extent(0); ++k) {
             C(i) += A(k, i) * B(k);
@@ -60,6 +67,15 @@ KOKKOS_INLINE_FUNCTION void VecScale(V1 v_in, double scale, V2 v_out) {
 // Matrix functions
 //------------------------------------------------------------------------------
 
+template <typename View_A>
+KOKKOS_INLINE_FUNCTION void FillMatrix(View_A A, double value) {
+    for (size_t i = 0; i < A.extent(0); ++i) {
+        for (size_t j = 0; j < A.extent(1); ++j) {
+            A(i, j) = value;
+        }
+    }
+}
+
 template <typename A, typename B>
 KOKKOS_INLINE_FUNCTION void MatScale(A m_in, double scale, B m_out) {
     for (size_t i = 0; i < m_in.extent(0); ++i) {
@@ -80,7 +96,7 @@ KOKKOS_INLINE_FUNCTION void MatAdd(View_A M_A, View_B M_B, View_C M_C) {
 
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatMulAB(View_A A, View_B B, View_C C) {
-    Kokkos::deep_copy(C, 0.);
+    FillMatrix(C, 0.);
     for (size_t i = 0; i < A.extent(0); ++i) {
         for (size_t j = 0; j < B.extent(1); ++j) {
             for (size_t k = 0; k < B.extent(0); ++k) {
@@ -92,7 +108,7 @@ KOKKOS_INLINE_FUNCTION void MatMulAB(View_A A, View_B B, View_C C) {
 
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatMulATB(View_A AT, View_B B, View_C C) {
-    Kokkos::deep_copy(C, 0.);
+    FillMatrix(C, 0.);
     for (size_t i = 0; i < AT.extent(1); ++i) {
         for (size_t j = 0; j < B.extent(1); ++j) {
             for (size_t k = 0; k < B.extent(0); ++k) {
@@ -104,7 +120,7 @@ KOKKOS_INLINE_FUNCTION void MatMulATB(View_A AT, View_B B, View_C C) {
 
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatMulABT(View_A A, View_B BT, View_C C) {
-    Kokkos::deep_copy(C, 0.);
+    FillMatrix(C, 0.);
     for (size_t i = 0; i < A.extent(0); ++i) {
         for (size_t j = 0; j < BT.extent(0); ++j) {
             for (size_t k = 0; k < BT.extent(1); ++k) {
@@ -172,7 +188,7 @@ void QuaternionCompose(View_Quaternion q1, View_Quaternion q2, View_Quaternion q
 
 KOKKOS_INLINE_FUNCTION
 void InterpVector3(View_NxN shape_matrix, View_Nx3 node_v, View_Nx3 qp_v) {
-    Kokkos::deep_copy(qp_v, 0.);
+    FillMatrix(qp_v, 0.);
     for (size_t i = 0; i < node_v.extent(0); ++i) {
         for (size_t j = 0; j < qp_v.extent(0); ++j) {
             for (size_t k = 0; k < 3; ++k) {
@@ -184,7 +200,7 @@ void InterpVector3(View_NxN shape_matrix, View_Nx3 node_v, View_Nx3 qp_v) {
 
 KOKKOS_INLINE_FUNCTION
 void InterpVector4(View_NxN shape_matrix, View_Nx4 node_v, View_Nx4 qp_v) {
-    Kokkos::deep_copy(qp_v, 0.);
+    FillMatrix(qp_v, 0.);
     for (size_t i = 0; i < node_v.extent(0); ++i) {
         for (size_t j = 0; j < qp_v.extent(0); ++j) {
             for (size_t k = 0; k < 4; ++k) {
@@ -261,7 +277,7 @@ struct InterpolateQPPosition {
         auto qp_pos = Kokkos::subview(qp_pos_, idx.qp_range, Kokkos::ALL);
 
         // Initialize qp_pos
-        Kokkos::deep_copy(qp_pos, 0.);
+        FillMatrix(qp_pos, 0.);
 
         // Perform matrix-matrix multiplication
         for (size_t i = 0; i < idx.num_nodes; ++i) {
@@ -427,7 +443,11 @@ struct CalculateRR0 {
             Kokkos::subview(qp_RR0_, i_qp, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         QuaternionCompose(qR, qR0, qRR0);
         QuaternionToRotationMatrix(qRR0, RR0_11);
-        Kokkos::deep_copy(RR0_22, RR0_11);
+        for (size_t i = 0; i < 3; ++i) {
+            for (size_t j = 0; j < 3; ++j) {
+                RR0_22(i, j) = RR0_11(i, j);
+            }
+        }
     }
 };
 
@@ -566,15 +586,19 @@ struct CalculateForcesAndMatrices {
         // Mass matrix components
         auto m = Muu(0, 0);
         if (m == 0.) {
-            Kokkos::deep_copy(eta, 0.);
+            eta(0) = 0.;
+            eta(1) = 0.;
+            eta(2) = 0.;
         } else {
             eta(0) = Muu(5, 1) / m;
             eta(1) = -Muu(5, 0) / m;
             eta(2) = Muu(4, 0) / m;
         }
-        Kokkos::deep_copy(
-            rho, Kokkos::subview(Muu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6))
-        );
+        for (size_t i = 0; i < 3; ++i) {
+            for (size_t j = 0; j < 3; ++j) {
+                rho(i, j) = Muu(3 + i, 3 + j);
+            }
+        }
         VecTilde(eta, eta_tilde);
 
         // Temporary variable used in many other calcs
@@ -591,7 +615,7 @@ struct CalculateForcesAndMatrices {
         VecTilde(N, N_tilde);
 
         // Elastic Force FD and it's components
-        Kokkos::deep_copy(FD, 0.);
+        FillVector(FD, 0.);
         MatVecMulATB(x0pupSS, N, Kokkos::subview(FD, Kokkos::make_pair(3, 6)));
 
         // Inertial forces
@@ -624,11 +648,13 @@ struct CalculateForcesAndMatrices {
 
         // Gravity force
         VecScale(gravity, m, V1);
-        Kokkos::deep_copy(Kokkos::subview(FG, Kokkos::make_pair(0, 3)), V1);
+        FG(0) = V1(0);
+        FG(1) = V1(1);
+        FG(2) = V1(2);
         MatVecMulAB(eta_tilde, V1, Kokkos::subview(FG, Kokkos::make_pair(3, 6)));
 
         // Ouu
-        Kokkos::deep_copy(Ouu, 0.);
+        FillMatrix(Ouu, 0.);
         auto Ouu_12 = Kokkos::subview(Ouu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         auto Ouu_22 = Kokkos::subview(Ouu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         MatMulAB(C11, x0pupSS, Ouu_12);
@@ -645,7 +671,7 @@ struct CalculateForcesAndMatrices {
         }
 
         // Puu
-        Kokkos::deep_copy(Puu, 0.);
+        FillMatrix(Puu, 0.);
         auto Puu_21 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
         MatMulATB(x0pupSS, C11, Puu_21);
         for (size_t i = 0; i < 3; i++) {
@@ -657,7 +683,7 @@ struct CalculateForcesAndMatrices {
         MatMulATB(x0pupSS, C12, Puu_22);
 
         // Quu
-        Kokkos::deep_copy(Quu, 0.);
+        FillMatrix(Quu, 0.);
         auto Quu_22 = Kokkos::subview(Quu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         MatMulAB(C11, x0pupSS, M1);
         for (size_t i = 0; i < 3; i++) {
@@ -668,7 +694,7 @@ struct CalculateForcesAndMatrices {
         MatMulATB(x0pupSS, M1, Quu_22);
 
         // Inertia gyroscopic matrix
-        Kokkos::deep_copy(Guu, 0.);
+        FillMatrix(Guu, 0.);
         // omega.tilde() * m * eta.tilde().t() + (omega.tilde() * m * eta).tilde().t()
         auto Guu_12 = Kokkos::subview(Guu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         VecScale(eta, m, V1);
@@ -693,7 +719,7 @@ struct CalculateForcesAndMatrices {
         }
 
         // Inertia stiffness matrix
-        Kokkos::deep_copy(Kuu, 0.);
+        FillMatrix(Kuu, 0.);
         auto Kuu_12 = Kokkos::subview(Kuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         MatMulAB(omega_tilde, omega_tilde, M1);
         for (size_t i = 0; i < 3; i++) {
@@ -766,9 +792,9 @@ struct CalculateNodeForces {
         auto node_FG = Kokkos::subview(node_FG_, idx.node_range, Kokkos::ALL);
         auto node_FI = Kokkos::subview(node_FI_, idx.node_range, Kokkos::ALL);
 
-        Kokkos::deep_copy(node_FE, 0.);
-        Kokkos::deep_copy(node_FG, 0.);
-        Kokkos::deep_copy(node_FI, 0.);
+        FillMatrix(node_FE, 0.);
+        FillMatrix(node_FG, 0.);
+        FillMatrix(node_FI, 0.);
 
         // The following calculations are reduction operations which would
         // likely benefit from parallelization
