@@ -18,8 +18,8 @@ namespace oturb {
 
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatVecMulAB(View_A A, View_B B, View_C C) {
-    Kokkos::deep_copy(C, 0.);
     for (size_t i = 0; i < A.extent(0); ++i) {
+        C(i) = 0.;
         for (size_t k = 0; k < B.extent(0); ++k) {
             C(i) += A(i, k) * B(k);
         }
@@ -28,8 +28,8 @@ KOKKOS_INLINE_FUNCTION void MatVecMulAB(View_A A, View_B B, View_C C) {
 
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatVecMulATB(View_A A, View_B B, View_C C) {
-    Kokkos::deep_copy(C, 0.);
     for (size_t i = 0; i < A.extent(1); ++i) {
+        C(i) = 0.;
         for (size_t k = 0; k < B.extent(0); ++k) {
             C(i) += A(k, i) * B(k);
         }
@@ -80,9 +80,9 @@ KOKKOS_INLINE_FUNCTION void MatAdd(View_A M_A, View_B M_B, View_C M_C) {
 
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatMulAB(View_A A, View_B B, View_C C) {
-    Kokkos::deep_copy(C, 0.);
     for (size_t i = 0; i < A.extent(0); ++i) {
         for (size_t j = 0; j < B.extent(1); ++j) {
+            C(i, j) = 0.;
             for (size_t k = 0; k < B.extent(0); ++k) {
                 C(i, j) += A(i, k) * B(k, j);
             }
@@ -92,9 +92,9 @@ KOKKOS_INLINE_FUNCTION void MatMulAB(View_A A, View_B B, View_C C) {
 
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatMulATB(View_A AT, View_B B, View_C C) {
-    Kokkos::deep_copy(C, 0.);
     for (size_t i = 0; i < AT.extent(1); ++i) {
         for (size_t j = 0; j < B.extent(1); ++j) {
+            C(i, j) = 0.;
             for (size_t k = 0; k < B.extent(0); ++k) {
                 C(i, j) += AT(k, i) * B(k, j);
             }
@@ -104,9 +104,9 @@ KOKKOS_INLINE_FUNCTION void MatMulATB(View_A AT, View_B B, View_C C) {
 
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatMulABT(View_A A, View_B BT, View_C C) {
-    Kokkos::deep_copy(C, 0.);
     for (size_t i = 0; i < A.extent(0); ++i) {
         for (size_t j = 0; j < BT.extent(0); ++j) {
+            C(i, j) = 0.;
             for (size_t k = 0; k < BT.extent(1); ++k) {
                 C(i, j) += A(i, k) * BT(j, k);
             }
@@ -172,7 +172,11 @@ void QuaternionCompose(View_Quaternion q1, View_Quaternion q2, View_Quaternion q
 
 KOKKOS_INLINE_FUNCTION
 void InterpVector3(View_NxN shape_matrix, View_Nx3 node_v, View_Nx3 qp_v) {
-    Kokkos::deep_copy(qp_v, 0.);
+    for (size_t j = 0; j < qp_v.extent(0); ++j) {
+        for (size_t k = 0; k < 3; ++k) {
+            qp_v(j, k) = 0.;
+        }
+    }
     for (size_t i = 0; i < node_v.extent(0); ++i) {
         for (size_t j = 0; j < qp_v.extent(0); ++j) {
             for (size_t k = 0; k < 3; ++k) {
@@ -184,7 +188,11 @@ void InterpVector3(View_NxN shape_matrix, View_Nx3 node_v, View_Nx3 qp_v) {
 
 KOKKOS_INLINE_FUNCTION
 void InterpVector4(View_NxN shape_matrix, View_Nx4 node_v, View_Nx4 qp_v) {
-    Kokkos::deep_copy(qp_v, 0.);
+    for (size_t j = 0; j < qp_v.extent(0); ++j) {
+        for (size_t k = 0; k < 4; ++k) {
+            qp_v(j, k) = 0.;
+        }
+    }
     for (size_t i = 0; i < node_v.extent(0); ++i) {
         for (size_t j = 0; j < qp_v.extent(0); ++j) {
             for (size_t k = 0; k < 4; ++k) {
@@ -261,7 +269,11 @@ struct InterpolateQPPosition {
         auto qp_pos = Kokkos::subview(qp_pos_, idx.qp_range, Kokkos::ALL);
 
         // Initialize qp_pos
-        Kokkos::deep_copy(qp_pos, 0.);
+        for (size_t i = 0; i < qp_pos.extent(0); ++i) {
+            for (size_t j = 0; j < qp_pos.extent(1); ++j) {
+                qp_pos(i, j) = 0.;
+            }
+        }
 
         // Perform matrix-matrix multiplication
         for (size_t i = 0; i < idx.num_nodes; ++i) {
@@ -345,66 +357,82 @@ struct CalculateJacobian {
 };
 
 struct InterpolateQPState {
-    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
-
-    View_NxN shape_interp_;  // Num Nodes x Num Quadrature points
-    View_NxN shape_deriv_;   // Num Nodes x Num Quadrature points
-    View_N qp_jacobian_;     // Num Nodes x Num Quadrature points
-    View_Nx7 node_u_;        // Node translation & rotation displacement
-    View_Nx6 node_u_dot_;    // Node translation & angular velocity
-    View_Nx6 node_u_ddot_;   // Node translation & angular acceleration
-
-    View_Nx3 qp_u_;          // qp translation displacement
-    View_Nx3 qp_u_prime_;    // qp translation displacement derivative
-    View_Nx4 qp_r_;          // qp rotation displacement
-    View_Nx4 qp_r_prime_;    // qp rotation displacement derivative
-    View_Nx3 qp_u_dot_;      // qp translation velocity
-    View_Nx3 qp_omega_;      // qp angular velocity
-    View_Nx3 qp_u_ddot_;     // qp translation acceleration
-    View_Nx3 qp_omega_dot_;  // qp angular acceleration
+    Kokkos::View<Beams::ElemIndices*> elem_indices;
+    View_NxN shape_interp_;
+    View_NxN shape_deriv_;
+    View_N qp_jacobian_;
+    View_Nx7 node_u_;
+    View_Nx3 qp_u_;
+    View_Nx3 qp_u_prime_;
+    View_Nx4 qp_r_;
+    View_Nx4 qp_r_prime_;
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_elem) const {
-        // Element specific views
-        auto& idx = elem_indices[i_elem];
+        auto idx = elem_indices(i_elem);
         auto shape_interp = Kokkos::subview(shape_interp_, idx.node_range, idx.qp_shape_range);
-        auto shape_deriv = Kokkos::subview(shape_deriv_, idx.node_range, idx.qp_shape_range);
-        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
         auto node_u = Kokkos::subview(node_u_, idx.node_range, Kokkos::make_pair(0, 3));
-        auto node_r = Kokkos::subview(node_u_, idx.node_range, Kokkos::make_pair(3, 7));
-
-        // Interpolate translation displacement
         auto qp_u = Kokkos::subview(qp_u_, idx.qp_range, Kokkos::ALL);
         InterpVector3(shape_interp, node_u, qp_u);
 
-        // Interpolate translation displacement derivative
+        auto shape_deriv = Kokkos::subview(shape_deriv_, idx.node_range, idx.qp_shape_range);
+        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
         auto qp_u_prime = Kokkos::subview(qp_u_prime_, idx.qp_range, Kokkos::ALL);
         InterpVector3Deriv(shape_deriv, qp_jacobian, node_u, qp_u_prime);
 
-        // Interpolate rotation displacement
+        auto node_r = Kokkos::subview(node_u_, idx.node_range, Kokkos::make_pair(3, 7));
         auto qp_r = Kokkos::subview(qp_r_, idx.qp_range, Kokkos::ALL);
         InterpQuaternion(shape_interp, node_r, qp_r);
 
-        // Interpolate rotation displacement derivative
         auto qp_r_prime = Kokkos::subview(qp_r_prime_, idx.qp_range, Kokkos::ALL);
         InterpVector4Deriv(shape_deriv, qp_jacobian, node_r, qp_r_prime);
+    }
+};
 
-        // Interpolate translation velocity
+struct InterpolateQPVelocity {
+    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
+    View_NxN shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_NxN shape_deriv_;                           // Num Nodes x Num Quadrature points
+    View_N qp_jacobian_;                             // Num Nodes x Num Quadrature points
+    View_Nx6 node_u_dot_;                            // Node translation & angular velocity
+    View_Nx3 qp_u_dot_;                              // qp translation velocity
+    View_Nx3 qp_omega_;                              // qp angular velocity
+
+    KOKKOS_FUNCTION
+    void operator()(const size_t i_elem) const {
+        auto& idx = elem_indices[i_elem];
+        auto shape_interp = Kokkos::subview(shape_interp_, idx.node_range, idx.qp_shape_range);
         auto node_u_dot = Kokkos::subview(node_u_dot_, idx.node_range, Kokkos::make_pair(0, 3));
         auto qp_u_dot = Kokkos::subview(qp_u_dot_, idx.qp_range, Kokkos::ALL);
         InterpVector3(shape_interp, node_u_dot, qp_u_dot);
 
-        // Interpolate angular velocity
+        auto shape_deriv = Kokkos::subview(shape_deriv_, idx.node_range, idx.qp_shape_range);
+        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
         auto node_omega = Kokkos::subview(node_u_dot_, idx.node_range, Kokkos::make_pair(3, 6));
         auto qp_omega = Kokkos::subview(qp_omega_, idx.qp_range, Kokkos::ALL);
         InterpVector3(shape_interp, node_omega, qp_omega);
+    }
+};
 
-        // Interpolate translation acceleration
+struct InterpolateQPAcceleration {
+    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
+    View_NxN shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_NxN shape_deriv_;                           // Num Nodes x Num Quadrature points
+    View_N qp_jacobian_;                             // Num Nodes x Num Quadrature points
+    View_Nx6 node_u_ddot_;                           // Node translation & angular velocity
+    View_Nx3 qp_u_ddot_;                             // qp translation velocity
+    View_Nx3 qp_omega_dot_;                          // qp angular velocity
+
+    KOKKOS_FUNCTION
+    void operator()(const size_t i_elem) const {
+        auto& idx = elem_indices[i_elem];
+        auto shape_interp = Kokkos::subview(shape_interp_, idx.node_range, idx.qp_shape_range);
         auto node_u_ddot = Kokkos::subview(node_u_ddot_, idx.node_range, Kokkos::make_pair(0, 3));
         auto qp_u_ddot = Kokkos::subview(qp_u_ddot_, idx.qp_range, Kokkos::ALL);
         InterpVector3(shape_interp, node_u_ddot, qp_u_ddot);
 
-        // Interpolate angular acceleration
+        auto shape_deriv = Kokkos::subview(shape_deriv_, idx.node_range, idx.qp_shape_range);
+        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
         auto node_omega_dot = Kokkos::subview(node_u_ddot_, idx.node_range, Kokkos::make_pair(3, 6));
         auto qp_omega_dot = Kokkos::subview(qp_omega_dot_, idx.qp_range, Kokkos::ALL);
         InterpVector3(shape_interp, node_omega_dot, qp_omega_dot);
@@ -427,7 +455,11 @@ struct CalculateRR0 {
             Kokkos::subview(qp_RR0_, i_qp, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         QuaternionCompose(qR, qR0, qRR0);
         QuaternionToRotationMatrix(qRR0, RR0_11);
-        Kokkos::deep_copy(RR0_22, RR0_11);
+        for (size_t i = 0; i < RR0_22.extent(0); ++i) {
+            for (size_t j = 0; j < RR0_22.extent(1); ++j) {
+                RR0_22(i, j) = RR0_11(i, j);
+            }
+        }
     }
 };
 
@@ -495,106 +527,130 @@ struct CalculateStrain {
     }
 };
 
-struct CalculateForcesAndMatrices {
-    View_3 gravity;               //
-    View_Nx6x6 qp_Muu_;           //
-    View_Nx6x6 qp_Cuu_;           //
-    View_Nx3 qp_x0_prime_;        //
-    View_Nx3 qp_u_prime_;         //
-    View_Nx3 qp_u_ddot_;          //
-    View_Nx3 qp_omega_;           //
-    View_Nx3 qp_omega_dot_;       //
-    View_Nx6 qp_strain_;          //
-    View_Nx3x3 eta_tilde_;        //
-    View_Nx3x3 omega_tilde_;      //
-    View_Nx3x3 omega_dot_tilde_;  //
-    View_Nx3x3 x0pupSS_;          //
-    View_Nx3x3 M_tilde_;          //
-    View_Nx3x3 N_tilde_;          //
-    View_Nx3x3 rho_;              //
-    View_Nx3 eta_;                //
-    View_Nx3 v1_;                 // temporary vector
-    View_Nx3 v2_;                 // temporary vector
-    View_Nx3x3 M1_;               // temporary matrix
-    View_Nx3x3 M2_;               // temporary matrix
-    View_Nx6 qp_FC_;              //
-    View_Nx6 qp_FD_;              //
-    View_Nx6 qp_FI_;              //
-    View_Nx6 qp_FG_;              //
-    View_Nx6x6 qp_Ouu_;           //
-    View_Nx6x6 qp_Puu_;           //
-    View_Nx6x6 qp_Quu_;           //
-    View_Nx6x6 qp_Guu_;           //
-    View_Nx6x6 qp_Kuu_;           //
+struct CalculateMassMatrixComponents {
+    View_Nx6x6 qp_Muu_;
+    View_Nx3 eta_;
+    View_Nx3x3 rho_;
+    View_Nx3x3 eta_tilde_;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i_qp) const {
+    void operator()(size_t i_qp) const {
         auto Muu = Kokkos::subview(qp_Muu_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto Cuu = Kokkos::subview(qp_Cuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto x0_prime = Kokkos::subview(qp_x0_prime_, i_qp, Kokkos::ALL);
-        auto u_prime = Kokkos::subview(qp_u_prime_, i_qp, Kokkos::ALL);
-        auto u_ddot = Kokkos::subview(qp_u_ddot_, i_qp, Kokkos::ALL);
-        auto omega = Kokkos::subview(qp_omega_, i_qp, Kokkos::ALL);
-        auto omega_dot = Kokkos::subview(qp_omega_dot_, i_qp, Kokkos::ALL);
-        auto strain = Kokkos::subview(qp_strain_, i_qp, Kokkos::ALL);
-        auto eta_tilde = Kokkos::subview(eta_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto omega_tilde = Kokkos::subview(omega_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto omega_dot_tilde = Kokkos::subview(omega_dot_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto x0pupSS = Kokkos::subview(x0pupSS_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto M_tilde = Kokkos::subview(M_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto N_tilde = Kokkos::subview(N_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
-        auto V1 = Kokkos::subview(v1_, i_qp, Kokkos::ALL);
-        auto V2 = Kokkos::subview(v2_, i_qp, Kokkos::ALL);
-        auto M1 = Kokkos::subview(M1_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto M2 = Kokkos::subview(M2_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto FC = Kokkos::subview(qp_FC_, i_qp, Kokkos::ALL);
-        auto FD = Kokkos::subview(qp_FD_, i_qp, Kokkos::ALL);
-        auto FI = Kokkos::subview(qp_FI_, i_qp, Kokkos::ALL);
-        auto FG = Kokkos::subview(qp_FG_, i_qp, Kokkos::ALL);
-        auto Ouu = Kokkos::subview(qp_Ouu_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto Puu = Kokkos::subview(qp_Puu_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto Quu = Kokkos::subview(qp_Quu_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto Guu = Kokkos::subview(qp_Guu_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto Kuu = Kokkos::subview(qp_Kuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto eta_tilde = Kokkos::subview(eta_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
 
-        auto C11 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
-        auto C12 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
-        auto C21 = Kokkos::subview(Cuu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
-
-        // Mass matrix components
         auto m = Muu(0, 0);
         if (m == 0.) {
-            Kokkos::deep_copy(eta, 0.);
+            eta(0) = 0.;
+            eta(1) = 0.;
+            eta(2) = 0.;
         } else {
             eta(0) = Muu(5, 1) / m;
             eta(1) = -Muu(5, 0) / m;
             eta(2) = Muu(4, 0) / m;
         }
-        Kokkos::deep_copy(
-            rho, Kokkos::subview(Muu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6))
-        );
+        for (size_t i = 0; i < rho.extent(0); ++i) {
+            for (size_t j = 0; j < rho.extent(1); ++j) {
+                rho(i, j) = Muu(i + 3, j + 3);
+            }
+        }
         VecTilde(eta, eta_tilde);
+    }
+};
 
-        // Temporary variable used in many other calcs
+struct CalculateTemporaryVariables {
+    View_Nx3 qp_x0_prime_;
+    View_Nx3 qp_u_prime_;
+    View_Nx3 v1_;
+    View_Nx3x3 x0pupSS_;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i_qp) const {
+        auto x0_prime = Kokkos::subview(qp_x0_prime_, i_qp, Kokkos::ALL);
+        auto u_prime = Kokkos::subview(qp_u_prime_, i_qp, Kokkos::ALL);
+        auto V1 = Kokkos::subview(v1_, i_qp, Kokkos::ALL);
+        auto x0pupSS = Kokkos::subview(x0pupSS_, i_qp, Kokkos::ALL, Kokkos::ALL);
+
         for (size_t i = 0; i < 3; i++) {
             V1(i) = x0_prime(i) + u_prime(i);
         }
         VecTilde(V1, x0pupSS);
+    }
+};
 
-        // Elastic Force FC and it's components
+struct CalculateForceFC {
+    View_Nx6x6 qp_Cuu_;
+    View_Nx6 qp_strain_;
+    View_Nx6 qp_FC_;
+    View_Nx3x3 M_tilde_;
+    View_Nx3x3 N_tilde_;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i_qp) const {
+        auto Cuu = Kokkos::subview(qp_Cuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto strain = Kokkos::subview(qp_strain_, i_qp, Kokkos::ALL);
+        auto FC = Kokkos::subview(qp_FC_, i_qp, Kokkos::ALL);
+        auto M_tilde = Kokkos::subview(M_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto N_tilde = Kokkos::subview(N_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+
         MatVecMulAB(Cuu, strain, FC);
         auto N = Kokkos::subview(FC, Kokkos::make_pair(0, 3));
         auto M = Kokkos::subview(FC, Kokkos::make_pair(3, 6));
         VecTilde(M, M_tilde);
         VecTilde(N, N_tilde);
+    }
+};
 
-        // Elastic Force FD and it's components
-        Kokkos::deep_copy(FD, 0.);
+struct CalculateForceFD {
+    View_Nx3x3 x0pupSS_;
+    View_Nx6 qp_FC_;
+    View_Nx6 qp_FD_;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i_qp) const {
+        auto x0pupSS = Kokkos::subview(x0pupSS_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto FC = Kokkos::subview(qp_FC_, i_qp, Kokkos::ALL);
+        auto FD = Kokkos::subview(qp_FD_, i_qp, Kokkos::ALL);
+
+        auto N = Kokkos::subview(FC, Kokkos::make_pair(0, 3));
+        for (size_t i = 0; i < FD.extent(0); ++i) {
+            FD(i) = 0.;
+        }
         MatVecMulATB(x0pupSS, N, Kokkos::subview(FD, Kokkos::make_pair(3, 6)));
+    }
+};
 
-        // Inertial forces
+struct CalculateInertialForces {
+    View_Nx6x6 qp_Muu_;
+    View_Nx3 qp_u_ddot_;
+    View_Nx3 qp_omega_;
+    View_Nx3 qp_omega_dot_;
+    View_Nx3x3 eta_tilde_;
+    View_Nx3x3 omega_tilde_;
+    View_Nx3x3 omega_dot_tilde_;
+    View_Nx3x3 rho_;
+    View_Nx3 eta_;
+    View_Nx3 v1_;
+    View_Nx3x3 M1_;
+    View_Nx6 qp_FI_;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i_qp) const {
+        auto Muu = Kokkos::subview(qp_Muu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto u_ddot = Kokkos::subview(qp_u_ddot_, i_qp, Kokkos::ALL);
+        auto omega = Kokkos::subview(qp_omega_, i_qp, Kokkos::ALL);
+        auto omega_dot = Kokkos::subview(qp_omega_dot_, i_qp, Kokkos::ALL);
+        auto eta_tilde = Kokkos::subview(eta_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto omega_tilde = Kokkos::subview(omega_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto omega_dot_tilde = Kokkos::subview(omega_dot_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
+        auto V1 = Kokkos::subview(v1_, i_qp, Kokkos::ALL);
+        auto M1 = Kokkos::subview(M1_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto FI = Kokkos::subview(qp_FI_, i_qp, Kokkos::ALL);
+
+        auto m = Muu(0, 0);
         VecTilde(omega, omega_tilde);
         VecTilde(omega_dot, omega_dot_tilde);
         auto FI_1 = Kokkos::subview(FI, Kokkos::make_pair(0, 3));
@@ -621,14 +677,53 @@ struct CalculateForcesAndMatrices {
         for (size_t i = 0; i < 3; i++) {
             FI_2(i) += V1(i);
         }
+    }
+};
 
-        // Gravity force
+struct CalculateGravityForce {
+    View_3 gravity;
+    View_Nx6x6 qp_Muu_;
+    View_Nx3x3 eta_tilde_;
+    View_Nx3 v1_;
+    View_Nx6 qp_FG_;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i_qp) const {
+        auto Muu = Kokkos::subview(qp_Muu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto eta_tilde = Kokkos::subview(eta_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto V1 = Kokkos::subview(v1_, i_qp, Kokkos::ALL);
+        auto FG = Kokkos::subview(qp_FG_, i_qp, Kokkos::ALL);
+        auto m = Muu(0, 0);
         VecScale(gravity, m, V1);
-        Kokkos::deep_copy(Kokkos::subview(FG, Kokkos::make_pair(0, 3)), V1);
+        for (size_t i = 0; i < 3; ++i) {
+            FG(i) = V1(i);
+        }
         MatVecMulAB(eta_tilde, V1, Kokkos::subview(FG, Kokkos::make_pair(3, 6)));
+    }
+};
 
-        // Ouu
-        Kokkos::deep_copy(Ouu, 0.);
+struct CalculateOuu {
+    View_Nx6x6 qp_Cuu_;
+    View_Nx3x3 x0pupSS_;
+    View_Nx3x3 M_tilde_;
+    View_Nx3x3 N_tilde_;
+    View_Nx6x6 qp_Ouu_;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i_qp) const {
+        auto Cuu = Kokkos::subview(qp_Cuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto x0pupSS = Kokkos::subview(x0pupSS_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto M_tilde = Kokkos::subview(M_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto N_tilde = Kokkos::subview(N_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Ouu = Kokkos::subview(qp_Ouu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+
+        auto C11 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
+        auto C21 = Kokkos::subview(Cuu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
+        for (size_t i = 0; i < Ouu.extent(0); ++i) {
+            for (size_t j = 0; j < Ouu.extent(1); ++j) {
+                Ouu(i, j) = 0.;
+            }
+        }
         auto Ouu_12 = Kokkos::subview(Ouu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         auto Ouu_22 = Kokkos::subview(Ouu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         MatMulAB(C11, x0pupSS, Ouu_12);
@@ -643,9 +738,28 @@ struct CalculateForcesAndMatrices {
                 Ouu_22(i, j) -= M_tilde(i, j);
             }
         }
+    }
+};
 
-        // Puu
-        Kokkos::deep_copy(Puu, 0.);
+struct CalculatePuu {
+    View_Nx6x6 qp_Cuu_;
+    View_Nx3x3 x0pupSS_;
+    View_Nx3x3 N_tilde_;
+    View_Nx6x6 qp_Puu_;
+    KOKKOS_FUNCTION
+    void operator()(size_t i_qp) const {
+        auto Cuu = Kokkos::subview(qp_Cuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto x0pupSS = Kokkos::subview(x0pupSS_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto N_tilde = Kokkos::subview(N_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Puu = Kokkos::subview(qp_Puu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+
+        auto C11 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
+        auto C12 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
+        for (size_t i = 0; i < Puu.extent(0); ++i) {
+            for (size_t j = 0; j < Puu.extent(1); ++j) {
+                Puu(i, j) = 0.;
+            }
+        }
         auto Puu_21 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
         MatMulATB(x0pupSS, C11, Puu_21);
         for (size_t i = 0; i < 3; i++) {
@@ -655,9 +769,29 @@ struct CalculateForcesAndMatrices {
         }
         auto Puu_22 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         MatMulATB(x0pupSS, C12, Puu_22);
+    }
+};
 
-        // Quu
-        Kokkos::deep_copy(Quu, 0.);
+struct CalculateQuu {
+    View_Nx6x6 qp_Cuu_;
+    View_Nx3x3 x0pupSS_;
+    View_Nx3x3 N_tilde_;
+    View_Nx3x3 M1_;
+    View_Nx6x6 qp_Quu_;
+    KOKKOS_FUNCTION
+    void operator()(size_t i_qp) const {
+        auto Cuu = Kokkos::subview(qp_Cuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto x0pupSS = Kokkos::subview(x0pupSS_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto N_tilde = Kokkos::subview(N_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto M1 = Kokkos::subview(M1_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Quu = Kokkos::subview(qp_Quu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+
+        auto C11 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
+        for (size_t i = 0; i < Quu.extent(0); ++i) {
+            for (size_t j = 0; j < Quu.extent(1); ++j) {
+                Quu(i, j) = 0.;
+            }
+        }
         auto Quu_22 = Kokkos::subview(Quu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         MatMulAB(C11, x0pupSS, M1);
         for (size_t i = 0; i < 3; i++) {
@@ -666,9 +800,39 @@ struct CalculateForcesAndMatrices {
             }
         }
         MatMulATB(x0pupSS, M1, Quu_22);
+    }
+};
 
+struct CalculateGyroscopicMatrix {
+    View_Nx6x6 qp_Muu_;
+    View_Nx3 qp_omega_;
+    View_Nx3x3 omega_tilde_;
+    View_Nx3x3 rho_;
+    View_Nx3 eta_;
+    View_Nx3 v1_;
+    View_Nx3 v2_;
+    View_Nx3x3 M1_;
+    View_Nx6x6 qp_Guu_;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i_qp) const {
+        auto Muu = Kokkos::subview(qp_Muu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto omega = Kokkos::subview(qp_omega_, i_qp, Kokkos::ALL);
+        auto omega_tilde = Kokkos::subview(omega_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
+        auto V1 = Kokkos::subview(v1_, i_qp, Kokkos::ALL);
+        auto V2 = Kokkos::subview(v2_, i_qp, Kokkos::ALL);
+        auto M1 = Kokkos::subview(M1_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Guu = Kokkos::subview(qp_Guu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+
+        auto m = Muu(0, 0);
         // Inertia gyroscopic matrix
-        Kokkos::deep_copy(Guu, 0.);
+        for (size_t i = 0; i < Guu.extent(0); ++i) {
+            for (size_t j = 0; j < Guu.extent(1); ++j) {
+                Guu(i, j) = 0.;
+            }
+        }
         // omega.tilde() * m * eta.tilde().t() + (omega.tilde() * m * eta).tilde().t()
         auto Guu_12 = Kokkos::subview(Guu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         VecScale(eta, m, V1);
@@ -691,9 +855,46 @@ struct CalculateForcesAndMatrices {
                 Guu_22(i, j) -= M1(i, j);
             }
         }
+    }
+};
+
+struct CalculateInertiaStiffnessMatrix {
+    View_Nx6x6 qp_Muu_;
+    View_Nx3 qp_u_ddot_;
+    View_Nx3 qp_omega_;
+    View_Nx3 qp_omega_dot_;
+    View_Nx3x3 omega_tilde_;
+    View_Nx3x3 omega_dot_tilde_;
+    View_Nx3x3 rho_;
+    View_Nx3 eta_;
+    View_Nx3 v1_;
+    View_Nx3x3 M1_;
+    View_Nx3x3 M2_;
+    View_Nx6x6 qp_Kuu_;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i_qp) const {
+        auto Muu = Kokkos::subview(qp_Muu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto u_ddot = Kokkos::subview(qp_u_ddot_, i_qp, Kokkos::ALL);
+        auto omega = Kokkos::subview(qp_omega_, i_qp, Kokkos::ALL);
+        auto omega_dot = Kokkos::subview(qp_omega_dot_, i_qp, Kokkos::ALL);
+        auto omega_tilde = Kokkos::subview(omega_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto omega_dot_tilde = Kokkos::subview(omega_dot_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
+        auto V1 = Kokkos::subview(v1_, i_qp, Kokkos::ALL);
+        auto M1 = Kokkos::subview(M1_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto M2 = Kokkos::subview(M2_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Kuu = Kokkos::subview(qp_Kuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+
+        auto m = Muu(0, 0);
 
         // Inertia stiffness matrix
-        Kokkos::deep_copy(Kuu, 0.);
+        for (size_t i = 0; i < Kuu.extent(0); ++i) {
+            for (size_t j = 0; j < Kuu.extent(1); ++j) {
+                Kuu(i, j) = 0.;
+            }
+        }
         auto Kuu_12 = Kokkos::subview(Kuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         MatMulAB(omega_tilde, omega_tilde, M1);
         for (size_t i = 0; i < 3; i++) {
@@ -766,9 +967,13 @@ struct CalculateNodeForces {
         auto node_FG = Kokkos::subview(node_FG_, idx.node_range, Kokkos::ALL);
         auto node_FI = Kokkos::subview(node_FI_, idx.node_range, Kokkos::ALL);
 
-        Kokkos::deep_copy(node_FE, 0.);
-        Kokkos::deep_copy(node_FG, 0.);
-        Kokkos::deep_copy(node_FI, 0.);
+        for (size_t i = 0; i < node_FE.extent(0); ++i) {
+            for (size_t j = 0; j < node_FE.extent(1); ++j) {
+                node_FE(i, j) = 0.;
+                node_FG(i, j) = 0.;
+                node_FI(i, j) = 0.;
+            }
+        }
 
         // The following calculations are reduction operations which would
         // likely benefit from parallelization
