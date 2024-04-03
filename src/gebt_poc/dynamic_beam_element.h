@@ -112,9 +112,9 @@ public:
                     }(team_member, delta_gen_coords_node);
                     team_member.team_barrier();
                     const auto psi_times_psi = [&](auto& member, ScratchView2D_3x3::const_type psi) {
-                        auto psi_times_psi = ScratchView2D_3x3(member.team_scratch(0));
-                        gemm::invoke(member, 1., psi, psi, 0., psi_times_psi);
-                        return psi_times_psi;
+                        auto psi_x_psi = ScratchView2D_3x3(member.team_scratch(0));
+                        gemm::invoke(member, 1., psi, psi, 0., psi_x_psi);
+                        return psi_x_psi;
                     }(team_member, psi_cross_prod_matrix);
                     const auto factor_1 = (1.0 - std::cos(phi)) / (phi * phi);
                     const auto factor_2 = (1.0 - std::sin(phi) / phi) / (phi * phi);
