@@ -30,10 +30,11 @@ struct State {
         Kokkos::deep_copy(Kokkos::subview(this->q, Kokkos::ALL, 3), 1.);
     }
     State(
-        size_t num_system_nodes, size_t num_constraint_nodes, std::vector<std::array<double, 7>> q_,
-        std::vector<std::array<double, 6>> v_, std::vector<std::array<double, 6>> vd_
+        size_t num_system_nodes_, size_t num_constraint_nodes_,
+        std::vector<std::array<double, 7>> q_, std::vector<std::array<double, 6>> v_,
+        std::vector<std::array<double, 6>> vd_
     )
-        : State(num_system_nodes, num_constraint_nodes) {
+        : State(num_system_nodes_, num_constraint_nodes_) {
         if (q_.size() == 0 || v_.size() == 0 || vd_.size() == 0)
             return;
         // Create mirror of state views
