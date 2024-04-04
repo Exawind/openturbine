@@ -87,7 +87,7 @@ inline void solve_linear_system(Kokkos::View<double**> system, Kokkos::View<doub
         throw std::runtime_error("Linear system solver failed to find a solution");
     }
 
-    Kokkos::deep_copy(system, A);
+    // Kokkos::deep_copy(system, A);
     Kokkos::deep_copy(solution, b);
 }
 
