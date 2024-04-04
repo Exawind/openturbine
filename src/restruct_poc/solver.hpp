@@ -41,6 +41,16 @@ struct Constraints {
             host_node_indices(i).constrained_node_index = inputs[i].constrained_node_index;
         }
         Kokkos::deep_copy(this->node_indices, host_node_indices);
+        // Initialize rotation to identity
+        Kokkos::deep_copy(Kokkos::subview(this->u, Kokkos::ALL, 3), 1.0);
+    }
+
+    void UpdateDisplacement(size_t index, std::array<double, kLieGroupComponents> u_) {
+        auto host_u = Kokkos::create_mirror(this->u);
+        for (size_t i = 0; i < kLieGroupComponents; ++i) {
+            host_u(index, i) = u_[i];
+        }
+        Kokkos::deep_copy(this->u, host_u);
     }
 };
 

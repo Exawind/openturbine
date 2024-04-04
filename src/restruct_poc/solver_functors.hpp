@@ -233,7 +233,7 @@ struct CalculateConstraintResidualGradient {
         auto i_node2 = node_indices(i_constraint).constrained_node_index;
 
         Quaternion R1;
-        if (i_node1 < 0) {
+        if (i_node1 == (size_t)-1) {
             R1 = Quaternion(
                 constraint_u(i_constraint, 3), constraint_u(i_constraint, 4),
                 constraint_u(i_constraint, 5), constraint_u(i_constraint, 6)

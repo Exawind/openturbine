@@ -103,6 +103,14 @@ TEST(RotatingBeamTest, StepConvergence) {
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < 10; ++i) {
+        // Set constraint displacement
+        auto q = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
+            Vector(0, 0, omega * step_size * (i + 1))
+        );
+        solver.constraints.UpdateDisplacement(
+            0, {0, 0, 0, q.GetScalarComponent(), q.GetXComponent(), q.GetYComponent(),
+                q.GetZComponent()}
+        );
         auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
     }

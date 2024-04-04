@@ -108,6 +108,15 @@ protected:
         // Initialize constraints
         InitializeConstraints(*solver_, *beams_);
 
+        // Set constraint displacement
+        auto q = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
+            Vector(0, 0, omega * step_size)
+        );
+        solver_->constraints.UpdateDisplacement(
+            0, {0, 0, 0, q.GetScalarComponent(), q.GetXComponent(), q.GetYComponent(),
+                q.GetZComponent()}
+        );
+
         // Predict the next state for the solver
         PredictNextState(*solver_);
 
@@ -474,6 +483,15 @@ protected:
         // Initialize constraints
         InitializeConstraints(*solver_, *beams_);
 
+        // Set constraint displacement
+        auto q = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
+            Vector(0, 0, omega * step_size)
+        );
+        solver_->constraints.UpdateDisplacement(
+            0, {0, 0, 0, q.GetScalarComponent(), q.GetXComponent(), q.GetYComponent(),
+                q.GetZComponent()}
+        );
+
         // Perform step with 1 convergence iteration
         Step(*solver_, *beams_);
     }
@@ -721,6 +739,15 @@ protected:
 
         // Initialize constraints
         InitializeConstraints(*solver_, *beams_);
+
+        // Set constraint displacement
+        auto q = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
+            Vector(0, 0, omega * step_size)
+        );
+        solver_->constraints.UpdateDisplacement(
+            0, {0, 0, 0, q.GetScalarComponent(), q.GetXComponent(), q.GetYComponent(),
+                q.GetZComponent()}
+        );
 
         // Perform step with 1 convergence iteration
         Step(*solver_, *beams_);
