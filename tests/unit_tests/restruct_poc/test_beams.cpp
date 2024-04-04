@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "src/restruct_poc/beams.hpp"
-#include "src/restruct_poc/solver.hpp"
+#include "src/restruct_poc/state.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace oturb::restruct_poc::tests {
