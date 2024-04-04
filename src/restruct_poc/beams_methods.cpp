@@ -4,7 +4,7 @@
 
 #include "beams_functors.hpp"
 
-namespace oturb {
+namespace openturbine {
 
 struct UpdateNodeState {
     Kokkos::View<size_t*> node_state_indices;
@@ -233,4 +233,4 @@ void AssembleElasticStiffnessMatrix(Beams& beams, View_NxN K) {
     );
 }
 
-}  // namespace oturb
+}  // namespace openturbine

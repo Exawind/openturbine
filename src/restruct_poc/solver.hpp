@@ -4,7 +4,7 @@
 #include "state.hpp"
 #include "types.hpp"
 
-namespace oturb {
+namespace openturbine {
 
 struct ConstraintInput {
     size_t base_node_index;
@@ -130,4 +130,4 @@ bool Step(Solver& solver, Beams& beams);
 void SolveSystem(Solver& solver);
 double CalculateConvergenceError(Solver& solver);
 
-}  // namespace oturb
+}  // namespace openturbine

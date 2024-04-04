@@ -6,7 +6,7 @@
 
 #include "types.hpp"
 
-namespace oturb {
+namespace openturbine {
 
 struct Beams {
     // Node and quadrature point index data for an element
@@ -170,4 +170,4 @@ struct Beams {
           qp_quat("Quat_4", num_qps_) {}
 };
 
-}  // namespace oturb
+}  // namespace openturbine

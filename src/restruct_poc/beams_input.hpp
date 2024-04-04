@@ -6,7 +6,7 @@
 
 #include "src/restruct_poc/types.hpp"
 
-namespace oturb {
+namespace openturbine {
 
 using Array_6x6 = std::array<std::array<double, 6>, 6>;
 using Array_2 = std::array<double, 2>;
@@ -118,4 +118,4 @@ struct BeamsInput {
 
 Beams CreateBeams(const BeamsInput& beams_input);
 
-}  // namespace oturb
+}  // namespace openturbine

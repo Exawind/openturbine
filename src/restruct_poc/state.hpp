@@ -2,7 +2,7 @@
 
 #include "types.hpp"
 
-namespace oturb {
+namespace openturbine {
 
 struct State {
     size_t num_system_nodes;
@@ -63,4 +63,4 @@ struct State {
     }
 };
 
-}  // namespace oturb
+}  // namespace openturbine

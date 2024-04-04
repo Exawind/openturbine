@@ -6,7 +6,7 @@
 #include "src/restruct_poc/state.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
-namespace oturb::restruct_poc::tests {
+namespace openturbine::restruct_poc::tests {
 
 class BeamsTest : public testing::Test {
 protected:
@@ -896,4 +896,4 @@ TEST_F(BeamsTest, ElasticStiffnessMatrix) {
     );
 }
 
-}  // namespace oturb::restruct_poc::tests
+}  // namespace openturbine::restruct_poc::tests

@@ -6,7 +6,7 @@
 #include "src/restruct_poc/solver.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
-namespace oturb::restruct_poc::tests {
+namespace openturbine::restruct_poc::tests {
 
 TEST(RotatingBeamTest, StepConvergence) {
     // Mass matrix for uniform composite beam section
@@ -116,4 +116,4 @@ TEST(RotatingBeamTest, StepConvergence) {
     }
 }
 
-}  // namespace oturb::restruct_poc::tests
+}  // namespace openturbine::restruct_poc::tests

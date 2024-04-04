@@ -3,7 +3,7 @@
 #include "beams_data.hpp"
 #include "beams_input.hpp"
 
-namespace oturb {
+namespace openturbine {
 
 void LagrangePolynomialInterpWeights(
     const double x, const std::vector<double>& xs, std::vector<double>& weights
@@ -25,4 +25,4 @@ void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K);
 
 void AssembleElasticStiffnessMatrix(Beams& beams, View_NxN K);
 
-}  // namespace oturb
+}  // namespace openturbine

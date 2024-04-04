@@ -5,7 +5,7 @@
 
 #include "src/gebt_poc/linear_solver.h"
 
-namespace oturb {
+namespace openturbine {
 
 void PredictNextState(Solver& solver) {
     Kokkos::deep_copy(solver.state.lambda, 0.);
@@ -224,4 +224,4 @@ bool Step(Solver& solver, Beams& beams) {
     return false;
 }
 
-}  // namespace oturb
+}  // namespace openturbine

@@ -6,7 +6,7 @@
 #include "src/restruct_poc/solver.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
-namespace oturb::restruct_poc::tests {
+namespace openturbine::restruct_poc::tests {
 
 class NewSolverTest : public testing::Test {
 protected:
@@ -1134,4 +1134,4 @@ TEST_F(SolverStep2Test, SolutionVector) {
 //     );
 // }
 
-}  // namespace oturb::restruct_poc::tests
+}  // namespace openturbine::restruct_poc::tests

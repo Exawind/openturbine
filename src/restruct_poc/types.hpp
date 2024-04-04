@@ -6,7 +6,7 @@
 #include "src/gen_alpha_poc/rotation_matrix.h"
 #include "src/gen_alpha_poc/vector.h"
 
-namespace oturb {
+namespace openturbine {
 
 static constexpr std::size_t kLieAlgebraComponents = 6;
 static constexpr std::size_t kLieGroupComponents = 7;
@@ -39,4 +39,4 @@ using Vector = openturbine::gen_alpha_solver::Vector;
 using Quaternion = openturbine::gen_alpha_solver::Quaternion;
 using RotationMatrix = openturbine::gen_alpha_solver::RotationMatrix;
 
-}  // namespace oturb
+}  // namespace openturbine

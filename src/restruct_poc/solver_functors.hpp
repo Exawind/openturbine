@@ -2,7 +2,7 @@
 
 #include "types.hpp"
 
-namespace oturb {
+namespace openturbine {
 
 //------------------------------------------------------------------------------
 // Functor helper functions which should be reworked later
@@ -353,4 +353,4 @@ struct CalculateErrorSumSquares {
     }
 };
 
-}  // namespace oturb
+}  // namespace openturbine

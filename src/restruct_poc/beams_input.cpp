@@ -2,7 +2,7 @@
 
 #include "beams_functors.hpp"
 
-namespace oturb {
+namespace openturbine {
 
 void LagrangePolynomialInterpWeights(
     const double x, const std::vector<double>& xs, std::vector<double>& weights
@@ -291,4 +291,4 @@ Beams CreateBeams(const BeamsInput& beams_input) {
     return beams;
 }
 
-}  // namespace oturb
+}  // namespace openturbine

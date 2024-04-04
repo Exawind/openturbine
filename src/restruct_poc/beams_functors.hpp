@@ -10,7 +10,7 @@
 #include "src/gebt_poc/quadrature.h"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
-namespace oturb {
+namespace openturbine {
 
 //------------------------------------------------------------------------------
 // Vector Functions
@@ -1146,4 +1146,4 @@ struct IntegrateResidualVector {
     }
 };
 
-}  // namespace oturb
+}  // namespace openturbine
