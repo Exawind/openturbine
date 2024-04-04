@@ -8,7 +8,9 @@ target_sources(${oturb_lib_name}
     beams_methods.hpp
     beams.hpp
     dynamic_beam.cpp
+    solver_functors.hpp
     solver.hpp
     solver.cpp
     types.hpp
+    state.hpp
 )
