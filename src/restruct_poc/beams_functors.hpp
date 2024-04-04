@@ -836,7 +836,7 @@ struct IntegrateMatrix {
     View_N qp_jacobian_;                             // Jacobians
     View_NxN shape_interp_;                          // Num Nodes x Num Quadrature points
     View_Nx6x6 qp_M_;                                //
-    Kokkos::View<double**, Kokkos::MemoryTraits<Kokkos::Atomic>> gbl_M_;  //
+    View_NxN_atomic gbl_M_;                          //
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_elem) const {
