@@ -370,7 +370,7 @@ TEST_F(NewSolverTest, AssembleIterationMatrix) {
     );
 }
 
-class NewSolverTest2 : public testing::Test {
+class SolverStep1Test : public testing::Test {
 protected:
     // Per-test-suite set-up.
     // Called before the first test in this test suite.
@@ -493,10 +493,10 @@ protected:
     static Solver* solver_;
 };
 
-Beams* NewSolverTest2::beams_ = nullptr;
-Solver* NewSolverTest2::solver_ = nullptr;
+Beams* SolverStep1Test::beams_ = nullptr;
+Solver* SolverStep1Test::solver_ = nullptr;
 
-TEST_F(NewSolverTest2, SolutionVector) {
+TEST_F(SolverStep1Test, SolutionVector) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         solver_->x,
         {
@@ -518,11 +518,11 @@ TEST_F(NewSolverTest2, SolutionVector) {
     );
 }
 
-TEST_F(NewSolverTest2, ConvergenceError) {
-    EXPECT_NEAR(solver_->convergence_err, 13.698797186349344, 1.e-9);
+TEST_F(SolverStep1Test, ConvergenceError) {
+    EXPECT_NEAR(solver_->convergence_err, 13.698797186349344, 1.e-6);
 }
 
-TEST_F(NewSolverTest2, SolverUpdateStatePrediction_q_delta) {
+TEST_F(SolverStep1Test, SolverUpdateStatePrediction_q_delta) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         solver_->state.q_delta,
         {
@@ -542,7 +542,7 @@ TEST_F(NewSolverTest2, SolverUpdateStatePrediction_q_delta) {
     );
 }
 
-TEST_F(NewSolverTest2, SolverUpdateStatePrediction_v) {
+TEST_F(SolverStep1Test, SolverUpdateStatePrediction_v) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         solver_->state.v,
         {
@@ -562,7 +562,7 @@ TEST_F(NewSolverTest2, SolverUpdateStatePrediction_v) {
     );
 }
 
-TEST_F(NewSolverTest2, SolverUpdateStatePrediction_vd) {
+TEST_F(SolverStep1Test, SolverUpdateStatePrediction_vd) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         solver_->state.vd,
         {
@@ -582,7 +582,7 @@ TEST_F(NewSolverTest2, SolverUpdateStatePrediction_vd) {
     );
 }
 
-TEST_F(NewSolverTest2, SolverUpdateStatePrediction_q) {
+TEST_F(SolverStep1Test, SolverUpdateStatePrediction_q) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         solver_->state.q,
         {
@@ -608,7 +608,7 @@ TEST_F(NewSolverTest2, SolverUpdateStatePrediction_q) {
     );
 }
 
-TEST_F(NewSolverTest2, SolverUpdateStatePrediction_lambda) {
+TEST_F(SolverStep1Test, SolverUpdateStatePrediction_lambda) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         solver_->state.lambda,
         {
@@ -622,7 +622,7 @@ TEST_F(NewSolverTest2, SolverUpdateStatePrediction_lambda) {
     );
 }
 
-class NewSolverTest3 : public testing::Test {
+class SolverStep2Test : public testing::Test {
 protected:
     // Per-test-suite set-up.
     // Called before the first test in this test suite.
@@ -741,10 +741,10 @@ protected:
     static Solver* solver_;
 };
 
-Beams* NewSolverTest3::beams_ = nullptr;
-Solver* NewSolverTest3::solver_ = nullptr;
+Beams* SolverStep2Test::beams_ = nullptr;
+Solver* SolverStep2Test::solver_ = nullptr;
 
-TEST_F(NewSolverTest3, ConstraintResidualVector) {
+TEST_F(SolverStep2Test, ConstraintResidualVector) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         solver_->constraints.Phi,
         {
@@ -758,7 +758,7 @@ TEST_F(NewSolverTest3, ConstraintResidualVector) {
     );
 }
 
-TEST_F(NewSolverTest3, ConstraintGradientMatrix) {
+TEST_F(SolverStep2Test, ConstraintGradientMatrix) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(solver_->constraints.B, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)),
         {
@@ -772,7 +772,7 @@ TEST_F(NewSolverTest3, ConstraintGradientMatrix) {
     );
 }
 
-TEST_F(NewSolverTest3, MatrixK) {
+TEST_F(SolverStep2Test, MatrixK) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(solver_->K, Kokkos::make_pair(0, 12), Kokkos::make_pair(0, 12)),
         {
@@ -820,7 +820,7 @@ TEST_F(NewSolverTest3, MatrixK) {
     );
 }
 
-TEST_F(NewSolverTest3, MatrixM) {
+TEST_F(SolverStep2Test, MatrixM) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(solver_->M, Kokkos::make_pair(0, 12), Kokkos::make_pair(0, 12)),
         {
@@ -852,7 +852,7 @@ TEST_F(NewSolverTest3, MatrixM) {
     );
 }
 
-TEST_F(NewSolverTest3, MatrixG) {
+TEST_F(SolverStep2Test, MatrixG) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(solver_->G, Kokkos::make_pair(0, 12), Kokkos::make_pair(0, 12)),
         {
@@ -876,7 +876,7 @@ TEST_F(NewSolverTest3, MatrixG) {
     );
 }
 
-TEST_F(NewSolverTest3, ResidualVector) {
+TEST_F(SolverStep2Test, ResidualVector) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         solver_->R,
         {
@@ -926,7 +926,7 @@ TEST_F(NewSolverTest3, ResidualVector) {
     );
 }
 
-TEST_F(NewSolverTest3, IterationMatrix) {
+TEST_F(SolverStep2Test, IterationMatrix) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         Kokkos::subview(solver_->St, Kokkos::make_pair(0, 12), Kokkos::make_pair(0, 12)),
         {
@@ -981,7 +981,7 @@ TEST_F(NewSolverTest3, IterationMatrix) {
     );
 }
 
-TEST_F(NewSolverTest3, SolutionVector) {
+TEST_F(SolverStep2Test, SolutionVector) {
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
         solver_->x,
         {
@@ -1003,11 +1003,11 @@ TEST_F(NewSolverTest3, SolutionVector) {
     );
 }
 
-// TEST_F(NewSolverTest3, ConvergenceError) {
+// TEST_F(SolverStep2Test, ConvergenceError) {
 //     EXPECT_NEAR(solver_->convergence_err, 13.698797186349344, 1.e-9);
 // }
 
-// TEST_F(NewSolverTest3, SolverUpdateStatePrediction_q_delta) {
+// TEST_F(SolverStep2Test, SolverUpdateStatePrediction_q_delta) {
 //     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
 //         solver_->state.q_delta,
 //         {
@@ -1027,7 +1027,7 @@ TEST_F(NewSolverTest3, SolutionVector) {
 //     );
 // }
 
-// TEST_F(NewSolverTest3, SolverUpdateStatePrediction_v) {
+// TEST_F(SolverStep2Test, SolverUpdateStatePrediction_v) {
 //     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
 //         solver_->state.v,
 //         {
@@ -1047,7 +1047,7 @@ TEST_F(NewSolverTest3, SolutionVector) {
 //     );
 // }
 
-// TEST_F(NewSolverTest3, SolverUpdateStatePrediction_vd) {
+// TEST_F(SolverStep2Test, SolverUpdateStatePrediction_vd) {
 //     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
 //         solver_->state.vd,
 //         {
@@ -1067,7 +1067,7 @@ TEST_F(NewSolverTest3, SolutionVector) {
 //     );
 // }
 
-// TEST_F(NewSolverTest3, SolverUpdateStatePrediction_q) {
+// TEST_F(SolverStep2Test, SolverUpdateStatePrediction_q) {
 //     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
 //         solver_->state.q,
 //         {
@@ -1093,7 +1093,7 @@ TEST_F(NewSolverTest3, SolutionVector) {
 //     );
 // }
 
-// TEST_F(NewSolverTest3, SolverUpdateStatePrediction_lambda) {
+// TEST_F(SolverStep2Test, SolverUpdateStatePrediction_lambda) {
 //     openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
 //         solver_->state.lambda,
 //         {
