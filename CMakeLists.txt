@@ -13,7 +13,6 @@ include(openturbine-utils)
 ########################## OPTIONS #####################################
 
 # General options for the project
-add_compile_options(-Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wpedantic -Werror)
 option(OTURB_ENABLE_BASIC_SANITIZERS "Compile with addrss and undefined behavior sanitizers" OFF)
 if(OTURB_ENABLE_BASIC_SANITIZERS)
   add_compile_options(-fsanitize=address,undefined)
@@ -71,6 +70,10 @@ set(OTURB_PRECISION "DOUBLE" CACHE STRING "Floating point precision SINGLE or DO
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(OTURB_ENABLE_CUDA)
+else()
+  add_compile_options(-Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wpedantic -Werror)
+endif()
 
 if(OTURB_ENABLE_CUDA)
   enable_language(CUDA)

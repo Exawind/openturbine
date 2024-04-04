@@ -50,9 +50,10 @@ void LagrangePolynomialDerivWeights(
     }
 }
 
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
 void PopulateElementViews(
-    const BeamElement& elem, View_Nx7 node_x0, View_N qp_weight, View_Nx6x6 qp_Mstar,
-    View_Nx6x6 qp_Cstar, View_NxN shape_interp, View_NxN shape_deriv
+    const BeamElement& elem, T1 node_x0, T2 qp_weight, T3 qp_Mstar, T4 qp_Cstar, T5 shape_interp,
+    T6 shape_deriv
 ) {
     //--------------------------------------------------------------------------
     // Calculate element's node and quadrature point positions [-1,1]
@@ -149,6 +150,12 @@ void PopulateElementViews(
     }
 }
 
+struct SetNodeStateIndices {
+    Kokkos::View<size_t*> node_state_indices;
+    KOKKOS_FUNCTION
+    void operator()(size_t i) const { node_state_indices(i) = i; }
+};
+
 Beams CreateBeams(const BeamsInput& beams_input) {
     Beams beams(
         beams_input.NumElements(), beams_input.NumNodes(), beams_input.NumQuadraturePoints(),
@@ -235,8 +242,7 @@ Beams CreateBeams(const BeamsInput& beams_input) {
     // Set state index for each node
     // TODO: update for assembly where state may apply to multiple nodes in different elements
     Kokkos::parallel_for(
-        "SetNodeStateIndices", beams.num_nodes,
-        KOKKOS_LAMBDA(size_t i) { beams.node_state_indices(i) = i; }
+        "SetNodeStateIndices", beams.num_nodes, SetNodeStateIndices{beams.node_state_indices}
     );
 
     // Interpolate node positions to quadrature points
@@ -268,11 +274,20 @@ Beams CreateBeams(const BeamsInput& beams_input) {
         "InterpolateQPState", beams.num_elems,
         InterpolateQPState{
             beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
-            beams.node_u, beams.node_u_dot, beams.node_u_ddot, beams.qp_u, beams.qp_u_prime,
-            beams.qp_r, beams.qp_r_prime, beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot,
-            beams.qp_omega_dot}
+            beams.node_u, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime}
     );
-
+    Kokkos::parallel_for(
+        "InterpolateQPVelocity", beams.num_elems,
+        InterpolateQPVelocity{
+            beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
+            beams.node_u_dot, beams.qp_u_dot, beams.qp_omega}
+    );
+    Kokkos::parallel_for(
+        "InterpolateQPAcceleration", beams.num_elems,
+        InterpolateQPAcceleration{
+            beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
+            beams.node_u_ddot, beams.qp_u_ddot, beams.qp_omega_dot}
+    );
     return beams;
 }
 
