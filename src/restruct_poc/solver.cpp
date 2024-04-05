@@ -207,6 +207,9 @@ bool Step(Solver& solver, Beams& beams) {
 
     // Perform convergence iterations
     for (size_t iter = 0; iter < solver.max_iter; ++iter) {
+        Kokkos::deep_copy(solver.St, 0.);
+        Kokkos::deep_copy(solver.R, 0.);
+
         // Update beam elements state from solvers
         UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
 
