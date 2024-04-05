@@ -277,7 +277,7 @@ TEST(RotatingBeamTest, TwoBeam) {
 
 TEST(RotatingBeamTest, ThreeBladeRotor) {
     // Gravity vector
-    std::array<double, 3> gravity = {0., 0., 0.};
+    std::array<double, 3> gravity = {0., 0., 9.81};
 
     // Rotor angular velocity in rad/s
     Vector omega(0., 0., 1);
