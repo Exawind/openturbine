@@ -1043,16 +1043,17 @@ struct IntegrateMatrix {
         auto qp_M = Kokkos::subview(qp_M_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
 
         for (size_t i = 0; i < idx.num_nodes; ++i) {  // Nodes
-            auto i_gbl_start = 6 * node_state_indices(i);
+            auto i_gbl_start = node_state_indices(idx.node_range.first + i) * kLieAlgebraComponents;
             for (size_t j = 0; j < idx.num_nodes; ++j) {  // Nodes
-                auto j_gbl_start = 6 * node_state_indices(j);
+                auto j_gbl_start =
+                    node_state_indices(idx.node_range.first + j) * kLieAlgebraComponents;
                 auto gbl_M = Kokkos::subview(
-                    gbl_M_, Kokkos::make_pair(i_gbl_start, i_gbl_start + 6),
-                    Kokkos::make_pair(j_gbl_start, j_gbl_start + 6)
+                    gbl_M_, Kokkos::make_pair(i_gbl_start, i_gbl_start + kLieAlgebraComponents),
+                    Kokkos::make_pair(j_gbl_start, j_gbl_start + kLieAlgebraComponents)
                 );
-                for (size_t k = 0; k < idx.num_qps; ++k) {  // QPs
-                    for (size_t m = 0; m < 6; ++m) {        // Components
-                        for (size_t n = 0; n < 6; ++n) {    // Components
+                for (size_t k = 0; k < idx.num_qps; ++k) {                    // QPs
+                    for (size_t m = 0; m < kLieAlgebraComponents; ++m) {      // Components
+                        for (size_t n = 0; n < kLieAlgebraComponents; ++n) {  // Components
                             gbl_M(m, n) += weight(k) * shape_interp(i, k) * qp_M(k, m, n) *
                                            shape_interp(j, k) * qp_jacobian(k);
                         }
@@ -1090,12 +1091,13 @@ struct IntegrateElasticStiffnessMatrix {
         auto qp_Quu = Kokkos::subview(qp_Quu_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
 
         for (size_t i = 0; i < idx.num_nodes; ++i) {  // Nodes
-            auto i_gbl_start = 6 * node_state_indices(i);
+            auto i_gbl_start = node_state_indices(idx.node_range.first + i) * kLieAlgebraComponents;
             for (size_t j = 0; j < idx.num_nodes; ++j) {  // Nodes
-                auto j_gbl_start = 6 * node_state_indices(j);
+                auto j_gbl_start =
+                    node_state_indices(idx.node_range.first + j) * kLieAlgebraComponents;
                 auto gbl_M = Kokkos::subview(
-                    gbl_M_, Kokkos::make_pair(i_gbl_start, i_gbl_start + 6),
-                    Kokkos::make_pair(j_gbl_start, j_gbl_start + 6)
+                    gbl_M_, Kokkos::make_pair(i_gbl_start, i_gbl_start + kLieAlgebraComponents),
+                    Kokkos::make_pair(j_gbl_start, j_gbl_start + kLieAlgebraComponents)
                 );
                 for (size_t k = 0; k < idx.num_qps; ++k) {  // QPs
                     auto phi_i = shape_interp(i, k);
@@ -1124,7 +1126,7 @@ struct IntegrateResidualVector {
     View_Nx6 node_FI_;  // Inertial force
     View_Nx6 node_FG_;  // Gravity force
     View_Nx6 node_FX_;  // External force
-    Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>> residual_vector_;
+    View_N_atomic residual_vector_;
 
     IntegrateResidualVector(
         Kokkos::View<size_t*> node_state_indices, View_Nx6 node_FE, View_Nx6 node_FI,
@@ -1138,7 +1140,7 @@ struct IntegrateResidualVector {
           residual_vector_(residual_vector) {}
 
     KOKKOS_INLINE_FUNCTION void operator()(const size_t i_node) const {
-        auto i_rv_start = 6 * node_state_indices_(i_node);
+        auto i_rv_start = node_state_indices_(i_node) * kLieAlgebraComponents;
         for (size_t j = 0; j < 6; j++) {
             residual_vector_(i_rv_start + j) += node_FE_(i_node, j) + node_FI_(i_node, j) -
                                                 node_FX_(i_node, j) - node_FG_(i_node, j);

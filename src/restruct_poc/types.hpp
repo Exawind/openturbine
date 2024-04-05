@@ -34,6 +34,7 @@ using View_Nx6x6 = Kokkos::View<double* [6][6]>;
 
 // Atomic
 using View_NxN_atomic = Kokkos::View<double**, Kokkos::MemoryTraits<Kokkos::Atomic>>;
+using View_N_atomic = Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>>;
 
 using Vector = openturbine::gen_alpha_solver::Vector;
 using Quaternion = openturbine::gen_alpha_solver::Quaternion;
