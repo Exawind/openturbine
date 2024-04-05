@@ -138,6 +138,22 @@ void AssembleConstraints(
     KokkosBlas::gemm("N", "N", 1.0, solver.constraints.B, solver.T, 0.0, St_21);
 }
 
+void solve_linear_system(View_NxN system, View_N solution) {
+    auto A =
+        Kokkos::View<double**, Kokkos::LayoutLeft>("system", system.extent(0), system.extent(1));
+    Kokkos::deep_copy(A, system);
+    auto b = Kokkos::View<double*, Kokkos::LayoutLeft>("solution", solution.extent(0));
+    Kokkos::deep_copy(b, solution);
+    auto pivots =
+        Kokkos::View<int*, Kokkos::LayoutLeft, Kokkos::HostSpace>("pivots", solution.extent(0));
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated"
+    KokkosBlas::gesv(A, b, pivots);
+#pragma GCC diagnostic pop
+
+    // Kokkos::deep_copy(system, A);
+    Kokkos::deep_copy(solution, b);
 }
 
 void SolveSystem(Solver& solver) {
@@ -150,7 +166,8 @@ void SolveSystem(Solver& solver) {
 
     // Solve linear system
     KokkosBlas::axpby(-1.0, solver.R, 0.0, solver.x);
-    openturbine::gebt_poc::solve_linear_system(solver.St, solver.x);
+    // openturbine::gebt_poc::solve_linear_system(solver.St, solver.x);
+    solve_linear_system(solver.St, solver.x);
 
     // Uncondition solution
     Kokkos::parallel_for(
