@@ -139,8 +139,9 @@ void AssembleConstraints(
 void SolveSystem(Solver& solver) {
     // Condition system for solve
     Kokkos::parallel_for(
-        "ConditionSystem", solver.num_dofs,
-        ConditionSystem{solver.num_system_dofs, solver.conditioner, solver.St, solver.R}
+        "ConditionSystem", 1,
+        ConditionSystem{
+            solver.num_system_dofs, solver.num_dofs, solver.conditioner, solver.St, solver.R}
     );
 
     // Solve linear system

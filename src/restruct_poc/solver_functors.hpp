@@ -240,7 +240,7 @@ struct CalculateConstraintResidualGradient {
             );
         } else {
             R1 = Quaternion(
-                node_u(i_node2, 3), node_u(i_node2, 4), node_u(i_node2, 5), node_u(i_node2, 6)
+                node_u(i_node1, 3), node_u(i_node1, 4), node_u(i_node1, 5), node_u(i_node1, 6)
             );
         }
 
@@ -300,25 +300,37 @@ struct CalculateConstraintResidualGradient {
 
 struct ConditionSystem {
     size_t num_system_dofs;
+    size_t num_dofs;
     double conditioner;
-    View_NxN_atomic St;
+    View_NxN St;
     View_N R;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i) const {
+    void operator()(const size_t) const {
         // DL = (i < num_system_dofs) ? conditioner : 1.0
         // DR = (i >= num_system_dofs) ? 1.0 / conditioner : 1.0
 
         // DL * St * DR
-        for (size_t j = 0; j < num_system_dofs; ++j) {
-            St(i, j) *= conditioner;
+        // Premultiplying by diagonal matrix DL matrix effectively multiplies
+        // each row by the diagonal element. The diagonal element is conditioner
+        // for the system dofs and 1.0 for the constraint dofs
+        for (size_t i = 0; i < num_system_dofs; ++i) {
+            for (size_t j = 0; j < num_dofs; ++j) {
+                St(i, j) *= conditioner;
+            }
         }
-        for (size_t j = num_system_dofs; j < St.extent(0); ++j) {
-            St(j, i) /= conditioner;
+        // Postmultiplying by diagonal matrix DR matrix effectively multiplies
+        // each column by the diagonal element. The diagonal element is 1.0
+        // for the system dofs and 1/conditioner for the constraint dofs
+        for (size_t i = 0; i < num_dofs; ++i) {
+            for (size_t j = num_system_dofs; j < num_dofs; ++j) {
+                St(i, j) /= conditioner;
+            }
         }
 
         // R * DL
-        if (i < num_system_dofs) {
+        // DL is conditioner for system dofs, 1.0 for constraint dofs
+        for (size_t i = 0; i < num_system_dofs; ++i) {
             R(i) *= conditioner;
         }
     }
