@@ -126,14 +126,18 @@ void AssembleConstraints(
 
     // Update iteration matrix
     Kokkos::parallel_for(
-        "St_12=B.transpose", solver.num_system_dofs,
-        KOKKOS_LAMBDA(size_t j) {
+        "St_12=B.transpose", 1,
+        KOKKOS_LAMBDA(size_t) {
             for (size_t i = 0; i < solver.num_constraint_dofs; ++i) {
+                for (size_t j = 0; j < solver.num_system_dofs; ++j) {
                 St_12(j, i) = solver.constraints.B(i, j);
+            }
             }
         }
     );
-    KokkosBlas::gemm("N", "N", 1.0, solver.constraints.B, solver.T, 1.0, St_21);
+    KokkosBlas::gemm("N", "N", 1.0, solver.constraints.B, solver.T, 0.0, St_21);
+}
+
 }
 
 void SolveSystem(Solver& solver) {
