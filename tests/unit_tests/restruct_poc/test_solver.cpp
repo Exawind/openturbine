@@ -537,7 +537,7 @@ TEST_F(SolverStep1Test, SolutionVector) {
 }
 
 TEST_F(SolverStep1Test, ConvergenceError) {
-    EXPECT_NEAR(solver_->convergence_err, 13.698797186349344, 1.e-6);
+    EXPECT_NEAR(solver_->convergence_err[0], 14.796392074134879, 1.e-7);
 }
 
 TEST_F(SolverStep1Test, SolverUpdateStatePrediction_q_delta) {

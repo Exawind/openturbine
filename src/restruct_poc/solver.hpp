@@ -66,7 +66,6 @@ struct Solver {
     double gamma_prime;
     double beta_prime;
     double conditioner;
-    double convergence_err;
     size_t num_system_nodes;
     size_t num_system_dofs;
     size_t num_constraint_nodes;
@@ -81,6 +80,7 @@ struct Solver {
     View_N x;     // System solution vector
     State state;
     Constraints constraints;
+    std::vector<double> convergence_err;
 
     Solver() {}
     Solver(
@@ -101,7 +101,6 @@ struct Solver {
           gamma_prime(gamma / (h * beta)),
           beta_prime((1. - alpha_m) / (h * h * beta * (1. - alpha_f))),
           conditioner(beta * h * h),
-          convergence_err(0.),
           num_system_nodes(num_system_nodes_),
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
           num_constraint_nodes(constraint_inputs.size()),
@@ -115,7 +114,8 @@ struct Solver {
           R("R", num_dofs),
           x("x", num_dofs),
           state(num_system_nodes, num_constraint_nodes, q_, v_, vd_),
-          constraints(constraint_inputs, num_system_nodes) {}
+          constraints(constraint_inputs, num_system_nodes),
+          convergence_err(max_iter) {}
 };
 
 void PredictNextState(Solver& solver);

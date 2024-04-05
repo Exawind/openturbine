@@ -1,5 +1,7 @@
 #include "solver.hpp"
 
+#include <KokkosBlas_gesv.hpp>
+
 #include "beams.hpp"
 #include "solver_functors.hpp"
 
@@ -130,8 +132,8 @@ void AssembleConstraints(
         KOKKOS_LAMBDA(size_t) {
             for (size_t i = 0; i < solver.num_constraint_dofs; ++i) {
                 for (size_t j = 0; j < solver.num_system_dofs; ++j) {
-                St_12(j, i) = solver.constraints.B(i, j);
-            }
+                    St_12(j, i) = solver.constraints.B(i, j);
+                }
             }
         }
     );
@@ -184,8 +186,7 @@ double CalculateConvergenceError(Solver& solver) {
         solver.num_system_dofs, CalculateErrorSumSquares{atol, rtol, solver.state.q_delta, solver.x},
         sum_error_squared
     );
-    solver.convergence_err = std::sqrt(sum_error_squared / solver.num_dofs);
-    return solver.convergence_err;
+    return std::sqrt(sum_error_squared / solver.num_system_dofs);
 }
 
 bool Step(Solver& solver, Beams& beams) {
@@ -204,6 +205,9 @@ bool Step(Solver& solver, Beams& beams) {
     auto St_11 = Kokkos::subview(solver.St, system_range, system_range);
     auto St_12 = Kokkos::subview(solver.St, system_range, constraint_range);
     auto St_21 = Kokkos::subview(solver.St, constraint_range, system_range);
+
+    // Reset convergence error vector
+    solver.convergence_err.clear();
 
     // Perform convergence iterations
     for (size_t iter = 0; iter < solver.max_iter; ++iter) {
@@ -224,6 +228,7 @@ bool Step(Solver& solver, Beams& beams) {
 
         // Calculate error
         auto err = CalculateConvergenceError(solver);
+        solver.convergence_err.push_back(err);
 
         // If error is sufficiently small, solution converged, update acceleration and return
         if (err < 1.) {
