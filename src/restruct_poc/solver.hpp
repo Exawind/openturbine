@@ -47,6 +47,7 @@ struct Constraints {
 
     void UpdateDisplacement(size_t index, std::array<double, kLieGroupComponents> u_) {
         auto host_u = Kokkos::create_mirror(this->u);
+        Kokkos::deep_copy(host_u, this->u);
         for (size_t i = 0; i < kLieGroupComponents; ++i) {
             host_u(index, i) = u_[i];
         }
