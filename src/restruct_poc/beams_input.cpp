@@ -1,8 +1,44 @@
 #include "beams_input.hpp"
 
+#include <algorithm>
+
 #include "beams_functors.hpp"
 
 namespace openturbine {
+
+void LinearInterpWeights(
+    const double x, const std::vector<double>& xs, std::vector<double>& weights
+) {
+    // Get number of nodes
+    auto n = xs.size();
+
+    // Resize weights and fill with zeros
+    weights.clear();
+    weights.resize(n, 0.);
+
+    // Find the lower bound location
+    auto lower = std::lower_bound(xs.begin(), xs.end(), x);
+
+    // If x is less than the first location
+    if (lower == xs.begin()) {
+        weights.front() = 1.0;
+    }
+
+    // If x is greater than the last location
+    else if (lower == xs.end()) {
+        weights.back() = 1.0;
+    }
+
+    // x is between two points in xs
+    else {
+        size_t index = lower - xs.begin();
+        double lower_loc = xs[index - 1];
+        double upper_loc = xs[index];
+        double weight_upper = (x - lower_loc) / (upper_loc - lower_loc);
+        weights[lower_loc] = 1.0 - weight_upper;
+        weights[upper_loc] = weight_upper;
+    }
+}
 
 void LagrangePolynomialInterpWeights(
     const double x, const std::vector<double>& xs, std::vector<double>& weights
@@ -136,7 +172,7 @@ void PopulateElementViews(
         auto qp_xi = elem.quadrature[i][0];
 
         // Calculate weights
-        LagrangePolynomialInterpWeights(qp_xi, section_xi, weights);
+        LinearInterpWeights(qp_xi, section_xi, weights);
 
         // Loop through sections
         for (size_t j = 0; j < section_xi.size(); ++j) {
