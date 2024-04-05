@@ -31,6 +31,18 @@ public:
     KOKKOS_FUNCTION
     inline double GetZComponent() const { return z_; }
 
+    /// Returns the first component of the vector
+    KOKKOS_FUNCTION
+    inline double GetX() const { return x_; }
+
+    /// Returns the second component of the vector
+    KOKKOS_FUNCTION
+    inline double GetY() const { return y_; }
+
+    /// Returns the third component of the vector
+    KOKKOS_FUNCTION
+    inline double GetZ() const { return z_; }
+
     /// Adds provided vector to this vector and returns the result
     KOKKOS_FUNCTION
     inline Vector operator+(const Vector& other) const {
