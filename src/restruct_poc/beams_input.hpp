@@ -19,8 +19,11 @@ struct BeamNode {
     double s;   // Position of node in element on range [0, 1]
     Array_7 x;  // Node initial positions and rotations
 
-    BeamNode(Array_7 x_) : s(0.), x(std::move(x_)) {}
-    BeamNode(double s_, Array_7 x_) : s(s_), x(std::move(x_)) {}
+    BeamNode(Array_7 x_) : s(0.), x(x_) {}
+    BeamNode(double s_, Array_7 x_) : s(s_), x(x_) {}
+    BeamNode(double s_, Vector p, Quaternion q)
+        : s(s_), x{p.GetX(),          p.GetY(),          p.GetZ(),         q.GetScalarComponent(),
+                   q.GetXComponent(), q.GetYComponent(), q.GetZComponent()} {}
 };
 
 // Beam section initialization data
@@ -39,16 +42,11 @@ struct BeamElement {
     std::vector<BeamNode> nodes;        // Element node positions/rotations in material frame
     std::vector<BeamSection> sections;  // Element mass/stiffness in material frame
     BeamQuadrature quadrature;          // Element quadrature points and weights
-    Array_7 root_x;                     // Element root node position and rotation
 
     BeamElement(
-        std::vector<BeamNode> nodes_, std::vector<BeamSection> sections_, BeamQuadrature quadrature_,
-        Array_7 root_x_
+        std::vector<BeamNode> nodes_, std::vector<BeamSection> sections_, BeamQuadrature quadrature_
     )
-        : nodes(std::move(nodes_)),
-          sections(std::move(sections_)),
-          quadrature(std::move(quadrature_)),
-          root_x(std::move(root_x_)) {
+        : nodes(nodes_), sections(sections_), quadrature(quadrature_) {
         // // If node positions already set, return
         // if (nodes.back().s_ != 0.)
         //     return;
