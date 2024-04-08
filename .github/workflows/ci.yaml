@@ -94,7 +94,7 @@ jobs:
           -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} 
         cmake --build .
-        ctest -C ${{ matrix.build_type }} --output-on-failure -VV
+        ctest -C ${{ matrix.build_type }} --output-on-failure
     - name: Run CppCheck
       if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'llvm'
       run: |
