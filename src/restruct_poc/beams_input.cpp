@@ -35,8 +35,8 @@ void LinearInterpWeights(
         double lower_loc = xs[index - 1];
         double upper_loc = xs[index];
         double weight_upper = (x - lower_loc) / (upper_loc - lower_loc);
-        weights[lower_loc] = 1.0 - weight_upper;
-        weights[upper_loc] = weight_upper;
+        weights[index - 1] = 1.0 - weight_upper;
+        weights[index] = weight_upper;
     }
 }
 
