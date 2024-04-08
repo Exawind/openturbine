@@ -2,6 +2,10 @@ name: OpenTurbine-CI
 
 on: push
 
+env:
+  CMAKE_BUILD_PARALLEL_LEVEL: 4
+  CTEST_PARALLEL_LEVEL: 2
+
 jobs:
   Correctness:
     runs-on: ${{matrix.os}}
@@ -51,7 +55,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
           -DKokkos_ENABLE_DEBUG=${{ matrix.build_type == 'Debug' }} \
           -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=${{ matrix.build_type == 'Debug' }}
-        sudo cmake --build . --target install -j 2
+        sudo cmake --build . --target install
     - name: Cache install Kokkos-Kernels
       id: cache-kokkos-kernels
       uses: actions/cache@v3
@@ -75,7 +79,7 @@ jobs:
         cmake .. \
           -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        sudo cmake --build . --target install -j 2
+        sudo cmake --build . --target install
     - name: Clone
       uses: actions/checkout@v4
       with:
@@ -89,8 +93,8 @@ jobs:
           -DOTURB_ENABLE_TESTS:BOOL=ON \
           -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} 
-        cmake --build . -j 2
-        ctest -C ${{ matrix.build_type }}
+        cmake --build .
+        ctest -C ${{ matrix.build_type }} --output-on-failure -VV
     - name: Run CppCheck
       if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'llvm'
       run: |
