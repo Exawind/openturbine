@@ -105,19 +105,19 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
 
 template <typename Subview_NxN>
 struct UpdateIterationMatrix {
-  Subview_NxN St_12;
-  View_NxN B;
-  size_t num_constraint_dofs;
-  size_t num_system_dofs;
+    Subview_NxN St_12;
+    View_NxN B;
+    size_t num_constraint_dofs;
+    size_t num_system_dofs;
 
-  KOKKOS_FUNCTION
-  void operator()(size_t) const { 
-    for (size_t i = 0; i < num_constraint_dofs; ++i) {
-      for (size_t j = 0; j < num_system_dofs; ++j) {
-        St_12(j, i) = B(i, j);
-      }
+    KOKKOS_FUNCTION
+    void operator()(size_t) const {
+        for (size_t i = 0; i < num_constraint_dofs; ++i) {
+            for (size_t j = 0; j < num_system_dofs; ++j) {
+                St_12(j, i) = B(i, j);
+            }
+        }
     }
-  }  
 };
 
 template <typename Subview_NxN, typename Subview_N>
@@ -145,11 +145,12 @@ void AssembleConstraints(
 
     // Update iteration matrix
     Kokkos::parallel_for(
-        "St_12=B.transpose", 1, UpdateIterationMatrix<Subview_NxN>{St_12, solver.constraints.B, solver.num_constraint_dofs, solver.num_system_dofs}
+        "St_12=B.transpose", 1,
+        UpdateIterationMatrix<Subview_NxN>{
+            St_12, solver.constraints.B, solver.num_constraint_dofs, solver.num_system_dofs}
     );
 
     KokkosBlas::gemm("N", "N", 1.0, solver.constraints.B, solver.T, 0.0, St_21);
-
 }
 
 void SolveSystem(Solver& solver) {
@@ -183,21 +184,20 @@ double CalculateConvergenceError(Solver& solver) {
 }
 
 struct UpdateAcceleration {
-  View_Nx6 acceleration;
-  View_Nx6 vd;
-  double alpha_f;
-  double alpha_m;
+    View_Nx6 acceleration;
+    View_Nx6 vd;
+    double alpha_f;
+    double alpha_m;
 
-  KOKKOS_FUNCTION
-  void operator()(size_t i) const {
-    for(size_t j = 0; j < 6; ++j) {
-      acceleration(i, j) += (1. - alpha_f) / (1. - alpha_m) * vd(i, j);
-    } 
-  }
+    KOKKOS_FUNCTION
+    void operator()(size_t i) const {
+        for (size_t j = 0; j < 6; ++j) {
+            acceleration(i, j) += (1. - alpha_f) / (1. - alpha_m) * vd(i, j);
+        }
+    }
 };
 
 bool Step(Solver& solver, Beams& beams) {
-
     // Predict state at end of step
     PredictNextState(solver);
 
@@ -219,7 +219,6 @@ bool Step(Solver& solver, Beams& beams) {
 
     // Perform convergence iterations
     for (size_t iter = 0; iter < solver.max_iter; ++iter) {
-
         Kokkos::deep_copy(solver.St, 0.);
         Kokkos::deep_copy(solver.R, 0.);
 
@@ -242,7 +241,8 @@ bool Step(Solver& solver, Beams& beams) {
         // If error is sufficiently small, solution converged, update acceleration and return
         if (err < 1.) {
             Kokkos::parallel_for(
-                "UpdateAlgorithmicAcceleration", solver.num_system_nodes, UpdateAcceleration{solver.state.a, solver.state.vd, solver.alpha_f, solver.alpha_m}
+                "UpdateAlgorithmicAcceleration", solver.num_system_nodes,
+                UpdateAcceleration{solver.state.a, solver.state.vd, solver.alpha_f, solver.alpha_m}
             );
 
             // Solution converged
@@ -251,12 +251,10 @@ bool Step(Solver& solver, Beams& beams) {
 
         // Update state prediction
         UpdateStatePrediction(solver, x_system, x_lambda);
-
     }
 
     // Solution did not converge
     return false;
-
 }
 
 }  // namespace openturbine
