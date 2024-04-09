@@ -1036,27 +1036,26 @@ struct IntegrateMatrix {
     KOKKOS_FUNCTION
     void operator()(const size_t i_elem) const {
         auto idx = elem_indices[i_elem];
-        auto shape_qp_range = idx.qp_shape_range;
-        auto weight = Kokkos::subview(qp_weight_, idx.qp_range);
-        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
-        auto shape_interp = Kokkos::subview(shape_interp_, idx.node_range, shape_qp_range);
-        auto qp_M = Kokkos::subview(qp_M_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
 
-        for (size_t i = 0; i < idx.num_nodes; ++i) {  // Nodes
-            auto i_gbl_start = node_state_indices(idx.node_range.first + i) * kLieAlgebraComponents;
-            for (size_t j = 0; j < idx.num_nodes; ++j) {  // Nodes
-                auto j_gbl_start =
-                    node_state_indices(idx.node_range.first + j) * kLieAlgebraComponents;
-                auto gbl_M = Kokkos::subview(
-                    gbl_M_, Kokkos::make_pair(i_gbl_start, i_gbl_start + kLieAlgebraComponents),
-                    Kokkos::make_pair(j_gbl_start, j_gbl_start + kLieAlgebraComponents)
-                );
-                for (size_t k = 0; k < idx.num_qps; ++k) {                    // QPs
-                    for (size_t m = 0; m < kLieAlgebraComponents; ++m) {      // Components
-                        for (size_t n = 0; n < kLieAlgebraComponents; ++n) {  // Components
-                            gbl_M(m, n) += weight(k) * shape_interp(i, k) * qp_M(k, m, n) *
-                                           shape_interp(j, k) * qp_jacobian(k);
+        for (size_t i = idx.node_range.first; i < idx.node_range.second; ++i) {  // Nodes
+            auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+            for (size_t j = idx.node_range.first; j < idx.node_range.second; ++j) {  // Nodes
+                double local_M[6][6]{0.};
+                for (size_t k = 0; k < idx.num_qps; ++k) {
+                    auto k_qp = idx.qp_range.first + k;
+                    auto w = qp_weight_(k_qp);
+                    auto jacobian = qp_jacobian_(k_qp);
+                    for (size_t m = 0; m < kLieAlgebraComponents; ++m) {
+                        for (size_t n = 0; n < kLieAlgebraComponents; ++n) {
+                            local_M[m][n] += w * shape_interp_(i, k) * qp_M_(k_qp, m, n) *
+                                             shape_interp_(j, k) * jacobian;
                         }
+                    }
+                }
+                auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
+                for (size_t m = 0; m < kLieAlgebraComponents; ++m) {
+                    for (size_t n = 0; n < kLieAlgebraComponents; ++n) {
+                        gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M[m][n];
                     }
                 }
             }
@@ -1080,39 +1079,34 @@ struct IntegrateElasticStiffnessMatrix {
     KOKKOS_FUNCTION
     void operator()(const size_t i_elem) const {
         auto idx = elem_indices[i_elem];
-        auto shape_qp_range = idx.qp_shape_range;
-        auto weight = Kokkos::subview(qp_weight_, idx.qp_range);
-        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
-        auto shape_interp = Kokkos::subview(shape_interp_, idx.node_range, shape_qp_range);
-        auto shape_deriv = Kokkos::subview(shape_deriv_, idx.node_range, shape_qp_range);
-        auto qp_Puu = Kokkos::subview(qp_Puu_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
-        auto qp_Cuu = Kokkos::subview(qp_Cuu_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
-        auto qp_Ouu = Kokkos::subview(qp_Ouu_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
-        auto qp_Quu = Kokkos::subview(qp_Quu_, idx.qp_range, Kokkos::ALL, Kokkos::ALL);
 
-        for (size_t i = 0; i < idx.num_nodes; ++i) {  // Nodes
-            auto i_gbl_start = node_state_indices(idx.node_range.first + i) * kLieAlgebraComponents;
-            for (size_t j = 0; j < idx.num_nodes; ++j) {  // Nodes
-                auto j_gbl_start =
-                    node_state_indices(idx.node_range.first + j) * kLieAlgebraComponents;
-                auto gbl_M = Kokkos::subview(
-                    gbl_M_, Kokkos::make_pair(i_gbl_start, i_gbl_start + kLieAlgebraComponents),
-                    Kokkos::make_pair(j_gbl_start, j_gbl_start + kLieAlgebraComponents)
-                );
+        for (size_t i = idx.node_range.first; i < idx.node_range.second; ++i) {  // Nodes
+            auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+            for (size_t j = idx.node_range.first; j < idx.node_range.second; ++j) {  // Nodes
+                double local_M[6][6]{0.};
                 for (size_t k = 0; k < idx.num_qps; ++k) {  // QPs
-                    auto phi_i = shape_interp(i, k);
-                    auto phi_j = shape_interp(j, k);
-                    auto phi_prime_i = shape_deriv(i, k);
-                    auto phi_prime_j = shape_deriv(j, k);
+                    auto k_qp = idx.qp_range.first + k;
+                    auto w = qp_weight_(k_qp);
+                    auto jacobian = qp_jacobian_(k_qp);
+                    auto phi_i = shape_interp_(i, k);
+                    auto phi_j = shape_interp_(j, k);
+                    auto phi_prime_i = shape_deriv_(i, k);
+                    auto phi_prime_j = shape_deriv_(j, k);
                     for (size_t m = 0; m < 6; ++m) {      // Matrix components
                         for (size_t n = 0; n < 6; ++n) {  // Matrix components
-                            gbl_M(m, n) +=
-                                weight(k) *
-                                (phi_i * qp_Puu(k, m, n) * phi_prime_j +
-                                 phi_i * qp_Quu(k, m, n) * phi_j * qp_jacobian(k) +
-                                 phi_prime_i * qp_Cuu(k, m, n) * phi_prime_j / qp_jacobian(k) +
-                                 phi_prime_i * qp_Ouu(k, m, n) * phi_j);
+                            local_M[m][n] +=
+                                w * (phi_i * qp_Puu_(k_qp, m, n) * phi_prime_j +
+                                     phi_i * qp_Quu_(k_qp, m, n) * phi_j * jacobian +
+                                     phi_prime_i * qp_Cuu_(k_qp, m, n) * phi_prime_j / jacobian +
+                                     phi_prime_i * qp_Ouu_(k_qp, m, n) * phi_j);
                         }
+                    }
+                }
+
+                auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
+                for (size_t m = 0; m < 6; ++m) {
+                    for (size_t n = 0; n < 6; ++n) {
+                        gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M[m][n];
                     }
                 }
             }
