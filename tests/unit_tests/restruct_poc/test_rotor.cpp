@@ -16,12 +16,29 @@ Quaternion CRV2Quat(double c1, double c2, double c3) {
     return Quaternion(e0, c1 / (4 - c0), c2 / (4 - c0), c3 / (4 - c0));
 }
 
+template <typename T>
+void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << filename << std::endl;
+        return;
+    }
+    file << std::setprecision(16);
+    for (const auto& innerVector : data) {
+        for (const auto& element : innerVector) {
+            file << element << ",";
+        }
+        file << std::endl;
+    }
+    file.close();
+}
+
 TEST(RotatingBeamTest, IEA15Rotor) {
     // Gravity vector
     std::array<double, 3> gravity = {-9.81, 0., 0.};
 
     // Rotor angular velocity in rad/s
-    Vector omega(0., 0., 0.104719755);  // 7.55 rpm
+    Vector omega(0., 0., 0.79063415025);  // 7.55 rpm
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -656,6 +673,9 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     // Initialize constraints
     InitializeConstraints(solver, beams);
 
+    // auto qp_x0 = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams.qp_x0);
+    // WriteMatrixToFile(qp_x0, "step_0000.csv");
+
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
@@ -679,6 +699,20 @@ TEST(RotatingBeamTest, IEA15Rotor) {
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
+
+        // Get quadrature point displacement and convert to global position
+        // auto qp_x = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams.qp_u);
+        // for (size_t j = 0; j < qp_x.size(); ++j) {
+        //     for (size_t k = 0; k < qp_x[0].size(); ++k) {
+        //         qp_x[j][k] += qp_x0[j][k];
+        //     }
+        // }
+        // auto tmp = std::to_string(i + 1);
+        // WriteMatrixToFile(
+        //     qp_x, std::string("step_") + std::string(4 - tmp.size(), '0') + tmp + ".csv"
+        // );
+
+        // auto fg = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams.qp_Fg);
     }
 }
 
