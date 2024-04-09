@@ -35,7 +35,6 @@ protected:
         }};
 
         std::array<double, 3> gravity = {0., 0., 9.81};
-
         // Define beam initialization
         BeamsInput beams_input(
             {
@@ -168,6 +167,7 @@ TEST_F(BeamsTest, NodeInitialPositionX0) {
 }
 
 TEST_F(BeamsTest, NodeInitialDisplacement) {
+    std::cout << 11 << std::endl;
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
         beams_->node_u,
         {
@@ -266,8 +266,10 @@ TEST_F(BeamsTest, QuadraturePointWeights) {
 }
 
 TEST_F(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
+    auto Mstar = View_NxN("Mstar", beams_->qp_Mstar.extent(1), beams_->qp_Mstar.extent(2));
+    Kokkos::deep_copy(Mstar, Kokkos::subview(beams_->qp_Mstar, 0, Kokkos::ALL, Kokkos::ALL));
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams_->qp_Mstar, 0, Kokkos::ALL, Kokkos::ALL),
+        Mstar,
         {
             {2., 0., 0., 0., 0.6, -0.4},
             {0., 2., 0., -0.6, 0., 0.2},
@@ -281,8 +283,10 @@ TEST_F(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
 }
 
 TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInMaterialFrame) {
+    auto Cstar = View_NxN("Cstar", beams_->qp_Cstar.extent(1), beams_->qp_Cstar.extent(2));
+    Kokkos::deep_copy(Cstar, Kokkos::subview(beams_->qp_Cstar, 0, Kokkos::ALL, Kokkos::ALL));
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams_->qp_Cstar, 0, Kokkos::ALL, Kokkos::ALL),
+        Cstar,
         {
             {1., 2., 3., 4., 5., 6.},
             {2., 4., 6., 8., 10., 12.},
@@ -460,12 +464,10 @@ TEST_F(BeamsTest, QuadraturePointAngularAcceleration) {
 }
 
 TEST_F(BeamsTest, QuadraturePointRR0) {
-    auto v = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(
-        Kokkos::subview(beams_->qp_RR0, 0, Kokkos::ALL, Kokkos::ALL)
-    );
-
+    auto RR0 = View_NxN("RR0", beams_->qp_RR0.extent(1), beams_->qp_RR0.extent(2));
+    Kokkos::deep_copy(RR0, Kokkos::subview(beams_->qp_RR0, 0, Kokkos::ALL, Kokkos::ALL));
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams_->qp_RR0, 0, Kokkos::ALL, Kokkos::ALL),
+        RR0,
         {
             {0.9246873610951006, 0.34700636042507577, -0.156652066872805, 0.0, 0.0, 0.0},
             {-0.3426571011111718, 0.937858102036658, 0.05484789423748749, 0.0, 0.0, 0.0},
@@ -478,8 +480,10 @@ TEST_F(BeamsTest, QuadraturePointRR0) {
 }
 
 TEST_F(BeamsTest, QuadraturePointMassMatrixInGlobalFrame) {
+    auto Muu = View_NxN("Muu", beams_->qp_Muu.extent(1), beams_->qp_Muu.extent(2));
+    Kokkos::deep_copy(Muu, Kokkos::subview(beams_->qp_Muu, 0, Kokkos::ALL, Kokkos::ALL));
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams_->qp_Muu, 0, Kokkos::ALL, Kokkos::ALL),
+        Muu,
         {
             {2.000000000000001, 5.204170427930421e-17, -5.551115123125783e-17,
              -4.163336342344337e-17, 0.626052147258804, -0.3395205571349214},
@@ -498,8 +502,10 @@ TEST_F(BeamsTest, QuadraturePointMassMatrixInGlobalFrame) {
 }
 
 TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInGlobalFrame) {
+    auto Cuu = View_NxN("Cuu", beams_->qp_Cuu.extent(1), beams_->qp_Cuu.extent(2));
+    Kokkos::deep_copy(Cuu, Kokkos::subview(beams_->qp_Cuu, 0, Kokkos::ALL, Kokkos::ALL));
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams_->qp_Cuu, 0, Kokkos::ALL, Kokkos::ALL),
+        Cuu,
         {
             {1.3196125048858467, 1.9501108129670985, 3.5958678677753957, 5.1623043394880055,
              4.190329885612304, 7.576404967559343},
@@ -614,8 +620,10 @@ TEST_F(BeamsTest, QuadraturePointGravityForceFg) {
 }
 
 TEST_F(BeamsTest, QuadraturePointMatrixOuu) {
+    auto Ouu = View_NxN("Ouu", beams_->qp_Ouu.extent(1), beams_->qp_Ouu.extent(2));
+    Kokkos::deep_copy(Ouu, Kokkos::subview(beams_->qp_Ouu, 0, Kokkos::ALL, Kokkos::ALL));
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams_->qp_Ouu, 0, Kokkos::ALL, Kokkos::ALL),
+        Ouu,
         {
             {0., 0., 0., 1.558035187754702, 3.3878498808227704, -2.4090666622503774},
             {0., 0., 0., 2.023578567654382, 4.594419401889352, -3.2342585893237827},
@@ -628,8 +636,10 @@ TEST_F(BeamsTest, QuadraturePointMatrixOuu) {
 }
 
 TEST_F(BeamsTest, QuadraturePointMatrixPuu) {
+    auto Puu = View_NxN("Puu", beams_->qp_Puu.extent(1), beams_->qp_Puu.extent(2));
+    Kokkos::deep_copy(Puu, Kokkos::subview(beams_->qp_Puu, 0, Kokkos::ALL, Kokkos::ALL));
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams_->qp_Puu, 0, Kokkos::ALL, Kokkos::ALL),
+        Puu,
         {
             {0., 0., 0., 0., 0., 0.},
             {0., 0., 0., 0., 0., 0.},
@@ -645,8 +655,10 @@ TEST_F(BeamsTest, QuadraturePointMatrixPuu) {
 }
 
 TEST_F(BeamsTest, QuadraturePointMatrixQuu) {
+    auto Quu = View_NxN("Quu", beams_->qp_Quu.extent(1), beams_->qp_Quu.extent(2));
+    Kokkos::deep_copy(Quu, Kokkos::subview(beams_->qp_Quu, 0, Kokkos::ALL, Kokkos::ALL));
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams_->qp_Quu, 0, Kokkos::ALL, Kokkos::ALL),
+        Quu,
         {
             {0., 0., 0., 0., 0., 0.},
             {0., 0., 0., 0., 0., 0.},
@@ -659,8 +671,10 @@ TEST_F(BeamsTest, QuadraturePointMatrixQuu) {
 }
 
 TEST_F(BeamsTest, QuadraturePointMatrixGuu) {
+    auto Guu = View_NxN("Guu", beams_->qp_Guu.extent(1), beams_->qp_Guu.extent(2));
+    Kokkos::deep_copy(Guu, Kokkos::subview(beams_->qp_Guu, 0, Kokkos::ALL, Kokkos::ALL));
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams_->qp_Guu, 0, Kokkos::ALL, Kokkos::ALL),
+        Guu,
         {
             {0., 0., 0., -0.0008012182534494841, 0.002003432464632351, 0.0015631511018243545},
             {0., 0., 0., -0.002297634478952118, 0.0006253629923483924, -0.0015967098417843995},
@@ -673,8 +687,10 @@ TEST_F(BeamsTest, QuadraturePointMatrixGuu) {
 }
 
 TEST_F(BeamsTest, QuadraturePointMatrixKuu) {
+    auto Kuu = View_NxN("Kuu", beams_->qp_Kuu.extent(1), beams_->qp_Kuu.extent(2));
+    Kokkos::deep_copy(Kuu, Kokkos::subview(beams_->qp_Kuu, 0, Kokkos::ALL, Kokkos::ALL));
     openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams_->qp_Kuu, 0, Kokkos::ALL, Kokkos::ALL),
+        Kuu,
         {
             {0., 0., 0., -0.0023904728226588536, 0.0005658527664274542, 0.0005703830914904407},
             {0., 0., 0., -0.0008599439459226316, -0.000971811812092634, 0.0008426153626567674},

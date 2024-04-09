@@ -147,7 +147,6 @@ TEST(RotatingBeamTest, TwoBeam) {
     std::vector<std::array<double, 6>> velocity;
     std::vector<std::array<double, 6>> acceleration;
     std::vector<ConstraintInput> constraint_inputs;
-
     // Loop through blades
     for (size_t i = 0; i < num_blades; ++i) {
         // Define root rotation

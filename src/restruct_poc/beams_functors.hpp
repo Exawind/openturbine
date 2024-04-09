@@ -43,8 +43,8 @@ KOKKOS_INLINE_FUNCTION void MatVecMulATB(View_A A, View_B B, View_C C) {
     }
 }
 
-template <typename View_3x3>
-KOKKOS_INLINE_FUNCTION void VecTilde(View_3 vector, View_3x3 matrix) {
+template <typename VectorType, typename MatrixType>
+KOKKOS_INLINE_FUNCTION void VecTilde(VectorType vector, MatrixType matrix) {
     matrix(0, 0) = 0.;
     matrix(0, 1) = -vector(2);
     matrix(0, 2) = vector(1);
@@ -131,8 +131,8 @@ KOKKOS_INLINE_FUNCTION void MatMulABT(View_A A, View_B BT, View_C C) {
 }
 
 /// Populates a 3x3 rotation matrix from a 4x1 quaternion
-template <typename View_Rotation>
-KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(View_Quaternion q, View_Rotation R) {
+template <typename Q, typename View_Rotation>
+KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(Q q, View_Rotation R) {
     R(0, 0) = q(0) * q(0) + q(1) * q(1) - q(2) * q(2) - q(3) * q(3);
     R(0, 1) = 2. * (q(1) * q(2) - q(0) * q(3));
     R(0, 2) = 2. * (q(1) * q(3) + q(0) * q(2));
@@ -145,8 +145,8 @@ KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(View_Quaternion q, View_R
 }
 
 /// Rotates provided vector by provided *unit* quaternion
-KOKKOS_INLINE_FUNCTION
-void QuaternionRotateVector(View_Quaternion q, View_3 v, View_3 v_rot) {
+template <typename Q, typename View1, typename View2>
+KOKKOS_INLINE_FUNCTION void QuaternionRotateVector(Q q, View1 v, View2 v_rot) {
     v_rot[0] = (q(0) * q(0) + q(1) * q(1) - q(2) * q(2) - q(3) * q(3)) * v(0) +
                2. * (q(1) * q(2) - q(0) * q(3)) * v(1) + 2. * (q(1) * q(3) + q(0) * q(2)) * v(2);
     v_rot[1] = 2. * (q(1) * q(2) + q(0) * q(3)) * v(0) +
@@ -157,8 +157,8 @@ void QuaternionRotateVector(View_Quaternion q, View_3 v, View_3 v_rot) {
 }
 
 /// Calculate the quaternion derivative (E)
-KOKKOS_INLINE_FUNCTION
-void QuaternionDerivative(View_Quaternion q, View_3x4 m) {
+template <typename Q, typename M>
+KOKKOS_INLINE_FUNCTION void QuaternionDerivative(Q q, M m) {
     m(0, 0) = -q(1);
     m(0, 1) = q(0);
     m(0, 2) = -q(3);
@@ -174,8 +174,8 @@ void QuaternionDerivative(View_Quaternion q, View_3x4 m) {
 }
 
 /// Multiplies provided quaternion with this quaternion and returns the result
-KOKKOS_INLINE_FUNCTION
-void QuaternionCompose(View_Quaternion q1, View_Quaternion q2, View_Quaternion qn) {
+template <typename Q1, typename Q2, typename QN>
+KOKKOS_INLINE_FUNCTION void QuaternionCompose(Q1 q1, Q2 q2, QN qn) {
     qn(0) = q1(0) * q2(0) - q1(1) * q2(1) - q1(2) * q2(2) - q1(3) * q2(3);
     qn(1) = q1(0) * q2(1) + q1(1) * q2(0) + q1(2) * q2(3) - q1(3) * q2(2);
     qn(2) = q1(0) * q2(2) - q1(1) * q2(3) + q1(2) * q2(0) + q1(3) * q2(1);
