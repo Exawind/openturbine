@@ -1040,7 +1040,9 @@ struct IntegrateMatrix {
         for (size_t i = idx.node_range.first; i < idx.node_range.second; ++i) {  // Nodes
             auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
             for (size_t j = idx.node_range.first; j < idx.node_range.second; ++j) {  // Nodes
-                double local_M[6][6]{0.};
+                double local_M[6][6] = {{0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.},
+                                        {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.},
+                                        {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}};
                 for (size_t k = 0; k < idx.num_qps; ++k) {
                     auto k_qp = idx.qp_range.first + k;
                     auto w = qp_weight_(k_qp);
@@ -1083,7 +1085,9 @@ struct IntegrateElasticStiffnessMatrix {
         for (size_t i = idx.node_range.first; i < idx.node_range.second; ++i) {  // Nodes
             auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
             for (size_t j = idx.node_range.first; j < idx.node_range.second; ++j) {  // Nodes
-                double local_M[6][6]{0.};
+                double local_M[6][6] = {{0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.},
+                                        {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.},
+                                        {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}};
                 for (size_t k = 0; k < idx.num_qps; ++k) {  // QPs
                     auto k_qp = idx.qp_range.first + k;
                     auto w = qp_weight_(k_qp);
