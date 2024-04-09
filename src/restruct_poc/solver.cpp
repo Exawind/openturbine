@@ -1,6 +1,7 @@
 #include "solver.hpp"
 
 #include <KokkosBlas_gesv.hpp>
+#include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "beams.hpp"
 #include "solver_functors.hpp"
@@ -10,6 +11,7 @@
 namespace openturbine {
 
 void PredictNextState(Solver& solver) {
+    auto region = Kokkos::Profiling::ScopedRegion("Predict Next State");
     Kokkos::deep_copy(solver.state.lambda, 0.);
     Kokkos::deep_copy(solver.state.q_prev, solver.state.q);
 
@@ -29,6 +31,7 @@ void PredictNextState(Solver& solver) {
 }
 
 void InitializeConstraints(Solver& solver, Beams& beams) {
+    auto region = Kokkos::Profiling::ScopedRegion("Initialize Constraints");
     Kokkos::parallel_for(
         "CalculateConstraintX0", solver.num_constraint_nodes,
         CalculateConstraintX0{solver.constraints.node_indices, beams.node_x0, solver.constraints.X0}
@@ -36,6 +39,7 @@ void InitializeConstraints(Solver& solver, Beams& beams) {
 }
 
 void UpdateStatePrediction(Solver& solver, View_N x_system, View_N x_lambda) {
+    auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
     // Update state prediction based on system solution
     if (solver.is_dynamic_solve) {
         // Calculate change in state based on dynamic solution iteration
@@ -72,6 +76,7 @@ void UpdateStatePrediction(Solver& solver, View_N x_system, View_N x_lambda) {
 
 template <typename Subview_NxN, typename Subview_N>
 void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R_system) {
+    auto region = Kokkos::Profiling::ScopedRegion("Assemble System");
     // Tangent operator
     Kokkos::deep_copy(solver.T, 0.);
     Kokkos::parallel_for(
@@ -124,6 +129,7 @@ template <typename Subview_NxN, typename Subview_N>
 void AssembleConstraints(
     Solver& solver, Subview_NxN St_12, Subview_NxN St_21, Subview_N R_system, Subview_N R_lambda
 ) {
+    auto region = Kokkos::Profiling::ScopedRegion("Assemble Constraints");
     // If no constraints in solver, return
     if (solver.num_constraint_dofs == 0) {
         return;
@@ -154,6 +160,7 @@ void AssembleConstraints(
 }
 
 void SolveSystem(Solver& solver) {
+    auto region = Kokkos::Profiling::ScopedRegion("Solve System");
     // Condition system for solve
     Kokkos::parallel_for(
         "ConditionSystem", 1,
@@ -173,6 +180,7 @@ void SolveSystem(Solver& solver) {
 }
 
 double CalculateConvergenceError(Solver& solver) {
+    auto region = Kokkos::Profiling::ScopedRegion("Calculate Convergence Error");
     const double atol = 1e-7;
     const double rtol = 1e-5;
     double sum_error_squared = 0.;
@@ -198,6 +206,7 @@ struct UpdateAcceleration {
 };
 
 bool Step(Solver& solver, Beams& beams) {
+    auto region = Kokkos::Profiling::ScopedRegion("Step");
     // Predict state at end of step
     PredictNextState(solver);
 

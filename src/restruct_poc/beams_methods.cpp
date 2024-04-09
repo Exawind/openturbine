@@ -2,6 +2,8 @@
 
 #include <array>
 
+#include <Kokkos_Profiling_ScopedRegion.hpp>
+
 #include "beams_functors.hpp"
 
 namespace openturbine {
@@ -33,6 +35,7 @@ struct UpdateNodeState {
 
 // Update node states (displacement, velocity, acceleration) and interpolate to quadrature points
 void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
+    auto region = Kokkos::Profiling::ScopedRegion("Update State");
     // Copy displacement, velocity, and acceleration to nodes
     Kokkos::parallel_for(
         "UpdateNodeState", beams.num_nodes,
@@ -161,6 +164,7 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
 }
 
 void AssembleResidualVector(Beams& beams, View_N residual_vector) {
+    auto region = Kokkos::Profiling::ScopedRegion("Assemble Residual");
     Kokkos::parallel_for(
         beams.num_nodes, IntegrateResidualVector(
                              beams.node_state_indices, beams.node_FE, beams.node_FI, beams.node_FG,
@@ -170,6 +174,7 @@ void AssembleResidualVector(Beams& beams, View_N residual_vector) {
 }
 
 void AssembleMassMatrix(Beams& beams, View_NxN M) {
+    auto region = Kokkos::Profiling::ScopedRegion("Assemble Mass Matrix");
     Kokkos::parallel_for(
         "IntegrateMatrix", beams.num_elems,
         IntegrateMatrix{
@@ -185,6 +190,7 @@ void AssembleMassMatrix(Beams& beams, View_NxN M) {
 }
 
 void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
+    auto region = Kokkos::Profiling::ScopedRegion("Assemble Gyroscopic Inertia Matrix");
     Kokkos::parallel_for(
         "IntegrateMatrix", beams.num_elems,
         IntegrateMatrix{
@@ -200,6 +206,7 @@ void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
 }
 
 void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K) {
+    auto region = Kokkos::Profiling::ScopedRegion("Assemble Inertial Stiffness Matrix");
     Kokkos::parallel_for(
         "IntegrateMatrix", beams.num_elems,
         IntegrateMatrix{
@@ -215,6 +222,7 @@ void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K) {
 }
 
 void AssembleElasticStiffnessMatrix(Beams& beams, View_NxN K) {
+    auto region = Kokkos::Profiling::ScopedRegion("Assemble Elastic Stiffness Matrix");
     Kokkos::parallel_for(
         "IntegrateElasticStiffnessMatrix", beams.num_elems,
         IntegrateElasticStiffnessMatrix{
