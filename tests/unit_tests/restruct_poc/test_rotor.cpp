@@ -8,6 +8,10 @@
 #include "src/restruct_poc/solver.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
+#ifdef OTURB_ENABLE_VTK
+#include "vtkout.hpp"
+#endif
+
 namespace openturbine::restruct_poc::tests {
 
 Quaternion CRV2Quat(double c1, double c2, double c3) {
@@ -674,7 +678,10 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     InitializeConstraints(solver, beams);
 
     // auto qp_x0 = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams.qp_x0);
-    // WriteMatrixToFile(qp_x0, "step_0000.csv");
+    // WriteMatrixToFile(qp_x0, "steps/step_0000.csv");
+#ifdef OTURB_ENABLE_VTK
+    BeamsWriteVTK(beams, "steps/step_0000.vtu");
+#endif
 
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
@@ -700,6 +707,9 @@ TEST(RotatingBeamTest, IEA15Rotor) {
         // Verify that step converged
         EXPECT_EQ(converged, true);
 
+        // Get step number as a string
+        auto tmp = std::to_string(i + 1);
+        auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
         // Get quadrature point displacement and convert to global position
         // auto qp_x = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams.qp_u);
         // for (size_t j = 0; j < qp_x.size(); ++j) {
@@ -707,12 +717,11 @@ TEST(RotatingBeamTest, IEA15Rotor) {
         //         qp_x[j][k] += qp_x0[j][k];
         //     }
         // }
-        // auto tmp = std::to_string(i + 1);
-        // WriteMatrixToFile(
-        //     qp_x, std::string("step_") + std::string(4 - tmp.size(), '0') + tmp + ".csv"
-        // );
+        // WriteMatrixToFile(qp_x, file_name + ".csv");
 
-        // auto fg = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams.qp_Fg);
+#ifdef OTURB_ENABLE_VTK
+        BeamsWriteVTK(beams, file_name + ".vtu");
+#endif
     }
 }
 

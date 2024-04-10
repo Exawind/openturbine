@@ -19,6 +19,13 @@ if(OTURB_ENABLE_BASIC_SANITIZERS)
   add_link_options(-fsanitize=address,undefined)
 endif()
 
+# Enable VTK output
+option(OTURB_ENABLE_VTK "Enable VTK output" OFF)
+if(OTURB_ENABLE_VTK)
+  find_package(VTK REQUIRED IOXML)
+  add_compile_definitions(OTURB_ENABLE_VTK)
+endif()
+
 # option(OTURB_ENABLE_CLANG_TIDY "Compile with clang-tidy static analysis" OFF)
 # option(OTURB_ENABLE_CPPCHECK "Enable cppcheck static analysis target" OFF)
 # option(OTURB_ENABLE_FCOMPARE "Enable building fcompare when not testing" OFF)

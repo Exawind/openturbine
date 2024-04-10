@@ -7,3 +7,11 @@ target_sources(
     test_rotating_beam.cpp
     test_rotor.cpp
 )
+
+if(OTURB_ENABLE_VTK)
+    target_sources(
+        ${oturb_unit_test_exe_name}
+        PRIVATE
+        vtkout.hpp
+    )
+endif()

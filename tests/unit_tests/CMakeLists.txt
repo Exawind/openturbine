@@ -38,6 +38,13 @@ target_link_libraries(${oturb_unit_test_exe_name} PRIVATE
     Kokkos::kokkoskernels
 )
 
+# Link VTK to test target
+if (OTURB_ENABLE_VTK)
+  target_link_libraries(${oturb_unit_test_exe_name} PRIVATE
+    VTK::IOXML
+  )
+endif()
+
 # Define what we want to be installed during a make install
 install(TARGETS ${oturb_unit_test_exe_name}
     RUNTIME DESTINATION bin
