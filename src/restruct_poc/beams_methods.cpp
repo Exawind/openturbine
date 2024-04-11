@@ -166,7 +166,7 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
 
 void AssembleResidualVector(Beams& beams, View_N residual_vector) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Residual");
-    Kokkos::parallel_for(
+    Kokkos::parallel_for("IntegrateResidualVector",
         beams.num_nodes, IntegrateResidualVector(
                              beams.node_state_indices, beams.node_FE, beams.node_FI, beams.node_FG,
                              beams.node_FX, residual_vector
@@ -177,7 +177,7 @@ void AssembleResidualVector(Beams& beams, View_N residual_vector) {
 void AssembleMassMatrix(Beams& beams, View_NxN M) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Mass Matrix");
     Kokkos::parallel_for(
-        "IntegrateMatrix", beams.num_elems,
+        "IntegrateMatrix", Kokkos::TeamPolicy<>{static_cast<int>(beams.num_elems), Kokkos::AUTO},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,
@@ -193,7 +193,7 @@ void AssembleMassMatrix(Beams& beams, View_NxN M) {
 void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Gyroscopic Inertia Matrix");
     Kokkos::parallel_for(
-        "IntegrateMatrix", beams.num_elems,
+        "IntegrateMatrix", Kokkos::TeamPolicy<>{static_cast<int>(beams.num_elems), Kokkos::AUTO},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,

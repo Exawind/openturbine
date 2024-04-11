@@ -198,8 +198,9 @@ void InterpVector3(View_NxN shape_matrix, View_Nx3 node_v, View_Nx3 qp_v) {
     }
     for (size_t i = 0; i < node_v.extent(0); ++i) {
         for (size_t j = 0; j < qp_v.extent(0); ++j) {
+            const auto phi = shape_matrix(i, j);
             for (size_t k = 0; k < 3; ++k) {
-                qp_v(j, k) += node_v(i, k) * shape_matrix(i, j);
+                qp_v(j, k) += node_v(i, k) * phi;
             }
         }
     }
@@ -214,8 +215,9 @@ void InterpVector4(View_NxN shape_matrix, View_Nx4 node_v, View_Nx4 qp_v) {
     }
     for (size_t i = 0; i < node_v.extent(0); ++i) {
         for (size_t j = 0; j < qp_v.extent(0); ++j) {
+            const auto phi = shape_matrix(i, j);
             for (size_t k = 0; k < 4; ++k) {
-                qp_v(j, k) += node_v(i, k) * shape_matrix(i, j);
+                qp_v(j, k) += node_v(i, k) * phi;
             }
         }
     }
@@ -251,8 +253,9 @@ void InterpVector3Deriv(
 ) {
     InterpVector3(shape_matrix_deriv, node_v, qp_v);
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
+        const auto jac = jacobian(j);
         for (size_t k = 0; k < qp_v.extent(1); ++k) {
-            qp_v(j, k) /= jacobian(j);
+            qp_v(j, k) /= jac;
         }
     }
 }
@@ -263,8 +266,9 @@ void InterpVector4Deriv(
 ) {
     InterpVector4(shape_matrix_deriv, node_v, qp_v);
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
+        const auto jac = jacobian(j);
         for (size_t k = 0; k < qp_v.extent(1); ++k) {
-            qp_v(j, k) /= jacobian(j);
+            qp_v(j, k) /= jac;
         }
     }
 }
@@ -297,8 +301,9 @@ struct InterpolateQPPosition {
         // Perform matrix-matrix multiplication
         for (size_t i = 0; i < idx.num_nodes; ++i) {
             for (size_t j = 0; j < idx.num_qps; ++j) {
+                const auto phi = shape_interp(i, j);
                 for (size_t k = 0; k < kVectorComponents; ++k) {
-                    qp_pos(j, k) += node_pos(i, k) * shape_interp(i, j);
+                    qp_pos(j, k) += node_pos(i, k) * phi;
                 }
             }
         }
@@ -362,15 +367,15 @@ struct CalculateJacobian {
         //  Loop through quadrature points
         for (size_t j = 0; j < idx.num_qps; ++j) {
             // Calculate Jacobian as norm of derivative
-            qp_jacobian(j) = Kokkos::sqrt(
+            const auto jacobian = Kokkos::sqrt(
                 Kokkos::pow(qp_pos_deriv(j, 0), 2.) + Kokkos::pow(qp_pos_deriv(j, 1), 2.) +
                 Kokkos::pow(qp_pos_deriv(j, 2), 2.)
             );
-
+            qp_jacobian(j) = jacobian;
             // Apply Jacobian to row
-            qp_pos_deriv(j, 0) /= qp_jacobian(j);
-            qp_pos_deriv(j, 1) /= qp_jacobian(j);
-            qp_pos_deriv(j, 2) /= qp_jacobian(j);
+            for(size_t k = 0; k < 3; ++k) {
+                qp_pos_deriv(j, k) /= jacobian;
+            }
         }
     }
 };
