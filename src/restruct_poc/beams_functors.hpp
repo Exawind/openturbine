@@ -26,20 +26,22 @@ KOKKOS_INLINE_FUNCTION void FillVector(View_A A, double value) {
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatVecMulAB(View_A A, View_B B, View_C C) {
     for (size_t i = 0; i < A.extent(0); ++i) {
-        C(i) = 0.;
+        auto local_result = 0.;
         for (size_t k = 0; k < B.extent(0); ++k) {
-            C(i) += A(i, k) * B(k);
+            local_result += A(i, k) * B(k);
         }
+        C(i) = local_result;
     }
 }
 
 template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatVecMulATB(View_A A, View_B B, View_C C) {
     for (size_t i = 0; i < A.extent(1); ++i) {
-        C(i) = 0.;
+        auto local_result = 0.;
         for (size_t k = 0; k < B.extent(0); ++k) {
-            C(i) += A(k, i) * B(k);
+            local_result += A(k, i) * B(k);
         }
+        C(i) = local_result;
     }
 }
 
@@ -80,7 +82,7 @@ template <typename A, typename B>
 KOKKOS_INLINE_FUNCTION void MatScale(A m_in, double scale, B m_out) {
     for (size_t i = 0; i < m_in.extent(0); ++i) {
         for (size_t j = 0; j < m_in.extent(1); ++j) {
-            m_out(i) = m_in(i) * scale;
+            m_out(i, j) = m_in(i, j) * scale;
         }
     }
 }
@@ -98,10 +100,11 @@ template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatMulAB(View_A A, View_B B, View_C C) {
     for (size_t i = 0; i < A.extent(0); ++i) {
         for (size_t j = 0; j < B.extent(1); ++j) {
-            C(i, j) = 0.;
+            auto local_result = 0.;
             for (size_t k = 0; k < B.extent(0); ++k) {
-                C(i, j) += A(i, k) * B(k, j);
+                local_result += A(i, k) * B(k, j);
             }
+            C(i, j) = local_result;
         }
     }
 }
@@ -110,10 +113,11 @@ template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatMulATB(View_A AT, View_B B, View_C C) {
     for (size_t i = 0; i < AT.extent(1); ++i) {
         for (size_t j = 0; j < B.extent(1); ++j) {
-            C(i, j) = 0.;
+            auto local_result = 0.;
             for (size_t k = 0; k < B.extent(0); ++k) {
-                C(i, j) += AT(k, i) * B(k, j);
+                local_result += AT(k, i) * B(k, j);
             }
+            C(i, j) = local_result;
         }
     }
 }
@@ -122,10 +126,11 @@ template <typename View_A, typename View_B, typename View_C>
 KOKKOS_INLINE_FUNCTION void MatMulABT(View_A A, View_B BT, View_C C) {
     for (size_t i = 0; i < A.extent(0); ++i) {
         for (size_t j = 0; j < BT.extent(0); ++j) {
-            C(i, j) = 0.;
+            auto local_result = 0.;
             for (size_t k = 0; k < BT.extent(1); ++k) {
-                C(i, j) += A(i, k) * BT(j, k);
+                local_result += A(i, k) * BT(j, k);
             }
+            C(i, j) = local_result;
         }
     }
 }
@@ -222,9 +227,11 @@ void InterpVector4(View_NxN::const_type shape_matrix, View_Nx4::const_type node_
 }
 
 KOKKOS_INLINE_FUNCTION
-void InterpQuaternion(View_NxN::const_type shape_matrix, View_Nx4::const_type node_v, View_Nx4 qp_v) {
+void InterpQuaternion(
+    View_NxN::const_type shape_matrix, View_Nx4::const_type node_v, View_Nx4 qp_v
+) {
     InterpVector4(shape_matrix, node_v, qp_v);
-    static constexpr auto length_zero_result = Kokkos::Array<double, 4> {1., 0., 0., 0.};
+    static constexpr auto length_zero_result = Kokkos::Array<double, 4>{1., 0., 0., 0.};
     // Normalize quaternions (rows)
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
         auto length = Kokkos::sqrt(
@@ -232,11 +239,11 @@ void InterpQuaternion(View_NxN::const_type shape_matrix, View_Nx4::const_type no
             Kokkos::pow(qp_v(j, 3), 2)
         );
         if (length == 0.) {
-            for(size_t k = 0; k < 4; ++k) {
+            for (size_t k = 0; k < 4; ++k) {
                 qp_v(j, k) = length_zero_result[k];
             }
         } else {
-            for(size_t k = 0; k < 4; ++k) {
+            for (size_t k = 0; k < 4; ++k) {
                 qp_v(j, k) /= length;
             }
         }
@@ -245,7 +252,8 @@ void InterpQuaternion(View_NxN::const_type shape_matrix, View_Nx4::const_type no
 
 KOKKOS_INLINE_FUNCTION
 void InterpVector3Deriv(
-    View_NxN::const_type shape_matrix_deriv, View_N::const_type jacobian, View_Nx3::const_type node_v, View_Nx3 qp_v
+    View_NxN::const_type shape_matrix_deriv, View_N::const_type jacobian,
+    View_Nx3::const_type node_v, View_Nx3 qp_v
 ) {
     InterpVector3(shape_matrix_deriv, node_v, qp_v);
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
@@ -258,7 +266,8 @@ void InterpVector3Deriv(
 
 KOKKOS_INLINE_FUNCTION
 void InterpVector4Deriv(
-    View_NxN::const_type shape_matrix_deriv, View_N::const_type jacobian, View_Nx4::const_type node_v, View_Nx4 qp_v
+    View_NxN::const_type shape_matrix_deriv, View_N::const_type jacobian,
+    View_Nx4::const_type node_v, View_Nx4 qp_v
 ) {
     InterpVector4(shape_matrix_deriv, node_v, qp_v);
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
@@ -324,7 +333,7 @@ struct InterpolateQPRotationDerivative {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
     View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
     View_N::const_type qp_jacobian_;                             // Jacobians
-    View_Nx7::const_type node_pos_rot_;                          // Node global position/rotation vector
+    View_Nx7::const_type node_pos_rot_;              // Node global position/rotation vector
     View_Nx4 qp_rot_deriv_;                          // quadrature point rotation derivative
 
     KOKKOS_FUNCTION
@@ -342,7 +351,7 @@ struct InterpolateQPRotationDerivative {
 struct CalculateJacobian {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
     View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
-    View_Nx7::const_type node_pos_rot_;                          // Node global position/rotation vector
+    View_Nx7::const_type node_pos_rot_;              // Node global position/rotation vector
     View_Nx3 qp_pos_deriv_;                          // quadrature point position derivative
     View_N qp_jacobian_;                             // Jacobians
 
@@ -366,7 +375,7 @@ struct CalculateJacobian {
             );
             qp_jacobian(j) = jacobian;
             // Apply Jacobian to row
-            for(size_t k = 0; k < 3; ++k) {
+            for (size_t k = 0; k < 3; ++k) {
                 qp_pos_deriv(j, k) /= jacobian;
             }
         }
@@ -436,7 +445,7 @@ struct InterpolateQPAcceleration {
     View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
     View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
     View_N::const_type qp_jacobian_;                             // Num Nodes x Num Quadrature points
-    View_Nx6::const_type node_u_ddot_;                           // Node translation & angular velocity
+    View_Nx6::const_type node_u_ddot_;               // Node translation & angular velocity
     View_Nx3 qp_u_ddot_;                             // qp translation velocity
     View_Nx3 qp_omega_dot_;                          // qp angular velocity
 
@@ -1229,17 +1238,6 @@ struct IntegrateResidualVector {
     View_Nx6::const_type node_FG_;  // Gravity force
     View_Nx6::const_type node_FX_;  // External force
     View_N_atomic residual_vector_;
-
-    IntegrateResidualVector(
-        Kokkos::View<size_t*> node_state_indices, View_Nx6 node_FE, View_Nx6 node_FI,
-        View_Nx6 node_FG, View_Nx6 node_FX, View_N residual_vector
-    )
-        : node_state_indices_(node_state_indices),
-          node_FE_(node_FE),
-          node_FI_(node_FI),
-          node_FG_(node_FG),
-          node_FX_(node_FX),
-          residual_vector_(residual_vector) {}
 
     KOKKOS_INLINE_FUNCTION void operator()(const size_t i_node) const {
         auto i_rv_start = node_state_indices_(i_node) * kLieAlgebraComponents;
