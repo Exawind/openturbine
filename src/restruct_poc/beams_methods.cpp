@@ -69,7 +69,6 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
         CalculateRR0{
             beams.qp_r0,
             beams.qp_r,
-            beams.qp_quat,
             beams.qp_RR0,
         }
     );
@@ -94,8 +93,6 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
             beams.qp_u_prime,
             beams.qp_r,
             beams.qp_r_prime,
-            beams.M_3x4,
-            beams.V1_3,
             beams.qp_strain,
         }
     );
@@ -103,54 +100,58 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     // Calculate Forces
     Kokkos::parallel_for(
         "CalculateMassMatrixComponents", beams.num_qps,
-        CalculateMassMatrixComponents{beams.qp_Muu, beams.V1_3, beams.M7_3x3, beams.M1_3x3}
+        CalculateMassMatrixComponents{beams.qp_Muu, beams.qp_eta, beams.qp_rho, beams.qp_eta_tilde}
     );
     Kokkos::parallel_for(
         "CalculateTemporaryVariables", beams.num_qps,
-        CalculateTemporaryVariables{beams.qp_x0_prime, beams.qp_u_prime, beams.V2_3, beams.M4_3x3}
+        CalculateTemporaryVariables{beams.qp_x0_prime, beams.qp_u_prime, beams.qp_x0pupss}
     );
     Kokkos::parallel_for(
         "CalculateForceFC", beams.num_qps,
-        CalculateForceFC{beams.qp_Cuu, beams.qp_strain, beams.qp_Fc, beams.M5_3x3, beams.M6_3x3}
+        CalculateForceFC{
+            beams.qp_Cuu, beams.qp_strain, beams.qp_Fc, beams.qp_M_tilde, beams.qp_N_tilde}
     );
     Kokkos::parallel_for(
-        "CalculateForceFD", beams.num_qps, CalculateForceFD{beams.M4_3x3, beams.qp_Fc, beams.qp_Fd}
+        "CalculateForceFD", beams.num_qps,
+        CalculateForceFD{beams.qp_x0pupss, beams.qp_Fc, beams.qp_Fd}
     );
     Kokkos::parallel_for(
         "CalculateInertialForces", beams.num_qps,
         CalculateInertialForces{
-            beams.qp_Muu, beams.qp_u_ddot, beams.qp_omega, beams.qp_omega_dot, beams.M1_3x3,
-            beams.M2_3x3, beams.M3_3x3, beams.M7_3x3, beams.V1_3, beams.V2_3, beams.M8_3x3,
-            beams.qp_Fi}
+            beams.qp_Muu, beams.qp_u_ddot, beams.qp_omega, beams.qp_omega_dot, beams.qp_eta_tilde,
+            beams.qp_omega_tilde, beams.qp_omega_dot_tilde, beams.qp_rho, beams.qp_eta, beams.V2_3,
+            beams.M8_3x3, beams.qp_Fi}
     );
     Kokkos::parallel_for(
         "CalculateGravityForce", beams.num_qps,
-        CalculateGravityForce{beams.gravity, beams.qp_Muu, beams.M1_3x3, beams.V2_3, beams.qp_Fg}
+        CalculateGravityForce{
+            beams.gravity, beams.qp_Muu, beams.qp_eta_tilde, beams.V2_3, beams.qp_Fg}
     );
     Kokkos::parallel_for(
         "CalculateOuu", beams.num_qps,
-        CalculateOuu{beams.qp_Cuu, beams.M4_3x3, beams.M5_3x3, beams.M6_3x3, beams.qp_Ouu}
+        CalculateOuu{
+            beams.qp_Cuu, beams.qp_x0pupss, beams.qp_M_tilde, beams.qp_N_tilde, beams.qp_Ouu}
     );
     Kokkos::parallel_for(
         "CalculatePuu", beams.num_qps,
-        CalculatePuu{beams.qp_Cuu, beams.M4_3x3, beams.M6_3x3, beams.qp_Puu}
+        CalculatePuu{beams.qp_Cuu, beams.qp_x0pupss, beams.qp_N_tilde, beams.qp_Puu}
     );
     Kokkos::parallel_for(
         "CalculateQuu", beams.num_qps,
-        CalculateQuu{beams.qp_Cuu, beams.M4_3x3, beams.M6_3x3, beams.M8_3x3, beams.qp_Quu}
+        CalculateQuu{beams.qp_Cuu, beams.qp_x0pupss, beams.qp_N_tilde, beams.M8_3x3, beams.qp_Quu}
     );
     Kokkos::parallel_for(
         "CalculateGyroscopicMatrix", beams.num_qps,
         CalculateGyroscopicMatrix{
-            beams.qp_Muu, beams.qp_omega, beams.M2_3x3, beams.M7_3x3, beams.V1_3, beams.V2_3,
-            beams.V3_3, beams.M8_3x3, beams.qp_Guu}
+            beams.qp_Muu, beams.qp_omega, beams.qp_omega_tilde, beams.qp_rho, beams.qp_eta,
+            beams.V2_3, beams.V3_3, beams.M8_3x3, beams.qp_Guu}
     );
     Kokkos::parallel_for(
         "CalculateInertiaStiffnessMatrix", beams.num_qps,
         CalculateInertiaStiffnessMatrix{
-            beams.qp_Muu, beams.qp_u_ddot, beams.qp_omega, beams.qp_omega_dot, beams.M2_3x3,
-            beams.M3_3x3, beams.M7_3x3, beams.V1_3, beams.V2_3, beams.M8_3x3, beams.M9_3x3,
-            beams.qp_Kuu}
+            beams.qp_Muu, beams.qp_u_ddot, beams.qp_omega, beams.qp_omega_dot, beams.qp_omega_tilde,
+            beams.qp_omega_dot_tilde, beams.qp_rho, beams.qp_eta, beams.V2_3, beams.M8_3x3,
+            beams.M9_3x3, beams.qp_Kuu}
     );
 
     // Calculate nodal force vectors

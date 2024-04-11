@@ -157,20 +157,23 @@ KOKKOS_INLINE_FUNCTION void QuaternionRotateVector(Q q, View1 v, View2 v_rot) {
 }
 
 /// Calculate the quaternion derivative (E)
-template <typename Q, typename M>
-KOKKOS_INLINE_FUNCTION void QuaternionDerivative(Q q, M m) {
-    m(0, 0) = -q(1);
-    m(0, 1) = q(0);
-    m(0, 2) = -q(3);
-    m(0, 3) = q(2);
-    m(1, 0) = -q(2);
-    m(1, 1) = q(3);
-    m(1, 2) = q(0);
-    m(1, 3) = -q(1);
-    m(2, 0) = -q(3);
-    m(2, 1) = -q(2);
-    m(2, 2) = q(1);
-    m(2, 3) = q(0);
+KOKKOS_INLINE_FUNCTION void QuaternionDerivative(const Quaternion& q, double m[3][4]) {
+    auto q0 = q.GetScalarComponent();
+    auto q1 = q.GetXComponent();
+    auto q2 = q.GetYComponent();
+    auto q3 = q.GetZComponent();
+    m[0][0] = -q1;
+    m[0][1] = q0;
+    m[0][2] = -q3;
+    m[0][3] = q2;
+    m[1][0] = -q2;
+    m[1][1] = q3;
+    m[1][2] = q0;
+    m[1][3] = -q1;
+    m[2][0] = -q3;
+    m[2][1] = -q2;
+    m[2][2] = q1;
+    m[2][3] = q0;
 }
 
 /// Multiplies provided quaternion with this quaternion and returns the result
@@ -458,22 +461,16 @@ struct InterpolateQPAcceleration {
 struct CalculateRR0 {
     View_Nx4 qp_r0_;     // quadrature point initial rotation
     View_Nx4 qp_r_;      // quadrature rotation displacement
-    View_Nx4 qRR0_;      // quaternion composition of RR0
     View_Nx6x6 qp_RR0_;  // quadrature global rotation
 
     KOKKOS_FUNCTION void operator()(const size_t i_qp) const {
-        auto qR = Kokkos::subview(qp_r_, i_qp, Kokkos::ALL);
-        auto qR0 = Kokkos::subview(qp_r0_, i_qp, Kokkos::ALL);
-        auto qRR0 = Kokkos::subview(qRR0_, i_qp, Kokkos::ALL);
-        auto RR0_11 =
-            Kokkos::subview(qp_RR0_, i_qp, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
-        auto RR0_22 =
-            Kokkos::subview(qp_RR0_, i_qp, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        QuaternionCompose(qR, qR0, qRR0);
-        QuaternionToRotationMatrix(qRR0, RR0_11);
-        for (size_t i = 0; i < RR0_22.extent(0); ++i) {
-            for (size_t j = 0; j < RR0_22.extent(1); ++j) {
-                RR0_22(i, j) = RR0_11(i, j);
+        Quaternion R(qp_r_(i_qp, 0), qp_r_(i_qp, 1), qp_r_(i_qp, 2), qp_r_(i_qp, 3));
+        Quaternion R0(qp_r0_(i_qp, 0), qp_r0_(i_qp, 1), qp_r0_(i_qp, 2), qp_r0_(i_qp, 3));
+        auto RR0 = (R * R0).to_rotation_matrix();
+        for (size_t i = 0; i < 3; ++i) {
+            for (size_t j = 0; j < 3; ++j) {
+                qp_RR0_(i_qp, i, j) = RR0(i, j);
+                qp_RR0_(i_qp, 3 + i, 3 + j) = RR0(i, j);
             }
         }
     }
@@ -518,28 +515,36 @@ struct CalculateStrain {
     View_Nx3 qp_u_prime_;   //
     View_Nx4 qp_r_;         //
     View_Nx4 qp_r_prime_;   //
-    View_Nx3x4 qp_E_;       //
-    View_Nx3 qp_V_;         //
     View_Nx6 qp_strain_;    //
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_qp) const {
-        auto x0_prime = Kokkos::subview(qp_x0_prime_, i_qp, Kokkos::ALL);
-        auto u_prime = Kokkos::subview(qp_u_prime_, i_qp, Kokkos::ALL);
-        auto R = Kokkos::subview(qp_r_, i_qp, Kokkos::ALL);
-        auto R_prime = Kokkos::subview(qp_r_prime_, i_qp, Kokkos::ALL);
-        auto E = Kokkos::subview(qp_E_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto R_x0_prime = Kokkos::subview(qp_V_, i_qp, Kokkos::ALL);
-        auto e1 = Kokkos::subview(qp_strain_, i_qp, Kokkos::make_pair(0, 3));
-        auto e2 = Kokkos::subview(qp_strain_, i_qp, Kokkos::make_pair(3, 6));
+        Vector x0_prime(qp_x0_prime_(i_qp, 0), qp_x0_prime_(i_qp, 1), qp_x0_prime_(i_qp, 2));
+        Vector u_prime(qp_u_prime_(i_qp, 0), qp_u_prime_(i_qp, 1), qp_u_prime_(i_qp, 2));
+        Quaternion R(qp_r_(i_qp, 0), qp_r_(i_qp, 1), qp_r_(i_qp, 2), qp_r_(i_qp, 3));
 
-        QuaternionRotateVector(R, x0_prime, R_x0_prime);
+        auto R_x0_prime = R * x0_prime;
+        auto e1 = x0_prime + u_prime - R_x0_prime;
+
+        double E[3][4];
         QuaternionDerivative(R, E);
-        MatVecMulAB(E, R_prime, e2);
-        for (size_t i = 0; i < 3; i++) {
-            e1(i) = x0_prime(i) + u_prime(i) - R_x0_prime(i);
-            e2(i) *= 2.;
+        double R_prime[4] = {
+            qp_r_prime_(i_qp, 0), qp_r_prime_(i_qp, 1), qp_r_prime_(i_qp, 2), qp_r_prime_(i_qp, 3)};
+        double e2[3];
+
+        for (size_t i = 0; i < 3; ++i) {
+            e2[i] = 0.;
+            for (size_t k = 0; k < 4; ++k) {
+                e2[i] += E[i][k] * R_prime[k];
+            }
         }
+
+        qp_strain_(i_qp, 0) = e1.GetX();
+        qp_strain_(i_qp, 1) = e1.GetY();
+        qp_strain_(i_qp, 2) = e1.GetZ();
+        qp_strain_(i_qp, 3) = 2.0 * e2[0];
+        qp_strain_(i_qp, 4) = 2.0 * e2[1];
+        qp_strain_(i_qp, 5) = 2.0 * e2[2];
     }
 };
 
@@ -578,20 +583,20 @@ struct CalculateMassMatrixComponents {
 struct CalculateTemporaryVariables {
     View_Nx3 qp_x0_prime_;
     View_Nx3 qp_u_prime_;
-    View_Nx3 v1_;
     View_Nx3x3 x0pupSS_;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_qp) const {
-        auto x0_prime = Kokkos::subview(qp_x0_prime_, i_qp, Kokkos::ALL);
-        auto u_prime = Kokkos::subview(qp_u_prime_, i_qp, Kokkos::ALL);
-        auto V1 = Kokkos::subview(v1_, i_qp, Kokkos::ALL);
-        auto x0pupSS = Kokkos::subview(x0pupSS_, i_qp, Kokkos::ALL, Kokkos::ALL);
-
-        for (size_t i = 0; i < 3; i++) {
-            V1(i) = x0_prime(i) + u_prime(i);
+        Vector x0_prime(qp_x0_prime_(i_qp, 0), qp_x0_prime_(i_qp, 1), qp_x0_prime_(i_qp, 2));
+        Vector u_prime(qp_u_prime_(i_qp, 0), qp_u_prime_(i_qp, 1), qp_u_prime_(i_qp, 2));
+        auto x0pup = x0_prime + u_prime;
+        double tmp[3][3];
+        x0pup.Tilde(tmp);
+        for (size_t i = 0; i < 3; ++i) {
+            for (size_t j = 0; j < 3; ++j) {
+                x0pupSS_(i_qp, i, j) = tmp[i][j];
+            }
         }
-        VecTilde(V1, x0pupSS);
     }
 };
 
@@ -961,9 +966,9 @@ struct CalculateNodeForces {
     View_Nx6::const_type qp_Fd_;                                 //
     View_Nx6::const_type qp_Fi_;                                 //
     View_Nx6::const_type qp_Fg_;                                 //
-    View_Nx6 node_FE_;                               // Elastic force
-    View_Nx6 node_FI_;                               // Inertial force
-    View_Nx6 node_FG_;                               // Gravity force
+    View_Nx6 node_FE_;                                           // Elastic force
+    View_Nx6 node_FI_;                                           // Inertial force
+    View_Nx6 node_FG_;                                           // Gravity force
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_elem) const {
@@ -986,10 +991,10 @@ struct CalculateNodeForces {
                 const auto coeff_d = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
                 const auto coeff_i = coeff_d;
                 const auto coeff_g = coeff_d;
-                for (size_t k = 0; k < 6; ++k) {        // Components
+                for (size_t k = 0; k < 6; ++k) {  // Components
                     node_FE_(i, k) += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
                 }
-                for (size_t k = 0; k < 6; ++k) {        // Components
+                for (size_t k = 0; k < 6; ++k) {  // Components
                     node_FI_(i, k) += coeff_i * qp_Fi_(j, k);
                 }
                 for (size_t k = 0; k < 6; ++k) {  // Components
@@ -1021,7 +1026,7 @@ struct CalculateNodeForces {
                 const auto coeff_d = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
                 const auto coeff_i = coeff_d;
                 const auto coeff_g = coeff_d;
-                for (size_t k = 0; k < 6; ++k) {        // Components
+                for (size_t k = 0; k < 6; ++k) {  // Components
                     node_FE_(i, k) += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
                 }
                 for (size_t k = 0; k < 6; ++k) {  // Components
@@ -1042,7 +1047,7 @@ struct IntegrateMatrix {
     View_N::const_type qp_jacobian_;                             // Jacobians
     View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
     View_Nx6x6::const_type qp_M_;                                //
-    View_NxN_atomic gbl_M_;                          //
+    View_NxN_atomic gbl_M_;                                      //
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_elem) const {

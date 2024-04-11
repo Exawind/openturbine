@@ -47,54 +47,53 @@ struct Beams {
     View_NxN node_iteration;  // Iteration matrix
 
     // Quadrature point data
-    View_N qp_weight;       // Integration weights
-    View_N qp_jacobian;     // Jacobian vector
-    View_Nx6x6 qp_Mstar;    // Mass matrix in material frame
-    View_Nx6x6 qp_Cstar;    // Stiffness matrix in material frame
-    View_Nx3 qp_x0;         // Initial position
-    View_Nx3 qp_x0_prime;   // Initial position derivative
-    View_Nx4 qp_r0;         // Initial rotation
-    View_Nx3 qp_u;          // State: translation displacement
-    View_Nx3 qp_u_prime;    // State: translation displacement derivative
-    View_Nx3 qp_u_dot;      // State: translation velocity
-    View_Nx3 qp_u_ddot;     // State: translation acceleration
-    View_Nx4 qp_r;          // State: rotation
-    View_Nx4 qp_r_prime;    // State: rotation derivative
-    View_Nx3 qp_omega;      // State: angular velocity
-    View_Nx3 qp_omega_dot;  // State: position/rotation
-    View_Nx6 qp_strain;     // Strain
-    View_Nx6 qp_Fc;         // Elastic force
-    View_Nx6 qp_Fd;         // Elastic force
-    View_Nx6 qp_Fi;         // Inertial force
-    View_Nx6 qp_Fg;         // Gravity force
-    View_Nx6x6 qp_RR0;      // Global rotation
-    View_Nx6x6 qp_Muu;      // Mass in global frame
-    View_Nx6x6 qp_Cuu;      // Stiffness in global frame
-    View_Nx6x6 qp_Ouu;      // Linearization matrices
-    View_Nx6x6 qp_Puu;      // Linearization matrices
-    View_Nx6x6 qp_Quu;      // Linearization matrices
-    View_Nx6x6 qp_Guu;      // Linearization matrices
-    View_Nx6x6 qp_Kuu;      // Linearization matrices
+    View_N qp_weight;               // Integration weights
+    View_N qp_jacobian;             // Jacobian vector
+    View_Nx6x6 qp_Mstar;            // Mass matrix in material frame
+    View_Nx6x6 qp_Cstar;            // Stiffness matrix in material frame
+    View_Nx3 qp_x0;                 // Initial position
+    View_Nx3 qp_x0_prime;           // Initial position derivative
+    View_Nx4 qp_r0;                 // Initial rotation
+    View_Nx3 qp_u;                  // State: translation displacement
+    View_Nx3 qp_u_prime;            // State: translation displacement derivative
+    View_Nx3 qp_u_dot;              // State: translation velocity
+    View_Nx3 qp_u_ddot;             // State: translation acceleration
+    View_Nx4 qp_r;                  // State: rotation
+    View_Nx4 qp_r_prime;            // State: rotation derivative
+    View_Nx3 qp_omega;              // State: angular velocity
+    View_Nx3 qp_omega_dot;          // State: position/rotation
+    View_Nx3x4 qp_E;                // Quaternion derivative
+    View_Nx3x3 qp_eta_tilde;        //
+    View_Nx3x3 qp_omega_tilde;      //
+    View_Nx3x3 qp_omega_dot_tilde;  //
+    View_Nx3x3 qp_x0pupss;          //
+    View_Nx3x3 qp_M_tilde;          //
+    View_Nx3x3 qp_N_tilde;          //
+    View_Nx3 qp_eta;                //
+    View_Nx3x3 qp_rho;              //
+    View_Nx6 qp_strain;             // Strain
+    View_Nx6 qp_Fc;                 // Elastic force
+    View_Nx6 qp_Fd;                 // Elastic force
+    View_Nx6 qp_Fi;                 // Inertial force
+    View_Nx6 qp_Fg;                 // Gravity force
+    View_Nx6x6 qp_RR0;              // Global rotation
+    View_Nx6x6 qp_Muu;              // Mass in global frame
+    View_Nx6x6 qp_Cuu;              // Stiffness in global frame
+    View_Nx6x6 qp_Ouu;              // Linearization matrices
+    View_Nx6x6 qp_Puu;              // Linearization matrices
+    View_Nx6x6 qp_Quu;              // Linearization matrices
+    View_Nx6x6 qp_Guu;              // Linearization matrices
+    View_Nx6x6 qp_Kuu;              // Linearization matrices
 
     View_NxN shape_interp;  // shape function matrix for interpolation [Nodes x QPs]
     View_NxN shape_deriv;   // shape function matrix for derivative interp [Nodes x QPs]
 
     // Scratch variables to be replaced later
     View_Nx6x6 M_6x6;   //
-    View_Nx3x4 M_3x4;   //
-    View_Nx3x3 M1_3x3;  //
-    View_Nx3x3 M2_3x3;  //
-    View_Nx3x3 M3_3x3;  //
-    View_Nx3x3 M4_3x3;  //
-    View_Nx3x3 M5_3x3;  //
-    View_Nx3x3 M6_3x3;  //
-    View_Nx3x3 M7_3x3;  //
     View_Nx3x3 M8_3x3;  //
     View_Nx3x3 M9_3x3;  //
-    View_Nx3 V1_3;      //
     View_Nx3 V2_3;      //
     View_Nx3 V3_3;      //
-    View_Nx4 qp_quat;   //
 
     Beams() {}  // Default constructor which doesn't initialize views
 
@@ -137,6 +136,15 @@ struct Beams {
           qp_r_prime("qp_r_prime", num_qps_),
           qp_omega("qp_omega", num_qps_),
           qp_omega_dot("qp_omega_dot", num_qps_),
+          qp_E("qp_E", num_qps_),
+          qp_eta_tilde("R1_3x3", num_qps_),
+          qp_omega_tilde("R1_3x3", num_qps_),
+          qp_omega_dot_tilde("R1_3x3", num_qps_),
+          qp_x0pupss("R1_3x3", num_qps_),
+          qp_M_tilde("R1_3x3", num_qps_),
+          qp_N_tilde("R1_3x3", num_qps_),
+          qp_eta("V_3", num_qps_),
+          qp_rho("R1_3x3", num_qps_),
           qp_strain("qp_strain", num_qps_),
           qp_Fc("qp_Fc", num_qps_),
           qp_Fd("qp_Fd", num_qps_),
@@ -153,21 +161,11 @@ struct Beams {
           shape_interp("shape_interp", num_nodes_, max_elem_qps),
           shape_deriv("deriv_interp", num_nodes_, max_elem_qps),
           // Scratch
-          M_6x6("M1_6x6", num_qps_),
-          M_3x4("M_3x4", num_qps_),
-          M1_3x3("R1_3x3", num_qps_),
-          M2_3x3("R1_3x3", num_qps_),
-          M3_3x3("R1_3x3", num_qps_),
-          M4_3x3("R1_3x3", num_qps_),
-          M5_3x3("R1_3x3", num_qps_),
-          M6_3x3("R1_3x3", num_qps_),
-          M7_3x3("R1_3x3", num_qps_),
+          M_6x6("M_6x6", num_qps_),
           M8_3x3("R1_3x3", num_qps_),
           M9_3x3("R1_3x3", num_qps_),
-          V1_3("V_3", num_qps_),
           V2_3("V_3", num_qps_),
-          V3_3("V_3", num_qps_),
-          qp_quat("Quat_4", num_qps_) {}
+          V3_3("V_3", num_qps_) {}
 };
 
 }  // namespace openturbine
