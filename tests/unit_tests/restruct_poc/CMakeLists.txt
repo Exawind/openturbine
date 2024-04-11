@@ -5,6 +5,7 @@ target_sources(
     test_beams.cpp
     test_solver.cpp
     test_rotating_beam.cpp
+    test_cantilever_beam.cpp
     test_rotor.cpp
 )
 
