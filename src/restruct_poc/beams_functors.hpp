@@ -190,7 +190,7 @@ KOKKOS_INLINE_FUNCTION void QuaternionCompose(Q1 q1, Q2 q2, QN qn) {
 //------------------------------------------------------------------------------
 
 KOKKOS_INLINE_FUNCTION
-void InterpVector3(View_NxN shape_matrix, View_Nx3 node_v, View_Nx3 qp_v) {
+void InterpVector3(View_NxN::const_type shape_matrix, View_Nx3::const_type node_v, View_Nx3 qp_v) {
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
         for (size_t k = 0; k < 3; ++k) {
             qp_v(j, k) = 0.;
@@ -207,7 +207,7 @@ void InterpVector3(View_NxN shape_matrix, View_Nx3 node_v, View_Nx3 qp_v) {
 }
 
 KOKKOS_INLINE_FUNCTION
-void InterpVector4(View_NxN shape_matrix, View_Nx4 node_v, View_Nx4 qp_v) {
+void InterpVector4(View_NxN::const_type shape_matrix, View_Nx4::const_type node_v, View_Nx4 qp_v) {
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
         for (size_t k = 0; k < 4; ++k) {
             qp_v(j, k) = 0.;
@@ -224,7 +224,7 @@ void InterpVector4(View_NxN shape_matrix, View_Nx4 node_v, View_Nx4 qp_v) {
 }
 
 KOKKOS_INLINE_FUNCTION
-void InterpQuaternion(View_NxN shape_matrix, View_Nx4 node_v, View_Nx4 qp_v) {
+void InterpQuaternion(View_NxN::const_type shape_matrix, View_Nx4::const_type node_v, View_Nx4 qp_v) {
     InterpVector4(shape_matrix, node_v, qp_v);
 
     // Normalize quaternions (rows)
@@ -249,7 +249,7 @@ void InterpQuaternion(View_NxN shape_matrix, View_Nx4 node_v, View_Nx4 qp_v) {
 
 KOKKOS_INLINE_FUNCTION
 void InterpVector3Deriv(
-    View_NxN shape_matrix_deriv, View_N jacobian, View_Nx3 node_v, View_Nx3 qp_v
+    View_NxN::const_type shape_matrix_deriv, View_N::const_type jacobian, View_Nx3::const_type node_v, View_Nx3 qp_v
 ) {
     InterpVector3(shape_matrix_deriv, node_v, qp_v);
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
@@ -262,7 +262,7 @@ void InterpVector3Deriv(
 
 KOKKOS_INLINE_FUNCTION
 void InterpVector4Deriv(
-    View_NxN shape_matrix_deriv, View_N jacobian, View_Nx4 node_v, View_Nx4 qp_v
+    View_NxN::const_type shape_matrix_deriv, View_N::const_type jacobian, View_Nx4::const_type node_v, View_Nx4 qp_v
 ) {
     InterpVector4(shape_matrix_deriv, node_v, qp_v);
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
@@ -278,9 +278,9 @@ void InterpVector4Deriv(
 //------------------------------------------------------------------------------
 
 struct InterpolateQPPosition {
-    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
-    View_NxN shape_interp_;                          // Num Nodes x Num Quadrature points
-    View_Nx7 node_pos_rot_;                          // Node global position vector
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_Nx7::const_type node_pos_rot_;                          // Node global position vector
     View_Nx3 qp_pos_;                                // quadrature point position
 
     KOKKOS_FUNCTION
@@ -311,9 +311,9 @@ struct InterpolateQPPosition {
 };
 
 struct InterpolateQPRotation {
-    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
-    View_NxN shape_interp_;                          // Num Nodes x Num Quadrature points
-    View_Nx7 node_pos_rot_;                          // Node global position vector
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_Nx7::const_type node_pos_rot_;                          // Node global position vector
     View_Nx4 qp_rot_;                                // quadrature point rotation
 
     KOKKOS_FUNCTION
@@ -328,10 +328,10 @@ struct InterpolateQPRotation {
 };
 
 struct InterpolateQPRotationDerivative {
-    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
-    View_NxN shape_deriv_;                           // Num Nodes x Num Quadrature points
-    View_N qp_jacobian_;                             // Jacobians
-    View_Nx7 node_pos_rot_;                          // Node global position/rotation vector
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
+    View_N::const_type qp_jacobian_;                             // Jacobians
+    View_Nx7::const_type node_pos_rot_;                          // Node global position/rotation vector
     View_Nx4 qp_rot_deriv_;                          // quadrature point rotation derivative
 
     KOKKOS_FUNCTION
@@ -347,9 +347,9 @@ struct InterpolateQPRotationDerivative {
 };
 
 struct CalculateJacobian {
-    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
-    View_NxN shape_deriv_;                           // Num Nodes x Num Quadrature points
-    View_Nx7 node_pos_rot_;                          // Node global position/rotation vector
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
+    View_Nx7::const_type node_pos_rot_;                          // Node global position/rotation vector
     View_Nx3 qp_pos_deriv_;                          // quadrature point position derivative
     View_N qp_jacobian_;                             // Jacobians
 
@@ -381,11 +381,11 @@ struct CalculateJacobian {
 };
 
 struct InterpolateQPState {
-    Kokkos::View<Beams::ElemIndices*> elem_indices;
-    View_NxN shape_interp_;
-    View_NxN shape_deriv_;
-    View_N qp_jacobian_;
-    View_Nx7 node_u_;
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
+    View_NxN::const_type shape_interp_;
+    View_NxN::const_type shape_deriv_;
+    View_N::const_type qp_jacobian_;
+    View_Nx7::const_type node_u_;
     View_Nx3 qp_u_;
     View_Nx3 qp_u_prime_;
     View_Nx4 qp_r_;
@@ -414,10 +414,10 @@ struct InterpolateQPState {
 };
 
 struct InterpolateQPVelocity {
-    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
-    View_NxN shape_interp_;                          // Num Nodes x Num Quadrature points
-    View_NxN shape_deriv_;                           // Num Nodes x Num Quadrature points
-    View_N qp_jacobian_;                             // Num Nodes x Num Quadrature points
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
+    View_N::const_type qp_jacobian_;                             // Num Nodes x Num Quadrature points
     View_Nx6 node_u_dot_;                            // Node translation & angular velocity
     View_Nx3 qp_u_dot_;                              // qp translation velocity
     View_Nx3 qp_omega_;                              // qp angular velocity
@@ -439,11 +439,11 @@ struct InterpolateQPVelocity {
 };
 
 struct InterpolateQPAcceleration {
-    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
-    View_NxN shape_interp_;                          // Num Nodes x Num Quadrature points
-    View_NxN shape_deriv_;                           // Num Nodes x Num Quadrature points
-    View_N qp_jacobian_;                             // Num Nodes x Num Quadrature points
-    View_Nx6 node_u_ddot_;                           // Node translation & angular velocity
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
+    View_N::const_type qp_jacobian_;                             // Num Nodes x Num Quadrature points
+    View_Nx6::const_type node_u_ddot_;                           // Node translation & angular velocity
     View_Nx3 qp_u_ddot_;                             // qp translation velocity
     View_Nx3 qp_omega_dot_;                          // qp angular velocity
 
@@ -464,8 +464,8 @@ struct InterpolateQPAcceleration {
 };
 
 struct CalculateRR0 {
-    View_Nx4 qp_r0_;     // quadrature point initial rotation
-    View_Nx4 qp_r_;      // quadrature rotation displacement
+    View_Nx4::const_type qp_r0_;     // quadrature point initial rotation
+    View_Nx4::const_type qp_r_;      // quadrature rotation displacement
     View_Nx6x6 qp_RR0_;  // quadrature global rotation
 
     KOKKOS_FUNCTION void operator()(const size_t i_qp) const {
@@ -482,8 +482,8 @@ struct CalculateRR0 {
 };
 
 struct CalculateMuu {
-    View_Nx6x6 qp_RR0_;    //
-    View_Nx6x6 qp_Mstar_;  //
+    View_Nx6x6::const_type qp_RR0_;    //
+    View_Nx6x6::const_type qp_Mstar_;  //
     View_Nx6x6 qp_Muu_;    //
     View_Nx6x6 qp_Mtmp_;   //
 
@@ -499,8 +499,8 @@ struct CalculateMuu {
 };
 
 struct CalculateCuu {
-    View_Nx6x6 qp_RR0_;    //
-    View_Nx6x6 qp_Cstar_;  //
+    View_Nx6x6::const_type qp_RR0_;    //
+    View_Nx6x6::const_type qp_Cstar_;  //
     View_Nx6x6 qp_Cuu_;    //
     View_Nx6x6 qp_Ctmp_;   //
 
@@ -516,10 +516,10 @@ struct CalculateCuu {
 };
 
 struct CalculateStrain {
-    View_Nx3 qp_x0_prime_;  //
-    View_Nx3 qp_u_prime_;   //
-    View_Nx4 qp_r_;         //
-    View_Nx4 qp_r_prime_;   //
+    View_Nx3::const_type qp_x0_prime_;  //
+    View_Nx3::const_type qp_u_prime_;   //
+    View_Nx4::const_type qp_r_;         //
+    View_Nx4::const_type qp_r_prime_;   //
     View_Nx6 qp_strain_;    //
 
     KOKKOS_FUNCTION
@@ -554,7 +554,7 @@ struct CalculateStrain {
 };
 
 struct CalculateMassMatrixComponents {
-    View_Nx6x6 qp_Muu_;
+    View_Nx6x6::const_type qp_Muu_;
     View_Nx3 eta_;
     View_Nx3x3 rho_;
     View_Nx3x3 eta_tilde_;
@@ -586,8 +586,8 @@ struct CalculateMassMatrixComponents {
 };
 
 struct CalculateTemporaryVariables {
-    View_Nx3 qp_x0_prime_;
-    View_Nx3 qp_u_prime_;
+    View_Nx3::const_type qp_x0_prime_;
+    View_Nx3::const_type qp_u_prime_;
     View_Nx3x3 x0pupSS_;
 
     KOKKOS_FUNCTION
@@ -606,8 +606,8 @@ struct CalculateTemporaryVariables {
 };
 
 struct CalculateForceFC {
-    View_Nx6x6 qp_Cuu_;
-    View_Nx6 qp_strain_;
+    View_Nx6x6::const_type qp_Cuu_;
+    View_Nx6::const_type qp_strain_;
     View_Nx6 qp_FC_;
     View_Nx3x3 M_tilde_;
     View_Nx3x3 N_tilde_;
@@ -629,8 +629,8 @@ struct CalculateForceFC {
 };
 
 struct CalculateForceFD {
-    View_Nx3x3 x0pupSS_;
-    View_Nx6 qp_FC_;
+    View_Nx3x3::const_type x0pupSS_;
+    View_Nx6::const_type qp_FC_;
     View_Nx6 qp_FD_;
 
     KOKKOS_FUNCTION
@@ -648,15 +648,15 @@ struct CalculateForceFD {
 };
 
 struct CalculateInertialForces {
-    View_Nx6x6 qp_Muu_;
-    View_Nx3 qp_u_ddot_;
-    View_Nx3 qp_omega_;
-    View_Nx3 qp_omega_dot_;
-    View_Nx3x3 eta_tilde_;
+    View_Nx6x6::const_type qp_Muu_;
+    View_Nx3::const_type qp_u_ddot_;
+    View_Nx3::const_type qp_omega_;
+    View_Nx3::const_type qp_omega_dot_;
+    View_Nx3x3::const_type eta_tilde_;
     View_Nx3x3 omega_tilde_;
     View_Nx3x3 omega_dot_tilde_;
-    View_Nx3x3 rho_;
-    View_Nx3 eta_;
+    View_Nx3x3::const_type rho_;
+    View_Nx3::const_type eta_;
     View_Nx3 v1_;
     View_Nx3x3 M1_;
     View_Nx6 qp_FI_;
@@ -707,9 +707,9 @@ struct CalculateInertialForces {
 };
 
 struct CalculateGravityForce {
-    View_3 gravity;
-    View_Nx6x6 qp_Muu_;
-    View_Nx3x3 eta_tilde_;
+    View_3::const_type gravity;
+    View_Nx6x6::const_type qp_Muu_;
+    View_Nx3x3::const_type eta_tilde_;
     View_Nx3 v1_;
     View_Nx6 qp_FG_;
 
@@ -729,10 +729,10 @@ struct CalculateGravityForce {
 };
 
 struct CalculateOuu {
-    View_Nx6x6 qp_Cuu_;
-    View_Nx3x3 x0pupSS_;
-    View_Nx3x3 M_tilde_;
-    View_Nx3x3 N_tilde_;
+    View_Nx6x6::const_type qp_Cuu_;
+    View_Nx3x3::const_type x0pupSS_;
+    View_Nx3x3::const_type M_tilde_;
+    View_Nx3x3::const_type N_tilde_;
     View_Nx6x6 qp_Ouu_;
 
     KOKKOS_FUNCTION
@@ -768,9 +768,9 @@ struct CalculateOuu {
 };
 
 struct CalculatePuu {
-    View_Nx6x6 qp_Cuu_;
-    View_Nx3x3 x0pupSS_;
-    View_Nx3x3 N_tilde_;
+    View_Nx6x6::const_type qp_Cuu_;
+    View_Nx3x3::const_type x0pupSS_;
+    View_Nx3x3::const_type N_tilde_;
     View_Nx6x6 qp_Puu_;
     KOKKOS_FUNCTION
     void operator()(size_t i_qp) const {
@@ -799,9 +799,9 @@ struct CalculatePuu {
 };
 
 struct CalculateQuu {
-    View_Nx6x6 qp_Cuu_;
-    View_Nx3x3 x0pupSS_;
-    View_Nx3x3 N_tilde_;
+    View_Nx6x6::const_type qp_Cuu_;
+    View_Nx3x3::const_type x0pupSS_;
+    View_Nx3x3::const_type N_tilde_;
     View_Nx3x3 M1_;
     View_Nx6x6 qp_Quu_;
     KOKKOS_FUNCTION
@@ -830,11 +830,11 @@ struct CalculateQuu {
 };
 
 struct CalculateGyroscopicMatrix {
-    View_Nx6x6 qp_Muu_;
-    View_Nx3 qp_omega_;
-    View_Nx3x3 omega_tilde_;
-    View_Nx3x3 rho_;
-    View_Nx3 eta_;
+    View_Nx6x6::const_type qp_Muu_;
+    View_Nx3::const_type qp_omega_;
+    View_Nx3x3::const_type omega_tilde_;
+    View_Nx3x3::const_type rho_;
+    View_Nx3::const_type eta_;
     View_Nx3 v1_;
     View_Nx3 v2_;
     View_Nx3x3 M1_;
@@ -885,14 +885,14 @@ struct CalculateGyroscopicMatrix {
 };
 
 struct CalculateInertiaStiffnessMatrix {
-    View_Nx6x6 qp_Muu_;
-    View_Nx3 qp_u_ddot_;
-    View_Nx3 qp_omega_;
-    View_Nx3 qp_omega_dot_;
-    View_Nx3x3 omega_tilde_;
-    View_Nx3x3 omega_dot_tilde_;
-    View_Nx3x3 rho_;
-    View_Nx3 eta_;
+    View_Nx6x6::const_type qp_Muu_;
+    View_Nx3::const_type qp_u_ddot_;
+    View_Nx3::const_type qp_omega_;
+    View_Nx3::const_type qp_omega_dot_;
+    View_Nx3x3::const_type omega_tilde_;
+    View_Nx3x3::const_type omega_dot_tilde_;
+    View_Nx3x3::const_type rho_;
+    View_Nx3::const_type eta_;
     View_Nx3 v1_;
     View_Nx3x3 M1_;
     View_Nx3x3 M2_;
@@ -1230,7 +1230,7 @@ struct IntegrateElasticStiffnessMatrix {
 };
 
 struct IntegrateResidualVector {
-    Kokkos::View<size_t*> node_state_indices_;
+    Kokkos::View<size_t*>::const_type node_state_indices_;
     View_Nx6::const_type node_FE_;  // Elastic force
     View_Nx6::const_type node_FI_;  // Inertial force
     View_Nx6::const_type node_FG_;  // Gravity force
