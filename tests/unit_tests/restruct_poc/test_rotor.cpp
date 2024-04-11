@@ -937,7 +937,7 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
 
     // Write quadrature point positions to file
-    auto qp_x0 = kokkos_view_2D_to_vector(beams.qp_x0);
+    auto qp_x0 = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams.qp_x0);
     WriteMatrixToFile(qp_x0, "steps/step_0000.csv");
 
 #ifdef OTURB_ENABLE_VTK
