@@ -192,16 +192,15 @@ KOKKOS_INLINE_FUNCTION void QuaternionCompose(Q1 q1, Q2 q2, QN qn) {
 KOKKOS_INLINE_FUNCTION
 void InterpVector3(View_NxN::const_type shape_matrix, View_Nx3::const_type node_v, View_Nx3 qp_v) {
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
-        for (size_t k = 0; k < 3; ++k) {
-            qp_v(j, k) = 0.;
-        }
-    }
-    for (size_t i = 0; i < node_v.extent(0); ++i) {
-        for (size_t j = 0; j < qp_v.extent(0); ++j) {
+        auto local_total = Kokkos::Array<double, 3>{};
+        for (size_t i = 0; i < node_v.extent(0); ++i) {
             const auto phi = shape_matrix(i, j);
             for (size_t k = 0; k < 3; ++k) {
-                qp_v(j, k) += node_v(i, k) * phi;
+                local_total[k] += node_v(i, k) * phi;
             }
+        }
+        for (size_t k = 0; k < 3; ++k) {
+            qp_v(j, k) = local_total[k];
         }
     }
 }
@@ -209,16 +208,15 @@ void InterpVector3(View_NxN::const_type shape_matrix, View_Nx3::const_type node_
 KOKKOS_INLINE_FUNCTION
 void InterpVector4(View_NxN::const_type shape_matrix, View_Nx4::const_type node_v, View_Nx4 qp_v) {
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
-        for (size_t k = 0; k < 4; ++k) {
-            qp_v(j, k) = 0.;
-        }
-    }
-    for (size_t i = 0; i < node_v.extent(0); ++i) {
-        for (size_t j = 0; j < qp_v.extent(0); ++j) {
+        auto local_total = Kokkos::Array<double, 4>{};
+        for (size_t i = 0; i < node_v.extent(0); ++i) {
             const auto phi = shape_matrix(i, j);
             for (size_t k = 0; k < 4; ++k) {
-                qp_v(j, k) += node_v(i, k) * phi;
+                local_total[k] += node_v(i, k) * phi;
             }
+        }
+        for (size_t k = 0; k < 4; ++k) {
+            qp_v(j, k) = local_total[k];
         }
     }
 }
@@ -226,7 +224,7 @@ void InterpVector4(View_NxN::const_type shape_matrix, View_Nx4::const_type node_
 KOKKOS_INLINE_FUNCTION
 void InterpQuaternion(View_NxN::const_type shape_matrix, View_Nx4::const_type node_v, View_Nx4 qp_v) {
     InterpVector4(shape_matrix, node_v, qp_v);
-
+    static constexpr auto length_zero_result = Kokkos::Array<double, 4> {1., 0., 0., 0.};
     // Normalize quaternions (rows)
     for (size_t j = 0; j < qp_v.extent(0); ++j) {
         auto length = Kokkos::sqrt(
@@ -234,15 +232,13 @@ void InterpQuaternion(View_NxN::const_type shape_matrix, View_Nx4::const_type no
             Kokkos::pow(qp_v(j, 3), 2)
         );
         if (length == 0.) {
-            qp_v(j, 0) = 1.;
-            qp_v(j, 1) = 0.;
-            qp_v(j, 2) = 0.;
-            qp_v(j, 3) = 0.;
+            for(size_t k = 0; k < 4; ++k) {
+                qp_v(j, k) = length_zero_result[k];
+            }
         } else {
-            qp_v(j, 0) /= length;
-            qp_v(j, 1) /= length;
-            qp_v(j, 2) /= length;
-            qp_v(j, 3) /= length;
+            for(size_t k = 0; k < 4; ++k) {
+                qp_v(j, k) /= length;
+            }
         }
     }
 }
@@ -291,20 +287,17 @@ struct InterpolateQPPosition {
             Kokkos::subview(node_pos_rot_, idx.node_range, Kokkos::make_pair((size_t)0, (size_t)3));
         auto qp_pos = Kokkos::subview(qp_pos_, idx.qp_range, Kokkos::ALL);
 
-        // Initialize qp_pos
-        for (size_t i = 0; i < qp_pos.extent(0); ++i) {
-            for (size_t j = 0; j < qp_pos.extent(1); ++j) {
-                qp_pos(i, j) = 0.;
-            }
-        }
-
         // Perform matrix-matrix multiplication
-        for (size_t i = 0; i < idx.num_nodes; ++i) {
-            for (size_t j = 0; j < idx.num_qps; ++j) {
+        for (size_t j = 0; j < idx.num_qps; ++j) {
+            auto local_result = Kokkos::Array<double, 3>{};
+            for (size_t i = 0; i < idx.num_nodes; ++i) {
                 const auto phi = shape_interp(i, j);
                 for (size_t k = 0; k < kVectorComponents; ++k) {
-                    qp_pos(j, k) += node_pos(i, k) * phi;
+                    local_result[k] += node_pos(i, k) * phi;
                 }
+            }
+            for (size_t k = 0; k < 3; ++k) {
+                qp_pos(j, k) = local_result[k];
             }
         }
     }
@@ -1031,15 +1024,15 @@ struct CalculateNodeForces {
                 const auto coeff_d = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
                 const auto coeff_i = coeff_d;
                 const auto coeff_g = coeff_d;
-                for (size_t k = 0; k < 6; ++k) {  // Components
+                Kokkos::parallel_for(Kokkos::ThreadVectorRange(member, 6), [=](size_t k) {
                     node_FE_(i, k) += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
-                }
-                for (size_t k = 0; k < 6; ++k) {  // Components
+                });
+                Kokkos::parallel_for(Kokkos::ThreadVectorRange(member, 6), [=](size_t k) {
                     node_FI_(i, k) += coeff_i * qp_Fi_(j, k);
-                }
-                for (size_t k = 0; k < 6; ++k) {  // Components
+                });
+                Kokkos::parallel_for(Kokkos::ThreadVectorRange(member, 6), [=](size_t k) {
                     node_FG_(i, k) += coeff_g * qp_Fg_(j, k);
-                }
+                });
             }
         });
     }
