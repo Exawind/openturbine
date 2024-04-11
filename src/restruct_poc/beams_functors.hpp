@@ -952,15 +952,15 @@ struct CalculateInertiaStiffnessMatrix {
 };
 
 struct CalculateNodeForces {
-    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
-    View_N qp_weight_;                               //
-    View_N qp_jacobian_;                             // Jacobians
-    View_NxN shape_interp_;                          // Num Nodes x Num Quadrature points
-    View_NxN shape_deriv_;                           // Num Nodes x Num Quadrature points
-    View_Nx6 qp_Fc_;                                 //
-    View_Nx6 qp_Fd_;                                 //
-    View_Nx6 qp_Fi_;                                 //
-    View_Nx6 qp_Fg_;                                 //
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    View_N::const_type qp_weight_;                               //
+    View_N::const_type qp_jacobian_;                             // Jacobians
+    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
+    View_Nx6::const_type qp_Fc_;                                 //
+    View_Nx6::const_type qp_Fd_;                                 //
+    View_Nx6::const_type qp_Fi_;                                 //
+    View_Nx6::const_type qp_Fg_;                                 //
     View_Nx6 node_FE_;                               // Elastic force
     View_Nx6 node_FI_;                               // Inertial force
     View_Nx6 node_FG_;                               // Gravity force
@@ -968,162 +968,263 @@ struct CalculateNodeForces {
     KOKKOS_FUNCTION
     void operator()(const size_t i_elem) const {
         auto idx = elem_indices[i_elem];
-        auto shape_qp_range = idx.qp_shape_range;
-        auto weight = Kokkos::subview(qp_weight_, idx.qp_range);
-        auto qp_jacobian = Kokkos::subview(qp_jacobian_, idx.qp_range);
-        auto shape_interp = Kokkos::subview(shape_interp_, idx.node_range, shape_qp_range);
-        auto shape_deriv = Kokkos::subview(shape_deriv_, idx.node_range, shape_qp_range);
 
-        auto qp_Fc = Kokkos::subview(qp_Fc_, idx.qp_range, Kokkos::ALL);
-        auto qp_Fd = Kokkos::subview(qp_Fd_, idx.qp_range, Kokkos::ALL);
-        auto qp_Fi = Kokkos::subview(qp_Fi_, idx.qp_range, Kokkos::ALL);
-        auto qp_Fg = Kokkos::subview(qp_Fg_, idx.qp_range, Kokkos::ALL);
-
-        auto node_FE = Kokkos::subview(node_FE_, idx.node_range, Kokkos::ALL);
-        auto node_FG = Kokkos::subview(node_FG_, idx.node_range, Kokkos::ALL);
-        auto node_FI = Kokkos::subview(node_FI_, idx.node_range, Kokkos::ALL);
-
-        for (size_t i = 0; i < node_FE.extent(0); ++i) {
-            for (size_t j = 0; j < node_FE.extent(1); ++j) {
-                node_FE(i, j) = 0.;
-                node_FG(i, j) = 0.;
-                node_FI(i, j) = 0.;
+        for (size_t i = idx.node_range.first; i < idx.node_range.second; ++i) {
+            for (size_t j = 0; j < 6; ++j) {
+                node_FE_(i, j) = 0.;
+                node_FG_(i, j) = 0.;
+                node_FI_(i, j) = 0.;
             }
         }
 
-        // The following calculations are reduction operations which would
-        // likely benefit from parallelization
-
-        // Calculate elastic forces
-        for (size_t i = 0; i < idx.num_nodes; ++i) {    // Nodes
-            for (size_t j = 0; j < idx.num_qps; ++j) {  // QPs
+        for (size_t i_index = 0; i_index < idx.num_nodes; ++i_index) {    // Nodes
+            for (size_t j_index = 0; j_index < idx.num_qps; ++j_index) {  // QPs
+                const auto i = idx.node_range.first + i_index;
+                const auto j = idx.qp_range.first + j_index;
+                const auto weight = qp_weight_(j);
+                const auto coeff_c = weight * shape_deriv_(i, j_index);
+                const auto coeff_d = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
+                const auto coeff_i = coeff_d;
+                const auto coeff_g = coeff_d;
                 for (size_t k = 0; k < 6; ++k) {        // Components
-                    node_FE(i, k) += weight(j) * (shape_deriv(i, j) * qp_Fc(j, k) +
-                                                  qp_jacobian(j) * shape_interp(i, j) * qp_Fd(j, k));
+                    node_FE_(i, k) += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
+                }
+                for (size_t k = 0; k < 6; ++k) {        // Components
+                    node_FI_(i, k) += coeff_i * qp_Fi_(j, k);
+                }
+                for (size_t k = 0; k < 6; ++k) {  // Components
+                    node_FG_(i, k) += coeff_g * qp_Fg_(j, k);
                 }
             }
         }
+    }
 
-        // Calculate internal forces
-        for (size_t i = 0; i < idx.num_nodes; ++i) {    // Nodes
-            for (size_t j = 0; j < idx.num_qps; ++j) {  // QPs
+    KOKKOS_FUNCTION
+    void operator()(Kokkos::TeamPolicy<>::member_type member) const {
+        const auto idx = elem_indices(member.league_rank());
+        Kokkos::parallel_for(
+            Kokkos::TeamThreadMDRange(member, idx.num_nodes, 6),
+            [=](size_t i_index, size_t j) {
+                const auto i = idx.node_range.first + i_index;
+                node_FE_(i, j) = 0.;
+                node_FG_(i, j) = 0.;
+                node_FI_(i, j) = 0.;
+            }
+        );
+
+        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, idx.num_nodes), [=](size_t i_index) {
+            for (size_t j_index = 0; j_index < idx.num_qps; ++j_index) {  // QPs
+                const auto i = idx.node_range.first + i_index;
+                const auto j = idx.qp_range.first + j_index;
+                const auto weight = qp_weight_(j);
+                const auto coeff_c = weight * shape_deriv_(i, j_index);
+                const auto coeff_d = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
+                const auto coeff_i = coeff_d;
+                const auto coeff_g = coeff_d;
                 for (size_t k = 0; k < 6; ++k) {        // Components
-                    node_FI(i, k) += weight(j) * qp_jacobian(j) * shape_interp(i, j) * qp_Fi(j, k);
+                    node_FE_(i, k) += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
+                }
+                for (size_t k = 0; k < 6; ++k) {  // Components
+                    node_FI_(i, k) += coeff_i * qp_Fi_(j, k);
+                }
+                for (size_t k = 0; k < 6; ++k) {  // Components
+                    node_FG_(i, k) += coeff_g * qp_Fg_(j, k);
                 }
             }
-        }
-
-        // Calculate gravity forces
-        for (size_t i = 0; i < idx.num_nodes; ++i) {    // Nodes
-            for (size_t j = 0; j < idx.num_qps; ++j) {  // QPs
-                for (size_t k = 0; k < 6; ++k) {        // Components
-                    node_FG(i, k) += weight(j) * qp_jacobian(j) * shape_interp(i, j) * qp_Fg(j, k);
-                }
-            }
-        }
+        });
     }
 };
 
 struct IntegrateMatrix {
-    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
-    Kokkos::View<size_t*> node_state_indices;        // Element indices
-    View_N qp_weight_;                               //
-    View_N qp_jacobian_;                             // Jacobians
-    View_NxN shape_interp_;                          // Num Nodes x Num Quadrature points
-    View_Nx6x6 qp_M_;                                //
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    Kokkos::View<size_t*>::const_type node_state_indices;        // Element indices
+    View_N::const_type qp_weight_;                               //
+    View_N::const_type qp_jacobian_;                             // Jacobians
+    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_Nx6x6::const_type qp_M_;                                //
     View_NxN_atomic gbl_M_;                          //
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_elem) const {
-        auto idx = elem_indices[i_elem];
+        const auto idx = elem_indices[i_elem];
 
-        for (size_t i = idx.node_range.first; i < idx.node_range.second; ++i) {  // Nodes
-            auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+        for (size_t i = idx.node_range.first; i < idx.node_range.second; ++i) {      // Nodes
             for (size_t j = idx.node_range.first; j < idx.node_range.second; ++j) {  // Nodes
-                double local_M[6][6] = {{0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.},
-                                        {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.},
-                                        {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}};
+                auto local_M_data = Kokkos::Array<double, 36>{};
+                auto local_M = Kokkos::View<double[6][6], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
+                    local_M_data.data()
+                );
                 for (size_t k = 0; k < idx.num_qps; ++k) {
-                    auto k_qp = idx.qp_range.first + k;
-                    auto w = qp_weight_(k_qp);
-                    auto jacobian = qp_jacobian_(k_qp);
+                    const auto k_qp = idx.qp_range.first + k;
+                    const auto w = qp_weight_(k_qp);
+                    const auto jacobian = qp_jacobian_(k_qp);
+                    const auto phi_i = shape_interp_(i, k);
+                    const auto phi_j = shape_interp_(j, k);
+                    const auto coeff = w * phi_i * phi_j * jacobian;
                     for (size_t m = 0; m < kLieAlgebraComponents; ++m) {
                         for (size_t n = 0; n < kLieAlgebraComponents; ++n) {
-                            local_M[m][n] += w * shape_interp_(i, k) * qp_M_(k_qp, m, n) *
-                                             shape_interp_(j, k) * jacobian;
+                            local_M(m, n) += coeff * qp_M_(k_qp, m, n);
                         }
                     }
                 }
-                auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
+                const auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+                const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
                 for (size_t m = 0; m < kLieAlgebraComponents; ++m) {
                     for (size_t n = 0; n < kLieAlgebraComponents; ++n) {
-                        gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M[m][n];
+                        gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
                     }
                 }
             }
         }
     }
+
+    KOKKOS_FUNCTION
+    void operator()(Kokkos::TeamPolicy<>::member_type member) const {
+        const auto idx = elem_indices(member.league_rank());
+        Kokkos::parallel_for(
+            Kokkos::TeamThreadMDRange(member, idx.num_nodes, idx.num_nodes),
+            [=](size_t i_index, size_t j_index) {
+                const auto i = i_index + idx.node_range.first;
+                const auto j = j_index + idx.node_range.first;
+                auto local_M_data = Kokkos::Array<double, 36>{};
+                auto local_M = Kokkos::View<double[6][6], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
+                    local_M_data.data()
+                );
+                for (size_t k = 0; k < idx.num_qps; ++k) {
+                    const auto k_qp = idx.qp_range.first + k;
+                    const auto w = qp_weight_(k_qp);
+                    const auto jacobian = qp_jacobian_(k_qp);
+                    const auto phi_i = shape_interp_(i, k);
+                    const auto phi_j = shape_interp_(j, k);
+                    const auto coeff = w * phi_i * phi_j * jacobian;
+                    Kokkos::parallel_for(
+                        Kokkos::ThreadVectorMDRange(member, 6, 6),
+                        [=](size_t m, size_t n) {
+                            local_M(m, n) += coeff * qp_M_(k_qp, m, n);
+                        }
+                    );
+                }
+                const auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+                const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
+                Kokkos::parallel_for(
+                    Kokkos::ThreadVectorMDRange(member, 6, 6),
+                    [=](size_t m, size_t n) {
+                        gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
+                    }
+                );
+            }
+        );
+    }
 };
 
 struct IntegrateElasticStiffnessMatrix {
-    Kokkos::View<Beams::ElemIndices*> elem_indices;  // Element indices
-    Kokkos::View<size_t*> node_state_indices;        // Element indices
-    View_N qp_weight_;                               //
-    View_N qp_jacobian_;                             // Jacobians
-    View_NxN shape_interp_;                          // Num Nodes x Num Quadrature points
-    View_NxN shape_deriv_;                           // Num Nodes x Num Quadrature points
-    View_Nx6x6 qp_Puu_;                              //
-    View_Nx6x6 qp_Cuu_;                              //
-    View_Nx6x6 qp_Ouu_;                              //
-    View_Nx6x6 qp_Quu_;                              //
-    Kokkos::View<double**, Kokkos::MemoryTraits<Kokkos::Atomic>> gbl_M_;  //
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    Kokkos::View<size_t*>::const_type node_state_indices;        // Element indices
+    View_N::const_type qp_weight_;                               //
+    View_N::const_type qp_jacobian_;                             // Jacobians
+    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
+    View_Nx6x6::const_type qp_Puu_;                              //
+    View_Nx6x6::const_type qp_Cuu_;                              //
+    View_Nx6x6::const_type qp_Ouu_;                              //
+    View_Nx6x6::const_type qp_Quu_;                              //
+    View_NxN_atomic gbl_M_;
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_elem) const {
-        auto idx = elem_indices[i_elem];
+        const auto idx = elem_indices[i_elem];
 
-        for (size_t i = idx.node_range.first; i < idx.node_range.second; ++i) {  // Nodes
-            auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+        for (size_t i = idx.node_range.first; i < idx.node_range.second; ++i) {      // Nodes
             for (size_t j = idx.node_range.first; j < idx.node_range.second; ++j) {  // Nodes
-                double local_M[6][6] = {{0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.},
-                                        {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.},
-                                        {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}};
+                auto local_M_data = Kokkos::Array<double, 36>{};
+                auto local_M = Kokkos::View<double[6][6], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
+                    local_M_data.data()
+                );
                 for (size_t k = 0; k < idx.num_qps; ++k) {  // QPs
-                    auto k_qp = idx.qp_range.first + k;
-                    auto w = qp_weight_(k_qp);
-                    auto jacobian = qp_jacobian_(k_qp);
-                    auto phi_i = shape_interp_(i, k);
-                    auto phi_j = shape_interp_(j, k);
-                    auto phi_prime_i = shape_deriv_(i, k);
-                    auto phi_prime_j = shape_deriv_(j, k);
+                    const auto k_qp = idx.qp_range.first + k;
+                    const auto w = qp_weight_(k_qp);
+                    const auto jacobian = qp_jacobian_(k_qp);
+                    const auto phi_i = shape_interp_(i, k);
+                    const auto phi_j = shape_interp_(j, k);
+                    const auto phi_prime_i = shape_deriv_(i, k);
+                    const auto phi_prime_j = shape_deriv_(j, k);
+                    const auto coeff_P = w * (phi_i * phi_prime_j);
+                    const auto coeff_Q = w * (phi_i * phi_j * jacobian);
+                    const auto coeff_C = w * (phi_prime_i * phi_prime_j / jacobian);
+                    const auto coeff_O = w * (phi_prime_i * phi_j);
                     for (size_t m = 0; m < 6; ++m) {      // Matrix components
                         for (size_t n = 0; n < 6; ++n) {  // Matrix components
-                            local_M[m][n] +=
-                                w * (phi_i * qp_Puu_(k_qp, m, n) * phi_prime_j +
-                                     phi_i * qp_Quu_(k_qp, m, n) * phi_j * jacobian +
-                                     phi_prime_i * qp_Cuu_(k_qp, m, n) * phi_prime_j / jacobian +
-                                     phi_prime_i * qp_Ouu_(k_qp, m, n) * phi_j);
+                            local_M(m, n) +=
+                                coeff_P * qp_Puu_(k_qp, m, n) + coeff_Q * qp_Quu_(k_qp, m, n) +
+                                coeff_C * qp_Cuu_(k_qp, m, n) + coeff_O * qp_Ouu_(k_qp, m, n);
                         }
                     }
                 }
 
-                auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
+                const auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+                const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
                 for (size_t m = 0; m < 6; ++m) {
                     for (size_t n = 0; n < 6; ++n) {
-                        gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M[m][n];
+                        gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
                     }
                 }
             }
         }
+    }
+
+    KOKKOS_FUNCTION
+    void operator()(Kokkos::TeamPolicy<>::member_type member) const {
+        const auto idx = elem_indices(member.league_rank());
+        Kokkos::parallel_for(
+            Kokkos::TeamThreadMDRange(member, idx.num_nodes, idx.num_nodes),
+            [=](size_t i_index, size_t j_index) {
+                const auto i = i_index + idx.node_range.first;
+                const auto j = j_index + idx.node_range.first;
+                auto local_M_data = Kokkos::Array<double, 36>{};
+                auto local_M = Kokkos::View<double[6][6], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
+                    local_M_data.data()
+                );
+                for (size_t k = 0; k < idx.num_qps; ++k) {
+                    const auto k_qp = idx.qp_range.first + k;
+                    const auto w = qp_weight_(k_qp);
+                    const auto jacobian = qp_jacobian_(k_qp);
+                    const auto phi_i = shape_interp_(i, k);
+                    const auto phi_j = shape_interp_(j, k);
+                    const auto phi_prime_i = shape_deriv_(i, k);
+                    const auto phi_prime_j = shape_deriv_(j, k);
+                    const auto coeff_P = w * (phi_i * phi_prime_j);
+                    const auto coeff_Q = w * (phi_i * phi_j * jacobian);
+                    const auto coeff_C = w * (phi_prime_i * phi_prime_j / jacobian);
+                    const auto coeff_O = w * (phi_prime_i * phi_j);
+                    Kokkos::parallel_for(
+                        Kokkos::ThreadVectorMDRange(member, 6, 6),
+                        [=](size_t m, size_t n) {
+                            local_M(m, n) +=
+                                coeff_P * qp_Puu_(k_qp, m, n) + coeff_Q * qp_Quu_(k_qp, m, n) +
+                                coeff_C * qp_Cuu_(k_qp, m, n) + coeff_O * qp_Ouu_(k_qp, m, n);
+                        }
+                    );
+                }
+
+                const auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+                const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
+                Kokkos::parallel_for(
+                    Kokkos::ThreadVectorMDRange(member, 6, 6),
+                    [=](size_t m, size_t n) {
+                        gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
+                    }
+                );
+            }
+        );
     }
 };
 
 struct IntegrateResidualVector {
     Kokkos::View<size_t*> node_state_indices_;
-    View_Nx6 node_FE_;  // Elastic force
-    View_Nx6 node_FI_;  // Inertial force
-    View_Nx6 node_FG_;  // Gravity force
-    View_Nx6 node_FX_;  // External force
+    View_Nx6::const_type node_FE_;  // Elastic force
+    View_Nx6::const_type node_FI_;  // Inertial force
+    View_Nx6::const_type node_FG_;  // Gravity force
+    View_Nx6::const_type node_FX_;  // External force
     View_N_atomic residual_vector_;
 
     IntegrateResidualVector(

@@ -298,6 +298,30 @@ struct CalculateConstraintResidualGradient {
     }
 };
 
+struct PreconditionSt {
+    View_NxN St;
+    double conditioner;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i, size_t j) const { St(i, j) *= conditioner; }
+};
+
+struct PostconditionSt {
+    View_NxN St;
+    double conditioner;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i, size_t j) const { St(i, j) /= conditioner; }
+};
+
+struct ConditionR {
+    View_N R;
+    double conditioner;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i) const { R(i) *= conditioner; }
+};
+
 struct ConditionSystem {
     size_t num_system_dofs;
     size_t num_dofs;

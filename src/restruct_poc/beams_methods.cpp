@@ -155,7 +155,7 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
 
     // Calculate nodal force vectors
     Kokkos::parallel_for(
-        "CalculateNodeForces", beams.num_elems,
+        "CalculateNodeForces", Kokkos::TeamPolicy<>{static_cast<int>(beams.num_elems), Kokkos::AUTO},
         CalculateNodeForces{
             beams.elem_indices, beams.qp_weight, beams.qp_jacobian, beams.shape_interp,
             beams.shape_deriv, beams.qp_Fc, beams.qp_Fd, beams.qp_Fi, beams.qp_Fg, beams.node_FE,
@@ -208,7 +208,7 @@ void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
 void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Inertial Stiffness Matrix");
     Kokkos::parallel_for(
-        "IntegrateMatrix", beams.num_elems,
+        "IntegrateMatrix", Kokkos::TeamPolicy<>{static_cast<int>(beams.num_elems), Kokkos::AUTO},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,
@@ -224,7 +224,8 @@ void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K) {
 void AssembleElasticStiffnessMatrix(Beams& beams, View_NxN K) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Elastic Stiffness Matrix");
     Kokkos::parallel_for(
-        "IntegrateElasticStiffnessMatrix", beams.num_elems,
+        "IntegrateElasticStiffnessMatrix",
+        Kokkos::TeamPolicy<>{static_cast<int>(beams.num_elems), Kokkos::AUTO},
         IntegrateElasticStiffnessMatrix{
             beams.elem_indices,
             beams.node_state_indices,

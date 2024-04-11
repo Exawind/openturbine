@@ -163,10 +163,28 @@ void SolveSystem(Solver& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Solve System");
     // Condition system for solve
     Kokkos::parallel_for(
-        "ConditionSystem", 1,
-        ConditionSystem{
-            solver.num_system_dofs, solver.num_dofs, solver.conditioner, solver.St, solver.R}
+        "PreconditionSt",
+        Kokkos::MDRangePolicy<Kokkos::Rank<2>>(
+            {0, 0}, {static_cast<int>(solver.num_system_dofs), static_cast<int>(solver.num_dofs)}
+        ),
+        PreconditionSt{solver.St, solver.conditioner}
     );
+    Kokkos::parallel_for(
+        "PostconditionSt",
+        Kokkos::MDRangePolicy<Kokkos::Rank<2>>(
+            {0, static_cast<int>(solver.num_system_dofs)},
+            {static_cast<int>(solver.num_dofs), static_cast<int>(solver.num_dofs)}
+        ),
+        PostconditionSt{solver.St, solver.conditioner}
+    );
+    Kokkos::parallel_for(
+        "ConditionR", solver.num_system_dofs, ConditionR{solver.R, solver.conditioner}
+    );
+    //    Kokkos::parallel_for(
+    //        "ConditionSystem", 1,
+    //        ConditionSystem{
+    //            solver.num_system_dofs, solver.num_dofs, solver.conditioner, solver.St, solver.R}
+    //    );
 
     // Solve linear system
     KokkosBlas::axpby(-1.0, solver.R, 0.0, solver.x);
