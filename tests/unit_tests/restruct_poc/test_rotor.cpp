@@ -34,11 +34,11 @@ void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::strin
 
 TEST(RotatingBeamTest, IEA15Rotor) {
     // Gravity vector
-    std::array<double, 3> gravity = {0., -9.81, 0.};
+    std::array<double, 3> gravity = {-9.81, 0., 0.};
     // std::array<double, 3> gravity = {0., 0., 0.};
 
     // Rotor angular velocity in rad/s
-    Vector omega(0., 0., 0.79063415025);  // 7.55 rpm
+    Vector omega(0., 0., -0.79063415025);  // 7.55 rpm
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -877,7 +877,7 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     for (size_t i = 0; i < num_blades; ++i) {
         // Define root rotation
         auto q_root = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
-            Vector(0, 0, 2.0 * M_PI * i / num_blades)
+            Vector(0, 0, -2.0 * M_PI * i / num_blades)
         );
 
         // Declare list of element nodes
