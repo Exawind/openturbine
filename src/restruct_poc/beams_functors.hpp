@@ -466,8 +466,8 @@ struct InterpolateQPAcceleration {
 };
 
 struct CalculateRR0 {
-    View_Nx4::const_type qp_r0_;     // quadrature point initial rotation
-    View_Nx4::const_type qp_r_;      // quadrature rotation displacement
+    View_Nx4::const_type qp_r0_;  // quadrature point initial rotation
+    View_Nx4::const_type qp_r_;   // quadrature rotation displacement
     View_Nx6x6 qp_RR0_;  // quadrature global rotation
 
     KOKKOS_FUNCTION void operator()(const size_t i_qp) const {

@@ -57,7 +57,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
         {0.4058451513773971, 0.3818300505051189},   {0.7415311855993945, 0.27970539148927664},
         {0.9491079123427585, 0.1294849661688697},
     };
-std::cout << 1 << std::endl;
+    std::cout << 1 << std::endl;
     std::vector<BeamSection> sections = {
         BeamSection(0., mass_matrix, stiffness_matrix),
         BeamSection(1., mass_matrix, stiffness_matrix),
@@ -78,7 +78,7 @@ std::cout << 1 << std::endl;
         acceleration.push_back({0., 0., 0., 0., 0., 0.});
     }
 
-std::cout << 2 << std::endl;
+    std::cout << 2 << std::endl;
     // Define beam initialization
     BeamsInput beams_input(
         {
@@ -96,7 +96,7 @@ std::cout << 2 << std::endl;
     // Constraint inputs
     std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
 
-std::cout << 3 << std::endl;
+    std::cout << 3 << std::endl;
     // Solution parameters
     const bool is_dynamic_solve(true);
     const size_t max_iter(5);
@@ -109,58 +109,61 @@ std::cout << 3 << std::endl;
         displacement, velocity, acceleration
     );
 
-std::cout << 4 << std::endl;
+    std::cout << 4 << std::endl;
     // Initialize constraints
     InitializeConstraints(solver, beams);
     solver.constraints.UpdateDisplacement(0, {0, 0, 0, 1, 0, 0, 0});
 
-std::cout << 5 << std::endl;
+    std::cout << 5 << std::endl;
     // First step
-    Kokkos::deep_copy(Kokkos::subview(beams.node_FX, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.005));
-std::cout << 6 << std::endl;
+    Kokkos::deep_copy(
+        Kokkos::subview(beams.node_FX, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.005)
+    );
+    std::cout << 6 << std::endl;
     auto converged = Step(solver, beams);
     EXPECT_EQ(converged, true);
-std::cout << 7 << std::endl;
+    std::cout << 7 << std::endl;
     {
         Kokkos::View<double[3]> result("result");
         Kokkos::deep_copy(result, Kokkos::subview(solver.state.q, 4, Kokkos::make_pair(0, 3)));
         openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-            result,
-            {-8.15173937E-08, -1.86549248E-07, 6.97278045E-04}
+            result, {-8.15173937E-08, -1.86549248E-07, 6.97278045E-04}
         );
     }
-std::cout << 8 << std::endl;
+    std::cout << 8 << std::endl;
     // Second step
-    Kokkos::deep_copy(Kokkos::subview(beams.node_FX, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.010));
-std::cout << 9 << std::endl;
+    Kokkos::deep_copy(
+        Kokkos::subview(beams.node_FX, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.010)
+    );
+    std::cout << 9 << std::endl;
     converged = Step(solver, beams);
     EXPECT_EQ(converged, true);
-std::cout << 10 << std::endl;
+    std::cout << 10 << std::endl;
     {
         Kokkos::View<double[3]> result("result");
         Kokkos::deep_copy(result, Kokkos::subview(solver.state.q, 4, Kokkos::make_pair(0, 3)));
         openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-            result,
-            {-1.00926258E-06, -7.91711079E-07, 2.65017558E-03}
+            result, {-1.00926258E-06, -7.91711079E-07, 2.65017558E-03}
         );
     }
-std::cout << 11 << std::endl;
+    std::cout << 11 << std::endl;
 
     // Third step
-    Kokkos::deep_copy(Kokkos::subview(beams.node_FX, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.015));
-std::cout << 12 << std::endl;
+    Kokkos::deep_copy(
+        Kokkos::subview(beams.node_FX, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.015)
+    );
+    std::cout << 12 << std::endl;
     converged = Step(solver, beams);
     EXPECT_EQ(converged, true);
-std::cout << 13 << std::endl;
+    std::cout << 13 << std::endl;
     {
         Kokkos::View<double[3]> result("result");
         Kokkos::deep_copy(result, Kokkos::subview(solver.state.q, 4, Kokkos::make_pair(0, 3)));
         openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-            result,
-            {-5.05830945E-06, -2.29457246E-06, 6.30508154E-03}
+            result, {-5.05830945E-06, -2.29457246E-06, 6.30508154E-03}
         );
     }
-std::cout << 14 << std::endl;
+    std::cout << 14 << std::endl;
 }
 
 }  // namespace openturbine::restruct_poc::tests
