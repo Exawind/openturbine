@@ -1,6 +1,9 @@
 
 set(Kokkos_DIR "$ENV{Kokkos_ROOT}" CACHE STRING "Kokkos root directory")
 find_package(KokkosKernels REQUIRED)
+if(TARGET Kokkos::MKL)
+  find_package(MKL REQUIRED)
+endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
