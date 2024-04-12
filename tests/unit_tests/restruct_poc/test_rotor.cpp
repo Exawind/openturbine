@@ -33,9 +33,11 @@ void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::strin
 }
 
 TEST(RotatingBeamTest, IEA15Rotor) {
+    // Flag to write output
+    const bool write_output(false);
+
     // Gravity vector
     std::array<double, 3> gravity = {-9.81, 0., 0.};
-    // std::array<double, 3> gravity = {0., 0., 0.};
 
     // Rotor angular velocity in rad/s
     Vector omega(0., 0., -0.79063415025);  // 7.55 rpm
@@ -936,14 +938,17 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     // Transfer initial conditions to beam nodes and quadrature points
     UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
 
-    // Write quadrature point positions to file
-    auto qp_x0 = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams.qp_x0);
-    WriteMatrixToFile(qp_x0, "steps/step_0000.csv");
+    // Write quadrature point global positions to file and VTK
+    std::vector<std::vector<double>> qp_x0;
+    if (write_output) {
+        qp_x0 = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams.qp_x0);
+        WriteMatrixToFile(qp_x0, "steps/step_0000.csv");
 
 #ifdef OTURB_ENABLE_VTK
-    // Write vtk visualization file
-    BeamsWriteVTK(beams, "steps/step_0000.vtu");
+        // Write vtk visualization file
+        BeamsWriteVTK(beams, "steps/step_0000.vtu");
 #endif
+    }
 
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
@@ -969,25 +974,23 @@ TEST(RotatingBeamTest, IEA15Rotor) {
         // Verify that step converged
         EXPECT_EQ(converged, true);
 
-        // Get step number as a string
-        auto tmp = std::to_string(i + 1);
-        auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-
-        // Get quadrature point displacement and convert to global position
-        auto qp_x = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams.qp_u);
-        for (size_t j = 0; j < qp_x.size(); ++j) {
-            for (size_t k = 0; k < qp_x[0].size(); ++k) {
-                qp_x[j][k] += qp_x0[j][k];
+        // If flag set, write quadrature point glob position to file
+        if (write_output) {
+            auto tmp = std::to_string(i + 1);
+            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
+            auto qp_x = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(beams.qp_u);
+            for (size_t j = 0; j < qp_x.size(); ++j) {
+                for (size_t k = 0; k < qp_x[0].size(); ++k) {
+                    qp_x[j][k] += qp_x0[j][k];
+                }
             }
-        }
-
-        // Write position to file
-        WriteMatrixToFile(qp_x, file_name + ".csv");
+            WriteMatrixToFile(qp_x, file_name + ".csv");
 
 #ifdef OTURB_ENABLE_VTK
-        // Write VTK output to file
-        BeamsWriteVTK(beams, file_name + ".vtu");
+            // Write VTK output to file
+            BeamsWriteVTK(beams, file_name + ".vtu");
 #endif
+        }
     }
 }
 
