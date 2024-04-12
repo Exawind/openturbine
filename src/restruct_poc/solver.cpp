@@ -240,10 +240,15 @@ bool Step(Solver& solver, Beams& beams) {
     // Reset convergence error vector
     solver.convergence_err.clear();
 
-    // Perform convergence iterations
-    for (size_t iter = 0; iter < solver.max_iter; ++iter) {
+    // Initialize convergence error to a large number
+    double err = 1000.0;
+
+    // Loop while error is greater than 1
+    for (size_t iter = 0; err > 1.0; ++iter) {
+        // Initialize iteration matrix and residual to zero
         Kokkos::deep_copy(solver.St, 0.);
         Kokkos::deep_copy(solver.R, 0.);
+
         // Update beam elements state from solvers
         UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
 
@@ -256,27 +261,34 @@ bool Step(Solver& solver, Beams& beams) {
         // Solve system
         SolveSystem(solver);
 
-        // Calculate error
-        auto err = CalculateConvergenceError(solver);
+        // Calculate error for this iteration
+        err = CalculateConvergenceError(solver);
+
+        // Save convergence error in vector
         solver.convergence_err.push_back(err);
-
-        // If error is sufficiently small, solution converged, update acceleration and return
-        if (err < 1.) {
-            Kokkos::parallel_for(
-                "UpdateAlgorithmicAcceleration", solver.num_system_nodes,
-                UpdateAcceleration{solver.state.a, solver.state.vd, solver.alpha_f, solver.alpha_m}
-            );
-
-            // Solution converged
-            return true;
-        }
 
         // Update state prediction
         UpdateStatePrediction(solver, x_system, x_lambda);
+
+        // If iteration reaches maximum, return solution failed to converge
+        if (iter >= solver.max_iter) {
+            return false;
+        }
     }
 
-    // Solution did not converge
-    return false;
+    // Solution converged, update algorithmic acceleration for next step
+    Kokkos::parallel_for(
+        "UpdateAlgorithmicAcceleration", solver.num_system_nodes,
+        UpdateAcceleration{
+            solver.state.a,
+            solver.state.vd,
+            solver.alpha_f,
+            solver.alpha_m,
+        }
+    );
+
+    // Return solution converged
+    return true;
 }
 
 }  // namespace openturbine
