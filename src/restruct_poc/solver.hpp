@@ -76,6 +76,8 @@ struct Solver {
     View_NxN K;   // Stiffness matrix
     View_NxN T;   // Tangent matrix
     View_NxN St;  // Iteration matrix
+    Kokkos::View<double**, Kokkos::LayoutLeft> St_left;
+    Kokkos::View<int*, Kokkos::LayoutLeft> IPIV;
     View_N R;     // System residual vector
     View_N x;     // System solution vector
     State state;
@@ -111,6 +113,8 @@ struct Solver {
           K("K", num_system_dofs, num_system_dofs),
           T("T", num_system_dofs, num_system_dofs),
           St("St", num_dofs, num_dofs),
+          St_left("St_left", num_dofs, num_dofs),
+          IPIV("IPIV", num_dofs),
           R("R", num_dofs),
           x("x", num_dofs),
           state(num_system_nodes, num_constraint_nodes, q_, v_, vd_),

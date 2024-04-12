@@ -1,12 +1,10 @@
 #include "solver.hpp"
 
-#include <KokkosBlas_gesv.hpp>
+#include <KokkosLapack_gesv.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "beams.hpp"
 #include "solver_functors.hpp"
-
-#include "src/gebt_poc/linear_solver.h"
 
 namespace openturbine {
 
@@ -180,15 +178,13 @@ void SolveSystem(Solver& solver) {
     Kokkos::parallel_for(
         "ConditionR", solver.num_system_dofs, ConditionR{solver.R, solver.conditioner}
     );
-    //    Kokkos::parallel_for(
-    //        "ConditionSystem", 1,
-    //        ConditionSystem{
-    //            solver.num_system_dofs, solver.num_dofs, solver.conditioner, solver.St, solver.R}
-    //    );
 
     // Solve linear system
     KokkosBlas::axpby(-1.0, solver.R, 0.0, solver.x);
-    openturbine::gebt_poc::solve_linear_system(solver.St, solver.x);
+    Kokkos::deep_copy(solver.St_left, solver.St);
+    auto x = Kokkos::View<double*, Kokkos::LayoutLeft>(solver.x);
+    KokkosLapack::gesv(solver.St_left, x, solver.IPIV);
+    Kokkos::deep_copy(solver.x, x);
 
     // Uncondition solution
     Kokkos::parallel_for(
