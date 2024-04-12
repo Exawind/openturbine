@@ -7,26 +7,25 @@
 namespace openturbine {
 
 struct ConstraintInput {
-    size_t base_node_index;
-    size_t constrained_node_index;
-    ConstraintInput(size_t node1, size_t node2)
-        : base_node_index(node1), constrained_node_index(node2) {}
+    int base_node_index;
+    int constrained_node_index;
+    ConstraintInput(int node1, int node2) : base_node_index(node1), constrained_node_index(node2) {}
 };
 
 struct Constraints {
     struct NodeIndices {
-        size_t base_node_index;
-        size_t constrained_node_index;
+        int base_node_index;
+        int constrained_node_index;
     };
 
-    size_t num_constraint_nodes;
+    int num_constraint_nodes;
     Kokkos::View<NodeIndices*> node_indices;
     View_N Phi;
     View_NxN B;
     View_Nx3 X0;
     View_Nx7 u;
     Constraints() {}
-    Constraints(std::vector<ConstraintInput> inputs, size_t num_system_nodes)
+    Constraints(std::vector<ConstraintInput> inputs, int num_system_nodes)
         : num_constraint_nodes(inputs.size()),
           node_indices("node_indices", num_constraint_nodes),
           Phi("residual_vector", num_constraint_nodes * kLieAlgebraComponents),
@@ -45,10 +44,10 @@ struct Constraints {
         Kokkos::deep_copy(Kokkos::subview(this->u, Kokkos::ALL, 3), 1.0);
     }
 
-    void UpdateDisplacement(size_t index, std::array<double, kLieGroupComponents> u_) {
+    void UpdateDisplacement(int index, std::array<double, kLieGroupComponents> u_) {
         auto host_u = Kokkos::create_mirror(this->u);
         Kokkos::deep_copy(host_u, this->u);
-        for (size_t i = 0; i < kLieGroupComponents; ++i) {
+        for (int i = 0; i < kLieGroupComponents; ++i) {
             host_u(index, i) = u_[i];
         }
         Kokkos::deep_copy(this->u, host_u);
@@ -57,7 +56,7 @@ struct Constraints {
 
 struct Solver {
     bool is_dynamic_solve;
-    size_t max_iter;
+    int max_iter;
     double h;
     double alpha_m;
     double alpha_f;
@@ -66,11 +65,11 @@ struct Solver {
     double gamma_prime;
     double beta_prime;
     double conditioner;
-    size_t num_system_nodes;
-    size_t num_system_dofs;
-    size_t num_constraint_nodes;
-    size_t num_constraint_dofs;
-    size_t num_dofs;
+    int num_system_nodes;
+    int num_system_dofs;
+    int num_constraint_nodes;
+    int num_constraint_dofs;
+    int num_dofs;
     View_NxN M;   // Mass matrix
     View_NxN G;   // Gyroscopic matrix
     View_NxN K;   // Stiffness matrix
@@ -78,16 +77,15 @@ struct Solver {
     View_NxN St;  // Iteration matrix
     Kokkos::View<double**, Kokkos::LayoutLeft> St_left;
     Kokkos::View<int*, Kokkos::LayoutLeft> IPIV;
-    View_N R;     // System residual vector
-    View_N x;     // System solution vector
+    View_N R;  // System residual vector
+    View_N x;  // System solution vector
     State state;
     Constraints constraints;
     std::vector<double> convergence_err;
 
     Solver() {}
     Solver(
-        bool is_dynamic_solve_, size_t max_iter_, double h_, double rho_inf,
-        size_t num_system_nodes_,
+        bool is_dynamic_solve_, int max_iter_, double h_, double rho_inf, int num_system_nodes_,
         std::vector<ConstraintInput> constraint_inputs = std::vector<ConstraintInput>(),
         std::vector<std::array<double, 7>> q_ = std::vector<std::array<double, 7>>(),
         std::vector<std::array<double, 6>> v_ = std::vector<std::array<double, 6>>(),

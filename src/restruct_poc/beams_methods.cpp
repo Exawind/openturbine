@@ -9,7 +9,7 @@
 namespace openturbine {
 
 struct UpdateNodeState {
-    Kokkos::View<size_t*> node_state_indices;
+    Kokkos::View<int*> node_state_indices;
     View_Nx7 node_u;
     View_Nx6 node_u_dot;
     View_Nx6 node_u_ddot;
@@ -19,15 +19,15 @@ struct UpdateNodeState {
     View_Nx6 A;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i) const {
+    void operator()(int i) const {
         auto j = node_state_indices(i);
-        for (size_t k = 0; k < kLieGroupComponents; k++) {
+        for (int k = 0; k < kLieGroupComponents; k++) {
             node_u(i, k) = Q(j, k);
         }
-        for (size_t k = 0; k < kLieAlgebraComponents; k++) {
+        for (int k = 0; k < kLieAlgebraComponents; k++) {
             node_u_dot(i, k) = V(j, k);
         }
-        for (size_t k = 0; k < kLieAlgebraComponents; k++) {
+        for (int k = 0; k < kLieAlgebraComponents; k++) {
             node_u_ddot(i, k) = A(j, k);
         }
     }
@@ -40,27 +40,54 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     Kokkos::parallel_for(
         "UpdateNodeState", beams.num_nodes,
         UpdateNodeState{
-            beams.node_state_indices, beams.node_u, beams.node_u_dot, beams.node_u_ddot, Q, V, A}
+            beams.node_state_indices,
+            beams.node_u,
+            beams.node_u_dot,
+            beams.node_u_ddot,
+            Q,
+            V,
+            A,
+        }
     );
 
     // Interpolate node state to quadrature points
     Kokkos::parallel_for(
         "InterpolateQPState", beams.num_elems,
         InterpolateQPState{
-            beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
-            beams.node_u, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime}
+            beams.elem_indices,
+            beams.shape_interp,
+            beams.shape_deriv,
+            beams.qp_jacobian,
+            beams.node_u,
+            beams.qp_u,
+            beams.qp_u_prime,
+            beams.qp_r,
+            beams.qp_r_prime,
+        }
     );
     Kokkos::parallel_for(
         "InterpolateQPVelocity", beams.num_elems,
         InterpolateQPVelocity{
-            beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
-            beams.node_u_dot, beams.qp_u_dot, beams.qp_omega}
+            beams.elem_indices,
+            beams.shape_interp,
+            beams.shape_deriv,
+            beams.qp_jacobian,
+            beams.node_u_dot,
+            beams.qp_u_dot,
+            beams.qp_omega,
+        }
     );
     Kokkos::parallel_for(
         "InterpolateQPAcceleration", beams.num_elems,
         InterpolateQPAcceleration{
-            beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
-            beams.node_u_ddot, beams.qp_u_ddot, beams.qp_omega_dot}
+            beams.elem_indices,
+            beams.shape_interp,
+            beams.shape_deriv,
+            beams.qp_jacobian,
+            beams.node_u_ddot,
+            beams.qp_u_ddot,
+            beams.qp_omega_dot,
+        }
     );
 
     // Calculate RR0 matrix
@@ -156,7 +183,7 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
 
     // Calculate nodal force vectors
     Kokkos::parallel_for(
-        "CalculateNodeForces", Kokkos::TeamPolicy<>{static_cast<int>(beams.num_elems), Kokkos::AUTO},
+        "CalculateNodeForces", Kokkos::TeamPolicy<>{beams.num_elems, Kokkos::AUTO},
         CalculateNodeForces{
             beams.elem_indices, beams.qp_weight, beams.qp_jacobian, beams.shape_interp,
             beams.shape_deriv, beams.qp_Fc, beams.qp_Fd, beams.qp_Fi, beams.qp_Fg, beams.node_FE,
@@ -177,7 +204,7 @@ void AssembleResidualVector(Beams& beams, View_N residual_vector) {
 void AssembleMassMatrix(Beams& beams, View_NxN M) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Mass Matrix");
     Kokkos::parallel_for(
-        "IntegrateMatrix", Kokkos::TeamPolicy<>{static_cast<int>(beams.num_elems), Kokkos::AUTO},
+        "IntegrateMatrix", Kokkos::TeamPolicy<>{beams.num_elems, Kokkos::AUTO},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,
@@ -193,7 +220,7 @@ void AssembleMassMatrix(Beams& beams, View_NxN M) {
 void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Gyroscopic Inertia Matrix");
     Kokkos::parallel_for(
-        "IntegrateMatrix", Kokkos::TeamPolicy<>{static_cast<int>(beams.num_elems), Kokkos::AUTO},
+        "IntegrateMatrix", Kokkos::TeamPolicy<>{beams.num_elems, Kokkos::AUTO},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,
@@ -209,7 +236,7 @@ void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
 void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Inertial Stiffness Matrix");
     Kokkos::parallel_for(
-        "IntegrateMatrix", Kokkos::TeamPolicy<>{static_cast<int>(beams.num_elems), Kokkos::AUTO},
+        "IntegrateMatrix", Kokkos::TeamPolicy<>{beams.num_elems, Kokkos::AUTO},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,
@@ -225,8 +252,7 @@ void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K) {
 void AssembleElasticStiffnessMatrix(Beams& beams, View_NxN K) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Elastic Stiffness Matrix");
     Kokkos::parallel_for(
-        "IntegrateElasticStiffnessMatrix",
-        Kokkos::TeamPolicy<>{static_cast<int>(beams.num_elems), Kokkos::AUTO},
+        "IntegrateElasticStiffnessMatrix", Kokkos::TeamPolicy<>{beams.num_elems, Kokkos::AUTO},
         IntegrateElasticStiffnessMatrix{
             beams.elem_indices,
             beams.node_state_indices,

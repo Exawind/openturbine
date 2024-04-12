@@ -23,14 +23,14 @@ void VectorTilde(double a, double v[3], double m[3][3]) {
 
 KOKKOS_FUNCTION
 void Mat3xMat3(double m1[3][3], double m2[3][3], double m3[3][3]) {
-    for (size_t i = 0; i < 3; ++i) {
-        for (size_t j = 0; j < 3; ++j) {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
             m3[i][j] = 0.;
         }
     }
-    for (size_t i = 0; i < 3; ++i) {
-        for (size_t j = 0; j < 3; ++j) {
-            for (size_t k = 0; k < 3; ++k) {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            for (int k = 0; k < 3; ++k) {
                 m3[i][j] += m1[i][k] * m2[k][j];
             }
         }
@@ -74,8 +74,8 @@ struct CalculateNextState {
     View_Nx6 a;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i) const {
-        for (size_t j = 0; j < kLieAlgebraComponents; ++j) {
+    void operator()(const int i) const {
+        for (int j = 0; j < kLieAlgebraComponents; ++j) {
             double v_p = v(i, j);    // Save velocity from previous iteration
             double vd_p = vd(i, j);  // Save acceleration from previous iteration
             double a_p = a(i, j);    // Save algorithmic acceleration from previous iteration
@@ -91,13 +91,13 @@ template <typename Subview_NxN>
 struct UpdateIterationMatrix {
     Subview_NxN St_12;
     View_NxN B;
-    size_t num_constraint_dofs;
-    size_t num_system_dofs;
+    int num_constraint_dofs;
+    int num_system_dofs;
 
     KOKKOS_FUNCTION
-    void operator()(size_t) const {
-        for (size_t i = 0; i < num_constraint_dofs; ++i) {
-            for (size_t j = 0; j < num_system_dofs; ++j) {
+    void operator()(int) const {
+        for (int i = 0; i < num_constraint_dofs; ++i) {
+            for (int j = 0; j < num_system_dofs; ++j) {
                 St_12(j, i) = B(i, j);
             }
         }
@@ -112,8 +112,8 @@ struct UpdateStaticPrediction {
     View_Nx6 q_delta;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i_node) const {
-        for (size_t j = 0; j < kLieAlgebraComponents; j++) {
+    void operator()(const int i_node) const {
+        for (int j = 0; j < kLieAlgebraComponents; j++) {
             double delta = x_delta(i_node * 6 + j);
             q_delta(i_node, j) += delta / h;
         }
@@ -130,8 +130,8 @@ struct UpdateDynamicPrediction {
     View_Nx6 vd;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i_node) const {
-        for (size_t j = 0; j < kLieAlgebraComponents; j++) {
+    void operator()(const int i_node) const {
+        for (int j = 0; j < kLieAlgebraComponents; j++) {
             double delta = x_delta(i_node * 6 + j);
             q_delta(i_node, j) += delta / h;
             v(i_node, j) += gamma_prime * delta;
@@ -145,7 +145,7 @@ struct UpdateLambdaPrediction {
     View_N lambda;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i_lambda) const { lambda(i_lambda) -= lambda_delta(i_lambda); }
+    void operator()(const int i_lambda) const { lambda(i_lambda) -= lambda_delta(i_lambda); }
 };
 
 struct CalculateTangentOperator {
@@ -154,9 +154,9 @@ struct CalculateTangentOperator {
     View_NxN T;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i_node) const {
-        size_t j = i_node * kLieAlgebraComponents;
-        for (size_t k = 0; k < kLieAlgebraComponents; ++k) {
+    void operator()(const int i_node) const {
+        int j = i_node * kLieAlgebraComponents;
+        for (int k = 0; k < kLieAlgebraComponents; ++k) {
             T(j + k, j + k) = 1.0;
         }
         // Rotation vector
@@ -171,8 +171,8 @@ struct CalculateTangentOperator {
             VectorTilde(tmp2, rv, m2);
             VectorTilde(1.0, rv, m3);
             Mat3xMat3(m2, m3, m4);
-            for (size_t k = 0; k < 3; ++k) {
-                for (size_t n = 0; n < 3; ++n) {
+            for (int k = 0; k < 3; ++k) {
+                for (int n = 0; n < 3; ++n) {
                     T(j + k, j + n) += m1[k][n] + m4[k][n];
                 }
             }
@@ -187,7 +187,7 @@ struct CalculateDisplacement {
     View_Nx7 q;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i_node) const {
+    void operator()(const int i_node) const {
         // Calculate new displacements
         q(i_node, 0) = q_prev(i_node, 0) + h * q_delta(i_node, 0);
         q(i_node, 1) = q_prev(i_node, 1) + h * q_delta(i_node, 1);
@@ -220,11 +220,11 @@ struct CalculateConstraintX0 {
     View_Nx3 constraint_X0;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i_constraint) const {
+    void operator()(const int i_constraint) const {
         auto i_node1 = node_indices(i_constraint).base_node_index;
         auto i_node2 = node_indices(i_constraint).constrained_node_index;
 
-        if (i_node1 == (size_t)-1) {
+        if (i_node1 == -1) {
             constraint_X0(i_constraint, 0) = node_x0(i_node2, 0);
             constraint_X0(i_constraint, 1) = node_x0(i_node2, 1);
             constraint_X0(i_constraint, 2) = node_x0(i_node2, 2);
@@ -245,12 +245,12 @@ struct CalculateConstraintResidualGradient {
     View_NxN B;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i_constraint) const {
+    void operator()(const int i_constraint) const {
         auto i_node1 = node_indices(i_constraint).base_node_index;
         auto i_node2 = node_indices(i_constraint).constrained_node_index;
 
         Quaternion R1;
-        if (i_node1 == (size_t)-1) {
+        if (i_node1 == -1) {
             R1 = Quaternion(
                 constraint_u(i_constraint, 3), constraint_u(i_constraint, 4),
                 constraint_u(i_constraint, 5), constraint_u(i_constraint, 6)
@@ -302,13 +302,13 @@ struct CalculateConstraintResidualGradient {
         RotationMatrix trI3(tr, 0., 0., 0., tr, 0., 0., 0., tr);
 
         // Displacement gradient (identity)
-        for (size_t i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i) {
             B(i_row + i, i_col + i) = 1.;
         }
 
         // Rotation gradient
-        for (size_t i = 0; i < 3; ++i) {
-            for (size_t j = 0; j < 3; ++j) {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
                 B(i_row + i + 3, i_col + j + 3) = (trI3(i, j) - mR2R1T(i, j)) / 2.;
             }
         }
@@ -320,7 +320,7 @@ struct PreconditionSt {
     double conditioner;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i, size_t j) const { St(i, j) *= conditioner; }
+    void operator()(int i, int j) const { St(i, j) *= conditioner; }
 };
 
 struct PostconditionSt {
@@ -328,7 +328,7 @@ struct PostconditionSt {
     double conditioner;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i, size_t j) const { St(i, j) /= conditioner; }
+    void operator()(int i, int j) const { St(i, j) /= conditioner; }
 };
 
 struct ConditionR {
@@ -336,18 +336,18 @@ struct ConditionR {
     double conditioner;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i) const { R(i) *= conditioner; }
+    void operator()(int i) const { R(i) *= conditioner; }
 };
 
 struct ConditionSystem {
-    size_t num_system_dofs;
-    size_t num_dofs;
+    int num_system_dofs;
+    int num_dofs;
     double conditioner;
     View_NxN St;
     View_N R;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t) const {
+    void operator()(const int) const {
         // DL = (i < num_system_dofs) ? conditioner : 1.0
         // DR = (i >= num_system_dofs) ? 1.0 / conditioner : 1.0
 
@@ -355,35 +355,35 @@ struct ConditionSystem {
         // Premultiplying by diagonal matrix DL matrix effectively multiplies
         // each row by the diagonal element. The diagonal element is conditioner
         // for the system dofs and 1.0 for the constraint dofs
-        for (size_t i = 0; i < num_system_dofs; ++i) {
-            for (size_t j = 0; j < num_dofs; ++j) {
+        for (int i = 0; i < num_system_dofs; ++i) {
+            for (int j = 0; j < num_dofs; ++j) {
                 St(i, j) *= conditioner;
             }
         }
         // Postmultiplying by diagonal matrix DR matrix effectively multiplies
         // each column by the diagonal element. The diagonal element is 1.0
         // for the system dofs and 1/conditioner for the constraint dofs
-        for (size_t i = 0; i < num_dofs; ++i) {
-            for (size_t j = num_system_dofs; j < num_dofs; ++j) {
+        for (int i = 0; i < num_dofs; ++i) {
+            for (int j = num_system_dofs; j < num_dofs; ++j) {
                 St(i, j) /= conditioner;
             }
         }
 
         // R * DL
         // DL is conditioner for system dofs, 1.0 for constraint dofs
-        for (size_t i = 0; i < num_system_dofs; ++i) {
+        for (int i = 0; i < num_system_dofs; ++i) {
             R(i) *= conditioner;
         }
     }
 };
 
 struct UnconditionSolution {
-    size_t num_system_dofs;
+    int num_system_dofs;
     double conditioner;
     View_N x;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i) const {
+    void operator()(const int i) const {
         // DR = (i > num_system_dofs) ? 1.0 / conditioner : 1.0
         // x * DR
         if (i >= num_system_dofs) {
@@ -401,7 +401,7 @@ struct CalculateErrorSumSquares {
     View_N x;
 
     KOKKOS_INLINE_FUNCTION
-    void operator()(const size_t i, double& err) const {
+    void operator()(const int i, double& err) const {
         err += Kokkos::pow(x(i) / (atol + rtol * Kokkos::abs(q_delta(i / 6, i % 6))), 2.);
     }
 };
@@ -413,8 +413,8 @@ struct UpdateAlgorithmicAcceleration {
     double alpha_m;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i) const {
-        for (size_t j = 0; j < 6; ++j) {
+    void operator()(int i) const {
+        for (int j = 0; j < 6; ++j) {
             acceleration(i, j) += (1. - alpha_f) / (1. - alpha_m) * vd(i, j);
         }
     }

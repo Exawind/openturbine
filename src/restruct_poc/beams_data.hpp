@@ -11,26 +11,26 @@ namespace openturbine {
 struct Beams {
     // Node and quadrature point index data for an element
     struct ElemIndices {
-        size_t num_nodes;
-        size_t num_qps;
-        Kokkos::pair<size_t, size_t> node_range;
-        Kokkos::pair<size_t, size_t> qp_range;
-        Kokkos::pair<size_t, size_t> qp_shape_range;
+        int num_nodes;
+        int num_qps;
+        Kokkos::pair<int, int> node_range;
+        Kokkos::pair<int, int> qp_range;
+        Kokkos::pair<int, int> qp_shape_range;
         ElemIndices() {}
-        ElemIndices(size_t num_nodes_, size_t num_qps_, size_t i_node_start, size_t i_qp_start)
+        ElemIndices(int num_nodes_, int num_qps_, int i_node_start, int i_qp_start)
             : num_nodes(num_nodes_),
               num_qps(num_qps_),
               node_range(Kokkos::make_pair(i_node_start, i_node_start + num_nodes)),
               qp_range(Kokkos::make_pair(i_qp_start, i_qp_start + num_qps)),
-              qp_shape_range(Kokkos::make_pair((size_t)0, num_qps)) {}
+              qp_shape_range(Kokkos::make_pair(0, num_qps)) {}
     };
 
-    size_t num_elems;  // Number of beams
-    size_t num_nodes;  // Number of nodes
-    size_t num_qps;    // Number of quadrature points
+    int num_elems;  // Number of beams
+    int num_nodes;  // Number of nodes
+    int num_qps;    // Number of quadrature points
 
-    Kokkos::View<ElemIndices*> elem_indices;   // View of element node and qp indices into views
-    Kokkos::View<size_t*> node_state_indices;  // State row index for each node
+    Kokkos::View<ElemIndices*> elem_indices;  // View of element node and qp indices into views
+    Kokkos::View<int*> node_state_indices;    // State row index for each node
 
     View_3 gravity;
 
@@ -98,10 +98,7 @@ struct Beams {
     Beams() {}  // Default constructor which doesn't initialize views
 
     // Constructor which initializes views based on given sizes
-    Beams(
-        const size_t num_beams_, const size_t num_nodes_, const size_t num_qps_,
-        const size_t max_elem_qps
-    )
+    Beams(const int num_beams_, const int num_nodes_, const int num_qps_, const int max_elem_qps)
         : num_elems(num_beams_),
           num_nodes(num_nodes_),
           num_qps(num_qps_),

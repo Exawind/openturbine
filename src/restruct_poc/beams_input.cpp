@@ -44,7 +44,7 @@ void LagrangePolynomialInterpWeights(
     const double x, const std::vector<double>& xs, std::vector<double>& weights
 ) {
     // Get number of nodes
-    auto n = xs.size();
+    const auto n = xs.size();
 
     // Resize weights and fill with 1s
     weights.clear();
@@ -64,7 +64,7 @@ void LagrangePolynomialDerivWeights(
     const double x, const std::vector<double>& xs, std::vector<double>& weights
 ) {
     // Get number of nodes
-    auto n = xs.size();
+    const auto n = xs.size();
 
     // Resize weights and fill with zeros
     weights.clear();
@@ -187,9 +187,9 @@ void PopulateElementViews(
 }
 
 struct SetNodeStateIndices {
-    Kokkos::View<size_t*> node_state_indices;
+    Kokkos::View<int*> node_state_indices;
     KOKKOS_FUNCTION
-    void operator()(size_t i) const { node_state_indices(i) = i; }
+    void operator()(int i) const { node_state_indices(i) = i; }
 };
 
 Beams CreateBeams(const BeamsInput& beams_input) {

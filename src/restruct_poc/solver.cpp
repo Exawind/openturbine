@@ -194,9 +194,7 @@ void SolveSystem(Solver& solver) {
     // Condition system for solve
     Kokkos::parallel_for(
         "PreconditionSt",
-        Kokkos::MDRangePolicy<Kokkos::Rank<2>>(
-            {0, 0}, {static_cast<int>(solver.num_system_dofs), static_cast<int>(solver.num_dofs)}
-        ),
+        Kokkos::MDRangePolicy<Kokkos::Rank<2>>({0, 0}, {solver.num_system_dofs, solver.num_dofs}),
         PreconditionSt{
             solver.St,
             solver.conditioner,
@@ -205,8 +203,7 @@ void SolveSystem(Solver& solver) {
     Kokkos::parallel_for(
         "PostconditionSt",
         Kokkos::MDRangePolicy<Kokkos::Rank<2>>(
-            {0, static_cast<int>(solver.num_system_dofs)},
-            {static_cast<int>(solver.num_dofs), static_cast<int>(solver.num_dofs)}
+            {0, solver.num_system_dofs}, {solver.num_dofs, solver.num_dofs}
         ),
         PostconditionSt{
             solver.St,
@@ -262,7 +259,7 @@ bool Step(Solver& solver, Beams& beams) {
     // Predict state at end of step
     PredictNextState(solver);
 
-    auto system_range = Kokkos::make_pair((size_t)0, solver.num_system_dofs);
+    auto system_range = Kokkos::make_pair(0, solver.num_system_dofs);
     auto constraint_range = Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs);
 
     auto R_system = Kokkos::subview(solver.R, system_range);
@@ -282,7 +279,7 @@ bool Step(Solver& solver, Beams& beams) {
     double err = 1000.0;
 
     // Loop while error is greater than 1
-    for (size_t iter = 0; err > 1.0; ++iter) {
+    for (int iter = 0; err > 1.0; ++iter) {
         // Initialize iteration matrix and residual to zero
         Kokkos::deep_copy(solver.St, 0.);
 

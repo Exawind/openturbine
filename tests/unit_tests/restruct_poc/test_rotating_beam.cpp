@@ -96,14 +96,14 @@ TEST(RotatingBeamTest, StepConvergence) {
     auto beams = CreateBeams(beams_input);
 
     // Number of system nodes from number of beam nodes
-    const size_t num_system_nodes(beams.num_nodes);
+    const int num_system_nodes(beams.num_nodes);
 
     // Constraint inputs
     std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
 
     // Solution parameters
     const bool is_dynamic_solve(true);
-    const size_t max_iter(5);
+    const int max_iter(5);
     const double step_size(0.01);  // seconds
     const double rho_inf(0.9);
 
@@ -117,7 +117,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     InitializeConstraints(solver, beams);
 
     // Perform 10 time steps and check for convergence within max_iter iterations
-    for (size_t i = 0; i < 10; ++i) {
+    for (int i = 0; i < 10; ++i) {
         // Set constraint displacement
         auto q = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
             Vector(0, 0, omega * step_size * (i + 1))
@@ -165,14 +165,14 @@ TEST(RotatingBeamTest, TwoBeam) {
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 0.1 rad/s angular velocity around the z axis
-    const size_t num_blades = 2;
+    const int num_blades = 2;
     std::vector<BeamElement> blade_elems;
     std::vector<std::array<double, 7>> displacement;
     std::vector<std::array<double, 6>> velocity;
     std::vector<std::array<double, 6>> acceleration;
     std::vector<ConstraintInput> constraint_inputs;
     // Loop through blades
-    for (size_t i = 0; i < num_blades; ++i) {
+    for (int i = 0; i < num_blades; ++i) {
         // Define root rotation
         Quaternion q_root(1, 0, 0, 0);
 
@@ -212,11 +212,11 @@ TEST(RotatingBeamTest, TwoBeam) {
     auto beams = CreateBeams(beams_input);
 
     // Number of system nodes from number of beam nodes
-    const size_t num_system_nodes(beams.num_nodes);
+    const int num_system_nodes(beams.num_nodes);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
-    const size_t max_iter(1);
+    const int max_iter(1);
     const double step_size(0.01);  // seconds
     const double rho_inf(0.9);
 
@@ -239,7 +239,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     );
 
     // Update constraint displacements
-    for (size_t j = 0; j < solver.num_constraint_nodes; ++j) {
+    for (int j = 0; j < solver.num_constraint_nodes; ++j) {
         solver.constraints.UpdateDisplacement(j, u_hub);
     }
 
@@ -253,8 +253,8 @@ TEST(RotatingBeamTest, TwoBeam) {
     // Check that K matrix is the same for both beams
     auto K = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.K);
     // WriteMatrixToFile(K, "K.csv");
-    for (size_t i = 0; i < n; ++i) {
-        for (size_t j = 0; j < n; ++j) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
             EXPECT_NEAR(K[i][j], K[n + i][n + j], 1e-12);
         }
     }
@@ -262,37 +262,37 @@ TEST(RotatingBeamTest, TwoBeam) {
     // Check that M matrix is the same for both beams
     auto M = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.M);
     // WriteMatrixToFile(M, "M.csv");
-    for (size_t i = 0; i < n; ++i) {
-        for (size_t j = 0; j < n; ++j) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
             EXPECT_NEAR(K[i][j], K[n + i][n + j], 1e-12);
         }
     }
 
     // Check that St matrix is the same for both beams
     auto St = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.St);
-    for (size_t i = 0; i < n; ++i) {
-        for (size_t j = 0; j < n; ++j) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
             EXPECT_NEAR(St[i][j], St[n + i][n + j], 1e-12);
         }
     }
 
     // Check that R vector is the same for both beams
     auto R = openturbine::gen_alpha_solver::tests::kokkos_view_1D_to_vector(solver.R);
-    for (size_t i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) {
         EXPECT_NEAR(R[i], R[n + i], 1e-12);
     }
 
     // Check that Phi vector is the same for both beams
     auto Phi =
         openturbine::gen_alpha_solver::tests::kokkos_view_1D_to_vector(solver.constraints.Phi);
-    for (size_t i = 0; i < m; ++i) {
+    for (int i = 0; i < m; ++i) {
         EXPECT_NEAR(Phi[i], Phi[i + m], 1e-12);
     }
 
     // Check that B matrix is the same for both beams
     auto B = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.constraints.B);
-    for (size_t i = 0; i < m; ++i) {
-        for (size_t j = 0; j < n; ++j) {
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
             EXPECT_NEAR(B[i][j], B[i + m][j + n], 1e-12);
         }
     }
@@ -308,7 +308,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 1 rad/s angular velocity around the z axis
-    const size_t num_blades = 3;
+    const int num_blades = 3;
     std::vector<BeamElement> blade_elems;
     std::vector<std::array<double, 7>> displacement;
     std::vector<std::array<double, 6>> velocity;
@@ -316,7 +316,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     std::vector<ConstraintInput> constraint_inputs;
 
     // Loop through blades
-    for (size_t i = 0; i < num_blades; ++i) {
+    for (int i = 0; i < num_blades; ++i) {
         // Define root rotation
         auto q_root = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
             Vector(0, 0, 2.0 * M_PI * i / num_blades)
@@ -358,15 +358,15 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     auto beams = CreateBeams(beams_input);
 
     // Number of system nodes from number of beam nodes
-    const size_t num_system_nodes(beams.num_nodes);
+    const int num_system_nodes(beams.num_nodes);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
-    const size_t max_iter(4);
+    const int max_iter(4);
     const double step_size(0.01);  // seconds
     const double rho_inf(0.9);
     const double t_end(0.1);
-    const size_t num_steps(t_end / step_size + 1.0);
+    const int num_steps(t_end / step_size + 1.0);
 
     // Create solver with initial node state
     Solver solver(
@@ -378,7 +378,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     InitializeConstraints(solver, beams);
 
     // Perform time steps and check for convergence within max_iter iterations
-    for (size_t i = 0; i < num_steps; ++i) {
+    for (int i = 0; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
         auto q_hub = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
             omega * step_size * (i + 1)
@@ -391,7 +391,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         );
 
         // Update constraint displacements
-        for (size_t j = 0; j < solver.num_constraint_nodes; ++j) {
+        for (int j = 0; j < solver.num_constraint_nodes; ++j) {
             solver.constraints.UpdateDisplacement(j, u_hub);
         }
 

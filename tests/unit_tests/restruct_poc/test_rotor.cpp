@@ -964,7 +964,7 @@ TEST(RotatingBeamTest, IEA15Rotor) {
         );
 
         // Update constraint displacements
-        for (size_t j = 0; j < solver.num_constraint_nodes; ++j) {
+        for (int j = 0; j < solver.num_constraint_nodes; ++j) {
             solver.constraints.UpdateDisplacement(j, u_hub);
         }
 
