@@ -46,7 +46,7 @@ jobs:
       if: steps.cache-kokkos.outputs.cache-hit != 'true'
       run: |
         sudo mkdir -p ~/dependencies/kokkos
-        git clone --depth 1 --branch 4.2.00 https://github.com/kokkos/kokkos
+        git clone --depth 1 --branch master https://github.com/kokkos/kokkos
         cd kokkos
         mkdir build
         cd build
@@ -71,7 +71,7 @@ jobs:
           git clone https://github.com/kokkos/kokkos-kernels
         fi
         if [ ${{matrix.os}} = 'macos-latest' ]; then
-          git clone --depth 1 --branch 4.2.00 https://github.com/kokkos/kokkos-kernels
+          git clone --depth 1 --branch master https://github.com/kokkos/kokkos-kernels
         fi
         cd kokkos-kernels
         mkdir build
