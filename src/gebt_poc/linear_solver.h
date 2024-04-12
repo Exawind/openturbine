@@ -6,7 +6,6 @@
 #include <KokkosBatched_SolveUTV_Decl.hpp>
 #include <KokkosBatched_UTV_Decl.hpp>
 #include <KokkosBlas.hpp>
-#include <KokkosLapack_gesv.hpp>
 
 #include "src/utilities/log.h"
 

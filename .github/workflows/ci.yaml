@@ -20,9 +20,9 @@ jobs:
             compiler: gcc
         include:
           - os: ubuntu-latest
-            install_deps: sudo apt-get install libgtest-dev libblas-dev liblapack-dev
+            install_deps: sudo apt-get install gfortran libgtest-dev libblas-dev liblapack-dev liblapacke-dev
           - os: macos-latest
-            install_deps: brew install googletest openblas lapack
+            install_deps: brew install gcc googletest openblas lapack
     steps:
     - name: Setup Cpp
       uses: aminya/setup-cpp@v1
@@ -46,7 +46,7 @@ jobs:
       if: steps.cache-kokkos.outputs.cache-hit != 'true'
       run: |
         sudo mkdir -p ~/dependencies/kokkos
-        git clone --depth 1 --branch master https://github.com/kokkos/kokkos
+        git clone --depth 1 --branch develop https://github.com/kokkos/kokkos
         cd kokkos
         mkdir build
         cd build
@@ -68,20 +68,19 @@ jobs:
         sudo mkdir -p ~/dependencies/kokkos_kernels
         export Kokkos_DIR=~/dependencies/kokkos
         if [ ${{matrix.os}} = 'ubuntu-latest' ]; then
-          git clone https://github.com/kokkos/kokkos-kernels
+          git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
         fi
         if [ ${{matrix.os}} = 'macos-latest' ]; then
-          git clone --depth 1 --branch master https://github.com/kokkos/kokkos-kernels
+          git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
         fi
         cd kokkos-kernels
         mkdir build
         cd build
-        cmake .. \
+        cmake ../ \
           -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
           -DKokkosKernels_ENABLE_TPL_BLAS=ON \
-          -DKokkosKernels_ENABLE_TPL_LAPACK=ON \
-          -DKokkosKernels_ENABLE_TPL_LAPACKE=ON
+          -DKokkosKernels_ENABLE_TPL_LAPACK=ON 
         sudo cmake --build . --target install
     - name: Clone
       uses: actions/checkout@v4
