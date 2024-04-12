@@ -20,9 +20,9 @@ jobs:
             compiler: gcc
         include:
           - os: ubuntu-latest
-            install_deps: sudo apt-get install libgtest-dev
+            install_deps: sudo apt-get install libgtest-dev libblas-dev liblapack-dev
           - os: macos-latest
-            install_deps: brew install googletest
+            install_deps: brew install googletest openblas lapack
     steps:
     - name: Setup Cpp
       uses: aminya/setup-cpp@v1
@@ -78,7 +78,10 @@ jobs:
         cd build
         cmake .. \
           -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DKokkosKernels_ENABLE_TPL_BLAS=ON \
+          -DKokkosKernels_ENABLE_TPL_LAPACK=ON \
+          -DKokkosKernels_ENABLE_TPL_LAPACKE=ON
         sudo cmake --build . --target install
     - name: Clone
       uses: actions/checkout@v4
