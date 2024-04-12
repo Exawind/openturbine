@@ -468,7 +468,7 @@ protected:
 
         // Solution parameters
         const bool is_dynamic_solve(true);
-        const size_t max_iter(1);
+        const size_t max_iter(0);
         const double step_size(0.01);  // seconds
         const double rho_inf(0.9);
 
