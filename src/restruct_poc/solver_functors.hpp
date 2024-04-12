@@ -87,6 +87,23 @@ struct CalculateNextState {
     }
 };
 
+template <typename Subview_NxN>
+struct UpdateIterationMatrix {
+    Subview_NxN St_12;
+    View_NxN B;
+    size_t num_constraint_dofs;
+    size_t num_system_dofs;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t) const {
+        for (size_t i = 0; i < num_constraint_dofs; ++i) {
+            for (size_t j = 0; j < num_system_dofs; ++j) {
+                St_12(j, i) = B(i, j);
+            }
+        }
+    }
+};
+
 struct UpdateStaticPrediction {
     double h;
     double beta_prime;
@@ -386,6 +403,20 @@ struct CalculateErrorSumSquares {
     KOKKOS_INLINE_FUNCTION
     void operator()(const size_t i, double& err) const {
         err += Kokkos::pow(x(i) / (atol + rtol * Kokkos::abs(q_delta(i / 6, i % 6))), 2.);
+    }
+};
+
+struct UpdateAlgorithmicAcceleration {
+    View_Nx6 acceleration;
+    View_Nx6 vd;
+    double alpha_f;
+    double alpha_m;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i) const {
+        for (size_t j = 0; j < 6; ++j) {
+            acceleration(i, j) += (1. - alpha_f) / (1. - alpha_m) * vd(i, j);
+        }
     }
 };
 

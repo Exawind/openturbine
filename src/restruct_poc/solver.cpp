@@ -17,14 +17,27 @@ void PredictNextState(Solver& solver) {
     Kokkos::parallel_for(
         "CalculateNextState", solver.num_system_nodes,
         CalculateNextState{
-            solver.h, solver.alpha_f, solver.alpha_m, solver.beta, solver.gamma,
-            solver.state.q_delta, solver.state.v, solver.state.vd, solver.state.a}
+            solver.h,
+            solver.alpha_f,
+            solver.alpha_m,
+            solver.beta,
+            solver.gamma,
+            solver.state.q_delta,
+            solver.state.v,
+            solver.state.vd,
+            solver.state.a,
+        }
     );
 
     // Update predicted displacements
     Kokkos::parallel_for(
         "CalculateDisplacement", solver.state.q.extent(0),
-        CalculateDisplacement{solver.h, solver.state.q_delta, solver.state.q_prev, solver.state.q}
+        CalculateDisplacement{
+            solver.h,
+            solver.state.q_delta,
+            solver.state.q_prev,
+            solver.state.q,
+        }
     );
 }
 
@@ -32,7 +45,11 @@ void InitializeConstraints(Solver& solver, Beams& beams) {
     auto region = Kokkos::Profiling::ScopedRegion("Initialize Constraints");
     Kokkos::parallel_for(
         "CalculateConstraintX0", solver.num_constraint_nodes,
-        CalculateConstraintX0{solver.constraints.node_indices, beams.node_x0, solver.constraints.X0}
+        CalculateConstraintX0{
+            solver.constraints.node_indices,
+            beams.node_x0,
+            solver.constraints.X0,
+        }
     );
 }
 
@@ -44,22 +61,38 @@ void UpdateStatePrediction(Solver& solver, View_N x_system, View_N x_lambda) {
         Kokkos::parallel_for(
             "UpdateDynamicPrediction", solver.num_system_nodes,
             UpdateDynamicPrediction{
-                solver.h, solver.beta_prime, solver.gamma_prime, x_system, solver.state.q_delta,
-                solver.state.v, solver.state.vd}
+                solver.h,
+                solver.beta_prime,
+                solver.gamma_prime,
+                x_system,
+                solver.state.q_delta,
+                solver.state.v,
+                solver.state.vd,
+            }
         );
     } else {
         Kokkos::parallel_for(
             // Calculate change in state based on static solution iteration
             "UpdateStaticPrediction", solver.num_system_nodes,
             UpdateStaticPrediction{
-                solver.h, solver.beta_prime, solver.gamma_prime, x_system, solver.state.q_delta}
+                solver.h,
+                solver.beta_prime,
+                solver.gamma_prime,
+                x_system,
+                solver.state.q_delta,
+            }
         );
     }
 
     // Update predicted displacements
     Kokkos::parallel_for(
         "CalculateDisplacement", solver.num_system_nodes,
-        CalculateDisplacement{solver.h, solver.state.q_delta, solver.state.q_prev, solver.state.q}
+        CalculateDisplacement{
+            solver.h,
+            solver.state.q_delta,
+            solver.state.q_prev,
+            solver.state.q,
+        }
     );
 
     // If constraints are being used, update state lambda
@@ -67,7 +100,10 @@ void UpdateStatePrediction(Solver& solver, View_N x_system, View_N x_lambda) {
         // Update lambda in state
         Kokkos::parallel_for(
             "UpdateLambdaPrediction", solver.num_constraint_dofs,
-            UpdateLambdaPrediction{x_lambda, solver.state.lambda}
+            UpdateLambdaPrediction{
+                x_lambda,
+                solver.state.lambda,
+            }
         );
     }
 }
@@ -79,7 +115,11 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     Kokkos::deep_copy(solver.T, 0.);
     Kokkos::parallel_for(
         "TangentOperator", solver.num_system_nodes,
-        CalculateTangentOperator{solver.h, solver.state.q_delta, solver.T}
+        CalculateTangentOperator{
+            solver.h,
+            solver.state.q_delta,
+            solver.T,
+        }
     );
 
     // Assemble residual vector
@@ -106,23 +146,6 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     }
 }
 
-template <typename Subview_NxN>
-struct UpdateIterationMatrix {
-    Subview_NxN St_12;
-    View_NxN B;
-    size_t num_constraint_dofs;
-    size_t num_system_dofs;
-
-    KOKKOS_FUNCTION
-    void operator()(size_t) const {
-        for (size_t i = 0; i < num_constraint_dofs; ++i) {
-            for (size_t j = 0; j < num_system_dofs; ++j) {
-                St_12(j, i) = B(i, j);
-            }
-        }
-    }
-};
-
 template <typename Subview_NxN, typename Subview_N>
 void AssembleConstraints(
     Solver& solver, Subview_NxN St_12, Subview_NxN St_21, Subview_N R_system, Subview_N R_lambda
@@ -139,8 +162,13 @@ void AssembleConstraints(
     Kokkos::parallel_for(
         "CalculateConstraintResidualGradient", solver.num_constraint_nodes,
         CalculateConstraintResidualGradient{
-            solver.constraints.node_indices, solver.constraints.X0, solver.constraints.u,
-            solver.state.q, solver.constraints.Phi, solver.constraints.B}
+            solver.constraints.node_indices,
+            solver.constraints.X0,
+            solver.constraints.u,
+            solver.state.q,
+            solver.constraints.Phi,
+            solver.constraints.B,
+        }
     );
 
     // Update residual vector
@@ -151,7 +179,11 @@ void AssembleConstraints(
     Kokkos::parallel_for(
         "St_12=B.transpose", 1,
         UpdateIterationMatrix<Subview_NxN>{
-            St_12, solver.constraints.B, solver.num_constraint_dofs, solver.num_system_dofs}
+            St_12,
+            solver.constraints.B,
+            solver.num_constraint_dofs,
+            solver.num_system_dofs,
+        }
     );
 
     KokkosBlas::gemm("N", "N", 1.0, solver.constraints.B, solver.T, 0.0, St_21);
@@ -165,7 +197,10 @@ void SolveSystem(Solver& solver) {
         Kokkos::MDRangePolicy<Kokkos::Rank<2>>(
             {0, 0}, {static_cast<int>(solver.num_system_dofs), static_cast<int>(solver.num_dofs)}
         ),
-        PreconditionSt{solver.St, solver.conditioner}
+        PreconditionSt{
+            solver.St,
+            solver.conditioner,
+        }
     );
     Kokkos::parallel_for(
         "PostconditionSt",
@@ -173,10 +208,17 @@ void SolveSystem(Solver& solver) {
             {0, static_cast<int>(solver.num_system_dofs)},
             {static_cast<int>(solver.num_dofs), static_cast<int>(solver.num_dofs)}
         ),
-        PostconditionSt{solver.St, solver.conditioner}
+        PostconditionSt{
+            solver.St,
+            solver.conditioner,
+        }
     );
     Kokkos::parallel_for(
-        "ConditionR", solver.num_system_dofs, ConditionR{solver.R, solver.conditioner}
+        "ConditionR", solver.num_system_dofs,
+        ConditionR{
+            solver.R,
+            solver.conditioner,
+        }
     );
 
     // Solve linear system
@@ -189,7 +231,11 @@ void SolveSystem(Solver& solver) {
     // Uncondition solution
     Kokkos::parallel_for(
         "UnconditionSolution", solver.num_dofs,
-        UnconditionSolution{solver.num_system_dofs, solver.conditioner, solver.x}
+        UnconditionSolution{
+            solver.num_system_dofs,
+            solver.conditioner,
+            solver.x,
+        }
     );
 }
 
@@ -199,25 +245,17 @@ double CalculateConvergenceError(Solver& solver) {
     const double rtol = 1e-5;
     double sum_error_squared = 0.;
     Kokkos::parallel_reduce(
-        solver.num_system_dofs, CalculateErrorSumSquares{atol, rtol, solver.state.q_delta, solver.x},
+        solver.num_system_dofs,
+        CalculateErrorSumSquares{
+            atol,
+            rtol,
+            solver.state.q_delta,
+            solver.x,
+        },
         sum_error_squared
     );
     return std::sqrt(sum_error_squared / solver.num_system_dofs);
 }
-
-struct UpdateAcceleration {
-    View_Nx6 acceleration;
-    View_Nx6 vd;
-    double alpha_f;
-    double alpha_m;
-
-    KOKKOS_FUNCTION
-    void operator()(size_t i) const {
-        for (size_t j = 0; j < 6; ++j) {
-            acceleration(i, j) += (1. - alpha_f) / (1. - alpha_m) * vd(i, j);
-        }
-    }
-};
 
 bool Step(Solver& solver, Beams& beams) {
     auto region = Kokkos::Profiling::ScopedRegion("Step");
@@ -247,7 +285,6 @@ bool Step(Solver& solver, Beams& beams) {
     for (size_t iter = 0; err > 1.0; ++iter) {
         // Initialize iteration matrix and residual to zero
         Kokkos::deep_copy(solver.St, 0.);
-        Kokkos::deep_copy(solver.R, 0.);
 
         // Update beam elements state from solvers
         UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
@@ -279,7 +316,7 @@ bool Step(Solver& solver, Beams& beams) {
     // Solution converged, update algorithmic acceleration for next step
     Kokkos::parallel_for(
         "UpdateAlgorithmicAcceleration", solver.num_system_nodes,
-        UpdateAcceleration{
+        UpdateAlgorithmicAcceleration{
             solver.state.a,
             solver.state.vd,
             solver.alpha_f,
