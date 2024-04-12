@@ -13,11 +13,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        compiler: [gcc, llvm]
+        compiler: [gcc-10, llvm]
         build_type: [Release, Debug]
         exclude: 
           - os: macos-latest
-            compiler: gcc
+            compiler: gcc-10
         include:
           - os: ubuntu-latest
             install_deps: sudo apt-get install gfortran libgtest-dev libblas-dev liblapack-dev liblapacke-dev
