@@ -61,12 +61,12 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     // Create a grid object and add the points to it.
     vtkNew<vtkUnstructuredGrid> gd;
     gd->Allocate(beams.num_elems);
-    for (size_t i = 0; i < beams.num_elems; ++i) {
+    for (int i = 0; i < beams.num_elems; ++i) {
         auto& idx = elem_indices[i];
         std::vector<vtkIdType> pts;
         pts.push_back(idx.qp_range.first);       // first qp
         pts.push_back(idx.qp_range.second - 1);  // last qp
-        for (size_t j = idx.qp_range.first; j < idx.qp_range.second - 2; ++j) {
+        for (int j = idx.qp_range.first; j < idx.qp_range.second - 2; ++j) {
             pts.push_back(j);
         }
         gd->InsertNextCell(VTK_LAGRANGE_CURVE, idx.num_qps, pts.data());
@@ -86,7 +86,7 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     }
     gd->SetPoints(qp_pos);
 
-    // Add orientation field data
+    // Add orientation point data
     vtkNew<vtkFloatArray> orientation_x;
     orientation_x->SetNumberOfComponents(3);
     orientation_x->SetName("OrientationX");
@@ -113,7 +113,7 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     gd->GetPointData()->AddArray(orientation_y);
     gd->GetPointData()->AddArray(orientation_z);
 
-    // Add translational velocity field data
+    // Add translational velocity point data
     vtkNew<vtkFloatArray> translational_velocity;
     translational_velocity->SetNumberOfComponents(3);
     translational_velocity->SetName("TranslationalVelocity");
@@ -123,7 +123,7 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     }
     gd->GetPointData()->AddArray(translational_velocity);
 
-    // Add rotational velocity field data
+    // Add rotational velocity point data
     vtkNew<vtkFloatArray> rotational_velocity;
     rotational_velocity->SetNumberOfComponents(3);
     rotational_velocity->SetName("RotationalVelocity");
@@ -132,6 +132,27 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
         rotational_velocity->InsertNextTuple(p.data());
     }
     gd->GetPointData()->AddArray(rotational_velocity);
+
+    // Add deformation point data
+    vtkNew<vtkFloatArray> deformation_vector;
+    deformation_vector->SetNumberOfComponents(3);
+    deformation_vector->SetName("DeformationVector");
+    for (int i = 0; i < beams.num_elems; ++i) {
+        auto& idx = elem_indices[i];
+        auto i_root = idx.qp_range.first;
+        auto x0_root = Vector(qp_x0[i_root][0], qp_x0[i_root][1], qp_x0[i_root][2]);
+        auto x_root = Vector(qp_x[i_root][0], qp_x[i_root][1], qp_x[i_root][2]);
+        auto r_u = Quaternion(qp_r[i_root][0], qp_r[i_root][1], qp_r[i_root][2], qp_r[i_root][3]);
+        for (int j = idx.qp_range.first; j < idx.qp_range.second; ++j) {
+            auto x = Vector(qp_x[j][0], qp_x[j][1], qp_x[j][2]);
+            auto x_undeformed =
+                (r_u * (Vector(qp_x0[j][0], qp_x0[j][1], qp_x0[j][2]) - x0_root)) + x_root;
+            auto u = x - x_undeformed;
+            double p[3] = {u.GetX(), u.GetY(), u.GetZ()};
+            deformation_vector->InsertNextTuple(p);
+        }
+    }
+    gd->GetPointData()->AddArray(deformation_vector);
 
     // Write the file
     vtkNew<vtkXMLUnstructuredGridWriter> writer;
