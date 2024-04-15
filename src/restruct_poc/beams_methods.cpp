@@ -204,7 +204,9 @@ void AssembleResidualVector(Beams& beams, View_N residual_vector) {
 void AssembleMassMatrix(Beams& beams, View_NxN M) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Mass Matrix");
     Kokkos::parallel_for(
-        "IntegrateMatrix", Kokkos::TeamPolicy<>{beams.num_elems, Kokkos::AUTO},
+        "IntegrateMatrix",
+        Kokkos::MDRangePolicy{
+            {0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,
@@ -220,7 +222,9 @@ void AssembleMassMatrix(Beams& beams, View_NxN M) {
 void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Gyroscopic Inertia Matrix");
     Kokkos::parallel_for(
-        "IntegrateMatrix", Kokkos::TeamPolicy<>{beams.num_elems, Kokkos::AUTO},
+        "IntegrateMatrix",
+        Kokkos::MDRangePolicy{
+            {0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,
@@ -236,7 +240,9 @@ void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
 void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Inertial Stiffness Matrix");
     Kokkos::parallel_for(
-        "IntegrateMatrix", Kokkos::TeamPolicy<>{beams.num_elems, Kokkos::AUTO},
+        "IntegrateMatrix",
+        Kokkos::MDRangePolicy{
+            {0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,
@@ -252,7 +258,9 @@ void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K) {
 void AssembleElasticStiffnessMatrix(Beams& beams, View_NxN K) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Elastic Stiffness Matrix");
     Kokkos::parallel_for(
-        "IntegrateElasticStiffnessMatrix", Kokkos::TeamPolicy<>{beams.num_elems, Kokkos::AUTO},
+        "IntegrateElasticStiffnessMatrix",
+        Kokkos::MDRangePolicy{
+            {0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}},
         IntegrateElasticStiffnessMatrix{
             beams.elem_indices,
             beams.node_state_indices,

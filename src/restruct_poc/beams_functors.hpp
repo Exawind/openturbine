@@ -1135,7 +1135,9 @@ struct IntegrateMatrix {
 
         const auto i = i_index + idx.node_range.first;
         const auto j = j_index + idx.node_range.first;
-        double local_M[6][6] = {{0}, {0}, {0}, {0}, {0}, {0}};
+        auto local_M_data = Kokkos::Array<double, 36>{};
+        auto local_M =
+            Kokkos::View<double[6][6], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(local_M_data.data());
         for (int k = 0; k < idx.num_qps; ++k) {
             const auto k_qp = idx.qp_range.first + k;
             const auto w = qp_weight_(k_qp);
@@ -1145,7 +1147,7 @@ struct IntegrateMatrix {
             const auto coeff = w * phi_i * phi_j * jacobian;
             for (int m = 0; m < kLieAlgebraComponents; ++m) {
                 for (int n = 0; n < kLieAlgebraComponents; ++n) {
-                    local_M[m][n] += coeff * qp_M_(k_qp, m, n);
+                    local_M(m, n) += coeff * qp_M_(k_qp, m, n);
                 }
             }
         }
@@ -1153,7 +1155,7 @@ struct IntegrateMatrix {
         const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
         for (int m = 0; m < kLieAlgebraComponents; ++m) {
             for (int n = 0; n < kLieAlgebraComponents; ++n) {
-                gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M[m][n];
+                gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
             }
         }
     }
@@ -1268,7 +1270,9 @@ struct IntegrateElasticStiffnessMatrix {
 
         const auto i = i_index + idx.node_range.first;
         const auto j = j_index + idx.node_range.first;
-        double local_M[6][6] = {{0}, {0}, {0}, {0}, {0}, {0}};
+        auto local_M_data = Kokkos::Array<double, 36>{};
+        auto local_M =
+            Kokkos::View<double[6][6], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(local_M_data.data());
         for (int k = 0; k < idx.num_qps; ++k) {
             const auto k_qp = idx.qp_range.first + k;
             const auto w = qp_weight_(k_qp);
@@ -1283,7 +1287,7 @@ struct IntegrateElasticStiffnessMatrix {
             const auto coeff_O = w * (phi_prime_i * phi_j);
             for (int m = 0; m < 6; ++m) {      // Matrix components
                 for (int n = 0; n < 6; ++n) {  // Matrix components
-                    local_M[m][n] += coeff_P * qp_Puu_(k_qp, m, n) + coeff_Q * qp_Quu_(k_qp, m, n) +
+                    local_M(m, n) += coeff_P * qp_Puu_(k_qp, m, n) + coeff_Q * qp_Quu_(k_qp, m, n) +
                                      coeff_C * qp_Cuu_(k_qp, m, n) + coeff_O * qp_Ouu_(k_qp, m, n);
                 }
             };
@@ -1293,7 +1297,7 @@ struct IntegrateElasticStiffnessMatrix {
         const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
         for (int m = 0; m < 6; ++m) {
             for (int n = 0; n < 6; ++n) {
-                gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M[m][n];
+                gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
             }
         };
     }
