@@ -1044,6 +1044,37 @@ struct CalculateNodeForces {
             }
         });
     }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int i_index) const {
+        const auto idx = elem_indices(i_elem);
+        const auto i = idx.node_range.first + i_index;
+
+        // If node or qp indices don't apply to this element, return
+        if (i_index >= idx.num_nodes) {
+            return;
+        }
+
+        for (auto k = 0; k < 6; ++k) {
+            node_FE_(i, k) = 0.;
+            node_FG_(i, k) = 0.;
+            node_FI_(i, k) = 0.;
+        }
+
+        for (int j_index = 0; j_index < idx.num_qps; ++j_index) {
+            const auto j = idx.qp_range.first + j_index;
+            const auto weight = qp_weight_(j);
+            const auto coeff_c = weight * shape_deriv_(i, j_index);
+            const auto coeff_d = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
+            const auto coeff_i = coeff_d;
+            const auto coeff_g = coeff_d;
+            for (int k = 0; k < 6; ++k) {
+                node_FE_(i, k) += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
+                node_FI_(i, k) += coeff_i * qp_Fi_(j, k);
+                node_FG_(i, k) += coeff_g * qp_Fg_(j, k);
+            }
+        }
+    }
 };
 
 struct IntegrateMatrix {
@@ -1290,7 +1321,7 @@ struct IntegrateElasticStiffnessMatrix {
                     local_M(m, n) += coeff_P * qp_Puu_(k_qp, m, n) + coeff_Q * qp_Quu_(k_qp, m, n) +
                                      coeff_C * qp_Cuu_(k_qp, m, n) + coeff_O * qp_Ouu_(k_qp, m, n);
                 }
-            };
+            }
         }
 
         const auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
@@ -1299,7 +1330,7 @@ struct IntegrateElasticStiffnessMatrix {
             for (int n = 0; n < 6; ++n) {
                 gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
             }
-        };
+        }
     }
 };
 
