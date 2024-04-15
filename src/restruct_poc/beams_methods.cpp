@@ -52,30 +52,32 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
 
     // Interpolate node state to quadrature points
     Kokkos::parallel_for(
-        "InterpolateQpU", beams.num_elems,
+        "InterpolateQpU", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPU{beams.elem_indices, beams.shape_interp, beams.node_u, beams.qp_u}
     );
     Kokkos::parallel_for(
-        "InterpolateQpU_Prime", beams.num_elems,
+        "InterpolateQpU_Prime", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPU_Prime{
             beams.elem_indices, beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.qp_u_prime}
     );
     Kokkos::parallel_for(
-        "InterpolateQpR", beams.num_elems,
+        "InterpolateQpR", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPR{beams.elem_indices, beams.shape_interp, beams.node_u, beams.qp_r}
     );
     Kokkos::parallel_for(
-        "InterpolateQpR_Prime", beams.num_elems,
+        "InterpolateQpR_Prime", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPR_Prime{
             beams.elem_indices, beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.qp_r_prime}
     );
     Kokkos::parallel_for(
-        "InterpolateQPVelocity_Translation", beams.num_elems,
+        "InterpolateQPVelocity_Translation",
+        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPVelocity_Translation{
             beams.elem_indices, beams.shape_interp, beams.node_u_dot, beams.qp_u_dot}
     );
     Kokkos::parallel_for(
-        "InterpolateQPVelocity_Angular", beams.num_elems,
+        "InterpolateQPVelocity_Angular",
+        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPVelocity_Angular{
             beams.elem_indices,
             beams.shape_deriv,
@@ -85,12 +87,14 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
         }
     );
     Kokkos::parallel_for(
-        "InterpolateQPAcceleration_Translation", beams.num_elems,
+        "InterpolateQPAcceleration_Translation",
+        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPAcceleration_Translation{
             beams.elem_indices, beams.shape_interp, beams.node_u_ddot, beams.qp_u_ddot}
     );
     Kokkos::parallel_for(
-        "InterpolateQPAcceleration_Angular", beams.num_elems,
+        "InterpolateQPAcceleration_Angular",
+        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPAcceleration_Angular{
             beams.elem_indices,
             beams.shape_interp,

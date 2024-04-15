@@ -405,6 +405,26 @@ struct InterpolateQPU {
             }
         }
     }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int j_index) const {
+        auto idx = elem_indices(i_elem);
+        if (j_index > idx.num_qps) {
+            return;
+        }
+        const auto j = idx.qp_range.first + j_index;
+        auto local_total = Kokkos::Array<double, 3>{};
+        for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
+            const auto i = idx.node_range.first + i_index;
+            const auto phi = shape_interp_(i, j_index);
+            for (int k = 0; k < 3; ++k) {
+                local_total[k] += node_u_(i, k) * phi;
+            }
+        }
+        for (int k = 0; k < 3; ++k) {
+            qp_u_(j, k) = local_total[k];
+        }
+    }
 };
 
 struct InterpolateQPU_Prime {
@@ -431,6 +451,28 @@ struct InterpolateQPU_Prime {
             for (int k = 0; k < 3; ++k) {
                 qp_u_prime_(j, k) = local_total[k];
             }
+        }
+    }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int j_index) const {
+        auto idx = elem_indices(i_elem);
+        if (j_index > idx.num_qps) {
+            return;
+        }
+
+        const auto j = idx.qp_range.first + j_index;
+        const auto jacobian = qp_jacobian_(j);
+        auto local_total = Kokkos::Array<double, 3>{};
+        for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
+            const auto i = idx.node_range.first + i_index;
+            const auto dphi = shape_deriv_(i, j_index);
+            for (int k = 0; k < 3; ++k) {
+                local_total[k] += node_u_(i, k) * dphi / jacobian;
+            }
+        }
+        for (int k = 0; k < 3; ++k) {
+            qp_u_prime_(j, k) = local_total[k];
         }
     }
 };
@@ -467,6 +509,35 @@ struct InterpolateQPR {
             }
         }
     }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int j_index) const {
+        auto idx = elem_indices(i_elem);
+        if (j_index > idx.num_qps) {
+            return;
+        }
+
+        const auto j = idx.qp_range.first + j_index;
+        auto local_total = Kokkos::Array<double, 4>{};
+        for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
+            const auto i = idx.node_range.first + i_index;
+            const auto phi = shape_interp_(i, j_index);
+            for (int k = 0; k < 4; ++k) {
+                local_total[k] += node_u_(i, k + 3) * phi;
+            }
+        }
+        const auto length = Kokkos::sqrt(
+            local_total[0] * local_total[0] + local_total[1] * local_total[1] +
+            local_total[2] * local_total[2] + local_total[3] * local_total[3]
+        );
+        static constexpr auto length_zero_result = Kokkos::Array<double, 4>{1., 0., 0., 0.};
+        if (length == 0.) {
+            local_total = length_zero_result;
+        }
+        for (int k = 0; k < 4; ++k) {
+            qp_r_(j, k) = local_total[k];
+        }
+    }
 };
 
 struct InterpolateQPR_Prime {
@@ -493,6 +564,28 @@ struct InterpolateQPR_Prime {
             for (int k = 0; k < 4; ++k) {
                 qp_r_prime_(j, k) = local_total[k];
             }
+        }
+    }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int j_index) const {
+        auto idx = elem_indices(i_elem);
+        if (j_index > idx.num_qps) {
+            return;
+        }
+
+        const auto j = idx.qp_range.first + j_index;
+        const auto jacobian = qp_jacobian_(j);
+        auto local_total = Kokkos::Array<double, 4>{};
+        for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
+            const auto i = idx.node_range.first + i_index;
+            const auto dphi = shape_deriv_(i, j_index);
+            for (int k = 0; k < 4; ++k) {
+                local_total[k] += node_u_(i, k + 3) * dphi / jacobian;
+            }
+        }
+        for (int k = 0; k < 4; ++k) {
+            qp_r_prime_(j, k) = local_total[k];
         }
     }
 };
@@ -607,6 +700,27 @@ struct InterpolateQPVelocity_Translation {
             }
         }
     }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int j_index) const {
+        auto idx = elem_indices(i_elem);
+        if (j_index > idx.num_qps) {
+            return;
+        }
+
+        const auto j = idx.qp_range.first + j_index;
+        auto local_total = Kokkos::Array<double, 3>{};
+        for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
+            const auto i = idx.node_range.first + i_index;
+            const auto phi = shape_interp_(i, j_index);
+            for (int k = 0; k < 3; ++k) {
+                local_total[k] += node_u_dot_(i, k) * phi;
+            }
+        }
+        for (int k = 0; k < 3; ++k) {
+            qp_u_dot_(j, k) = local_total[k];
+        }
+    }
 };
 
 struct InterpolateQPVelocity_Angular {
@@ -633,6 +747,28 @@ struct InterpolateQPVelocity_Angular {
             for (int k = 0; k < 3; ++k) {
                 qp_omega_(j, k) = local_total[k];
             }
+        }
+    }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int j_index) const {
+        auto idx = elem_indices(i_elem);
+        if (j_index > idx.num_qps) {
+            return;
+        }
+
+        const auto j = idx.qp_range.first + j_index;
+        const auto jacobian = qp_jacobian_(j);
+        auto local_total = Kokkos::Array<double, 3>{};
+        for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
+            const auto i = idx.node_range.first + i_index;
+            const auto dphi = shape_deriv_(i, j_index);
+            for (int k = 0; k < 3; ++k) {
+                local_total[k] += node_u_dot_(i, k + 3) * dphi / jacobian;
+            }
+        }
+        for (int k = 0; k < 3; ++k) {
+            qp_omega_(j, k) = local_total[k];
         }
     }
 };
@@ -686,6 +822,27 @@ struct InterpolateQPAcceleration_Translation {
             }
         }
     }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int j_index) const {
+        auto idx = elem_indices(i_elem);
+        if (j_index > idx.num_qps) {
+            return;
+        }
+
+        const auto j = idx.qp_range.first + j_index;
+        auto local_total = Kokkos::Array<double, 3>{};
+        for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
+            const auto i = idx.node_range.first + i_index;
+            const auto phi = shape_interp_(i, j_index);
+            for (int k = 0; k < 3; ++k) {
+                local_total[k] += node_u_ddot_(i, k) * phi;
+            }
+        }
+        for (int k = 0; k < 3; ++k) {
+            qp_u_ddot_(j, k) = local_total[k];
+        }
+    }
 };
 
 struct InterpolateQPAcceleration_Angular {
@@ -710,6 +867,27 @@ struct InterpolateQPAcceleration_Angular {
             for (int k = 0; k < 3; ++k) {
                 qp_omega_dot_(j, k) = local_total[k];
             }
+        }
+    }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int j_index) const {
+        auto idx = elem_indices(i_elem);
+        if (j_index > idx.num_qps) {
+            return;
+        }
+
+        const auto j = idx.qp_range.first + j_index;
+        auto local_total = Kokkos::Array<double, 3>{};
+        for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
+            const auto i = idx.node_range.first + i_index;
+            const auto phi = shape_interp_(i, j_index);
+            for (int k = 0; k < 3; ++k) {
+                local_total[k] += node_u_ddot_(i, k + 3) * phi;
+            }
+        }
+        for (int k = 0; k < 3; ++k) {
+            qp_omega_dot_(j, k) = local_total[k];
         }
     }
 };
