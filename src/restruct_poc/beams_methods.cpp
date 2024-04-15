@@ -52,40 +52,49 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
 
     // Interpolate node state to quadrature points
     Kokkos::parallel_for(
-        "InterpolateQPState", beams.num_elems,
-        InterpolateQPState{
-            beams.elem_indices,
-            beams.shape_interp,
-            beams.shape_deriv,
-            beams.qp_jacobian,
-            beams.node_u,
-            beams.qp_u,
-            beams.qp_u_prime,
-            beams.qp_r,
-            beams.qp_r_prime,
-        }
+        "InterpolateQpU", beams.num_elems,
+        InterpolateQPU{beams.elem_indices, beams.shape_interp, beams.node_u, beams.qp_u}
     );
     Kokkos::parallel_for(
-        "InterpolateQPVelocity", beams.num_elems,
-        InterpolateQPVelocity{
+        "InterpolateQpU_Prime", beams.num_elems,
+        InterpolateQPU_Prime{
+            beams.elem_indices, beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.qp_u_prime}
+    );
+    Kokkos::parallel_for(
+        "InterpolateQpR", beams.num_elems,
+        InterpolateQPR{beams.elem_indices, beams.shape_interp, beams.node_u, beams.qp_r}
+    );
+    Kokkos::parallel_for(
+        "InterpolateQpR_Prime", beams.num_elems,
+        InterpolateQPR_Prime{
+            beams.elem_indices, beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.qp_r_prime}
+    );
+    Kokkos::parallel_for(
+        "InterpolateQPVelocity_Translation", beams.num_elems,
+        InterpolateQPVelocity_Translation{
+            beams.elem_indices, beams.shape_interp, beams.node_u_dot, beams.qp_u_dot}
+    );
+    Kokkos::parallel_for(
+        "InterpolateQPVelocity_Angular", beams.num_elems,
+        InterpolateQPVelocity_Angular{
             beams.elem_indices,
-            beams.shape_interp,
             beams.shape_deriv,
             beams.qp_jacobian,
             beams.node_u_dot,
-            beams.qp_u_dot,
             beams.qp_omega,
         }
     );
     Kokkos::parallel_for(
-        "InterpolateQPAcceleration", beams.num_elems,
-        InterpolateQPAcceleration{
+        "InterpolateQPAcceleration_Translation", beams.num_elems,
+        InterpolateQPAcceleration_Translation{
+            beams.elem_indices, beams.shape_interp, beams.node_u_ddot, beams.qp_u_ddot}
+    );
+    Kokkos::parallel_for(
+        "InterpolateQPAcceleration_Angular", beams.num_elems,
+        InterpolateQPAcceleration_Angular{
             beams.elem_indices,
             beams.shape_interp,
-            beams.shape_deriv,
-            beams.qp_jacobian,
             beams.node_u_ddot,
-            beams.qp_u_ddot,
             beams.qp_omega_dot,
         }
     );
