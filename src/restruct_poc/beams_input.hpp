@@ -104,6 +104,15 @@ struct BeamsInput {
         return num_qps;
     }
 
+    // Returns the maximum number of nodes in any element
+    size_t MaxElemNodes() const {
+        size_t max_elem_nodes = 0;
+        for (const auto& input : this->elements) {
+            max_elem_nodes = std::max(max_elem_nodes, input.nodes.size());
+        }
+        return max_elem_nodes;
+    }
+
     // Returns the maximum number of quadrature points in any element
     size_t MaxElemQuadraturePoints() const {
         size_t max_elem_qps = 0;

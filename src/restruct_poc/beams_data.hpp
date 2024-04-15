@@ -28,6 +28,8 @@ struct Beams {
     int num_elems;  // Number of beams
     int num_nodes;  // Number of nodes
     int num_qps;    // Number of quadrature points
+    int max_elem_nodes;
+    int max_elem_qps;
 
     Kokkos::View<ElemIndices*> elem_indices;  // View of element node and qp indices into views
     Kokkos::View<int*> node_state_indices;    // State row index for each node
@@ -98,10 +100,15 @@ struct Beams {
     Beams() {}  // Default constructor which doesn't initialize views
 
     // Constructor which initializes views based on given sizes
-    Beams(const int num_beams_, const int num_nodes_, const int num_qps_, const int max_elem_qps)
+    Beams(
+        const int num_beams_, const int num_nodes_, const int num_qps_, const int max_elem_nodes_,
+        const int max_elem_qps_
+    )
         : num_elems(num_beams_),
           num_nodes(num_nodes_),
           num_qps(num_qps_),
+          max_elem_nodes(max_elem_nodes_),
+          max_elem_qps(max_elem_qps_),
           // Element Data
           elem_indices("elem_indices", num_beams_),
           node_state_indices("node_state_indices", num_nodes_),
