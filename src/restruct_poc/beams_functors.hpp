@@ -1123,6 +1123,40 @@ struct IntegrateMatrix {
             }
         );
     }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int i_index, const int j_index) const {
+        const auto idx = elem_indices[i_elem];
+
+        // If node or qp indices don't apply to this element, return
+        if (i_index >= idx.num_nodes || j_index >= idx.num_nodes) {
+            return;
+        }
+
+        const auto i = i_index + idx.node_range.first;
+        const auto j = j_index + idx.node_range.first;
+        double local_M[6][6] = {{0}, {0}, {0}, {0}, {0}, {0}};
+        for (int k = 0; k < idx.num_qps; ++k) {
+            const auto k_qp = idx.qp_range.first + k;
+            const auto w = qp_weight_(k_qp);
+            const auto jacobian = qp_jacobian_(k_qp);
+            const auto phi_i = shape_interp_(i, k);
+            const auto phi_j = shape_interp_(j, k);
+            const auto coeff = w * phi_i * phi_j * jacobian;
+            for (int m = 0; m < kLieAlgebraComponents; ++m) {
+                for (int n = 0; n < kLieAlgebraComponents; ++n) {
+                    local_M[m][n] += coeff * qp_M_(k_qp, m, n);
+                }
+            }
+        }
+        const auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+        const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
+        for (int m = 0; m < kLieAlgebraComponents; ++m) {
+            for (int n = 0; n < kLieAlgebraComponents; ++n) {
+                gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M[m][n];
+            }
+        }
+    }
 };
 
 struct IntegrateElasticStiffnessMatrix {
@@ -1221,6 +1255,47 @@ struct IntegrateElasticStiffnessMatrix {
                 });
             }
         );
+    }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int i_index, const int j_index) const {
+        const auto idx = elem_indices[i_elem];
+
+        // If node or qp indices don't apply to this element, return
+        if (i_index >= idx.num_nodes || j_index >= idx.num_nodes) {
+            return;
+        }
+
+        const auto i = i_index + idx.node_range.first;
+        const auto j = j_index + idx.node_range.first;
+        double local_M[6][6] = {{0}, {0}, {0}, {0}, {0}, {0}};
+        for (int k = 0; k < idx.num_qps; ++k) {
+            const auto k_qp = idx.qp_range.first + k;
+            const auto w = qp_weight_(k_qp);
+            const auto jacobian = qp_jacobian_(k_qp);
+            const auto phi_i = shape_interp_(i, k);
+            const auto phi_j = shape_interp_(j, k);
+            const auto phi_prime_i = shape_deriv_(i, k);
+            const auto phi_prime_j = shape_deriv_(j, k);
+            const auto coeff_P = w * (phi_i * phi_prime_j);
+            const auto coeff_Q = w * (phi_i * phi_j * jacobian);
+            const auto coeff_C = w * (phi_prime_i * phi_prime_j / jacobian);
+            const auto coeff_O = w * (phi_prime_i * phi_j);
+            for (int m = 0; m < 6; ++m) {      // Matrix components
+                for (int n = 0; n < 6; ++n) {  // Matrix components
+                    local_M[m][n] += coeff_P * qp_Puu_(k_qp, m, n) + coeff_Q * qp_Quu_(k_qp, m, n) +
+                                     coeff_C * qp_Cuu_(k_qp, m, n) + coeff_O * qp_Ouu_(k_qp, m, n);
+                }
+            };
+        }
+
+        const auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+        const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
+        for (int m = 0; m < 6; ++m) {
+            for (int n = 0; n < 6; ++n) {
+                gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M[m][n];
+            }
+        };
     }
 };
 
