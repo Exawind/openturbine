@@ -14,9 +14,9 @@ struct UpdateNodeState {
     View_Nx6 node_u_dot;
     View_Nx6 node_u_ddot;
 
-    View_Nx7 Q;
-    View_Nx6 V;
-    View_Nx6 A;
+    View_Nx7::const_type Q;
+    View_Nx6::const_type V;
+    View_Nx6::const_type A;
 
     KOKKOS_FUNCTION
     void operator()(int i) const {
@@ -31,6 +31,16 @@ struct UpdateNodeState {
             node_u_ddot(i, k) = A(j, k);
         }
     }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i, const int k) const {
+        auto j = node_state_indices(i);
+            node_u(i, k) = Q(j, k);
+        if(k < kLieAlgebraComponents) {
+            node_u_dot(i, k) = V(j, k);
+            node_u_ddot(i, k) = A(j, k);
+        }
+    }
 };
 
 // Update node states (displacement, velocity, acceleration) and interpolate to quadrature points
@@ -38,7 +48,7 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State");
     // Copy displacement, velocity, and acceleration to nodes
     Kokkos::parallel_for(
-        "UpdateNodeState", beams.num_nodes,
+        "UpdateNodeState", Kokkos::MDRangePolicy{{0, 0}, {beams.num_nodes, kLieGroupComponents}},
         UpdateNodeState{
             beams.node_state_indices,
             beams.node_u,
