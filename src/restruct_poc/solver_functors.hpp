@@ -91,17 +91,9 @@ template <typename Subview_NxN>
 struct UpdateIterationMatrix {
     Subview_NxN St_12;
     View_NxN B;
-    int num_constraint_dofs;
-    int num_system_dofs;
 
     KOKKOS_FUNCTION
-    void operator()(int) const {
-        for (int i = 0; i < num_constraint_dofs; ++i) {
-            for (int j = 0; j < num_system_dofs; ++j) {
-                St_12(j, i) = B(i, j);
-            }
-        }
-    }
+    void operator()(const int i, const int j) const { St_12(j, i) = B(i, j); }
 };
 
 struct UpdateStaticPrediction {

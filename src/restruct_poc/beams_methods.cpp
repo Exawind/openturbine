@@ -220,7 +220,8 @@ void AssembleMassMatrix(Beams& beams, View_NxN M) {
     Kokkos::parallel_for(
         "IntegrateMatrix",
         Kokkos::MDRangePolicy{
-            {0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}},
+            {0, 0, 0, 0},
+            {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes, beams.max_elem_qps}},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,
@@ -238,7 +239,8 @@ void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
     Kokkos::parallel_for(
         "IntegrateMatrix",
         Kokkos::MDRangePolicy{
-            {0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}},
+            {0, 0, 0, 0},
+            {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes, beams.max_elem_qps}},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,
@@ -256,7 +258,8 @@ void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K) {
     Kokkos::parallel_for(
         "IntegrateMatrix",
         Kokkos::MDRangePolicy{
-            {0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}},
+            {0, 0, 0, 0},
+            {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes, beams.max_elem_qps}},
         IntegrateMatrix{
             beams.elem_indices,
             beams.node_state_indices,
@@ -274,7 +277,8 @@ void AssembleElasticStiffnessMatrix(Beams& beams, View_NxN K) {
     Kokkos::parallel_for(
         "IntegrateElasticStiffnessMatrix",
         Kokkos::MDRangePolicy{
-            {0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}},
+            {0, 0, 0, 0},
+            {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes, beams.max_elem_qps}},
         IntegrateElasticStiffnessMatrix{
             beams.elem_indices,
             beams.node_state_indices,

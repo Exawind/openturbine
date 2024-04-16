@@ -132,8 +132,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     AssembleInertialStiffnessMatrix(beams, solver.K);
 
     // Iteration matrix
-    Kokkos::deep_copy(St_11, 0.);
-    KokkosBlas::gemm("N", "N", 1.0, solver.K, solver.T, 1.0, St_11);
+    KokkosBlas::gemm("N", "N", 1.0, solver.K, solver.T, 0.0, St_11);
 
     // If dynamic solution
     if (solver.is_dynamic_solve) {
@@ -177,13 +176,9 @@ void AssembleConstraints(
 
     // Update iteration matrix
     Kokkos::parallel_for(
-        "St_12=B.transpose", 1,
-        UpdateIterationMatrix<Subview_NxN>{
-            St_12,
-            solver.constraints.B,
-            solver.num_constraint_dofs,
-            solver.num_system_dofs,
-        }
+        "St_12=B.transpose",
+        Kokkos::MDRangePolicy{{0, 0}, {solver.num_constraint_dofs, solver.num_system_dofs}},
+        UpdateIterationMatrix<Subview_NxN>{St_12, solver.constraints.B}
     );
 
     KokkosBlas::gemm("N", "N", 1.0, solver.constraints.B, solver.T, 0.0, St_21);

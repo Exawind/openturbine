@@ -409,7 +409,7 @@ struct InterpolateQPU {
     KOKKOS_FUNCTION
     void operator()(const int i_elem, const int j_index) const {
         auto idx = elem_indices(i_elem);
-        if (j_index > idx.num_qps) {
+        if (j_index >= idx.num_qps) {
             return;
         }
         const auto j = idx.qp_range.first + j_index;
@@ -457,7 +457,7 @@ struct InterpolateQPU_Prime {
     KOKKOS_FUNCTION
     void operator()(const int i_elem, const int j_index) const {
         auto idx = elem_indices(i_elem);
-        if (j_index > idx.num_qps) {
+        if (j_index >= idx.num_qps) {
             return;
         }
 
@@ -513,7 +513,7 @@ struct InterpolateQPR {
     KOKKOS_FUNCTION
     void operator()(const int i_elem, const int j_index) const {
         auto idx = elem_indices(i_elem);
-        if (j_index > idx.num_qps) {
+        if (j_index >= idx.num_qps) {
             return;
         }
 
@@ -570,7 +570,7 @@ struct InterpolateQPR_Prime {
     KOKKOS_FUNCTION
     void operator()(const int i_elem, const int j_index) const {
         auto idx = elem_indices(i_elem);
-        if (j_index > idx.num_qps) {
+        if (j_index >= idx.num_qps) {
             return;
         }
 
@@ -704,7 +704,7 @@ struct InterpolateQPVelocity_Translation {
     KOKKOS_FUNCTION
     void operator()(const int i_elem, const int j_index) const {
         auto idx = elem_indices(i_elem);
-        if (j_index > idx.num_qps) {
+        if (j_index >= idx.num_qps) {
             return;
         }
 
@@ -753,7 +753,7 @@ struct InterpolateQPVelocity_Angular {
     KOKKOS_FUNCTION
     void operator()(const int i_elem, const int j_index) const {
         auto idx = elem_indices(i_elem);
-        if (j_index > idx.num_qps) {
+        if (j_index >= idx.num_qps) {
             return;
         }
 
@@ -826,7 +826,7 @@ struct InterpolateQPAcceleration_Translation {
     KOKKOS_FUNCTION
     void operator()(const int i_elem, const int j_index) const {
         auto idx = elem_indices(i_elem);
-        if (j_index > idx.num_qps) {
+        if (j_index >= idx.num_qps) {
             return;
         }
 
@@ -873,7 +873,7 @@ struct InterpolateQPAcceleration_Angular {
     KOKKOS_FUNCTION
     void operator()(const int i_elem, const int j_index) const {
         auto idx = elem_indices(i_elem);
-        if (j_index > idx.num_qps) {
+        if (j_index >= idx.num_qps) {
             return;
         }
 
@@ -1415,6 +1415,110 @@ struct CalculateInertiaStiffnessMatrix {
     }
 };
 
+struct CalculateNodeForces_FE {
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    View_N::const_type qp_weight_;                               //
+    View_N::const_type qp_jacobian_;                             // Jacobians
+    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
+    View_Nx6::const_type qp_Fc_;                                 //
+    View_Nx6::const_type qp_Fd_;                                 //
+    View_Nx6 node_FE_;                                           // Elastic force
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int i_index) const {
+        const auto idx = elem_indices(i_elem);
+        const auto i = idx.node_range.first + i_index;
+
+        // If node or qp indices don't apply to this element, return
+        if (i_index >= idx.num_nodes) {
+            return;
+        }
+
+        auto local_FE = Kokkos::Array<double, 6>{};
+        for (int j_index = 0; j_index < idx.num_qps; ++j_index) {
+            const auto j = idx.qp_range.first + j_index;
+            const auto weight = qp_weight_(j);
+            const auto coeff_c = weight * shape_deriv_(i, j_index);
+            const auto coeff_d = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
+            for (int k = 0; k < 6; ++k) {
+                local_FE[k] += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
+            }
+        }
+        for (int k = 0; k < 6; ++k) {
+            node_FE_(i, k) = local_FE[k];
+        }
+    }
+};
+
+struct CalculateNodeForces_FI {
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    View_N::const_type qp_weight_;                               //
+    View_N::const_type qp_jacobian_;                             // Jacobians
+    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
+    View_Nx6::const_type qp_Fi_;                                 //
+    View_Nx6 node_FI_;                                           // Elastic force
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int i_index) const {
+        const auto idx = elem_indices(i_elem);
+        const auto i = idx.node_range.first + i_index;
+
+        // If node or qp indices don't apply to this element, return
+        if (i_index >= idx.num_nodes) {
+            return;
+        }
+
+        auto local_FI = Kokkos::Array<double, 6>{};
+        for (int j_index = 0; j_index < idx.num_qps; ++j_index) {
+            const auto j = idx.qp_range.first + j_index;
+            const auto weight = qp_weight_(j);
+            const auto coeff_i = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
+            for (int k = 0; k < 6; ++k) {
+                local_FI[k] += coeff_i * qp_Fi_(j, k);
+            }
+        }
+        for (int k = 0; k < 6; ++k) {
+            node_FI_(i, k) = local_FI[k];
+        }
+    }
+};
+
+struct CalculateNodeForces_FG {
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
+    View_N::const_type qp_weight_;                               //
+    View_N::const_type qp_jacobian_;                             // Jacobians
+    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
+    View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
+    View_Nx6::const_type qp_Fg_;                                 //
+    View_Nx6 node_FG_;                                           // Elastic force
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int i_index) const {
+        const auto idx = elem_indices(i_elem);
+        const auto i = idx.node_range.first + i_index;
+
+        // If node or qp indices don't apply to this element, return
+        if (i_index >= idx.num_nodes) {
+            return;
+        }
+
+        auto local_FG = Kokkos::Array<double, 6>{};
+        for (int j_index = 0; j_index < idx.num_qps; ++j_index) {
+            const auto j = idx.qp_range.first + j_index;
+            const auto weight = qp_weight_(j);
+            const auto coeff_g = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
+            for (int k = 0; k < 6; ++k) {
+                local_FG[k] += coeff_g * qp_Fg_(j, k);
+            }
+        }
+        for (int k = 0; k < 6; ++k) {
+            node_FG_(i, k) = local_FG[k];
+        }
+    }
+};
+
 struct CalculateNodeForces {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
     View_N::const_type qp_weight_;                               //
@@ -1508,11 +1612,9 @@ struct CalculateNodeForces {
             return;
         }
 
-        for (auto k = 0; k < 6; ++k) {
-            node_FE_(i, k) = 0.;
-            node_FG_(i, k) = 0.;
-            node_FI_(i, k) = 0.;
-        }
+        auto local_FE = Kokkos::Array<double, 6>{};
+        auto local_FI = Kokkos::Array<double, 6>{};
+        auto local_FG = Kokkos::Array<double, 6>{};
 
         for (int j_index = 0; j_index < idx.num_qps; ++j_index) {
             const auto j = idx.qp_range.first + j_index;
@@ -1522,10 +1624,16 @@ struct CalculateNodeForces {
             const auto coeff_i = coeff_d;
             const auto coeff_g = coeff_d;
             for (int k = 0; k < 6; ++k) {
-                node_FE_(i, k) += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
-                node_FI_(i, k) += coeff_i * qp_Fi_(j, k);
-                node_FG_(i, k) += coeff_g * qp_Fg_(j, k);
+                local_FE[k] += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
+                local_FI[k] += coeff_i * qp_Fi_(j, k);
+                local_FG[k] += coeff_g * qp_Fg_(j, k);
             }
+        }
+
+        for (int k = 0; k < 6; ++k) {
+            node_FE_(i, k) = local_FE[k];
+            node_FI_(i, k) = local_FI[k];
+            node_FG_(i, k) = local_FG[k];
         }
     }
 };
@@ -1633,6 +1741,40 @@ struct IntegrateMatrix {
                 for (int n = 0; n < kLieAlgebraComponents; ++n) {
                     local_M(m, n) += coeff * qp_M_(k_qp, m, n);
                 }
+            }
+        }
+        const auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+        const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
+        for (int m = 0; m < kLieAlgebraComponents; ++m) {
+            for (int n = 0; n < kLieAlgebraComponents; ++n) {
+                gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
+            }
+        }
+    }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int i_index, const int j_index, const int k) const {
+        const auto idx = elem_indices[i_elem];
+
+        // If node or qp indices don't apply to this element, return
+        if (i_index >= idx.num_nodes || j_index >= idx.num_nodes || k >= idx.num_qps) {
+            return;
+        }
+
+        const auto i = i_index + idx.node_range.first;
+        const auto j = j_index + idx.node_range.first;
+        auto local_M_data = Kokkos::Array<double, 36>{};
+        auto local_M =
+            Kokkos::View<double[6][6], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(local_M_data.data());
+        const auto k_qp = idx.qp_range.first + k;
+        const auto w = qp_weight_(k_qp);
+        const auto jacobian = qp_jacobian_(k_qp);
+        const auto phi_i = shape_interp_(i, k);
+        const auto phi_j = shape_interp_(j, k);
+        const auto coeff = w * phi_i * phi_j * jacobian;
+        for (int m = 0; m < kLieAlgebraComponents; ++m) {
+            for (int n = 0; n < kLieAlgebraComponents; ++n) {
+                local_M(m, n) += coeff * qp_M_(k_qp, m, n);
             }
         }
         const auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
@@ -1774,6 +1916,46 @@ struct IntegrateElasticStiffnessMatrix {
                     local_M(m, n) += coeff_P * qp_Puu_(k_qp, m, n) + coeff_Q * qp_Quu_(k_qp, m, n) +
                                      coeff_C * qp_Cuu_(k_qp, m, n) + coeff_O * qp_Ouu_(k_qp, m, n);
                 }
+            }
+        }
+
+        const auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
+        const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
+        for (int m = 0; m < 6; ++m) {
+            for (int n = 0; n < 6; ++n) {
+                gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
+            }
+        }
+    }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int i_index, const int j_index, const int k) const {
+        const auto idx = elem_indices(i_elem);
+
+        if (i_index >= idx.num_nodes || j_index >= idx.num_nodes || k >= idx.num_qps) {
+            return;
+        }
+
+        const auto i = i_index + idx.node_range.first;
+        const auto j = j_index + idx.node_range.first;
+        auto local_M_data = Kokkos::Array<double, 36>{};
+        auto local_M =
+            Kokkos::View<double[6][6], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(local_M_data.data());
+        const auto k_qp = idx.qp_range.first + k;
+        const auto w = qp_weight_(k_qp);
+        const auto jacobian = qp_jacobian_(k_qp);
+        const auto phi_i = shape_interp_(i, k);
+        const auto phi_j = shape_interp_(j, k);
+        const auto phi_prime_i = shape_deriv_(i, k);
+        const auto phi_prime_j = shape_deriv_(j, k);
+        const auto coeff_P = w * (phi_i * phi_prime_j);
+        const auto coeff_Q = w * (phi_i * phi_j * jacobian);
+        const auto coeff_C = w * (phi_prime_i * phi_prime_j / jacobian);
+        const auto coeff_O = w * (phi_prime_i * phi_j);
+        for (int m = 0; m < 6; ++m) {      // Matrix components
+            for (int n = 0; n < 6; ++n) {  // Matrix components
+                local_M(m, n) = coeff_P * qp_Puu_(k_qp, m, n) + coeff_Q * qp_Quu_(k_qp, m, n) +
+                                coeff_C * qp_Cuu_(k_qp, m, n) + coeff_O * qp_Ouu_(k_qp, m, n);
             }
         }
 
