@@ -252,7 +252,6 @@ TEST(RotatingBeamTest, TwoBeam) {
 
     // Check that K matrix is the same for both beams
     auto K = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.K);
-    const auto relative_error = 10. * std::numeric_limits<double>::epsilon();
     // WriteMatrixToFile(K, "K.csv");
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
