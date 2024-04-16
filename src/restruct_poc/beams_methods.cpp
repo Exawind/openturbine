@@ -1,10 +1,35 @@
 #include "beams_methods.hpp"
 
 #include <array>
-
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "beams_functors.hpp"
+
+#include "CalculateCuu.hpp"
+#include "CalculateForceFC.hpp"
+#include "CalculateForceFD.hpp"
+#include "CalculateGravityForce.hpp"
+#include "CalculateGyroscopicMatrix.hpp"
+#include "CalculateInertiaStiffnessMatrix.hpp"
+#include "CalculateInertialForces.hpp"
+#include "CalculateJacobian.hpp"
+#include "CalculateMassMatrixComponents.hpp"
+#include "CalculateMuu.hpp"
+#include "CalculateNodeForces.hpp"
+#include "CalculateOuu.hpp"
+#include "CalculatePuu.hpp"
+#include "CalculateQuu.hpp"
+#include "CalculateRR0.hpp"
+#include "CalculateStrain.hpp"
+#include "CalculateTemporaryVariables.hpp"
+#include "IntegrateElasticStiffnessMatrix.hpp"
+#include "IntegrateMatrix.hpp"
+#include "IntegrateResidualVector.hpp"
+#include "InterpolateQPAcceleration.hpp"
+#include "InterpolateQPPosition.hpp"
+#include "InterpolateQPRotation.hpp"
+#include "InterpolateQPRotationDerivative.hpp"
+#include "InterpolateQPState.hpp"
+#include "InterpolateQPVelocity.hpp"
 
 namespace openturbine {
 
