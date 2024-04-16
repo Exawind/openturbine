@@ -71,6 +71,7 @@ jobs:
           git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
         fi
         if [ ${{matrix.os}} = 'macos-latest' ]; then
+          export FC=gfortran
           git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
         fi
         cd kokkos-kernels
