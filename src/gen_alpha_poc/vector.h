@@ -31,6 +31,18 @@ public:
     KOKKOS_FUNCTION
     inline double GetZComponent() const { return z_; }
 
+    /// Returns the first component of the vector
+    KOKKOS_FUNCTION
+    inline double GetX() const { return x_; }
+
+    /// Returns the second component of the vector
+    KOKKOS_FUNCTION
+    inline double GetY() const { return y_; }
+
+    /// Returns the third component of the vector
+    KOKKOS_FUNCTION
+    inline double GetZ() const { return z_; }
+
     /// Adds provided vector to this vector and returns the result
     KOKKOS_FUNCTION
     inline Vector operator+(const Vector& other) const {
@@ -108,6 +120,19 @@ public:
     KOKKOS_FUNCTION
     inline bool IsParallelTo(const Vector& other) const {
         return this->CrossProduct(other).IsNullVector();
+    }
+
+    /// Populates given 3x3 array with tilde matrix
+    KOKKOS_FUNCTION void Tilde(double matrix[3][3]) {
+        matrix[0][0] = 0.;
+        matrix[0][1] = -this->z_;
+        matrix[0][2] = this->y_;
+        matrix[1][0] = this->z_;
+        matrix[1][1] = 0.;
+        matrix[1][2] = -this->x_;
+        matrix[2][0] = -this->y_;
+        matrix[2][1] = this->x_;
+        matrix[2][2] = 0.;
     }
 
 private:

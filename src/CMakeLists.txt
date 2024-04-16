@@ -1,6 +1,9 @@
 
 set(Kokkos_DIR "$ENV{Kokkos_ROOT}" CACHE STRING "Kokkos root directory")
 find_package(KokkosKernels REQUIRED)
+if(TARGET Kokkos::MKL)
+  find_package(MKL REQUIRED)
+endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
@@ -40,6 +43,7 @@ target_include_directories(${oturb_lib_name}
 # Get all source files
 add_subdirectory(gebt_poc)
 add_subdirectory(gen_alpha_poc)
+add_subdirectory(restruct_poc)
 add_subdirectory(io)
 add_subdirectory(utilities)
 

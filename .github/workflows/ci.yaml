@@ -2,6 +2,10 @@ name: OpenTurbine-CI
 
 on: push
 
+env:
+  CMAKE_BUILD_PARALLEL_LEVEL: 4
+  CTEST_PARALLEL_LEVEL: 2
+
 jobs:
   Correctness:
     runs-on: ${{matrix.os}}
@@ -9,16 +13,16 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        compiler: [gcc, llvm]
+        compiler: [gcc-10, llvm]
         build_type: [Release, Debug]
         exclude: 
           - os: macos-latest
-            compiler: gcc
+            compiler: gcc-10
         include:
           - os: ubuntu-latest
-            install_deps: sudo apt-get install libgtest-dev
+            install_deps: sudo apt-get install gfortran libgtest-dev libblas-dev liblapack-dev liblapacke-dev
           - os: macos-latest
-            install_deps: brew install googletest
+            install_deps: brew install gfortran gcc googletest openblas lapack
     steps:
     - name: Setup Cpp
       uses: aminya/setup-cpp@v1
@@ -42,7 +46,7 @@ jobs:
       if: steps.cache-kokkos.outputs.cache-hit != 'true'
       run: |
         sudo mkdir -p ~/dependencies/kokkos
-        git clone --depth 1 --branch 4.2.00 https://github.com/kokkos/kokkos
+        git clone --depth 1 --branch develop https://github.com/kokkos/kokkos
         cd kokkos
         mkdir build
         cd build
@@ -51,7 +55,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
           -DKokkos_ENABLE_DEBUG=${{ matrix.build_type == 'Debug' }} \
           -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=${{ matrix.build_type == 'Debug' }}
-        sudo cmake --build . --target install -j 2
+        sudo cmake --build . --target install
     - name: Cache install Kokkos-Kernels
       id: cache-kokkos-kernels
       uses: actions/cache@v3
@@ -64,18 +68,21 @@ jobs:
         sudo mkdir -p ~/dependencies/kokkos_kernels
         export Kokkos_DIR=~/dependencies/kokkos
         if [ ${{matrix.os}} = 'ubuntu-latest' ]; then
-          git clone https://github.com/kokkos/kokkos-kernels
+          git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
         fi
         if [ ${{matrix.os}} = 'macos-latest' ]; then
-          git clone --depth 1 --branch 4.2.00 https://github.com/kokkos/kokkos-kernels
+          export FC=gfortran-13
+          git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
         fi
         cd kokkos-kernels
         mkdir build
         cd build
-        cmake .. \
+        cmake ../ \
           -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        sudo cmake --build . --target install -j 2
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DKokkosKernels_ENABLE_TPL_BLAS=ON \
+          -DKokkosKernels_ENABLE_TPL_LAPACK=ON 
+        sudo cmake --build . --target install
     - name: Clone
       uses: actions/checkout@v4
       with:
@@ -89,8 +96,8 @@ jobs:
           -DOTURB_ENABLE_TESTS:BOOL=ON \
           -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} 
-        cmake --build . -j 2
-        ctest -C ${{ matrix.build_type }}
+        cmake --build .
+        ctest -C ${{ matrix.build_type }} --output-on-failure
     - name: Run CppCheck
       if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'llvm'
       run: |

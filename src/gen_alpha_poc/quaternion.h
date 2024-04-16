@@ -71,6 +71,50 @@ public:
         );
     }
 
+    KOKKOS_FUNCTION
+    inline Vector operator*(const Vector& vector) const {
+        auto v0 = vector.GetXComponent();
+        auto v1 = vector.GetYComponent();
+        auto v2 = vector.GetZComponent();
+        return Vector{
+            (this->q0_ * this->q0_ + this->q1_ * this->q1_ - this->q2_ * this->q2_ -
+             this->q3_ * this->q3_) *
+                    v0 +
+                2. * (this->q1_ * this->q2_ - this->q0_ * this->q3_) * v1 +
+                2. * (this->q1_ * this->q3_ + this->q0_ * this->q2_) * v2,
+            2. * (this->q1_ * this->q2_ + this->q0_ * this->q3_) * v0 +
+                (this->q0_ * this->q0_ - this->q1_ * this->q1_ + this->q2_ * this->q2_ -
+                 this->q3_ * this->q3_) *
+                    v1 +
+                2. * (this->q2_ * this->q3_ - this->q0_ * this->q1_) * v2,
+            2. * (this->q1_ * this->q3_ - this->q0_ * this->q2_) * v0 +
+                2. * (this->q2_ * this->q3_ + this->q0_ * this->q1_) * v1 +
+                (this->q0_ * this->q0_ - this->q1_ * this->q1_ - this->q2_ * this->q2_ +
+                 this->q3_ * this->q3_) *
+                    v2};
+    }
+
+    /// Rotates provided vector by provided *unit* quaternion and returns the result
+    KOKKOS_INLINE_FUNCTION
+    Vector rotate_vector(const Quaternion& quaternion, const Vector& vector) {
+        auto v0 = vector.GetXComponent();
+        auto v1 = vector.GetYComponent();
+        auto v2 = vector.GetZComponent();
+
+        auto q0 = quaternion.GetScalarComponent();
+        auto q1 = quaternion.GetXComponent();
+        auto q2 = quaternion.GetYComponent();
+        auto q3 = quaternion.GetZComponent();
+
+        return Vector{
+            (q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3) * v0 + 2. * (q1 * q2 - q0 * q3) * v1 +
+                2. * (q1 * q3 + q0 * q2) * v2,
+            2. * (q1 * q2 + q0 * q3) * v0 + (q0 * q0 - q1 * q1 + q2 * q2 - q3 * q3) * v1 +
+                2. * (q2 * q3 - q0 * q1) * v2,
+            2. * (q1 * q3 - q0 * q2) * v0 + 2. * (q2 * q3 + q0 * q1) * v1 +
+                (q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3) * v2};
+    }
+
     /// Multiplies this quaternion with a scalar and returns the result
     KOKKOS_FUNCTION
     inline Quaternion operator*(double scalar) const {
@@ -94,6 +138,39 @@ public:
             this->q0_ * this->q0_ + this->q1_ * this->q1_ + this->q2_ * this->q2_ +
             this->q3_ * this->q3_
         );
+    }
+
+    KOKKOS_FUNCTION
+    RotationMatrix to_rotation_matrix() const {
+        auto q0 = this->GetScalarComponent();
+        auto q1 = this->GetXComponent();
+        auto q2 = this->GetYComponent();
+        auto q3 = this->GetZComponent();
+
+        return RotationMatrix{
+            q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3,
+            2. * (q1 * q2 - q0 * q3),
+            2. * (q1 * q3 + q0 * q2),
+            2. * (q1 * q2 + q0 * q3),
+            q0 * q0 - q1 * q1 + q2 * q2 - q3 * q3,
+            2. * (q2 * q3 - q0 * q1),
+            2. * (q1 * q3 - q0 * q2),
+            2. * (q2 * q3 + q0 * q1),
+            q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3};
+    }
+
+    /// Returns the Axial vector of the rotation matrix corresponding to this quaternion
+    KOKKOS_FUNCTION
+    inline Vector Axial() const {
+        auto R = this->to_rotation_matrix();
+        return Vector(R(2, 1) - R(1, 2), R(0, 2) - R(2, 0), R(1, 0) - R(0, 1)) / 2.;
+    }
+
+    /// Returns the trace of the rotation matrix corresponding to this quaternion
+    KOKKOS_FUNCTION
+    inline double Trace() const {
+        auto R = this->to_rotation_matrix();
+        return R(0, 0) + R(1, 1) + R(2, 2);
     }
 
     /// Returns if the quaternion is a unit quaternion
@@ -128,6 +205,23 @@ private:
     double q2_;
     double q3_;
 };
+
+/// Returns a 4-D quaternion from provided 3-D rotation vector, i.e. exponential map
+KOKKOS_INLINE_FUNCTION
+Quaternion quaternion_from_rotation_vector(const double& v0, const double& v1, const double& v2) {
+    double angle = std::sqrt(v0 * v0 + v1 * v1 + v2 * v2);
+
+    // Return the quaternion {1, 0, 0, 0} if provided rotation vector is null
+    if (close_to(angle, 0.)) {
+        return Quaternion(1.0, 0.0, 0.0, 0.0);
+    }
+
+    double sin_angle = std::sin(angle / 2.0);
+    double cos_angle = std::cos(angle / 2.0);
+    auto factor = sin_angle / angle;
+
+    return Quaternion(cos_angle, v0 * factor, v1 * factor, v2 * factor);
+}
 
 /// Returns a 4-D quaternion from provided 3-D rotation vector, i.e. exponential map
 KOKKOS_INLINE_FUNCTION

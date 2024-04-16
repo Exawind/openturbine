@@ -57,54 +57,6 @@ public:
         using ScratchView2D_6x6 = Kokkos::View<double[6][6], scratch_space, unmanaged_memory>;
         using ScratchView2D_3x3 = Kokkos::View<double[3][3], scratch_space, unmanaged_memory>;
 
-        auto create_cross_product_matrix =
-            KOKKOS_LAMBDA(auto& member, ScratchView1D_Vector::const_type vector)
-                ->ScratchView2D_3x3::const_type {
-            auto output = ScratchView2D_3x3(member.team_scratch(0));
-            Kokkos::single(Kokkos::PerTeam(member), [&]() {
-                output(0, 0) = 0.;
-                output(0, 1) = -vector(2);
-                output(0, 2) = vector(1);
-                output(1, 0) = vector(2);
-                output(1, 1) = 0.;
-                output(1, 2) = -vector(0);
-                output(2, 0) = -vector(1);
-                output(2, 1) = vector(0);
-                output(2, 2) = 0.;
-            });
-            return output;
-        };
-
-        auto get_nodal_delta =
-            KOKKOS_LAMBDA(
-                auto& member, std::size_t node, double scale, LieAlgebraFieldView::const_type delta
-            )
-                ->ScratchView1D_Vector::const_type {
-            auto nodal_delta = ScratchView1D_Vector(member.team_scratch(0));
-            Kokkos::parallel_for(Kokkos::ThreadVectorRange(member, 3), [&](std::size_t i) {
-                nodal_delta(i) = delta(node, 3 + i) / scale;
-            });
-            return nodal_delta;
-        };
-
-        auto get_initial_operator = KOKKOS_LAMBDA(auto& member) {
-            auto initial_operator = ScratchView2D_6x6(member.team_scratch(0));
-            Kokkos::parallel_for(
-                Kokkos::ThreadVectorMDRange(member, 6, 6),
-                [&](std::size_t i, std::size_t j) {
-                    initial_operator(i, j) = i == j;
-                }
-            );
-            return initial_operator;
-        };
-
-        auto compute_psi_times_psi = KOKKOS_LAMBDA(auto& member, ScratchView2D_3x3::const_type psi)
-                                         ->ScratchView2D_3x3::const_type {
-            auto psi_times_psi = ScratchView2D_3x3(member.team_scratch(0));
-            gemm::invoke(member, 1., psi, psi, 0., psi_times_psi);
-            return psi_times_psi;
-        };
-
         const auto n_nodes = delta_gen_coords.extent(0);
         auto policy = Kokkos::TeamPolicy<>(n_nodes, Kokkos::AUTO(), Kokkos::AUTO());
         const auto scratch_size = ScratchView1D_Vector::shmem_size() +
@@ -115,28 +67,60 @@ public:
         Kokkos::deep_copy(tangent_operator, 0.0);
         Kokkos::parallel_for(
             policy,
-            KOKKOS_LAMBDA(const member_type& member) {
-                const auto node = member.league_rank();
-                const auto delta_gen_coords_node =
-                    get_nodal_delta(member, node, h, delta_gen_coords);
-                const auto tangent_operator_node = get_initial_operator(member);
-
-                member.team_barrier();
+            KOKKOS_LAMBDA(const Kokkos::TeamPolicy<>::member_type& team_member) {
+                const auto node = team_member.league_rank();
+                const auto delta_gen_coords_node = [&](auto& member
+                                                   ) -> ScratchView1D_Vector::const_type {
+                    auto nodal_delta = ScratchView1D_Vector(member.team_scratch(0));
+                    Kokkos::parallel_for(Kokkos::ThreadVectorRange(member, 3), [&](std::size_t i) {
+                        nodal_delta(i) = delta_gen_coords(node, 3 + i) / h;
+                    });
+                    return nodal_delta;
+                }(team_member);
+                const auto tangent_operator_node = [&](auto& member) {
+                    auto initial_operator = ScratchView2D_6x6(member.team_scratch(0));
+                    Kokkos::parallel_for(
+                        Kokkos::ThreadVectorMDRange(member, 6, 6),
+                        [&](std::size_t i, std::size_t j) {
+                            initial_operator(i, j) = i == j;
+                        }
+                    );
+                    return initial_operator;
+                }(team_member);
+                team_member.team_barrier();
                 const double phi = std::sqrt(
                     delta_gen_coords_node(0) * delta_gen_coords_node(0) +
                     delta_gen_coords_node(1) * delta_gen_coords_node(1) +
                     delta_gen_coords_node(2) * delta_gen_coords_node(2)
                 );
                 if (phi > Tolerance) {
-                    const auto psi_cross_prod_matrix =
-                        create_cross_product_matrix(member, delta_gen_coords_node);
-                    member.team_barrier();
-                    const auto psi_times_psi = compute_psi_times_psi(member, psi_cross_prod_matrix);
+                    const auto psi_cross_prod_matrix = [&](auto& member,
+                                                           ScratchView1D_Vector::const_type vector) {
+                        auto output = ScratchView2D_3x3(member.team_scratch(0));
+                        Kokkos::single(Kokkos::PerTeam(member), [&]() {
+                            output(0, 0) = 0.;
+                            output(0, 1) = -vector(2);
+                            output(0, 2) = vector(1);
+                            output(1, 0) = vector(2);
+                            output(1, 1) = 0.;
+                            output(1, 2) = -vector(0);
+                            output(2, 0) = -vector(1);
+                            output(2, 1) = vector(0);
+                            output(2, 2) = 0.;
+                        });
+                        return output;
+                    }(team_member, delta_gen_coords_node);
+                    team_member.team_barrier();
+                    const auto psi_times_psi = [&](auto& member, ScratchView2D_3x3::const_type psi) {
+                        auto psi_x_psi = ScratchView2D_3x3(member.team_scratch(0));
+                        gemm::invoke(member, 1., psi, psi, 0., psi_x_psi);
+                        return psi_x_psi;
+                    }(team_member, psi_cross_prod_matrix);
                     const auto factor_1 = (std::cos(phi) - 1.0) / (phi * phi);
                     const auto factor_2 = (1.0 - std::sin(phi) / phi) / (phi * phi);
-                    member.team_barrier();
+                    team_member.team_barrier();
                     Kokkos::parallel_for(
-                        Kokkos::ThreadVectorMDRange(member, 3, 3),
+                        Kokkos::ThreadVectorMDRange(team_member, 3, 3),
                         [&](std::size_t i, std::size_t j) {
                             tangent_operator_node(3 + i, 3 + j) +=
                                 factor_1 * psi_cross_prod_matrix(i, j) +
@@ -145,9 +129,9 @@ public:
                     );
                 }
 
-                member.team_barrier();
+                team_member.team_barrier();
                 Kokkos::parallel_for(
-                    Kokkos::ThreadVectorMDRange(member, 6, 6),
+                    Kokkos::ThreadVectorMDRange(team_member, 6, 6),
                     [&](std::size_t i, std::size_t j) {
                         tangent_operator(node * 6 + i, node * 6 + j) = tangent_operator_node(i, j);
                     }
