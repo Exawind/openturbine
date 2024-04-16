@@ -725,8 +725,7 @@ struct InterpolateQPVelocity_Translation {
 
 struct InterpolateQPVelocity_Angular {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
-    View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
-    View_N::const_type qp_jacobian_;                             // Num Nodes x Num Quadrature points
+    View_NxN::const_type shape_interp_;                           // Num Nodes x Num Quadrature points
     View_Nx6 node_u_dot_;  // Node translation & angular velocity
     View_Nx3 qp_omega_;    // qp angular velocity
 
@@ -735,13 +734,12 @@ struct InterpolateQPVelocity_Angular {
         auto idx = elem_indices(i_elem);
         for (int j_index = 0; j_index < idx.num_qps; ++j_index) {
             const auto j = idx.qp_range.first + j_index;
-            const auto jacobian = qp_jacobian_(j);
             auto local_total = Kokkos::Array<double, 3>{};
             for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
                 const auto i = idx.node_range.first + i_index;
-                const auto dphi = shape_deriv_(i, j_index);
+                const auto phi = shape_interp_(i, j_index);
                 for (int k = 0; k < 3; ++k) {
-                    local_total[k] += node_u_dot_(i, k + 3) * dphi / jacobian;
+                    local_total[k] += node_u_dot_(i, k + 3) * phi;
                 }
             }
             for (int k = 0; k < 3; ++k) {
@@ -758,13 +756,12 @@ struct InterpolateQPVelocity_Angular {
         }
 
         const auto j = idx.qp_range.first + j_index;
-        const auto jacobian = qp_jacobian_(j);
         auto local_total = Kokkos::Array<double, 3>{};
         for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
             const auto i = idx.node_range.first + i_index;
-            const auto dphi = shape_deriv_(i, j_index);
+            const auto phi = shape_interp_(i, j_index);
             for (int k = 0; k < 3; ++k) {
-                local_total[k] += node_u_dot_(i, k + 3) * dphi / jacobian;
+                local_total[k] += node_u_dot_(i, k + 3) * phi;
             }
         }
         for (int k = 0; k < 3; ++k) {

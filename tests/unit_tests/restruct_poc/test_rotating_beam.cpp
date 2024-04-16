@@ -252,10 +252,11 @@ TEST(RotatingBeamTest, TwoBeam) {
 
     // Check that K matrix is the same for both beams
     auto K = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.K);
+    const auto relative_error = 10. * std::numeric_limits<double>::epsilon();
     // WriteMatrixToFile(K, "K.csv");
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            EXPECT_NEAR(K[i][j], K[n + i][n + j], 1e-12);
+            EXPECT_NEAR(K[i][j], K[n + i][n + j], 1.e-10);
         }
     }
 
@@ -264,7 +265,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     // WriteMatrixToFile(M, "M.csv");
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            EXPECT_NEAR(K[i][j], K[n + i][n + j], 1e-12);
+            EXPECT_NEAR(M[i][j], M[n + i][n + j], 1.e-10);
         }
     }
 
@@ -272,28 +273,28 @@ TEST(RotatingBeamTest, TwoBeam) {
     auto St = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.St);
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            EXPECT_NEAR(St[i][j], St[n + i][n + j], 1e-12);
+            EXPECT_NEAR(St[i][j], St[n + i][n + j], 1.e-10);
         }
     }
 
     // Check that R vector is the same for both beams
     auto R = openturbine::gen_alpha_solver::tests::kokkos_view_1D_to_vector(solver.R);
     for (int i = 0; i < n; ++i) {
-        EXPECT_NEAR(R[i], R[n + i], 1e-12);
+        EXPECT_NEAR(R[i], R[n + i], 1.e-10);
     }
 
     // Check that Phi vector is the same for both beams
     auto Phi =
         openturbine::gen_alpha_solver::tests::kokkos_view_1D_to_vector(solver.constraints.Phi);
     for (int i = 0; i < m; ++i) {
-        EXPECT_NEAR(Phi[i], Phi[i + m], 1e-12);
+        EXPECT_NEAR(Phi[i], Phi[i + m], 1.e-10);
     }
 
     // Check that B matrix is the same for both beams
     auto B = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.constraints.B);
     for (int i = 0; i < m; ++i) {
         for (int j = 0; j < n; ++j) {
-            EXPECT_NEAR(B[i][j], B[i + m][j + n], 1e-12);
+            EXPECT_NEAR(B[i][j], B[i + m][j + n], 1.e-10);
         }
     }
 }

@@ -80,8 +80,7 @@ void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
         Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPVelocity_Angular{
             beams.elem_indices,
-            beams.shape_deriv,
-            beams.qp_jacobian,
+            beams.shape_interp,
             beams.node_u_dot,
             beams.qp_omega,
         }
