@@ -22,7 +22,7 @@ jobs:
           - os: ubuntu-latest
             install_deps: sudo apt-get install gfortran libgtest-dev libblas-dev liblapack-dev liblapacke-dev
           - os: macos-latest
-            install_deps: brew install gcc googletest openblas lapack
+            install_deps: brew install gfortran gcc googletest openblas lapack
     steps:
     - name: Setup Cpp
       uses: aminya/setup-cpp@v1
@@ -71,7 +71,7 @@ jobs:
           git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
         fi
         if [ ${{matrix.os}} = 'macos-latest' ]; then
-          export FC=gfortran
+          export FC=gfortran-13
           git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
         fi
         cd kokkos-kernels
