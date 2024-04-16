@@ -35,8 +35,8 @@ struct UpdateNodeState {
     KOKKOS_FUNCTION
     void operator()(const int i, const int k) const {
         auto j = node_state_indices(i);
-            node_u(i, k) = Q(j, k);
-        if(k < kLieAlgebraComponents) {
+        node_u(i, k) = Q(j, k);
+        if (k < kLieAlgebraComponents) {
             node_u_dot(i, k) = V(j, k);
             node_u_ddot(i, k) = A(j, k);
         }
