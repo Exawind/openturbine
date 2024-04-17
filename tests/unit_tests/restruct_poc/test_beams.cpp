@@ -3,7 +3,11 @@
 #include <gtest/gtest.h>
 
 #include "src/restruct_poc/beams.hpp"
-#include "src/restruct_poc/beams_input.hpp"
+#include "src/restruct_poc/BeamsInput.hpp"
+#include "src/restruct_poc/BeamNode.hpp"
+#include "src/restruct_poc/BeamSection.hpp"
+#include "src/restruct_poc/BeamElement.hpp"
+#include "src/restruct_poc/CreateBeams.hpp"
 #include "src/restruct_poc/state.hpp"
 #include "src/restruct_poc/UpdateState.hpp"
 #include "src/restruct_poc/AssembleResidualVector.hpp"
@@ -17,6 +21,7 @@
 namespace openturbine::restruct_poc::tests {
 
 class BeamsTest : public testing::Test {
+    using BeamQuadrature = std::vector<std::array<double, 2>>;
 protected:
     // Per-test-suite set-up.
     // Called before the first test in this test suite.
