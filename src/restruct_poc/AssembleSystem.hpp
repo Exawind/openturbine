@@ -7,6 +7,11 @@
 #include "solver.hpp"
 #include "beams.hpp"
 #include "CalculateTangentOperator.hpp"
+#include "AssembleResidualVector.hpp"
+#include "AssembleElasticStiffnessMatrix.hpp"
+#include "AssembleInertialStiffnessMatrix.hpp"
+#include "AssembleMassMatrix.hpp"
+#include "AssembleGyroscopicInertiaMatrix.hpp"
 
 namespace openturbine {
 

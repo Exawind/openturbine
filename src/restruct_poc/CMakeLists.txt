@@ -3,7 +3,6 @@ target_sources(${oturb_lib_name}
     beams_data.hpp
     beams_input.cpp
     beams_input.hpp
-    beams_methods.cpp
     beams_methods.hpp
     beams.hpp
     dynamic_beam.cpp
