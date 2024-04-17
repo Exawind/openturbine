@@ -120,17 +120,4 @@ struct Solver {
           convergence_err(max_iter) {}
 };
 
-void PredictNextState(Solver& solver);
-void InitializeConstraints(Solver& solver, Beams& beams);
-void UpdateStatePrediction(Solver& solver, View_N x_system, View_N x_lambda);
-template <typename Subview_NxN, typename Subview_N>
-void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St, Subview_N R);
-template <typename Subview_NxN, typename Subview_N>
-void AssembleConstraints(
-    Solver& solver, Subview_NxN St_12, Subview_NxN St_21, Subview_N R_system, Subview_N R_lambda
-);
-bool Step(Solver& solver, Beams& beams);
-void SolveSystem(Solver& solver);
-double CalculateConvergenceError(Solver& solver);
-
 }  // namespace openturbine

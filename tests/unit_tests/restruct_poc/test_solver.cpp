@@ -5,6 +5,12 @@
 #include "src/restruct_poc/beams.hpp"
 #include "src/restruct_poc/solver.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
+#include "src/restruct_poc/InitializeConstraints.hpp"
+#include "src/restruct_poc/PredictNextState.hpp"
+#include "src/restruct_poc/AssembleSystem.hpp"
+#include "src/restruct_poc/AssembleConstraints.hpp"
+#include "src/restruct_poc/Step.hpp"
+
 
 namespace openturbine::restruct_poc::tests {
 
