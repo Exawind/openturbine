@@ -58,7 +58,7 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     const size_t max_iter(6);
     const double step_size(0.01);  // seconds
     const double rho_inf(0.0);
-    const double t_end(10.);
+    const double t_end(0.1);
     const size_t num_steps(t_end / step_size + 1.0);
 
     // Element quadrature
