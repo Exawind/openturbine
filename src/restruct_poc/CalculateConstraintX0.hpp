@@ -29,4 +29,4 @@ struct CalculateConstraintX0 {
     }
 };
 
-}
+}  // namespace openturbine

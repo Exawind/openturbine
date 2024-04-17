@@ -2,8 +2,8 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "types.hpp"
 #include "VectorOperations.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 
@@ -39,4 +39,4 @@ struct CalculateMassMatrixComponents {
     }
 };
 
-}
+}  // namespace openturbine

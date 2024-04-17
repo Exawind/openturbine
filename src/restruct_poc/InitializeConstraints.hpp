@@ -3,9 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
+#include "CalculateConstraintX0.hpp"
 #include "Solver.hpp"
 #include "beams.hpp"
-#include "CalculateConstraintX0.hpp"
 
 namespace openturbine {
 
@@ -18,7 +18,7 @@ inline void InitializeConstraints(Solver& solver, Beams& beams) {
             beams.node_x0,
             solver.constraints.X0,
         }
-    );  
+    );
 }
 
-}
+}  // namespace openturbine

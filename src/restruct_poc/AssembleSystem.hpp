@@ -1,17 +1,17 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "Solver.hpp"
-#include "beams.hpp"
-#include "CalculateTangentOperator.hpp"
-#include "AssembleResidualVector.hpp"
 #include "AssembleElasticStiffnessMatrix.hpp"
+#include "AssembleGyroscopicInertiaMatrix.hpp"
 #include "AssembleInertialStiffnessMatrix.hpp"
 #include "AssembleMassMatrix.hpp"
-#include "AssembleGyroscopicInertiaMatrix.hpp"
+#include "AssembleResidualVector.hpp"
+#include "CalculateTangentOperator.hpp"
+#include "Solver.hpp"
+#include "beams.hpp"
 
 namespace openturbine {
 
@@ -47,4 +47,4 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     }
 }
 
-}
+}  // namespace openturbine

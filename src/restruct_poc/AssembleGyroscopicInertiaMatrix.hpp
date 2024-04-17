@@ -26,4 +26,4 @@ inline void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
     );
 }
 
-}
+}  // namespace openturbine

@@ -6,26 +6,25 @@
 
 namespace openturbine {
 
-template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6> 
+template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
 inline void PopulateElementViews(
     const BeamElement& elem, T1 node_x0, T2 qp_weight, T3 qp_Mstar, T4 qp_Cstar, T5 shape_interp,
     T6 shape_deriv
 ) {
-
     std::vector<double> node_xi(elem.nodes.size());
     for (size_t i = 0; i < elem.nodes.size(); ++i) {
         node_xi[i] = 2 * elem.nodes[i].s - 1;
-    }   
+    }
 
     for (size_t j = 0; j < elem.nodes.size(); ++j) {
         for (size_t k = 0; k < elem.nodes[j].x.size(); ++k) {
             node_x0(j, k) = elem.nodes[j].x[k];
         }
-    }   
+    }
 
     for (size_t j = 0; j < elem.quadrature.size(); ++j) {
         qp_weight(j) = elem.quadrature[j][1];
-    }   
+    }
 
     std::vector<double> weights;
 
@@ -45,7 +44,7 @@ inline void PopulateElementViews(
         }
     }
 
-    //TODO: remove assumption that s runs from 0 to 1
+    // TODO: remove assumption that s runs from 0 to 1
     std::vector<double> section_xi(elem.sections.size());
 
     for (size_t i = 0; i < elem.sections.size(); ++i) {
@@ -71,4 +70,4 @@ inline void PopulateElementViews(
     }
 }
 
-}
+}  // namespace openturbine

@@ -3,9 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "Solver.hpp"
-#include "CalculateNextState.hpp"
 #include "CalculateDisplacement.hpp"
+#include "CalculateNextState.hpp"
+#include "Solver.hpp"
 
 namespace openturbine {
 
@@ -27,7 +27,7 @@ inline void PredictNextState(Solver& solver) {
             solver.state.vd,
             solver.state.a,
         }
-    );  
+    );
 
     Kokkos::parallel_for(
         "CalculateDisplacement", solver.state.q.extent(0),
@@ -37,7 +37,7 @@ inline void PredictNextState(Solver& solver) {
             solver.state.q_prev,
             solver.state.q,
         }
-    );  
+    );
 }
 
-}
+}  // namespace openturbine

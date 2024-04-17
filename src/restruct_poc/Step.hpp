@@ -3,16 +3,16 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "Solver.hpp"
-#include "beams.hpp"
-#include "UpdateAlgorithmicAcceleration.hpp"
-#include "AssembleSystem.hpp"
 #include "AssembleConstraints.hpp"
-#include "SolveSystem.hpp"
+#include "AssembleSystem.hpp"
 #include "CalculateConvergenceError.hpp"
-#include "UpdateStatePrediction.hpp"
 #include "PredictNextState.hpp"
+#include "SolveSystem.hpp"
+#include "Solver.hpp"
+#include "UpdateAlgorithmicAcceleration.hpp"
 #include "UpdateState.hpp"
+#include "UpdateStatePrediction.hpp"
+#include "beams.hpp"
 
 namespace openturbine {
 
@@ -72,4 +72,4 @@ inline bool Step(Solver& solver, Beams& beams) {
     return true;
 }
 
-}
+}  // namespace openturbine

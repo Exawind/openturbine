@@ -20,4 +20,4 @@ struct UpdateAlgorithmicAcceleration {
     }
 };
 
-}
+}  // namespace openturbine

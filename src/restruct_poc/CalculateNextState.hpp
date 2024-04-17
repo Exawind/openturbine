@@ -31,4 +31,4 @@ struct CalculateNextState {
     }
 };
 
-}
+}  // namespace openturbine

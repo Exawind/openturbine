@@ -3,13 +3,13 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "types.hpp"
-#include "Solver.hpp"
-#include "beams.hpp"
-#include "UpdateDynamicPrediction.hpp"
-#include "UpdateStaticPrediction.hpp"
 #include "CalculateDisplacement.hpp"
+#include "Solver.hpp"
+#include "UpdateDynamicPrediction.hpp"
 #include "UpdateLambdaPrediction.hpp"
+#include "UpdateStaticPrediction.hpp"
+#include "beams.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 
@@ -62,4 +62,4 @@ inline void UpdateStatePrediction(Solver& solver, View_N x_system, View_N x_lamb
     }
 }
 
-}
+}  // namespace openturbine

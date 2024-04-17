@@ -1,12 +1,12 @@
 #pragma once
 
-#include <vector>
 #include <array>
+#include <vector>
 
 #include <Kokkos_Core.hpp>
 
-#include "Constraints.hpp"
 #include "ConstraintInput.hpp"
+#include "Constraints.hpp"
 #include "state.hpp"
 #include "types.hpp"
 
@@ -78,4 +78,4 @@ struct Solver {
           convergence_err(max_iter) {}
 };
 
-}
+}  // namespace openturbine

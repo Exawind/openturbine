@@ -3,8 +3,8 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "beams.hpp"
 #include "IntegrateMatrix.hpp"
+#include "beams.hpp"
 
 namespace openturbine {
 
@@ -27,4 +27,4 @@ inline void AssembleMassMatrix(Beams& beams, View_NxN M) {
     );
 }
 
-}
+}  // namespace openturbine

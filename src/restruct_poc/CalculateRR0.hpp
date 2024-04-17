@@ -3,6 +3,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "types.hpp"
+
 #include "src/gebt_poc/quadrature.h"
 
 namespace openturbine {
@@ -24,4 +25,4 @@ struct CalculateRR0 {
         }
     }
 };
-}
+}  // namespace openturbine

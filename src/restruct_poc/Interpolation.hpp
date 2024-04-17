@@ -4,31 +4,33 @@
 
 namespace openturbine {
 
-inline void LinearInterpWeights(double x, const std::vector<double>& xs, std::vector<double>& weights) {
+inline void LinearInterpWeights(
+    double x, const std::vector<double>& xs, std::vector<double>& weights
+) {
     const auto n = xs.size();
-    
+
     weights.clear();
     weights.resize(n, 0.);
 
     const auto lower = std::lower_bound(xs.begin(), xs.end(), x);
-        
+
     if (lower == xs.begin()) {
         weights.front() = 1.0;
-    }   
-    else if (lower == xs.end()) {
+    } else if (lower == xs.end()) {
         weights.back() = 1.0;
-    }   
-    else {
+    } else {
         size_t index = lower - xs.begin();
-        double lower_loc = xs[index - 1]; 
+        double lower_loc = xs[index - 1];
         double upper_loc = xs[index];
         double weight_upper = (x - lower_loc) / (upper_loc - lower_loc);
         weights[index - 1] = 1.0 - weight_upper;
         weights[index] = weight_upper;
-    }   
+    }
 }
 
-inline void LagrangePolynomialInterpWeights(double x, const std::vector<double>& xs, std::vector<double>& weights) {
+inline void LagrangePolynomialInterpWeights(
+    double x, const std::vector<double>& xs, std::vector<double>& weights
+) {
     const auto n = xs.size();
 
     weights.clear();
@@ -40,10 +42,12 @@ inline void LagrangePolynomialInterpWeights(double x, const std::vector<double>&
                 weights[j] *= (x - xs[m]) / (xs[j] - xs[m]);
             }
         }
-    }   
+    }
 }
 
-inline void LagrangePolynomialDerivWeights(double x, const std::vector<double>& xs, std::vector<double>& weights) {
+inline void LagrangePolynomialDerivWeights(
+    double x, const std::vector<double>& xs, std::vector<double>& weights
+) {
     const auto n = xs.size();
 
     weights.clear();
@@ -64,4 +68,4 @@ inline void LagrangePolynomialDerivWeights(double x, const std::vector<double>& 
     }
 }
 
-}
+}  // namespace openturbine

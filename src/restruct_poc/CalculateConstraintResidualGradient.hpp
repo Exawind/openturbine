@@ -73,4 +73,4 @@ struct CalculateConstraintResidualGradient {
     }
 };
 
-}
+}  // namespace openturbine

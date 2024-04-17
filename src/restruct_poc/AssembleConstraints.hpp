@@ -1,14 +1,13 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "beams.hpp"
-#include "Solver.hpp"
 #include "CalculateConstraintResidualGradient.hpp"
+#include "Solver.hpp"
 #include "UpdateIterationMatrix.hpp"
-
+#include "beams.hpp"
 
 namespace openturbine {
 
@@ -47,4 +46,4 @@ void AssembleConstraints(
     KokkosBlas::gemm("N", "N", 1.0, solver.constraints.B, solver.T, 0.0, St_21);
 }
 
-}
+}  // namespace openturbine

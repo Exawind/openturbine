@@ -7,7 +7,7 @@
 namespace openturbine {
 
 struct BeamNode {
-    double s;   // Position of node in element on range [0, 1]
+    double s;                 // Position of node in element on range [0, 1]
     std::array<double, 7> x;  // Node initial positions and rotations
 
     BeamNode(std::array<double, 7> x_) : s(0.), x(std::move(x_)) {}
@@ -17,4 +17,4 @@ struct BeamNode {
                    q.GetXComponent(), q.GetYComponent(), q.GetZComponent()} {}
 };
 
-}
+}  // namespace openturbine

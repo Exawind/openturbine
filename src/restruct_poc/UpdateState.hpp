@@ -3,30 +3,28 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "types.hpp"
-#include "beams.hpp"
-#include "UpdateNodeState.hpp"
-#include "InterpolateQPState.hpp"
-#include "InterpolateQPVelocity.hpp"
-#include "InterpolateQPAcceleration.hpp"
+#include "CalculateCuu.hpp"
+#include "CalculateForceFC.hpp"
+#include "CalculateForceFD.hpp"
+#include "CalculateGravityForce.hpp"
+#include "CalculateGyroscopicMatrix.hpp"
+#include "CalculateInertiaStiffnessMatrix.hpp"
+#include "CalculateInertialForces.hpp"
+#include "CalculateMassMatrixComponents.hpp"
+#include "CalculateMuu.hpp"
+#include "CalculateNodeForces.hpp"
 #include "CalculateOuu.hpp"
 #include "CalculatePuu.hpp"
 #include "CalculateQuu.hpp"
 #include "CalculateRR0.hpp"
-#include "CalculateMuu.hpp"
-#include "CalculateCuu.hpp"
 #include "CalculateStrain.hpp"
-#include "CalculateMassMatrixComponents.hpp"
 #include "CalculateTemporaryVariables.hpp"
-#include "CalculateForceFC.hpp"
-#include "CalculateForceFD.hpp"
-#include "CalculateInertialForces.hpp"
-#include "CalculateGravityForce.hpp"
-#include "CalculateGyroscopicMatrix.hpp"
-#include "CalculateInertiaStiffnessMatrix.hpp"
-#include "CalculateNodeForces.hpp"
-
-
+#include "InterpolateQPAcceleration.hpp"
+#include "InterpolateQPState.hpp"
+#include "InterpolateQPVelocity.hpp"
+#include "UpdateNodeState.hpp"
+#include "beams.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 
@@ -192,4 +190,4 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     );
 }
 
-}
+}  // namespace openturbine

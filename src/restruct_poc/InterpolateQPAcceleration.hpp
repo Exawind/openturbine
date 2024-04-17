@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+
 #include "types.hpp"
 
 namespace openturbine {
@@ -99,4 +100,4 @@ struct InterpolateQPAcceleration_Angular {
     }
 };
 
-}
+}  // namespace openturbine

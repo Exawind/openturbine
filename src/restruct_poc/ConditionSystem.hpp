@@ -70,4 +70,4 @@ struct UnconditionSolution {
     }
 };
 
-}
+}  // namespace openturbine

@@ -15,4 +15,4 @@ struct UpdateIterationMatrix {
     void operator()(const int i, const int j) const { St_12(j, i) = B(i, j); }
 };
 
-}
+}  // namespace openturbine

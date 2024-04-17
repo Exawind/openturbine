@@ -3,8 +3,8 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "Solver.hpp"
 #include "CalculateErrorSumSquares.hpp"
+#include "Solver.hpp"
 
 namespace openturbine {
 
@@ -26,4 +26,4 @@ inline double CalculateConvergenceError(Solver& solver) {
     return std::sqrt(sum_error_squared / solver.num_system_dofs);
 }
 
-}
+}  // namespace openturbine

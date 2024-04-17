@@ -2,9 +2,9 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "types.hpp"
 #include "MatrixOperations.hpp"
 #include "VectorOperations.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 
@@ -30,4 +30,4 @@ struct CalculateGravityForce {
     }
 };
 
-}
+}  // namespace openturbine

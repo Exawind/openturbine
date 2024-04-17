@@ -2,9 +2,9 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "types.hpp"
-#include "beams_data.hpp"
 #include "InterpolationOperations.hpp"
+#include "beams_data.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 
@@ -27,4 +27,4 @@ struct InterpolateQPRotationDerivative {
     }
 };
 
-}
+}  // namespace openturbine

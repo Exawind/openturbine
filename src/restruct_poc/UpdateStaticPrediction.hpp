@@ -22,4 +22,4 @@ struct UpdateStaticPrediction {
     }
 };
 
-}
+}  // namespace openturbine

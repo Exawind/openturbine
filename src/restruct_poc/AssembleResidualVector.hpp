@@ -3,9 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
+#include "IntegrateResidualVector.hpp"
 #include "beams.hpp"
 #include "types.hpp"
-#include "IntegrateResidualVector.hpp"
 
 namespace openturbine {
 
@@ -19,4 +19,4 @@ inline void AssembleResidualVector(Beams& beams, View_N residual_vector) {
     );
 }
 
-}
+}  // namespace openturbine

@@ -1,11 +1,12 @@
 #pragma once
 
-#include <vector>
 #include <array>
+#include <vector>
+
 #include <Kokkos_Core.hpp>
 
-#include "types.hpp"
 #include "ConstraintInput.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 
@@ -13,13 +14,13 @@ struct Constraints {
     struct NodeIndices {
         int base_node_index;
         int constrained_node_index;
-    };  
+    };
 
     int num_constraint_nodes;
     Kokkos::View<NodeIndices*> node_indices;
     View_N Phi;
     View_NxN B;
-    View_Nx3 X0; 
+    View_Nx3 X0;
     View_Nx7 u;
     Constraints() {}
     Constraints(std::vector<ConstraintInput> inputs, int num_system_nodes)
@@ -37,7 +38,7 @@ struct Constraints {
         }
         Kokkos::deep_copy(this->node_indices, host_node_indices);
         Kokkos::deep_copy(Kokkos::subview(this->u, Kokkos::ALL, 3), 1.0);
-    }   
+    }
 
     void UpdateDisplacement(int index, std::array<double, kLieGroupComponents> u_) {
         auto host_u = Kokkos::create_mirror(this->u);
@@ -46,7 +47,7 @@ struct Constraints {
             host_u(index, i) = u_[i];
         }
         Kokkos::deep_copy(this->u, host_u);
-    }   
+    }
 };
 
-}
+}  // namespace openturbine

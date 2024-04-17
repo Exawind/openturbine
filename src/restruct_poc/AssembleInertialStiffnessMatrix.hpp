@@ -3,9 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
+#include "IntegrateMatrix.hpp"
 #include "beams.hpp"
 #include "types.hpp"
-#include "IntegrateMatrix.hpp"
 
 namespace openturbine {
 
@@ -28,4 +28,4 @@ inline void AssembleInertialStiffnessMatrix(Beams& beams, View_NxN K) {
     );
 }
 
-}
+}  // namespace openturbine

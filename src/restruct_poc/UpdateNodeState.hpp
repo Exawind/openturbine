@@ -20,25 +20,25 @@ struct UpdateNodeState {
     void operator()(int i) const {
         auto j = node_state_indices(i);
         for (int k = 0; k < kLieGroupComponents; k++) {
-            node_u(i, k) = Q(j, k); 
+            node_u(i, k) = Q(j, k);
         }
         for (int k = 0; k < kLieAlgebraComponents; k++) {
-            node_u_dot(i, k) = V(j, k); 
+            node_u_dot(i, k) = V(j, k);
         }
         for (int k = 0; k < kLieAlgebraComponents; k++) {
-            node_u_ddot(i, k) = A(j, k); 
+            node_u_ddot(i, k) = A(j, k);
         }
-    }   
+    }
 
     KOKKOS_FUNCTION
     void operator()(const int i, const int k) const {
         auto j = node_state_indices(i);
-        node_u(i, k) = Q(j, k); 
+        node_u(i, k) = Q(j, k);
         if (k < kLieAlgebraComponents) {
-            node_u_dot(i, k) = V(j, k); 
-            node_u_ddot(i, k) = A(j, k); 
+            node_u_dot(i, k) = V(j, k);
+            node_u_ddot(i, k) = A(j, k);
         }
-    }   
+    }
 };
 
-}
+}  // namespace openturbine

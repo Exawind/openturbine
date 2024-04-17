@@ -1,14 +1,14 @@
 #pragma once
 
-#include "beams.hpp"
+#include "CalculateJacobian.hpp"
+#include "InterpolateQPAcceleration.hpp"
 #include "InterpolateQPPosition.hpp"
 #include "InterpolateQPRotation.hpp"
-#include "CalculateJacobian.hpp"
 #include "InterpolateQPState.hpp"
 #include "InterpolateQPVelocity.hpp"
-#include "InterpolateQPAcceleration.hpp"
 #include "PopulateElementViews.hpp"
 #include "SetNodeStateIndices.hpp"
+#include "beams.hpp"
 
 namespace openturbine {
 
@@ -104,26 +104,30 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
             beams.node_u, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime}
     );
     Kokkos::parallel_for(
-        "InterpolateQPVelocity", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
+        "InterpolateQPVelocity",
+        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPVelocity_Translation{
             beams.elem_indices, beams.shape_interp, beams.node_u_dot, beams.qp_u_dot}
     );
     Kokkos::parallel_for(
-        "InterpolateQPVelocity", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
+        "InterpolateQPVelocity",
+        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPVelocity_Angular{
             beams.elem_indices, beams.shape_interp, beams.node_u_dot, beams.qp_omega}
     );
     Kokkos::parallel_for(
-        "InterpolateQPAcceleration", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
+        "InterpolateQPAcceleration",
+        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPAcceleration_Translation{
             beams.elem_indices, beams.shape_interp, beams.node_u_ddot, beams.qp_u_ddot}
     );
     Kokkos::parallel_for(
-        "InterpolateQPAcceleration", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
+        "InterpolateQPAcceleration",
+        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPAcceleration_Angular{
             beams.elem_indices, beams.shape_interp, beams.node_u_ddot, beams.qp_omega_dot}
     );
     return beams;
 }
 
-}
+}  // namespace openturbine

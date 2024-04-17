@@ -72,7 +72,7 @@ void RotationVectorToQuaternion(double phi[3], double quaternion[4]) {
         quaternion[1] = phi[0] * factor;
         quaternion[2] = phi[1] * factor;
         quaternion[3] = phi[2] * factor;
-    }   
+    }
 }
 
-}
+}  // namespace openturbine

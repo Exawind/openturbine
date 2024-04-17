@@ -7,29 +7,29 @@ template <typename View_A>
 KOKKOS_INLINE_FUNCTION void FillVector(View_A A, double value) {
     for (int i = 0; i < A.extent_int(0); ++i) {
         A(i) = value;
-    }    
+    }
 }
 
 template <typename View_A, typename View_B, typename View_C>
-KOKKOS_INLINE_FUNCTION void MatVecMulAB(View_A A, View_B B, View_C C) { 
+KOKKOS_INLINE_FUNCTION void MatVecMulAB(View_A A, View_B B, View_C C) {
     for (int i = 0; i < A.extent_int(0); ++i) {
         auto local_result = 0.;
         for (int k = 0; k < B.extent_int(0); ++k) {
             local_result += A(i, k) * B(k);
         }
         C(i) = local_result;
-    }    
+    }
 }
 
 template <typename View_A, typename View_B, typename View_C>
-KOKKOS_INLINE_FUNCTION void MatVecMulATB(View_A A, View_B B, View_C C) { 
+KOKKOS_INLINE_FUNCTION void MatVecMulATB(View_A A, View_B B, View_C C) {
     for (int i = 0; i < A.extent_int(1); ++i) {
         auto local_result = 0.;
         for (int k = 0; k < B.extent_int(0); ++k) {
             local_result += A(k, i) * B(k);
         }
         C(i) = local_result;
-    }    
+    }
 }
 
 template <typename VectorType, typename MatrixType>
@@ -47,15 +47,15 @@ KOKKOS_INLINE_FUNCTION void VecTilde(VectorType vector, MatrixType matrix) {
 
 KOKKOS_INLINE_FUNCTION
 void VectorTilde(double a, double v[3], double m[3][3]) {
-    m[0][0] = 0.; 
+    m[0][0] = 0.;
     m[0][1] = -v[2] * a;
     m[0][2] = v[1] * a;
     m[1][0] = v[2] * a;
-    m[1][1] = 0.; 
+    m[1][1] = 0.;
     m[1][2] = -v[0] * a;
     m[2][0] = -v[1] * a;
     m[2][1] = v[0] * a;
-    m[2][2] = 0.; 
+    m[2][2] = 0.;
 }
 
 template <typename V1, typename V2>
@@ -65,4 +65,4 @@ KOKKOS_INLINE_FUNCTION void VecScale(V1 v_in, double scale, V2 v_out) {
     }
 }
 
-}
+}  // namespace openturbine

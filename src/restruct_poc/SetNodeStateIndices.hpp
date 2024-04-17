@@ -10,4 +10,4 @@ struct SetNodeStateIndices {
     void operator()(int i) const { node_state_indices(i) = i; }
 };
 
-}
+}  // namespace openturbine

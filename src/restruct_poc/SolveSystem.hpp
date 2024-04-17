@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
 #include <KokkosLapack_gesv.hpp>
+#include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "Solver.hpp"
 #include "ConditionSystem.hpp"
+#include "Solver.hpp"
 
 namespace openturbine {
 
@@ -54,4 +54,4 @@ inline void SolveSystem(Solver& solver) {
     );
 }
 
-}
+}  // namespace openturbine

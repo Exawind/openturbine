@@ -26,4 +26,4 @@ struct UpdateDynamicPrediction {
     }
 };
 
-}
+}  // namespace openturbine

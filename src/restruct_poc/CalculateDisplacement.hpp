@@ -35,4 +35,4 @@ struct CalculateDisplacement {
     }
 };
 
-}
+}  // namespace openturbine

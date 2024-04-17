@@ -20,4 +20,4 @@ struct CalculateErrorSumSquares {
     }
 };
 
-}
+}  // namespace openturbine

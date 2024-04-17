@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+
 #include "types.hpp"
 
 namespace openturbine {
@@ -54,7 +55,7 @@ struct InterpolateQPVelocity_Translation {
 
 struct InterpolateQPVelocity_Angular {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
-    View_NxN::const_type shape_interp_;                           // Num Nodes x Num Quadrature points
+    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
     View_Nx6 node_u_dot_;  // Node translation & angular velocity
     View_Nx3 qp_omega_;    // qp angular velocity
 
@@ -99,4 +100,4 @@ struct InterpolateQPVelocity_Angular {
     }
 };
 
-}
+}  // namespace openturbine

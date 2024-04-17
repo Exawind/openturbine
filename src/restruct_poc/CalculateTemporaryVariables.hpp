@@ -26,4 +26,4 @@ struct CalculateTemporaryVariables {
     }
 };
 
-}
+}  // namespace openturbine

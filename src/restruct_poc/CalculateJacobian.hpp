@@ -2,9 +2,9 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "types.hpp"
-#include "beams.hpp"
 #include "InterpolationOperations.hpp"
+#include "beams.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 
@@ -38,4 +38,4 @@ struct CalculateJacobian {
     }
 };
 
-}
+}  // namespace openturbine

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <array>
+#include <vector>
 
 #include "BeamNode.hpp"
 #include "BeamSection.hpp"
@@ -16,9 +16,10 @@ struct BeamElement {
 
     BeamElement(
         std::vector<BeamNode> nodes_, std::vector<BeamSection> sections_, BeamQuadrature quadrature_
-    )   
-        : nodes(std::move(nodes_)), sections(std::move(sections_)), quadrature(std::move(quadrature_)) {
-    }   
+    )
+        : nodes(std::move(nodes_)),
+          sections(std::move(sections_)),
+          quadrature(std::move(quadrature_)) {}
 };
 
-}
+}  // namespace openturbine

@@ -88,5 +88,5 @@ void InterpVector4Deriv(
         }
     }
 }
- 
-}
+
+}  // namespace openturbine

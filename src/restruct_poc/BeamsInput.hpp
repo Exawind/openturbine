@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
-#include <array>
 #include <algorithm>
+#include <array>
+#include <vector>
 
 #include "BeamElement.hpp"
 
@@ -23,7 +23,7 @@ struct BeamsInput {
             num_nodes += input.nodes.size();
         }
         return num_nodes;
-    }   
+    }
 
     size_t NumQuadraturePoints() const {
         size_t num_qps = 0;
@@ -50,4 +50,4 @@ struct BeamsInput {
     }
 };
 
-}
+}  // namespace openturbine
