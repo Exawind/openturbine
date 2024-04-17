@@ -4,7 +4,18 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "beams.hpp"
-#include "solver_functors.hpp"
+#include "CalculateNextState.hpp"
+#include "CalculateDisplacement.hpp"
+#include "CalculateConstraintX0.hpp"
+#include "UpdateDynamicPrediction.hpp"
+#include "UpdateStaticPrediction.hpp"
+#include "UpdateLambdaPrediction.hpp"
+#include "ConditionSystem.hpp"
+#include "CalculateErrorSumSquares.hpp"
+#include "UpdateAlgorithmicAcceleration.hpp"
+#include "CalculateTangentOperator.hpp"
+#include "CalculateConstraintResidualGradient.hpp"
+#include "UpdateIterationMatrix.hpp"
 
 namespace openturbine {
 

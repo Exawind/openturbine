@@ -55,4 +55,24 @@ KOKKOS_INLINE_FUNCTION void QuaternionCompose(Q1 q1, Q2 q2, QN qn) {
     qn(3) = q1(0) * q2(3) + q1(1) * q2(2) - q1(2) * q2(1) + q1(3) * q2(0);
 }
 
+KOKKOS_INLINE_FUNCTION
+void RotationVectorToQuaternion(double phi[3], double quaternion[4]) {
+    double angle = std::sqrt(phi[0] * phi[0] + phi[1] * phi[1] + phi[2] * phi[2]);
+
+    if (Kokkos::abs(angle) < 1e-12) {
+        quaternion[0] = 1.0;
+        quaternion[1] = 0.0;
+        quaternion[2] = 0.0;
+        quaternion[3] = 0.0;
+    } else {
+        double sin_angle = Kokkos::sin(angle / 2.0);
+        double cos_angle = Kokkos::cos(angle / 2.0);
+        double factor = sin_angle / angle;
+        quaternion[0] = cos_angle;
+        quaternion[1] = phi[0] * factor;
+        quaternion[2] = phi[1] * factor;
+        quaternion[3] = phi[2] * factor;
+    }   
+}
+
 }

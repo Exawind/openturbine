@@ -45,6 +45,19 @@ KOKKOS_INLINE_FUNCTION void VecTilde(VectorType vector, MatrixType matrix) {
     matrix(2, 2) = 0.;
 }
 
+KOKKOS_INLINE_FUNCTION
+void VectorTilde(double a, double v[3], double m[3][3]) {
+    m[0][0] = 0.; 
+    m[0][1] = -v[2] * a;
+    m[0][2] = v[1] * a;
+    m[1][0] = v[2] * a;
+    m[1][1] = 0.; 
+    m[1][2] = -v[0] * a;
+    m[2][0] = -v[1] * a;
+    m[2][1] = v[0] * a;
+    m[2][2] = 0.; 
+}
+
 template <typename V1, typename V2>
 KOKKOS_INLINE_FUNCTION void VecScale(V1 v_in, double scale, V2 v_out) {
     for (int i = 0; i < v_in.extent_int(0); ++i) {

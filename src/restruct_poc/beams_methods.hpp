@@ -5,14 +5,6 @@
 
 namespace openturbine {
 
-void LagrangePolynomialInterpWeights(
-    const double x, const std::vector<double>& xs, std::vector<double>& weights
-);
-
-void LagrangePolynomialDerivWeights(
-    const double x, const std::vector<double>& xs, std::vector<double>& weights
-);
-
 void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A);
 
 void AssembleResidualVector(Beams& beams, View_N residual_vector);
