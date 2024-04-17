@@ -3,7 +3,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "types.hpp"
-#include "beams_data.hpp"
+#include "beams.hpp"
 #include "InterpolationOperations.hpp"
 
 namespace openturbine {

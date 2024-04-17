@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/beams_input.hpp"
 #include "src/restruct_poc/state.hpp"
 #include "src/restruct_poc/UpdateState.hpp"
 #include "src/restruct_poc/AssembleResidualVector.hpp"
@@ -11,6 +12,7 @@
 #include "src/restruct_poc/AssembleInertialStiffnessMatrix.hpp"
 #include "src/restruct_poc/AssembleElasticStiffnessMatrix.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
+
 
 namespace openturbine::restruct_poc::tests {
 

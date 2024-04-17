@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "beams_data.hpp"
+#include "beams.hpp"
 
 #include "src/restruct_poc/types.hpp"
 
