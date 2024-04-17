@@ -3,7 +3,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "solver.hpp"
+#include "Solver.hpp"
 #include "CalculateNextState.hpp"
 #include "CalculateDisplacement.hpp"
 

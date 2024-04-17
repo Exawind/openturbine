@@ -7,7 +7,7 @@
 
 #include "src/restruct_poc/beams.hpp"
 #include "src/restruct_poc/beams_input.hpp"
-#include "src/restruct_poc/solver.hpp"
+#include "src/restruct_poc/Solver.hpp"
 #include "src/restruct_poc/Step.hpp"
 #include "src/restruct_poc/InitializeConstraints.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"

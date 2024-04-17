@@ -4,7 +4,7 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "types.hpp"
-#include "solver.hpp"
+#include "Solver.hpp"
 #include "beams.hpp"
 #include "UpdateDynamicPrediction.hpp"
 #include "UpdateStaticPrediction.hpp"

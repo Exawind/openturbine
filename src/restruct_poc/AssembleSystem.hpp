@@ -4,7 +4,7 @@
 #include <KokkosBlas.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "solver.hpp"
+#include "Solver.hpp"
 #include "beams.hpp"
 #include "CalculateTangentOperator.hpp"
 #include "AssembleResidualVector.hpp"

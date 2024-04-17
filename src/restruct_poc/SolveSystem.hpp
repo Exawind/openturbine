@@ -5,7 +5,7 @@
 #include <KokkosLapack_gesv.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "solver.hpp"
+#include "Solver.hpp"
 #include "ConditionSystem.hpp"
 
 namespace openturbine {

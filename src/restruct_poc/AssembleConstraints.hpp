@@ -5,7 +5,7 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "beams.hpp"
-#include "solver.hpp"
+#include "Solver.hpp"
 #include "CalculateConstraintResidualGradient.hpp"
 #include "UpdateIterationMatrix.hpp"
 
