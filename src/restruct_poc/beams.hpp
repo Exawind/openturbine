@@ -45,8 +45,6 @@ struct Beams {
     View_Nx6 node_FG;         // Gravity forces
     View_Nx6 node_FI;         // Inertial forces
     View_Nx6 node_FX;         // External forces
-    View_N node_residual;     // Residual forces
-    View_NxN node_iteration;  // Iteration matrix
 
     // Quadrature point data
     View_N qp_weight;               // Integration weights
@@ -122,8 +120,6 @@ struct Beams {
           node_FG("node_force_gravity", num_nodes_),
           node_FI("node_force_inertial", num_nodes_),
           node_FX("node_force_external", num_nodes_),
-          node_residual("node_residual", num_nodes_ * 6),
-          node_iteration("node_iteration", num_nodes_ * 6, num_nodes_ * 6),
           // Quadrature Point data
           qp_weight("qp_weight", num_qps_),
           qp_jacobian("qp_jacobian", num_qps_),
