@@ -4,9 +4,19 @@
 
 #include <gtest/gtest.h>
 
+#include "src/restruct_poc/BeamElement.hpp"
+#include "src/restruct_poc/BeamNode.hpp"
+#include "src/restruct_poc/BeamSection.hpp"
+#include "src/restruct_poc/BeamsInput.hpp"
+#include "src/restruct_poc/CreateBeams.hpp"
 #include "src/restruct_poc/beams.hpp"
-#include "src/restruct_poc/solver.hpp"
+#include "src/restruct_poc/solver/InitializeConstraints.hpp"
+#include "src/restruct_poc/solver/Solver.hpp"
+#include "src/restruct_poc/solver/Step.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
+
+using BeamQuadrature = std::vector<std::array<double, 2>>;
+using Array_6x6 = std::array<std::array<double, 6>, 6>;
 
 namespace openturbine::restruct_poc::tests {
 

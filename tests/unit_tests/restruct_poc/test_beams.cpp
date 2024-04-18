@@ -2,13 +2,26 @@
 
 #include <gtest/gtest.h>
 
+#include "src/restruct_poc/AssembleElasticStiffnessMatrix.hpp"
+#include "src/restruct_poc/AssembleGyroscopicInertiaMatrix.hpp"
+#include "src/restruct_poc/AssembleInertialStiffnessMatrix.hpp"
+#include "src/restruct_poc/AssembleMassMatrix.hpp"
+#include "src/restruct_poc/AssembleResidualVector.hpp"
+#include "src/restruct_poc/BeamElement.hpp"
+#include "src/restruct_poc/BeamNode.hpp"
+#include "src/restruct_poc/BeamSection.hpp"
+#include "src/restruct_poc/BeamsInput.hpp"
+#include "src/restruct_poc/CreateBeams.hpp"
+#include "src/restruct_poc/UpdateState.hpp"
 #include "src/restruct_poc/beams.hpp"
-#include "src/restruct_poc/state.hpp"
+#include "src/restruct_poc/solver/State.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::restruct_poc::tests {
 
 class BeamsTest : public testing::Test {
+    using BeamQuadrature = std::vector<std::array<double, 2>>;
+
 protected:
     // Per-test-suite set-up.
     // Called before the first test in this test suite.

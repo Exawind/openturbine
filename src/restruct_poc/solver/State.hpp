@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.hpp"
+#include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 

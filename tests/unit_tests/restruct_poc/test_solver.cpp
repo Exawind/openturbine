@@ -2,11 +2,23 @@
 
 #include <gtest/gtest.h>
 
+#include "src/restruct_poc/BeamElement.hpp"
+#include "src/restruct_poc/BeamNode.hpp"
+#include "src/restruct_poc/BeamSection.hpp"
+#include "src/restruct_poc/BeamsInput.hpp"
+#include "src/restruct_poc/CreateBeams.hpp"
 #include "src/restruct_poc/beams.hpp"
-#include "src/restruct_poc/solver.hpp"
+#include "src/restruct_poc/solver/AssembleConstraints.hpp"
+#include "src/restruct_poc/solver/AssembleSystem.hpp"
+#include "src/restruct_poc/solver/InitializeConstraints.hpp"
+#include "src/restruct_poc/solver/PredictNextState.hpp"
+#include "src/restruct_poc/solver/Solver.hpp"
+#include "src/restruct_poc/solver/Step.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::restruct_poc::tests {
+
+using BeamQuadrature = std::vector<std::array<double, 2>>;
 
 class NewSolverTest : public testing::Test {
 protected:
