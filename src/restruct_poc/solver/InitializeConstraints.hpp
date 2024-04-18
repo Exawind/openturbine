@@ -5,7 +5,8 @@
 
 #include "CalculateConstraintX0.hpp"
 #include "Solver.hpp"
-#include "beams.hpp"
+
+#include "src/restruct_poc/beams.hpp"
 
 namespace openturbine {
 

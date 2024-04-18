@@ -10,9 +10,10 @@
 #include "SolveSystem.hpp"
 #include "Solver.hpp"
 #include "UpdateAlgorithmicAcceleration.hpp"
-#include "UpdateState.hpp"
 #include "UpdateStatePrediction.hpp"
-#include "beams.hpp"
+
+#include "src/restruct_poc/UpdateState.hpp"
+#include "src/restruct_poc/beams.hpp"
 
 namespace openturbine {
 

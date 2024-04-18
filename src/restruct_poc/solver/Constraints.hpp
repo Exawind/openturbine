@@ -6,7 +6,8 @@
 #include <Kokkos_Core.hpp>
 
 #include "ConstraintInput.hpp"
-#include "types.hpp"
+
+#include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 

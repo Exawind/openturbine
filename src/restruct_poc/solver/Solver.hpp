@@ -7,8 +7,9 @@
 
 #include "ConstraintInput.hpp"
 #include "Constraints.hpp"
-#include "state.hpp"
-#include "types.hpp"
+#include "State.hpp"
+
+#include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 

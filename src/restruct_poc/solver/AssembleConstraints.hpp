@@ -7,7 +7,8 @@
 #include "CalculateConstraintResidualGradient.hpp"
 #include "Solver.hpp"
 #include "UpdateIterationMatrix.hpp"
-#include "beams.hpp"
+
+#include "src/restruct_poc/beams.hpp"
 
 namespace openturbine {
 

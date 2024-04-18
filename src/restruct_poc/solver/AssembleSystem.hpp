@@ -4,14 +4,15 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "AssembleElasticStiffnessMatrix.hpp"
-#include "AssembleGyroscopicInertiaMatrix.hpp"
-#include "AssembleInertialStiffnessMatrix.hpp"
-#include "AssembleMassMatrix.hpp"
-#include "AssembleResidualVector.hpp"
-#include "CalculateTangentOperator.hpp"
 #include "Solver.hpp"
-#include "beams.hpp"
+
+#include "src/restruct_poc/AssembleElasticStiffnessMatrix.hpp"
+#include "src/restruct_poc/AssembleGyroscopicInertiaMatrix.hpp"
+#include "src/restruct_poc/AssembleInertialStiffnessMatrix.hpp"
+#include "src/restruct_poc/AssembleMassMatrix.hpp"
+#include "src/restruct_poc/AssembleResidualVector.hpp"
+#include "src/restruct_poc/CalculateTangentOperator.hpp"
+#include "src/restruct_poc/beams.hpp"
 
 namespace openturbine {
 

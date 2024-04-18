@@ -2,18 +2,18 @@
 
 #include <gtest/gtest.h>
 
-#include "src/restruct_poc/AssembleConstraints.hpp"
-#include "src/restruct_poc/AssembleSystem.hpp"
 #include "src/restruct_poc/BeamElement.hpp"
 #include "src/restruct_poc/BeamNode.hpp"
 #include "src/restruct_poc/BeamSection.hpp"
 #include "src/restruct_poc/BeamsInput.hpp"
 #include "src/restruct_poc/CreateBeams.hpp"
-#include "src/restruct_poc/InitializeConstraints.hpp"
-#include "src/restruct_poc/PredictNextState.hpp"
-#include "src/restruct_poc/Solver.hpp"
-#include "src/restruct_poc/Step.hpp"
 #include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/solver/AssembleConstraints.hpp"
+#include "src/restruct_poc/solver/AssembleSystem.hpp"
+#include "src/restruct_poc/solver/InitializeConstraints.hpp"
+#include "src/restruct_poc/solver/PredictNextState.hpp"
+#include "src/restruct_poc/solver/Solver.hpp"
+#include "src/restruct_poc/solver/Step.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::restruct_poc::tests {

@@ -8,8 +8,9 @@
 #include "UpdateDynamicPrediction.hpp"
 #include "UpdateLambdaPrediction.hpp"
 #include "UpdateStaticPrediction.hpp"
-#include "beams.hpp"
-#include "types.hpp"
+
+#include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 
