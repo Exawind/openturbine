@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBlas1_set.hpp>
 #include <KokkosBatched_Gemm_Decl.hpp>
 
 #include "MatrixOperations.hpp"
@@ -25,25 +26,21 @@ struct CalculateOuu {
 
         auto C11 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
         auto C21 = Kokkos::subview(Cuu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
-        for (int i = 0; i < Ouu.extent_int(0); ++i) {
-            for (int j = 0; j < Ouu.extent_int(1); ++j) {
-                Ouu(i, j) = 0.;
-            }
-        }
+        KokkosBlas::SerialSet::invoke(0., Ouu);
         auto Ouu_12 = Kokkos::subview(Ouu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
+        for(int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                Ouu_12(i, j) = N_tilde(i, j);
+            }
+        }
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., C11, x0pupSS, -1., Ouu_12);
         auto Ouu_22 = Kokkos::subview(Ouu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., C11, x0pupSS, 0., Ouu_12);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                Ouu_12(i, j) -= N_tilde(i, j);
+                Ouu_22(i, j) = M_tilde(i, j);
             }
         }
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., C21, x0pupSS, 0., Ouu_22);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Ouu_22(i, j) -= M_tilde(i, j);
-            }
-        }
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., C21, x0pupSS, -1., Ouu_22);
     }
 };
 

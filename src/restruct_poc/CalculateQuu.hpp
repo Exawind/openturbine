@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBlas1_set.hpp>
 #include <KokkosBatched_Gemm_Decl.hpp>
 
 #include "MatrixOperations.hpp"
@@ -24,18 +25,14 @@ struct CalculateQuu {
         auto Quu = Kokkos::subview(qp_Quu_, i_qp, Kokkos::ALL, Kokkos::ALL);
 
         auto C11 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
-        for (int i = 0; i < Quu.extent_int(0); ++i) {
-            for (int j = 0; j < Quu.extent_int(1); ++j) {
-                Quu(i, j) = 0.;
-            }
-        }
-        auto Quu_22 = Kokkos::subview(Quu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., C11, x0pupSS, 0., M1);
+        KokkosBlas::SerialSet::invoke(0., Quu);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                M1(i, j) -= N_tilde(i, j);
+                M1(i, j) = N_tilde(i, j);
             }
         }
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., C11, x0pupSS, -1., M1);
+        auto Quu_22 = Kokkos::subview(Quu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         KokkosBatched::SerialGemm<KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., x0pupSS, M1, 0., Quu_22);
     }
 };
