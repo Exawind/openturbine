@@ -29,14 +29,14 @@ struct CalculatePuu {
             }
         }
         auto Puu_21 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., x0pupSS, C11, 0., Puu_21);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., x0pupSS, C11, 0., Puu_21);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Puu_21(i, j) += N_tilde(i, j);
             }
         }
         auto Puu_22 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., x0pupSS, C12, 0., Puu_22);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., x0pupSS, C12, 0., Puu_22);
     }
 };
 

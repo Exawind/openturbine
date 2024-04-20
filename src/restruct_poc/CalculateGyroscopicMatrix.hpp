@@ -44,7 +44,7 @@ struct CalculateGyroscopicMatrix {
         auto Guu_12 = Kokkos::subview(Guu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         VecScale(eta, m, V1);
         VecTilde(V1, M1);
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::Transpose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., omega_tilde, M1, 0., Guu_12);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::Transpose, KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, M1, 0., Guu_12);
         KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., omega_tilde, V1, 0., V2);
         VecTilde(V2, M1);
         for (int i = 0; i < 3; i++) {
@@ -54,7 +54,7 @@ struct CalculateGyroscopicMatrix {
         }
         // Guu_22 = omega.tilde() * rho - (rho * omega).tilde()
         auto Guu_22 = Kokkos::subview(Guu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., omega_tilde, rho, 0., Guu_22);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, rho, 0., Guu_22);
         KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., rho, omega, 0., V1);
         VecTilde(V1, M1);
         for (int i = 0; i < 3; i++) {

@@ -43,7 +43,7 @@ struct CalculateInertialForces {
         VecTilde(omega, omega_tilde);
         VecTilde(omega_dot, omega_dot_tilde);
         auto FI_1 = Kokkos::subview(FI, Kokkos::make_pair(0, 3));
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., omega_tilde, omega_tilde, 0., M1);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, omega_tilde, 0., M1);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 M1(i, j) += omega_dot_tilde(i, j);
@@ -61,7 +61,7 @@ struct CalculateInertialForces {
         for (int i = 0; i < 3; i++) {
             FI_2(i) += V1(i);
         }
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., omega_tilde, rho, 0., M1);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, rho, 0., M1);
         KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., M1, omega, 0., V1);
         for (int i = 0; i < 3; i++) {
             FI_2(i) += V1(i);
