@@ -3,35 +3,6 @@
 
 namespace openturbine {
 
-template <typename View_A>
-KOKKOS_INLINE_FUNCTION void FillVector(View_A A, double value) {
-    for (int i = 0; i < A.extent_int(0); ++i) {
-        A(i) = value;
-    }
-}
-
-template <typename View_A, typename View_B, typename View_C>
-KOKKOS_INLINE_FUNCTION void MatVecMulAB(View_A A, View_B B, View_C C) {
-    for (int i = 0; i < A.extent_int(0); ++i) {
-        auto local_result = 0.;
-        for (int k = 0; k < B.extent_int(0); ++k) {
-            local_result += A(i, k) * B(k);
-        }
-        C(i) = local_result;
-    }
-}
-
-template <typename View_A, typename View_B, typename View_C>
-KOKKOS_INLINE_FUNCTION void MatVecMulATB(View_A A, View_B B, View_C C) {
-    for (int i = 0; i < A.extent_int(1); ++i) {
-        auto local_result = 0.;
-        for (int k = 0; k < B.extent_int(0); ++k) {
-            local_result += A(k, i) * B(k);
-        }
-        C(i) = local_result;
-    }
-}
-
 template <typename VectorType, typename MatrixType>
 KOKKOS_INLINE_FUNCTION void VecTilde(VectorType vector, MatrixType matrix) {
     matrix(0, 0) = 0.;
