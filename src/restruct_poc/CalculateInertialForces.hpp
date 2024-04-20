@@ -35,8 +35,10 @@ struct CalculateInertialForces {
         auto omega_dot_tilde = Kokkos::subview(omega_dot_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
-        auto V1 = Kokkos::subview(v1_, i_qp, Kokkos::ALL);
-        auto M1 = Kokkos::subview(M1_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto v1 = Kokkos::Array<double, 3>{};
+        auto V1 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(v1.data());
+        auto m1 = Kokkos::Array<double, 9>{};
+        auto M1 = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(m1.data());
         auto FI = Kokkos::subview(qp_FI_, i_qp, Kokkos::ALL);
 
         auto m = Muu(0, 0);

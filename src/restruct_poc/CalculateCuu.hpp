@@ -20,7 +20,8 @@ struct CalculateCuu {
         auto RR0 = Kokkos::subview(qp_RR0_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto Cstar = Kokkos::subview(qp_Cstar_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto Cuu = Kokkos::subview(qp_Cuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto Ctmp = Kokkos::subview(qp_Ctmp_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto ctmp_data = Kokkos::Array<double, 36>{};
+        auto Ctmp = Kokkos::View<double[6][6], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(ctmp_data.data());
         KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., RR0, Cstar, 0., Ctmp);
         KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::Transpose, KokkosBatched::Algo::Gemm::Default>::invoke(1., Ctmp, RR0, 0., Cuu);
     }
