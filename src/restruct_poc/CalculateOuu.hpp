@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBatched_Gemm_Decl.hpp>
 
 #include "MatrixOperations.hpp"
 #include "types.hpp"
@@ -31,13 +32,13 @@ struct CalculateOuu {
         }
         auto Ouu_12 = Kokkos::subview(Ouu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         auto Ouu_22 = Kokkos::subview(Ouu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        MatMulAB(C11, x0pupSS, Ouu_12);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., C11, x0pupSS, 0., Ouu_12);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Ouu_12(i, j) -= N_tilde(i, j);
             }
         }
-        MatMulAB(C21, x0pupSS, Ouu_22);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., C21, x0pupSS, 0., Ouu_22);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Ouu_22(i, j) -= M_tilde(i, j);

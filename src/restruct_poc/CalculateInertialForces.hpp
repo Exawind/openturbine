@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBatched_Gemm_Decl.hpp>
 
 #include "MatrixOperations.hpp"
 #include "VectorOperations.hpp"
@@ -41,7 +42,7 @@ struct CalculateInertialForces {
         VecTilde(omega, omega_tilde);
         VecTilde(omega_dot, omega_dot_tilde);
         auto FI_1 = Kokkos::subview(FI, Kokkos::make_pair(0, 3));
-        MatMulAB(omega_tilde, omega_tilde, M1);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., omega_tilde, omega_tilde, 0., M1);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 M1(i, j) += omega_dot_tilde(i, j);
@@ -59,7 +60,7 @@ struct CalculateInertialForces {
         for (int i = 0; i < 3; i++) {
             FI_2(i) += V1(i);
         }
-        MatMulAB(omega_tilde, rho, M1);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., omega_tilde, rho, 0., M1);
         MatVecMulAB(M1, omega, V1);
         for (int i = 0; i < 3; i++) {
             FI_2(i) += V1(i);

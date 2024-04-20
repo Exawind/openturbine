@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBatched_Gemm_Decl.hpp>
 
 #include "MatrixOperations.hpp"
 #include "types.hpp"
@@ -29,13 +30,13 @@ struct CalculateQuu {
             }
         }
         auto Quu_22 = Kokkos::subview(Quu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        MatMulAB(C11, x0pupSS, M1);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., C11, x0pupSS, 0., M1);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 M1(i, j) -= N_tilde(i, j);
             }
         }
-        MatMulATB(x0pupSS, M1, Quu_22);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., x0pupSS, M1, 0., Quu_22);
     }
 };
 

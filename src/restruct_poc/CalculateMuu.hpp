@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBatched_Gemm_Decl.hpp>
 
 #include "MatrixOperations.hpp"
 #include "types.hpp"
@@ -19,8 +20,8 @@ struct CalculateMuu {
         auto Mstar = Kokkos::subview(qp_Mstar_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto Muu = Kokkos::subview(qp_Muu_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto Mtmp = Kokkos::subview(qp_Mtmp_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        MatMulAB(RR0, Mstar, Mtmp);
-        MatMulABT(Mtmp, RR0, Muu);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., RR0, Mstar, 0., Mtmp);
+        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::Transpose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., Mtmp, RR0, 0., Muu);
     }
 };
 
