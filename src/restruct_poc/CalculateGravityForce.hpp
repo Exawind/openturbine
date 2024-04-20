@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBlas.hpp>
 
 #include "MatrixOperations.hpp"
 #include "VectorOperations.hpp"
@@ -26,7 +27,7 @@ struct CalculateGravityForce {
         for (int i = 0; i < 3; ++i) {
             FG(i) = V1(i);
         }
-        MatVecMulAB(eta_tilde, V1, Kokkos::subview(FG, Kokkos::make_pair(3, 6)));
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., eta_tilde, V1, 0., Kokkos::subview(FG, Kokkos::make_pair(3, 6)));
     }
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBlas.hpp>
 #include <KokkosBatched_Gemm_Decl.hpp>
 
 #include "MatrixOperations.hpp"
@@ -44,7 +45,7 @@ struct CalculateGyroscopicMatrix {
         VecScale(eta, m, V1);
         VecTilde(V1, M1);
         KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::Transpose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., omega_tilde, M1, 0., Guu_12);
-        MatVecMulAB(omega_tilde, V1, V2);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., omega_tilde, V1, 0., V2);
         VecTilde(V2, M1);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -54,7 +55,7 @@ struct CalculateGyroscopicMatrix {
         // Guu_22 = omega.tilde() * rho - (rho * omega).tilde()
         auto Guu_22 = Kokkos::subview(Guu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., omega_tilde, rho, 0., Guu_22);
-        MatVecMulAB(rho, omega, V1);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., rho, omega, 0., V1);
         VecTilde(V1, M1);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {

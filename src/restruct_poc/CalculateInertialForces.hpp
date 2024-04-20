@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBlas.hpp>
 #include <KokkosBatched_Gemm_Decl.hpp>
 
 #include "MatrixOperations.hpp"
@@ -49,19 +50,19 @@ struct CalculateInertialForces {
                 M1(i, j) *= m;
             }
         }
-        MatVecMulAB(M1, eta, FI_1);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., M1, eta, 0., FI_1);
         for (int i = 0; i < 3; i++) {
             FI_1(i) += u_ddot(i) * m;
         }
         auto FI_2 = Kokkos::subview(FI, Kokkos::make_pair(3, 6));
         VecScale(u_ddot, m, V1);
-        MatVecMulAB(eta_tilde, V1, FI_2);
-        MatVecMulAB(rho, omega_dot, V1);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., eta_tilde, V1, 0., FI_2);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., rho, omega_dot, 0., V1);
         for (int i = 0; i < 3; i++) {
             FI_2(i) += V1(i);
         }
         KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., omega_tilde, rho, 0., M1);
-        MatVecMulAB(M1, omega, V1);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., M1, omega, 0., V1);
         for (int i = 0; i < 3; i++) {
             FI_2(i) += V1(i);
         }

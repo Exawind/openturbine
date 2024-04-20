@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBlas.hpp>
 
 #include "MatrixOperations.hpp"
 #include "VectorOperations.hpp"
@@ -60,7 +61,7 @@ struct CalculateInertiaStiffnessMatrix {
         VecTilde(V1, M2);
         KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., M1, M2, 0., Kuu_22);
         KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., rho, omega_dot_tilde, 0., M1);
-        MatVecMulAB(rho, omega_dot, V1);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., rho, omega_dot, 0., V1);
         VecTilde(V1, M2);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -68,7 +69,7 @@ struct CalculateInertiaStiffnessMatrix {
             }
         }
         KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Unblocked>::invoke(1., rho, omega_tilde, 0., M1);
-        MatVecMulAB(rho, omega, V1);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., rho, omega, 0., V1);
         VecTilde(V1, M2);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {

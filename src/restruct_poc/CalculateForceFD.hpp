@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBlas.hpp>
 
 #include "MatrixOperations.hpp"
 #include "VectorOperations.hpp"
@@ -23,7 +24,7 @@ struct CalculateForceFD {
         for (int i = 0; i < FD.extent_int(0); ++i) {
             FD(i) = 0.;
         }
-        MatVecMulATB(x0pupSS, N, Kokkos::subview(FD, Kokkos::make_pair(3, 6)));
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::Transpose, KokkosBlas::Algo::Gemv::Default>::invoke(1., x0pupSS, N, 0., Kokkos::subview(FD, Kokkos::make_pair(3, 6)));
     }
 };
 
