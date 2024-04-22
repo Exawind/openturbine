@@ -1,8 +1,9 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBatched_Gemm_Decl.hpp>
+#include <KokkosBlas.hpp>
 
-#include "MatrixOperations.hpp"
 #include "VectorOperations.hpp"
 #include "types.hpp"
 
@@ -15,27 +16,33 @@ struct CalculateTangentOperator {
 
     KOKKOS_FUNCTION
     void operator()(const int i_node) const {
-        int j = i_node * kLieAlgebraComponents;
+        const int j = i_node * kLieAlgebraComponents;
         for (int k = 0; k < kLieAlgebraComponents; ++k) {
             T(j + k, j + k) = 1.0;
         }
-        double rv[3] = {h * q_delta(i_node, 3), h * q_delta(i_node, 4), h * q_delta(i_node, 5)};
-        double phi = Kokkos::sqrt(rv[0] * rv[0] + rv[1] * rv[1] + rv[2] * rv[2]);
-        if (phi > 1.0e-16) {
-            j += 3;
-            double m1[3][3], m2[3][3], m3[3][3], m4[3][3];
-            double tmp1 = (Kokkos::cos(phi) - 1.) / (phi * phi);
-            double tmp2 = (1. - Kokkos::sin(phi) / phi) / (phi * phi);
-            VectorTilde(tmp1, rv, m1);
-            VectorTilde(tmp2, rv, m2);
-            VectorTilde(1.0, rv, m3);
-            Mat3xMat3(m2, m3, m4);
+
+        auto rv_data = Kokkos::Array<double, 3>{};
+        auto rv = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{rv_data.data()};
+        KokkosBlas::serial_axpy(h, Kokkos::subview(q_delta, i_node, Kokkos::make_pair(3, 6)), rv);
+        auto phi = Kokkos::sqrt(rv(0) * rv(0) + rv(1) * rv(1) + rv(2) * rv(2));
+            const int j2 = j+3;
+            auto m1_data = Kokkos::Array<double, 9>{};
+            auto m1 = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(m1_data.data());
+            auto m2_data = Kokkos::Array<double, 9>{};
+            auto m2 = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(m2_data.data());
+
+            const auto tmp1 = (phi > 1.e-16) ? (Kokkos::cos(phi) - 1.) / (phi * phi) : 0.;
+            const auto tmp2 = (phi > 1.e-16) ? (1. - Kokkos::sin(phi) / phi) / (phi * phi) : 0.;
+
+            VecTilde(rv, m1);
+            VecTilde(rv, m2);
+            KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(tmp2, m2, m2, tmp1, m1);
+
             for (int k = 0; k < 3; ++k) {
                 for (int n = 0; n < 3; ++n) {
-                    T(j + k, j + n) += m1[k][n] + m4[k][n];
+                    T(j2 + k, j2 + n) += m1(k, n);
                 }
             }
-        }
     }
 };
 

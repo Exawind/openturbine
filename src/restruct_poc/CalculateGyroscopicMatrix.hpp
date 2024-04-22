@@ -5,7 +5,6 @@
 #include <KokkosBlas1_set.hpp>
 #include <KokkosBatched_Gemm_Decl.hpp>
 
-#include "MatrixOperations.hpp"
 #include "VectorOperations.hpp"
 #include "types.hpp"
 

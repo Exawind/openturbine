@@ -5,7 +5,6 @@
 #include <KokkosBlas1_set.hpp>
 #include <KokkosBatched_Gemm_Decl.hpp>
 
-#include "MatrixOperations.hpp"
 #include "VectorOperations.hpp"
 #include "types.hpp"
 
@@ -44,11 +43,6 @@ struct CalculateInertiaStiffnessMatrix {
 
         KokkosBlas::SerialSet::invoke(0., Kuu);
         KokkosBlas::serial_axpy(1., omega_dot_tilde, M1);
-//        for (int i = 0; i < 3; i++) {
-//            for (int j = 0; j < 3; j++) {
-//                M1(i, j) = omega_dot_tilde(i, j);
-//            }
-//        }
         KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, omega_tilde, 1., M1);
         KokkosBlas::serial_axpy(m, eta, V1);
         VecTilde(V1, M2);
