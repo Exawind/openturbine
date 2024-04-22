@@ -11,11 +11,16 @@ namespace openturbine {
 
 inline void AssembleElasticStiffnessMatrix(Beams& beams, View_NxN K) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Elastic Stiffness Matrix");
+    auto range_policy = std::invoke([&]() {
+        if constexpr (std::is_same_v<Kokkos::DefaultExecutionSpace, Kokkos::DefaultHostExecutionSpace>) {
+            return Kokkos::MDRangePolicy{{0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}};
+        }
+        else {
+            return Kokkos::MDRangePolicy{{0, 0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes, beams.max_elem_qps}};
+        }
+    }); 
     Kokkos::parallel_for(
-        "IntegrateElasticStiffnessMatrix",
-        Kokkos::MDRangePolicy{
-            {0, 0, 0, 0},
-            {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes, beams.max_elem_qps}},
+        "IntegrateElasticStiffnessMatrix", range_policy,
         IntegrateElasticStiffnessMatrix{
             beams.elem_indices,
             beams.node_state_indices,
