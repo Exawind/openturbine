@@ -37,14 +37,14 @@ struct Beams {
     View_3 gravity;
 
     // Node-based data
-    View_Nx7 node_x0;         // Inital position/rotation
-    View_Nx7 node_u;          // State: translation/rotation displacement
-    View_Nx6 node_u_dot;      // State: translation/rotation velocity
-    View_Nx6 node_u_ddot;     // State: translation/rotation acceleration
-    View_Nx6 node_FE;         // Elastic forces
-    View_Nx6 node_FG;         // Gravity forces
-    View_Nx6 node_FI;         // Inertial forces
-    View_Nx6 node_FX;         // External forces
+    View_Nx7 node_x0;      // Inital position/rotation
+    View_Nx7 node_u;       // State: translation/rotation displacement
+    View_Nx6 node_u_dot;   // State: translation/rotation velocity
+    View_Nx6 node_u_ddot;  // State: translation/rotation acceleration
+    View_Nx6 node_FE;      // Elastic forces
+    View_Nx6 node_FG;      // Gravity forces
+    View_Nx6 node_FI;      // Inertial forces
+    View_Nx6 node_FX;      // External forces
 
     // Quadrature point data
     View_N qp_weight;               // Integration weights
@@ -87,13 +87,6 @@ struct Beams {
 
     View_NxN shape_interp;  // shape function matrix for interpolation [Nodes x QPs]
     View_NxN shape_deriv;   // shape function matrix for derivative interp [Nodes x QPs]
-
-    // Scratch variables to be replaced later
-    View_Nx6x6 M_6x6;   //
-    View_Nx3x3 M8_3x3;  //
-    View_Nx3x3 M9_3x3;  //
-    View_Nx3 V2_3;      //
-    View_Nx3 V3_3;      //
 
     Beams() {}  // Default constructor which doesn't initialize views
 
@@ -159,13 +152,7 @@ struct Beams {
           qp_Guu("qp_Guu", num_qps_),
           qp_Kuu("qp_Kuu", num_qps_),
           shape_interp("shape_interp", num_nodes_, max_elem_qps),
-          shape_deriv("deriv_interp", num_nodes_, max_elem_qps),
-          // Scratch
-          M_6x6("M_6x6", num_qps_),
-          M8_3x3("R1_3x3", num_qps_),
-          M9_3x3("R1_3x3", num_qps_),
-          V2_3("V_3", num_qps_),
-          V3_3("V_3", num_qps_) {}
+          shape_deriv("deriv_interp", num_nodes_, max_elem_qps) {}
 };
 
 }  // namespace openturbine

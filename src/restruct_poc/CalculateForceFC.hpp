@@ -1,8 +1,8 @@
 #pragma once
 
+#include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "MatrixOperations.hpp"
 #include "VectorOperations.hpp"
 #include "types.hpp"
 
@@ -23,7 +23,8 @@ struct CalculateForceFC {
         auto M_tilde = Kokkos::subview(M_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto N_tilde = Kokkos::subview(N_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
 
-        MatVecMulAB(Cuu, strain, FC);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
+            invoke(1., Cuu, strain, 0., FC);
         auto N = Kokkos::subview(FC, Kokkos::make_pair(0, 3));
         auto M = Kokkos::subview(FC, Kokkos::make_pair(3, 6));
         VecTilde(M, M_tilde);

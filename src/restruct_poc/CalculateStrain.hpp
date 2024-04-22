@@ -2,7 +2,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "MatrixOperations.hpp"
 #include "QuaternionOperations.hpp"
 #include "types.hpp"
 

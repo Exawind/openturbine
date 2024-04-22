@@ -98,7 +98,7 @@ struct IntegrateMatrix {
         auto local_M_data = Kokkos::Array<double, 36>{};
         auto local_M =
             Kokkos::View<double[6][6], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(local_M_data.data());
-        for(int k = 0; k < idx.num_qps; ++k) {
+        for (int k = 0; k < idx.num_qps; ++k) {
             const auto k_qp = idx.qp_range.first + k;
             const auto w = qp_weight_(k_qp);
             const auto jacobian = qp_jacobian_(k_qp);

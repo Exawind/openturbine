@@ -11,13 +11,16 @@ namespace openturbine {
 inline void AssembleMassMatrix(Beams& beams, View_NxN M) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Mass Matrix");
     auto range_policy = std::invoke([&]() {
-        if constexpr (std::is_same_v<Kokkos::DefaultExecutionSpace, Kokkos::DefaultHostExecutionSpace>) {
-            return Kokkos::MDRangePolicy{{0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}};
+        if constexpr (std::is_same_v<
+                          Kokkos::DefaultExecutionSpace, Kokkos::DefaultHostExecutionSpace>) {
+            return Kokkos::MDRangePolicy{
+                {0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}};
+        } else {
+            return Kokkos::MDRangePolicy{
+                {0, 0, 0, 0},
+                {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes, beams.max_elem_qps}};
         }
-        else {
-            return Kokkos::MDRangePolicy{{0, 0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes, beams.max_elem_qps}};
-        }
-    }); 
+    });
     Kokkos::parallel_for(
         "IntegrateMatrix", range_policy,
         IntegrateMatrix{

@@ -1,8 +1,9 @@
 #pragma once
 
+#include <KokkosBatched_Gemm_Decl.hpp>
+#include <KokkosBlas1_set.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "MatrixOperations.hpp"
 #include "types.hpp"
 
 namespace openturbine {
@@ -22,20 +23,16 @@ struct CalculatePuu {
 
         auto C11 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));
         auto C12 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
-        for (int i = 0; i < Puu.extent_int(0); ++i) {
-            for (int j = 0; j < Puu.extent_int(1); ++j) {
-                Puu(i, j) = 0.;
-            }
-        }
+        KokkosBlas::SerialSet::invoke(0., Puu);
         auto Puu_21 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
-        MatMulATB(x0pupSS, C11, Puu_21);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Puu_21(i, j) += N_tilde(i, j);
-            }
-        }
+        KokkosBlas::serial_axpy(1., N_tilde, Puu_21);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., x0pupSS, C11, 1., Puu_21);
         auto Puu_22 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        MatMulATB(x0pupSS, C12, Puu_22);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., x0pupSS, C12, 0., Puu_22);
     }
 };
 

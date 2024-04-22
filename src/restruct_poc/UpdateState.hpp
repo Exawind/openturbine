@@ -104,13 +104,11 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     );
 
     Kokkos::parallel_for(
-        "CalculateMuu", beams.num_qps,
-        CalculateMuu{beams.qp_RR0, beams.qp_Mstar, beams.qp_Muu, beams.M_6x6}
+        "CalculateMuu", beams.num_qps, CalculateMuu{beams.qp_RR0, beams.qp_Mstar, beams.qp_Muu}
     );
 
     Kokkos::parallel_for(
-        "CalculateCuu", beams.num_qps,
-        CalculateCuu{beams.qp_RR0, beams.qp_Cstar, beams.qp_Cuu, beams.M_6x6}
+        "CalculateCuu", beams.num_qps, CalculateCuu{beams.qp_RR0, beams.qp_Cstar, beams.qp_Cuu}
     );
 
     Kokkos::parallel_for(
@@ -145,13 +143,11 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
         "CalculateInertialForces", beams.num_qps,
         CalculateInertialForces{
             beams.qp_Muu, beams.qp_u_ddot, beams.qp_omega, beams.qp_omega_dot, beams.qp_eta_tilde,
-            beams.qp_omega_tilde, beams.qp_omega_dot_tilde, beams.qp_rho, beams.qp_eta, beams.V2_3,
-            beams.M8_3x3, beams.qp_Fi}
+            beams.qp_omega_tilde, beams.qp_omega_dot_tilde, beams.qp_rho, beams.qp_eta, beams.qp_Fi}
     );
     Kokkos::parallel_for(
         "CalculateGravityForce", beams.num_qps,
-        CalculateGravityForce{
-            beams.gravity, beams.qp_Muu, beams.qp_eta_tilde, beams.V2_3, beams.qp_Fg}
+        CalculateGravityForce{beams.gravity, beams.qp_Muu, beams.qp_eta_tilde, beams.qp_Fg}
     );
     Kokkos::parallel_for(
         "CalculateOuu", beams.num_qps,
@@ -164,20 +160,19 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     );
     Kokkos::parallel_for(
         "CalculateQuu", beams.num_qps,
-        CalculateQuu{beams.qp_Cuu, beams.qp_x0pupss, beams.qp_N_tilde, beams.M8_3x3, beams.qp_Quu}
+        CalculateQuu{beams.qp_Cuu, beams.qp_x0pupss, beams.qp_N_tilde, beams.qp_Quu}
     );
     Kokkos::parallel_for(
         "CalculateGyroscopicMatrix", beams.num_qps,
         CalculateGyroscopicMatrix{
             beams.qp_Muu, beams.qp_omega, beams.qp_omega_tilde, beams.qp_rho, beams.qp_eta,
-            beams.V2_3, beams.V3_3, beams.M8_3x3, beams.qp_Guu}
+            beams.qp_Guu}
     );
     Kokkos::parallel_for(
         "CalculateInertiaStiffnessMatrix", beams.num_qps,
         CalculateInertiaStiffnessMatrix{
             beams.qp_Muu, beams.qp_u_ddot, beams.qp_omega, beams.qp_omega_dot, beams.qp_omega_tilde,
-            beams.qp_omega_dot_tilde, beams.qp_rho, beams.qp_eta, beams.V2_3, beams.M8_3x3,
-            beams.M9_3x3, beams.qp_Kuu}
+            beams.qp_omega_dot_tilde, beams.qp_rho, beams.qp_eta, beams.qp_Kuu}
     );
 
     Kokkos::parallel_for(
