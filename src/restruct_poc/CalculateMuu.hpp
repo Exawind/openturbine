@@ -12,7 +12,6 @@ struct CalculateMuu {
     View_Nx6x6::const_type qp_RR0_;    //
     View_Nx6x6::const_type qp_Mstar_;  //
     View_Nx6x6 qp_Muu_;                //
-    View_Nx6x6 qp_Mtmp_;               //
 
     KOKKOS_FUNCTION
     void operator()(const int i_qp) const {

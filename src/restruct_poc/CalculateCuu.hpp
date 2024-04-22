@@ -13,7 +13,6 @@ struct CalculateCuu {
     View_Nx6x6::const_type qp_RR0_;    //
     View_Nx6x6::const_type qp_Cstar_;  //
     View_Nx6x6 qp_Cuu_;                //
-    View_Nx6x6 qp_Ctmp_;               //
 
     KOKKOS_FUNCTION
     void operator()(const int i_qp) const {

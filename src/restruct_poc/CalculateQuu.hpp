@@ -13,7 +13,6 @@ struct CalculateQuu {
     View_Nx6x6::const_type qp_Cuu_;
     View_Nx3x3::const_type x0pupSS_;
     View_Nx3x3::const_type N_tilde_;
-    View_Nx3x3 M1_;
     View_Nx6x6 qp_Quu_;
 
     KOKKOS_FUNCTION

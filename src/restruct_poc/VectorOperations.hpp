@@ -29,11 +29,4 @@ void VectorTilde(double a, double v[3], double m[3][3]) {
     m[2][2] = 0.;
 }
 
-template <typename V1, typename V2>
-KOKKOS_INLINE_FUNCTION void VecScale(V1 v_in, double scale, V2 v_out) {
-    for (int i = 0; i < v_in.extent_int(0); ++i) {
-        v_out(i) = v_in(i) * scale;
-    }
-}
-
 }  // namespace openturbine

@@ -17,9 +17,6 @@ struct CalculateGyroscopicMatrix {
     View_Nx3x3::const_type omega_tilde_;
     View_Nx3x3::const_type rho_;
     View_Nx3::const_type eta_;
-    View_Nx3 v1_;
-    View_Nx3 v2_;
-    View_Nx3x3 M1_;
     View_Nx6x6 qp_Guu_;
 
     KOKKOS_FUNCTION
@@ -42,7 +39,7 @@ struct CalculateGyroscopicMatrix {
         KokkosBlas::SerialSet::invoke(0., Guu);
         // omega.tilde() * m * eta.tilde().t() + (omega.tilde() * m * eta).tilde().t()
         auto Guu_12 = Kokkos::subview(Guu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
-        VecScale(eta, m, V1);
+        KokkosBlas::serial_axpy(m, eta, V1);
         KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., omega_tilde, V1, 0., V2);
         VecTilde(V2, M1);
         for (int i = 0; i < 3; i++) {

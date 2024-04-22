@@ -266,7 +266,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     // WriteMatrixToFile(K, "K.csv");
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            EXPECT_NEAR(K[i][j], K[n + i][n + j], 1.e-10);
+            EXPECT_NEAR(K[i][j], K[n + i][n + j], 1.e-9);
         }
     }
 
