@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
-#include <KokkosBlas1_set.hpp>
 #include <KokkosBatched_Gemm_Decl.hpp>
+#include <KokkosBlas1_set.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "types.hpp"
 
@@ -28,10 +28,14 @@ struct CalculateOuu {
         KokkosBlas::SerialSet::invoke(0., Ouu);
         auto Ouu_12 = Kokkos::subview(Ouu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         KokkosBlas::serial_axpy(1., N_tilde, Ouu_12);
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., C11, x0pupSS, -1., Ouu_12);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., C11, x0pupSS, -1., Ouu_12);
         auto Ouu_22 = Kokkos::subview(Ouu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         KokkosBlas::serial_axpy(1., M_tilde, Ouu_22);
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., C21, x0pupSS, -1., Ouu_22);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., C21, x0pupSS, -1., Ouu_22);
     }
 };
 

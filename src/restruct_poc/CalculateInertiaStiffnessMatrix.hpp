@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
+#include <KokkosBatched_Gemm_Decl.hpp>
 #include <KokkosBlas.hpp>
 #include <KokkosBlas1_set.hpp>
-#include <KokkosBatched_Gemm_Decl.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "VectorOperations.hpp"
 #include "types.hpp"
@@ -43,22 +43,36 @@ struct CalculateInertiaStiffnessMatrix {
 
         KokkosBlas::SerialSet::invoke(0., Kuu);
         KokkosBlas::serial_axpy(1., omega_dot_tilde, M1);
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, omega_tilde, 1., M1);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, omega_tilde, 1., M1);
         KokkosBlas::serial_axpy(m, eta, V1);
         VecTilde(V1, M2);
         auto Kuu_12 = Kokkos::subview(Kuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::Transpose, KokkosBatched::Algo::Gemm::Default>::invoke(1., M1, M2, 0., Kuu_12);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::Transpose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., M1, M2, 0., Kuu_12);
         VecTilde(u_ddot, M1);
         auto Kuu_22 = Kokkos::subview(Kuu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., rho, omega_dot_tilde, 0., Kuu_22);
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., M1, M2, 1., Kuu_22);
-        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., rho, omega_dot, 0., V1);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., rho, omega_dot_tilde, 0., Kuu_22);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., M1, M2, 1., Kuu_22);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
+            invoke(1., rho, omega_dot, 0., V1);
         VecTilde(V1, M2);
         KokkosBlas::serial_axpy(-1., M2, Kuu_22);
-        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., rho, omega, 0., V1);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
+            invoke(1., rho, omega, 0., V1);
         VecTilde(V1, M1);
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., rho, omega_tilde, -1., M1);
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, M1, 1., Kuu_22);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., rho, omega_tilde, -1., M1);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, M1, 1., Kuu_22);
     }
 };
 

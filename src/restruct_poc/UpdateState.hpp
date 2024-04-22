@@ -104,13 +104,11 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     );
 
     Kokkos::parallel_for(
-        "CalculateMuu", beams.num_qps,
-        CalculateMuu{beams.qp_RR0, beams.qp_Mstar, beams.qp_Muu}
+        "CalculateMuu", beams.num_qps, CalculateMuu{beams.qp_RR0, beams.qp_Mstar, beams.qp_Muu}
     );
 
     Kokkos::parallel_for(
-        "CalculateCuu", beams.num_qps,
-        CalculateCuu{beams.qp_RR0, beams.qp_Cstar, beams.qp_Cuu}
+        "CalculateCuu", beams.num_qps, CalculateCuu{beams.qp_RR0, beams.qp_Cstar, beams.qp_Cuu}
     );
 
     Kokkos::parallel_for(
@@ -149,8 +147,7 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     );
     Kokkos::parallel_for(
         "CalculateGravityForce", beams.num_qps,
-        CalculateGravityForce{
-            beams.gravity, beams.qp_Muu, beams.qp_eta_tilde, beams.qp_Fg}
+        CalculateGravityForce{beams.gravity, beams.qp_Muu, beams.qp_eta_tilde, beams.qp_Fg}
     );
     Kokkos::parallel_for(
         "CalculateOuu", beams.num_qps,

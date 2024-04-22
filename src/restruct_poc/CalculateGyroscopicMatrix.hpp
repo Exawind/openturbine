@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
+#include <KokkosBatched_Gemm_Decl.hpp>
 #include <KokkosBlas.hpp>
 #include <KokkosBlas1_set.hpp>
-#include <KokkosBatched_Gemm_Decl.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "VectorOperations.hpp"
 #include "types.hpp"
@@ -39,7 +39,8 @@ struct CalculateGyroscopicMatrix {
         // omega.tilde() * m * eta.tilde().t() + (omega.tilde() * m * eta).tilde().t()
         auto Guu_12 = Kokkos::subview(Guu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         KokkosBlas::serial_axpy(m, eta, V1);
-        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., omega_tilde, V1, 0., V2);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
+            invoke(1., omega_tilde, V1, 0., V2);
         VecTilde(V2, M1);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -48,9 +49,12 @@ struct CalculateGyroscopicMatrix {
         }
 
         VecTilde(V1, M1);
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::Transpose, KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, M1, 1., Guu_12);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::Transpose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, M1, 1., Guu_12);
         // Guu_22 = omega.tilde() * rho - (rho * omega).tilde()
-        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., rho, omega, 0., V1);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
+            invoke(1., rho, omega, 0., V1);
         VecTilde(V1, M1);
         auto Guu_22 = Kokkos::subview(Guu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         for (int i = 0; i < 3; i++) {
@@ -58,7 +62,9 @@ struct CalculateGyroscopicMatrix {
                 Guu_22(i, j) = M1(i, j);
             }
         }
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, rho, -1., Guu_22);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, rho, -1., Guu_22);
     }
 };
 

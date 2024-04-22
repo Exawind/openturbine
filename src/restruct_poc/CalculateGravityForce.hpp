@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "VectorOperations.hpp"
 #include "types.hpp"
@@ -23,7 +23,11 @@ struct CalculateGravityForce {
         for (int i = 0; i < 3; ++i) {
             FG(i) = m * gravity(i);
         }
-        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::invoke(1., eta_tilde, Kokkos::subview(FG, Kokkos::make_pair(0, 3)), 0., Kokkos::subview(FG, Kokkos::make_pair(3, 6)));
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
+            invoke(
+                1., eta_tilde, Kokkos::subview(FG, Kokkos::make_pair(0, 3)), 0.,
+                Kokkos::subview(FG, Kokkos::make_pair(3, 6))
+            );
     }
 };
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
-#include <KokkosBlas1_set.hpp>
 #include <KokkosBatched_Gemm_Decl.hpp>
+#include <KokkosBlas1_set.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "types.hpp"
 
@@ -26,9 +26,13 @@ struct CalculatePuu {
         KokkosBlas::SerialSet::invoke(0., Puu);
         auto Puu_21 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));
         KokkosBlas::serial_axpy(1., N_tilde, Puu_21);
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., x0pupSS, C11, 1., Puu_21);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., x0pupSS, C11, 1., Puu_21);
         auto Puu_22 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-        KokkosBatched::SerialGemm<KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>::invoke(1., x0pupSS, C12, 0., Puu_22);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::Transpose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., x0pupSS, C12, 0., Puu_22);
     }
 };
 
