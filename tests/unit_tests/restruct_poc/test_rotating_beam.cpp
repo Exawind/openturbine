@@ -236,12 +236,12 @@ TEST(RotatingBeamTest, TwoBeam) {
     InitializeConstraints(solver, beams);
 
     // Calculate hub rotation for this time step
-    const auto q_hub = RotationVectorToQuaternion({step_size * omega[0], step_size * omega[1], step_size * omega[2]});
+    const auto q_hub =
+        RotationVectorToQuaternion({step_size * omega[0], step_size * omega[1], step_size * omega[2]}
+        );
 
     // Define hub translation/rotation displacement
-    Array_7 u_hub(
-        {0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]}
-    );
+    Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
     // Update constraint displacements
     for (int j = 0; j < solver.num_constraint_nodes; ++j) {
@@ -383,12 +383,13 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     // Perform time steps and check for convergence within max_iter iterations
     for (int i = 0; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion({step_size * (i+1) * omega[0], step_size * (i+1) * omega[1], step_size * (i+1) * omega[2]});
+        const auto q_hub = RotationVectorToQuaternion(
+            {step_size * (i + 1) * omega[0], step_size * (i + 1) * omega[1],
+             step_size * (i + 1) * omega[2]}
+        );
 
         // Define hub translation/rotation displacement
-        Array_7 u_hub(
-            {0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]}
-        );
+        Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
         // Update constraint displacements
         for (int j = 0; j < solver.num_constraint_nodes; ++j) {

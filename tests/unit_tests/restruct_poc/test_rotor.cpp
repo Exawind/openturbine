@@ -106,39 +106,30 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     // Node Rotation
     std::vector<std::array<double, 4>> node_rotation = {
         std::array<double, 4>{
-            0.9907227443578874, -0.13566457224703346, 0.007899216411874178, 0.0010816788266006607
-        },
+            0.9907227443578874, -0.13566457224703346, 0.007899216411874178, 0.0010816788266006607},
         std::array<double, 4>{
-            0.9909252982620628, -0.13426519082440538, 0.006260373215503113, 0.0008482478001981521
-        },
+            0.9909252982620628, -0.13426519082440538, 0.006260373215503113, 0.0008482478001981521},
         std::array<double, 4>{
-            0.9935167796154206, -0.11359784336864302, 0.00443636138538857, 0.0005072496973620513
-        },
+            0.9935167796154206, -0.11359784336864302, 0.00443636138538857, 0.0005072496973620513},
         std::array<double, 4>{
-            0.9974116582281851, -0.0718560788024431, 0.002579425796743258, 0.0001858284107537662
-        },
+            0.9974116582281851, -0.0718560788024431, 0.002579425796743258, 0.0001858284107537662},
         std::array<double, 4>{
             0.9993668285851437, -0.035436934270507724, -0.0031863532939427376,
-            -0.00011298613182902174
-        },
+            -0.00011298613182902174},
         std::array<double, 4>{
-            0.9997694376789568, -0.01571896564353078, -0.014626439008272178, -0.00022996551364081713
-        },
+            0.9997694376789568, -0.01571896564353078, -0.014626439008272178,
+            -0.00022996551364081713},
         std::array<double, 4>{
-            0.9996244263618369, -0.00011737820053802088, -0.027404241145705933, -3.21786905958282e-06
-        },
+            0.9996244263618369, -0.00011737820053802088, -0.027404241145705933,
+            -3.21786905958282e-06},
         std::array<double, 4>{
-            0.9992258769980531, 0.014354416057417973, -0.03662404497855903, 0.0005261240640677012
-        },
+            0.9992258769980531, 0.014354416057417973, -0.03662404497855903, 0.0005261240640677012},
         std::array<double, 4>{
-            0.998912306432686, 0.018760692766230495, -0.04268018194796855, 0.000801581655943506
-        },
+            0.998912306432686, 0.018760692766230495, -0.04268018194796855, 0.000801581655943506},
         std::array<double, 4>{
-            0.9987446969974336, 0.014486925484536069, -0.0479445051145804, 0.0006954414627441799
-        },
+            0.9987446969974336, 0.014486925484536069, -0.0479445051145804, 0.0006954414627441799},
         std::array<double, 4>{
-            0.9986289781304243, 0.010827457815091479, -0.051211540599741034, 0.000555252058204468
-        },
+            0.9986289781304243, 0.010827457815091479, -0.051211540599741034, 0.000555252058204468},
     };
 
     std::vector<BeamSection> material_sections = {
@@ -896,7 +887,9 @@ TEST(RotatingBeamTest, IEA15Rotor) {
 
         // Loop through nodes
         for (size_t j = 0; j < node_loc.size(); ++j) {
-            const auto pos = QuaternionRotateVector(q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]});
+            const auto pos = QuaternionRotateVector(
+                q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
+            );
             const auto rot = QuaternionCompose(q_root, node_rotation[j]);
             nodes.push_back(BeamNode(node_loc[j], pos, rot));
 
@@ -962,12 +955,13 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion({omega[0] * step_size * (i+1), omega[1] * step_size * (i+1), omega[2] * step_size * (i+1)});
+        const auto q_hub = RotationVectorToQuaternion(
+            {omega[0] * step_size * (i + 1), omega[1] * step_size * (i + 1),
+             omega[2] * step_size * (i + 1)}
+        );
 
         // Define hub translation/rotation displacement
-        Array_7 u_hub(
-            {0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]}
-        );
+        Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
         // Update constraint displacements
         for (int j = 0; j < solver.num_constraint_nodes; ++j) {

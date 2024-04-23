@@ -1,5 +1,9 @@
 #pragma once
 #include <array>
+<<<<<<< HEAD
+=======
+
+>>>>>>> fdc3be9 (Remove Vector and Quaternion includes from types.)
 #include <Kokkos_Core.hpp>
 
 namespace openturbine {
@@ -28,7 +32,9 @@ KOKKOS_INLINE_FUNCTION void QuaternionRotateVector(Q q, View1 v, View2 v_rot) {
                (q(0) * q(0) - q(1) * q(1) - q(2) * q(2) + q(3) * q(3)) * v(2);
 }
 
-inline std::array<double, 3> QuaternionRotateVector(std::array<double, 4> q, std::array<double, 3> v) {
+inline std::array<double, 3> QuaternionRotateVector(
+    std::array<double, 4> q, std::array<double, 3> v
+) {
     auto v_rot = std::array<double, 3>{};
     v_rot[0] = (q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]) * v[0] +
                2. * (q[1] * q[2] - q[0] * q[3]) * v[1] + 2. * (q[1] * q[3] + q[0] * q[2]) * v[2];
@@ -58,9 +64,10 @@ KOKKOS_INLINE_FUNCTION void QuaternionDerivative(Q q, M m) {
 
 template <typename Qin, typename Qout>
 KOKKOS_INLINE_FUNCTION void QuaternionInverse(Qin q_in, Qout q_out) {
-    auto length = Kokkos::sqrt(q_in(0) * q_in(0) + q_in(1) * q_in(1) + q_in(2) * q_in(2) + q_in(3) * q_in(3));
+    auto length =
+        Kokkos::sqrt(q_in(0) * q_in(0) + q_in(1) * q_in(1) + q_in(2) * q_in(2) + q_in(3) * q_in(3));
     q_out(0) = q_in(0) / length;
-    for(int i = 1; i < 4; ++i) {
+    for (int i = 1; i < 4; ++i) {
         q_out(i) = -q_in(i) / length;
     }
 }
@@ -90,14 +97,13 @@ KOKKOS_INLINE_FUNCTION void ComputeAxialVector(M m, V v) {
 }
 
 template <typename V, typename Q>
-KOKKOS_INLINE_FUNCTION
-void RotationVectorToQuaternion(V phi, Q quaternion) {
+KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(V phi, Q quaternion) {
     const auto angle = Kokkos::sqrt(phi(0) * phi(0) + phi(1) * phi(1) + phi(2) * phi(2));
     const auto cos_angle = Kokkos::cos(angle / 2.0);
     const auto factor = (Kokkos::abs(angle) < 1.e-12) ? 0. : Kokkos::sin(angle / 2.0) / angle;
     quaternion(0) = cos_angle;
-    for(int i = 0; i < 3; ++i) {
-        quaternion(i+1) = phi(i) * factor;
+    for (int i = 0; i < 3; ++i) {
+        quaternion(i + 1) = phi(i) * factor;
     }
 }
 
