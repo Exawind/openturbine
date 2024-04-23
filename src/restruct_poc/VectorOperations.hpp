@@ -16,4 +16,12 @@ KOKKOS_INLINE_FUNCTION void VecTilde(VectorType vector, MatrixType matrix) {
     matrix(2, 2) = 0.;
 }
 
+constexpr std::array<double, 3> CrossProduct(std::array<double, 3> a, std::array<double, 3> b) {
+    auto c = std::array<double, 3>{};
+    c[0] = a[1] * b[2] - a[2] * b[1];
+    c[1] = a[2] * b[0] - a[0] * b[2];
+    c[2] = a[0] * b[1] - a[1] * b[0];
+    return c;
+}
+
 }  // namespace openturbine

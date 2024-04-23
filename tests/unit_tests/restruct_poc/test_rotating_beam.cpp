@@ -130,14 +130,9 @@ TEST(RotatingBeamTest, StepConvergence) {
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
         // Set constraint displacement
-        auto q = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
-            Vector(0, 0, omega * step_size * (i + 1))
-        );
-        solver.constraints.UpdateDisplacement(
-            0, {0, 0, 0, q.GetScalarComponent(), q.GetXComponent(), q.GetYComponent(),
-                q.GetZComponent()}
-        );
-        auto converged = Step(solver, beams);
+        const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
+        solver.constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+        const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
     }
 
@@ -171,7 +166,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     std::array<double, 3> gravity = {0., 0., 0.};
 
     // Rotor angular velocity in rad/s
-    Vector omega(0., 0., 1);
+    const auto omega = std::array<double, 3>{0., 0., 1.};
 
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
@@ -185,26 +180,26 @@ TEST(RotatingBeamTest, TwoBeam) {
     // Loop through blades
     for (int i = 0; i < num_blades; ++i) {
         // Define root rotation
-        Quaternion q_root(1, 0, 0, 0);
+        const auto q_root = std::array<double, 4>{1., 0., 0., 0.};
 
         // Declare list of element nodes
         std::vector<BeamNode> nodes;
 
         // Loop through nodes
         for (const double s : node_s) {
-            auto pos = q_root * Vector(10. * s + 2., 0, 0);
+            const auto pos = QuaternionRotateVector(q_root, {10. * s + 2., 0., 0.});
             nodes.push_back(BeamNode(s, pos, q_root));
 
             // Add node initial displacement, velocity, and acceleration
             displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
-            auto v = omega.CrossProduct(pos);
+            auto v = CrossProduct(omega, pos);
             velocity.push_back({
-                v.GetX(),
-                v.GetY(),
-                v.GetZ(),
-                omega.GetXComponent(),
-                omega.GetYComponent(),
-                omega.GetZComponent(),
+                v[0],
+                v[1],
+                v[2],
+                omega[0],
+                omega[1],
+                omega[2],
             });
             acceleration.push_back({0., 0., 0., 0., 0., 0.});
         }
@@ -241,12 +236,11 @@ TEST(RotatingBeamTest, TwoBeam) {
     InitializeConstraints(solver, beams);
 
     // Calculate hub rotation for this time step
-    auto q_hub = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(omega * step_size);
+    const auto q_hub = RotationVectorToQuaternion({step_size * omega[0], step_size * omega[1], step_size * omega[2]});
 
     // Define hub translation/rotation displacement
     Array_7 u_hub(
-        {0, 0, 0, q_hub.GetScalarComponent(), q_hub.GetXComponent(), q_hub.GetYComponent(),
-         q_hub.GetZComponent()}
+        {0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]}
     );
 
     // Update constraint displacements
@@ -314,7 +308,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     std::array<double, 3> gravity = {0., 0., 9.81};
 
     // Rotor angular velocity in rad/s
-    Vector omega(0., 0., 1);
+    const auto omega = std::array<double, 3>{0., 0., 1.};
 
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
@@ -329,28 +323,26 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     // Loop through blades
     for (int i = 0; i < num_blades; ++i) {
         // Define root rotation
-        auto q_root = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
-            Vector(0, 0, 2.0 * M_PI * i / num_blades)
-        );
+        const auto q_root = RotationVectorToQuaternion({0., 0., 2. * M_PI * i / num_blades});
 
         // Declare list of element nodes
         std::vector<BeamNode> nodes;
 
         // Loop through nodes
         for (const double s : node_s) {
-            auto pos = q_root * Vector(10. * s + 2., 0, 0);
+            const auto pos = QuaternionRotateVector(q_root, {10. * s + 2., 0., 0.});
             nodes.push_back(BeamNode(s, pos, q_root));
 
             // Add node initial displacement, velocity, and acceleration
             displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
-            auto v = omega.CrossProduct(pos);
+            auto v = CrossProduct(omega, pos);
             velocity.push_back({
-                v.GetX(),
-                v.GetY(),
-                v.GetZ(),
-                omega.GetXComponent(),
-                omega.GetYComponent(),
-                omega.GetZComponent(),
+                v[0],
+                v[1],
+                v[2],
+                omega[0],
+                omega[1],
+                omega[2],
             });
             acceleration.push_back({0., 0., 0., 0., 0., 0.});
         }
@@ -391,14 +383,11 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     // Perform time steps and check for convergence within max_iter iterations
     for (int i = 0; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        auto q_hub = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
-            omega * step_size * (i + 1)
-        );
+        const auto q_hub = RotationVectorToQuaternion({step_size * (i+1) * omega[0], step_size * (i+1) * omega[1], step_size * (i+1) * omega[2]});
 
         // Define hub translation/rotation displacement
         Array_7 u_hub(
-            {0, 0, 0, q_hub.GetScalarComponent(), q_hub.GetXComponent(), q_hub.GetYComponent(),
-             q_hub.GetZComponent()}
+            {0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]}
         );
 
         // Update constraint displacements

@@ -2,8 +2,6 @@
 
 #include <array>
 
-#include "types.hpp"
-
 namespace openturbine {
 
 struct BeamNode {
@@ -12,9 +10,8 @@ struct BeamNode {
 
     BeamNode(std::array<double, 7> x_) : s(0.), x(std::move(x_)) {}
     BeamNode(double s_, std::array<double, 7> x_) : s(s_), x(x_) {}
-    BeamNode(double s_, Vector p, Quaternion q)
-        : s(s_), x{p.GetX(),          p.GetY(),          p.GetZ(),         q.GetScalarComponent(),
-                   q.GetXComponent(), q.GetYComponent(), q.GetZComponent()} {}
+    BeamNode(double s_, std::array<double, 3> p, std::array<double, 4> q)
+        : s(s_), x{p[0], p[1], p[2], q[0], q[1], q[2], q[3]} {}
 };
 
 }  // namespace openturbine
