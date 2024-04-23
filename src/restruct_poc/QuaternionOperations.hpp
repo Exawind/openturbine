@@ -1,9 +1,5 @@
 #pragma once
 #include <array>
-<<<<<<< HEAD
-=======
-
->>>>>>> fdc3be9 (Remove Vector and Quaternion includes from types.)
 #include <Kokkos_Core.hpp>
 
 namespace openturbine {
