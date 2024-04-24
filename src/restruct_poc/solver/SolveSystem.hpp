@@ -39,10 +39,14 @@ inline void SolveSystem(Solver& solver) {
     );
 
     KokkosBlas::axpby(-1.0, solver.R, 0.0, solver.x);
-    Kokkos::deep_copy(solver.St_left, solver.St);
     auto x = Kokkos::View<double*, Kokkos::LayoutLeft>(solver.x);
-    KokkosLapack::gesv(solver.St_left, x, solver.IPIV);
-    Kokkos::deep_copy(solver.x, x);
+    if constexpr (std::is_same_v<decltype(solver.St)::array_layout, Kokkos::LayoutLeft>) {
+        KokkosLapack::gesv(solver.St, x, solver.IPIV);
+    }
+    else {
+        Kokkos::deep_copy(solver.St_left, solver.St);
+        KokkosLapack::gesv(solver.St_left, x, solver.IPIV);
+    }
 
     Kokkos::parallel_for(
         "UnconditionSolution", solver.num_dofs,
