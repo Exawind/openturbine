@@ -3,7 +3,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "CalculateCuu.hpp"
+#include "RotateSectionMatrix.hpp"
 #include "CalculateForceFC.hpp"
 #include "CalculateForceFD.hpp"
 #include "CalculateGravityForce.hpp"
@@ -11,7 +11,6 @@
 #include "CalculateInertiaStiffnessMatrix.hpp"
 #include "CalculateInertialForces.hpp"
 #include "CalculateMassMatrixComponents.hpp"
-#include "CalculateMuu.hpp"
 #include "CalculateNodeForces.hpp"
 #include "CalculateOuu.hpp"
 #include "CalculatePuu.hpp"
@@ -104,11 +103,11 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     );
 
     Kokkos::parallel_for(
-        "CalculateMuu", beams.num_qps, CalculateMuu{beams.qp_RR0, beams.qp_Mstar, beams.qp_Muu}
+        "RotateSectionMatrix", beams.num_qps, RotateSectionMatrix{beams.qp_RR0, beams.qp_Mstar, beams.qp_Muu}
     );
 
     Kokkos::parallel_for(
-        "CalculateCuu", beams.num_qps, CalculateCuu{beams.qp_RR0, beams.qp_Cstar, beams.qp_Cuu}
+        "RotateSectionMatrix", beams.num_qps, RotateSectionMatrix{beams.qp_RR0, beams.qp_Cstar, beams.qp_Cuu}
     );
 
     Kokkos::parallel_for(
