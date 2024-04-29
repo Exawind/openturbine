@@ -8,7 +8,7 @@
 #include "Solver.hpp"
 #include "UpdateIterationMatrix.hpp"
 
-#include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/beams/Beams.hpp"
 
 namespace openturbine {
 

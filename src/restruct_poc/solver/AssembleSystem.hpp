@@ -12,7 +12,7 @@
 #include "src/restruct_poc/AssembleMassMatrix.hpp"
 #include "src/restruct_poc/AssembleResidualVector.hpp"
 #include "src/restruct_poc/CalculateTangentOperator.hpp"
-#include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/beams/Beams.hpp"
 
 namespace openturbine {
 

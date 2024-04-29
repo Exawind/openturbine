@@ -4,7 +4,7 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "IntegrateMatrix.hpp"
-#include "beams.hpp"
+#include "src/restruct_poc/beams/Beams.hpp"
 #include "types.hpp"
 
 namespace openturbine {

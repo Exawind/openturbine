@@ -8,7 +8,7 @@
 #include "InterpolateQPVelocity.hpp"
 #include "PopulateElementViews.hpp"
 #include "SetNodeStateIndices.hpp"
-#include "beams.hpp"
+#include "Beams.hpp"
 
 namespace openturbine {
 

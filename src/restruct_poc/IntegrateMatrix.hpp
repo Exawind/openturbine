@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "beams.hpp"
+#include "src/restruct_poc/beams/Beams.hpp"
 #include "types.hpp"
 
 namespace openturbine {

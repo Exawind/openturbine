@@ -18,12 +18,12 @@
 #include "CalculateRR0.hpp"
 #include "CalculateStrain.hpp"
 #include "CalculateTemporaryVariables.hpp"
-#include "InterpolateQPAcceleration.hpp"
-#include "InterpolateQPState.hpp"
-#include "InterpolateQPVelocity.hpp"
+#include "src/restruct_poc/beams/InterpolateQPAcceleration.hpp"
+#include "src/restruct_poc/beams/InterpolateQPState.hpp"
+#include "src/restruct_poc/beams/InterpolateQPVelocity.hpp"
 #include "UpdateNodeState.hpp"
-#include "beams.hpp"
-#include "types.hpp"
+#include "src/restruct_poc/beams/Beams.hpp"
+#include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 
