@@ -2,8 +2,9 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "InterpolationOperations.hpp"
 #include "Beams.hpp"
+#include "InterpolationOperations.hpp"
+
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {

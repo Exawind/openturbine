@@ -3,7 +3,6 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "RotateSectionMatrix.hpp"
 #include "CalculateForceFC.hpp"
 #include "CalculateForceFD.hpp"
 #include "CalculateGravityForce.hpp"
@@ -18,11 +17,13 @@
 #include "CalculateRR0.hpp"
 #include "CalculateStrain.hpp"
 #include "CalculateTemporaryVariables.hpp"
+#include "RotateSectionMatrix.hpp"
+#include "UpdateNodeState.hpp"
+
+#include "src/restruct_poc/beams/Beams.hpp"
 #include "src/restruct_poc/beams/InterpolateQPAcceleration.hpp"
 #include "src/restruct_poc/beams/InterpolateQPState.hpp"
 #include "src/restruct_poc/beams/InterpolateQPVelocity.hpp"
-#include "UpdateNodeState.hpp"
-#include "src/restruct_poc/beams/Beams.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
@@ -103,11 +104,13 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     );
 
     Kokkos::parallel_for(
-        "RotateSectionMatrix", beams.num_qps, RotateSectionMatrix{beams.qp_RR0, beams.qp_Mstar, beams.qp_Muu}
+        "RotateSectionMatrix", beams.num_qps,
+        RotateSectionMatrix{beams.qp_RR0, beams.qp_Mstar, beams.qp_Muu}
     );
 
     Kokkos::parallel_for(
-        "RotateSectionMatrix", beams.num_qps, RotateSectionMatrix{beams.qp_RR0, beams.qp_Cstar, beams.qp_Cuu}
+        "RotateSectionMatrix", beams.num_qps,
+        RotateSectionMatrix{beams.qp_RR0, beams.qp_Cstar, beams.qp_Cuu}
     );
 
     Kokkos::parallel_for(

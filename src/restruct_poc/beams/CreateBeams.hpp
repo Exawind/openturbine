@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Beams.hpp"
 #include "CalculateJacobian.hpp"
 #include "InterpolateQPAcceleration.hpp"
 #include "InterpolateQPPosition.hpp"
@@ -8,7 +9,6 @@
 #include "InterpolateQPVelocity.hpp"
 #include "PopulateElementViews.hpp"
 #include "SetNodeStateIndices.hpp"
-#include "Beams.hpp"
 
 namespace openturbine {
 

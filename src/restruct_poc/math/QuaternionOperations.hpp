@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+
 #include <Kokkos_Core.hpp>
 
 namespace openturbine {

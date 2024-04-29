@@ -4,6 +4,7 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "IntegrateResidualVector.hpp"
+
 #include "src/restruct_poc/beams/Beams.hpp"
 #include "src/restruct_poc/types.hpp"
 
