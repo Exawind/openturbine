@@ -2,8 +2,8 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "QuaternionOperations.hpp"
-#include "types.hpp"
+#include "src/restruct_poc/QuaternionOperations.hpp"
+#include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 

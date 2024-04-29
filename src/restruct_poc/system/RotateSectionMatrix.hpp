@@ -4,7 +4,7 @@
 #include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
 
-#include "types.hpp"
+#include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 

@@ -3,8 +3,8 @@
 #include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "VectorOperations.hpp"
-#include "types.hpp"
+#include "src/restruct_poc/VectorOperations.hpp"
+#include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 
