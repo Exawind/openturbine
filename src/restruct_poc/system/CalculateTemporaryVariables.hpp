@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "src/restruct_poc/VectorOperations.hpp"
+#include "src/restruct_poc/math/VectorOperations.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
