@@ -123,6 +123,36 @@ struct CalculateNodeForces {
             node_FG_(i, k) = local_FG[k];
         }
     }
+
+    KOKKOS_FUNCTION
+    void operator()(const int i_elem, const int i_index, const int k) const {
+        const auto idx = elem_indices(i_elem);
+        const auto i = idx.node_range.first + i_index;
+
+        if (i_index >= idx.num_nodes || k >= 6) {
+            return;
+        }
+
+        auto local_FE = 0.;
+        auto local_FI = 0.;
+        auto local_FG = 0.;
+
+        for (int j_index = 0; j_index < idx.num_qps; ++j_index) {
+            const auto j = idx.qp_range.first + j_index;
+            const auto weight = qp_weight_(j);
+            const auto coeff_c = weight * shape_deriv_(i, j_index);
+            const auto coeff_d = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
+            const auto coeff_i = coeff_d;
+            const auto coeff_g = coeff_d;
+            local_FE += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
+            local_FI += coeff_i * qp_Fi_(j, k);
+            local_FG += coeff_g * qp_Fg_(j, k);
+        }
+
+        node_FE_(i, k) = local_FE;
+        node_FI_(i, k) = local_FI;
+        node_FG_(i, k) = local_FG;
+    }
 };
 
 struct CalculateNodeForces_FE {

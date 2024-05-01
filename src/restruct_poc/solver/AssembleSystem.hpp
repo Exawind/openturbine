@@ -43,8 +43,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
         Kokkos::deep_copy(solver.G, 0.);
         AssembleMassMatrix(beams, solver.M);
         AssembleGyroscopicInertiaMatrix(beams, solver.G);
-        KokkosBlas::axpy(solver.beta_prime, solver.M, St_11);
-        KokkosBlas::axpy(solver.gamma_prime, solver.G, St_11);
+        KokkosBlas::update(solver.beta_prime, solver.M, solver.gamma_prime, solver.G, 1., St_11);
     }
 }
 
