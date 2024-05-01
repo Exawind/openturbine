@@ -42,8 +42,7 @@ inline void SolveSystem(Solver& solver) {
     auto x = Kokkos::View<double*, Kokkos::LayoutLeft>(solver.x);
     if constexpr (std::is_same_v<decltype(solver.St)::array_layout, Kokkos::LayoutLeft>) {
         KokkosLapack::gesv(solver.St, x, solver.IPIV);
-    }
-    else {
+    } else {
         Kokkos::deep_copy(solver.St_left, solver.St);
         KokkosLapack::gesv(solver.St_left, x, solver.IPIV);
     }

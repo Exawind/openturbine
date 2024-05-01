@@ -6,13 +6,13 @@
 
 #include "Solver.hpp"
 
-#include "src/restruct_poc/AssembleElasticStiffnessMatrix.hpp"
-#include "src/restruct_poc/AssembleGyroscopicInertiaMatrix.hpp"
-#include "src/restruct_poc/AssembleInertialStiffnessMatrix.hpp"
-#include "src/restruct_poc/AssembleMassMatrix.hpp"
-#include "src/restruct_poc/AssembleResidualVector.hpp"
-#include "src/restruct_poc/CalculateTangentOperator.hpp"
-#include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/beams/Beams.hpp"
+#include "src/restruct_poc/system/AssembleElasticStiffnessMatrix.hpp"
+#include "src/restruct_poc/system/AssembleGyroscopicInertiaMatrix.hpp"
+#include "src/restruct_poc/system/AssembleInertialStiffnessMatrix.hpp"
+#include "src/restruct_poc/system/AssembleMassMatrix.hpp"
+#include "src/restruct_poc/system/AssembleResidualVector.hpp"
+#include "src/restruct_poc/system/CalculateTangentOperator.hpp"
 
 namespace openturbine {
 

@@ -2,12 +2,12 @@
 
 #include <gtest/gtest.h>
 
-#include "src/restruct_poc/BeamElement.hpp"
-#include "src/restruct_poc/BeamNode.hpp"
-#include "src/restruct_poc/BeamSection.hpp"
-#include "src/restruct_poc/BeamsInput.hpp"
-#include "src/restruct_poc/CreateBeams.hpp"
-#include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/beams/BeamElement.hpp"
+#include "src/restruct_poc/beams/BeamNode.hpp"
+#include "src/restruct_poc/beams/BeamSection.hpp"
+#include "src/restruct_poc/beams/Beams.hpp"
+#include "src/restruct_poc/beams/BeamsInput.hpp"
+#include "src/restruct_poc/beams/CreateBeams.hpp"
 #include "src/restruct_poc/solver/AssembleConstraints.hpp"
 #include "src/restruct_poc/solver/AssembleSystem.hpp"
 #include "src/restruct_poc/solver/InitializeConstraints.hpp"

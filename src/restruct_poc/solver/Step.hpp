@@ -12,8 +12,8 @@
 #include "UpdateAlgorithmicAcceleration.hpp"
 #include "UpdateStatePrediction.hpp"
 
-#include "src/restruct_poc/UpdateState.hpp"
-#include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/beams/Beams.hpp"
+#include "src/restruct_poc/system/UpdateState.hpp"
 
 namespace openturbine {
 

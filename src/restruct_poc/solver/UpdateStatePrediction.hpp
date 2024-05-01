@@ -9,7 +9,7 @@
 #include "UpdateLambdaPrediction.hpp"
 #include "UpdateStaticPrediction.hpp"
 
-#include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/beams/Beams.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
