@@ -1,8 +1,10 @@
 #pragma once
 
+#include <KokkosBatched_Gemm_Decl.hpp>
+#include <KokkosBlas.hpp>
+#include <KokkosBlas1_set.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "MatrixOperations.hpp"
 #include "VectorOperations.hpp"
 #include "types.hpp"
 
@@ -17,9 +19,6 @@ struct CalculateInertiaStiffnessMatrix {
     View_Nx3x3::const_type omega_dot_tilde_;
     View_Nx3x3::const_type rho_;
     View_Nx3::const_type eta_;
-    View_Nx3 v1_;
-    View_Nx3x3 M1_;
-    View_Nx3x3 M2_;
     View_Nx6x6 qp_Kuu_;
 
     KOKKOS_FUNCTION
@@ -32,55 +31,48 @@ struct CalculateInertiaStiffnessMatrix {
         auto omega_dot_tilde = Kokkos::subview(omega_dot_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
-        auto V1 = Kokkos::subview(v1_, i_qp, Kokkos::ALL);
-        auto M1 = Kokkos::subview(M1_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto M2 = Kokkos::subview(M2_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto v1 = Kokkos::Array<double, 3>{};
+        auto V1 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(v1.data());
+        auto m1 = Kokkos::Array<double, 9>{};
+        auto M1 = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(m1.data());
+        auto m2 = Kokkos::Array<double, 9>{};
+        auto M2 = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(m2.data());
         auto Kuu = Kokkos::subview(qp_Kuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
 
         auto m = Muu(0, 0);
 
-        for (int i = 0; i < Kuu.extent_int(0); ++i) {
-            for (int j = 0; j < Kuu.extent_int(1); ++j) {
-                Kuu(i, j) = 0.;
-            }
-        }
+        KokkosBlas::SerialSet::invoke(0., Kuu);
+        KokkosBlas::serial_axpy(1., omega_dot_tilde, M1);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, omega_tilde, 1., M1);
+        KokkosBlas::serial_axpy(m, eta, V1);
+        VecTilde(V1, M2);
         auto Kuu_12 = Kokkos::subview(Kuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
-        MatMulAB(omega_tilde, omega_tilde, M1);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                M1(i, j) += omega_dot_tilde(i, j);
-            }
-        }
-        VecScale(eta, m, V1);
-        VecTilde(V1, M2);
-        MatMulABT(M1, M2, Kuu_12);
-        auto Kuu_22 = Kokkos::subview(Kuu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::Transpose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., M1, M2, 0., Kuu_12);
         VecTilde(u_ddot, M1);
-        VecScale(eta, m, V1);
+        auto Kuu_22 = Kokkos::subview(Kuu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., rho, omega_dot_tilde, 0., Kuu_22);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., M1, M2, 1., Kuu_22);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
+            invoke(1., rho, omega_dot, 0., V1);
         VecTilde(V1, M2);
-        MatMulAB(M1, M2, Kuu_22);
-        MatMulAB(rho, omega_dot_tilde, M1);
-        MatVecMulAB(rho, omega_dot, V1);
-        VecTilde(V1, M2);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Kuu_22(i, j) += M1(i, j) - M2(i, j);
-            }
-        }
-        MatMulAB(rho, omega_tilde, M1);
-        MatVecMulAB(rho, omega, V1);
-        VecTilde(V1, M2);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                M1(i, j) -= M2(i, j);
-            }
-        }
-        MatMulAB(omega_tilde, M1, M2);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Kuu_22(i, j) += M2(i, j);
-            }
-        }
+        KokkosBlas::serial_axpy(-1., M2, Kuu_22);
+        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
+            invoke(1., rho, omega, 0., V1);
+        VecTilde(V1, M1);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., rho, omega_tilde, -1., M1);
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, M1, 1., Kuu_22);
     }
 };
 

@@ -2,10 +2,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "src/gen_alpha_poc/quaternion.h"
-#include "src/gen_alpha_poc/rotation_matrix.h"
-#include "src/gen_alpha_poc/vector.h"
-
 namespace openturbine {
 
 static constexpr int kLieAlgebraComponents = 6;
@@ -35,9 +31,5 @@ using View_Nx6x6 = Kokkos::View<double* [6][6]>;
 // Atomic
 using View_NxN_atomic = Kokkos::View<double**, Kokkos::MemoryTraits<Kokkos::Atomic>>;
 using View_N_atomic = Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>>;
-
-using Vector = openturbine::gen_alpha_solver::Vector;
-using Quaternion = openturbine::gen_alpha_solver::Quaternion;
-using RotationMatrix = openturbine::gen_alpha_solver::RotationMatrix;
 
 }  // namespace openturbine

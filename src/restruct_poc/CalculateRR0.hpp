@@ -2,9 +2,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "QuaternionOperations.hpp"
 #include "types.hpp"
-
-#include "src/gebt_poc/quadrature.h"
 
 namespace openturbine {
 
@@ -14,9 +13,18 @@ struct CalculateRR0 {
     View_Nx6x6 qp_RR0_;           // quadrature global rotation
 
     KOKKOS_FUNCTION void operator()(const int i_qp) const {
-        Quaternion R(qp_r_(i_qp, 0), qp_r_(i_qp, 1), qp_r_(i_qp, 2), qp_r_(i_qp, 3));
-        Quaternion R0(qp_r0_(i_qp, 0), qp_r0_(i_qp, 1), qp_r0_(i_qp, 2), qp_r0_(i_qp, 3));
-        auto RR0 = (R * R0).to_rotation_matrix();
+        auto RR0_quaternion_data = Kokkos::Array<double, 4>{};
+        auto RR0_quaternion = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
+            RR0_quaternion_data.data()
+        );
+        QuaternionCompose(
+            Kokkos::subview(qp_r_, i_qp, Kokkos::ALL), Kokkos::subview(qp_r0_, i_qp, Kokkos::ALL),
+            RR0_quaternion
+        );
+        auto RR0_data = Kokkos::Array<double, 9>{};
+        auto RR0 =
+            Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(RR0_data.data());
+        QuaternionToRotationMatrix(RR0_quaternion, RR0);
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
                 qp_RR0_(i_qp, i, j) = RR0(i, j);

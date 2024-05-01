@@ -51,7 +51,7 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     std::array<double, 3> gravity = {-9.81, 0., 0.};
 
     // Rotor angular velocity in rad/s
-    Vector omega(0., 0., -0.79063415025);  // 7.55 rpm
+    const auto omega = std::array<double, 3>{0., 0., -0.79063415025};
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -89,56 +89,47 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     }
 
     // Node Coordinates
-    std::vector<Vector> node_coords = {
-        Vector(0.0, 0.0, 0.0),
-        Vector(3.860916321128559, 0.0, -0.05469664173133543),
-        Vector(12.607716790706057, 0.0, -0.1464345809622239),
-        Vector(25.433733370721974, 0.0, -0.23918824799640123),
-        Vector(41.19814906816406, 0.0, -0.24301416634938658),
-        Vector(58.50000000000004, 0.0, 0.054037571255432564),
-        Vector(75.80185093183596, 0.0, 0.785406045211315),
-        Vector(91.56626662927795, 0.0, 1.8044719127555426),
-        Vector(104.39228320929396, 0.0, 2.8241493860344002),
-        Vector(113.13908367887151, 0.0, 3.6162361535819865),
-        Vector(117.0, 0.0, 4.000000000000026),
+    std::vector<std::array<double, 3>> node_coords = {
+        std::array<double, 3>{0.0, 0.0, 0.0},
+        std::array<double, 3>{3.860916321128559, 0.0, -0.05469664173133543},
+        std::array<double, 3>{12.607716790706057, 0.0, -0.1464345809622239},
+        std::array<double, 3>{25.433733370721974, 0.0, -0.23918824799640123},
+        std::array<double, 3>{41.19814906816406, 0.0, -0.24301416634938658},
+        std::array<double, 3>{58.50000000000004, 0.0, 0.054037571255432564},
+        std::array<double, 3>{75.80185093183596, 0.0, 0.785406045211315},
+        std::array<double, 3>{91.56626662927795, 0.0, 1.8044719127555426},
+        std::array<double, 3>{104.39228320929396, 0.0, 2.8241493860344002},
+        std::array<double, 3>{113.13908367887151, 0.0, 3.6162361535819865},
+        std::array<double, 3>{117.0, 0.0, 4.000000000000026},
     };
 
     // Node Rotation
-    std::vector<Quaternion> node_rotation = {
-        Quaternion(
-            0.9907227443578874, -0.13566457224703346, 0.007899216411874178, 0.0010816788266006607
-        ),
-        Quaternion(
-            0.9909252982620628, -0.13426519082440538, 0.006260373215503113, 0.0008482478001981521
-        ),
-        Quaternion(
-            0.9935167796154206, -0.11359784336864302, 0.00443636138538857, 0.0005072496973620513
-        ),
-        Quaternion(
-            0.9974116582281851, -0.0718560788024431, 0.002579425796743258, 0.0001858284107537662
-        ),
-        Quaternion(
+    std::vector<std::array<double, 4>> node_rotation = {
+        std::array<double, 4>{
+            0.9907227443578874, -0.13566457224703346, 0.007899216411874178, 0.0010816788266006607},
+        std::array<double, 4>{
+            0.9909252982620628, -0.13426519082440538, 0.006260373215503113, 0.0008482478001981521},
+        std::array<double, 4>{
+            0.9935167796154206, -0.11359784336864302, 0.00443636138538857, 0.0005072496973620513},
+        std::array<double, 4>{
+            0.9974116582281851, -0.0718560788024431, 0.002579425796743258, 0.0001858284107537662},
+        std::array<double, 4>{
             0.9993668285851437, -0.035436934270507724, -0.0031863532939427376,
-            -0.00011298613182902174
-        ),
-        Quaternion(
-            0.9997694376789568, -0.01571896564353078, -0.014626439008272178, -0.00022996551364081713
-        ),
-        Quaternion(
-            0.9996244263618369, -0.00011737820053802088, -0.027404241145705933, -3.21786905958282e-06
-        ),
-        Quaternion(
-            0.9992258769980531, 0.014354416057417973, -0.03662404497855903, 0.0005261240640677012
-        ),
-        Quaternion(
-            0.998912306432686, 0.018760692766230495, -0.04268018194796855, 0.000801581655943506
-        ),
-        Quaternion(
-            0.9987446969974336, 0.014486925484536069, -0.0479445051145804, 0.0006954414627441799
-        ),
-        Quaternion(
-            0.9986289781304243, 0.010827457815091479, -0.051211540599741034, 0.000555252058204468
-        ),
+            -0.00011298613182902174},
+        std::array<double, 4>{
+            0.9997694376789568, -0.01571896564353078, -0.014626439008272178,
+            -0.00022996551364081713},
+        std::array<double, 4>{
+            0.9996244263618369, -0.00011737820053802088, -0.027404241145705933,
+            -3.21786905958282e-06},
+        std::array<double, 4>{
+            0.9992258769980531, 0.014354416057417973, -0.03662404497855903, 0.0005261240640677012},
+        std::array<double, 4>{
+            0.998912306432686, 0.018760692766230495, -0.04268018194796855, 0.000801581655943506},
+        std::array<double, 4>{
+            0.9987446969974336, 0.014486925484536069, -0.0479445051145804, 0.0006954414627441799},
+        std::array<double, 4>{
+            0.9986289781304243, 0.010827457815091479, -0.051211540599741034, 0.000555252058204468},
     };
 
     std::vector<BeamSection> material_sections = {
@@ -889,29 +880,29 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     size_t root_node_index(0);
     for (size_t i = 0; i < num_blades; ++i) {
         // Define root rotation
-        auto q_root = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
-            Vector(0, 0, -2.0 * M_PI * i / num_blades)
-        );
+        const auto q_root = RotationVectorToQuaternion({0., 0., -2. * M_PI * i / num_blades});
 
         // Declare list of element nodes
         std::vector<BeamNode> nodes;
 
         // Loop through nodes
         for (size_t j = 0; j < node_loc.size(); ++j) {
-            auto pos = q_root * (node_coords[j] + Vector(hub_rad, 0, 0));
-            auto rot = q_root * node_rotation[j];
+            const auto pos = QuaternionRotateVector(
+                q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
+            );
+            const auto rot = QuaternionCompose(q_root, node_rotation[j]);
             nodes.push_back(BeamNode(node_loc[j], pos, rot));
 
             // Add node initial displacement, velocity, and acceleration
             displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
-            auto v = omega.CrossProduct(pos);
+            const auto v = CrossProduct(omega, pos);
             velocity.push_back({
-                v.GetX(),
-                v.GetY(),
-                v.GetZ(),
-                omega.GetXComponent(),
-                omega.GetYComponent(),
-                omega.GetZComponent(),
+                v[0],
+                v[1],
+                v[2],
+                omega[0],
+                omega[1],
+                omega[2],
             });
             acceleration.push_back({0., 0., 0., 0., 0., 0.});
         }
@@ -964,15 +955,13 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        auto q_hub = openturbine::gen_alpha_solver::quaternion_from_rotation_vector(
-            omega * step_size * (i + 1)
+        const auto q_hub = RotationVectorToQuaternion(
+            {omega[0] * step_size * (i + 1), omega[1] * step_size * (i + 1),
+             omega[2] * step_size * (i + 1)}
         );
 
         // Define hub translation/rotation displacement
-        Array_7 u_hub(
-            {0, 0, 0, q_hub.GetScalarComponent(), q_hub.GetXComponent(), q_hub.GetYComponent(),
-             q_hub.GetZComponent()}
-        );
+        Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
         // Update constraint displacements
         for (int j = 0; j < solver.num_constraint_nodes; ++j) {
