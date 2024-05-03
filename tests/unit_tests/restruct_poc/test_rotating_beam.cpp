@@ -4,15 +4,15 @@
 
 #include <gtest/gtest.h>
 
-#include "src/restruct_poc/beams/BeamElement.hpp"
-#include "src/restruct_poc/beams/BeamNode.hpp"
-#include "src/restruct_poc/beams/BeamSection.hpp"
-#include "src/restruct_poc/beams/Beams.hpp"
-#include "src/restruct_poc/beams/BeamsInput.hpp"
-#include "src/restruct_poc/beams/CreateBeams.hpp"
-#include "src/restruct_poc/solver/InitializeConstraints.hpp"
-#include "src/restruct_poc/solver/Solver.hpp"
-#include "src/restruct_poc/solver/Step.hpp"
+#include "src/restruct_poc/beams/beam_element.hpp"
+#include "src/restruct_poc/beams/beam_node.hpp"
+#include "src/restruct_poc/beams/beam_section.hpp"
+#include "src/restruct_poc/beams/beams.hpp"
+#include "src/restruct_poc/beams/beams_input.hpp"
+#include "src/restruct_poc/beams/create_beams.hpp"
+#include "src/restruct_poc/solver/initialize_constraints.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
+#include "src/restruct_poc/solver/step.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 using BeamQuadrature = std::vector<std::array<double, 2>>;
