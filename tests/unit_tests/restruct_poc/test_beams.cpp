@@ -2,19 +2,19 @@
 
 #include <gtest/gtest.h>
 
-#include "src/restruct_poc/beams/BeamElement.hpp"
-#include "src/restruct_poc/beams/BeamNode.hpp"
-#include "src/restruct_poc/beams/BeamSection.hpp"
-#include "src/restruct_poc/beams/Beams.hpp"
-#include "src/restruct_poc/beams/BeamsInput.hpp"
-#include "src/restruct_poc/beams/CreateBeams.hpp"
-#include "src/restruct_poc/solver/State.hpp"
-#include "src/restruct_poc/system/AssembleElasticStiffnessMatrix.hpp"
-#include "src/restruct_poc/system/AssembleGyroscopicInertiaMatrix.hpp"
-#include "src/restruct_poc/system/AssembleInertialStiffnessMatrix.hpp"
-#include "src/restruct_poc/system/AssembleMassMatrix.hpp"
-#include "src/restruct_poc/system/AssembleResidualVector.hpp"
-#include "src/restruct_poc/system/UpdateState.hpp"
+#include "src/restruct_poc/beams/beam_element.hpp"
+#include "src/restruct_poc/beams/beam_node.hpp"
+#include "src/restruct_poc/beams/beam_section.hpp"
+#include "src/restruct_poc/beams/beams.hpp"
+#include "src/restruct_poc/beams/beams_input.hpp"
+#include "src/restruct_poc/beams/create_beams.hpp"
+#include "src/restruct_poc/solver/state.hpp"
+#include "src/restruct_poc/system/assemble_elastic_stiffness_matrix.hpp"
+#include "src/restruct_poc/system/assemble_gyroscopic_inertia_matrix.hpp"
+#include "src/restruct_poc/system/assemble_inertial_stiffness_matrix.hpp"
+#include "src/restruct_poc/system/assemble_mass_matrix.hpp"
+#include "src/restruct_poc/system/assemble_residual_vector.hpp"
+#include "src/restruct_poc/system/update_state.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::restruct_poc::tests {
@@ -109,8 +109,8 @@ protected:
                 {0, 0, 0, 1, 0, 0, 0},
                 {0.002981602178886856, -0.00246675949494302, 0.003084570715675624,
                  0.9999627302042724, 0.008633550973807708, 0, 0},
-                {0.025, -0.0125, 0.027500000000000004, 0.9996875162757026, 0.02499739591471221, 0,
-                 0},
+                {0.025, -0.0125, 0.027500000000000004, 0.9996875162757026, 0.02499739591471221, 0, 0
+                },
                 {0.06844696924968459, -0.011818954790771264, 0.07977257214146725, 0.9991445348823055,
                  0.04135454527402512, 0, 0},
                 {0.1, 0, 0.12, 0.9987502603949663, 0.04997916927067825, 0, 0},
