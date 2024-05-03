@@ -5,9 +5,9 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ConstraintInput.hpp"
-#include "Constraints.hpp"
-#include "State.hpp"
+#include "constraint_input.hpp"
+#include "constraints.hpp"
+#include "state.hpp"
 
 #include "src/restruct_poc/types.hpp"
 

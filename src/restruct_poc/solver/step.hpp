@@ -3,17 +3,17 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "AssembleConstraints.hpp"
-#include "AssembleSystem.hpp"
-#include "CalculateConvergenceError.hpp"
-#include "PredictNextState.hpp"
-#include "SolveSystem.hpp"
-#include "Solver.hpp"
-#include "UpdateAlgorithmicAcceleration.hpp"
-#include "UpdateStatePrediction.hpp"
+#include "assemble_constraints.hpp"
+#include "assemble_system.hpp"
+#include "calculate_convergence_error.hpp"
+#include "predict_next_state.hpp"
+#include "solve_system.hpp"
+#include "solver.hpp"
+#include "update_algorithmic_acceleration.hpp"
+#include "update_state_prediction.hpp"
 
-#include "src/restruct_poc/beams/Beams.hpp"
-#include "src/restruct_poc/system/UpdateState.hpp"
+#include "src/restruct_poc/beams/beams.hpp"
+#include "src/restruct_poc/system/update_state.hpp"
 
 namespace openturbine {
 

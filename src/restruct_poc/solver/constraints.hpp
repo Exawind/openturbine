@@ -5,7 +5,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "ConstraintInput.hpp"
+#include "constraint_input.hpp"
 
 #include "src/restruct_poc/types.hpp"
 
