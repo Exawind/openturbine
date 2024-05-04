@@ -10,10 +10,10 @@ struct BeamSection {
     std::array<std::array<double, 6>, 6> C_star;  // Stiffness matrix in material frame
 
     BeamSection(
-        double s_, std::array<std::array<double, 6>, 6> M_star_,
-        std::array<std::array<double, 6>, 6> C_star_
+        double s, std::array<std::array<double, 6>, 6> mass,
+        std::array<std::array<double, 6>, 6> stiffness
     )
-        : s(s_), M_star(std::move(M_star_)), C_star(std::move(C_star_)) {}
+        : s(s), M_star(std::move(mass)), C_star(std::move(stiffness)) {}
 };
 
 }  // namespace openturbine
