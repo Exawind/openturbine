@@ -69,4 +69,124 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_3) {
     );
 }
 
+TEST(QuaternionTest, RotateXAxis90DegreesAboutYAxis) {
+    // Quaternion representing a 90 degree rotation about the y axis
+    auto q = Kokkos::View<double[4]>("q");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            q(0) = 0.707107;
+            q(1) = 0.;
+            q(2) = 0.707107;
+            q(3) = 0.;
+        }
+    );
+
+    // Initialize a vector along the x axis
+    auto v = Kokkos::View<double[3]>("v");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            v(0) = 1.;
+            v(1) = 0.;
+            v(2) = 0.;
+        }
+    );
+
+    // Rotate the x axis 90 degrees about the y axis and compare to expected result
+    auto v_rot = Kokkos::View<double[3]>("v_rot");
+    RotateVectorByQuaternion(q, v, v_rot);
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(v_rot, {0., 0., -1.});
+}
+
+TEST(QuaternionTest, RotateZAxis90DegreesAboutXAxis) {
+    // Quaternion representing a 90 degree rotation about the x axis
+    auto q = Kokkos::View<double[4]>("q");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            q(0) = 0.707107;
+            q(1) = 0.707107;
+            q(2) = 0.;
+            q(3) = 0.;
+        }
+    );
+
+    // Initialize a vector along the z axis
+    auto v = Kokkos::View<double[3]>("v");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            v(0) = 0.;
+            v(1) = 0.;
+            v(2) = 1.;
+        }
+    );
+
+    // Rotate the z axis 90 degrees about the x axis and compare to expected result
+    auto v_rot = Kokkos::View<double[3]>("v_rot");
+    RotateVectorByQuaternion(q, v, v_rot);
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(v_rot, {0., -1., 0.});
+}
+
+TEST(QuaternionTest, RotateXAxis45DegreesAboutZAxis) {
+    // Quaternion representing a 45 degree rotation about the z axis
+    auto q = Kokkos::View<double[4]>("q");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            q(0) = 0.92388;
+            q(1) = 0.;
+            q(2) = 0.;
+            q(3) = 0.382683;
+        }
+    );
+
+    // Initialize a vector along the x axis
+    auto v = Kokkos::View<double[3]>("v");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            v(0) = 1.;
+            v(1) = 0.;
+            v(2) = 0.;
+        }
+    );
+
+    // Rotate the x axis 45 degrees about the z axis and compare to expected result
+    auto v_rot = Kokkos::View<double[3]>("v_rot");
+    RotateVectorByQuaternion(q, v, v_rot);
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(v_rot, {0.707107, 0.707107, 0.});
+}
+
+TEST(QuaternionTest, RotateXAxisNeg45DegreesAboutZAxis) {
+    // Quaternion representing a -45 degree rotation about the z axis
+    auto q = Kokkos::View<double[4]>("q");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            q(0) = 0.92388;
+            q(1) = 0.;
+            q(2) = 0.;
+            q(3) = -0.382683;
+        }
+    );
+
+    // Initialize a vector along the x axis
+    auto v = Kokkos::View<double[3]>("v");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            v(0) = 1.;
+            v(1) = 0.;
+            v(2) = 0.;
+        }
+    );
+
+    // Rotate the x axis -45 degrees about the z axis and compare to expected result
+    auto v_rot = Kokkos::View<double[3]>("v_rot");
+    RotateVectorByQuaternion(q, v, v_rot);
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(v_rot, {0.707107, -0.707107, 0.});
+}
+
 }  // namespace openturbine::restruct_poc::tests
