@@ -59,7 +59,7 @@ struct InterpolateQPAcceleration_Angular {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
     View_NxN::const_type shape_interp;                           // Num Nodes x Num Quadrature points
     View_Nx6::const_type node_u_ddot;  // Node translation & angular velocity
-    View_Nx3 qp_omega_dot_;            // qp angular velocity
+    View_Nx3 qp_omega_dot;             // qp angular velocity
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {
@@ -75,7 +75,7 @@ struct InterpolateQPAcceleration_Angular {
                 }
             }
             for (int k = 0; k < 3; ++k) {
-                qp_omega_dot_(j, k) = local_total[k];
+                qp_omega_dot(j, k) = local_total[k];
             }
         }
     }
@@ -97,7 +97,7 @@ struct InterpolateQPAcceleration_Angular {
             }
         }
         for (int k = 0; k < 3; ++k) {
-            qp_omega_dot_(j, k) = local_total[k];
+            qp_omega_dot(j, k) = local_total[k];
         }
     }
 };
