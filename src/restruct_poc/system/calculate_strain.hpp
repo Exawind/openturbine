@@ -36,7 +36,7 @@ struct CalculateStrain {
         auto R_x0_prime =
             Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(R_x0_prime_data.data());
 
-        QuaternionRotateVector(R, x0_prime, R_x0_prime);
+        RotateVectorByQuaternion(R, x0_prime, R_x0_prime);
         KokkosBlas::serial_axpy(-1., u_prime, R_x0_prime);
         KokkosBlas::serial_axpy(-1., x0_prime, R_x0_prime);
 

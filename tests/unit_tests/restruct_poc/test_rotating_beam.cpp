@@ -187,7 +187,7 @@ TEST(RotatingBeamTest, TwoBeam) {
 
         // Loop through nodes
         for (const double s : node_s) {
-            const auto pos = QuaternionRotateVector(q_root, {10. * s + 2., 0., 0.});
+            const auto pos = RotateVectorByQuaternion(q_root, {10. * s + 2., 0., 0.});
             nodes.push_back(BeamNode(s, pos, q_root));
 
             // Add node initial displacement, velocity, and acceleration
@@ -330,7 +330,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
 
         // Loop through nodes
         for (const double s : node_s) {
-            const auto pos = QuaternionRotateVector(q_root, {10. * s + 2., 0., 0.});
+            const auto pos = RotateVectorByQuaternion(q_root, {10. * s + 2., 0., 0.});
             nodes.push_back(BeamNode(s, pos, q_root));
 
             // Add node initial displacement, velocity, and acceleration

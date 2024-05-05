@@ -6,8 +6,9 @@
 
 namespace openturbine {
 
-template <typename Q, typename View_Rotation>
-KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(Q q, View_Rotation R) {
+/// Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result
+template <typename Quaternion, typename RotationMatrix>
+KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(Quaternion q, RotationMatrix R) {
     R(0, 0) = q(0) * q(0) + q(1) * q(1) - q(2) * q(2) - q(3) * q(3);
     R(0, 1) = 2. * (q(1) * q(2) - q(0) * q(3));
     R(0, 2) = 2. * (q(1) * q(3) + q(0) * q(2));
@@ -19,18 +20,20 @@ KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(Q q, View_Rotation R) {
     R(2, 2) = q(0) * q(0) - q(1) * q(1) - q(2) * q(2) + q(3) * q(3);
 }
 
-template <typename Q, typename View1, typename View2>
-KOKKOS_INLINE_FUNCTION void QuaternionRotateVector(Q q, View1 v, View2 v_rot) {
-    v_rot[0] = (q(0) * q(0) + q(1) * q(1) - q(2) * q(2) - q(3) * q(3)) * v(0) +
+/// Rotates provided vector by provided *unit* quaternion and returns the result
+template <typename Quaternion, typename View1, typename View2>
+KOKKOS_INLINE_FUNCTION void RotateVectorByQuaternion(Quaternion q, View1 v, View2 v_rot) {
+    v_rot(0) = (q(0) * q(0) + q(1) * q(1) - q(2) * q(2) - q(3) * q(3)) * v(0) +
                2. * (q(1) * q(2) - q(0) * q(3)) * v(1) + 2. * (q(1) * q(3) + q(0) * q(2)) * v(2);
-    v_rot[1] = 2. * (q(1) * q(2) + q(0) * q(3)) * v(0) +
+    v_rot(1) = 2. * (q(1) * q(2) + q(0) * q(3)) * v(0) +
                (q(0) * q(0) - q(1) * q(1) + q(2) * q(2) - q(3) * q(3)) * v(1) +
                2. * (q(2) * q(3) - q(0) * q(1)) * v(2);
-    v_rot[2] = 2. * (q(1) * q(3) - q(0) * q(2)) * v(0) + 2. * (q(2) * q(3) + q(0) * q(1)) * v(1) +
+    v_rot(2) = 2. * (q(1) * q(3) - q(0) * q(2)) * v(0) + 2. * (q(2) * q(3) + q(0) * q(1)) * v(1) +
                (q(0) * q(0) - q(1) * q(1) - q(2) * q(2) + q(3) * q(3)) * v(2);
 }
 
-inline std::array<double, 3> QuaternionRotateVector(
+// TODO This is a duplicate of the above function. We should look into merging them.
+inline std::array<double, 3> RotateVectorByQuaternion(
     std::array<double, 4> q, std::array<double, 3> v
 ) {
     auto v_rot = std::array<double, 3>{};

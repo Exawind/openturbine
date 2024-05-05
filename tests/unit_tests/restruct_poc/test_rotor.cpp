@@ -897,7 +897,7 @@ TEST(RotatingBeamTest, IEA15Rotor) {
 
         // Loop through nodes
         for (size_t j = 0; j < node_loc.size(); ++j) {
-            const auto pos = QuaternionRotateVector(
+            const auto pos = RotateVectorByQuaternion(
                 q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
             );
             const auto rot = QuaternionCompose(q_root, node_rotation[j]);
