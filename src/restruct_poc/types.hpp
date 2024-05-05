@@ -10,6 +10,7 @@ static constexpr int kVectorComponents = 3;
 
 static constexpr double kTolerance = 1.e-16;
 
+// Create some type aliases for Kokkos views to improve readability
 using View_3x3 = Kokkos::View<double[3][3]>;
 using View_3x4 = Kokkos::View<double[3][4]>;
 using View_6x6 = Kokkos::View<double[6][6]>;
@@ -27,6 +28,9 @@ using View_Nx7 = Kokkos::View<double* [7]>;
 using View_Nx3x4 = Kokkos::View<double* [3][4]>;
 using View_Nx3x3 = Kokkos::View<double* [3][3]>;
 using View_Nx6x6 = Kokkos::View<double* [6][6]>;
+
+// Define some type aliases for std::arrays to improve readability
+using Array_6x6 = std::array<std::array<double, 6>, 6>;
 
 // Atomic
 using View_NxN_atomic = Kokkos::View<double**, Kokkos::MemoryTraits<Kokkos::Atomic>>;
