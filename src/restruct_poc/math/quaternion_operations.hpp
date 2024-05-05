@@ -1,4 +1,5 @@
 #pragma once
+
 #include <array>
 
 #include <Kokkos_Core.hpp>
@@ -99,6 +100,7 @@ KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(V phi, Q quaternion) {
     const auto cos_angle = Kokkos::cos(angle / 2.0);
     const auto factor = (Kokkos::abs(angle) < 1.e-12) ? 0. : Kokkos::sin(angle / 2.0) / angle;
     quaternion(0) = cos_angle;
+
     for (int i = 0; i < 3; ++i) {
         quaternion(i + 1) = phi(i) * factor;
     }
