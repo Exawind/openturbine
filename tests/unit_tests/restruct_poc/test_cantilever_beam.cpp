@@ -13,10 +13,8 @@
 #include "src/restruct_poc/solver/initialize_constraints.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
+#include "src/restruct_poc/types.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
-
-using BeamQuadrature = std::vector<std::array<double, 2>>;
-using Array_6x6 = std::array<std::array<double, 6>, 6>;
 
 namespace openturbine::restruct_poc::tests {
 

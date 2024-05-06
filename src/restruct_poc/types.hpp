@@ -31,6 +31,7 @@ using View_Nx6x6 = Kokkos::View<double* [6][6]>;
 
 // Define some type aliases for 2D std::arrays to improve readability
 using Array_6x6 = std::array<std::array<double, 6>, 6>;
+using BeamQuadrature = std::vector<std::array<double, 2>>;
 
 // Atomic
 using View_N_atomic = Kokkos::View<double*, Kokkos::MemoryTraits<Kokkos::Atomic>>;
