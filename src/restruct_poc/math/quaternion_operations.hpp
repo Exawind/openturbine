@@ -76,14 +76,15 @@ KOKKOS_INLINE_FUNCTION void QuaternionInverse(QuaternionInput q_in, QuaternionOu
 }
 
 /// Composes (i.e. multiplies) two quaternions and stores the result in a third quaternion
-template <typename Q1, typename Q2, typename QN>
-KOKKOS_INLINE_FUNCTION void QuaternionCompose(Q1 q1, Q2 q2, QN qn) {
+template <typename Quaternion1, typename Quaternion2, typename QuaternionN>
+KOKKOS_INLINE_FUNCTION void QuaternionCompose(Quaternion1 q1, Quaternion2 q2, QuaternionN qn) {
     qn(0) = q1(0) * q2(0) - q1(1) * q2(1) - q1(2) * q2(2) - q1(3) * q2(3);
     qn(1) = q1(0) * q2(1) + q1(1) * q2(0) + q1(2) * q2(3) - q1(3) * q2(2);
     qn(2) = q1(0) * q2(2) - q1(1) * q2(3) + q1(2) * q2(0) + q1(3) * q2(1);
     qn(3) = q1(0) * q2(3) + q1(1) * q2(2) - q1(2) * q2(1) + q1(3) * q2(0);
 }
 
+// TODO This is a duplicate of the above function. We should look into merging them.
 inline std::array<double, 4> QuaternionCompose(std::array<double, 4> q1, std::array<double, 4> q2) {
     auto qn = std::array<double, 4>{};
     qn[0] = q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3];
@@ -93,25 +94,28 @@ inline std::array<double, 4> QuaternionCompose(std::array<double, 4> q1, std::ar
     return qn;
 }
 
-template <typename M, typename V>
-KOKKOS_INLINE_FUNCTION void ComputeAxialVector(M m, V v) {
+/// Computes the axial vector of a 3x3 rotation matrix
+template <typename Matrix, typename Vector>
+KOKKOS_INLINE_FUNCTION void ComputeAxialVector(Matrix m, Vector v) {
     v(0) = (m(2, 1) - m(1, 2)) / 2.;
     v(1) = (m(0, 2) - m(2, 0)) / 2.;
     v(2) = (m(1, 0) - m(0, 1)) / 2.;
 }
 
-template <typename V, typename Q>
-KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(V phi, Q quaternion) {
+/// Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map
+template <typename Vector, typename Quaternion>
+KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(Vector phi, Quaternion quaternion) {
     const auto angle = Kokkos::sqrt(phi(0) * phi(0) + phi(1) * phi(1) + phi(2) * phi(2));
-    const auto cos_angle = Kokkos::cos(angle / 2.0);
-    const auto factor = (Kokkos::abs(angle) < 1.e-12) ? 0. : Kokkos::sin(angle / 2.0) / angle;
-    quaternion(0) = cos_angle;
+    const auto cos_angle = Kokkos::cos(angle / 2.);
+    const auto factor = (Kokkos::abs(angle) < 1.e-12) ? 0. : Kokkos::sin(angle / 2.) / angle;
 
-    for (int i = 0; i < 3; ++i) {
-        quaternion(i + 1) = phi(i) * factor;
-    }
+    quaternion(0) = cos_angle;
+    quaternion(1) = phi(0) * factor;
+    quaternion(2) = phi(1) * factor;
+    quaternion(3) = phi(2) * factor;
 }
 
+// TODO This is a duplicate of the above function. We should look into merging them.
 inline std::array<double, 4> RotationVectorToQuaternion(std::array<double, 3> phi) {
     const auto angle = std::sqrt(phi[0] * phi[0] + phi[1] * phi[1] + phi[2] * phi[2]);
 
