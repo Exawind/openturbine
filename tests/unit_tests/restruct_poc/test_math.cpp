@@ -253,4 +253,60 @@ TEST(QuaternionTest, MultiplicationOfTwoQuaternions_Set2) {
     gen_alpha_solver::tests::expect_kokkos_view_1D_equal(qn, {-60., 12., 30., 24.});
 }
 
+TEST(QuaternionTest, ComputeAxialVector) {
+    auto m = Kokkos::View<double[3][3]>("m");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            m(0, 0) = 0.;
+            m(0, 1) = -1.;
+            m(0, 2) = 0.;
+            m(1, 0) = 1.;
+            m(1, 1) = 0.;
+            m(1, 2) = 0.;
+            m(2, 0) = 0.;
+            m(2, 1) = 0.;
+            m(2, 2) = 0.;
+        }
+    );
+
+    auto v = Kokkos::View<double[3]>("v");
+    ComputeAxialVector(m, v);
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(v, {0., 0., 1.});
+}
+
+TEST(QuaternionTest, RotationVectorToQuaternion_Set1) {
+    auto phi = Kokkos::View<double[3]>("phi");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            phi(0) = 1.;
+            phi(1) = 2.;
+            phi(2) = 3.;
+        }
+    );
+
+    auto quaternion = Kokkos::View<double[4]>("quaternion");
+    RotationVectorToQuaternion(phi, quaternion);
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        quaternion, {-0.295551, 0.255322, 0.510644, 0.765966}
+    );
+}
+
+TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
+    auto phi = Kokkos::View<double[3]>("phi");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            phi(0) = 0.;
+            phi(1) = 0.;
+            phi(2) = 1.570796;
+        }
+    );
+
+    auto quaternion = Kokkos::View<double[4]>("quaternion");
+    RotationVectorToQuaternion(phi, quaternion);
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(quaternion, {0.707107, 0., 0., 0.707107});
+}
+
 }  // namespace openturbine::restruct_poc::tests
