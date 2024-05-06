@@ -209,4 +209,48 @@ TEST(QuaternionTest, GetInverse) {
     );
 }
 
+TEST(QuaternionTest, MultiplicationOfTwoQuaternions_Set1) {
+    auto q1 = Kokkos::View<double[4]>("q1");
+    auto q2 = Kokkos::View<double[4]>("q2");
+    auto qn = Kokkos::View<double[4]>("qn");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            q1(0) = 3.;
+            q1(1) = 1.;
+            q1(2) = -2.;
+            q1(3) = 1.;
+            q2(0) = 2.;
+            q2(1) = -1.;
+            q2(2) = 2.;
+            q2(3) = 3.;
+        }
+    );
+
+    QuaternionCompose(q1, q2, qn);
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(qn, {8., -9., -2., 11.});
+}
+
+TEST(QuaternionTest, MultiplicationOfTwoQuaternions_Set2) {
+    auto q1 = Kokkos::View<double[4]>("q1");
+    auto q2 = Kokkos::View<double[4]>("q2");
+    auto qn = Kokkos::View<double[4]>("qn");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            q1(0) = 1.;
+            q1(1) = 2.;
+            q1(2) = 3.;
+            q1(3) = 4.;
+            q2(0) = 5.;
+            q2(1) = 6.;
+            q2(2) = 7.;
+            q2(3) = 8.;
+        }
+    );
+
+    QuaternionCompose(q1, q2, qn);
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(qn, {-60., 12., 30., 24.});
+}
+
 }  // namespace openturbine::restruct_poc::tests

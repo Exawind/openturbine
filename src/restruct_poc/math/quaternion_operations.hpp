@@ -75,6 +75,7 @@ KOKKOS_INLINE_FUNCTION void QuaternionInverse(QuaternionInput q_in, QuaternionOu
     q_out(3) = -q_in(3) / length;
 }
 
+/// Composes (i.e. multiplies) two quaternions and stores the result in a third quaternion
 template <typename Q1, typename Q2, typename QN>
 KOKKOS_INLINE_FUNCTION void QuaternionCompose(Q1 q1, Q2 q2, QN qn) {
     qn(0) = q1(0) * q2(0) - q1(1) * q2(1) - q1(2) * q2(2) - q1(3) * q2(3);
