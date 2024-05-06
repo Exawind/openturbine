@@ -309,4 +309,42 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
     gen_alpha_solver::tests::expect_kokkos_view_1D_equal(quaternion, {0.707107, 0., 0., 0.707107});
 }
 
+TEST(VectorTest, VecTilde) {
+    auto v = Kokkos::View<double[3]>("v");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            v(0) = 1.;
+            v(1) = 2.;
+            v(2) = 3.;
+        }
+    );
+
+    auto m = Kokkos::View<double[3][3]>("m");
+    VecTilde(v, m);
+    gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        m, {{0., -3., 2.}, {3., 0., -1.}, {-2., 1., 0.}}
+    );
+}
+
+TEST(QuaternionTest, CrossProduct_Set1) {
+    auto a = std::array<double, 3>{1., 2., 3.};
+    auto b = std::array<double, 3>{4., 5., 6.};
+    auto c = CrossProduct(a, b);
+
+    ASSERT_EQ(c[0], -3.);
+    ASSERT_EQ(c[1], 6.);
+    ASSERT_EQ(c[2], -3.);
+}
+
+TEST(VectorTest, CrossProduct_Set2) {
+    auto a = std::array<double, 3>{0.19, -5.03, 2.71};
+    auto b = std::array<double, 3>{1.16, 0.09, 0.37};
+    auto c = CrossProduct(a, b);
+
+    ASSERT_EQ(c[0], -5.03 * 0.37 - 2.71 * 0.09);
+    ASSERT_EQ(c[1], 2.71 * 1.16 - 0.19 * 0.37);
+    ASSERT_EQ(c[2], 0.19 * 0.09 - -5.03 * 1.16);
+}
+
 }  // namespace openturbine::restruct_poc::tests
