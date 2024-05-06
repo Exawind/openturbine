@@ -189,6 +189,25 @@ TEST(QuaternionTest, RotateXAxisNeg45DegreesAboutZAxis) {
     gen_alpha_solver::tests::expect_kokkos_view_1D_equal(v_rot, {0.707107, -0.707107, 0.});
 }
 
+TEST(QuaternionTest, QuaternionDerivative) {
+    auto q = Kokkos::View<double[4]>("q");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            q(0) = 1.;
+            q(1) = 2.;
+            q(2) = 3.;
+            q(3) = 4.;
+        }
+    );
+
+    auto m = Kokkos::View<double[3][4]>("m");
+    QuaternionDerivative(q, m);
+    gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+        m, {{-2., 1., -4., 3.}, {-3., 4., 1., -2.}, {-4., -3., 2., 1.}}
+    );
+}
+
 TEST(QuaternionTest, GetInverse) {
     auto q = Kokkos::View<double[4]>("q");
     Kokkos::parallel_for(
