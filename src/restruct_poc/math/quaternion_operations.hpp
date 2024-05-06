@@ -63,14 +63,16 @@ KOKKOS_INLINE_FUNCTION void QuaternionDerivative(Q q, M m) {
     m(2, 3) = q(0);
 }
 
-template <typename Qin, typename Qout>
-KOKKOS_INLINE_FUNCTION void QuaternionInverse(Qin q_in, Qout q_out) {
+template <typename QuaternionInput, typename QuaternionOutput>
+KOKKOS_INLINE_FUNCTION void QuaternionInverse(QuaternionInput q_in, QuaternionOutput q_out) {
     auto length =
         Kokkos::sqrt(q_in(0) * q_in(0) + q_in(1) * q_in(1) + q_in(2) * q_in(2) + q_in(3) * q_in(3));
+
+    // Inverse of a quaternion is the conjugate divided by the length
     q_out(0) = q_in(0) / length;
-    for (int i = 1; i < 4; ++i) {
-        q_out(i) = -q_in(i) / length;
-    }
+    q_out(1) = -q_in(1) / length;
+    q_out(2) = -q_in(2) / length;
+    q_out(3) = -q_in(3) / length;
 }
 
 template <typename Q1, typename Q2, typename QN>

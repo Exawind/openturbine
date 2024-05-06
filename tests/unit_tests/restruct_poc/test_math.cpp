@@ -189,4 +189,24 @@ TEST(QuaternionTest, RotateXAxisNeg45DegreesAboutZAxis) {
     gen_alpha_solver::tests::expect_kokkos_view_1D_equal(v_rot, {0.707107, -0.707107, 0.});
 }
 
+TEST(QuaternionTest, GetInverse) {
+    auto q = Kokkos::View<double[4]>("q");
+    Kokkos::parallel_for(
+        1,
+        KOKKOS_LAMBDA(const int) {
+            q(0) = 1. / std::sqrt(30.);
+            q(1) = 2. / std::sqrt(30.);
+            q(2) = 3. / std::sqrt(30.);
+            q(3) = 4. / std::sqrt(30.);
+        }
+    );
+
+    auto q_inv = Kokkos::View<double[4]>("q_inv");
+    QuaternionInverse(q, q_inv);
+    gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+        q_inv,
+        {1. / std::sqrt(30.), -2. / std::sqrt(30.), -3. / std::sqrt(30.), -4. / std::sqrt(30.)}
+    );
+}
+
 }  // namespace openturbine::restruct_poc::tests
