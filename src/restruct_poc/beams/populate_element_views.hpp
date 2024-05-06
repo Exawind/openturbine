@@ -48,7 +48,7 @@ inline void PopulateElementViews(
     std::vector<double> section_xi(elem.sections.size());
 
     for (size_t i = 0; i < elem.sections.size(); ++i) {
-        section_xi[i] = 2 * elem.sections[i].s - 1;
+        section_xi[i] = 2 * elem.sections[i].position - 1;
     }
 
     Kokkos::deep_copy(qp_Mstar, 0.);
