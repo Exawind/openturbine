@@ -12,27 +12,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-13]
         compiler: [gcc-10, llvm]
         build_type: [Release, Debug]
         exclude: 
-          - os: macos-latest
+          - os: macos-13
             compiler: gcc-10
         include:
           - os: ubuntu-latest
             install_deps: sudo apt-get install gfortran libgtest-dev libblas-dev liblapack-dev liblapacke-dev
-          - os: macos-latest
+          - os: macos-13
             install_deps: brew install gfortran gcc googletest openblas lapack
     steps:
     - name: Setup Cpp
-      uses: aminya/setup-cpp@v1
+      uses: aminya/setup-cpp@v0.37.0
       with:
         compiler: ${{ matrix.compiler }}
         cmake: true
         ninja: true
-        clangtidy: true
-        cppcheck: true
-        ccache: true
+        clangtidy: ${{matrix.os != 'macos-latest' }}
+        cppcheck: ${{matrix.os != 'macos-latest' }}
+        ccache: ${{matrix.os != 'macos-latest' }}
     - name: Install dependencies
       run: |
         ${{matrix.install_deps}}
@@ -70,7 +70,7 @@ jobs:
         if [ ${{matrix.os}} = 'ubuntu-latest' ]; then
           git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
         fi
-        if [ ${{matrix.os}} = 'macos-latest' ]; then
+        if [ ${{matrix.os}} = 'macos-13' ]; then
           export FC=gfortran-13
           git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
         fi
