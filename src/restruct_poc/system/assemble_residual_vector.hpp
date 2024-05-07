@@ -16,8 +16,7 @@ inline void AssembleResidualVector(Beams& beams, View_N residual_vector) {
         "IntegrateResidualVector", beams.num_nodes,
         IntegrateResidualVector{
             beams.node_state_indices, beams.node_FE, beams.node_FI, beams.node_FG, beams.node_FX,
-            residual_vector
-        }
+            residual_vector}
     );
 }
 
