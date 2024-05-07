@@ -26,24 +26,20 @@ struct CalculateConstraintResidualGradient {
             if (i_node1 == -1) {
                 return Kokkos::Array<double, 4>{
                     constraint_u(i_constraint, 3), constraint_u(i_constraint, 4),
-                    constraint_u(i_constraint, 5), constraint_u(i_constraint, 6)
-                };
+                    constraint_u(i_constraint, 5), constraint_u(i_constraint, 6)};
             }
             return Kokkos::Array<double, 4>{
-                node_u(i_node1, 3), node_u(i_node1, 4), node_u(i_node1, 5), node_u(i_node1, 6)
-            };
+                node_u(i_node1, 3), node_u(i_node1, 4), node_u(i_node1, 5), node_u(i_node1, 6)};
         }();
         auto R1 = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{r1_data.data()};
 
         auto r2_data = Kokkos::Array<double, 4>{
-            node_u(i_node2, 3), node_u(i_node2, 4), node_u(i_node2, 5), node_u(i_node2, 6)
-        };
+            node_u(i_node2, 3), node_u(i_node2, 4), node_u(i_node2, 5), node_u(i_node2, 6)};
         auto R2 = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{r2_data.data()};
 
         auto x0_data = Kokkos::Array<double, 3>{
             constraint_X0(i_constraint, 0), constraint_X0(i_constraint, 1),
-            constraint_X0(i_constraint, 2)
-        };
+            constraint_X0(i_constraint, 2)};
         auto X0 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{x0_data.data()};
 
         auto u2_data =
@@ -67,14 +63,12 @@ struct CalculateConstraintResidualGradient {
 
         auto R2_R1_Inverse_data = Kokkos::Array<double, 4>{};
         auto R2_R1_Inverse = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{
-            R2_R1_Inverse_data.data()
-        };
+            R2_R1_Inverse_data.data()};
         QuaternionCompose(R2, inverse, R2_R1_Inverse);
 
         auto rotation_data = Kokkos::Array<double, 9>{};
-        auto rotation =
-            Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{rotation_data.data()
-            };
+        auto rotation = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{
+            rotation_data.data()};
         QuaternionToRotationMatrix(R2_R1_Inverse, rotation);
 
         auto Phi_p_data = Kokkos::Array<double, 3>{};
