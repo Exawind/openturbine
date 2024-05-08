@@ -7,281 +7,190 @@
 
 namespace openturbine::restruct_poc::tests {
 
-TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutXAxis) {
-    // 90 degree rotation about the x axis
-    auto q = Kokkos::View<double[4]>("q");
-    auto q_host = Kokkos::create_mirror(q);
-    q_host(0) = 0.707107;
-    q_host(1) = 0.707107;
-    q_host(2) = 0.;
-    q_host(3) = 0.;
-    Kokkos::deep_copy(q, q_host);
+template <int size>
+auto Create1DView(const std::array<double, size>& input) {
+    auto view = Kokkos::View<double[size]>("view");
+    auto view_host =
+        Kokkos::View<const double[size], Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
+            input.data()
+        );
+    Kokkos::deep_copy(view, view_host);
+    return view;
+}
 
-    // Convert quaternion to rotation matrix and compare to expected rotation matrix
+void TestConversion(
+    Kokkos::View<const double[4]> q, const std::vector<std::vector<double>>& expected
+) {
     auto R_from_q = Kokkos::View<double[3][3]>("R_from_q");
-    QuaternionToRotationMatrix(q, R_from_q);
-    expect_kokkos_view_2D_equal(R_from_q, {{1., 0., 0.}, {0., 0., -1.}, {0., 1., 0.}});
+    Kokkos::parallel_for(
+        "QuaternionToRotationMatrix", 1,
+        KOKKOS_LAMBDA(int) { QuaternionToRotationMatrix(q, R_from_q); }
+    );
+    expect_kokkos_view_2D_equal(R_from_q, expected);
+}
+
+TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutXAxis) {
+    auto rotation_x_axis = Create1DView<4>({
+        0.707107,
+        0.707107,
+        0.,
+        0.,
+    });
+    TestConversion(rotation_x_axis, {{1., 0., 0.}, {0., 0., -1.}, {0., 1., 0.}});
 }
 
 TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutYAxis) {
-    // 90 degree rotation about the y axis
-    auto q = Kokkos::View<double[4]>("q");
-    auto q_host = Kokkos::create_mirror(q);
-    q_host(0) = 0.707107;
-    q_host(1) = 0.;
-    q_host(2) = 0.707107;
-    q_host(3) = 0.;
-    Kokkos::deep_copy(q, q_host);
-
-    // Convert quaternion to rotation matrix and compare to expected rotation matrix
-    auto R_from_q = Kokkos::View<double[3][3]>("R_from_q");
-    QuaternionToRotationMatrix(q, R_from_q);
-    expect_kokkos_view_2D_equal(R_from_q, {{0., 0., 1.}, {0., 1., 0.}, {-1., 0., 0.}});
+    auto rotation_y_axis = Create1DView<4>({0.707107, 0., 0.707107, 0.});
+    ;
+    TestConversion(rotation_y_axis, {{0., 0., 1.}, {0., 1., 0.}, {-1., 0., 0.}});
 }
 
 TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutZAxis) {
-    // 90 degree rotation about the z axis
-    auto q = Kokkos::View<double[4]>("q");
-    auto q_host = Kokkos::create_mirror(q);
-    q_host(0) = 0.707107;
-    q_host(1) = 0.;
-    q_host(2) = 0.;
-    q_host(3) = 0.707107;
-    Kokkos::deep_copy(q, q_host);
+    auto rotation_z_axis = Create1DView<4>({0.707107, 0., 0., 0.707107});
+    ;
+    TestConversion(rotation_z_axis, {{0., -1., 0.}, {1., 0., 0.}, {0., 0., 1.}});
+}
 
-    // Convert quaternion to rotation matrix and compare to expected rotation matrix
-    auto R_from_q = Kokkos::View<double[3][3]>("R_from_q");
-    QuaternionToRotationMatrix(q, R_from_q);
-    expect_kokkos_view_2D_equal(R_from_q, {{0., -1., 0.}, {1., 0., 0.}, {0., 0., 1.}});
+void TestRotation(
+    Kokkos::View<const double[4]> q, Kokkos::View<const double[3]> v,
+    const std::vector<double>& exact
+) {
+    auto v_rot = Kokkos::View<double[3]>("v_rot");
+    Kokkos::parallel_for(
+        "RotateVectorBoyQuaternion", 1, KOKKOS_LAMBDA(int) { RotateVectorByQuaternion(q, v, v_rot); }
+    );
+    expect_kokkos_view_1D_equal(v_rot, exact);
 }
 
 TEST(QuaternionTest, RotateXAxis90DegreesAboutYAxis) {
-    // Quaternion representing a 90 degree rotation about the y axis
-    auto q = Kokkos::View<double[4]>("q");
-    auto q_host = Kokkos::create_mirror(q);
-    q_host(0) = 0.707107;
-    q_host(1) = 0.;
-    q_host(2) = 0.707107;
-    q_host(3) = 0.;
-    Kokkos::deep_copy(q, q_host);
-
-    // Initialize a vector along the x axis
-    auto v = Kokkos::View<double[3]>("v");
-    auto v_host = Kokkos::create_mirror(v);
-    v_host(0) = 1.;
-    v_host(1) = 0.;
-    v_host(2) = 0.;
-    Kokkos::deep_copy(v, v_host);
-
-    // Rotate the x axis 90 degrees about the y axis and compare to expected result
-    auto v_rot = Kokkos::View<double[3]>("v_rot");
-    RotateVectorByQuaternion(q, v, v_rot);
-    expect_kokkos_view_1D_equal(v_rot, {0., 0., -1.});
+    auto rotation_y_axis = Create1DView<4>({0.707107, 0., 0.707107, 0.});
+    auto x_axis = Create1DView<3>({1., 0., 0.});
+    TestRotation(rotation_y_axis, x_axis, {0., 0., -1.});
 }
 
 TEST(QuaternionTest, RotateZAxis90DegreesAboutXAxis) {
-    // Quaternion representing a 90 degree rotation about the x axis
-    auto q = Kokkos::View<double[4]>("q");
-    auto q_host = Kokkos::create_mirror(q);
-    q_host(0) = 0.707107;
-    q_host(1) = 0.707107;
-    q_host(2) = 0.;
-    q_host(3) = 0.;
-    Kokkos::deep_copy(q, q_host);
-
-    // Initialize a vector along the z axis
-    auto v = Kokkos::View<double[3]>("v");
-    auto v_host = Kokkos::create_mirror(v);
-    v_host(0) = 0.;
-    v_host(1) = 0.;
-    v_host(2) = 1.;
-    Kokkos::deep_copy(v, v_host);
-
-    // Rotate the z axis 90 degrees about the x axis and compare to expected result
-    auto v_rot = Kokkos::View<double[3]>("v_rot");
-    RotateVectorByQuaternion(q, v, v_rot);
-    expect_kokkos_view_1D_equal(v_rot, {0., -1., 0.});
+    auto rotation_x_axis = Create1DView<4>({0.707107, 0.707107, 0., 0.});
+    auto z_axis = Create1DView<3>({0., 0., 1.});
+    TestRotation(rotation_x_axis, z_axis, {0., -1., 0.});
 }
 
 TEST(QuaternionTest, RotateXAxis45DegreesAboutZAxis) {
-    // Quaternion representing a 45 degree rotation about the z axis
-    auto q = Kokkos::View<double[4]>("q");
-    auto q_host = Kokkos::create_mirror(q);
-    q_host(0) = 0.92388;
-    q_host(1) = 0.;
-    q_host(2) = 0.;
-    q_host(3) = 0.382683;
-    Kokkos::deep_copy(q, q_host);
-
-    // Initialize a vector along the x axis
-    auto v = Kokkos::View<double[3]>("v");
-    auto v_host = Kokkos::create_mirror(v);
-    v_host(0) = 1.;
-    v_host(1) = 0.;
-    v_host(2) = 0.;
-    Kokkos::deep_copy(v, v_host);
-
-    // Rotate the x axis 45 degrees about the z axis and compare to expected result
-    auto v_rot = Kokkos::View<double[3]>("v_rot");
-    RotateVectorByQuaternion(q, v, v_rot);
-    expect_kokkos_view_1D_equal(v_rot, {0.707107, 0.707107, 0.});
+    auto rotation_z_axis = Create1DView<4>({0.92388, 0., 0., 0.382683});
+    auto x_axis = Create1DView<3>({1., 0., 0.});
+    TestRotation(rotation_z_axis, x_axis, {0.707107, 0.707107, 0.});
 }
 
 TEST(QuaternionTest, RotateXAxisNeg45DegreesAboutZAxis) {
-    // Quaternion representing a -45 degree rotation about the z axis
-    auto q = Kokkos::View<double[4]>("q");
-    auto q_host = Kokkos::create_mirror(q);
-    q_host(0) = 0.92388;
-    q_host(1) = 0.;
-    q_host(2) = 0.;
-    q_host(3) = -0.382683;
-    Kokkos::deep_copy(q, q_host);
+    auto rotation_z_axis = Create1DView<4>({0.92388, 0., 0., -0.382683});
+    auto x_axis = Create1DView<3>({1., 0., 0.});
+    TestRotation(rotation_z_axis, x_axis, {0.707107, -0.707107, 0.});
+}
 
-    // Initialize a vector along the x axis
-    auto v = Kokkos::View<double[3]>("v");
-    auto v_host = Kokkos::create_mirror(v);
-    v_host(0) = 1.;
-    v_host(1) = 0.;
-    v_host(2) = 0.;
-    Kokkos::deep_copy(v, v_host);
-
-    // Rotate the x axis -45 degrees about the z axis and compare to expected result
-    auto v_rot = Kokkos::View<double[3]>("v_rot");
-    RotateVectorByQuaternion(q, v, v_rot);
-    expect_kokkos_view_1D_equal(v_rot, {0.707107, -0.707107, 0.});
+void TestDerivative(Kokkos::View<const double[4]> q, const std::vector<std::vector<double>>& exact) {
+    auto m = Kokkos::View<double[3][4]>("m");
+    Kokkos::parallel_for(
+        "QuaternionDerivative", 1, KOKKOS_LAMBDA(int) { QuaternionDerivative(q, m); }
+    );
+    expect_kokkos_view_2D_equal(m, exact);
 }
 
 TEST(QuaternionTest, QuaternionDerivative) {
-    auto q = Kokkos::View<double[4]>("q");
-    auto q_host = Kokkos::create_mirror(q);
-    q_host(0) = 1.;
-    q_host(1) = 2.;
-    q_host(2) = 3.;
-    q_host(3) = 4.;
-    Kokkos::deep_copy(q, q_host);
+    auto q = Create1DView<4>({1., 2., 3., 4.});
+    TestDerivative(q, {{-2., 1., -4., 3.}, {-3., 4., 1., -2.}, {-4., -3., 2., 1.}});
+}
 
-    auto m = Kokkos::View<double[3][4]>("m");
-    QuaternionDerivative(q, m);
-    expect_kokkos_view_2D_equal(m, {{-2., 1., -4., 3.}, {-3., 4., 1., -2.}, {-4., -3., 2., 1.}});
+void TestInverse(Kokkos::View<const double[4]> q, const std::vector<double>& exact) {
+    auto q_inv = Kokkos::View<double[4]>("q_inv");
+    Kokkos::parallel_for(
+        "QuaternionInverse", 1, KOKKOS_LAMBDA(int) { QuaternionInverse(q, q_inv); }
+    );
+    expect_kokkos_view_1D_equal(q_inv, exact);
 }
 
 TEST(QuaternionTest, GetInverse) {
-    auto q = Kokkos::View<double[4]>("q");
-    auto q_host = Kokkos::create_mirror(q);
-    q_host(0) = 1. / std::sqrt(30.);
-    q_host(1) = 2. / std::sqrt(30.);
-    q_host(2) = 3. / std::sqrt(30.);
-    q_host(3) = 4. / std::sqrt(30.);
-    Kokkos::deep_copy(q, q_host);
+    const auto coeff = std::sqrt(30.);
+    auto q = Create1DView<4>({1. / coeff, 2. / coeff, 3. / coeff, 4. / coeff});
+    TestInverse(q, {1. / coeff, -2. / coeff, -3. / coeff, -4. / coeff});
+}
 
-    auto q_inv = Kokkos::View<double[4]>("q_inv");
-    QuaternionInverse(q, q_inv);
-    expect_kokkos_view_1D_equal(
-        q_inv,
-        {1. / std::sqrt(30.), -2. / std::sqrt(30.), -3. / std::sqrt(30.), -4. / std::sqrt(30.)}
+void TestCompose(
+    Kokkos::View<const double[4]> q1, Kokkos::View<const double[4]> q2,
+    const std::vector<double>& exact
+) {
+    auto qn = Kokkos::View<double[4]>("qn");
+    Kokkos::parallel_for(
+        "QuaternionCompose", 1, KOKKOS_LAMBDA(int) { QuaternionCompose(q1, q2, qn); }
     );
+    expect_kokkos_view_1D_equal(qn, exact);
 }
 
 TEST(QuaternionTest, MultiplicationOfTwoQuaternions_Set1) {
-    auto q1 = Kokkos::View<double[4]>("q1");
-    auto q1_host = Kokkos::create_mirror(q1);
-    q1_host(0) = 3.;
-    q1_host(1) = 1.;
-    q1_host(2) = -2.;
-    q1_host(3) = 1.;
-    Kokkos::deep_copy(q1, q1_host);
-
-    auto q2 = Kokkos::View<double[4]>("q2");
-    auto q2_host = Kokkos::create_mirror(q2);
-    q2_host(0) = 2.;
-    q2_host(1) = -1.;
-    q2_host(2) = 2.;
-    q2_host(3) = 3.;
-    Kokkos::deep_copy(q2, q2_host);
-
-    auto qn = Kokkos::View<double[4]>("qn");
-    QuaternionCompose(q1, q2, qn);
-    expect_kokkos_view_1D_equal(qn, {8., -9., -2., 11.});
+    auto q1 = Create1DView<4>({3., 1., -2., 1.});
+    auto q2 = Create1DView<4>({2., -1., 2., 3.});
+    TestCompose(q1, q2, {8., -9., -2., 11.});
 }
 
 TEST(QuaternionTest, MultiplicationOfTwoQuaternions_Set2) {
-    auto q1 = Kokkos::View<double[4]>("q1");
-    auto q1_host = Kokkos::create_mirror(q1);
-    q1_host(0) = 1.;
-    q1_host(1) = 2.;
-    q1_host(2) = 3.;
-    q1_host(3) = 4.;
-    Kokkos::deep_copy(q1, q1_host);
+    auto q1 = Create1DView<4>({1., 2., 3., 4.});
+    auto q2 = Create1DView<4>({5., 6., 7., 8.});
+    TestCompose(q1, q2, {-60., 12., 30., 24.});
+}
 
-    auto q2 = Kokkos::View<double[4]>("q2");
-    auto q2_host = Kokkos::create_mirror(q2);
-    q2_host(0) = 5.;
-    q2_host(1) = 6.;
-    q2_host(2) = 7.;
-    q2_host(3) = 8.;
-    Kokkos::deep_copy(q2, q2_host);
+auto Create2DView(const std::array<double, 9>& input) {
+    auto m = Kokkos::View<double[3][3]>("m");
+    auto m_host = Kokkos::create_mirror(m);
+    auto input_view =
+        Kokkos::View<const double[3][3], Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
+            input.data()
+        );
+    Kokkos::deep_copy(m_host, input_view);
+    Kokkos::deep_copy(m, m_host);
+    return m;
+}
 
-    auto qn = Kokkos::View<double[4]>("qn");
-    QuaternionCompose(q1, q2, qn);
-    expect_kokkos_view_1D_equal(qn, {-60., 12., 30., 24.});
+void TestAxialVector(Kokkos::View<const double[3][3]> m, const std::vector<double>& exact) {
+    auto v = Kokkos::View<double[3]>("v");
+    Kokkos::parallel_for(
+        "AxialVectorOfMatrix", 1, KOKKOS_LAMBDA(int) { AxialVectorOfMatrix(m, v); }
+    );
+    expect_kokkos_view_1D_equal(v, exact);
 }
 
 TEST(QuaternionTest, AxialVectorOfMatrix) {
-    auto m = Kokkos::View<double[3][3]>("m");
-    auto m_host = Kokkos::create_mirror(m);
-    m_host(0, 0) = 0.;
-    m_host(0, 1) = -1.;
-    m_host(0, 2) = 0.;
-    m_host(1, 0) = 1.;
-    m_host(1, 1) = 0.;
-    m_host(1, 2) = 0.;
-    m_host(2, 0) = 0.;
-    m_host(2, 1) = 0.;
-    m_host(2, 2) = 0.;
-    Kokkos::deep_copy(m, m_host);
+    auto m = Create2DView({0., -1., 0., 1., 0., 0., 0., 0., 0.});
+    TestAxialVector(m, {0., 0., 1.});
+}
 
-    auto v = Kokkos::View<double[3]>("v");
-    AxialVectorOfMatrix(m, v);
-    expect_kokkos_view_1D_equal(v, {0., 0., 1.});
+void TestRotationToQuaternion(Kokkos::View<const double[4]> phi, const std::vector<double>& exact) {
+    auto quaternion = Kokkos::View<double[4]>("quaternion");
+    Kokkos::parallel_for(
+        "RotationVectorToQuaternion", 1,
+        KOKKOS_LAMBDA(int) { RotationVectorToQuaternion(phi, quaternion); }
+    );
+    expect_kokkos_view_1D_equal(quaternion, exact);
 }
 
 TEST(QuaternionTest, RotationVectorToQuaternion_Set1) {
-    auto phi = Kokkos::View<double[3]>("phi");
-    auto phi_host = Kokkos::create_mirror(phi);
-    phi_host(0) = 1.;
-    phi_host(1) = 2.;
-    phi_host(2) = 3.;
-    Kokkos::deep_copy(phi, phi_host);
-
-    auto quaternion = Kokkos::View<double[4]>("quaternion");
-    RotationVectorToQuaternion(phi, quaternion);
-    expect_kokkos_view_1D_equal(quaternion, {-0.295551, 0.255322, 0.510644, 0.765966});
+    auto phi = Create1DView<4>({1., 2., 3.});
+    TestRotationToQuaternion(phi, {-0.295551, 0.255322, 0.510644, 0.765966});
 }
 
 TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
-    auto phi = Kokkos::View<double[3]>("phi");
-    auto phi_host = Kokkos::create_mirror(phi);
-    phi_host(0) = 0.;
-    phi_host(1) = 0.;
-    phi_host(2) = 1.570796;
-    Kokkos::deep_copy(phi, phi_host);
+    auto phi = Create1DView<4>({0., 0., 1.570796});
+    TestRotationToQuaternion(phi, {0.707107, 0., 0., 0.707107});
+}
 
-    auto quaternion = Kokkos::View<double[4]>("quaternion");
-    RotationVectorToQuaternion(phi, quaternion);
-    expect_kokkos_view_1D_equal(quaternion, {0.707107, 0., 0., 0.707107});
+void TestVecTilde(Kokkos::View<double[3]> v, const std::vector<std::vector<double>>& exact) {
+    auto m = Kokkos::View<double[3][3]>("m");
+    Kokkos::parallel_for(
+        "VecTilde", 1, KOKKOS_LAMBDA(int) { VecTilde(v, m); }
+    );
+    expect_kokkos_view_2D_equal(m, exact);
 }
 
 TEST(VectorTest, VecTilde) {
-    auto v = Kokkos::View<double[3]>("v");
-    auto v_host = Kokkos::create_mirror(v);
-    v_host(0) = 1.;
-    v_host(1) = 2.;
-    v_host(2) = 3.;
-    Kokkos::deep_copy(v, v_host);
-
-    auto m = Kokkos::View<double[3][3]>("m");
-    VecTilde(v, m);
-    expect_kokkos_view_2D_equal(m, {{0., -3., 2.}, {3., 0., -1.}, {-2., 1., 0.}});
+    auto v = Create1DView<3>({1., 2., 3.});
+    TestVecTilde(v, {{0., -3., 2.}, {3., 0., -1.}, {-2., 1., 0.}});
 }
 
 TEST(QuaternionTest, CrossProduct_Set1) {
