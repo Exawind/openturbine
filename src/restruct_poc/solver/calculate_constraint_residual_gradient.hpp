@@ -74,7 +74,7 @@ struct CalculateConstraintResidualGradient {
         auto Phi_p_data = Kokkos::Array<double, 3>{};
         auto Phi_p =
             Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{Phi_p_data.data()};
-        ComputeAxialVector(rotation, Phi_p);
+        AxialVectorOfMatrix(rotation, Phi_p);
 
         Phi(i_row + 0) = -Phi_x(0);
         Phi(i_row + 1) = -Phi_x(1);
