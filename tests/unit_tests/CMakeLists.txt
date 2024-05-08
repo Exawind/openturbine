@@ -1,7 +1,7 @@
 
 # Add subdirectories for unit tests
-add_subdirectory(gebt_poc)
-add_subdirectory(gen_alpha_poc)
+#add_subdirectory(gebt_poc)
+#add_subdirectory(gen_alpha_poc)
 add_subdirectory(restruct_poc)
 
 target_sources(
@@ -9,7 +9,6 @@ target_sources(
     PRIVATE
     utest_main.cpp
     test_config.cpp
-    test_log.cpp
 )
 
 target_compile_options(
