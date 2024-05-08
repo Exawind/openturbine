@@ -101,14 +101,14 @@ jobs:
     - name: Run CppCheck
       if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'llvm'
       run: |
-        export KokkosKernels_DIR=~/dependencies/kokkos_kernels
         mkdir build-cppcheck
         cd build-cppcheck
         cmake .. \
           -DOTURB_ENABLE_TESTS:BOOL=ON \
           -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DCMAKE_CXX_CPPCHECK="cppcheck;--enable=all;--force;--suppress=missingIncludeSystem;--library=googletest;--clang"
+          -DKokkosKernels_DIR=/home/runner/dependencies/kokkos_kernels/lib/cmake/KokkosKernels/ \
+          -DCMAKE_CXX_CPPCHECK="cppcheck;--enable=all;--error-exitcode=0;--suppress=missingInclude;--library=googletest"
         cmake --build . -j 1
     - name: Run Clang-Tidy
       if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'llvm'

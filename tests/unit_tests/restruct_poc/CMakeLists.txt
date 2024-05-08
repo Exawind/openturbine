@@ -8,6 +8,7 @@ target_sources(
     test_cantilever_beam.cpp
     test_rotor.cpp
     test_math.cpp
+    test_utilities.cpp
 )
 
 if(OTURB_ENABLE_VTK)

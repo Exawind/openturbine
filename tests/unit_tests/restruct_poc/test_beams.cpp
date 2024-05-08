@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+#include "test_utilities.hpp"
+
 #include "src/restruct_poc/beams/beam_element.hpp"
 #include "src/restruct_poc/beams/beam_node.hpp"
 #include "src/restruct_poc/beams/beam_section.hpp"
@@ -16,7 +18,6 @@
 #include "src/restruct_poc/system/assemble_residual_vector.hpp"
 #include "src/restruct_poc/system/update_state.hpp"
 #include "src/restruct_poc/types.hpp"
-#include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::restruct_poc::tests {
 
