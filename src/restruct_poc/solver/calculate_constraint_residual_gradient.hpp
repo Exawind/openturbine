@@ -49,7 +49,7 @@ struct CalculateConstraintResidualGradient {
         auto phi_x_data = Kokkos::Array<double, 3>{};
         auto Phi_x =
             Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{phi_x_data.data()};
-        QuaternionRotateVector(R1, X0, Phi_x);
+        RotateVectorByQuaternion(R1, X0, Phi_x);
         KokkosBlas::serial_axpy(-1., X0, Phi_x);
         KokkosBlas::serial_axpy(-1., u2, Phi_x);
 
@@ -74,7 +74,7 @@ struct CalculateConstraintResidualGradient {
         auto Phi_p_data = Kokkos::Array<double, 3>{};
         auto Phi_p =
             Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{Phi_p_data.data()};
-        ComputeAxialVector(rotation, Phi_p);
+        AxialVectorOfMatrix(rotation, Phi_p);
 
         Phi(i_row + 0) = -Phi_x(0);
         Phi(i_row + 1) = -Phi_x(1);

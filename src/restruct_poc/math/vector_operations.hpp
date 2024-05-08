@@ -1,8 +1,10 @@
 #pragma once
+
 #include <Kokkos_Core.hpp>
 
 namespace openturbine {
 
+/// Converts a 3x1 vector to a 3x3 skew-symmetric matrix and returns the result
 template <typename VectorType, typename MatrixType>
 KOKKOS_INLINE_FUNCTION void VecTilde(VectorType vector, MatrixType matrix) {
     matrix(0, 0) = 0.;
