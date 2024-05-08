@@ -4,6 +4,8 @@
 
 #include <gtest/gtest.h>
 
+#include "test_utilities.hpp"
+
 #include "src/restruct_poc/beams/beam_element.hpp"
 #include "src/restruct_poc/beams/beam_node.hpp"
 #include "src/restruct_poc/beams/beam_section.hpp"
@@ -14,7 +16,6 @@
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
 #include "src/restruct_poc/types.hpp"
-#include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 using Array_7 = std::array<double, 7>;
 
