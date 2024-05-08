@@ -15,13 +15,12 @@
 #include "src/restruct_poc/system/assemble_mass_matrix.hpp"
 #include "src/restruct_poc/system/assemble_residual_vector.hpp"
 #include "src/restruct_poc/system/update_state.hpp"
+#include "src/restruct_poc/types.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::restruct_poc::tests {
 
 class BeamsTest : public testing::Test {
-    using BeamQuadrature = std::vector<std::array<double, 2>>;
-
 protected:
     // Per-test-suite set-up.
     // Called before the first test in this test suite.

@@ -6,11 +6,11 @@
 #include "beam_node.hpp"
 #include "beam_section.hpp"
 
+#include "src/restruct_poc/types.hpp"
+
 namespace openturbine {
 
 struct BeamElement {
-    using BeamQuadrature = std::vector<std::array<double, 2>>;
-
     std::vector<BeamNode> nodes;        // Element node positions/rotations in material frame
     std::vector<BeamSection> sections;  // Element mass/stiffness in material frame
     BeamQuadrature quadrature;          // Element quadrature points and weights

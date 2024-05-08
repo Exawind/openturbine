@@ -2,6 +2,8 @@
 
 #include <array>
 
+#include "src/restruct_poc/types.hpp"
+
 namespace openturbine {
 
 struct BeamSection {

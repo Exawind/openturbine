@@ -14,11 +14,10 @@
 #include "src/restruct_poc/solver/predict_next_state.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
+#include "src/restruct_poc/types.hpp"
 #include "tests/unit_tests/gen_alpha_poc/test_utilities.h"
 
 namespace openturbine::restruct_poc::tests {
-
-using BeamQuadrature = std::vector<std::array<double, 2>>;
 
 class NewSolverTest : public testing::Test {
 protected:
