@@ -13,12 +13,12 @@ inline void PopulateElementViews(
 ) {
     std::vector<double> node_xi(elem.nodes.size());
     for (size_t i = 0; i < elem.nodes.size(); ++i) {
-        node_xi[i] = 2 * elem.nodes[i].s - 1;
+        node_xi[i] = 2 * elem.nodes[i].position - 1;
     }
 
     for (size_t j = 0; j < elem.nodes.size(); ++j) {
-        for (size_t k = 0; k < elem.nodes[j].x.size(); ++k) {
-            node_x0(j, k) = elem.nodes[j].x[k];
+        for (size_t k = 0; k < elem.nodes[j].initial_dofs.size(); ++k) {
+            node_x0(j, k) = elem.nodes[j].initial_dofs[k];
         }
     }
 
@@ -48,7 +48,7 @@ inline void PopulateElementViews(
     std::vector<double> section_xi(elem.sections.size());
 
     for (size_t i = 0; i < elem.sections.size(); ++i) {
-        section_xi[i] = 2 * elem.sections[i].s - 1;
+        section_xi[i] = 2 * elem.sections[i].position - 1;
     }
 
     Kokkos::deep_copy(qp_Mstar, 0.);

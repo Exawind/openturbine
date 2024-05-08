@@ -15,13 +15,11 @@ struct CalculateTemporaryVariables {
     KOKKOS_FUNCTION
     void operator()(int i_qp) const {
         auto x0pup_data = Kokkos::Array<double, 3>{
-            qp_x0_prime_(i_qp, 0), qp_x0_prime_(i_qp, 1), qp_x0_prime_(i_qp, 2)
-        };
+            qp_x0_prime_(i_qp, 0), qp_x0_prime_(i_qp, 1), qp_x0_prime_(i_qp, 2)};
         auto x0pup =
             Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{x0pup_data.data()};
         auto u_prime_data = Kokkos::Array<double, 3>{
-            qp_u_prime_(i_qp, 0), qp_u_prime_(i_qp, 1), qp_u_prime_(i_qp, 2)
-        };
+            qp_u_prime_(i_qp, 0), qp_u_prime_(i_qp, 1), qp_u_prime_(i_qp, 2)};
         auto u_prime =
             Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{u_prime_data.data()};
         KokkosBlas::serial_axpy(1., u_prime, x0pup);

@@ -15,13 +15,11 @@ inline void AssembleMassMatrix(Beams& beams, View_NxN M) {
         if constexpr (std::is_same_v<
                           Kokkos::DefaultExecutionSpace, Kokkos::DefaultHostExecutionSpace>) {
             return Kokkos::MDRangePolicy{
-                {0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}
-            };
+                {0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes}};
         } else {
             return Kokkos::MDRangePolicy{
                 {0, 0, 0, 0},
-                {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes, beams.max_elem_qps}
-            };
+                {beams.num_elems, beams.max_elem_nodes, beams.max_elem_nodes, beams.max_elem_qps}};
         }
     });
     Kokkos::parallel_for(
