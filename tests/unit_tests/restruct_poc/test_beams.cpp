@@ -162,7 +162,7 @@ protected:
 Beams* BeamsTest::beams_ = nullptr;
 
 TEST_F(BeamsTest, NodeInitialPositionX0) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->node_x0,
         {
             {0., 0., 0., 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
@@ -181,7 +181,7 @@ TEST_F(BeamsTest, NodeInitialPositionX0) {
 
 TEST_F(BeamsTest, NodeInitialDisplacement) {
     std::cout << 11 << std::endl;
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->node_u,
         {
             {0., 0., 0., 1., 0., 0., 0.},
@@ -196,7 +196,7 @@ TEST_F(BeamsTest, NodeInitialDisplacement) {
 }
 
 TEST_F(BeamsTest, NodeInitialVelocity) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->node_u_dot,
         {
             {0., 0., 0., 0., 0., 0},
@@ -211,7 +211,7 @@ TEST_F(BeamsTest, NodeInitialVelocity) {
 }
 
 TEST_F(BeamsTest, NodeInitialAcceleration) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->node_u_ddot,
         {
             {0., 0., 0., 0., 0., 0},
@@ -226,7 +226,7 @@ TEST_F(BeamsTest, NodeInitialAcceleration) {
 }
 
 TEST_F(BeamsTest, ShapeFunctionInterpolationMatrix) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->shape_interp,
         {{0.7643937937285443, 0.13706262395004942, -0.13172898316530468,
           0.000000000000000022962127484012874, 0.05567285555959517, -0.020342107108930366,
@@ -246,7 +246,7 @@ TEST_F(BeamsTest, ShapeFunctionInterpolationMatrix) {
 }
 
 TEST_F(BeamsTest, ShapeFunctionDerivativeMatrix) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->shape_deriv,
         {{-4.2701511577426, -1.9393626617606694, 0.013055310813328586, 0.375, -0.12778431702017545,
           -0.1974469591256584, 0.29092055406654616},
@@ -263,7 +263,7 @@ TEST_F(BeamsTest, ShapeFunctionDerivativeMatrix) {
 }
 
 TEST_F(BeamsTest, JacobianArray) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+    expect_kokkos_view_1D_equal(
         beams_->qp_jacobian,
         {2.7027484463552844, 2.585197218483525, 2.5041356900076877, 2.5980762113533173,
          2.8809584014451253, 3.2234919864103784, 3.4713669823269462}
@@ -271,7 +271,7 @@ TEST_F(BeamsTest, JacobianArray) {
 }
 
 TEST_F(BeamsTest, QuadraturePointWeights) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+    expect_kokkos_view_1D_equal(
         beams_->qp_weight,
         {0.1294849661688697, 0.27970539148927664, 0.3818300505051189, 0.4179591836734694,
          0.3818300505051189, 0.27970539148927664, 0.1294849661688697}
@@ -281,7 +281,7 @@ TEST_F(BeamsTest, QuadraturePointWeights) {
 TEST_F(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
     auto Mstar = View_NxN("Mstar", beams_->qp_Mstar.extent(1), beams_->qp_Mstar.extent(2));
     Kokkos::deep_copy(Mstar, Kokkos::subview(beams_->qp_Mstar, 0, Kokkos::ALL, Kokkos::ALL));
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Mstar,
         {
             {2., 0., 0., 0., 0.6, -0.4},
@@ -298,7 +298,7 @@ TEST_F(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
 TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInMaterialFrame) {
     auto Cstar = View_NxN("Cstar", beams_->qp_Cstar.extent(1), beams_->qp_Cstar.extent(2));
     Kokkos::deep_copy(Cstar, Kokkos::subview(beams_->qp_Cstar, 0, Kokkos::ALL, Kokkos::ALL));
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Cstar,
         {
             {1., 2., 3., 4., 5., 6.},
@@ -312,7 +312,7 @@ TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInMaterialFrame) {
 }
 
 TEST_F(BeamsTest, QuadraturePointInitialPosition) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_x0,
         {
             {0.12723021914310378, -0.04894958421765723, 0.024151041535564563},
@@ -327,7 +327,7 @@ TEST_F(BeamsTest, QuadraturePointInitialPosition) {
 }
 
 TEST_F(BeamsTest, QuadraturePointInitialPositionDerivative) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_x0_prime,
         {
             {0.924984344499876, -0.3417491071948319, 0.16616711516322952},
@@ -342,7 +342,7 @@ TEST_F(BeamsTest, QuadraturePointInitialPositionDerivative) {
 }
 
 TEST_F(BeamsTest, QuadraturePointInitialRotation) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_r0,
         {
             {0.980884413320975, -0.0144723270940525, -0.0824443301646419, -0.1756680160876},
@@ -357,7 +357,7 @@ TEST_F(BeamsTest, QuadraturePointInitialRotation) {
 }
 
 TEST_F(BeamsTest, QuadraturePointTranslationalDisplacement) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_u,
         {
             {6.475011465280995e-5, -6.310248039744534e-5, 6.5079641503883e-5},
@@ -372,7 +372,7 @@ TEST_F(BeamsTest, QuadraturePointTranslationalDisplacement) {
 }
 
 TEST_F(BeamsTest, QuadraturePointTranslationalDisplacementDerivative) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_u_prime,
         {
             {0.0009414876868372848, -0.0009055519814222241, 0.0009486748279202956},
@@ -387,7 +387,7 @@ TEST_F(BeamsTest, QuadraturePointTranslationalDisplacementDerivative) {
 }
 
 TEST_F(BeamsTest, QuadraturePointRotationalDisplacement) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_r,
         {
             {0.9999991906236807, 0.001272301844556629, 0.0, 0.0},
@@ -402,7 +402,7 @@ TEST_F(BeamsTest, QuadraturePointRotationalDisplacement) {
 }
 
 TEST_F(BeamsTest, QuadraturePointRotationalDisplacementDerivative) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_r_prime,
         {
             {-1.1768592508490864e-5, 0.009249835939573259, 0.0, 0.0},
@@ -417,7 +417,7 @@ TEST_F(BeamsTest, QuadraturePointRotationalDisplacementDerivative) {
 }
 
 TEST_F(BeamsTest, QuadraturePointInitialTranslationalVelocity) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_u_dot,
         {
             {0.0025446043828620765, -0.0024798542682092665, 6.5079641503883e-5},
@@ -432,7 +432,7 @@ TEST_F(BeamsTest, QuadraturePointInitialTranslationalVelocity) {
 }
 
 TEST_F(BeamsTest, QuadraturePointInitialAngularVelocity) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_omega,
         {
             {0.0025446043828620765, -0.0024798542682092665, 6.5079641503883e-5},
@@ -447,7 +447,7 @@ TEST_F(BeamsTest, QuadraturePointInitialAngularVelocity) {
 }
 
 TEST_F(BeamsTest, QuadraturePointTranslationalAcceleration) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_u_ddot,
         {
             {0.0025446043828620765, -0.0024151041535564553, 0.0001298297561566934},
@@ -462,7 +462,7 @@ TEST_F(BeamsTest, QuadraturePointTranslationalAcceleration) {
 }
 
 TEST_F(BeamsTest, QuadraturePointAngularAcceleration) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_omega_dot,
         {
             {0.0025446043828620765, -0.0024798542682092665, -0.0024798542682092665},
@@ -479,7 +479,7 @@ TEST_F(BeamsTest, QuadraturePointAngularAcceleration) {
 TEST_F(BeamsTest, QuadraturePointRR0) {
     auto RR0 = View_NxN("RR0", beams_->qp_RR0.extent(1), beams_->qp_RR0.extent(2));
     Kokkos::deep_copy(RR0, Kokkos::subview(beams_->qp_RR0, 0, Kokkos::ALL, Kokkos::ALL));
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         RR0,
         {
             {0.9246873610951006, 0.34700636042507577, -0.156652066872805, 0.0, 0.0, 0.0},
@@ -495,7 +495,7 @@ TEST_F(BeamsTest, QuadraturePointRR0) {
 TEST_F(BeamsTest, QuadraturePointMassMatrixInGlobalFrame) {
     auto Muu = View_NxN("Muu", beams_->qp_Muu.extent(1), beams_->qp_Muu.extent(2));
     Kokkos::deep_copy(Muu, Kokkos::subview(beams_->qp_Muu, 0, Kokkos::ALL, Kokkos::ALL));
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Muu,
         {
             {2.000000000000001, 5.204170427930421e-17, -5.551115123125783e-17,
@@ -517,7 +517,7 @@ TEST_F(BeamsTest, QuadraturePointMassMatrixInGlobalFrame) {
 TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInGlobalFrame) {
     auto Cuu = View_NxN("Cuu", beams_->qp_Cuu.extent(1), beams_->qp_Cuu.extent(2));
     Kokkos::deep_copy(Cuu, Kokkos::subview(beams_->qp_Cuu, 0, Kokkos::ALL, Kokkos::ALL));
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Cuu,
         {
             {1.3196125048858467, 1.9501108129670985, 3.5958678677753957, 5.1623043394880055,
@@ -537,7 +537,7 @@ TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInGlobalFrame) {
 }
 
 TEST_F(BeamsTest, QuadraturePointStrain) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_strain,
         {
             {0.0009414876868373279, -0.00048382928348705834, 0.0018188281296873943,
@@ -559,7 +559,7 @@ TEST_F(BeamsTest, QuadraturePointStrain) {
 }
 
 TEST_F(BeamsTest, QuadraturePointElasticForceFC) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_Fc,
         {
             {0.10234015755301404, 0.15123731179112573, 0.2788710191555731, 0.4003531623743687,
@@ -581,7 +581,7 @@ TEST_F(BeamsTest, QuadraturePointElasticForceFC) {
 }
 
 TEST_F(BeamsTest, QuadraturePointElasticForceFD) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_Fd,
         {
             {0.0, 0.0, 0.0, 0.12083059685899937, 0.2411112242070902, -0.1751018655842517},
@@ -596,7 +596,7 @@ TEST_F(BeamsTest, QuadraturePointElasticForceFD) {
 }
 
 TEST_F(BeamsTest, QuadraturePointInternalForceFI) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_Fi,
         {
             {0.004375199541621397, -0.006996757474943007, 0.0016854280323566574,
@@ -618,7 +618,7 @@ TEST_F(BeamsTest, QuadraturePointInternalForceFI) {
 }
 
 TEST_F(BeamsTest, QuadraturePointGravityForceFg) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->qp_Fg,
         {
             {0.0, 0.0, 19.620000000000008, 3.33069666549358, -2.2538354951632575, 0.0},
@@ -635,7 +635,7 @@ TEST_F(BeamsTest, QuadraturePointGravityForceFg) {
 TEST_F(BeamsTest, QuadraturePointMatrixOuu) {
     auto Ouu = View_NxN("Ouu", beams_->qp_Ouu.extent(1), beams_->qp_Ouu.extent(2));
     Kokkos::deep_copy(Ouu, Kokkos::subview(beams_->qp_Ouu, 0, Kokkos::ALL, Kokkos::ALL));
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Ouu,
         {
             {0., 0., 0., 1.558035187754702, 3.3878498808227704, -2.4090666622503774},
@@ -651,7 +651,7 @@ TEST_F(BeamsTest, QuadraturePointMatrixOuu) {
 TEST_F(BeamsTest, QuadraturePointMatrixPuu) {
     auto Puu = View_NxN("Puu", beams_->qp_Puu.extent(1), beams_->qp_Puu.extent(2));
     Kokkos::deep_copy(Puu, Kokkos::subview(beams_->qp_Puu, 0, Kokkos::ALL, Kokkos::ALL));
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Puu,
         {
             {0., 0., 0., 0., 0., 0.},
@@ -670,7 +670,7 @@ TEST_F(BeamsTest, QuadraturePointMatrixPuu) {
 TEST_F(BeamsTest, QuadraturePointMatrixQuu) {
     auto Quu = View_NxN("Quu", beams_->qp_Quu.extent(1), beams_->qp_Quu.extent(2));
     Kokkos::deep_copy(Quu, Kokkos::subview(beams_->qp_Quu, 0, Kokkos::ALL, Kokkos::ALL));
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Quu,
         {
             {0., 0., 0., 0., 0., 0.},
@@ -686,7 +686,7 @@ TEST_F(BeamsTest, QuadraturePointMatrixQuu) {
 TEST_F(BeamsTest, QuadraturePointMatrixGuu) {
     auto Guu = View_NxN("Guu", beams_->qp_Guu.extent(1), beams_->qp_Guu.extent(2));
     Kokkos::deep_copy(Guu, Kokkos::subview(beams_->qp_Guu, 0, Kokkos::ALL, Kokkos::ALL));
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Guu,
         {
             {0., 0., 0., -0.0008012182534494841, 0.002003432464632351, 0.0015631511018243545},
@@ -702,7 +702,7 @@ TEST_F(BeamsTest, QuadraturePointMatrixGuu) {
 TEST_F(BeamsTest, QuadraturePointMatrixKuu) {
     auto Kuu = View_NxN("Kuu", beams_->qp_Kuu.extent(1), beams_->qp_Kuu.extent(2));
     Kokkos::deep_copy(Kuu, Kokkos::subview(beams_->qp_Kuu, 0, Kokkos::ALL, Kokkos::ALL));
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Kuu,
         {
             {0., 0., 0., -0.0023904728226588536, 0.0005658527664274542, 0.0005703830914904407},
@@ -716,7 +716,7 @@ TEST_F(BeamsTest, QuadraturePointMatrixKuu) {
 }
 
 TEST_F(BeamsTest, NodalForceVectorFE) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->node_FE,
         {
             {-0.11121183449279078, -0.16149482899687723, -0.30437442031624473, -0.40385243171727625,
@@ -734,7 +734,7 @@ TEST_F(BeamsTest, NodalForceVectorFE) {
 }
 
 TEST_F(BeamsTest, NodalForceVectorFI) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->node_FI,
         {
             {0.00011604556408931232, -0.0006507362696177878, -0.0006134866787566515,
@@ -756,7 +756,7 @@ TEST_F(BeamsTest, NodalForceVectorFI) {
 }
 
 TEST_F(BeamsTest, NodalForceVectorFG) {
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         beams_->node_FG,
         {
             {0., 0., 5.387595382846484, 0.9155947038768231, -0.6120658127519644, 0.},
@@ -771,7 +771,7 @@ TEST_F(BeamsTest, NodalForceVectorFG) {
 TEST_F(BeamsTest, ResidualForceVector) {
     View_N residual_vector("residual_vector", beams_->num_nodes * 6);
     AssembleResidualVector(*beams_, residual_vector);
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
+    expect_kokkos_view_1D_equal(
         residual_vector,
         {
             -0.11109578892870146, -0.162145565266495,   -5.692583289841486,    -1.3188329033929058,
@@ -789,7 +789,7 @@ TEST_F(BeamsTest, ResidualForceVector) {
 TEST_F(BeamsTest, MassMatrix) {
     View_NxN mass_matrix("mass_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
     AssembleMassMatrix(*beams_, mass_matrix);
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Kokkos::subview(mass_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {{0.4772429894755368, 9.713031930841838e-18, -1.2295544475412003e-17, -8.212152094108017e-18,
           0.1485885016038723, -0.0822496584432702, 0.1443512681342982, 1.3253623350648216e-17,
@@ -827,7 +827,7 @@ TEST_F(BeamsTest, MassMatrix) {
 TEST_F(BeamsTest, GyroscopicInertiaMatrix) {
     View_NxN gyro_matrix("gyro_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
     AssembleGyroscopicInertiaMatrix(*beams_, gyro_matrix);
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Kokkos::subview(gyro_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {
             {0.0, 0.0, 0.0, -0.0001426663153504464, 0.001061043044936692, 0.0007128139299700778, 0.0,
@@ -857,7 +857,7 @@ TEST_F(BeamsTest, GyroscopicInertiaMatrix) {
 TEST_F(BeamsTest, InertialStiffnessMatrix) {
     View_NxN stiffness_matrix("stiffness_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
     AssembleInertialStiffnessMatrix(*beams_, stiffness_matrix);
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Kokkos::subview(stiffness_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {
             {0.0, 0.0, 0.0, -0.0010312283191276819, 0.00022828252813933251, 0.00025788162731961564,
@@ -887,7 +887,7 @@ TEST_F(BeamsTest, InertialStiffnessMatrix) {
 TEST_F(BeamsTest, ElasticStiffnessMatrix) {
     View_NxN stiffness_matrix("stiffness_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
     AssembleElasticStiffnessMatrix(*beams_, stiffness_matrix);
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         Kokkos::subview(stiffness_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {
             {1.7424036187210084, 2.596502219359714, 4.70722699207639, 6.038208635026575,

@@ -127,9 +127,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     {
         Kokkos::View<double[3]> result("result");
         Kokkos::deep_copy(result, Kokkos::subview(solver.state.q, 4, Kokkos::make_pair(0, 3)));
-        openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-            result, {-8.15173937E-08, -1.86549248E-07, 6.97278045E-04}
-        );
+        expect_kokkos_view_1D_equal(result, {-8.15173937E-08, -1.86549248E-07, 6.97278045E-04});
     }
     // Second step
     Kokkos::deep_copy(
@@ -140,9 +138,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     {
         Kokkos::View<double[3]> result("result");
         Kokkos::deep_copy(result, Kokkos::subview(solver.state.q, 4, Kokkos::make_pair(0, 3)));
-        openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-            result, {-1.00926258E-06, -7.91711079E-07, 2.65017558E-03}
-        );
+        expect_kokkos_view_1D_equal(result, {-1.00926258E-06, -7.91711079E-07, 2.65017558E-03});
     }
 
     // Third step
@@ -154,9 +150,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     {
         Kokkos::View<double[3]> result("result");
         Kokkos::deep_copy(result, Kokkos::subview(solver.state.q, 4, Kokkos::make_pair(0, 3)));
-        openturbine::gen_alpha_solver::tests::expect_kokkos_view_1D_equal(
-            result, {-5.05830945E-06, -2.29457246E-06, 6.30508154E-03}
-        );
+        expect_kokkos_view_1D_equal(result, {-5.05830945E-06, -2.29457246E-06, 6.30508154E-03});
     }
 }
 

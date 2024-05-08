@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-namespace openturbine::gen_alpha_solver::tests {
+namespace openturbine::restruct_poc::tests {
 
 Kokkos::View<double**> create_diagonal_matrix(const std::vector<double>& values) {
     auto matrix = Kokkos::View<double**>("matrix", values.size(), values.size());
@@ -94,12 +94,4 @@ void expect_kokkos_view_3D_equal(
     }
 }
 
-Vector multiply_rotation_matrix_with_vector(const RotationMatrix& R, const Vector& v) {
-    return Vector{
-        R(0, 0) * v.GetXComponent() + R(0, 1) * v.GetYComponent() + R(0, 2) * v.GetZComponent(),
-        R(1, 0) * v.GetXComponent() + R(1, 1) * v.GetYComponent() + R(1, 2) * v.GetZComponent(),
-        R(2, 0) * v.GetXComponent() + R(2, 1) * v.GetYComponent() + R(2, 2) * v.GetZComponent(),
-    };
-}
-
-}  // namespace openturbine::gen_alpha_solver::tests
+}  // namespace openturbine::restruct_poc::tests

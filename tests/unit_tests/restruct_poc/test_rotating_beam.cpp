@@ -136,7 +136,7 @@ TEST(RotatingBeamTest, StepConvergence) {
         EXPECT_EQ(converged, true);
     }
 
-    openturbine::gen_alpha_solver::tests::expect_kokkos_view_2D_equal(
+    expect_kokkos_view_2D_equal(
         solver.state.q,
         {
             {-0.000099661884299369481, 0.019999672917628962, -3.6608854058480302E-25,
@@ -256,7 +256,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     auto m = solver.num_constraint_dofs / 2;
 
     // Check that K matrix is the same for both beams
-    auto K = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.K);
+    auto K = kokkos_view_2D_to_vector(solver.K);
     // WriteMatrixToFile(K, "K.csv");
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -265,7 +265,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     }
 
     // Check that M matrix is the same for both beams
-    auto M = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.M);
+    auto M = kokkos_view_2D_to_vector(solver.M);
     // WriteMatrixToFile(M, "M.csv");
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -274,7 +274,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     }
 
     // Check that St matrix is the same for both beams
-    auto St = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.St);
+    auto St = kokkos_view_2D_to_vector(solver.St);
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             EXPECT_NEAR(St[i][j], St[n + i][n + j], 1.e-10);
@@ -282,20 +282,19 @@ TEST(RotatingBeamTest, TwoBeam) {
     }
 
     // Check that R vector is the same for both beams
-    auto R = openturbine::gen_alpha_solver::tests::kokkos_view_1D_to_vector(solver.R);
+    auto R = kokkos_view_1D_to_vector(solver.R);
     for (int i = 0; i < n; ++i) {
         EXPECT_NEAR(R[i], R[n + i], 1.e-10);
     }
 
     // Check that Phi vector is the same for both beams
-    auto Phi =
-        openturbine::gen_alpha_solver::tests::kokkos_view_1D_to_vector(solver.constraints.Phi);
+    auto Phi = kokkos_view_1D_to_vector(solver.constraints.Phi);
     for (int i = 0; i < m; ++i) {
         EXPECT_NEAR(Phi[i], Phi[i + m], 1.e-10);
     }
 
     // Check that B matrix is the same for both beams
-    auto B = openturbine::gen_alpha_solver::tests::kokkos_view_2D_to_vector(solver.constraints.B);
+    auto B = kokkos_view_2D_to_vector(solver.constraints.B);
     for (int i = 0; i < m; ++i) {
         for (int j = 0; j < n; ++j) {
             EXPECT_NEAR(B[i][j], B[i + m][j + n], 1.e-10);

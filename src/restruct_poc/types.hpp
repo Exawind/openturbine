@@ -9,6 +9,7 @@ static constexpr int kLieAlgebraComponents = 6;
 static constexpr int kLieGroupComponents = 7;
 
 static constexpr double kTolerance = 1.e-16;
+static constexpr double kTestTolerance = 1.e-6;
 
 // Create some type aliases for Kokkos views to improve readability
 // 1D views
