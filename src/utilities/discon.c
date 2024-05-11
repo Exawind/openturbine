@@ -1,6 +1,11 @@
 
 #include "discon.h"
 
+#ifdef __cplusplus
+namespace openturbine::util {
+extern "C" {
+#endif
+
 // clang-format off
 
 float clamp(float v, float v_min, float v_max)
@@ -464,3 +469,8 @@ void DISCON(float avrSWAP[], int aviFAIL, char accINFILE[], char avcOUTNAME[], c
 }
 
 // clang-format on
+
+#ifdef __cplusplus
+}
+}  // namespace openturbine::util
+#endif

@@ -20,6 +20,7 @@
 #pragma once
 
 #ifdef __cplusplus
+namespace openturbine::util {
 extern "C" {
 #endif
 
@@ -181,4 +182,5 @@ void DISCON(float avrSWAP[], int aviFAIL, char accINFILE[], char avcOUTNAME[], c
 
 #ifdef __cplusplus
 }
+}  // namespace openturbine::util
 #endif
