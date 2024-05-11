@@ -11,7 +11,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
   endif()
 endif()
 
-target_sources(${oturb_exe_name} PRIVATE main.cpp)
+target_sources(${oturb_exe_name} PRIVATE main.cpp utilities/discon.c)
 set_target_properties(${oturb_exe_name} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${oturb_exe_name} PRIVATE
     Kokkos::kokkoskernels
