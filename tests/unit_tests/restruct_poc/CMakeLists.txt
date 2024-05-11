@@ -9,6 +9,7 @@ target_sources(
     test_rotor.cpp
     test_math.cpp
     test_utilities.cpp
+<<<<<<< HEAD
     solver/test_compute_number_of_non_zeros.cpp
     solver/test_copy_into_sparse_matrix.cpp
     solver/test_populate_sparse_indices.cpp
@@ -16,6 +17,9 @@ target_sources(
     system/test_integrate_stiffness_matrix.cpp
     system/test_integrate_inertia_matrix.cpp
     system/test_integrate_residual_vector.cpp
+=======
+    test_controller.cpp
+>>>>>>> 25dbb17 (Add unit test for the clamp function in discon.c)
 )
 
 if(OTURB_ENABLE_VTK)
