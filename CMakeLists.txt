@@ -2,7 +2,7 @@
 ############################ BASE ######################################
 
 cmake_minimum_required (VERSION 3.20 FATAL_ERROR)
-project(OpenTurbine LANGUAGES CXX)
+project(OpenTurbine LANGUAGES C CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
