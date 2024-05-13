@@ -2,7 +2,7 @@
 
 #include "test_utilities.hpp"
 
-#include "src/utilities/discon.h"
+#include "src/utilities/controllers/discon.h"
 
 namespace openturbine::restruct_poc::tests {
 
