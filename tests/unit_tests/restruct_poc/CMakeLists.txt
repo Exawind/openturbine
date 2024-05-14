@@ -9,6 +9,7 @@ target_sources(
     test_rotor.cpp
     test_math.cpp
     test_utilities.cpp
+    system/test_integrate_matrix.cpp
 )
 
 if(OTURB_ENABLE_VTK)
