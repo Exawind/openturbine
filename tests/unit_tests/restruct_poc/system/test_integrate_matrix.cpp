@@ -13,6 +13,7 @@ void TestOneElementOneNodeOneQP(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_nodes = 1;
     constexpr auto number_of_qps = 1;
+
     const auto element_indices = std::invoke(
         [](int n_elem, int n_nodes, int n_qps) {
             auto elem_indices = Kokkos::View<Beams::ElemIndices*>("elem_indices", n_elem);
@@ -101,6 +102,22 @@ void TestOneElementOneNodeOneQP(Policy policy) {
                 {600150., 600300., 600450., 600600., 600750., 600900.},
                 {750150., 750300., 750450., 750600., 750750., 750900.}}
     );
+}
+
+TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_1D) {
+    TestOneElementOneNodeOneQP(Kokkos::RangePolicy(0, 1));
+}
+
+TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_3D) {
+    TestOneElementOneNodeOneQP(Kokkos::MDRangePolicy{{0, 0, 0}, {1, 1, 1}});
+}
+
+TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_4D) {
+    TestOneElementOneNodeOneQP(Kokkos::MDRangePolicy{{0, 0, 0, 0}, {1, 1, 1, 1}});
+}
+
+TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_TeamPolicy) {
+    TestOneElementOneNodeOneQP(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 template <typename Policy>
@@ -216,6 +233,22 @@ void TestTwoElementsOneNodeOneQP(Policy policy) {
     );
 }
 
+TEST(IntegrateMatrixTests, TwoElementsOneNodeOneQP_1D) {
+    TestTwoElementsOneNodeOneQP(Kokkos::RangePolicy(0, 2));
+}
+
+TEST(IntegrateMatrixTests, TwoElementsOneNodeOneQP_3D) {
+    TestTwoElementsOneNodeOneQP(Kokkos::MDRangePolicy{{0, 0, 0}, {2, 1, 1}});
+}
+
+TEST(IntegrateMatrixTests, TwoElementsOneNodeOneQP_4D) {
+    TestTwoElementsOneNodeOneQP(Kokkos::MDRangePolicy{{0, 0, 0, 0}, {2, 1, 1, 1}});
+}
+
+TEST(IntegrateMatrixTests, TwoElementsOneNodeOneQP_TeamPolicy) {
+    TestTwoElementsOneNodeOneQP(Kokkos::TeamPolicy<>(2, Kokkos::AUTO()));
+}
+
 template <typename Policy>
 void TestOneElementTwoNodesOneQP(Policy policy) {
     constexpr auto number_of_elements = 1;
@@ -323,6 +356,22 @@ void TestOneElementTwoNodesOneQP(Policy policy) {
     );
 }
 
+TEST(IntegrateMatrixTests, OneElementTwoNodesOneQP_1D) {
+    TestOneElementTwoNodesOneQP(Kokkos::RangePolicy(0, 1));
+}
+
+TEST(IntegrateMatrixTests, OneElementTwoNodesOneQP_3D) {
+    TestOneElementTwoNodesOneQP(Kokkos::MDRangePolicy{{0, 0, 0}, {1, 2, 2}});
+}
+
+TEST(IntegrateMatrixTests, OneElementTwoNodesOneQP_4D) {
+    TestOneElementTwoNodesOneQP(Kokkos::MDRangePolicy{{0, 0, 0, 0}, {1, 2, 2, 1}});
+}
+
+TEST(IntegrateMatrixTests, OneElementTwoNodesOneQP_TeamPolicy) {
+    TestOneElementTwoNodesOneQP(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
+}
+
 template <typename Policy>
 void TestOneElementOneNodeTwoQPs(Policy policy) {
     constexpr auto number_of_elements = 1;
@@ -427,119 +476,20 @@ void TestOneElementOneNodeTwoQPs(Policy policy) {
     );
 }
 
-TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_OneIndex) {
-    constexpr auto number_of_elements = 1;
-
-    TestOneElementOneNodeOneQP(Kokkos::RangePolicy(0, number_of_elements));
+TEST(IntegrateMatrixTests, OneElementOneNodeTwoQPs_1D) {
+    TestOneElementOneNodeTwoQPs(Kokkos::RangePolicy(0, 1));
 }
 
-TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_TeamPolicy) {
-    constexpr auto number_of_elements = 1;
-
-    TestOneElementOneNodeOneQP(Kokkos::TeamPolicy<>(number_of_elements, Kokkos::AUTO()));
+TEST(IntegrateMatrixTests, OneElementOneNodeTwoQPs_3D) {
+    TestOneElementOneNodeTwoQPs(Kokkos::MDRangePolicy{{0, 0, 0}, {1, 1, 1}});
 }
 
-TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_ThreeIndices) {
-    constexpr auto number_of_elements = 1;
-    constexpr auto number_of_nodes = 1;
-
-    TestOneElementOneNodeOneQP(Kokkos::MDRangePolicy{
-        {0, 0, 0}, {number_of_elements, number_of_nodes, number_of_nodes}});
+TEST(IntegrateMatrixTests, OneElementOneNodeTwoQPs_4D) {
+    TestOneElementOneNodeTwoQPs(Kokkos::MDRangePolicy{{0, 0, 0, 0}, {1, 1, 1, 2}});
 }
 
-TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_FourIndices) {
-    constexpr auto number_of_elements = 1;
-    constexpr auto number_of_nodes = 1;
-    constexpr auto number_of_qps = 1;
-
-    TestOneElementOneNodeOneQP(Kokkos::MDRangePolicy{
-        {0, 0, 0, 0}, {number_of_elements, number_of_nodes, number_of_nodes, number_of_qps}});
+TEST(IntegrateMatrixTests, OneElementOneNodeTwoQPs_TeamPolicy) {
+    TestOneElementOneNodeTwoQPs(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
-TEST(IntegrateMatrixTests, TestTwoElementsOneNodeOneQP_OneIndex) {
-    constexpr auto number_of_elements = 2;
-
-    TestTwoElementsOneNodeOneQP(Kokkos::RangePolicy(0, number_of_elements));
-}
-
-TEST(IntegrateMatrixTests, TestTwoElementsOneNodeOneQP_TeamPolicy) {
-    constexpr auto number_of_elements = 2;
-
-    TestTwoElementsOneNodeOneQP(Kokkos::TeamPolicy<>(number_of_elements, Kokkos::AUTO()));
-}
-
-TEST(IntegrateMatrixTests, TestTwoElementsOneNodeOneQP_ThreeIndices) {
-    constexpr auto number_of_elements = 2;
-    constexpr auto number_of_nodes = 1;
-
-    TestTwoElementsOneNodeOneQP(Kokkos::MDRangePolicy{
-        {0, 0, 0}, {number_of_elements, number_of_nodes, number_of_nodes}});
-}
-
-TEST(IntegrateMatrixTests, TestTwoElementsOneNodeOneQP_FourIndices) {
-    constexpr auto number_of_elements = 2;
-    constexpr auto number_of_nodes = 1;
-    constexpr auto number_of_qps = 1;
-
-    TestTwoElementsOneNodeOneQP(Kokkos::MDRangePolicy{
-        {0, 0, 0, 0}, {number_of_elements, number_of_nodes, number_of_nodes, number_of_qps}});
-}
-
-TEST(IntegrateMatrixTests, TestOneElementTwoNodesOneQP_OneIndex) {
-    constexpr auto number_of_elements = 1;
-
-    TestOneElementTwoNodesOneQP(Kokkos::RangePolicy(0, number_of_elements));
-}
-
-TEST(IntegrateMatrixTests, TestOneElementTwoNodesOneQP_TeamPolicy) {
-    constexpr auto number_of_elements = 1;
-
-    TestOneElementTwoNodesOneQP(Kokkos::TeamPolicy<>(number_of_elements, Kokkos::AUTO()));
-}
-
-TEST(IntegrateMatrixTests, TestOneElementTwoNodesOneQP_ThreeIndices) {
-    constexpr auto number_of_elements = 1;
-    constexpr auto number_of_nodes = 2;
-
-    TestOneElementTwoNodesOneQP(Kokkos::MDRangePolicy{
-        {0, 0, 0}, {number_of_elements, number_of_nodes, number_of_nodes}});
-}
-
-TEST(IntegrateMatrixTests, TestOneElementTwoNodesOneQP_FourIndices) {
-    constexpr auto number_of_elements = 1;
-    constexpr auto number_of_nodes = 2;
-    constexpr auto number_of_qps = 1;
-
-    TestOneElementTwoNodesOneQP(Kokkos::MDRangePolicy{
-        {0, 0, 0, 0}, {number_of_elements, number_of_nodes, number_of_nodes, number_of_qps}});
-}
-
-TEST(IntegrateMatrixTests, TestOneElementOneNodeTwoQPs_OneIndex) {
-    constexpr auto number_of_elements = 1;
-
-    TestOneElementOneNodeTwoQPs(Kokkos::RangePolicy(0, number_of_elements));
-}
-
-TEST(IntegrateMatrixTests, TestOneElementOneNodeTwoQPs_TeamPolicy) {
-    constexpr auto number_of_elements = 1;
-
-    TestOneElementOneNodeTwoQPs(Kokkos::TeamPolicy<>(number_of_elements, Kokkos::AUTO()));
-}
-
-TEST(IntegrateMatrixTests, TestOneElementOneNodeTwoQPs_ThreeIndices) {
-    constexpr auto number_of_elements = 1;
-    constexpr auto number_of_nodes = 1;
-
-    TestOneElementOneNodeTwoQPs(Kokkos::MDRangePolicy{
-        {0, 0, 0}, {number_of_elements, number_of_nodes, number_of_nodes}});
-}
-
-TEST(IntegrateMatrixTests, TestOneElementOneNodeTwoQPs_FourIndices) {
-    constexpr auto number_of_elements = 1;
-    constexpr auto number_of_nodes = 1;
-    constexpr auto number_of_qps = 2;
-
-    TestOneElementOneNodeTwoQPs(Kokkos::MDRangePolicy{
-        {0, 0, 0, 0}, {number_of_elements, number_of_nodes, number_of_nodes, number_of_qps}});
-}
 }  // namespace openturbine::restruct_poc::tests
