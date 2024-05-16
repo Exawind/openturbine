@@ -8,6 +8,11 @@
 
 namespace openturbine::restruct_poc::tests {
 
+using view_1x6x6 =
+    Kokkos::View<double[1][6][6], Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
+using view_2x6x6 =
+    Kokkos::View<double[2][6][6], Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
+
 template <typename Policy>
 void TestOneElementOneNodeOneQP(Policy policy) {
     constexpr auto number_of_elements = 1;
@@ -77,9 +82,7 @@ void TestOneElementOneNodeOneQP(Policy policy) {
                                      1004., 1005., 1006., 2001., 2002., 2003., 2004., 2005., 2006.,
                                      3001., 3002., 3003., 3004., 3005., 3006., 4001., 4002., 4003.,
                                      4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.};
-            using data_view_type = Kokkos::View<
-                double[1][6][6], Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
-            auto M_data_view = data_view_type(M_data.data());
+            auto M_data_view = view_1x6x6(M_data.data());
             Kokkos::deep_copy(host_M, M_data_view);
             Kokkos::deep_copy(M, host_M);
             return M;
@@ -125,6 +128,7 @@ void TestTwoElementsOneNodeOneQP(Policy policy) {
     constexpr auto number_of_elements = 2;
     constexpr auto number_of_nodes = 1;
     constexpr auto number_of_qps = 1;
+
     const auto element_indices = std::invoke(
         [](int n_elem, int n_nodes, int n_qps) {
             auto elem_indices = Kokkos::View<Beams::ElemIndices*>("elem_indices", n_elem);
@@ -199,9 +203,7 @@ void TestTwoElementsOneNodeOneQP(Policy policy) {
                            10004., 10005., 10006., 20001., 20002., 20003., 20004., 20005., 20006.,
                            30001., 30002., 30003., 30004., 30005., 30006., 40001., 40002., 40003.,
                            40004., 40005., 40006., 50001., 50002., 50003., 50004., 50005., 50006.};
-            using data_view_type = Kokkos::View<
-                double[2][6][6], Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
-            auto M_data_view = data_view_type(M_data.data());
+            auto M_data_view = view_2x6x6(M_data.data());
             Kokkos::deep_copy(host_M, M_data_view);
             Kokkos::deep_copy(M, host_M);
             return M;
@@ -254,6 +256,7 @@ void TestOneElementTwoNodesOneQP(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_nodes = 2;
     constexpr auto number_of_qps = 1;
+
     const auto element_indices = std::invoke(
         [](int n_elem, int n_nodes, int n_qps) {
             auto elem_indices = Kokkos::View<Beams::ElemIndices*>("elem_indices", n_elem);
@@ -319,9 +322,7 @@ void TestOneElementTwoNodesOneQP(Policy policy) {
                                      0104., 0105., 0106., 0201., 0202., 0203., 0204., 0205., 0206.,
                                      0301., 0302., 0303., 0304., 0305., 0306., 0401., 0402., 0403.,
                                      0404., 0405., 0406., 0501., 0502., 0503., 0504., 0505., 0506.};
-            using data_view_type = Kokkos::View<
-                double[1][6][6], Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
-            auto M_data_view = data_view_type(M_data.data());
+            auto M_data_view = view_1x6x6(M_data.data());
             Kokkos::deep_copy(host_M, M_data_view);
             Kokkos::deep_copy(M, host_M);
             return M;
@@ -377,6 +378,7 @@ void TestOneElementOneNodeTwoQPs(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_nodes = 1;
     constexpr auto number_of_qps = 2;
+
     const auto element_indices = std::invoke(
         [](int n_elem, int n_nodes, int n_qps) {
             auto elem_indices = Kokkos::View<Beams::ElemIndices*>("elem_indices", n_elem);
@@ -449,9 +451,7 @@ void TestOneElementOneNodeTwoQPs(Policy policy) {
                            14000., 15000., 16000., 21000., 22000., 23000., 24000., 25000., 26000.,
                            31000., 32000., 33000., 34000., 35000., 36000., 41000., 42000., 43000.,
                            44000., 45000., 46000., 51000., 52000., 53000., 54000., 55000., 56000.};
-            using data_view_type = Kokkos::View<
-                double[2][6][6], Kokkos::HostSpace, Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
-            auto M_data_view = data_view_type(M_data.data());
+            auto M_data_view = view_2x6x6(M_data.data());
             Kokkos::deep_copy(host_M, M_data_view);
             Kokkos::deep_copy(M, host_M);
             return M;
