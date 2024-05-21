@@ -10,6 +10,7 @@ target_sources(
     test_math.cpp
     test_utilities.cpp
     system/test_integrate_matrix.cpp
+    system/test_integrate_elastic_stiffness_matrix.cpp
 )
 
 if(OTURB_ENABLE_VTK)

@@ -1,3 +1,5 @@
+#include "test_integrate_matrix.hpp"
+
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
@@ -7,75 +9,6 @@
 #include "tests/unit_tests/restruct_poc/test_utilities.hpp"
 
 namespace openturbine::restruct_poc::tests {
-
-template <int n_elem, int n_nodes, int n_qps>
-auto get_element_indices() {
-    using IndicesView = Kokkos::View<Beams::ElemIndices[n_elem]>;
-    auto elem_indices = IndicesView("elem_indices");
-    auto host_elem_indices = Kokkos::create_mirror(elem_indices);
-    for (int i = 0; i < n_elem; ++i) {
-        host_elem_indices(i) = Beams::ElemIndices(n_nodes, n_qps, i, i);
-    }
-    Kokkos::deep_copy(elem_indices, host_elem_indices);
-    return elem_indices;
-}
-
-template <int n_elem, int n_nodes>
-auto get_node_state_indices() {
-    using IndicesView = Kokkos::View<int[n_elem * n_nodes]>;
-    auto indices = IndicesView("node_state_indices");
-    auto host_indices = Kokkos::create_mirror(indices);
-    for (int i = 0; i < n_elem * n_nodes; ++i) {
-        host_indices(i) = i;
-    }
-    Kokkos::deep_copy(indices, host_indices);
-    return indices;
-}
-
-template <int n_elem, int n_qps>
-auto get_qp_weights(const std::array<double, n_elem * n_qps>& weight_data) {
-    using WeightsView = Kokkos::View<double[n_elem * n_qps]>;
-    using HostWeightsView = Kokkos::View<const double[n_elem * n_qps], Kokkos::HostSpace>;
-    auto weights = WeightsView("weights");
-    auto host_weights = HostWeightsView(weight_data.data());
-    Kokkos::deep_copy(weights, host_weights);
-    return weights;
-}
-
-template <int n_elem, int n_qps>
-auto get_qp_jacobian(const std::array<double, n_elem * n_qps>& jacobian_data) {
-    using JacobianView = Kokkos::View<double[n_elem * n_qps]>;
-    using HostJacobianView = Kokkos::View<const double[n_elem * n_qps], Kokkos::HostSpace>;
-    auto jacobian = JacobianView("jacobian");
-    auto host_jacobian = HostJacobianView(jacobian_data.data());
-    Kokkos::deep_copy(jacobian, host_jacobian);
-    return jacobian;
-}
-
-template <int n_elem, int n_nodes, int n_qps>
-auto get_shape_interp(const std::array<double, n_elem * n_nodes * n_elem * n_qps>& shape_data) {
-    using ShapeView = Kokkos::View<double[n_elem * n_nodes][n_elem * n_qps]>;
-    using HostShapeView =
-        Kokkos::View<const double[n_elem * n_nodes][n_elem * n_qps], Kokkos::HostSpace>;
-    auto shape = ShapeView("shape_interp");
-    auto host_shape = Kokkos::create_mirror(shape);
-    auto shape_data_view = HostShapeView(shape_data.data());
-    Kokkos::deep_copy(host_shape, shape_data_view);
-    Kokkos::deep_copy(shape, host_shape);
-    return shape;
-}
-
-template <int n_elem, int n_qps>
-auto get_qp_M(const std::array<double, n_elem * n_qps * 6 * 6>& M_data) {
-    using MView = Kokkos::View<double[n_elem * n_qps][6][6]>;
-    using HostMView = Kokkos::View<const double[n_elem * n_qps][6][6], Kokkos::HostSpace>;
-    auto M = MView("M");
-    auto host_M = Kokkos::create_mirror(M);
-    auto M_data_view = HostMView(M_data.data());
-    Kokkos::deep_copy(host_M, M_data_view);
-    Kokkos::deep_copy(M, host_M);
-    return M;
-}
 
 template <typename Policy>
 void TestOneElementOneNodeOneQP(Policy policy) {
