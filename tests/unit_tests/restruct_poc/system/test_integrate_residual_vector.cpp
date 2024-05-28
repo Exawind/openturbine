@@ -10,9 +10,9 @@
 
 namespace openturbine::restruct_poc::tests {
 
-void TestIntegrateResidualVector_OneElementOneNode_all_zero() {
-    constexpr int num_elements = 1;
-    constexpr int num_nodes = 1;
+void TestIntegrateResidualVector_1Element1Node_AllZeros() {
+    constexpr auto num_elements = 1;
+    constexpr auto num_nodes = 1;
     auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
     auto node_FE = Kokkos::View<double[num_elements * num_nodes][6]>("node_FE");
@@ -31,8 +31,8 @@ void TestIntegrateResidualVector_OneElementOneNode_all_zero() {
     expect_kokkos_view_1D_equal(residual_vector, {0., 0., 0., 0., 0., 0.});
 }
 
-TEST(IntegrateResidualVector, OneElementOneNode_all_zero) {
-    TestIntegrateResidualVector_OneElementOneNode_all_zero();
+TEST(IntegrateResidualVector, OneElementOneNode_AllZeros) {
+    TestIntegrateResidualVector_1Element1Node_AllZeros();
 }
 
 template <int n_elem, int n_nodes>
@@ -69,9 +69,9 @@ auto get_node_FX(const std::array<double, n_elem * n_nodes * 6>& vector_data) {
     return get_node_vector<n_elem, n_nodes>("node_FX", vector_data);
 }
 
-void TestIntegrateResidualVector_OneElementOneNode_node_FE() {
-    constexpr int num_elements = 1;
-    constexpr int num_nodes = 1;
+void TestIntegrateResidualVector_1Element1Node_node_FE() {
+    constexpr auto num_elements = 1;
+    constexpr auto num_nodes = 1;
     auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
     auto node_FE = get_node_FE<num_elements, num_nodes>({1., 2., 3., 4., 5., 6.});
@@ -91,12 +91,12 @@ void TestIntegrateResidualVector_OneElementOneNode_node_FE() {
 }
 
 TEST(IntegrateResidualVector, OneElementOneNode_node_FE) {
-    TestIntegrateResidualVector_OneElementOneNode_node_FE();
+    TestIntegrateResidualVector_1Element1Node_node_FE();
 }
 
-void TestIntegrateResidualVector_OneElementOneNode_node_FI() {
-    constexpr int num_elements = 1;
-    constexpr int num_nodes = 1;
+void TestIntegrateResidualVector_1Element1Node_node_FI() {
+    constexpr auto num_elements = 1;
+    constexpr auto num_nodes = 1;
     auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
     auto node_FE = Kokkos::View<double[num_elements * num_nodes][6]>("node_FE");
@@ -116,12 +116,12 @@ void TestIntegrateResidualVector_OneElementOneNode_node_FI() {
 }
 
 TEST(IntegrateResidualVector, OneElementOneNode_node_FI) {
-    TestIntegrateResidualVector_OneElementOneNode_node_FI();
+    TestIntegrateResidualVector_1Element1Node_node_FI();
 }
 
-void TestIntegrateResidualVector_OneElementOneNode_node_FG() {
-    constexpr int num_elements = 1;
-    constexpr int num_nodes = 1;
+void TestIntegrateResidualVector_1Element1Node_node_FG() {
+    constexpr auto num_elements = 1;
+    constexpr auto num_nodes = 1;
     auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
     auto node_FE = Kokkos::View<double[num_elements * num_nodes][6]>("node_FE");
@@ -141,12 +141,12 @@ void TestIntegrateResidualVector_OneElementOneNode_node_FG() {
 }
 
 TEST(IntegrateResidualVector, OneElementOneNode_node_FG) {
-    TestIntegrateResidualVector_OneElementOneNode_node_FG();
+    TestIntegrateResidualVector_1Element1Node_node_FG();
 }
 
-void TestIntegrateResidualVector_OneElementOneNode_node_FX() {
-    constexpr int num_elements = 1;
-    constexpr int num_nodes = 1;
+void TestIntegrateResidualVector_1Element1Node_node_FX() {
+    constexpr auto num_elements = 1;
+    constexpr auto num_nodes = 1;
     auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
     auto node_FE = Kokkos::View<double[num_elements * num_nodes][6]>("node_FE");
@@ -166,12 +166,12 @@ void TestIntegrateResidualVector_OneElementOneNode_node_FX() {
 }
 
 TEST(IntegrateResidualVector, OneElementOneNode_node_FX) {
-    TestIntegrateResidualVector_OneElementOneNode_node_FX();
+    TestIntegrateResidualVector_1Element1Node_node_FX();
 }
 
-void TestIntegrateResidualVector_OneElementOneNode_sum() {
-    constexpr int num_elements = 1;
-    constexpr int num_nodes = 1;
+void TestIntegrateResidualVector_1Element1Node_Sum() {
+    constexpr auto num_elements = 1;
+    constexpr auto num_nodes = 1;
     auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
     auto node_FE = get_node_FE<num_elements, num_nodes>({1., 2., 3., 4., 5., 6.});
@@ -190,13 +190,13 @@ void TestIntegrateResidualVector_OneElementOneNode_sum() {
     expect_kokkos_view_1D_equal(residual_vector, {0., 0., 0., 0., 0., 0.});
 }
 
-TEST(IntegrateResidualVector, OneElementOneNode_sum) {
-    TestIntegrateResidualVector_OneElementOneNode_sum();
+TEST(IntegrateResidualVector, OneElementOneNode_Sum) {
+    TestIntegrateResidualVector_1Element1Node_Sum();
 }
 
 void TestIntegrateResidualVector_OneElementTwoNodes() {
-    constexpr int num_elements = 1;
-    constexpr int num_nodes = 2;
+    constexpr auto num_elements = 1;
+    constexpr auto num_nodes = 2;
     auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
     auto node_FE =
@@ -222,9 +222,9 @@ TEST(IntegrateResidualVector, OneElementTwoNodes) {
     TestIntegrateResidualVector_OneElementTwoNodes();
 }
 
-void TestIntegrateResidualVector_TwoElementsTwoNodes() {
-    constexpr int num_elements = 2;
-    constexpr int num_nodes = 2;
+void TestIntegrateResidualVector_2Elements2Nodes() {
+    constexpr auto num_elements = 2;
+    constexpr auto num_nodes = 2;
     auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
     auto node_FE = get_node_FE<num_elements, num_nodes>({1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,
@@ -248,7 +248,7 @@ void TestIntegrateResidualVector_TwoElementsTwoNodes() {
 }
 
 TEST(IntegrateResidualVector, TwoElementsTwoNodes) {
-    TestIntegrateResidualVector_TwoElementsTwoNodes();
+    TestIntegrateResidualVector_2Elements2Nodes();
 }
 
 }  // namespace openturbine::restruct_poc::tests
