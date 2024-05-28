@@ -9,6 +9,7 @@ namespace openturbine::restruct_poc::tests {
 
 template <int n_elem, int n_nodes, int n_qps = 0>
 auto get_indices() {
+    // TODO Any quick way to merge the duplicate looking code in the conditional branches?
     if constexpr (n_qps > 0) {
         // Case for getting element indices with n_nodes and n_qps
         using IndicesView = Kokkos::View<Beams::ElemIndices[n_elem]>;

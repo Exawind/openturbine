@@ -11,7 +11,7 @@
 namespace openturbine::restruct_poc::tests {
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQP(
+void TestIntegrateElasticStiffnessMatrix_1Element1Node1QP(
     Policy policy, Kokkos::View<const double[1][6][6]> qp_Puu,
     Kokkos::View<const double[1][6][6]> qp_Cuu, Kokkos::View<const double[1][6][6]> qp_Ouu,
     Kokkos::View<const double[1][6][6]> qp_Quu, const std::vector<std::vector<double>>& exact_M
@@ -42,7 +42,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQP(
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPPuu(Policy policy) {
+void TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Puu(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_qps = 1;
 
@@ -56,7 +56,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPPuu(Policy policy
     const auto qp_Cuu = QpMatrixView("Cuu");
     const auto qp_Ouu = QpMatrixView("Ouu");
 
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQP(
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{000040., 000080., 000120., 000160., 000200., 000240.},
          {040040., 040080., 040120., 040160., 040200., 040240.},
@@ -67,28 +67,27 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPPuu(Policy policy
     );
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPPuu_1D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPPuu(Kokkos::RangePolicy(0, 1));
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Puu_1D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Puu(Kokkos::RangePolicy(0, 1));
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPPuu_3D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPPuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Puu_3D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Puu(Kokkos::MDRangePolicy{
         {0, 0, 0}, {1, 1, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPPuu_4D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPPuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Puu_4D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Puu(Kokkos::MDRangePolicy{
         {0, 0, 0, 0}, {1, 1, 1, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPPuu_TeamPolicy) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPPuu(
-        Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Puu_TeamPolicy) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Puu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
     );
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPQuu(Policy policy) {
+void TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Quu(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_qps = 1;
 
@@ -102,7 +101,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPQuu(Policy policy
     const auto qp_Cuu = QpMatrixView("Cuu");
     const auto qp_Ouu = QpMatrixView("Ouu");
 
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQP(
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{000096., 000192., 000288., 000384., 000480., 000576.},
          {096096., 096192., 096288., 096384., 096480., 096576.},
@@ -113,28 +112,27 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPQuu(Policy policy
     );
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPQuu_1D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPQuu(Kokkos::RangePolicy(0, 1));
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Quu_1D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Quu(Kokkos::RangePolicy(0, 1));
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPQuu_3D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPQuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Quu_3D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Quu(Kokkos::MDRangePolicy{
         {0, 0, 0}, {1, 1, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPQuu_4D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPQuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Quu_4D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Quu(Kokkos::MDRangePolicy{
         {0, 0, 0, 0}, {1, 1, 1, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPQuu_TeamPolicy) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPQuu(
-        Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Quu_TeamPolicy) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Quu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
     );
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPCuu(Policy policy) {
+void TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Cuu(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_qps = 1;
 
@@ -149,7 +147,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPCuu(Policy policy
     );
     const auto qp_Ouu = QpMatrixView("Ouu");
 
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQP(
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{050050., 050100., 050150., 050200., 050250., 050300.},
          {100050., 100100., 100150., 100200., 100250., 100300.},
@@ -160,28 +158,27 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPCuu(Policy policy
     );
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPCuu_1D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPCuu(Kokkos::RangePolicy(0, 1));
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Cuu_1D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Cuu(Kokkos::RangePolicy(0, 1));
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPCuu_3D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPCuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Cuu_3D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Cuu(Kokkos::MDRangePolicy{
         {0, 0, 0}, {1, 1, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPCuu_4D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPCuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Cuu_4D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Cuu(Kokkos::MDRangePolicy{
         {0, 0, 0, 0}, {1, 1, 1, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPCuu_TeamPolicy) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPCuu(
-        Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Cuu_TeamPolicy) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Cuu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
     );
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPOuu(Policy policy) {
+void TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Ouu(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_qps = 1;
 
@@ -194,7 +191,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPOuu(Policy policy
          5001., 5002., 5003., 5004., 5005., 5006., 6001., 6002., 6003., 6004., 6005., 6006.}
     );
 
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQP(
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{040040., 040080., 040120., 040160., 040200., 040240.},
          {080040., 080080., 080120., 080160., 080200., 080240.},
@@ -205,28 +202,27 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPOuu(Policy policy
     );
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPOuu_1D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPOuu(Kokkos::RangePolicy(0, 1));
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Ouu_1D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Ouu(Kokkos::RangePolicy(0, 1));
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPOuu_3D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPOuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Ouu_3D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Ouu(Kokkos::MDRangePolicy{
         {0, 0, 0}, {1, 1, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPOuu_4D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPOuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Ouu_4D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Ouu(Kokkos::MDRangePolicy{
         {0, 0, 0, 0}, {1, 1, 1, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQPOuu_TeamPolicy) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPOuu(
-        Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeOneQP_Ouu_TeamPolicy) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node1QP_Ouu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
     );
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_TwoElementsOneNodeOneQP(Policy policy) {
+void TestIntegrateElasticStiffnessMatrix_2Elements1Node1QP(Policy policy) {
     constexpr auto number_of_elements = 2;
     constexpr auto number_of_nodes = 1;
     constexpr auto number_of_qps = 1;
@@ -284,27 +280,25 @@ void TestIntegrateElasticStiffnessMatrix_TwoElementsOneNodeOneQP(Policy policy) 
 }
 
 TEST(IntegrateElasticStiffnessMatrixTests, TwoElementsOneNodeOneQP_1D) {
-    TestIntegrateElasticStiffnessMatrix_TwoElementsOneNodeOneQP(Kokkos::RangePolicy(0, 2));
+    TestIntegrateElasticStiffnessMatrix_2Elements1Node1QP(Kokkos::RangePolicy(0, 2));
 }
 
 TEST(IntegrateElasticStiffnessMatrixTests, TwoElementsOneNodeOneQP_3D) {
-    TestIntegrateElasticStiffnessMatrix_TwoElementsOneNodeOneQP(Kokkos::MDRangePolicy{
-        {0, 0, 0}, {2, 1, 1}});
+    TestIntegrateElasticStiffnessMatrix_2Elements1Node1QP(Kokkos::MDRangePolicy{{0, 0, 0}, {2, 1, 1}}
+    );
 }
 
 TEST(IntegrateElasticStiffnessMatrixTests, TwoElementsOneNodeOneQP_4D) {
-    TestIntegrateElasticStiffnessMatrix_TwoElementsOneNodeOneQP(Kokkos::MDRangePolicy{
+    TestIntegrateElasticStiffnessMatrix_2Elements1Node1QP(Kokkos::MDRangePolicy{
         {0, 0, 0, 0}, {2, 1, 1, 1}});
 }
 
 TEST(IntegrateElasticStiffnessMatrixTests, TwoElementsOneNodeOneQP_TeamPolicy) {
-    TestIntegrateElasticStiffnessMatrix_TwoElementsOneNodeOneQP(
-        Kokkos::TeamPolicy<>(2, Kokkos::AUTO())
-    );
+    TestIntegrateElasticStiffnessMatrix_2Elements1Node1QP(Kokkos::TeamPolicy<>(2, Kokkos::AUTO()));
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQP(
+void TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP(
     Policy policy, Kokkos::View<const double[1][6][6]> qp_Puu,
     Kokkos::View<const double[1][6][6]> qp_Cuu, Kokkos::View<const double[1][6][6]> qp_Ouu,
     Kokkos::View<const double[1][6][6]> qp_Quu, const std::vector<std::vector<double>>& exact_M
@@ -335,7 +329,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQP(
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPPuu(Policy policy) {
+void TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Puu(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_qps = 1;
 
@@ -349,7 +343,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPPuu(Policy polic
     const auto qp_Cuu = QpMatrixView("Cuu");
     const auto qp_Ouu = QpMatrixView("Ouu");
 
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQP(
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{00001., 00002., 00003., 00004., 00005., 00006., 00004., 00008., 00012., 00016., 00020.,
           00024.},
@@ -379,28 +373,27 @@ void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPPuu(Policy polic
     );
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPPuu_1D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPPuu(Kokkos::RangePolicy(0, 1));
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Puu_1D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Puu(Kokkos::RangePolicy(0, 1));
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPPuu_3D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPPuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Puu_3D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Puu(Kokkos::MDRangePolicy{
         {0, 0, 0}, {1, 2, 2}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPPuu_4D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPPuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Puu_4D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Puu(Kokkos::MDRangePolicy{
         {0, 0, 0, 0}, {1, 2, 2, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPPuu_TeamPolicy) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPPuu(
-        Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Puu_TeamPolicy) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Puu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
     );
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPQuu(Policy policy) {
+void TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Quu(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_qps = 1;
 
@@ -414,7 +407,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPQuu(Policy polic
     const auto qp_Cuu = QpMatrixView("Cuu");
     const auto qp_Ouu = QpMatrixView("Ouu");
 
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQP(
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{00001., 00002., 00003., 00004., 00005., 00006., 00002., 00004., 00006., 00008., 00010.,
           00012.},
@@ -444,28 +437,27 @@ void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPQuu(Policy polic
     );
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPQuu_1D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPQuu(Kokkos::RangePolicy(0, 1));
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Quu_1D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Quu(Kokkos::RangePolicy(0, 1));
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPQuu_3D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPQuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Quu_3D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Quu(Kokkos::MDRangePolicy{
         {0, 0, 0}, {1, 2, 2}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPQuu_4D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPQuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Quu_4D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Quu(Kokkos::MDRangePolicy{
         {0, 0, 0, 0}, {1, 2, 2, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPQuu_TeamPolicy) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPQuu(
-        Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Quu_TeamPolicy) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Quu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
     );
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPCuu(Policy policy) {
+void TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Cuu(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_qps = 1;
 
@@ -479,7 +471,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPCuu(Policy polic
     );
     const auto qp_Ouu = QpMatrixView("Ouu");
 
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQP(
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{00001., 00002., 00003., 00004., 00005., 00006., 00004., 00008., 00012., 00016., 00020.,
           00024.},
@@ -509,28 +501,27 @@ void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPCuu(Policy polic
     );
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPCuu_1D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPCuu(Kokkos::RangePolicy(0, 1));
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Cuu_1D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Cuu(Kokkos::RangePolicy(0, 1));
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPCuu_3D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPCuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Cuu_3D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Cuu(Kokkos::MDRangePolicy{
         {0, 0, 0}, {1, 2, 2}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPCuu_4D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPCuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Cuu_4D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Cuu(Kokkos::MDRangePolicy{
         {0, 0, 0, 0}, {1, 2, 2, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPCuu_TeamPolicy) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPCuu(
-        Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Cuu_TeamPolicy) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Cuu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
     );
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPOuu(Policy policy) {
+void TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Ouu(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_qps = 1;
 
@@ -544,7 +535,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPOuu(Policy polic
          0401., 0402., 0403., 0404., 0405., 0406., 0501., 0502., 0503., 0504., 0505., 0506.}
     );
 
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQP(
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{00001., 00002., 00003., 00004., 00005., 00006., 00002., 00004., 00006., 00008., 00010.,
           00012.},
@@ -574,28 +565,27 @@ void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPOuu(Policy polic
     );
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPOuu_1D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPOuu(Kokkos::RangePolicy(0, 1));
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Ouu_1D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Ouu(Kokkos::RangePolicy(0, 1));
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPOuu_3D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPOuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Ouu_3D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Ouu(Kokkos::MDRangePolicy{
         {0, 0, 0}, {1, 2, 2}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPOuu_4D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPOuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Ouu_4D) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Ouu(Kokkos::MDRangePolicy{
         {0, 0, 0, 0}, {1, 2, 2, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQPOuu_TeamPolicy) {
-    TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQPOuu(
-        Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementTwoNodesOneQP_Ouu_TeamPolicy) {
+    TestIntegrateElasticStiffnessMatrix_1Element2Nodes1QP_Ouu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
     );
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPs(
+void TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs(
     Policy policy, Kokkos::View<const double[2][6][6]> qp_Puu,
     Kokkos::View<const double[2][6][6]> qp_Cuu, Kokkos::View<const double[2][6][6]> qp_Ouu,
     Kokkos::View<const double[2][6][6]> qp_Quu, const std::vector<std::vector<double>>& exact_M
@@ -626,7 +616,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPs(
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsPuu(Policy policy) {
+void TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs_Puu(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_qps = 2;
 
@@ -646,7 +636,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsPuu(Policy polic
     const auto qp_Cuu = QpMatrixView("Cuu");
     const auto qp_Ouu = QpMatrixView("Ouu");
 
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPs(
+    TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{70004., 70008., 70012., 70016., 70020., 70024.},
          {70404., 70408., 70412., 70416., 70420., 70424.},
@@ -657,28 +647,27 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsPuu(Policy polic
     );
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQpsPuu_1D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsPuu(Kokkos::RangePolicy(0, 1));
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQPs_Puu_1D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs_Puu(Kokkos::RangePolicy(0, 1));
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQpsPuu_3D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsPuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQPs_Puu_3D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs_Puu(Kokkos::MDRangePolicy{
         {0, 0, 0}, {1, 1, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQpsPuu_4D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsPuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQPs_Puu_4D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs_Puu(Kokkos::MDRangePolicy{
         {0, 0, 0, 0}, {1, 1, 1, 2}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQpsPuu_TeamPolicy) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsPuu(
-        Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQPs_Puu_TeamPolicy) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs_Puu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
     );
 }
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsQuu(Policy policy) {
+void TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs_Quu(Policy policy) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_qps = 2;
 
@@ -698,7 +687,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsQuu(Policy polic
     const auto qp_Cuu = QpMatrixView("Cuu");
     const auto qp_Ouu = QpMatrixView("Ouu");
 
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPs(
+    TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{260014., 260028., 260042., 260056., 260070., 260084.},
          {261414., 261428., 261442., 261456., 261470., 261484.},
@@ -709,23 +698,23 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsQuu(Policy polic
     );
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQpsQuu_1D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsQuu(Kokkos::RangePolicy(0, 1));
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQPs_Quu_1D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs_Quu(Kokkos::RangePolicy(0, 1));
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQpsQuu_3D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsQuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQPs_Quu_3D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs_Quu(Kokkos::MDRangePolicy{
         {0, 0, 0}, {1, 1, 1}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQpsQuu_4D) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsQuu(Kokkos::MDRangePolicy{
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQPs_Quu_4D) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs_Quu(Kokkos::MDRangePolicy{
         {0, 0, 0, 0}, {1, 1, 1, 2}});
 }
 
-TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQpsQuu_TeamPolicy) {
-    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPsQuu(
-        Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
+TEST(IntegrateElasticStiffnessMatrixTests, OneElementOneNodeTwoQPs_Quu_TeamPolicy) {
+    TestIntegrateElasticStiffnessMatrix_1Element1Node2QPs_Quu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
     );
 }
+
 }  // namespace openturbine::restruct_poc::tests
