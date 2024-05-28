@@ -16,9 +16,8 @@ void TestOneElementOneNodeOneQP(Policy policy) {
     constexpr auto number_of_nodes = 1;
     constexpr auto number_of_qps = 1;
 
-    const auto element_indices =
-        get_element_indices<number_of_elements, number_of_nodes, number_of_qps>();
-    const auto node_state_indices = get_node_state_indices<number_of_elements, number_of_nodes>();
+    const auto element_indices = get_indices<number_of_elements, number_of_nodes, number_of_qps>();
+    const auto node_state_indices = get_indices<number_of_elements, number_of_nodes>();
     const auto qp_weights = get_qp_weights<number_of_elements, number_of_qps>({2.});
     const auto qp_jacobian = get_qp_jacobian<number_of_elements, number_of_qps>({3.});
     const auto shape_interp =
@@ -69,9 +68,8 @@ void TestTwoElementsOneNodeOneQP(Policy policy) {
     constexpr auto number_of_nodes = 1;
     constexpr auto number_of_qps = 1;
 
-    const auto element_indices =
-        get_element_indices<number_of_elements, number_of_nodes, number_of_qps>();
-    const auto node_state_indices = get_node_state_indices<number_of_elements, number_of_nodes>();
+    const auto element_indices = get_indices<number_of_elements, number_of_nodes, number_of_qps>();
+    const auto node_state_indices = get_indices<number_of_elements, number_of_nodes>();
     const auto qp_weights = get_qp_weights<number_of_elements, number_of_qps>({1., 1.});
     const auto qp_jacobian = get_qp_jacobian<number_of_elements, number_of_qps>({1., 1.});
     const auto shape_interp =
@@ -135,9 +133,8 @@ void TestOneElementTwoNodesOneQP(Policy policy) {
     constexpr auto number_of_nodes = 2;
     constexpr auto number_of_qps = 1;
 
-    const auto element_indices =
-        get_element_indices<number_of_elements, number_of_nodes, number_of_qps>();
-    const auto node_state_indices = get_node_state_indices<number_of_elements, number_of_nodes>();
+    const auto element_indices = get_indices<number_of_elements, number_of_nodes, number_of_qps>();
+    const auto node_state_indices = get_indices<number_of_elements, number_of_nodes>();
     const auto qp_weights = get_qp_weights<number_of_elements, number_of_qps>({1.});
     const auto qp_jacobian = get_qp_jacobian<number_of_elements, number_of_qps>({1.});
     const auto shape_interp =
@@ -195,9 +192,8 @@ void TestOneElementOneNodeTwoQPs(Policy policy) {
     constexpr auto number_of_nodes = 1;
     constexpr auto number_of_qps = 2;
 
-    const auto element_indices =
-        get_element_indices<number_of_elements, number_of_nodes, number_of_qps>();
-    const auto node_state_indices = get_node_state_indices<number_of_elements, number_of_nodes>();
+    const auto element_indices = get_indices<number_of_elements, number_of_nodes, number_of_qps>();
+    const auto node_state_indices = get_indices<number_of_elements, number_of_nodes>();
     const auto qp_weights = get_qp_weights<number_of_elements, number_of_qps>({9., 1.});
     const auto qp_jacobian = get_qp_jacobian<number_of_elements, number_of_qps>({1., 4.});
     const auto shape_interp =

@@ -7,28 +7,29 @@
 
 namespace openturbine::restruct_poc::tests {
 
-template <int n_elem, int n_nodes, int n_qps>
-auto get_element_indices() {
-    using IndicesView = Kokkos::View<Beams::ElemIndices[n_elem]>;
-    auto elem_indices = IndicesView("elem_indices");
-    auto host_elem_indices = Kokkos::create_mirror(elem_indices);
-    for (int i = 0; i < n_elem; ++i) {
-        host_elem_indices(i) = Beams::ElemIndices(n_nodes, n_qps, i, i);
+template <int n_elem, int n_nodes, int n_qps = 0>
+auto get_indices() {
+    if constexpr (n_qps > 0) {
+        // Case for getting element indices with n_nodes and n_qps
+        using IndicesView = Kokkos::View<Beams::ElemIndices[n_elem]>;
+        auto indices = IndicesView("elem_indices");
+        auto host_indices = Kokkos::create_mirror(indices);
+        for (int i = 0; i < n_elem; ++i) {
+            host_indices(i) = Beams::ElemIndices(n_nodes, n_qps, i, i);
+        }
+        Kokkos::deep_copy(indices, host_indices);
+        return indices;
+    } else {
+        // Case for getting node state indices with n_nodes
+        using IndicesView = Kokkos::View<int[n_elem * n_nodes]>;
+        auto indices = IndicesView("node_state_indices");
+        auto host_indices = Kokkos::create_mirror(indices);
+        for (int i = 0; i < n_elem * n_nodes; ++i) {
+            host_indices(i) = i;
+        }
+        Kokkos::deep_copy(indices, host_indices);
+        return indices;
     }
-    Kokkos::deep_copy(elem_indices, host_elem_indices);
-    return elem_indices;
-}
-
-template <int n_elem, int n_nodes>
-auto get_node_state_indices() {
-    using IndicesView = Kokkos::View<int[n_elem * n_nodes]>;
-    auto indices = IndicesView("node_state_indices");
-    auto host_indices = Kokkos::create_mirror(indices);
-    for (int i = 0; i < n_elem * n_nodes; ++i) {
-        host_indices(i) = i;
-    }
-    Kokkos::deep_copy(indices, host_indices);
-    return indices;
 }
 
 template <int n_elem, int n_qps>

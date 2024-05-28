@@ -11,7 +11,7 @@
 namespace openturbine::restruct_poc::tests {
 
 template <typename Policy>
-void TestIntegrateElasticStiffnessMatrix_oneElementOneNodeOneQP(
+void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQP(
     Policy policy, Kokkos::View<const double[1][6][6]> qp_Puu,
     Kokkos::View<const double[1][6][6]> qp_Cuu, Kokkos::View<const double[1][6][6]> qp_Ouu,
     Kokkos::View<const double[1][6][6]> qp_Quu, const std::vector<std::vector<double>>& exact_M
@@ -20,9 +20,8 @@ void TestIntegrateElasticStiffnessMatrix_oneElementOneNodeOneQP(
     constexpr auto number_of_nodes = 1;
     constexpr auto number_of_qps = 1;
 
-    const auto element_indices =
-        get_element_indices<number_of_elements, number_of_nodes, number_of_qps>();
-    const auto node_state_indices = get_node_state_indices<number_of_elements, number_of_nodes>();
+    const auto element_indices = get_indices<number_of_elements, number_of_nodes, number_of_qps>();
+    const auto node_state_indices = get_indices<number_of_elements, number_of_nodes>();
     const auto qp_weights = get_qp_weights<number_of_elements, number_of_qps>({2.});
     const auto qp_jacobian = get_qp_jacobian<number_of_elements, number_of_qps>({3.});
     const auto shape_interp =
@@ -57,7 +56,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPPuu(Policy policy
     const auto qp_Cuu = QpMatrixView("Cuu");
     const auto qp_Ouu = QpMatrixView("Ouu");
 
-    TestIntegrateElasticStiffnessMatrix_oneElementOneNodeOneQP(
+    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{000040., 000080., 000120., 000160., 000200., 000240.},
          {040040., 040080., 040120., 040160., 040200., 040240.},
@@ -103,7 +102,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPQuu(Policy policy
     const auto qp_Cuu = QpMatrixView("Cuu");
     const auto qp_Ouu = QpMatrixView("Ouu");
 
-    TestIntegrateElasticStiffnessMatrix_oneElementOneNodeOneQP(
+    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{000096., 000192., 000288., 000384., 000480., 000576.},
          {096096., 096192., 096288., 096384., 096480., 096576.},
@@ -150,7 +149,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPCuu(Policy policy
     );
     const auto qp_Ouu = QpMatrixView("Ouu");
 
-    TestIntegrateElasticStiffnessMatrix_oneElementOneNodeOneQP(
+    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{050050., 050100., 050150., 050200., 050250., 050300.},
          {100050., 100100., 100150., 100200., 100250., 100300.},
@@ -195,7 +194,7 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQPOuu(Policy policy
          5001., 5002., 5003., 5004., 5005., 5006., 6001., 6002., 6003., 6004., 6005., 6006.}
     );
 
-    TestIntegrateElasticStiffnessMatrix_oneElementOneNodeOneQP(
+    TestIntegrateElasticStiffnessMatrix_OneElementOneNodeOneQP(
         policy, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{040040., 040080., 040120., 040160., 040200., 040240.},
          {080040., 080080., 080120., 080160., 080200., 080240.},
@@ -232,9 +231,8 @@ void TestIntegrateElasticStiffnessMatrix_TwoElementsOneNodeOneQP(Policy policy) 
     constexpr auto number_of_nodes = 1;
     constexpr auto number_of_qps = 1;
 
-    const auto element_indices =
-        get_element_indices<number_of_elements, number_of_nodes, number_of_qps>();
-    const auto node_state_indices = get_node_state_indices<number_of_elements, number_of_nodes>();
+    const auto element_indices = get_indices<number_of_elements, number_of_nodes, number_of_qps>();
+    const auto node_state_indices = get_indices<number_of_elements, number_of_nodes>();
     const auto qp_weights = get_qp_weights<number_of_elements, number_of_qps>({1., 1.});
     const auto qp_jacobian = get_qp_jacobian<number_of_elements, number_of_qps>({1., 1.});
     const auto shape_interp =
@@ -315,9 +313,8 @@ void TestIntegrateElasticStiffnessMatrix_OneElementTwoNodesOneQP(
     constexpr auto number_of_nodes = 2;
     constexpr auto number_of_qps = 1;
 
-    const auto element_indices =
-        get_element_indices<number_of_elements, number_of_nodes, number_of_qps>();
-    const auto node_state_indices = get_node_state_indices<number_of_elements, number_of_nodes>();
+    const auto element_indices = get_indices<number_of_elements, number_of_nodes, number_of_qps>();
+    const auto node_state_indices = get_indices<number_of_elements, number_of_nodes>();
     const auto qp_weights = get_qp_weights<number_of_elements, number_of_qps>({1.});
     const auto qp_jacobian = get_qp_jacobian<number_of_elements, number_of_qps>({1.});
     const auto shape_interp =
@@ -607,9 +604,8 @@ void TestIntegrateElasticStiffnessMatrix_OneElementOneNodeTwoQPs(
     constexpr auto number_of_nodes = 1;
     constexpr auto number_of_qps = 2;
 
-    const auto element_indices =
-        get_element_indices<number_of_elements, number_of_nodes, number_of_qps>();
-    const auto node_state_indices = get_node_state_indices<number_of_elements, number_of_nodes>();
+    const auto element_indices = get_indices<number_of_elements, number_of_nodes, number_of_qps>();
+    const auto node_state_indices = get_indices<number_of_elements, number_of_nodes>();
     const auto qp_weights = get_qp_weights<number_of_elements, number_of_qps>({1., 3.});
     const auto qp_jacobian = get_qp_jacobian<number_of_elements, number_of_qps>({2., 4.});
     const auto shape_interp =
