@@ -11,6 +11,7 @@ target_sources(
     test_utilities.cpp
     system/test_integrate_matrix.cpp
     system/test_integrate_elastic_stiffness_matrix.cpp
+    system/test_integrate_residual_vector.cpp
 )
 
 if(OTURB_ENABLE_VTK)
