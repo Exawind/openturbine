@@ -788,7 +788,7 @@ TEST_F(BeamsTest, ResidualForceVector) {
 
 TEST_F(BeamsTest, MassMatrix) {
     View_NxN mass_matrix("mass_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
-    AssembleMassMatrix(*beams_, mass_matrix);
+    AssembleMassMatrix(*beams_, 1., mass_matrix);
     expect_kokkos_view_2D_equal(
         Kokkos::subview(mass_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {{0.4772429894755368, 9.713031930841838e-18, -1.2295544475412003e-17, -8.212152094108017e-18,
@@ -826,7 +826,7 @@ TEST_F(BeamsTest, MassMatrix) {
 
 TEST_F(BeamsTest, GyroscopicInertiaMatrix) {
     View_NxN gyro_matrix("gyro_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
-    AssembleGyroscopicInertiaMatrix(*beams_, gyro_matrix);
+    AssembleGyroscopicInertiaMatrix(*beams_, 1., gyro_matrix);
     expect_kokkos_view_2D_equal(
         Kokkos::subview(gyro_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {

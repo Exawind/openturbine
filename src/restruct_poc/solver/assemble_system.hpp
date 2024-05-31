@@ -39,11 +39,10 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     KokkosBlas::gemm("N", "N", 1.0, solver.K, solver.T, 0.0, St_11);
 
     if (solver.is_dynamic_solve) {
-        Kokkos::deep_copy(solver.M, 0.);
-        Kokkos::deep_copy(solver.G, 0.);
-        AssembleMassMatrix(beams, solver.M);
-        AssembleGyroscopicInertiaMatrix(beams, solver.G);
-        KokkosBlas::update(solver.beta_prime, solver.M, solver.gamma_prime, solver.G, 1., St_11);
+        Kokkos::deep_copy(solver.K, 0.);
+        AssembleMassMatrix(beams, solver.beta_prime, solver.K);
+        AssembleGyroscopicInertiaMatrix(beams, solver.gamma_prime, solver.K);
+        KokkosBlas::update(0., solver.K, 1., solver.K, 1., St_11);
     }
 }
 

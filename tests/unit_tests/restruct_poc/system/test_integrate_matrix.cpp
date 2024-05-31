@@ -248,4 +248,60 @@ TEST(IntegrateMatrixTests, OneElementOneNodeTwoQPs_TeamPolicy) {
     TestOneElementOneNodeTwoQPs(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
+template <typename Policy>
+void TestOneElementOneNodeOneQP_WithMultiplicationFactor(Policy policy) {
+    constexpr auto number_of_elements = 1;
+    constexpr auto number_of_nodes = 1;
+    constexpr auto number_of_qps = 1;
+
+    const auto element_indices =
+        get_element_indices<number_of_elements, number_of_nodes, number_of_qps>();
+    const auto node_state_indices = get_node_state_indices<number_of_elements, number_of_nodes>();
+    const auto qp_weights = get_qp_weights<number_of_elements, number_of_qps>({1.});
+    const auto qp_jacobian = get_qp_jacobian<number_of_elements, number_of_qps>({1.});
+    const auto shape_interp =
+        get_shape_interp<number_of_elements, number_of_nodes, number_of_qps>({1.});
+    const auto qp_M = get_qp_M<number_of_elements, number_of_qps>(
+        {0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003., 1004., 1005., 1006.,
+         2001., 2002., 2003., 2004., 2005., 2006., 3001., 3002., 3003., 3004., 3005., 3006.,
+         4001., 4002., 4003., 4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.}
+    );
+    const auto multiplication_factor = 5.;
+
+    auto gbl_M = Kokkos::View<double[6][6]>("global_M");
+
+    Kokkos::parallel_for(
+        policy,
+        IntegrateMatrix{
+            element_indices, node_state_indices, qp_weights, qp_jacobian, shape_interp, qp_M, gbl_M,
+            multiplication_factor}
+    );
+
+    expect_kokkos_view_2D_equal(
+        gbl_M, {{00005., 00010., 00015., 00020., 00025., 00030.},
+                {05005., 05010., 05015., 05020., 05025., 05030.},
+                {10005., 10010., 10015., 10020., 10025., 10030.},
+                {15005., 15010., 15015., 15020., 15025., 15030.},
+                {20005., 20010., 20015., 20020., 20025., 20030.},
+                {25005., 25010., 25015., 25020., 25025., 25030.}}
+    );
+}
+
+TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_WithMultiplicationFactor_1D) {
+    TestOneElementOneNodeOneQP_WithMultiplicationFactor(Kokkos::RangePolicy(0, 1));
+}
+
+TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_WithMultiplicationFactor_3D) {
+    TestOneElementOneNodeOneQP_WithMultiplicationFactor(Kokkos::MDRangePolicy{{0, 0, 0}, {1, 1, 1}});
+}
+
+TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_WithMultiplicationFactor_4D) {
+    TestOneElementOneNodeOneQP_WithMultiplicationFactor(Kokkos::MDRangePolicy{
+        {0, 0, 0, 0}, {1, 1, 1, 1}});
+}
+
+TEST(IntegrateMatrixTests, OneElementOneNodeOneQP_WithMultiplicationFactor_TeamPolicy) {
+    TestOneElementOneNodeOneQP_WithMultiplicationFactor(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
+}
+
 }  // namespace openturbine::restruct_poc::tests

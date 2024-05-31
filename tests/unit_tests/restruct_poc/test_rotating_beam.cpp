@@ -264,15 +264,6 @@ TEST(RotatingBeamTest, TwoBeam) {
         }
     }
 
-    // Check that M matrix is the same for both beams
-    auto M = kokkos_view_2D_to_vector(solver.M);
-    // WriteMatrixToFile(M, "M.csv");
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            EXPECT_NEAR(M[i][j], M[n + i][n + j], 1.e-10);
-        }
-    }
-
     // Check that St matrix is the same for both beams
     auto St = kokkos_view_2D_to_vector(solver.St);
     for (int i = 0; i < n; ++i) {
