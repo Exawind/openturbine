@@ -9,7 +9,7 @@
 
 namespace openturbine {
 
-inline void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
+inline void AssembleGyroscopicInertiaMatrix(Beams& beams, double gamma_prime, View_NxN G) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Gyroscopic Inertia Matrix");
     auto range_policy = std::invoke([&]() {
         if constexpr (std::is_same_v<
@@ -25,14 +25,8 @@ inline void AssembleGyroscopicInertiaMatrix(Beams& beams, View_NxN G) {
     Kokkos::parallel_for(
         "IntegrateMatrix", range_policy,
         IntegrateMatrix{
-            beams.elem_indices,
-            beams.node_state_indices,
-            beams.qp_weight,
-            beams.qp_jacobian,
-            beams.shape_interp,
-            beams.qp_Guu,
-            G,
-        }
+            beams.elem_indices, beams.node_state_indices, beams.qp_weight, beams.qp_jacobian,
+            beams.shape_interp, beams.qp_Guu, G, gamma_prime}
     );
 }
 

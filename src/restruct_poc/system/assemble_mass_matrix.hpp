@@ -9,7 +9,7 @@
 
 namespace openturbine {
 
-inline void AssembleMassMatrix(Beams& beams, View_NxN M) {
+inline void AssembleMassMatrix(Beams& beams, double beta_prime, View_NxN M) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Mass Matrix");
     auto range_policy = std::invoke([&]() {
         if constexpr (std::is_same_v<
@@ -25,14 +25,8 @@ inline void AssembleMassMatrix(Beams& beams, View_NxN M) {
     Kokkos::parallel_for(
         "IntegrateMatrix", range_policy,
         IntegrateMatrix{
-            beams.elem_indices,
-            beams.node_state_indices,
-            beams.qp_weight,
-            beams.qp_jacobian,
-            beams.shape_interp,
-            beams.qp_Muu,
-            M,
-        }
+            beams.elem_indices, beams.node_state_indices, beams.qp_weight, beams.qp_jacobian,
+            beams.shape_interp, beams.qp_Muu, M, beta_prime}
     );
 }
 

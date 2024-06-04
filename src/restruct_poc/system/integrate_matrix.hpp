@@ -15,6 +15,7 @@ struct IntegrateMatrix {
     View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
     View_Nx6x6::const_type qp_M_;                                //
     View_NxN_atomic gbl_M_;                                      //
+    double factor = 1.;
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {
@@ -43,7 +44,7 @@ struct IntegrateMatrix {
                 const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
                 for (int m = 0; m < kLieAlgebraComponents; ++m) {
                     for (int n = 0; n < kLieAlgebraComponents; ++n) {
-                        gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
+                        gbl_M_(i_gbl_start + m, j_gbl_start + n) += factor * local_M(m, n);
                     }
                 }
             }
@@ -79,7 +80,7 @@ struct IntegrateMatrix {
                 const auto i_gbl_start = node_state_indices(i) * kLieAlgebraComponents;
                 const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
                 Kokkos::parallel_for(Kokkos::ThreadVectorMDRange(member, 6, 6), [=](int m, int n) {
-                    gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
+                    gbl_M_(i_gbl_start + m, j_gbl_start + n) += factor * local_M(m, n);
                 });
             }
         );
@@ -115,7 +116,7 @@ struct IntegrateMatrix {
         const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
         for (int m = 0; m < kLieAlgebraComponents; ++m) {
             for (int n = 0; n < kLieAlgebraComponents; ++n) {
-                gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
+                gbl_M_(i_gbl_start + m, j_gbl_start + n) += factor * local_M(m, n);
             }
         }
     }
@@ -148,7 +149,7 @@ struct IntegrateMatrix {
         const auto j_gbl_start = node_state_indices(j) * kLieAlgebraComponents;
         for (int m = 0; m < kLieAlgebraComponents; ++m) {
             for (int n = 0; n < kLieAlgebraComponents; ++n) {
-                gbl_M_(i_gbl_start + m, j_gbl_start + n) += local_M(m, n);
+                gbl_M_(i_gbl_start + m, j_gbl_start + n) += factor * local_M(m, n);
             }
         }
     }
