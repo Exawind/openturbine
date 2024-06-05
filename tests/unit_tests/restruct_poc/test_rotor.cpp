@@ -13,6 +13,9 @@
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
+#include "src/restruct_poc/masses/create_masses.hpp"
+#include "src/restruct_poc/masses/masses.hpp"
+#include "src/restruct_poc/masses/masses_input.hpp"
 #include "src/restruct_poc/solver/initialize_constraints.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
@@ -877,7 +880,6 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     const double hub_rad(3.97);
 
     // Loop through blades
-    size_t root_node_index(0);
     for (size_t i = 0; i < num_blades; ++i) {
         // Define root rotation
         const auto q_root = RotationVectorToQuaternion({0., 0., -2. * M_PI * i / num_blades});
@@ -909,10 +911,6 @@ TEST(RotatingBeamTest, IEA15Rotor) {
 
         // Add beam element
         blade_elems.push_back(BeamElement(nodes, material_sections, trapz_quadrature));
-
-        // Set constraint nodes
-        constraint_inputs.push_back(ConstraintInput(-1, root_node_index));
-        root_node_index += nodes.size();
     }
 
     // Define beam initialization
@@ -921,8 +919,34 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
+    // Initialize masses from element inputs
+    auto masses = CreateMasses(
+        MassesInput(
+            {MassElement(MassNode({0., 0., 0.}, {1., 0., 0., 0.}), 0., {0., 0., 0.})}, gravity
+        ),
+        beams.num_nodes  // first node number
+    );
+    displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
+    velocity.push_back({0., 0., 0., 0., 0., 0.});
+    acceleration.push_back({0., 0., 0., 0., 0., 0.});
+
     // Number of system nodes from number of beam nodes
-    const size_t num_system_nodes(beams.num_nodes);
+    const size_t num_system_nodes(beams.num_nodes + masses.num_nodes);
+
+    // Hub node index
+    auto hub_node_index = num_system_nodes - 1;
+
+    // Constraint inputs
+    auto root_node_index = 0;
+    for (size_t i = 0; i < num_blades; ++i) {
+        constraint_inputs.push_back(ConstraintInput::RigidConstraint(hub_node_index, root_node_index)
+        );
+        root_node_index += beams_input.elements[i].nodes.size();
+    }
+    constraint_inputs.push_back(ConstraintInput::PrescribedBC(hub_node_index));
+
+    // Prescribed BC constraint index
+    auto prescribed_bc_index = constraint_inputs.size() - 1;
 
     // Create solver with initial node state
     Solver solver(
@@ -931,14 +955,14 @@ TEST(RotatingBeamTest, IEA15Rotor) {
     );
 
     // Initialize constraints
-    InitializeConstraints(solver, beams);
+    InitializeConstraints(solver, beams, masses);
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
     std::filesystem::create_directory("steps");
 
     // Transfer initial conditions to beam nodes and quadrature points
-    UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
+    UpdateState(beams, masses, solver.state.q, solver.state.v, solver.state.vd);
 
     // Write quadrature point global positions to file and VTK
     std::vector<std::vector<double>> qp_x0;
@@ -964,12 +988,10 @@ TEST(RotatingBeamTest, IEA15Rotor) {
         Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
         // Update constraint displacements
-        for (int j = 0; j < solver.num_constraint_nodes; ++j) {
-            solver.constraints.UpdateDisplacement(j, u_hub);
-        }
+        solver.constraints.UpdateDisplacement(prescribed_bc_index, u_hub);
 
         // Take step
-        auto converged = Step(solver, beams);
+        auto converged = Step(solver, beams, masses);
 
         // Verify that step converged
         EXPECT_EQ(converged, true);

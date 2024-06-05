@@ -10,6 +10,9 @@
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
+#include "src/restruct_poc/masses/create_masses.hpp"
+#include "src/restruct_poc/masses/masses.hpp"
+#include "src/restruct_poc/masses/masses_input.hpp"
 #include "src/restruct_poc/solver/assemble_constraints.hpp"
 #include "src/restruct_poc/solver/assemble_system.hpp"
 #include "src/restruct_poc/solver/initialize_constraints.hpp"
@@ -98,11 +101,15 @@ protected:
         beams_ = new Beams();
         *beams_ = CreateBeams(beams_input);
 
+        // Initialize masses from element inputs
+        masses_ = new Masses();
+        *masses_ = CreateMasses(MassesInput({}, gravity));
+
         // Number of system nodes from number of beam nodes
         const size_t num_system_nodes(beams_->num_nodes);
 
         // Constraint inputs
-        std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+        std::vector<ConstraintInput> constraint_inputs({ConstraintInput::PrescribedBC(0)});
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -117,7 +124,7 @@ protected:
         );
 
         // Initialize constraints
-        InitializeConstraints(*solver_, *beams_);
+        InitializeConstraints(*solver_, *beams_, *masses_);
 
         // Set constraint displacement
 
@@ -141,9 +148,9 @@ protected:
         auto St_21 = Kokkos::subview(solver_->St, constraint_range, system_range);
 
         // Update beam elements state from solvers
-        UpdateState(*beams_, solver_->state.q, solver_->state.v, solver_->state.vd);
+        UpdateState(*beams_, *masses_, solver_->state.q, solver_->state.v, solver_->state.vd);
 
-        AssembleSystem(*solver_, *beams_, St_11, R_system);
+        AssembleSystem(*solver_, *beams_, *masses_, St_11, R_system);
 
         AssembleConstraints(*solver_, St_12, St_21, R_system, R_lambda);
     }
@@ -154,16 +161,20 @@ protected:
     static void TearDownTestSuite() {
         delete beams_;
         beams_ = nullptr;
+        delete masses_;
+        masses_ = nullptr;
         delete solver_;
         solver_ = nullptr;
     }
 
     // Some expensive resource shared by all tests.
     static Beams* beams_;
+    static Masses* masses_;
     static Solver* solver_;
 };
 
 Beams* NewSolverTest::beams_ = nullptr;
+Masses* NewSolverTest::masses_ = nullptr;
 Solver* NewSolverTest::solver_ = nullptr;
 
 TEST_F(NewSolverTest, SolverPredictNextState_lambda) {
@@ -466,11 +477,15 @@ protected:
         beams_ = new Beams();
         *beams_ = CreateBeams(beams_input);
 
+        // Initialize masses from element inputs
+        masses_ = new Masses();
+        *masses_ = CreateMasses(MassesInput({}, gravity));
+
         // Number of system nodes from number of beam nodes
         const size_t num_system_nodes(beams_->num_nodes);
 
         // Constraint inputs
-        std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+        std::vector<ConstraintInput> constraint_inputs({ConstraintInput::PrescribedBC(0)});
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -485,14 +500,14 @@ protected:
         );
 
         // Initialize constraints
-        InitializeConstraints(*solver_, *beams_);
+        InitializeConstraints(*solver_, *beams_, *masses_);
 
         // Set constraint displacement
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
         solver_->constraints.UpdateDisplacement(0., {0., 0., 0., q[0], q[1], q[2], q[3]});
 
         // Perform step with 1 convergence iteration
-        Step(*solver_, *beams_);
+        Step(*solver_, *beams_, *masses_);
     }
 
     // Per-test-suite tear-down.
@@ -501,16 +516,20 @@ protected:
     static void TearDownTestSuite() {
         delete beams_;
         beams_ = nullptr;
+        delete masses_;
+        masses_ = nullptr;
         delete solver_;
         solver_ = nullptr;
     }
 
     // Some expensive resource shared by all tests.
     static Beams* beams_;
+    static Masses* masses_;
     static Solver* solver_;
 };
 
 Beams* SolverStep1Test::beams_ = nullptr;
+Masses* SolverStep1Test::masses_ = nullptr;
 Solver* SolverStep1Test::solver_ = nullptr;
 
 TEST_F(SolverStep1Test, SolutionVector) {
@@ -717,11 +736,15 @@ protected:
         beams_ = new Beams();
         *beams_ = CreateBeams(beams_input);
 
+        // Initialize masses from element inputs
+        masses_ = new Masses();
+        *masses_ = CreateMasses(MassesInput({}, gravity));
+
         // Number of system nodes from number of beam nodes
         const size_t num_system_nodes(beams_->num_nodes);
 
         // Constraint inputs
-        std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+        std::vector<ConstraintInput> constraint_inputs({ConstraintInput::PrescribedBC(0)});
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -736,14 +759,14 @@ protected:
         );
 
         // Initialize constraints
-        InitializeConstraints(*solver_, *beams_);
+        InitializeConstraints(*solver_, *beams_, *masses_);
 
         // Set constraint displacement
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
         solver_->constraints.UpdateDisplacement(0., {0., 0., 0., q[0], q[1], q[2], q[3]});
 
         // Perform step with 1 convergence iteration
-        Step(*solver_, *beams_);
+        Step(*solver_, *beams_, *masses_);
     }
 
     // Per-test-suite tear-down.
@@ -752,16 +775,20 @@ protected:
     static void TearDownTestSuite() {
         delete beams_;
         beams_ = nullptr;
+        delete masses_;
+        masses_ = nullptr;
         delete solver_;
         solver_ = nullptr;
     }
 
     // Some expensive resource shared by all tests.
     static Beams* beams_;
+    static Masses* masses_;
     static Solver* solver_;
 };
 
 Beams* SolverStep2Test::beams_ = nullptr;
+Masses* SolverStep2Test::masses_ = nullptr;
 Solver* SolverStep2Test::solver_ = nullptr;
 
 TEST_F(SolverStep2Test, ConstraintResidualVector) {

@@ -10,6 +10,9 @@
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
+#include "src/restruct_poc/masses/create_masses.hpp"
+#include "src/restruct_poc/masses/masses.hpp"
+#include "src/restruct_poc/masses/masses_input.hpp"
 #include "src/restruct_poc/solver/state.hpp"
 #include "src/restruct_poc/system/assemble_elastic_stiffness_matrix.hpp"
 #include "src/restruct_poc/system/assemble_gyroscopic_inertia_matrix.hpp"
@@ -100,6 +103,10 @@ protected:
         beams_ = new Beams();
         *beams_ = CreateBeams(beams_input);
 
+        // Initialize masses (no elements)
+        masses_ = new Masses();
+        *masses_ = CreateMasses(MassesInput({}, gravity));
+
         // Create initial state
         State state(
             beams_->num_nodes,  // Number of nodes
@@ -138,7 +145,7 @@ protected:
         );
 
         // Set the beam's initial state
-        UpdateState(*beams_, state.q, state.v, state.vd);
+        UpdateState(*beams_, *masses_, state.q, state.v, state.vd);
     }
 
     // Per-test-suite tear-down.
@@ -147,6 +154,8 @@ protected:
     static void TearDownTestSuite() {
         delete beams_;
         beams_ = nullptr;
+        delete masses_;
+        masses_ = nullptr;
     }
 
     // You can define per-test set-up logic as usual.
@@ -157,9 +166,11 @@ protected:
 
     // Some expensive resource shared by all tests.
     static Beams* beams_;
+    static Masses* masses_;
 };
 
 Beams* BeamsTest::beams_ = nullptr;
+Masses* BeamsTest::masses_ = nullptr;
 
 TEST_F(BeamsTest, NodeInitialPositionX0) {
     expect_kokkos_view_2D_equal(
@@ -788,7 +799,7 @@ TEST_F(BeamsTest, ResidualForceVector) {
 
 TEST_F(BeamsTest, MassMatrix) {
     View_NxN mass_matrix("mass_matrix", beams_->num_nodes * 6, beams_->num_nodes * 6);
-    AssembleMassMatrix(*beams_, mass_matrix);
+    AssembleMassMatrix(*beams_, *masses_, mass_matrix);
     expect_kokkos_view_2D_equal(
         Kokkos::subview(mass_matrix, Kokkos::make_pair(0, 10), Kokkos::make_pair(0, 10)),
         {{0.4772429894755368, 9.713031930841838e-18, -1.2295544475412003e-17, -8.212152094108017e-18,

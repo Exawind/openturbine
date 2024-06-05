@@ -26,9 +26,8 @@ void AssembleConstraints(
     Kokkos::parallel_for(
         "CalculateConstraintResidualGradient", solver.num_constraint_nodes,
         CalculateConstraintResidualGradient{
-            solver.constraints.node_indices,
-            solver.constraints.X0,
-            solver.constraints.u,
+            solver.constraints.data,
+            solver.constraints.control,
             solver.state.q,
             solver.constraints.Phi,
             solver.constraints.B,

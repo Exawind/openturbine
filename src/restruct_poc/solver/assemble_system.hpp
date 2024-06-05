@@ -7,6 +7,7 @@
 #include "solver.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
+#include "src/restruct_poc/masses/masses.hpp"
 #include "src/restruct_poc/system/assemble_elastic_stiffness_matrix.hpp"
 #include "src/restruct_poc/system/assemble_gyroscopic_inertia_matrix.hpp"
 #include "src/restruct_poc/system/assemble_inertial_stiffness_matrix.hpp"
@@ -17,7 +18,9 @@
 namespace openturbine {
 
 template <typename Subview_NxN, typename Subview_N>
-void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R_system) {
+void AssembleSystem(
+    Solver& solver, Beams& beams, Masses& masses, Subview_NxN St_11, Subview_N R_system
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System");
     Kokkos::deep_copy(solver.T, 0.);
     Kokkos::parallel_for(
@@ -41,7 +44,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     if (solver.is_dynamic_solve) {
         Kokkos::deep_copy(solver.M, 0.);
         Kokkos::deep_copy(solver.G, 0.);
-        AssembleMassMatrix(beams, solver.M);
+        AssembleMassMatrix(beams, masses, solver.M);
         AssembleGyroscopicInertiaMatrix(beams, solver.G);
         KokkosBlas::update(solver.beta_prime, solver.M, solver.gamma_prime, solver.G, 1., St_11);
     }

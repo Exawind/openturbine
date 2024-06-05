@@ -12,6 +12,9 @@
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
+#include "src/restruct_poc/masses/create_masses.hpp"
+#include "src/restruct_poc/masses/masses.hpp"
+#include "src/restruct_poc/masses/masses_input.hpp"
 #include "src/restruct_poc/solver/initialize_constraints.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
@@ -86,22 +89,17 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
         acceleration.push_back({0., 0., 0., 0., 0., 0.});
     }
 
-    // Define beam initialization
-    BeamsInput beams_input(
-        {
-            BeamElement(nodes, sections, quadrature),
-        },
-        gravity
-    );
-
     // Initialize beams from element inputs
-    auto beams = CreateBeams(beams_input);
+    auto beams = CreateBeams(BeamsInput({BeamElement(nodes, sections, quadrature)}, gravity));
+
+    // Initialize masses from element inputs
+    auto masses = CreateMasses(MassesInput({}, gravity));
 
     // Number of system nodes from number of beam nodes
     const size_t num_system_nodes(beams.num_nodes);
 
     // Constraint inputs
-    std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+    std::vector<ConstraintInput> constraint_inputs({ConstraintInput::FixedBC(0)});
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -116,14 +114,14 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     );
 
     // Initialize constraints
-    InitializeConstraints(solver, beams);
+    InitializeConstraints(solver, beams, masses);
     solver.constraints.UpdateDisplacement(0, {0, 0, 0, 1, 0, 0, 0});
 
     // First step
     Kokkos::deep_copy(
         Kokkos::subview(beams.node_FX, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.005)
     );
-    auto converged = Step(solver, beams);
+    auto converged = Step(solver, beams, masses);
     {
         Kokkos::View<double[3]> result("result");
         Kokkos::deep_copy(result, Kokkos::subview(solver.state.q, 4, Kokkos::make_pair(0, 3)));
@@ -133,7 +131,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     Kokkos::deep_copy(
         Kokkos::subview(beams.node_FX, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.010)
     );
-    converged = Step(solver, beams);
+    converged = Step(solver, beams, masses);
     EXPECT_EQ(converged, true);
     {
         Kokkos::View<double[3]> result("result");
@@ -145,7 +143,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     Kokkos::deep_copy(
         Kokkos::subview(beams.node_FX, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.015)
     );
-    converged = Step(solver, beams);
+    converged = Step(solver, beams, masses);
     EXPECT_EQ(converged, true);
     {
         Kokkos::View<double[3]> result("result");

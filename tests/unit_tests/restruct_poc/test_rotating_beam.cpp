@@ -12,6 +12,9 @@
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
+#include "src/restruct_poc/masses/create_masses.hpp"
+#include "src/restruct_poc/masses/masses.hpp"
+#include "src/restruct_poc/masses/masses_input.hpp"
 #include "src/restruct_poc/solver/initialize_constraints.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
@@ -96,12 +99,10 @@ TEST(RotatingBeamTest, StepConvergence) {
     }
 
     // Define beam initialization
-    BeamsInput beams_input(
-        {
-            BeamElement(nodes, sections, quadrature),
-        },
-        gravity
-    );
+    BeamsInput beams_input({BeamElement(nodes, sections, quadrature)}, gravity);
+
+    // Initialize masses from element inputs
+    auto masses = CreateMasses(MassesInput({}, gravity));
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
@@ -110,7 +111,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     const int num_system_nodes(beams.num_nodes);
 
     // Constraint inputs
-    std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+    std::vector<ConstraintInput> constraint_inputs({ConstraintInput::PrescribedBC(0)});
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -125,14 +126,14 @@ TEST(RotatingBeamTest, StepConvergence) {
     );
 
     // Initialize constraints
-    InitializeConstraints(solver, beams);
+    InitializeConstraints(solver, beams, masses);
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
         solver.constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
-        const auto converged = Step(solver, beams);
+        const auto converged = Step(solver, beams, masses);
         EXPECT_EQ(converged, true);
     }
 
@@ -208,7 +209,7 @@ TEST(RotatingBeamTest, TwoBeam) {
         blade_elems.push_back(BeamElement(nodes, sections, quadrature));
 
         // Set constraint nodes
-        constraint_inputs.push_back(ConstraintInput(-1, i * node_s.size()));
+        constraint_inputs.push_back(ConstraintInput::PrescribedBC(i * node_s.size()));
     }
 
     // Define beam initialization
@@ -216,6 +217,9 @@ TEST(RotatingBeamTest, TwoBeam) {
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
+
+    // Initialize masses from element inputs
+    auto masses = CreateMasses(MassesInput({}, gravity));
 
     // Number of system nodes from number of beam nodes
     const int num_system_nodes(beams.num_nodes);
@@ -233,7 +237,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     );
 
     // Initialize constraints
-    InitializeConstraints(solver, beams);
+    InitializeConstraints(solver, beams, masses);
 
     // Calculate hub rotation for this time step
     const auto q_hub =
@@ -250,7 +254,7 @@ TEST(RotatingBeamTest, TwoBeam) {
 
     // Take step, don't check for convergence, the following tests check that
     // all the elements were assembled properly
-    Step(solver, beams);
+    Step(solver, beams, masses);
 
     auto n = solver.num_system_dofs / 2;
     auto m = solver.num_constraint_dofs / 2;
@@ -350,7 +354,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         blade_elems.push_back(BeamElement(nodes, sections, quadrature));
 
         // Set constraint nodes
-        constraint_inputs.push_back(ConstraintInput(-1, i * node_s.size()));
+        constraint_inputs.push_back(ConstraintInput::PrescribedBC(i * node_s.size()));
     }
 
     // Define beam initialization
@@ -358,6 +362,9 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
+
+    // Initialize masses from element inputs
+    auto masses = CreateMasses(MassesInput({}, gravity));
 
     // Number of system nodes from number of beam nodes
     const int num_system_nodes(beams.num_nodes);
@@ -377,7 +384,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     );
 
     // Initialize constraints
-    InitializeConstraints(solver, beams);
+    InitializeConstraints(solver, beams, masses);
 
     // Perform time steps and check for convergence within max_iter iterations
     for (int i = 0; i < num_steps; ++i) {
@@ -396,11 +403,108 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         }
 
         // Take step
-        auto converged = Step(solver, beams);
+        auto converged = Step(solver, beams, masses);
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
     }
+}
+
+TEST(RotatingBeamTest, MasslessConstraints) {
+    // Gravity vector
+    std::array<double, 3> gravity = {0., 0., 0.};
+
+    // Build vector of nodes (straight along x axis, no rotation)
+    // Calculate displacement, velocity, acceleration assuming a
+    // 0.1 rad/s angular velocity around the z axis
+    const double omega = 0.1;
+    std::vector<BeamNode> nodes;
+    std::vector<std::array<double, 7>> displacement;
+    std::vector<std::array<double, 6>> velocity;
+    std::vector<std::array<double, 6>> acceleration;
+    for (const double s : node_s) {
+        auto x = 10 * s + 2.;
+        nodes.push_back(BeamNode(s, {x, 0., 0., 1., 0., 0., 0.}));
+        displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
+        velocity.push_back({0., x * omega, 0., 0., 0., omega});
+        acceleration.push_back({0., 0., 0., 0., 0., 0.});
+    }
+
+    // Define beam initialization
+    BeamsInput beams_input({BeamElement(nodes, sections, quadrature)}, gravity);
+
+    // Initialize beams from element inputs
+    auto beams = CreateBeams(beams_input);
+
+    // Initialize masses from element inputs
+    auto masses = CreateMasses(
+        MassesInput(
+            {MassElement(MassNode({0., 0., 0.}, {1., 0., 0., 0.}), 0., {0., 0., 0.})}, gravity
+        ),
+        beams.num_nodes  // first node number
+    );
+    displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
+    velocity.push_back({0., 0., 0., 0., 0., 0.});
+    acceleration.push_back({0., 0., 0., 0., 0., 0.});
+
+    // Number of system nodes
+    const int num_system_nodes(beams.num_nodes + masses.num_nodes);
+
+    // Constraint node indices
+    auto mass_node_index = num_system_nodes - 1;
+    auto beam_root_node_index = 0;
+    auto prescribed_bc_index = 0;
+
+    // Constraint inputs
+    std::vector<ConstraintInput> constraint_inputs({
+        ConstraintInput::PrescribedBC(mass_node_index),
+        ConstraintInput::RigidConstraint(mass_node_index, beam_root_node_index),
+    });
+
+    // Solution parameters
+    const bool is_dynamic_solve(true);
+    const int max_iter(5);
+    const double step_size(0.01);  // seconds
+    const double rho_inf(0.9);
+
+    // Create solver
+    Solver solver(
+        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, constraint_inputs,
+        displacement, velocity, acceleration
+    );
+
+    // Initialize constraints
+    InitializeConstraints(solver, beams, masses);
+
+    // Perform 10 time steps and check for convergence within max_iter iterations
+    for (int i = 0; i < 10; ++i) {
+        // Set constraint displacement
+        const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
+        solver.constraints.UpdateDisplacement(
+            prescribed_bc_index, {0., 0., 0., q[0], q[1], q[2], q[3]}
+        );
+        const auto converged = Step(solver, beams, masses);
+        EXPECT_EQ(converged, true);
+    }
+
+    expect_kokkos_view_2D_equal(
+        solver.state.q,
+        {{-0.000099661884299369481, 0.019999672917628962, -3.6608854058480302E-25,
+          0.99998750002604175, -1.5971376141505654E-26, 3.1592454262792375E-25,
+          0.004999979166692714},
+         {-0.00015838391157346692, 0.031746709275713193, -2.8155520815870626E-13,
+          0.99998750002143066, 2.7244338869052949E-12, 1.989181042516661E-12, 0.0049999800888738608},
+         {-0.00027859681974392133, 0.055737500699772298, 2.815269319303426E-12, 0.9999875000205457,
+          7.3510877107173739E-12, 1.0550370096863904E-12, 0.0049999802658924715},
+         {-0.00042131446700509681, 0.08426017738413949, 8.2854411551089936E-12, 0.99998750002161218,
+          3.7252296525466957E-11, -5.26890056047209E-14, 0.0049999800525935617},
+         {-0.00054093210652801399, 0.10825097509997549, -9.3934322245617647E-12, 0.99998750002142056,
+          4.0321076018153484E-11, 5.2579938812420674E-12, 0.0049999800909203019},
+         {-0.00059944528351138049, 0.11999801747595988, -2.6207280972097857E-11, 0.99998750002237801,
+          3.4435006114567926E-11, 6.4250095159262128E-12, 0.0049999798994432168},
+         {0., 0., 0., 0.99998750002604219, 2.2269013449027429E-29, 1.884955233551297E-29,
+          0.0049999791666927107}}
+    );
 }
 
 }  // namespace openturbine::restruct_poc::tests

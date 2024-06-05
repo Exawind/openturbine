@@ -24,12 +24,18 @@
 #include "src/restruct_poc/beams/interpolate_QP_acceleration.hpp"
 #include "src/restruct_poc/beams/interpolate_QP_state.hpp"
 #include "src/restruct_poc/beams/interpolate_QP_velocity.hpp"
+#include "src/restruct_poc/masses/masses.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 
-inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
+inline void UpdateState(Beams& beams, Masses& masses, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State");
+
+    //--------------------------------------------------------------------------
+    // Beams
+    //--------------------------------------------------------------------------
+
     Kokkos::parallel_for(
         "UpdateNodeState", Kokkos::MDRangePolicy{{0, 0}, {beams.num_nodes, kLieGroupComponents}},
         UpdateNodeState{
@@ -185,6 +191,31 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
             beams.shape_deriv, beams.qp_Fc, beams.qp_Fd, beams.qp_Fi, beams.qp_Fg, beams.node_FE,
             beams.node_FI, beams.node_FG}
     );
+
+    //--------------------------------------------------------------------------
+    // Masses
+    //--------------------------------------------------------------------------
+
+    if (masses.num_nodes > 0) {
+        Kokkos::parallel_for(
+            "UpdateNodeState",
+            Kokkos::MDRangePolicy{{0, 0}, {masses.num_nodes, kLieGroupComponents}},
+            UpdateNodeState{
+                masses.node_state_indices,
+                masses.node_u,
+                masses.node_u_dot,
+                masses.node_u_ddot,
+                Q,
+                V,
+                A,
+            }
+        );
+
+        Kokkos::parallel_for(
+            "RotateSectionMatrix", masses.num_nodes,
+            RotateSectionMatrix{masses.node_RR0, masses.node_Mstar, masses.node_Muu}
+        );
+    }
 }
 
 }  // namespace openturbine

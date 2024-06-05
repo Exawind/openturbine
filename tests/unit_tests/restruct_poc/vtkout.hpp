@@ -14,7 +14,7 @@
 #include <vtkXMLPolyDataWriter.h>
 #include <vtkXMLUnstructuredGridWriter.h>
 
-#include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/beams/beams.hpp"
 
 namespace openturbine {
 
@@ -99,8 +99,8 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     auto qp_r = kokkos_view_2D_to_vector(beams.qp_r);
     auto qp_r0 = kokkos_view_2D_to_vector(beams.qp_r0);
     for (size_t i = 0; i < qp_r.size(); ++i) {
-        auto r = Quaternion(qp_r[i][0], qp_r[i][1], qp_r[i][2], qp_r[i][3]);
-        auto r0 = Quaternion(qp_r0[i][0], qp_r0[i][1], qp_r0[i][2], qp_r0[i][3]);
+        auto r = gen_alpha_solver::Quaternion(qp_r[i][0], qp_r[i][1], qp_r[i][2], qp_r[i][3]);
+        auto r0 = gen_alpha_solver::Quaternion(qp_r0[i][0], qp_r0[i][1], qp_r0[i][2], qp_r0[i][3]);
         auto R = (r * r0).to_rotation_matrix();
         double ori_x[3] = {R(0, 0), R(1, 0), R(2, 0)};
         double ori_y[3] = {R(0, 1), R(1, 1), R(2, 1)};
@@ -140,13 +140,17 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     for (int i = 0; i < beams.num_elems; ++i) {
         auto& idx = elem_indices[i];
         auto i_root = idx.qp_range.first;
-        auto x0_root = Vector(qp_x0[i_root][0], qp_x0[i_root][1], qp_x0[i_root][2]);
-        auto x_root = Vector(qp_x[i_root][0], qp_x[i_root][1], qp_x[i_root][2]);
-        auto r_u = Quaternion(qp_r[i_root][0], qp_r[i_root][1], qp_r[i_root][2], qp_r[i_root][3]);
+        auto x0_root =
+            gen_alpha_solver::Vector(qp_x0[i_root][0], qp_x0[i_root][1], qp_x0[i_root][2]);
+        auto x_root = gen_alpha_solver::Vector(qp_x[i_root][0], qp_x[i_root][1], qp_x[i_root][2]);
+        auto r_u = gen_alpha_solver::Quaternion(
+            qp_r[i_root][0], qp_r[i_root][1], qp_r[i_root][2], qp_r[i_root][3]
+        );
         for (int j = idx.qp_range.first; j < idx.qp_range.second; ++j) {
-            auto x = Vector(qp_x[j][0], qp_x[j][1], qp_x[j][2]);
+            auto x = gen_alpha_solver::Vector(qp_x[j][0], qp_x[j][1], qp_x[j][2]);
             auto x_undeformed =
-                (r_u * (Vector(qp_x0[j][0], qp_x0[j][1], qp_x0[j][2]) - x0_root)) + x_root;
+                (r_u * (gen_alpha_solver::Vector(qp_x0[j][0], qp_x0[j][1], qp_x0[j][2]) - x0_root)) +
+                x_root;
             auto u = x - x_undeformed;
             double p[3] = {u.GetX(), u.GetY(), u.GetZ()};
             deformation_vector->InsertNextTuple(p);

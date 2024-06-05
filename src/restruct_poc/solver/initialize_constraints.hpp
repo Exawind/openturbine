@@ -10,14 +10,16 @@
 
 namespace openturbine {
 
-inline void InitializeConstraints(Solver& solver, Beams& beams) {
+inline void InitializeConstraints(Solver& solver, Beams& beams, Masses& masses) {
     auto region = Kokkos::Profiling::ScopedRegion("Initialize Constraints");
     Kokkos::parallel_for(
         "CalculateConstraintX0", solver.num_constraint_nodes,
         CalculateConstraintX0{
-            solver.constraints.node_indices,
+            solver.constraints.data,
+            beams.node_state_indices,
             beams.node_x0,
-            solver.constraints.X0,
+            masses.node_state_indices,
+            masses.node_x0,
         }
     );
 }
