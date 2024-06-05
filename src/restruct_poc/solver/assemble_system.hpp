@@ -21,7 +21,7 @@
 #include "src/restruct_poc/system/calculate_tangent_operator.hpp"
 
 namespace openturbine {
-    
+
 template <typename Subview_NxN, typename Subview_N>
 void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R_system) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System");
@@ -55,7 +55,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     auto row_ptrs = Kokkos::View<int*>("row_ptrs", num_rows+1);
     auto indices = Kokkos::View<int*>("indices", num_non_zero);
     Kokkos::parallel_for("PopulateSparseRowPtrs", 1, PopulateSparseRowPtrs{beams.elem_indices, row_ptrs});
-    Kokkos::parallel_for("Populate Sparse Indices", 1, PopulateSparseIndices{beams.elem_indices, beams.node_state_indices, indices});
+    Kokkos::parallel_for("PopulateSparseIndices", 1, PopulateSparseIndices{beams.elem_indices, beams.node_state_indices, indices});
 
     using crs_matrix_type = KokkosSparse::CrsMatrix<double, int, Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>, void, int>;
     Kokkos::fence();
@@ -69,8 +69,8 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     auto sparse_matrix_policy = Kokkos::TeamPolicy<>(num_rows, Kokkos::AUTO());
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
 
-    Kokkos::parallel_for("Copy into Sparse Matrix", sparse_matrix_policy, CopyIntoSparseMatrix{K, solver.K});
-    Kokkos::parallel_for("Copy into Sparse Matrix", sparse_matrix_policy, CopyIntoSparseMatrix{T, solver.T});
+    Kokkos::parallel_for("CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{K, solver.K});
+    Kokkos::parallel_for("CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{T, solver.T});
 
     Kokkos::fence();
     crs_matrix_type static_system_matrix;
@@ -82,7 +82,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     Kokkos::deep_copy(solver.K, 0.);
     AssembleMassMatrix(beams, beta_prime, solver.K);
     AssembleGyroscopicInertiaMatrix(beams, gamma_prime, solver.K);
-    Kokkos::parallel_for("Copy into Sparse Matrix", sparse_matrix_policy, CopyIntoSparseMatrix{K, solver.K});
+    Kokkos::parallel_for("CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{K, solver.K});
 
     Kokkos::fence();
     crs_matrix_type system_matrix;
