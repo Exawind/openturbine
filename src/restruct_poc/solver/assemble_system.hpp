@@ -7,6 +7,10 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "solver.hpp"
+#include "populate_sparse_indices.hpp"
+#include "populate_sparse_row_ptrs.hpp"
+#include "compute_number_of_non_zeros.hpp"
+#include "copy_into_sparse_matrix.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/system/assemble_elastic_stiffness_matrix.hpp"
@@ -17,93 +21,7 @@
 #include "src/restruct_poc/system/calculate_tangent_operator.hpp"
 
 namespace openturbine {
-
-struct CopyIntoSparseMatrix {
-    using crs_matrix_type = KokkosSparse::CrsMatrix<double, int, Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>, void, int>;
-    using row_data_type = Kokkos::View<double*, Kokkos::DefaultExecutionSpace::scratch_memory_space, Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
-    using col_idx_type = Kokkos::View<int*, Kokkos::DefaultExecutionSpace::scratch_memory_space, Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
-    crs_matrix_type sparse;
-    Kokkos::View<const double**> dense;
-
-    KOKKOS_FUNCTION
-    void operator()(Kokkos::TeamPolicy<>::member_type member) const {
-        auto i = member.league_rank();
-        auto row = sparse.row(i);
-        auto row_map = sparse.graph.row_map;
-        auto cols = sparse.graph.entries;
-        auto row_data = row_data_type(member.team_scratch(1), row.length);
-        auto col_idx = col_idx_type(member.team_scratch(1), row.length);
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](int entry) {
-            col_idx(entry) = cols(row_map(i) + entry);
-            row_data(entry) = dense(i, col_idx(entry));
-        });
-        member.team_barrier();
-        Kokkos::single(Kokkos::PerTeam(member), [=](){
-            sparse.replaceValues(i, col_idx.data(), row.length, row_data.data());
-        });
-    }
-};
-
-struct ComputeNumberOfNonZeros {
-    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
     
-    KOKKOS_FUNCTION
-    void operator()(int i_elem, int& update) const {
-        auto idx = elem_indices[i_elem];
-        auto num_nodes = idx.num_nodes;
-        update += (num_nodes*6) * (num_nodes*6);
-    }
-};
-
-struct PopulateSparseRowPtrs {
-    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
-    Kokkos::View<int*> row_ptrs;
-
-    KOKKOS_FUNCTION
-    void operator()(int) const {
-      const auto num_elems = elem_indices.extent(0);
-      auto rows_so_far = 0;
-      for(int i_elem = 0; i_elem < num_elems; ++i_elem) {
-        auto idx = elem_indices[i_elem];
-        auto num_nodes = idx.num_nodes;
-        for(int i = 0; i < num_nodes*kLieAlgebraComponents; ++i) {
-            row_ptrs(rows_so_far + 1) = row_ptrs(rows_so_far) + num_nodes * kLieAlgebraComponents;
-            ++rows_so_far;
-        }
-        
-      }
-    }
-};
-
-struct PopulateSparseIndices {
-    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
-    Kokkos::View<int*>::const_type node_state_indices;    
-    Kokkos::View<int*> indices;
-
-    KOKKOS_FUNCTION
-    void operator()(int) const {
-      const auto num_elems = elem_indices.extent(0);
-      auto entries_so_far = 0;
-      for(int i_elem = 0; i_elem < num_elems; ++i_elem) {
-        auto idx = elem_indices[i_elem];
-        auto num_nodes = idx.num_nodes;
-        for(int j_index = 0; j_index < num_nodes; ++j_index) {
-          for(int n = 0; n < kLieAlgebraComponents; ++n) {
-            for(int i_index = 0; i_index < num_nodes; ++i_index) {
-              const auto i = i_index + idx.node_range.first;
-              const auto column_start = node_state_indices(i)*kLieAlgebraComponents;
-              for(int m = 0; m < kLieAlgebraComponents; ++m) {
-                  indices(entries_so_far) = column_start + m;
-                  ++entries_so_far;
-              }
-            }
-          }
-        }
-      }
-    }
-
-};
-
 template <typename Subview_NxN, typename Subview_N>
 void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R_system) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System");
