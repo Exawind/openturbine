@@ -1,5 +1,5 @@
-#include <Kokkos_Core.hpp>
 #include <KokkosSparse.hpp>
+#include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
 #include "src/restruct_poc/solver/copy_into_sparse_matrix.hpp"
@@ -25,7 +25,8 @@ auto createRowPtrs_1x1() {
 }
 
 TEST(CopyIntoSparseMatrix, SingleEntry) {
-    using device_type =  Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    using device_type =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     using crs_matrix_type = KokkosSparse::CrsMatrix<double, int, device_type, void, int>;
 
     constexpr auto num_rows = 1;
@@ -37,14 +38,17 @@ TEST(CopyIntoSparseMatrix, SingleEntry) {
     auto values = Kokkos::View<double[num_non_zero]>("values");
     auto row_ptrs = createRowPtrs_1x1();
     auto indices = Kokkos::View<int[num_non_zero]>("indices");
-    auto sparse = crs_matrix_type("sparse", num_rows, num_columns, num_non_zero, values, row_ptrs, indices);
+    auto sparse =
+        crs_matrix_type("sparse", num_rows, num_columns, num_non_zero, values, row_ptrs, indices);
 
     auto row_data_size = Kokkos::View<double*>::shmem_size(num_columns);
     auto col_idx_size = Kokkos::View<int*>::shmem_size(num_columns);
     auto sparse_matrix_policy = Kokkos::TeamPolicy<>(num_rows, Kokkos::AUTO());
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
 
-    Kokkos::parallel_for("CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{sparse, dense});
+    Kokkos::parallel_for(
+        "CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{sparse, dense}
+    );
 
     auto values_mirror = Kokkos::create_mirror(values);
     Kokkos::deep_copy(values_mirror, values);
@@ -78,7 +82,8 @@ auto createIndices_3x3() {
 }
 
 TEST(CopyIntoSparseMatrix, Diagonal) {
-    using device_type =  Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    using device_type =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     using crs_matrix_type = KokkosSparse::CrsMatrix<double, int, device_type, void, int>;
 
     constexpr auto num_rows = 3;
@@ -90,14 +95,17 @@ TEST(CopyIntoSparseMatrix, Diagonal) {
     auto values = Kokkos::View<double[num_non_zero]>("values");
     auto row_ptrs = createRowPtrs_3x3();
     auto indices = createIndices_3x3();
-    auto sparse = crs_matrix_type("sparse", num_rows, num_columns, num_non_zero, values, row_ptrs, indices);
+    auto sparse =
+        crs_matrix_type("sparse", num_rows, num_columns, num_non_zero, values, row_ptrs, indices);
 
     auto row_data_size = Kokkos::View<double*>::shmem_size(num_columns);
     auto col_idx_size = Kokkos::View<int*>::shmem_size(num_columns);
     auto sparse_matrix_policy = Kokkos::TeamPolicy<>(num_rows, Kokkos::AUTO());
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
 
-    Kokkos::parallel_for("CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{sparse, dense});
+    Kokkos::parallel_for(
+        "CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{sparse, dense}
+    );
 
     auto values_mirror = Kokkos::create_mirror(values);
     Kokkos::deep_copy(values_mirror, values);
@@ -108,11 +116,8 @@ TEST(CopyIntoSparseMatrix, Diagonal) {
 
 auto createDenseMatrix_5x5() {
     auto dense = Kokkos::View<double[5][5]>("dense");
-    auto dense_host_data = std::array{1., 2., 3., 00., 00.,
-                                      4., 5., 6., 00., 00.,
-                                      7., 8., 9., 00., 00.,
-                                      0., 0., 0., 10., 11.,
-                                      0., 0., 0., 12., 13.};
+    auto dense_host_data = std::array{1.,  2.,  3., 00., 00., 4.,  5.,  6., 00., 00., 7.,  8., 9.,
+                                      00., 00., 0., 0.,  0.,  10., 11., 0., 0.,  0.,  12., 13.};
     auto dense_host = Kokkos::View<double[5][5], Kokkos::HostSpace>(dense_host_data.data());
     auto dense_mirror = Kokkos::create_mirror(dense);
     Kokkos::deep_copy(dense_mirror, dense_host);
@@ -137,7 +142,8 @@ auto createIndices_5x5() {
 }
 
 TEST(CopyIntoSparseMatrix, Block) {
-    using device_type =  Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    using device_type =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     using crs_matrix_type = KokkosSparse::CrsMatrix<double, int, device_type, void, int>;
 
     constexpr auto num_rows = 5;
@@ -149,14 +155,17 @@ TEST(CopyIntoSparseMatrix, Block) {
     auto values = Kokkos::View<double[num_non_zero]>("values");
     auto row_ptrs = createRowPtrs_5x5();
     auto indices = createIndices_5x5();
-    auto sparse = crs_matrix_type("sparse", num_rows, num_columns, num_non_zero, values, row_ptrs, indices);
+    auto sparse =
+        crs_matrix_type("sparse", num_rows, num_columns, num_non_zero, values, row_ptrs, indices);
 
     auto row_data_size = Kokkos::View<double*>::shmem_size(num_columns);
     auto col_idx_size = Kokkos::View<int*>::shmem_size(num_columns);
     auto sparse_matrix_policy = Kokkos::TeamPolicy<>(num_rows, Kokkos::AUTO());
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
 
-    Kokkos::parallel_for("CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{sparse, dense});
+    Kokkos::parallel_for(
+        "CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{sparse, dense}
+    );
 
     auto values_mirror = Kokkos::create_mirror(values);
     Kokkos::deep_copy(values_mirror, values);
@@ -175,4 +184,4 @@ TEST(CopyIntoSparseMatrix, Block) {
     ASSERT_EQ(values_mirror(12), 13.);
 }
 
-}
+}  // namespace openturbine::restruct_poc::tests
