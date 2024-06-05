@@ -39,7 +39,14 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
 
     auto num_rows = solver.K.extent(0);
     auto num_columns = solver.K.extent(1);
-    auto num_non_zero = (beams.max_elem_nodes * 6) * (beams.max_elem_nodes * 6) * beams.num_elems; //make this a reduction
+    auto num_non_zero = 0;
+    Kokkos::parallel_reduce("compute number of non-zeros", beams.num_elems, KOKKOS_LAMBDA(int i_elem, int& update) {
+        auto elem_indices = beams.elem_indices;
+        auto idx = elem_indices[i_elem];
+        auto num_nodes = idx.num_nodes;
+        update += (num_nodes*6) * (num_nodes*6);
+    }, num_non_zero);
+
     auto row_ptrs = Kokkos::View<int*>("row_ptrs", num_rows+1);
     auto indices = Kokkos::View<int*>("indices", num_non_zero);
     auto K_values = Kokkos::View<double*>("K values", num_non_zero);
