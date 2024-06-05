@@ -10,7 +10,7 @@ struct PopulateSparseIndices {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        const auto num_elems = elem_indices.extent(0);
+        const auto num_elems = static_cast<int>(elem_indices.extent(0));
         auto entries_so_far = 0;
         for (int i_elem = 0; i_elem < num_elems; ++i_elem) {
             auto idx = elem_indices[i_elem];
