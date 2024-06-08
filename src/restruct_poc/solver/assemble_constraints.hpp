@@ -136,17 +136,25 @@ void AssembleConstraints(
     KernelHandle kh;
     kh.create_spgemm_handle();
 
-    auto local_R_system = Kokkos::View<double*>("lrs", R_system.extent(0));
-    Kokkos::deep_copy(local_R_system, R_system);
-    KokkosSparse::spmv("T", 1., B, solver.state.lambda, 1., local_R_system);
-    Kokkos::deep_copy(R_system, local_R_system);
+    auto spmv_handle = KokkosSparse::SPMVHandle<
+        Kokkos::DefaultExecutionSpace, decltype(B), decltype(solver.state.lambda),
+        decltype(R_system)>();
+    KokkosSparse::spmv(&spmv_handle, "T", 1., B, solver.state.lambda, 1., R_system);
 
     Kokkos::deep_copy(R_lambda, solver.constraints.Phi);
 
+    auto transpose_copy_policy = Kokkos::TeamPolicy<>(St_12.extent(1), Kokkos::AUTO());
     Kokkos::parallel_for(
-        "UpdateIterationMatrix",
-        Kokkos::MDRangePolicy{{0, 0}, {solver.num_constraint_dofs, solver.num_system_dofs}},
-        UpdateIterationMatrix<Subview_NxN>{St_12, solver.constraints.B}
+        "Copy into St_12", transpose_copy_policy,
+        KOKKOS_LAMBDA(Kokkos::TeamPolicy<>::member_type member) {
+            auto i = member.league_rank();
+            auto row = B.row(i);
+            auto row_map = B.graph.row_map;
+            auto cols = B.graph.entries;
+            Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](int entry) {
+                St_12(cols(row_map(i) + entry), i) = row.value(entry);
+            });
+        }
     );
 
     Kokkos::fence();
@@ -154,7 +162,6 @@ void AssembleConstraints(
     KokkosSparse::spgemm_symbolic(kh, B, false, T, false, system_matrix);
     KokkosSparse::spgemm_numeric(kh, B, false, T, false, system_matrix);
 
-    Kokkos::deep_copy(St_21, 0.);
     Kokkos::fence();
     auto copy_policy = Kokkos::TeamPolicy<>(St_21.extent(0), Kokkos::AUTO());
     Kokkos::parallel_for(

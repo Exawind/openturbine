@@ -108,7 +108,6 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     KokkosSparse::spadd_symbolic(&kh, K, static_system_matrix, system_matrix);
     KokkosSparse::spadd_numeric(&kh, 1., K, 1., static_system_matrix, system_matrix);
 
-    Kokkos::deep_copy(St_11, 0.);
     Kokkos::fence();
     Kokkos::parallel_for(
         "Copy into St_11", sparse_matrix_policy,
