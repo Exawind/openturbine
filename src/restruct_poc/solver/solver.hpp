@@ -29,8 +29,6 @@ struct Solver {
     int num_constraint_nodes;
     int num_constraint_dofs;
     int num_dofs;
-    View_NxN M;   // Mass matrix
-    View_NxN G;   // Gyroscopic matrix
     View_NxN K;   // Stiffness matrix
     View_NxN T;   // Tangent matrix
     View_NxN St;  // Iteration matrix
@@ -65,18 +63,19 @@ struct Solver {
           num_constraint_nodes(constraint_inputs.size()),
           num_constraint_dofs(num_constraint_nodes * kLieAlgebraComponents),
           num_dofs(num_system_dofs + num_constraint_dofs),
-          M("M", num_system_dofs, num_system_dofs),
-          G("G", num_system_dofs, num_system_dofs),
           K("K", num_system_dofs, num_system_dofs),
           T("T", num_system_dofs, num_system_dofs),
           St("St", num_dofs, num_dofs),
-          St_left("St_left", num_dofs, num_dofs),
           IPIV("IPIV", num_dofs),
           R("R", num_dofs),
           x("x", num_dofs),
           state(num_system_nodes, num_constraint_nodes, q_, v_, vd_),
           constraints(constraint_inputs, num_system_nodes),
-          convergence_err(max_iter) {}
+          convergence_err(max_iter) {
+        if constexpr (!std::is_same_v<decltype(St)::array_layout, Kokkos::LayoutLeft>) {
+            St_left = Kokkos::View<double**, Kokkos::LayoutLeft>("St_left", num_dofs, num_dofs);
+        }
+    }
 };
 
 }  // namespace openturbine
