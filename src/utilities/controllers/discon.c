@@ -1,5 +1,5 @@
 
-#include "src/utilities/controllers/discon.h"
+#include "discon.h"
 
 #ifdef __cplusplus
 namespace openturbine::util {
