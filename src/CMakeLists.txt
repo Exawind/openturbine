@@ -13,7 +13,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
   endif()
 endif()
 
-target_sources(${oturb_exe_name} PRIVATE main.cpp utilities/controllers/discon.c)
+target_sources(${oturb_exe_name} PRIVATE main.cpp)
 set_target_properties(${oturb_exe_name} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${oturb_exe_name} PRIVATE
     KokkosKernels::kokkoskernels
@@ -57,6 +57,24 @@ configure_file("${CMAKE_SOURCE_DIR}/cmake/OpenTurbineVersion.H.in"
 )
 
 target_link_libraries(${oturb_exe_name} PRIVATE ${oturb_lib_name})
+
+# Fetch dylib
+# TODO This should be done via find_package to make it a pre-install dependency
+include(FetchContent)
+FetchContent_Declare(
+  dylib
+  GIT_REPOSITORY  "https://github.com/martin-olivier/dylib"
+  GIT_TAG         "v2.2.1"
+)
+FetchContent_MakeAvailable(dylib)
+
+# Build DISCON.c into a shared library
+set(SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}/utilities/controllers/DISCON.c")
+add_library(DISCON SHARED ${SOURCE_PATH})
+set_target_properties(DISCON PROPERTIES PREFIX "" SUFFIX ".dll")
+add_library(dynamic_lib SHARED ${SOURCE_PATH})
+
+target_link_libraries(${oturb_exe_name} PRIVATE DISCON)
 
 # Set -fpic options
 set_target_properties(${oturb_lib_name}
