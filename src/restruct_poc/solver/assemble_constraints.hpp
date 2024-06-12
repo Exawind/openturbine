@@ -13,14 +13,11 @@
 #include "solver.hpp"
 #include "update_iteration_matrix.hpp"
 
-#include "src/restruct_poc/beams/beams.hpp"
-
 namespace openturbine {
 
-template <typename Subview_NxN, typename Subview_N>
+template <typename Subview_N>
 void AssembleConstraints(
-    Solver& solver, Beams& beams, Subview_NxN St_12, Subview_NxN St_21, Subview_N R_system,
-    Subview_N R_lambda
+    Solver& solver, Subview_N R_system, Subview_N R_lambda
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Constraints");
     if (solver.num_constraint_dofs == 0) {

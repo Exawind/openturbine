@@ -136,16 +136,12 @@ protected:
         auto x_system = Kokkos::subview(solver_->x, system_range);
         auto x_lambda = Kokkos::subview(solver_->x, constraint_range);
 
-        auto St_11 = Kokkos::subview(solver_->St, system_range, system_range);
-        auto St_12 = Kokkos::subview(solver_->St, system_range, constraint_range);
-        auto St_21 = Kokkos::subview(solver_->St, constraint_range, system_range);
-
         // Update beam elements state from solvers
         UpdateState(*beams_, solver_->state.q, solver_->state.v, solver_->state.vd);
 
-        AssembleSystem(*solver_, *beams_, St_11, R_system);
+        AssembleSystem(*solver_, *beams_, R_system);
 
-        AssembleConstraints(*solver_, *beams_, St_12, St_21, R_system, R_lambda);
+        AssembleConstraints(*solver_, R_system, R_lambda);
     }
 
     // Per-test-suite tear-down.

@@ -31,10 +31,6 @@ inline bool Step(Solver& solver, Beams& beams) {
     auto x_system = Kokkos::subview(solver.x, system_range);
     auto x_lambda = Kokkos::subview(solver.x, constraint_range);
 
-    auto St_11 = Kokkos::subview(solver.St, system_range, system_range);
-    auto St_12 = Kokkos::subview(solver.St, system_range, constraint_range);
-    auto St_21 = Kokkos::subview(solver.St, constraint_range, system_range);
-
     solver.convergence_err.clear();
 
     double err = 1000.0;
@@ -44,9 +40,9 @@ inline bool Step(Solver& solver, Beams& beams) {
 
         UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
 
-        AssembleSystem(solver, beams, St_11, R_system);
+        AssembleSystem(solver, beams, R_system);
 
-        AssembleConstraints(solver, beams, St_12, St_21, R_system, R_lambda);
+        AssembleConstraints(solver, R_system, R_lambda);
 
         SolveSystem(solver);
 

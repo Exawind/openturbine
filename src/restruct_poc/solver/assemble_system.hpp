@@ -22,8 +22,8 @@
 
 namespace openturbine {
 
-template <typename Subview_NxN, typename Subview_N>
-void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R_system) {
+template <typename Subview_N>
+void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System");
     Kokkos::deep_copy(solver.K_dense, 0.);
     Kokkos::parallel_for(
