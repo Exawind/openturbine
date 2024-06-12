@@ -64,11 +64,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(dylib)
 
+target_link_libraries(${oturb_exe_name} PRIVATE dylib)
+
 # Build DISCON.c into a shared library
 set(SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}/utilities/controllers/DISCON.c")
 add_library(DISCON SHARED ${SOURCE_PATH})
-set_target_properties(DISCON PROPERTIES PREFIX "" SUFFIX ".dll")
-add_library(dynamic_lib SHARED ${SOURCE_PATH})
 
 target_link_libraries(${oturb_exe_name} PRIVATE DISCON)
 

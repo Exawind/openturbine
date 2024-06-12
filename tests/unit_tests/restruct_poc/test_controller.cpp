@@ -7,7 +7,7 @@ namespace openturbine::restruct_poc::tests {
 
 TEST(ControllerTest, ClampFunction) {
     // Use dylib to load the dynamic library and get access to the controller functions
-    dylib lib("./", "dynamic_lib");
+    dylib lib("./", "DISCON");
     auto clamp = lib.get_function<float(float, float, float)>("clamp");
 
     // test case 1: v is less than v_min
@@ -38,7 +38,7 @@ TEST(ControllerTest, DisconController) {
     // at time = 0.0s
 
     // Use dylib to load the dynamic library and get access to the controller functions
-    dylib lib("./", "dynamic_lib");
+    dylib lib("./", "DISCON");
     auto DISCON = lib.get_function<void(float*, int&, char*, char*, char*)>("DISCON");
 
     float avrSWAP[81] = {0.};
