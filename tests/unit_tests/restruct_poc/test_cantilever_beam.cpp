@@ -111,7 +111,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
 
     // Create solver
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, constraint_inputs,
+        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, beams, constraint_inputs,
         displacement, velocity, acceleration
     );
 

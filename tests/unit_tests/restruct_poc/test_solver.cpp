@@ -112,7 +112,7 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, constraint_inputs,
+            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_, constraint_inputs,
             displacement, velocity, acceleration
         );
 
@@ -250,20 +250,6 @@ TEST_F(NewSolverTest, SolverPredictNextState_q) {
             {0, 0.0084261575824032, 0, 0.999999875, 0, 0, 0.0004999999},
             {0, 0.0108252766196473, 0, 0.999999875, 0, 0, 0.0004999999},
             {0, 0.0120000000000000, 0, 0.999999875, 0, 0, 0.0004999999},
-        }
-    );
-}
-
-TEST_F(NewSolverTest, TangentOperator) {
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(solver_->T, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)),
-        {
-            {1., 0., 0., 0.00000000000000000000, 0.0000000000000000000, 0.},
-            {0., 1., 0., 0.00000000000000000000, 0.0000000000000000000, 0.},
-            {0., 0., 1., 0.00000000000000000000, 0.0000000000000000000, 0.},
-            {0., 0., 0., 0.99999983333334160000, 0.0004999999583255033, 0.},
-            {0., 0., 0., -0.0004999999583255033, 0.9999998333333416000, 0.},
-            {0., 0., 0., 0.00000000000000000000, 0.0000000000000000000, 1.},
         }
     );
 }
@@ -480,7 +466,7 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, constraint_inputs,
+            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_, constraint_inputs,
             displacement, velocity, acceleration
         );
 
@@ -731,7 +717,7 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, constraint_inputs,
+            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_, constraint_inputs,
             displacement, velocity, acceleration
         );
 

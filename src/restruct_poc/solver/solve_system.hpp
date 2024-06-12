@@ -12,24 +12,73 @@ namespace openturbine {
 
 inline void SolveSystem(Solver& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Solve System");
-    Kokkos::parallel_for(
-        "PreconditionSt",
-        Kokkos::MDRangePolicy<Kokkos::Rank<2>>({0, 0}, {solver.num_system_dofs, solver.num_dofs}),
-        PreconditionSt{
-            solver.St,
-            solver.conditioner,
+    using CrsMatrixType = typename Solver::CrsMatrixType;
+    auto num_dofs = solver.num_dofs;
+    auto num_system_dofs = solver.num_system_dofs;
+    auto system_matrix = solver.system_matrix;
+    auto system_matrix_full_row_ptrs = Kokkos::View<int*>("system_matrix_full_row_ptrs", num_dofs+1);
+    Kokkos::parallel_for("FillSystemMatrixFullRowPtrs", system_matrix_full_row_ptrs.extent(0), KOKKOS_LAMBDA(int i){
+        auto last_row_map_index = num_system_dofs+1;
+        if(i < last_row_map_index) {
+            system_matrix_full_row_ptrs(i) = system_matrix.graph.row_map(i);
         }
-    );
-    Kokkos::parallel_for(
-        "PostconditionSt",
-        Kokkos::MDRangePolicy<Kokkos::Rank<2>>(
-            {0, solver.num_system_dofs}, {solver.num_dofs, solver.num_dofs}
-        ),
-        PostconditionSt{
-            solver.St,
-            solver.conditioner,
+        else {
+            system_matrix_full_row_ptrs(i) = system_matrix.graph.row_map(num_system_dofs);
         }
-    );
+    });
+    auto system_matrix_full = CrsMatrixType("system_matrix_full", num_dofs, num_dofs, system_matrix.nnz(), system_matrix.values, system_matrix_full_row_ptrs, system_matrix.graph.entries);
+
+    auto constraints_matrix = solver.constraints_matrix;
+    auto constraints_matrix_full_row_ptrs = Kokkos::View<int*>("constraints_matrix_full_row_ptrs", num_dofs+1);
+    Kokkos::parallel_for("FillConstraintsMatrixFullRowPtrs", constraints_matrix_full_row_ptrs.extent(0), KOKKOS_LAMBDA(int i) {
+        if(i > num_system_dofs) {
+            constraints_matrix_full_row_ptrs(i) = constraints_matrix.graph.row_map(i-num_system_dofs);
+        }
+    });
+    auto constraints_matrix_full = CrsMatrixType("constraints_matrix_full", num_dofs, num_dofs, constraints_matrix.nnz(), constraints_matrix.values, constraints_matrix_full_row_ptrs, constraints_matrix.graph.entries);
+
+    auto transpose_matrix = solver.B_t;
+    auto transpose_matrix_full_row_ptrs = Kokkos::View<int*>("transpose_matrix_full_row_ptrs", num_dofs+1);
+    Kokkos::parallel_for("FillSystemMatrixFullRowPtrs", transpose_matrix_full_row_ptrs.extent(0), KOKKOS_LAMBDA(int i){
+        auto last_row_map_index = num_system_dofs+1;
+        if(i < last_row_map_index) {
+            transpose_matrix_full_row_ptrs(i) = transpose_matrix.graph.row_map(i);
+        }
+        else {
+            transpose_matrix_full_row_ptrs(i) = transpose_matrix.graph.row_map(num_system_dofs);
+        }
+    });
+    auto transpose_matrix_full_indices = Kokkos::View<int*>("transpose_matrix_full_indices", transpose_matrix.nnz());
+    Kokkos::parallel_for("fullTransposeMatrixFullIndices", transpose_matrix_full_indices.extent(0), KOKKOS_LAMBDA(int i) {
+        transpose_matrix_full_indices(i) = transpose_matrix.graph.entries(i) + num_system_dofs;
+    });
+    auto transpose_matrix_full = CrsMatrixType("transpose_matrix_full", num_dofs, num_dofs, transpose_matrix.nnz(), transpose_matrix.values, transpose_matrix_full_row_ptrs, transpose_matrix_full_indices);
+
+    Kokkos::fence();
+    CrsMatrixType system_plus_constraints;
+    auto spc_handle = Solver::KernelHandle();
+    spc_handle.create_spadd_handle(true);
+    KokkosSparse::spadd_symbolic(&spc_handle, system_matrix_full, constraints_matrix_full, system_plus_constraints);
+    KokkosSparse::spadd_numeric(&spc_handle, solver.conditioner, system_matrix_full, 1., constraints_matrix_full, system_plus_constraints);
+
+    CrsMatrixType system;
+    auto system_handle = Solver::KernelHandle();
+    system_handle.create_spadd_handle(true);
+    KokkosSparse::spadd_symbolic(&system_handle, system_plus_constraints, transpose_matrix_full, system);
+    KokkosSparse::spadd_numeric(&system_handle, 1., system_plus_constraints, 1., transpose_matrix_full, system);
+
+    auto St = solver.St;
+    auto sparse_matrix_policy = Kokkos::TeamPolicy<>(num_dofs, Kokkos::AUTO());
+    Kokkos::parallel_for("Copy into St", sparse_matrix_policy, KOKKOS_LAMBDA(Kokkos::TeamPolicy<>::member_type member) {
+            auto i = member.league_rank();
+            auto row = system.row(i);
+            auto row_map = system.graph.row_map;
+            auto cols = system.graph.entries;
+            Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](int entry) {
+                St(i, cols(row_map(i) + entry)) = row.value(entry);
+            });
+    });
+
     Kokkos::parallel_for(
         "ConditionR", solver.num_system_dofs,
         ConditionR{

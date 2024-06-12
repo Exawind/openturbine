@@ -120,7 +120,7 @@ TEST(RotatingBeamTest, StepConvergence) {
 
     // Create solver
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, constraint_inputs,
+        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, beams, constraint_inputs,
         displacement, velocity, acceleration
     );
 
@@ -228,7 +228,7 @@ TEST(RotatingBeamTest, TwoBeam) {
 
     // Create solver with initial node state
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, constraint_inputs,
+        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, beams, constraint_inputs,
         displacement, velocity, acceleration
     );
 
@@ -254,15 +254,6 @@ TEST(RotatingBeamTest, TwoBeam) {
 
     auto n = solver.num_system_dofs / 2;
     auto m = solver.num_constraint_dofs / 2;
-
-    // Check that K matrix is the same for both beams
-    auto K = kokkos_view_2D_to_vector(solver.K);
-    // WriteMatrixToFile(K, "K.csv");
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            EXPECT_NEAR(K[i][j], K[n + i][n + j], 1.e-9);
-        }
-    }
 
     // Check that St matrix is the same for both beams
     auto St = kokkos_view_2D_to_vector(solver.St);
@@ -363,7 +354,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
 
     // Create solver with initial node state
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, constraint_inputs,
+        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, beams, constraint_inputs,
         displacement, velocity, acceleration
     );
 
