@@ -11,15 +11,13 @@ struct FillUnshiftedRowPtrs {
 
     KOKKOS_FUNCTION
     void operator()(int i) const {
-        auto last_row_map_index = num_system_dofs+1;
-        if(i < last_row_map_index) {
+        auto last_row_map_index = num_system_dofs + 1;
+        if (i < last_row_map_index) {
             new_row_ptrs(i) = old_row_ptrs(i);
-        }
-        else {
+        } else {
             new_row_ptrs(i) = old_row_ptrs(num_system_dofs);
         }
     }
-
 };
 
-}
+}  // namespace openturbine

@@ -50,15 +50,19 @@ void AssembleConstraints(
     constraint_policy.set_scratch_size(1, Kokkos::PerTeam(B_row_data_size + B_col_idx_size));
 
     Kokkos::parallel_for(
-        "CopyIntoSparseMatrix", constraint_policy, CopyIntoSparseMatrix{solver.B, solver.constraints.B}
+        "CopyIntoSparseMatrix", constraint_policy,
+        CopyIntoSparseMatrix{solver.B, solver.constraints.B}
     );
 
     auto B_t_row_data_size = Kokkos::View<double*>::shmem_size(B_num_rows);
     auto B_t_col_idx_size = Kokkos::View<int*>::shmem_size(B_num_rows);
     auto constraint_transpose_policy = Kokkos::TeamPolicy<>(B_num_columns, Kokkos::AUTO());
-    constraint_transpose_policy.set_scratch_size(1, Kokkos::PerTeam(B_t_row_data_size + B_t_col_idx_size));
+    constraint_transpose_policy.set_scratch_size(
+        1, Kokkos::PerTeam(B_t_row_data_size + B_t_col_idx_size)
+    );
     Kokkos::parallel_for(
-        "CopyIntoSparseMatrix_Transpose", constraint_transpose_policy, CopyIntoSparseMatrix_Transpose{solver.B_t, solver.constraints.B}
+        "CopyIntoSparseMatrix_Transpose", constraint_transpose_policy,
+        CopyIntoSparseMatrix_Transpose{solver.B_t, solver.constraints.B}
     );
 
     auto R = Kokkos::View<double*>("R_local", R_system.extent(0));
@@ -72,8 +76,12 @@ void AssembleConstraints(
     Kokkos::fence();
     auto constraints_spgemm_handle = Solver::KernelHandle();
     constraints_spgemm_handle.create_spgemm_handle();
-    KokkosSparse::spgemm_symbolic(constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix);
-    KokkosSparse::spgemm_numeric(constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix);
+    KokkosSparse::spgemm_symbolic(
+        constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix
+    );
+    KokkosSparse::spgemm_numeric(
+        constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix
+    );
 }
 
 }  // namespace openturbine

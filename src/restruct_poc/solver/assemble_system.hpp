@@ -61,8 +61,12 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     Kokkos::fence();
     auto system_spgemm_handle = Solver::KernelHandle();
     system_spgemm_handle.create_spgemm_handle();
-    KokkosSparse::spgemm_symbolic(system_spgemm_handle, solver.K, false, solver.T, false, solver.static_system_matrix);
-    KokkosSparse::spgemm_numeric(system_spgemm_handle, solver.K, false, solver.T, false, solver.static_system_matrix);
+    KokkosSparse::spgemm_symbolic(
+        system_spgemm_handle, solver.K, false, solver.T, false, solver.static_system_matrix
+    );
+    KokkosSparse::spgemm_numeric(
+        system_spgemm_handle, solver.K, false, solver.T, false, solver.static_system_matrix
+    );
 
     auto beta_prime = (solver.is_dynamic_solve) ? solver.beta_prime : 0.;
     auto gamma_prime = (solver.is_dynamic_solve) ? solver.gamma_prime : 0.;
@@ -76,8 +80,12 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     Kokkos::fence();
     auto system_spadd_handle = Solver::KernelHandle();
     system_spadd_handle.create_spadd_handle(true);
-    KokkosSparse::spadd_symbolic(&system_spadd_handle, solver.K, solver.static_system_matrix, solver.system_matrix);
-    KokkosSparse::spadd_numeric(&system_spadd_handle, 1., solver.K, 1., solver.static_system_matrix, solver.system_matrix);
+    KokkosSparse::spadd_symbolic(
+        &system_spadd_handle, solver.K, solver.static_system_matrix, solver.system_matrix
+    );
+    KokkosSparse::spadd_numeric(
+        &system_spadd_handle, 1., solver.K, 1., solver.static_system_matrix, solver.system_matrix
+    );
 }
 
 }  // namespace openturbine

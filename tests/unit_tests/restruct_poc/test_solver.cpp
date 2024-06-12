@@ -112,8 +112,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_, constraint_inputs,
-            displacement, velocity, acceleration
+            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_,
+            constraint_inputs, displacement, velocity, acceleration
         );
 
         // Initialize constraints
@@ -466,8 +466,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_, constraint_inputs,
-            displacement, velocity, acceleration
+            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_,
+            constraint_inputs, displacement, velocity, acceleration
         );
 
         // Initialize constraints
@@ -717,8 +717,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_, constraint_inputs,
-            displacement, velocity, acceleration
+            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_,
+            constraint_inputs, displacement, velocity, acceleration
         );
 
         // Initialize constraints
