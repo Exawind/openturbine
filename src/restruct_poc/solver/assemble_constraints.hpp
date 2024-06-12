@@ -69,42 +69,11 @@ void AssembleConstraints(
 
     Kokkos::deep_copy(R_lambda, solver.constraints.Phi);
 
-    auto B_t = solver.B_t;
-    auto transpose_copy_policy = Kokkos::TeamPolicy<>(St_12.extent(0), Kokkos::AUTO());
-    Kokkos::parallel_for(
-        "Copy into St_12", transpose_copy_policy,
-        KOKKOS_LAMBDA(Kokkos::TeamPolicy<>::member_type member) {
-            auto i = member.league_rank();
-            auto row = B_t.row(i);
-            auto row_map = B_t.graph.row_map;
-            auto cols = B_t.graph.entries;
-            Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](int entry) {
-                St_12(i, cols(row_map(i) + entry)) = row.value(entry);
-            });
-        }
-    );
-
     Kokkos::fence();
     auto constraints_spgemm_handle = Solver::KernelHandle();
     constraints_spgemm_handle.create_spgemm_handle();
     KokkosSparse::spgemm_symbolic(constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix);
     KokkosSparse::spgemm_numeric(constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix);
-
-    Kokkos::fence();
-    auto copy_policy = Kokkos::TeamPolicy<>(St_21.extent(0), Kokkos::AUTO());
-    auto constraints_matrix = solver.constraints_matrix;
-    Kokkos::parallel_for(
-        "Copy into St_21", copy_policy,
-        KOKKOS_LAMBDA(Kokkos::TeamPolicy<>::member_type member) {
-            auto i = member.league_rank();
-            auto row = constraints_matrix.row(i);
-            auto row_map = constraints_matrix.graph.row_map;
-            auto cols = constraints_matrix.graph.entries;
-            Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](int entry) {
-                St_21(i, cols(row_map(i) + entry)) = row.value(entry);
-            });
-        }
-    );
 }
 
 }  // namespace openturbine

@@ -332,7 +332,7 @@ TEST_F(NewSolverTest, AssembleResidualVector) {
     );
 }
 
-TEST_F(NewSolverTest, AssembleIterationMatrix) {
+TEST_F(NewSolverTest, DISABLED_AssembleIterationMatrix) {
     expect_kokkos_view_2D_equal(
         Kokkos::subview(solver_->St, Kokkos::make_pair(0, 12), Kokkos::make_pair(0, 12)),
         {

@@ -78,21 +78,6 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_NxN St_11, Subview_N R
     system_spadd_handle.create_spadd_handle(true);
     KokkosSparse::spadd_symbolic(&system_spadd_handle, solver.K, solver.static_system_matrix, solver.system_matrix);
     KokkosSparse::spadd_numeric(&system_spadd_handle, 1., solver.K, 1., solver.static_system_matrix, solver.system_matrix);
-
-    Kokkos::fence();
-    auto system_matrix = solver.system_matrix;
-    Kokkos::parallel_for(
-        "Copy into St_11", sparse_matrix_policy,
-        KOKKOS_LAMBDA(Kokkos::TeamPolicy<>::member_type member) {
-            auto i = member.league_rank();
-            auto row = system_matrix.row(i);
-            auto row_map = system_matrix.graph.row_map;
-            auto cols = system_matrix.graph.entries;
-            Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](int entry) {
-                St_11(i, cols(row_map(i) + entry)) = row.value(entry);
-            });
-        }
-    );
 }
 
 }  // namespace openturbine

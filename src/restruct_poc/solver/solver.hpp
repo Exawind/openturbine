@@ -54,6 +54,8 @@ struct Solver {
     CrsMatrixType static_system_matrix;
     CrsMatrixType system_matrix;
     CrsMatrixType constraints_matrix;
+    CrsMatrixType system_plus_constraints;
+    CrsMatrixType full_matrix;
     View_NxN K_dense;   // Stiffness matrix
     View_NxN St;  // Iteration matrix
     DenseMatrixType St_left;
