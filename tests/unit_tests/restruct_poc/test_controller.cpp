@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "dylib.hpp"
 #include "test_utilities.hpp"
+
+#include "src/utilities/dylib.hpp"
 
 namespace openturbine::restruct_poc::tests {
 
