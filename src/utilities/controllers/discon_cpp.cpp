@@ -4,6 +4,8 @@
 
 namespace openturbine::util {
 
+// TODO This is a quick and dirty conversion of the DISCON function from the original C code to
+// C++. It needs to be refactored to be more idiomatic C++.
 void DISCON(
     float avrSWAP[], int aviFAIL, [[maybe_unused]] const char* accINFILE,
     [[maybe_unused]] const char* avcOUTNAME, const char* avcMSG
@@ -18,9 +20,10 @@ void DISCON(
     float pitch_com_proportional;
     // Total command pitch based on the sum of the proportional and integral terms (rad)
     float pitch_com_total;
-
-    static FILE* fp_log = nullptr;  // Log file pointer
-    static FILE* fp_csv = nullptr;  // CSV file pointer
+    // Log file pointer
+    static FILE* fp_log = nullptr;
+    // CSV file pointer
+    static FILE* fp_csv = nullptr;
 
     // Map swap from calling program to struct
     SwapStruct* swap = reinterpret_cast<SwapStruct*>(avrSWAP);
@@ -53,17 +56,20 @@ void DISCON(
         );
 
         // Determine some torque control parameters not specified directly
-        state.VS_SySp = kVS_RtGnSp / (1. + 0.01 * kVS_SlPc);
-        state.VS_Slope15 = (kVS_Rgn2K * kVS_Rgn2Sp * kVS_Rgn2Sp) / (kVS_Rgn2Sp - kVS_CtInSp);
-        state.VS_Slope25 = (kVS_RtPwr / kVS_RtGnSp) / (kVS_RtGnSp - state.VS_SySp);
+        state.VS_sync_speed = kVS_RtGnSp / (1. + 0.01 * kVS_SlPc);
+        state.VS_torque_slope_15 = (kVS_Rgn2K * kVS_Rgn2Sp * kVS_Rgn2Sp) / (kVS_Rgn2Sp - kVS_CtInSp);
+        state.VS_torque_slope_25 = (kVS_RtPwr / kVS_RtGnSp) / (kVS_RtGnSp - state.VS_sync_speed);
         if (kVS_Rgn2K == 0.) {
             // Region 2 torque is flat, and thus, the denominator in the else condition is zero
-            state.VS_TrGnSp = state.VS_SySp;
+            state.VS_generator_speed_trans = state.VS_sync_speed;
         } else {
             // Region 2 torque is quadratic with speed
-            state.VS_TrGnSp =
-                (state.VS_Slope25 -
-                 sqrt(state.VS_Slope25 * (state.VS_Slope25 - 4.0 * kVS_Rgn2K * state.VS_SySp))) /
+            state.VS_generator_speed_trans =
+                (state.VS_torque_slope_25 -
+                 sqrt(
+                     state.VS_torque_slope_25 *
+                     (state.VS_torque_slope_25 - 4.0 * kVS_Rgn2K * state.VS_sync_speed)
+                 )) /
                 (2.0 * kVS_Rgn2K);
         }
 
@@ -87,10 +93,10 @@ void DISCON(
                 const_cast<char*>(avcMSG), "VS_Rgn2Sp must be greater than VS_CtInSp.",
                 swap->msg_size
             );
-        } else if (state.VS_TrGnSp < kVS_Rgn2Sp) {
+        } else if (state.VS_generator_speed_trans < kVS_Rgn2Sp) {
             strncpy(
-                const_cast<char*>(avcMSG), "VS_TrGnSp must not be less than VS_Rgn2Sp.",
-                swap->msg_size
+                const_cast<char*>(avcMSG),
+                "VS_generator_speed_trans must not be less than VS_Rgn2Sp.", swap->msg_size
             );
         } else if (kVS_SlPc <= 0.0) {
             strncpy(const_cast<char*>(avcMSG), "VS_SlPc must be greater than zero.", swap->msg_size);
@@ -154,10 +160,11 @@ void DISCON(
                 fp_log,
                 "%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t"
                 "%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\n",
-                "Time", "ElapsedTime", "HorWindV", "GenSpeed", "GenSpeedF", "RelSpdErr", "SpdErr",
-                "IntSpdErr", "GK", "PitchComP", "PitchComI", "PitchComT", "PitchRate1", "PitchRate2",
-                "PitchRate3", "PitchCom1", "PitchCom2", "PitchCom3", "BlPitch1", "BlPitch2",
-                "BlPitch3"
+                "Time", "ElapsedTime", "HorWindV", "GenSpeed", "generator_speed_filtered",
+                "RelSpdErr", "SpdErr", "integral_speed_error", "GK", "pitch_commanded_latestP",
+                "pitch_commanded_latestI", "pitch_commanded_latestT", "PitchRate1", "PitchRate2",
+                "PitchRate3", "pitch_commanded_latest1", "pitch_commanded_latest2",
+                "pitch_commanded_latest3", "BlPitch1", "BlPitch2", "BlPitch3"
             );
             fprintf(
                 fp_log,
@@ -180,34 +187,34 @@ void DISCON(
         }
 
         // Initialize the state variables
-        // NOTE: LastGenTrq is initialized in the torque controller below for simplicity (not
-        // here).
+        // NOTE: generator_torque_lastest is initialized in the torque controller below for
+        // simplicity (not here).
         // --------------------------------------------------------------------------------------------
         // This will ensure that generator speed filter will use the initial value of the
         // generator speed on the first pass
-        state.GenSpeedF = swap->GenSpeed;
+        state.generator_speed_filtered = swap->GenSpeed;
 
         // This will ensure that the variable speed controller picks the correct control region
         // and the pitch controller picks the correct gain on the first call
-        state.PitchCom[0] = swap->BlPitch1;
-        state.PitchCom[1] = swap->BlPitch2;
-        state.PitchCom[2] = swap->BlPitch3;
+        state.pitch_commanded_latest[0] = swap->BlPitch1;
+        state.pitch_commanded_latest[1] = swap->BlPitch2;
+        state.pitch_commanded_latest[2] = swap->BlPitch3;
 
         // This will ensure that the pitch angle is unchanged if the initial SpdErr is zero
-        float GK = 1.0 / (1.0 + state.PitchCom[0] / kPC_KK);
+        float GK = 1.0 / (1.0 + state.pitch_commanded_latest[0] / kPC_KK);
 
         // This will ensure that the pitch angle is unchanged if the initial SpdErr is zero
-        state.IntSpdErr = state.PitchCom[1] / (GK * kPC_KI);
+        state.integral_speed_error = state.pitch_commanded_latest[1] / (GK * kPC_KI);
 
         // This will ensure that generator speed filter will use the initial value of the
         // generator speed on the first pass
-        state.LastTime = swap->Time;
+        state.time_latest = swap->Time;
 
         // This will ensure that the pitch controller is called on the first pass
-        state.LastTimePC = swap->Time - kPC_DT;
+        state.pitch_controller_latest = swap->Time - kPC_DT;
 
         // This will ensure that the torque controller is called on the first pass
-        state.LastTimeVS = swap->Time - kVS_DT;
+        state.torque_controller_latest = swap->Time - kVS_DT;
     }
 
     //--------------------------------------------------------------------------
@@ -244,16 +251,17 @@ void DISCON(
 
         // Update the coefficient in the recursive formula based on the elapsed time since the
         // last call to the controller
-        alpha = exp((state.LastTime - swap->Time) * kCornerFreq);
+        alpha = exp((state.time_latest - swap->Time) * kCornerFreq);
 
         // Apply the filter
-        state.GenSpeedF = (1. - alpha) * swap->GenSpeed + alpha * state.GenSpeedF;
+        state.generator_speed_filtered =
+            (1. - alpha) * swap->GenSpeed + alpha * state.generator_speed_filtered;
 
         // ==========================================================================
         // Variable-speed torque control
 
         // Compute the elapsed time since the last call to the controller
-        float elapsed_time = swap->Time - state.LastTimeVS;
+        float elapsed_time = swap->Time - state.torque_controller_latest;
 
         // Only perform the control calculations if the elapsed time is greater than or equal to
         // the communication interval of the torque controller NOTE: Time is scaled by OnePlusEps
@@ -262,24 +270,27 @@ void DISCON(
 
         float gen_trq;  // Electrical generator torque, N-m
 
-        if ((swap->Time * kOnePlusEps - state.LastTimeVS) >= kVS_DT) {
+        if ((swap->Time * kOnePlusEps - state.torque_controller_latest) >= kVS_DT) {
             // Compute the generator torque, which depends on which region we are in
-            if ((state.GenSpeedF >= kVS_RtGnSp) || (state.PitchCom[0] >= kVS_Rgn3MP)) {
+            if ((state.generator_speed_filtered >= kVS_RtGnSp) ||
+                (state.pitch_commanded_latest[0] >= kVS_Rgn3MP)) {
                 // We are in region 3 - power is constant
-                gen_trq = kVS_RtPwr / state.GenSpeedF;
-            } else if (state.GenSpeedF <= kVS_CtInSp) {
+                gen_trq = kVS_RtPwr / state.generator_speed_filtered;
+            } else if (state.generator_speed_filtered <= kVS_CtInSp) {
                 // We are in region 1 - torque is zero
                 gen_trq = 0.0;
-            } else if (state.GenSpeedF < kVS_Rgn2Sp) {
+            } else if (state.generator_speed_filtered < kVS_Rgn2Sp) {
                 // We are in region 1 1/2 - linear ramp in torque from zero to optimal
-                gen_trq = state.VS_Slope15 * (state.GenSpeedF - kVS_CtInSp);
-            } else if (state.GenSpeedF < state.VS_TrGnSp) {
+                gen_trq = state.VS_torque_slope_15 * (state.generator_speed_filtered - kVS_CtInSp);
+            } else if (state.generator_speed_filtered < state.VS_generator_speed_trans) {
                 // We are in region 2 - optimal torque is proportional to the square of the
                 // generator speed
-                gen_trq = kVS_Rgn2K * state.GenSpeedF * state.GenSpeedF;
+                gen_trq =
+                    kVS_Rgn2K * state.generator_speed_filtered * state.generator_speed_filtered;
             } else {
                 // We are in region 2 1/2 - simple induction generator transition region
-                gen_trq = state.VS_Slope25 * (state.GenSpeedF - state.VS_SySp);
+                gen_trq = state.VS_torque_slope_25 *
+                          (state.generator_speed_filtered - state.VS_sync_speed);
             }
 
             // Saturate the commanded torque using the maximum torque limit
@@ -287,22 +298,24 @@ void DISCON(
                 gen_trq = kVS_MaxTq;
             }
 
-            // Initialize the value of LastGenTrq on the first pass only
+            // Initialize the value of generator_torque_lastest on the first pass only
             if (status == 0) {
-                state.LastGenTrq = gen_trq;
+                state.generator_torque_lastest = gen_trq;
             }
 
             // Torque rate based on the current and last torque commands, N-m/s
             // Saturate the torque rate using its maximum absolute value
-            float trq_rate =
-                clamp<float>((gen_trq - state.LastGenTrq) / elapsed_time, -kVS_MaxRat, kVS_MaxRat);
+            float trq_rate = clamp<float>(
+                (gen_trq - state.generator_torque_lastest) / elapsed_time, -kVS_MaxRat, kVS_MaxRat
+            );
 
             // Saturate the command using the torque rate limit
-            gen_trq = state.LastGenTrq + trq_rate * elapsed_time;
+            gen_trq = state.generator_torque_lastest + trq_rate * elapsed_time;
 
-            // Reset the values of LastTimeVS and LastGenTrq to the current values
-            state.LastTimeVS = swap->Time;
-            state.LastGenTrq = gen_trq;
+            // Reset the values of torque_controller_latest and generator_torque_lastest to the
+            // current values
+            state.torque_controller_latest = swap->Time;
+            state.generator_torque_lastest = gen_trq;
         }
 
         // Set the generator contactor status, avrSWAP(35), to main (high speed)
@@ -311,38 +324,38 @@ void DISCON(
 
         swap->GeneratorContactorStatus =
             1.0;  // Generator contactor status: 1=main (high speed) variable-speed generator
-        swap->TorqueOverride = 0.0;                        // Torque override: 0=yes
-        swap->DemandedGeneratorTorque = state.LastGenTrq;  // Demanded generator torque
+        swap->TorqueOverride = 0.0;                                      // Torque override: 0=yes
+        swap->DemandedGeneratorTorque = state.generator_torque_lastest;  // Demanded generator torque
 
         //======================================================================
 
         // Pitch control:
 
         // Compute the elapsed time since the last call to the controller:
-        elapsed_time = swap->Time - state.LastTimePC;
+        elapsed_time = swap->Time - state.pitch_controller_latest;
 
         // Only perform the control calculations if the elapsed time is greater than or equal to
         // the communication interval of the pitch controller NOTE: Time is scaled by OnePlusEps
         // to ensure that the contoller is called at every time step when PC_DT = DT, even in the
         // presence of numerical precision errors
-        if ((swap->Time * kOnePlusEps - state.LastTimePC) >= kPC_DT) {
+        if ((swap->Time * kOnePlusEps - state.pitch_controller_latest) >= kPC_DT) {
             // Current value of the gain correction factor, used in the gain
             // scheduling law of the pitch controller, (-).
             // Based on the previously commanded pitch angle for blade 1:
-            float GK = 1.0 / (1.0 + state.PitchCom[0] / kPC_KK);
+            float GK = 1.0 / (1.0 + state.pitch_commanded_latest[0] / kPC_KK);
 
             // Compute the current speed error and its integral w.r.t. time; saturate the
             // integral term using the pitch angle limits
-            float speed_error = state.GenSpeedF - kPC_RefSpd;
-            state.IntSpdErr += speed_error * elapsed_time;
-            state.IntSpdErr = clamp<float>(
-                state.IntSpdErr, kPC_MinPit / (kOnePlusEps * kPC_KI),
+            float speed_error = state.generator_speed_filtered - kPC_RefSpd;
+            state.integral_speed_error += speed_error * elapsed_time;
+            state.integral_speed_error = clamp<float>(
+                state.integral_speed_error, kPC_MinPit / (kOnePlusEps * kPC_KI),
                 kPC_MaxPit / (kOnePlusEps * kPC_KI)
             );
 
             // Compute the pitch commands associated with the proportional and integral gains
             pitch_com_proportional = GK * kPC_KP * speed_error;
-            pitch_com_integral = GK * kPC_KI * state.IntSpdErr;
+            pitch_com_integral = GK * kPC_KI * state.integral_speed_error;
 
             // Superimpose the individual commands to get the total pitch command; saturate the
             // overall command using the pitch angle limits
@@ -370,13 +383,14 @@ void DISCON(
                 // Saturate the pitch rate of blade K using its maximum absolute value
                 pitch_rate[k] = clamp<float>(pitch_rate[k], -kPC_MaxRat, kPC_MaxRat);
                 // Saturate the overall command of blade K using the pitch rate limit
-                state.PitchCom[k] = blade_pitch[k] + pitch_rate[k] * elapsed_time;
+                state.pitch_commanded_latest[k] = blade_pitch[k] + pitch_rate[k] * elapsed_time;
                 // Saturate the overall command using the pitch angle limits
-                state.PitchCom[k] = clamp<float>(state.PitchCom[k], kPC_MinPit, kPC_MaxPit);
+                state.pitch_commanded_latest[k] =
+                    clamp<float>(state.pitch_commanded_latest[k], kPC_MinPit, kPC_MaxPit);
             }
 
-            // Reset the value of LastTimePC to the current value
-            state.LastTimePC = swap->Time;
+            // Reset the value of pitch_controller_latest to the current value
+            state.pitch_controller_latest = swap->Time;
 
             // Output debugging information if requested:
             if (PC_DbgOut) {
@@ -387,12 +401,13 @@ void DISCON(
                     "%11.4e\t%11.4e\t%11.4e\t%11.4e\t%11.4e\t%11.4e\t"
                     "%11.4e\t%11.4e\t%11.4e\n",
                     swap->Time, elapsed_time, swap->HorWindV, swap->GenSpeed * kRPS2RPM,
-                    state.GenSpeedF * kRPS2RPM, 100.0 * speed_error / kPC_RefSpd, speed_error,
-                    state.IntSpdErr, GK, pitch_com_proportional * kR2D, pitch_com_integral * kR2D,
-                    pitch_com_total * kR2D, pitch_rate[0] * kR2D, pitch_rate[1] * kR2D,
-                    pitch_rate[2] * kR2D, state.PitchCom[0] * kR2D, state.PitchCom[1] * kR2D,
-                    state.PitchCom[2] * kR2D, blade_pitch[0] * kR2D, blade_pitch[1] * kR2D,
-                    blade_pitch[2] * kR2D
+                    state.generator_speed_filtered * kRPS2RPM, 100.0 * speed_error / kPC_RefSpd,
+                    speed_error, state.integral_speed_error, GK, pitch_com_proportional * kR2D,
+                    pitch_com_integral * kR2D, pitch_com_total * kR2D, pitch_rate[0] * kR2D,
+                    pitch_rate[1] * kR2D, pitch_rate[2] * kR2D,
+                    state.pitch_commanded_latest[0] * kR2D, state.pitch_commanded_latest[1] * kR2D,
+                    state.pitch_commanded_latest[2] * kR2D, blade_pitch[0] * kR2D,
+                    blade_pitch[1] * kR2D, blade_pitch[2] * kR2D
                 );
             }
         }
@@ -401,13 +416,15 @@ void DISCON(
         // call to the controller (See Appendix A of Bladed User's Guide):
         swap->PitchOverride = 0.;  // Pitch override: 0=yes
 
-        swap->PitchCom1 =
-            state.PitchCom[0];  // Use the command angles of all blades if using individual pitch
-        swap->PitchCom2 = state.PitchCom[1];  // "
-        swap->PitchCom3 = state.PitchCom[2];  // "
+        swap->pitch_commanded_latest1 =
+            state.pitch_commanded_latest[0];  // Use the command angles of all blades
+                                              // if using individual pitch
+        swap->pitch_commanded_latest2 = state.pitch_commanded_latest[1];  // "
+        swap->pitch_commanded_latest3 = state.pitch_commanded_latest[2];  // "
 
-        swap->PitchComCol =
-            state.PitchCom[0];  // Use the command angle of blade 1 if using collective pitch
+        swap->pitch_commanded_latestCol =
+            state.pitch_commanded_latest[0];  // Use the command angle of blade 1 if using collective
+                                              // pitch
 
         if (PC_DbgOut) {
             fprintf(fp_csv, "\n%11.6f", swap->Time);
@@ -418,8 +435,8 @@ void DISCON(
 
         //======================================================================
 
-        // Reset the value of LastTime to the current value:
-        state.LastTime = swap->Time;
+        // Reset the value of time_latest to the current value:
+        state.time_latest = swap->Time;
     } else if (status == -8) {
         // Pack internal state to file
         FILE* fp = fopen(accINFILE, "wb");
