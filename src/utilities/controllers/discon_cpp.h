@@ -8,7 +8,7 @@
 
 namespace openturbine::util {
 
-#define PC_DbgOut 1  // Flag to indicate whether to output debugging information (0=Off)
+#define PC_DbgOut 0  // Flag to indicate whether to output debugging information (0=Off)
 
 /// Transitional generator speed (HSS side) between regions 1 and 1 1/2, rad/s
 static constexpr double kVS_CtInSp{70.16224};
