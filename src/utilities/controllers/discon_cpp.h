@@ -108,63 +108,69 @@ struct SwapStruct {
     float unused_39;                  // (39)
     float unused_40;                  // (40)
     float DemandedYawActuatorTorque;  // (41) Demanded yaw actuator torque
-    float PitchCom1;          // (42) Use the command angles of all blades if using individual pitch
-    float PitchCom2;          // (43) Use the command angles of all blades if using individual pitch
-    float PitchCom3;          // (44) Use the command angles of all blades if using individual pitch
-    float PitchComCol;        // (45) Use the command angle of blade 1 if using collective pitch
-    float DemandedPitchRate;  // (46) Demanded pitch rate (Collective pitch)
-    float DemandedGeneratorTorque;   // (47) Demanded generator torque
-    float DemandedNacelleYawRate;    // (48) Demanded nacelle yaw rate
-    float msg_size;                  // (49) avcMSG array size
-    float infile_size;               // (50) avcINFILE array size
-    float outname_size;              // (51) avcOUTNAME array size
-    float unused_52;                 // (52)
-    float unused_53;                 // (53)
-    float unused_54;                 // (54)
-    float PitchOverride;             // (55) Pitch override: 0=yes
-    float TorqueOverride;            // (56) Torque override: 0=yes
-    float unused_57;                 // (57)
-    float unused_58;                 // (58)
-    float unused_59;                 // (59)
-    float unused_60;                 // (60)
-    float NumBl;                     // (61) Number of blades
-    float unused_62;                 // (62)
-    float unused_63;                 // (63)
-    float unused_64;                 // (64)
-    float NumVar;                    // (65) Number of variables returned for logging
-    float unused_66;                 // (66)
-    float unused_67;                 // (67)
-    float unused_68;                 // (68)
-    float unused_69;                 // (69)
-    float unused_70;                 // (70)
-    float unused_71;                 // (71)
-    float GeneratorStartResistance;  // (72) Generator start-up resistance
-    float unused_73;                 // (73)
-    float unused_74;                 // (74)
-    float unused_75;                 // (75)
-    float unused_76;                 // (76)
-    float unused_77;                 // (77)
-    float unused_78;                 // (78)
-    float LoadsReq;                  // (79) Request for loads: 0=none
-    float VariableSlipStatus;        // (80) Variable slip current status
-    float VariableSlipDemand;        // (81) Variable slip current demand
+    float pitch_commanded_latest1;  // (42) Use the command angles of all blades if using individual
+                                    // pitch
+    float pitch_commanded_latest2;  // (43) Use the command angles of all blades if using individual
+                                    // pitch
+    float pitch_commanded_latest3;  // (44) Use the command angles of all blades if using individual
+                                    // pitch
+    float pitch_commanded_latestCol;  // (45) Use the command angle of blade 1 if using collective
+                                      // pitch
+    float DemandedPitchRate;          // (46) Demanded pitch rate (Collective pitch)
+    float DemandedGeneratorTorque;    // (47) Demanded generator torque
+    float DemandedNacelleYawRate;     // (48) Demanded nacelle yaw rate
+    float msg_size;                   // (49) avcMSG array size
+    float infile_size;                // (50) avcINFILE array size
+    float outname_size;               // (51) avcOUTNAME array size
+    float unused_52;                  // (52)
+    float unused_53;                  // (53)
+    float unused_54;                  // (54)
+    float PitchOverride;              // (55) Pitch override: 0=yes
+    float TorqueOverride;             // (56) Torque override: 0=yes
+    float unused_57;                  // (57)
+    float unused_58;                  // (58)
+    float unused_59;                  // (59)
+    float unused_60;                  // (60)
+    float NumBl;                      // (61) Number of blades
+    float unused_62;                  // (62)
+    float unused_63;                  // (63)
+    float unused_64;                  // (64)
+    float NumVar;                     // (65) Number of variables returned for logging
+    float unused_66;                  // (66)
+    float unused_67;                  // (67)
+    float unused_68;                  // (68)
+    float unused_69;                  // (69)
+    float unused_70;                  // (70)
+    float unused_71;                  // (71)
+    float GeneratorStartResistance;   // (72) Generator start-up resistance
+    float unused_73;                  // (73)
+    float unused_74;                  // (74)
+    float unused_75;                  // (75)
+    float unused_76;                  // (76)
+    float unused_77;                  // (77)
+    float unused_78;                  // (78)
+    float LoadsReq;                   // (79) Request for loads: 0=none
+    float VariableSlipStatus;         // (80) Variable slip current status
+    float VariableSlipDemand;         // (81) Variable slip current demand
 };
 
 struct InternalState {
-    float GenSpeedF;   // Filtered HSS (generator) speed, rad/s.
-    float IntSpdErr;   // Current integral of speed error w.r.t. time, rad.
-    float LastGenTrq;  // Commanded electrical generator torque the last time the controller was
-                       // called, N-m.
-    float LastTime;    // Last time this DLL was called, sec.
-    float LastTimePC;  // Last time the pitch  controller was called, sec.
-    float LastTimeVS;  // Last time the torque controller was called, sec.
-    float
-        PitchCom[3];   // Commanded pitch of each blade the last time the controller was called, rad.
-    float VS_Slope15;  // Torque/speed slope of region 1 1/2 cut-in torque ramp , N-m/(rad/s).
-    float VS_Slope25;  // Torque/speed slope of region 2 1/2 induction generator, N-m/(rad/s).
-    float VS_SySp;     // Synchronous speed of region 2 1/2 induction generator, rad/s.
-    float VS_TrGnSp;   // Transitional generator speed (HSS side) between regions 2 and 2 1/2, rad/s.
-                       // 1/2, rad/s
+    float generator_speed_filtered;   // Filtered HSS (generator) speed, rad/s.
+    float integral_speed_error;       // Current integral of speed error w.r.t. time, rad.
+    float generator_torque_lastest;   // Commanded electrical generator torque the last time the
+                                      // controller was called, N-m.
+    float time_latest;                // Last time this DLL was called, sec.
+    float pitch_controller_latest;    // Last time the pitch  controller was called, sec.
+    float torque_controller_latest;   // Last time the torque controller was called, sec.
+    float pitch_commanded_latest[3];  // Commanded pitch of each blade the last time the controller
+                                      // was called, rad.
+    float VS_torque_slope_15;         // Torque/speed slope of region 1 1/2 cut-in torque ramp,
+                                      // N-m/(rad/s).
+    float VS_torque_slope_25;         // Torque/speed slope of region 2 1/2 induction
+                                      // generator, N-m/(rad/s).
+    float VS_sync_speed;              // Synchronous speed of region 2 1/2 induction generator, rad/s
+    float VS_generator_speed_trans;   // Transitional generator speed (HSS side) between regions
+                                      // 2 and 2 1/2, rad/s. 1/2, rad/s
 };
 
 // float clamp(float v, float v_min, float v_max);

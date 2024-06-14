@@ -79,10 +79,6 @@ TEST(ControllerTest, DisconController) {
     char in_file[] = "in_file";
     char out_name[] = "out_name";
     char msg[] = "msg";
-    // void DISCON(
-    //     SwapStruct& avrSWAP, int& aviFAIL, const char* accINFILE, const char* avcOUTNAME,
-    //     const char* avcMSG
-    // );
     openturbine::util::DISCON(avrSWAP, aviFAIL, in_file, out_name, msg);
 
     EXPECT_FLOAT_EQ(avrSWAP[34], 1.);          // GeneratorContactorStatus
