@@ -54,6 +54,8 @@
 #define DYLIB_WIN_OTHER(win_def, other_def) other_def
 #endif
 
+namespace openturbine::util {
+
 /**
  *  The `dylib` class represents a single dynamic library instance,
  *  allowing the access of symbols like functions or global variables
@@ -332,3 +334,5 @@ protected:
 #undef DYLIB_WIN_MAC_OTHER
 #undef DYLIB_WIN_OTHER
 #undef DYLIB_CPP17
+
+}  // namespace openturbine::util

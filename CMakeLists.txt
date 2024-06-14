@@ -217,5 +217,5 @@ install(
 )
 
 # Build DISCON.c into a shared library
-set(SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}/src/utilities/controllers/DISCON.c")
+set(SOURCE_PATH "${PROJECT_SOURCE_DIR}/src/utilities/controllers/DISCON.c")
 add_library(DISCON SHARED ${SOURCE_PATH})
