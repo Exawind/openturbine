@@ -2,33 +2,34 @@
 
 #include "test_utilities.hpp"
 
+#include "src/utilities/controllers/discon_cpp.h"
 #include "src/utilities/dylib.hpp"
 
 namespace openturbine::restruct_poc::tests {
 
 TEST(ControllerTest, ClampFunction) {
     // Use dylib to load the dynamic library and get access to the controller functions
-    util::dylib lib("./", "DISCON");
-    auto clamp = lib.get_function<float(float, float, float)>("clamp");
+    // util::dylib lib("./", "DISCON");
+    // auto clamp = lib.get_function<float(float, float, float)>("clamp");
 
     // test case 1: v is less than v_min
     float v = 1.0;
     float v_min = 2.0;
     float v_max = 3.0;
     float expected = 2.0;
-    float actual = clamp(v, v_min, v_max);
+    auto actual = openturbine::util::clamp<float>(v, v_min, v_max);
     EXPECT_FLOAT_EQ(expected, actual);
 
     // test case 2: v is greater than v_max
     v = 4.0;
     expected = 3.0;
-    actual = clamp(v, v_min, v_max);
+    actual = util::clamp<float>(v, v_min, v_max);
     EXPECT_FLOAT_EQ(expected, actual);
 
     // test case 3: v is between v_min and v_max
     v = 2.5;
     expected = 2.5;
-    actual = clamp(v, v_min, v_max);
+    actual = util::clamp<float>(v, v_min, v_max);
     EXPECT_FLOAT_EQ(expected, actual);
 }
 
@@ -39,8 +40,8 @@ TEST(ControllerTest, DisconController) {
     // at time = 0.0s
 
     // Use dylib to load the dynamic library and get access to the controller functions
-    util::dylib lib("./", "DISCON");
-    auto DISCON = lib.get_function<void(float*, int&, char*, char*, char*)>("DISCON");
+    // util::dylib lib("./", "DISCON");
+    // auto DISCON = lib.get_function<void(float*, int&, char*, char*, char*)>("DISCON");
 
     float avrSWAP[81] = {0.};
     avrSWAP[0] = 0.;           // Status
@@ -78,7 +79,11 @@ TEST(ControllerTest, DisconController) {
     char in_file[] = "in_file";
     char out_name[] = "out_name";
     char msg[] = "msg";
-    DISCON(avrSWAP, aviFAIL, in_file, out_name, msg);
+    // void DISCON(
+    //     SwapStruct& avrSWAP, int& aviFAIL, const char* accINFILE, const char* avcOUTNAME,
+    //     const char* avcMSG
+    // );
+    openturbine::util::DISCON(avrSWAP, aviFAIL, in_file, out_name, msg);
 
     EXPECT_FLOAT_EQ(avrSWAP[34], 1.);          // GeneratorContactorStatus
     EXPECT_FLOAT_EQ(avrSWAP[35], 0.);          // ShaftBrakeStatus
