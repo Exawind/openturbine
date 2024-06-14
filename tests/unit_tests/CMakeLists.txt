@@ -38,9 +38,6 @@ target_link_libraries(${oturb_unit_test_exe_name} PRIVATE
     Kokkos::kokkoskernels
 )
 
-# Fetch dylib
-target_link_libraries(${oturb_unit_test_exe_name} PRIVATE dylib)
-
 # Link VTK to test target
 if (OTURB_ENABLE_VTK)
   target_link_libraries(${oturb_unit_test_exe_name} PRIVATE
