@@ -30,10 +30,10 @@ void DISCON(
 
     // A status flag set by the simulation as follows: 0 if this is the first call, 1 for all
     // subsequent time steps, -1 if this is the final call at the end of the simulation
-    int status = static_cast<int>(swap->Status);
+    int status = static_cast<int>(swap->status);
 
     // Number of blades, (-)
-    int num_blades = static_cast<int>(swap->NumBl);
+    int num_blades = static_cast<int>(swap->n_blades);
 
     // Initialize aviFAIL to 0
     aviFAIL = 0;
@@ -52,7 +52,7 @@ void DISCON(
             "5MW baseline wind turbine from DISCON.dll as written by J. "
             "Jonkman of NREL/NWTC for use in the IEA Annex XXIII OC3 "
             "studies.",
-            swap->msg_size
+            swap->message_array_size
         );
 
         // Determine some torque control parameters not specified directly
@@ -82,69 +82,97 @@ void DISCON(
 
         if (kCornerFreq <= 0.0) {
             strncpy(
-                const_cast<char*>(avcMSG), "CornerFreq must be greater than zero.", swap->msg_size
+                const_cast<char*>(avcMSG), "CornerFreq must be greater than zero.",
+                swap->message_array_size
             );
         } else if (kVS_DT <= 0.0) {
-            strncpy(const_cast<char*>(avcMSG), "VS_DT must be greater than zero.", swap->msg_size);
+            strncpy(
+                const_cast<char*>(avcMSG), "VS_DT must be greater than zero.",
+                swap->message_array_size
+            );
         } else if (kVS_CtInSp < 0.0) {
-            strncpy(const_cast<char*>(avcMSG), "VS_CtInSp must not be negative.", swap->msg_size);
+            strncpy(
+                const_cast<char*>(avcMSG), "VS_CtInSp must not be negative.",
+                swap->message_array_size
+            );
         } else if (kVS_Rgn2Sp <= kVS_CtInSp) {
             strncpy(
                 const_cast<char*>(avcMSG), "VS_Rgn2Sp must be greater than VS_CtInSp.",
-                swap->msg_size
+                swap->message_array_size
             );
         } else if (state.VS_generator_speed_trans < kVS_Rgn2Sp) {
             strncpy(
                 const_cast<char*>(avcMSG),
-                "VS_generator_speed_trans must not be less than VS_Rgn2Sp.", swap->msg_size
+                "VS_generator_speed_trans must not be less than VS_Rgn2Sp.", swap->message_array_size
             );
         } else if (kVS_SlPc <= 0.0) {
-            strncpy(const_cast<char*>(avcMSG), "VS_SlPc must be greater than zero.", swap->msg_size);
+            strncpy(
+                const_cast<char*>(avcMSG), "VS_SlPc must be greater than zero.",
+                swap->message_array_size
+            );
         } else if (kVS_MaxRat <= 0.0) {
             strncpy(
-                const_cast<char*>(avcMSG), "VS_MaxRat must be greater than zero.", swap->msg_size
+                const_cast<char*>(avcMSG), "VS_MaxRat must be greater than zero.",
+                swap->message_array_size
             );
         } else if (kVS_RtPwr < 0.0) {
-            strncpy(const_cast<char*>(avcMSG), "VS_RtPwr must not be negative.", swap->msg_size);
+            strncpy(
+                const_cast<char*>(avcMSG), "VS_RtPwr must not be negative.", swap->message_array_size
+            );
         } else if (kVS_Rgn2K < 0.0) {
-            strncpy(const_cast<char*>(avcMSG), "VS_Rgn2K must not be negative.", swap->msg_size);
+            strncpy(
+                const_cast<char*>(avcMSG), "VS_Rgn2K must not be negative.", swap->message_array_size
+            );
         } else if (kVS_Rgn2K * kVS_RtGnSp * kVS_RtGnSp > kVS_RtPwr / kVS_RtGnSp) {
             strncpy(
                 const_cast<char*>(avcMSG),
-                "VS_Rgn2K*VS_RtGnSp^2 must not be greater than VS_RtPwr/VS_RtGnSp.", swap->msg_size
+                "VS_Rgn2K*VS_RtGnSp^2 must not be greater than VS_RtPwr/VS_RtGnSp.",
+                swap->message_array_size
             );
         } else if (kVS_MaxTq < kVS_RtPwr / kVS_RtGnSp) {
             strncpy(
                 const_cast<char*>(avcMSG), "VS_RtPwr/VS_RtGnSp must not be greater than VS_MaxTq.",
-                swap->msg_size
+                swap->message_array_size
             );
         } else if (kPC_DT <= 0.0) {
-            strncpy(const_cast<char*>(avcMSG), "PC_DT must be greater than zero.", swap->msg_size);
+            strncpy(
+                const_cast<char*>(avcMSG), "PC_DT must be greater than zero.",
+                swap->message_array_size
+            );
         } else if (kPC_KI <= 0.0) {
-            strncpy(const_cast<char*>(avcMSG), "PC_KI must be greater than zero.", swap->msg_size);
+            strncpy(
+                const_cast<char*>(avcMSG), "PC_KI must be greater than zero.",
+                swap->message_array_size
+            );
         } else if (kPC_KK <= 0.0) {
-            strncpy(const_cast<char*>(avcMSG), "PC_KK must be greater than zero.", swap->msg_size);
+            strncpy(
+                const_cast<char*>(avcMSG), "PC_KK must be greater than zero.",
+                swap->message_array_size
+            );
         } else if (kPC_RefSpd <= 0.0) {
             strncpy(
-                const_cast<char*>(avcMSG), "PC_RefSpd must be greater than zero.", swap->msg_size
+                const_cast<char*>(avcMSG), "PC_RefSpd must be greater than zero.",
+                swap->message_array_size
             );
         } else if (kPC_MaxRat <= 0.0) {
             strncpy(
-                const_cast<char*>(avcMSG), "PC_MaxRat must be greater than zero.", swap->msg_size
+                const_cast<char*>(avcMSG), "PC_MaxRat must be greater than zero.",
+                swap->message_array_size
             );
         } else if (kPC_MinPit >= kPC_MaxPit) {
             strncpy(
-                const_cast<char*>(avcMSG), "PC_MinPit must be less than PC_MaxPit.", swap->msg_size
+                const_cast<char*>(avcMSG), "PC_MinPit must be less than PC_MaxPit.",
+                swap->message_array_size
             );
         } else {
             aviFAIL = 0;
-            memset(const_cast<char*>(avcMSG), 0, swap->msg_size);
+            memset(const_cast<char*>(avcMSG), 0, swap->message_array_size);
         }
 
         // If we're debugging the pitch controller, open the debug file and write the header
         if (PC_DbgOut) {
             // Allocate memory to store log file paths
-            int str_size = swap->outname_size + 7;
+            int str_size = swap->outname_array_size + 7;
             std::unique_ptr<char[]> file_path(new char[str_size]);
 
             // Open primary debug file
@@ -160,11 +188,11 @@ void DISCON(
                 fp_log,
                 "%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t"
                 "%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\t%11s\n",
-                "Time", "ElapsedTime", "HorWindV", "GenSpeed", "generator_speed_filtered",
-                "RelSpdErr", "SpdErr", "integral_speed_error", "GK", "pitch_commanded_latestP",
-                "pitch_commanded_latestI", "pitch_commanded_latestT", "PitchRate1", "PitchRate2",
-                "PitchRate3", "pitch_commanded_latest1", "pitch_commanded_latest2",
-                "pitch_commanded_latest3", "BlPitch1", "BlPitch2", "BlPitch3"
+                "Time", "ElapsedTime", "horizontal_wind_speed", "generator_speed",
+                "generator_speed_filtered", "RelSpdErr", "SpdErr", "integral_speed_error", "GK",
+                "pitch_commanded_latestP", "pitch_commanded_latestI", "pitch_commanded_latestT",
+                "PitchRate1", "PitchRate2", "PitchRate3", "pitch_command_1", "pitch_command_2",
+                "pitch_command_3", "pitch_blade1", "pitch_blade2", "pitch_blade3"
             );
             fprintf(
                 fp_log,
@@ -192,13 +220,13 @@ void DISCON(
         // --------------------------------------------------------------------------------------------
         // This will ensure that generator speed filter will use the initial value of the
         // generator speed on the first pass
-        state.generator_speed_filtered = swap->GenSpeed;
+        state.generator_speed_filtered = swap->generator_speed;
 
         // This will ensure that the variable speed controller picks the correct control region
         // and the pitch controller picks the correct gain on the first call
-        state.pitch_commanded_latest[0] = swap->BlPitch1;
-        state.pitch_commanded_latest[1] = swap->BlPitch2;
-        state.pitch_commanded_latest[2] = swap->BlPitch3;
+        state.pitch_commanded_latest[0] = swap->pitch_blade1;
+        state.pitch_commanded_latest[1] = swap->pitch_blade2;
+        state.pitch_commanded_latest[2] = swap->pitch_blade3;
 
         // This will ensure that the pitch angle is unchanged if the initial SpdErr is zero
         float GK = 1.0 / (1.0 + state.pitch_commanded_latest[0] / kPC_KK);
@@ -208,13 +236,13 @@ void DISCON(
 
         // This will ensure that generator speed filter will use the initial value of the
         // generator speed on the first pass
-        state.time_latest = swap->Time;
+        state.time_latest = swap->time;
 
         // This will ensure that the pitch controller is called on the first pass
-        state.pitch_controller_latest = swap->Time - kPC_DT;
+        state.pitch_controller_latest = swap->time - kPC_DT;
 
         // This will ensure that the torque controller is called on the first pass
-        state.torque_controller_latest = swap->Time - kVS_DT;
+        state.torque_controller_latest = swap->time - kVS_DT;
     }
 
     //--------------------------------------------------------------------------
@@ -226,23 +254,24 @@ void DISCON(
     if (status >= 0 && aviFAIL >= 0) {
         // Abort if the user has not requested a pitch angle actuator (See Appendix A of Bladed
         // User's Guide)
-        if (static_cast<int>(swap->PitchAngleActuatorReq) != 0) {
+        if (static_cast<int>(swap->pitch_angle_actuator_req) != 0) {
             aviFAIL = -1;
             strncpy(
-                const_cast<char*>(avcMSG), "Pitch angle actuator not requested.", swap->msg_size
+                const_cast<char*>(avcMSG), "Pitch angle actuator not requested.",
+                swap->message_array_size
             );
         }
 
         // Set unused outputs to zero (See Appendix A of Bladed User's Guide):
-        swap->ShaftBrakeStatus = 0.;           // Shaft brake status: 0=off
-        swap->DemandedYawActuatorTorque = 0.;  // Demanded yaw actuator torque
-        swap->DemandedPitchRate = 0.;          // Demanded pitch rate (Collective pitch)
-        swap->DemandedNacelleYawRate = 0.;     // Demanded nacelle yaw rate
-        swap->NumVar = 0.;                     // Number of variables returned for logging
-        swap->GeneratorStartResistance = 0.;   // Generator start-up resistance
-        swap->LoadsReq = 0.;                   // Request for loads: 0=none
-        swap->VariableSlipStatus = 0.;         // Variable slip current status
-        swap->VariableSlipDemand = 0.;         // Variable slip current demand
+        swap->shaft_brake_status = 0.;            // Shaft brake status: 0=off
+        swap->demanded_yaw_actuator_torque = 0.;  // Demanded yaw actuator torque
+        swap->demanded_pitch_rate = 0.;           // Demanded pitch rate (Collective pitch)
+        swap->demanded_nacelle_yaw_rate = 0.;     // Demanded nacelle yaw rate
+        swap->n_log_variables = 0.;               // Number of variables returned for logging
+        swap->generator_startup_resistance = 0.;  // Generator start-up resistance
+        swap->loads_request = 0.;                 // Request for loads: 0=none
+        swap->variable_slip_status = 0.;          // Variable slip current status
+        swap->variable_slip_demand = 0.;          // Variable slip current demand
 
         //======================================================================
         // Filter the HSS (generator) speed measurement
@@ -251,17 +280,17 @@ void DISCON(
 
         // Update the coefficient in the recursive formula based on the elapsed time since the
         // last call to the controller
-        alpha = exp((state.time_latest - swap->Time) * kCornerFreq);
+        alpha = exp((state.time_latest - swap->time) * kCornerFreq);
 
         // Apply the filter
         state.generator_speed_filtered =
-            (1. - alpha) * swap->GenSpeed + alpha * state.generator_speed_filtered;
+            (1. - alpha) * swap->generator_speed + alpha * state.generator_speed_filtered;
 
         // ==========================================================================
         // Variable-speed torque control
 
         // Compute the elapsed time since the last call to the controller
-        float elapsed_time = swap->Time - state.torque_controller_latest;
+        float elapsed_time = swap->time - state.torque_controller_latest;
 
         // Only perform the control calculations if the elapsed time is greater than or equal to
         // the communication interval of the torque controller NOTE: Time is scaled by OnePlusEps
@@ -270,7 +299,7 @@ void DISCON(
 
         float gen_trq;  // Electrical generator torque, N-m
 
-        if ((swap->Time * kOnePlusEps - state.torque_controller_latest) >= kVS_DT) {
+        if ((swap->time * kOnePlusEps - state.torque_controller_latest) >= kVS_DT) {
             // Compute the generator torque, which depends on which region we are in
             if ((state.generator_speed_filtered >= kVS_RtGnSp) ||
                 (state.pitch_commanded_latest[0] >= kVS_Rgn3MP)) {
@@ -314,7 +343,7 @@ void DISCON(
 
             // Reset the values of torque_controller_latest and generator_torque_lastest to the
             // current values
-            state.torque_controller_latest = swap->Time;
+            state.torque_controller_latest = swap->time;
             state.generator_torque_lastest = gen_trq;
         }
 
@@ -322,23 +351,24 @@ void DISCON(
         //   variable-speed generator, the torque override to yes, and command the
         //   generator torque (See Appendix A of Bladed User's Guide):
 
-        swap->GeneratorContactorStatus =
+        swap->generator_contactor_status =
             1.0;  // Generator contactor status: 1=main (high speed) variable-speed generator
-        swap->TorqueOverride = 0.0;                                      // Torque override: 0=yes
-        swap->DemandedGeneratorTorque = state.generator_torque_lastest;  // Demanded generator torque
+        swap->torque_override = 0.0;  // Torque override: 0=yes
+        swap->demanded_generator_torque =
+            state.generator_torque_lastest;  // Demanded generator torque
 
         //======================================================================
 
         // Pitch control:
 
         // Compute the elapsed time since the last call to the controller:
-        elapsed_time = swap->Time - state.pitch_controller_latest;
+        elapsed_time = swap->time - state.pitch_controller_latest;
 
         // Only perform the control calculations if the elapsed time is greater than or equal to
         // the communication interval of the pitch controller NOTE: Time is scaled by OnePlusEps
         // to ensure that the contoller is called at every time step when PC_DT = DT, even in the
         // presence of numerical precision errors
-        if ((swap->Time * kOnePlusEps - state.pitch_controller_latest) >= kPC_DT) {
+        if ((swap->time * kOnePlusEps - state.pitch_controller_latest) >= kPC_DT) {
             // Current value of the gain correction factor, used in the gain
             // scheduling law of the pitch controller, (-).
             // Based on the previously commanded pitch angle for blade 1:
@@ -370,7 +400,7 @@ void DISCON(
             //       blade.
 
             // Current values of the blade pitch angles, rad
-            float blade_pitch[3] = {swap->BlPitch1, swap->BlPitch2, swap->BlPitch3};
+            float blade_pitch[3] = {swap->pitch_blade1, swap->pitch_blade2, swap->pitch_blade3};
 
             // Pitch rates of each blade based on the current pitch angles and current pitch
             // command, rad/s
@@ -390,7 +420,7 @@ void DISCON(
             }
 
             // Reset the value of pitch_controller_latest to the current value
-            state.pitch_controller_latest = swap->Time;
+            state.pitch_controller_latest = swap->time;
 
             // Output debugging information if requested:
             if (PC_DbgOut) {
@@ -400,11 +430,11 @@ void DISCON(
                     "%11.4e\t%11.4e\t%11.4e\t%11.4e\t%11.4e\t%11.4e\t"
                     "%11.4e\t%11.4e\t%11.4e\t%11.4e\t%11.4e\t%11.4e\t"
                     "%11.4e\t%11.4e\t%11.4e\n",
-                    swap->Time, elapsed_time, swap->HorWindV, swap->GenSpeed * kRPS2RPM,
-                    state.generator_speed_filtered * kRPS2RPM, 100.0 * speed_error / kPC_RefSpd,
-                    speed_error, state.integral_speed_error, GK, pitch_com_proportional * kR2D,
-                    pitch_com_integral * kR2D, pitch_com_total * kR2D, pitch_rate[0] * kR2D,
-                    pitch_rate[1] * kR2D, pitch_rate[2] * kR2D,
+                    swap->time, elapsed_time, swap->horizontal_wind_speed,
+                    swap->generator_speed * kRPS2RPM, state.generator_speed_filtered * kRPS2RPM,
+                    100.0 * speed_error / kPC_RefSpd, speed_error, state.integral_speed_error, GK,
+                    pitch_com_proportional * kR2D, pitch_com_integral * kR2D, pitch_com_total * kR2D,
+                    pitch_rate[0] * kR2D, pitch_rate[1] * kR2D, pitch_rate[2] * kR2D,
                     state.pitch_commanded_latest[0] * kR2D, state.pitch_commanded_latest[1] * kR2D,
                     state.pitch_commanded_latest[2] * kR2D, blade_pitch[0] * kR2D,
                     blade_pitch[1] * kR2D, blade_pitch[2] * kR2D
@@ -414,20 +444,19 @@ void DISCON(
 
         // Set the pitch override to yes and command the pitch demanded from the last
         // call to the controller (See Appendix A of Bladed User's Guide):
-        swap->PitchOverride = 0.;  // Pitch override: 0=yes
+        swap->pitch_override = 0.;  // Pitch override: 0=yes
 
-        swap->pitch_commanded_latest1 =
-            state.pitch_commanded_latest[0];  // Use the command angles of all blades
-                                              // if using individual pitch
-        swap->pitch_commanded_latest2 = state.pitch_commanded_latest[1];  // "
-        swap->pitch_commanded_latest3 = state.pitch_commanded_latest[2];  // "
+        swap->pitch_command_1 = state.pitch_commanded_latest[0];  // Use the command angles of all
+                                                                  // blades if using individual pitch
+        swap->pitch_command_2 = state.pitch_commanded_latest[1];  // "
+        swap->pitch_command_3 = state.pitch_commanded_latest[2];  // "
 
-        swap->pitch_commanded_latestCol =
+        swap->pitch_command_collective =
             state.pitch_commanded_latest[0];  // Use the command angle of blade 1 if using collective
                                               // pitch
 
         if (PC_DbgOut) {
-            fprintf(fp_csv, "\n%11.6f", swap->Time);
+            fprintf(fp_csv, "\n%11.6f", swap->time);
             for (int i = 0; i < 85; i++) {
                 fprintf(fp_csv, "\t%11.4e", avrSWAP[i]);
             }
@@ -436,7 +465,7 @@ void DISCON(
         //======================================================================
 
         // Reset the value of time_latest to the current value:
-        state.time_latest = swap->Time;
+        state.time_latest = swap->time;
     } else if (status == -8) {
         // Pack internal state to file
         FILE* fp = fopen(accINFILE, "wb");
@@ -445,7 +474,7 @@ void DISCON(
             fclose(fp);
         } else {
             snprintf(
-                const_cast<char*>(avcMSG), swap->msg_size,
+                const_cast<char*>(avcMSG), swap->message_array_size,
                 "Cannot open file \"%s\". Another program may have locked it for writing", accINFILE
             );
             aviFAIL = -1;
@@ -458,7 +487,7 @@ void DISCON(
             fclose(fp);
         } else {
             snprintf(
-                const_cast<char*>(avcMSG), swap->msg_size,
+                const_cast<char*>(avcMSG), swap->message_array_size,
                 "Cannot open file \"%s\" for reading. Another program may have locked it.", accINFILE
             );
             aviFAIL = -1;
