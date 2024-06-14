@@ -9,7 +9,6 @@ target_sources(
     PRIVATE
     utest_main.cpp
     test_config.cpp
-    ../../src/utilities/controllers/discon.c
 )
 
 target_compile_options(
