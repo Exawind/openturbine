@@ -3,7 +3,7 @@
 #include "test_utilities.hpp"
 
 #include "src/utilities/controllers/discon.h"
-#include "src/utilities/dylib.hpp"
+#include "src/vendor/dylib/dylib.hpp"
 
 namespace openturbine::restruct_poc::tests {
 
