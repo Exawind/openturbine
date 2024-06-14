@@ -424,7 +424,7 @@ void DISCON(
         // Pack internal state to file
         FILE* fp = fopen(accINFILE, "wb");
         if (fp) {
-            fwrite(&state, sizeof(state), 1, fp);
+            [[maybe_unused]] auto f = fwrite(&state, sizeof(state), 1, fp);
             fclose(fp);
         } else {
             snprintf(
@@ -437,7 +437,7 @@ void DISCON(
         // Unpack internal state from file
         FILE* fp = fopen(accINFILE, "rb");
         if (fp) {
-            fread(&state, sizeof(state), 1, fp);
+            [[maybe_unused]] auto f = fread(&state, sizeof(state), 1, fp);
             fclose(fp);
         } else {
             snprintf(
