@@ -216,6 +216,6 @@ install(
   DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
-# Build DISCON.c into a shared library
-# set(SOURCE_PATH "${PROJECT_SOURCE_DIR}/src/utilities/controllers/discon.c")
-# add_library(DISCON SHARED ${SOURCE_PATH})
+# Build DISCON.cpp into a shared library
+set(SOURCE_PATH "${PROJECT_SOURCE_DIR}/src/utilities/controllers/discon.cpp")
+add_library(DISCON SHARED ${SOURCE_PATH})
