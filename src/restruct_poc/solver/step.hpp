@@ -1,5 +1,6 @@
 #pragma once
 
+#include <KokkosSparse.hpp>
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
@@ -45,7 +46,7 @@ inline bool Step(Solver& solver, Beams& beams) {
 
         AssembleSystem(solver, beams, St_11, R_system);
 
-        AssembleConstraints(solver, St_12, St_21, R_system, R_lambda);
+        AssembleConstraints(solver, beams, St_12, St_21, R_system, R_lambda);
 
         SolveSystem(solver);
 

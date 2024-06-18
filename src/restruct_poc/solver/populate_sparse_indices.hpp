@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Kokkos_Core.hpp>
 
 #include "src/restruct_poc/beams/beams.hpp"

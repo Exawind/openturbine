@@ -1,3 +1,5 @@
+#pragma once
+
 #include <KokkosSparse.hpp>
 #include <Kokkos_Core.hpp>
 

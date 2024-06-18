@@ -145,7 +145,7 @@ protected:
 
         AssembleSystem(*solver_, *beams_, St_11, R_system);
 
-        AssembleConstraints(*solver_, St_12, St_21, R_system, R_lambda);
+        AssembleConstraints(*solver_, *beams_, St_12, St_21, R_system, R_lambda);
     }
 
     // Per-test-suite tear-down.
