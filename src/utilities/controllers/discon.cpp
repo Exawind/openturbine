@@ -1,8 +1,10 @@
-#include "src/utilities/controllers/discon.h"
+#include "discon.h"
 
 #include <memory>
 
 namespace openturbine::util {
+
+extern "C" {
 
 // TODO This is a quick and dirty conversion of the DISCON function from the original C code to
 // C++. It needs to be refactored to be more idiomatic C++.
@@ -334,7 +336,7 @@ void DISCON(
 
             // Torque rate based on the current and last torque commands, N-m/s
             // Saturate the torque rate using its maximum absolute value
-            float trq_rate = clamp<float>(
+            float trq_rate = clamp(
                 (gen_trq - state.generator_torque_lastest) / elapsed_time, -kVS_MaxRat, kVS_MaxRat
             );
 
@@ -378,7 +380,7 @@ void DISCON(
             // integral term using the pitch angle limits
             float speed_error = state.generator_speed_filtered - kPC_RefSpd;
             state.integral_speed_error += speed_error * elapsed_time;
-            state.integral_speed_error = clamp<float>(
+            state.integral_speed_error = clamp(
                 state.integral_speed_error, kPC_MinPit / (kOnePlusEps * kPC_KI),
                 kPC_MaxPit / (kOnePlusEps * kPC_KI)
             );
@@ -390,7 +392,7 @@ void DISCON(
             // Superimpose the individual commands to get the total pitch command; saturate the
             // overall command using the pitch angle limits
             pitch_com_total =
-                clamp<float>(pitch_com_proportional + pitch_com_integral, kPC_MinPit, kPC_MaxPit);
+                clamp(pitch_com_proportional + pitch_com_integral, kPC_MinPit, kPC_MaxPit);
 
             // Saturate the overall commanded pitch using the pitch rate limit:
             // NOTE: Since the current pitch angle may be different for each blade
@@ -411,12 +413,12 @@ void DISCON(
                 // Pitch rate of blade K (unsaturated)
                 pitch_rate[k] = (pitch_com_total - blade_pitch[k]) / elapsed_time;
                 // Saturate the pitch rate of blade K using its maximum absolute value
-                pitch_rate[k] = clamp<float>(pitch_rate[k], -kPC_MaxRat, kPC_MaxRat);
+                pitch_rate[k] = clamp(pitch_rate[k], -kPC_MaxRat, kPC_MaxRat);
                 // Saturate the overall command of blade K using the pitch rate limit
                 state.pitch_commanded_latest[k] = blade_pitch[k] + pitch_rate[k] * elapsed_time;
                 // Saturate the overall command using the pitch angle limits
                 state.pitch_commanded_latest[k] =
-                    clamp<float>(state.pitch_commanded_latest[k], kPC_MinPit, kPC_MaxPit);
+                    clamp(state.pitch_commanded_latest[k], kPC_MinPit, kPC_MaxPit);
             }
 
             // Reset the value of pitch_controller_latest to the current value
@@ -494,5 +496,7 @@ void DISCON(
         }
     }
 }
+
+}  // extern "C"
 
 }  // namespace openturbine::util

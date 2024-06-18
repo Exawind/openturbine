@@ -8,6 +8,8 @@
 
 namespace openturbine::util {
 
+extern "C" {
+
 #define PC_DbgOut 0  // Flag to indicate whether to output debugging information (0=Off)
 
 // Define some constants
@@ -175,10 +177,8 @@ struct InternalState {
                                       // 2 and 2 1/2, rad/s. 1/2, rad/s
 };
 
-// float clamp(float v, float v_min, float v_max);
-
-template <typename T>
-T clamp(T v, T v_min, T v_max) {
+/// @brief This function is used to clamp a value between a minimum and maximum value
+float clamp(float v, float v_min, float v_max) {
     return v < v_min ? v_min : (v > v_max ? v_max : v);
 }
 
@@ -201,5 +201,7 @@ T clamp(T v, T v_min, T v_max) {
 void DISCON(
     float avrSWAP[], int aviFAIL, const char* accINFILE, const char* avcOUTNAME, const char* avcMSG
 );
+
+}  // extern "C"
 
 }  // namespace openturbine::util
