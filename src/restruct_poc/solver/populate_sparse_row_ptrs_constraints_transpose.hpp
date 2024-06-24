@@ -11,7 +11,7 @@ struct PopulateSparseRowPtrs_Constraints_Transpose {
     int num_constraint_nodes;
     int num_system_nodes;
     Kokkos::View<Constraints::NodeIndices*> node_indices;
-    Kokkos::View<int*> B_row_ptrs;
+    Kokkos::View<unsigned*> B_row_ptrs;
 
     KOKKOS_FUNCTION
     void operator()(int) const {

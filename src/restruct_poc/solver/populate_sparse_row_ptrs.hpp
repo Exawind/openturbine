@@ -7,7 +7,7 @@
 namespace openturbine {
 struct PopulateSparseRowPtrs {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
-    Kokkos::View<int*> row_ptrs;
+    Kokkos::View<unsigned*> row_ptrs;
 
     KOKKOS_FUNCTION
     void operator()(int) const {

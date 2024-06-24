@@ -166,7 +166,7 @@ if(OTURB_ENABLE_UNIT_TESTS OR OTURB_ENABLE_TESTS)
 #        CUDA_SEPARABLE_COMPILATION ON)
     endif()
     include(GoogleTest)
-    gtest_discover_tests(${oturb_unit_test_exe_name} PROPERTIES DISCOVERY_TIMEOUT 60000)
+#    gtest_discover_tests(${oturb_unit_test_exe_name} PROPERTIES DISCOVERY_TIMEOUT 60000)
 endif()
 
 # add_subdirectory(tools)

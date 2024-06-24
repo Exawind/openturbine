@@ -5,9 +5,9 @@
 namespace openturbine {
 
 struct FillUnshiftedRowPtrs {
-    Kokkos::View<int*> new_row_ptrs;
+    Kokkos::View<unsigned*> new_row_ptrs;
     int num_system_dofs;
-    Kokkos::View<const int*> old_row_ptrs;
+    Kokkos::View<const unsigned*> old_row_ptrs;
 
     KOKKOS_FUNCTION
     void operator()(int i) const {

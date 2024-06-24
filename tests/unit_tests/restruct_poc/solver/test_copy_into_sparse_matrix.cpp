@@ -17,9 +17,9 @@ auto createDenseMatrix_1x1() {
 }
 
 auto createRowPtrs_1x1() {
-    auto row_ptrs = Kokkos::View<int[2]>("row_ptrs");
-    auto row_ptrs_host_data = std::array{0, 1};
-    auto row_ptrs_host = Kokkos::View<int[2], Kokkos::HostSpace>(row_ptrs_host_data.data());
+    auto row_ptrs = Kokkos::View<unsigned[2]>("row_ptrs");
+    auto row_ptrs_host_data = std::array{0u, 1u};
+    auto row_ptrs_host = Kokkos::View<unsigned[2], Kokkos::HostSpace>(row_ptrs_host_data.data());
     Kokkos::deep_copy(row_ptrs, row_ptrs_host);
     return row_ptrs;
 }
@@ -27,7 +27,7 @@ auto createRowPtrs_1x1() {
 TEST(CopyIntoSparseMatrix, SingleEntry) {
     using device_type =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    using crs_matrix_type = KokkosSparse::CrsMatrix<double, int, device_type, void, int>;
+    using crs_matrix_type = KokkosSparse::CrsMatrix<double, int, device_type>;
 
     constexpr auto num_rows = 1;
     constexpr auto num_columns = 1;
@@ -66,9 +66,9 @@ auto createDenseMatrix_3x3() {
 }
 
 auto createRowPtrs_3x3() {
-    auto row_ptrs = Kokkos::View<int[4]>("row_ptrs");
-    auto row_ptrs_host_data = std::array{0, 1, 2, 3};
-    auto row_ptrs_host = Kokkos::View<int[4], Kokkos::HostSpace>(row_ptrs_host_data.data());
+    auto row_ptrs = Kokkos::View<unsigned[4]>("row_ptrs");
+    auto row_ptrs_host_data = std::array{0u, 1u, 2u, 3u};
+    auto row_ptrs_host = Kokkos::View<unsigned[4], Kokkos::HostSpace>(row_ptrs_host_data.data());
     Kokkos::deep_copy(row_ptrs, row_ptrs_host);
     return row_ptrs;
 }
@@ -84,7 +84,7 @@ auto createIndices_3x3() {
 TEST(CopyIntoSparseMatrix, Diagonal) {
     using device_type =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    using crs_matrix_type = KokkosSparse::CrsMatrix<double, int, device_type, void, int>;
+    using crs_matrix_type = KokkosSparse::CrsMatrix<double, int, device_type>;
 
     constexpr auto num_rows = 3;
     constexpr auto num_columns = 3;
@@ -126,9 +126,9 @@ auto createDenseMatrix_5x5() {
 }
 
 auto createRowPtrs_5x5() {
-    auto row_ptrs = Kokkos::View<int[6]>("row_ptrs");
-    auto row_ptrs_host_data = std::array{0, 3, 6, 9, 11, 13};
-    auto row_ptrs_host = Kokkos::View<int[6], Kokkos::HostSpace>(row_ptrs_host_data.data());
+    auto row_ptrs = Kokkos::View<unsigned[6]>("row_ptrs");
+    auto row_ptrs_host_data = std::array{0u, 3u, 6u, 9u, 11u, 13u};
+    auto row_ptrs_host = Kokkos::View<unsigned[6], Kokkos::HostSpace>(row_ptrs_host_data.data());
     Kokkos::deep_copy(row_ptrs, row_ptrs_host);
     return row_ptrs;
 }
@@ -144,7 +144,7 @@ auto createIndices_5x5() {
 TEST(CopyIntoSparseMatrix, Block) {
     using device_type =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    using crs_matrix_type = KokkosSparse::CrsMatrix<double, int, device_type, void, int>;
+    using crs_matrix_type = KokkosSparse::CrsMatrix<double, int, device_type>;
 
     constexpr auto num_rows = 5;
     constexpr auto num_columns = 5;

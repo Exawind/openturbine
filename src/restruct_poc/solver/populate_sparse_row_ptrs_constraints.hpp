@@ -7,7 +7,7 @@
 namespace openturbine {
 struct PopulateSparseRowPtrs_Constraints {
     int num_constraint_nodes;
-    Kokkos::View<int*> B_row_ptrs;
+    Kokkos::View<unsigned*> B_row_ptrs;
 
     KOKKOS_FUNCTION
     void operator()(int) const {
