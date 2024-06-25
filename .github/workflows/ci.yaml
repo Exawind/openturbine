@@ -36,60 +36,68 @@ jobs:
     - name: Install dependencies
       run: |
         ${{matrix.install_deps}}
-    - name: Cache install Kokkos
-      id: cache-kokkos
-      uses: actions/cache@v3
-      with:
-        path: ~/dependencies/kokkos
-        key: ${{runner.os}}-kokkos
-    - name: Install Kokkos
-      if: steps.cache-kokkos.outputs.cache-hit != 'true'
+    - name: Install Trilinos
       run: |
-        sudo mkdir -p ~/dependencies/kokkos
-        git clone --depth 1 --branch develop https://github.com/kokkos/kokkos
-        cd kokkos
-        mkdir build
-        cd build
-        cmake .. \
-          -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DKokkos_ENABLE_DEBUG=${{ matrix.build_type == 'Debug' }} \
-          -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=${{ matrix.build_type == 'Debug' }}
-        sudo cmake --build . --target install
-    - name: Cache install Kokkos-Kernels
-      id: cache-kokkos-kernels
-      uses: actions/cache@v3
-      with:
-        path: ~/dependencies/kokkos_kernels
-        key: ${{runner.os}}-kokkos-kernels
-    - name: Install Kokkos-Kernels
-      if: steps.cache-kokkos-kernels.outputs.cache-hit != 'true'
-      run: |
-        sudo mkdir -p ~/dependencies/kokkos_kernels
-        export Kokkos_DIR=~/dependencies/kokkos
-        if [ ${{matrix.os}} = 'ubuntu-latest' ]; then
-          git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
-        fi
-        if [ ${{matrix.os}} = 'macos-13' ]; then
-          export FC=gfortran-13
-          git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
-        fi
-        cd kokkos-kernels
-        mkdir build
-        cd build
-        cmake ../ \
-          -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DKokkosKernels_ENABLE_TPL_BLAS=ON \
-          -DKokkosKernels_ENABLE_TPL_LAPACK=ON 
-        sudo cmake --build . --target install
+        sudo mkdir -p ~/dependencies/spack
+        git clone --depth 1 https://github.com/spack/spack.git
+        cd spack
+        source share/spack/setup-env.sh
+        spack install trilinos@master~mpi~epetra+basker
+    # - name: Cache install Kokkos
+    #   id: cache-kokkos
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: ~/dependencies/kokkos
+    #     key: ${{runner.os}}-kokkos
+    # - name: Install Kokkos
+    #   if: steps.cache-kokkos.outputs.cache-hit != 'true'
+    #   run: |
+    #     sudo mkdir -p ~/dependencies/kokkos
+    #     git clone --depth 1 --branch develop https://github.com/kokkos/kokkos
+    #     cd kokkos
+    #     mkdir build
+    #     cd build
+    #     cmake .. \
+    #       -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos \
+    #       -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+    #       -DKokkos_ENABLE_DEBUG=${{ matrix.build_type == 'Debug' }} \
+    #       -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=${{ matrix.build_type == 'Debug' }}
+    #     sudo cmake --build . --target install
+    # - name: Cache install Kokkos-Kernels
+    #   id: cache-kokkos-kernels
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: ~/dependencies/kokkos_kernels
+    #     key: ${{runner.os}}-kokkos-kernels
+    # - name: Install Kokkos-Kernels
+    #   if: steps.cache-kokkos-kernels.outputs.cache-hit != 'true'
+    #   run: |
+    #     sudo mkdir -p ~/dependencies/kokkos_kernels
+    #     export Kokkos_DIR=~/dependencies/kokkos
+    #     if [ ${{matrix.os}} = 'ubuntu-latest' ]; then
+    #       git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
+    #     fi
+    #     if [ ${{matrix.os}} = 'macos-13' ]; then
+    #       export FC=gfortran-13
+    #       git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
+    #     fi
+    #     cd kokkos-kernels
+    #     mkdir build
+    #     cd build
+    #     cmake ../ \
+    #       -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
+    #       -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+    #       -DKokkosKernels_ENABLE_TPL_BLAS=ON \
+    #       -DKokkosKernels_ENABLE_TPL_LAPACK=ON 
+    #     sudo cmake --build . --target install
     - name: Clone
       uses: actions/checkout@v4
       with:
         submodules: true
     - name: Test OpenTurbine
       run: |
-        export KokkosKernels_DIR=~/dependencies/kokkos_kernels
+        source ~/dependencies/spack/share/spack/setup-env.sh
+        spack load trilinos
         mkdir build
         cd build
         cmake .. \
@@ -101,19 +109,21 @@ jobs:
     - name: Run CppCheck
       if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'llvm'
       run: |
+        source ~/dependencies/spack/share/spack/setup-env.sh
+        spack load trilinos
         mkdir build-cppcheck
         cd build-cppcheck
         cmake .. \
           -DOTURB_ENABLE_TESTS:BOOL=ON \
           -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DKokkosKernels_DIR=/home/runner/dependencies/kokkos_kernels/lib/cmake/KokkosKernels/ \
           -DCMAKE_CXX_CPPCHECK="cppcheck;--enable=all;--error-exitcode=0;--suppress=missingInclude;--library=googletest"
         cmake --build . -j 1
     - name: Run Clang-Tidy
       if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'llvm'
       run: |
-        export KokkosKernels_DIR=~/dependencies/kokkos_kernels
+        source ~/dependencies/spack/share/spack/setup-env.sh
+        spack load trilinos
         mkdir build-clangtidy
         cd build-clangtidy
         cmake .. \

@@ -5,15 +5,8 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-// #include <Teuchos_ScalarTraits.hpp>
 #include <Teuchos_RCP.hpp>
-// #include <Teuchos_oblackholestream.hpp>
-// #include <Teuchos_Tuple.hpp>
-// #include <Teuchos_VerboseObject.hpp>
-// #include <Amesos2_KokkosMultiVecAdapter.hpp>
 #include <Amesos2.hpp>
-// #include <Amesos2_KokkosMatrixAdaptor.hpp>
-#include <Amesos2_Version.hpp>
 
 #include "condition_system.hpp"
 #include "fill_unshifted_row_ptrs.hpp"
@@ -110,17 +103,17 @@ inline void SolveSystem(Solver& solver) {
     );
 
     KokkosBlas::axpby(-1.0, solver.R, 0.0, solver.x);
-    using scalar_type = double;
-    using ordinal_type = CrsMatrixType::ordinal_type;
-    using size_type = CrsMatrixType::size_type;
-    using GlobalCrsMatrixType = Tpetra::CrsMatrix<scalar_type, ordinal_type, size_type>;
+    using GlobalCrsMatrixType = Tpetra::CrsMatrix<>;
+    using scalar_type = GlobalCrsMatrixType::scalar_type;
+    using ordinal_type = GlobalCrsMatrixType::local_ordinal_type;
+    using size_type = GlobalCrsMatrixType::global_ordinal_type;
     using GlobalRowPtrType = GlobalCrsMatrixType::local_graph_device_type::row_map_type::non_const_type;
     using GlobalIndicesType = GlobalCrsMatrixType::local_graph_device_type::entries_type::non_const_type;
     using GlobalValuesType = GlobalCrsMatrixType::local_matrix_device_type::values_type;
-    using GlobalMapType = Tpetra::Map<ordinal_type, size_type>;
+    using GlobalMapType = GlobalCrsMatrixType::map_type;
 
-    using DualViewType = Kokkos::DualView<scalar_type**, Kokkos::LayoutLeft>;
-    using GlobalMultiVectorType = Tpetra::MultiVector<scalar_type, ordinal_type, size_type>;
+    using GlobalMultiVectorType = Tpetra::MultiVector<>;
+    using DualViewType = GlobalMultiVectorType::dual_view_type;
 
     auto comm = Tpetra::getDefaultComm ();
 
@@ -186,9 +179,18 @@ inline void SolveSystem(Solver& solver) {
     {
       auto sparse_region = Kokkos::Profiling::ScopedRegion("Sparse Solver");  
       auto amesos_solver = Amesos2::create<GlobalCrsMatrixType, GlobalMultiVectorType>("Basker", Teuchos::rcpFromRef(A), Teuchos::rcpFromRef(x), Teuchos::rcpFromRef(b));
-      amesos_solver->symbolicFactorization();
-      amesos_solver->numericFactorization();
-      amesos_solver->solve();
+      {
+        auto sparse_region = Kokkos::Profiling::ScopedRegion("Symbolic Factorization"); 
+        amesos_solver->symbolicFactorization();
+      }
+      {
+        auto sparse_region = Kokkos::Profiling::ScopedRegion("Numeric Factorization"); 
+        amesos_solver->numericFactorization();
+      }
+      {
+        auto sparse_region = Kokkos::Profiling::ScopedRegion("Solve"); 
+        amesos_solver->solve();
+      }
     }
     Kokkos::deep_copy(solver.x, Kokkos::subview(x.getLocalViewDevice(Tpetra::Access::ReadOnly), Kokkos::ALL(), 0));
 
