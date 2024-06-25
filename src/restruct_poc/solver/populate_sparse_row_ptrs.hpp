@@ -5,9 +5,10 @@
 #include "src/restruct_poc/beams/beams.hpp"
 
 namespace openturbine {
+template <typename size_type>
 struct PopulateSparseRowPtrs {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
-    Kokkos::View<unsigned*> row_ptrs;
+    Kokkos::View<size_type*> row_ptrs;
 
     KOKKOS_FUNCTION
     void operator()(int) const {

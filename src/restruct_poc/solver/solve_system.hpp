@@ -180,15 +180,15 @@ inline void SolveSystem(Solver& solver) {
       auto sparse_region = Kokkos::Profiling::ScopedRegion("Sparse Solver");  
       auto amesos_solver = Amesos2::create<GlobalCrsMatrixType, GlobalMultiVectorType>("Basker", Teuchos::rcpFromRef(A), Teuchos::rcpFromRef(x), Teuchos::rcpFromRef(b));
       {
-        auto sparse_region = Kokkos::Profiling::ScopedRegion("Symbolic Factorization"); 
+        auto symbolic_region = Kokkos::Profiling::ScopedRegion("Symbolic Factorization"); 
         amesos_solver->symbolicFactorization();
       }
       {
-        auto sparse_region = Kokkos::Profiling::ScopedRegion("Numeric Factorization"); 
+        auto numeric_region = Kokkos::Profiling::ScopedRegion("Numeric Factorization"); 
         amesos_solver->numericFactorization();
       }
       {
-        auto sparse_region = Kokkos::Profiling::ScopedRegion("Solve"); 
+        auto solve_region = Kokkos::Profiling::ScopedRegion("Solve"); 
         amesos_solver->solve();
       }
     }

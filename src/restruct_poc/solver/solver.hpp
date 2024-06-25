@@ -109,7 +109,7 @@ struct Solver {
         auto row_ptrs = RowPtrType("row_ptrs", num_rows + 1);
         auto indices = IndicesType("indices", num_non_zero);
         Kokkos::parallel_for(
-            "PopulateSparseRowPtrs", 1, PopulateSparseRowPtrs{beams_.elem_indices, row_ptrs}
+            "PopulateSparseRowPtrs", 1, PopulateSparseRowPtrs<CrsMatrixType::size_type>{beams_.elem_indices, row_ptrs}
         );
         Kokkos::parallel_for(
             "PopulateSparseIndices", 1,
@@ -129,7 +129,7 @@ struct Solver {
         auto B_indices = IndicesType("b_indices", B_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrs_Constraints", 1,
-            PopulateSparseRowPtrs_Constraints{num_constraint_nodes, B_row_ptrs}
+            PopulateSparseRowPtrs_Constraints<CrsMatrixType::size_type>{num_constraint_nodes, B_row_ptrs}
         );
 
         Kokkos::parallel_for(
@@ -151,7 +151,7 @@ struct Solver {
 
         Kokkos::parallel_for(
             "PopulateSparseRowPtrs_Constraints_Transpose", 1,
-            PopulateSparseRowPtrs_Constraints_Transpose{
+            PopulateSparseRowPtrs_Constraints_Transpose<CrsMatrixType::size_type>{
                 num_constraint_nodes, num_system_nodes, constraints.node_indices, B_t_row_ptrs}
         );
         Kokkos::parallel_for(

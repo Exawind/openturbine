@@ -7,11 +7,12 @@
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
+template <typename size_type>
 struct PopulateSparseRowPtrs_Constraints_Transpose {
     int num_constraint_nodes;
     int num_system_nodes;
     Kokkos::View<Constraints::NodeIndices*> node_indices;
-    Kokkos::View<unsigned*> B_row_ptrs;
+    Kokkos::View<size_type*> B_row_ptrs;
 
     KOKKOS_FUNCTION
     void operator()(int) const {
