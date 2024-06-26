@@ -57,6 +57,7 @@ jobs:
           spack install trilinos@master~mpi~epetra+basker
         fi
         if [ ${{matrix.os}} = 'macos-latest' ]; then
+          spack compiler remove clang
           spack install trilinos@master~mpi~epetra+basker
         fi
         
