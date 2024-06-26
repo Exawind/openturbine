@@ -45,11 +45,17 @@ jobs:
     - name: Install Trilinos
       if: steps.cache-trilinos.outputs.cache-hit != 'true'
       run: |
-        export FC=gfortran
+        if [ ${{matrix.os}} = 'ubuntu-latest' ]; then
+          export FC=gfortran
+        fi
         git clone https://github.com/spack/spack.git
         source spack/share/spack/setup-env.sh
         spack compiler find
         spack external find
+        if [ ${{matrix.os}} = 'macos-13' ]; then
+          spack compiler remove apple-clang
+          spack compiler remove clang
+        fi
         spack install googletest
         spack install trilinos@master~mpi~epetra+basker
     # - name: Cache install Kokkos
