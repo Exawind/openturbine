@@ -25,7 +25,7 @@ inline void SolveSystem(Solver& solver) {
         Solver::RowPtrType("system_matrix_full_row_ptrs", num_dofs + 1);
     Kokkos::parallel_for(
         "FillUnshiftedRowPtrs", num_dofs + 1,
-        FillUnshiftedRowPtrs{
+        FillUnshiftedRowPtrs<CrsMatrixType::size_type, CrsMatrixType::size_type>{
             system_matrix_full_row_ptrs, num_system_dofs, system_matrix.graph.row_map}
     );
 
@@ -56,7 +56,7 @@ inline void SolveSystem(Solver& solver) {
         Solver::RowPtrType("transpose_matrix_full_row_ptrs", num_dofs + 1);
     Kokkos::parallel_for(
         "FillUnshiftedRowPtrs", num_dofs + 1,
-        FillUnshiftedRowPtrs{
+        FillUnshiftedRowPtrs<CrsMatrixType::size_type, CrsMatrixType::size_type>{
             transpose_matrix_full_row_ptrs, num_system_dofs, transpose_matrix.graph.row_map}
     );
 
@@ -104,8 +104,6 @@ inline void SolveSystem(Solver& solver) {
 
     KokkosBlas::axpby(-1.0, solver.R, 0.0, solver.x);
     using GlobalCrsMatrixType = Tpetra::CrsMatrix<>;
-    using scalar_type = GlobalCrsMatrixType::scalar_type;
-    using ordinal_type = GlobalCrsMatrixType::local_ordinal_type;
     using size_type = GlobalCrsMatrixType::global_ordinal_type;
     using GlobalRowPtrType = GlobalCrsMatrixType::local_graph_device_type::row_map_type::non_const_type;
     using GlobalIndicesType = GlobalCrsMatrixType::local_graph_device_type::entries_type::non_const_type;

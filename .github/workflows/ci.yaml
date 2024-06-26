@@ -45,7 +45,7 @@ jobs:
     - name: Install Trilinos
       if: steps.cache-trilinos.outputs.cache-hit != 'true'
       run: |
-        export FC=gfortran-13
+        export FC=gfortran
         git clone https://github.com/spack/spack.git
         source spack/share/spack/setup-env.sh
         spack compiler find

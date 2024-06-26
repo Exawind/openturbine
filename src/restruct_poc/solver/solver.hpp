@@ -33,7 +33,7 @@ struct Solver {
     using RowPtrType = Kokkos::View<CrsMatrixType::size_type*>;
     using IndicesType = Kokkos::View<CrsMatrixType::ordinal_type*>;
     using KernelHandle = typename KokkosKernels::Experimental::KokkosKernelsHandle<
-        unsigned, int, double, ExecutionSpace, MemorySpace, MemorySpace>;
+        CrsMatrixType::size_type, CrsMatrixType::ordinal_type, CrsMatrixType::value_type, ExecutionSpace, MemorySpace, MemorySpace>;
     using SpmvHandle = KokkosSparse::SPMVHandle<
         ExecutionSpace, CrsMatrixType, Kokkos::View<double*>, Kokkos::View<double*>>;
     bool is_dynamic_solve;
