@@ -12,16 +12,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-13]
+        os: [ubuntu-latest, macos-latest]
         compiler: [gcc, llvm]
         build_type: [Release, Debug]
         exclude: 
-          - os: macos-13
+          - os: macos-latest
             compiler: gcc
         include:
            - os: ubuntu-latest
              install_deps: sudo apt-get install gfortran-13 libblas-dev liblapack-dev liblapacke-dev
-           - os: macos-13
+           - os: macos-latest
              install_deps: brew install gfortran gcc openblas lapack
     steps:
     - name: Setup Cpp
@@ -56,8 +56,8 @@ jobs:
         if [ ${{matrix.os}} = 'ubuntu-latest' ]; then
           spack install trilinos@master~mpi~epetra+basker
         fi
-        if [ ${{matrix.os}} = 'macos-13' ]; then
-          spack install trilinos@master%gcc~mpi~epetra+basker
+        if [ ${{matrix.os}} = 'macos-latest' ]; then
+          spack install trilinos@master~mpi~epetra+basker
         fi
         
     # - name: Cache install Kokkos
