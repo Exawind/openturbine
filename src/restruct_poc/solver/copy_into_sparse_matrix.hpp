@@ -7,8 +7,7 @@ namespace openturbine {
 struct CopyIntoSparseMatrix {
     using crs_matrix_type = KokkosSparse::CrsMatrix<
         double, int,
-        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>,
-        void, int>;
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>;
     using row_data_type = Kokkos::View<
         double*, Kokkos::DefaultExecutionSpace::scratch_memory_space,
         Kokkos::MemoryTraits<Kokkos::Unmanaged>>;

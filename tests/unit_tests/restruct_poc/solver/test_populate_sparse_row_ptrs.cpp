@@ -13,9 +13,9 @@ TEST(PopulateSparseRowPtrs, SingleElement) {
     Kokkos::deep_copy(elem_indices, elem_indices_host);
 
     constexpr auto num_rows = 5 * 6;
-    auto row_ptrs = Kokkos::View<int[num_rows + 1]>("row_ptrs");
+    auto row_ptrs = Kokkos::View<unsigned[num_rows + 1]>("row_ptrs");
 
-    Kokkos::parallel_for(1, PopulateSparseRowPtrs{elem_indices, row_ptrs});
+    Kokkos::parallel_for(1, PopulateSparseRowPtrs<unsigned>{elem_indices, row_ptrs});
 
     auto row_ptrs_host = Kokkos::create_mirror(row_ptrs);
     Kokkos::deep_copy(row_ptrs_host, row_ptrs);
@@ -35,9 +35,9 @@ TEST(PopulateSparseRowPtrs, TwoElements) {
     constexpr auto elem1_rows = 5 * 6;
     constexpr auto elem2_rows = 3 * 6;
     constexpr auto num_rows = elem1_rows + elem2_rows;
-    auto row_ptrs = Kokkos::View<int[num_rows + 1]>("row_ptrs");
+    auto row_ptrs = Kokkos::View<unsigned[num_rows + 1]>("row_ptrs");
 
-    Kokkos::parallel_for(1, PopulateSparseRowPtrs{elem_indices, row_ptrs});
+    Kokkos::parallel_for(1, PopulateSparseRowPtrs<unsigned>{elem_indices, row_ptrs});
 
     auto row_ptrs_host = Kokkos::create_mirror(row_ptrs);
     Kokkos::deep_copy(row_ptrs_host, row_ptrs);

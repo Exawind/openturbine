@@ -36,8 +36,6 @@ inline bool Step(Solver& solver, Beams& beams) {
     double err = 1000.0;
 
     for (int iter = 0; err > 1.0; ++iter) {
-        Kokkos::deep_copy(solver.St, 0.);
-
         UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
 
         AssembleSystem(solver, beams, R_system);
