@@ -16,6 +16,8 @@
 #include "populate_sparse_row_ptrs.hpp"
 #include "populate_sparse_row_ptrs_constraints.hpp"
 #include "populate_sparse_row_ptrs_constraints_transpose.hpp"
+#include "populate_tangent_row_ptrs.hpp"
+#include "populate_tangent_indices.hpp"
 #include "state.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
@@ -61,6 +63,7 @@ struct Solver {
     CrsMatrixType system_plus_constraints;
     CrsMatrixType full_matrix;
     View_NxN K_dense;  // Stiffness matrix
+    View_Nx6x6 T_dense;
     View_N R;  // System residual vector
     View_N x;  // System solution vector
     State state;
@@ -91,6 +94,7 @@ struct Solver {
           num_constraint_dofs(num_constraint_nodes * kLieAlgebraComponents),
           num_dofs(num_system_dofs + num_constraint_dofs),
           K_dense("K dense", num_system_dofs, num_system_dofs),
+          T_dense("T dense", num_system_nodes),
           R("R", num_dofs),
           x("x", num_dofs),
           state(num_system_nodes, num_constraint_nodes, q_, v_, vd_),
@@ -117,8 +121,17 @@ struct Solver {
         Kokkos::fence();
         auto K_values = ValuesType("K values", num_non_zero);
         K = CrsMatrixType("K", num_rows, num_columns, num_non_zero, K_values, row_ptrs, indices);
-        auto T_values = ValuesType("T values", num_non_zero);
-        T = CrsMatrixType("T", num_rows, num_columns, num_non_zero, T_values, row_ptrs, indices);
+
+        auto T_num_non_zero = num_system_nodes * 6 * 6;
+        auto T_row_ptrs = RowPtrType("T_row_ptrs", num_rows + 1);
+        auto T_indices = IndicesType("T_indices", T_num_non_zero);
+        Kokkos::parallel_for("PopulateTangentRowPtrs", 1, PopulateTangentRowPtrs<CrsMatrixType::size_type>{beams_.elem_indices, T_row_ptrs});
+        Kokkos::parallel_for(
+            "PopulateTangentIndices", 1,
+            PopulateTangentIndices{beams_.elem_indices, beams_.node_state_indices, T_indices}
+        );
+        auto T_values = ValuesType("T values", T_num_non_zero);
+        T = CrsMatrixType("T", num_rows, num_columns, T_num_non_zero, T_values, T_row_ptrs, T_indices);
 
         auto B_num_rows = num_constraint_dofs;
         auto B_num_columns = num_system_dofs;

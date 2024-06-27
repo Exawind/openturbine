@@ -12,20 +12,25 @@ namespace openturbine {
 struct CalculateTangentOperator {
     double h;
     View_Nx6::const_type q_delta;
-    View_NxN T;
+    View_Nx6x6 T;
 
     KOKKOS_FUNCTION
     void operator()(const int i_node) const {
-        const int j = i_node * kLieAlgebraComponents;
-        for (int k = 0; k < kLieAlgebraComponents; ++k) {
-            T(j + k, j + k) = 1.0;
+        for (auto k = 0; k < kLieAlgebraComponents; ++k) {
+            for(auto n = 0; n < kLieAlgebraComponents; ++n) {
+                T(i_node, k, n) = 0.;
+            }
+        }
+
+        for (auto k = 0; k < kLieAlgebraComponents; ++k) {
+            T(i_node, k, k) = 1.0;
         }
 
         auto rv_data = Kokkos::Array<double, 3>{};
         auto rv = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{rv_data.data()};
         KokkosBlas::serial_axpy(h, Kokkos::subview(q_delta, i_node, Kokkos::make_pair(3, 6)), rv);
         auto phi = Kokkos::sqrt(rv(0) * rv(0) + rv(1) * rv(1) + rv(2) * rv(2));
-        const int j2 = j + 3;
+
         auto m1_data = Kokkos::Array<double, 9>{};
         auto m1 =
             Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(m1_data.data());
@@ -42,9 +47,9 @@ struct CalculateTangentOperator {
             KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
             KokkosBatched::Algo::Gemm::Default>::invoke(tmp2, m2, m2, tmp1, m1);
 
-        for (int k = 0; k < 3; ++k) {
-            for (int n = 0; n < 3; ++n) {
-                T(j2 + k, j2 + n) += m1(k, n);
+        for (auto k = 0; k < 3; ++k) {
+            for (auto n = 0; n < 3; ++n) {
+                T(i_node, k+3, n+3) += m1(k, n);
             }
         }
     }
