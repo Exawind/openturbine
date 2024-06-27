@@ -25,6 +25,7 @@ jobs:
              install_deps: brew install gfortran gcc openblas lapack
     steps:
     - name: Setup Cpp
+      if: matrix.os == 'ubuntu-latest'
       uses: aminya/setup-cpp@v1
       with:
         compiler: ${{ matrix.compiler }}
