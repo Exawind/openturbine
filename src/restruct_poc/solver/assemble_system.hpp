@@ -10,6 +10,7 @@
 #include "copy_into_sparse_matrix.hpp"
 #include "populate_sparse_indices.hpp"
 #include "populate_sparse_row_ptrs.hpp"
+#include "copy_tangent_to_sparse_matrix.hpp"
 #include "solver.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
@@ -25,13 +26,12 @@ namespace openturbine {
 template <typename Subview_N>
 void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System");
-    Kokkos::deep_copy(solver.K_dense, 0.);
     Kokkos::parallel_for(
         "TangentOperator", solver.num_system_nodes,
         CalculateTangentOperator{
             solver.h,
             solver.state.q_delta,
-            solver.K_dense,
+            solver.T_dense,
         }
     );
 
@@ -44,7 +44,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
 
     Kokkos::parallel_for(
-        "CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{solver.T, solver.K_dense}
+        "CopyTangentIntoSparseMatrix", sparse_matrix_policy, CopyTangentToSparseMatrix{solver.T, solver.T_dense}
     );
 
     Kokkos::deep_copy(R_system, 0.);
