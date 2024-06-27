@@ -66,6 +66,7 @@ struct Solver {
     DenseMatrixType St_left;
     Kokkos::View<int*, Kokkos::LayoutLeft> IPIV;
     View_Nx6x6 T_dense;
+    Kokkos::View<double***> matrix_terms;
     View_N R;  // System residual vector
     View_N x;  // System solution vector
 
@@ -93,7 +94,10 @@ struct Solver {
           K_dense("K dense", num_system_dofs, num_system_dofs),
           St("St", num_dofs, num_dofs),
           IPIV("IPIV", num_dofs),
+          num_constraint_nodes(constraint_inputs.size()),
+          num_constraint_dofs(num_constraint_nodes * kLieAlgebraComponents),
           T_dense("T dense", num_system_nodes),
+          matrix_terms("matrix_terms", beams_.num_elems, beams_.max_elem_nodes*kLieAlgebraComponents, beams_.max_elem_nodes*kLieAlgebraComponents),
           R("R", num_dofs),
           x("x", num_dofs),
           convergence_err(max_iter) {
