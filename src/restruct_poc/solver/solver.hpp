@@ -62,8 +62,8 @@ struct Solver {
     CrsMatrixType constraints_matrix;
     CrsMatrixType system_plus_constraints;
     CrsMatrixType full_matrix;
-    View_NxN K_dense;  // Stiffness matrix
     View_Nx6x6 T_dense;
+    Kokkos::View<double***> matrix_terms;
     View_N R;  // System residual vector
     View_N x;  // System solution vector
     State state;
@@ -93,8 +93,8 @@ struct Solver {
           num_constraint_nodes(constraint_inputs.size()),
           num_constraint_dofs(num_constraint_nodes * kLieAlgebraComponents),
           num_dofs(num_system_dofs + num_constraint_dofs),
-          K_dense("K dense", num_system_dofs, num_system_dofs),
           T_dense("T dense", num_system_nodes),
+          matrix_terms("matrix_terms", beams_.num_elems, beams_.max_elem_nodes*kLieAlgebraComponents, beams_.max_elem_nodes*kLieAlgebraComponents),
           R("R", num_dofs),
           x("x", num_dofs),
           state(num_system_nodes, num_constraint_nodes, q_, v_, vd_),
