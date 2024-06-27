@@ -54,60 +54,7 @@ jobs:
         spack compiler find
         spack external find
         spack install googletest
-        if [ ${{matrix.os}} = 'ubuntu-latest' ]; then
-          spack install trilinos@master~mpi~epetra+basker
-        fi
-        if [ ${{matrix.os}} = 'macos-latest' ]; then
-          spack install trilinos@master~mpi~epetra+basker
-        fi
-        
-    # - name: Cache install Kokkos
-    #   id: cache-kokkos
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: ~/dependencies/kokkos
-    #     key: ${{runner.os}}-kokkos
-    # - name: Install Kokkos
-    #   if: steps.cache-kokkos.outputs.cache-hit != 'true'
-    #   run: |
-    #     sudo mkdir -p ~/dependencies/kokkos
-    #     git clone --depth 1 --branch develop https://github.com/kokkos/kokkos
-    #     cd kokkos
-    #     mkdir build
-    #     cd build
-    #     cmake .. \
-    #       -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos \
-    #       -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-    #       -DKokkos_ENABLE_DEBUG=${{ matrix.build_type == 'Debug' }} \
-    #       -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=${{ matrix.build_type == 'Debug' }}
-    #     sudo cmake --build . --target install
-    # - name: Cache install Kokkos-Kernels
-    #   id: cache-kokkos-kernels
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: ~/dependencies/kokkos_kernels
-    #     key: ${{runner.os}}-kokkos-kernels
-    # - name: Install Kokkos-Kernels
-    #   if: steps.cache-kokkos-kernels.outputs.cache-hit != 'true'
-    #   run: |
-    #     sudo mkdir -p ~/dependencies/kokkos_kernels
-    #     export Kokkos_DIR=~/dependencies/kokkos
-    #     if [ ${{matrix.os}} = 'ubuntu-latest' ]; then
-    #       git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
-    #     fi
-    #     if [ ${{matrix.os}} = 'macos-13' ]; then
-    #       export FC=gfortran-13
-    #       git clone --depth 1 --branch develop https://github.com/kokkos/kokkos-kernels
-    #     fi
-    #     cd kokkos-kernels
-    #     mkdir build
-    #     cd build
-    #     cmake ../ \
-    #       -DCMAKE_INSTALL_PREFIX:PATH=~/dependencies/kokkos_kernels \
-    #       -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-    #       -DKokkosKernels_ENABLE_TPL_BLAS=ON \
-    #       -DKokkosKernels_ENABLE_TPL_LAPACK=ON 
-    #     sudo cmake --build . --target install
+        spack install trilinos@master~mpi~epetra+basker
     - name: Clone
       uses: actions/checkout@v4
       with:

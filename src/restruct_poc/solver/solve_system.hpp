@@ -1,12 +1,11 @@
 #pragma once
 
+#include <Amesos2.hpp>
 #include <KokkosBlas.hpp>
 #include <KokkosLapack_gesv.hpp>
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
-
 #include <Teuchos_RCP.hpp>
-#include <Amesos2.hpp>
 
 #include "condition_system.hpp"
 #include "fill_unshifted_row_ptrs.hpp"
@@ -178,16 +177,16 @@ inline void SolveSystem(Solver& solver) {
       auto sparse_region = Kokkos::Profiling::ScopedRegion("Sparse Solver");  
       auto amesos_solver = Amesos2::create<GlobalCrsMatrixType, GlobalMultiVectorType>("Basker", Teuchos::rcpFromRef(A), Teuchos::rcpFromRef(x), Teuchos::rcpFromRef(b));
       {
-        auto symbolic_region = Kokkos::Profiling::ScopedRegion("Symbolic Factorization"); 
-        amesos_solver->symbolicFactorization();
+          auto symbolic_region = Kokkos::Profiling::ScopedRegion("Symbolic Factorization");
+          amesos_solver->symbolicFactorization();
       }
       {
-        auto numeric_region = Kokkos::Profiling::ScopedRegion("Numeric Factorization"); 
-        amesos_solver->numericFactorization();
+          auto numeric_region = Kokkos::Profiling::ScopedRegion("Numeric Factorization");
+          amesos_solver->numericFactorization();
       }
       {
-        auto solve_region = Kokkos::Profiling::ScopedRegion("Solve"); 
-        amesos_solver->solve();
+          auto solve_region = Kokkos::Profiling::ScopedRegion("Solve");
+          amesos_solver->solve();
       }
     }
     Kokkos::deep_copy(solver.x, Kokkos::subview(x.getLocalViewDevice(Tpetra::Access::ReadOnly), Kokkos::ALL(), 0));
