@@ -13,7 +13,7 @@ include(openturbine-utils)
 ########################## OPTIONS #####################################
 
 # General options for the project
-option(OTURB_ENABLE_BASIC_SANITIZERS "Compile with addrss and undefined behavior sanitizers" OFF)
+option(OTURB_ENABLE_BASIC_SANITIZERS "Compile with address and undefined behavior sanitizers" OFF)
 if(OTURB_ENABLE_BASIC_SANITIZERS)
   add_compile_options(-fsanitize=address,undefined)
   add_link_options(-fsanitize=address,undefined)
