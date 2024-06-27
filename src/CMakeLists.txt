@@ -1,28 +1,40 @@
+target_sources(${oturb_exe_name} PRIVATE main.cpp)
+set_target_properties(${oturb_exe_name} PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(${oturb_lib_name} PROPERTIES LINKER_LANGUAGE CXX)
 
+############################ PACKAGES ############################
+# Find KokkosKernels and link to OpenTurbine
 set(Kokkos_DIR "$ENV{Kokkos_ROOT}" CACHE STRING "Kokkos root directory")
 find_package(KokkosKernels REQUIRED)
+
+# Find MKL if KokkosMKL is enabled
 if(TARGET Kokkos::MKL)
   find_package(MKL REQUIRED)
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
-    set(FS_LIB stdc++fs)
-  endif()
-endif()
-
-target_sources(${oturb_exe_name} PRIVATE main.cpp)
-set_target_properties(${oturb_exe_name} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${oturb_exe_name} PRIVATE
     Kokkos::kokkoskernels
     ${FS_LIB}
 )
 
-set_target_properties(${oturb_lib_name} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${oturb_lib_name} PRIVATE
     Kokkos::kokkoskernels
     ${FS_LIB}
 )
+
+# Find yaml-cpp and link to OpenTurbine
+find_package(yaml-cpp REQUIRED)
+target_link_libraries(${oturb_exe_name} PRIVATE yaml-cpp)
+target_link_libraries(${oturb_lib_name} PRIVATE yaml-cpp)
+
+############################ OPTIONS ############################
+
+# If the C++ compiler is GNU (< 9.0), use 'stdc++fs' to link the filesystem library
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+    set(FS_LIB stdc++fs)
+  endif()
+endif()
 
 target_include_directories(${oturb_exe_name} PRIVATE ${PROJECT_BINARY_DIR})
 target_include_directories(${oturb_exe_name}
@@ -49,15 +61,15 @@ add_subdirectory(utilities)
 
 # Generate OpenTurbine version header
 configure_file("${CMAKE_SOURCE_DIR}/cmake/OpenTurbineVersion.H.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/OpenTurbineVersion.H" @ONLY
+  "${CMAKE_CURRENT_BINARY_DIR}/OpenTurbineVersion.H" @ONLY
 )
 
 target_link_libraries(${oturb_exe_name} PRIVATE ${oturb_lib_name})
 
-# Set -fpic options
+# Set -fpic options for shared libraries
 set_target_properties(${oturb_lib_name}
-    PROPERTIES
-    POSITION_INDEPENDENT_CODE ON
+  PROPERTIES
+  POSITION_INDEPENDENT_CODE ON
 )
 
 file(GLOB_RECURSE openturbine_header_list ${CMAKE_CURRENT_SOURCE_DIR} "*.H")
@@ -65,6 +77,6 @@ add_custom_target(openturbine_headers SOURCES ${openturbine_header_list})
 
 # Add CMake-generated headers to installation
 install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/OpenTurbineVersion.H
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  FILES ${CMAKE_CURRENT_BINARY_DIR}/OpenTurbineVersion.H
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
