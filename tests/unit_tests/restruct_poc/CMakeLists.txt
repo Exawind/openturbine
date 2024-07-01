@@ -16,6 +16,8 @@ target_sources(
     solver/test_populate_sparse_row_ptrs.cpp
     system/test_integrate_matrix.cpp
     system/test_integrate_elastic_stiffness_matrix.cpp
+    system/test_integrate_stiffness_matrix.cpp
+    system/test_integrate_inertia_matrix.cpp
     system/test_integrate_residual_vector.cpp
 )
 
