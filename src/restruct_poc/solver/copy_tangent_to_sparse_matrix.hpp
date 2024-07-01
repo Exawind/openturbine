@@ -15,7 +15,7 @@ struct CopyTangentToSparseMatrix {
         int*, Kokkos::DefaultExecutionSpace::scratch_memory_space,
         Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
     crs_matrix_type sparse;
-    Kokkos::View<const double*[6][6]> dense;
+    Kokkos::View<const double* [6][6]> dense;
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
@@ -27,7 +27,7 @@ struct CopyTangentToSparseMatrix {
         auto col_idx = col_idx_type(member.team_scratch(1), row.length);
         Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](int entry) {
             col_idx(entry) = cols(row_map(i) + entry);
-            row_data(entry) = dense(i/6, i%6, entry);
+            row_data(entry) = dense(i / 6, i % 6, entry);
         });
         member.team_barrier();
         Kokkos::single(Kokkos::PerTeam(member), [=]() {

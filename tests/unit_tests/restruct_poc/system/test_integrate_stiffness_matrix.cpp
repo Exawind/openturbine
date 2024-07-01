@@ -12,9 +12,10 @@ namespace openturbine::restruct_poc::tests {
 
 template <typename Policy>
 void TestIntegrateStiffnessMatrix_1Element1Node1QP(
-    Policy policy, Kokkos::View<const double[1][6][6]> qp_Kuu, Kokkos::View<const double[1][6][6]> qp_Puu,
-    Kokkos::View<const double[1][6][6]> qp_Cuu, Kokkos::View<const double[1][6][6]> qp_Ouu,
-    Kokkos::View<const double[1][6][6]> qp_Quu, const std::vector<std::vector<std::vector<double>>>& exact_M
+    Policy policy, Kokkos::View<const double[1][6][6]> qp_Kuu,
+    Kokkos::View<const double[1][6][6]> qp_Puu, Kokkos::View<const double[1][6][6]> qp_Cuu,
+    Kokkos::View<const double[1][6][6]> qp_Ouu, Kokkos::View<const double[1][6][6]> qp_Quu,
+    const std::vector<std::vector<std::vector<double>>>& exact_M
 ) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_nodes = 1;
@@ -34,8 +35,8 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP(
     Kokkos::parallel_for(
         policy,
         IntegrateStiffnessMatrix{
-            element_indices, qp_weights, qp_jacobian, shape_interp,
-            shape_interp_deriv, qp_Kuu, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, gbl_M}
+            element_indices, qp_weights, qp_jacobian, shape_interp, shape_interp_deriv, qp_Kuu,
+            qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, gbl_M}
     );
 
     auto M0 = Kokkos::View<double[6][6]>("M0");
@@ -71,8 +72,7 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP_Kuu(Policy policy) {
 }
 
 TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeOneQP_Kuu) {
-    TestIntegrateStiffnessMatrix_1Element1Node1QP_Kuu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
-    );
+    TestIntegrateStiffnessMatrix_1Element1Node1QP_Kuu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 template <typename Policy>
@@ -103,8 +103,7 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP_Puu(Policy policy) {
 }
 
 TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeOneQP_Puu) {
-    TestIntegrateStiffnessMatrix_1Element1Node1QP_Puu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
-    );
+    TestIntegrateStiffnessMatrix_1Element1Node1QP_Puu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 template <typename Policy>
@@ -135,8 +134,7 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP_Quu(Policy policy) {
 }
 
 TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeOneQP_Quu) {
-    TestIntegrateStiffnessMatrix_1Element1Node1QP_Quu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
-    );
+    TestIntegrateStiffnessMatrix_1Element1Node1QP_Quu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 template <typename Policy>
@@ -168,8 +166,7 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP_Cuu(Policy policy) {
 }
 
 TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeOneQP_Cuu) {
-    TestIntegrateStiffnessMatrix_1Element1Node1QP_Cuu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
-    );
+    TestIntegrateStiffnessMatrix_1Element1Node1QP_Cuu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 template <typename Policy>
@@ -200,8 +197,7 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP_Ouu(Policy policy) {
 }
 
 TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeOneQP_Ouu) {
-    TestIntegrateStiffnessMatrix_1Element1Node1QP_Ouu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
-    );
+    TestIntegrateStiffnessMatrix_1Element1Node1QP_Ouu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 template <typename Policy>
@@ -242,24 +238,24 @@ void TestIntegrateStiffnessMatrix_2Elements1Node1QP(Policy policy) {
     Kokkos::parallel_for(
         policy,
         IntegrateStiffnessMatrix{
-            element_indices, qp_weights, qp_jacobian, shape_interp,
-            shape_interp_deriv, qp_Kuu, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, gbl_M}
+            element_indices, qp_weights, qp_jacobian, shape_interp, shape_interp_deriv, qp_Kuu,
+            qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, gbl_M}
     );
 
-    auto exact_M = std::vector<std::vector<std::vector<double>>>
-               {{{00001., 00002., 00003., 00004., 00005., 00006.},
-                 {00101., 00102., 00103., 00104., 00105., 00106.},
-                 {00201., 00202., 00203., 00204., 00205., 00206.},
-                 {00301., 00302., 00303., 00304., 00305., 00306.},
-                 {00401., 00402., 00403., 00404., 00405., 00406.},
-                 {00501., 00502., 00503., 00504., 00505., 00506.}},
+    auto exact_M = std::vector<std::vector<std::vector<double>>>{
+        {{00001., 00002., 00003., 00004., 00005., 00006.},
+         {00101., 00102., 00103., 00104., 00105., 00106.},
+         {00201., 00202., 00203., 00204., 00205., 00206.},
+         {00301., 00302., 00303., 00304., 00305., 00306.},
+         {00401., 00402., 00403., 00404., 00405., 00406.},
+         {00501., 00502., 00503., 00504., 00505., 00506.}},
 
-                {{00001., 00002., 00003., 00004., 00005., 00006.},
-                 {10001., 10002., 10003., 10004., 10005., 10006.},
-                 {20001., 20002., 20003., 20004., 20005., 20006.},
-                 {30001., 30002., 30003., 30004., 30005., 30006.},
-                 {40001., 40002., 40003., 40004., 40005., 40006.},
-                 {50001., 50002., 50003., 50004., 50005., 50006.}}};
+        {{00001., 00002., 00003., 00004., 00005., 00006.},
+         {10001., 10002., 10003., 10004., 10005., 10006.},
+         {20001., 20002., 20003., 20004., 20005., 20006.},
+         {30001., 30002., 30003., 30004., 30005., 30006.},
+         {40001., 40002., 40003., 40004., 40005., 40006.},
+         {50001., 50002., 50003., 50004., 50005., 50006.}}};
 
     auto M0 = Kokkos::View<double[6][6]>("M0");
     Kokkos::deep_copy(M0, Kokkos::subview(gbl_M, 0, Kokkos::ALL, Kokkos::ALL));
@@ -276,9 +272,10 @@ TEST(IntegrateStiffnessMatrixTests, TwoElementsOneNodeOneQP) {
 
 template <typename Policy>
 void TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
-    Policy policy, Kokkos::View<const double[1][6][6]> qp_Kuu, Kokkos::View<const double[1][6][6]> qp_Puu,
-    Kokkos::View<const double[1][6][6]> qp_Cuu, Kokkos::View<const double[1][6][6]> qp_Ouu,
-    Kokkos::View<const double[1][6][6]> qp_Quu, const std::vector<std::vector<std::vector<double>>>& exact_M
+    Policy policy, Kokkos::View<const double[1][6][6]> qp_Kuu,
+    Kokkos::View<const double[1][6][6]> qp_Puu, Kokkos::View<const double[1][6][6]> qp_Cuu,
+    Kokkos::View<const double[1][6][6]> qp_Ouu, Kokkos::View<const double[1][6][6]> qp_Quu,
+    const std::vector<std::vector<std::vector<double>>>& exact_M
 ) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_nodes = 2;
@@ -298,8 +295,8 @@ void TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
     Kokkos::parallel_for(
         policy,
         IntegrateStiffnessMatrix{
-            element_indices, qp_weights, qp_jacobian, shape_interp,
-            shape_interp_deriv, qp_Kuu, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, gbl_M}
+            element_indices, qp_weights, qp_jacobian, shape_interp, shape_interp_deriv, qp_Kuu,
+            qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, gbl_M}
     );
 
     auto M0 = Kokkos::View<double[12][12]>("M0");
@@ -326,36 +323,35 @@ void TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Puu(Policy policy) {
     TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
         policy, qp_Kuu, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{{00001., 00002., 00003., 00004., 00005., 00006., 00004., 00008., 00012., 00016., 00020.,
-          00024.},
+           00024.},
           {00101., 00102., 00103., 00104., 00105., 00106., 00404., 00408., 00412., 00416., 00420.,
-          00424.},
+           00424.},
           {00201., 00202., 00203., 00204., 00205., 00206., 00804., 00808., 00812., 00816., 00820.,
-          00824.},
+           00824.},
           {00301., 00302., 00303., 00304., 00305., 00306., 01204., 01208., 01212., 01216., 01220.,
-          01224.},
+           01224.},
           {00401., 00402., 00403., 00404., 00405., 00406., 01604., 01608., 01612., 01616., 01620.,
-          01624.},
+           01624.},
           {00501., 00502., 00503., 00504., 00505., 00506., 02004., 02008., 02012., 02016., 02020.,
-          02024.},
+           02024.},
 
           {00002., 00004., 00006., 00008., 00010., 00012., 00008., 00016., 00024., 00032., 00040.,
-          00048.},
+           00048.},
           {00202., 00204., 00206., 00208., 00210., 00212., 00808., 00816., 00824., 00832., 00840.,
-          00848.},
+           00848.},
           {00402., 00404., 00406., 00408., 00410., 00412., 01608., 01616., 01624., 01632., 01640.,
-          01648.},
+           01648.},
           {00602., 00604., 00606., 00608., 00610., 00612., 02408., 02416., 02424., 02432., 02440.,
-          02448.},
+           02448.},
           {00802., 00804., 00806., 00808., 00810., 00812., 03208., 03216., 03224., 03232., 03240.,
-          03248.},
+           03248.},
           {01002., 01004., 01006., 01008., 01010., 01012., 04008., 04016., 04024., 04032., 04040.,
-          04048.}}}
+           04048.}}}
     );
 }
 
 TEST(IntegrateStiffnessMatrixTests, OneElementTwoNodesOneQP_Puu) {
-    TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Puu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
-    );
+    TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Puu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 template <typename Policy>
@@ -377,36 +373,35 @@ void TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Quu(Policy policy) {
     TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
         policy, qp_Kuu, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{{00001., 00002., 00003., 00004., 00005., 00006., 00002., 00004., 00006., 00008., 00010.,
-          00012.},
-         {00101., 00102., 00103., 00104., 00105., 00106., 00202., 00204., 00206., 00208., 00210.,
-          00212.},
-         {00201., 00202., 00203., 00204., 00205., 00206., 00402., 00404., 00406., 00408., 00410.,
-          00412.},
-         {00301., 00302., 00303., 00304., 00305., 00306., 00602., 00604., 00606., 00608., 00610.,
-          00612.},
-         {00401., 00402., 00403., 00404., 00405., 00406., 00802., 00804., 00806., 00808., 00810.,
-          00812.},
-         {00501., 00502., 00503., 00504., 00505., 00506., 01002., 01004., 01006., 01008., 01010.,
-          01012.},
+           00012.},
+          {00101., 00102., 00103., 00104., 00105., 00106., 00202., 00204., 00206., 00208., 00210.,
+           00212.},
+          {00201., 00202., 00203., 00204., 00205., 00206., 00402., 00404., 00406., 00408., 00410.,
+           00412.},
+          {00301., 00302., 00303., 00304., 00305., 00306., 00602., 00604., 00606., 00608., 00610.,
+           00612.},
+          {00401., 00402., 00403., 00404., 00405., 00406., 00802., 00804., 00806., 00808., 00810.,
+           00812.},
+          {00501., 00502., 00503., 00504., 00505., 00506., 01002., 01004., 01006., 01008., 01010.,
+           01012.},
 
-         {00002., 00004., 00006., 00008., 00010., 00012., 00004., 00008., 00012., 00016., 00020.,
-          00024.},
-         {00202., 00204., 00206., 00208., 00210., 00212., 00404., 00408., 00412., 00416., 00420.,
-          00424.},
-         {00402., 00404., 00406., 00408., 00410., 00412., 00804., 00808., 00812., 00816., 00820.,
-          00824.},
-         {00602., 00604., 00606., 00608., 00610., 00612., 01204., 01208., 01212., 01216., 01220.,
-          01224.},
-         {00802., 00804., 00806., 00808., 00810., 00812., 01604., 01608., 01612., 01616., 01620.,
-          01624.},
-         {01002., 01004., 01006., 01008., 01010., 01012., 02004., 02008., 02012., 02016., 02020.,
-          02024.}}}
+          {00002., 00004., 00006., 00008., 00010., 00012., 00004., 00008., 00012., 00016., 00020.,
+           00024.},
+          {00202., 00204., 00206., 00208., 00210., 00212., 00404., 00408., 00412., 00416., 00420.,
+           00424.},
+          {00402., 00404., 00406., 00408., 00410., 00412., 00804., 00808., 00812., 00816., 00820.,
+           00824.},
+          {00602., 00604., 00606., 00608., 00610., 00612., 01204., 01208., 01212., 01216., 01220.,
+           01224.},
+          {00802., 00804., 00806., 00808., 00810., 00812., 01604., 01608., 01612., 01616., 01620.,
+           01624.},
+          {01002., 01004., 01006., 01008., 01010., 01012., 02004., 02008., 02012., 02016., 02020.,
+           02024.}}}
     );
 }
 
 TEST(IntegrateStiffnessMatrixTests, OneElementTwoNodesOneQP_Quu) {
-    TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Quu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
-    );
+    TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Quu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 template <typename Policy>
@@ -428,37 +423,35 @@ void TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Cuu(Policy policy) {
     TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
         policy, qp_Kuu, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{{00001., 00002., 00003., 00004., 00005., 00006., 00004., 00008., 00012., 00016., 00020.,
-          00024.},
-         {00101., 00102., 00103., 00104., 00105., 00106., 00404., 00408., 00412., 00416., 00420.,
-          00424.},
-         {00201., 00202., 00203., 00204., 00205., 00206., 00804., 00808., 00812., 00816., 00820.,
-          00824.},
-         {00301., 00302., 00303., 00304., 00305., 00306., 01204., 01208., 01212., 01216., 01220.,
-          01224.},
-         {00401., 00402., 00403., 00404., 00405., 00406., 01604., 01608., 01612., 01616., 01620.,
-          01624.},
-         {00501., 00502., 00503., 00504., 00505., 00506., 02004., 02008., 02012., 02016., 02020.,
-          02024.},
+           00024.},
+          {00101., 00102., 00103., 00104., 00105., 00106., 00404., 00408., 00412., 00416., 00420.,
+           00424.},
+          {00201., 00202., 00203., 00204., 00205., 00206., 00804., 00808., 00812., 00816., 00820.,
+           00824.},
+          {00301., 00302., 00303., 00304., 00305., 00306., 01204., 01208., 01212., 01216., 01220.,
+           01224.},
+          {00401., 00402., 00403., 00404., 00405., 00406., 01604., 01608., 01612., 01616., 01620.,
+           01624.},
+          {00501., 00502., 00503., 00504., 00505., 00506., 02004., 02008., 02012., 02016., 02020.,
+           02024.},
 
-         {00004., 00008., 00012., 00016., 00020., 00024., 00016., 00032., 00048., 00064., 00080.,
-          00096.},
-         {00404., 00408., 00412., 00416., 00420., 00424., 01616., 01632., 01648., 01664., 01680.,
-          01696.},
-         {00804., 00808., 00812., 00816., 00820., 00824., 03216., 03232., 03248., 03264., 03280.,
-          03296.},
-         {01204., 01208., 01212., 01216., 01220., 01224., 04816., 04832., 04848., 04864., 04880.,
-          04896.},
-         {01604., 01608., 01612., 01616., 01620., 01624., 06416., 06432., 06448., 06464., 06480.,
-          06496.},
-         {02004., 02008., 02012., 02016., 02020., 02024., 08016., 08032., 08048., 08064., 08080.,
-          08096.}}}
+          {00004., 00008., 00012., 00016., 00020., 00024., 00016., 00032., 00048., 00064., 00080.,
+           00096.},
+          {00404., 00408., 00412., 00416., 00420., 00424., 01616., 01632., 01648., 01664., 01680.,
+           01696.},
+          {00804., 00808., 00812., 00816., 00820., 00824., 03216., 03232., 03248., 03264., 03280.,
+           03296.},
+          {01204., 01208., 01212., 01216., 01220., 01224., 04816., 04832., 04848., 04864., 04880.,
+           04896.},
+          {01604., 01608., 01612., 01616., 01620., 01624., 06416., 06432., 06448., 06464., 06480.,
+           06496.},
+          {02004., 02008., 02012., 02016., 02020., 02024., 08016., 08032., 08048., 08064., 08080.,
+           08096.}}}
     );
 }
 
-
 TEST(IntegrateStiffnessMatrixTests, OneElementTwoNodesOneQP_Cuu) {
-    TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Cuu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
-    );
+    TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Cuu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 template <typename Policy>
@@ -480,43 +473,43 @@ void TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Ouu(Policy policy) {
     TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
         policy, qp_Kuu, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu,
         {{{00001., 00002., 00003., 00004., 00005., 00006., 00002., 00004., 00006., 00008., 00010.,
-          00012.},
-         {00101., 00102., 00103., 00104., 00105., 00106., 00202., 00204., 00206., 00208., 00210.,
-          00212.},
-         {00201., 00202., 00203., 00204., 00205., 00206., 00402., 00404., 00406., 00408., 00410.,
-          00412.},
-         {00301., 00302., 00303., 00304., 00305., 00306., 00602., 00604., 00606., 00608., 00610.,
-          00612.},
-         {00401., 00402., 00403., 00404., 00405., 00406., 00802., 00804., 00806., 00808., 00810.,
-          00812.},
-         {00501., 00502., 00503., 00504., 00505., 00506., 01002., 01004., 01006., 01008., 01010.,
-          01012.},
+           00012.},
+          {00101., 00102., 00103., 00104., 00105., 00106., 00202., 00204., 00206., 00208., 00210.,
+           00212.},
+          {00201., 00202., 00203., 00204., 00205., 00206., 00402., 00404., 00406., 00408., 00410.,
+           00412.},
+          {00301., 00302., 00303., 00304., 00305., 00306., 00602., 00604., 00606., 00608., 00610.,
+           00612.},
+          {00401., 00402., 00403., 00404., 00405., 00406., 00802., 00804., 00806., 00808., 00810.,
+           00812.},
+          {00501., 00502., 00503., 00504., 00505., 00506., 01002., 01004., 01006., 01008., 01010.,
+           01012.},
 
-         {00004., 00008., 00012., 00016., 00020., 00024., 00008., 00016., 00024., 00032., 00040.,
-          00048.},
-         {00404., 00408., 00412., 00416., 00420., 00424., 00808., 00816., 00824., 00832., 00840.,
-          00848.},
-         {00804., 00808., 00812., 00816., 00820., 00824., 01608., 01616., 01624., 01632., 01640.,
-          01648.},
-         {01204., 01208., 01212., 01216., 01220., 01224., 02408., 02416., 02424., 02432., 02440.,
-          02448.},
-         {01604., 01608., 01612., 01616., 01620., 01624., 03208., 03216., 03224., 03232., 03240.,
-          03248.},
-         {02004., 02008., 02012., 02016., 02020., 02024., 04008., 04016., 04024., 04032., 04040.,
-          04048.}}}
+          {00004., 00008., 00012., 00016., 00020., 00024., 00008., 00016., 00024., 00032., 00040.,
+           00048.},
+          {00404., 00408., 00412., 00416., 00420., 00424., 00808., 00816., 00824., 00832., 00840.,
+           00848.},
+          {00804., 00808., 00812., 00816., 00820., 00824., 01608., 01616., 01624., 01632., 01640.,
+           01648.},
+          {01204., 01208., 01212., 01216., 01220., 01224., 02408., 02416., 02424., 02432., 02440.,
+           02448.},
+          {01604., 01608., 01612., 01616., 01620., 01624., 03208., 03216., 03224., 03232., 03240.,
+           03248.},
+          {02004., 02008., 02012., 02016., 02020., 02024., 04008., 04016., 04024., 04032., 04040.,
+           04048.}}}
     );
 }
 
 TEST(IntegrateStiffnessMatrixTests, OneElementTwoNodesOneQP_Ouu) {
-    TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Ouu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
-    );
+    TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Ouu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 template <typename Policy>
 void TestIntegrateStiffnessMatrix_1Element1Node2QPs(
-    Policy policy, Kokkos::View<const double[2][6][6]> qp_Kuu, Kokkos::View<const double[2][6][6]> qp_Puu,
-    Kokkos::View<const double[2][6][6]> qp_Cuu, Kokkos::View<const double[2][6][6]> qp_Ouu,
-    Kokkos::View<const double[2][6][6]> qp_Quu, const std::vector<std::vector<std::vector<double>>>& exact_M
+    Policy policy, Kokkos::View<const double[2][6][6]> qp_Kuu,
+    Kokkos::View<const double[2][6][6]> qp_Puu, Kokkos::View<const double[2][6][6]> qp_Cuu,
+    Kokkos::View<const double[2][6][6]> qp_Ouu, Kokkos::View<const double[2][6][6]> qp_Quu,
+    const std::vector<std::vector<std::vector<double>>>& exact_M
 ) {
     constexpr auto number_of_elements = 1;
     constexpr auto number_of_nodes = 1;
@@ -536,8 +529,8 @@ void TestIntegrateStiffnessMatrix_1Element1Node2QPs(
     Kokkos::parallel_for(
         policy,
         IntegrateStiffnessMatrix{
-            element_indices, qp_weights, qp_jacobian, shape_interp,
-            shape_interp_deriv, qp_Kuu, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, gbl_M}
+            element_indices, qp_weights, qp_jacobian, shape_interp, shape_interp_deriv, qp_Kuu,
+            qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, gbl_M}
     );
 
     auto M0 = Kokkos::View<double[6][6]>("M0");
@@ -579,8 +572,7 @@ void TestIntegrateStiffnessMatrix_1Element1Node2QPs_Puu(Policy policy) {
 }
 
 TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeTwoQPs_Puu) {
-    TestIntegrateStiffnessMatrix_1Element1Node2QPs_Puu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
-    );
+    TestIntegrateStiffnessMatrix_1Element1Node2QPs_Puu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 template <typename Policy>
@@ -617,8 +609,7 @@ void TestIntegrateStiffnessMatrix_1Element1Node2QPs_Quu(Policy policy) {
 }
 
 TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeTwoQPs_Quu) {
-    TestIntegrateStiffnessMatrix_1Element1Node2QPs_Quu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO())
-    );
+    TestIntegrateStiffnessMatrix_1Element1Node2QPs_Quu(Kokkos::TeamPolicy<>(1, Kokkos::AUTO()));
 }
 
 }  // namespace openturbine::restruct_poc::tests

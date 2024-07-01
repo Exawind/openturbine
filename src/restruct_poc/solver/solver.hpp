@@ -97,7 +97,10 @@ struct Solver {
           num_constraint_nodes(constraint_inputs.size()),
           num_constraint_dofs(num_constraint_nodes * kLieAlgebraComponents),
           T_dense("T dense", num_system_nodes),
-          matrix_terms("matrix_terms", beams_.num_elems, beams_.max_elem_nodes*kLieAlgebraComponents, beams_.max_elem_nodes*kLieAlgebraComponents),
+          matrix_terms(
+              "matrix_terms", beams_.num_elems, beams_.max_elem_nodes * kLieAlgebraComponents,
+              beams_.max_elem_nodes * kLieAlgebraComponents
+          ),
           R("R", num_dofs),
           x("x", num_dofs),
           convergence_err(max_iter) {
@@ -131,13 +134,18 @@ struct Solver {
         auto T_num_non_zero = num_system_nodes * 6 * 6;
         auto T_row_ptrs = RowPtrType("T_row_ptrs", num_rows + 1);
         auto T_indices = IndicesType("T_indices", T_num_non_zero);
-        Kokkos::parallel_for("PopulateTangentRowPtrs", 1, PopulateTangentRowPtrs<CrsMatrixType::size_type>{beams_.elem_indices, T_row_ptrs});
+        Kokkos::parallel_for(
+            "PopulateTangentRowPtrs", 1,
+            PopulateTangentRowPtrs<CrsMatrixType::size_type>{beams_.elem_indices, T_row_ptrs}
+        );
         Kokkos::parallel_for(
             "PopulateTangentIndices", 1,
             PopulateTangentIndices{beams_.elem_indices, beams_.node_state_indices, T_indices}
         );
         auto T_values = ValuesType("T values", T_num_non_zero);
-        T = CrsMatrixType("T", num_rows, num_columns, T_num_non_zero, T_values, T_row_ptrs, T_indices);
+        T = CrsMatrixType(
+            "T", num_rows, num_columns, T_num_non_zero, T_values, T_row_ptrs, T_indices
+        );
 
         auto B_num_rows = num_constraint_dofs;
         auto B_num_columns = num_system_dofs;

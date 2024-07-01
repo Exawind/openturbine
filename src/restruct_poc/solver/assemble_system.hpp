@@ -7,17 +7,17 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "compute_number_of_non_zeros.hpp"
+#include "contribute_elements_to_sparse_matrix.hpp"
 #include "copy_into_sparse_matrix.hpp"
+#include "copy_tangent_to_sparse_matrix.hpp"
 #include "populate_sparse_indices.hpp"
 #include "populate_sparse_row_ptrs.hpp"
-#include "copy_tangent_to_sparse_matrix.hpp"
-#include "contribute_elements_to_sparse_matrix.hpp"
 #include "solver.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
-#include "src/restruct_poc/system/assemble_stiffness_matrix.hpp"
 #include "src/restruct_poc/system/assemble_inertia_matrix.hpp"
 #include "src/restruct_poc/system/assemble_residual_vector.hpp"
+#include "src/restruct_poc/system/assemble_stiffness_matrix.hpp"
 #include "src/restruct_poc/system/calculate_tangent_operator.hpp"
 
 namespace openturbine {
@@ -43,7 +43,8 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
 
     Kokkos::parallel_for(
-        "CopyTangentIntoSparseMatrix", sparse_matrix_policy, CopyTangentToSparseMatrix{solver.T, solver.T_dense}
+        "CopyTangentIntoSparseMatrix", sparse_matrix_policy,
+        CopyTangentToSparseMatrix{solver.T, solver.T_dense}
     );
 
     Kokkos::deep_copy(R_system, 0.);
@@ -52,7 +53,8 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     AssembleStiffnessMatrix(beams, solver.matrix_terms);
 
     Kokkos::parallel_for(
-        "ContributeElementsToSparseMatrix", sparse_matrix_policy, ContributeElementsToSparseMatrix{solver.K, solver.matrix_terms}
+        "ContributeElementsToSparseMatrix", sparse_matrix_policy,
+        ContributeElementsToSparseMatrix{solver.K, solver.matrix_terms}
     );
 
     Kokkos::fence();
@@ -69,7 +71,8 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     auto gamma_prime = (solver.is_dynamic_solve) ? solver.gamma_prime : 0.;
     AssembleInertiaMatrix(beams, beta_prime, gamma_prime, solver.matrix_terms);
     Kokkos::parallel_for(
-        "ContributeElementsToSparseMatrix", sparse_matrix_policy, ContributeElementsToSparseMatrix{solver.K, solver.matrix_terms}
+        "ContributeElementsToSparseMatrix", sparse_matrix_policy,
+        ContributeElementsToSparseMatrix{solver.K, solver.matrix_terms}
     );
 
     Kokkos::fence();

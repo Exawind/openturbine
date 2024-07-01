@@ -17,7 +17,7 @@ struct CalculateTangentOperator {
     KOKKOS_FUNCTION
     void operator()(const int i_node) const {
         for (auto k = 0; k < kLieAlgebraComponents; ++k) {
-            for(auto n = 0; n < kLieAlgebraComponents; ++n) {
+            for (auto n = 0; n < kLieAlgebraComponents; ++n) {
                 T(i_node, k, n) = 0.;
             }
         }
@@ -49,7 +49,7 @@ struct CalculateTangentOperator {
 
         for (auto k = 0; k < 3; ++k) {
             for (auto n = 0; n < 3; ++n) {
-                T(i_node, k+3, n+3) += m1(k, n);
+                T(i_node, k + 3, n + 3) += m1(k, n);
             }
         }
     }
