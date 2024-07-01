@@ -21,6 +21,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
     auto host_gravity = Kokkos::create_mirror(beams.gravity);
 
     auto host_elem_indices = Kokkos::create_mirror(beams.elem_indices);
+    auto host_node_state_indices = Kokkos::create_mirror(beams.node_state_indices);
     auto host_node_x0 = Kokkos::create_mirror(beams.node_x0);
     auto host_node_u = Kokkos::create_mirror(beams.node_u);
     auto host_node_u_dot = Kokkos::create_mirror(beams.node_u_dot);
@@ -41,13 +42,24 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
     size_t qp_counter = 0;
 
     for (size_t i = 0; i < beams_input.NumElements(); i++) {
+        // Get number of nodes and quadrature points in element
         size_t num_nodes = beams_input.elements[i].nodes.size();
         size_t num_qps = beams_input.elements[i].quadrature.size();
+
+        // Create element indices and set in host mirror
         host_elem_indices[i] = Beams::ElemIndices(num_nodes, num_qps, node_counter, qp_counter);
-        node_counter += num_nodes;
-        qp_counter += num_qps;
         auto& idx = host_elem_indices[i];
 
+        // Populate beam node->state indices
+        for (size_t j = 0; j < num_nodes; ++j) {
+            host_node_state_indices(node_counter + j) = beams_input.elements[i].nodes[j].node.ID;
+        }
+
+        // Increment counters for beam nodes and quadrature points
+        node_counter += num_nodes;
+        qp_counter += num_qps;
+
+        // Populate views for this element
         PopulateElementViews(
             beams_input.elements[i],  // Element inputs
             Kokkos::subview(host_node_x0, idx.node_range, Kokkos::ALL),
@@ -61,6 +73,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
 
     Kokkos::deep_copy(beams.gravity, host_gravity);
     Kokkos::deep_copy(beams.elem_indices, host_elem_indices);
+    Kokkos::deep_copy(beams.node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_x0, host_node_x0);
     Kokkos::deep_copy(beams.node_u, host_node_u);
     Kokkos::deep_copy(beams.node_u_dot, host_node_u_dot);
@@ -70,11 +83,6 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
     Kokkos::deep_copy(beams.qp_Cstar, host_qp_Cstar);
     Kokkos::deep_copy(beams.shape_interp, host_shape_interp);
     Kokkos::deep_copy(beams.shape_deriv, host_shape_deriv);
-
-    // TODO: update for assembly where state may apply to multiple nodes in different elements
-    Kokkos::parallel_for(
-        "SetNodeStateIndices", beams.num_nodes, SetNodeStateIndices{beams.node_state_indices}
-    );
 
     Kokkos::parallel_for(
         "InterpolateQPPosition", beams.num_elems,
