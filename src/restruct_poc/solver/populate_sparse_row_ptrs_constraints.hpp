@@ -14,7 +14,6 @@ struct PopulateSparseRowPtrs_Constraints {
     void operator()(int) const {
         auto rows_so_far = 0;
         for (int i_constraint = 0; i_constraint < num_constraint_nodes; ++i_constraint) {
-            int factor = 0;
             for (int i = 0; i < kLieAlgebraComponents; ++i) {
                 auto num_cols =
                     (data(i_constraint).base_node_index < 0 ? 1 : 2) * kLieAlgebraComponents;

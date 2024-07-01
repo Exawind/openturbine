@@ -22,6 +22,10 @@ struct PopulateSparseRowPtrs {
                 ++rows_so_far;
             }
         }
+        auto last_row = rows_so_far;
+        for(int i = last_row+1; i < row_ptrs.extent(0); ++i) {
+            row_ptrs(i) = row_ptrs(last_row);
+        }
     }
 };
 }  // namespace openturbine
