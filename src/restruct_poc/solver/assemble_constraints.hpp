@@ -16,20 +16,21 @@
 namespace openturbine {
 
 template <typename Subview_N>
-void AssembleConstraints(
-    Solver& solver, Subview_N R_system, Subview_N R_lambda
-) {
+void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Constraints");
     if (solver.num_constraint_dofs == 0) {
         return;
     }
+
+    // Transfer prescribed displacements to host
+    solver.constraints.TransferU();
 
     Kokkos::deep_copy(solver.constraints.Phi, 0.);
     Kokkos::deep_copy(solver.constraints.B, 0.);
     Kokkos::parallel_for(
         "CalculateConstraintResidualGradient", solver.num_constraint_nodes,
         CalculateConstraintResidualGradient{
-            solver.constraints.node_indices,
+            solver.constraints.data,
             solver.constraints.X0,
             solver.constraints.u,
             solver.state.q,

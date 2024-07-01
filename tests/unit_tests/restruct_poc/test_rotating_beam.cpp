@@ -12,7 +12,7 @@
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
-#include "src/restruct_poc/solver/initialize_constraints.hpp"
+#include "src/restruct_poc/model/model.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
 #include "src/restruct_poc/types.hpp"
@@ -76,6 +76,8 @@ std::vector<BeamSection> sections = {
 };
 
 TEST(RotatingBeamTest, StepConvergence) {
+    auto model = Model();
+
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
 
@@ -84,15 +86,14 @@ TEST(RotatingBeamTest, StepConvergence) {
     // 0.1 rad/s angular velocity around the z axis
     const double omega = 0.1;
     std::vector<BeamNode> nodes;
-    std::vector<std::array<double, 7>> displacement;
-    std::vector<std::array<double, 6>> velocity;
-    std::vector<std::array<double, 6>> acceleration;
     for (const double s : node_s) {
         auto x = 10 * s + 2.;
-        nodes.push_back(BeamNode(s, {x, 0., 0., 1., 0., 0., 0.}));
-        displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
-        velocity.push_back({0., x * omega, 0., 0., 0., omega});
-        acceleration.push_back({0., 0., 0., 0., 0., 0.});
+        auto& node = model.AddNode(
+            {x, 0., 0., 1., 0., 0., 0.},        // Position
+            {0., 0., 0., 1., 0., 0., 0.},       // Displacement
+            {0., x * omega, 0., 0., 0., omega}  // Velocity
+        );
+        nodes.push_back(BeamNode(s, node));
     }
 
     // Define beam initialization
@@ -106,11 +107,8 @@ TEST(RotatingBeamTest, StepConvergence) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // Number of system nodes from number of beam nodes
-    const int num_system_nodes(beams.num_nodes);
-
     // Constraint inputs
-    std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+    model.PrescribedBC(model.nodes[0]);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -120,12 +118,8 @@ TEST(RotatingBeamTest, StepConvergence) {
 
     // Create solver
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, beams, constraint_inputs,
-        displacement, velocity, acceleration
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
     );
-
-    // Initialize constraints
-    InitializeConstraints(solver, beams);
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
@@ -162,6 +156,9 @@ TEST(RotatingBeamTest, StepConvergence) {
 }
 
 TEST(RotatingBeamTest, TwoBeam) {
+    // Create model for managing nodes and constraints
+    auto model = Model();
+
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
 
@@ -173,42 +170,34 @@ TEST(RotatingBeamTest, TwoBeam) {
     // 0.1 rad/s angular velocity around the z axis
     const int num_blades = 2;
     std::vector<BeamElement> blade_elems;
-    std::vector<std::array<double, 7>> displacement;
-    std::vector<std::array<double, 6>> velocity;
-    std::vector<std::array<double, 6>> acceleration;
-    std::vector<ConstraintInput> constraint_inputs;
+
     // Loop through blades
     for (int i = 0; i < num_blades; ++i) {
         // Define root rotation
         const auto q_root = std::array<double, 4>{1., 0., 0., 0.};
 
         // Declare list of element nodes
-        std::vector<BeamNode> nodes;
+        std::vector<BeamNode> beam_nodes;
 
         // Loop through nodes
         for (const double s : node_s) {
             const auto pos = RotateVectorByQuaternion(q_root, {10. * s + 2., 0., 0.});
-            nodes.push_back(BeamNode(s, pos, q_root));
-
-            // Add node initial displacement, velocity, and acceleration
-            displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
             auto v = CrossProduct(omega, pos);
-            velocity.push_back({
-                v[0],
-                v[1],
-                v[2],
-                omega[0],
-                omega[1],
-                omega[2],
-            });
-            acceleration.push_back({0., 0., 0., 0., 0., 0.});
+            beam_nodes.push_back(BeamNode(
+                s, model.AddNode(
+                       {pos[0], pos[1], pos[2], q_root[0], q_root[1], q_root[2],
+                        q_root[3]},                                      // position
+                       {0., 0., 0., 1., 0., 0., 0.},                     // displacement
+                       {v[0], v[1], v[2], omega[0], omega[1], omega[2]}  // velocity
+                   )
+            ));
         }
 
         // Add beam element
-        blade_elems.push_back(BeamElement(nodes, sections, quadrature));
+        blade_elems.push_back(BeamElement(beam_nodes, sections, quadrature));
 
         // Set constraint nodes
-        constraint_inputs.push_back(ConstraintInput(-1, i * node_s.size()));
+        model.PrescribedBC(beam_nodes[0].node);
     }
 
     // Define beam initialization
@@ -216,9 +205,6 @@ TEST(RotatingBeamTest, TwoBeam) {
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
-
-    // Number of system nodes from number of beam nodes
-    const int num_system_nodes(beams.num_nodes);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -228,12 +214,8 @@ TEST(RotatingBeamTest, TwoBeam) {
 
     // Create solver with initial node state
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, beams, constraint_inputs,
-        displacement, velocity, acceleration
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
     );
-
-    // Initialize constraints
-    InitializeConstraints(solver, beams);
 
     // Calculate hub rotation for this time step
     const auto q_hub =
@@ -285,21 +267,19 @@ TEST(RotatingBeamTest, TwoBeam) {
 }
 
 TEST(RotatingBeamTest, ThreeBladeRotor) {
+    auto model = Model();
+
     // Gravity vector
-    std::array<double, 3> gravity = {0., 0., 9.81};
+    Array_3 gravity = {0., 0., 9.81};
 
     // Rotor angular velocity in rad/s
-    const auto omega = std::array<double, 3>{0., 0., 1.};
+    const auto omega = Array_3{0., 0., 1.};
 
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 1 rad/s angular velocity around the z axis
     const int num_blades = 3;
     std::vector<BeamElement> blade_elems;
-    std::vector<std::array<double, 7>> displacement;
-    std::vector<std::array<double, 6>> velocity;
-    std::vector<std::array<double, 6>> acceleration;
-    std::vector<ConstraintInput> constraint_inputs;
 
     // Loop through blades
     for (int i = 0; i < num_blades; ++i) {
@@ -307,32 +287,27 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         const auto q_root = RotationVectorToQuaternion({0., 0., 2. * M_PI * i / num_blades});
 
         // Declare list of element nodes
-        std::vector<BeamNode> nodes;
+        std::vector<BeamNode> beam_nodes;
 
         // Loop through nodes
         for (const double s : node_s) {
             const auto pos = RotateVectorByQuaternion(q_root, {10. * s + 2., 0., 0.});
-            nodes.push_back(BeamNode(s, pos, q_root));
-
-            // Add node initial displacement, velocity, and acceleration
-            displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
             auto v = CrossProduct(omega, pos);
-            velocity.push_back({
-                v[0],
-                v[1],
-                v[2],
-                omega[0],
-                omega[1],
-                omega[2],
-            });
-            acceleration.push_back({0., 0., 0., 0., 0., 0.});
+            beam_nodes.push_back(BeamNode(
+                s, model.AddNode(
+                       {pos[0], pos[1], pos[2], q_root[0], q_root[1], q_root[2],
+                        q_root[3]},                                      // position
+                       {0., 0., 0., 1., 0., 0., 0.},                     // displacement
+                       {v[0], v[1], v[2], omega[0], omega[1], omega[2]}  // velocity
+                   )
+            ));
         }
 
         // Add beam element
-        blade_elems.push_back(BeamElement(nodes, sections, quadrature));
+        blade_elems.push_back(BeamElement(beam_nodes, sections, quadrature));
 
         // Set constraint nodes
-        constraint_inputs.push_back(ConstraintInput(-1, i * node_s.size()));
+        model.PrescribedBC(beam_nodes[0].node);
     }
 
     // Define beam initialization
@@ -340,9 +315,6 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
-
-    // Number of system nodes from number of beam nodes
-    const int num_system_nodes(beams.num_nodes);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -354,12 +326,8 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
 
     // Create solver with initial node state
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, beams, constraint_inputs,
-        displacement, velocity, acceleration
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
     );
-
-    // Initialize constraints
-    InitializeConstraints(solver, beams);
 
     // Perform time steps and check for convergence within max_iter iterations
     for (int i = 0; i < num_steps; ++i) {

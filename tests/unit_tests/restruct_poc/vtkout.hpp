@@ -14,7 +14,7 @@
 #include <vtkXMLPolyDataWriter.h>
 #include <vtkXMLUnstructuredGridWriter.h>
 
-#include "src/restruct_poc/beams.hpp"
+#include "src/restruct_poc/beams/beams.hpp"
 
 namespace openturbine {
 
