@@ -20,13 +20,13 @@ struct PopulateTangentIndices {
             for (int j_index = 0; j_index < num_nodes; ++j_index) {
                 for (int n = 0; n < kLieAlgebraComponents; ++n) {
                     // for (int i_index = 0; i_index < num_nodes; ++i_index) {
-                        // const auto i = i_index + idx.node_range.first;
-                        const auto i = j_index + idx.node_range.first;
-                        const auto column_start = node_state_indices(i) * kLieAlgebraComponents;
-                        for (int m = 0; m < kLieAlgebraComponents; ++m) {
-                            indices(entries_so_far) = column_start + m;
-                            ++entries_so_far;
-                        }
+                    // const auto i = i_index + idx.node_range.first;
+                    const auto i = j_index + idx.node_range.first;
+                    const auto column_start = node_state_indices(i) * kLieAlgebraComponents;
+                    for (int m = 0; m < kLieAlgebraComponents; ++m) {
+                        indices(entries_so_far) = column_start + m;
+                        ++entries_so_far;
+                    }
                     // }
                 }
             }

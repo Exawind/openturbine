@@ -27,7 +27,7 @@ struct ContributeElementsToSparseMatrix {
         auto col_idx = col_idx_type(member.team_scratch(1), row.length);
         Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](int entry) {
             col_idx(entry) = cols(row_map(i) + entry);
-            row_data(entry) = dense(i/row.length, i%row.length, entry);
+            row_data(entry) = dense(i / row.length, i % row.length, entry);
         });
         member.team_barrier();
         Kokkos::single(Kokkos::PerTeam(member), [=]() {
