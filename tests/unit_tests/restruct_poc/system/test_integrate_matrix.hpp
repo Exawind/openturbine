@@ -97,6 +97,21 @@ auto get_qp_M(const std::array<double, n_elem * n_qps * 6 * 6>& M_data) {
 }
 
 template <int n_elem, int n_qps>
+auto get_qp_Muu(const std::array<double, n_elem * n_qps * 6 * 6>& M_data) {
+    return get_qp_matrix<n_elem, n_qps>("Muu", M_data);
+}
+
+template <int n_elem, int n_qps>
+auto get_qp_Guu(const std::array<double, n_elem * n_qps * 6 * 6>& M_data) {
+    return get_qp_matrix<n_elem, n_qps>("Guu", M_data);
+}
+
+template <int n_elem, int n_qps>
+auto get_qp_Kuu(const std::array<double, n_elem * n_qps * 6 * 6>& Puu_data) {
+    return get_qp_matrix<n_elem, n_qps>("Kuu", Puu_data);
+}
+
+template <int n_elem, int n_qps>
 auto get_qp_Puu(const std::array<double, n_elem * n_qps * 6 * 6>& Puu_data) {
     return get_qp_matrix<n_elem, n_qps>("Puu", Puu_data);
 }
