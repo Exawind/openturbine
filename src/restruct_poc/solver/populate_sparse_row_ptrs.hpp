@@ -23,7 +23,7 @@ struct PopulateSparseRowPtrs {
             }
         }
         auto last_row = rows_so_far;
-        for(int i = last_row+1; i < row_ptrs.extent(0); ++i) {
+        for (int i = last_row + 1; i < row_ptrs.extent_int(0); ++i) {
             row_ptrs(i) = row_ptrs(last_row);
         }
     }
