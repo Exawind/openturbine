@@ -16,16 +16,9 @@ struct PopulateSparseRowPtrs_Constraints {
         for (int i_constraint = 0; i_constraint < num_constraint_nodes; ++i_constraint) {
             int factor = 0;
             for (int i = 0; i < kLieAlgebraComponents; ++i) {
-                switch (data(i_constraint).type) {
-                    case ConstraintType::FixedBC:
-                    case ConstraintType::PrescribedBC:
-                        factor = 1;
-                        break;
-                    default:
-                        factor = 2;
-                }
-                B_row_ptrs(rows_so_far + 1) =
-                    B_row_ptrs(rows_so_far) + factor * kLieAlgebraComponents;
+                auto num_cols =
+                    (data(i_constraint).base_node_index < 0 ? 1 : 2) * kLieAlgebraComponents;
+                B_row_ptrs(rows_so_far + 1) = B_row_ptrs(rows_so_far) + num_cols;
                 ++rows_so_far;
             }
         }
