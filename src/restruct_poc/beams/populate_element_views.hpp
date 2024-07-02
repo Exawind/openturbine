@@ -16,9 +16,10 @@ inline void PopulateElementViews(
         node_xi[i] = 2 * elem.nodes[i].position - 1;
     }
 
+    // Set node initial position and orientation
     for (size_t j = 0; j < elem.nodes.size(); ++j) {
-        for (size_t k = 0; k < elem.nodes[j].initial_dofs.size(); ++k) {
-            node_x0(j, k) = elem.nodes[j].initial_dofs[k];
+        for (size_t k = 0; k < elem.nodes[j].node.x.size(); ++k) {
+            node_x0(j, k) = elem.nodes[j].node.x[k];
         }
     }
 

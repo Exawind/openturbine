@@ -10,9 +10,9 @@
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
+#include "src/restruct_poc/model/model.hpp"
 #include "src/restruct_poc/solver/assemble_constraints.hpp"
 #include "src/restruct_poc/solver/assemble_system.hpp"
-#include "src/restruct_poc/solver/initialize_constraints.hpp"
 #include "src/restruct_poc/solver/predict_next_state.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
@@ -46,6 +46,9 @@ protected:
             {0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
         }};
 
+        // Create model for adding nodes and constraints
+        auto model = Model();
+
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};
 
@@ -59,23 +62,24 @@ protected:
         // Calculate displacement, velocity, acceleration assuming a
         // 0.1 rad/s angular velocity around the z axis
         const double omega = 0.1;
-        std::vector<BeamNode> nodes;
-        std::vector<std::array<double, 7>> displacement;
-        std::vector<std::array<double, 6>> velocity;
-        std::vector<std::array<double, 6>> acceleration;
+        std::vector<BeamNode> beam_nodes;
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
-            nodes.push_back(BeamNode(s, {x, 0., 0., 1., 0., 0., 0.}));
-            displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
-            velocity.push_back({0., x * omega, 0., 0., 0., omega});
-            acceleration.push_back({0., 0., 0., 0., 0., 0.});
+            beam_nodes.push_back(BeamNode(
+                s, model.AddNode(
+                       {x, 0., 0., 1., 0., 0., 0.},         // Position
+                       {0., 0., 0., 1., 0., 0., 0.},        // Displacement
+                       {0., x * omega, 0., 0., 0., omega},  // Velocity
+                       {0., 0., 0., 0., 0., 0.}             // Acceleration
+                   )
+            ));
         }
 
         // Define beam initialization
         BeamsInput beams_input(
             {
                 BeamElement(
-                    nodes,
+                    beam_nodes,
                     {
                         BeamSection(0., mass_matrix, stiffness_matrix),
                         BeamSection(1., mass_matrix, stiffness_matrix),
@@ -98,11 +102,8 @@ protected:
         beams_ = new Beams();
         *beams_ = CreateBeams(beams_input);
 
-        // Number of system nodes from number of beam nodes
-        const size_t num_system_nodes(beams_->num_nodes);
-
         // Constraint inputs
-        std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+        model.PrescribedBC(model.nodes[0]);
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -112,17 +113,11 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_,
-            constraint_inputs, displacement, velocity, acceleration
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
         );
 
-        // Initialize constraints
-        InitializeConstraints(*solver_, *beams_);
-
-        // Set constraint displacement
-
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
-        solver_->constraints.UpdateDisplacement(0., {0., 0., 0., q[0], q[1], q[2], q[3]});
+        solver_->constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
 
         // Predict the next state for the solver
         PredictNextState(*solver_);
@@ -392,6 +387,9 @@ protected:
             {0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
         }};
 
+        // Create model for adding nodes and constraints
+        auto model = Model();
+
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};
 
@@ -409,23 +407,24 @@ protected:
         // Calculate displacement, velocity, acceleration assuming a
         // 0.1 rad/s angular velocity around the z axis
         const double omega = 0.1;
-        std::vector<BeamNode> nodes;
-        std::vector<std::array<double, 7>> displacement;
-        std::vector<std::array<double, 6>> velocity;
-        std::vector<std::array<double, 6>> acceleration;
+        std::vector<BeamNode> beam_nodes;
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
-            nodes.push_back(BeamNode(s, {x, 0., 0., 1., 0., 0., 0.}));
-            displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
-            velocity.push_back({0., x * omega, 0., 0., 0., omega});
-            acceleration.push_back({0., 0., 0., 0., 0., 0.});
+            beam_nodes.push_back(BeamNode(
+                s, model.AddNode(
+                       {x, 0., 0., 1., 0., 0., 0.},         // Position
+                       {0., 0., 0., 1., 0., 0., 0.},        // Displacement
+                       {0., x * omega, 0., 0., 0., omega},  // Velocity
+                       {0., 0., 0., 0., 0., 0.}             // Acceleration
+                   )
+            ));
         }
 
         // Define beam initialization
         BeamsInput beams_input(
             {
                 BeamElement(
-                    nodes,
+                    beam_nodes,
                     {
                         BeamSection(0., mass_matrix, stiffness_matrix),
                         BeamSection(1., mass_matrix, stiffness_matrix),
@@ -448,11 +447,8 @@ protected:
         beams_ = new Beams();
         *beams_ = CreateBeams(beams_input);
 
-        // Number of system nodes from number of beam nodes
-        const size_t num_system_nodes(beams_->num_nodes);
-
         // Constraint inputs
-        std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+        model.PrescribedBC(model.nodes[0]);
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -462,12 +458,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_,
-            constraint_inputs, displacement, velocity, acceleration
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
         );
-
-        // Initialize constraints
-        InitializeConstraints(*solver_, *beams_);
 
         // Set constraint displacement
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -647,6 +639,9 @@ protected:
             {0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
         }};
 
+        // Create model for adding nodes and constraints
+        auto model = Model();
+
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};
 
@@ -660,23 +655,24 @@ protected:
         // Calculate displacement, velocity, acceleration assuming a
         // 0.1 rad/s angular velocity around the z axis
         const double omega = 0.1;
-        std::vector<BeamNode> nodes;
-        std::vector<std::array<double, 7>> displacement;
-        std::vector<std::array<double, 6>> velocity;
-        std::vector<std::array<double, 6>> acceleration;
+        std::vector<BeamNode> beam_nodes;
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
-            nodes.push_back(BeamNode(s, {x, 0., 0., 1., 0., 0., 0.}));
-            displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
-            velocity.push_back({0., x * omega, 0., 0., 0., omega});
-            acceleration.push_back({0., 0., 0., 0., 0., 0.});
+            beam_nodes.push_back(BeamNode(
+                s, model.AddNode(
+                       {x, 0., 0., 1., 0., 0., 0.},         // Position
+                       {0., 0., 0., 1., 0., 0., 0.},        // Displacement
+                       {0., x * omega, 0., 0., 0., omega},  // Velocity
+                       {0., 0., 0., 0., 0., 0.}             // Acceleration
+                   )
+            ));
         }
 
         // Define beam initialization
         BeamsInput beams_input(
             {
                 BeamElement(
-                    nodes,
+                    beam_nodes,
                     {
                         BeamSection(0., mass_matrix, stiffness_matrix),
                         BeamSection(1., mass_matrix, stiffness_matrix),
@@ -699,11 +695,8 @@ protected:
         beams_ = new Beams();
         *beams_ = CreateBeams(beams_input);
 
-        // Number of system nodes from number of beam nodes
-        const size_t num_system_nodes(beams_->num_nodes);
-
         // Constraint inputs
-        std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+        model.PrescribedBC(model.nodes[0]);
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -713,12 +706,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_,
-            constraint_inputs, displacement, velocity, acceleration
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
         );
-
-        // Initialize constraints
-        InitializeConstraints(*solver_, *beams_);
 
         // Set constraint displacement
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
