@@ -43,7 +43,7 @@ void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::strin
     file.close();
 }
 
-TEST(RotatingBeamTest, IEA15Rotor) {
+TEST(RotorTest, IEA15Rotor) {
     // Flag to write output
     const bool write_output(false);
 

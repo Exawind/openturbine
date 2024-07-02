@@ -124,19 +124,12 @@ struct Solver {
         // Initialize contraint for indexing for sparse matrices
         int B_num_non_zero = 0;
         for (const auto& constraint : constraints_) {
-            switch (constraint.type) {
-                case ConstraintType::FixedBC:
-                case ConstraintType::PrescribedBC:
-                    B_num_non_zero += 6 * 6;
-                    break;
-                default:
-                    B_num_non_zero += 2 * 6 * 6;
-            }
+            B_num_non_zero += (constraint.base_node.ID < 0 ? 1 : 2) * 6 * 6;
         }
         auto B_num_rows = num_constraint_dofs;
         auto B_num_columns = num_system_dofs;
         auto B_row_ptrs = Kokkos::View<int*>("b_row_ptrs", B_num_rows + 1);
-        auto B_indices = Kokkos::View<int*>("b_indices", B_num_non_zero);
+        auto B_col_ind = Kokkos::View<int*>("b_indices", B_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrs_Constraints", 1,
             PopulateSparseRowPtrs_Constraints{num_constraint_nodes, constraints.data, B_row_ptrs}
@@ -144,13 +137,13 @@ struct Solver {
 
         Kokkos::parallel_for(
             "PopulateSparseIndices_Constraints", 1,
-            PopulateSparseIndices_Constraints{num_constraint_nodes, constraints.data, B_indices}
+            PopulateSparseIndices_Constraints{num_constraint_nodes, constraints.data, B_col_ind}
         );
 
         auto B_values = Kokkos::View<double*>("B values", B_num_non_zero);
-        KokkosSparse::sort_crs_matrix(B_row_ptrs, B_indices, B_values);
+        KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);
         B = CrsMatrixType(
-            "B", B_num_rows, B_num_columns, B_num_non_zero, B_values, B_row_ptrs, B_indices
+            "B", B_num_rows, B_num_columns, B_num_non_zero, B_values, B_row_ptrs, B_col_ind
         );
 
         auto B_t_num_rows = B_num_columns;
@@ -167,7 +160,7 @@ struct Solver {
         Kokkos::parallel_for(
             "PopulateSparseIndices_Constraints_Transpose", 1,
             PopulateSparseIndices_Constraints_Transpose{
-                num_constraint_nodes, constraints.data, B_t_indices}
+                num_constraint_nodes, num_system_nodes, constraints.data, B_t_indices}
         );
 
         auto B_t_values = Kokkos::View<double*>("B_t values", B_t_num_non_zero);
