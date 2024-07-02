@@ -137,8 +137,10 @@ struct CalculateConstraintResidualGradient {
                 QuaternionCompose(R2_RCinv, R1inv, R2_RCinv_R1inv);
                 QuaternionToRotationMatrix(R2_RCinv_R1inv, C);
                 AxialVectorOfMatrix(C, Phi_p);
+                break;
             case ConstraintType::Cylindrical:
-                // Phi_p = Axial(R2*inv(RC)*inv(R1))
+                // Phi_p =
+                break;
             default:
                 // Phi_p = Axial(R2*inv(R1))
                 QuaternionCompose(R2, R1inv, R2_R1inv);
