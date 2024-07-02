@@ -65,20 +65,13 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
             beams.qp_omega
         }
     );
-    Kokkos::parallel_for(
-        "InterpolateQPAcceleration_Translation",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPAcceleration_Translation{
-            beams.elem_indices, beams.shape_interp, beams.node_u_ddot, beams.qp_u_ddot}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQPAcceleration_Angular",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPAcceleration_Angular{
+    Kokkos::parallel_for("InterpolateQPAcceleration", range_policy,
+        InterpolateQPAcceleration {
             beams.elem_indices,
             beams.shape_interp,
             beams.node_u_ddot,
-            beams.qp_omega_dot,
+            beams.qp_u_ddot,
+            beams.qp_omega_dot
         }
     );
 
