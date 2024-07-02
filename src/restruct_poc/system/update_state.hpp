@@ -42,25 +42,21 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
             A,
         }
     );
+    auto range_policy = Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO());
+    Kokkos::parallel_for("InterpolateQPState", range_policy, 
+        InterpolateQPState{
+            beams.elem_indices, 
+            beams.shape_interp, 
+            beams.shape_deriv, 
+            beams.qp_jacobian, 
+            beams.node_u, 
+            beams.qp_u, 
+            beams.qp_u_prime, 
+            beams.qp_r, 
+            beams.qp_r_prime
+        }
+    );
 
-    Kokkos::parallel_for(
-        "InterpolateQpU", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPU{beams.elem_indices, beams.shape_interp, beams.node_u, beams.qp_u}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQpU_Prime", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPU_Prime{
-            beams.elem_indices, beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.qp_u_prime}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQpR", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPR{beams.elem_indices, beams.shape_interp, beams.node_u, beams.qp_r}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQpR_Prime", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPR_Prime{
-            beams.elem_indices, beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.qp_r_prime}
-    );
     Kokkos::parallel_for(
         "InterpolateQPVelocity_Translation",
         Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},

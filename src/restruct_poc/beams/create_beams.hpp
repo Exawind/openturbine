@@ -98,7 +98,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
     );
 
     Kokkos::parallel_for(
-        "InterpolateQPState", beams.num_elems,
+        "InterpolateQPState", Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO()),
         InterpolateQPState{
             beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
             beams.node_u, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime}
