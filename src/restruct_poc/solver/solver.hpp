@@ -16,6 +16,8 @@
 #include "populate_sparse_row_ptrs.hpp"
 #include "populate_sparse_row_ptrs_constraints.hpp"
 #include "populate_sparse_row_ptrs_constraints_transpose.hpp"
+#include "populate_tangent_indices.hpp"
+#include "populate_tangent_row_ptrs.hpp"
 #include "state.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
@@ -33,6 +35,9 @@ struct Solver {
         int, int, double, ExecutionSpace, MemorySpace, MemorySpace>;
     using SpmvHandle = KokkosSparse::SPMVHandle<
         ExecutionSpace, CrsMatrixType, Kokkos::View<double*>, Kokkos::View<double*>>;
+    using ValuesType = Kokkos::View<CrsMatrixType::value_type*>;
+    using RowPtrType = Kokkos::View<CrsMatrixType::size_type*>;
+    using IndicesType = Kokkos::View<CrsMatrixType::ordinal_type*>;
     bool is_dynamic_solve;
     int max_iter;
     double h;
@@ -122,30 +127,26 @@ struct Solver {
         );
 
         // Tangent operator sparse matrix
-        auto T_num_rows = num_system_dofs;
-        auto T_num_columns = num_system_dofs;
-        auto T_num_non_zero = num_system_nodes * (6 * 6);
-        auto T_row_ptrs = Kokkos::View<int*>("T_row_ptrs", T_num_rows + 1);
-        auto T_col_inds = Kokkos::View<int*>("T_col_inds", T_num_non_zero);
-        auto T_values = Kokkos::View<double*>("T values", T_num_non_zero);
-        auto T_row_ptrs_host = Kokkos::create_mirror(T_row_ptrs);
-        auto T_col_inds_host = Kokkos::create_mirror(T_col_inds);
-        auto cum_cols = 0;
-        for (int i = 0; i < num_system_nodes; ++i) {
-            for (int j = 0; j < 6; ++j) {
-                T_row_ptrs_host(i) = cum_cols;
-                auto col_start = i * kLieAlgebraComponents;
-                for (int k = 0; k < 6; k++) {
-                    T_col_inds_host(cum_cols) = col_start + k;
-                    ++cum_cols;
-                }
-            }
+        auto T_num_non_zero = num_system_nodes * 6 * 6;
+        auto T_row_ptrs = RowPtrType("T_row_ptrs", K_num_rows + 1);
+        auto T_indices = IndicesType("T_indices", T_num_non_zero);
+        Kokkos::parallel_for(
+            "PopulateTangentRowPtrs", 1,
+            PopulateTangentRowPtrs<CrsMatrixType::size_type>{num_system_nodes, T_row_ptrs}
+        );
+        auto node_ids = Kokkos::View<int*>("node_ids", system_nodes.size());
+        auto host_node_ids = Kokkos::create_mirror(node_ids);
+        for (auto i = 0u; i < system_nodes.size(); ++i) {
+            host_node_ids(i) = system_nodes[i].ID;
         }
-        T_row_ptrs_host(T_num_rows) = cum_cols;
-        Kokkos::deep_copy(T_row_ptrs, T_row_ptrs_host);
-        Kokkos::deep_copy(T_col_inds, T_col_inds_host);
+        Kokkos::deep_copy(node_ids, host_node_ids);
+        Kokkos::parallel_for(
+            "PopulateTangentIndices", 1,
+            PopulateTangentIndices{num_system_nodes, node_ids, T_indices}
+        );
+        auto T_values = ValuesType("T values", T_num_non_zero);
         T = CrsMatrixType(
-            "T", T_num_rows, T_num_columns, T_num_non_zero, T_values, T_row_ptrs, T_col_inds
+            "T", K_num_rows, K_num_columns, T_num_non_zero, T_values, T_row_ptrs, T_indices
         );
 
         // Initialize contraint for indexing for sparse matrices

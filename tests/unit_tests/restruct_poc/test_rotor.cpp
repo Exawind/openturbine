@@ -870,7 +870,7 @@ TEST(RotorTest, IEA15Rotor) {
     // Calculate displacement, velocity, acceleration assuming a
     // 1 rad/s angular velocity around the z axis
     const size_t num_blades = 3;
-    std::vector<BeamElement> blade_elems;
+    std::vector<BeamElement> beam_elems;
 
     // Hub radius (meters)
     const double hub_rad{3.97};
@@ -904,17 +904,24 @@ TEST(RotorTest, IEA15Rotor) {
         }
 
         // Add beam element
-        blade_elems.push_back(BeamElement(beam_nodes, material_sections, trapz_quadrature));
+        beam_elems.push_back(BeamElement(beam_nodes, material_sections, trapz_quadrature));
 
         // Set prescribed BC on root node
-        model.PrescribedBC(beam_nodes[0].node);
+        // model.PrescribedBC(beam_nodes[0].node);
     }
 
     // Define beam initialization
-    BeamsInput beams_input(blade_elems, gravity);
+    BeamsInput beams_input(beam_elems, gravity);
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
+
+    // Define hub node and associated constraints
+    auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0});
+    for (const auto& beam_elem : beam_elems) {
+        model.RigidConstraint(hub_node, beam_elem.nodes[0].node);
+    }
+    auto hub_bc = model.PrescribedBC(hub_node, {0., 0., 0.});
 
     // Create solver with initial node state
     Solver solver(
@@ -951,10 +958,8 @@ TEST(RotorTest, IEA15Rotor) {
         // Define hub translation/rotation displacement
         Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
-        // Update constraint displacements
-        for (const auto& constraint : model.constraints) {
-            solver.constraints.UpdateDisplacement(constraint.ID, u_hub);
-        }
+        // Update prescribed displacement constraint on hub
+        solver.constraints.UpdateDisplacement(hub_bc.ID, u_hub);
 
         // Take step
         auto converged = Step(solver, beams);
