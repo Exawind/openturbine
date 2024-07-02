@@ -35,6 +35,7 @@ struct Constraint {
                 break;
             case ConstraintType::RotationControl:
                 rot_axis = vec;
+                [[fallthrough]];
             default:
                 X0[0] = this->target_node.x[0] - this->base_node.x[0];
                 X0[1] = this->target_node.x[1] - this->base_node.x[1];
