@@ -2,11 +2,9 @@
 
 #include "beams.hpp"
 #include "calculate_jacobian.hpp"
-#include "interpolate_QP_acceleration.hpp"
+#include "interpolate_to_quadrature_points.hpp"
 #include "interpolate_QP_position.hpp"
 #include "interpolate_QP_rotation.hpp"
-#include "interpolate_QP_state.hpp"
-#include "interpolate_QP_velocity.hpp"
 #include "populate_element_views.hpp"
 #include "set_node_state_indices.hpp"
 
@@ -98,37 +96,56 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
     );
 
     auto range_policy = Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO());
-    Kokkos::parallel_for(
-        "InterpolateQPState", range_policy,
-        InterpolateQPState{
+    Kokkos::parallel_for("InterpolateToQuadraturePoints", range_policy,
+        InterpolateToQuadraturePoints {
             beams.elem_indices, 
             beams.shape_interp, 
             beams.shape_deriv, 
             beams.qp_jacobian,
-            beams.node_u, 
+            beams.node_u,
+            beams.node_u_dot,
+            beams.node_u_ddot,
             beams.qp_u, 
             beams.qp_u_prime, 
             beams.qp_r, 
-            beams.qp_r_prime}
-    );
-    Kokkos::parallel_for("InterpolateQPVelocity", range_policy,
-        InterpolateQPVelocity{
-            beams.elem_indices,
-            beams.shape_interp,
-            beams.node_u_dot,
+            beams.qp_r_prime,
             beams.qp_u_dot,
-            beams.qp_omega
-        }
-    );
-    Kokkos::parallel_for("InterpolateQPAcceleration", range_policy,
-        InterpolateQPAcceleration {
-            beams.elem_indices,
-            beams.shape_interp,
-            beams.node_u_ddot,
+            beams.qp_omega,
             beams.qp_u_ddot,
             beams.qp_omega_dot
         }
     );
+    // Kokkos::parallel_for(
+    //     "InterpolateQPState", range_policy,
+    //     InterpolateQPState{
+    //         beams.elem_indices, 
+    //         beams.shape_interp, 
+    //         beams.shape_deriv, 
+    //         beams.qp_jacobian,
+    //         beams.node_u, 
+    //         beams.qp_u, 
+    //         beams.qp_u_prime, 
+    //         beams.qp_r, 
+    //         beams.qp_r_prime}
+    // );
+    // Kokkos::parallel_for("InterpolateQPVelocity", range_policy,
+    //     InterpolateQPVelocity{
+    //         beams.elem_indices,
+    //         beams.shape_interp,
+    //         beams.node_u_dot,
+    //         beams.qp_u_dot,
+    //         beams.qp_omega
+    //     }
+    // );
+    // Kokkos::parallel_for("InterpolateQPAcceleration", range_policy,
+    //     InterpolateQPAcceleration {
+    //         beams.elem_indices,
+    //         beams.shape_interp,
+    //         beams.node_u_ddot,
+    //         beams.qp_u_ddot,
+    //         beams.qp_omega_dot
+    //     }
+    // );
     // Kokkos::parallel_for(
     //     "InterpolateQPAcceleration",
     //     Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
