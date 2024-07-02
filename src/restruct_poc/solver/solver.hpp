@@ -126,11 +126,17 @@ struct Solver {
         auto T_indices = IndicesType("T_indices", T_num_non_zero);
         Kokkos::parallel_for(
             "PopulateTangentRowPtrs", 1,
-            PopulateTangentRowPtrs<CrsMatrixType::size_type>{beams_.elem_indices, T_row_ptrs}
+            PopulateTangentRowPtrs<CrsMatrixType::size_type>{num_system_nodes, T_row_ptrs}
         );
+        auto node_ids = Kokkos::View<int*>("node_ids", system_nodes.size());
+        auto host_node_ids = Kokkos::create_mirror(node_ids);
+        for(auto i = 0u; i < system_nodes.size(); ++i) {
+            host_node_ids(i) = system_nodes[i].ID;
+        }
+        Kokkos::deep_copy(node_ids, host_node_ids);
         Kokkos::parallel_for(
             "PopulateTangentIndices", 1,
-            PopulateTangentIndices{beams_.elem_indices, beams_.node_state_indices, T_indices}
+            PopulateTangentIndices{num_system_nodes, node_ids, T_indices}
         );
         auto T_values = ValuesType("T values", T_num_non_zero);
         T = CrsMatrixType(
@@ -144,11 +150,11 @@ struct Solver {
         }
         auto B_num_rows = num_constraint_dofs;
         auto B_num_columns = num_system_dofs;
-        auto B_row_ptrs = Kokkos::View<int*>("b_row_ptrs", B_num_rows + 1);
-        auto B_col_ind = Kokkos::View<int*>("b_indices", B_num_non_zero);
+        auto B_row_ptrs = RowPtrType("b_row_ptrs", B_num_rows + 1);
+        auto B_col_ind = IndicesType("b_indices", B_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrs_Constraints", 1,
-            PopulateSparseRowPtrs_Constraints{num_constraint_nodes, constraints.data, B_row_ptrs}
+            PopulateSparseRowPtrs_Constraints<CrsMatrixType::size_type>{num_constraint_nodes, constraints.data, B_row_ptrs}
         );
 
         Kokkos::parallel_for(

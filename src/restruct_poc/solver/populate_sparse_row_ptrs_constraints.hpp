@@ -9,7 +9,7 @@ template <typename size_type>
 struct PopulateSparseRowPtrs_Constraints {
     int num_constraint_nodes;
     Kokkos::View<Constraints::Data*> data;
-    Kokkos::View<int*> B_row_ptrs;
+    Kokkos::View<size_type*> B_row_ptrs;
 
     KOKKOS_FUNCTION
     void operator()(int) const {

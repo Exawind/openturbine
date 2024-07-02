@@ -46,7 +46,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
         "CopyTangentIntoSparseMatrix", sparse_matrix_policy,
         CopyTangentToSparseMatrix{solver.T, solver.T_dense}
     );
-
+    
     Kokkos::deep_copy(R_system, 0.);
     AssembleResidualVector(beams, R_system);
 
