@@ -105,23 +105,28 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
         }
     );
 
+    auto range_policy = Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO());
     Kokkos::parallel_for(
-        "InterpolateQPState", Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO()),
+        "InterpolateQPState", range_policy,
         InterpolateQPState{
-            beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
-            beams.node_u, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime}
+            beams.elem_indices, 
+            beams.shape_interp, 
+            beams.shape_deriv, 
+            beams.qp_jacobian,
+            beams.node_u, 
+            beams.qp_u, 
+            beams.qp_u_prime, 
+            beams.qp_r, 
+            beams.qp_r_prime}
     );
-    Kokkos::parallel_for(
-        "InterpolateQPVelocity",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPVelocity_Translation{
-            beams.elem_indices, beams.shape_interp, beams.node_u_dot, beams.qp_u_dot}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQPVelocity",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPVelocity_Angular{
-            beams.elem_indices, beams.shape_interp, beams.node_u_dot, beams.qp_omega}
+    Kokkos::parallel_for("InterpolateQPVelocity", range_policy,
+        InterpolateQPVelocity{
+            beams.elem_indices,
+            beams.shape_interp,
+            beams.node_u_dot,
+            beams.qp_u_dot,
+            beams.qp_omega
+        }
     );
     Kokkos::parallel_for(
         "InterpolateQPAcceleration",

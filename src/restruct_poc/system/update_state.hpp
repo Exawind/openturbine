@@ -56,21 +56,13 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
             beams.qp_r_prime
         }
     );
-
-    Kokkos::parallel_for(
-        "InterpolateQPVelocity_Translation",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPVelocity_Translation{
-            beams.elem_indices, beams.shape_interp, beams.node_u_dot, beams.qp_u_dot}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQPVelocity_Angular",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPVelocity_Angular{
+    Kokkos::parallel_for("InterpolateQPVelocity", range_policy,
+        InterpolateQPVelocity{
             beams.elem_indices,
             beams.shape_interp,
             beams.node_u_dot,
-            beams.qp_omega,
+            beams.qp_u_dot,
+            beams.qp_omega
         }
     );
     Kokkos::parallel_for(

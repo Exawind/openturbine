@@ -6,42 +6,20 @@
 
 namespace openturbine {
 
-struct InterpolateQPVelocity_Translation {
-    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
-    View_NxN::const_type shape_interp;                           // Num Nodes x Num Quadrature points
-    View_Nx6 node_u_dot;  // Node translation & angular velocity
-    View_Nx3 qp_u_dot;    // qp translation velocity
+struct InterpolateQPVelocity_Translational {
+    int first_qp;
+    int first_node;
+    int num_nodes;
+    View_NxN::const_type shape_interp;                           
+    View_Nx6::const_type node_u_dot;  
+    View_Nx3 qp_u_dot;    
 
     KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
-        auto idx = elem_indices(i_elem);
-        for (int j_index = 0; j_index < idx.num_qps; ++j_index) {
-            const auto j = idx.qp_range.first + j_index;
-            auto local_total = Kokkos::Array<double, 3>{};
-            for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
-                const auto i = idx.node_range.first + i_index;
-                const auto phi = shape_interp(i, j_index);
-                for (int k = 0; k < 3; ++k) {
-                    local_total[k] += node_u_dot(i, k) * phi;
-                }
-            }
-            for (int k = 0; k < 3; ++k) {
-                qp_u_dot(j, k) = local_total[k];
-            }
-        }
-    }
-
-    KOKKOS_FUNCTION
-    void operator()(const int i_elem, const int j_index) const {
-        auto idx = elem_indices(i_elem);
-        if (j_index >= idx.num_qps) {
-            return;
-        }
-
-        const auto j = idx.qp_range.first + j_index;
+    void operator()(int j_index) const {
+        const auto j = first_qp + j_index;
         auto local_total = Kokkos::Array<double, 3>{};
-        for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
-            const auto i = idx.node_range.first + i_index;
+        for (int i_index = 0; i_index < num_nodes; ++i_index) {
+            const auto i = first_node + i_index;
             const auto phi = shape_interp(i, j_index);
             for (int k = 0; k < 3; ++k) {
                 local_total[k] += node_u_dot(i, k) * phi;
@@ -54,41 +32,19 @@ struct InterpolateQPVelocity_Translation {
 };
 
 struct InterpolateQPVelocity_Angular {
-    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
-    View_NxN::const_type shape_interp;                           // Num Nodes x Num Quadrature points
-    View_Nx6 node_u_dot;  // Node translation & angular velocity
-    View_Nx3 qp_omega;    // qp angular velocity
+    int first_qp;
+    int first_node;
+    int num_nodes;
+    View_NxN::const_type shape_interp;                           
+    View_Nx6::const_type node_u_dot;  
+    View_Nx3 qp_omega;    
 
     KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
-        auto idx = elem_indices(i_elem);
-        for (int j_index = 0; j_index < idx.num_qps; ++j_index) {
-            const auto j = idx.qp_range.first + j_index;
-            auto local_total = Kokkos::Array<double, 3>{};
-            for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
-                const auto i = idx.node_range.first + i_index;
-                const auto phi = shape_interp(i, j_index);
-                for (int k = 0; k < 3; ++k) {
-                    local_total[k] += node_u_dot(i, k + 3) * phi;
-                }
-            }
-            for (int k = 0; k < 3; ++k) {
-                qp_omega(j, k) = local_total[k];
-            }
-        }
-    }
-
-    KOKKOS_FUNCTION
-    void operator()(const int i_elem, const int j_index) const {
-        auto idx = elem_indices(i_elem);
-        if (j_index >= idx.num_qps) {
-            return;
-        }
-
-        const auto j = idx.qp_range.first + j_index;
+    void operator()(int j_index) const {
+        const auto j = first_qp + j_index;
         auto local_total = Kokkos::Array<double, 3>{};
-        for (int i_index = 0; i_index < idx.num_nodes; ++i_index) {
-            const auto i = idx.node_range.first + i_index;
+        for (int i_index = 0; i_index < num_nodes; ++i_index) {
+            const auto i = first_node + i_index;
             const auto phi = shape_interp(i, j_index);
             for (int k = 0; k < 3; ++k) {
                 local_total[k] += node_u_dot(i, k + 3) * phi;
@@ -100,4 +56,22 @@ struct InterpolateQPVelocity_Angular {
     }
 };
 
+struct InterpolateQPVelocity {
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  
+    View_NxN::const_type shape_interp;                           
+    View_Nx6::const_type node_u_dot;  
+    View_Nx3 qp_u_dot;    
+    View_Nx3 qp_omega;
+
+    KOKKOS_FUNCTION
+    void operator()(Kokkos::TeamPolicy<>::member_type member) const {
+        auto i_elem = member.league_rank();
+        auto idx = elem_indices(i_elem);
+        auto first_qp = idx.qp_range.first;
+        auto first_node = idx.node_range.first;
+        auto num_nodes = idx.num_nodes;
+        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, idx.num_qps), InterpolateQPVelocity_Translational{first_qp, first_node, num_nodes, shape_interp, node_u_dot, qp_u_dot});
+        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, idx.num_qps), InterpolateQPVelocity_Angular{first_qp, first_node, num_nodes, shape_interp, node_u_dot, qp_omega});
+    }
+};
 }  // namespace openturbine
