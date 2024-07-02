@@ -907,14 +907,7 @@ TEST(RotorTest, IEA15Rotor) {
         blade_elems.push_back(BeamElement(beam_nodes, material_sections, trapz_quadrature));
 
         // Set prescribed BC on root node
-        // model.PrescribedBC(beam_nodes[0].node);
-    }
-
-    // Create hub node and add rigid constraints from hub node to blade root node
-    auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0});
-    auto hub_constraint = model.PrescribedBC(hub_node);
-    for (const auto& blade_elem : blade_elems) {
-        model.RigidConstraint(hub_node, blade_elem.nodes[0].node);
+        model.PrescribedBC(beam_nodes[0].node);
     }
 
     // Define beam initialization
@@ -959,7 +952,9 @@ TEST(RotorTest, IEA15Rotor) {
         Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
         // Update constraint displacements
-        solver.constraints.UpdateDisplacement(hub_constraint.ID, u_hub);
+        for (const auto& constraint : model.constraints) {
+            solver.constraints.UpdateDisplacement(constraint.ID, u_hub);
+        }
 
         // Take step
         auto converged = Step(solver, beams);

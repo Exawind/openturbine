@@ -353,4 +353,77 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     }
 }
 
+TEST(RotatingBeamTest, MasslessConstraints) {
+    auto model = Model();
+
+    // Gravity vector
+    std::array<double, 3> gravity = {0., 0., 0.};
+
+    // Build vector of nodes (straight along x axis, no rotation)
+    // Calculate displacement, velocity, acceleration assuming a
+    // 0.1 rad/s angular velocity around the z axis
+    const double omega = 0.1;
+    std::vector<BeamNode> beam_nodes;
+    for (const double s : node_s) {
+        auto x = 10 * s + 2.;
+        beam_nodes.push_back(BeamNode(
+            s, model.AddNode(
+                   {x, 0., 0., 1., 0., 0., 0.},        // position
+                   {0., 0., 0., 1., 0., 0., 0.},       // displacement
+                   {0., x * omega, 0., 0., 0., omega}  // velocity
+               )
+        ));
+    }
+
+    // Define beam initialization
+    BeamsInput beams_input({BeamElement(beam_nodes, sections, quadrature)}, gravity);
+
+    // Initialize beams from element inputs
+    auto beams = CreateBeams(beams_input);
+
+    // Add hub node and associated constraints
+    auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
+    model.RigidConstraint(hub_node, beam_nodes[0].node);
+    auto hub_bc = model.PrescribedBC(hub_node);
+
+    // Solution parameters
+    const bool is_dynamic_solve(true);
+    const int max_iter(5);
+    const double step_size(0.01);  // seconds
+    const double rho_inf(0.9);
+
+    // Create solver
+    Solver solver(
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+    );
+
+    // Perform 10 time steps and check for convergence within max_iter iterations
+    for (int i = 0; i < 10; ++i) {
+        // Set constraint displacement
+        const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
+        solver.constraints.UpdateDisplacement(hub_bc.ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
+        const auto converged = Step(solver, beams);
+        EXPECT_EQ(converged, true);
+    }
+
+    expect_kokkos_view_2D_equal(
+        solver.state.q,
+        {{-0.000099661884299369481, 0.019999672917628962, -3.6608854058480302E-25,
+          0.99998750002604175, -1.5971376141505654E-26, 3.1592454262792375E-25,
+          0.004999979166692714},
+         {-0.00015838391157346692, 0.031746709275713193, -2.8155520815870626E-13,
+          0.99998750002143066, 2.7244338869052949E-12, 1.989181042516661E-12, 0.0049999800888738608},
+         {-0.00027859681974392133, 0.055737500699772298, 2.815269319303426E-12, 0.9999875000205457,
+          7.3510877107173739E-12, 1.0550370096863904E-12, 0.0049999802658924715},
+         {-0.00042131446700509681, 0.08426017738413949, 8.2854411551089936E-12, 0.99998750002161218,
+          3.7252296525466957E-11, -5.26890056047209E-14, 0.0049999800525935617},
+         {-0.00054093210652801399, 0.10825097509997549, -9.3934322245617647E-12, 0.99998750002142056,
+          4.0321076018153484E-11, 5.2579938812420674E-12, 0.0049999800909203019},
+         {-0.00059944528351138049, 0.11999801747595988, -2.6207280972097857E-11, 0.99998750002237801,
+          3.4435006114567926E-11, 6.4250095159262128E-12, 0.0049999798994432168},
+         {0., 0., 0., 0.99998750002604219, 2.2269013449027429E-29, 1.884955233551297E-29,
+          0.0049999791666927107}}
+    );
+}
+
 }  // namespace openturbine::restruct_poc::tests

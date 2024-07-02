@@ -98,28 +98,55 @@ struct Solver {
             St_left = Kokkos::View<double**, Kokkos::LayoutLeft>("St_left", num_dofs, num_dofs);
         }
 
-        auto num_rows = num_system_dofs;
-        auto num_columns = num_system_dofs;
-        auto num_non_zero = 0;
+        auto K_num_rows = num_system_dofs;
+        auto K_num_columns = num_system_dofs;
+        auto K_num_non_zero = 0;
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros", beams_.num_elems,
-            ComputeNumberOfNonZeros{beams_.elem_indices}, num_non_zero
+            ComputeNumberOfNonZeros{beams_.elem_indices}, K_num_non_zero
         );
-        auto row_ptrs = Kokkos::View<int*>("row_ptrs", num_rows + 1);
-        auto indices = Kokkos::View<int*>("indices", num_non_zero);
+        auto K_row_ptrs = Kokkos::View<int*>("K_row_ptrs", K_num_rows + 1);
+        auto K_col_inds = Kokkos::View<int*>("indices", K_num_non_zero);
         Kokkos::parallel_for(
-            "PopulateSparseRowPtrs", 1, PopulateSparseRowPtrs{beams_.elem_indices, row_ptrs}
+            "PopulateSparseRowPtrs", 1, PopulateSparseRowPtrs{beams_.elem_indices, K_row_ptrs}
         );
         Kokkos::parallel_for(
             "PopulateSparseIndices", 1,
-            PopulateSparseIndices{beams_.elem_indices, beams_.node_state_indices, indices}
+            PopulateSparseIndices{beams_.elem_indices, beams_.node_state_indices, K_col_inds}
         );
 
         Kokkos::fence();
-        auto K_values = Kokkos::View<double*>("K values", num_non_zero);
-        K = CrsMatrixType("K", num_rows, num_columns, num_non_zero, K_values, row_ptrs, indices);
-        auto T_values = Kokkos::View<double*>("T values", num_non_zero);
-        T = CrsMatrixType("T", num_rows, num_columns, num_non_zero, T_values, row_ptrs, indices);
+        auto K_values = Kokkos::View<double*>("K values", K_num_non_zero);
+        K = CrsMatrixType(
+            "K", K_num_rows, K_num_columns, K_num_non_zero, K_values, K_row_ptrs, K_col_inds
+        );
+
+        // Tangent operator sparse matrix
+        auto T_num_rows = num_system_dofs;
+        auto T_num_columns = num_system_dofs;
+        auto T_num_non_zero = num_system_nodes * (6 * 6);
+        auto T_row_ptrs = Kokkos::View<int*>("T_row_ptrs", T_num_rows + 1);
+        auto T_col_inds = Kokkos::View<int*>("T_col_inds", T_num_non_zero);
+        auto T_values = Kokkos::View<double*>("T values", T_num_non_zero);
+        auto T_row_ptrs_host = Kokkos::create_mirror(T_row_ptrs);
+        auto T_col_inds_host = Kokkos::create_mirror(T_col_inds);
+        auto cum_cols = 0;
+        for (int i = 0; i < num_system_nodes; ++i) {
+            for (int j = 0; j < 6; ++j) {
+                T_row_ptrs_host(i) = cum_cols;
+                auto col_start = i * kLieAlgebraComponents;
+                for (int k = 0; k < 6; k++) {
+                    T_col_inds_host(cum_cols) = col_start + k;
+                    ++cum_cols;
+                }
+            }
+        }
+        T_row_ptrs_host(T_num_rows) = cum_cols;
+        Kokkos::deep_copy(T_row_ptrs, T_row_ptrs_host);
+        Kokkos::deep_copy(T_col_inds, T_col_inds_host);
+        T = CrsMatrixType(
+            "T", T_num_rows, T_num_columns, T_num_non_zero, T_values, T_row_ptrs, T_col_inds
+        );
 
         // Initialize contraint for indexing for sparse matrices
         int B_num_non_zero = 0;
