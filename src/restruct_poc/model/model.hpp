@@ -7,7 +7,8 @@
 
 namespace openturbine {
 
-static Node GroundNode(-1, {0., 0., 0., 1., 0., 0., 0.});
+// InvalidNode represents an invalid node in constraints that only use the target node.
+static Node InvalidNode(-1, {0., 0., 0., 1., 0., 0., 0.});
 
 struct Model {
     std::vector<Node> nodes;
@@ -22,33 +23,35 @@ struct Model {
         return this->nodes.back();
     }
 
-    const Constraint RigidConstraint(const Node node1, const Node node2) {
+    const Constraint AddRigidConstraint(const Node node1, const Node node2) {
         this->constraints.push_back(
             Constraint(this->constraints.size(), node1, node2, ConstraintType::Rigid)
         );
         return this->constraints.back();
     }
-    const Constraint PrescribedBC(const Node node, Array_3 ref_position = {0., 0., 0.}) {
+    const Constraint AddPrescribedBC(const Node node, Array_3 ref_position = {0., 0., 0.}) {
         this->constraints.push_back(Constraint(
-            this->constraints.size(), GroundNode, node, ConstraintType::PrescribedBC, ref_position
+            this->constraints.size(), InvalidNode, node, ConstraintType::PrescribedBC, ref_position
         ));
         return this->constraints.back();
     }
-    const Constraint FixedBC(const Node node) {
+    const Constraint AddFixedBC(const Node node) {
         this->constraints.push_back(
-            Constraint(this->constraints.size(), GroundNode, node, ConstraintType::FixedBC)
+            Constraint(this->constraints.size(), InvalidNode, node, ConstraintType::FixedBC)
         );
         return this->constraints.back();
     }
-    const Constraint Cylindrical(const Node node1, const Node node2) {
+    const Constraint AddCylindricalConstraint(const Node node1, const Node node2) {
         this->constraints.push_back(
             Constraint(this->constraints.size(), node1, node2, ConstraintType::Cylindrical)
         );
         return this->constraints.back();
     }
-    const Constraint RotationControl(const Node node1, const Node node2) {
+    const Constraint AddRotationControl(
+        const Node node1, const Node node2, const Array_3 axis = {0., 0., 0.}
+    ) {
         this->constraints.push_back(
-            Constraint(this->constraints.size(), node1, node2, ConstraintType::RotationControl)
+            Constraint(this->constraints.size(), node1, node2, ConstraintType::RotationControl, axis)
         );
         return this->constraints.back();
     }

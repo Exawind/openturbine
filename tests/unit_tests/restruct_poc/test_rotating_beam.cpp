@@ -88,7 +88,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     std::vector<BeamNode> nodes;
     for (const double s : node_s) {
         auto x = 10 * s + 2.;
-        auto& node = model.AddNode(
+        auto node = model.AddNode(
             {x, 0., 0., 1., 0., 0., 0.},        // Position
             {0., 0., 0., 1., 0., 0., 0.},       // Displacement
             {0., x * omega, 0., 0., 0., omega}  // Velocity
@@ -108,7 +108,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     auto beams = CreateBeams(beams_input);
 
     // Constraint inputs
-    model.PrescribedBC(model.nodes[0]);
+    model.AddPrescribedBC(model.nodes[0]);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -197,7 +197,7 @@ TEST(RotatingBeamTest, TwoBeam) {
         blade_elems.push_back(BeamElement(beam_nodes, sections, quadrature));
 
         // Set constraint nodes
-        model.PrescribedBC(beam_nodes[0].node);
+        model.AddPrescribedBC(beam_nodes[0].node);
     }
 
     // Define beam initialization
@@ -307,7 +307,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         blade_elems.push_back(BeamElement(beam_nodes, sections, quadrature));
 
         // Set constraint nodes
-        model.PrescribedBC(beam_nodes[0].node);
+        model.AddPrescribedBC(beam_nodes[0].node);
     }
 
     // Define beam initialization
@@ -383,8 +383,8 @@ TEST(RotatingBeamTest, MasslessConstraints) {
 
     // Add hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
-    model.RigidConstraint(hub_node, beam_nodes[0].node);
-    auto hub_bc = model.PrescribedBC(hub_node);
+    model.AddRigidConstraint(hub_node, beam_nodes[0].node);
+    auto hub_bc = model.AddPrescribedBC(hub_node);
 
     // Solution parameters
     const bool is_dynamic_solve(true);

@@ -12,7 +12,7 @@ namespace openturbine {
 
 struct CalculateConstraintResidualGradient {
     Kokkos::View<Constraints::Data*>::const_type data;
-    View_Nx3::const_type constraint_X0;
+    View_N::const_type control;
     View_Nx7::const_type constraint_u;
     View_Nx7::const_type node_u;
     View_N Phi;
@@ -26,9 +26,7 @@ struct CalculateConstraintResidualGradient {
         auto i_row = i_constraint * kLieAlgebraComponents;
 
         // Initial difference between nodes
-        auto x0_data = Kokkos::Array<double, 3>{
-            constraint_X0(i_constraint, 0), constraint_X0(i_constraint, 1),
-            constraint_X0(i_constraint, 2)};
+        auto x0_data = Kokkos::Array<double, 3>{cd.X0[0], cd.X0[1], cd.X0[2]};
         auto X0 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{x0_data.data()};
 
         // Base node displacement
@@ -67,26 +65,52 @@ struct CalculateConstraintResidualGradient {
         auto Phi_x_data = Kokkos::Array<double, 3>{};
         auto Phi_x =
             Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{Phi_x_data.data()};
+
         auto Phi_p_data = Kokkos::Array<double, 3>{};
         auto Phi_p =
             Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{Phi_p_data.data()};
+
+        auto RV_data = Kokkos::Array<double, 3>{};
+        auto RV = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{RV_data.data()};
+
+        auto RC_data = Kokkos::Array<double, 4>{};
+        auto RC = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{RC_data.data()};
+
         auto R1inv_data = Kokkos::Array<double, 4>{};
         auto R1inv =
             Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1inv_data.data()};
+
         auto R2inv_data = Kokkos::Array<double, 4>{};
         auto R2inv =
             Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2inv_data.data()};
+
+        auto RCinv_data = Kokkos::Array<double, 4>{};
+        auto RCinv =
+            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{RCinv_data.data()};
+
         auto R1_X0_data = Kokkos::Array<double, 3>{};
         auto R1_X0 =
             Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1_X0_data.data()};
+
         auto R2_R1inv_data = Kokkos::Array<double, 4>{};
         auto R2_R1inv =
             Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2_R1inv_data.data()};
+
+        auto R2_RCinv_data = Kokkos::Array<double, 4>{};
+        auto R2_RCinv =
+            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2_RCinv_data.data()};
+
         auto R1_R2inv_data = Kokkos::Array<double, 4>{};
         auto R1_R2inv =
             Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1_R2inv_data.data()};
+
+        auto R2_RCinv_R1inv_data = Kokkos::Array<double, 4>{};
+        auto R2_RCinv_R1inv = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{
+            R2_RCinv_R1inv_data.data()};
+
         auto A_data = Kokkos::Array<double, 9>{};
         auto A = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{A_data.data()};
+
         auto C_data = Kokkos::Array<double, 9>{};
         auto C = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{C_data.data()};
 
@@ -100,11 +124,27 @@ struct CalculateConstraintResidualGradient {
             Phi_x(i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
         }
 
-        // Phi_p = Axial(R2*inv(R1))
         QuaternionInverse(R1, R1inv);
-        QuaternionCompose(R2, R1inv, R2_R1inv);
-        QuaternionToRotationMatrix(R2_R1inv, C);
-        AxialVectorOfMatrix(C, Phi_p);
+        switch (cd.type) {
+            case ConstraintType::RotationControl:
+                // Phi_p = Axial(R2*inv(RC)*inv(R1))
+                RV(0) = cd.axis[0] * control(i_constraint);
+                RV(1) = cd.axis[1] * control(i_constraint);
+                RV(2) = cd.axis[2] * control(i_constraint);
+                RotationVectorToQuaternion(RV, RC);
+                QuaternionInverse(RC, RCinv);
+                QuaternionCompose(R2, RCinv, R2_RCinv);
+                QuaternionCompose(R2_RCinv, R1inv, R2_RCinv_R1inv);
+                QuaternionToRotationMatrix(R2_RCinv_R1inv, C);
+                AxialVectorOfMatrix(C, Phi_p);
+            case ConstraintType::Cylindrical:
+                // Phi_p = Axial(R2*inv(RC)*inv(R1))
+            default:
+                // Phi_p = Axial(R2*inv(R1))
+                QuaternionCompose(R2, R1inv, R2_R1inv);
+                QuaternionToRotationMatrix(R2_R1inv, C);
+                AxialVectorOfMatrix(C, Phi_p);
+        }
 
         Phi(i_row + 0) += Phi_x(0);
         Phi(i_row + 1) += Phi_x(1);

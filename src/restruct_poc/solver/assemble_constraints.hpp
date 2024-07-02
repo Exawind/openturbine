@@ -23,7 +23,7 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
     }
 
     // Transfer prescribed displacements to host
-    solver.constraints.TransferU();
+    solver.constraints.TransferToDevice();
 
     Kokkos::deep_copy(solver.constraints.Phi, 0.);
     Kokkos::deep_copy(solver.constraints.B, 0.);
@@ -31,7 +31,7 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
         "CalculateConstraintResidualGradient", solver.num_constraint_nodes,
         CalculateConstraintResidualGradient{
             solver.constraints.data,
-            solver.constraints.X0,
+            solver.constraints.control,
             solver.constraints.u,
             solver.state.q,
             solver.constraints.Phi,

@@ -90,7 +90,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     auto beams = CreateBeams(beams_input);
 
     // Constraint inputs
-    model.FixedBC(model.nodes[0]);
+    model.AddFixedBC(model.nodes[0]);
 
     // Solution parameters
     const bool is_dynamic_solve(true);

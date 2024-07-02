@@ -103,7 +103,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.PrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(model.nodes[0]);
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -448,7 +448,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.PrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(model.nodes[0]);
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -696,7 +696,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.PrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(model.nodes[0]);
 
         // Solution parameters
         const bool is_dynamic_solve(true);
