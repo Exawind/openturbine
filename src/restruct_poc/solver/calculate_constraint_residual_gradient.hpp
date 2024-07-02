@@ -11,7 +11,7 @@
 namespace openturbine {
 
 struct CalculateConstraintResidualGradient {
-    Kokkos::View<Constraints::Data*>::const_type data;
+    Kokkos::View<Constraints::DeviceData*>::const_type data;
     View_N::const_type control;
     View_Nx7::const_type constraint_u;
     View_Nx7::const_type node_u;
@@ -73,46 +73,51 @@ struct CalculateConstraintResidualGradient {
         auto RV_data = Kokkos::Array<double, 3>{};
         auto RV = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{RV_data.data()};
 
-        auto RC_data = Kokkos::Array<double, 4>{};
+        auto RC_data = Kokkos::Array<double, 4>{1., 0., 0., 0};
         auto RC = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{RC_data.data()};
 
-        auto R1inv_data = Kokkos::Array<double, 4>{};
-        auto R1inv =
-            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1inv_data.data()};
+        auto RCt_data = Kokkos::Array<double, 4>{1., 0., 0., 0.};
+        auto RCt = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{RCt_data.data()};
 
-        auto R2inv_data = Kokkos::Array<double, 4>{};
-        auto R2inv =
-            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2inv_data.data()};
+        auto R1t_data = Kokkos::Array<double, 4>{};
+        auto R1t = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1t_data.data()};
 
-        auto RCinv_data = Kokkos::Array<double, 4>{};
-        auto RCinv =
-            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{RCinv_data.data()};
+        auto R2t_data = Kokkos::Array<double, 4>{};
+        auto R2t = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2t_data.data()};
 
         auto R1_X0_data = Kokkos::Array<double, 3>{};
         auto R1_X0 =
             Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1_X0_data.data()};
 
-        auto R2_R1inv_data = Kokkos::Array<double, 4>{};
-        auto R2_R1inv =
-            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2_R1inv_data.data()};
+        auto R2_R1t_data = Kokkos::Array<double, 4>{};
+        auto R2_R1t =
+            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2_R1t_data.data()};
 
-        auto R2_RCinv_data = Kokkos::Array<double, 4>{};
-        auto R2_RCinv =
-            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2_RCinv_data.data()};
+        auto R2_RCt_data = Kokkos::Array<double, 4>{};
+        auto R2_RCt =
+            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2_RCt_data.data()};
 
-        auto R1_R2inv_data = Kokkos::Array<double, 4>{};
-        auto R1_R2inv =
-            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1_R2inv_data.data()};
+        auto R1_R2t_data = Kokkos::Array<double, 4>{};
+        auto R1_R2t =
+            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1_R2t_data.data()};
 
-        auto R2_RCinv_R1inv_data = Kokkos::Array<double, 4>{};
-        auto R2_RCinv_R1inv = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{
-            R2_RCinv_R1inv_data.data()};
+        auto R2_RCt_R1t_data = Kokkos::Array<double, 4>{};
+        auto R2_RCt_R1t =
+            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2_RCt_R1t_data.data()};
 
         auto A_data = Kokkos::Array<double, 9>{};
         auto A = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{A_data.data()};
 
         auto C_data = Kokkos::Array<double, 9>{};
         auto C = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{C_data.data()};
+
+        auto Ct_data = Kokkos::Array<double, 9>{};
+        auto Ct =
+            Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{Ct_data.data()};
+
+        auto V_axial_data = Kokkos::Array<double, 3>{};
+        auto V_axial =
+            Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{V_axial_data.data()};
 
         //----------------------------------------------------------------------
         // Residual Vector
@@ -124,27 +129,27 @@ struct CalculateConstraintResidualGradient {
             Phi_x(i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
         }
 
-        QuaternionInverse(R1, R1inv);
+        QuaternionInverse(R1, R1t);
         switch (cd.type) {
+            case ConstraintType::Cylindrical:
+                // Phi_p =
+                break;
             case ConstraintType::RotationControl:
-                // Phi_p = Axial(R2*inv(RC)*inv(R1))
+                // Phi_p = axial(R2*inv(RC)*inv(R1))
                 RV(0) = cd.axis[0] * control(i_constraint);
                 RV(1) = cd.axis[1] * control(i_constraint);
                 RV(2) = cd.axis[2] * control(i_constraint);
                 RotationVectorToQuaternion(RV, RC);
-                QuaternionInverse(RC, RCinv);
-                QuaternionCompose(R2, RCinv, R2_RCinv);
-                QuaternionCompose(R2_RCinv, R1inv, R2_RCinv_R1inv);
-                QuaternionToRotationMatrix(R2_RCinv_R1inv, C);
+                QuaternionInverse(RC, RCt);
+                QuaternionCompose(R2, RCt, R2_RCt);
+                QuaternionCompose(R2_RCt, R1t, R2_RCt_R1t);
+                QuaternionToRotationMatrix(R2_RCt_R1t, C);
                 AxialVectorOfMatrix(C, Phi_p);
                 break;
-            case ConstraintType::Cylindrical:
-                // Phi_p =
-                break;
             default:
-                // Phi_p = Axial(R2*inv(R1))
-                QuaternionCompose(R2, R1inv, R2_R1inv);
-                QuaternionToRotationMatrix(R2_R1inv, C);
+                // Phi_p = axial(R2*inv(R1))
+                QuaternionCompose(R2, R1t, R2_R1t);
+                QuaternionToRotationMatrix(R2_R1t, C);
                 AxialVectorOfMatrix(C, Phi_p);
         }
 
@@ -163,18 +168,6 @@ struct CalculateConstraintResidualGradient {
         // Target Node
         //---------------------------------
 
-        // A = 1/2*(tr(R1*inv(R2))*I - R1*inv(R2))
-        QuaternionInverse(R2, R2inv);
-        QuaternionCompose(R1, R2inv, R1_R2inv);
-        QuaternionToRotationMatrix(R1_R2inv, A);
-        auto trace = A(0, 0) + A(1, 1) + A(2, 2);
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 3; ++j) {
-                A(i, j) *= -1. / 2.;
-            }
-            A(i, i) += trace / 2.;
-        }
-
         // Starting column index in B matrix
         auto i_col = i_node2 * kLieAlgebraComponents;
 
@@ -183,10 +176,11 @@ struct CalculateConstraintResidualGradient {
             B(i_row + i, i_col + i) = 1.;
         }
 
-        // B22 = A
+        // B22 = AX(R1*inv(R2)) = transpose(AX(R2*inv(R1)))
+        AX_Matrix(C, A);
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
-                B(i_row + i + 3, i_col + j + 3) = A(i, j);
+                B(i_row + i + 3, i_col + j + 3) = A(j, i);
             }
         }
 
@@ -194,21 +188,16 @@ struct CalculateConstraintResidualGradient {
         // Base Node
         //---------------------------------
 
-        // If fixed or prescribed boundary, skip based node
-        if (cd.type == ConstraintType::FixedBC || cd.type == ConstraintType::PrescribedBC)
-            return;
+        switch (cd.type) {
+            case ConstraintType::FixedBC:
+            case ConstraintType::PrescribedBC:
+                return;
+            default:
+                break;
+        }
 
         // Starting column index in B matrix
         i_col = i_node1 * kLieAlgebraComponents;
-
-        // C = 1/2*(tr(R2*inv(R1))*I - R2*inv(R1))
-        trace = C(0, 0) + C(1, 1) + C(2, 2);
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 3; ++j) {
-                C(i, j) *= -1. / 2.;
-            }
-            C(i, i) += trace / 2.;
-        }
 
         // B11 = -I
         for (int i = 0; i < 3; ++i) {
@@ -216,15 +205,18 @@ struct CalculateConstraintResidualGradient {
         }
 
         // B12 = tilde(R1*X0)
-        VecTilde(
-            R1_X0,
-            Kokkos::subview(B, Kokkos::pair(i_row, i_row + 3), Kokkos::pair(i_col + 3, i_col + 6))
-        );
-
-        // B22 = C
+        VecTilde(R1_X0, A);
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
-                B(i_row + i + 3, i_col + j + 3) = -C(i, j);
+                B(i_row + i, i_col + j + 3) = A(i, j);
+            }
+        }
+
+        // B22 = -AX(R2*inv(R1))
+        AX_Matrix(C, A);
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                B(i_row + i + 3, i_col + j + 3) = -A(i, j);
             }
         }
     }

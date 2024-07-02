@@ -5,6 +5,7 @@
 namespace openturbine {
 
 enum class ConstraintType {
+    None,
     FixedBC,       // Fixed boundary condition constraint (zero displacement)
     PrescribedBC,  // Prescribed boundary condition (displacement can be set)
     Rigid,  // Rigid constraint between two nodes (nodes maintain relative distance and rotation)
@@ -20,12 +21,13 @@ struct Constraint {
     ConstraintType type;
     Array_3 X0;        // reference position for prescribed BC
     Array_3 rot_axis;  // unit vector axis for cylindrical constraint
+    double* control;   // pointer to control variable
 
     Constraint(
         int id, const Node node1, const Node node2, ConstraintType constraint_type,
-        Array_3 vec = {0., 0., 0.}
+        Array_3 vec = {0., 0., 0.}, double* control_ = nullptr
     )
-        : ID(id), base_node(node1), target_node(node2), type(constraint_type) {
+        : ID(id), base_node(node1), target_node(node2), type(constraint_type), control(control_) {
         switch (constraint_type) {
             case ConstraintType::FixedBC:
             case ConstraintType::PrescribedBC:

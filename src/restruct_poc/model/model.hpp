@@ -48,11 +48,11 @@ struct Model {
         return this->constraints.back();
     }
     const Constraint AddRotationControl(
-        const Node node1, const Node node2, const Array_3 axis = {0., 0., 0.}
+        const Node node1, const Node node2, const Array_3 axis, double* control
     ) {
-        this->constraints.push_back(
-            Constraint(this->constraints.size(), node1, node2, ConstraintType::RotationControl, axis)
-        );
+        this->constraints.push_back(Constraint(
+            this->constraints.size(), node1, node2, ConstraintType::RotationControl, axis, control
+        ));
         return this->constraints.back();
     }
 

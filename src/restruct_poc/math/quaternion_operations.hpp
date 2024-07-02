@@ -102,6 +102,32 @@ KOKKOS_INLINE_FUNCTION void AxialVectorOfMatrix(Matrix m, Vector v) {
     v(2) = (m(1, 0) - m(0, 1)) / 2.;
 }
 
+/// Computes AX(A) of a square matrix
+template <typename Matrix>
+KOKKOS_INLINE_FUNCTION void AX_Matrix(Matrix A, Matrix AX_A) {
+    double trace = 0.;
+    for (int i = 0; i < A.extent_int(0); ++i) {
+        trace += A(i, i);
+    }
+    trace /= 2.;
+    for (int i = 0; i < A.extent_int(0); ++i) {
+        for (int j = 0; j < A.extent_int(1); ++j) {
+            AX_A(i, j) = -A(i, j) / 2.;
+        }
+        AX_A(i, i) += trace;
+    }
+}
+
+/// Calculates the transpose of the given matrix
+template <typename Matrix>
+KOKKOS_INLINE_FUNCTION void TransposeMatrix(Matrix A, Matrix At) {
+    for (int i = 0; i < A.extent_int(0); ++i) {
+        for (int j = 0; j < A.extent_int(1); ++j) {
+            At(j, i) = A(i, j);
+        }
+    }
+}
+
 /// Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map
 template <typename Vector, typename Quaternion>
 KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(Vector phi, Quaternion quaternion) {
