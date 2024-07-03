@@ -458,7 +458,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     double pitch = 0.;
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
     model.AddRotationControl(hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);
-    auto hub_bc = model.AddPrescribedBC(hub_node);
+    model.AddFixedBC(hub_node);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -473,31 +473,22 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
-        // Set constraint displacement
-        const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
-        solver.constraints.UpdateDisplacement(hub_bc.ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
+        double t = step_size * (i + 1);
+        // Set pitch
+        pitch = t * M_PI / 2.;
         const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
     }
 
-    expect_kokkos_view_2D_equal(
-        solver.state.q,
-        {{-0.000099661884299369481, 0.019999672917628962, -3.6608854058480302E-25,
-          0.99998750002604175, -1.5971376141505654E-26, 3.1592454262792375E-25,
-          0.004999979166692714},
-         {-0.00015838391157346692, 0.031746709275713193, -2.8155520815870626E-13,
-          0.99998750002143066, 2.7244338869052949E-12, 1.989181042516661E-12, 0.0049999800888738608},
-         {-0.00027859681974392133, 0.055737500699772298, 2.815269319303426E-12, 0.9999875000205457,
-          7.3510877107173739E-12, 1.0550370096863904E-12, 0.0049999802658924715},
-         {-0.00042131446700509681, 0.08426017738413949, 8.2854411551089936E-12, 0.99998750002161218,
-          3.7252296525466957E-11, -5.26890056047209E-14, 0.0049999800525935617},
-         {-0.00054093210652801399, 0.10825097509997549, -9.3934322245617647E-12, 0.99998750002142056,
-          4.0321076018153484E-11, 5.2579938812420674E-12, 0.0049999800909203019},
-         {-0.00059944528351138049, 0.11999801747595988, -2.6207280972097857E-11, 0.99998750002237801,
-          3.4435006114567926E-11, 6.4250095159262128E-12, 0.0049999798994432168},
-         {0., 0., 0., 0.99998750002604219, 2.2269013449027429E-29, 1.884955233551297E-29,
-          0.0049999791666927107}}
-    );
+    // Get rotation of root node as rotation vector
+    auto q = kokkos_view_2D_to_vector(solver.state.q);
+    auto r_root = QuaternionToRotationVector({q[0][3], q[0][4], q[0][5], q[0][6]});
+
+    // Check that root node rotation about x-axis matches prescribed pitch
+    // and that other rotations are essentially zero
+    EXPECT_NEAR(r_root[0], pitch, 1e-9);
+    EXPECT_NEAR(r_root[1], 0., 1e-9);
+    EXPECT_NEAR(r_root[2], 0., 1e-9);
 }
 
 }  // namespace openturbine::restruct_poc::tests
