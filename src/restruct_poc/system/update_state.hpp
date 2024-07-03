@@ -31,7 +31,7 @@ namespace openturbine {
 inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State");
     Kokkos::parallel_for(
-        "UpdateNodeState", Kokkos::MDRangePolicy{{0, 0}, {beams.num_nodes, kLieGroupComponents}},
+        "UpdateNodeState", beams.num_nodes,
         UpdateNodeState{
             beams.node_state_indices,
             beams.node_u,
@@ -42,7 +42,8 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
             A,
         }
     );
-
+    
+    auto range_policy = Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO());
     Kokkos::parallel_for(
         "InterpolateQpU", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
         InterpolateQPU{beams.elem_indices, beams.shape_interp, beams.node_u, beams.qp_u}
