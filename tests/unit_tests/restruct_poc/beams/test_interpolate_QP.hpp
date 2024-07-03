@@ -13,7 +13,8 @@ inline auto create_shape_interp_OneNodeOneQP() {
     auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
 
     auto host_data = std::array<double, num_entries>{2.};
-    auto shape_interp_host = Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
+    auto shape_interp_host =
+        Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
     Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
     Kokkos::deep_copy(shape_interp, shape_interp_mirror);
     return shape_interp;
@@ -27,7 +28,8 @@ inline auto create_shape_deriv_OneNodeOneQP() {
     auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
 
     auto host_data = std::array<double, num_entries>{4.};
-    auto shape_deriv_host = Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
+    auto shape_deriv_host =
+        Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
     return shape_deriv;
@@ -54,7 +56,8 @@ inline auto create_shape_interp_OneNodeTwoQP() {
     auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
 
     auto host_data = std::array<double, num_entries>{2., 4.};
-    auto shape_interp_host = Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
+    auto shape_interp_host =
+        Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
     Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
     Kokkos::deep_copy(shape_interp, shape_interp_mirror);
     return shape_interp;
@@ -68,7 +71,8 @@ inline auto create_shape_deriv_OneNodeTwoQP() {
     auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
 
     auto host_data = std::array<double, num_entries>{4., 9.};
-    auto shape_deriv_host = Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
+    auto shape_deriv_host =
+        Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
     return shape_deriv;
@@ -95,7 +99,8 @@ inline auto create_shape_interp_TwoNodeTwoQP() {
     auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
 
     auto host_data = std::array<double, num_entries>{2., 3., 4., 5.};
-    auto shape_interp_host = Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
+    auto shape_interp_host =
+        Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
     Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
     Kokkos::deep_copy(shape_interp, shape_interp_mirror);
     return shape_interp;
@@ -109,10 +114,11 @@ inline auto create_shape_deriv_TwoNodeTwoQP() {
     auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
 
     auto host_data = std::array<double, num_entries>{4., 9., 8., 15.};
-    auto shape_deriv_host = Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
+    auto shape_deriv_host =
+        Kokkos::View<double[num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
     return shape_deriv;
 }
 
-}
+}  // namespace openturbine::restruct_poc::tests

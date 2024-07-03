@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
@@ -9,9 +10,9 @@ struct InterpolateQPVector {
     int first_qp;
     int first_node;
     int num_nodes;
-    View_NxN::const_type shape_interp;                           
-    View_Nx3::const_type node_vector;  
-    View_Nx3 qp_vector;    
+    View_NxN::const_type shape_interp;
+    View_Nx3::const_type node_vector;
+    View_Nx3 qp_vector;
 
     KOKKOS_FUNCTION
     void operator()(int j_index) const {
@@ -30,4 +31,4 @@ struct InterpolateQPVector {
     }
 };
 
-}
+}  // namespace openturbine
