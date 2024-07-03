@@ -41,24 +41,13 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
         }
     );
     auto range_policy = Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO());
-    Kokkos::parallel_for("InterpolateToQuadraturePoints", range_policy,
-        InterpolateToQuadraturePoints {
-            beams.elem_indices, 
-            beams.shape_interp, 
-            beams.shape_deriv, 
-            beams.qp_jacobian,
-            beams.node_u,
-            beams.node_u_dot,
-            beams.node_u_ddot,
-            beams.qp_u, 
-            beams.qp_u_prime, 
-            beams.qp_r, 
-            beams.qp_r_prime,
-            beams.qp_u_dot,
-            beams.qp_omega,
-            beams.qp_u_ddot,
-            beams.qp_omega_dot
-        }
+    Kokkos::parallel_for(
+        "InterpolateToQuadraturePoints", range_policy,
+        InterpolateToQuadraturePoints{
+            beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
+            beams.node_u, beams.node_u_dot, beams.node_u_ddot, beams.qp_u, beams.qp_u_prime,
+            beams.qp_r, beams.qp_r_prime, beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot,
+            beams.qp_omega_dot}
     );
 
     Kokkos::parallel_for(
