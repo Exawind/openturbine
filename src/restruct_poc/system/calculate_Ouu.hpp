@@ -9,6 +9,9 @@
 namespace openturbine {
 
 struct CalculateOuu {
+    using NoTranspose = KokkosBatched::Trans::NoTranspose;
+    using Default = KokkosBatched::Algo::Gemm::Default;
+    using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, Default>;
     View_Nx6x6::const_type qp_Cuu_;
     View_Nx3x3::const_type x0pupSS_;
     View_Nx3x3::const_type M_tilde_;
@@ -28,14 +31,10 @@ struct CalculateOuu {
         KokkosBlas::SerialSet::invoke(0., Ouu);
         auto Ouu_12 = Kokkos::subview(Ouu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
         KokkosBlas::serial_axpy(1., N_tilde, Ouu_12);
-        KokkosBatched::SerialGemm<
-            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
-            KokkosBatched::Algo::Gemm::Default>::invoke(1., C11, x0pupSS, -1., Ouu_12);
+        Gemm::invoke(1., C11, x0pupSS, -1., Ouu_12);
         auto Ouu_22 = Kokkos::subview(Ouu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
         KokkosBlas::serial_axpy(1., M_tilde, Ouu_22);
-        KokkosBatched::SerialGemm<
-            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
-            KokkosBatched::Algo::Gemm::Default>::invoke(1., C21, x0pupSS, -1., Ouu_22);
+        Gemm::invoke(1., C21, x0pupSS, -1., Ouu_22);
     }
 };
 

@@ -68,18 +68,18 @@ struct CalculateNodeForces_FI_FG {
 };
 
 struct CalculateNodeForces {
-    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
-    View_N::const_type qp_weight_;                               //
-    View_N::const_type qp_jacobian_;                             // Jacobians
-    View_NxN::const_type shape_interp_;                          // Num Nodes x Num Quadrature points
-    View_NxN::const_type shape_deriv_;                           // Num Nodes x Num Quadrature points
-    View_Nx6::const_type qp_Fc_;                                 //
-    View_Nx6::const_type qp_Fd_;                                 //
-    View_Nx6::const_type qp_Fi_;                                 //
-    View_Nx6::const_type qp_Fg_;                                 //
-    View_Nx6 node_FE_;                                           // Elastic force
-    View_Nx6 node_FI_;                                           // Inertial force
-    View_Nx6 node_FG_;                                           // Gravity force
+    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
+    View_N::const_type qp_weight_;
+    View_N::const_type qp_jacobian_;
+    View_NxN::const_type shape_interp_;
+    View_NxN::const_type shape_deriv_;
+    View_Nx6::const_type qp_Fc_;                                 
+    View_Nx6::const_type qp_Fd_;                                 
+    View_Nx6::const_type qp_Fi_;                                 
+    View_Nx6::const_type qp_Fg_;
+    View_Nx6 node_FE_;
+    View_Nx6 node_FI_;
+    View_Nx6 node_FG_;
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
