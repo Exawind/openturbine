@@ -9,8 +9,7 @@ extern "C" {
 // TODO This is a quick and dirty conversion of the DISCON function from the original C code to
 // C++. It needs to be refactored to be more idiomatic C++.
 void DISCON(
-    float avrSWAP[], int aviFAIL, [[maybe_unused]] const char* accINFILE,
-    [[maybe_unused]] const char* avcOUTNAME, const char* avcMSG
+    float avrSWAP[], int* aviFAIL, const char* accINFILE, const char* avcOUTNAME, const char* avcMSG
 ) {
     // Internal state
     static InternalState state;
@@ -38,7 +37,7 @@ void DISCON(
     int num_blades = static_cast<int>(swap->n_blades);
 
     // Initialize aviFAIL to 0
-    aviFAIL = 0;
+    *aviFAIL = 0;
 
     //--------------------------------------------------------------------------
     // Read External Controller Parameters from the User Interface and initialize variables
@@ -47,7 +46,7 @@ void DISCON(
     // If first call to the DLL
     if (status == 0) {
         // Inform users that we are using this user-defined routine:
-        aviFAIL = 1;
+        *aviFAIL = 1;
         strncpy(
             const_cast<char*>(avcMSG),
             "Running with torque and pitch control of the NREL offshore "
@@ -80,7 +79,7 @@ void DISCON(
         //----------------------------------------------------------------------
 
         // Initialize aviFAIL to true (will be set to false if all checks pass)
-        aviFAIL = -1;
+        *aviFAIL = -1;
 
         if (kCornerFreq <= 0.0) {
             strncpy(
@@ -167,7 +166,7 @@ void DISCON(
                 swap->message_array_size
             );
         } else {
-            aviFAIL = 0;
+            *aviFAIL = 0;
             memset(const_cast<char*>(avcMSG), 0, swap->message_array_size);
         }
 
@@ -253,11 +252,11 @@ void DISCON(
 
     // Only compute control calculations if no error has occurred and we are not on the last time
     // step
-    if (status >= 0 && aviFAIL >= 0) {
+    if (status >= 0 && *aviFAIL >= 0) {
         // Abort if the user has not requested a pitch angle actuator (See Appendix A of Bladed
         // User's Guide)
         if (static_cast<int>(swap->pitch_angle_actuator_req) != 0) {
-            aviFAIL = -1;
+            *aviFAIL = -1;
             strncpy(
                 const_cast<char*>(avcMSG), "Pitch angle actuator not requested.",
                 swap->message_array_size
@@ -479,7 +478,7 @@ void DISCON(
                 const_cast<char*>(avcMSG), swap->message_array_size,
                 "Cannot open file \"%s\". Another program may have locked it for writing", accINFILE
             );
-            aviFAIL = -1;
+            *aviFAIL = -1;
         }
     } else if (status == -9) {
         // Unpack internal state from file
@@ -492,7 +491,7 @@ void DISCON(
                 const_cast<char*>(avcMSG), swap->message_array_size,
                 "Cannot open file \"%s\" for reading. Another program may have locked it.", accINFILE
             );
-            aviFAIL = -1;
+            *aviFAIL = -1;
         }
     }
 }
