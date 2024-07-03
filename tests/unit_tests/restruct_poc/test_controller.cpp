@@ -3,6 +3,7 @@
 #include "test_utilities.hpp"
 
 #include "src/utilities/controllers/discon.h"
+#include "src/utilities/controllers/turbine_controller.hpp"
 #include "src/vendor/dylib/dylib.hpp"
 
 namespace openturbine::restruct_poc::tests {
@@ -88,6 +89,64 @@ TEST(ControllerTest, DisconController) {
     EXPECT_FLOAT_EQ(avrSWAP[44], 0.);          // PitchComCol
     EXPECT_FLOAT_EQ(avrSWAP[46], 43093.5508);  // DemandedGeneratorTorque
     EXPECT_FLOAT_EQ(avrSWAP[47], 0.);          // DemandedNacelleYawRate
+}
+
+// Write a test for the TurbineController class
+TEST(ControllerTest, TurbineController) {
+    // provide shared library path and controller function name to clamp
+    std::string shared_lib_path = "./";
+    std::string controller_name = "DISCON";
+    std::string controller_function_name = "DISCON";
+    std::string accINFILE = "in_file";
+    std::string avcOUTNAME = "out_name";
+
+    // create an instance of TurbineController
+    util::TurbineController controller(
+        shared_lib_path, controller_name, controller_function_name, accINFILE, avcOUTNAME
+    );
+
+    // get the pointer to the avrSWAP array and set the values
+    auto swap = controller.GetSwap();
+    swap->status = 0.;
+    swap->time = 0.;
+    swap->pitch_blade1 = 0.;
+    swap->pitch_angle_actuator_req = 0.;
+    swap->generator_speed = 122.909576;
+    swap->horizontal_wind_speed = 11.9900799;
+    swap->pitch_blade2 = 0.;
+    swap->pitch_blade3 = 0.;
+    swap->generator_contactor_status = 1.;
+    swap->shaft_brake_status = 0.;
+    swap->demanded_yaw_actuator_torque = 0.;
+    swap->pitch_command_1 = 0.;
+    swap->pitch_command_2 = 0.;
+    swap->pitch_command_3 = 0.;
+    swap->pitch_command_collective = 0.;
+    swap->demanded_pitch_rate = 0.;
+    swap->demanded_generator_torque = 0.;
+    swap->demanded_nacelle_yaw_rate = 0.;
+    swap->message_array_size = 3.;
+    swap->infile_array_size = 82.;
+    swap->outname_array_size = 96.;
+    swap->pitch_override = 0.;
+    swap->torque_override = 0.;
+    swap->n_blades = 3.;
+    swap->n_log_variables = 0.;
+    swap->generator_startup_resistance = 0.;
+    swap->loads_request = 0.;
+    swap->variable_slip_status = 0.;
+    swap->variable_slip_demand = 0.;
+
+    // call the controller function
+    controller.CallController();
+
+    // expect the following outputs
+    EXPECT_FLOAT_EQ(swap->generator_contactor_status, 1.);         // GeneratorContactorStatus
+    EXPECT_FLOAT_EQ(swap->shaft_brake_status, 0.);                 // ShaftBrakeStatus
+    EXPECT_FLOAT_EQ(swap->demanded_yaw_actuator_torque, 0.);       // DemandedYawActuatorTorque
+    EXPECT_FLOAT_EQ(swap->pitch_command_collective, 0.);           // PitchComCol
+    EXPECT_FLOAT_EQ(swap->demanded_generator_torque, 43093.5508);  // DemandedGeneratorTorque
+    EXPECT_FLOAT_EQ(swap->demanded_nacelle_yaw_rate, 0.);          // DemandedNacelleYawRate
 }
 
 }  // namespace openturbine::restruct_poc::tests
