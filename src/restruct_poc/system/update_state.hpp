@@ -134,8 +134,7 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     );
 
     Kokkos::parallel_for(
-        "CalculateNodeForces",
-        Kokkos::MDRangePolicy{{0, 0, 0}, {beams.num_elems, beams.max_elem_nodes, 6}},
+        "CalculateNodeForces", range_policy,
         CalculateNodeForces{
             beams.elem_indices, beams.qp_weight, beams.qp_jacobian, beams.shape_interp,
             beams.shape_deriv, beams.qp_Fc, beams.qp_Fd, beams.qp_Fi, beams.qp_Fg, beams.node_FE,
