@@ -154,4 +154,34 @@ inline std::array<double, 4> RotationVectorToQuaternion(std::array<double, 3> ph
     return std::array<double, 4>{cos_angle, phi[0] * factor, phi[1] * factor, phi[2] * factor};
 }
 
+inline std::array<double, 3> QuaternionToRotationVector(std::array<double, 4> quat) {
+    std::array<double, 3> rotationVector;
+
+    // Calculate the angle of rotation
+    double theta = 2.0 * std::acos(quat[0]);
+
+    // Calculate the sin of half the angle
+    double sinHalfTheta = std::sqrt(1.0 - quat[0] * quat[0]);
+
+    // Avoid division by zero if sinHalfTheta is very small
+    if (sinHalfTheta < 0.001) {
+        // When theta is small, direction of axis is not important, we can choose any unit vector
+        rotationVector[0] = quat[1];
+        rotationVector[1] = quat[2];
+        rotationVector[2] = quat[3];
+    } else {
+        // Normalize the axis components
+        rotationVector[0] = quat[1] / sinHalfTheta;
+        rotationVector[1] = quat[2] / sinHalfTheta;
+        rotationVector[2] = quat[3] / sinHalfTheta;
+    }
+
+    // Scale by the angle
+    rotationVector[0] *= theta;
+    rotationVector[1] *= theta;
+    rotationVector[2] *= theta;
+
+    return rotationVector;
+}
+
 }  // namespace openturbine
