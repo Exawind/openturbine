@@ -29,27 +29,22 @@ struct State {
         Kokkos::deep_copy(Kokkos::subview(this->q_prev, Kokkos::ALL, 3), 1.);
         Kokkos::deep_copy(Kokkos::subview(this->q, Kokkos::ALL, 3), 1.);
     }
-    State(
-        size_t num_system_nodes_, size_t num_constraint_nodes_,
-        std::vector<std::array<double, 7>> q_, std::vector<std::array<double, 6>> v_,
-        std::vector<std::array<double, 6>> vd_
-    )
+    State(size_t num_system_nodes_, size_t num_constraint_nodes_, std::vector<Node>& nodes)
         : State(num_system_nodes_, num_constraint_nodes_) {
-        if (q_.size() == 0 || v_.size() == 0 || vd_.size() == 0)
-            return;
         // Create mirror of state views
         auto host_q = Kokkos::create_mirror(this->q);
         auto host_v = Kokkos::create_mirror(this->v);
         auto host_vd = Kokkos::create_mirror(this->vd);
 
         // Loop through number of nodes and copy data to host view
-        for (size_t i = 0; i < num_system_nodes; ++i) {
+        for (size_t i = 0; i < nodes.size(); ++i) {
+            auto& node = nodes[i];
             for (size_t j = 0; j < kLieGroupComponents; ++j) {
-                host_q(i, j) = q_[i][j];
+                host_q(i, j) = node.u[j];
             }
             for (size_t j = 0; j < kLieAlgebraComponents; ++j) {
-                host_v(i, j) = v_[i][j];
-                host_vd(i, j) = vd_[i][j];
+                host_v(i, j) = node.v[j];
+                host_vd(i, j) = node.vd[j];
             }
         }
 

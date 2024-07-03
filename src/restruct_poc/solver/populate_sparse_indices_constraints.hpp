@@ -10,19 +10,27 @@ namespace openturbine {
 
 struct PopulateSparseIndices_Constraints {
     int num_constraint_nodes;
-    Kokkos::View<Constraints::NodeIndices*> node_indices;
-    Kokkos::View<int*> B_indices;
+    Kokkos::View<Constraints::Data*> data;
+    Kokkos::View<int*> B_col_inds;
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        auto entries_so_far = 0;
+        auto ind_num = 0;
         for (int i_constraint = 0; i_constraint < num_constraint_nodes; ++i_constraint) {
-            auto i_node2 = node_indices(i_constraint).constrained_node_index;
-            auto i_col = i_node2 * kLieAlgebraComponents;
-            for (int i = 0; i < kLieAlgebraComponents; ++i) {
-                for (int j = 0; j < kLieAlgebraComponents; ++j) {
-                    B_indices(entries_so_far) = i_col + j;
-                    ++entries_so_far;
+            // Get reference to constraint data for this constraint
+            auto& cd = data(i_constraint);
+
+            for (int j = 0; j < kLieAlgebraComponents; ++j) {
+                for (int i = 0; i < kLieAlgebraComponents; ++i) {
+                    B_col_inds(ind_num) = cd.target_node_index * kLieAlgebraComponents + i;
+                    ind_num++;
+                }
+
+                if (cd.base_node_index >= 0) {
+                    for (int i = 0; i < kLieAlgebraComponents; ++i) {
+                        B_col_inds(ind_num) = cd.base_node_index * kLieAlgebraComponents + i;
+                        ind_num++;
+                    }
                 }
             }
         }
