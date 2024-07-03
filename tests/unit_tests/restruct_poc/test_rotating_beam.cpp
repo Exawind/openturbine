@@ -226,7 +226,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
     // Update constraint displacements
-    for (int j = 0; j < solver.num_constraint_nodes; ++j) {
+    for (int j = 0; j < solver.constraints.num; ++j) {
         solver.constraints.UpdateDisplacement(j, u_hub);
     }
 
@@ -235,7 +235,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     Step(solver, beams);
 
     auto n = solver.num_system_dofs / 2;
-    auto m = solver.num_constraint_dofs / 2;
+    auto m = solver.constraints.num_dofs / 2;
 
     // Check that St matrix is the same for both beams
     auto St = kokkos_view_2D_to_vector(solver.St);
@@ -341,7 +341,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
         // Update constraint displacements
-        for (int j = 0; j < solver.num_constraint_nodes; ++j) {
+        for (int j = 0; j < solver.constraints.num; ++j) {
             solver.constraints.UpdateDisplacement(j, u_hub);
         }
 

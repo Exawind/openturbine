@@ -11,9 +11,18 @@
 
 namespace openturbine {
 
+inline int NumConstraintDOFs(const std::vector<Constraint>& constraints) {
+    int num_dofs = 0;
+    for (const auto& constraint : constraints) {
+        num_dofs += constraint.NumDOFs();
+    }
+    return num_dofs;
+}
+
 struct Constraints {
     struct DeviceData {
         ConstraintType type;
+        Kokkos::pair<int, int> row_range;
         int base_node_index;
         int target_node_index;
         double X0[3];
@@ -26,44 +35,56 @@ struct Constraints {
         double* control;
     };
 
-    int num_constraint_nodes;
-    Kokkos::View<DeviceData*> data;
+    int num;
+    int num_dofs;
     std::vector<HostData> constraint_data;
+    Kokkos::View<DeviceData*> data;
     View_N control;
     View_Nx7 u;
     View_N Phi;
     View_NxN B;
 
     Constraints() {}
-    Constraints(std::vector<Constraint> constraints, int num_system_nodes)
-        : num_constraint_nodes(constraints.size()),
-          data("data", num_constraint_nodes),
+    Constraints(const std::vector<Constraint>& constraints, int num_system_dofs)
+        : num(constraints.size()),
+          num_dofs(NumConstraintDOFs(constraints)),
           constraint_data(
-              num_constraint_nodes,
-              HostData{ConstraintType::None, {0., 0., 0., 1., 0., 0., 0.}, nullptr}
+              num, HostData{ConstraintType::None, {0., 0., 0., 1., 0., 0., 0.}, nullptr}
           ),
-          control("control", num_constraint_nodes),
-          u("u", num_constraint_nodes),
-          Phi("residual_vector", num_constraint_nodes * kLieAlgebraComponents),
-          B("gradient_matrix", num_constraint_nodes * kLieAlgebraComponents,
-            num_system_nodes * kLieAlgebraComponents) {
+          data("data", num),
+          control("control", num),
+          u("u", num),
+          Phi("residual_vector", num_dofs),
+          B("gradient_matrix", num_dofs, num_system_dofs) {
         // Create host mirror for constraint data
         auto host_data = Kokkos::create_mirror(this->data);
 
         // Loop through constraint input
-        for (size_t i = 0; i < constraints.size(); ++i) {
-            host_data(i).base_node_index = constraints[i].base_node.ID;
-            host_data(i).target_node_index = constraints[i].target_node.ID;
+        int start_row = 0;
+        for (int i = 0; i < this->num; ++i) {
+            // Set constraint type
             host_data(i).type = constraints[i].type;
 
+            // Set constraint rows
+            auto dofs = constraints[i].NumDOFs();
+            host_data(i).row_range = Kokkos::make_pair(start_row, start_row + dofs);
+            start_row += dofs;
+
+            // Set base node and target node index
+            host_data(i).base_node_index = constraints[i].base_node.ID;
+            host_data(i).target_node_index = constraints[i].target_node.ID;
+
+            // Set initial relative location between nodes
             host_data(i).X0[0] = constraints[i].X0[0];
             host_data(i).X0[1] = constraints[i].X0[1];
             host_data(i).X0[2] = constraints[i].X0[2];
 
+            // Set rotation axis
             host_data(i).axis[0] = constraints[i].rot_axis[0];
             host_data(i).axis[1] = constraints[i].rot_axis[1];
             host_data(i).axis[2] = constraints[i].rot_axis[2];
 
+            // Set Host constraint data
             this->constraint_data[i].type = constraints[i].type;
             this->constraint_data[i].control = constraints[i].control;
         }
@@ -76,10 +97,10 @@ struct Constraints {
     }
 
     // UpdateDisplacement sets the new displacement for the given constraint
-    void UpdateDisplacement(int index, Array_7 u_) { this->constraint_data[index].u = u_; }
+    void UpdateDisplacement(int id, Array_7 u_) { this->constraint_data[id].u = u_; }
 
-    // Transfer control signals and prescribed displacements to device
-    void TransferToDevice() {
+    // UpdateViews transfers new prescribed displacements and control signals to views
+    void UpdateViews() {
         // Prescribed displacement
         auto host_u_mirror = Kokkos::create_mirror(this->u);
         auto host_control_mirror = Kokkos::create_mirror(this->control);

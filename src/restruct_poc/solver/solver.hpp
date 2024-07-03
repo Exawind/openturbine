@@ -50,9 +50,9 @@ struct Solver {
     double conditioner;
     int num_system_nodes;
     int num_system_dofs;
-    int num_constraint_nodes;
-    int num_constraint_dofs;
+    Constraints constraints;
     int num_dofs;
+    State state;
     CrsMatrixType K;
     CrsMatrixType T;
     CrsMatrixType B;
@@ -68,8 +68,7 @@ struct Solver {
     Kokkos::View<int*, Kokkos::LayoutLeft> IPIV;
     View_N R;  // System residual vector
     View_N x;  // System solution vector
-    State state;
-    Constraints constraints;
+
     std::vector<double> convergence_err;
 
     Solver(
@@ -88,23 +87,21 @@ struct Solver {
           conditioner(beta * h * h),
           num_system_nodes(system_nodes.size()),
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
-          num_constraint_nodes(constraints_.size()),
-          num_constraint_dofs(num_constraint_nodes * kLieAlgebraComponents),
-          num_dofs(num_system_dofs + num_constraint_dofs),
+          constraints(constraints_, num_system_dofs),
+          num_dofs(num_system_dofs + constraints.num_dofs),
+          state(num_system_nodes, constraints.num_dofs, system_nodes),
           K_dense("K dense", num_system_dofs, num_system_dofs),
           St("St", num_dofs, num_dofs),
           IPIV("IPIV", num_dofs),
           R("R", num_dofs),
           x("x", num_dofs),
-          state(num_system_nodes, num_constraint_nodes, system_nodes),
-          constraints(constraints_, num_system_nodes),
           convergence_err(max_iter) {
         if constexpr (!std::is_same_v<decltype(St)::array_layout, Kokkos::LayoutLeft>) {
             St_left = Kokkos::View<double**, Kokkos::LayoutLeft>("St_left", num_dofs, num_dofs);
         }
 
-        auto K_num_rows = num_system_dofs;
-        auto K_num_columns = num_system_dofs;
+        auto K_num_rows = this->num_system_dofs;
+        auto K_num_columns = this->num_system_dofs;
         auto K_num_non_zero = 0;
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros", beams_.num_elems,
@@ -127,12 +124,12 @@ struct Solver {
         );
 
         // Tangent operator sparse matrix
-        auto T_num_non_zero = num_system_nodes * 6 * 6;
+        auto T_num_non_zero = this->num_system_nodes * 6 * 6;
         auto T_row_ptrs = RowPtrType("T_row_ptrs", K_num_rows + 1);
         auto T_indices = IndicesType("T_indices", T_num_non_zero);
         Kokkos::parallel_for(
             "PopulateTangentRowPtrs", 1,
-            PopulateTangentRowPtrs<CrsMatrixType::size_type>{num_system_nodes, T_row_ptrs}
+            PopulateTangentRowPtrs<CrsMatrixType::size_type>{this->num_system_nodes, T_row_ptrs}
         );
         auto node_ids = Kokkos::View<int*>("node_ids", system_nodes.size());
         auto host_node_ids = Kokkos::create_mirror(node_ids);
@@ -142,7 +139,7 @@ struct Solver {
         Kokkos::deep_copy(node_ids, host_node_ids);
         Kokkos::parallel_for(
             "PopulateTangentIndices", 1,
-            PopulateTangentIndices{num_system_nodes, node_ids, T_indices}
+            PopulateTangentIndices{this->num_system_nodes, node_ids, T_indices}
         );
         auto T_values = ValuesType("T values", T_num_non_zero);
         T = CrsMatrixType(
@@ -154,18 +151,20 @@ struct Solver {
         for (const auto& constraint : constraints_) {
             B_num_non_zero += (constraint.base_node.ID < 0 ? 1 : 2) * 6 * 6;
         }
-        auto B_num_rows = num_constraint_dofs;
-        auto B_num_columns = num_system_dofs;
+        auto B_num_rows = this->constraints.num_dofs;
+        auto B_num_columns = this->num_system_dofs;
         auto B_row_ptrs = Kokkos::View<int*>("b_row_ptrs", B_num_rows + 1);
         auto B_col_ind = Kokkos::View<int*>("b_indices", B_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrs_Constraints", 1,
-            PopulateSparseRowPtrs_Constraints{num_constraint_nodes, constraints.data, B_row_ptrs}
+            PopulateSparseRowPtrs_Constraints{
+                this->constraints.num, this->constraints.data, B_row_ptrs}
         );
 
         Kokkos::parallel_for(
             "PopulateSparseIndices_Constraints", 1,
-            PopulateSparseIndices_Constraints{num_constraint_nodes, constraints.data, B_col_ind}
+            PopulateSparseIndices_Constraints{
+                this->constraints.num, this->constraints.data, B_col_ind}
         );
 
         auto B_values = Kokkos::View<double*>("B values", B_num_non_zero);
@@ -183,12 +182,12 @@ struct Solver {
         Kokkos::parallel_for(
             "PopulateSparseRowPtrs_Constraints_Transpose", 1,
             PopulateSparseRowPtrs_Constraints_Transpose{
-                num_constraint_nodes, num_system_nodes, constraints.data, B_t_row_ptrs}
+                this->constraints.num, this->num_system_nodes, this->constraints.data, B_t_row_ptrs}
         );
         Kokkos::parallel_for(
             "PopulateSparseIndices_Constraints_Transpose", 1,
             PopulateSparseIndices_Constraints_Transpose{
-                num_constraint_nodes, num_system_nodes, constraints.data, B_t_indices}
+                this->constraints.num, this->num_system_nodes, this->constraints.data, B_t_indices}
         );
 
         auto B_t_values = Kokkos::View<double*>("B_t values", B_t_num_non_zero);

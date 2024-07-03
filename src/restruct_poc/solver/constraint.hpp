@@ -44,6 +44,16 @@ struct Constraint {
                 X0[2] = this->target_node.x[2] - this->base_node.x[2];
         }
     }
+
+    // NumDOFs returns the number of degrees of freedom used by constraint.
+    int NumDOFs() const {
+        switch (this->type) {
+            case ConstraintType::Cylindrical:
+                return 5;
+            default:
+                return kLieAlgebraComponents;
+        }
+    }
 };
 
 }  // namespace openturbine

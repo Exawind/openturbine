@@ -52,9 +52,9 @@ inline void UpdateStatePrediction(Solver& solver, View_N x_system, View_N x_lamb
         }
     );
 
-    if (solver.num_constraint_nodes > 0) {
+    if (solver.constraints.num > 0) {
         Kokkos::parallel_for(
-            "UpdateLambdaPrediction", solver.num_constraint_dofs,
+            "UpdateLambdaPrediction", solver.constraints.num_dofs,
             UpdateLambdaPrediction{
                 x_lambda,
                 solver.state.lambda,
