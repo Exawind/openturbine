@@ -26,7 +26,7 @@ public:
         this->swap_ = reinterpret_cast<SwapStruct*>(this->avrSWAP_);
     }
 
-    // Get the smart pointer to the avrSWAP array
+    // Get the pointer to the avrSWAP array
     SwapStruct* GetSwap() { return this->swap_; }
 
     // Method to call the controller function from the shared library
@@ -61,6 +61,7 @@ private:
     std::string controller_function_name_;
 
     // Declare a raw pointer to the avrSWAP array
+    // TODO Make it a smart pointer
     SwapStruct* swap_;
 };
 

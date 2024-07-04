@@ -496,6 +496,19 @@ void DISCON(
     }
 }
 
+void TEST_CONTROLLER(
+    float avrSWAP[], [[maybe_unused]] int* aviFAIL, [[maybe_unused]] const char* accINFILE,
+    [[maybe_unused]] const char* avcOUTNAME, [[maybe_unused]] const char* avcMSG
+) {
+    // Map swap from calling program to struct
+    SwapStruct* swap = reinterpret_cast<SwapStruct*>(avrSWAP);
+
+    // Update pitch angle in radians (ranges from -90 to 90 starting at zero)
+    swap->pitch_blade1 = 2. * M_PI * swap->time / 3.;
+    swap->pitch_blade2 = 2. * M_PI * swap->time / 3.;
+    swap->pitch_blade3 = 2. * M_PI * swap->time / 3.;
+}
+
 }  // extern "C"
 
 }  // namespace openturbine::util
