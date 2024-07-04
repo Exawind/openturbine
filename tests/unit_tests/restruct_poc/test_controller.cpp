@@ -91,7 +91,6 @@ TEST(ControllerTest, DisconController) {
     EXPECT_FLOAT_EQ(avrSWAP[47], 0.);          // DemandedNacelleYawRate
 }
 
-// Write a test for the TurbineController class
 TEST(ControllerTest, TurbineController) {
     // provide shared library path and controller function name to clamp
     std::string shared_lib_path = "./";
@@ -147,6 +146,46 @@ TEST(ControllerTest, TurbineController) {
     EXPECT_FLOAT_EQ(swap->pitch_command_collective, 0.);           // PitchComCol
     EXPECT_FLOAT_EQ(swap->demanded_generator_torque, 43093.5508);  // DemandedGeneratorTorque
     EXPECT_FLOAT_EQ(swap->demanded_nacelle_yaw_rate, 0.);          // DemandedNacelleYawRate
+}
+
+TEST(ControllerTest, TestController) {
+    // Use dylib to load the dynamic library and get access to the controller functions
+    util::dylib lib("./", "DISCON");
+    auto TEST_CONTROLLER =
+        lib.get_function<void(float*, int&, const char*, const char*, const char*)>("TEST_CONTROLLER"
+        );
+
+    float avrSWAP[81] = {0.};
+    util::SwapStruct* swap = reinterpret_cast<util::SwapStruct*>(avrSWAP);
+    swap->status = 0.;
+    swap->time = 0.;
+
+    // Call TEST_CONTROLLER and expect the following outputs at time = 0.0s
+    int aviFAIL = 0;
+    char in_file[] = "in_file";
+    char out_name[] = "out_name";
+    char msg[] = "msg";
+    TEST_CONTROLLER(avrSWAP, aviFAIL, in_file, out_name, msg);
+
+    EXPECT_FLOAT_EQ(swap->pitch_blade1, 0.);  // PitchBlade1
+    EXPECT_FLOAT_EQ(swap->pitch_blade2, 0.);  // PitchBlade2
+    EXPECT_FLOAT_EQ(swap->pitch_blade3, 0.);  // PitchBlade3
+
+    // Call TEST_CONTROLLER and expect the following outputs at time = 1.0s
+    swap->time = 1.;
+    TEST_CONTROLLER(avrSWAP, aviFAIL, in_file, out_name, msg);
+
+    EXPECT_FLOAT_EQ(swap->pitch_blade1, 2. * M_PI / 3.);  // PitchBlade1
+    EXPECT_FLOAT_EQ(swap->pitch_blade2, 2. * M_PI / 3.);  // PitchBlade2
+    EXPECT_FLOAT_EQ(swap->pitch_blade3, 2. * M_PI / 3.);  // PitchBlade3
+
+    // Call TEST_CONTROLLER and expect the following outputs at time = 2.0s
+    swap->time = 2.;
+    TEST_CONTROLLER(avrSWAP, aviFAIL, in_file, out_name, msg);
+
+    EXPECT_FLOAT_EQ(swap->pitch_blade1, 4. * M_PI / 3.);  // PitchBlade1
+    EXPECT_FLOAT_EQ(swap->pitch_blade2, 4. * M_PI / 3.);  // PitchBlade2
+    EXPECT_FLOAT_EQ(swap->pitch_blade3, 4. * M_PI / 3.);  // PitchBlade3
 }
 
 }  // namespace openturbine::restruct_poc::tests
