@@ -18,6 +18,9 @@
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
 #include "src/restruct_poc/types.hpp"
+#include "src/utilities/controllers/discon.h"
+#include "src/utilities/controllers/turbine_controller.hpp"
+#include "src/vendor/dylib/dylib.hpp"
 
 #ifdef OTURB_ENABLE_VTK
 #include "vtkout.hpp"
@@ -264,8 +267,22 @@ TEST(RotorTest, DISABLED_IEA15RotorController) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
+    // Add logic related to TurbineController
+    // provide shared library path and controller function name to clamp
+    std::string shared_lib_path = "./";
+    std::string controller_name = "DISCON";
+    std::string controller_function_name = "TEST_CONTROLLER";
+    std::string accINFILE = "in_file";
+    std::string avcOUTNAME = "out_name";
+
+    // create an instance of TurbineController
+    util::TurbineController controller(
+        shared_lib_path, controller_name, controller_function_name, accINFILE, avcOUTNAME
+    );
+    auto swap = controller.GetSwap();
+
     // Pitch control variable
-    double pitch = 0.;
+    double pitch = swap->pitch_blade1;
 
     // Define hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0});
@@ -313,7 +330,11 @@ TEST(RotorTest, DISABLED_IEA15RotorController) {
         solver.constraints.UpdateDisplacement(hub_bc.ID, u_hub);
 
         // Update pitch angle in radians (ranges from -90 to 90 starting at zero)
-        pitch = 2. * M_PI * t / 3.;
+        // pitch = 2. * M_PI * t / 3.;
+
+        // call turbine_controller.update_pitch(pitch)
+        controller.CallController();
+        pitch = swap->pitch_blade1;
 
         // Take step
         auto converged = Step(solver, beams);
