@@ -14,55 +14,71 @@ namespace openturbine::util {
 class TurbineController {
 public:
     TurbineController(
-        std::string shared_lib_path, std::string controller_name,
-        std::string controller_function_name, std::string accINFILE = "", std::string avcOUTNAME = ""
+        std::string shared_lib_path, std::string controller_function_name,
+        std::string input_file_path = "", std::string output_file_path = ""
     )
-        : shared_lib_path_(shared_lib_path),
-          controller_name_(controller_name),
+        : lib(shared_lib_path,
+              util::dylib::no_filename_decorations),  // TODO: add error handling for library load
+          input_file_path_(input_file_path),
+          output_file_path_(output_file_path),
+          shared_lib_path_(shared_lib_path),
           controller_function_name_(controller_function_name) {
-        // Copy the input file and output name to the class attributes
-        std::copy(accINFILE.begin(), accINFILE.end(), this->accINFILE_);
-        std::copy(avcOUTNAME.begin(), avcOUTNAME.end(), this->avcOUTNAME_);
-        this->swap_ = reinterpret_cast<SwapStruct*>(this->avrSWAP_);
-    }
+        // Map swap array to IO structure
+        this->io = reinterpret_cast<ControllerIO*>(this->swap_array);
 
-    // Get the pointer to the avrSWAP array
-    SwapStruct* GetSwap() { return this->swap_; }
+        // Populate size of character arrays
+        this->io->message_array_size = this->message_.size();
+        this->io->infile_array_size = this->input_file_path_.size();
+        this->io->outname_array_size = this->output_file_path_.size();
+
+        // Get pointer to the function inside shared library
+        // TODO: Add error handling because this can fail
+        this->func_ptr_ = lib.get_function<void(
+            float* avrSWAP, int* aviFAIL, char* const accINFILE, char* const avcOUTNAME,
+            char* const avcMSG
+        )>(this->controller_function_name_);
+    }
 
     // Method to call the controller function from the shared library
     void CallController() {
-        // Logic to call the DLL and get the results
-        util::dylib lib(this->shared_lib_path_, this->controller_name_);
-        lib.get_function<
-            void(float*, int&, const char*, const char*, const char*)>(this->controller_function_name_)(
-            this->avrSWAP_, this->aviFAIL_, this->accINFILE_, this->avcOUTNAME_, this->avcMSG_
+        // Logic call the controller function
+        this->func_ptr_(
+            this->swap_array, &this->status_, this->input_file_path_.data(),
+            this->output_file_path_.data(), this->message_.data()
         );
 
         // Handle the errors coming out of the shared library
-        if (this->aviFAIL_ < 0) {
-            throw std::runtime_error(this->avcMSG_);
-        } else if (this->aviFAIL_ > 0) {
-            std::cout << "Warning: " << this->avcMSG_ << std::endl;
+        if (this->status_ < 0) {
+            throw std::runtime_error(this->message_);
+        } else if (this->status_ > 0) {
+            std::cout << "Warning: " << this->message_ << std::endl;
         }
     }
 
+    // Pointer to structure mapping swap array to named fields
+    ControllerIO* io;
+
 private:
+    // Shared library handle
+    util::dylib lib;
+
+    // Pointer to controller function in dll
+    void (*func_ptr_)(
+        float* avrSWAP, int* aviFAIL, char* const accINFILE, char* const avcOUTNAME,
+        char* const avcMSG
+    ) = nullptr;
+
     // Declare the attributes required to call the shared library (typically implemented in C
     // utilizing the Bladed API)
-    float avrSWAP_[81] = {0.};
-    int aviFAIL_;
-    char accINFILE_[256];
-    char avcOUTNAME_[256];
-    char avcMSG_[1024];
+    float swap_array[81] = {0.};
+    int status_ = 0;
+    std::string input_file_path_;
+    std::string output_file_path_;
+    std::string message_ = std::string(1024, ' ');
 
     // Store the shared library information
     std::string shared_lib_path_;
-    std::string controller_name_;
     std::string controller_function_name_;
-
-    // Declare a raw pointer to the avrSWAP array
-    // TODO Make it a smart pointer
-    SwapStruct* swap_;
 };
 
 }  // namespace openturbine::util

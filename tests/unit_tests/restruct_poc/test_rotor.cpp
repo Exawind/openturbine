@@ -193,7 +193,7 @@ TEST(RotorTest, IEA15Rotor) {
     }
 }
 
-TEST(RotorTest, DISABLED_IEA15RotorController) {
+TEST(RotorTest, IEA15RotorController) {
     // Flag to write output
     const bool write_output(true);
 
@@ -208,8 +208,11 @@ TEST(RotorTest, DISABLED_IEA15RotorController) {
     const size_t max_iter(6);
     const double step_size(0.01);  // seconds
     const double rho_inf(0.0);
-    const double t_end(10.);
+    const double t_end(3.0 * 2.0 * M_PI / fabs(omega[2]));  // 3 revolutions
     const size_t num_steps(t_end / step_size + 1.0);
+
+    // Hub radius (meters)
+    const double hub_rad{3.97};
 
     // Node location [0, 1]
     std::vector<double> node_loc;
@@ -225,9 +228,6 @@ TEST(RotorTest, DISABLED_IEA15RotorController) {
     // 1 rad/s angular velocity around the z axis
     const size_t num_blades = 3;
     std::vector<BeamElement> beam_elems;
-
-    // Hub radius (meters)
-    const double hub_rad{3.97};
 
     // Loop through blades
     for (size_t i = 0; i < num_blades; ++i) {
@@ -269,27 +269,29 @@ TEST(RotorTest, DISABLED_IEA15RotorController) {
 
     // Add logic related to TurbineController
     // provide shared library path and controller function name to clamp
-    std::string shared_lib_path = "./";
-    std::string controller_name = "DISCON";
-    std::string controller_function_name = "TEST_CONTROLLER";
+    std::string shared_lib_path = "./DISCON_ROTOR_TEST.dll";
+    std::string controller_function_name = "PITCH_CONTROLLER";
     std::string accINFILE = "in_file";
     std::string avcOUTNAME = "out_name";
 
     // create an instance of TurbineController
     util::TurbineController controller(
-        shared_lib_path, controller_name, controller_function_name, accINFILE, avcOUTNAME
+        shared_lib_path, controller_function_name, accINFILE, avcOUTNAME
     );
-    auto swap = controller.GetSwap();
 
     // Pitch control variable
-    double pitch = swap->pitch_blade1;
+    std::vector<float*> blade_pitch_command{
+        &controller.io->pitch_command_1, &controller.io->pitch_command_2,
+        &controller.io->pitch_command_3};
 
     // Define hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0});
     for (size_t i = 0; i < beam_elems.size(); ++i) {
         const auto q_root = RotationVectorToQuaternion({0., 0., -2. * M_PI * i / num_blades});
         const auto pitch_axis = RotateVectorByQuaternion(q_root, {1., 0., 0.});
-        model.AddRotationControl(hub_node, beam_elems[i].nodes[0].node, pitch_axis, &pitch);
+        model.AddRotationControl(
+            hub_node, beam_elems[i].nodes[0].node, pitch_axis, blade_pitch_command[i]
+        );
     }
     auto hub_bc = model.AddPrescribedBC(hub_node, {0., 0., 0.});
 
@@ -329,12 +331,11 @@ TEST(RotorTest, DISABLED_IEA15RotorController) {
         Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
         solver.constraints.UpdateDisplacement(hub_bc.ID, u_hub);
 
-        // Update pitch angle in radians (ranges from -90 to 90 starting at zero)
-        // pitch = 2. * M_PI * t / 3.;
+        // Update time in controller
+        controller.io->time = t;
 
-        // call turbine_controller.update_pitch(pitch)
+        // call controller to get signals for this step
         controller.CallController();
-        pitch = swap->pitch_blade1;
 
         // Take step
         auto converged = Step(solver, beams);

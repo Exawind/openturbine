@@ -6,10 +6,87 @@ namespace openturbine::util {
 
 extern "C" {
 
+#define PC_DbgOut 0  // Flag to indicate whether to output debugging information (0=Off)
+
+// Define some constants
+// ------------------------------------------------------------------------------------------------
+/// Transitional generator speed (HSS side) between regions 1 and 1 1/2, rad/s
+static constexpr double kVS_CtInSp{70.16224};
+/// Communication interval for torque controller, sec
+static constexpr double kVS_DT{0.000125};
+/// Maximum torque rate (in absolute value) in torque controller, N-m/s
+static constexpr double kVS_MaxRat{15000.};
+/// Maximum generator torque in Region 3 (HSS side), N-m
+static constexpr double kVS_MaxTq{47402.91};
+/// Generator torque constant in Region 2 (HSS side), N-m/(rad/s)^2
+static constexpr double kVS_Rgn2K{2.332287};
+/// Transitional generator speed (HSS side) between regions 1 1/2 and 2, rad/s
+static constexpr double kVS_Rgn2Sp{91.21091};
+/// Minimum pitch angle at which the torque is computed as if we are in region 3 regardless of the
+/// generator speed, rad
+static constexpr double kVS_Rgn3MP{0.01745329};
+/// Rated generator speed (HSS side), rad/s
+static constexpr double kVS_RtGnSp{121.6805};
+/// Rated generator generator power in Region 3, Watts
+static constexpr double kVS_RtPwr{5296610.0};
+/// Corner frequency (-3dB point) in the recursive, single-pole, low-pass filter, rad/s -- chosen to
+/// be 1/4 the blade edgewise natural frequency ( 1/4 of approx. 1 Hz = 0.25 Hz = 1.570796 rad/s)
+static constexpr double kCornerFreq{1.570796};
+/// A value slightly greater than unity in single precision
+static constexpr double kOnePlusEps{1.0 + 1.19e-07};
+/// Communication interval for the pitch controller, sec
+static constexpr double kPC_DT{0.000125};
+/// Integral gain for pitch controller at rated pitch (zero), (-)
+static constexpr double kPC_KI{0.008068634};
+/// Pitch angle where the the derivative of the aerodynamic power w.r.t. pitch has increased by a
+/// factor of two relative to the derivative at rated pitch (zero), rad
+static constexpr double kPC_KK{0.1099965};
+/// Proportional gain for pitch controller at rated pitch (zero), sec
+static constexpr double kPC_KP{0.01882681};
+/// Maximum pitch setting in pitch controller, rad
+static constexpr double kPC_MaxPit{1.570796};
+/// Maximum pitch rate (in absolute value) in pitch controller, rad/s
+static constexpr double kPC_MaxRat{0.1396263};
+/// Minimum pitch setting in pitch controller, rad
+static constexpr double kPC_MinPit{0.0};
+/// Desired (reference) HSS speed for pitch controller, rad/s
+static constexpr double kPC_RefSpd{122.9096};
+/// Factor to convert radians to degrees
+static constexpr double kR2D{57.295780};
+/// Factor to convert radians per second to revolutions per minute
+static constexpr double kRPS2RPM{9.5492966};
+/// Rated generator slip percentage in Region 2 1/2, %
+static constexpr double kVS_SlPc{10.0};
+
+struct InternalState {
+    float generator_speed_filtered;   // Filtered HSS (generator) speed, rad/s.
+    float integral_speed_error;       // Current integral of speed error w.r.t. time, rad
+    float generator_torque_lastest;   // Commanded electrical generator torque the last time the
+                                      // controller was called, N-m
+    float time_latest;                // Last time this DLL was called, sec
+    float pitch_controller_latest;    // Last time the pitch  controller was called, sec
+    float torque_controller_latest;   // Last time the torque controller was called, sec
+    float pitch_commanded_latest[3];  // Commanded pitch of each blade the last time the controller
+                                      // was called, rad
+    float VS_torque_slope_15;         // Torque/speed slope of region 1 1/2 cut-in torque ramp,
+                                      // N-m/(rad/s)
+    float VS_torque_slope_25;         // Torque/speed slope of region 2 1/2 induction
+                                      // generator, N-m/(rad/s)
+    float VS_sync_speed;              // Synchronous speed of region 2 1/2 induction generator, rad/s
+    float VS_generator_speed_trans;   // Transitional generator speed (HSS side) between regions
+                                      // 2 and 2 1/2, rad/s. 1/2, rad/s
+};
+
+/// @brief This function is used to clamp a value between a minimum and maximum value
+float clamp(float v, float v_min, float v_max) {
+    return v < v_min ? v_min : (v > v_max ? v_max : v);
+}
+
 // TODO This is a quick and dirty conversion of the DISCON function from the original C code to
 // C++. It needs to be refactored to be more idiomatic C++.
 void DISCON(
-    float avrSWAP[], int* aviFAIL, const char* accINFILE, const char* avcOUTNAME, const char* avcMSG
+    float avrSWAP[], int* aviFAIL, const char* const accINFILE, char* const avcOUTNAME,
+    char* const avcMSG
 ) {
     // Internal state
     static InternalState state;
@@ -27,7 +104,7 @@ void DISCON(
     static FILE* fp_csv = nullptr;
 
     // Map swap from calling program to struct
-    SwapStruct* swap = reinterpret_cast<SwapStruct*>(avrSWAP);
+    ControllerIO* swap = reinterpret_cast<ControllerIO*>(avrSWAP);
 
     // A status flag set by the simulation as follows: 0 if this is the first call, 1 for all
     // subsequent time steps, -1 if this is the final call at the end of the simulation
@@ -494,19 +571,6 @@ void DISCON(
             *aviFAIL = -1;
         }
     }
-}
-
-void TEST_CONTROLLER(
-    float avrSWAP[], [[maybe_unused]] int* aviFAIL, [[maybe_unused]] const char* accINFILE,
-    [[maybe_unused]] const char* avcOUTNAME, [[maybe_unused]] const char* avcMSG
-) {
-    // Map swap from calling program to struct
-    SwapStruct* swap = reinterpret_cast<SwapStruct*>(avrSWAP);
-
-    // Update pitch angle in radians (ranges from -90 to 90 starting at zero)
-    swap->pitch_blade1 = 2. * M_PI * swap->time / 3.;
-    swap->pitch_blade2 = 2. * M_PI * swap->time / 3.;
-    swap->pitch_blade3 = 2. * M_PI * swap->time / 3.;
 }
 
 }  // extern "C"

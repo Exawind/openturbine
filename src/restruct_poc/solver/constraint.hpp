@@ -20,15 +20,15 @@ struct Constraint {
     Node base_node;
     Node target_node;
     ConstraintType type;
-    Array_3 X0 = {0.};          // reference position for prescribed BC
-    Array_3 x_axis = {0.};      // unit vector for x axis
-    Array_3 y_axis = {0.};      // unit vector for y axis
-    Array_3 z_axis = {0.};      // unit vector for z axis
-    double* control = nullptr;  // pointer to control variable
+    Array_3 X0 = {0.};         // reference position for prescribed BC
+    Array_3 x_axis = {0.};     // unit vector for x axis
+    Array_3 y_axis = {0.};     // unit vector for y axis
+    Array_3 z_axis = {0.};     // unit vector for z axis
+    float* control = nullptr;  // pointer to control variable
 
     Constraint(
         int id, const Node node1, const Node node2, ConstraintType constraint_type,
-        Array_3 vec = {0., 0., 0.}, double* control_ = nullptr
+        Array_3 vec = {0., 0., 0.}, float* control_ = nullptr
     )
         : ID(id), base_node(node1), target_node(node2), type(constraint_type), control(control_) {
         // If fixed BC or prescribed displacement, X0 is based on reference position vector

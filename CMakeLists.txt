@@ -217,5 +217,8 @@ install(
 )
 
 # Build DISCON.cpp into a shared library
-set(SOURCE_PATH "${PROJECT_SOURCE_DIR}/src/utilities/controllers/discon.cpp")
-add_library(DISCON SHARED ${SOURCE_PATH})
+add_library(DISCON SHARED "${PROJECT_SOURCE_DIR}/src/utilities/controllers/discon.cpp")
+set_target_properties(DISCON PROPERTIES PREFIX "" SUFFIX ".dll")
+
+add_library(DISCON_ROTOR_TEST SHARED "${PROJECT_SOURCE_DIR}/src/utilities/controllers/discon_rotor_test.cpp")
+set_target_properties(DISCON_ROTOR_TEST PROPERTIES PREFIX "" SUFFIX ".dll")

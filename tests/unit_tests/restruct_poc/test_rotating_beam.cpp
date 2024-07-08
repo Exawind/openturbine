@@ -445,7 +445,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     auto beams = CreateBeams(beams_input);
 
     // Add hub node and associated constraints
-    double pitch = 0.;
+    float pitch = 0.;
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
     model.AddRotationControl(hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);
     model.AddFixedBC(hub_node);
@@ -510,7 +510,7 @@ TEST(RotatingBeamTest, DISABLED_CylindricalConstraint) {
     auto beams = CreateBeams(beams_input);
 
     // Add hub node and associated constraints
-    double pitch = 0.;
+    float pitch = 0.;
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
     auto ground_node = model.AddNode({-1., 0., -0.25, 1., 0., 0., 0.});
     model.AddRotationControl(hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);

@@ -34,7 +34,7 @@ struct Constraints {
     struct HostData {
         ConstraintType type;
         Array_7 u;
-        double* control;
+        float* control;
     };
 
     int num;
