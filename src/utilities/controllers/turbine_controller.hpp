@@ -42,7 +42,15 @@ public:
             throw std::runtime_error("Failed to get function: " + controller_function_name);
         }
 
-        // Map swap array to ControllerIO structure
+        // Initialize some values required for calling the controller function
+        for (int i = 0; i < 81; ++i) {
+            // Initialize swap array to zero
+            this->swap_array_[i] = 0.;
+        }
+        this->status_ = 0;                        // Status of the controller function call
+        this->message_ = std::string(1024, ' ');  // 1024 characters for message
+
+        // Map swap array to ControllerIO structure for easier access
         this->io = reinterpret_cast<ControllerIO*>(this->swap_array_);
         this->io->infile_array_size = input_file_path.size();
         this->io->outname_array_size = output_file_path.size();
@@ -64,11 +72,11 @@ public:
     }
 
 private:
-    float swap_array_[81] = {0.};   //< Swap array used to pass data to and from the controller
-    int status_ = 0;                //< Status of the controller function call
+    float swap_array_[81];          //< Swap array used to pass data to and from the controller
+    int status_;                    //< Status of the controller function call
     std::string input_file_path_;   //< Path to the input file
     std::string output_file_path_;  //< Path to the output file
-    std::string message_ = std::string(1024, ' ');
+    std::string message_;
     std::string shared_lib_path_;           //< Path to shared library
     std::string controller_function_name_;  //< Name of the controller function in the shared library
 
