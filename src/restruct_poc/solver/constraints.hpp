@@ -26,7 +26,9 @@ struct Constraints {
         int base_node_index;
         int target_node_index;
         double X0[3];
-        double axis[3];
+        double axis_x[3];  // Unit vector representing x rotation axis
+        double axis_y[3];  // Unit vector representing y rotation axis
+        double axis_z[3];  // Unit vector representing z rotation axis
     };
 
     struct HostData {
@@ -62,6 +64,10 @@ struct Constraints {
         // Loop through constraint input
         int start_row = 0;
         for (int i = 0; i < this->num; ++i) {
+            // Set Host constraint data
+            this->constraint_data[i].type = constraints[i].type;
+            this->constraint_data[i].control = constraints[i].control;
+
             // Set constraint type
             host_data(i).type = constraints[i].type;
 
@@ -79,14 +85,12 @@ struct Constraints {
             host_data(i).X0[1] = constraints[i].X0[1];
             host_data(i).X0[2] = constraints[i].X0[2];
 
-            // Set rotation axis
-            host_data(i).axis[0] = constraints[i].rot_axis[0];
-            host_data(i).axis[1] = constraints[i].rot_axis[1];
-            host_data(i).axis[2] = constraints[i].rot_axis[2];
-
-            // Set Host constraint data
-            this->constraint_data[i].type = constraints[i].type;
-            this->constraint_data[i].control = constraints[i].control;
+            // Set rotation axes
+            for (int j = 0; j < 3; ++j) {
+                host_data(i).axis_x[j] = constraints[i].x_axis[j];
+                host_data(i).axis_y[j] = constraints[i].y_axis[j];
+                host_data(i).axis_z[j] = constraints[i].z_axis[j];
+            }
         }
 
         // Update data

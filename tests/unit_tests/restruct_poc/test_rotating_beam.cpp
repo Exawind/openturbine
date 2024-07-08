@@ -433,6 +433,61 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     std::array<double, 3> gravity = {0., 0., 0.};
 
     // Build vector of nodes (straight along x axis, no rotation)
+    std::vector<BeamNode> beam_nodes;
+    for (const double s : node_s) {
+        beam_nodes.push_back(BeamNode(s, model.AddNode({10 * s + 2., 0., 0., 1., 0., 0., 0.})));
+    }
+
+    // Define beam initialization
+    BeamsInput beams_input({BeamElement(beam_nodes, sections, quadrature)}, gravity);
+
+    // Initialize beams from element inputs
+    auto beams = CreateBeams(beams_input);
+
+    // Add hub node and associated constraints
+    double pitch = 0.;
+    auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
+    model.AddRotationControl(hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);
+    model.AddFixedBC(hub_node);
+
+    // Solution parameters
+    const bool is_dynamic_solve(true);
+    const int max_iter(5);
+    const double step_size(0.01);  // seconds
+    const double rho_inf(0.9);
+
+    // Create solver
+    Solver solver(
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+    );
+
+    // Perform 10 time steps and check for convergence within max_iter iterations
+    for (int i = 0; i < 10; ++i) {
+        double t = step_size * (i + 1);
+        // Set pitch
+        pitch = t * M_PI / 2.;
+        const auto converged = Step(solver, beams);
+        EXPECT_EQ(converged, true);
+    }
+
+    // Get rotation of root node as rotation vector
+    auto q = kokkos_view_2D_to_vector(solver.state.q);
+    auto r_root = QuaternionToRotationVector({q[0][3], q[0][4], q[0][5], q[0][6]});
+
+    // Check that root node rotation about x-axis matches prescribed pitch
+    // and that other rotations are essentially zero
+    EXPECT_NEAR(r_root[0], pitch, 1e-9);
+    EXPECT_NEAR(r_root[1], 0., 1e-9);
+    EXPECT_NEAR(r_root[2], 0., 1e-9);
+}
+
+TEST(RotatingBeamTest, DISABLED_CylindricalConstraint) {
+    auto model = Model();
+
+    // Gravity vector
+    std::array<double, 3> gravity = {0., 0., 0.};
+
+    // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 0.1 rad/s angular velocity around the z axis
     const double omega = 0.1;
@@ -457,8 +512,10 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     // Add hub node and associated constraints
     double pitch = 0.;
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
+    auto ground_node = model.AddNode({-1., 0., -0.25, 1., 0., 0., 0.});
     model.AddRotationControl(hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);
-    model.AddFixedBC(hub_node);
+    model.AddCylindricalConstraint(ground_node, hub_node);
+    model.AddFixedBC(ground_node);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
