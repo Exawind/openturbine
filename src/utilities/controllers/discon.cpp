@@ -85,8 +85,7 @@ float clamp(float v, float v_min, float v_max) {
 // TODO This is a quick and dirty conversion of the DISCON function from the original C code to
 // C++. It needs to be refactored to be more idiomatic C++.
 void DISCON(
-    float avrSWAP[], int* aviFAIL, const char* const accINFILE, char* const avcOUTNAME,
-    char* const avcMSG
+    float avrSWAP[], int* aviFAIL, const char* accINFILE, const char* avcOUTNAME, const char* avcMSG
 ) {
     // Internal state
     static InternalState state;

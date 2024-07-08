@@ -11,6 +11,7 @@ namespace openturbine::util {
 extern "C" {
 
 /// Structure defining the swap layout (See Appendix A of Bladed User's Guide)
+/// Ref: https://openfast.readthedocs.io/en/main/source/user/servodyn/ExtendedBladedInterface.html
 struct ControllerIO {
     float status;  // (1) -->  Status flag set as follows: 0 if this is the first call, 1 for all
                    // subsequent time steps, -1 if this is the final call at the end of the
@@ -119,15 +120,13 @@ struct ControllerIO {
 /// @param avcMSG MESSAGE (Message from DLL to simulation code [ErrMsg])  The message which will
 ///               be displayed by the calling program if aviFAIL <> 0
 void DISCON(
-    float avrSWAP[], int* aviFAIL, const char* const accINFILE, char* const avcOUTNAME,
-    char* const avcMSG
+    float avrSWAP[], int* aviFAIL, const char* accINFILE, const char* avcOUTNAME, const char* avcMSG
 );
 
-// Implement a test controller that returns pitch angle in radians (ranges from -90 to 90 starting at
-// zero)
+/// Implement a test controller that returns pitch angle in radians (ranges from -90 to 90 starting
+/// at zero) - used for testing purposes
 void TEST_CONTROLLER(
-    float avrSWAP[], int* aviFAIL, const char* const accINFILE, char* const avcOUTNAME,
-    char* const avcMSG
+    float avrSWAP[], int* aviFAIL, const char* accINFILE, const char* avcOUTNAME, const char* avcMSG
 );
 
 }  // extern "C"
