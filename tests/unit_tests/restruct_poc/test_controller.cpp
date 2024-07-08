@@ -92,18 +92,17 @@ TEST(ControllerTest, DisconController) {
 }
 
 TEST(ControllerTest, TurbineController) {
-    // provide shared library path and controller function name to clamp
+    // Get a handle to the controller function via the TurbineController class and use it to
+    // calculate the controller outputs
     std::string shared_lib_path = "./DISCON.dll";
     std::string controller_function_name = "DISCON";
-    std::string accINFILE = "in_file";
-    std::string avcOUTNAME = "out_name";
+    std::string input_file_path = "";
+    std::string output_file_path = "";
 
-    // create an instance of TurbineController
     util::TurbineController controller(
-        shared_lib_path, controller_function_name, accINFILE, avcOUTNAME
+        shared_lib_path, controller_function_name, input_file_path, output_file_path
     );
 
-    // get the pointer to the avrSWAP array and set the values
     controller.io->status = 0.;
     controller.io->time = 0.;
     controller.io->pitch_blade1 = 0.;
@@ -134,10 +133,8 @@ TEST(ControllerTest, TurbineController) {
     controller.io->variable_slip_status = 0.;
     controller.io->variable_slip_demand = 0.;
 
-    // call the controller function
     controller.CallController();
 
-    // expect the following outputs
     EXPECT_FLOAT_EQ(controller.io->generator_contactor_status, 1.);    // GeneratorContactorStatus
     EXPECT_FLOAT_EQ(controller.io->shaft_brake_status, 0.);            // ShaftBrakeStatus
     EXPECT_FLOAT_EQ(controller.io->demanded_yaw_actuator_torque, 0.);  // DemandedYawActuatorTorque
