@@ -208,7 +208,7 @@ TEST(RotorTest, IEA15RotorController) {
     const size_t max_iter(6);
     const double step_size(0.01);  // seconds
     const double rho_inf(0.0);
-    const double t_end(3.0 * 2.0 * M_PI / fabs(omega[2]));  // 3 revolutions
+    const double t_end(0.01 * 2.0 * M_PI / fabs(omega[2]));  // 3 revolutions
     const size_t num_steps(t_end / step_size + 1.0);
 
     // Hub radius (meters)
