@@ -269,7 +269,7 @@ TEST(RotorTest, IEA15RotorController) {
 
     // Add logic related to TurbineController
     // provide shared library path and controller function name to clamp
-    std::string shared_lib_path = "./DISCON_ROTOR_TEST.dll";
+    std::string shared_lib_path = "./DISCON_ROTOR_TEST_CONTROLLER.dll";
     std::string controller_function_name = "PITCH_CONTROLLER";
     std::string accINFILE = "in_file";
     std::string avcOUTNAME = "out_name";
