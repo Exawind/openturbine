@@ -20,6 +20,7 @@ target_sources(
     system/test_update_node_state.cpp
     system/test_calculate_RR0.cpp
     system/test_rotate_section_matrix.cpp
+    system/test_calculate_strain.cpp
 )
 
 if(OTURB_ENABLE_VTK)
