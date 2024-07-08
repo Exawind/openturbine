@@ -145,4 +145,32 @@ TEST(ControllerTest, TurbineController) {
     EXPECT_FLOAT_EQ(controller.io->demanded_nacelle_yaw_rate, 0.);  // DemandedNacelleYawRate
 }
 
+TEST(ControllerTest, TurbineControllerException) {
+    // Test case 1: invalid shared library path
+    std::string shared_lib_path = "./INVALID.dll";
+    std::string controller_function_name = "DISCON";
+    std::string input_file_path = "";
+    std::string output_file_path = "";
+
+    EXPECT_THROW(
+        util::TurbineController controller(
+            shared_lib_path, controller_function_name, input_file_path, output_file_path
+        ),
+        std::runtime_error
+    );
+
+    // Test case 2: invalid controller function name
+    shared_lib_path = "./DISCON.dll";
+    controller_function_name = "INVALID";
+    input_file_path = "";
+    output_file_path = "";
+
+    EXPECT_THROW(
+        util::TurbineController controller(
+            shared_lib_path, controller_function_name, input_file_path, output_file_path
+        ),
+        std::runtime_error
+    );
+}
+
 }  // namespace openturbine::restruct_poc::tests
