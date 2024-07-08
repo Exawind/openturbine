@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include <functional>
 #include <stdexcept>
 #include <string>
 
@@ -9,76 +9,73 @@
 
 namespace openturbine::util {
 
-/// A turbine controller class that works as a wrapper around the shared library
-/// that contains the controller logic
+/// A turbine controller class that works as a wrapper around the shared library containing the
+/// controller logic
 class TurbineController {
 public:
+    /// Pointer to structure mapping swap array -> named fields i.e. ControllerIO
+    ControllerIO* io;
+
+    /// @brief Constructor for the TurbineController class
+    /// @param shared_lib_path Path to the shared library containing the controller function
+    /// @param controller_function_name Name of the controller function in the shared library
+    /// @param input_file_path Path to the input file
+    /// @param output_file_path Path to the output file
     TurbineController(
         std::string shared_lib_path, std::string controller_function_name,
         std::string input_file_path = "", std::string output_file_path = ""
     )
-        : lib(shared_lib_path,
-              util::dylib::no_filename_decorations),  // TODO: add error handling for library load
-          input_file_path_(input_file_path),
+        : input_file_path_(input_file_path),
           output_file_path_(output_file_path),
           shared_lib_path_(shared_lib_path),
-          controller_function_name_(controller_function_name) {
-        // Map swap array to IO structure
-        this->io = reinterpret_cast<ControllerIO*>(this->swap_array);
+          controller_function_name_(controller_function_name),
+          lib_(shared_lib_path, util::dylib::no_filename_decorations) {
+        // Make sure we have a valid shared library path + controller function name
+        try {
+            this->controller_function_ = lib_.get_function<void(
+                float* avrSWAP, int* aviFAIL, const char* accINFILE, const char* avcOUTNAME,
+                const char* avcMSG
+            )>(this->controller_function_name_);
+        } catch (const util::dylib::load_error& e) {
+            throw std::runtime_error("Failed to load shared library: " + shared_lib_path);
+        } catch (const util::dylib::symbol_error& e) {
+            throw std::runtime_error("Failed to get function: " + controller_function_name);
+        }
 
-        // Populate size of character arrays
+        // Map swap array to ControllerIO structure
+        this->io = reinterpret_cast<ControllerIO*>(this->swap_array_);
+        this->io->infile_array_size = input_file_path.size();
+        this->io->outname_array_size = output_file_path.size();
         this->io->message_array_size = this->message_.size();
-        this->io->infile_array_size = this->input_file_path_.size();
-        this->io->outname_array_size = this->output_file_path_.size();
-
-        // Get pointer to the function inside shared library
-        // TODO: Add error handling because this can fail
-        this->func_ptr_ = lib.get_function<void(
-            float* avrSWAP, int* aviFAIL, char* const accINFILE, char* const avcOUTNAME,
-            char* const avcMSG
-        )>(this->controller_function_name_);
     }
 
     // Method to call the controller function from the shared library
     void CallController() {
-        // Logic call the controller function
-        this->func_ptr_(
-            this->swap_array, &this->status_, this->input_file_path_.data(),
+        this->controller_function_(
+            this->swap_array_, &this->status_, this->input_file_path_.data(),
             this->output_file_path_.data(), this->message_.data()
         );
 
-        // Handle the errors coming out of the shared library
         if (this->status_ < 0) {
-            throw std::runtime_error(this->message_);
+            throw std::runtime_error("Error raised in controller: " + this->message_);
         } else if (this->status_ > 0) {
-            std::cout << "Warning: " << this->message_ << std::endl;
+            std::cout << "Warning from controller: " << this->message_ << std::endl;
         }
     }
 
-    // Pointer to structure mapping swap array to named fields
-    ControllerIO* io;
-
 private:
-    // Shared library handle
-    util::dylib lib;
-
-    // Pointer to controller function in dll
-    void (*func_ptr_)(
-        float* avrSWAP, int* aviFAIL, char* const accINFILE, char* const avcOUTNAME,
-        char* const avcMSG
-    ) = nullptr;
-
-    // Declare the attributes required to call the shared library (typically implemented in C
-    // utilizing the Bladed API)
-    float swap_array[81] = {0.};
-    int status_ = 0;
-    std::string input_file_path_;
-    std::string output_file_path_;
+    float swap_array_[81] = {0.};   //< Swap array used to pass data to and from the controller
+    int status_ = 0;                //< Status of the controller function call
+    std::string input_file_path_;   //< Path to the input file
+    std::string output_file_path_;  //< Path to the output file
     std::string message_ = std::string(1024, ' ');
+    std::string shared_lib_path_;           //< Path to shared library
+    std::string controller_function_name_;  //< Name of the controller function in the shared library
 
-    // Store the shared library information
-    std::string shared_lib_path_;
-    std::string controller_function_name_;
+    util::dylib lib_;  //< Handle to the shared library
+
+    /// Function pointer to the controller function in the shared library
+    std::function<void(float*, int*, const char*, const char*, const char*)> controller_function_;
 };
 
 }  // namespace openturbine::util
