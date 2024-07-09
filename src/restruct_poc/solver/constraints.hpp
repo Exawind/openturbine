@@ -11,14 +11,6 @@
 
 namespace openturbine {
 
-inline int NumConstraintDOFs(const std::vector<Constraint>& constraints) {
-    int num_dofs = 0;
-    for (const auto& constraint : constraints) {
-        num_dofs += constraint.NumDOFs();
-    }
-    return num_dofs;
-}
-
 struct Constraints {
     struct DeviceData {
         ConstraintType type;
@@ -49,7 +41,12 @@ struct Constraints {
     Constraints() {}
     Constraints(const std::vector<Constraint>& constraints, int num_system_dofs)
         : num(constraints.size()),
-          num_dofs(NumConstraintDOFs(constraints)),
+          num_dofs(std::transform_reduce(
+              constraints.cbegin(), constraints.cend(), 0, std::plus{},
+              [](auto c) {
+                  return c.NumDOFs();
+              }
+          )),
           constraint_data(
               num, HostData{ConstraintType::None, {0., 0., 0., 1., 0., 0., 0.}, nullptr}
           ),

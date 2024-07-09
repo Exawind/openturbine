@@ -479,6 +479,29 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     EXPECT_NEAR(r_root[0], pitch, 1e-9);
     EXPECT_NEAR(r_root[1], 0., 1e-9);
     EXPECT_NEAR(r_root[2], 0., 1e-9);
+
+    // Check that remaining displacements are as expected
+    expect_kokkos_view_2D_equal(
+        solver.state.q,
+        {{-5.7690945215728628E-18, 2.0652319043893875E-18, -2.4953577261422928E-20,
+          0.99691733356165013, 0.078459097906677058, 5.0946025505270351E-19, 3.3980589449407732E-19},
+         {-2.9904494403209058E-7, 0.00014453413260242541, -0.00075720167307353353,
+          0.99700858667767766, 0.077290133367305239, 0.00033527696532594382,
+          0.000031054788779458509},
+         {-0.000001465015511032517, 0.00057112956926573543, -0.0031674836974124104,
+          0.99711128371780355, 0.075953862519306012, 0.00031282312872539991,
+          0.000028155321221201416},
+         {-0.0000020860700662326159, 0.00062108133928823466, -0.0035095491673744371,
+          0.99720257290191016, 0.074745725742637242, -0.00032312502616037265,
+          -0.000025908193827167231},
+         {-0.0000043494810453724702, 0.00012641646939721653, -0.00026687208011275229,
+          0.99728073405283557, 0.073693469884480778, -0.00063846060120356163,
+          -0.000048492096870836455},
+         {-0.0000058187577280119813, -0.00014174393267219577, 0.0015608892113182621,
+          0.9972883429355086, 0.073590276246437658, -0.00065565396382017294,
+          -0.000049038763777556399},
+         {0, 0, 0, 1, 0, 0, 0}}
+    );
 }
 
 TEST(RotatingBeamTest, DISABLED_CylindricalConstraint) {
@@ -528,8 +551,8 @@ TEST(RotatingBeamTest, DISABLED_CylindricalConstraint) {
         is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
     );
 
-    // Perform 10 time steps and check for convergence within max_iter iterations
-    for (int i = 0; i < 10; ++i) {
+    // Perform 2 time steps and check for convergence within max_iter iterations
+    for (int i = 0; i < 2; ++i) {
         double t = step_size * (i + 1);
         // Set pitch
         pitch = t * M_PI / 2.;

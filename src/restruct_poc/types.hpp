@@ -32,6 +32,7 @@ using View_Nx6x6 = Kokkos::View<double* [6][6]>;
 
 // Define some type aliases for 2D std::arrays to improve readability
 using Array_3 = std::array<double, 3>;
+using Array_4 = std::array<double, 4>;
 using Array_6 = std::array<double, 6>;
 using Array_7 = std::array<double, 7>;
 using Array_6x6 = std::array<Array_6, 6>;

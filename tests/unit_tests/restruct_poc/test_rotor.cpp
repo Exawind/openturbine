@@ -273,7 +273,9 @@ TEST(RotorTest, IEA15RotorController) {
     std::string controller_function_name = "PITCH_CONTROLLER";
 
     // create an instance of TurbineController
-    util::TurbineController controller(shared_lib_path, controller_function_name);
+    util::TurbineController controller(
+        shared_lib_path, controller_function_name, "test_input_file", "test_output_file"
+    );
 
     // Pitch control variable
     std::vector<float*> blade_pitch_command{

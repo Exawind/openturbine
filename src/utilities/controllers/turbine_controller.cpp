@@ -8,8 +8,8 @@
 namespace openturbine::util {
 
 TurbineController::TurbineController(
-    std::string shared_lib_path, std::string controller_function_name, std::string input_file_path,
-    std::string output_file_path
+    const std::string& shared_lib_path, const std::string& controller_function_name,
+    const std::string& input_file_path, const std::string& output_file_path
 )
     : input_file_path_(input_file_path),
       output_file_path_(output_file_path),
