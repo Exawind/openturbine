@@ -96,12 +96,8 @@ TEST(ControllerTest, TurbineController) {
     // calculate the controller outputs
     std::string shared_lib_path = "./DISCON.dll";
     std::string controller_function_name = "DISCON";
-    std::string input_file_path = "";
-    std::string output_file_path = "";
 
-    util::TurbineController controller(
-        shared_lib_path, controller_function_name, input_file_path, output_file_path
-    );
+    util::TurbineController controller(shared_lib_path, controller_function_name);
 
     controller.io->status = 0.;
     controller.io->time = 0.;
@@ -149,26 +145,18 @@ TEST(ControllerTest, TurbineControllerException) {
     // Test case 1: invalid shared library path
     std::string shared_lib_path = "./INVALID.dll";
     std::string controller_function_name = "DISCON";
-    std::string input_file_path = "";
-    std::string output_file_path = "";
 
     EXPECT_THROW(
-        util::TurbineController controller(
-            shared_lib_path, controller_function_name, input_file_path, output_file_path
-        ),
+        util::TurbineController controller(shared_lib_path, controller_function_name),
         std::runtime_error
     );
 
     // Test case 2: invalid controller function name
     shared_lib_path = "./DISCON.dll";
     controller_function_name = "INVALID";
-    input_file_path = "";
-    output_file_path = "";
 
     EXPECT_THROW(
-        util::TurbineController controller(
-            shared_lib_path, controller_function_name, input_file_path, output_file_path
-        ),
+        util::TurbineController controller(shared_lib_path, controller_function_name),
         std::runtime_error
     );
 }

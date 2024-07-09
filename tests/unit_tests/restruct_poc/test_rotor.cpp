@@ -271,13 +271,9 @@ TEST(RotorTest, IEA15RotorController) {
     // provide shared library path and controller function name to clamp
     std::string shared_lib_path = "./DISCON_ROTOR_TEST_CONTROLLER.dll";
     std::string controller_function_name = "PITCH_CONTROLLER";
-    std::string accINFILE = "in_file";
-    std::string avcOUTNAME = "out_name";
 
     // create an instance of TurbineController
-    util::TurbineController controller(
-        shared_lib_path, controller_function_name, accINFILE, avcOUTNAME
-    );
+    util::TurbineController controller(shared_lib_path, controller_function_name);
 
     // Pitch control variable
     std::vector<float*> blade_pitch_command{
