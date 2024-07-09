@@ -120,7 +120,8 @@ struct ControllerIO {
 /// @param avcMSG MESSAGE (Message from DLL to simulation code [ErrMsg])  The message which will
 ///               be displayed by the calling program if aviFAIL <> 0
 void DISCON(
-    float avrSWAP[], int* aviFAIL, const char* accINFILE, const char* avcOUTNAME, const char* avcMSG
+    float avrSWAP[], int* aviFAIL, const char* const accINFILE, char* const avcOUTNAME,
+    char* const avcMSG
 );
 
 }  // extern "C"

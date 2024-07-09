@@ -28,6 +28,12 @@ TurbineController::TurbineController(
         throw std::runtime_error("Failed to get function: " + controller_function_name);
     }
 
+    // Store the controller function from the shared lib in a function pointer for later use
+    this->controller_function_ =
+        lib_.get_function<void(float*, int*, const char* const, char* const, char* const)>(
+            this->controller_function_name_
+        );
+
     // Initialize some values required for calling the controller function
     for (int i = 0; i < 81; ++i) {
         // Initialize swap array to zero
@@ -44,10 +50,9 @@ TurbineController::TurbineController(
 }
 
 void TurbineController::CallController() {
-    this->lib_.get_function<
-        void(float*, int*, const char*, const char*, const char*)>(this->controller_function_name_)(
+    this->controller_function_(
         this->swap_array_, &this->status_, this->input_file_path_.c_str(),
-        this->output_file_path_.c_str(), this->message_.c_str()
+        this->output_file_path_.data(), this->message_.data()
     );
 
     if (this->status_ < 0) {

@@ -9,7 +9,8 @@ namespace openturbine::util {
 extern "C" {
 
 void PITCH_CONTROLLER(
-    float avrSWAP[], int* aviFAIL, const char* accINFILE, const char* avcOUTNAME, const char* avcMSG
+    float avrSWAP[], int* aviFAIL, const char* const accINFILE, char* const avcOUTNAME,
+    char* const avcMSG
 ) {
     // Map swap from calling program to struct
     ControllerIO* io = reinterpret_cast<ControllerIO*>(avrSWAP);
@@ -23,8 +24,8 @@ void PITCH_CONTROLLER(
     *aviFAIL = 0;
 
     // Set message to success
-    strncpy(const_cast<char*>(avcMSG), "success\0", static_cast<int>(io->message_array_size));
-    const_cast<char*>(avcMSG)[static_cast<int>(io->message_array_size) - 1] = 0;
+    strncpy(avcMSG, "success\0", io->message_array_size);
+    avcMSG[static_cast<int>(io->message_array_size) - 1] = 0;
 
     // If this is the first call, output the controller input and output file names
     if (first_call) {
