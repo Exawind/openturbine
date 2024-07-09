@@ -15,10 +15,10 @@ void PITCH_CONTROLLER(
     // Map swap from calling program to struct
     ControllerIO* io = reinterpret_cast<ControllerIO*>(avrSWAP);
 
-    // Update pitch angle in radians (ranges from -90 to 90 starting at zero)
-    io->pitch_command_1 = 2. * M_PI * io->time / 3.;
-    io->pitch_command_2 = 2. * M_PI * io->time / 6.;
-    io->pitch_command_3 = 2. * M_PI * io->time / 9.;
+    // Update pitch angle in radians
+    io->pitch_command_1 = 2. * M_PI * io->time / 3.;  // Full rotation every 3 seconds
+    io->pitch_command_2 = 2. * M_PI * io->time / 6.;  // Full rotation every 6 seconds
+    io->pitch_command_3 = 2. * M_PI * io->time / 9.;  // Full rotation every 9 seconds
 
     // Set failure flag to zero
     *aviFAIL = 0;
