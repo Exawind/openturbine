@@ -22,8 +22,8 @@ public:
     /// @param input_file_path Path to the input file
     /// @param output_file_path Path to the output file
     TurbineController(
-        std::string shared_lib_path, std::string controller_function_name,
-        std::string input_file_path = "", std::string output_file_path = ""
+        const std::string& shared_lib_path, const std::string& controller_function_name,
+        const std::string& input_file_path = "", const std::string& output_file_path = ""
     );
 
     // Method to call the controller function from the shared library
