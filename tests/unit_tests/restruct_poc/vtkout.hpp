@@ -19,8 +19,8 @@
 
 namespace openturbine {
 
-using openturbine::gen_alpha_solver::Vector;
 using openturbine::gen_alpha_solver::Quaternion;
+using openturbine::gen_alpha_solver::Vector;
 
 inline std::vector<std::vector<double>> kokkos_view_2D_to_vector(Kokkos::View<double**> view) {
     Kokkos::View<double**> view_contiguous("view_contiguous", view.extent(0), view.extent(1));
