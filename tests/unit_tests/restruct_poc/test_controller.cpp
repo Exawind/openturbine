@@ -50,6 +50,9 @@ TEST(ControllerTest, DisconController) {
     swap->variable_slip_status = 0.;
     swap->variable_slip_demand = 0.;
 
+    // Expect demanded generator torque to be 0. before calling the controller
+    EXPECT_FLOAT_EQ(avrSWAP[47], 0.);
+
     // Call DISCON and expect the following outputs
     int aviFAIL = 0;
     char in_file[] = "in_file";
@@ -102,6 +105,8 @@ TEST(ControllerTest, TurbineController) {
     controller.io->loads_request = 0.;
     controller.io->variable_slip_status = 0.;
     controller.io->variable_slip_demand = 0.;
+
+    EXPECT_FLOAT_EQ(controller.io->demanded_generator_torque, 0.);
 
     controller.CallController();
 
