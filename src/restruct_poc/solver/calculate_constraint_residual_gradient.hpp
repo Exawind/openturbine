@@ -32,23 +32,24 @@ struct CalculateConstraintResidualGradient {
         auto r1_data = Kokkos::Array<double, 4>{};
         auto u1_data = Kokkos::Array<double, 3>{};
         switch (cd.type) {
-            case ConstraintType::kFixedBC:
+            case ConstraintType::kFixedBC: {
                 u1_data = Kokkos::Array<double, 3>{0., 0., 0.};
                 r1_data = Kokkos::Array<double, 4>{1., 0., 0., 0.};
-                break;
-            case ConstraintType::kPrescribedBC:
+            } break;
+            case ConstraintType::kPrescribedBC: {
                 u1_data = Kokkos::Array<double, 3>{
                     constraint_u(i_constraint, 0), constraint_u(i_constraint, 1),
                     constraint_u(i_constraint, 2)};
                 r1_data = Kokkos::Array<double, 4>{
                     constraint_u(i_constraint, 3), constraint_u(i_constraint, 4),
                     constraint_u(i_constraint, 5), constraint_u(i_constraint, 6)};
-                break;
-            default:
+            } break;
+            default: {
                 u1_data = Kokkos::Array<double, 3>{
                     node_u(i_node1, 0), node_u(i_node1, 1), node_u(i_node1, 2)};
                 r1_data = Kokkos::Array<double, 4>{
                     node_u(i_node1, 3), node_u(i_node1, 4), node_u(i_node1, 5), node_u(i_node1, 6)};
+            }
         }
         auto u1 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{u1_data.data()};
         auto R1 = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{r1_data.data()};

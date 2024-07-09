@@ -107,14 +107,14 @@ struct Constraints {
         auto host_control_mirror = Kokkos::create_mirror(this->control);
         for (size_t i = 0; i < this->constraint_data.size(); ++i) {
             switch (this->constraint_data[i].type) {
-                case ConstraintType::kPrescribedBC:
+                case ConstraintType::kPrescribedBC: {
                     for (int j = 0; j < kLieGroupComponents; ++j) {
                         host_u_mirror(i, j) = this->constraint_data[i].u[j];
                     }
-                    break;
-                case ConstraintType::kRotationControl:
+                } break;
+                case ConstraintType::kRotationControl: {
                     host_control_mirror(i) = *this->constraint_data[i].control;
-                    break;
+                } break;
                 default:
                     break;
             }

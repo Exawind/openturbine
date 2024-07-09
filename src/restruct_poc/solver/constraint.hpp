@@ -87,7 +87,7 @@ struct Constraint {
                 return 5;
             } break;
             default: {
-                return kLieAlgebraComponents;
+                return kLieAlgebraComponents;  // 7
             }
         }
     }
