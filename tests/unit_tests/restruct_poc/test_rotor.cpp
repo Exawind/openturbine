@@ -18,7 +18,7 @@
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
 #include "src/restruct_poc/types.hpp"
-#include "src/utilities/controllers/discon.h"
+#include "src/utilities/controllers/discon.hpp"
 #include "src/utilities/controllers/turbine_controller.hpp"
 #include "src/vendor/dylib/dylib.hpp"
 

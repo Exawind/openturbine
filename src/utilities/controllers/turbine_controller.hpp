@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "src/utilities/controllers/discon.h"
+#include "src/utilities/controllers/controller_io.hpp"
 #include "src/vendor/dylib/dylib.hpp"
 
 namespace openturbine::util {

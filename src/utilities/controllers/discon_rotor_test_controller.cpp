@@ -1,8 +1,10 @@
 #include "discon_rotor_test_controller.hpp"
 
-#include <memory>
+#include "math.h"
+#include "stdio.h"
+#include "string.h"
 
-#include "discon.h"
+#include "controller_io.hpp"
 
 namespace openturbine::util {
 

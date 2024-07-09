@@ -1,7 +1,9 @@
-#include "discon.h"
+#include "discon.hpp"
 
 #include <algorithm>
 #include <memory>
+
+#include "controller_io.hpp"
 
 namespace openturbine::util {
 
