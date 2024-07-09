@@ -30,10 +30,10 @@ public:
     void CallController();
 
 private:
-    float swap_array_[81];          //< Swap array used to pass data to and from the controller
-    int status_;                    //< Status of the controller function call
-    std::string input_file_path_;   //< Path to the input file
-    std::string output_file_path_;  //< Path to the output file
+    float swap_array_[kSwapArraySize];  //< Swap array used to pass data to and from the controller
+    int status_;                        //< Status of the controller function call
+    std::string input_file_path_;       //< Path to the input file
+    std::string output_file_path_;      //< Path to the output file
     std::string message_;
     std::string shared_lib_path_;           //< Path to shared library
     std::string controller_function_name_;  //< Name of the controller function in the shared library

@@ -2,6 +2,7 @@
 
 #include "test_utilities.hpp"
 
+#include "src/utilities/controllers/controller_io.hpp"
 #include "src/utilities/controllers/discon.hpp"
 #include "src/utilities/controllers/turbine_controller.hpp"
 #include "src/vendor/dylib/dylib.hpp"
@@ -18,7 +19,7 @@ TEST(ControllerTest, DisconController) {
     util::dylib lib("./DISCON.dll", util::dylib::no_filename_decorations);
     auto DISCON = lib.get_function<void(float*, int&, char*, char*, char*)>("DISCON");
 
-    float avrSWAP[81] = {0.};
+    float avrSWAP[util::kSwapArraySize] = {0.};
     util::ControllerIO* swap = reinterpret_cast<util::ControllerIO*>(avrSWAP);
     swap->status = 0.;
     swap->time = 0.;

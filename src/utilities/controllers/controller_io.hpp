@@ -2,6 +2,8 @@
 
 namespace openturbine::util {
 
+static constexpr int kSwapArraySize = 81;
+
 /// Structure defining the swap layout (See Appendix A of Bladed User's Guide)
 /// Ref: https://openfast.readthedocs.io/en/main/source/user/servodyn/ExtendedBladedInterface.html
 struct ControllerIO {

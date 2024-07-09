@@ -35,7 +35,7 @@ TurbineController::TurbineController(
         );
 
     // Initialize some values required for calling the controller function
-    for (int i = 0; i < 81; ++i) {
+    for (auto i = 0; i < kSwapArraySize; ++i) {
         // Initialize swap array to zero
         this->swap_array_[i] = 0.;
     }
