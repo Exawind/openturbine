@@ -25,6 +25,7 @@ target_sources(
     system/test_calculate_temporary_variables.cpp
     system/test_calculate_force_FC.cpp
     system/test_calculate_force_FD.cpp
+    system/test_calculate_inertial_forces.cpp
 )
 
 if(OTURB_ENABLE_VTK)
