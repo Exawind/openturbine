@@ -5,16 +5,22 @@
 
 namespace openturbine {
 
+/// @brief Enum class to define the type of constraint
 enum class ConstraintType {
-    None,
-    FixedBC,       // Fixed boundary condition constraint (zero displacement)
-    PrescribedBC,  // Prescribed boundary condition (displacement can be set)
-    Rigid,  // Rigid constraint between two nodes (nodes maintain relative distance and rotation)
-    Cylindrical,  // Target node rotates freely around specified axis. Relative distance and rotation
-                  // are fixed)
-    RotationControl,  // Specify rotation about given axis
+    kNone = 0,          // No constraint (default)
+    kFixedBC = 1,       // Fixed boundary condition constraint (zero displacement)
+    kPrescribedBC = 2,  // Prescribed boundary condition (displacement can be set)
+    kRigid =
+        3,  // Rigid constraint between two nodes (nodes maintain relative distance and rotation)
+    kCylindrical = 4,      // Target node rotates freely around specified axis. Relative distance and
+                           // rotation are fixed)
+    kRotationControl = 5,  // Specify rotation about given axis
 };
 
+/// @brief Struct to define a constraint between two nodes
+/// @details A constraint is a relationship between two nodes that restricts their relative motion
+/// in some way. Constraints can be used to model fixed boundary conditions, prescribed
+/// displacements, rigid body motion, and other types of constraints.
 struct Constraint {
     int ID;
     Node base_node;
@@ -32,8 +38,8 @@ struct Constraint {
     )
         : ID(id), base_node(node1), target_node(node2), type(constraint_type), control(control_) {
         // If fixed BC or prescribed displacement, X0 is based on reference position vector
-        if (constraint_type == ConstraintType::FixedBC ||
-            constraint_type == ConstraintType::PrescribedBC) {
+        if (constraint_type == ConstraintType::kFixedBC ||
+            constraint_type == ConstraintType::kPrescribedBC) {
             this->X0[0] = this->target_node.x[0] - vec[0];
             this->X0[1] = this->target_node.x[1] - vec[1];
             this->X0[2] = this->target_node.x[2] - vec[2];
@@ -45,9 +51,9 @@ struct Constraint {
             this->X0[2] = this->target_node.x[2] - this->base_node.x[2];
 
             // If rotation control constraint, vec is rotation axis
-            if (constraint_type == ConstraintType::RotationControl) {
+            if (constraint_type == ConstraintType::kRotationControl) {
                 this->x_axis = vec;
-            } else if (constraint_type == ConstraintType::Cylindrical) {
+            } else if (constraint_type == ConstraintType::kCylindrical) {
                 Array_3 x_hat = this->X0;
                 auto length = sqrt(x_hat[0] * x_hat[0] + x_hat[1] * x_hat[1] + x_hat[2] * x_hat[2]);
                 if (length > 1.0e-10) {
@@ -75,13 +81,15 @@ struct Constraint {
         }
     }
 
-    // NumDOFs returns the number of degrees of freedom used by constraint.
+    /// Returns the number of degrees of freedom used by constraint
     int NumDOFs() const {
         switch (this->type) {
-            case ConstraintType::Cylindrical:
+            case ConstraintType::kCylindrical: {
                 return 5;
-            default:
+            } break;
+            default: {
                 return kLieAlgebraComponents;
+            }
         }
     }
 };

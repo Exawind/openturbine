@@ -32,11 +32,11 @@ struct CalculateConstraintResidualGradient {
         auto r1_data = Kokkos::Array<double, 4>{};
         auto u1_data = Kokkos::Array<double, 3>{};
         switch (cd.type) {
-            case ConstraintType::FixedBC:
+            case ConstraintType::kFixedBC:
                 u1_data = Kokkos::Array<double, 3>{0., 0., 0.};
                 r1_data = Kokkos::Array<double, 4>{1., 0., 0., 0.};
                 break;
-            case ConstraintType::PrescribedBC:
+            case ConstraintType::kPrescribedBC:
                 u1_data = Kokkos::Array<double, 3>{
                     constraint_u(i_constraint, 0), constraint_u(i_constraint, 1),
                     constraint_u(i_constraint, 2)};
@@ -122,10 +122,10 @@ struct CalculateConstraintResidualGradient {
             Phi(i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
         }
 
-        if (cd.type == ConstraintType::Cylindrical) {
+        if (cd.type == ConstraintType::kCylindrical) {
         } else {
             // If this is a rotation control constraint, calculate RC from control and axis
-            if (cd.type == ConstraintType::RotationControl) {
+            if (cd.type == ConstraintType::kRotationControl) {
                 RV(0) = cd.axis_x[0] * control(i_constraint);
                 RV(1) = cd.axis_x[1] * control(i_constraint);
                 RV(2) = cd.axis_x[2] * control(i_constraint);
@@ -175,8 +175,8 @@ struct CalculateConstraintResidualGradient {
         //---------------------------------
 
         switch (cd.type) {
-            case ConstraintType::FixedBC:
-            case ConstraintType::PrescribedBC:
+            case ConstraintType::kFixedBC:
+            case ConstraintType::kPrescribedBC:
                 return;
             default:
                 break;

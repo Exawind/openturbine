@@ -48,7 +48,7 @@ struct Constraints {
               }
           )),
           constraint_data(
-              num, HostData{ConstraintType::None, {0., 0., 0., 1., 0., 0., 0.}, nullptr}
+              num, HostData{ConstraintType::kNone, {0., 0., 0., 1., 0., 0., 0.}, nullptr}
           ),
           data("data", num),
           control("control", num),
@@ -107,12 +107,12 @@ struct Constraints {
         auto host_control_mirror = Kokkos::create_mirror(this->control);
         for (size_t i = 0; i < this->constraint_data.size(); ++i) {
             switch (this->constraint_data[i].type) {
-                case ConstraintType::PrescribedBC:
+                case ConstraintType::kPrescribedBC:
                     for (int j = 0; j < kLieGroupComponents; ++j) {
                         host_u_mirror(i, j) = this->constraint_data[i].u[j];
                     }
                     break;
-                case ConstraintType::RotationControl:
+                case ConstraintType::kRotationControl:
                     host_control_mirror(i) = *this->constraint_data[i].control;
                     break;
                 default:
