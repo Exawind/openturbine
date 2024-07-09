@@ -25,25 +25,25 @@ struct Model {
 
     const Constraint AddRigidConstraint(const Node node1, const Node node2) {
         this->constraints.push_back(
-            Constraint(this->constraints.size(), node1, node2, ConstraintType::kRigid)
+            Constraint(ConstraintType::kRigid, this->constraints.size(), node1, node2)
         );
         return this->constraints.back();
     }
     const Constraint AddPrescribedBC(const Node node, Array_3 ref_position = {0., 0., 0.}) {
         this->constraints.push_back(Constraint(
-            this->constraints.size(), InvalidNode, node, ConstraintType::kPrescribedBC, ref_position
+            ConstraintType::kPrescribedBC, this->constraints.size(), InvalidNode, node, ref_position
         ));
         return this->constraints.back();
     }
     const Constraint AddFixedBC(const Node node) {
         this->constraints.push_back(
-            Constraint(this->constraints.size(), InvalidNode, node, ConstraintType::kFixedBC)
+            Constraint(ConstraintType::kFixedBC, this->constraints.size(), InvalidNode, node)
         );
         return this->constraints.back();
     }
     const Constraint AddCylindricalConstraint(const Node node1, const Node node2) {
         this->constraints.push_back(
-            Constraint(this->constraints.size(), node1, node2, ConstraintType::kCylindrical)
+            Constraint(ConstraintType::kCylindrical, this->constraints.size(), node1, node2)
         );
         return this->constraints.back();
     }
@@ -51,7 +51,7 @@ struct Model {
         const Node node1, const Node node2, const Array_3 axis, float* control
     ) {
         this->constraints.push_back(Constraint(
-            this->constraints.size(), node1, node2, ConstraintType::kRotationControl, axis, control
+            ConstraintType::kRotationControl, this->constraints.size(), node1, node2, axis, control
         ));
         return this->constraints.back();
     }

@@ -22,28 +22,27 @@ enum class ConstraintType {
 /// in some way. Constraints can be used to model fixed boundary conditions, prescribed
 /// displacements, rigid body motion, and other types of constraints.
 struct Constraint {
-    int ID;
-    Node base_node;
-    Node target_node;
-    ConstraintType type;
-    Array_3 X0 = {0.};         // reference position for prescribed BC
-    Array_3 x_axis = {0.};     // unit vector for x axis
-    Array_3 y_axis = {0.};     // unit vector for y axis
-    Array_3 z_axis = {0.};     // unit vector for z axis
-    float* control = nullptr;  // pointer to control variable
+    ConstraintType type;       //< Type of constraint
+    int ID;                    //< Unique identifier for constraint
+    Node base_node;            //< Base node for constraint
+    Node target_node;          //< Target node for constraint
+    Array_3 X0 = {0.};         //< reference position for prescribed BC
+    Array_3 x_axis = {0.};     //< unit vector for x axis
+    Array_3 y_axis = {0.};     //< unit vector for y axis
+    Array_3 z_axis = {0.};     //< unit vector for z axis
+    float* control = nullptr;  //< Pointer to control signal
 
     Constraint(
-        int id, const Node node1, const Node node2, ConstraintType constraint_type,
-        Array_3 vec = {0., 0., 0.}, float* control_ = nullptr
+        ConstraintType constraint_type, int id, const Node node1, const Node node2,
+        Array_3 vec = {0., 0., 0.}, float* ctrl = nullptr
     )
-        : ID(id), base_node(node1), target_node(node2), type(constraint_type), control(control_) {
+        : type(constraint_type), ID(id), base_node(node1), target_node(node2), control(ctrl) {
         // If fixed BC or prescribed displacement, X0 is based on reference position vector
         if (constraint_type == ConstraintType::kFixedBC ||
             constraint_type == ConstraintType::kPrescribedBC) {
             this->X0[0] = this->target_node.x[0] - vec[0];
             this->X0[1] = this->target_node.x[1] - vec[1];
             this->X0[2] = this->target_node.x[2] - vec[2];
-
         } else {
             // Calculate initial difference in position between nodes
             this->X0[0] = this->target_node.x[0] - this->base_node.x[0];
