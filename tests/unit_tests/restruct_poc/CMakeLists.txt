@@ -23,6 +23,7 @@ target_sources(
     system/test_rotate_section_matrix.cpp
     system/test_calculate_strain.cpp
     system/test_calculate_mass_matrix_components.cpp
+    system/test_calculate_temporary_variables.cpp
 )
 
 if(OTURB_ENABLE_VTK)
