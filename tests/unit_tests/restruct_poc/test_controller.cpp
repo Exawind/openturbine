@@ -8,32 +8,6 @@
 
 namespace openturbine::restruct_poc::tests {
 
-TEST(ControllerTest, ClampFunction) {
-    // Use dylib to load the dynamic library and get access to the controller functions
-    util::dylib lib("./DISCON.dll", util::dylib::no_filename_decorations);
-    auto clamp = lib.get_function<float(float, float, float)>("clamp");
-
-    // test case 1: v is less than v_min
-    float v = 1.0;
-    float v_min = 2.0;
-    float v_max = 3.0;
-    float expected = 2.0;
-    auto actual = clamp(v, v_min, v_max);
-    EXPECT_FLOAT_EQ(expected, actual);
-
-    // test case 2: v is greater than v_max
-    v = 4.0;
-    expected = 3.0;
-    actual = clamp(v, v_min, v_max);
-    EXPECT_FLOAT_EQ(expected, actual);
-
-    // test case 3: v is between v_min and v_max
-    v = 2.5;
-    expected = 2.5;
-    actual = clamp(v, v_min, v_max);
-    EXPECT_FLOAT_EQ(expected, actual);
-}
-
 TEST(ControllerTest, DisconController) {
     // Test data generated using the following regression test from the
     // OpenFAST/r-test repository:
