@@ -39,9 +39,6 @@ private:
     std::string controller_function_name_;  //< Name of the controller function in the shared library
 
     util::dylib lib_;  //< Handle to the shared library
-
-    /// Function pointer to the controller function in the shared library
-    std::function<void(float*, int*, const char*, const char*, const char*)> controller_function_;
 };
 
 }  // namespace openturbine::util

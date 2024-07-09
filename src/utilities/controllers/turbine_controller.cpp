@@ -18,7 +18,7 @@ TurbineController::TurbineController(
       lib_(shared_lib_path, util::dylib::no_filename_decorations) {
     // Make sure we have a valid shared library path + controller function name
     try {
-        this->controller_function_ = lib_.get_function<void(
+        lib_.get_function<void(
             float* avrSWAP, int* aviFAIL, const char* accINFILE, const char* avcOUTNAME,
             const char* avcMSG
         )>(this->controller_function_name_);
@@ -44,9 +44,10 @@ TurbineController::TurbineController(
 }
 
 void TurbineController::CallController() {
-    this->controller_function_(
-        this->swap_array_, &this->status_, this->input_file_path_.data(),
-        this->output_file_path_.data(), this->message_.data()
+    this->lib_.get_function<
+        void(float*, int*, const char*, const char*, const char*)>(this->controller_function_name_)(
+        this->swap_array_, &this->status_, this->input_file_path_.c_str(),
+        this->output_file_path_.c_str(), this->message_.c_str()
     );
 
     if (this->status_ < 0) {
