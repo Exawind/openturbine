@@ -115,8 +115,8 @@ TEST(ControllerTest, TurbineController) {
     EXPECT_FLOAT_EQ(controller.io->demanded_nacelle_yaw_rate, 0.);  // DemandedNacelleYawRate
 }
 
-TEST(ControllerTest, TurbineControllerException) {
-    // Test case 1: invalid shared library path
+TEST(ControllerTest, TurbineControllerExceptionInvalidSharedLibraryPath) {
+    // Test case: invalid shared library path
     std::string shared_lib_path = "./INVALID.dll";
     std::string controller_function_name = "DISCON";
 
@@ -124,10 +124,12 @@ TEST(ControllerTest, TurbineControllerException) {
         util::TurbineController controller(shared_lib_path, controller_function_name),
         std::runtime_error
     );
+}
 
-    // Test case 2: invalid controller function name
-    shared_lib_path = "./DISCON.dll";
-    controller_function_name = "INVALID";
+TEST(ControllerTest, TurbineControllerExceptionInvalidControllerFunctionName) {
+    // Test case: invalid controller function name
+    std::string shared_lib_path = "./DISCON.dll";
+    std::string controller_function_name = "INVALID";
 
     EXPECT_THROW(
         util::TurbineController controller(shared_lib_path, controller_function_name),
