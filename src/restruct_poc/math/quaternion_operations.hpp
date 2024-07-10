@@ -20,6 +20,27 @@ KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(Quaternion q, RotationMat
     R(2, 2) = q(0) * q(0) - q(1) * q(1) - q(2) * q(2) + q(3) * q(3);
 }
 
+/// Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result
+inline std::array<Array_3, 3> QuaternionToRotationMatrix(Array_4 q) {
+    return std::array<Array_3, 3>{{
+        {
+            q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3],
+            2. * (q[1] * q[2] - q[0] * q[3]),
+            2. * (q[1] * q[3] + q[0] * q[2]),
+        },
+        {
+            2. * (q[1] * q[2] + q[0] * q[3]),
+            q[0] * q[0] - q[1] * q[1] + q[2] * q[2] - q[3] * q[3],
+            2. * (q[2] * q[3] - q[0] * q[1]),
+        },
+        {
+            2. * (q[1] * q[3] - q[0] * q[2]),
+            2. * (q[2] * q[3] + q[0] * q[1]),
+            q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3],
+        },
+    }};
+}
+
 /// Rotates provided vector by provided *unit* quaternion and returns the result
 template <typename Quaternion, typename View1, typename View2>
 KOKKOS_INLINE_FUNCTION void RotateVectorByQuaternion(Quaternion q, View1 v, View2 v_rot) {
@@ -118,16 +139,6 @@ KOKKOS_INLINE_FUNCTION void AX_Matrix(Matrix A, Matrix AX_A) {
     }
 }
 
-/// Calculates the transpose of the given matrix
-template <typename Matrix>
-KOKKOS_INLINE_FUNCTION void TransposeMatrix(Matrix A, Matrix At) {
-    for (int i = 0; i < A.extent_int(0); ++i) {
-        for (int j = 0; j < A.extent_int(1); ++j) {
-            At(j, i) = A(i, j);
-        }
-    }
-}
-
 /// Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map
 template <typename Vector, typename Quaternion>
 KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(Vector phi, Quaternion quaternion) {
@@ -152,36 +163,6 @@ inline std::array<double, 4> RotationVectorToQuaternion(std::array<double, 3> ph
     const auto cos_angle = std::cos(angle / 2.);
     const auto factor = sin_angle / angle;
     return std::array<double, 4>{cos_angle, phi[0] * factor, phi[1] * factor, phi[2] * factor};
-}
-
-inline std::array<double, 3> QuaternionToRotationVector(std::array<double, 4> quat) {
-    std::array<double, 3> rotationVector;
-
-    // Calculate the angle of rotation
-    double theta = 2.0 * std::acos(quat[0]);
-
-    // Calculate the sin of half the angle
-    double sinHalfTheta = std::sqrt(1.0 - quat[0] * quat[0]);
-
-    // Avoid division by zero if sinHalfTheta is very small
-    if (sinHalfTheta < 0.001) {
-        // When theta is small, direction of axis is not important, we can choose any unit vector
-        rotationVector[0] = quat[1];
-        rotationVector[1] = quat[2];
-        rotationVector[2] = quat[3];
-    } else {
-        // Normalize the axis components
-        rotationVector[0] = quat[1] / sinHalfTheta;
-        rotationVector[1] = quat[2] / sinHalfTheta;
-        rotationVector[2] = quat[3] / sinHalfTheta;
-    }
-
-    // Scale by the angle
-    rotationVector[0] *= theta;
-    rotationVector[1] *= theta;
-    rotationVector[2] *= theta;
-
-    return rotationVector;
 }
 
 }  // namespace openturbine

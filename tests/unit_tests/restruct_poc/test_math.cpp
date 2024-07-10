@@ -18,6 +18,19 @@ auto Create1DView(const std::array<double, size>& input) {
     return view;
 }
 
+template <int rows, int cols>
+auto Create2DView(const std::array<std::array<double, rows>, cols>& input) {
+    auto view = Kokkos::View<double[rows][cols]>("view");
+    auto view_host = Kokkos::create_mirror(view);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            view_host(i, j) = input[i][j];
+        }
+    }
+    Kokkos::deep_copy(view, view_host);
+    return view;
+}
+
 void TestConversion(
     Kokkos::View<const double[4]> q, const std::vector<std::vector<double>>& expected
 ) {
@@ -156,7 +169,7 @@ void TestAxialVector(Kokkos::View<const double[3][3]> m, const std::vector<doubl
     expect_kokkos_view_1D_equal(v, exact);
 }
 
-TEST(QuaternionTest, AxialVectorOfMatrix) {
+TEST(VectorTest, AxialVectorOfMatrix) {
     auto m = Create2DView({0., -1., 0., 1., 0., 0., 0., 0., 0.});
     TestAxialVector(m, {0., 0., 1.});
 }
@@ -193,7 +206,7 @@ TEST(VectorTest, VecTilde) {
     TestVecTilde(v, {{0., -3., 2.}, {3., 0., -1.}, {-2., 1., 0.}});
 }
 
-TEST(QuaternionTest, CrossProduct_Set1) {
+TEST(VectorTest, CrossProduct_Set1) {
     auto a = std::array<double, 3>{1., 2., 3.};
     auto b = std::array<double, 3>{4., 5., 6.};
     auto c = CrossProduct(a, b);
@@ -211,6 +224,21 @@ TEST(VectorTest, CrossProduct_Set2) {
     ASSERT_EQ(c[0], -5.03 * 0.37 - 2.71 * 0.09);
     ASSERT_EQ(c[1], 2.71 * 1.16 - 0.19 * 0.37);
     ASSERT_EQ(c[2], 0.19 * 0.09 - -5.03 * 1.16);
+}
+
+TEST(MatrixTest, AX_Matrix) {
+    auto A = Create2DView<3, 3>({{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}});
+    auto out = Create2DView<3, 3>({{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}});
+    AX_Matrix(A, out);
+    auto tmp = kokkos_view_2D_to_vector(out);
+    expect_kokkos_view_2D_equal(
+        out,
+        {
+            {7, -1, -1.5},
+            {-2, 5, -3},
+            {-3.5, -4, 3},
+        }
+    );
 }
 
 }  // namespace openturbine::restruct_poc::tests

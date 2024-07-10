@@ -35,6 +35,7 @@ using Array_3 = std::array<double, 3>;
 using Array_4 = std::array<double, 4>;
 using Array_6 = std::array<double, 6>;
 using Array_7 = std::array<double, 7>;
+using Array_3x3 = std::array<Array_3, 3>;
 using Array_6x6 = std::array<Array_6, 6>;
 using BeamQuadrature = std::vector<std::array<double, 2>>;
 

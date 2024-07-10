@@ -470,16 +470,6 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
         EXPECT_EQ(converged, true);
     }
 
-    // Get rotation of root node as rotation vector
-    auto q = kokkos_view_2D_to_vector(solver.state.q);
-    auto r_root = QuaternionToRotationVector({q[0][3], q[0][4], q[0][5], q[0][6]});
-
-    // Check that root node rotation about x-axis matches prescribed pitch
-    // and that other rotations are essentially zero
-    EXPECT_NEAR(r_root[0], pitch, 1e-9);
-    EXPECT_NEAR(r_root[1], 0., 1e-9);
-    EXPECT_NEAR(r_root[2], 0., 1e-9);
-
     // Check that remaining displacements are as expected
     expect_kokkos_view_2D_equal(
         solver.state.q,
@@ -559,16 +549,6 @@ TEST(RotatingBeamTest, DISABLED_CylindricalConstraint) {
         const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
     }
-
-    // Get rotation of root node as rotation vector
-    auto q = kokkos_view_2D_to_vector(solver.state.q);
-    auto r_root = QuaternionToRotationVector({q[0][3], q[0][4], q[0][5], q[0][6]});
-
-    // Check that root node rotation about x-axis matches prescribed pitch
-    // and that other rotations are essentially zero
-    EXPECT_NEAR(r_root[0], pitch, 1e-9);
-    EXPECT_NEAR(r_root[1], 0., 1e-9);
-    EXPECT_NEAR(r_root[2], 0., 1e-9);
 }
 
 }  // namespace openturbine::restruct_poc::tests

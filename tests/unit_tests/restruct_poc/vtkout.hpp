@@ -18,9 +18,6 @@
 
 namespace openturbine {
 
-using openturbine::gen_alpha_solver::Quaternion;
-using openturbine::gen_alpha_solver::Vector;
-
 inline std::vector<std::vector<double>> kokkos_view_2D_to_vector(Kokkos::View<double**> view) {
     Kokkos::View<double**> view_contiguous("view_contiguous", view.extent(0), view.extent(1));
     Kokkos::deep_copy(view_contiguous, view);
@@ -102,12 +99,12 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     auto qp_r = kokkos_view_2D_to_vector(beams.qp_r);
     auto qp_r0 = kokkos_view_2D_to_vector(beams.qp_r0);
     for (size_t i = 0; i < qp_r.size(); ++i) {
-        auto r = Quaternion(qp_r[i][0], qp_r[i][1], qp_r[i][2], qp_r[i][3]);
-        auto r0 = Quaternion(qp_r0[i][0], qp_r0[i][1], qp_r0[i][2], qp_r0[i][3]);
-        auto R = (r * r0).to_rotation_matrix();
-        double ori_x[3] = {R(0, 0), R(1, 0), R(2, 0)};
-        double ori_y[3] = {R(0, 1), R(1, 1), R(2, 1)};
-        double ori_z[3] = {R(0, 2), R(1, 2), R(2, 2)};
+        Array_4 r{qp_r[i][0], qp_r[i][1], qp_r[i][2], qp_r[i][3]};
+        Array_4 r0{qp_r0[i][0], qp_r0[i][1], qp_r0[i][2], qp_r0[i][3]};
+        auto R = QuaternionToRotationMatrix(QuaternionCompose(r, r0));
+        double ori_x[3] = {R[0][0], R[1][0], R[2][0]};
+        double ori_y[3] = {R[0][1], R[1][1], R[2][1]};
+        double ori_z[3] = {R[0][2], R[1][2], R[2][2]};
         orientation_x->InsertNextTuple(ori_x);
         orientation_y->InsertNextTuple(ori_y);
         orientation_z->InsertNextTuple(ori_z);
