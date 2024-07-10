@@ -1,6 +1,7 @@
 #pragma once
 
 #include <KokkosBatched_Gemm_Decl.hpp>
+#include <KokkosBlas.hpp>
 #include <KokkosBlas1_set.hpp>
 #include <Kokkos_Core.hpp>
 
