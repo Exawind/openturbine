@@ -6,7 +6,7 @@ env:
   CMAKE_BUILD_PARALLEL_LEVEL: 1
 
 jobs:
-  Correctness:
+  ClangTidy:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -32,7 +32,6 @@ jobs:
         submodules: true
         path: openturbine
     - name: Run Clang-Tidy
-      if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'llvm'
       run: |
         source spack/share/spack/setup-env.sh
         spack load trilinos
@@ -43,6 +42,6 @@ jobs:
         cmake .. \
           -DOTURB_ENABLE_TESTS:BOOL=ON \
           -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DCMAKE_BUILD_TYPE=Debug \
           -DCMAKE_CXX_CLANG_TIDY="clang-tidy"
         cmake --build .

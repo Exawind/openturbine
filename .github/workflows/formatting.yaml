@@ -3,7 +3,7 @@ name: OpenTurbine-CI
 on: push
 
 jobs:
-  Formatting:
+  ClangFormat:
     runs-on: ubuntu-latest
     steps:
     - name: Clone
@@ -13,5 +13,5 @@ jobs:
       with:
         source: './src ./tests/unit_tests'
         exclude: '.'
-        extensions: 'H,h,cpp'
+        extensions: 'H,h,cpp,hpp'
         clangFormatVersion: 16
