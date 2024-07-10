@@ -10,7 +10,7 @@ namespace openturbine {
 
 struct PopulateSparseIndices_Constraints {
     int num_constraint_nodes;
-    Kokkos::View<Constraints::Data*> data;
+    Kokkos::View<Constraints::DeviceData*> data;
     Kokkos::View<int*> B_col_inds;
 
     KOKKOS_FUNCTION

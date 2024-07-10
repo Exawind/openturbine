@@ -226,7 +226,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
     // Update constraint displacements
-    for (int j = 0; j < solver.num_constraint_nodes; ++j) {
+    for (int j = 0; j < solver.constraints.num; ++j) {
         solver.constraints.UpdateDisplacement(j, u_hub);
     }
 
@@ -235,7 +235,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     Step(solver, beams);
 
     auto n = solver.num_system_dofs / 2;
-    auto m = solver.num_constraint_dofs / 2;
+    auto m = solver.constraints.num_dofs / 2;
 
     // Check that St matrix is the same for both beams
     auto St = kokkos_view_2D_to_vector(solver.St);
@@ -341,7 +341,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
         // Update constraint displacements
-        for (int j = 0; j < solver.num_constraint_nodes; ++j) {
+        for (int j = 0; j < solver.constraints.num; ++j) {
             solver.constraints.UpdateDisplacement(j, u_hub);
         }
 
@@ -424,6 +424,131 @@ TEST(RotatingBeamTest, MasslessConstraints) {
          {0., 0., 0., 0.99998750002604219, 2.2269013449027429E-29, 1.884955233551297E-29,
           0.0049999791666927107}}
     );
+}
+
+TEST(RotatingBeamTest, RotationControlConstraint) {
+    auto model = Model();
+
+    // Gravity vector
+    std::array<double, 3> gravity = {0., 0., 0.};
+
+    // Build vector of nodes (straight along x axis, no rotation)
+    std::vector<BeamNode> beam_nodes;
+    for (const double s : node_s) {
+        beam_nodes.push_back(BeamNode(s, model.AddNode({10 * s + 2., 0., 0., 1., 0., 0., 0.})));
+    }
+
+    // Define beam initialization
+    BeamsInput beams_input({BeamElement(beam_nodes, sections, quadrature)}, gravity);
+
+    // Initialize beams from element inputs
+    auto beams = CreateBeams(beams_input);
+
+    // Add hub node and associated constraints
+    float pitch = 0.;
+    auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
+    model.AddRotationControl(hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);
+    model.AddFixedBC(hub_node);
+
+    // Solution parameters
+    const bool is_dynamic_solve(true);
+    const int max_iter(5);
+    const double step_size(0.01);  // seconds
+    const double rho_inf(0.9);
+
+    // Create solver
+    Solver solver(
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+    );
+
+    // Perform 10 time steps and check for convergence within max_iter iterations
+    for (int i = 0; i < 10; ++i) {
+        double t = step_size * (i + 1);
+        // Set pitch
+        pitch = t * M_PI / 2.;
+        const auto converged = Step(solver, beams);
+        EXPECT_EQ(converged, true);
+    }
+
+    // Check that remaining displacements are as expected
+    expect_kokkos_view_2D_equal(
+        solver.state.q,
+        {{-5.7690945215728628E-18, 2.0652319043893875E-18, -2.4953577261422928E-20,
+          0.99691733356165013, 0.078459097906677058, 5.0946025505270351E-19, 3.3980589449407732E-19},
+         {-2.9904494403209058E-7, 0.00014453413260242541, -0.00075720167307353353,
+          0.99700858667767766, 0.077290133367305239, 0.00033527696532594382,
+          0.000031054788779458509},
+         {-0.000001465015511032517, 0.00057112956926573543, -0.0031674836974124104,
+          0.99711128371780355, 0.075953862519306012, 0.00031282312872539991,
+          0.000028155321221201416},
+         {-0.0000020860700662326159, 0.00062108133928823466, -0.0035095491673744371,
+          0.99720257290191016, 0.074745725742637242, -0.00032312502616037265,
+          -0.000025908193827167231},
+         {-0.0000043494810453724702, 0.00012641646939721653, -0.00026687208011275229,
+          0.99728073405283557, 0.073693469884480778, -0.00063846060120356163,
+          -0.000048492096870836455},
+         {-0.0000058187577280119813, -0.00014174393267219577, 0.0015608892113182621,
+          0.9972883429355086, 0.073590276246437658, -0.00065565396382017294,
+          -0.000049038763777556399},
+         {0, 0, 0, 1, 0, 0, 0}}
+    );
+}
+
+TEST(RotatingBeamTest, DISABLED_CylindricalConstraint) {
+    auto model = Model();
+
+    // Gravity vector
+    std::array<double, 3> gravity = {0., 0., 0.};
+
+    // Build vector of nodes (straight along x axis, no rotation)
+    // Calculate displacement, velocity, acceleration assuming a
+    // 0.1 rad/s angular velocity around the z axis
+    const double omega = 0.1;
+    std::vector<BeamNode> beam_nodes;
+    for (const double s : node_s) {
+        auto x = 10 * s + 2.;
+        beam_nodes.push_back(BeamNode(
+            s, model.AddNode(
+                   {x, 0., 0., 1., 0., 0., 0.},        // position
+                   {0., 0., 0., 1., 0., 0., 0.},       // displacement
+                   {0., x * omega, 0., 0., 0., omega}  // velocity
+               )
+        ));
+    }
+
+    // Define beam initialization
+    BeamsInput beams_input({BeamElement(beam_nodes, sections, quadrature)}, gravity);
+
+    // Initialize beams from element inputs
+    auto beams = CreateBeams(beams_input);
+
+    // Add hub node and associated constraints
+    float pitch = 0.;
+    auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
+    auto ground_node = model.AddNode({-1., 0., -0.25, 1., 0., 0., 0.});
+    model.AddRotationControl(hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);
+    model.AddCylindricalConstraint(ground_node, hub_node);
+    model.AddFixedBC(ground_node);
+
+    // Solution parameters
+    const bool is_dynamic_solve(true);
+    const int max_iter(5);
+    const double step_size(0.01);  // seconds
+    const double rho_inf(0.9);
+
+    // Create solver
+    Solver solver(
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+    );
+
+    // Perform 2 time steps and check for convergence within max_iter iterations
+    for (int i = 0; i < 2; ++i) {
+        double t = step_size * (i + 1);
+        // Set pitch
+        pitch = t * M_PI / 2.;
+        const auto converged = Step(solver, beams);
+        EXPECT_EQ(converged, true);
+    }
 }
 
 }  // namespace openturbine::restruct_poc::tests

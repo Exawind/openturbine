@@ -10,7 +10,7 @@ namespace openturbine {
 struct PopulateSparseRowPtrs_Constraints_Transpose {
     int num_constraint_nodes;
     int num_system_nodes;
-    Kokkos::View<Constraints::Data*> data;
+    Kokkos::View<Constraints::DeviceData*> data;
     Kokkos::View<int*> B_row_ptrs;
 
     KOKKOS_FUNCTION

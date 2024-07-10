@@ -99,12 +99,12 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     auto qp_r = kokkos_view_2D_to_vector(beams.qp_r);
     auto qp_r0 = kokkos_view_2D_to_vector(beams.qp_r0);
     for (size_t i = 0; i < qp_r.size(); ++i) {
-        auto r = Quaternion(qp_r[i][0], qp_r[i][1], qp_r[i][2], qp_r[i][3]);
-        auto r0 = Quaternion(qp_r0[i][0], qp_r0[i][1], qp_r0[i][2], qp_r0[i][3]);
-        auto R = (r * r0).to_rotation_matrix();
-        double ori_x[3] = {R(0, 0), R(1, 0), R(2, 0)};
-        double ori_y[3] = {R(0, 1), R(1, 1), R(2, 1)};
-        double ori_z[3] = {R(0, 2), R(1, 2), R(2, 2)};
+        Array_4 r{qp_r[i][0], qp_r[i][1], qp_r[i][2], qp_r[i][3]};
+        Array_4 r0{qp_r0[i][0], qp_r0[i][1], qp_r0[i][2], qp_r0[i][3]};
+        auto R = QuaternionToRotationMatrix(QuaternionCompose(r, r0));
+        double ori_x[3] = {R[0][0], R[1][0], R[2][0]};
+        double ori_y[3] = {R[0][1], R[1][1], R[2][1]};
+        double ori_z[3] = {R[0][2], R[1][2], R[2][2]};
         orientation_x->InsertNextTuple(ori_x);
         orientation_y->InsertNextTuple(ori_y);
         orientation_z->InsertNextTuple(ori_z);
@@ -140,16 +140,18 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     for (int i = 0; i < beams.num_elems; ++i) {
         auto& idx = elem_indices[i];
         auto i_root = idx.qp_range.first;
-        auto x0_root = Vector(qp_x0[i_root][0], qp_x0[i_root][1], qp_x0[i_root][2]);
-        auto x_root = Vector(qp_x[i_root][0], qp_x[i_root][1], qp_x[i_root][2]);
-        auto r_u = Quaternion(qp_r[i_root][0], qp_r[i_root][1], qp_r[i_root][2], qp_r[i_root][3]);
+        Array_3 x0_root{qp_x0[i_root][0], qp_x0[i_root][1], qp_x0[i_root][2]};
+        Array_3 x_root{qp_x[i_root][0], qp_x[i_root][1], qp_x[i_root][2]};
+        Array_4 r_u{qp_r[i_root][0], qp_r[i_root][1], qp_r[i_root][2], qp_r[i_root][3]};
+
         for (int j = idx.qp_range.first; j < idx.qp_range.second; ++j) {
-            auto x = Vector(qp_x[j][0], qp_x[j][1], qp_x[j][2]);
-            auto x_undeformed =
-                (r_u * (Vector(qp_x0[j][0], qp_x0[j][1], qp_x0[j][2]) - x0_root)) + x_root;
-            auto u = x - x_undeformed;
-            double p[3] = {u.GetX(), u.GetY(), u.GetZ()};
-            deformation_vector->InsertNextTuple(p);
+            Array_3 x{qp_x[j][0], qp_x[j][1], qp_x[j][2]};
+            Array_3 tmp = {
+                qp_x0[j][0] - x0_root[0], qp_x0[j][1] - x0_root[1], qp_x0[j][2] - x0_root[2]};
+            tmp = RotateVectorByQuaternion(r_u, tmp);
+            Array_3 x_undef{tmp[0] + x_root[0], tmp[1] + x_root[1], tmp[2] + x_root[2]};
+            Array_3 u{x[0] - x_undef[0], x[1] - x_undef[1], x[2] - x_undef[2]};
+            deformation_vector->InsertNextTuple(u.data());
         }
     }
     gd->GetPointData()->AddArray(deformation_vector);
