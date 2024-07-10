@@ -27,6 +27,7 @@ target_sources(
     system/test_calculate_force_FC.cpp
     system/test_calculate_force_FD.cpp
     system/test_calculate_inertial_forces.cpp
+    system/test_calculate_gravity_force.cpp
 )
 
 if(OTURB_ENABLE_VTK)
