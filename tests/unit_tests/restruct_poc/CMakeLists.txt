@@ -30,6 +30,7 @@ target_sources(
     system/test_calculate_Ouu.cpp
     system/test_calculate_Puu.cpp
     system/test_calculate_Quu.cpp
+    system/test_calculate_gyroscopic_matrix.cpp
 )
 
 if(OTURB_ENABLE_VTK)
