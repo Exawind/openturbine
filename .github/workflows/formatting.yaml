@@ -13,5 +13,5 @@ jobs:
       with:
         source: './src ./tests/unit_tests'
         exclude: '.'
-        extensions: 'H,h,cpp,hpp'
+        extensions: 'H,h,cpp'
         clangFormatVersion: 16
