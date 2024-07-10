@@ -23,17 +23,17 @@ TEST(CalculateTemporaryVariablesTests, OneNode) {
 
     auto x0pupSS = Kokkos::View<double[1][3][3]>("x0pupSS");
 
-    Kokkos::parallel_for("CalculateTemporaryVariables", 1, CalculateTemporaryVariables{x0_prime, u_prime, x0pupSS});
+    Kokkos::parallel_for(
+        "CalculateTemporaryVariables", 1, CalculateTemporaryVariables{x0_prime, u_prime, x0pupSS}
+    );
 
-    auto x0pupSS_exact_data = std::array<double, 9>{0., -9., 7., 
-                                                    9., 0., -5., 
-                                                   -7., 5., 0.};
+    auto x0pupSS_exact_data = std::array<double, 9>{0., -9., 7., 9., 0., -5., -7., 5., 0.};
     auto x0pupSS_exact = Kokkos::View<double[1][3][3], Kokkos::HostSpace>(x0pupSS_exact_data.data());
-    
+
     auto x0pupSS_mirror = Kokkos::create_mirror(x0pupSS);
     Kokkos::deep_copy(x0pupSS_mirror, x0pupSS);
-    for(int i = 0; i < 3; ++i) {
-        for(int j = 0; j < 3; ++j) {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
             EXPECT_EQ(x0pupSS_mirror(0, i, j), x0pupSS_exact(0, i, j));
         }
     }

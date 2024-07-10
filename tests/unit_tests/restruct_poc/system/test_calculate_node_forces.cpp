@@ -28,14 +28,16 @@ TEST(CalculateNodeForcesTests, FE_OneNodeOneQP) {
 
     auto shape_interp = Kokkos::View<double[num_nodes][num_qps]>("shape_interp");
     auto shape_interp_data = std::array<double, 1>{4.};
-    auto shape_interp_host = Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
+    auto shape_interp_host =
+        Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
     auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
     Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
     Kokkos::deep_copy(shape_interp, shape_interp_mirror);
 
     auto shape_deriv = Kokkos::View<double[num_nodes][num_qps]>("shape_deriv");
     auto shape_deriv_data = std::array<double, 1>{5.};
-    auto shape_deriv_host = Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
+    auto shape_deriv_host =
+        Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
     auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
@@ -56,15 +58,19 @@ TEST(CalculateNodeForcesTests, FE_OneNodeOneQP) {
 
     auto FE = Kokkos::View<double[num_nodes][6]>("FE");
 
-    Kokkos::parallel_for("CalculateNodeForces_FE", num_nodes, CalculateNodeForces_FE{first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd, FE});
+    Kokkos::parallel_for(
+        "CalculateNodeForces_FE", num_nodes,
+        CalculateNodeForces_FE{
+            first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd, FE}
+    );
 
     auto FE_exact_data = std::array<double, 6>{178., 212., 246., 280., 314., 348.};
     auto FE_exact = Kokkos::View<double[num_nodes][6], Kokkos::HostSpace>(FE_exact_data.data());
-    
+
     auto FE_mirror = Kokkos::create_mirror(FE);
     Kokkos::deep_copy(FE_mirror, FE);
-    
-    for(int i = 0; i < 6; ++i) {
+
+    for (int i = 0; i < 6; ++i) {
         EXPECT_EQ(FE_mirror(0, i), FE_exact(0, i));
     }
 }
@@ -91,14 +97,16 @@ TEST(CalculateNodeForcesTests, FE_TwoNodesTwoQPs) {
 
     auto shape_interp = Kokkos::View<double[num_nodes][num_qps]>("shape_interp");
     auto shape_interp_data = std::array<double, 4>{6., 7., 8., 9.};
-    auto shape_interp_host = Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
+    auto shape_interp_host =
+        Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
     auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
     Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
     Kokkos::deep_copy(shape_interp, shape_interp_mirror);
 
     auto shape_deriv = Kokkos::View<double[num_nodes][num_qps]>("shape_deriv");
     auto shape_deriv_data = std::array<double, 4>{10., 11., 12., 13.};
-    auto shape_deriv_host = Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
+    auto shape_deriv_host =
+        Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
     auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
@@ -111,7 +119,8 @@ TEST(CalculateNodeForcesTests, FE_TwoNodesTwoQPs) {
     Kokkos::deep_copy(Fc, Fc_mirror);
 
     auto Fd = Kokkos::View<double[num_qps][6]>("Fd");
-    auto Fd_data = std::array<double, 12>{13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24.};
+    auto Fd_data =
+        std::array<double, 12>{13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24.};
     auto Fd_host = Kokkos::View<double[num_qps][6], Kokkos::HostSpace>(Fd_data.data());
     auto Fd_mirror = Kokkos::create_mirror(Fd);
     Kokkos::deep_copy(Fd_mirror, Fd_host);
@@ -119,19 +128,24 @@ TEST(CalculateNodeForcesTests, FE_TwoNodesTwoQPs) {
 
     auto FE = Kokkos::View<double[num_nodes][6]>("FE");
 
-    Kokkos::parallel_for("CalculateNodeForces_FE", num_nodes, CalculateNodeForces_FE{first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd, FE});
+    Kokkos::parallel_for(
+        "CalculateNodeForces_FE", num_nodes,
+        CalculateNodeForces_FE{
+            first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd, FE}
+    );
 
-    auto FE_exact_data = std::array<double, 12>{2870., 3076., 3282., 3488., 3694., 3900., 3694., 3956., 4218., 4480., 4742., 5004.};
+    auto FE_exact_data = std::array<double, 12>{2870., 3076., 3282., 3488., 3694., 3900.,
+                                                3694., 3956., 4218., 4480., 4742., 5004.};
     auto FE_exact = Kokkos::View<double[num_nodes][6], Kokkos::HostSpace>(FE_exact_data.data());
-    
+
     auto FE_mirror = Kokkos::create_mirror(FE);
     Kokkos::deep_copy(FE_mirror, FE);
-    
-    for(int i = 0; i < 6; ++i) {
+
+    for (int i = 0; i < 6; ++i) {
         EXPECT_EQ(FE_mirror(0, i), FE_exact(0, i));
     }
 
-    for(int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 6; ++i) {
         EXPECT_EQ(FE_mirror(1, i), FE_exact(1, i));
     }
 }
@@ -158,14 +172,16 @@ TEST(CalculateNodeForcesTests, FI_FG_OneNodeOneQP) {
 
     auto shape_interp = Kokkos::View<double[num_nodes][num_qps]>("shape_interp");
     auto shape_interp_data = std::array<double, 1>{4.};
-    auto shape_interp_host = Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
+    auto shape_interp_host =
+        Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
     auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
     Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
     Kokkos::deep_copy(shape_interp, shape_interp_mirror);
 
     auto shape_deriv = Kokkos::View<double[num_nodes][num_qps]>("shape_deriv");
     auto shape_deriv_data = std::array<double, 1>{5.};
-    auto shape_deriv_host = Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
+    auto shape_deriv_host =
+        Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
     auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
@@ -179,15 +195,19 @@ TEST(CalculateNodeForcesTests, FI_FG_OneNodeOneQP) {
 
     auto FIG = Kokkos::View<double[num_nodes][6]>("FIG");
 
-    Kokkos::parallel_for("CalculateNodeForces_FI_FG", num_nodes, CalculateNodeForces_FI_FG{first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG});
+    Kokkos::parallel_for(
+        "CalculateNodeForces_FI_FG", num_nodes,
+        CalculateNodeForces_FI_FG{
+            first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG}
+    );
 
     auto FIG_exact_data = std::array<double, 6>{24., 48., 72., 96., 120., 144.};
     auto FIG_exact = Kokkos::View<double[num_nodes][6], Kokkos::HostSpace>(FIG_exact_data.data());
-    
+
     auto FIG_mirror = Kokkos::create_mirror(FIG);
     Kokkos::deep_copy(FIG_mirror, FIG);
-    
-    for(int i = 0; i < 6; ++i) {
+
+    for (int i = 0; i < 6; ++i) {
         EXPECT_EQ(FIG_mirror(0, i), FIG_exact(0, i));
     }
 }
@@ -214,14 +234,16 @@ TEST(CalculateNodeForcesTests, FI_FG_TwoNodesTwoQP) {
 
     auto shape_interp = Kokkos::View<double[num_nodes][num_qps]>("shape_interp");
     auto shape_interp_data = std::array<double, 4>{6., 7., 8., 9.};
-    auto shape_interp_host = Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
+    auto shape_interp_host =
+        Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
     auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
     Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
     Kokkos::deep_copy(shape_interp, shape_interp_mirror);
 
     auto shape_deriv = Kokkos::View<double[num_nodes][num_qps]>("shape_deriv");
     auto shape_deriv_data = std::array<double, 4>{10., 11., 12., 13.};
-    auto shape_deriv_host = Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
+    auto shape_deriv_host =
+        Kokkos::View<double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
     auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
@@ -235,21 +257,26 @@ TEST(CalculateNodeForcesTests, FI_FG_TwoNodesTwoQP) {
 
     auto FIG = Kokkos::View<double[num_nodes][6]>("FIG");
 
-    Kokkos::parallel_for("CalculateNodeForces_FI_FG", num_nodes, CalculateNodeForces_FI_FG{first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG});
+    Kokkos::parallel_for(
+        "CalculateNodeForces_FI_FG", num_nodes,
+        CalculateNodeForces_FI_FG{
+            first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG}
+    );
 
-    auto FIG_exact_data = std::array<double, 12>{783., 936., 1089., 1242., 1395., 1548., 1009., 1208., 1407., 1606., 1805., 2004.};
+    auto FIG_exact_data = std::array<double, 12>{783.,  936.,  1089., 1242., 1395., 1548.,
+                                                 1009., 1208., 1407., 1606., 1805., 2004.};
     auto FIG_exact = Kokkos::View<double[num_nodes][6], Kokkos::HostSpace>(FIG_exact_data.data());
-    
+
     auto FIG_mirror = Kokkos::create_mirror(FIG);
     Kokkos::deep_copy(FIG_mirror, FIG);
-    
-    for(int i = 0; i < 6; ++i) {
+
+    for (int i = 0; i < 6; ++i) {
         EXPECT_EQ(FIG_mirror(0, i), FIG_exact(0, i));
     }
 
-    for(int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 6; ++i) {
         EXPECT_EQ(FIG_mirror(1, i), FIG_exact(1, i));
     }
 }
 
-}
+}  // namespace openturbine::restruct_poc::tests

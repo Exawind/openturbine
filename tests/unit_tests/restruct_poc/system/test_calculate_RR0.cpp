@@ -25,18 +25,16 @@ TEST(CalculateRR0Tests, OneNode) {
 
     Kokkos::parallel_for("CalculateRR0", 1, CalculateRR0{r0, r, rr0});
 
-    auto expected_rr0_data = std::array<double, 36>{2780., 4400., -400., 0., 0., 0., 
-                                                    -3280., 2372., 3296., 0., 0., 0., 
-                                                    2960., -1504., 4028., 0., 0., 0.,
-                                                    0., 0., 0., 2780., 4400., -400.,
-                                                    0., 0., 0., -3280., 2372., 3296.,
-                                                    0., 0., 0., 2960., -1504., 4028.};
+    auto expected_rr0_data = std::array<double, 36>{
+        2780., 4400.,  -400., 0.,     0.,    0.,    -3280., 2372., 3296., 0.,    0.,     0.,
+        2960., -1504., 4028., 0.,     0.,    0.,    0.,     0.,    0.,    2780., 4400.,  -400.,
+        0.,    0.,     0.,    -3280., 2372., 3296., 0.,     0.,    0.,    2960., -1504., 4028.};
     auto expected_rr0 = Kokkos::View<double[1][6][6], Kokkos::HostSpace>(expected_rr0_data.data());
 
     auto rr0_mirror = Kokkos::create_mirror(rr0);
     Kokkos::deep_copy(rr0_mirror, rr0);
-    for(int i = 0; i < 6; ++i) {
-        for(int j = 0; j < 6; ++j) {
+    for (int i = 0; i < 6; ++i) {
+        for (int j = 0; j < 6; ++j) {
             EXPECT_EQ(rr0_mirror(0, i, j), expected_rr0(0, i, j));
         }
     }
@@ -61,30 +59,27 @@ TEST(CalculateRR0Tests, TwoNodes) {
 
     Kokkos::parallel_for("CalculateRR0", 2, CalculateRR0{r0, r, rr0});
 
-    auto expected_rr0_data = std::array<double, 72>{2780., 4400., -400., 0., 0., 0., 
-                                                    -3280., 2372., 3296., 0., 0., 0., 
-                                                    2960., -1504., 4028., 0., 0., 0.,
-                                                    0., 0., 0., 2780., 4400., -400.,
-                                                    0., 0., 0., -3280., 2372., 3296.,
-                                                    0., 0., 0., 2960., -1504., 4028.,
+    auto expected_rr0_data = std::array<double, 72>{
+        2780.,   4400.,  -400.,   0.,     0.,      0.,      -3280.,  2372.,   3296.,
+        0.,      0.,     0.,      2960.,  -1504.,  4028.,   0.,      0.,      0.,
+        0.,      0.,     0.,      2780.,  4400.,   -400.,   0.,      0.,      0.,
+        -3280.,  2372.,  3296.,   0.,     0.,      0.,      2960.,   -1504.,  4028.,
 
-                                                    16412., 74896., -11984., 0., 0., 0., 
-                                                    -27376., 17284., 70528., 0., 0., 0., 
-                                                    70736., -10688., 30076., 0., 0., 0.,
-                                                    0., 0., 0., 16412., 74896., -11984.,
-                                                    0., 0., 0., -27376., 17284., 70528.,
-                                                    0., 0., 0., 70736., -10688., 30076.};
+        16412.,  74896., -11984., 0.,     0.,      0.,      -27376., 17284.,  70528.,
+        0.,      0.,     0.,      70736., -10688., 30076.,  0.,      0.,      0.,
+        0.,      0.,     0.,      16412., 74896.,  -11984., 0.,      0.,      0.,
+        -27376., 17284., 70528.,  0.,     0.,      0.,      70736.,  -10688., 30076.};
     auto expected_rr0 = Kokkos::View<double[2][6][6], Kokkos::HostSpace>(expected_rr0_data.data());
 
     auto rr0_mirror = Kokkos::create_mirror(rr0);
     Kokkos::deep_copy(rr0_mirror, rr0);
-    for(int i = 0; i < 6; ++i) {
-        for(int j = 0; j < 6; ++j) {
+    for (int i = 0; i < 6; ++i) {
+        for (int j = 0; j < 6; ++j) {
             EXPECT_EQ(rr0_mirror(0, i, j), expected_rr0(0, i, j));
         }
     }
-    for(int i = 0; i < 6; ++i) {
-        for(int j = 0; j < 6; ++j) {
+    for (int i = 0; i < 6; ++i) {
+        for (int j = 0; j < 6; ++j) {
             EXPECT_EQ(rr0_mirror(1, i, j), expected_rr0(1, i, j));
         }
     }

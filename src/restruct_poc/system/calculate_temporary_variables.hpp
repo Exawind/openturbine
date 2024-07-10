@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
 #include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
 #include "src/restruct_poc/math/vector_operations.hpp"
 #include "src/restruct_poc/types.hpp"

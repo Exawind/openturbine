@@ -8,12 +8,9 @@ namespace openturbine::restruct_poc::tests {
 
 TEST(CalculateInertialForcesTests, OneNode) {
     auto Muu = Kokkos::View<double[1][6][6]>("Muu");
-    auto Muu_data = std::array<double, 36>{1., 2., 3., 4., 5., 6., 
-                                           7., 8., 9., 10., 11., 12., 
-                                           13., 14., 15., 16., 17., 18., 
-                                           19., 20., 21., 22., 23., 24., 
-                                           25., 26., 27., 28., 29., 30., 
-                                           31., 32., 33., 34., 35., 36.};
+    auto Muu_data = std::array<double, 36>{
+        1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,  10., 11., 12., 13., 14., 15., 16., 17., 18.,
+        19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36.};
     auto Muu_host = Kokkos::View<double[1][6][6], Kokkos::HostSpace>(Muu_data.data());
     auto Muu_mirror = Kokkos::create_mirror(Muu);
     Kokkos::deep_copy(Muu_mirror, Muu_host);
@@ -65,30 +62,33 @@ TEST(CalculateInertialForcesTests, OneNode) {
     auto omega_dot_tilde = Kokkos::View<double[1][3][3]>("omega_dot_tilde");
     auto FI = Kokkos::View<double[1][6]>("FI");
 
-    Kokkos::parallel_for("CalculateInertialForces", 1, CalculateInertialForces{Muu, u_ddot, omega, omega_dot, eta_tilde, omega_tilde, omega_dot_tilde, rho, eta, FI});
+    Kokkos::parallel_for(
+        "CalculateInertialForces", 1,
+        CalculateInertialForces{
+            Muu, u_ddot, omega, omega_dot, eta_tilde, omega_tilde, omega_dot_tilde, rho, eta, FI}
+    );
 
-    auto omega_tilde_exact_data = std::array<double, 9>{0., -42., 41.,
-                                                         42., 0., -40.,
-                                                         -41., 40., 0.};
-    auto omega_tilde_exact = Kokkos::View<double[1][3][3], Kokkos::HostSpace>(omega_tilde_exact_data.data());
+    auto omega_tilde_exact_data = std::array<double, 9>{0., -42., 41., 42., 0., -40., -41., 40., 0.};
+    auto omega_tilde_exact =
+        Kokkos::View<double[1][3][3], Kokkos::HostSpace>(omega_tilde_exact_data.data());
 
     auto omega_tilde_mirror = Kokkos::create_mirror(omega_tilde);
     Kokkos::deep_copy(omega_tilde_mirror, omega_tilde);
-    for(int i = 0; i < 3; ++i) {
-        for(int j = 0; j < 3; ++j) {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
             EXPECT_EQ(omega_tilde_mirror(0, i, j), omega_tilde_exact(0, i, j));
         }
     }
 
-    auto omega_dot_tilde_exact_data = std::array<double, 9>{0., -45., 44.,
-                                                             45., 0., -43.,
-                                                             -44., 43., 0.};
-    auto omega_dot_tilde_exact = Kokkos::View<double[1][3][3], Kokkos::HostSpace>(omega_dot_tilde_exact_data.data());
+    auto omega_dot_tilde_exact_data =
+        std::array<double, 9>{0., -45., 44., 45., 0., -43., -44., 43., 0.};
+    auto omega_dot_tilde_exact =
+        Kokkos::View<double[1][3][3], Kokkos::HostSpace>(omega_dot_tilde_exact_data.data());
 
     auto omega_dot_tilde_mirror = Kokkos::create_mirror(omega_dot_tilde);
     Kokkos::deep_copy(omega_dot_tilde_mirror, omega_dot_tilde);
-    for(int i = 0; i < 3; ++i) {
-        for(int j = 0; j < 3; ++j) {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
             EXPECT_EQ(omega_dot_tilde_mirror(0, i, j), omega_dot_tilde_exact(0, i, j));
         }
     }
@@ -98,7 +98,7 @@ TEST(CalculateInertialForcesTests, OneNode) {
 
     auto FI_mirror = Kokkos::create_mirror(FI);
     Kokkos::deep_copy(FI_mirror, FI);
-    for(int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 6; ++i) {
         EXPECT_EQ(FI_mirror(0, i), FI_exact(0, i));
     }
 }

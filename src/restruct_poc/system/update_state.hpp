@@ -40,7 +40,7 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
             A,
         }
     );
-    
+
     auto range_policy = Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO());
     Kokkos::parallel_for(
         "InterpolateToQuadraturePoints", range_policy,

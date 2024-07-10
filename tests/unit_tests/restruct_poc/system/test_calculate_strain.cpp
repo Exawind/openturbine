@@ -37,14 +37,16 @@ TEST(CalculateStrainTests, OneNode) {
 
     auto strain = Kokkos::View<double[1][6]>("strain");
 
-    Kokkos::parallel_for("CalculateStrain", 1, CalculateStrain{x0_prime, u_prime, r, r_prime, strain});
+    Kokkos::parallel_for(
+        "CalculateStrain", 1, CalculateStrain{x0_prime, u_prime, r, r_prime, strain}
+    );
 
     auto strain_exact_data = std::array<double, 6>{-793., -413., -621., -16., 0., -32.};
     auto strain_exact = Kokkos::View<double[1][6], Kokkos::HostSpace>(strain_exact_data.data());
-    
+
     auto strain_mirror = Kokkos::create_mirror(strain);
     Kokkos::deep_copy(strain_mirror, strain);
-    for(int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 6; ++i) {
         EXPECT_EQ(strain_mirror(0, i), strain_exact(0, i));
     }
 }

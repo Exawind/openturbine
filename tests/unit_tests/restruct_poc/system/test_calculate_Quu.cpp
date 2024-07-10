@@ -8,12 +8,9 @@ namespace openturbine::restruct_poc::tests {
 
 TEST(CalculateQuuTests, OneNode) {
     auto Cuu = Kokkos::View<double[1][6][6]>("Cuu");
-    auto Cuu_data = std::array<double, 36>{1., 2., 3., 4., 5., 6., 
-                                           7., 8., 9., 10., 11., 12., 
-                                           13., 14., 15., 16., 17., 18., 
-                                           19., 20., 21., 22., 23., 24., 
-                                           25., 26., 27., 28., 29., 30., 
-                                           31., 32., 33., 34., 35., 36.};
+    auto Cuu_data = std::array<double, 36>{
+        1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,  10., 11., 12., 13., 14., 15., 16., 17., 18.,
+        19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36.};
     auto Cuu_host = Kokkos::View<double[1][6][6], Kokkos::HostSpace>(Cuu_data.data());
     auto Cuu_mirror = Kokkos::create_mirror(Cuu);
     Kokkos::deep_copy(Cuu_mirror, Cuu_host);
@@ -44,18 +41,16 @@ TEST(CalculateQuuTests, OneNode) {
 
     Kokkos::parallel_for("CalculateQuu", 1, CalculateQuu{Cuu, x0pupSS, N_tilde, Quu});
 
-    auto Quu_exact_data = std::array<double, 36>{0., 0., 0., 0., 0., 0., 
-                                                 0., 0., 0., 0., 0., 0., 
-                                                 0., 0., 0., 0., 0., 0., 
-                                                 0., 0., 0., 113262., 116130., 118998.,  
-                                                 0., 0., 0., 115986., 118923., 121860.,
-                                                 0., 0., 0., 118710., 121716., 124722.};
+    auto Quu_exact_data = std::array<double, 36>{
+        0., 0., 0., 0.,      0.,      0.,      0., 0., 0., 0.,      0.,      0.,
+        0., 0., 0., 0.,      0.,      0.,      0., 0., 0., 113262., 116130., 118998.,
+        0., 0., 0., 115986., 118923., 121860., 0., 0., 0., 118710., 121716., 124722.};
     auto Quu_exact = Kokkos::View<double[1][6][6], Kokkos::HostSpace>(Quu_exact_data.data());
 
     auto Quu_mirror = Kokkos::create_mirror(Quu);
     Kokkos::deep_copy(Quu_mirror, Quu);
-    for(int i = 0; i < 6; ++i) {
-        for(int j = 0; j < 6; ++j) {
+    for (int i = 0; i < 6; ++i) {
+        for (int j = 0; j < 6; ++j) {
             EXPECT_EQ(Quu_mirror(0, i, j), Quu_exact(0, i, j));
         }
     }
