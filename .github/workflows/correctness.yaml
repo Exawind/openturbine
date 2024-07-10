@@ -2,27 +2,19 @@ name: OpenTurbine-CI
 
 on: push
 
-env:
-  CMAKE_BUILD_PARALLEL_LEVEL: 4
-  CTEST_PARALLEL_LEVEL: 2
-
 jobs:
-  Correctness:
+  CTest:
     runs-on: ${{matrix.os}}
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: 4
+      CTEST_PARALLEL_LEVEL: 2
+      CXX: ${{matrix.compiler}}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        compiler: [gcc, llvm]
+        compiler: [g++, clang++]
         build_type: [Release, Debug]
-        exclude: 
-          - os: macos-latest
-            compiler: gcc
-        include:
-           - os: ubuntu-latest
-             install_deps: sudo apt-get install gfortran-13 libblas-dev liblapack-dev liblapacke-dev
-           - os: macos-latest
-             install_deps: brew install gfortran gcc openblas lapack
     steps:
     - name: Cache install Trilinos
       id: cache-trilinos
