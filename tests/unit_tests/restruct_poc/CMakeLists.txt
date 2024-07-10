@@ -32,6 +32,7 @@ target_sources(
     system/test_calculate_Quu.cpp
     system/test_calculate_gyroscopic_matrix.cpp
     system/test_calculate_inertia_stiffness_matrix.cpp
+    system/test_calculate_node_forces.cpp
 )
 
 if(OTURB_ENABLE_VTK)
