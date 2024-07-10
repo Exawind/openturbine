@@ -8,12 +8,9 @@ namespace openturbine::restruct_poc::tests {
 
 TEST(CalculatePuuTests, OneNode) {
     auto Cuu = Kokkos::View<double[1][6][6]>("Cuu");
-    auto Cuu_data = std::array<double, 36>{1., 2., 3., 4., 5., 6., 
-                                           7., 8., 9., 10., 11., 12., 
-                                           13., 14., 15., 16., 17., 18., 
-                                           19., 20., 21., 22., 23., 24., 
-                                           25., 26., 27., 28., 29., 30., 
-                                           31., 32., 33., 34., 35., 36.};
+    auto Cuu_data = std::array<double, 36>{
+        1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,  10., 11., 12., 13., 14., 15., 16., 17., 18.,
+        19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36.};
     auto Cuu_host = Kokkos::View<double[1][6][6], Kokkos::HostSpace>(Cuu_data.data());
     auto Cuu_mirror = Kokkos::create_mirror(Cuu);
     Kokkos::deep_copy(Cuu_mirror, Cuu_host);
@@ -44,18 +41,16 @@ TEST(CalculatePuuTests, OneNode) {
 
     Kokkos::parallel_for("CalculatePuu", 1, CalculatePuu{Cuu, x0pupSS, N_tilde, Puu});
 
-    auto Puu_exact_data = std::array<double, 36>{0., 0., 0., 0., 0., 0., 
-                                                 0., 0., 0., 0., 0., 0., 
-                                                 0., 0., 0., 0., 0., 0., 
-                                                 931., 1052., 1173., 1236., 1356., 1476.,  
-                                                 955., 1079., 1203., 1266., 1389., 1512.,
-                                                 979., 1106., 1233., 1296., 1422., 1548.};
+    auto Puu_exact_data = std::array<double, 36>{
+        0.,   0.,    0.,    0.,    0.,    0.,    0.,   0.,    0.,    0.,    0.,    0.,
+        0.,   0.,    0.,    0.,    0.,    0.,    931., 1052., 1173., 1236., 1356., 1476.,
+        955., 1079., 1203., 1266., 1389., 1512., 979., 1106., 1233., 1296., 1422., 1548.};
     auto Puu_exact = Kokkos::View<double[1][6][6], Kokkos::HostSpace>(Puu_exact_data.data());
 
     auto Puu_mirror = Kokkos::create_mirror(Puu);
     Kokkos::deep_copy(Puu_mirror, Puu);
-    for(int i = 0; i < 6; ++i) {
-        for(int j = 0; j < 6; ++j) {
+    for (int i = 0; i < 6; ++i) {
+        for (int j = 0; j < 6; ++j) {
             EXPECT_EQ(Puu_mirror(0, i, j), Puu_exact(0, i, j));
         }
     }

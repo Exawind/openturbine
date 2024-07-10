@@ -13,9 +13,10 @@ TEST(UpdateNodeStateTests, TwoNodes_InOrder) {
     auto indices_mirror = Kokkos::create_mirror(indices);
     Kokkos::deep_copy(indices_mirror, indices_host);
     Kokkos::deep_copy(indices, indices_host);
-    
+
     auto Q = Kokkos::View<double[2][7]>("Q");
-    auto Q_data = std::array<double, 14>{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14.};
+    auto Q_data =
+        std::array<double, 14>{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14.};
     auto Q_host = Kokkos::View<double[2][7], Kokkos::HostSpace>(Q_data.data());
     auto Q_mirror = Kokkos::create_mirror(Q);
     Kokkos::deep_copy(Q_mirror, Q_host);
@@ -39,32 +40,34 @@ TEST(UpdateNodeStateTests, TwoNodes_InOrder) {
     auto node_u_dot = Kokkos::View<double[2][6]>("node_u_dot");
     auto node_u_ddot = Kokkos::View<double[2][6]>("node_u_ddot");
 
-    Kokkos::parallel_for("UpdateNodeState", 2, UpdateNodeState{indices, node_u, node_u_dot, node_u_ddot, Q, V, A});
+    Kokkos::parallel_for(
+        "UpdateNodeState", 2, UpdateNodeState{indices, node_u, node_u_dot, node_u_ddot, Q, V, A}
+    );
 
     auto node_u_mirror = Kokkos::create_mirror(node_u);
     Kokkos::deep_copy(node_u_mirror, node_u);
-    for(int j = 0; j < 7; ++j) {
+    for (int j = 0; j < 7; ++j) {
         EXPECT_EQ(node_u_mirror(0, j), Q_host(0, j));
     }
-    for(int j = 0; j < 7; ++j) {
+    for (int j = 0; j < 7; ++j) {
         EXPECT_EQ(node_u_mirror(1, j), Q_host(1, j));
     }
 
     auto node_u_dot_mirror = Kokkos::create_mirror(node_u_dot);
     Kokkos::deep_copy(node_u_dot_mirror, node_u_dot);
-    for(int j = 0; j < 6; ++j) {
+    for (int j = 0; j < 6; ++j) {
         EXPECT_EQ(node_u_dot_mirror(0, j), V_host(0, j));
     }
-    for(int j = 0; j < 6; ++j) {
+    for (int j = 0; j < 6; ++j) {
         EXPECT_EQ(node_u_dot_mirror(1, j), V_host(1, j));
     }
 
     auto node_u_ddot_mirror = Kokkos::create_mirror(node_u_ddot);
     Kokkos::deep_copy(node_u_ddot_mirror, node_u_ddot);
-    for(int j = 0; j < 6; ++j) {
+    for (int j = 0; j < 6; ++j) {
         EXPECT_EQ(node_u_ddot_mirror(0, j), A_host(0, j));
     }
-    for(int j = 0; j < 6; ++j) {
+    for (int j = 0; j < 6; ++j) {
         EXPECT_EQ(node_u_ddot_mirror(1, j), A_host(1, j));
     }
 }
@@ -76,9 +79,10 @@ TEST(UpdateNodeStateTests, TwoNodes_OutOfOrder) {
     auto indices_mirror = Kokkos::create_mirror(indices);
     Kokkos::deep_copy(indices_mirror, indices_host);
     Kokkos::deep_copy(indices, indices_host);
-    
+
     auto Q = Kokkos::View<double[2][7]>("Q");
-    auto Q_data = std::array<double, 14>{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14.};
+    auto Q_data =
+        std::array<double, 14>{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14.};
     auto Q_host = Kokkos::View<double[2][7], Kokkos::HostSpace>(Q_data.data());
     auto Q_mirror = Kokkos::create_mirror(Q);
     Kokkos::deep_copy(Q_mirror, Q_host);
@@ -90,7 +94,7 @@ TEST(UpdateNodeStateTests, TwoNodes_OutOfOrder) {
     auto V_mirror = Kokkos::create_mirror(V);
     Kokkos::deep_copy(V_mirror, V_host);
     Kokkos::deep_copy(V, V_mirror);
-    
+
     auto A = Kokkos::View<double[2][6]>("A");
     auto A_data = std::array<double, 12>{27., 28., 29., 30., 31., 32., 33., 34., 35., 36., 37., 38.};
     auto A_host = Kokkos::View<double[2][6], Kokkos::HostSpace>(A_data.data());
@@ -102,32 +106,34 @@ TEST(UpdateNodeStateTests, TwoNodes_OutOfOrder) {
     auto node_u_dot = Kokkos::View<double[2][6]>("node_u_dot");
     auto node_u_ddot = Kokkos::View<double[2][6]>("node_u_ddot");
 
-    Kokkos::parallel_for("UpdateNodeState", 2, UpdateNodeState{indices, node_u, node_u_dot, node_u_ddot, Q, V, A});
+    Kokkos::parallel_for(
+        "UpdateNodeState", 2, UpdateNodeState{indices, node_u, node_u_dot, node_u_ddot, Q, V, A}
+    );
 
     auto node_u_mirror = Kokkos::create_mirror(node_u);
     Kokkos::deep_copy(node_u_mirror, node_u);
-    for(int j = 0; j < 7; ++j) {
+    for (int j = 0; j < 7; ++j) {
         EXPECT_EQ(node_u_mirror(0, j), Q_host(1, j));
     }
-    for(int j = 0; j < 7; ++j) {
+    for (int j = 0; j < 7; ++j) {
         EXPECT_EQ(node_u_mirror(1, j), Q_host(0, j));
     }
 
     auto node_u_dot_mirror = Kokkos::create_mirror(node_u_dot);
     Kokkos::deep_copy(node_u_dot_mirror, node_u_dot);
-    for(int j = 0; j < 6; ++j) {
+    for (int j = 0; j < 6; ++j) {
         EXPECT_EQ(node_u_dot_mirror(0, j), V_host(1, j));
     }
-    for(int j = 0; j < 6; ++j) {
+    for (int j = 0; j < 6; ++j) {
         EXPECT_EQ(node_u_dot_mirror(1, j), V_host(0, j));
     }
 
     auto node_u_ddot_mirror = Kokkos::create_mirror(node_u_ddot);
     Kokkos::deep_copy(node_u_ddot_mirror, node_u_ddot);
-    for(int j = 0; j < 6; ++j) {
+    for (int j = 0; j < 6; ++j) {
         EXPECT_EQ(node_u_ddot_mirror(0, j), A_host(1, j));
     }
-    for(int j = 0; j < 6; ++j) {
+    for (int j = 0; j < 6; ++j) {
         EXPECT_EQ(node_u_ddot_mirror(1, j), A_host(0, j));
     }
 }

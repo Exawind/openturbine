@@ -8,12 +8,9 @@ namespace openturbine::restruct_poc::tests {
 
 TEST(CalculateOuuTests, OneNode) {
     auto Cuu = Kokkos::View<double[1][6][6]>("Cuu");
-    auto Cuu_data = std::array<double, 36>{1., 2., 3., 4., 5., 6., 
-                                           7., 8., 9., 10., 11., 12., 
-                                           13., 14., 15., 16., 17., 18., 
-                                           19., 20., 21., 22., 23., 24., 
-                                           25., 26., 27., 28., 29., 30., 
-                                           31., 32., 33., 34., 35., 36.};
+    auto Cuu_data = std::array<double, 36>{
+        1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,  10., 11., 12., 13., 14., 15., 16., 17., 18.,
+        19., 20., 21., 22., 23., 24., 25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36.};
     auto Cuu_host = Kokkos::View<double[1][6][6], Kokkos::HostSpace>(Cuu_data.data());
     auto Cuu_mirror = Kokkos::create_mirror(Cuu);
     Kokkos::deep_copy(Cuu_mirror, Cuu_host);
@@ -44,18 +41,16 @@ TEST(CalculateOuuTests, OneNode) {
 
     Kokkos::parallel_for("CalculateOuu", 1, CalculateOuu{Cuu, x0pupSS, M_tilde, N_tilde, Ouu});
 
-    auto Ouu_exact_data = std::array<double, 36>{0., 0., 0., 191., 196., 201., 
-                                                 0., 0., 0., 908., 931., 954., 
-                                                 0., 0., 0., 1625., 1666., 1707., 
-                                                 0., 0., 0., 2360., 2419., 2478.,  
-                                                 0., 0., 0., 3077., 3154., 3231.,
-                                                 0., 0., 0., 3794., 3889., 3984.};
+    auto Ouu_exact_data =
+        std::array<double, 36>{0., 0., 0., 191.,  196.,  201.,  0., 0., 0., 908.,  931.,  954.,
+                               0., 0., 0., 1625., 1666., 1707., 0., 0., 0., 2360., 2419., 2478.,
+                               0., 0., 0., 3077., 3154., 3231., 0., 0., 0., 3794., 3889., 3984.};
     auto Ouu_exact = Kokkos::View<double[1][6][6], Kokkos::HostSpace>(Ouu_exact_data.data());
 
     auto Ouu_mirror = Kokkos::create_mirror(Ouu);
     Kokkos::deep_copy(Ouu_mirror, Ouu);
-    for(int i = 0; i < 6; ++i) {
-        for(int j = 0; j < 6; ++j) {
+    for (int i = 0; i < 6; ++i) {
+        for (int j = 0; j < 6; ++j) {
             EXPECT_EQ(Ouu_mirror(0, i, j), Ouu_exact(0, i, j));
         }
     }

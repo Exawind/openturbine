@@ -26,7 +26,10 @@ struct CalculateGravityForce {
         for (int i = 0; i < 3; ++i) {
             FG(i) = m * gravity(i);
         }
-        Gemv::invoke(1., eta_tilde, Kokkos::subview(FG, Kokkos::make_pair(0, 3)), 0., Kokkos::subview(FG, Kokkos::make_pair(3, 6)));
+        Gemv::invoke(
+            1., eta_tilde, Kokkos::subview(FG, Kokkos::make_pair(0, 3)), 0.,
+            Kokkos::subview(FG, Kokkos::make_pair(3, 6))
+        );
     }
 };
 

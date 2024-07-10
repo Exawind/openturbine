@@ -8,9 +8,7 @@ namespace openturbine::restruct_poc::tests {
 
 TEST(CalculateForceFDTests, OneNode) {
     auto x0pupSS = Kokkos::View<double[1][3][3]>("x0pupSS");
-    auto x0pupSS_data = std::array<double, 9>{ 1.,  2.,  3.,  
-                                               4.,  5.,  6.,
-                                               7.,  8.,  9.};
+    auto x0pupSS_data = std::array<double, 9>{1., 2., 3., 4., 5., 6., 7., 8., 9.};
     auto x0pupSS_host = Kokkos::View<double[1][3][3], Kokkos::HostSpace>(x0pupSS_data.data());
     auto x0pupSS_mirror = Kokkos::create_mirror(x0pupSS);
     Kokkos::deep_copy(x0pupSS_mirror, x0pupSS_host);
@@ -32,7 +30,7 @@ TEST(CalculateForceFDTests, OneNode) {
 
     auto FD_mirror = Kokkos::create_mirror(FD);
     Kokkos::deep_copy(FD_mirror, FD);
-    for(int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 6; ++i) {
         EXPECT_EQ(FD_mirror(0, i), FD_exact(0, i));
     }
 }

@@ -42,7 +42,7 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
             A,
         }
     );
-    
+
     auto range_policy = Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO());
     Kokkos::parallel_for(
         "InterpolateQpU", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},

@@ -28,11 +28,11 @@ struct CalculateNodeForces_FE {
             const auto weight = qp_weight_(j);
             const auto coeff_c = weight * shape_deriv_(i, j_index);
             const auto coeff_d = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
-            for(int k = 0; k < 6; ++k) {
+            for (int k = 0; k < 6; ++k) {
                 FE[k] += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
             }
         }
-        for(int k = 0; k < 6; ++k) {
+        for (int k = 0; k < 6; ++k) {
             node_FE_(i, k) = FE[k];
         }
     }
@@ -57,11 +57,11 @@ struct CalculateNodeForces_FI_FG {
             const auto j = first_qp + j_index;
             const auto weight = qp_weight_(j);
             const auto coeff_ig = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
-            for(int k = 0; k < 6; ++k) {
+            for (int k = 0; k < 6; ++k) {
                 FIG[k] += coeff_ig * qp_Fig_(j, k);
             }
         }
-        for(int k = 0; k < 6; ++k) {
+        for (int k = 0; k < 6; ++k) {
             node_FIG_(i, k) = FIG[k];
         }
     }
@@ -73,9 +73,9 @@ struct CalculateNodeForces {
     View_N::const_type qp_jacobian_;
     View_NxN::const_type shape_interp_;
     View_NxN::const_type shape_deriv_;
-    View_Nx6::const_type qp_Fc_;                                 
-    View_Nx6::const_type qp_Fd_;                                 
-    View_Nx6::const_type qp_Fi_;                                 
+    View_Nx6::const_type qp_Fc_;
+    View_Nx6::const_type qp_Fd_;
+    View_Nx6::const_type qp_Fi_;
     View_Nx6::const_type qp_Fg_;
     View_Nx6 node_FE_;
     View_Nx6 node_FI_;
@@ -88,9 +88,24 @@ struct CalculateNodeForces {
         const auto first_qp = idx.qp_range.first;
         const auto num_qps = idx.num_qps;
 
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, idx.num_nodes), CalculateNodeForces_FE{first_node, first_qp, num_qps, qp_weight_, qp_jacobian_, shape_interp_, shape_deriv_, qp_Fc_, qp_Fd_, node_FE_});
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, idx.num_nodes), CalculateNodeForces_FI_FG{first_node, first_qp, num_qps, qp_weight_, qp_jacobian_, shape_interp_, shape_deriv_, qp_Fi_, node_FI_});
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, idx.num_nodes), CalculateNodeForces_FI_FG{first_node, first_qp, num_qps, qp_weight_, qp_jacobian_, shape_interp_, shape_deriv_, qp_Fg_, node_FG_});
+        Kokkos::parallel_for(
+            Kokkos::TeamThreadRange(member, idx.num_nodes),
+            CalculateNodeForces_FE{
+                first_node, first_qp, num_qps, qp_weight_, qp_jacobian_, shape_interp_, shape_deriv_,
+                qp_Fc_, qp_Fd_, node_FE_}
+        );
+        Kokkos::parallel_for(
+            Kokkos::TeamThreadRange(member, idx.num_nodes),
+            CalculateNodeForces_FI_FG{
+                first_node, first_qp, num_qps, qp_weight_, qp_jacobian_, shape_interp_, shape_deriv_,
+                qp_Fi_, node_FI_}
+        );
+        Kokkos::parallel_for(
+            Kokkos::TeamThreadRange(member, idx.num_nodes),
+            CalculateNodeForces_FI_FG{
+                first_node, first_qp, num_qps, qp_weight_, qp_jacobian_, shape_interp_, shape_deriv_,
+                qp_Fg_, node_FG_}
+        );
     }
 };
 }  // namespace openturbine

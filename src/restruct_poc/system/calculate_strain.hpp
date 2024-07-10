@@ -16,7 +16,7 @@ struct CalculateStrain {
     View_Nx3::const_type qp_x0_prime_;
     View_Nx3::const_type qp_u_prime_;
     View_Nx4::const_type qp_r_;
-    View_Nx4::const_type qp_r_prime_; 
+    View_Nx4::const_type qp_r_prime_;
     View_Nx6 qp_strain_;
 
     KOKKOS_FUNCTION
