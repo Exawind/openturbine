@@ -75,6 +75,12 @@ void TestRotation(
     expect_kokkos_view_1D_equal(v_rot, exact);
 }
 
+TEST(QuaternionTest, RotateYAxisByIdentity) {
+    auto rotation_identity = Create1DView<4>({1., 0., 0., 0.});
+    auto y_axis = Create1DView<3>({0., 1., 0.});
+    TestRotation(rotation_identity, y_axis, {0., 1., 0.});
+}
+
 TEST(QuaternionTest, RotateXAxis90DegreesAboutYAxis) {
     auto rotation_y_axis = Create1DView<4>({0.707107, 0., 0.707107, 0.});
     auto x_axis = Create1DView<3>({1., 0., 0.});

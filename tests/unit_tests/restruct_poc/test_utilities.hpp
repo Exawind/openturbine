@@ -25,6 +25,7 @@ void expect_kokkos_view_3D_equal(
 );
 
 std::vector<double> kokkos_view_1D_to_vector(Kokkos::View<double*> view);
+std::vector<int> kokkos_view_1D_to_vector(Kokkos::View<int*> view);
 std::vector<std::vector<double>> kokkos_view_2D_to_vector(Kokkos::View<double**> view);
 
 }  // namespace openturbine::restruct_poc::tests
