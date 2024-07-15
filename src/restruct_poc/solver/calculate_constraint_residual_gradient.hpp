@@ -134,7 +134,7 @@ struct CalculateConstraintResidualGradient {
         // Extract residual rows relevant to this constraint
         auto Phi = Kokkos::subview(Phi_, cd.row_range);
 
-        // Position residual = u2 + X0 - u1 - R1*X0
+        // Phi(0:3) = u2 + X0 - u1 - R1*X0
         QuaternionInverse(R1, R1t);
         RotateVectorByQuaternion(R1, X0, R1_X0);
         for (int i = 0; i < 3; ++i) {
@@ -146,8 +146,10 @@ struct CalculateConstraintResidualGradient {
             RotateVectorByQuaternion(R1, x0, x);
             RotateVectorByQuaternion(R2, y0, y);
             RotateVectorByQuaternion(R2, z0, z);
-            Phi(3) = DotProduct(z, x);  // dot(R2 * z0_hat, R1 * x0_hat)
-            Phi(4) = DotProduct(y, x);  // dot(R2 * y0_hat, R1 * x0_hat)
+            // Phi(3) = dot(R2 * z0_hat, R1 * x0_hat)
+            Phi(3) = DotProduct(z, x);
+            // Phi(4) = dot(R2 * y0_hat, R1 * x0_hat)
+            Phi(4) = DotProduct(y, x);
         } else {
             // If this is a rotation control constraint, calculate RC from control and axis
             if (cd.type == ConstraintType::kRotationControl) {
@@ -158,7 +160,7 @@ struct CalculateConstraintResidualGradient {
                 QuaternionInverse(RC, RCt);
             }
 
-            // axial(R2*inv(RC)*inv(R1))
+            // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
             QuaternionCompose(R2, RCt, R2_RCt);
             QuaternionCompose(R2_RCt, R1t, R2_RCt_R1t);
             QuaternionToRotationMatrix(R2_RCt_R1t, C);
@@ -182,15 +184,15 @@ struct CalculateConstraintResidualGradient {
             B_, cd.row_range, Kokkos::make_pair(i_col, i_col + kLieAlgebraComponents)
         );
 
-        // B11 = I
+        // B(0:3,0:3) = I
         for (int i = 0; i < 3; ++i) {
             B(i, i) = 1.;
         }
 
         if (cd.type == ConstraintType::kCylindrical) {
-            // B22 = -cross(R1 * x0_hat, transpose(R2 * z0_hat))
-            // B22 = -cross(R1 * x0_hat, transpose(R2 * y0_hat))
+            // B(3,3:6) = -cross(R1 * x0_hat, transpose(R2 * z0_hat))
             CrossProduct(x, z, xcz);
+            // B(4,3:6) = -cross(R1 * x0_hat, transpose(R2 * y0_hat))
             CrossProduct(x, y, xcy);
             for (int j = 0; j < 3; ++j) {
                 B(3, j + 3) = -xcz(j);
@@ -198,7 +200,7 @@ struct CalculateConstraintResidualGradient {
             }
 
         } else {
-            // B22 = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
+            // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
             AX_Matrix(C, A);
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 3; ++j) {
@@ -225,21 +227,21 @@ struct CalculateConstraintResidualGradient {
             B_, cd.row_range, Kokkos::make_pair(i_col, i_col + kLieAlgebraComponents)
         );
 
-        // B11 = -I
+        // B(0:3,0:3) = -I
         for (int i = 0; i < 3; ++i) {
             B(i, i) = -1.;
         }
 
         if (cd.type == ConstraintType::kCylindrical) {
-            // B22 = cross(R1 * x0_hat, transpose(R2 * z0_hat))
-            // B22 = cross(R1 * x0_hat, transpose(R2 * y0_hat))
+            // B(3,3:6) = cross(R1 * x0_hat, transpose(R2 * z0_hat))
+            // B(4,3:6) = cross(R1 * x0_hat, transpose(R2 * y0_hat))
             for (int j = 0; j < 3; ++j) {
                 B(3, j + 3) = xcz(j);
                 B(4, j + 3) = xcy(j);
             }
 
         } else {
-            // B12 = tilde(R1*X0)
+            // B(0:3,3:6) = tilde(R1*X0)
             VecTilde(R1_X0, A);
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 3; ++j) {
@@ -247,7 +249,7 @@ struct CalculateConstraintResidualGradient {
                 }
             }
 
-            // B22 = -AX(R2*inv(RC)*inv(R1))
+            // B(3:6,3:6) = -AX(R2*inv(RC)*inv(R1))
             AX_Matrix(C, A);
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 3; ++j) {
