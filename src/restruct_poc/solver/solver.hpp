@@ -172,15 +172,13 @@ struct Solver {
         auto tmp_row_ptrs = Kokkos::View<int*>("tmp_row_ptrs", B_t_num_rows + 1);
         auto B_t_row_ptrs = Kokkos::View<int*>("b_t_row_ptrs", B_t_num_rows + 1);
         auto B_t_col_inds = Kokkos::View<int*>("B_t_indices", B_t_num_non_zero);
+        auto B_t_values = Kokkos::View<double*>("B_t values", B_t_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Transpose", 1,
             PopulateSparseRowPtrsColInds_Transpose{
-                B_num_rows, B_num_columns, col_count, tmp_row_ptrs, B_row_ptrs, B_col_ind,
+                B_num_rows, B_num_columns, B_row_ptrs, B_col_ind, col_count, tmp_row_ptrs,
                 B_t_row_ptrs, B_t_col_inds}
         );
-
-        auto B_t_values = Kokkos::View<double*>("B_t values", B_t_num_non_zero);
-        // KokkosSparse::sort_crs_matrix(B_t_row_ptrs, B_t_indices, B_t_values);
         B_t = CrsMatrixType(
             "B_t", B_t_num_rows, B_t_num_columns, B_t_num_non_zero, B_t_values, B_t_row_ptrs,
             B_t_col_inds
