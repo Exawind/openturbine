@@ -60,7 +60,7 @@ constexpr Array_3 CrossProduct(const Array_3& a, const Array_3& b) {
 constexpr Array_3 UnitVector(const Array_3& v) {
     // Calculate vector norm
     double norm = std::sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-    if (norm == 0) {
+    if (norm == 0.) {
         throw std::invalid_argument("Cannot normalize a zero vector");
     }
     return Array_3{
