@@ -15,24 +15,13 @@ inline void SolveSystem(Solver& solver) {
     using CrsMatrixType = typename Solver::CrsMatrixType;
     auto num_dofs = solver.num_dofs;
 
-    Kokkos::fence();
-    auto spc_handle = Solver::KernelHandle();
-    spc_handle.create_spadd_handle(true);
-    KokkosSparse::spadd_symbolic(
-        &spc_handle, solver.system_matrix_full, solver.constraints_matrix_full, solver.system_plus_constraints
-    );
     KokkosSparse::spadd_numeric(
-        &spc_handle, solver.conditioner, solver.system_matrix_full, 1., solver.constraints_matrix_full,
+        &solver.spc_spadd_handle, solver.conditioner, solver.system_matrix_full, 1., solver.constraints_matrix_full,
         solver.system_plus_constraints
     );
 
-    auto system_handle = Solver::KernelHandle();
-    system_handle.create_spadd_handle(true);
-    KokkosSparse::spadd_symbolic(
-        &system_handle, solver.system_plus_constraints, solver.transpose_matrix_full, solver.full_matrix
-    );
     KokkosSparse::spadd_numeric(
-        &system_handle, 1., solver.system_plus_constraints, 1., solver.transpose_matrix_full,
+        &solver.full_system_spadd_handle, 1., solver.system_plus_constraints, 1., solver.transpose_matrix_full,
         solver.full_matrix
     );
 

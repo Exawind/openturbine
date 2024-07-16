@@ -78,6 +78,8 @@ struct Solver {
     KernelHandle system_spgemm_handle;
     KernelHandle constraints_spgemm_handle;
     KernelHandle system_spadd_handle;
+    KernelHandle spc_spadd_handle;
+    KernelHandle full_system_spadd_handle;
 
     Solver(
         bool is_dynamic_solve_, int max_iter_, double h_, double rho_inf,
@@ -231,6 +233,12 @@ struct Solver {
         Kokkos::deep_copy(transpose_matrix_full_indices, num_system_dofs);
         KokkosBlas::axpy(1., B_t.graph.entries, transpose_matrix_full_indices);
         transpose_matrix_full = CrsMatrixType("transpose_matrix_full", num_dofs, num_dofs, B_t.nnz(), B_t.values, transpose_matrix_full_row_ptrs, transpose_matrix_full_indices);
+
+        spc_spadd_handle.create_spadd_handle(true);
+        KokkosSparse::spadd_symbolic(&spc_spadd_handle, system_matrix_full, constraints_matrix_full, system_plus_constraints);
+
+        full_system_spadd_handle.create_spadd_handle(true);
+        KokkosSparse::spadd_symbolic(&full_system_spadd_handle, system_plus_constraints, transpose_matrix_full, full_matrix);
     }
 };
 
