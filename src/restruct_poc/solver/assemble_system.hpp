@@ -44,7 +44,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
 
     Kokkos::parallel_for(
         "CopyTangentIntoSparseMatrix", sparse_matrix_policy,
-        CopyTangentToSparseMatrix{solver.T, solver.T_dense}
+        CopyTangentToSparseMatrix<Solver::CrsMatrixType>{solver.T, solver.T_dense}
     );
 
     Kokkos::deep_copy(R_system, 0.);
@@ -54,7 +54,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
 
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,
-        ContributeElementsToSparseMatrix{solver.K, solver.matrix_terms}
+        ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{solver.K, solver.matrix_terms}
     );
 
     Kokkos::fence();
@@ -72,7 +72,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     AssembleInertiaMatrix(beams, beta_prime, gamma_prime, solver.matrix_terms);
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,
-        ContributeElementsToSparseMatrix{solver.K, solver.matrix_terms}
+        ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{solver.K, solver.matrix_terms}
     );
 
     Kokkos::fence();

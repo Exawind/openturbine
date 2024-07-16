@@ -61,7 +61,6 @@ struct Solver {
     CrsMatrixType constraints_matrix;
     CrsMatrixType system_plus_constraints;
     CrsMatrixType full_matrix;
-    View_NxN K_dense;  // Stiffness matrix
     View_NxN St;       // Iteration matrix
     DenseMatrixType St_left;
     Kokkos::View<int*, Kokkos::LayoutLeft> IPIV;
@@ -91,11 +90,8 @@ struct Solver {
           constraints(constraints_, num_system_dofs),
           num_dofs(num_system_dofs + constraints.num_dofs),
           state(num_system_nodes, constraints.num_dofs, system_nodes),
-          K_dense("K dense", num_system_dofs, num_system_dofs),
           St("St", num_dofs, num_dofs),
           IPIV("IPIV", num_dofs),
-          num_constraint_nodes(constraint_inputs.size()),
-          num_constraint_dofs(num_constraint_nodes * kLieAlgebraComponents),
           T_dense("T dense", num_system_nodes),
           matrix_terms(
               "matrix_terms", beams_.num_elems, beams_.max_elem_nodes * kLieAlgebraComponents,
@@ -129,33 +125,6 @@ struct Solver {
         auto K_values = Kokkos::View<double*>("K values", K_num_non_zero);
         K = CrsMatrixType(
             "K", K_num_rows, K_num_columns, K_num_non_zero, K_values, K_row_ptrs, K_col_inds
-        );
-
-        auto T_num_non_zero = num_system_nodes * 6 * 6;
-        auto T_row_ptrs = RowPtrType("T_row_ptrs", num_rows + 1);
-        auto T_indices = IndicesType("T_indices", T_num_non_zero);
-        Kokkos::parallel_for(
-            "PopulateTangentRowPtrs", 1,
-            PopulateTangentRowPtrs<CrsMatrixType::size_type>{beams_.elem_indices, T_row_ptrs}
-        );
-        Kokkos::parallel_for(
-            "PopulateTangentIndices", 1,
-            PopulateTangentIndices{beams_.elem_indices, beams_.node_state_indices, T_indices}
-        );
-        auto T_values = ValuesType("T values", T_num_non_zero);
-        T = CrsMatrixType(
-            "T", num_rows, num_columns, T_num_non_zero, T_values, T_row_ptrs, T_indices
-        );
-
-        auto B_num_rows = num_constraint_dofs;
-        auto B_num_columns = num_system_dofs;
-        auto B_num_non_zero = num_constraint_nodes * 6 * 6;
-        auto B_row_ptrs = RowPtrType("b_row_ptrs", B_num_rows + 1);
-        auto B_indices = IndicesType("b_indices", B_num_non_zero);
-        Kokkos::parallel_for(
-            "PopulateSparseRowPtrs_Constraints", 1,
-            PopulateSparseRowPtrs_Constraints<CrsMatrixType::size_type>{
-                num_constraint_nodes, B_row_ptrs}
         );
 
         // Tangent operator sparse matrix

@@ -4,10 +4,8 @@
 #include <Kokkos_Core.hpp>
 
 namespace openturbine {
+template <typename crs_matrix_type>
 struct ContributeElementsToSparseMatrix {
-    using crs_matrix_type = KokkosSparse::CrsMatrix<
-        double, int,
-        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>;
     using row_data_type = Kokkos::View<
         double*, Kokkos::DefaultExecutionSpace::scratch_memory_space,
         Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
