@@ -12,7 +12,6 @@ namespace openturbine {
 
 inline void SolveSystem(Solver& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Solve System");
-    using CrsMatrixType = typename Solver::CrsMatrixType;
     auto num_dofs = solver.num_dofs;
 
     {
