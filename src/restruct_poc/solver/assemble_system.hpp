@@ -59,9 +59,10 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     );
 
     Kokkos::fence();
-    KokkosSparse::spgemm_numeric(
-        solver.system_spgemm_handle, solver.K, false, solver.T, false, solver.static_system_matrix
-    );
+    {
+        auto static_region = Kokkos::Profiling::ScopedRegion("Assemble Static System Matrix");
+        KokkosSparse::spgemm_numeric(solver.system_spgemm_handle, solver.K, false, solver.T, false, solver.static_system_matrix);
+    }
 
     auto beta_prime = (solver.is_dynamic_solve) ? solver.beta_prime : 0.;
     auto gamma_prime = (solver.is_dynamic_solve) ? solver.gamma_prime : 0.;
@@ -73,9 +74,10 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     );
 
     Kokkos::fence();
-    KokkosSparse::spadd_numeric(
-        &solver.system_spadd_handle, 1., solver.K, 1., solver.static_system_matrix, solver.system_matrix
-    );
+    {
+        auto system_region = Kokkos::Profiling::ScopedRegion("Assemble System Matrix");
+        KokkosSparse::spadd_numeric(&solver.system_spadd_handle, 1., solver.K, 1., solver.static_system_matrix, solver.system_matrix);
+    }
 }
 
 }  // namespace openturbine

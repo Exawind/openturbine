@@ -15,15 +15,11 @@ inline void SolveSystem(Solver& solver) {
     using CrsMatrixType = typename Solver::CrsMatrixType;
     auto num_dofs = solver.num_dofs;
 
-    KokkosSparse::spadd_numeric(
-        &solver.spc_spadd_handle, solver.conditioner, solver.system_matrix_full, 1., solver.constraints_matrix_full,
-        solver.system_plus_constraints
-    );
-
-    KokkosSparse::spadd_numeric(
-        &solver.full_system_spadd_handle, 1., solver.system_plus_constraints, 1., solver.transpose_matrix_full,
-        solver.full_matrix
-    );
+    {
+        auto assemble_region = Kokkos::Profiling::ScopedRegion("Assemble Full System");
+        KokkosSparse::spadd_numeric(&solver.spc_spadd_handle, solver.conditioner, solver.system_matrix_full, 1., solver.constraints_matrix_full, solver.system_plus_constraints);
+        KokkosSparse::spadd_numeric(&solver.full_system_spadd_handle, 1., solver.system_plus_constraints, 1., solver.transpose_matrix_full, solver.full_matrix);
+    }
 
     auto St = solver.St;
     auto full_matrix = solver.full_matrix;
