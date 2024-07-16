@@ -10,6 +10,7 @@
 #include "compute_number_of_non_zeros.hpp"
 #include "constraint.hpp"
 #include "constraints.hpp"
+#include "fill_unshifted_row_ptrs.hpp"
 #include "populate_sparse_indices.hpp"
 #include "populate_sparse_indices_constraints.hpp"
 #include "populate_sparse_indices_constraints_transpose.hpp"
@@ -60,6 +61,9 @@ struct Solver {
     CrsMatrixType static_system_matrix;
     CrsMatrixType system_matrix;
     CrsMatrixType constraints_matrix;
+    CrsMatrixType system_matrix_full;
+    CrsMatrixType constraints_matrix_full;
+    CrsMatrixType transpose_matrix_full;
     CrsMatrixType system_plus_constraints;
     CrsMatrixType full_matrix;
     View_NxN K_dense;  // Stiffness matrix
@@ -212,6 +216,21 @@ struct Solver {
 
         system_spadd_handle.create_spadd_handle(true);
         KokkosSparse::spadd_symbolic(&system_spadd_handle, K, static_system_matrix, system_matrix);
+
+        auto system_matrix_full_row_ptrs = Kokkos::View<int*>("system_matrix_full_row_ptrs", num_dofs + 1);
+        Kokkos::parallel_for("FillUnshiftedRowPtrs", num_dofs + 1, FillUnshiftedRowPtrs{system_matrix_full_row_ptrs, num_system_dofs, system_matrix.graph.row_map});
+        system_matrix_full = CrsMatrixType("system_matrix_full", num_dofs, num_dofs, system_matrix.nnz(), system_matrix.values, system_matrix_full_row_ptrs, system_matrix.graph.entries);
+
+        auto constraints_matrix_full_row_ptrs = Kokkos::View<int*>("constraints_matrix_full_row_ptrs", num_dofs + 1);
+        Kokkos::deep_copy(Kokkos::subview(constraints_matrix_full_row_ptrs, Kokkos::pair(num_system_dofs, num_dofs+1)), constraints_matrix.graph.row_map);
+        constraints_matrix_full = CrsMatrixType("constraints_matrix_full", num_dofs, num_dofs, constraints_matrix.nnz(), constraints_matrix.values, constraints_matrix_full_row_ptrs, constraints_matrix.graph.entries);
+
+        auto transpose_matrix_full_row_ptrs = Kokkos::View<int*>("transpose_matrix_full_row_ptrs", num_dofs + 1);
+        Kokkos::parallel_for("FillUnshiftedRowPtrs", num_dofs + 1, FillUnshiftedRowPtrs{transpose_matrix_full_row_ptrs, num_system_dofs, B_t.graph.row_map});
+        auto transpose_matrix_full_indices = Kokkos::View<int*>("transpose_matrix_full_indices", B_t.nnz());
+        Kokkos::deep_copy(transpose_matrix_full_indices, num_system_dofs);
+        KokkosBlas::axpy(1., B_t.graph.entries, transpose_matrix_full_indices);
+        transpose_matrix_full = CrsMatrixType("transpose_matrix_full", num_dofs, num_dofs, B_t.nnz(), B_t.values, transpose_matrix_full_row_ptrs, transpose_matrix_full_indices);
     }
 };
 
