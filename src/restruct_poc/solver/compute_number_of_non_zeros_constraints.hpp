@@ -5,6 +5,9 @@
 #include "src/restruct_poc/solver/constraints.hpp"
 
 namespace openturbine {
+
+/// ComputeNumberOfNonZeros_Constraints calculates the total number of nonzero values in the
+/// constraint gradient matrix based on the block layout of the constraints.
 struct ComputeNumberOfNonZeros_Constraints {
     Kokkos::View<Constraints::DeviceData*>::const_type constraint_data;
 

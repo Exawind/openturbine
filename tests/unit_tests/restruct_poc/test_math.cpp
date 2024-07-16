@@ -232,11 +232,45 @@ TEST(VectorTest, CrossProduct_Set2) {
     ASSERT_EQ(c[2], 0.19 * 0.09 - -5.03 * 1.16);
 }
 
+TEST(VectorTest, DotProduct_View) {
+    auto a = Create1DView<3>({1., 2., 3.});
+    auto b = Create1DView<3>({4., 5., 6.});
+    auto c = DotProduct(a, b);
+    ASSERT_EQ(c, 32.);
+}
+
+TEST(VectorTest, DotProduct_Array) {
+    auto a = std::array<double, 3>{1., 2., 3.};
+    auto b = std::array<double, 3>{4., 5., 6.};
+    auto c = DotProduct(a, b);
+    ASSERT_EQ(c, 32);
+}
+
+TEST(VectorTest, UnitVector_Set1) {
+    auto a = std::array<double, 3>{5., 0., 0.};
+    auto b = UnitVector(a);
+    ASSERT_EQ(b[0], 1.);
+    ASSERT_EQ(b[1], 0.);
+    ASSERT_EQ(b[2], 0.);
+}
+
+TEST(VectorTest, UnitVector_Set2) {
+    auto a = std::array<double, 3>{3., 4., 0.};
+    auto b = UnitVector(a);
+    ASSERT_EQ(b[0], 0.6);
+    ASSERT_EQ(b[1], 0.8);
+    ASSERT_EQ(b[2], 0.);
+}
+
+TEST(VectorTest, VectorTest_UnitVector_Set3_Test) {
+    auto a = std::array<double, 3>{0., 0., 0.};
+    EXPECT_THROW(UnitVector(a), std::invalid_argument);
+}
+
 TEST(MatrixTest, AX_Matrix) {
     auto A = Create2DView<3, 3>({{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}});
     auto out = Create2DView<3, 3>({{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}});
     AX_Matrix(A, out);
-    auto tmp = kokkos_view_2D_to_vector(out);
     expect_kokkos_view_2D_equal(
         out,
         {

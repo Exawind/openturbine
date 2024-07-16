@@ -47,26 +47,6 @@ void expect_kokkos_view_2D_equal(
     }
 }
 
-std::vector<double> kokkos_view_1D_to_vector(Kokkos::View<double*> view) {
-    auto view_host = Kokkos::create_mirror(view);
-    Kokkos::deep_copy(view_host, view);
-    std::vector<double> values;
-    for (size_t i = 0; i < view_host.extent(0); ++i) {
-        values.push_back(view_host(i));
-    }
-    return values;
-}
-
-std::vector<int> kokkos_view_1D_to_vector(Kokkos::View<int*> view) {
-    auto view_host = Kokkos::create_mirror(view);
-    Kokkos::deep_copy(view_host, view);
-    std::vector<int> values;
-    for (size_t i = 0; i < view_host.extent(0); ++i) {
-        values.push_back(view_host(i));
-    }
-    return values;
-}
-
 std::vector<std::vector<double>> kokkos_view_2D_to_vector(Kokkos::View<double**> view) {
     Kokkos::View<double**> view_contiguous("view_contiguous", view.extent(0), view.extent(1));
     Kokkos::deep_copy(view_contiguous, view);

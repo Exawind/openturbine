@@ -31,12 +31,8 @@ KOKKOS_INLINE_FUNCTION double DotProduct(VectorType a, VectorType b) {
 }
 
 /// Calculate the dot product between two vector views
-constexpr double DotProduct(Array_3 a, Array_3 b) {
-    double sum = 0.;
-    for (int i = 0; i < 3; ++i) {
-        sum += a[i] * b[i];
-    }
-    return sum;
+constexpr double DotProduct(const Array_3& a, const Array_3& b) {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
 /// Calculate the cross product between two vector views

@@ -22,15 +22,15 @@ enum class ConstraintType {
 /// in some way. Constraints can be used to model fixed boundary conditions, prescribed
 /// displacements, rigid body motion, and other types of constraints.
 struct Constraint {
-    ConstraintType type;       //< Type of constraint
-    int ID;                    //< Unique identifier for constraint
-    Node base_node;            //< Base node for constraint
-    Node target_node;          //< Target node for constraint
-    Array_3 X0 = {0.};         //< reference position for prescribed BC
-    Array_3 x_axis = {0.};     //< unit vector for x axis
-    Array_3 y_axis = {0.};     //< unit vector for y axis
-    Array_3 z_axis = {0.};     //< unit vector for z axis
-    float* control = nullptr;  //< Pointer to control signal
+    ConstraintType type;    //< Type of constraint
+    int ID;                 //< Unique identifier for constraint
+    Node base_node;         //< Base node for constraint
+    Node target_node;       //< Target node for constraint
+    Array_3 X0 = {0.};      //< reference position for prescribed BC
+    Array_3 x_axis = {0.};  //< unit vector for x axis
+    Array_3 y_axis = {0.};  //< unit vector for y axis
+    Array_3 z_axis = {0.};  //< unit vector for z axis
+    float* control = NULL;  //< Pointer to control signal
 
     Constraint(
         ConstraintType constraint_type, const int id, const Node& node1, const Node& node2,
@@ -48,44 +48,45 @@ struct Constraint {
             this->X0[0] = this->target_node.x[0] - vec[0];
             this->X0[1] = this->target_node.x[1] - vec[1];
             this->X0[2] = this->target_node.x[2] - vec[2];
-        } else {
-            // Calculate initial difference in position between nodes
-            this->X0[0] = this->target_node.x[0] - this->base_node.x[0];
-            this->X0[1] = this->target_node.x[1] - this->base_node.x[1];
-            this->X0[2] = this->target_node.x[2] - this->base_node.x[2];
+            return;
+        }
 
-            // If rotation control constraint, vec is rotation axis
-            if (constraint_type == ConstraintType::kCylindrical) {
-                Array_3 x{1., 0., 0.};
-                auto x_hat = UnitVector(this->X0);
+        // Calculate initial difference in position between nodes
+        this->X0[0] = this->target_node.x[0] - this->base_node.x[0];
+        this->X0[1] = this->target_node.x[1] - this->base_node.x[1];
+        this->X0[2] = this->target_node.x[2] - this->base_node.x[2];
 
-                // Create rotation matrix which rotates x to match vector
-                auto v = CrossProduct(x, x_hat);
-                auto c = DotProduct(x_hat, x);
-                auto k = 1. / (1. + c);
-                Array_3x3 R = {
-                    {{
-                         v[0] * v[0] * k + c,
-                         v[0] * v[1] * k - v[2],
-                         v[0] * v[2] * k + v[1],
-                     },
-                     {
-                         v[1] * v[0] * k + v[2],
-                         v[1] * v[1] * k + c,
-                         v[1] * v[2] * k - v[0],
-                     },
-                     {
-                         v[2] * v[0] * k - v[1],
-                         v[2] * v[1] * k + v[0],
-                         v[2] * v[2] * k + c,
-                     }}};
+        // If rotation control constraint, vec is rotation axis
+        if (constraint_type == ConstraintType::kCylindrical) {
+            Array_3 x{1., 0., 0.};
+            auto x_hat = UnitVector(this->X0);
 
-                // Columns of rotation matrix are orthogonal unit vectors with
-                // the first column matching the target vector
-                this->x_axis = {R[0][0], R[1][0], R[2][0]};
-                this->y_axis = {R[0][1], R[1][1], R[2][1]};
-                this->z_axis = {R[0][2], R[1][2], R[2][2]};
-            }
+            // Create rotation matrix which rotates x to match vector
+            auto v = CrossProduct(x, x_hat);
+            auto c = DotProduct(x_hat, x);
+            auto k = 1. / (1. + c);
+            Array_3x3 R = {
+                {{
+                     v[0] * v[0] * k + c,
+                     v[0] * v[1] * k - v[2],
+                     v[0] * v[2] * k + v[1],
+                 },
+                 {
+                     v[1] * v[0] * k + v[2],
+                     v[1] * v[1] * k + c,
+                     v[1] * v[2] * k - v[0],
+                 },
+                 {
+                     v[2] * v[0] * k - v[1],
+                     v[2] * v[1] * k + v[0],
+                     v[2] * v[2] * k + c,
+                 }}};
+
+            // Columns of rotation matrix are orthogonal unit vectors with
+            // the first column matching the target vector
+            this->x_axis = {R[0][0], R[1][0], R[2][0]};
+            this->y_axis = {R[0][1], R[1][1], R[2][1]};
+            this->z_axis = {R[0][2], R[1][2], R[2][2]};
         }
     }
 
