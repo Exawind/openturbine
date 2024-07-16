@@ -71,6 +71,10 @@ struct Solver {
 
     std::vector<double> convergence_err;
 
+    KernelHandle system_spgemm_handle;
+    KernelHandle constraints_spgemm_handle;
+    KernelHandle system_spadd_handle;
+
     Solver(
         bool is_dynamic_solve_, int max_iter_, double h_, double rho_inf,
         std::vector<Node>& system_nodes, std::vector<Constraint> constraints_, Beams& beams_
@@ -95,7 +99,10 @@ struct Solver {
           IPIV("IPIV", num_dofs),
           R("R", num_dofs),
           x("x", num_dofs),
-          convergence_err(max_iter) {
+          convergence_err(max_iter),
+          system_spgemm_handle(),
+          constraints_spgemm_handle(),
+          system_spadd_handle() {
         if constexpr (!std::is_same_v<decltype(St)::array_layout, Kokkos::LayoutLeft>) {
             St_left = Kokkos::View<double**, Kokkos::LayoutLeft>("St_left", num_dofs, num_dofs);
         }
@@ -196,6 +203,15 @@ struct Solver {
             "B_t", B_t_num_rows, B_t_num_columns, B_t_num_non_zero, B_t_values, B_t_row_ptrs,
             B_t_indices
         );
+
+        system_spgemm_handle.create_spgemm_handle();
+        KokkosSparse::spgemm_symbolic(system_spgemm_handle, K, false, T, false, static_system_matrix);
+
+        constraints_spgemm_handle.create_spgemm_handle();
+        KokkosSparse::spgemm_symbolic(constraints_spgemm_handle, B, false, T, false, constraints_matrix);
+
+        system_spadd_handle.create_spadd_handle(true);
+        KokkosSparse::spadd_symbolic(&system_spadd_handle, K, static_system_matrix, system_matrix);
     }
 };
 

@@ -74,13 +74,8 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
     Kokkos::deep_copy(R_lambda, solver.constraints.Phi);
 
     Kokkos::fence();
-    auto constraints_spgemm_handle = Solver::KernelHandle();
-    constraints_spgemm_handle.create_spgemm_handle();
-    KokkosSparse::spgemm_symbolic(
-        constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix
-    );
     KokkosSparse::spgemm_numeric(
-        constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix
+        solver.constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix
     );
 }
 
