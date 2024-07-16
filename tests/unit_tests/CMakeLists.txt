@@ -34,7 +34,7 @@ target_link_libraries(${oturb_unit_test_exe_name} PRIVATE ${oturb_lib_name})
 # Link Kokkos to test target
 find_package(KokkosKernels REQUIRED)
 target_link_libraries(${oturb_unit_test_exe_name} PRIVATE
-KokkosKernels::kokkoskernels
+  KokkosKernels::kokkoskernels
 )
 
 # Link VTK to test target
