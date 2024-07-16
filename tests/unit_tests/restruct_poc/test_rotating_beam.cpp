@@ -6,6 +6,10 @@
 
 #include "test_utilities.hpp"
 
+#ifdef OTURB_ENABLE_VTK
+#include "vtkout.hpp"
+#endif
+
 #include "src/restruct_poc/beams/beam_element.hpp"
 #include "src/restruct_poc/beams/beam_node.hpp"
 #include "src/restruct_poc/beams/beam_section.hpp"
@@ -494,7 +498,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     );
 }
 
-TEST(RotatingBeamTest, DISABLED_CylindricalConstraint) {
+TEST(RotatingBeamTest, CylindricalConstraint) {
     auto model = Model();
 
     // Gravity vector
@@ -522,13 +526,14 @@ TEST(RotatingBeamTest, DISABLED_CylindricalConstraint) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // Add hub node and associated constraints
-    float pitch = 0.;
+    // Add hub node and ground node
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
-    auto ground_node = model.AddNode({-1., 0., -0.25, 1., 0., 0., 0.});
-    model.AddRotationControl(hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);
-    model.AddCylindricalConstraint(ground_node, hub_node);
+    auto ground_node = model.AddNode({0, 0., -1., 1., 0., 0., 0.});
+
+    // Add constraints
     model.AddFixedBC(ground_node);
+    model.AddCylindricalConstraint(ground_node, hub_node);
+    model.AddRigidConstraint(hub_node, beam_nodes[0].node);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -541,14 +546,47 @@ TEST(RotatingBeamTest, DISABLED_CylindricalConstraint) {
         is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
     );
 
-    // Perform 2 time steps and check for convergence within max_iter iterations
-    for (int i = 0; i < 2; ++i) {
-        double t = step_size * (i + 1);
-        // Set pitch
-        pitch = t * M_PI / 2.;
+#ifdef OTURB_ENABLE_VTK
+    UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
+    std::filesystem::remove_all("steps");
+    std::filesystem::create_directory("steps");
+    BeamsWriteVTK(beams, "steps/step_0000.vtu");
+#endif
+
+    // Run 10 steps
+    for (int i = 0; i < 5; ++i) {
         const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
+#ifdef OTURB_ENABLE_VTK
+        auto tmp = std::to_string(i + 1);
+        auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
+        BeamsWriteVTK(beams, file_name + ".vtu");
+#endif
     }
+
+    auto q = kokkos_view_2D_to_vector(solver.state.q);
+
+    expect_kokkos_view_2D_equal(
+        solver.state.q,
+        {{-0.00002499992806604526, 0.009999954363364278, 7.0592758596667977E-26, 0.99999687500410894,
+          8.0588517542554213E-29, 5.3983736084468692E-26, 0.0024999964033195574},
+         {-0.000039681188471502004, 0.015873544516367064, 4.8213624609892645E-14,
+          0.99999687500405054, -1.4117736696803771E-13, 4.0393896390903965E-14,
+          0.0024999964266638514},
+         {-0.000069668915568583335, 0.027869085208344892, 4.0193427070238621E-14,
+          0.99999687500401824, -4.6940123973356305E-13, 7.4011787713126742E-14,
+          0.0024999964396126765},
+         {-0.00010532153768001662, 0.0421305961297474, 9.1114041847296216E-15, 0.99999687500407363,
+          -2.4869679200969056E-13, 6.7014722734775103E-15, 0.0024999964174613749},
+         {-0.00013530744593540648, 0.054126136607669233, -5.3259699489140029E-15,
+          0.99999687500410672, 1.6008699820757778E-13, -6.0232179820024248E-14,
+          0.0024999964042487837},
+         {-0.00014999065003689889, 0.059999726696767466, 9.5097860930873942E-14, 0.9999968750041126,
+          2.113602318183918E-13, -7.958169516703918E-14, 0.0024999964018790257},
+         {0, 0, 0, 0.99999687500410894, 7.2192479817696718E-29, -2.7782381382812961E-27,
+          0.0024999964033195574},
+         {0, 0, 0, 1, 0, 0, 0}}
+    );
 }
 
 }  // namespace openturbine::restruct_poc::tests
