@@ -75,6 +75,12 @@ void TestRotation(
     expect_kokkos_view_1D_equal(v_rot, exact);
 }
 
+TEST(QuaternionTest, RotateYAxisByIdentity) {
+    auto rotation_identity = Create1DView<4>({1., 0., 0., 0.});
+    auto y_axis = Create1DView<3>({0., 1., 0.});
+    TestRotation(rotation_identity, y_axis, {0., 1., 0.});
+}
+
 TEST(QuaternionTest, RotateXAxis90DegreesAboutYAxis) {
     auto rotation_y_axis = Create1DView<4>({0.707107, 0., 0.707107, 0.});
     auto x_axis = Create1DView<3>({1., 0., 0.});
@@ -224,6 +230,41 @@ TEST(VectorTest, CrossProduct_Set2) {
     ASSERT_EQ(c[0], -5.03 * 0.37 - 2.71 * 0.09);
     ASSERT_EQ(c[1], 2.71 * 1.16 - 0.19 * 0.37);
     ASSERT_EQ(c[2], 0.19 * 0.09 - -5.03 * 1.16);
+}
+
+TEST(VectorTest, DotProduct_View) {
+    auto a = Create1DView<3>({1., 2., 3.});
+    auto b = Create1DView<3>({4., 5., 6.});
+    auto c = DotProduct(a, b);
+    ASSERT_EQ(c, 32.);
+}
+
+TEST(VectorTest, DotProduct_Array) {
+    auto a = std::array<double, 3>{1., 2., 3.};
+    auto b = std::array<double, 3>{4., 5., 6.};
+    auto c = DotProduct(a, b);
+    ASSERT_EQ(c, 32);
+}
+
+TEST(VectorTest, UnitVector_Set1) {
+    auto a = std::array<double, 3>{5., 0., 0.};
+    auto b = UnitVector(a);
+    ASSERT_EQ(b[0], 1.);
+    ASSERT_EQ(b[1], 0.);
+    ASSERT_EQ(b[2], 0.);
+}
+
+TEST(VectorTest, UnitVector_Set2) {
+    auto a = std::array<double, 3>{3., 4., 0.};
+    auto b = UnitVector(a);
+    ASSERT_EQ(b[0], 0.6);
+    ASSERT_EQ(b[1], 0.8);
+    ASSERT_EQ(b[2], 0.);
+}
+
+TEST(VectorTest, VectorTest_UnitVector_Set3_Test) {
+    auto a = std::array<double, 3>{0., 0., 0.};
+    EXPECT_THROW(UnitVector(a), std::invalid_argument);
 }
 
 inline void test_AX_Matrix() {

@@ -8,15 +8,14 @@
 #include <Kokkos_Core.hpp>
 
 #include "compute_number_of_non_zeros.hpp"
+#include "compute_number_of_non_zeros_constraints.hpp"
 #include "constraint.hpp"
 #include "constraints.hpp"
 #include "fill_unshifted_row_ptrs.hpp"
 #include "populate_sparse_indices.hpp"
-#include "populate_sparse_indices_constraints.hpp"
-#include "populate_sparse_indices_constraints_transpose.hpp"
 #include "populate_sparse_row_ptrs.hpp"
-#include "populate_sparse_row_ptrs_constraints.hpp"
-#include "populate_sparse_row_ptrs_constraints_transpose.hpp"
+#include "populate_sparse_row_ptrs_col_inds_constraints.hpp"
+#include "populate_sparse_row_ptrs_col_inds_transpose.hpp"
 #include "populate_tangent_indices.hpp"
 #include "populate_tangent_row_ptrs.hpp"
 #include "state.hpp"
@@ -161,25 +160,18 @@ struct Solver {
 
         // Initialize contraint for indexing for sparse matrices
         int B_num_non_zero = 0;
-        for (const auto& constraint : constraints_) {
-            B_num_non_zero += (constraint.base_node.ID < 0 ? 1 : 2) * 6 * 6;
-        }
+        Kokkos::parallel_reduce(
+            "ComputeNumberOfNonZeros_Constraints", this->constraints.num,
+            ComputeNumberOfNonZeros_Constraints{this->constraints.data}, B_num_non_zero
+        );
         auto B_num_rows = this->constraints.num_dofs;
         auto B_num_columns = this->num_system_dofs;
         auto B_row_ptrs = Kokkos::View<int*>("b_row_ptrs", B_num_rows + 1);
         auto B_col_ind = Kokkos::View<int*>("b_indices", B_num_non_zero);
         Kokkos::parallel_for(
-            "PopulateSparseRowPtrs_Constraints", 1,
-            PopulateSparseRowPtrs_Constraints{
-                this->constraints.num, this->constraints.data, B_row_ptrs}
+            "PopulateSparseRowPtrsColInds_Constraints", 1,
+            PopulateSparseRowPtrsColInds_Constraints{this->constraints.data, B_row_ptrs, B_col_ind}
         );
-
-        Kokkos::parallel_for(
-            "PopulateSparseIndices_Constraints", 1,
-            PopulateSparseIndices_Constraints{
-                this->constraints.num, this->constraints.data, B_col_ind}
-        );
-
         auto B_values = Kokkos::View<double*>("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);
         B = CrsMatrixType(
@@ -189,25 +181,20 @@ struct Solver {
         auto B_t_num_rows = B_num_columns;
         auto B_t_num_columns = B_num_rows;
         auto B_t_num_non_zero = B_num_non_zero;
+        auto col_count = Kokkos::View<int*>("col_count", B_num_columns);
+        auto tmp_row_ptrs = Kokkos::View<int*>("tmp_row_ptrs", B_t_num_rows + 1);
         auto B_t_row_ptrs = Kokkos::View<int*>("b_t_row_ptrs", B_t_num_rows + 1);
-        auto B_t_indices = Kokkos::View<int*>("B_t_indices", B_t_num_non_zero);
-
-        Kokkos::parallel_for(
-            "PopulateSparseRowPtrs_Constraints_Transpose", 1,
-            PopulateSparseRowPtrs_Constraints_Transpose{
-                this->constraints.num, this->num_system_nodes, this->constraints.data, B_t_row_ptrs}
-        );
-        Kokkos::parallel_for(
-            "PopulateSparseIndices_Constraints_Transpose", 1,
-            PopulateSparseIndices_Constraints_Transpose{
-                this->constraints.num, this->num_system_nodes, this->constraints.data, B_t_indices}
-        );
-
+        auto B_t_col_inds = Kokkos::View<int*>("B_t_indices", B_t_num_non_zero);
         auto B_t_values = Kokkos::View<double*>("B_t values", B_t_num_non_zero);
-        KokkosSparse::sort_crs_matrix(B_t_row_ptrs, B_t_indices, B_t_values);
+        Kokkos::parallel_for(
+            "PopulateSparseRowPtrsColInds_Transpose", 1,
+            PopulateSparseRowPtrsColInds_Transpose{
+                B_num_rows, B_num_columns, B_row_ptrs, B_col_ind, col_count, tmp_row_ptrs,
+                B_t_row_ptrs, B_t_col_inds}
+        );
         B_t = CrsMatrixType(
             "B_t", B_t_num_rows, B_t_num_columns, B_t_num_non_zero, B_t_values, B_t_row_ptrs,
-            B_t_indices
+            B_t_col_inds
         );
 
         system_spgemm_handle.create_spgemm_handle();
