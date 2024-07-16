@@ -78,7 +78,10 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
     Kokkos::fence();
     {
         auto mult_region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Matrix");
-        KokkosSparse::spgemm_numeric(solver.constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix);
+        KokkosSparse::spgemm_numeric(
+            solver.constraints_spgemm_handle, solver.B, false, solver.T, false,
+            solver.constraints_matrix
+        );
     }
 }
 
