@@ -12,8 +12,7 @@ namespace openturbine {
 
 inline void SolveSystem(Solver& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Solve System");
-    auto num_dofs = solver.num_dofs;
-
+    
     {
         auto assemble_region = Kokkos::Profiling::ScopedRegion("Assemble Full System");
         KokkosSparse::spadd_numeric(
@@ -28,7 +27,7 @@ inline void SolveSystem(Solver& solver) {
 
     auto St = solver.St;
     auto full_matrix = solver.full_matrix;
-    auto sparse_matrix_policy = Kokkos::TeamPolicy<>(num_dofs, Kokkos::AUTO());
+    auto sparse_matrix_policy = Kokkos::TeamPolicy<>(full_matrix.numRows(), Kokkos::AUTO());
     Kokkos::parallel_for(
         "Copy into St", sparse_matrix_policy,
         KOKKOS_LAMBDA(Kokkos::TeamPolicy<>::member_type member) {

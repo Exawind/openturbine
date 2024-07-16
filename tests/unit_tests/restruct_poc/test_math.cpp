@@ -226,10 +226,12 @@ TEST(VectorTest, CrossProduct_Set2) {
     ASSERT_EQ(c[2], 0.19 * 0.09 - -5.03 * 1.16);
 }
 
-TEST(MatrixTest, AX_Matrix) {
+inline void test_AX_Matrix() {
     auto A = Create2DView<3, 3>({{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}});
     auto out = Create2DView<3, 3>({{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}});
-    AX_Matrix(A, out);
+    Kokkos::parallel_for(
+        1, KOKKOS_LAMBDA(int) { AX_Matrix(A, out); }
+    );
     auto tmp = kokkos_view_2D_to_vector(out);
     expect_kokkos_view_2D_equal(
         out,
@@ -239,6 +241,10 @@ TEST(MatrixTest, AX_Matrix) {
             {-3.5, -4, 3},
         }
     );
+}
+
+TEST(MatrixTest, AX_Matrix) {
+    test_AX_Matrix();
 }
 
 }  // namespace openturbine::restruct_poc::tests

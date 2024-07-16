@@ -214,14 +214,21 @@ struct Solver {
         KokkosSparse::spgemm_symbolic(
             system_spgemm_handle, K, false, T, false, static_system_matrix
         );
+        KokkosSparse::spgemm_numeric(
+            system_spgemm_handle, K, false, T, false, static_system_matrix
+        );
 
         constraints_spgemm_handle.create_spgemm_handle();
         KokkosSparse::spgemm_symbolic(
             constraints_spgemm_handle, B, false, T, false, constraints_matrix
         );
+        KokkosSparse::spgemm_numeric(
+            constraints_spgemm_handle, B, false, T, false, constraints_matrix
+        );
 
-        system_spadd_handle.create_spadd_handle(true);
+        system_spadd_handle.create_spadd_handle(true, true);
         KokkosSparse::spadd_symbolic(&system_spadd_handle, K, static_system_matrix, system_matrix);
+        KokkosSparse::spadd_numeric(&system_spadd_handle, 1., K, 1., static_system_matrix, system_matrix);
 
         auto system_matrix_full_row_ptrs =
             Kokkos::View<int*>("system_matrix_full_row_ptrs", num_dofs + 1);
@@ -264,14 +271,20 @@ struct Solver {
             transpose_matrix_full_row_ptrs, transpose_matrix_full_indices
         );
 
-        spc_spadd_handle.create_spadd_handle(true);
+        spc_spadd_handle.create_spadd_handle(true, true);
         KokkosSparse::spadd_symbolic(
             &spc_spadd_handle, system_matrix_full, constraints_matrix_full, system_plus_constraints
         );
+        KokkosSparse::spadd_numeric(
+            &spc_spadd_handle, 1., system_matrix_full, 1., constraints_matrix_full, system_plus_constraints
+        );
 
-        full_system_spadd_handle.create_spadd_handle(true);
+        full_system_spadd_handle.create_spadd_handle(true, true);
         KokkosSparse::spadd_symbolic(
             &full_system_spadd_handle, system_plus_constraints, transpose_matrix_full, full_matrix
+        );
+        KokkosSparse::spadd_numeric(
+            &full_system_spadd_handle, 1., system_plus_constraints, 1., transpose_matrix_full, full_matrix
         );
     }
 };
