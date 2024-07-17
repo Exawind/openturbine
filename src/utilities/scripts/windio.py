@@ -35,6 +35,9 @@ class Field:
         self.type = type
         self.desc = desc
 
+    def __eq__(self, other):
+        return self.name == other.name and self.type == other.type and self.desc == other.desc
+
 
 class Struct:
     def __init__(self, name, desc=''):
@@ -68,6 +71,16 @@ def modify_name(snake_str: str) -> str:
 
     return modified
 
+def modify_variable_name(snake_str: str) -> str:
+    # remove spaces
+    modified = snake_str.replace(' ', '')
+
+    # replace forward slashes with 'DividedBy'
+    if '/' in modified:
+        modified = modified.replace('/', 'DividedBy')
+
+    return modified
+
 
 def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct_map: dict[str, Struct]) -> None:
     """
@@ -88,6 +101,27 @@ def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct
     # Mark struct as generated
     struct_schema.generated = True
 
+    # Check if the struct is already in the map
+    if s.name in struct_map:
+        print(f"Struct {s.name} already exists")
+        # Now check if the struct in the map has the same fields as the struct we are trying to build
+        same = True
+        for field in s.fields:
+            if field not in struct_map[s.name].fields:
+                # If the field is not in the struct in the map, the struct is not the same
+                same = False
+                break
+        if same:
+            # If the struct is the same, return
+            print(f"Skipping {s.name}")
+            return
+
+        # If the struct is not the same, add a suffix to the name by keeping track of the number of structs with the same name
+        i = 1
+        while f"{s.name}_{i}" in struct_map:
+            i += 1
+        s.name = f"{s.name}_{i}"
+
     # Add struct to map
     struct_map[s.name] = s
 
@@ -95,7 +129,7 @@ def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct
     for field_name, field_schema in struct_schema.properties.items():
         field = Field(
             name=modify_name(field_name),
-            name_yaml=field_name,
+            name_yaml=modify_variable_name(field_name),
             type=field_schema.type,
             desc=field_schema.description,
         )
