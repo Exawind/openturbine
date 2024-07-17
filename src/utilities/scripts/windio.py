@@ -44,9 +44,10 @@ class Struct:
         self.fields = []
 
 
-def to_pascal_case(snake_str: str) -> str:
+def modify_name(snake_str: str) -> str:
     """
-    Converts a snake_case string to PascalCase
+    Converts a snake_case string to PascalCase string.
+    Removes spaces and replaces forward slashes with 'DividedBy'
 
     Args:
         snake_str (str): The snake_case string to convert
@@ -54,10 +55,18 @@ def to_pascal_case(snake_str: str) -> str:
     Returns:
         str: The camelCase string
     """
+    # snake_case to PascalCase
     components = snake_str.split('_')
-    # return components[0] + ''.join(x.title() for x in components[1:])
-    # Convert the first letter of each component to uppercase
-    return ''.join(x.title() for x in components)
+    modified = ''.join(x.title() for x in components)
+
+    # remove spaces
+    modified = modified.replace(' ', '')
+
+    # replace forward slashes with 'DividedBy'
+    if '/' in modified:
+        modified = modified.replace('/', 'DividedBy')
+
+    return modified
 
 
 def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct_map: dict[str, Struct]) -> None:
@@ -85,7 +94,7 @@ def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct
     # Loop through properties in object schema and create fields
     for field_name, field_schema in struct_schema.properties.items():
         field = Field(
-            name=to_pascal_case(field_name),
+            name=modify_name(field_name),
             name_yaml=field_name,
             type=field_schema.type,
             desc=field_schema.description,
@@ -163,7 +172,7 @@ def build_type(field: Field, schema: Schema, definition_map: dict, struct_map: d
         raise ValueError(f"Unknown type '{schema.type} - {schema}'")
 
     # print the detected type
-    print(f"{field.name}: {field.type}")
+    #print(f"{field.name}: {field.type}")
 
 
 def main():
@@ -182,7 +191,7 @@ def main():
     struct_names = sorted(struct_map.keys())
 
     # Write structs to file
-    with open("/Users/fbhuiyan/dev/openturbine/src/utilities/scripts/structs.cpp", 'w') as file:
+    with open("/Users/fbhuiyan/dev/openturbine/src/utilities/scripts/structs_v2.cpp", 'w') as file:
         # Write includes
         file.write("#include <string>\n#include <vector>\n\n")
 
