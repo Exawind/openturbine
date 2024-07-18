@@ -8,8 +8,7 @@
 
 namespace openturbine::restruct_poc::tests {
 
-// Write a test for the Model_2 class
-TEST(Model_2, AddNode) {
+TEST(Model_2, TestModel) {
     Model_2 model;
     Array_3 pos = {0., 0., 0.};
     Array_4 rot = {1., 0., 0., 0.};
@@ -61,6 +60,18 @@ TEST(Model_2, AddNode) {
     // Get the nodes in the model and check their number
     nodes = model.GetNodes();
     ASSERT_EQ(nodes.size(), 2);
+
+    // Translate the second node to 1,0,0
+    node_1->Translate({1., 0., 0.});
+    ASSERT_EQ(node_1->x[0], 1.);
+    ASSERT_EQ(node_1->x[1], 0.);
+    ASSERT_EQ(node_1->x[2], 0.);
+
+    // Now rotate the node 90 degrees around the z-axis
+    node_1->Rotate({0., 0., 1.}, M_PI / 2.);
+    ASSERT_NEAR(node_1->x[0], 0., 1e-12);
+    ASSERT_NEAR(node_1->x[1], 1., 1e-12);
+    ASSERT_NEAR(node_1->x[2], 0., 1e-12);
 }
 
 }  // namespace openturbine::restruct_poc::tests
