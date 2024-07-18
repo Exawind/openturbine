@@ -5,7 +5,6 @@ import yaml
 Script to convert a YAML schema to C++ structs. The schema is read from the windIO schema file and the structs are written to a C++ file.
 """
 
-# type Definitions map[string]yaml.Node
 Definitions = dict[str, yaml.Node]
 
 class Schema:
@@ -77,7 +76,7 @@ def modify_variable_name(snake_str: str) -> str:
 
     # replace forward slashes with 'DividedBy'
     if '/' in modified:
-        modified = modified.replace('/', 'DividedBy')
+        modified = modified.replace('/', '_divided_by_')
 
     return modified
 
@@ -101,22 +100,35 @@ def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct
     # Mark struct as generated
     struct_schema.generated = True
 
-    # Check if the struct is already in the map
+    # Check if the struct is already in the map and create test struct to compare
     if s.name in struct_map:
         print(f"Struct {s.name} already exists")
+        # create a test field
+        s_test = Struct(s.name, s.desc)
+        for field_name, field_schema in struct_schema.properties.items():
+            test_field = Field(
+                name=modify_name(field_name),
+                name_yaml=modify_variable_name(field_name),
+                type=field_schema.type,
+                desc=field_schema.description,
+            )
+            build_type(test_field, field_schema, definition_map, struct_map)
+            s_test.fields.append(test_field)
+
         # Now check if the struct in the map has the same fields as the struct we are trying to build
         same = True
-        for field in s.fields:
+        for field in s_test.fields:
             if field not in struct_map[s.name].fields:
                 # If the field is not in the struct in the map, the struct is not the same
                 same = False
                 break
         if same:
             # If the struct is the same, return
-            print(f"Skipping {s.name}")
+            print(f"Struct {s.name} is the same, returning")
             return
 
         # If the struct is not the same, add a suffix to the name by keeping track of the number of structs with the same name
+        print(f"Struct {s.name} is not the same, adding suffix")
         i = 1
         while f"{s.name}_{i}" in struct_map:
             i += 1
@@ -241,63 +253,4 @@ def main():
             file.write("};\n\n")
 
 if __name__ == "__main__":
-    # test_get_ref()
-    # test_build_type()
     main()
-
-# def test_build_type():
-#     """
-#     Test the build_type function
-#     """
-#     # Test object
-#     field = Field('test_object', 'test_object', '', '')
-#     schema = Schema({'type': 'object', 'properties': {'a': {'type': 'string'}}})
-#     definition_map = {}
-#     struct_map = {}
-#     build_type(field, schema, definition_map, struct_map)
-#     assert field.type == 'test_object'
-#     assert 'test_object' in struct_map
-
-#     # Test string
-#     field = Field('test_string', 'test_string', '', '')
-#     schema = Schema({'type': 'string'})
-#     definition_map = {}
-#     struct_map = {}
-#     build_type(field, schema, definition_map, struct_map)
-#     assert field.type == 'std::string'
-#     assert 'test_object' not in struct_map
-
-#     # Test number
-#     field = Field('test', 'test', '', '')
-#     schema = Schema({'type': 'number'})
-#     definition_map = {}
-#     struct_map = {}
-#     build_type(field, schema, definition_map, struct_map)
-#     assert field.type == 'double'
-#     assert 'test_object' not in struct_map
-
-#     # Test integer
-#     field = Field('test', 'test', '', '')
-#     schema = Schema({'type': 'integer'})
-#     definition_map = {}
-#     struct_map = {}
-#     build_type(field, schema, definition_map, struct_map)
-#     assert field.type == 'int'
-#     assert 'test_object' not in struct_map
-
-#     # Test boolean
-#     field = Field('test', 'test', '', '')
-#     schema = Schema({'type': 'boolean'})
-#     definition_map = {}
-#     struct_map = {}
-#     build_type(field, schema, definition_map, struct_map)
-#     assert field.type == 'bool'
-#     assert 'test_object' not in struct_map
-
-#     # Test array
-#     field = Field('test', 'test', '', '')
-#     schema = Schema({'type': 'array', 'items': {'type': 'string'}})
-#     definition_map = {}
-#     struct_map = {}
-#     build_type(field, schema, definition_map, struct_map)
-#     assert field.type == 'std::vector<std::string>'
