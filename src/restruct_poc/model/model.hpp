@@ -2,6 +2,7 @@
 
 #include "node.hpp"
 
+#include "src/restruct_poc/beams/beam_element.hpp"
 #include "src/restruct_poc/solver/constraint.hpp"
 #include "src/restruct_poc/types.hpp"
 
@@ -73,6 +74,52 @@ struct Model {
 
     /// Returns the number of nodes in the model
     int NumNodes() { return this->nodes.size(); }
+};
+
+class Model_2 {
+public:
+    Model_2() = default;
+
+    // Add a constructor to initialize the model with nodes and elements
+    Model_2(
+        std::vector<std::shared_ptr<Node>> nodes,
+        std::vector<std::shared_ptr<BeamElement>> beam_elements
+    )
+        : nodes_(std::move(nodes)), beam_elements_(std::move(beam_elements)) {}
+
+    // Add a node to the model and return a shared pointer to the node
+    std::shared_ptr<Node> AddNode(
+        const Array_7& position, const Array_7& displacement = Array_7{0., 0., 0., 1., 0., 0., 0.},
+        const Array_6& velocity = Array_6{0., 0., 0., 0., 0., 0.},
+        const Array_6& acceleration = Array_6{0., 0., 0., 0., 0., 0.}
+    ) {
+        auto node =
+            std::make_shared<Node>(nodes_.size(), position, displacement, velocity, acceleration);
+        this->nodes_.push_back(std::move(node));
+        return this->nodes_.back();
+    }
+
+    // Return a node by ID
+    std::shared_ptr<Node> GetNode(int id) { return this->nodes_[id]; }
+
+    // Returns a reference to the nodes in the model
+    const std::vector<std::shared_ptr<Node>>& GetNodes() const { return this->nodes_; }
+
+    // Returns the number of nodes in the model
+    int NumNodes() { return this->nodes_.size(); }
+
+    // Add a beam element to the model and return a shared pointer to the element
+    std::shared_ptr<BeamElement> AddBeamElement(
+        std::vector<BeamNode> nodes, std::vector<BeamSection> sections, BeamQuadrature quadrature
+    ) {
+        auto element = std::make_shared<BeamElement>(nodes, sections, quadrature);
+        this->beam_elements_.push_back(std::move(element));
+        return this->beam_elements_.back();
+    }
+
+private:
+    std::vector<std::shared_ptr<Node>> nodes_;
+    std::vector<std::shared_ptr<BeamElement>> beam_elements_;
 };
 
 }  // namespace openturbine
