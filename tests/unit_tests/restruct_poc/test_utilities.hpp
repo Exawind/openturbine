@@ -24,7 +24,17 @@ void expect_kokkos_view_3D_equal(
     double epsilon = kTestTolerance
 );
 
-std::vector<double> kokkos_view_1D_to_vector(Kokkos::View<double*> view);
+template <typename T>
+std::vector<T> kokkos_view_1D_to_vector(Kokkos::View<T*> view) {
+    auto view_host = Kokkos::create_mirror(view);
+    Kokkos::deep_copy(view_host, view);
+    std::vector<T> values;
+    for (size_t i = 0; i < view_host.extent(0); ++i) {
+        values.push_back(view_host(i));
+    }
+    return values;
+}
+
 std::vector<std::vector<double>> kokkos_view_2D_to_vector(Kokkos::View<double**> view);
 
 }  // namespace openturbine::restruct_poc::tests

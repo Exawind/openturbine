@@ -12,7 +12,7 @@
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
-#include "src/restruct_poc/solver/initialize_constraints.hpp"
+#include "src/restruct_poc/model/model.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
 #include "src/restruct_poc/types.hpp"
@@ -74,34 +74,23 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
 
+    // Create model for managing nodes and constraints
+    auto model = Model();
+
     // Build vector of nodes (straight along x axis, no rotation)
-    std::vector<BeamNode> nodes;
-    std::vector<std::array<double, 7>> displacement;
-    std::vector<std::array<double, 6>> velocity;
-    std::vector<std::array<double, 6>> acceleration;
+    std::vector<BeamNode> beam_nodes;
     for (const double s : node_s) {
-        nodes.push_back(BeamNode(s, {10 * s, 0., 0., 1., 0., 0., 0.}));
-        displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
-        velocity.push_back({0., 0., 0., 0., 0., 0.});
-        acceleration.push_back({0., 0., 0., 0., 0., 0.});
+        beam_nodes.push_back(BeamNode(s, model.AddNode({10 * s, 0., 0., 1., 0., 0., 0.})));
     }
 
     // Define beam initialization
-    BeamsInput beams_input(
-        {
-            BeamElement(nodes, sections, quadrature),
-        },
-        gravity
-    );
+    BeamsInput beams_input({BeamElement(beam_nodes, sections, quadrature)}, gravity);
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // Number of system nodes from number of beam nodes
-    const size_t num_system_nodes(beams.num_nodes);
-
     // Constraint inputs
-    std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+    model.AddFixedBC(model.nodes[0]);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -111,13 +100,8 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
 
     // Create solver
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, beams, constraint_inputs,
-        displacement, velocity, acceleration
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
     );
-
-    // Initialize constraints
-    InitializeConstraints(solver, beams);
-    solver.constraints.UpdateDisplacement(0, {0, 0, 0, 1, 0, 0, 0});
 
     // First step
     Kokkos::deep_copy(
