@@ -26,31 +26,28 @@ struct Node {
         x[2] += displacement[2];
     }
 
+    /// Rotate node by a quaternion
+    void Rotate(const Array_4& q) {
+        // Rotate position
+        auto x_rot = RotateVectorByQuaternion(q, {x[0], x[1], x[2]});
+        x[0] = x_rot[0];
+        x[1] = x_rot[1];
+        x[2] = x_rot[2];
+
+        // Rotate orientation
+        auto q_rot = QuaternionCompose(q, {x[3], x[4], x[5], x[6]});
+        x[3] = q_rot[0];
+        x[4] = q_rot[1];
+        x[5] = q_rot[2];
+        x[6] = q_rot[3];
+    }
+
     /// Rotate node by a rotation axis and angle
     void Rotate(const Array_3& axis, double angle) {
         auto q = Array_4{
             cos(angle / 2.), sin(angle / 2.) * axis[0], sin(angle / 2.) * axis[1],
             sin(angle / 2.) * axis[2]};
-        auto R = QuaternionToRotationMatrix(q);
-        auto x_rot = std::array<double, 3>{};
-        for (int i = 0; i < 3; ++i) {
-            x_rot[i] = R[i][0] * x[0] + R[i][1] * x[1] + R[i][2] * x[2];
-        }
-        x[0] = x_rot[0];
-        x[1] = x_rot[1];
-        x[2] = x_rot[2];
-    }
-
-    /// Rotate node by a quaternion
-    void Rotate(const Array_4& q) {
-        auto R = QuaternionToRotationMatrix(q);
-        auto x_rot = std::array<double, 3>{};
-        for (int i = 0; i < 3; ++i) {
-            x_rot[i] = R[i][0] * x[0] + R[i][1] * x[1] + R[i][2] * x[2];
-        }
-        x[0] = x_rot[0];
-        x[1] = x_rot[1];
-        x[2] = x_rot[2];
+        Rotate(q);
     }
 };
 
