@@ -72,6 +72,18 @@ TEST(Model_2, TestModel) {
     ASSERT_NEAR(node_1->x[0], 0., 1e-12);
     ASSERT_NEAR(node_1->x[1], 1., 1e-12);
     ASSERT_NEAR(node_1->x[2], 0., 1e-12);
+
+    // Return the node to 1,0,0
+    node_1->Translate({1., -1., 0.});
+    ASSERT_NEAR(node_1->x[0], 1., 1e-12);
+    ASSERT_NEAR(node_1->x[1], 0., 1e-12);
+    ASSERT_NEAR(node_1->x[2], 0., 1e-12);
+
+    // Now rotate the second node 45 degrees around the z-axis using a quaternion
+    node_1->Rotate({0.92388, 0., 0., 0.382683});
+    ASSERT_NEAR(node_1->x[0], 0.707107, 1e-6);
+    ASSERT_NEAR(node_1->x[1], 0.707107, 1e-6);
+    ASSERT_NEAR(node_1->x[2], 0., 1e-6);
 }
 
 }  // namespace openturbine::restruct_poc::tests
