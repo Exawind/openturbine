@@ -80,14 +80,22 @@ class Model_2 {
 public:
     Model_2() = default;
 
-    // Add a constructor to initialize the model with nodes and elements
+    Model_2(std::vector<Node> nodes, std::vector<BeamElement> beam_elements) {
+        for (auto& node : nodes) {
+            this->nodes_.push_back(std::make_shared<Node>(node));
+        }
+        for (auto& element : beam_elements) {
+            this->beam_elements_.push_back(std::make_shared<BeamElement>(element));
+        }
+    }
+
     Model_2(
         std::vector<std::shared_ptr<Node>> nodes,
         std::vector<std::shared_ptr<BeamElement>> beam_elements
     )
         : nodes_(std::move(nodes)), beam_elements_(std::move(beam_elements)) {}
 
-    // Add a node to the model and return a shared pointer to the node
+    /// Add a node to the model and return a shared pointer to the node
     std::shared_ptr<Node> AddNode(
         const Array_7& position, const Array_7& displacement = Array_7{0., 0., 0., 1., 0., 0., 0.},
         const Array_6& velocity = Array_6{0., 0., 0., 0., 0., 0.},
@@ -99,16 +107,19 @@ public:
         return this->nodes_.back();
     }
 
-    // Return a node by ID
+    /// Return a node by ID - const/read-only version
+    std::shared_ptr<const Node> GetNode(int id) const { return this->nodes_[id]; }
+
+    /// Return a node by ID - non-const version
     std::shared_ptr<Node> GetNode(int id) { return this->nodes_[id]; }
 
-    // Returns a reference to the nodes in the model
+    /// Returns a reference to the nodes in the model
     const std::vector<std::shared_ptr<Node>>& GetNodes() const { return this->nodes_; }
 
-    // Returns the number of nodes in the model
-    int NumNodes() { return this->nodes_.size(); }
+    /// Returns the number of nodes in the model
+    size_t NumNodes() const { return this->nodes_.size(); }
 
-    // Add a beam element to the model and return a shared pointer to the element
+    /// Add a beam element to the model and return a shared pointer to the element
     std::shared_ptr<BeamElement> AddBeamElement(
         std::vector<BeamNode> nodes, std::vector<BeamSection> sections, BeamQuadrature quadrature
     ) {
@@ -118,8 +129,8 @@ public:
     }
 
 private:
-    std::vector<std::shared_ptr<Node>> nodes_;
-    std::vector<std::shared_ptr<BeamElement>> beam_elements_;
+    std::vector<std::shared_ptr<Node>> nodes_;                 //< Nodes in the model
+    std::vector<std::shared_ptr<BeamElement>> beam_elements_;  //< Beam elements in the model
 };
 
 }  // namespace openturbine
