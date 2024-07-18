@@ -1,19 +1,19 @@
 #include <string>
 #include <vector>
 
-// A -
+// A
 struct A {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// AirfoilPosition -
+// AirfoilPosition
 struct AirfoilPosition {
-    std::vector<double> grid;         //
-    std::vector<std::string> labels;  //
+    std::vector<double> grid;
+    std::vector<std::string> labels;
 };
 
-// Airfoils -
+// Airfoils
 struct Airfoils {
     std::string name;         // Name of the airfoil
     Coordinates coordinates;  // Airfoil coordinates described from trailing edge (x=1) along the
@@ -24,7 +24,7 @@ struct Airfoils {
     std::vector<Polars> polars;  // Different sets of polars at varying conditions
 };
 
-// AnchorTypes -
+// AnchorTypes
 struct AnchorTypes {
     std::string name;         // Name of anchor to be referenced by anchor_id in Nodes section
     std::string type;         // Type of anchor for property lookup
@@ -36,7 +36,7 @@ struct AnchorTypes {
                                // anchor can support
 };
 
-// Assembly -
+// Assembly
 struct Assembly {
     std::string turbine_class;      // IEC wind class of the wind turbine. The options are "I", "II",
                                     // "III", and 'IV'
@@ -55,36 +55,35 @@ struct Assembly {
     double lifetime;     // Turbine design lifetime in years.
 };
 
-// AxialJoints -
+// AxialJoints
 struct AxialJoints {
     std::string name;  // Unique name of joint
     double grid;       // Non-dimensional value along member axis
 };
 
-// Ballast -
+// Ballast
 struct Ballast {
     bool variable_flag;  // If true, then this ballast is variable and adjusted by control system. If
                          // false, then considered permanent
-    std::string material;      // material identifier
-    std::vector<double> grid;  //
-    double volume;             // Total volume of ballast (permanent ballast only)
+    std::string material;  // material identifier
+    std::vector<double> grid;
+    double volume;  // Total volume of ballast (permanent ballast only)
 };
 
-// BedplateWallThickness - Thickness of the hollow elliptical bedplate used in direct drive
-// configurations
+// Thickness of the hollow elliptical bedplate used in direct drive configurations
 struct BedplateWallThickness {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Blade -
+// Blade
 struct Blade {
-    OuterShapeBem outer_shape_bem;                     //
-    ElasticPropertiesMb elastic_properties_mb;         //
-    InternalStructure2DFem internal_structure_2d_fem;  //
+    OuterShapeBem outer_shape_bem;
+    ElasticPropertiesMb elastic_properties_mb;
+    InternalStructure2DFem internal_structure_2d_fem;
 };
 
-// Bos -
+// Bos
 struct Bos {
     double plant_turbine_spacing;  // Distance between turbines in the primary grid streamwise
                                    // direction in rotor diameters
@@ -108,45 +107,45 @@ struct Bos {
     double design_install_plan_cost;  // Cost to do installation planning
 };
 
-// Bulkhead -
+// Bulkhead
 struct Bulkhead {
     std::string material;  // material identifier
     Thickness
         thickness;  // thickness of the bulkhead at non-dimensional locations of the member [0..1]
 };
 
-// CD -
+// CD
 struct CD {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// CL -
+// CL
 struct CL {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// CM -
+// CM
 struct CM {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Chord -
+// Chord
 struct Chord {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Components -
+// Components
 struct Components {
-    Blade blade;        //
-    Hub hub;            //
-    Nacelle nacelle;    //
-    Tower tower;        //
-    Monopile monopile;  //
-    Jacket jacket;      //
+    Blade blade;
+    Hub hub;
+    Nacelle nacelle;
+    Tower tower;
+    Monopile monopile;
+    Jacket jacket;
     FloatingPlatform
         floating_platform;  // Ontology definition for floating platforms (substructures) suitable
                             // for use with the WEIS co-design analysis tool
@@ -154,21 +153,21 @@ struct Components {
                             // co-design analysis tool
 };
 
-// Control -
+// Control
 struct Control {
-    Supervisory supervisory;  //
-    Pitch pitch;              //
-    Torque torque;            //
+    Supervisory supervisory;
+    Pitch pitch;
+    Torque torque;
 };
 
-// Coordinates - Airfoil coordinates described from trailing edge (x=1) along the suction side (y>0)
-// to leading edge (x=0) back to trailing edge (x=1) along the pressure side (y<0)
+// Airfoil coordinates described from trailing edge (x=1) along the suction side (y>0) to leading
+// edge (x=0) back to trailing edge (x=1) along the pressure side (y<0)
 struct Coordinates {
-    std::vector<double> x;  //
-    std::vector<double> y;  //
+    std::vector<double> x;
+    std::vector<double> y;
 };
 
-// Costs -
+// Costs
 struct Costs {
     double wake_loss_factor;  // Factor to model losses in annual energy production in a wind farm
                               // compared to the annual energy production at the turbine level (wakes
@@ -216,47 +215,47 @@ struct Costs {
         benchmark_price;  // Benchmark price used to nondimensionalize value in beyond lcoe metrics
 };
 
-// CpLambdaBeam - Geometrically exact beams with simplified properties
+// Geometrically exact beams with simplified properties
 struct CpLambdaBeam {
-    ReferenceAxis reference_axis;  //
-    T11 T11;                       //
-    T22 T22;                       //
-    Ea EA;                         //
-    E11 E11;                       //
-    E22 E22;                       //
-    Gj GJ;                         //
-    XCe x_ce;                      //
-    YCe y_ce;                      //
-    Dm dm;                         //
-    DeltaTheta delta_theta;        //
-    XSh x_sh;                      //
-    YSh y_sh;                      //
-    J1 J1;                         //
-    J2 J2;                         //
-    J3 J3;                         //
-    XCg x_cg;                      //
-    YCg y_cg;                      //
+    ReferenceAxis reference_axis;
+    T11 T11;
+    T22 T22;
+    Ea EA;
+    E11 E11;
+    E22 E22;
+    Gj GJ;
+    XCe x_ce;
+    YCe y_ce;
+    Dm dm;
+    DeltaTheta delta_theta;
+    XSh x_sh;
+    YSh y_sh;
+    J1 J1;
+    J2 J2;
+    J3 J3;
+    XCg x_cg;
+    YCg y_cg;
 };
 
-// DeltaTheta -
+// DeltaTheta
 struct DeltaTheta {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Dm -
+// Dm
 struct Dm {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// DragCoefficient -
+// DragCoefficient
 struct DragCoefficient {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Drivetrain - Inputs to WISDEM specific drivetrain sizing tool, DrivetrainSE
+// Inputs to WISDEM specific drivetrain sizing tool, DrivetrainSE
 struct Drivetrain {
     double uptilt;                 // Tilt angle of the nacelle, always defined positive.
     double distance_tt_hub;        // Vertical distance between the tower top and the hub center.
@@ -317,45 +316,55 @@ struct Drivetrain {
     std::vector<int> planet_numbers;  // Number of planets for epicyclic stages (use 0 for parallel)
 };
 
-// E -
+// E
 struct E {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// E11 -
+// E11
 struct E11 {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// E22 -
+// E22
 struct E22 {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Ea -
+// Ea
 struct Ea {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// ElasticPropertiesMb -
+// ElasticPropertiesMb
 struct ElasticPropertiesMb {
-    TimoschenkoHawc timoschenko_hawc;  //
-    CpLambdaBeam cp_lambda_beam;       //
-    SixXSix six_x_six;                 //
+    TimoschenkoHawc timoschenko_hawc;
+    CpLambdaBeam cp_lambda_beam;
+    SixXSix six_x_six;
 };
 
-// EndNdArc - non-dimensional location of the point along the non-dimensional arc length
+// ElasticPropertiesMb_1
+struct ElasticPropertiesMb_1 {
+    double system_mass;  // Mass of the hub system, which includes the hub, the spinner, the blade
+                         // bearings, the pitch actuators, the cabling, ....
+    std::vector<double>
+        system_inertia;  // Inertia of the hub system, on the hub reference system, which has the x
+                         // aligned with the rotor axis, and y and z perpendicular to it.
+    std::vector<double> system_center_mass;  // Center of mass of the hub system. Work in progress.
+};
+
+// non-dimensional location of the point along the non-dimensional arc length
 struct EndNdArc {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
-    std::string fixed;           // Name of the layer to lock the edge
+    std::vector<double> grid;
+    std::vector<double> values;
+    std::string fixed;  // Name of the layer to lock the edge
 };
 
-// Environment -
+// Environment
 struct Environment {
     double gravity;               // Gravitational acceleration
     double air_density;           // Density of air.
@@ -374,160 +383,176 @@ struct Environment {
                     // of the IEC wind class
 };
 
-// FiberOrientation - orientation of the fibers
+// orientation of the fibers
 struct FiberOrientation {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// FloatingPlatform - Ontology definition for floating platforms (substructures) suitable for use
-// with the WEIS co-design analysis tool
+// Ontology definition for floating platforms (substructures) suitable for use with the WEIS
+// co-design analysis tool
 struct FloatingPlatform {
-    std::vector<Joints> joints;             //
-    std::vector<Members> members;           //
-    std::vector<RigidBodies> rigid_bodies;  //
-    double transition_piece_mass;           // Total mass of transition piece
-    double transition_piece_cost;           // Total cost of transition piece
+    std::vector<Joints> joints;
+    std::vector<Members> members;
+    std::vector<RigidBodies> rigid_bodies;
+    double transition_piece_mass;  // Total mass of transition piece
+    double transition_piece_cost;  // Total cost of transition piece
 };
 
-// G -
+// G
 struct G {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Generator -
+// Generator
 struct Generator {
     double mass_coefficient;  // When not doing a detailed generator design, use a simplified
                               // approach to generator scaling. This input allows for overriding of
                               // the regression-based scaling coefficient to obtain generator mass
-    std::string generator_type;  //
-    double B_r;                  // Words
-    double P_Fe0e;               // Words
-    double P_Fe0h;               // Words
-    double S_N;                  // Words
-    double S_Nmax;               // Words
-    double alpha_p;              // Words
-    double b_r_tau_r;            // Words
-    double b_ro;                 // Words
-    double b_s_tau_s;            // Words
-    double b_so;                 // Words
-    double cofi;                 // Words
-    double freq;                 // Words
-    double h_i;                  // Words
-    double h_sy0;                // Words
-    double h_w;                  // Words
-    double k_fes;                // Words
-    double k_fillr;              // Words
-    double k_fills;              // Words
-    double k_s;                  // Words
-    int m;                       // Words
-    double mu_0;                 // Permittivity of free space
-    double mu_r;                 // Words
-    double p;                    // Words
-    double phi;                  // Words
-    int q1;                      // Words
-    int q3;                      // Words
-    double ratio_mw2pp;          // Words
-    double resist_Cu;            // Resistivity of copper
-    double sigma;                // Maximum allowable shear stress
-    double y_tau_p;              // Words
-    double y_tau_pr;             // Words
-    double I_0;                  // Words
-    double d_r;                  // Words
-    double h_m;                  // Words
-    double h_0;                  // Words
-    double h_s;                  // Words
-    double len_s;                // Words
-    double n_r;                  // Words
-    double rad_ag;               // Words
-    double t_wr;                 // Words
-    double n_s;                  // Words
-    double b_st;                 // Words
-    double d_s;                  // Words
-    double t_ws;                 // Words
-    double rho_Copper;           // Copper density
-    double rho_Fe;               // Structural steel density
-    double rho_Fes;              // Electrical steel density
-    double rho_PM;               // Permanent magnet density
-    double C_Cu;                 // Copper cost
-    double C_Fe;                 // Structural steel cost
-    double C_Fes;                // Electrical steel cost
-    double C_PM;                 // Permanent magnet cost
+    std::string generator_type;
+    double B_r;          // Words
+    double P_Fe0e;       // Words
+    double P_Fe0h;       // Words
+    double S_N;          // Words
+    double S_Nmax;       // Words
+    double alpha_p;      // Words
+    double b_r_tau_r;    // Words
+    double b_ro;         // Words
+    double b_s_tau_s;    // Words
+    double b_so;         // Words
+    double cofi;         // Words
+    double freq;         // Words
+    double h_i;          // Words
+    double h_sy0;        // Words
+    double h_w;          // Words
+    double k_fes;        // Words
+    double k_fillr;      // Words
+    double k_fills;      // Words
+    double k_s;          // Words
+    int m;               // Words
+    double mu_0;         // Permittivity of free space
+    double mu_r;         // Words
+    double p;            // Words
+    double phi;          // Words
+    int q1;              // Words
+    int q3;              // Words
+    double ratio_mw2pp;  // Words
+    double resist_Cu;    // Resistivity of copper
+    double sigma;        // Maximum allowable shear stress
+    double y_tau_p;      // Words
+    double y_tau_pr;     // Words
+    double I_0;          // Words
+    double d_r;          // Words
+    double h_m;          // Words
+    double h_0;          // Words
+    double h_s;          // Words
+    double len_s;        // Words
+    double n_r;          // Words
+    double rad_ag;       // Words
+    double t_wr;         // Words
+    double n_s;          // Words
+    double b_st;         // Words
+    double d_s;          // Words
+    double t_ws;         // Words
+    double rho_Copper;   // Copper density
+    double rho_Fe;       // Structural steel density
+    double rho_Fes;      // Electrical steel density
+    double rho_PM;       // Permanent magnet density
+    double C_Cu;         // Copper cost
+    double C_Fe;         // Structural steel cost
+    double C_Fes;        // Electrical steel cost
+    double C_PM;         // Permanent magnet cost
 };
 
-// GeneratorRpmEfficiencyUser - User input override of generator rpm-efficiency values, with rpm as
-// grid input and eff as values input
+// User input override of generator rpm-efficiency values, with rpm as grid input and eff as values
+// input
 struct GeneratorRpmEfficiencyUser {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Gj -
+// Gj
 struct Gj {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Hub -
+// Hub
 struct Hub {
-    OuterShapeBem outer_shape_bem;              //
-    ElasticPropertiesMb elastic_properties_mb;  //
+    OuterShapeBem outer_shape_bem;
+    ElasticPropertiesMb elastic_properties_mb;
 };
 
-// IX -
+// IX
 struct IX {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// IY -
+// IY
 struct IY {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// InternalStructure -
+// InternalStructure
 struct InternalStructure {
-    double outfitting_factor;        // Scaling factor for the member mass to account for auxiliary
-                                     // structures, such as elevator, ladders, cables, platforms,
-                                     // fasteners, etc
-    std::vector<Layers> layers;      // Material layer properties
-    RingStiffeners ring_stiffeners;  //
-    LongitudinalStiffeners longitudinal_stiffeners;  //
-    Bulkhead bulkhead;                               //
+    double outfitting_factor;    // Scaling factor for the member mass to account for auxiliary
+                                 // structures, such as elevator, ladders, cables, platforms,
+                                 // fasteners, etc
+    std::vector<Layers> layers;  // Material layer properties
+    RingStiffeners ring_stiffeners;
+    LongitudinalStiffeners longitudinal_stiffeners;
+    Bulkhead bulkhead;
     std::vector<Ballast> ballast;  // Different types of permanent and/or variable ballast
 };
 
-// InternalStructure2DFem -
+// InternalStructure2DFem
 struct InternalStructure2DFem {
-    Root root;                     //
-    ReferenceAxis reference_axis;  //
-    std::vector<Webs> webs;        // ...
-    std::vector<Layers> layers;    // ...
+    Root root;
+    ReferenceAxis reference_axis;
+    std::vector<Webs> webs;      // ...
+    std::vector<Layers> layers;  // ...
     Joint joint;  // This is a spanwise joint along the blade, usually adopted to ease transportation
                   // constraints. WISDEM currently supports a single joint.
 };
 
-// J1 -
+// InternalStructure2DFem_1
+struct InternalStructure2DFem_1 {
+    double outfitting_factor;  // Scaling factor for the tower mass to account for auxiliary
+                               // structures, such as elevator, ladders, cables, platforms, etc
+    ReferenceAxis reference_axis;
+    std::vector<Layers> layers;  // ...
+};
+
+// InternalStructure2DFem_2
+struct InternalStructure2DFem_2 {
+    double outfitting_factor;  // Scaling factor for the tower mass to account for auxiliary
+                               // structures, such as elevator, ladders, cables, platforms, etc
+    ReferenceAxis reference_axis;
+    std::vector<Layers> layers;  // ...
+};
+
+// J1
 struct J1 {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// J2 -
+// J2
 struct J2 {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// J3 -
+// J3
 struct J3 {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Jacket -
+// Jacket
 struct Jacket {
     double transition_piece_mass;    // Total mass of transition piece
     double transition_piece_cost;    // Total cost of transition piece
@@ -539,16 +564,16 @@ struct Jacket {
     double r_head;         // Radius of head (top) of jacket, in meters.
     double height;         // Overall jacket height, meters.
     double leg_thickness;  // Leg thickness, meters. Constant throughout each leg.
-    std::vector<double> brace_diameters;    //
-    std::vector<double> brace_thicknesses;  //
-    std::vector<double> bay_spacing;        //
-    std::vector<double> leg_spacing;        //
-    bool x_mb;                              // Mud brace included if true.
-    double leg_diameter;                    // Leg diameter, meters. Constant throughout each leg.
+    std::vector<double> brace_diameters;
+    std::vector<double> brace_thicknesses;
+    std::vector<double> bay_spacing;
+    std::vector<double> leg_spacing;
+    bool x_mb;            // Mud brace included if true.
+    double leg_diameter;  // Leg diameter, meters. Constant throughout each leg.
 };
 
-// Joint - This is a spanwise joint along the blade, usually adopted to ease transportation
-// constraints. WISDEM currently supports a single joint.
+// This is a spanwise joint along the blade, usually adopted to ease transportation constraints.
+// WISDEM currently supports a single joint.
 struct Joint {
     double position;          // Spanwise position of the segmentation joint.
     double mass;              // Mass of the joint.
@@ -561,7 +586,7 @@ struct Joint {
         reinforcement_layer_ps;  // Layer identifier for the joint reinforcement on the pressure side
 };
 
-// Joints -
+// Joints
 struct Joints {
     std::string name;  // Unique name of the joint (node)
     std::vector<double>
@@ -575,31 +600,31 @@ struct Joints {
                           // instance, a ball joint would be Rx=Ry=Rz=False, Rxx=Ryy=Rzz=True
 };
 
-// K -
+// K
 struct K {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// KX -
+// KX
 struct KX {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// KY -
+// KY
 struct KY {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// LDividedByD -
+// LDividedByD
 struct LDividedByD {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Layers -
+// Layers
 struct Layers {
     std::string name;      // structural component identifier
     std::string material;  // material identifier
@@ -608,14 +633,22 @@ struct Layers {
     NPlies n_plies;                      // number of plies of the laminate
     FiberOrientation fiber_orientation;  // orientation of the fibers
     Width width;                         // dimensional width of the component along the arc
-    MidpointNdArc midpoint_nd_arc;       //
-    StartNdArc start_nd_arc;             //
-    EndNdArc end_nd_arc;                 //
-    Rotation rotation;                   //
-    OffsetYPa offset_y_pa;               //
+    MidpointNdArc midpoint_nd_arc;
+    StartNdArc start_nd_arc;
+    EndNdArc end_nd_arc;
+    Rotation rotation;
+    OffsetYPa offset_y_pa;
 };
 
-// LineTypes -
+// Layers_1
+struct Layers_1 {
+    std::string name;      // structural component identifier
+    std::string material;  // material identifier
+    Thickness thickness;   // Gridded values describing thickness along non-dimensional axis from
+                           // joint1 to joint2
+};
+
+// LineTypes
 struct LineTypes {
     std::string name;  // Name of material or line type to be referenced by line segments
     double diameter;   // the volume-equivalent diameter of the line – the diameter of a cylinder
@@ -635,7 +668,7 @@ struct LineTypes {
     double tangential_drag;  // tangential drag coefficient (with respect to surface area, π*d*l)
 };
 
-// Lines -
+// Lines
 struct Lines {
     std::string name;           // ID of this line
     std::string line_type;      // Reference to line type database
@@ -644,18 +677,18 @@ struct Lines {
     std::string node2;          // node id of second line connection
 };
 
-// LongitudinalStiffeners -
+// LongitudinalStiffeners
 struct LongitudinalStiffeners {
-    std::string material;     // material identifier
-    double flange_thickness;  //
-    double flange_width;      //
-    double web_height;        //
-    double web_thickness;     //
+    std::string material;  // material identifier
+    double flange_thickness;
+    double flange_width;
+    double web_height;
+    double web_thickness;
     double
         spacing;  // Spacing between stiffeners in angle (radians). Value of 0.0 means no stiffeners
 };
 
-// Materials -
+// Materials
 struct Materials {
     std::string name;         // Name of the material
     std::string description;  // Optional field describing the material
@@ -705,13 +738,13 @@ struct Materials {
     double R;     // Fatigue stress ratio
 };
 
-// Members -
+// Members
 struct Members {
-    std::string name;                      // Name of the member
-    std::string joint1;                    // Name of joint/node connection
-    std::string joint2;                    // Name of joint/node connection
-    OuterShape outer_shape;                //
-    InternalStructure internal_structure;  //
+    std::string name;    // Name of the member
+    std::string joint1;  // Name of joint/node connection
+    std::string joint2;  // Name of joint/node connection
+    OuterShape outer_shape;
+    InternalStructure internal_structure;
     std::vector<AxialJoints>
         axial_joints;  // Define joints along non-dimensional axis of this member
     double Ca;         // User-defined added mass coefficient
@@ -719,25 +752,24 @@ struct Members {
     double Cd;         // User-defined drag coefficient
 };
 
-// MidpointNdArc - non-dimensional location of the point along the non-dimensional arc length
+// non-dimensional location of the point along the non-dimensional arc length
 struct MidpointNdArc {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
-    std::string fixed;           // Name of the layer to lock the edge
+    std::vector<double> grid;
+    std::vector<double> values;
+    std::string fixed;  // Name of the layer to lock the edge
 };
 
-// Monopile -
+// Monopile
 struct Monopile {
     double transition_piece_mass;    // Total mass of transition piece
     double transition_piece_cost;    // Total cost of transition piece
     double gravity_foundation_mass;  // Total mass of gravity foundation addition onto monopile
-    OuterShape outer_shape;          //
-    ElasticPropertiesMb elastic_properties_mb;         //
-    InternalStructure2DFem internal_structure_2d_fem;  //
+    OuterShape outer_shape;
+    ElasticPropertiesMb elastic_properties_mb;
+    InternalStructure2DFem internal_structure_2d_fem;
 };
 
-// Mooring - Ontology definition for mooring systems suitable for use with the WEIS co-design
-// analysis tool
+// Ontology definition for mooring systems suitable for use with the WEIS co-design analysis tool
 struct Mooring {
     std::vector<Nodes> nodes;           // List of nodes in the mooring system
     std::vector<Lines> lines;           // List of all mooring line properties in the mooring system
@@ -745,22 +777,22 @@ struct Mooring {
     std::vector<AnchorTypes> anchor_types;  // List of anchor properties used in the system
 };
 
-// NPlies - number of plies of the laminate
+// number of plies of the laminate
 struct NPlies {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Nacelle -
+// Nacelle
 struct Nacelle {
     Drivetrain drivetrain;  // Inputs to WISDEM specific drivetrain sizing tool, DrivetrainSE
-    Generator generator;    //
+    Generator generator;
 };
 
-// Nodes -
+// Nodes
 struct Nodes {
-    std::string name;       // Name or ID of this node for use in line segment
-    std::string node_type;  //
+    std::string name;  // Name or ID of this node for use in line segment
+    std::string node_type;
     std::vector<double>
         location;  // – Coordinates x, y, and z of the connection (relative to inertial reference
                    // frame if Fixed or Connect, relative to platform reference frame if Vessel). In
@@ -768,110 +800,148 @@ struct Nodes {
                    // MoorDyn calculates the equilibrium initial position.
     std::string joint;  // For anchor positions and fairlead attachments, reference a joint name from
                         // the "joints" section or an "axial_joint" on a member
-    std::string anchor_type;    // Name of anchor type from anchor_type list
-    std::string fairlead_type;  //
-    double node_mass;           // Clump weight mass
-    double node_volume;         // Floater volume
-    double drag_area;   // Product of drag coefficient and projected area (assumed constant in all
-                        // directions) to calculate a drag force for the node
+    std::string anchor_type;  // Name of anchor type from anchor_type list
+    std::string fairlead_type;
+    double node_mass;    // Clump weight mass
+    double node_volume;  // Floater volume
+    double drag_area;    // Product of drag coefficient and projected area (assumed constant in all
+                         // directions) to calculate a drag force for the node
     double added_mass;  // Added mass coefficient used along with node volume to calculate added mass
                         // on node
 };
 
-// OffsetYPa - dimensional offset in respect to the pitch axis along the x axis, which is the chord
-// line rotated by a user-defined angle. Negative values move the midpoint towards the leading edge,
-// positive towards the trailing edge
+// dimensional offset in respect to the pitch axis along the x axis, which is the chord line rotated
+// by a user-defined angle. Negative values move the midpoint towards the leading edge, positive
+// towards the trailing edge
 struct OffsetYPa {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// OuterDiameter -
+// OuterDiameter
 struct OuterDiameter {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// OuterShape -
+// OuterShape
 struct OuterShape {
-    ReferenceAxis reference_axis;      //
-    OuterDiameter outer_diameter;      //
-    DragCoefficient drag_coefficient;  //
+    ReferenceAxis reference_axis;
+    OuterDiameter outer_diameter;
+    DragCoefficient drag_coefficient;
 };
 
-// OuterShapeBem -
+// OuterShapeBem
 struct OuterShapeBem {
-    AirfoilPosition airfoil_position;  //
-    Chord chord;                       //
-    Twist twist;                       //
-    PitchAxis pitch_axis;              //
-    TDividedByC tDividedByc;           //
-    LDividedByD LDividedByD;           //
-    CD c_d;                            //
-    StallMargin stall_margin;          //
-    ReferenceAxis reference_axis;      //
-    Rthick rthick;                     //
+    AirfoilPosition airfoil_position;
+    Chord chord;
+    Twist twist;
+    PitchAxis pitch_axis;
+    TDividedByC t_divided_by_c;
+    LDividedByD L_divided_by_D;
+    CD c_d;
+    StallMargin stall_margin;
+    ReferenceAxis reference_axis;
+    Rthick rthick;
 };
 
-// Pitch -
+// OuterShapeBem_1
+struct OuterShapeBem_1 {
+    double diameter;    // Diameter of the hub measured at the blade root positions.
+    double cone_angle;  // Rotor precone angle, defined positive for both upwind and downwind rotors.
+    double drag_coefficient;  // Equivalent drag coefficient to compute the aerodynamic forces
+                              // generated on the hub.
+};
+
+// OuterShapeBem_2
+struct OuterShapeBem_2 {
+    ReferenceAxis reference_axis;
+    OuterDiameter outer_diameter;
+    DragCoefficient drag_coefficient;
+};
+
+// OuterShape_1
+struct OuterShape_1 {
+    std::string shape;  // Specifies cross-sectional shape of the member.  If circular, then the
+                        // outer_diameter field is required.  If polygonal, then the side_lengths,
+                        // angles, and rotation fields are required
+    OuterDiameter outer_diameter;  // Gridded values describing diameter at non-dimensional axis from
+                                   // joint1 to joint2
+    std::vector<double> side_lengths1;  // Polygon side lengths at joint1
+    std::vector<double> side_lengths2;  // Polygon side lengths at joint1
+    std::vector<double> angles;  // Polygon angles with the ordering such that angle[i] is between
+                                 // side_length[i] and side_length[i+1]
+    double rotation;  // Angle between principle axes of the cross-section and the member coordinate
+                      // system.  Essentially the rotation of the member if both joints were placed
+                      // on the global x-y axis with the first side length along the z-axis
+};
+
+// Pitch
 struct Pitch {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// PitchAxis -
+// PitchAxis
 struct PitchAxis {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Polars - Lift, drag and moment coefficients expressed in terms of angles of attack
+// Pitch_1
+struct Pitch_1 {
+    double min_pitch;       // Minimum pitch angle, where the default is 0 degrees. It is used by the
+                            // ROSCO controller (https://github.com/NREL/ROSCO)
+    double max_pitch_rate;  // Maximum pitch rate of the rotor blades.
+};
+
+// Lift, drag and moment coefficients expressed in terms of angles of attack
 struct Polars {
     std::string configuration;  // Text to identify the setup for the definition of the polars
     double re;                  // Reynolds number of the polars
-    CL c_l;                     //
-    CD c_d;                     //
-    CM c_m;                     //
+    CL c_l;
+    CD c_d;
+    CM c_m;
 };
 
-// Reactions - If this joint is compliant is certain DOFs, then specify which are compliant (True) in
-// the member/element coordinate system).  If not specified, default is all entries are False
-// (completely rigid).  For instance, a ball joint would be Rx=Ry=Rz=False, Rxx=Ryy=Rzz=True
+// If this joint is compliant is certain DOFs, then specify which are compliant (True) in the
+// member/element coordinate system).  If not specified, default is all entries are False (completely
+// rigid).  For instance, a ball joint would be Rx=Ry=Rz=False, Rxx=Ryy=Rzz=True
 struct Reactions {
-    bool Rx;                    //
-    bool Ry;                    //
-    bool Rz;                    //
-    bool Rxx;                   //
-    bool Ryy;                   //
-    bool Rzz;                   //
+    bool Rx;
+    bool Ry;
+    bool Rz;
+    bool Rxx;
+    bool Ryy;
+    bool Rzz;
     std::vector<double> Euler;  // Euler angles [alpha, beta, gamma] that describe the rotation of
                                 // the Reaction coordinate system relative to the global coordinate
                                 // system α is a rotation around the z axis, β is a rotation around
                                 // the x' axis, γ is a rotation around the z" axis.
 };
 
-// ReferenceAxis - The reference system is located at blade root, with z aligned with the pitch axis,
-// x pointing towards the suction sides of the airfoils (standard prebend will be negative) and y
-// pointing to the trailing edge (standard sweep will be positive)
+// The reference system is located at blade root, with z aligned with the pitch axis, x pointing
+// towards the suction sides of the airfoils (standard prebend will be negative) and y pointing to
+// the trailing edge (standard sweep will be positive)
 struct ReferenceAxis {
-    X x;  //
-    Y y;  //
-    Z z;  //
+    X x;
+    Y y;
+    Z z;
 };
 
-// RiX -
+// RiX
 struct RiX {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// RiY -
+// RiY
 struct RiY {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// RigidBodies -
+// RigidBodies
 struct RigidBodies {
     std::string joint1;  // Name of joint/node connection
     double mass;         // Mass of this rigid body
@@ -884,116 +954,116 @@ struct RigidBodies {
     double Cd;                               // User-defined drag coefficient
 };
 
-// RingStiffeners -
+// RingStiffeners
 struct RingStiffeners {
-    std::string material;     // material identifier
-    double flange_thickness;  //
-    double flange_width;      //
-    double web_height;        //
-    double web_thickness;     //
+    std::string material;  // material identifier
+    double flange_thickness;
+    double flange_width;
+    double web_height;
+    double web_thickness;
     double spacing;  // Spacing between stiffeners in non-dimensional grid coordinates. Value of 0.0
                      // means no stiffeners
 };
 
-// Root -
+// Root
 struct Root {
     double d_f;        // Diameter of the fastener, default is M30, so 0.03 meters
     double sigma_max;  // Max stress on bolt
 };
 
-// Rotation - rotation of the chord axis around the pitch axis
+// rotation of the chord axis around the pitch axis
 struct Rotation {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
-    std::string fixed;           // Name of the layer to lock the edge
+    std::vector<double> grid;
+    std::vector<double> values;
+    std::string fixed;  // Name of the layer to lock the edge
 };
 
-// Rthick -
+// Rthick
 struct Rthick {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// SixXSix -
+// SixXSix
 struct SixXSix {
-    ReferenceAxis reference_axis;  //
-    StiffMatrix stiff_matrix;      //
+    ReferenceAxis reference_axis;
+    StiffMatrix stiff_matrix;
 };
 
-// StallMargin -
+// StallMargin
 struct StallMargin {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// StartNdArc - non-dimensional location of the point along the non-dimensional arc length
+// non-dimensional location of the point along the non-dimensional arc length
 struct StartNdArc {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
-    std::string fixed;           // Name of the layer to lock the edge
+    std::vector<double> grid;
+    std::vector<double> values;
+    std::string fixed;  // Name of the layer to lock the edge
 };
 
-// StiffMatrix -
+// StiffMatrix
 struct StiffMatrix {
-    std::vector<double> grid;                 //
-    std::vector<std::vector<double>> values;  //
+    std::vector<double> grid;
+    std::vector<std::vector<double>> values;
 };
 
-// Supervisory -
+// Supervisory
 struct Supervisory {
     double Vin;    // Cut-in wind speed of the wind turbine.
     double Vout;   // Cut-out wind speed of the wind turbine.
     double maxTS;  // Maximum allowable blade tip speed.
 };
 
-// T11 -
+// T11
 struct T11 {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// T22 -
+// T22
 struct T22 {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// TDividedByC -
+// TDividedByC
 struct TDividedByC {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Thickness - thickness of the laminate
+// thickness of the laminate
 struct Thickness {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// TimoschenkoHawc - Timoschenko beam as in HAWC2
+// Timoschenko beam as in HAWC2
 struct TimoschenkoHawc {
-    ReferenceAxis reference_axis;  //
-    A A;                           //
-    E E;                           //
-    G G;                           //
-    IX I_x;                        //
-    IY I_y;                        //
-    K K;                           //
-    Dm dm;                         //
-    KX k_x;                        //
-    KY k_y;                        //
-    Pitch pitch;                   //
-    RiX ri_x;                      //
-    RiY ri_y;                      //
-    XCg x_cg;                      //
-    XE x_e;                        //
-    XSh x_sh;                      //
-    YCg y_cg;                      //
-    YE y_e;                        //
-    YSh y_sh;                      //
+    ReferenceAxis reference_axis;
+    A A;
+    E E;
+    G G;
+    IX I_x;
+    IY I_y;
+    K K;
+    Dm dm;
+    KX k_x;
+    KY k_y;
+    Pitch pitch;
+    RiX ri_x;
+    RiY ri_y;
+    XCg x_cg;
+    XE x_e;
+    XSh x_sh;
+    YCg y_cg;
+    YE y_e;
+    YSh y_sh;
 };
 
-// Torque -
+// Torque
 struct Torque {
     double max_torque_rate;  // Maximum torque rate of the wind turbine generator.
     double tsr;  // Rated tip speed ratio of the wind turbine. As default, it is maintained constant
@@ -1004,110 +1074,110 @@ struct Torque {
                        // (https://github.com/NREL/ROSCO)
 };
 
-// Tower -
+// Tower
 struct Tower {
-    OuterShapeBem outer_shape_bem;                     //
-    ElasticPropertiesMb elastic_properties_mb;         //
-    InternalStructure2DFem internal_structure_2d_fem;  //
+    OuterShapeBem outer_shape_bem;
+    ElasticPropertiesMb elastic_properties_mb;
+    InternalStructure2DFem internal_structure_2d_fem;
 };
 
-// Turbine -
+// Turbine
 struct Turbine {
-    std::string comments;              // Description of the model
-    std::string name;                  // Name of the turbine
-    Assembly assembly;                 //
-    Components components;             //
+    std::string comments;  // Description of the model
+    std::string name;      // Name of the turbine
+    Assembly assembly;
+    Components components;
     std::vector<Airfoils> airfoils;    // Database of airfoils
     std::vector<Materials> materials;  // Database of the materials
-    Control control;                   //
-    Environment environment;           //
-    Bos bos;                           //
-    Costs costs;                       //
+    Control control;
+    Environment environment;
+    Bos bos;
+    Costs costs;
 };
 
-// Twist -
+// Twist
 struct Twist {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Webs -
+// Webs
 struct Webs {
-    std::string name;         // structural component identifier
-    StartNdArc start_nd_arc;  //
-    EndNdArc end_nd_arc;      //
-    Rotation rotation;        //
-    OffsetYPa offset_y_pa;    //
+    std::string name;  // structural component identifier
+    StartNdArc start_nd_arc;
+    EndNdArc end_nd_arc;
+    Rotation rotation;
+    OffsetYPa offset_y_pa;
 };
 
-// Width - dimensional width of the component along the arc
+// dimensional width of the component along the arc
 struct Width {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// X -
+// X
 struct X {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// XCe -
+// XCe
 struct XCe {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// XCg -
+// XCg
 struct XCg {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// XE -
+// XE
 struct XE {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// XSh -
+// XSh
 struct XSh {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Y -
+// Y
 struct Y {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// YCe -
+// YCe
 struct YCe {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// YCg -
+// YCg
 struct YCg {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// YE -
+// YE
 struct YE {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// YSh -
+// YSh
 struct YSh {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };
 
-// Z -
+// Z
 struct Z {
-    std::vector<double> grid;    //
-    std::vector<double> values;  //
+    std::vector<double> grid;
+    std::vector<double> values;
 };

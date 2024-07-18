@@ -237,19 +237,19 @@ def main():
     struct_names = sorted(struct_map.keys())
 
     # Write structs to file
-    with open("/Users/fbhuiyan/dev/openturbine/src/utilities/scripts/structs_v2.cpp", 'w') as file:
+    with open("/Users/fbhuiyan/dev/openturbine/src/utilities/scripts/windio_mapped_structs.cpp", 'w') as file:
         # Write includes
         file.write("#include <string>\n#include <vector>\n\n")
 
         # Write structs
         for struct_name in struct_names:
             s = struct_map[struct_name]
-            file.write(f"// {s.name} - {s.desc}\n")
+            file.write(f"// {s.desc}\n" if s.desc else f"// {s.name}\n")
             file.write(f"struct {s.name} {{\n") # Write struct name
 
             # Write fields
             for f in s.fields:
-                file.write(f"    {f.type} {f.name_yaml}; // {f.desc}\n") # Write field
+                file.write(f"    {f.type} {f.name_yaml};{f' // {f.desc}' if f.desc else ''}\n")
             file.write("};\n\n")
 
 if __name__ == "__main__":
