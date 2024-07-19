@@ -49,6 +49,22 @@ struct Node {
             sin(angle / 2.) * axis[2]};
         Rotate(q);
     }
+
+    // Rotate velocity by a quaternion
+    void RotateVelocity(const Array_4& q) {
+        auto v_rot = RotateVectorByQuaternion(q, {v[3], v[4], v[5]});
+        v[3] = v_rot[0];
+        v[4] = v_rot[1];
+        v[5] = v_rot[2];
+    }
+
+    // Rotate velocity by a rotation axis and angle
+    void RotateVelocity(const Array_3& axis, double angle) {
+        auto q = Array_4{
+            cos(angle / 2.), sin(angle / 2.) * axis[0], sin(angle / 2.) * axis[1],
+            sin(angle / 2.) * axis[2]};
+        RotateVelocity(q);
+    }
 };
 
 }  // namespace openturbine

@@ -84,6 +84,18 @@ TEST(Model_2, TestModel) {
     ASSERT_NEAR(node_1->x[0], 0.707107, 1e-6);
     ASSERT_NEAR(node_1->x[1], 0.707107, 1e-6);
     ASSERT_NEAR(node_1->x[2], 0., 1e-6);
+
+    // Assign a rotational velocity to the node
+    node_1->v = {0., 0., 0., 1., 0., 0.};
+    ASSERT_NEAR(node_1->v[3], 1., 1e-12);
+    ASSERT_NEAR(node_1->v[4], 0., 1e-12);
+    ASSERT_NEAR(node_1->v[5], 0., 1e-12);
+
+    // Rotate the velocity 90 degrees around the z-axis
+    node_1->RotateVelocity({0., 0., 1.}, M_PI / 2.);
+    ASSERT_NEAR(node_1->v[3], 0., 1e-12);
+    ASSERT_NEAR(node_1->v[4], 1., 1e-12);
+    ASSERT_NEAR(node_1->v[5], 0., 1e-12);
 }
 
 }  // namespace openturbine::restruct_poc::tests
