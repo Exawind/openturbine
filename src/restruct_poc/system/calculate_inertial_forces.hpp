@@ -38,9 +38,9 @@ struct CalculateInertialForces {
         auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
         auto v1 = Kokkos::Array<double, 3>{};
-        auto V1 = Kokkos::View<double[3]>(v1.data());
+        auto V1 = View_3(v1.data());
         auto m1 = Kokkos::Array<double, 9>{};
-        auto M1 = Kokkos::View<double[3][3]>(m1.data());
+        auto M1 = View_3x3(m1.data());
         auto FI = Kokkos::subview(qp_FI_, i_qp, Kokkos::ALL);
 
         auto m = Muu(0, 0);

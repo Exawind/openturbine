@@ -24,7 +24,7 @@ struct RotateSectionMatrix {
         auto Cstar = Kokkos::subview(qp_Cstar_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto Cuu = Kokkos::subview(qp_Cuu_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto ctmp_data = Kokkos::Array<double, 36>{};
-        auto Ctmp = Kokkos::View<double[6][6]>(ctmp_data.data());
+        auto Ctmp = View_6x6(ctmp_data.data());
         GemmNN::invoke(1., RR0, Cstar, 0., Ctmp);
         GemmNT::invoke(1., Ctmp, RR0, 0., Cuu);
     }

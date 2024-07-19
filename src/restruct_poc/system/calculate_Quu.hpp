@@ -26,7 +26,7 @@ struct CalculateQuu {
         auto x0pupSS = Kokkos::subview(x0pupSS_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto N_tilde = Kokkos::subview(N_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto m1 = Kokkos::Array<double, 9>{};
-        auto M1 = Kokkos::View<double[3][3]>(m1.data());
+        auto M1 = View_3x3(m1.data());
         auto Quu = Kokkos::subview(qp_Quu_, i_qp, Kokkos::ALL, Kokkos::ALL);
 
         auto C11 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));

@@ -20,7 +20,7 @@ struct CalculateRR0 {
             RR0_quaternion
         );
         auto RR0_data = Kokkos::Array<double, 9>{};
-        auto RR0 = Kokkos::View<double[3][3]>(RR0_data.data());
+        auto RR0 = View_3x3(RR0_data.data());
         QuaternionToRotationMatrix(RR0_quaternion, RR0);
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
