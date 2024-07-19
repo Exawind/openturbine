@@ -38,8 +38,10 @@ struct Solver {
     using RowPtrType = CrsMatrixType::staticcrsgraph_type::row_map_type::non_const_type;
     using IndicesType = CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
     using KernelHandle = typename KokkosKernels::Experimental::KokkosKernelsHandle<
-        RowPtrType::value_type, IndicesType::value_type, ValuesType::value_type, ExecutionSpace, MemorySpace, MemorySpace>;
-    using SpmvHandle = KokkosSparse::SPMVHandle<ExecutionSpace, CrsMatrixType, ValuesType, ValuesType>;
+        RowPtrType::value_type, IndicesType::value_type, ValuesType::value_type, ExecutionSpace,
+        MemorySpace, MemorySpace>;
+    using SpmvHandle =
+        KokkosSparse::SPMVHandle<ExecutionSpace, CrsMatrixType, ValuesType, ValuesType>;
     bool is_dynamic_solve;
     int max_iter;
     double h;
@@ -125,7 +127,8 @@ struct Solver {
         auto K_row_ptrs = RowPtrType("K_row_ptrs", K_num_rows + 1);
         auto K_col_inds = IndicesType("indices", K_num_non_zero);
         Kokkos::parallel_for(
-            "PopulateSparseRowPtrs", 1, PopulateSparseRowPtrs<RowPtrType>{beams_.elem_indices, K_row_ptrs}
+            "PopulateSparseRowPtrs", 1,
+            PopulateSparseRowPtrs<RowPtrType>{beams_.elem_indices, K_row_ptrs}
         );
         Kokkos::parallel_for(
             "PopulateSparseIndices", 1,
@@ -173,7 +176,8 @@ struct Solver {
         auto B_col_ind = IndicesType("b_indices", B_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Constraints", 1,
-            PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{this->constraints.data, B_row_ptrs, B_col_ind}
+            PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
+                this->constraints.data, B_row_ptrs, B_col_ind}
         );
         auto B_values = ValuesType("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);
@@ -220,8 +224,7 @@ struct Solver {
         KokkosSparse::spadd_symbolic(&system_spadd_handle, K, static_system_matrix, system_matrix);
         KokkosSparse::spadd_numeric(&system_spadd_handle, 1., K, 1., static_system_matrix, system_matrix);
 
-        auto system_matrix_full_row_ptrs =
-            RowPtrType("system_matrix_full_row_ptrs", num_dofs + 1);
+        auto system_matrix_full_row_ptrs = RowPtrType("system_matrix_full_row_ptrs", num_dofs + 1);
         Kokkos::parallel_for(
             "FillUnshiftedRowPtrs", num_dofs + 1,
             FillUnshiftedRowPtrs<RowPtrType>{
@@ -250,10 +253,10 @@ struct Solver {
             RowPtrType("transpose_matrix_full_row_ptrs", num_dofs + 1);
         Kokkos::parallel_for(
             "FillUnshiftedRowPtrs", num_dofs + 1,
-            FillUnshiftedRowPtrs<RowPtrType>{num_system_dofs, B_t.graph.row_map, transpose_matrix_full_row_ptrs}
+            FillUnshiftedRowPtrs<RowPtrType>{
+                num_system_dofs, B_t.graph.row_map, transpose_matrix_full_row_ptrs}
         );
-        auto transpose_matrix_full_indices =
-            IndicesType("transpose_matrix_full_indices", B_t.nnz());
+        auto transpose_matrix_full_indices = IndicesType("transpose_matrix_full_indices", B_t.nnz());
         Kokkos::deep_copy(transpose_matrix_full_indices, num_system_dofs);
         KokkosBlas::axpy(1., B_t.graph.entries, transpose_matrix_full_indices);
         transpose_matrix_full = CrsMatrixType(
@@ -279,34 +282,40 @@ struct Solver {
 
         using size_type = GlobalCrsMatrixType::global_ordinal_type;
         auto comm = Tpetra::getDefaultComm();
-        auto rowMap = std::invoke([&](){
+        auto rowMap = std::invoke([&]() {
             const auto numLocalEntries = full_matrix.numRows();
             const auto numGlobalEntries = comm->getSize() * numLocalEntries;
             const auto indexBase = size_type{0u};
-            return Teuchos::rcp(new GlobalMapType(numGlobalEntries, numLocalEntries, indexBase, comm));
+            return Teuchos::rcp(new GlobalMapType(numGlobalEntries, numLocalEntries, indexBase, comm)
+            );
         });
 
-        auto colMap = std::invoke([&](){
-            auto colInds = std::invoke([&](){
+        auto colMap = std::invoke([&]() {
+            auto colInds = std::invoke([&]() {
                 const auto numLocalEntries = full_matrix.numRows();
                 auto colInds_local = Kokkos::View<size_type*>("Column Map", numLocalEntries);
                 auto colIndsMirror = Kokkos::create_mirror(colInds_local);
-                for(int i = 0; i < numLocalEntries; ++i) {
+                for (int i = 0; i < numLocalEntries; ++i) {
                     colIndsMirror(i) = rowMap->getGlobalElement(i);
                 }
                 Kokkos::deep_copy(colInds_local, colIndsMirror);
                 return colInds_local;
             });
             const auto indexBase = size_type{0u};
-            const auto INV = Teuchos::OrdinalTraits<size_type>::invalid ();
+            const auto INV = Teuchos::OrdinalTraits<size_type>::invalid();
             return Teuchos::rcp(new GlobalMapType(INV, colInds, indexBase, comm));
         });
 
         A = Teuchos::rcp(new GlobalCrsMatrixType(rowMap, colMap, CrsMatrixType("A", full_matrix)));
-        b = Teuchos::rcp(new GlobalMultiVectorType(A->getRangeMap (), DualViewType("b", x.extent(0), 1)));
-        x_mv = Teuchos::rcp(new GlobalMultiVectorType(A->getDomainMap (), DualViewType("x", x.extent(0), 1)));
+        b = Teuchos::rcp(
+            new GlobalMultiVectorType(A->getRangeMap(), DualViewType("b", x.extent(0), 1))
+        );
+        x_mv = Teuchos::rcp(
+            new GlobalMultiVectorType(A->getDomainMap(), DualViewType("x", x.extent(0), 1))
+        );
 
-        amesos_solver = Amesos2::create<GlobalCrsMatrixType, GlobalMultiVectorType>("Basker", A, x_mv, b);
+        amesos_solver =
+            Amesos2::create<GlobalCrsMatrixType, GlobalMultiVectorType>("Basker", A, x_mv, b);
         amesos_solver->symbolicFactorization();
     }
 };

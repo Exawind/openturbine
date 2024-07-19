@@ -33,17 +33,23 @@ inline void SolveSystem(Solver& solver) {
         }
     );
 
-    KokkosBlas::axpby(-1.0, solver.R, 0.0, Kokkos::subview(solver.b->getLocalViewDevice(Tpetra::Access::OverwriteAll), Kokkos::ALL(), 0));
+    KokkosBlas::axpby(
+        -1.0, solver.R, 0.0,
+        Kokkos::subview(solver.b->getLocalViewDevice(Tpetra::Access::OverwriteAll), Kokkos::ALL(), 0)
+    );
 
     Kokkos::deep_copy(solver.A->getLocalMatrixDevice().values, solver.full_matrix.values);
-    
+
     {
         auto solve_region = Kokkos::Profiling::ScopedRegion("Linear Solve");
         solver.amesos_solver->numericFactorization();
         solver.amesos_solver->solve();
     }
 
-    Kokkos::deep_copy(solver.x, Kokkos::subview(solver.x_mv->getLocalViewDevice(Tpetra::Access::ReadOnly), Kokkos::ALL(), 0));
+    Kokkos::deep_copy(
+        solver.x,
+        Kokkos::subview(solver.x_mv->getLocalViewDevice(Tpetra::Access::ReadOnly), Kokkos::ALL(), 0)
+    );
 
     Kokkos::parallel_for(
         "UnconditionSolution", solver.num_dofs,

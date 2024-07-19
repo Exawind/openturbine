@@ -12,12 +12,12 @@ template <typename RowPtrType, typename IndicesType>
 struct PopulateSparseRowPtrsColInds_Transpose {
     const int rows;
     const int cols;
-    typename RowPtrType::const_type row_ptrs;  // rows + 1
+    typename RowPtrType::const_type row_ptrs;   // rows + 1
     typename IndicesType::const_type col_inds;  // nnz
-    IndicesType col_count;             // cols
-    RowPtrType temp_row_ptr;          // cols + 1
-    RowPtrType row_ptrs_trans;        // cols + 1
-    IndicesType col_inds_trans;        // nnz
+    IndicesType col_count;                      // cols
+    RowPtrType temp_row_ptr;                    // cols + 1
+    RowPtrType row_ptrs_trans;                  // cols + 1
+    IndicesType col_inds_trans;                 // nnz
 
     KOKKOS_FUNCTION
     void operator()(int) const {

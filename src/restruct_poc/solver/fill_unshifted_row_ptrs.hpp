@@ -9,7 +9,6 @@ struct FillUnshiftedRowPtrs {
     int num_system_dofs;
     typename RowPtrType::const_type old_row_ptrs;
     RowPtrType new_row_ptrs;
-    
 
     KOKKOS_FUNCTION
     void operator()(int i) const {
