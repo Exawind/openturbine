@@ -47,7 +47,7 @@ TEST(CopyIntoSparseMatrix, SingleEntry) {
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
 
     Kokkos::parallel_for(
-        "CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{sparse, dense}
+        "CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix<crs_matrix_type>{sparse, dense}
     );
 
     auto values_mirror = Kokkos::create_mirror(values);
@@ -104,7 +104,7 @@ TEST(CopyIntoSparseMatrix, Diagonal) {
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
 
     Kokkos::parallel_for(
-        "CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{sparse, dense}
+        "CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix<crs_matrix_type>{sparse, dense}
     );
 
     auto values_mirror = Kokkos::create_mirror(values);
@@ -164,7 +164,7 @@ TEST(CopyIntoSparseMatrix, Block) {
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
 
     Kokkos::parallel_for(
-        "CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix{sparse, dense}
+        "CopyIntoSparseMatrix", sparse_matrix_policy, CopyIntoSparseMatrix<crs_matrix_type>{sparse, dense}
     );
 
     auto values_mirror = Kokkos::create_mirror(values);

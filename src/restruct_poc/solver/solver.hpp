@@ -29,16 +29,15 @@ namespace openturbine {
 struct Solver {
     using ExecutionSpace = Kokkos::DefaultExecutionSpace;
     using MemorySpace = ExecutionSpace::memory_space;
-    using DeviceType = Kokkos::Device<ExecutionSpace, MemorySpace>;
-    using CrsMatrixType = KokkosSparse::CrsMatrix<double, int, DeviceType, void, int>;
+    using GlobalCrsMatrixType = Tpetra::CrsMatrix<>;
+    using CrsMatrixType = GlobalCrsMatrixType::local_matrix_device_type;
     using DenseMatrixType = Kokkos::View<double**, Kokkos::LayoutLeft>;
+    using ValuesType = CrsMatrixType::values_type::non_const_type;
+    using RowPtrType = CrsMatrixType::staticcrsgraph_type::row_map_type::non_const_type;
+    using IndicesType = CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
     using KernelHandle = typename KokkosKernels::Experimental::KokkosKernelsHandle<
-        int, int, double, ExecutionSpace, MemorySpace, MemorySpace>;
-    using SpmvHandle = KokkosSparse::SPMVHandle<
-        ExecutionSpace, CrsMatrixType, Kokkos::View<double*>, Kokkos::View<double*>>;
-    using ValuesType = Kokkos::View<CrsMatrixType::value_type*>;
-    using RowPtrType = Kokkos::View<CrsMatrixType::size_type*>;
-    using IndicesType = Kokkos::View<CrsMatrixType::ordinal_type*>;
+        RowPtrType::value_type, IndicesType::value_type, ValuesType::value_type, ExecutionSpace, MemorySpace, MemorySpace>;
+    using SpmvHandle = KokkosSparse::SPMVHandle<ExecutionSpace, CrsMatrixType, ValuesType, ValuesType>;
     bool is_dynamic_solve;
     int max_iter;
     double h;
@@ -125,10 +124,10 @@ struct Solver {
             "ComputeNumberOfNonZeros", beams_.num_elems,
             ComputeNumberOfNonZeros{beams_.elem_indices}, K_num_non_zero
         );
-        auto K_row_ptrs = Kokkos::View<int*>("K_row_ptrs", K_num_rows + 1);
-        auto K_col_inds = Kokkos::View<int*>("indices", K_num_non_zero);
+        auto K_row_ptrs = RowPtrType("K_row_ptrs", K_num_rows + 1);
+        auto K_col_inds = IndicesType("indices", K_num_non_zero);
         Kokkos::parallel_for(
-            "PopulateSparseRowPtrs", 1, PopulateSparseRowPtrs{beams_.elem_indices, K_row_ptrs}
+            "PopulateSparseRowPtrs", 1, PopulateSparseRowPtrs<RowPtrType>{beams_.elem_indices, K_row_ptrs}
         );
         Kokkos::parallel_for(
             "PopulateSparseIndices", 1,
@@ -136,7 +135,7 @@ struct Solver {
         );
 
         Kokkos::fence();
-        auto K_values = Kokkos::View<double*>("K values", K_num_non_zero);
+        auto K_values = ValuesType("K values", K_num_non_zero);
         K = CrsMatrixType(
             "K", K_num_rows, K_num_columns, K_num_non_zero, K_values, K_row_ptrs, K_col_inds
         );
@@ -149,7 +148,7 @@ struct Solver {
             "PopulateTangentRowPtrs", 1,
             PopulateTangentRowPtrs<CrsMatrixType::size_type>{this->num_system_nodes, T_row_ptrs}
         );
-        auto node_ids = Kokkos::View<int*>("node_ids", system_nodes.size());
+        auto node_ids = IndicesType("node_ids", system_nodes.size());
         auto host_node_ids = Kokkos::create_mirror(node_ids);
         for (auto i = 0u; i < system_nodes.size(); ++i) {
             host_node_ids(i) = system_nodes[i].ID;
@@ -172,13 +171,13 @@ struct Solver {
         );
         auto B_num_rows = this->constraints.num_dofs;
         auto B_num_columns = this->num_system_dofs;
-        auto B_row_ptrs = Kokkos::View<int*>("b_row_ptrs", B_num_rows + 1);
-        auto B_col_ind = Kokkos::View<int*>("b_indices", B_num_non_zero);
+        auto B_row_ptrs = RowPtrType("b_row_ptrs", B_num_rows + 1);
+        auto B_col_ind = IndicesType("b_indices", B_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Constraints", 1,
-            PopulateSparseRowPtrsColInds_Constraints{this->constraints.data, B_row_ptrs, B_col_ind}
+            PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{this->constraints.data, B_row_ptrs, B_col_ind}
         );
-        auto B_values = Kokkos::View<double*>("B values", B_num_non_zero);
+        auto B_values = ValuesType("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);
         B = CrsMatrixType(
             "B", B_num_rows, B_num_columns, B_num_non_zero, B_values, B_row_ptrs, B_col_ind
@@ -187,14 +186,14 @@ struct Solver {
         auto B_t_num_rows = B_num_columns;
         auto B_t_num_columns = B_num_rows;
         auto B_t_num_non_zero = B_num_non_zero;
-        auto col_count = Kokkos::View<int*>("col_count", B_num_columns);
-        auto tmp_row_ptrs = Kokkos::View<int*>("tmp_row_ptrs", B_t_num_rows + 1);
-        auto B_t_row_ptrs = Kokkos::View<int*>("b_t_row_ptrs", B_t_num_rows + 1);
-        auto B_t_col_inds = Kokkos::View<int*>("B_t_indices", B_t_num_non_zero);
-        auto B_t_values = Kokkos::View<double*>("B_t values", B_t_num_non_zero);
+        auto col_count = IndicesType("col_count", B_num_columns);
+        auto tmp_row_ptrs = RowPtrType("tmp_row_ptrs", B_t_num_rows + 1);
+        auto B_t_row_ptrs = RowPtrType("b_t_row_ptrs", B_t_num_rows + 1);
+        auto B_t_col_inds = IndicesType("B_t_indices", B_t_num_non_zero);
+        auto B_t_values = ValuesType("B_t values", B_t_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Transpose", 1,
-            PopulateSparseRowPtrsColInds_Transpose{
+            PopulateSparseRowPtrsColInds_Transpose<RowPtrType, IndicesType>{
                 B_num_rows, B_num_columns, B_row_ptrs, B_col_ind, col_count, tmp_row_ptrs,
                 B_t_row_ptrs, B_t_col_inds}
         );
@@ -224,11 +223,11 @@ struct Solver {
         KokkosSparse::spadd_numeric(&system_spadd_handle, 1., K, 1., static_system_matrix, system_matrix);
 
         auto system_matrix_full_row_ptrs =
-            Kokkos::View<int*>("system_matrix_full_row_ptrs", num_dofs + 1);
+            RowPtrType("system_matrix_full_row_ptrs", num_dofs + 1);
         Kokkos::parallel_for(
             "FillUnshiftedRowPtrs", num_dofs + 1,
-            FillUnshiftedRowPtrs{
-                system_matrix_full_row_ptrs, num_system_dofs, system_matrix.graph.row_map}
+            FillUnshiftedRowPtrs<RowPtrType>{
+                num_system_dofs, system_matrix.graph.row_map, system_matrix_full_row_ptrs}
         );
         system_matrix_full = CrsMatrixType(
             "system_matrix_full", num_dofs, num_dofs, system_matrix.nnz(), system_matrix.values,
@@ -236,7 +235,7 @@ struct Solver {
         );
 
         auto constraints_matrix_full_row_ptrs =
-            Kokkos::View<int*>("constraints_matrix_full_row_ptrs", num_dofs + 1);
+            RowPtrType("constraints_matrix_full_row_ptrs", num_dofs + 1);
         Kokkos::deep_copy(
             Kokkos::subview(
                 constraints_matrix_full_row_ptrs, Kokkos::pair(num_system_dofs, num_dofs + 1)
@@ -250,13 +249,13 @@ struct Solver {
         );
 
         auto transpose_matrix_full_row_ptrs =
-            Kokkos::View<int*>("transpose_matrix_full_row_ptrs", num_dofs + 1);
+            RowPtrType("transpose_matrix_full_row_ptrs", num_dofs + 1);
         Kokkos::parallel_for(
             "FillUnshiftedRowPtrs", num_dofs + 1,
-            FillUnshiftedRowPtrs{transpose_matrix_full_row_ptrs, num_system_dofs, B_t.graph.row_map}
+            FillUnshiftedRowPtrs<RowPtrType>{num_system_dofs, B_t.graph.row_map, transpose_matrix_full_row_ptrs}
         );
         auto transpose_matrix_full_indices =
-            Kokkos::View<int*>("transpose_matrix_full_indices", B_t.nnz());
+            IndicesType("transpose_matrix_full_indices", B_t.nnz());
         Kokkos::deep_copy(transpose_matrix_full_indices, num_system_dofs);
         KokkosBlas::axpy(1., B_t.graph.entries, transpose_matrix_full_indices);
         transpose_matrix_full = CrsMatrixType(
