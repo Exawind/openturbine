@@ -3,6 +3,7 @@
 #include <array>
 #include <vector>
 
+#include <Amesos2.hpp>
 #include <KokkosSparse.hpp>
 #include <KokkosSparse_spadd.hpp>
 #include <Kokkos_Core.hpp>
