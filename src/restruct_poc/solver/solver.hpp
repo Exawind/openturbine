@@ -30,6 +30,9 @@ struct Solver {
     using ExecutionSpace = Kokkos::DefaultExecutionSpace;
     using MemorySpace = ExecutionSpace::memory_space;
     using GlobalCrsMatrixType = Tpetra::CrsMatrix<>;
+    using GlobalMapType = GlobalCrsMatrixType::map_type;
+    using GlobalMultiVectorType = Tpetra::MultiVector<>;
+    using DualViewType = GlobalMultiVectorType::dual_view_type;
     using CrsMatrixType = GlobalCrsMatrixType::local_matrix_device_type;
     using DenseMatrixType = Kokkos::View<double**, Kokkos::LayoutLeft>;
     using ValuesType = CrsMatrixType::values_type::non_const_type;
@@ -65,6 +68,9 @@ struct Solver {
     CrsMatrixType transpose_matrix_full;
     CrsMatrixType system_plus_constraints;
     CrsMatrixType full_matrix;
+    GlobalCrsMatrixType A;
+    GlobalMultiVectorType b;
+    GlobalMultiVectorType x_mv;
     View_NxN St;       // Iteration matrix
     DenseMatrixType St_left;
     Kokkos::View<int*, Kokkos::LayoutLeft> IPIV;
@@ -100,6 +106,7 @@ struct Solver {
           constraints(constraints_, num_system_dofs),
           num_dofs(num_system_dofs + constraints.num_dofs),
           state(num_system_nodes, constraints.num_dofs, system_nodes),
+          A(Teuchos::RCP<const GlobalMapType>(), 0),
           St("St", num_dofs, num_dofs),
           IPIV("IPIV", num_dofs),
           T_dense("T dense", num_system_nodes),
@@ -278,6 +285,43 @@ struct Solver {
         KokkosSparse::spadd_numeric(
             &full_system_spadd_handle, 1., system_plus_constraints, 1., transpose_matrix_full, full_matrix
         );
+
+        using size_type = GlobalCrsMatrixType::global_ordinal_type;
+        auto comm = Tpetra::getDefaultComm();
+        auto rowMap = std::invoke([&](){
+            const auto numLocalEntries = full_matrix.numRows();
+            const auto numGlobalEntries = comm->getSize() * numLocalEntries;
+            const auto indexBase = size_type{0u};
+            return Teuchos::rcp(new GlobalMapType(numGlobalEntries, numLocalEntries, indexBase, comm));
+        });
+
+        auto colMap = std::invoke([&](){
+            auto colInds = std::invoke([&](){
+                const auto numLocalEntries = full_matrix.numRows();
+                auto colInds_local = Kokkos::View<size_type*>("Column Map", numLocalEntries);
+                auto colIndsMirror = Kokkos::create_mirror(colInds_local);
+                for(int i = 0; i < numLocalEntries; ++i) {
+                    colIndsMirror(i) = rowMap->getGlobalElement(i);
+                }
+                Kokkos::deep_copy(colInds_local, colIndsMirror);
+                return colInds_local;
+            });
+            const auto indexBase = size_type{0u};
+            const auto INV = Teuchos::OrdinalTraits<size_type>::invalid ();
+            return Teuchos::rcp(new GlobalMapType(INV, colInds, indexBase, comm));
+        });
+
+        A = GlobalCrsMatrixType(rowMap, colMap, CrsMatrixType("A", full_matrix));
+
+        auto b = std::invoke([&](){
+            auto b_lcl = DualViewType("b", x.extent(0), 1);
+            return GlobalMultiVectorType(A.getRangeMap (), b_lcl);
+        });
+
+        auto x_mv = std::invoke([&](){
+            auto x_lcl = DualViewType("x", x.extent(0), 1);
+            return GlobalMultiVectorType(A.getDomainMap (), x_lcl);
+        });
     }
 };
 
