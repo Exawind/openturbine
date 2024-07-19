@@ -1,4 +1,4 @@
-import os
+import argparse
 import yaml
 
 """
@@ -218,7 +218,12 @@ def main():
     """
     Main function to build the structs from the schema
     """
-    with open("/Users/fbhuiyan/dev/openturbine/src/utilities/scripts/IEAontology_schema.yaml", 'r') as file:
+    parser = argparse.ArgumentParser(description="Convert a YAML schema to C++ structs")
+    parser.add_argument("input_file", type=argparse.FileType('r'), help="The YAML schema file e.g. IEAontology_schema.yaml")
+    parser.add_argument("output_file", type=argparse.FileType('w'), help="The output C++ file e.g. IEAontology_structs.cpp")
+    args = parser.parse_args()
+
+    with open(args.input_file.name, 'r') as file:
         data = yaml.safe_load(file)
 
     root = Schema(data)
@@ -230,7 +235,7 @@ def main():
     struct_names = sorted(struct_map.keys())
 
     # Write structs to file
-    with open("/Users/fbhuiyan/dev/openturbine/src/utilities/scripts/windio_mapped_structs.cpp", 'w') as file:
+    with open(args.output_file.name, 'w') as file:
         # Write includes
         file.write("#include <string>\n#include <vector>\n\n")
 
