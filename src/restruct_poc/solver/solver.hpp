@@ -34,7 +34,6 @@ struct Solver {
     using GlobalMultiVectorType = Tpetra::MultiVector<>;
     using DualViewType = GlobalMultiVectorType::dual_view_type;
     using CrsMatrixType = GlobalCrsMatrixType::local_matrix_device_type;
-    using DenseMatrixType = Kokkos::View<double**, Kokkos::LayoutLeft>;
     using ValuesType = CrsMatrixType::values_type::non_const_type;
     using RowPtrType = CrsMatrixType::staticcrsgraph_type::row_map_type::non_const_type;
     using IndicesType = CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
@@ -68,12 +67,9 @@ struct Solver {
     CrsMatrixType transpose_matrix_full;
     CrsMatrixType system_plus_constraints;
     CrsMatrixType full_matrix;
-    GlobalCrsMatrixType A;
-    GlobalMultiVectorType b;
-    GlobalMultiVectorType x_mv;
-    View_NxN St;       // Iteration matrix
-    DenseMatrixType St_left;
-    Kokkos::View<int*, Kokkos::LayoutLeft> IPIV;
+    Teuchos::RCP<GlobalCrsMatrixType> A;
+    Teuchos::RCP<GlobalMultiVectorType> b;
+    Teuchos::RCP<GlobalMultiVectorType> x_mv;
     View_Nx6x6 T_dense;
     Kokkos::View<double***> matrix_terms;
     View_N R;  // System residual vector
@@ -86,6 +82,8 @@ struct Solver {
     KernelHandle system_spadd_handle;
     KernelHandle spc_spadd_handle;
     KernelHandle full_system_spadd_handle;
+
+    Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
     Solver(
         bool is_dynamic_solve_, int max_iter_, double h_, double rho_inf,
@@ -106,9 +104,6 @@ struct Solver {
           constraints(constraints_, num_system_dofs),
           num_dofs(num_system_dofs + constraints.num_dofs),
           state(num_system_nodes, constraints.num_dofs, system_nodes),
-          A(Teuchos::RCP<const GlobalMapType>(), 0),
-          St("St", num_dofs, num_dofs),
-          IPIV("IPIV", num_dofs),
           T_dense("T dense", num_system_nodes),
           matrix_terms(
               "matrix_terms", beams_.num_elems, beams_.max_elem_nodes * kLieAlgebraComponents,
@@ -120,10 +115,6 @@ struct Solver {
           system_spgemm_handle(),
           constraints_spgemm_handle(),
           system_spadd_handle() {
-        if constexpr (!std::is_same_v<decltype(St)::array_layout, Kokkos::LayoutLeft>) {
-            St_left = Kokkos::View<double**, Kokkos::LayoutLeft>("St_left", num_dofs, num_dofs);
-        }
-
         auto K_num_rows = this->num_system_dofs;
         auto K_num_columns = this->num_system_dofs;
         auto K_num_non_zero = 0;
@@ -311,17 +302,12 @@ struct Solver {
             return Teuchos::rcp(new GlobalMapType(INV, colInds, indexBase, comm));
         });
 
-        A = GlobalCrsMatrixType(rowMap, colMap, CrsMatrixType("A", full_matrix));
+        A = Teuchos::rcp(new GlobalCrsMatrixType(rowMap, colMap, CrsMatrixType("A", full_matrix)));
+        b = Teuchos::rcp(new GlobalMultiVectorType(A->getRangeMap (), DualViewType("b", x.extent(0), 1)));
+        x_mv = Teuchos::rcp(new GlobalMultiVectorType(A->getDomainMap (), DualViewType("x", x.extent(0), 1)));
 
-        auto b = std::invoke([&](){
-            auto b_lcl = DualViewType("b", x.extent(0), 1);
-            return GlobalMultiVectorType(A.getRangeMap (), b_lcl);
-        });
-
-        auto x_mv = std::invoke([&](){
-            auto x_lcl = DualViewType("x", x.extent(0), 1);
-            return GlobalMultiVectorType(A.getDomainMap (), x_lcl);
-        });
+        amesos_solver = Amesos2::create<GlobalCrsMatrixType, GlobalMultiVectorType>("Basker", A, x_mv, b);
+        amesos_solver->symbolicFactorization();
     }
 };
 
