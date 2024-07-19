@@ -21,9 +21,7 @@
 #include "update_node_state.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
-#include "src/restruct_poc/beams/interpolate_QP_acceleration.hpp"
-#include "src/restruct_poc/beams/interpolate_QP_state.hpp"
-#include "src/restruct_poc/beams/interpolate_QP_velocity.hpp"
+#include "src/restruct_poc/beams/interpolate_to_quadrature_points.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
@@ -44,55 +42,14 @@ inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
     );
 
     auto range_policy = Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO());
+
     Kokkos::parallel_for(
-        "InterpolateQpU", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPU{beams.elem_indices, beams.shape_interp, beams.node_u, beams.qp_u}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQpU_Prime", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPU_Prime{
-            beams.elem_indices, beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.qp_u_prime}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQpR", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPR{beams.elem_indices, beams.shape_interp, beams.node_u, beams.qp_r}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQpR_Prime", Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPR_Prime{
-            beams.elem_indices, beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.qp_r_prime}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQPVelocity_Translation",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPVelocity_Translation{
-            beams.elem_indices, beams.shape_interp, beams.node_u_dot, beams.qp_u_dot}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQPVelocity_Angular",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPVelocity_Angular{
-            beams.elem_indices,
-            beams.shape_interp,
-            beams.node_u_dot,
-            beams.qp_omega,
-        }
-    );
-    Kokkos::parallel_for(
-        "InterpolateQPAcceleration_Translation",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPAcceleration_Translation{
-            beams.elem_indices, beams.shape_interp, beams.node_u_ddot, beams.qp_u_ddot}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQPAcceleration_Angular",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPAcceleration_Angular{
-            beams.elem_indices,
-            beams.shape_interp,
-            beams.node_u_ddot,
-            beams.qp_omega_dot,
-        }
+        "InterpolateToQuadraturePoints", range_policy,
+        InterpolateToQuadraturePoints{
+            beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
+            beams.node_u, beams.node_u_dot, beams.node_u_ddot, beams.qp_u, beams.qp_u_prime,
+            beams.qp_r, beams.qp_r_prime, beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot,
+            beams.qp_omega_dot}
     );
 
     Kokkos::parallel_for(
