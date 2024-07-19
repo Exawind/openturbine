@@ -102,7 +102,6 @@ def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct
 
     # Check if the struct is already in the map and create test struct to compare
     if s.name in struct_map:
-        print(f"Struct {s.name} already exists")
         # create a test field
         s_test = Struct(s.name, s.desc)
         for field_name, field_schema in struct_schema.properties.items():
@@ -123,12 +122,9 @@ def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct
                 same = False
                 break
         if same:
-            # If the struct is the same, return
-            print(f"Struct {s.name} is the same, returning")
             return
 
         # If the struct is not the same, add a suffix to the name by keeping track of the number of structs with the same name
-        print(f"Struct {s.name} is not the same, adding suffix")
         i = 1
         while f"{s.name}_{i}" in struct_map:
             i += 1
@@ -216,9 +212,6 @@ def build_type(field: Field, schema: Schema, definition_map: dict, struct_map: d
         field.type = f"std::vector<{field.type}>"
     else:
         raise ValueError(f"Unknown type '{schema.type} - {schema}'")
-
-    # print the detected type
-    #print(f"{field.name}: {field.type}")
 
 
 def main():
