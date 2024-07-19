@@ -65,10 +65,11 @@ struct Solver {
     CrsMatrixType transpose_matrix_full;
     CrsMatrixType system_plus_constraints;
     CrsMatrixType full_matrix;
-    View_NxN K_dense;  // Stiffness matrix
     View_NxN St;       // Iteration matrix
     DenseMatrixType St_left;
     Kokkos::View<int*, Kokkos::LayoutLeft> IPIV;
+    View_Nx6x6 T_dense;
+    Kokkos::View<double***> matrix_terms;
     View_N R;  // System residual vector
     View_N x;  // System solution vector
 
@@ -99,9 +100,13 @@ struct Solver {
           constraints(constraints_, num_system_dofs),
           num_dofs(num_system_dofs + constraints.num_dofs),
           state(num_system_nodes, constraints.num_dofs, system_nodes),
-          K_dense("K dense", num_system_dofs, num_system_dofs),
           St("St", num_dofs, num_dofs),
           IPIV("IPIV", num_dofs),
+          T_dense("T dense", num_system_nodes),
+          matrix_terms(
+              "matrix_terms", beams_.num_elems, beams_.max_elem_nodes * kLieAlgebraComponents,
+              beams_.max_elem_nodes * kLieAlgebraComponents
+          ),
           R("R", num_dofs),
           x("x", num_dofs),
           convergence_err(max_iter),
