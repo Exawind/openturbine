@@ -11,6 +11,7 @@
 #include "compute_number_of_non_zeros_constraints.hpp"
 #include "constraint.hpp"
 #include "constraints.hpp"
+#include "fill_unshifted_row_ptrs.hpp"
 #include "populate_sparse_indices.hpp"
 #include "populate_sparse_row_ptrs.hpp"
 #include "populate_sparse_row_ptrs_col_inds_constraints.hpp"
@@ -59,16 +60,26 @@ struct Solver {
     CrsMatrixType static_system_matrix;
     CrsMatrixType system_matrix;
     CrsMatrixType constraints_matrix;
+    CrsMatrixType system_matrix_full;
+    CrsMatrixType constraints_matrix_full;
+    CrsMatrixType transpose_matrix_full;
     CrsMatrixType system_plus_constraints;
     CrsMatrixType full_matrix;
-    View_NxN K_dense;  // Stiffness matrix
     View_NxN St;       // Iteration matrix
     DenseMatrixType St_left;
     Kokkos::View<int*, Kokkos::LayoutLeft> IPIV;
+    View_Nx6x6 T_dense;
+    Kokkos::View<double***> matrix_terms;
     View_N R;  // System residual vector
     View_N x;  // System solution vector
 
     std::vector<double> convergence_err;
+
+    KernelHandle system_spgemm_handle;
+    KernelHandle constraints_spgemm_handle;
+    KernelHandle system_spadd_handle;
+    KernelHandle spc_spadd_handle;
+    KernelHandle full_system_spadd_handle;
 
     Solver(
         bool is_dynamic_solve_, int max_iter_, double h_, double rho_inf,
@@ -89,12 +100,19 @@ struct Solver {
           constraints(constraints_, num_system_dofs),
           num_dofs(num_system_dofs + constraints.num_dofs),
           state(num_system_nodes, constraints.num_dofs, system_nodes),
-          K_dense("K dense", num_system_dofs, num_system_dofs),
           St("St", num_dofs, num_dofs),
           IPIV("IPIV", num_dofs),
+          T_dense("T dense", num_system_nodes),
+          matrix_terms(
+              "matrix_terms", beams_.num_elems, beams_.max_elem_nodes * kLieAlgebraComponents,
+              beams_.max_elem_nodes * kLieAlgebraComponents
+          ),
           R("R", num_dofs),
           x("x", num_dofs),
-          convergence_err(max_iter) {
+          convergence_err(max_iter),
+          system_spgemm_handle(),
+          constraints_spgemm_handle(),
+          system_spadd_handle() {
         if constexpr (!std::is_same_v<decltype(St)::array_layout, Kokkos::LayoutLeft>) {
             St_left = Kokkos::View<double**, Kokkos::LayoutLeft>("St_left", num_dofs, num_dofs);
         }
@@ -182,6 +200,83 @@ struct Solver {
         B_t = CrsMatrixType(
             "B_t", B_t_num_rows, B_t_num_columns, B_t_num_non_zero, B_t_values, B_t_row_ptrs,
             B_t_col_inds
+        );
+
+        system_spgemm_handle.create_spgemm_handle();
+        KokkosSparse::spgemm_symbolic(
+            system_spgemm_handle, K, false, T, false, static_system_matrix
+        );
+        KokkosSparse::spgemm_numeric(
+            system_spgemm_handle, K, false, T, false, static_system_matrix
+        );
+
+        constraints_spgemm_handle.create_spgemm_handle();
+        KokkosSparse::spgemm_symbolic(
+            constraints_spgemm_handle, B, false, T, false, constraints_matrix
+        );
+        KokkosSparse::spgemm_numeric(
+            constraints_spgemm_handle, B, false, T, false, constraints_matrix
+        );
+
+        system_spadd_handle.create_spadd_handle(true, true);
+        KokkosSparse::spadd_symbolic(&system_spadd_handle, K, static_system_matrix, system_matrix);
+        KokkosSparse::spadd_numeric(&system_spadd_handle, 1., K, 1., static_system_matrix, system_matrix);
+
+        auto system_matrix_full_row_ptrs =
+            Kokkos::View<int*>("system_matrix_full_row_ptrs", num_dofs + 1);
+        Kokkos::parallel_for(
+            "FillUnshiftedRowPtrs", num_dofs + 1,
+            FillUnshiftedRowPtrs{
+                system_matrix_full_row_ptrs, num_system_dofs, system_matrix.graph.row_map}
+        );
+        system_matrix_full = CrsMatrixType(
+            "system_matrix_full", num_dofs, num_dofs, system_matrix.nnz(), system_matrix.values,
+            system_matrix_full_row_ptrs, system_matrix.graph.entries
+        );
+
+        auto constraints_matrix_full_row_ptrs =
+            Kokkos::View<int*>("constraints_matrix_full_row_ptrs", num_dofs + 1);
+        Kokkos::deep_copy(
+            Kokkos::subview(
+                constraints_matrix_full_row_ptrs, Kokkos::pair(num_system_dofs, num_dofs + 1)
+            ),
+            constraints_matrix.graph.row_map
+        );
+        constraints_matrix_full = CrsMatrixType(
+            "constraints_matrix_full", num_dofs, num_dofs, constraints_matrix.nnz(),
+            constraints_matrix.values, constraints_matrix_full_row_ptrs,
+            constraints_matrix.graph.entries
+        );
+
+        auto transpose_matrix_full_row_ptrs =
+            Kokkos::View<int*>("transpose_matrix_full_row_ptrs", num_dofs + 1);
+        Kokkos::parallel_for(
+            "FillUnshiftedRowPtrs", num_dofs + 1,
+            FillUnshiftedRowPtrs{transpose_matrix_full_row_ptrs, num_system_dofs, B_t.graph.row_map}
+        );
+        auto transpose_matrix_full_indices =
+            Kokkos::View<int*>("transpose_matrix_full_indices", B_t.nnz());
+        Kokkos::deep_copy(transpose_matrix_full_indices, num_system_dofs);
+        KokkosBlas::axpy(1., B_t.graph.entries, transpose_matrix_full_indices);
+        transpose_matrix_full = CrsMatrixType(
+            "transpose_matrix_full", num_dofs, num_dofs, B_t.nnz(), B_t.values,
+            transpose_matrix_full_row_ptrs, transpose_matrix_full_indices
+        );
+
+        spc_spadd_handle.create_spadd_handle(true, true);
+        KokkosSparse::spadd_symbolic(
+            &spc_spadd_handle, system_matrix_full, constraints_matrix_full, system_plus_constraints
+        );
+        KokkosSparse::spadd_numeric(
+            &spc_spadd_handle, 1., system_matrix_full, 1., constraints_matrix_full, system_plus_constraints
+        );
+
+        full_system_spadd_handle.create_spadd_handle(true, true);
+        KokkosSparse::spadd_symbolic(
+            &full_system_spadd_handle, system_plus_constraints, transpose_matrix_full, full_matrix
+        );
+        KokkosSparse::spadd_numeric(
+            &full_system_spadd_handle, 1., system_plus_constraints, 1., transpose_matrix_full, full_matrix
         );
     }
 };
