@@ -4,6 +4,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "src/restruct_poc/types.hpp"
+
 namespace openturbine {
 
 /// Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result

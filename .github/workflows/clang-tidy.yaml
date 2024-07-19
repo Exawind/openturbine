@@ -1,0 +1,46 @@
+name: OpenTurbine-CI
+
+on: push
+
+jobs:
+  ClangTidy:
+    runs-on: ubuntu-latest
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: 1
+    strategy:
+      fail-fast: false
+    steps:
+    - name: Cache install Trilinos
+      id: cache-trilinos
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/spack
+        key: linux-spack
+    - name: Install Trilinos
+      if: steps.cache-trilinos.outputs.cache-hit != 'true'
+      run: |
+        git clone https://github.com/spack/spack.git
+        source spack/share/spack/setup-env.sh
+        spack compiler find
+        spack external find
+        spack install googletest
+        spack install trilinos@master~mpi~epetra+basker
+    - name: Clone
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+        path: openturbine
+    - name: Run Clang-Tidy
+      run: |
+        source spack/share/spack/setup-env.sh
+        spack load trilinos
+        spack load googletest
+        cd openturbine
+        mkdir build-clangtidy
+        cd build-clangtidy
+        cmake .. \
+          -DOTURB_ENABLE_TESTS:BOOL=ON \
+          -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_CLANG_TIDY="clang-tidy"
+        cmake --build .
