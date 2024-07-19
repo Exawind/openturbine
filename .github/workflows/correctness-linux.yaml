@@ -3,7 +3,7 @@ name: OpenTurbine-CI
 on: push
 
 jobs:
-  CTest:
+  Correctness-Linux:
     runs-on: ubuntu-latest
     env:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
