@@ -38,7 +38,7 @@ struct PopulateSparseRowPtrsColInds_Transpose {
         }
 
         for (int i = 0; i < rows; ++i) {
-            for (int j = row_ptrs(i); j < row_ptrs(i + 1); ++j) {
+            for (auto j = row_ptrs(i); j < row_ptrs(i + 1); ++j) {
                 int col = col_inds(j);
                 int dest_pos = temp_row_ptr(col)++;
                 col_inds_trans(dest_pos) = i;
