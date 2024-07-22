@@ -12,7 +12,7 @@ namespace openturbine {
 
 inline void SolveSystem(Solver& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Solve System");
-    
+
     {
         auto assemble_region = Kokkos::Profiling::ScopedRegion("Assemble Full System");
         KokkosSparse::spadd_numeric(

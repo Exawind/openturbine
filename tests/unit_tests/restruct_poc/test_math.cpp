@@ -232,11 +232,18 @@ TEST(VectorTest, CrossProduct_Set2) {
     ASSERT_EQ(c[2], 0.19 * 0.09 - -5.03 * 1.16);
 }
 
-TEST(VectorTest, DotProduct_View) {
+void test_DotProduct_View() {
     auto a = Create1DView<3>({1., 2., 3.});
     auto b = Create1DView<3>({4., 5., 6.});
-    auto c = DotProduct(a, b);
+    auto c = double{};
+    Kokkos::parallel_reduce(
+        "DotProduct_View", 1, KOKKOS_LAMBDA(int, double& result) { result = DotProduct(a, b); }, c
+    );
     ASSERT_EQ(c, 32.);
+}
+
+TEST(VectorTest, DotProduct_View) {
+    test_DotProduct_View();
 }
 
 TEST(VectorTest, DotProduct_Array) {
