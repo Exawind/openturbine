@@ -6,12 +6,14 @@
 namespace openturbine {
 
 struct Node {
-    int ID;      // Node identifier
-    Array_7 x;   // Node positions and orientations
-    Array_7 u;   // Node displacement
-    Array_6 v;   // Node velocity
-    Array_6 vd;  // Node acceleration
+    int ID;      //< Node identifier
+    Array_7 x;   //< Node positions and orientations
+    Array_7 u;   //< Node displacement
+    Array_6 v;   //< Node velocity
+    Array_6 vd;  //< Node acceleration
 
+    /// @brief Construct a node with an ID, position, displacement, velocity, and acceleration
+    /// vectors
     Node(
         int id, Array_7 position, Array_7 displacement = Array_7{0., 0., 0., 1., 0., 0., 0.},
         Array_6 velocity = Array_6{0., 0., 0., 0., 0., 0.},
