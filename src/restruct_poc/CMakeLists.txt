@@ -1,3 +1,1 @@
-target_sources(${oturb_lib_name}
-    PRIVATE
-)
+target_sources(${oturb_lib_name} PRIVATE)
