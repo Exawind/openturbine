@@ -9,6 +9,9 @@
 namespace openturbine {
 
 struct CalculateForceFD {
+    using Transpose = KokkosBlas::Trans::Transpose;
+    using Default = KokkosBlas::Algo::Gemv::Default;
+    using Gemv = KokkosBlas::SerialGemv<Transpose, Default>;
     View_Nx3x3::const_type x0pupSS_;
     View_Nx6::const_type qp_FC_;
     View_Nx6 qp_FD_;
@@ -23,8 +26,7 @@ struct CalculateForceFD {
         for (int i = 0; i < FD.extent_int(0); ++i) {
             FD(i) = 0.;
         }
-        KokkosBlas::SerialGemv<KokkosBlas::Trans::Transpose, KokkosBlas::Algo::Gemv::Default>::
-            invoke(1., x0pupSS, N, 0., Kokkos::subview(FD, Kokkos::make_pair(3, 6)));
+        Gemv::invoke(1., x0pupSS, N, 0., Kokkos::subview(FD, Kokkos::make_pair(3, 6)));
     }
 };
 

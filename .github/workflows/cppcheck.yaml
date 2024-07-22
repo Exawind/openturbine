@@ -1,0 +1,48 @@
+name: OpenTurbine-CI
+
+on: push
+
+jobs:
+  CppCheck:
+    runs-on: ubuntu-latest
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: 1
+      CXX: clang++
+    strategy:
+      fail-fast: false
+    steps:
+    - name: Cache install Trilinos
+      id: cache-trilinos
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/spack
+        key: linux-spack
+    - name: Install Trilinos
+      if: steps.cache-trilinos.outputs.cache-hit != 'true'
+      run: |
+        git clone https://github.com/spack/spack.git
+        source spack/share/spack/setup-env.sh
+        spack compiler find
+        spack external find
+        spack install googletest
+        spack install trilinos@master~mpi~epetra+basker
+    - name: Clone
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+        path: openturbine
+    - name: Run CppCheck
+      run: |
+        source spack/share/spack/setup-env.sh
+        spack load trilinos
+        spack load googletest
+        sudo apt-get install cppcheck
+        cd openturbine
+        mkdir build-cppcheck
+        cd build-cppcheck
+        cmake .. \
+          -DOTURB_ENABLE_TESTS:BOOL=ON \
+          -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_CPPCHECK="cppcheck;--enable=all;--error-exitcode=0;--suppress=missingInclude;--library=googletest"
+        cmake --build .
