@@ -37,6 +37,9 @@ struct Solver {
     using ValuesType = CrsMatrixType::values_type::non_const_type;
     using RowPtrType = CrsMatrixType::staticcrsgraph_type::row_map_type::non_const_type;
     using IndicesType = CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
+    using ScalarType = GlobalCrsMatrixType::scalar_type;
+    using LocalOrdinalType = GlobalCrsMatrixType::local_ordinal_type;
+    using GlobalOrdinalType = GlobalCrsMatrixType::global_ordinal_type;
     using KernelHandle = typename KokkosKernels::Experimental::KokkosKernelsHandle<
         RowPtrType::value_type, IndicesType::value_type, ValuesType::value_type, ExecutionSpace,
         MemorySpace, MemorySpace>;
@@ -280,39 +283,15 @@ struct Solver {
             &full_system_spadd_handle, 1., system_plus_constraints, 1., transpose_matrix_full, full_matrix
         );
 
-        using size_type = GlobalCrsMatrixType::global_ordinal_type;
-        auto comm = Tpetra::getDefaultComm();
-        auto rowMap = std::invoke([&]() {
-            const auto numLocalEntries = full_matrix.numRows();
-            const auto numGlobalEntries = comm->getSize() * numLocalEntries;
-            const auto indexBase = size_type{0u};
-            return Teuchos::rcp(new GlobalMapType(numGlobalEntries, numLocalEntries, indexBase, comm)
-            );
-        });
-
-        auto colMap = std::invoke([&]() {
-            auto colInds = std::invoke([&]() {
-                const auto numLocalEntries = full_matrix.numRows();
-                auto colInds_local = Kokkos::View<size_type*>("Column Map", numLocalEntries);
-                auto colIndsMirror = Kokkos::create_mirror(colInds_local);
-                for (int i = 0; i < numLocalEntries; ++i) {
-                    colIndsMirror(i) = rowMap->getGlobalElement(i);
-                }
-                Kokkos::deep_copy(colInds_local, colIndsMirror);
-                return colInds_local;
-            });
-            const auto indexBase = size_type{0u};
-            const auto INV = Teuchos::OrdinalTraits<size_type>::invalid();
-            return Teuchos::rcp(new GlobalMapType(INV, colInds, indexBase, comm));
-        });
+        auto comm = Teuchos::createSerialComm<LocalOrdinalType>();
+        auto rowMap =
+            Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(full_matrix.numRows(), comm);
+        auto colMap =
+            Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(full_matrix.numCols(), comm);
 
         A = Teuchos::rcp(new GlobalCrsMatrixType(rowMap, colMap, CrsMatrixType("A", full_matrix)));
-        b = Teuchos::rcp(
-            new GlobalMultiVectorType(A->getRangeMap(), DualViewType("b", x.extent(0), 1))
-        );
-        x_mv = Teuchos::rcp(
-            new GlobalMultiVectorType(A->getDomainMap(), DualViewType("x", x.extent(0), 1))
-        );
+        b = Tpetra::createMultiVector<ScalarType>(A->getRangeMap(), 1);
+        x_mv = Tpetra::createMultiVector<ScalarType>(A->getDomainMap(), 1);
 
         amesos_solver =
             Amesos2::create<GlobalCrsMatrixType, GlobalMultiVectorType>("Basker", A, x_mv, b);
