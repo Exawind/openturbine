@@ -195,7 +195,11 @@ def build_type(field: Field, schema: Schema, definition_map: dict, struct_map: d
     # Set the type based on the schema type
     if schema.type == 'object': # If the field is an object, build a Struct for it
         field.type = field.name
-        build_structs(Struct(field.name, schema.description), schema, definition_map, struct_map)
+        s = Struct(field.name, schema.description)
+        build_structs(s, schema, definition_map, struct_map)
+        # set the type to the name of the struct if there were any changes made to the name
+        if s.name != field.type:
+            field.type = s.name
     elif schema.type == 'string':
         field.type = 'std::string'
     elif schema.type == 'number':

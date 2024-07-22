@@ -156,7 +156,7 @@ struct Components {
 // Control
 struct Control {
     Supervisory supervisory;
-    Pitch pitch;
+    Pitch_1 pitch;
     Torque torque;
 };
 
@@ -480,8 +480,8 @@ struct Gj {
 
 // Hub
 struct Hub {
-    OuterShapeBem outer_shape_bem;
-    ElasticPropertiesMb elastic_properties_mb;
+    OuterShapeBem_1 outer_shape_bem;
+    ElasticPropertiesMb_1 elastic_properties_mb;
 };
 
 // IX
@@ -498,10 +498,10 @@ struct IY {
 
 // InternalStructure
 struct InternalStructure {
-    double outfitting_factor;    // Scaling factor for the member mass to account for auxiliary
-                                 // structures, such as elevator, ladders, cables, platforms,
-                                 // fasteners, etc
-    std::vector<Layers> layers;  // Material layer properties
+    double outfitting_factor;      // Scaling factor for the member mass to account for auxiliary
+                                   // structures, such as elevator, ladders, cables, platforms,
+                                   // fasteners, etc
+    std::vector<Layers_1> layers;  // Material layer properties
     RingStiffeners ring_stiffeners;
     LongitudinalStiffeners longitudinal_stiffeners;
     Bulkhead bulkhead;
@@ -743,7 +743,7 @@ struct Members {
     std::string name;    // Name of the member
     std::string joint1;  // Name of joint/node connection
     std::string joint2;  // Name of joint/node connection
-    OuterShape outer_shape;
+    OuterShape_1 outer_shape;
     InternalStructure internal_structure;
     std::vector<AxialJoints>
         axial_joints;  // Define joints along non-dimensional axis of this member
@@ -766,7 +766,7 @@ struct Monopile {
     double gravity_foundation_mass;  // Total mass of gravity foundation addition onto monopile
     OuterShape outer_shape;
     ElasticPropertiesMb elastic_properties_mb;
-    InternalStructure2DFem internal_structure_2d_fem;
+    InternalStructure2DFem_2 internal_structure_2d_fem;
 };
 
 // Ontology definition for mooring systems suitable for use with the WEIS co-design analysis tool
@@ -1076,9 +1076,9 @@ struct Torque {
 
 // Tower
 struct Tower {
-    OuterShapeBem outer_shape_bem;
+    OuterShapeBem_2 outer_shape_bem;
     ElasticPropertiesMb elastic_properties_mb;
-    InternalStructure2DFem internal_structure_2d_fem;
+    InternalStructure2DFem_1 internal_structure_2d_fem;
 };
 
 // Turbine
