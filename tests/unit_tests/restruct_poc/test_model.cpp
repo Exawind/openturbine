@@ -4,6 +4,7 @@
 
 #include "test_utilities.hpp"
 
+#include "src/restruct_poc/beams/beam_element.hpp"
 #include "src/restruct_poc/model/model.hpp"
 
 namespace openturbine::restruct_poc::tests {
@@ -93,6 +94,33 @@ TEST_F(Model_2Fixture, RotateModelNode) {
     ASSERT_NEAR(node_0->x[0], 0.707107, 1e-6);
     ASSERT_NEAR(node_0->x[1], 0.707107, 1e-6);
     ASSERT_NEAR(node_0->x[2], 0., 1e-6);
+}
+
+TEST_F(Model_2Fixture, AddBeamElementToModel) {
+    // Add couple of nodes to the model
+    auto node1 = model.AddNode(
+        {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
+        {0., 0., 0., 1., 0., 0., 0.},                              // displacement
+        {v[0], v[1], v[2], omega[0], omega[1], omega[2]}           // velocity
+    );
+    auto node2 = model.AddNode(
+        {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
+        {0., 0., 0., 1., 0., 0., 0.},                              // displacement
+        {v[0], v[1], v[2], omega[0], omega[1], omega[2]}           // velocity
+    );
+
+    // Add a beam element to the model
+    auto nodes = std::vector<BeamNode>{BeamNode{0., *node1}, BeamNode{1., *node2}};
+    auto sections = std::vector<BeamSection>{};
+    auto quadrature = BeamQuadrature{};
+    auto beam_element = model.AddBeamElement(nodes, sections, quadrature);
+
+    // Get number of elements in the model
+    ASSERT_EQ(model.NumBeamElements(), 1);
+
+    // Get the elements in the model and check their number
+    auto elements = model.GetBeamElements();
+    ASSERT_EQ(elements.size(), 1);
 }
 
 }  // namespace openturbine::restruct_poc::tests

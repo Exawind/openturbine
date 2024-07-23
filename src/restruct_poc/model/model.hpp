@@ -132,6 +132,22 @@ public:
         return this->beam_elements_.back();
     }
 
+    /// Return a beam element by ID - const/read-only version
+    std::shared_ptr<const BeamElement> GetBeamElement(int id) const {
+        return this->beam_elements_[id];
+    }
+
+    /// Return a beam element by ID - non-const version
+    std::shared_ptr<BeamElement> GetBeamElement(int id) { return this->beam_elements_[id]; }
+
+    /// Returns a reference to the beam elements in the model
+    const std::vector<std::shared_ptr<BeamElement>>& GetBeamElements() const {
+        return this->beam_elements_;
+    }
+
+    /// Returns the number of beam elements in the model
+    size_t NumBeamElements() const { return this->beam_elements_.size(); }
+
 private:
     std::vector<std::shared_ptr<Node>> nodes_;                 //< Nodes in the model
     std::vector<std::shared_ptr<BeamElement>> beam_elements_;  //< Beam elements in the model
