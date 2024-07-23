@@ -80,7 +80,7 @@ std::vector<BeamSection> sections = {
 };
 
 TEST(RotatingBeamTest, StepConvergence) {
-    auto model = Model_2();
+    auto model = Model();
 
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
@@ -172,7 +172,7 @@ TEST(RotatingBeamTest, StepConvergence) {
 
 TEST(RotatingBeamTest, TwoBeam) {
     // Create model for managing nodes and constraints
-    auto model = Model_2();
+    auto model = Model();
 
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
@@ -292,7 +292,7 @@ TEST(RotatingBeamTest, TwoBeam) {
 }
 
 TEST(RotatingBeamTest, ThreeBladeRotor) {
-    auto model = Model_2();
+    auto model = Model();
 
     // Gravity vector
     Array_3 gravity = {0., 0., 9.81};
@@ -389,7 +389,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
 }
 
 TEST(RotatingBeamTest, MasslessConstraints) {
-    auto model = Model_2();
+    auto model = Model();
 
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
@@ -472,7 +472,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
 }
 
 TEST(RotatingBeamTest, RotationControlConstraint) {
-    auto model = Model_2();
+    auto model = Model();
 
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
@@ -550,7 +550,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
 }
 
 TEST(RotatingBeamTest, CylindricalConstraint) {
-    auto model = Model_2();
+    auto model = Model();
 
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};

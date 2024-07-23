@@ -80,7 +80,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     // Build vector of nodes (straight along x axis, no rotation)
     std::vector<BeamNode> beam_nodes;
     for (const double s : node_s) {
-        beam_nodes.push_back(BeamNode(s, model.AddNode({10 * s, 0., 0., 1., 0., 0., 0.})));
+        beam_nodes.push_back(BeamNode(s, *model.AddNode({10 * s, 0., 0., 1., 0., 0., 0.})));
     }
 
     // Define beam initialization
@@ -90,7 +90,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     auto beams = CreateBeams(beams_input);
 
     // Constraint inputs
-    model.AddFixedBC(model.nodes[0]);
+    model.AddFixedBC(*model.GetNode(0));
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -99,8 +99,18 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     const double rho_inf(0.0);
 
     // Create solver
+    auto nodes_vector = std::vector<Node>{};
+    for (const auto& node : model.GetNodes()) {
+        nodes_vector.push_back(*node);
+    }
+
+    auto constraints_vector = std::vector<Constraint>{};
+    for (const auto& constraint : model.GetConstraints()) {
+        constraints_vector.push_back(*constraint);
+    }
+
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
     );
 
     // First step

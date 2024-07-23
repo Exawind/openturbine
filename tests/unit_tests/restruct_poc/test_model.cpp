@@ -9,7 +9,7 @@
 
 namespace openturbine::restruct_poc::tests {
 
-class Model_2Fixture : public ::testing::Test {
+class ModelFixture : public ::testing::Test {
 protected:
     void SetUp() override {
         pos = {0., 0., 0.};
@@ -23,10 +23,10 @@ protected:
     Array_3 v;
     Array_3 omega;
 
-    Model_2 model;
+    Model model;
 };
 
-TEST_F(Model_2Fixture, AddNodeToModel) {
+TEST_F(ModelFixture, AddNodeToModel) {
     ASSERT_EQ(model.NumNodes(), 0);
 
     // Add a node to the model and check the ID
@@ -45,7 +45,7 @@ TEST_F(Model_2Fixture, AddNodeToModel) {
     ASSERT_EQ(nodes.size(), 1);
 }
 
-TEST_F(Model_2Fixture, TranslateModelNode) {
+TEST_F(ModelFixture, TranslateModelNode) {
     // Add a node to the model and check the ID
     auto node = model.AddNode(
         {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
@@ -68,7 +68,7 @@ TEST_F(Model_2Fixture, TranslateModelNode) {
     ASSERT_EQ(node_0->x[2], pos[2] + displacement[2]);  // 3.
 }
 
-TEST_F(Model_2Fixture, RotateModelNode) {
+TEST_F(ModelFixture, RotateModelNode) {
     // Add a node to the model and check the ID
     auto node = model.AddNode(
         {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
@@ -96,7 +96,7 @@ TEST_F(Model_2Fixture, RotateModelNode) {
     ASSERT_NEAR(node_0->x[2], 0., 1e-6);
 }
 
-TEST_F(Model_2Fixture, AddBeamElementToModel) {
+TEST_F(ModelFixture, AddBeamElementToModel) {
     // Add couple of nodes to the model
     auto node1 = model.AddNode(
         {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position

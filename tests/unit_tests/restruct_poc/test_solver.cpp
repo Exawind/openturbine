@@ -47,7 +47,7 @@ protected:
         }};
 
         // Create model for adding nodes and constraints
-        auto model = Model_2();
+        auto model = Model();
 
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};
@@ -398,7 +398,7 @@ protected:
         }};
 
         // Create model for adding nodes and constraints
-        auto model = Model_2();
+        auto model = Model();
 
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};
@@ -659,7 +659,7 @@ protected:
         }};
 
         // Create model for adding nodes and constraints
-        auto model = Model_2();
+        auto model = Model();
 
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};

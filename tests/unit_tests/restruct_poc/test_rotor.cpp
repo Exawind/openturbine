@@ -70,7 +70,7 @@ TEST(RotorTest, IEA15Rotor) {
     }
 
     // Create model for adding nodes and constraints
-    auto model = Model_2();
+    auto model = Model();
 
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
@@ -231,7 +231,7 @@ TEST(RotorTest, IEA15RotorController) {
     }
 
     // Create model for adding nodes and constraints
-    auto model = Model_2();
+    auto model = Model();
 
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
