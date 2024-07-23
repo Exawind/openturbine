@@ -148,9 +148,59 @@ public:
     /// Returns the number of beam elements in the model
     size_t NumBeamElements() const { return this->beam_elements_.size(); }
 
+    /// Adds a rigid constraint to the model and returns the constraint
+    std::shared_ptr<Constraint> AddRigidConstraint(const Node& node1, const Node& node2) {
+        auto constraint =
+            std::make_shared<Constraint>(ConstraintType::kRigid, constraints_.size(), node1, node2);
+        this->constraints_.push_back(std::move(constraint));
+        return this->constraints_.back();
+    }
+
+    /// Adds a prescribed boundary condition constraint to the model and returns the constraint
+    std::shared_ptr<Constraint> AddPrescribedBC(const Node& node, const Array_3& ref_position) {
+        auto constraint = std::make_shared<Constraint>(
+            ConstraintType::kPrescribedBC, constraints_.size(), InvalidNode, node, ref_position
+        );
+        this->constraints_.push_back(std::move(constraint));
+        return this->constraints_.back();
+    }
+
+    /// Adds a fixed boundary condition constraint to the model and returns the constraint
+    std::shared_ptr<Constraint> AddFixedBC(const Node& node) {
+        auto constraint = std::make_shared<Constraint>(
+            ConstraintType::kFixedBC, constraints_.size(), InvalidNode, node
+        );
+        this->constraints_.push_back(std::move(constraint));
+        return this->constraints_.back();
+    }
+
+    /// Adds a cylindrical constraint to the model and returns the constraint
+    std::shared_ptr<Constraint> AddCylindricalConstraint(const Node& node1, const Node& node2) {
+        auto constraint = std::make_shared<Constraint>(
+            ConstraintType::kCylindrical, constraints_.size(), node1, node2
+        );
+        this->constraints_.push_back(std::move(constraint));
+        return this->constraints_.back();
+    }
+
+    /// Adds a rotation control constraint to the model and returns the constraint
+    std::shared_ptr<Constraint> AddRotationControl(
+        const Node& node1, const Node& node2, const Array_3& axis, float* control
+    ) {
+        auto constraint = std::make_shared<Constraint>(
+            ConstraintType::kRotationControl, constraints_.size(), node1, node2, axis, control
+        );
+        this->constraints_.push_back(std::move(constraint));
+        return this->constraints_.back();
+    }
+
+    /// Returns the number of constraints in the model
+    size_t NumConstraints() const { return this->constraints_.size(); }
+
 private:
     std::vector<std::shared_ptr<Node>> nodes_;                 //< Nodes in the model
     std::vector<std::shared_ptr<BeamElement>> beam_elements_;  //< Beam elements in the model
+    std::vector<std::shared_ptr<Constraint>> constraints_;     //< Constraints in the model
 };
 
 }  // namespace openturbine
