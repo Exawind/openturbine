@@ -51,7 +51,7 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
 
     Kokkos::parallel_for(
         "CopyIntoSparseMatrix", constraint_policy,
-        CopyIntoSparseMatrix{solver.B, solver.constraints.B}
+        CopyIntoSparseMatrix<Solver::CrsMatrixType>{solver.B, solver.constraints.B}
     );
 
     auto B_t_row_data_size = Kokkos::View<double*>::shmem_size(B_num_rows);
@@ -62,15 +62,17 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
     );
     Kokkos::parallel_for(
         "CopyIntoSparseMatrix_Transpose", constraint_transpose_policy,
-        CopyIntoSparseMatrix_Transpose{solver.B_t, solver.constraints.B}
+        CopyIntoSparseMatrix_Transpose<Solver::CrsMatrixType>{solver.B_t, solver.constraints.B}
     );
 
     {
         auto resid_region = Kokkos::Profiling::ScopedRegion("Assemble Residual");
-        auto R = Kokkos::View<double*>("R_local", R_system.extent(0));
+        auto R = Solver::ValuesType("R_local", R_system.extent(0));
         Kokkos::deep_copy(R, R_system);
+        auto lambda = Solver::ValuesType("lambda", solver.state.lambda.extent(0));
+        Kokkos::deep_copy(lambda, solver.state.lambda);
         auto spmv_handle = Solver::SpmvHandle();
-        KokkosSparse::spmv(&spmv_handle, "T", 1., solver.B, solver.state.lambda, 1., R);
+        KokkosSparse::spmv(&spmv_handle, "T", 1., solver.B, lambda, 1., R);
         Kokkos::deep_copy(R_system, R);
         Kokkos::deep_copy(R_lambda, solver.constraints.Phi);
     }

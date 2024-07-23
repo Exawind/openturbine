@@ -8,10 +8,11 @@
 
 namespace openturbine {
 
+template <typename RowPtrType, typename IndicesType>
 struct PopulateSparseRowPtrsColInds_Constraints {
     Kokkos::View<Constraints::DeviceData*> data;
-    Kokkos::View<int*> B_row_ptrs;
-    Kokkos::View<int*> B_col_inds;
+    RowPtrType B_row_ptrs;
+    IndicesType B_col_inds;
 
     KOKKOS_FUNCTION
     void operator()(int) const {

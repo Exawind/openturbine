@@ -4,10 +4,11 @@
 
 namespace openturbine {
 
+template <typename RowPtrType>
 struct FillUnshiftedRowPtrs {
-    Kokkos::View<int*> new_row_ptrs;
     int num_system_dofs;
-    Kokkos::View<const int*> old_row_ptrs;
+    typename RowPtrType::const_type old_row_ptrs;
+    RowPtrType new_row_ptrs;
 
     KOKKOS_FUNCTION
     void operator()(int i) const {

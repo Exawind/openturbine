@@ -8,15 +8,16 @@
 
 namespace openturbine {
 
+template <typename RowPtrType, typename IndicesType>
 struct PopulateSparseRowPtrsColInds_Transpose {
     const int rows;
     const int cols;
-    Kokkos::View<int*>::const_type row_ptrs;  // rows + 1
-    Kokkos::View<int*>::const_type col_inds;  // nnz
-    Kokkos::View<int*> col_count;             // cols
-    Kokkos::View<int*> temp_row_ptr;          // cols + 1
-    Kokkos::View<int*> row_ptrs_trans;        // cols + 1
-    Kokkos::View<int*> col_inds_trans;        // nnz
+    typename RowPtrType::const_type row_ptrs;   // rows + 1
+    typename IndicesType::const_type col_inds;  // nnz
+    IndicesType col_count;                      // cols
+    RowPtrType temp_row_ptr;                    // cols + 1
+    RowPtrType row_ptrs_trans;                  // cols + 1
+    IndicesType col_inds_trans;                 // nnz
 
     KOKKOS_FUNCTION
     void operator()(int) const {
@@ -37,7 +38,7 @@ struct PopulateSparseRowPtrsColInds_Transpose {
         }
 
         for (int i = 0; i < rows; ++i) {
-            for (int j = row_ptrs(i); j < row_ptrs(i + 1); ++j) {
+            for (auto j = row_ptrs(i); j < row_ptrs(i + 1); ++j) {
                 int col = col_inds(j);
                 int dest_pos = temp_row_ptr(col)++;
                 col_inds_trans(dest_pos) = i;
