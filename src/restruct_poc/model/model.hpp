@@ -117,7 +117,7 @@ public:
     /// Return a node by ID - non-const version
     std::shared_ptr<Node> GetNode(int id) { return this->nodes_[id]; }
 
-    /// Returns a reference to the nodes in the model
+    /// Returns a reference to the nodes in the model (as vector of shared pointers)
     const std::vector<std::shared_ptr<Node>>& GetNodes() const { return this->nodes_; }
 
     /// Returns the number of nodes in the model
@@ -157,7 +157,9 @@ public:
     }
 
     /// Adds a prescribed boundary condition constraint to the model and returns the constraint
-    std::shared_ptr<Constraint> AddPrescribedBC(const Node& node, const Array_3& ref_position) {
+    std::shared_ptr<Constraint> AddPrescribedBC(
+        const Node& node, const Array_3& ref_position = {0., 0., 0.}
+    ) {
         auto constraint = std::make_shared<Constraint>(
             ConstraintType::kPrescribedBC, constraints_.size(), InvalidNode, node, ref_position
         );
@@ -192,6 +194,11 @@ public:
         );
         this->constraints_.push_back(std::move(constraint));
         return this->constraints_.back();
+    }
+
+    /// Returns the constraints in the model (as vector of shared pointers)
+    const std::vector<std::shared_ptr<Constraint>>& GetConstraints() const {
+        return this->constraints_;
     }
 
     /// Returns the number of constraints in the model

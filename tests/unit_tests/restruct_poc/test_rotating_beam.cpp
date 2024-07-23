@@ -80,7 +80,7 @@ std::vector<BeamSection> sections = {
 };
 
 TEST(RotatingBeamTest, StepConvergence) {
-    auto model = Model();
+    auto model = Model_2();
 
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
@@ -97,7 +97,7 @@ TEST(RotatingBeamTest, StepConvergence) {
             {0., 0., 0., 1., 0., 0., 0.},       // Displacement
             {0., x * omega, 0., 0., 0., omega}  // Velocity
         );
-        nodes.push_back(BeamNode(s, node));
+        nodes.push_back(BeamNode(s, *node));
     }
 
     // Define beam initialization
@@ -112,7 +112,8 @@ TEST(RotatingBeamTest, StepConvergence) {
     auto beams = CreateBeams(beams_input);
 
     // Constraint inputs
-    model.AddPrescribedBC(model.nodes[0]);
+    // model.AddPrescribedBC(model.nodes[0]);
+    model.AddPrescribedBC(*model.GetNode(0));
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -121,8 +122,18 @@ TEST(RotatingBeamTest, StepConvergence) {
     const double rho_inf(0.9);
 
     // Create solver
+    auto nodes_vector = std::vector<Node>{};
+    for (const auto& node : model.GetNodes()) {
+        nodes_vector.push_back(*node);
+    }
+
+    auto constraints_vector = std::vector<Constraint>{};
+    for (const auto& constraint : model.GetConstraints()) {
+        constraints_vector.push_back(*constraint);
+    }
+
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
     );
 
     // Perform 10 time steps and check for convergence within max_iter iterations
