@@ -172,7 +172,7 @@ TEST(RotatingBeamTest, StepConvergence) {
 
 TEST(RotatingBeamTest, TwoBeam) {
     // Create model for managing nodes and constraints
-    auto model = Model();
+    auto model = Model_2();
 
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
@@ -199,7 +199,7 @@ TEST(RotatingBeamTest, TwoBeam) {
             const auto pos = RotateVectorByQuaternion(q_root, {10. * s + 2., 0., 0.});
             auto v = CrossProduct(omega, pos);
             beam_nodes.push_back(BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {pos[0], pos[1], pos[2], q_root[0], q_root[1], q_root[2],
                         q_root[3]},                                      // position
                        {0., 0., 0., 1., 0., 0., 0.},                     // displacement
@@ -228,8 +228,18 @@ TEST(RotatingBeamTest, TwoBeam) {
     const double rho_inf(0.9);
 
     // Create solver with initial node state
+    auto nodes_vector = std::vector<Node>{};
+    for (const auto& node : model.GetNodes()) {
+        nodes_vector.push_back(*node);
+    }
+
+    auto constraints_vector = std::vector<Constraint>{};
+    for (const auto& constraint : model.GetConstraints()) {
+        constraints_vector.push_back(*constraint);
+    }
+
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
     );
 
     // Calculate hub rotation for this time step
@@ -282,7 +292,7 @@ TEST(RotatingBeamTest, TwoBeam) {
 }
 
 TEST(RotatingBeamTest, ThreeBladeRotor) {
-    auto model = Model();
+    auto model = Model_2();
 
     // Gravity vector
     Array_3 gravity = {0., 0., 9.81};
@@ -309,7 +319,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
             const auto pos = RotateVectorByQuaternion(q_root, {10. * s + 2., 0., 0.});
             auto v = CrossProduct(omega, pos);
             beam_nodes.push_back(BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {pos[0], pos[1], pos[2], q_root[0], q_root[1], q_root[2],
                         q_root[3]},                                      // position
                        {0., 0., 0., 1., 0., 0., 0.},                     // displacement
@@ -340,8 +350,18 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     const int num_steps(t_end / step_size + 1.0);
 
     // Create solver with initial node state
+    auto nodes_vector = std::vector<Node>{};
+    for (const auto& node : model.GetNodes()) {
+        nodes_vector.push_back(*node);
+    }
+
+    auto constraints_vector = std::vector<Constraint>{};
+    for (const auto& constraint : model.GetConstraints()) {
+        constraints_vector.push_back(*constraint);
+    }
+
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
     );
 
     // Perform time steps and check for convergence within max_iter iterations
@@ -369,7 +389,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
 }
 
 TEST(RotatingBeamTest, MasslessConstraints) {
-    auto model = Model();
+    auto model = Model_2();
 
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
@@ -382,7 +402,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     for (const double s : node_s) {
         auto x = 10 * s + 2.;
         beam_nodes.push_back(BeamNode(
-            s, model.AddNode(
+            s, *model.AddNode(
                    {x, 0., 0., 1., 0., 0., 0.},        // position
                    {0., 0., 0., 1., 0., 0., 0.},       // displacement
                    {0., x * omega, 0., 0., 0., omega}  // velocity
@@ -398,8 +418,8 @@ TEST(RotatingBeamTest, MasslessConstraints) {
 
     // Add hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
-    model.AddRigidConstraint(hub_node, beam_nodes[0].node);
-    auto hub_bc = model.AddPrescribedBC(hub_node);
+    model.AddRigidConstraint(*hub_node, *model.GetNode(0));
+    auto hub_bc = model.AddPrescribedBC(*hub_node);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -408,15 +428,25 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     const double rho_inf(0.9);
 
     // Create solver
+    auto nodes_vector = std::vector<Node>{};
+    for (const auto& node : model.GetNodes()) {
+        nodes_vector.push_back(*node);
+    }
+
+    auto constraints_vector = std::vector<Constraint>{};
+    for (const auto& constraint : model.GetConstraints()) {
+        constraints_vector.push_back(*constraint);
+    }
+
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
     );
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
-        solver.constraints.UpdateDisplacement(hub_bc.ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
+        solver.constraints.UpdateDisplacement(hub_bc->ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
         const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
     }
@@ -442,7 +472,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
 }
 
 TEST(RotatingBeamTest, RotationControlConstraint) {
-    auto model = Model();
+    auto model = Model_2();
 
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
@@ -450,7 +480,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     // Build vector of nodes (straight along x axis, no rotation)
     std::vector<BeamNode> beam_nodes;
     for (const double s : node_s) {
-        beam_nodes.push_back(BeamNode(s, model.AddNode({10 * s + 2., 0., 0., 1., 0., 0., 0.})));
+        beam_nodes.push_back(BeamNode(s, *model.AddNode({10 * s + 2., 0., 0., 1., 0., 0., 0.})));
     }
 
     // Define beam initialization
@@ -462,8 +492,8 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     // Add hub node and associated constraints
     float pitch = 0.;
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
-    model.AddRotationControl(hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);
-    model.AddFixedBC(hub_node);
+    model.AddRotationControl(*hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);
+    model.AddFixedBC(*hub_node);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -472,8 +502,18 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     const double rho_inf(0.9);
 
     // Create solver
+    auto nodes_vector = std::vector<Node>{};
+    for (const auto& node : model.GetNodes()) {
+        nodes_vector.push_back(*node);
+    }
+
+    auto constraints_vector = std::vector<Constraint>{};
+    for (const auto& constraint : model.GetConstraints()) {
+        constraints_vector.push_back(*constraint);
+    }
+
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
     );
 
     // Perform 10 time steps and check for convergence within max_iter iterations
@@ -510,7 +550,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
 }
 
 TEST(RotatingBeamTest, CylindricalConstraint) {
-    auto model = Model();
+    auto model = Model_2();
 
     // Gravity vector
     std::array<double, 3> gravity = {0., 0., 0.};
@@ -523,7 +563,7 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
     for (const double s : node_s) {
         auto x = 10 * s + 2.;
         beam_nodes.push_back(BeamNode(
-            s, model.AddNode(
+            s, *model.AddNode(
                    {x, 0., 0., 1., 0., 0., 0.},        // position
                    {0., 0., 0., 1., 0., 0., 0.},       // displacement
                    {0., x * omega, 0., 0., 0., omega}  // velocity
@@ -542,9 +582,9 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
     auto ground_node = model.AddNode({0, 0., -1., 1., 0., 0., 0.});
 
     // Add constraints
-    model.AddFixedBC(ground_node);
-    model.AddCylindricalConstraint(ground_node, hub_node);
-    model.AddRigidConstraint(hub_node, beam_nodes[0].node);
+    model.AddFixedBC(*ground_node);
+    model.AddCylindricalConstraint(*ground_node, *hub_node);
+    model.AddRigidConstraint(*hub_node, beam_nodes[0].node);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -553,8 +593,18 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
     const double rho_inf(0.9);
 
     // Create solver
+    auto nodes_vector = std::vector<Node>{};
+    for (const auto& node : model.GetNodes()) {
+        nodes_vector.push_back(*node);
+    }
+
+    auto constraints_vector = std::vector<Constraint>{};
+    for (const auto& constraint : model.GetConstraints()) {
+        constraints_vector.push_back(*constraint);
+    }
+
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
     );
 
 #ifdef OTURB_ENABLE_VTK
