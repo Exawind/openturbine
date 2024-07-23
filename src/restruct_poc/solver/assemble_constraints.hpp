@@ -65,23 +65,24 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
         CopyIntoSparseMatrix_Transpose{solver.B_t, solver.constraints.B}
     );
 
-    auto R = Kokkos::View<double*>("R_local", R_system.extent(0));
-    Kokkos::deep_copy(R, R_system);
-    auto spmv_handle = Solver::SpmvHandle();
-    KokkosSparse::spmv(&spmv_handle, "T", 1., solver.B, solver.state.lambda, 1., R);
-    Kokkos::deep_copy(R_system, R);
-
-    Kokkos::deep_copy(R_lambda, solver.constraints.Phi);
+    {
+        auto resid_region = Kokkos::Profiling::ScopedRegion("Assemble Residual");
+        auto R = Kokkos::View<double*>("R_local", R_system.extent(0));
+        Kokkos::deep_copy(R, R_system);
+        auto spmv_handle = Solver::SpmvHandle();
+        KokkosSparse::spmv(&spmv_handle, "T", 1., solver.B, solver.state.lambda, 1., R);
+        Kokkos::deep_copy(R_system, R);
+        Kokkos::deep_copy(R_lambda, solver.constraints.Phi);
+    }
 
     Kokkos::fence();
-    auto constraints_spgemm_handle = Solver::KernelHandle();
-    constraints_spgemm_handle.create_spgemm_handle();
-    KokkosSparse::spgemm_symbolic(
-        constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix
-    );
-    KokkosSparse::spgemm_numeric(
-        constraints_spgemm_handle, solver.B, false, solver.T, false, solver.constraints_matrix
-    );
+    {
+        auto mult_region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Matrix");
+        KokkosSparse::spgemm_numeric(
+            solver.constraints_spgemm_handle, solver.B, false, solver.T, false,
+            solver.constraints_matrix
+        );
+    }
 }
 
 }  // namespace openturbine

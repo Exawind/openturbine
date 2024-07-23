@@ -1,0 +1,17 @@
+name: OpenTurbine-CI
+
+on: push
+
+jobs:
+  ClangFormat:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v4
+    - name: Check formatting
+      uses: DoozyX/clang-format-lint-action@v0.16.2
+      with:
+        source: './src ./tests/unit_tests'
+        exclude: '.'
+        extensions: 'cpp,hpp'
+        clangFormatVersion: 16
