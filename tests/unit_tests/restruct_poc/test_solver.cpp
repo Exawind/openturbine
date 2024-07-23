@@ -47,7 +47,7 @@ protected:
         }};
 
         // Create model for adding nodes and constraints
-        auto model = Model();
+        auto model = Model_2();
 
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};
@@ -66,7 +66,7 @@ protected:
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
             beam_nodes.push_back(BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.},         // Position
                        {0., 0., 0., 1., 0., 0., 0.},        // Displacement
                        {0., x * omega, 0., 0., 0., omega},  // Velocity
@@ -103,7 +103,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.AddPrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(*model.GetNode(0));
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -112,8 +112,18 @@ protected:
         const double rho_inf(0.9);
 
         // Create solver
+        auto nodes_vector = std::vector<Node>{};
+        for (const auto& node : model.GetNodes()) {
+            nodes_vector.push_back(*node);
+        }
+
+        auto constraints_vector = std::vector<Constraint>{};
+        for (const auto& constraint : model.GetConstraints()) {
+            constraints_vector.push_back(*constraint);
+        }
+
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, *beams_
         );
 
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -388,7 +398,7 @@ protected:
         }};
 
         // Create model for adding nodes and constraints
-        auto model = Model();
+        auto model = Model_2();
 
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};
@@ -411,7 +421,7 @@ protected:
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
             beam_nodes.push_back(BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.},         // Position
                        {0., 0., 0., 1., 0., 0., 0.},        // Displacement
                        {0., x * omega, 0., 0., 0., omega},  // Velocity
@@ -448,7 +458,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.AddPrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(*model.GetNode(0));
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -457,8 +467,17 @@ protected:
         const double rho_inf(0.9);
 
         // Create solver
+        auto nodes_vector = std::vector<Node>{};
+        for (const auto& node : model.GetNodes()) {
+            nodes_vector.push_back(*node);
+        }
+
+        auto constraints_vector = std::vector<Constraint>{};
+        for (const auto& constraint : model.GetConstraints()) {
+            constraints_vector.push_back(*constraint);
+        }
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, *beams_
         );
 
         // Set constraint displacement
@@ -640,7 +659,7 @@ protected:
         }};
 
         // Create model for adding nodes and constraints
-        auto model = Model();
+        auto model = Model_2();
 
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};
@@ -659,7 +678,7 @@ protected:
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
             beam_nodes.push_back(BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.},         // Position
                        {0., 0., 0., 1., 0., 0., 0.},        // Displacement
                        {0., x * omega, 0., 0., 0., omega},  // Velocity
@@ -696,7 +715,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.AddPrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(*model.GetNode(0));
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -705,8 +724,17 @@ protected:
         const double rho_inf(0.9);
 
         // Create solver
+        auto nodes_vector = std::vector<Node>{};
+        for (const auto& node : model.GetNodes()) {
+            nodes_vector.push_back(*node);
+        }
+
+        auto constraints_vector = std::vector<Constraint>{};
+        for (const auto& constraint : model.GetConstraints()) {
+            constraints_vector.push_back(*constraint);
+        }
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, *beams_
         );
 
         // Set constraint displacement
