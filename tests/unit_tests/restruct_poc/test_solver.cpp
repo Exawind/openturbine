@@ -259,20 +259,6 @@ TEST_F(NewSolverTest, ConstraintResidualVector) {
     );
 }
 
-TEST_F(NewSolverTest, ConstraintGradientMatrix) {
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(solver_->constraints.B, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)),
-        {
-            {1., 0., 0., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 1., 0., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 1., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 0., 1.0000000000000004, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 0., 0.0000000000000000, 1.0000000000000004, 0.0000000000000000},
-            {0., 0., 0., 0.0000000000000000, 0.0000000000000000, 1.0000000000000004},
-        }
-    );
-}
-
 TEST_F(NewSolverTest, AssembleResidualVector) {
     expect_kokkos_view_1D_equal(
         solver_->R,
@@ -707,20 +693,6 @@ TEST_F(SolverStep2Test, ConstraintResidualVector) {
             -1.31908395004359e-29,
             1.3190835103592412e-26,
             0.0,
-        }
-    );
-}
-
-TEST_F(SolverStep2Test, ConstraintGradientMatrix) {
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(solver_->constraints.B, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)),
-        {
-            {1.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-            {0.0, 1.0, 0.0, 0.0, 0.0, 0.0},
-            {0.0, 0.0, 1.0, 0.0, 0.0, 0.0},
-            {0.0, 0.0, 0.0, 1.0000000000000004, 0.0, -6.595417551796206e-27},
-            {0.0, 0.0, 0.0, 0.0, 1.0000000000000004, -6.59541975021795e-30},
-            {0.0, 0.0, 0.0, 6.595417551796206e-27, 6.595419750217949e-30, 1.0000000000000002},
         }
     );
 }

@@ -252,14 +252,6 @@ TEST(RotatingBeamTest, TwoBeam) {
     for (int i = 0; i < m; ++i) {
         EXPECT_NEAR(Phi[i], Phi[i + m], 1.e-10);
     }
-
-    // Check that B matrix is the same for both beams
-    auto B = kokkos_view_2D_to_vector(solver.constraints.B);
-    for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < n; ++j) {
-            EXPECT_NEAR(B[i][j], B[i + m][j + n], 1.e-10);
-        }
-    }
 }
 
 TEST(RotatingBeamTest, ThreeBladeRotor) {
