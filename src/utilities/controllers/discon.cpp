@@ -88,14 +88,6 @@ void DISCON(
 ) {
     // Internal state
     static InternalState state;
-    // Current coefficient in the recursive, single-pole, low-pass filter (-)
-    float alpha;
-    // Integral term of command pitch (rad)
-    float pitch_com_integral;
-    // Proportional term of command pitch (rad)
-    float pitch_com_proportional;
-    // Total command pitch based on the sum of the proportional and integral terms (rad)
-    float pitch_com_total;
     // Log file pointer
     static FILE* fp_log = nullptr;
     // CSV file pointer
@@ -356,7 +348,7 @@ void DISCON(
 
         // Update the coefficient in the recursive formula based on the elapsed time since the
         // last call to the controller
-        alpha = exp((state.time_latest - swap->time) * kCornerFreq);
+        const float alpha = exp((state.time_latest - swap->time) * kCornerFreq);
 
         // Apply the filter
         state.generator_speed_filtered =
@@ -373,9 +365,8 @@ void DISCON(
         // to ensure that the controller is called at every time step when kVS_DT = DT, even in
         // the presence of numerical precision errors
 
-        float gen_trq;  // Electrical generator torque, N-m
-
         if ((swap->time * kOnePlusEps - state.torque_controller_latest) >= kVS_DT) {
+            float gen_trq;  // Electrical generator torque, N-m
             // Compute the generator torque, which depends on which region we are in
             if ((state.generator_speed_filtered >= kVS_RtGnSp) ||
                 (state.pitch_commanded_latest[0] >= kVS_Rgn3MP)) {
@@ -462,12 +453,12 @@ void DISCON(
             );
 
             // Compute the pitch commands associated with the proportional and integral gains
-            pitch_com_proportional = GK * kPC_KP * speed_error;
-            pitch_com_integral = GK * kPC_KI * state.integral_speed_error;
+            const float pitch_com_proportional = GK * kPC_KP * speed_error;
+            const float pitch_com_integral = GK * kPC_KI * state.integral_speed_error;
 
             // Superimpose the individual commands to get the total pitch command; saturate the
             // overall command using the pitch angle limits
-            pitch_com_total = std::clamp(
+            const float pitch_com_total = std::clamp(
                 static_cast<float>(pitch_com_proportional + pitch_com_integral),
                 static_cast<float>(kPC_MinPit), static_cast<float>(kPC_MaxPit)
             );
@@ -479,7 +470,8 @@ void DISCON(
             //       blade.
 
             // Current values of the blade pitch angles, rad
-            float blade_pitch[3] = {swap->pitch_blade1, swap->pitch_blade2, swap->pitch_blade3};
+            const float blade_pitch[3] = {
+                swap->pitch_blade1, swap->pitch_blade2, swap->pitch_blade3};
 
             // Pitch rates of each blade based on the current pitch angles and current pitch
             // command, rad/s

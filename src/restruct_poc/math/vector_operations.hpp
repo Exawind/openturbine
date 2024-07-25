@@ -8,7 +8,7 @@ namespace openturbine {
 
 /// Converts a 3x1 vector to a 3x3 skew-symmetric matrix and returns the result
 template <typename VectorType, typename MatrixType>
-KOKKOS_INLINE_FUNCTION void VecTilde(VectorType vector, MatrixType matrix) {
+KOKKOS_INLINE_FUNCTION void VecTilde(const VectorType& vector, const MatrixType& matrix) {
     matrix(0, 0) = 0.;
     matrix(0, 1) = -vector(2);
     matrix(0, 2) = vector(1);
@@ -22,7 +22,7 @@ KOKKOS_INLINE_FUNCTION void VecTilde(VectorType vector, MatrixType matrix) {
 
 /// Calculate the dot product between two vector views
 template <typename VectorType>
-KOKKOS_INLINE_FUNCTION double DotProduct(VectorType a, VectorType b) {
+KOKKOS_INLINE_FUNCTION double DotProduct(const VectorType& a, const VectorType& b) {
     double sum = 0.;
     for (int i = 0; i < a.extent_int(0); ++i) {
         sum += a(i) * b(i);
@@ -37,7 +37,9 @@ constexpr double DotProduct(const Array_3& a, const Array_3& b) {
 
 /// Calculate the cross product between two vector views
 template <typename VectorType>
-KOKKOS_INLINE_FUNCTION void CrossProduct(VectorType a, VectorType b, VectorType c) {
+KOKKOS_INLINE_FUNCTION void CrossProduct(
+    const VectorType& a, const VectorType& b, const VectorType& c
+) {
     c(0) = a(1) * b(2) - a(2) * b(1);
     c(1) = a(2) * b(0) - a(0) * b(2);
     c(2) = a(0) * b(1) - a(1) * b(0);

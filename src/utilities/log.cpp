@@ -11,23 +11,18 @@ std::string SeverityLevelToString(const SeverityLevel& level) {
     switch (level) {
         case SeverityLevel::kDebug: {
             return std::string("DEBUG");
-            break;
         }
         case SeverityLevel::kError: {
             return std::string("ERROR");
-            break;
         }
         case SeverityLevel::kInfo: {
             return std::string("INFO");
-            break;
         }
         case SeverityLevel::kWarning: {
             return std::string("WARNING");
-            break;
         }
         default: {
             return std::string("NONE");
-            break;
         }
     }
 }
