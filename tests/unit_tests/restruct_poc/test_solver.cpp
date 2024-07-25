@@ -122,7 +122,7 @@ protected:
         // Predict the next state for the solver
         PredictNextState(*solver_);
 
-        auto system_range = Kokkos::make_pair(0, solver_->num_system_dofs);
+        auto system_range = Kokkos::make_pair(size_t{0u}, solver_->num_system_dofs);
         auto constraint_range = Kokkos::make_pair(solver_->num_system_dofs, solver_->num_dofs);
 
         auto R_system = Kokkos::subview(solver_->R, system_range);

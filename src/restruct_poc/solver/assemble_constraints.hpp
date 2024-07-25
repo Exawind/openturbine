@@ -46,7 +46,7 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
 
     auto B_row_data_size = Kokkos::View<double*>::shmem_size(B_num_columns);
     auto B_col_idx_size = Kokkos::View<int*>::shmem_size(B_num_columns);
-    auto constraint_policy = Kokkos::TeamPolicy<>(B_num_rows, Kokkos::AUTO());
+    auto constraint_policy = Kokkos::TeamPolicy<>(static_cast<int>(B_num_rows), Kokkos::AUTO());
     constraint_policy.set_scratch_size(1, Kokkos::PerTeam(B_row_data_size + B_col_idx_size));
 
     Kokkos::parallel_for(
@@ -56,7 +56,8 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
 
     auto B_t_row_data_size = Kokkos::View<double*>::shmem_size(B_num_rows);
     auto B_t_col_idx_size = Kokkos::View<int*>::shmem_size(B_num_rows);
-    auto constraint_transpose_policy = Kokkos::TeamPolicy<>(B_num_columns, Kokkos::AUTO());
+    auto constraint_transpose_policy =
+        Kokkos::TeamPolicy<>(static_cast<int>(B_num_columns), Kokkos::AUTO());
     constraint_transpose_policy.set_scratch_size(
         1, Kokkos::PerTeam(B_t_row_data_size + B_t_col_idx_size)
     );

@@ -24,30 +24,30 @@ struct IntegrateInertiaMatrix {
         const auto idx = elem_indices(i_elem);
         Kokkos::parallel_for(
             Kokkos::TeamThreadMDRange(member, idx.num_nodes, idx.num_nodes),
-            [&](int i_index, int j_index) {
+            [&](size_t i_index, size_t j_index) {
                 const auto i = i_index + idx.node_range.first;
                 const auto j = j_index + idx.node_range.first;
                 auto local_M_data = Kokkos::Array<double, 36>{};
                 auto local_M = Kokkos::View<double[6][6], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(
                     local_M_data.data()
                 );
-                for (int k = 0; k < idx.num_qps; ++k) {
+                for (auto k = 0u; k < idx.num_qps; ++k) {
                     const auto k_qp = idx.qp_range.first + k;
                     const auto w = qp_weight_(k_qp);
                     const auto jacobian = qp_jacobian_(k_qp);
                     const auto phi_i = shape_interp_(i, k);
                     const auto phi_j = shape_interp_(j, k);
                     const auto coeff = w * phi_i * phi_j * jacobian;
-                    for (int m = 0; m < 6; ++m) {
-                        for (int n = 0; n < 6; ++n) {
+                    for (auto m = 0u; m < 6u; ++m) {
+                        for (auto n = 0u; n < 6u; ++n) {
                             local_M(m, n) += beta_prime_ * coeff * qp_Muu_(k_qp, m, n) +
                                              gamma_prime_ * coeff * qp_Guu_(k_qp, m, n);
                         }
                     }
                 }
-                for (int m = 0; m < 6; ++m) {
-                    for (int n = 0; n < 6; ++n) {
-                        gbl_M_(i_elem, i_index * 6 + m, j_index * 6 + n) = local_M(m, n);
+                for (auto m = 0u; m < 6u; ++m) {
+                    for (auto n = 0u; n < 6u; ++n) {
+                        gbl_M_(i_elem, i_index * 6u + m, j_index * 6u + n) = local_M(m, n);
                     }
                 }
             }

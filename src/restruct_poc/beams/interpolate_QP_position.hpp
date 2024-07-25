@@ -22,15 +22,15 @@ struct InterpolateQPPosition {
             Kokkos::subview(node_position_rotation, idx.node_range, Kokkos::make_pair(0, 3));
         auto qp_pos = Kokkos::subview(qp_position, idx.qp_range, Kokkos::ALL);
 
-        for (int j = 0; j < idx.num_qps; ++j) {
+        for (auto j = 0u; j < idx.num_qps; ++j) {
             auto local_result = Kokkos::Array<double, 3>{};
-            for (int i = 0; i < idx.num_nodes; ++i) {
+            for (auto i = 0u; i < idx.num_nodes; ++i) {
                 const auto phi = shape_interp(i, j);
-                for (int k = 0; k < kVectorComponents; ++k) {
+                for (auto k = 0u; k < kVectorComponents; ++k) {
                     local_result[k] += node_pos(i, k) * phi;
                 }
             }
-            for (int k = 0; k < 3; ++k) {
+            for (auto k = 0u; k < 3u; ++k) {
                 qp_pos(j, k) = local_result[k];
             }
         }

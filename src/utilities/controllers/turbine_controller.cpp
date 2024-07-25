@@ -44,9 +44,9 @@ TurbineController::TurbineController(
 
     // Map swap array to ControllerIO structure for easier access
     this->io = reinterpret_cast<ControllerIO*>(this->swap_array_);
-    this->io->infile_array_size = input_file_path.size();
-    this->io->outname_array_size = output_file_path.size();
-    this->io->message_array_size = this->message_.size();
+    this->io->infile_array_size = static_cast<float>(input_file_path.size());
+    this->io->outname_array_size = static_cast<float>(output_file_path.size());
+    this->io->message_array_size = static_cast<float>(this->message_.size());
 }
 
 void TurbineController::CallController() {

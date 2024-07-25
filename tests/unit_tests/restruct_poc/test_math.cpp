@@ -7,7 +7,7 @@
 
 namespace openturbine::restruct_poc::tests {
 
-template <int size>
+template <unsigned size>
 auto Create1DView(const std::array<double, size>& input) {
     auto view = Kokkos::View<double[size]>("view");
     auto view_host =
@@ -18,12 +18,12 @@ auto Create1DView(const std::array<double, size>& input) {
     return view;
 }
 
-template <int rows, int cols>
+template <unsigned rows, unsigned cols>
 auto Create2DView(const std::array<std::array<double, rows>, cols>& input) {
     auto view = Kokkos::View<double[rows][cols]>("view");
     auto view_host = Kokkos::create_mirror(view);
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
+    for (auto i = 0u; i < rows; i++) {
+        for (auto j = 0u; j < cols; j++) {
             view_host(i, j) = input[i][j];
         }
     }

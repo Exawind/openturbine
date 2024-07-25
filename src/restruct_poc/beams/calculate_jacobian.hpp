@@ -27,7 +27,7 @@ struct CalculateJacobian {
 
         InterpVector3(shape_deriv, node_pos, qp_pos_deriv);
 
-        for (int j = 0; j < idx.num_qps; ++j) {
+        for (auto j = 0u; j < idx.num_qps; ++j) {
             const auto jacobian = Kokkos::sqrt(
                 Kokkos::pow(qp_pos_deriv(j, 0), 2.) + Kokkos::pow(qp_pos_deriv(j, 1), 2.) +
                 Kokkos::pow(qp_pos_deriv(j, 2), 2.)

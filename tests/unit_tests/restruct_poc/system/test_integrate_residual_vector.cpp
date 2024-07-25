@@ -35,9 +35,9 @@ TEST(IntegrateResidualVector, OneElementOneNode_AllZeros) {
     TestIntegrateResidualVector_1Element1Node_AllZeros();
 }
 
-template <int n_elem, int n_nodes>
+template <size_t n_elem, size_t n_nodes>
 auto get_node_vector(
-    std::string_view name, const std::array<double, n_elem * n_nodes * 6>& vector_data
+    std::string_view name, const std::array<double, n_elem * n_nodes * 6u>& vector_data
 ) {
     using VectorView = Kokkos::View<double[n_elem * n_nodes][6]>;
     using HostVectorView = Kokkos::View<const double[n_elem * n_nodes][6], Kokkos::HostSpace>;
@@ -49,22 +49,22 @@ auto get_node_vector(
     return shape;
 }
 
-template <int n_elem, int n_nodes>
+template <size_t n_elem, size_t n_nodes>
 auto get_node_FE(const std::array<double, n_elem * n_nodes * 6>& vector_data) {
     return get_node_vector<n_elem, n_nodes>("node_FE", vector_data);
 }
 
-template <int n_elem, int n_nodes>
+template <size_t n_elem, size_t n_nodes>
 auto get_node_FI(const std::array<double, n_elem * n_nodes * 6>& vector_data) {
     return get_node_vector<n_elem, n_nodes>("node_FI", vector_data);
 }
 
-template <int n_elem, int n_nodes>
+template <size_t n_elem, size_t n_nodes>
 auto get_node_FG(const std::array<double, n_elem * n_nodes * 6>& vector_data) {
     return get_node_vector<n_elem, n_nodes>("node_FG", vector_data);
 }
 
-template <int n_elem, int n_nodes>
+template <size_t n_elem, size_t n_nodes>
 auto get_node_FX(const std::array<double, n_elem * n_nodes * 6>& vector_data) {
     return get_node_vector<n_elem, n_nodes>("node_FX", vector_data);
 }

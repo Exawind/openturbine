@@ -17,9 +17,9 @@ struct CopyIntoSparseMatrix_Transpose {
         auto row = sparse.row(i);
         auto row_map = sparse.graph.row_map;
         auto cols = sparse.graph.entries;
-        auto row_data = RowDataType(member.team_scratch(1), row.length);
-        auto col_idx = ColIdxType(member.team_scratch(1), row.length);
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](int entry) {
+        auto row_data = RowDataType(member.team_scratch(1), static_cast<size_t>(row.length));
+        auto col_idx = ColIdxType(member.team_scratch(1), static_cast<size_t>(row.length));
+        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](size_t entry) {
             col_idx(entry) = cols(row_map(i) + entry);
             row_data(entry) = dense(col_idx(entry), i);
         });

@@ -17,9 +17,10 @@ struct PopulateSparseRowPtrs {
         for (int i_elem = 0; i_elem < num_elems; ++i_elem) {
             auto idx = elem_indices[i_elem];
             auto num_nodes = idx.num_nodes;
-            for (int i = 0; i < num_nodes * kLieAlgebraComponents; ++i) {
+            for (auto i = 0u; i < num_nodes * kLieAlgebraComponents; ++i) {
                 row_ptrs(rows_so_far + 1) =
-                    row_ptrs(rows_so_far) + num_nodes * kLieAlgebraComponents;
+                    row_ptrs(rows_so_far) +
+                    static_cast<typename RowPtrType::value_type>(num_nodes * kLieAlgebraComponents);
                 ++rows_so_far;
             }
         }

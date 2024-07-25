@@ -18,8 +18,8 @@ struct CalculateNextState {
     View_Nx6 a;
 
     KOKKOS_FUNCTION
-    void operator()(const int i) const {
-        for (int j = 0; j < kLieAlgebraComponents; ++j) {
+    void operator()(const size_t i) const {
+        for (auto j = 0u; j < kLieAlgebraComponents; ++j) {
             double v_p = v(i, j);    // Save velocity from previous iteration
             double vd_p = vd(i, j);  // Save acceleration from previous iteration
             double a_p = a(i, j);    // Save algorithmic acceleration from previous iteration

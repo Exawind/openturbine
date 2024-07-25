@@ -13,7 +13,7 @@ inline void AssembleInertiaMatrix(
     Beams& beams, double beta_prime, double gamma_prime, Kokkos::View<double***> M
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Inertia Matrix");
-    auto range_policy = Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO());
+    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
 
     Kokkos::parallel_for(
         "IntegrateInertiaMatrix", range_policy,

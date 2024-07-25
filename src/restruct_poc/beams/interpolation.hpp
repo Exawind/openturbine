@@ -19,10 +19,10 @@ inline void LinearInterpWeights(
     } else if (lower == xs.end()) {
         weights.back() = 1.0;
     } else {
-        size_t index = lower - xs.begin();
-        double lower_loc = xs[index - 1];
-        double upper_loc = xs[index];
-        double weight_upper = (x - lower_loc) / (upper_loc - lower_loc);
+        auto index = static_cast<unsigned>(std::distance(xs.begin(), lower));
+        auto lower_loc = xs[index - 1];
+        auto upper_loc = xs[index];
+        auto weight_upper = (x - lower_loc) / (upper_loc - lower_loc);
         weights[index - 1] = 1.0 - weight_upper;
         weights[index] = weight_upper;
     }

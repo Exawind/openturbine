@@ -58,13 +58,13 @@ struct ConditionSystem {
 };
 
 struct UnconditionSolution {
-    int num_system_dofs;
+    size_t num_system_dofs;
     double conditioner;
     View_N x;
 
     KOKKOS_FUNCTION
     void operator()(const int i) const {
-        if (i >= num_system_dofs) {
+        if (static_cast<size_t>(i) >= num_system_dofs) {
             x(i) /= conditioner;
         }
     }

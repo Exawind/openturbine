@@ -4,15 +4,11 @@
 #include <Kokkos_Core.hpp>
 
 namespace openturbine {
-template <typename crs_matrix_type>
+template <typename CrsMatrixType>
 struct ContributeElementsToSparseMatrix {
-    using row_data_type = Kokkos::View<
-        double*, Kokkos::DefaultExecutionSpace::scratch_memory_space,
-        Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
-    using col_idx_type = Kokkos::View<
-        int*, Kokkos::DefaultExecutionSpace::scratch_memory_space,
-        Kokkos::MemoryTraits<Kokkos::Unmanaged>>;
-    crs_matrix_type sparse;
+    using RowDataType = typename CrsMatrixType::values_type::non_const_type;
+    using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
+    CrsMatrixType sparse;
     Kokkos::View<const double***> dense;
 
     KOKKOS_FUNCTION
@@ -21,9 +17,9 @@ struct ContributeElementsToSparseMatrix {
         auto row = sparse.row(i);
         auto row_map = sparse.graph.row_map;
         auto cols = sparse.graph.entries;
-        auto row_data = row_data_type(member.team_scratch(1), row.length);
-        auto col_idx = col_idx_type(member.team_scratch(1), row.length);
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](int entry) {
+        auto row_data = RowDataType(member.team_scratch(1), static_cast<size_t>(row.length));
+        auto col_idx = ColIdxType(member.team_scratch(1), static_cast<size_t>(row.length));
+        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](size_t entry) {
             col_idx(entry) = cols(row_map(i) + entry);
             row_data(entry) = dense(i / row.length, i % row.length, entry);
         });

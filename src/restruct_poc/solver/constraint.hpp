@@ -91,13 +91,13 @@ struct Constraint {
     }
 
     /// Returns the number of degrees of freedom used by constraint
-    int NumDOFs() const {
+    size_t NumDOFs() const {
         switch (this->type) {
             case ConstraintType::kCylindrical: {
-                return 5;
+                return 5u;
             } break;
             default: {
-                return kLieAlgebraComponents;  // 6
+                return static_cast<size_t>(kLieAlgebraComponents);  // 6
             }
         }
     }

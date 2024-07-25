@@ -230,7 +230,7 @@ TEST(RotatingBeamTest, TwoBeam) {
     Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
     // Update constraint displacements
-    for (int j = 0; j < solver.constraints.num; ++j) {
+    for (auto j = 0u; j < solver.constraints.num; ++j) {
         solver.constraints.UpdateDisplacement(j, u_hub);
     }
 
@@ -243,20 +243,20 @@ TEST(RotatingBeamTest, TwoBeam) {
 
     // Check that R vector is the same for both beams
     auto R = kokkos_view_1D_to_vector(solver.R);
-    for (int i = 0; i < n; ++i) {
+    for (auto i = 0u; i < n; ++i) {
         EXPECT_NEAR(R[i], R[n + i], 1.e-10);
     }
 
     // Check that Phi vector is the same for both beams
     auto Phi = kokkos_view_1D_to_vector(solver.constraints.Phi);
-    for (int i = 0; i < m; ++i) {
+    for (auto i = 0u; i < m; ++i) {
         EXPECT_NEAR(Phi[i], Phi[i + m], 1.e-10);
     }
 
     // Check that B matrix is the same for both beams
     auto B = kokkos_view_2D_to_vector(solver.constraints.B);
-    for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < n; ++j) {
+    for (auto i = 0u; i < m; ++i) {
+        for (auto j = 0u; j < n; ++j) {
             EXPECT_NEAR(B[i][j], B[i + m][j + n], 1.e-10);
         }
     }
@@ -318,7 +318,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     const double step_size(0.01);  // seconds
     const double rho_inf(0.9);
     const double t_end(0.1);
-    const int num_steps(t_end / step_size + 1.0);
+    const auto num_steps = static_cast<size_t>(std::floor(t_end / step_size + 1.0));
 
     // Create solver with initial node state
     Solver solver(
@@ -326,7 +326,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     );
 
     // Perform time steps and check for convergence within max_iter iterations
-    for (int i = 0; i < num_steps; ++i) {
+    for (auto i = 0u; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
         const auto q_hub = RotationVectorToQuaternion(
             {step_size * (i + 1) * omega[0], step_size * (i + 1) * omega[1],
@@ -337,7 +337,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
         // Update constraint displacements
-        for (int j = 0; j < solver.constraints.num; ++j) {
+        for (auto j = 0u; j < solver.constraints.num; ++j) {
             solver.constraints.UpdateDisplacement(j, u_hub);
         }
 
@@ -397,7 +397,9 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     for (int i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
-        solver.constraints.UpdateDisplacement(hub_bc.ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
+        solver.constraints.UpdateDisplacement(
+            static_cast<size_t>(hub_bc.ID), {0., 0., 0., q[0], q[1], q[2], q[3]}
+        );
         const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
     }
@@ -459,9 +461,9 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
-        double t = step_size * (i + 1);
+        double t = step_size * static_cast<double>(i + 1);
         // Set pitch
-        pitch = t * M_PI / 2.;
+        pitch = static_cast<float>(t * M_PI / 2.);
         const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
     }

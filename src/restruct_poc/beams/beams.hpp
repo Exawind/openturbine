@@ -11,13 +11,13 @@ namespace openturbine {
 struct Beams {
     // Node and quadrature point index data for an element
     struct ElemIndices {
-        int num_nodes;
-        int num_qps;
-        Kokkos::pair<int, int> node_range;
-        Kokkos::pair<int, int> qp_range;
-        Kokkos::pair<int, int> qp_shape_range;
+        size_t num_nodes;
+        size_t num_qps;
+        Kokkos::pair<size_t, size_t> node_range;
+        Kokkos::pair<size_t, size_t> qp_range;
+        Kokkos::pair<size_t, size_t> qp_shape_range;
         ElemIndices() {}
-        ElemIndices(int n_nodes, int n_qps, int i_node_start, int i_qp_start)
+        ElemIndices(size_t n_nodes, size_t n_qps, size_t i_node_start, size_t i_qp_start)
             : num_nodes(n_nodes),
               num_qps(n_qps),
               node_range(Kokkos::make_pair(i_node_start, i_node_start + n_nodes)),
@@ -25,14 +25,14 @@ struct Beams {
               qp_shape_range(Kokkos::make_pair(0, n_qps)) {}
     };
 
-    int num_elems;  // Number of beams
-    int num_nodes;  // Number of nodes
-    int num_qps;    // Number of quadrature points
-    int max_elem_nodes;
-    int max_elem_qps;
+    size_t num_elems;  // Number of beams
+    size_t num_nodes;  // Number of nodes
+    size_t num_qps;    // Number of quadrature points
+    size_t max_elem_nodes;
+    size_t max_elem_qps;
 
-    Kokkos::View<ElemIndices*> elem_indices;  // View of element node and qp indices into views
-    Kokkos::View<int*> node_state_indices;    // State row index for each node
+    Kokkos::View<ElemIndices*> elem_indices;   // View of element node and qp indices into views
+    Kokkos::View<size_t*> node_state_indices;  // State row index for each node
 
     View_3 gravity;
 
@@ -92,8 +92,8 @@ struct Beams {
 
     // Constructor which initializes views based on given sizes
     Beams(
-        const int n_beams, const int n_nodes, const int n_qps, const int max_e_nodes,
-        const int max_e_qps
+        const size_t n_beams, const size_t n_nodes, const size_t n_qps, const size_t max_e_nodes,
+        const size_t max_e_qps
     )
         : num_elems(n_beams),
           num_nodes(n_nodes),

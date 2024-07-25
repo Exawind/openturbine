@@ -61,7 +61,7 @@ TEST(RotorTest, IEA15Rotor) {
     const double step_size(0.01);  // seconds
     const double rho_inf(0.0);
     const double t_end(0.1);
-    const size_t num_steps(t_end / step_size + 1.0);
+    const auto num_steps = static_cast<size_t>(std::floor(t_end / step_size + 1.0));
 
     // Node location [0, 1]
     std::vector<double> node_loc;
@@ -84,7 +84,8 @@ TEST(RotorTest, IEA15Rotor) {
     // Loop through blades
     for (size_t i = 0; i < num_blades; ++i) {
         // Define root rotation
-        const auto q_root = RotationVectorToQuaternion({0., 0., -2. * M_PI * i / num_blades});
+        const auto q_root =
+            RotationVectorToQuaternion({0., 0., -2. * M_PI * static_cast<double>(i / num_blades)});
 
         // Declare vector of beam nodes
         std::vector<BeamNode> beam_nodes;
@@ -159,8 +160,9 @@ TEST(RotorTest, IEA15Rotor) {
     for (size_t i = 0; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
         const auto q_hub = RotationVectorToQuaternion(
-            {omega[0] * step_size * (i + 1), omega[1] * step_size * (i + 1),
-             omega[2] * step_size * (i + 1)}
+            {omega[0] * step_size * static_cast<double>(i + 1),
+             omega[1] * step_size * static_cast<double>(i + 1),
+             omega[2] * step_size * static_cast<double>(i + 1)}
         );
 
         // Define hub translation/rotation displacement
@@ -170,7 +172,7 @@ TEST(RotorTest, IEA15Rotor) {
         std::for_each(
             prescribed_bc.cbegin(), prescribed_bc.cend(),
             [&solver, &u_hub](const auto& bc) {
-                solver.constraints.UpdateDisplacement(bc.ID, u_hub);
+                solver.constraints.UpdateDisplacement(static_cast<size_t>(bc.ID), u_hub);
             }
         );
 
@@ -216,7 +218,7 @@ TEST(RotorTest, IEA15RotorHub) {
     const double step_size(0.01);  // seconds
     const double rho_inf(0.0);
     const double t_end(0.1);
-    const size_t num_steps(t_end / step_size + 1.0);
+    const auto num_steps = static_cast<size_t>(std::floor(t_end / step_size + 1.0));
 
     // Node location [0, 1]
     std::vector<double> node_loc;
@@ -239,7 +241,8 @@ TEST(RotorTest, IEA15RotorHub) {
     // Loop through blades
     for (size_t i = 0; i < num_blades; ++i) {
         // Define root rotation
-        const auto q_root = RotationVectorToQuaternion({0., 0., -2. * M_PI * i / num_blades});
+        const auto q_root =
+            RotationVectorToQuaternion({0., 0., -2. * M_PI * static_cast<double>(i / num_blades)});
 
         // Declare vector of beam nodes
         std::vector<BeamNode> beam_nodes;
@@ -312,15 +315,16 @@ TEST(RotorTest, IEA15RotorHub) {
     for (size_t i = 0; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
         const auto q_hub = RotationVectorToQuaternion(
-            {omega[0] * step_size * (i + 1), omega[1] * step_size * (i + 1),
-             omega[2] * step_size * (i + 1)}
+            {omega[0] * step_size * static_cast<double>(i + 1),
+             omega[1] * step_size * static_cast<double>(i + 1),
+             omega[2] * step_size * static_cast<double>(i + 1)}
         );
 
         // Define hub translation/rotation displacement
         Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
         // Update prescribed displacement constraint on hub
-        solver.constraints.UpdateDisplacement(hub_bc.ID, u_hub);
+        solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc.ID), u_hub);
 
         // Take step
         auto converged = Step(solver, beams);
@@ -364,7 +368,7 @@ TEST(RotorTest, IEA15RotorController) {
     const double step_size(0.01);  // seconds
     const double rho_inf(0.0);
     const double t_end(0.01 * 2.0 * M_PI / fabs(omega[2]));  // 3 revolutions
-    const size_t num_steps(t_end / step_size + 1.0);
+    const auto num_steps = static_cast<size_t>(std::floor(t_end / step_size + 1.));
 
     // Hub radius (meters)
     const double hub_rad{3.97};
@@ -387,7 +391,8 @@ TEST(RotorTest, IEA15RotorController) {
     // Loop through blades
     for (size_t i = 0; i < num_blades; ++i) {
         // Define root rotation
-        const auto q_root = RotationVectorToQuaternion({0., 0., -2. * M_PI * i / num_blades});
+        const auto q_root =
+            RotationVectorToQuaternion({0., 0., -2. * M_PI * static_cast<double>(i / num_blades)});
 
         // Declare vector of beam nodes
         std::vector<BeamNode> beam_nodes;
@@ -440,7 +445,8 @@ TEST(RotorTest, IEA15RotorController) {
     // Define hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0});
     for (size_t i = 0; i < beam_elems.size(); ++i) {
-        const auto q_root = RotationVectorToQuaternion({0., 0., -2. * M_PI * i / num_blades});
+        const auto q_root =
+            RotationVectorToQuaternion({0., 0., -2. * M_PI * static_cast<double>(i / num_blades)});
         const auto pitch_axis = RotateVectorByQuaternion(q_root, {1., 0., 0.});
         model.AddRotationControl(
             hub_node, beam_elems[i].nodes[0].node, pitch_axis, blade_pitch_command[i % 3]
@@ -475,17 +481,17 @@ TEST(RotorTest, IEA15RotorController) {
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         // Time at end of step
-        const double t = step_size * (i + 1);
+        const double t = step_size * static_cast<double>(i + 1);
 
         // Calculate hub rotation for this time step
         const auto q_hub = RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
 
         // Update prescribed displacement constraint on hub
         Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
-        solver.constraints.UpdateDisplacement(hub_bc.ID, u_hub);
+        solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc.ID), u_hub);
 
         // Update time in controller
-        controller.io->time = t;
+        controller.io->time = static_cast<float>(t);
 
         // call controller to get signals for this step
         controller.CallController();

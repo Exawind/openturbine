@@ -7,9 +7,9 @@
 namespace openturbine::restruct_poc::tests {
 
 TEST(UpdateNodeStateTests, TwoNodes_InOrder) {
-    auto indices = Kokkos::View<int[2]>("node_state_indices");
-    auto indices_data = std::array<int, 2>{0, 1};
-    auto indices_host = Kokkos::View<int[2], Kokkos::HostSpace>(indices_data.data());
+    auto indices = Kokkos::View<size_t[2]>("node_state_indices");
+    auto indices_data = std::array<size_t, 2>{0u, 1u};
+    auto indices_host = Kokkos::View<size_t[2], Kokkos::HostSpace>(indices_data.data());
     auto indices_mirror = Kokkos::create_mirror(indices);
     Kokkos::deep_copy(indices_mirror, indices_host);
     Kokkos::deep_copy(indices, indices_host);
@@ -73,9 +73,9 @@ TEST(UpdateNodeStateTests, TwoNodes_InOrder) {
 }
 
 TEST(UpdateNodeStateTests, TwoNodes_OutOfOrder) {
-    auto indices = Kokkos::View<int[2]>("node_state_indices");
-    auto indices_data = std::array<int, 2>{1, 0};
-    auto indices_host = Kokkos::View<int[2], Kokkos::HostSpace>(indices_data.data());
+    auto indices = Kokkos::View<size_t[2]>("node_state_indices");
+    auto indices_data = std::array<size_t, 2>{1u, 0u};
+    auto indices_host = Kokkos::View<size_t[2], Kokkos::HostSpace>(indices_data.data());
     auto indices_mirror = Kokkos::create_mirror(indices);
     Kokkos::deep_copy(indices_mirror, indices_host);
     Kokkos::deep_copy(indices, indices_host);

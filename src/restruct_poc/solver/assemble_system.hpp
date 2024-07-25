@@ -39,7 +39,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
 
     auto row_data_size = Kokkos::View<double*>::shmem_size(num_columns);
     auto col_idx_size = Kokkos::View<int*>::shmem_size(num_columns);
-    auto sparse_matrix_policy = Kokkos::TeamPolicy<>(num_rows, Kokkos::AUTO());
+    auto sparse_matrix_policy = Kokkos::TeamPolicy<>(static_cast<int>(num_rows), Kokkos::AUTO());
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
 
     Kokkos::parallel_for(

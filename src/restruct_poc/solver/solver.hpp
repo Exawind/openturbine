@@ -46,7 +46,7 @@ struct Solver {
     using SpmvHandle =
         KokkosSparse::SPMVHandle<ExecutionSpace, CrsMatrixType, ValuesType, ValuesType>;
     bool is_dynamic_solve;
-    int max_iter;
+    size_t max_iter;
     double h;
     double alpha_m;
     double alpha_f;
@@ -55,10 +55,10 @@ struct Solver {
     double gamma_prime;
     double beta_prime;
     double conditioner;
-    int num_system_nodes;
-    int num_system_dofs;
+    size_t num_system_nodes;
+    size_t num_system_dofs;
     Constraints constraints;
-    int num_dofs;
+    size_t num_dofs;
     State state;
     CrsMatrixType K;
     CrsMatrixType T;
@@ -91,7 +91,7 @@ struct Solver {
     Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
     Solver(
-        bool is_dynamic_solve_, int max_iter_, double h_, double rho_inf,
+        bool is_dynamic_solve_, size_t max_iter_, double h_, double rho_inf,
         std::vector<Node>& system_nodes, std::vector<Constraint> constraints_, Beams& beams_
     )
         : is_dynamic_solve(is_dynamic_solve_),
@@ -122,7 +122,7 @@ struct Solver {
           system_spadd_handle() {
         auto K_num_rows = this->num_system_dofs;
         auto K_num_columns = this->num_system_dofs;
-        auto K_num_non_zero = 0;
+        auto K_num_non_zero = size_t{0u};
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros", beams_.num_elems,
             ComputeNumberOfNonZeros{beams_.elem_indices}, K_num_non_zero
@@ -141,7 +141,8 @@ struct Solver {
         Kokkos::fence();
         auto K_values = ValuesType("K values", K_num_non_zero);
         K = CrsMatrixType(
-            "K", K_num_rows, K_num_columns, K_num_non_zero, K_values, K_row_ptrs, K_col_inds
+            "K", static_cast<int>(K_num_rows), static_cast<int>(K_num_columns), K_num_non_zero,
+            K_values, K_row_ptrs, K_col_inds
         );
 
         // Tangent operator sparse matrix
@@ -164,11 +165,12 @@ struct Solver {
         );
         auto T_values = ValuesType("T values", T_num_non_zero);
         T = CrsMatrixType(
-            "T", K_num_rows, K_num_columns, T_num_non_zero, T_values, T_row_ptrs, T_indices
+            "T", static_cast<int>(K_num_rows), static_cast<int>(K_num_columns), T_num_non_zero,
+            T_values, T_row_ptrs, T_indices
         );
 
         // Initialize contraint for indexing for sparse matrices
-        int B_num_non_zero = 0;
+        auto B_num_non_zero = size_t{0u};
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros_Constraints", this->constraints.num,
             ComputeNumberOfNonZeros_Constraints{this->constraints.data}, B_num_non_zero
@@ -185,7 +187,8 @@ struct Solver {
         auto B_values = ValuesType("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);
         B = CrsMatrixType(
-            "B", B_num_rows, B_num_columns, B_num_non_zero, B_values, B_row_ptrs, B_col_ind
+            "B", static_cast<int>(B_num_rows), static_cast<int>(B_num_columns), B_num_non_zero,
+            B_values, B_row_ptrs, B_col_ind
         );
 
         auto B_t_num_rows = B_num_columns;
@@ -203,8 +206,8 @@ struct Solver {
                 B_t_row_ptrs, B_t_col_inds}
         );
         B_t = CrsMatrixType(
-            "B_t", B_t_num_rows, B_t_num_columns, B_t_num_non_zero, B_t_values, B_t_row_ptrs,
-            B_t_col_inds
+            "B_t", static_cast<int>(B_t_num_rows), static_cast<int>(B_t_num_columns),
+            B_t_num_non_zero, B_t_values, B_t_row_ptrs, B_t_col_inds
         );
 
         system_spgemm_handle.create_spgemm_handle();
@@ -234,8 +237,9 @@ struct Solver {
                 num_system_dofs, system_matrix.graph.row_map, system_matrix_full_row_ptrs}
         );
         system_matrix_full = CrsMatrixType(
-            "system_matrix_full", num_dofs, num_dofs, system_matrix.nnz(), system_matrix.values,
-            system_matrix_full_row_ptrs, system_matrix.graph.entries
+            "system_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs),
+            system_matrix.nnz(), system_matrix.values, system_matrix_full_row_ptrs,
+            system_matrix.graph.entries
         );
 
         auto constraints_matrix_full_row_ptrs =
@@ -247,8 +251,8 @@ struct Solver {
             constraints_matrix.graph.row_map
         );
         constraints_matrix_full = CrsMatrixType(
-            "constraints_matrix_full", num_dofs, num_dofs, constraints_matrix.nnz(),
-            constraints_matrix.values, constraints_matrix_full_row_ptrs,
+            "constraints_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs),
+            constraints_matrix.nnz(), constraints_matrix.values, constraints_matrix_full_row_ptrs,
             constraints_matrix.graph.entries
         );
 
@@ -260,11 +264,11 @@ struct Solver {
                 num_system_dofs, B_t.graph.row_map, transpose_matrix_full_row_ptrs}
         );
         auto transpose_matrix_full_indices = IndicesType("transpose_matrix_full_indices", B_t.nnz());
-        Kokkos::deep_copy(transpose_matrix_full_indices, num_system_dofs);
-        KokkosBlas::axpy(1., B_t.graph.entries, transpose_matrix_full_indices);
+        Kokkos::deep_copy(transpose_matrix_full_indices, static_cast<int>(num_system_dofs));
+        KokkosBlas::axpy(1, B_t.graph.entries, transpose_matrix_full_indices);
         transpose_matrix_full = CrsMatrixType(
-            "transpose_matrix_full", num_dofs, num_dofs, B_t.nnz(), B_t.values,
-            transpose_matrix_full_row_ptrs, transpose_matrix_full_indices
+            "transpose_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs),
+            B_t.nnz(), B_t.values, transpose_matrix_full_row_ptrs, transpose_matrix_full_indices
         );
 
         spc_spadd_handle.create_spadd_handle(true, true);
@@ -286,10 +290,12 @@ struct Solver {
         );
 
         auto comm = Teuchos::createSerialComm<LocalOrdinalType>();
-        auto rowMap =
-            Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(full_matrix.numRows(), comm);
-        auto colMap =
-            Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(full_matrix.numCols(), comm);
+        auto rowMap = Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(
+            static_cast<size_t>(full_matrix.numRows()), comm
+        );
+        auto colMap = Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(
+            static_cast<size_t>(full_matrix.numCols()), comm
+        );
 
         A = Teuchos::rcp(new GlobalCrsMatrixType(rowMap, colMap, CrsMatrixType("A", full_matrix)));
         b = Tpetra::createMultiVector<ScalarType>(A->getRangeMap(), 1);

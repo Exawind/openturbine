@@ -8,9 +8,9 @@
 namespace openturbine {
 
 struct CalculateNodeForces_FE {
-    int first_node;
-    int first_qp;
-    int num_qps;
+    size_t first_node;
+    size_t first_qp;
+    size_t num_qps;
     View_N::const_type qp_weight_;
     View_N::const_type qp_jacobian_;
     View_NxN::const_type shape_interp_;
@@ -20,28 +20,28 @@ struct CalculateNodeForces_FE {
     View_Nx6 node_FE_;
 
     KOKKOS_FUNCTION
-    void operator()(int i_index) const {
+    void operator()(size_t i_index) const {
         const auto i = first_node + i_index;
         auto FE = Kokkos::Array<double, 6>{};
-        for (int j_index = 0; j_index < num_qps; ++j_index) {  // QPs
+        for (auto j_index = 0u; j_index < num_qps; ++j_index) {  // QPs
             const auto j = first_qp + j_index;
             const auto weight = qp_weight_(j);
             const auto coeff_c = weight * shape_deriv_(i, j_index);
             const auto coeff_d = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
-            for (int k = 0; k < 6; ++k) {
+            for (auto k = 0u; k < 6u; ++k) {
                 FE[k] += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
             }
         }
-        for (int k = 0; k < 6; ++k) {
+        for (auto k = 0u; k < 6u; ++k) {
             node_FE_(i, k) = FE[k];
         }
     }
 };
 
 struct CalculateNodeForces_FI_FG {
-    int first_node;
-    int first_qp;
-    int num_qps;
+    size_t first_node;
+    size_t first_qp;
+    size_t num_qps;
     View_N::const_type qp_weight_;
     View_N::const_type qp_jacobian_;
     View_NxN::const_type shape_interp_;
@@ -50,18 +50,18 @@ struct CalculateNodeForces_FI_FG {
     View_Nx6 node_FIG_;
 
     KOKKOS_FUNCTION
-    void operator()(int i_index) const {
+    void operator()(size_t i_index) const {
         const auto i = first_node + i_index;
         auto FIG = Kokkos::Array<double, 6>{};
-        for (int j_index = 0; j_index < num_qps; ++j_index) {  // QPs
+        for (auto j_index = 0u; j_index < num_qps; ++j_index) {  // QPs
             const auto j = first_qp + j_index;
             const auto weight = qp_weight_(j);
             const auto coeff_ig = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
-            for (int k = 0; k < 6; ++k) {
+            for (auto k = 0u; k < 6u; ++k) {
                 FIG[k] += coeff_ig * qp_Fig_(j, k);
             }
         }
-        for (int k = 0; k < 6; ++k) {
+        for (auto k = 0u; k < 6u; ++k) {
             node_FIG_(i, k) = FIG[k];
         }
     }

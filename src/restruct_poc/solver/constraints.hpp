@@ -14,7 +14,7 @@ namespace openturbine {
 struct Constraints {
     struct DeviceData {
         ConstraintType type;
-        Kokkos::pair<int, int> row_range;
+        Kokkos::pair<size_t, size_t> row_range;
         int base_node_index;
         int target_node_index;
         double X0[3];
@@ -29,8 +29,8 @@ struct Constraints {
         float* control;
     };
 
-    int num;
-    int num_dofs;
+    size_t num;
+    size_t num_dofs;
     std::vector<HostData> constraint_data;
     Kokkos::View<DeviceData*> data;
     View_N control;
@@ -39,10 +39,10 @@ struct Constraints {
     View_NxN B;
 
     Constraints() {}
-    Constraints(const std::vector<Constraint>& constraints, int num_system_dofs)
+    Constraints(const std::vector<Constraint>& constraints, size_t num_system_dofs)
         : num(constraints.size()),
           num_dofs(std::transform_reduce(
-              constraints.cbegin(), constraints.cend(), 0, std::plus{},
+              constraints.cbegin(), constraints.cend(), 0u, std::plus{},
               [](auto c) {
                   return c.NumDOFs();
               }
@@ -59,8 +59,8 @@ struct Constraints {
         auto host_data = Kokkos::create_mirror(this->data);
 
         // Loop through constraint input
-        int start_row = 0;
-        for (int i = 0; i < this->num; ++i) {
+        auto start_row = size_t{0u};
+        for (auto i = 0u; i < this->num; ++i) {
             // Set Host constraint data
             this->constraint_data[i].type = constraints[i].type;
             this->constraint_data[i].control = constraints[i].control;
@@ -83,7 +83,7 @@ struct Constraints {
             host_data(i).X0[2] = constraints[i].X0[2];
 
             // Set rotation axes
-            for (int j = 0; j < 3; ++j) {
+            for (auto j = 0u; j < 3u; ++j) {
                 host_data(i).axis_x[j] = constraints[i].x_axis[j];
                 host_data(i).axis_y[j] = constraints[i].y_axis[j];
                 host_data(i).axis_z[j] = constraints[i].z_axis[j];
@@ -98,22 +98,22 @@ struct Constraints {
     }
 
     // UpdateDisplacement sets the new displacement for the given constraint
-    void UpdateDisplacement(int id, Array_7 u_) { this->constraint_data[id].u = u_; }
+    void UpdateDisplacement(size_t id, Array_7 u_) { this->constraint_data[id].u = u_; }
 
     // UpdateViews transfers new prescribed displacements and control signals to views
     void UpdateViews() {
         // Prescribed displacement
         auto host_u_mirror = Kokkos::create_mirror(this->u);
         auto host_control_mirror = Kokkos::create_mirror(this->control);
-        for (size_t i = 0; i < this->constraint_data.size(); ++i) {
+        for (auto i = 0u; i < this->constraint_data.size(); ++i) {
             switch (this->constraint_data[i].type) {
                 case ConstraintType::kPrescribedBC: {
-                    for (int j = 0; j < kLieGroupComponents; ++j) {
+                    for (auto j = 0u; j < static_cast<unsigned>(kLieGroupComponents); ++j) {
                         host_u_mirror(i, j) = this->constraint_data[i].u[j];
                     }
                 } break;
                 case ConstraintType::kRotationControl: {
-                    host_control_mirror(i) = *this->constraint_data[i].control;
+                    host_control_mirror(i) = static_cast<double>(*this->constraint_data[i].control);
                 } break;
                 default:
                     break;

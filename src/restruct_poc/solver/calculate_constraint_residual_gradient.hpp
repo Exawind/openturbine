@@ -179,7 +179,7 @@ struct CalculateConstraintResidualGradient {
         //---------------------------------
 
         // Extract gradient block for target node of this constraint
-        auto i_col = i_node2 * kLieAlgebraComponents;
+        auto i_col = static_cast<size_t>(i_node2) * kLieAlgebraComponents;
         auto B = Kokkos::subview(
             B_, cd.row_range, Kokkos::make_pair(i_col, i_col + kLieAlgebraComponents)
         );
@@ -222,7 +222,7 @@ struct CalculateConstraintResidualGradient {
         }
 
         // Extract gradient block for base node of this constraint
-        i_col = i_node1 * kLieAlgebraComponents;
+        i_col = static_cast<size_t>(i_node1) * kLieAlgebraComponents;
         B = Kokkos::subview(
             B_, cd.row_range, Kokkos::make_pair(i_col, i_col + kLieAlgebraComponents)
         );

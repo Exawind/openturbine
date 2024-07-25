@@ -25,8 +25,8 @@ TEST(ControllerTest, DisconController) {
     swap->time = 0.;
     swap->pitch_blade1 = 0.;
     swap->pitch_angle_actuator_req = 0.;
-    swap->generator_speed = 122.909576;
-    swap->horizontal_wind_speed = 11.9900799;
+    swap->generator_speed = 122.909576f;
+    swap->horizontal_wind_speed = 11.9900799f;
     swap->pitch_blade2 = 0.;
     swap->pitch_blade3 = 0.;
     swap->generator_contactor_status = 1.;
@@ -61,12 +61,12 @@ TEST(ControllerTest, DisconController) {
     char msg[] = "msg";
     DISCON(avrSWAP, aviFAIL, in_file, out_name, msg);
 
-    EXPECT_FLOAT_EQ(avrSWAP[34], 1.);          // GeneratorContactorStatus
-    EXPECT_FLOAT_EQ(avrSWAP[35], 0.);          // ShaftBrakeStatus
-    EXPECT_FLOAT_EQ(avrSWAP[40], 0.);          // DemandedYawActuatorTorque
-    EXPECT_FLOAT_EQ(avrSWAP[44], 0.);          // PitchComCol
-    EXPECT_FLOAT_EQ(avrSWAP[46], 43093.5508);  // DemandedGeneratorTorque
-    EXPECT_FLOAT_EQ(avrSWAP[47], 0.);          // DemandedNacelleYawRate
+    EXPECT_FLOAT_EQ(avrSWAP[34], 1.);           // GeneratorContactorStatus
+    EXPECT_FLOAT_EQ(avrSWAP[35], 0.);           // ShaftBrakeStatus
+    EXPECT_FLOAT_EQ(avrSWAP[40], 0.);           // DemandedYawActuatorTorque
+    EXPECT_FLOAT_EQ(avrSWAP[44], 0.);           // PitchComCol
+    EXPECT_FLOAT_EQ(avrSWAP[46], 43093.5508f);  // DemandedGeneratorTorque
+    EXPECT_FLOAT_EQ(avrSWAP[47], 0.);           // DemandedNacelleYawRate
 }
 
 TEST(ControllerTest, TurbineController) {
@@ -81,8 +81,8 @@ TEST(ControllerTest, TurbineController) {
     controller.io->time = 0.;
     controller.io->pitch_blade1 = 0.;
     controller.io->pitch_angle_actuator_req = 0.;
-    controller.io->generator_speed = 122.909576;
-    controller.io->horizontal_wind_speed = 11.9900799;
+    controller.io->generator_speed = 122.909576f;
+    controller.io->horizontal_wind_speed = 11.9900799f;
     controller.io->pitch_blade2 = 0.;
     controller.io->pitch_blade3 = 0.;
     controller.io->generator_contactor_status = 1.;
@@ -116,7 +116,7 @@ TEST(ControllerTest, TurbineController) {
     EXPECT_FLOAT_EQ(controller.io->demanded_yaw_actuator_torque, 0.);  // DemandedYawActuatorTorque
     EXPECT_FLOAT_EQ(controller.io->pitch_command_collective, 0.);      // PitchComCol
     EXPECT_FLOAT_EQ(
-        controller.io->demanded_generator_torque, 43093.5508
+        controller.io->demanded_generator_torque, 43093.5508f
     );                                                              // DemandedGeneratorTorque
     EXPECT_FLOAT_EQ(controller.io->demanded_nacelle_yaw_rate, 0.);  // DemandedNacelleYawRate
 }

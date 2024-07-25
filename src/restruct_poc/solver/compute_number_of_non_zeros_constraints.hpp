@@ -12,9 +12,9 @@ struct ComputeNumberOfNonZeros_Constraints {
     Kokkos::View<Constraints::DeviceData*>::const_type constraint_data;
 
     KOKKOS_FUNCTION
-    void operator()(int i_constraint, int& update) const {
+    void operator()(int i_constraint, size_t& update) const {
         auto& cd = constraint_data[i_constraint];
-        auto num_blocks = cd.base_node_index < 0 ? 1 : 2;
+        auto num_blocks = cd.base_node_index < 0 ? 1u : 2u;
         update += num_blocks * kLieAlgebraComponents * (cd.row_range.second - cd.row_range.first);
     }
 };
