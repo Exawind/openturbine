@@ -1,8 +1,3 @@
-target_sources(${oturb_lib_name}
+target_sources(openturbine_library
     PRIVATE
-    #C++
-    # diagnostics.cpp
-    # io.cpp
-    console_io.cpp
-    # IOManager.cpp
 )

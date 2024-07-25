@@ -1,74 +1,36 @@
+add_library(openturbine_library)
+add_library(OpenTurbine::openturbine_library ALIAS openturbine_library)
 
-set(Kokkos_DIR "$ENV{Kokkos_ROOT}" CACHE STRING "Kokkos root directory")
-find_package(KokkosKernels REQUIRED)
-if(TARGET Kokkos::MKL)
-  find_package(MKL REQUIRED)
-endif()
+set_target_properties(openturbine_library PROPERTIES 
+  LINKER_LANGUAGE CXX
+  POSITION_INDEPENDENT_CODE ON
+  VISIBILITY_INLINES_HIDDEN YES)
 
-find_package(Amesos2 REQUIRED)
-
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
-    set(FS_LIB stdc++fs)
-  endif()
-endif()
-
-target_sources(${oturb_exe_name} PRIVATE main.cpp)
-set_target_properties(${oturb_exe_name} PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(${oturb_exe_name} PRIVATE
-    KokkosKernels::kokkoskernels
-    Amesos2::amesos2
-    ${FS_LIB}
+target_link_libraries(openturbine_library PRIVATE
+    openturbine_options
+    openturbine_warnings
 )
 
-set_target_properties(${oturb_lib_name} PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(${oturb_lib_name} PRIVATE
-    KokkosKernels::kokkoskernels
-    Amesos2::amesos2
-    ${FS_LIB}
+target_link_system_libraries(openturbine_library PRIVATE 
+  KokkosKernels::kokkoskernels
+  Amesos2::amesos2
+  ${FS_LIB}
 )
 
-target_include_directories(${oturb_exe_name} PRIVATE ${PROJECT_BINARY_DIR})
-target_include_directories(${oturb_exe_name}
+target_include_directories(openturbine_library
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
-    $<INSTALL_INTERFACE:include>
 )
 
-# OpenTurbine lib include directories
-target_include_directories(${oturb_lib_name}
-    PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
-    $<INSTALL_INTERFACE:include>
-)
+target_compile_features(openturbine_library PUBLIC cxx_std_17)
 
-# Get all source files
-# add_subdirectory(gebt_poc)
-# add_subdirectory(gen_alpha_poc)
+add_library(DISCON SHARED)
+set_target_properties(DISCON PROPERTIES PREFIX "" SUFFIX ".dll")
+
+add_library(DISCON_ROTOR_TEST_CONTROLLER SHARED)
+set_target_properties(DISCON_ROTOR_TEST_CONTROLLER PROPERTIES PREFIX "" SUFFIX ".dll")
+
 add_subdirectory(restruct_poc)
 add_subdirectory(io)
 add_subdirectory(utilities)
-
-# Generate OpenTurbine version header
-configure_file("${CMAKE_SOURCE_DIR}/cmake/OpenTurbineVersion.H.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/OpenTurbineVersion.H" @ONLY
-)
-
-target_link_libraries(${oturb_exe_name} PRIVATE ${oturb_lib_name})
-
-# Set -fpic options
-set_target_properties(${oturb_lib_name}
-    PROPERTIES
-    POSITION_INDEPENDENT_CODE ON
-)
-
-file(GLOB_RECURSE openturbine_header_list ${CMAKE_CURRENT_SOURCE_DIR} "*.H")
-add_custom_target(openturbine_headers SOURCES ${openturbine_header_list})
-
-# Add CMake-generated headers to installation
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/OpenTurbineVersion.H
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "src/gen_alpha_poc/quaternion.h"
-#include "src/gen_alpha_poc/utilities.h"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine::restruct_poc::tests {

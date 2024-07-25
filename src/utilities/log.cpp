@@ -1,4 +1,4 @@
-#include "src/utilities/log.h"
+#include "src/utilities/log.hpp"
 
 #include <chrono>
 #include <ctime>

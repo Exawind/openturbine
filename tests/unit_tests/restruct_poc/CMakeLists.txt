@@ -1,6 +1,6 @@
 
 target_sources(
-    ${oturb_unit_test_exe_name}
+    openturbine_unit_tests
     PRIVATE
     test_beams.cpp
     test_solver.cpp
@@ -39,7 +39,7 @@ target_sources(
 
 if(OTURB_ENABLE_VTK)
     target_sources(
-        ${oturb_unit_test_exe_name}
+        openturbine_unit_tests
         PRIVATE
         vtkout.hpp
     )

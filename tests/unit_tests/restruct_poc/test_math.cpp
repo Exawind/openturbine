@@ -235,7 +235,7 @@ TEST(VectorTest, CrossProduct_Set2) {
 void test_DotProduct_View() {
     auto a = Create1DView<3>({1., 2., 3.});
     auto b = Create1DView<3>({4., 5., 6.});
-    auto c = double{};
+    auto c = 0.;
     Kokkos::parallel_reduce(
         "DotProduct_View", 1, KOKKOS_LAMBDA(int, double& result) { result = DotProduct(a, b); }, c
     );
