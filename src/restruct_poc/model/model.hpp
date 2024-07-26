@@ -66,7 +66,7 @@ struct Model {
 
     /// Adds a rotation control constraint to the model and returns the constraint.
     Constraint AddRotationControl(
-        const Node& node1, const Node& node2, const Array_3& axis, float* control
+        const Node& node1, const Node& node2, const Array_3& axis, double* control
     ) {
         this->constraints.push_back(Constraint(
             ConstraintType::kRotationControl, static_cast<int>(this->constraints.size()), node1,

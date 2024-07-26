@@ -443,7 +443,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     auto beams = CreateBeams(beams_input);
 
     // Add hub node and associated constraints
-    float pitch = 0.;
+    auto pitch = 0.;
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
     model.AddRotationControl(hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);
     model.AddFixedBC(hub_node);
@@ -463,7 +463,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     for (int i = 0; i < 10; ++i) {
         double t = step_size * static_cast<double>(i + 1);
         // Set pitch
-        pitch = static_cast<float>(t * M_PI / 2.);
+        pitch = t * M_PI / 2.;
         const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
     }

@@ -16,6 +16,7 @@ Checks: "bugprone*,
          -cppcoreguidelines-avoid-c-arrays,
          -modernize-avoid-c-arrays,
          -bugprone-assignment-in-if-condition,
+         -bugprone-easily-swappable-parameters,
          -readability-named-parameter,
 "
 WarningsAsErrors: ''

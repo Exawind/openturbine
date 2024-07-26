@@ -26,7 +26,7 @@ struct Constraints {
     struct HostData {
         ConstraintType type;
         Array_7 u;
-        float* control;
+        double* control;
     };
 
     size_t num;
@@ -113,7 +113,7 @@ struct Constraints {
                     }
                 } break;
                 case ConstraintType::kRotationControl: {
-                    host_control_mirror(i) = static_cast<double>(*this->constraint_data[i].control);
+                    host_control_mirror(i) = *this->constraint_data[i].control;
                 } break;
                 default:
                     break;
