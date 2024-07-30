@@ -106,7 +106,7 @@ struct Solver {
           conditioner(beta * h * h),
           num_system_nodes(system_nodes.size()),
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
-          constraints(constraints_, num_system_dofs),
+          constraints(constraints_),
           num_dofs(num_system_dofs + constraints.num_dofs),
           state(num_system_nodes, constraints.num_dofs, system_nodes),
           T_dense("T dense", num_system_nodes),

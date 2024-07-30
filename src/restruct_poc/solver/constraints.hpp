@@ -36,10 +36,10 @@ struct Constraints {
     View_N control;
     View_Nx7 u;
     View_N Phi;
-    View_NxN B;
+    Kokkos::View<double* [6][12]> gradient_terms;
 
     Constraints() {}
-    Constraints(const std::vector<Constraint>& constraints, int num_system_dofs)
+    Constraints(const std::vector<Constraint>& constraints)
         : num(constraints.size()),
           num_dofs(std::transform_reduce(
               constraints.cbegin(), constraints.cend(), 0, std::plus{},
@@ -54,7 +54,7 @@ struct Constraints {
           control("control", num),
           u("u", num),
           Phi("residual_vector", num_dofs),
-          B("gradient_matrix", num_dofs, num_system_dofs) {
+          gradient_terms("gradient_terms", num) {
         // Create host mirror for constraint data
         auto host_data = Kokkos::create_mirror(this->data);
 
