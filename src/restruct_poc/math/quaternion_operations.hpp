@@ -59,9 +59,7 @@ KOKKOS_INLINE_FUNCTION void RotateVectorByQuaternion(
                (q(0) * q(0) - q(1) * q(1) - q(2) * q(2) + q(3) * q(3)) * v(2);
 }
 
-inline std::array<double, 3> RotateVectorByQuaternion(
-    const Array_4& q, const Array_3& v
-) {
+inline std::array<double, 3> RotateVectorByQuaternion(const Array_4& q, const Array_3& v) {
     auto v_rot = std::array<double, 3>{};
     v_rot[0] = (q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]) * v[0] +
                2. * (q[1] * q[2] - q[0] * q[3]) * v[1] + 2. * (q[1] * q[3] + q[0] * q[2]) * v[2];
