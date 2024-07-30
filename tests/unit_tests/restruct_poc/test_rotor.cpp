@@ -127,13 +127,23 @@ TEST(RotorTest, IEA15Rotor) {
     std::transform(
         beam_elems.cbegin(), beam_elems.cend(), std::back_inserter(prescribed_bc),
         [&model](const auto& beam_elem) {
-            return model.AddPrescribedBC(beam_elem.nodes[0].node, {0., 0., 0.});
+            return *model.AddPrescribedBC(beam_elem.nodes[0].node, {0., 0., 0.});
         }
     );
 
     // Create solver with initial node state
+    auto nodes_vector = std::vector<Node>{};
+    for (const auto& node : model.GetNodes()) {
+        nodes_vector.push_back(*node);
+    }
+
+    auto constraints_vector = std::vector<Constraint>{};
+    for (const auto& constraint : model.GetConstraints()) {
+        constraints_vector.push_back(*constraint);
+    }
+
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
     );
 
     // Remove output directory for writing step data
@@ -261,7 +271,7 @@ TEST(RotorTest, IEA15RotorHub) {
             );
 
             // Add beam node
-            beam_nodes.push_back(BeamNode(node_loc[j], node));
+            beam_nodes.push_back(BeamNode(node_loc[j], *node));
         }
 
         // Add beam element

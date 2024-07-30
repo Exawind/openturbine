@@ -112,7 +112,6 @@ TEST(RotatingBeamTest, StepConvergence) {
     auto beams = CreateBeams(beams_input);
 
     // Constraint inputs
-    // model.AddPrescribedBC(model.nodes[0]);
     model.AddPrescribedBC(*model.GetNode(0));
 
     // Solution parameters
