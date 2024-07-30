@@ -20,12 +20,18 @@ class Model {
 public:
     Model() = default;
 
-    Model(std::vector<Node> nodes, std::vector<BeamElement> beam_elements) {
-        for (auto& node : nodes) {
-            this->nodes_.push_back(std::make_shared<Node>(node));
+    Model(
+        const std::vector<Node>& nodes, const std::vector<BeamElement>& beam_elements,
+        const std::vector<Constraint>& constraints
+    ) {
+        for (const auto& n : nodes) {
+            this->nodes_.push_back(std::make_shared<Node>(n));
         }
-        for (auto& element : beam_elements) {
-            this->beam_elements_.push_back(std::make_shared<BeamElement>(element));
+        for (const auto& e : beam_elements) {
+            this->beam_elements_.push_back(std::make_shared<BeamElement>(e));
+        }
+        for (const auto& c : constraints) {
+            this->constraints_.push_back(std::make_shared<Constraint>(c));
         }
     }
 
