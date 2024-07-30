@@ -16,7 +16,7 @@ TEST(ControllerTest, DisconController) {
     // at time = 0.0s
 
     // Use dylib to load the dynamic library and get access to the controller functions
-    util::dylib lib("./DISCON.dll", util::dylib::no_filename_decorations);
+    const util::dylib lib("./DISCON.dll", util::dylib::no_filename_decorations);
     auto DISCON = lib.get_function<void(float*, int&, char*, char*, char*)>("DISCON");
 
     util::ControllerIO swap;
@@ -61,7 +61,10 @@ TEST(ControllerTest, DisconController) {
     char in_file[] = "in_file";
     char out_name[] = "out_name";
     char msg[] = "msg";
-    DISCON(avrSWAP.data(), aviFAIL, in_file, out_name, msg);
+    DISCON(
+        avrSWAP.data(), aviFAIL, static_cast<char*>(in_file), static_cast<char*>(out_name),
+        static_cast<char*>(msg)
+    );
 
     EXPECT_FLOAT_EQ(avrSWAP[34], 1.);           // GeneratorContactorStatus
     EXPECT_FLOAT_EQ(avrSWAP[35], 0.);           // ShaftBrakeStatus
@@ -74,8 +77,8 @@ TEST(ControllerTest, DisconController) {
 TEST(ControllerTest, TurbineController) {
     // Get a handle to the controller function via the TurbineController class and use it to
     // calculate the controller outputs
-    std::string shared_lib_path = "./DISCON.dll";
-    std::string controller_function_name = "DISCON";
+    const auto shared_lib_path = std::string{"./DISCON.dll"};
+    const auto controller_function_name = std::string{"DISCON"};
 
     auto controller = util::TurbineController(shared_lib_path, controller_function_name, "", "");
 
@@ -125,8 +128,8 @@ TEST(ControllerTest, TurbineController) {
 
 TEST(ControllerTest, TurbineControllerExceptionInvalidSharedLibraryPath) {
     // Test case: invalid shared library path
-    std::string shared_lib_path = "./INVALID.dll";
-    std::string controller_function_name = "DISCON";
+    const auto shared_lib_path = std::string{"./INVALID.dll"};
+    const auto controller_function_name = std::string{"DISCON"};
 
     EXPECT_THROW(
         auto controller = util::TurbineController(shared_lib_path, controller_function_name, "", ""),
@@ -136,8 +139,8 @@ TEST(ControllerTest, TurbineControllerExceptionInvalidSharedLibraryPath) {
 
 TEST(ControllerTest, TurbineControllerExceptionInvalidControllerFunctionName) {
     // Test case: invalid controller function name
-    std::string shared_lib_path = "./DISCON.dll";
-    std::string controller_function_name = "INVALID";
+    const auto shared_lib_path = std::string{"./DISCON.dll"};
+    const auto controller_function_name = std::string{"INVALID"};
 
     EXPECT_THROW(
         auto controller = util::TurbineController(shared_lib_path, controller_function_name, "", ""),

@@ -12,7 +12,7 @@ TEST(ComputeNumberOfNonZeros, SingleElement) {
 
     elem_indices_host(0).num_nodes = 5;
     Kokkos::deep_copy(elem_indices, elem_indices_host);
-    auto num_non_zero = size_t{0u};
+    auto num_non_zero = size_t{0U};
     Kokkos::parallel_reduce(1, ComputeNumberOfNonZeros{elem_indices}, num_non_zero);
     constexpr auto num_dof = 5 * 6;
     constexpr auto expected_num_non_zero = num_dof * num_dof;
@@ -27,7 +27,7 @@ TEST(ComputeNumberOfNonZeros, TwoElements) {
     elem_indices_host(0).num_nodes = 5;
     elem_indices_host(1).num_nodes = 3;
     Kokkos::deep_copy(elem_indices, elem_indices_host);
-    auto num_non_zero = size_t{0u};
+    auto num_non_zero = size_t{0U};
     Kokkos::parallel_reduce(2, ComputeNumberOfNonZeros{elem_indices}, num_non_zero);
     constexpr auto num_dof_elem1 = 5 * 6;
     constexpr auto num_dof_elem2 = 3 * 6;
