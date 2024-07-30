@@ -116,9 +116,7 @@ KOKKOS_INLINE_FUNCTION void QuaternionCompose(
     qn(3) = q1(0) * q2(3) + q1(1) * q2(2) - q1(2) * q2(1) + q1(3) * q2(0);
 }
 
-inline std::array<double, 4> QuaternionCompose(
-    const std::array<double, 4>& q1, const std::array<double, 4>& q2
-) {
+inline Array_4 QuaternionCompose(const Array_4& q1, const Array_4& q2) {
     auto qn = std::array<double, 4>{};
     qn[0] = q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3];
     qn[1] = q1[0] * q2[1] + q1[1] * q2[0] + q1[2] * q2[3] - q1[3] * q2[2];
