@@ -30,7 +30,10 @@ void PITCH_CONTROLLER(
 
     // Set message to success
     strncpy(avcMSG, "success\0", io.message_array_size);
-    // *std::next(avcMSG, io.message_array_size - 1) = 0;
+    *std::next(
+        avcMSG,
+        static_cast<typename std::iterator_traits<char*>::difference_type>(io.message_array_size) - 1
+    ) = 0;
 
     // If this is the first call, output the controller input and output file names
     if (first_call) {
