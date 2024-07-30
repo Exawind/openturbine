@@ -73,7 +73,8 @@ public:
 
     /// Add a beam element to the model and return a shared pointer to the element
     std::shared_ptr<BeamElement> AddBeamElement(
-        std::vector<BeamNode> nodes, std::vector<BeamSection> sections, BeamQuadrature quadrature
+        const std::vector<BeamNode>& nodes, const std::vector<BeamSection>& sections,
+        const BeamQuadrature& quadrature
     ) {
         return this->beam_elements_.emplace_back(std::make_shared<BeamElement>(
             std::move(nodes), std::move(sections), std::move(quadrature)
