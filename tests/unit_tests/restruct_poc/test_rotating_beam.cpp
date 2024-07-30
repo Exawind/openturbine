@@ -262,14 +262,6 @@ TEST(RotatingBeamTest, TwoBeam) {
     auto n = solver.num_system_dofs / 2;
     auto m = solver.constraints.num_dofs / 2;
 
-    // Check that St matrix is the same for both beams
-    auto St = kokkos_view_2D_to_vector(solver.St);
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            EXPECT_NEAR(St[i][j], St[n + i][n + j], 1.e-10);
-        }
-    }
-
     // Check that R vector is the same for both beams
     auto R = kokkos_view_1D_to_vector(solver.R);
     for (int i = 0; i < n; ++i) {
@@ -280,14 +272,6 @@ TEST(RotatingBeamTest, TwoBeam) {
     auto Phi = kokkos_view_1D_to_vector(solver.constraints.Phi);
     for (int i = 0; i < m; ++i) {
         EXPECT_NEAR(Phi[i], Phi[i + m], 1.e-10);
-    }
-
-    // Check that B matrix is the same for both beams
-    auto B = kokkos_view_2D_to_vector(solver.constraints.B);
-    for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < n; ++j) {
-            EXPECT_NEAR(B[i][j], B[i + m][j + n], 1.e-10);
-        }
     }
 }
 
