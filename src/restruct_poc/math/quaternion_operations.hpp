@@ -164,7 +164,7 @@ KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(
     }
 }
 
-inline std::array<double, 4> RotationVectorToQuaternion(const std::array<double, 3>& phi) {
+inline Array_4 RotationVectorToQuaternion(const Array_3& phi) {
     const auto angle = std::sqrt(phi[0] * phi[0] + phi[1] * phi[1] + phi[2] * phi[2]);
 
     if (std::abs(angle) < 1e-12) {
