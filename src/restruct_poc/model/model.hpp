@@ -60,10 +60,10 @@ public:
     }
 
     /// Return a node by ID - const/read-only version
-    std::shared_ptr<const Node> GetNode(int id) const { return this->nodes_[id]; }
+    const Node& GetNode(int id) const { return *this->nodes_[id]; }
 
     /// Return a node by ID - non-const version
-    std::shared_ptr<Node> GetNode(int id) { return this->nodes_[id]; }
+    Node& GetNode(int id) { return *this->nodes_[id]; }
 
     /// Returns a reference to the nodes in the model (as vector of shared pointers)
     const std::vector<std::shared_ptr<Node>>& GetNodes() const { return this->nodes_; }

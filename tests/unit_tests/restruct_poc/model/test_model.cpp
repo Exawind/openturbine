@@ -55,17 +55,17 @@ TEST_F(ModelFixture, TranslateModelNode) {
 
     // Get the node and check the position
     auto node_0 = model.GetNode(0);
-    ASSERT_EQ(node_0->ID, 0);
-    ASSERT_EQ(node_0->x[0], pos[0]);  // 0.
-    ASSERT_EQ(node_0->x[1], pos[1]);  // 0.
-    ASSERT_EQ(node_0->x[2], pos[2]);  // 0.
+    ASSERT_EQ(node_0.ID, 0);
+    ASSERT_EQ(node_0.x[0], pos[0]);  // 0.
+    ASSERT_EQ(node_0.x[1], pos[1]);  // 0.
+    ASSERT_EQ(node_0.x[2], pos[2]);  // 0.
 
     // Now translate the node and check the new position
     Array_3 displacement = {1., 2., 3.};
-    node_0->Translate(displacement);
-    ASSERT_EQ(node_0->x[0], pos[0] + displacement[0]);  // 1.
-    ASSERT_EQ(node_0->x[1], pos[1] + displacement[1]);  // 2.
-    ASSERT_EQ(node_0->x[2], pos[2] + displacement[2]);  // 3.
+    node_0.Translate(displacement);
+    ASSERT_EQ(node_0.x[0], pos[0] + displacement[0]);  // 1.
+    ASSERT_EQ(node_0.x[1], pos[1] + displacement[1]);  // 2.
+    ASSERT_EQ(node_0.x[2], pos[2] + displacement[2]);  // 3.
 }
 
 TEST_F(ModelFixture, RotateModelNode) {
@@ -78,22 +78,22 @@ TEST_F(ModelFixture, RotateModelNode) {
 
     // Translate the node to {1., 0., 0.}
     auto node_0 = model.GetNode(0);
-    node_0->Translate({1., 0., 0.});
+    node_0.Translate({1., 0., 0.});
 
     // Now rotate the node 90 degrees around the z-axis
-    node_0->Rotate({0., 0., 1.}, M_PI / 2.);
-    ASSERT_NEAR(node_0->x[0], 0., 1e-12);
-    ASSERT_NEAR(node_0->x[1], 1., 1e-12);
-    ASSERT_NEAR(node_0->x[2], 0., 1e-12);
+    node_0.Rotate({0., 0., 1.}, M_PI / 2.);
+    ASSERT_NEAR(node_0.x[0], 0., 1e-12);
+    ASSERT_NEAR(node_0.x[1], 1., 1e-12);
+    ASSERT_NEAR(node_0.x[2], 0., 1e-12);
 
     // Return the node to {1., 0., 0.}
-    node_0->Translate({1., -1., 0.});
+    node_0.Translate({1., -1., 0.});
 
     // Now rotate the node 45 degrees around the z-axis using a quaternion
-    node_0->Rotate({0.92388, 0., 0., 0.382683});
-    ASSERT_NEAR(node_0->x[0], 0.707107, 1e-6);
-    ASSERT_NEAR(node_0->x[1], 0.707107, 1e-6);
-    ASSERT_NEAR(node_0->x[2], 0., 1e-6);
+    node_0.Rotate({0.92388, 0., 0., 0.382683});
+    ASSERT_NEAR(node_0.x[0], 0.707107, 1e-6);
+    ASSERT_NEAR(node_0.x[1], 0.707107, 1e-6);
+    ASSERT_NEAR(node_0.x[2], 0., 1e-6);
 }
 
 TEST_F(ModelFixture, AddBeamElementToModel) {
