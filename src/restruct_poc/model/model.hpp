@@ -25,13 +25,13 @@ public:
         const std::vector<Constraint>& constraints
     ) {
         for (const auto& n : nodes) {
-            this->nodes_.push_back(std::make_shared<Node>(n));
+            this->nodes_.emplace_back(std::make_shared<Node>(n));
         }
         for (const auto& e : beam_elements) {
-            this->beam_elements_.push_back(std::make_shared<BeamElement>(e));
+            this->beam_elements_.emplace_back(std::make_shared<BeamElement>(e));
         }
         for (const auto& c : constraints) {
-            this->constraints_.push_back(std::make_shared<Constraint>(c));
+            this->constraints_.emplace_back(std::make_shared<Constraint>(c));
         }
     }
 
@@ -54,10 +54,9 @@ public:
         const Array_6& velocity = Array_6{0., 0., 0., 0., 0., 0.},
         const Array_6& acceleration = Array_6{0., 0., 0., 0., 0., 0.}
     ) {
-        auto node =
-            std::make_shared<Node>(nodes_.size(), position, displacement, velocity, acceleration);
-        this->nodes_.push_back(std::move(node));
-        return this->nodes_.back();
+        return this->nodes_.emplace_back(
+            std::make_shared<Node>(nodes_.size(), position, displacement, velocity, acceleration)
+        );
     }
 
     /// Return a node by ID - const/read-only version
@@ -76,9 +75,9 @@ public:
     std::shared_ptr<BeamElement> AddBeamElement(
         std::vector<BeamNode> nodes, std::vector<BeamSection> sections, BeamQuadrature quadrature
     ) {
-        auto element = std::make_shared<BeamElement>(nodes, sections, quadrature);
-        this->beam_elements_.push_back(std::move(element));
-        return this->beam_elements_.back();
+        return this->beam_elements_.emplace_back(std::make_shared<BeamElement>(
+            std::move(nodes), std::move(sections), std::move(quadrature)
+        ));
     }
 
     /// Return a beam element by ID - const/read-only version
@@ -99,50 +98,41 @@ public:
 
     /// Adds a rigid constraint to the model and returns the constraint
     std::shared_ptr<Constraint> AddRigidConstraint(const Node& node1, const Node& node2) {
-        auto constraint =
-            std::make_shared<Constraint>(ConstraintType::kRigid, constraints_.size(), node1, node2);
-        this->constraints_.push_back(std::move(constraint));
-        return this->constraints_.back();
+        return this->constraints_.emplace_back(
+            std::make_shared<Constraint>(ConstraintType::kRigid, constraints_.size(), node1, node2)
+        );
     }
 
     /// Adds a prescribed boundary condition constraint to the model and returns the constraint
     std::shared_ptr<Constraint> AddPrescribedBC(
         const Node& node, const Array_3& ref_position = {0., 0., 0.}
     ) {
-        auto constraint = std::make_shared<Constraint>(
+        return this->constraints_.emplace_back(std::make_shared<Constraint>(
             ConstraintType::kPrescribedBC, constraints_.size(), InvalidNode, node, ref_position
-        );
-        this->constraints_.push_back(std::move(constraint));
-        return this->constraints_.back();
+        ));
     }
 
     /// Adds a fixed boundary condition constraint to the model and returns the constraint
     std::shared_ptr<Constraint> AddFixedBC(const Node& node) {
-        auto constraint = std::make_shared<Constraint>(
+        return this->constraints_.emplace_back(std::make_shared<Constraint>(
             ConstraintType::kFixedBC, constraints_.size(), InvalidNode, node
-        );
-        this->constraints_.push_back(std::move(constraint));
-        return this->constraints_.back();
+        ));
     }
 
     /// Adds a cylindrical constraint to the model and returns the constraint
     std::shared_ptr<Constraint> AddCylindricalConstraint(const Node& node1, const Node& node2) {
-        auto constraint = std::make_shared<Constraint>(
+        return this->constraints_.emplace_back(std::make_shared<Constraint>(
             ConstraintType::kCylindrical, constraints_.size(), node1, node2
-        );
-        this->constraints_.push_back(std::move(constraint));
-        return this->constraints_.back();
+        ));
     }
 
     /// Adds a rotation control constraint to the model and returns the constraint
     std::shared_ptr<Constraint> AddRotationControl(
         const Node& node1, const Node& node2, const Array_3& axis, float* control
     ) {
-        auto constraint = std::make_shared<Constraint>(
+        return this->constraints_.emplace_back(std::make_shared<Constraint>(
             ConstraintType::kRotationControl, constraints_.size(), node1, node2, axis, control
-        );
-        this->constraints_.push_back(std::move(constraint));
-        return this->constraints_.back();
+        ));
     }
 
     /// Returns the constraints in the model (as vector of shared pointers)
