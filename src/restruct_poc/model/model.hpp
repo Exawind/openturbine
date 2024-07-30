@@ -37,9 +37,12 @@ public:
 
     Model(
         std::vector<std::shared_ptr<Node>> nodes,
-        std::vector<std::shared_ptr<BeamElement>> beam_elements
+        std::vector<std::shared_ptr<BeamElement>> beam_elements,
+        std::vector<std::shared_ptr<Constraint>> constraints
     )
-        : nodes_(std::move(nodes)), beam_elements_(std::move(beam_elements)) {}
+        : nodes_(std::move(nodes)),
+          beam_elements_(std::move(beam_elements)),
+          constraints_(std::move(constraints)) {}
 
     // Make the class non-copyable and non-assignable
     Model(const Model&) = delete;

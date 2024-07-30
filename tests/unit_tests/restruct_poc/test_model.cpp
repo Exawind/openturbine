@@ -123,4 +123,38 @@ TEST_F(ModelFixture, AddBeamElementToModel) {
     ASSERT_EQ(elements.size(), 1);
 }
 
+TEST(Model, ModelConstructorWithDefaults) {
+    // Create an empty model
+    Model model;
+    ASSERT_EQ(model.NumNodes(), 0);
+    ASSERT_EQ(model.NumBeamElements(), 0);
+    ASSERT_EQ(model.NumConstraints(), 0);
+}
+
+TEST(Model, ModelConstructorWithObjects) {
+    // Create a model with a couple of nodes, elements and constraints
+    auto nodes = std::vector<Node>{Node{0, {0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.}}};
+    auto beam_elements = std::vector<BeamElement>{};
+    auto constraints = std::vector<Constraint>{};
+
+    Model model(nodes, beam_elements, constraints);
+    ASSERT_EQ(model.NumNodes(), 1);
+    ASSERT_EQ(model.NumBeamElements(), 0);
+    ASSERT_EQ(model.NumConstraints(), 0);
+}
+
+TEST(Model, ModelConstructorWithPointers) {
+    // Create a model with a couple of nodes, elements and constraints
+    auto nodes = std::vector<std::shared_ptr<Node>>{std::make_shared<Node>(
+        0, Array_7{0., 0., 0., 0., 0., 0., 0.}, Array_7{0., 0., 0., 1., 0., 0., 0.}
+    )};
+    auto beam_elements = std::vector<std::shared_ptr<BeamElement>>{};
+    auto constraints = std::vector<std::shared_ptr<Constraint>>{};
+
+    Model model(nodes, beam_elements, constraints);
+    ASSERT_EQ(model.NumNodes(), 1);
+    ASSERT_EQ(model.NumBeamElements(), 0);
+    ASSERT_EQ(model.NumConstraints(), 0);
+}
+
 }  // namespace openturbine::restruct_poc::tests
