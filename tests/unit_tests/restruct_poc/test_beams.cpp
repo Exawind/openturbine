@@ -90,11 +90,11 @@ protected:
             {
                 BeamElement(
                     {
-                        BeamNode(0., *model.GetNode(0)),
-                        BeamNode(0.1726731646460114, *model.GetNode(1)),
-                        BeamNode(0.5, *model.GetNode(2)),
-                        BeamNode(0.82732683535398865, *model.GetNode(3)),
-                        BeamNode(1., *model.GetNode(4)),
+                        BeamNode(0., model.GetNode(0)),
+                        BeamNode(0.1726731646460114, model.GetNode(1)),
+                        BeamNode(0.5, model.GetNode(2)),
+                        BeamNode(0.82732683535398865, model.GetNode(3)),
+                        BeamNode(1., model.GetNode(4)),
                     },
                     {
                         BeamSection(0., mass_matrix, stiffness_matrix),

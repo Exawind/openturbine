@@ -112,7 +112,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     auto beams = CreateBeams(beams_input);
 
     // Constraint inputs
-    model.AddPrescribedBC(*model.GetNode(0));
+    model.AddPrescribedBC(model.GetNode(0));
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -401,7 +401,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
 
     // Add hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
-    model.AddRigidConstraint(*hub_node, *model.GetNode(0));
+    model.AddRigidConstraint(*hub_node, model.GetNode(0));
     auto hub_bc = model.AddPrescribedBC(*hub_node);
 
     // Solution parameters
