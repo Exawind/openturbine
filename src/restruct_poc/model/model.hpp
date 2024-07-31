@@ -44,10 +44,6 @@ public:
           beam_elements_(std::move(beam_elements)),
           constraints_(std::move(constraints)) {}
 
-    // Make the class non-copyable and non-assignable
-    Model(const Model&) = delete;
-    Model& operator=(const Model&) = delete;
-
     /// Add a node to the model and return a shared pointer to the node
     std::shared_ptr<Node> AddNode(
         const Array_7& position, const Array_7& displacement = Array_7{0., 0., 0., 1., 0., 0., 0.},
