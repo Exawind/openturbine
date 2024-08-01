@@ -1,7 +1,10 @@
 #pragma once
 
+#include <functional>
+
 #include "node.hpp"
 
+#include "src/restruct_poc/beams/beam_element.hpp"
 #include "src/restruct_poc/solver/constraint.hpp"
 #include "src/restruct_poc/types.hpp"
 
@@ -15,68 +18,132 @@ static const Node InvalidNode(-1, {0., 0., 0., 1., 0., 0., 0.});
 /// relationships between components in a turbine. Nodes represent points in space with
 /// position, displacement, velocity, and acceleration. Constraints represent relationships
 /// between nodes that restrict their relative motion in some way.
-struct Model {
-    std::vector<Node> nodes;
-    std::vector<Constraint> constraints;
+class Model {
+public:
+    Model() = default;
 
-    /// Adds a node to the model and returns the node
-    Node AddNode(
+    Model(
+        const std::vector<Node>& nodes, const std::vector<BeamElement>& beam_elements,
+        const std::vector<Constraint>& constraints
+    ) {
+        for (const auto& n : nodes) {
+            this->nodes_.emplace_back(std::make_shared<Node>(n));
+        }
+        for (const auto& e : beam_elements) {
+            this->beam_elements_.emplace_back(std::make_shared<BeamElement>(e));
+        }
+        for (const auto& c : constraints) {
+            this->constraints_.emplace_back(std::make_shared<Constraint>(c));
+        }
+    }
+
+    Model(
+        std::vector<std::shared_ptr<Node>> nodes,
+        std::vector<std::shared_ptr<BeamElement>> beam_elements,
+        std::vector<std::shared_ptr<Constraint>> constraints
+    )
+        : nodes_(std::move(nodes)),
+          beam_elements_(std::move(beam_elements)),
+          constraints_(std::move(constraints)) {}
+
+    /// Add a node to the model and return a shared pointer to the node
+    std::shared_ptr<Node> AddNode(
         const Array_7& position, const Array_7& displacement = Array_7{0., 0., 0., 1., 0., 0., 0.},
         const Array_6& velocity = Array_6{0., 0., 0., 0., 0., 0.},
         const Array_6& acceleration = Array_6{0., 0., 0., 0., 0., 0.}
     ) {
-        this->nodes.emplace_back(
-            static_cast<int>(nodes.size()), position, displacement, velocity, acceleration
+        return this->nodes_.emplace_back(
+            std::make_shared<Node>(nodes_.size(), position, displacement, velocity, acceleration)
         );
-        return this->nodes.back();
     }
 
-    /// Adds a rigid constraint to the model and returns the constraint.
-    Constraint AddRigidConstraint(const Node& node1, const Node& node2) {
-        this->constraints.emplace_back(
-            ConstraintType::kRigid, static_cast<int>(this->constraints.size()), node1, node2
-        );
-        return this->constraints.back();
-    }
+    /// Return a node by ID - const/read-only version
+    const Node& GetNode(size_t id) const { return *this->nodes_[id]; }
 
-    /// Adds a prescribed boundary condition constraint to the model and returns the constraint.
-    Constraint AddPrescribedBC(const Node& node, const Array_3& ref_position = {0., 0., 0.}) {
-        this->constraints.emplace_back(
-            ConstraintType::kPrescribedBC, static_cast<int>(this->constraints.size()), InvalidNode,
-            node, ref_position
-        );
-        return this->constraints.back();
-    }
+    /// Return a node by ID - non-const version
+    Node& GetNode(size_t id) { return *this->nodes_[id]; }
 
-    /// Adds a fixed boundary condition constraint to the model and returns the constraint.
-    Constraint AddFixedBC(const Node& node) {
-        this->constraints.emplace_back(
-            ConstraintType::kFixedBC, static_cast<int>(this->constraints.size()), InvalidNode, node
-        );
-        return this->constraints.back();
-    }
-
-    /// Adds a cylindrical constraint to the model and returns the constraint.
-    Constraint AddCylindricalConstraint(const Node& node1, const Node& node2) {
-        this->constraints.emplace_back(
-            ConstraintType::kCylindrical, static_cast<int>(this->constraints.size()), node1, node2
-        );
-        return this->constraints.back();
-    }
-
-    /// Adds a rotation control constraint to the model and returns the constraint.
-    Constraint AddRotationControl(
-        const Node& node1, const Node& node2, const Array_3& axis, double* control
-    ) {
-        this->constraints.emplace_back(
-            ConstraintType::kRotationControl, static_cast<int>(this->constraints.size()), node1,
-            node2, axis, control
-        );
-        return this->constraints.back();
-    }
+    /// Returns a reference to the nodes in the model (as vector of shared pointers)
+    const std::vector<std::shared_ptr<Node>>& GetNodes() const { return this->nodes_; }
 
     /// Returns the number of nodes in the model
-    [[nodiscard]] size_t NumNodes() const { return this->nodes.size(); }
+    size_t NumNodes() const { return this->nodes_.size(); }
+
+    /// Add a beam element to the model and return a shared pointer to the element
+    std::shared_ptr<BeamElement> AddBeamElement(
+        const std::vector<BeamNode>& nodes, const std::vector<BeamSection>& sections,
+        const BeamQuadrature& quadrature
+    ) {
+        return this->beam_elements_.emplace_back(std::make_shared<BeamElement>(
+            std::move(nodes), std::move(sections), std::move(quadrature)
+        ));
+    }
+
+    /// Return a beam element by ID - const/read-only version
+    const BeamElement& GetBeamElement(size_t id) const { return *this->beam_elements_[id]; }
+
+    /// Return a beam element by ID - non-const version
+    BeamElement& GetBeamElement(size_t id) { return *this->beam_elements_[id]; }
+
+    /// Returns a reference to the beam elements in the model
+    const std::vector<std::shared_ptr<BeamElement>>& GetBeamElements() const {
+        return this->beam_elements_;
+    }
+
+    /// Returns the number of beam elements in the model
+    size_t NumBeamElements() const { return this->beam_elements_.size(); }
+
+    /// Adds a rigid constraint to the model and returns the constraint
+    std::shared_ptr<Constraint> AddRigidConstraint(const Node& node1, const Node& node2) {
+        return this->constraints_.emplace_back(
+            std::make_shared<Constraint>(ConstraintType::kRigid, constraints_.size(), node1, node2)
+        );
+    }
+
+    /// Adds a prescribed boundary condition constraint to the model and returns the constraint
+    std::shared_ptr<Constraint> AddPrescribedBC(
+        const Node& node, const Array_3& ref_position = {0., 0., 0.}
+    ) {
+        return this->constraints_.emplace_back(std::make_shared<Constraint>(
+            ConstraintType::kPrescribedBC, constraints_.size(), InvalidNode, node, ref_position
+        ));
+    }
+
+    /// Adds a fixed boundary condition constraint to the model and returns the constraint
+    std::shared_ptr<Constraint> AddFixedBC(const Node& node) {
+        return this->constraints_.emplace_back(std::make_shared<Constraint>(
+            ConstraintType::kFixedBC, constraints_.size(), InvalidNode, node
+        ));
+    }
+
+    /// Adds a cylindrical constraint to the model and returns the constraint
+    std::shared_ptr<Constraint> AddCylindricalConstraint(const Node& node1, const Node& node2) {
+        return this->constraints_.emplace_back(std::make_shared<Constraint>(
+            ConstraintType::kCylindrical, constraints_.size(), node1, node2
+        ));
+    }
+
+    /// Adds a rotation control constraint to the model and returns the constraint
+    std::shared_ptr<Constraint> AddRotationControl(
+        const Node& node1, const Node& node2, const Array_3& axis, float* control
+    ) {
+        return this->constraints_.emplace_back(std::make_shared<Constraint>(
+            ConstraintType::kRotationControl, constraints_.size(), node1, node2, axis, control
+        ));
+    }
+
+    /// Returns the constraints in the model (as vector of shared pointers)
+    const std::vector<std::shared_ptr<Constraint>>& GetConstraints() const {
+        return this->constraints_;
+    }
+
+    /// Returns the number of constraints in the model
+    size_t NumConstraints() const { return this->constraints_.size(); }
+
+private:
+    std::vector<std::shared_ptr<Node>> nodes_;                 //< Nodes in the model
+    std::vector<std::shared_ptr<BeamElement>> beam_elements_;  //< Beam elements in the model
+    std::vector<std::shared_ptr<Constraint>> constraints_;     //< Constraints in the model
 };
 
 }  // namespace openturbine

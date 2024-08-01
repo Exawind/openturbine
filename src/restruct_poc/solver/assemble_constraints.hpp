@@ -6,8 +6,11 @@
 
 #include "calculate_constraint_residual_gradient.hpp"
 #include "compute_number_of_non_zeros.hpp"
+#include "contribute_elements_to_sparse_matrix.hpp"
+#include "copy_constraints_to_sparse_matrix.hpp"
 #include "copy_into_sparse_matrix.hpp"
 #include "copy_into_sparse_matrix_transpose.hpp"
+#include "copy_sparse_values_to_transpose.hpp"
 #include "populate_sparse_indices.hpp"
 #include "populate_sparse_row_ptrs.hpp"
 #include "solver.hpp"
@@ -27,50 +30,48 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
     // Transfer prescribed displacements to host
     solver.constraints.UpdateViews();
 
-    Kokkos::deep_copy(solver.constraints.Phi, 0.);
-    Kokkos::deep_copy(solver.constraints.B, 0.);
     Kokkos::parallel_for(
         "CalculateConstraintResidualGradient", solver.constraints.num,
         CalculateConstraintResidualGradient{
-            solver.constraints.data,
-            solver.constraints.control,
-            solver.constraints.u,
-            solver.state.q,
-            solver.constraints.Phi,
-            solver.constraints.B,
-        }
+            solver.constraints.data, solver.constraints.control, solver.constraints.u,
+            solver.state.q, solver.constraints.Phi, solver.constraints.gradient_terms}
     );
 
-    auto B_num_rows = solver.constraints.B.extent(0);
-    auto B_num_columns = solver.constraints.B.extent(1);
-
-    auto B_row_data_size = Kokkos::View<double*>::shmem_size(B_num_columns);
-    auto B_col_idx_size = Kokkos::View<int*>::shmem_size(B_num_columns);
-    auto constraint_policy = Kokkos::TeamPolicy<>(static_cast<int>(B_num_rows), Kokkos::AUTO());
-    constraint_policy.set_scratch_size(1, Kokkos::PerTeam(B_row_data_size + B_col_idx_size));
+    auto constraint_policy = Kokkos::TeamPolicy<>(static_cast<int>(solver.constraints.num), Kokkos::AUTO());
 
     Kokkos::parallel_for(
-        "CopyIntoSparseMatrix", constraint_policy,
-        CopyIntoSparseMatrix<Solver::CrsMatrixType>{solver.B, solver.constraints.B}
+        "CopyConstraintsToSparseMatrix", constraint_policy,
+        CopyConstraintsToSparseMatrix<Solver::CrsMatrixType>{
+            solver.constraints.data, solver.B, solver.constraints.gradient_terms}
     );
 
-    auto B_t_row_data_size = Kokkos::View<double*>::shmem_size(B_num_rows);
-    auto B_t_col_idx_size = Kokkos::View<int*>::shmem_size(B_num_rows);
-    auto constraint_transpose_policy =
-        Kokkos::TeamPolicy<>(static_cast<int>(B_num_columns), Kokkos::AUTO());
-    constraint_transpose_policy.set_scratch_size(
-        1, Kokkos::PerTeam(B_t_row_data_size + B_t_col_idx_size)
-    );
-    Kokkos::parallel_for(
-        "CopyIntoSparseMatrix_Transpose", constraint_transpose_policy,
-        CopyIntoSparseMatrix_Transpose<Solver::CrsMatrixType>{solver.B_t, solver.constraints.B}
-    );
+    Kokkos::fence();
+
+    {
+        auto trans_region = Kokkos::Profiling::ScopedRegion("Transpose Constraints Matrix");
+        auto B_num_rows = solver.B.numRows();
+        auto constraint_transpose_policy = Kokkos::TeamPolicy<>(B_num_rows, Kokkos::AUTO());
+        auto tmp_row_map = Solver::RowPtrType(
+            Kokkos::view_alloc(Kokkos::WithoutInitializing, "tmp_row_map"),
+            solver.B_t.graph.row_map.extent(0)
+        );
+        Kokkos::deep_copy(tmp_row_map, solver.B_t.graph.row_map);
+        Kokkos::parallel_for(
+            "CopySparseValuesToTranspose", constraint_transpose_policy,
+            CopySparseValuesToTranspose<Solver::CrsMatrixType>{solver.B, tmp_row_map, solver.B_t}
+        );
+        KokkosSparse::sort_crs_matrix(solver.B_t);
+    }
 
     {
         auto resid_region = Kokkos::Profiling::ScopedRegion("Assemble Residual");
-        auto R = Solver::ValuesType("R_local", R_system.extent(0));
+        auto R = Solver::ValuesType(
+            Kokkos::view_alloc(Kokkos::WithoutInitializing, "R_local"), R_system.extent(0)
+        );
         Kokkos::deep_copy(R, R_system);
-        auto lambda = Solver::ValuesType("lambda", solver.state.lambda.extent(0));
+        auto lambda = Solver::ValuesType(
+            Kokkos::view_alloc(Kokkos::WithoutInitializing, "lambda"), solver.state.lambda.extent(0)
+        );
         Kokkos::deep_copy(lambda, solver.state.lambda);
         auto spmv_handle = Solver::SpmvHandle();
         KokkosSparse::spmv(&spmv_handle, "T", 1., solver.B, lambda, 1., R);

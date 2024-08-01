@@ -349,6 +349,7 @@ TEST(NewSolverTest, ConstraintGradientMatrix) {
 
 TEST(NewSolverTest, AssembleResidualVector) {
     auto solver = SetUpSolverAndAssemble();
+
     expect_kokkos_view_1D_equal(
         solver.R,
         {
@@ -436,7 +437,7 @@ inline auto SetupAndTakeNoSteps() {
         [&](auto s) {
             const auto x = 10 * s + 2.;
             return BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.},
                        {0., x * omega, 0., 0., 0., omega}, {0., 0., 0., 0., 0., 0.}
                    )
@@ -663,7 +664,7 @@ inline auto SetupAndTakeTwoSteps() {
         [&](auto s) {
             const auto x = 10 * s + 2.;
             return BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.},
                        {0., x * omega, 0., 0., 0., omega}, {0., 0., 0., 0., 0., 0.}
                    )
@@ -721,6 +722,7 @@ inline auto SetupAndTakeTwoSteps() {
 
 TEST(SolverStep2Test, ConstraintResidualVector) {
     auto solver = SetupAndTakeTwoSteps();
+
     expect_kokkos_view_1D_equal(
         solver.constraints.Phi,
         {

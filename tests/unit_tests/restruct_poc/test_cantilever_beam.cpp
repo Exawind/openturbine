@@ -79,7 +79,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     std::transform(
         std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
         [&](auto s) {
-            return BeamNode(s, model.AddNode({10 * s, 0., 0., 1., 0., 0., 0.}));
+            return BeamNode(s, *model.AddNode({10 * s, 0., 0., 1., 0., 0., 0.}));
         }
     );
 
@@ -90,7 +90,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     auto beams = CreateBeams(beams_input);
 
     // Constraint inputs
-    model.AddFixedBC(model.nodes[0]);
+    model.AddFixedBC(model.GetNode(0));
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -100,7 +100,8 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
 
     // Create solver
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // First step

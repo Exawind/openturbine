@@ -1,259 +1,128 @@
-(compiling)=
 # Compiling
 
-OpenTurbine is written in C++ and compiles into both an executable and
-a static or shared library. The procedure and considerations for compiling
-OpenTurbine are described here.
+OpenTurbine is written in C++17 and should be buildable on all systems with a compliant compiler.
+Because it leverages Kokkos and Trilinos for performance portability, OpenTurbine is expected to run anywhere that those projects support.
+Every effort is made to test on a variety of platforms, including both Linux and MacOS, but it is unlikely that we routinely cover all possibilities.
+This page documents the build proceedure as known to work on Linux (RHEL8).  
+Please reach out to the developers if additional guidance is needed for your particular situation.
 
 ## Dependencies
 
-The third party dependencies used in OpenTurbine are listed below.
-These can be installed by any means appropriate for the target
-use. For HPC, it is recommended to use vendor specific libraries
-when available. For workstations, package managers such as
-conda, APT, and Homebrew will provide the easiest experience
-for linking and runtime path searches.
+Before building OpenTurbine, you'll need the following:
 
-- [CMake](<https://cmake.org/>) version 3.20 or higher
 - C++ compiler that supports the C++17 standard
-  - GCC version 10 or higher
-  - LLVM Clang 7 or higher
-  - Intel 2020 (oneAPI) or higher
-- [Kokkos](https://github.com/kokkos/kokkos) core programming model for performance portability (see {ref}`installing-kokkos`)
-- [LAPACK](https://www.netlib.org/lapack/) for linear algebra operations
-- OS: OpenTurbine is regularly tested on Linux and macOS
-- (Optional) Google Test (gtest) for the test infrastructure (via conda-forge)
-- (Optional) clang-format for linting (via conda-forge or brew)
+- [CMake](<https://cmake.org/>) the default build system for C++ projects, version 3.21+
+- [Kokkos](https://github.com/kokkos/kokkos) core programming model for performance portability
+- [KokkosKernels](https://github.com/kokkos/kokkoskernels) performance portable linear algebra library
+- [Trilinos](https://github.com/trilinos/Trilinos) primarily for the Amesos2 sparse direct linear solver package
+- [GoogleTest](https://github.com/google/googletest) unit testing package
 
+## Installing Third Party Librariess
 
-(installing-kokkos)=
-## Installing Kokkos
+While there are many ways to get the required Third Party Libraries (TPLs) for building, the easiest is the use the [spack](https://github.com/spack/spack) package manager.
+Spack provides a rich featureset for development and dependency management.
+The following should be considered a quick-start guide for installing and loading the TPLs you'll need for building OpenTurbine.
 
-OpenTurbine relies heavily on Kokkos for portability between systems,
-compilers, and hardware types. It is at the core of this software.
-Therefore, the Kokkos library used should be tuned to your specific
-use case. See the [Kokkos documentation](https://kokkos.github.io/kokkos-core-wiki/building.html)
-for instructions on building that library.
-
-For use in OpenTurbine, the Kokkos library must be available
-within a typical search path, or you must provide the search
-path via the `Kokkos_DIR` environment variable. This will
-typically be the install location from your Kokkos build.
-It should be set in the shell session where you're compiling
-OpenTurbine. See the example below.
-
+### Clone the spack repository, load the spack environment, and let spack learn about your system
 ```bash
-# Configure CMake in OpenTurbine without setting the environment variable
-cmake ..
-
-# Results in this error:
-# CMake Error at src/CMakeLists.txt:3 (find_package):
-#   By not providing "FindKokkos.cmake" in CMAKE_MODULE_PATH this project has
-#   asked CMake to find a package configuration file provided by "Kokkos", but
-#   CMake did not find one.
-#
-#   Could not find a package configuration file provided by "Kokkos" with any
-#   of the following names:
-#
-#     KokkosConfig.cmake
-#     kokkos-config.cmake
-#
-#   Add the installation prefix of "Kokkos" to CMAKE_PREFIX_PATH or set
-#   "Kokkos_DIR" to a directory containing one of the above files.  If "Kokkos"
-#   provides a separate development package or SDK, be sure it has been
-#   installed.
-
-# Set the environment variable
-export Kokkos_DIR=~/Development/kokkos/install
-
-# Test that is was set correctly
-echo $Kokkos_DIR
-# Displays:
-# ~/Development/kokkos/install
-
-# Reconfigure CMake in OpenTurbine
-cmake ..
+git clone git@github.com:spack/spack.git
+source spack/share/spack/setup-env.sh
+spack compiler find
+spack external find
 ```
 
-If you installed Kokkos using Spack, you can find the installation
-directory via spack and extract the path using grep as follows.
-
+### Install GoogleTest
 ```bash
-# Find the Kokkos and KokkosKernels installation directory via spack and
-# extract the path via grep & awk
-export Kokkos_DIR=$(spack find -p kokkos | grep -m 1 kokkos | awk '{print $2}')
+spack install googletest
 ```
 
-## Build system
+### Install Trilinos.
 
-The build system is defined entirely within a CMake project.
-It is configured via configuration variables that accept either
-boolean (`ON`/`OFF`) or string arguments. This is typically
-done via the command line interface for CMake.
+For building OpenTurbine, Trilinos must be configured without MPI and with the Basker solver enabled.
+We also commonly disable EPetra explicitly to prevent deprication warnings.
+At the time of this writing, OpenTurbine is known to work with Trilinos version 16.0.0 - the latest and default version in spack 
 
+For a simple serial build
 ```bash
-cmake .. -DBOOL_FLAG=ON -DSTRING_FLAG="value"
+spack install trilinos~mpi~epetra+basker
 ```
 
-See the [CMake documentation](https://cmake.org/documentation/)
-for a full reference on CMake. The primary targets available to build
-are listed below.
-
-| Target         | Type | Description |
-| ----------- | ----- | ----------- |
-| openturbine  | Exe | Primary executable including the `main`    |
-| openturbine_obj   | Lib | Library including all code used by `main`    |
-| openturbine_unit_tests   | Exe |  Unit test driver executable including all tests and links to the Google Test   |
-
-### Architecture options
-
-#### OTURB_ENABLE_OPENMP
-
-   Enable OpenMP threading support for CPU builds. It is not recommended to
-   combine this with GPU builds. Default: OFF
-
-#### OTURB_ENABLE_CUDA
-
-   Enable [NVIDIA CUDA GPU](https://developer.nvidia.com/cuda-zone) builds. Default: OFF
-
-#### OTURB_ENABLE_ROCM
-
-   Enable [AMD ROCm GPU](https://rocmdocs.amd.com/en/latest/) builds. Default: OFF
-
-(oturb-enable-dpcpp)=
-#### OTURB_ENABLE_DPCPP
-
-   Enable [Intel OneAPI DPC++](https://software.intel.com/content/www/us/en/develop/tools/oneapi.html) builds. Default: OFF
-
-#### OTURB_PRECISION
-
-   Specifies the floating point precision; can be one of "SINGLE" or "DOUBLE". Default: DOUBLE
-
-### Other OpenTurbine specific options
-
-#### OTURB_ENABLE_TESTS
-
-   Adds the testing infrastructure to the build. Default: OFF
-
-#### OTURB_ENABLE_ALL_WARNINGS
-
-   Enable compiler warnings during build. Default: OFF
-
-### General CMake options
-
-#### CMAKE_INSTALL_PREFIX
-
-   The directory where the compiled executables and libraries as well as headers
-   are installed. For example, passing
-   `-DCMAKE_INSTALL_PREFIX=${HOME}/software` will install the executables in
-   `${HOME}/software/bin` when the user executes the `make install` command.
-
-#### CMAKE_BUILD_TYPE
-
-   Controls the optimization levels for compilation. This variable can take the
-   following values:
-
-
-| Value          |  Typical flags |
-| ---- | ---- |
-| RELEASE |          `-O3 -DNDEBUG` |
-| DEBUG |            `-g` |
-| RelWithDebInfo |   `-O2 -g` |
-
-   Example: `-DCMAKE_BUILD_TYPE:STRING=RELEASE`
-
-#### CMAKE_CXX_COMPILER
-
-   Set the C++ compiler used for compiling the code.
-
-   For Intel DPC++ builds (see {ref}`oturb-enable-dpcpp`) this should be
-   set to `dpcpp`.
-
-#### CMAKE_CXX_FLAGS
-
-   Additional flags to be passed to the C++ compiler during compilation.
-
-
-## Step by step
-
-### 1. Load or install dependencies
-
-If you are on an HPC system that provides Modules Environment, load the
-necessary dependencies. If targeting GPUs, load CUDA
-modules.
-
-### 2. Clone the repository
-
-This creates a local copy of the software repository
-from GitHub.
-
+Trilinos can also be compiled with OpenMP support for parallelism on CPU based machines
 ```bash
-git clone https://github.com/exawind/openturbine.git
+spack install trilinos~mpi~epetra+basker+openmp
 ```
 
-### 3. Configure and build
-
-This step configures the CMake project and compiles the
-code into a "build/" directory within the repository directory.
-Be sure to note the location from where the commands are run.
-The final step can be run with no additional arguments
-to compile all targets or with a specific target. No arguments
-instructs to compile all targets.
-
+If building for CUDA platforms, Trilinos must be configured with CUDA support
 ```bash
-mkdir openturbine/build
-cd openturbine/build
-
-cmake .. -DOTURB_ENABLE_TESTS:BOOL=ON
-make
+spack install trilinos~mpi~epetra+basker+cuda+cuda_rdc
 ```
 
-Upon successfully building, two executables should be available
-in the `build` directory:
-- `openturbine`: main driver for the software
-- `openturbine_unit_tests`: driver for the unit tests
-
-### 4. Test your build
-
-Ensure the code is compiled and linked correctly by running the
-included tests. These involve low-level unit tests as well
-as high-level regression tests. See Testing for more info.
-
+### Load the TPLs into your environment
 ```bash
+spack load googletest
+spack load trilinos
+```
+
+Trilinos can also be compiled with support for other platforms.
+It is assumed that OpenTurbine will inherit compatibility with them, but they have not been tested at the time of writing.
+
+For those that choose not to use spack, you must build all of the dependencies manually.  
+You will have to ensure the the `Amesos2_DIR`, `GTest_DIR`, and `KokkosKernels_DIR` environment variables are properly set for those packages, or otherwise make sure that cmake's `find_package` utility will be able to find them.  
+
+## Building OpenTurbine
+
+The following is written assuming the TPLs in hand and the environment configured as described above.
+
+### Clone OpenTurbine and setup a build directory
+```bash
+git clone git@github.com:Exawind/openturbine.git
+cd openturbine
+mkdir build
+cd build
+```
+
+### Configure cmake
+
+For a CPU-based build which includes building unit tests, use
+```bash
+cmake ../
+```
+
+If Trilinos was built with CUDA support, you will need to use the nvcc_wrapper for compilation
+```bash
+cmake ../ -DCMAKE_CXX_COMPILER=nvcc_wrapper
+```
+
+### Build and Test
+At this time, OpenTurbine builds several shared libraries by default.  
+In order for thier unit tests to pass, they will have to be copied into the directory where your tests are run.
+```bash
+make -j
+cp src/*.dll tests/unit_tests/
 ctest --output-on-failure
 ```
 
-## Quirks and issues
-
-Here's a list of known issues or oddities and workarounds.
-
-### GTest from conda-forge
-
-If you've installed Google Test (GTest) with conda, you
-must also install Google Mock (GMock) as it is a dependency
-but it is not automatically included. The command below
-installs both.
-
+Once built, the unit test executable can also be run directly from the build directory
 ```bash
-conda install gtest gmock -c conda-forge
+cp src/*.dll ./
+./tests/unit_tests/openturbine_unit_tests
 ```
 
-On Linux with GTest from conda-forge and the GNU
-compiler, you may see this error:
-`undefined reference to 'std::__throw_bad_array_new_length()@GLIBCXX_3.4.29'`.
-In that case, upgrade to GCC 11 (`g++-11`). GTest in conda-forge is linked
-to `GLIBCXX_3.4.29` but GCC 10 has `GLIBCXX_3.4.28`.
-Check installed versions with this command:
-```bash
-strings /lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX
-```
-For Ubuntu 20.04, instructions on upgrading GCC are [here](https://lindevs.com/install-gcc-on-ubuntu).
+### Build Options
 
-On macOS with GTest from conda-forge, you must include the
-GTest directory in the library search path since it will not
-be found automatically by rpath.
+OpenTurbine has several build options which can be set either when running cmake from the commandline or through a GUI such as ccmake.
 
-```bash
-export DYLD_LIBRARY_PATH=~/miniconda3/envs/openturbine/lib  # customize this to your path
-```
-
+- [OpenTurbine_ENABLE_CLANG_TIDY] enables the Clang-Tidy static analysis tool
+- [OpenTurbine_ENABLE_COVERAGE] enables code coverage analysis using gcov
+- [OpenTurbine_ENABLE_CPPCHECK] enables the CppCheck static analysis tool
+- [OpenTurbine_ENABLE_IPO] enables link time optimization
+- [OpenTurbine_ENABLE_PCH] builds precompiled headers to potentially decrease compilation time
+- [OpenTurbine_ENABLE_SANITIZER_ADDRESS] enables the address sanitizer runtime analysis tool
+- [OpenTurbine_ENABLE_SANITIZER_LEAK] enables the leak sanitizer runtime analysis tool
+- [OpenTurbine_ENABLE_SANITIZER_MEMORY] enables the memory sanitizer runtime analysis tool
+- [OpenTurbine_ENABLE_SANITIZER_THREAD] enables the thread sanitizer runtime analysis tool
+- [OpenTurbine_ENABLE_SANITIZER_UNDEFINED] enables the undefined behavior sanitizer runtime analysis tool
+- [OpenTurbine_ENABLE_TESTS] builds OpenTurbine's test suite
+- [OpenTurbine_ENABLE_UNITY_BUILD] uses unity builds to potentially decrease compilation time
+- [OpenTurbine_ENABLE_VTK] builds OpenTurbine with VTK support for visualization in tests.  Will need the VTK TPL to be properly configured
+- [OpenTurbine_WARNINGS_AS_ERRORS] treats warnings as errors, including warnings from static analysis tools

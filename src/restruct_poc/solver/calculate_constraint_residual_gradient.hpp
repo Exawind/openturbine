@@ -16,7 +16,7 @@ struct CalculateConstraintResidualGradient {
     View_Nx7::const_type constraint_u;
     View_Nx7::const_type node_u;
     View_N Phi_;
-    View_NxN B_;
+    Kokkos::View<double* [6][12]> gradient_terms;
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
@@ -26,7 +26,7 @@ struct CalculateConstraintResidualGradient {
 
         // Initial difference between nodes
         auto X0_data = Kokkos::Array<double, 3>{cd.X0[0], cd.X0[1], cd.X0[2]};
-        auto X0 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{X0_data.data()};
+        auto X0 = View_3{X0_data.data()};
 
         // Base node displacement
         auto u1_data = Kokkos::Array<double, 3>{};
@@ -51,81 +51,75 @@ struct CalculateConstraintResidualGradient {
                     node_u(i_node1, 3), node_u(i_node1, 4), node_u(i_node1, 5), node_u(i_node1, 6)};
             }
         }
-        auto u1 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{u1_data.data()};
-        auto R1 = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1_data.data()};
+        auto u1 = View_3{u1_data.data()};
+        auto R1 = Kokkos::View<double[4]>{R1_data.data()};
 
         // Target node displacement
         auto R2_data = Kokkos::Array<double, 4>{
             node_u(i_node2, 3), node_u(i_node2, 4), node_u(i_node2, 5), node_u(i_node2, 6)};
-        auto R2 = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2_data.data()};
+        auto R2 = Kokkos::View<double[4]>{R2_data.data()};
         auto u2_data =
             Kokkos::Array<double, 3>{node_u(i_node2, 0), node_u(i_node2, 1), node_u(i_node2, 2)};
-        auto u2 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{u2_data.data()};
+        auto u2 = View_3{u2_data.data()};
 
         // Rotation control
         auto RC_data = Kokkos::Array<double, 4>{1., 0., 0., 0};
-        auto RC = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{RC_data.data()};
+        auto RC = Kokkos::View<double[4]>{RC_data.data()};
         auto RCt_data = Kokkos::Array<double, 4>{1., 0., 0., 0.};
-        auto RCt = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{RCt_data.data()};
+        auto RCt = Kokkos::View<double[4]>{RCt_data.data()};
         auto RV_data = Kokkos::Array<double, 3>{};
-        auto RV = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{RV_data.data()};
+        auto RV = Kokkos::View<double[4]>{RV_data.data()};
 
         auto R1t_data = Kokkos::Array<double, 4>{};
-        auto R1t = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1t_data.data()};
+        auto R1t = Kokkos::View<double[4]>{R1t_data.data()};
 
         auto R2t_data = Kokkos::Array<double, 4>{};
-        auto R2t = Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2t_data.data()};
+        auto R2t = Kokkos::View<double[4]>{R2t_data.data()};
 
         auto R1_X0_data = Kokkos::Array<double, 3>{};
-        auto R1_X0 =
-            Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1_X0_data.data()};
+        auto R1_X0 = Kokkos::View<double[4]>{R1_X0_data.data()};
 
         auto R2_R1t_data = Kokkos::Array<double, 4>{};
-        auto R2_R1t =
-            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2_R1t_data.data()};
+        auto R2_R1t = Kokkos::View<double[4]>{R2_R1t_data.data()};
 
         auto R2_RCt_data = Kokkos::Array<double, 4>{};
-        auto R2_RCt =
-            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2_RCt_data.data()};
+        auto R2_RCt = Kokkos::View<double[4]>{R2_RCt_data.data()};
 
         auto R1_R2t_data = Kokkos::Array<double, 4>{};
-        auto R1_R2t =
-            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R1_R2t_data.data()};
+        auto R1_R2t = Kokkos::View<double[4]>{R1_R2t_data.data()};
 
         auto R2_RCt_R1t_data = Kokkos::Array<double, 4>{};
-        auto R2_RCt_R1t =
-            Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{R2_RCt_R1t_data.data()};
+        auto R2_RCt_R1t = Kokkos::View<double[4]>{R2_RCt_R1t_data.data()};
 
         auto A_data = Kokkos::Array<double, 9>{};
-        auto A = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{A_data.data()};
+        auto A = View_3x3{A_data.data()};
 
         auto C_data = Kokkos::Array<double, 9>{};
-        auto C = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{C_data.data()};
+        auto C = View_3x3{C_data.data()};
 
         auto Ct_data = Kokkos::Array<double, 9>{};
-        auto Ct =
-            Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{Ct_data.data()};
+        auto Ct = View_3x3{Ct_data.data()};
 
         auto V3_data = Kokkos::Array<double, 3>{};
-        auto V3 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{V3_data.data()};
+        auto V3 = View_3{V3_data.data()};
 
         // Cylindrical constraint data
         auto x0_data = Kokkos::Array<double, 3>{cd.axis_x[0], cd.axis_x[1], cd.axis_x[2]};
         auto y0_data = Kokkos::Array<double, 3>{cd.axis_y[0], cd.axis_y[1], cd.axis_y[2]};
         auto z0_data = Kokkos::Array<double, 3>{cd.axis_z[0], cd.axis_z[1], cd.axis_z[2]};
-        auto x0 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{x0_data.data()};
-        auto y0 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{y0_data.data()};
-        auto z0 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{z0_data.data()};
+        auto x0 = View_3{x0_data.data()};
+        auto y0 = View_3{y0_data.data()};
+        auto z0 = View_3{z0_data.data()};
         auto x_data = Kokkos::Array<double, 3>{};
         auto y_data = Kokkos::Array<double, 3>{};
         auto z_data = Kokkos::Array<double, 3>{};
-        auto x = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{x_data.data()};
-        auto y = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{y_data.data()};
-        auto z = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{z_data.data()};
+        auto x = View_3{x_data.data()};
+        auto y = View_3{y_data.data()};
+        auto z = View_3{z_data.data()};
         auto xcy_data = Kokkos::Array<double, 3>{};
         auto xcz_data = Kokkos::Array<double, 3>{};
-        auto xcy = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{xcy_data.data()};
-        auto xcz = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{xcz_data.data()};
+        auto xcy = View_3{xcy_data.data()};
+        auto xcz = View_3{xcz_data.data()};
 
         //----------------------------------------------------------------------
         // Residual Vector
@@ -179,9 +173,10 @@ struct CalculateConstraintResidualGradient {
         //---------------------------------
 
         // Extract gradient block for target node of this constraint
-        auto i_col = static_cast<size_t>(i_node2) * kLieAlgebraComponents;
+        auto i_col = (i_node2 < i_node1 || i_node1 < 0) ? 0U : kLieAlgebraComponents;
         auto B = Kokkos::subview(
-            B_, cd.row_range, Kokkos::make_pair(i_col, i_col + kLieAlgebraComponents)
+            gradient_terms, i_constraint, Kokkos::ALL,
+            Kokkos::make_pair(i_col, i_col + kLieAlgebraComponents)
         );
 
         // B(0:3,0:3) = I
@@ -222,9 +217,11 @@ struct CalculateConstraintResidualGradient {
         }
 
         // Extract gradient block for base node of this constraint
-        i_col = static_cast<size_t>(i_node1) * kLieAlgebraComponents;
+        i_col = (i_node1 < i_node2) ? 0U : kLieAlgebraComponents;
+      
         B = Kokkos::subview(
-            B_, cd.row_range, Kokkos::make_pair(i_col, i_col + kLieAlgebraComponents)
+            gradient_terms, i_constraint, Kokkos::ALL,
+            Kokkos::make_pair(i_col, i_col + kLieAlgebraComponents)
         );
 
         // B(0:3,0:3) = -I
