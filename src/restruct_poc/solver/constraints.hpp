@@ -50,7 +50,7 @@ struct Constraints {
     Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints) {
         num = constraints.size();
         num_dofs = std::transform_reduce(
-            constraints.cbegin(), constraints.cend(), 0, std::plus{},
+            constraints.cbegin(), constraints.cend(), 0U, std::plus{},
             [](auto c) {
                 return c->NumDOFs();
             }
@@ -68,7 +68,7 @@ struct Constraints {
         auto host_data = Kokkos::create_mirror(this->data);
 
         // Loop through constraint input and set data
-        int start_row = 0;
+        auto start_row = size_t{0U};
         for (auto i = 0U; i < this->num; ++i) {
             // Set Host constraint data
             this->constraint_data[i].type = constraints[i]->type;
