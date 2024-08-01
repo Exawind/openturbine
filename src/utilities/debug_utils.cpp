@@ -1,6 +1,6 @@
-#include "src/utilities/debug_utils.H"
+#include "src/utilities/debug_utils.hpp"
 
-#include "src/utilities/log.h"
+#include "src/utilities/log.hpp"
 
 namespace openturbine::util {
 

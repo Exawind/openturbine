@@ -8,7 +8,7 @@ namespace openturbine::restruct_poc::tests {
 
 auto createDenseMatrix_1x1() {
     auto dense = Kokkos::View<double[1][1]>("dense");
-    auto dense_host_data = std::array{3.};
+    auto dense_host_data = std::array<double, 1>{3.};
     auto dense_host = Kokkos::View<double[1][1], Kokkos::HostSpace>(dense_host_data.data());
     auto dense_mirror = Kokkos::create_mirror(dense);
     Kokkos::deep_copy(dense_mirror, dense_host);
