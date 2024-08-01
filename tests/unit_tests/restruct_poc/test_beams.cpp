@@ -16,7 +16,7 @@
 #include "src/restruct_poc/system/update_state.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 inline auto SetUpBeams() {
     // Stiffness matrix for uniform composite beam section
@@ -781,4 +781,4 @@ TEST(BeamsTest, ResidualForceVector) {
     );
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

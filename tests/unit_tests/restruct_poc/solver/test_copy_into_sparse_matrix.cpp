@@ -4,7 +4,7 @@
 
 #include "src/restruct_poc/solver/copy_into_sparse_matrix.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 auto createDenseMatrix_1x1() {
     auto dense = Kokkos::View<double[1][1]>("dense");
@@ -187,4 +187,4 @@ TEST(CopyIntoSparseMatrix, Block) {
     ASSERT_EQ(values_mirror(12), 13.);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

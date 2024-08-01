@@ -3,7 +3,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 inline void CompareWithExpected(
     const Kokkos::View<const double**>::host_mirror_type& result,
@@ -29,4 +29,4 @@ inline void CompareWithExpected(
     }
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

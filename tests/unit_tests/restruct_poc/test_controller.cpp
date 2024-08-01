@@ -7,7 +7,7 @@
 #include "src/utilities/controllers/turbine_controller.hpp"
 #include "src/vendor/dylib/dylib.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(ControllerTest, DisconController) {
     // Test data generated using the following regression test from the
@@ -148,4 +148,4 @@ TEST(ControllerTest, TurbineControllerExceptionInvalidControllerFunctionName) {
     );
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

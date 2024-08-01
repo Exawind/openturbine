@@ -26,7 +26,7 @@
 #include "vtkout.hpp"
 #endif
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 template <typename T>
 void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
@@ -550,4 +550,4 @@ TEST(RotorTest, IEA15RotorController) {
     }
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

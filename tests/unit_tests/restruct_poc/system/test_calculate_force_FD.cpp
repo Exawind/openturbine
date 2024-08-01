@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/calculate_force_FD.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(CalculateForceFDTests, OneNode) {
     const auto x0pupSS = Kokkos::View<double[1][3][3]>("x0pupSS");
@@ -36,4 +36,4 @@ TEST(CalculateForceFDTests, OneNode) {
     CompareWithExpected(FD_mirror, FD_exact);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

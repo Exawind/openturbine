@@ -9,7 +9,7 @@
 #include "src/restruct_poc/types.hpp"
 #include "tests/unit_tests/restruct_poc/test_utilities.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 void TestIntegrateStiffnessMatrix_1Element1Node1QP(
     const Kokkos::View<const double[1][6][6]>& qp_Kuu,
@@ -629,4 +629,4 @@ TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeTwoQPs_Quu) {
     TestIntegrateStiffnessMatrix_1Element1Node2QPs_Quu();
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

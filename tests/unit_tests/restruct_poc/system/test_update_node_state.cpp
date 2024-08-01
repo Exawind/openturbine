@@ -4,7 +4,7 @@
 #include "src/restruct_poc/system/update_node_state.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 inline void CompareInOrder(
     const Kokkos::View<const double**>::host_mirror_type& result,
@@ -130,4 +130,4 @@ TEST(UpdateNodeStateTests, TwoNodes_OutOfOrder) {
     CompareOutOfOrder(node_u_ddot_mirror, A_host);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

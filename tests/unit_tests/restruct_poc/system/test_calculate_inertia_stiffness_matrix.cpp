@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/calculate_inertia_stiffness_matrix.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(CalculateInertiaStiffnessMatrixTests, OneNode) {
     const auto Muu = Kokkos::View<double[1][6][6]>("Muu");
@@ -98,4 +98,4 @@ TEST(CalculateInertiaStiffnessMatrixTests, OneNode) {
     CompareWithExpected(Kuu_mirror, Kuu_exact);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

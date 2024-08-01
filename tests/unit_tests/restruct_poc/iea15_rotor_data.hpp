@@ -3,7 +3,7 @@
 #include "src/restruct_poc/beams/beam_section.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 // Node location from [-1, 1]
 static constexpr auto node_xi = std::array{
@@ -792,4 +792,4 @@ static const std::vector<BeamSection> material_sections = {
     },
 };
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

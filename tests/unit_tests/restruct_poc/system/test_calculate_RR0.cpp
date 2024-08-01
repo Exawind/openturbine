@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/calculate_RR0.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(CalculateRR0Tests, OneNode) {
     const auto r0 = Kokkos::View<double[1][4]>("r0");
@@ -85,4 +85,4 @@ TEST(CalculateRR0Tests, TwoNodes) {
     }
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/calculate_strain.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(CalculateStrainTests, OneNode) {
     const auto x0_prime = Kokkos::View<double[1][3]>("x0_prime");
@@ -55,4 +55,4 @@ TEST(CalculateStrainTests, OneNode) {
     CompareWithExpected(strain_mirror, strain_exact);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

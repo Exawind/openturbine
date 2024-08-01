@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/calculate_gravity_force.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(CalculateGravityForceTests, OneNode) {
     const auto Muu = Kokkos::View<double[1][6][6]>("Muu");
@@ -47,4 +47,4 @@ TEST(CalculateGravityForceTests, OneNode) {
     CompareWithExpected(FG_mirror, FG_exact);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests
