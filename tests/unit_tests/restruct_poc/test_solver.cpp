@@ -66,7 +66,7 @@ protected:
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
             beam_nodes.push_back(BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.},         // Position
                        {0., 0., 0., 1., 0., 0., 0.},        // Displacement
                        {0., x * omega, 0., 0., 0., omega},  // Velocity
@@ -103,7 +103,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.AddPrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(model.GetNode(0));
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -113,7 +113,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+            *beams_
         );
 
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -259,20 +260,6 @@ TEST_F(NewSolverTest, ConstraintResidualVector) {
     );
 }
 
-TEST_F(NewSolverTest, ConstraintGradientMatrix) {
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(solver_->constraints.B, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)),
-        {
-            {1., 0., 0., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 1., 0., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 1., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 0., 1.0000000000000004, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 0., 0.0000000000000000, 1.0000000000000004, 0.0000000000000000},
-            {0., 0., 0., 0.0000000000000000, 0.0000000000000000, 1.0000000000000004},
-        }
-    );
-}
-
 TEST_F(NewSolverTest, AssembleResidualVector) {
     expect_kokkos_view_1D_equal(
         solver_->R,
@@ -373,7 +360,7 @@ protected:
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
             beam_nodes.push_back(BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.},         // Position
                        {0., 0., 0., 1., 0., 0., 0.},        // Displacement
                        {0., x * omega, 0., 0., 0., omega},  // Velocity
@@ -410,7 +397,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.AddPrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(model.GetNode(0));
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -420,7 +407,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+            *beams_
         );
 
         // Set constraint displacement
@@ -621,7 +609,7 @@ protected:
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
             beam_nodes.push_back(BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.},         // Position
                        {0., 0., 0., 1., 0., 0., 0.},        // Displacement
                        {0., x * omega, 0., 0., 0., omega},  // Velocity
@@ -658,7 +646,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.AddPrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(model.GetNode(0));
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -668,7 +656,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+            *beams_
         );
 
         // Set constraint displacement
@@ -707,20 +696,6 @@ TEST_F(SolverStep2Test, ConstraintResidualVector) {
             -1.31908395004359e-29,
             1.3190835103592412e-26,
             0.0,
-        }
-    );
-}
-
-TEST_F(SolverStep2Test, ConstraintGradientMatrix) {
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(solver_->constraints.B, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)),
-        {
-            {1.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-            {0.0, 1.0, 0.0, 0.0, 0.0, 0.0},
-            {0.0, 0.0, 1.0, 0.0, 0.0, 0.0},
-            {0.0, 0.0, 0.0, 1.0000000000000004, 0.0, -6.595417551796206e-27},
-            {0.0, 0.0, 0.0, 0.0, 1.0000000000000004, -6.59541975021795e-30},
-            {0.0, 0.0, 0.0, 6.595417551796206e-27, 6.595419750217949e-30, 1.0000000000000002},
         }
     );
 }

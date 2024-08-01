@@ -1,7 +1,13 @@
-This is a collection of GitHub workflow definitions for CI purposes.  They are organized as follows:
+# GitHub Workflow Definitions for CI
 
-1.  correctness-linux.yaml: Builds and runs our entire test suite on ubuntu-latest for both gcc and clang compilers.  Debug and release builds are tested.  Address sanitizer and undefined behavior sanitizer are enabled.
-2.  correctness-macos.yaml: Builds and runs our entire test suite on macos-latest using AppleClang.  Debug and release builds are tested.  Address sanitizer and undefined behavior sanitizer are enabled/
-3.  formatting.yaml:  Checks formatting on all source, header, and test files.  This does not automatically fix formatting errors - the developer is responsible for fixing any failures.
-4.  clang-tidy.yaml:  Runs the clang-tidy static analysis tool on all source, header, and test files.
-5.  cppcheck.yaml:  Runs the CppCheck static analaysis tool on all source, header, and test files.
+This collection of GitHub workflow definitions is designed for Continuous Integration (CI) and is organized as follows:
+
+- **correctness-linux.yaml**: Builds and runs the entire test suite on `ubuntu-latest` using both _gcc_ and _clang_ compilers. Both `Debug` and `Release` builds are tested, with `AddressSanitizer` and `UndefinedBehaviorSanitizer` enabled.
+
+- **correctness-macos.yaml**: Builds and runs the entire test suite on `macos-latest` using the _AppleClang_ compiler. Similar to the Linux workflow, both `Debug` and `Release` builds are tested, with `AddressSanitizer` and `UndefinedBehaviorSanitizer` enabled.
+
+- **formatting.yaml**: Checks formatting for all source, header, and test files. Note that this workflow does not automatically fix formatting errors; developers are responsible for correcting any issues detected.
+
+- **clang-tidy.yaml**: Runs the `clang-tidy` static analysis tool on all source, header, and test files.
+
+- **cppcheck.yaml**: Runs the `CppCheck` static analysis tool on all source, header, and test files.

@@ -90,11 +90,11 @@ protected:
             {
                 BeamElement(
                     {
-                        BeamNode(0., model.nodes[0]),
-                        BeamNode(0.1726731646460114, model.nodes[1]),
-                        BeamNode(0.5, model.nodes[2]),
-                        BeamNode(0.82732683535398865, model.nodes[3]),
-                        BeamNode(1., model.nodes[4]),
+                        BeamNode(0., model.GetNode(0)),
+                        BeamNode(0.1726731646460114, model.GetNode(1)),
+                        BeamNode(0.5, model.GetNode(2)),
+                        BeamNode(0.82732683535398865, model.GetNode(3)),
+                        BeamNode(1., model.GetNode(4)),
                     },
                     {
                         BeamSection(0., mass_matrix, stiffness_matrix),
@@ -122,7 +122,7 @@ protected:
         State state(
             beams_->num_nodes,  // Number of nodes
             0,                  // Number of constraints
-            model.nodes         // nodes
+            model.GetNodes()    // Node vector
         );
 
         // Set the beam's initial state

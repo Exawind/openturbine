@@ -107,7 +107,7 @@ TEST(RotorTest, IEA15Rotor) {
             );
 
             // Add beam node
-            beam_nodes.push_back(BeamNode(node_loc[j], node));
+            beam_nodes.push_back(BeamNode(node_loc[j], *node));
         }
 
         // Add beam element
@@ -128,13 +128,14 @@ TEST(RotorTest, IEA15Rotor) {
     std::transform(
         beam_elems.cbegin(), beam_elems.cend(), std::back_inserter(prescribed_bc),
         [&model](const auto& beam_elem) {
-            return model.AddPrescribedBC(beam_elem.nodes[0].node, {0., 0., 0.});
+            return *model.AddPrescribedBC(beam_elem.nodes[0].node, {0., 0., 0.});
         }
     );
 
     // Create solver with initial node state
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // Remove output directory for writing step data
@@ -264,7 +265,7 @@ TEST(RotorTest, IEA15RotorHub) {
             );
 
             // Add beam node
-            beam_nodes.push_back(BeamNode(node_loc[j], node));
+            beam_nodes.push_back(BeamNode(node_loc[j], *node));
         }
 
         // Add beam element
@@ -283,13 +284,14 @@ TEST(RotorTest, IEA15RotorHub) {
     // Define hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0});
     for (const auto& beam_elem : beam_elems) {
-        model.AddRigidConstraint(hub_node, beam_elem.nodes[0].node);
+        model.AddRigidConstraint(*hub_node, beam_elem.nodes[0].node);
     }
-    auto hub_bc = model.AddPrescribedBC(hub_node, {0., 0., 0.});
+    auto hub_bc = model.AddPrescribedBC(*hub_node, {0., 0., 0.});
 
     // Create solver with initial node state
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // Remove output directory for writing step data
@@ -324,7 +326,7 @@ TEST(RotorTest, IEA15RotorHub) {
         Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
 
         // Update prescribed displacement constraint on hub
-        solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc.ID), u_hub);
+        solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc->ID), u_hub);
 
         // Take step
         auto converged = Step(solver, beams);
@@ -414,7 +416,7 @@ TEST(RotorTest, IEA15RotorController) {
             );
 
             // Add beam node
-            beam_nodes.push_back(BeamNode(node_loc[j], node));
+            beam_nodes.push_back(BeamNode(node_loc[j], *node));
         }
 
         // Add beam element
@@ -449,14 +451,25 @@ TEST(RotorTest, IEA15RotorController) {
             RotationVectorToQuaternion({0., 0., -2. * M_PI * static_cast<double>(i / num_blades)});
         const auto pitch_axis = RotateVectorByQuaternion(q_root, {1., 0., 0.});
         model.AddRotationControl(
-            hub_node, beam_elems[i].nodes[0].node, pitch_axis, blade_pitch_command[i % 3]
+            *hub_node, beam_elems[i].nodes[0].node, pitch_axis, blade_pitch_command[i]
         );
     }
-    auto hub_bc = model.AddPrescribedBC(hub_node, {0., 0., 0.});
+    auto hub_bc = model.AddPrescribedBC(*hub_node, {0., 0., 0.});
 
     // Create solver with initial node state
+    auto nodes_vector = std::vector<Node>{};
+    for (const auto& node : model.GetNodes()) {
+        nodes_vector.push_back(*node);
+    }
+
+    auto constraints_vector = std::vector<Constraint>{};
+    for (const auto& constraint : model.GetConstraints()) {
+        constraints_vector.push_back(*constraint);
+    }
+
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // Remove output directory for writing step data
@@ -488,7 +501,8 @@ TEST(RotorTest, IEA15RotorController) {
 
         // Update prescribed displacement constraint on hub
         Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
-        solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc.ID), u_hub);
+
+        solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc->ID), u_hub);
 
         // Update time in controller
         controller.io->time = static_cast<float>(t);
