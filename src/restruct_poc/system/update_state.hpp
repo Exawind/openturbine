@@ -26,7 +26,9 @@
 
 namespace openturbine {
 
-inline void UpdateState(Beams& beams, View_Nx7 Q, View_Nx6 V, View_Nx6 A) {
+inline void UpdateState(
+    const Beams& beams, const View_Nx7& Q, const View_Nx6& V, const View_Nx6& A
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State");
     Kokkos::parallel_for(
         "UpdateNodeState", beams.num_nodes,

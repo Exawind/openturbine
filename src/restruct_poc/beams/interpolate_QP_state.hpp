@@ -18,14 +18,14 @@ struct InterpolateQPState_u {
     void operator()(size_t j_index) const {
         const auto j = first_qp + j_index;
         auto local_total = Kokkos::Array<double, 3>{};
-        for (auto i_index = 0u; i_index < num_nodes; ++i_index) {
+        for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
             const auto i = first_node + i_index;
             const auto phi = shape_interp(i, j_index);
-            for (auto k = 0u; k < 3u; ++k) {
+            for (auto k = 0U; k < 3U; ++k) {
                 local_total[k] += node_u(i, k) * phi;
             }
         }
-        for (auto k = 0u; k < 3u; ++k) {
+        for (auto k = 0U; k < 3U; ++k) {
             qp_u(j, k) = local_total[k];
         }
     }
@@ -45,14 +45,14 @@ struct InterpolateQPState_uprime {
         const auto j = first_qp + j_index;
         const auto jacobian = qp_jacobian(j);
         auto local_total = Kokkos::Array<double, 3>{};
-        for (auto i_index = 0u; i_index < num_nodes; ++i_index) {
+        for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
             const auto i = first_node + i_index;
             const auto dphi = shape_deriv(i, j_index);
-            for (auto k = 0u; k < 3u; ++k) {
+            for (auto k = 0U; k < 3U; ++k) {
                 local_total[k] += node_u(i, k) * dphi / jacobian;
             }
         }
-        for (auto k = 0u; k < 3u; ++k) {
+        for (auto k = 0U; k < 3U; ++k) {
             qp_uprime(j, k) = local_total[k];
         }
     }
@@ -70,10 +70,10 @@ struct InterpolateQPState_r {
     void operator()(size_t j_index) const {
         const auto j = first_qp + j_index;
         auto local_total = Kokkos::Array<double, 4>{};
-        for (auto i_index = 0u; i_index < num_nodes; ++i_index) {
+        for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
             const auto i = first_node + i_index;
             const auto phi = shape_interp(i, j_index);
-            for (auto k = 0u; k < 4u; ++k) {
+            for (auto k = 0U; k < 4U; ++k) {
                 local_total[k] += node_u(i, k + 3) * phi;
             }
         }
@@ -85,7 +85,7 @@ struct InterpolateQPState_r {
         if (length == 0.) {
             local_total = length_zero_result;
         }
-        for (auto k = 0u; k < 4u; ++k) {
+        for (auto k = 0U; k < 4U; ++k) {
             qp_r(j, k) = local_total[k];
         }
     }
@@ -105,14 +105,14 @@ struct InterpolateQPState_rprime {
         const auto j = first_qp + j_index;
         const auto jacobian = qp_jacobian(j);
         auto local_total = Kokkos::Array<double, 4>{};
-        for (auto i_index = 0u; i_index < num_nodes; ++i_index) {
+        for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
             const auto i = first_node + i_index;
             const auto dphi = shape_deriv(i, j_index);
-            for (auto k = 0u; k < 4u; ++k) {
+            for (auto k = 0U; k < 4U; ++k) {
                 local_total[k] += node_u(i, k + 3) * dphi / jacobian;
             }
         }
-        for (auto k = 0u; k < 4u; ++k) {
+        for (auto k = 0U; k < 4U; ++k) {
             qp_rprime(j, k) = local_total[k];
         }
     }

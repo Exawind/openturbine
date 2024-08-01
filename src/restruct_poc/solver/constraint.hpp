@@ -58,7 +58,7 @@ struct Constraint {
 
         // If rotation control constraint, vec is rotation axis
         if (constraint_type == ConstraintType::kCylindrical) {
-            Array_3 x{1., 0., 0.};
+            constexpr auto x = std::array{1., 0., 0.};
             auto x_hat = UnitVector(this->X0);
 
             // Create rotation matrix which rotates x to match vector
@@ -91,10 +91,10 @@ struct Constraint {
     }
 
     /// Returns the number of degrees of freedom used by constraint
-    size_t NumDOFs() const {
+    [[nodiscard]] size_t NumDOFs() const {
         switch (this->type) {
             case ConstraintType::kCylindrical: {
-                return 5u;
+                return 5U;
             } break;
             default: {
                 return static_cast<size_t>(kLieAlgebraComponents);  // 6

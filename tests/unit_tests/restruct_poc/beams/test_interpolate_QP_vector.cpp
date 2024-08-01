@@ -5,7 +5,7 @@
 
 #include "src/restruct_poc/beams/interpolate_QP_vector.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 inline auto create_node_u_dot_OneNode() {
     constexpr auto num_nodes = 1;
@@ -108,4 +108,4 @@ TEST(InterpolateQPVectorTests, TwoNodeTwoQP) {
     EXPECT_NEAR(qp_u_dot_mirror(1, 2), 54., tolerance);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

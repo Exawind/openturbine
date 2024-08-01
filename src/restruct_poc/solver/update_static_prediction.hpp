@@ -15,8 +15,8 @@ struct UpdateStaticPrediction {
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_node) const {
-        for (auto j = 0u; j < kLieAlgebraComponents; j++) {
-            auto delta = x_delta(i_node * 6 + j);
+        for (auto j = 0U; j < kLieAlgebraComponents; j++) {
+            const auto delta = x_delta(i_node * 6 + j);
             q_delta(i_node, j) += delta / h;
         }
     }

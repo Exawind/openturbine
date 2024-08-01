@@ -41,12 +41,12 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
 
     for (size_t i = 0; i < beams_input.NumElements(); i++) {
         // Get number of nodes and quadrature points in element
-        size_t num_nodes = beams_input.elements[i].nodes.size();
-        size_t num_qps = beams_input.elements[i].quadrature.size();
+        const auto num_nodes = beams_input.elements[i].nodes.size();
+        const auto num_qps = beams_input.elements[i].quadrature.size();
 
         // Create element indices and set in host mirror
         host_elem_indices[i] = Beams::ElemIndices(num_nodes, num_qps, node_counter, qp_counter);
-        auto& idx = host_elem_indices[i];
+        const auto& idx = host_elem_indices[i];
 
         // Populate beam node->state indices
         for (size_t j = 0; j < num_nodes; ++j) {
