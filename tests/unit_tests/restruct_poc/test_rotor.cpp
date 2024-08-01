@@ -132,18 +132,9 @@ TEST(RotorTest, IEA15Rotor) {
     );
 
     // Create solver with initial node state
-    auto nodes_vector = std::vector<Node>{};
-    for (const auto& node : model.GetNodes()) {
-        nodes_vector.push_back(*node);
-    }
-
-    auto constraints_vector = std::vector<Constraint>{};
-    for (const auto& constraint : model.GetConstraints()) {
-        constraints_vector.push_back(*constraint);
-    }
-
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // Remove output directory for writing step data
@@ -295,18 +286,9 @@ TEST(RotorTest, IEA15RotorHub) {
     auto hub_bc = model.AddPrescribedBC(*hub_node, {0., 0., 0.});
 
     // Create solver with initial node state
-    auto nodes_vector = std::vector<Node>{};
-    for (const auto& node : model.GetNodes()) {
-        nodes_vector.push_back(*node);
-    }
-
-    auto constraints_vector = std::vector<Constraint>{};
-    for (const auto& constraint : model.GetConstraints()) {
-        constraints_vector.push_back(*constraint);
-    }
-
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // Remove output directory for writing step data
@@ -480,7 +462,8 @@ TEST(RotorTest, IEA15RotorController) {
     }
 
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // Remove output directory for writing step data

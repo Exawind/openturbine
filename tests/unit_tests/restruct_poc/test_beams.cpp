@@ -118,16 +118,11 @@ protected:
         beams_ = new Beams();
         *beams_ = CreateBeams(beams_input);
 
-        auto nodes_vector = std::vector<Node>{};
-        for (const auto& node : model.GetNodes()) {
-            nodes_vector.push_back(*node);
-        }
-
         // Create initial state
         State state(
             beams_->num_nodes,  // Number of nodes
             0,                  // Number of constraints
-            nodes_vector        // Nodes
+            model.GetNodes()    // Node vector
         );
 
         // Set the beam's initial state

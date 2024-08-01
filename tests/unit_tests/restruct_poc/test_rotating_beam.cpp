@@ -121,18 +121,9 @@ TEST(RotatingBeamTest, StepConvergence) {
     const double rho_inf(0.9);
 
     // Create solver
-    auto nodes_vector = std::vector<Node>{};
-    for (const auto& node : model.GetNodes()) {
-        nodes_vector.push_back(*node);
-    }
-
-    auto constraints_vector = std::vector<Constraint>{};
-    for (const auto& constraint : model.GetConstraints()) {
-        constraints_vector.push_back(*constraint);
-    }
-
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // Perform 10 time steps and check for convergence within max_iter iterations
@@ -227,18 +218,9 @@ TEST(RotatingBeamTest, TwoBeam) {
     const double rho_inf(0.9);
 
     // Create solver with initial node state
-    auto nodes_vector = std::vector<Node>{};
-    for (const auto& node : model.GetNodes()) {
-        nodes_vector.push_back(*node);
-    }
-
-    auto constraints_vector = std::vector<Constraint>{};
-    for (const auto& constraint : model.GetConstraints()) {
-        constraints_vector.push_back(*constraint);
-    }
-
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // Calculate hub rotation for this time step
@@ -344,7 +326,8 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     }
 
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // Perform time steps and check for convergence within max_iter iterations
@@ -422,7 +405,8 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     }
 
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // Perform 10 time steps and check for convergence within max_iter iterations
@@ -496,7 +480,8 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     }
 
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // Perform 10 time steps and check for convergence within max_iter iterations
@@ -587,7 +572,8 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
     }
 
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
 #ifdef OTURB_ENABLE_VTK

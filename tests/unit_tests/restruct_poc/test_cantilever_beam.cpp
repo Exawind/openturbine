@@ -99,18 +99,9 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     const double rho_inf(0.0);
 
     // Create solver
-    auto nodes_vector = std::vector<Node>{};
-    for (const auto& node : model.GetNodes()) {
-        nodes_vector.push_back(*node);
-    }
-
-    auto constraints_vector = std::vector<Constraint>{};
-    for (const auto& constraint : model.GetConstraints()) {
-        constraints_vector.push_back(*constraint);
-    }
-
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     // First step

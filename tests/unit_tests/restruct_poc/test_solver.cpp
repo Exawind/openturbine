@@ -112,18 +112,9 @@ protected:
         const double rho_inf(0.9);
 
         // Create solver
-        auto nodes_vector = std::vector<Node>{};
-        for (const auto& node : model.GetNodes()) {
-            nodes_vector.push_back(*node);
-        }
-
-        auto constraints_vector = std::vector<Constraint>{};
-        for (const auto& constraint : model.GetConstraints()) {
-            constraints_vector.push_back(*constraint);
-        }
-
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+            *beams_
         );
 
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -415,17 +406,9 @@ protected:
         const double rho_inf(0.9);
 
         // Create solver
-        auto nodes_vector = std::vector<Node>{};
-        for (const auto& node : model.GetNodes()) {
-            nodes_vector.push_back(*node);
-        }
-
-        auto constraints_vector = std::vector<Constraint>{};
-        for (const auto& constraint : model.GetConstraints()) {
-            constraints_vector.push_back(*constraint);
-        }
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+            *beams_
         );
 
         // Set constraint displacement
@@ -672,17 +655,9 @@ protected:
         const double rho_inf(0.9);
 
         // Create solver
-        auto nodes_vector = std::vector<Node>{};
-        for (const auto& node : model.GetNodes()) {
-            nodes_vector.push_back(*node);
-        }
-
-        auto constraints_vector = std::vector<Constraint>{};
-        for (const auto& constraint : model.GetConstraints()) {
-            constraints_vector.push_back(*constraint);
-        }
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, nodes_vector, constraints_vector, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+            *beams_
         );
 
         // Set constraint displacement
