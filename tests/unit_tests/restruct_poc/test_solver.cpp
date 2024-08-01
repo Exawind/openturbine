@@ -66,7 +66,7 @@ protected:
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
             beam_nodes.push_back(BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.},         // Position
                        {0., 0., 0., 1., 0., 0., 0.},        // Displacement
                        {0., x * omega, 0., 0., 0., omega},  // Velocity
@@ -103,7 +103,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.AddPrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(model.GetNode(0));
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -113,7 +113,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+            *beams_
         );
 
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -359,7 +360,7 @@ protected:
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
             beam_nodes.push_back(BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.},         // Position
                        {0., 0., 0., 1., 0., 0., 0.},        // Displacement
                        {0., x * omega, 0., 0., 0., omega},  // Velocity
@@ -396,7 +397,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.AddPrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(model.GetNode(0));
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -406,7 +407,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+            *beams_
         );
 
         // Set constraint displacement
@@ -607,7 +609,7 @@ protected:
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
             beam_nodes.push_back(BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.},         // Position
                        {0., 0., 0., 1., 0., 0., 0.},        // Displacement
                        {0., x * omega, 0., 0., 0., omega},  // Velocity
@@ -644,7 +646,7 @@ protected:
         *beams_ = CreateBeams(beams_input);
 
         // Constraint inputs
-        model.AddPrescribedBC(model.nodes[0]);
+        model.AddPrescribedBC(model.GetNode(0));
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -654,7 +656,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+            *beams_
         );
 
         // Set constraint displacement

@@ -4,17 +4,22 @@
 
 namespace openturbine {
 
+/// @brief State struct holds all state data
+/// @details State struct holds all state data and provides methods to update the
+/// state variables during the simulation
 struct State {
-    size_t num_system_nodes;
-    size_t num_constraint_dofs;
-    View_Nx6 q_delta;
-    View_Nx7 q_prev;
-    View_Nx7 q;
-    View_Nx6 v;
-    View_Nx6 vd;
-    View_Nx6 a;
-    View_N lambda;
-    State() {}
+    size_t num_system_nodes;     //< Number of system nodes
+    size_t num_constraint_dofs;  //< Number of constraint degrees of freedom
+    View_Nx6 q_delta;            //< Displacement increment
+    View_Nx7 q_prev;             //< Previous state
+    View_Nx7 q;                  //< Current state
+    View_Nx6 v;                  //< Velocity
+    View_Nx6 vd;                 //< Acceleration
+    View_Nx6 a;                  //< Algorithmic acceleration
+    View_N lambda;               //< Lagrange multipliers
+
+    State() = default;
+
     State(size_t num_system_nodes_, size_t num_constraint_dofs_)
         : num_system_nodes(num_system_nodes_),
           num_constraint_dofs(num_constraint_dofs_),
@@ -29,7 +34,11 @@ struct State {
         Kokkos::deep_copy(Kokkos::subview(this->q_prev, Kokkos::ALL, 3), 1.);
         Kokkos::deep_copy(Kokkos::subview(this->q, Kokkos::ALL, 3), 1.);
     }
-    State(size_t num_system_nodes_, size_t num_constraint_dofs_, std::vector<Node>& nodes)
+
+    State(
+        size_t num_system_nodes_, size_t num_constraint_dofs_,
+        const std::vector<std::shared_ptr<Node>>& nodes
+    )
         : State(num_system_nodes_, num_constraint_dofs_) {
         // Create mirror of state views
         auto host_q = Kokkos::create_mirror(this->q);
@@ -40,11 +49,11 @@ struct State {
         for (size_t i = 0; i < nodes.size(); ++i) {
             auto& node = nodes[i];
             for (size_t j = 0; j < kLieGroupComponents; ++j) {
-                host_q(i, j) = node.u[j];
+                host_q(i, j) = node->u[j];
             }
             for (size_t j = 0; j < kLieAlgebraComponents; ++j) {
-                host_v(i, j) = node.v[j];
-                host_vd(i, j) = node.vd[j];
+                host_v(i, j) = node->v[j];
+                host_vd(i, j) = node->vd[j];
             }
         }
 

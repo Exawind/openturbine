@@ -26,7 +26,11 @@
 
 namespace openturbine {
 
+/// @brief Solver struct holds all solver data
+/// @details Solver struct holds all solver data and provides methods to update the
+/// solver variables during the simulation
 struct Solver {
+    // Define some types for the solver to make the code more readable
     using ExecutionSpace = Kokkos::DefaultExecutionSpace;
     using MemorySpace = ExecutionSpace::memory_space;
     using GlobalCrsMatrixType = Tpetra::CrsMatrix<>;
@@ -45,40 +49,42 @@ struct Solver {
         MemorySpace, MemorySpace>;
     using SpmvHandle =
         KokkosSparse::SPMVHandle<ExecutionSpace, CrsMatrixType, ValuesType, ValuesType>;
-    bool is_dynamic_solve;
-    int max_iter;
-    double h;
-    double alpha_m;
-    double alpha_f;
-    double gamma;
-    double beta;
-    double gamma_prime;
-    double beta_prime;
-    double conditioner;
-    int num_system_nodes;
-    int num_system_dofs;
-    Constraints constraints;
-    int num_dofs;
-    State state;
-    CrsMatrixType K;
-    CrsMatrixType T;
-    CrsMatrixType B;
-    CrsMatrixType B_t;
-    CrsMatrixType static_system_matrix;
-    CrsMatrixType system_matrix;
-    CrsMatrixType constraints_matrix;
-    CrsMatrixType system_matrix_full;
-    CrsMatrixType constraints_matrix_full;
+
+    bool is_dynamic_solve;    //< Flag to indicate if the solver is dynamic
+    int max_iter;             //< Maximum number of iterations
+    double h;                 //< Time step
+    double alpha_m;           //< Alpha_m coefficient
+    double alpha_f;           //< Alpha_f coefficient
+    double gamma;             //< Gamma coefficient
+    double beta;              //< Beta coefficient
+    double gamma_prime;       //< Gamma prime coefficient
+    double beta_prime;        //< Beta prime coefficient
+    double conditioner;       //< Conditioner for the system matrix
+    int num_system_nodes;     //< Number of system nodes
+    int num_system_dofs;      //< Number of system degrees of freedom
+    Constraints constraints;  //< Constraints
+    int num_dofs;             //< Number of degrees of freedom
+
+    State state;                            //< State
+    CrsMatrixType K;                        //< Stiffness matrix
+    CrsMatrixType T;                        //< Tangent operator
+    CrsMatrixType B;                        //< Constraints matrix
+    CrsMatrixType B_t;                      //< Transpose of constraints matrix
+    CrsMatrixType static_system_matrix;     //< Static system matrix
+    CrsMatrixType system_matrix;            //< System matrix
+    CrsMatrixType constraints_matrix;       //< Constraints matrix
+    CrsMatrixType system_matrix_full;       //< System matrix with constraints
+    CrsMatrixType constraints_matrix_full;  //< Constraints matrix with system
     CrsMatrixType transpose_matrix_full;
-    CrsMatrixType system_plus_constraints;
-    CrsMatrixType full_matrix;
-    Teuchos::RCP<GlobalCrsMatrixType> A;
-    Teuchos::RCP<GlobalMultiVectorType> b;
-    Teuchos::RCP<GlobalMultiVectorType> x_mv;
-    View_Nx6x6 T_dense;
-    Kokkos::View<double***> matrix_terms;
-    View_N R;  // System residual vector
-    View_N x;  // System solution vector
+    CrsMatrixType system_plus_constraints;     //< System matrix with constraints
+    CrsMatrixType full_matrix;                 //< Full system matrix
+    Teuchos::RCP<GlobalCrsMatrixType> A;       // System matrix
+    Teuchos::RCP<GlobalMultiVectorType> b;     // System RHS
+    Teuchos::RCP<GlobalMultiVectorType> x_mv;  // System solution
+    View_Nx6x6 T_dense;                        // Dense tangent operator
+    Kokkos::View<double***> matrix_terms;      // Matrix terms
+    View_N R;                                  // System residual vector
+    View_N x;                                  // System solution vector
 
     std::vector<double> convergence_err;
 
@@ -92,7 +98,8 @@ struct Solver {
 
     Solver(
         bool is_dynamic_solve_, int max_iter_, double h_, double rho_inf,
-        std::vector<Node>& system_nodes, std::vector<Constraint> constraints_, Beams& beams_
+        const std::vector<std::shared_ptr<Node>>& system_nodes,
+        const std::vector<std::shared_ptr<Constraint>>& constraints_, Beams& beams_
     )
         : is_dynamic_solve(is_dynamic_solve_),
           max_iter(max_iter_),
@@ -155,7 +162,7 @@ struct Solver {
         auto node_ids = IndicesType("node_ids", system_nodes.size());
         auto host_node_ids = Kokkos::create_mirror(node_ids);
         for (auto i = 0u; i < system_nodes.size(); ++i) {
-            host_node_ids(i) = system_nodes[i].ID;
+            host_node_ids(i) = system_nodes[i]->ID;
         }
         Kokkos::deep_copy(node_ids, host_node_ids);
         Kokkos::parallel_for(
