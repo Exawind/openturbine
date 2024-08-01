@@ -130,9 +130,6 @@ def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct
             i += 1
         s.name = f"{s.name}_{i}"
 
-    # Add struct to map
-    struct_map[s.name] = s
-
     # Loop through properties in object schema and create fields
     for field_name, field_schema in struct_schema.properties.items():
         field = Field(
@@ -147,6 +144,9 @@ def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct
 
         # Add the field to the struct
         s.fields.append(field)
+
+    # Add struct to map
+    struct_map[s.name] = s
 
 
 def get_ref(ref: str, definitions: Definitions, struct_map: dict[str, Struct]) -> tuple[str, Schema]:
@@ -236,7 +236,7 @@ def main():
     struct_map = {}
     build_structs(Struct("Turbine"), root, root.definitions, struct_map)
 
-    struct_names = sorted(struct_map.keys())
+    struct_names = struct_map.keys()
 
     # Write structs to file
     with open(args.output_file.name, 'w') as file:
