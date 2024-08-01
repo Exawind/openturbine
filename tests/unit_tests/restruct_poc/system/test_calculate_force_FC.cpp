@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/calculate_force_FC.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(CalculateForceFCTests, OneNode) {
     const auto Cuu = Kokkos::View<double[1][6][6]>("Cuu");
@@ -58,4 +58,4 @@ TEST(CalculateForceFCTests, OneNode) {
     CompareWithExpected(N_tilde_mirror, N_tilde_exact);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

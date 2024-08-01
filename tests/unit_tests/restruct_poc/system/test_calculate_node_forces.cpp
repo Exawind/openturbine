@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/calculate_node_forces.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(CalculateNodeForcesTests, FE_OneNodeOneQP) {
     constexpr auto first_node = 0;
@@ -272,4 +272,4 @@ TEST(CalculateNodeForcesTests, FI_FG_TwoNodesTwoQP) {
     CompareWithExpected(FIG_mirror, FIG_exact);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

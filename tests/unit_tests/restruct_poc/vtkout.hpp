@@ -17,7 +17,7 @@
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/math/quaternion_operations.hpp"
 
-namespace openturbine {
+namespace openturbine::tests {
 
 inline std::vector<std::vector<double>> kokkos_view_2D_to_vector(Kokkos::View<double**> view) {
     Kokkos::View<double**> view_contiguous("view_contiguous", view.extent(0), view.extent(1));
@@ -165,4 +165,4 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     writer->Write();
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::tests

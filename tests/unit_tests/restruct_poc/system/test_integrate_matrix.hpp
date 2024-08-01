@@ -5,7 +5,7 @@
 
 #include "src/restruct_poc/beams/beams.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 template <size_t n_elem, size_t n_nodes, size_t n_qps>
 auto get_element_indices() {
@@ -131,4 +131,4 @@ auto get_qp_Ouu(const std::array<double, n_elem * n_qps * 6 * 6>& Ouu_data) {
     return get_qp_matrix<n_elem, n_qps>("Ouu", Ouu_data);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

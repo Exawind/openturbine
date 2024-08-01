@@ -17,7 +17,7 @@
 #include "src/restruct_poc/solver/step.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 template <typename T>
 void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
@@ -139,4 +139,4 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     }
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

@@ -23,7 +23,7 @@
 
 using Array_7 = std::array<double, 7>;
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 template <typename T>
 void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
@@ -602,4 +602,4 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
     );
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

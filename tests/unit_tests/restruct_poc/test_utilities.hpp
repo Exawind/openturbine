@@ -2,7 +2,7 @@
 
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 Kokkos::View<double**> create_diagonal_matrix(const std::vector<double>& values);
 
@@ -36,4 +36,4 @@ std::vector<T> kokkos_view_1D_to_vector(Kokkos::View<T*> view) {
 
 std::vector<std::vector<double>> kokkos_view_2D_to_vector(const Kokkos::View<double**>& view);
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 Kokkos::View<double**> create_diagonal_matrix(const std::vector<double>& values) {
     auto matrix = Kokkos::View<double**>("matrix", values.size(), values.size());
@@ -76,4 +76,4 @@ void expect_kokkos_view_3D_equal(
     }
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

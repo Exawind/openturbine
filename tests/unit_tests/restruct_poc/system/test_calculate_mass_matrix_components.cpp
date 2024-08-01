@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/calculate_mass_matrix_components.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(CalculateMassMatrixComponentsTests, OneQuadPoint) {
     const auto Muu = Kokkos::View<double[1][6][6]>("Muu");
@@ -51,4 +51,4 @@ TEST(CalculateMassMatrixComponentsTests, OneQuadPoint) {
     CompareWithExpected(eta_tilde_mirror, eta_tilde_exact);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests
