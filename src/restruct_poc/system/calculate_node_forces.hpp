@@ -23,16 +23,16 @@ struct CalculateNodeForces_FE {
     void operator()(size_t i_index) const {
         const auto i = first_node + i_index;
         auto FE = Kokkos::Array<double, 6>{};
-        for (auto j_index = 0u; j_index < num_qps; ++j_index) {  // QPs
+        for (auto j_index = 0U; j_index < num_qps; ++j_index) {  // QPs
             const auto j = first_qp + j_index;
             const auto weight = qp_weight_(j);
             const auto coeff_c = weight * shape_deriv_(i, j_index);
             const auto coeff_d = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
-            for (auto k = 0u; k < 6u; ++k) {
+            for (auto k = 0U; k < 6U; ++k) {
                 FE[k] += coeff_c * qp_Fc_(j, k) + coeff_d * qp_Fd_(j, k);
             }
         }
-        for (auto k = 0u; k < 6u; ++k) {
+        for (auto k = 0U; k < 6U; ++k) {
             node_FE_(i, k) = FE[k];
         }
     }
@@ -53,15 +53,15 @@ struct CalculateNodeForces_FI_FG {
     void operator()(size_t i_index) const {
         const auto i = first_node + i_index;
         auto FIG = Kokkos::Array<double, 6>{};
-        for (auto j_index = 0u; j_index < num_qps; ++j_index) {  // QPs
+        for (auto j_index = 0U; j_index < num_qps; ++j_index) {  // QPs
             const auto j = first_qp + j_index;
             const auto weight = qp_weight_(j);
             const auto coeff_ig = weight * qp_jacobian_(j) * shape_interp_(i, j_index);
-            for (auto k = 0u; k < 6u; ++k) {
+            for (auto k = 0U; k < 6U; ++k) {
                 FIG[k] += coeff_ig * qp_Fig_(j, k);
             }
         }
-        for (auto k = 0u; k < 6u; ++k) {
+        for (auto k = 0U; k < 6U; ++k) {
             node_FIG_(i, k) = FIG[k];
         }
     }

@@ -92,7 +92,8 @@ struct Solver {
 
     Solver(
         bool is_dynamic_solve_, size_t max_iter_, double h_, double rho_inf,
-        std::vector<Node>& system_nodes, std::vector<Constraint> constraints_, Beams& beams_
+        const std::vector<Node>& system_nodes, const std::vector<Constraint>& constraints_,
+        Beams& beams_
     )
         : is_dynamic_solve(is_dynamic_solve_),
           max_iter(max_iter_),
@@ -116,13 +117,10 @@ struct Solver {
           ),
           R("R", num_dofs),
           x("x", num_dofs),
-          convergence_err(max_iter),
-          system_spgemm_handle(),
-          constraints_spgemm_handle(),
-          system_spadd_handle() {
+          convergence_err(max_iter) {
         auto K_num_rows = this->num_system_dofs;
         auto K_num_columns = this->num_system_dofs;
-        auto K_num_non_zero = size_t{0u};
+        auto K_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros", beams_.num_elems,
             ComputeNumberOfNonZeros{beams_.elem_indices}, K_num_non_zero
@@ -155,7 +153,7 @@ struct Solver {
         );
         auto node_ids = IndicesType("node_ids", system_nodes.size());
         auto host_node_ids = Kokkos::create_mirror(node_ids);
-        for (auto i = 0u; i < system_nodes.size(); ++i) {
+        for (auto i = 0U; i < system_nodes.size(); ++i) {
             host_node_ids(i) = system_nodes[i].ID;
         }
         Kokkos::deep_copy(node_ids, host_node_ids);
@@ -170,7 +168,7 @@ struct Solver {
         );
 
         // Initialize contraint for indexing for sparse matrices
-        auto B_num_non_zero = size_t{0u};
+        auto B_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros_Constraints", this->constraints.num,
             ComputeNumberOfNonZeros_Constraints{this->constraints.data}, B_num_non_zero
@@ -297,7 +295,7 @@ struct Solver {
             static_cast<size_t>(full_matrix.numCols()), comm
         );
 
-        A = Teuchos::rcp(new GlobalCrsMatrixType(rowMap, colMap, CrsMatrixType("A", full_matrix)));
+        A = Teuchos::make_rcp<GlobalCrsMatrixType>(rowMap, colMap, CrsMatrixType("A", full_matrix));
         b = Tpetra::createMultiVector<ScalarType>(A->getRangeMap(), 1);
         x_mv = Tpetra::createMultiVector<ScalarType>(A->getDomainMap(), 1);
 

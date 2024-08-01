@@ -16,8 +16,8 @@ struct PopulateSparseRowPtrsColInds_Constraints {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        auto ind_col = 0u;
-        for (auto i_constraint = 0u; i_constraint < data.extent(0); ++i_constraint) {
+        auto ind_col = 0U;
+        for (auto i_constraint = 0U; i_constraint < data.extent(0); ++i_constraint) {
             // Get reference to constraint data for this constraint
             auto& cd = data(i_constraint);
 
@@ -27,7 +27,7 @@ struct PopulateSparseRowPtrsColInds_Constraints {
                 B_row_ptrs(i_row) = ind_col;
 
                 // Add column indices for target node
-                for (auto j = 0u; j < kLieAlgebraComponents; ++j) {
+                for (auto j = 0U; j < kLieAlgebraComponents; ++j) {
                     B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
                         static_cast<size_t>(cd.target_node_index) * kLieAlgebraComponents + j
                     );
@@ -37,7 +37,7 @@ struct PopulateSparseRowPtrsColInds_Constraints {
                 // Add column indices for base node if it has a valid index
                 if (cd.base_node_index >= 0) {
                     // Add column indices for base node
-                    for (auto j = 0u; j < kLieAlgebraComponents; ++j) {
+                    for (auto j = 0U; j < kLieAlgebraComponents; ++j) {
                         B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
                             static_cast<size_t>(cd.base_node_index) * kLieAlgebraComponents + j
                         );

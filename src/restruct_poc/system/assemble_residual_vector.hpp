@@ -10,7 +10,7 @@
 
 namespace openturbine {
 
-inline void AssembleResidualVector(Beams& beams, View_N residual_vector) {
+inline void AssembleResidualVector(const Beams& beams, const View_N& residual_vector) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Residual");
     Kokkos::parallel_for(
         "IntegrateResidualVector", beams.num_nodes,

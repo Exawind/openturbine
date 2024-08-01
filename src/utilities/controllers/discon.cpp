@@ -55,9 +55,9 @@ static constexpr double kPC_MinPit{0.0};
 /// Desired (reference) HSS speed for pitch controller, rad/s
 static constexpr double kPC_RefSpd{122.9096};
 /// Factor to convert radians to degrees
-static constexpr double kR2D{57.295780};
+// static constexpr double kR2D{57.295780};
 /// Factor to convert radians per second to revolutions per minute
-static constexpr double kRPS2RPM{9.5492966};
+// static constexpr double kRPS2RPM{9.5492966};
 /// Rated generator slip percentage in Region 2 1/2, %
 static constexpr double kVS_SlPc{10.0};
 

@@ -16,21 +16,22 @@ struct InterpolateQPPosition {
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {
-        auto& idx = elem_indices[i_elem];
-        auto shape_interp = Kokkos::subview(shape_interpolation, idx.node_range, idx.qp_shape_range);
-        auto node_pos =
+        const auto& idx = elem_indices[i_elem];
+        const auto shape_interp =
+            Kokkos::subview(shape_interpolation, idx.node_range, idx.qp_shape_range);
+        const auto node_pos =
             Kokkos::subview(node_position_rotation, idx.node_range, Kokkos::make_pair(0, 3));
-        auto qp_pos = Kokkos::subview(qp_position, idx.qp_range, Kokkos::ALL);
+        const auto qp_pos = Kokkos::subview(qp_position, idx.qp_range, Kokkos::ALL);
 
-        for (auto j = 0u; j < idx.num_qps; ++j) {
+        for (auto j = 0U; j < idx.num_qps; ++j) {
             auto local_result = Kokkos::Array<double, 3>{};
-            for (auto i = 0u; i < idx.num_nodes; ++i) {
+            for (auto i = 0U; i < idx.num_nodes; ++i) {
                 const auto phi = shape_interp(i, j);
-                for (auto k = 0u; k < kVectorComponents; ++k) {
+                for (auto k = 0U; k < kVectorComponents; ++k) {
                     local_result[k] += node_pos(i, k) * phi;
                 }
             }
-            for (auto k = 0u; k < 3u; ++k) {
+            for (auto k = 0U; k < 3U; ++k) {
                 qp_pos(j, k) = local_result[k];
             }
         }
