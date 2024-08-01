@@ -433,14 +433,14 @@ TEST(RotorTest, IEA15RotorController) {
     std::string controller_function_name = "PITCH_CONTROLLER";
 
     // create an instance of TurbineController
-    util::TurbineController controller(
+    auto controller = util::TurbineController(
         shared_lib_path, controller_function_name, "test_input_file", "test_output_file"
     );
 
     // Pitch control variable
-    std::vector<float*> blade_pitch_command{
-        &controller.io->pitch_command_1, &controller.io->pitch_command_2,
-        &controller.io->pitch_command_3};
+    auto blade_pitch_command = std::array<double*, 3>{
+        &controller.io.pitch_command_1, &controller.io.pitch_command_2,
+        &controller.io.pitch_command_3};
 
     // Define hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0});
@@ -491,7 +491,7 @@ TEST(RotorTest, IEA15RotorController) {
         solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc.ID), u_hub);
 
         // Update time in controller
-        controller.io->time = static_cast<float>(t);
+        controller.io.time = t;
 
         // call controller to get signals for this step
         controller.CallController();

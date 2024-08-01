@@ -6,7 +6,7 @@
 
 #include "gtest/gtest.h"
 
-#include "OpenTurbineTestEnv.H"
+#include "OpenTurbineTestEnv.hpp"
 
 //! Global instance of the environment (for access in tests)
 openturbine_tests::OTurbTestEnv* utest_env{nullptr};
