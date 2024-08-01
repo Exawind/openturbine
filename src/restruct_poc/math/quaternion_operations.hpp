@@ -4,6 +4,8 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "src/restruct_poc/types.hpp"
+
 namespace openturbine {
 
 /// Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result
@@ -18,6 +20,27 @@ KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(Quaternion q, RotationMat
     R(2, 0) = 2. * (q(1) * q(3) - q(0) * q(2));
     R(2, 1) = 2. * (q(2) * q(3) + q(0) * q(1));
     R(2, 2) = q(0) * q(0) - q(1) * q(1) - q(2) * q(2) + q(3) * q(3);
+}
+
+/// Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result
+inline std::array<Array_3, 3> QuaternionToRotationMatrix(Array_4 q) {
+    return std::array<Array_3, 3>{{
+        {
+            q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3],
+            2. * (q[1] * q[2] - q[0] * q[3]),
+            2. * (q[1] * q[3] + q[0] * q[2]),
+        },
+        {
+            2. * (q[1] * q[2] + q[0] * q[3]),
+            q[0] * q[0] - q[1] * q[1] + q[2] * q[2] - q[3] * q[3],
+            2. * (q[2] * q[3] - q[0] * q[1]),
+        },
+        {
+            2. * (q[1] * q[3] - q[0] * q[2]),
+            2. * (q[2] * q[3] + q[0] * q[1]),
+            q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3],
+        },
+    }};
 }
 
 /// Rotates provided vector by provided *unit* quaternion and returns the result
@@ -100,6 +123,22 @@ KOKKOS_INLINE_FUNCTION void AxialVectorOfMatrix(Matrix m, Vector v) {
     v(0) = (m(2, 1) - m(1, 2)) / 2.;
     v(1) = (m(0, 2) - m(2, 0)) / 2.;
     v(2) = (m(1, 0) - m(0, 1)) / 2.;
+}
+
+/// Computes AX(A) of a square matrix
+template <typename Matrix>
+KOKKOS_INLINE_FUNCTION void AX_Matrix(Matrix A, Matrix AX_A) {
+    double trace = 0.;
+    for (int i = 0; i < A.extent_int(0); ++i) {
+        trace += A(i, i);
+    }
+    trace /= 2.;
+    for (int i = 0; i < A.extent_int(0); ++i) {
+        for (int j = 0; j < A.extent_int(1); ++j) {
+            AX_A(i, j) = -A(i, j) / 2.;
+        }
+        AX_A(i, i) += trace;
+    }
 }
 
 /// Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map

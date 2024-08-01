@@ -2,11 +2,9 @@
 
 #include "beams.hpp"
 #include "calculate_jacobian.hpp"
-#include "interpolate_QP_acceleration.hpp"
 #include "interpolate_QP_position.hpp"
 #include "interpolate_QP_rotation.hpp"
-#include "interpolate_QP_state.hpp"
-#include "interpolate_QP_velocity.hpp"
+#include "interpolate_to_quadrature_points.hpp"
 #include "populate_element_views.hpp"
 #include "set_node_state_indices.hpp"
 
@@ -21,6 +19,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
     auto host_gravity = Kokkos::create_mirror(beams.gravity);
 
     auto host_elem_indices = Kokkos::create_mirror(beams.elem_indices);
+    auto host_node_state_indices = Kokkos::create_mirror(beams.node_state_indices);
     auto host_node_x0 = Kokkos::create_mirror(beams.node_x0);
     auto host_node_u = Kokkos::create_mirror(beams.node_u);
     auto host_node_u_dot = Kokkos::create_mirror(beams.node_u_dot);
@@ -41,13 +40,24 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
     size_t qp_counter = 0;
 
     for (size_t i = 0; i < beams_input.NumElements(); i++) {
+        // Get number of nodes and quadrature points in element
         size_t num_nodes = beams_input.elements[i].nodes.size();
         size_t num_qps = beams_input.elements[i].quadrature.size();
+
+        // Create element indices and set in host mirror
         host_elem_indices[i] = Beams::ElemIndices(num_nodes, num_qps, node_counter, qp_counter);
-        node_counter += num_nodes;
-        qp_counter += num_qps;
         auto& idx = host_elem_indices[i];
 
+        // Populate beam node->state indices
+        for (size_t j = 0; j < num_nodes; ++j) {
+            host_node_state_indices(node_counter + j) = beams_input.elements[i].nodes[j].node.ID;
+        }
+
+        // Increment counters for beam nodes and quadrature points
+        node_counter += num_nodes;
+        qp_counter += num_qps;
+
+        // Populate views for this element
         PopulateElementViews(
             beams_input.elements[i],  // Element inputs
             Kokkos::subview(host_node_x0, idx.node_range, Kokkos::ALL),
@@ -61,6 +71,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
 
     Kokkos::deep_copy(beams.gravity, host_gravity);
     Kokkos::deep_copy(beams.elem_indices, host_elem_indices);
+    Kokkos::deep_copy(beams.node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_x0, host_node_x0);
     Kokkos::deep_copy(beams.node_u, host_node_u);
     Kokkos::deep_copy(beams.node_u_dot, host_node_u_dot);
@@ -70,11 +81,6 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
     Kokkos::deep_copy(beams.qp_Cstar, host_qp_Cstar);
     Kokkos::deep_copy(beams.shape_interp, host_shape_interp);
     Kokkos::deep_copy(beams.shape_deriv, host_shape_deriv);
-
-    // TODO: update for assembly where state may apply to multiple nodes in different elements
-    Kokkos::parallel_for(
-        "SetNodeStateIndices", beams.num_nodes, SetNodeStateIndices{beams.node_state_indices}
-    );
 
     Kokkos::parallel_for(
         "InterpolateQPPosition", beams.num_elems,
@@ -97,35 +103,14 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
         }
     );
 
+    auto range_policy = Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO());
     Kokkos::parallel_for(
-        "InterpolateQPState", beams.num_elems,
-        InterpolateQPState{
+        "InterpolateToQuadraturePoints", range_policy,
+        InterpolateToQuadraturePoints{
             beams.elem_indices, beams.shape_interp, beams.shape_deriv, beams.qp_jacobian,
-            beams.node_u, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQPVelocity",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPVelocity_Translation{
-            beams.elem_indices, beams.shape_interp, beams.node_u_dot, beams.qp_u_dot}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQPVelocity",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPVelocity_Angular{
-            beams.elem_indices, beams.shape_interp, beams.node_u_dot, beams.qp_omega}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQPAcceleration",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPAcceleration_Translation{
-            beams.elem_indices, beams.shape_interp, beams.node_u_ddot, beams.qp_u_ddot}
-    );
-    Kokkos::parallel_for(
-        "InterpolateQPAcceleration",
-        Kokkos::MDRangePolicy{{0, 0}, {beams.num_elems, beams.max_elem_qps}},
-        InterpolateQPAcceleration_Angular{
-            beams.elem_indices, beams.shape_interp, beams.node_u_ddot, beams.qp_omega_dot}
+            beams.node_u, beams.node_u_dot, beams.node_u_ddot, beams.qp_u, beams.qp_u_prime,
+            beams.qp_r, beams.qp_r_prime, beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot,
+            beams.qp_omega_dot}
     );
     return beams;
 }

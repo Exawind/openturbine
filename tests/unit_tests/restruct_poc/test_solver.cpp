@@ -10,9 +10,9 @@
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
+#include "src/restruct_poc/model/model.hpp"
 #include "src/restruct_poc/solver/assemble_constraints.hpp"
 #include "src/restruct_poc/solver/assemble_system.hpp"
-#include "src/restruct_poc/solver/initialize_constraints.hpp"
 #include "src/restruct_poc/solver/predict_next_state.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
@@ -46,6 +46,9 @@ protected:
             {0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
         }};
 
+        // Create model for adding nodes and constraints
+        auto model = Model();
+
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};
 
@@ -59,23 +62,24 @@ protected:
         // Calculate displacement, velocity, acceleration assuming a
         // 0.1 rad/s angular velocity around the z axis
         const double omega = 0.1;
-        std::vector<BeamNode> nodes;
-        std::vector<std::array<double, 7>> displacement;
-        std::vector<std::array<double, 6>> velocity;
-        std::vector<std::array<double, 6>> acceleration;
+        std::vector<BeamNode> beam_nodes;
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
-            nodes.push_back(BeamNode(s, {x, 0., 0., 1., 0., 0., 0.}));
-            displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
-            velocity.push_back({0., x * omega, 0., 0., 0., omega});
-            acceleration.push_back({0., 0., 0., 0., 0., 0.});
+            beam_nodes.push_back(BeamNode(
+                s, model.AddNode(
+                       {x, 0., 0., 1., 0., 0., 0.},         // Position
+                       {0., 0., 0., 1., 0., 0., 0.},        // Displacement
+                       {0., x * omega, 0., 0., 0., omega},  // Velocity
+                       {0., 0., 0., 0., 0., 0.}             // Acceleration
+                   )
+            ));
         }
 
         // Define beam initialization
         BeamsInput beams_input(
             {
                 BeamElement(
-                    nodes,
+                    beam_nodes,
                     {
                         BeamSection(0., mass_matrix, stiffness_matrix),
                         BeamSection(1., mass_matrix, stiffness_matrix),
@@ -98,11 +102,8 @@ protected:
         beams_ = new Beams();
         *beams_ = CreateBeams(beams_input);
 
-        // Number of system nodes from number of beam nodes
-        const size_t num_system_nodes(beams_->num_nodes);
-
         // Constraint inputs
-        std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+        model.AddPrescribedBC(model.nodes[0]);
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -112,17 +113,11 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_,
-            constraint_inputs, displacement, velocity, acceleration
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
         );
 
-        // Initialize constraints
-        InitializeConstraints(*solver_, *beams_);
-
-        // Set constraint displacement
-
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
-        solver_->constraints.UpdateDisplacement(0., {0., 0., 0., q[0], q[1], q[2], q[3]});
+        solver_->constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
 
         // Predict the next state for the solver
         PredictNextState(*solver_);
@@ -264,20 +259,6 @@ TEST_F(NewSolverTest, ConstraintResidualVector) {
     );
 }
 
-TEST_F(NewSolverTest, ConstraintGradientMatrix) {
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(solver_->constraints.B, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)),
-        {
-            {1., 0., 0., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 1., 0., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 1., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 0., 1.0000000000000004, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 0., 0.0000000000000000, 1.0000000000000004, 0.0000000000000000},
-            {0., 0., 0., 0.0000000000000000, 0.0000000000000000, 1.0000000000000004},
-        }
-    );
-}
-
 TEST_F(NewSolverTest, AssembleResidualVector) {
     expect_kokkos_view_1D_equal(
         solver_->R,
@@ -328,44 +309,6 @@ TEST_F(NewSolverTest, AssembleResidualVector) {
     );
 }
 
-TEST_F(NewSolverTest, DISABLED_AssembleIterationMatrix) {
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(solver_->St, Kokkos::make_pair(0, 12), Kokkos::make_pair(0, 12)),
-        {
-            {1414801.7504034417, 1322.2627851577333, 0.0, 0.0, 0.0, -44.2794594494287,
-             -1574613.1137289538, -1472.9196463832786, 0.0, 0.0, 0.0, -59.87418876160718},
-            {1322.2627851577329, 92540.72826322596, 0.0, 0.0, 0.0, 44279.65795795503,
-             -1472.9196463832784, -101695.43123906071, 0.0, 0.0, 0.0, 59874.45718261191},
-            {0.0, 0.0, 41100.0726666667, 29.08449765683834, -19389.645031296728, 0.0, 0.0, 0.0,
-             -44393.6958340446, 39.327731738255004, -26218.460682663215, 0.0},
-            {0.0, 0.0, 19.389672717633655, 17653.597868705176, 18150.55055727363, -362.3174853804042,
-             0.0, 0.0, -26.218498119817678, -19430.15450862125, -20234.27111826118,
-             403.5994572601714},
-            {0.0, 0.0, -19389.657957741776, 18105.353944134222, 72936.68675438849,
-             -382.6958421062328, 0.0, 0.0, 26218.478161657324, -20191.88748468507,
-             -65290.151252854055, 426.29969681875457},
-            {-44.27945944942881, 44279.65795795503, 0.0, -362.1260770890552, -382.8769370511865,
-             173146.22637419065, 59.8741887616077, -59874.45718261189, 0.0, 403.386240162955,
-             426.50142548061893, -156418.0506742802},
-            {-1574613.1137289538, -1472.9196463832789, 0.0, 0.0, 0.0, 59.874188761607556,
-             2503202.5925416285, 2335.7187569544285, 0.0, 0.0, 0.0, 3.907985046680551e-14},
-            {-1472.9196463832784, -101695.43123906071, 0.0, 0.0, 0.0, -59874.4571826119,
-             2335.7187569544276, 167486.94987970704, 0.0, 0.0, 0.0, 1.921307557495311e-11},
-            {0.0, 0.0, -44393.69583404459, -39.32773173825499, 26218.460682663215, 0.0, 0.0, 0.0,
-             76619.30579594545, -1.1182165464503461e-15, 2.4584775114948027e-12, 0.0},
-            {0.0, 0.0, 26.218498119817696, -19430.15450862125, -20234.27111826118, 403.5994572601714,
-             0.0, 0.0, -1.887379141862766e-15, 31863.56207519658, 32016.823623811943,
-             -640.0178210223318},
-            {0.0, 0.0, -26218.478161657324, -20191.887484685067, -65290.15125285405,
-             426.29969681875457, 0.0, 0.0, 2.4584778657299466e-12, 31913.957377672083,
-             174987.68054334674, -676.0152873162565},
-            {-59.87418876160725, 59874.45718261191, 0.0, 403.386240162955, 426.50142548061893,
-             -156418.0506742802, 1.212363542890671e-13, 1.6086687537608668e-11, 0.0,
-             -639.6797067372147, -676.3351835308863, 411288.96761996194},
-        }
-    );
-}
-
 class SolverStep1Test : public testing::Test {
 protected:
     // Per-test-suite set-up.
@@ -392,6 +335,9 @@ protected:
             {0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
         }};
 
+        // Create model for adding nodes and constraints
+        auto model = Model();
+
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};
 
@@ -409,23 +355,24 @@ protected:
         // Calculate displacement, velocity, acceleration assuming a
         // 0.1 rad/s angular velocity around the z axis
         const double omega = 0.1;
-        std::vector<BeamNode> nodes;
-        std::vector<std::array<double, 7>> displacement;
-        std::vector<std::array<double, 6>> velocity;
-        std::vector<std::array<double, 6>> acceleration;
+        std::vector<BeamNode> beam_nodes;
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
-            nodes.push_back(BeamNode(s, {x, 0., 0., 1., 0., 0., 0.}));
-            displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
-            velocity.push_back({0., x * omega, 0., 0., 0., omega});
-            acceleration.push_back({0., 0., 0., 0., 0., 0.});
+            beam_nodes.push_back(BeamNode(
+                s, model.AddNode(
+                       {x, 0., 0., 1., 0., 0., 0.},         // Position
+                       {0., 0., 0., 1., 0., 0., 0.},        // Displacement
+                       {0., x * omega, 0., 0., 0., omega},  // Velocity
+                       {0., 0., 0., 0., 0., 0.}             // Acceleration
+                   )
+            ));
         }
 
         // Define beam initialization
         BeamsInput beams_input(
             {
                 BeamElement(
-                    nodes,
+                    beam_nodes,
                     {
                         BeamSection(0., mass_matrix, stiffness_matrix),
                         BeamSection(1., mass_matrix, stiffness_matrix),
@@ -448,11 +395,8 @@ protected:
         beams_ = new Beams();
         *beams_ = CreateBeams(beams_input);
 
-        // Number of system nodes from number of beam nodes
-        const size_t num_system_nodes(beams_->num_nodes);
-
         // Constraint inputs
-        std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+        model.AddPrescribedBC(model.nodes[0]);
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -462,12 +406,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_,
-            constraint_inputs, displacement, velocity, acceleration
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
         );
-
-        // Initialize constraints
-        InitializeConstraints(*solver_, *beams_);
 
         // Set constraint displacement
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -647,6 +587,9 @@ protected:
             {0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
         }};
 
+        // Create model for adding nodes and constraints
+        auto model = Model();
+
         // Gravity vector
         std::array<double, 3> gravity = {0., 0., 0.};
 
@@ -660,23 +603,24 @@ protected:
         // Calculate displacement, velocity, acceleration assuming a
         // 0.1 rad/s angular velocity around the z axis
         const double omega = 0.1;
-        std::vector<BeamNode> nodes;
-        std::vector<std::array<double, 7>> displacement;
-        std::vector<std::array<double, 6>> velocity;
-        std::vector<std::array<double, 6>> acceleration;
+        std::vector<BeamNode> beam_nodes;
         for (const double s : node_s) {
             auto x = 10 * s + 2.;
-            nodes.push_back(BeamNode(s, {x, 0., 0., 1., 0., 0., 0.}));
-            displacement.push_back({0., 0., 0., 1., 0., 0., 0.});
-            velocity.push_back({0., x * omega, 0., 0., 0., omega});
-            acceleration.push_back({0., 0., 0., 0., 0., 0.});
+            beam_nodes.push_back(BeamNode(
+                s, model.AddNode(
+                       {x, 0., 0., 1., 0., 0., 0.},         // Position
+                       {0., 0., 0., 1., 0., 0., 0.},        // Displacement
+                       {0., x * omega, 0., 0., 0., omega},  // Velocity
+                       {0., 0., 0., 0., 0., 0.}             // Acceleration
+                   )
+            ));
         }
 
         // Define beam initialization
         BeamsInput beams_input(
             {
                 BeamElement(
-                    nodes,
+                    beam_nodes,
                     {
                         BeamSection(0., mass_matrix, stiffness_matrix),
                         BeamSection(1., mass_matrix, stiffness_matrix),
@@ -699,11 +643,8 @@ protected:
         beams_ = new Beams();
         *beams_ = CreateBeams(beams_input);
 
-        // Number of system nodes from number of beam nodes
-        const size_t num_system_nodes(beams_->num_nodes);
-
         // Constraint inputs
-        std::vector<ConstraintInput> constraint_inputs({ConstraintInput(-1, 0)});
+        model.AddPrescribedBC(model.nodes[0]);
 
         // Solution parameters
         const bool is_dynamic_solve(true);
@@ -713,12 +654,8 @@ protected:
 
         // Create solver
         solver_ = new Solver(
-            is_dynamic_solve, max_iter, step_size, rho_inf, num_system_nodes, *beams_,
-            constraint_inputs, displacement, velocity, acceleration
+            is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, *beams_
         );
-
-        // Initialize constraints
-        InitializeConstraints(*solver_, *beams_);
 
         // Set constraint displacement
         auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -756,20 +693,6 @@ TEST_F(SolverStep2Test, ConstraintResidualVector) {
             -1.31908395004359e-29,
             1.3190835103592412e-26,
             0.0,
-        }
-    );
-}
-
-TEST_F(SolverStep2Test, ConstraintGradientMatrix) {
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(solver_->constraints.B, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)),
-        {
-            {1.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-            {0.0, 1.0, 0.0, 0.0, 0.0, 0.0},
-            {0.0, 0.0, 1.0, 0.0, 0.0, 0.0},
-            {0.0, 0.0, 0.0, 1.0000000000000004, 0.0, -6.595417551796206e-27},
-            {0.0, 0.0, 0.0, 0.0, 1.0000000000000004, -6.59541975021795e-30},
-            {0.0, 0.0, 0.0, 6.595417551796206e-27, 6.595419750217949e-30, 1.0000000000000002},
         }
     );
 }
@@ -820,61 +743,6 @@ TEST_F(SolverStep2Test, ResidualVector) {
             -1.3190839500435901E-29,
             1.3190835103592412E-26,
             0,
-        }
-    );
-}
-
-TEST_F(SolverStep2Test, DISABLED_IterationMatrix) {
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(solver_->St, Kokkos::make_pair(0, 12), Kokkos::make_pair(0, 12)),
-        {
-            {39.19118422170844, 0.03662777474795655, 5.431970858957439e-13, 1.6028381978290388e-15,
-             -1.0886758979566943e-12, -0.0012265887214511358, -43.6180917930529,
-             -0.04080109468702067, -6.645402921711687e-13, 2.1336648365260163e-15,
-             -1.4133438319901642e-12, -0.0016585796701074095},
-            {0.03662777474795655, 2.563455076537186, -1.812430399129996e-12, 2.92254394582245e-14,
-             6.342242601248811e-13, 1.2265907994587366, -0.04080109468702067, -2.817047956753582,
-             1.8714070969396966e-12, -2.0489986853981713e-14, 4.561344703178226e-12,
-             1.6585823496633025},
-            {5.431970858957439e-13, -1.812430399129996e-12, 1.1385061680517088,
-             0.0008056762368014134, -0.5371170480229618, -6.352680946684192e-13,
-             -6.645402921711687e-13, 1.871407096939697e-12, -1.229742266871041,
-             0.0010894262602801842, -0.7262836716663055, -7.563947523418205e-13},
-            {1.0585001152893736e-15, 2.9542549152820547e-14, 0.0005371176456544514,
-             0.4890193316384446, 0.5027853299013584, -0.010036495441208484, -1.4575395534518318e-15,
-             -2.889750631789036e-14, -0.000726284456581465, -0.5382314269900914, -0.5605061258067667,
-             0.011180040370362227},
-            {-1.0886766086528004e-12, 6.342095945531298e-13, -0.5371174061013255, 0.5015333431792913,
-             2.0204114163031464, -0.01060099285205352, 1.4876296152371372e-12,
-             -1.192860296608879e-12, 0.7262841601176612, -0.559332065668402, -1.8085904088500921,
-             0.011808855865582644},
-            {-0.0012265887214511358, 1.2265907994587366, -6.35268094668419e-13, -0.01003119327307262,
-             -0.010606009331956042, 4.7962985870997965, 0.001658579648880224, -1.6585823537657316,
-             1.1943178361623309e-12, 0.011174134079342342, 0.011814443906856665, -4.332909032644746},
-            {-43.618091793052905, -0.040801094687020666, -6.645402921711687e-13,
-             -2.201354056150927e-15, 1.4876286385291646e-12, 0.001658579648880224, 69.34079203718417,
-             0.06470134063641056, 2.1638441155967127e-12, 1.8945497940296173e-16,
-             -8.66663142345895e-14, -7.04516117205331e-10},
-            {-0.040801094687020666, -2.817047956753582, 1.8714070969396966e-12,
-             -2.8301071403057902e-14, -1.1928745465507937e-12, -1.6585823537657314,
-             0.06470134063641056, 4.639527697478868, -4.9325999265727314e-12, -6.226200383309214e-14,
-             1.8708422050523935e-12, 1.2558433637842626e-7},
-            {-6.645402921711687e-13, 1.8714070969396974e-12, -1.229742266871041,
-             -0.0010894263853253655, 0.7262836759281092, 1.1943178361623313e-12,
-             2.163844115596713e-12, -4.932599926572733e-12, 2.122418443100981, 4.322686056153791e-11,
-             -1.3047062064454673e-7, -1.8710188932725623e-12},
-            {1.3936626810880922e-15, 1.5120959585306213e-14, 0.0007262844145473438,
-             -0.5382314269271556, -0.5605061268801798, 0.011180040368717822, 1.4612180199203463e-16,
-             -6.13265752267249e-14, -2.2008438829458875e-11, 0.8826471493082577, 0.8868925949620642,
-             -0.01772902551933346},
-            {-1.4106976254619134e-12, 1.914194709556308e-12, -0.7262841558557008,
-             -0.5593320644536077, -1.8085904089118592, 0.011808855863447563, -8.66664006154342e-14,
-             1.870872979706598e-12, -1.3047063138542513e-7, 0.8840431033768114, 4.847330412009456,
-             -0.01872618523302892},
-            {-0.0016585796701074067, 1.6585823496633025, -1.9155883722373963e-12,
-             0.011174134078697226, 0.011814443914277478, -4.332909032644728, -7.045161177250753e-10,
-             1.2558433647290286e-7, -1.8710191015085898e-12, -0.017719659473594083,
-             -0.018735046596094138, 11.393070412332664},
         }
     );
 }

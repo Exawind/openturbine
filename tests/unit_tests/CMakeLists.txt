@@ -33,8 +33,10 @@ target_link_libraries(${oturb_unit_test_exe_name} PRIVATE ${oturb_lib_name})
 
 # Link Kokkos to test target
 find_package(KokkosKernels REQUIRED)
+find_package(Amesos2 REQUIRED)
 target_link_libraries(${oturb_unit_test_exe_name} PRIVATE
-    Kokkos::kokkoskernels
+  KokkosKernels::kokkoskernels
+  Amesos2::amesos2
 )
 
 # Link VTK to test target

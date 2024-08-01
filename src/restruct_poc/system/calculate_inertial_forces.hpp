@@ -10,6 +10,11 @@
 namespace openturbine {
 
 struct CalculateInertialForces {
+    using NoTranspose = KokkosBatched::Trans::NoTranspose;
+    using GemmDefault = KokkosBatched::Algo::Gemm::Default;
+    using GemvDefault = KokkosBlas::Algo::Gemv::Default;
+    using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, GemmDefault>;
+    using Gemv = KokkosBlas::SerialGemv<NoTranspose, GemvDefault>;
     View_Nx6x6::const_type qp_Muu_;
     View_Nx3::const_type qp_u_ddot_;
     View_Nx3::const_type qp_omega_;
@@ -33,34 +38,26 @@ struct CalculateInertialForces {
         auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
         auto v1 = Kokkos::Array<double, 3>{};
-        auto V1 = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(v1.data());
+        auto V1 = View_3(v1.data());
         auto m1 = Kokkos::Array<double, 9>{};
-        auto M1 = Kokkos::View<double[3][3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>(m1.data());
+        auto M1 = View_3x3(m1.data());
         auto FI = Kokkos::subview(qp_FI_, i_qp, Kokkos::ALL);
 
         auto m = Muu(0, 0);
         VecTilde(omega, omega_tilde);
         VecTilde(omega_dot, omega_dot_tilde);
         auto FI_1 = Kokkos::subview(FI, Kokkos::make_pair(0, 3));
-        KokkosBatched::SerialGemm<
-            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
-            KokkosBatched::Algo::Gemm::Default>::invoke(m, omega_tilde, omega_tilde, 0., M1);
+        Gemm::invoke(m, omega_tilde, omega_tilde, 0., M1);
         KokkosBlas::serial_axpy(m, omega_dot_tilde, M1);
 
-        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
-            invoke(1., M1, eta, 0., FI_1);
+        Gemv::invoke(1., M1, eta, 0., FI_1);
         KokkosBlas::serial_axpy(m, u_ddot, FI_1);
         auto FI_2 = Kokkos::subview(FI, Kokkos::make_pair(3, 6));
         KokkosBlas::serial_axpy(m, u_ddot, V1);
-        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
-            invoke(1., eta_tilde, V1, 0., FI_2);
-        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
-            invoke(1., rho, omega_dot, 1., FI_2);
-        KokkosBatched::SerialGemm<
-            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
-            KokkosBatched::Algo::Gemm::Default>::invoke(1., omega_tilde, rho, 0., M1);
-        KokkosBlas::SerialGemv<KokkosBlas::Trans::NoTranspose, KokkosBlas::Algo::Gemv::Default>::
-            invoke(1., M1, omega, 1., FI_2);
+        Gemv::invoke(1., eta_tilde, V1, 0., FI_2);
+        Gemv::invoke(1., rho, omega_dot, 1., FI_2);
+        Gemm::invoke(1., omega_tilde, rho, 0., M1);
+        Gemv::invoke(1., M1, omega, 1., FI_2);
     }
 };
 

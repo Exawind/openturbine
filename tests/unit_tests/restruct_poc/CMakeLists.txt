@@ -11,13 +11,31 @@ target_sources(
     test_utilities.cpp
     test_controller.cpp
     test_yaml_parser.cpp
+    beams/test_interpolate_QP_state.cpp
+    beams/test_interpolate_QP_vector.cpp
     solver/test_compute_number_of_non_zeros.cpp
     solver/test_copy_into_sparse_matrix.cpp
     solver/test_populate_sparse_indices.cpp
     solver/test_populate_sparse_row_ptrs.cpp
-    system/test_integrate_matrix.cpp
-    system/test_integrate_elastic_stiffness_matrix.cpp
+    system/test_integrate_stiffness_matrix.cpp
+    system/test_integrate_inertia_matrix.cpp
     system/test_integrate_residual_vector.cpp
+    system/test_update_node_state.cpp
+    system/test_calculate_RR0.cpp
+    system/test_rotate_section_matrix.cpp
+    system/test_calculate_strain.cpp
+    system/test_calculate_mass_matrix_components.cpp
+    system/test_calculate_temporary_variables.cpp
+    system/test_calculate_force_FC.cpp
+    system/test_calculate_force_FD.cpp
+    system/test_calculate_inertial_forces.cpp
+    system/test_calculate_gravity_force.cpp
+    system/test_calculate_Ouu.cpp
+    system/test_calculate_Puu.cpp
+    system/test_calculate_Quu.cpp
+    system/test_calculate_gyroscopic_matrix.cpp
+    system/test_calculate_inertia_stiffness_matrix.cpp
+    system/test_calculate_node_forces.cpp
 )
 
 if(OTURB_ENABLE_VTK)

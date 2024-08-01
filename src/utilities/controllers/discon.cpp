@@ -1,16 +1,90 @@
-#include "discon.h"
+#include "discon.hpp"
 
+#include <algorithm>
 #include <memory>
+
+#include "controller_io.hpp"
 
 namespace openturbine::util {
 
 extern "C" {
 
+#define PC_DbgOut 0  // Flag to indicate whether to output debugging information (0=Off)
+
+// Define some constants
+// ------------------------------------------------------------------------------------------------
+/// Transitional generator speed (HSS side) between regions 1 and 1 1/2, rad/s
+static constexpr double kVS_CtInSp{70.16224};
+/// Communication interval for torque controller, sec
+static constexpr double kVS_DT{0.000125};
+/// Maximum torque rate (in absolute value) in torque controller, N-m/s
+static constexpr double kVS_MaxRat{15000.};
+/// Maximum generator torque in Region 3 (HSS side), N-m
+static constexpr double kVS_MaxTq{47402.91};
+/// Generator torque constant in Region 2 (HSS side), N-m/(rad/s)^2
+static constexpr double kVS_Rgn2K{2.332287};
+/// Transitional generator speed (HSS side) between regions 1 1/2 and 2, rad/s
+static constexpr double kVS_Rgn2Sp{91.21091};
+/// Minimum pitch angle at which the torque is computed as if we are in region 3 regardless of the
+/// generator speed, rad
+static constexpr double kVS_Rgn3MP{0.01745329};
+/// Rated generator speed (HSS side), rad/s
+static constexpr double kVS_RtGnSp{121.6805};
+/// Rated generator generator power in Region 3, Watts
+static constexpr double kVS_RtPwr{5296610.0};
+/// Corner frequency (-3dB point) in the recursive, single-pole, low-pass filter, rad/s -- chosen to
+/// be 1/4 the blade edgewise natural frequency ( 1/4 of approx. 1 Hz = 0.25 Hz = 1.570796 rad/s)
+static constexpr double kCornerFreq{1.570796};
+/// A value slightly greater than unity in single precision
+static constexpr double kOnePlusEps{1.0 + 1.19e-07};
+/// Communication interval for the pitch controller, sec
+static constexpr double kPC_DT{0.000125};
+/// Integral gain for pitch controller at rated pitch (zero), (-)
+static constexpr double kPC_KI{0.008068634};
+/// Pitch angle where the the derivative of the aerodynamic power w.r.t. pitch has increased by a
+/// factor of two relative to the derivative at rated pitch (zero), rad
+static constexpr double kPC_KK{0.1099965};
+/// Proportional gain for pitch controller at rated pitch (zero), sec
+static constexpr double kPC_KP{0.01882681};
+/// Maximum pitch setting in pitch controller, rad
+static constexpr double kPC_MaxPit{1.570796};
+/// Maximum pitch rate (in absolute value) in pitch controller, rad/s
+static constexpr double kPC_MaxRat{0.1396263};
+/// Minimum pitch setting in pitch controller, rad
+static constexpr double kPC_MinPit{0.0};
+/// Desired (reference) HSS speed for pitch controller, rad/s
+static constexpr double kPC_RefSpd{122.9096};
+/// Factor to convert radians to degrees
+static constexpr double kR2D{57.295780};
+/// Factor to convert radians per second to revolutions per minute
+static constexpr double kRPS2RPM{9.5492966};
+/// Rated generator slip percentage in Region 2 1/2, %
+static constexpr double kVS_SlPc{10.0};
+
+struct InternalState {
+    float generator_speed_filtered;   // Filtered HSS (generator) speed, rad/s.
+    float integral_speed_error;       // Current integral of speed error w.r.t. time, rad
+    float generator_torque_lastest;   // Commanded electrical generator torque the last time the
+                                      // controller was called, N-m
+    float time_latest;                // Last time this DLL was called, sec
+    float pitch_controller_latest;    // Last time the pitch  controller was called, sec
+    float torque_controller_latest;   // Last time the torque controller was called, sec
+    float pitch_commanded_latest[3];  // Commanded pitch of each blade the last time the controller
+                                      // was called, rad
+    float VS_torque_slope_15;         // Torque/speed slope of region 1 1/2 cut-in torque ramp,
+                                      // N-m/(rad/s)
+    float VS_torque_slope_25;         // Torque/speed slope of region 2 1/2 induction
+                                      // generator, N-m/(rad/s)
+    float VS_sync_speed;              // Synchronous speed of region 2 1/2 induction generator, rad/s
+    float VS_generator_speed_trans;   // Transitional generator speed (HSS side) between regions
+                                      // 2 and 2 1/2, rad/s. 1/2, rad/s
+};
+
 // TODO This is a quick and dirty conversion of the DISCON function from the original C code to
 // C++. It needs to be refactored to be more idiomatic C++.
 void DISCON(
-    float avrSWAP[], int aviFAIL, [[maybe_unused]] const char* accINFILE,
-    [[maybe_unused]] const char* avcOUTNAME, const char* avcMSG
+    float avrSWAP[], int* aviFAIL, const char* const accINFILE, char* const avcOUTNAME,
+    char* const avcMSG
 ) {
     // Internal state
     static InternalState state;
@@ -28,7 +102,7 @@ void DISCON(
     static FILE* fp_csv = nullptr;
 
     // Map swap from calling program to struct
-    SwapStruct* swap = reinterpret_cast<SwapStruct*>(avrSWAP);
+    ControllerIO* swap = reinterpret_cast<ControllerIO*>(avrSWAP);
 
     // A status flag set by the simulation as follows: 0 if this is the first call, 1 for all
     // subsequent time steps, -1 if this is the final call at the end of the simulation
@@ -38,7 +112,7 @@ void DISCON(
     int num_blades = static_cast<int>(swap->n_blades);
 
     // Initialize aviFAIL to 0
-    aviFAIL = 0;
+    *aviFAIL = 0;
 
     //--------------------------------------------------------------------------
     // Read External Controller Parameters from the User Interface and initialize variables
@@ -47,7 +121,7 @@ void DISCON(
     // If first call to the DLL
     if (status == 0) {
         // Inform users that we are using this user-defined routine:
-        aviFAIL = 1;
+        *aviFAIL = 1;
         strncpy(
             const_cast<char*>(avcMSG),
             "Running with torque and pitch control of the NREL offshore "
@@ -80,7 +154,7 @@ void DISCON(
         //----------------------------------------------------------------------
 
         // Initialize aviFAIL to true (will be set to false if all checks pass)
-        aviFAIL = -1;
+        *aviFAIL = -1;
 
         if (kCornerFreq <= 0.0) {
             strncpy(
@@ -167,7 +241,7 @@ void DISCON(
                 swap->message_array_size
             );
         } else {
-            aviFAIL = 0;
+            *aviFAIL = 0;
             memset(const_cast<char*>(avcMSG), 0, swap->message_array_size);
         }
 
@@ -253,11 +327,11 @@ void DISCON(
 
     // Only compute control calculations if no error has occurred and we are not on the last time
     // step
-    if (status >= 0 && aviFAIL >= 0) {
+    if (status >= 0 && *aviFAIL >= 0) {
         // Abort if the user has not requested a pitch angle actuator (See Appendix A of Bladed
         // User's Guide)
         if (static_cast<int>(swap->pitch_angle_actuator_req) != 0) {
-            aviFAIL = -1;
+            *aviFAIL = -1;
             strncpy(
                 const_cast<char*>(avcMSG), "Pitch angle actuator not requested.",
                 swap->message_array_size
@@ -336,8 +410,9 @@ void DISCON(
 
             // Torque rate based on the current and last torque commands, N-m/s
             // Saturate the torque rate using its maximum absolute value
-            float trq_rate = clamp(
-                (gen_trq - state.generator_torque_lastest) / elapsed_time, -kVS_MaxRat, kVS_MaxRat
+            float trq_rate = std::clamp(
+                static_cast<float>(gen_trq - state.generator_torque_lastest) / elapsed_time,
+                static_cast<float>(-kVS_MaxRat), static_cast<float>(kVS_MaxRat)
             );
 
             // Saturate the command using the torque rate limit
@@ -380,9 +455,10 @@ void DISCON(
             // integral term using the pitch angle limits
             float speed_error = state.generator_speed_filtered - kPC_RefSpd;
             state.integral_speed_error += speed_error * elapsed_time;
-            state.integral_speed_error = clamp(
-                state.integral_speed_error, kPC_MinPit / (kOnePlusEps * kPC_KI),
-                kPC_MaxPit / (kOnePlusEps * kPC_KI)
+            state.integral_speed_error = std::clamp(
+                static_cast<float>(state.integral_speed_error),
+                static_cast<float>(kPC_MinPit / (kOnePlusEps * kPC_KI)),
+                static_cast<float>(kPC_MaxPit / (kOnePlusEps * kPC_KI))
             );
 
             // Compute the pitch commands associated with the proportional and integral gains
@@ -391,9 +467,10 @@ void DISCON(
 
             // Superimpose the individual commands to get the total pitch command; saturate the
             // overall command using the pitch angle limits
-            pitch_com_total =
-                clamp(pitch_com_proportional + pitch_com_integral, kPC_MinPit, kPC_MaxPit);
-
+            pitch_com_total = std::clamp(
+                static_cast<float>(pitch_com_proportional + pitch_com_integral),
+                static_cast<float>(kPC_MinPit), static_cast<float>(kPC_MaxPit)
+            );
             // Saturate the overall commanded pitch using the pitch rate limit:
             // NOTE: Since the current pitch angle may be different for each blade
             //       (depending on the type of actuator implemented in the structural
@@ -413,12 +490,17 @@ void DISCON(
                 // Pitch rate of blade K (unsaturated)
                 pitch_rate[k] = (pitch_com_total - blade_pitch[k]) / elapsed_time;
                 // Saturate the pitch rate of blade K using its maximum absolute value
-                pitch_rate[k] = clamp(pitch_rate[k], -kPC_MaxRat, kPC_MaxRat);
+                pitch_rate[k] = std::clamp(
+                    static_cast<float>(pitch_rate[k]), static_cast<float>(-kPC_MaxRat),
+                    static_cast<float>(kPC_MaxRat)
+                );
                 // Saturate the overall command of blade K using the pitch rate limit
                 state.pitch_commanded_latest[k] = blade_pitch[k] + pitch_rate[k] * elapsed_time;
                 // Saturate the overall command using the pitch angle limits
-                state.pitch_commanded_latest[k] =
-                    clamp(state.pitch_commanded_latest[k], kPC_MinPit, kPC_MaxPit);
+                state.pitch_commanded_latest[k] = std::clamp(
+                    static_cast<float>(state.pitch_commanded_latest[k]),
+                    static_cast<float>(kPC_MinPit), static_cast<float>(kPC_MaxPit)
+                );
             }
 
             // Reset the value of pitch_controller_latest to the current value
@@ -479,7 +561,7 @@ void DISCON(
                 const_cast<char*>(avcMSG), swap->message_array_size,
                 "Cannot open file \"%s\". Another program may have locked it for writing", accINFILE
             );
-            aviFAIL = -1;
+            *aviFAIL = -1;
         }
     } else if (status == -9) {
         // Unpack internal state from file
@@ -492,7 +574,7 @@ void DISCON(
                 const_cast<char*>(avcMSG), swap->message_array_size,
                 "Cannot open file \"%s\" for reading. Another program may have locked it.", accINFILE
             );
-            aviFAIL = -1;
+            *aviFAIL = -1;
         }
     }
 }

@@ -12,13 +12,25 @@ if(TARGET Kokkos::MKL)
   find_package(MKL REQUIRED)
 endif()
 
+find_package(Amesos2 REQUIRED)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+    set(FS_LIB stdc++fs)
+  endif()
+endif()
+
+target_sources(${oturb_exe_name} PRIVATE main.cpp)
+set_target_properties(${oturb_exe_name} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${oturb_exe_name} PRIVATE
-    Kokkos::kokkoskernels
+    KokkosKernels::kokkoskernels
+    Amesos2::amesos2
     ${FS_LIB}
 )
 
 target_link_libraries(${oturb_lib_name} PRIVATE
-    Kokkos::kokkoskernels
+    KokkosKernels::kokkoskernels
+    Amesos2::amesos2
     ${FS_LIB}
 )
 
