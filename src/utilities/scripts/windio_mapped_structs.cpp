@@ -18,6 +18,20 @@ struct Assembly {
     double rated_power;  // Nameplate power of the turbine, i.e. the rated electrical output of the
                          // generator.
     double lifetime;     // Turbine design lifetime in years.
+
+    void parse(const YAML::Node& node) {
+        turbine_class = node["turbine_class"] ? node["turbine_class"].as<std::string>() : "";
+        turbulence_class =
+            node["turbulence_class"] ? node["turbulence_class"].as<std::string>() : "";
+        drivetrain = node["drivetrain"] ? node["drivetrain"].as<std::string>() : "";
+        rotor_orientation =
+            node["rotor_orientation"] ? node["rotor_orientation"].as<std::string>() : "";
+        number_of_blades = node["number_of_blades"] ? node["number_of_blades"].as<int>() : 0;
+        rotor_diameter = node["rotor_diameter"] ? node["rotor_diameter"].as<double>() : 0.;
+        hub_height = node["hub_height"] ? node["hub_height"].as<double>() : 0.;
+        rated_power = node["rated_power"] ? node["rated_power"].as<double>() : 0.;
+        lifetime = node["lifetime"] ? node["lifetime"].as<double>() : 0.;
+    }
 };
 
 // AirfoilPosition
@@ -1043,6 +1057,37 @@ struct Materials {
     double A;     // Fatigue S/N curve fitting parameter S=A*N^(-1/m)
     double m;     // Fatigue S/N curve fitting parameter S=A*N^(-1/m)
     double R;     // Fatigue stress ratio
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        description = node["description"] ? node["description"].as<std::string>() : "";
+        source = node["source"] ? node["source"].as<std::string>() : "";
+        orth = node["orth"] ? node["orth"].as<int>() : 0;
+        rho = node["rho"] ? node["rho"].as<double>() : 0.;
+        E = node["E"] ? node["E"].as<double>() : 0.;
+        G = node["G"] ? node["G"].as<double>() : 0.;
+        nu = node["nu"] ? node["nu"].as<double>() : 0.;
+        alpha = node["alpha"] ? node["alpha"].as<double>() : 0.;
+        Xt = node["Xt"] ? node["Xt"].as<double>() : 0.;
+        Xc = node["Xc"] ? node["Xc"].as<double>() : 0.;
+        Xy = node["Xy"] ? node["Xy"].as<double>() : 0.;
+        S = node["S"] ? node["S"].as<double>() : 0.;
+        ply_t = node["ply_t"] ? node["ply_t"].as<double>() : 0.;
+        unit_cost = node["unit_cost"] ? node["unit_cost"].as<double>() : 0.;
+        fvf = node["fvf"] ? node["fvf"].as<double>() : 0.;
+        fwf = node["fwf"] ? node["fwf"].as<double>() : 0.;
+        fiber_density = node["fiber_density"] ? node["fiber_density"].as<double>() : 0.;
+        area_density_dry = node["area_density_dry"] ? node["area_density_dry"].as<double>() : 0.;
+        component_id = node["component_id"] ? node["component_id"].as<int>() : 0;
+        waste = node["waste"] ? node["waste"].as<double>() : 0.;
+        roll_mass = node["roll_mass"] ? node["roll_mass"].as<double>() : 0.;
+        GIc = node["GIc"] ? node["GIc"].as<double>() : 0.;
+        GIIc = node["GIIc"] ? node["GIIc"].as<double>() : 0.;
+        alp0 = node["alp0"] ? node["alp0"].as<double>() : 0.;
+        A = node["A"] ? node["A"].as<double>() : 0.;
+        m = node["m"] ? node["m"].as<double>() : 0.;
+        R = node["R"] ? node["R"].as<double>() : 0.;
+    }
 };
 
 // Supervisory
@@ -1180,4 +1225,19 @@ struct Turbine {
     Environment environment;
     Bos bos;
     Costs costs;
+
+    void parse(const YAML::Node& node) {
+        comments = node["comments"] ? node["comments"].as<std::string>() : "";
+        name = node["name"] ? node["name"].as<std::string>() : "";
+
+        if (node["assembly"]) {
+            assembly.parse(node["assembly"]);
+        }
+
+        for (std::size_t i = 0; i < node["materials"].size(); i++) {
+            Materials mats;
+            mats.parse(node["materials"][i]);
+            materials.push_back(mats);
+        }
+    }
 };
