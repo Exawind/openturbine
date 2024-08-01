@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "node.hpp"
 
 #include "src/restruct_poc/beams/beam_element.hpp"
@@ -78,12 +80,10 @@ public:
     }
 
     /// Return a beam element by ID - const/read-only version
-    std::shared_ptr<const BeamElement> GetBeamElement(int id) const {
-        return this->beam_elements_[id];
-    }
+    const BeamElement& GetBeamElement(int id) const { return *this->beam_elements_[id]; }
 
     /// Return a beam element by ID - non-const version
-    std::shared_ptr<BeamElement> GetBeamElement(int id) { return this->beam_elements_[id]; }
+    BeamElement& GetBeamElement(int id) { return *this->beam_elements_[id]; }
 
     /// Returns a reference to the beam elements in the model
     const std::vector<std::shared_ptr<BeamElement>>& GetBeamElements() const {
