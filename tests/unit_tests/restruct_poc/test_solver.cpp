@@ -18,7 +18,7 @@
 #include "src/restruct_poc/solver/step.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 inline std::pair<Beams, Solver> MakeBeamsAndSolver(size_t max_iter) {
     // Mass matrix for uniform composite beam section
@@ -823,4 +823,4 @@ TEST(SolverStep2Test, SolutionVector) {
     );
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

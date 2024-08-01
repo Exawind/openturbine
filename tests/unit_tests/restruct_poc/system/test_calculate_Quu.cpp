@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/calculate_Quu.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(CalculateQuuTests, OneNode) {
     const auto Cuu = Kokkos::View<double[1][6][6]>("Cuu");
@@ -58,4 +58,4 @@ TEST(CalculateQuuTests, OneNode) {
     CompareWithExpected(Quu_mirror, Quu_exact);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

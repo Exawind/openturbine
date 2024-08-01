@@ -5,7 +5,7 @@
 
 #include "src/restruct_poc/beams/interpolate_QP_state.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 inline auto create_node_u_OneNode() {
     constexpr auto num_nodes = 1;
@@ -322,4 +322,4 @@ TEST(InterpolateQPStateTests, rprime_TwoNodeTwoQP) {
     EXPECT_NEAR(qp_rprime_mirror(1, 3), 91., tolerance);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

@@ -5,7 +5,7 @@
 #include "src/restruct_poc/math/quaternion_operations.hpp"
 #include "src/restruct_poc/math/vector_operations.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 template <unsigned size>
 auto Create1DView(const std::array<double, size>& input) {
@@ -299,4 +299,4 @@ TEST(MatrixTest, AX_Matrix) {
     test_AX_Matrix();
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

@@ -38,11 +38,10 @@ struct Constraints {
     View_N Phi;
     View_NxN B;
 
-    Constraints() {}
     Constraints(const std::vector<Constraint>& constraints, size_t num_system_dofs)
         : num(constraints.size()),
           num_dofs(std::transform_reduce(
-              constraints.cbegin(), constraints.cend(), 0u, std::plus{},
+              constraints.cbegin(), constraints.cend(), 0U, std::plus{},
               [](auto c) {
                   return c.NumDOFs();
               }
@@ -59,8 +58,8 @@ struct Constraints {
         auto host_data = Kokkos::create_mirror(this->data);
 
         // Loop through constraint input
-        auto start_row = size_t{0u};
-        for (auto i = 0u; i < this->num; ++i) {
+        auto start_row = size_t{0U};
+        for (auto i = 0U; i < this->num; ++i) {
             // Set Host constraint data
             this->constraint_data[i].type = constraints[i].type;
             this->constraint_data[i].control = constraints[i].control;
@@ -83,7 +82,7 @@ struct Constraints {
             host_data(i).X0[2] = constraints[i].X0[2];
 
             // Set rotation axes
-            for (auto j = 0u; j < 3u; ++j) {
+            for (auto j = 0U; j < 3U; ++j) {
                 host_data(i).axis_x[j] = constraints[i].x_axis[j];
                 host_data(i).axis_y[j] = constraints[i].y_axis[j];
                 host_data(i).axis_z[j] = constraints[i].z_axis[j];
@@ -105,10 +104,10 @@ struct Constraints {
         // Prescribed displacement
         auto host_u_mirror = Kokkos::create_mirror(this->u);
         auto host_control_mirror = Kokkos::create_mirror(this->control);
-        for (auto i = 0u; i < this->constraint_data.size(); ++i) {
+        for (auto i = 0U; i < this->constraint_data.size(); ++i) {
             switch (this->constraint_data[i].type) {
                 case ConstraintType::kPrescribedBC: {
-                    for (auto j = 0u; j < static_cast<unsigned>(kLieGroupComponents); ++j) {
+                    for (auto j = 0U; j < static_cast<unsigned>(kLieGroupComponents); ++j) {
                         host_u_mirror(i, j) = this->constraint_data[i].u[j];
                     }
                 } break;

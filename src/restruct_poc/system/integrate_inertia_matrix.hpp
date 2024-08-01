@@ -8,10 +8,10 @@
 namespace openturbine {
 
 struct IntegrateInertiaMatrixElement {
-    const int i_elem;
-    const size_t num_qps;
-    const size_t first_node;
-    const size_t first_qp;
+    int i_elem;
+    size_t num_qps;
+    size_t first_node;
+    size_t first_qp;
     View_N::const_type qp_weight_;
     View_N::const_type qp_jacobian_;
     View_NxN::const_type shape_interp_;
@@ -27,23 +27,23 @@ struct IntegrateInertiaMatrixElement {
         const auto j = j_index + first_node;
         auto local_M_data = Kokkos::Array<double, 36>{};
         const auto local_M = Kokkos::View<double[6][6]>(local_M_data.data());
-        for (auto k = 0u; k < num_qps; ++k) {
+        for (auto k = 0U; k < num_qps; ++k) {
             const auto k_qp = first_qp + k;
             const auto w = qp_weight_(k_qp);
             const auto jacobian = qp_jacobian_(k_qp);
             const auto phi_i = shape_interp_(i, k);
             const auto phi_j = shape_interp_(j, k);
             const auto coeff = w * phi_i * phi_j * jacobian;
-            for (auto m = 0u; m < 6u; ++m) {
-                for (auto n = 0u; n < 6u; ++n) {
+            for (auto m = 0U; m < 6U; ++m) {
+                for (auto n = 0U; n < 6U; ++n) {
                     local_M(m, n) += beta_prime_ * coeff * qp_Muu_(k_qp, m, n) +
                                      gamma_prime_ * coeff * qp_Guu_(k_qp, m, n);
                 }
             }
         }
-        for (auto m = 0u; m < 6u; ++m) {
-            for (auto n = 0u; n < 6u; ++n) {
-                gbl_M_(i_elem, i_index * 6u + m, j_index * 6u + n) = local_M(m, n);
+        for (auto m = 0U; m < 6U; ++m) {
+            for (auto n = 0U; n < 6U; ++n) {
+                gbl_M_(i_elem, i_index * 6 + m, j_index * 6 + n) = local_M(m, n);
             }
         }
     }

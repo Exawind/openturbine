@@ -3,7 +3,7 @@
 
 #include "src/restruct_poc/solver/compute_number_of_non_zeros.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(ComputeNumberOfNonZeros, SingleElement) {
     auto elem_indices_host =
@@ -35,4 +35,4 @@ TEST(ComputeNumberOfNonZeros, TwoElements) {
         num_dof_elem1 * num_dof_elem1 + num_dof_elem2 * num_dof_elem2;
     EXPECT_EQ(num_non_zero, expected_num_non_zero);
 }
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

@@ -8,7 +8,7 @@
 #include "src/restruct_poc/types.hpp"
 #include "tests/unit_tests/restruct_poc/test_utilities.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 void TestIntegrateResidualVector_1Element1Node_AllZeros() {
     constexpr auto num_elements = size_t{1U};
@@ -252,4 +252,4 @@ TEST(IntegrateResidualVector, TwoElementsTwoNodes) {
     TestIntegrateResidualVector_2Elements2Nodes();
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

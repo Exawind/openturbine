@@ -18,14 +18,14 @@ struct UpdateNodeState {
 
     KOKKOS_FUNCTION
     void operator()(int i) const {
-        auto j = node_state_indices(i);
-        for (auto k = 0u; k < kLieGroupComponents; k++) {
+        const auto j = node_state_indices(i);
+        for (auto k = 0U; k < kLieGroupComponents; k++) {
             node_u(i, k) = Q(j, k);
         }
-        for (auto k = 0u; k < kLieAlgebraComponents; k++) {
+        for (auto k = 0U; k < kLieAlgebraComponents; k++) {
             node_u_dot(i, k) = V(j, k);
         }
-        for (auto k = 0u; k < kLieAlgebraComponents; k++) {
+        for (auto k = 0U; k < kLieAlgebraComponents; k++) {
             node_u_ddot(i, k) = A(j, k);
         }
     }

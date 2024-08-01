@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/calculate_gyroscopic_matrix.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(CalculateGyroscopicMatrixTests, OneNode) {
     const auto Muu = Kokkos::View<double[1][6][6]>("Muu");
@@ -66,4 +66,4 @@ TEST(CalculateGyroscopicMatrixTests, OneNode) {
     CompareWithExpected(Guu_mirror, Guu_exact);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

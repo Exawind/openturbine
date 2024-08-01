@@ -43,16 +43,16 @@
 #include <dlfcn.h>
 #endif
 
-#if (defined(_WIN32) || defined(_WIN64))
-#define DYLIB_WIN_MAC_OTHER(win_def, mac_def, other_def) win_def
-#define DYLIB_WIN_OTHER(win_def, other_def) win_def
-#elif defined(__APPLE__)
-#define DYLIB_WIN_MAC_OTHER(win_def, mac_def, other_def) mac_def
-#define DYLIB_WIN_OTHER(win_def, other_def) other_def
-#else
-#define DYLIB_WIN_MAC_OTHER(win_def, mac_def, other_def) other_def
-#define DYLIB_WIN_OTHER(win_def, other_def) other_def
-#endif
+#if (defined(_WIN32) || defined(_WIN64))                            // NOLINT
+#define DYLIB_WIN_MAC_OTHER(win_def, mac_def, other_def) win_def    // NOLINT
+#define DYLIB_WIN_OTHER(win_def, other_def) win_def                 // NOLINT
+#elif defined(__APPLE__)                                            // NOLINT
+#define DYLIB_WIN_MAC_OTHER(win_def, mac_def, other_def) mac_def    // NOLINT
+#define DYLIB_WIN_OTHER(win_def, other_def) other_def               // NOLINT
+#else                                                               // NOLINT
+#define DYLIB_WIN_MAC_OTHER(win_def, mac_def, other_def) other_def  // NOLINT
+#define DYLIB_WIN_OTHER(win_def, other_def) other_def               // NOLINT
+#endif                                                              // NOLINT
 
 namespace openturbine::util {
 
@@ -102,8 +102,9 @@ public:
     dylib(dylib&& other) noexcept : m_handle(other.m_handle) { other.m_handle = nullptr; }
 
     dylib& operator=(dylib&& other) noexcept {
-        if (this != &other)
+        if (this != &other) {
             std::swap(m_handle, other.m_handle);
+        }
         return *this;
     }
 
@@ -120,27 +121,32 @@ public:
      */
     ///@{
     dylib(const char* dir_path, const char* lib_name, bool decorations = add_filename_decorations) {
-        if (!dir_path)
+        if (dir_path == nullptr) {
             throw std::invalid_argument("The directory path is null");
-        if (!lib_name)
+        }
+        if (lib_name == nullptr) {
             throw std::invalid_argument("The library name is null");
+        }
 
         std::string final_name = lib_name;
         std::string final_path = dir_path;
 
-        if (decorations)
+        if (decorations) {
             final_name = filename_components::prefix + final_name + filename_components::suffix;
+        }
 
-        if (!final_path.empty() && final_path.find_last_of('/') != final_path.size() - 1)
+        if (!final_path.empty() && final_path.find_last_of('/') != final_path.size() - 1) {
             final_path += '/';
+        }
 
         m_handle = open((final_path + final_name).c_str());
 
-        if (!m_handle)
+        if (m_handle == nullptr) {
             throw load_error(
                 "Could not load library \"" + final_path + final_name + "\"\n" +
                 get_error_description()
             );
+        }
     }
 
     dylib(
@@ -186,8 +192,9 @@ public:
     ///@}
 
     ~dylib() {
-        if (m_handle)
+        if (m_handle != nullptr) {
             close(m_handle);
+        }
     }
 
     /**
@@ -201,24 +208,27 @@ public:
      *  @return a pointer to the requested symbol
      */
     native_symbol_type get_symbol(const char* symbol_name) const {
-        if (!symbol_name)
+        if (symbol_name == nullptr) {
             throw std::invalid_argument("The symbol name to lookup is null");
-        if (!m_handle)
+        }
+        if (m_handle == nullptr) {
             throw std::logic_error(
                 "The dynamic library handle is null. This object may have been moved from."
             );
+        }
 
-        auto symbol = locate_symbol(m_handle, symbol_name);
+        auto* symbol = locate_symbol(m_handle, symbol_name);
 
-        if (symbol == nullptr)
+        if (symbol == nullptr) {
             throw symbol_error(
                 "Could not get symbol \"" + std::string(symbol_name) + "\"\n" +
                 get_error_description()
             );
+        }
         return symbol;
     }
 
-    native_symbol_type get_symbol(const std::string& symbol_name) const {
+    [[nodiscard]] native_symbol_type get_symbol(const std::string& symbol_name) const {
         return get_symbol(symbol_name.c_str());
     }
 
@@ -239,14 +249,14 @@ public:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
 #endif
-        return reinterpret_cast<T*>(get_symbol(symbol_name));
+        return reinterpret_cast<T*>(get_symbol(symbol_name));  // NOLINT
 #if (defined(__GNUC__) && __GNUC__ >= 8)
 #pragma GCC diagnostic pop
 #endif
     }
 
     template <typename T>
-    T* get_function(const std::string& symbol_name) const {
+    T* get_function(const std::string& symbol_name) const {  // NOLINT
         return get_function<T>(symbol_name.c_str());
     }
 
@@ -263,7 +273,7 @@ public:
      */
     template <typename T>
     T& get_variable(const char* symbol_name) const {
-        return *reinterpret_cast<T*>(get_symbol(symbol_name));
+        return *reinterpret_cast<T*>(get_symbol(symbol_name));  // NOLINT
     }
 
     template <typename T>
@@ -280,13 +290,16 @@ public:
      *
      *  @return true if the symbol exists in the dynamic library, false otherwise
      */
-    bool has_symbol(const char* symbol_name) const noexcept {
-        if (!m_handle || !symbol_name)
+    [[nodiscard]] bool has_symbol(const char* symbol_name) const noexcept {
+        if (m_handle == nullptr || symbol_name == nullptr) {
             return false;
+        }
         return locate_symbol(m_handle, symbol_name) != nullptr;
     }
 
-    bool has_symbol(const std::string& symbol) const noexcept { return has_symbol(symbol.c_str()); }
+    [[nodiscard]] bool has_symbol(const std::string& symbol) const noexcept {
+        return has_symbol(symbol.c_str());
+    }
 
     /**
      *  @return the dynamic library handle
@@ -325,7 +338,7 @@ protected:
         );
         return (length == 0) ? "Unknown error (FormatMessage failed)" : description;
 #else
-        const auto description = dlerror();
+        const auto* const description = dlerror();
         return (description == nullptr) ? "No error reported by dlerror" : description;
 #endif
     }

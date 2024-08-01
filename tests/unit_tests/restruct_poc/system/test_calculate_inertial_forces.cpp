@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/calculate_inertial_forces.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(CalculateInertialForcesTests, OneNode) {
     const auto Muu = Kokkos::View<double[1][6][6]>("Muu");
@@ -97,4 +97,4 @@ TEST(CalculateInertialForcesTests, OneNode) {
     CompareWithExpected(FI_mirror, FI_exact);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

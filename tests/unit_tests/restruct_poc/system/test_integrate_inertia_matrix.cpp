@@ -9,7 +9,7 @@
 #include "src/restruct_poc/types.hpp"
 #include "tests/unit_tests/restruct_poc/test_utilities.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 inline void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Muu() {
     constexpr auto number_of_elements = 1;
@@ -313,4 +313,4 @@ TEST(IntegrateInertiaMatrixTests, OneElementOneNodeOneQP_WithMultiplicationFacto
     IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_WithMultiplicationFactor();
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

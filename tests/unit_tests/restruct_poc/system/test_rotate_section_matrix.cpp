@@ -6,7 +6,7 @@
 #include "src/restruct_poc/system/rotate_section_matrix.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(RotateSectionMatrixTests, OneNode) {
     const auto rr0 = Kokkos::View<double[1][6][6]>("rr0");
@@ -44,4 +44,4 @@ TEST(RotateSectionMatrixTests, OneNode) {
     CompareWithExpected(Cuu_mirror, Cuu_exact);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

@@ -12,13 +12,13 @@ struct PopulateTangentIndices {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        auto entries_so_far = 0u;
-        for (auto i_node = 0u; i_node < num_system_nodes; ++i_node) {
-            for (auto n = 0u; n < kLieAlgebraComponents; ++n) {
+        auto entries_so_far = 0U;
+        for (auto i_node = 0U; i_node < num_system_nodes; ++i_node) {
+            for (auto n = 0U; n < kLieAlgebraComponents; ++n) {
                 const auto i = i_node;
                 const auto column_start =
                     static_cast<size_t>(node_state_indices(i)) * kLieAlgebraComponents;
-                for (auto m = 0u; m < kLieAlgebraComponents; ++m) {
+                for (auto m = 0U; m < kLieAlgebraComponents; ++m) {
                     indices(entries_so_far) = static_cast<int>(column_start + m);
                     ++entries_so_far;
                 }

@@ -3,7 +3,7 @@
 
 #include "src/restruct_poc/solver/populate_sparse_indices.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(PopulateSparseIndices, SingleElement) {
     constexpr auto num_nodes = 5;
@@ -76,4 +76,4 @@ TEST(PopulateSparseIndices, TwoElements) {
         }
     }
 }
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests
