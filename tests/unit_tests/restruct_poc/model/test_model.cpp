@@ -6,26 +6,16 @@
 #include "src/restruct_poc/model/model.hpp"
 #include "tests/unit_tests/restruct_poc/test_utilities.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
-class ModelFixture : public ::testing::Test {
-protected:
-    void SetUp() override {
-        pos = {0., 0., 0.};
-        rot = {1., 0., 0., 0.};
-        v = {0., 0., 0.};
-        omega = {0., 0., 0.};
-    }
-
-    Array_3 pos;
-    Array_4 rot;
-    Array_3 v;
-    Array_3 omega;
-
+TEST(Model, AddNodeToModel) {
     Model model;
-};
 
-TEST_F(ModelFixture, AddNodeToModel) {
+    constexpr auto pos = std::array{0., 0., 0.};
+    constexpr auto rot = std::array{1., 0., 0., 0.};
+    constexpr auto v = std::array{0., 0., 0.};
+    constexpr auto omega = std::array{0., 0., 0.};
+
     ASSERT_EQ(model.NumNodes(), 0);
 
     // Add a node to the model and check the ID
@@ -44,7 +34,14 @@ TEST_F(ModelFixture, AddNodeToModel) {
     ASSERT_EQ(nodes.size(), 1);
 }
 
-TEST_F(ModelFixture, TranslateModelNode) {
+TEST(Model, TranslateModelNode) {
+    Model model;
+
+    constexpr auto pos = std::array{0., 0., 0.};
+    constexpr auto rot = std::array{1., 0., 0., 0.};
+    constexpr auto v = std::array{0., 0., 0.};
+    constexpr auto omega = std::array{0., 0., 0.};
+
     // Add a node to the model and check the ID
     auto node = model.AddNode(
         {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
@@ -67,7 +64,14 @@ TEST_F(ModelFixture, TranslateModelNode) {
     ASSERT_EQ(node_0.x[2], pos[2] + displacement[2]);  // 3.
 }
 
-TEST_F(ModelFixture, RotateModelNode) {
+TEST(Model, RotateModelNode) {
+    Model model;
+
+    constexpr auto pos = std::array{0., 0., 0.};
+    constexpr auto rot = std::array{1., 0., 0., 0.};
+    constexpr auto v = std::array{0., 0., 0.};
+    constexpr auto omega = std::array{0., 0., 0.};
+
     // Add a node to the model and check the ID
     auto node = model.AddNode(
         {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
@@ -95,7 +99,14 @@ TEST_F(ModelFixture, RotateModelNode) {
     ASSERT_NEAR(node_0.x[2], 0., 1e-6);
 }
 
-TEST_F(ModelFixture, AddBeamElementToModel) {
+TEST(Model, AddBeamElementToModel) {
+    Model model;
+
+    constexpr auto pos = std::array{0., 0., 0.};
+    constexpr auto rot = std::array{1., 0., 0., 0.};
+    constexpr auto v = std::array{0., 0., 0.};
+    constexpr auto omega = std::array{0., 0., 0.};
+
     // Add couple of nodes to the model
     auto node1 = model.AddNode(
         {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
@@ -124,7 +135,7 @@ TEST_F(ModelFixture, AddBeamElementToModel) {
 
 TEST(Model, ModelConstructorWithDefaults) {
     // Create an empty model
-    Model model;
+    const Model model;
     ASSERT_EQ(model.NumNodes(), 0);
     ASSERT_EQ(model.NumBeamElements(), 0);
     ASSERT_EQ(model.NumConstraints(), 0);
@@ -136,7 +147,7 @@ TEST(Model, ModelConstructorWithObjects) {
     auto beam_elements = std::vector<BeamElement>{};
     auto constraints = std::vector<Constraint>{};
 
-    Model model(nodes, beam_elements, constraints);
+    const Model model(nodes, beam_elements, constraints);
     ASSERT_EQ(model.NumNodes(), 1);
     ASSERT_EQ(model.NumBeamElements(), 0);
     ASSERT_EQ(model.NumConstraints(), 0);
@@ -144,16 +155,17 @@ TEST(Model, ModelConstructorWithObjects) {
 
 TEST(Model, ModelConstructorWithPointers) {
     // Create a model with a couple of nodes, elements and constraints
-    auto nodes = std::vector<std::shared_ptr<Node>>{std::make_shared<Node>(
-        0, Array_7{0., 0., 0., 0., 0., 0., 0.}, Array_7{0., 0., 0., 1., 0., 0., 0.}
-    )};
-    auto beam_elements = std::vector<std::shared_ptr<BeamElement>>{};
-    auto constraints = std::vector<std::shared_ptr<Constraint>>{};
+    auto nodes = std::vector<std::shared_ptr<Node>>{};
+    nodes.push_back(std::make_shared<Node>(
+        0, std::array{0., 0., 0., 0., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0., 0.}
+    ));
+    const auto beam_elements = std::vector<std::shared_ptr<BeamElement>>{};
+    const auto constraints = std::vector<std::shared_ptr<Constraint>>{};
 
-    Model model(nodes, beam_elements, constraints);
+    const Model model(nodes, beam_elements, constraints);
     ASSERT_EQ(model.NumNodes(), 1);
     ASSERT_EQ(model.NumBeamElements(), 0);
     ASSERT_EQ(model.NumConstraints(), 0);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

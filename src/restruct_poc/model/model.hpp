@@ -125,7 +125,7 @@ public:
 
     /// Adds a rotation control constraint to the model and returns the constraint
     std::shared_ptr<Constraint> AddRotationControl(
-        const Node& node1, const Node& node2, const Array_3& axis, float* control
+        const Node& node1, const Node& node2, const Array_3& axis, double* control
     ) {
         return this->constraints_.emplace_back(std::make_shared<Constraint>(
             ConstraintType::kRotationControl, constraints_.size(), node1, node2, axis, control

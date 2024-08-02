@@ -113,7 +113,7 @@ TEST(RotorTest, IEA15Rotor) {
                     // Create model node
                     return BeamNode(
                         node_loc[j],
-                        model.AddNode(
+                        *model.AddNode(
                             {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
                             {0., 0., 0., 1., 0., 0., 0.},                     // displacement
                             {v[0], v[1], v[2], omega[0], omega[1], omega[2]}  // velocity
@@ -281,7 +281,7 @@ TEST(RotorTest, IEA15RotorHub) {
                     // Create model node
                     return BeamNode(
                         node_loc[j],
-                        model.AddNode(
+                        *model.AddNode(
                             {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
                             {0., 0., 0., 1., 0., 0., 0.},                     // displacement
                             {v[0], v[1], v[2], omega[0], omega[1], omega[2]}  // velocity
@@ -443,7 +443,7 @@ TEST(RotorTest, IEA15RotorController) {
                     // Create model node
                     return BeamNode(
                         node_loc[j],
-                        model.AddNode(
+                        *model.AddNode(
                             {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
                             {0., 0., 0., 1., 0., 0., 0.},                     // displacement
                             {v[0], v[1], v[2], omega[0], omega[1], omega[2]}  // velocity

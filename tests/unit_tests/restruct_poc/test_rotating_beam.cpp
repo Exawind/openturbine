@@ -89,7 +89,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     std::transform(std::cbegin(node_s), std::cend(node_s), std::back_inserter(nodes), [&](auto s) {
         const auto x = 10 * s + 2.;
         return BeamNode(
-            s, model.AddNode(
+            s, *model.AddNode(
                    {x, 0., 0., 1., 0., 0., 0.},        // Position
                    {0., 0., 0., 1., 0., 0., 0.},       // Displacement
                    {0., x * omega, 0., 0., 0., omega}  // Velocity

@@ -51,7 +51,7 @@ struct Solver {
         KokkosSparse::SPMVHandle<ExecutionSpace, CrsMatrixType, ValuesType, ValuesType>;
 
     bool is_dynamic_solve;    //< Flag to indicate if the solver is dynamic
-    size_t max_iter;             //< Maximum number of iterations
+    size_t max_iter;          //< Maximum number of iterations
     double h;                 //< Time step
     double alpha_m;           //< Alpha_m coefficient
     double alpha_f;           //< Alpha_f coefficient
@@ -60,10 +60,10 @@ struct Solver {
     double gamma_prime;       //< Gamma prime coefficient
     double beta_prime;        //< Beta prime coefficient
     double conditioner;       //< Conditioner for the system matrix
-    size_t num_system_nodes;     //< Number of system nodes
-    size_t num_system_dofs;      //< Number of system degrees of freedom
+    size_t num_system_nodes;  //< Number of system nodes
+    size_t num_system_dofs;   //< Number of system degrees of freedom
     Constraints constraints;  //< Constraints
-    size_t num_dofs;             //< Number of degrees of freedom
+    size_t num_dofs;          //< Number of degrees of freedom
 
     State state;                            //< State
     CrsMatrixType K;                        //< Stiffness matrix

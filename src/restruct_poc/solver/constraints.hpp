@@ -19,25 +19,25 @@ namespace openturbine {
 struct Constraints {
     /// @brief DeviceData struct holds constraint data on device
     struct DeviceData {
-        ConstraintType type;               //< Constraint type
+        ConstraintType type;                     //< Constraint type
         Kokkos::pair<size_t, size_t> row_range;  //< Range of rows in the global stiffness matrix
-        int base_node_index;               //< Base node index
-        int target_node_index;             //< Target node index
-        double X0[3];                      //< Initial relative location between nodes
-        double axis_x[3];                  // Unit vector representing x rotation axis
-        double axis_y[3];                  // Unit vector representing y rotation axis
-        double axis_z[3];                  // Unit vector representing z rotation axis
+        int base_node_index;                     //< Base node index
+        int target_node_index;                   //< Target node index
+        double X0[3];                            //< Initial relative location between nodes
+        double axis_x[3];                        // Unit vector representing x rotation axis
+        double axis_y[3];                        // Unit vector representing y rotation axis
+        double axis_z[3];                        // Unit vector representing z rotation axis
     };
 
     /// @brief HostData struct holds constraint data on host
     struct HostData {
         ConstraintType type;  //< Constraint type
         Array_7 u;            //< Prescribed displacement
-        double* control;       //< Control signal
+        double* control;      //< Control signal
     };
 
-    size_t num;                                       //< Number of constraints
-    size_t num_dofs;                                  //< Number of degrees of freedom
+    size_t num;                                    //< Number of constraints
+    size_t num_dofs;                               //< Number of degrees of freedom
     std::vector<HostData> constraint_data;         //< Host constraint data
     Kokkos::View<DeviceData*> data;                //< Device constraint data
     View_N control;                                //< Control signals

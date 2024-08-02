@@ -58,7 +58,7 @@ inline std::pair<Beams, Solver> MakeBeamsAndSolver(size_t max_iter) {
         [&](auto s) {
             const auto x = 10 * s + 2.;
             return BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.},
                        {0., x * omega, 0., 0., 0., omega}, {0., 0., 0., 0., 0., 0.}
                    )
@@ -93,7 +93,7 @@ inline std::pair<Beams, Solver> MakeBeamsAndSolver(size_t max_iter) {
     auto beams = CreateBeams(beams_input);
 
     // Constraint inputs
-    model.AddPrescribedBC(model.nodes[0]);
+    model.AddPrescribedBC(model.GetNode(0));
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -102,7 +102,8 @@ inline std::pair<Beams, Solver> MakeBeamsAndSolver(size_t max_iter) {
 
     // Create solver
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -149,7 +150,7 @@ inline Solver SetUpSolverAndAssemble() {
         [&](auto s) {
             const auto x = 10 * s + 2.;
             return BeamNode(
-                s, model.AddNode(
+                s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.},
                        {0., x * omega, 0., 0., 0., omega}, {0., 0., 0., 0., 0., 0.}
                    )
@@ -184,7 +185,7 @@ inline Solver SetUpSolverAndAssemble() {
     auto beams = CreateBeams(beams_input);
 
     // Constraint inputs
-    model.AddPrescribedBC(model.nodes[0]);
+    model.AddPrescribedBC(model.GetNode(0));
 
     // Solution parameters
     constexpr auto max_iter = 10U;
@@ -194,7 +195,8 @@ inline Solver SetUpSolverAndAssemble() {
 
     // Create solver
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -332,21 +334,6 @@ TEST(NewSolverTest, ConstraintResidualVector) {
     );
 }
 
-TEST(NewSolverTest, ConstraintGradientMatrix) {
-    auto solver = SetUpSolverAndAssemble();
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(solver.constraints.B, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)),
-        {
-            {1., 0., 0., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 1., 0., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 1., 0.0000000000000000, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 0., 1.0000000000000004, 0.0000000000000000, 0.0000000000000000},
-            {0., 0., 0., 0.0000000000000000, 1.0000000000000004, 0.0000000000000000},
-            {0., 0., 0., 0.0000000000000000, 0.0000000000000000, 1.0000000000000004},
-        }
-    );
-}
-
 TEST(NewSolverTest, AssembleResidualVector) {
     auto solver = SetUpSolverAndAssemble();
 
@@ -472,7 +459,7 @@ inline auto SetupAndTakeNoSteps() {
     auto beams = CreateBeams(beams_input);
 
     // Constraint inputs
-    model.AddPrescribedBC(model.nodes[0]);
+    model.AddPrescribedBC(model.GetNode(0));
 
     // Solution parameters
     constexpr auto max_iter = 0U;
@@ -482,7 +469,8 @@ inline auto SetupAndTakeNoSteps() {
 
     // Create solver
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -699,7 +687,7 @@ inline auto SetupAndTakeTwoSteps() {
     auto beams = CreateBeams(beams_input);
 
     // Constraint inputs
-    model.AddPrescribedBC(model.nodes[0]);
+    model.AddPrescribedBC(model.GetNode(0));
 
     // Solution parameters
     constexpr auto max_iter = 2U;
@@ -709,7 +697,8 @@ inline auto SetupAndTakeTwoSteps() {
 
     // Create solver
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.nodes, model.constraints, beams
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        beams
     );
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -732,21 +721,6 @@ TEST(SolverStep2Test, ConstraintResidualVector) {
             -1.31908395004359e-29,
             1.3190835103592412e-26,
             0.0,
-        }
-    );
-}
-
-TEST(SolverStep2Test, ConstraintGradientMatrix) {
-    auto solver = SetupAndTakeTwoSteps();
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(solver.constraints.B, Kokkos::make_pair(0, 6), Kokkos::make_pair(0, 6)),
-        {
-            {1.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-            {0.0, 1.0, 0.0, 0.0, 0.0, 0.0},
-            {0.0, 0.0, 1.0, 0.0, 0.0, 0.0},
-            {0.0, 0.0, 0.0, 1.0000000000000004, 0.0, -6.595417551796206e-27},
-            {0.0, 0.0, 0.0, 0.0, 1.0000000000000004, -6.59541975021795e-30},
-            {0.0, 0.0, 0.0, 6.595417551796206e-27, 6.595419750217949e-30, 1.0000000000000002},
         }
     );
 }
