@@ -74,13 +74,15 @@ public:
         const std::vector<BeamNode>& nodes, const std::vector<BeamSection>& sections,
         const BeamQuadrature& quadrature
     ) {
-        return this->beam_elements_.emplace_back(std::make_shared<BeamElement>(
-            nodes, sections, quadrature
-        ));
+        return this->beam_elements_.emplace_back(
+            std::make_shared<BeamElement>(nodes, sections, quadrature)
+        );
     }
 
     /// Return a beam element by ID - const/read-only version
-    [[nodiscard]] const BeamElement& GetBeamElement(size_t id) const { return *this->beam_elements_[id]; }
+    [[nodiscard]] const BeamElement& GetBeamElement(size_t id) const {
+        return *this->beam_elements_[id];
+    }
 
     /// Return a beam element by ID - non-const version
     [[nodiscard]] BeamElement& GetBeamElement(size_t id) { return *this->beam_elements_[id]; }
