@@ -173,7 +173,7 @@ struct CalculateConstraintResidualGradient {
         //---------------------------------
 
         // Extract gradient block for target node of this constraint
-        auto i_col = (i_node2 < i_node1 || i_node1 < 0) ? 0 : kLieAlgebraComponents;
+        auto i_col = (i_node2 < i_node1 || i_node1 < 0) ? 0U : kLieAlgebraComponents;
         auto B = Kokkos::subview(
             gradient_terms, i_constraint, Kokkos::ALL,
             Kokkos::make_pair(i_col, i_col + kLieAlgebraComponents)
@@ -217,7 +217,8 @@ struct CalculateConstraintResidualGradient {
         }
 
         // Extract gradient block for base node of this constraint
-        i_col = (i_node1 < i_node2) ? 0 : kLieAlgebraComponents;
+        i_col = (i_node1 < i_node2) ? 0U : kLieAlgebraComponents;
+
         B = Kokkos::subview(
             gradient_terms, i_constraint, Kokkos::ALL,
             Kokkos::make_pair(i_col, i_col + kLieAlgebraComponents)

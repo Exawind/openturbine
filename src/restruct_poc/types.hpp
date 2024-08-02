@@ -4,9 +4,9 @@
 
 namespace openturbine {
 
-static constexpr int kVectorComponents = 3;
-static constexpr int kLieAlgebraComponents = 6;
-static constexpr int kLieGroupComponents = 7;
+static constexpr size_t kVectorComponents = 3;
+static constexpr size_t kLieAlgebraComponents = 6;
+static constexpr size_t kLieGroupComponents = 7;
 
 static constexpr double kTolerance = 1.e-16;
 static constexpr double kTestTolerance = 1.e-6;

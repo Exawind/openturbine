@@ -3,7 +3,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 inline auto create_shape_interp_OneNodeOneQP() {
     constexpr auto num_qp = 1;
@@ -121,4 +121,4 @@ inline auto create_shape_deriv_TwoNodeTwoQP() {
     return shape_deriv;
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

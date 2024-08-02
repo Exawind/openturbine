@@ -37,7 +37,8 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
             solver.state.q, solver.constraints.Phi, solver.constraints.gradient_terms}
     );
 
-    auto constraint_policy = Kokkos::TeamPolicy<>(solver.constraints.num, Kokkos::AUTO());
+    auto constraint_policy =
+        Kokkos::TeamPolicy<>(static_cast<int>(solver.constraints.num), Kokkos::AUTO());
 
     Kokkos::parallel_for(
         "CopyConstraintsToSparseMatrix", constraint_policy,

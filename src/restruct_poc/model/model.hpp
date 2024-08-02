@@ -11,7 +11,7 @@
 namespace openturbine {
 
 // InvalidNode represents an invalid node in constraints that only use the target node.
-static Node InvalidNode(-1, {0., 0., 0., 1., 0., 0., 0.});
+static const Node InvalidNode(-1, {0., 0., 0., 1., 0., 0., 0.});
 
 /// @brief Struct to define a turbine model with nodes and constraints
 /// @details A model is a collection of nodes and constraints that define the geometry and
@@ -58,10 +58,10 @@ public:
     }
 
     /// Return a node by ID - const/read-only version
-    const Node& GetNode(int id) const { return *this->nodes_[id]; }
+    const Node& GetNode(size_t id) const { return *this->nodes_[id]; }
 
     /// Return a node by ID - non-const version
-    Node& GetNode(int id) { return *this->nodes_[id]; }
+    Node& GetNode(size_t id) { return *this->nodes_[id]; }
 
     /// Returns a reference to the nodes in the model (as vector of shared pointers)
     const std::vector<std::shared_ptr<Node>>& GetNodes() const { return this->nodes_; }
@@ -80,10 +80,10 @@ public:
     }
 
     /// Return a beam element by ID - const/read-only version
-    const BeamElement& GetBeamElement(int id) const { return *this->beam_elements_[id]; }
+    const BeamElement& GetBeamElement(size_t id) const { return *this->beam_elements_[id]; }
 
     /// Return a beam element by ID - non-const version
-    BeamElement& GetBeamElement(int id) { return *this->beam_elements_[id]; }
+    BeamElement& GetBeamElement(size_t id) { return *this->beam_elements_[id]; }
 
     /// Returns a reference to the beam elements in the model
     const std::vector<std::shared_ptr<BeamElement>>& GetBeamElements() const {
@@ -125,7 +125,7 @@ public:
 
     /// Adds a rotation control constraint to the model and returns the constraint
     std::shared_ptr<Constraint> AddRotationControl(
-        const Node& node1, const Node& node2, const Array_3& axis, float* control
+        const Node& node1, const Node& node2, const Array_3& axis, double* control
     ) {
         return this->constraints_.emplace_back(std::make_shared<Constraint>(
             ConstraintType::kRotationControl, constraints_.size(), node1, node2, axis, control

@@ -17,11 +17,12 @@ struct InterpolateQPRotation {
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {
-        auto& idx = elem_indices[i_elem];
-        auto shape_interp = Kokkos::subview(shape_interpolation, idx.node_range, idx.qp_shape_range);
-        auto node_rot =
+        const auto& idx = elem_indices[i_elem];
+        const auto shape_interp =
+            Kokkos::subview(shape_interpolation, idx.node_range, idx.qp_shape_range);
+        const auto node_rot =
             Kokkos::subview(node_position_rotation, idx.node_range, Kokkos::make_pair(3, 7));
-        auto qp_rot = Kokkos::subview(qp_rotation, idx.qp_range, Kokkos::ALL);
+        const auto qp_rot = Kokkos::subview(qp_rotation, idx.qp_range, Kokkos::ALL);
 
         InterpQuaternion(shape_interp, node_rot, qp_rot);
     }

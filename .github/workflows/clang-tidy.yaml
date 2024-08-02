@@ -40,6 +40,5 @@ jobs:
         cd build-clangtidy
         cmake .. \
           -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
-          -DOpenTurbine_WARNINGS_AS_ERRORS=OFF \
           -DCMAKE_BUILD_TYPE=Debug
         cmake --build .

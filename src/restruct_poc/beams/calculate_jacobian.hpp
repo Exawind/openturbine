@@ -18,22 +18,23 @@ struct CalculateJacobian {
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {
-        auto& idx = elem_indices[i_elem];
-        auto shape_deriv = Kokkos::subview(shape_derivative, idx.node_range, idx.qp_shape_range);
-        auto qp_pos_deriv = Kokkos::subview(qp_position_derivative, idx.qp_range, Kokkos::ALL);
-        auto node_pos =
+        const auto& idx = elem_indices[i_elem];
+        const auto shape_deriv =
+            Kokkos::subview(shape_derivative, idx.node_range, idx.qp_shape_range);
+        const auto qp_pos_deriv = Kokkos::subview(qp_position_derivative, idx.qp_range, Kokkos::ALL);
+        const auto node_pos =
             Kokkos::subview(node_position_rotation, idx.node_range, Kokkos::make_pair(0, 3));
-        auto qp_jacob = Kokkos::subview(qp_jacobian, idx.qp_range);
+        const auto qp_jacob = Kokkos::subview(qp_jacobian, idx.qp_range);
 
         InterpVector3(shape_deriv, node_pos, qp_pos_deriv);
 
-        for (int j = 0; j < idx.num_qps; ++j) {
+        for (auto j = 0U; j < idx.num_qps; ++j) {
             const auto jacobian = Kokkos::sqrt(
                 Kokkos::pow(qp_pos_deriv(j, 0), 2.) + Kokkos::pow(qp_pos_deriv(j, 1), 2.) +
                 Kokkos::pow(qp_pos_deriv(j, 2), 2.)
             );
             qp_jacob(j) = jacobian;
-            for (int k = 0; k < 3; ++k) {
+            for (auto k = 0U; k < 3U; ++k) {
                 qp_pos_deriv(j, k) /= jacobian;
             }
         }

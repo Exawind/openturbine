@@ -16,142 +16,113 @@
 #include "src/restruct_poc/system/update_state.hpp"
 #include "src/restruct_poc/types.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
-class BeamsTest : public testing::Test {
-protected:
-    // Per-test-suite set-up.
-    // Called before the first test in this test suite.
-    // Can be omitted if not needed.
-    static void SetUpTestSuite() {
-        // Stiffness matrix for uniform composite beam section
-        std::array<std::array<double, 6>, 6> stiffness_matrix = {{
-            {1., 2., 3., 4., 5., 6.},
-            {2., 4., 6., 8., 10., 12.},
-            {3., 6., 9., 12., 15., 18.},
-            {4., 8., 12., 16., 20., 24.},
-            {5., 10., 15., 20., 25., 30.},
-            {6., 12., 18., 24., 30., 36.},
-        }};
+inline auto SetUpBeams() {
+    // Stiffness matrix for uniform composite beam section
+    constexpr auto stiffness_matrix = std::array{
+        std::array{1., 2., 3., 4., 5., 6.},      std::array{2., 4., 6., 8., 10., 12.},
+        std::array{3., 6., 9., 12., 15., 18.},   std::array{4., 8., 12., 16., 20., 24.},
+        std::array{5., 10., 15., 20., 25., 30.}, std::array{6., 12., 18., 24., 30., 36.},
+    };
 
-        // Mass matrix for uniform composite beam section
-        std::array<std::array<double, 6>, 6> mass_matrix = {{
-            {2., 0., 0., 0., 0.6, -0.4},
-            {0., 2., 0., -0.6, 0., 0.2},
-            {0., 0., 2., 0.4, -0.2, 0.},
-            {0., -0.6, 0.4, 1., 2., 3.},
-            {0.6, 0., -0.2, 2., 4., 6.},
-            {-0.4, 0.2, 0., 3., 6., 9.},
-        }};
+    // Mass matrix for uniform composite beam section
+    constexpr auto mass_matrix = std::array{
+        std::array{2., 0., 0., 0., 0.6, -0.4}, std::array{0., 2., 0., -0.6, 0., 0.2},
+        std::array{0., 0., 2., 0.4, -0.2, 0.}, std::array{0., -0.6, 0.4, 1., 2., 3.},
+        std::array{0.6, 0., -0.2, 2., 4., 6.}, std::array{-0.4, 0.2, 0., 3., 6., 9.},
+    };
 
-        auto model = Model();
-        model.AddNode(
-            {0, 0, 0, 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
-             -0.18831121859148398},
-            {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
-        );
-        model.AddNode(
-            {0.863365823230057, -0.2558982639254171, 0.11304112106827427, 0.9950113028068008,
-             -0.002883848832932071, -0.030192109815745303, -0.09504013471947484},
-            {0.002981602178886856, -0.00246675949494302, 0.003084570715675624, 0.9999627302042724,
-             0.008633550973807708, 0, 0},
-            {0.01726731646460114, -0.014285714285714285, 0.003084570715675624, 0.01726731646460114,
-             -0.014285714285714285, 0.003084570715675624},
-            {0.01726731646460114, -0.011304112106827427, 0.00606617289456248, 0.01726731646460114,
-             -0.014285714285714285, -0.014285714285714285}
-        );
-        model.AddNode(
-            {2.5, -0.25, 0, 0.9904718430204884, -0.009526411091536478, 0.09620741150793366,
-             0.09807604012323785},
-            {0.025, -0.0125, 0.027500000000000004, 0.9996875162757026, 0.02499739591471221, 0, 0},
-            {0.05, -0.025, 0.027500000000000004, 0.05, -0.025, 0.027500000000000004},
-            {0.05, 0, 0.052500000000000005, 0.05, -0.025, -0.025}
-        );
-        model.AddNode(
-            {4.1366341767699435, 0.39875540678256005, -0.5416125496397031, 0.9472312341234699,
-             -0.04969214162931507, 0.18127630174800594, 0.25965858850765167},
-            {0.06844696924968459, -0.011818954790771264, 0.07977257214146725, 0.9991445348823055,
-             0.04135454527402512, 0, 0},
-            {0.08273268353539887, -0.01428571428571428, 0.07977257214146725, 0.08273268353539887,
-             -0.01428571428571428, 0.07977257214146725},
-            {0.08273268353539887, 0.05416125496397031, 0.14821954139115184, 0.08273268353539887,
-             -0.01428571428571428, -0.01428571428571428}
-        );
-        model.AddNode(
-            {5, 1, -1, 0.9210746582719719, -0.07193653093139739, 0.20507529985516368,
-             0.32309554437664584},
-            {0.1, 0, 0.12, 0.9987502603949663, 0.04997916927067825, 0, 0},
-            {0.1, 0, 0.12, 0.1, 0, 0.12}, {0.1, 0.1, 0.22000000000000003, 0.1, 0, 0}
-        );
+    auto model = Model();
+    model.AddNode(
+        {0, 0, 0, 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
+         -0.18831121859148398},
+        {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
+    );
+    model.AddNode(
+        {0.863365823230057, -0.2558982639254171, 0.11304112106827427, 0.9950113028068008,
+         -0.002883848832932071, -0.030192109815745303, -0.09504013471947484},
+        {0.002981602178886856, -0.00246675949494302, 0.003084570715675624, 0.9999627302042724,
+         0.008633550973807708, 0, 0},
+        {0.01726731646460114, -0.014285714285714285, 0.003084570715675624, 0.01726731646460114,
+         -0.014285714285714285, 0.003084570715675624},
+        {0.01726731646460114, -0.011304112106827427, 0.00606617289456248, 0.01726731646460114,
+         -0.014285714285714285, -0.014285714285714285}
+    );
+    model.AddNode(
+        {2.5, -0.25, 0, 0.9904718430204884, -0.009526411091536478, 0.09620741150793366,
+         0.09807604012323785},
+        {0.025, -0.0125, 0.027500000000000004, 0.9996875162757026, 0.02499739591471221, 0, 0},
+        {0.05, -0.025, 0.027500000000000004, 0.05, -0.025, 0.027500000000000004},
+        {0.05, 0, 0.052500000000000005, 0.05, -0.025, -0.025}
+    );
+    model.AddNode(
+        {4.1366341767699435, 0.39875540678256005, -0.5416125496397031, 0.9472312341234699,
+         -0.04969214162931507, 0.18127630174800594, 0.25965858850765167},
+        {0.06844696924968459, -0.011818954790771264, 0.07977257214146725, 0.9991445348823055,
+         0.04135454527402512, 0, 0},
+        {0.08273268353539887, -0.01428571428571428, 0.07977257214146725, 0.08273268353539887,
+         -0.01428571428571428, 0.07977257214146725},
+        {0.08273268353539887, 0.05416125496397031, 0.14821954139115184, 0.08273268353539887,
+         -0.01428571428571428, -0.01428571428571428}
+    );
+    model.AddNode(
+        {5, 1, -1, 0.9210746582719719, -0.07193653093139739, 0.20507529985516368,
+         0.32309554437664584},
+        {0.1, 0, 0.12, 0.9987502603949663, 0.04997916927067825, 0, 0}, {0.1, 0, 0.12, 0.1, 0, 0.12},
+        {0.1, 0.1, 0.22000000000000003, 0.1, 0, 0}
+    );
 
-        std::array<double, 3> gravity = {0., 0., 9.81};
-        // Define beam initialization
-        BeamsInput beams_input(
-            {
-                BeamElement(
-                    {
-                        BeamNode(0., model.GetNode(0)),
-                        BeamNode(0.1726731646460114, model.GetNode(1)),
-                        BeamNode(0.5, model.GetNode(2)),
-                        BeamNode(0.82732683535398865, model.GetNode(3)),
-                        BeamNode(1., model.GetNode(4)),
-                    },
-                    {
-                        BeamSection(0., mass_matrix, stiffness_matrix),
-                        BeamSection(1., mass_matrix, stiffness_matrix),
-                    },
-                    BeamQuadrature{
-                        {-0.9491079123427585, 0.1294849661688697},
-                        {-0.7415311855993943, 0.27970539148927664},
-                        {-0.40584515137739696, 0.3818300505051189},
-                        {6.123233995736766e-17, 0.4179591836734694},
-                        {0.4058451513773971, 0.3818300505051189},
-                        {0.7415311855993945, 0.27970539148927664},
-                        {0.9491079123427585, 0.1294849661688697},
-                    }
-                ),
-            },
-            gravity
-        );
+    constexpr auto gravity = std::array{0., 0., 9.81};
+    // Define beam initialization
+    const auto beams_input = BeamsInput(
+        {
+            BeamElement(
+                {
+                    BeamNode(0., model.GetNode(0)),
+                    BeamNode(0.1726731646460114, model.GetNode(1)),
+                    BeamNode(0.5, model.GetNode(2)),
+                    BeamNode(0.82732683535398865, model.GetNode(3)),
+                    BeamNode(1., model.GetNode(4)),
+                },
+                {
+                    BeamSection(0., mass_matrix, stiffness_matrix),
+                    BeamSection(1., mass_matrix, stiffness_matrix),
+                },
+                BeamQuadrature{
+                    {-0.9491079123427585, 0.1294849661688697},
+                    {-0.7415311855993943, 0.27970539148927664},
+                    {-0.40584515137739696, 0.3818300505051189},
+                    {6.123233995736766e-17, 0.4179591836734694},
+                    {0.4058451513773971, 0.3818300505051189},
+                    {0.7415311855993945, 0.27970539148927664},
+                    {0.9491079123427585, 0.1294849661688697},
+                }
+            ),
+        },
+        gravity
+    );
 
-        // Initialize beams from element inputs
-        beams_ = new Beams();
-        *beams_ = CreateBeams(beams_input);
+    // Initialize beams from element inputs
+    auto beams = CreateBeams(beams_input);
 
-        // Create initial state
-        State state(
-            beams_->num_nodes,  // Number of nodes
-            0,                  // Number of constraints
-            model.GetNodes()    // Node vector
-        );
+    // Create initial state
+    const State state(
+        beams.num_nodes,  // Number of nodes
+        0,                // Number of constraints
+        model.GetNodes()  // nodes
+    );
 
-        // Set the beam's initial state
-        UpdateState(*beams_, state.q, state.v, state.vd);
-    }
+    // Set the beam's initial state
+    UpdateState(beams, state.q, state.v, state.vd);
 
-    // Per-test-suite tear-down.
-    // Called after the last test in this test suite.
-    // Can be omitted if not needed.
-    static void TearDownTestSuite() {
-        delete beams_;
-        beams_ = nullptr;
-    }
+    return beams;
+}
 
-    // You can define per-test set-up logic as usual.
-    //   void SetUp() override { ... }
-
-    // You can define per-test tear-down logic as usual.
-    //   void TearDown() override { ... }
-
-    // Some expensive resource shared by all tests.
-    static Beams* beams_;
-};
-
-Beams* BeamsTest::beams_ = nullptr;
-
-TEST_F(BeamsTest, NodeInitialPositionX0) {
+TEST(BeamsTest, NodeInitialPositionX0) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->node_x0,
+        beams.node_x0,
         {
             {0., 0., 0., 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
              -0.18831121859148398},
@@ -167,10 +138,10 @@ TEST_F(BeamsTest, NodeInitialPositionX0) {
     );
 }
 
-TEST_F(BeamsTest, NodeInitialDisplacement) {
-    std::cout << 11 << std::endl;
+TEST(BeamsTest, NodeInitialDisplacement) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->node_u,
+        beams.node_u,
         {
             {0., 0., 0., 1., 0., 0., 0.},
             {0.002981602178886856, -0.00246675949494302, 0.003084570715675624, 0.9999627302042724,
@@ -183,9 +154,10 @@ TEST_F(BeamsTest, NodeInitialDisplacement) {
     );
 }
 
-TEST_F(BeamsTest, NodeInitialVelocity) {
+TEST(BeamsTest, NodeInitialVelocity) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->node_u_dot,
+        beams.node_u_dot,
         {
             {0., 0., 0., 0., 0., 0},
             {0.01726731646460114, -0.014285714285714285, 0.003084570715675624, 0.01726731646460114,
@@ -198,9 +170,10 @@ TEST_F(BeamsTest, NodeInitialVelocity) {
     );
 }
 
-TEST_F(BeamsTest, NodeInitialAcceleration) {
+TEST(BeamsTest, NodeInitialAcceleration) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->node_u_ddot,
+        beams.node_u_ddot,
         {
             {0., 0., 0., 0., 0., 0},
             {0.01726731646460114, -0.011304112106827427, 0.00606617289456248, 0.01726731646460114,
@@ -213,9 +186,10 @@ TEST_F(BeamsTest, NodeInitialAcceleration) {
     );
 }
 
-TEST_F(BeamsTest, ShapeFunctionInterpolationMatrix) {
+TEST(BeamsTest, ShapeFunctionInterpolationMatrix) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->shape_interp,
+        beams.shape_interp,
         {{0.7643937937285443, 0.13706262395004942, -0.13172898316530468,
           0.000000000000000022962127484012874, 0.05567285555959517, -0.020342107108930366,
           -0.01995866709520774},
@@ -233,9 +207,10 @@ TEST_F(BeamsTest, ShapeFunctionInterpolationMatrix) {
     );
 }
 
-TEST_F(BeamsTest, ShapeFunctionDerivativeMatrix) {
+TEST(BeamsTest, ShapeFunctionDerivativeMatrix) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->shape_deriv,
+        beams.shape_deriv,
         {{-4.2701511577426, -1.9393626617606694, 0.013055310813328586, 0.375, -0.12778431702017545,
           -0.1974469591256584, 0.29092055406654616},
          {5.3820901606566505, 1.1702482430865344, -1.7874218089539982, -1.3365845776954526,
@@ -250,25 +225,28 @@ TEST_F(BeamsTest, ShapeFunctionDerivativeMatrix) {
     );
 }
 
-TEST_F(BeamsTest, JacobianArray) {
+TEST(BeamsTest, JacobianArray) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_1D_equal(
-        beams_->qp_jacobian,
+        beams.qp_jacobian,
         {2.7027484463552844, 2.585197218483525, 2.5041356900076877, 2.5980762113533173,
          2.8809584014451253, 3.2234919864103784, 3.4713669823269462}
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointWeights) {
+TEST(BeamsTest, QuadraturePointWeights) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_1D_equal(
-        beams_->qp_weight,
+        beams.qp_weight,
         {0.1294849661688697, 0.27970539148927664, 0.3818300505051189, 0.4179591836734694,
          0.3818300505051189, 0.27970539148927664, 0.1294849661688697}
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
-    auto Mstar = View_NxN("Mstar", beams_->qp_Mstar.extent(1), beams_->qp_Mstar.extent(2));
-    Kokkos::deep_copy(Mstar, Kokkos::subview(beams_->qp_Mstar, 0, Kokkos::ALL, Kokkos::ALL));
+TEST(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
+    const auto beams = SetUpBeams();
+    auto Mstar = View_NxN("Mstar", beams.qp_Mstar.extent(1), beams.qp_Mstar.extent(2));
+    Kokkos::deep_copy(Mstar, Kokkos::subview(beams.qp_Mstar, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Mstar,
         {
@@ -283,9 +261,10 @@ TEST_F(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInMaterialFrame) {
-    auto Cstar = View_NxN("Cstar", beams_->qp_Cstar.extent(1), beams_->qp_Cstar.extent(2));
-    Kokkos::deep_copy(Cstar, Kokkos::subview(beams_->qp_Cstar, 0, Kokkos::ALL, Kokkos::ALL));
+TEST(BeamsTest, QuadraturePointStiffnessMatrixInMaterialFrame) {
+    const auto beams = SetUpBeams();
+    auto Cstar = View_NxN("Cstar", beams.qp_Cstar.extent(1), beams.qp_Cstar.extent(2));
+    Kokkos::deep_copy(Cstar, Kokkos::subview(beams.qp_Cstar, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Cstar,
         {
@@ -299,9 +278,10 @@ TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInMaterialFrame) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointInitialPosition) {
+TEST(BeamsTest, QuadraturePointInitialPosition) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_x0,
+        beams.qp_x0,
         {
             {0.12723021914310378, -0.04894958421765723, 0.024151041535564563},
             {0.6461720360015141, -0.20836421838736455, 0.09583134319147545},
@@ -314,9 +294,10 @@ TEST_F(BeamsTest, QuadraturePointInitialPosition) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointInitialPositionDerivative) {
+TEST(BeamsTest, QuadraturePointInitialPositionDerivative) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_x0_prime,
+        beams.qp_x0_prime,
         {
             {0.924984344499876, -0.3417491071948319, 0.16616711516322952},
             {0.9670442092872504, -0.23684722156643212, 0.09342853375847142},
@@ -329,9 +310,10 @@ TEST_F(BeamsTest, QuadraturePointInitialPositionDerivative) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointInitialRotation) {
+TEST(BeamsTest, QuadraturePointInitialRotation) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_r0,
+        beams.qp_r0,
         {
             {0.980884413320975, -0.0144723270940525, -0.0824443301646419, -0.1756680160876},
             {0.991669584564107, -0.005383778767255235, -0.04674982717307109, -0.11990372653059925},
@@ -344,9 +326,10 @@ TEST_F(BeamsTest, QuadraturePointInitialRotation) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointTranslationalDisplacement) {
+TEST(BeamsTest, QuadraturePointTranslationalDisplacement) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_u,
+        beams.qp_u,
         {
             {6.475011465280995e-5, -6.310248039744534e-5, 6.5079641503883e-5},
             {0.001670153200441368, -0.0014543119416486395, 0.0017133214521999145},
@@ -359,9 +342,10 @@ TEST_F(BeamsTest, QuadraturePointTranslationalDisplacement) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointTranslationalDisplacementDerivative) {
+TEST(BeamsTest, QuadraturePointTranslationalDisplacementDerivative) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_u_prime,
+        beams.qp_u_prime,
         {
             {0.0009414876868372848, -0.0009055519814222241, 0.0009486748279202956},
             {0.0049990154049489330, -0.0040299482162833, 0.00519282884268206},
@@ -374,9 +358,10 @@ TEST_F(BeamsTest, QuadraturePointTranslationalDisplacementDerivative) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointRotationalDisplacement) {
+TEST(BeamsTest, QuadraturePointRotationalDisplacement) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_r,
+        beams.qp_r,
         {
             {0.9999991906236807, 0.001272301844556629, 0.0, 0.0},
             {0.9999791231576566, 0.006461675389885671, 0.0, 0.0},
@@ -389,9 +374,10 @@ TEST_F(BeamsTest, QuadraturePointRotationalDisplacement) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointRotationalDisplacementDerivative) {
+TEST(BeamsTest, QuadraturePointRotationalDisplacementDerivative) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_r_prime,
+        beams.qp_r_prime,
         {
             {-1.1768592508490864e-5, 0.009249835939573259, 0.0, 0.0},
             {-6.24872579944091e-5, 0.009670240217676533, 0.0, 0.0},
@@ -404,9 +390,10 @@ TEST_F(BeamsTest, QuadraturePointRotationalDisplacementDerivative) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointInitialTranslationalVelocity) {
+TEST(BeamsTest, QuadraturePointInitialTranslationalVelocity) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_u_dot,
+        beams.qp_u_dot,
         {
             {0.0025446043828620765, -0.0024798542682092665, 6.5079641503883e-5},
             {0.0129234407200302820, -0.0112532875195889140, 0.0017133214521999145},
@@ -419,9 +406,10 @@ TEST_F(BeamsTest, QuadraturePointInitialTranslationalVelocity) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointInitialAngularVelocity) {
+TEST(BeamsTest, QuadraturePointInitialAngularVelocity) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_omega,
+        beams.qp_omega,
         {
             {0.0025446043828620765, -0.0024798542682092665, 6.5079641503883e-5},
             {0.0129234407200302820, -0.011253287519588914, 0.0017133214521999145},
@@ -434,9 +422,10 @@ TEST_F(BeamsTest, QuadraturePointInitialAngularVelocity) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointTranslationalAcceleration) {
+TEST(BeamsTest, QuadraturePointTranslationalAcceleration) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_u_ddot,
+        beams.qp_u_ddot,
         {
             {0.0025446043828620765, -0.0024151041535564553, 0.0001298297561566934},
             {0.012923440720030282, -0.009583134319147544, 0.003383474652641283},
@@ -449,9 +438,10 @@ TEST_F(BeamsTest, QuadraturePointTranslationalAcceleration) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointAngularAcceleration) {
+TEST(BeamsTest, QuadraturePointAngularAcceleration) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_omega_dot,
+        beams.qp_omega_dot,
         {
             {0.0025446043828620765, -0.0024798542682092665, -0.0024798542682092665},
             {0.012923440720030282, -0.011253287519588914, -0.011253287519588914},
@@ -464,9 +454,10 @@ TEST_F(BeamsTest, QuadraturePointAngularAcceleration) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointRR0) {
-    auto RR0 = View_NxN("RR0", beams_->qp_RR0.extent(1), beams_->qp_RR0.extent(2));
-    Kokkos::deep_copy(RR0, Kokkos::subview(beams_->qp_RR0, 0, Kokkos::ALL, Kokkos::ALL));
+TEST(BeamsTest, QuadraturePointRR0) {
+    const auto beams = SetUpBeams();
+    auto RR0 = View_NxN("RR0", beams.qp_RR0.extent(1), beams.qp_RR0.extent(2));
+    Kokkos::deep_copy(RR0, Kokkos::subview(beams.qp_RR0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         RR0,
         {
@@ -480,9 +471,10 @@ TEST_F(BeamsTest, QuadraturePointRR0) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointMassMatrixInGlobalFrame) {
-    auto Muu = View_NxN("Muu", beams_->qp_Muu.extent(1), beams_->qp_Muu.extent(2));
-    Kokkos::deep_copy(Muu, Kokkos::subview(beams_->qp_Muu, 0, Kokkos::ALL, Kokkos::ALL));
+TEST(BeamsTest, QuadraturePointMassMatrixInGlobalFrame) {
+    const auto beams = SetUpBeams();
+    auto Muu = View_NxN("Muu", beams.qp_Muu.extent(1), beams.qp_Muu.extent(2));
+    Kokkos::deep_copy(Muu, Kokkos::subview(beams.qp_Muu, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Muu,
         {
@@ -502,9 +494,10 @@ TEST_F(BeamsTest, QuadraturePointMassMatrixInGlobalFrame) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInGlobalFrame) {
-    auto Cuu = View_NxN("Cuu", beams_->qp_Cuu.extent(1), beams_->qp_Cuu.extent(2));
-    Kokkos::deep_copy(Cuu, Kokkos::subview(beams_->qp_Cuu, 0, Kokkos::ALL, Kokkos::ALL));
+TEST(BeamsTest, QuadraturePointStiffnessMatrixInGlobalFrame) {
+    const auto beams = SetUpBeams();
+    auto Cuu = View_NxN("Cuu", beams.qp_Cuu.extent(1), beams.qp_Cuu.extent(2));
+    Kokkos::deep_copy(Cuu, Kokkos::subview(beams.qp_Cuu, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Cuu,
         {
@@ -524,9 +517,10 @@ TEST_F(BeamsTest, QuadraturePointStiffnessMatrixInGlobalFrame) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointStrain) {
+TEST(BeamsTest, QuadraturePointStrain) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_strain,
+        beams.qp_strain,
         {
             {0.0009414876868373279, -0.00048382928348705834, 0.0018188281296873943,
              0.0184996868523541, 0.0, 0.0},
@@ -546,9 +540,10 @@ TEST_F(BeamsTest, QuadraturePointStrain) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointElasticForceFC) {
+TEST(BeamsTest, QuadraturePointElasticForceFC) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_Fc,
+        beams.qp_Fc,
         {
             {0.10234015755301404, 0.15123731179112573, 0.2788710191555731, 0.4003531623743687,
              0.3249734441776631, 0.587574363833825},
@@ -568,9 +563,10 @@ TEST_F(BeamsTest, QuadraturePointElasticForceFC) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointElasticForceFD) {
+TEST(BeamsTest, QuadraturePointElasticForceFD) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_Fd,
+        beams.qp_Fd,
         {
             {0.0, 0.0, 0.0, 0.12083059685899937, 0.2411112242070902, -0.1751018655842517},
             {0.0, 0.0, 0.0, 0.10453073708428946, 0.33031057987442725, -0.22352273933363598},
@@ -583,9 +579,10 @@ TEST_F(BeamsTest, QuadraturePointElasticForceFD) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointInternalForceFI) {
+TEST(BeamsTest, QuadraturePointInternalForceFI) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_Fi,
+        beams.qp_Fi,
         {
             {0.004375199541621397, -0.006996757474943007, 0.0016854280323566574,
              -0.008830739650908434, -0.01379034342897087, -0.02975324221499824},
@@ -605,9 +602,10 @@ TEST_F(BeamsTest, QuadraturePointInternalForceFI) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointGravityForceFg) {
+TEST(BeamsTest, QuadraturePointGravityForceFg) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->qp_Fg,
+        beams.qp_Fg,
         {
             {0.0, 0.0, 19.620000000000008, 3.33069666549358, -2.2538354951632575, 0.0},
             {0.0, 0.0, 19.620000000000005, 3.395755863205606, -2.293994529332462, 0.0},
@@ -620,9 +618,10 @@ TEST_F(BeamsTest, QuadraturePointGravityForceFg) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointMatrixOuu) {
-    auto Ouu = View_NxN("Ouu", beams_->qp_Ouu.extent(1), beams_->qp_Ouu.extent(2));
-    Kokkos::deep_copy(Ouu, Kokkos::subview(beams_->qp_Ouu, 0, Kokkos::ALL, Kokkos::ALL));
+TEST(BeamsTest, QuadraturePointMatrixOuu) {
+    const auto beams = SetUpBeams();
+    auto Ouu = View_NxN("Ouu", beams.qp_Ouu.extent(1), beams.qp_Ouu.extent(2));
+    Kokkos::deep_copy(Ouu, Kokkos::subview(beams.qp_Ouu, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Ouu,
         {
@@ -636,9 +635,10 @@ TEST_F(BeamsTest, QuadraturePointMatrixOuu) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointMatrixPuu) {
-    auto Puu = View_NxN("Puu", beams_->qp_Puu.extent(1), beams_->qp_Puu.extent(2));
-    Kokkos::deep_copy(Puu, Kokkos::subview(beams_->qp_Puu, 0, Kokkos::ALL, Kokkos::ALL));
+TEST(BeamsTest, QuadraturePointMatrixPuu) {
+    const auto beams = SetUpBeams();
+    auto Puu = View_NxN("Puu", beams.qp_Puu.extent(1), beams.qp_Puu.extent(2));
+    Kokkos::deep_copy(Puu, Kokkos::subview(beams.qp_Puu, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Puu,
         {
@@ -655,9 +655,10 @@ TEST_F(BeamsTest, QuadraturePointMatrixPuu) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointMatrixQuu) {
-    auto Quu = View_NxN("Quu", beams_->qp_Quu.extent(1), beams_->qp_Quu.extent(2));
-    Kokkos::deep_copy(Quu, Kokkos::subview(beams_->qp_Quu, 0, Kokkos::ALL, Kokkos::ALL));
+TEST(BeamsTest, QuadraturePointMatrixQuu) {
+    const auto beams = SetUpBeams();
+    auto Quu = View_NxN("Quu", beams.qp_Quu.extent(1), beams.qp_Quu.extent(2));
+    Kokkos::deep_copy(Quu, Kokkos::subview(beams.qp_Quu, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Quu,
         {
@@ -671,9 +672,10 @@ TEST_F(BeamsTest, QuadraturePointMatrixQuu) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointMatrixGuu) {
-    auto Guu = View_NxN("Guu", beams_->qp_Guu.extent(1), beams_->qp_Guu.extent(2));
-    Kokkos::deep_copy(Guu, Kokkos::subview(beams_->qp_Guu, 0, Kokkos::ALL, Kokkos::ALL));
+TEST(BeamsTest, QuadraturePointMatrixGuu) {
+    const auto beams = SetUpBeams();
+    auto Guu = View_NxN("Guu", beams.qp_Guu.extent(1), beams.qp_Guu.extent(2));
+    Kokkos::deep_copy(Guu, Kokkos::subview(beams.qp_Guu, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Guu,
         {
@@ -687,9 +689,10 @@ TEST_F(BeamsTest, QuadraturePointMatrixGuu) {
     );
 }
 
-TEST_F(BeamsTest, QuadraturePointMatrixKuu) {
-    auto Kuu = View_NxN("Kuu", beams_->qp_Kuu.extent(1), beams_->qp_Kuu.extent(2));
-    Kokkos::deep_copy(Kuu, Kokkos::subview(beams_->qp_Kuu, 0, Kokkos::ALL, Kokkos::ALL));
+TEST(BeamsTest, QuadraturePointMatrixKuu) {
+    const auto beams = SetUpBeams();
+    auto Kuu = View_NxN("Kuu", beams.qp_Kuu.extent(1), beams.qp_Kuu.extent(2));
+    Kokkos::deep_copy(Kuu, Kokkos::subview(beams.qp_Kuu, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Kuu,
         {
@@ -703,9 +706,10 @@ TEST_F(BeamsTest, QuadraturePointMatrixKuu) {
     );
 }
 
-TEST_F(BeamsTest, NodalForceVectorFE) {
+TEST(BeamsTest, NodalForceVectorFE) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->node_FE,
+        beams.node_FE,
         {
             {-0.11121183449279078, -0.16149482899687723, -0.30437442031624473, -0.40385243171727625,
              -0.29275354335733944, -0.6838427114868826},
@@ -721,9 +725,10 @@ TEST_F(BeamsTest, NodalForceVectorFE) {
     );
 }
 
-TEST_F(BeamsTest, NodalForceVectorFI) {
+TEST(BeamsTest, NodalForceVectorFI) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->node_FI,
+        beams.node_FI,
         {
             {0.00011604556408931232, -0.0006507362696177878, -0.0006134866787566515,
              0.0006142322011934136, -0.0021994796881491885, -0.002486843354672628},
@@ -743,9 +748,10 @@ TEST_F(BeamsTest, NodalForceVectorFI) {
     );
 }
 
-TEST_F(BeamsTest, NodalForceVectorFG) {
+TEST(BeamsTest, NodalForceVectorFG) {
+    const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams_->node_FG,
+        beams.node_FG,
         {
             {0., 0., 5.387595382846484, 0.9155947038768231, -0.6120658127519644, 0.},
             {0., 0., 27.214654505466733, 4.774257980210559, -3.2246653192400943, 0.},
@@ -756,9 +762,10 @@ TEST_F(BeamsTest, NodalForceVectorFG) {
     );
 }
 
-TEST_F(BeamsTest, ResidualForceVector) {
-    View_N residual_vector("residual_vector", beams_->num_nodes * 6);
-    AssembleResidualVector(*beams_, residual_vector);
+TEST(BeamsTest, ResidualForceVector) {
+    auto beams = SetUpBeams();
+    auto residual_vector = View_N("residual_vector", beams.num_nodes * 6);
+    AssembleResidualVector(beams, residual_vector);
     expect_kokkos_view_1D_equal(
         residual_vector,
         {
@@ -774,4 +781,4 @@ TEST_F(BeamsTest, ResidualForceVector) {
     );
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

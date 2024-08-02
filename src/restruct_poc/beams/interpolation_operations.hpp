@@ -7,7 +7,10 @@
 namespace openturbine {
 
 KOKKOS_INLINE_FUNCTION
-void InterpVector3(View_NxN::const_type shape_matrix, View_Nx3::const_type node_v, View_Nx3 qp_v) {
+void InterpVector3(
+    const View_NxN::const_type& shape_matrix, const View_Nx3::const_type& node_v,
+    const View_Nx3& qp_v
+) {
     for (int j = 0; j < qp_v.extent_int(0); ++j) {
         auto local_total = Kokkos::Array<double, 3>{};
         for (int i = 0; i < node_v.extent_int(0); ++i) {
@@ -23,7 +26,10 @@ void InterpVector3(View_NxN::const_type shape_matrix, View_Nx3::const_type node_
 }
 
 KOKKOS_INLINE_FUNCTION
-void InterpVector4(View_NxN::const_type shape_matrix, View_Nx4::const_type node_v, View_Nx4 qp_v) {
+void InterpVector4(
+    const View_NxN::const_type& shape_matrix, const View_Nx4::const_type& node_v,
+    const View_Nx4& qp_v
+) {
     for (int j = 0; j < qp_v.extent_int(0); ++j) {
         auto local_total = Kokkos::Array<double, 4>{};
         for (int i = 0; i < node_v.extent_int(0); ++i) {
@@ -40,7 +46,8 @@ void InterpVector4(View_NxN::const_type shape_matrix, View_Nx4::const_type node_
 
 KOKKOS_INLINE_FUNCTION
 void InterpQuaternion(
-    View_NxN::const_type shape_matrix, View_Nx4::const_type node_v, View_Nx4 qp_v
+    const View_NxN::const_type& shape_matrix, const View_Nx4::const_type& node_v,
+    const View_Nx4& qp_v
 ) {
     InterpVector4(shape_matrix, node_v, qp_v);
     static constexpr auto length_zero_result = Kokkos::Array<double, 4>{1., 0., 0., 0.};
@@ -63,8 +70,8 @@ void InterpQuaternion(
 
 KOKKOS_INLINE_FUNCTION
 void InterpVector3Deriv(
-    View_NxN::const_type shape_matrix_deriv, View_N::const_type jacobian,
-    View_Nx3::const_type node_v, View_Nx3 qp_v
+    const View_NxN::const_type& shape_matrix_deriv, const View_N::const_type& jacobian,
+    const View_Nx3::const_type& node_v, const View_Nx3& qp_v
 ) {
     InterpVector3(shape_matrix_deriv, node_v, qp_v);
     for (int j = 0; j < qp_v.extent_int(0); ++j) {
@@ -77,8 +84,8 @@ void InterpVector3Deriv(
 
 KOKKOS_INLINE_FUNCTION
 void InterpVector4Deriv(
-    View_NxN::const_type shape_matrix_deriv, View_N::const_type jacobian,
-    View_Nx4::const_type node_v, View_Nx4 qp_v
+    const View_NxN::const_type& shape_matrix_deriv, const View_N::const_type& jacobian,
+    const View_Nx4::const_type& node_v, const View_Nx4& qp_v
 ) {
     InterpVector4(shape_matrix_deriv, node_v, qp_v);
     for (int j = 0; j < qp_v.extent_int(0); ++j) {

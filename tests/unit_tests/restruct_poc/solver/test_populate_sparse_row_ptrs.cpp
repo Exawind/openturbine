@@ -3,7 +3,7 @@
 
 #include "src/restruct_poc/solver/populate_sparse_row_ptrs.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 TEST(PopulateSparseRowPtrs, SingleElement) {
     auto elem_indices_host =
@@ -52,4 +52,4 @@ TEST(PopulateSparseRowPtrs, TwoElements) {
     }
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests
