@@ -36,8 +36,8 @@ struct Constraints {
         double* control;      //< Control signal
     };
 
-    size_t num;                                    //< Number of constraints
-    size_t num_dofs;                               //< Number of degrees of freedom
+    size_t num;                                  //< Number of constraints
+    size_t num_dofs;                             //< Number of degrees of freedom
     std::vector<HostData> constraint_data;         //< Host constraint data
     Kokkos::View<DeviceData*> data;                //< Device constraint data
     View_N control;                                //< Control signals
@@ -45,25 +45,21 @@ struct Constraints {
     View_N Phi;                                    //< Residual vector
     Kokkos::View<double* [6][12]> gradient_terms;  //< Gradient terms
 
-    Constraints() = default;
-
-    Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints) {
-        num = constraints.size();
-        num_dofs = std::transform_reduce(
+    Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints) :
+      num{constraints.size()},
+      num_dofs{std::transform_reduce(
             constraints.cbegin(), constraints.cend(), 0U, std::plus{},
             [](auto c) {
                 return c->NumDOFs();
             }
-        );
-        constraint_data = std::vector<HostData>(
-            num, HostData{ConstraintType::kNone, {0., 0., 0., 1., 0., 0., 0.}, nullptr}
-        );
-        data = Kokkos::View<DeviceData*>("data", num);
-        control = View_N("control", num);
-        u = View_Nx7("u", num);
-        Phi = View_N("residual_vector", num_dofs);
-        gradient_terms = Kokkos::View<double* [6][12]>("gradient_terms", num);
-
+        )},
+      constraint_data(num, HostData{ConstraintType::kNone, {0., 0., 0., 1., 0., 0., 0.}, nullptr}),
+      data("data", num),
+      control("control", num),
+      u("u", num),
+      Phi("residual_vector", num_dofs),
+      gradient_terms("gradient_terms", num)
+    {
         // Create host mirror for constraint data
         auto host_data = Kokkos::create_mirror(this->data);
 
