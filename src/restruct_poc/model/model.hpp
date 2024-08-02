@@ -11,7 +11,7 @@
 namespace openturbine {
 
 // InvalidNode represents an invalid node in constraints that only use the target node.
-static const Node InvalidNode(-1, {0., 0., 0., 1., 0., 0., 0.});
+static const Node InvalidNode(0U, {0., 0., 0., 1., 0., 0., 0.});
 
 /// @brief Struct to define a turbine model with nodes and constraints
 /// @details A model is a collection of nodes and constraints that define the geometry and

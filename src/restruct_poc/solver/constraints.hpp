@@ -21,8 +21,8 @@ struct Constraints {
     struct DeviceData {
         ConstraintType type;                     //< Constraint type
         Kokkos::pair<size_t, size_t> row_range;  //< Range of rows in the global stiffness matrix
-        int base_node_index;                     //< Base node index
-        int target_node_index;                   //< Target node index
+        size_t base_node_index;                  //< Base node index
+        size_t target_node_index;                //< Target node index
         double X0[3];                            //< Initial relative location between nodes
         double axis_x[3];                        // Unit vector representing x rotation axis
         double axis_y[3];                        // Unit vector representing y rotation axis
