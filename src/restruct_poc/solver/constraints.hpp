@@ -19,25 +19,25 @@ namespace openturbine {
 struct Constraints {
     /// @brief DeviceData struct holds constraint data on device
     struct DeviceData {
-        ConstraintType type;               //< Constraint type
+        ConstraintType type;                     //< Constraint type
         Kokkos::pair<size_t, size_t> row_range;  //< Range of rows in the global stiffness matrix
-        int base_node_index;               //< Base node index
-        int target_node_index;             //< Target node index
-        double X0[3];                      //< Initial relative location between nodes
-        double axis_x[3];                  // Unit vector representing x rotation axis
-        double axis_y[3];                  // Unit vector representing y rotation axis
-        double axis_z[3];                  // Unit vector representing z rotation axis
+        int base_node_index;                     //< Base node index
+        int target_node_index;                   //< Target node index
+        double X0[3];                            //< Initial relative location between nodes
+        double axis_x[3];                        // Unit vector representing x rotation axis
+        double axis_y[3];                        // Unit vector representing y rotation axis
+        double axis_z[3];                        // Unit vector representing z rotation axis
     };
 
     /// @brief HostData struct holds constraint data on host
     struct HostData {
         ConstraintType type;  //< Constraint type
         Array_7 u;            //< Prescribed displacement
-        float* control;       //< Control signal
+        double* control;      //< Control signal
     };
 
-    size_t num;                                       //< Number of constraints
-    size_t num_dofs;                                  //< Number of degrees of freedom
+    size_t num;                                    //< Number of constraints
+    size_t num_dofs;                               //< Number of degrees of freedom
     std::vector<HostData> constraint_data;         //< Host constraint data
     Kokkos::View<DeviceData*> data;                //< Device constraint data
     View_N control;                                //< Control signals
@@ -113,15 +113,15 @@ struct Constraints {
     void UpdateViews() {
         auto host_u_mirror = Kokkos::create_mirror(this->u);
         auto host_control_mirror = Kokkos::create_mirror(this->control);
-        for (auto i = 0u; i < this->constraint_data.size(); ++i) {
+        for (auto i = 0U; i < this->constraint_data.size(); ++i) {
             switch (this->constraint_data[i].type) {
                 case ConstraintType::kPrescribedBC: {
-                    for (auto j = 0u; j < static_cast<unsigned>(kLieGroupComponents); ++j) {
+                    for (auto j = 0U; j < static_cast<unsigned>(kLieGroupComponents); ++j) {
                         host_u_mirror(i, j) = this->constraint_data[i].u[j];
                     }
                 } break;
                 case ConstraintType::kRotationControl: {
-                    host_control_mirror(i) = static_cast<double>(*this->constraint_data[i].control);
+                    host_control_mirror(i) = *this->constraint_data[i].control;
                 } break;
                 default:
                     break;

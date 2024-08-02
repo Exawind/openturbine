@@ -26,10 +26,7 @@ extern "C" {
 /// @param avcOUTNAME OUTNAME (Simulation RootName)
 /// @param avcMSG MESSAGE (Message from DLL to simulation code [ErrMsg])  The message which will
 ///               be displayed by the calling program if aviFAIL <> 0
-void DISCON(
-    float avrSWAP[], int* aviFAIL, const char* const accINFILE, char* const avcOUTNAME,
-    char* const avcMSG
-);
+void DISCON(float avrSWAP[], int* aviFAIL, const char* accINFILE, char* avcOUTNAME, char* avcMSG);
 
 }  // extern "C"
 

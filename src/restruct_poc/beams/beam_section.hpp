@@ -15,7 +15,7 @@ struct BeamSection {
         double s, std::array<std::array<double, 6>, 6> mass,
         std::array<std::array<double, 6>, 6> stiffness
     )
-        : position(s), M_star(std::move(mass)), C_star(std::move(stiffness)) {}
+        : position(s), M_star(mass), C_star(stiffness) {}
 };
 
 }  // namespace openturbine

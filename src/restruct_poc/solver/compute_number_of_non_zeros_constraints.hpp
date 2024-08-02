@@ -13,8 +13,8 @@ struct ComputeNumberOfNonZeros_Constraints {
 
     KOKKOS_FUNCTION
     void operator()(int i_constraint, size_t& update) const {
-        auto& cd = constraint_data[i_constraint];
-        auto num_blocks = cd.base_node_index < 0 ? 1u : 2u;
+        const auto& cd = constraint_data[i_constraint];
+        const auto num_blocks = cd.base_node_index < 0 ? 1U : 2U;
         update += num_blocks * kLieAlgebraComponents * (cd.row_range.second - cd.row_range.first);
     }
 };

@@ -26,7 +26,7 @@
 #include "vtkout.hpp"
 #endif
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 template <typename T>
 void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
@@ -47,27 +47,31 @@ void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::strin
 
 TEST(RotorTest, IEA15Rotor) {
     // Flag to write output
-    const bool write_output(false);
+    constexpr bool write_output(false);
 
     // Gravity vector
-    std::array<double, 3> gravity = {-9.81, 0., 0.};
+    constexpr auto gravity = std::array{-9.81, 0., 0.};
 
     // Rotor angular velocity in rad/s
-    const auto omega = std::array<double, 3>{0., 0., -0.79063415025};
+    constexpr auto omega = std::array{0., 0., -0.79063415025};
 
     // Solution parameters
-    const bool is_dynamic_solve(true);
-    const size_t max_iter(6);
-    const double step_size(0.01);  // seconds
-    const double rho_inf(0.0);
-    const double t_end(0.1);
-    const auto num_steps = static_cast<size_t>(std::floor(t_end / step_size + 1.0));
+    constexpr bool is_dynamic_solve(true);
+    constexpr size_t max_iter(6);
+    constexpr double step_size(0.01);  // seconds
+    constexpr double rho_inf(0.0);
+    constexpr double t_end(0.1);
+    constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.0);
+    constexpr auto num_nodes = node_xi.size();
 
     // Node location [0, 1]
-    std::vector<double> node_loc;
-    for (const auto& xi : node_xi) {
-        node_loc.push_back((xi + 1.) / 2.);
-    }
+    auto node_loc = std::array<double, num_nodes>{};
+    std::transform(
+        std::cbegin(node_xi), std::cend(node_xi), std::begin(node_loc),
+        [](const auto xi) {
+            return (xi + 1.) / 2.;
+        }
+    );
 
     // Create model for adding nodes and constraints
     auto model = Model();
@@ -75,50 +79,56 @@ TEST(RotorTest, IEA15Rotor) {
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 1 rad/s angular velocity around the z axis
-    const size_t num_blades = 3;
-    std::vector<BeamElement> beam_elems;
+    constexpr size_t num_blades = 3;
+    auto blade_list = std::array<size_t, num_blades>{};
+    std::iota(std::begin(blade_list), std::end(blade_list), 0);
 
     // Hub radius (meters)
-    const double hub_rad{3.97};
+    constexpr double hub_rad{3.97};
 
-    // Loop through blades
-    for (size_t i = 0; i < num_blades; ++i) {
-        // Define root rotation
-        const auto q_root =
-            RotationVectorToQuaternion({0., 0., -2. * M_PI * static_cast<double>(i / num_blades)});
-
-        // Declare vector of beam nodes
-        std::vector<BeamNode> beam_nodes;
-
-        // Loop through node locations
-        for (size_t j = 0; j < node_loc.size(); ++j) {
-            // Calculate node position and orientation for this blade
-            const auto pos = RotateVectorByQuaternion(
-                q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
-            );
-            const auto rot = QuaternionCompose(q_root, node_rotation[j]);
-            const auto v = CrossProduct(omega, pos);
-
-            // Create model node
-            auto node = model.AddNode(
-                {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
-                {0., 0., 0., 1., 0., 0., 0.},                              // displacement
-                {v[0], v[1], v[2], omega[0], omega[1], omega[2]}           // velocity
+    std::vector<BeamElement> beam_elems;
+    std::transform(
+        std::cbegin(blade_list), std::cend(blade_list), std::back_inserter(beam_elems),
+        [&](const size_t i) {
+            // Define root rotation
+            const auto q_root = RotationVectorToQuaternion(
+                {0., 0., -2. * M_PI * static_cast<double>(i) / static_cast<double>(num_blades)}
             );
 
-            // Add beam node
-            beam_nodes.push_back(BeamNode(node_loc[j], *node));
+            // Declare vector of beam nodes
+            std::vector<BeamNode> beam_nodes;
+
+            auto node_list = std::array<size_t, num_nodes>{};
+            std::iota(std::begin(node_list), std::end(node_list), 0);
+            std::transform(
+                std::cbegin(node_list), std::cend(node_list), std::back_inserter(beam_nodes),
+                [&](const size_t j) {
+                    // Calculate node position and orientation for this blade
+                    const auto pos = RotateVectorByQuaternion(
+                        q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
+                    );
+                    const auto rot = QuaternionCompose(q_root, node_rotation[j]);
+                    const auto v = CrossProduct(omega, pos);
+
+                    // Create model node
+                    return BeamNode(
+                        node_loc[j],
+                        *model.AddNode(
+                            {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
+                            {0., 0., 0., 1., 0., 0., 0.},                     // displacement
+                            {v[0], v[1], v[2], omega[0], omega[1], omega[2]}  // velocity
+                        )
+                    );
+                }
+            );
+
+            // Add beam element
+            return BeamElement(beam_nodes, material_sections, trapz_quadrature);
         }
-
-        // Add beam element
-        beam_elems.push_back(BeamElement(beam_nodes, material_sections, trapz_quadrature));
-
-        // Set prescribed BC on root node
-        // model.PrescribedBC(beam_nodes[0].node);
-    }
+    );
 
     // Define beam initialization
-    BeamsInput beams_input(beam_elems, gravity);
+    const auto beams_input = BeamsInput(beam_elems, gravity);
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
@@ -133,7 +143,7 @@ TEST(RotorTest, IEA15Rotor) {
     );
 
     // Create solver with initial node state
-    Solver solver(
+    auto solver = Solver(
         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
         beams
     );
@@ -167,7 +177,7 @@ TEST(RotorTest, IEA15Rotor) {
         );
 
         // Define hub translation/rotation displacement
-        Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
+        const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
 
         // Update prescribed displacement constraint on beam root nodes
         std::for_each(
@@ -205,27 +215,31 @@ TEST(RotorTest, IEA15Rotor) {
 
 TEST(RotorTest, IEA15RotorHub) {
     // Flag to write output
-    const bool write_output(false);
+    constexpr bool write_output(false);
 
     // Gravity vector
-    std::array<double, 3> gravity = {-9.81, 0., 0.};
+    constexpr auto gravity = std::array{-9.81, 0., 0.};
 
     // Rotor angular velocity in rad/s
-    const auto omega = std::array<double, 3>{0., 0., -0.79063415025};
+    constexpr auto omega = std::array{0., 0., -0.79063415025};
 
     // Solution parameters
-    const bool is_dynamic_solve(true);
-    const size_t max_iter(6);
-    const double step_size(0.01);  // seconds
-    const double rho_inf(0.0);
-    const double t_end(0.1);
-    const auto num_steps = static_cast<size_t>(std::floor(t_end / step_size + 1.0));
+    constexpr bool is_dynamic_solve(true);
+    constexpr size_t max_iter(6);
+    constexpr double step_size(0.01);  // seconds
+    constexpr double rho_inf(0.0);
+    constexpr double t_end(0.1);
+    constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.0);
+    constexpr auto num_nodes = node_xi.size();
 
     // Node location [0, 1]
-    std::vector<double> node_loc;
-    for (const auto& xi : node_xi) {
-        node_loc.push_back((xi + 1.) / 2.);
-    }
+    auto node_loc = std::array<double, num_nodes>{};
+    std::transform(
+        std::cbegin(node_xi), std::cend(node_xi), std::begin(node_loc),
+        [&](const auto xi) {
+            return (xi + 1.) / 2.;
+        }
+    );
 
     // Create model for adding nodes and constraints
     auto model = Model();
@@ -233,63 +247,69 @@ TEST(RotorTest, IEA15RotorHub) {
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 1 rad/s angular velocity around the z axis
-    const size_t num_blades = 3;
-    std::vector<BeamElement> beam_elems;
+    constexpr size_t num_blades = 3;
+    auto blade_list = std::array<size_t, num_blades>{};
+    std::iota(std::begin(blade_list), std::end(blade_list), 0);
 
     // Hub radius (meters)
-    const double hub_rad{3.97};
+    constexpr double hub_rad{3.97};
 
-    // Loop through blades
-    for (size_t i = 0; i < num_blades; ++i) {
-        // Define root rotation
-        const auto q_root =
-            RotationVectorToQuaternion({0., 0., -2. * M_PI * static_cast<double>(i / num_blades)});
-
-        // Declare vector of beam nodes
-        std::vector<BeamNode> beam_nodes;
-
-        // Loop through node locations
-        for (size_t j = 0; j < node_loc.size(); ++j) {
-            // Calculate node position and orientation for this blade
-            const auto pos = RotateVectorByQuaternion(
-                q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
-            );
-            const auto rot = QuaternionCompose(q_root, node_rotation[j]);
-            const auto v = CrossProduct(omega, pos);
-
-            // Create model node
-            auto node = model.AddNode(
-                {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
-                {0., 0., 0., 1., 0., 0., 0.},                              // displacement
-                {v[0], v[1], v[2], omega[0], omega[1], omega[2]}           // velocity
+    std::vector<BeamElement> beam_elems;
+    std::transform(
+        std::cbegin(blade_list), std::cend(blade_list), std::back_inserter(beam_elems),
+        [&](const size_t i) {
+            // Define root rotation
+            const auto q_root = RotationVectorToQuaternion(
+                {0., 0., -2. * M_PI * static_cast<double>(i) / static_cast<double>(num_blades)}
             );
 
-            // Add beam node
-            beam_nodes.push_back(BeamNode(node_loc[j], *node));
+            // Declare vector of beam nodes
+            std::vector<BeamNode> beam_nodes;
+
+            auto node_list = std::array<size_t, num_nodes>{};
+            std::iota(std::begin(node_list), std::end(node_list), 0);
+            std::transform(
+                std::cbegin(node_list), std::cend(node_list), std::back_inserter(beam_nodes),
+                [&](const size_t j) {
+                    // Calculate node position and orientation for this blade
+                    const auto pos = RotateVectorByQuaternion(
+                        q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
+                    );
+                    const auto rot = QuaternionCompose(q_root, node_rotation[j]);
+                    const auto v = CrossProduct(omega, pos);
+
+                    // Create model node
+                    return BeamNode(
+                        node_loc[j],
+                        *model.AddNode(
+                            {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
+                            {0., 0., 0., 1., 0., 0., 0.},                     // displacement
+                            {v[0], v[1], v[2], omega[0], omega[1], omega[2]}  // velocity
+                        )
+                    );
+                }
+            );
+
+            // Add beam element
+            return BeamElement(beam_nodes, material_sections, trapz_quadrature);
         }
-
-        // Add beam element
-        beam_elems.push_back(BeamElement(beam_nodes, material_sections, trapz_quadrature));
-
-        // Set prescribed BC on root node
-        // model.PrescribedBC(beam_nodes[0].node);
-    }
+    );
 
     // Define beam initialization
-    BeamsInput beams_input(beam_elems, gravity);
+    const auto beams_input = BeamsInput(beam_elems, gravity);
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
     // Define hub node and associated constraints
-    auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0});
+    auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
     for (const auto& beam_elem : beam_elems) {
         model.AddRigidConstraint(*hub_node, beam_elem.nodes[0].node);
     }
     auto hub_bc = model.AddPrescribedBC(*hub_node, {0., 0., 0.});
 
     // Create solver with initial node state
-    Solver solver(
+    auto solver = Solver(
         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
         beams
     );
@@ -323,7 +343,7 @@ TEST(RotorTest, IEA15RotorHub) {
         );
 
         // Define hub translation/rotation displacement
-        Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
+        const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
 
         // Update prescribed displacement constraint on hub
         solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc->ID), u_hub);
@@ -356,30 +376,32 @@ TEST(RotorTest, IEA15RotorHub) {
 
 TEST(RotorTest, IEA15RotorController) {
     // Flag to write output
-    const bool write_output(true);
+    constexpr bool write_output(true);
 
     // Gravity vector
-    std::array<double, 3> gravity = {-9.81, 0., 0.};
+    constexpr auto gravity = std::array{-9.81, 0., 0.};
 
     // Rotor angular velocity in rad/s
-    const auto omega = std::array<double, 3>{0., 0., -0.79063415025};
+    constexpr auto angular_speed = 0.79063415025;
+    constexpr auto omega = std::array{0., 0., -angular_speed};
 
     // Solution parameters
-    const bool is_dynamic_solve(true);
-    const size_t max_iter(6);
-    const double step_size(0.01);  // seconds
-    const double rho_inf(0.0);
-    const double t_end(0.01 * 2.0 * M_PI / fabs(omega[2]));  // 3 revolutions
-    const auto num_steps = static_cast<size_t>(std::floor(t_end / step_size + 1.));
-
-    // Hub radius (meters)
-    const double hub_rad{3.97};
+    constexpr bool is_dynamic_solve(true);
+    constexpr size_t max_iter(6);
+    constexpr double step_size(0.01);  // seconds
+    constexpr double rho_inf(0.0);
+    constexpr double t_end(0.01 * 2.0 * M_PI / angular_speed);  // 3 revolutions
+    constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.);
+    constexpr auto num_nodes = node_xi.size();
 
     // Node location [0, 1]
-    std::vector<double> node_loc;
-    for (const auto& xi : node_xi) {
-        node_loc.push_back((xi + 1.) / 2.);
-    }
+    auto node_loc = std::array<double, num_nodes>{};
+    std::transform(
+        std::cbegin(node_xi), std::cend(node_xi), std::begin(node_loc),
+        [&](const auto xi) {
+            return (xi + 1.) / 2.;
+        }
+    );
 
     // Create model for adding nodes and constraints
     auto model = Model();
@@ -387,68 +409,81 @@ TEST(RotorTest, IEA15RotorController) {
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 1 rad/s angular velocity around the z axis
-    const size_t num_blades = 3;
+    constexpr size_t num_blades = 3;
+    auto blade_list = std::array<size_t, num_blades>{};
+    std::iota(std::begin(blade_list), std::end(blade_list), 0);
+
+    // Hub radius (meters)
+    constexpr double hub_rad{3.97};
+
     std::vector<BeamElement> beam_elems;
-
-    // Loop through blades
-    for (size_t i = 0; i < num_blades; ++i) {
-        // Define root rotation
-        const auto q_root =
-            RotationVectorToQuaternion({0., 0., -2. * M_PI * static_cast<double>(i / num_blades)});
-
-        // Declare vector of beam nodes
-        std::vector<BeamNode> beam_nodes;
-
-        // Loop through node locations
-        for (size_t j = 0; j < node_loc.size(); ++j) {
-            // Calculate node position and orientation for this blade
-            const auto pos = RotateVectorByQuaternion(
-                q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
-            );
-            const auto rot = QuaternionCompose(q_root, node_rotation[j]);
-            const auto v = CrossProduct(omega, pos);
-
-            // Create model node
-            auto node = model.AddNode(
-                {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
-                {0., 0., 0., 1., 0., 0., 0.},                              // displacement
-                {v[0], v[1], v[2], omega[0], omega[1], omega[2]}           // velocity
+    std::transform(
+        std::cbegin(blade_list), std::cend(blade_list), std::back_inserter(beam_elems),
+        [&](const size_t i) {
+            // Define root rotation
+            const auto q_root = RotationVectorToQuaternion(
+                {0., 0., -2. * M_PI * static_cast<double>(i) / static_cast<double>(num_blades)}
             );
 
-            // Add beam node
-            beam_nodes.push_back(BeamNode(node_loc[j], *node));
+            // Declare vector of beam nodes
+            std::vector<BeamNode> beam_nodes;
+
+            auto node_list = std::array<size_t, num_nodes>{};
+            std::iota(std::begin(node_list), std::end(node_list), 0);
+            std::transform(
+                std::cbegin(node_list), std::cend(node_list), std::back_inserter(beam_nodes),
+                [&](const size_t j) {
+                    // Calculate node position and orientation for this blade
+                    const auto pos = RotateVectorByQuaternion(
+                        q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
+                    );
+                    const auto rot = QuaternionCompose(q_root, node_rotation[j]);
+                    const auto v = CrossProduct(omega, pos);
+
+                    // Create model node
+                    return BeamNode(
+                        node_loc[j],
+                        *model.AddNode(
+                            {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
+                            {0., 0., 0., 1., 0., 0., 0.},                     // displacement
+                            {v[0], v[1], v[2], omega[0], omega[1], omega[2]}  // velocity
+                        )
+                    );
+                }
+            );
+
+            // Add beam element
+            return BeamElement(beam_nodes, material_sections, trapz_quadrature);
         }
-
-        // Add beam element
-        beam_elems.push_back(BeamElement(beam_nodes, material_sections, trapz_quadrature));
-    }
+    );
 
     // Define beam initialization
-    BeamsInput beams_input(beam_elems, gravity);
+    const auto beams_input = BeamsInput(beam_elems, gravity);
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
     // Add logic related to TurbineController
     // provide shared library path and controller function name to clamp
-    std::string shared_lib_path = "./DISCON_ROTOR_TEST_CONTROLLER.dll";
-    std::string controller_function_name = "PITCH_CONTROLLER";
+    const auto shared_lib_path = std::string{"./DISCON_ROTOR_TEST_CONTROLLER.dll"};
+    const auto controller_function_name = std::string{"PITCH_CONTROLLER"};
 
     // create an instance of TurbineController
-    util::TurbineController controller(
+    auto controller = util::TurbineController(
         shared_lib_path, controller_function_name, "test_input_file", "test_output_file"
     );
 
     // Pitch control variable
-    std::vector<float*> blade_pitch_command{
-        &controller.io->pitch_command_1, &controller.io->pitch_command_2,
-        &controller.io->pitch_command_3};
+    auto blade_pitch_command = std::array<double*, 3>{
+        &controller.io.pitch_command_1, &controller.io.pitch_command_2,
+        &controller.io.pitch_command_3};
 
     // Define hub node and associated constraints
-    auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0});
+    auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
     for (size_t i = 0; i < beam_elems.size(); ++i) {
-        const auto q_root =
-            RotationVectorToQuaternion({0., 0., -2. * M_PI * static_cast<double>(i / num_blades)});
+        const auto q_root = RotationVectorToQuaternion(
+            {0., 0., -2. * M_PI * static_cast<double>(i) / static_cast<double>(num_blades)}
+        );
         const auto pitch_axis = RotateVectorByQuaternion(q_root, {1., 0., 0.});
         model.AddRotationControl(
             *hub_node, beam_elems[i].nodes[0].node, pitch_axis, blade_pitch_command[i]
@@ -500,12 +535,11 @@ TEST(RotorTest, IEA15RotorController) {
         const auto q_hub = RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
 
         // Update prescribed displacement constraint on hub
-        Array_7 u_hub({0, 0, 0, q_hub[0], q_hub[1], q_hub[2], q_hub[3]});
-
+        const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
         solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc->ID), u_hub);
 
         // Update time in controller
-        controller.io->time = static_cast<float>(t);
+        controller.io.time = t;
 
         // call controller to get signals for this step
         controller.CallController();
@@ -529,4 +563,4 @@ TEST(RotorTest, IEA15RotorController) {
     }
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

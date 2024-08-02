@@ -16,7 +16,7 @@ struct Beams {
         Kokkos::pair<size_t, size_t> node_range;
         Kokkos::pair<size_t, size_t> qp_range;
         Kokkos::pair<size_t, size_t> qp_shape_range;
-        ElemIndices() {}
+        ElemIndices() = default;
         ElemIndices(size_t n_nodes, size_t n_qps, size_t i_node_start, size_t i_qp_start)
             : num_nodes(n_nodes),
               num_qps(n_qps),
@@ -87,8 +87,6 @@ struct Beams {
 
     View_NxN shape_interp;  // shape function matrix for interpolation [Nodes x QPs]
     View_NxN shape_deriv;   // shape function matrix for derivative interp [Nodes x QPs]
-
-    Beams() {}  // Default constructor which doesn't initialize views
 
     // Constructor which initializes views based on given sizes
     Beams(

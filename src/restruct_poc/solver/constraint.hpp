@@ -22,19 +22,19 @@ enum class ConstraintType {
 /// in some way. Constraints can be used to model fixed boundary conditions, prescribed
 /// displacements, rigid body motion, and other types of constraints.
 struct Constraint {
-    ConstraintType type;    //< Type of constraint
-    int ID;                 //< Unique identifier for constraint
-    Node base_node;         //< Base node for constraint
-    Node target_node;       //< Target node for constraint
-    Array_3 X0 = {0.};      //< reference position for prescribed BC
-    Array_3 x_axis = {0.};  //< unit vector for x axis
-    Array_3 y_axis = {0.};  //< unit vector for y axis
-    Array_3 z_axis = {0.};  //< unit vector for z axis
-    float* control = NULL;  //< Pointer to control signal
+    ConstraintType type;        //< Type of constraint
+    int ID;                     //< Unique identifier for constraint
+    Node base_node;             //< Base node for constraint
+    Node target_node;           //< Target node for constraint
+    Array_3 X0 = {0.};          //< reference position for prescribed BC
+    Array_3 x_axis = {0.};      //< unit vector for x axis
+    Array_3 y_axis = {0.};      //< unit vector for y axis
+    Array_3 z_axis = {0.};      //< unit vector for z axis
+    double* control = nullptr;  //< Pointer to control signal
 
     Constraint(
         ConstraintType constraint_type, const int id, const Node& node1, const Node& node2,
-        const Array_3& vec = {0., 0., 0.}, float* ctrl = nullptr
+        const Array_3& vec = {0., 0., 0.}, double* ctrl = nullptr
     )
         : type(constraint_type),
           ID(id),
@@ -58,7 +58,7 @@ struct Constraint {
 
         // If rotation control constraint, vec is rotation axis
         if (constraint_type == ConstraintType::kCylindrical) {
-            Array_3 x{1., 0., 0.};
+            constexpr auto x = std::array{1., 0., 0.};
             auto x_hat = UnitVector(this->X0);
 
             // Create rotation matrix which rotates x to match vector
@@ -91,10 +91,10 @@ struct Constraint {
     }
 
     /// Returns the number of degrees of freedom used by constraint
-    size_t NumDOFs() const {
+    [[nodiscard]] size_t NumDOFs() const {
         switch (this->type) {
             case ConstraintType::kCylindrical: {
-                return 5u;
+                return 5U;
             } break;
             default: {
                 return static_cast<size_t>(kLieAlgebraComponents);  // 6

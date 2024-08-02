@@ -42,6 +42,5 @@ jobs:
         cd build-cppcheck
         cmake .. \
           -DOpenTurbine_ENABLE_CPPCHECK=ON \
-          -DOpenTurbine_WARNINGS_AS_ERRORS=OFF \
           -DCMAKE_BUILD_TYPE=Debug
         cmake --build .

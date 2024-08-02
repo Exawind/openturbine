@@ -16,13 +16,13 @@ struct CalculateTangentOperator {
 
     KOKKOS_FUNCTION
     void operator()(const int i_node) const {
-        for (auto k = 0u; k < kLieAlgebraComponents; ++k) {
-            for (auto n = 0u; n < kLieAlgebraComponents; ++n) {
+        for (auto k = 0U; k < kLieAlgebraComponents; ++k) {
+            for (auto n = 0U; n < kLieAlgebraComponents; ++n) {
                 T(i_node, k, n) = 0.;
             }
         }
 
-        for (auto k = 0u; k < kLieAlgebraComponents; ++k) {
+        for (auto k = 0U; k < kLieAlgebraComponents; ++k) {
             T(i_node, k, k) = 1.0;
         }
 
@@ -47,8 +47,8 @@ struct CalculateTangentOperator {
             KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
             KokkosBatched::Algo::Gemm::Default>::invoke(tmp2, m2, m2, tmp1, m1);
 
-        for (auto k = 0u; k < 3u; ++k) {
-            for (auto n = 0u; n < 3u; ++n) {
+        for (auto k = 0U; k < 3U; ++k) {
+            for (auto n = 0U; n < 3U; ++n) {
                 T(i_node, k + 3, n + 3) += m1(k, n);
             }
         }

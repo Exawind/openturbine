@@ -51,7 +51,7 @@ struct Solver {
         KokkosSparse::SPMVHandle<ExecutionSpace, CrsMatrixType, ValuesType, ValuesType>;
 
     bool is_dynamic_solve;    //< Flag to indicate if the solver is dynamic
-    size_t max_iter;             //< Maximum number of iterations
+    size_t max_iter;          //< Maximum number of iterations
     double h;                 //< Time step
     double alpha_m;           //< Alpha_m coefficient
     double alpha_f;           //< Alpha_f coefficient
@@ -60,10 +60,10 @@ struct Solver {
     double gamma_prime;       //< Gamma prime coefficient
     double beta_prime;        //< Beta prime coefficient
     double conditioner;       //< Conditioner for the system matrix
-    size_t num_system_nodes;     //< Number of system nodes
-    size_t num_system_dofs;      //< Number of system degrees of freedom
+    size_t num_system_nodes;  //< Number of system nodes
+    size_t num_system_dofs;   //< Number of system degrees of freedom
     Constraints constraints;  //< Constraints
-    size_t num_dofs;             //< Number of degrees of freedom
+    size_t num_dofs;          //< Number of degrees of freedom
 
     State state;                            //< State
     CrsMatrixType K;                        //< Stiffness matrix
@@ -123,13 +123,10 @@ struct Solver {
           ),
           R("R", num_dofs),
           x("x", num_dofs),
-          convergence_err(max_iter),
-          system_spgemm_handle(),
-          constraints_spgemm_handle(),
-          system_spadd_handle() {
+          convergence_err(max_iter) {
         auto K_num_rows = this->num_system_dofs;
         auto K_num_columns = this->num_system_dofs;
-        auto K_num_non_zero = size_t{0u};
+        auto K_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros", beams_.num_elems,
             ComputeNumberOfNonZeros{beams_.elem_indices}, K_num_non_zero
@@ -162,7 +159,8 @@ struct Solver {
         );
         auto node_ids = IndicesType("node_ids", system_nodes.size());
         auto host_node_ids = Kokkos::create_mirror(node_ids);
-        for (auto i = 0u; i < system_nodes.size(); ++i) {
+
+        for (auto i = 0U; i < system_nodes.size(); ++i) {
             host_node_ids(i) = system_nodes[i]->ID;
         }
         Kokkos::deep_copy(node_ids, host_node_ids);
@@ -177,7 +175,7 @@ struct Solver {
         );
 
         // Initialize contraint for indexing for sparse matrices
-        auto B_num_non_zero = size_t{0u};
+        auto B_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros_Constraints", this->constraints.num,
             ComputeNumberOfNonZeros_Constraints{this->constraints.data}, B_num_non_zero
@@ -304,7 +302,7 @@ struct Solver {
             static_cast<size_t>(full_matrix.numCols()), comm
         );
 
-        A = Teuchos::rcp(new GlobalCrsMatrixType(rowMap, colMap, CrsMatrixType("A", full_matrix)));
+        A = Teuchos::make_rcp<GlobalCrsMatrixType>(rowMap, colMap, CrsMatrixType("A", full_matrix));
         b = Tpetra::createMultiVector<ScalarType>(A->getRangeMap(), 1);
         x_mv = Tpetra::createMultiVector<ScalarType>(A->getDomainMap(), 1);
 

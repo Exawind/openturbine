@@ -11,7 +11,7 @@
 namespace openturbine {
 
 // InvalidNode represents an invalid node in constraints that only use the target node.
-static Node InvalidNode(-1, {0., 0., 0., 1., 0., 0., 0.});
+static const Node InvalidNode(-1, {0., 0., 0., 1., 0., 0., 0.});
 
 /// @brief Struct to define a turbine model with nodes and constraints
 /// @details A model is a collection of nodes and constraints that define the geometry and
@@ -52,7 +52,6 @@ public:
         const Array_6& velocity = Array_6{0., 0., 0., 0., 0., 0.},
         const Array_6& acceleration = Array_6{0., 0., 0., 0., 0., 0.}
     ) {
-
         return this->nodes_.emplace_back(
             std::make_shared<Node>(nodes_.size(), position, displacement, velocity, acceleration)
         );
@@ -126,7 +125,7 @@ public:
 
     /// Adds a rotation control constraint to the model and returns the constraint
     std::shared_ptr<Constraint> AddRotationControl(
-        const Node& node1, const Node& node2, const Array_3& axis, float* control
+        const Node& node1, const Node& node2, const Array_3& axis, double* control
     ) {
         return this->constraints_.emplace_back(std::make_shared<Constraint>(
             ConstraintType::kRotationControl, constraints_.size(), node1, node2, axis, control
