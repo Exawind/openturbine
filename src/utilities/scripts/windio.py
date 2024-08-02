@@ -159,6 +159,43 @@ def get_ref(ref: str, definitions: Definitions, struct_map: dict[str, Struct]) -
     return name, schema
 
 
+def set_type(field: Field, schema: Schema, definition_map: dict, struct_map: dict[str, Struct]) -> None:
+    """
+    Sets the type of a field based on the schema type
+
+    Args:
+        field (Field): The field to set the type of
+        schema (Schema): The schema of the field
+        definition_map (dict): The definitions present in the schema
+        struct_map (dict[str, Struct]): The structs that have already been built based on the schema
+
+    Returns:
+        None
+    """
+    if schema.type == 'object':
+        field.type = field.name
+        s = Struct(field.name, schema.description)
+        build_structs(s, schema, definition_map, struct_map)
+        if s.name != field.type:
+            field.type = s.name
+    elif schema.type == 'string':
+        field.type = 'std::string'
+    elif schema.type == 'number':
+        field.type = 'double'
+    elif schema.type == 'integer':
+        field.type = 'int'
+    elif schema.type == 'boolean':
+        field.type = 'bool'
+    elif schema.type == 'array':
+        if not schema.items:
+            raise ValueError(f"{field.name}: array without item spec")
+        field.type = schema.items.type
+        build_type(field, schema.items, definition_map, struct_map)
+        field.type = f"std::vector<{field.type}>"
+    else:
+        raise ValueError(f"Unknown type '{schema.type} - {schema}'")
+
+
 def build_type(field: Field, schema: Schema, definition_map: dict, struct_map: dict[str, Struct]) -> None:
     """
     Determines the type of a field based on the schema and builds the Struct/Class if necessary.
@@ -188,34 +225,20 @@ def build_type(field: Field, schema: Schema, definition_map: dict, struct_map: d
     if not schema.type and schema.properties:
         schema.type = 'object'
 
-    # If the schema has multiple types, use the first one (for now)
+    # If the schema has multiple types, use std::variant to represent them
     if schema.one_of:
-        schema = schema.one_of[0]
+        field.type = "std::variant<"
+        for i, s in enumerate(schema.one_of):
+            field_dummy = Field("", "", "", "")
+            set_type(field_dummy, s, definition_map, struct_map)
+            field.type += field_dummy.type
+            if i < len(schema.one_of) - 1:
+                field.type += ", "
+        field.type += ">"
+        return
 
-    # Set the type based on the schema type
-    if schema.type == 'object': # If the field is an object, build a Struct for it
-        field.type = field.name
-        s = Struct(field.name, schema.description)
-        build_structs(s, schema, definition_map, struct_map)
-        # set the type to the name of the struct if there were any changes made to the name
-        if s.name != field.type:
-            field.type = s.name
-    elif schema.type == 'string':
-        field.type = 'std::string'
-    elif schema.type == 'number':
-        field.type = 'double'
-    elif schema.type == 'integer':
-        field.type = 'int'
-    elif schema.type == 'boolean':
-        field.type = 'bool'
-    elif schema.type == 'array':
-        if not schema.items:
-            raise ValueError(f"{field.name}: array without item spec")
-        field.type = schema.items.type
-        build_type(field, schema.items, definition_map, struct_map)
-        field.type = f"std::vector<{field.type}>"
-    else:
-        raise ValueError(f"Unknown type '{schema.type} - {schema}'")
+    # Set the type based on the schema type using the set_type function
+    set_type(field, schema, definition_map, struct_map)
 
 
 def main():
