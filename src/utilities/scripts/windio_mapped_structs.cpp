@@ -38,66 +38,122 @@ struct Assembly {
 struct AirfoilPosition {
     std::vector<double> grid;
     std::vector<std::string> labels;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        labels = node["labels"] ? node["labels"].as<std::vector<std::string>>()
+                                : std::vector<std::string>();
+    }
 };
 
 // Chord
 struct Chord {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Twist
 struct Twist {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // PitchAxis
 struct PitchAxis {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // TDividedByC
 struct TDividedByC {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // LDividedByD
 struct LDividedByD {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // CD
 struct CD {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // StallMargin
 struct StallMargin {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // X
 struct X {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Y
 struct Y {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Z
 struct Z {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // The reference system is located at blade root, with z aligned with the pitch axis, x pointing
@@ -107,12 +163,29 @@ struct ReferenceAxis {
     X x;
     Y y;
     Z z;
+
+    void parse(const YAML::Node& node) {
+        if (node["x"]) {
+            x.parse(node["x"]);
+        }
+        if (node["y"]) {
+            y.parse(node["y"]);
+        }
+        if (node["z"]) {
+            z.parse(node["z"]);
+        }
+    }
 };
 
 // Rthick
 struct Rthick {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // OuterShapeBem
@@ -127,114 +200,237 @@ struct OuterShapeBem {
     StallMargin stall_margin;
     ReferenceAxis reference_axis;
     Rthick rthick;
+
+    void parse(const YAML::Node& node) {
+        if (node["airfoil_position"]) {
+            airfoil_position.parse(node["airfoil_position"]);
+        }
+        if (node["chord"]) {
+            chord.parse(node["chord"]);
+        }
+        if (node["twist"]) {
+            twist.parse(node["twist"]);
+        }
+        if (node["pitch_axis"]) {
+            pitch_axis.parse(node["pitch_axis"]);
+        }
+        if (node["t_divided_by_c"]) {
+            t_divided_by_c.parse(node["t_divided_by_c"]);
+        }
+        if (node["L_divided_by_D"]) {
+            L_divided_by_D.parse(node["L_divided_by_D"]);
+        }
+        if (node["c_d"]) {
+            c_d.parse(node["c_d"]);
+        }
+        if (node["stall_margin"]) {
+            stall_margin.parse(node["stall_margin"]);
+        }
+        if (node["reference_axis"]) {
+            reference_axis.parse(node["reference_axis"]);
+        }
+        if (node["rthick"]) {
+            rthick.parse(node["rthick"]);
+        }
+    }
 };
 
 // A
 struct A {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // E
 struct E {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // G
 struct G {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // IX
 struct IX {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // IY
 struct IY {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // K
 struct K {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Dm
 struct Dm {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // KX
 struct KX {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // KY
 struct KY {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Pitch
 struct Pitch {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // RiX
 struct RiX {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // RiY
 struct RiY {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // XCg
 struct XCg {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // XE
 struct XE {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // XSh
 struct XSh {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // YCg
 struct YCg {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // YE
 struct YE {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // YSh
 struct YSh {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Timoschenko beam as in HAWC2
@@ -258,78 +454,198 @@ struct TimoschenkoHawc {
     YCg y_cg;
     YE y_e;
     YSh y_sh;
+
+    void parse(const YAML::Node& node) {
+        if (node["reference_axis"]) {
+            reference_axis.parse(node["reference_axis"]);
+        }
+        if (node["A"]) {
+            A.parse(node["A"]);
+        }
+        if (node["E"]) {
+            E.parse(node["E"]);
+        }
+        if (node["G"]) {
+            G.parse(node["G"]);
+        }
+        if (node["I_x"]) {
+            I_x.parse(node["I_x"]);
+        }
+        if (node["I_y"]) {
+            I_y.parse(node["I_y"]);
+        }
+        if (node["K"]) {
+            K.parse(node["K"]);
+        }
+        if (node["dm"]) {
+            dm.parse(node["dm"]);
+        }
+        if (node["k_x"]) {
+            k_x.parse(node["k_x"]);
+        }
+        if (node["k_y"]) {
+            k_y.parse(node["k_y"]);
+        }
+        if (node["pitch"]) {
+            pitch.parse(node["pitch"]);
+        }
+        if (node["ri_x"]) {
+            ri_x.parse(node["ri_x"]);
+        }
+        if (node["ri_y"]) {
+            ri_y.parse(node["ri_y"]);
+        }
+        if (node["x_cg"]) {
+            x_cg.parse(node["x_cg"]);
+        }
+        if (node["x_e"]) {
+            x_e.parse(node["x_e"]);
+        }
+        if (node["x_sh"]) {
+            x_sh.parse(node["x_sh"]);
+        }
+        if (node["y_cg"]) {
+            y_cg.parse(node["y_cg"]);
+        }
+        if (node["y_e"]) {
+            y_e.parse(node["y_e"]);
+        }
+        if (node["y_sh"]) {
+            y_sh.parse(node["y_sh"]);
+        }
+    }
 };
 
 // T11
 struct T11 {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // T22
 struct T22 {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Ea
 struct Ea {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // E11
 struct E11 {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // E22
 struct E22 {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Gj
 struct Gj {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // XCe
 struct XCe {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // YCe
 struct YCe {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // DeltaTheta
 struct DeltaTheta {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // J1
 struct J1 {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // J2
 struct J2 {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // J3
 struct J3 {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Geometrically exact beams with simplified properties
@@ -352,18 +668,93 @@ struct CpLambdaBeam {
     J3 J3;
     XCg x_cg;
     YCg y_cg;
+
+    void parse(const YAML::Node& node) {
+        if (node["reference_axis"]) {
+            reference_axis.parse(node["reference_axis"]);
+        }
+        if (node["T11"]) {
+            T11.parse(node["T11"]);
+        }
+        if (node["T22"]) {
+            T22.parse(node["T22"]);
+        }
+        if (node["EA"]) {
+            EA.parse(node["EA"]);
+        }
+        if (node["E11"]) {
+            E11.parse(node["E11"]);
+        }
+        if (node["E22"]) {
+            E22.parse(node["E22"]);
+        }
+        if (node["GJ"]) {
+            GJ.parse(node["GJ"]);
+        }
+        if (node["x_ce"]) {
+            x_ce.parse(node["x_ce"]);
+        }
+        if (node["y_ce"]) {
+            y_ce.parse(node["y_ce"]);
+        }
+        if (node["dm"]) {
+            dm.parse(node["dm"]);
+        }
+        if (node["delta_theta"]) {
+            delta_theta.parse(node["delta_theta"]);
+        }
+        if (node["x_sh"]) {
+            x_sh.parse(node["x_sh"]);
+        }
+        if (node["y_sh"]) {
+            y_sh.parse(node["y_sh"]);
+        }
+        if (node["J1"]) {
+            J1.parse(node["J1"]);
+        }
+        if (node["J2"]) {
+            J2.parse(node["J2"]);
+        }
+        if (node["J3"]) {
+            J3.parse(node["J3"]);
+        }
+        if (node["x_cg"]) {
+            x_cg.parse(node["x_cg"]);
+        }
+        if (node["y_cg"]) {
+            y_cg.parse(node["y_cg"]);
+        }
+    }
 };
 
 // StiffMatrix
 struct StiffMatrix {
     std::vector<double> grid;
     std::vector<std::vector<double>> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        if (node["values"]) {
+            for (const auto& item : node["values"]) {
+                values.push_back(item.as<std::vector<double>>());
+            }
+        }
+    }
 };
 
 // SixXSix
 struct SixXSix {
     ReferenceAxis reference_axis;
     StiffMatrix stiff_matrix;
+
+    void parse(const YAML::Node& node) {
+        if (node["reference_axis"]) {
+            reference_axis.parse(node["reference_axis"]);
+        }
+        if (node["stiff_matrix"]) {
+            stiff_matrix.parse(node["stiff_matrix"]);
+        }
+    }
 };
 
 // ElasticPropertiesMb
@@ -371,12 +762,29 @@ struct ElasticPropertiesMb {
     TimoschenkoHawc timoschenko_hawc;
     CpLambdaBeam cp_lambda_beam;
     SixXSix six_x_six;
+
+    void parse(const YAML::Node& node) {
+        if (node["timoschenko_hawc"]) {
+            timoschenko_hawc.parse(node["timoschenko_hawc"]);
+        }
+        if (node["cp_lambda_beam"]) {
+            cp_lambda_beam.parse(node["cp_lambda_beam"]);
+        }
+        if (node["six_x_six"]) {
+            six_x_six.parse(node["six_x_six"]);
+        }
+    }
 };
 
 // Root
 struct Root {
     double d_f;        // Diameter of the fastener, default is M30, so 0.03 meters
     double sigma_max;  // Max stress on bolt
+
+    void parse(const YAML::Node& node) {
+        d_f = node["d_f"] ? node["d_f"].as<double>() : 0.;
+        sigma_max = node["sigma_max"] ? node["sigma_max"].as<double>() : 0.;
+    }
 };
 
 // non-dimensional location of the point along the non-dimensional arc length
@@ -384,6 +792,12 @@ struct StartNdArc {
     std::vector<double> grid;
     std::vector<double> values;
     std::string fixed;  // Name of the layer to lock the edge
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+        fixed = node["fixed"] ? node["fixed"].as<std::string>() : "";
+    }
 };
 
 // non-dimensional location of the point along the non-dimensional arc length
@@ -391,6 +805,12 @@ struct EndNdArc {
     std::vector<double> grid;
     std::vector<double> values;
     std::string fixed;  // Name of the layer to lock the edge
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+        fixed = node["fixed"] ? node["fixed"].as<std::string>() : "";
+    }
 };
 
 // rotation of the chord axis around the pitch axis
@@ -398,6 +818,12 @@ struct Rotation {
     std::vector<double> grid;
     std::vector<double> values;
     std::string fixed;  // Name of the layer to lock the edge
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+        fixed = node["fixed"] ? node["fixed"].as<std::string>() : "";
+    }
 };
 
 // dimensional offset in respect to the pitch axis along the x axis, which is the chord line rotated
@@ -406,6 +832,11 @@ struct Rotation {
 struct OffsetYPa {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Webs
@@ -415,30 +846,66 @@ struct Webs {
     EndNdArc end_nd_arc;
     Rotation rotation;
     OffsetYPa offset_y_pa;
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        if (node["start_nd_arc"]) {
+            start_nd_arc.parse(node["start_nd_arc"]);
+        }
+        if (node["end_nd_arc"]) {
+            end_nd_arc.parse(node["end_nd_arc"]);
+        }
+        if (node["rotation"]) {
+            rotation.parse(node["rotation"]);
+        }
+        if (node["offset_y_pa"]) {
+            offset_y_pa.parse(node["offset_y_pa"]);
+        }
+    }
 };
 
 // thickness of the laminate
 struct Thickness {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // number of plies of the laminate
 struct NPlies {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // orientation of the fibers
 struct FiberOrientation {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // dimensional width of the component along the arc
 struct Width {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // non-dimensional location of the point along the non-dimensional arc length
@@ -446,6 +913,12 @@ struct MidpointNdArc {
     std::vector<double> grid;
     std::vector<double> values;
     std::string fixed;  // Name of the layer to lock the edge
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+        fixed = node["fixed"] ? node["fixed"].as<std::string>() : "";
+    }
 };
 
 // Layers
@@ -462,6 +935,39 @@ struct Layers {
     EndNdArc end_nd_arc;
     Rotation rotation;
     OffsetYPa offset_y_pa;
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        material = node["material"] ? node["material"].as<std::string>() : "";
+        web = node["web"] ? node["web"].as<std::string>() : "";
+        if (node["thickness"]) {
+            thickness.parse(node["thickness"]);
+        }
+        if (node["n_plies"]) {
+            n_plies.parse(node["n_plies"]);
+        }
+        if (node["fiber_orientation"]) {
+            fiber_orientation.parse(node["fiber_orientation"]);
+        }
+        if (node["width"]) {
+            width.parse(node["width"]);
+        }
+        if (node["midpoint_nd_arc"]) {
+            midpoint_nd_arc.parse(node["midpoint_nd_arc"]);
+        }
+        if (node["start_nd_arc"]) {
+            start_nd_arc.parse(node["start_nd_arc"]);
+        }
+        if (node["end_nd_arc"]) {
+            end_nd_arc.parse(node["end_nd_arc"]);
+        }
+        if (node["rotation"]) {
+            rotation.parse(node["rotation"]);
+        }
+        if (node["offset_y_pa"]) {
+            offset_y_pa.parse(node["offset_y_pa"]);
+        }
+    }
 };
 
 // This is a spanwise joint along the blade, usually adopted to ease transportation constraints.
@@ -476,6 +982,18 @@ struct Joint {
         reinforcement_layer_ss;  // Layer identifier for the joint reinforcement on the suction side
     std::string
         reinforcement_layer_ps;  // Layer identifier for the joint reinforcement on the pressure side
+
+    void parse(const YAML::Node& node) {
+        position = node["position"] ? node["position"].as<double>() : 0.;
+        mass = node["mass"] ? node["mass"].as<double>() : 0.;
+        cost = node["cost"] ? node["cost"].as<double>() : 0.;
+        bolt = node["bolt"] ? node["bolt"].as<std::string>() : "";
+        nonmaterial_cost = node["nonmaterial_cost"] ? node["nonmaterial_cost"].as<double>() : 0.;
+        reinforcement_layer_ss =
+            node["reinforcement_layer_ss"] ? node["reinforcement_layer_ss"].as<std::string>() : "";
+        reinforcement_layer_ps =
+            node["reinforcement_layer_ps"] ? node["reinforcement_layer_ps"].as<std::string>() : "";
+    }
 };
 
 // InternalStructure2DFem
@@ -486,6 +1004,32 @@ struct InternalStructure2DFem {
     std::vector<Layers> layers;  // ...
     Joint joint;  // This is a spanwise joint along the blade, usually adopted to ease transportation
                   // constraints. WISDEM currently supports a single joint.
+
+    void parse(const YAML::Node& node) {
+        if (node["root"]) {
+            root.parse(node["root"]);
+        }
+        if (node["reference_axis"]) {
+            reference_axis.parse(node["reference_axis"]);
+        }
+        if (node["webs"]) {
+            for (const auto& item : node["webs"]) {
+                Webs x;
+                x.parse(item);
+                webs.push_back(x);
+            }
+        }
+        if (node["layers"]) {
+            for (const auto& item : node["layers"]) {
+                Layers x;
+                x.parse(item);
+                layers.push_back(x);
+            }
+        }
+        if (node["joint"]) {
+            joint.parse(node["joint"]);
+        }
+    }
 };
 
 // Blade
@@ -493,6 +1037,18 @@ struct Blade {
     OuterShapeBem outer_shape_bem;
     ElasticPropertiesMb elastic_properties_mb;
     InternalStructure2DFem internal_structure_2d_fem;
+
+    void parse(const YAML::Node& node) {
+        if (node["outer_shape_bem"]) {
+            outer_shape_bem.parse(node["outer_shape_bem"]);
+        }
+        if (node["elastic_properties_mb"]) {
+            elastic_properties_mb.parse(node["elastic_properties_mb"]);
+        }
+        if (node["internal_structure_2d_fem"]) {
+            internal_structure_2d_fem.parse(node["internal_structure_2d_fem"]);
+        }
+    }
 };
 
 // OuterShapeBem_1
@@ -501,6 +1057,12 @@ struct OuterShapeBem_1 {
     double cone_angle;  // Rotor precone angle, defined positive for both upwind and downwind rotors.
     double drag_coefficient;  // Equivalent drag coefficient to compute the aerodynamic forces
                               // generated on the hub.
+
+    void parse(const YAML::Node& node) {
+        diameter = node["diameter"] ? node["diameter"].as<double>() : 0.;
+        cone_angle = node["cone_angle"] ? node["cone_angle"].as<double>() : 0.;
+        drag_coefficient = node["drag_coefficient"] ? node["drag_coefficient"].as<double>() : 0.;
+    }
 };
 
 // ElasticPropertiesMb_1
@@ -511,12 +1073,30 @@ struct ElasticPropertiesMb_1 {
         system_inertia;  // Inertia of the hub system, on the hub reference system, which has the x
                          // aligned with the rotor axis, and y and z perpendicular to it.
     std::vector<double> system_center_mass;  // Center of mass of the hub system. Work in progress.
+
+    void parse(const YAML::Node& node) {
+        system_mass = node["system_mass"] ? node["system_mass"].as<double>() : 0.;
+        system_inertia = node["system_inertia"] ? node["system_inertia"].as<std::vector<double>>()
+                                                : std::vector<double>();
+        system_center_mass = node["system_center_mass"]
+                                 ? node["system_center_mass"].as<std::vector<double>>()
+                                 : std::vector<double>();
+    }
 };
 
 // Hub
 struct Hub {
     OuterShapeBem_1 outer_shape_bem;
     ElasticPropertiesMb_1 elastic_properties_mb;
+
+    void parse(const YAML::Node& node) {
+        if (node["outer_shape_bem"]) {
+            outer_shape_bem.parse(node["outer_shape_bem"]);
+        }
+        if (node["elastic_properties_mb"]) {
+            elastic_properties_mb.parse(node["elastic_properties_mb"]);
+        }
+    }
 };
 
 // User input override of generator rpm-efficiency values, with rpm as grid input and eff as values
@@ -524,12 +1104,22 @@ struct Hub {
 struct GeneratorRpmEfficiencyUser {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Thickness of the hollow elliptical bedplate used in direct drive configurations
 struct BedplateWallThickness {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Inputs to WISDEM specific drivetrain sizing tool, DrivetrainSE
@@ -591,6 +1181,74 @@ struct Drivetrain {
     std::string gear_configuration;   // 3-letter string of Es or Ps to denote epicyclic or parallel
                                       // gear configuration
     std::vector<int> planet_numbers;  // Number of planets for epicyclic stages (use 0 for parallel)
+
+    void parse(const YAML::Node& node) {
+        uptilt = node["uptilt"] ? node["uptilt"].as<double>() : 0.;
+        distance_tt_hub = node["distance_tt_hub"] ? node["distance_tt_hub"].as<double>() : 0.;
+        distance_hub_mb = node["distance_hub_mb"] ? node["distance_hub_mb"].as<double>() : 0.;
+        distance_mb_mb = node["distance_mb_mb"] ? node["distance_mb_mb"].as<double>() : 0.;
+        overhang = node["overhang"] ? node["overhang"].as<double>() : 0.;
+        generator_length = node["generator_length"] ? node["generator_length"].as<double>() : 0.;
+        generator_radius_user =
+            node["generator_radius_user"] ? node["generator_radius_user"].as<double>() : 0.;
+        generator_mass_user =
+            node["generator_mass_user"] ? node["generator_mass_user"].as<double>() : 0.;
+        if (node["generator_rpm_efficiency_user"]) {
+            generator_rpm_efficiency_user.parse(node["generator_rpm_efficiency_user"]);
+        }
+        gear_ratio = node["gear_ratio"] ? node["gear_ratio"].as<double>() : 0.;
+        gearbox_length_user =
+            node["gearbox_length_user"] ? node["gearbox_length_user"].as<double>() : 0.;
+        gearbox_radius_user =
+            node["gearbox_radius_user"] ? node["gearbox_radius_user"].as<double>() : 0.;
+        gearbox_mass_user = node["gearbox_mass_user"] ? node["gearbox_mass_user"].as<double>() : 0.;
+        gearbox_efficiency =
+            node["gearbox_efficiency"] ? node["gearbox_efficiency"].as<double>() : 0.;
+        damping_ratio = node["damping_ratio"] ? node["damping_ratio"].as<double>() : 0.;
+        lss_diameter = node["lss_diameter"] ? node["lss_diameter"].as<std::vector<double>>()
+                                            : std::vector<double>();
+        lss_wall_thickness = node["lss_wall_thickness"]
+                                 ? node["lss_wall_thickness"].as<std::vector<double>>()
+                                 : std::vector<double>();
+        lss_material = node["lss_material"] ? node["lss_material"].as<std::string>() : "";
+        hss_length = node["hss_length"] ? node["hss_length"].as<double>() : 0.;
+        hss_diameter = node["hss_diameter"] ? node["hss_diameter"].as<std::vector<double>>()
+                                            : std::vector<double>();
+        hss_wall_thickness = node["hss_wall_thickness"]
+                                 ? node["hss_wall_thickness"].as<std::vector<double>>()
+                                 : std::vector<double>();
+        hss_material = node["hss_material"] ? node["hss_material"].as<std::string>() : "";
+        nose_diameter = node["nose_diameter"] ? node["nose_diameter"].as<std::vector<double>>()
+                                              : std::vector<double>();
+        nose_wall_thickness = node["nose_wall_thickness"]
+                                  ? node["nose_wall_thickness"].as<std::vector<double>>()
+                                  : std::vector<double>();
+        if (node["bedplate_wall_thickness"]) {
+            bedplate_wall_thickness.parse(node["bedplate_wall_thickness"]);
+        }
+        bedplate_flange_width =
+            node["bedplate_flange_width"] ? node["bedplate_flange_width"].as<double>() : 0.;
+        bedplate_flange_thickness =
+            node["bedplate_flange_thickness"] ? node["bedplate_flange_thickness"].as<double>() : 0.;
+        bedplate_web_thickness =
+            node["bedplate_web_thickness"] ? node["bedplate_web_thickness"].as<double>() : 0.;
+        brake_mass_user = node["brake_mass_user"] ? node["brake_mass_user"].as<double>() : 0.;
+        hvac_mass_coefficient =
+            node["hvac_mass_coefficient"] ? node["hvac_mass_coefficient"].as<double>() : 0.;
+        converter_mass_user =
+            node["converter_mass_user"] ? node["converter_mass_user"].as<double>() : 0.;
+        transformer_mass_user =
+            node["transformer_mass_user"] ? node["transformer_mass_user"].as<double>() : 0.;
+        bedplate_material =
+            node["bedplate_material"] ? node["bedplate_material"].as<std::string>() : "";
+        mb1Type = node["mb1Type"] ? node["mb1Type"].as<std::string>() : "";
+        mb2Type = node["mb2Type"] ? node["mb2Type"].as<std::string>() : "";
+        uptower = node["uptower"] ? node["uptower"].as<bool>() : false;
+        gear_configuration =
+            node["gear_configuration"] ? node["gear_configuration"].as<std::string>() : "";
+        planet_numbers = node["planet_numbers"] ? node["planet_numbers"].as<std::vector<int>>()
+                                                : std::vector<int>();
+    }
 };
 
 // Generator
@@ -651,24 +1309,100 @@ struct Generator {
     double C_Fe;         // Structural steel cost
     double C_Fes;        // Electrical steel cost
     double C_PM;         // Permanent magnet cost
+
+    void parse(const YAML::Node& node) {
+        mass_coefficient = node["mass_coefficient"] ? node["mass_coefficient"].as<double>() : 0.;
+        generator_type = node["generator_type"] ? node["generator_type"].as<std::string>() : "";
+        B_r = node["B_r"] ? node["B_r"].as<double>() : 0.;
+        P_Fe0e = node["P_Fe0e"] ? node["P_Fe0e"].as<double>() : 0.;
+        P_Fe0h = node["P_Fe0h"] ? node["P_Fe0h"].as<double>() : 0.;
+        S_N = node["S_N"] ? node["S_N"].as<double>() : 0.;
+        S_Nmax = node["S_Nmax"] ? node["S_Nmax"].as<double>() : 0.;
+        alpha_p = node["alpha_p"] ? node["alpha_p"].as<double>() : 0.;
+        b_r_tau_r = node["b_r_tau_r"] ? node["b_r_tau_r"].as<double>() : 0.;
+        b_ro = node["b_ro"] ? node["b_ro"].as<double>() : 0.;
+        b_s_tau_s = node["b_s_tau_s"] ? node["b_s_tau_s"].as<double>() : 0.;
+        b_so = node["b_so"] ? node["b_so"].as<double>() : 0.;
+        cofi = node["cofi"] ? node["cofi"].as<double>() : 0.;
+        freq = node["freq"] ? node["freq"].as<double>() : 0.;
+        h_i = node["h_i"] ? node["h_i"].as<double>() : 0.;
+        h_sy0 = node["h_sy0"] ? node["h_sy0"].as<double>() : 0.;
+        h_w = node["h_w"] ? node["h_w"].as<double>() : 0.;
+        k_fes = node["k_fes"] ? node["k_fes"].as<double>() : 0.;
+        k_fillr = node["k_fillr"] ? node["k_fillr"].as<double>() : 0.;
+        k_fills = node["k_fills"] ? node["k_fills"].as<double>() : 0.;
+        k_s = node["k_s"] ? node["k_s"].as<double>() : 0.;
+        m = node["m"] ? node["m"].as<int>() : 0;
+        mu_0 = node["mu_0"] ? node["mu_0"].as<double>() : 0.;
+        mu_r = node["mu_r"] ? node["mu_r"].as<double>() : 0.;
+        p = node["p"] ? node["p"].as<double>() : 0.;
+        phi = node["phi"] ? node["phi"].as<double>() : 0.;
+        q1 = node["q1"] ? node["q1"].as<int>() : 0;
+        q3 = node["q3"] ? node["q3"].as<int>() : 0;
+        ratio_mw2pp = node["ratio_mw2pp"] ? node["ratio_mw2pp"].as<double>() : 0.;
+        resist_Cu = node["resist_Cu"] ? node["resist_Cu"].as<double>() : 0.;
+        sigma = node["sigma"] ? node["sigma"].as<double>() : 0.;
+        y_tau_p = node["y_tau_p"] ? node["y_tau_p"].as<double>() : 0.;
+        y_tau_pr = node["y_tau_pr"] ? node["y_tau_pr"].as<double>() : 0.;
+        I_0 = node["I_0"] ? node["I_0"].as<double>() : 0.;
+        d_r = node["d_r"] ? node["d_r"].as<double>() : 0.;
+        h_m = node["h_m"] ? node["h_m"].as<double>() : 0.;
+        h_0 = node["h_0"] ? node["h_0"].as<double>() : 0.;
+        h_s = node["h_s"] ? node["h_s"].as<double>() : 0.;
+        len_s = node["len_s"] ? node["len_s"].as<double>() : 0.;
+        n_r = node["n_r"] ? node["n_r"].as<double>() : 0.;
+        rad_ag = node["rad_ag"] ? node["rad_ag"].as<double>() : 0.;
+        t_wr = node["t_wr"] ? node["t_wr"].as<double>() : 0.;
+        n_s = node["n_s"] ? node["n_s"].as<double>() : 0.;
+        b_st = node["b_st"] ? node["b_st"].as<double>() : 0.;
+        d_s = node["d_s"] ? node["d_s"].as<double>() : 0.;
+        t_ws = node["t_ws"] ? node["t_ws"].as<double>() : 0.;
+        rho_Copper = node["rho_Copper"] ? node["rho_Copper"].as<double>() : 0.;
+        rho_Fe = node["rho_Fe"] ? node["rho_Fe"].as<double>() : 0.;
+        rho_Fes = node["rho_Fes"] ? node["rho_Fes"].as<double>() : 0.;
+        rho_PM = node["rho_PM"] ? node["rho_PM"].as<double>() : 0.;
+        C_Cu = node["C_Cu"] ? node["C_Cu"].as<double>() : 0.;
+        C_Fe = node["C_Fe"] ? node["C_Fe"].as<double>() : 0.;
+        C_Fes = node["C_Fes"] ? node["C_Fes"].as<double>() : 0.;
+        C_PM = node["C_PM"] ? node["C_PM"].as<double>() : 0.;
+    }
 };
 
 // Nacelle
 struct Nacelle {
     Drivetrain drivetrain;  // Inputs to WISDEM specific drivetrain sizing tool, DrivetrainSE
     Generator generator;
+
+    void parse(const YAML::Node& node) {
+        if (node["drivetrain"]) {
+            drivetrain.parse(node["drivetrain"]);
+        }
+        if (node["generator"]) {
+            generator.parse(node["generator"]);
+        }
+    }
 };
 
 // OuterDiameter
 struct OuterDiameter {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // DragCoefficient
 struct DragCoefficient {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // OuterShapeBem_2
@@ -676,6 +1410,18 @@ struct OuterShapeBem_2 {
     ReferenceAxis reference_axis;
     OuterDiameter outer_diameter;
     DragCoefficient drag_coefficient;
+
+    void parse(const YAML::Node& node) {
+        if (node["reference_axis"]) {
+            reference_axis.parse(node["reference_axis"]);
+        }
+        if (node["outer_diameter"]) {
+            outer_diameter.parse(node["outer_diameter"]);
+        }
+        if (node["drag_coefficient"]) {
+            drag_coefficient.parse(node["drag_coefficient"]);
+        }
+    }
 };
 
 // InternalStructure2DFem_1
@@ -684,6 +1430,20 @@ struct InternalStructure2DFem_1 {
                                // structures, such as elevator, ladders, cables, platforms, etc
     ReferenceAxis reference_axis;
     std::vector<Layers> layers;  // ...
+
+    void parse(const YAML::Node& node) {
+        outfitting_factor = node["outfitting_factor"] ? node["outfitting_factor"].as<double>() : 0.;
+        if (node["reference_axis"]) {
+            reference_axis.parse(node["reference_axis"]);
+        }
+        if (node["layers"]) {
+            for (const auto& item : node["layers"]) {
+                Layers x;
+                x.parse(item);
+                layers.push_back(x);
+            }
+        }
+    }
 };
 
 // Tower
@@ -691,6 +1451,18 @@ struct Tower {
     OuterShapeBem_2 outer_shape_bem;
     ElasticPropertiesMb elastic_properties_mb;
     InternalStructure2DFem_1 internal_structure_2d_fem;
+
+    void parse(const YAML::Node& node) {
+        if (node["outer_shape_bem"]) {
+            outer_shape_bem.parse(node["outer_shape_bem"]);
+        }
+        if (node["elastic_properties_mb"]) {
+            elastic_properties_mb.parse(node["elastic_properties_mb"]);
+        }
+        if (node["internal_structure_2d_fem"]) {
+            internal_structure_2d_fem.parse(node["internal_structure_2d_fem"]);
+        }
+    }
 };
 
 // OuterShape
@@ -698,6 +1470,18 @@ struct OuterShape {
     ReferenceAxis reference_axis;
     OuterDiameter outer_diameter;
     DragCoefficient drag_coefficient;
+
+    void parse(const YAML::Node& node) {
+        if (node["reference_axis"]) {
+            reference_axis.parse(node["reference_axis"]);
+        }
+        if (node["outer_diameter"]) {
+            outer_diameter.parse(node["outer_diameter"]);
+        }
+        if (node["drag_coefficient"]) {
+            drag_coefficient.parse(node["drag_coefficient"]);
+        }
+    }
 };
 
 // InternalStructure2DFem_2
@@ -706,6 +1490,20 @@ struct InternalStructure2DFem_2 {
                                // structures, such as elevator, ladders, cables, platforms, etc
     ReferenceAxis reference_axis;
     std::vector<Layers> layers;  // ...
+
+    void parse(const YAML::Node& node) {
+        outfitting_factor = node["outfitting_factor"] ? node["outfitting_factor"].as<double>() : 0.;
+        if (node["reference_axis"]) {
+            reference_axis.parse(node["reference_axis"]);
+        }
+        if (node["layers"]) {
+            for (const auto& item : node["layers"]) {
+                Layers x;
+                x.parse(item);
+                layers.push_back(x);
+            }
+        }
+    }
 };
 
 // Monopile
@@ -716,6 +1514,24 @@ struct Monopile {
     OuterShape outer_shape;
     ElasticPropertiesMb elastic_properties_mb;
     InternalStructure2DFem_2 internal_structure_2d_fem;
+
+    void parse(const YAML::Node& node) {
+        transition_piece_mass =
+            node["transition_piece_mass"] ? node["transition_piece_mass"].as<double>() : 0.;
+        transition_piece_cost =
+            node["transition_piece_cost"] ? node["transition_piece_cost"].as<double>() : 0.;
+        gravity_foundation_mass =
+            node["gravity_foundation_mass"] ? node["gravity_foundation_mass"].as<double>() : 0.;
+        if (node["outer_shape"]) {
+            outer_shape.parse(node["outer_shape"]);
+        }
+        if (node["elastic_properties_mb"]) {
+            elastic_properties_mb.parse(node["elastic_properties_mb"]);
+        }
+        if (node["internal_structure_2d_fem"]) {
+            internal_structure_2d_fem.parse(node["internal_structure_2d_fem"]);
+        }
+    }
 };
 
 // Jacket
@@ -736,6 +1552,33 @@ struct Jacket {
     std::vector<double> leg_spacing;
     bool x_mb;            // Mud brace included if true.
     double leg_diameter;  // Leg diameter, meters. Constant throughout each leg.
+
+    void parse(const YAML::Node& node) {
+        transition_piece_mass =
+            node["transition_piece_mass"] ? node["transition_piece_mass"].as<double>() : 0.;
+        transition_piece_cost =
+            node["transition_piece_cost"] ? node["transition_piece_cost"].as<double>() : 0.;
+        gravity_foundation_mass =
+            node["gravity_foundation_mass"] ? node["gravity_foundation_mass"].as<double>() : 0.;
+        material = node["material"] ? node["material"].as<std::string>() : "";
+        n_bays = node["n_bays"] ? node["n_bays"].as<int>() : 0;
+        n_legs = node["n_legs"] ? node["n_legs"].as<int>() : 0;
+        r_foot = node["r_foot"] ? node["r_foot"].as<double>() : 0.;
+        r_head = node["r_head"] ? node["r_head"].as<double>() : 0.;
+        height = node["height"] ? node["height"].as<double>() : 0.;
+        leg_thickness = node["leg_thickness"] ? node["leg_thickness"].as<double>() : 0.;
+        brace_diameters = node["brace_diameters"] ? node["brace_diameters"].as<std::vector<double>>()
+                                                  : std::vector<double>();
+        brace_thicknesses = node["brace_thicknesses"]
+                                ? node["brace_thicknesses"].as<std::vector<double>>()
+                                : std::vector<double>();
+        bay_spacing = node["bay_spacing"] ? node["bay_spacing"].as<std::vector<double>>()
+                                          : std::vector<double>();
+        leg_spacing = node["leg_spacing"] ? node["leg_spacing"].as<std::vector<double>>()
+                                          : std::vector<double>();
+        x_mb = node["x_mb"] ? node["x_mb"].as<bool>() : false;
+        leg_diameter = node["leg_diameter"] ? node["leg_diameter"].as<double>() : 0.;
+    }
 };
 
 // If this joint is compliant is certain DOFs, then specify which are compliant (True) in the
@@ -752,6 +1595,16 @@ struct Reactions {
                                 // the Reaction coordinate system relative to the global coordinate
                                 // system α is a rotation around the z axis, β is a rotation around
                                 // the x' axis, γ is a rotation around the z" axis.
+
+    void parse(const YAML::Node& node) {
+        Rx = node["Rx"] ? node["Rx"].as<bool>() : false;
+        Ry = node["Ry"] ? node["Ry"].as<bool>() : false;
+        Rz = node["Rz"] ? node["Rz"].as<bool>() : false;
+        Rxx = node["Rxx"] ? node["Rxx"].as<bool>() : false;
+        Ryy = node["Ryy"] ? node["Ryy"].as<bool>() : false;
+        Rzz = node["Rzz"] ? node["Rzz"].as<bool>() : false;
+        Euler = node["Euler"] ? node["Euler"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Joints
@@ -766,6 +1619,17 @@ struct Joints {
                           // compliant (True) in the member/element coordinate system).  If not
                           // specified, default is all entries are False (completely rigid).  For
                           // instance, a ball joint would be Rx=Ry=Rz=False, Rxx=Ryy=Rzz=True
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        location =
+            node["location"] ? node["location"].as<std::vector<double>>() : std::vector<double>();
+        transition = node["transition"] ? node["transition"].as<bool>() : false;
+        cylindrical = node["cylindrical"] ? node["cylindrical"].as<bool>() : false;
+        if (node["reactions"]) {
+            reactions.parse(node["reactions"]);
+        }
+    }
 };
 
 // OuterShape_1
@@ -782,6 +1646,19 @@ struct OuterShape_1 {
     double rotation;  // Angle between principle axes of the cross-section and the member coordinate
                       // system.  Essentially the rotation of the member if both joints were placed
                       // on the global x-y axis with the first side length along the z-axis
+
+    void parse(const YAML::Node& node) {
+        shape = node["shape"] ? node["shape"].as<std::string>() : "";
+        if (node["outer_diameter"]) {
+            outer_diameter.parse(node["outer_diameter"]);
+        }
+        side_lengths1 = node["side_lengths1"] ? node["side_lengths1"].as<std::vector<double>>()
+                                              : std::vector<double>();
+        side_lengths2 = node["side_lengths2"] ? node["side_lengths2"].as<std::vector<double>>()
+                                              : std::vector<double>();
+        angles = node["angles"] ? node["angles"].as<std::vector<double>>() : std::vector<double>();
+        rotation = node["rotation"] ? node["rotation"].as<double>() : 0.;
+    }
 };
 
 // Layers_1
@@ -790,6 +1667,14 @@ struct Layers_1 {
     std::string material;  // material identifier
     Thickness thickness;   // Gridded values describing thickness along non-dimensional axis from
                            // joint1 to joint2
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        material = node["material"] ? node["material"].as<std::string>() : "";
+        if (node["thickness"]) {
+            thickness.parse(node["thickness"]);
+        }
+    }
 };
 
 // RingStiffeners
@@ -801,6 +1686,15 @@ struct RingStiffeners {
     double web_thickness;
     double spacing;  // Spacing between stiffeners in non-dimensional grid coordinates. Value of 0.0
                      // means no stiffeners
+
+    void parse(const YAML::Node& node) {
+        material = node["material"] ? node["material"].as<std::string>() : "";
+        flange_thickness = node["flange_thickness"] ? node["flange_thickness"].as<double>() : 0.;
+        flange_width = node["flange_width"] ? node["flange_width"].as<double>() : 0.;
+        web_height = node["web_height"] ? node["web_height"].as<double>() : 0.;
+        web_thickness = node["web_thickness"] ? node["web_thickness"].as<double>() : 0.;
+        spacing = node["spacing"] ? node["spacing"].as<double>() : 0.;
+    }
 };
 
 // LongitudinalStiffeners
@@ -812,6 +1706,15 @@ struct LongitudinalStiffeners {
     double web_thickness;
     double
         spacing;  // Spacing between stiffeners in angle (radians). Value of 0.0 means no stiffeners
+
+    void parse(const YAML::Node& node) {
+        material = node["material"] ? node["material"].as<std::string>() : "";
+        flange_thickness = node["flange_thickness"] ? node["flange_thickness"].as<double>() : 0.;
+        flange_width = node["flange_width"] ? node["flange_width"].as<double>() : 0.;
+        web_height = node["web_height"] ? node["web_height"].as<double>() : 0.;
+        web_thickness = node["web_thickness"] ? node["web_thickness"].as<double>() : 0.;
+        spacing = node["spacing"] ? node["spacing"].as<double>() : 0.;
+    }
 };
 
 // Bulkhead
@@ -819,6 +1722,13 @@ struct Bulkhead {
     std::string material;  // material identifier
     Thickness
         thickness;  // thickness of the bulkhead at non-dimensional locations of the member [0..1]
+
+    void parse(const YAML::Node& node) {
+        material = node["material"] ? node["material"].as<std::string>() : "";
+        if (node["thickness"]) {
+            thickness.parse(node["thickness"]);
+        }
+    }
 };
 
 // Ballast
@@ -828,6 +1738,13 @@ struct Ballast {
     std::string material;  // material identifier
     std::vector<double> grid;
     double volume;  // Total volume of ballast (permanent ballast only)
+
+    void parse(const YAML::Node& node) {
+        variable_flag = node["variable_flag"] ? node["variable_flag"].as<bool>() : false;
+        material = node["material"] ? node["material"].as<std::string>() : "";
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        volume = node["volume"] ? node["volume"].as<double>() : 0.;
+    }
 };
 
 // InternalStructure
@@ -840,12 +1757,44 @@ struct InternalStructure {
     LongitudinalStiffeners longitudinal_stiffeners;
     Bulkhead bulkhead;
     std::vector<Ballast> ballast;  // Different types of permanent and/or variable ballast
+
+    void parse(const YAML::Node& node) {
+        outfitting_factor = node["outfitting_factor"] ? node["outfitting_factor"].as<double>() : 0.;
+        if (node["layers"]) {
+            for (const auto& item : node["layers"]) {
+                Layers_1 x;
+                x.parse(item);
+                layers.push_back(x);
+            }
+        }
+        if (node["ring_stiffeners"]) {
+            ring_stiffeners.parse(node["ring_stiffeners"]);
+        }
+        if (node["longitudinal_stiffeners"]) {
+            longitudinal_stiffeners.parse(node["longitudinal_stiffeners"]);
+        }
+        if (node["bulkhead"]) {
+            bulkhead.parse(node["bulkhead"]);
+        }
+        if (node["ballast"]) {
+            for (const auto& item : node["ballast"]) {
+                Ballast x;
+                x.parse(item);
+                ballast.push_back(x);
+            }
+        }
+    }
 };
 
 // AxialJoints
 struct AxialJoints {
     std::string name;  // Unique name of joint
     double grid;       // Non-dimensional value along member axis
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        grid = node["grid"] ? node["grid"].as<double>() : 0.;
+    }
 };
 
 // Members
@@ -860,6 +1809,28 @@ struct Members {
     double Ca;         // User-defined added mass coefficient
     double Cp;         // User-defined pressure coefficient
     double Cd;         // User-defined drag coefficient
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        joint1 = node["joint1"] ? node["joint1"].as<std::string>() : "";
+        joint2 = node["joint2"] ? node["joint2"].as<std::string>() : "";
+        if (node["outer_shape"]) {
+            outer_shape.parse(node["outer_shape"]);
+        }
+        if (node["internal_structure"]) {
+            internal_structure.parse(node["internal_structure"]);
+        }
+        if (node["axial_joints"]) {
+            for (const auto& item : node["axial_joints"]) {
+                AxialJoints x;
+                x.parse(item);
+                axial_joints.push_back(x);
+            }
+        }
+        Ca = node["Ca"] ? node["Ca"].as<double>() : 0.;
+        Cp = node["Cp"] ? node["Cp"].as<double>() : 0.;
+        Cd = node["Cd"] ? node["Cd"].as<double>() : 0.;
+    }
 };
 
 // RigidBodies
@@ -873,6 +1844,20 @@ struct RigidBodies {
     double Ca;                               // User-defined added mass coefficient
     double Cp;                               // User-defined pressure coefficient
     double Cd;                               // User-defined drag coefficient
+
+    void parse(const YAML::Node& node) {
+        joint1 = node["joint1"] ? node["joint1"].as<std::string>() : "";
+        mass = node["mass"] ? node["mass"].as<double>() : 0.;
+        cost = node["cost"] ? node["cost"].as<double>() : 0.;
+        cm_offset =
+            node["cm_offset"] ? node["cm_offset"].as<std::vector<double>>() : std::vector<double>();
+        moments_of_inertia = node["moments_of_inertia"]
+                                 ? node["moments_of_inertia"].as<std::vector<double>>()
+                                 : std::vector<double>();
+        Ca = node["Ca"] ? node["Ca"].as<double>() : 0.;
+        Cp = node["Cp"] ? node["Cp"].as<double>() : 0.;
+        Cd = node["Cd"] ? node["Cd"].as<double>() : 0.;
+    }
 };
 
 // Ontology definition for floating platforms (substructures) suitable for use with the WEIS
@@ -883,6 +1868,34 @@ struct FloatingPlatform {
     std::vector<RigidBodies> rigid_bodies;
     double transition_piece_mass;  // Total mass of transition piece
     double transition_piece_cost;  // Total cost of transition piece
+
+    void parse(const YAML::Node& node) {
+        if (node["joints"]) {
+            for (const auto& item : node["joints"]) {
+                Joints x;
+                x.parse(item);
+                joints.push_back(x);
+            }
+        }
+        if (node["members"]) {
+            for (const auto& item : node["members"]) {
+                Members x;
+                x.parse(item);
+                members.push_back(x);
+            }
+        }
+        if (node["rigid_bodies"]) {
+            for (const auto& item : node["rigid_bodies"]) {
+                RigidBodies x;
+                x.parse(item);
+                rigid_bodies.push_back(x);
+            }
+        }
+        transition_piece_mass =
+            node["transition_piece_mass"] ? node["transition_piece_mass"].as<double>() : 0.;
+        transition_piece_cost =
+            node["transition_piece_cost"] ? node["transition_piece_cost"].as<double>() : 0.;
+    }
 };
 
 // Nodes
@@ -904,6 +1917,20 @@ struct Nodes {
                          // directions) to calculate a drag force for the node
     double added_mass;  // Added mass coefficient used along with node volume to calculate added mass
                         // on node
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        node_type = node["node_type"] ? node["node_type"].as<std::string>() : "";
+        location =
+            node["location"] ? node["location"].as<std::vector<double>>() : std::vector<double>();
+        joint = node["joint"] ? node["joint"].as<std::string>() : "";
+        anchor_type = node["anchor_type"] ? node["anchor_type"].as<std::string>() : "";
+        fairlead_type = node["fairlead_type"] ? node["fairlead_type"].as<std::string>() : "";
+        node_mass = node["node_mass"] ? node["node_mass"].as<double>() : 0.;
+        node_volume = node["node_volume"] ? node["node_volume"].as<double>() : 0.;
+        drag_area = node["drag_area"] ? node["drag_area"].as<double>() : 0.;
+        added_mass = node["added_mass"] ? node["added_mass"].as<double>() : 0.;
+    }
 };
 
 // Lines
@@ -913,6 +1940,15 @@ struct Lines {
     double unstretched_length;  // length of line segment prior to tensioning
     std::string node1;          // node id of first line connection
     std::string node2;          // node id of second line connection
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        line_type = node["line_type"] ? node["line_type"].as<std::string>() : "";
+        unstretched_length =
+            node["unstretched_length"] ? node["unstretched_length"].as<double>() : 0.;
+        node1 = node["node1"] ? node["node1"].as<std::string>() : "";
+        node2 = node["node2"] ? node["node2"].as<std::string>() : "";
+    }
 };
 
 // LineTypes
@@ -933,6 +1969,23 @@ struct LineTypes {
                                    // displacement)
     double transverse_drag;        // transverse drag coefficient (with respect to frontal area, d*l)
     double tangential_drag;  // tangential drag coefficient (with respect to surface area, π*d*l)
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        diameter = node["diameter"] ? node["diameter"].as<double>() : 0.;
+        type = node["type"] ? node["type"].as<std::string>() : "";
+        mass_density = node["mass_density"] ? node["mass_density"].as<double>() : 0.;
+        stiffness = node["stiffness"] ? node["stiffness"].as<double>() : 0.;
+        cost = node["cost"] ? node["cost"].as<double>() : 0.;
+        breaking_load = node["breaking_load"] ? node["breaking_load"].as<double>() : 0.;
+        damping = node["damping"] ? node["damping"].as<double>() : 0.;
+        transverse_added_mass =
+            node["transverse_added_mass"] ? node["transverse_added_mass"].as<double>() : 0.;
+        tangential_added_mass =
+            node["tangential_added_mass"] ? node["tangential_added_mass"].as<double>() : 0.;
+        transverse_drag = node["transverse_drag"] ? node["transverse_drag"].as<double>() : 0.;
+        tangential_drag = node["tangential_drag"] ? node["tangential_drag"].as<double>() : 0.;
+    }
 };
 
 // AnchorTypes
@@ -945,6 +1998,15 @@ struct AnchorTypes {
                               // support
     double max_vertical_load;  // Maximum vertical load (perpendicular to the sea floor) that the
                                // anchor can support
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        type = node["type"] ? node["type"].as<std::string>() : "";
+        mass = node["mass"] ? node["mass"].as<double>() : 0.;
+        cost = node["cost"] ? node["cost"].as<double>() : 0.;
+        max_lateral_load = node["max_lateral_load"] ? node["max_lateral_load"].as<double>() : 0.;
+        max_vertical_load = node["max_vertical_load"] ? node["max_vertical_load"].as<double>() : 0.;
+    }
 };
 
 // Ontology definition for mooring systems suitable for use with the WEIS co-design analysis tool
@@ -953,6 +2015,37 @@ struct Mooring {
     std::vector<Lines> lines;           // List of all mooring line properties in the mooring system
     std::vector<LineTypes> line_types;  // List of mooring line properties used in the system
     std::vector<AnchorTypes> anchor_types;  // List of anchor properties used in the system
+
+    void parse(const YAML::Node& node) {
+        if (node["nodes"]) {
+            for (const auto& item : node["nodes"]) {
+                Nodes x;
+                x.parse(item);
+                nodes.push_back(x);
+            }
+        }
+        if (node["lines"]) {
+            for (const auto& item : node["lines"]) {
+                Lines x;
+                x.parse(item);
+                lines.push_back(x);
+            }
+        }
+        if (node["line_types"]) {
+            for (const auto& item : node["line_types"]) {
+                LineTypes x;
+                x.parse(item);
+                line_types.push_back(x);
+            }
+        }
+        if (node["anchor_types"]) {
+            for (const auto& item : node["anchor_types"]) {
+                AnchorTypes x;
+                x.parse(item);
+                anchor_types.push_back(x);
+            }
+        }
+    }
 };
 
 // Components
@@ -968,6 +2061,33 @@ struct Components {
                             // for use with the WEIS co-design analysis tool
     Mooring mooring;        // Ontology definition for mooring systems suitable for use with the WEIS
                             // co-design analysis tool
+
+    void parse(const YAML::Node& node) {
+        if (node["blade"]) {
+            blade.parse(node["blade"]);
+        }
+        if (node["hub"]) {
+            hub.parse(node["hub"]);
+        }
+        if (node["nacelle"]) {
+            nacelle.parse(node["nacelle"]);
+        }
+        if (node["tower"]) {
+            tower.parse(node["tower"]);
+        }
+        if (node["monopile"]) {
+            monopile.parse(node["monopile"]);
+        }
+        if (node["jacket"]) {
+            jacket.parse(node["jacket"]);
+        }
+        if (node["floating_platform"]) {
+            floating_platform.parse(node["floating_platform"]);
+        }
+        if (node["mooring"]) {
+            mooring.parse(node["mooring"]);
+        }
+    }
 };
 
 // Airfoil coordinates described from trailing edge (x=1) along the suction side (y>0) to leading
@@ -975,18 +2095,33 @@ struct Components {
 struct Coordinates {
     std::vector<double> x;
     std::vector<double> y;
+
+    void parse(const YAML::Node& node) {
+        x = node["x"] ? node["x"].as<std::vector<double>>() : std::vector<double>();
+        y = node["y"] ? node["y"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // CL
 struct CL {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // CM
 struct CM {
     std::vector<double> grid;
     std::vector<double> values;
+
+    void parse(const YAML::Node& node) {
+        grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
+        values = node["values"] ? node["values"].as<std::vector<double>>() : std::vector<double>();
+    }
 };
 
 // Lift, drag and moment coefficients expressed in terms of angles of attack
@@ -996,6 +2131,20 @@ struct Polars {
     CL c_l;
     CD c_d;
     CM c_m;
+
+    void parse(const YAML::Node& node) {
+        configuration = node["configuration"] ? node["configuration"].as<std::string>() : "";
+        re = node["re"] ? node["re"].as<double>() : 0.;
+        if (node["c_l"]) {
+            c_l.parse(node["c_l"]);
+        }
+        if (node["c_d"]) {
+            c_d.parse(node["c_d"]);
+        }
+        if (node["c_m"]) {
+            c_m.parse(node["c_m"]);
+        }
+    }
 };
 
 // Airfoils
@@ -1007,6 +2156,24 @@ struct Airfoils {
     double relative_thickness;   // Thickness of the airfoil expressed non-dimensional
     double aerodynamic_center;   // Non-dimensional chordwise coordinate of the aerodynamic center
     std::vector<Polars> polars;  // Different sets of polars at varying conditions
+
+    void parse(const YAML::Node& node) {
+        name = node["name"] ? node["name"].as<std::string>() : "";
+        if (node["coordinates"]) {
+            coordinates.parse(node["coordinates"]);
+        }
+        relative_thickness =
+            node["relative_thickness"] ? node["relative_thickness"].as<double>() : 0.;
+        aerodynamic_center =
+            node["aerodynamic_center"] ? node["aerodynamic_center"].as<double>() : 0.;
+        if (node["polars"]) {
+            for (const auto& item : node["polars"]) {
+                Polars x;
+                x.parse(item);
+                polars.push_back(x);
+            }
+        }
+    }
 };
 
 // Materials
@@ -1017,22 +2184,28 @@ struct Materials {
     int orth;                 // Flag to switch between isotropic (0) and orthotropic (1) materials
     double rho;  // Density of the material. For composites, this is the density of the laminate once
                  // cured
-    double E;  // Stiffness modulus. For orthotropic materials, it consists of an array with E11, E22
-               // and E33.
-    double G;  // Shear stiffness modulus. For orthotropic materials, it consists of an array with
-               // G12, G13 and G23
-    double nu;  // Poisson ratio. For orthotropic materials, it consists of an array with nu12, nu13
-                // and nu23. For isotropic materials, a minimum of -1 and a maximum of 0.5 are
-                // imposed. No limits are imposed to anisotropic materials.
-    double alpha;  // Thermal coefficient of expansion
-    double Xt;  // Ultimate tensile strength. For orthotropic materials, it consists of an array with
-                // the strength in directions 11, 22 and 33. The values must be positive
-    double Xc;  // Ultimate compressive strength. For orthotropic materials, it consists of an array
-                // with the strength in directions 11, 22 and 33. The values must be positive
-    double Xy;  // Ultimate yield strength for metals. For orthotropic materials, it consists of an
-                // array with the strength in directions 12, 13 and 23
-    double S;   // Ultimate shear strength. For orthotropic materials, it consists of an array with
-                // the strength in directions 12, 13 and 23
+    std::variant<double, std::vector<double>> E;  // Stiffness modulus. For orthotropic materials, it
+                                                  // consists of an array with E11, E22 and E33.
+    std::variant<double, std::vector<double>>
+        G;  // Shear stiffness modulus. For orthotropic materials, it consists of an array with G12,
+            // G13 and G23
+    std::variant<double, std::vector<double>>
+        nu;  // Poisson ratio. For orthotropic materials, it consists of an array with nu12, nu13 and
+             // nu23. For isotropic materials, a minimum of -1 and a maximum of 0.5 are imposed. No
+             // limits are imposed to anisotropic materials.
+    std::variant<double, std::vector<double>> alpha;  // Thermal coefficient of expansion
+    std::variant<double, std::vector<double>>
+        Xt;  // Ultimate tensile strength. For orthotropic materials, it consists of an array with
+             // the strength in directions 11, 22 and 33. The values must be positive
+    std::variant<double, std::vector<double>>
+        Xc;  // Ultimate compressive strength. For orthotropic materials, it consists of an array
+             // with the strength in directions 11, 22 and 33. The values must be positive
+    std::variant<double, std::vector<double>>
+        Xy;  // Ultimate yield strength for metals. For orthotropic materials, it consists of an
+             // array with the strength in directions 12, 13 and 23
+    std::variant<double, std::vector<double>>
+        S;  // Ultimate shear strength. For orthotropic materials, it consists of an array with the
+            // strength in directions 12, 13 and 23
     double ply_t;      // Ply thickness of the composite material
     double unit_cost;  // Unit cost of the material. For composites, this is the unit cost of the dry
                        // fabric.
@@ -1054,9 +2227,9 @@ struct Materials {
                   // Laboratories
     double alp0;  // Fracture angle under pure transverse compression. It is used by NuMAD from
                   // Sandia National Laboratories
-    double A;     // Fatigue S/N curve fitting parameter S=A*N^(-1/m)
-    double m;     // Fatigue S/N curve fitting parameter S=A*N^(-1/m)
-    double R;     // Fatigue stress ratio
+    std::variant<double, std::vector<double>> A;  // Fatigue S/N curve fitting parameter S=A*N^(-1/m)
+    std::variant<double, std::vector<double>> m;  // Fatigue S/N curve fitting parameter S=A*N^(-1/m)
+    std::variant<double, std::vector<double>> R;  // Fatigue stress ratio
 
     void parse(const YAML::Node& node) {
         name = node["name"] ? node["name"].as<std::string>() : "";
@@ -1064,14 +2237,46 @@ struct Materials {
         source = node["source"] ? node["source"].as<std::string>() : "";
         orth = node["orth"] ? node["orth"].as<int>() : 0;
         rho = node["rho"] ? node["rho"].as<double>() : 0.;
-        E = node["E"] ? node["E"].as<double>() : 0.;
-        G = node["G"] ? node["G"].as<double>() : 0.;
-        nu = node["nu"] ? node["nu"].as<double>() : 0.;
-        alpha = node["alpha"] ? node["alpha"].as<double>() : 0.;
-        Xt = node["Xt"] ? node["Xt"].as<double>() : 0.;
-        Xc = node["Xc"] ? node["Xc"].as<double>() : 0.;
-        Xy = node["Xy"] ? node["Xy"].as<double>() : 0.;
-        S = node["S"] ? node["S"].as<double>() : 0.;
+        if (!orth) {
+            E = node["E"] ? node["E"].as<double>() : 0.;
+        } else {
+            E = node["E"] ? node["E"].as<std::vector<double>>() : std::vector<double>();
+        }
+        if (!orth) {
+            G = node["G"] ? node["G"].as<double>() : 0.;
+        } else {
+            G = node["G"] ? node["G"].as<std::vector<double>>() : std::vector<double>();
+        }
+        if (!orth) {
+            nu = node["nu"] ? node["nu"].as<double>() : 0.;
+        } else {
+            nu = node["nu"] ? node["nu"].as<std::vector<double>>() : std::vector<double>();
+        }
+        if (!orth) {
+            alpha = node["alpha"] ? node["alpha"].as<double>() : 0.;
+        } else {
+            alpha = node["alpha"] ? node["alpha"].as<std::vector<double>>() : std::vector<double>();
+        }
+        if (!orth) {
+            Xt = node["Xt"] ? node["Xt"].as<double>() : 0.;
+        } else {
+            Xt = node["Xt"] ? node["Xt"].as<std::vector<double>>() : std::vector<double>();
+        }
+        if (!orth) {
+            Xc = node["Xc"] ? node["Xc"].as<double>() : 0.;
+        } else {
+            Xc = node["Xc"] ? node["Xc"].as<std::vector<double>>() : std::vector<double>();
+        }
+        if (!orth) {
+            Xy = node["Xy"] ? node["Xy"].as<double>() : 0.;
+        } else {
+            Xy = node["Xy"] ? node["Xy"].as<std::vector<double>>() : std::vector<double>();
+        }
+        if (!orth) {
+            S = node["S"] ? node["S"].as<double>() : 0.;
+        } else {
+            S = node["S"] ? node["S"].as<std::vector<double>>() : std::vector<double>();
+        }
         ply_t = node["ply_t"] ? node["ply_t"].as<double>() : 0.;
         unit_cost = node["unit_cost"] ? node["unit_cost"].as<double>() : 0.;
         fvf = node["fvf"] ? node["fvf"].as<double>() : 0.;
@@ -1095,6 +2300,12 @@ struct Supervisory {
     double Vin;    // Cut-in wind speed of the wind turbine.
     double Vout;   // Cut-out wind speed of the wind turbine.
     double maxTS;  // Maximum allowable blade tip speed.
+
+    void parse(const YAML::Node& node) {
+        Vin = node["Vin"] ? node["Vin"].as<double>() : 0.;
+        Vout = node["Vout"] ? node["Vout"].as<double>() : 0.;
+        maxTS = node["maxTS"] ? node["maxTS"].as<double>() : 0.;
+    }
 };
 
 // Pitch_1
@@ -1102,6 +2313,11 @@ struct Pitch_1 {
     double min_pitch;       // Minimum pitch angle, where the default is 0 degrees. It is used by the
                             // ROSCO controller (https://github.com/NREL/ROSCO)
     double max_pitch_rate;  // Maximum pitch rate of the rotor blades.
+
+    void parse(const YAML::Node& node) {
+        min_pitch = node["min_pitch"] ? node["min_pitch"].as<double>() : 0.;
+        max_pitch_rate = node["max_pitch_rate"] ? node["max_pitch_rate"].as<double>() : 0.;
+    }
 };
 
 // Torque
@@ -1113,6 +2329,13 @@ struct Torque {
                        // (https://github.com/NREL/ROSCO)
     double VS_maxspd;  // Maximum rotor speed. It is used by the ROSCO controller
                        // (https://github.com/NREL/ROSCO)
+
+    void parse(const YAML::Node& node) {
+        max_torque_rate = node["max_torque_rate"] ? node["max_torque_rate"].as<double>() : 0.;
+        tsr = node["tsr"] ? node["tsr"].as<double>() : 0.;
+        VS_minspd = node["VS_minspd"] ? node["VS_minspd"].as<double>() : 0.;
+        VS_maxspd = node["VS_maxspd"] ? node["VS_maxspd"].as<double>() : 0.;
+    }
 };
 
 // Control
@@ -1120,6 +2343,18 @@ struct Control {
     Supervisory supervisory;
     Pitch_1 pitch;
     Torque torque;
+
+    void parse(const YAML::Node& node) {
+        if (node["supervisory"]) {
+            supervisory.parse(node["supervisory"]);
+        }
+        if (node["pitch"]) {
+            pitch.parse(node["pitch"]);
+        }
+        if (node["torque"]) {
+            torque.parse(node["torque"]);
+        }
+    }
 };
 
 // Environment
@@ -1139,6 +2374,27 @@ struct Environment {
     double soil_poisson;          // Poisson ratio of the soil.
     double V_mean;  // Average inflow wind speed. If different than 0, this will overwrite the V mean
                     // of the IEC wind class
+
+    void parse(const YAML::Node& node) {
+        gravity = node["gravity"] ? node["gravity"].as<double>() : 0.;
+        air_density = node["air_density"] ? node["air_density"].as<double>() : 0.;
+        air_dyn_viscosity = node["air_dyn_viscosity"] ? node["air_dyn_viscosity"].as<double>() : 0.;
+        air_pressure = node["air_pressure"] ? node["air_pressure"].as<double>() : 0.;
+        air_vapor_pressure =
+            node["air_vapor_pressure"] ? node["air_vapor_pressure"].as<double>() : 0.;
+        weib_shape_parameter =
+            node["weib_shape_parameter"] ? node["weib_shape_parameter"].as<double>() : 0.;
+        air_speed_sound = node["air_speed_sound"] ? node["air_speed_sound"].as<double>() : 0.;
+        shear_exp = node["shear_exp"] ? node["shear_exp"].as<double>() : 0.;
+        water_density = node["water_density"] ? node["water_density"].as<double>() : 0.;
+        water_dyn_viscosity =
+            node["water_dyn_viscosity"] ? node["water_dyn_viscosity"].as<double>() : 0.;
+        water_depth = node["water_depth"] ? node["water_depth"].as<double>() : 0.;
+        soil_shear_modulus =
+            node["soil_shear_modulus"] ? node["soil_shear_modulus"].as<double>() : 0.;
+        soil_poisson = node["soil_poisson"] ? node["soil_poisson"].as<double>() : 0.;
+        V_mean = node["V_mean"] ? node["V_mean"].as<double>() : 0.;
+    }
 };
 
 // Bos
@@ -1163,6 +2419,40 @@ struct Bos {
     double boem_review_cost;  // Cost for additional review by U.S. Dept of Interior Bureau of Ocean
                               // Energy Management (BOEM)
     double design_install_plan_cost;  // Cost to do installation planning
+
+    void parse(const YAML::Node& node) {
+        plant_turbine_spacing =
+            node["plant_turbine_spacing"] ? node["plant_turbine_spacing"].as<double>() : 0.;
+        plant_row_spacing = node["plant_row_spacing"] ? node["plant_row_spacing"].as<double>() : 0.;
+        commissioning_pct = node["commissioning_pct"] ? node["commissioning_pct"].as<double>() : 0.;
+        decommissioning_pct =
+            node["decommissioning_pct"] ? node["decommissioning_pct"].as<double>() : 0.;
+        distance_to_substation =
+            node["distance_to_substation"] ? node["distance_to_substation"].as<double>() : 0.;
+        distance_to_interconnection = node["distance_to_interconnection"]
+                                          ? node["distance_to_interconnection"].as<double>()
+                                          : 0.;
+        distance_to_landfall =
+            node["distance_to_landfall"] ? node["distance_to_landfall"].as<double>() : 0.;
+        distance_to_site = node["distance_to_site"] ? node["distance_to_site"].as<double>() : 0.;
+        interconnect_voltage =
+            node["interconnect_voltage"] ? node["interconnect_voltage"].as<double>() : 0.;
+        port_cost_per_month =
+            node["port_cost_per_month"] ? node["port_cost_per_month"].as<double>() : 0.;
+        site_auction_price =
+            node["site_auction_price"] ? node["site_auction_price"].as<double>() : 0.;
+        site_assessment_plan_cost =
+            node["site_assessment_plan_cost"] ? node["site_assessment_plan_cost"].as<double>() : 0.;
+        site_assessment_cost =
+            node["site_assessment_cost"] ? node["site_assessment_cost"].as<double>() : 0.;
+        construction_operations_plan_cost =
+            node["construction_operations_plan_cost"]
+                ? node["construction_operations_plan_cost"].as<double>()
+                : 0.;
+        boem_review_cost = node["boem_review_cost"] ? node["boem_review_cost"].as<double>() : 0.;
+        design_install_plan_cost =
+            node["design_install_plan_cost"] ? node["design_install_plan_cost"].as<double>() : 0.;
+    }
 };
 
 // Costs
@@ -1211,6 +2501,66 @@ struct Costs {
     double capacity_credit;    // Capacity credit used to compute value in beyond lcoe metrics
     double
         benchmark_price;  // Benchmark price used to nondimensionalize value in beyond lcoe metrics
+
+    void parse(const YAML::Node& node) {
+        wake_loss_factor = node["wake_loss_factor"] ? node["wake_loss_factor"].as<double>() : 0.;
+        fixed_charge_rate = node["fixed_charge_rate"] ? node["fixed_charge_rate"].as<double>() : 0.;
+        bos_per_kW = node["bos_per_kW"] ? node["bos_per_kW"].as<double>() : 0.;
+        opex_per_kW = node["opex_per_kW"] ? node["opex_per_kW"].as<double>() : 0.;
+        turbine_number = node["turbine_number"] ? node["turbine_number"].as<int>() : 0;
+        labor_rate = node["labor_rate"] ? node["labor_rate"].as<double>() : 0.;
+        painting_rate = node["painting_rate"] ? node["painting_rate"].as<double>() : 0.;
+        blade_mass_cost_coeff =
+            node["blade_mass_cost_coeff"] ? node["blade_mass_cost_coeff"].as<double>() : 0.;
+        hub_mass_cost_coeff =
+            node["hub_mass_cost_coeff"] ? node["hub_mass_cost_coeff"].as<double>() : 0.;
+        pitch_system_mass_cost_coeff = node["pitch_system_mass_cost_coeff"]
+                                           ? node["pitch_system_mass_cost_coeff"].as<double>()
+                                           : 0.;
+        spinner_mass_cost_coeff =
+            node["spinner_mass_cost_coeff"] ? node["spinner_mass_cost_coeff"].as<double>() : 0.;
+        lss_mass_cost_coeff =
+            node["lss_mass_cost_coeff"] ? node["lss_mass_cost_coeff"].as<double>() : 0.;
+        bearing_mass_cost_coeff =
+            node["bearing_mass_cost_coeff"] ? node["bearing_mass_cost_coeff"].as<double>() : 0.;
+        gearbox_mass_cost_coeff =
+            node["gearbox_mass_cost_coeff"] ? node["gearbox_mass_cost_coeff"].as<double>() : 0.;
+        hss_mass_cost_coeff =
+            node["hss_mass_cost_coeff"] ? node["hss_mass_cost_coeff"].as<double>() : 0.;
+        generator_mass_cost_coeff =
+            node["generator_mass_cost_coeff"] ? node["generator_mass_cost_coeff"].as<double>() : 0.;
+        bedplate_mass_cost_coeff =
+            node["bedplate_mass_cost_coeff"] ? node["bedplate_mass_cost_coeff"].as<double>() : 0.;
+        yaw_mass_cost_coeff =
+            node["yaw_mass_cost_coeff"] ? node["yaw_mass_cost_coeff"].as<double>() : 0.;
+        converter_mass_cost_coeff =
+            node["converter_mass_cost_coeff"] ? node["converter_mass_cost_coeff"].as<double>() : 0.;
+        transformer_mass_cost_coeff = node["transformer_mass_cost_coeff"]
+                                          ? node["transformer_mass_cost_coeff"].as<double>()
+                                          : 0.;
+        hvac_mass_cost_coeff =
+            node["hvac_mass_cost_coeff"] ? node["hvac_mass_cost_coeff"].as<double>() : 0.;
+        cover_mass_cost_coeff =
+            node["cover_mass_cost_coeff"] ? node["cover_mass_cost_coeff"].as<double>() : 0.;
+        elec_connec_machine_rating_cost_coeff =
+            node["elec_connec_machine_rating_cost_coeff"]
+                ? node["elec_connec_machine_rating_cost_coeff"].as<double>()
+                : 0.;
+        platforms_mass_cost_coeff =
+            node["platforms_mass_cost_coeff"] ? node["platforms_mass_cost_coeff"].as<double>() : 0.;
+        tower_mass_cost_coeff =
+            node["tower_mass_cost_coeff"] ? node["tower_mass_cost_coeff"].as<double>() : 0.;
+        controls_machine_rating_cost_coeff =
+            node["controls_machine_rating_cost_coeff"]
+                ? node["controls_machine_rating_cost_coeff"].as<double>()
+                : 0.;
+        crane_cost = node["crane_cost"] ? node["crane_cost"].as<double>() : 0.;
+        electricity_price = node["electricity_price"] ? node["electricity_price"].as<double>() : 0.;
+        reserve_margin_price =
+            node["reserve_margin_price"] ? node["reserve_margin_price"].as<double>() : 0.;
+        capacity_credit = node["capacity_credit"] ? node["capacity_credit"].as<double>() : 0.;
+        benchmark_price = node["benchmark_price"] ? node["benchmark_price"].as<double>() : 0.;
+    }
 };
 
 // Turbine
@@ -1229,15 +2579,37 @@ struct Turbine {
     void parse(const YAML::Node& node) {
         comments = node["comments"] ? node["comments"].as<std::string>() : "";
         name = node["name"] ? node["name"].as<std::string>() : "";
-
         if (node["assembly"]) {
             assembly.parse(node["assembly"]);
         }
-
-        for (std::size_t i = 0; i < node["materials"].size(); i++) {
-            Materials mats;
-            mats.parse(node["materials"][i]);
-            materials.push_back(mats);
+        if (node["components"]) {
+            components.parse(node["components"]);
+        }
+        if (node["airfoils"]) {
+            for (const auto& item : node["airfoils"]) {
+                Airfoils x;
+                x.parse(item);
+                airfoils.push_back(x);
+            }
+        }
+        if (node["materials"]) {
+            for (const auto& item : node["materials"]) {
+                Materials x;
+                x.parse(item);
+                materials.push_back(x);
+            }
+        }
+        if (node["control"]) {
+            control.parse(node["control"]);
+        }
+        if (node["environment"]) {
+            environment.parse(node["environment"]);
+        }
+        if (node["bos"]) {
+            bos.parse(node["bos"]);
+        }
+        if (node["costs"]) {
+            costs.parse(node["costs"]);
         }
     }
 };
