@@ -47,8 +47,8 @@ struct Beams {
     View_Nx6 node_FX;      // External forces
 
     // Quadrature point data
-    View_N qp_weight;               // Integration weights
-    View_N qp_jacobian;             // Jacobian vector
+    View_NxN qp_weight;             // Integration weights
+    View_NxN qp_jacobian;           // Jacobian vector
     View_Nx6x6 qp_Mstar;            // Mass matrix in material frame
     View_Nx6x6 qp_Cstar;            // Stiffness matrix in material frame
     View_Nx3 qp_x0;                 // Initial position
@@ -85,8 +85,9 @@ struct Beams {
     View_Nx6x6 qp_Guu;              // Linearization matrices
     View_Nx6x6 qp_Kuu;              // Linearization matrices
 
-    View_NxN shape_interp;  // shape function matrix for interpolation [Nodes x QPs]
-    View_NxN shape_deriv;   // shape function matrix for derivative interp [Nodes x QPs]
+    Kokkos::View<double***> shape_interp;  // shape function matrix for interpolation [Nodes x QPs]
+    Kokkos::View<double***>
+        shape_deriv;  // shape function matrix for derivative interp [Nodes x QPs]
 
     // Constructor which initializes views based on given sizes
     Beams(
@@ -112,8 +113,8 @@ struct Beams {
           node_FI("node_force_inertial", n_nodes),
           node_FX("node_force_external", n_nodes),
           // Quadrature Point data
-          qp_weight("qp_weight", n_qps),
-          qp_jacobian("qp_jacobian", n_qps),
+          qp_weight("qp_weight", n_beams, max_elem_qps),
+          qp_jacobian("qp_jacobian", n_beams, max_elem_qps),
           qp_Mstar("qp_Mstar", n_qps),
           qp_Cstar("qp_Cstar", n_qps),
           qp_x0("qp_x0", n_qps),
@@ -149,8 +150,8 @@ struct Beams {
           qp_Quu("qp_Quu", n_qps),
           qp_Guu("qp_Guu", n_qps),
           qp_Kuu("qp_Kuu", n_qps),
-          shape_interp("shape_interp", n_nodes, max_e_qps),
-          shape_deriv("deriv_interp", n_nodes, max_e_qps) {}
+          shape_interp("shape_interp", n_beams, max_elem_nodes, max_elem_qps),
+          shape_deriv("deriv_interp", n_beams, max_elem_nodes, max_elem_qps) {}
 };
 
 }  // namespace openturbine

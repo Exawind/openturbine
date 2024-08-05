@@ -216,9 +216,9 @@ void TestIntegrateStiffnessMatrix_2Elements1Node1QP() {
     const auto qp_weights = get_qp_weights<number_of_elements, number_of_qps>({1., 1.});
     const auto qp_jacobian = get_qp_jacobian<number_of_elements, number_of_qps>({1., 1.});
     const auto shape_interp =
-        get_shape_interp<number_of_elements, number_of_nodes, number_of_qps>({1., 0., 1., 0.});
+        get_shape_interp<number_of_elements, number_of_nodes, number_of_qps>({1., 1.});
     const auto shape_interp_deriv =
-        get_shape_interp_deriv<number_of_elements, number_of_nodes, number_of_qps>({1., 0., 1., 0.});
+        get_shape_interp_deriv<number_of_elements, number_of_nodes, number_of_qps>({1., 1.});
 
     const auto qp_Puu = get_qp_Puu<number_of_elements, number_of_qps>(
         {00001., 00002., 00003., 00004., 00005., 00006., 00101., 00102., 00103.,

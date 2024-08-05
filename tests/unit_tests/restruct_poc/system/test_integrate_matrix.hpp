@@ -33,10 +33,12 @@ auto get_node_state_indices() {
 
 template <size_t n_elem, size_t n_qps>
 auto get_qp_vector(std::string_view name, const std::array<double, n_elem * n_qps>& vector_data) {
-    using VectorView = Kokkos::View<double[n_elem * n_qps]>;
-    using HostVectorView = Kokkos::View<const double[n_elem * n_qps], Kokkos::HostSpace>;
+    using VectorView = Kokkos::View<double[n_elem][n_qps]>;
+    using HostVectorView = Kokkos::View<const double[n_elem][n_qps], Kokkos::HostSpace>;
     auto vector = VectorView(std::string{name});
-    const auto host_vector = HostVectorView(vector_data.data());
+    const auto host_vector = Kokkos::create_mirror(vector);
+    const auto vector_data_view = HostVectorView(vector_data.data());
+    Kokkos::deep_copy(host_vector, vector_data_view);
     Kokkos::deep_copy(vector, host_vector);
     return vector;
 }
@@ -53,11 +55,10 @@ auto get_qp_jacobian(const std::array<double, n_elem * n_qps>& jacobian_data) {
 
 template <size_t n_elem, size_t n_nodes, size_t n_qps>
 auto get_shape_matrix(
-    std::string_view name, const std::array<double, n_elem * n_nodes * n_elem * n_qps>& shape_data
+    std::string_view name, const std::array<double, n_elem * n_nodes * n_qps>& shape_data
 ) {
-    using ShapeView = Kokkos::View<double[n_elem * n_nodes][n_elem * n_qps]>;
-    using HostShapeView =
-        Kokkos::View<const double[n_elem * n_nodes][n_elem * n_qps], Kokkos::HostSpace>;
+    using ShapeView = Kokkos::View<double[n_elem][n_nodes][n_qps]>;
+    using HostShapeView = Kokkos::View<const double[n_elem][n_nodes][n_qps], Kokkos::HostSpace>;
     auto shape = ShapeView(std::string{name});
     const auto host_shape = Kokkos::create_mirror(shape);
     const auto shape_data_view = HostShapeView(shape_data.data());
@@ -67,13 +68,12 @@ auto get_shape_matrix(
 }
 
 template <size_t n_elem, size_t n_nodes, size_t n_qps>
-auto get_shape_interp(const std::array<double, n_elem * n_nodes * n_elem * n_qps>& shape_data) {
+auto get_shape_interp(const std::array<double, n_elem * n_nodes * n_qps>& shape_data) {
     return get_shape_matrix<n_elem, n_nodes, n_qps>("shape_interp", shape_data);
 }
 
 template <size_t n_elem, size_t n_nodes, size_t n_qps>
-auto get_shape_interp_deriv(const std::array<double, n_elem * n_nodes * n_elem * n_qps>& shape_data
-) {
+auto get_shape_interp_deriv(const std::array<double, n_elem * n_nodes * n_qps>& shape_data) {
     return get_shape_matrix<n_elem, n_nodes, n_qps>("shape_interp_deriv", shape_data);
 }
 
