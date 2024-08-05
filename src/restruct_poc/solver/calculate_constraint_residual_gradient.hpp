@@ -2,12 +2,12 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "constraints.hpp"
+#include "calculate_cylindrical_constraint.hpp"
 #include "calculate_fixed_bc_constraint.hpp"
 #include "calculate_prescribed_bc_constraint.hpp"
 #include "calculate_rigid_constraint.hpp"
-#include "calculate_cylindrical_constraint.hpp"
 #include "calculate_rotation_control_constraint.hpp"
+#include "constraints.hpp"
 
 #include "src/restruct_poc/math/quaternion_operations.hpp"
 #include "src/restruct_poc/math/vector_operations.hpp"
@@ -27,15 +27,20 @@ struct CalculateConstraintResidualGradient {
     void operator()(const int i_constraint) const {
         const auto& cd = data(i_constraint);
         if (cd.type == ConstraintType::kFixedBC) {
-            CalculateFixedBCConstraint{data, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
+            CalculateFixedBCConstraint{
+                data, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
         } else if (cd.type == ConstraintType::kPrescribedBC) {
-            CalculatePrescribedBCConstraint{data, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
+            CalculatePrescribedBCConstraint{data,   control, constraint_u,
+                                            node_u, Phi_,    gradient_terms}(i_constraint);
         } else if (cd.type == ConstraintType::kRigid) {
-            CalculateRigidConstraint{data, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
+            CalculateRigidConstraint{
+                data, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
         } else if (cd.type == ConstraintType::kCylindrical) {
-            CalculateCylindricalConstraint{data, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
+            CalculateCylindricalConstraint{data,   control, constraint_u,
+                                           node_u, Phi_,    gradient_terms}(i_constraint);
         } else if (cd.type == ConstraintType::kRotationControl) {
-            CalculateRotationControlConstraint{data, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
+            CalculateRotationControlConstraint{data,   control, constraint_u,
+                                               node_u, Phi_,    gradient_terms}(i_constraint);
         }
     }
 };

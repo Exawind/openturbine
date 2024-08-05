@@ -18,7 +18,6 @@ struct CalculatePrescribedBCConstraint {
     View_N Phi_;
     Kokkos::View<double* [6][12]> gradient_terms;
 
-
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
         const auto& cd = data(i_constraint);
@@ -105,7 +104,8 @@ struct CalculatePrescribedBCConstraint {
         //---------------------------------
 
         // Extract gradient block for target node of this constraint
-        const auto B = Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, cd.target_node_col_range);
+        const auto B =
+            Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, cd.target_node_col_range);
 
         // B(0:3,0:3) = I
         for (int i = 0; i < 3; ++i) {

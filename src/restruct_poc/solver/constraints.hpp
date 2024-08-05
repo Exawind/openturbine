@@ -23,12 +23,12 @@ struct Constraints {
         Kokkos::pair<size_t, size_t> row_range;  //< Range of rows in the global stiffness matrix
         Kokkos::pair<size_t, size_t> base_node_col_range;
         Kokkos::pair<size_t, size_t> target_node_col_range;
-        size_t base_node_index;                  //< Base node index
-        size_t target_node_index;                //< Target node index
-        double X0[3];                            //< Initial relative location between nodes
-        double axis_x[3];                        // Unit vector representing x rotation axis
-        double axis_y[3];                        // Unit vector representing y rotation axis
-        double axis_z[3];                        // Unit vector representing z rotation axis
+        size_t base_node_index;    //< Base node index
+        size_t target_node_index;  //< Target node index
+        double X0[3];              //< Initial relative location between nodes
+        double axis_x[3];          // Unit vector representing x rotation axis
+        double axis_y[3];          // Unit vector representing y rotation axis
+        double axis_z[3];          // Unit vector representing z rotation axis
     };
 
     /// @brief HostData struct holds constraint data on host
@@ -81,16 +81,19 @@ struct Constraints {
             host_data(i).row_range = Kokkos::make_pair(start_row, start_row + dofs);
             start_row += dofs;
 
-            if(GetNumberOfNodes(constraints[i]->type) == 2) {
+            if (GetNumberOfNodes(constraints[i]->type) == 2) {
                 const auto target_node_id = constraints[i]->target_node.ID;
                 const auto base_node_id = constraints[i]->base_node.ID;
-                const auto target_start_col = (target_node_id < base_node_id) ? 0U : kLieAlgebraComponents;
-                host_data(i).target_node_col_range = Kokkos::make_pair(target_start_col, target_start_col + kLieAlgebraComponents);
+                const auto target_start_col =
+                    (target_node_id < base_node_id) ? 0U : kLieAlgebraComponents;
+                host_data(i).target_node_col_range =
+                    Kokkos::make_pair(target_start_col, target_start_col + kLieAlgebraComponents);
 
-                const auto base_start_col = (base_node_id < target_node_id) ? 0U : kLieAlgebraComponents;
-                host_data(i).base_node_col_range = Kokkos::make_pair(base_start_col, base_start_col + kLieAlgebraComponents);
-            }
-            else {
+                const auto base_start_col =
+                    (base_node_id < target_node_id) ? 0U : kLieAlgebraComponents;
+                host_data(i).base_node_col_range =
+                    Kokkos::make_pair(base_start_col, base_start_col + kLieAlgebraComponents);
+            } else {
                 host_data(i).target_node_col_range = Kokkos::make_pair(0U, kLieAlgebraComponents);
             }
 

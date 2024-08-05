@@ -113,7 +113,8 @@ struct CalculateRotationControlConstraint {
         //---------------------------------
         {
             // Extract gradient block for target node of this constraint
-            const auto B = Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, cd.target_node_col_range);
+            const auto B =
+                Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, cd.target_node_col_range);
 
             // B(0:3,0:3) = I
             for (int i = 0; i < 3; ++i) {
@@ -133,7 +134,8 @@ struct CalculateRotationControlConstraint {
         //---------------------------------
         {
             // Extract gradient block for base node of this constraint
-            const auto B = Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, cd.base_node_col_range);
+            const auto B =
+                Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, cd.base_node_col_range);
 
             // B(0:3,0:3) = -I
             for (int i = 0; i < 3; ++i) {
