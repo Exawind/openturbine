@@ -14,34 +14,36 @@ TEST(CalculateNodeForcesTests, FE_OneNodeOneQP) {
     constexpr auto num_nodes = 1;
     constexpr auto num_qps = 1;
 
-    const auto weight = Kokkos::View<double[num_qps]>("weight");
+    const auto weight = Kokkos::View<double[1][num_qps]>("weight");
     constexpr auto weight_data = std::array<double, 1>{2.};
     const auto weight_host =
-        Kokkos::View<const double[num_qps], Kokkos::HostSpace>(weight_data.data());
+        Kokkos::View<const double[1][num_qps], Kokkos::HostSpace>(weight_data.data());
     const auto weight_mirror = Kokkos::create_mirror(weight);
     Kokkos::deep_copy(weight_mirror, weight_host);
     Kokkos::deep_copy(weight, weight_mirror);
 
-    const auto jacobian = Kokkos::View<double[num_qps]>("jacobian");
+    const auto jacobian = Kokkos::View<double[1][num_qps]>("jacobian");
     constexpr auto jacobian_data = std::array{3.};
     const auto jacobian_host =
-        Kokkos::View<const double[num_qps], Kokkos::HostSpace>(jacobian_data.data());
+        Kokkos::View<const double[1][num_qps], Kokkos::HostSpace>(jacobian_data.data());
     const auto jacobian_mirror = Kokkos::create_mirror(jacobian);
     Kokkos::deep_copy(jacobian_mirror, jacobian_host);
     Kokkos::deep_copy(jacobian, jacobian_mirror);
 
-    const auto shape_interp = Kokkos::View<double[num_nodes][num_qps]>("shape_interp");
+    const auto shape_interp = Kokkos::View<double[1][num_nodes][num_qps]>("shape_interp");
     constexpr auto shape_interp_data = std::array{4.};
     const auto shape_interp_host =
-        Kokkos::View<const double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
+        Kokkos::View<const double[1][num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data()
+        );
     const auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
     Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
     Kokkos::deep_copy(shape_interp, shape_interp_mirror);
 
-    const auto shape_deriv = Kokkos::View<double[num_nodes][num_qps]>("shape_deriv");
+    const auto shape_deriv = Kokkos::View<double[1][num_nodes][num_qps]>("shape_deriv");
     constexpr auto shape_deriv_data = std::array{5.};
     const auto shape_deriv_host =
-        Kokkos::View<const double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
+        Kokkos::View<const double[1][num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data()
+        );
     const auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
@@ -65,7 +67,8 @@ TEST(CalculateNodeForcesTests, FE_OneNodeOneQP) {
     Kokkos::parallel_for(
         "CalculateNodeForces_FE", num_nodes,
         CalculateNodeForces_FE{
-            first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd, FE}
+            0, first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd,
+            FE}
     );
 
     constexpr auto FE_exact_data = std::array{178., 212., 246., 280., 314., 348.};
@@ -83,34 +86,36 @@ TEST(CalculateNodeForcesTests, FE_TwoNodesTwoQPs) {
     constexpr auto num_nodes = 2;
     constexpr auto num_qps = 2;
 
-    const auto weight = Kokkos::View<double[num_qps]>("weight");
+    const auto weight = Kokkos::View<double[1][num_qps]>("weight");
     constexpr auto weight_data = std::array{2., 3.};
     const auto weight_host =
-        Kokkos::View<const double[num_qps], Kokkos::HostSpace>(weight_data.data());
+        Kokkos::View<const double[1][num_qps], Kokkos::HostSpace>(weight_data.data());
     const auto weight_mirror = Kokkos::create_mirror(weight);
     Kokkos::deep_copy(weight_mirror, weight_host);
     Kokkos::deep_copy(weight, weight_mirror);
 
-    const auto jacobian = Kokkos::View<double[num_qps]>("jacobian");
+    const auto jacobian = Kokkos::View<double[1][num_qps]>("jacobian");
     constexpr auto jacobian_data = std::array{4., 5.};
     const auto jacobian_host =
-        Kokkos::View<const double[num_qps], Kokkos::HostSpace>(jacobian_data.data());
+        Kokkos::View<const double[1][num_qps], Kokkos::HostSpace>(jacobian_data.data());
     const auto jacobian_mirror = Kokkos::create_mirror(jacobian);
     Kokkos::deep_copy(jacobian_mirror, jacobian_host);
     Kokkos::deep_copy(jacobian, jacobian_mirror);
 
-    const auto shape_interp = Kokkos::View<double[num_nodes][num_qps]>("shape_interp");
+    const auto shape_interp = Kokkos::View<double[1][num_nodes][num_qps]>("shape_interp");
     constexpr auto shape_interp_data = std::array{6., 7., 8., 9.};
     const auto shape_interp_host =
-        Kokkos::View<const double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
+        Kokkos::View<const double[1][num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data()
+        );
     const auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
     Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
     Kokkos::deep_copy(shape_interp, shape_interp_mirror);
 
-    const auto shape_deriv = Kokkos::View<double[num_nodes][num_qps]>("shape_deriv");
+    const auto shape_deriv = Kokkos::View<double[1][num_nodes][num_qps]>("shape_deriv");
     constexpr auto shape_deriv_data = std::array{10., 11., 12., 13.};
     const auto shape_deriv_host =
-        Kokkos::View<const double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
+        Kokkos::View<const double[1][num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data()
+        );
     const auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
@@ -134,7 +139,8 @@ TEST(CalculateNodeForcesTests, FE_TwoNodesTwoQPs) {
     Kokkos::parallel_for(
         "CalculateNodeForces_FE", num_nodes,
         CalculateNodeForces_FE{
-            first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd, FE}
+            0, first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd,
+            FE}
     );
 
     constexpr auto FE_exact_data = std::array{2870., 3076., 3282., 3488., 3694., 3900.,
@@ -153,34 +159,36 @@ TEST(CalculateNodeForcesTests, FI_FG_OneNodeOneQP) {
     constexpr auto num_nodes = 1;
     constexpr auto num_qps = 1;
 
-    const auto weight = Kokkos::View<double[num_qps]>("weight");
+    const auto weight = Kokkos::View<double[1][num_qps]>("weight");
     constexpr auto weight_data = std::array{2.};
     const auto weight_host =
-        Kokkos::View<const double[num_qps], Kokkos::HostSpace>(weight_data.data());
+        Kokkos::View<const double[1][num_qps], Kokkos::HostSpace>(weight_data.data());
     const auto weight_mirror = Kokkos::create_mirror(weight);
     Kokkos::deep_copy(weight_mirror, weight_host);
     Kokkos::deep_copy(weight, weight_mirror);
 
-    const auto jacobian = Kokkos::View<double[num_qps]>("jacobian");
+    const auto jacobian = Kokkos::View<double[1][num_qps]>("jacobian");
     constexpr auto jacobian_data = std::array{3.};
     const auto jacobian_host =
-        Kokkos::View<const double[num_qps], Kokkos::HostSpace>(jacobian_data.data());
+        Kokkos::View<const double[1][num_qps], Kokkos::HostSpace>(jacobian_data.data());
     const auto jacobian_mirror = Kokkos::create_mirror(jacobian);
     Kokkos::deep_copy(jacobian_mirror, jacobian_host);
     Kokkos::deep_copy(jacobian, jacobian_mirror);
 
-    const auto shape_interp = Kokkos::View<double[num_nodes][num_qps]>("shape_interp");
+    const auto shape_interp = Kokkos::View<double[1][num_nodes][num_qps]>("shape_interp");
     constexpr auto shape_interp_data = std::array{4.};
     const auto shape_interp_host =
-        Kokkos::View<const double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
+        Kokkos::View<const double[1][num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data()
+        );
     const auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
     Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
     Kokkos::deep_copy(shape_interp, shape_interp_mirror);
 
-    const auto shape_deriv = Kokkos::View<double[num_nodes][num_qps]>("shape_deriv");
+    const auto shape_deriv = Kokkos::View<double[1][num_nodes][num_qps]>("shape_deriv");
     constexpr auto shape_deriv_data = std::array{5.};
     const auto shape_deriv_host =
-        Kokkos::View<const double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
+        Kokkos::View<const double[1][num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data()
+        );
     const auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
@@ -197,7 +205,7 @@ TEST(CalculateNodeForcesTests, FI_FG_OneNodeOneQP) {
     Kokkos::parallel_for(
         "CalculateNodeForces_FI_FG", num_nodes,
         CalculateNodeForces_FI_FG{
-            first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG}
+            0, first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG}
     );
 
     constexpr auto FIG_exact_data = std::array{24., 48., 72., 96., 120., 144.};
@@ -215,34 +223,36 @@ TEST(CalculateNodeForcesTests, FI_FG_TwoNodesTwoQP) {
     constexpr auto num_nodes = 2;
     constexpr auto num_qps = 2;
 
-    const auto weight = Kokkos::View<double[num_qps]>("weight");
+    const auto weight = Kokkos::View<double[1][num_qps]>("weight");
     constexpr auto weight_data = std::array{2., 3.};
     const auto weight_host =
-        Kokkos::View<const double[num_qps], Kokkos::HostSpace>(weight_data.data());
+        Kokkos::View<const double[1][num_qps], Kokkos::HostSpace>(weight_data.data());
     const auto weight_mirror = Kokkos::create_mirror(weight);
     Kokkos::deep_copy(weight_mirror, weight_host);
     Kokkos::deep_copy(weight, weight_mirror);
 
-    const auto jacobian = Kokkos::View<double[num_qps]>("jacobian");
+    const auto jacobian = Kokkos::View<double[1][num_qps]>("jacobian");
     constexpr auto jacobian_data = std::array{4., 5.};
     const auto jacobian_host =
-        Kokkos::View<const double[num_qps], Kokkos::HostSpace>(jacobian_data.data());
+        Kokkos::View<const double[1][num_qps], Kokkos::HostSpace>(jacobian_data.data());
     const auto jacobian_mirror = Kokkos::create_mirror(jacobian);
     Kokkos::deep_copy(jacobian_mirror, jacobian_host);
     Kokkos::deep_copy(jacobian, jacobian_mirror);
 
-    const auto shape_interp = Kokkos::View<double[num_nodes][num_qps]>("shape_interp");
+    const auto shape_interp = Kokkos::View<double[1][num_nodes][num_qps]>("shape_interp");
     constexpr auto shape_interp_data = std::array{6., 7., 8., 9.};
     const auto shape_interp_host =
-        Kokkos::View<const double[num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data());
+        Kokkos::View<const double[1][num_nodes][num_qps], Kokkos::HostSpace>(shape_interp_data.data()
+        );
     const auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
     Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
     Kokkos::deep_copy(shape_interp, shape_interp_mirror);
 
-    const auto shape_deriv = Kokkos::View<double[num_nodes][num_qps]>("shape_deriv");
+    const auto shape_deriv = Kokkos::View<double[1][num_nodes][num_qps]>("shape_deriv");
     constexpr auto shape_deriv_data = std::array{10., 11., 12., 13.};
     const auto shape_deriv_host =
-        Kokkos::View<const double[num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data());
+        Kokkos::View<const double[1][num_nodes][num_qps], Kokkos::HostSpace>(shape_deriv_data.data()
+        );
     const auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
@@ -259,7 +269,7 @@ TEST(CalculateNodeForcesTests, FI_FG_TwoNodesTwoQP) {
     Kokkos::parallel_for(
         "CalculateNodeForces_FI_FG", num_nodes,
         CalculateNodeForces_FI_FG{
-            first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG}
+            0, first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG}
     );
 
     constexpr auto FIG_exact_data =

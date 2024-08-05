@@ -12,9 +12,9 @@ struct IntegrateInertiaMatrixElement {
     size_t num_qps;
     size_t first_node;
     size_t first_qp;
-    View_N::const_type qp_weight_;
-    View_N::const_type qp_jacobian_;
-    View_NxN::const_type shape_interp_;
+    View_NxN::const_type qp_weight_;
+    View_NxN::const_type qp_jacobian_;
+    Kokkos::View<double***>::const_type shape_interp_;
     View_Nx6x6::const_type qp_Muu_;
     View_Nx6x6::const_type qp_Guu_;
     double beta_prime_;
@@ -23,16 +23,16 @@ struct IntegrateInertiaMatrixElement {
 
     KOKKOS_FUNCTION
     void operator()(size_t i_index, size_t j_index) const {
-        const auto i = i_index + first_node;
-        const auto j = j_index + first_node;
+        // const auto i = i_index + first_node;
+        // const auto j = j_index + first_node;
         auto local_M_data = Kokkos::Array<double, 36>{};
         const auto local_M = Kokkos::View<double[6][6]>(local_M_data.data());
         for (auto k = 0U; k < num_qps; ++k) {
             const auto k_qp = first_qp + k;
-            const auto w = qp_weight_(k_qp);
-            const auto jacobian = qp_jacobian_(k_qp);
-            const auto phi_i = shape_interp_(i, k);
-            const auto phi_j = shape_interp_(j, k);
+            const auto w = qp_weight_(i_elem, k);
+            const auto jacobian = qp_jacobian_(i_elem, k);
+            const auto phi_i = shape_interp_(i_elem, i_index, k);
+            const auto phi_j = shape_interp_(i_elem, j_index, k);
             const auto coeff = w * phi_i * phi_j * jacobian;
             for (auto m = 0U; m < 6U; ++m) {
                 for (auto n = 0U; n < 6U; ++n) {
@@ -50,9 +50,9 @@ struct IntegrateInertiaMatrixElement {
 };
 struct IntegrateInertiaMatrix {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
-    View_N::const_type qp_weight_;
-    View_N::const_type qp_jacobian_;
-    View_NxN::const_type shape_interp_;
+    View_NxN::const_type qp_weight_;
+    View_NxN::const_type qp_jacobian_;
+    Kokkos::View<double***>::const_type shape_interp_;
     View_Nx6x6::const_type qp_Muu_;
     View_Nx6x6::const_type qp_Guu_;
     double beta_prime_;
