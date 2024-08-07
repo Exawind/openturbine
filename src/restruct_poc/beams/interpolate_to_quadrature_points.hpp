@@ -18,14 +18,14 @@ struct InterpolateToQuadraturePoints {
     View_Nx7::const_type node_u;
     View_Nx6::const_type node_u_dot;
     View_Nx6::const_type node_u_ddot;
-    View_Nx3 qp_u;
-    View_Nx3 qp_uprime;
-    View_Nx4 qp_r;
-    View_Nx4 qp_rprime;
-    View_Nx3 qp_u_dot;
-    View_Nx3 qp_omega;
-    View_Nx3 qp_u_ddot;
-    View_Nx3 qp_omega_dot;
+    Kokkos::View<double** [3]> qp_u;
+    Kokkos::View<double** [3]> qp_uprime;
+    Kokkos::View<double** [4]> qp_r;
+    Kokkos::View<double** [4]> qp_rprime;
+    Kokkos::View<double** [3]> qp_u_dot;
+    Kokkos::View<double** [3]> qp_omega;
+    Kokkos::View<double** [3]> qp_u_ddot;
+    Kokkos::View<double** [3]> qp_omega_dot;
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {

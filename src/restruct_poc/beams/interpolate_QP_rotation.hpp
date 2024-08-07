@@ -13,7 +13,7 @@ struct InterpolateQPRotation {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
     Kokkos::View<double***>::const_type shape_interpolation;     // Num Nodes x Num Quadrature points
     View_Nx7::const_type node_position_rotation;                 // Node global position vector
-    View_Nx4 qp_rotation;                                        // quadrature point rotation
+    Kokkos::View<double** [4]> qp_rotation;                      // quadrature point rotation
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {
@@ -24,7 +24,9 @@ struct InterpolateQPRotation {
         );
         const auto node_rot =
             Kokkos::subview(node_position_rotation, idx.node_range, Kokkos::make_pair(3, 7));
-        const auto qp_rot = Kokkos::subview(qp_rotation, idx.qp_range, Kokkos::ALL);
+        const auto qp_rot = Kokkos::subview(
+            qp_rotation, i_elem, Kokkos::make_pair(size_t{0U}, idx.num_qps), Kokkos::ALL
+        );
 
         InterpQuaternion(shape_interp, node_rot, qp_rot);
     }
