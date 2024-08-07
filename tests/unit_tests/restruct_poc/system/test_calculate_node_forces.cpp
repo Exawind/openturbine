@@ -48,16 +48,18 @@ TEST(CalculateNodeForcesTests, FE_OneNodeOneQP) {
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
 
-    const auto Fc = Kokkos::View<double[num_qps][6]>("Fc");
+    const auto Fc = Kokkos::View<double[1][num_qps][6]>("Fc");
     constexpr auto Fc_data = std::array{1., 2., 3., 4., 5., 6.};
-    const auto Fc_host = Kokkos::View<const double[num_qps][6], Kokkos::HostSpace>(Fc_data.data());
+    const auto Fc_host =
+        Kokkos::View<const double[1][num_qps][6], Kokkos::HostSpace>(Fc_data.data());
     const auto Fc_mirror = Kokkos::create_mirror(Fc);
     Kokkos::deep_copy(Fc_mirror, Fc_host);
     Kokkos::deep_copy(Fc, Fc_mirror);
 
-    const auto Fd = Kokkos::View<double[num_qps][6]>("Fd");
+    const auto Fd = Kokkos::View<double[1][num_qps][6]>("Fd");
     constexpr auto Fd_data = std::array{7., 8., 9., 10., 11., 12.};
-    const auto Fd_host = Kokkos::View<const double[num_qps][6], Kokkos::HostSpace>(Fd_data.data());
+    const auto Fd_host =
+        Kokkos::View<const double[1][num_qps][6], Kokkos::HostSpace>(Fd_data.data());
     const auto Fd_mirror = Kokkos::create_mirror(Fd);
     Kokkos::deep_copy(Fd_mirror, Fd_host);
     Kokkos::deep_copy(Fd, Fd_mirror);
@@ -120,16 +122,18 @@ TEST(CalculateNodeForcesTests, FE_TwoNodesTwoQPs) {
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
 
-    const auto Fc = Kokkos::View<double[num_qps][6]>("Fc");
+    const auto Fc = Kokkos::View<double[1][num_qps][6]>("Fc");
     constexpr auto Fc_data = std::array{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12.};
-    const auto Fc_host = Kokkos::View<const double[num_qps][6], Kokkos::HostSpace>(Fc_data.data());
+    const auto Fc_host =
+        Kokkos::View<const double[1][num_qps][6], Kokkos::HostSpace>(Fc_data.data());
     const auto Fc_mirror = Kokkos::create_mirror(Fc);
     Kokkos::deep_copy(Fc_mirror, Fc_host);
     Kokkos::deep_copy(Fc, Fc_mirror);
 
-    const auto Fd = Kokkos::View<double[num_qps][6]>("Fd");
+    const auto Fd = Kokkos::View<double[1][num_qps][6]>("Fd");
     constexpr auto Fd_data = std::array{13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24.};
-    const auto Fd_host = Kokkos::View<const double[num_qps][6], Kokkos::HostSpace>(Fd_data.data());
+    const auto Fd_host =
+        Kokkos::View<const double[1][num_qps][6], Kokkos::HostSpace>(Fd_data.data());
     const auto Fd_mirror = Kokkos::create_mirror(Fd);
     Kokkos::deep_copy(Fd_mirror, Fd_host);
     Kokkos::deep_copy(Fd, Fd_mirror);
@@ -193,9 +197,10 @@ TEST(CalculateNodeForcesTests, FI_FG_OneNodeOneQP) {
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
 
-    const auto Fig = Kokkos::View<double[num_qps][6]>("Fig");
+    const auto Fig = Kokkos::View<double[1][num_qps][6]>("Fig");
     constexpr auto Fig_data = std::array{1., 2., 3., 4., 5., 6.};
-    const auto Fig_host = Kokkos::View<const double[num_qps][6], Kokkos::HostSpace>(Fig_data.data());
+    const auto Fig_host =
+        Kokkos::View<const double[1][num_qps][6], Kokkos::HostSpace>(Fig_data.data());
     const auto Fig_mirror = Kokkos::create_mirror(Fig);
     Kokkos::deep_copy(Fig_mirror, Fig_host);
     Kokkos::deep_copy(Fig, Fig_mirror);
@@ -257,9 +262,10 @@ TEST(CalculateNodeForcesTests, FI_FG_TwoNodesTwoQP) {
     Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
     Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
 
-    const auto Fig = Kokkos::View<double[num_qps][6]>("Fig");
+    const auto Fig = Kokkos::View<double[1][num_qps][6]>("Fig");
     constexpr auto Fig_data = std::array{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12.};
-    const auto Fig_host = Kokkos::View<const double[num_qps][6], Kokkos::HostSpace>(Fig_data.data());
+    const auto Fig_host =
+        Kokkos::View<const double[1][num_qps][6], Kokkos::HostSpace>(Fig_data.data());
     const auto Fig_mirror = Kokkos::create_mirror(Fig);
     Kokkos::deep_copy(Fig_mirror, Fig_host);
     Kokkos::deep_copy(Fig, Fig_mirror);

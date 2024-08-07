@@ -13,11 +13,11 @@ struct InterpolateQPVector {
     size_t num_nodes;
     Kokkos::View<double***>::const_type shape_interp;
     View_Nx3::const_type node_vector;
-    View_Nx3 qp_vector;
+    Kokkos::View<double** [3]> qp_vector;
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
-        const auto j = first_qp + j_index;
+        // const auto j = first_qp + j_index;
         auto local_total = Kokkos::Array<double, 3>{};
         for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
             const auto i = first_node + i_index;
@@ -27,7 +27,7 @@ struct InterpolateQPVector {
             }
         }
         for (auto k = 0U; k < 3U; ++k) {
-            qp_vector(j, k) = local_total[k];
+            qp_vector(i_elem, j_index, k) = local_total[k];
         }
     }
 };

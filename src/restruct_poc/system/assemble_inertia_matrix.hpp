@@ -14,7 +14,10 @@ inline void AssembleInertiaMatrix(
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Inertia Matrix");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
-
+    auto smem = 2 * Kokkos::View<double* [6][6]>::shmem_size(beams.max_elem_qps) +
+                2 * Kokkos::View<double*>::shmem_size(beams.max_elem_qps) +
+                Kokkos::View<double**>::shmem_size(beams.max_elem_nodes, beams.max_elem_qps);
+    range_policy.set_scratch_size(1, Kokkos::PerTeam(smem));
     Kokkos::parallel_for(
         "IntegrateInertiaMatrix", range_policy,
         IntegrateInertiaMatrix{

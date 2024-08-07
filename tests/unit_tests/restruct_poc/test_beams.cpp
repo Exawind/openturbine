@@ -186,68 +186,10 @@ TEST(BeamsTest, NodeInitialAcceleration) {
     );
 }
 
-// TEST(BeamsTest, ShapeFunctionInterpolationMatrix) {
-//     const auto beams = SetUpBeams();
-//     expect_kokkos_view_2D_equal(
-//         beams.shape_interp,
-//         {{0.7643937937285443, 0.13706262395004942, -0.13172898316530468,
-//           0.000000000000000022962127484012874, 0.05567285555959517, -0.020342107108930366,
-//           -0.01995866709520774},
-//          {0.308266541035087, 0.95147326166415, 0.7339940232440426,
-//           -0.00000000000000008184220124322266, -0.1722057227387884, 0.05920536387827322,
-//           0.05659843178759581},
-//          {-0.1093000994560195, -0.12739914238354233, 0.5142678271004555, 0.9999999999999999,
-//           0.5142678271004553, -0.12739914238354247, -0.1093000994560195},
-//          {0.05659843178759582, 0.05920536387827313, -0.17220572273878845,
-//           0.0000000000000000818422012432227, 0.7339940232440427, 0.9514732616641498,
-//           0.308266541035087},
-//          {-0.01995866709520774, -0.020342107108930346, 0.055672855559595176,
-//           -0.000000000000000022962127484012877, -0.1317289831653047, 0.13706262395004964,
-//           0.7643937937285443}}
-//     );
-// }
-
-// TEST(BeamsTest, ShapeFunctionDerivativeMatrix) {
-//     const auto beams = SetUpBeams();
-//     expect_kokkos_view_2D_equal(
-//         beams.shape_deriv,
-//         {{-4.2701511577426, -1.9393626617606694, 0.013055310813328586, 0.375,
-//         -0.12778431702017545,
-//           -0.1974469591256584, 0.29092055406654616},
-//          {5.3820901606566505, 1.1702482430865344, -1.7874218089539982, -1.3365845776954526,
-//           0.4351480290853632, 0.5662571364020152, -0.8312402426318174},
-//          {-1.6522586914793211, 1.137924595950492, 2.0817302102058575,
-//           -0.0000000000000006661338147750939, -2.081730210205858, -1.1379245959504911,
-//           1.6522586914793211},
-//          {0.8312402426318174, -0.5662571364020155, -0.4351480290853627, 1.3365845776954537,
-//           1.7874218089539977, -1.1702482430865357, -5.38209016065665},
-//          {-0.2909205540665461, 0.1974469591256585, 0.12778431702017526, -0.3750000000000001,
-//           -0.013055310813328114, 1.9393626617606703, 4.2701511577426}}
-//     );
-// }
-
-// TEST(BeamsTest, JacobianArray) {
-//     const auto beams = SetUpBeams();
-//     expect_kokkos_view_1D_equal(
-//         beams.qp_jacobian,
-//         {2.7027484463552844, 2.585197218483525, 2.5041356900076877, 2.5980762113533173,
-//          2.8809584014451253, 3.2234919864103784, 3.4713669823269462}
-//     );
-// }
-
-// TEST(BeamsTest, QuadraturePointWeights) {
-//     const auto beams = SetUpBeams();
-//     expect_kokkos_view_1D_equal(
-//         beams.qp_weight,
-//         {0.1294849661688697, 0.27970539148927664, 0.3818300505051189, 0.4179591836734694,
-//          0.3818300505051189, 0.27970539148927664, 0.1294849661688697}
-//     );
-// }
-
 TEST(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
     const auto beams = SetUpBeams();
-    auto Mstar = View_NxN("Mstar", beams.qp_Mstar.extent(1), beams.qp_Mstar.extent(2));
-    Kokkos::deep_copy(Mstar, Kokkos::subview(beams.qp_Mstar, 0, Kokkos::ALL, Kokkos::ALL));
+    auto Mstar = View_NxN("Mstar", beams.qp_Mstar.extent(2), beams.qp_Mstar.extent(3));
+    Kokkos::deep_copy(Mstar, Kokkos::subview(beams.qp_Mstar, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Mstar,
         {
@@ -264,8 +206,8 @@ TEST(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
 
 TEST(BeamsTest, QuadraturePointStiffnessMatrixInMaterialFrame) {
     const auto beams = SetUpBeams();
-    auto Cstar = View_NxN("Cstar", beams.qp_Cstar.extent(1), beams.qp_Cstar.extent(2));
-    Kokkos::deep_copy(Cstar, Kokkos::subview(beams.qp_Cstar, 0, Kokkos::ALL, Kokkos::ALL));
+    auto Cstar = View_NxN("Cstar", beams.qp_Cstar.extent(2), beams.qp_Cstar.extent(3));
+    Kokkos::deep_copy(Cstar, Kokkos::subview(beams.qp_Cstar, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Cstar,
         {
@@ -279,186 +221,10 @@ TEST(BeamsTest, QuadraturePointStiffnessMatrixInMaterialFrame) {
     );
 }
 
-TEST(BeamsTest, QuadraturePointInitialPosition) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_x0,
-        {
-            {0.12723021914310378, -0.04894958421765723, 0.024151041535564563},
-            {0.6461720360015141, -0.20836421838736455, 0.09583134319147545},
-            {1.4853871215565078, -0.32938986051629177, 0.12056743224042737},
-            {2.5, -0.24999999999999994, -3.061616997868384e-17},
-            {3.5146128784434927, 0.07645529086110522, -0.28527771913696975},
-            {4.353827963998485, 0.5331669672120298, -0.645699842407919},
-            {4.8727697808568955, 0.9001583281251011, -0.9249568708071938},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointInitialPositionDerivative) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_x0_prime,
-        {
-            {0.924984344499876, -0.3417491071948319, 0.16616711516322952},
-            {0.9670442092872504, -0.23684722156643212, 0.09342853375847142},
-            {0.9983484561063567, -0.0434352369562536, -0.03759973910292136},
-            {0.9622504486493763, 0.19245008972987515, -0.1924500897298753},
-            {0.8677667816189111, 0.38486072083162454, -0.3144249326623439},
-            {0.7755564495086442, 0.5001708660037699, -0.38515100730308954},
-            {0.7201773862365269, 0.5541511105877541, -0.4174458994742709},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointInitialRotation) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_r0,
-        {
-            {0.980884413320975, -0.0144723270940525, -0.0824443301646419, -0.1756680160876},
-            {0.991669584564107, -0.005383778767255235, -0.04674982717307109, -0.11990372653059925},
-            {0.9995861588301111, -0.00017992787003652953, 0.01938431110866726, -0.02125387456601228},
-            {0.9904718430204885, -0.00952641109153648, 0.09620741150793369, 0.09807604012323788},
-            {0.9659269297215409, -0.03234979016749597, 0.15563090950471747, 0.2042490575781702},
-            {0.9405335895294235, -0.05575622959800262, 0.18841261313027519, 0.2771073745704617},
-            {0.9248004133377579, -0.06909685323377392, 0.20225483002403755, 0.3147424408869105},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointTranslationalDisplacement) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_u,
-        {
-            {6.475011465280995e-5, -6.310248039744534e-5, 6.5079641503883e-5},
-            {0.001670153200441368, -0.0014543119416486395, 0.0017133214521999145},
-            {0.00882549960354371, -0.006203642913062532, 0.009349870941639945},
-            {0.025000000000000000, -0.012500000000000000, 0.027500000000000004},
-            {0.049410014741283426, -0.014678599914523912, 0.05635629770663533},
-            {0.07582327176038081, -0.00979897557794027, 0.08902813099686892},
-            {0.09497554134892866, -0.002416751787811821, 0.113487299261152},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointTranslationalDisplacementDerivative) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_u_prime,
-        {
-            {0.0009414876868372848, -0.0009055519814222241, 0.0009486748279202956},
-            {0.0049990154049489330, -0.0040299482162833, 0.00519282884268206},
-            {0.0118634715162096380, -0.006576917174070561, 0.012920782384637453},
-            {0.0192450089729875180, -0.004811252243246878, 0.022131760318935656},
-            {0.0243989144493063000, 0.0013269072337655852, 0.029544078785920684},
-            {0.0270131148602409250, 0.008270021601725071, 0.03406974215263411},
-            {0.0280740688360788040, 0.012965473438963544, 0.03628197729108727},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointRotationalDisplacement) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_r,
-        {
-            {0.9999991906236807, 0.001272301844556629, 0.0, 0.0},
-            {0.9999791231576566, 0.006461675389885671, 0.0, 0.0},
-            {0.9998896832832036, 0.014853325008724992, 0.0, 0.0},
-            {0.9996875162757026, 0.024997395914712214, 0.0, 0.0},
-            {0.9993824383901835, 0.035138893512620800, 0.0, 0.0},
-            {0.9990523588113228, 0.043524525885204780, 0.0, 0.0},
-            {0.9988130406194091, 0.048708417020170240, 0.0, 0.0},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointRotationalDisplacementDerivative) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_r_prime,
-        {
-            {-1.1768592508490864e-5, 0.009249835939573259, 0.0, 0.0},
-            {-6.24872579944091e-5, 0.009670240217676533, 0.0, 0.0},
-            {-0.00014828794095145858, 0.009982383220428504, 0.0, 0.0},
-            {-0.00024053755400424963, 0.009619497597035018, 0.0, 0.0},
-            {-0.0003049236454906731, 0.008672308825681862, 0.0, 0.0},
-            {-0.00033755726789449716, 0.007748215013234193, 0.0, 0.0},
-            {-0.00035078700412695185, 0.0071932256346726306, 0.0, 0.0},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointInitialTranslationalVelocity) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_u_dot,
-        {
-            {0.0025446043828620765, -0.0024798542682092665, 6.5079641503883e-5},
-            {0.0129234407200302820, -0.0112532875195889140, 0.0017133214521999145},
-            {0.0297077424311301600, -0.0208822428275864500, 0.009349870941639945},
-            {0.0500000000000000000, -0.0249999999999999980, 0.027500000000000004},
-            {0.0702922575688698500, -0.0208822428275864400, 0.05635629770663533},
-            {0.0870765592799697300, -0.0112532875195889040, 0.08902813099686892},
-            {0.0974553956171379200, -0.0024798542682092648, 0.113487299261152},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointInitialAngularVelocity) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_omega,
-        {
-            {0.0025446043828620765, -0.0024798542682092665, 6.5079641503883e-5},
-            {0.0129234407200302820, -0.011253287519588914, 0.0017133214521999145},
-            {0.0297077424311301600, -0.020882242827586450, 0.009349870941639945},
-            {0.0500000000000000000, -0.024999999999999998, 0.027500000000000004},
-            {0.0702922575688698500, -0.020882242827586440, 0.05635629770663533},
-            {0.0870765592799697300, -0.011253287519588904, 0.08902813099686892},
-            {0.0974553956171379200, -0.0024798542682092648, 0.113487299261152},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointTranslationalAcceleration) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_u_ddot,
-        {
-            {0.0025446043828620765, -0.0024151041535564553, 0.0001298297561566934},
-            {0.012923440720030282, -0.009583134319147544, 0.003383474652641283},
-            {0.02970774243113016, -0.01205674322404274, 0.018175370545183655},
-            {0.05000000000000000, 3.0616169978683843e-18, 0.052500000000000005},
-            {0.07029225756886985, 0.028527771913696987, 0.10576631244791876},
-            {0.08707655927996973, 0.06456998424079191, 0.16485140275724972},
-            {0.09745539561713792, 0.0924956870807194, 0.2084628406100807},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointAngularAcceleration) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_omega_dot,
-        {
-            {0.0025446043828620765, -0.0024798542682092665, -0.0024798542682092665},
-            {0.012923440720030282, -0.011253287519588914, -0.011253287519588914},
-            {0.02970774243113016, -0.02088224282758645, -0.02088224282758645},
-            {0.05000000000000000, -0.024999999999999998, -0.024999999999999998},
-            {0.07029225756886985, -0.02088224282758644, -0.02088224282758644},
-            {0.08707655927996973, -0.011253287519588904, -0.011253287519588904},
-            {0.09745539561713792, -0.0024798542682092648, -0.0024798542682092648},
-        }
-    );
-}
-
 TEST(BeamsTest, QuadraturePointRR0) {
     const auto beams = SetUpBeams();
-    auto RR0 = View_NxN("RR0", beams.qp_RR0.extent(1), beams.qp_RR0.extent(2));
-    Kokkos::deep_copy(RR0, Kokkos::subview(beams.qp_RR0, 0, Kokkos::ALL, Kokkos::ALL));
+    auto RR0 = View_NxN("RR0", beams.qp_RR0.extent(2), beams.qp_RR0.extent(3));
+    Kokkos::deep_copy(RR0, Kokkos::subview(beams.qp_RR0, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         RR0,
         {
@@ -474,8 +240,8 @@ TEST(BeamsTest, QuadraturePointRR0) {
 
 TEST(BeamsTest, QuadraturePointMassMatrixInGlobalFrame) {
     const auto beams = SetUpBeams();
-    auto Muu = View_NxN("Muu", beams.qp_Muu.extent(1), beams.qp_Muu.extent(2));
-    Kokkos::deep_copy(Muu, Kokkos::subview(beams.qp_Muu, 0, Kokkos::ALL, Kokkos::ALL));
+    auto Muu = View_NxN("Muu", beams.qp_Muu.extent(2), beams.qp_Muu.extent(3));
+    Kokkos::deep_copy(Muu, Kokkos::subview(beams.qp_Muu, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Muu,
         {
@@ -497,8 +263,8 @@ TEST(BeamsTest, QuadraturePointMassMatrixInGlobalFrame) {
 
 TEST(BeamsTest, QuadraturePointStiffnessMatrixInGlobalFrame) {
     const auto beams = SetUpBeams();
-    auto Cuu = View_NxN("Cuu", beams.qp_Cuu.extent(1), beams.qp_Cuu.extent(2));
-    Kokkos::deep_copy(Cuu, Kokkos::subview(beams.qp_Cuu, 0, Kokkos::ALL, Kokkos::ALL));
+    auto Cuu = View_NxN("Cuu", beams.qp_Cuu.extent(2), beams.qp_Cuu.extent(3));
+    Kokkos::deep_copy(Cuu, Kokkos::subview(beams.qp_Cuu, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Cuu,
         {
@@ -518,111 +284,10 @@ TEST(BeamsTest, QuadraturePointStiffnessMatrixInGlobalFrame) {
     );
 }
 
-TEST(BeamsTest, QuadraturePointStrain) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_strain,
-        {
-            {0.0009414876868373279, -0.00048382928348705834, 0.0018188281296873943,
-             0.0184996868523541, 0.0, 0.0},
-            {0.004999015404948959, -0.002842341990545394, 0.008261426556751703, 0.019340884211946498,
-             0.0, 0.0},
-            {0.01186347151620959, -0.007712921718478594, 0.014194364820045248, 0.0199669691313353,
-             0.0, 0.0},
-            {0.019245008972987532, -0.014189235354885782, 0.01227275220904131, 0.019245008946139657,
-             0.0, 0.0},
-            {0.024398914449306308, -0.01980612763870543, 0.0017371550623738186, 0.01735533564038205,
-             0.0, 0.0},
-            {0.02701311486024094, -0.023330205052589426, -0.010887645811743119, 0.015511129011186278,
-             0.0, 0.0},
-            {0.02807406883607877, -0.02502305729533416, -0.019618382135299595, 0.014403547695422242,
-             0.0, 0.0},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointElasticForceFC) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_Fc,
-        {
-            {0.10234015755301404, 0.15123731179112573, 0.2788710191555731, 0.4003531623743687,
-             0.3249734441776631, 0.587574363833825},
-            {0.13306714951787607, 0.19697673529625817, 0.35331128776303233, 0.5133351516878956,
-             0.4501862995539333, 0.7288106297098484},
-            {0.1574290494109584, 0.24483537583051979, 0.39546209547846906, 0.5824699918301253,
-             0.6098871468512939, 0.7841672804415049},
-            {0.11793522304442454, 0.22073370020290126, 0.2970111064121941, 0.4152800673577701,
-             0.5850266055677404, 0.5612027971947426},
-            {0.03186778209076205, 0.08327525615132295, 0.09383878502122098, 0.1098030416906359,
-             0.22617087196765523, 0.17014187136266343},
-            {-0.023089877459047222, -0.09044007186162746, -0.09136793568603306, -0.08138800637367143,
-             -0.24723410629067144, -0.16150807105320447},
-            {-0.038045836638108975, -0.20629914099635355, -0.19957255488872738, -0.14032215607825765,
-             -0.565277913007998, -0.34909700109374714},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointElasticForceFD) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_Fd,
-        {
-            {0.0, 0.0, 0.0, 0.12083059685899937, 0.2411112242070902, -0.1751018655842517},
-            {0.0, 0.0, 0.0, 0.10453073708428946, 0.33031057987442725, -0.22352273933363598},
-            {0.0, 0.0, 0.0, 0.013735629628543994, 0.40338571047157723, -0.25520898285167615},
-            {0.0, 0.0, 0.0, -0.09332581379105467, 0.311601581974594, -0.1945198959425422},
-            {0.0, 0.0, 0.0, -0.05996290388705013, 0.0927982659298175, -0.061988383692168025},
-            {0.0, 0.0, 0.0, 0.0782070091683667, -0.08143554773131514, 0.06084461128549694},
-            {0.0, 0.0, 0.0, 0.19181469531917145, -0.16383215490377, 0.13278720752010728},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointInternalForceFI) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_Fi,
-        {
-            {0.004375199541621397, -0.006996757474943007, 0.0016854280323566574,
-             -0.008830739650908434, -0.01379034342897087, -0.02975324221499824},
-            {0.022688362568082213, -0.02992652234700804, 0.013688107068036132, -0.03886658700317607,
-             -0.060824965744675934, -0.12868857402180311},
-            {0.05443226231283839, -0.04765607714110308, 0.05164453045055776, -0.06741913573437128,
-             -0.11199467143793916, -0.21160513689448818},
-            {0.09626719733160705, -0.036356394776880435, 0.13017740515825674, -0.0655069009245357,
-             -0.13688516240854653, -0.2044209307349181},
-            {0.1400861741787473, 0.010259103320423194, 0.24646612271293694, -0.03557208624212079,
-             -0.10605047687360963, -0.11140102512076272},
-            {0.1765783599566686, 0.07337977541628125, 0.3727813760978104, -0.017058328302108794,
-             -0.023041772515279488, 0.021701973146492262},
-            {0.19926271187822545, 0.12238033682674138, 0.4651665411925664, -0.022580493439478086,
-             0.0575214328048846, 0.13433832751076802},
-        }
-    );
-}
-
-TEST(BeamsTest, QuadraturePointGravityForceFg) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        beams.qp_Fg,
-        {
-            {0.0, 0.0, 19.620000000000008, 3.33069666549358, -2.2538354951632575, 0.0},
-            {0.0, 0.0, 19.620000000000005, 3.395755863205606, -2.293994529332462, 0.0},
-            {0.0, 0.0, 19.620000000000008, 3.660343899283414, -2.3535996733587927, 0.0},
-            {0.0, 0.0, 19.620000000000008, 4.17217336243553, -2.2291394364636914, 0.0},
-            {0.0, 0.0, 19.62, 4.7227318298581675, -1.8072954174231637, 0.0},
-            {0.0, 0.0, 19.619999999999997, 5.083070688156127, -1.297737572397898, 0.0},
-            {0.0, 0.0, 19.620000000000015, 5.230522791902463, -0.964616792447741, 0.0},
-        }
-    );
-}
-
 TEST(BeamsTest, QuadraturePointMatrixOuu) {
     const auto beams = SetUpBeams();
-    auto Ouu = View_NxN("Ouu", beams.qp_Ouu.extent(1), beams.qp_Ouu.extent(2));
-    Kokkos::deep_copy(Ouu, Kokkos::subview(beams.qp_Ouu, 0, Kokkos::ALL, Kokkos::ALL));
+    auto Ouu = View_NxN("Ouu", beams.qp_Ouu.extent(2), beams.qp_Ouu.extent(3));
+    Kokkos::deep_copy(Ouu, Kokkos::subview(beams.qp_Ouu, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Ouu,
         {
@@ -638,8 +303,8 @@ TEST(BeamsTest, QuadraturePointMatrixOuu) {
 
 TEST(BeamsTest, QuadraturePointMatrixPuu) {
     const auto beams = SetUpBeams();
-    auto Puu = View_NxN("Puu", beams.qp_Puu.extent(1), beams.qp_Puu.extent(2));
-    Kokkos::deep_copy(Puu, Kokkos::subview(beams.qp_Puu, 0, Kokkos::ALL, Kokkos::ALL));
+    auto Puu = View_NxN("Puu", beams.qp_Puu.extent(2), beams.qp_Puu.extent(3));
+    Kokkos::deep_copy(Puu, Kokkos::subview(beams.qp_Puu, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Puu,
         {
@@ -658,8 +323,8 @@ TEST(BeamsTest, QuadraturePointMatrixPuu) {
 
 TEST(BeamsTest, QuadraturePointMatrixQuu) {
     const auto beams = SetUpBeams();
-    auto Quu = View_NxN("Quu", beams.qp_Quu.extent(1), beams.qp_Quu.extent(2));
-    Kokkos::deep_copy(Quu, Kokkos::subview(beams.qp_Quu, 0, Kokkos::ALL, Kokkos::ALL));
+    auto Quu = View_NxN("Quu", beams.qp_Quu.extent(2), beams.qp_Quu.extent(3));
+    Kokkos::deep_copy(Quu, Kokkos::subview(beams.qp_Quu, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Quu,
         {
@@ -675,8 +340,8 @@ TEST(BeamsTest, QuadraturePointMatrixQuu) {
 
 TEST(BeamsTest, QuadraturePointMatrixGuu) {
     const auto beams = SetUpBeams();
-    auto Guu = View_NxN("Guu", beams.qp_Guu.extent(1), beams.qp_Guu.extent(2));
-    Kokkos::deep_copy(Guu, Kokkos::subview(beams.qp_Guu, 0, Kokkos::ALL, Kokkos::ALL));
+    auto Guu = View_NxN("Guu", beams.qp_Guu.extent(2), beams.qp_Guu.extent(3));
+    Kokkos::deep_copy(Guu, Kokkos::subview(beams.qp_Guu, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Guu,
         {
@@ -692,8 +357,8 @@ TEST(BeamsTest, QuadraturePointMatrixGuu) {
 
 TEST(BeamsTest, QuadraturePointMatrixKuu) {
     const auto beams = SetUpBeams();
-    auto Kuu = View_NxN("Kuu", beams.qp_Kuu.extent(1), beams.qp_Kuu.extent(2));
-    Kokkos::deep_copy(Kuu, Kokkos::subview(beams.qp_Kuu, 0, Kokkos::ALL, Kokkos::ALL));
+    auto Kuu = View_NxN("Kuu", beams.qp_Kuu.extent(2), beams.qp_Kuu.extent(3));
+    Kokkos::deep_copy(Kuu, Kokkos::subview(beams.qp_Kuu, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Kuu,
         {

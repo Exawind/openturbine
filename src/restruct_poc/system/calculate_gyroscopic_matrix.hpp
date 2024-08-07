@@ -18,27 +18,28 @@ struct CalculateGyroscopicMatrix {
     using GemmNN = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, GemmDefault>;
     using GemmNT = KokkosBatched::SerialGemm<NoTranspose, Transpose, GemmDefault>;
     using Gemv = KokkosBlas::SerialGemv<NoTranspose, GemvDefault>;
-    View_Nx6x6::const_type qp_Muu_;
-    View_Nx3::const_type qp_omega_;
-    View_Nx3x3::const_type omega_tilde_;
-    View_Nx3x3::const_type rho_;
-    View_Nx3::const_type eta_;
-    View_Nx6x6 qp_Guu_;
+    size_t i_elem;
+    Kokkos::View<double** [6][6]>::const_type qp_Muu_;
+    Kokkos::View<double** [3]>::const_type qp_omega_;
+    Kokkos::View<double** [3][3]>::const_type omega_tilde_;
+    Kokkos::View<double** [3][3]>::const_type rho_;
+    Kokkos::View<double** [3]>::const_type eta_;
+    Kokkos::View<double** [6][6]> qp_Guu_;
 
     KOKKOS_FUNCTION
     void operator()(int i_qp) const {
-        auto Muu = Kokkos::subview(qp_Muu_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto omega = Kokkos::subview(qp_omega_, i_qp, Kokkos::ALL);
-        auto omega_tilde = Kokkos::subview(omega_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
+        auto Muu = Kokkos::subview(qp_Muu_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto omega = Kokkos::subview(qp_omega_, i_elem, i_qp, Kokkos::ALL);
+        auto omega_tilde = Kokkos::subview(omega_tilde_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto rho = Kokkos::subview(rho_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto eta = Kokkos::subview(eta_, i_elem, i_qp, Kokkos::ALL);
         auto v1 = Kokkos::Array<double, 3>{};
         auto V1 = Kokkos::View<double[3]>(v1.data());
         auto v2 = Kokkos::Array<double, 3>{};
         auto V2 = Kokkos::View<double[3]>(v2.data());
         auto m1 = Kokkos::Array<double, 9>{};
         auto M1 = Kokkos::View<double[3][3]>(m1.data());
-        auto Guu = Kokkos::subview(qp_Guu_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Guu = Kokkos::subview(qp_Guu_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
 
         auto m = Muu(0, 0);
         // Inertia gyroscopic matrix

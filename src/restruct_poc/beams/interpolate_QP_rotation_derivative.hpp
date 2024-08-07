@@ -12,8 +12,8 @@ struct InterpolateQPRotationDerivative {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
     Kokkos::View<double***>::const_type shape_derivative;        // Num Nodes x Num Quadrature points
     View_N::const_type qp_jacobian;                              // Jacobians
-    View_Nx7::const_type node_pos_rot;  // Node global position/rotation vector
-    View_Nx4 qp_rot_deriv;              // quadrature point rotation derivative
+    View_Nx7::const_type node_pos_rot;        // Node global position/rotation vector
+    Kokkos::View<double** [4]> qp_rot_deriv;  // quadrature point rotation derivative
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {

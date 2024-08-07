@@ -8,17 +8,18 @@
 namespace openturbine {
 
 struct CalculateMassMatrixComponents {
-    View_Nx6x6::const_type qp_Muu_;
-    View_Nx3 eta_;
-    View_Nx3x3 rho_;
-    View_Nx3x3 eta_tilde_;
+    size_t i_elem;
+    Kokkos::View<double** [6][6]>::const_type qp_Muu_;
+    Kokkos::View<double** [3]> eta_;
+    Kokkos::View<double** [3][3]> rho_;
+    Kokkos::View<double** [3][3]> eta_tilde_;
 
     KOKKOS_FUNCTION
     void operator()(int i_qp) const {
-        auto Muu = Kokkos::subview(qp_Muu_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto eta = Kokkos::subview(eta_, i_qp, Kokkos::ALL);
-        auto rho = Kokkos::subview(rho_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto eta_tilde = Kokkos::subview(eta_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto Muu = Kokkos::subview(qp_Muu_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto eta = Kokkos::subview(eta_, i_elem, i_qp, Kokkos::ALL);
+        auto rho = Kokkos::subview(rho_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto eta_tilde = Kokkos::subview(eta_tilde_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
 
         auto m = Muu(0, 0);
         if (m == 0.) {

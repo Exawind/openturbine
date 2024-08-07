@@ -12,9 +12,9 @@ namespace openturbine {
 struct CalculateJacobian {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;  // Element indices
     Kokkos::View<double***>::const_type shape_derivative;        // Num Nodes x Num Quadrature points
-    View_Nx7::const_type node_position_rotation;  // Node global position/rotation vector
-    View_Nx3 qp_position_derivative;              // quadrature point position derivative
-    View_NxN qp_jacobian;                         // Jacobians
+    View_Nx7::const_type node_position_rotation;        // Node global position/rotation vector
+    Kokkos::View<double** [3]> qp_position_derivative;  // quadrature point position derivative
+    View_NxN qp_jacobian;                               // Jacobians
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {
@@ -23,7 +23,9 @@ struct CalculateJacobian {
             shape_derivative, i_elem, Kokkos::make_pair(size_t{0U}, idx.num_nodes),
             idx.qp_shape_range
         );
-        const auto qp_pos_deriv = Kokkos::subview(qp_position_derivative, idx.qp_range, Kokkos::ALL);
+        const auto qp_pos_deriv = Kokkos::subview(
+            qp_position_derivative, i_elem, Kokkos::pair(size_t{0U}, idx.num_qps), Kokkos::ALL
+        );
         const auto node_pos =
             Kokkos::subview(node_position_rotation, idx.node_range, Kokkos::make_pair(0, 3));
         const auto qp_jacob =
