@@ -3,6 +3,8 @@ function(openturbine_setup_dependencies)
 
   find_package(Amesos2 REQUIRED)
 
+  find_package(yaml-cpp REQUIRED)
+
   if(TARGET Kokkos::MKL)
     find_package(MKL REQUIRED)
   endif()
