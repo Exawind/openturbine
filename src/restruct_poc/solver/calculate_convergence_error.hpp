@@ -23,7 +23,7 @@ inline double CalculateConvergenceError(Solver& solver) {
         },
         sum_error_squared
     );
-    return std::sqrt(sum_error_squared / solver.num_system_dofs);
+    return std::sqrt(sum_error_squared / static_cast<double>(solver.num_system_dofs));
 }
 
 }  // namespace openturbine

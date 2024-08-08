@@ -19,15 +19,16 @@ struct CopyConstraintsToSparseMatrix {
         auto start_row = cd.row_range.first;
         auto end_row = cd.row_range.second;
         Kokkos::parallel_for(Kokkos::TeamThreadRange(member, start_row, end_row), [&](int i) {
-            auto row_number = i - start_row;
+            auto row_number = static_cast<size_t>(i) - start_row;
             auto row = sparse.row(i);
             auto row_map = sparse.graph.row_map;
             auto cols = sparse.graph.entries;
+            auto length = static_cast<size_t>(row.length);
             auto row_data_data = Kokkos::Array<typename RowDataType::value_type, 12>{};
             auto col_idx_data = Kokkos::Array<typename ColIdxType::value_type, 12>{};
-            auto row_data = RowDataType(row_data_data.data(), row.length);
-            auto col_idx = ColIdxType(col_idx_data.data(), row.length);
-            for (int entry = 0; entry < row.length; ++entry) {
+            auto row_data = RowDataType(row_data_data.data(), length);
+            auto col_idx = ColIdxType(col_idx_data.data(), length);
+            for (auto entry = 0U; entry < length; ++entry) {
                 col_idx(entry) = cols(row_map(i) + entry);
                 row_data(entry) = dense(i_constraint, row_number, entry);
             }

@@ -41,16 +41,17 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
 
     for (size_t i = 0; i < beams_input.NumElements(); i++) {
         // Get number of nodes and quadrature points in element
-        size_t num_nodes = beams_input.elements[i].nodes.size();
-        size_t num_qps = beams_input.elements[i].quadrature.size();
+        const auto num_nodes = beams_input.elements[i].nodes.size();
+        const auto num_qps = beams_input.elements[i].quadrature.size();
 
         // Create element indices and set in host mirror
         host_elem_indices[i] = Beams::ElemIndices(num_nodes, num_qps, node_counter, qp_counter);
-        auto& idx = host_elem_indices[i];
+        const auto& idx = host_elem_indices[i];
 
         // Populate beam node->state indices
         for (size_t j = 0; j < num_nodes; ++j) {
-            host_node_state_indices(node_counter + j) = beams_input.elements[i].nodes[j].node.ID;
+            host_node_state_indices(node_counter + j) =
+                static_cast<size_t>(beams_input.elements[i].nodes[j].node.ID);
         }
 
         // Increment counters for beam nodes and quadrature points
@@ -103,7 +104,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
         }
     );
 
-    auto range_policy = Kokkos::TeamPolicy<>(beams.num_elems, Kokkos::AUTO());
+    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(
         "InterpolateToQuadraturePoints", range_policy,
         InterpolateToQuadraturePoints{

@@ -4,11 +4,11 @@
 
 #include "src/restruct_poc/solver/copy_into_sparse_matrix.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 auto createDenseMatrix_1x1() {
     auto dense = Kokkos::View<double[1][1]>("dense");
-    auto dense_host_data = std::array{3.};
+    auto dense_host_data = std::array<double, 1>{3.};
     auto dense_host = Kokkos::View<double[1][1], Kokkos::HostSpace>(dense_host_data.data());
     auto dense_mirror = Kokkos::create_mirror(dense);
     Kokkos::deep_copy(dense_mirror, dense_host);
@@ -187,4 +187,4 @@ TEST(CopyIntoSparseMatrix, Block) {
     ASSERT_EQ(values_mirror(12), 13.);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

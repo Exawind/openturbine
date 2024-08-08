@@ -6,7 +6,7 @@ jobs:
   CppCheck:
     runs-on: ubuntu-latest
     env:
-      CMAKE_BUILD_PARALLEL_LEVEL: 1
+      CMAKE_BUILD_PARALLEL_LEVEL: 4
       CXX: clang++
     strategy:
       fail-fast: false
@@ -41,8 +41,6 @@ jobs:
         mkdir build-cppcheck
         cd build-cppcheck
         cmake .. \
-          -DOTURB_ENABLE_TESTS:BOOL=ON \
-          -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXX_CPPCHECK="cppcheck;--enable=all;--error-exitcode=0;--suppress=missingInclude;--library=googletest"
+          -DOpenTurbine_ENABLE_CPPCHECK=ON \
+          -DCMAKE_BUILD_TYPE=Debug
         cmake --build .

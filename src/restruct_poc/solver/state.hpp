@@ -18,8 +18,6 @@ struct State {
     View_Nx6 a;                  //< Algorithmic acceleration
     View_N lambda;               //< Lagrange multipliers
 
-    State() = default;
-
     State(size_t num_system_nodes_, size_t num_constraint_dofs_)
         : num_system_nodes(num_system_nodes_),
           num_constraint_dofs(num_constraint_dofs_),
@@ -46,12 +44,12 @@ struct State {
         auto host_vd = Kokkos::create_mirror(this->vd);
 
         // Loop through number of nodes and copy data to host view
-        for (size_t i = 0; i < nodes.size(); ++i) {
-            auto& node = nodes[i];
-            for (size_t j = 0; j < kLieGroupComponents; ++j) {
+        for (auto i = 0U; i < nodes.size(); ++i) {
+            const auto& node = nodes[i];
+            for (auto j = 0U; j < kLieGroupComponents; ++j) {
                 host_q(i, j) = node->u[j];
             }
-            for (size_t j = 0; j < kLieAlgebraComponents; ++j) {
+            for (auto j = 0U; j < kLieAlgebraComponents; ++j) {
                 host_v(i, j) = node->v[j];
                 host_vd(i, j) = node->vd[j];
             }

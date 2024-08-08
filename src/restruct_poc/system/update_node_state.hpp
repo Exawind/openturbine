@@ -7,7 +7,7 @@
 namespace openturbine {
 
 struct UpdateNodeState {
-    Kokkos::View<int*>::const_type node_state_indices;
+    Kokkos::View<size_t*>::const_type node_state_indices;
     View_Nx7 node_u;
     View_Nx6 node_u_dot;
     View_Nx6 node_u_ddot;
@@ -18,14 +18,14 @@ struct UpdateNodeState {
 
     KOKKOS_FUNCTION
     void operator()(int i) const {
-        auto j = node_state_indices(i);
-        for (int k = 0; k < kLieGroupComponents; k++) {
+        const auto j = node_state_indices(i);
+        for (auto k = 0U; k < kLieGroupComponents; k++) {
             node_u(i, k) = Q(j, k);
         }
-        for (int k = 0; k < kLieAlgebraComponents; k++) {
+        for (auto k = 0U; k < kLieAlgebraComponents; k++) {
             node_u_dot(i, k) = V(j, k);
         }
-        for (int k = 0; k < kLieAlgebraComponents; k++) {
+        for (auto k = 0U; k < kLieAlgebraComponents; k++) {
             node_u_ddot(i, k) = A(j, k);
         }
     }

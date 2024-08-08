@@ -6,19 +6,20 @@
 
 namespace openturbine {
 struct PopulateTangentIndices {
-    int num_system_nodes;
+    size_t num_system_nodes;
     Kokkos::View<int*>::const_type node_state_indices;
     Kokkos::View<int*> indices;
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        auto entries_so_far = 0;
-        for (int i_node = 0; i_node < num_system_nodes; ++i_node) {
-            for (int n = 0; n < kLieAlgebraComponents; ++n) {
+        auto entries_so_far = 0U;
+        for (auto i_node = 0U; i_node < num_system_nodes; ++i_node) {
+            for (auto n = 0U; n < kLieAlgebraComponents; ++n) {
                 const auto i = i_node;
-                const auto column_start = node_state_indices(i) * kLieAlgebraComponents;
-                for (int m = 0; m < kLieAlgebraComponents; ++m) {
-                    indices(entries_so_far) = column_start + m;
+                const auto column_start =
+                    static_cast<size_t>(node_state_indices(i)) * kLieAlgebraComponents;
+                for (auto m = 0U; m < kLieAlgebraComponents; ++m) {
+                    indices(entries_so_far) = static_cast<int>(column_start + m);
                     ++entries_so_far;
                 }
             }

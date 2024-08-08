@@ -5,9 +5,9 @@
 #include "src/restruct_poc/math/quaternion_operations.hpp"
 #include "src/restruct_poc/math/vector_operations.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
-template <int size>
+template <unsigned size>
 auto Create1DView(const std::array<double, size>& input) {
     auto view = Kokkos::View<double[size]>("view");
     auto view_host =
@@ -18,12 +18,12 @@ auto Create1DView(const std::array<double, size>& input) {
     return view;
 }
 
-template <int rows, int cols>
+template <unsigned rows, unsigned cols>
 auto Create2DView(const std::array<std::array<double, rows>, cols>& input) {
     auto view = Kokkos::View<double[rows][cols]>("view");
     auto view_host = Kokkos::create_mirror(view);
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
+    for (auto i = 0U; i < rows; i++) {
+        for (auto j = 0U; j < cols; j++) {
             view_host(i, j) = input[i][j];
         }
     }
@@ -32,7 +32,7 @@ auto Create2DView(const std::array<std::array<double, rows>, cols>& input) {
 }
 
 void TestConversion(
-    Kokkos::View<const double[4]> q, const std::vector<std::vector<double>>& expected
+    const Kokkos::View<const double[4]>& q, const std::vector<std::vector<double>>& expected
 ) {
     auto R_from_q = Kokkos::View<double[3][3]>("R_from_q");
     Kokkos::parallel_for(
@@ -65,7 +65,7 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutZAxi
 }
 
 void TestRotation(
-    Kokkos::View<const double[4]> q, Kokkos::View<const double[3]> v,
+    const Kokkos::View<const double[4]>& q, const Kokkos::View<const double[3]>& v,
     const std::vector<double>& exact
 ) {
     auto v_rot = Kokkos::View<double[3]>("v_rot");
@@ -105,7 +105,9 @@ TEST(QuaternionTest, RotateXAxisNeg45DegreesAboutZAxis) {
     TestRotation(rotation_z_axis, x_axis, {0.707107, -0.707107, 0.});
 }
 
-void TestDerivative(Kokkos::View<const double[4]> q, const std::vector<std::vector<double>>& exact) {
+void TestDerivative(
+    const Kokkos::View<const double[4]>& q, const std::vector<std::vector<double>>& exact
+) {
     auto m = Kokkos::View<double[3][4]>("m");
     Kokkos::parallel_for(
         "QuaternionDerivative", 1, KOKKOS_LAMBDA(int) { QuaternionDerivative(q, m); }
@@ -118,7 +120,7 @@ TEST(QuaternionTest, QuaternionDerivative) {
     TestDerivative(q, {{-2., 1., -4., 3.}, {-3., 4., 1., -2.}, {-4., -3., 2., 1.}});
 }
 
-void TestInverse(Kokkos::View<const double[4]> q, const std::vector<double>& exact) {
+void TestInverse(const Kokkos::View<const double[4]>& q, const std::vector<double>& exact) {
     auto q_inv = Kokkos::View<double[4]>("q_inv");
     Kokkos::parallel_for(
         "QuaternionInverse", 1, KOKKOS_LAMBDA(int) { QuaternionInverse(q, q_inv); }
@@ -133,7 +135,7 @@ TEST(QuaternionTest, GetInverse) {
 }
 
 void TestCompose(
-    Kokkos::View<const double[4]> q1, Kokkos::View<const double[4]> q2,
+    const Kokkos::View<const double[4]>& q1, const Kokkos::View<const double[4]>& q2,
     const std::vector<double>& exact
 ) {
     auto qn = Kokkos::View<double[4]>("qn");
@@ -167,7 +169,7 @@ auto Create2DView(const std::array<double, 9>& input) {
     return m;
 }
 
-void TestAxialVector(Kokkos::View<const double[3][3]> m, const std::vector<double>& exact) {
+void TestAxialVector(const Kokkos::View<const double[3][3]>& m, const std::vector<double>& exact) {
     auto v = Kokkos::View<double[3]>("v");
     Kokkos::parallel_for(
         "AxialVectorOfMatrix", 1, KOKKOS_LAMBDA(int) { AxialVectorOfMatrix(m, v); }
@@ -180,7 +182,9 @@ TEST(VectorTest, AxialVectorOfMatrix) {
     TestAxialVector(m, {0., 0., 1.});
 }
 
-void TestRotationToQuaternion(Kokkos::View<const double[4]> phi, const std::vector<double>& exact) {
+void TestRotationToQuaternion(
+    const Kokkos::View<const double[4]>& phi, const std::vector<double>& exact
+) {
     auto quaternion = Kokkos::View<double[4]>("quaternion");
     Kokkos::parallel_for(
         "RotationVectorToQuaternion", 1,
@@ -199,7 +203,7 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
     TestRotationToQuaternion(phi, {0.707107, 0., 0., 0.707107});
 }
 
-void TestVecTilde(Kokkos::View<double[3]> v, const std::vector<std::vector<double>>& exact) {
+void TestVecTilde(const Kokkos::View<double[3]>& v, const std::vector<std::vector<double>>& exact) {
     auto m = Kokkos::View<double[3][3]>("m");
     Kokkos::parallel_for(
         "VecTilde", 1, KOKKOS_LAMBDA(int) { VecTilde(v, m); }
@@ -235,7 +239,7 @@ TEST(VectorTest, CrossProduct_Set2) {
 void test_DotProduct_View() {
     auto a = Create1DView<3>({1., 2., 3.});
     auto b = Create1DView<3>({4., 5., 6.});
-    auto c = double{};
+    auto c = 0.;
     Kokkos::parallel_reduce(
         "DotProduct_View", 1, KOKKOS_LAMBDA(int, double& result) { result = DotProduct(a, b); }, c
     );
@@ -295,4 +299,4 @@ TEST(MatrixTest, AX_Matrix) {
     test_AX_Matrix();
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

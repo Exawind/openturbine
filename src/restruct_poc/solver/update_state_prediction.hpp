@@ -14,7 +14,9 @@
 
 namespace openturbine {
 
-inline void UpdateStatePrediction(Solver& solver, View_N x_system, View_N x_lambda) {
+inline void UpdateStatePrediction(
+    const Solver& solver, const View_N& x_system, const View_N& x_lambda
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
     if (solver.is_dynamic_solve) {
         Kokkos::parallel_for(

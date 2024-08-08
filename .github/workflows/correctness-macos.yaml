@@ -42,8 +42,9 @@ jobs:
         mkdir build
         cd build
         cmake .. \
-          -DOTURB_ENABLE_TESTS:BOOL=ON \
-          -DOTURB_ENABLE_BASIC_SANITIZERS=ON \
+          -DOpenTurbine_ENABLE_SANITIZER_ADDRESS=ON \
+          -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=ON \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} 
         cmake --build .
+        cp src/*.dll tests/unit_tests/
         ctest --output-on-failure
