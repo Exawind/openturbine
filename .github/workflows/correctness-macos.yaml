@@ -28,8 +28,15 @@ jobs:
         spack external find
         spack install googletest
         spack install trilinos@master~mpi~epetra+basker
+    - name: Cache install yaml-cpp
+      id: cache-yaml-cpp
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/spack
+        key: macos-yaml-cpp
     - name: Install yaml-cpp
-      run:
+      if: steps.cache-yaml-cpp.outputs.cache-hit != 'true'
+      run: |
         source spack/share/spack/setup-env.sh
         spack install yaml-cpp
     - name: Clone
