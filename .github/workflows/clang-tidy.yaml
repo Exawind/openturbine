@@ -25,6 +25,10 @@ jobs:
         spack external find
         spack install googletest
         spack install trilinos@master~mpi~epetra+basker
+    - name: Install yaml-cpp
+      run:
+        source spack/share/spack/setup-env.sh
+        spack install yaml-cpp
     - name: Clone
       uses: actions/checkout@v4
       with:
@@ -35,6 +39,7 @@ jobs:
         source spack/share/spack/setup-env.sh
         spack load trilinos
         spack load googletest
+        spack load yaml-cpp
         cd openturbine
         mkdir build-clangtidy
         cd build-clangtidy
