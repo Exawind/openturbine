@@ -47,6 +47,7 @@ jobs:
         source spack/share/spack/setup-env.sh
         spack load trilinos
         spack load googletest
+        spack load yaml-cpp
         sudo apt-get install cppcheck
         cd openturbine
         mkdir build-cppcheck
