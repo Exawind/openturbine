@@ -17,13 +17,20 @@ enum class ConstraintType {
     kRotationControl = 5,  // Specify rotation about given axis
 };
 
+KOKKOS_INLINE_FUNCTION
+constexpr size_t GetNumberOfNodes(ConstraintType t) {
+    const auto has_two_nodes = t == ConstraintType::kRigid || t == ConstraintType::kCylindrical ||
+                               t == ConstraintType::kRotationControl;
+    return 1U + static_cast<size_t>(has_two_nodes);
+}
+
 /// @brief Struct to define a constraint between two nodes
 /// @details A constraint is a relationship between two nodes that restricts their relative motion
 /// in some way. Constraints can be used to model fixed boundary conditions, prescribed
 /// displacements, rigid body motion, and other types of constraints.
 struct Constraint {
     ConstraintType type;        //< Type of constraint
-    int ID;                     //< Unique identifier for constraint
+    size_t ID;                  //< Unique identifier for constraint
     Node base_node;             //< Base node for constraint
     Node target_node;           //< Target node for constraint
     Array_3 X0 = {0.};          //< reference position for prescribed BC
@@ -33,7 +40,7 @@ struct Constraint {
     double* control = nullptr;  //< Pointer to control signal
 
     Constraint(
-        ConstraintType constraint_type, const int id, const Node& node1, const Node& node2,
+        ConstraintType constraint_type, const size_t id, const Node& node1, const Node& node2,
         const Array_3& vec = {0., 0., 0.}, double* ctrl = nullptr
     )
         : type(constraint_type),

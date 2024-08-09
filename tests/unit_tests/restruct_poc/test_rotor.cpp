@@ -346,7 +346,7 @@ TEST(RotorTest, IEA15RotorHub) {
         const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
 
         // Update prescribed displacement constraint on hub
-        solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc->ID), u_hub);
+        solver.constraints.UpdateDisplacement(hub_bc->ID, u_hub);
 
         // Take step
         auto converged = Step(solver, beams);
@@ -536,7 +536,7 @@ TEST(RotorTest, IEA15RotorController) {
 
         // Update prescribed displacement constraint on hub
         const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
-        solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc->ID), u_hub);
+        solver.constraints.UpdateDisplacement(hub_bc->ID, u_hub);
 
         // Update time in controller
         controller.io.time = t;

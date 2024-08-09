@@ -426,9 +426,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     for (int i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
-        solver.constraints.UpdateDisplacement(
-            static_cast<size_t>(hub_bc->ID), {0., 0., 0., q[0], q[1], q[2], q[3]}
-        );
+        solver.constraints.UpdateDisplacement(hub_bc->ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
         const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
     }

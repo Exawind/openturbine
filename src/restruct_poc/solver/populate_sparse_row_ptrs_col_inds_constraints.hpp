@@ -29,17 +29,17 @@ struct PopulateSparseRowPtrsColInds_Constraints {
                 // Add column indices for target node
                 for (auto j = 0U; j < kLieAlgebraComponents; ++j) {
                     B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
-                        static_cast<size_t>(cd.target_node_index) * kLieAlgebraComponents + j
+                        cd.target_node_index * kLieAlgebraComponents + j
                     );
                     ind_col++;
                 }
 
                 // Add column indices for base node if it has a valid index
-                if (cd.base_node_index >= 0) {
+                if (GetNumberOfNodes(cd.type) == 2U) {
                     // Add column indices for base node
                     for (auto j = 0U; j < kLieAlgebraComponents; ++j) {
                         B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
-                            static_cast<size_t>(cd.base_node_index) * kLieAlgebraComponents + j
+                            cd.base_node_index * kLieAlgebraComponents + j
                         );
                         ind_col++;
                     }

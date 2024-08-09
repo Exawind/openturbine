@@ -161,7 +161,7 @@ struct Solver {
         auto host_node_ids = Kokkos::create_mirror(node_ids);
 
         for (auto i = 0U; i < system_nodes.size(); ++i) {
-            host_node_ids(i) = system_nodes[i]->ID;
+            host_node_ids(i) = static_cast<int>(system_nodes[i]->ID);
         }
         Kokkos::deep_copy(node_ids, host_node_ids);
         Kokkos::parallel_for(
