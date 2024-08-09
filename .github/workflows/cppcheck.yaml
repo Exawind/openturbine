@@ -31,7 +31,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/spack
-        key: macos-yaml-cpp
+        key: linux-yaml-cpp
     - name: Install yaml-cpp
       if: steps.cache-yaml-cpp.outputs.cache-hit != 'true'
       run: |
