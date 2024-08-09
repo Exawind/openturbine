@@ -71,6 +71,9 @@ def modify_name(snake_str: str) -> str:
     return modified
 
 def modify_variable_name(snake_str: str) -> str:
+    # get it to lower case
+    snake_str = snake_str.lower()
+
     # remove spaces
     modified = snake_str.replace(' ', '')
 

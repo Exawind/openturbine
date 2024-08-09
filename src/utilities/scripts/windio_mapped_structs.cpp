@@ -195,7 +195,7 @@ struct OuterShapeBem {
     Twist twist;
     PitchAxis pitch_axis;
     TDividedByC t_divided_by_c;
-    LDividedByD L_divided_by_D;
+    LDividedByD l_divided_by_d;
     CD c_d;
     StallMargin stall_margin;
     ReferenceAxis reference_axis;
@@ -217,8 +217,8 @@ struct OuterShapeBem {
         if (node["t_divided_by_c"]) {
             t_divided_by_c.parse(node["t_divided_by_c"]);
         }
-        if (node["L_divided_by_D"]) {
-            L_divided_by_D.parse(node["L_divided_by_D"]);
+        if (node["l_divided_by_d"]) {
+            l_divided_by_d.parse(node["l_divided_by_d"]);
         }
         if (node["c_d"]) {
             c_d.parse(node["c_d"]);
@@ -436,12 +436,12 @@ struct YSh {
 // Timoschenko beam as in HAWC2
 struct TimoschenkoHawc {
     ReferenceAxis reference_axis;
-    A A;
-    E E;
-    G G;
-    IX I_x;
-    IY I_y;
-    K K;
+    A a;
+    E e;
+    G g;
+    IX i_x;
+    IY i_y;
+    K k;
     Dm dm;
     KX k_x;
     KY k_y;
@@ -459,23 +459,23 @@ struct TimoschenkoHawc {
         if (node["reference_axis"]) {
             reference_axis.parse(node["reference_axis"]);
         }
-        if (node["A"]) {
-            A.parse(node["A"]);
+        if (node["a"]) {
+            a.parse(node["a"]);
         }
-        if (node["E"]) {
-            E.parse(node["E"]);
+        if (node["e"]) {
+            e.parse(node["e"]);
         }
-        if (node["G"]) {
-            G.parse(node["G"]);
+        if (node["g"]) {
+            g.parse(node["g"]);
         }
-        if (node["I_x"]) {
-            I_x.parse(node["I_x"]);
+        if (node["i_x"]) {
+            i_x.parse(node["i_x"]);
         }
-        if (node["I_y"]) {
-            I_y.parse(node["I_y"]);
+        if (node["i_y"]) {
+            i_y.parse(node["i_y"]);
         }
-        if (node["K"]) {
-            K.parse(node["K"]);
+        if (node["k"]) {
+            k.parse(node["k"]);
         }
         if (node["dm"]) {
             dm.parse(node["dm"]);
@@ -651,21 +651,21 @@ struct J3 {
 // Geometrically exact beams with simplified properties
 struct CpLambdaBeam {
     ReferenceAxis reference_axis;
-    T11 T11;
-    T22 T22;
-    Ea EA;
-    E11 E11;
-    E22 E22;
-    Gj GJ;
+    T11 t11;
+    T22 t22;
+    Ea ea;
+    E11 e11;
+    E22 e22;
+    Gj gj;
     XCe x_ce;
     YCe y_ce;
     Dm dm;
     DeltaTheta delta_theta;
     XSh x_sh;
     YSh y_sh;
-    J1 J1;
-    J2 J2;
-    J3 J3;
+    J1 j1;
+    J2 j2;
+    J3 j3;
     XCg x_cg;
     YCg y_cg;
 
@@ -673,23 +673,23 @@ struct CpLambdaBeam {
         if (node["reference_axis"]) {
             reference_axis.parse(node["reference_axis"]);
         }
-        if (node["T11"]) {
-            T11.parse(node["T11"]);
+        if (node["t11"]) {
+            t11.parse(node["t11"]);
         }
-        if (node["T22"]) {
-            T22.parse(node["T22"]);
+        if (node["t22"]) {
+            t22.parse(node["t22"]);
         }
-        if (node["EA"]) {
-            EA.parse(node["EA"]);
+        if (node["ea"]) {
+            ea.parse(node["ea"]);
         }
-        if (node["E11"]) {
-            E11.parse(node["E11"]);
+        if (node["e11"]) {
+            e11.parse(node["e11"]);
         }
-        if (node["E22"]) {
-            E22.parse(node["E22"]);
+        if (node["e22"]) {
+            e22.parse(node["e22"]);
         }
-        if (node["GJ"]) {
-            GJ.parse(node["GJ"]);
+        if (node["gj"]) {
+            gj.parse(node["gj"]);
         }
         if (node["x_ce"]) {
             x_ce.parse(node["x_ce"]);
@@ -709,14 +709,14 @@ struct CpLambdaBeam {
         if (node["y_sh"]) {
             y_sh.parse(node["y_sh"]);
         }
-        if (node["J1"]) {
-            J1.parse(node["J1"]);
+        if (node["j1"]) {
+            j1.parse(node["j1"]);
         }
-        if (node["J2"]) {
-            J2.parse(node["J2"]);
+        if (node["j2"]) {
+            j2.parse(node["j2"]);
         }
-        if (node["J3"]) {
-            J3.parse(node["J3"]);
+        if (node["j3"]) {
+            j3.parse(node["j3"]);
         }
         if (node["x_cg"]) {
             x_cg.parse(node["x_cg"]);
@@ -1175,8 +1175,8 @@ struct Drivetrain {
     double transformer_mass_user;  // Override regular regression-based calculation of transformer
                                    // mass with this value
     std::string bedplate_material;  // Material name identifier
-    std::string mb1Type;            // Type of bearing for first main bearing
-    std::string mb2Type;            // Type of bearing for second main bearing
+    std::string mb1type;            // Type of bearing for first main bearing
+    std::string mb2type;            // Type of bearing for second main bearing
     bool uptower;  // If power electronics are located uptower (True) or at tower base (False)
     std::string gear_configuration;   // 3-letter string of Es or Ps to denote epicyclic or parallel
                                       // gear configuration
@@ -1241,8 +1241,8 @@ struct Drivetrain {
             node["transformer_mass_user"] ? node["transformer_mass_user"].as<double>() : 0.;
         bedplate_material =
             node["bedplate_material"] ? node["bedplate_material"].as<std::string>() : "";
-        mb1Type = node["mb1Type"] ? node["mb1Type"].as<std::string>() : "";
-        mb2Type = node["mb2Type"] ? node["mb2Type"].as<std::string>() : "";
+        mb1type = node["mb1type"] ? node["mb1type"].as<std::string>() : "";
+        mb2type = node["mb2type"] ? node["mb2type"].as<std::string>() : "";
         uptower = node["uptower"] ? node["uptower"].as<bool>() : false;
         gear_configuration =
             node["gear_configuration"] ? node["gear_configuration"].as<std::string>() : "";
@@ -1257,11 +1257,11 @@ struct Generator {
                               // approach to generator scaling. This input allows for overriding of
                               // the regression-based scaling coefficient to obtain generator mass
     std::string generator_type;
-    double B_r;          // Words
-    double P_Fe0e;       // Words
-    double P_Fe0h;       // Words
-    double S_N;          // Words
-    double S_Nmax;       // Words
+    double b_r;          // Words
+    double p_fe0e;       // Words
+    double p_fe0h;       // Words
+    double s_n;          // Words
+    double s_nmax;       // Words
     double alpha_p;      // Words
     double b_r_tau_r;    // Words
     double b_ro;         // Words
@@ -1284,11 +1284,11 @@ struct Generator {
     int q1;              // Words
     int q3;              // Words
     double ratio_mw2pp;  // Words
-    double resist_Cu;    // Resistivity of copper
+    double resist_cu;    // Resistivity of copper
     double sigma;        // Maximum allowable shear stress
     double y_tau_p;      // Words
     double y_tau_pr;     // Words
-    double I_0;          // Words
+    double i_0;          // Words
     double d_r;          // Words
     double h_m;          // Words
     double h_0;          // Words
@@ -1301,23 +1301,23 @@ struct Generator {
     double b_st;         // Words
     double d_s;          // Words
     double t_ws;         // Words
-    double rho_Copper;   // Copper density
-    double rho_Fe;       // Structural steel density
-    double rho_Fes;      // Electrical steel density
-    double rho_PM;       // Permanent magnet density
-    double C_Cu;         // Copper cost
-    double C_Fe;         // Structural steel cost
-    double C_Fes;        // Electrical steel cost
-    double C_PM;         // Permanent magnet cost
+    double rho_copper;   // Copper density
+    double rho_fe;       // Structural steel density
+    double rho_fes;      // Electrical steel density
+    double rho_pm;       // Permanent magnet density
+    double c_cu;         // Copper cost
+    double c_fe;         // Structural steel cost
+    double c_fes;        // Electrical steel cost
+    double c_pm;         // Permanent magnet cost
 
     void parse(const YAML::Node& node) {
         mass_coefficient = node["mass_coefficient"] ? node["mass_coefficient"].as<double>() : 0.;
         generator_type = node["generator_type"] ? node["generator_type"].as<std::string>() : "";
-        B_r = node["B_r"] ? node["B_r"].as<double>() : 0.;
-        P_Fe0e = node["P_Fe0e"] ? node["P_Fe0e"].as<double>() : 0.;
-        P_Fe0h = node["P_Fe0h"] ? node["P_Fe0h"].as<double>() : 0.;
-        S_N = node["S_N"] ? node["S_N"].as<double>() : 0.;
-        S_Nmax = node["S_Nmax"] ? node["S_Nmax"].as<double>() : 0.;
+        b_r = node["b_r"] ? node["b_r"].as<double>() : 0.;
+        p_fe0e = node["p_fe0e"] ? node["p_fe0e"].as<double>() : 0.;
+        p_fe0h = node["p_fe0h"] ? node["p_fe0h"].as<double>() : 0.;
+        s_n = node["s_n"] ? node["s_n"].as<double>() : 0.;
+        s_nmax = node["s_nmax"] ? node["s_nmax"].as<double>() : 0.;
         alpha_p = node["alpha_p"] ? node["alpha_p"].as<double>() : 0.;
         b_r_tau_r = node["b_r_tau_r"] ? node["b_r_tau_r"].as<double>() : 0.;
         b_ro = node["b_ro"] ? node["b_ro"].as<double>() : 0.;
@@ -1340,11 +1340,11 @@ struct Generator {
         q1 = node["q1"] ? node["q1"].as<int>() : 0;
         q3 = node["q3"] ? node["q3"].as<int>() : 0;
         ratio_mw2pp = node["ratio_mw2pp"] ? node["ratio_mw2pp"].as<double>() : 0.;
-        resist_Cu = node["resist_Cu"] ? node["resist_Cu"].as<double>() : 0.;
+        resist_cu = node["resist_cu"] ? node["resist_cu"].as<double>() : 0.;
         sigma = node["sigma"] ? node["sigma"].as<double>() : 0.;
         y_tau_p = node["y_tau_p"] ? node["y_tau_p"].as<double>() : 0.;
         y_tau_pr = node["y_tau_pr"] ? node["y_tau_pr"].as<double>() : 0.;
-        I_0 = node["I_0"] ? node["I_0"].as<double>() : 0.;
+        i_0 = node["i_0"] ? node["i_0"].as<double>() : 0.;
         d_r = node["d_r"] ? node["d_r"].as<double>() : 0.;
         h_m = node["h_m"] ? node["h_m"].as<double>() : 0.;
         h_0 = node["h_0"] ? node["h_0"].as<double>() : 0.;
@@ -1357,14 +1357,14 @@ struct Generator {
         b_st = node["b_st"] ? node["b_st"].as<double>() : 0.;
         d_s = node["d_s"] ? node["d_s"].as<double>() : 0.;
         t_ws = node["t_ws"] ? node["t_ws"].as<double>() : 0.;
-        rho_Copper = node["rho_Copper"] ? node["rho_Copper"].as<double>() : 0.;
-        rho_Fe = node["rho_Fe"] ? node["rho_Fe"].as<double>() : 0.;
-        rho_Fes = node["rho_Fes"] ? node["rho_Fes"].as<double>() : 0.;
-        rho_PM = node["rho_PM"] ? node["rho_PM"].as<double>() : 0.;
-        C_Cu = node["C_Cu"] ? node["C_Cu"].as<double>() : 0.;
-        C_Fe = node["C_Fe"] ? node["C_Fe"].as<double>() : 0.;
-        C_Fes = node["C_Fes"] ? node["C_Fes"].as<double>() : 0.;
-        C_PM = node["C_PM"] ? node["C_PM"].as<double>() : 0.;
+        rho_copper = node["rho_copper"] ? node["rho_copper"].as<double>() : 0.;
+        rho_fe = node["rho_fe"] ? node["rho_fe"].as<double>() : 0.;
+        rho_fes = node["rho_fes"] ? node["rho_fes"].as<double>() : 0.;
+        rho_pm = node["rho_pm"] ? node["rho_pm"].as<double>() : 0.;
+        c_cu = node["c_cu"] ? node["c_cu"].as<double>() : 0.;
+        c_fe = node["c_fe"] ? node["c_fe"].as<double>() : 0.;
+        c_fes = node["c_fes"] ? node["c_fes"].as<double>() : 0.;
+        c_pm = node["c_pm"] ? node["c_pm"].as<double>() : 0.;
     }
 };
 
@@ -1585,25 +1585,25 @@ struct Jacket {
 // member/element coordinate system).  If not specified, default is all entries are False (completely
 // rigid).  For instance, a ball joint would be Rx=Ry=Rz=False, Rxx=Ryy=Rzz=True
 struct Reactions {
-    bool Rx;
-    bool Ry;
-    bool Rz;
-    bool Rxx;
-    bool Ryy;
-    bool Rzz;
-    std::vector<double> Euler;  // Euler angles [alpha, beta, gamma] that describe the rotation of
+    bool rx;
+    bool ry;
+    bool rz;
+    bool rxx;
+    bool ryy;
+    bool rzz;
+    std::vector<double> euler;  // Euler angles [alpha, beta, gamma] that describe the rotation of
                                 // the Reaction coordinate system relative to the global coordinate
                                 // system α is a rotation around the z axis, β is a rotation around
                                 // the x' axis, γ is a rotation around the z" axis.
 
     void parse(const YAML::Node& node) {
-        Rx = node["Rx"] ? node["Rx"].as<bool>() : false;
-        Ry = node["Ry"] ? node["Ry"].as<bool>() : false;
-        Rz = node["Rz"] ? node["Rz"].as<bool>() : false;
-        Rxx = node["Rxx"] ? node["Rxx"].as<bool>() : false;
-        Ryy = node["Ryy"] ? node["Ryy"].as<bool>() : false;
-        Rzz = node["Rzz"] ? node["Rzz"].as<bool>() : false;
-        Euler = node["Euler"] ? node["Euler"].as<std::vector<double>>() : std::vector<double>();
+        rx = node["rx"] ? node["rx"].as<bool>() : false;
+        ry = node["ry"] ? node["ry"].as<bool>() : false;
+        rz = node["rz"] ? node["rz"].as<bool>() : false;
+        rxx = node["rxx"] ? node["rxx"].as<bool>() : false;
+        ryy = node["ryy"] ? node["ryy"].as<bool>() : false;
+        rzz = node["rzz"] ? node["rzz"].as<bool>() : false;
+        euler = node["euler"] ? node["euler"].as<std::vector<double>>() : std::vector<double>();
     }
 };
 
@@ -1806,9 +1806,9 @@ struct Members {
     InternalStructure internal_structure;
     std::vector<AxialJoints>
         axial_joints;  // Define joints along non-dimensional axis of this member
-    double Ca;         // User-defined added mass coefficient
-    double Cp;         // User-defined pressure coefficient
-    double Cd;         // User-defined drag coefficient
+    double ca;         // User-defined added mass coefficient
+    double cp;         // User-defined pressure coefficient
+    double cd;         // User-defined drag coefficient
 
     void parse(const YAML::Node& node) {
         name = node["name"] ? node["name"].as<std::string>() : "";
@@ -1827,9 +1827,9 @@ struct Members {
                 axial_joints.push_back(x);
             }
         }
-        Ca = node["Ca"] ? node["Ca"].as<double>() : 0.;
-        Cp = node["Cp"] ? node["Cp"].as<double>() : 0.;
-        Cd = node["Cd"] ? node["Cd"].as<double>() : 0.;
+        ca = node["ca"] ? node["ca"].as<double>() : 0.;
+        cp = node["cp"] ? node["cp"].as<double>() : 0.;
+        cd = node["cd"] ? node["cd"].as<double>() : 0.;
     }
 };
 
@@ -1841,9 +1841,9 @@ struct RigidBodies {
     std::vector<double>
         cm_offset;  // Offset from joint location to center of mass (CM) of body in dx, dy, dz
     std::vector<double> moments_of_inertia;  // Moments of inertia around body CM in Ixx, Iyy, Izz
-    double Ca;                               // User-defined added mass coefficient
-    double Cp;                               // User-defined pressure coefficient
-    double Cd;                               // User-defined drag coefficient
+    double ca;                               // User-defined added mass coefficient
+    double cp;                               // User-defined pressure coefficient
+    double cd;                               // User-defined drag coefficient
 
     void parse(const YAML::Node& node) {
         joint1 = node["joint1"] ? node["joint1"].as<std::string>() : "";
@@ -1854,9 +1854,9 @@ struct RigidBodies {
         moments_of_inertia = node["moments_of_inertia"]
                                  ? node["moments_of_inertia"].as<std::vector<double>>()
                                  : std::vector<double>();
-        Ca = node["Ca"] ? node["Ca"].as<double>() : 0.;
-        Cp = node["Cp"] ? node["Cp"].as<double>() : 0.;
-        Cd = node["Cd"] ? node["Cd"].as<double>() : 0.;
+        ca = node["ca"] ? node["ca"].as<double>() : 0.;
+        cp = node["cp"] ? node["cp"].as<double>() : 0.;
+        cd = node["cd"] ? node["cd"].as<double>() : 0.;
     }
 };
 
@@ -2184,10 +2184,10 @@ struct Materials {
     int orth;                 // Flag to switch between isotropic (0) and orthotropic (1) materials
     double rho;  // Density of the material. For composites, this is the density of the laminate once
                  // cured
-    std::variant<double, std::vector<double>> E;  // Stiffness modulus. For orthotropic materials, it
+    std::variant<double, std::vector<double>> e;  // Stiffness modulus. For orthotropic materials, it
                                                   // consists of an array with E11, E22 and E33.
     std::variant<double, std::vector<double>>
-        G;  // Shear stiffness modulus. For orthotropic materials, it consists of an array with G12,
+        g;  // Shear stiffness modulus. For orthotropic materials, it consists of an array with G12,
             // G13 and G23
     std::variant<double, std::vector<double>>
         nu;  // Poisson ratio. For orthotropic materials, it consists of an array with nu12, nu13 and
@@ -2195,16 +2195,16 @@ struct Materials {
              // limits are imposed to anisotropic materials.
     std::variant<double, std::vector<double>> alpha;  // Thermal coefficient of expansion
     std::variant<double, std::vector<double>>
-        Xt;  // Ultimate tensile strength. For orthotropic materials, it consists of an array with
+        xt;  // Ultimate tensile strength. For orthotropic materials, it consists of an array with
              // the strength in directions 11, 22 and 33. The values must be positive
     std::variant<double, std::vector<double>>
-        Xc;  // Ultimate compressive strength. For orthotropic materials, it consists of an array
+        xc;  // Ultimate compressive strength. For orthotropic materials, it consists of an array
              // with the strength in directions 11, 22 and 33. The values must be positive
     std::variant<double, std::vector<double>>
-        Xy;  // Ultimate yield strength for metals. For orthotropic materials, it consists of an
+        xy;  // Ultimate yield strength for metals. For orthotropic materials, it consists of an
              // array with the strength in directions 12, 13 and 23
     std::variant<double, std::vector<double>>
-        S;  // Ultimate shear strength. For orthotropic materials, it consists of an array with the
+        s;  // Ultimate shear strength. For orthotropic materials, it consists of an array with the
             // strength in directions 12, 13 and 23
     double ply_t;      // Ply thickness of the composite material
     double unit_cost;  // Unit cost of the material. For composites, this is the unit cost of the dry
@@ -2221,15 +2221,15 @@ struct Materials {
                    // used in the NREL blade cost model https://www.nrel.gov/docs/fy19osti/73585.pdf
     double roll_mass;  // Mass of a fabric roll. This quantity is used in the NREL blade cost model
                        // https://www.nrel.gov/docs/fy19osti/73585.pdf
-    double GIc;   // Mode 1 critical energy-release rate. It is used by NuMAD from Sandia National
+    double gic;   // Mode 1 critical energy-release rate. It is used by NuMAD from Sandia National
                   // Laboratories
-    double GIIc;  // Mode 2 critical energy-release rate. It is used by NuMAD from Sandia National
+    double giic;  // Mode 2 critical energy-release rate. It is used by NuMAD from Sandia National
                   // Laboratories
     double alp0;  // Fracture angle under pure transverse compression. It is used by NuMAD from
                   // Sandia National Laboratories
-    std::variant<double, std::vector<double>> A;  // Fatigue S/N curve fitting parameter S=A*N^(-1/m)
+    std::variant<double, std::vector<double>> a;  // Fatigue S/N curve fitting parameter S=A*N^(-1/m)
     std::variant<double, std::vector<double>> m;  // Fatigue S/N curve fitting parameter S=A*N^(-1/m)
-    std::variant<double, std::vector<double>> R;  // Fatigue stress ratio
+    std::variant<double, std::vector<double>> r;  // Fatigue stress ratio
 
     void parse(const YAML::Node& node) {
         name = node["name"] ? node["name"].as<std::string>() : "";
@@ -2237,16 +2237,8 @@ struct Materials {
         source = node["source"] ? node["source"].as<std::string>() : "";
         orth = node["orth"] ? node["orth"].as<int>() : 0;
         rho = node["rho"] ? node["rho"].as<double>() : 0.;
-        if (!orth) {
-            E = node["E"] ? node["E"].as<double>() : 0.;
-        } else {
-            E = node["E"] ? node["E"].as<std::vector<double>>() : std::vector<double>();
-        }
-        if (!orth) {
-            G = node["G"] ? node["G"].as<double>() : 0.;
-        } else {
-            G = node["G"] ? node["G"].as<std::vector<double>>() : std::vector<double>();
-        }
+        e = node["e"] ? node["e"].as<double>() : 0.;
+        g = node["g"] ? node["g"].as<double>() : 0.;
         if (!orth) {
             nu = node["nu"] ? node["nu"].as<double>() : 0.;
         } else {
@@ -2257,26 +2249,10 @@ struct Materials {
         } else {
             alpha = node["alpha"] ? node["alpha"].as<std::vector<double>>() : std::vector<double>();
         }
-        if (!orth) {
-            Xt = node["Xt"] ? node["Xt"].as<double>() : 0.;
-        } else {
-            Xt = node["Xt"] ? node["Xt"].as<std::vector<double>>() : std::vector<double>();
-        }
-        if (!orth) {
-            Xc = node["Xc"] ? node["Xc"].as<double>() : 0.;
-        } else {
-            Xc = node["Xc"] ? node["Xc"].as<std::vector<double>>() : std::vector<double>();
-        }
-        if (!orth) {
-            Xy = node["Xy"] ? node["Xy"].as<double>() : 0.;
-        } else {
-            Xy = node["Xy"] ? node["Xy"].as<std::vector<double>>() : std::vector<double>();
-        }
-        if (!orth) {
-            S = node["S"] ? node["S"].as<double>() : 0.;
-        } else {
-            S = node["S"] ? node["S"].as<std::vector<double>>() : std::vector<double>();
-        }
+        xt = node["xt"] ? node["xt"].as<double>() : 0.;
+        xc = node["xc"] ? node["xc"].as<double>() : 0.;
+        xy = node["xy"] ? node["xy"].as<double>() : 0.;
+        s = node["s"] ? node["s"].as<double>() : 0.;
         ply_t = node["ply_t"] ? node["ply_t"].as<double>() : 0.;
         unit_cost = node["unit_cost"] ? node["unit_cost"].as<double>() : 0.;
         fvf = node["fvf"] ? node["fvf"].as<double>() : 0.;
@@ -2286,25 +2262,25 @@ struct Materials {
         component_id = node["component_id"] ? node["component_id"].as<int>() : 0;
         waste = node["waste"] ? node["waste"].as<double>() : 0.;
         roll_mass = node["roll_mass"] ? node["roll_mass"].as<double>() : 0.;
-        GIc = node["GIc"] ? node["GIc"].as<double>() : 0.;
-        GIIc = node["GIIc"] ? node["GIIc"].as<double>() : 0.;
+        gic = node["gic"] ? node["gic"].as<double>() : 0.;
+        giic = node["giic"] ? node["giic"].as<double>() : 0.;
         alp0 = node["alp0"] ? node["alp0"].as<double>() : 0.;
-        A = node["A"] ? node["A"].as<double>() : 0.;
+        a = node["a"] ? node["a"].as<double>() : 0.;
         m = node["m"] ? node["m"].as<double>() : 0.;
-        R = node["R"] ? node["R"].as<double>() : 0.;
+        r = node["r"] ? node["r"].as<double>() : 0.;
     }
 };
 
 // Supervisory
 struct Supervisory {
-    double Vin;    // Cut-in wind speed of the wind turbine.
-    double Vout;   // Cut-out wind speed of the wind turbine.
-    double maxTS;  // Maximum allowable blade tip speed.
+    double vin;    // Cut-in wind speed of the wind turbine.
+    double vout;   // Cut-out wind speed of the wind turbine.
+    double maxts;  // Maximum allowable blade tip speed.
 
     void parse(const YAML::Node& node) {
-        Vin = node["Vin"] ? node["Vin"].as<double>() : 0.;
-        Vout = node["Vout"] ? node["Vout"].as<double>() : 0.;
-        maxTS = node["maxTS"] ? node["maxTS"].as<double>() : 0.;
+        vin = node["vin"] ? node["vin"].as<double>() : 0.;
+        vout = node["vout"] ? node["vout"].as<double>() : 0.;
+        maxts = node["maxts"] ? node["maxts"].as<double>() : 0.;
     }
 };
 
@@ -2325,16 +2301,16 @@ struct Torque {
     double max_torque_rate;  // Maximum torque rate of the wind turbine generator.
     double tsr;  // Rated tip speed ratio of the wind turbine. As default, it is maintained constant
                  // in region II.
-    double VS_minspd;  // Minimum rotor speed. It is used by the ROSCO controller
+    double vs_minspd;  // Minimum rotor speed. It is used by the ROSCO controller
                        // (https://github.com/NREL/ROSCO)
-    double VS_maxspd;  // Maximum rotor speed. It is used by the ROSCO controller
+    double vs_maxspd;  // Maximum rotor speed. It is used by the ROSCO controller
                        // (https://github.com/NREL/ROSCO)
 
     void parse(const YAML::Node& node) {
         max_torque_rate = node["max_torque_rate"] ? node["max_torque_rate"].as<double>() : 0.;
         tsr = node["tsr"] ? node["tsr"].as<double>() : 0.;
-        VS_minspd = node["VS_minspd"] ? node["VS_minspd"].as<double>() : 0.;
-        VS_maxspd = node["VS_maxspd"] ? node["VS_maxspd"].as<double>() : 0.;
+        vs_minspd = node["vs_minspd"] ? node["vs_minspd"].as<double>() : 0.;
+        vs_maxspd = node["vs_maxspd"] ? node["vs_maxspd"].as<double>() : 0.;
     }
 };
 
@@ -2372,7 +2348,7 @@ struct Environment {
     double water_depth;           // Water depth for offshore environment.
     double soil_shear_modulus;    // Shear modulus of the soil.
     double soil_poisson;          // Poisson ratio of the soil.
-    double V_mean;  // Average inflow wind speed. If different than 0, this will overwrite the V mean
+    double v_mean;  // Average inflow wind speed. If different than 0, this will overwrite the V mean
                     // of the IEC wind class
 
     void parse(const YAML::Node& node) {
@@ -2393,7 +2369,7 @@ struct Environment {
         soil_shear_modulus =
             node["soil_shear_modulus"] ? node["soil_shear_modulus"].as<double>() : 0.;
         soil_poisson = node["soil_poisson"] ? node["soil_poisson"].as<double>() : 0.;
-        V_mean = node["V_mean"] ? node["V_mean"].as<double>() : 0.;
+        v_mean = node["v_mean"] ? node["v_mean"].as<double>() : 0.;
     }
 };
 
@@ -2462,9 +2438,9 @@ struct Costs {
                               // mostly).
     double fixed_charge_rate;  // Fixed charge rate to compute the levelized cost of energy. See this
                                // for inspiration https://www.nrel.gov/docs/fy20osti/74598.pdf
-    double bos_per_kW;         // Balance of stations costs expressed in USD per kW. See this for
+    double bos_per_kw;         // Balance of stations costs expressed in USD per kW. See this for
                                // inspiration https://www.nrel.gov/docs/fy20osti/74598.pdf
-    double opex_per_kW;        // Operational expenditures expressed in USD per kW. See this for
+    double opex_per_kw;        // Operational expenditures expressed in USD per kW. See this for
                                // inspiration https://www.nrel.gov/docs/fy20osti/74598.pdf
     int turbine_number;  // Number of turbines in the park, used to compute levelized cost of energy.
                          // Often wind parks are assumed of 600 MW. See this for inspiration
@@ -2505,8 +2481,8 @@ struct Costs {
     void parse(const YAML::Node& node) {
         wake_loss_factor = node["wake_loss_factor"] ? node["wake_loss_factor"].as<double>() : 0.;
         fixed_charge_rate = node["fixed_charge_rate"] ? node["fixed_charge_rate"].as<double>() : 0.;
-        bos_per_kW = node["bos_per_kW"] ? node["bos_per_kW"].as<double>() : 0.;
-        opex_per_kW = node["opex_per_kW"] ? node["opex_per_kW"].as<double>() : 0.;
+        bos_per_kw = node["bos_per_kw"] ? node["bos_per_kw"].as<double>() : 0.;
+        opex_per_kw = node["opex_per_kw"] ? node["opex_per_kw"].as<double>() : 0.;
         turbine_number = node["turbine_number"] ? node["turbine_number"].as<int>() : 0;
         labor_rate = node["labor_rate"] ? node["labor_rate"].as<double>() : 0.;
         painting_rate = node["painting_rate"] ? node["painting_rate"].as<double>() : 0.;
