@@ -735,9 +735,13 @@ struct StiffMatrix {
     void parse(const YAML::Node& node) {
         grid = node["grid"] ? node["grid"].as<std::vector<double>>() : std::vector<double>();
         if (node["values"]) {
-            for (const auto& item : node["values"]) {
-                values.push_back(item.as<std::vector<double>>());
-            }
+            std::transform(
+                node["values"].begin(), node["values"].end(), std::back_inserter(values),
+                [](const auto& item) {
+                    //  use 'template' keyword to treat 'as' as a dependent template name
+                    return item.template as<std::vector<double>>();
+                }
+            );
         }
     }
 };
