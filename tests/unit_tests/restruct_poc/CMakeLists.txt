@@ -10,6 +10,7 @@ target_sources(
     test_math.cpp
     test_utilities.cpp
     test_controller.cpp
+    test_yaml_parser.cpp
     beams/test_interpolate_QP_state.cpp
     beams/test_interpolate_QP_vector.cpp
     model/test_model.cpp
