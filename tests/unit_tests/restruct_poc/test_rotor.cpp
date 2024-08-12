@@ -32,7 +32,7 @@ template <typename T>
 void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
     std::ofstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Unable to open file: " << filename << std::endl;
+        std::cerr << "Unable to open file: " << filename << "\n";
         return;
     }
     file << std::setprecision(16);
@@ -40,7 +40,7 @@ void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::strin
         for (const auto& element : innerVector) {
             file << element << ",";
         }
-        file << std::endl;
+        file << "\n";
     }
     file.close();
 }
@@ -552,11 +552,10 @@ TEST(RotorTest, IEA15RotorController) {
 
         // If flag set, write quadrature point glob position to file
         if (write_output) {
-            auto tmp = std::to_string(i + 1);
-            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-
 #ifdef OTURB_ENABLE_VTK
             // Write VTK output to file
+            auto tmp = std::to_string(i + 1);
+            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
             BeamsWriteVTK(beams, file_name + ".vtu");
 #endif
         }

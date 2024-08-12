@@ -60,7 +60,7 @@ void TurbineController::CallController() {
     if (status < 0) {
         throw std::runtime_error("Error raised in controller: " + message);
     } else if (status > 0) {
-        std::cout << "Warning from controller: " << message << std::endl;
+        std::cout << "Warning from controller: " << message << "\n";
     }
 }
 

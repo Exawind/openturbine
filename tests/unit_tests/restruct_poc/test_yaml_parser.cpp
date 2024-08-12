@@ -3,14 +3,14 @@
 
 #include "test_utilities.hpp"
 
-#include "src/utilities/scripts/windio_mapped_structs.cpp"
+#include "src/utilities/scripts/windio_mapped_structs.hpp"
 
 namespace openturbine::restruct_poc::tests {
 
 TEST(ParserTest, ParseIEA15MW) {
     try {
         // Load the YAML file
-        YAML::Node config = YAML::LoadFile("../src/utilities/scripts/IEA-15-240-RWT.yaml");
+        const YAML::Node config = YAML::LoadFile("../src/utilities/scripts/IEA-15-240-RWT.yaml");
 
         // Parse the top-level node
         Turbine turbine;
@@ -33,7 +33,7 @@ TEST(ParserTest, ParseIEA15MW) {
         // Assert the materials
         ASSERT_EQ(turbine.materials.size(), 11);
     } catch (const YAML::Exception& e) {
-        std::cerr << "Error loading YAML file: " << e.what() << std::endl;
+        std::cerr << "Error loading YAML file: " << e.what() << "\n";
     }
 }
 
