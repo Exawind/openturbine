@@ -156,11 +156,7 @@ TEST(RotorTest, IEA15Rotor) {
     UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
 
     // Write quadrature point global positions to file and VTK
-    std::vector<std::vector<double>> qp_x0;
     if (write_output) {
-        qp_x0 = kokkos_view_2D_to_vector(beams.qp_x0);
-        WriteMatrixToFile(qp_x0, "steps/step_0000.csv");
-
 #ifdef OTURB_ENABLE_VTK
         // Write vtk visualization file
         BeamsWriteVTK(beams, "steps/step_0000.vtu");
@@ -195,16 +191,6 @@ TEST(RotorTest, IEA15Rotor) {
 
         // If flag set, write quadrature point glob position to file
         if (write_output) {
-            auto tmp = std::to_string(i + 1);
-            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-            auto qp_x = kokkos_view_2D_to_vector(beams.qp_u);
-            for (size_t j = 0; j < qp_x.size(); ++j) {
-                for (size_t k = 0; k < qp_x[0].size(); ++k) {
-                    qp_x[j][k] += qp_x0[j][k];
-                }
-            }
-            WriteMatrixToFile(qp_x, file_name + ".csv");
-
 #ifdef OTURB_ENABLE_VTK
             // Write VTK output to file
             BeamsWriteVTK(beams, file_name + ".vtu");
@@ -322,11 +308,7 @@ TEST(RotorTest, IEA15RotorHub) {
     UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
 
     // Write quadrature point global positions to file and VTK
-    std::vector<std::vector<double>> qp_x0;
     if (write_output) {
-        qp_x0 = kokkos_view_2D_to_vector(beams.qp_x0);
-        WriteMatrixToFile(qp_x0, "steps/step_0000.csv");
-
 #ifdef OTURB_ENABLE_VTK
         // Write vtk visualization file
         BeamsWriteVTK(beams, "steps/step_0000.vtu");
@@ -346,7 +328,7 @@ TEST(RotorTest, IEA15RotorHub) {
         const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
 
         // Update prescribed displacement constraint on hub
-        solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc->ID), u_hub);
+        solver.constraints.UpdateDisplacement(hub_bc->ID, u_hub);
 
         // Take step
         auto converged = Step(solver, beams);
@@ -356,16 +338,6 @@ TEST(RotorTest, IEA15RotorHub) {
 
         // If flag set, write quadrature point glob position to file
         if (write_output) {
-            auto tmp = std::to_string(i + 1);
-            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-            auto qp_x = kokkos_view_2D_to_vector(beams.qp_u);
-            for (size_t j = 0; j < qp_x.size(); ++j) {
-                for (size_t k = 0; k < qp_x[0].size(); ++k) {
-                    qp_x[j][k] += qp_x0[j][k];
-                }
-            }
-            WriteMatrixToFile(qp_x, file_name + ".csv");
-
 #ifdef OTURB_ENABLE_VTK
             // Write VTK output to file
             BeamsWriteVTK(beams, file_name + ".vtu");
@@ -515,11 +487,7 @@ TEST(RotorTest, IEA15RotorController) {
     UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
 
     // Write quadrature point global positions to file and VTK
-    std::vector<std::vector<double>> qp_x0;
     if (write_output) {
-        qp_x0 = kokkos_view_2D_to_vector(beams.qp_x0);
-        WriteMatrixToFile(qp_x0, "steps/step_0000.csv");
-
 #ifdef OTURB_ENABLE_VTK
         // Write vtk visualization file
         BeamsWriteVTK(beams, "steps/step_0000.vtu");
@@ -536,7 +504,7 @@ TEST(RotorTest, IEA15RotorController) {
 
         // Update prescribed displacement constraint on hub
         const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
-        solver.constraints.UpdateDisplacement(static_cast<size_t>(hub_bc->ID), u_hub);
+        solver.constraints.UpdateDisplacement(hub_bc->ID, u_hub);
 
         // Update time in controller
         controller.io.time = t;
