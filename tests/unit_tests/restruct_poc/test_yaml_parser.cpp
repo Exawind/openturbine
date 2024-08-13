@@ -7,19 +7,22 @@
 
 namespace openturbine::restruct_poc::tests {
 
-TEST(ParserTest, ParseIEA15MW) {
+TEST(ParserTest, ParseIEA15MWBasicInfo) {
     try {
-        // Load the YAML file
         const YAML::Node config = YAML::LoadFile("../src/utilities/scripts/IEA-15-240-RWT.yaml");
-
-        // Parse the top-level node
         Turbine turbine;
         turbine.parse(config);
-
-        // Assert the turbine name
         ASSERT_EQ(turbine.name, "IEA 15MW Offshore Reference Turbine, with taped chord tip design");
+    } catch (const YAML::Exception& e) {
+        std::cerr << "Error loading YAML file: " << e.what() << "\n";
+    }
+}
 
-        // Assert the assembly parameters
+TEST(ParserTest, ParseIEA15MWAssembly) {
+    try {
+        const YAML::Node config = YAML::LoadFile("../src/utilities/scripts/IEA-15-240-RWT.yaml");
+        Turbine turbine;
+        turbine.parse(config);
         ASSERT_EQ(turbine.assembly.turbine_class, "I");
         ASSERT_EQ(turbine.assembly.turbulence_class, "B");
         ASSERT_EQ(turbine.assembly.drivetrain, "direct_drive");
@@ -29,8 +32,16 @@ TEST(ParserTest, ParseIEA15MW) {
         ASSERT_EQ(turbine.assembly.rotor_diameter, 241.94);
         ASSERT_EQ(turbine.assembly.rated_power, 15.e+6);
         ASSERT_EQ(turbine.assembly.lifetime, 25.);
+    } catch (const YAML::Exception& e) {
+        std::cerr << "Error loading YAML file: " << e.what() << "\n";
+    }
+}
 
-        // Assert the materials
+TEST(ParserTest, ParseIEA15MWMaterials) {
+    try {
+        const YAML::Node config = YAML::LoadFile("../src/utilities/scripts/IEA-15-240-RWT.yaml");
+        Turbine turbine;
+        turbine.parse(config);
         ASSERT_EQ(turbine.materials.size(), 11);
     } catch (const YAML::Exception& e) {
         std::cerr << "Error loading YAML file: " << e.what() << "\n";
