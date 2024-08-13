@@ -2,6 +2,7 @@ function(openturbine_setup_dependencies)
   # Find and link required packages
   find_package(KokkosKernels REQUIRED)
   find_package(Amesos2 REQUIRED)
+  find_package(yaml-cpp REQUIRED)
 
   # Optionally find and link MKL if available
   if(TARGET Kokkos::MKL)

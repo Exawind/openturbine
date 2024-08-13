@@ -25,6 +25,17 @@ jobs:
         spack external find
         spack install googletest
         spack install trilinos@master~mpi~epetra+basker
+    - name: Cache install yaml-cpp
+      id: cache-yaml-cpp
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/spack
+        key: linux-yaml-cpp
+    - name: Install yaml-cpp
+      if: steps.cache-yaml-cpp.outputs.cache-hit != 'true'
+      run: |
+        source spack/share/spack/setup-env.sh
+        spack install yaml-cpp
     - name: Clone
       uses: actions/checkout@v4
       with:
@@ -35,6 +46,7 @@ jobs:
         source spack/share/spack/setup-env.sh
         spack load trilinos
         spack load googletest
+        spack load yaml-cpp
         cd openturbine
         mkdir build-clangtidy
         cd build-clangtidy

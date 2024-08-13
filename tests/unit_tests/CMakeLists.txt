@@ -26,6 +26,7 @@ target_link_system_libraries(
   PRIVATE
   KokkosKernels::kokkoskernels
   Amesos2::amesos2
+  yaml-cpp
   GTest::gtest
   GTest::gtest_main
 )

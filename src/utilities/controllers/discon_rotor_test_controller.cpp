@@ -38,9 +38,6 @@ void PITCH_CONTROLLER(
 
     // If this is the first call, output the controller input and output file names
     if (first_call) {
-        std::cout << "controller input file: " << accINFILE << std::endl;
-        std::cout << "controller output file: " << avcOUTNAME << std::endl;
-
         // Set first call to false
         first_call = false;
     }

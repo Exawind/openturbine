@@ -29,14 +29,14 @@ template <typename T>
 void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
     std::ofstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Unable to open file: " << filename << std::endl;
+        std::cerr << "Unable to open file: " << filename << "\n";
         return;
     }
     for (const auto& innerVector : data) {
         for (const auto& element : innerVector) {
             file << element << ",";
         }
-        file << std::endl;
+        file << "\n";
     }
     file.close();
 }

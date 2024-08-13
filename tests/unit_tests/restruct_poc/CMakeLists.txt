@@ -12,6 +12,7 @@ target_sources(
     test_math.cpp
     test_utilities.cpp
     test_controller.cpp
+    test_yaml_parser.cpp
 
     # Beams-related tests
     beams/test_interpolate_QP_state.cpp
