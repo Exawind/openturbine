@@ -1,3 +1,5 @@
+#include <filesystem>
+
 #include <gtest/gtest.h>
 #include <yaml-cpp/yaml.h>
 
@@ -7,15 +9,33 @@
 
 namespace openturbine::restruct_poc::tests {
 
+/// Function to find the project root directory
+static std::filesystem::path FindProjectRoot() {
+    std::filesystem::path currentPath = std::filesystem::current_path();
+
+    while (!currentPath.empty()) {
+        if (std::filesystem::exists(currentPath / "CMakeLists.txt")) {
+            return currentPath;
+        }
+        currentPath = currentPath.parent_path();
+    }
+
+    throw std::runtime_error("Could not find project root directory. CMakeLists.txt not found.");
+}
+
 TEST(ParserTest, ParseIEA15MWBasicInfo) {
-    const YAML::Node config = YAML::LoadFile("../src/utilities/scripts/IEA-15-240-RWT.yaml");
+    const std::filesystem::path projectRoot = FindProjectRoot();
+    std::filesystem::path yamlPath = projectRoot / "src/utilities/scripts/IEA-15-240-RWT.yaml";
+    const YAML::Node config = YAML::LoadFile(yamlPath.string());
     Turbine turbine;
     turbine.parse(config);
     ASSERT_EQ(turbine.name, "IEA 15MW Offshore Reference Turbine, with taped chord tip design");
 }
 
 TEST(ParserTest, ParseIEA15MWAssembly) {
-    const YAML::Node config = YAML::LoadFile("../src/utilities/scripts/IEA-15-240-RWT.yaml");
+    const std::filesystem::path projectRoot = FindProjectRoot();
+    std::filesystem::path yamlPath = projectRoot / "src/utilities/scripts/IEA-15-240-RWT.yaml";
+    const YAML::Node config = YAML::LoadFile(yamlPath.string());
     Turbine turbine;
     turbine.parse(config);
     ASSERT_EQ(turbine.assembly.turbine_class, "I");
@@ -30,7 +50,9 @@ TEST(ParserTest, ParseIEA15MWAssembly) {
 }
 
 TEST(ParserTest, ParseIEA15MWMaterials) {
-    const YAML::Node config = YAML::LoadFile("../src/utilities/scripts/IEA-15-240-RWT.yaml");
+    const std::filesystem::path projectRoot = FindProjectRoot();
+    std::filesystem::path yamlPath = projectRoot / "src/utilities/scripts/IEA-15-240-RWT.yaml";
+    const YAML::Node config = YAML::LoadFile(yamlPath.string());
     Turbine turbine;
     turbine.parse(config);
     ASSERT_EQ(turbine.materials.size(), 11);
