@@ -1,100 +1,79 @@
 macro(openturbine_enable_cppcheck WARNINGS_AS_ERRORS CPPCHECK_OPTIONS)
   find_program(CPPCHECK cppcheck)
   if(CPPCHECK)
-
+    set(CPPCHECK_TEMPLATE "gcc")
     if(CMAKE_GENERATOR MATCHES ".*Visual Studio.*")
       set(CPPCHECK_TEMPLATE "vs")
-    else()
-      set(CPPCHECK_TEMPLATE "gcc")
     endif()
 
+    # Default cppcheck options if none are provided
     if("${CPPCHECK_OPTIONS}" STREQUAL "")
-      # Enable all warnings that are actionable by the user of this toolset
-      # style should enable the other 3, but we'll be explicit just in case
-      set(SUPPRESS_DIR "*:${CMAKE_CURRENT_BINARY_DIR}/_deps/*.h")
-      message(STATUS "CPPCHECK_OPTIONS suppress: ${SUPPRESS_DIR}")
-      set(CMAKE_CXX_CPPCHECK
-          ${CPPCHECK}
-          --template=${CPPCHECK_TEMPLATE}
-          --enable=style,performance,warning,portability
-          --inline-suppr
-          # We cannot act on a bug/missing feature of cppcheck
-          --suppress=cppcheckError
-          --suppress=internalAstError
-          # if a file does not have an internalAstError, we get an unmatchedSuppression error
-          --suppress=unmatchedSuppression
-          # noisy and incorrect sometimes
-          --suppress=passedByValue
-          # ignores code that cppcheck thinks is invalid C++
-          --suppress=syntaxError
-          --suppress=preprocessorErrorDirective
-          --inconclusive
-          --suppress=${SUPPRESS_DIR})
-    else()
-      # if the user provides a CPPCHECK_OPTIONS with a template specified, it will override this template
-      set(CMAKE_CXX_CPPCHECK ${CPPCHECK} --template=${CPPCHECK_TEMPLATE} ${CPPCHECK_OPTIONS})
+      set(SUPPRESS_DIR "${CMAKE_CURRENT_BINARY_DIR}/_deps/*.h")
+      message(STATUS "CPPCHECK suppressing warnings for directory: ${SUPPRESS_DIR}")
+      set(CPPCHECK_OPTIONS
+        --enable=style,performance,warning,portability
+        --template=${CPPCHECK_TEMPLATE}
+        --inline-suppr
+        --inconclusive
+        --suppress=cppcheckError  # Suppress cppcheck errors
+        --suppress=internalAstError # Suppress internal AST errors
+        --suppress=unmatchedSuppression # Suppress unmatched suppressions in the code
+        --suppress=passedByValue # Suppress passed by value warnings
+        --suppress=syntaxError # Suppress syntax errors in the code
+        --suppress=preprocessorErrorDirective # Suppress preprocessor error directives
+        --suppress=${SUPPRESS_DIR})
     endif()
-    if(NOT
-       "${CMAKE_CXX_STANDARD}"
-       STREQUAL
-       "")
-      set(CMAKE_CXX_CPPCHECK ${CMAKE_CXX_CPPCHECK} --std=c++${CMAKE_CXX_STANDARD})
+
+    if(NOT "${CMAKE_CXX_STANDARD}" STREQUAL "")
+      list(APPEND CPPCHECK_OPTIONS --std=c++${CMAKE_CXX_STANDARD})
     endif()
+
     if(${WARNINGS_AS_ERRORS})
-      list(APPEND CMAKE_CXX_CPPCHECK --error-exitcode=2)
+      list(APPEND CPPCHECK_OPTIONS --error-exitcode=2)
     endif()
+
+    set(CMAKE_CXX_CPPCHECK ${CPPCHECK} ${CPPCHECK_OPTIONS})
   else()
-    message(${WARNING_MESSAGE} "cppcheck requested but executable not found")
+    message(WARNING "cppcheck requested but executable not found")
   endif()
 endmacro()
 
 macro(openturbine_enable_clang_tidy target WARNINGS_AS_ERRORS)
-
   find_program(CLANGTIDY clang-tidy)
   if(CLANGTIDY)
-    if(NOT
-       CMAKE_CXX_COMPILER_ID
-       MATCHES
-       ".*Clang")
-
+    if(NOT CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
       get_target_property(TARGET_PCH ${target} INTERFACE_PRECOMPILE_HEADERS)
-
-      if("${TARGET_PCH}" STREQUAL "TARGET_PCH-NOTFOUND")
+      if(NOT TARGET_PCH)
         get_target_property(TARGET_PCH ${target} PRECOMPILE_HEADERS)
       endif()
 
-      if(NOT ("${TARGET_PCH}" STREQUAL "TARGET_PCH-NOTFOUND"))
-        message(
-          SEND_ERROR
-            "clang-tidy cannot be enabled with non-clang compiler and PCH, clang-tidy fails to handle gcc's PCH file")
-      endif()
-    endif()
-    set(CLANG_TIDY_OPTIONS
-        ${CLANGTIDY}
-        -extra-arg=-Wno-unknown-warning-option
-        -extra-arg=-Wno-ignored-optimization-argument
-        -extra-arg=-Wno-unused-command-line-argument
-        -p)
-    # set standard
-    if(NOT
-       "${CMAKE_CXX_STANDARD}"
-       STREQUAL
-       "")
-      if("${CLANG_TIDY_OPTIONS_DRIVER_MODE}" STREQUAL "cl")
-        set(CLANG_TIDY_OPTIONS ${CLANG_TIDY_OPTIONS} -extra-arg=/std:c++${CMAKE_CXX_STANDARD})
-      else()
-        set(CLANG_TIDY_OPTIONS ${CLANG_TIDY_OPTIONS} -extra-arg=-std=c++${CMAKE_CXX_STANDARD})
+      if(TARGET_PCH)
+        message(FATAL_ERROR "clang-tidy cannot be used with non-Clang compilers and PCH (Precompiled Headers).")
       endif()
     endif()
 
-    # set warnings as errors
+    set(CLANG_TIDY_OPTIONS
+      ${CLANGTIDY}
+      -extra-arg=-Wno-unknown-warning-option # Ignore unknown warning options in Clang-Tidy
+      -extra-arg=-Wno-ignored-optimization-argument # Ignore ignored optimization arguments
+      -extra-arg=-Wno-unused-command-line-argument # Ignore unused command line arguments
+      -p)
+
+    if(NOT "${CMAKE_CXX_STANDARD}" STREQUAL "")
+      if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+        list(APPEND CLANG_TIDY_OPTIONS -extra-arg=-std=c++${CMAKE_CXX_STANDARD})
+      else()
+        list(APPEND CLANG_TIDY_OPTIONS -extra-arg=/std:c++${CMAKE_CXX_STANDARD})
+      endif()
+    endif()
+
     if(${WARNINGS_AS_ERRORS})
       list(APPEND CLANG_TIDY_OPTIONS -warnings-as-errors=*)
     endif()
 
-    message("Also setting clang-tidy globally")
+    message(STATUS "Setting clang-tidy globally for target: ${target}")
     set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY_OPTIONS})
   else()
-    message(${WARNING_MESSAGE} "clang-tidy requested but executable not found")
+    message(WARNING "clang-tidy requested but executable not found")
   endif()
 endmacro()
