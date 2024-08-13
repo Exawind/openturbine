@@ -4,7 +4,7 @@ on: push
 
 jobs:
   ClangTidy:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     env:
       CMAKE_BUILD_PARALLEL_LEVEL: 4
     strategy:
@@ -15,7 +15,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/spack
-        key: linux-spack
+        key: macos-spack
     - name: Install Trilinos
       if: steps.cache-trilinos.outputs.cache-hit != 'true'
       run: |
@@ -30,7 +30,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/spack
-        key: linux-yaml-cpp
+        key: macos-yaml-cpp
     - name: Install yaml-cpp
       if: steps.cache-yaml-cpp.outputs.cache-hit != 'true'
       run: |
