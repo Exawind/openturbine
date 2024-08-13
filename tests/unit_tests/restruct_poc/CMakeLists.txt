@@ -26,6 +26,7 @@ target_sources(
     solver/test_copy_into_sparse_matrix.cpp
     solver/test_populate_sparse_indices.cpp
     solver/test_populate_sparse_row_ptrs.cpp
+    solver/test_populate_tangent_row_ptrs.cpp
 
     # System-related tests
     system/test_integrate_stiffness_matrix.cpp
