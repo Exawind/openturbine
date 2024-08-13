@@ -30,6 +30,17 @@ jobs:
         spack external find
         spack install googletest
         spack install trilinos@master~mpi~epetra+basker
+    - name: Cache install yaml-cpp
+      id: cache-yaml-cpp
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/spack
+        key: linux-yaml-cpp
+    - name: Install yaml-cpp
+      if: steps.cache-yaml-cpp.outputs.cache-hit != 'true'
+      run: |
+        source spack/share/spack/setup-env.sh
+        spack install yaml-cpp
     - name: Clone
       uses: actions/checkout@v4
       with:
@@ -40,6 +51,7 @@ jobs:
         source spack/share/spack/setup-env.sh
         spack load trilinos
         spack load googletest
+        spack load yaml-cpp
         cd openturbine
         mkdir build
         cd build
@@ -47,7 +59,7 @@ jobs:
           -DOpenTurbine_ENABLE_SANITIZER_ADDRESS=ON \
           -DOpenTurbine_ENABLE_SANITIZER_LEAK=ON \
           -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=ON \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} 
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         cmake --build .
         cp src/*.dll tests/unit_tests/
         ctest --output-on-failure
