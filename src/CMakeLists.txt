@@ -33,14 +33,14 @@ target_include_directories(openturbine_library
 # Set the C++ standard for the target
 target_compile_features(openturbine_library PUBLIC cxx_std_17)
 
-# Define the DISCON shared libraries
+# Define the DISCON shared libraries for the turbine controller
 add_library(DISCON SHARED)
 set_target_properties(DISCON PROPERTIES PREFIX "" SUFFIX ".dll")
 
 add_library(DISCON_ROTOR_TEST_CONTROLLER SHARED)
 set_target_properties(DISCON_ROTOR_TEST_CONTROLLER PROPERTIES PREFIX "" SUFFIX ".dll")
 
-# Add subdirectories for additional components
+# Add subdirectories for additional components of the library
 add_subdirectory(restruct_poc)
 add_subdirectory(io)
 add_subdirectory(utilities)

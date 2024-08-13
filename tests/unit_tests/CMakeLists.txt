@@ -31,7 +31,7 @@ target_link_system_libraries(
   GTest::gtest_main
 )
 
-# Conditional linking for VTK if enabled
+# Conditional linking for VTK (i.e. visualization toolkit) if enabled
 if (OTURB_ENABLE_VTK)
   target_link_system_libraries(
     openturbine_unit_tests
