@@ -38,8 +38,8 @@ jobs:
         spack install yaml-cpp
     - name: Install Clang-Tidy
       run: |
-        sudo apt-get update -y
-        sudo apt-get install -y clang-tidy
+        apt-get update -y
+        apt-get install -y clang-tidy
     - name: Clone
       uses: actions/checkout@v4
       with:
