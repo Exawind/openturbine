@@ -23,6 +23,7 @@ target_sources(
 
     # Solver-related tests
     solver/test_compute_number_of_non_zeros.cpp
+    solver/test_compute_number_of_non_zeros_constraints.cpp
     solver/test_copy_into_sparse_matrix.cpp
     solver/test_populate_sparse_indices.cpp
     solver/test_populate_sparse_row_ptrs.cpp
