@@ -13,11 +13,11 @@ struct InterpolateQPState_u {
     size_t num_nodes;
     Kokkos::View<double***>::const_type shape_interp;
     View_Nx7::const_type node_u;
-    View_Nx3 qp_u;
+    Kokkos::View<double** [3]> qp_u;
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
-        const auto j = first_qp + j_index;
+        // const auto j = first_qp + j_index;
         auto local_total = Kokkos::Array<double, 3>{};
         for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
             const auto i = first_node + i_index;
@@ -27,7 +27,7 @@ struct InterpolateQPState_u {
             }
         }
         for (auto k = 0U; k < 3U; ++k) {
-            qp_u(j, k) = local_total[k];
+            qp_u(i_elem, j_index, k) = local_total[k];
         }
     }
 };
@@ -40,11 +40,11 @@ struct InterpolateQPState_uprime {
     Kokkos::View<double***>::const_type shape_deriv;
     View_NxN::const_type qp_jacobian;
     View_Nx7::const_type node_u;
-    View_Nx3 qp_uprime;
+    Kokkos::View<double** [3]> qp_uprime;
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
-        const auto j = first_qp + j_index;
+        // const auto j = first_qp + j_index;
         const auto jacobian = qp_jacobian(i_elem, j_index);
         auto local_total = Kokkos::Array<double, 3>{};
         for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
@@ -55,7 +55,7 @@ struct InterpolateQPState_uprime {
             }
         }
         for (auto k = 0U; k < 3U; ++k) {
-            qp_uprime(j, k) = local_total[k];
+            qp_uprime(i_elem, j_index, k) = local_total[k];
         }
     }
 };
@@ -67,11 +67,11 @@ struct InterpolateQPState_r {
     size_t num_nodes;
     Kokkos::View<double***>::const_type shape_interp;
     View_Nx7::const_type node_u;
-    View_Nx4 qp_r;
+    Kokkos::View<double** [4]> qp_r;
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
-        const auto j = first_qp + j_index;
+        // const auto j = first_qp + j_index;
         auto local_total = Kokkos::Array<double, 4>{};
         for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
             const auto i = first_node + i_index;
@@ -89,7 +89,7 @@ struct InterpolateQPState_r {
             local_total = length_zero_result;
         }
         for (auto k = 0U; k < 4U; ++k) {
-            qp_r(j, k) = local_total[k];
+            qp_r(i_elem, j_index, k) = local_total[k];
         }
     }
 };
@@ -102,11 +102,11 @@ struct InterpolateQPState_rprime {
     Kokkos::View<double***>::const_type shape_deriv;
     View_NxN::const_type qp_jacobian;
     View_Nx7::const_type node_u;
-    View_Nx4 qp_rprime;
+    Kokkos::View<double** [4]> qp_rprime;
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
-        const auto j = first_qp + j_index;
+        // const auto j = first_qp + j_index;
         const auto jacobian = qp_jacobian(i_elem, j_index);
         auto local_total = Kokkos::Array<double, 4>{};
         for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
@@ -117,7 +117,7 @@ struct InterpolateQPState_rprime {
             }
         }
         for (auto k = 0U; k < 4U; ++k) {
-            qp_rprime(j, k) = local_total[k];
+            qp_rprime(i_elem, j_index, k) = local_total[k];
         }
     }
 };

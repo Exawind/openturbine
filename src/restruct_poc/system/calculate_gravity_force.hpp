@@ -12,16 +12,17 @@ struct CalculateGravityForce {
     using NoTranspose = KokkosBlas::Trans::NoTranspose;
     using Default = KokkosBlas::Algo::Gemv::Default;
     using Gemv = KokkosBlas::SerialGemv<NoTranspose, Default>;
+    size_t i_elem;
     View_3::const_type gravity;
-    View_Nx6x6::const_type qp_Muu_;
-    View_Nx3x3::const_type eta_tilde_;
-    View_Nx6 qp_FG_;
+    Kokkos::View<double** [6][6]>::const_type qp_Muu_;
+    Kokkos::View<double** [3][3]>::const_type eta_tilde_;
+    Kokkos::View<double** [6]> qp_FG_;
 
     KOKKOS_FUNCTION
     void operator()(int i_qp) const {
-        auto Muu = Kokkos::subview(qp_Muu_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto eta_tilde = Kokkos::subview(eta_tilde_, i_qp, Kokkos::ALL, Kokkos::ALL);
-        auto FG = Kokkos::subview(qp_FG_, i_qp, Kokkos::ALL);
+        auto Muu = Kokkos::subview(qp_Muu_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto eta_tilde = Kokkos::subview(eta_tilde_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
+        auto FG = Kokkos::subview(qp_FG_, i_elem, i_qp, Kokkos::ALL);
         auto m = Muu(0, 0);
         for (int i = 0; i < 3; ++i) {
             FG(i) = m * gravity(i);
