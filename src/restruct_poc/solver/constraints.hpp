@@ -21,12 +21,14 @@ struct Constraints {
     struct DeviceData {
         ConstraintType type;                     //< Constraint type
         Kokkos::pair<size_t, size_t> row_range;  //< Range of rows in the global stiffness matrix
-        int base_node_index;                     //< Base node index
-        int target_node_index;                   //< Target node index
-        double X0[3];                            //< Initial relative location between nodes
-        double axis_x[3];                        // Unit vector representing x rotation axis
-        double axis_y[3];                        // Unit vector representing y rotation axis
-        double axis_z[3];                        // Unit vector representing z rotation axis
+        Kokkos::pair<size_t, size_t> base_node_col_range;
+        Kokkos::pair<size_t, size_t> target_node_col_range;
+        size_t base_node_index;    //< Base node index
+        size_t target_node_index;  //< Target node index
+        double X0[3];              //< Initial relative location between nodes
+        double axis_x[3];          // Unit vector representing x rotation axis
+        double axis_y[3];          // Unit vector representing y rotation axis
+        double axis_z[3];          // Unit vector representing z rotation axis
     };
 
     /// @brief HostData struct holds constraint data on host
@@ -45,25 +47,22 @@ struct Constraints {
     View_N Phi;                                    //< Residual vector
     Kokkos::View<double* [6][12]> gradient_terms;  //< Gradient terms
 
-    Constraints() = default;
-
-    Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints) {
-        num = constraints.size();
-        num_dofs = std::transform_reduce(
-            constraints.cbegin(), constraints.cend(), 0U, std::plus{},
-            [](auto c) {
-                return c->NumDOFs();
-            }
-        );
-        constraint_data = std::vector<HostData>(
-            num, HostData{ConstraintType::kNone, {0., 0., 0., 1., 0., 0., 0.}, nullptr}
-        );
-        data = Kokkos::View<DeviceData*>("data", num);
-        control = View_N("control", num);
-        u = View_Nx7("u", num);
-        Phi = View_N("residual_vector", num_dofs);
-        gradient_terms = Kokkos::View<double* [6][12]>("gradient_terms", num);
-
+    Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints)
+        : num{constraints.size()},
+          num_dofs{std::transform_reduce(
+              constraints.cbegin(), constraints.cend(), 0U, std::plus{},
+              [](auto c) {
+                  return c->NumDOFs();
+              }
+          )},
+          constraint_data(
+              num, HostData{ConstraintType::kNone, {0., 0., 0., 1., 0., 0., 0.}, nullptr}
+          ),
+          data("data", num),
+          control("control", num),
+          u("u", num),
+          Phi("residual_vector", num_dofs),
+          gradient_terms("gradient_terms", num) {
         // Create host mirror for constraint data
         auto host_data = Kokkos::create_mirror(this->data);
 
@@ -81,6 +80,22 @@ struct Constraints {
             auto dofs = constraints[i]->NumDOFs();
             host_data(i).row_range = Kokkos::make_pair(start_row, start_row + dofs);
             start_row += dofs;
+
+            if (GetNumberOfNodes(constraints[i]->type) == 2) {
+                const auto target_node_id = constraints[i]->target_node.ID;
+                const auto base_node_id = constraints[i]->base_node.ID;
+                const auto target_start_col =
+                    (target_node_id < base_node_id) ? 0U : kLieAlgebraComponents;
+                host_data(i).target_node_col_range =
+                    Kokkos::make_pair(target_start_col, target_start_col + kLieAlgebraComponents);
+
+                const auto base_start_col =
+                    (base_node_id < target_node_id) ? 0U : kLieAlgebraComponents;
+                host_data(i).base_node_col_range =
+                    Kokkos::make_pair(base_start_col, base_start_col + kLieAlgebraComponents);
+            } else {
+                host_data(i).target_node_col_range = Kokkos::make_pair(0U, kLieAlgebraComponents);
+            }
 
             // Set base node and target node index
             host_data(i).base_node_index = constraints[i]->base_node.ID;
