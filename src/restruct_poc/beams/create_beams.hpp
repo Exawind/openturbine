@@ -62,11 +62,19 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
         PopulateElementViews(
             beams_input.elements[i],  // Element inputs
             Kokkos::subview(host_node_x0, idx.node_range, Kokkos::ALL),
-            Kokkos::subview(host_qp_weight, idx.qp_range),
-            Kokkos::subview(host_qp_Mstar, idx.qp_range, Kokkos::ALL, Kokkos::ALL),
-            Kokkos::subview(host_qp_Cstar, idx.qp_range, Kokkos::ALL, Kokkos::ALL),
-            Kokkos::subview(host_shape_interp, idx.node_range, idx.qp_shape_range),
-            Kokkos::subview(host_shape_deriv, idx.node_range, idx.qp_shape_range)
+            Kokkos::subview(host_qp_weight, i, Kokkos::pair(size_t{0U}, idx.num_qps)),
+            Kokkos::subview(
+                host_qp_Mstar, i, Kokkos::pair(size_t{0U}, idx.num_qps), Kokkos::ALL, Kokkos::ALL
+            ),
+            Kokkos::subview(
+                host_qp_Cstar, i, Kokkos::pair(size_t{0U}, idx.num_qps), Kokkos::ALL, Kokkos::ALL
+            ),
+            Kokkos::subview(
+                host_shape_interp, i, Kokkos::pair(size_t{0U}, idx.num_nodes), idx.qp_shape_range
+            ),
+            Kokkos::subview(
+                host_shape_deriv, i, Kokkos::pair(size_t{0U}, idx.num_nodes), idx.qp_shape_range
+            )
         );
     }
 

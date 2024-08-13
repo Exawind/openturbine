@@ -22,5 +22,5 @@ Checks: "bugprone*,
          -readability-named-parameter,
 "
 WarningsAsErrors: ''
-HeaderFilterRegex: ''
+HeaderFilterRegex: '.*'
 FormatStyle:     none

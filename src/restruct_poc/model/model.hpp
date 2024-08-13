@@ -11,7 +11,7 @@
 namespace openturbine {
 
 // InvalidNode represents an invalid node in constraints that only use the target node.
-static const Node InvalidNode(-1, {0., 0., 0., 1., 0., 0., 0.});
+static const Node InvalidNode(0U, {0., 0., 0., 1., 0., 0., 0.});
 
 /// @brief Struct to define a turbine model with nodes and constraints
 /// @details A model is a collection of nodes and constraints that define the geometry and
@@ -58,40 +58,42 @@ public:
     }
 
     /// Return a node by ID - const/read-only version
-    const Node& GetNode(size_t id) const { return *this->nodes_[id]; }
+    [[nodiscard]] const Node& GetNode(size_t id) const { return *this->nodes_[id]; }
 
     /// Return a node by ID - non-const version
-    Node& GetNode(size_t id) { return *this->nodes_[id]; }
+    [[nodiscard]] Node& GetNode(size_t id) { return *this->nodes_[id]; }
 
     /// Returns a reference to the nodes in the model (as vector of shared pointers)
-    const std::vector<std::shared_ptr<Node>>& GetNodes() const { return this->nodes_; }
+    [[nodiscard]] const std::vector<std::shared_ptr<Node>>& GetNodes() const { return this->nodes_; }
 
     /// Returns the number of nodes in the model
-    size_t NumNodes() const { return this->nodes_.size(); }
+    [[nodiscard]] size_t NumNodes() const { return this->nodes_.size(); }
 
     /// Add a beam element to the model and return a shared pointer to the element
     std::shared_ptr<BeamElement> AddBeamElement(
         const std::vector<BeamNode>& nodes, const std::vector<BeamSection>& sections,
         const BeamQuadrature& quadrature
     ) {
-        return this->beam_elements_.emplace_back(std::make_shared<BeamElement>(
-            std::move(nodes), std::move(sections), std::move(quadrature)
-        ));
+        return this->beam_elements_.emplace_back(
+            std::make_shared<BeamElement>(nodes, sections, quadrature)
+        );
     }
 
     /// Return a beam element by ID - const/read-only version
-    const BeamElement& GetBeamElement(size_t id) const { return *this->beam_elements_[id]; }
+    [[nodiscard]] const BeamElement& GetBeamElement(size_t id) const {
+        return *this->beam_elements_[id];
+    }
 
     /// Return a beam element by ID - non-const version
-    BeamElement& GetBeamElement(size_t id) { return *this->beam_elements_[id]; }
+    [[nodiscard]] BeamElement& GetBeamElement(size_t id) { return *this->beam_elements_[id]; }
 
     /// Returns a reference to the beam elements in the model
-    const std::vector<std::shared_ptr<BeamElement>>& GetBeamElements() const {
+    [[nodiscard]] const std::vector<std::shared_ptr<BeamElement>>& GetBeamElements() const {
         return this->beam_elements_;
     }
 
     /// Returns the number of beam elements in the model
-    size_t NumBeamElements() const { return this->beam_elements_.size(); }
+    [[nodiscard]] size_t NumBeamElements() const { return this->beam_elements_.size(); }
 
     /// Adds a rigid constraint to the model and returns the constraint
     std::shared_ptr<Constraint> AddRigidConstraint(const Node& node1, const Node& node2) {
@@ -133,12 +135,12 @@ public:
     }
 
     /// Returns the constraints in the model (as vector of shared pointers)
-    const std::vector<std::shared_ptr<Constraint>>& GetConstraints() const {
+    [[nodiscard]] const std::vector<std::shared_ptr<Constraint>>& GetConstraints() const {
         return this->constraints_;
     }
 
     /// Returns the number of constraints in the model
-    size_t NumConstraints() const { return this->constraints_.size(); }
+    [[nodiscard]] size_t NumConstraints() const { return this->constraints_.size(); }
 
 private:
     std::vector<std::shared_ptr<Node>> nodes_;                 //< Nodes in the model

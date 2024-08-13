@@ -31,9 +31,9 @@ namespace openturbine {
 /// solver variables during the simulation
 struct Solver {
     // Define some types for the solver to make the code more readable
-    using ExecutionSpace = Kokkos::DefaultExecutionSpace;
-    using MemorySpace = ExecutionSpace::memory_space;
     using GlobalCrsMatrixType = Tpetra::CrsMatrix<>;
+    using ExecutionSpace = GlobalCrsMatrixType::execution_space;
+    using MemorySpace = GlobalCrsMatrixType::memory_space;
     using GlobalMapType = GlobalCrsMatrixType::map_type;
     using GlobalMultiVectorType = Tpetra::MultiVector<>;
     using DualViewType = GlobalMultiVectorType::dual_view_type;
@@ -161,7 +161,7 @@ struct Solver {
         auto host_node_ids = Kokkos::create_mirror(node_ids);
 
         for (auto i = 0U; i < system_nodes.size(); ++i) {
-            host_node_ids(i) = system_nodes[i]->ID;
+            host_node_ids(i) = static_cast<int>(system_nodes[i]->ID);
         }
         Kokkos::deep_copy(node_ids, host_node_ids);
         Kokkos::parallel_for(
@@ -306,8 +306,12 @@ struct Solver {
         b = Tpetra::createMultiVector<ScalarType>(A->getRangeMap(), 1);
         x_mv = Tpetra::createMultiVector<ScalarType>(A->getDomainMap(), 1);
 
+        const auto solver_name = (std::is_same_v<ExecutionSpace, Kokkos::DefaultHostExecutionSpace>)
+                                     ? std::string{"klu2"}
+                                     : std::string{"basker"};
+
         amesos_solver =
-            Amesos2::create<GlobalCrsMatrixType, GlobalMultiVectorType>("Basker", A, x_mv, b);
+            Amesos2::create<GlobalCrsMatrixType, GlobalMultiVectorType>(solver_name, A, x_mv, b);
         amesos_solver->symbolicFactorization();
     }
 };
