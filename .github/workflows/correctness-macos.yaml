@@ -53,6 +53,7 @@ jobs:
           -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=ON \
           -DOpenTurbine_ENABLE_CPPCHECK=ON \
           -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
+          -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         cmake --build .
         cp src/*.dll tests/unit_tests/
