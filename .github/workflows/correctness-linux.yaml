@@ -29,7 +29,6 @@ jobs:
         spack compiler find
         spack external find
         spack install googletest
-        spack install llvm
         spack install cppcheck
         spack install yaml-cpp
         spack install trilinos@master~mpi~epetra+basker
@@ -44,7 +43,6 @@ jobs:
         spack load trilinos
         spack load googletest
         spack load cppcheck
-        spack load llvm
         spack load yaml-cpp
         cd openturbine
         mkdir build

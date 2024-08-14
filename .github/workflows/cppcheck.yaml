@@ -1,58 +1,58 @@
-name: OpenTurbine-CI
-
-on: push
-
-jobs:
-  CppCheck:
-    runs-on: ubuntu-latest
-    env:
-      CMAKE_BUILD_PARALLEL_LEVEL: 4
-      CXX: clang++
-    strategy:
-      fail-fast: false
-    steps:
-    - name: Cache install Trilinos
-      id: cache-trilinos
-      uses: actions/cache@v3
-      with:
-        path: ${{ github.workspace }}/spack
-        key: linux-spack
-    - name: Install Trilinos
-      if: steps.cache-trilinos.outputs.cache-hit != 'true'
-      run: |
-        git clone https://github.com/spack/spack.git
-        source spack/share/spack/setup-env.sh
-        spack compiler find
-        spack external find
-        spack install googletest
-        spack install trilinos@master~mpi~epetra+basker
-    - name: Cache install yaml-cpp
-      id: cache-yaml-cpp
-      uses: actions/cache@v3
-      with:
-        path: ${{ github.workspace }}/spack
-        key: linux-yaml-cpp
-    - name: Install yaml-cpp
-      if: steps.cache-yaml-cpp.outputs.cache-hit != 'true'
-      run: |
-        source spack/share/spack/setup-env.sh
-        spack install yaml-cpp
-    - name: Clone
-      uses: actions/checkout@v4
-      with:
-        submodules: true
-        path: openturbine
-    - name: Run CppCheck
-      run: |
-        source spack/share/spack/setup-env.sh
-        spack load trilinos
-        spack load googletest
-        spack load yaml-cpp
-        sudo apt-get install cppcheck
-        cd openturbine
-        mkdir build-cppcheck
-        cd build-cppcheck
-        cmake .. \
-          -DOpenTurbine_ENABLE_CPPCHECK=ON \
-          -DCMAKE_BUILD_TYPE=Debug
-        cmake --build .
+#name: OpenTurbine-CI
+#
+#on: push
+#
+#jobs:
+#  CppCheck:
+#    runs-on: ubuntu-latest
+#    env:
+#      CMAKE_BUILD_PARALLEL_LEVEL: 4
+#      CXX: clang++
+#    strategy:
+#      fail-fast: false
+#    steps:
+#    - name: Cache install Trilinos
+#      id: cache-trilinos
+#      uses: actions/cache@v3
+#      with:
+#        path: ${{ github.workspace }}/spack
+#        key: linux-spack
+#    - name: Install Trilinos
+#      if: steps.cache-trilinos.outputs.cache-hit != 'true'
+#      run: |
+#        git clone https://github.com/spack/spack.git
+#        source spack/share/spack/setup-env.sh
+#        spack compiler find
+#        spack external find
+#        spack install googletest
+#        spack install trilinos@master~mpi~epetra+basker
+#    - name: Cache install yaml-cpp
+#      id: cache-yaml-cpp
+#      uses: actions/cache@v3
+#      with:
+#        path: ${{ github.workspace }}/spack
+#        key: linux-yaml-cpp
+#    - name: Install yaml-cpp
+#      if: steps.cache-yaml-cpp.outputs.cache-hit != 'true'
+#      run: |
+#        source spack/share/spack/setup-env.sh
+#        spack install yaml-cpp
+#    - name: Clone
+#      uses: actions/checkout@v4
+#      with:
+#        submodules: true
+#        path: openturbine
+#    - name: Run CppCheck
+#      run: |
+#        source spack/share/spack/setup-env.sh
+#        spack load trilinos
+#        spack load googletest
+#        spack load yaml-cpp
+#        sudo apt-get install cppcheck
+#        cd openturbine
+#        mkdir build-cppcheck
+#        cd build-cppcheck
+#        cmake .. \
+#          -DOpenTurbine_ENABLE_CPPCHECK=ON \
+#          -DCMAKE_BUILD_TYPE=Debug
+#        cmake --build .

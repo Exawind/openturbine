@@ -11,6 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        compiler: [g++, apple-clang]
         build_type: [Release, Debug]
     steps:
     - name: Cache install Dependencies
