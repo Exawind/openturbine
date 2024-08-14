@@ -69,8 +69,8 @@ public:
     using native_handle_type = DYLIB_WIN_OTHER(HINSTANCE, void*);
     using native_symbol_type = DYLIB_WIN_OTHER(FARPROC, void*);
 
-    static_assert(std::is_pointer<native_handle_type>::value, "Expecting HINSTANCE to be a pointer");
-    static_assert(std::is_pointer<native_symbol_type>::value, "Expecting FARPROC to be a pointer");
+    static_assert(std::is_pointer_v<native_handle_type>, "Expecting HINSTANCE to be a pointer");
+    static_assert(std::is_pointer_v<native_symbol_type>, "Expecting FARPROC to be a pointer");
 
     static constexpr bool add_filename_decorations = true;
     static constexpr bool no_filename_decorations = false;
@@ -325,7 +325,7 @@ protected:
         DYLIB_WIN_OTHER(FreeLibrary, dlclose)(lib);
     }
 
-    static std::string get_error_description() noexcept {
+    static std::string get_error_description() {
 #if (defined(_WIN32) || defined(_WIN64))
         constexpr const size_t BUF_SIZE = 512;
         const auto error_code = GetLastError();
