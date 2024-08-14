@@ -11,8 +11,7 @@ namespace openturbine::util {
 extern "C" {
 
 void PITCH_CONTROLLER(
-    float avrSWAP[], int* aviFAIL, const char* const accINFILE, char* const avcOUTNAME,
-    char* const avcMSG
+    float avrSWAP[], int* aviFAIL, const char* const, char* const, char* const avcMSG
 ) {
     static auto first_call = true;
     // Map swap from calling program to struct

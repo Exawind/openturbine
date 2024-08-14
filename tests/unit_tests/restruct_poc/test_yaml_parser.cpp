@@ -10,7 +10,7 @@
 namespace openturbine::restruct_poc::tests {
 
 /// Function to find the project root directory
-static std::filesystem::path FindProjectRoot() {
+inline std::filesystem::path FindProjectRoot() {
     std::filesystem::path currentPath = std::filesystem::current_path();
 
     while (!currentPath.empty()) {
@@ -25,7 +25,7 @@ static std::filesystem::path FindProjectRoot() {
 
 TEST(ParserTest, ParseIEA15MWBasicInfo) {
     const std::filesystem::path projectRoot = FindProjectRoot();
-    std::filesystem::path yamlPath = projectRoot / "src/utilities/scripts/IEA-15-240-RWT.yaml";
+    const std::filesystem::path yamlPath = projectRoot / "src/utilities/scripts/IEA-15-240-RWT.yaml";
     const YAML::Node config = YAML::LoadFile(yamlPath.string());
     Turbine turbine;
     turbine.parse(config);
@@ -34,7 +34,7 @@ TEST(ParserTest, ParseIEA15MWBasicInfo) {
 
 TEST(ParserTest, ParseIEA15MWAssembly) {
     const std::filesystem::path projectRoot = FindProjectRoot();
-    std::filesystem::path yamlPath = projectRoot / "src/utilities/scripts/IEA-15-240-RWT.yaml";
+    const std::filesystem::path yamlPath = projectRoot / "src/utilities/scripts/IEA-15-240-RWT.yaml";
     const YAML::Node config = YAML::LoadFile(yamlPath.string());
     Turbine turbine;
     turbine.parse(config);
@@ -51,7 +51,7 @@ TEST(ParserTest, ParseIEA15MWAssembly) {
 
 TEST(ParserTest, ParseIEA15MWMaterials) {
     const std::filesystem::path projectRoot = FindProjectRoot();
-    std::filesystem::path yamlPath = projectRoot / "src/utilities/scripts/IEA-15-240-RWT.yaml";
+    const std::filesystem::path yamlPath = projectRoot / "src/utilities/scripts/IEA-15-240-RWT.yaml";
     const YAML::Node config = YAML::LoadFile(yamlPath.string());
     Turbine turbine;
     turbine.parse(config);
