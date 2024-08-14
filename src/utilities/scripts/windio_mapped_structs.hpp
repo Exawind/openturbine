@@ -1137,13 +1137,13 @@ struct Drivetrain {
     double gear_ratio{};  // Gear ratio of the drivetrain. Set it to 1 for direct drive machines.
     double gearbox_length_user{};  // User input override of gearbox length along shaft, only used
                                    // when using gearbox_mass_user is > 0
-    double gearbox_radius_user{};      // User input override of gearbox radius, only used when using
-                                       // gearbox_mass_user is > 0
-    double gearbox_mass_user{};        // User input override of gearbox mass
-    double gearbox_efficiency{};       // Efficiency of the gearbox system.
-    double damping_ratio{};            // Damping ratio for the drivetrain system
-    std::vector<double> lss_diameter;  // Diameter of the low speed shaft at beginning
-                                       // (generator/gearbox) and end (hub) points
+    double gearbox_radius_user{};  // User input override of gearbox radius, only used when using
+                                   // gearbox_mass_user is > 0
+    double gearbox_mass_user{};    // User input override of gearbox mass
+    double gearbox_efficiency{};   // Efficiency of the gearbox system.
+    double damping_ratio{};        // Damping ratio for the drivetrain system
+    std::vector<double> lss_diameter;        // Diameter of the low speed shaft at beginning
+                                             // (generator/gearbox) and end (hub) points
     std::vector<double> lss_wall_thickness;  // Thickness of the low speed shaft at beginning
                                              // (generator/gearbox) and end (hub) points
     std::string lss_material;                // Material name identifier
@@ -1876,7 +1876,7 @@ struct Nodes {
     double drag_area{};    // Product of drag coefficient and projected area (assumed constant in all
                            // directions) to calculate a drag force for the node
     double added_mass{};   // Added mass coefficient used along with node volume to calculate added
-                          // mass on node
+                           // mass on node
 
     void parse(const YAML::Node& node) {
         name = node["name"].as<std::string>("");
@@ -1946,12 +1946,12 @@ struct LineTypes {
 
 // AnchorTypes
 struct AnchorTypes {
-    std::string name;           // Name of anchor to be referenced by anchor_id in Nodes section
-    std::string type;           // Type of anchor for property lookup
-    double mass{};              // mass of the anchor
-    double cost{};              // cost of the anchor
-    double max_lateral_load{};  // Maximum lateral load (parallel to the sea floor) that the anchor
-                                // can support
+    std::string name;            // Name of anchor to be referenced by anchor_id in Nodes section
+    std::string type;            // Type of anchor for property lookup
+    double mass{};               // mass of the anchor
+    double cost{};               // cost of the anchor
+    double max_lateral_load{};   // Maximum lateral load (parallel to the sea floor) that the anchor
+                                 // can support
     double max_vertical_load{};  // Maximum vertical load (perpendicular to the sea floor) that the
                                  // anchor can support
 
@@ -2163,8 +2163,8 @@ struct Materials {
     double ply_t{};      // Ply thickness of the composite material
     double unit_cost{};  // Unit cost of the material. For composites, this is the unit cost of the
                          // dry fabric.
-    double fvf{};               // Fiber volume fraction of the composite material
-    double fwf{};               // Fiber weight fraction of the composite material
+    double fvf{};        // Fiber volume fraction of the composite material
+    double fwf{};        // Fiber weight fraction of the composite material
     double fiber_density{};     // Density of the fibers of a composite material.
     double area_density_dry{};  // Aerial density of a fabric of a composite material.
     int component_id{};         // Flag used by the NREL blade cost model
@@ -2254,8 +2254,8 @@ struct Pitch_1 {
 // Torque
 struct Torque {
     double max_torque_rate{};  // Maximum torque rate of the wind turbine generator.
-    double tsr{};  // Rated tip speed ratio of the wind turbine. As default, it is maintained
-                   // constant in region II.
+    double tsr{};        // Rated tip speed ratio of the wind turbine. As default, it is maintained
+                         // constant in region II.
     double vs_minspd{};  // Minimum rotor speed. It is used by the ROSCO controller
                          // (https://github.com/NREL/ROSCO)
     double vs_maxspd{};  // Maximum rotor speed. It is used by the ROSCO controller
@@ -2326,10 +2326,10 @@ struct Environment {
 
 // Bos
 struct Bos {
-    double plant_turbine_spacing{};  // Distance between turbines in the primary grid streamwise
-                                     // direction in rotor diameters
-    double plant_row_spacing{};      // Distance between turbine rows in the cross-wind direction in
-                                 // rotor diameters
+    double plant_turbine_spacing{};   // Distance between turbines in the primary grid streamwise
+                                      // direction in rotor diameters
+    double plant_row_spacing{};       // Distance between turbine rows in the cross-wind direction in
+                                      // rotor diameters
     double commissioning_pct{};       // Fraction of total BOS cost that is due to commissioning
     double decommissioning_pct{};     // Fraction of total BOS cost that is due to decommissioning
     double distance_to_substation{};  // Distance from centroid of plant to substation in km
@@ -2369,18 +2369,18 @@ struct Bos {
 
 // Costs
 struct Costs {
-    double wake_loss_factor{};  // Factor to model losses in annual energy production in a wind farm
-                                // compared to the annual energy production at the turbine level
-                                // (wakes mostly).
+    double wake_loss_factor{};   // Factor to model losses in annual energy production in a wind farm
+                                 // compared to the annual energy production at the turbine level
+                                 // (wakes mostly).
     double fixed_charge_rate{};  // Fixed charge rate to compute the levelized cost of energy. See
                                  // this for inspiration https://www.nrel.gov/docs/fy20osti/74598.pdf
-    double bos_per_kw{};   // Balance of stations costs expressed in USD per kW. See this for
-                           // inspiration https://www.nrel.gov/docs/fy20osti/74598.pdf
-    double opex_per_kw{};  // Operational expenditures expressed in USD per kW. See this for
-                           // inspiration https://www.nrel.gov/docs/fy20osti/74598.pdf
-    int turbine_number{};  // Number of turbines in the park, used to compute levelized cost of
-                           // energy. Often wind parks are assumed of 600 MW. See this for
-                           // inspiration https://www.nrel.gov/docs/fy20osti/74598.pdf
+    double bos_per_kw{};         // Balance of stations costs expressed in USD per kW. See this for
+                                 // inspiration https://www.nrel.gov/docs/fy20osti/74598.pdf
+    double opex_per_kw{};        // Operational expenditures expressed in USD per kW. See this for
+                                 // inspiration https://www.nrel.gov/docs/fy20osti/74598.pdf
+    int turbine_number{};        // Number of turbines in the park, used to compute levelized cost of
+                                 // energy. Often wind parks are assumed of 600 MW. See this for
+                                 // inspiration https://www.nrel.gov/docs/fy20osti/74598.pdf
     double labor_rate{};  // Hourly loaded wage per worker including all benefits and overhead.  This
                           // is currently only applied to steel, column structures.
     double painting_rate{};  // Cost per unit area for finishing and surface treatments.  This is
