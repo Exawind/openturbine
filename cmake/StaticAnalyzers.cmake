@@ -8,11 +8,12 @@ macro(openturbine_enable_cppcheck WARNINGS_AS_ERRORS CPPCHECK_OPTIONS)
 
     # Default cppcheck options if none are provided
     if("${CPPCHECK_OPTIONS}" STREQUAL "")
-      set(SUPPRESS_DIR "${CMAKE_CURRENT_BINARY_DIR}/_deps/*.h")
+      set(SUPPRESS_DIR "*:${CMAKE_CURRENT_BINARY_DIR}/_deps/*.h")
       message(STATUS "CPPCHECK suppressing warnings for directory: ${SUPPRESS_DIR}")
-      set(CPPCHECK_OPTIONS
-        --enable=style,performance,warning,portability
+      set(CMAKE_CXX_CPPCHECK
+        ${CPPCHECK}
         --template=${CPPCHECK_TEMPLATE}
+        --enable=style,performance,warning,portability
         --inline-suppr
         --inconclusive
         --suppress=cppcheckError  # Suppress cppcheck errors
@@ -22,17 +23,19 @@ macro(openturbine_enable_cppcheck WARNINGS_AS_ERRORS CPPCHECK_OPTIONS)
         --suppress=syntaxError # Suppress syntax errors in the code
         --suppress=preprocessorErrorDirective # Suppress preprocessor error directives
         --suppress=${SUPPRESS_DIR})
+      else()
+        # If the user provides a CPPCHECK_OPTIONS with a template specified, use it
+        set(CMAKE_CXX_CPPCHECK ${CPPCHECK} --template=${CPPCHECK_TEMPLATE} ${CPPCHECK_OPTIONS})
     endif()
 
     if(NOT "${CMAKE_CXX_STANDARD}" STREQUAL "")
-      list(APPEND CPPCHECK_OPTIONS --std=c++${CMAKE_CXX_STANDARD})
+      set(CMAKE_CXX_CPPCHECK ${CMAKE_CXX_CPPCHECK} --std=c++${CMAKE_CXX_STANDARD})
     endif()
 
     if(${WARNINGS_AS_ERRORS})
-      list(APPEND CPPCHECK_OPTIONS --error-exitcode=2)
+      list(APPEND CMAKE_CXX_CPPCHECK --error-exitcode=2)
     endif()
 
-    set(CMAKE_CXX_CPPCHECK ${CPPCHECK} ${CPPCHECK_OPTIONS})
   else()
     message(WARNING "cppcheck requested but executable not found")
   endif()
