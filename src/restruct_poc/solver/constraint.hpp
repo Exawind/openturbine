@@ -6,7 +6,7 @@
 namespace openturbine {
 
 /// @brief Enum class to define the type of constraint
-enum class ConstraintType {
+enum class ConstraintType : std::uint8_t {
     kNone = 0,          // No constraint (default)
     kFixedBC = 1,       // Fixed boundary condition constraint (zero displacement)
     kPrescribedBC = 2,  // Prescribed boundary condition (displacement can be set)

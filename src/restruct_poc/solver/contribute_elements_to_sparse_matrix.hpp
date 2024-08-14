@@ -19,12 +19,12 @@ struct ContributeElementsToSparseMatrix {
         auto cols = sparse.graph.entries;
         auto row_data = RowDataType(member.team_scratch(1), static_cast<size_t>(row.length));
         auto col_idx = ColIdxType(member.team_scratch(1), static_cast<size_t>(row.length));
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [=](size_t entry) {
+        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, row.length), [&](size_t entry) {
             col_idx(entry) = cols(row_map(i) + entry);
             row_data(entry) = dense(i / row.length, i % row.length, entry);
         });
         member.team_barrier();
-        Kokkos::single(Kokkos::PerTeam(member), [=]() {
+        Kokkos::single(Kokkos::PerTeam(member), [&]() {
             // sparse.sumIntoValues(i, col_idx.data(), row.length, row_data.data(), true, true);
             sparse.replaceValues(i, col_idx.data(), row.length, row_data.data());
         });
