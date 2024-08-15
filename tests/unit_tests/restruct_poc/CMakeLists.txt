@@ -1,7 +1,9 @@
-
+# Specify the source files for the unit test executable
 target_sources(
     openturbine_unit_tests
     PRIVATE
+
+    # System-wide tests
     test_beams.cpp
     test_solver.cpp
     test_rotating_beam.cpp
@@ -11,13 +13,21 @@ target_sources(
     test_utilities.cpp
     test_controller.cpp
     test_yaml_parser.cpp
+
+    # Beams-related tests
     beams/test_interpolate_QP_state.cpp
     beams/test_interpolate_QP_vector.cpp
+
+    # Model-related tests
     model/test_model.cpp
+
+    # Solver-related tests
     solver/test_compute_number_of_non_zeros.cpp
     solver/test_copy_into_sparse_matrix.cpp
     solver/test_populate_sparse_indices.cpp
     solver/test_populate_sparse_row_ptrs.cpp
+
+    # System-related tests
     system/test_integrate_stiffness_matrix.cpp
     system/test_integrate_inertia_matrix.cpp
     system/test_integrate_residual_vector.cpp
@@ -39,6 +49,7 @@ target_sources(
     system/test_calculate_node_forces.cpp
 )
 
+# Conditionally add VTK-related source files if VTK is enabled
 if(OTURB_ENABLE_VTK)
     target_sources(
         openturbine_unit_tests
