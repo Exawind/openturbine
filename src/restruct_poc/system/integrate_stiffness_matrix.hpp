@@ -85,7 +85,7 @@ struct IntegrateStiffnessMatrix {
         const auto qp_Ouu = Kokkos::View<double* [6][6]>(member.team_scratch(1), idx.num_qps);
         const auto qp_Quu = Kokkos::View<double* [6][6]>(member.team_scratch(1), idx.num_qps);
 
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, idx.num_qps), [=](size_t k) {
+        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, idx.num_qps), [&](size_t k) {
             for (auto i = 0U; i < idx.num_nodes; ++i) {
                 shape_interp(i, k) = shape_interp_(i_elem, i, k);
                 shape_deriv(i, k) = shape_deriv_(i_elem, i, k);

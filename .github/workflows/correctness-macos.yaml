@@ -11,15 +11,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        compiler: [g++, clang++]
         build_type: [Release, Debug]
     steps:
-    - name: Cache install Trilinos
-      id: cache-trilinos
+    - name: Cache install Dependencies
+      id: cache-dependencies
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/spack
         key: macos-spack
-    - name: Install Trilinos
+    - name: Install Dependencies
       if: steps.cache-trilinos.outputs.cache-hit != 'true'
       run: |
         git clone https://github.com/spack/spack.git
@@ -27,18 +28,10 @@ jobs:
         spack compiler find
         spack external find
         spack install googletest
-        spack install trilinos@master~mpi~epetra+basker
-    - name: Cache install yaml-cpp
-      id: cache-yaml-cpp
-      uses: actions/cache@v3
-      with:
-        path: ${{ github.workspace }}/spack
-        key: macos-yaml-cpp
-    - name: Install yaml-cpp
-      if: steps.cache-yaml-cpp.outputs.cache-hit != 'true'
-      run: |
-        source spack/share/spack/setup-env.sh
+        spack install llvm
+        spack install cppcheck
         spack install yaml-cpp
+        spack install trilinos@master~mpi~epetra+basker
     - name: Clone
       uses: actions/checkout@v4
       with:
@@ -47,6 +40,8 @@ jobs:
     - name: Test OpenTurbine
       run: |
         source spack/share/spack/setup-env.sh
+        spack load llvm
+        spack load cppcheck
         spack load trilinos
         spack load googletest
         spack load yaml-cpp
@@ -56,6 +51,9 @@ jobs:
         cmake .. \
           -DOpenTurbine_ENABLE_SANITIZER_ADDRESS=ON \
           -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=ON \
+          -DOpenTurbine_ENABLE_CPPCHECK=ON \
+          -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
+          -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         cmake --build .
         cp src/*.dll tests/unit_tests/
