@@ -11,8 +11,8 @@ namespace openturbine {
 struct Beams {
     // Node and quadrature point index data for an element
     struct ElemIndices {
-        size_t num_nodes;
-        size_t num_qps;
+        size_t num_nodes{};
+        size_t num_qps{};
         Kokkos::pair<size_t, size_t> node_range;
         Kokkos::pair<size_t, size_t> qp_range;
         Kokkos::pair<size_t, size_t> qp_shape_range;
