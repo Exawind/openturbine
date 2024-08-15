@@ -1,7 +1,7 @@
 #pragma once
 
-#include <numeric>
 #include <array>
+#include <numeric>
 #include <vector>
 
 #include <Kokkos_Core.hpp>
