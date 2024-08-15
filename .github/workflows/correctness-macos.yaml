@@ -21,7 +21,7 @@ jobs:
         path: ${{ github.workspace }}/spack
         key: macos-spack
     - name: Install Dependencies
-      if: steps.cache-trilinos.outputs.cache-hit != 'true'
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
         git clone https://github.com/spack/spack.git
         source spack/share/spack/setup-env.sh
