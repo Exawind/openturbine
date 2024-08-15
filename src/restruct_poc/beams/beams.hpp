@@ -13,9 +13,9 @@ struct Beams {
     struct ElemIndices {
         size_t num_nodes{};
         size_t num_qps{};
-        Kokkos::pair<size_t, size_t> node_range;
-        Kokkos::pair<size_t, size_t> qp_range;
-        Kokkos::pair<size_t, size_t> qp_shape_range;
+        Kokkos::pair<size_t, size_t> node_range{};
+        Kokkos::pair<size_t, size_t> qp_range{};
+        Kokkos::pair<size_t, size_t> qp_shape_range{};
         ElemIndices() = default;
         ElemIndices(size_t n_nodes, size_t n_qps, size_t i_node_start, size_t i_qp_start)
             : num_nodes(n_nodes),
