@@ -16,7 +16,7 @@ jobs:
         build_type: [Release, Debug]
     steps:
     - name: Cache install Dependencies
-      id: cache-trilinos
+      id: cache-dependencies
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/spack
