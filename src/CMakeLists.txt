@@ -42,5 +42,4 @@ set_target_properties(DISCON_ROTOR_TEST_CONTROLLER PROPERTIES PREFIX "" SUFFIX "
 
 # Add subdirectories for additional components of the library
 add_subdirectory(restruct_poc)
-add_subdirectory(io)
 add_subdirectory(utilities)
