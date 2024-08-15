@@ -28,6 +28,7 @@ target_sources(
     solver/test_populate_sparse_indices.cpp
     solver/test_populate_sparse_row_ptrs.cpp
     solver/test_populate_sparse_row_ptrs_col_inds_constraints.cpp
+    solver/test_populate_sparse_row_ptrs_col_inds_transpose.cpp
     solver/test_populate_tangent_row_ptrs.cpp
     solver/test_populate_tangent_indices.cpp
 
