@@ -6,9 +6,9 @@
 
 namespace openturbine {
 
-template <typename shape_matrix_type, typename qp_type>
+template <typename shape_matrix_type, typename node_type, typename qp_type>
 KOKKOS_INLINE_FUNCTION void InterpVector3(
-    const shape_matrix_type& shape_matrix, const View_Nx3::const_type& node_v, const qp_type& qp_v
+    const shape_matrix_type& shape_matrix, const node_type& node_v, const qp_type& qp_v
 ) {
     for (int j = 0; j < qp_v.extent_int(0); ++j) {
         auto local_total = Kokkos::Array<double, 3>{};
@@ -24,9 +24,9 @@ KOKKOS_INLINE_FUNCTION void InterpVector3(
     }
 }
 
-template <typename shape_matrix_type, typename qp_type>
+template <typename shape_matrix_type, typename node_type, typename qp_type>
 KOKKOS_INLINE_FUNCTION void InterpVector4(
-    const shape_matrix_type& shape_matrix, const View_Nx4::const_type& node_v, const qp_type& qp_v
+    const shape_matrix_type& shape_matrix, const node_type& node_v, const qp_type& qp_v
 ) {
     for (int j = 0; j < qp_v.extent_int(0); ++j) {
         auto local_total = Kokkos::Array<double, 4>{};
@@ -42,9 +42,9 @@ KOKKOS_INLINE_FUNCTION void InterpVector4(
     }
 }
 
-template <typename shape_matrix_type, typename qp_type>
+template <typename shape_matrix_type, typename node_type, typename qp_type>
 KOKKOS_INLINE_FUNCTION void InterpQuaternion(
-    const shape_matrix_type& shape_matrix, const View_Nx4::const_type& node_v, const qp_type& qp_v
+    const shape_matrix_type& shape_matrix, const node_type& node_v, const qp_type& qp_v
 ) {
     InterpVector4(shape_matrix, node_v, qp_v);
     static constexpr auto length_zero_result = Kokkos::Array<double, 4>{1., 0., 0., 0.};
@@ -65,10 +65,10 @@ KOKKOS_INLINE_FUNCTION void InterpQuaternion(
     }
 }
 
-template <typename shape_matrix_type, typename jacobian_type, typename qp_type>
+template <typename shape_matrix_type, typename jacobian_type, typename node_type, typename qp_type>
 KOKKOS_INLINE_FUNCTION void InterpVector3Deriv(
     const shape_matrix_type& shape_matrix_deriv, const jacobian_type& jacobian,
-    const View_Nx3::const_type& node_v, const qp_type& qp_v
+    const node_type& node_v, const qp_type& qp_v
 ) {
     InterpVector3(shape_matrix_deriv, node_v, qp_v);
     for (int j = 0; j < qp_v.extent_int(0); ++j) {
@@ -79,10 +79,10 @@ KOKKOS_INLINE_FUNCTION void InterpVector3Deriv(
     }
 }
 
-template <typename shape_matrix_type, typename jacobian_type, typename qp_type>
+template <typename shape_matrix_type, typename jacobian_type, typename node_type, typename qp_type>
 KOKKOS_INLINE_FUNCTION void InterpVector4Deriv(
     const shape_matrix_type& shape_matrix_deriv, const jacobian_type& jacobian,
-    const View_Nx4::const_type& node_v, const qp_type& qp_v
+    const node_type& node_v, const qp_type& qp_v
 ) {
     InterpVector4(shape_matrix_deriv, node_v, qp_v);
     for (int j = 0; j < qp_v.extent_int(0); ++j) {

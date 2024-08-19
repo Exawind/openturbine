@@ -34,6 +34,7 @@ inline auto SetUpBeams() {
     };
 
     auto model = Model();
+
     model.AddNode(
         {0, 0, 0, 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
          -0.18831121859148398},
@@ -122,7 +123,7 @@ inline auto SetUpBeams() {
 TEST(BeamsTest, NodeInitialPositionX0) {
     const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams.node_x0,
+        Kokkos::subview(beams.node_x0, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {0., 0., 0., 0.9778215200524469, -0.01733607539094763, -0.09001900002195001,
              -0.18831121859148398},
@@ -141,7 +142,7 @@ TEST(BeamsTest, NodeInitialPositionX0) {
 TEST(BeamsTest, NodeInitialDisplacement) {
     const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams.node_u,
+        Kokkos::subview(beams.node_u, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {0., 0., 0., 1., 0., 0., 0.},
             {0.002981602178886856, -0.00246675949494302, 0.003084570715675624, 0.9999627302042724,
@@ -157,7 +158,7 @@ TEST(BeamsTest, NodeInitialDisplacement) {
 TEST(BeamsTest, NodeInitialVelocity) {
     const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams.node_u_dot,
+        Kokkos::subview(beams.node_u_dot, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {0., 0., 0., 0., 0., 0},
             {0.01726731646460114, -0.014285714285714285, 0.003084570715675624, 0.01726731646460114,
@@ -173,7 +174,7 @@ TEST(BeamsTest, NodeInitialVelocity) {
 TEST(BeamsTest, NodeInitialAcceleration) {
     const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams.node_u_ddot,
+        Kokkos::subview(beams.node_u_ddot, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {0., 0., 0., 0., 0., 0},
             {0.01726731646460114, -0.011304112106827427, 0.00606617289456248, 0.01726731646460114,
@@ -375,7 +376,7 @@ TEST(BeamsTest, QuadraturePointMatrixKuu) {
 TEST(BeamsTest, NodalForceVectorFE) {
     const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams.node_FE,
+        Kokkos::subview(beams.node_FE, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {-0.11121183449279078, -0.16149482899687723, -0.30437442031624473, -0.40385243171727625,
              -0.29275354335733944, -0.6838427114868826},
@@ -394,7 +395,7 @@ TEST(BeamsTest, NodalForceVectorFE) {
 TEST(BeamsTest, NodalForceVectorFI) {
     const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams.node_FI,
+        Kokkos::subview(beams.node_FI, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {0.00011604556408931232, -0.0006507362696177878, -0.0006134866787566515,
              0.0006142322011934136, -0.0021994796881491885, -0.002486843354672628},
@@ -417,7 +418,7 @@ TEST(BeamsTest, NodalForceVectorFI) {
 TEST(BeamsTest, NodalForceVectorFG) {
     const auto beams = SetUpBeams();
     expect_kokkos_view_2D_equal(
-        beams.node_FG,
+        Kokkos::subview(beams.node_FG, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {0., 0., 5.387595382846484, 0.9155947038768231, -0.6120658127519644, 0.},
             {0., 0., 27.214654505466733, 4.774257980210559, -3.2246653192400943, 0.},

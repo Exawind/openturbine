@@ -7,24 +7,25 @@
 namespace openturbine::tests {
 
 inline void CompareInOrder(
-    const Kokkos::View<const double**>::host_mirror_type& result,
+    const Kokkos::View<const double***>::host_mirror_type& result,
     const Kokkos::View<const double**, Kokkos::HostSpace>& expected
 ) {
     for (auto j = 0U; j < result.extent(1); ++j) {
-        EXPECT_EQ(result(0, j), expected(0, j));
+        EXPECT_EQ(result(0, 0, j), expected(0, j));
     }
     for (auto j = 0U; j < result.extent(1); ++j) {
-        EXPECT_EQ(result(1, j), expected(1, j));
+        EXPECT_EQ(result(0, 1, j), expected(1, j));
     }
 }
 
 TEST(UpdateNodeStateTests, TwoNodes_InOrder) {
-    const auto indices = Kokkos::View<size_t[2]>("node_state_indices");
+    const auto indices = Kokkos::View<size_t[1][2]>("node_state_indices");
     constexpr auto indices_data = std::array<size_t, 2>{0U, 1U};
-    const auto indices_host = Kokkos::View<const size_t[2], Kokkos::HostSpace>(indices_data.data());
+    const auto indices_host =
+        Kokkos::View<const size_t[1][2], Kokkos::HostSpace>(indices_data.data());
     const auto indices_mirror = Kokkos::create_mirror(indices);
     Kokkos::deep_copy(indices_mirror, indices_host);
-    Kokkos::deep_copy(indices, indices_host);
+    Kokkos::deep_copy(indices, indices_mirror);
 
     const auto Q = Kokkos::View<double[2][7]>("Q");
     constexpr auto Q_data = std::array{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14.};
@@ -47,12 +48,13 @@ TEST(UpdateNodeStateTests, TwoNodes_InOrder) {
     Kokkos::deep_copy(A_mirror, A_host);
     Kokkos::deep_copy(A, A_mirror);
 
-    const auto node_u = Kokkos::View<double[2][7]>("node_u");
-    const auto node_u_dot = Kokkos::View<double[2][6]>("node_u_dot");
-    const auto node_u_ddot = Kokkos::View<double[2][6]>("node_u_ddot");
+    const auto node_u = Kokkos::View<double[1][2][7]>("node_u");
+    const auto node_u_dot = Kokkos::View<double[1][2][6]>("node_u_dot");
+    const auto node_u_ddot = Kokkos::View<double[1][2][6]>("node_u_ddot");
 
     Kokkos::parallel_for(
-        "UpdateNodeState", 2, UpdateNodeState{indices, node_u, node_u_dot, node_u_ddot, Q, V, A}
+        "UpdateNodeStateElement", 2,
+        UpdateNodeStateElement{0U, indices, node_u, node_u_dot, node_u_ddot, Q, V, A}
     );
 
     const auto node_u_mirror = Kokkos::create_mirror(node_u);
@@ -69,24 +71,25 @@ TEST(UpdateNodeStateTests, TwoNodes_InOrder) {
 }
 
 inline void CompareOutOfOrder(
-    const Kokkos::View<const double**>::host_mirror_type& result,
+    const Kokkos::View<const double***>::host_mirror_type& result,
     const Kokkos::View<const double**, Kokkos::HostSpace>& expected
 ) {
     for (auto j = 0U; j < result.extent(1); ++j) {
-        EXPECT_EQ(result(0, j), expected(1, j));
+        EXPECT_EQ(result(0, 0, j), expected(1, j));
     }
     for (auto j = 0U; j < result.extent(1); ++j) {
-        EXPECT_EQ(result(1, j), expected(0, j));
+        EXPECT_EQ(result(0, 1, j), expected(0, j));
     }
 }
 
 TEST(UpdateNodeStateTests, TwoNodes_OutOfOrder) {
-    const auto indices = Kokkos::View<size_t[2]>("node_state_indices");
+    const auto indices = Kokkos::View<size_t[1][2]>("node_state_indices");
     constexpr auto indices_data = std::array<size_t, 2>{1U, 0U};
-    const auto indices_host = Kokkos::View<const size_t[2], Kokkos::HostSpace>(indices_data.data());
+    const auto indices_host =
+        Kokkos::View<const size_t[1][2], Kokkos::HostSpace>(indices_data.data());
     const auto indices_mirror = Kokkos::create_mirror(indices);
     Kokkos::deep_copy(indices_mirror, indices_host);
-    Kokkos::deep_copy(indices, indices_host);
+    Kokkos::deep_copy(indices, indices_mirror);
 
     const auto Q = Kokkos::View<double[2][7]>("Q");
     constexpr auto Q_data = std::array{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14.};
@@ -109,12 +112,13 @@ TEST(UpdateNodeStateTests, TwoNodes_OutOfOrder) {
     Kokkos::deep_copy(A_mirror, A_host);
     Kokkos::deep_copy(A, A_mirror);
 
-    const auto node_u = Kokkos::View<double[2][7]>("node_u");
-    const auto node_u_dot = Kokkos::View<double[2][6]>("node_u_dot");
-    const auto node_u_ddot = Kokkos::View<double[2][6]>("node_u_ddot");
+    const auto node_u = Kokkos::View<double[1][2][7]>("node_u");
+    const auto node_u_dot = Kokkos::View<double[1][2][6]>("node_u_dot");
+    const auto node_u_ddot = Kokkos::View<double[1][2][6]>("node_u_ddot");
 
     Kokkos::parallel_for(
-        "UpdateNodeState", 2, UpdateNodeState{indices, node_u, node_u_dot, node_u_ddot, Q, V, A}
+        "UpdateNodeStateElement", 2,
+        UpdateNodeStateElement{0U, indices, node_u, node_u_dot, node_u_ddot, Q, V, A}
     );
 
     const auto node_u_mirror = Kokkos::create_mirror(node_u);

@@ -12,11 +12,12 @@ namespace openturbine {
 
 inline void AssembleResidualVector(const Beams& beams, const View_N& residual_vector) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Residual");
+    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(
-        "IntegrateResidualVector", beams.num_nodes,
+        "IntegrateResidualVector", range_policy,
         IntegrateResidualVector{
-            beams.node_state_indices, beams.node_FE, beams.node_FI, beams.node_FG, beams.node_FX,
-            residual_vector}
+            beams.elem_indices, beams.node_state_indices, beams.node_FE, beams.node_FI,
+            beams.node_FG, beams.node_FX, residual_vector}
     );
 }
 

@@ -7,7 +7,7 @@
 namespace openturbine {
 struct PopulateSparseIndices {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
-    Kokkos::View<size_t*>::const_type node_state_indices;
+    Kokkos::View<size_t**>::const_type node_state_indices;
     Kokkos::View<int*> indices;
 
     KOKKOS_FUNCTION
@@ -20,8 +20,8 @@ struct PopulateSparseIndices {
             for (auto j_index = 0U; j_index < num_nodes; ++j_index) {
                 for (auto n = 0U; n < kLieAlgebraComponents; ++n) {
                     for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
-                        const auto i = i_index + idx.node_range.first;
-                        const auto column_start = node_state_indices(i) * kLieAlgebraComponents;
+                        const auto column_start =
+                            node_state_indices(i_elem, i_index) * kLieAlgebraComponents;
                         for (auto m = 0U; m < kLieAlgebraComponents; ++m) {
                             indices(entries_so_far) = static_cast<int>(column_start + m);
                             ++entries_so_far;

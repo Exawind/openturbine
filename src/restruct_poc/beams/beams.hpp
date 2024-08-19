@@ -31,24 +31,24 @@ struct Beams {
     size_t max_elem_nodes;
     size_t max_elem_qps;
 
-    Kokkos::View<ElemIndices*> elem_indices;   // View of element node and qp indices into views
-    Kokkos::View<size_t*> node_state_indices;  // State row index for each node
+    Kokkos::View<ElemIndices*> elem_indices;    // View of element node and qp indices into views
+    Kokkos::View<size_t**> node_state_indices;  // State row index for each node
 
     View_3 gravity;
 
     // Node-based data
-    View_Nx7 node_x0;      // Inital position/rotation
-    View_Nx7 node_u;       // State: translation/rotation displacement
-    View_Nx6 node_u_dot;   // State: translation/rotation velocity
-    View_Nx6 node_u_ddot;  // State: translation/rotation acceleration
-    View_Nx6 node_FE;      // Elastic forces
-    View_Nx6 node_FG;      // Gravity forces
-    View_Nx6 node_FI;      // Inertial forces
-    View_Nx6 node_FX;      // External forces
+    Kokkos::View<double** [7]> node_x0;      // Inital position/rotation
+    Kokkos::View<double** [7]> node_u;       // State: translation/rotation displacement
+    Kokkos::View<double** [6]> node_u_dot;   // State: translation/rotation velocity
+    Kokkos::View<double** [6]> node_u_ddot;  // State: translation/rotation acceleration
+    Kokkos::View<double** [6]> node_FE;      // Elastic forces
+    Kokkos::View<double** [6]> node_FG;      // Gravity forces
+    Kokkos::View<double** [6]> node_FI;      // Inertial forces
+    Kokkos::View<double** [6]> node_FX;      // External forces
 
     // Quadrature point data
-    View_NxN qp_weight;                                // Integration weights
-    View_NxN qp_jacobian;                              // Jacobian vector
+    Kokkos::View<double**> qp_weight;                  // Integration weights
+    Kokkos::View<double**> qp_jacobian;                // Jacobian vector
     Kokkos::View<double** [6][6]> qp_Mstar;            // Mass matrix in material frame
     Kokkos::View<double** [6][6]> qp_Cstar;            // Stiffness matrix in material frame
     Kokkos::View<double** [3]> qp_x0;                  // Initial position
@@ -100,58 +100,58 @@ struct Beams {
           max_elem_nodes(max_e_nodes),
           max_elem_qps(max_e_qps),
           // Element Data
-          elem_indices("elem_indices", n_beams),
-          node_state_indices("node_state_indices", n_nodes),
+          elem_indices("elem_indices", num_elems),
+          node_state_indices("node_state_indices", num_elems, max_elem_nodes),
           gravity("gravity"),
           // Node Data
-          node_x0("node_x0", n_nodes),
-          node_u("node_u", n_nodes),
-          node_u_dot("node_u_dot", n_nodes),
-          node_u_ddot("node_u_ddot", n_nodes),
-          node_FE("node_force_elastic", n_nodes),
-          node_FG("node_force_gravity", n_nodes),
-          node_FI("node_force_inertial", n_nodes),
-          node_FX("node_force_external", n_nodes),
+          node_x0("node_x0", num_elems, max_elem_nodes),
+          node_u("node_u", num_elems, max_elem_nodes),
+          node_u_dot("node_u_dot", num_elems, max_elem_nodes),
+          node_u_ddot("node_u_ddot", num_elems, max_elem_nodes),
+          node_FE("node_force_elastic", num_elems, max_elem_nodes),
+          node_FG("node_force_gravity", num_elems, max_elem_nodes),
+          node_FI("node_force_inertial", num_elems, max_elem_nodes),
+          node_FX("node_force_external", num_elems, max_elem_nodes),
           // Quadrature Point data
-          qp_weight("qp_weight", n_beams, max_elem_qps),
-          qp_jacobian("qp_jacobian", n_beams, max_elem_qps),
-          qp_Mstar("qp_Mstar", n_beams, max_elem_qps),
-          qp_Cstar("qp_Cstar", n_beams, max_elem_qps),
-          qp_x0("qp_x0", n_beams, max_elem_qps),
-          qp_x0_prime("qp_x0_prime", n_beams, max_elem_qps),
-          qp_r0("qp_r0", n_beams, max_elem_qps),
-          qp_u("qp_u", n_beams, max_elem_qps),
-          qp_u_prime("qp_u_prime", n_beams, max_elem_qps),
-          qp_u_dot("qp_u_dot", n_beams, max_elem_qps),
-          qp_u_ddot("qp_u_ddot", n_beams, max_elem_qps),
-          qp_r("qp_r", n_beams, max_elem_qps),
-          qp_r_prime("qp_r_prime", n_beams, max_elem_qps),
-          qp_omega("qp_omega", n_beams, max_elem_qps),
-          qp_omega_dot("qp_omega_dot", n_beams, max_elem_qps),
-          qp_E("qp_E", n_beams, max_elem_qps),
-          qp_eta_tilde("R1_3x3", n_beams, max_elem_qps),
-          qp_omega_tilde("R1_3x3", n_beams, max_elem_qps),
-          qp_omega_dot_tilde("R1_3x3", n_beams, max_elem_qps),
-          qp_x0pupss("R1_3x3", n_beams, max_elem_qps),
-          qp_M_tilde("R1_3x3", n_beams, max_elem_qps),
-          qp_N_tilde("R1_3x3", n_beams, max_elem_qps),
-          qp_eta("V_3", n_beams, max_elem_qps),
-          qp_rho("R1_3x3", n_beams, max_elem_qps),
-          qp_strain("qp_strain", n_beams, max_elem_qps),
-          qp_Fc("qp_Fc", n_beams, max_elem_qps),
-          qp_Fd("qp_Fd", n_beams, max_elem_qps),
-          qp_Fi("qp_Fi", n_beams, max_elem_qps),
-          qp_Fg("qp_Fg", n_beams, max_elem_qps),
-          qp_RR0("qp_RR0", n_beams, max_elem_qps),
-          qp_Muu("qp_Muu", n_beams, max_elem_qps),
-          qp_Cuu("qp_Cuu", n_beams, max_elem_qps),
-          qp_Ouu("qp_Ouu", n_beams, max_elem_qps),
-          qp_Puu("qp_Puu", n_beams, max_elem_qps),
-          qp_Quu("qp_Quu", n_beams, max_elem_qps),
-          qp_Guu("qp_Guu", n_beams, max_elem_qps),
-          qp_Kuu("qp_Kuu", n_beams, max_elem_qps),
-          shape_interp("shape_interp", n_beams, max_elem_nodes, max_elem_qps),
-          shape_deriv("deriv_interp", n_beams, max_elem_nodes, max_elem_qps) {}
+          qp_weight("qp_weight", num_elems, max_elem_qps),
+          qp_jacobian("qp_jacobian", num_elems, max_elem_qps),
+          qp_Mstar("qp_Mstar", num_elems, max_elem_qps),
+          qp_Cstar("qp_Cstar", num_elems, max_elem_qps),
+          qp_x0("qp_x0", num_elems, max_elem_qps),
+          qp_x0_prime("qp_x0_prime", num_elems, max_elem_qps),
+          qp_r0("qp_r0", num_elems, max_elem_qps),
+          qp_u("qp_u", num_elems, max_elem_qps),
+          qp_u_prime("qp_u_prime", num_elems, max_elem_qps),
+          qp_u_dot("qp_u_dot", num_elems, max_elem_qps),
+          qp_u_ddot("qp_u_ddot", num_elems, max_elem_qps),
+          qp_r("qp_r", num_elems, max_elem_qps),
+          qp_r_prime("qp_r_prime", num_elems, max_elem_qps),
+          qp_omega("qp_omega", num_elems, max_elem_qps),
+          qp_omega_dot("qp_omega_dot", num_elems, max_elem_qps),
+          qp_E("qp_E", num_elems, max_elem_qps),
+          qp_eta_tilde("R1_3x3", num_elems, max_elem_qps),
+          qp_omega_tilde("R1_3x3", num_elems, max_elem_qps),
+          qp_omega_dot_tilde("R1_3x3", num_elems, max_elem_qps),
+          qp_x0pupss("R1_3x3", num_elems, max_elem_qps),
+          qp_M_tilde("R1_3x3", num_elems, max_elem_qps),
+          qp_N_tilde("R1_3x3", num_elems, max_elem_qps),
+          qp_eta("V_3", num_elems, max_elem_qps),
+          qp_rho("R1_3x3", num_elems, max_elem_qps),
+          qp_strain("qp_strain", num_elems, max_elem_qps),
+          qp_Fc("qp_Fc", num_elems, max_elem_qps),
+          qp_Fd("qp_Fd", num_elems, max_elem_qps),
+          qp_Fi("qp_Fi", num_elems, max_elem_qps),
+          qp_Fg("qp_Fg", num_elems, max_elem_qps),
+          qp_RR0("qp_RR0", num_elems, max_elem_qps),
+          qp_Muu("qp_Muu", num_elems, max_elem_qps),
+          qp_Cuu("qp_Cuu", num_elems, max_elem_qps),
+          qp_Ouu("qp_Ouu", num_elems, max_elem_qps),
+          qp_Puu("qp_Puu", num_elems, max_elem_qps),
+          qp_Quu("qp_Quu", num_elems, max_elem_qps),
+          qp_Guu("qp_Guu", num_elems, max_elem_qps),
+          qp_Kuu("qp_Kuu", num_elems, max_elem_qps),
+          shape_interp("shape_interp", num_elems, max_elem_nodes, max_elem_qps),
+          shape_deriv("deriv_interp", num_elems, max_elem_nodes, max_elem_qps) {}
 };
 
 }  // namespace openturbine
