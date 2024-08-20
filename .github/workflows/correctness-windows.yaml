@@ -1,0 +1,65 @@
+name: OpenTurbine-CI
+
+on: push
+
+jobs:
+  Correctness-Windows:
+    defaults:
+      run:
+        shell: wsl-bash {0}
+    runs-on: windows-latest
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: 4
+      CTEST_PARALLEL_LEVEL: 2
+      CXX: ${{matrix.compiler}}
+      FC: gfortran
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [g++]
+        build_type: [Debug]
+    steps:
+    - uses: Vampire/setup-wsl@v3
+      with: 
+        distribution: Ubuntu-24.04
+        additional-packages:
+          gcc
+          git
+          cmake
+          clang
+          python3
+          pip 
+    - name: Cache install Dependencies
+      id: cache-dependencies
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/spack
+        key: windows-spack
+    - name: Install Dependencies
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      run: |
+        git clone https://github.com/spack/spack.git
+        source spack/share/spack/setup-env.sh
+        spack compiler find
+        spack install googletest
+        spack install yaml-cpp
+        spack install trilinos@master~mpi~epetra
+    - name: Clone
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+        path: openturbine
+    - name: Test OpenTurbine
+      run: |
+        spack/share/spack/setup-env.sh
+        spack load trilinos
+        spack load googletest
+        spack load yaml-cpp
+        cd openturbine
+        mkdir build
+        cd build
+        cmake .. \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        cmake --build .
+        cp src/*.dll tests/unit_tests/
+        ctest --output-on-failure
