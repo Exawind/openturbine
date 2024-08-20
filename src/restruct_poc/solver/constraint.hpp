@@ -10,18 +10,26 @@ enum class ConstraintType : std::uint8_t {
     kNone = 0,          // No constraint (default)
     kFixedBC = 1,       // Fixed boundary condition constraint (zero displacement)
     kPrescribedBC = 2,  // Prescribed boundary condition (displacement can be set)
-    kRigid =
-        3,  // Rigid constraint between two nodes (nodes maintain relative distance and rotation)
-    kCylindrical = 4,      // Target node rotates freely around specified axis. Relative distance and
-                           // rotation are fixed)
-    kRotationControl = 5,  // Specify rotation about given axis
+    kRigid = 3,  // Rigid constraint between two nodes (nodes maintain relative distance and rotation
+                 // between each other)
+    kCylindrical = 4,  // Target node rotates freely around a specified axis. Relative distance and
+                       // rotation are fixed)
+    kRotationControl = 5,  // A rotation is specified about a given axis
 };
 
+/// @brief Returns the number of nodes associated with a constraint type (1 or 2)
 KOKKOS_INLINE_FUNCTION
-constexpr size_t GetNumberOfNodes(ConstraintType t) {
-    const auto has_two_nodes = t == ConstraintType::kRigid || t == ConstraintType::kCylindrical ||
-                               t == ConstraintType::kRotationControl;
-    return 1U + static_cast<size_t>(has_two_nodes);
+constexpr size_t GetNumberOfNodes(ConstraintType type) {
+    switch (type) {
+        case ConstraintType::kRigid:
+        case ConstraintType::kCylindrical:
+        case ConstraintType::kRotationControl: {
+            return 2U;
+        } break;
+        default:
+            // kNone, kFixedBC, kPrescribedBC
+            return 1U;
+    }
 }
 
 /// @brief Struct to define a constraint between two nodes
@@ -98,12 +106,14 @@ struct Constraint {
     }
 
     /// Returns the number of degrees of freedom used by constraint
-    [[nodiscard]] size_t NumDOFs() const {
+    size_t NumDOFs() const {
         switch (this->type) {
             case ConstraintType::kCylindrical: {
+                // Cylindrical constraints have 5 degrees of freedom
                 return 5U;
             } break;
             default: {
+                // kNone, kFixedBC, kPrescribedBC, kRigid, kRotationControl
                 return static_cast<size_t>(kLieAlgebraComponents);  // 6
             }
         }
