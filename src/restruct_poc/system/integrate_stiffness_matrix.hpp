@@ -7,12 +7,10 @@
 
 namespace openturbine {
 struct IntegrateStiffnessMatrixElement {
-    int i_elem;
+    size_t i_elem;
     size_t num_qps;
-    size_t first_node;
-    size_t first_qp;
-    View_N::const_type qp_weight_;
-    View_N::const_type qp_jacobian_;
+    Kokkos::View<double*>::const_type qp_weight_;
+    Kokkos::View<double*>::const_type qp_jacobian_;
     Kokkos::View<double**>::const_type shape_interp_;
     Kokkos::View<double**>::const_type shape_deriv_;
     Kokkos::View<double* [6][6]>::const_type qp_Kuu_;
@@ -54,9 +52,10 @@ struct IntegrateStiffnessMatrixElement {
 };
 
 struct IntegrateStiffnessMatrix {
-    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
-    View_NxN::const_type qp_weight_;
-    View_NxN::const_type qp_jacobian_;
+    Kokkos::View<size_t*>::const_type num_nodes_per_element;
+    Kokkos::View<size_t*>::const_type num_qps_per_element;
+    Kokkos::View<double**>::const_type qp_weight_;
+    Kokkos::View<double**>::const_type qp_jacobian_;
     Kokkos::View<double***>::const_type shape_interp_;
     Kokkos::View<double***>::const_type shape_deriv_;
     Kokkos::View<double** [6][6]>::const_type qp_Kuu_;
@@ -68,25 +67,24 @@ struct IntegrateStiffnessMatrix {
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
-        const auto i_elem = member.league_rank();
-        const auto idx = elem_indices(i_elem);
+        const auto i_elem = static_cast<size_t>(member.league_rank());
+        const auto num_nodes = num_nodes_per_element(i_elem);
+        const auto num_qps = num_qps_per_element(i_elem);
 
-        const auto shape_interp =
-            Kokkos::View<double**>(member.team_scratch(1), idx.num_nodes, idx.num_qps);
-        const auto shape_deriv =
-            Kokkos::View<double**>(member.team_scratch(1), idx.num_nodes, idx.num_qps);
+        const auto shape_interp = Kokkos::View<double**>(member.team_scratch(1), num_nodes, num_qps);
+        const auto shape_deriv = Kokkos::View<double**>(member.team_scratch(1), num_nodes, num_qps);
 
-        const auto qp_weight = Kokkos::View<double*>(member.team_scratch(1), idx.num_qps);
-        const auto qp_jacobian = Kokkos::View<double*>(member.team_scratch(1), idx.num_qps);
+        const auto qp_weight = Kokkos::View<double*>(member.team_scratch(1), num_qps);
+        const auto qp_jacobian = Kokkos::View<double*>(member.team_scratch(1), num_qps);
 
-        const auto qp_Kuu = Kokkos::View<double* [6][6]>(member.team_scratch(1), idx.num_qps);
-        const auto qp_Puu = Kokkos::View<double* [6][6]>(member.team_scratch(1), idx.num_qps);
-        const auto qp_Cuu = Kokkos::View<double* [6][6]>(member.team_scratch(1), idx.num_qps);
-        const auto qp_Ouu = Kokkos::View<double* [6][6]>(member.team_scratch(1), idx.num_qps);
-        const auto qp_Quu = Kokkos::View<double* [6][6]>(member.team_scratch(1), idx.num_qps);
+        const auto qp_Kuu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+        const auto qp_Puu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+        const auto qp_Cuu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+        const auto qp_Ouu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+        const auto qp_Quu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
 
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, idx.num_qps), [&](size_t k) {
-            for (auto i = 0U; i < idx.num_nodes; ++i) {
+        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, num_qps), [&](size_t k) {
+            for (auto i = 0U; i < num_nodes; ++i) {
                 shape_interp(i, k) = shape_interp_(i_elem, i, k);
                 shape_deriv(i, k) = shape_deriv_(i_elem, i, k);
             }
@@ -104,22 +102,10 @@ struct IntegrateStiffnessMatrix {
         });
         member.team_barrier();
 
-        const auto node_range = Kokkos::TeamThreadMDRange(member, idx.num_nodes, idx.num_nodes);
+        const auto node_range = Kokkos::TeamThreadMDRange(member, num_nodes, num_nodes);
         const auto element_integrator = IntegrateStiffnessMatrixElement{
-            i_elem,
-            idx.num_qps,
-            idx.node_range.first,
-            idx.qp_range.first,
-            qp_weight,
-            qp_jacobian,
-            shape_interp,
-            shape_deriv,
-            qp_Kuu,
-            qp_Puu,
-            qp_Cuu,
-            qp_Ouu,
-            qp_Quu,
-            gbl_M_};
+            i_elem, num_qps, qp_weight, qp_jacobian, shape_interp, shape_deriv,
+            qp_Kuu, qp_Puu,  qp_Cuu,    qp_Ouu,      qp_Quu,       gbl_M_};
         Kokkos::parallel_for(node_range, element_integrator);
     }
 };

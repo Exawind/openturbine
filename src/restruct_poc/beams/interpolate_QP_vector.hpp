@@ -8,8 +8,6 @@ namespace openturbine {
 
 struct InterpolateQPVector {
     size_t i_elem;
-    size_t first_qp;
-    size_t first_node;
     size_t num_nodes;
     Kokkos::View<double***>::const_type shape_interp;
     Kokkos::View<double** [3], Kokkos::LayoutStride>::const_type node_vector;

@@ -16,7 +16,7 @@ inline void AssembleResidualVector(const Beams& beams, const View_N& residual_ve
     Kokkos::parallel_for(
         "IntegrateResidualVector", range_policy,
         IntegrateResidualVector{
-            beams.elem_indices, beams.node_state_indices, beams.node_FE, beams.node_FI,
+            beams.num_nodes_per_element, beams.node_state_indices, beams.node_FE, beams.node_FI,
             beams.node_FG, beams.node_FX, residual_vector}
     );
 }

@@ -22,7 +22,7 @@
 
 namespace openturbine {
 struct CalculateQuadraturePointValues {
-    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
+    Kokkos::View<size_t*>::const_type num_qps_per_element;
     View_3::const_type gravity_;
     Kokkos::View<double** [3]>::const_type qp_u_prime_;
     Kokkos::View<double** [4]>::const_type qp_r_;
@@ -59,45 +59,44 @@ struct CalculateQuadraturePointValues {
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
         const auto i_elem = static_cast<size_t>(member.league_rank());
-        const auto idx = elem_indices(i_elem);
+        const auto num_qps = num_qps_per_element(i_elem);
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
-            CalculateRR0{i_elem, qp_r0_, qp_r_, qp_RR0_}
+            Kokkos::TeamThreadRange(member, num_qps), CalculateRR0{i_elem, qp_r0_, qp_r_, qp_RR0_}
         );
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculateTemporaryVariables{i_elem, qp_x0_prime_, qp_u_prime_, qp_x0pupSS_}
         );
         member.team_barrier();
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             RotateSectionMatrix{i_elem, qp_RR0_, qp_Mstar_, qp_Muu_}
         );
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             RotateSectionMatrix{i_elem, qp_RR0_, qp_Cstar_, qp_Cuu_}
         );
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculateStrain{i_elem, qp_x0_prime_, qp_u_prime_, qp_r_, qp_r_prime_, qp_strain_}
         );
         member.team_barrier();
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculateMassMatrixComponents{i_elem, qp_Muu_, qp_eta_, qp_rho_, qp_eta_tilde_}
         );
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculateForceFC{i_elem, qp_Cuu_, qp_strain_, qp_FC_, qp_M_tilde_, qp_N_tilde_}
         );
         member.team_barrier();
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculateInertialForces{
                 i_elem, qp_Muu_, qp_u_ddot_, qp_omega_, qp_omega_dot_, qp_eta_tilde_,
                 qp_omega_tilde_, qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_FI_}
@@ -105,38 +104,38 @@ struct CalculateQuadraturePointValues {
         member.team_barrier();
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculateForceFD{i_elem, qp_x0pupSS_, qp_FC_, qp_FD_}
         );
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculateGravityForce{i_elem, gravity_, qp_Muu_, qp_eta_tilde_, qp_FG_}
         );
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculateOuu{i_elem, qp_Cuu_, qp_x0pupSS_, qp_M_tilde_, qp_N_tilde_, qp_Ouu_}
         );
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculatePuu{i_elem, qp_Cuu_, qp_x0pupSS_, qp_N_tilde_, qp_Puu_}
         );
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculateQuu{i_elem, qp_Cuu_, qp_x0pupSS_, qp_N_tilde_, qp_Quu_}
         );
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculateGyroscopicMatrix{
                 i_elem, qp_Muu_, qp_omega_, qp_omega_tilde_, qp_rho_, qp_eta_, qp_Guu_}
         );
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_qps),
+            Kokkos::TeamThreadRange(member, num_qps),
             CalculateInertiaStiffnessMatrix{
                 i_elem, qp_Muu_, qp_u_ddot_, qp_omega_, qp_omega_dot_, qp_omega_tilde_,
                 qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_Kuu_}

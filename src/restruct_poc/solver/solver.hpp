@@ -129,17 +129,18 @@ struct Solver {
         auto K_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros", beams_.num_elems,
-            ComputeNumberOfNonZeros{beams_.elem_indices}, K_num_non_zero
+            ComputeNumberOfNonZeros{beams_.num_nodes_per_element}, K_num_non_zero
         );
         auto K_row_ptrs = RowPtrType("K_row_ptrs", K_num_rows + 1);
         auto K_col_inds = IndicesType("indices", K_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrs", 1,
-            PopulateSparseRowPtrs<RowPtrType>{beams_.elem_indices, K_row_ptrs}
+            PopulateSparseRowPtrs<RowPtrType>{beams_.num_nodes_per_element, K_row_ptrs}
         );
         Kokkos::parallel_for(
             "PopulateSparseIndices", 1,
-            PopulateSparseIndices{beams_.elem_indices, beams_.node_state_indices, K_col_inds}
+            PopulateSparseIndices{
+                beams_.num_nodes_per_element, beams_.node_state_indices, K_col_inds}
         );
 
         Kokkos::fence();

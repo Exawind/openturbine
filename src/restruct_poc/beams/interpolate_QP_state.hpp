@@ -8,8 +8,6 @@ namespace openturbine {
 
 struct InterpolateQPState_u {
     size_t i_elem;
-    size_t first_qp;
-    size_t first_node;
     size_t num_nodes;
     Kokkos::View<double***>::const_type shape_interp;
     Kokkos::View<double** [7]>::const_type node_u;
@@ -33,8 +31,6 @@ struct InterpolateQPState_u {
 
 struct InterpolateQPState_uprime {
     size_t i_elem;
-    size_t first_qp;
-    size_t first_node;
     size_t num_nodes;
     Kokkos::View<double***>::const_type shape_deriv;
     Kokkos::View<double**>::const_type qp_jacobian;
@@ -60,8 +56,6 @@ struct InterpolateQPState_uprime {
 
 struct InterpolateQPState_r {
     size_t i_elem;
-    size_t first_qp;
-    size_t first_node;
     size_t num_nodes;
     Kokkos::View<double***>::const_type shape_interp;
     Kokkos::View<double** [7]>::const_type node_u;
@@ -93,8 +87,6 @@ struct InterpolateQPState_r {
 
 struct InterpolateQPState_rprime {
     size_t i_elem;
-    size_t first_qp;
-    size_t first_node;
     size_t num_nodes;
     Kokkos::View<double***>::const_type shape_deriv;
     Kokkos::View<double**>::const_type qp_jacobian;

@@ -32,7 +32,7 @@ struct UpdateNodeStateElement {
 };
 
 struct UpdateNodeState {
-    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
+    Kokkos::View<size_t*>::const_type num_nodes_per_element;
     Kokkos::View<size_t**>::const_type node_state_indices;
     Kokkos::View<double** [7]> node_u;
     Kokkos::View<double** [6]> node_u_dot;
@@ -45,10 +45,10 @@ struct UpdateNodeState {
     KOKKOS_FUNCTION
     void operator()(const Kokkos::TeamPolicy<>::member_type& member) const {
         const auto i_elem = static_cast<size_t>(member.league_rank());
-        const auto idx = elem_indices(i_elem);
+        const auto num_nodes = num_nodes_per_element(i_elem);
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, idx.num_nodes),
+            Kokkos::TeamThreadRange(member, num_nodes),
             UpdateNodeStateElement{
                 i_elem, node_state_indices, node_u, node_u_dot, node_u_ddot, Q, V, A}
         );

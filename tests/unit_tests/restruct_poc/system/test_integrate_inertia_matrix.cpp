@@ -12,8 +12,8 @@
 namespace openturbine::tests {
 
 inline void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Muu() {
-    constexpr auto number_of_nodes = 1;
-    constexpr auto number_of_qps = 1;
+    constexpr auto number_of_nodes = size_t{1U};
+    constexpr auto number_of_qps = size_t{1U};
 
     const auto qp_weights = get_qp_weights<number_of_qps>({2.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
@@ -33,8 +33,7 @@ inline void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Muu() {
 
     const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
     const auto integrator = IntegrateInertiaMatrixElement{
-        0,      number_of_qps, 0,  0,  qp_weights, qp_jacobian, shape_interp,
-        qp_Muu, qp_Guu,        1., 0., gbl_M};
+        0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, qp_Muu, qp_Guu, 1., 0., gbl_M};
     Kokkos::parallel_for(policy, integrator);
 
     constexpr auto exact_M_data =
@@ -54,8 +53,8 @@ TEST(IntegrateInertiaMatrixTests, OneElementOneNodeOneQP_Muu) {
 }
 
 void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Guu() {
-    constexpr auto number_of_nodes = 1;
-    constexpr auto number_of_qps = 1;
+    constexpr auto number_of_nodes = size_t{1U};
+    constexpr auto number_of_qps = size_t{1U};
 
     const auto qp_weights = get_qp_weights<number_of_qps>({2.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
@@ -75,8 +74,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Guu() {
 
     const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
     const auto integrator = IntegrateInertiaMatrixElement{
-        0,      number_of_qps, 0,  0,  qp_weights, qp_jacobian, shape_interp,
-        qp_Muu, qp_Guu,        0., 1., gbl_M};
+        0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, qp_Muu, qp_Guu, 0., 1., gbl_M};
     Kokkos::parallel_for(policy, integrator);
 
     constexpr auto exact_M_data =
@@ -96,8 +94,8 @@ TEST(IntegrateInertiaMatrixTests, OneElementOneNodeOneQP_Guu) {
 }
 
 void IntegrateInertiaMatrix_TestTwoElementsOneNodeOneQP() {
-    constexpr auto number_of_nodes = 1;
-    constexpr auto number_of_qps = 1;
+    constexpr auto number_of_nodes = size_t{1U};
+    constexpr auto number_of_qps = size_t{1U};
 
     const auto qp_weights = get_qp_weights<number_of_qps>({1.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({1.});
@@ -116,8 +114,7 @@ void IntegrateInertiaMatrix_TestTwoElementsOneNodeOneQP() {
         );
         const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
         const auto integrator = IntegrateInertiaMatrixElement{
-            0,      number_of_qps, 0,  0,  qp_weights, qp_jacobian, shape_interp,
-            qp_Muu, qp_Guu,        1., 0., gbl_M};
+            0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, qp_Muu, qp_Guu, 1., 0., gbl_M};
         Kokkos::parallel_for(policy, integrator);
     }
 
@@ -130,8 +127,7 @@ void IntegrateInertiaMatrix_TestTwoElementsOneNodeOneQP() {
         );
         const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
         const auto integrator = IntegrateInertiaMatrixElement{
-            1,      number_of_qps, 1,  1,  qp_weights, qp_jacobian, shape_interp,
-            qp_Muu, qp_Guu,        1., 0., gbl_M};
+            1U, number_of_qps, qp_weights, qp_jacobian, shape_interp, qp_Muu, qp_Guu, 1., 0., gbl_M};
         Kokkos::parallel_for(policy, integrator);
     }
 
@@ -157,8 +153,8 @@ TEST(IntegrateInertiaMatrixTests, TwoElementsOneNodeOneQP) {
 }
 
 void IntegrateInertiaMatrix_TestOneElementTwoNodesOneQP() {
-    constexpr auto number_of_nodes = 2;
-    constexpr auto number_of_qps = 1;
+    constexpr auto number_of_nodes = size_t{2U};
+    constexpr auto number_of_qps = size_t{1U};
 
     const auto qp_weights = get_qp_weights<number_of_qps>({1.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({1.});
@@ -175,8 +171,7 @@ void IntegrateInertiaMatrix_TestOneElementTwoNodesOneQP() {
 
     const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
     const auto integrator = IntegrateInertiaMatrixElement{
-        0,      number_of_qps, 0,  0,  qp_weights, qp_jacobian, shape_interp,
-        qp_Muu, qp_Guu,        1., 0., gbl_M};
+        0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, qp_Muu, qp_Guu, 1., 0., gbl_M};
     Kokkos::parallel_for(policy, integrator);
 
     constexpr auto exact_M_data = std::array{
@@ -206,8 +201,8 @@ TEST(IntegrateInertiaMatrixTests, OneElementTwoNodesOneQP) {
 }
 
 void IntegrateInertiaMatrix_TestOneElementOneNodeTwoQPs() {
-    constexpr auto number_of_nodes = 1;
-    constexpr auto number_of_qps = 2;
+    constexpr auto number_of_nodes = size_t{1U};
+    constexpr auto number_of_qps = size_t{2U};
 
     const auto qp_weights = get_qp_weights<number_of_qps>({9., 1.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({1., 4.});
@@ -230,8 +225,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeTwoQPs() {
 
     const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
     const auto integrator = IntegrateInertiaMatrixElement{
-        0,      number_of_qps, 0,  0,  qp_weights, qp_jacobian, shape_interp,
-        qp_Muu, qp_Guu,        1., 0., gbl_M};
+        0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, qp_Muu, qp_Guu, 1., 0., gbl_M};
     Kokkos::parallel_for(policy, integrator);
 
     constexpr auto exact_M_data =
@@ -251,8 +245,8 @@ TEST(IntegrateInertiaMatrixTests, OneElementOneNodeTwoQPs) {
 }
 
 void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_WithMultiplicationFactor() {
-    constexpr auto number_of_nodes = 1;
-    constexpr auto number_of_qps = 1;
+    constexpr auto number_of_nodes = size_t{1U};
+    constexpr auto number_of_qps = size_t{1};
 
     const auto qp_weights = get_qp_weights<number_of_qps>({1.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({1.});
@@ -270,8 +264,8 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_WithMultiplicationFactor(
 
     const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
     const auto integrator = IntegrateInertiaMatrixElement{
-        0,      number_of_qps,         0,  0,    qp_weights, qp_jacobian, shape_interp, qp_Muu,
-        qp_Guu, multiplication_factor, 0., gbl_M};
+        0U,     number_of_qps,         qp_weights, qp_jacobian, shape_interp, qp_Muu,
+        qp_Guu, multiplication_factor, 0.,         gbl_M};
     Kokkos::parallel_for(policy, integrator);
 
     constexpr auto exact_M_data =
