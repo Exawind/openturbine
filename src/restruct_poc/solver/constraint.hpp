@@ -41,45 +41,48 @@ struct Constraint {
     size_t ID;                  //< Unique identifier for constraint
     Node base_node;             //< Base node for constraint
     Node target_node;           //< Target node for constraint
-    Array_3 X0 = {0.};          //< reference position for prescribed BC
-    Array_3 x_axis = {0.};      //< unit vector for x axis
-    Array_3 y_axis = {0.};      //< unit vector for y axis
-    Array_3 z_axis = {0.};      //< unit vector for z axis
+    Array_3 X0 = {0.};          //< Reference position for prescribed BC
+    Array_3 x_axis = {0.};      //< Unit vector for x axis
+    Array_3 y_axis = {0.};      //< Unit vector for y axis
+    Array_3 z_axis = {0.};      //< Unit vector for z axis
     double* control = nullptr;  //< Pointer to control signal
 
     Constraint(
-        ConstraintType constraint_type, const size_t id, const Node& node1, const Node& node2,
+        ConstraintType constraint_type, size_t id, const Node& node1, const Node& node2,
         const Array_3& vec = {0., 0., 0.}, double* ctrl = nullptr
     )
-        : type(constraint_type),
-          ID(id),
-          base_node(node1),
-          target_node(node2),
-          x_axis(vec),
-          control(ctrl) {
-        // If fixed BC or prescribed displacement, X0 is based on reference position vector
-        if (constraint_type == ConstraintType::kFixedBC ||
-            constraint_type == ConstraintType::kPrescribedBC) {
-            this->X0[0] = this->target_node.x[0] - vec[0];
-            this->X0[1] = this->target_node.x[1] - vec[1];
-            this->X0[2] = this->target_node.x[2] - vec[2];
+        : type(constraint_type), ID(id), base_node(node1), target_node(node2), control(ctrl) {
+        InitializeX0(vec);
+        InitializeAxes(vec);
+    }
+
+    /// @brief Initializes X0 based on the constraint type and reference position
+    void InitializeX0(const Array_3& vec) {
+        // Set X0 to the prescribed displacement for fixed and prescribed BCs
+        if (type == ConstraintType::kFixedBC || type == ConstraintType::kPrescribedBC) {
+            X0[0] = target_node.x[0] - vec[0];
+            X0[1] = target_node.x[1] - vec[1];
+            X0[2] = target_node.x[2] - vec[2];
             return;
         }
 
-        // Calculate initial difference in position between nodes
-        this->X0[0] = this->target_node.x[0] - this->base_node.x[0];
-        this->X0[1] = this->target_node.x[1] - this->base_node.x[1];
-        this->X0[2] = this->target_node.x[2] - this->base_node.x[2];
+        // Default: set X0 to the relative position between nodes
+        X0[0] = target_node.x[0] - base_node.x[0];
+        X0[1] = target_node.x[1] - base_node.x[1];
+        X0[2] = target_node.x[2] - base_node.x[2];
+    }
 
-        // If rotation control constraint, vec is rotation axis
-        if (constraint_type == ConstraintType::kCylindrical) {
-            constexpr auto x = std::array{1., 0., 0.};
-            auto x_hat = UnitVector(this->X0);
+    /// @brief Initializes the x, y, z axes based on the constraint type
+    void InitializeAxes(const Array_3& vec) {
+        if (type == ConstraintType::kCylindrical) {
+            constexpr Array_3 x = {1., 0., 0.};
+            Array_3 x_hat = UnitVector(X0);
 
-            // Create rotation matrix which rotates x to match vector
+            // Create rotation matrix to rotate x to match vector
             auto v = CrossProduct(x, x_hat);
             auto c = DotProduct(x_hat, x);
             auto k = 1. / (1. + c);
+
             Array_3x3 R = {
                 {{
                      v[0] * v[0] * k + c,
@@ -97,26 +100,23 @@ struct Constraint {
                      v[2] * v[2] * k + c,
                  }}};
 
-            // Columns of rotation matrix are orthogonal unit vectors with
-            // the first column matching the target vector
-            this->x_axis = {R[0][0], R[1][0], R[2][0]};
-            this->y_axis = {R[0][1], R[1][1], R[2][1]};
-            this->z_axis = {R[0][2], R[1][2], R[2][2]};
+            // Set orthogonal unit vectors from the rotation matrix
+            x_axis = {R[0][0], R[1][0], R[2][0]};
+            y_axis = {R[0][1], R[1][1], R[2][1]};
+            z_axis = {R[0][2], R[1][2], R[2][2]};
+            return;
         }
+
+        // If not cylindrical, set axes to input vector
+        x_axis = vec;
     }
 
-    /// Returns the number of degrees of freedom used by constraint
+    /// @brief Returns the number of degrees of freedom used by the constraint
     size_t NumDOFs() const {
-        switch (this->type) {
-            case ConstraintType::kCylindrical: {
-                // Cylindrical constraints have 5 degrees of freedom
-                return 5U;
-            } break;
-            default: {
-                // kNone, kFixedBC, kPrescribedBC, kRigid, kRotationControl
-                return static_cast<size_t>(kLieAlgebraComponents);  // 6
-            }
+        if (type == ConstraintType::kCylindrical) {
+            return 5U;  // Cylindrical constraints have 5 degrees of freedom
         }
+        return static_cast<size_t>(kLieAlgebraComponents);  // Default: 6 DOFs
     }
 };
 
