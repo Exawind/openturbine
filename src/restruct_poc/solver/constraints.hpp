@@ -1,8 +1,5 @@
 #pragma once
 
-#include <array>
-#include <vector>
-
 #include <Kokkos_Core.hpp>
 
 #include "constraint.hpp"
@@ -12,12 +9,12 @@
 namespace openturbine {
 
 /// @brief Constraints struct holds all constraint data
-/// @details Constraints struct holds all constraint data and provides methods
-/// to update the prescribed displacements and control signals.
+/// @details Constraints struct holds all constraint data on the host and device and
+/// provides methods to update the prescribed displacements and control signals.
 /// @note The struct is used to transfer data between the solver and the
 /// constraint objects.
 struct Constraints {
-    /// @brief DeviceData struct holds constraint data on device
+    /// @brief DeviceData struct holds constraint data on the device
     struct DeviceData {
         ConstraintType type;                     //< Constraint type
         Kokkos::pair<size_t, size_t> row_range;  //< Range of rows in the global stiffness matrix
@@ -31,17 +28,18 @@ struct Constraints {
         double axis_z[3];          // Unit vector representing z rotation axis
     };
 
-    /// @brief HostData struct holds constraint data on host
+    /// @brief HostData struct holds constraint data on the host
     struct HostData {
-        ConstraintType type;  //< Constraint type
-        Array_7 u;            //< Prescribed displacement
-        double* control;      //< Control signal
+        ConstraintType type;        //< Constraint type
+        Array_7 u;                  //< Prescribed displacement
+        double* control = nullptr;  //< Control signal
     };
 
+    // Data members of the Constraints struct
     size_t num;                                    //< Number of constraints
     size_t num_dofs;                               //< Number of degrees of freedom
-    std::vector<HostData> constraint_data;         //< Host constraint data
-    Kokkos::View<DeviceData*> data;                //< Device constraint data
+    std::vector<HostData> host_constraints;        //< Host constraint data
+    Kokkos::View<DeviceData*> device_constraints;  //< Device constraint data
     View_N control;                                //< Control signals
     View_Nx7 u;                                    //< Prescribed displacements
     View_N Phi;                                    //< Residual vector
@@ -55,23 +53,23 @@ struct Constraints {
                   return c->NumDOFs();
               }
           )},
-          constraint_data(
+          host_constraints(
               num, HostData{ConstraintType::kNone, {0., 0., 0., 1., 0., 0., 0.}, nullptr}
           ),
-          data("data", num),
+          device_constraints("device_constraints", num),
           control("control", num),
           u("u", num),
           Phi("residual_vector", num_dofs),
           gradient_terms("gradient_terms", num) {
         // Create host mirror for constraint data
-        auto host_data = Kokkos::create_mirror(this->data);
+        auto host_data = Kokkos::create_mirror(this->device_constraints);
 
         // Loop through constraint input and set data
         auto start_row = size_t{0U};
         for (auto i = 0U; i < this->num; ++i) {
             // Set Host constraint data
-            this->constraint_data[i].type = constraints[i]->type;
-            this->constraint_data[i].control = constraints[i]->control;
+            this->host_constraints[i].type = constraints[i]->type;
+            this->host_constraints[i].control = constraints[i]->control;
 
             // Set constraint type
             host_data(i).type = constraints[i]->type;
@@ -81,6 +79,7 @@ struct Constraints {
             host_data(i).row_range = Kokkos::make_pair(start_row, start_row + dofs);
             start_row += dofs;
 
+            // Set column ranges for two node constraints
             if (GetNumberOfNodes(constraints[i]->type) == 2) {
                 const auto target_node_id = constraints[i]->target_node.ID;
                 const auto base_node_id = constraints[i]->base_node.ID;
@@ -94,6 +93,7 @@ struct Constraints {
                 host_data(i).base_node_col_range =
                     Kokkos::make_pair(base_start_col, base_start_col + kLieAlgebraComponents);
             } else {
+                // Set column ranges for single node constraints
                 host_data(i).target_node_col_range = Kokkos::make_pair(0U, kLieAlgebraComponents);
             }
 
@@ -115,33 +115,37 @@ struct Constraints {
         }
 
         // Update data
-        Kokkos::deep_copy(this->data, host_data);
+        Kokkos::deep_copy(this->device_constraints, host_data);
 
         // Set initial rotation to identity
         Kokkos::deep_copy(Kokkos::subview(this->u, Kokkos::ALL, 3), 1.0);
     }
 
     /// Sets the new displacement for the given constraint
-    void UpdateDisplacement(size_t id, Array_7 u_) { this->constraint_data[id].u = u_; }
+    void UpdateDisplacement(size_t id, Array_7 u_) { this->host_constraints[id].u = u_; }
 
     /// Transfers new prescribed displacements and control signals to Views
     void UpdateViews() {
         auto host_u_mirror = Kokkos::create_mirror(this->u);
         auto host_control_mirror = Kokkos::create_mirror(this->control);
-        for (auto i = 0U; i < this->constraint_data.size(); ++i) {
-            switch (this->constraint_data[i].type) {
+
+        // Loop through constraints and set prescribed displacements and control signals
+        for (auto i = 0U; i < this->host_constraints.size(); ++i) {
+            switch (this->host_constraints[i].type) {
                 case ConstraintType::kPrescribedBC: {
                     for (auto j = 0U; j < static_cast<unsigned>(kLieGroupComponents); ++j) {
-                        host_u_mirror(i, j) = this->constraint_data[i].u[j];
+                        host_u_mirror(i, j) = this->host_constraints[i].u[j];
                     }
                 } break;
                 case ConstraintType::kRotationControl: {
-                    host_control_mirror(i) = *this->constraint_data[i].control;
+                    host_control_mirror(i) = *this->host_constraints[i].control;
                 } break;
                 default:
                     break;
             }
         }
+
+        // Update Views
         Kokkos::deep_copy(this->control, host_control_mirror);
         Kokkos::deep_copy(this->u, host_u_mirror);
     }

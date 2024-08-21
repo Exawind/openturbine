@@ -33,7 +33,7 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
     Kokkos::parallel_for(
         "CalculateConstraintResidualGradient", solver.constraints.num,
         CalculateConstraintResidualGradient{
-            solver.constraints.data, solver.constraints.control, solver.constraints.u,
+            solver.constraints.device_constraints, solver.constraints.control, solver.constraints.u,
             solver.state.q, solver.constraints.Phi, solver.constraints.gradient_terms}
     );
 
@@ -43,7 +43,7 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
     Kokkos::parallel_for(
         "CopyConstraintsToSparseMatrix", constraint_policy,
         CopyConstraintsToSparseMatrix<Solver::CrsMatrixType>{
-            solver.constraints.data, solver.B, solver.constraints.gradient_terms}
+            solver.constraints.device_constraints, solver.B, solver.constraints.gradient_terms}
     );
 
     Kokkos::fence();
