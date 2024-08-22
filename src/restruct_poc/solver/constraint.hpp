@@ -7,22 +7,22 @@ namespace openturbine {
 
 /// @brief Enum class to define the type of constraint
 enum class ConstraintType : std::uint8_t {
-    kNone = 0,          // No constraint (default)
-    kFixedBC = 1,       // Fixed boundary condition constraint (zero displacement)
-    kPrescribedBC = 2,  // Prescribed boundary condition (displacement can be set)
-    kRigid = 3,  // Rigid constraint between two nodes (nodes maintain relative distance and rotation
-                 // between each other)
-    kCylindrical = 4,  // Target node rotates freely around a specified axis. Relative distance and
-                       // rotation are fixed)
-    kRotationControl = 5,  // A rotation is specified about a given axis
+    kNone = 0,           // No constraint (default)
+    kFixedBC = 1,        // Fixed boundary condition/clamped constraint (all DOFs fixed)
+    kPrescribedBC = 2,   // Prescribed boundary condition (displacement and rotation are specified)
+    kRigidJoint = 3,     // Rigid constraint between two nodes (no relative motion between nodes i.e.
+                         // all 6 DOFs of target node constrained)
+    kRevoluteJoint = 4,  // Target node rotates freely around a specified axis (5 DOFs constrained)
+    kRotationControl = 5,  // A rotation is specified about a given axis (1 DOF allowed about the
+                           // axis specified by the user)
 };
 
 /// @brief Returns the number of nodes associated with a constraint type (1 or 2)
 KOKKOS_INLINE_FUNCTION
 constexpr size_t GetNumberOfNodes(ConstraintType type) {
     switch (type) {
-        case ConstraintType::kRigid:
-        case ConstraintType::kCylindrical:
+        case ConstraintType::kRigidJoint:
+        case ConstraintType::kRevoluteJoint:
         case ConstraintType::kRotationControl: {
             return 2U;
         } break;
@@ -74,7 +74,7 @@ struct Constraint {
 
     /// @brief Initializes the x, y, z axes based on the constraint type
     void InitializeAxes(const Array_3& vec) {
-        if (type == ConstraintType::kCylindrical) {
+        if (type == ConstraintType::kRevoluteJoint) {
             constexpr Array_3 x = {1., 0., 0.};
             Array_3 x_hat = UnitVector(X0);
 
@@ -107,16 +107,16 @@ struct Constraint {
             return;
         }
 
-        // If not cylindrical, set axes to input vector
+        // If not a revolute/hinge joint, set axes to input vector
         x_axis = vec;
     }
 
-    /// @brief Returns the number of degrees of freedom used by the constraint
+    /// @brief Returns the number of degrees of freedom used/fixed by the constraint
     size_t NumDOFs() const {
-        if (type == ConstraintType::kCylindrical) {
-            return 5U;  // Cylindrical constraints have 5 degrees of freedom
+        if (type == ConstraintType::kRevoluteJoint) {
+            return 5U;  // A revolute joint constraints fixes 5 degrees of freedom
         }
-        return static_cast<size_t>(kLieAlgebraComponents);  // Default: 6 DOFs
+        return static_cast<size_t>(kLieAlgebraComponents);  // Default: Fixes 6 DOFs
     }
 };
 

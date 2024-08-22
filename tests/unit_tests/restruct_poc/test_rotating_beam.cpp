@@ -397,7 +397,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
 
     // Add hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
-    model.AddRigidConstraint(*hub_node, model.GetNode(0));
+    model.AddRigidJointConstraint(*hub_node, model.GetNode(0));
     auto hub_bc = model.AddPrescribedBC(*hub_node);
 
     // Solution parameters
@@ -523,7 +523,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     );
 }
 
-TEST(RotatingBeamTest, CylindricalConstraint) {
+TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto model = Model();
 
     // Gravity vector
@@ -560,8 +560,8 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
 
     // Add constraints
     model.AddFixedBC(*ground_node);
-    model.AddCylindricalConstraint(*ground_node, *hub_node);
-    model.AddRigidConstraint(*hub_node, beam_nodes[0].node);
+    model.AddRevoluteJointConstraint(*ground_node, *hub_node);
+    model.AddRigidJointConstraint(*hub_node, beam_nodes[0].node);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -627,5 +627,123 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
          {0, 0, 0, 1, 0, 0, 0}}
     );
 }
+
+// TEST(RotatingBeamTest, GeneratorTorque) {
+//     auto model = Model();
+
+//     // Gravity vector
+//     constexpr auto gravity = std::array{0., 0., 0.};
+
+//     // Shaft tilt angle
+//     auto tilt = 0.;  // radians
+
+//     // Build vector of nodes (straight along x axis, no rotation)
+//     // Calculate displacement, velocity, acceleration assuming a
+//     // 0.1 rad/s angular velocity around the z axis
+//     const double omega = 0.1;
+//     std::vector<BeamNode> beam_nodes;
+//     std::transform(
+//         std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
+//         [&](auto s) {
+//             const auto x = 10 * s + 2.;
+//             return BeamNode(
+//                 s, *model.AddNode(
+//                        {x, std::sin(tilt), std::cos(tilt), 1., 0., 0., 0.},  // position
+//                    )
+//             );
+//         }
+//     );
+
+//     // Define beam initialization
+//     const auto beams_input = BeamsInput({BeamElement(beam_nodes, sections, quadrature)}, gravity);
+
+//     // Initialize beams from element inputs
+//     auto beams = CreateBeams(beams_input);
+
+//     // Add shaft base, azimuth, and hub nodes
+//     auto shaft_base = model.AddNode({0, 0., 0., 1., 0., 0., 0.});
+//     auto azimuth = model.AddNode({0, 0., 0., 1., 0., 0., 0.});
+//     auto hub = model.AddNode({0, std::sin(tilt), std::cos(tilt), 1., 0., 0., 0.});
+
+//     // Add constraints
+//     model.AddFixedBC(*shaft_base);
+//     // model.AddRevoluteJointConstraint(*ground_node, *hub_node);
+//     model.AddRevoluteConstraint(
+//         *shaft_base, *azimuth, {0., std::sin(tilt), std::cos(tilt)}
+//     );  // TODO We need to modify the constraint to allow for getting axis of rotation as an input
+//     // model.AddRigidJointConstraint(*hub_node, beam_nodes[0].node);
+//     model.AddRigidJointConstraint(*azimuth, *hub);
+//     model.AddRigidJointConstraint(*hub, beam_nodes[0].node);
+
+//     // Solution parameters
+//     const bool is_dynamic_solve(true);
+//     const int max_iter(5);
+//     const double step_size(0.01);  // seconds
+//     const double rho_inf(0.9);
+
+//     // Create solver
+//     auto nodes_vector = std::vector<Node>{};
+//     for (const auto& node : model.GetNodes()) {
+//         nodes_vector.push_back(*node);
+//     }
+
+//     auto constraints_vector = std::vector<Constraint>{};
+//     for (const auto& constraint : model.GetConstraints()) {
+//         constraints_vector.push_back(*constraint);
+//     }
+
+//     Solver solver(
+//         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+//         beams
+//     );
+
+// #ifdef OTURB_ENABLE_VTK
+//     UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
+//     std::filesystem::remove_all("steps");
+//     std::filesystem::create_directory("steps");
+//     BeamsWriteVTK(beams, "steps/step_0000.vtu");
+// #endif
+
+//     // TODO Follow the pitch control constraint - we need to figure out how to apply the torque to
+//     // the residual vector
+
+//     // Run 10 steps
+//     for (int i = 0; i < 5; ++i) {
+//         const auto converged = Step(solver, beams);
+//         EXPECT_EQ(converged, true);
+// #ifdef OTURB_ENABLE_VTK
+//         auto tmp = std::to_string(i + 1);
+//         auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
+//         BeamsWriteVTK(beams, file_name + ".vtu");
+// #endif
+//     }
+
+//     auto q = kokkos_view_2D_to_vector(solver.state.q);
+
+//     expect_kokkos_view_2D_equal(
+//         solver.state.q,
+//         {{-0.00002499992806604526, 0.009999954363364278, 7.0592758596667977E-26,
+//         0.99999687500410894,
+//           8.0588517542554213E-29, 5.3983736084468692E-26, 0.0024999964033195574},
+//          {-0.000039681188471502004, 0.015873544516367064, 4.8213624609892645E-14,
+//           0.99999687500405054, -1.4117736696803771E-13, 4.0393896390903965E-14,
+//           0.0024999964266638514},
+//          {-0.000069668915568583335, 0.027869085208344892, 4.0193427070238621E-14,
+//           0.99999687500401824, -4.6940123973356305E-13, 7.4011787713126742E-14,
+//           0.0024999964396126765},
+//          {-0.00010532153768001662, 0.0421305961297474, 9.1114041847296216E-15,
+//          0.99999687500407363,
+//           -2.4869679200969056E-13, 6.7014722734775103E-15, 0.0024999964174613749},
+//          {-0.00013530744593540648, 0.054126136607669233, -5.3259699489140029E-15,
+//           0.99999687500410672, 1.6008699820757778E-13, -6.0232179820024248E-14,
+//           0.0024999964042487837},
+//          {-0.00014999065003689889, 0.059999726696767466, 9.5097860930873942E-14,
+//          0.9999968750041126,
+//           2.113602318183918E-13, -7.958169516703918E-14, 0.0024999964018790257},
+//          {0, 0, 0, 0.99999687500410894, 7.2192479817696718E-29, -2.7782381382812961E-27,
+//           0.0024999964033195574},
+//          {0, 0, 0, 1, 0, 0, 0}}
+//     );
+// }
 
 }  // namespace openturbine::tests

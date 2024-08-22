@@ -10,7 +10,7 @@
 
 namespace openturbine {
 
-struct CalculateRigidConstraint {
+struct CalculateRigidJointConstraint {
     Kokkos::View<Constraints::DeviceData*>::const_type data;
     View_N::const_type control;
     View_Nx7::const_type constraint_u;

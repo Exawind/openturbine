@@ -290,7 +290,7 @@ TEST(RotorTest, IEA15RotorHub) {
     // Define hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
     for (const auto& beam_elem : beam_elems) {
-        model.AddRigidConstraint(*hub_node, beam_elem.nodes[0].node);
+        model.AddRigidJointConstraint(*hub_node, beam_elem.nodes[0].node);
     }
     auto hub_bc = model.AddPrescribedBC(*hub_node, {0., 0., 0.});
 

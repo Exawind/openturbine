@@ -10,7 +10,7 @@
 
 namespace openturbine {
 
-struct CalculateCylindricalConstraint {
+struct CalculateRevoluteJointConstraint {
     Kokkos::View<Constraints::DeviceData*>::const_type data;
     View_N::const_type control;
     View_Nx7::const_type constraint_u;
@@ -51,7 +51,7 @@ struct CalculateCylindricalConstraint {
         auto R1_X0_data = Kokkos::Array<double, 4>{};
         auto R1_X0 = Kokkos::View<double[4]>{R1_X0_data.data()};
 
-        // Cylindrical constraint data
+        // RevoluteJoint constraint data
         const auto x0_data = Kokkos::Array<double, 3>{cd.axis_x[0], cd.axis_x[1], cd.axis_x[2]};
         const auto x0 = View_3::const_type{x0_data.data()};
         const auto y0_data = Kokkos::Array<double, 3>{cd.axis_y[0], cd.axis_y[1], cd.axis_y[2]};
