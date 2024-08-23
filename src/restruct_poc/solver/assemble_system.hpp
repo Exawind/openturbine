@@ -8,6 +8,7 @@
 
 #include "compute_number_of_non_zeros.hpp"
 #include "contribute_elements_to_sparse_matrix.hpp"
+#include "contribute_elements_to_vector.hpp"
 #include "copy_into_sparse_matrix.hpp"
 #include "copy_tangent_to_sparse_matrix.hpp"
 #include "populate_sparse_indices.hpp"
@@ -47,7 +48,9 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     );
 
     Kokkos::deep_copy(R_system, 0.);
-    AssembleResidualVector(beams, R_system);
+    auto vector_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
+    Kokkos::parallel_for("ContributeElementsToVector", vector_policy, 
+        ContributeElementsToVector{beams.num_nodes_per_element, beams.node_state_indices, beams.residual_vector_terms, solver.R});
 
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,

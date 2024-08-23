@@ -3,9 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
+#include "assemble_residual_vector.hpp"
 #include "assemble_stiffness_matrix.hpp"
 #include "assemble_inertia_matrix.hpp"
-#include "calculate_node_forces.hpp"
 #include "calculate_quadrature_point_values.hpp"
 #include "update_node_state.hpp"
 
@@ -81,14 +81,7 @@ inline void UpdateState(
             beams.qp_Kuu}
     );
 
-    Kokkos::parallel_for(
-        "CalculateNodeForces", range_policy,
-        CalculateNodeForces{
-            beams.num_nodes_per_element, beams.num_qps_per_element, beams.qp_weight,
-            beams.qp_jacobian, beams.shape_interp, beams.shape_deriv, beams.qp_Fc, beams.qp_Fd,
-            beams.qp_Fi, beams.qp_Fg, beams.node_FE, beams.node_FI, beams.node_FG}
-    );
-
+    AssembleResidualVector(beams);
     AssembleStiffnessMatrix(beams);
     AssembleInertiaMatrix(beams, beta_prime, gamma_prime);
 }
