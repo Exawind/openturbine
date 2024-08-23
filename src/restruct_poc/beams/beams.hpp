@@ -70,6 +70,9 @@ struct Beams {
     Kokkos::View<double** [6][6]> qp_Guu;              // Linearization matrices
     Kokkos::View<double** [6][6]> qp_Kuu;              // Linearization matrices
 
+    Kokkos::View<double***[6][6]> stiffness_matrix_terms;
+    Kokkos::View<double***[6][6]> inertia_matrix_terms;
+
     Kokkos::View<double***> shape_interp;  // shape function matrix for interpolation [Nodes x QPs]
     Kokkos::View<double***>
         shape_deriv;  // shape function matrix for derivative interp [Nodes x QPs]
@@ -136,6 +139,8 @@ struct Beams {
           qp_Quu("qp_Quu", num_elems, max_elem_qps),
           qp_Guu("qp_Guu", num_elems, max_elem_qps),
           qp_Kuu("qp_Kuu", num_elems, max_elem_qps),
+          stiffness_matrix_terms("stiffness_matrix_terms", num_elems, max_elem_nodes, max_elem_nodes),
+          inertia_matrix_terms("inertia_matrix_terms", num_elems, max_elem_nodes, max_elem_nodes),
           shape_interp("shape_interp", num_elems, max_elem_nodes, max_elem_qps),
           shape_deriv("deriv_interp", num_elems, max_elem_nodes, max_elem_qps) {}
 };

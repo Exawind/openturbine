@@ -10,8 +10,7 @@
 namespace openturbine {
 
 inline void AssembleInertiaMatrix(
-    const Beams& beams, double beta_prime, double gamma_prime, const Kokkos::View<double***>& M
-) {
+    const Beams& beams, double beta_prime, double gamma_prime) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Inertia Matrix");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     auto smem = 2 * Kokkos::View<double* [6][6]>::shmem_size(beams.max_elem_qps) +
@@ -23,7 +22,7 @@ inline void AssembleInertiaMatrix(
         IntegrateInertiaMatrix{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.qp_weight,
             beams.qp_jacobian, beams.shape_interp, beams.qp_Muu, beams.qp_Guu, beta_prime,
-            gamma_prime, M}
+            gamma_prime, beams.inertia_matrix_terms}
     );
 }
 

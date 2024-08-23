@@ -82,7 +82,6 @@ struct Solver {
     Teuchos::RCP<GlobalMultiVectorType> b;     // System RHS
     Teuchos::RCP<GlobalMultiVectorType> x_mv;  // System solution
     View_Nx6x6 T_dense;                        // Dense tangent operator
-    Kokkos::View<double***> matrix_terms;      // Matrix terms
     View_N R;                                  // System residual vector
     View_N x;                                  // System solution vector
 
@@ -117,10 +116,6 @@ struct Solver {
           num_dofs(num_system_dofs + constraints.num_dofs),
           state(num_system_nodes, constraints.num_dofs, system_nodes),
           T_dense("T dense", num_system_nodes),
-          matrix_terms(
-              "matrix_terms", beams_.num_elems, beams_.max_elem_nodes * kLieAlgebraComponents,
-              beams_.max_elem_nodes * kLieAlgebraComponents
-          ),
           R("R", num_dofs),
           x("x", num_dofs),
           convergence_err(max_iter) {

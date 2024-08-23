@@ -36,8 +36,9 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
 
     auto num_rows = solver.num_system_dofs;
 
-    auto row_data_size = Kokkos::View<double*>::shmem_size(solver.matrix_terms.extent(2));
-    auto col_idx_size = Kokkos::View<int*>::shmem_size(solver.matrix_terms.extent(2));
+    const auto max_row_entries = beams.max_elem_nodes * 6U;
+    const auto row_data_size = Kokkos::View<double*>::shmem_size(max_row_entries);
+    const auto col_idx_size = Kokkos::View<int*>::shmem_size(max_row_entries);
     auto sparse_matrix_policy = Kokkos::TeamPolicy<>(static_cast<int>(num_rows), Kokkos::AUTO());
 
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
@@ -50,11 +51,11 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     Kokkos::deep_copy(R_system, 0.);
     AssembleResidualVector(beams, R_system);
 
-    AssembleStiffnessMatrix(beams, solver.matrix_terms);
+    AssembleStiffnessMatrix(beams);
 
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,
-        ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{solver.K, solver.matrix_terms}
+        ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{solver.K, beams.stiffness_matrix_terms}
     );
 
     Kokkos::fence();
@@ -68,10 +69,10 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
 
     auto beta_prime = (solver.is_dynamic_solve) ? solver.beta_prime : 0.;
     auto gamma_prime = (solver.is_dynamic_solve) ? solver.gamma_prime : 0.;
-    AssembleInertiaMatrix(beams, beta_prime, gamma_prime, solver.matrix_terms);
+    AssembleInertiaMatrix(beams, beta_prime, gamma_prime);
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,
-        ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{solver.K, solver.matrix_terms}
+        ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{solver.K, beams.inertia_matrix_terms}
     );
 
     Kokkos::fence();

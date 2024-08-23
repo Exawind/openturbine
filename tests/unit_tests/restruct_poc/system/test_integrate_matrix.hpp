@@ -7,18 +7,6 @@
 
 namespace openturbine::tests {
 
-// template <size_t n_elem, size_t n_nodes, size_t n_qps>
-// auto get_element_indices() {
-//     using IndicesView = Kokkos::View<Beams::ElemIndices[n_elem]>;
-//     auto elem_indices = IndicesView("elem_indices");
-//     const auto host_elem_indices = Kokkos::create_mirror(elem_indices);
-//     for (auto i = 0U; i < n_elem; ++i) {
-//         host_elem_indices(i) = Beams::ElemIndices(n_nodes, n_qps, i, i);
-//     }
-//     Kokkos::deep_copy(elem_indices, host_elem_indices);
-//     return elem_indices;
-// }
-
 template <size_t n_elem, size_t n_nodes>
 auto get_node_state_indices() {
     using IndicesView = Kokkos::View<size_t[n_elem][n_nodes]>;

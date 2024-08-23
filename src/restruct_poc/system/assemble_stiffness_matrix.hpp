@@ -10,7 +10,7 @@
 
 namespace openturbine {
 
-inline void AssembleStiffnessMatrix(const Beams& beams, const Kokkos::View<double***>& K) {
+inline void AssembleStiffnessMatrix(const Beams& beams) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Stiffness Matrix");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     auto smem = 5 * Kokkos::View<double* [6][6]>::shmem_size(beams.max_elem_qps) +
@@ -31,7 +31,7 @@ inline void AssembleStiffnessMatrix(const Beams& beams, const Kokkos::View<doubl
             beams.qp_Cuu,
             beams.qp_Ouu,
             beams.qp_Quu,
-            K,
+            beams.stiffness_matrix_terms,
         }
     );
 }
