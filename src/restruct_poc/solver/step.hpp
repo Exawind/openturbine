@@ -35,8 +35,10 @@ inline bool Step(Solver& solver, Beams& beams) {
 
     double err = 1000.0;
 
+    auto beta_prime = (solver.is_dynamic_solve) ? solver.beta_prime : 0.;
+    auto gamma_prime = (solver.is_dynamic_solve) ? solver.gamma_prime : 0.;
     for (auto iter = 0U; err > 1.0; ++iter) {
-        UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
+        UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd, beta_prime, gamma_prime);
 
         AssembleSystem(solver, beams, R_system);
 

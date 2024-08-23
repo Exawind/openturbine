@@ -15,9 +15,7 @@
 #include "solver.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
-#include "src/restruct_poc/system/assemble_inertia_matrix.hpp"
 #include "src/restruct_poc/system/assemble_residual_vector.hpp"
-#include "src/restruct_poc/system/assemble_stiffness_matrix.hpp"
 #include "src/restruct_poc/system/calculate_tangent_operator.hpp"
 
 namespace openturbine {
@@ -51,8 +49,6 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
     Kokkos::deep_copy(R_system, 0.);
     AssembleResidualVector(beams, R_system);
 
-    AssembleStiffnessMatrix(beams);
-
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,
         ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{solver.K, beams.stiffness_matrix_terms}
@@ -67,9 +63,6 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
         );
     }
 
-    auto beta_prime = (solver.is_dynamic_solve) ? solver.beta_prime : 0.;
-    auto gamma_prime = (solver.is_dynamic_solve) ? solver.gamma_prime : 0.;
-    AssembleInertiaMatrix(beams, beta_prime, gamma_prime);
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,
         ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{solver.K, beams.inertia_matrix_terms}

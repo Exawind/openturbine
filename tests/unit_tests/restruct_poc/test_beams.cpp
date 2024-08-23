@@ -115,7 +115,7 @@ inline auto SetUpBeams() {
     );
 
     // Set the beam's initial state
-    UpdateState(beams, state.q, state.v, state.vd);
+    UpdateState(beams, state.q, state.v, state.vd, 0., 0.);
 
     return beams;
 }

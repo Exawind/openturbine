@@ -215,7 +215,7 @@ inline Solver SetUpSolverAndAssemble() {
     auto x_lambda = Kokkos::subview(solver.x, constraint_range);
 
     // Update beam elements state from solvers
-    UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
+    UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd, 0., 0.);
 
     AssembleSystem(solver, beams, R_system);
 

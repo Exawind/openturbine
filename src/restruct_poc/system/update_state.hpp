@@ -3,6 +3,8 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
+#include "assemble_stiffness_matrix.hpp"
+#include "assemble_inertia_matrix.hpp"
 #include "calculate_node_forces.hpp"
 #include "calculate_quadrature_point_values.hpp"
 #include "update_node_state.hpp"
@@ -14,7 +16,7 @@
 namespace openturbine {
 
 inline void UpdateState(
-    const Beams& beams, const View_Nx7& Q, const View_Nx6& V, const View_Nx6& A
+    const Beams& beams, const View_Nx7& Q, const View_Nx6& V, const View_Nx6& A, const double beta_prime, const double gamma_prime
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
@@ -86,6 +88,9 @@ inline void UpdateState(
             beams.qp_jacobian, beams.shape_interp, beams.shape_deriv, beams.qp_Fc, beams.qp_Fd,
             beams.qp_Fi, beams.qp_Fg, beams.node_FE, beams.node_FI, beams.node_FG}
     );
+
+    AssembleStiffnessMatrix(beams);
+    AssembleInertiaMatrix(beams, beta_prime, gamma_prime);
 }
 
 }  // namespace openturbine

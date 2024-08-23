@@ -152,9 +152,6 @@ TEST(RotorTest, IEA15Rotor) {
     std::filesystem::remove_all("steps");
     std::filesystem::create_directory("steps");
 
-    // Transfer initial conditions to beam nodes and quadrature points
-    UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
-
     // Write quadrature point global positions to file and VTK
     if (write_output) {
 #ifdef OTURB_ENABLE_VTK
@@ -303,9 +300,6 @@ TEST(RotorTest, IEA15RotorHub) {
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
     std::filesystem::create_directory("steps");
-
-    // Transfer initial conditions to beam nodes and quadrature points
-    UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
 
     // Write quadrature point global positions to file and VTK
     if (write_output) {
@@ -482,9 +476,6 @@ TEST(RotorTest, IEA15RotorController) {
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
     std::filesystem::create_directory("steps");
-
-    // Transfer initial conditions to beam nodes and quadrature points
-    UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
 
     // Write quadrature point global positions to file and VTK
     if (write_output) {
