@@ -11,8 +11,11 @@
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
-#include "src/restruct_poc/solver/assemble_constraints.hpp"
-#include "src/restruct_poc/solver/assemble_system.hpp"
+#include "src/restruct_poc/solver/update_constraint_variables.hpp"
+#include "src/restruct_poc/solver/assemble_constraints_matrix.hpp"
+#include "src/restruct_poc/solver/assemble_constraints_residual.hpp"
+#include "src/restruct_poc/solver/assemble_system_matrix.hpp"
+#include "src/restruct_poc/solver/assemble_system_residual.hpp"
 #include "src/restruct_poc/solver/predict_next_state.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/step.hpp"
@@ -208,9 +211,12 @@ inline Solver SetUpSolverAndAssemble() {
     // Update beam elements state from solvers
     UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd, 0., 0.);
 
-    AssembleSystem(solver, beams);
+    AssembleSystemMatrix(solver, beams);
+    AssembleSystemResidual(solver, beams);
 
-    AssembleConstraints(solver);
+    UpdateConstraintVariables(solver);
+    AssembleConstraintsMatrix(solver);
+    AssembleConstraintsResidual(solver);
 
     return solver;
 }

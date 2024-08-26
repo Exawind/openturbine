@@ -4,13 +4,17 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "assemble_constraints.hpp"
-#include "assemble_system.hpp"
+#include "solver.hpp"
+#include "assemble_constraints_matrix.hpp"
+#include "assemble_constraints_residual.hpp"
+#include "assemble_system_matrix.hpp"
+#include "assemble_system_residual.hpp"
+#include "assemble_tangent_operator.hpp"
 #include "calculate_convergence_error.hpp"
 #include "predict_next_state.hpp"
 #include "solve_system.hpp"
-#include "solver.hpp"
 #include "update_algorithmic_acceleration.hpp"
+#include "update_constraint_variables.hpp"
 #include "update_state_prediction.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
@@ -31,9 +35,17 @@ inline bool Step(Solver& solver, Beams& beams) {
     for (auto iter = 0U; err > 1.0; ++iter) {
         UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd, beta_prime, gamma_prime);
 
-        AssembleSystem(solver, beams);
+        AssembleTangentOperator(solver);
 
-        AssembleConstraints(solver);
+        AssembleSystemResidual(solver, beams);
+
+        AssembleSystemMatrix(solver, beams);
+
+        UpdateConstraintVariables(solver);
+
+        AssembleConstraintsMatrix(solver);
+
+        AssembleConstraintsResidual(solver);
 
         SolveSystem(solver);
 
