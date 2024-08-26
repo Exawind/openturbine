@@ -21,8 +21,7 @@
 
 namespace openturbine {
 
-template <typename Subview_N>
-void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
+inline void AssembleSystem(Solver& solver, Beams& beams) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System");
     Kokkos::parallel_for(
         "TangentOperator", solver.num_system_nodes,
@@ -33,7 +32,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
         }
     );
 
-    auto num_rows = solver.num_system_dofs;
+    const auto num_rows = solver.num_system_dofs;
 
     const auto max_row_entries = beams.max_elem_nodes * 6U;
     const auto row_data_size = Kokkos::View<double*>::shmem_size(max_row_entries);
@@ -47,7 +46,7 @@ void AssembleSystem(Solver& solver, Beams& beams, Subview_N R_system) {
         CopyTangentToSparseMatrix<Solver::CrsMatrixType>{solver.T, solver.T_dense}
     );
 
-    Kokkos::deep_copy(R_system, 0.);
+    Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, num_rows)), 0.);
     auto vector_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for("ContributeElementsToVector", vector_policy, 
         ContributeElementsToVector{beams.num_nodes_per_element, beams.node_state_indices, beams.residual_vector_terms, solver.R});

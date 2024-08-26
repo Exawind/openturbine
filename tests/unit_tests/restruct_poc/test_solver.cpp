@@ -205,21 +205,12 @@ inline Solver SetUpSolverAndAssemble() {
     // Predict the next state for the solver
     PredictNextState(solver);
 
-    auto system_range = Kokkos::make_pair(size_t{0U}, solver.num_system_dofs);
-    auto constraint_range = Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs);
-
-    auto R_system = Kokkos::subview(solver.R, system_range);
-    auto R_lambda = Kokkos::subview(solver.R, constraint_range);
-
-    auto x_system = Kokkos::subview(solver.x, system_range);
-    auto x_lambda = Kokkos::subview(solver.x, constraint_range);
-
     // Update beam elements state from solvers
     UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd, 0., 0.);
 
-    AssembleSystem(solver, beams, R_system);
+    AssembleSystem(solver, beams);
 
-    AssembleConstraints(solver, R_system, R_lambda);
+    AssembleConstraints(solver);
 
     return solver;
 }

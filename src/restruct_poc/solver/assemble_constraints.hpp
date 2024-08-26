@@ -18,8 +18,7 @@
 
 namespace openturbine {
 
-template <typename Subview_N>
-void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda) {
+inline void AssembleConstraints(Solver& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Constraints");
 
     // If no constraints, return
@@ -67,17 +66,17 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
     {
         auto resid_region = Kokkos::Profiling::ScopedRegion("Assemble Residual");
         auto R = Solver::ValuesType(
-            Kokkos::view_alloc(Kokkos::WithoutInitializing, "R_local"), R_system.extent(0)
+            Kokkos::view_alloc(Kokkos::WithoutInitializing, "R_local"), solver.num_system_dofs
         );
-        Kokkos::deep_copy(R, R_system);
+        Kokkos::deep_copy(R, Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs)));
         auto lambda = Solver::ValuesType(
             Kokkos::view_alloc(Kokkos::WithoutInitializing, "lambda"), solver.state.lambda.extent(0)
         );
         Kokkos::deep_copy(lambda, solver.state.lambda);
         auto spmv_handle = Solver::SpmvHandle();
         KokkosSparse::spmv(&spmv_handle, "T", 1., solver.B, lambda, 1., R);
-        Kokkos::deep_copy(R_system, R);
-        Kokkos::deep_copy(R_lambda, solver.constraints.Phi);
+        Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs)), R);
+        Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs)), solver.constraints.Phi);
     }
 
     Kokkos::fence();
