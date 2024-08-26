@@ -119,9 +119,11 @@ public:
     }
 
     /// Adds a revolute/hinge constraint to the model and returns the constraint
-    std::shared_ptr<Constraint> AddRevoluteJointConstraint(const Node& node1, const Node& node2) {
+    std::shared_ptr<Constraint> AddRevoluteJointConstraint(
+        const Node& node1, const Node& node2, const Array_3& axis = {0., 0., 1.}
+    ) {
         return this->constraints_.emplace_back(std::make_shared<Constraint>(
-            ConstraintType::kRevoluteJoint, constraints_.size(), node1, node2
+            ConstraintType::kRevoluteJoint, constraints_.size(), node1, node2, axis
         ));
     }
 

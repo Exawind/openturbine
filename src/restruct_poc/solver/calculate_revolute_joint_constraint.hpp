@@ -51,7 +51,7 @@ struct CalculateRevoluteJointConstraint {
         auto R1_X0_data = Kokkos::Array<double, 4>{};
         auto R1_X0 = Kokkos::View<double[4]>{R1_X0_data.data()};
 
-        // RevoluteJoint constraint data
+        // Revolute joint constraint data
         const auto x0_data = Kokkos::Array<double, 3>{cd.axis_x[0], cd.axis_x[1], cd.axis_x[2]};
         const auto x0 = View_3::const_type{x0_data.data()};
         const auto y0_data = Kokkos::Array<double, 3>{cd.axis_y[0], cd.axis_y[1], cd.axis_y[2]};
@@ -70,7 +70,7 @@ struct CalculateRevoluteJointConstraint {
         const auto xcz = View_3{xcz_data.data()};
 
         //----------------------------------------------------------------------
-        // Residual Vector
+        // Residual Vector, Phi
         //----------------------------------------------------------------------
 
         // Extract residual rows relevant to this constraint
@@ -93,7 +93,7 @@ struct CalculateRevoluteJointConstraint {
         Phi(4) = DotProduct(y, x);
 
         //----------------------------------------------------------------------
-        // Constraint Gradient Matrix
+        // Constraint Gradient Matrix, B
         //----------------------------------------------------------------------
 
         //---------------------------------
@@ -104,14 +104,14 @@ struct CalculateRevoluteJointConstraint {
             const auto B =
                 Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, cd.target_node_col_range);
 
-            // B(0:3,0:3) = I
+            // B(0:3, 0:3) = I
             for (int i = 0; i < 3; ++i) {
                 B(i, i) = 1.;
             }
 
-            // B(3,3:6) = -cross(R1 * x0_hat, transpose(R2 * z0_hat))
+            // B(3, 3:6) = -cross(R1 * x0_hat, transpose(R2 * z0_hat))
             CrossProduct(x, z, xcz);
-            // B(4,3:6) = -cross(R1 * x0_hat, transpose(R2 * y0_hat))
+            // B(4, 3:6) = -cross(R1 * x0_hat, transpose(R2 * y0_hat))
             CrossProduct(x, y, xcy);
             for (int j = 0; j < 3; ++j) {
                 B(3, j + 3) = -xcz(j);
@@ -126,7 +126,7 @@ struct CalculateRevoluteJointConstraint {
             const auto B =
                 Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, cd.base_node_col_range);
 
-            // B(0:3,0:3) = -I
+            // B(0:3, 0:3) = -I
             for (int i = 0; i < 3; ++i) {
                 B(i, i) = -1.;
             }

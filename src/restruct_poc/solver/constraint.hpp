@@ -8,13 +8,14 @@ namespace openturbine {
 /// @brief Enum class to define the type of constraint
 enum class ConstraintType : std::uint8_t {
     kNone = 0,           // No constraint (default)
-    kFixedBC = 1,        // Fixed boundary condition/clamped constraint (all DOFs fixed)
-    kPrescribedBC = 2,   // Prescribed boundary condition (displacement and rotation are specified)
+    kFixedBC = 1,        // Fixed boundary condition/clamped constraint (all 6 DOFs fixed)
+    kPrescribedBC = 2,   // Prescribed boundary condition (displacement and rotation are specified
+                         // i.e. all 6 DOFs are fixed)
     kRigidJoint = 3,     // Rigid constraint between two nodes (no relative motion between nodes i.e.
                          // all 6 DOFs of target node constrained)
     kRevoluteJoint = 4,  // Target node rotates freely around a specified axis (5 DOFs constrained)
     kRotationControl = 5,  // A rotation is specified about a given axis (1 DOF allowed about the
-                           // axis specified by the user)
+                           // axis specified by the user - the other 5 DOFs are constrained)
 };
 
 /// @brief Returns the number of nodes associated with a constraint type (1 or 2)
@@ -24,10 +25,11 @@ constexpr size_t GetNumberOfNodes(ConstraintType type) {
         case ConstraintType::kRigidJoint:
         case ConstraintType::kRevoluteJoint:
         case ConstraintType::kRotationControl: {
+            // kinematic pair: 2 nodes are required to specify the constraint relationship
             return 2U;
         } break;
         default:
-            // kNone, kFixedBC, kPrescribedBC
+            // kNone, kFixedBC, kPrescribedBC etc. require only one node to enforce the constraint
             return 1U;
     }
 }
@@ -107,7 +109,7 @@ struct Constraint {
             return;
         }
 
-        // If not a revolute/hinge joint, set axes to input vector
+        // If not a revolute/hinge joint, set axes to the input vector
         x_axis = vec;
     }
 

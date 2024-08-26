@@ -631,15 +631,13 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
 TEST(RotatingBeamTest, GeneratorTorque) {
     auto model = Model();
 
-    // Gravity vector
+    // Gravity vector - assume no gravity
     constexpr auto gravity = std::array{0., 0., 0.};
 
     // Shaft tilt angle
-    auto tilt = 0.;  // radians
+    auto tilt = 0.1;  // 0.1 radians = 5.7 degrees
 
     // Build vector of nodes (straight along x axis, no rotation)
-    // Calculate displacement, velocity, acceleration assuming a
-    // 0.1 rad/s angular velocity around the z axis
     std::vector<BeamNode> beam_nodes;
     std::transform(
         std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
@@ -660,14 +658,16 @@ TEST(RotatingBeamTest, GeneratorTorque) {
 
     // Add shaft base, azimuth, and hub nodes as massless points
     auto shaft_base = model.AddNode({0, 0., 0., 1., 0., 0., 0.});
-    auto azimuth = model.AddNode({0, 0., 0., 1., 0., 0., 0.});
+    auto azimuth =
+        // assume azimuth node lies halfway between the shaft base and the hub
+        model.AddNode({0, std::sin(tilt) / 2., std::cos(tilt) / 2., 1., 0., 0., 0.});
     auto hub = model.AddNode({0, std::sin(tilt), std::cos(tilt), 1., 0., 0., 0.});
 
     // Add constraints between the nodes to simulate a rotor with a generator
-    model.AddFixedBC(*shaft_base);  // Fixed shaft base
-    // model.AddRevoluteJointConstraint(  // Azimuth can rotate around shaft base
-    //     *shaft_base, *azimuth, {0., std::sin(tilt), std::cos(tilt)}
-    // );
+    model.AddFixedBC(*shaft_base);     // Fixed shaft base
+    model.AddRevoluteJointConstraint(  // Azimuth can rotate around shaft base
+        *shaft_base, *azimuth, {0., std::sin(tilt), std::cos(tilt)}
+    );
     model.AddRigidJointConstraint(*azimuth, *hub);            // Hub is rigidly attached to azimuth
     model.AddRigidJointConstraint(*hub, beam_nodes[0].node);  // Beam is rigidly attached to hub
 
