@@ -6,13 +6,14 @@
 #include "calculate_displacement.hpp"
 #include "calculate_next_state.hpp"
 #include "solver.hpp"
+#include "state.hpp"
 
 namespace openturbine {
 
-inline void PredictNextState(Solver& solver) {
+inline void PredictNextState(Solver& solver, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Predict Next State");
-    Kokkos::deep_copy(solver.state.lambda, 0.);
-    Kokkos::deep_copy(solver.state.q_prev, solver.state.q);
+    Kokkos::deep_copy(state.lambda, 0.);
+    Kokkos::deep_copy(state.q_prev, state.q);
 
     Kokkos::parallel_for(
         "CalculateNextState", solver.num_system_nodes,
@@ -22,20 +23,20 @@ inline void PredictNextState(Solver& solver) {
             solver.alpha_m,
             solver.beta,
             solver.gamma,
-            solver.state.q_delta,
-            solver.state.v,
-            solver.state.vd,
-            solver.state.a,
+            state.q_delta,
+            state.v,
+            state.vd,
+            state.a,
         }
     );
 
     Kokkos::parallel_for(
-        "CalculateDisplacement", solver.state.q.extent(0),
+        "CalculateDisplacement", state.q.extent(0),
         CalculateDisplacement{
             solver.h,
-            solver.state.q_delta,
-            solver.state.q_prev,
-            solver.state.q,
+            state.q_delta,
+            state.q_prev,
+            state.q,
         }
     );
 }

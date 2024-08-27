@@ -18,6 +18,8 @@
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
+#include "src/restruct_poc/solver/state.hpp"
+#include "src/restruct_poc/solver/copy_nodes_to_state.hpp"
 #include "src/restruct_poc/solver/step.hpp"
 #include "src/restruct_poc/types.hpp"
 
@@ -122,18 +124,20 @@ TEST(RotatingBeamTest, StepConvergence) {
         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
         beams
     );
+    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
         solver.constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
-        const auto converged = Step(solver, beams);
+        const auto converged = Step(solver, beams, state);
         EXPECT_EQ(converged, true);
     }
 
     expect_kokkos_view_2D_equal(
-        solver.state.q,
+        state.q,
         {
             {-0.000099661884299369481, 0.019999672917628962, -3.6608854058480302E-25,
              0.99998750002604175, -1.5971376141505654E-26, 3.1592454262792375E-25,
@@ -222,6 +226,8 @@ inline auto CreateTwoBeamSolverWithSameBeamsAndStep() {
         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
         beams
     );
+    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
 
     // Calculate hub rotation for this time step
     const auto q_hub =
@@ -238,7 +244,7 @@ inline auto CreateTwoBeamSolverWithSameBeamsAndStep() {
 
     // Take step, don't check for convergence, the following tests check that
     // all the elements were assembled properly
-    Step(solver, beams);
+    Step(solver, beams, state);
 
     return solver;
 }
@@ -339,6 +345,8 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
         beams
     );
+    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
 
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
@@ -357,7 +365,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         }
 
         // Take step
-        auto converged = Step(solver, beams);
+        auto converged = Step(solver, beams, state);
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
@@ -421,18 +429,20 @@ TEST(RotatingBeamTest, MasslessConstraints) {
         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
         beams
     );
+    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
         solver.constraints.UpdateDisplacement(hub_bc->ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
-        const auto converged = Step(solver, beams);
+        const auto converged = Step(solver, beams, state);
         EXPECT_EQ(converged, true);
     }
 
     expect_kokkos_view_2D_equal(
-        solver.state.q,
+        state.q,
         {{-0.000099661884299369481, 0.019999672917628962, -3.6608854058480302E-25,
           0.99998750002604175, -1.5971376141505654E-26, 3.1592454262792375E-25,
           0.004999979166692714},
@@ -489,19 +499,21 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
         beams
     );
+    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (auto i = 0; i < 10; ++i) {
         const auto t = step_size * static_cast<double>(i + 1);
         // Set pitch
         pitch = t * M_PI / 2.;
-        const auto converged = Step(solver, beams);
+        const auto converged = Step(solver, beams, state);
         EXPECT_EQ(converged, true);
     }
 
     // Check that remaining displacements are as expected
     expect_kokkos_view_2D_equal(
-        solver.state.q,
+        state.q,
         {{-5.7690945215728628E-18, 2.0652319043893875E-18, -2.4953577261422928E-20,
           0.99691733356165013, 0.078459097906677058, 5.0946025505270351E-19, 3.3980589449407732E-19},
          {-2.9904494403209058E-7, 0.00014453413260242541, -0.00075720167307353353,
@@ -584,9 +596,11 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
         beams
     );
+    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
 
 #ifdef OTURB_ENABLE_VTK
-    UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
+    UpdateState(beams, state.q, state.v, state.vd);
     std::filesystem::remove_all("steps");
     std::filesystem::create_directory("steps");
     BeamsWriteVTK(beams, "steps/step_0000.vtu");
@@ -594,7 +608,7 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
 
     // Run 10 steps
     for (int i = 0; i < 5; ++i) {
-        const auto converged = Step(solver, beams);
+        const auto converged = Step(solver, beams, state);
         EXPECT_EQ(converged, true);
 #ifdef OTURB_ENABLE_VTK
         auto tmp = std::to_string(i + 1);
@@ -603,10 +617,8 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
 #endif
     }
 
-    auto q = kokkos_view_2D_to_vector(solver.state.q);
-
     expect_kokkos_view_2D_equal(
-        solver.state.q,
+        state.q,
         {{-0.00002499992806604526, 0.009999954363364278, 7.0592758596667977E-26, 0.99999687500410894,
           8.0588517542554213E-29, 5.3983736084468692E-26, 0.0024999964033195574},
          {-0.000039681188471502004, 0.015873544516367064, 4.8213624609892645E-14,

@@ -5,6 +5,7 @@
 
 #include "calculate_displacement.hpp"
 #include "solver.hpp"
+#include "state.hpp"
 #include "update_dynamic_prediction.hpp"
 #include "update_lambda_prediction.hpp"
 #include "update_static_prediction.hpp"
@@ -14,7 +15,7 @@
 
 namespace openturbine {
 
-inline void UpdateStatePrediction(const Solver& solver) {
+inline void UpdateStatePrediction(const Solver& solver, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
     const auto x_system = Kokkos::subview(solver.x, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs));
     const auto x_lambda = Kokkos::subview(solver.x, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs));
@@ -26,9 +27,9 @@ inline void UpdateStatePrediction(const Solver& solver) {
                 solver.beta_prime,
                 solver.gamma_prime,
                 x_system,
-                solver.state.q_delta,
-                solver.state.v,
-                solver.state.vd,
+                state.q_delta,
+                state.v,
+                state.vd,
             }
         );
     } else {
@@ -39,7 +40,7 @@ inline void UpdateStatePrediction(const Solver& solver) {
                 solver.beta_prime,
                 solver.gamma_prime,
                 x_system,
-                solver.state.q_delta,
+                state.q_delta,
             }
         );
     }
@@ -48,9 +49,9 @@ inline void UpdateStatePrediction(const Solver& solver) {
         "CalculateDisplacement", solver.num_system_nodes,
         CalculateDisplacement{
             solver.h,
-            solver.state.q_delta,
-            solver.state.q_prev,
-            solver.state.q,
+            state.q_delta,
+            state.q_prev,
+            state.q,
         }
     );
 
@@ -59,7 +60,7 @@ inline void UpdateStatePrediction(const Solver& solver) {
             "UpdateLambdaPrediction", solver.constraints.num_dofs,
             UpdateLambdaPrediction{
                 x_lambda,
-                solver.state.lambda,
+                state.lambda,
             }
         );
     }

@@ -6,10 +6,11 @@
 
 #include "calculate_constraint_residual_gradient.hpp"
 #include "solver.hpp"
+#include "state.hpp"
 
 namespace openturbine {
 
-inline void UpdateConstraintVariables(Solver& solver) {
+inline void UpdateConstraintVariables(Solver& solver, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Constraint Variables");
 
     if (solver.constraints.num == 0) {
@@ -22,7 +23,7 @@ inline void UpdateConstraintVariables(Solver& solver) {
         "CalculateConstraintResidualGradient", solver.constraints.num,
         CalculateConstraintResidualGradient{
             solver.constraints.data, solver.constraints.control, solver.constraints.u,
-            solver.state.q, solver.constraints.Phi, solver.constraints.gradient_terms}
+            state.q, solver.constraints.Phi, solver.constraints.gradient_terms}
     );
 }
 

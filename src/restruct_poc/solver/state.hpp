@@ -32,37 +32,6 @@ struct State {
         Kokkos::deep_copy(Kokkos::subview(this->q_prev, Kokkos::ALL, 3), 1.);
         Kokkos::deep_copy(Kokkos::subview(this->q, Kokkos::ALL, 3), 1.);
     }
-
-    State(
-        size_t num_system_nodes_, size_t num_constraint_dofs_,
-        const std::vector<std::shared_ptr<Node>>& nodes
-    )
-        : State(num_system_nodes_, num_constraint_dofs_) {
-        // Create mirror of state views
-        auto host_q = Kokkos::create_mirror(this->q);
-        auto host_v = Kokkos::create_mirror(this->v);
-        auto host_vd = Kokkos::create_mirror(this->vd);
-
-        // Loop through number of nodes and copy data to host view
-        for (auto i = 0U; i < nodes.size(); ++i) {
-            const auto& node = nodes[i];
-            for (auto j = 0U; j < kLieGroupComponents; ++j) {
-                host_q(i, j) = node->u[j];
-            }
-            for (auto j = 0U; j < kLieAlgebraComponents; ++j) {
-                host_v(i, j) = node->v[j];
-                host_vd(i, j) = node->vd[j];
-            }
-        }
-
-        // Transfer host view data to state views
-        Kokkos::deep_copy(this->q, host_q);
-        Kokkos::deep_copy(this->v, host_v);
-        Kokkos::deep_copy(this->vd, host_vd);
-
-        // Copy q to q_previous
-        Kokkos::deep_copy(this->q_prev, this->q);
-    }
 };
 
 }  // namespace openturbine

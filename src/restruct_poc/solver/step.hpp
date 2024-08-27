@@ -5,6 +5,7 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "solver.hpp"
+#include "state.hpp"
 #include "assemble_constraints_matrix.hpp"
 #include "assemble_constraints_residual.hpp"
 #include "assemble_system_matrix.hpp"
@@ -22,9 +23,9 @@
 
 namespace openturbine {
 
-inline bool Step(Solver& solver, Beams& beams) {
+inline bool Step(Solver& solver, Beams& beams, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Step");
-    PredictNextState(solver);
+    PredictNextState(solver, state);
 
     solver.convergence_err.clear();
 
@@ -33,27 +34,27 @@ inline bool Step(Solver& solver, Beams& beams) {
     auto beta_prime = (solver.is_dynamic_solve) ? solver.beta_prime : 0.;
     auto gamma_prime = (solver.is_dynamic_solve) ? solver.gamma_prime : 0.;
     for (auto iter = 0U; err > 1.0; ++iter) {
-        UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd, beta_prime, gamma_prime);
+        UpdateState(beams, state.q, state.v, state.vd, beta_prime, gamma_prime);
 
-        AssembleTangentOperator(solver);
+        AssembleTangentOperator(solver, state);
 
         AssembleSystemResidual(solver, beams);
 
         AssembleSystemMatrix(solver, beams);
 
-        UpdateConstraintVariables(solver);
+        UpdateConstraintVariables(solver, state);
 
         AssembleConstraintsMatrix(solver);
 
-        AssembleConstraintsResidual(solver);
+        AssembleConstraintsResidual(solver, state);
 
         SolveSystem(solver);
 
-        err = CalculateConvergenceError(solver);
+        err = CalculateConvergenceError(solver, state);
 
         solver.convergence_err.push_back(err);
 
-        UpdateStatePrediction(solver);
+        UpdateStatePrediction(solver, state);
 
         if (iter >= solver.max_iter) {
             return false;
@@ -63,8 +64,8 @@ inline bool Step(Solver& solver, Beams& beams) {
     Kokkos::parallel_for(
         "UpdateAlgorithmicAcceleration", solver.num_system_nodes,
         UpdateAlgorithmicAcceleration{
-            solver.state.a,
-            solver.state.vd,
+            state.a,
+            state.vd,
             solver.alpha_f,
             solver.alpha_m,
         }

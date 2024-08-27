@@ -16,6 +16,8 @@
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
+#include "src/restruct_poc/solver/state.hpp"
+#include "src/restruct_poc/solver/copy_nodes_to_state.hpp"
 #include "src/restruct_poc/solver/step.hpp"
 #include "src/restruct_poc/types.hpp"
 #include "src/utilities/controllers/discon.hpp"
@@ -147,6 +149,8 @@ TEST(RotorTest, IEA15Rotor) {
         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
         beams
     );
+    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
@@ -181,7 +185,7 @@ TEST(RotorTest, IEA15Rotor) {
         );
 
         // Take step
-        auto converged = Step(solver, beams);
+        auto converged = Step(solver, beams, state);
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
@@ -296,6 +300,8 @@ TEST(RotorTest, IEA15RotorHub) {
         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
         beams
     );
+    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
@@ -325,7 +331,7 @@ TEST(RotorTest, IEA15RotorHub) {
         solver.constraints.UpdateDisplacement(hub_bc->ID, u_hub);
 
         // Take step
-        auto converged = Step(solver, beams);
+        auto converged = Step(solver, beams, state);
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
@@ -472,6 +478,8 @@ TEST(RotorTest, IEA15RotorController) {
         is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
         beams
     );
+    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
@@ -504,7 +512,7 @@ TEST(RotorTest, IEA15RotorController) {
         controller.CallController();
 
         // Take step
-        auto converged = Step(solver, beams);
+        auto converged = Step(solver, beams, state);
 
         // Verify that step converged
         EXPECT_EQ(converged, true);

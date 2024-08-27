@@ -12,6 +12,7 @@
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
 #include "src/restruct_poc/solver/state.hpp"
+#include "src/restruct_poc/solver/copy_nodes_to_state.hpp"
 #include "src/restruct_poc/system/assemble_residual_vector.hpp"
 #include "src/restruct_poc/system/update_state.hpp"
 #include "src/restruct_poc/types.hpp"
@@ -108,11 +109,8 @@ inline auto SetUpBeams() {
     auto beams = CreateBeams(beams_input);
 
     // Create initial state
-    const State state(
-        beams.num_nodes,  // Number of nodes
-        0,                // Number of constraints
-        model.GetNodes()  // nodes
-    );
+    State state(beams.num_nodes, 0);
+    CopyNodesToState(state, model.GetNodes());
 
     // Set the beam's initial state
     UpdateState(beams, state.q, state.v, state.vd, 0., 0.);

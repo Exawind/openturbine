@@ -19,7 +19,6 @@
 #include "populate_sparse_row_ptrs_col_inds_transpose.hpp"
 #include "populate_tangent_indices.hpp"
 #include "populate_tangent_row_ptrs.hpp"
-#include "state.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/types.hpp"
@@ -65,7 +64,6 @@ struct Solver {
     Constraints constraints;  //< Constraints
     size_t num_dofs;          //< Number of degrees of freedom
 
-    State state;                            //< State
     CrsMatrixType K;                        //< Stiffness matrix
     CrsMatrixType T;                        //< Tangent operator
     CrsMatrixType B;                        //< Constraints matrix
@@ -114,7 +112,6 @@ struct Solver {
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
           constraints(constraints_),
           num_dofs(num_system_dofs + constraints.num_dofs),
-          state(num_system_nodes, constraints.num_dofs, system_nodes),
           T_dense("T dense", num_system_nodes),
           R("R", num_dofs),
           x("x", num_dofs),

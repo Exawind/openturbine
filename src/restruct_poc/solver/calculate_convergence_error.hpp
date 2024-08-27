@@ -5,10 +5,11 @@
 
 #include "calculate_error_sum_squares.hpp"
 #include "solver.hpp"
+#include "state.hpp"
 
 namespace openturbine {
 
-inline double CalculateConvergenceError(Solver& solver) {
+inline double CalculateConvergenceError(Solver& solver, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Calculate Convergence Error");
     const double atol = 1e-7;
     const double rtol = 1e-5;
@@ -18,7 +19,7 @@ inline double CalculateConvergenceError(Solver& solver) {
         CalculateErrorSumSquares{
             atol,
             rtol,
-            solver.state.q_delta,
+            state.q_delta,
             solver.x,
         },
         sum_error_squared
