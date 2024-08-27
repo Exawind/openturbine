@@ -7,16 +7,17 @@
 
 #include "condition_system.hpp"
 #include "solver.hpp"
+#include "step_parameters.hpp"
 
 namespace openturbine {
 
-inline void SolveSystem(Solver& solver) {
+inline void SolveSystem(StepParameters& parameters, Solver& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Solve System");
 
     {
         auto assemble_region = Kokkos::Profiling::ScopedRegion("Assemble Full System");
         KokkosSparse::spadd_numeric(
-            &solver.spc_spadd_handle, solver.conditioner, solver.system_matrix_full, 1.,
+            &solver.spc_spadd_handle, parameters.conditioner, solver.system_matrix_full, 1.,
             solver.constraints_matrix_full, solver.system_plus_constraints
         );
         KokkosSparse::spadd_numeric(
@@ -29,7 +30,7 @@ inline void SolveSystem(Solver& solver) {
         "ConditionR", solver.num_system_dofs,
         ConditionR{
             solver.R,
-            solver.conditioner,
+            parameters.conditioner,
         }
     );
 
@@ -55,7 +56,7 @@ inline void SolveSystem(Solver& solver) {
         "UnconditionSolution", solver.num_dofs,
         UnconditionSolution{
             solver.num_system_dofs,
-            solver.conditioner,
+            parameters.conditioner,
             solver.x,
         }
     );

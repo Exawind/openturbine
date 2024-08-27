@@ -49,16 +49,6 @@ struct Solver {
     using SpmvHandle =
         KokkosSparse::SPMVHandle<ExecutionSpace, CrsMatrixType, ValuesType, ValuesType>;
 
-    bool is_dynamic_solve;    //< Flag to indicate if the solver is dynamic
-    size_t max_iter;          //< Maximum number of iterations
-    double h;                 //< Time step
-    double alpha_m;           //< Alpha_m coefficient
-    double alpha_f;           //< Alpha_f coefficient
-    double gamma;             //< Gamma coefficient
-    double beta;              //< Beta coefficient
-    double gamma_prime;       //< Gamma prime coefficient
-    double beta_prime;        //< Beta prime coefficient
-    double conditioner;       //< Conditioner for the system matrix
     size_t num_system_nodes;  //< Number of system nodes
     size_t num_system_dofs;   //< Number of system degrees of freedom
     size_t num_dofs;          //< Number of degrees of freedom
@@ -92,28 +82,13 @@ struct Solver {
 
     Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
-    Solver(
-        bool is_dynamic_solve_, size_t max_iter_, double h_, double rho_inf,
-        const std::vector<std::shared_ptr<Node>>& system_nodes,
-        const Constraints& constraints, Beams& beams_
-    )
-        : is_dynamic_solve(is_dynamic_solve_),
-          max_iter(max_iter_),
-          h(h_),
-          alpha_m((2. * rho_inf - 1.) / (rho_inf + 1.)),
-          alpha_f(rho_inf / (rho_inf + 1.)),
-          gamma(0.5 + alpha_f - alpha_m),
-          beta(0.25 * (gamma + 0.5) * (gamma + 0.5)),
-          gamma_prime(gamma / (h * beta)),
-          beta_prime((1. - alpha_m) / (h * h * beta * (1. - alpha_f))),
-          conditioner(beta * h * h),
-          num_system_nodes(system_nodes.size()),
+    Solver(const std::vector<std::shared_ptr<Node>>& system_nodes, const Constraints& constraints, Beams& beams_)
+        : num_system_nodes(system_nodes.size()),
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
           num_dofs(num_system_dofs + constraints.num_dofs),
           T_dense("T dense", num_system_nodes),
           R("R", num_dofs),
-          x("x", num_dofs),
-          convergence_err(max_iter) {
+          x("x", num_dofs) {
         auto K_num_rows = this->num_system_dofs;
         auto K_num_columns = this->num_system_dofs;
         auto K_num_non_zero = size_t{0U};

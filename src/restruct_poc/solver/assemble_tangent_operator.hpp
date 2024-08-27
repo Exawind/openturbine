@@ -5,17 +5,18 @@
 
 #include "solver.hpp"
 #include "state.hpp"
+#include "step_parameters.hpp"
 #include "src/restruct_poc/system/calculate_tangent_operator.hpp"
 #include "copy_tangent_to_sparse_matrix.hpp"
 
 namespace openturbine {
 
-inline void AssembleTangentOperator(Solver& solver, State& state) {
+inline void AssembleTangentOperator(StepParameters& parameters, Solver& solver, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Tangent Operator");
     Kokkos::parallel_for(
         "CalculateTangentOperator", solver.num_system_nodes,
         CalculateTangentOperator{
-            solver.h,
+            parameters.h,
             state.q_delta,
             solver.T_dense,
         }

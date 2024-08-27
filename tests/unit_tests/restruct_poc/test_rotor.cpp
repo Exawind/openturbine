@@ -145,13 +145,11 @@ TEST(RotorTest, IEA15Rotor) {
     );
 
     // Create solver with initial node state
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes(), constraints.num_dofs);
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
-        beams
-    );
+    auto solver = Solver(model.GetNodes(), constraints, beams);
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
@@ -186,7 +184,7 @@ TEST(RotorTest, IEA15Rotor) {
         );
 
         // Take step
-        auto converged = Step(solver, beams, state, constraints);
+        auto converged = Step(parameters, solver, beams, state, constraints);
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
@@ -297,13 +295,11 @@ TEST(RotorTest, IEA15RotorHub) {
     auto hub_bc = model.AddPrescribedBC(*hub_node, {0., 0., 0.});
 
     // Create solver with initial node state
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes(), constraints.num_dofs);
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
-        beams
-    );
+    auto solver = Solver(model.GetNodes(), constraints, beams);
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
@@ -333,7 +329,7 @@ TEST(RotorTest, IEA15RotorHub) {
         constraints.UpdateDisplacement(hub_bc->ID, u_hub);
 
         // Take step
-        auto converged = Step(solver, beams, state, constraints);
+        auto converged = Step(parameters, solver, beams, state, constraints);
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
@@ -476,13 +472,11 @@ TEST(RotorTest, IEA15RotorController) {
         constraints_vector.push_back(*constraint);
     }
 
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes(), constraints.num_dofs);
     CopyNodesToState(state, model.GetNodes());
-    Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
-        beams
-    );
+    Solver solver(model.GetNodes(), constraints, beams);
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
@@ -515,7 +509,7 @@ TEST(RotorTest, IEA15RotorController) {
         controller.CallController();
 
         // Take step
-        auto converged = Step(solver, beams, state, constraints);
+        auto converged = Step(parameters, solver, beams, state, constraints);
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
