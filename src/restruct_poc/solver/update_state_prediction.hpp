@@ -8,18 +8,15 @@
 #include "state.hpp"
 #include "step_parameters.hpp"
 #include "update_dynamic_prediction.hpp"
-#include "update_lambda_prediction.hpp"
 #include "update_static_prediction.hpp"
 
-#include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 
-inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solver, State& state, Constraints& constraints) {
+inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solver, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
     const auto x_system = Kokkos::subview(solver.x, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs));
-    const auto x_lambda = Kokkos::subview(solver.x, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs));
     if (parameters.is_dynamic_solve) {
         Kokkos::parallel_for(
             "UpdateDynamicPrediction", solver.num_system_nodes,
@@ -55,16 +52,6 @@ inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solv
             state.q,
         }
     );
-
-    if (constraints.num > 0) {
-        Kokkos::parallel_for(
-            "UpdateLambdaPrediction", constraints.num_dofs,
-            UpdateLambdaPrediction{
-                x_lambda,
-                state.lambda,
-            }
-        );
-    }
 }
 
 }  // namespace openturbine

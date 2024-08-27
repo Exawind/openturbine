@@ -13,7 +13,6 @@ namespace openturbine {
 
 inline void PredictNextState(StepParameters& parameters, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Predict Next State");
-    Kokkos::deep_copy(state.lambda, 0.);
     Kokkos::deep_copy(state.q_prev, state.q);
 
     Kokkos::parallel_for(

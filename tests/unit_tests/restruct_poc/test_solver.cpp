@@ -110,7 +110,7 @@ inline void SetUpSolverAndAssemble() {
     // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(model.GetNodes(), constraints, beams);
 
@@ -128,9 +128,9 @@ inline void SetUpSolverAndAssemble() {
 
     UpdateConstraintVariables(state, constraints);
     AssembleConstraintsMatrix(solver, constraints);
-    AssembleConstraintsResidual(solver, state, constraints);
+    AssembleConstraintsResidual(solver, constraints);
 
-    expect_kokkos_view_1D_equal(state.lambda, {0., 0., 0., 0., 0., 0.});
+    expect_kokkos_view_1D_equal(constraints.lambda, {0., 0., 0., 0., 0., 0.});
     expect_kokkos_view_2D_equal(
         state.q_prev,
         {
@@ -345,7 +345,7 @@ inline void SetupAndTakeNoSteps() {
     // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(model.GetNodes(), constraints, beams);
 
@@ -449,7 +449,7 @@ inline void SetupAndTakeNoSteps() {
         }
     );
     expect_kokkos_view_1D_equal(
-        state.lambda,
+        constraints.lambda,
         {
             -0.10816660597819647,
             -0.000095455157310304377,
@@ -549,7 +549,7 @@ inline auto SetupAndTakeTwoSteps() {
     // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(model.GetNodes(), constraints, beams);
 

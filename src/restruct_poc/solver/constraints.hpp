@@ -44,6 +44,7 @@ struct Constraints {
     Kokkos::View<DeviceData*> data;                //< Device constraint data
     View_N control;                                //< Control signals
     View_Nx7 u;                                    //< Prescribed displacements
+    Kokkos::View<double*> lambda;
     View_N Phi;                                    //< Residual vector
     Kokkos::View<double* [6][12]> gradient_terms;  //< Gradient terms
 
@@ -61,6 +62,7 @@ struct Constraints {
           data("data", num),
           control("control", num),
           u("u", num),
+          lambda("lambda", num_dofs),
           Phi("residual_vector", num_dofs),
           gradient_terms("gradient_terms", num) {
         // Create host mirror for constraint data

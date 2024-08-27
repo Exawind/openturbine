@@ -122,7 +122,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(model.GetNodes(), constraints, beams);
 
@@ -223,7 +223,7 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     // Create solver with initial node state
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(model.GetNodes(), constraints, beams);
 
@@ -340,7 +340,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
 
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     Solver solver(model.GetNodes(), constraints, beams);
 
@@ -423,7 +423,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
 
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     Solver solver(model.GetNodes(), constraints, beams);
 
@@ -492,7 +492,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(model.GetNodes(), constraints, beams);
 
@@ -588,7 +588,7 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
 
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     Solver solver(model.GetNodes(), constraints, beams);
 

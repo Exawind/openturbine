@@ -103,7 +103,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(model.GetNodes(), constraints, beams);
 

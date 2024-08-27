@@ -110,7 +110,7 @@ inline auto SetUpBeams() {
 
     // Create initial state
     auto parameters = StepParameters(false, 0, 0., 0.); 
-    State state(beams.num_nodes, 0);
+    State state(beams.num_nodes);
     CopyNodesToState(state, model.GetNodes());
 
     // Set the beam's initial state

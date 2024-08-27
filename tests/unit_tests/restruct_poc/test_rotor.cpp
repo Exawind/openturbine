@@ -147,7 +147,7 @@ TEST(RotorTest, IEA15Rotor) {
     // Create solver with initial node state
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(model.GetNodes(), constraints, beams);
 
@@ -297,7 +297,7 @@ TEST(RotorTest, IEA15RotorHub) {
     // Create solver with initial node state
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(model.GetNodes(), constraints, beams);
 
@@ -474,7 +474,7 @@ TEST(RotorTest, IEA15RotorController) {
 
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes(), constraints.num_dofs);
+    auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
     Solver solver(model.GetNodes(), constraints, beams);
 

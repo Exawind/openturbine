@@ -14,10 +14,12 @@
 #include "calculate_convergence_error.hpp"
 #include "constraints.hpp"
 #include "predict_next_state.hpp"
+#include "reset_constraints.hpp"
 #include "step_parameters.hpp"
 #include "solve_system.hpp"
 #include "update_algorithmic_acceleration.hpp"
 #include "update_constraint_variables.hpp"
+#include "update_constraint_prediction.hpp"
 #include "update_state_prediction.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
@@ -28,6 +30,8 @@ namespace openturbine {
 inline bool Step(StepParameters& parameters, Solver& solver, Beams& beams, State& state, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Step");
     PredictNextState(parameters, state);
+
+    ResetConstraints(constraints);
 
     solver.convergence_err.clear();
 
@@ -46,7 +50,7 @@ inline bool Step(StepParameters& parameters, Solver& solver, Beams& beams, State
 
         AssembleConstraintsMatrix(solver, constraints);
 
-        AssembleConstraintsResidual(solver, state, constraints);
+        AssembleConstraintsResidual(solver, constraints);
 
         SolveSystem(parameters, solver);
 
@@ -54,7 +58,9 @@ inline bool Step(StepParameters& parameters, Solver& solver, Beams& beams, State
 
         solver.convergence_err.push_back(err);
 
-        UpdateStatePrediction(parameters, solver, state, constraints);
+        UpdateStatePrediction(parameters, solver, state);
+
+        UpdateConstraintPrediction(solver, constraints);
 
         if (iter >= parameters.max_iter) {
             return false;

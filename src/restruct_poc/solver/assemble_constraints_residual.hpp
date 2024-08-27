@@ -9,7 +9,7 @@
 
 namespace openturbine {
 
-inline void AssembleConstraintsResidual(Solver& solver, State& state, Constraints& constraints) {
+inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints) {
     auto resid_region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Residual");
 
     if (constraints.num == 0) {
@@ -21,9 +21,9 @@ inline void AssembleConstraintsResidual(Solver& solver, State& state, Constraint
     );
     Kokkos::deep_copy(R, Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs)));
     auto lambda = Solver::ValuesType(
-        Kokkos::view_alloc(Kokkos::WithoutInitializing, "lambda"), state.lambda.extent(0)
+        Kokkos::view_alloc(Kokkos::WithoutInitializing, "lambda"), constraints.lambda.extent(0)
     );
-    Kokkos::deep_copy(lambda, state.lambda);
+    Kokkos::deep_copy(lambda, constraints.lambda);
     auto spmv_handle = Solver::SpmvHandle();
     KokkosSparse::spmv(&spmv_handle, "T", 1., solver.B, lambda, 1., R);
     Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs)), R);
