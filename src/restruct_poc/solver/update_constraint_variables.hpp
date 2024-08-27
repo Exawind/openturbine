@@ -1,29 +1,28 @@
 #pragma once
 
-#include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "calculate_constraint_residual_gradient.hpp"
-#include "solver.hpp"
+#include "constraints.hpp"
 #include "state.hpp"
 
 namespace openturbine {
 
-inline void UpdateConstraintVariables(Solver& solver, State& state) {
+inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Constraint Variables");
 
-    if (solver.constraints.num == 0) {
+    if (constraints.num == 0) {
         return;
     }
 
-    solver.constraints.UpdateViews();
+    constraints.UpdateViews();
 
     Kokkos::parallel_for(
-        "CalculateConstraintResidualGradient", solver.constraints.num,
+        "CalculateConstraintResidualGradient", constraints.num,
         CalculateConstraintResidualGradient{
-            solver.constraints.data, solver.constraints.control, solver.constraints.u,
-            state.q, solver.constraints.Phi, solver.constraints.gradient_terms}
+            constraints.data, constraints.control, constraints.u,
+            state.q, constraints.Phi, constraints.gradient_terms}
     );
 }
 

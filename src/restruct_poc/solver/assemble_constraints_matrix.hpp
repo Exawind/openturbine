@@ -4,26 +4,27 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "solver.hpp"
+#include "constraints.hpp"
 #include "copy_constraints_to_sparse_matrix.hpp"
 #include "copy_sparse_values_to_transpose.hpp"
 
 namespace openturbine {
-inline void AssembleConstraintsMatrix(Solver& solver) {
+inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Matrix");
 
-    if (solver.constraints.num == 0) {
+    if (constraints.num == 0) {
         return;
     }
 
     {
         auto const_region = Kokkos::Profiling::ScopedRegion("Constraints Matrix"); 
         auto constraint_policy =
-            Kokkos::TeamPolicy<>(static_cast<int>(solver.constraints.num), Kokkos::AUTO());
+            Kokkos::TeamPolicy<>(static_cast<int>(constraints.num), Kokkos::AUTO());
      
         Kokkos::parallel_for(
             "CopyConstraintsToSparseMatrix", constraint_policy,
             CopyConstraintsToSparseMatrix<Solver::CrsMatrixType>{
-                solver.constraints.data, solver.B, solver.constraints.gradient_terms}
+                constraints.data, solver.B, constraints.gradient_terms}
         );
     }
 

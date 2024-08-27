@@ -12,6 +12,7 @@
 #include "assemble_system_residual.hpp"
 #include "assemble_tangent_operator.hpp"
 #include "calculate_convergence_error.hpp"
+#include "constraints.hpp"
 #include "predict_next_state.hpp"
 #include "solve_system.hpp"
 #include "update_algorithmic_acceleration.hpp"
@@ -23,7 +24,7 @@
 
 namespace openturbine {
 
-inline bool Step(Solver& solver, Beams& beams, State& state) {
+inline bool Step(Solver& solver, Beams& beams, State& state, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Step");
     PredictNextState(solver, state);
 
@@ -42,11 +43,11 @@ inline bool Step(Solver& solver, Beams& beams, State& state) {
 
         AssembleSystemMatrix(solver, beams);
 
-        UpdateConstraintVariables(solver, state);
+        UpdateConstraintVariables(state, constraints);
 
-        AssembleConstraintsMatrix(solver);
+        AssembleConstraintsMatrix(solver, constraints);
 
-        AssembleConstraintsResidual(solver, state);
+        AssembleConstraintsResidual(solver, state, constraints);
 
         SolveSystem(solver);
 
@@ -54,7 +55,7 @@ inline bool Step(Solver& solver, Beams& beams, State& state) {
 
         solver.convergence_err.push_back(err);
 
-        UpdateStatePrediction(solver, state);
+        UpdateStatePrediction(solver, state, constraints);
 
         if (iter >= solver.max_iter) {
             return false;

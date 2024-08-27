@@ -107,15 +107,16 @@ inline void SetUpSolverAndAssemble() {
     constexpr auto rho_inf = 0.9;
 
     // Create solver
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes(), constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
         beams
     );
-    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
-    CopyNodesToState(state, model.GetNodes());
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
-    solver.constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+    constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
 
     // Predict the next state for the solver
     PredictNextState(solver, state);
@@ -126,9 +127,9 @@ inline void SetUpSolverAndAssemble() {
     AssembleSystemMatrix(solver, beams);
     AssembleSystemResidual(solver, beams);
 
-    UpdateConstraintVariables(solver, state);
-    AssembleConstraintsMatrix(solver);
-    AssembleConstraintsResidual(solver, state);
+    UpdateConstraintVariables(state, constraints);
+    AssembleConstraintsMatrix(solver, constraints);
+    AssembleConstraintsResidual(solver, state, constraints);
 
     expect_kokkos_view_1D_equal(state.lambda, {0., 0., 0., 0., 0., 0.});
     expect_kokkos_view_2D_equal(
@@ -198,7 +199,7 @@ inline void SetUpSolverAndAssemble() {
         }
     );
     expect_kokkos_view_1D_equal(
-        solver.constraints.Phi,
+        constraints.Phi,
         {
             9.9999991642896191E-7,
             3.3333331667800836E-10,
@@ -343,17 +344,18 @@ inline void SetupAndTakeNoSteps() {
     constexpr auto rho_inf = 0.9;
 
     // Create solver
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes(), constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
         beams
     );
-    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
-    CopyNodesToState(state, model.GetNodes());
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
-    solver.constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+    constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
 
-    Step(solver, beams, state);
+    Step(solver, beams, state, constraints);
 
     expect_kokkos_view_1D_equal(
         solver.x,
@@ -548,20 +550,21 @@ inline auto SetupAndTakeTwoSteps() {
     constexpr auto rho_inf = 0.9;
 
     // Create solver
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes(), constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
         beams
     );
-    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
-    CopyNodesToState(state, model.GetNodes());
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
-    solver.constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+    constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
 
-    Step(solver, beams, state);
+    Step(solver, beams, state, constraints);
 
     expect_kokkos_view_1D_equal(
-        solver.constraints.Phi,
+        constraints.Phi,
         {
             0.0,
             0.0,

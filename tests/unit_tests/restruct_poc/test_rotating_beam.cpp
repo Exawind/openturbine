@@ -120,19 +120,20 @@ TEST(RotatingBeamTest, StepConvergence) {
     const double rho_inf(0.9);
 
     // Create solver
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes(), constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
         beams
     );
-    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
-    CopyNodesToState(state, model.GetNodes());
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
-        solver.constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
-        const auto converged = Step(solver, beams, state);
+        constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+        const auto converged = Step(solver, beams, state, constraints);
         EXPECT_EQ(converged, true);
     }
 
@@ -161,7 +162,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     );
 }
 
-inline auto CreateTwoBeamSolverWithSameBeamsAndStep() {
+inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     // Create model for managing nodes and constraints
     auto model = Model();
 
@@ -222,12 +223,13 @@ inline auto CreateTwoBeamSolverWithSameBeamsAndStep() {
     const double rho_inf(0.9);
 
     // Create solver with initial node state
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes(), constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
         beams
     );
-    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
-    CopyNodesToState(state, model.GetNodes());
 
     // Calculate hub rotation for this time step
     const auto q_hub =
@@ -238,22 +240,17 @@ inline auto CreateTwoBeamSolverWithSameBeamsAndStep() {
     const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
 
     // Update constraint displacements
-    for (auto j = 0U; j < solver.constraints.num; ++j) {
-        solver.constraints.UpdateDisplacement(j, u_hub);
+    for (auto j = 0U; j < constraints.num; ++j) {
+        constraints.UpdateDisplacement(j, u_hub);
     }
 
     // Take step, don't check for convergence, the following tests check that
     // all the elements were assembled properly
-    Step(solver, beams, state);
+    Step(solver, beams, state, constraints);
 
-    return solver;
-}
-
-TEST(RotatingBeamTest, TwoBeam) {
-    auto solver = CreateTwoBeamSolverWithSameBeamsAndStep();
 
     auto n = solver.num_system_dofs / 2;
-    auto m = solver.constraints.num_dofs / 2;
+    auto m = constraints.num_dofs / 2;
 
     // Check that R vector is the same for both beams
     auto R = kokkos_view_1D_to_vector(solver.R);
@@ -262,10 +259,14 @@ TEST(RotatingBeamTest, TwoBeam) {
     }
 
     // Check that Phi vector is the same for both beams
-    auto Phi = kokkos_view_1D_to_vector(solver.constraints.Phi);
+    auto Phi = kokkos_view_1D_to_vector(constraints.Phi);
     for (auto i = 0U; i < m; ++i) {
         EXPECT_NEAR(Phi[i], Phi[i + m], 1.e-10);
     }
+}
+
+TEST(RotatingBeamTest, TwoBeam) {
+    CreateTwoBeamSolverWithSameBeamsAndStep();
 }
 
 TEST(RotatingBeamTest, ThreeBladeRotor) {
@@ -341,12 +342,13 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         constraints_vector.push_back(*constraint);
     }
 
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes(), constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
         beams
     );
-    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
-    CopyNodesToState(state, model.GetNodes());
 
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
@@ -360,12 +362,12 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
 
         // Update constraint displacements
-        for (auto j = 0U; j < solver.constraints.num; ++j) {
-            solver.constraints.UpdateDisplacement(j, u_hub);
+        for (auto j = 0U; j < constraints.num; ++j) {
+            constraints.UpdateDisplacement(j, u_hub);
         }
 
         // Take step
-        auto converged = Step(solver, beams, state);
+        auto converged = Step(solver, beams, state, constraints);
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
@@ -425,19 +427,20 @@ TEST(RotatingBeamTest, MasslessConstraints) {
         constraints_vector.push_back(*constraint);
     }
 
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes(), constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
         beams
     );
-    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
-    CopyNodesToState(state, model.GetNodes());
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
-        solver.constraints.UpdateDisplacement(hub_bc->ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
-        const auto converged = Step(solver, beams, state);
+        constraints.UpdateDisplacement(hub_bc->ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
+        const auto converged = Step(solver, beams, state, constraints);
         EXPECT_EQ(converged, true);
     }
 
@@ -495,19 +498,20 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     const double rho_inf(0.9);
 
     // Create solver
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes(), constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
         beams
     );
-    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
-    CopyNodesToState(state, model.GetNodes());
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (auto i = 0; i < 10; ++i) {
         const auto t = step_size * static_cast<double>(i + 1);
         // Set pitch
         pitch = t * M_PI / 2.;
-        const auto converged = Step(solver, beams, state);
+        const auto converged = Step(solver, beams, state, constraints);
         EXPECT_EQ(converged, true);
     }
 
@@ -592,12 +596,13 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
         constraints_vector.push_back(*constraint);
     }
 
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes(), constraints.num_dofs);
+    CopyNodesToState(state, model.GetNodes());
     Solver solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
+        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), constraints,
         beams
     );
-    auto state = State(model.NumNodes(), solver.constraints.num_dofs);
-    CopyNodesToState(state, model.GetNodes());
 
 #ifdef OTURB_ENABLE_VTK
     UpdateState(beams, state.q, state.v, state.vd);
@@ -608,7 +613,7 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
 
     // Run 10 steps
     for (int i = 0; i < 5; ++i) {
-        const auto converged = Step(solver, beams, state);
+        const auto converged = Step(solver, beams, state, constraints);
         EXPECT_EQ(converged, true);
 #ifdef OTURB_ENABLE_VTK
         auto tmp = std::to_string(i + 1);

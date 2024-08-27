@@ -4,14 +4,15 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "solver.hpp"
+#include "constraints.hpp"
 #include "state.hpp"
 
 namespace openturbine {
 
-inline void AssembleConstraintsResidual(Solver& solver, State& state) {
+inline void AssembleConstraintsResidual(Solver& solver, State& state, Constraints& constraints) {
     auto resid_region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Residual");
 
-    if (solver.constraints.num == 0) {
+    if (constraints.num == 0) {
         return;
     }
 
@@ -26,7 +27,7 @@ inline void AssembleConstraintsResidual(Solver& solver, State& state) {
     auto spmv_handle = Solver::SpmvHandle();
     KokkosSparse::spmv(&spmv_handle, "T", 1., solver.B, lambda, 1., R);
     Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs)), R);
-    Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs)), solver.constraints.Phi);
+    Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs)), constraints.Phi);
 }
 
 }

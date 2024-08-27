@@ -61,7 +61,6 @@ struct Solver {
     double conditioner;       //< Conditioner for the system matrix
     size_t num_system_nodes;  //< Number of system nodes
     size_t num_system_dofs;   //< Number of system degrees of freedom
-    Constraints constraints;  //< Constraints
     size_t num_dofs;          //< Number of degrees of freedom
 
     CrsMatrixType K;                        //< Stiffness matrix
@@ -96,7 +95,7 @@ struct Solver {
     Solver(
         bool is_dynamic_solve_, size_t max_iter_, double h_, double rho_inf,
         const std::vector<std::shared_ptr<Node>>& system_nodes,
-        const std::vector<std::shared_ptr<Constraint>>& constraints_, Beams& beams_
+        const Constraints& constraints, Beams& beams_
     )
         : is_dynamic_solve(is_dynamic_solve_),
           max_iter(max_iter_),
@@ -110,7 +109,6 @@ struct Solver {
           conditioner(beta * h * h),
           num_system_nodes(system_nodes.size()),
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
-          constraints(constraints_),
           num_dofs(num_system_dofs + constraints.num_dofs),
           T_dense("T dense", num_system_nodes),
           R("R", num_dofs),
@@ -170,17 +168,17 @@ struct Solver {
         // Initialize contraint for indexing for sparse matrices
         auto B_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
-            "ComputeNumberOfNonZeros_Constraints", this->constraints.num,
-            ComputeNumberOfNonZeros_Constraints{this->constraints.data}, B_num_non_zero
+            "ComputeNumberOfNonZeros_Constraints", constraints.num,
+            ComputeNumberOfNonZeros_Constraints{constraints.data}, B_num_non_zero
         );
-        auto B_num_rows = this->constraints.num_dofs;
+        auto B_num_rows = constraints.num_dofs;
         auto B_num_columns = this->num_system_dofs;
         auto B_row_ptrs = RowPtrType("b_row_ptrs", B_num_rows + 1);
         auto B_col_ind = IndicesType("b_indices", B_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Constraints", 1,
             PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
-                this->constraints.data, B_row_ptrs, B_col_ind}
+                constraints.data, B_row_ptrs, B_col_ind}
         );
         auto B_values = ValuesType("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);

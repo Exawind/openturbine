@@ -15,7 +15,7 @@
 
 namespace openturbine {
 
-inline void UpdateStatePrediction(const Solver& solver, State& state) {
+inline void UpdateStatePrediction(const Solver& solver, State& state, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
     const auto x_system = Kokkos::subview(solver.x, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs));
     const auto x_lambda = Kokkos::subview(solver.x, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs));
@@ -55,9 +55,9 @@ inline void UpdateStatePrediction(const Solver& solver, State& state) {
         }
     );
 
-    if (solver.constraints.num > 0) {
+    if (constraints.num > 0) {
         Kokkos::parallel_for(
-            "UpdateLambdaPrediction", solver.constraints.num_dofs,
+            "UpdateLambdaPrediction", constraints.num_dofs,
             UpdateLambdaPrediction{
                 x_lambda,
                 state.lambda,
