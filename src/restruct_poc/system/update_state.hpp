@@ -7,17 +7,19 @@
 #include "assemble_stiffness_matrix.hpp"
 #include "assemble_inertia_matrix.hpp"
 #include "calculate_quadrature_point_values.hpp"
+#include "calculate_tangent_operator.hpp"
 #include "update_node_state.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/interpolate_to_quadrature_points.hpp"
 #include "src/restruct_poc/types.hpp"
 
+#include "src/restruct_poc/solver/step_parameters.hpp"
+#include "src/restruct_poc/solver/state.hpp"
+
 namespace openturbine {
 
-inline void UpdateState(
-    const Beams& beams, const View_Nx7& Q, const View_Nx6& V, const View_Nx6& A, const double beta_prime, const double gamma_prime
-) {
+inline void UpdateState(StepParameters& parameters, const Beams& beams, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(
@@ -28,9 +30,9 @@ inline void UpdateState(
             beams.node_u,
             beams.node_u_dot,
             beams.node_u_ddot,
-            Q,
-            V,
-            A,
+            state.q,
+            state.v,
+            state.vd,
         }
     );
 
@@ -83,7 +85,16 @@ inline void UpdateState(
 
     AssembleResidualVector(beams);
     AssembleStiffnessMatrix(beams);
-    AssembleInertiaMatrix(beams, beta_prime, gamma_prime);
+    AssembleInertiaMatrix(beams, parameters.beta_prime, parameters.gamma_prime);
+
+    Kokkos::parallel_for(
+        "CalculateTangentOperator", state.num_system_nodes,
+        CalculateTangentOperator{
+            parameters.h,
+            state.q_delta,
+            state.tangent,
+        }
+    );
 }
 
 }  // namespace openturbine

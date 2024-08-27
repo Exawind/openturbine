@@ -121,7 +121,7 @@ inline void SetUpSolverAndAssemble() {
     PredictNextState(parameters, state);
 
     // Update beam elements state from solvers
-    UpdateState(beams, state.q, state.v, state.vd, 0., 0.);
+    UpdateState(parameters, beams, state);
 
     AssembleSystemMatrix(solver, beams);
     AssembleSystemResidual(solver, beams);

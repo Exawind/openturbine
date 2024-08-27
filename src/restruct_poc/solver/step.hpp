@@ -34,9 +34,9 @@ inline bool Step(StepParameters& parameters, Solver& solver, Beams& beams, State
     double err = 1000.0;
 
     for (auto iter = 0U; err > 1.0; ++iter) {
-        UpdateState(beams, state.q, state.v, state.vd, parameters.beta_prime, parameters.gamma_prime);
+        UpdateState(parameters, beams, state);
 
-        AssembleTangentOperator(parameters, solver, state);
+        AssembleTangentOperator(solver, state);
 
         AssembleSystemResidual(solver, beams);
 

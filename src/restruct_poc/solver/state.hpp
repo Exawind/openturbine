@@ -16,6 +16,7 @@ struct State {
     View_Nx6 v;                  //< Velocity
     View_Nx6 vd;                 //< Acceleration
     View_Nx6 a;                  //< Algorithmic acceleration
+    Kokkos::View<double*[6][6]> tangent;
     View_N lambda;               //< Lagrange multipliers
 
     State(size_t num_system_nodes_, size_t num_constraint_dofs_)
@@ -27,6 +28,7 @@ struct State {
           v("v", num_system_nodes),
           vd("vd", num_system_nodes),
           a("a", num_system_nodes),
+          tangent("tangent", num_system_nodes),
           lambda("lambda", num_constraint_dofs) {
         // Initialize q and q_prev rotation to identity
         Kokkos::deep_copy(Kokkos::subview(this->q_prev, Kokkos::ALL, 3), 1.);
