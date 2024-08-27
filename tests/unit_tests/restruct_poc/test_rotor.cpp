@@ -149,7 +149,7 @@ TEST(RotorTest, IEA15Rotor) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(model.GetNodes(), constraints, beams);
+    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints);
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
@@ -299,7 +299,7 @@ TEST(RotorTest, IEA15RotorHub) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(model.GetNodes(), constraints, beams);
+    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints);
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
@@ -476,7 +476,7 @@ TEST(RotorTest, IEA15RotorController) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    Solver solver(model.GetNodes(), constraints, beams);
+    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints);
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");

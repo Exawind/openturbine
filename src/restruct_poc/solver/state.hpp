@@ -9,6 +9,7 @@ namespace openturbine {
 /// state variables during the simulation
 struct State {
     size_t num_system_nodes;     //< Number of system nodes
+    Kokkos::View<size_t*> ID;
     View_Nx6 q_delta;            //< Displacement increment
     View_Nx7 q_prev;             //< Previous state
     View_Nx7 q;                  //< Current state
@@ -19,6 +20,7 @@ struct State {
 
     State(size_t num_system_nodes_)
         : num_system_nodes(num_system_nodes_),
+          ID("ID", num_system_nodes),
           q_delta("q_delta", num_system_nodes),
           q_prev("q_prev", num_system_nodes),
           q("q", num_system_nodes),

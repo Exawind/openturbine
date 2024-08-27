@@ -7,6 +7,7 @@
 namespace openturbine {
 
 inline void CopyNodesToState(State& state, const std::vector<std::shared_ptr<Node>>& nodes) {
+        auto host_id = Kokkos::create_mirror(state.ID);
         auto host_q = Kokkos::create_mirror(state.q);
         auto host_v = Kokkos::create_mirror(state.v);
         auto host_vd = Kokkos::create_mirror(state.vd);
@@ -20,8 +21,10 @@ inline void CopyNodesToState(State& state, const std::vector<std::shared_ptr<Nod
                 host_v(i, j) = node.v[j];
                 host_vd(i, j) = node.vd[j];
             }
+            host_id(i) = node.ID;
         }
 
+        Kokkos::deep_copy(state.ID, host_id);
         Kokkos::deep_copy(state.q, host_q);
         Kokkos::deep_copy(state.v, host_v);
         Kokkos::deep_copy(state.vd, host_vd);

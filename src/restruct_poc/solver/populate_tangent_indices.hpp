@@ -7,7 +7,7 @@
 namespace openturbine {
 struct PopulateTangentIndices {
     size_t num_system_nodes;
-    Kokkos::View<int*>::const_type node_state_indices;
+    Kokkos::View<size_t*>::const_type node_state_indices;
     Kokkos::View<int*> indices;
 
     KOKKOS_FUNCTION

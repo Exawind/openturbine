@@ -20,7 +20,6 @@
 #include "populate_tangent_indices.hpp"
 #include "populate_tangent_row_ptrs.hpp"
 
-#include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
@@ -81,8 +80,8 @@ struct Solver {
 
     Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
-    Solver(const std::vector<std::shared_ptr<Node>>& system_nodes, const Constraints& constraints, Beams& beams_)
-        : num_system_nodes(system_nodes.size()),
+    Solver(const Kokkos::View<size_t*>::const_type node_IDs, const Kokkos::View<size_t*>::const_type num_nodes_per_element, const Kokkos::View<size_t**>::const_type node_state_indices, const Constraints& constraints)
+        : num_system_nodes(node_IDs.extent(0)),
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
           num_dofs(num_system_dofs + constraints.num_dofs),
           R("R", num_dofs),
@@ -91,19 +90,19 @@ struct Solver {
         auto K_num_columns = this->num_system_dofs;
         auto K_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
-            "ComputeNumberOfNonZeros", beams_.num_elems,
-            ComputeNumberOfNonZeros{beams_.num_nodes_per_element}, K_num_non_zero
+            "ComputeNumberOfNonZeros", num_nodes_per_element.extent(0),
+            ComputeNumberOfNonZeros{num_nodes_per_element}, K_num_non_zero
         );
         auto K_row_ptrs = RowPtrType("K_row_ptrs", K_num_rows + 1);
         auto K_col_inds = IndicesType("indices", K_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrs", 1,
-            PopulateSparseRowPtrs<RowPtrType>{beams_.num_nodes_per_element, K_row_ptrs}
+            PopulateSparseRowPtrs<RowPtrType>{num_nodes_per_element, K_row_ptrs}
         );
         Kokkos::parallel_for(
             "PopulateSparseIndices", 1,
             PopulateSparseIndices{
-                beams_.num_nodes_per_element, beams_.node_state_indices, K_col_inds}
+                num_nodes_per_element, node_state_indices, K_col_inds}
         );
 
         Kokkos::fence();
@@ -121,16 +120,10 @@ struct Solver {
             "PopulateTangentRowPtrs", 1,
             PopulateTangentRowPtrs<CrsMatrixType::size_type>{this->num_system_nodes, T_row_ptrs}
         );
-        auto node_ids = IndicesType("node_ids", system_nodes.size());
-        auto host_node_ids = Kokkos::create_mirror(node_ids);
 
-        for (auto i = 0U; i < system_nodes.size(); ++i) {
-            host_node_ids(i) = static_cast<int>(system_nodes[i]->ID);
-        }
-        Kokkos::deep_copy(node_ids, host_node_ids);
         Kokkos::parallel_for(
             "PopulateTangentIndices", 1,
-            PopulateTangentIndices{this->num_system_nodes, node_ids, T_indices}
+            PopulateTangentIndices{this->num_system_nodes, node_IDs, T_indices}
         );
         auto T_values = ValuesType("T values", T_num_non_zero);
         T = CrsMatrixType(

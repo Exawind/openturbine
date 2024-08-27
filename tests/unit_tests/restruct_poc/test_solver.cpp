@@ -112,7 +112,7 @@ inline void SetUpSolverAndAssemble() {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(model.GetNodes(), constraints, beams);
+    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints);
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
     constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
@@ -347,7 +347,7 @@ inline void SetupAndTakeNoSteps() {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(model.GetNodes(), constraints, beams);
+    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints);
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
     constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
@@ -551,7 +551,7 @@ inline auto SetupAndTakeTwoSteps() {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(model.GetNodes(), constraints, beams);
+    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints);
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
     constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
