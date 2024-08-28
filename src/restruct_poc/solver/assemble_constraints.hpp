@@ -4,6 +4,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
+#include "assemble_constraint_force.hpp"
 #include "calculate_constraint_residual_gradient.hpp"
 #include "compute_number_of_non_zeros.hpp"
 #include "contribute_elements_to_sparse_matrix.hpp"
@@ -66,6 +67,15 @@ void AssembleConstraints(Solver& solver, Subview_N R_system, Subview_N R_lambda)
 
     {
         auto resid_region = Kokkos::Profiling::ScopedRegion("Assemble Residual");
+
+        // Add the constraint forces to the residual
+        Kokkos::parallel_for(
+            "AssembleConstraintForce", solver.constraints.num,
+            AssembleConstraintForce{
+                solver.constraints.device_constraints, solver.constraints.control, solver.state.q,
+                R_system}
+        );
+
         auto R = Solver::ValuesType(
             Kokkos::view_alloc(Kokkos::WithoutInitializing, "R_local"), R_system.extent(0)
         );
