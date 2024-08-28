@@ -5,7 +5,7 @@
 
 namespace openturbine {
 
-/// @brief Enum class to define the type of constraint
+/// @brief Enum class to define the type of the constraint
 enum class ConstraintType : std::uint8_t {
     kNone = 0,           // No constraint (default)
     kFixedBC = 1,        // Fixed boundary condition/clamped constraint (all 6 DOFs fixed)
@@ -34,10 +34,11 @@ constexpr size_t GetNumberOfNodes(ConstraintType type) {
     }
 }
 
-/// @brief Struct to define a constraint between two nodes
-/// @details A constraint is a relationship between two nodes that restricts their relative motion
-/// in some way. Constraints can be used to model fixed boundary conditions, prescribed
-/// displacements, rigid body motion, and other types of constraints.
+/// @brief Struct to define a constraint between two nodes or enforce a boundary condition at a
+/// single node
+/// @details A constraint is a relationship between two nodes that restricts their relative
+/// motion in some way. Constraints can be used to model fixed boundary conditions, prescribed
+/// displacements, rigid body motion, lower-pair kinematic joints, control signals etc.
 struct Constraint {
     ConstraintType type;        //< Type of constraint
     size_t ID;                  //< Unique identifier for constraint
@@ -47,7 +48,7 @@ struct Constraint {
     Array_3 x_axis = {0.};      //< Unit vector for x axis
     Array_3 y_axis = {0.};      //< Unit vector for y axis
     Array_3 z_axis = {0.};      //< Unit vector for z axis
-    double* control = nullptr;  //< Pointer to control signal
+    double* control = nullptr;  //< Pointer to control signal (if any)
 
     Constraint(
         ConstraintType constraint_type, size_t id, const Node& node1, const Node& node2,
@@ -78,7 +79,7 @@ struct Constraint {
     void InitializeAxes(const Array_3& vec) {
         if (type == ConstraintType::kRevoluteJoint) {
             constexpr Array_3 x = {1., 0., 0.};
-            Array_3 x_hat = UnitVector(X0);
+            Array_3 x_hat = UnitVector(vec);
 
             // Create rotation matrix to rotate x to match vector
             auto v = CrossProduct(x, x_hat);

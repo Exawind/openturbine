@@ -658,9 +658,7 @@ TEST(RotatingBeamTest, GeneratorTorque) {
 
     // Add shaft base, azimuth, and hub nodes as massless points
     auto shaft_base = model.AddNode({0, 0., 0., 1., 0., 0., 0.});
-    auto azimuth =
-        // assume azimuth node lies halfway between the shaft base and the hub
-        model.AddNode({0, std::sin(tilt) / 2., std::cos(tilt) / 2., 1., 0., 0., 0.});
+    auto azimuth = model.AddNode({0, 0, 0, 1., 0., 0., 0.});
     auto hub = model.AddNode({0, std::sin(tilt), std::cos(tilt), 1., 0., 0., 0.});
 
     // Add constraints between the nodes to simulate a rotor with a generator
