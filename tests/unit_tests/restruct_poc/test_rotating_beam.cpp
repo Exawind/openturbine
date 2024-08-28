@@ -662,9 +662,12 @@ TEST(RotatingBeamTest, GeneratorTorque) {
     auto hub = model.AddNode({0, std::sin(tilt), std::cos(tilt), 1., 0., 0., 0.});
 
     // Add constraints between the nodes to simulate a rotor with a generator
-    model.AddFixedBC(*shaft_base);     // Fixed shaft base
+    model.AddFixedBC(*shaft_base);  // Fixed shaft base
+
+    // Add torque to the azimuth node
+    auto torque = 1.e3;
     model.AddRevoluteJointConstraint(  // Azimuth can rotate around shaft base
-        *shaft_base, *azimuth, {0., std::sin(tilt), std::cos(tilt)}
+        *shaft_base, *azimuth, {0., std::sin(tilt), std::cos(tilt)}, &torque
     );
     model.AddRigidJointConstraint(*azimuth, *hub);            // Hub is rigidly attached to azimuth
     model.AddRigidJointConstraint(*hub, beam_nodes[0].node);  // Beam is rigidly attached to hub
