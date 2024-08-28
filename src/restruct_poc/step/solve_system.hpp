@@ -1,13 +1,12 @@
 #pragma once
 
-#include <KokkosBlas.hpp>
-#include <KokkosLapack_gesv.hpp>
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "condition_system.hpp"
-#include "solver.hpp"
 #include "step_parameters.hpp"
+
+#include "src/restruct_poc/solver/solver.hpp"
+#include "src/restruct_poc/solver/condition_system.hpp"
 
 namespace openturbine {
 

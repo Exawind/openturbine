@@ -3,10 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "integrate_residual_vector.hpp"
+#include "src/restruct_poc/system/integrate_residual_vector.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
-#include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 

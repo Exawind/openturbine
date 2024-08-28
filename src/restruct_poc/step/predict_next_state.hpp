@@ -3,11 +3,12 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "calculate_displacement.hpp"
-#include "calculate_next_state.hpp"
-#include "solver.hpp"
 #include "step_parameters.hpp"
-#include "state.hpp"
+
+#include "src/restruct_poc/solver/solver.hpp"
+#include "src/restruct_poc/state/calculate_displacement.hpp"
+#include "src/restruct_poc/state/calculate_next_state.hpp"
+#include "src/restruct_poc/state/state.hpp"
 
 namespace openturbine {
 

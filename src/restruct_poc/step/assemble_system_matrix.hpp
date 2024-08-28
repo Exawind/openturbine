@@ -6,11 +6,11 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "solver.hpp"
-#include "contribute_elements_to_sparse_matrix.hpp"
-#include "copy_into_sparse_matrix.hpp"
-#include "populate_sparse_indices.hpp"
-#include "populate_sparse_row_ptrs.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
+#include "src/restruct_poc/solver/contribute_elements_to_sparse_matrix.hpp"
+#include "src/restruct_poc/solver/copy_into_sparse_matrix.hpp"
+#include "src/restruct_poc/solver/populate_sparse_indices.hpp"
+#include "src/restruct_poc/solver/populate_sparse_row_ptrs.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
 

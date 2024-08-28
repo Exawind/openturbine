@@ -6,20 +6,20 @@
 #include "assemble_residual_vector.hpp"
 #include "assemble_stiffness_matrix.hpp"
 #include "assemble_inertia_matrix.hpp"
-#include "calculate_quadrature_point_values.hpp"
-#include "calculate_tangent_operator.hpp"
-#include "update_node_state.hpp"
+#include "step_parameters.hpp"
+
+#include "src/restruct_poc/system/calculate_quadrature_point_values.hpp"
+#include "src/restruct_poc/system/calculate_tangent_operator.hpp"
+#include "src/restruct_poc/system/update_node_state.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/interpolate_to_quadrature_points.hpp"
-#include "src/restruct_poc/types.hpp"
 
-#include "src/restruct_poc/solver/step_parameters.hpp"
-#include "src/restruct_poc/solver/state.hpp"
+#include "src/restruct_poc/state/state.hpp"
 
 namespace openturbine {
 
-inline void UpdateState(StepParameters& parameters, const Beams& beams, State& state) {
+inline void UpdateSystemVariables(StepParameters& parameters, const Beams& beams, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(

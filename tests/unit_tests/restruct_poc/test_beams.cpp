@@ -11,10 +11,10 @@
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
-#include "src/restruct_poc/solver/state.hpp"
-#include "src/restruct_poc/solver/copy_nodes_to_state.hpp"
-#include "src/restruct_poc/system/assemble_residual_vector.hpp"
-#include "src/restruct_poc/system/update_state.hpp"
+#include "src/restruct_poc/state/state.hpp"
+#include "src/restruct_poc/state/copy_nodes_to_state.hpp"
+#include "src/restruct_poc/step/assemble_residual_vector.hpp"
+#include "src/restruct_poc/step/update_system_variables.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine::tests {
@@ -114,7 +114,7 @@ inline auto SetUpBeams() {
     CopyNodesToState(state, model.GetNodes());
 
     // Set the beam's initial state
-    UpdateState(parameters, beams, state);
+    UpdateSystemVariables(parameters, beams, state);
 
     return beams;
 }

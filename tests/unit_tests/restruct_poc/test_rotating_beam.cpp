@@ -18,9 +18,9 @@
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
-#include "src/restruct_poc/solver/state.hpp"
-#include "src/restruct_poc/solver/copy_nodes_to_state.hpp"
-#include "src/restruct_poc/solver/step.hpp"
+#include "src/restruct_poc/state/state.hpp"
+#include "src/restruct_poc/state/copy_nodes_to_state.hpp"
+#include "src/restruct_poc/step/step.hpp"
 #include "src/restruct_poc/types.hpp"
 
 using Array_7 = std::array<double, 7>;

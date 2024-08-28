@@ -3,7 +3,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "integrate_inertia_matrix.hpp"
+#include "src/restruct_poc/system/integrate_inertia_matrix.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
 

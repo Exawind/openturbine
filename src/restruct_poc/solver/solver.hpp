@@ -10,8 +10,6 @@
 
 #include "compute_number_of_non_zeros.hpp"
 #include "compute_number_of_non_zeros_constraints.hpp"
-#include "constraint.hpp"
-#include "constraints.hpp"
 #include "fill_unshifted_row_ptrs.hpp"
 #include "populate_sparse_indices.hpp"
 #include "populate_sparse_row_ptrs.hpp"
@@ -20,6 +18,7 @@
 #include "populate_tangent_indices.hpp"
 #include "populate_tangent_row_ptrs.hpp"
 
+#include "src/restruct_poc/constraints/constraint_type.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {

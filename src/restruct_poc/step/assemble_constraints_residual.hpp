@@ -3,9 +3,8 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "solver.hpp"
-#include "constraints.hpp"
-#include "state.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
+#include "src/restruct_poc/constraints/constraints.hpp"
 
 namespace openturbine {
 

@@ -11,17 +11,17 @@
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
-#include "src/restruct_poc/solver/update_constraint_variables.hpp"
-#include "src/restruct_poc/solver/assemble_constraints_matrix.hpp"
-#include "src/restruct_poc/solver/assemble_constraints_residual.hpp"
-#include "src/restruct_poc/solver/assemble_system_matrix.hpp"
-#include "src/restruct_poc/solver/assemble_system_residual.hpp"
-#include "src/restruct_poc/solver/predict_next_state.hpp"
+#include "src/restruct_poc/step/update_constraint_variables.hpp"
+#include "src/restruct_poc/step/assemble_constraints_matrix.hpp"
+#include "src/restruct_poc/step/assemble_constraints_residual.hpp"
+#include "src/restruct_poc/step/assemble_system_matrix.hpp"
+#include "src/restruct_poc/step/assemble_system_residual.hpp"
+#include "src/restruct_poc/step/predict_next_state.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
-#include "src/restruct_poc/solver/step_parameters.hpp"
-#include "src/restruct_poc/solver/state.hpp"
-#include "src/restruct_poc/solver/copy_nodes_to_state.hpp"
-#include "src/restruct_poc/solver/step.hpp"
+#include "src/restruct_poc/step/step_parameters.hpp"
+#include "src/restruct_poc/state/state.hpp"
+#include "src/restruct_poc/state/copy_nodes_to_state.hpp"
+#include "src/restruct_poc/step/step.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine::tests {
@@ -121,8 +121,7 @@ inline void SetUpSolverAndAssemble() {
     PredictNextState(parameters, state);
 
     // Update beam elements state from solvers
-    UpdateState(parameters, beams, state);
-
+    UpdateSystemVariables(parameters, beams, state);
     AssembleSystemMatrix(solver, beams);
     AssembleSystemResidual(solver, beams);
 

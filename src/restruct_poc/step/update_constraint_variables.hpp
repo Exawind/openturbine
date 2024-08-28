@@ -3,9 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "calculate_constraint_residual_gradient.hpp"
-#include "constraints.hpp"
-#include "state.hpp"
+#include "src/restruct_poc/constraints/calculate_constraint_residual_gradient.hpp"
+#include "src/restruct_poc/constraints/constraints.hpp"
+#include "src/restruct_poc/state/state.hpp"
 
 namespace openturbine {
 

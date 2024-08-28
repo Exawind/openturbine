@@ -4,26 +4,27 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "solver.hpp"
-#include "state.hpp"
 #include "assemble_constraints_matrix.hpp"
 #include "assemble_constraints_residual.hpp"
 #include "assemble_system_matrix.hpp"
 #include "assemble_system_residual.hpp"
 #include "assemble_tangent_operator.hpp"
 #include "calculate_convergence_error.hpp"
-#include "constraints.hpp"
 #include "predict_next_state.hpp"
 #include "reset_constraints.hpp"
 #include "step_parameters.hpp"
 #include "solve_system.hpp"
-#include "update_algorithmic_acceleration.hpp"
 #include "update_constraint_variables.hpp"
 #include "update_constraint_prediction.hpp"
 #include "update_state_prediction.hpp"
+#include "update_system_variables.hpp"
 
+#include "src/restruct_poc/state/update_algorithmic_acceleration.hpp"
+
+#include "src/restruct_poc/state/state.hpp"
+#include "src/restruct_poc/constraints/constraints.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/beams/beams.hpp"
-#include "src/restruct_poc/system/update_state.hpp"
 
 namespace openturbine {
 
@@ -38,7 +39,7 @@ inline bool Step(StepParameters& parameters, Solver& solver, Beams& beams, State
     double err = 1000.0;
 
     for (auto iter = 0U; err > 1.0; ++iter) {
-        UpdateState(parameters, beams, state);
+        UpdateSystemVariables(parameters, beams, state);
 
         AssembleTangentOperator(solver, state);
 

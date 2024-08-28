@@ -3,8 +3,8 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "solver.hpp"
-#include "contribute_elements_to_vector.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
+#include "src/restruct_poc/solver/contribute_elements_to_vector.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
 

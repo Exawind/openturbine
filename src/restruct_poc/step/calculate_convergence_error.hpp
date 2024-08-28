@@ -3,9 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "calculate_error_sum_squares.hpp"
-#include "solver.hpp"
-#include "state.hpp"
+#include "src/restruct_poc/solver/calculate_error_sum_squares.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
+#include "src/restruct_poc/state/state.hpp"
 
 namespace openturbine {
 
