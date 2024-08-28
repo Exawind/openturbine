@@ -6,7 +6,7 @@
 
 #include "test_utilities.hpp"
 
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
 #include "vtkout.hpp"
 #endif
 
@@ -585,7 +585,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
         beams
     );
 
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
     UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
     std::filesystem::remove_all("steps");
     std::filesystem::create_directory("steps");
@@ -596,7 +596,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     for (int i = 0; i < 5; ++i) {
         const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i + 1);
         auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
         BeamsWriteVTK(beams, file_name + ".vtu");
@@ -694,7 +694,7 @@ TEST(RotatingBeamTest, GeneratorTorque) {
         beams
     );
 
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
     UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
     std::filesystem::remove_all("steps");
     std::filesystem::create_directory("steps");
@@ -705,10 +705,10 @@ TEST(RotatingBeamTest, GeneratorTorque) {
     // the residual vector
 
     // Run 10 steps
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 1000; ++i) {
         const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i + 1);
         auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
         BeamsWriteVTK(beams, file_name + ".vtu");

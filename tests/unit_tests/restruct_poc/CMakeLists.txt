@@ -50,7 +50,7 @@ target_sources(
 )
 
 # Conditionally add VTK-related source files if VTK is enabled
-if(OTURB_ENABLE_VTK)
+if(OpenTurbine_ENABLE_VTK)
     target_sources(
         openturbine_unit_tests
         PRIVATE
