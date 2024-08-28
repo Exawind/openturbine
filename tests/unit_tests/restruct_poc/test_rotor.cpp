@@ -16,8 +16,8 @@
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
-#include "src/restruct_poc/state/state.hpp"
 #include "src/restruct_poc/state/copy_nodes_to_state.hpp"
+#include "src/restruct_poc/state/state.hpp"
 #include "src/restruct_poc/step/step.hpp"
 #include "src/restruct_poc/types.hpp"
 #include "src/utilities/controllers/discon.hpp"
@@ -149,7 +149,10 @@ TEST(RotorTest, IEA15Rotor) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs, constraints.type, constraints.node_index, constraints.row_range);
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.node_index, constraints.row_range
+    );
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
@@ -299,7 +302,10 @@ TEST(RotorTest, IEA15RotorHub) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs, constraints.type, constraints.node_index, constraints.row_range);
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.node_index, constraints.row_range
+    );
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");
@@ -476,7 +482,10 @@ TEST(RotorTest, IEA15RotorController) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs, constraints.type, constraints.node_index, constraints.row_range);
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.node_index, constraints.row_range
+    );
 
     // Remove output directory for writing step data
     std::filesystem::remove_all("steps");

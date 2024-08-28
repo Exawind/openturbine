@@ -10,4 +10,4 @@ inline void ResetConstraints(Constraints& constraints) {
     Kokkos::deep_copy(constraints.lambda, 0.);
 }
 
-}
+}  // namespace openturbine

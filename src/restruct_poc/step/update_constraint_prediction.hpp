@@ -3,15 +3,16 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/constraints/constraints.hpp"
 #include "src/restruct_poc/constraints/update_lambda_prediction.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
 
 namespace openturbine {
 
 inline void UpdateConstraintPrediction(Solver& solver, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Constraint Prediction");
-    const auto x_lambda = Kokkos::subview(solver.x, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs));
+    const auto x_lambda =
+        Kokkos::subview(solver.x, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs));
 
     if (constraints.num > 0) {
         Kokkos::parallel_for(
@@ -24,4 +25,4 @@ inline void UpdateConstraintPrediction(Solver& solver, Constraints& constraints)
     }
 }
 
-}
+}  // namespace openturbine

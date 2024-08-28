@@ -5,7 +5,6 @@
 #include "src/restruct_poc/math/vector_operations.hpp"
 #include "src/restruct_poc/model/node.hpp"
 
-
 namespace openturbine {
 /// @brief Struct to define a constraint between two nodes
 /// @details A constraint is a relationship between two nodes that restricts their relative motion

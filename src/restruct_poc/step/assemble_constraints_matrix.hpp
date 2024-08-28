@@ -3,10 +3,10 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/constraints/constraints.hpp"
 #include "src/restruct_poc/solver/copy_constraints_to_sparse_matrix.hpp"
 #include "src/restruct_poc/solver/copy_sparse_values_to_transpose.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
 
 namespace openturbine {
 inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) {
@@ -17,10 +17,10 @@ inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) 
     }
 
     {
-        auto const_region = Kokkos::Profiling::ScopedRegion("Constraints Matrix"); 
+        auto const_region = Kokkos::Profiling::ScopedRegion("Constraints Matrix");
         auto constraint_policy =
             Kokkos::TeamPolicy<>(static_cast<int>(constraints.num), Kokkos::AUTO());
-     
+
         Kokkos::parallel_for(
             "CopyConstraintsToSparseMatrix", constraint_policy,
             CopyConstraintsToSparseMatrix<Solver::CrsMatrixType>{
@@ -52,4 +52,4 @@ inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) 
         );
     }
 }
-}
+}  // namespace openturbine

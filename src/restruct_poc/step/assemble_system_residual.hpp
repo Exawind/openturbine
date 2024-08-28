@@ -3,10 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/restruct_poc/solver/solver.hpp"
-#include "src/restruct_poc/solver/contribute_elements_to_vector.hpp"
-
 #include "src/restruct_poc/beams/beams.hpp"
+#include "src/restruct_poc/solver/contribute_elements_to_vector.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
 
 namespace openturbine {
 
@@ -17,8 +16,12 @@ inline void AssembleSystemResidual(Solver& solver, Beams& beams) {
 
     Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, num_rows)), 0.);
     auto vector_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
-    Kokkos::parallel_for("ContributeElementsToVector", vector_policy, 
-        ContributeElementsToVector{beams.num_nodes_per_element, beams.node_state_indices, beams.residual_vector_terms, solver.R});
+    Kokkos::parallel_for(
+        "ContributeElementsToVector", vector_policy,
+        ContributeElementsToVector{
+            beams.num_nodes_per_element, beams.node_state_indices, beams.residual_vector_terms,
+            solver.R}
+    );
 }
 
-}
+}  // namespace openturbine

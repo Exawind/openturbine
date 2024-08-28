@@ -3,14 +3,12 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/restruct_poc/system/integrate_inertia_matrix.hpp"
-
 #include "src/restruct_poc/beams/beams.hpp"
+#include "src/restruct_poc/system/integrate_inertia_matrix.hpp"
 
 namespace openturbine {
 
-inline void AssembleInertiaMatrix(
-    const Beams& beams, double beta_prime, double gamma_prime) {
+inline void AssembleInertiaMatrix(const Beams& beams, double beta_prime, double gamma_prime) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Inertia Matrix");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     auto smem = 2 * Kokkos::View<double* [6][6]>::shmem_size(beams.max_elem_qps) +

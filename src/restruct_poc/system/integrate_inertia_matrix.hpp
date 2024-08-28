@@ -17,7 +17,7 @@ struct IntegrateInertiaMatrixElement {
     Kokkos::View<double* [6][6]>::const_type qp_Guu_;
     double beta_prime_;
     double gamma_prime_;
-    Kokkos::View<double***[6][6]> gbl_M_;
+    Kokkos::View<double*** [6][6]> gbl_M_;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_index, size_t j_index) const {

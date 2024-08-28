@@ -5,20 +5,19 @@
 
 #include "step_parameters.hpp"
 
+#include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/state/calculate_displacement.hpp"
 #include "src/restruct_poc/state/state.hpp"
 #include "src/restruct_poc/state/update_dynamic_prediction.hpp"
 #include "src/restruct_poc/state/update_static_prediction.hpp"
-
-#include "src/restruct_poc/solver/solver.hpp"
-
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
 
 inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solver, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
-    const auto x_system = Kokkos::subview(solver.x, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs));
+    const auto x_system =
+        Kokkos::subview(solver.x, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs));
     if (parameters.is_dynamic_solve) {
         Kokkos::parallel_for(
             "UpdateDynamicPrediction", solver.num_system_nodes,

@@ -8,7 +8,7 @@ template <typename CrsMatrixType>
 struct CopyConstraintsToSparseMatrix {
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
-    Kokkos::View<size_t*[2]>::const_type row_range;
+    Kokkos::View<size_t* [2]>::const_type row_range;
     CrsMatrixType sparse;
     Kokkos::View<const double* [6][12]> dense;
 

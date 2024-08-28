@@ -3,8 +3,8 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/copy_tangent_to_sparse_matrix.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/state/state.hpp"
 #include "src/restruct_poc/system/calculate_tangent_operator.hpp"
 
@@ -26,7 +26,6 @@ inline void AssembleTangentOperator(Solver& solver, State& state) {
         "CopyTangentIntoSparseMatrix", sparse_matrix_policy,
         CopyTangentToSparseMatrix<Solver::CrsMatrixType>{solver.T, state.tangent}
     );
-
 }
 
-}
+}  // namespace openturbine

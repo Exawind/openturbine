@@ -12,23 +12,24 @@
 #include "calculate_convergence_error.hpp"
 #include "predict_next_state.hpp"
 #include "reset_constraints.hpp"
-#include "step_parameters.hpp"
 #include "solve_system.hpp"
-#include "update_constraint_variables.hpp"
+#include "step_parameters.hpp"
 #include "update_constraint_prediction.hpp"
+#include "update_constraint_variables.hpp"
 #include "update_state_prediction.hpp"
 #include "update_system_variables.hpp"
 
-#include "src/restruct_poc/state/update_algorithmic_acceleration.hpp"
-
-#include "src/restruct_poc/state/state.hpp"
+#include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/constraints/constraints.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
-#include "src/restruct_poc/beams/beams.hpp"
+#include "src/restruct_poc/state/state.hpp"
+#include "src/restruct_poc/state/update_algorithmic_acceleration.hpp"
 
 namespace openturbine {
 
-inline bool Step(StepParameters& parameters, Solver& solver, Beams& beams, State& state, Constraints& constraints) {
+inline bool Step(
+    StepParameters& parameters, Solver& solver, Beams& beams, State& state, Constraints& constraints
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Step");
     PredictNextState(parameters, state);
 

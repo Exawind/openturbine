@@ -79,7 +79,14 @@ struct Solver {
 
     Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
-    Solver(const Kokkos::View<size_t*>::const_type& node_IDs, const Kokkos::View<size_t*>::const_type& num_nodes_per_element, const Kokkos::View<size_t**>::const_type& node_state_indices, size_t num_constraint_dofs, const Kokkos::View<ConstraintType*>::const_type& constraint_type, const Kokkos::View<size_t*[2]>::const_type& constraint_node_index, const Kokkos::View<size_t*[2]>::const_type& constraint_row_range)
+    Solver(
+        const Kokkos::View<size_t*>::const_type& node_IDs,
+        const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
+        const Kokkos::View<size_t**>::const_type& node_state_indices, size_t num_constraint_dofs,
+        const Kokkos::View<ConstraintType*>::const_type& constraint_type,
+        const Kokkos::View<size_t* [2]>::const_type& constraint_node_index,
+        const Kokkos::View<size_t* [2]>::const_type& constraint_row_range
+    )
         : num_system_nodes(node_IDs.extent(0)),
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
           num_dofs(num_system_dofs + num_constraint_dofs),
@@ -100,8 +107,7 @@ struct Solver {
         );
         Kokkos::parallel_for(
             "PopulateSparseIndices", 1,
-            PopulateSparseIndices{
-                num_nodes_per_element, node_state_indices, K_col_inds}
+            PopulateSparseIndices{num_nodes_per_element, node_state_indices, K_col_inds}
         );
 
         Kokkos::fence();
@@ -134,7 +140,8 @@ struct Solver {
         auto B_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros_Constraints", constraint_type.extent(0),
-            ComputeNumberOfNonZeros_Constraints{constraint_type, constraint_row_range}, B_num_non_zero
+            ComputeNumberOfNonZeros_Constraints{constraint_type, constraint_row_range},
+            B_num_non_zero
         );
         auto B_num_rows = num_constraint_dofs;
         auto B_num_columns = this->num_system_dofs;

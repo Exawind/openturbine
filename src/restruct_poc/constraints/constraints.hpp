@@ -17,19 +17,19 @@ namespace openturbine {
 /// @note The struct is used to transfer data between the solver and the
 /// constraint objects.
 struct Constraints {
-    size_t num;                                    //< Number of constraints
-    size_t num_dofs;                               //< Number of degrees of freedom
+    size_t num;       //< Number of constraints
+    size_t num_dofs;  //< Number of degrees of freedom
     std::vector<double*> control_signal;
     Kokkos::View<ConstraintType*> type;
-    Kokkos::View<size_t*[2]> row_range;
-    Kokkos::View<size_t*[2][2]> node_col_range;
-    Kokkos::View<size_t*[2]> node_index;
-    Kokkos::View<double*[3]> X0;    
-    Kokkos::View<double*[3][3]> axis;    
+    Kokkos::View<size_t* [2]> row_range;
+    Kokkos::View<size_t* [2][2]> node_col_range;
+    Kokkos::View<size_t* [2]> node_index;
+    Kokkos::View<double* [3]> X0;
+    Kokkos::View<double* [3][3]> axis;
 
-    View_N control;                                //< Control signals
-    View_Nx7 u;                                    //< Prescribed displacements
-    Kokkos::View<double*[7]>::HostMirror u_signal;
+    View_N control;  //< Control signals
+    View_Nx7 u;      //< Prescribed displacements
+    Kokkos::View<double* [7]>::HostMirror u_signal;
     Kokkos::View<double*> lambda;
     View_N Phi;                                    //< Residual vector
     Kokkos::View<double* [6][12]> gradient_terms;  //< Gradient terms
@@ -98,7 +98,7 @@ struct Constraints {
             host_node_index(i, 1) = constraints[i]->target_node.ID;
 
             // Set initial relative location between nodes and rotation axes
-            for(auto j = 0U; j < 3U; ++j) {
+            for (auto j = 0U; j < 3U; ++j) {
                 host_X0(i, j) = constraints[i]->X0[j];
                 host_axis(i, 0, j) = constraints[i]->x_axis[j];
                 host_axis(i, 1, j) = constraints[i]->y_axis[j];
@@ -119,9 +119,9 @@ struct Constraints {
     }
 
     /// Sets the new displacement for the given constraint
-    void UpdateDisplacement(size_t id, const std::array<double, 7>& u_) const { 
-        for(auto i = 0U; i < 7U; ++i) {
-            u_signal(id, i) = u_[i]; 
+    void UpdateDisplacement(size_t id, const std::array<double, 7>& u_) const {
+        for (auto i = 0U; i < 7U; ++i) {
+            u_signal(id, i) = u_[i];
         }
     }
 

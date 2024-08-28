@@ -6,13 +6,12 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/restruct_poc/solver/solver.hpp"
+#include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/solver/contribute_elements_to_sparse_matrix.hpp"
 #include "src/restruct_poc/solver/copy_into_sparse_matrix.hpp"
 #include "src/restruct_poc/solver/populate_sparse_indices.hpp"
 #include "src/restruct_poc/solver/populate_sparse_row_ptrs.hpp"
-
-#include "src/restruct_poc/beams/beams.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
 
 namespace openturbine {
 
@@ -30,7 +29,8 @@ inline void AssembleSystemMatrix(Solver& solver, Beams& beams) {
 
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,
-        ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{solver.K, beams.stiffness_matrix_terms}
+        ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{
+            solver.K, beams.stiffness_matrix_terms}
     );
 
     Kokkos::fence();

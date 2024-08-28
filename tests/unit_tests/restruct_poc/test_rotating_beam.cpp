@@ -18,8 +18,8 @@
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
-#include "src/restruct_poc/state/state.hpp"
 #include "src/restruct_poc/state/copy_nodes_to_state.hpp"
+#include "src/restruct_poc/state/state.hpp"
 #include "src/restruct_poc/step/step.hpp"
 #include "src/restruct_poc/types.hpp"
 
@@ -124,7 +124,10 @@ TEST(RotatingBeamTest, StepConvergence) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs, constraints.type, constraints.node_index, constraints.row_range);
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.node_index, constraints.row_range
+    );
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
@@ -225,7 +228,10 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs, constraints.type, constraints.node_index, constraints.row_range);
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.node_index, constraints.row_range
+    );
 
     // Calculate hub rotation for this time step
     const auto q_hub =
@@ -243,7 +249,6 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     // Take step, don't check for convergence, the following tests check that
     // all the elements were assembled properly
     Step(parameters, solver, beams, state, constraints);
-
 
     auto n = solver.num_system_dofs / 2;
     auto m = constraints.num_dofs / 2;
@@ -342,7 +347,10 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs, constraints.type, constraints.node_index, constraints.row_range);
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.node_index, constraints.row_range
+    );
 
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
@@ -425,7 +433,10 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs, constraints.type, constraints.node_index, constraints.row_range);
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.node_index, constraints.row_range
+    );
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
@@ -494,7 +505,10 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs, constraints.type, constraints.node_index, constraints.row_range);
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.node_index, constraints.row_range
+    );
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (auto i = 0; i < 10; ++i) {
@@ -590,7 +604,10 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs, constraints.type, constraints.node_index, constraints.row_range);
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.node_index, constraints.row_range
+    );
 
 #ifdef OTURB_ENABLE_VTK
     UpdateState(beams, state.q, state.v, state.vd);

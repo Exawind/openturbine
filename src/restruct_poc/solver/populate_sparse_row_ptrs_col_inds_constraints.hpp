@@ -3,7 +3,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "src/restruct_poc/constraints/constraint_type.hpp"
-
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
@@ -11,8 +10,8 @@ namespace openturbine {
 template <typename RowPtrType, typename IndicesType>
 struct PopulateSparseRowPtrsColInds_Constraints {
     Kokkos::View<ConstraintType*>::const_type type;
-    Kokkos::View<size_t*[2]>::const_type node_index;
-    Kokkos::View<size_t*[2]>::const_type row_range;
+    Kokkos::View<size_t* [2]>::const_type node_index;
+    Kokkos::View<size_t* [2]>::const_type row_range;
     RowPtrType B_row_ptrs;
     IndicesType B_col_inds;
 
@@ -21,7 +20,8 @@ struct PopulateSparseRowPtrsColInds_Constraints {
         auto ind_col = 0U;
         for (auto i_constraint = 0U; i_constraint < type.extent(0); ++i_constraint) {
             // Loop through rows that apply to this constraint
-            for (auto i_row = row_range(i_constraint, 0); i_row < row_range(i_constraint, 1); ++i_row) {
+            for (auto i_row = row_range(i_constraint, 0); i_row < row_range(i_constraint, 1);
+                 ++i_row) {
                 // Set first column index in this row
                 B_row_ptrs(i_row) = ind_col;
 

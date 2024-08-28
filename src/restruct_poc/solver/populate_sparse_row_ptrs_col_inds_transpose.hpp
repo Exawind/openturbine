@@ -3,7 +3,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "src/restruct_poc/constraints/constraint_type.hpp"
-
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {

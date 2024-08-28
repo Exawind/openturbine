@@ -5,8 +5,8 @@
 
 #include "step_parameters.hpp"
 
-#include "src/restruct_poc/solver/solver.hpp"
 #include "src/restruct_poc/solver/condition_system.hpp"
+#include "src/restruct_poc/solver/solver.hpp"
 
 namespace openturbine {
 

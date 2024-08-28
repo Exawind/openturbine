@@ -11,10 +11,10 @@
 namespace openturbine {
 
 struct CalculateFixedBCConstraint {
-    Kokkos::View<size_t*[2]>::const_type node_index;
-    Kokkos::View<size_t*[2]>::const_type row_range;
-    Kokkos::View<size_t*[2][2]>::const_type node_col_range;
-    Kokkos::View<double*[3]>::const_type X0_;
+    Kokkos::View<size_t* [2]>::const_type node_index;
+    Kokkos::View<size_t* [2]>::const_type row_range;
+    Kokkos::View<size_t* [2][2]>::const_type node_col_range;
+    Kokkos::View<double* [3]>::const_type X0_;
     View_N::const_type control;
     View_Nx7::const_type constraint_u;
     View_Nx7::const_type node_u;
@@ -26,7 +26,8 @@ struct CalculateFixedBCConstraint {
         const auto i_node2 = node_index(i_constraint, 1);
 
         // Initial difference between nodes
-        const auto X0_data = Kokkos::Array<double, 3>{X0_(i_constraint, 0), X0_(i_constraint, 1), X0_(i_constraint, 2)};
+        const auto X0_data = Kokkos::Array<double, 3>{
+            X0_(i_constraint, 0), X0_(i_constraint, 1), X0_(i_constraint, 2)};
         const auto X0 = View_3::const_type{X0_data.data()};
 
         // Base node displacement
@@ -73,7 +74,9 @@ struct CalculateFixedBCConstraint {
         //----------------------------------------------------------------------
 
         // Extract residual rows relevant to this constraint
-        const auto Phi = Kokkos::subview(Phi_, Kokkos::make_pair(row_range(i_constraint, 0), row_range(i_constraint, 1)));
+        const auto Phi = Kokkos::subview(
+            Phi_, Kokkos::make_pair(row_range(i_constraint, 0), row_range(i_constraint, 1))
+        );
 
         // Phi(0:3) = u2 + X0 - u1 - R1*X0
         QuaternionInverse(R1, R1t);
@@ -101,8 +104,10 @@ struct CalculateFixedBCConstraint {
         //---------------------------------
 
         // Extract gradient block for target node of this constraint
-        const auto B =
-            Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, Kokkos::make_pair(node_col_range(i_constraint, 1, 0), node_col_range(i_constraint, 1, 1)));
+        const auto B = Kokkos::subview(
+            gradient_terms, i_constraint, Kokkos::ALL,
+            Kokkos::make_pair(node_col_range(i_constraint, 1, 0), node_col_range(i_constraint, 1, 1))
+        );
 
         // B(0:3,0:3) = I
         for (int i = 0; i < 3; ++i) {

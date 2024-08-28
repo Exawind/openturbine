@@ -27,10 +27,11 @@ struct IntegrateResidualVectorElement {
         for (auto j_index = 0U; j_index < num_qps; ++j_index) {  // QPs
             const auto weight = qp_weight_(j_index);
             const auto coeff_c = weight * shape_deriv_(i_index, j_index);
-            const auto coeff_dig =
-                weight * qp_jacobian_(j_index) * shape_interp_(i_index, j_index);
+            const auto coeff_dig = weight * qp_jacobian_(j_index) * shape_interp_(i_index, j_index);
             for (auto k = 0U; k < 6U; ++k) {
-                local_residual[k] += coeff_c * qp_Fc_(j_index, k) + coeff_dig * (qp_Fd_(j_index, k) + qp_Fi_(j_index, k) - qp_Fg_(j_index, k));
+                local_residual[k] +=
+                    coeff_c * qp_Fc_(j_index, k) +
+                    coeff_dig * (qp_Fd_(j_index, k) + qp_Fi_(j_index, k) - qp_Fg_(j_index, k));
             }
         }
         for (auto k = 0U; k < 6U; ++k) {
@@ -71,7 +72,7 @@ struct IntegrateResidualVector {
         const auto qp_Fg = Kokkos::View<double* [6]>(member.team_scratch(1), num_qps);
 
         Kokkos::parallel_for(Kokkos::TeamThreadRange(member, num_qps), [&](size_t k) {
-            for(auto i = 0U; i < num_nodes; ++i) {
+            for (auto i = 0U; i < num_nodes; ++i) {
                 shape_interp(i, k) = shape_interp_(i_elem, i, k);
                 shape_deriv(i, k) = shape_deriv_(i_elem, i, k);
             }
@@ -93,8 +94,8 @@ struct IntegrateResidualVector {
 
         const auto node_range = Kokkos::TeamThreadRange(member, num_nodes);
         const auto element_integrator = IntegrateResidualVectorElement{
-                i_elem, num_qps, qp_weight, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-                qp_Fd, qp_Fi, qp_Fg, residual_vector_terms_};
+            i_elem,  num_qps, qp_weight, qp_jacobian, shape_interp, shape_deriv,
+            node_FX, qp_Fc,   qp_Fd,     qp_Fi,       qp_Fg,        residual_vector_terms_};
         Kokkos::parallel_for(node_range, element_integrator);
     }
 };

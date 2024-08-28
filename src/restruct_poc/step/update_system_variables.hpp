@@ -3,19 +3,17 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
+#include "assemble_inertia_matrix.hpp"
 #include "assemble_residual_vector.hpp"
 #include "assemble_stiffness_matrix.hpp"
-#include "assemble_inertia_matrix.hpp"
 #include "step_parameters.hpp"
-
-#include "src/restruct_poc/system/calculate_quadrature_point_values.hpp"
-#include "src/restruct_poc/system/calculate_tangent_operator.hpp"
-#include "src/restruct_poc/system/update_node_state.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/interpolate_to_quadrature_points.hpp"
-
 #include "src/restruct_poc/state/state.hpp"
+#include "src/restruct_poc/system/calculate_quadrature_point_values.hpp"
+#include "src/restruct_poc/system/calculate_tangent_operator.hpp"
+#include "src/restruct_poc/system/update_node_state.hpp"
 
 namespace openturbine {
 

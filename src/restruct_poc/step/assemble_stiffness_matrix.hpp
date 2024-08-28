@@ -3,9 +3,8 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/restruct_poc/system/integrate_stiffness_matrix.hpp"
-
 #include "src/restruct_poc/beams/beams.hpp"
+#include "src/restruct_poc/system/integrate_stiffness_matrix.hpp"
 
 namespace openturbine {
 
