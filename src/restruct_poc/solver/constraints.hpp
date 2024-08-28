@@ -132,15 +132,19 @@ struct Constraints {
         // Loop through constraints and set prescribed displacements and control signals
         for (auto i = 0U; i < this->host_constraints.size(); ++i) {
             switch (this->host_constraints[i].type) {
+                // Set prescribed displacements
                 case ConstraintType::kPrescribedBC: {
                     for (auto j = 0U; j < static_cast<unsigned>(kLieGroupComponents); ++j) {
                         host_u_mirror(i, j) = this->host_constraints[i].u[j];
                     }
                 } break;
+                // Set control signals for revolute joints and rotation control constraints
+                case ConstraintType::kRevoluteJoint:
                 case ConstraintType::kRotationControl: {
                     host_control_mirror(i) = *this->host_constraints[i].control;
                 } break;
                 default:
+                    // Do nothing for other constraints
                     break;
             }
         }
