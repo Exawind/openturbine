@@ -6,7 +6,6 @@
 
 #include "src/beams/beams.hpp"
 #include "src/system/integrate_inertia_matrix.hpp"
-#include "tests/unit_tests/restruct_poc/test_utilities.hpp"
 
 namespace openturbine::tests {
 

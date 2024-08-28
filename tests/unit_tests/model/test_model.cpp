@@ -4,7 +4,7 @@
 
 #include "src/beams/beam_element.hpp"
 #include "src/model/model.hpp"
-#include "tests/unit_tests/restruct_poc/test_utilities.hpp"
+#include "tests/unit_tests/regression/test_utilities.hpp"
 
 namespace openturbine::tests {
 
