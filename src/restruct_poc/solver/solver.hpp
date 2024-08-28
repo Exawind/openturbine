@@ -135,7 +135,7 @@ struct Solver {
         auto B_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros_Constraints", constraints.num,
-            ComputeNumberOfNonZeros_Constraints{constraints.data}, B_num_non_zero
+            ComputeNumberOfNonZeros_Constraints{constraints.type, constraints.row_range}, B_num_non_zero
         );
         auto B_num_rows = constraints.num_dofs;
         auto B_num_columns = this->num_system_dofs;
@@ -144,7 +144,7 @@ struct Solver {
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Constraints", 1,
             PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
-                constraints.data, B_row_ptrs, B_col_ind}
+                constraints.type, constraints.node_index, constraints.row_range, B_row_ptrs, B_col_ind}
         );
         auto B_values = ValuesType("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);

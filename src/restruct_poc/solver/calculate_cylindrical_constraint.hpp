@@ -11,7 +11,11 @@
 namespace openturbine {
 
 struct CalculateCylindricalConstraint {
-    Kokkos::View<Constraints::DeviceData*>::const_type data;
+    Kokkos::View<size_t*[2]>::const_type node_index;
+    Kokkos::View<size_t*[2]>::const_type row_range;
+    Kokkos::View<size_t*[2][2]>::const_type node_col_range;
+    Kokkos::View<double*[3]>::const_type X0_;
+    Kokkos::View<double*[3][3]>::const_type axis;
     View_N::const_type control;
     View_Nx7::const_type constraint_u;
     View_Nx7::const_type node_u;
@@ -20,12 +24,11 @@ struct CalculateCylindricalConstraint {
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
-        const auto& cd = data(i_constraint);
-        const auto i_node1 = cd.base_node_index;
-        const auto i_node2 = cd.target_node_index;
+        const auto i_node1 = node_index(i_constraint, 0);
+        const auto i_node2 = node_index(i_constraint, 1);
 
         // Initial difference between nodes
-        const auto X0_data = Kokkos::Array<double, 3>{cd.X0[0], cd.X0[1], cd.X0[2]};
+        const auto X0_data = Kokkos::Array<double, 3>{X0_(i_constraint, 0), X0_(i_constraint, 1), X0_(i_constraint, 2)};
         const auto X0 = View_3::const_type{X0_data.data()};
 
         // Base node displacement
@@ -52,11 +55,11 @@ struct CalculateCylindricalConstraint {
         auto R1_X0 = Kokkos::View<double[4]>{R1_X0_data.data()};
 
         // Cylindrical constraint data
-        const auto x0_data = Kokkos::Array<double, 3>{cd.axis_x[0], cd.axis_x[1], cd.axis_x[2]};
+        const auto x0_data = Kokkos::Array<double, 3>{axis(i_constraint, 0, 0), axis(i_constraint, 0, 1), axis(i_constraint, 0, 2)};
         const auto x0 = View_3::const_type{x0_data.data()};
-        const auto y0_data = Kokkos::Array<double, 3>{cd.axis_y[0], cd.axis_y[1], cd.axis_y[2]};
+        const auto y0_data = Kokkos::Array<double, 3>{axis(i_constraint, 1, 0), axis(i_constraint, 1, 1), axis(i_constraint, 1, 2)};
         const auto y0 = View_3::const_type{y0_data.data()};
-        const auto z0_data = Kokkos::Array<double, 3>{cd.axis_z[0], cd.axis_z[1], cd.axis_z[2]};
+        const auto z0_data = Kokkos::Array<double, 3>{axis(i_constraint, 2, 0), axis(i_constraint, 2, 1), axis(i_constraint, 2, 2)};
         const auto z0 = View_3::const_type{z0_data.data()};
         auto x_data = Kokkos::Array<double, 3>{};
         const auto x = View_3{x_data.data()};
@@ -74,7 +77,7 @@ struct CalculateCylindricalConstraint {
         //----------------------------------------------------------------------
 
         // Extract residual rows relevant to this constraint
-        const auto Phi = Kokkos::subview(Phi_, cd.row_range);
+        const auto Phi = Kokkos::subview(Phi_, Kokkos::make_pair(row_range(i_constraint, 0), row_range(i_constraint, 1)));
 
         // Phi(0:3) = u2 + X0 - u1 - R1*X0
         QuaternionInverse(R1, R1t);
@@ -102,7 +105,7 @@ struct CalculateCylindricalConstraint {
         {
             // Extract gradient block for target node of this constraint
             const auto B =
-                Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, cd.target_node_col_range);
+                Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, Kokkos::make_pair(node_col_range(i_constraint, 1, 0), node_col_range(i_constraint, 1, 1)));
 
             // B(0:3,0:3) = I
             for (int i = 0; i < 3; ++i) {
@@ -124,7 +127,7 @@ struct CalculateCylindricalConstraint {
         {
             // Extract gradient block for base node of this constraint
             const auto B =
-                Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, cd.base_node_col_range);
+                Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, Kokkos::make_pair(node_col_range(i_constraint, 0, 0), node_col_range(i_constraint, 0, 1)));
 
             // B(0:3,0:3) = -I
             for (int i = 0; i < 3; ++i) {

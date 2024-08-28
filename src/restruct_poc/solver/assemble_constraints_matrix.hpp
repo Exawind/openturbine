@@ -24,7 +24,7 @@ inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) 
         Kokkos::parallel_for(
             "CopyConstraintsToSparseMatrix", constraint_policy,
             CopyConstraintsToSparseMatrix<Solver::CrsMatrixType>{
-                constraints.data, solver.B, constraints.gradient_terms}
+                constraints.row_range, solver.B, constraints.gradient_terms}
         );
     }
 
