@@ -1,8 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/restruct_poc/system/update_node_state.hpp"
-#include "src/restruct_poc/types.hpp"
+#include "src/system/update_node_state.hpp"
 
 namespace openturbine::tests {
 

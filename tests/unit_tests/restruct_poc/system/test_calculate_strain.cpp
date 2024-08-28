@@ -3,8 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/restruct_poc/system/calculate_strain.hpp"
-#include "src/restruct_poc/types.hpp"
+#include "src/system/calculate_strain.hpp"
 
 namespace openturbine::tests {
 

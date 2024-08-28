@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/restruct_poc/solver/populate_sparse_row_ptrs.hpp"
+#include "src/solver/populate_sparse_row_ptrs.hpp"
 
 namespace openturbine::tests {
 

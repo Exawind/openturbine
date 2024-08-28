@@ -2,8 +2,8 @@
 
 #include "test_utilities.hpp"
 
-#include "src/restruct_poc/math/quaternion_operations.hpp"
-#include "src/restruct_poc/math/vector_operations.hpp"
+#include "src/math/quaternion_operations.hpp"
+#include "src/math/vector_operations.hpp"
 
 namespace openturbine::tests {
 

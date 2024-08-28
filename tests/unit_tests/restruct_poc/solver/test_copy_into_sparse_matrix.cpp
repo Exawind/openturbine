@@ -2,7 +2,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/restruct_poc/solver/copy_into_sparse_matrix.hpp"
+#include "src/solver/copy_into_sparse_matrix.hpp"
 
 namespace openturbine::tests {
 

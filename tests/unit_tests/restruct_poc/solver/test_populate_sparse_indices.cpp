@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/restruct_poc/solver/populate_sparse_indices.hpp"
+#include "src/solver/populate_sparse_indices.hpp"
 
 namespace openturbine::tests {
 

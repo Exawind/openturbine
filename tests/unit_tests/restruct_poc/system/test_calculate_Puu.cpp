@@ -3,8 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/restruct_poc/system/calculate_Puu.hpp"
-#include "src/restruct_poc/types.hpp"
+#include "src/system/calculate_Puu.hpp"
 
 namespace openturbine::tests {
 

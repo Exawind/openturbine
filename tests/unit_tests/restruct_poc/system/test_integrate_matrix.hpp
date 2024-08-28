@@ -3,8 +3,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "src/restruct_poc/beams/beams.hpp"
-
 namespace openturbine::tests {
 
 template <size_t n_elem, size_t n_nodes>

@@ -3,8 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/restruct_poc/system/calculate_gravity_force.hpp"
-#include "src/restruct_poc/types.hpp"
+#include "src/system/calculate_gravity_force.hpp"
 
 namespace openturbine::tests {
 

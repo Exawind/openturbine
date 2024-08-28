@@ -4,9 +4,8 @@
 #include "test_calculate.hpp"
 #include "test_integrate_matrix.hpp"
 
-#include "src/restruct_poc/beams/beams.hpp"
-#include "src/restruct_poc/system/integrate_residual_vector.hpp"
-#include "src/restruct_poc/types.hpp"
+#include "src/beams/beams.hpp"
+#include "src/system/integrate_residual_vector.hpp"
 #include "tests/unit_tests/restruct_poc/test_utilities.hpp"
 
 namespace openturbine::tests {

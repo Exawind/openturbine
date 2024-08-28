@@ -6,18 +6,18 @@
 
 #include "test_utilities.hpp"
 
-#include "src/restruct_poc/beams/beam_element.hpp"
-#include "src/restruct_poc/beams/beam_node.hpp"
-#include "src/restruct_poc/beams/beam_section.hpp"
-#include "src/restruct_poc/beams/beams.hpp"
-#include "src/restruct_poc/beams/beams_input.hpp"
-#include "src/restruct_poc/beams/create_beams.hpp"
-#include "src/restruct_poc/model/model.hpp"
-#include "src/restruct_poc/solver/solver.hpp"
-#include "src/restruct_poc/state/copy_nodes_to_state.hpp"
-#include "src/restruct_poc/state/state.hpp"
-#include "src/restruct_poc/step/step.hpp"
-#include "src/restruct_poc/types.hpp"
+#include "src/beams/beam_element.hpp"
+#include "src/beams/beam_node.hpp"
+#include "src/beams/beam_section.hpp"
+#include "src/beams/beams.hpp"
+#include "src/beams/beams_input.hpp"
+#include "src/beams/create_beams.hpp"
+#include "src/model/model.hpp"
+#include "src/solver/solver.hpp"
+#include "src/state/copy_nodes_to_state.hpp"
+#include "src/state/state.hpp"
+#include "src/step/step.hpp"
+#include "src/types.hpp"
 
 namespace openturbine::tests {
 

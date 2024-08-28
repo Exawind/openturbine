@@ -3,8 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/restruct_poc/system/calculate_force_FC.hpp"
-#include "src/restruct_poc/types.hpp"
+#include "src/system/calculate_force_FC.hpp"
 
 namespace openturbine::tests {
 

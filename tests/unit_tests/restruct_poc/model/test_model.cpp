@@ -2,8 +2,8 @@
 
 #include <gtest/gtest.h>
 
-#include "src/restruct_poc/beams/beam_element.hpp"
-#include "src/restruct_poc/model/model.hpp"
+#include "src/beams/beam_element.hpp"
+#include "src/model/model.hpp"
 #include "tests/unit_tests/restruct_poc/test_utilities.hpp"
 
 namespace openturbine::tests {

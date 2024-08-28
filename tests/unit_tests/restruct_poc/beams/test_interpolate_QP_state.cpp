@@ -3,7 +3,7 @@
 
 #include "test_interpolate_QP.hpp"
 
-#include "src/restruct_poc/beams/interpolate_QP_state.hpp"
+#include "src/beams/interpolate_QP_state.hpp"
 
 namespace openturbine::tests {
 
