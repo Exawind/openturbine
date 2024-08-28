@@ -80,10 +80,10 @@ struct Solver {
 
     Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
-    Solver(const Kokkos::View<size_t*>::const_type node_IDs, const Kokkos::View<size_t*>::const_type num_nodes_per_element, const Kokkos::View<size_t**>::const_type node_state_indices, const Constraints& constraints)
+    Solver(const Kokkos::View<size_t*>::const_type node_IDs, const Kokkos::View<size_t*>::const_type num_nodes_per_element, const Kokkos::View<size_t**>::const_type node_state_indices, size_t num_constraint_dofs, const Kokkos::View<ConstraintType*>::const_type constraint_type, const Kokkos::View<size_t*[2]>::const_type constraint_node_index, const Kokkos::View<size_t*[2]>::const_type constraint_row_range)
         : num_system_nodes(node_IDs.extent(0)),
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
-          num_dofs(num_system_dofs + constraints.num_dofs),
+          num_dofs(num_system_dofs + num_constraint_dofs),
           R("R", num_dofs),
           x("x", num_dofs) {
         auto K_num_rows = this->num_system_dofs;
@@ -134,17 +134,17 @@ struct Solver {
         // Initialize contraint for indexing for sparse matrices
         auto B_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
-            "ComputeNumberOfNonZeros_Constraints", constraints.num,
-            ComputeNumberOfNonZeros_Constraints{constraints.type, constraints.row_range}, B_num_non_zero
+            "ComputeNumberOfNonZeros_Constraints", constraint_type.extent(0),
+            ComputeNumberOfNonZeros_Constraints{constraint_type, constraint_row_range}, B_num_non_zero
         );
-        auto B_num_rows = constraints.num_dofs;
+        auto B_num_rows = num_constraint_dofs;
         auto B_num_columns = this->num_system_dofs;
         auto B_row_ptrs = RowPtrType("b_row_ptrs", B_num_rows + 1);
         auto B_col_ind = IndicesType("b_indices", B_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Constraints", 1,
             PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
-                constraints.type, constraints.node_index, constraints.row_range, B_row_ptrs, B_col_ind}
+                constraint_type, constraint_node_index, constraint_row_range, B_row_ptrs, B_col_ind}
         );
         auto B_values = ValuesType("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);

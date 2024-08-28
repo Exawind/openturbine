@@ -105,7 +105,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     auto constraints = Constraints(model.GetConstraints());
     auto state = State(model.NumNodes());
     CopyNodesToState(state, model.GetNodes());
-    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints);
+    auto solver = Solver(state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs, constraints.type, constraints.node_index, constraints.row_range);
 
     // First step
     Kokkos::deep_copy(
