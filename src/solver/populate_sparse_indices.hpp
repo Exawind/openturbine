@@ -17,8 +17,7 @@ struct PopulateSparseIndices {
             for (auto j_index = 0U; j_index < num_nodes; ++j_index) {
                 for (auto n = 0U; n < 6U; ++n) {
                     for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
-                        const auto column_start =
-                            node_state_indices(i_elem, i_index) * 6U;
+                        const auto column_start = node_state_indices(i_elem, i_index) * 6U;
                         for (auto m = 0U; m < 6U; ++m) {
                             indices(entries_so_far) = static_cast<int>(column_start + m);
                             ++entries_so_far;
