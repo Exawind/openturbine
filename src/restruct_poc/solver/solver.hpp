@@ -80,7 +80,7 @@ struct Solver {
 
     Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
-    Solver(const Kokkos::View<size_t*>::const_type node_IDs, const Kokkos::View<size_t*>::const_type num_nodes_per_element, const Kokkos::View<size_t**>::const_type node_state_indices, size_t num_constraint_dofs, const Kokkos::View<ConstraintType*>::const_type constraint_type, const Kokkos::View<size_t*[2]>::const_type constraint_node_index, const Kokkos::View<size_t*[2]>::const_type constraint_row_range)
+    Solver(const Kokkos::View<size_t*>::const_type& node_IDs, const Kokkos::View<size_t*>::const_type& num_nodes_per_element, const Kokkos::View<size_t**>::const_type& node_state_indices, size_t num_constraint_dofs, const Kokkos::View<ConstraintType*>::const_type& constraint_type, const Kokkos::View<size_t*[2]>::const_type& constraint_node_index, const Kokkos::View<size_t*[2]>::const_type& constraint_row_range)
         : num_system_nodes(node_IDs.extent(0)),
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
           num_dofs(num_system_dofs + num_constraint_dofs),

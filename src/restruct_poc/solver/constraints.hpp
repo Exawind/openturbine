@@ -119,7 +119,7 @@ struct Constraints {
     }
 
     /// Sets the new displacement for the given constraint
-    void UpdateDisplacement(size_t id, const std::array<double, 7>& u_) { 
+    void UpdateDisplacement(size_t id, const std::array<double, 7>& u_) const { 
         for(auto i = 0U; i < 7U; ++i) {
             u_signal(id, i) = u_[i]; 
         }

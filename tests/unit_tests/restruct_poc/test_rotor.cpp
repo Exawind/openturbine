@@ -81,7 +81,7 @@ TEST(RotorTest, IEA15Rotor) {
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 1 rad/s angular velocity around the z axis
-    constexpr size_t num_blades = 300;
+    constexpr size_t num_blades = 3;
     auto blade_list = std::array<size_t, num_blades>{};
     std::iota(std::begin(blade_list), std::end(blade_list), 0);
 

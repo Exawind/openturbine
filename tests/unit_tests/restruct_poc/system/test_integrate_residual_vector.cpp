@@ -139,7 +139,6 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_FX) {
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
     const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({4.});
     const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
-    using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
     using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
     
     const auto node_FX = get_node_FX<number_of_nodes>({1., 2., 3., 4., 5., 6.});
