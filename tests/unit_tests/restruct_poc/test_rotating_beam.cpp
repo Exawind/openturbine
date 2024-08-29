@@ -668,11 +668,12 @@ TEST(RotatingBeamTest, GeneratorTorque) {
     // Add constraints between the nodes to simulate a rotor with a generator
     model.AddFixedBC(*shaft_base);  // Fixed shaft base
 
-    // Add torque to the azimuth node
+    // Add torque to the azimuth node to simulate generator torque
     auto torque = 1.e3;
     model.AddRevoluteJointConstraint(  // Azimuth can rotate around shaft base
         *shaft_base, *azimuth, {0., std::sin(tilt), std::cos(tilt)}, &torque
     );
+
     model.AddRigidJointConstraint(*azimuth, *hub);            // Hub is rigidly attached to azimuth
     model.AddRigidJointConstraint(*hub, beam_nodes[0].node);  // Beam is rigidly attached to hub
 
@@ -705,11 +706,8 @@ TEST(RotatingBeamTest, GeneratorTorque) {
     BeamsWriteVTK(beams, "steps/step_0000.vtu");
 #endif
 
-    // TODO Follow the pitch control constraint - we need to figure out how to apply the torque to
-    // the residual vector
-
     // Run 10 steps
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 10; ++i) {
         const auto converged = Step(solver, beams);
         EXPECT_EQ(converged, true);
 #ifdef OpenTurbine_ENABLE_VTK
@@ -719,7 +717,19 @@ TEST(RotatingBeamTest, GeneratorTorque) {
 #endif
     }
 
-    auto q = kokkos_view_2D_to_vector(solver.state.q);
+    // auto q = kokkos_view_2D_to_vector(solver.state.q);
+
+    // // Check that the azimuth node has rotated by the expected amount
+    // // Get the subview of the azimuth node from q
+    // auto azimuth_q = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::ALL);
+    // auto azimuth_q_vec = kokkos_view_1D_to_vector(azimuth_q);
+    // auto azimuth_q_pos = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::make_pair(0, 3));
+
+    // // Check the azimuth node position is zero
+    // expect_kokkos_view_1D_equal(azimuth_q_pos, {0., 0., 0.});
+
+    // // Check the azimuth node rotation is not zero
+    // auto azimuth_q_rot = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::make_pair(3, 7));
 }
 
 }  // namespace openturbine::tests
