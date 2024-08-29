@@ -559,9 +559,13 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto ground_node = model.AddNode({0, 0., -1., 1., 0., 0., 0.});
 
     // Add constraints
-    model.AddFixedBC(*ground_node);
-    model.AddRevoluteJointConstraint(*ground_node, *hub_node);
-    model.AddRigidJointConstraint(*hub_node, beam_nodes[0].node);
+    model.AddFixedBC(*ground_node);  // Ground node is fixed
+
+    // Revolute joint constraint
+    auto torque = 0.;
+    model.AddRevoluteJointConstraint(*ground_node, *hub_node, {0., 0., 0.}, &torque);
+
+    model.AddRigidJointConstraint(*hub_node, beam_nodes[0].node);  // Hub node is rigidly connected
 
     // Solution parameters
     const bool is_dynamic_solve(true);
