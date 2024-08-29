@@ -22,7 +22,7 @@
 #include "src/utilities/controllers/turbine_controller.hpp"
 #include "src/vendor/dylib/dylib.hpp"
 
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
 #include "vtkout.hpp"
 #endif
 
@@ -157,7 +157,7 @@ TEST(RotorTest, IEA15Rotor) {
 
     // Write quadrature point global positions to file and VTK
     if (write_output) {
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
         // Write vtk visualization file
         BeamsWriteVTK(beams, "steps/step_0000.vtu");
 #endif
@@ -191,8 +191,10 @@ TEST(RotorTest, IEA15Rotor) {
 
         // If flag set, write quadrature point glob position to file
         if (write_output) {
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
             // Write VTK output to file
+            auto tmp = std::to_string(i + 1);
+            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
             BeamsWriteVTK(beams, file_name + ".vtu");
 #endif
         }
@@ -309,7 +311,7 @@ TEST(RotorTest, IEA15RotorHub) {
 
     // Write quadrature point global positions to file and VTK
     if (write_output) {
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
         // Write vtk visualization file
         BeamsWriteVTK(beams, "steps/step_0000.vtu");
 #endif
@@ -338,8 +340,10 @@ TEST(RotorTest, IEA15RotorHub) {
 
         // If flag set, write quadrature point glob position to file
         if (write_output) {
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
             // Write VTK output to file
+            auto tmp = std::to_string(i + 1);
+            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
             BeamsWriteVTK(beams, file_name + ".vtu");
 #endif
         }
@@ -488,7 +492,7 @@ TEST(RotorTest, IEA15RotorController) {
 
     // Write quadrature point global positions to file and VTK
     if (write_output) {
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
         // Write vtk visualization file
         BeamsWriteVTK(beams, "steps/step_0000.vtu");
 #endif
@@ -520,7 +524,7 @@ TEST(RotorTest, IEA15RotorController) {
 
         // If flag set, write quadrature point glob position to file
         if (write_output) {
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
             // Write VTK output to file
             auto tmp = std::to_string(i + 1);
             auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
