@@ -14,45 +14,12 @@
 #include <vtkXMLPolyDataWriter.h>
 #include <vtkXMLUnstructuredGridWriter.h>
 
+#include "test_utilities.hpp"
+
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/math/quaternion_operations.hpp"
 
 namespace openturbine::tests {
-
-inline std::vector<std::vector<double>> kokkos_view_2D_to_vector_vtk(Kokkos::View<double**> view) {
-    Kokkos::View<double**> view_contiguous("view_contiguous", view.extent(0), view.extent(1));
-    Kokkos::deep_copy(view_contiguous, view);
-    auto view_host = Kokkos::create_mirror(view_contiguous);
-    Kokkos::deep_copy(view_host, view_contiguous);
-    std::vector<std::vector<double>> values(view.extent(0));
-    for (size_t i = 0; i < view_host.extent(0); ++i) {
-        for (size_t j = 0; j < view_host.extent(1); ++j) {
-            values[i].push_back(view_host(i, j));
-        }
-    }
-    return values;
-}
-
-inline std::vector<std::vector<std::vector<double>>> kokkos_view_3D_to_vector_vtk(
-    Kokkos::View<double***> view
-) {
-    Kokkos::View<double***> view_contiguous(
-        "view_contiguous", view.extent(0), view.extent(1), view.extent(2)
-    );
-    Kokkos::deep_copy(view_contiguous, view);
-    auto view_host = Kokkos::create_mirror(view_contiguous);
-    Kokkos::deep_copy(view_host, view_contiguous);
-    std::vector<std::vector<std::vector<double>>> values(view.extent(0));
-    for (size_t i = 0; i < view_host.extent(0); ++i) {
-        for (size_t j = 0; j < view_host.extent(1); ++j) {
-            values[i].push_back(std::vector<double>());
-            for (size_t k = 0; k < view_host.extent(2); ++k) {
-                values[i][j].push_back(view_host(i, j, k));
-            }
-        }
-    }
-    return values;
-}
 
 inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     // Get a copy of the beam element indices in the host space
@@ -74,8 +41,8 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     }
 
     // Create qp position points
-    auto qp_x0 = kokkos_view_3D_to_vector_vtk(beams.qp_x0);
-    auto qp_x = kokkos_view_3D_to_vector_vtk(beams.qp_u);
+    auto qp_x0 = kokkos_view_3D_to_vector(beams.qp_x0);
+    auto qp_x = kokkos_view_3D_to_vector(beams.qp_u);
     for (size_t j = 0; j < qp_x.size(); ++j) {
         for (size_t k = 0; k < qp_x[0].size(); ++k) {
             for (size_t l = 0; l < qp_x[0][0].size(); ++l) {
@@ -101,8 +68,8 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     vtkNew<vtkFloatArray> orientation_z;
     orientation_z->SetNumberOfComponents(3);
     orientation_z->SetName("OrientationZ");
-    auto qp_r = kokkos_view_3D_to_vector_vtk(beams.qp_r);
-    auto qp_r0 = kokkos_view_3D_to_vector_vtk(beams.qp_r0);
+    auto qp_r = kokkos_view_3D_to_vector(beams.qp_r);
+    auto qp_r0 = kokkos_view_3D_to_vector(beams.qp_r0);
     for (size_t el = 0; el < qp_r.size(); ++el) {
         for (size_t i = 0; i < qp_r[el].size(); ++i) {
             Array_4 r{qp_r[el][i][0], qp_r[el][i][1], qp_r[el][i][2], qp_r[el][i][3]};
@@ -124,7 +91,7 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     vtkNew<vtkFloatArray> translational_velocity;
     translational_velocity->SetNumberOfComponents(3);
     translational_velocity->SetName("TranslationalVelocity");
-    auto qp_u_dot = kokkos_view_3D_to_vector_vtk(beams.qp_u_dot);
+    auto qp_u_dot = kokkos_view_3D_to_vector(beams.qp_u_dot);
     for (const auto& el : qp_u_dot) {
         for (const auto& p : el) {
             translational_velocity->InsertNextTuple(p.data());
@@ -136,7 +103,7 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     vtkNew<vtkFloatArray> rotational_velocity;
     rotational_velocity->SetNumberOfComponents(3);
     rotational_velocity->SetName("RotationalVelocity");
-    auto qp_omega = kokkos_view_3D_to_vector_vtk(beams.qp_omega);
+    auto qp_omega = kokkos_view_3D_to_vector(beams.qp_omega);
     for (const auto& el : qp_omega) {
         for (const auto& p : el) {
             rotational_velocity->InsertNextTuple(p.data());
