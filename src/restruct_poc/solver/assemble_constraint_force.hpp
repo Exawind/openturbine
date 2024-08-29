@@ -21,7 +21,7 @@ struct AssembleConstraintForce {
         const auto& cd = data(i_constraint);
 
         // Applies the torque from a revolute joint constraint to the system residual
-        if (cd.type == ConstraintType::kRevoluteJoint) {
+        if (cd.type == ConstraintType::kRevoluteJoint && cd.control) {
             const auto i_node2 = cd.target_node_index;
 
             // Initial difference between nodes

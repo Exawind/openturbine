@@ -26,6 +26,7 @@ struct Constraints {
         double axis_x[3];          // Unit vector representing x rotation axis
         double axis_y[3];          // Unit vector representing y rotation axis
         double axis_z[3];          // Unit vector representing z rotation axis
+        double* control;           //< Control signal
     };
 
     /// @brief HostData struct holds constraint data on the host
