@@ -717,19 +717,20 @@ TEST(RotatingBeamTest, GeneratorTorque) {
 #endif
     }
 
-    // auto q = kokkos_view_2D_to_vector(solver.state.q);
+    auto q = kokkos_view_2D_to_vector(solver.state.q);
 
-    // // Check that the azimuth node has rotated by the expected amount
-    // // Get the subview of the azimuth node from q
-    // auto azimuth_q = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::ALL);
-    // auto azimuth_q_vec = kokkos_view_1D_to_vector(azimuth_q);
-    // auto azimuth_q_pos = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::make_pair(0, 3));
+    // Check that the azimuth node has rotated by the expected amount
+    // Get the subview of the azimuth node from q
+    auto azimuth_q = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::ALL);
+    auto azimuth_q_vec = kokkos_view_1D_to_vector(azimuth_q);
 
-    // // Check the azimuth node position is zero
-    // expect_kokkos_view_1D_equal(azimuth_q_pos, {0., 0., 0.});
+    // Check the azimuth node position is zero
+    auto azimuth_q_pos = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::make_pair(0, 3));
+    expect_kokkos_view_1D_equal(azimuth_q_pos, {0., 0., 0.});
 
-    // // Check the azimuth node rotation is not zero
-    // auto azimuth_q_rot = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::make_pair(3, 7));
+    // Check the azimuth node rotation is not zero
+    auto azimuth_q_rot = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::make_pair(3, 7));
+    expect_kokkos_view_1D_equal(azimuth_q_rot, {0.999987, 1.59247e-18, -0.00050079, -0.00499119});
 }
 
 }  // namespace openturbine::tests
