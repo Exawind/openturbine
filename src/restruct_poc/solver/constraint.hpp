@@ -79,12 +79,12 @@ struct Constraint {
     void InitializeAxes(const Array_3& vec) {
         if (type == ConstraintType::kRevoluteJoint) {
             constexpr Array_3 x = {1., 0., 0.};
-            Array_3 x_hat = Norm(vec) > 0. ? UnitVector(vec) : UnitVector(X0);
+            const Array_3 x_hat = Norm(vec) > 0. ? UnitVector(vec) : UnitVector(X0);
 
             // Create rotation matrix to rotate x to match vector
-            auto v = CrossProduct(x, x_hat);
-            auto c = DotProduct(x_hat, x);
-            auto k = 1. / (1. + c);
+            const auto v = CrossProduct(x, x_hat);
+            const auto c = DotProduct(x_hat, x);
+            const auto k = 1. / (1. + c);
 
             Array_3x3 R = {
                 {{
