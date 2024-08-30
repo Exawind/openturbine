@@ -26,21 +26,30 @@ struct CalculateConstraintResidualGradient {
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
         const auto& cd = data(i_constraint);
-        if (cd.type == ConstraintType::kFixedBC) {
-            CalculateFixedBCConstraint{
-                data, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
-        } else if (cd.type == ConstraintType::kPrescribedBC) {
-            CalculatePrescribedBCConstraint{data,   control, constraint_u,
-                                            node_u, Phi_,    gradient_terms}(i_constraint);
-        } else if (cd.type == ConstraintType::kRigidJoint) {
-            CalculateRigidJointConstraint{
-                data, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
-        } else if (cd.type == ConstraintType::kRevoluteJoint) {
-            CalculateRevoluteJointConstraint{data,   control, constraint_u,
-                                             node_u, Phi_,    gradient_terms}(i_constraint);
-        } else if (cd.type == ConstraintType::kRotationControl) {
-            CalculateRotationControlConstraint{data,   control, constraint_u,
-                                               node_u, Phi_,    gradient_terms}(i_constraint);
+        switch (cd.type) {
+            case ConstraintType::kFixedBC: {
+                CalculateFixedBCConstraint{data,   control, constraint_u,
+                                           node_u, Phi_,    gradient_terms}(i_constraint);
+            } break;
+            case ConstraintType::kPrescribedBC: {
+                CalculatePrescribedBCConstraint{data,   control, constraint_u,
+                                                node_u, Phi_,    gradient_terms}(i_constraint);
+            } break;
+            case ConstraintType::kRigidJoint: {
+                CalculateRigidJointConstraint{data,   control, constraint_u,
+                                              node_u, Phi_,    gradient_terms}(i_constraint);
+            } break;
+            case ConstraintType::kRevoluteJoint: {
+                CalculateRevoluteJointConstraint{data,   control, constraint_u,
+                                                 node_u, Phi_,    gradient_terms}(i_constraint);
+            } break;
+            case ConstraintType::kRotationControl: {
+                CalculateRotationControlConstraint{data,   control, constraint_u,
+                                                   node_u, Phi_,    gradient_terms}(i_constraint);
+            } break;
+            default: {
+                // Do nothing
+            } break;
         }
     }
 };
