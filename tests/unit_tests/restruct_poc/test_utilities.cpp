@@ -79,7 +79,6 @@ std::vector<std::vector<std::vector<double>>> kokkos_view_3D_to_vector(
     std::vector<std::vector<std::vector<double>>> values(view.extent(0));
     for (size_t i = 0; i < view_host.extent(0); ++i) {
         for (size_t j = 0; j < view_host.extent(1); ++j) {
-            values[i].emplace_back(std::vector<double>());
             for (size_t k = 0; k < view_host.extent(2); ++k) {
                 values[i][j].emplace_back(view_host(i, j, k));
             }
