@@ -115,7 +115,7 @@ struct Constraint {
     }
 
     /// @brief Returns the number of degrees of freedom used/fixed by the constraint
-    size_t NumDOFs() const {
+    [[nodiscard]] size_t NumDOFs() const {
         if (type == ConstraintType::kRevoluteJoint) {
             return 5U;  // A revolute joint constraints fixes 5 degrees of freedom
         }
