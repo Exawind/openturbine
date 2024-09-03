@@ -20,7 +20,7 @@ enum class ConstraintType : std::uint8_t {
 
 /// @brief Returns the number of nodes associated with a constraint type (1 or 2)
 KOKKOS_INLINE_FUNCTION
-constexpr size_t GetNumberOfNodes(ConstraintType type) {
+constexpr size_t NumberOfNodesForConstraint(ConstraintType type) {
     switch (type) {
         case ConstraintType::kRigidJoint:
         case ConstraintType::kRevoluteJoint:
@@ -29,8 +29,20 @@ constexpr size_t GetNumberOfNodes(ConstraintType type) {
             return 2U;
         } break;
         default:
-            // kNone, kFixedBC, kPrescribedBC etc. require only one node to enforce the constraint
+            // kNone, kFixedBC, kPrescribedBC etc. requires only 1 node to enforce the constraint
             return 1U;
+    }
+}
+
+/// @brief Returns the number of degrees of freedom used/fixed by the constraint type
+KOKKOS_INLINE_FUNCTION
+constexpr size_t NumDOFsForConstraint(ConstraintType type) {
+    switch (type) {
+        case ConstraintType::kRevoluteJoint: {
+            return 5U;  // A revolute joint constraint fixes 5 DOFs
+        } break;
+        default:
+            return static_cast<size_t>(kLieAlgebraComponents);  // Default: Fixes 6 DOFs
     }
 }
 
@@ -112,14 +124,6 @@ struct Constraint {
 
         // If not a revolute/hinge joint, set axes to the input vector
         x_axis = vec;
-    }
-
-    /// @brief Returns the number of degrees of freedom used/fixed by the constraint
-    [[nodiscard]] size_t NumDOFs() const {
-        if (type == ConstraintType::kRevoluteJoint) {
-            return 5U;  // A revolute joint constraints fixes 5 degrees of freedom
-        }
-        return static_cast<size_t>(kLieAlgebraComponents);  // Default: Fixes 6 DOFs
     }
 };
 

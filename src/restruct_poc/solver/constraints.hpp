@@ -50,7 +50,7 @@ struct Constraints {
           num_dofs{std::transform_reduce(
               constraints.cbegin(), constraints.cend(), 0U, std::plus{},
               [](auto c) {
-                  return c->NumDOFs();
+                  return NumDOFsForConstraint(c->type);
               }
           )},
           host_constraints(
@@ -75,12 +75,12 @@ struct Constraints {
             host_data(i).type = constraints[i]->type;
 
             // Set constraint rows
-            auto dofs = constraints[i]->NumDOFs();
+            auto dofs = NumDOFsForConstraint(constraints[i]->type);
             host_data(i).row_range = Kokkos::make_pair(start_row, start_row + dofs);
             start_row += dofs;
 
             // Set column ranges for two node constraints
-            if (GetNumberOfNodes(constraints[i]->type) == 2) {
+            if (NumberOfNodesForConstraint(constraints[i]->type) == 2) {
                 const auto target_node_id = constraints[i]->target_node.ID;
                 const auto base_node_id = constraints[i]->base_node.ID;
                 const auto target_start_col =

@@ -35,7 +35,7 @@ struct PopulateSparseRowPtrsColInds_Constraints {
                 }
 
                 // Add column indices for base node if it has a valid index
-                if (GetNumberOfNodes(cd.type) == 2U) {
+                if (NumberOfNodesForConstraint(cd.type) == 2U) {
                     // Add column indices for base node
                     for (auto j = 0U; j < kLieAlgebraComponents; ++j) {
                         B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
