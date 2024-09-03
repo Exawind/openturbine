@@ -7,18 +7,6 @@
 
 namespace openturbine::tests {
 
-// template <size_t n_elem, size_t n_nodes, size_t n_qps>
-// auto get_element_indices() {
-//     using IndicesView = Kokkos::View<Beams::ElemIndices[n_elem]>;
-//     auto elem_indices = IndicesView("elem_indices");
-//     const auto host_elem_indices = Kokkos::create_mirror(elem_indices);
-//     for (auto i = 0U; i < n_elem; ++i) {
-//         host_elem_indices(i) = Beams::ElemIndices(n_nodes, n_qps, i, i);
-//     }
-//     Kokkos::deep_copy(elem_indices, host_elem_indices);
-//     return elem_indices;
-// }
-
 template <size_t n_elem, size_t n_nodes>
 auto get_node_state_indices() {
     using IndicesView = Kokkos::View<size_t[n_elem * n_nodes]>;
@@ -55,7 +43,7 @@ auto get_qp_jacobian(const std::array<double, n_qps>& jacobian_data) {
 
 template <size_t n_nodes, size_t n_qps>
 auto get_shape_matrix(std::string_view name, const std::array<double, n_nodes * n_qps>& shape_data) {
-    using ShapeView = Kokkos::View<double[n_nodes][n_qps]>;
+    using ShapeView = Kokkos::View<double[n_nodes][n_qps], Kokkos::LayoutLeft>;
     using HostShapeView = Kokkos::View<const double[n_nodes][n_qps], Kokkos::HostSpace>;
     auto shape = ShapeView(std::string{name});
     const auto host_shape = Kokkos::create_mirror(shape);
