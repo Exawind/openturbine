@@ -15,7 +15,7 @@ struct CalculateCylindricalConstraint {
     Kokkos::View<size_t* [2]>::const_type row_range;
     Kokkos::View<size_t* [2][2]>::const_type node_col_range;
     Kokkos::View<double* [3]>::const_type X0_;
-    Kokkos::View<double* [3][3]>::const_type axis;
+    Kokkos::View<double* [3][3]>::const_type axes;
     View_N::const_type control;
     View_Nx7::const_type constraint_u;
     View_Nx7::const_type node_u;
@@ -57,13 +57,13 @@ struct CalculateCylindricalConstraint {
 
         // Cylindrical constraint data
         const auto x0_data = Kokkos::Array<double, 3>{
-            axis(i_constraint, 0, 0), axis(i_constraint, 0, 1), axis(i_constraint, 0, 2)};
+            axes(i_constraint, 0, 0), axes(i_constraint, 0, 1), axes(i_constraint, 0, 2)};
         const auto x0 = View_3::const_type{x0_data.data()};
         const auto y0_data = Kokkos::Array<double, 3>{
-            axis(i_constraint, 1, 0), axis(i_constraint, 1, 1), axis(i_constraint, 1, 2)};
+            axes(i_constraint, 1, 0), axes(i_constraint, 1, 1), axes(i_constraint, 1, 2)};
         const auto y0 = View_3::const_type{y0_data.data()};
         const auto z0_data = Kokkos::Array<double, 3>{
-            axis(i_constraint, 2, 0), axis(i_constraint, 2, 1), axis(i_constraint, 2, 2)};
+            axes(i_constraint, 2, 0), axes(i_constraint, 2, 1), axes(i_constraint, 2, 2)};
         const auto z0 = View_3::const_type{z0_data.data()};
         auto x_data = Kokkos::Array<double, 3>{};
         const auto x = View_3{x_data.data()};

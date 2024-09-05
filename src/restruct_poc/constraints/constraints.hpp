@@ -25,7 +25,7 @@ struct Constraints {
     Kokkos::View<size_t* [2][2]> node_col_range;
     Kokkos::View<size_t* [2]> node_index;
     Kokkos::View<double* [3]> X0;
-    Kokkos::View<double* [3][3]> axis;
+    Kokkos::View<double* [3][3]> axes;
 
     View_N control;  //< Control signals
     View_Nx7 u;      //< Prescribed displacements
@@ -48,7 +48,7 @@ struct Constraints {
           node_col_range("row_col_range", num),
           node_index("node_index", num),
           X0("X0", num),
-          axis("axis", num),
+          axes("axes", num),
           control("control", num),
           u("u", num),
           u_signal("u_signal", num),
@@ -61,7 +61,7 @@ struct Constraints {
         auto host_node_col_range = Kokkos::create_mirror(node_col_range);
         auto host_node_index = Kokkos::create_mirror(node_index);
         auto host_X0 = Kokkos::create_mirror(X0);
-        auto host_axis = Kokkos::create_mirror(axis);
+        auto host_axes = Kokkos::create_mirror(axes);
 
         // Loop through constraint input and set data
         auto start_row = size_t{0U};
@@ -100,9 +100,9 @@ struct Constraints {
             // Set initial relative location between nodes and rotation axes
             for (auto j = 0U; j < 3U; ++j) {
                 host_X0(i, j) = constraints[i]->X0[j];
-                host_axis(i, 0, j) = constraints[i]->x_axis[j];
-                host_axis(i, 1, j) = constraints[i]->y_axis[j];
-                host_axis(i, 2, j) = constraints[i]->z_axis[j];
+                host_axes(i, 0, j) = constraints[i]->x_axis[j];
+                host_axes(i, 1, j) = constraints[i]->y_axis[j];
+                host_axes(i, 2, j) = constraints[i]->z_axis[j];
             }
         }
 
@@ -112,7 +112,7 @@ struct Constraints {
         Kokkos::deep_copy(node_col_range, host_node_col_range);
         Kokkos::deep_copy(node_index, host_node_index);
         Kokkos::deep_copy(X0, host_X0);
-        Kokkos::deep_copy(axis, host_axis);
+        Kokkos::deep_copy(axes, host_axes);
 
         // Set initial rotation to identity
         Kokkos::deep_copy(Kokkos::subview(this->u, Kokkos::ALL, 3), 1.0);

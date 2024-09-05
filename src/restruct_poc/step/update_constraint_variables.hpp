@@ -22,7 +22,7 @@ inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
         "CalculateConstraintResidualGradient", constraints.num,
         CalculateConstraintResidualGradient{
             constraints.type, constraints.node_index, constraints.row_range,
-            constraints.node_col_range, constraints.X0, constraints.axis, constraints.control,
+            constraints.node_col_range, constraints.X0, constraints.axes, constraints.control,
             constraints.u, state.q, constraints.Phi, constraints.gradient_terms}
     );
 }

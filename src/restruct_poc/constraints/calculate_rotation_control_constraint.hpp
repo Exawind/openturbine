@@ -15,7 +15,7 @@ struct CalculateRotationControlConstraint {
     Kokkos::View<size_t* [2]>::const_type row_range;
     Kokkos::View<size_t* [2][2]>::const_type node_col_range;
     Kokkos::View<double* [3]>::const_type X0_;
-    Kokkos::View<double* [3][3]>::const_type axis;
+    Kokkos::View<double* [3][3]>::const_type axes;
     View_N::const_type control;
     View_Nx7::const_type constraint_u;
     View_Nx7::const_type node_u;
@@ -96,7 +96,7 @@ struct CalculateRotationControlConstraint {
         // Angular residual
         // If this is a rotation control constraint, calculate RC from control and axis
         for (auto i = 0U; i < 3U; ++i) {
-            RV(i) = axis(i_constraint, 0, i) * control(i_constraint);
+            RV(i) = axes(i_constraint, 0, i) * control(i_constraint);
         }
         RotationVectorToQuaternion(RV, RC);
         QuaternionInverse(RC, RCt);
