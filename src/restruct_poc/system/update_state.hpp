@@ -17,9 +17,11 @@ inline void UpdateState(
     const Beams& beams, const View_Nx7& Q, const View_Nx6& V, const View_Nx6& A
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State");
+    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(
-        "UpdateNodeState", beams.num_nodes,
+        "UpdateNodeState", range_policy,
         UpdateNodeState{
+            beams.elem_indices,
             beams.node_state_indices,
             beams.node_u,
             beams.node_u_dot,
@@ -29,8 +31,6 @@ inline void UpdateState(
             A,
         }
     );
-
-    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
 
     Kokkos::parallel_for(
         "InterpolateToQuadraturePoints", range_policy,

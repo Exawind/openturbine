@@ -64,7 +64,7 @@ TEST(CalculateNodeForcesTests, FE_OneNodeOneQP) {
     Kokkos::deep_copy(Fd_mirror, Fd_host);
     Kokkos::deep_copy(Fd, Fd_mirror);
 
-    const auto FE = Kokkos::View<double[num_nodes][6]>("FE");
+    const auto FE = Kokkos::View<double[1][num_nodes][6]>("FE");
 
     Kokkos::parallel_for(
         "CalculateNodeForces_FE", num_nodes,
@@ -75,7 +75,7 @@ TEST(CalculateNodeForcesTests, FE_OneNodeOneQP) {
 
     constexpr auto FE_exact_data = std::array{178., 212., 246., 280., 314., 348.};
     const auto FE_exact =
-        Kokkos::View<const double[num_nodes][6], Kokkos::HostSpace>(FE_exact_data.data());
+        Kokkos::View<const double[1][num_nodes][6], Kokkos::HostSpace>(FE_exact_data.data());
 
     const auto FE_mirror = Kokkos::create_mirror(FE);
     Kokkos::deep_copy(FE_mirror, FE);
@@ -138,7 +138,7 @@ TEST(CalculateNodeForcesTests, FE_TwoNodesTwoQPs) {
     Kokkos::deep_copy(Fd_mirror, Fd_host);
     Kokkos::deep_copy(Fd, Fd_mirror);
 
-    const auto FE = Kokkos::View<double[num_nodes][6]>("FE");
+    const auto FE = Kokkos::View<double[1][num_nodes][6]>("FE");
 
     Kokkos::parallel_for(
         "CalculateNodeForces_FE", num_nodes,
@@ -150,7 +150,7 @@ TEST(CalculateNodeForcesTests, FE_TwoNodesTwoQPs) {
     constexpr auto FE_exact_data = std::array{2870., 3076., 3282., 3488., 3694., 3900.,
                                               3694., 3956., 4218., 4480., 4742., 5004.};
     const auto FE_exact =
-        Kokkos::View<const double[num_nodes][6], Kokkos::HostSpace>(FE_exact_data.data());
+        Kokkos::View<const double[1][num_nodes][6], Kokkos::HostSpace>(FE_exact_data.data());
 
     const auto FE_mirror = Kokkos::create_mirror(FE);
     Kokkos::deep_copy(FE_mirror, FE);
@@ -205,7 +205,7 @@ TEST(CalculateNodeForcesTests, FI_FG_OneNodeOneQP) {
     Kokkos::deep_copy(Fig_mirror, Fig_host);
     Kokkos::deep_copy(Fig, Fig_mirror);
 
-    const auto FIG = Kokkos::View<double[num_nodes][6]>("FIG");
+    const auto FIG = Kokkos::View<double[1][num_nodes][6]>("FIG");
 
     Kokkos::parallel_for(
         "CalculateNodeForces_FI_FG", num_nodes,
@@ -215,7 +215,7 @@ TEST(CalculateNodeForcesTests, FI_FG_OneNodeOneQP) {
 
     constexpr auto FIG_exact_data = std::array{24., 48., 72., 96., 120., 144.};
     const auto FIG_exact =
-        Kokkos::View<const double[num_nodes][6], Kokkos::HostSpace>(FIG_exact_data.data());
+        Kokkos::View<const double[1][num_nodes][6], Kokkos::HostSpace>(FIG_exact_data.data());
 
     const auto FIG_mirror = Kokkos::create_mirror(FIG);
     Kokkos::deep_copy(FIG_mirror, FIG);
@@ -270,7 +270,7 @@ TEST(CalculateNodeForcesTests, FI_FG_TwoNodesTwoQP) {
     Kokkos::deep_copy(Fig_mirror, Fig_host);
     Kokkos::deep_copy(Fig, Fig_mirror);
 
-    const auto FIG = Kokkos::View<double[num_nodes][6]>("FIG");
+    const auto FIG = Kokkos::View<double[1][num_nodes][6]>("FIG");
 
     Kokkos::parallel_for(
         "CalculateNodeForces_FI_FG", num_nodes,
@@ -281,7 +281,7 @@ TEST(CalculateNodeForcesTests, FI_FG_TwoNodesTwoQP) {
     constexpr auto FIG_exact_data =
         std::array{783., 936., 1089., 1242., 1395., 1548., 1009., 1208., 1407., 1606., 1805., 2004.};
     const auto FIG_exact =
-        Kokkos::View<const double[num_nodes][6], Kokkos::HostSpace>(FIG_exact_data.data());
+        Kokkos::View<const double[1][num_nodes][6], Kokkos::HostSpace>(FIG_exact_data.data());
 
     const auto FIG_mirror = Kokkos::create_mirror(FIG);
     Kokkos::deep_copy(FIG_mirror, FIG);

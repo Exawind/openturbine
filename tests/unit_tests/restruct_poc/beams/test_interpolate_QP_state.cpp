@@ -10,11 +10,11 @@ namespace openturbine::tests {
 inline auto create_node_u_OneNode() {
     constexpr auto num_nodes = 1;
     constexpr auto num_entries = num_nodes * 7;
-    auto node_u = Kokkos::View<double[num_nodes][7]>("node_u");
+    auto node_u = Kokkos::View<double[1][num_nodes][7]>("node_u");
     auto node_u_mirror = Kokkos::create_mirror(node_u);
 
     auto host_data = std::array<double, num_entries>{1., 2., 3., 4., 5., 6., 7.};
-    auto node_u_host = Kokkos::View<double[num_nodes][7], Kokkos::HostSpace>(host_data.data());
+    auto node_u_host = Kokkos::View<double[1][num_nodes][7], Kokkos::HostSpace>(host_data.data());
     Kokkos::deep_copy(node_u_mirror, node_u_host);
     Kokkos::deep_copy(node_u, node_u_mirror);
     return node_u;
@@ -209,12 +209,12 @@ TEST(InterpolateQPStateTests, rprime_OneNodeTwoQP) {
 inline auto create_node_u_TwoNode() {
     constexpr auto num_nodes = 2;
     constexpr auto num_entries = num_nodes * 7;
-    auto node_u = Kokkos::View<double[num_nodes][7]>("node_u");
+    auto node_u = Kokkos::View<double[1][num_nodes][7]>("node_u");
     auto node_u_mirror = Kokkos::create_mirror(node_u);
 
     auto host_data =
         std::array<double, num_entries>{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14.};
-    auto node_u_host = Kokkos::View<double[num_nodes][7], Kokkos::HostSpace>(host_data.data());
+    auto node_u_host = Kokkos::View<double[1][num_nodes][7], Kokkos::HostSpace>(host_data.data());
     Kokkos::deep_copy(node_u_mirror, node_u_host);
     Kokkos::deep_copy(node_u, node_u_mirror);
     return node_u;

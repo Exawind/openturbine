@@ -16,11 +16,13 @@ TEST(PopulateSparseIndices, SingleElement) {
     elem_indices_host(0).node_range.first = 0;
     Kokkos::deep_copy(elem_indices, elem_indices_host);
 
-    auto node_state_indices = Kokkos::View<size_t[num_nodes]>("node_state_indices");
+    auto node_state_indices = Kokkos::View<size_t[1][num_nodes]>("node_state_indices");
     auto node_state_indices_host_data = std::array<size_t, num_nodes>{0U, 1U, 2U, 3U, 4U};
     auto node_state_indices_host =
-        Kokkos::View<size_t[num_nodes], Kokkos::HostSpace>(node_state_indices_host_data.data());
-    Kokkos::deep_copy(node_state_indices, node_state_indices_host);
+        Kokkos::View<size_t[1][num_nodes], Kokkos::HostSpace>(node_state_indices_host_data.data());
+    auto node_state_indices_mirror = Kokkos::create_mirror(node_state_indices);
+    Kokkos::deep_copy(node_state_indices_mirror, node_state_indices_host);
+    Kokkos::deep_copy(node_state_indices, node_state_indices_mirror);
     auto indices = Kokkos::View<int[num_dof * num_dof]>("indices");
 
     Kokkos::parallel_for(1, PopulateSparseIndices{elem_indices, node_state_indices, indices});
@@ -35,11 +37,11 @@ TEST(PopulateSparseIndices, SingleElement) {
 }
 
 TEST(PopulateSparseIndices, TwoElements) {
-    constexpr auto elem1_num_nodes = 5U;
+    constexpr auto elem1_num_nodes = size_t{5U};
     constexpr auto elem1_num_dof = elem1_num_nodes * 6U;
-    constexpr auto elem2_num_nodes = 3U;
+    constexpr auto elem2_num_nodes = size_t{3U};
     constexpr auto elem2_num_dof = elem2_num_nodes * 6U;
-    constexpr auto num_nodes = elem1_num_nodes + elem2_num_nodes;
+    constexpr auto max_num_nodes = elem1_num_nodes;
 
     auto elem_indices_host =
         Kokkos::View<Beams::ElemIndices[2], Kokkos::HostSpace>("elem_indices_host");
@@ -50,12 +52,15 @@ TEST(PopulateSparseIndices, TwoElements) {
     elem_indices_host(1).node_range.first = elem1_num_nodes;
     Kokkos::deep_copy(elem_indices, elem_indices_host);
 
-    auto node_state_indices = Kokkos::View<size_t[num_nodes]>("node_state_indices");
+    auto node_state_indices = Kokkos::View<size_t[2][max_num_nodes]>("node_state_indices");
     auto node_state_indices_host_data =
-        std::array<size_t, num_nodes>{0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U};
+        std::array<size_t, size_t{2U} * max_num_nodes>{0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 0U, 0U};
     auto node_state_indices_host =
-        Kokkos::View<size_t[num_nodes], Kokkos::HostSpace>(node_state_indices_host_data.data());
-    Kokkos::deep_copy(node_state_indices, node_state_indices_host);
+        Kokkos::View<size_t[2][max_num_nodes], Kokkos::HostSpace>(node_state_indices_host_data.data()
+        );
+    auto node_state_indices_mirror = Kokkos::create_mirror(node_state_indices);
+    Kokkos::deep_copy(node_state_indices_mirror, node_state_indices_host);
+    Kokkos::deep_copy(node_state_indices, node_state_indices_mirror);
     auto indices =
         Kokkos::View<int[elem1_num_dof * elem1_num_dof + elem2_num_dof * elem2_num_dof]>("indices");
 

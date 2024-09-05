@@ -15,17 +15,17 @@ void TestIntegrateResidualVector_1Element1Node_AllZeros() {
     constexpr auto num_nodes = size_t{1U};
     const auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
-    const auto node_FE = Kokkos::View<double[num_elements * num_nodes][6]>("node_FE");
-    const auto node_FI = Kokkos::View<double[num_elements * num_nodes][6]>("node_FI");
-    const auto node_FG = Kokkos::View<double[num_elements * num_nodes][6]>("node_FG");
-    const auto node_FX = Kokkos::View<double[num_elements * num_nodes][6]>("node_FX");
+    const auto node_FE = Kokkos::View<double[num_elements][num_nodes][6]>("node_FE");
+    const auto node_FI = Kokkos::View<double[num_elements][num_nodes][6]>("node_FI");
+    const auto node_FG = Kokkos::View<double[num_elements][num_nodes][6]>("node_FG");
+    const auto node_FX = Kokkos::View<double[num_elements][num_nodes][6]>("node_FX");
 
     auto residual_vector = Kokkos::View<double[num_elements * num_nodes * 6]>("residual_vector");
 
     Kokkos::parallel_for(
-        num_elements * num_nodes,
-        IntegrateResidualVector{
-            node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
+        num_nodes,
+        IntegrateResidualVectorElement{
+            0U, node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
     );
 
     expect_kokkos_view_1D_equal(residual_vector, {0., 0., 0., 0., 0., 0.});
@@ -39,8 +39,8 @@ template <size_t n_elem, size_t n_nodes>
 auto get_node_vector(
     std::string_view name, const std::array<double, n_elem * n_nodes * 6>& vector_data
 ) {
-    using VectorView = Kokkos::View<double[n_elem * n_nodes][6]>;
-    using HostVectorView = Kokkos::View<const double[n_elem * n_nodes][6], Kokkos::HostSpace>;
+    using VectorView = Kokkos::View<double[n_elem][n_nodes][6]>;
+    using HostVectorView = Kokkos::View<const double[n_elem][n_nodes][6], Kokkos::HostSpace>;
     auto shape = VectorView(std::string{name});
     const auto host_shape = Kokkos::create_mirror(shape);
     const auto shape_data_view = HostVectorView(vector_data.data());
@@ -75,16 +75,16 @@ void TestIntegrateResidualVector_1Element1Node_node_FE() {
     const auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
     const auto node_FE = get_node_FE<num_elements, num_nodes>({1., 2., 3., 4., 5., 6.});
-    const auto node_FI = Kokkos::View<double[num_elements * num_nodes][6]>("node_FI");
-    const auto node_FG = Kokkos::View<double[num_elements * num_nodes][6]>("node_FG");
-    const auto node_FX = Kokkos::View<double[num_elements * num_nodes][6]>("node_FX");
+    const auto node_FI = Kokkos::View<double[num_elements][num_nodes][6]>("node_FI");
+    const auto node_FG = Kokkos::View<double[num_elements][num_nodes][6]>("node_FG");
+    const auto node_FX = Kokkos::View<double[num_elements][num_nodes][6]>("node_FX");
 
     auto residual_vector = Kokkos::View<double[num_elements * num_nodes * 6]>("residual_vector");
 
     Kokkos::parallel_for(
-        num_elements * num_nodes,
-        IntegrateResidualVector{
-            node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
+        num_nodes,
+        IntegrateResidualVectorElement{
+            0U, node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
     );
 
     expect_kokkos_view_1D_equal(residual_vector, {1., 2., 3., 4., 5., 6.});
@@ -99,17 +99,17 @@ void TestIntegrateResidualVector_1Element1Node_node_FI() {
     constexpr auto num_nodes = size_t{1U};
     const auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
-    const auto node_FE = Kokkos::View<double[num_elements * num_nodes][6]>("node_FE");
+    const auto node_FE = Kokkos::View<double[num_elements][num_nodes][6]>("node_FE");
     const auto node_FI = get_node_FI<num_elements, num_nodes>({1., 2., 3., 4., 5., 6.});
-    const auto node_FG = Kokkos::View<double[num_elements * num_nodes][6]>("node_FG");
-    const auto node_FX = Kokkos::View<double[num_elements * num_nodes][6]>("node_FX");
+    const auto node_FG = Kokkos::View<double[num_elements][num_nodes][6]>("node_FG");
+    const auto node_FX = Kokkos::View<double[num_elements][num_nodes][6]>("node_FX");
 
     auto residual_vector = Kokkos::View<double[num_elements * num_nodes * 6]>("residual_vector");
 
     Kokkos::parallel_for(
-        num_elements * num_nodes,
-        IntegrateResidualVector{
-            node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
+        num_nodes,
+        IntegrateResidualVectorElement{
+            0U, node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
     );
 
     expect_kokkos_view_1D_equal(residual_vector, {1., 2., 3., 4., 5., 6.});
@@ -124,17 +124,17 @@ void TestIntegrateResidualVector_1Element1Node_node_FG() {
     constexpr auto num_nodes = size_t{1U};
     const auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
-    const auto node_FE = Kokkos::View<double[num_elements * num_nodes][6]>("node_FE");
-    const auto node_FI = Kokkos::View<double[num_elements * num_nodes][6]>("node_FI");
+    const auto node_FE = Kokkos::View<double[num_elements][num_nodes][6]>("node_FE");
+    const auto node_FI = Kokkos::View<double[num_elements][num_nodes][6]>("node_FI");
     const auto node_FG = get_node_FG<num_elements, num_nodes>({1., 2., 3., 4., 5., 6.});
-    const auto node_FX = Kokkos::View<double[num_elements * num_nodes][6]>("node_FX");
+    const auto node_FX = Kokkos::View<double[num_elements][num_nodes][6]>("node_FX");
 
     auto residual_vector = Kokkos::View<double[num_elements * num_nodes * 6]>("residual_vector");
 
     Kokkos::parallel_for(
-        num_elements * num_nodes,
-        IntegrateResidualVector{
-            node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
+        num_nodes,
+        IntegrateResidualVectorElement{
+            0U, node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
     );
 
     expect_kokkos_view_1D_equal(residual_vector, {-1., -2., -3., -4., -5., -6.});
@@ -149,17 +149,17 @@ void TestIntegrateResidualVector_1Element1Node_node_FX() {
     constexpr auto num_nodes = size_t{1U};
     const auto node_state_indices = get_node_state_indices<num_elements, num_nodes>();
 
-    const auto node_FE = Kokkos::View<double[num_elements * num_nodes][6]>("node_FE");
-    const auto node_FI = Kokkos::View<double[num_elements * num_nodes][6]>("node_FI");
-    const auto node_FG = Kokkos::View<double[num_elements * num_nodes][6]>("node_FG");
+    const auto node_FE = Kokkos::View<double[num_elements][num_nodes][6]>("node_FE");
+    const auto node_FI = Kokkos::View<double[num_elements][num_nodes][6]>("node_FI");
+    const auto node_FG = Kokkos::View<double[num_elements][num_nodes][6]>("node_FG");
     const auto node_FX = get_node_FX<num_elements, num_nodes>({1., 2., 3., 4., 5., 6.});
 
     auto residual_vector = Kokkos::View<double[num_elements * num_nodes * 6]>("residual_vector");
 
     Kokkos::parallel_for(
-        num_elements * num_nodes,
-        IntegrateResidualVector{
-            node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
+        num_nodes,
+        IntegrateResidualVectorElement{
+            0U, node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
     );
 
     expect_kokkos_view_1D_equal(residual_vector, {-1., -2., -3., -4., -5., -6.});
@@ -182,9 +182,9 @@ void TestIntegrateResidualVector_1Element1Node_Sum() {
     auto residual_vector = Kokkos::View<double[num_elements * num_nodes * 6]>("residual_vector");
 
     Kokkos::parallel_for(
-        num_elements * num_nodes,
-        IntegrateResidualVector{
-            node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
+        num_nodes,
+        IntegrateResidualVectorElement{
+            0U, node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
     );
 
     expect_kokkos_view_1D_equal(residual_vector, {0., 0., 0., 0., 0., 0.});
@@ -201,16 +201,16 @@ void TestIntegrateResidualVector_OneElementTwoNodes() {
 
     const auto node_FE =
         get_node_FE<num_elements, num_nodes>({1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12.});
-    const auto node_FI = Kokkos::View<double[num_elements * num_nodes][6]>("node_FI");
-    const auto node_FG = Kokkos::View<double[num_elements * num_nodes][6]>("node_FG");
-    const auto node_FX = Kokkos::View<double[num_elements * num_nodes][6]>("node_FX");
+    const auto node_FI = Kokkos::View<double[num_elements][num_nodes][6]>("node_FI");
+    const auto node_FG = Kokkos::View<double[num_elements][num_nodes][6]>("node_FG");
+    const auto node_FX = Kokkos::View<double[num_elements][num_nodes][6]>("node_FX");
 
     auto residual_vector = Kokkos::View<double[num_elements * num_nodes * 6]>("residual_vector");
 
     Kokkos::parallel_for(
         num_elements * num_nodes,
-        IntegrateResidualVector{
-            node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
+        IntegrateResidualVectorElement{
+            0U, node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
     );
 
     expect_kokkos_view_1D_equal(
@@ -231,16 +231,22 @@ void TestIntegrateResidualVector_2Elements2Nodes() {
         get_node_FE<num_elements, num_nodes>({1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,
                                               9.,  10., 11., 12., 13., 14., 15., 16.,
                                               17., 18., 19., 20., 21., 22., 23., 24.});
-    const auto node_FI = Kokkos::View<double[num_elements * num_nodes][6]>("node_FI");
-    const auto node_FG = Kokkos::View<double[num_elements * num_nodes][6]>("node_FG");
-    const auto node_FX = Kokkos::View<double[num_elements * num_nodes][6]>("node_FX");
+    const auto node_FI = Kokkos::View<double[num_elements][num_nodes][6]>("node_FI");
+    const auto node_FG = Kokkos::View<double[num_elements][num_nodes][6]>("node_FG");
+    const auto node_FX = Kokkos::View<double[num_elements][num_nodes][6]>("node_FX");
 
     auto residual_vector = Kokkos::View<double[num_elements * num_nodes * 6]>("residual_vector");
 
     Kokkos::parallel_for(
-        num_elements * num_nodes,
-        IntegrateResidualVector{
-            node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
+        num_nodes,
+        IntegrateResidualVectorElement{
+            0U, node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
+    );
+
+    Kokkos::parallel_for(
+        num_nodes,
+        IntegrateResidualVectorElement{
+            1U, node_state_indices, node_FE, node_FI, node_FG, node_FX, residual_vector}
     );
 
     expect_kokkos_view_1D_equal(residual_vector, {1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,

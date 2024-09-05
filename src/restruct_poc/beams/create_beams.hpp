@@ -6,7 +6,6 @@
 #include "interpolate_QP_rotation.hpp"
 #include "interpolate_to_quadrature_points.hpp"
 #include "populate_element_views.hpp"
-#include "set_node_state_indices.hpp"
 
 namespace openturbine {
 
@@ -50,7 +49,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
 
         // Populate beam node->state indices
         for (size_t j = 0; j < num_nodes; ++j) {
-            host_node_state_indices(node_counter + j) =
+            host_node_state_indices(i, j) =
                 static_cast<size_t>(beams_input.elements[i].nodes[j].node.ID);
         }
 
@@ -61,19 +60,24 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
         // Populate views for this element
         PopulateElementViews(
             beams_input.elements[i],  // Element inputs
-            Kokkos::subview(host_node_x0, idx.node_range, Kokkos::ALL),
-            Kokkos::subview(host_qp_weight, i, Kokkos::pair(size_t{0U}, idx.num_qps)),
             Kokkos::subview(
-                host_qp_Mstar, i, Kokkos::pair(size_t{0U}, idx.num_qps), Kokkos::ALL, Kokkos::ALL
+                host_node_x0, i, Kokkos::make_pair(size_t{0U}, idx.num_nodes), Kokkos::ALL
+            ),
+            Kokkos::subview(host_qp_weight, i, Kokkos::make_pair(size_t{0U}, idx.num_qps)),
+            Kokkos::subview(
+                host_qp_Mstar, i, Kokkos::make_pair(size_t{0U}, idx.num_qps), Kokkos::ALL,
+                Kokkos::ALL
             ),
             Kokkos::subview(
-                host_qp_Cstar, i, Kokkos::pair(size_t{0U}, idx.num_qps), Kokkos::ALL, Kokkos::ALL
+                host_qp_Cstar, i, Kokkos::make_pair(size_t{0U}, idx.num_qps), Kokkos::ALL,
+                Kokkos::ALL
             ),
             Kokkos::subview(
-                host_shape_interp, i, Kokkos::pair(size_t{0U}, idx.num_nodes), idx.qp_shape_range
+                host_shape_interp, i, Kokkos::make_pair(size_t{0U}, idx.num_nodes),
+                idx.qp_shape_range
             ),
             Kokkos::subview(
-                host_shape_deriv, i, Kokkos::pair(size_t{0U}, idx.num_nodes), idx.qp_shape_range
+                host_shape_deriv, i, Kokkos::make_pair(size_t{0U}, idx.num_nodes), idx.qp_shape_range
             )
         );
     }
