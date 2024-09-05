@@ -29,8 +29,8 @@ void expect_kokkos_view_1D_equal(
 }
 
 void expect_kokkos_view_2D_equal(
-    const Kokkos::View<const double**>& view, const std::vector<std::vector<double>>& expected,
-    double epsilon
+    const Kokkos::View<const double**, Kokkos::LayoutStride>& view,
+    const std::vector<std::vector<double>>& expected, double epsilon
 ) {
     const Kokkos::View<double**> view_contiguous("view_contiguous", view.extent(0), view.extent(1));
     Kokkos::deep_copy(view_contiguous, view);
@@ -88,7 +88,7 @@ std::vector<std::vector<std::vector<double>>> kokkos_view_3D_to_vector(
 }
 
 void expect_kokkos_view_3D_equal(
-    const Kokkos::View<const double***>& view,
+    const Kokkos::View<const double***, Kokkos::LayoutStride>& view,
     const std::vector<std::vector<std::vector<double>>>& expected, double epsilon
 ) {
     const Kokkos::View<double***> view_contiguous(

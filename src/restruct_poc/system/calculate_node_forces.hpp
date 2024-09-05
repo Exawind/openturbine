@@ -12,17 +12,16 @@ struct CalculateNodeForces_FE {
     size_t first_node;
     size_t first_qp;
     size_t num_qps;
-    View_NxN::const_type qp_weight_;
-    View_NxN::const_type qp_jacobian_;
+    Kokkos::View<double**>::const_type qp_weight_;
+    Kokkos::View<double**>::const_type qp_jacobian_;
     Kokkos::View<double***>::const_type shape_interp_;
     Kokkos::View<double***>::const_type shape_deriv_;
     Kokkos::View<double** [6]>::const_type qp_Fc_;
     Kokkos::View<double** [6]>::const_type qp_Fd_;
-    View_Nx6 node_FE_;
+    Kokkos::View<double** [6]> node_FE_;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_index) const {
-        const auto i = first_node + i_index;
         auto FE = Kokkos::Array<double, 6>{};
         for (auto j_index = 0U; j_index < num_qps; ++j_index) {  // QPs
             // const auto j = first_qp + j_index;
@@ -35,7 +34,7 @@ struct CalculateNodeForces_FE {
             }
         }
         for (auto k = 0U; k < 6U; ++k) {
-            node_FE_(i, k) = FE[k];
+            node_FE_(i_elem, i_index, k) = FE[k];
         }
     }
 };
@@ -45,16 +44,15 @@ struct CalculateNodeForces_FI_FG {
     size_t first_node;
     size_t first_qp;
     size_t num_qps;
-    View_NxN::const_type qp_weight_;
-    View_NxN::const_type qp_jacobian_;
+    Kokkos::View<double**>::const_type qp_weight_;
+    Kokkos::View<double**>::const_type qp_jacobian_;
     Kokkos::View<double***>::const_type shape_interp_;
     Kokkos::View<double***>::const_type shape_deriv_;
     Kokkos::View<double** [6]>::const_type qp_Fig_;
-    View_Nx6 node_FIG_;
+    Kokkos::View<double** [6]> node_FIG_;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_index) const {
-        const auto i = first_node + i_index;
         auto FIG = Kokkos::Array<double, 6>{};
         for (auto j_index = 0U; j_index < num_qps; ++j_index) {  // QPs
             // const auto j = first_qp + j_index;
@@ -66,24 +64,24 @@ struct CalculateNodeForces_FI_FG {
             }
         }
         for (auto k = 0U; k < 6U; ++k) {
-            node_FIG_(i, k) = FIG[k];
+            node_FIG_(i_elem, i_index, k) = FIG[k];
         }
     }
 };
 
 struct CalculateNodeForces {
     Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
-    View_NxN::const_type qp_weight_;
-    View_NxN::const_type qp_jacobian_;
+    Kokkos::View<double**>::const_type qp_weight_;
+    Kokkos::View<double**>::const_type qp_jacobian_;
     Kokkos::View<double***>::const_type shape_interp_;
     Kokkos::View<double***>::const_type shape_deriv_;
     Kokkos::View<double** [6]>::const_type qp_Fc_;
     Kokkos::View<double** [6]>::const_type qp_Fd_;
     Kokkos::View<double** [6]>::const_type qp_Fi_;
     Kokkos::View<double** [6]>::const_type qp_Fg_;
-    View_Nx6 node_FE_;
-    View_Nx6 node_FI_;
-    View_Nx6 node_FG_;
+    Kokkos::View<double** [6]> node_FE_;
+    Kokkos::View<double** [6]> node_FI_;
+    Kokkos::View<double** [6]> node_FG_;
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
