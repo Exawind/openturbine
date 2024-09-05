@@ -8,15 +8,18 @@
 
 namespace openturbine {
 
-// Contains the field variables needed to compute the per-element contributions to the
-// residual vector and system matrix.  
-//
-// In all Views, the first dimension corresponds to the element number
-// In Views prefixed `node_`, the second dimension corresponds to the node number within that element
-// In Views prefixed `qp_`, the second dimension corresponds to the quadrature point within that element
-// The remaining dimensions are the number of components as defined by physics
-//
-// shape_interp and shape_deriv have dimensions num_elems x num_nodes x num_qps
+/**
+ * @brief Contains the field variables needed to compute the per-element contributions to the
+ * residual vector and system matrix.
+ *
+ * - In all Views, the first dimension corresponds to the element number
+ * - In Views prefixed `node_`, the second dimension corresponds to the node number within that
+ * element
+ * - In Views prefixed `qp_`, the second dimension corresponds to the quadrature point within that
+ * element
+ * - The remaining dimensions are the number of components as defined by physics
+ * - Additionally, shape_interp and shape_deriv have dimensions num_elems x num_nodes x num_qps
+ */
 struct Beams {
     // Node and quadrature point index data for an element
     struct ElemIndices {
@@ -34,11 +37,11 @@ struct Beams {
               qp_shape_range(Kokkos::make_pair(0, n_qps)) {}
     };
 
-    size_t num_elems;  // Total number of element
-    size_t num_nodes;  // Total number of nodes
-    size_t num_qps;    // Total number of quadrature points
+    size_t num_elems;       // Total number of element
+    size_t num_nodes;       // Total number of nodes
+    size_t num_qps;         // Total number of quadrature points
     size_t max_elem_nodes;  // Maximum number of nodes per element
-    size_t max_elem_qps;  // Maximum number of quadrature points per element
+    size_t max_elem_qps;    // Maximum number of quadrature points per element
 
     Kokkos::View<ElemIndices*> elem_indices;    // View of element node and qp indices into views
     Kokkos::View<size_t**> node_state_indices;  // State row index for each node
