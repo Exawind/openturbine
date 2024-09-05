@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <numeric>
 #include <vector>
 
 #include <Kokkos_Core.hpp>
@@ -47,7 +48,7 @@ struct Constraints {
     View_N Phi;                                    //< Residual vector
     Kokkos::View<double* [6][12]> gradient_terms;  //< Gradient terms
 
-    Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints)
+    explicit Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints)
         : num{constraints.size()},
           num_dofs{std::transform_reduce(
               constraints.cbegin(), constraints.cend(), 0U, std::plus{},

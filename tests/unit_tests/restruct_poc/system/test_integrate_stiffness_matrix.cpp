@@ -28,10 +28,20 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP(
 
     auto gbl_M = Kokkos::View<double[1][6][6]>("global_M");
 
-    const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
-    const auto integrator = IntegrateStiffnessMatrixElement{
-        0,      number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_interp_deriv,
-        qp_Kuu, qp_Puu,        qp_Cuu,     qp_Ouu,      qp_Quu,       gbl_M};
+    const auto policy = Kokkos::RangePolicy(0, number_of_nodes);
+    const auto integrator = IntegrateStiffnessMatrixElement{0U,
+                                                            number_of_nodes,
+                                                            number_of_qps,
+                                                            qp_weights,
+                                                            qp_jacobian,
+                                                            shape_interp,
+                                                            shape_interp_deriv,
+                                                            qp_Kuu,
+                                                            qp_Puu,
+                                                            qp_Cuu,
+                                                            qp_Ouu,
+                                                            qp_Quu,
+                                                            gbl_M};
     Kokkos::parallel_for(policy, integrator);
 
     const auto exact_M = Kokkos::View<const double[1][6][6], Kokkos::HostSpace>(exact_M_data.data());
@@ -211,10 +221,20 @@ void TestIntegrateStiffnessMatrix_2Elements1Node1QP() {
              00301., 00302., 00303., 00304., 00305., 00306., 00401., 00402., 00403.,
              00404., 00405., 00406., 00501., 00502., 00503., 00504., 00505., 00506.}
         );
-        const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
-        const auto integrator = IntegrateStiffnessMatrixElement{
-            0,      number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_interp_deriv,
-            qp_Kuu, qp_Puu,        qp_Cuu,     qp_Ouu,      qp_Quu,       gbl_M};
+        const auto policy = Kokkos::RangePolicy(0, number_of_nodes);
+        const auto integrator = IntegrateStiffnessMatrixElement{0U,
+                                                                number_of_nodes,
+                                                                number_of_qps,
+                                                                qp_weights,
+                                                                qp_jacobian,
+                                                                shape_interp,
+                                                                shape_interp_deriv,
+                                                                qp_Kuu,
+                                                                qp_Puu,
+                                                                qp_Cuu,
+                                                                qp_Ouu,
+                                                                qp_Quu,
+                                                                gbl_M};
         Kokkos::parallel_for(policy, integrator);
     }
 
@@ -225,10 +245,20 @@ void TestIntegrateStiffnessMatrix_2Elements1Node1QP() {
              30001., 30002., 30003., 30004., 30005., 30006., 40001., 40002., 40003.,
              40004., 40005., 40006., 50001., 50002., 50003., 50004., 50005., 50006.}
         );
-        const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
-        const auto integrator = IntegrateStiffnessMatrixElement{
-            1,      number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_interp_deriv,
-            qp_Kuu, qp_Puu,        qp_Cuu,     qp_Ouu,      qp_Quu,       gbl_M};
+        const auto policy = Kokkos::RangePolicy(0, number_of_nodes);
+        const auto integrator = IntegrateStiffnessMatrixElement{1U,
+                                                                number_of_nodes,
+                                                                number_of_qps,
+                                                                qp_weights,
+                                                                qp_jacobian,
+                                                                shape_interp,
+                                                                shape_interp_deriv,
+                                                                qp_Kuu,
+                                                                qp_Puu,
+                                                                qp_Cuu,
+                                                                qp_Ouu,
+                                                                qp_Quu,
+                                                                gbl_M};
         Kokkos::parallel_for(policy, integrator);
     }
 
@@ -271,10 +301,20 @@ void TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
 
     auto gbl_M = Kokkos::View<double[1][12][12]>("global_M");
 
-    const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
-    const auto integrator = IntegrateStiffnessMatrixElement{
-        0,      number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_interp_deriv,
-        qp_Kuu, qp_Puu,        qp_Cuu,     qp_Ouu,      qp_Quu,       gbl_M};
+    const auto policy = Kokkos::RangePolicy(0, number_of_nodes);
+    const auto integrator = IntegrateStiffnessMatrixElement{0U,
+                                                            number_of_nodes,
+                                                            number_of_qps,
+                                                            qp_weights,
+                                                            qp_jacobian,
+                                                            shape_interp,
+                                                            shape_interp_deriv,
+                                                            qp_Kuu,
+                                                            qp_Puu,
+                                                            qp_Cuu,
+                                                            qp_Ouu,
+                                                            qp_Quu,
+                                                            gbl_M};
     Kokkos::parallel_for(policy, integrator);
 
     const auto exact_M =
@@ -462,10 +502,20 @@ void TestIntegrateStiffnessMatrix_1Element1Node2QPs(
 
     auto gbl_M = Kokkos::View<double[1][6][6]>("global_M");
 
-    const auto policy = Kokkos::MDRangePolicy({0, 0}, {number_of_nodes, number_of_nodes});
-    const auto integrator = IntegrateStiffnessMatrixElement{
-        0,      number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_interp_deriv,
-        qp_Kuu, qp_Puu,        qp_Cuu,     qp_Ouu,      qp_Quu,       gbl_M};
+    const auto policy = Kokkos::RangePolicy(0, number_of_nodes);
+    const auto integrator = IntegrateStiffnessMatrixElement{0U,
+                                                            number_of_nodes,
+                                                            number_of_qps,
+                                                            qp_weights,
+                                                            qp_jacobian,
+                                                            shape_interp,
+                                                            shape_interp_deriv,
+                                                            qp_Kuu,
+                                                            qp_Puu,
+                                                            qp_Cuu,
+                                                            qp_Ouu,
+                                                            qp_Quu,
+                                                            gbl_M};
     Kokkos::parallel_for(policy, integrator);
 
     const auto exact_M = Kokkos::View<const double[1][6][6], Kokkos::HostSpace>(exact_M_data.data());
