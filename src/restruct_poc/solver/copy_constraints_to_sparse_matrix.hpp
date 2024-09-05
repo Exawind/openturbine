@@ -8,15 +8,15 @@ template <typename CrsMatrixType>
 struct CopyConstraintsToSparseMatrix {
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
-    Kokkos::View<size_t* [2]>::const_type row_range;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
     CrsMatrixType sparse;
     Kokkos::View<const double* [6][12]> dense;
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
         const auto i_constraint = member.league_rank();
-        const auto start_row = row_range(i_constraint, 0);
-        const auto end_row = row_range(i_constraint, 1);
+        const auto start_row = row_range(i_constraint).first;
+        const auto end_row = row_range(i_constraint).second;
         Kokkos::parallel_for(Kokkos::TeamThreadRange(member, start_row, end_row), [&](int i) {
             const auto row_number = static_cast<size_t>(i) - start_row;
             const auto row = sparse.row(i);

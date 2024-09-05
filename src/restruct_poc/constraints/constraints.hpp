@@ -21,9 +21,11 @@ struct Constraints {
     size_t num_dofs;  //< Number of degrees of freedom
     std::vector<double*> control_signal;
     Kokkos::View<ConstraintType*> type;
-    Kokkos::View<size_t* [2]> row_range;
-    Kokkos::View<size_t* [2][2]> node_col_range;
-    Kokkos::View<size_t* [2]> node_index;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*> row_range;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*> base_node_col_range;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*> target_node_col_range;
+    Kokkos::View<size_t*> base_node_index;
+    Kokkos::View<size_t*> target_node_index;
     Kokkos::View<double* [3]> X0;
     Kokkos::View<double* [3][3]> axes;
 
@@ -45,8 +47,10 @@ struct Constraints {
           control_signal(num),
           type("type", num),
           row_range("row_range", num),
-          node_col_range("row_col_range", num),
-          node_index("node_index", num),
+          base_node_col_range("base_row_col_range", num),
+          target_node_col_range("target_row_col_range", num),
+          base_node_index("base_node_index", num),
+          target_node_index("target_node_index", num),
           X0("X0", num),
           axes("axes", num),
           control("control", num),
@@ -58,8 +62,10 @@ struct Constraints {
         // Create host mirror for constraint data
         auto host_type = Kokkos::create_mirror(type);
         auto host_row_range = Kokkos::create_mirror(row_range);
-        auto host_node_col_range = Kokkos::create_mirror(node_col_range);
-        auto host_node_index = Kokkos::create_mirror(node_index);
+        auto host_base_node_col_range = Kokkos::create_mirror(base_node_col_range);
+        auto host_target_node_col_range = Kokkos::create_mirror(target_node_col_range);
+        auto host_base_node_index = Kokkos::create_mirror(base_node_index);
+        auto host_target_node_index = Kokkos::create_mirror(target_node_index);
         auto host_X0 = Kokkos::create_mirror(X0);
         auto host_axes = Kokkos::create_mirror(axes);
 
@@ -72,8 +78,7 @@ struct Constraints {
 
             // Set constraint rows
             auto dofs = constraints[i]->NumDOFs();
-            host_row_range(i, 0) = start_row;
-            host_row_range(i, 1) = start_row + dofs;
+            host_row_range(i) = Kokkos::make_pair(start_row, start_row + dofs);
             start_row += dofs;
 
             if (GetNumberOfNodes(constraints[i]->type) == 2) {
@@ -81,21 +86,18 @@ struct Constraints {
                 const auto base_node_id = constraints[i]->base_node.ID;
                 const auto target_start_col =
                     (target_node_id < base_node_id) ? 0U : kLieAlgebraComponents;
-                host_node_col_range(i, 1, 0) = target_start_col;
-                host_node_col_range(i, 1, 1) = target_start_col + kLieAlgebraComponents;
+                host_target_node_col_range(i) = Kokkos::make_pair(target_start_col, target_start_col + kLieAlgebraComponents);
 
                 const auto base_start_col =
                     (base_node_id < target_node_id) ? 0U : kLieAlgebraComponents;
-                host_node_col_range(i, 0, 0) = base_start_col;
-                host_node_col_range(i, 0, 1) = base_start_col + kLieAlgebraComponents;
+                host_base_node_col_range(i) = Kokkos::make_pair(base_start_col, base_start_col + kLieAlgebraComponents);
             } else {
-                host_node_col_range(i, 1, 0) = 0U;
-                host_node_col_range(i, 1, 1) = kLieAlgebraComponents;
+                host_target_node_col_range(i) = Kokkos::make_pair(0U, kLieAlgebraComponents);
             }
 
             // Set base node and target node index
-            host_node_index(i, 0) = constraints[i]->base_node.ID;
-            host_node_index(i, 1) = constraints[i]->target_node.ID;
+            host_base_node_index(i) = constraints[i]->base_node.ID;
+            host_target_node_index(i) = constraints[i]->target_node.ID;
 
             // Set initial relative location between nodes and rotation axes
             for (auto j = 0U; j < 3U; ++j) {
@@ -109,8 +111,10 @@ struct Constraints {
         // Update data
         Kokkos::deep_copy(type, host_type);
         Kokkos::deep_copy(row_range, host_row_range);
-        Kokkos::deep_copy(node_col_range, host_node_col_range);
-        Kokkos::deep_copy(node_index, host_node_index);
+        Kokkos::deep_copy(base_node_col_range, host_base_node_col_range);
+        Kokkos::deep_copy(target_node_col_range, host_target_node_col_range);
+	Kokkos::deep_copy(base_node_index, host_base_node_index);
+        Kokkos::deep_copy(target_node_index, host_target_node_index);
         Kokkos::deep_copy(X0, host_X0);
         Kokkos::deep_copy(axes, host_axes);
 

@@ -20,10 +20,7 @@ inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
 
     Kokkos::parallel_for(
         "CalculateConstraintResidualGradient", constraints.num,
-        CalculateConstraintResidualGradient{
-            constraints.type, constraints.node_index, constraints.row_range,
-            constraints.node_col_range, constraints.X0, constraints.axes, constraints.control,
-            constraints.u, state.q, constraints.Phi, constraints.gradient_terms}
+        CalculateConstraintResidualGradient{constraints.type, constraints.base_node_index, constraints.target_node_index, constraints.row_range, constraints.base_node_col_range, constraints.target_node_col_range, constraints.X0, constraints.axes, constraints.control, constraints.u, state.q, constraints.Phi, constraints.gradient_terms}
     );
 }
 

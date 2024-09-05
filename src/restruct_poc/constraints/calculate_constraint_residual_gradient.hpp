@@ -17,9 +17,11 @@ namespace openturbine {
 
 struct CalculateConstraintResidualGradient {
     Kokkos::View<ConstraintType*>::const_type type;
-    Kokkos::View<size_t* [2]>::const_type node_index;
-    Kokkos::View<size_t* [2]>::const_type row_range;
-    Kokkos::View<size_t* [2][2]>::const_type node_col_range;
+    Kokkos::View<size_t*>::const_type base_node_index;
+    Kokkos::View<size_t*>::const_type target_node_index;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type base_node_col_range;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type target_node_col_range;
     Kokkos::View<double* [3]>::const_type X0_;
     Kokkos::View<double* [3][3]>::const_type axes;
     View_N::const_type control;
@@ -31,25 +33,15 @@ struct CalculateConstraintResidualGradient {
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
         if (type(i_constraint) == ConstraintType::kFixedBC) {
-            CalculateFixedBCConstraint{node_index, row_range, node_col_range,
-                                       X0_,        control,   constraint_u,
-                                       node_u,     Phi_,      gradient_terms}(i_constraint);
+            CalculateFixedBCConstraint{target_node_index, row_range, target_node_col_range, X0_,        control,   constraint_u, node_u,     Phi_,      gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kPrescribedBC) {
-            CalculatePrescribedBCConstraint{node_index, row_range, node_col_range,
-                                            X0_,        control,   constraint_u,
-                                            node_u,     Phi_,      gradient_terms}(i_constraint);
+            CalculatePrescribedBCConstraint{target_node_index, row_range, target_node_col_range, X0_,        control,   constraint_u, node_u,     Phi_,      gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kRigid) {
-            CalculateRigidConstraint{
-                node_index,   row_range, node_col_range, X0_,           control,
-                constraint_u, node_u,    Phi_,           gradient_terms}(i_constraint);
+            CalculateRigidConstraint{base_node_index, target_node_index, row_range, base_node_col_range, target_node_col_range, X0_, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kCylindrical) {
-            CalculateCylindricalConstraint{node_index, row_range,     node_col_range, X0_,
-                                           axes,       control,       constraint_u,   node_u,
-                                           Phi_,       gradient_terms}(i_constraint);
+            CalculateCylindricalConstraint{base_node_index, target_node_index, row_range, base_node_col_range, target_node_col_range, X0_, axes, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kRotationControl) {
-            CalculateRotationControlConstraint{node_index, row_range,     node_col_range, X0_,
-                                               axes,       control,       constraint_u,   node_u,
-                                               Phi_,       gradient_terms}(i_constraint);
+            CalculateRotationControlConstraint{base_node_index, target_node_index, row_range, base_node_col_range, target_node_col_range, X0_, axes, control, constraint_u, node_u, Phi_, gradient_terms}(i_constraint);
         }
     }
 };

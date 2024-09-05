@@ -11,9 +11,11 @@
 namespace openturbine {
 
 struct CalculateCylindricalConstraint {
-    Kokkos::View<size_t* [2]>::const_type node_index;
-    Kokkos::View<size_t* [2]>::const_type row_range;
-    Kokkos::View<size_t* [2][2]>::const_type node_col_range;
+    Kokkos::View<size_t*>::const_type base_node_index;
+    Kokkos::View<size_t*>::const_type target_node_index;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type base_node_col_range;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type target_node_col_range;
     Kokkos::View<double* [3]>::const_type X0_;
     Kokkos::View<double* [3][3]>::const_type axes;
     View_N::const_type control;
@@ -24,8 +26,8 @@ struct CalculateCylindricalConstraint {
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
-        const auto i_node1 = node_index(i_constraint, 0);
-        const auto i_node2 = node_index(i_constraint, 1);
+        const auto i_node1 = base_node_index(i_constraint);
+        const auto i_node2 = target_node_index(i_constraint);
 
         // Initial difference between nodes
         const auto X0_data = Kokkos::Array<double, 3>{
@@ -81,9 +83,7 @@ struct CalculateCylindricalConstraint {
         //----------------------------------------------------------------------
 
         // Extract residual rows relevant to this constraint
-        const auto Phi = Kokkos::subview(
-            Phi_, Kokkos::make_pair(row_range(i_constraint, 0), row_range(i_constraint, 1))
-        );
+        const auto Phi = Kokkos::subview(Phi_, row_range(i_constraint));
 
         // Phi(0:3) = u2 + X0 - u1 - R1*X0
         QuaternionInverse(R1, R1t);
@@ -110,12 +110,7 @@ struct CalculateCylindricalConstraint {
         //---------------------------------
         {
             // Extract gradient block for target node of this constraint
-            const auto B = Kokkos::subview(
-                gradient_terms, i_constraint, Kokkos::ALL,
-                Kokkos::make_pair(
-                    node_col_range(i_constraint, 1, 0), node_col_range(i_constraint, 1, 1)
-                )
-            );
+            const auto B = Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, target_node_col_range(i_constraint));
 
             // B(0:3,0:3) = I
             for (int i = 0; i < 3; ++i) {
@@ -136,12 +131,7 @@ struct CalculateCylindricalConstraint {
         //---------------------------------
         {
             // Extract gradient block for base node of this constraint
-            const auto B = Kokkos::subview(
-                gradient_terms, i_constraint, Kokkos::ALL,
-                Kokkos::make_pair(
-                    node_col_range(i_constraint, 0, 0), node_col_range(i_constraint, 0, 1)
-                )
-            );
+            const auto B = Kokkos::subview(gradient_terms, i_constraint, Kokkos::ALL, base_node_col_range(i_constraint));
 
             // B(0:3,0:3) = -I
             for (int i = 0; i < 3; ++i) {
