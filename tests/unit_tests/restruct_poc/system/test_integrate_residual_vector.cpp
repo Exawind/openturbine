@@ -17,8 +17,12 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fc) {
 
     const auto qp_weights = get_qp_weights<number_of_qps>({2.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({0.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({0.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3.});
+    const auto shape_interp_left = get_shape_interp<number_of_nodes, number_of_qps>({0.});
+    const auto shape_interp = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_interp");
+    Kokkos::deep_copy(shape_interp, shape_interp_left);
+    const auto shape_deriv_left = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3.});
+    const auto shape_deriv = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_deriv");
+    Kokkos::deep_copy(shape_deriv, shape_deriv_left);
     using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
     using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
 
@@ -55,8 +59,12 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fd) {
 
     const auto qp_weights = get_qp_weights<number_of_qps>({2.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({4.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
+    const auto shape_interp_left = get_shape_interp<number_of_nodes, number_of_qps>({4.});
+    const auto shape_interp = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_interp");
+    Kokkos::deep_copy(shape_interp, shape_interp_left);
+    const auto shape_deriv_left = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
+    const auto shape_deriv = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_deriv");
+    Kokkos::deep_copy(shape_deriv, shape_deriv_left);
     using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
     using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
 
@@ -93,8 +101,12 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fi) {
 
     const auto qp_weights = get_qp_weights<number_of_qps>({2.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({4.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
+    const auto shape_interp_left = get_shape_interp<number_of_nodes, number_of_qps>({4.});
+    const auto shape_interp = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_interp");
+    Kokkos::deep_copy(shape_interp, shape_interp_left);
+    const auto shape_deriv_left = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
+    const auto shape_deriv = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_deriv");
+    Kokkos::deep_copy(shape_deriv, shape_deriv_left);
     using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
     using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
 
@@ -131,8 +143,12 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fg) {
 
     const auto qp_weights = get_qp_weights<number_of_qps>({2.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({4.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
+    const auto shape_interp_left = get_shape_interp<number_of_nodes, number_of_qps>({4.});
+    const auto shape_interp = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_interp");
+    Kokkos::deep_copy(shape_interp, shape_interp_left);
+    const auto shape_deriv_left = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
+    const auto shape_deriv = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_deriv");
+    Kokkos::deep_copy(shape_deriv, shape_deriv_left);
     using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
     using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
 
@@ -169,8 +185,12 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_FX) {
 
     const auto qp_weights = get_qp_weights<number_of_qps>({2.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({4.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
+    const auto shape_interp_left = get_shape_interp<number_of_nodes, number_of_qps>({4.});
+    const auto shape_interp = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_interp");
+    Kokkos::deep_copy(shape_interp, shape_interp_left);
+    const auto shape_deriv_left = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
+    const auto shape_deriv = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_deriv");
+    Kokkos::deep_copy(shape_deriv, shape_deriv_left);
     using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
 
     const auto node_FX = get_node_FX<number_of_nodes>({1., 2., 3., 4., 5., 6.});
@@ -206,8 +226,12 @@ TEST(IntegrateResidualVector, TwoElementsOneNodeOneQP) {
 
     const auto qp_weights = get_qp_weights<number_of_qps>({2.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({0.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({0.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3.});
+    const auto shape_interp_left = get_shape_interp<number_of_nodes, number_of_qps>({0.});
+    const auto shape_interp = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_interp");
+    Kokkos::deep_copy(shape_interp, shape_interp_left);
+    const auto shape_deriv_left = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3.});
+    const auto shape_deriv = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_deriv");
+    Kokkos::deep_copy(shape_deriv, shape_deriv_left);
     using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
     using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
 
@@ -252,8 +276,12 @@ TEST(IntegrateResidualVector, OneElementOneNodeTwoQPs) {
 
     const auto qp_weights = get_qp_weights<number_of_qps>({2., 1.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({0.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({0.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3., 2.});
+    const auto shape_interp_left = get_shape_interp<number_of_nodes, number_of_qps>({0.});
+    const auto shape_interp = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_interp");
+    Kokkos::deep_copy(shape_interp, shape_interp_left);
+    const auto shape_deriv_left = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3., 2.});
+    const auto shape_deriv = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_deriv");
+    Kokkos::deep_copy(shape_deriv, shape_deriv_left);
     using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
     using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
 
@@ -290,8 +318,12 @@ TEST(IntegrateResidualVector, OneElementTwoNodesOneQP) {
 
     const auto qp_weights = get_qp_weights<number_of_qps>({2.});
     const auto qp_jacobian = get_qp_jacobian<number_of_qps>({0.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({0.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3.});
+    const auto shape_interp_left = get_shape_interp<number_of_nodes, number_of_qps>({0.});
+    const auto shape_interp = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_interp");
+    Kokkos::deep_copy(shape_interp, shape_interp_left);
+    const auto shape_deriv_left = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3.});
+    const auto shape_deriv = Kokkos::View<double[number_of_nodes][number_of_qps]>("shape_deriv");
+    Kokkos::deep_copy(shape_deriv, shape_deriv_left);
     using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
     using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
 

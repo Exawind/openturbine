@@ -15,8 +15,7 @@ struct ComputeNumberOfNonZeros_Constraints {
     KOKKOS_FUNCTION
     void operator()(int i_constraint, size_t& update) const {
         const auto num_blocks = GetNumberOfNodes(type(i_constraint));
-        update += num_blocks * kLieAlgebraComponents *
-                  (row_range(i_constraint).second - row_range(i_constraint).first);
+        update += num_blocks * 6U * (row_range(i_constraint).second - row_range(i_constraint).first);
     }
 };
 }  // namespace openturbine

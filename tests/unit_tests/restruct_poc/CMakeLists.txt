@@ -23,9 +23,15 @@ target_sources(
 
     # Solver-related tests
     solver/test_compute_number_of_non_zeros.cpp
+    solver/test_compute_number_of_non_zeros_constraints.cpp
     solver/test_copy_into_sparse_matrix.cpp
+    solver/test_fill_unshifted_row_ptrs.cpp
     solver/test_populate_sparse_indices.cpp
     solver/test_populate_sparse_row_ptrs.cpp
+    solver/test_populate_sparse_row_ptrs_col_inds_constraints.cpp
+    solver/test_populate_sparse_row_ptrs_col_inds_transpose.cpp
+    solver/test_populate_tangent_row_ptrs.cpp
+    solver/test_populate_tangent_indices.cpp
 
     # System-related tests
     system/test_integrate_stiffness_matrix.cpp

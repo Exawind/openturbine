@@ -45,7 +45,7 @@ auto get_qp_jacobian(const std::array<double, n_qps>& jacobian_data) {
 
 template <size_t n_nodes, size_t n_qps>
 auto get_shape_matrix(std::string_view name, const std::array<double, n_nodes * n_qps>& shape_data) {
-    using ShapeView = Kokkos::View<double[n_nodes][n_qps]>;
+    using ShapeView = Kokkos::View<double[n_nodes][n_qps], Kokkos::LayoutLeft>;
     using HostShapeView = Kokkos::View<const double[n_nodes][n_qps], Kokkos::HostSpace>;
     auto shape = ShapeView(std::string{name});
     const auto host_shape = Kokkos::create_mirror(shape);
