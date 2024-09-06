@@ -11,108 +11,22 @@
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
-#include "src/restruct_poc/solver/assemble_constraints.hpp"
-#include "src/restruct_poc/solver/assemble_system.hpp"
-#include "src/restruct_poc/solver/predict_next_state.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
-#include "src/restruct_poc/solver/step.hpp"
+#include "src/restruct_poc/state/copy_nodes_to_state.hpp"
+#include "src/restruct_poc/state/state.hpp"
+#include "src/restruct_poc/step/assemble_constraints_matrix.hpp"
+#include "src/restruct_poc/step/assemble_constraints_residual.hpp"
+#include "src/restruct_poc/step/assemble_system_matrix.hpp"
+#include "src/restruct_poc/step/assemble_system_residual.hpp"
+#include "src/restruct_poc/step/predict_next_state.hpp"
+#include "src/restruct_poc/step/step.hpp"
+#include "src/restruct_poc/step/step_parameters.hpp"
+#include "src/restruct_poc/step/update_constraint_variables.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine::tests {
 
-inline std::pair<Beams, Solver> MakeBeamsAndSolver(size_t max_iter) {
-    // Mass matrix for uniform composite beam section
-    constexpr auto mass_matrix = std::array{
-        std::array{8.538e-2, 0., 0., 0., 0., 0.},   std::array{0., 8.538e-2, 0., 0., 0., 0.},
-        std::array{0., 0., 8.538e-2, 0., 0., 0.},   std::array{0., 0., 0., 1.4433e-2, 0., 0.},
-        std::array{0., 0., 0., 0., 0.40972e-2, 0.}, std::array{0., 0., 0., 0., 0., 1.0336e-2},
-    };
-
-    // Stiffness matrix for uniform composite beam section
-    constexpr auto stiffness_matrix = std::array{
-        std::array{1368.17e3, 0., 0., 0., 0., 0.},
-        std::array{0., 88.56e3, 0., 0., 0., 0.},
-        std::array{0., 0., 38.78e3, 0., 0., 0.},
-        std::array{0., 0., 0., 16.9600e3, 17.6100e3, -0.3510e3},
-        std::array{0., 0., 0., 17.6100e3, 59.1200e3, -0.3700e3},
-        std::array{0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
-    };
-
-    // Create model for adding nodes and constraints
-    auto model = Model();
-
-    // Gravity vector
-    constexpr auto gravity = std::array{0., 0., 0.};
-
-    // Node locations (GLL quadrature)
-    constexpr auto node_s = std::array{
-        0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.};
-
-    // Build vector of nodes (straight along x axis, no rotation)
-    // Calculate displacement, velocity, acceleration assuming a
-    // 0.1 rad/s angular velocity around the z axis
-    constexpr auto omega = 0.1;
-    std::vector<BeamNode> beam_nodes;
-    std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
-        [&](auto s) {
-            const auto x = 10 * s + 2.;
-            return BeamNode(
-                s, *model.AddNode(
-                       {x, 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.},
-                       {0., x * omega, 0., 0., 0., omega}, {0., 0., 0., 0., 0., 0.}
-                   )
-            );
-        }
-    );
-
-    // Define beam initialization
-    const auto beams_input = BeamsInput(
-        {
-            BeamElement(
-                beam_nodes,
-                {
-                    BeamSection(0., mass_matrix, stiffness_matrix),
-                    BeamSection(1., mass_matrix, stiffness_matrix),
-                },
-                BeamQuadrature{
-                    {-0.9491079123427585, 0.1294849661688697},
-                    {-0.7415311855993943, 0.27970539148927664},
-                    {-0.40584515137739696, 0.3818300505051189},
-                    {6.123233995736766e-17, 0.4179591836734694},
-                    {0.4058451513773971, 0.3818300505051189},
-                    {0.7415311855993945, 0.27970539148927664},
-                    {0.9491079123427585, 0.1294849661688697},
-                }
-            ),
-        },
-        gravity
-    );
-
-    // Initialize beams from element inputs
-    auto beams = CreateBeams(beams_input);
-
-    // Constraint inputs
-    model.AddPrescribedBC(model.GetNode(0));
-
-    // Solution parameters
-    const bool is_dynamic_solve(true);
-    const double step_size(0.01);  // seconds
-    const double rho_inf(0.9);
-
-    // Create solver
-    auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
-        beams
-    );
-
-    auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
-    solver.constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
-
-    return std::make_pair(beams, solver);
-}
-
-inline Solver SetUpSolverAndAssemble() {
+inline void SetUpSolverAndAssemble() {
     // Mass matrix for uniform composite beam section
     constexpr auto mass_matrix = std::array{
         std::array{8.538e-2, 0., 0., 0., 0., 0.},   std::array{0., 8.538e-2, 0., 0., 0., 0.},
@@ -194,45 +108,34 @@ inline Solver SetUpSolverAndAssemble() {
     constexpr auto rho_inf = 0.9;
 
     // Create solver
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes());
+    CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
-        beams
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
     );
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
-    solver.constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+    constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
 
     // Predict the next state for the solver
-    PredictNextState(solver);
-
-    auto system_range = Kokkos::make_pair(size_t{0U}, solver.num_system_dofs);
-    auto constraint_range = Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs);
-
-    auto R_system = Kokkos::subview(solver.R, system_range);
-    auto R_lambda = Kokkos::subview(solver.R, constraint_range);
-
-    auto x_system = Kokkos::subview(solver.x, system_range);
-    auto x_lambda = Kokkos::subview(solver.x, constraint_range);
+    PredictNextState(parameters, state);
 
     // Update beam elements state from solvers
-    UpdateState(beams, solver.state.q, solver.state.v, solver.state.vd);
+    UpdateSystemVariables(parameters, beams, state);
+    AssembleSystemMatrix(solver, beams);
+    AssembleSystemResidual(solver, beams);
 
-    AssembleSystem(solver, beams, R_system);
+    UpdateConstraintVariables(state, constraints);
+    AssembleConstraintsMatrix(solver, constraints);
+    AssembleConstraintsResidual(solver, constraints);
 
-    AssembleConstraints(solver, R_system, R_lambda);
-
-    return solver;
-}
-
-TEST(NewSolverTest, SolverPredictNextState_lambda) {
-    auto solver = SetUpSolverAndAssemble();
-    expect_kokkos_view_1D_equal(solver.state.lambda, {0., 0., 0., 0., 0., 0.});
-}
-
-TEST(NewSolverTest, SolverPredictNextState_q_prev) {
-    auto solver = SetUpSolverAndAssemble();
+    expect_kokkos_view_1D_equal(constraints.lambda, {0., 0., 0., 0., 0., 0.});
     expect_kokkos_view_2D_equal(
-        solver.state.q_prev,
+        state.q_prev,
         {
             {0., 0., 0., 1., 0., 0., 0.},
             {0., 0., 0., 1., 0., 0., 0.},
@@ -242,12 +145,8 @@ TEST(NewSolverTest, SolverPredictNextState_q_prev) {
             {0., 0., 0., 1., 0., 0., 0.},
         }
     );
-}
-
-TEST(NewSolverTest, SolverPredictNextState_a) {
-    auto solver = SetUpSolverAndAssemble();
     expect_kokkos_view_2D_equal(
-        solver.state.a,
+        state.a,
         {
             {0., 0., 0., 0., 0., 0.},
             {0., 0., 0., 0., 0., 0.},
@@ -257,12 +156,8 @@ TEST(NewSolverTest, SolverPredictNextState_a) {
             {0., 0., 0., 0., 0., 0.},
         }
     );
-}
-
-TEST(NewSolverTest, SolverPredictNextState_v) {
-    auto solver = SetUpSolverAndAssemble();
     expect_kokkos_view_2D_equal(
-        solver.state.v,
+        state.v,
         {
             {0, 0.20000000000000000, 0, 0, 0, 0.1},
             {0, 0.31747233803526764, 0, 0, 0, 0.1},
@@ -272,12 +167,8 @@ TEST(NewSolverTest, SolverPredictNextState_v) {
             {0, 1.20000000000000000, 0, 0, 0, 0.1},
         }
     );
-}
-
-TEST(NewSolverTest, SolverPredictNextState_vd) {
-    auto solver = SetUpSolverAndAssemble();
     expect_kokkos_view_2D_equal(
-        solver.state.vd,
+        state.vd,
         {
             {0., 0., 0., 0., 0., 0.},
             {0., 0., 0., 0., 0., 0.},
@@ -287,12 +178,8 @@ TEST(NewSolverTest, SolverPredictNextState_vd) {
             {0., 0., 0., 0., 0., 0.},
         }
     );
-}
-
-TEST(NewSolverTest, SolverPredictNextState_q_delta) {
-    auto solver = SetUpSolverAndAssemble();
     expect_kokkos_view_2D_equal(
-        solver.state.q_delta,
+        state.q_delta,
         {
             {0., 0.20000000000000001, 0., 0., 0., 0.10000000000000001},
             {0., 0.31747233803526764, 0., 0., 0., 0.10000000000000001},
@@ -302,12 +189,8 @@ TEST(NewSolverTest, SolverPredictNextState_q_delta) {
             {0., 1.20000000000000020, 0., 0., 0., 0.10000000000000001},
         }
     );
-}
-
-TEST(NewSolverTest, SolverPredictNextState_q) {
-    auto solver = SetUpSolverAndAssemble();
     expect_kokkos_view_2D_equal(
-        solver.state.q,
+        state.q,
         {
             {0, 0.0020000000000000, 0, 0.999999875, 0, 0, 0.0004999999},
             {0, 0.0031747233803526, 0, 0.999999875, 0, 0, 0.0004999999},
@@ -317,26 +200,16 @@ TEST(NewSolverTest, SolverPredictNextState_q) {
             {0, 0.0120000000000000, 0, 0.999999875, 0, 0, 0.0004999999},
         }
     );
-}
-
-TEST(NewSolverTest, ConstraintResidualVector) {
-    auto solver = SetUpSolverAndAssemble();
-    expect_kokkos_view_1D_equal(
-        solver.constraints.Phi,
-        {
-            9.9999991642896191E-7,
-            3.3333331667800836E-10,
-            0.,
-            0.,
-            0.,
-            0.,
-        }
+    expect_kokkos_view_2D_equal(
+        constraints.residual_terms, {{
+                                        9.9999991642896191E-7,
+                                        3.3333331667800836E-10,
+                                        0.,
+                                        0.,
+                                        0.,
+                                        0.,
+                                    }}
     );
-}
-
-TEST(NewSolverTest, AssembleResidualVector) {
-    auto solver = SetUpSolverAndAssemble();
-
     expect_kokkos_view_1D_equal(
         solver.R,
         {
@@ -386,7 +259,11 @@ TEST(NewSolverTest, AssembleResidualVector) {
     );
 }
 
-inline auto SetupAndTakeNoSteps() {
+TEST(NewSolverTest, SolverPredictNextState) {
+    SetUpSolverAndAssemble();
+}
+
+inline void SetupAndTakeNoSteps() {
     // Mass matrix for uniform composite beam section
     constexpr auto mass_matrix = std::array{
         std::array{8.538e-2, 0., 0., 0., 0., 0.},   std::array{0., 8.538e-2, 0., 0., 0., 0.},
@@ -468,21 +345,21 @@ inline auto SetupAndTakeNoSteps() {
     constexpr auto rho_inf = 0.9;
 
     // Create solver
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes());
+    CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
-        beams
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
     );
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
-    solver.constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+    constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
 
-    Step(solver, beams);
+    Step(parameters, solver, beams, state, constraints);
 
-    return solver;
-}
-
-TEST(SolverStep1Test, SolutionVector) {
-    auto solver = SetupAndTakeNoSteps();
     expect_kokkos_view_1D_equal(
         solver.x,
         {
@@ -502,17 +379,9 @@ TEST(SolverStep1Test, SolutionVector) {
             2.0316113427113777E-8,     2.1788291524533811E-8,   -0.000033726153743119725,
         }
     );
-}
-
-TEST(SolverStep1Test, ConvergenceError) {
-    auto solver = SetupAndTakeNoSteps();
     EXPECT_NEAR(solver.convergence_err[0], 14.796392074134879, 1.e-7);
-}
-
-TEST(SolverStep1Test, SolverUpdateStatePrediction_q_delta) {
-    auto solver = SetupAndTakeNoSteps();
     expect_kokkos_view_2D_equal(
-        solver.state.q_delta,
+        state.q_delta,
         {
             {-0.000099999991642894646, 0.19999996666666833, -2.7693137528041646E-26,
              -6.5954208494030504E-28, 1.3190840599775882E-24, 0.10000000000000001},
@@ -528,12 +397,8 @@ TEST(SolverStep1Test, SolverUpdateStatePrediction_q_delta) {
              -2.6313864405287535E-10, -1.7915982090983507E-11, 0.099999958035748431},
         }
     );
-}
-
-TEST(SolverStep1Test, SolverUpdateStatePrediction_v) {
-    auto solver = SetupAndTakeNoSteps();
     expect_kokkos_view_2D_equal(
-        solver.state.v,
+        state.v,
         {
             {-0.00019949998332757481, 0.19999993350000334, -5.5247809368443091E-26,
              -1.3157864594559085E-27, 2.6315726996552886E-24, 0.10000000000000001},
@@ -549,12 +414,8 @@ TEST(SolverStep1Test, SolverUpdateStatePrediction_v) {
              -5.2496159488548634E-10, -3.5742384271512094E-11, 0.099999916281318101},
         }
     );
-}
-
-TEST(SolverStep1Test, SolverUpdateStatePrediction_vd) {
-    auto solver = SetupAndTakeNoSteps();
     expect_kokkos_view_2D_equal(
-        solver.state.vd,
+        state.vd,
         {
             {-0.039709996681393474, -0.000013236666005283692, -1.0996944912385341E-23,
              -2.619041619297952E-25, 5.2380828021710043E-22, 3.0933382853420454E-19},
@@ -570,12 +431,8 @@ TEST(SolverStep1Test, SolverUpdateStatePrediction_vd) {
              -1.0449235555339682E-7, -7.1144364883295513E-9, -0.000016664004302439988},
         }
     );
-}
-
-TEST(SolverStep1Test, SolverUpdateStatePrediction_q) {
-    auto solver = SetupAndTakeNoSteps();
     expect_kokkos_view_2D_equal(
-        solver.state.q,
+        state.q,
         {
             {-9.9999991642894645E-7, 0.0019999996666666834, -2.7693137528041648E-28,
              0.99999987500000264, -3.2977102872969255E-30, 6.5954200250787654E-27,
@@ -597,12 +454,8 @@ TEST(SolverStep1Test, SolverUpdateStatePrediction_q) {
              0.00049999976934543534},
         }
     );
-}
-
-TEST(SolverStep1Test, SolverUpdateStatePrediction_lambda) {
-    auto solver = SetupAndTakeNoSteps();
     expect_kokkos_view_1D_equal(
-        solver.state.lambda,
+        constraints.lambda,
         {
             -0.10816660597819647,
             -0.000095455157310304377,
@@ -612,6 +465,10 @@ TEST(SolverStep1Test, SolverUpdateStatePrediction_lambda) {
             0.000033726153743119725,
         }
     );
+}
+
+TEST(SolverStep1Test, SolutionVector) {
+    SetupAndTakeNoSteps();
 }
 
 inline auto SetupAndTakeTwoSteps() {
@@ -696,37 +553,31 @@ inline auto SetupAndTakeTwoSteps() {
     constexpr auto rho_inf = 0.9;
 
     // Create solver
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes());
+    CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
-        beams
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
     );
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
-    solver.constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+    constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
 
-    Step(solver, beams);
+    Step(parameters, solver, beams, state, constraints);
 
-    return solver;
-}
-
-TEST(SolverStep2Test, ConstraintResidualVector) {
-    auto solver = SetupAndTakeTwoSteps();
-
-    expect_kokkos_view_1D_equal(
-        solver.constraints.Phi,
-        {
-            0.0,
-            0.0,
-            -2.769313752804165e-28,
-            -1.31908395004359e-29,
-            1.3190835103592412e-26,
-            0.0,
-        }
+    expect_kokkos_view_2D_equal(
+        constraints.residual_terms, {{
+                                        0.0,
+                                        0.0,
+                                        -2.769313752804165e-28,
+                                        -1.31908395004359e-29,
+                                        1.3190835103592412e-26,
+                                        0.0,
+                                    }}
     );
-}
-
-TEST(SolverStep2Test, ResidualVector) {
-    auto solver = SetupAndTakeTwoSteps();
     expect_kokkos_view_1D_equal(
         solver.R,
         {
@@ -774,10 +625,6 @@ TEST(SolverStep2Test, ResidualVector) {
             0,
         }
     );
-}
-
-TEST(SolverStep2Test, SolutionVector) {
-    auto solver = SetupAndTakeTwoSteps();
     expect_kokkos_view_1D_equal(
         solver.x,
         {
@@ -797,6 +644,10 @@ TEST(SolverStep2Test, SolutionVector) {
             4.0632386057053241E-8,   4.3576751058673394E-8,   -0.000067452108435714744,
         }
     );
+}
+
+TEST(SolverStep2Test, ConstraintResidualVector) {
+    SetupAndTakeTwoSteps();
 }
 
 }  // namespace openturbine::tests

@@ -8,12 +8,12 @@ namespace openturbine::tests {
 TEST(PopulateTangentIndices, TwoNodes) {
     constexpr auto num_system_nodes = 2U;
     constexpr auto num_system_dofs = num_system_nodes * 6U * 6U;
-    constexpr auto node_state_indices_host_data = std::array{0, 1};
+    constexpr auto node_state_indices_host_data = std::array{size_t{0U}, size_t{1U}};
     const auto node_state_indices_host =
-        Kokkos::View<const int[num_system_nodes], Kokkos::HostSpace>(
+        Kokkos::View<const size_t[num_system_nodes], Kokkos::HostSpace>(
             node_state_indices_host_data.data()
         );
-    const auto node_state_indices = Kokkos::View<int[num_system_nodes]>("node_state_indices");
+    const auto node_state_indices = Kokkos::View<size_t[num_system_nodes]>("node_state_indices");
     Kokkos::deep_copy(node_state_indices, node_state_indices_host);
 
     const auto indices = Kokkos::View<int[num_system_dofs]>("indices");

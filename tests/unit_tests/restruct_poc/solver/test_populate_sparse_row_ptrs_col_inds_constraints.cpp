@@ -9,32 +9,43 @@ TEST(PopulateSparseRowPtrsColInds_Constraints, OneOfEach) {
     constexpr auto num_constraints = 5U;
     constexpr auto num_constraint_dofs = 29U;
     constexpr auto num_non_zero = 288U;
-    constexpr auto device_data_host_data = std::array{
-        Constraints::DeviceData{
-            ConstraintType::kFixedBC, {0U, 6U}, {0U, 0U}, {0U, 0U}, 1U, 2U, {}, {}, {}, {}},
-        Constraints::DeviceData{
-            ConstraintType::kPrescribedBC, {6U, 12U}, {0U, 0U}, {0U, 0U}, 3U, 4U, {}, {}, {}, {}},
-        Constraints::DeviceData{
-            ConstraintType::kRigid, {12U, 18U}, {0U, 0U}, {0U, 0U}, 5U, 6U, {}, {}, {}, {}},
-        Constraints::DeviceData{
-            ConstraintType::kCylindrical, {18U, 23U}, {0U, 0U}, {0U, 0U}, 7U, 8U, {}, {}, {}, {}},
-        Constraints::DeviceData{
-            ConstraintType::kRotationControl,
-            {23U, 29U},
-            {0U, 0U},
-            {0U, 0U},
-            9U,
-            10U,
-            {},
-            {},
-            {},
-            {}}};
-    const auto device_data_host =
-        Kokkos::View<const Constraints::DeviceData[num_constraints], Kokkos::HostSpace>(
-            device_data_host_data.data()
+    constexpr auto type_host_data = std::array{
+        ConstraintType::kFixedBC, ConstraintType::kPrescribedBC, ConstraintType::kRigid,
+        ConstraintType::kCylindrical, ConstraintType::kRotationControl};
+    constexpr auto row_range_host_data = std::array{
+        Kokkos::pair<size_t, size_t>{0U, 6U}, Kokkos::pair<size_t, size_t>{6U, 12U},
+        Kokkos::pair<size_t, size_t>{12U, 18U}, Kokkos::pair<size_t, size_t>{18U, 23U},
+        Kokkos::pair<size_t, size_t>{23U, 29U}};
+    constexpr auto base_node_index_host_data =
+        std::array<size_t, num_constraints>{1U, 3U, 5U, 7U, 9U};
+    constexpr auto target_node_index_host_data =
+        std::array<size_t, num_constraints>{2U, 4U, 6U, 8U, 10U};
+
+    const auto type_host =
+        Kokkos::View<const ConstraintType[num_constraints], Kokkos::HostSpace>(type_host_data.data()
         );
-    const auto device_data = Kokkos::View<Constraints::DeviceData[num_constraints]>("device_data");
-    Kokkos::deep_copy(device_data, device_data_host);
+    const auto type = Kokkos::View<ConstraintType[num_constraints]>("type");
+    Kokkos::deep_copy(type, type_host);
+
+    const auto row_range_host =
+        Kokkos::View<const Kokkos::pair<size_t, size_t>[num_constraints], Kokkos::HostSpace>(
+            row_range_host_data.data()
+        );
+    const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>[num_constraints]>("row_range");
+    Kokkos::deep_copy(row_range, row_range_host);
+
+    const auto base_node_index_host = Kokkos::View<const size_t[num_constraints], Kokkos::HostSpace>(
+        base_node_index_host_data.data()
+    );
+    const auto base_node_index = Kokkos::View<size_t[num_constraints]>("base_node_index");
+    Kokkos::deep_copy(base_node_index, base_node_index_host);
+
+    const auto target_node_index_host =
+        Kokkos::View<const size_t[num_constraints], Kokkos::HostSpace>(
+            target_node_index_host_data.data()
+        );
+    const auto target_node_index = Kokkos::View<size_t[num_constraints]>("target_node_index");
+    Kokkos::deep_copy(target_node_index, target_node_index_host);
 
     const auto B_row_ptrs = Kokkos::View<size_t[num_constraint_dofs + 1U]>("B_row_ptrs");
     const auto B_col_inds = Kokkos::View<size_t[num_non_zero]>("B_col_inds");
@@ -42,7 +53,7 @@ TEST(PopulateSparseRowPtrsColInds_Constraints, OneOfEach) {
     Kokkos::parallel_for(
         "PopulateSparseRowPtrsColInds_Constraints", 1,
         PopulateSparseRowPtrsColInds_Constraints<Kokkos::View<size_t*>, Kokkos::View<size_t*>>{
-            device_data, B_row_ptrs, B_col_inds}
+            type, base_node_index, target_node_index, row_range, B_row_ptrs, B_col_inds}
     );
 
     constexpr auto B_row_ptrs_exact_data = std::array<size_t, num_constraint_dofs + 1U>{

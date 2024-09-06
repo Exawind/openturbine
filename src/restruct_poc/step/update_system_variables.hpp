@@ -3,19 +3,21 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "calculate_node_forces.hpp"
-#include "calculate_quadrature_point_values.hpp"
-#include "update_node_state.hpp"
+#include "assemble_inertia_matrix.hpp"
+#include "assemble_residual_vector.hpp"
+#include "assemble_stiffness_matrix.hpp"
+#include "step_parameters.hpp"
 
 #include "src/restruct_poc/beams/beams.hpp"
 #include "src/restruct_poc/beams/interpolate_to_quadrature_points.hpp"
-#include "src/restruct_poc/types.hpp"
+#include "src/restruct_poc/state/state.hpp"
+#include "src/restruct_poc/system/calculate_quadrature_point_values.hpp"
+#include "src/restruct_poc/system/calculate_tangent_operator.hpp"
+#include "src/restruct_poc/system/update_node_state.hpp"
 
 namespace openturbine {
 
-inline void UpdateState(
-    const Beams& beams, const View_Nx7& Q, const View_Nx6& V, const View_Nx6& A
-) {
+inline void UpdateSystemVariables(StepParameters& parameters, const Beams& beams, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(
@@ -26,9 +28,9 @@ inline void UpdateState(
             beams.node_u,
             beams.node_u_dot,
             beams.node_u_ddot,
-            Q,
-            V,
-            A,
+            state.q,
+            state.v,
+            state.vd,
         }
     );
 
@@ -79,12 +81,17 @@ inline void UpdateState(
             beams.qp_Kuu}
     );
 
+    AssembleResidualVector(beams);
+    AssembleStiffnessMatrix(beams);
+    AssembleInertiaMatrix(beams, parameters.beta_prime, parameters.gamma_prime);
+
     Kokkos::parallel_for(
-        "CalculateNodeForces", range_policy,
-        CalculateNodeForces{
-            beams.num_nodes_per_element, beams.num_qps_per_element, beams.qp_weight,
-            beams.qp_jacobian, beams.shape_interp, beams.shape_deriv, beams.qp_Fc, beams.qp_Fd,
-            beams.qp_Fi, beams.qp_Fg, beams.node_FE, beams.node_FI, beams.node_FG}
+        "CalculateTangentOperator", state.num_system_nodes,
+        CalculateTangentOperator{
+            parameters.h,
+            state.q_delta,
+            state.tangent,
+        }
     );
 }
 

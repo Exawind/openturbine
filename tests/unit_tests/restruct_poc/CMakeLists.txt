@@ -52,7 +52,6 @@ target_sources(
     system/test_calculate_Quu.cpp
     system/test_calculate_gyroscopic_matrix.cpp
     system/test_calculate_inertia_stiffness_matrix.cpp
-    system/test_calculate_node_forces.cpp
 )
 
 # Conditionally add VTK-related source files if VTK is enabled

@@ -11,9 +11,10 @@
 #include "src/restruct_poc/beams/beams_input.hpp"
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
-#include "src/restruct_poc/solver/state.hpp"
-#include "src/restruct_poc/system/assemble_residual_vector.hpp"
-#include "src/restruct_poc/system/update_state.hpp"
+#include "src/restruct_poc/state/copy_nodes_to_state.hpp"
+#include "src/restruct_poc/state/state.hpp"
+#include "src/restruct_poc/step/assemble_residual_vector.hpp"
+#include "src/restruct_poc/step/update_system_variables.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine::tests {
@@ -108,14 +109,12 @@ inline auto SetUpBeams() {
     auto beams = CreateBeams(beams_input);
 
     // Create initial state
-    const State state(
-        beams.num_nodes,  // Number of nodes
-        0,                // Number of constraints
-        model.GetNodes()  // nodes
-    );
+    auto parameters = StepParameters(false, 0, 0., 0.);
+    State state(beams.num_nodes);
+    CopyNodesToState(state, model.GetNodes());
 
     // Set the beam's initial state
-    UpdateState(beams, state.q, state.v, state.vd);
+    UpdateSystemVariables(parameters, beams, state);
 
     return beams;
 }
@@ -369,81 +368,6 @@ TEST(BeamsTest, QuadraturePointMatrixKuu) {
             {0., 0., 0., 0.004762288305421506, -0.016524233223710137, 0.007213755243428677},
             {0., 0., 0., 0.035164381478288514, 0.017626317482204206, -0.022463736936512112},
             {0., 0., 0., -0.0025828596476940593, 0.04278211835291491, -0.022253736971069835},
-        }
-    );
-}
-
-TEST(BeamsTest, NodalForceVectorFE) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.node_FE, 0, Kokkos::ALL, Kokkos::ALL),
-        {
-            {-0.11121183449279078, -0.16149482899687723, -0.30437442031624473, -0.40385243171727625,
-             -0.29275354335733944, -0.6838427114868826},
-            {-0.05271722510789922, -0.09881895866851326, -0.10322757369767363, -0.04702535280786492,
-             0.200307040286711, -0.4938097677451396},
-            {0.11947220141210066, 0.1434066009624302, 0.2789250942058333, 0.2881567336891544,
-             0.9034846722720415, 0.21303887057613874},
-            {0.08548666343411367, 0.29791784250206643, 0.30730427651111236, 0.3462309471335382,
-             0.7532480845688548, 0.5928285701260374},
-            {-0.04102980524552424, -0.18101065579910605, -0.1786273767030272, -0.06307503428118048,
-             -0.5619802667455869, -0.2600125012438039},
-        }
-    );
-}
-
-TEST(BeamsTest, NodalForceVectorFI) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.node_FI, 0, Kokkos::ALL, Kokkos::ALL),
-        {
-            {0.00011604556408931232, -0.0006507362696177878, -0.0006134866787566515,
-             0.0006142322011934136, -0.0021994796881491885, -0.002486843354672628},
-
-            {0.042241295273487904, -0.04970288500953047, 0.030888872844313506, -0.06975512417597267,
-             -0.10161193406971922, -0.2145759755006094},
-
-            {0.17821954823792277, -0.06852557905980948, 0.2391832328082968, -0.11742114482709139,
-             -0.25775479677677504, -0.38514969641195906},
-
-            {0.28429636341252773, 0.09461848004332962, 0.5753721231362983, -0.03722226802421734,
-             -0.08186055756075394, -0.023972312767031694},
-
-            {0.07251940986370606, 0.047582193710461344, 0.17271485835503486, -0.007667261048491411,
-             0.027312893470209154, 0.05581821163081033},
-        }
-    );
-}
-
-TEST(BeamsTest, NodalForceVectorFG) {
-    const auto beams = SetUpBeams();
-    expect_kokkos_view_2D_equal(
-        Kokkos::subview(beams.node_FG, 0, Kokkos::ALL, Kokkos::ALL),
-        {
-            {0., 0., 5.387595382846484, 0.9155947038768231, -0.6120658127519644, 0.},
-            {0., 0., 27.214654505466733, 4.774257980210559, -3.2246653192400943, 0.},
-            {0., 0., 36.276475250297956, 7.721022587119256, -4.10632562513434, 0.},
-            {0., 0., 33.389731486725104, 8.507277441455756, -2.4615219287391987, 0.},
-            {0., 0., 6.941513108125961, 1.8625822925070992, -0.3057154246940985, 0.},
-        }
-    );
-}
-
-TEST(BeamsTest, ResidualForceVector) {
-    auto beams = SetUpBeams();
-    auto residual_vector = View_N("residual_vector", beams.num_nodes * 6);
-    AssembleResidualVector(beams, residual_vector);
-    expect_kokkos_view_1D_equal(
-        residual_vector,
-        {
-            -0.11109578892870146, -0.162145565266495,   -5.692583289841486,    -1.3188329033929058,
-            0.3171127897064757,   -0.6863295548415552,  -0.010475929834411313, -0.14852184367804372,
-            -27.286993206320094,  -4.891038457194397,   3.323360425457086,     -0.708385743245749,
-            0.29769174965002343,  0.0748810219026207,   -35.75836692328382,    -7.550286998257193,
-            4.752055500629607,    -0.17211082583582032, 0.3697830268466414,    0.39253632254539605,
-            -32.507055087077696,  -8.198268762346435,   3.1329094557472996,    0.5688562573590057,
-            0.031489604618181816, -0.1334284620886447,  -6.947425626473954,    -1.933324587836771,
-            -0.2289519485812792,  -0.20419428961299355,
         }
     );
 }

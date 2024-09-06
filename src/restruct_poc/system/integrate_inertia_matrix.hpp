@@ -16,7 +16,7 @@ struct IntegrateInertiaMatrixElement {
     Kokkos::View<double* [6][6]>::const_type qp_Guu_;
     double beta_prime_;
     double gamma_prime_;
-    Kokkos::View<double***> gbl_M_;
+    Kokkos::View<double*** [6][6]> gbl_M_;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_index) const {
@@ -48,8 +48,7 @@ struct IntegrateInertiaMatrixElement {
             for (auto m = 0U; m < 6U; ++m) {
                 for (auto lane = 0U; lane < width && mask[lane]; ++lane) {
                     for (auto n = 0U; n < 6U; ++n) {
-                        gbl_M_(i_elem, i_index * 6 + m, (j_index + lane) * 6 + n) =
-                            local_M(m, n)[lane];
+                        gbl_M_(i_elem, i_index, j_index + lane, m, n) = local_M(m, n)[lane];
                     }
                 }
             }
@@ -67,7 +66,7 @@ struct IntegrateInertiaMatrix {
     Kokkos::View<double** [6][6]>::const_type qp_Guu_;
     double beta_prime_;
     double gamma_prime_;
-    Kokkos::View<double***> gbl_M_;
+    Kokkos::View<double*** [6][6]> gbl_M_;
 
     KOKKOS_FUNCTION
     void operator()(const Kokkos::TeamPolicy<>::member_type& member) const {

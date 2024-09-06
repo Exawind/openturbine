@@ -14,7 +14,9 @@
 #include "src/restruct_poc/beams/create_beams.hpp"
 #include "src/restruct_poc/model/model.hpp"
 #include "src/restruct_poc/solver/solver.hpp"
-#include "src/restruct_poc/solver/step.hpp"
+#include "src/restruct_poc/state/copy_nodes_to_state.hpp"
+#include "src/restruct_poc/state/state.hpp"
+#include "src/restruct_poc/step/step.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine::tests {
@@ -99,31 +101,36 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     const double rho_inf(0.0);
 
     // Create solver
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes());
+    CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
-        is_dynamic_solve, max_iter, step_size, rho_inf, model.GetNodes(), model.GetConstraints(),
-        beams
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
     );
 
     // First step
     Kokkos::deep_copy(
         Kokkos::subview(beams.node_FX, 0, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.005)
     );
-    auto converged = Step(solver, beams);
+    auto converged = Step(parameters, solver, beams, state, constraints);
     EXPECT_EQ(converged, true);
     {
         const auto result = Kokkos::View<double[3]>("result");
-        Kokkos::deep_copy(result, Kokkos::subview(solver.state.q, 4, Kokkos::make_pair(0, 3)));
+        Kokkos::deep_copy(result, Kokkos::subview(state.q, 4, Kokkos::make_pair(0, 3)));
         expect_kokkos_view_1D_equal(result, {-8.15173937E-08, -1.86549248E-07, 6.97278045E-04});
     }
     // Second step
     Kokkos::deep_copy(
         Kokkos::subview(beams.node_FX, 0, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.010)
     );
-    converged = Step(solver, beams);
+    converged = Step(parameters, solver, beams, state, constraints);
     EXPECT_EQ(converged, true);
     {
         const auto result = Kokkos::View<double[3]>("result");
-        Kokkos::deep_copy(result, Kokkos::subview(solver.state.q, 4, Kokkos::make_pair(0, 3)));
+        Kokkos::deep_copy(result, Kokkos::subview(state.q, 4, Kokkos::make_pair(0, 3)));
         expect_kokkos_view_1D_equal(result, {-1.00926258E-06, -7.91711079E-07, 2.65017558E-03});
     }
 
@@ -131,11 +138,11 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     Kokkos::deep_copy(
         Kokkos::subview(beams.node_FX, 0, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.015)
     );
-    converged = Step(solver, beams);
+    converged = Step(parameters, solver, beams, state, constraints);
     EXPECT_EQ(converged, true);
     {
         const auto result = Kokkos::View<double[3]>("result");
-        Kokkos::deep_copy(result, Kokkos::subview(solver.state.q, 4, Kokkos::make_pair(0, 3)));
+        Kokkos::deep_copy(result, Kokkos::subview(state.q, 4, Kokkos::make_pair(0, 3)));
         expect_kokkos_view_1D_equal(result, {-5.05830945E-06, -2.29457246E-06, 6.30508154E-03});
     }
 }

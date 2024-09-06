@@ -10,8 +10,6 @@
 
 #include "compute_number_of_non_zeros.hpp"
 #include "compute_number_of_non_zeros_constraints.hpp"
-#include "constraint.hpp"
-#include "constraints.hpp"
 #include "fill_unshifted_row_ptrs.hpp"
 #include "populate_sparse_indices.hpp"
 #include "populate_sparse_row_ptrs.hpp"
@@ -19,9 +17,8 @@
 #include "populate_sparse_row_ptrs_col_inds_transpose.hpp"
 #include "populate_tangent_indices.hpp"
 #include "populate_tangent_row_ptrs.hpp"
-#include "state.hpp"
 
-#include "src/restruct_poc/beams/beams.hpp"
+#include "src/restruct_poc/constraints/constraint_type.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {
@@ -50,22 +47,10 @@ struct Solver {
     using SpmvHandle =
         KokkosSparse::SPMVHandle<ExecutionSpace, CrsMatrixType, ValuesType, ValuesType>;
 
-    bool is_dynamic_solve;    //< Flag to indicate if the solver is dynamic
-    size_t max_iter;          //< Maximum number of iterations
-    double h;                 //< Time step
-    double alpha_m;           //< Alpha_m coefficient
-    double alpha_f;           //< Alpha_f coefficient
-    double gamma;             //< Gamma coefficient
-    double beta;              //< Beta coefficient
-    double gamma_prime;       //< Gamma prime coefficient
-    double beta_prime;        //< Beta prime coefficient
-    double conditioner;       //< Conditioner for the system matrix
     size_t num_system_nodes;  //< Number of system nodes
     size_t num_system_dofs;   //< Number of system degrees of freedom
-    Constraints constraints;  //< Constraints
     size_t num_dofs;          //< Number of degrees of freedom
 
-    State state;                            //< State
     CrsMatrixType K;                        //< Stiffness matrix
     CrsMatrixType T;                        //< Tangent operator
     CrsMatrixType B;                        //< Constraints matrix
@@ -81,8 +66,6 @@ struct Solver {
     Teuchos::RCP<GlobalCrsMatrixType> A;       // System matrix
     Teuchos::RCP<GlobalMultiVectorType> b;     // System RHS
     Teuchos::RCP<GlobalMultiVectorType> x_mv;  // System solution
-    View_Nx6x6 T_dense;                        // Dense tangent operator
-    Kokkos::View<double***> matrix_terms;      // Matrix terms
     View_N R;                                  // System residual vector
     View_N x;                                  // System solution vector
 
@@ -97,50 +80,35 @@ struct Solver {
     Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
     Solver(
-        bool is_dynamic_solve_, size_t max_iter_, double h_, double rho_inf,
-        const std::vector<std::shared_ptr<Node>>& system_nodes,
-        const std::vector<std::shared_ptr<Constraint>>& constraints_, Beams& beams_
+        const Kokkos::View<size_t*>::const_type& node_IDs,
+        const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
+        const Kokkos::View<size_t**>::const_type& node_state_indices, size_t num_constraint_dofs,
+        const Kokkos::View<ConstraintType*>::const_type& constraint_type,
+        const Kokkos::View<size_t*>::const_type& constraint_base_node_index,
+        const Kokkos::View<size_t*>::const_type& constraint_target_node_index,
+        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
     )
-        : is_dynamic_solve(is_dynamic_solve_),
-          max_iter(max_iter_),
-          h(h_),
-          alpha_m((2. * rho_inf - 1.) / (rho_inf + 1.)),
-          alpha_f(rho_inf / (rho_inf + 1.)),
-          gamma(0.5 + alpha_f - alpha_m),
-          beta(0.25 * (gamma + 0.5) * (gamma + 0.5)),
-          gamma_prime(gamma / (h * beta)),
-          beta_prime((1. - alpha_m) / (h * h * beta * (1. - alpha_f))),
-          conditioner(beta * h * h),
-          num_system_nodes(system_nodes.size()),
+        : num_system_nodes(node_IDs.extent(0)),
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
-          constraints(constraints_),
-          num_dofs(num_system_dofs + constraints.num_dofs),
-          state(num_system_nodes, constraints.num_dofs, system_nodes),
-          T_dense("T dense", num_system_nodes),
-          matrix_terms(
-              "matrix_terms", beams_.num_elems, beams_.max_elem_nodes * kLieAlgebraComponents,
-              beams_.max_elem_nodes * kLieAlgebraComponents
-          ),
+          num_dofs(num_system_dofs + num_constraint_dofs),
           R("R", num_dofs),
-          x("x", num_dofs),
-          convergence_err(max_iter) {
+          x("x", num_dofs) {
         auto K_num_rows = this->num_system_dofs;
         auto K_num_columns = this->num_system_dofs;
         auto K_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
-            "ComputeNumberOfNonZeros", beams_.num_elems,
-            ComputeNumberOfNonZeros{beams_.num_nodes_per_element}, K_num_non_zero
+            "ComputeNumberOfNonZeros", num_nodes_per_element.extent(0),
+            ComputeNumberOfNonZeros{num_nodes_per_element}, K_num_non_zero
         );
         auto K_row_ptrs = RowPtrType("K_row_ptrs", K_num_rows + 1);
         auto K_col_inds = IndicesType("indices", K_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrs", 1,
-            PopulateSparseRowPtrs<RowPtrType>{beams_.num_nodes_per_element, K_row_ptrs}
+            PopulateSparseRowPtrs<RowPtrType>{num_nodes_per_element, K_row_ptrs}
         );
         Kokkos::parallel_for(
             "PopulateSparseIndices", 1,
-            PopulateSparseIndices{
-                beams_.num_nodes_per_element, beams_.node_state_indices, K_col_inds}
+            PopulateSparseIndices{num_nodes_per_element, node_state_indices, K_col_inds}
         );
 
         Kokkos::fence();
@@ -158,16 +126,10 @@ struct Solver {
             "PopulateTangentRowPtrs", 1,
             PopulateTangentRowPtrs<CrsMatrixType::size_type>{this->num_system_nodes, T_row_ptrs}
         );
-        auto node_ids = IndicesType("node_ids", system_nodes.size());
-        auto host_node_ids = Kokkos::create_mirror(node_ids);
 
-        for (auto i = 0U; i < system_nodes.size(); ++i) {
-            host_node_ids(i) = static_cast<int>(system_nodes[i]->ID);
-        }
-        Kokkos::deep_copy(node_ids, host_node_ids);
         Kokkos::parallel_for(
             "PopulateTangentIndices", 1,
-            PopulateTangentIndices{this->num_system_nodes, node_ids, T_indices}
+            PopulateTangentIndices{this->num_system_nodes, node_IDs, T_indices}
         );
         auto T_values = ValuesType("T values", T_num_non_zero);
         T = CrsMatrixType(
@@ -178,17 +140,19 @@ struct Solver {
         // Initialize contraint for indexing for sparse matrices
         auto B_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
-            "ComputeNumberOfNonZeros_Constraints", this->constraints.num,
-            ComputeNumberOfNonZeros_Constraints{this->constraints.data}, B_num_non_zero
+            "ComputeNumberOfNonZeros_Constraints", constraint_type.extent(0),
+            ComputeNumberOfNonZeros_Constraints{constraint_type, constraint_row_range},
+            B_num_non_zero
         );
-        auto B_num_rows = this->constraints.num_dofs;
+        auto B_num_rows = num_constraint_dofs;
         auto B_num_columns = this->num_system_dofs;
         auto B_row_ptrs = RowPtrType("b_row_ptrs", B_num_rows + 1);
         auto B_col_ind = IndicesType("b_indices", B_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Constraints", 1,
             PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
-                this->constraints.data, B_row_ptrs, B_col_ind}
+                constraint_type, constraint_base_node_index, constraint_target_node_index,
+                constraint_row_range, B_row_ptrs, B_col_ind}
         );
         auto B_values = ValuesType("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);

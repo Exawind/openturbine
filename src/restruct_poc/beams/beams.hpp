@@ -38,9 +38,6 @@ struct Beams {
     Kokkos::View<double** [7]> node_u;       // State: translation/rotation displacement
     Kokkos::View<double** [6]> node_u_dot;   // State: translation/rotation velocity
     Kokkos::View<double** [6]> node_u_ddot;  // State: translation/rotation acceleration
-    Kokkos::View<double** [6]> node_FE;      // Elastic forces
-    Kokkos::View<double** [6]> node_FG;      // Gravity forces
-    Kokkos::View<double** [6]> node_FI;      // Inertial forces
     Kokkos::View<double** [6]> node_FX;      // External forces
 
     // Quadrature point data
@@ -82,6 +79,10 @@ struct Beams {
     Kokkos::View<double** [6][6]> qp_Guu;              // Linearization matrices
     Kokkos::View<double** [6][6]> qp_Kuu;              // Linearization matrices
 
+    Kokkos::View<double** [6]> residual_vector_terms;
+    Kokkos::View<double*** [6][6]> stiffness_matrix_terms;
+    Kokkos::View<double*** [6][6]> inertia_matrix_terms;
+
     // Shape Function data
     Kokkos::View<double***> shape_interp;  // Shape function values
     Kokkos::View<double***> shape_deriv;   // Shape function derivatives
@@ -106,9 +107,6 @@ struct Beams {
           node_u("node_u", num_elems, max_elem_nodes),
           node_u_dot("node_u_dot", num_elems, max_elem_nodes),
           node_u_ddot("node_u_ddot", num_elems, max_elem_nodes),
-          node_FE("node_force_elastic", num_elems, max_elem_nodes),
-          node_FG("node_force_gravity", num_elems, max_elem_nodes),
-          node_FI("node_force_inertial", num_elems, max_elem_nodes),
           node_FX("node_force_external", num_elems, max_elem_nodes),
           // Quadrature Point data
           qp_weight("qp_weight", num_elems, max_elem_qps),
@@ -148,6 +146,11 @@ struct Beams {
           qp_Quu("qp_Quu", num_elems, max_elem_qps),
           qp_Guu("qp_Guu", num_elems, max_elem_qps),
           qp_Kuu("qp_Kuu", num_elems, max_elem_qps),
+          residual_vector_terms("residual_vector_terms", num_elems, max_elem_nodes),
+          stiffness_matrix_terms(
+              "stiffness_matrix_terms", num_elems, max_elem_nodes, max_elem_nodes
+          ),
+          inertia_matrix_terms("inertia_matrix_terms", num_elems, max_elem_nodes, max_elem_nodes),
           // Shape Function data
           shape_interp("shape_interp", num_elems, max_elem_nodes, max_elem_qps),
           shape_deriv("deriv_interp", num_elems, max_elem_nodes, max_elem_qps) {}

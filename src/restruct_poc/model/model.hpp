@@ -5,7 +5,7 @@
 #include "node.hpp"
 
 #include "src/restruct_poc/beams/beam_element.hpp"
-#include "src/restruct_poc/solver/constraint.hpp"
+#include "src/restruct_poc/constraints/constraint.hpp"
 #include "src/restruct_poc/types.hpp"
 
 namespace openturbine {

@@ -117,4 +117,40 @@ auto get_qp_Ouu(const std::array<double, n_qps * 6 * 6>& Ouu_data) {
     return get_qp_matrix<n_qps>("Ouu", Ouu_data);
 }
 
+template <size_t n_qps>
+auto get_qp_vector(std::string_view name, const std::array<double, n_qps * 6>& vector_data) {
+    using VectorView = Kokkos::View<double[n_qps][6]>;
+    using HostVectorView = Kokkos::View<const double[n_qps][6], Kokkos::HostSpace>;
+    auto vector = VectorView(std::string{name});
+    const auto host_vector = Kokkos::create_mirror(vector);
+    const auto vector_data_view = HostVectorView(vector_data.data());
+    Kokkos::deep_copy(host_vector, vector_data_view);
+    Kokkos::deep_copy(vector, host_vector);
+    return vector;
+}
+
+template <size_t n_nodes>
+auto get_node_FX(const std::array<double, n_nodes * 6>& FX_data) {
+    return get_qp_vector<n_nodes>("FX", FX_data);
+}
+
+template <size_t n_qps>
+auto get_qp_Fc(const std::array<double, n_qps * 6>& Fc_data) {
+    return get_qp_vector<n_qps>("Fc", Fc_data);
+}
+
+template <size_t n_qps>
+auto get_qp_Fd(const std::array<double, n_qps * 6>& Fd_data) {
+    return get_qp_vector<n_qps>("Fd", Fd_data);
+}
+
+template <size_t n_qps>
+auto get_qp_Fi(const std::array<double, n_qps * 6>& Fi_data) {
+    return get_qp_vector<n_qps>("Fi", Fi_data);
+}
+
+template <size_t n_qps>
+auto get_qp_Fg(const std::array<double, n_qps * 6>& Fg_data) {
+    return get_qp_vector<n_qps>("Fg", Fg_data);
+}
 }  // namespace openturbine::tests
