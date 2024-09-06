@@ -21,29 +21,14 @@ namespace openturbine {
  * - Additionally, shape_interp and shape_deriv have dimensions num_elems x num_nodes x num_qps
  */
 struct Beams {
-    // Node and quadrature point index data for an element
-    struct ElemIndices {
-        size_t num_nodes{};
-        size_t num_qps{};
-        Kokkos::pair<size_t, size_t> node_range{};
-        Kokkos::pair<size_t, size_t> qp_range{};
-        Kokkos::pair<size_t, size_t> qp_shape_range{};
-        ElemIndices() = default;
-        ElemIndices(size_t n_nodes, size_t n_qps, size_t i_node_start, size_t i_qp_start)
-            : num_nodes(n_nodes),
-              num_qps(n_qps),
-              node_range(Kokkos::make_pair(i_node_start, i_node_start + n_nodes)),
-              qp_range(Kokkos::make_pair(i_qp_start, i_qp_start + n_qps)),
-              qp_shape_range(Kokkos::make_pair(0, n_qps)) {}
-    };
-
     size_t num_elems;       // Total number of element
     size_t num_nodes;       // Total number of nodes
     size_t num_qps;         // Total number of quadrature points
     size_t max_elem_nodes;  // Maximum number of nodes per element
     size_t max_elem_qps;    // Maximum number of quadrature points per element
 
-    Kokkos::View<ElemIndices*> elem_indices;    // View of element node and qp indices into views
+    Kokkos::View<size_t*> num_nodes_per_element;
+    Kokkos::View<size_t*> num_qps_per_element;
     Kokkos::View<size_t**> node_state_indices;  // State row index for each node
 
     View_3 gravity;
@@ -112,7 +97,8 @@ struct Beams {
           max_elem_nodes(max_e_nodes),
           max_elem_qps(max_e_qps),
           // Element Data
-          elem_indices("elem_indices", num_elems),
+          num_nodes_per_element("num_nodes_per_element", num_elems),
+          num_qps_per_element("num_qps_per_element", num_elems),
           node_state_indices("node_state_indices", num_elems, max_elem_nodes),
           gravity("gravity"),
           // Node Data

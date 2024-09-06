@@ -3,19 +3,14 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_SIMD.hpp>
 
-#include "src/restruct_poc/beams/beams.hpp"
-#include "src/restruct_poc/types.hpp"
-
 namespace openturbine {
 
 struct IntegrateInertiaMatrixElement {
-    int i_elem;
+    size_t i_elem;
     size_t num_nodes;
     size_t num_qps;
-    size_t first_node;
-    size_t first_qp;
-    View_N::const_type qp_weight_;
-    View_N::const_type qp_jacobian_;
+    Kokkos::View<double*>::const_type qp_weight_;
+    Kokkos::View<double*>::const_type qp_jacobian_;
     Kokkos::View<double**, Kokkos::LayoutLeft>::const_type shape_interp_;
     Kokkos::View<double* [6][6]>::const_type qp_Muu_;
     Kokkos::View<double* [6][6]>::const_type qp_Guu_;
@@ -63,9 +58,10 @@ struct IntegrateInertiaMatrixElement {
 };
 
 struct IntegrateInertiaMatrix {
-    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
-    View_NxN::const_type qp_weight_;
-    View_NxN::const_type qp_jacobian_;
+    Kokkos::View<size_t*>::const_type num_nodes_per_element;
+    Kokkos::View<size_t*>::const_type num_qps_per_element;
+    Kokkos::View<double**>::const_type qp_weight_;
+    Kokkos::View<double**>::const_type qp_jacobian_;
     Kokkos::View<double***>::const_type shape_interp_;
     Kokkos::View<double** [6][6]>::const_type qp_Muu_;
     Kokkos::View<double** [6][6]>::const_type qp_Guu_;
@@ -75,20 +71,20 @@ struct IntegrateInertiaMatrix {
 
     KOKKOS_FUNCTION
     void operator()(const Kokkos::TeamPolicy<>::member_type& member) const {
-        const auto i_elem = member.league_rank();
-        const auto idx = elem_indices(i_elem);
-        const auto shape_interp = Kokkos::View<double**, Kokkos::LayoutLeft>(
-            member.team_scratch(1), idx.num_nodes, idx.num_qps
-        );
+        const auto i_elem = static_cast<size_t>(member.league_rank());
+        const auto num_nodes = num_nodes_per_element(i_elem);
+        const auto num_qps = num_qps_per_element(i_elem);
+        const auto shape_interp =
+            Kokkos::View<double**, Kokkos::LayoutLeft>(member.team_scratch(1), num_nodes, num_qps);
 
-        const auto qp_weight = Kokkos::View<double*>(member.team_scratch(1), idx.num_qps);
-        const auto qp_jacobian = Kokkos::View<double*>(member.team_scratch(1), idx.num_qps);
+        const auto qp_weight = Kokkos::View<double*>(member.team_scratch(1), num_qps);
+        const auto qp_jacobian = Kokkos::View<double*>(member.team_scratch(1), num_qps);
 
-        const auto qp_Muu = Kokkos::View<double* [6][6]>(member.team_scratch(1), idx.num_qps);
-        const auto qp_Guu = Kokkos::View<double* [6][6]>(member.team_scratch(1), idx.num_qps);
+        const auto qp_Muu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+        const auto qp_Guu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
 
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, idx.num_qps), [&](size_t k) {
-            for (auto i = 0U; i < idx.num_nodes; ++i) {
+        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, num_qps), [&](size_t k) {
+            for (auto i = 0U; i < num_nodes; ++i) {
                 shape_interp(i, k) = shape_interp_(i_elem, i, k);
             }
             qp_weight(k) = qp_weight_(i_elem, k);
@@ -102,21 +98,10 @@ struct IntegrateInertiaMatrix {
         });
         member.team_barrier();
 
-        const auto node_range = Kokkos::TeamThreadRange(member, idx.num_nodes);
+        const auto node_range = Kokkos::TeamThreadRange(member, num_nodes);
         const auto element_integrator = IntegrateInertiaMatrixElement{
-            i_elem,
-            idx.num_nodes,
-            idx.num_qps,
-            idx.node_range.first,
-            idx.qp_range.first,
-            qp_weight,
-            qp_jacobian,
-            shape_interp,
-            qp_Muu,
-            qp_Guu,
-            beta_prime_,
-            gamma_prime_,
-            gbl_M_};
+            i_elem, num_nodes, num_qps,     qp_weight,    qp_jacobian, shape_interp,
+            qp_Muu, qp_Guu,    beta_prime_, gamma_prime_, gbl_M_};
         Kokkos::parallel_for(node_range, element_integrator);
     }
 };

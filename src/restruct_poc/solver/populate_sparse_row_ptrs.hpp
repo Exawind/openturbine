@@ -7,16 +7,15 @@
 namespace openturbine {
 template <typename RowPtrType>
 struct PopulateSparseRowPtrs {
-    Kokkos::View<Beams::ElemIndices*>::const_type elem_indices;
+    Kokkos::View<size_t*>::const_type num_nodes_per_element;
     RowPtrType row_ptrs;
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        const auto num_elems = static_cast<int>(elem_indices.extent(0));
+        const auto num_elems = num_nodes_per_element.extent(0);
         auto rows_so_far = 0;
-        for (int i_elem = 0; i_elem < num_elems; ++i_elem) {
-            auto idx = elem_indices[i_elem];
-            auto num_nodes = idx.num_nodes;
+        for (auto i_elem = 0U; i_elem < num_elems; ++i_elem) {
+            auto num_nodes = num_nodes_per_element(i_elem);
             for (auto i = 0U; i < num_nodes * kLieAlgebraComponents; ++i) {
                 row_ptrs(rows_so_far + 1) =
                     row_ptrs(rows_so_far) +

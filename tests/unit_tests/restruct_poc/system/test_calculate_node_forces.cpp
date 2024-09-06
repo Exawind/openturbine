@@ -9,10 +9,8 @@
 namespace openturbine::tests {
 
 TEST(CalculateNodeForcesTests, FE_OneNodeOneQP) {
-    constexpr auto first_node = 0;
-    constexpr auto first_qp = 0;
-    constexpr auto num_nodes = 1;
-    constexpr auto num_qps = 1;
+    constexpr auto num_nodes = size_t{1U};
+    constexpr auto num_qps = size_t{1U};
 
     const auto weight = Kokkos::View<double[1][num_qps]>("weight");
     constexpr auto weight_data = std::array<double, 1>{2.};
@@ -68,9 +66,7 @@ TEST(CalculateNodeForcesTests, FE_OneNodeOneQP) {
 
     Kokkos::parallel_for(
         "CalculateNodeForces_FE", num_nodes,
-        CalculateNodeForces_FE{
-            0, first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd,
-            FE}
+        CalculateNodeForces_FE{0U, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd, FE}
     );
 
     constexpr auto FE_exact_data = std::array{178., 212., 246., 280., 314., 348.};
@@ -83,10 +79,8 @@ TEST(CalculateNodeForcesTests, FE_OneNodeOneQP) {
 }
 
 TEST(CalculateNodeForcesTests, FE_TwoNodesTwoQPs) {
-    constexpr auto first_node = 0;
-    constexpr auto first_qp = 0;
-    constexpr auto num_nodes = 2;
-    constexpr auto num_qps = 2;
+    constexpr auto num_nodes = size_t{2U};
+    constexpr auto num_qps = size_t{2U};
 
     const auto weight = Kokkos::View<double[1][num_qps]>("weight");
     constexpr auto weight_data = std::array{2., 3.};
@@ -142,9 +136,7 @@ TEST(CalculateNodeForcesTests, FE_TwoNodesTwoQPs) {
 
     Kokkos::parallel_for(
         "CalculateNodeForces_FE", num_nodes,
-        CalculateNodeForces_FE{
-            0, first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd,
-            FE}
+        CalculateNodeForces_FE{0U, num_qps, weight, jacobian, shape_interp, shape_deriv, Fc, Fd, FE}
     );
 
     constexpr auto FE_exact_data = std::array{2870., 3076., 3282., 3488., 3694., 3900.,
@@ -158,10 +150,8 @@ TEST(CalculateNodeForcesTests, FE_TwoNodesTwoQPs) {
 }
 
 TEST(CalculateNodeForcesTests, FI_FG_OneNodeOneQP) {
-    constexpr auto first_node = 0;
-    constexpr auto first_qp = 0;
-    constexpr auto num_nodes = 1;
-    constexpr auto num_qps = 1;
+    constexpr auto num_nodes = size_t{1U};
+    constexpr auto num_qps = size_t{1U};
 
     const auto weight = Kokkos::View<double[1][num_qps]>("weight");
     constexpr auto weight_data = std::array{2.};
@@ -209,8 +199,7 @@ TEST(CalculateNodeForcesTests, FI_FG_OneNodeOneQP) {
 
     Kokkos::parallel_for(
         "CalculateNodeForces_FI_FG", num_nodes,
-        CalculateNodeForces_FI_FG{
-            0, first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG}
+        CalculateNodeForces_FI_FG{0U, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG}
     );
 
     constexpr auto FIG_exact_data = std::array{24., 48., 72., 96., 120., 144.};
@@ -223,10 +212,8 @@ TEST(CalculateNodeForcesTests, FI_FG_OneNodeOneQP) {
 }
 
 TEST(CalculateNodeForcesTests, FI_FG_TwoNodesTwoQP) {
-    constexpr auto first_node = 0;
-    constexpr auto first_qp = 0;
-    constexpr auto num_nodes = 2;
-    constexpr auto num_qps = 2;
+    constexpr auto num_nodes = size_t{2U};
+    constexpr auto num_qps = size_t{2U};
 
     const auto weight = Kokkos::View<double[1][num_qps]>("weight");
     constexpr auto weight_data = std::array{2., 3.};
@@ -274,8 +261,7 @@ TEST(CalculateNodeForcesTests, FI_FG_TwoNodesTwoQP) {
 
     Kokkos::parallel_for(
         "CalculateNodeForces_FI_FG", num_nodes,
-        CalculateNodeForces_FI_FG{
-            0, first_node, first_qp, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG}
+        CalculateNodeForces_FI_FG{0U, num_qps, weight, jacobian, shape_interp, shape_deriv, Fig, FIG}
     );
 
     constexpr auto FIG_exact_data =

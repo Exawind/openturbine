@@ -8,7 +8,7 @@
 namespace openturbine::tests {
 
 inline auto create_node_u_dot_OneNode() {
-    constexpr auto num_nodes = 1;
+    constexpr auto num_nodes = size_t{1U};
     constexpr auto num_entries = num_nodes * 6;
     auto node_u = Kokkos::View<double[1][num_nodes][6]>("node_u_dot");
     auto node_u_mirror = Kokkos::create_mirror(node_u);
@@ -21,17 +21,15 @@ inline auto create_node_u_dot_OneNode() {
 }
 
 TEST(InterpolateQPVectorTests, OneNodeOneQP) {
-    constexpr auto first_qp = 0;
-    constexpr auto num_qp = 1;
-    constexpr auto first_node = 0;
-    constexpr auto num_nodes = 1;
+    constexpr auto num_qp = size_t{1U};
+    constexpr auto num_nodes = size_t{1U};
     auto shape_interp = create_shape_interp_OneNodeOneQP();
     auto node_u_dot = create_node_u_dot_OneNode();
     auto qp_u_dot = Kokkos::View<double[1][num_qp][3]>("qp_u_dot");
     Kokkos::parallel_for(
         num_qp,
         InterpolateQPVector{
-            0, first_qp, first_node, num_nodes, shape_interp,
+            0U, num_nodes, shape_interp,
             Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot}
     );
     auto qp_u_dot_mirror = Kokkos::create_mirror(qp_u_dot);
@@ -43,17 +41,15 @@ TEST(InterpolateQPVectorTests, OneNodeOneQP) {
 }
 
 TEST(InterpolateQPVectorTests, OneNodeTwoQP) {
-    constexpr auto first_qp = 0;
-    constexpr auto num_qp = 2;
-    constexpr auto first_node = 0;
-    constexpr auto num_nodes = 1;
+    constexpr auto num_qp = size_t{2U};
+    constexpr auto num_nodes = size_t{1U};
     auto shape_interp = create_shape_interp_OneNodeTwoQP();
     auto node_u_dot = create_node_u_dot_OneNode();
     auto qp_u_dot = Kokkos::View<double[1][num_qp][3]>("qp_u_dot");
     Kokkos::parallel_for(
         num_qp,
         InterpolateQPVector{
-            0, first_qp, first_node, num_nodes, shape_interp,
+            0, num_nodes, shape_interp,
             Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot}
     );
     auto qp_u_dot_mirror = Kokkos::create_mirror(qp_u_dot);
@@ -84,17 +80,15 @@ inline auto create_node_u_dot_TwoNode() {
 }
 
 TEST(InterpolateQPVectorTests, TwoNodeTwoQP) {
-    constexpr auto first_qp = 0;
-    constexpr auto num_qp = 2;
-    constexpr auto first_node = 0;
-    constexpr auto num_nodes = 2;
+    constexpr auto num_qp = size_t{2U};
+    constexpr auto num_nodes = size_t{2U};
     auto shape_interp = create_shape_interp_TwoNodeTwoQP();
     auto node_u_dot = create_node_u_dot_TwoNode();
     auto qp_u_dot = Kokkos::View<double[1][num_qp][3]>("qp_u_dot");
     Kokkos::parallel_for(
         num_qp,
         InterpolateQPVector{
-            0, first_qp, first_node, num_nodes, shape_interp,
+            0U, num_nodes, shape_interp,
             Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot}
     );
     auto qp_u_dot_mirror = Kokkos::create_mirror(qp_u_dot);

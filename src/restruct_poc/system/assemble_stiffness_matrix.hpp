@@ -20,7 +20,8 @@ inline void AssembleStiffnessMatrix(const Beams& beams, const Kokkos::View<doubl
     Kokkos::parallel_for(
         "IntegrateStiffnessMatrix", range_policy,
         IntegrateStiffnessMatrix{
-            beams.elem_indices,
+            beams.num_nodes_per_element,
+            beams.num_qps_per_element,
             beams.qp_weight,
             beams.qp_jacobian,
             beams.shape_interp,
