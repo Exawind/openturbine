@@ -83,8 +83,9 @@ struct Solver {
         const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
         const Kokkos::View<size_t**>::const_type& node_state_indices, size_t num_constraint_dofs,
         const Kokkos::View<ConstraintType*>::const_type& constraint_type,
-        const Kokkos::View<size_t* [2]>::const_type& constraint_node_index,
-        const Kokkos::View<size_t* [2]>::const_type& constraint_row_range
+        const Kokkos::View<size_t*>::const_type& constraint_base_node_index,
+        const Kokkos::View<size_t*>::const_type& constraint_target_node_index,
+        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
     )
         : num_system_nodes(node_IDs.extent(0)),
           num_system_dofs(num_system_nodes * kLieAlgebraComponents),
@@ -149,7 +150,8 @@ struct Solver {
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Constraints", 1,
             PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
-                constraint_type, constraint_node_index, constraint_row_range, B_row_ptrs, B_col_ind}
+                constraint_type, constraint_base_node_index, constraint_target_node_index,
+                constraint_row_range, B_row_ptrs, B_col_ind}
         );
         auto B_values = ValuesType("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);

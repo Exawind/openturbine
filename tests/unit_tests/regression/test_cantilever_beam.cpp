@@ -107,7 +107,8 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
-        constraints.type, constraints.node_index, constraints.row_range
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
     );
 
     // First step

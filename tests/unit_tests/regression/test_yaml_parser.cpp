@@ -7,7 +7,7 @@
 
 #include "src/utilities/scripts/windio_mapped_structs.hpp"
 
-namespace openturbine::restruct_poc::tests {
+namespace openturbine::tests {
 
 /// Function to find the project root directory
 inline std::filesystem::path FindProjectRoot() {
@@ -58,4 +58,4 @@ TEST(ParserTest, ParseIEA15MWMaterials) {
     ASSERT_EQ(turbine.materials.size(), 11);
 }
 
-}  // namespace openturbine::restruct_poc::tests
+}  // namespace openturbine::tests

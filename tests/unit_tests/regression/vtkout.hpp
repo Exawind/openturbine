@@ -14,8 +14,8 @@
 #include <vtkXMLPolyDataWriter.h>
 #include <vtkXMLUnstructuredGridWriter.h>
 
-#include "src/restruct_poc/beams/beams.hpp"
-#include "src/restruct_poc/math/quaternion_operations.hpp"
+#include "src/beams/beams.hpp"
+#include "src/math/quaternion_operations.hpp"
 
 namespace openturbine::tests {
 

@@ -12,8 +12,8 @@ struct PopulateTangentRowPtrs {
     void operator()(int) const {
         auto rows_so_far = 0;
         for (auto i_node = 0U; i_node < num_system_nodes; ++i_node) {
-            for (auto i = 0U; i < kLieAlgebraComponents; ++i) {
-                row_ptrs(rows_so_far + 1) = row_ptrs(rows_so_far) + kLieAlgebraComponents;
+            for (auto i = 0U; i < 6U; ++i) {
+                row_ptrs(rows_so_far + 1) = row_ptrs(rows_so_far) + 6U;
                 ++rows_so_far;
             }
         }

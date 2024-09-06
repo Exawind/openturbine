@@ -4,6 +4,7 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "src/constraints/constraints.hpp"
+#include "src/solver/copy_constraints_residual_to_vector.hpp"
 #include "src/solver/solver.hpp"
 
 namespace openturbine {
@@ -30,9 +31,13 @@ inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints
     Kokkos::deep_copy(
         Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs)), R
     );
-    Kokkos::deep_copy(
-        Kokkos::subview(solver.R, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs)),
-        constraints.Phi
+
+    Kokkos::parallel_for(
+        "CopyConstraintsResidualToVector", constraints.num,
+        CopyConstraintsResidualToVector{
+            constraints.row_range,
+            Kokkos::subview(solver.R, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs)),
+            constraints.residual_terms}
     );
 }
 
