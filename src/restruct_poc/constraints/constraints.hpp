@@ -33,8 +33,9 @@ struct Constraints {
     View_Nx7 u;      //< Prescribed displacements
     Kokkos::View<double* [7]>::HostMirror u_signal;
     Kokkos::View<double*> lambda;
-    View_N Phi;                                    //< Residual vector
-    Kokkos::View<double* [6][12]> gradient_terms;  //< Gradient terms
+    Kokkos::View<double* [6]> residual_terms;
+    Kokkos::View<double* [6][6]> base_gradient_terms;
+    Kokkos::View<double* [6][6]> target_gradient_terms;
 
     Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints)
         : num{constraints.size()},
@@ -57,8 +58,9 @@ struct Constraints {
           u("u", num),
           u_signal("u_signal", num),
           lambda("lambda", num_dofs),
-          Phi("residual_vector", num_dofs),
-          gradient_terms("gradient_terms", num) {
+          residual_terms("residual_terms", num),
+          base_gradient_terms("base_gradient_terms", num),
+          target_gradient_terms("target_gradient_terms", num) {
         // Create host mirror for constraint data
         auto host_type = Kokkos::create_mirror(type);
         auto host_row_range = Kokkos::create_mirror(row_range);

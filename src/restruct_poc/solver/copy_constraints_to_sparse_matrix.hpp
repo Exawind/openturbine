@@ -9,8 +9,11 @@ struct CopyConstraintsToSparseMatrix {
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type base_node_col_range;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type target_node_col_range;
     CrsMatrixType sparse;
-    Kokkos::View<const double* [6][12]> dense;
+    Kokkos::View<const double* [6][6]> base_dense;
+    Kokkos::View<const double* [6][6]> target_dense;
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
@@ -29,7 +32,12 @@ struct CopyConstraintsToSparseMatrix {
             const auto col_idx = ColIdxType(col_idx_data.data(), length);
             for (auto entry = 0U; entry < length; ++entry) {
                 col_idx(entry) = cols(row_map(i) + entry);
-                row_data(entry) = dense(i_constraint, row_number, entry);
+            }
+            for (auto entry = base_node_col_range(i_constraint).first; entry < base_node_col_range(i_constraint).second; ++entry) {
+                row_data(entry) = base_dense(i_constraint, row_number, entry - base_node_col_range(i_constraint).first);
+            }
+            for (auto entry = target_node_col_range(i_constraint).first; entry < target_node_col_range(i_constraint).second; ++entry) {
+                row_data(entry) = target_dense(i_constraint, row_number, entry - target_node_col_range(i_constraint).first);
             }
             sparse.replaceValues(i, col_idx.data(), row.length, row_data.data());
         });

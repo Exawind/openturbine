@@ -260,9 +260,9 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     }
 
     // Check that Phi vector is the same for both beams
-    auto Phi = kokkos_view_1D_to_vector(constraints.Phi);
+    auto Phi = kokkos_view_2D_to_vector(constraints.residual_terms);
     for (auto i = 0U; i < m; ++i) {
-        EXPECT_NEAR(Phi[i], Phi[i + m], 1.e-10);
+        EXPECT_NEAR(Phi[0][i], Phi[1][i], 1.e-10);
     }
 }
 
