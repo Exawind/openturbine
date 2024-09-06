@@ -33,11 +33,17 @@ struct CopyConstraintsToSparseMatrix {
             for (auto entry = 0U; entry < length; ++entry) {
                 col_idx(entry) = cols(row_map(i) + entry);
             }
-            for (auto entry = base_node_col_range(i_constraint).first; entry < base_node_col_range(i_constraint).second; ++entry) {
-                row_data(entry) = base_dense(i_constraint, row_number, entry - base_node_col_range(i_constraint).first);
+            for (auto entry = base_node_col_range(i_constraint).first;
+                 entry < base_node_col_range(i_constraint).second; ++entry) {
+                row_data(entry) = base_dense(
+                    i_constraint, row_number, entry - base_node_col_range(i_constraint).first
+                );
             }
-            for (auto entry = target_node_col_range(i_constraint).first; entry < target_node_col_range(i_constraint).second; ++entry) {
-                row_data(entry) = target_dense(i_constraint, row_number, entry - target_node_col_range(i_constraint).first);
+            for (auto entry = target_node_col_range(i_constraint).first;
+                 entry < target_node_col_range(i_constraint).second; ++entry) {
+                row_data(entry) = target_dense(
+                    i_constraint, row_number, entry - target_node_col_range(i_constraint).first
+                );
             }
             sparse.replaceValues(i, col_idx.data(), row.length, row_data.data());
         });

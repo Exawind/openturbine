@@ -16,7 +16,7 @@ struct CalculateFixedBCConstraint {
     View_N::const_type control;
     View_Nx7::const_type constraint_u;
     View_Nx7::const_type node_u;
-    Kokkos::View<double*[6]> residual_terms;
+    Kokkos::View<double* [6]> residual_terms;
     Kokkos::View<double* [6][6]> target_gradient_terms;
 
     KOKKOS_FUNCTION

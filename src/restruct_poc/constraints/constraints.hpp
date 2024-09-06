@@ -88,11 +88,13 @@ struct Constraints {
                 const auto base_node_id = constraints[i]->base_node.ID;
                 const auto target_start_col =
                     (target_node_id < base_node_id) ? 0U : kLieAlgebraComponents;
-                host_target_node_col_range(i) = Kokkos::make_pair(target_start_col, target_start_col + kLieAlgebraComponents);
+                host_target_node_col_range(i) =
+                    Kokkos::make_pair(target_start_col, target_start_col + kLieAlgebraComponents);
 
                 const auto base_start_col =
                     (base_node_id < target_node_id) ? 0U : kLieAlgebraComponents;
-                host_base_node_col_range(i) = Kokkos::make_pair(base_start_col, base_start_col + kLieAlgebraComponents);
+                host_base_node_col_range(i) =
+                    Kokkos::make_pair(base_start_col, base_start_col + kLieAlgebraComponents);
             } else {
                 host_target_node_col_range(i) = Kokkos::make_pair(0U, kLieAlgebraComponents);
             }
@@ -115,7 +117,7 @@ struct Constraints {
         Kokkos::deep_copy(row_range, host_row_range);
         Kokkos::deep_copy(base_node_col_range, host_base_node_col_range);
         Kokkos::deep_copy(target_node_col_range, host_target_node_col_range);
-	Kokkos::deep_copy(base_node_index, host_base_node_index);
+        Kokkos::deep_copy(base_node_index, host_base_node_index);
         Kokkos::deep_copy(target_node_index, host_target_node_index);
         Kokkos::deep_copy(X0, host_X0);
         Kokkos::deep_copy(axes, host_axes);

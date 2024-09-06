@@ -24,22 +24,47 @@ struct CalculateConstraintResidualGradient {
     View_N::const_type control;
     View_Nx7::const_type constraint_u;
     View_Nx7::const_type node_u;
-    Kokkos::View<double*[6]> residual_terms;
+    Kokkos::View<double* [6]> residual_terms;
     Kokkos::View<double* [6][6]> base_gradient_terms;
     Kokkos::View<double* [6][6]> target_gradient_terms;
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
         if (type(i_constraint) == ConstraintType::kFixedBC) {
-            CalculateFixedBCConstraint{target_node_index, X0_, control, constraint_u, node_u, residual_terms, target_gradient_terms}(i_constraint);
+            CalculateFixedBCConstraint{target_node_index,    X0_,    control,
+                                       constraint_u,         node_u, residual_terms,
+                                       target_gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kPrescribedBC) {
-            CalculatePrescribedBCConstraint{target_node_index, X0_, control, constraint_u, node_u, residual_terms, target_gradient_terms}(i_constraint);
+            CalculatePrescribedBCConstraint{target_node_index,    X0_,    control,
+                                            constraint_u,         node_u, residual_terms,
+                                            target_gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kRigid) {
-            CalculateRigidConstraint{base_node_index, target_node_index, X0_, control, constraint_u, node_u, residual_terms, base_gradient_terms, target_gradient_terms}(i_constraint);
+            CalculateRigidConstraint{
+                base_node_index, target_node_index,   X0_,
+                control,         constraint_u,        node_u,
+                residual_terms,  base_gradient_terms, target_gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kCylindrical) {
-            CalculateCylindricalConstraint{base_node_index, target_node_index, X0_, axes, control, constraint_u, node_u, residual_terms, base_gradient_terms, target_gradient_terms}(i_constraint);
+            CalculateCylindricalConstraint{base_node_index,
+                                           target_node_index,
+                                           X0_,
+                                           axes,
+                                           control,
+                                           constraint_u,
+                                           node_u,
+                                           residual_terms,
+                                           base_gradient_terms,
+                                           target_gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kRotationControl) {
-            CalculateRotationControlConstraint{base_node_index, target_node_index, X0_, axes, control, constraint_u, node_u, residual_terms, base_gradient_terms, target_gradient_terms}(i_constraint);
+            CalculateRotationControlConstraint{base_node_index,
+                                               target_node_index,
+                                               X0_,
+                                               axes,
+                                               control,
+                                               constraint_u,
+                                               node_u,
+                                               residual_terms,
+                                               base_gradient_terms,
+                                               target_gradient_terms}(i_constraint);
         }
     }
 };

@@ -151,7 +151,8 @@ TEST(RotorTest, IEA15Rotor) {
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
-        constraints.type, constraints.base_node_index, constraints.target_node_index, constraints.row_range
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
     );
 
     // Remove output directory for writing step data
@@ -304,7 +305,8 @@ TEST(RotorTest, IEA15RotorHub) {
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
-        constraints.type, constraints.base_node_index, constraints.target_node_index, constraints.row_range
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
     );
 
     // Remove output directory for writing step data
@@ -484,7 +486,8 @@ TEST(RotorTest, IEA15RotorController) {
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
-        constraints.type, constraints.base_node_index, constraints.target_node_index, constraints.row_range
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
     );
 
     // Remove output directory for writing step data

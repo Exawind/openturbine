@@ -114,7 +114,8 @@ inline void SetUpSolverAndAssemble() {
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
-        constraints.type, constraints.base_node_index, constraints.target_node_index, constraints.row_range
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
     );
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -200,15 +201,14 @@ inline void SetUpSolverAndAssemble() {
         }
     );
     expect_kokkos_view_2D_equal(
-        constraints.residual_terms,
-        {{
-            9.9999991642896191E-7,
-            3.3333331667800836E-10,
-            0.,
-            0.,
-            0.,
-            0.,
-        }}
+        constraints.residual_terms, {{
+                                        9.9999991642896191E-7,
+                                        3.3333331667800836E-10,
+                                        0.,
+                                        0.,
+                                        0.,
+                                        0.,
+                                    }}
     );
     expect_kokkos_view_1D_equal(
         solver.R,
@@ -351,7 +351,8 @@ inline void SetupAndTakeNoSteps() {
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
-        constraints.type, constraints.base_node_index, constraints.target_node_index, constraints.row_range
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
     );
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -558,7 +559,8 @@ inline auto SetupAndTakeTwoSteps() {
     CopyNodesToState(state, model.GetNodes());
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
-        constraints.type, constraints.base_node_index, constraints.target_node_index, constraints.row_range
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
     );
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -567,15 +569,14 @@ inline auto SetupAndTakeTwoSteps() {
     Step(parameters, solver, beams, state, constraints);
 
     expect_kokkos_view_2D_equal(
-        constraints.residual_terms,
-        {{
-            0.0,
-            0.0,
-            -2.769313752804165e-28,
-            -1.31908395004359e-29,
-            1.3190835103592412e-26,
-            0.0,
-        }}
+        constraints.residual_terms, {{
+                                        0.0,
+                                        0.0,
+                                        -2.769313752804165e-28,
+                                        -1.31908395004359e-29,
+                                        1.3190835103592412e-26,
+                                        0.0,
+                                    }}
     );
     expect_kokkos_view_1D_equal(
         solver.R,
