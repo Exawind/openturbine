@@ -48,6 +48,13 @@ constexpr auto mass_matrix = std::array{
     std::array{0., 0., 0., 0., 0.40972e-2, 0.}, std::array{0., 0., 0., 0., 0., 1.0336e-2},
 };
 
+// create a unity mass matrix
+constexpr auto mass_matrix_unity = std::array{
+    std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
+    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
+    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.},
+};
+
 // Stiffness matrix for uniform composite beam section
 constexpr auto stiffness_matrix = std::array{
     std::array{1368.17e3, 0., 0., 0., 0., 0.},
@@ -56,6 +63,13 @@ constexpr auto stiffness_matrix = std::array{
     std::array{0., 0., 0., 16.9600e3, 17.6100e3, -0.3510e3},
     std::array{0., 0., 0., 17.6100e3, 59.1200e3, -0.3700e3},
     std::array{0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
+};
+
+// create a unit stiffness matrix
+constexpr auto stiffness_matrix_unity = std::array{
+    std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
+    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
+    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.},
 };
 
 // Node locations (GLL quadrature)
@@ -73,6 +87,11 @@ const auto quadrature = BeamQuadrature{
 const auto sections = std::vector{
     BeamSection(0., mass_matrix, stiffness_matrix),
     BeamSection(1., mass_matrix, stiffness_matrix),
+};
+
+const auto sections_unity = std::vector{
+    BeamSection(0., mass_matrix_unity, stiffness_matrix_unity),
+    BeamSection(1., mass_matrix_unity, stiffness_matrix_unity),
 };
 
 TEST(RotatingBeamTest, StepConvergence) {
@@ -632,14 +651,14 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     );
 }
 
-TEST(RotatingBeamTest, GeneratorTorque) {
+void GeneratorTorqueWithAxisTilt(
+    double tilt, const std::vector<double>& expected_azimuth_q,
+    const std::vector<double>& expected_azimuth_vel
+) {
     auto model = Model();
 
     // Gravity vector - assume no gravity
     constexpr auto gravity = std::array{0., 0., 0.};
-
-    // Shaft tilt angle
-    auto tilt = 0.1;  // 0.1 radians = 5.7 degrees
 
     // Build vector of nodes (straight along x axis, no rotation)
     std::vector<BeamNode> beam_nodes;
@@ -655,7 +674,8 @@ TEST(RotatingBeamTest, GeneratorTorque) {
     );
 
     // Define beam initialization
-    const auto beams_input = BeamsInput({BeamElement(beam_nodes, sections, quadrature)}, gravity);
+    const auto beams_input =
+        BeamsInput({BeamElement(beam_nodes, sections_unity, quadrature)}, gravity);
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
@@ -717,20 +737,25 @@ TEST(RotatingBeamTest, GeneratorTorque) {
 #endif
     }
 
-    auto q = kokkos_view_2D_to_vector(solver.state.q);
-
     // Check that the azimuth node has rotated by the expected amount
-    // Get the subview of the azimuth node from q
     auto azimuth_q = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::ALL);
-    auto azimuth_q_vec = kokkos_view_1D_to_vector(azimuth_q);
+    expect_kokkos_view_1D_equal(azimuth_q, expected_azimuth_q);
 
-    // Check the azimuth node position is zero
-    auto azimuth_q_pos = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::make_pair(0, 3));
-    expect_kokkos_view_1D_equal(azimuth_q_pos, {0., 0., 0.});
+    // Check the azimuth node angular velocity is as expected
+    auto azimuth_vel = Kokkos::subview(solver.state.v, azimuth->ID, Kokkos::ALL);
+    expect_kokkos_view_1D_equal(azimuth_vel, expected_azimuth_vel);
+}
 
-    // Check the azimuth node rotation is not zero
-    auto azimuth_q_rot = Kokkos::subview(solver.state.q, azimuth->ID, Kokkos::make_pair(3, 7));
-    expect_kokkos_view_1D_equal(azimuth_q_rot, {0.999987, 1.59247e-18, -0.00050079, -0.00499119});
+TEST(RotatingBeamTest, GeneratorTorque_Tilt0) {
+    GeneratorTorqueWithAxisTilt(
+        0., {0., 0., 0., -0.140339, 0., 0., -0.990104}, {0., 0., 0., 0., 0., -87.066040}
+    );
+}
+
+TEST(RotatingBeamTest, GeneratorTorque_Tilt90) {
+    GeneratorTorqueWithAxisTilt(
+        M_PI / 2., {0., 0., 0., -0.140339, 0., -0.990104, 0.}, {0., 0., 0., 0., -87.066040, 0.}
+    );
 }
 
 }  // namespace openturbine::tests
