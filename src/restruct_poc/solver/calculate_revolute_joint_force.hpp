@@ -38,10 +38,7 @@ struct CalculateRevoluteJointForce {
         //----------------------------------------------------------------------
 
         // Extract residual rows relevant to this constraint
-        auto R = Kokkos::subview(
-            R_system,
-            Kokkos::make_pair(i_node2 * kLieGroupComponents, (i_node2 + 1) * kLieGroupComponents)
-        );
+        auto R = Kokkos::subview(R_system, Kokkos::make_pair(i_node2 * 6U, (i_node2 + 1) * 6U));
         RotateVectorByQuaternion(R2, X0, R2_X0);
 
         // Take axis_x and rotate it to right orientation
