@@ -2,10 +2,10 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "calculate_cylindrical_constraint.hpp"
 #include "calculate_fixed_bc_constraint.hpp"
 #include "calculate_prescribed_bc_constraint.hpp"
-#include "calculate_rigid_constraint.hpp"
+#include "calculate_revolute_joint_constraint.hpp"
+#include "calculate_rigid_joint_constraint.hpp"
 #include "calculate_rotation_control_constraint.hpp"
 #include "constraints.hpp"
 
@@ -37,22 +37,22 @@ struct CalculateConstraintResidualGradient {
             CalculatePrescribedBCConstraint{target_node_index,    X0_,    control,
                                             constraint_u,         node_u, residual_terms,
                                             target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kRigid) {
-            CalculateRigidConstraint{
+        } else if (type(i_constraint) == ConstraintType::kRigidJoint) {
+            CalculateRigidJointConstraint{
                 base_node_index, target_node_index,   X0_,
                 control,         constraint_u,        node_u,
                 residual_terms,  base_gradient_terms, target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kCylindrical) {
-            CalculateCylindricalConstraint{base_node_index,
-                                           target_node_index,
-                                           X0_,
-                                           axes,
-                                           control,
-                                           constraint_u,
-                                           node_u,
-                                           residual_terms,
-                                           base_gradient_terms,
-                                           target_gradient_terms}(i_constraint);
+        } else if (type(i_constraint) == ConstraintType::kRevoluteJoint) {
+            CalculateRevoluteJointConstraint{base_node_index,
+                                             target_node_index,
+                                             X0_,
+                                             axes,
+                                             control,
+                                             constraint_u,
+                                             node_u,
+                                             residual_terms,
+                                             base_gradient_terms,
+                                             target_gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kRotationControl) {
             CalculateRotationControlConstraint{base_node_index,
                                                target_node_index,

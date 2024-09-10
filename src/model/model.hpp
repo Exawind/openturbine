@@ -96,10 +96,10 @@ public:
     [[nodiscard]] size_t NumBeamElements() const { return this->beam_elements_.size(); }
 
     /// Adds a rigid constraint to the model and returns the constraint
-    std::shared_ptr<Constraint> AddRigidConstraint(const Node& node1, const Node& node2) {
-        return this->constraints_.emplace_back(
-            std::make_shared<Constraint>(ConstraintType::kRigid, constraints_.size(), node1, node2)
-        );
+    std::shared_ptr<Constraint> AddRigidJointConstraint(const Node& node1, const Node& node2) {
+        return this->constraints_.emplace_back(std::make_shared<Constraint>(
+            ConstraintType::kRigidJoint, constraints_.size(), node1, node2
+        ));
     }
 
     /// Adds a prescribed boundary condition constraint to the model and returns the constraint
@@ -118,10 +118,12 @@ public:
         ));
     }
 
-    /// Adds a cylindrical constraint to the model and returns the constraint
-    std::shared_ptr<Constraint> AddCylindricalConstraint(const Node& node1, const Node& node2) {
+    /// Adds a revolute/hinge constraint to the model and returns the constraint
+    std::shared_ptr<Constraint> AddRevoluteJointConstraint(
+        const Node& node1, const Node& node2, const Array_3& axis, double* torque
+    ) {
         return this->constraints_.emplace_back(std::make_shared<Constraint>(
-            ConstraintType::kCylindrical, constraints_.size(), node1, node2
+            ConstraintType::kRevoluteJoint, constraints_.size(), node1, node2, axis, torque
         ));
     }
 

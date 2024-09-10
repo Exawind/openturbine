@@ -43,6 +43,16 @@ void expect_kokkos_view_2D_equal(
     }
 }
 
+std::vector<double> kokkos_view_1D_to_vector(const Kokkos::View<double*>& view) {
+    auto view_host = Kokkos::create_mirror(view);
+    Kokkos::deep_copy(view_host, view);
+    std::vector<double> values;
+    for (size_t i = 0; i < view_host.extent(0); ++i) {
+        values.emplace_back(view_host(i));
+    }
+    return values;
+}
+
 std::vector<std::vector<double>> kokkos_view_2D_to_vector(const Kokkos::View<double**>& view) {
     const Kokkos::View<double**> view_contiguous("view_contiguous", view.extent(0), view.extent(1));
     Kokkos::deep_copy(view_contiguous, view);
@@ -51,7 +61,27 @@ std::vector<std::vector<double>> kokkos_view_2D_to_vector(const Kokkos::View<dou
     std::vector<std::vector<double>> values(view.extent(0));
     for (size_t i = 0; i < view_host.extent(0); ++i) {
         for (size_t j = 0; j < view_host.extent(1); ++j) {
-            values[i].push_back(view_host(i, j));
+            values[i].emplace_back(view_host(i, j));
+        }
+    }
+    return values;
+}
+
+std::vector<std::vector<std::vector<double>>> kokkos_view_3D_to_vector(
+    const Kokkos::View<double***>& view
+) {
+    const Kokkos::View<double***> view_contiguous(
+        "view_contiguous", view.extent(0), view.extent(1), view.extent(2)
+    );
+    Kokkos::deep_copy(view_contiguous, view);
+    auto view_host = Kokkos::create_mirror(view_contiguous);
+    Kokkos::deep_copy(view_host, view_contiguous);
+    std::vector<std::vector<std::vector<double>>> values(view.extent(0));
+    for (size_t i = 0; i < view_host.extent(0); ++i) {
+        for (size_t j = 0; j < view_host.extent(1); ++j) {
+            for (size_t k = 0; k < view_host.extent(2); ++k) {
+                values[i][j].emplace_back(view_host(i, j, k));
+            }
         }
     }
     return values;

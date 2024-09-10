@@ -32,6 +32,7 @@ struct Constraints {
     Kokkos::View<double* [7]>::HostMirror u_signal;
     Kokkos::View<double*> lambda;
     Kokkos::View<double* [6]> residual_terms;
+    Kokkos::View<double* [6]> system_residual_terms;
     Kokkos::View<double* [6][6]> base_gradient_terms;
     Kokkos::View<double* [6][6]> target_gradient_terms;
 
@@ -40,7 +41,7 @@ struct Constraints {
           num_dofs{std::transform_reduce(
               constraints.cbegin(), constraints.cend(), 0U, std::plus{},
               [](auto c) {
-                  return c->NumDOFs();
+                  return NumDOFsForConstraint(c->type);
               }
           )},
           control_signal(num),
@@ -57,6 +58,7 @@ struct Constraints {
           u_signal("u_signal", num),
           lambda("lambda", num_dofs),
           residual_terms("residual_terms", num),
+          system_residual_terms("system_residual_terms", num),
           base_gradient_terms("base_gradient_terms", num),
           target_gradient_terms("target_gradient_terms", num) {
         // Create host mirror for constraint data
@@ -77,7 +79,7 @@ struct Constraints {
             control_signal[i] = constraints[i]->control;
 
             // Set constraint rows
-            auto dofs = constraints[i]->NumDOFs();
+            auto dofs = NumDOFsForConstraint(host_type(i));
             host_row_range(i) = Kokkos::make_pair(start_row, start_row + dofs);
             start_row += dofs;
 
@@ -137,12 +139,8 @@ struct Constraints {
         auto host_type = Kokkos::create_mirror(type);
         Kokkos::deep_copy(host_type, type);
         for (auto i = 0U; i < num; ++i) {
-            switch (host_type(i)) {
-                case ConstraintType::kRotationControl: {
-                    host_control_mirror(i) = *control_signal[i];
-                } break;
-                default:
-                    break;
+            if (control_signal[i] != nullptr) {
+                host_control_mirror(i) = *control_signal[i];
             }
         }
         Kokkos::deep_copy(this->control, host_control_mirror);

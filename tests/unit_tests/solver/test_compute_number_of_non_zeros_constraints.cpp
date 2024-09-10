@@ -8,8 +8,8 @@ namespace openturbine::tests {
 TEST(ComputeNumberOfNonZeros_Constraints, OneOfEach) {
     constexpr auto num_constraints = 5U;
     constexpr auto type_host_data = std::array{
-        ConstraintType::kFixedBC, ConstraintType::kPrescribedBC, ConstraintType::kRigid,
-        ConstraintType::kCylindrical, ConstraintType::kRotationControl};
+        ConstraintType::kFixedBC, ConstraintType::kPrescribedBC, ConstraintType::kRigidJoint,
+        ConstraintType::kRevoluteJoint, ConstraintType::kRotationControl};
     constexpr auto row_range_host_data = std::array{
         Kokkos::pair<size_t, size_t>{0U, 6U}, Kokkos::pair<size_t, size_t>{6U, 12U},
         Kokkos::pair<size_t, size_t>{12U, 18U}, Kokkos::pair<size_t, size_t>{18U, 24U},

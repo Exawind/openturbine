@@ -6,7 +6,7 @@
 
 #include "test_utilities.hpp"
 
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
 #include "vtkout.hpp"
 #endif
 
@@ -50,6 +50,13 @@ constexpr auto mass_matrix = std::array{
     std::array{0., 0., 0., 0., 0.40972e-2, 0.}, std::array{0., 0., 0., 0., 0., 1.0336e-2},
 };
 
+// create a unity mass matrix
+constexpr auto mass_matrix_unity = std::array{
+    std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
+    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
+    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.},
+};
+
 // Stiffness matrix for uniform composite beam section
 constexpr auto stiffness_matrix = std::array{
     std::array{1368.17e3, 0., 0., 0., 0., 0.},
@@ -58,6 +65,13 @@ constexpr auto stiffness_matrix = std::array{
     std::array{0., 0., 0., 16.9600e3, 17.6100e3, -0.3510e3},
     std::array{0., 0., 0., 17.6100e3, 59.1200e3, -0.3700e3},
     std::array{0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
+};
+
+// create a unit stiffness matrix
+constexpr auto stiffness_matrix_unity = std::array{
+    std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
+    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
+    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.},
 };
 
 // Node locations (GLL quadrature)
@@ -75,6 +89,11 @@ const auto quadrature = BeamQuadrature{
 const auto sections = std::vector{
     BeamSection(0., mass_matrix, stiffness_matrix),
     BeamSection(1., mass_matrix, stiffness_matrix),
+};
+
+const auto sections_unity = std::vector{
+    BeamSection(0., mass_matrix_unity, stiffness_matrix_unity),
+    BeamSection(1., mass_matrix_unity, stiffness_matrix_unity),
 };
 
 TEST(RotatingBeamTest, StepConvergence) {
@@ -412,7 +431,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
 
     // Add hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
-    model.AddRigidConstraint(*hub_node, model.GetNode(0));
+    model.AddRigidJointConstraint(*hub_node, model.GetNode(0));
     auto hub_bc = model.AddPrescribedBC(*hub_node);
 
     // Solution parameters
@@ -548,7 +567,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     );
 }
 
-TEST(RotatingBeamTest, CylindricalConstraint) {
+TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto model = Model();
 
     // Gravity vector
@@ -584,9 +603,13 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
     auto ground_node = model.AddNode({0, 0., -1., 1., 0., 0., 0.});
 
     // Add constraints
-    model.AddFixedBC(*ground_node);
-    model.AddCylindricalConstraint(*ground_node, *hub_node);
-    model.AddRigidConstraint(*hub_node, beam_nodes[0].node);
+    model.AddFixedBC(*ground_node);  // Ground node is fixed
+
+    // Revolute joint constraint
+    auto torque = 0.;
+    model.AddRevoluteJointConstraint(*ground_node, *hub_node, {0., 0., 0.}, &torque);
+
+    model.AddRigidJointConstraint(*hub_node, beam_nodes[0].node);  // Hub node is rigidly connected
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -615,8 +638,8 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
         constraints.row_range
     );
 
-#ifdef OTURB_ENABLE_VTK
-    UpdateState(beams, state.q, state.v, state.vd);
+#ifdef OpenTurbine_ENABLE_VTK
+    UpdateSystemVariables(parameters, beams, state);
     std::filesystem::remove_all("steps");
     std::filesystem::create_directory("steps");
     BeamsWriteVTK(beams, "steps/step_0000.vtu");
@@ -626,7 +649,7 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
     for (int i = 0; i < 5; ++i) {
         const auto converged = Step(parameters, solver, beams, state, constraints);
         EXPECT_EQ(converged, true);
-#ifdef OTURB_ENABLE_VTK
+#ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i + 1);
         auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
         BeamsWriteVTK(beams, file_name + ".vtu");
@@ -653,6 +676,118 @@ TEST(RotatingBeamTest, CylindricalConstraint) {
          {0, 0, 0, 0.99999687500410894, 7.2192479817696718E-29, -2.7782381382812961E-27,
           0.0024999964033195574},
          {0, 0, 0, 1, 0, 0, 0}}
+    );
+}
+
+void GeneratorTorqueWithAxisTilt(
+    double tilt, const std::vector<double>& expected_azimuth_q,
+    const std::vector<double>& expected_azimuth_vel
+) {
+    auto model = Model();
+
+    // Gravity vector - assume no gravity
+    constexpr auto gravity = std::array{0., 0., 0.};
+
+    // Build vector of nodes (straight along x axis, no rotation)
+    std::vector<BeamNode> beam_nodes;
+    std::transform(
+        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
+        [&](auto s) {
+            const auto x = 10 * s + 2.;
+            return BeamNode(
+                s, *model.AddNode({x, std::sin(tilt), std::cos(tilt), 1., 0., 0., 0.}  // position
+                   )
+            );
+        }
+    );
+
+    // Define beam initialization
+    const auto beams_input =
+        BeamsInput({BeamElement(beam_nodes, sections_unity, quadrature)}, gravity);
+
+    // Initialize beams from element inputs
+    auto beams = CreateBeams(beams_input);
+
+    // Add shaft base, azimuth, and hub nodes as massless points
+    auto shaft_base = model.AddNode({0, 0., 0., 1., 0., 0., 0.});
+    auto azimuth = model.AddNode({0, 0, 0, 1., 0., 0., 0.});
+    auto hub = model.AddNode({0, std::sin(tilt), std::cos(tilt), 1., 0., 0., 0.});
+
+    // Add constraints between the nodes to simulate a rotor with a generator
+    model.AddFixedBC(*shaft_base);  // Fixed shaft base
+
+    // Add torque to the azimuth node to simulate generator torque
+    auto torque = 1.e3;
+    model.AddRevoluteJointConstraint(  // Azimuth can rotate around shaft base
+        *shaft_base, *azimuth, {0., std::sin(tilt), std::cos(tilt)}, &torque
+    );
+
+    model.AddRigidJointConstraint(*azimuth, *hub);            // Hub is rigidly attached to azimuth
+    model.AddRigidJointConstraint(*hub, beam_nodes[0].node);  // Beam is rigidly attached to hub
+
+    // Solution parameters
+    const bool is_dynamic_solve(true);
+    const int max_iter(5);
+    const double step_size(0.01);  // seconds
+    const double rho_inf(0.9);
+
+    // Create solver
+    auto nodes_vector = std::vector<Node>{};
+    for (const auto& node : model.GetNodes()) {
+        nodes_vector.push_back(*node);
+    }
+
+    auto constraints_vector = std::vector<Constraint>{};
+    for (const auto& constraint : model.GetConstraints()) {
+        constraints_vector.push_back(*constraint);
+    }
+
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = State(model.NumNodes());
+    CopyNodesToState(state, model.GetNodes());
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
+    );
+
+#ifdef OpenTurbine_ENABLE_VTK
+    UpdateSystemVariables(parameters, beams, state);
+    std::filesystem::remove_all("steps");
+    std::filesystem::create_directory("steps");
+    BeamsWriteVTK(beams, "steps/step_0000.vtu");
+#endif
+
+    // Run 10 steps
+    for (int i = 0; i < 10; ++i) {
+        const auto converged = Step(parameters, solver, beams, state, constraints);
+        EXPECT_EQ(converged, true);
+#ifdef OpenTurbine_ENABLE_VTK
+        auto tmp = std::to_string(i + 1);
+        auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
+        BeamsWriteVTK(beams, file_name + ".vtu");
+#endif
+    }
+
+    // Check that the azimuth node has rotated by the expected amount
+    auto azimuth_q = Kokkos::subview(state.q, azimuth->ID, Kokkos::ALL);
+    expect_kokkos_view_1D_equal(azimuth_q, expected_azimuth_q);
+
+    // Check the azimuth node angular velocity is as expected
+    auto azimuth_vel = Kokkos::subview(state.v, azimuth->ID, Kokkos::ALL);
+    expect_kokkos_view_1D_equal(azimuth_vel, expected_azimuth_vel);
+}
+
+TEST(RotatingBeamTest, GeneratorTorque_Tilt0) {
+    GeneratorTorqueWithAxisTilt(
+        0., {0., 0., 0., -0.140339, 0., 0., -0.990104}, {0., 0., 0., 0., 0., -87.066040}
+    );
+}
+
+TEST(RotatingBeamTest, GeneratorTorque_Tilt90) {
+    GeneratorTorqueWithAxisTilt(
+        M_PI / 2., {0., 0., 0., -0.140339, 0., -0.990104, 0.}, {0., 0., 0., 0., -87.066040, 0.}
     );
 }
 

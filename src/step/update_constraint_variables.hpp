@@ -3,6 +3,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
+#include "src/constraints/calculate_constraint_force.hpp"
 #include "src/constraints/calculate_constraint_residual_gradient.hpp"
 #include "src/constraints/constraints.hpp"
 #include "src/state/state.hpp"
@@ -17,6 +18,13 @@ inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
     }
 
     constraints.UpdateViews();
+
+    Kokkos::parallel_for(
+        "CalculateConstraintForce", constraints.num,
+        CalculateConstraintForce{
+            constraints.type, constraints.target_node_index, constraints.axes, constraints.control,
+            state.q, constraints.system_residual_terms}
+    );
 
     Kokkos::parallel_for(
         "CalculateConstraintResidualGradient", constraints.num,

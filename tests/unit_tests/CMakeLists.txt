@@ -36,12 +36,13 @@ target_link_system_libraries(
 )
 
 # Conditional linking for VTK (i.e. visualization toolkit) if enabled
-if (OTURB_ENABLE_VTK)
+if (OpenTurbine_ENABLE_VTK)
   target_link_system_libraries(
     openturbine_unit_tests
     PRIVATE
     VTK::IOXML
   )
+  target_compile_definitions(openturbine_unit_tests PRIVATE OpenTurbine_ENABLE_VTK)
 endif()
 
 # Include GoogleTest module and discover tests
