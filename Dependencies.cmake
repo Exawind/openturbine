@@ -12,18 +12,10 @@ function(openturbine_setup_dependencies)
     GIT_TAG dev # Use the branch dev
     GIT_SHALLOW TRUE # Only clone the latest commit
     GIT_SUBMODULES_RECURSE FALSE # Do not clone submodules
-    CMAKE_ARGS -DBUILD_SHARED_LIBS=ON                # Build shared libraries for linking
-               -DBUILD_TESTING=OFF                   # Disable tests
+    CMAKE_ARGS -DBUILD_TESTING=OFF # Do not build tests
     BUILD_IN_SOURCE FALSE # Build in a separate directory
     BUILD_COMMAND ${CMAKE_COMMAND} --build . --target aerodyn_inflow_c_binding # Build only the ADI library
     INSTALL_COMMAND ""
-  )
-
-  # Set the location of the ADI library for linking
-  ExternalProject_Get_Property(OpenFAST_ADI SOURCE_DIR) # Get the source directory
-  message(STATUS "SOURCE_DIR: ${SOURCE_DIR}")
-  set_target_properties(OpenFAST_ADI PROPERTIES
-    IMPORTED_LOCATION "${SOURCE_DIR}/build/modules/aerodyn/aerodyn_inflow_c_binding/libaerodyn_inflow_c_binding.dylib"
   )
 
   # Optionally find and link MKL if available
