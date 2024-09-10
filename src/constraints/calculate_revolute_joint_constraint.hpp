@@ -9,10 +9,11 @@
 
 namespace openturbine {
 
-struct CalculateRigidConstraint {
+struct CalculateRevoluteJointConstraint {
     Kokkos::View<size_t*>::const_type base_node_index;
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3]>::const_type X0_;
+    Kokkos::View<double* [3][3]>::const_type axes;
     Kokkos::View<double*>::const_type control;
     Kokkos::View<double* [7]>::const_type constraint_u;
     Kokkos::View<double* [7]>::const_type node_u;
@@ -47,32 +48,35 @@ struct CalculateRigidConstraint {
         const auto u2 = View_3::const_type{u2_data.data()};
 
         // Rotation control
-        constexpr auto RCt_data = Kokkos::Array<double, 4>{1., 0., 0., 0.};
-        const auto RCt = Kokkos::View<double[4]>::const_type{RCt_data.data()};
-
         auto R1t_data = Kokkos::Array<double, 4>{};
-        const auto R1t = Kokkos::View<double[4]>{R1t_data.data()};
+        auto R1t = Kokkos::View<double[4]>{R1t_data.data()};
 
         auto R1_X0_data = Kokkos::Array<double, 4>{};
         auto R1_X0 = Kokkos::View<double[4]>{R1_X0_data.data()};
 
-        auto R2_RCt_data = Kokkos::Array<double, 4>{};
-        auto R2_RCt = Kokkos::View<double[4]>{R2_RCt_data.data()};
-
-        auto R2_RCt_R1t_data = Kokkos::Array<double, 4>{};
-        auto R2_RCt_R1t = Kokkos::View<double[4]>{R2_RCt_R1t_data.data()};
-
-        auto A_data = Kokkos::Array<double, 9>{};
-        auto A = View_3x3{A_data.data()};
-
-        auto C_data = Kokkos::Array<double, 9>{};
-        auto C = View_3x3{C_data.data()};
-
-        auto V3_data = Kokkos::Array<double, 3>{};
-        auto V3 = View_3{V3_data.data()};
+        // Revolute joint constraint data
+        const auto x0_data = Kokkos::Array<double, 3>{
+            axes(i_constraint, 0, 0), axes(i_constraint, 0, 1), axes(i_constraint, 0, 2)};
+        const auto x0 = View_3::const_type{x0_data.data()};
+        const auto y0_data = Kokkos::Array<double, 3>{
+            axes(i_constraint, 1, 0), axes(i_constraint, 1, 1), axes(i_constraint, 1, 2)};
+        const auto y0 = View_3::const_type{y0_data.data()};
+        const auto z0_data = Kokkos::Array<double, 3>{
+            axes(i_constraint, 2, 0), axes(i_constraint, 2, 1), axes(i_constraint, 2, 2)};
+        const auto z0 = View_3::const_type{z0_data.data()};
+        auto x_data = Kokkos::Array<double, 3>{};
+        const auto x = View_3{x_data.data()};
+        auto y_data = Kokkos::Array<double, 3>{};
+        const auto y = View_3{y_data.data()};
+        auto z_data = Kokkos::Array<double, 3>{};
+        const auto z = View_3{z_data.data()};
+        auto xcy_data = Kokkos::Array<double, 3>{};
+        const auto xcy = View_3{xcy_data.data()};
+        auto xcz_data = Kokkos::Array<double, 3>{};
+        const auto xcz = View_3{xcz_data.data()};
 
         //----------------------------------------------------------------------
-        // Residual Vector
+        // Residual Vector, Phi
         //----------------------------------------------------------------------
 
         // Phi(0:3) = u2 + X0 - u1 - R1*X0
@@ -83,34 +87,33 @@ struct CalculateRigidConstraint {
         }
 
         // Angular residual
-        // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
-        QuaternionCompose(R2, RCt, R2_RCt);
-        QuaternionCompose(R2_RCt, R1t, R2_RCt_R1t);
-        QuaternionToRotationMatrix(R2_RCt_R1t, C);
-        AxialVectorOfMatrix(C, V3);
-        for (int i = 0; i < 3; ++i) {
-            residual_terms(i_constraint, i + 3) = V3(i);
-        }
+        RotateVectorByQuaternion(R1, x0, x);
+        RotateVectorByQuaternion(R2, y0, y);
+        RotateVectorByQuaternion(R2, z0, z);
+        // Phi(3) = dot(R2 * z0_hat, R1 * x0_hat)
+        residual_terms(i_constraint, 3) = DotProduct(z, x);
+        // Phi(4) = dot(R2 * y0_hat, R1 * x0_hat)
+        residual_terms(i_constraint, 4) = DotProduct(y, x);
 
         //----------------------------------------------------------------------
-        // Constraint Gradient Matrix
+        // Constraint Gradient Matrix, B
         //----------------------------------------------------------------------
 
         //---------------------------------
         // Target Node
         //---------------------------------
         {
-            // B(0:3,0:3) = I
             for (int i = 0; i < 3; ++i) {
                 target_gradient_terms(i_constraint, i, i) = 1.;
             }
 
-            // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
-            AX_Matrix(C, A);
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    target_gradient_terms(i_constraint, i + 3, j + 3) = A(j, i);
-                }
+            // B(3, 3:6) = -cross(R1 * x0_hat, transpose(R2 * z0_hat))
+            CrossProduct(x, z, xcz);
+            // B(4, 3:6) = -cross(R1 * x0_hat, transpose(R2 * y0_hat))
+            CrossProduct(x, y, xcy);
+            for (int j = 0; j < 3; ++j) {
+                target_gradient_terms(i_constraint, 3, j + 3) = -xcz(j);
+                target_gradient_terms(i_constraint, 4, j + 3) = -xcy(j);
             }
         }
         //---------------------------------
@@ -122,20 +125,11 @@ struct CalculateRigidConstraint {
                 base_gradient_terms(i_constraint, i, i) = -1.;
             }
 
-            // B(0:3,3:6) = tilde(R1*X0)
-            VecTilde(R1_X0, A);
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    base_gradient_terms(i_constraint, i, j + 3) = A(i, j);
-                }
-            }
-
-            // B(3:6,3:6) = -AX(R2*inv(RC)*inv(R1))
-            AX_Matrix(C, A);
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    base_gradient_terms(i_constraint, i + 3, j + 3) = -A(i, j);
-                }
+            // B(3,3:6) = cross(R1 * x0_hat, transpose(R2 * z0_hat))
+            // B(4,3:6) = cross(R1 * x0_hat, transpose(R2 * y0_hat))
+            for (int j = 0; j < 3; ++j) {
+                base_gradient_terms(i_constraint, 3, j + 3) = xcz(j);
+                base_gradient_terms(i_constraint, 4, j + 3) = xcy(j);
             }
         }
     }

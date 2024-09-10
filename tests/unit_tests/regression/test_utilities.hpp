@@ -25,17 +25,15 @@ void expect_kokkos_view_3D_equal(
     const std::vector<std::vector<std::vector<double>>>& expected, double epsilon = 1.e-6
 );
 
-template <typename T>
-std::vector<T> kokkos_view_1D_to_vector(Kokkos::View<T*> view) {
-    auto view_host = Kokkos::create_mirror(view);
-    Kokkos::deep_copy(view_host, view);
-    std::vector<T> values;
-    for (size_t i = 0; i < view_host.extent(0); ++i) {
-        values.push_back(view_host(i));
-    }
-    return values;
-}
+// Convert a 1D Kokkos view to a vector
+std::vector<double> kokkos_view_1D_to_vector(const Kokkos::View<double*>& view);
 
+// Convert a 2D Kokkos view to a vector
 std::vector<std::vector<double>> kokkos_view_2D_to_vector(const Kokkos::View<double**>& view);
+
+// Convert a 3D Kokkos view to a vector
+std::vector<std::vector<std::vector<double>>> kokkos_view_3D_to_vector(
+    const Kokkos::View<double***>& view
+);
 
 }  // namespace openturbine::tests

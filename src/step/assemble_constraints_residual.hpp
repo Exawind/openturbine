@@ -4,6 +4,7 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "src/constraints/constraints.hpp"
+#include "src/solver/contribute_constraints_system_residual_to_vector.hpp"
 #include "src/solver/copy_constraints_residual_to_vector.hpp"
 #include "src/solver/solver.hpp"
 
@@ -15,6 +16,12 @@ inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints
     if (constraints.num == 0) {
         return;
     }
+
+    Kokkos::parallel_for(
+        "ContributeConstraintsSystemResidualToVector", constraints.num,
+        ContributeConstraintsSystemResidualToVector{
+            constraints.target_node_index, solver.R, constraints.system_residual_terms}
+    );
 
     auto R = Solver::ValuesType(
         Kokkos::view_alloc(Kokkos::WithoutInitializing, "R_local"), solver.num_system_dofs
