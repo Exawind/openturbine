@@ -11,4 +11,5 @@ target_sources(
     test_utilities.cpp
     test_controller.cpp
     test_yaml_parser.cpp
+    test_aerodyn_inflow.cpp
 )
