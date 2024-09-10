@@ -2,7 +2,11 @@
 add_executable(openturbine_unit_tests)
 
 # Add subdirectory for additional components (if required)
-add_subdirectory(restruct_poc)
+add_subdirectory(beams)
+add_subdirectory(model)
+add_subdirectory(regression)
+add_subdirectory(solver)
+add_subdirectory(system)
 
 # Specify the source files for the unit tests
 target_sources(
