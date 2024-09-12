@@ -4,20 +4,6 @@ function(openturbine_setup_dependencies)
   find_package(Amesos2 REQUIRED)
   find_package(yaml-cpp REQUIRED)
 
-  # Add external project to build the OpenFAST/AerodynInflow(ADI) library
-  # include(ExternalProject)
-  # ExternalProject_Add(OpenFAST_ADI
-  #   PREFIX ${CMAKE_BINARY_DIR}/../OpenFAST_ADI
-  #   GIT_REPOSITORY https://github.com/OpenFAST/openfast.git
-  #   GIT_TAG dev # Use the branch dev
-  #   GIT_SHALLOW TRUE # Only clone the latest commit
-  #   GIT_SUBMODULES_RECURSE FALSE # Do not clone submodules
-  #   CMAKE_ARGS -DBUILD_TESTING=OFF # Do not build tests
-  #   BUILD_IN_SOURCE FALSE # Build in a separate directory
-  #   BUILD_COMMAND ${CMAKE_COMMAND} --build . --target aerodyn_inflow_c_binding # Build only the ADI library
-  #   INSTALL_COMMAND ""
-  # )
-
   # Optionally find and link MKL if available
   if(TARGET Kokkos::MKL)
     find_package(MKL REQUIRED)
@@ -39,4 +25,25 @@ function(openturbine_setup_dependencies)
       set(FS_LIB stdc++fs)
     endif()
   endif()
+
+  # Add external project to build the OpenFAST/AerodynInflow(ADI) library
+  include(ExternalProject)
+  ExternalProject_Add(OpenFAST_ADI
+    PREFIX ${CMAKE_BINARY_DIR}/external/OpenFAST_ADI
+    GIT_REPOSITORY https://github.com/OpenFAST/openfast.git
+    GIT_TAG dev                    # Use the "dev" branch
+    GIT_SHALLOW TRUE               # Clone only the latest commit
+    GIT_SUBMODULES_RECURSE OFF     # Avoid unnecessary submodule cloning
+    CMAKE_ARGS
+      -DBUILD_TESTING=OFF          # Disable testing
+    BUILD_IN_SOURCE OFF            # Build in a separate directory for cleaner output
+    BINARY_DIR ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build
+    # Build only the aerodyn_inflow_c_binding taget and do it sequentially (avoid parallel build)
+    BUILD_COMMAND ${CMAKE_COMMAND} --build . --target aerodyn_inflow_c_binding -- -j 1
+    INSTALL_COMMAND
+      ${CMAKE_COMMAND} -E copy
+      ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build/modules/aerodyn/libaerodyn_inflow_c_binding.dylib
+      ${CMAKE_BINARY_DIR}         # Copy the library to the binary directory
+  )
+
 endfunction()
