@@ -21,7 +21,7 @@
 
 namespace openturbine::tests {
 
-inline void BeamsWriteVTK(Beams& beams, std::string filename) {
+inline void BeamsWriteVTK(Beams& beams, const std::string& filename) {
     // Get a copy of the beam element indices in the host space
     auto num_qps_per_element = Kokkos::create_mirror(beams.num_qps_per_element);
     Kokkos::deep_copy(num_qps_per_element, beams.num_qps_per_element);
@@ -81,15 +81,15 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     // auto qp_r0 = kokkos_view_3D_to_vector(beams.qp_r0);
     for (size_t el = 0; el < beams.num_elems; ++el) {
         for (size_t i = 0; i < num_qps_per_element(el); ++i) {
-            Array_4 r{qp_r(el, i, 0), qp_r(el, i, 1), qp_r(el, i, 2), qp_r(el, i, 3)};
-            Array_4 r0{qp_r0(el, i, 0), qp_r0(el, i, 1), qp_r0(el, i, 2), qp_r0(el, i, 3)};
+            const Array_4 r{qp_r(el, i, 0), qp_r(el, i, 1), qp_r(el, i, 2), qp_r(el, i, 3)};
+            const Array_4 r0{qp_r0(el, i, 0), qp_r0(el, i, 1), qp_r0(el, i, 2), qp_r0(el, i, 3)};
             auto R = QuaternionToRotationMatrix(QuaternionCompose(r, r0));
-            double ori_x[3] = {R[0][0], R[1][0], R[2][0]};
-            double ori_y[3] = {R[0][1], R[1][1], R[2][1]};
-            double ori_z[3] = {R[0][2], R[1][2], R[2][2]};
-            orientation_x->InsertNextTuple(ori_x);
-            orientation_y->InsertNextTuple(ori_y);
-            orientation_z->InsertNextTuple(ori_z);
+            const auto ori_x = std::array{R[0][0], R[1][0], R[2][0]};
+            const auto ori_y = std::array{R[0][1], R[1][1], R[2][1]};
+            const auto ori_z = std::array{R[0][2], R[1][2], R[2][2]};
+            orientation_x->InsertNextTuple(ori_x.data());
+            orientation_y->InsertNextTuple(ori_y.data());
+            orientation_z->InsertNextTuple(ori_z.data());
         }
     }
     gd->GetPointData()->AddArray(orientation_x);
@@ -131,18 +131,18 @@ inline void BeamsWriteVTK(Beams& beams, std::string filename) {
     for (size_t i = 0; i < beams.num_elems; ++i) {
         // Get the undeformed shape
         auto num_qps = num_qps_per_element(i);
-        Array_3 x0_root{qp_x0(i, 0, 0), qp_x0(i, 0, 1), qp_x0(i, 0, 2)};
-        Array_3 x_root{qp_x(i, 0, 0), qp_x(i, 0, 1), qp_x(i, 0, 2)};
-        Array_4 r_u{qp_r(i, 0, 0), qp_r(i, 0, 1), qp_r(i, 0, 2), qp_r(i, 0, 3)};
+        const Array_3 x0_root{qp_x0(i, 0, 0), qp_x0(i, 0, 1), qp_x0(i, 0, 2)};
+        const Array_3 x_root{qp_x(i, 0, 0), qp_x(i, 0, 1), qp_x(i, 0, 2)};
+        const Array_4 r_u{qp_r(i, 0, 0), qp_r(i, 0, 1), qp_r(i, 0, 2), qp_r(i, 0, 3)};
 
         for (size_t j = 0; j < num_qps; ++j) {
-            Array_3 x{qp_x(i, j, 0), qp_x(i, j, 1), qp_x(i, j, 2)};
+            const Array_3 x{qp_x(i, j, 0), qp_x(i, j, 1), qp_x(i, j, 2)};
             Array_3 tmp = {
                 qp_x0(i, j, 0) - x0_root[0], qp_x0(i, j, 1) - x0_root[1],
                 qp_x0(i, j, 2) - x0_root[2]};
             tmp = RotateVectorByQuaternion(r_u, tmp);
-            Array_3 x_undef{tmp[0] + x_root[0], tmp[1] + x_root[1], tmp[2] + x_root[2]};
-            Array_3 u{x[0] - x_undef[0], x[1] - x_undef[1], x[2] - x_undef[2]};
+            const Array_3 x_undef{tmp[0] + x_root[0], tmp[1] + x_root[1], tmp[2] + x_root[2]};
+            const Array_3 u{x[0] - x_undef[0], x[1] - x_undef[1], x[2] - x_undef[2]};
             deformation_vector->InsertNextTuple(u.data());
         }
     }
