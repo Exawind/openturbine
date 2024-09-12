@@ -9,7 +9,10 @@ namespace openturbine::tests {
 #ifdef OpenTurbine_BUILD_OPENFAST_ADI
 TEST(AerodynInflowTest, ADI_C_PreInit) {
     // Use dylib to load the dynamic library and get access to the aerodyn inflow c binding functions
-    auto path = std::string{"libaerodyn_inflow_c_binding."};
+    const std::filesystem::path project_root = FindProjectRoot();
+    const std::filesystem::path full_path =
+        project_root / "build/tests/unit_tests/libaerodyn_inflow_c_binding.";
+    std::string path = full_path.string();
 #ifdef __APPLE__
     path += "dylib";
 #elif __linux__

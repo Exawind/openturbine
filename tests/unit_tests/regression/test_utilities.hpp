@@ -1,10 +1,14 @@
 #pragma once
 
+#include <filesystem>
 #include <vector>
 
 #include <Kokkos_Core.hpp>
 
 namespace openturbine::tests {
+
+/// Function to find the project root directory
+std::filesystem::path FindProjectRoot();
 
 Kokkos::View<double**> create_diagonal_matrix(const std::vector<double>& values);
 

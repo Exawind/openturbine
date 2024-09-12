@@ -6,6 +6,19 @@
 
 namespace openturbine::tests {
 
+std::filesystem::path FindProjectRoot() {
+    std::filesystem::path currentPath = std::filesystem::current_path();
+
+    while (!currentPath.empty()) {
+        if (std::filesystem::exists(currentPath / "CMakeLists.txt")) {
+            return currentPath;
+        }
+        currentPath = currentPath.parent_path();
+    }
+
+    throw std::runtime_error("Could not find project root directory. CMakeLists.txt not found.");
+}
+
 Kokkos::View<double**> create_diagonal_matrix(const std::vector<double>& values) {
     auto matrix = Kokkos::View<double**>("matrix", values.size(), values.size());
     auto matrix_host = Kokkos::create_mirror(matrix);

@@ -16,7 +16,9 @@ TEST(ControllerTest, DisconController) {
     // at time = 0.0s
 
     // Use dylib to load the dynamic library and get access to the controller functions
-    const util::dylib lib("./DISCON.dll", util::dylib::no_filename_decorations);
+    const std::filesystem::path project_root = FindProjectRoot();
+    const std::filesystem::path full_path = project_root / "build/tests/unit_tests/DISCON.dll";
+    const util::dylib lib(full_path.string(), util::dylib::no_filename_decorations);
     auto DISCON = lib.get_function<void(float*, int&, char*, char*, char*)>("DISCON");
 
     util::ControllerIO swap;
@@ -77,7 +79,9 @@ TEST(ControllerTest, DisconController) {
 TEST(ControllerTest, TurbineController) {
     // Get a handle to the controller function via the TurbineController class and use it to
     // calculate the controller outputs
-    const auto shared_lib_path = std::string{"./DISCON.dll"};
+    const std::filesystem::path project_root = FindProjectRoot();
+    const std::filesystem::path full_path = project_root / "build/tests/unit_tests/DISCON.dll";
+    const auto shared_lib_path = full_path.string();
     const auto controller_function_name = std::string{"DISCON"};
 
     auto controller = util::TurbineController(shared_lib_path, controller_function_name, "", "");
