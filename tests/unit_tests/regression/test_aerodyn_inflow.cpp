@@ -8,7 +8,14 @@ namespace openturbine::tests {
 
 TEST(AerodynInflowTest, ADI_C_PreInit) {
     // Use dylib to load the dynamic library and get access to the aerodyn inflow c binding functions
-    auto path = std::string{"libaerodyn_inflow_c_binding.dylib"};
+    auto path = std::string{"libaerodyn_inflow_c_binding."};
+#ifdef __APPLE__
+    path += "dylib";
+#elif __linux__
+    path += "so";
+#else if _WIN32 || _WIN64
+    path += "dll";
+#endif
     const util::dylib lib(path, util::dylib::no_filename_decorations);
     auto ADI_C_PreInit = lib.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
 
