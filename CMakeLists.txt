@@ -15,14 +15,14 @@ project(
 
 # Include custom CMake modules
 include(cmake/PreventInSourceBuilds.cmake)
-include(OpenTurbineOptions.cmake)
+include(cmake/OpenTurbineOptions.cmake)
 
 # Setup project-specific options
 openturbine_setup_options()
 openturbine_global_options()
 
 # Include and setup dependencies
-include(Dependencies.cmake)
+include(cmake/Dependencies.cmake)
 openturbine_setup_dependencies()
 
 # Setup local project options
