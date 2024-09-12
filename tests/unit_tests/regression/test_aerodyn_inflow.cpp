@@ -12,7 +12,7 @@ TEST(AerodynInflowTest, ADI_C_PreInit) {
     const util::dylib lib(path, util::dylib::no_filename_decorations);
     auto ADI_C_PreInit = lib.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
 
-    // Call ADI_C_PreInit and expect the following outputs
+    // Call ADI_C_PreInit routine and expect the following outputs
     int numTurbines{1};               // input: Number of turbines
     int transposeDCM{1};              // input: Transpose the direction cosine matrix
     int debuglevel{0};                // input: Debug level
@@ -23,8 +23,11 @@ TEST(AerodynInflowTest, ADI_C_PreInit) {
         static_cast<char*>(error_message_c)
     );
 
+    EXPECT_EQ(numTurbines, 1);
+    EXPECT_EQ(transposeDCM, 1);
+    EXPECT_EQ(debuglevel, 0);
     EXPECT_EQ(error_status_c, 0);
-    EXPECT_STREQ(error_message_c, "");
+    EXPECT_STREQ(static_cast<char*>(error_message_c), "");
 }
 
 }  // namespace openturbine::tests
