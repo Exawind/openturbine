@@ -26,7 +26,7 @@ function(openturbine_setup_dependencies)
     endif()
   endif()
 
-  # Conditionally add external project to build the OpenFAST/AerodynInflow(ADI) library
+  # Conditionally add external project to build the OpenFAST/AerodynInflow (ADI) library
   if(OpenTurbine_BUILD_OPENFAST_ADI)
     message(STATUS "Building OpenFAST AerodynInflow (ADI) library")
     include(ExternalProject)
@@ -40,7 +40,7 @@ function(openturbine_setup_dependencies)
         -DBUILD_TESTING=OFF          # Disable testing
       BUILD_IN_SOURCE OFF            # Build in a separate directory for cleaner output
       BINARY_DIR ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build
-      # Build only the aerodyn_inflow_c_binding taget and do it sequentially (avoid parallel build)
+      # Build only the aerodyn_inflow_c_binding target and do it sequentially (avoid parallel build)
       BUILD_COMMAND ${CMAKE_COMMAND} --build . --target aerodyn_inflow_c_binding -- -j 1
       INSTALL_COMMAND
         ${CMAKE_COMMAND} -E copy
@@ -48,5 +48,4 @@ function(openturbine_setup_dependencies)
         ${CMAKE_BINARY_DIR}         # Copy the library to the binary directory
     )
   endif()
-
 endfunction()
