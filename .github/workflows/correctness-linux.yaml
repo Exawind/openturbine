@@ -27,11 +27,10 @@ jobs:
         git clone https://github.com/spack/spack.git
         source spack/share/spack/setup-env.sh
         spack compiler find
-        spack external find
         spack install googletest
         spack install cppcheck
         spack install yaml-cpp
-        spack install trilinos@master~mpi~epetra+basker
+        spack install trilinos@master~mpi~epetra
     - name: Clone
       uses: actions/checkout@v4
       with:

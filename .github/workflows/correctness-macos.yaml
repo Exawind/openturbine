@@ -31,7 +31,8 @@ jobs:
         spack install llvm
         spack install cppcheck
         spack install yaml-cpp
-        spack install trilinos@master~mpi~epetra+basker
+        spack install vtk~mpi~opengl2
+        spack install trilinos@master~mpi~epetra
     - name: Clone
       uses: actions/checkout@v4
       with:
@@ -45,6 +46,7 @@ jobs:
         spack load trilinos
         spack load googletest
         spack load yaml-cpp
+        spack load vtk
         cd openturbine
         mkdir build
         cd build
@@ -53,6 +55,7 @@ jobs:
           -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=ON \
           -DOpenTurbine_ENABLE_CPPCHECK=ON \
           -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
+          -DOpenTurbine_ENABLE_VTK=ON \
           -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         cmake --build .
