@@ -15,6 +15,7 @@ macro(openturbine_setup_options)
   option(OpenTurbine_ENABLE_CPPCHECK "Enable CppCheck analysis" OFF)
   option(OpenTurbine_ENABLE_PCH "Enable precompiled headers" OFF)
   option(OpenTurbine_ENABLE_VTK "Use VTK for visualization" OFF)
+  option(OpenTurbine_BUILD_OPENFAST_ADI "Build the OpenFAST ADI external project" ON)
 endmacro()
 
 macro(openturbine_global_options)

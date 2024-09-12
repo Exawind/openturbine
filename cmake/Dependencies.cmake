@@ -26,24 +26,27 @@ function(openturbine_setup_dependencies)
     endif()
   endif()
 
-  # Add external project to build the OpenFAST/AerodynInflow(ADI) library
-  include(ExternalProject)
-  ExternalProject_Add(OpenFAST_ADI
-    PREFIX ${CMAKE_BINARY_DIR}/external/OpenFAST_ADI
-    GIT_REPOSITORY https://github.com/OpenFAST/openfast.git
-    GIT_TAG dev                    # Use the "dev" branch
-    GIT_SHALLOW TRUE               # Clone only the latest commit
-    GIT_SUBMODULES_RECURSE OFF     # Avoid unnecessary submodule cloning
-    CMAKE_ARGS
-      -DBUILD_TESTING=OFF          # Disable testing
-    BUILD_IN_SOURCE OFF            # Build in a separate directory for cleaner output
-    BINARY_DIR ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build
-    # Build only the aerodyn_inflow_c_binding taget and do it sequentially (avoid parallel build)
-    BUILD_COMMAND ${CMAKE_COMMAND} --build . --target aerodyn_inflow_c_binding -- -j 1
-    INSTALL_COMMAND
-      ${CMAKE_COMMAND} -E copy
-      ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build/modules/aerodyn/libaerodyn_inflow_c_binding.dylib
-      ${CMAKE_BINARY_DIR}         # Copy the library to the binary directory
-  )
+  # Conditionally add external project to build the OpenFAST/AerodynInflow(ADI) library
+  if(OpenTurbine_BUILD_OPENFAST_ADI)
+    message(STATUS "Building OpenFAST AerodynInflow (ADI) library")
+    include(ExternalProject)
+    ExternalProject_Add(OpenFAST_ADI
+      PREFIX ${CMAKE_BINARY_DIR}/external/OpenFAST_ADI
+      GIT_REPOSITORY https://github.com/OpenFAST/openfast.git
+      GIT_TAG dev                    # Use the "dev" branch
+      GIT_SHALLOW TRUE               # Clone only the latest commit
+      GIT_SUBMODULES_RECURSE OFF     # Avoid unnecessary submodule cloning
+      CMAKE_ARGS
+        -DBUILD_TESTING=OFF          # Disable testing
+      BUILD_IN_SOURCE OFF            # Build in a separate directory for cleaner output
+      BINARY_DIR ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build
+      # Build only the aerodyn_inflow_c_binding taget and do it sequentially (avoid parallel build)
+      BUILD_COMMAND ${CMAKE_COMMAND} --build . --target aerodyn_inflow_c_binding -- -j 1
+      INSTALL_COMMAND
+        ${CMAKE_COMMAND} -E copy
+        ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build/modules/aerodyn/libaerodyn_inflow_c_binding.dylib
+        ${CMAKE_BINARY_DIR}         # Copy the library to the binary directory
+    )
+  endif()
 
 endfunction()
