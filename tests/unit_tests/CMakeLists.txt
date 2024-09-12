@@ -33,6 +33,11 @@ if(OpenTurbine_ENABLE_VTK)
   target_compile_definitions(openturbine_unit_tests PRIVATE OpenTurbine_ENABLE_VTK)
 endif()
 
+# Add compile definitions for OpenTurbine_BUILD_OPENFAST_ADI if enabled
+if(OpenTurbine_BUILD_OPENFAST_ADI)
+  target_compile_definitions(openturbine_unit_tests PRIVATE OpenTurbine_BUILD_OPENFAST_ADI)
+endif()
+
 # Include GoogleTest module and discover tests
 include(GoogleTest)
 gtest_discover_tests(openturbine_unit_tests PROPERTIES DISCOVERY_TIMEOUT 60000)
