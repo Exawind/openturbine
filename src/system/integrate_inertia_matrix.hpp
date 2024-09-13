@@ -39,17 +39,28 @@ struct IntegrateInertiaMatrixElement {
                     .copy_from(&shape_interp_(j_index, k), tag_type());
                 const auto coeff = w * phi_i * phi_j * jacobian;
                 for (auto m = 0U; m < 6U; ++m) {
-                    for (auto n = 0U; n < 6U; ++n) {
-                        local_M(m, n) += coeff * (beta_prime_ * qp_Muu_(k, m, n) +
-                                                  gamma_prime_ * qp_Guu_(k, m, n));
-                    }
+                    local_M(m, 0) +=
+                        coeff * (beta_prime_ * qp_Muu_(k, m, 0) + gamma_prime_ * qp_Guu_(k, m, 0));
+                    local_M(m, 1) +=
+                        coeff * (beta_prime_ * qp_Muu_(k, m, 1) + gamma_prime_ * qp_Guu_(k, m, 1));
+                    local_M(m, 2) +=
+                        coeff * (beta_prime_ * qp_Muu_(k, m, 2) + gamma_prime_ * qp_Guu_(k, m, 2));
+                    local_M(m, 3) +=
+                        coeff * (beta_prime_ * qp_Muu_(k, m, 3) + gamma_prime_ * qp_Guu_(k, m, 3));
+                    local_M(m, 4) +=
+                        coeff * (beta_prime_ * qp_Muu_(k, m, 4) + gamma_prime_ * qp_Guu_(k, m, 4));
+                    local_M(m, 5) +=
+                        coeff * (beta_prime_ * qp_Muu_(k, m, 5) + gamma_prime_ * qp_Guu_(k, m, 5));
                 }
             }
-            for (auto m = 0U; m < 6U; ++m) {
-                for (auto lane = 0U; lane < width && mask[lane]; ++lane) {
-                    for (auto n = 0U; n < 6U; ++n) {
-                        gbl_M_(i_elem, i_index, j_index + lane, m, n) = local_M(m, n)[lane];
-                    }
+            for (auto lane = 0U; lane < width && mask[lane]; ++lane) {
+                for (auto m = 0U; m < 6U; ++m) {
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 0) = local_M(m, 0)[lane];
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 1) = local_M(m, 1)[lane];
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 2) = local_M(m, 2)[lane];
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 3) = local_M(m, 3)[lane];
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 4) = local_M(m, 4)[lane];
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 5) = local_M(m, 5)[lane];
                 }
             }
         }
