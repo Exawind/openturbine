@@ -48,4 +48,27 @@ function(openturbine_setup_dependencies)
         ${CMAKE_BINARY_DIR}/tests/unit_tests/
     )
   endif()
+
+  # Conditionally add external project to build the ROSCO Controller library
+  if(OpenTurbine_BUILD_ROSCO_CONTROLLER)
+    if (NOT ROSCO_BUILD_TAG) 
+      set(ROSCO_BUILD_TAG "v2.9.4")
+    endif()
+    message(STATUS "Building ROSCO Controller library")
+    include(ExternalProject)
+    ExternalProject_Add(ROSCO_Controller
+      PREFIX ${CMAKE_BINARY_DIR}/external/ROSCO_Controller
+      GIT_REPOSITORY https://github.com/NREL/ROSCO.git
+      GIT_TAG ${ROSCO_BUILD_TAG}     # Use tagged release
+      GIT_SHALLOW TRUE               # Clone only the latest commit
+      BUILD_IN_SOURCE OFF            # Build in a separate directory for cleaner output
+      BINARY_DIR ${CMAKE_BINARY_DIR}/ROSCO_build
+      SOURCE_SUBDIR rosco/controller
+      BUILD_COMMAND ${CMAKE_COMMAND} --build . -- -j 1
+      INSTALL_COMMAND
+        ${CMAKE_COMMAND} -E copy
+        ${CMAKE_BINARY_DIR}/ROSCO_build/${CMAKE_SHARED_LIBRARY_PREFIX}DISCON${CMAKE_SHARED_LIBRARY_SUFFIX}
+        ${CMAKE_BINARY_DIR}/tests/unit_tests/ROSCO.dll
+    )
+  endif()
 endfunction()
