@@ -56,7 +56,7 @@ jobs:
           -DOpenTurbine_ENABLE_CPPCHECK=ON \
           -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
           -DOpenTurbine_ENABLE_VTK=ON \
-          -DCMAKE_Fortran_COMPILER=gfortran-14 \
+          -DCMAKE_Fortran_COMPILER=$(which gfortran) \
           -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         cmake --build .
