@@ -40,6 +40,10 @@ jobs:
         path: openturbine
     - name: Test OpenTurbine
       run: |
+        # print the compiler path for gfortran
+        echo $(which gfortran)
+        # print the path
+        echo $PATH
         export FC=$(which gfortran)
         source spack/share/spack/setup-env.sh
         spack load llvm
