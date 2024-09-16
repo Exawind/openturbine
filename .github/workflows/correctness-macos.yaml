@@ -33,6 +33,7 @@ jobs:
         spack install yaml-cpp
         spack install vtk~mpi~opengl2
         spack install trilinos@master~mpi~epetra
+        spack install gcc
     - name: Clone
       uses: actions/checkout@v4
       with:
