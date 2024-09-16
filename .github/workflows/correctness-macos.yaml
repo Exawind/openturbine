@@ -41,10 +41,12 @@ jobs:
     - name: Test OpenTurbine
       run: |
         # print the compiler path for gfortran
-        echo $(which gfortran)
+        echo $(find /opt/homebrew/ -name gfortran)
+        # add above path to the PATH
+        export PATH=$(find /opt/homebrew/ -name gfortran):$PATH
         # print the path
         echo $PATH
-        export FC=$(which gfortran)
+        export FC=$(find /opt/homebrew/ -name gfortran)
         source spack/share/spack/setup-env.sh
         spack load llvm
         spack load cppcheck
