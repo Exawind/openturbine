@@ -18,6 +18,7 @@
 #include "update_constraint_variables.hpp"
 #include "update_state_prediction.hpp"
 #include "update_system_variables.hpp"
+#include "update_tangent_operator.hpp"
 
 #include "src/beams/beams.hpp"
 #include "src/constraints/constraints.hpp"
@@ -41,6 +42,8 @@ inline bool Step(
 
     for (auto iter = 0U; err > 1.0; ++iter) {
         UpdateSystemVariables(parameters, beams, state);
+
+        UpdateTangentOperator(parameters, state);
 
         AssembleTangentOperator(solver, state);
 
