@@ -15,22 +15,26 @@
 #include "calculate_mass_matrix_components.hpp"
 #include "calculate_strain.hpp"
 #include "calculate_temporary_variables.hpp"
+#include "calculate_x.hpp"
 #include "rotate_section_matrix.hpp"
 
 namespace openturbine {
 struct CalculateQuadraturePointValues {
     Kokkos::View<size_t*>::const_type num_qps_per_element;
     Kokkos::View<double[3]>::const_type gravity_;
+    Kokkos::View<double** [3]>::const_type qp_u_;
     Kokkos::View<double** [3]>::const_type qp_u_prime_;
     Kokkos::View<double** [4]>::const_type qp_r_;
     Kokkos::View<double** [4]>::const_type qp_r_prime_;
     Kokkos::View<double** [4]>::const_type qp_r0_;
+    Kokkos::View<double** [3]>::const_type qp_x0_;
     Kokkos::View<double** [3]>::const_type qp_x0_prime_;
     Kokkos::View<double** [3]>::const_type qp_u_ddot_;
     Kokkos::View<double** [3]>::const_type qp_omega_;
     Kokkos::View<double** [3]>::const_type qp_omega_dot_;
     Kokkos::View<double** [6][6]>::const_type qp_Mstar_;
     Kokkos::View<double** [6][6]>::const_type qp_Cstar_;
+    Kokkos::View<double** [7]> qp_x_;
     Kokkos::View<double** [6][6]> qp_RR0_;
     Kokkos::View<double** [6]> qp_strain_;
     Kokkos::View<double** [3]> qp_eta_;
@@ -59,11 +63,16 @@ struct CalculateQuadraturePointValues {
         const auto num_qps = num_qps_per_element(i_elem);
 
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps), CalculateRR0{i_elem, qp_r0_, qp_r_, qp_RR0_}
+            Kokkos::TeamThreadRange(member, num_qps),
+            CalculateX{i_elem, qp_x0_, qp_u_, qp_r0_, qp_r_, qp_x_}
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             CalculateTemporaryVariables{i_elem, qp_x0_prime_, qp_u_prime_, qp_x0pupSS_}
+        );
+        member.team_barrier();
+        Kokkos::parallel_for(
+            Kokkos::TeamThreadRange(member, num_qps), CalculateRR0{i_elem, qp_x_, qp_RR0_}
         );
         member.team_barrier();
         Kokkos::parallel_for(

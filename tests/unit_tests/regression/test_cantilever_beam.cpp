@@ -14,7 +14,6 @@
 #include "src/beams/create_beams.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
-#include "src/state/copy_nodes_to_state.hpp"
 #include "src/state/state.hpp"
 #include "src/step/step.hpp"
 #include "src/types.hpp"
@@ -103,8 +102,8 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes());
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
+
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,

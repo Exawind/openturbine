@@ -43,6 +43,7 @@ struct Beams {
     Kokkos::View<double**> qp_jacobian;                // Jacobian vector
     Kokkos::View<double** [6][6]> qp_Mstar;            // Mass matrix in material frame
     Kokkos::View<double** [6][6]> qp_Cstar;            // Stiffness matrix in material frame
+    Kokkos::View<double** [7]> qp_x;                   // Current position/orientation
     Kokkos::View<double** [3]> qp_x0;                  // Initial position
     Kokkos::View<double** [3]> qp_x0_prime;            // Initial position derivative
     Kokkos::View<double** [4]> qp_r0;                  // Initial rotation
@@ -111,6 +112,7 @@ struct Beams {
           qp_jacobian("qp_jacobian", num_elems, max_elem_qps),
           qp_Mstar("qp_Mstar", num_elems, max_elem_qps),
           qp_Cstar("qp_Cstar", num_elems, max_elem_qps),
+          qp_x("qp_x", num_elems, max_elem_qps),
           qp_x0("qp_x0", num_elems, max_elem_qps),
           qp_x0_prime("qp_x0_prime", num_elems, max_elem_qps),
           qp_r0("qp_r0", num_elems, max_elem_qps),
