@@ -6,7 +6,7 @@
 
 namespace openturbine {
 
-struct CalculateX {
+struct CalculateQPPosition {
     size_t i_elem;
     Kokkos::View<double** [3]>::const_type qp_x0_;
     Kokkos::View<double** [3]>::const_type qp_u_;

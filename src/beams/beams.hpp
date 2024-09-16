@@ -55,6 +55,7 @@ struct Beams {
     Kokkos::View<double** [4]> qp_r_prime;             // State: rotation derivative
     Kokkos::View<double** [3]> qp_omega;               // State: angular velocity
     Kokkos::View<double** [3]> qp_omega_dot;           // State: position/rotation
+    Kokkos::View<double** [3]> qp_deformation;         // Deformation relative to undeformed state
     Kokkos::View<double** [3][4]> qp_E;                // Quaternion derivative
     Kokkos::View<double** [3][3]> qp_eta_tilde;        //
     Kokkos::View<double** [3][3]> qp_omega_tilde;      //
@@ -124,6 +125,7 @@ struct Beams {
           qp_r_prime("qp_r_prime", num_elems, max_elem_qps),
           qp_omega("qp_omega", num_elems, max_elem_qps),
           qp_omega_dot("qp_omega_dot", num_elems, max_elem_qps),
+          qp_deformation("qp_deformation", num_elems, max_elem_qps),
           qp_E("qp_E", num_elems, max_elem_qps),
           qp_eta_tilde("R1_3x3", num_elems, max_elem_qps),
           qp_omega_tilde("R1_3x3", num_elems, max_elem_qps),

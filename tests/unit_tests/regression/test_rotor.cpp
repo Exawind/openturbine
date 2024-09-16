@@ -48,7 +48,7 @@ void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::strin
 
 TEST(RotorTest, IEA15Rotor) {
     // Flag to write output
-    constexpr bool write_output(false);
+    constexpr bool write_output(true);
 
     // Gravity vector
     constexpr auto gravity = std::array{-9.81, 0., 0.};
@@ -61,7 +61,7 @@ TEST(RotorTest, IEA15Rotor) {
     constexpr size_t max_iter(6);
     constexpr double step_size(0.01);  // seconds
     constexpr double rho_inf(0.0);
-    constexpr double t_end(0.1);
+    constexpr double t_end(10);
     constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.0);
     constexpr auto num_nodes = node_xi.size();
 

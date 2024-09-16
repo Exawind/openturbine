@@ -17,6 +17,7 @@
 #include "test_utilities.hpp"
 
 #include "src/beams/beams.hpp"
+#include "src/beams/calculate_QP_deformation.hpp"
 #include "src/math/quaternion_operations.hpp"
 
 namespace openturbine::tests {
@@ -44,17 +45,8 @@ inline void BeamsWriteVTK(Beams& beams, const std::string& filename) {
     }
 
     // Create qp position points
-    auto qp_x0 = Kokkos::create_mirror(beams.qp_x0);
-    Kokkos::deep_copy(qp_x0, beams.qp_x0);
-    auto qp_x = Kokkos::create_mirror(beams.qp_u);
-    Kokkos::deep_copy(qp_x, beams.qp_u);
-    for (size_t j = 0; j < beams.num_elems; ++j) {
-        for (size_t k = 0; k < num_qps_per_element(j); ++k) {
-            for (size_t l = 0; l < qp_x.extent(2); ++l) {
-                qp_x(j, k, l) += qp_x0(j, k, l);
-            }
-        }
-    }
+    auto qp_x = Kokkos::create_mirror(beams.qp_x);
+    Kokkos::deep_copy(qp_x, beams.qp_x);
     vtkNew<vtkPoints> qp_pos;
     for (size_t j = 0; j < beams.num_elems; ++j) {
         for (size_t k = 0; k < num_qps_per_element(j); ++k) {
@@ -73,17 +65,11 @@ inline void BeamsWriteVTK(Beams& beams, const std::string& filename) {
     vtkNew<vtkFloatArray> orientation_z;
     orientation_z->SetNumberOfComponents(3);
     orientation_z->SetName("OrientationZ");
-    auto qp_r = Kokkos::create_mirror(beams.qp_r);
-    Kokkos::deep_copy(qp_r, beams.qp_r);
-    auto qp_r0 = Kokkos::create_mirror(beams.qp_r0);
-    Kokkos::deep_copy(qp_r0, beams.qp_r0);
-    // auto qp_r = kokkos_view_3D_to_vector(beams.qp_r);
-    // auto qp_r0 = kokkos_view_3D_to_vector(beams.qp_r0);
     for (size_t el = 0; el < beams.num_elems; ++el) {
         for (size_t i = 0; i < num_qps_per_element(el); ++i) {
-            const Array_4 r{qp_r(el, i, 0), qp_r(el, i, 1), qp_r(el, i, 2), qp_r(el, i, 3)};
-            const Array_4 r0{qp_r0(el, i, 0), qp_r0(el, i, 1), qp_r0(el, i, 2), qp_r0(el, i, 3)};
-            auto R = QuaternionToRotationMatrix(QuaternionCompose(r, r0));
+            auto R = QuaternionToRotationMatrix(
+                {qp_x(el, i, 3), qp_x(el, i, 4), qp_x(el, i, 5), qp_x(el, i, 6)}
+            );
             const auto ori_x = std::array{R[0][0], R[1][0], R[2][0]};
             const auto ori_y = std::array{R[0][1], R[1][1], R[2][1]};
             const auto ori_z = std::array{R[0][2], R[1][2], R[2][2]};
@@ -128,21 +114,28 @@ inline void BeamsWriteVTK(Beams& beams, const std::string& filename) {
     vtkNew<vtkFloatArray> deformation_vector;
     deformation_vector->SetNumberOfComponents(3);
     deformation_vector->SetName("DeformationVector");
+    Kokkos::parallel_for(
+        "CalculateQPDeformation",
+        Kokkos::MDRangePolicy<Kokkos::Rank<2>>({0, 0}, {beams.num_elems, beams.max_elem_qps}),
+        CalculateQPDeformation{
+            beams.num_qps_per_element,
+            beams.qp_x0,
+            beams.qp_r,
+            beams.qp_x,
+            beams.qp_deformation,
+        }
+    );
+    auto qp_deformation = Kokkos::create_mirror(beams.qp_deformation);
+    Kokkos::deep_copy(qp_deformation, beams.qp_deformation);
     for (size_t i = 0; i < beams.num_elems; ++i) {
         // Get the undeformed shape
         auto num_qps = num_qps_per_element(i);
-        const Array_3 x0_root{qp_x0(i, 0, 0), qp_x0(i, 0, 1), qp_x0(i, 0, 2)};
-        const Array_3 x_root{qp_x(i, 0, 0), qp_x(i, 0, 1), qp_x(i, 0, 2)};
-        const Array_4 r_u{qp_r(i, 0, 0), qp_r(i, 0, 1), qp_r(i, 0, 2), qp_r(i, 0, 3)};
-
         for (size_t j = 0; j < num_qps; ++j) {
-            const Array_3 x{qp_x(i, j, 0), qp_x(i, j, 1), qp_x(i, j, 2)};
-            Array_3 tmp = {
-                qp_x0(i, j, 0) - x0_root[0], qp_x0(i, j, 1) - x0_root[1],
-                qp_x0(i, j, 2) - x0_root[2]};
-            tmp = RotateVectorByQuaternion(r_u, tmp);
-            const Array_3 x_undef{tmp[0] + x_root[0], tmp[1] + x_root[1], tmp[2] + x_root[2]};
-            const Array_3 u{x[0] - x_undef[0], x[1] - x_undef[1], x[2] - x_undef[2]};
+            const Array_3 u{
+                qp_deformation(i, j, 0),
+                qp_deformation(i, j, 1),
+                qp_deformation(i, j, 2),
+            };
             deformation_vector->InsertNextTuple(u.data());
         }
     }

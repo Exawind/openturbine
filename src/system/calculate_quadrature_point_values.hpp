@@ -15,7 +15,6 @@
 #include "calculate_mass_matrix_components.hpp"
 #include "calculate_strain.hpp"
 #include "calculate_temporary_variables.hpp"
-#include "calculate_x.hpp"
 #include "rotate_section_matrix.hpp"
 
 namespace openturbine {
@@ -62,10 +61,6 @@ struct CalculateQuadraturePointValues {
         const auto i_elem = static_cast<size_t>(member.league_rank());
         const auto num_qps = num_qps_per_element(i_elem);
 
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateX{i_elem, qp_x0_, qp_u_, qp_r0_, qp_r_, qp_x_}
-        );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             CalculateTemporaryVariables{i_elem, qp_x0_prime_, qp_u_prime_, qp_x0pupSS_}
