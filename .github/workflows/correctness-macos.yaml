@@ -40,9 +40,8 @@ jobs:
         path: openturbine
     - name: Test OpenTurbine
       run: |
-        gfortran_path=$(find /opt/homebrew/ -name gfortran | tr ' ' '\n' | grep "/gcc/.*gfortran")
-        echo $gfortran_path
-        export FC=$gfortran_path
+        # Find the gfortran compiler and set the FC environment variable
+        export FC=$(find /opt/homebrew/ -name gfortran | tr ' ' '\n' | grep "/gcc/.*gfortran")
         source spack/share/spack/setup-env.sh
         spack load llvm
         spack load cppcheck
