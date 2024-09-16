@@ -772,11 +772,13 @@ void GeneratorTorqueWithAxisTilt(
     }
 
     // Check that the azimuth node has rotated by the expected amount
-    auto azimuth_q = Kokkos::subview(state.q, azimuth->ID, Kokkos::ALL);
+    auto azimuth_q = Kokkos::View<double[7]>("azimuth_q");
+    Kokkos::deep_copy(azimuth_q, Kokkos::subview(state.q, azimuth->ID, Kokkos::ALL));
     expect_kokkos_view_1D_equal(azimuth_q, expected_azimuth_q);
 
     // Check the azimuth node angular velocity is as expected
-    auto azimuth_vel = Kokkos::subview(state.v, azimuth->ID, Kokkos::ALL);
+    auto azimuth_vel = Kokkos::View<double[6]>("azimuth_vel");
+    Kokkos::deep_copy(azimuth_vel, Kokkos::subview(state.v, azimuth->ID, Kokkos::ALL));
     expect_kokkos_view_1D_equal(azimuth_vel, expected_azimuth_vel);
 }
 

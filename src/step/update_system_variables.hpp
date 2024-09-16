@@ -12,13 +12,12 @@
 #include "src/beams/interpolate_to_quadrature_points.hpp"
 #include "src/state/state.hpp"
 #include "src/system/calculate_quadrature_point_values.hpp"
-#include "src/system/calculate_tangent_operator.hpp"
 #include "src/system/update_node_state.hpp"
 
 namespace openturbine {
 
 inline void UpdateSystemVariables(StepParameters& parameters, const Beams& beams, State& state) {
-    auto region = Kokkos::Profiling::ScopedRegion("Update State");
+    auto region = Kokkos::Profiling::ScopedRegion("Update System Variables");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(
         "UpdateNodeState", range_policy,
@@ -84,15 +83,6 @@ inline void UpdateSystemVariables(StepParameters& parameters, const Beams& beams
     AssembleResidualVector(beams);
     AssembleStiffnessMatrix(beams);
     AssembleInertiaMatrix(beams, parameters.beta_prime, parameters.gamma_prime);
-
-    Kokkos::parallel_for(
-        "CalculateTangentOperator", state.num_system_nodes,
-        CalculateTangentOperator{
-            parameters.h,
-            state.q_delta,
-            state.tangent,
-        }
-    );
 }
 
 }  // namespace openturbine
