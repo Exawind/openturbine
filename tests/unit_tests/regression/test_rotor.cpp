@@ -455,10 +455,7 @@ TEST(RotorTest, IEA15RotorController) {
 
     // Add logic related to TurbineController
     // provide shared library path and controller function name to clamp
-    const std::filesystem::path project_root = FindProjectRoot();
-    const std::filesystem::path full_path =
-        project_root / "build/tests/unit_tests/DISCON_ROTOR_TEST_CONTROLLER.dll";
-    const auto shared_lib_path = full_path.string();
+    const auto shared_lib_path = std::string{"./DISCON_ROTOR_TEST_CONTROLLER.dll"};
     const auto controller_function_name = std::string{"PITCH_CONTROLLER"};
 
     // create an instance of TurbineController
