@@ -47,18 +47,34 @@ struct IntegrateStiffnessMatrixElement {
                 const auto C = w * (phi_prime_i * phi_prime_j / jacobian);
                 const auto O = w * (phi_prime_i * phi_j);
                 for (auto m = 0U; m < 6U; ++m) {
-                    for (auto n = 0U; n < 6U; ++n) {
-                        local_M(m, n) += K * (qp_Kuu_(k, m, n) + qp_Quu_(k, m, n)) +
-                                         P * qp_Puu_(k, m, n) + C * qp_Cuu_(k, m, n) +
-                                         O * qp_Ouu_(k, m, n);
-                    }
+                    local_M(m, 0) += K * (qp_Kuu_(k, m, 0) + qp_Quu_(k, m, 0)) +
+                                     P * qp_Puu_(k, m, 0) + C * qp_Cuu_(k, m, 0) +
+                                     O * qp_Ouu_(k, m, 0);
+                    local_M(m, 1) += K * (qp_Kuu_(k, m, 1) + qp_Quu_(k, m, 1)) +
+                                     P * qp_Puu_(k, m, 1) + C * qp_Cuu_(k, m, 1) +
+                                     O * qp_Ouu_(k, m, 1);
+                    local_M(m, 2) += K * (qp_Kuu_(k, m, 2) + qp_Quu_(k, m, 2)) +
+                                     P * qp_Puu_(k, m, 2) + C * qp_Cuu_(k, m, 2) +
+                                     O * qp_Ouu_(k, m, 2);
+                    local_M(m, 3) += K * (qp_Kuu_(k, m, 3) + qp_Quu_(k, m, 3)) +
+                                     P * qp_Puu_(k, m, 3) + C * qp_Cuu_(k, m, 3) +
+                                     O * qp_Ouu_(k, m, 3);
+                    local_M(m, 4) += K * (qp_Kuu_(k, m, 4) + qp_Quu_(k, m, 4)) +
+                                     P * qp_Puu_(k, m, 4) + C * qp_Cuu_(k, m, 4) +
+                                     O * qp_Ouu_(k, m, 4);
+                    local_M(m, 5) += K * (qp_Kuu_(k, m, 5) + qp_Quu_(k, m, 5)) +
+                                     P * qp_Puu_(k, m, 5) + C * qp_Cuu_(k, m, 5) +
+                                     O * qp_Ouu_(k, m, 5);
                 }
             }
-            for (auto m = 0U; m < 6U; ++m) {
-                for (auto lane = 0U; lane < width && mask[lane]; ++lane) {
-                    for (auto n = 0U; n < 6U; ++n) {
-                        gbl_M_(i_elem, i_index, j_index + lane, m, n) = local_M(m, n)[lane];
-                    }
+            for (auto lane = 0U; lane < width && mask[lane]; ++lane) {
+                for (auto m = 0U; m < 6U; ++m) {
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 0) = local_M(m, 0)[lane];
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 1) = local_M(m, 1)[lane];
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 2) = local_M(m, 2)[lane];
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 3) = local_M(m, 3)[lane];
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 4) = local_M(m, 4)[lane];
+                    gbl_M_(i_elem, i_index, j_index + lane, m, 5) = local_M(m, 5)[lane];
                 }
             }
         }
