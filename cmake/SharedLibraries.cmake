@@ -7,7 +7,3 @@ function(add_shared_library target_name)
     $<TARGET_FILE:${target_name}> ${CMAKE_BINARY_DIR}/tests/unit_tests/$<TARGET_FILE_NAME:${target_name}>
   )
 endfunction()
-
-# Define the DISCON shared libraries for the turbine controller
-add_shared_library(DISCON)
-add_shared_library(DISCON_ROTOR_TEST_CONTROLLER)
