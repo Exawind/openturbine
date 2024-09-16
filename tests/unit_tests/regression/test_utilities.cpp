@@ -19,6 +19,22 @@ std::filesystem::path FindProjectRoot() {
     throw std::runtime_error("Could not find project root directory. CMakeLists.txt not found.");
 }
 
+void RemoveDirectoryWithRetries(const std::filesystem::path& dir, int retries, int delayMs) {
+    for (int i = 0; i < retries; ++i) {
+        try {
+            std::filesystem::remove_all(dir);
+            return;
+        } catch (const std::filesystem::filesystem_error& e) {
+            if (i < retries - 1) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+            } else {
+                std::cerr << "Failed to remove directory: " << dir << "\n";
+                throw;
+            }
+        }
+    }
+}
+
 Kokkos::View<double**> create_diagonal_matrix(const std::vector<double>& values) {
     auto matrix = Kokkos::View<double**>("matrix", values.size(), values.size());
     auto matrix_host = Kokkos::create_mirror(matrix);
