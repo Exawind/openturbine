@@ -67,7 +67,7 @@ function(openturbine_setup_dependencies)
       BUILD_COMMAND ${CMAKE_COMMAND} --build . -- -j 1
       INSTALL_COMMAND
         ${CMAKE_COMMAND} -E copy
-        ${CMAKE_BINARY_DIR}/ROSCO_build/${CMAKE_SHARED_LIBRARY_PREFIX}DISCON${CMAKE_SHARED_LIBRARY_SUFFIX}
+        ${CMAKE_BINARY_DIR}/ROSCO_build/${CMAKE_SHARED_LIBRARY_PREFIX}discon${CMAKE_SHARED_LIBRARY_SUFFIX}
         ${CMAKE_BINARY_DIR}/tests/unit_tests/ROSCO.dll
     )
   endif()
