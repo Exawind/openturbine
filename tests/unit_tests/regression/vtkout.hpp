@@ -114,6 +114,7 @@ inline void BeamsWriteVTK(Beams& beams, const std::string& filename) {
     vtkNew<vtkFloatArray> deformation_vector;
     deformation_vector->SetNumberOfComponents(3);
     deformation_vector->SetName("DeformationVector");
+    // TODO: use hierarchical parallelism to make this function better.
     Kokkos::parallel_for(
         "CalculateQPDeformation",
         Kokkos::MDRangePolicy<Kokkos::Rank<2>>({0, 0}, {beams.num_elems, beams.max_elem_qps}),

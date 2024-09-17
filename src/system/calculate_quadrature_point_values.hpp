@@ -62,12 +62,11 @@ struct CalculateQuadraturePointValues {
         const auto num_qps = num_qps_per_element(i_elem);
 
         Kokkos::parallel_for(
+            Kokkos::TeamThreadRange(member, num_qps), CalculateRR0{i_elem, qp_x_, qp_RR0_}
+        );
+        Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             CalculateTemporaryVariables{i_elem, qp_x0_prime_, qp_u_prime_, qp_x0pupSS_}
-        );
-        member.team_barrier();
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps), CalculateRR0{i_elem, qp_x_, qp_RR0_}
         );
         member.team_barrier();
         Kokkos::parallel_for(
