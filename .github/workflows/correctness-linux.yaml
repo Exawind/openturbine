@@ -52,6 +52,7 @@ jobs:
           -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=ON \
           -DOpenTurbine_ENABLE_CPPCHECK=ON \
           -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
+          -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         cmake --build .
         ctest --output-on-failure
