@@ -1,5 +1,3 @@
-#include <filesystem>
-
 #include <gtest/gtest.h>
 #include <yaml-cpp/yaml.h>
 
@@ -8,20 +6,6 @@
 #include "src/utilities/scripts/windio_mapped_structs.hpp"
 
 namespace openturbine::tests {
-
-/// Function to find the project root directory
-inline std::filesystem::path FindProjectRoot() {
-    std::filesystem::path currentPath = std::filesystem::current_path();
-
-    while (!currentPath.empty()) {
-        if (std::filesystem::exists(currentPath / "CMakeLists.txt")) {
-            return currentPath;
-        }
-        currentPath = currentPath.parent_path();
-    }
-
-    throw std::runtime_error("Could not find project root directory. CMakeLists.txt not found.");
-}
 
 TEST(ParserTest, ParseIEA15MWBasicInfo) {
     const std::filesystem::path projectRoot = FindProjectRoot();

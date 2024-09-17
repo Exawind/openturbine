@@ -641,7 +641,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
 
 #ifdef OpenTurbine_ENABLE_VTK
     UpdateSystemVariables(parameters, beams, state);
-    std::filesystem::remove_all("steps");
+    RemoveDirectoryWithRetries("steps");
     std::filesystem::create_directory("steps");
     BeamsWriteVTK(beams, "steps/step_0000.vtu");
 #endif
@@ -755,7 +755,7 @@ void GeneratorTorqueWithAxisTilt(
 
 #ifdef OpenTurbine_ENABLE_VTK
     UpdateSystemVariables(parameters, beams, state);
-    std::filesystem::remove_all("steps");
+    RemoveDirectoryWithRetries("steps");
     std::filesystem::create_directory("steps");
     BeamsWriteVTK(beams, "steps/step_0000.vtu");
 #endif

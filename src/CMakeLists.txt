@@ -23,6 +23,13 @@ target_link_system_libraries(openturbine_library PRIVATE
   ${FS_LIB}
 )
 
+# Include shared libraries for the OpenTurbine library
+include(../cmake/SharedLibraries.cmake)
+
+# Define the DISCON shared libraries for the turbine controller
+add_shared_library(DISCON)
+add_shared_library(DISCON_ROTOR_TEST_CONTROLLER)
+
 # Set include directories for the library
 target_include_directories(openturbine_library
   PUBLIC
@@ -32,13 +39,6 @@ target_include_directories(openturbine_library
 
 # Set the C++ standard for the target
 target_compile_features(openturbine_library PUBLIC cxx_std_17)
-
-# Define the DISCON shared libraries for the turbine controller
-add_library(DISCON SHARED)
-set_target_properties(DISCON PROPERTIES PREFIX "" SUFFIX ".dll")
-
-add_library(DISCON_ROTOR_TEST_CONTROLLER SHARED)
-set_target_properties(DISCON_ROTOR_TEST_CONTROLLER PROPERTIES PREFIX "" SUFFIX ".dll")
 
 # Add subdirectories for additional components of the library
 add_subdirectory(beams)
