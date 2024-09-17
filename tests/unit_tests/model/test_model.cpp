@@ -172,8 +172,8 @@ TEST(Model, ModelCreateState) {
     Model model;
 
     // Rotation of 1 radian around x
-    auto R1 = RotationVectorToQuaternion({1.0, 0., 0.});
-    auto R2 = RotationVectorToQuaternion({0., 1.0, 0.});
+    auto R1 = RotationVectorToQuaternion({1., 0., 0.});
+    auto R2 = RotationVectorToQuaternion({0., 1., 0.});
 
     // Create node with initial position and displacement from initial position
     model.AddNode(
