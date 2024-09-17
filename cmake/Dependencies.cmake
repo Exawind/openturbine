@@ -45,7 +45,7 @@ function(openturbine_setup_dependencies)
       INSTALL_COMMAND
         ${CMAKE_COMMAND} -E copy
         ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build/modules/aerodyn/libaerodyn_inflow_c_binding${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_BINARY_DIR}         # Copy the library to the binary directory
+        ${CMAKE_BINARY_DIR}/tests/unit_tests/
     )
   endif()
 endfunction()

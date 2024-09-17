@@ -158,11 +158,7 @@ TEST(RotorTest, IEA15Rotor) {
     // Remove output directory for writing step data
     if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
-        try {
-            std::filesystem::remove_all("steps");
-        } catch (...) {
-            std::cout << "Did not remove steps folder\n";
-        }
+        RemoveDirectoryWithRetries("steps");
         std::filesystem::create_directory("steps");
 
         // Write quadrature point global positions to file and VTK
@@ -318,11 +314,7 @@ TEST(RotorTest, IEA15RotorHub) {
     // Remove output directory for writing step data
     if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
-        try {
-            std::filesystem::remove_all("steps");
-        } catch (...) {
-            std::cout << "Did not remove steps folder\n";
-        }
+        RemoveDirectoryWithRetries("steps");
         std::filesystem::create_directory("steps");
 
         // Write quadrature point global positions to file and VTK
@@ -505,11 +497,7 @@ TEST(RotorTest, IEA15RotorController) {
     // Remove output directory for writing step data
     if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
-        try {
-            std::filesystem::remove_all("steps");
-        } catch (...) {
-            std::cout << "Did not remove steps folder\n";
-        }
+        RemoveDirectoryWithRetries("steps");
         std::filesystem::create_directory("steps");
 
         // Write quadrature point global positions to file and VTK

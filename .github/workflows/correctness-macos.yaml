@@ -40,6 +40,8 @@ jobs:
         path: openturbine
     - name: Test OpenTurbine
       run: |
+        # Find the gfortran compiler and set the FC environment variable
+        export FC=$(find /opt/homebrew/ -name gfortran | tr ' ' '\n' | grep "/gcc/.*gfortran")
         source spack/share/spack/setup-env.sh
         spack load llvm
         spack load cppcheck
@@ -59,5 +61,4 @@ jobs:
           -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         cmake --build .
-        cp src/*.dll tests/unit_tests/
         ctest --output-on-failure

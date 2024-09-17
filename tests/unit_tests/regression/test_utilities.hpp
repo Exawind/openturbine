@@ -1,10 +1,19 @@
 #pragma once
 
+#include <filesystem>
 #include <vector>
 
 #include <Kokkos_Core.hpp>
 
 namespace openturbine::tests {
+
+/// Function to find the project root directory
+std::filesystem::path FindProjectRoot();
+
+/// Function to remove a directory with several retries with a delay
+void RemoveDirectoryWithRetries(
+    const std::filesystem::path& dir, int retries = 3, int delayMs = 1000
+);
 
 Kokkos::View<double**> create_diagonal_matrix(const std::vector<double>& values);
 
