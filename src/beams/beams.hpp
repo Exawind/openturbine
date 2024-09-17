@@ -43,6 +43,7 @@ struct Beams {
     Kokkos::View<double**> qp_jacobian;                // Jacobian vector
     Kokkos::View<double** [6][6]> qp_Mstar;            // Mass matrix in material frame
     Kokkos::View<double** [6][6]> qp_Cstar;            // Stiffness matrix in material frame
+    Kokkos::View<double** [7]> qp_x;                   // Current position/orientation
     Kokkos::View<double** [3]> qp_x0;                  // Initial position
     Kokkos::View<double** [3]> qp_x0_prime;            // Initial position derivative
     Kokkos::View<double** [4]> qp_r0;                  // Initial rotation
@@ -54,6 +55,7 @@ struct Beams {
     Kokkos::View<double** [4]> qp_r_prime;             // State: rotation derivative
     Kokkos::View<double** [3]> qp_omega;               // State: angular velocity
     Kokkos::View<double** [3]> qp_omega_dot;           // State: position/rotation
+    Kokkos::View<double** [3]> qp_deformation;         // Deformation relative to rigid body motion
     Kokkos::View<double** [3][4]> qp_E;                // Quaternion derivative
     Kokkos::View<double** [3][3]> qp_eta_tilde;        //
     Kokkos::View<double** [3][3]> qp_omega_tilde;      //
@@ -111,6 +113,7 @@ struct Beams {
           qp_jacobian("qp_jacobian", num_elems, max_elem_qps),
           qp_Mstar("qp_Mstar", num_elems, max_elem_qps),
           qp_Cstar("qp_Cstar", num_elems, max_elem_qps),
+          qp_x("qp_x", num_elems, max_elem_qps),
           qp_x0("qp_x0", num_elems, max_elem_qps),
           qp_x0_prime("qp_x0_prime", num_elems, max_elem_qps),
           qp_r0("qp_r0", num_elems, max_elem_qps),
@@ -122,6 +125,7 @@ struct Beams {
           qp_r_prime("qp_r_prime", num_elems, max_elem_qps),
           qp_omega("qp_omega", num_elems, max_elem_qps),
           qp_omega_dot("qp_omega_dot", num_elems, max_elem_qps),
+          qp_deformation("qp_deformation", num_elems, max_elem_qps),
           qp_E("qp_E", num_elems, max_elem_qps),
           qp_eta_tilde("R1_3x3", num_elems, max_elem_qps),
           qp_omega_tilde("R1_3x3", num_elems, max_elem_qps),

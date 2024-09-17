@@ -2,6 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "calculate_QP_position.hpp"
 #include "interpolate_QP_state.hpp"
 #include "interpolate_QP_vector.hpp"
 
@@ -16,6 +17,8 @@ struct InterpolateToQuadraturePoints {
     Kokkos::View<double** [7]>::const_type node_u;
     Kokkos::View<double** [6]>::const_type node_u_dot;
     Kokkos::View<double** [6]>::const_type node_u_ddot;
+    Kokkos::View<double** [3]>::const_type qp_x0;
+    Kokkos::View<double** [4]>::const_type qp_r0;
     Kokkos::View<double** [3]> qp_u;
     Kokkos::View<double** [3]> qp_uprime;
     Kokkos::View<double** [4]> qp_r;
@@ -24,6 +27,7 @@ struct InterpolateToQuadraturePoints {
     Kokkos::View<double** [3]> qp_omega;
     Kokkos::View<double** [3]> qp_u_ddot;
     Kokkos::View<double** [3]> qp_omega_dot;
+    Kokkos::View<double** [7]> qp_x;
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
@@ -72,6 +76,10 @@ struct InterpolateToQuadraturePoints {
                 i_elem, num_nodes, shape_interp,
                 Kokkos::subview(node_u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(3, 6)),
                 qp_omega_dot}
+        );
+        Kokkos::parallel_for(
+            Kokkos::TeamThreadRange(member, num_qps),
+            CalculateQPPosition{i_elem, qp_x0, qp_u, qp_r0, qp_r, qp_x}
         );
     }
 };

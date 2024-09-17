@@ -16,7 +16,6 @@
 #include "src/beams/create_beams.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
-#include "src/state/copy_nodes_to_state.hpp"
 #include "src/state/state.hpp"
 #include "src/step/step.hpp"
 #include "src/types.hpp"
@@ -49,7 +48,7 @@ void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::strin
 
 TEST(RotorTest, IEA15Rotor) {
     // Flag to write output
-    constexpr bool write_output(false);
+    constexpr bool write_output{false};
 
     // Gravity vector
     constexpr auto gravity = std::array{-9.81, 0., 0.};
@@ -147,8 +146,7 @@ TEST(RotorTest, IEA15Rotor) {
     // Create solver with initial node state
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes());
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
@@ -303,8 +301,7 @@ TEST(RotorTest, IEA15RotorHub) {
     // Create solver with initial node state
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes());
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
@@ -486,8 +483,7 @@ TEST(RotorTest, IEA15RotorController) {
 
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes());
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,

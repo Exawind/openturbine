@@ -11,7 +11,6 @@
 #include "src/beams/beams_input.hpp"
 #include "src/beams/create_beams.hpp"
 #include "src/model/model.hpp"
-#include "src/state/copy_nodes_to_state.hpp"
 #include "src/state/state.hpp"
 #include "src/step/assemble_residual_vector.hpp"
 #include "src/step/update_system_variables.hpp"
@@ -110,8 +109,7 @@ inline auto SetUpBeams() {
 
     // Create initial state
     auto parameters = StepParameters(false, 0, 0., 0.);
-    State state(beams.num_nodes);
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
 
     // Set the beam's initial state
     UpdateSystemVariables(parameters, beams, state);

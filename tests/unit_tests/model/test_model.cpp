@@ -168,4 +168,31 @@ TEST(Model, ModelConstructorWithPointers) {
     ASSERT_EQ(model.NumConstraints(), 0);
 }
 
+TEST(Model, ModelCreateState) {
+    Model model;
+
+    // Rotation of 1 radian around x
+    auto R1 = RotationVectorToQuaternion({1., 0., 0.});
+    auto R2 = RotationVectorToQuaternion({0., 1., 0.});
+
+    // Create node with initial position and displacement from initial position
+    model.AddNode(
+        std::array{1., 2., 3., R1[0], R1[1], R1[2], R1[3]},  // initial position/orientation
+        std::array{3., 2., 1., R2[0], R2[1], R2[2], R2[3]}   // displacement
+    );
+
+    // Create state object from model
+    auto state = model.CreateState();
+
+    // Verify initial position
+    expect_kokkos_view_2D_equal(state.x0, {{1., 2., 3., R1[0], R1[1], R1[2], R1[3]}});
+
+    // Verify initial displacement
+    expect_kokkos_view_2D_equal(state.q, {{3., 2., 1., R2[0], R2[1], R2[2], R2[3]}});
+
+    // Verify current position (initial position plus displacement)
+    auto Rt = QuaternionCompose(R2, R1);
+    expect_kokkos_view_2D_equal(state.x, {{4., 4., 4., Rt[0], Rt[1], Rt[2], Rt[3]}});
+}
+
 }  // namespace openturbine::tests

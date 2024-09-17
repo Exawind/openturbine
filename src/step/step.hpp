@@ -25,6 +25,7 @@
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
 #include "src/state/update_algorithmic_acceleration.hpp"
+#include "src/state/update_global_position.hpp"
 
 namespace openturbine {
 
@@ -79,6 +80,15 @@ inline bool Step(
             state.vd,
             parameters.alpha_f,
             parameters.alpha_m,
+        }
+    );
+
+    Kokkos::parallel_for(
+        "UpdateGlobalPosition", solver.num_system_nodes,
+        UpdateGlobalPosition{
+            state.q,
+            state.x0,
+            state.x,
         }
     );
 
