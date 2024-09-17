@@ -147,7 +147,7 @@ public:
     [[nodiscard]] size_t NumConstraints() const { return this->constraints_.size(); }
 
     // Returns a State object initialized from the model nodes
-    [[nodiscard]] State CreateState() {
+    [[nodiscard]] State CreateState() const {
         auto state = State(this->nodes_.size());
         CopyNodesToState(state, this->nodes_);
         return state;
