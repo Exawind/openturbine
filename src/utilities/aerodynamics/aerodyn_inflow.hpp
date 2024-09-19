@@ -23,7 +23,7 @@ struct ErrorHandling {
     std::array<char, kErrorMessagesLength> error_message{};  // Error message buffer
 };
 
-/// Struct to hold the environmental conditions related to the working fluid i.e. air
+/// Struct to hold the environmental conditions related to the working fluid
 struct EnvironmentalConditions {
     double gravity{9.80665};                        // Gravitational acceleration (m/s^2)
     double density{1.225};                          // Air density (kg/m^3)
@@ -37,14 +37,14 @@ struct EnvironmentalConditions {
 
 /// Struct to hold the settings for the turbine (assuming a single turbine)
 struct TurbineSettings {
-    int n_turbines{1};                                  // Number of turbines - 1 by default
-    int n_blades{3};                                    // Number of blades - 3 by default
-    std::array<int, 3> initial_hub_position{0, 0, 0};   // Initial hub position
-    std::array<int, 9> initial_hub_orientation{0};      // Initial hub orientation
-    std::array<int, 3> initial_nacelle_position{0};     // Initial nacelle position
-    std::array<int, 9> initial_nacelle_orientation{0};  // Initial nacelle orientation
-    std::array<int, 3> initial_root_position{0};        // Initial root position
-    std::array<int, 9> initial_root_orientation{0};     // Initial root orientation
+    int n_turbines{1};                                     // Number of turbines - 1 by default
+    int n_blades{3};                                       // Number of blades - 3 by default
+    std::array<float, 3> initial_hub_position{0, 0, 0};    // Initial hub position
+    std::array<double, 9> initial_hub_orientation{0};      // Initial hub orientation
+    std::array<float, 3> initial_nacelle_position{0};      // Initial nacelle position
+    std::array<double, 9> initial_nacelle_orientation{0};  // Initial nacelle orientation
+    std::array<float, 3> initial_root_position{0};         // Initial root position
+    std::array<double, 9> initial_root_orientation{0};     // Initial root orientation
 };
 
 /// Struct to hold the structural mesh data
@@ -150,6 +150,65 @@ struct AeroDynInflowLibrary {
                 std::string("PreInit error: ") + error_handling.error_message.data()
             );
         }
+    }
+
+    /// Wrapper for ADI_C_SetupRotor routine to set up the rotor
+    void ADI_SetupRotor(
+        int turbine_number, int is_horizontal_axis, std::vector<float> turbine_ref_pos
+    ) {
+        auto ADI_C_SetupRotor = this->lib.get_function<
+            void(int*, int*, float*, float*, double*, float*, double*, int*, float*, double*, int*, float*, double*, int*, int*, char*)>(
+            "ADI_C_SetupRotor"
+        );
+
+        // Flatten mesh arrays
+        std::vector<float> init_mesh_pos_flat =
+            this->FlattenArray(structural_mesh.initial_mesh_position);
+        std::vector<double> init_mesh_orient_flat =
+            this->FlattenArray(structural_mesh.initial_mesh_orientation);
+
+        ADI_C_SetupRotor(
+            &turbine_number,                             // input: current turbine number
+            &is_horizontal_axis,                         // input: 1: is HAWT, 0: VAWT or cross-flow
+            const_cast<float*>(turbine_ref_pos.data()),  // input: initial hub position
+            const_cast<float*>(turbine_settings.initial_hub_position.data()
+            ),  // input: initial hub position
+            const_cast<double*>(turbine_settings.initial_hub_orientation.data()
+            ),  // input: initial hub orientation
+            const_cast<float*>(turbine_settings.initial_nacelle_position.data()
+            ),  // input: initial nacelle position
+            const_cast<double*>(turbine_settings.initial_nacelle_orientation.data()
+            ),                           // input: initial nacelle orientation
+            &turbine_settings.n_blades,  // input: number of blades
+            const_cast<float*>(turbine_settings.initial_root_position.data()
+            ),  // input: initial blade root positions
+            const_cast<double*>(turbine_settings.initial_root_orientation.data()
+            ),                                              // input: initial blade root orientation
+            &structural_mesh.n_mesh_points,                 // input: number of mesh points
+            const_cast<float*>(init_mesh_pos_flat.data()),  // input: initial node positions
+            const_cast<double*>(init_mesh_orient_flat.data()),  // input: initial node orientation
+            const_cast<int*>(structural_mesh.mesh_point_to_blade_num.data()
+            ),                                   // input: initial mesh point to blade number mapping
+            &error_handling.error_status,        // output: Error status
+            error_handling.error_message.data()  // output: Error message buffer
+        );
+
+        if (error_handling.error_status != 0) {
+            throw std::runtime_error(
+                std::string("SetupRotor error: ") + error_handling.error_message.data()
+            );
+        }
+    }
+
+private:
+    /// Method to flatten a 2D array into a 1D array for Fortran compatibility
+    template <typename T, size_t N>
+    std::vector<T> FlattenArray(const std::vector<std::array<T, N>>& input) {
+        std::vector<T> output;
+        for (const auto& arr : input) {
+            output.insert(output.end(), arr.begin(), arr.end());
+        }
+        return output;
     }
 };
 
