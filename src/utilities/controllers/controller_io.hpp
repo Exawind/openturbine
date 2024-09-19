@@ -59,7 +59,7 @@ struct ControllerIO {
         swap_array[19] = static_cast<float>(generator_speed_actual);
         swap_array[20] = static_cast<float>(rotor_speed_actual);
         swap_array[22] = static_cast<float>(generator_torque_actual);
-        swap_array[22] = static_cast<float>(yaw_error_actual);
+        swap_array[23] = static_cast<float>(yaw_error_actual);
         swap_array[26] = static_cast<float>(horizontal_wind_speed);
         swap_array[27] = static_cast<float>(pitch_control_type);
         swap_array[32] = static_cast<float>(pitch_blade2_actual);
@@ -101,7 +101,7 @@ struct ControllerIO {
         generator_speed_actual = static_cast<double>(swap_array[19]);
         rotor_speed_actual = static_cast<double>(swap_array[20]);
         generator_torque_actual = static_cast<double>(swap_array[22]);
-        yaw_error_actual = static_cast<double>(swap_array[22]);
+        yaw_error_actual = static_cast<double>(swap_array[23]);
         horizontal_wind_speed = static_cast<double>(swap_array[26]);
         pitch_control_type = static_cast<int>(swap_array[27]);
         pitch_blade2_actual = static_cast<double>(swap_array[32]);
