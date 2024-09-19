@@ -22,22 +22,22 @@ TEST(ControllerTest, DisconController) {
     util::ControllerIO swap;
     swap.status = 0.;
     swap.time = 0.;
-    swap.pitch_blade1 = 0.;
-    swap.pitch_angle_actuator_req = 0.;
-    swap.generator_speed = 122.909576;
+    swap.pitch_blade1_actual = 0.;
+    swap.pitch_actuator_type_req = 0.;
+    swap.generator_speed_actual = 122.909576;
     swap.horizontal_wind_speed = 11.9900799;
-    swap.pitch_blade2 = 0.;
-    swap.pitch_blade3 = 0.;
+    swap.pitch_blade2_actual = 0.;
+    swap.pitch_blade3_actual = 0.;
     swap.generator_contactor_status = 1.;
     swap.shaft_brake_status = 0.;
-    swap.demanded_yaw_actuator_torque = 0.;
-    swap.pitch_command_1 = 0.;
-    swap.pitch_command_2 = 0.;
-    swap.pitch_command_3 = 0.;
-    swap.pitch_command_collective = 0.;
-    swap.demanded_pitch_rate = 0.;
-    swap.demanded_generator_torque = 0.;
-    swap.demanded_nacelle_yaw_rate = 0.;
+    swap.yaw_actuator_torque_command = 0.;
+    swap.pitch_blade1_command = 0.;
+    swap.pitch_blade2_command = 0.;
+    swap.pitch_blade3_command = 0.;
+    swap.pitch_collective_command = 0.;
+    swap.pitch_rate_command = 0.;
+    swap.generator_torque_command = 0.;
+    swap.nacelle_yaw_rate_command = 0.;
     swap.message_array_size = 3.;
     swap.infile_array_size = 82.;
     swap.outname_array_size = 96.;
@@ -84,22 +84,22 @@ TEST(ControllerTest, TurbineController) {
 
     controller.io.status = 0.;
     controller.io.time = 0.;
-    controller.io.pitch_blade1 = 0.;
-    controller.io.pitch_angle_actuator_req = 0.;
-    controller.io.generator_speed = 122.909576;
+    controller.io.pitch_blade1_actual = 0.;
+    controller.io.pitch_actuator_type_req = 0.;
+    controller.io.generator_speed_actual = 122.909576;
     controller.io.horizontal_wind_speed = 11.9900799;
-    controller.io.pitch_blade2 = 0.;
-    controller.io.pitch_blade3 = 0.;
+    controller.io.pitch_blade2_actual = 0.;
+    controller.io.pitch_blade3_actual = 0.;
     controller.io.generator_contactor_status = 1.;
     controller.io.shaft_brake_status = 0.;
-    controller.io.demanded_yaw_actuator_torque = 0.;
-    controller.io.pitch_command_1 = 0.;
-    controller.io.pitch_command_2 = 0.;
-    controller.io.pitch_command_3 = 0.;
-    controller.io.pitch_command_collective = 0.;
-    controller.io.demanded_pitch_rate = 0.;
-    controller.io.demanded_generator_torque = 0.;
-    controller.io.demanded_nacelle_yaw_rate = 0.;
+    controller.io.yaw_actuator_torque_command = 0.;
+    controller.io.pitch_blade1_command = 0.;
+    controller.io.pitch_blade2_command = 0.;
+    controller.io.pitch_blade3_command = 0.;
+    controller.io.pitch_collective_command = 0.;
+    controller.io.pitch_rate_command = 0.;
+    controller.io.generator_torque_command = 0.;
+    controller.io.nacelle_yaw_rate_command = 0.;
     controller.io.message_array_size = 3.;
     controller.io.infile_array_size = 82.;
     controller.io.outname_array_size = 96.;
@@ -112,18 +112,18 @@ TEST(ControllerTest, TurbineController) {
     controller.io.variable_slip_status = 0.;
     controller.io.variable_slip_demand = 0.;
 
-    EXPECT_DOUBLE_EQ(controller.io.demanded_generator_torque, 0.);
+    EXPECT_DOUBLE_EQ(controller.io.generator_torque_command, 0.);
 
     controller.CallController();
 
-    EXPECT_DOUBLE_EQ(controller.io.generator_contactor_status, 1.);    // GeneratorContactorStatus
-    EXPECT_DOUBLE_EQ(controller.io.shaft_brake_status, 0.);            // ShaftBrakeStatus
-    EXPECT_DOUBLE_EQ(controller.io.demanded_yaw_actuator_torque, 0.);  // DemandedYawActuatorTorque
-    EXPECT_DOUBLE_EQ(controller.io.pitch_command_collective, 0.);      // PitchComCol
+    EXPECT_DOUBLE_EQ(controller.io.generator_contactor_status, 1.);   // GeneratorContactorStatus
+    EXPECT_DOUBLE_EQ(controller.io.shaft_brake_status, 0.);           // ShaftBrakeStatus
+    EXPECT_DOUBLE_EQ(controller.io.yaw_actuator_torque_command, 0.);  // DemandedYawActuatorTorque
+    EXPECT_DOUBLE_EQ(controller.io.pitch_collective_command, 0.);     // PitchComCol
     EXPECT_DOUBLE_EQ(
-        controller.io.demanded_generator_torque, 43093.55078125
-    );                                                              // DemandedGeneratorTorque
-    EXPECT_DOUBLE_EQ(controller.io.demanded_nacelle_yaw_rate, 0.);  // DemandedNacelleYawRate
+        controller.io.generator_torque_command, 43093.55078125
+    );                                                             // DemandedGeneratorTorque
+    EXPECT_DOUBLE_EQ(controller.io.nacelle_yaw_rate_command, 0.);  // DemandedNacelleYawRate
 }
 
 TEST(ControllerTest, TurbineControllerExceptionInvalidSharedLibraryPath) {

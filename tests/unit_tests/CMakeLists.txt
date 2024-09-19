@@ -3,11 +3,11 @@ add_executable(openturbine_unit_tests)
 
 # Add subdirectories for additional components
 add_subdirectory(beams)
+add_subdirectory(external)
 add_subdirectory(model)
 add_subdirectory(regression)
 add_subdirectory(solver)
 add_subdirectory(system)
-add_subdirectory(external)
 
 # Specify the source files for the unit tests
 target_sources(openturbine_unit_tests PRIVATE utest_main.cpp)

@@ -57,7 +57,7 @@ function(openturbine_setup_dependencies)
     message(STATUS "Building ROSCO Controller library")
     include(ExternalProject)
     ExternalProject_Add(ROSCO_Controller
-      PREFIX ${CMAKE_BINARY_DIR}/external/ROSCO_Controller
+      PREFIX ${CMAKE_BINARY_DIR}/external
       GIT_REPOSITORY https://github.com/NREL/ROSCO.git
       GIT_TAG ${ROSCO_BUILD_TAG}     # Use tagged release
       GIT_SHALLOW TRUE               # Clone only the latest commit
@@ -69,6 +69,10 @@ function(openturbine_setup_dependencies)
         ${CMAKE_COMMAND} -E copy
         ${CMAKE_BINARY_DIR}/ROSCO_build/${CMAKE_SHARED_LIBRARY_PREFIX}discon${CMAKE_SHARED_LIBRARY_SUFFIX}
         ${CMAKE_BINARY_DIR}/tests/unit_tests/ROSCO.dll
+      COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_BINARY_DIR}/external/src/ROSCO_Controller/Examples/Test_Cases/NREL-5MW/Cp_Ct_Cq.NREL5MW.txt
+        ${CMAKE_BINARY_DIR}/external/src/ROSCO_Controller/Examples/Test_Cases/NREL-5MW/DISCON.IN
+        ${CMAKE_BINARY_DIR}/tests/unit_tests
     )
   endif()
 endfunction()
