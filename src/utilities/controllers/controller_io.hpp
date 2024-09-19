@@ -4,7 +4,7 @@
 
 namespace openturbine::util {
 
-static constexpr int kSwapArraySize = 81;
+static constexpr int kSwapArraySize = 128;
 
 /// Structure defining the swap layout (See Appendix A of Bladed User's Guide)
 /// Ref: https://openfast.readthedocs.io/en/main/source/user/servodyn/ExtendedBladedInterface.html
