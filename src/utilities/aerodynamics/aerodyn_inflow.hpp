@@ -100,16 +100,36 @@ struct VTKSettings {
     float VTKHubRad{1.5f};   // Hub radius for VTK surface rendering
 };
 
-/// @brief Wrapper class for the AeroDynInflow (ADI) shared library
+/// @brief Wrapper class for the AeroDynInflow (ADI) shared library containing the following C
+/// interfaces
+/// - ADI_C_PreInit(int*, int*, int*, int*, char*)
+/// - ADI_C_SetupRotor(int*, int*, float*, float*, double*, float*, double*, int*, float*, double*,
+///   int*, float*, double*, int*, int*, char*)
+/// - ADI_C_Init(int*, char**, int*, int*, char**, int*, char*, float*, float*, float*, float*,
+///   float*, float*, float*, int*, double*, double*, int*, int*, float*, float*, int*, double*,
+///   int*, char*, char*, int*, char*)
+/// - ADI_C_SetRotorMotion(int*, float*, double*, float*, float*, float*, double*, float*, float*,
+///   float*, double*, float*, float*, int*, float*, double*, float*, float*)
+/// - ADI_C_GetRotorLoads(int*, int*, float*, int*, char*)
+/// - ADI_C_CalcOutput(double*, float*, int*, char*)
+/// - ADI_C_UpdateStates(double*, double*, int*, char*)
+/// - ADI_C_End(int*, char*)
 struct AeroDynInflowLibrary {
-    std::string library_path;                //< Path to the shared library
-    ErrorHandling error_handling;            //< Error handling settings
-    EnvironmentalConditions env_conditions;  //< Environmental conditions
-    TurbineSettings turbine_settings;        //< Turbine settings
-    SimulationControls sim_controls;         //< Simulation controls
-    VTKSettings vtk_settings;                //< VTK settings
+    util::dylib lib{
+        "libaerodyn_inflow_c_binding.dylib",
+        util::dylib::no_filename_decorations};  //< Dynamic library object for AeroDyn Inflow
+    ErrorHandling error_handling;               //< Error handling settings
+    EnvironmentalConditions env_conditions;     //< Environmental conditions
+    TurbineSettings turbine_settings;           //< Turbine settings
+    StructuralMesh structural_mesh;             //< Structural mesh data
+    SimulationControls sim_controls;            //< Simulation controls
+    VTKSettings vtk_settings;                   //< VTK settings
 
-    AeroDynInflowLibrary(const std::string& path) : library_path(path) {}
+    AeroDynInflowLibrary(std::string shared_lib_path = "") {
+        if (shared_lib_path != "") {
+            lib = util::dylib(shared_lib_path, util::dylib::no_filename_decorations);
+        }
+    }
 };
 
 }  // namespace openturbine::util
