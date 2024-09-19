@@ -100,8 +100,10 @@ struct VTKSettings {
     float VTKHubRad{1.5f};   // Hub radius for VTK surface rendering
 };
 
-/// @brief Wrapper class for the AeroDynInflow (ADI) shared library containing the following C
-/// interfaces
+/// @brief Wrapper class for the AeroDynInflow (ADI) shared library
+/// @details The AeroDynInflow (ADI) shared library is a Fortran library that provides C bindings
+/// for interfacing with the AeroDyn Inflow module. The following functions are available in the
+/// shared library
 /// - ADI_C_PreInit(int*, int*, int*, int*, char*)
 /// - ADI_C_SetupRotor(int*, int*, float*, float*, double*, float*, double*, int*, float*, double*,
 ///   int*, float*, double*, int*, int*, char*)
@@ -128,6 +130,25 @@ struct AeroDynInflowLibrary {
     AeroDynInflowLibrary(std::string shared_lib_path = "") {
         if (shared_lib_path != "") {
             lib = util::dylib(shared_lib_path, util::dylib::no_filename_decorations);
+        }
+    }
+
+    /// Wrapper for ADI_C_PreInit routine to initialize AeroDyn Inflow library
+    void ADI_PreInit() {
+        auto ADI_C_PreInit =
+            this->lib.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
+        ADI_C_PreInit(
+            &turbine_settings.n_turbines,        // input: Number of turbines
+            &sim_controls.transpose_DCM,         // input: Transpose the direction cosine matrix?
+            &sim_controls.debug_level,           // input: Debug level
+            &error_handling.error_status,        // output: Error status
+            error_handling.error_message.data()  // output: Error message buffer
+        );
+
+        if (error_handling.error_status != 0) {
+            throw std::runtime_error(
+                std::string("PreInit error: ") + error_handling.error_message.data()
+            );
         }
     }
 };
