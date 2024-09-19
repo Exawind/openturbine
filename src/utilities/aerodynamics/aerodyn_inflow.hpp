@@ -6,23 +6,9 @@
 
 namespace openturbine::util {
 
-// Forward declare the C functions residing in the Aerodyn Inflow shared library to be used in the
-// C++ wrapper class
-extern "C" {
-void ADI_C_PreInit(int*, int*, int*, int*, char*);
-void ADI_C_SetupRotor(int*, int*, float*, float*, double*, float*, double*, int*, float*, double*, int*, float*, double*, int*, int*, char*);
-void ADI_C_Init(int*, char**, int*, int*, char**, int*, char*, float*, float*, float*, float*, float*, float*, float*, int*, double*, double*, int*, int*, float*, float*, int*, double*, int*, char*, char*, int*, char*);
-void ADI_C_SetRotorMotion(int*, float*, double*, float*, float*, float*, double*, float*, float*, float*, double*, float*, float*, int*, float*, double*, float*, float*);
-void ADI_C_GetRotorLoads(int*, int*, float*, int*, char*);
-void ADI_C_CalcOutput(double*, float*, int*, char*);
-void ADI_C_UpdateStates(double*, double*, int*, char*);
-void ADI_C_End(int*, char*);
-}
-
-/// @brief Wrapper class for the AeroDyn Inflow shared library
-class AeroDynInflowLib {
-public:
-    // Error levels
+/// Struct for error handling settings
+struct ErrorHandling {
+    /// Error levels used in the ADI library
     enum class ErrorLevel {
         kNone = 0,
         kInfo = 1,
@@ -31,48 +17,86 @@ public:
         kFatalError = 4
     };
 
-    // Define some constants
-    static constexpr int kErrorMessagesLength{
-        1025  // Error message length in Fortran
-    };
-    static constexpr int kDefaultStringLength{
-        1025  // Length of the name used for any output file written by the HD Fortran code
-    };
+    static constexpr size_t kErrorMessagesLength{1025U};       // Max error message length in Fortran
+    int abort_error_level{4};                                  // Error level at which to abort
+    int error_status_c{0};                                     // Error status
+    std::array<char, kErrorMessagesLength> error_message_c{};  // Error message buffer
+};
 
-    /// @brief Constructor
-    AeroDynInflowLib(const std::string& library_path) : library_path_(library_path), ended_(false) {
-        InitializeRoutines();
-        InitializeData();
-    }
+/// Struct to hold the environmental conditions related to the working fluid
+struct EnvironmentalConditions {
+    double gravity{9.80665};                         // Gravitational acceleration (m/s^2)
+    double air_density{1.225};                       // Air density (kg/m^3)
+    double kinematic_viscosity{1.464E-05};           // Kinematic viscosity (m^2/s)
+    double sound_speed{335.};                        // Speed of sound in working fluid (m/s)
+    double atmospheric_pressure{103500.};            // Atmospheric pressure (Pa)
+    double vapor_pressure{1700.};                    // Vapour pressure of working fluid (Pa)
+    double water_depth{0.};                          // Water depth (m)
+    double mean_sea_level_to_still_water_level{0.};  // Offset (m)
+};
 
-    /// Wrapper for the ADI_C_PreInit routine
-    void ADI_PreInit() {
-        int n_turbines{1};     // input: Number of turbines
-        int transpose_DCM{1};  // input: Transpose the direction cosine matrix?
-        int debug_level{0};    // input: Debug level
-        int error_status{0};   // output: Error status
-        char error_message[kErrorMessagesLength]{'\0'};  // output: Error message buffer
+/// Struct to hold the settings for the turbine
+struct TurbineSettings {
+    int n_turbines{1};                                  // Number of turbines
+    int n_blades{3};                                    // Number of blades
+    std::array<int, 3> initial_hub_position{0, 0, 0};   // Initial hub position
+    std::array<int, 9> initial_hub_orientation{0};      // Initial hub orientation
+    std::array<int, 3> initial_nacelle_position{0};     // Initial nacelle position
+    std::array<int, 9> initial_nacelle_orientation{0};  // Initial nacelle orientation
+    std::array<int, 3> initial_root_position{0};        // Initial root position
+    std::array<int, 9> initial_root_orientation{0};     // Initial root orientation
+};
 
-        ADI_C_PreInit(&n_turbines, &transpose_DCM, &debug_level, &error_status, error_message);
+/// Struct to hold the settings for the simulation controls
+struct SimulationControls {
+    static constexpr size_t kDefaultStringLength{
+        1025};  // Max length of the name used for any output file written by the HD Fortran code
 
-        if (error_status != 0) {
-            throw std::runtime_error(std::string("PreInit error: ") + error_message);
-        }
-    }
+    // Input file handling
+    bool aerodyn_input_passed{true};     // Assume passing of input file as a string
+    bool inflowwind_input_passed{true};  // Assume passing of input file as a string
 
-private:
-    std::string library_path_;           // Path to the shared library
-    [[maybe_unused]] bool ended_;        // For error handling at end
-    [[maybe_unused]] int n_blades_ = 3;  // Default number of blades
+    // Interpolation order (must be 1: linear, or 2: quadratic)
+    int interpolation_order{1};  // Interpolation order - linear by default
 
-    void InitializeRoutines() {
-        // Add other routine initializations if needed
-    }
+    // Initial time related variables
+    float dt{0.1f};         // Timestep (s)
+    float tmax{600.f};      // Maximum time (s)
+    float total_time{0.f};  // Total elapsed time (s)
+    int n_time_steps{0};    // Number of time steps
 
-    void InitializeData() {
-        // Initialize buffers for the class data
-        // Similar to the Python __init__ but adapted for C++
-    }
+    // Flags
+    bool store_HH_wind_speed{1};  // Store hub-height wind speed?
+    bool transpose_DCM{1};        // Transpose the direction cosine matrix?
+    int debug_level{0};           // Debug level (0-4)
+
+    // Outputs
+    int output_format{0};                                   // File format for writing outputs
+    float output_timestep{0.};                              // Timestep for outputs to file
+    char output_root_name[kDefaultStringLength]{"output"};  // Root name for output files
+    int n_channels{0};                                      // Number of channels returned
+};
+
+/// Struct to hold the settings for writing VTK output
+struct VTKSettings {
+    bool write_vtk{false};  // Write VTK output?
+    int vtk_type{1};        // VTK output type (1: surface meshes)
+    std::array<float, 6> vtk_nacelle_dimensions{
+        -2.5f, -2.5f, 0.f,
+        10.f,  5.f,   5.f};  // Nacelle dimensions for VTK surface rendering [x0,y0,z0,Lx,Ly,Lz] (m)
+    float VTKHubRad{1.5f};   // Hub radius for VTK surface rendering
+};
+
+/// @brief Wrapper class for the AeroDynInflow (ADI) shared library
+struct AeroDynInflowLibrary {
+    std::string library_path;                //< Path to the shared library
+    ErrorHandling error_handling;            //< Error handling settings
+    EnvironmentalConditions env_conditions;  //< Environmental conditions
+    TurbineSettings turbine_settings;        //< Turbine settings
+    SimulationControls sim_controls;         //< Simulation controls
+    VTKSettings vtk_settings;                //< VTK settings
+
+    AeroDynInflowLibrary(const std::string& path) : library_path(path) {}
 };
 
 }  // namespace openturbine::util
