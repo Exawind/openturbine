@@ -1,14 +1,14 @@
 #pragma once
 
-#include <cstring>
 #include <stdexcept>
-#include <string>
+
+#include "src/vendor/dylib/dylib.hpp"
 
 namespace openturbine::util {
 
 /// Struct for error handling settings
 struct ErrorHandling {
-    /// Error levels used in the ADI library
+    /// Error levels used in InflowWind
     enum class ErrorLevel {
         kNone = 0,
         kInfo = 1,
@@ -17,34 +17,43 @@ struct ErrorHandling {
         kFatalError = 4
     };
 
-    static constexpr size_t kErrorMessagesLength{1025U};       // Max error message length in Fortran
-    int abort_error_level{4};                                  // Error level at which to abort
-    int error_status_c{0};                                     // Error status
-    std::array<char, kErrorMessagesLength> error_message_c{};  // Error message buffer
+    static constexpr size_t kErrorMessagesLength{1025U};     // Max error message length in Fortran
+    int abort_error_level{4};                                // Error level at which to abort
+    int error_status{0};                                     // Error status
+    std::array<char, kErrorMessagesLength> error_message{};  // Error message buffer
 };
 
-/// Struct to hold the environmental conditions related to the working fluid
+/// Struct to hold the environmental conditions related to the working fluid i.e. air
 struct EnvironmentalConditions {
-    double gravity{9.80665};                         // Gravitational acceleration (m/s^2)
-    double air_density{1.225};                       // Air density (kg/m^3)
-    double kinematic_viscosity{1.464E-05};           // Kinematic viscosity (m^2/s)
-    double sound_speed{335.};                        // Speed of sound in working fluid (m/s)
-    double atmospheric_pressure{103500.};            // Atmospheric pressure (Pa)
-    double vapor_pressure{1700.};                    // Vapour pressure of working fluid (Pa)
-    double water_depth{0.};                          // Water depth (m)
-    double mean_sea_level_to_still_water_level{0.};  // Offset (m)
+    double gravity{9.80665};                        // Gravitational acceleration (m/s^2)
+    double density{1.225};                          // Air density (kg/m^3)
+    double kinematic_viscosity{1.464E-05};          // Kinematic viscosity (m^2/s)
+    double sound_speed{335.};                       // Speed of sound in working fluid (m/s)
+    double atm_pressure{103500.};                   // Atmospheric pressure (Pa)
+    double vapor_pressure{1700.};                   // Vapour pressure of working fluid (Pa)
+    double water_depth{0.};                         // Water depth (m)
+    double mean_sea_level_2_still_water_level{0.};  // Offset (m)
 };
 
-/// Struct to hold the settings for the turbine
+/// Struct to hold the settings for the turbine (assuming a single turbine)
 struct TurbineSettings {
-    int n_turbines{1};                                  // Number of turbines
-    int n_blades{3};                                    // Number of blades
+    int n_turbines{1};                                  // Number of turbines - 1 by default
+    int n_blades{3};                                    // Number of blades - 3 by default
     std::array<int, 3> initial_hub_position{0, 0, 0};   // Initial hub position
     std::array<int, 9> initial_hub_orientation{0};      // Initial hub orientation
     std::array<int, 3> initial_nacelle_position{0};     // Initial nacelle position
     std::array<int, 9> initial_nacelle_orientation{0};  // Initial nacelle orientation
     std::array<int, 3> initial_root_position{0};        // Initial root position
     std::array<int, 9> initial_root_orientation{0};     // Initial root orientation
+};
+
+/// Struct to hold the structural mesh data
+struct StructuralMesh {
+    int n_mesh_points{1};                                       // Number of mesh points
+    std::vector<std::array<float, 3>> initial_mesh_position{};  // N x 3 array [x, y, z]
+    std::vector<std::array<double, 9>>
+        initial_mesh_orientation{};              // N x 9 array [r11, r12, ..., r33]
+    std::vector<int> mesh_point_to_blade_num{};  // N x 1 array [blade number]
 };
 
 /// Struct to hold the settings for the simulation controls
@@ -66,15 +75,19 @@ struct SimulationControls {
     int n_time_steps{0};    // Number of time steps
 
     // Flags
-    bool store_HH_wind_speed{1};  // Store hub-height wind speed?
-    bool transpose_DCM{1};        // Transpose the direction cosine matrix?
-    int debug_level{0};           // Debug level (0-4)
+    int store_HH_wind_speed{1};  // Store hub-height wind speed?
+    int transpose_DCM{1};        // Transpose the direction cosine matrix?
+    int debug_level{0};          // Debug level (0-4)
 
     // Outputs
-    int output_format{0};                                   // File format for writing outputs
-    float output_timestep{0.};                              // Timestep for outputs to file
-    char output_root_name[kDefaultStringLength]{"output"};  // Root name for output files
-    int n_channels{0};                                      // Number of channels returned
+    int output_format{0};       // File format for writing outputs
+    float output_timestep{0.};  // Timestep for outputs to file
+    std::array<char, kDefaultStringLength> output_root_name{
+        "Output_ADIlib_default"  // Root name for output files
+    };
+    int n_channels{0};                              // Number of channels returned
+    std::array<char, 20 * 8000> channel_names_c{};  // Output channel names
+    std::array<char, 20 * 8000> channel_units_c{};  // Output channel units
 };
 
 /// Struct to hold the settings for writing VTK output
