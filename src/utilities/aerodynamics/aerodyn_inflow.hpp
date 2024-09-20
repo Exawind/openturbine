@@ -9,6 +9,13 @@
 
 namespace openturbine::util {
 
+// Notes from Derek:
+//
+// Premitive data types should match the Fortran data types in the shared library (SingPrec.f90), so:
+// int should int_32_t etc.
+//
+// How are we providing the structural mesh data?
+
 /// Struct for error handling settings
 struct ErrorHandling {
     /// Error levels used in InflowWind
@@ -34,18 +41,18 @@ struct ErrorHandling {
 
 /// Struct to hold the properties of the working fluid (air)
 struct FluidProperties {
-    double density{1.225};                 // Air density (kg/m^3)
-    double kinematic_viscosity{1.464E-5};  // Kinematic viscosity (m^2/s)
-    double sound_speed{335.};              // Speed of sound in the working fluid (m/s)
-    double vapor_pressure{1700.};          // Vapor pressure of the working fluid (Pa)
+    float density{1.225f};                 // Air density (kg/m^3)
+    float kinematic_viscosity{1.464E-5f};  // Kinematic viscosity (m^2/s)
+    float sound_speed{335.f};              // Speed of sound in the working fluid (m/s)
+    float vapor_pressure{1700.f};          // Vapor pressure of the working fluid (Pa)
 };
 
 /// Struct to hold the environmental conditions
 struct EnvironmentalConditions {
-    double gravity{9.80665};       // Gravitational acceleration (m/s^2)
-    double atm_pressure{103500.};  // Atmospheric pressure (Pa)
-    double water_depth{0.};        // Water depth (m)
-    double msl_offset{0.};         // Mean sea level to still water level offset (m)
+    float gravity{9.80665f};       // Gravitational acceleration (m/s^2)
+    float atm_pressure{103500.f};  // Atmospheric pressure (Pa)
+    float water_depth{0.f};        // Water depth (m)
+    float msl_offset{0.f};         // Mean sea level to still water level offset (m)
 };
 
 /// Struct to hold the settings for the turbine (assuming a single turbine)
@@ -75,16 +82,16 @@ struct SimulationControls {
     static constexpr size_t kDefaultStringLength{1025};  // Max length for output filenames
 
     // Input file handling
-    bool aerodyn_input_passed{true};     // Input file passed for AeroDyn
-    bool inflowwind_input_passed{true};  // Input file passed for InflowWind
+    int aerodyn_input_passed{true};     // Input file passed for AeroDyn
+    int inflowwind_input_passed{true};  // Input file passed for InflowWind
 
     // Interpolation order (must be either 1: linear, or 2: quadratic)
     int interpolation_order{1};  // Interpolation order - linear by default
 
     // Initial time related variables
-    float time_step{0.1f};          // Simulation timestep (s)
-    float max_time{600.f};          // Maximum simulation time (s)
-    float total_elapsed_time{0.f};  // Total elapsed time (s)
+    double time_step{0.1};          // Simulation timestep (s)
+    double max_time{600.};          // Maximum simulation time (s)
+    double total_elapsed_time{0.};  // Total elapsed time (s)
     int num_time_steps{0};          // Number of time steps
 
     // Flags
@@ -105,7 +112,7 @@ struct SimulationControls {
 
 /// Struct to hold the settings for VTK output
 struct VTKSettings {
-    bool write_vtk{false};                      // Flag to write VTK output
+    int write_vtk{false};                       // Flag to write VTK output
     int vtk_type{1};                            // Type of VTK output (1: surface meshes)
     std::array<float, 6> vtk_nacelle_dimensions{// Nacelle dimensions for VTK rendering
                                                 -2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f};
@@ -186,6 +193,71 @@ struct AeroDynInflowLibrary {
         error_handling.CheckError();
     }
 
+    /// Wrapper for ADI_Init routine to initialize the AeroDyn Inflow library
+    void ADI_Init(
+        std::vector<std::string> aerodyn_input_string_array,
+        std::vector<std::string> inflowwind_input_string_array
+    ) {
+        auto ADI_C_Init =
+            this->lib
+                .get_function<
+                    void(int*, const char*, int*, int*, const char*, int*, char*, float*, float*, float*, float*, float*, float*, float*, float*, int*, double*, double*, int*, int*, int*, float*, float*, int*, float*, int*, char*, char*, int*, char*)>(
+                    "ADI_C_Init"
+                );
+
+        // Flatten arrays to pass
+        auto vtk_nacelle_dim_flat = std::array<float, 6>{};
+        std::copy(
+            vtk_settings.vtk_nacelle_dimensions.begin(), vtk_settings.vtk_nacelle_dimensions.end(),
+            vtk_nacelle_dim_flat.begin()
+        );
+
+        // Primary input files will be passed as a single string joined by C_NULL_CHAR i.e. '\0'
+        std::string aerodyn_input_string = this->JoinStringArray(aerodyn_input_string_array, '\0');
+        aerodyn_input_string = aerodyn_input_string + '\0';
+        int aerodyn_input_string_length = static_cast<int>(aerodyn_input_string.size());
+
+        std::string inflowwind_input_string =
+            this->JoinStringArray(inflowwind_input_string_array, '\0');
+        inflowwind_input_string = inflowwind_input_string + '\0';
+        int inflowwind_input_string_length = static_cast<int>(inflowwind_input_string.size());
+
+        ADI_C_Init(
+            &sim_controls.aerodyn_input_passed,     // input: AD input file is passed
+            aerodyn_input_string.data(),            // input: AD input file as string
+            &aerodyn_input_string_length,           // input: AD input file string length
+            &sim_controls.inflowwind_input_passed,  // input: IfW input file is passed
+            inflowwind_input_string.data(),         // input: IfW input file as string
+            &inflowwind_input_string_length,        // input: IfW input file string length
+            sim_controls.output_root_name.data(),   // input: rootname for ADI file writing
+            &env_conditions.gravity,                // input: gravity
+            &air.density,                           // input: air density
+            &air.kinematic_viscosity,               // input: kinematic viscosity
+            &air.sound_speed,                       // input: speed of sound
+            &env_conditions.atm_pressure,           // input: atmospheric pressure
+            &air.vapor_pressure,                    // input: vapor pressure
+            &env_conditions.water_depth,            // input: water depth
+            &env_conditions.msl_offset,             // input: MSL to SWL offset
+            &sim_controls.interpolation_order,      // input: interpolation order
+            &sim_controls.time_step,                // input: time step
+            &sim_controls.max_time,                 // input: maximum simulation time
+            &sim_controls.store_HH_wind_speed,      // input: store HH wind speed
+            &vtk_settings.write_vtk,                // input: write VTK output
+            &vtk_settings.vtk_type,                 // input: VTK output type
+            vtk_nacelle_dim_flat.data(),            // input: VTK nacelle dimensions
+            &vtk_settings.vtk_hub_radius,           // input: VTK hub radius
+            &sim_controls.output_format,            // input: output format
+            &sim_controls.output_time_step,         // input: output time step
+            &sim_controls.n_channels,               // output: number of channels
+            sim_controls.channel_names_c.data(),    // output: output channel names
+            sim_controls.channel_units_c.data(),    // output: output channel units
+            &error_handling.error_status,           // output: error status
+            error_handling.error_message.data()     // output: error message buffer
+        );
+
+        error_handling.CheckError();
+    }
+
 private:
     /// Method to flatten a 2D array into a 1D array for Fortran compatibility
     template <typename T, size_t N>
@@ -193,6 +265,15 @@ private:
         std::vector<T> output;
         for (const auto& arr : input) {
             output.insert(output.end(), arr.begin(), arr.end());
+        }
+        return output;
+    }
+
+    /// Method to join a vector of strings into a single string with a delimiter
+    std::string JoinStringArray(const std::vector<std::string>& input, char delimiter) {
+        std::string output;
+        for (const auto& str : input) {
+            output += str + delimiter;
         }
         return output;
     }
