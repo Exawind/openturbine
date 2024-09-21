@@ -258,6 +258,71 @@ struct AeroDynInflowLibrary {
         error_handling.CheckError();
     }
 
+    // Wrapper for ADI_SetRotorMotion routine to set rotor motion i.e. motion of the hub, nacelle,
+    // root, and mesh points from the structural mesh
+
+    // Define structures for hub, nacelle, root, and mesh motions
+    struct MotionData {
+        std::vector<float> position;
+        std::vector<double> orientation;
+        std::vector<float> velocity;
+        std::vector<float> acceleration;
+    };
+
+    struct MeshMotionData {
+        std::vector<std::array<float, 3>> position;
+        std::vector<std::array<double, 9>> orientation;
+        std::vector<std::array<float, 3>> velocity;
+        std::vector<std::array<float, 3>> acceleration;
+    };
+
+    // Use the above structures in ADI_SetRotorMotion wrapper
+    void ADI_C_SetRotorMotion(
+        int turbine_number, MotionData hub_motion, MotionData nacelle_motion,
+        MeshMotionData root_motion, MeshMotionData mesh_motion
+    ) {
+        auto ADI_C_SetRotorMotion = this->lib.get_function<
+            void(int*, float*, double*, float*, float*, float*, double*, float*, float*, float*, double*, float*, float*, int*, float*, double*, float*, float*, int*, char*)>(
+            "ADI_C_SetRotorMotion"
+        );
+
+        // Flatten root and mesh motion arrays
+        auto root_pos_flat = FlattenArray(root_motion.position);
+        auto root_orient_flat = FlattenArray(root_motion.orientation);
+        auto root_vel_flat = FlattenArray(root_motion.velocity);
+        auto root_acc_flat = FlattenArray(root_motion.acceleration);
+
+        auto mesh_pos_flat = FlattenArray(mesh_motion.position);
+        auto mesh_orient_flat = FlattenArray(mesh_motion.orientation);
+        auto mesh_vel_flat = FlattenArray(mesh_motion.velocity);
+        auto mesh_acc_flat = FlattenArray(mesh_motion.acceleration);
+
+        ADI_C_SetRotorMotion(
+            &turbine_number,                     // input: current turbine number
+            hub_motion.position.data(),          // input: hub position
+            hub_motion.orientation.data(),       // input: hub orientation
+            hub_motion.velocity.data(),          // input: hub velocity
+            hub_motion.acceleration.data(),      // input: hub acceleration
+            nacelle_motion.position.data(),      // input: nacelle position
+            nacelle_motion.orientation.data(),   // input: nacelle orientation
+            nacelle_motion.velocity.data(),      // input: nacelle velocity
+            nacelle_motion.acceleration.data(),  // input: nacelle acceleration
+            root_pos_flat.data(),                // input: root positions
+            root_orient_flat.data(),             // input: root orientations
+            root_vel_flat.data(),                // input: root velocities
+            root_acc_flat.data(),                // input: root accelerations
+            &structural_mesh.n_mesh_points,      // input: number of mesh points
+            mesh_pos_flat.data(),                // input: mesh positions
+            mesh_orient_flat.data(),             // input: mesh orientations
+            mesh_vel_flat.data(),                // input: mesh velocities
+            mesh_acc_flat.data(),                // input: mesh accelerations
+            &error_handling.error_status,        // output: error status
+            error_handling.error_message.data()  // output: error message buffer
+        );
+
+        error_handling.CheckError();
+    }
+
 private:
     /// Method to flatten a 2D array into a 1D array for Fortran compatibility
     template <typename T, size_t N>
