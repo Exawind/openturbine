@@ -28,44 +28,25 @@
 
 namespace openturbine::tests {
 
-TEST(RotorTest, IEA15RotorAeroController) {
+TEST(Milestone, IEA15RotorAeroController) {
     // Gravity vector
     constexpr auto gravity = std::array{-9.81, 0., 0.};
 
+    // Geometry
+    auto tower_height = 150.;  // Rotor height
+
     // Rotor angular velocity in rad/s
-    constexpr auto angular_speed = 0.79063415025;
-    constexpr auto omega = std::array{0., 0., -angular_speed};
+    constexpr auto rotor_speed = 0.79063415025;
+    constexpr auto omega = std::array{0., 0., -rotor_speed};
 
     // Solution parameters
     constexpr bool is_dynamic_solve(true);
     constexpr size_t max_iter(6);
     constexpr double step_size(0.01);  // seconds
     constexpr double rho_inf(0.0);
-    constexpr double t_end(0.01 * 2.0 * M_PI / angular_speed);  // 3 revolutions
+    constexpr double t_end(0.01 * 2.0 * M_PI / rotor_speed);  // 3 revolutions
     constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.);
     constexpr auto num_nodes = node_xi.size();
-
-    //--------------------------------------------------------------------------
-    // Controller Setup
-    //--------------------------------------------------------------------------
-
-    const auto shared_lib_path = std::string{"./ROSCO.dll"};
-    const auto controller_function_name = std::string{"DISCON"};
-
-    auto controller =
-        util::TurbineController(shared_lib_path, controller_function_name, "DISCON.IN", "");
-
-    controller.io.status = 0;
-    controller.io.time = 0.;
-    controller.io.dt = 0.01;
-    controller.io.rotor_speed_actual = 5.;
-
-    controller.CallController();
-
-    // Pitch control variables
-    auto blade_pitch_command = std::array<double*, 3>{
-        &controller.io.pitch_collective_command, &controller.io.pitch_collective_command,
-        &controller.io.pitch_collective_command};
 
     //--------------------------------------------------------------------------
     // Rotor Elements
@@ -139,6 +120,28 @@ TEST(RotorTest, IEA15RotorAeroController) {
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
+
+    //--------------------------------------------------------------------------
+    // Controller Setup
+    //--------------------------------------------------------------------------
+
+    const auto shared_lib_path = std::string{"./ROSCO.dll"};
+    const auto controller_function_name = std::string{"DISCON"};
+
+    auto controller =
+        util::TurbineController(shared_lib_path, controller_function_name, "DISCON.IN", "");
+
+    controller.io.status = 0;
+    controller.io.time = 0.;
+    controller.io.dt = step_size;
+    controller.io.rotor_speed_actual = rotor_speed;
+
+    controller.CallController();
+
+    // Pitch control variables
+    auto blade_pitch_command = std::array<double*, 3>{
+        &controller.io.pitch_collective_command, &controller.io.pitch_collective_command,
+        &controller.io.pitch_collective_command};
 
     //--------------------------------------------------------------------------
     // Constraints
