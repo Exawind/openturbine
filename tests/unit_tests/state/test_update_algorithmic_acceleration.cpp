@@ -18,7 +18,10 @@ TEST(UpdateAlgorithmicAcceleration, OneNode) {
 
     const auto acceleration = Kokkos::View<double[1][6]>("acceleration");
 
-    Kokkos::parallel_for("UpdateAlgorithmicAcceleration", 1, UpdateAlgorithmicAcceleration{acceleration, vd, alpha_f, alpha_m});
+    Kokkos::parallel_for(
+        "UpdateAlgorithmicAcceleration", 1,
+        UpdateAlgorithmicAcceleration{acceleration, vd, alpha_f, alpha_m}
+    );
 
     constexpr auto acceleration_exact_data = std::array{14., 16., 18., 20., 22., 24.};
     const auto acceleration_exact =
@@ -28,6 +31,5 @@ TEST(UpdateAlgorithmicAcceleration, OneNode) {
     for (auto j = 0U; j < 6U; ++j) {
         EXPECT_EQ(acceleration_mirror(0, j), acceleration_exact(0, j));
     }
-
 }
 }  // namespace openturbine::tests
