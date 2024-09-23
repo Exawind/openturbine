@@ -9,12 +9,32 @@
 
 namespace openturbine::util {
 
-// Notes from Derek:
-//
-// Premitive data types should match the Fortran data types in the shared library (SingPrec.f90), so:
-// int should int_32_t etc.
-//
-// How are we providing the structural mesh data?
+/**
+ * C++ wrapper for interfacing with the AeroDyn Inflow (ADI) shared library, a Fortran-based
+ * library that exposes C-bindings for the AeroDyn and InflowWind modules of OpenFAST. This
+ * wrapper simplifies interaction with the ADI library (particularly the C-based interface),
+ * providing a user-friendly interface for OpenTurbine developers to run AeroDyn with InflowWind.
+ *
+ * AeroDyn utilizes blade element momentum (BEM) theory to calculate aerodynamic forces acting
+ * on each blade section. It accounts for factors such as:
+ *  - Dynamic stall
+ *  - Unsteady aerodynamics
+ *  - Tower shadow
+ *  - Wind shear
+ *
+ * InflowWind simulates the inflow conditions around wind turbines by modeling spatially and
+ * temporally varying wind fields. It enables the simulation of complex wind phenomena, such as:
+ *  - Turbulence
+ *  - Wind shear
+ *  - Gusts
+ *  - Free vortex wake
+ *
+ * References:
+ * - AeroDyn InflowWind C bindings:
+ *   https://github.com/OpenFAST/openfast/blob/dev/modules/aerodyn/src/AeroDyn_Inflow_C_Binding.f90
+ * - AeroDyn InflowWind Python interface:
+ *   https://github.com/OpenFAST/openfast/blob/dev/modules/aerodyn/python-lib/aerodyn_inflow_library.py
+ */
 
 /// Struct for error handling settings
 struct ErrorHandling {
