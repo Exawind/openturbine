@@ -13,7 +13,7 @@ namespace openturbine {
 struct CalculateRevoluteJointForce {
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3][3]>::const_type axes;
-    Kokkos::View<double*>::const_type control;
+    Kokkos::View<double* [7]>::const_type inputs;
     Kokkos::View<double* [7]>::const_type node_u;
     Kokkos::View<double* [6]> system_residual_terms;
 
@@ -42,9 +42,9 @@ struct CalculateRevoluteJointForce {
         RotateVectorByQuaternion(R2, X0, R2_X0);
 
         // Take axis_x and rotate it to right orientation
-        system_residual_terms(i_constraint, 3) = R2_X0(0) * control(i_constraint);
-        system_residual_terms(i_constraint, 4) = R2_X0(1) * control(i_constraint);
-        system_residual_terms(i_constraint, 5) = R2_X0(2) * control(i_constraint);
+        system_residual_terms(i_constraint, 3) = R2_X0(0) * inputs(i_constraint, 0);
+        system_residual_terms(i_constraint, 4) = R2_X0(1) * inputs(i_constraint, 0);
+        system_residual_terms(i_constraint, 5) = R2_X0(2) * inputs(i_constraint, 0);
     }
 };
 

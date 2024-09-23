@@ -203,6 +203,19 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
     TestRotationToQuaternion(phi, {0.707107, 0., 0., 0.707107});
 }
 
+TEST(QuaternionTest, QuaternionToRotationVector_1) {
+    auto phi = Create1DView<3>({1.2, -0.5, 1.570796});
+    auto phi2 = Create1DView<3>({0., 0., 0.});
+    auto q = Create1DView<4>({0., 0., 0., 0.});
+    Kokkos::parallel_for(
+        "RotationVectorToQuaternion", 1, KOKKOS_LAMBDA(int) { RotationVectorToQuaternion(phi, q); }
+    );
+    Kokkos::parallel_for(
+        "RotationVectorToQuaternion", 1, KOKKOS_LAMBDA(int) { QuaternionToRotationVector(q, phi2); }
+    );
+    expect_kokkos_view_1D_equal(phi2, {1.2, -0.5, 1.570796});
+}
+
 void TestVecTilde(const Kokkos::View<double[3]>& v, const std::vector<std::vector<double>>& exact) {
     auto m = Kokkos::View<double[3][3]>("m");
     Kokkos::parallel_for(
