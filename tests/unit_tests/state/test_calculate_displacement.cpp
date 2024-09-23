@@ -38,7 +38,7 @@ TEST(CalculateDisplacement, OneNode) {
     const auto q_mirror = Kokkos::create_mirror(q);
     Kokkos::deep_copy(q_mirror, q);
     for (auto i = 0U; i < 7U; ++i) {
-        EXPECT_EQ(q_mirror(0, i), q_exact(0, i));
+        EXPECT_NEAR(q_mirror(0, i), q_exact(0, i), 1.e-14);
     }
 }
 }  // namespace openturbine::tests

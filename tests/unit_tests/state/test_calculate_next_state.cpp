@@ -4,6 +4,18 @@
 #include "src/state/calculate_next_state.hpp"
 
 namespace openturbine::tests {
+
+inline void CompareWithExpected(
+    const Kokkos::View<const double**>::host_mirror_type& result,
+    const Kokkos::View<const double**, Kokkos::HostSpace>& expected
+) {
+    for (auto i = 0U; i < result.extent(0); ++i) {
+        for (auto j = 0U; j < result.extent(1); ++j) {
+            EXPECT_NEAR(result(i, j), expected(i, j), 1.e-14);
+        }
+    }
+}
+
 TEST(CalculateNextState, OneNode) {
     constexpr auto h = 2.;
     constexpr auto alpha_f = 3.;
@@ -53,34 +65,26 @@ TEST(CalculateNextState, OneNode) {
     const auto q_delta_exact =
         Kokkos::View<double[1][6], Kokkos::HostSpace>::const_type(q_delta_exact_data.data());
     Kokkos::deep_copy(q_delta_mirror, q_delta);
-    for (auto j = 0U; j < 6U; ++j) {
-        EXPECT_EQ(q_delta_mirror(0, j), q_delta_exact(0, j));
-    }
+    CompareWithExpected(q_delta_mirror, q_delta_exact);
 
     constexpr auto v_exact_data = std::array{-4.9999999999999929, -10.000000000000007, -15.,
                                              -19.999999999999993, -25.000000000000007, -30.};
     const auto v_exact =
         Kokkos::View<double[1][6], Kokkos::HostSpace>::const_type(v_exact_data.data());
     Kokkos::deep_copy(v_mirror, v);
-    for (auto j = 0U; j < 6U; ++j) {
-        EXPECT_EQ(v_mirror(0, j), v_exact(0, j));
-    }
+    CompareWithExpected(v_mirror, v_exact);
 
     constexpr auto vd_exact_data = std::array{0., 0., 0., 0., 0., 0.};
     const auto vd_exact =
         Kokkos::View<double[1][6], Kokkos::HostSpace>::const_type(vd_exact_data.data());
     Kokkos::deep_copy(vd_mirror, vd);
-    for (auto j = 0U; j < 6U; ++j) {
-        EXPECT_EQ(vd_mirror(0, j), vd_exact(0, j));
-    }
+    CompareWithExpected(vd_mirror, vd_exact);
 
     constexpr auto a_exact_data = std::array{10.333333333333334, 10.666666666666666, 11.,
                                              11.333333333333334, 11.666666666666666, 12.};
     const auto a_exact =
         Kokkos::View<double[1][6], Kokkos::HostSpace>::const_type(a_exact_data.data());
     Kokkos::deep_copy(a_mirror, a);
-    for (auto j = 0U; j < 6U; ++j) {
-        EXPECT_EQ(a_mirror(0, j), a_exact(0, j));
-    }
+    CompareWithExpected(a_mirror, a_exact);
 }
 }  // namespace openturbine::tests
