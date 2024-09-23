@@ -88,16 +88,6 @@ struct TurbineSettings {
     std::array<double, 9> initial_root_orientation{0.};     //< Initial root orientation
 };
 
-/// Struct to hold the structural mesh data
-struct StructuralMesh {
-    int n_mesh_points{1};                                       //< Number of mesh points
-    std::vector<std::array<float, 3>> initial_mesh_position{};  //< N x 3 array [x, y, z]
-    std::vector<std::array<double, 9>>
-        initial_mesh_orientation{};  //< N x 9 array [r11, r12, ..., r33]
-    std::vector<int>
-        mesh_point_to_blade_num{};  //< N x 1 array for mapping a mesh point to blade number
-};
-
 /// Struct to hold the settings for the simulation controls
 struct SimulationControls {
     static constexpr size_t kDefaultStringLength{1025};  //< Max length for output filenames
@@ -138,6 +128,16 @@ struct VTKSettings {
     std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
                                                 -2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f};
     float vtk_hub_radius{1.5f};  //< Hub radius for VTK rendering
+};
+
+/// Struct to hold the structural mesh data
+struct StructuralMesh {
+    int n_mesh_points{1};                                       //< Number of mesh points
+    std::vector<std::array<float, 3>> initial_mesh_position{};  //< N x 3 array [x, y, z]
+    std::vector<std::array<double, 9>>
+        initial_mesh_orientation{};  //< N x 9 array [r11, r12, ..., r33]
+    std::vector<int>
+        mesh_point_to_blade_num{};  //< N x 1 array for mapping a mesh point to blade number
 };
 
 // Define structures for hub, nacelle, root, and mesh motions
@@ -374,6 +374,54 @@ private:
         return output;
     }
 
+    std::vector<float> FlattenPositionArray(
+        const std::vector<std::vector<float>>& position_array, size_t num_pts
+    ) {
+        if (position_array.size() != num_pts) {
+            std::cerr << "The number of mesh points changed from the initial value of " << num_pts
+                      << ". This is not permitted during the simulation." << std::endl;
+            // call ADI_End();
+        }
+
+        std::vector<float> mesh_pos_flat;
+        for (const auto& pos : position_array) {
+            mesh_pos_flat.insert(mesh_pos_flat.end(), pos.begin(), pos.end());
+        }
+        return mesh_pos_flat;
+    }
+
+    std::vector<double> FlattenOrientationArray(
+        const std::vector<std::vector<double>>& orientation_array, size_t num_pts
+    ) {
+        if (orientation_array.size() != num_pts) {
+            std::cerr << "The number of mesh points changed from the initial value of " << num_pts
+                      << ". This is not permitted during the simulation." << std::endl;
+            // call ADI_End();
+        }
+
+        std::vector<double> mesh_orient_flat;
+        for (const auto& orient : orientation_array) {
+            mesh_orient_flat.insert(mesh_orient_flat.end(), orient.begin(), orient.end());
+        }
+        return mesh_orient_flat;
+    }
+
+    std::vector<float> FlattenVelocityArray(
+        const std::vector<std::vector<float>>& velocity_array, size_t num_pts
+    ) {
+        if (velocity_array.size() != num_pts) {
+            std::cerr << "The number of mesh points changed from the initial value of " << num_pts
+                      << ". This is not permitted during the simulation." << std::endl;
+            // call ADI_End();
+        }
+
+        std::vector<float> mesh_vel_flat;
+        for (const auto& vel : velocity_array) {
+            mesh_vel_flat.insert(mesh_vel_flat.end(), vel.begin(), vel.end());
+        }
+        return mesh_vel_flat;
+    }
+
     /// Method to join a vector of strings into a single string with a delimiter
     std::string JoinStringArray(const std::vector<std::string>& input, char delimiter) {
         std::string output;
@@ -388,6 +436,7 @@ private:
         const std::vector<std::vector<T>>& array, size_t expected_rows, size_t expected_cols,
         const std::string& array_name, const std::string& node_type
     ) {
+        // Check row count first
         if (array.size() != expected_rows) {
             std::cerr << "Expecting a " << expected_rows << "x" << expected_cols << " array of "
                       << node_type << " " << array_name << " with " << expected_rows << " rows."
@@ -395,13 +444,12 @@ private:
             // call ADI_End();
         }
 
-        for (const auto& row : array) {
-            if (row.size() != expected_cols) {
-                std::cerr << "Expecting a " << expected_rows << "x" << expected_cols << " array of "
-                          << node_type << " " << array_name << " with " << expected_cols
-                          << " columns." << std::endl;
-                // call ADI_End();
-            }
+        // Check column count only on the first row to avoid redundant checks
+        if (!array.empty() && array[0].size() != expected_cols) {
+            std::cerr << "Expecting a " << expected_rows << "x" << expected_cols << " array of "
+                      << node_type << " " << array_name << " with " << expected_cols << " columns."
+                      << std::endl;
+            // call ADI_End();
         }
     }
 
