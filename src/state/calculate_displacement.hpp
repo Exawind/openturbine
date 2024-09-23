@@ -8,8 +8,8 @@ namespace openturbine {
 
 struct CalculateDisplacement {
     double h;
-    Kokkos::View<double* [6]> q_delta;
-    Kokkos::View<double* [7]> q_prev;
+    Kokkos::View<double* [6]>::const_type q_delta;
+    Kokkos::View<double* [7]>::const_type q_prev;
     Kokkos::View<double* [7]> q;
 
     KOKKOS_FUNCTION
