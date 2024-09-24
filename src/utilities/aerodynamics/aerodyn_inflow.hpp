@@ -528,6 +528,19 @@ struct AeroDynInflowLibrary {
         error_handling.CheckError();
     }
 
+    // Wrapper for ADI_C_End routine to end the AeroDyn Inflow library
+    void ADI_End() {
+        auto ADI_C_End = this->lib.get_function<void(int*, char*)>("ADI_C_End");
+
+        // Run ADI_C_End
+        ADI_C_End(
+            &error_handling.error_status,        // output: error status
+            error_handling.error_message.data()  // output: error message buffer
+        );
+
+        error_handling.CheckError();
+    }
+
 private:
     /// Method to flatten a 2D array into a 1D array for Fortran compatibility
     template <typename T, size_t N>
