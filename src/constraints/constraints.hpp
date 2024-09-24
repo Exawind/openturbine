@@ -37,7 +37,7 @@ struct Constraints {
     Kokkos::View<double* [6][6]> base_gradient_terms;
     Kokkos::View<double* [6][6]> target_gradient_terms;
 
-    Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints)
+    explicit Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints)
         : num{constraints.size()},
           num_dofs{std::transform_reduce(
               constraints.cbegin(), constraints.cend(), 0U, std::plus{},
