@@ -203,6 +203,39 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
     TestRotationToQuaternion(phi, {0.707107, 0., 0., 0.707107});
 }
 
+TEST(QuaternionTest, QuaternionToRotationVector_1) {
+    const auto n = 100U;
+    const auto dtheta = M_PI / static_cast<double>(n);
+    for (size_t i = 0; i < n; ++i) {
+        Array_3 rot_vec{static_cast<double>(i) * dtheta, 0., 0.};
+        auto phi = Create1DView<3>(rot_vec);
+        auto phi2 = Create1DView<3>({0., 0., 0.});
+        auto q = Create1DView<4>({0., 0., 0., 0.});
+        Kokkos::parallel_for(
+            "RotationVectorToQuaternion", 1,
+            KOKKOS_LAMBDA(int) { RotationVectorToQuaternion(phi, q); }
+        );
+        Kokkos::parallel_for(
+            "RotationVectorToQuaternion", 1,
+            KOKKOS_LAMBDA(int) { QuaternionToRotationVector(q, phi2); }
+        );
+        expect_kokkos_view_1D_equal(phi2, {rot_vec[0], rot_vec[1], rot_vec[2]});
+    }
+}
+
+TEST(QuaternionTest, QuaternionToRotationVector_2) {
+    const auto n = 100U;
+    const auto dtheta = M_PI / static_cast<double>(n);
+    for (size_t i = 0; i < n; ++i) {
+        Array_3 rot_vec{static_cast<double>(i) * dtheta, 0., 0.};
+        auto q = RotationVectorToQuaternion(rot_vec);
+        auto rot_vec2 = QuaternionToRotationVector(q);
+        ASSERT_NEAR(rot_vec2[0], rot_vec[0], 1e-7);
+        ASSERT_NEAR(rot_vec2[1], rot_vec[1], 1e-7);
+        ASSERT_NEAR(rot_vec2[2], rot_vec[2], 1e-7);
+    }
+}
+
 void TestVecTilde(const Kokkos::View<double[3]>& v, const std::vector<std::vector<double>>& exact) {
     auto m = Kokkos::View<double[3][3]>("m");
     Kokkos::parallel_for(

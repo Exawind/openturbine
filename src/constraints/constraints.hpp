@@ -27,9 +27,10 @@ struct Constraints {
     Kokkos::View<double* [3]> X0;
     Kokkos::View<double* [3][3]> axes;
 
-    Kokkos::View<double*> control;  //< Control signals
-    Kokkos::View<double* [7]> u;    //< Prescribed displacements
-    Kokkos::View<double* [7]>::HostMirror u_signal;
+    Kokkos::View<double* [7]> input;                    //< Inputs
+    Kokkos::View<double* [3]> output;                   //< Outputs
+    Kokkos::View<double* [7]>::HostMirror host_input;   //< Inputs mirror on host
+    Kokkos::View<double* [3]>::HostMirror host_output;  //< Outputs mirror on host
     Kokkos::View<double*> lambda;
     Kokkos::View<double* [6]> residual_terms;
     Kokkos::View<double* [6]> system_residual_terms;
@@ -53,9 +54,10 @@ struct Constraints {
           target_node_index("target_node_index", num),
           X0("X0", num),
           axes("axes", num),
-          control("control", num),
-          u("u", num),
-          u_signal("u_signal", num),
+          input("inputs", num),
+          output("outputs", num),
+          host_input("host_input", num),
+          host_output("host_output", num),
           lambda("lambda", num_dofs),
           residual_terms("residual_terms", num),
           system_residual_terms("system_residual_terms", num),
@@ -123,28 +125,25 @@ struct Constraints {
         Kokkos::deep_copy(axes, host_axes);
 
         // Set initial rotation to identity
-        Kokkos::deep_copy(Kokkos::subview(this->u, Kokkos::ALL, 3), 1.0);
+        Kokkos::deep_copy(Kokkos::subview(this->input, Kokkos::ALL, 3), 1.0);
     }
 
     /// Sets the new displacement for the given constraint
     void UpdateDisplacement(size_t id, const std::array<double, 7>& u_) const {
         for (auto i = 0U; i < 7U; ++i) {
-            u_signal(id, i) = u_[i];
+            host_input(id, i) = u_[i];
         }
     }
 
     /// Transfers new prescribed displacements and control signals to Views
     void UpdateViews() {
-        auto host_control_mirror = Kokkos::create_mirror(this->control);
-        auto host_type = Kokkos::create_mirror(type);
-        Kokkos::deep_copy(host_type, type);
-        for (auto i = 0U; i < num; ++i) {
+        // Loop through constraints and copy control signal to host
+        for (auto i = 0U; i < this->num; ++i) {
             if (control_signal[i] != nullptr) {
-                host_control_mirror(i) = *control_signal[i];
+                host_input(i, 0) = *control_signal[i];
             }
         }
-        Kokkos::deep_copy(this->control, host_control_mirror);
-        Kokkos::deep_copy(this->u, u_signal);
+        Kokkos::deep_copy(this->input, host_input);
     }
 };
 

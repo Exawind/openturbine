@@ -170,13 +170,13 @@ inline int SetupFirstCall(const ControllerIO& swap, InternalState& state, char* 
     // --------------------------------------------------------------------------------------------
     // This will ensure that generator speed filter will use the initial value of the
     // generator speed on the first pass
-    state.generator_speed_filtered = swap.generator_speed;
+    state.generator_speed_filtered = swap.generator_speed_actual;
 
     // This will ensure that the variable speed controller picks the correct control region
     // and the pitch controller picks the correct gain on the first call
-    state.pitch_commanded_latest[0] = swap.pitch_blade1;
-    state.pitch_commanded_latest[1] = swap.pitch_blade2;
-    state.pitch_commanded_latest[2] = swap.pitch_blade3;
+    state.pitch_commanded_latest[0] = swap.pitch_blade1_actual;
+    state.pitch_commanded_latest[1] = swap.pitch_blade2_actual;
+    state.pitch_commanded_latest[2] = swap.pitch_blade3_actual;
 
     // This will ensure that the pitch angle is unchanged if the initial SpdErr is zero
     const auto GK = 1.0 / (1.0 + state.pitch_commanded_latest[0] / kPC_KK);
@@ -207,7 +207,7 @@ inline void FilterGeneratorSpeed(const ControllerIO& swap, InternalState& state)
 
     // Apply the filter
     state.generator_speed_filtered =
-        (1. - alpha) * swap.generator_speed + alpha * state.generator_speed_filtered;
+        (1. - alpha) * swap.generator_speed_actual + alpha * state.generator_speed_filtered;
 }
 
 inline void VariableSpeedTorqueControl(ControllerIO& swap, InternalState& state) {
@@ -272,8 +272,8 @@ inline void VariableSpeedTorqueControl(ControllerIO& swap, InternalState& state)
 
     swap.generator_contactor_status =
         1;  // Generator contactor status: 1=main (high speed) variable-speed generator
-    swap.torque_override = 0;                                         // Torque override: 0=yes
-    swap.demanded_generator_torque = state.generator_torque_lastest;  // Demanded generator torque
+    swap.torque_override = 0;                                        // Torque override: 0=yes
+    swap.generator_torque_command = state.generator_torque_lastest;  // Demanded generator torque
 }
 
 inline void PitchControl(ControllerIO& swap, InternalState& state) {
@@ -314,7 +314,8 @@ inline void PitchControl(ControllerIO& swap, InternalState& state) {
         //       blade.
 
         // Current values of the blade pitch angles, rad
-        const auto blade_pitch = std::array{swap.pitch_blade1, swap.pitch_blade2, swap.pitch_blade3};
+        const auto blade_pitch =
+            std::array{swap.pitch_blade1_actual, swap.pitch_blade2_actual, swap.pitch_blade3_actual};
 
         // Pitch rates of each blade based on the current pitch angles and current pitch
         // command, rad/s
@@ -346,12 +347,12 @@ inline void PitchControl(ControllerIO& swap, InternalState& state) {
     // call to the controller (See Appendix A of Bladed User's Guide):
     swap.pitch_override = 0.;  // Pitch override: 0=yes
 
-    swap.pitch_command_1 = state.pitch_commanded_latest[0];  // Use the command angles of all
-                                                             // blades if using individual pitch
-    swap.pitch_command_2 = state.pitch_commanded_latest[1];  // "
-    swap.pitch_command_3 = state.pitch_commanded_latest[2];  // "
+    swap.pitch_blade1_command = state.pitch_commanded_latest[0];  // Use the command angles of all
+                                                                  // blades if using individual pitch
+    swap.pitch_blade2_command = state.pitch_commanded_latest[1];  // "
+    swap.pitch_blade3_command = state.pitch_commanded_latest[2];  // "
 
-    swap.pitch_command_collective =
+    swap.pitch_collective_command =
         state.pitch_commanded_latest[0];  // Use the command angle of blade 1 if using collective
                                           // pitch
 }
@@ -360,16 +361,16 @@ inline int ComputeControl(ControllerIO& swap, InternalState& state, char* const 
     // Abort if the user has not requested a pitch angle actuator (See Appendix A of Bladed
     // User's Guide)
     auto aviFAIL = 0;
-    if (swap.pitch_angle_actuator_req != 0) {
+    if (swap.pitch_actuator_type_req != 0) {
         aviFAIL = -1;
         strncpy(avcMSG, "Pitch angle actuator not requested.", swap.message_array_size);
     }
 
     // Set unused outputs to zero (See Appendix A of Bladed User's Guide):
     swap.shaft_brake_status = 0;             // Shaft brake status: 0=off
-    swap.demanded_yaw_actuator_torque = 0.;  // Demanded yaw actuator torque
-    swap.demanded_pitch_rate = 0.;           // Demanded pitch rate (Collective pitch)
-    swap.demanded_nacelle_yaw_rate = 0.;     // Demanded nacelle yaw rate
+    swap.yaw_actuator_torque_command = 0.;   // Demanded yaw actuator torque
+    swap.pitch_rate_command = 0.;            // Demanded pitch rate (Collective pitch)
+    swap.nacelle_yaw_rate_command = 0.;      // Demanded nacelle yaw rate
     swap.n_log_variables = 0U;               // Number of variables returned for logging
     swap.generator_startup_resistance = 0.;  // Generator start-up resistance
     swap.loads_request = 0;                  // Request for loads: 0=none

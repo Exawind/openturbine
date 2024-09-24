@@ -21,6 +21,7 @@
 #include "update_tangent_operator.hpp"
 
 #include "src/beams/beams.hpp"
+#include "src/constraints/calculate_constraint_output.hpp"
 #include "src/constraints/constraints.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -89,6 +90,20 @@ inline bool Step(
             state.q,
             state.x0,
             state.x,
+        }
+    );
+
+    Kokkos::parallel_for(
+        "CalculateConstraintOutput", constraints.num,
+        CalculateConstraintOutput{
+            constraints.type,
+            constraints.target_node_index,
+            constraints.axes,
+            state.x0,
+            state.q,
+            state.v,
+            state.vd,
+            constraints.output,
         }
     );
 

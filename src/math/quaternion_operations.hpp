@@ -162,6 +162,41 @@ KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(
     }
 }
 
+/// Returns a 3-D rotation vector from provided 4-D quaternion
+template <typename Quaternion, typename Vector>
+KOKKOS_INLINE_FUNCTION void QuaternionToRotationVector(
+    const Quaternion& quaternion, const Vector& phi
+) {
+    auto theta = 2. * Kokkos::acos(quaternion(0));
+    const auto sin_half_theta = std::sqrt(1. - quaternion(0) * quaternion(0));
+    if (sin_half_theta > 1e-12) {
+        phi(0) = theta * quaternion(1) / sin_half_theta;
+        phi(1) = theta * quaternion(2) / sin_half_theta;
+        phi(2) = theta * quaternion(3) / sin_half_theta;
+    } else {
+        phi(0) = 0.;
+        phi(1) = 0.;
+        phi(2) = 0.;
+    }
+}
+
+/// Returns a 3-D rotation vector from provided 4-D quaternion
+inline Array_3 QuaternionToRotationVector(const Array_4& quaternion) {
+    auto theta = 2. * Kokkos::acos(quaternion[0]);
+    const auto sin_half_theta = std::sqrt(1. - quaternion[0] * quaternion[0]);
+    Array_3 phi;
+    if (sin_half_theta > 1e-12) {
+        phi[0] = theta * quaternion[1] / sin_half_theta;
+        phi[1] = theta * quaternion[2] / sin_half_theta;
+        phi[2] = theta * quaternion[3] / sin_half_theta;
+    } else {
+        phi[0] = 0.;
+        phi[1] = 0.;
+        phi[2] = 0.;
+    }
+    return phi;
+}
+
 inline Array_4 RotationVectorToQuaternion(const Array_3& phi) {
     const auto angle = std::sqrt(phi[0] * phi[0] + phi[1] * phi[1] + phi[2] * phi[2]);
 

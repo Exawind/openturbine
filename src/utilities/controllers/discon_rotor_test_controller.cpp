@@ -21,9 +21,9 @@ void PITCH_CONTROLLER(
     io.CopyFromSwapArray(swap_array);
 
     // Update pitch angle in radians
-    io.pitch_command_1 = 2. * M_PI * io.time / 3.;  // Full rotation every 3 seconds
-    io.pitch_command_2 = 2. * M_PI * io.time / 6.;  // Full rotation every 6 seconds
-    io.pitch_command_3 = 2. * M_PI * io.time / 9.;  // Full rotation every 9 seconds
+    io.pitch_blade1_command = 2. * M_PI * io.time / 3.;  // Full rotation every 3 seconds
+    io.pitch_blade2_command = 2. * M_PI * io.time / 6.;  // Full rotation every 6 seconds
+    io.pitch_blade3_command = 2. * M_PI * io.time / 9.;  // Full rotation every 9 seconds
 
     // Set failure flag to zero
     *aviFAIL = 0;
