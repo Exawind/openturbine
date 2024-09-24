@@ -141,24 +141,119 @@ struct StructuralMesh {
         mesh_point_to_blade_num{};  //< N x 1 array for mapping a mesh point to blade number
 };
 
-// Define structures for hub, nacelle, root, and mesh motions
-struct MotionData {
-    std::vector<float> position;
-    std::vector<double> orientation;
-    std::vector<float> velocity;
-    std::vector<float> acceleration;
-};
-
 struct MeshMotionData {
-    std::vector<std::array<float, 3>> position;
-    std::vector<std::array<double, 9>> orientation;
-    std::vector<std::array<float, 3>> velocity;
-    std::vector<std::array<float, 3>> acceleration;
+    std::vector<std::array<float, 3>> position;      //< N x 3 array [x, y, z]
+    std::vector<std::array<double, 9>> orientation;  //< N x 9 array [r11, r12, ..., r33]
+    std::vector<std::array<float, 6>> velocity;      //< N x 6 array [u, v, w, p, q, r]
+    std::vector<std::array<float, 6>>
+        acceleration;  //< N x 6 array [u_dot, v_dot, w_dot, p_dot, q_dot, r_dot]
+
+    /// Method to check the sizes of the input arrays
+    template <typename T, size_t N>
+    void CheckArraySize(
+        const std::vector<std::array<T, N>>& array, size_t expected_rows, size_t expected_cols,
+        const std::string& array_name, const std::string& node_type
+    ) const {
+        // Check row count first
+        if (array.size() != expected_rows) {
+            std::cerr << "Expecting a " << expected_rows << "x" << expected_cols << " array of "
+                      << node_type << " " << array_name << " with " << expected_rows << " rows."
+                      << std::endl;
+            // call ADI_End();
+        }
+
+        // Check column count only on the first row to avoid redundant checks
+        if (!array.empty() && array[0].size() != expected_cols) {
+            std::cerr << "Expecting a " << expected_rows << "x" << expected_cols << " array of "
+                      << node_type << " " << array_name << " with " << expected_cols << " columns."
+                      << std::endl;
+            // call ADI_End();
+        }
+    }
+
+    /// Method to check the input motions i.e. position, orientation, velocity, and acceleration
+    /// arrays
+    void CheckInputMotions(
+        const std::string& node_type, size_t expected_position_dim, size_t expected_orientation_dim,
+        size_t expected_vel_acc_dim, size_t expected_number_of_nodes
+    ) const {
+        CheckArraySize(
+            position, expected_number_of_nodes, expected_position_dim, "positions", node_type
+        );
+        CheckArraySize(
+            orientation, expected_number_of_nodes, expected_orientation_dim, "orientations",
+            node_type
+        );
+        CheckArraySize(
+            velocity, expected_number_of_nodes, expected_vel_acc_dim, "velocities", node_type
+        );
+        CheckArraySize(
+            acceleration, expected_number_of_nodes, expected_vel_acc_dim, "accelerations", node_type
+        );
+    }
+
+    /// Method to check the hub/nacelle input motions
+    void CheckHubNacelleInputMotions(const std::string& node_name) const {
+        const size_t expected_position_dim{3};
+        const size_t expected_orientation_dim{9};
+        const size_t expected_vel_acc_dim{6};
+        const size_t expected_number_of_nodes{1};  // Since there is only 1 hub/nacelle node
+
+        CheckInputMotions(
+            node_name, expected_position_dim, expected_orientation_dim, expected_vel_acc_dim,
+            expected_number_of_nodes
+        );
+    }
+
+    /// Method to check the root input motions
+    void CheckRootInputMotions(size_t num_blades, size_t init_num_blades) const {
+        if (num_blades != init_num_blades) {
+            std::cerr << "The number of root points changed from the initial value of "
+                      << init_num_blades << ". This is not permitted during the simulation."
+                      << std::endl;
+            // call ADI_End();
+        }
+
+        const size_t expected_position_dim{3};
+        const size_t expected_orientation_dim{9};
+        const size_t expected_vel_acc_dim{6};
+
+        CheckInputMotions(
+            "root", expected_position_dim, expected_orientation_dim, expected_vel_acc_dim, num_blades
+        );
+    }
+
+    /// Method to check the mesh input motions
+    void CheckMeshInputMotions(size_t num_mesh_pts, size_t init_num_mesh_pts) const {
+        if (num_mesh_pts != init_num_mesh_pts) {
+            std::cerr << "The number of mesh points changed from the initial value of "
+                      << init_num_mesh_pts << ". This is not permitted during the simulation."
+                      << std::endl;
+            // call ADI_End();
+        }
+
+        const size_t expected_position_dim{3};
+        const size_t expected_orientation_dim{9};
+        const size_t expected_vel_acc_dim{6};
+
+        CheckInputMotions(
+            "mesh", expected_position_dim, expected_orientation_dim, expected_vel_acc_dim,
+            num_mesh_pts
+        );
+    }
 };
 
-/// Wrapper class for the AeroDynInflow (ADI) shared library
-/// @details The AeroDynInflow (ADI) shared library is a Fortran library that provides C bindings
-/// for interfacing with the AeroDyn+InflowWind modules of OpenFAST
+/**
+ * @brief Wrapper class for the AeroDynInflow (ADI) shared library
+ *
+ * @details This class provides an interface for interacting with the AeroDynInflow (ADI) shared
+ * library, which is a Fortran library offering C bindings for the AeroDyn x InflowWind modules of
+ * OpenFAST. Following functions are ported over from the AeroDyn_Inflow_C_Binding.f90 file:
+ * - ADI_C_PreInit: Handles the pre-initialization of the AeroDynInflow module
+ * - ADI_C_SetupRotor: Configures rotor-specific parameters before simulation
+ * - ADI_C_Init: Initializes the AeroDynInflow module
+ * - ADI_C_SetRotorMotion: Updates the rotor's motion during the simulation
+ */
 struct AeroDynInflowLibrary {
     util::dylib lib{
         "libaerodyn_inflow_c_binding.dylib",
