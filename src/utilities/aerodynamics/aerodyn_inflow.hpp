@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "src/math/quaternion_operations.hpp"
 #include "src/vendor/dylib/dylib.hpp"
 
 namespace openturbine::util {
@@ -29,6 +30,25 @@ namespace openturbine::util {
  *  - Wind shear
  *  - Gusts
  *  - Free vortex wake
+ *
+ * Canonical workflow for using the AeroDyn x InflowWind C++ wrapper:
+ *   1.  Instantiate the AeroDynInflowLibrary class
+ *           - Modify the settings from provided defaults as needed
+ *           - Set input files for AeroDyn and InflowWind (from file or as strings)
+ *   2.  Initialize the AeroDyn Fortran library via the following steps:
+ *           - PreInitialize()  -- pre-initialize the AeroDyn library i.e. set number of turbines
+ *           - SetupRotor()     -- set up rotor-specific parameters i.e. initialize one rotor
+ *                                  (iterate over turbines)
+ *           - Initialize()     -- initialize the AeroDyn library with input files i.e. actually
+ *                                  call ADI to initialize the simulation
+ *   3.  Perform the simulation by iterating over timesteps:
+ *           - SetupRotorMotion()         -- set motions of single turbine (iterate over turbines)
+ *           - UpdateStates()             -- update to next time step
+ *           - CalculateOutputChannels()  -- get outputs
+ *           - GetRotorAerodynamicLoads() -- get loads per rotor (iterate over turbines)
+ *   4. Complete the simulation
+ *         - Call Finalize() to close the AeroDyn library and free memory
+ *         - Handle any resulting errors
  *
  * References:
  * - OpenFAST/AeroDyn:
@@ -253,33 +273,14 @@ struct MeshMotionData {
  * OpenFAST.
  *
  * Following functions are wrapped in this class:
- *  - ADI_C_PreInit: Handles the pre-initialization of the AeroDynInflow module
- *  - ADI_C_SetupRotor: Configures rotor-specific parameters before simulation
- *  - ADI_C_Init: Initializes the AeroDynInflow module
- *  - ADI_C_SetRotorMotion: Updates the rotor's motion during the simulation
- *  - ADI_C_GetRotorLoads: Retrieves the aerodynamic loads acting on the rotor
- *  - ADI_C_CalcOutput: Calculates the output channels at a given time
- *  - ADI_C_UpdateStates: Updates the states of the simulation at a given time
- *  - ADI_C_End: Ends the AeroDynInflow module
- *
- * Canonical workflow for using the AeroDyn x InflowWind C++ wrapper:
- *   1.  Instantiate the AeroDynInflowLibrary class
- *           - Modify the settings from defaults as needed
- *           - Set input files for AeroDyn and InflowWind (from file or as strings)
- *   2.  Initialize the AeroDyn Fortran library via the following steps:
- *           - PreInitialize()  -- pre-initialize the AeroDyn library i.e. set number of turbines
- *           - SetupRotor()     -- set up rotor-specific parameters i.e. initialize one rotor
- *                                  (iterate over turbines)
- *           - Initialize()     -- initialize the AeroDyn library with input files i.e. actually
- *                                  call ADI to initialize the simulation
- *   3.  Perform the simulation by iterating over timesteps:
- *           - SetupRotorMotion()         -- set motions of single turbine (iterate over turbines)
- *           - UpdateStates()             -- update to next time step
- *           - CalculateOutputChannels()  -- get outputs
- *           - GetRotorAerodynamicLoads() -- get loads per rotor (iterate over turbines)
- *   4. Complete the simulation
- *         - Call Finalize() to close the AeroDyn library and free memory
- *         - Handle any resulting errors
+ *  - PreInitialize -> ADI_C_PreInit: Handles the pre-initialization of the AeroDynInflow module
+ *  - SetupRotor -> ADI_C_SetupRotor: Configures rotor-specific parameters before simulation
+ *  - Initialize -> ADI_C_Init: Initializes the AeroDynInflow module for simulation
+ *  - SetupRotorMotion -> ADI_C_SetRotorMotion: Sets rotor motion for a given time step
+ *  - GetRotorAerodynamicLoads -> ADI_C_GetRotorLoads: Gets aerodynamic loads on the rotor
+ *  - CalculateOutputChannels -> ADI_C_CalcOutput: Calculates output channels at a given time
+ *  - UpdateStates -> ADI_C_UpdateStates: Updates states for the next time step
+ *  - Finalize -> ADI_C_End: Ends the AeroDynInflow module by freeing memory
  */
 struct AeroDynInflowLibrary {
     util::dylib lib{
