@@ -489,6 +489,29 @@ struct AeroDynInflowLibrary {
         }
     }
 
+    // Wrapper for ADI_C_CalcOutput routine to calculate output channels at a given time
+    void ADI_C_CalcOutput(double time, std::vector<float>& output_channel_values) {
+        auto ADI_C_CalcOutput =
+            this->lib.get_function<void(double*, float*, int*, char*)>("ADI_C_CalcOutput");
+
+        // Set up output channel values
+        auto output_channel_values_c =
+            std::vector<float>(static_cast<size_t>(sim_controls.n_channels));
+
+        // Run ADI_C_CalcOutput
+        ADI_C_CalcOutput(
+            &time,                               // input: time at which to calculate output forces
+            output_channel_values_c.data(),      // output: output channel values
+            &error_handling.error_status,        // output: error status
+            error_handling.error_message.data()  // output: error message buffer
+        );
+
+        error_handling.CheckError();
+
+        // Copy the output channel values back to the original array
+        output_channel_values = output_channel_values_c;
+    }
+
 private:
     /// Method to flatten a 2D array into a 1D array for Fortran compatibility
     template <typename T, size_t N>
