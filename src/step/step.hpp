@@ -10,6 +10,7 @@
 #include "assemble_system_residual.hpp"
 #include "assemble_tangent_operator.hpp"
 #include "calculate_convergence_error.hpp"
+#include "post_step_clean_up.hpp"
 #include "predict_next_state.hpp"
 #include "reset_constraints.hpp"
 #include "solve_system.hpp"
@@ -74,38 +75,7 @@ inline bool Step(
         }
     }
 
-    Kokkos::parallel_for(
-        "UpdateAlgorithmicAcceleration", solver.num_system_nodes,
-        UpdateAlgorithmicAcceleration{
-            state.a,
-            state.vd,
-            parameters.alpha_f,
-            parameters.alpha_m,
-        }
-    );
-
-    Kokkos::parallel_for(
-        "UpdateGlobalPosition", solver.num_system_nodes,
-        UpdateGlobalPosition{
-            state.q,
-            state.x0,
-            state.x,
-        }
-    );
-
-    Kokkos::parallel_for(
-        "CalculateConstraintOutput", constraints.num,
-        CalculateConstraintOutput{
-            constraints.type,
-            constraints.target_node_index,
-            constraints.axes,
-            state.x0,
-            state.q,
-            state.v,
-            state.vd,
-            constraints.output,
-        }
-    );
+    PostStepCleanUp(parameters, solver, state, constraints);
 
     return true;
 }
