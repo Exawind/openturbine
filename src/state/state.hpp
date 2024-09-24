@@ -20,7 +20,7 @@ struct State {
     View_Nx6 a;        //< Algorithmic acceleration
     Kokkos::View<double* [6][6]> tangent;
 
-    State(size_t num_system_nodes_)
+    explicit State(size_t num_system_nodes_)
         : num_system_nodes(num_system_nodes_),
           ID("ID", num_system_nodes),
           x0("x0", num_system_nodes),
