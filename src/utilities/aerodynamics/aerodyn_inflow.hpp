@@ -77,7 +77,7 @@ struct EnvironmentalConditions {
     float msl_offset{0.f};         //< Mean sea level to still water level offset (m)
 };
 
-/// Struct to hold the initial settings for the turbine (assuming a single turbine and three blades)
+/// Struct to hold the initial settings for the turbine
 struct TurbineSettings {
     int n_turbines{1};                                      //< Number of turbines - 1 by default
     int n_blades{3};                                        //< Number of blades - 3 by default
@@ -85,11 +85,13 @@ struct TurbineSettings {
     std::array<double, 9> initial_hub_orientation{0.};      //< Initial hub orientation
     std::array<float, 3> initial_nacelle_position{0.};      //< Initial nacelle position
     std::array<double, 9> initial_nacelle_orientation{0.};  //< Initial nacelle orientation
-    std::array<float, 3> initial_root_position{0.};         //< Initial root position
-    std::array<double, 9> initial_root_orientation{0.};     //< Initial root orientation
+    std::vector<std::array<float, 3>> initial_root_position{//< Initial root positions of blades
+                                                            static_cast<size_t>(n_blades)};
+    std::vector<std::array<double, 9>> initial_root_orientation{//< Initial root orientations
+                                                                static_cast<size_t>(n_blades)};
 };
 
-/// Struct to hold the settings for the simulation controls
+/// Struct to hold the settings for simulation controls
 struct SimulationControls {
     static constexpr size_t kDefaultStringLength{1025};  //< Max length for output filenames
 
@@ -262,7 +264,7 @@ struct MeshMotionData {
  *
  * Canonical workflow for using the AeroDyn x InflowWind C++ wrapper:
  *   1.  Instantiate the AeroDynInflowLibrary class
- *           - Modify the settings as needed
+ *           - Modify the settings from defaults as needed
  *           - Set input files for AeroDyn and InflowWind (from file or as strings)
  *   2.  Initialize the AeroDyn Fortran library via the following steps:
  *           - PreInitialize()  -- pre-initialize the AeroDyn library i.e. set number of turbines
@@ -320,7 +322,9 @@ struct AeroDynInflowLibrary {
             "ADI_C_SetupRotor"
         );
 
-        // Flatten mesh arrays
+        // Flatten arrays to pass to the Fortran routine
+        auto initial_root_position_flat = FlattenArray(turbine_settings.initial_root_position);
+        auto initial_root_orientation_flat = FlattenArray(turbine_settings.initial_root_orientation);
         auto init_mesh_pos_flat = FlattenArray(structural_mesh.initial_mesh_position);
         auto init_mesh_orient_flat = FlattenArray(structural_mesh.initial_mesh_orientation);
 
@@ -332,14 +336,13 @@ struct AeroDynInflowLibrary {
             turbine_settings.initial_hub_orientation.data(),   // input: initial hub orientation
             turbine_settings.initial_nacelle_position.data(),  // input: initial nacelle position
             turbine_settings.initial_nacelle_orientation.data(
-            ),                                              // input: initial nacelle orientation
-            &turbine_settings.n_blades,                     // input: number of blades
-            turbine_settings.initial_root_position.data(),  // input: initial blade root positions
-            turbine_settings.initial_root_orientation.data(
-            ),                               // input: initial blade root orientation
-            &structural_mesh.n_mesh_points,  // input: number of mesh points
-            init_mesh_pos_flat.data(),       // input: initial node positions
-            init_mesh_orient_flat.data(),    // input: initial node orientation
+            ),                                     // input: initial nacelle orientation
+            &turbine_settings.n_blades,            // input: number of blades
+            initial_root_position_flat.data(),     // input: initial blade root positions
+            initial_root_orientation_flat.data(),  // input: initial blade root orientation
+            &structural_mesh.n_mesh_points,        // input: number of mesh points
+            init_mesh_pos_flat.data(),             // input: initial node positions
+            init_mesh_orient_flat.data(),          // input: initial node orientation
             structural_mesh.mesh_point_to_blade_num.data(
             ),                                   // input: initial mesh point to blade number mapping
             &error_handling.error_status,        // output: Error status
@@ -437,7 +440,7 @@ struct AeroDynInflowLibrary {
             static_cast<size_t>(structural_mesh.initial_mesh_position.size())
         );
 
-        // Flatten the arrays to pass
+        // Flatten the arrays to pass to the Fortran routine
         auto hub_pos_flat = FlattenArray(hub_motion.position);
         auto hub_orient_flat = FlattenArray(hub_motion.orientation);
         auto hub_vel_flat = FlattenArray(hub_motion.velocity);
