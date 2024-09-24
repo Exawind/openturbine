@@ -10,7 +10,7 @@
 
 namespace openturbine {
 
-inline void UpdateTangentOperator(StepParameters& parameters, State& state) {
+inline void UpdateTangentOperator(const StepParameters& parameters, const State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Tangent Operator");
     Kokkos::parallel_for(
         "CalculateTangentOperator", state.num_system_nodes,

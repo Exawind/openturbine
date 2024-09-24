@@ -9,7 +9,7 @@
 #include "src/solver/solver.hpp"
 
 namespace openturbine {
-inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) {
+inline void AssembleConstraintsMatrix(Solver& solver, const Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Matrix");
 
     if (constraints.num == 0) {

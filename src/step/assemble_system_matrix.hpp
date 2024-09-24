@@ -15,7 +15,7 @@
 
 namespace openturbine {
 
-inline void AssembleSystemMatrix(Solver& solver, Beams& beams) {
+inline void AssembleSystemMatrix(Solver& solver, const Beams& beams) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System Matrix");
 
     const auto num_rows = solver.num_system_dofs;

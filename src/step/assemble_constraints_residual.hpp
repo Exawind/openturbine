@@ -10,7 +10,7 @@
 
 namespace openturbine {
 
-inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints) {
+inline void AssembleConstraintsResidual(const Solver& solver, const Constraints& constraints) {
     auto resid_region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Residual");
 
     if (constraints.num == 0) {

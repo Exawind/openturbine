@@ -10,7 +10,7 @@
 
 namespace openturbine {
 
-inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
+inline void UpdateConstraintVariables(const State& state, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Constraint Variables");
 
     if (constraints.num == 0) {

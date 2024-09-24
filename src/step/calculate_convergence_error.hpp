@@ -9,7 +9,7 @@
 
 namespace openturbine {
 
-inline double CalculateConvergenceError(Solver& solver, State& state) {
+inline double CalculateConvergenceError(const Solver& solver, const State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Calculate Convergence Error");
     const double atol = 1e-7;
     const double rtol = 1e-5;

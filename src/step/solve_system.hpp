@@ -10,7 +10,7 @@
 
 namespace openturbine {
 
-inline void SolveSystem(StepParameters& parameters, Solver& solver) {
+inline void SolveSystem(const StepParameters& parameters, Solver& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Solve System");
 
     {

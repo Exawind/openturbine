@@ -16,7 +16,7 @@
 
 namespace openturbine {
 
-inline void UpdateSystemVariables(StepParameters& parameters, const Beams& beams, State& state) {
+inline void UpdateSystemVariables(const StepParameters& parameters, const Beams& beams, const State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update System Variables");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(

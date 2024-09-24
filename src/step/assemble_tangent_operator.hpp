@@ -10,7 +10,7 @@
 
 namespace openturbine {
 
-inline void AssembleTangentOperator(Solver& solver, State& state) {
+inline void AssembleTangentOperator(const Solver& solver, const State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Tangent Operator");
 
     const auto num_rows = solver.num_system_dofs;

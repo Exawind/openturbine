@@ -9,7 +9,7 @@
 
 namespace openturbine {
 
-inline void UpdateConstraintPrediction(Solver& solver, Constraints& constraints) {
+inline void UpdateConstraintPrediction(const Solver& solver, const Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Constraint Prediction");
     const auto x_lambda =
         Kokkos::subview(solver.x, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs));

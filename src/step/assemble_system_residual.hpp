@@ -9,7 +9,7 @@
 
 namespace openturbine {
 
-inline void AssembleSystemResidual(Solver& solver, Beams& beams) {
+inline void AssembleSystemResidual(const Solver& solver, const Beams& beams) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System Residual");
 
     const auto num_rows = solver.num_system_dofs;
