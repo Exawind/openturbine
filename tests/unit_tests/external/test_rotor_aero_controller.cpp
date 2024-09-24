@@ -226,7 +226,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Remove output directory for writing step data
 #ifdef OpenTurbine_ENABLE_VTK
-    std::filesystem::path step_dir("steps/IEA15RotorAeroController");
+    const std::filesystem::path step_dir("steps/IEA15RotorAeroController");
     RemoveDirectoryWithRetries(step_dir);
     std::filesystem::create_directory(step_dir);
 
