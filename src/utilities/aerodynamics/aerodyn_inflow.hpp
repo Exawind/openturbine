@@ -461,6 +461,34 @@ struct AeroDynInflowLibrary {
         error_handling.CheckError();
     }
 
+    // Wrapper for ADI_C_GetRotorLoads routine to get aerodynamic loads on the rotor
+    void ADI_GetRotorLoads(
+        int turbine_number, std::vector<std::array<float, 6>>& mesh_force_moment
+    ) {
+        auto ADI_C_GetRotorLoads =
+            this->lib.get_function<void(int*, int*, float*, int*, char*)>("ADI_C_GetRotorLoads");
+
+        // Flatten the mesh force/moment array
+        auto mesh_force_moment_flat = FlattenArray(mesh_force_moment);
+
+        ADI_C_GetRotorLoads(
+            &turbine_number,                     // input: current turbine number
+            &structural_mesh.n_mesh_points,      // input: number of mesh points
+            mesh_force_moment_flat.data(),       // output: mesh force/moment array
+            &error_handling.error_status,        // output: error status
+            error_handling.error_message.data()  // output: error message buffer
+        );
+
+        error_handling.CheckError();
+
+        // Copy the flattened array back to the original array
+        for (size_t i = 0; i < mesh_force_moment.size(); ++i) {
+            for (size_t j = 0; j < 6; ++j) {
+                mesh_force_moment[i][j] = mesh_force_moment_flat[i * 6 + j];
+            }
+        }
+    }
+
 private:
     /// Method to flatten a 2D array into a 1D array for Fortran compatibility
     template <typename T, size_t N>
