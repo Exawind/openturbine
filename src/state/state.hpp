@@ -10,6 +10,8 @@ namespace openturbine {
 struct State {
     size_t num_system_nodes;  //< Number of system nodes
     Kokkos::View<size_t*> ID;
+    View_Nx7 x0;       //< Initial global position/rotation
+    View_Nx7 x;        //< Current global position/rotation
     View_Nx6 q_delta;  //< Displacement increment
     View_Nx7 q_prev;   //< Previous state
     View_Nx7 q;        //< Current state
@@ -21,6 +23,8 @@ struct State {
     State(size_t num_system_nodes_)
         : num_system_nodes(num_system_nodes_),
           ID("ID", num_system_nodes),
+          x0("x0", num_system_nodes),
+          x("x", num_system_nodes),
           q_delta("q_delta", num_system_nodes),
           q_prev("q_prev", num_system_nodes),
           q("q", num_system_nodes),

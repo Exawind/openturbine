@@ -20,8 +20,7 @@ struct CalculateConstraintResidualGradient {
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3]>::const_type X0_;
     Kokkos::View<double* [3][3]>::const_type axes;
-    Kokkos::View<double*>::const_type control;
-    Kokkos::View<double* [7]>::const_type constraint_u;
+    Kokkos::View<double* [7]>::const_type constraint_inputs;
     Kokkos::View<double* [7]>::const_type node_u;
     Kokkos::View<double* [6]> residual_terms;
     Kokkos::View<double* [6][6]> base_gradient_terms;
@@ -30,25 +29,28 @@ struct CalculateConstraintResidualGradient {
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
         if (type(i_constraint) == ConstraintType::kFixedBC) {
-            CalculateFixedBCConstraint{target_node_index,    X0_,    control,
-                                       constraint_u,         node_u, residual_terms,
-                                       target_gradient_terms}(i_constraint);
+            CalculateFixedBCConstraint{target_node_index, X0_,
+                                       constraint_inputs, node_u,
+                                       residual_terms,    target_gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kPrescribedBC) {
-            CalculatePrescribedBCConstraint{target_node_index,    X0_,    control,
-                                            constraint_u,         node_u, residual_terms,
-                                            target_gradient_terms}(i_constraint);
+            CalculatePrescribedBCConstraint{target_node_index, X0_,
+                                            constraint_inputs, node_u,
+                                            residual_terms,    target_gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kRigidJoint) {
-            CalculateRigidJointConstraint{
-                base_node_index, target_node_index,   X0_,
-                control,         constraint_u,        node_u,
-                residual_terms,  base_gradient_terms, target_gradient_terms}(i_constraint);
+            CalculateRigidJointConstraint{base_node_index,
+                                          target_node_index,
+                                          X0_,
+                                          constraint_inputs,
+                                          node_u,
+                                          residual_terms,
+                                          base_gradient_terms,
+                                          target_gradient_terms}(i_constraint);
         } else if (type(i_constraint) == ConstraintType::kRevoluteJoint) {
             CalculateRevoluteJointConstraint{base_node_index,
                                              target_node_index,
                                              X0_,
                                              axes,
-                                             control,
-                                             constraint_u,
+                                             constraint_inputs,
                                              node_u,
                                              residual_terms,
                                              base_gradient_terms,
@@ -58,8 +60,7 @@ struct CalculateConstraintResidualGradient {
                                                target_node_index,
                                                X0_,
                                                axes,
-                                               control,
-                                               constraint_u,
+                                               constraint_inputs,
                                                node_u,
                                                residual_terms,
                                                base_gradient_terms,

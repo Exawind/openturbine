@@ -12,8 +12,7 @@ namespace openturbine {
 struct CalculatePrescribedBCConstraint {
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3]>::const_type X0_;
-    Kokkos::View<double*>::const_type control;
-    Kokkos::View<double* [7]>::const_type constraint_u;
+    Kokkos::View<double* [7]>::const_type constraint_inputs;
     Kokkos::View<double* [7]>::const_type node_u;
     Kokkos::View<double* [6]> residual_terms;
     Kokkos::View<double* [6][6]> target_gradient_terms;
@@ -29,13 +28,13 @@ struct CalculatePrescribedBCConstraint {
 
         // Base node displacement
         const auto u1_data = Kokkos::Array<double, 3>{
-            constraint_u(i_constraint, 0), constraint_u(i_constraint, 1),
-            constraint_u(i_constraint, 2)};
+            constraint_inputs(i_constraint, 0), constraint_inputs(i_constraint, 1),
+            constraint_inputs(i_constraint, 2)};
         auto u1 = View_3::const_type{u1_data.data()};
 
         const auto R1_data = Kokkos::Array<double, 4>{
-            constraint_u(i_constraint, 3), constraint_u(i_constraint, 4),
-            constraint_u(i_constraint, 5), constraint_u(i_constraint, 6)};
+            constraint_inputs(i_constraint, 3), constraint_inputs(i_constraint, 4),
+            constraint_inputs(i_constraint, 5), constraint_inputs(i_constraint, 6)};
         const auto R1 = Kokkos::View<double[4]>::const_type{R1_data.data()};
 
         // Target node displacement

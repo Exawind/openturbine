@@ -19,7 +19,6 @@
 #include "src/beams/create_beams.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
-#include "src/state/copy_nodes_to_state.hpp"
 #include "src/state/state.hpp"
 #include "src/step/step.hpp"
 #include "src/types.hpp"
@@ -46,16 +45,22 @@ void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::strin
 
 // Mass matrix for uniform composite beam section
 constexpr auto mass_matrix = std::array{
-    std::array{8.538e-2, 0., 0., 0., 0., 0.},   std::array{0., 8.538e-2, 0., 0., 0., 0.},
-    std::array{0., 0., 8.538e-2, 0., 0., 0.},   std::array{0., 0., 0., 1.4433e-2, 0., 0.},
-    std::array{0., 0., 0., 0., 0.40972e-2, 0.}, std::array{0., 0., 0., 0., 0., 1.0336e-2},
+    std::array{8.538e-2, 0., 0., 0., 0., 0.},    //
+    std::array{0., 8.538e-2, 0., 0., 0., 0.},    //
+    std::array{0., 0., 8.538e-2, 0., 0., 0.},    //
+    std::array{0., 0., 0., 1.4433e-2, 0., 0.},   //
+    std::array{0., 0., 0., 0., 0.40972e-2, 0.},  //
+    std::array{0., 0., 0., 0., 0., 1.0336e-2},
 };
 
 // create a unity mass matrix
 constexpr auto mass_matrix_unity = std::array{
-    std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
-    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
-    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.},
+    std::array{1., 0., 0., 0., 0., 0.},  //
+    std::array{0., 1., 0., 0., 0., 0.},  //
+    std::array{0., 0., 1., 0., 0., 0.},  //
+    std::array{0., 0., 0., 1., 0., 0.},  //
+    std::array{0., 0., 0., 0., 1., 0.},  //
+    std::array{0., 0., 0., 0., 0., 1.},
 };
 
 // Stiffness matrix for uniform composite beam section
@@ -70,9 +75,12 @@ constexpr auto stiffness_matrix = std::array{
 
 // create a unit stiffness matrix
 constexpr auto stiffness_matrix_unity = std::array{
-    std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
-    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
-    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.},
+    std::array{1., 0., 0., 0., 0., 0.},  //
+    std::array{0., 1., 0., 0., 0., 0.},  //
+    std::array{0., 0., 1., 0., 0., 0.},  //
+    std::array{0., 0., 0., 1., 0., 0.},  //
+    std::array{0., 0., 0., 0., 1., 0.},  //
+    std::array{0., 0., 0., 0., 0., 1.},
 };
 
 // Node locations (GLL quadrature)
@@ -142,8 +150,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes());
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
@@ -247,8 +254,7 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     // Create solver with initial node state
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes());
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
@@ -367,8 +373,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
 
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes());
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
@@ -454,8 +459,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
 
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes());
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
@@ -527,8 +531,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes());
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
@@ -631,8 +634,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
 
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes());
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
@@ -682,12 +684,16 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
 
 void GeneratorTorqueWithAxisTilt(
     double tilt, const std::vector<double>& expected_azimuth_q,
-    const std::vector<double>& expected_azimuth_vel
+    const std::vector<double>& expected_azimuth_vel,
+    const std::vector<double>& expected_revolute_joint_output
 ) {
     auto model = Model();
 
     // Gravity vector - assume no gravity
     constexpr auto gravity = std::array{0., 0., 0.};
+
+    // Calculate tilt about x axis as a quaternion
+    auto node_tilt = RotationVectorToQuaternion({tilt, 0., 0.});
 
     // Build vector of nodes (straight along x axis, no rotation)
     std::vector<BeamNode> beam_nodes;
@@ -696,15 +702,16 @@ void GeneratorTorqueWithAxisTilt(
         [&](auto s) {
             const auto x = 10 * s + 2.;
             return BeamNode(
-                s, *model.AddNode({x, std::sin(tilt), std::cos(tilt), 1., 0., 0., 0.}  // position
+                s, *model.AddNode(
+                       {x, std::sin(tilt), std::cos(tilt), node_tilt[0], node_tilt[1], node_tilt[2],
+                        node_tilt[3]}  // position
                    )
             );
         }
     );
 
     // Define beam initialization
-    const auto beams_input =
-        BeamsInput({BeamElement(beam_nodes, sections_unity, quadrature)}, gravity);
+    const auto beams_input = BeamsInput({BeamElement(beam_nodes, sections, quadrature)}, gravity);
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
@@ -718,8 +725,8 @@ void GeneratorTorqueWithAxisTilt(
     model.AddFixedBC(*shaft_base);  // Fixed shaft base
 
     // Add torque to the azimuth node to simulate generator torque
-    auto torque = 1.e3;
-    model.AddRevoluteJointConstraint(  // Azimuth can rotate around shaft base
+    auto torque = 100.;
+    auto shaft_rj = model.AddRevoluteJointConstraint(  // Azimuth can rotate around shaft base
         *shaft_base, *azimuth, {0., std::sin(tilt), std::cos(tilt)}, &torque
     );
 
@@ -730,7 +737,7 @@ void GeneratorTorqueWithAxisTilt(
     const bool is_dynamic_solve(true);
     const int max_iter(5);
     const double step_size(0.01);  // seconds
-    const double rho_inf(0.9);
+    const double rho_inf(0.);
 
     // Create solver
     auto nodes_vector = std::vector<Node>{};
@@ -745,8 +752,7 @@ void GeneratorTorqueWithAxisTilt(
 
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
-    auto state = State(model.NumNodes());
-    CopyNodesToState(state, model.GetNodes());
+    auto state = model.CreateState();
     auto solver = Solver(
         state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
@@ -780,17 +786,31 @@ void GeneratorTorqueWithAxisTilt(
     auto azimuth_vel = Kokkos::View<double[6]>("azimuth_vel");
     Kokkos::deep_copy(azimuth_vel, Kokkos::subview(state.v, azimuth->ID, Kokkos::ALL));
     expect_kokkos_view_1D_equal(azimuth_vel, expected_azimuth_vel);
+
+    // Get revolute joint output
+    auto revolute_joint_out = Kokkos::View<double[3]>("revolute_joint_out");
+    Kokkos::deep_copy(
+        revolute_joint_out, Kokkos::subview(constraints.output, shaft_rj->ID, Kokkos::ALL)
+    );
+    // Check output (azimuth, angular velocity, angular acceleration)
+    expect_kokkos_view_1D_equal(revolute_joint_out, expected_revolute_joint_output);
 }
 
 TEST(RotatingBeamTest, GeneratorTorque_Tilt0) {
     GeneratorTorqueWithAxisTilt(
-        0., {0., 0., 0., -0.140339, 0., 0., -0.990104}, {0., 0., 0., 0., 0., -87.066040}
+        0.,                                            // Shaft tilt
+        {0., 0., 0., 0.99998634, 0., 0., -0.0052267},  // Azimuth node rotational displacement
+        {0., 0., 0., 0., 0., -0.18978539},             // Azimuth node rotational velocity
+        {-0.01045353, -0.18978539, -0.566558}          // Shaft angular rotation, velocity, accel
     );
 }
 
 TEST(RotatingBeamTest, GeneratorTorque_Tilt90) {
     GeneratorTorqueWithAxisTilt(
-        M_PI / 2., {0., 0., 0., -0.140339, 0., -0.990104, 0.}, {0., 0., 0., 0., -87.066040, 0.}
+        M_PI / 2.,                                     // Shaft tilt
+        {0., 0., 0., 0.99998634, 0., -0.0052267, 0.},  // Azimuth node rotational displacement
+        {0., 0., 0., 0., -0.18978539, 0.},             // Azimuth node rotational velocity
+        {-0.01045353, -0.18978539, -0.566560}          // Shaft angular rotation, velocity, accel
     );
 }
 

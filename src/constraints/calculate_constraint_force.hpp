@@ -13,7 +13,7 @@ struct CalculateConstraintForce {
     Kokkos::View<ConstraintType*>::const_type type;
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3][3]>::const_type axes;
-    Kokkos::View<double*>::const_type control;
+    Kokkos::View<double* [7]>::const_type inputs;
     Kokkos::View<double* [7]>::const_type node_u;
     Kokkos::View<double* [6]> system_residual_terms;
 
@@ -23,7 +23,7 @@ struct CalculateConstraintForce {
             case ConstraintType::kRevoluteJoint: {
                 // Applies the torque from a revolute joint constraint to the system residual
                 CalculateRevoluteJointForce{
-                    target_node_index, axes, control, node_u, system_residual_terms}(i_constraint);
+                    target_node_index, axes, inputs, node_u, system_residual_terms}(i_constraint);
             } break;
             default: {
                 // Do nothing

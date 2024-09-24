@@ -2,10 +2,12 @@
 
 #include <functional>
 
+#include "copy_nodes_to_state.hpp"
 #include "node.hpp"
 
 #include "src/beams/beam_element.hpp"
 #include "src/constraints/constraint.hpp"
+#include "src/state/state.hpp"
 #include "src/types.hpp"
 
 namespace openturbine {
@@ -143,6 +145,13 @@ public:
 
     /// Returns the number of constraints in the model
     [[nodiscard]] size_t NumConstraints() const { return this->constraints_.size(); }
+
+    // Returns a State object initialized from the model nodes
+    [[nodiscard]] State CreateState() const {
+        auto state = State(this->nodes_.size());
+        CopyNodesToState(state, this->nodes_);
+        return state;
+    }
 
 private:
     std::vector<std::shared_ptr<Node>> nodes_;                 //< Nodes in the model
