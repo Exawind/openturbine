@@ -10,10 +10,11 @@
 namespace openturbine::util {
 
 /**
- * C++ wrapper for interfacing with the AeroDyn Inflow (ADI) shared library, a Fortran-based
- * library that exposes C-bindings for the AeroDyn and InflowWind modules of OpenFAST. This
- * wrapper simplifies interaction with the ADI library (particularly the C-based interface),
- * providing a user-friendly interface for OpenTurbine developers to run AeroDyn with InflowWind.
+ * Following contains a C++ wrapper to interact with the AeroDyn Inflow (ADI) shared library,
+ * originally written in Fortran, that exposes C-bindings for the AeroDyn and InflowWind modules of
+ * OpenFAST. This wrapper simplifies interaction with the ADI library (particularly the C-based
+ * interface, with inspiration from the python interface), providing a modern interface for
+ * OpenTurbine devs to run AeroDyn x InflowWind.
  *
  * AeroDyn utilizes blade element momentum (BEM) theory to calculate aerodynamic forces acting
  * on each blade section. It accounts for factors such as:
@@ -30,10 +31,10 @@ namespace openturbine::util {
  *  - Free vortex wake
  *
  * References:
+ * - OpenFAST/AeroDyn:
+ *   https://github.com/OpenFAST/openfast/tree/main/modules/aerodyn
  * - AeroDyn InflowWind C bindings:
  *   https://github.com/OpenFAST/openfast/blob/dev/modules/aerodyn/src/AeroDyn_Inflow_C_Binding.f90
- * - AeroDyn InflowWind Python interface:
- *   https://github.com/OpenFAST/openfast/blob/dev/modules/aerodyn/python-lib/aerodyn_inflow_library.py
  */
 
 /// Struct for error handling settings
@@ -47,7 +48,7 @@ struct ErrorHandling {
         kFatalError = 4
     };
 
-    static constexpr size_t kErrorMessagesLength = 1025U;  //< Max error message length
+    static constexpr size_t kErrorMessagesLength{1025U};  //< Max error message length
     int abort_error_level{
         static_cast<int>(ErrorLevel::kFatalError)  //< Error level at which to abort
     };
@@ -93,8 +94,8 @@ struct SimulationControls {
     static constexpr size_t kDefaultStringLength{1025};  //< Max length for output filenames
 
     // Input file handling
-    int aerodyn_input_passed{true};     //< Flag to check if input file passed for AeroDyn module
-    int inflowwind_input_passed{true};  //< Flag to check if input file passed for InflowWind module
+    int aerodyn_input_passed{1};     //< Input file passed for AeroDyn module? (1: passed)
+    int inflowwind_input_passed{1};  //< Input file passed for InflowWind module (1: passed)
 
     // Interpolation order (must be either 1: linear, or 2: quadratic)
     int interpolation_order{1};  //< Interpolation order - linear by default
