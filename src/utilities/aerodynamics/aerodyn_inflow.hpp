@@ -512,6 +512,22 @@ struct AeroDynInflowLibrary {
         output_channel_values = output_channel_values_c;
     }
 
+    // Wrapper for ADI_C_UpdateStates routine to calculate output forces at a given time
+    void ADI_C_UpdateStates(double time, double time_next) {
+        auto ADI_C_UpdateStates =
+            this->lib.get_function<void(double*, double*, int*, char*)>("ADI_C_UpdateStates");
+
+        // Run ADI_C_UpdateStates
+        ADI_C_UpdateStates(
+            &time,                               // input: time at which to calculate output forces
+            &time_next,                          // input: time T+dt we are stepping to
+            &error_handling.error_status,        // output: error status
+            error_handling.error_message.data()  // output: error message buffer
+        );
+
+        error_handling.CheckError();
+    }
+
 private:
     /// Method to flatten a 2D array into a 1D array for Fortran compatibility
     template <typename T, size_t N>
