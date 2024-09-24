@@ -394,7 +394,7 @@ struct AeroDynInflowLibrary {
     // Wrapper for ADI_SetRotorMotion routine to set rotor motion i.e. motion of the hub, nacelle,
     // root, and mesh points from the structural mesh
     void ADI_C_SetRotorMotion(
-        int turbine_number, MotionData hub_motion, MotionData nacelle_motion,
+        int turbine_number, MeshMotionData hub_motion, MeshMotionData nacelle_motion,
         MeshMotionData root_motion, MeshMotionData mesh_motion
     ) {
         auto ADI_C_SetRotorMotion = this->lib.get_function<
@@ -402,7 +402,29 @@ struct AeroDynInflowLibrary {
             "ADI_C_SetRotorMotion"
         );
 
-        // Flatten root and mesh motion arrays
+        // Check the input motions for hub, nacelle, root, and mesh points
+        hub_motion.CheckHubNacelleInputMotions("hub");
+        nacelle_motion.CheckHubNacelleInputMotions("nacelle");
+        root_motion.CheckRootInputMotions(
+            static_cast<size_t>(turbine_settings.n_blades),
+            static_cast<size_t>(turbine_settings.initial_root_position.size())
+        );
+        mesh_motion.CheckMeshInputMotions(
+            static_cast<size_t>(structural_mesh.n_mesh_points),
+            static_cast<size_t>(structural_mesh.initial_mesh_position.size())
+        );
+
+        // Flatten the arrays to pass
+        auto hub_pos_flat = FlattenArray(hub_motion.position);
+        auto hub_orient_flat = FlattenArray(hub_motion.orientation);
+        auto hub_vel_flat = FlattenArray(hub_motion.velocity);
+        auto hub_acc_flat = FlattenArray(hub_motion.acceleration);
+
+        auto nacelle_pos_flat = FlattenArray(nacelle_motion.position);
+        auto nacelle_orient_flat = FlattenArray(nacelle_motion.orientation);
+        auto nacelle_vel_flat = FlattenArray(nacelle_motion.velocity);
+        auto nacelle_acc_flat = FlattenArray(nacelle_motion.acceleration);
+
         auto root_pos_flat = FlattenArray(root_motion.position);
         auto root_orient_flat = FlattenArray(root_motion.orientation);
         auto root_vel_flat = FlattenArray(root_motion.velocity);
@@ -413,36 +435,16 @@ struct AeroDynInflowLibrary {
         auto mesh_vel_flat = FlattenArray(mesh_motion.velocity);
         auto mesh_acc_flat = FlattenArray(mesh_motion.acceleration);
 
-        // Checck the input motions
-        // CheckHubNacelleInputMotions(
-        //     hub_motion.position, hub_motion.orientation, hub_motion.velocity,
-        //     hub_motion.acceleration, "hub"
-        // );
-        // CheckHubNacelleInputMotions(
-        //     nacelle_motion.position, nacelle_motion.orientation, nacelle_motion.velocity,
-        //     nacelle_motion.acceleration, "nacelle"
-        // );
-        // CheckRootInputMotions(
-        //     root_motion.position, root_motion.orientation, root_motion.velocity,
-        //     root_motion.acceleration, structural_mesh.n_mesh_points,
-        //     structural_mesh.initial_mesh_position.size()
-        // );
-        // CheckMeshInputMotions(
-        //     mesh_motion.position, mesh_motion.orientation, mesh_motion.velocity,
-        //     mesh_motion.acceleration, structural_mesh.n_mesh_points,
-        //     structural_mesh.initial_mesh_position.size()
-        // );
-
         ADI_C_SetRotorMotion(
             &turbine_number,                     // input: current turbine number
-            hub_motion.position.data(),          // input: hub position
-            hub_motion.orientation.data(),       // input: hub orientation
-            hub_motion.velocity.data(),          // input: hub velocity
-            hub_motion.acceleration.data(),      // input: hub acceleration
-            nacelle_motion.position.data(),      // input: nacelle position
-            nacelle_motion.orientation.data(),   // input: nacelle orientation
-            nacelle_motion.velocity.data(),      // input: nacelle velocity
-            nacelle_motion.acceleration.data(),  // input: nacelle acceleration
+            hub_pos_flat.data(),                 // input: hub positions
+            hub_orient_flat.data(),              // input: hub orientations
+            hub_vel_flat.data(),                 // input: hub velocities
+            hub_acc_flat.data(),                 // input: hub accelerations
+            nacelle_pos_flat.data(),             // input: nacelle positions
+            nacelle_orient_flat.data(),          // input: nacelle orientations
+            nacelle_vel_flat.data(),             // input: nacelle velocities
+            nacelle_acc_flat.data(),             // input: nacelle accelerations
             root_pos_flat.data(),                // input: root positions
             root_orient_flat.data(),             // input: root orientations
             root_vel_flat.data(),                // input: root velocities
@@ -470,52 +472,39 @@ private:
         return output;
     }
 
+    /// Template method to validate array size and flatten it
+    template <typename T, size_t N>
+    std::vector<T> ValidateAndFlattenArray(
+        const std::vector<std::array<T, N>>& array, size_t num_pts, const std::string& array_name
+    ) {
+        if (array.size() != num_pts) {
+            std::cerr << "The number of mesh points in the " << array_name
+                      << " array changed from the initial value of " << num_pts
+                      << ". This is not permitted during the simulation." << std::endl;
+            // call ADI_End();
+        }
+        return FlattenArray(array);
+    }
+
+    /// Flatten and validate position array
     std::vector<float> FlattenPositionArray(
-        const std::vector<std::vector<float>>& position_array, size_t num_pts
+        const std::vector<std::array<float, 3>>& position_array, size_t num_pts
     ) {
-        if (position_array.size() != num_pts) {
-            std::cerr << "The number of mesh points changed from the initial value of " << num_pts
-                      << ". This is not permitted during the simulation." << std::endl;
-            // call ADI_End();
-        }
-
-        std::vector<float> mesh_pos_flat;
-        for (const auto& pos : position_array) {
-            mesh_pos_flat.insert(mesh_pos_flat.end(), pos.begin(), pos.end());
-        }
-        return mesh_pos_flat;
+        return ValidateAndFlattenArray(position_array, num_pts, "position");
     }
 
+    /// Flatten and validate orientation array
     std::vector<double> FlattenOrientationArray(
-        const std::vector<std::vector<double>>& orientation_array, size_t num_pts
+        const std::vector<std::array<double, 9>>& orientation_array, size_t num_pts
     ) {
-        if (orientation_array.size() != num_pts) {
-            std::cerr << "The number of mesh points changed from the initial value of " << num_pts
-                      << ". This is not permitted during the simulation." << std::endl;
-            // call ADI_End();
-        }
-
-        std::vector<double> mesh_orient_flat;
-        for (const auto& orient : orientation_array) {
-            mesh_orient_flat.insert(mesh_orient_flat.end(), orient.begin(), orient.end());
-        }
-        return mesh_orient_flat;
+        return ValidateAndFlattenArray(orientation_array, num_pts, "orientation");
     }
 
+    /// Flatten and validate velocity array
     std::vector<float> FlattenVelocityArray(
-        const std::vector<std::vector<float>>& velocity_array, size_t num_pts
+        const std::vector<std::array<float, 6>>& velocity_array, size_t num_pts
     ) {
-        if (velocity_array.size() != num_pts) {
-            std::cerr << "The number of mesh points changed from the initial value of " << num_pts
-                      << ". This is not permitted during the simulation." << std::endl;
-            // call ADI_End();
-        }
-
-        std::vector<float> mesh_vel_flat;
-        for (const auto& vel : velocity_array) {
-            mesh_vel_flat.insert(mesh_vel_flat.end(), vel.begin(), vel.end());
-        }
-        return mesh_vel_flat;
+        return ValidateAndFlattenArray(velocity_array, num_pts, "velocity");
     }
 
     /// Method to join a vector of strings into a single string with a delimiter
@@ -525,118 +514,6 @@ private:
             output += str + delimiter;
         }
         return output;
-    }
-
-    template <typename T>
-    void CheckArraySize(
-        const std::vector<std::vector<T>>& array, size_t expected_rows, size_t expected_cols,
-        const std::string& array_name, const std::string& node_type
-    ) {
-        // Check row count first
-        if (array.size() != expected_rows) {
-            std::cerr << "Expecting a " << expected_rows << "x" << expected_cols << " array of "
-                      << node_type << " " << array_name << " with " << expected_rows << " rows."
-                      << std::endl;
-            // call ADI_End();
-        }
-
-        // Check column count only on the first row to avoid redundant checks
-        if (!array.empty() && array[0].size() != expected_cols) {
-            std::cerr << "Expecting a " << expected_rows << "x" << expected_cols << " array of "
-                      << node_type << " " << array_name << " with " << expected_cols << " columns."
-                      << std::endl;
-            // call ADI_End();
-        }
-    }
-
-    void CheckInputMotions(
-        const std::vector<std::vector<float>>& position_array,
-        const std::vector<std::vector<double>>& orientation_array,
-        const std::vector<std::vector<float>>& velocity_array,
-        const std::vector<std::vector<float>>& accleration_array, const std::string& node_type,
-        size_t expected_position_dim, size_t expected_orientation_dim, size_t expected_VelAcceln_dim,
-        size_t expected_number_of_nodes
-    ) {
-        CheckArraySize(
-            position_array, expected_number_of_nodes, expected_position_dim, "positions", node_type
-        );
-        CheckArraySize(
-            orientation_array, expected_number_of_nodes, expected_orientation_dim, "orientations",
-            node_type
-        );
-        CheckArraySize(
-            velocity_array, expected_number_of_nodes, expected_VelAcceln_dim, "velocities", node_type
-        );
-        CheckArraySize(
-            accleration_array, expected_number_of_nodes, expected_VelAcceln_dim, "accelerations",
-            node_type
-        );
-    }
-
-    void CheckHubNacelleInputMotions(
-        const std::vector<std::vector<float>>& hubPos,
-        const std::vector<std::vector<double>>& hubOrient,
-        const std::vector<std::vector<float>>& hubVel, const std::vector<std::vector<float>>& hubAcc,
-        const std::string& nodeName
-    ) {
-        // Hub/Nacelle specific checks, where dimensions are 3, 9, and 6 for position, orientation,
-        // and velocities/accelerations
-        const size_t expected_position_dim = 3;
-        const size_t expected_orientation_dim = 9;
-        const size_t expected_VelAcceln_dim = 6;
-        const size_t expected_number_of_nodes = 1;  // Since there is only 1 hub/nacelle node
-
-        CheckInputMotions(
-            hubPos, hubOrient, hubVel, hubAcc, nodeName, expected_position_dim,
-            expected_orientation_dim, expected_VelAcceln_dim, expected_number_of_nodes
-        );
-    }
-
-    void CheckRootInputMotions(
-        const std::vector<std::vector<float>>& root_pos,
-        const std::vector<std::vector<double>>& root_orient,
-        const std::vector<std::vector<float>>& root_vel,
-        const std::vector<std::vector<float>>& root_acc, size_t num_blades, size_t init_num_blades
-    ) {
-        if (num_blades != init_num_blades) {
-            std::cerr << "The number of root points changed from the initial value of "
-                      << init_num_blades << ". This is not permitted during the simulation."
-                      << std::endl;
-            // call ADI_End();
-        }
-
-        const size_t expected_position_dim = 3;
-        const size_t expected_orientation_dim = 9;
-        const size_t expected_vel_acc_dim = 6;
-
-        CheckInputMotions(
-            root_pos, root_orient, root_vel, root_acc, "root", expected_position_dim,
-            expected_orientation_dim, expected_vel_acc_dim, num_blades
-        );
-    }
-
-    void CheckMeshInputMotions(
-        const std::vector<std::vector<float>>& mesh_pos,
-        const std::vector<std::vector<double>>& mesh_orient,
-        const std::vector<std::vector<float>>& mesh_vel,
-        const std::vector<std::vector<float>>& mesh_acc, size_t num_mesh_pts,
-        size_t init_num_mesh_pts
-    ) {
-        if (num_mesh_pts != init_num_mesh_pts) {
-            std::cerr << "The number of mesh points changed from the initial value of "
-                      << init_num_mesh_pts << ". This is not permitted during the simulation."
-                      << std::endl;
-            // call ADI_End();
-        }
-
-        const size_t expected_position_dim = 3;
-        const size_t expected_orientation_dim = 9;
-        const size_t expected_vel_acc_dim = 6;
-
-        CheckInputMotions(
-            mesh_pos, mesh_orient, mesh_vel, mesh_acc, "mesh", expected_position_dim,
-            expected_orientation_dim, expected_vel_acc_dim, num_mesh_pts
-        );
     }
 };
 
