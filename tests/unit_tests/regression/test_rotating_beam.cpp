@@ -20,6 +20,8 @@
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
+#include "src/constraints/constraints.hpp"
+#include "src/step/step_parameters.hpp"
 #include "src/step/step.hpp"
 #include "src/types.hpp"
 

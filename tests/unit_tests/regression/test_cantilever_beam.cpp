@@ -16,6 +16,8 @@
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
 #include "src/step/step.hpp"
+#include "src/step/step_parameters.hpp"
+#include "src/constraints/constraints.hpp"
 #include "src/types.hpp"
 
 namespace openturbine::tests {
