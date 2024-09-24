@@ -6,6 +6,7 @@ add_subdirectory(beams)
 add_subdirectory(model)
 add_subdirectory(regression)
 add_subdirectory(solver)
+add_subdirectory(state)
 add_subdirectory(system)
 
 # Specify the source files for the unit tests

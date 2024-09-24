@@ -4,4 +4,5 @@ target_sources(
     PRIVATE
     # Model-related tests
     test_model.cpp
+    test_copy_nodes_to_state.cpp
 )
