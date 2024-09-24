@@ -5,4 +5,5 @@ target_sources(
     test_calculate_next_state.cpp
     test_calculate_displacement.cpp
     test_update_algorithmic_acceleration.cpp
+    test_update_dynamic_prediction.cpp
 )
