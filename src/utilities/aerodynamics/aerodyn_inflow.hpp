@@ -248,11 +248,36 @@ struct MeshMotionData {
  *
  * @details This class provides an interface for interacting with the AeroDynInflow (ADI) shared
  * library, which is a Fortran library offering C bindings for the AeroDyn x InflowWind modules of
- * OpenFAST. Following functions are ported over from the AeroDyn_Inflow_C_Binding.f90 file:
- * - ADI_C_PreInit: Handles the pre-initialization of the AeroDynInflow module
- * - ADI_C_SetupRotor: Configures rotor-specific parameters before simulation
- * - ADI_C_Init: Initializes the AeroDynInflow module
- * - ADI_C_SetRotorMotion: Updates the rotor's motion during the simulation
+ * OpenFAST.
+ *
+ * Following functions are wrapped in this class:
+ *  - ADI_C_PreInit: Handles the pre-initialization of the AeroDynInflow module
+ *  - ADI_C_SetupRotor: Configures rotor-specific parameters before simulation
+ *  - ADI_C_Init: Initializes the AeroDynInflow module
+ *  - ADI_C_SetRotorMotion: Updates the rotor's motion during the simulation
+ *  - ADI_C_GetRotorLoads: Retrieves the aerodynamic loads acting on the rotor
+ *  - ADI_C_CalcOutput: Calculates the output channels at a given time
+ *  - ADI_C_UpdateStates: Updates the states of the simulation at a given time
+ *  - ADI_C_End: Ends the AeroDynInflow module
+ *
+ * Canonical workflow for using the AeroDyn x InflowWind C++ wrapper:
+ *   1.  Instantiate the AeroDynInflowLibrary class
+ *           - Modify the settings as needed
+ *           - Set input files for AeroDyn and InflowWind (from file or as strings)
+ *   2.  Initialize the AeroDyn Fortran library via the following steps:
+ *           - PreInitialize()  -- pre-initialize the AeroDyn library i.e. set number of turbines
+ *           - SetupRotor()     -- set up rotor-specific parameters i.e. initialize one rotor
+ *                                  (iterate over turbines)
+ *           - Initialize()     -- initialize the AeroDyn library with input files i.e. actually
+ *                                  call ADI to initialize the simulation
+ *   3.  Perform the simulation by iterating over timesteps:
+ *           - SetupRotorMotion()         -- set motions of single turbine (iterate over turbines)
+ *           - UpdateStates()             -- update to next time step
+ *           - CalculateOutputChannels()  -- get outputs
+ *           - GetRotorAerodynamicLoads() -- get loads per rotor (iterate over turbines)
+ *   4. Complete the simulation
+ *         - Call Finalize() to close the AeroDyn library and free memory
+ *         - Handle any resulting errors
  */
 struct AeroDynInflowLibrary {
     util::dylib lib{
@@ -274,7 +299,7 @@ struct AeroDynInflowLibrary {
     }
 
     /// Wrapper for ADI_C_PreInit routine to initialize AeroDyn Inflow library
-    void ADI_PreInit() {
+    void PreInitialize() {
         auto ADI_C_PreInit =
             this->lib.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
         ADI_C_PreInit(
@@ -289,9 +314,7 @@ struct AeroDynInflowLibrary {
     }
 
     /// Wrapper for ADI_C_SetupRotor routine to set up the rotor
-    void ADI_SetupRotor(
-        int turbine_number, int is_horizontal_axis, std::vector<float> turbine_ref_pos
-    ) {
+    void SetupRotor(int turbine_number, int is_horizontal_axis, std::vector<float> turbine_ref_pos) {
         auto ADI_C_SetupRotor = this->lib.get_function<
             void(int*, int*, float*, float*, double*, float*, double*, int*, float*, double*, int*, float*, double*, int*, int*, char*)>(
             "ADI_C_SetupRotor"
@@ -326,8 +349,8 @@ struct AeroDynInflowLibrary {
         error_handling.CheckError();
     }
 
-    /// Wrapper for ADI_Init routine to initialize the AeroDyn Inflow library
-    void ADI_Init(
+    /// Wrapper for ADI_C_Init routine to initialize the AeroDyn Inflow library
+    void Initialize(
         std::vector<std::string> aerodyn_input_string_array,
         std::vector<std::string> inflowwind_input_string_array
     ) {
@@ -391,9 +414,9 @@ struct AeroDynInflowLibrary {
         error_handling.CheckError();
     }
 
-    // Wrapper for ADI_SetRotorMotion routine to set rotor motion i.e. motion of the hub, nacelle,
+    // Wrapper for ADI_C_SetRotorMotion routine to set rotor motion i.e. motion of the hub, nacelle,
     // root, and mesh points from the structural mesh
-    void ADI_C_SetRotorMotion(
+    void SetupRotorMotion(
         int turbine_number, MeshMotionData hub_motion, MeshMotionData nacelle_motion,
         MeshMotionData root_motion, MeshMotionData mesh_motion
     ) {
@@ -462,7 +485,7 @@ struct AeroDynInflowLibrary {
     }
 
     // Wrapper for ADI_C_GetRotorLoads routine to get aerodynamic loads on the rotor
-    void ADI_GetRotorLoads(
+    void GetRotorAerodynamicLoads(
         int turbine_number, std::vector<std::array<float, 6>>& mesh_force_moment
     ) {
         auto ADI_C_GetRotorLoads =
@@ -490,7 +513,7 @@ struct AeroDynInflowLibrary {
     }
 
     // Wrapper for ADI_C_CalcOutput routine to calculate output channels at a given time
-    void ADI_C_CalcOutput(double time, std::vector<float>& output_channel_values) {
+    void CalculateOutputChannels(double time, std::vector<float>& output_channel_values) {
         auto ADI_C_CalcOutput =
             this->lib.get_function<void(double*, float*, int*, char*)>("ADI_C_CalcOutput");
 
@@ -513,7 +536,7 @@ struct AeroDynInflowLibrary {
     }
 
     // Wrapper for ADI_C_UpdateStates routine to calculate output forces at a given time
-    void ADI_C_UpdateStates(double time, double time_next) {
+    void UpdateStates(double time, double time_next) {
         auto ADI_C_UpdateStates =
             this->lib.get_function<void(double*, double*, int*, char*)>("ADI_C_UpdateStates");
 
@@ -529,7 +552,7 @@ struct AeroDynInflowLibrary {
     }
 
     // Wrapper for ADI_C_End routine to end the AeroDyn Inflow library
-    void ADI_End() {
+    void Finalize() {
         auto ADI_C_End = this->lib.get_function<void(int*, char*)>("ADI_C_End");
 
         // Run ADI_C_End
