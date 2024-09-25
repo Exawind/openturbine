@@ -24,7 +24,8 @@
 namespace openturbine {
 
 bool Step(
-    const StepParameters& parameters, Solver& solver, const Beams& beams, const State& state, Constraints& constraints
+    const StepParameters& parameters, Solver& solver, const Beams& beams, const State& state,
+    Constraints& constraints
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Step");
     PredictNextState(parameters, state);
@@ -71,4 +72,4 @@ bool Step(
 
     return true;
 }
-}
+}  // namespace openturbine

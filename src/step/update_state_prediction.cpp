@@ -11,7 +11,9 @@
 
 namespace openturbine {
 
-void UpdateStatePrediction(const StepParameters& parameters, const Solver& solver, const State& state) {
+void UpdateStatePrediction(
+    const StepParameters& parameters, const Solver& solver, const State& state
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
     const auto x_system =
         Kokkos::subview(solver.x, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs));

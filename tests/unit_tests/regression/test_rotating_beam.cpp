@@ -17,12 +17,12 @@
 #include "src/beams/beams.hpp"
 #include "src/beams/beams_input.hpp"
 #include "src/beams/create_beams.hpp"
+#include "src/constraints/constraints.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
-#include "src/constraints/constraints.hpp"
-#include "src/step/step_parameters.hpp"
 #include "src/step/step.hpp"
+#include "src/step/step_parameters.hpp"
 #include "src/types.hpp"
 
 using Array_7 = std::array<double, 7>;

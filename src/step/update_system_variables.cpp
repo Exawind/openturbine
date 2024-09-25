@@ -14,7 +14,9 @@
 
 namespace openturbine {
 
-void UpdateSystemVariables(const StepParameters& parameters, const Beams& beams, const State& state) {
+void UpdateSystemVariables(
+    const StepParameters& parameters, const Beams& beams, const State& state
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Update System Variables");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(
@@ -85,4 +87,4 @@ void UpdateSystemVariables(const StepParameters& parameters, const Beams& beams,
     AssembleStiffnessMatrix(beams);
     AssembleInertiaMatrix(beams, parameters.beta_prime, parameters.gamma_prime);
 }
-}
+}  // namespace openturbine

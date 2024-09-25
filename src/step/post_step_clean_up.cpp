@@ -10,7 +10,10 @@
 
 namespace openturbine {
 
-void PostStepCleanUp(const StepParameters& parameters, const Solver& solver, const State& state, const Constraints& constraints) {
+void PostStepCleanUp(
+    const StepParameters& parameters, const Solver& solver, const State& state,
+    const Constraints& constraints
+) {
     Kokkos::parallel_for(
         "UpdateAlgorithmicAcceleration", solver.num_system_nodes,
         UpdateAlgorithmicAcceleration{
@@ -44,4 +47,4 @@ void PostStepCleanUp(const StepParameters& parameters, const Solver& solver, con
         }
     );
 }
-}
+}  // namespace openturbine

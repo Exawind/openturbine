@@ -21,8 +21,8 @@
 #include "src/step/predict_next_state.hpp"
 #include "src/step/step.hpp"
 #include "src/step/step_parameters.hpp"
-#include "src/step/update_system_variables.hpp"
 #include "src/step/update_constraint_variables.hpp"
+#include "src/step/update_system_variables.hpp"
 #include "src/types.hpp"
 
 namespace openturbine::tests {
