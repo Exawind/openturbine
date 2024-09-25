@@ -16,6 +16,7 @@
 #include "src/state/state.hpp"
 #include "src/step/step.hpp"
 #include "src/types.hpp"
+#include "src/utilities/aerodynamics/aerodyn_inflow.hpp"
 #include "src/utilities/controllers/discon.hpp"
 #include "src/utilities/controllers/turbine_controller.hpp"
 #include "src/vendor/dylib/dylib.hpp"
@@ -33,7 +34,8 @@ TEST(Milestone, IEA15RotorAeroController) {
     constexpr auto gravity = std::array{-9.81, 0., 0.};
 
     // Properties
-    constexpr size_t num_blades = 3;      // Number of blades in rotor
+    constexpr size_t n_turbines{1};       // Number of turbines
+    constexpr size_t n_blades{3};         // Number of blades in rotor
     constexpr double azimuth_init{0.};    // Azimuth angle (rad)
     constexpr double hub_height{150.};    // Hub height (meters)
     constexpr double hub_rad{3.97};       // Hub radius (meters)
@@ -48,10 +50,13 @@ TEST(Milestone, IEA15RotorAeroController) {
     constexpr double hub_wind_speed{12.0};
 
     // Controller parameters
-    const std::string shared_lib_path{"./ROSCO.dll"};
+    const std::string controller_shared_lib_path{"./ROSCO.dll"};
     const std::string controller_function_name{"DISCON"};
     const std::string controller_input_file_path{"IEA-15-240-RWT_DISCON.IN"};
     const std::string controller_simulation_name{"IEA-15-240-RWT"};
+
+    // Aerodynamics and Inflow library
+    const std::string adi_shared_lib_path{"./libaerodyn_inflow_c_binding.dylib"};
 
     // Solution parameters
     constexpr bool is_dynamic_solve{true};
@@ -70,7 +75,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Create controller object and load shared library
     auto controller = util::TurbineController(
-        shared_lib_path, controller_function_name, controller_input_file_path,
+        controller_shared_lib_path, controller_function_name, controller_input_file_path,
         controller_simulation_name
     );
 
@@ -78,7 +83,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     controller.io.dt = step_size;               // Time step size (seconds)
     controller.io.pitch_actuator_type_req = 0;  // Pitch position actuator
     controller.io.pitch_control_type = 0;       // Collective pitch control
-    controller.io.n_blades = num_blades;        // Number of blades
+    controller.io.n_blades = n_turbines;        // Number of blades
 
     // Controller current values
     controller.io.time = 0.;                     // Current time (seconds)
@@ -116,10 +121,10 @@ TEST(Milestone, IEA15RotorAeroController) {
     );
 
     // Build vector of blade elements
-    auto blade_list = std::array<size_t, num_blades>{};
+    auto blade_list = std::array<size_t, n_turbines>{};
     std::iota(std::begin(blade_list), std::end(blade_list), 0);
     std::vector<BeamElement> beam_elems;
-    constexpr double d_theta = 2. * M_PI / static_cast<double>(num_blades);
+    constexpr double d_theta = 2. * M_PI / static_cast<double>(n_turbines);
     auto base_rot = RotationVectorToQuaternion({0., -M_PI / 2., 0.});
     constexpr Array_3 omega{
         rotor_speed_init * shaft_axis[0], rotor_speed_init * shaft_axis[1],
@@ -211,6 +216,19 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Create constraints object
     auto constraints = Constraints(model.GetConstraints());
+
+    //--------------------------------------------------------------------------
+    // AeroDyn / InflowWind library
+    //--------------------------------------------------------------------------
+
+    auto adi = util::AeroDynInflowLibrary(adi_shared_lib_path);
+
+    adi.turbine_settings.n_turbines = n_turbines;
+    adi.turbine_settings.n_blades = n_blades;
+
+    adi.sim_controls.transpose_DCM = false;
+    adi.sim_controls.debug_level = 4;
+    adi.PreInitialize();
 
     //--------------------------------------------------------------------------
     // Solver
