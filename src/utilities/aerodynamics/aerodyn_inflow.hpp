@@ -11,7 +11,7 @@
 namespace openturbine::util {
 
 /**
- * Following contains a C++ wrapper to interact with the AeroDyn Inflow (ADI) shared library,
+ * Following contains a C++ wrapper to interact with the AeroDyn/InflowWind (ADI) shared library,
  * originally written in Fortran, that exposes C-bindings for the AeroDyn and InflowWind modules of
  * OpenFAST. This wrapper simplifies interaction with the ADI library (particularly the C-based
  * interface, with inspiration from the python interface), providing a modern interface for
@@ -31,7 +31,8 @@ namespace openturbine::util {
  *  - Gusts
  *  - Free vortex wake
  *
- * Canonical workflow for using the AeroDyn x InflowWind C++ wrapper:
+ * Canonical workflow for using the AeroDyn x InflowWind C++ wrapper (see unit test directory for
+ * example):
  *   1.  Instantiate the AeroDynInflowLibrary class
  *           - Modify the settings from provided defaults as needed
  *           - Set input files for AeroDyn and InflowWind (from file or as strings)
@@ -97,6 +98,29 @@ struct EnvironmentalConditions {
     float msl_offset{0.f};         //< Mean sea level to still water level offset (m)
 };
 
+/// Function to break apart a 7x1 generalized coords vector into position (3x1 vector) and
+/// orientation (9x1 vector) components
+static void SetPositionAndOrientation(
+    const std::array<double, 7>& data, std::array<float, 3>& position,
+    std::array<double, 9>& orientation
+) {
+    // Set position (first 3 elements)
+    for (size_t i = 0; i < 3; ++i) {
+        position[i] = static_cast<float>(data[i]);
+    }
+
+    // Set orientation (convert last 4 elements to 3x3 matrix)
+    auto orientation_2D =
+        QuaternionToRotationMatrix(std::array<double, 4>{data[3], data[4], data[5], data[6]});
+
+    // Flatten the 3x3 matrix to a 1D array
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            orientation[i * 3 + j] = orientation_2D[i][j];
+        }
+    }
+}
+
 /// Struct to hold the initial settings for the turbine
 struct TurbineSettings {
     int n_turbines{1};                                      //< Number of turbines - 1 by default
@@ -109,6 +133,34 @@ struct TurbineSettings {
                                                             static_cast<size_t>(n_blades)};
     std::vector<std::array<double, 9>> initial_root_orientation{//< Initial root orientations
                                                                 static_cast<size_t>(n_blades)};
+
+    /// Default constructor
+    TurbineSettings();
+
+    /// Constructor to initialize all data based on provided 7x1 inputs
+    TurbineSettings(
+        const std::array<double, 7>& hub_data, const std::array<double, 7>& nacelle_data,
+        const std::vector<std::array<double, 7>>& root_data, int n_turbines = 1, int n_blades = 3
+    )
+        : n_turbines(n_turbines),
+          n_blades(n_blades),
+          initial_root_position(static_cast<size_t>(n_blades)),
+          initial_root_orientation(static_cast<size_t>(n_blades)) {
+        // Set hub position and orientation
+        SetPositionAndOrientation(hub_data, initial_hub_position, initial_hub_orientation);
+
+        // Set nacelle position and orientation
+        SetPositionAndOrientation(
+            nacelle_data, initial_nacelle_position, initial_nacelle_orientation
+        );
+
+        // Set root positions and orientations
+        for (size_t i = 0; i < static_cast<size_t>(n_blades); ++i) {
+            SetPositionAndOrientation(
+                root_data[i], initial_root_position[i], initial_root_orientation[i]
+            );
+        }
+    };
 };
 
 /// Struct to hold the settings for simulation controls
@@ -153,7 +205,7 @@ struct VTKSettings {
     float vtk_hub_radius{1.5f};  //< Hub radius for VTK rendering
 };
 
-/// Struct to hold the structural mesh data
+/// Struct to hold the initial motion of the structural mesh
 struct StructuralMesh {
     int n_mesh_points{1};                                       //< Number of mesh points
     std::vector<std::array<float, 3>> initial_mesh_position{};  //< N x 3 array [x, y, z]
@@ -161,6 +213,23 @@ struct StructuralMesh {
         initial_mesh_orientation{};  //< N x 9 array [r11, r12, ..., r33]
     std::vector<int>
         mesh_point_to_blade_num{};  //< N x 1 array for mapping a mesh point to blade number
+
+    /// Default constructor
+    StructuralMesh() = default;
+
+    /// Constructor to initialize all data based on provided 7x1 inputs
+    StructuralMesh(const std::vector<std::array<double, 7>>& mesh_data, int n_mesh_points = 1)
+        : n_mesh_points(n_mesh_points),
+          initial_mesh_position(static_cast<size_t>(n_mesh_points)),
+          initial_mesh_orientation(static_cast<size_t>(n_mesh_points)),
+          mesh_point_to_blade_num(static_cast<size_t>(n_mesh_points)) {
+        // Set mesh position and orientation
+        for (size_t i = 0; i < static_cast<size_t>(n_mesh_points); ++i) {
+            SetPositionAndOrientation(
+                mesh_data[i], initial_mesh_position[i], initial_mesh_orientation[i]
+            );
+        }
+    }
 };
 
 struct MeshMotionData {
@@ -170,6 +239,20 @@ struct MeshMotionData {
     std::vector<std::array<float, 6>>
         acceleration;  //< N x 6 array [u_dot, v_dot, w_dot, p_dot, q_dot, r_dot]
 
+    /// Default constructor
+    MeshMotionData() = default;
+
+    /// Constructor to initialize all data based on provided 7x1 inputs
+    MeshMotionData(const std::vector<std::array<double, 7>>& mesh_data, int n_mesh_points = 1)
+        : position(static_cast<size_t>(n_mesh_points)),
+          orientation(static_cast<size_t>(n_mesh_points)),
+          velocity(static_cast<size_t>(n_mesh_points)),
+          acceleration(static_cast<size_t>(n_mesh_points)) {
+        // Set mesh position and orientation
+        for (size_t i = 0; i < static_cast<size_t>(n_mesh_points); ++i) {
+            SetPositionAndOrientation(mesh_data[i], position[i], orientation[i]);
+        }
+    }
     /// Method to check the sizes of the input arrays
     template <typename T, size_t N>
     void CheckArraySize(
@@ -269,8 +352,8 @@ struct MeshMotionData {
  * @brief Wrapper class for the AeroDynInflow (ADI) shared library
  *
  * @details This class provides an interface for interacting with the AeroDynInflow (ADI) shared
- * library, which is a Fortran library offering C bindings for the AeroDyn x InflowWind modules of
- * OpenFAST.
+ * library, which is a Fortran library offering C bindings for the AeroDyn x InflowWind modules
+ * of OpenFAST.
  *
  * Following functions are wrapped in this class:
  *  - PreInitialize -> ADI_C_PreInit: Handles the pre-initialization of the AeroDynInflow module
@@ -418,8 +501,8 @@ struct AeroDynInflowLibrary {
         error_handling.CheckError();
     }
 
-    // Wrapper for ADI_C_SetRotorMotion routine to set rotor motion i.e. motion of the hub, nacelle,
-    // root, and mesh points from the structural mesh
+    // Wrapper for ADI_C_SetRotorMotion routine to set rotor motion i.e. motion of the hub,
+    // nacelle, root, and mesh points from the structural mesh
     void SetupRotorMotion(
         int turbine_number, MeshMotionData hub_motion, MeshMotionData nacelle_motion,
         MeshMotionData root_motion, MeshMotionData mesh_motion
