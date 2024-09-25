@@ -23,6 +23,7 @@
 #include "src/state/state.hpp"
 #include "src/step/step.hpp"
 #include "src/step/step_parameters.hpp"
+#include "src/step/update_system_variables.hpp"
 #include "src/types.hpp"
 
 using Array_7 = std::array<double, 7>;
