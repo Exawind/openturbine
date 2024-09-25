@@ -19,10 +19,7 @@
 #include "update_system_variables.hpp"
 #include "update_tangent_operator.hpp"
 
-#include "src/beams/beams.hpp"
-#include "src/constraints/constraints.hpp"
 #include "src/solver/solver.hpp"
-#include "src/state/state.hpp"
 
 namespace openturbine {
 

@@ -12,6 +12,8 @@
 #include "src/beams/create_beams.hpp"
 #include "src/model/model.hpp"
 #include "src/state/state.hpp"
+#include "src/constraints/constraints.hpp"
+#include "src/step/step_parameters.hpp"
 #include "src/step/assemble_residual_vector.hpp"
 #include "src/step/update_system_variables.hpp"
 #include "src/types.hpp"

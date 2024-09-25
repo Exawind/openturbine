@@ -1,13 +1,8 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
-
-#include "src/constraints/constraints.hpp"
-
 namespace openturbine {
+struct Constraints;
 
-inline void ResetConstraints(const Constraints& constraints) {
-    Kokkos::deep_copy(constraints.lambda, 0.);
-}
+void ResetConstraints(const Constraints& constraints);
 
 }  // namespace openturbine

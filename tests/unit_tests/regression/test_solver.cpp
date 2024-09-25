@@ -10,6 +10,7 @@
 #include "src/beams/beams.hpp"
 #include "src/beams/beams_input.hpp"
 #include "src/beams/create_beams.hpp"
+#include "src/constraints/constraints.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"

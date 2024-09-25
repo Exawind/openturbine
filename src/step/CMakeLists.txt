@@ -1,1 +1,21 @@
-target_sources(openturbine_library PRIVATE step.cpp)
+target_sources(openturbine_library PRIVATE 
+  assemble_constraints_matrix.cpp
+  assemble_constraints_residual.cpp
+  assemble_inertia_matrix.cpp
+  assemble_residual_vector.cpp
+  assemble_stiffness_matrix.cpp
+  assemble_system_matrix.cpp
+  assemble_system_residual.cpp
+  assemble_tangent_operator.cpp
+  calculate_convergence_error.cpp
+  post_step_clean_up.cpp
+  predict_next_state.cpp
+  reset_constraints.cpp
+  solve_system.cpp
+  step.cpp
+  update_constraint_prediction.cpp
+  update_constraint_variables.cpp
+  update_state_prediction.cpp
+  update_system_variables.cpp
+  update_tangent_operator.cpp
+)

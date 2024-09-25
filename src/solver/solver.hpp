@@ -88,7 +88,7 @@ struct Solver {
         const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
     )
         : num_system_nodes(node_IDs.extent(0)),
-          num_system_dofs(num_system_nodes * kLieAlgebraComponents),
+          num_system_dofs(num_system_nodes * 6U),
           num_dofs(num_system_dofs + num_constraint_dofs),
           R("R", num_dofs),
           x("x", num_dofs) {
