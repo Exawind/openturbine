@@ -85,6 +85,47 @@ TEST(AerodynInflowTest, SetPositionAndOrientation) {
     ExpectArrayNear(orientation, {1., 0., 0., 0., 0., -1., 0., 1., 0.});
 }
 
+TEST(AerodynInflowTest, TurbineSettings_Default) {
+    util::TurbineSettings turbine_settings;
+    EXPECT_EQ(turbine_settings.n_turbines, 1);
+    EXPECT_EQ(turbine_settings.n_blades, 3);
+    ExpectArrayNear(turbine_settings.initial_hub_position, {0.f, 0.f, 0.f});
+    ExpectArrayNear(turbine_settings.initial_hub_orientation, {0., 0., 0., 0., 0., 0., 0., 0., 0.});
+    ExpectArrayNear(turbine_settings.initial_nacelle_position, {0.f, 0.f, 0.f});
+    ExpectArrayNear(
+        turbine_settings.initial_nacelle_orientation, {0., 0., 0., 0., 0., 0., 0., 0., 0.}
+    );
+    for (size_t i = 0; i < turbine_settings.initial_root_position.size(); ++i) {
+        ExpectArrayNear(turbine_settings.initial_root_position[i], {0.f, 0.f, 0.f});
+        ExpectArrayNear(
+            turbine_settings.initial_root_orientation[i], {0., 0., 0., 0., 0., 0., 0., 0., 0.}
+        );
+    }
+}
+
+TEST(AerodynInflowTest, TurbineSettings_Set_1T1B) {
+    int n_turbines{1};
+    int n_blades{1};
+    std::array<double, 7> hub_data = {1., 2., 3., 0.707107, 0.707107, 0., 0.};
+    std::array<double, 7> nacelle_data = {4., 5., 6., 0.707107, 0.707107, 0., 0.};
+    std::vector<std::array<double, 7>> root_data = {{7., 8., 9., 0.707107, 0.707107, 0., 0.}};
+
+    util::TurbineSettings turbine_settings(hub_data, nacelle_data, root_data, n_turbines, n_blades);
+
+    EXPECT_EQ(turbine_settings.n_turbines, 1);
+    EXPECT_EQ(turbine_settings.n_blades, 1);
+    ExpectArrayNear(turbine_settings.initial_hub_position, {1.f, 2.f, 3.f});
+    ExpectArrayNear(turbine_settings.initial_hub_orientation, {1., 0., 0., 0., 0., -1., 0., 1., 0.});
+    ExpectArrayNear(turbine_settings.initial_nacelle_position, {4.f, 5.f, 6.f});
+    ExpectArrayNear(
+        turbine_settings.initial_nacelle_orientation, {1., 0., 0., 0., 0., -1., 0., 1., 0.}
+    );
+    ExpectArrayNear(turbine_settings.initial_root_position[0], {7.f, 8.f, 9.f});
+    ExpectArrayNear(
+        turbine_settings.initial_root_orientation[0], {1., 0., 0., 0., 0., -1., 0., 1., 0.}
+    );
+}
+
 #endif
 
 }  // namespace openturbine::tests
