@@ -320,13 +320,17 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
     util::AeroDynInflowLibrary aerodyn_inflow_library(path);
 
     // Check initial error handling state
-    EXPECT_EQ(aerodyn_inflow_library.error_handling.error_status, 0);
-    EXPECT_STREQ(aerodyn_inflow_library.error_handling.error_message.data(), "");
+    EXPECT_EQ(aerodyn_inflow_library.GetErrorHandling().error_status, 0);
+    EXPECT_STREQ(aerodyn_inflow_library.GetErrorHandling().error_message.data(), "");
 
     // Check default values for other important members
-    EXPECT_EQ(aerodyn_inflow_library.turbine_settings.n_turbines, 1);
-    EXPECT_EQ(aerodyn_inflow_library.sim_controls.debug_level, 0);
-    EXPECT_EQ(aerodyn_inflow_library.sim_controls.transpose_DCM, 1);
+    EXPECT_EQ(aerodyn_inflow_library.GetFluidProperties().density, 1.225f);
+    EXPECT_EQ(aerodyn_inflow_library.GetEnvironmentalConditions().gravity, 9.80665f);
+    EXPECT_EQ(aerodyn_inflow_library.GetTurbineSettings().n_turbines, 1);
+    EXPECT_EQ(aerodyn_inflow_library.GetSimulationControls().debug_level, 0);
+    EXPECT_EQ(aerodyn_inflow_library.GetSimulationControls().transpose_DCM, 1);
+    EXPECT_EQ(aerodyn_inflow_library.GetStructuralMesh().n_mesh_points, 1);
+    EXPECT_EQ(aerodyn_inflow_library.GetVTKSettings().write_vtk, 0);
 }
 
 #endif

@@ -457,81 +457,87 @@ struct VTKSettings {
  *  - UpdateStates (ADI_C_UpdateStates): Updates states for the next time step
  *  - Finalize (ADI_C_End): Ends the AeroDynInflow module and frees memory
  */
-struct AeroDynInflowLibrary {
-    util::dylib lib{
-        "libaerodyn_inflow_c_binding.dylib",
-        util::dylib::no_filename_decorations  //< Dynamic library object for AeroDyn Inflow
-    };
-    ErrorHandling error_handling;            //< Error handling settings
-    FluidProperties air;                     //< Properties of the working fluid (air)
-    EnvironmentalConditions env_conditions;  //< Environmental conditions
-    TurbineSettings turbine_settings;        //< Turbine settings
-    StructuralMesh structural_mesh;          //< Structural mesh data
-    SimulationControls sim_controls;         //< Simulation control settings
-    VTKSettings vtk_settings;                //< VTK output settings
-
+class AeroDynInflowLibrary {
+public:
     /// Constructor to initialize AeroDyn Inflow library with default settings and optional path
     AeroDynInflowLibrary(
-        std::string shared_lib_path = "", TurbineSettings ts = TurbineSettings{},
-        StructuralMesh sm = StructuralMesh{}, SimulationControls sc = SimulationControls{},
-        VTKSettings vtk = VTKSettings{}
+        std::string shared_lib_path = "", ErrorHandling eh = ErrorHandling{},
+        FluidProperties fp = FluidProperties{},
+        EnvironmentalConditions ec = EnvironmentalConditions{},
+        TurbineSettings ts = TurbineSettings{}, StructuralMesh sm = StructuralMesh{},
+        SimulationControls sc = SimulationControls{}, VTKSettings vtk = VTKSettings{}
     )
-        : turbine_settings(ts), structural_mesh(sm), sim_controls(sc), vtk_settings(vtk) {
+        : error_handling_(std::move(eh)),
+          air_(std::move(fp)),
+          env_conditions_(std::move(ec)),
+          turbine_settings_(std::move(ts)),
+          structural_mesh_(std::move(sm)),
+          sim_controls_(std::move(sc)),
+          vtk_settings_(std::move(vtk)) {
         if (!shared_lib_path.empty()) {
-            lib = util::dylib(shared_lib_path, util::dylib::no_filename_decorations);
+            lib_ = util::dylib(shared_lib_path, util::dylib::no_filename_decorations);
         }
     }
 
+    /// Getter methods
+    const ErrorHandling& GetErrorHandling() const { return error_handling_; }
+    const EnvironmentalConditions& GetEnvironmentalConditions() const { return env_conditions_; }
+    const FluidProperties& GetFluidProperties() const { return air_; }
+    const TurbineSettings& GetTurbineSettings() const { return turbine_settings_; }
+    const StructuralMesh& GetStructuralMesh() const { return structural_mesh_; }
+    const SimulationControls& GetSimulationControls() const { return sim_controls_; }
+    const VTKSettings& GetVTKSettings() const { return vtk_settings_; }
+
     /// Wrapper for ADI_C_PreInit routine to initialize AeroDyn Inflow library
     void PreInitialize() {
-        auto ADI_C_PreInit =
-            this->lib.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
+        auto ADI_C_PreInit = lib_.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
         ADI_C_PreInit(
-            &turbine_settings.n_turbines,        // input: Number of turbines
-            &sim_controls.transpose_DCM,         // input: Transpose DCM?
-            &sim_controls.debug_level,           // input: Debug level
-            &error_handling.error_status,        // output: Error status
-            error_handling.error_message.data()  // output: Error message
+            &turbine_settings_.n_turbines,        // input: Number of turbines
+            &sim_controls_.transpose_DCM,         // input: Transpose DCM?
+            &sim_controls_.debug_level,           // input: Debug level
+            &error_handling_.error_status,        // output: Error status
+            error_handling_.error_message.data()  // output: Error message
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
     }
 
     /// Wrapper for ADI_C_SetupRotor routine to set up the rotor
     void SetupRotor(int turbine_number, int is_horizontal_axis, std::vector<float> turbine_ref_pos) {
-        auto ADI_C_SetupRotor = this->lib.get_function<
+        auto ADI_C_SetupRotor = lib_.get_function<
             void(int*, int*, float*, float*, double*, float*, double*, int*, float*, double*, int*, float*, double*, int*, int*, char*)>(
             "ADI_C_SetupRotor"
         );
 
         // Flatten arrays to pass to the Fortran routine
-        auto initial_root_position_flat = FlattenArray(turbine_settings.initial_root_position);
-        auto initial_root_orientation_flat = FlattenArray(turbine_settings.initial_root_orientation);
-        auto init_mesh_pos_flat = FlattenArray(structural_mesh.initial_mesh_position);
-        auto init_mesh_orient_flat = FlattenArray(structural_mesh.initial_mesh_orientation);
+        auto initial_root_position_flat = FlattenArray(turbine_settings_.initial_root_position);
+        auto initial_root_orientation_flat =
+            FlattenArray(turbine_settings_.initial_root_orientation);
+        auto init_mesh_pos_flat = FlattenArray(structural_mesh_.initial_mesh_position);
+        auto init_mesh_orient_flat = FlattenArray(structural_mesh_.initial_mesh_orientation);
 
         ADI_C_SetupRotor(
-            &turbine_number,                               // input: current turbine number
-            &is_horizontal_axis,                           // input: 1: HAWT, 0: VAWT or cross-flow
-            turbine_ref_pos.data(),                        // input: turbine reference position
-            turbine_settings.initial_hub_position.data(),  // input: initial hub position
-            turbine_settings.initial_hub_orientation.data(),   // input: initial hub orientation
-            turbine_settings.initial_nacelle_position.data(),  // input: initial nacelle position
-            turbine_settings.initial_nacelle_orientation.data(
+            &turbine_number,                                // input: current turbine number
+            &is_horizontal_axis,                            // input: 1: HAWT, 0: VAWT or cross-flow
+            turbine_ref_pos.data(),                         // input: turbine reference position
+            turbine_settings_.initial_hub_position.data(),  // input: initial hub position
+            turbine_settings_.initial_hub_orientation.data(),   // input: initial hub orientation
+            turbine_settings_.initial_nacelle_position.data(),  // input: initial nacelle position
+            turbine_settings_.initial_nacelle_orientation.data(
             ),                                     // input: initial nacelle orientation
-            &turbine_settings.n_blades,            // input: number of blades
+            &turbine_settings_.n_blades,           // input: number of blades
             initial_root_position_flat.data(),     // input: initial blade root positions
             initial_root_orientation_flat.data(),  // input: initial blade root orientation
-            &structural_mesh.n_mesh_points,        // input: number of mesh points
+            &structural_mesh_.n_mesh_points,       // input: number of mesh points
             init_mesh_pos_flat.data(),             // input: initial node positions
             init_mesh_orient_flat.data(),          // input: initial node orientation
-            structural_mesh.mesh_point_to_blade_num.data(
-            ),                                   // input: initial mesh point to blade number mapping
-            &error_handling.error_status,        // output: Error status
-            error_handling.error_message.data()  // output: Error message buffer
+            structural_mesh_.mesh_point_to_blade_num.data(
+            ),                              // input: initial mesh point to blade number mapping
+            &error_handling_.error_status,  // output: Error status
+            error_handling_.error_message.data()  // output: Error message buffer
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
     }
 
     /// Wrapper for ADI_C_Init routine to initialize the AeroDyn Inflow library
@@ -540,7 +546,7 @@ struct AeroDynInflowLibrary {
         std::vector<std::string> inflowwind_input_string_array
     ) {
         auto ADI_C_Init =
-            this->lib
+            lib_
                 .get_function<
                     void(int*, const char*, int*, int*, const char*, int*, char*, float*, float*, float*, float*, float*, float*, float*, float*, int*, double*, double*, int*, int*, int*, float*, float*, int*, float*, int*, char*, char*, int*, char*)>(
                     "ADI_C_Init"
@@ -549,7 +555,7 @@ struct AeroDynInflowLibrary {
         // Flatten arrays to pass
         auto vtk_nacelle_dim_flat = std::array<float, 6>{};
         std::copy(
-            vtk_settings.vtk_nacelle_dimensions.begin(), vtk_settings.vtk_nacelle_dimensions.end(),
+            vtk_settings_.vtk_nacelle_dimensions.begin(), vtk_settings_.vtk_nacelle_dimensions.end(),
             vtk_nacelle_dim_flat.begin()
         );
 
@@ -564,39 +570,39 @@ struct AeroDynInflowLibrary {
         int inflowwind_input_string_length = static_cast<int>(inflowwind_input_string.size());
 
         ADI_C_Init(
-            &sim_controls.aerodyn_input_passed,     // input: AD input file is passed
-            aerodyn_input_string.data(),            // input: AD input file as string
-            &aerodyn_input_string_length,           // input: AD input file string length
-            &sim_controls.inflowwind_input_passed,  // input: IfW input file is passed
-            inflowwind_input_string.data(),         // input: IfW input file as string
-            &inflowwind_input_string_length,        // input: IfW input file string length
-            sim_controls.output_root_name.data(),   // input: rootname for ADI file writing
-            &env_conditions.gravity,                // input: gravity
-            &air.density,                           // input: air density
-            &air.kinematic_viscosity,               // input: kinematic viscosity
-            &air.sound_speed,                       // input: speed of sound
-            &env_conditions.atm_pressure,           // input: atmospheric pressure
-            &air.vapor_pressure,                    // input: vapor pressure
-            &env_conditions.water_depth,            // input: water depth
-            &env_conditions.msl_offset,             // input: MSL to SWL offset
-            &sim_controls.interpolation_order,      // input: interpolation order
-            &sim_controls.time_step,                // input: time step
-            &sim_controls.max_time,                 // input: maximum simulation time
-            &sim_controls.store_HH_wind_speed,      // input: store HH wind speed
-            &vtk_settings.write_vtk,                // input: write VTK output
-            &vtk_settings.vtk_type,                 // input: VTK output type
-            vtk_nacelle_dim_flat.data(),            // input: VTK nacelle dimensions
-            &vtk_settings.vtk_hub_radius,           // input: VTK hub radius
-            &sim_controls.output_format,            // input: output format
-            &sim_controls.output_time_step,         // input: output time step
-            &sim_controls.n_channels,               // output: number of channels
-            sim_controls.channel_names_c.data(),    // output: output channel names
-            sim_controls.channel_units_c.data(),    // output: output channel units
-            &error_handling.error_status,           // output: error status
-            error_handling.error_message.data()     // output: error message buffer
+            &sim_controls_.aerodyn_input_passed,     // input: AD input file is passed
+            aerodyn_input_string.data(),             // input: AD input file as string
+            &aerodyn_input_string_length,            // input: AD input file string length
+            &sim_controls_.inflowwind_input_passed,  // input: IfW input file is passed
+            inflowwind_input_string.data(),          // input: IfW input file as string
+            &inflowwind_input_string_length,         // input: IfW input file string length
+            sim_controls_.output_root_name.data(),   // input: rootname for ADI file writing
+            &env_conditions_.gravity,                // input: gravity
+            &air_.density,                           // input: air density
+            &air_.kinematic_viscosity,               // input: kinematic viscosity
+            &air_.sound_speed,                       // input: speed of sound
+            &env_conditions_.atm_pressure,           // input: atmospheric pressure
+            &air_.vapor_pressure,                    // input: vapor pressure
+            &env_conditions_.water_depth,            // input: water depth
+            &env_conditions_.msl_offset,             // input: MSL to SWL offset
+            &sim_controls_.interpolation_order,      // input: interpolation order
+            &sim_controls_.time_step,                // input: time step
+            &sim_controls_.max_time,                 // input: maximum simulation time
+            &sim_controls_.store_HH_wind_speed,      // input: store HH wind speed
+            &vtk_settings_.write_vtk,                // input: write VTK output
+            &vtk_settings_.vtk_type,                 // input: VTK output type
+            vtk_nacelle_dim_flat.data(),             // input: VTK nacelle dimensions
+            &vtk_settings_.vtk_hub_radius,           // input: VTK hub radius
+            &sim_controls_.output_format,            // input: output format
+            &sim_controls_.output_time_step,         // input: output time step
+            &sim_controls_.n_channels,               // output: number of channels
+            sim_controls_.channel_names_c.data(),    // output: output channel names
+            sim_controls_.channel_units_c.data(),    // output: output channel units
+            &error_handling_.error_status,           // output: error status
+            error_handling_.error_message.data()     // output: error message buffer
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
     }
 
     // Wrapper for ADI_C_SetRotorMotion routine to set rotor motion i.e. motion of the hub,
@@ -605,7 +611,7 @@ struct AeroDynInflowLibrary {
         int turbine_number, MeshMotionData hub_motion, MeshMotionData nacelle_motion,
         MeshMotionData root_motion, MeshMotionData mesh_motion
     ) {
-        auto ADI_C_SetRotorMotion = this->lib.get_function<
+        auto ADI_C_SetRotorMotion = lib_.get_function<
             void(int*, float*, double*, float*, float*, float*, double*, float*, float*, float*, double*, float*, float*, int*, float*, double*, float*, float*, int*, char*)>(
             "ADI_C_SetRotorMotion"
         );
@@ -614,12 +620,12 @@ struct AeroDynInflowLibrary {
         hub_motion.CheckHubNacelleInputMotions("hub");
         nacelle_motion.CheckHubNacelleInputMotions("nacelle");
         root_motion.CheckRootInputMotions(
-            static_cast<size_t>(turbine_settings.n_blades),
-            static_cast<size_t>(turbine_settings.initial_root_position.size())
+            static_cast<size_t>(turbine_settings_.n_blades),
+            static_cast<size_t>(turbine_settings_.initial_root_position.size())
         );
         mesh_motion.CheckMeshInputMotions(
-            static_cast<size_t>(structural_mesh.n_mesh_points),
-            static_cast<size_t>(structural_mesh.initial_mesh_position.size())
+            static_cast<size_t>(structural_mesh_.n_mesh_points),
+            static_cast<size_t>(structural_mesh_.initial_mesh_position.size())
         );
 
         // Flatten the arrays to pass to the Fortran routine
@@ -644,29 +650,29 @@ struct AeroDynInflowLibrary {
         auto mesh_acc_flat = FlattenArray(mesh_motion.acceleration);
 
         ADI_C_SetRotorMotion(
-            &turbine_number,                     // input: current turbine number
-            hub_pos_flat.data(),                 // input: hub positions
-            hub_orient_flat.data(),              // input: hub orientations
-            hub_vel_flat.data(),                 // input: hub velocities
-            hub_acc_flat.data(),                 // input: hub accelerations
-            nacelle_pos_flat.data(),             // input: nacelle positions
-            nacelle_orient_flat.data(),          // input: nacelle orientations
-            nacelle_vel_flat.data(),             // input: nacelle velocities
-            nacelle_acc_flat.data(),             // input: nacelle accelerations
-            root_pos_flat.data(),                // input: root positions
-            root_orient_flat.data(),             // input: root orientations
-            root_vel_flat.data(),                // input: root velocities
-            root_acc_flat.data(),                // input: root accelerations
-            &structural_mesh.n_mesh_points,      // input: number of mesh points
-            mesh_pos_flat.data(),                // input: mesh positions
-            mesh_orient_flat.data(),             // input: mesh orientations
-            mesh_vel_flat.data(),                // input: mesh velocities
-            mesh_acc_flat.data(),                // input: mesh accelerations
-            &error_handling.error_status,        // output: error status
-            error_handling.error_message.data()  // output: error message buffer
+            &turbine_number,                      // input: current turbine number
+            hub_pos_flat.data(),                  // input: hub positions
+            hub_orient_flat.data(),               // input: hub orientations
+            hub_vel_flat.data(),                  // input: hub velocities
+            hub_acc_flat.data(),                  // input: hub accelerations
+            nacelle_pos_flat.data(),              // input: nacelle positions
+            nacelle_orient_flat.data(),           // input: nacelle orientations
+            nacelle_vel_flat.data(),              // input: nacelle velocities
+            nacelle_acc_flat.data(),              // input: nacelle accelerations
+            root_pos_flat.data(),                 // input: root positions
+            root_orient_flat.data(),              // input: root orientations
+            root_vel_flat.data(),                 // input: root velocities
+            root_acc_flat.data(),                 // input: root accelerations
+            &structural_mesh_.n_mesh_points,      // input: number of mesh points
+            mesh_pos_flat.data(),                 // input: mesh positions
+            mesh_orient_flat.data(),              // input: mesh orientations
+            mesh_vel_flat.data(),                 // input: mesh velocities
+            mesh_acc_flat.data(),                 // input: mesh accelerations
+            &error_handling_.error_status,        // output: error status
+            error_handling_.error_message.data()  // output: error message buffer
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
     }
 
     // Wrapper for ADI_C_GetRotorLoads routine to get aerodynamic loads on the rotor
@@ -674,20 +680,20 @@ struct AeroDynInflowLibrary {
         int turbine_number, std::vector<std::array<float, 6>>& mesh_force_moment
     ) {
         auto ADI_C_GetRotorLoads =
-            this->lib.get_function<void(int*, int*, float*, int*, char*)>("ADI_C_GetRotorLoads");
+            lib_.get_function<void(int*, int*, float*, int*, char*)>("ADI_C_GetRotorLoads");
 
         // Flatten the mesh force/moment array
         auto mesh_force_moment_flat = FlattenArray(mesh_force_moment);
 
         ADI_C_GetRotorLoads(
-            &turbine_number,                     // input: current turbine number
-            &structural_mesh.n_mesh_points,      // input: number of mesh points
-            mesh_force_moment_flat.data(),       // output: mesh force/moment array
-            &error_handling.error_status,        // output: error status
-            error_handling.error_message.data()  // output: error message buffer
+            &turbine_number,                      // input: current turbine number
+            &structural_mesh_.n_mesh_points,      // input: number of mesh points
+            mesh_force_moment_flat.data(),        // output: mesh force/moment array
+            &error_handling_.error_status,        // output: error status
+            error_handling_.error_message.data()  // output: error message buffer
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
 
         // Copy the flattened array back to the original array
         for (size_t i = 0; i < mesh_force_moment.size(); ++i) {
@@ -700,21 +706,21 @@ struct AeroDynInflowLibrary {
     // Wrapper for ADI_C_CalcOutput routine to calculate output channels at a given time
     void CalculateOutputChannels(double time, std::vector<float>& output_channel_values) {
         auto ADI_C_CalcOutput =
-            this->lib.get_function<void(double*, float*, int*, char*)>("ADI_C_CalcOutput");
+            lib_.get_function<void(double*, float*, int*, char*)>("ADI_C_CalcOutput");
 
         // Set up output channel values
         auto output_channel_values_c =
-            std::vector<float>(static_cast<size_t>(sim_controls.n_channels));
+            std::vector<float>(static_cast<size_t>(sim_controls_.n_channels));
 
         // Run ADI_C_CalcOutput
         ADI_C_CalcOutput(
-            &time,                               // input: time at which to calculate output forces
-            output_channel_values_c.data(),      // output: output channel values
-            &error_handling.error_status,        // output: error status
-            error_handling.error_message.data()  // output: error message buffer
+            &time,                                // input: time at which to calculate output forces
+            output_channel_values_c.data(),       // output: output channel values
+            &error_handling_.error_status,        // output: error status
+            error_handling_.error_message.data()  // output: error message buffer
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
 
         // Copy the output channel values back to the original array
         output_channel_values = output_channel_values_c;
@@ -723,33 +729,45 @@ struct AeroDynInflowLibrary {
     // Wrapper for ADI_C_UpdateStates routine to calculate output forces at a given time
     void UpdateStates(double time, double time_next) {
         auto ADI_C_UpdateStates =
-            this->lib.get_function<void(double*, double*, int*, char*)>("ADI_C_UpdateStates");
+            lib_.get_function<void(double*, double*, int*, char*)>("ADI_C_UpdateStates");
 
         // Run ADI_C_UpdateStates
         ADI_C_UpdateStates(
-            &time,                               // input: time at which to calculate output forces
-            &time_next,                          // input: time T+dt we are stepping to
-            &error_handling.error_status,        // output: error status
-            error_handling.error_message.data()  // output: error message buffer
+            &time,                                // input: time at which to calculate output forces
+            &time_next,                           // input: time T+dt we are stepping to
+            &error_handling_.error_status,        // output: error status
+            error_handling_.error_message.data()  // output: error message buffer
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
     }
 
     // Wrapper for ADI_C_End routine to end the AeroDyn Inflow library
     void Finalize() {
-        auto ADI_C_End = this->lib.get_function<void(int*, char*)>("ADI_C_End");
+        auto ADI_C_End = lib_.get_function<void(int*, char*)>("ADI_C_End");
 
         // Run ADI_C_End
         ADI_C_End(
-            &error_handling.error_status,        // output: error status
-            error_handling.error_message.data()  // output: error message buffer
+            &error_handling_.error_status,        // output: error status
+            error_handling_.error_message.data()  // output: error message buffer
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
     }
 
 private:
+    util::dylib lib_{
+        "libaerodyn_inflow_c_binding.dylib",
+        util::dylib::no_filename_decorations  //< Dynamic library object for AeroDyn Inflow
+    };
+    ErrorHandling error_handling_;            //< Error handling settings
+    FluidProperties air_;                     //< Properties of the working fluid (air)
+    EnvironmentalConditions env_conditions_;  //< Environmental conditions
+    TurbineSettings turbine_settings_;        //< Turbine settings
+    StructuralMesh structural_mesh_;          //< Structural mesh data
+    SimulationControls sim_controls_;         //< Simulation control settings
+    VTKSettings vtk_settings_;                //< VTK output settings
+
     /// Method to flatten a 2D array into a 1D array for Fortran compatibility
     template <typename T, size_t N>
     std::vector<T> FlattenArray(const std::vector<std::array<T, N>>& input) {
