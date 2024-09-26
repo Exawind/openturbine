@@ -134,16 +134,23 @@ inline void SetPositionAndOrientation(
 
 /// Struct to hold the initial settings/motion for the turbine
 struct TurbineSettings {
-    int n_turbines{1};                                      //< Number of turbines - 1 by default
-    int n_blades{3};                                        //< Number of blades - 3 by default
-    std::array<float, 3> initial_hub_position{0.};          //< Initial hub position
-    std::array<double, 9> initial_hub_orientation{0.};      //< Initial hub orientation
-    std::array<float, 3> initial_nacelle_position{0.};      //< Initial nacelle position
-    std::array<double, 9> initial_nacelle_orientation{0.};  //< Initial nacelle orientation
-    std::vector<std::array<float, 3>> initial_root_position{//< Initial root positions of blades
-                                                            static_cast<size_t>(n_blades)};
-    std::vector<std::array<double, 9>> initial_root_orientation{//< Initial root orientations
-                                                                static_cast<size_t>(n_blades)};
+    int n_turbines{1};                               //< Number of turbines - 1 by default
+    int n_blades{3};                                 //< Number of blades - 3 by default
+    std::array<float, 3> initial_hub_position{0.f};  //< Initial hub position
+    std::array<double, 9> initial_hub_orientation{
+        1., 0., 0., 0., 1., 0., 0., 0., 1.  //< Initial hub orientation
+    };
+    std::array<float, 3> initial_nacelle_position{0.f};  //< Initial nacelle position
+    std::array<double, 9> initial_nacelle_orientation{
+        1., 0., 0., 0., 1., 0., 0., 0., 1.  //< Initial nacelle orientation
+    };
+    std::vector<std::array<float, 3>> initial_root_position{
+        {0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}  //< Initial root positions of blades
+    };
+    std::vector<std::array<double, 9>> initial_root_orientation{
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},  //< Initial root orientations
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.}};
 
     /// Default constructor
     TurbineSettings() = default;
@@ -238,12 +245,16 @@ struct VTKSettings {
  * points to blade numbers.
  */
 struct StructuralMesh {
-    int n_mesh_points{1};                                       //< Number of mesh points
-    std::vector<std::array<float, 3>> initial_mesh_position{};  //< N x 3 array [x, y, z]
-    std::vector<std::array<double, 9>>
-        initial_mesh_orientation{};  //< N x 9 array [r11, r12, ..., r33]
-    std::vector<int>
-        mesh_point_to_blade_num{};  //< N x 1 array for mapping a mesh point to blade number
+    int n_mesh_points{1};  //< Number of mesh points
+    std::vector<std::array<float, 3>> initial_mesh_position{
+        {0.f, 0.f, 0.f}  //< N x 3 array [x, y, z]
+    };
+    std::vector<std::array<double, 9>> initial_mesh_orientation{
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.}  //< N x 9 array [r11, r12, ..., r33]
+    };
+    std::vector<int> mesh_point_to_blade_num{
+        1  //< N x 1 array for mapping a mesh point to blade number
+    };
 
     /// Default constructor
     StructuralMesh() = default;
@@ -323,8 +334,8 @@ struct MeshMotionData {
     }
 
     /**
-     * @brief Method to check the array sizes of the input motions for hub, nacelle, root, and mesh
-     * points
+     * @brief Method to check the array sizes of the input motions for hub, nacelle, root, and
+     * mesh points
      *
      * @param node_type The type of node (e.g., "hub", "nacelle", "root", "mesh")
      * @param expected_position_dim The expected dimension of the position array
