@@ -447,15 +447,15 @@ struct VTKSettings {
  * library, which is a Fortran library offering C bindings for the AeroDyn x InflowWind modules
  * of OpenFAST.
  *
- * Following functions are wrapped in this class:
- *  - PreInitialize -> ADI_C_PreInit: Handles the pre-initialization of the AeroDynInflow module
- *  - SetupRotor -> ADI_C_SetupRotor: Configures rotor-specific parameters before simulation
- *  - Initialize -> ADI_C_Init: Initializes the AeroDynInflow module for simulation
- *  - SetupRotorMotion -> ADI_C_SetRotorMotion: Sets rotor motion for a given time step
- *  - GetRotorAerodynamicLoads -> ADI_C_GetRotorLoads: Gets aerodynamic loads on the rotor
- *  - CalculateOutputChannels -> ADI_C_CalcOutput: Calculates output channels at a given time
- *  - UpdateStates -> ADI_C_UpdateStates: Updates states for the next time step
- *  - Finalize -> ADI_C_End: Ends the AeroDynInflow module by freeing memory
+ * The class encapsulates the following key functions:
+ *  - PreInitialize (ADI_C_PreInit): Pre-initializes the AeroDynInflow module
+ *  - SetupRotor (ADI_C_SetupRotor): Configures rotor-specific parameters before simulation
+ *  - Initialize (ADI_C_Init): Initializes the AeroDynInflow module for simulation
+ *  - SetupRotorMotion (ADI_C_SetRotorMotion): Sets rotor motion for a given time step
+ *  - GetRotorAerodynamicLoads (ADI_C_GetRotorLoads): Retrieves aerodynamic loads on the rotor
+ *  - CalculateOutputChannels (ADI_C_CalcOutput): Calculates output channels at a given time
+ *  - UpdateStates (ADI_C_UpdateStates): Updates states for the next time step
+ *  - Finalize (ADI_C_End): Ends the AeroDynInflow module and frees memory
  */
 struct AeroDynInflowLibrary {
     util::dylib lib{
@@ -470,7 +470,13 @@ struct AeroDynInflowLibrary {
     SimulationControls sim_controls;         //< Simulation control settings
     VTKSettings vtk_settings;                //< VTK output settings
 
-    AeroDynInflowLibrary(std::string shared_lib_path = "") {
+    /// Constructor to initialize AeroDyn Inflow library with default settings and optional path
+    AeroDynInflowLibrary(
+        std::string shared_lib_path = "", TurbineSettings ts = TurbineSettings{},
+        StructuralMesh sm = StructuralMesh{}, SimulationControls sc = SimulationControls{},
+        VTKSettings vtk = VTKSettings{}
+    )
+        : turbine_settings(ts), structural_mesh(sm), sim_controls(sc), vtk_settings(vtk) {
         if (!shared_lib_path.empty()) {
             lib = util::dylib(shared_lib_path, util::dylib::no_filename_decorations);
         }

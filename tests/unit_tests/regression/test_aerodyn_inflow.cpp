@@ -299,6 +299,36 @@ TEST(AerodynInflowTest, VTKSettings_Set) {
     EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.0f);
 }
 
+/// Helper function to get the shared library path
+std::string GetSharedLibraryPath() {
+    const std::filesystem::path project_root = FindProjectRoot();
+    const std::filesystem::path full_path =
+        project_root / "build/tests/unit_tests/libaerodyn_inflow_c_binding";
+
+#ifdef __APPLE__
+    return full_path.string() + ".dylib";
+#elif __linux__
+    return full_path.string() + ".so";
+#else  // Windows
+    return full_path.string() + ".dll";
+#endif
+}
+
+TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
+    // Load the shared library
+    const std::string path = GetSharedLibraryPath();
+    util::AeroDynInflowLibrary aerodyn_inflow_library(path);
+
+    // Check initial error handling state
+    EXPECT_EQ(aerodyn_inflow_library.error_handling.error_status, 0);
+    EXPECT_STREQ(aerodyn_inflow_library.error_handling.error_message.data(), "");
+
+    // Check default values for other important members
+    EXPECT_EQ(aerodyn_inflow_library.turbine_settings.n_turbines, 1);
+    EXPECT_EQ(aerodyn_inflow_library.sim_controls.debug_level, 0);
+    EXPECT_EQ(aerodyn_inflow_library.sim_controls.transpose_DCM, 1);
+}
+
 #endif
 
 }  // namespace openturbine::tests
