@@ -126,34 +126,6 @@ TEST(AerodynInflowTest, TurbineSettings_Set_1T1B) {
     );
 }
 
-TEST(AerodynInflowTest, SimulationControls_Default) {
-    util::SimulationControls simulation_controls;
-    EXPECT_EQ(simulation_controls.aerodyn_input_passed, 1);
-    EXPECT_EQ(simulation_controls.inflowwind_input_passed, 1);
-    EXPECT_EQ(simulation_controls.interpolation_order, 1);
-    EXPECT_EQ(simulation_controls.time_step, 0.1);
-    EXPECT_EQ(simulation_controls.max_time, 600.0);
-    EXPECT_EQ(simulation_controls.total_elapsed_time, 0.0);
-    EXPECT_EQ(simulation_controls.n_time_steps, 0);
-    EXPECT_EQ(simulation_controls.store_HH_wind_speed, 1);
-    EXPECT_EQ(simulation_controls.transpose_DCM, 1);
-    EXPECT_EQ(simulation_controls.debug_level, 0);
-    EXPECT_EQ(simulation_controls.output_format, 0);
-    EXPECT_EQ(simulation_controls.output_time_step, 0.0);
-    EXPECT_STREQ(simulation_controls.output_root_name.data(), "Output_ADIlib_default");
-    EXPECT_EQ(simulation_controls.n_channels, 0);
-    EXPECT_STREQ(simulation_controls.channel_names_c.data(), "");
-    EXPECT_STREQ(simulation_controls.channel_units_c.data(), "");
-}
-
-TEST(AerodynInflowTest, VTKSettings_Default) {
-    util::VTKSettings vtk_settings;
-    EXPECT_EQ(vtk_settings.write_vtk, 0);
-    EXPECT_EQ(vtk_settings.vtk_type, 1);
-    ExpectArrayNear(vtk_settings.vtk_nacelle_dimensions, {-2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f});
-    EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.5f);
-}
-
 TEST(AerodynInflowTest, StructuralMesh_Default) {
     util::StructuralMesh structural_mesh;
     EXPECT_EQ(structural_mesh.n_mesh_points, 1);
@@ -205,6 +177,96 @@ TEST(AerodynInflowTest, MeshMotionData_Set) {
     ExpectArrayNear(mesh_motion_data.orientation[0], {1., 0., 0., 0., 0., -1., 0., 1., 0.});
     ExpectArrayNear(mesh_motion_data.velocity[0], {1.f, 2.f, 3.f, 4.f, 5.f, 6.f});
     ExpectArrayNear(mesh_motion_data.acceleration[0], {7.f, 8.f, 9.f, 10.f, 11.f, 12.f});
+}
+
+TEST(AerodynInflowTest, SimulationControls_Default) {
+    util::SimulationControls simulation_controls;
+    EXPECT_EQ(simulation_controls.aerodyn_input_passed, 1);
+    EXPECT_EQ(simulation_controls.inflowwind_input_passed, 1);
+    EXPECT_EQ(simulation_controls.interpolation_order, 1);
+    EXPECT_EQ(simulation_controls.time_step, 0.1);
+    EXPECT_EQ(simulation_controls.max_time, 600.0);
+    EXPECT_EQ(simulation_controls.total_elapsed_time, 0.0);
+    EXPECT_EQ(simulation_controls.n_time_steps, 0);
+    EXPECT_EQ(simulation_controls.store_HH_wind_speed, 1);
+    EXPECT_EQ(simulation_controls.transpose_DCM, 1);
+    EXPECT_EQ(simulation_controls.debug_level, 0);
+    EXPECT_EQ(simulation_controls.output_format, 0);
+    EXPECT_EQ(simulation_controls.output_time_step, 0.0);
+    EXPECT_STREQ(simulation_controls.output_root_name.data(), "Output_ADIlib_default");
+    EXPECT_EQ(simulation_controls.n_channels, 0);
+    EXPECT_STREQ(simulation_controls.channel_names_c.data(), "");
+    EXPECT_STREQ(simulation_controls.channel_units_c.data(), "");
+}
+
+TEST(AerodynInflowTest, SimulationControls_Set) {
+    util::SimulationControls simulation_controls;
+    simulation_controls.aerodyn_input_passed = 0;
+    simulation_controls.inflowwind_input_passed = 0;
+    simulation_controls.interpolation_order = 2;
+    simulation_controls.time_step = 0.2;
+    simulation_controls.max_time = 1200.0;
+    simulation_controls.total_elapsed_time = 100.0;
+    simulation_controls.n_time_steps = 10;
+    simulation_controls.store_HH_wind_speed = 0;
+    simulation_controls.transpose_DCM = 0;
+    simulation_controls.debug_level = 1;
+    simulation_controls.output_format = 1;
+    simulation_controls.output_time_step = 1.0;
+    std::strncpy(
+        simulation_controls.output_root_name.data(), "Output_ADIlib_test",
+        simulation_controls.output_root_name.size() - 1
+    );
+    simulation_controls.output_root_name[simulation_controls.output_root_name.size() - 1] = '\0';
+    simulation_controls.n_channels = 1;
+    std::strncpy(
+        simulation_controls.channel_names_c.data(), "test_channel",
+        simulation_controls.channel_names_c.size() - 1
+    );
+    simulation_controls.channel_names_c[simulation_controls.channel_names_c.size() - 1] = '\0';
+    std::strncpy(
+        simulation_controls.channel_units_c.data(), "test_unit",
+        simulation_controls.channel_units_c.size() - 1
+    );
+    simulation_controls.channel_units_c[simulation_controls.channel_units_c.size() - 1] = '\0';
+
+    EXPECT_EQ(simulation_controls.aerodyn_input_passed, 0);
+    EXPECT_EQ(simulation_controls.inflowwind_input_passed, 0);
+    EXPECT_EQ(simulation_controls.interpolation_order, 2);
+    EXPECT_EQ(simulation_controls.time_step, 0.2);
+    EXPECT_EQ(simulation_controls.max_time, 1200.0);
+    EXPECT_EQ(simulation_controls.total_elapsed_time, 100.0);
+    EXPECT_EQ(simulation_controls.n_time_steps, 10);
+    EXPECT_EQ(simulation_controls.store_HH_wind_speed, 0);
+    EXPECT_EQ(simulation_controls.transpose_DCM, 0);
+    EXPECT_EQ(simulation_controls.debug_level, 1);
+    EXPECT_EQ(simulation_controls.output_format, 1);
+    EXPECT_EQ(simulation_controls.output_time_step, 1.0);
+    EXPECT_STREQ(simulation_controls.output_root_name.data(), "Output_ADIlib_test");
+    EXPECT_EQ(simulation_controls.n_channels, 1);
+    EXPECT_STREQ(simulation_controls.channel_names_c.data(), "test_channel");
+    EXPECT_STREQ(simulation_controls.channel_units_c.data(), "test_unit");
+}
+
+TEST(AerodynInflowTest, VTKSettings_Default) {
+    util::VTKSettings vtk_settings;
+    EXPECT_EQ(vtk_settings.write_vtk, 0);
+    EXPECT_EQ(vtk_settings.vtk_type, 1);
+    ExpectArrayNear(vtk_settings.vtk_nacelle_dimensions, {-2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f});
+    EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.5f);
+}
+
+TEST(AerodynInflowTest, VTKSettings_Set) {
+    util::VTKSettings vtk_settings;
+    vtk_settings.write_vtk = 1;
+    vtk_settings.vtk_type = 2;
+    vtk_settings.vtk_nacelle_dimensions = {-1.5f, -1.5f, 0.f, 5.f, 2.5f, 2.5f};
+    vtk_settings.vtk_hub_radius = 1.0f;
+
+    EXPECT_EQ(vtk_settings.write_vtk, 1);
+    EXPECT_EQ(vtk_settings.vtk_type, 2);
+    ExpectArrayNear(vtk_settings.vtk_nacelle_dimensions, {-1.5f, -1.5f, 0.f, 5.f, 2.5f, 2.5f});
+    EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.0f);
 }
 
 #endif
