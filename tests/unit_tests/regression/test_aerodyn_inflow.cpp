@@ -55,10 +55,10 @@ TEST(AerodynInflowTest, ErrorHandling_Throw) {
 
 TEST(AerodynInflowTest, FluidProperties_Default) {
     util::FluidProperties fluid_properties;
-    EXPECT_EQ(fluid_properties.density, 1.225f);
-    EXPECT_EQ(fluid_properties.kinematic_viscosity, 1.464E-5f);
-    EXPECT_EQ(fluid_properties.sound_speed, 335.f);
-    EXPECT_EQ(fluid_properties.vapor_pressure, 1700.f);
+    EXPECT_NEAR(fluid_properties.density, 1.225f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.kinematic_viscosity, 1.464E-5f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.sound_speed, 335.f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.vapor_pressure, 1700.f, 1e-6f);
 }
 
 TEST(AerodynInflowTest, FluidProperties_Set) {
@@ -67,18 +67,19 @@ TEST(AerodynInflowTest, FluidProperties_Set) {
     fluid_properties.kinematic_viscosity = 1.5E-5f;
     fluid_properties.sound_speed = 340.f;
     fluid_properties.vapor_pressure = 1800.f;
-    EXPECT_EQ(fluid_properties.density, 1.1f);
-    EXPECT_EQ(fluid_properties.kinematic_viscosity, 1.5E-5f);
-    EXPECT_EQ(fluid_properties.sound_speed, 340.f);
-    EXPECT_EQ(fluid_properties.vapor_pressure, 1800.f);
+
+    EXPECT_NEAR(fluid_properties.density, 1.1f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.kinematic_viscosity, 1.5E-5f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.sound_speed, 340.f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.vapor_pressure, 1800.f, 1e-6f);
 }
 
 TEST(AerodynInflowTest, EnvironmentalConditions_Default) {
     util::EnvironmentalConditions environmental_conditions;
-    EXPECT_EQ(environmental_conditions.gravity, 9.80665f);
-    EXPECT_EQ(environmental_conditions.atm_pressure, 103500.f);
-    EXPECT_EQ(environmental_conditions.water_depth, 0.f);
-    EXPECT_EQ(environmental_conditions.msl_offset, 0.f);
+    EXPECT_NEAR(environmental_conditions.gravity, 9.80665f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.atm_pressure, 103500.f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.water_depth, 0.f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.msl_offset, 0.f, 1e-6f);
 }
 
 TEST(AerodynInflowTest, EnvironmentalConditions_Set) {
@@ -87,10 +88,32 @@ TEST(AerodynInflowTest, EnvironmentalConditions_Set) {
     environmental_conditions.atm_pressure = 103000.f;
     environmental_conditions.water_depth = 100.f;
     environmental_conditions.msl_offset = 10.f;
-    EXPECT_EQ(environmental_conditions.gravity, 9.79665f);
-    EXPECT_EQ(environmental_conditions.atm_pressure, 103000.f);
-    EXPECT_EQ(environmental_conditions.water_depth, 100.f);
-    EXPECT_EQ(environmental_conditions.msl_offset, 10.f);
+
+    EXPECT_NEAR(environmental_conditions.gravity, 9.79665f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.atm_pressure, 103000.f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.water_depth, 100.f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.msl_offset, 10.f, 1e-6f);
+}
+
+TEST(AerodynInflowTest, SetPositionAndOrientation) {
+    std::array<double, 7> data = {1., 2., 3., 0.707107, 0.707107, 0., 0.};
+    std::array<float, 3> position;
+    std::array<double, 9> orientation;
+
+    util::SetPositionAndOrientation(data, position, orientation);
+
+    EXPECT_EQ(position[0], 1.0f);
+    EXPECT_EQ(position[1], 2.0f);
+    EXPECT_EQ(position[2], 3.0f);
+    EXPECT_NEAR(orientation[0], 1., 1.0E-6);
+    EXPECT_NEAR(orientation[1], 0., 1.0E-6);
+    EXPECT_NEAR(orientation[2], 0., 1.0E-6);
+    EXPECT_NEAR(orientation[3], 0., 1.0E-6);
+    EXPECT_NEAR(orientation[4], 0., 1.0E-6);
+    EXPECT_NEAR(orientation[5], -1., 1.0E-6);
+    EXPECT_NEAR(orientation[6], 0., 1.0E-6);
+    EXPECT_NEAR(orientation[7], 1., 1.0E-6);
+    EXPECT_NEAR(orientation[8], 0., 1.0E-6);
 }
 
 #endif
