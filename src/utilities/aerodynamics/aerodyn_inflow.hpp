@@ -17,7 +17,8 @@ namespace openturbine::util {
  *
  * This wrapper simplifies interaction with the ADI library, providing a modern C++ interface for
  * OpenTurbine developers to utilize AeroDyn and InflowWind functionality. It encapsulates the
- * C-based interface of the Fortran library, drawing inspiration from the existing Python interface.
+ * C-bindings of the Fortran library, drawing inspiration from the existing Python
+ * interface.
  *
  * ## Features
  *
@@ -53,6 +54,7 @@ namespace openturbine::util {
  *    - Handle any resulting errors using the ErrorHandling struct
  *
  * ## References
+ *
  * - OpenFAST/AeroDyn documentation:
  *   https://openfast.readthedocs.io/en/main/source/user/aerodyn/index.html
  * - OpenFAST/InflowWind documentation:
@@ -145,12 +147,15 @@ struct TurbineSettings {
         1., 0., 0., 0., 1., 0., 0., 0., 1.  //< Initial nacelle orientation
     };
     std::vector<std::array<float, 3>> initial_root_position{
-        {0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}  //< Initial root positions of blades
-    };
+        {0.f, 0.f, 0.f},  // blade 1
+        {0.f, 0.f, 0.f},  // blade 2
+        {0.f, 0.f, 0.f}   // blade 3
+    };                    //< Initial root positions of blades
     std::vector<std::array<double, 9>> initial_root_orientation{
-        {1., 0., 0., 0., 1., 0., 0., 0., 1.},  //< Initial root orientations
-        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
-        {1., 0., 0., 0., 1., 0., 0., 0., 1.}};
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},  // blade 1
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},  // blade 2
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.}   // blade 3
+    };                                         //< Initial root orientations of blades
 
     /// Default constructor
     TurbineSettings() = default;
@@ -186,58 +191,6 @@ struct TurbineSettings {
 };
 
 /**
- * @brief Struct to hold the settings for simulation controls
- *
- * @details This struct holds the settings for simulation controls, including input file handling,
- * interpolation order, time-related variables, and flags.
- */
-struct SimulationControls {
-    static constexpr size_t kDefaultStringLength{1025};  //< Max length for output filenames
-
-    // Input file handling
-    int aerodyn_input_passed{1};     //< Input file passed for AeroDyn module? (1: passed)
-    int inflowwind_input_passed{1};  //< Input file passed for InflowWind module (1: passed)
-
-    // Interpolation order (must be either 1: linear, or 2: quadratic)
-    int interpolation_order{1};  //< Interpolation order - linear by default
-
-    // Initial time related variables
-    double time_step{0.1};          //< Simulation timestep (s)
-    double max_time{600.};          //< Maximum simulation time (s)
-    double total_elapsed_time{0.};  //< Total elapsed time (s)
-    int n_time_steps{0};            //< Number of time steps
-
-    // Flags
-    int store_HH_wind_speed{1};  //< Flag to store HH wind speed
-    int transpose_DCM{1};        //< Flag to transpose the direction cosine matrix
-    int debug_level{0};          //< Debug level (0-4)
-
-    // Outputs
-    int output_format{0};        //< File format for writing outputs
-    float output_time_step{0.};  //< Timestep for outputs to file
-    std::array<char, kDefaultStringLength> output_root_name{
-        "Output_ADIlib_default"  //< Root name for output files
-    };
-    int n_channels{0};                              //< Number of channels returned
-    std::array<char, 20 * 8000> channel_names_c{};  //< Output channel names
-    std::array<char, 20 * 8000> channel_units_c{};  //< Output channel units
-};
-
-/**
- * @brief Struct to hold the settings for VTK output
- *
- * @details This struct holds the settings for VTK output, including the flag to write VTK output,
- * the type of VTK output, and the nacelle dimensions for VTK rendering.
- */
-struct VTKSettings {
-    int write_vtk{false};                       //< Flag to write VTK output
-    int vtk_type{1};                            //< Type of VTK output (1: surface meshes)
-    std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
-                                                -2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f};
-    float vtk_hub_radius{1.5f};  //< Hub radius for VTK rendering
-};
-
-/**
  * @brief Struct to hold the initial motion of the structural mesh
  *
  * @details This struct holds the initial motion of the structural mesh, including the number of
@@ -260,17 +213,31 @@ struct StructuralMesh {
     StructuralMesh() = default;
 
     /// Constructor to initialize all data based on provided 7x1 inputs
-    StructuralMesh(const std::vector<std::array<double, 7>>& mesh_data, int n_mesh_points = 1)
+    StructuralMesh(
+        const std::vector<std::array<double, 7>>& mesh_data,
+        std::vector<int> mesh_point_to_blade_num, int n_mesh_points = 1
+    )
         : n_mesh_points(n_mesh_points),
           initial_mesh_position(static_cast<size_t>(n_mesh_points)),
           initial_mesh_orientation(static_cast<size_t>(n_mesh_points)),
           mesh_point_to_blade_num(static_cast<size_t>(n_mesh_points)) {
+        if (mesh_data.size() != static_cast<size_t>(n_mesh_points) ||
+            mesh_point_to_blade_num.size() != static_cast<size_t>(n_mesh_points)) {
+            throw std::invalid_argument(
+                "Number of mesh data entries and mesh point to blade number entries must match "
+                "n_mesh_points"
+            );
+        }
+
         // Set mesh position and orientation
         for (size_t i = 0; i < static_cast<size_t>(n_mesh_points); ++i) {
             SetPositionAndOrientation(
                 mesh_data[i], initial_mesh_position[i], initial_mesh_orientation[i]
             );
         }
+
+        // Set mesh point to blade number mapping
+        this->mesh_point_to_blade_num = mesh_point_to_blade_num;
     }
 };
 
@@ -411,6 +378,58 @@ struct MeshMotionData {
             num_mesh_pts
         );
     }
+};
+
+/**
+ * @brief Struct to hold the settings for simulation controls
+ *
+ * @details This struct holds the settings for simulation controls, including input file handling,
+ * interpolation order, time-related variables, and flags.
+ */
+struct SimulationControls {
+    static constexpr size_t kDefaultStringLength{1025};  //< Max length for output filenames
+
+    // Input file handling
+    int aerodyn_input_passed{1};     //< Input file passed for AeroDyn module? (1: passed)
+    int inflowwind_input_passed{1};  //< Input file passed for InflowWind module (1: passed)
+
+    // Interpolation order (must be either 1: linear, or 2: quadratic)
+    int interpolation_order{1};  //< Interpolation order - linear by default
+
+    // Initial time related variables
+    double time_step{0.1};          //< Simulation timestep (s)
+    double max_time{600.};          //< Maximum simulation time (s)
+    double total_elapsed_time{0.};  //< Total elapsed time (s)
+    int n_time_steps{0};            //< Number of time steps
+
+    // Flags
+    int store_HH_wind_speed{1};  //< Flag to store HH wind speed
+    int transpose_DCM{1};        //< Flag to transpose the direction cosine matrix
+    int debug_level{0};          //< Debug level (0-4)
+
+    // Outputs
+    int output_format{0};        //< File format for writing outputs
+    float output_time_step{0.};  //< Timestep for outputs to file
+    std::array<char, kDefaultStringLength> output_root_name{
+        "Output_ADIlib_default"  //< Root name for output files
+    };
+    int n_channels{0};                              //< Number of channels returned
+    std::array<char, 20 * 8000> channel_names_c{};  //< Output channel names
+    std::array<char, 20 * 8000> channel_units_c{};  //< Output channel units
+};
+
+/**
+ * @brief Struct to hold the settings for VTK output
+ *
+ * @details This struct holds the settings for VTK output, including the flag to write VTK output,
+ * the type of VTK output, and the nacelle dimensions for VTK rendering.
+ */
+struct VTKSettings {
+    int write_vtk{false};                       //< Flag to write VTK output
+    int vtk_type{1};                            //< Type of VTK output (1: surface meshes)
+    std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
+                                                -2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f};
+    float vtk_hub_radius{1.5f};  //< Hub radius for VTK rendering
 };
 
 /**
