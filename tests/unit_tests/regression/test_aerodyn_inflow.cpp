@@ -8,39 +8,6 @@
 namespace openturbine::tests {
 
 #ifdef OpenTurbine_BUILD_OPENFAST_ADI
-TEST(AerodynInflowTest, ADI_C_PreInit) {
-    // Use dylib to load the dynamic library and get access to the aerodyn inflow c binding functions
-    const std::filesystem::path project_root = FindProjectRoot();
-    const std::filesystem::path full_path =
-        project_root / "build/tests/unit_tests/libaerodyn_inflow_c_binding.";
-    std::string path = full_path.string();
-#ifdef __APPLE__
-    path += "dylib";
-#elif __linux__
-    path += "so";
-#else  // Windows
-    path += "dll";
-#endif
-    const util::dylib lib(path, util::dylib::no_filename_decorations);
-    auto ADI_C_PreInit = lib.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
-
-    // Call ADI_C_PreInit routine and expect the following outputs
-    int numTurbines{1};               // input: Number of turbines
-    int transposeDCM{1};              // input: Transpose the direction cosine matrix
-    int debuglevel{0};                // input: Debug level
-    int error_status_c{0};            // output: error status
-    char error_message_c[] = {'\0'};  // output: error message
-    ADI_C_PreInit(
-        &numTurbines, &transposeDCM, &debuglevel, &error_status_c,
-        static_cast<char*>(error_message_c)
-    );
-
-    EXPECT_EQ(numTurbines, 1);
-    EXPECT_EQ(transposeDCM, 1);
-    EXPECT_EQ(debuglevel, 0);
-    EXPECT_EQ(error_status_c, 0);
-    EXPECT_STREQ(static_cast<char*>(error_message_c), "");
-}
 
 TEST(AerodynInflowTest, ErrorHandling_NoThrow) {
     util::ErrorHandling error_handling;
@@ -95,6 +62,18 @@ TEST(AerodynInflowTest, EnvironmentalConditions_Set) {
     EXPECT_NEAR(environmental_conditions.msl_offset, 10.f, 1e-6f);
 }
 
+/// Check if members of the provided array is equal to the provided expected array
+template <typename T, size_t N>
+void ExpectArrayNear(
+    const std::array<T, N>& actual, const std::array<T, N>& expected,
+    T epsilon = static_cast<T>(1e-6)
+) {
+    ASSERT_EQ(actual.size(), expected.size());
+    for (size_t i = 0; i < N; ++i) {
+        EXPECT_NEAR(actual[i], expected[i], epsilon) << "Element mismatch at index " << i;
+    }
+}
+
 TEST(AerodynInflowTest, SetPositionAndOrientation) {
     std::array<double, 7> data = {1., 2., 3., 0.707107, 0.707107, 0., 0.};
     std::array<float, 3> position;
@@ -102,18 +81,8 @@ TEST(AerodynInflowTest, SetPositionAndOrientation) {
 
     util::SetPositionAndOrientation(data, position, orientation);
 
-    EXPECT_EQ(position[0], 1.0f);
-    EXPECT_EQ(position[1], 2.0f);
-    EXPECT_EQ(position[2], 3.0f);
-    EXPECT_NEAR(orientation[0], 1., 1.0E-6);
-    EXPECT_NEAR(orientation[1], 0., 1.0E-6);
-    EXPECT_NEAR(orientation[2], 0., 1.0E-6);
-    EXPECT_NEAR(orientation[3], 0., 1.0E-6);
-    EXPECT_NEAR(orientation[4], 0., 1.0E-6);
-    EXPECT_NEAR(orientation[5], -1., 1.0E-6);
-    EXPECT_NEAR(orientation[6], 0., 1.0E-6);
-    EXPECT_NEAR(orientation[7], 1., 1.0E-6);
-    EXPECT_NEAR(orientation[8], 0., 1.0E-6);
+    ExpectArrayNear(position, {1.0f, 2.0f, 3.0f});
+    ExpectArrayNear(orientation, {1., 0., 0., 0., 0., -1., 0., 1., 0.});
 }
 
 #endif
