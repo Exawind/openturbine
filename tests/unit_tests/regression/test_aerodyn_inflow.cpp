@@ -179,6 +179,36 @@ TEST(AerodynInflowTest, MeshMotionData_Set) {
     ExpectArrayNear(mesh_motion_data.acceleration[0], {7.f, 8.f, 9.f, 10.f, 11.f, 12.f});
 }
 
+TEST(AerodynInflowTest, MeshMotionData_CheckArraySize_NoThrow) {
+    std::vector<std::array<double, 7>> mesh_data = {{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
+    std::vector<std::array<float, 6>> mesh_velocities = {{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
+    std::vector<std::array<float, 6>> mesh_accelerations = {{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+    util::MeshMotionData mesh_motion_data(mesh_data, mesh_velocities, mesh_accelerations, 1);
+
+    mesh_motion_data.CheckArraySize(mesh_motion_data.position, 1, 3, "position", "mesh motion data");
+    mesh_motion_data.CheckArraySize(
+        mesh_motion_data.orientation, 1, 9, "orientation", "mesh motion data"
+    );
+    mesh_motion_data.CheckArraySize(mesh_motion_data.velocity, 1, 6, "velocity", "mesh motion data");
+    mesh_motion_data.CheckArraySize(
+        mesh_motion_data.acceleration, 1, 6, "acceleration", "mesh motion data"
+    );
+}
+
+TEST(AerodynInflowTest, MeshMotionData_CheckArraySize_ExpectThrow) {
+    std::vector<std::array<double, 7>> mesh_data = {{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
+    std::vector<std::array<float, 6>> mesh_velocities = {{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
+    std::vector<std::array<float, 6>> mesh_accelerations = {{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+    util::MeshMotionData mesh_motion_data(mesh_data, mesh_velocities, mesh_accelerations, 1);
+
+    EXPECT_THROW(
+        mesh_motion_data.CheckArraySize(
+            mesh_motion_data.position, 2, 3, "position", "mesh motion data"  // Expected 1 row
+        ),
+        std::invalid_argument
+    );
+}
+
 TEST(AerodynInflowTest, SimulationControls_Default) {
     util::SimulationControls simulation_controls;
     EXPECT_EQ(simulation_controls.aerodyn_input_passed, 1);
