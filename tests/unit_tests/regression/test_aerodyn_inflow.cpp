@@ -183,6 +183,30 @@ TEST(AerodynInflowTest, StructuralMesh_Set) {
     EXPECT_EQ(structural_mesh.mesh_point_to_blade_num[0], 1);
 }
 
+TEST(AerodynInflowTest, MeshMotionData_Default) {
+    util::MeshMotionData mesh_motion_data;
+    EXPECT_EQ(mesh_motion_data.position.size(), 0);
+    EXPECT_EQ(mesh_motion_data.orientation.size(), 0);
+    EXPECT_EQ(mesh_motion_data.velocity.size(), 0);
+    EXPECT_EQ(mesh_motion_data.acceleration.size(), 0);
+}
+
+TEST(AerodynInflowTest, MeshMotionData_Set) {
+    std::vector<std::array<double, 7>> mesh_data = {{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
+    std::vector<std::array<float, 6>> mesh_velocities = {{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
+    std::vector<std::array<float, 6>> mesh_accelerations = {{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+    util::MeshMotionData mesh_motion_data(mesh_data, mesh_velocities, mesh_accelerations, 1);
+
+    EXPECT_EQ(mesh_motion_data.position.size(), 1);
+    EXPECT_EQ(mesh_motion_data.orientation.size(), 1);
+    EXPECT_EQ(mesh_motion_data.velocity.size(), 1);
+    EXPECT_EQ(mesh_motion_data.acceleration.size(), 1);
+    ExpectArrayNear(mesh_motion_data.position[0], {1.f, 2.f, 3.f});
+    ExpectArrayNear(mesh_motion_data.orientation[0], {1., 0., 0., 0., 0., -1., 0., 1., 0.});
+    ExpectArrayNear(mesh_motion_data.velocity[0], {1.f, 2.f, 3.f, 4.f, 5.f, 6.f});
+    ExpectArrayNear(mesh_motion_data.acceleration[0], {7.f, 8.f, 9.f, 10.f, 11.f, 12.f});
+}
+
 #endif
 
 }  // namespace openturbine::tests

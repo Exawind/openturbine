@@ -258,7 +258,11 @@ struct MeshMotionData {
     MeshMotionData() = default;
 
     /// Constructor to initialize all data based on provided 7x1 inputs
-    MeshMotionData(const std::vector<std::array<double, 7>>& mesh_data, int n_mesh_points = 1)
+    MeshMotionData(
+        const std::vector<std::array<double, 7>>& mesh_data,
+        std::vector<std::array<float, 6>> mesh_velocities,
+        std::vector<std::array<float, 6>> mesh_accelerations, int n_mesh_points = 1
+    )
         : position(static_cast<size_t>(n_mesh_points)),
           orientation(static_cast<size_t>(n_mesh_points)),
           velocity(static_cast<size_t>(n_mesh_points)),
@@ -267,6 +271,10 @@ struct MeshMotionData {
         for (size_t i = 0; i < static_cast<size_t>(n_mesh_points); ++i) {
             SetPositionAndOrientation(mesh_data[i], position[i], orientation[i]);
         }
+
+        // Set mesh velocities and accelerations
+        this->velocity = mesh_velocities;
+        this->acceleration = mesh_accelerations;
     }
 
     /**
@@ -383,8 +391,8 @@ struct MeshMotionData {
 /**
  * @brief Struct to hold the settings for simulation controls
  *
- * @details This struct holds the settings for simulation controls, including input file handling,
- * interpolation order, time-related variables, and flags.
+ * @details This struct holds the settings for simulation controls, including input file
+ * handling, interpolation order, time-related variables, and flags.
  */
 struct SimulationControls {
     static constexpr size_t kDefaultStringLength{1025};  //< Max length for output filenames
@@ -421,8 +429,8 @@ struct SimulationControls {
 /**
  * @brief Struct to hold the settings for VTK output
  *
- * @details This struct holds the settings for VTK output, including the flag to write VTK output,
- * the type of VTK output, and the nacelle dimensions for VTK rendering.
+ * @details This struct holds the settings for VTK output, including the flag to write VTK
+ * output, the type of VTK output, and the nacelle dimensions for VTK rendering.
  */
 struct VTKSettings {
     int write_vtk{false};                       //< Flag to write VTK output
