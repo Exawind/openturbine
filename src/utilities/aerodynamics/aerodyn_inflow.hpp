@@ -11,54 +11,63 @@
 namespace openturbine::util {
 
 /**
- * Following contains a C++ wrapper to interact with the AeroDyn/InflowWind (ADI) shared library,
- * originally written in Fortran, that exposes C-bindings for the AeroDyn and InflowWind modules of
- * OpenFAST. This wrapper simplifies interaction with the ADI library (particularly the C-based
- * interface, with inspiration from the python interface), providing a modern interface for
- * OpenTurbine devs to run AeroDyn x InflowWind.
+ * AeroDynInflowLibrary: A C++ wrapper for the AeroDyn/InflowWind (ADI) shared library
+ *
+ * ## Overview
+ *
+ * This wrapper simplifies interaction with the ADI library, providing a modern C++ interface for
+ * OpenTurbine developers to utilize AeroDyn and InflowWind functionality. It encapsulates the
+ * C-based interface of the Fortran library, drawing inspiration from the existing Python interface.
+ *
+ * ## Features
  *
  * AeroDyn utilizes blade element momentum (BEM) theory to calculate aerodynamic forces acting
  * on each blade section. It accounts for factors such as:
- *  - Dynamic stall
+ *  - Dynamic stall (Beddoes-Leishman or OLAF models)
  *  - Unsteady aerodynamics
- *  - Tower shadow
+ *  - Tower shadow effects
  *  - Wind shear
+ *  - Tip and hub losses
  *
  * InflowWind simulates the inflow conditions around wind turbines by modeling spatially and
- * temporally varying wind fields. It enables the simulation of complex wind phenomena, such as:
- *  - Turbulence
- *  - Wind shear
- *  - Gusts
- *  - Free vortex wake
+ * temporally varying wind fields. It enables the simulation of complex wind phenomena, including:
+ *  - Atmospheric turbulence (e.g., Kaimal, von Karman spectra)
+ *  - Wind shear (power law or logarithmic profiles)
+ *  - Discrete gusts and extreme events
+ *  - Various wind field types (uniform, full-field turbulence, user-defined)
  *
- * Canonical workflow for using the AeroDyn x InflowWind C++ wrapper (see unit test directory for
- * example):
- *   1.  Instantiate the AeroDynInflowLibrary class
- *           - Modify the settings from provided defaults as needed
- *           - Set input files for AeroDyn and InflowWind (from file or as strings)
- *   2.  Initialize the AeroDyn Fortran library via the following steps:
- *           - PreInitialize()  -- pre-initialize the AeroDyn library i.e. set number of turbines
- *           - SetupRotor()     -- set up rotor-specific parameters i.e. initialize one rotor
- *                                  (iterate over turbines)
- *           - Initialize()     -- initialize the AeroDyn library with input files i.e. actually
- *                                  call ADI to initialize the simulation
- *   3.  Perform the simulation by iterating over timesteps:
- *           - SetupRotorMotion()         -- set motions of single turbine (iterate over turbines)
- *           - UpdateStates()             -- update to next time step
- *           - CalculateOutputChannels()  -- get outputs
- *           - GetRotorAerodynamicLoads() -- get loads per rotor (iterate over turbines)
- *   4. Complete the simulation
- *         - Call Finalize() to close the AeroDyn library and free memory
- *         - Handle any resulting errors
+ * ## Usage
  *
- * References:
- * - OpenFAST/AeroDyn:
- *   https://github.com/OpenFAST/openfast/tree/main/modules/aerodyn
+ * 1. Instantiate the AeroDynInflowLibrary class with the path to the shared library
+ * 2. Initialize the AeroDyn/InflowWind modules:
+ *    - PreInitialize(): Set up general parameters
+ *    - SetupRotor(): Configure rotor-specific settings (iterate over turbines)
+ *    - Initialize(): Complete initialization with input files
+ * 3. Perform the simulation by iterating over timesteps:
+ *    - SetupRotorMotion(): Update rotor motion (iterate over turbines)
+ *    - UpdateStates(): Advance internal states
+ *    - CalculateOutputChannels(): Compute output values
+ *    - GetRotorAerodynamicLoads(): Retrieve aerodynamic forces and moments
+ * 4. Complete the simulation:
+ *    - Finalize(): Clean up and release resources
+ *    - Handle any resulting errors using the ErrorHandling struct
+ *
+ * ## References
+ * - OpenFAST/AeroDyn documentation:
+ *   https://openfast.readthedocs.io/en/main/source/user/aerodyn/index.html
+ * - OpenFAST/InflowWind documentation:
+ *   https://openfast.readthedocs.io/en/main/source/user/inflowwind/index.html
  * - AeroDyn InflowWind C bindings:
  *   https://github.com/OpenFAST/openfast/blob/dev/modules/aerodyn/src/AeroDyn_Inflow_C_Binding.f90
  */
 
-/// Struct for error handling settings
+/**
+ * @brief Struct for error handling settings
+ *
+ * @details This struct holds the error handling settings for the AeroDynInflow library wrapper. It
+ * includes an error level enum, a maximum error message length, and methods for checking and
+ * handling errors.
+ */
 struct ErrorHandling {
     /// Error levels used in InflowWind
     enum class ErrorLevel {
@@ -76,9 +85,11 @@ struct ErrorHandling {
     int error_status{0};                                     //< Error status
     std::array<char, kErrorMessagesLength> error_message{};  //< Error message buffer
 
-    /// Checks for errors and throws an exception if found - otherwise returns true
-    bool CheckError() const {
-        return error_status == 0 ? true : throw std::runtime_error(error_message.data());
+    /// Checks for errors and throws an exception if found
+    void CheckError() const {
+        if (error_status != 0) {
+            throw std::runtime_error(error_message.data());
+        }
     }
 };
 
@@ -98,9 +109,14 @@ struct EnvironmentalConditions {
     float msl_offset{0.f};         //< Mean sea level to still water level offset (m)
 };
 
-/// Function to break apart a 7x1 generalized coords vector into position (3x1 vector) and
-/// orientation (9x1 vector) components
-static void SetPositionAndOrientation(
+/**
+ * @brief Converts a 7-element array of position and quaternion to separate position and orientation
+ * arrays
+ * @param data Input array: [x, y, z, qw, qx, qy, qz]
+ * @param position Output array for position [x, y, z]
+ * @param orientation Output array for flattened 3x3 rotation matrix
+ */
+inline void SetPositionAndOrientation(
     const std::array<double, 7>& data, std::array<float, 3>& position,
     std::array<double, 9>& orientation
 ) {
@@ -109,19 +125,14 @@ static void SetPositionAndOrientation(
         position[i] = static_cast<float>(data[i]);
     }
 
-    // Set orientation (convert last 4 elements to 3x3 matrix)
-    auto orientation_2D =
-        QuaternionToRotationMatrix(std::array<double, 4>{data[3], data[4], data[5], data[6]});
+    // Set orientation (convert last 4 elements to 3x3 rotation matrix)
+    auto orientation_2D = QuaternionToRotationMatrix({data[3], data[4], data[5], data[6]});
 
     // Flatten the 3x3 matrix to a 1D array
-    for (size_t i = 0; i < 3; ++i) {
-        for (size_t j = 0; j < 3; ++j) {
-            orientation[i * 3 + j] = orientation_2D[i][j];
-        }
-    }
+    std::copy(&orientation_2D[0][0], &orientation_2D[0][0] + 9, orientation.begin());
 }
 
-/// Struct to hold the initial settings for the turbine
+/// Struct to hold the initial settings/motion for the turbine
 struct TurbineSettings {
     int n_turbines{1};                                      //< Number of turbines - 1 by default
     int n_blades{3};                                        //< Number of blades - 3 by default
@@ -135,7 +146,7 @@ struct TurbineSettings {
                                                                 static_cast<size_t>(n_blades)};
 
     /// Default constructor
-    TurbineSettings();
+    TurbineSettings() = default;
 
     /// Constructor to initialize all data based on provided 7x1 inputs
     TurbineSettings(
@@ -146,6 +157,10 @@ struct TurbineSettings {
           n_blades(n_blades),
           initial_root_position(static_cast<size_t>(n_blades)),
           initial_root_orientation(static_cast<size_t>(n_blades)) {
+        if (root_data.size() != static_cast<size_t>(n_blades)) {
+            throw std::invalid_argument("Number of root data entries must match n_blades");
+        }
+
         // Set hub position and orientation
         SetPositionAndOrientation(hub_data, initial_hub_position, initial_hub_orientation);
 
@@ -163,7 +178,12 @@ struct TurbineSettings {
     };
 };
 
-/// Struct to hold the settings for simulation controls
+/**
+ * @brief Struct to hold the settings for simulation controls
+ *
+ * @details This struct holds the settings for simulation controls, including input file handling,
+ * interpolation order, time-related variables, and flags.
+ */
 struct SimulationControls {
     static constexpr size_t kDefaultStringLength{1025};  //< Max length for output filenames
 
@@ -196,7 +216,12 @@ struct SimulationControls {
     std::array<char, 20 * 8000> channel_units_c{};  //< Output channel units
 };
 
-/// Struct to hold the settings for VTK output
+/**
+ * @brief Struct to hold the settings for VTK output
+ *
+ * @details This struct holds the settings for VTK output, including the flag to write VTK output,
+ * the type of VTK output, and the nacelle dimensions for VTK rendering.
+ */
 struct VTKSettings {
     int write_vtk{false};                       //< Flag to write VTK output
     int vtk_type{1};                            //< Type of VTK output (1: surface meshes)
@@ -205,7 +230,13 @@ struct VTKSettings {
     float vtk_hub_radius{1.5f};  //< Hub radius for VTK rendering
 };
 
-/// Struct to hold the initial motion of the structural mesh
+/**
+ * @brief Struct to hold the initial motion of the structural mesh
+ *
+ * @details This struct holds the initial motion of the structural mesh, including the number of
+ * mesh points, the initial mesh position, the initial mesh orientation, and the mapping of mesh
+ * points to blade numbers.
+ */
 struct StructuralMesh {
     int n_mesh_points{1};                                       //< Number of mesh points
     std::vector<std::array<float, 3>> initial_mesh_position{};  //< N x 3 array [x, y, z]
@@ -232,6 +263,12 @@ struct StructuralMesh {
     }
 };
 
+/**
+ * @brief Struct to hold the motion data of the structural mesh
+ *
+ * @details This struct holds the motion data of the structural mesh, i.e. position, orientation,
+ * velocity, and acceleration of the mesh points.
+ */
 struct MeshMotionData {
     std::vector<std::array<float, 3>> position;      //< N x 3 array [x, y, z]
     std::vector<std::array<double, 9>> orientation;  //< N x 9 array [r11, r12, ..., r33]
@@ -253,7 +290,16 @@ struct MeshMotionData {
             SetPositionAndOrientation(mesh_data[i], position[i], orientation[i]);
         }
     }
-    /// Method to check the sizes of the input arrays
+
+    /**
+     * @brief Method to check the dimensions of the input arrays
+     *
+     * @param array The input array to check
+     * @param expected_rows The expected number of rows
+     * @param expected_cols The expected number of columns
+     * @param array_name The name of the array
+     * @param node_type The type of node (e.g., "hub", "nacelle", "root", "mesh")
+     */
     template <typename T, size_t N>
     void CheckArraySize(
         const std::vector<std::array<T, N>>& array, size_t expected_rows, size_t expected_cols,
@@ -276,8 +322,16 @@ struct MeshMotionData {
         }
     }
 
-    /// Method to check the input motions i.e. position, orientation, velocity, and acceleration
-    /// arrays
+    /**
+     * @brief Method to check the array sizes of the input motions for hub, nacelle, root, and mesh
+     * points
+     *
+     * @param node_type The type of node (e.g., "hub", "nacelle", "root", "mesh")
+     * @param expected_position_dim The expected dimension of the position array
+     * @param expected_orientation_dim The expected dimension of the orientation array
+     * @param expected_vel_acc_dim The expected dimension of the velocity and acceleration arrays
+     * @param expected_number_of_nodes The expected number of nodes for the input motions
+     */
     void CheckInputMotions(
         const std::string& node_type, size_t expected_position_dim, size_t expected_orientation_dim,
         size_t expected_vel_acc_dim, size_t expected_number_of_nodes
