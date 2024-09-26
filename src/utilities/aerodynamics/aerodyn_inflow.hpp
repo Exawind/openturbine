@@ -53,6 +53,8 @@ namespace openturbine::util {
  *    - Finalize(): Clean up and release resources
  *    - Handle any resulting errors using the ErrorHandling struct
  *
+ * Note: Refer to the unit tests for more detailed examples of how to use this wrapper.
+ *
  * ## References
  *
  * - OpenFAST/AeroDyn documentation:
@@ -134,7 +136,14 @@ inline void SetPositionAndOrientation(
     std::copy(&orientation_2D[0][0], &orientation_2D[0][0] + 9, orientation.begin());
 }
 
-/// Struct to hold the initial settings/motion for the turbine
+/**
+ * @brief Struct to hold the initial settings/motion for the turbine
+ *
+ * @details This struct holds the initial settings/motion for the turbine, including the number of
+ * turbines, the number of blades, the initial hub position, the initial hub orientation, the initial
+ * nacelle position, the initial nacelle orientation, the initial root positions, and the initial
+ * root orientations.
+ */
 struct TurbineSettings {
     int n_turbines{1};                               //< Number of turbines - 1 by default
     int n_blades{3};                                 //< Number of blades - 3 by default
@@ -194,8 +203,8 @@ struct TurbineSettings {
  * @brief Struct to hold the initial motion of the structural mesh
  *
  * @details This struct holds the initial motion of the structural mesh, including the number of
- * mesh points, the initial mesh position, the initial mesh orientation, and the mapping of mesh
- * points to blade numbers.
+ * mesh points i.e. nodes, the initial mesh position, the initial mesh orientation, and the mapping
+ * of mesh points to blade numbers.
  */
 struct StructuralMesh {
     int n_mesh_points{1};  //< Number of mesh points
@@ -212,7 +221,8 @@ struct StructuralMesh {
     /// Default constructor
     StructuralMesh() = default;
 
-    /// Constructor to initialize all data based on provided 7x1 inputs
+    /// Constructor to initialize all data based on provided 7x1 inputs and mapping of mesh points
+    /// to blade numbers
     StructuralMesh(
         const std::vector<std::array<double, 7>>& mesh_data,
         std::vector<int> mesh_point_to_blade_num, int n_mesh_points = 1
@@ -220,9 +230,9 @@ struct StructuralMesh {
         : n_mesh_points(n_mesh_points),
           initial_mesh_position(static_cast<size_t>(n_mesh_points)),
           initial_mesh_orientation(static_cast<size_t>(n_mesh_points)),
-          mesh_point_to_blade_num(static_cast<size_t>(n_mesh_points)) {
+          mesh_point_to_blade_num(std::move(mesh_point_to_blade_num)) {
         if (mesh_data.size() != static_cast<size_t>(n_mesh_points) ||
-            mesh_point_to_blade_num.size() != static_cast<size_t>(n_mesh_points)) {
+            this->mesh_point_to_blade_num.size() != static_cast<size_t>(n_mesh_points)) {
             throw std::invalid_argument(
                 "Number of mesh data entries and mesh point to blade number entries must match "
                 "n_mesh_points"
@@ -235,9 +245,6 @@ struct StructuralMesh {
                 mesh_data[i], initial_mesh_position[i], initial_mesh_orientation[i]
             );
         }
-
-        // Set mesh point to blade number mapping
-        this->mesh_point_to_blade_num = mesh_point_to_blade_num;
     }
 };
 
