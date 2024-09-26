@@ -154,6 +154,35 @@ TEST(AerodynInflowTest, VTKSettings_Default) {
     EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.5f);
 }
 
+TEST(AerodynInflowTest, StructuralMesh_Default) {
+    util::StructuralMesh structural_mesh;
+    EXPECT_EQ(structural_mesh.n_mesh_points, 1);
+    EXPECT_EQ(structural_mesh.initial_mesh_position.size(), 1);
+    EXPECT_EQ(structural_mesh.initial_mesh_orientation.size(), 1);
+    EXPECT_EQ(structural_mesh.mesh_point_to_blade_num.size(), 1);
+    ExpectArrayNear(structural_mesh.initial_mesh_position[0], {0.f, 0.f, 0.f});
+    ExpectArrayNear(
+        structural_mesh.initial_mesh_orientation[0], {1., 0., 0., 0., 1., 0., 0., 0., 1.}
+    );
+    EXPECT_EQ(structural_mesh.mesh_point_to_blade_num[0], 1);
+}
+
+TEST(AerodynInflowTest, StructuralMesh_Set) {
+    std::vector<std::array<double, 7>> mesh_data = {{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
+    std::vector<int> mesh_point_to_blade_num = {1};
+    util::StructuralMesh structural_mesh(mesh_data, mesh_point_to_blade_num, 1);
+
+    EXPECT_EQ(structural_mesh.n_mesh_points, 1);
+    EXPECT_EQ(structural_mesh.initial_mesh_position.size(), 1);
+    EXPECT_EQ(structural_mesh.initial_mesh_orientation.size(), 1);
+    EXPECT_EQ(structural_mesh.mesh_point_to_blade_num.size(), 1);
+    ExpectArrayNear(structural_mesh.initial_mesh_position[0], {1.f, 2.f, 3.f});
+    ExpectArrayNear(
+        structural_mesh.initial_mesh_orientation[0], {1., 0., 0., 0., 0., -1., 0., 1., 0.}
+    );
+    EXPECT_EQ(structural_mesh.mesh_point_to_blade_num[0], 1);
+}
+
 #endif
 
 }  // namespace openturbine::tests
