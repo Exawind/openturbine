@@ -249,10 +249,11 @@ struct StructuralMesh {
 };
 
 /**
- * @brief Struct to hold the motion data of the structural mesh
+ * @brief Struct to hold the motion data of any structural mesh component
  *
- * @details This struct holds the motion data of the structural mesh, i.e. position, orientation,
- * velocity, and acceleration of the mesh points.
+ * @details This struct holds the motion data (i.e. position, orientation,
+ * velocity, and acceleration) of the structural mesh, which can be the hub, nacelle, root, or
+ * mesh points/nodes.
  */
 struct MeshMotionData {
     std::vector<std::array<float, 3>> position;      //< N x 3 array [x, y, z]
@@ -264,24 +265,25 @@ struct MeshMotionData {
     /// Default constructor
     MeshMotionData() = default;
 
-    /// Constructor to initialize all data based on provided 7x1 inputs
+    /// Constructor to initialize all data based on provided inputs
     MeshMotionData(
         const std::vector<std::array<double, 7>>& mesh_data,
-        std::vector<std::array<float, 6>> mesh_velocities,
-        std::vector<std::array<float, 6>> mesh_accelerations, int n_mesh_points = 1
+        const std::vector<std::array<float, 6>>& mesh_velocities,
+        const std::vector<std::array<float, 6>>& mesh_accelerations, size_t n_mesh_points = 1
     )
-        : position(static_cast<size_t>(n_mesh_points)),
-          orientation(static_cast<size_t>(n_mesh_points)),
-          velocity(static_cast<size_t>(n_mesh_points)),
-          acceleration(static_cast<size_t>(n_mesh_points)) {
-        // Set mesh position and orientation
-        for (size_t i = 0; i < static_cast<size_t>(n_mesh_points); ++i) {
-            SetPositionAndOrientation(mesh_data[i], position[i], orientation[i]);
+        : position(n_mesh_points),
+          orientation(n_mesh_points),
+          velocity(std::move(mesh_velocities)),
+          acceleration(std::move(mesh_accelerations)) {
+        if (mesh_data.size() != n_mesh_points || mesh_velocities.size() != n_mesh_points ||
+            mesh_accelerations.size() != n_mesh_points) {
+            throw std::invalid_argument("Input vector sizes must match n_mesh_points");
         }
 
-        // Set mesh velocities and accelerations
-        this->velocity = mesh_velocities;
-        this->acceleration = mesh_accelerations;
+        // Set mesh position and orientation
+        for (size_t i = 0; i < n_mesh_points; ++i) {
+            SetPositionAndOrientation(mesh_data[i], position[i], orientation[i]);
+        }
     }
 
     /**
@@ -291,60 +293,51 @@ struct MeshMotionData {
      * @param expected_rows The expected number of rows
      * @param expected_cols The expected number of columns
      * @param array_name The name of the array
-     * @param node_type The type of node (e.g., "hub", "nacelle", "root", "mesh")
+     * @param node_label The label of the node (e.g., "hub", "nacelle", "root", "mesh")
      */
     template <typename T, size_t N>
     void CheckArraySize(
         const std::vector<std::array<T, N>>& array, size_t expected_rows, size_t expected_cols,
-        const std::string& array_name, const std::string& node_type
+        const std::string& array_name, const std::string& node_label
     ) const {
-        // Check row count first
         if (array.size() != expected_rows) {
-            std::cerr << "Expecting a " << expected_rows << "x" << expected_cols << " array of "
-                      << node_type << " " << array_name << " with " << expected_rows << " rows."
-                      << std::endl;
-            // call ADI_End();
+            throw std::invalid_argument(
+                "Expecting a " + std::to_string(expected_rows) + "x" +
+                std::to_string(expected_cols) + " array of " + node_label + " " + array_name +
+                " with " + std::to_string(expected_rows) + " rows, but got " +
+                std::to_string(array.size()) + " rows."
+            );
         }
 
-        // Check column count only on the first row to avoid redundant checks
         if (!array.empty() && array[0].size() != expected_cols) {
-            std::cerr << "Expecting a " << expected_rows << "x" << expected_cols << " array of "
-                      << node_type << " " << array_name << " with " << expected_cols << " columns."
-                      << std::endl;
-            // call ADI_End();
+            throw std::invalid_argument(
+                "Expecting a " + std::to_string(expected_rows) + "x" +
+                std::to_string(expected_cols) + " array of " + node_label + " " + array_name +
+                " with " + std::to_string(expected_cols) + " columns, but got " +
+                std::to_string(array[0].size()) + " columns."
+            );
         }
     }
 
-    /**
-     * @brief Method to check the array sizes of the input motions for hub, nacelle, root, and
-     * mesh points
-     *
-     * @param node_type The type of node (e.g., "hub", "nacelle", "root", "mesh")
-     * @param expected_position_dim The expected dimension of the position array
-     * @param expected_orientation_dim The expected dimension of the orientation array
-     * @param expected_vel_acc_dim The expected dimension of the velocity and acceleration arrays
-     * @param expected_number_of_nodes The expected number of nodes for the input motions
-     */
     void CheckInputMotions(
-        const std::string& node_type, size_t expected_position_dim, size_t expected_orientation_dim,
+        const std::string& node_label, size_t expected_position_dim, size_t expected_orientation_dim,
         size_t expected_vel_acc_dim, size_t expected_number_of_nodes
     ) const {
         CheckArraySize(
-            position, expected_number_of_nodes, expected_position_dim, "positions", node_type
+            position, expected_number_of_nodes, expected_position_dim, "positions", node_label
         );
         CheckArraySize(
             orientation, expected_number_of_nodes, expected_orientation_dim, "orientations",
-            node_type
+            node_label
         );
         CheckArraySize(
-            velocity, expected_number_of_nodes, expected_vel_acc_dim, "velocities", node_type
+            velocity, expected_number_of_nodes, expected_vel_acc_dim, "velocities", node_label
         );
         CheckArraySize(
-            acceleration, expected_number_of_nodes, expected_vel_acc_dim, "accelerations", node_type
+            acceleration, expected_number_of_nodes, expected_vel_acc_dim, "accelerations", node_label
         );
     }
 
-    /// Method to check the hub/nacelle input motions
     void CheckHubNacelleInputMotions(const std::string& node_name) const {
         const size_t expected_position_dim{3};
         const size_t expected_orientation_dim{9};
@@ -357,13 +350,13 @@ struct MeshMotionData {
         );
     }
 
-    /// Method to check the root input motions
     void CheckRootInputMotions(size_t num_blades, size_t init_num_blades) const {
         if (num_blades != init_num_blades) {
-            std::cerr << "The number of root points changed from the initial value of "
-                      << init_num_blades << ". This is not permitted during the simulation."
-                      << std::endl;
-            // call ADI_End();
+            throw std::invalid_argument(
+                "The number of root points changed from the initial value of " +
+                std::to_string(init_num_blades) + " to " + std::to_string(num_blades) +
+                ". This is not permitted during the simulation."
+            );
         }
 
         const size_t expected_position_dim{3};
@@ -375,13 +368,13 @@ struct MeshMotionData {
         );
     }
 
-    /// Method to check the mesh input motions
     void CheckMeshInputMotions(size_t num_mesh_pts, size_t init_num_mesh_pts) const {
         if (num_mesh_pts != init_num_mesh_pts) {
-            std::cerr << "The number of mesh points changed from the initial value of "
-                      << init_num_mesh_pts << ". This is not permitted during the simulation."
-                      << std::endl;
-            // call ADI_End();
+            throw std::invalid_argument(
+                "The number of mesh points changed from the initial value of " +
+                std::to_string(init_num_mesh_pts) + " to " + std::to_string(num_mesh_pts) +
+                ". This is not permitted during the simulation."
+            );
         }
 
         const size_t expected_position_dim{3};
