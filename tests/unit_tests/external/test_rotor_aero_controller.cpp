@@ -83,7 +83,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     controller.io.dt = step_size;               // Time step size (seconds)
     controller.io.pitch_actuator_type_req = 0;  // Pitch position actuator
     controller.io.pitch_control_type = 0;       // Collective pitch control
-    controller.io.n_blades = n_turbines;        // Number of blades
+    controller.io.n_blades = n_blades;          // Number of blades
 
     // Controller current values
     controller.io.time = 0.;                     // Current time (seconds)
@@ -121,10 +121,10 @@ TEST(Milestone, IEA15RotorAeroController) {
     );
 
     // Build vector of blade elements
-    auto blade_list = std::array<size_t, n_turbines>{};
+    auto blade_list = std::array<size_t, n_blades>{};
     std::iota(std::begin(blade_list), std::end(blade_list), 0);
     std::vector<BeamElement> beam_elems;
-    constexpr double d_theta = 2. * M_PI / static_cast<double>(n_turbines);
+    constexpr double d_theta = 2. * M_PI / static_cast<double>(n_blades);
     auto base_rot = RotationVectorToQuaternion({0., -M_PI / 2., 0.});
     constexpr Array_3 omega{
         rotor_speed_init * shaft_axis[0], rotor_speed_init * shaft_axis[1],
@@ -223,8 +223,15 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     auto adi = util::AeroDynInflowLibrary(adi_shared_lib_path);
 
-    adi.turbine_settings.n_turbines = n_turbines;
-    adi.turbine_settings.n_blades = n_blades;
+    adi.turbine_settings = util::TurbineSettings(
+        hub_node->x, hub_node->x,
+        {
+            beam_elems[0].nodes[0].node.x,
+            beam_elems[0].nodes[1].node.x,
+            beam_elems[0].nodes[2].node.x,
+        },
+        n_turbines, n_blades
+    );
 
     adi.sim_controls.transpose_DCM = false;
     adi.sim_controls.debug_level = 4;
