@@ -846,20 +846,6 @@ public:
         error_handling_.CheckError();
     }
 
-private:
-    bool is_initialized_{false};  //< Flag to check if the library is initialized
-    util::dylib lib_{
-        "libaerodyn_inflow_c_binding.dylib",
-        util::dylib::no_filename_decorations  //< Dynamic library object for AeroDyn Inflow
-    };
-    ErrorHandling error_handling_;            //< Error handling settings
-    FluidProperties air_;                     //< Properties of the working fluid (air)
-    EnvironmentalConditions env_conditions_;  //< Environmental conditions
-    TurbineSettings turbine_settings_;        //< Turbine settings
-    StructuralMesh structural_mesh_;          //< Structural mesh data
-    SimulationControls sim_controls_;         //< Simulation control settings
-    VTKSettings vtk_settings_;                //< VTK output settings
-
     /// Method to flatten a 2D array into a 1D array for Fortran compatibility
     template <typename T, size_t N>
     std::vector<T> FlattenArray(const std::vector<std::array<T, N>>& input) {
@@ -913,6 +899,20 @@ private:
 
         return result.str();
     }
+
+private:
+    bool is_initialized_{false};  //< Flag to check if the library is initialized
+    util::dylib lib_{
+        "libaerodyn_inflow_c_binding.dylib",
+        util::dylib::no_filename_decorations  //< Dynamic library object for AeroDyn Inflow
+    };
+    ErrorHandling error_handling_;            //< Error handling settings
+    FluidProperties air_;                     //< Properties of the working fluid (air)
+    EnvironmentalConditions env_conditions_;  //< Environmental conditions
+    TurbineSettings turbine_settings_;        //< Turbine settings
+    StructuralMesh structural_mesh_;          //< Structural mesh data
+    SimulationControls sim_controls_;         //< Simulation control settings
+    VTKSettings vtk_settings_;                //< VTK output settings
 };
 
 }  // namespace openturbine::util

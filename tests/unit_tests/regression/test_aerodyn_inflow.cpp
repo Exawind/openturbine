@@ -437,6 +437,80 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_PreInitialize) {
     EXPECT_STREQ(aerodyn_inflow_library.GetErrorHandling().error_message.data(), "");
 }
 
+TEST(AerodynInflowTest, AeroDynInflowLibrary_FlattenArray) {
+    // Load the shared library
+    const std::string path = GetSharedLibraryPath();
+    util::AeroDynInflowLibrary aerodyn_inflow_library(path);
+
+    std::vector<std::array<float, 3>> input = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}};
+    std::vector<float> expected = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f};
+
+    auto result = aerodyn_inflow_library.FlattenArray(input);
+
+    ASSERT_EQ(result.size(), expected.size());
+    for (size_t i = 0; i < expected.size(); ++i) {
+        EXPECT_FLOAT_EQ(result[i], expected[i]);
+    }
+}
+
+class AerodynInflowValidateAndFlattenArrayTest : public ::testing::Test {
+protected:
+    util::AeroDynInflowLibrary aerodyn_inflow_library;
+
+    AerodynInflowValidateAndFlattenArrayTest() : aerodyn_inflow_library(GetSharedLibraryPath()) {}
+};
+
+TEST_F(AerodynInflowValidateAndFlattenArrayTest, ValidPositionArray) {
+    std::vector<std::array<float, 3>> position_array = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}};
+    size_t expected_size = 2;
+    std::vector<float> expected = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f};
+
+    auto result = aerodyn_inflow_library.ValidateAndFlattenArray(position_array, expected_size);
+    ASSERT_EQ(result, expected);
+}
+
+TEST_F(AerodynInflowValidateAndFlattenArrayTest, ValidOrientationArray) {
+    std::vector<std::array<double, 9>> orientation_array = {
+        {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0},
+        {10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0}};
+    size_t expected_size = 2;
+    std::vector<double> expected = {1.0,  2.0,  3.0,  4.0,  5.0,  6.0,  7.0,  8.0,  9.0,
+                                    10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0};
+
+    auto result = aerodyn_inflow_library.ValidateAndFlattenArray(orientation_array, expected_size);
+    ASSERT_EQ(result, expected);
+}
+
+TEST_F(AerodynInflowValidateAndFlattenArrayTest, ValidVelocityAccelerationArray) {
+    std::vector<std::array<float, 6>> velocity_array = {
+        {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f}, {7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f}};
+    size_t expected_size = 2;
+    std::vector<float> expected = {1.0f, 2.0f, 3.0f, 4.0f,  5.0f,  6.0f,
+                                   7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f};
+
+    auto result = aerodyn_inflow_library.ValidateAndFlattenArray(velocity_array, expected_size);
+    ASSERT_EQ(result, expected);
+}
+
+TEST_F(AerodynInflowValidateAndFlattenArrayTest, InvalidArraySize) {
+    std::vector<std::array<float, 3>> position_array = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}};
+    size_t expected_size = 3;  // Incorrect size
+
+    EXPECT_THROW(
+        { aerodyn_inflow_library.ValidateAndFlattenArray(position_array, expected_size); },
+        std::runtime_error
+    );
+}
+
+TEST_F(AerodynInflowValidateAndFlattenArrayTest, UnknownArrayType) {
+    std::vector<std::array<int, 2>> unknown_array = {{1, 2}, {3, 4}};
+    size_t expected_size = 2;
+
+    auto result = aerodyn_inflow_library.ValidateAndFlattenArray(unknown_array, expected_size);
+    std::vector<int> expected = {1, 2, 3, 4};
+    ASSERT_EQ(result, expected);
+}
+
 // Write test based on py_ad_driver.py to complete a full loop of initialization, simulation, and
 // cleanup
 TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
