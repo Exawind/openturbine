@@ -101,7 +101,7 @@ inline void SetPositionAndOrientation(
         position[i] = static_cast<float>(data[i]);
     }
 
-    // Set orientation (convert last 4 elements to 3x3 rotation matrix)
+    // Set orientation (convert last 4 elements i.e. quaternion to 3x3 rotation matrix)
     auto orientation_2D = QuaternionToRotationMatrix({data[3], data[4], data[5], data[6]});
 
     // Flatten the 3x3 matrix to a 1D array
@@ -292,8 +292,9 @@ struct MeshMotionData {
     }
 
     void CheckInputMotions(
-        const std::string& node_label, size_t expected_position_dim, size_t expected_orientation_dim,
-        size_t expected_vel_acc_dim, size_t expected_number_of_nodes
+        const std::string& node_label, size_t expected_number_of_nodes,
+        size_t expected_position_dim = 3, size_t expected_orientation_dim = 9,
+        size_t expected_vel_acc_dim = 6
     ) const {
         CheckArraySize(
             position, expected_number_of_nodes, expected_position_dim, "positions", node_label
@@ -310,53 +311,31 @@ struct MeshMotionData {
         );
     }
 
+    void CheckNodeInputMotions(
+        const std::string& node_name, size_t expected_number_of_nodes, size_t initial_number_of_nodes
+    ) const {
+        if (expected_number_of_nodes != initial_number_of_nodes) {
+            throw std::invalid_argument(
+                "The number of " + node_name + " points changed from the initial value of " +
+                std::to_string(initial_number_of_nodes) + " to " +
+                std::to_string(expected_number_of_nodes) +
+                ". This is not permitted during the simulation."
+            );
+        }
+
+        CheckInputMotions(node_name, expected_number_of_nodes);
+    }
+
     void CheckHubNacelleInputMotions(const std::string& node_name) const {
-        const size_t expected_position_dim{3};
-        const size_t expected_orientation_dim{9};
-        const size_t expected_vel_acc_dim{6};
-        const size_t expected_number_of_nodes{1};  // Since there is only 1 hub/nacelle node
-
-        CheckInputMotions(
-            node_name, expected_position_dim, expected_orientation_dim, expected_vel_acc_dim,
-            expected_number_of_nodes
-        );
+        CheckInputMotions(node_name, 1);
     }
 
-    void CheckRootInputMotions(size_t num_blades, size_t init_num_blades) const {
-        if (num_blades != init_num_blades) {
-            throw std::invalid_argument(
-                "The number of root points changed from the initial value of " +
-                std::to_string(init_num_blades) + " to " + std::to_string(num_blades) +
-                ". This is not permitted during the simulation."
-            );
-        }
-
-        const size_t expected_position_dim{3};
-        const size_t expected_orientation_dim{9};
-        const size_t expected_vel_acc_dim{6};
-
-        CheckInputMotions(
-            "root", expected_position_dim, expected_orientation_dim, expected_vel_acc_dim, num_blades
-        );
+    void CheckRootInputMotions(size_t n_blades, size_t init_n_blades) const {
+        CheckNodeInputMotions("root", n_blades, init_n_blades);
     }
 
-    void CheckMeshInputMotions(size_t num_mesh_pts, size_t init_num_mesh_pts) const {
-        if (num_mesh_pts != init_num_mesh_pts) {
-            throw std::invalid_argument(
-                "The number of mesh points changed from the initial value of " +
-                std::to_string(init_num_mesh_pts) + " to " + std::to_string(num_mesh_pts) +
-                ". This is not permitted during the simulation."
-            );
-        }
-
-        const size_t expected_position_dim{3};
-        const size_t expected_orientation_dim{9};
-        const size_t expected_vel_acc_dim{6};
-
-        CheckInputMotions(
-            "mesh", expected_position_dim, expected_orientation_dim, expected_vel_acc_dim,
-            num_mesh_pts
-        );
+    void CheckMeshInputMotions(size_t n_mesh_pts, size_t init_n_mesh_pts) const {
+        CheckNodeInputMotions("mesh", n_mesh_pts, init_n_mesh_pts);
     }
 };
 
