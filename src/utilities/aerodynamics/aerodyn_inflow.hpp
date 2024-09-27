@@ -349,8 +349,8 @@ struct SimulationControls {
     static constexpr size_t kDefaultStringLength{1025};  //< Max length for output filenames
 
     // Input file handling
-    int aerodyn_input_passed{1};     //< Input file passed for AeroDyn module? (1: passed)
-    int inflowwind_input_passed{1};  //< Input file passed for InflowWind module (1: passed)
+    bool aerodyn_input_passed{true};     //< Input file passed for AeroDyn module? (1: passed)
+    bool inflowwind_input_passed{true};  //< Input file passed for InflowWind module? (1: passed)
 
     // Interpolation order (must be either 1: linear, or 2: quadratic)
     int interpolation_order{1};  //< Interpolation order - linear by default
@@ -362,9 +362,9 @@ struct SimulationControls {
     int n_time_steps{0};            //< Number of time steps
 
     // Flags
-    int store_HH_wind_speed{1};  //< Flag to store HH wind speed
-    int transpose_DCM{1};        //< Flag to transpose the direction cosine matrix
-    int debug_level{0};          //< Debug level (0-4)
+    bool store_HH_wind_speed{true};  //< Flag to store HH wind speed
+    bool transpose_DCM{true};        //< Flag to transpose the direction cosine matrix
+    int debug_level{0};              //< Debug level (0-4)
 
     // Outputs
     int output_format{0};        //< File format for writing outputs
@@ -384,7 +384,7 @@ struct SimulationControls {
  * output, the type of VTK output, and the nacelle dimensions for VTK rendering.
  */
 struct VTKSettings {
-    int write_vtk{false};                       //< Flag to write VTK output
+    bool write_vtk{false};                      //< Flag to write VTK output
     int vtk_type{1};                            //< Type of VTK output (1: surface meshes)
     std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
                                                 -2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f};
@@ -445,7 +445,7 @@ public:
         }
     }
 
-    /// Getter methods
+    /// Getter methods for the private member variables
     const ErrorHandling& GetErrorHandling() const { return error_handling_; }
     const EnvironmentalConditions& GetEnvironmentalConditions() const { return env_conditions_; }
     const FluidProperties& GetFluidProperties() const { return air_; }
@@ -454,13 +454,21 @@ public:
     const SimulationControls& GetSimulationControls() const { return sim_controls_; }
     const VTKSettings& GetVTKSettings() const { return vtk_settings_; }
 
-    /// Wrapper for ADI_C_PreInit routine to pre-initialize AeroDyn Inflow library
+    /**
+     * @brief Pre-initializes the AeroDyn Inflow library
+     *
+     * @details This function pre-initializes the AeroDyn Inflow library by setting up the number
+     * of turbines, the number of blades, and the transpose DCM flag.
+     */
     void PreInitialize() {
         auto ADI_C_PreInit = lib_.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
 
+        // Convert bool -> int to pass to Fortran
+        int transpose_DCM_int = sim_controls_.transpose_DCM ? 1 : 0;
+
         ADI_C_PreInit(
             &turbine_settings_.n_turbines,        // input: Number of turbines
-            &sim_controls_.transpose_DCM,         // input: Transpose DCM?
+            &transpose_DCM_int,                   // input: Transpose DCM?
             &sim_controls_.debug_level,           // input: Debug level
             &error_handling_.error_status,        // output: Error status
             error_handling_.error_message.data()  // output: Error message
@@ -469,8 +477,19 @@ public:
         error_handling_.CheckError();
     }
 
-    /// Wrapper for ADI_C_SetupRotor routine to set up the rotor
-    void SetupRotor(int turbine_number, int is_horizontal_axis, std::vector<float> turbine_ref_pos) {
+    /**
+     * @brief Sets up the rotor for the AeroDyn Inflow library
+     *
+     * @details This function sets up the rotor for the AeroDyn Inflow library by initializing the
+     * rotor motion data and passing it to the Fortran routine.
+     *
+     * @param turbine_number Number of the current turbine
+     * @param is_horizontal_axis Flag to indicate if the turbine is a horizontal axis turbine
+     * @param turbine_ref_pos Reference position of the turbine
+     */
+    void SetupRotor(
+        int turbine_number, bool is_horizontal_axis, std::vector<float> turbine_ref_pos
+    ) {
         auto ADI_C_SetupRotor = lib_.get_function<
             void(int*, int*, float*, float*, double*, float*, double*, int*, float*, double*, int*, float*, double*, int*, int*, char*)>(
             "ADI_C_SetupRotor"
@@ -493,9 +512,12 @@ public:
             static_cast<size_t>(structural_mesh_.n_mesh_points)
         );
 
+        // Convert bool -> int to pass to Fortran
+        int is_horizontal_axis_int = is_horizontal_axis ? 1 : 0;
+
         ADI_C_SetupRotor(
             &turbine_number,                                // input: current turbine number
-            &is_horizontal_axis,                            // input: 1: HAWT, 0: VAWT or cross-flow
+            &is_horizontal_axis_int,                        // input: 1: HAWT, 0: VAWT or cross-flow
             turbine_ref_pos.data(),                         // input: turbine reference position
             turbine_settings_.initial_hub_position.data(),  // input: initial hub position
             turbine_settings_.initial_hub_orientation.data(),   // input: initial hub orientation
@@ -518,7 +540,15 @@ public:
         is_initialized_ = true;
     }
 
-    /// Wrapper for ADI_C_Init routine to initialize the AeroDyn Inflow library
+    /**
+     * @brief Initializes the AeroDyn Inflow library
+     *
+     * @details This function initializes the AeroDyn Inflow library by passing the input files and
+     * other parameters to the Fortran routine.
+     *
+     * @param aerodyn_input_string_array Input file for the AeroDyn module
+     * @param inflowwind_input_string_array Input file for the InflowWind module
+     */
     void Initialize(
         std::vector<std::string> aerodyn_input_string_array,
         std::vector<std::string> inflowwind_input_string_array
@@ -540,11 +570,17 @@ public:
         inflowwind_input_string = inflowwind_input_string + '\0';
         int inflowwind_input_string_length = static_cast<int>(inflowwind_input_string.size());
 
+        // Convert bool -> int to pass to Fortran
+        int aerodyn_input_passed_int = sim_controls_.aerodyn_input_passed ? 1 : 0;
+        int inflowwind_input_passed_int = sim_controls_.inflowwind_input_passed ? 1 : 0;
+        int store_HH_wind_speed_int = sim_controls_.store_HH_wind_speed ? 1 : 0;
+        int write_vtk_int = vtk_settings_.write_vtk ? 1 : 0;
+
         ADI_C_Init(
-            &sim_controls_.aerodyn_input_passed,          // input: AD input file is passed
+            &aerodyn_input_passed_int,                    // input: AD input file is passed?
             aerodyn_input_string.data(),                  // input: AD input file as string
             &aerodyn_input_string_length,                 // input: AD input file string length
-            &sim_controls_.inflowwind_input_passed,       // input: IfW input file is passed
+            &inflowwind_input_passed_int,                 // input: IfW input file is passed?
             inflowwind_input_string.data(),               // input: IfW input file as string
             &inflowwind_input_string_length,              // input: IfW input file string length
             sim_controls_.output_root_name.data(),        // input: rootname for ADI file writing
@@ -559,8 +595,8 @@ public:
             &sim_controls_.interpolation_order,           // input: interpolation order
             &sim_controls_.time_step,                     // input: time step
             &sim_controls_.max_time,                      // input: maximum simulation time
-            &sim_controls_.store_HH_wind_speed,           // input: store HH wind speed
-            &vtk_settings_.write_vtk,                     // input: write VTK output
+            &store_HH_wind_speed_int,                     // input: store HH wind speed?
+            &write_vtk_int,                               // input: write VTK output?
             &vtk_settings_.vtk_type,                      // input: VTK output type
             vtk_settings_.vtk_nacelle_dimensions.data(),  // input: VTK nacelle dimensions
             &vtk_settings_.vtk_hub_radius,                // input: VTK hub radius
@@ -576,8 +612,18 @@ public:
         error_handling_.CheckError();
     }
 
-    // Wrapper for ADI_C_SetRotorMotion routine to set rotor motion i.e. motion of the hub,
-    // nacelle, root, and mesh points from the structural mesh
+    /**
+     * @brief Sets up the rotor motion for the AeroDyn Inflow library
+     *
+     * @details This function sets up the rotor motion for the AeroDyn Inflow library by passing
+     * the motion data for the hub, nacelle, root, and mesh points to the Fortran routine.
+     *
+     * @param turbine_number Number of the current turbine
+     * @param hub_motion Motion data for the hub
+     * @param nacelle_motion Motion data for the nacelle
+     * @param root_motion Motion data for the blade roots
+     * @param mesh_motion Motion data for the mesh points
+     */
     void SetupRotorMotion(
         int turbine_number, MeshMotionData hub_motion, MeshMotionData nacelle_motion,
         MeshMotionData root_motion, MeshMotionData mesh_motion
@@ -649,7 +695,15 @@ public:
         error_handling_.CheckError();
     }
 
-    // Wrapper for ADI_C_GetRotorLoads routine to get aerodynamic loads on the rotor
+    /**
+     * @brief Gets the aerodynamic loads on the rotor
+     *
+     * @details This function gets the aerodynamic loads on the rotor by passing the mesh
+     * force/moment array to the Fortran routine.
+     *
+     * @param turbine_number Number of the current turbine
+     * @param mesh_force_moment Mesh force/moment array
+     */
     void GetRotorAerodynamicLoads(
         int turbine_number, std::vector<std::array<float, 6>>& mesh_force_moment
     ) {
@@ -677,7 +731,15 @@ public:
         }
     }
 
-    // Wrapper for ADI_C_CalcOutput routine to calculate output channels at a given time
+    /**
+     * @brief Calculates the output channels at a given time
+     *
+     * @details This function calculates the output channels at a given time by passing the time
+     * and the output channel values to the Fortran routine.
+     *
+     * @param time Time at which to calculate the output channels
+     * @param output_channel_values Output channel values
+     */
     void CalculateOutputChannels(double time, std::vector<float>& output_channel_values) {
         auto ADI_C_CalcOutput =
             lib_.get_function<void(double*, float*, int*, char*)>("ADI_C_CalcOutput");
@@ -697,7 +759,15 @@ public:
         output_channel_values = output_channel_values_c;
     }
 
-    // Wrapper for ADI_C_UpdateStates routine to calculate output forces at a given time
+    /**
+     * @brief Updates the states of the AeroDyn Inflow library
+     *
+     * @details This function updates the states of the AeroDyn Inflow library by passing the current
+     * time and the next time to the Fortran routine.
+     *
+     * @param time Current time
+     * @param time_next Next time
+     */
     void UpdateStates(double time, double time_next) {
         auto ADI_C_UpdateStates =
             lib_.get_function<void(double*, double*, int*, char*)>("ADI_C_UpdateStates");
@@ -712,7 +782,12 @@ public:
         error_handling_.CheckError();
     }
 
-    // Wrapper for ADI_C_End routine to end simulation and free memory
+    /**
+     * @brief Ends the simulation and frees memory
+     *
+     * @details This function ends the simulation and frees memory by passing the error status
+     * and error message buffer to the Fortran routine.
+     */
     void Finalize() {
         auto ADI_C_End = lib_.get_function<void(int*, char*)>("ADI_C_End");
 
