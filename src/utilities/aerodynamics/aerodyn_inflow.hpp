@@ -463,7 +463,7 @@ public:
     void PreInitialize() {
         auto ADI_C_PreInit = lib_.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
 
-        // Convert bool -> int to pass to Fortran
+        // Convert bool -> int to pass to the Fortran routine
         int transpose_DCM_int = sim_controls_.transpose_DCM ? 1 : 0;
 
         ADI_C_PreInit(
@@ -488,7 +488,7 @@ public:
      * @param turbine_ref_pos Reference position of the turbine
      */
     void SetupRotor(
-        int turbine_number, bool is_horizontal_axis, std::vector<float> turbine_ref_pos
+        int turbine_number, bool is_horizontal_axis, std::array<float, 3> turbine_ref_pos
     ) {
         auto ADI_C_SetupRotor = lib_.get_function<
             void(int*, int*, float*, float*, double*, float*, double*, int*, float*, double*, int*, float*, double*, int*, int*, char*)>(
@@ -512,7 +512,7 @@ public:
             static_cast<size_t>(structural_mesh_.n_mesh_points)
         );
 
-        // Convert bool -> int to pass to Fortran
+        // Convert bool -> int to pass to the Fortran routine
         int is_horizontal_axis_int = is_horizontal_axis ? 1 : 0;
 
         ADI_C_SetupRotor(
@@ -570,7 +570,7 @@ public:
         inflowwind_input_string = inflowwind_input_string + '\0';
         int inflowwind_input_string_length = static_cast<int>(inflowwind_input_string.size());
 
-        // Convert bool -> int to pass to Fortran
+        // Convert bool -> int to pass to the Fortran routine
         int aerodyn_input_passed_int = sim_controls_.aerodyn_input_passed ? 1 : 0;
         int inflowwind_input_passed_int = sim_controls_.inflowwind_input_passed ? 1 : 0;
         int store_HH_wind_speed_int = sim_controls_.store_HH_wind_speed ? 1 : 0;
