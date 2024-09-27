@@ -434,6 +434,17 @@ public:
         }
     }
 
+    /// Destructor to take care of Fortran-side cleanup if the library is initialized
+    ~AeroDynInflowLibrary() noexcept {
+        try {
+            if (is_initialized_) {
+                Finalize();
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Error during AeroDynInflowLibrary destruction: " << e.what() << std::endl;
+        }
+    }
+
     /// Getter methods
     const ErrorHandling& GetErrorHandling() const { return error_handling_; }
     const EnvironmentalConditions& GetEnvironmentalConditions() const { return env_conditions_; }
