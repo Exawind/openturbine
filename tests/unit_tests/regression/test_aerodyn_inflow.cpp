@@ -511,6 +511,43 @@ TEST_F(AerodynInflowValidateAndFlattenArrayTest, UnknownArrayType) {
     ASSERT_EQ(result, expected);
 }
 
+class AerodynInflowJoinStringArrayTest : public ::testing::Test {
+protected:
+    util::AeroDynInflowLibrary aerodyn_inflow_library;
+
+    AerodynInflowJoinStringArrayTest() : aerodyn_inflow_library(GetSharedLibraryPath()) {}
+};
+
+TEST_F(AerodynInflowJoinStringArrayTest, NormalCase) {
+    std::vector<std::string> input = {"apple", "banana", "cherry"};
+    std::string expected = "apple,banana,cherry";
+    EXPECT_EQ(aerodyn_inflow_library.JoinStringArray(input, ','), expected);
+}
+
+TEST_F(AerodynInflowJoinStringArrayTest, EmptyInput) {
+    std::vector<std::string> input = {};
+    std::string expected = "";
+    EXPECT_EQ(aerodyn_inflow_library.JoinStringArray(input, ','), expected);
+}
+
+TEST_F(AerodynInflowJoinStringArrayTest, SingleElement) {
+    std::vector<std::string> input = {"solo"};
+    std::string expected = "solo";
+    EXPECT_EQ(aerodyn_inflow_library.JoinStringArray(input, ','), expected);
+}
+
+TEST_F(AerodynInflowJoinStringArrayTest, DifferentDelimiter) {
+    std::vector<std::string> input = {"one", "two", "three"};
+    std::string expected = "one|two|three";
+    EXPECT_EQ(aerodyn_inflow_library.JoinStringArray(input, '|'), expected);
+}
+
+TEST_F(AerodynInflowJoinStringArrayTest, StringsContainingDelimiter) {
+    std::vector<std::string> input = {"com,ma", "semi;colon", "pipe|symbol"};
+    std::string expected = "com,ma;semi;colon;pipe|symbol";
+    EXPECT_EQ(aerodyn_inflow_library.JoinStringArray(input, ';'), expected);
+}
+
 // Write test based on py_ad_driver.py to complete a full loop of initialization, simulation, and
 // cleanup
 TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
