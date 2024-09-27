@@ -169,6 +169,71 @@ struct TurbineSettings {
             );
         }
     };
+
+    /**
+     * @brief Validates the turbine settings
+     *
+     * @details This method validates the turbine settings, including the number of blades, the
+     * initial root positions, and the initial root orientations.
+     */
+    void Validate() const {
+        if (n_blades < 1) {
+            throw std::runtime_error("No blades. Set n_blades to number of AD blades in the model");
+        }
+
+        if (initial_root_position.size() != static_cast<size_t>(n_blades)) {
+            throw std::invalid_argument("Number of blade root positions must match n_blades");
+        }
+
+        if (initial_root_orientation.size() != static_cast<size_t>(n_blades)) {
+            throw std::invalid_argument("Number of blade root orientations must match n_blades");
+        }
+
+        for (const auto& pos : initial_root_position) {
+            if (pos.size() != 3) {
+                throw std::invalid_argument(
+                    "Expecting a 3 element array for blade root positions (initial_root_position) "
+                    "with second index for [x,y,z]"
+                );
+            }
+        }
+
+        for (const auto& orient : initial_root_orientation) {
+            if (orient.size() != 9) {
+                throw std::invalid_argument(
+                    "Expecting a 9 element array for blade root orientations as DCMs "
+                    "(initial_root_orientation) with second index for "
+                    "[r11,r12,r13,r21,r22,r23,r31,r32,r33]"
+                );
+            }
+        }
+
+        if (initial_hub_position.size() != 3) {
+            throw std::invalid_argument(
+                "Expecting a 3 element array for initial_hub_position [x,y,z]"
+            );
+        }
+
+        if (initial_hub_orientation.size() != 9) {
+            throw std::invalid_argument(
+                "Expecting a 9 element array for initial_hub_orientation DCM "
+                "[r11,r12,r13,r21,r22,r23,r31,r32,r33]"
+            );
+        }
+
+        if (initial_nacelle_position.size() != 3) {
+            throw std::invalid_argument(
+                "Expecting a 3 element array for initial_nacelle_position [x,y,z]"
+            );
+        }
+
+        if (initial_nacelle_orientation.size() != 9) {
+            throw std::invalid_argument(
+                "Expecting a 9 element array for initial_nacelle_orientation DCM "
+                "[r11,r12,r13,r21,r22,r23,r31,r32,r33]"
+            );
+        }
+    }
 };
 
 /**
@@ -215,6 +280,54 @@ struct StructuralMesh {
         for (size_t i = 0; i < static_cast<size_t>(n_mesh_points); ++i) {
             SetPositionAndOrientation(
                 mesh_data[i], initial_mesh_position[i], initial_mesh_orientation[i]
+            );
+        }
+    }
+
+    /**
+     * @brief Validates the structural mesh
+     *
+     * @details This method validates the structural mesh, including the number of mesh points, the
+     * initial mesh position, the initial mesh orientation, and the mapping of mesh points to blade
+     * numbers.
+     */
+    void Validate() const {
+        if (initial_mesh_position.size() != static_cast<size_t>(n_mesh_points)) {
+            throw std::invalid_argument("Number of mesh positions must match n_mesh_points");
+        }
+
+        if (initial_mesh_orientation.size() != static_cast<size_t>(n_mesh_points)) {
+            throw std::invalid_argument("Number of mesh orientations must match n_mesh_points");
+        }
+
+        if (initial_mesh_position.size() != initial_mesh_orientation.size()) {
+            throw std::invalid_argument(
+                "Different number of meshes in initial position and orientation arrays"
+            );
+        }
+
+        for (const auto& pos : initial_mesh_position) {
+            if (pos.size() != 3) {
+                throw std::invalid_argument(
+                    "Expecting a Nx3 array of initial mesh positions (initial_mesh_position) with "
+                    "second index for [x,y,z]"
+                );
+            }
+        }
+
+        for (const auto& orient : initial_mesh_orientation) {
+            if (orient.size() != 9) {
+                throw std::invalid_argument(
+                    "Expecting a Nx9 array of initial mesh orientations as DCMs "
+                    "(initial_mesh_orientation) with second index for "
+                    "[r11,r12,r13,r21,r22,r23,r31,r32,r33]"
+                );
+            }
+        }
+
+        if (mesh_point_to_blade_num.size() != static_cast<size_t>(n_mesh_points)) {
+            throw std::invalid_argument(
+                "Number of mesh point to blade number mappings must match n_mesh_points"
             );
         }
     }
@@ -494,6 +607,10 @@ public:
             void(int*, int*, float*, float*, double*, float*, double*, int*, float*, double*, int*, float*, double*, int*, int*, char*)>(
             "ADI_C_SetupRotor"
         );
+
+        // Validate the turbine settings and structural mesh
+        turbine_settings_.Validate();
+        structural_mesh_.Validate();
 
         // Flatten arrays to pass to the Fortran routine
         auto initial_root_position_flat = ValidateAndFlattenArray(
