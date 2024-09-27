@@ -398,15 +398,19 @@ struct VTKSettings {
  * library, which is a Fortran library offering C bindings for the AeroDyn x InflowWind modules
  * of OpenFAST.
  *
- * The class encapsulates the following key functions:
- *  - PreInitialize (ADI_C_PreInit): Pre-initializes the AeroDynInflow module
- *  - SetupRotor (ADI_C_SetupRotor): Configures rotor-specific parameters before simulation
- *  - Initialize (ADI_C_Init): Initializes the AeroDynInflow module for simulation
- *  - SetupRotorMotion (ADI_C_SetRotorMotion): Sets rotor motion for a given time step
- *  - GetRotorAerodynamicLoads (ADI_C_GetRotorLoads): Retrieves aerodynamic loads on the rotor
- *  - CalculateOutputChannels (ADI_C_CalcOutput): Calculates output channels at a given time
- *  - UpdateStates (ADI_C_UpdateStates): Updates states for the next time step
- *  - Finalize (ADI_C_End): Ends the AeroDynInflow module and frees memory
+ * The class encapsulates key functions for AeroDyn/InflowWind simulation:
+ *
+ * - PreInitialize (ADI_C_PreInit): Set up general parameters
+ * - SetupRotor (ADI_C_SetupRotor): Configure rotor-specific settings
+ * - Initialize (ADI_C_Init): Complete initialization with input files
+ * - SetupRotorMotion (ADI_C_SetRotorMotion): Update rotor motion for each timestep
+ * - UpdateStates (ADI_C_UpdateStates): Advance internal states
+ * - CalculateOutputChannels (ADI_C_CalcOutput): Compute output values
+ * - GetRotorAerodynamicLoads (ADI_C_GetRotorLoads): Retrieve aerodynamic forces and moments
+ * - Finalize (ADI_C_End): Clean up and release resources
+ *
+ * Usage: Instantiate the class, call functions in the order listed above (iterating over
+ * turbines/timesteps as needed), and handle any errors using the ErrorHandling struct.
  */
 class AeroDynInflowLibrary {
 public:
