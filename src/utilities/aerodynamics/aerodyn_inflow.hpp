@@ -454,9 +454,10 @@ public:
     const SimulationControls& GetSimulationControls() const { return sim_controls_; }
     const VTKSettings& GetVTKSettings() const { return vtk_settings_; }
 
-    /// Wrapper for ADI_C_PreInit routine to initialize AeroDyn Inflow library
+    /// Wrapper for ADI_C_PreInit routine to pre-initialize AeroDyn Inflow library
     void PreInitialize() {
         auto ADI_C_PreInit = lib_.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
+
         ADI_C_PreInit(
             &turbine_settings_.n_turbines,        // input: Number of turbines
             &sim_controls_.transpose_DCM,         // input: Transpose DCM?
@@ -476,11 +477,21 @@ public:
         );
 
         // Flatten arrays to pass to the Fortran routine
-        auto initial_root_position_flat = FlattenArray(turbine_settings_.initial_root_position);
-        auto initial_root_orientation_flat =
-            FlattenArray(turbine_settings_.initial_root_orientation);
-        auto init_mesh_pos_flat = FlattenArray(structural_mesh_.initial_mesh_position);
-        auto init_mesh_orient_flat = FlattenArray(structural_mesh_.initial_mesh_orientation);
+        auto initial_root_position_flat = ValidateAndFlattenArray(
+            turbine_settings_.initial_root_position, static_cast<size_t>(turbine_settings_.n_blades)
+        );
+        auto initial_root_orientation_flat = ValidateAndFlattenArray(
+            turbine_settings_.initial_root_orientation,
+            static_cast<size_t>(turbine_settings_.n_blades)
+        );
+        auto init_mesh_pos_flat = ValidateAndFlattenArray(
+            structural_mesh_.initial_mesh_position,
+            static_cast<size_t>(structural_mesh_.n_mesh_points)
+        );
+        auto init_mesh_orient_flat = ValidateAndFlattenArray(
+            structural_mesh_.initial_mesh_orientation,
+            static_cast<size_t>(structural_mesh_.n_mesh_points)
+        );
 
         ADI_C_SetupRotor(
             &turbine_number,                                // input: current turbine number
@@ -519,13 +530,6 @@ public:
                     "ADI_C_Init"
                 );
 
-        // Flatten arrays to pass
-        auto vtk_nacelle_dim_flat = std::array<float, 6>{};
-        std::copy(
-            vtk_settings_.vtk_nacelle_dimensions.begin(), vtk_settings_.vtk_nacelle_dimensions.end(),
-            vtk_nacelle_dim_flat.begin()
-        );
-
         // Primary input files will be passed as a single string joined by C_NULL_CHAR i.e. '\0'
         std::string aerodyn_input_string = this->JoinStringArray(aerodyn_input_string_array, '\0');
         aerodyn_input_string = aerodyn_input_string + '\0';
@@ -537,36 +541,36 @@ public:
         int inflowwind_input_string_length = static_cast<int>(inflowwind_input_string.size());
 
         ADI_C_Init(
-            &sim_controls_.aerodyn_input_passed,     // input: AD input file is passed
-            aerodyn_input_string.data(),             // input: AD input file as string
-            &aerodyn_input_string_length,            // input: AD input file string length
-            &sim_controls_.inflowwind_input_passed,  // input: IfW input file is passed
-            inflowwind_input_string.data(),          // input: IfW input file as string
-            &inflowwind_input_string_length,         // input: IfW input file string length
-            sim_controls_.output_root_name.data(),   // input: rootname for ADI file writing
-            &env_conditions_.gravity,                // input: gravity
-            &air_.density,                           // input: air density
-            &air_.kinematic_viscosity,               // input: kinematic viscosity
-            &air_.sound_speed,                       // input: speed of sound
-            &env_conditions_.atm_pressure,           // input: atmospheric pressure
-            &air_.vapor_pressure,                    // input: vapor pressure
-            &env_conditions_.water_depth,            // input: water depth
-            &env_conditions_.msl_offset,             // input: MSL to SWL offset
-            &sim_controls_.interpolation_order,      // input: interpolation order
-            &sim_controls_.time_step,                // input: time step
-            &sim_controls_.max_time,                 // input: maximum simulation time
-            &sim_controls_.store_HH_wind_speed,      // input: store HH wind speed
-            &vtk_settings_.write_vtk,                // input: write VTK output
-            &vtk_settings_.vtk_type,                 // input: VTK output type
-            vtk_nacelle_dim_flat.data(),             // input: VTK nacelle dimensions
-            &vtk_settings_.vtk_hub_radius,           // input: VTK hub radius
-            &sim_controls_.output_format,            // input: output format
-            &sim_controls_.output_time_step,         // input: output time step
-            &sim_controls_.n_channels,               // output: number of channels
-            sim_controls_.channel_names_c.data(),    // output: output channel names
-            sim_controls_.channel_units_c.data(),    // output: output channel units
-            &error_handling_.error_status,           // output: error status
-            error_handling_.error_message.data()     // output: error message buffer
+            &sim_controls_.aerodyn_input_passed,          // input: AD input file is passed
+            aerodyn_input_string.data(),                  // input: AD input file as string
+            &aerodyn_input_string_length,                 // input: AD input file string length
+            &sim_controls_.inflowwind_input_passed,       // input: IfW input file is passed
+            inflowwind_input_string.data(),               // input: IfW input file as string
+            &inflowwind_input_string_length,              // input: IfW input file string length
+            sim_controls_.output_root_name.data(),        // input: rootname for ADI file writing
+            &env_conditions_.gravity,                     // input: gravity
+            &air_.density,                                // input: air density
+            &air_.kinematic_viscosity,                    // input: kinematic viscosity
+            &air_.sound_speed,                            // input: speed of sound
+            &env_conditions_.atm_pressure,                // input: atmospheric pressure
+            &air_.vapor_pressure,                         // input: vapor pressure
+            &env_conditions_.water_depth,                 // input: water depth
+            &env_conditions_.msl_offset,                  // input: MSL to SWL offset
+            &sim_controls_.interpolation_order,           // input: interpolation order
+            &sim_controls_.time_step,                     // input: time step
+            &sim_controls_.max_time,                      // input: maximum simulation time
+            &sim_controls_.store_HH_wind_speed,           // input: store HH wind speed
+            &vtk_settings_.write_vtk,                     // input: write VTK output
+            &vtk_settings_.vtk_type,                      // input: VTK output type
+            vtk_settings_.vtk_nacelle_dimensions.data(),  // input: VTK nacelle dimensions
+            &vtk_settings_.vtk_hub_radius,                // input: VTK hub radius
+            &sim_controls_.output_format,                 // input: output format
+            &sim_controls_.output_time_step,              // input: output time step
+            &sim_controls_.n_channels,                    // output: number of channels
+            sim_controls_.channel_names_c.data(),         // output: output channel names
+            sim_controls_.channel_units_c.data(),         // output: output channel units
+            &error_handling_.error_status,                // output: error status
+            error_handling_.error_message.data()          // output: error message buffer
         );
 
         error_handling_.CheckError();
@@ -595,26 +599,29 @@ public:
             static_cast<size_t>(structural_mesh_.initial_mesh_position.size())
         );
 
-        // Flatten the arrays to pass to the Fortran routine
-        auto hub_pos_flat = FlattenArray(hub_motion.position);
-        auto hub_orient_flat = FlattenArray(hub_motion.orientation);
-        auto hub_vel_flat = FlattenArray(hub_motion.velocity);
-        auto hub_acc_flat = FlattenArray(hub_motion.acceleration);
+        // Flatten arrays to pass to the Fortran routine
+        auto flatten_and_validate = [this](const auto& motion, int n_pts) {
+            return std::make_tuple(
+                ValidateAndFlattenArray(motion.position, static_cast<size_t>(n_pts)),
+                ValidateAndFlattenArray(motion.orientation, static_cast<size_t>(n_pts)),
+                ValidateAndFlattenArray(motion.velocity, static_cast<size_t>(n_pts)),
+                ValidateAndFlattenArray(motion.acceleration, static_cast<size_t>(n_pts))
+            );
+        };
 
-        auto nacelle_pos_flat = FlattenArray(nacelle_motion.position);
-        auto nacelle_orient_flat = FlattenArray(nacelle_motion.orientation);
-        auto nacelle_vel_flat = FlattenArray(nacelle_motion.velocity);
-        auto nacelle_acc_flat = FlattenArray(nacelle_motion.acceleration);
+        // Hub and nacelle (1 point each)
+        auto [hub_pos_flat, hub_orient_flat, hub_vel_flat, hub_acc_flat] =
+            flatten_and_validate(hub_motion, 1);
+        auto [nacelle_pos_flat, nacelle_orient_flat, nacelle_vel_flat, nacelle_acc_flat] =
+            flatten_and_validate(nacelle_motion, 1);
 
-        auto root_pos_flat = FlattenArray(root_motion.position);
-        auto root_orient_flat = FlattenArray(root_motion.orientation);
-        auto root_vel_flat = FlattenArray(root_motion.velocity);
-        auto root_acc_flat = FlattenArray(root_motion.acceleration);
+        // Root (n_blades points)
+        auto [root_pos_flat, root_orient_flat, root_vel_flat, root_acc_flat] =
+            flatten_and_validate(root_motion, turbine_settings_.n_blades);
 
-        auto mesh_pos_flat = FlattenArray(mesh_motion.position);
-        auto mesh_orient_flat = FlattenArray(mesh_motion.orientation);
-        auto mesh_vel_flat = FlattenArray(mesh_motion.velocity);
-        auto mesh_acc_flat = FlattenArray(mesh_motion.acceleration);
+        // Mesh (n_mesh_points)
+        auto [mesh_pos_flat, mesh_orient_flat, mesh_vel_flat, mesh_acc_flat] =
+            flatten_and_validate(mesh_motion, structural_mesh_.n_mesh_points);
 
         ADI_C_SetRotorMotion(
             &turbine_number,                      // input: current turbine number
@@ -679,7 +686,6 @@ public:
         auto output_channel_values_c =
             std::vector<float>(static_cast<size_t>(sim_controls_.n_channels));
 
-        // Run ADI_C_CalcOutput
         ADI_C_CalcOutput(
             &time,                                // input: time at which to calculate output forces
             output_channel_values_c.data(),       // output: output channel values
@@ -688,8 +694,6 @@ public:
         );
 
         error_handling_.CheckError();
-
-        // Copy the output channel values back to the original array
         output_channel_values = output_channel_values_c;
     }
 
@@ -698,7 +702,6 @@ public:
         auto ADI_C_UpdateStates =
             lib_.get_function<void(double*, double*, int*, char*)>("ADI_C_UpdateStates");
 
-        // Run ADI_C_UpdateStates
         ADI_C_UpdateStates(
             &time,                                // input: time at which to calculate output forces
             &time_next,                           // input: time T+dt we are stepping to
@@ -709,11 +712,10 @@ public:
         error_handling_.CheckError();
     }
 
-    // Wrapper for ADI_C_End routine to end the AeroDyn Inflow library
+    // Wrapper for ADI_C_End routine to end simulation and free memory
     void Finalize() {
         auto ADI_C_End = lib_.get_function<void(int*, char*)>("ADI_C_End");
 
-        // Run ADI_C_End
         ADI_C_End(
             &error_handling_.error_status,        // output: error status
             error_handling_.error_message.data()  // output: error message buffer
@@ -740,45 +742,38 @@ private:
     template <typename T, size_t N>
     std::vector<T> FlattenArray(const std::vector<std::array<T, N>>& input) {
         std::vector<T> output;
+        output.reserve(input.size() * N);
         for (const auto& arr : input) {
             output.insert(output.end(), arr.begin(), arr.end());
         }
         return output;
     }
 
-    /// Template method to validate array size and flatten it
+    /// Method to validate a 2D array for the correct number of points and then flatten it to 1D
     template <typename T, size_t N>
     std::vector<T> ValidateAndFlattenArray(
-        const std::vector<std::array<T, N>>& array, size_t num_pts, const std::string& array_name
+        const std::vector<std::array<T, N>>& array, size_t expected_size
     ) {
-        if (array.size() != num_pts) {
-            std::cerr << "The number of mesh points in the " << array_name
-                      << " array changed from the initial value of " << num_pts
-                      << ". This is not permitted during the simulation." << std::endl;
-            // call ADI_End();
+        std::string array_name;
+        if constexpr (std::is_same_v<T, float> && N == 3) {
+            array_name = "position";
+        } else if constexpr (std::is_same_v<T, double> && N == 9) {
+            array_name = "orientation";
+        } else if constexpr (std::is_same_v<T, float> && N == 6) {
+            array_name = "velocity/acceleration";
+        } else {
+            array_name = "unknown";
+        }
+
+        if (array.size() != expected_size) {
+            throw std::runtime_error(
+                "The number of mesh points in the " + array_name +
+                " array changed from the initial value of " + std::to_string(expected_size) +
+                " to " + std::to_string(array.size()) +
+                ". This is not permitted during the simulation."
+            );
         }
         return FlattenArray(array);
-    }
-
-    /// Flatten and validate position array
-    std::vector<float> FlattenPositionArray(
-        const std::vector<std::array<float, 3>>& position_array, size_t num_pts
-    ) {
-        return ValidateAndFlattenArray(position_array, num_pts, "position");
-    }
-
-    /// Flatten and validate orientation array
-    std::vector<double> FlattenOrientationArray(
-        const std::vector<std::array<double, 9>>& orientation_array, size_t num_pts
-    ) {
-        return ValidateAndFlattenArray(orientation_array, num_pts, "orientation");
-    }
-
-    /// Flatten and validate velocity array
-    std::vector<float> FlattenVelocityArray(
-        const std::vector<std::array<float, 6>>& velocity_array, size_t num_pts
-    ) {
-        return ValidateAndFlattenArray(velocity_array, num_pts, "velocity");
     }
 
     /// Method to join a vector of strings into a single string with a delimiter
