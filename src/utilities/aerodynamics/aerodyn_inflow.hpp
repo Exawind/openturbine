@@ -504,6 +504,7 @@ public:
         );
 
         error_handling_.CheckError();
+        is_initialized_ = true;
     }
 
     /// Wrapper for ADI_C_Init routine to initialize the AeroDyn Inflow library
@@ -722,6 +723,7 @@ public:
     }
 
 private:
+    bool is_initialized_{false};  //< Flag to check if the library is initialized
     util::dylib lib_{
         "libaerodyn_inflow_c_binding.dylib",
         util::dylib::no_filename_decorations  //< Dynamic library object for AeroDyn Inflow
