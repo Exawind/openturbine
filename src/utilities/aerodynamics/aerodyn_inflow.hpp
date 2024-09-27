@@ -11,58 +11,30 @@
 namespace openturbine::util {
 
 /**
- * AeroDynInflowLibrary: A C++ wrapper for the AeroDyn/InflowWind (ADI) shared library
+ * AeroDynInflowLibrary: C++ wrapper for the AeroDyn/InflowWind (ADI) shared library
  *
- * ## Overview
+ * Provides a modern C++ interface to AeroDyn x InflowWind functionality, encapsulating
+ * the C-bindings of the Fortran library.
  *
- * This wrapper simplifies interaction with the ADI library, providing a modern C++ interface for
- * OpenTurbine developers to utilize AeroDyn and InflowWind functionality. It encapsulates the
- * C-bindings of the Fortran library, drawing inspiration from the existing Python
- * interface.
+ * Key Features:
+ * - AeroDyn: Blade element momentum (BEM) theory for aerodynamic force calculations
+ *   (dynamic stall, unsteady aerodynamics, tower shadow, wind shear, tip/hub losses)
+ * - InflowWind: Simulates complex inflow conditions (turbulence, wind shear, gusts)
  *
- * ## Features
+ * Usage:
+ * 1. Instantiate AeroDynInflowLibrary with shared library path
+ * 2. Initialize: PreInitialize() -> SetupRotor() -> Initialize()
+ * 3. Simulate: SetupRotorMotion() -> UpdateStates() -> CalculateOutputChannels() ->
+ *              GetRotorAerodynamicLoads()
+ * 4. Finalize() and handle errors
  *
- * AeroDyn utilizes blade element momentum (BEM) theory to calculate aerodynamic forces acting
- * on each blade section. It accounts for factors such as:
- *  - Dynamic stall (Beddoes-Leishman or OLAF models)
- *  - Unsteady aerodynamics
- *  - Tower shadow effects
- *  - Wind shear
- *  - Tip and hub losses
+ * See unit tests for detailed usage examples.
  *
- * InflowWind simulates the inflow conditions around wind turbines by modeling spatially and
- * temporally varying wind fields. It enables the simulation of complex wind phenomena, including:
- *  - Atmospheric turbulence (e.g., Kaimal, von Karman spectra)
- *  - Wind shear (power law or logarithmic profiles)
- *  - Discrete gusts and extreme events
- *  - Various wind field types (uniform, full-field turbulence, user-defined)
- *
- * ## Usage
- *
- * 1. Instantiate the AeroDynInflowLibrary class with the path to the shared library
- * 2. Initialize the AeroDyn/InflowWind modules:
- *    - PreInitialize(): Set up general parameters
- *    - SetupRotor(): Configure rotor-specific settings (iterate over turbines)
- *    - Initialize(): Complete initialization with input files
- * 3. Perform the simulation by iterating over timesteps:
- *    - SetupRotorMotion(): Update rotor motion (iterate over turbines)
- *    - UpdateStates(): Advance internal states
- *    - CalculateOutputChannels(): Compute output values
- *    - GetRotorAerodynamicLoads(): Retrieve aerodynamic forces and moments
- * 4. Complete the simulation:
- *    - Finalize(): Clean up and release resources
- *    - Handle any resulting errors using the ErrorHandling struct
- *
- * Note: Refer to the unit tests for more detailed examples of how to use this wrapper.
- *
- * ## References
- *
- * - OpenFAST/AeroDyn documentation:
- *   https://openfast.readthedocs.io/en/main/source/user/aerodyn/index.html
- * - OpenFAST/InflowWind documentation:
- *   https://openfast.readthedocs.io/en/main/source/user/inflowwind/index.html
- * - AeroDyn InflowWind C bindings:
- *   https://github.com/OpenFAST/openfast/blob/dev/modules/aerodyn/src/AeroDyn_Inflow_C_Binding.f90
+ * References:
+ * - OpenFAST/AeroDyn: https://openfast.readthedocs.io/en/main/source/user/aerodyn/index.html
+ * - OpenFAST/InflowWind: https://openfast.readthedocs.io/en/main/source/user/inflowwind/index.html
+ * - C bindings:
+ * https://github.com/OpenFAST/openfast/blob/dev/modules/aerodyn/src/AeroDyn_Inflow_C_Binding.f90
  */
 
 /**
