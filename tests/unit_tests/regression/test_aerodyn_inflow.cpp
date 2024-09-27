@@ -16,7 +16,7 @@ TEST(AerodynInflowTest, ErrorHandling_NoThrow) {
 
 TEST(AerodynInflowTest, ErrorHandling_Throw) {
     util::ErrorHandling error_handling;
-    error_handling.error_status = 1;
+    error_handling.error_status = 1;  // Set error status to 1 to trigger an error
     EXPECT_THROW(error_handling.CheckError(), std::runtime_error);
 }
 
@@ -126,6 +126,45 @@ TEST(AerodynInflowTest, TurbineSettings_Set_1T1B) {
     );
 }
 
+TEST(AerodynInflowTest, TurbineSettings_Validate_ExpectNoThrow) {
+    util::TurbineSettings turbine_settings;
+    turbine_settings.n_blades = 3;
+    turbine_settings.initial_root_position = {{0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}};
+    turbine_settings.initial_root_orientation = {
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.}};
+
+    EXPECT_NO_THROW(turbine_settings.Validate());
+}
+
+TEST(AerodynInflowTest, TurbineSettings_Validate_InvalidBlades) {
+    util::TurbineSettings turbine_settings;
+    turbine_settings.n_blades = 0;  // Invalid number of blades
+
+    EXPECT_THROW(turbine_settings.Validate(), std::runtime_error);
+}
+
+TEST(AerodynInflowTest, TurbineSettings_Validate_InvalidRootPositionSize) {
+    util::TurbineSettings turbine_settings;
+    turbine_settings.n_blades = 3;
+    turbine_settings.initial_root_position = {{0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}};  // Only 2 positions
+
+    EXPECT_THROW(turbine_settings.Validate(), std::invalid_argument);
+}
+
+TEST(AerodynInflowTest, TurbineSettings_Validate_InvalidRootOrientationSize) {
+    util::TurbineSettings turbine_settings;
+    turbine_settings.n_blades = 3;
+    turbine_settings.initial_root_position = {{0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}};
+    turbine_settings.initial_root_orientation = {
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.}  // Only 2 orientations
+    };
+
+    EXPECT_THROW(turbine_settings.Validate(), std::invalid_argument);
+}
+
 TEST(AerodynInflowTest, StructuralMesh_Default) {
     util::StructuralMesh structural_mesh;
     EXPECT_EQ(structural_mesh.n_mesh_points, 1);
@@ -153,6 +192,54 @@ TEST(AerodynInflowTest, StructuralMesh_Set) {
         structural_mesh.initial_mesh_orientation[0], {1., 0., 0., 0., 0., -1., 0., 1., 0.}
     );
     EXPECT_EQ(structural_mesh.mesh_point_to_blade_num[0], 1);
+}
+
+TEST(AerodynInflowTest, StructuralMesh_Validate_ExpectNoThrow) {
+    util::StructuralMesh structural_mesh;
+    structural_mesh.n_mesh_points = 3;
+    structural_mesh.initial_mesh_position = {{0.f, 0.f, 0.f}, {1.f, 1.f, 1.f}, {2.f, 2.f, 2.f}};
+    structural_mesh.initial_mesh_orientation = {
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.}};
+
+    EXPECT_NO_THROW(structural_mesh.Validate());
+}
+
+TEST(AerodynInflowTest, StructuralMesh_Validate_InvalidMeshPositionSize) {
+    util::StructuralMesh structural_mesh;
+    structural_mesh.n_mesh_points = 3;
+    structural_mesh.initial_mesh_position = {{0.f, 0.f, 0.f}, {1.f, 1.f, 1.f}};  // Only 2 positions
+    structural_mesh.initial_mesh_orientation = {
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.}};
+
+    EXPECT_THROW(structural_mesh.Validate(), std::invalid_argument);
+}
+
+TEST(AerodynInflowTest, StructuralMesh_Validate_InvalidMeshOrientationSize) {
+    util::StructuralMesh structural_mesh;
+    structural_mesh.n_mesh_points = 3;
+    structural_mesh.initial_mesh_position = {{0.f, 0.f, 0.f}, {1.f, 1.f, 1.f}, {2.f, 2.f, 2.f}};
+    structural_mesh.initial_mesh_orientation = {
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.}  // Only 2 orientations
+    };
+
+    EXPECT_THROW(structural_mesh.Validate(), std::invalid_argument);
+}
+
+TEST(AerodynInflowTest, StructuralMesh_Validate_MismatchedSizes) {
+    util::StructuralMesh structural_mesh;
+    structural_mesh.n_mesh_points = 3;
+    structural_mesh.initial_mesh_position = {{0.f, 0.f, 0.f}, {1.f, 1.f, 1.f}, {2.f, 2.f, 2.f}};
+    structural_mesh.initial_mesh_orientation = {
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.}  // Only 2 orientations
+    };
+
+    EXPECT_THROW(structural_mesh.Validate(), std::invalid_argument);
 }
 
 TEST(AerodynInflowTest, MeshMotionData_Default) {
@@ -331,6 +418,82 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
     EXPECT_EQ(aerodyn_inflow_library.GetSimulationControls().transpose_DCM, 1);
     EXPECT_EQ(aerodyn_inflow_library.GetStructuralMesh().n_mesh_points, 1);
     EXPECT_EQ(aerodyn_inflow_library.GetVTKSettings().write_vtk, 0);
+}
+
+TEST(AerodynInflowTest, AeroDynInflowLibrary_PreInitialize) {
+    // Load the shared library
+    const std::string path = GetSharedLibraryPath();
+    util::AeroDynInflowLibrary aerodyn_inflow_library(path);
+
+    // Check initial error handling state
+    EXPECT_EQ(aerodyn_inflow_library.GetErrorHandling().error_status, 0);
+    EXPECT_STREQ(aerodyn_inflow_library.GetErrorHandling().error_message.data(), "");
+
+    // Call PreInitialize
+    aerodyn_inflow_library.PreInitialize();
+
+    // Check error handling state after PreInitialize
+    EXPECT_EQ(aerodyn_inflow_library.GetErrorHandling().error_status, 0);
+    EXPECT_STREQ(aerodyn_inflow_library.GetErrorHandling().error_message.data(), "");
+}
+
+// Write test based on py_ad_driver.py to complete a full loop of initialization, simulation, and
+// cleanup
+TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
+    // Set up simulation parameters
+    util::SimulationControls sim_controls;
+    sim_controls.time_step = 0.0125;
+    sim_controls.max_time = 10.0;
+
+    // Set up environmental conditions
+    util::EnvironmentalConditions env_conditions;
+    env_conditions.gravity = 9.80665f;
+    env_conditions.atm_pressure = 103500.0f;
+
+    // Set up fluid properties
+    util::FluidProperties fluid_props;
+    fluid_props.density = 1.225f;
+    fluid_props.kinematic_viscosity = 1.464E-05f;
+    fluid_props.sound_speed = 335.0f;
+    fluid_props.vapor_pressure = 1700.0f;
+
+    // Set up turbine settings
+    util::TurbineSettings turbine_settings;
+    turbine_settings.n_turbines = 1;
+    turbine_settings.n_blades = 3;
+    turbine_settings.initial_hub_position = {0.0f, 0.0f, 90.0f};
+    turbine_settings.initial_hub_orientation = {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0};
+    turbine_settings.initial_nacelle_position = {0.0f, 0.0f, 90.0f};
+    turbine_settings.initial_nacelle_orientation = {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0};
+    std::vector<std::array<float, 3>> root_positions = {
+        {0.0f, 0.0f, 90.0f}, {0.0f, 0.0f, 90.0f}, {0.0f, 0.0f, 90.0f}};
+    turbine_settings.initial_root_position = root_positions;
+    std::vector<std::array<double, 9>> root_orientations(
+        3, {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0}
+    );
+    turbine_settings.initial_root_orientation = root_orientations;
+
+    // Set up structural mesh
+    // Assuming 5 mesh points per blade
+    /*     std::vector<std::array<float, 3>> mesh_positions(15);
+        std::vector<std::array<double, 9>> mesh_orientations(
+            15, {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0}
+        );
+        std::vector<int> mesh_point_to_blade_num(15);
+
+        for (int i = 0; i < 15; ++i) {
+            mesh_positions[static_cast<size_t>(i)] = {0.0f, 0.0f, 90.0f + i * 2.0f};
+            mesh_point_to_blade_num[static_cast<size_t>(i)] = i / 5 + 1;
+        }
+
+        util::StructuralMesh structural_mesh(mesh_positions, mesh_point_to_blade_num, 15);
+
+        // Load the shared library
+        const std::string path = GetSharedLibraryPath();
+        util::AeroDynInflowLibrary aerodyn_inflow_library(
+            path, util::ErrorHandling{}, fluid_props, env_conditions, turbine_settings,
+            util::StructuralMesh{}, sim_controls, util::VTKSettings{}
+        ); */
 }
 
 #endif

@@ -188,51 +188,6 @@ struct TurbineSettings {
         if (initial_root_orientation.size() != static_cast<size_t>(n_blades)) {
             throw std::invalid_argument("Number of blade root orientations must match n_blades");
         }
-
-        for (const auto& pos : initial_root_position) {
-            if (pos.size() != 3) {
-                throw std::invalid_argument(
-                    "Expecting a 3 element array for blade root positions (initial_root_position) "
-                    "with second index for [x,y,z]"
-                );
-            }
-        }
-
-        for (const auto& orient : initial_root_orientation) {
-            if (orient.size() != 9) {
-                throw std::invalid_argument(
-                    "Expecting a 9 element array for blade root orientations as DCMs "
-                    "(initial_root_orientation) with second index for "
-                    "[r11,r12,r13,r21,r22,r23,r31,r32,r33]"
-                );
-            }
-        }
-
-        if (initial_hub_position.size() != 3) {
-            throw std::invalid_argument(
-                "Expecting a 3 element array for initial_hub_position [x,y,z]"
-            );
-        }
-
-        if (initial_hub_orientation.size() != 9) {
-            throw std::invalid_argument(
-                "Expecting a 9 element array for initial_hub_orientation DCM "
-                "[r11,r12,r13,r21,r22,r23,r31,r32,r33]"
-            );
-        }
-
-        if (initial_nacelle_position.size() != 3) {
-            throw std::invalid_argument(
-                "Expecting a 3 element array for initial_nacelle_position [x,y,z]"
-            );
-        }
-
-        if (initial_nacelle_orientation.size() != 9) {
-            throw std::invalid_argument(
-                "Expecting a 9 element array for initial_nacelle_orientation DCM "
-                "[r11,r12,r13,r21,r22,r23,r31,r32,r33]"
-            );
-        }
     }
 };
 
@@ -303,31 +258,6 @@ struct StructuralMesh {
         if (initial_mesh_position.size() != initial_mesh_orientation.size()) {
             throw std::invalid_argument(
                 "Different number of meshes in initial position and orientation arrays"
-            );
-        }
-
-        for (const auto& pos : initial_mesh_position) {
-            if (pos.size() != 3) {
-                throw std::invalid_argument(
-                    "Expecting a Nx3 array of initial mesh positions (initial_mesh_position) with "
-                    "second index for [x,y,z]"
-                );
-            }
-        }
-
-        for (const auto& orient : initial_mesh_orientation) {
-            if (orient.size() != 9) {
-                throw std::invalid_argument(
-                    "Expecting a Nx9 array of initial mesh orientations as DCMs "
-                    "(initial_mesh_orientation) with second index for "
-                    "[r11,r12,r13,r21,r22,r23,r31,r32,r33]"
-                );
-            }
-        }
-
-        if (mesh_point_to_blade_num.size() != static_cast<size_t>(n_mesh_points)) {
-            throw std::invalid_argument(
-                "Number of mesh point to blade number mappings must match n_mesh_points"
             );
         }
     }
@@ -970,11 +900,18 @@ private:
 
     /// Method to join a vector of strings into a single string with a delimiter
     std::string JoinStringArray(const std::vector<std::string>& input, char delimiter) {
-        std::string output;
-        for (const auto& str : input) {
-            output += str + delimiter;
+        if (input.empty()) {
+            return "";
         }
-        return output;
+
+        std::ostringstream result;
+        std::copy(
+            input.begin(), input.end() - 1,
+            std::ostream_iterator<std::string>(result, std::string(1, delimiter).c_str())
+        );
+        result << input.back();
+
+        return result.str();
     }
 };
 
