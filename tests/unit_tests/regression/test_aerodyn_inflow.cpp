@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include <gtest/gtest.h>
 
 #include "test_utilities.hpp"
@@ -81,7 +83,7 @@ TEST(AerodynInflowTest, SetPositionAndOrientation) {
 
     util::SetPositionAndOrientation(data, position, orientation);
 
-    ExpectArrayNear(position, {1.0f, 2.0f, 3.0f});
+    ExpectArrayNear(position, {1.f, 2.f, 3.f});
     ExpectArrayNear(orientation, {1., 0., 0., 0., 0., -1., 0., 1., 0.});
 }
 
@@ -202,6 +204,7 @@ TEST(AerodynInflowTest, StructuralMesh_Validate_ExpectNoThrow) {
         {1., 0., 0., 0., 1., 0., 0., 0., 1.},
         {1., 0., 0., 0., 1., 0., 0., 0., 1.},
         {1., 0., 0., 0., 1., 0., 0., 0., 1.}};
+    structural_mesh.mesh_point_to_blade_num = {1, 2, 3};
 
     EXPECT_NO_THROW(structural_mesh.Validate());
 }
@@ -214,6 +217,7 @@ TEST(AerodynInflowTest, StructuralMesh_Validate_InvalidMeshPositionSize) {
         {1., 0., 0., 0., 1., 0., 0., 0., 1.},
         {1., 0., 0., 0., 1., 0., 0., 0., 1.},
         {1., 0., 0., 0., 1., 0., 0., 0., 1.}};
+    structural_mesh.mesh_point_to_blade_num = {1, 2, 3};
 
     EXPECT_THROW(structural_mesh.Validate(), std::invalid_argument);
 }
@@ -226,18 +230,19 @@ TEST(AerodynInflowTest, StructuralMesh_Validate_InvalidMeshOrientationSize) {
         {1., 0., 0., 0., 1., 0., 0., 0., 1.},
         {1., 0., 0., 0., 1., 0., 0., 0., 1.}  // Only 2 orientations
     };
-
+    structural_mesh.mesh_point_to_blade_num = {1, 2, 3};
     EXPECT_THROW(structural_mesh.Validate(), std::invalid_argument);
 }
 
-TEST(AerodynInflowTest, StructuralMesh_Validate_MismatchedSizes) {
+TEST(AerodynInflowTest, StructuralMesh_Validate_MismatchedBladeNumbers) {
     util::StructuralMesh structural_mesh;
     structural_mesh.n_mesh_points = 3;
     structural_mesh.initial_mesh_position = {{0.f, 0.f, 0.f}, {1.f, 1.f, 1.f}, {2.f, 2.f, 2.f}};
     structural_mesh.initial_mesh_orientation = {
         {1., 0., 0., 0., 1., 0., 0., 0., 1.},
-        {1., 0., 0., 0., 1., 0., 0., 0., 1.}  // Only 2 orientations
-    };
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.},
+        {1., 0., 0., 0., 1., 0., 0., 0., 1.}};
+    structural_mesh.mesh_point_to_blade_num = {1, 2};  // Only 2 blade numbers
 
     EXPECT_THROW(structural_mesh.Validate(), std::invalid_argument);
 }
@@ -421,29 +426,24 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
 }
 
 TEST(AerodynInflowTest, AeroDynInflowLibrary_PreInitialize) {
-    // Load the shared library
     const std::string path = GetSharedLibraryPath();
     util::AeroDynInflowLibrary aerodyn_inflow_library(path);
 
-    // Check initial error handling state
     EXPECT_EQ(aerodyn_inflow_library.GetErrorHandling().error_status, 0);
     EXPECT_STREQ(aerodyn_inflow_library.GetErrorHandling().error_message.data(), "");
 
-    // Call PreInitialize
     aerodyn_inflow_library.PreInitialize();
 
-    // Check error handling state after PreInitialize
     EXPECT_EQ(aerodyn_inflow_library.GetErrorHandling().error_status, 0);
     EXPECT_STREQ(aerodyn_inflow_library.GetErrorHandling().error_message.data(), "");
 }
 
 TEST(AerodynInflowTest, AeroDynInflowLibrary_FlattenArray) {
-    // Load the shared library
     const std::string path = GetSharedLibraryPath();
     util::AeroDynInflowLibrary aerodyn_inflow_library(path);
 
-    std::vector<std::array<float, 3>> input = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}};
-    std::vector<float> expected = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f};
+    std::vector<std::array<float, 3>> input = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
+    std::vector<float> expected = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
 
     auto result = aerodyn_inflow_library.FlattenArray(input);
 
@@ -461,9 +461,9 @@ protected:
 };
 
 TEST_F(AerodynInflowValidateAndFlattenArrayTest, ValidPositionArray) {
-    std::vector<std::array<float, 3>> position_array = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}};
+    std::vector<std::array<float, 3>> position_array = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
     size_t expected_size = 2;
-    std::vector<float> expected = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f};
+    std::vector<float> expected = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
 
     auto result = aerodyn_inflow_library.ValidateAndFlattenArray(position_array, expected_size);
     ASSERT_EQ(result, expected);
@@ -471,11 +471,10 @@ TEST_F(AerodynInflowValidateAndFlattenArrayTest, ValidPositionArray) {
 
 TEST_F(AerodynInflowValidateAndFlattenArrayTest, ValidOrientationArray) {
     std::vector<std::array<double, 9>> orientation_array = {
-        {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0},
-        {10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0}};
+        {1., 2., 3., 4., 5., 6., 7., 8., 9.}, {10., 11., 12., 13., 14., 15., 16., 17., 18.}};
     size_t expected_size = 2;
-    std::vector<double> expected = {1.0,  2.0,  3.0,  4.0,  5.0,  6.0,  7.0,  8.0,  9.0,
-                                    10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0};
+    std::vector<double> expected = {1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,
+                                    10., 11., 12., 13., 14., 15., 16., 17., 18.};
 
     auto result = aerodyn_inflow_library.ValidateAndFlattenArray(orientation_array, expected_size);
     ASSERT_EQ(result, expected);
@@ -483,17 +482,16 @@ TEST_F(AerodynInflowValidateAndFlattenArrayTest, ValidOrientationArray) {
 
 TEST_F(AerodynInflowValidateAndFlattenArrayTest, ValidVelocityAccelerationArray) {
     std::vector<std::array<float, 6>> velocity_array = {
-        {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f}, {7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f}};
+        {1.f, 2.f, 3.f, 4.f, 5.f, 6.f}, {7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
     size_t expected_size = 2;
-    std::vector<float> expected = {1.0f, 2.0f, 3.0f, 4.0f,  5.0f,  6.0f,
-                                   7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f};
+    std::vector<float> expected = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f, 11.f, 12.f};
 
     auto result = aerodyn_inflow_library.ValidateAndFlattenArray(velocity_array, expected_size);
     ASSERT_EQ(result, expected);
 }
 
 TEST_F(AerodynInflowValidateAndFlattenArrayTest, InvalidArraySize) {
-    std::vector<std::array<float, 3>> position_array = {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}};
+    std::vector<std::array<float, 3>> position_array = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
     size_t expected_size = 3;  // Incorrect size
 
     EXPECT_THROW(
@@ -509,6 +507,21 @@ TEST_F(AerodynInflowValidateAndFlattenArrayTest, UnknownArrayType) {
     auto result = aerodyn_inflow_library.ValidateAndFlattenArray(unknown_array, expected_size);
     std::vector<int> expected = {1, 2, 3, 4};
     ASSERT_EQ(result, expected);
+}
+
+TEST(AerodynInflowTest, UnflattenArray) {
+    const std::string path = GetSharedLibraryPath();
+    util::AeroDynInflowLibrary aerodyn_inflow_library(path);
+
+    std::vector<float> input = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
+    std::vector<std::array<float, 3>> expected = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
+
+    auto result = aerodyn_inflow_library.UnflattenArray<float, 3>(input);
+
+    ASSERT_EQ(result.size(), expected.size());
+    for (size_t i = 0; i < expected.size(); ++i) {
+        EXPECT_EQ(result[i], expected[i]);
+    }
 }
 
 class AerodynInflowJoinStringArrayTest : public ::testing::Test {
@@ -546,65 +559,6 @@ TEST_F(AerodynInflowJoinStringArrayTest, StringsContainingDelimiter) {
     std::vector<std::string> input = {"com,ma", "semi;colon", "pipe|symbol"};
     std::string expected = "com,ma;semi;colon;pipe|symbol";
     EXPECT_EQ(aerodyn_inflow_library.JoinStringArray(input, ';'), expected);
-}
-
-// Write test based on py_ad_driver.py to complete a full loop of initialization, simulation, and
-// cleanup
-TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
-    // Set up simulation parameters
-    util::SimulationControls sim_controls;
-    sim_controls.time_step = 0.0125;
-    sim_controls.max_time = 10.0;
-
-    // Set up environmental conditions
-    util::EnvironmentalConditions env_conditions;
-    env_conditions.gravity = 9.80665f;
-    env_conditions.atm_pressure = 103500.0f;
-
-    // Set up fluid properties
-    util::FluidProperties fluid_props;
-    fluid_props.density = 1.225f;
-    fluid_props.kinematic_viscosity = 1.464E-05f;
-    fluid_props.sound_speed = 335.0f;
-    fluid_props.vapor_pressure = 1700.0f;
-
-    // Set up turbine settings
-    util::TurbineSettings turbine_settings;
-    turbine_settings.n_turbines = 1;
-    turbine_settings.n_blades = 3;
-    turbine_settings.initial_hub_position = {0.0f, 0.0f, 90.0f};
-    turbine_settings.initial_hub_orientation = {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0};
-    turbine_settings.initial_nacelle_position = {0.0f, 0.0f, 90.0f};
-    turbine_settings.initial_nacelle_orientation = {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0};
-    std::vector<std::array<float, 3>> root_positions = {
-        {0.0f, 0.0f, 90.0f}, {0.0f, 0.0f, 90.0f}, {0.0f, 0.0f, 90.0f}};
-    turbine_settings.initial_root_position = root_positions;
-    std::vector<std::array<double, 9>> root_orientations(
-        3, {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0}
-    );
-    turbine_settings.initial_root_orientation = root_orientations;
-
-    // Set up structural mesh
-    // Assuming 5 mesh points per blade
-    /*     std::vector<std::array<float, 3>> mesh_positions(15);
-        std::vector<std::array<double, 9>> mesh_orientations(
-            15, {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0}
-        );
-        std::vector<int> mesh_point_to_blade_num(15);
-
-        for (int i = 0; i < 15; ++i) {
-            mesh_positions[static_cast<size_t>(i)] = {0.0f, 0.0f, 90.0f + i * 2.0f};
-            mesh_point_to_blade_num[static_cast<size_t>(i)] = i / 5 + 1;
-        }
-
-        util::StructuralMesh structural_mesh(mesh_positions, mesh_point_to_blade_num, 15);
-
-        // Load the shared library
-        const std::string path = GetSharedLibraryPath();
-        util::AeroDynInflowLibrary aerodyn_inflow_library(
-            path, util::ErrorHandling{}, fluid_props, env_conditions, turbine_settings,
-            util::StructuralMesh{}, sim_controls, util::VTKSettings{}
-        ); */
 }
 
 #endif

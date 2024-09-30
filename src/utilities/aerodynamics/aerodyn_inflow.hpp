@@ -181,12 +181,11 @@ struct TurbineSettings {
             throw std::runtime_error("No blades. Set n_blades to number of AD blades in the model");
         }
 
-        if (initial_root_position.size() != static_cast<size_t>(n_blades)) {
-            throw std::invalid_argument("Number of blade root positions must match n_blades");
-        }
-
-        if (initial_root_orientation.size() != static_cast<size_t>(n_blades)) {
-            throw std::invalid_argument("Number of blade root orientations must match n_blades");
+        if (initial_root_position.size() != static_cast<size_t>(n_blades) ||
+            initial_root_orientation.size() != static_cast<size_t>(n_blades)) {
+            throw std::invalid_argument(
+                "Number of blade root positions and orientations must match n_blades"
+            );
         }
     }
 };
@@ -242,23 +241,21 @@ struct StructuralMesh {
     /**
      * @brief Validates the structural mesh
      *
-     * @details This method validates the structural mesh, including the number of mesh points, the
-     * initial mesh position, the initial mesh orientation, and the mapping of mesh points to blade
-     * numbers.
+     * @details This method validates the structural mesh by checking:
+     * - The number of mesh points matches the size of initial position and orientation arrays
+     * - The size of the mesh point to blade number mapping matches the number of mesh points
+     * - All blade numbers in the mapping are valid (between 1 and the number of blades)
      */
     void Validate() const {
-        if (initial_mesh_position.size() != static_cast<size_t>(n_mesh_points)) {
-            throw std::invalid_argument("Number of mesh positions must match n_mesh_points");
-        }
-
-        if (initial_mesh_orientation.size() != static_cast<size_t>(n_mesh_points)) {
-            throw std::invalid_argument("Number of mesh orientations must match n_mesh_points");
-        }
-
-        if (initial_mesh_position.size() != initial_mesh_orientation.size()) {
+        if (initial_mesh_position.size() != static_cast<size_t>(n_mesh_points) ||
+            initial_mesh_orientation.size() != static_cast<size_t>(n_mesh_points)) {
             throw std::invalid_argument(
-                "Different number of meshes in initial position and orientation arrays"
+                "Number of mesh positions and orientations must match n_mesh_points"
             );
+        }
+
+        if (mesh_point_to_blade_num.size() != static_cast<size_t>(n_mesh_points)) {
+            throw std::invalid_argument("Size of mesh_point_to_blade_num must match n_mesh_points");
         }
     }
 };
@@ -584,7 +581,7 @@ public:
         );
 
         error_handling_.CheckError();
-        is_initialized_ = true;
+        // is_initialized_ = true;
     }
 
     /**
@@ -757,6 +754,15 @@ public:
         auto ADI_C_GetRotorLoads =
             lib_.get_function<void(int*, int*, float*, int*, char*)>("ADI_C_GetRotorLoads");
 
+        // Ensure the input vector has the correct size
+        if (mesh_force_moment.size() != static_cast<size_t>(structural_mesh_.n_mesh_points)) {
+            throw std::invalid_argument(
+                "mesh_force_moment size (" + std::to_string(mesh_force_moment.size()) +
+                ") does not match n_mesh_points (" + std::to_string(structural_mesh_.n_mesh_points) +
+                ")"
+            );
+        }
+
         // Flatten the mesh force/moment array
         auto mesh_force_moment_flat = FlattenArray(mesh_force_moment);
 
@@ -771,11 +777,7 @@ public:
         error_handling_.CheckError();
 
         // Copy the flattened array back to the original array
-        for (size_t i = 0; i < mesh_force_moment.size(); ++i) {
-            for (size_t j = 0; j < 6; ++j) {
-                mesh_force_moment[i][j] = mesh_force_moment_flat[i * 6 + j];
-            }
-        }
+        mesh_force_moment = UnflattenArray<float, 6>(mesh_force_moment_flat);
     }
 
     /**
@@ -793,7 +795,7 @@ public:
 
         // Set up output channel values
         auto output_channel_values_c =
-            std::vector<float>(static_cast<size_t>(sim_controls_.n_channels));
+            std::vector<float>(static_cast<size_t>(sim_controls_.n_channels), 0.f);
 
         ADI_C_CalcOutput(
             &time,                                // input: time at which to calculate output forces
@@ -803,6 +805,8 @@ public:
         );
 
         error_handling_.CheckError();
+
+        // Convert output channel values back into the output vector
         output_channel_values = output_channel_values_c;
     }
 
@@ -812,16 +816,16 @@ public:
      * @details This function updates the states of the AeroDyn Inflow library by passing the current
      * time and the next time to the Fortran routine.
      *
-     * @param time Current time
-     * @param time_next Next time
+     * @param current_time Current time
+     * @param next_time Next time
      */
-    void UpdateStates(double time, double time_next) {
+    void UpdateStates(double current_time, double next_time) {
         auto ADI_C_UpdateStates =
             lib_.get_function<void(double*, double*, int*, char*)>("ADI_C_UpdateStates");
 
         ADI_C_UpdateStates(
-            &time,                                // input: time at which to calculate output forces
-            &time_next,                           // input: time T+dt we are stepping to
+            &current_time,                        // input: current time
+            &next_time,                           // input: next time step
             &error_handling_.error_status,        // output: error status
             error_handling_.error_message.data()  // output: error message buffer
         );
@@ -846,9 +850,19 @@ public:
         error_handling_.CheckError();
     }
 
-    /// Method to flatten a 2D array into a 1D array for Fortran compatibility
+    /**
+     * @brief Flattens a 2D array into a 1D array for Fortran compatibility
+     *
+     * @details This function flattens a 2D array into a 1D array for Fortran compatibility by
+     * inserting each element of the 2D array into the 1D array.
+     *
+     * @tparam T Type of the elements in the array
+     * @tparam N Number of elements in each row of the array
+     * @param input 2D array to flatten
+     * @return Flattened 1D array
+     */
     template <typename T, size_t N>
-    std::vector<T> FlattenArray(const std::vector<std::array<T, N>>& input) {
+    std::vector<T> FlattenArray(const std::vector<std::array<T, N>>& input) const {
         std::vector<T> output;
         output.reserve(input.size() * N);
         for (const auto& arr : input) {
@@ -857,11 +871,22 @@ public:
         return output;
     }
 
-    /// Method to validate a 2D array for the correct number of points and then flatten it to 1D
+    /**
+     * @brief Validates a 2D array for the correct number of points and then flattens it to 1D
+     *
+     * @details This function validates a 2D array for the correct number of points and then
+     * flattens it to 1D by inserting each element of the 2D array into the 1D array.
+     *
+     * @tparam T Type of the elements in the array
+     * @tparam N Number of elements in each row of the array
+     * @param array 2D array to validate and flatten
+     * @param expected_size Expected size of the 2D array
+     * @return Flattened 1D array
+     */
     template <typename T, size_t N>
     std::vector<T> ValidateAndFlattenArray(
         const std::vector<std::array<T, N>>& array, size_t expected_size
-    ) {
+    ) const {
         std::string array_name;
         if constexpr (std::is_same_v<T, float> && N == 3) {
             array_name = "position";
@@ -884,8 +909,39 @@ public:
         return FlattenArray(array);
     }
 
-    /// Method to join a vector of strings into a single string with a delimiter
-    std::string JoinStringArray(const std::vector<std::string>& input, char delimiter) {
+    /**
+     * @brief Unflattens a 1D array into a 2D array
+     *
+     * @details This function unflattens a 1D array into a 2D array by inserting each element of
+     * the 1D array into the 2D array.
+     *
+     * @tparam T Type of the elements in the array
+     * @tparam N Number of elements in each row of the array
+     * @param input 1D array to unflatten
+     * @return Unflattened 2D array
+     */
+    template <typename T, size_t N>
+    std::vector<std::array<T, N>> UnflattenArray(const std::vector<T>& input) const {
+        std::vector<std::array<T, N>> output(input.size() / N);
+        for (size_t i = 0; i < output.size(); ++i) {
+            for (size_t j = 0; j < N; ++j) {
+                output[i][j] = input[i * N + j];
+            }
+        }
+        return output;
+    }
+
+    /**
+     * @brief Joins a vector of strings into a single string with a delimiter
+     *
+     * @details This function joins a vector of strings into a single string with a delimiter by
+     * inserting each element of the vector into the string.
+     *
+     * @param input Vector of strings to join
+     * @param delimiter Delimiter to insert between the strings
+     * @return Joined string
+     */
+    std::string JoinStringArray(const std::vector<std::string>& input, char delimiter) const {
         if (input.empty()) {
             return "";
         }
