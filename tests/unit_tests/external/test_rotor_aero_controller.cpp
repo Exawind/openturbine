@@ -1,7 +1,9 @@
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 
 #include <gtest/gtest.h>
 
@@ -34,11 +36,10 @@ TEST(Milestone, IEA15RotorAeroController) {
     constexpr auto gravity = std::array{-9.81, 0., 0.};
 
     // Properties
-    constexpr size_t n_turbines{1};       // Number of turbines
     constexpr size_t n_blades{3};         // Number of blades in rotor
     constexpr double azimuth_init{0.};    // Azimuth angle (rad)
     constexpr double hub_height{150.};    // Hub height (meters)
-    constexpr double hub_rad{3.97};       // Hub radius (meters)
+    constexpr double hub_radius{3.97};    // Hub radius (meters)
     constexpr double gear_box_ratio{1.};  // Gear box ratio (-)
     // constexpr double rotor_speed_init{0.79063415025};    // Initial rotor rotational velocity
     // (rad/s)
@@ -149,7 +150,7 @@ TEST(Milestone, IEA15RotorAeroController) {
                         QuaternionCompose(QuaternionCompose(q_root, base_rot), node_rotation[j]);
                     // Calculate node position and orientation for this blade
                     const auto pos = RotateVectorByQuaternion(
-                        rot, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
+                        rot, {node_coords[j][0] + hub_radius, node_coords[j][1], node_coords[j][2]}
                     );
                     const auto v = CrossProduct(omega, pos);
 
@@ -221,21 +222,59 @@ TEST(Milestone, IEA15RotorAeroController) {
     // AeroDyn / InflowWind library
     //--------------------------------------------------------------------------
 
-    auto adi = util::AeroDynInflowLibrary(adi_shared_lib_path);
+    // Create lambda for building blade configuration
+    auto build_blade_config = [&](size_t blade_num) {
+        std::vector<Array_7> node_positions;
+        std::transform(
+            beam_elems[blade_num].nodes.begin(), beam_elems[blade_num].nodes.end(),
+            std::back_inserter(node_positions),
+            [](const BeamNode& n) {
+                return n.node.x;
+            }
+        );
+        return util::TurbineConfig::BladeConfig{
+            node_positions[0],  // root node
+            node_positions,     // all nodes
+        };
+    };
 
-    adi.turbine_settings = util::TurbineSettings(
-        hub_node->x, hub_node->x,
+    // Define turbine initial position
+    std::vector<util::TurbineConfig> turbine_configs{
+        // Turbine 1
         {
-            beam_elems[0].nodes[0].node.x,
-            beam_elems[0].nodes[1].node.x,
-            beam_elems[0].nodes[2].node.x,
+            {0., 0., 0.},  // reference position
+            hub_node->x,   // hub initial position
+            hub_node->x,   // nacelle initial position
+            {
+                build_blade_config(0),  // Blade 1 config
+                build_blade_config(1),  // Blade 2 config
+                build_blade_config(2),  // Blade 3 config
+            },
+            true,  // is HAWT
         },
-        n_turbines, n_blades
-    );
+    };
 
-    adi.sim_controls.transpose_DCM = false;
-    adi.sim_controls.debug_level = 4;
-    adi.PreInitialize();
+    // Simulation controls
+    util::SimulationControls sc;
+    sc.aerodyn_input = "IEA-15-240-RWT_AeroDyn15.dat";
+    sc.aerodyn_input_is_path = true;
+    sc.inflowwind_input = "IEA-15-240-RWT_InflowFile.dat";
+    sc.inflowwind_input_is_path = true;
+    sc.time_step = step_size;
+    sc.max_time = t_end;
+    sc.total_elapsed_time = 0.;
+    sc.n_time_steps = num_steps;
+    sc.output_time_step = step_size;
+
+    util::VTKSettings vtk_settings;
+    vtk_settings.write_vtk = 1;
+    vtk_settings.vtk_type = 2;  // Animation
+    vtk_settings.vtk_nacelle_dimensions = {-2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f};
+    vtk_settings.vtk_hub_radius = static_cast<float>(hub_radius);
+
+    auto adi = util::AeroDynInflowLibrary(adi_shared_lib_path, sc, vtk_settings);
+
+    adi.Initialize(turbine_configs, util::AeroDynInflowLibrary::DebugLevel::Max);
 
     //--------------------------------------------------------------------------
     // Solver
@@ -249,7 +288,7 @@ TEST(Milestone, IEA15RotorAeroController) {
         constraints.row_range
     );
 
-    // Remove output directory for writing step data
+// Remove output directory for writing step data
 #ifdef OpenTurbine_ENABLE_VTK
     const std::filesystem::path step_dir("steps/IEA15RotorAeroController");
     RemoveDirectoryWithRetries(step_dir);
