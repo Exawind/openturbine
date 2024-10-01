@@ -391,6 +391,108 @@ TEST(AerodynInflowTest, VTKSettings_Set) {
     EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.0f);
 }
 
+TEST(AerodynInflowTest, FlattenArray) {
+    std::vector<std::array<float, 3>> input = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
+    std::vector<float> expected = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
+
+    auto result = util::FlattenArray(input);
+
+    ASSERT_EQ(result.size(), expected.size());
+    for (size_t i = 0; i < expected.size(); ++i) {
+        EXPECT_FLOAT_EQ(result[i], expected[i]);
+    }
+}
+
+TEST(AerodynInflowTest, ValidateAndFlattenArray_ValidPositionArray) {
+    std::vector<std::array<float, 3>> position_array = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
+    size_t expected_size = 2;
+    std::vector<float> expected = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
+
+    auto result = util::ValidateAndFlattenArray(position_array, expected_size);
+    ASSERT_EQ(result, expected);
+}
+
+TEST(AerodynInflowTest, ValidateAndFlattenArray_ValidOrientationArray) {
+    std::vector<std::array<double, 9>> orientation_array = {
+        {1., 2., 3., 4., 5., 6., 7., 8., 9.}, {10., 11., 12., 13., 14., 15., 16., 17., 18.}};
+    size_t expected_size = 2;
+    std::vector<double> expected = {1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,
+                                    10., 11., 12., 13., 14., 15., 16., 17., 18.};
+
+    auto result = util::ValidateAndFlattenArray(orientation_array, expected_size);
+    ASSERT_EQ(result, expected);
+}
+
+TEST(AerodynInflowTest, ValidateAndFlattenArray_ValidVelocityAccelerationArray) {
+    std::vector<std::array<float, 6>> velocity_array = {
+        {1.f, 2.f, 3.f, 4.f, 5.f, 6.f}, {7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+    size_t expected_size = 2;
+    std::vector<float> expected = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f, 11.f, 12.f};
+
+    auto result = util::ValidateAndFlattenArray(velocity_array, expected_size);
+    ASSERT_EQ(result, expected);
+}
+
+TEST(AerodynInflowTest, ValidateAndFlattenArray_InvalidArraySize) {
+    std::vector<std::array<float, 3>> position_array = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
+    size_t expected_size = 3;  // Incorrect size
+
+    EXPECT_THROW(
+        { util::ValidateAndFlattenArray(position_array, expected_size); }, std::runtime_error
+    );
+}
+
+TEST(AerodynInflowTest, ValidateAndFlattenArray_UnknownArrayType) {
+    std::vector<std::array<int, 2>> unknown_array = {{1, 2}, {3, 4}};
+    size_t expected_size = 2;
+
+    auto result = util::ValidateAndFlattenArray(unknown_array, expected_size);
+    std::vector<int> expected = {1, 2, 3, 4};
+    ASSERT_EQ(result, expected);
+}
+
+TEST(AerodynInflowTest, UnflattenArray) {
+    std::vector<float> input = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
+    std::vector<std::array<float, 3>> expected = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
+
+    auto result = util::UnflattenArray<float, 3>(input);
+
+    ASSERT_EQ(result.size(), expected.size());
+    for (size_t i = 0; i < expected.size(); ++i) {
+        EXPECT_EQ(result[i], expected[i]);
+    }
+}
+
+TEST(AerodynInflowTest, JoinStringArray_NormalCase) {
+    std::vector<std::string> input = {"apple", "banana", "cherry"};
+    std::string expected = "apple,banana,cherry";
+    EXPECT_EQ(util::JoinStringArray(input, ','), expected);
+}
+
+TEST(AerodynInflowTest, JoinStringArray_EmptyInput) {
+    std::vector<std::string> input = {};
+    std::string expected = "";
+    EXPECT_EQ(util::JoinStringArray(input, ','), expected);
+}
+
+TEST(AerodynInflowTest, JoinStringArray_SingleElement) {
+    std::vector<std::string> input = {"solo"};
+    std::string expected = "solo";
+    EXPECT_EQ(util::JoinStringArray(input, ','), expected);
+}
+
+TEST(AerodynInflowTest, JoinStringArray_DifferentDelimiter) {
+    std::vector<std::string> input = {"one", "two", "three"};
+    std::string expected = "one|two|three";
+    EXPECT_EQ(util::JoinStringArray(input, '|'), expected);
+}
+
+TEST(AerodynInflowTest, JoinStringArray_StringsContainingDelimiter) {
+    std::vector<std::string> input = {"com,ma", "semi;colon", "pipe|symbol"};
+    std::string expected = "com,ma;semi;colon;pipe|symbol";
+    EXPECT_EQ(util::JoinStringArray(input, ';'), expected);
+}
+
 /// Helper function to get the shared library path
 std::string GetSharedLibraryPath() {
     const std::filesystem::path project_root = FindProjectRoot();
@@ -436,129 +538,6 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_PreInitialize) {
 
     EXPECT_EQ(aerodyn_inflow_library.GetErrorHandling().error_status, 0);
     EXPECT_STREQ(aerodyn_inflow_library.GetErrorHandling().error_message.data(), "");
-}
-
-TEST(AerodynInflowTest, AeroDynInflowLibrary_FlattenArray) {
-    const std::string path = GetSharedLibraryPath();
-    util::AeroDynInflowLibrary aerodyn_inflow_library(path);
-
-    std::vector<std::array<float, 3>> input = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
-    std::vector<float> expected = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
-
-    auto result = aerodyn_inflow_library.FlattenArray(input);
-
-    ASSERT_EQ(result.size(), expected.size());
-    for (size_t i = 0; i < expected.size(); ++i) {
-        EXPECT_FLOAT_EQ(result[i], expected[i]);
-    }
-}
-
-class AerodynInflowValidateAndFlattenArrayTest : public ::testing::Test {
-protected:
-    util::AeroDynInflowLibrary aerodyn_inflow_library;
-
-    AerodynInflowValidateAndFlattenArrayTest() : aerodyn_inflow_library(GetSharedLibraryPath()) {}
-};
-
-TEST_F(AerodynInflowValidateAndFlattenArrayTest, ValidPositionArray) {
-    std::vector<std::array<float, 3>> position_array = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
-    size_t expected_size = 2;
-    std::vector<float> expected = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
-
-    auto result = aerodyn_inflow_library.ValidateAndFlattenArray(position_array, expected_size);
-    ASSERT_EQ(result, expected);
-}
-
-TEST_F(AerodynInflowValidateAndFlattenArrayTest, ValidOrientationArray) {
-    std::vector<std::array<double, 9>> orientation_array = {
-        {1., 2., 3., 4., 5., 6., 7., 8., 9.}, {10., 11., 12., 13., 14., 15., 16., 17., 18.}};
-    size_t expected_size = 2;
-    std::vector<double> expected = {1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,
-                                    10., 11., 12., 13., 14., 15., 16., 17., 18.};
-
-    auto result = aerodyn_inflow_library.ValidateAndFlattenArray(orientation_array, expected_size);
-    ASSERT_EQ(result, expected);
-}
-
-TEST_F(AerodynInflowValidateAndFlattenArrayTest, ValidVelocityAccelerationArray) {
-    std::vector<std::array<float, 6>> velocity_array = {
-        {1.f, 2.f, 3.f, 4.f, 5.f, 6.f}, {7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
-    size_t expected_size = 2;
-    std::vector<float> expected = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f, 11.f, 12.f};
-
-    auto result = aerodyn_inflow_library.ValidateAndFlattenArray(velocity_array, expected_size);
-    ASSERT_EQ(result, expected);
-}
-
-TEST_F(AerodynInflowValidateAndFlattenArrayTest, InvalidArraySize) {
-    std::vector<std::array<float, 3>> position_array = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
-    size_t expected_size = 3;  // Incorrect size
-
-    EXPECT_THROW(
-        { aerodyn_inflow_library.ValidateAndFlattenArray(position_array, expected_size); },
-        std::runtime_error
-    );
-}
-
-TEST_F(AerodynInflowValidateAndFlattenArrayTest, UnknownArrayType) {
-    std::vector<std::array<int, 2>> unknown_array = {{1, 2}, {3, 4}};
-    size_t expected_size = 2;
-
-    auto result = aerodyn_inflow_library.ValidateAndFlattenArray(unknown_array, expected_size);
-    std::vector<int> expected = {1, 2, 3, 4};
-    ASSERT_EQ(result, expected);
-}
-
-TEST(AerodynInflowTest, UnflattenArray) {
-    const std::string path = GetSharedLibraryPath();
-    util::AeroDynInflowLibrary aerodyn_inflow_library(path);
-
-    std::vector<float> input = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
-    std::vector<std::array<float, 3>> expected = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
-
-    auto result = aerodyn_inflow_library.UnflattenArray<float, 3>(input);
-
-    ASSERT_EQ(result.size(), expected.size());
-    for (size_t i = 0; i < expected.size(); ++i) {
-        EXPECT_EQ(result[i], expected[i]);
-    }
-}
-
-class AerodynInflowJoinStringArrayTest : public ::testing::Test {
-protected:
-    util::AeroDynInflowLibrary aerodyn_inflow_library;
-
-    AerodynInflowJoinStringArrayTest() : aerodyn_inflow_library(GetSharedLibraryPath()) {}
-};
-
-TEST_F(AerodynInflowJoinStringArrayTest, NormalCase) {
-    std::vector<std::string> input = {"apple", "banana", "cherry"};
-    std::string expected = "apple,banana,cherry";
-    EXPECT_EQ(aerodyn_inflow_library.JoinStringArray(input, ','), expected);
-}
-
-TEST_F(AerodynInflowJoinStringArrayTest, EmptyInput) {
-    std::vector<std::string> input = {};
-    std::string expected = "";
-    EXPECT_EQ(aerodyn_inflow_library.JoinStringArray(input, ','), expected);
-}
-
-TEST_F(AerodynInflowJoinStringArrayTest, SingleElement) {
-    std::vector<std::string> input = {"solo"};
-    std::string expected = "solo";
-    EXPECT_EQ(aerodyn_inflow_library.JoinStringArray(input, ','), expected);
-}
-
-TEST_F(AerodynInflowJoinStringArrayTest, DifferentDelimiter) {
-    std::vector<std::string> input = {"one", "two", "three"};
-    std::string expected = "one|two|three";
-    EXPECT_EQ(aerodyn_inflow_library.JoinStringArray(input, '|'), expected);
-}
-
-TEST_F(AerodynInflowJoinStringArrayTest, StringsContainingDelimiter) {
-    std::vector<std::string> input = {"com,ma", "semi;colon", "pipe|symbol"};
-    std::string expected = "com,ma;semi;colon;pipe|symbol";
-    EXPECT_EQ(aerodyn_inflow_library.JoinStringArray(input, ';'), expected);
 }
 
 #endif

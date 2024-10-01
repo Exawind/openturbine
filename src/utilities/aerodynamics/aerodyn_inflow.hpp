@@ -432,6 +432,111 @@ struct VTKSettings {
 };
 
 /**
+ * @brief Flattens a 2D array into a 1D array for Fortran compatibility
+ *
+ * @details This function flattens a 2D array into a 1D array for Fortran compatibility by
+ * inserting each element of the 2D array into the 1D array.
+ *
+ * @tparam T Type of the elements in the array
+ * @tparam N Number of elements in each row of the array
+ * @param input 2D array to flatten
+ * @return Flattened 1D array
+ */
+template <typename T, size_t N>
+std::vector<T> FlattenArray(const std::vector<std::array<T, N>>& input) {
+    std::vector<T> output;
+    output.reserve(input.size() * N);
+    for (const auto& arr : input) {
+        output.insert(output.end(), arr.begin(), arr.end());
+    }
+    return output;
+}
+
+/**
+ * @brief Validates a 2D array for the correct number of points and then flattens it to 1D
+ *
+ * @details This function validates a 2D array for the correct number of points and then
+ * flattens it to 1D by inserting each element of the 2D array into the 1D array.
+ *
+ * @tparam T Type of the elements in the array
+ * @tparam N Number of elements in each row of the array
+ * @param array 2D array to validate and flatten
+ * @param expected_size Expected size of the 2D array
+ * @return Flattened 1D array
+ */
+template <typename T, size_t N>
+std::vector<T> ValidateAndFlattenArray(
+    const std::vector<std::array<T, N>>& array, size_t expected_size
+) {
+    std::string array_name;
+    if constexpr (std::is_same_v<T, float> && N == 3) {
+        array_name = "position";
+    } else if constexpr (std::is_same_v<T, double> && N == 9) {
+        array_name = "orientation";
+    } else if constexpr (std::is_same_v<T, float> && N == 6) {
+        array_name = "velocity/acceleration";
+    } else {
+        array_name = "unknown";
+    }
+
+    if (array.size() != expected_size) {
+        throw std::runtime_error(
+            "The number of mesh points in the " + array_name +
+            " array changed from the initial value of " + std::to_string(expected_size) + " to " +
+            std::to_string(array.size()) + ". This is not permitted during the simulation."
+        );
+    }
+    return FlattenArray(array);
+}
+
+/**
+ * @brief Unflattens a 1D array into a 2D array
+ *
+ * @details This function unflattens a 1D array into a 2D array by inserting each element of
+ * the 1D array into the 2D array.
+ *
+ * @tparam T Type of the elements in the array
+ * @tparam N Number of elements in each row of the array
+ * @param input 1D array to unflatten
+ * @return Unflattened 2D array
+ */
+template <typename T, size_t N>
+std::vector<std::array<T, N>> UnflattenArray(const std::vector<T>& input) {
+    std::vector<std::array<T, N>> output(input.size() / N);
+    for (size_t i = 0; i < output.size(); ++i) {
+        for (size_t j = 0; j < N; ++j) {
+            output[i][j] = input[i * N + j];
+        }
+    }
+    return output;
+}
+
+/**
+ * @brief Joins a vector of strings into a single string with a delimiter
+ *
+ * @details This function joins a vector of strings into a single string with a delimiter by
+ * inserting each element of the vector into the string.
+ *
+ * @param input Vector of strings to join
+ * @param delimiter Delimiter to insert between the strings
+ * @return Joined string
+ */
+std::string JoinStringArray(const std::vector<std::string>& input, char delimiter) {
+    if (input.empty()) {
+        return "";
+    }
+
+    std::ostringstream result;
+    std::copy(
+        input.begin(), input.end() - 1,
+        std::ostream_iterator<std::string>(result, std::string(1, delimiter).c_str())
+    );
+    result << input.back();
+
+    return result.str();
+}
+
+/**
  * @brief Wrapper class for the AeroDynInflow (ADI) shared library
  *
  * @details This class provides an interface for interacting with the AeroDynInflow (ADI) shared
@@ -605,12 +710,11 @@ public:
                 );
 
         // Primary input files will be passed as a single string joined by C_NULL_CHAR i.e. '\0'
-        std::string aerodyn_input_string = this->JoinStringArray(aerodyn_input_string_array, '\0');
+        std::string aerodyn_input_string = JoinStringArray(aerodyn_input_string_array, '\0');
         aerodyn_input_string = aerodyn_input_string + '\0';
         int aerodyn_input_string_length = static_cast<int>(aerodyn_input_string.size());
 
-        std::string inflowwind_input_string =
-            this->JoinStringArray(inflowwind_input_string_array, '\0');
+        std::string inflowwind_input_string = JoinStringArray(inflowwind_input_string_array, '\0');
         inflowwind_input_string = inflowwind_input_string + '\0';
         int inflowwind_input_string_length = static_cast<int>(inflowwind_input_string.size());
 
@@ -690,7 +794,7 @@ public:
         );
 
         // Flatten arrays to pass to the Fortran routine
-        auto flatten_and_validate = [this](const auto& motion, int n_pts) {
+        auto flatten_and_validate = [](const auto& motion, int n_pts) {
             return std::make_tuple(
                 ValidateAndFlattenArray(motion.position, static_cast<size_t>(n_pts)),
                 ValidateAndFlattenArray(motion.orientation, static_cast<size_t>(n_pts)),
@@ -848,112 +952,6 @@ public:
         );
 
         error_handling_.CheckError();
-    }
-
-    /**
-     * @brief Flattens a 2D array into a 1D array for Fortran compatibility
-     *
-     * @details This function flattens a 2D array into a 1D array for Fortran compatibility by
-     * inserting each element of the 2D array into the 1D array.
-     *
-     * @tparam T Type of the elements in the array
-     * @tparam N Number of elements in each row of the array
-     * @param input 2D array to flatten
-     * @return Flattened 1D array
-     */
-    template <typename T, size_t N>
-    std::vector<T> FlattenArray(const std::vector<std::array<T, N>>& input) const {
-        std::vector<T> output;
-        output.reserve(input.size() * N);
-        for (const auto& arr : input) {
-            output.insert(output.end(), arr.begin(), arr.end());
-        }
-        return output;
-    }
-
-    /**
-     * @brief Validates a 2D array for the correct number of points and then flattens it to 1D
-     *
-     * @details This function validates a 2D array for the correct number of points and then
-     * flattens it to 1D by inserting each element of the 2D array into the 1D array.
-     *
-     * @tparam T Type of the elements in the array
-     * @tparam N Number of elements in each row of the array
-     * @param array 2D array to validate and flatten
-     * @param expected_size Expected size of the 2D array
-     * @return Flattened 1D array
-     */
-    template <typename T, size_t N>
-    std::vector<T> ValidateAndFlattenArray(
-        const std::vector<std::array<T, N>>& array, size_t expected_size
-    ) const {
-        std::string array_name;
-        if constexpr (std::is_same_v<T, float> && N == 3) {
-            array_name = "position";
-        } else if constexpr (std::is_same_v<T, double> && N == 9) {
-            array_name = "orientation";
-        } else if constexpr (std::is_same_v<T, float> && N == 6) {
-            array_name = "velocity/acceleration";
-        } else {
-            array_name = "unknown";
-        }
-
-        if (array.size() != expected_size) {
-            throw std::runtime_error(
-                "The number of mesh points in the " + array_name +
-                " array changed from the initial value of " + std::to_string(expected_size) +
-                " to " + std::to_string(array.size()) +
-                ". This is not permitted during the simulation."
-            );
-        }
-        return FlattenArray(array);
-    }
-
-    /**
-     * @brief Unflattens a 1D array into a 2D array
-     *
-     * @details This function unflattens a 1D array into a 2D array by inserting each element of
-     * the 1D array into the 2D array.
-     *
-     * @tparam T Type of the elements in the array
-     * @tparam N Number of elements in each row of the array
-     * @param input 1D array to unflatten
-     * @return Unflattened 2D array
-     */
-    template <typename T, size_t N>
-    std::vector<std::array<T, N>> UnflattenArray(const std::vector<T>& input) const {
-        std::vector<std::array<T, N>> output(input.size() / N);
-        for (size_t i = 0; i < output.size(); ++i) {
-            for (size_t j = 0; j < N; ++j) {
-                output[i][j] = input[i * N + j];
-            }
-        }
-        return output;
-    }
-
-    /**
-     * @brief Joins a vector of strings into a single string with a delimiter
-     *
-     * @details This function joins a vector of strings into a single string with a delimiter by
-     * inserting each element of the vector into the string.
-     *
-     * @param input Vector of strings to join
-     * @param delimiter Delimiter to insert between the strings
-     * @return Joined string
-     */
-    std::string JoinStringArray(const std::vector<std::string>& input, char delimiter) const {
-        if (input.empty()) {
-            return "";
-        }
-
-        std::ostringstream result;
-        std::copy(
-            input.begin(), input.end() - 1,
-            std::ostream_iterator<std::string>(result, std::string(1, delimiter).c_str())
-        );
-        result << input.back();
-
-        return result.str();
     }
 
 private:
