@@ -535,19 +535,6 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
     EXPECT_EQ(aerodyn_inflow_library.GetVTKSettings().write_vtk, 0);
 }
 
-TEST(AerodynInflowTest, AeroDynInflowLibrary_PreInitialize) {
-    const std::string path = GetSharedLibraryPath();
-    util::AeroDynInflowLibrary aerodyn_inflow_library(path);
-
-    EXPECT_EQ(aerodyn_inflow_library.GetErrorHandling().error_status, 0);
-    EXPECT_STREQ(aerodyn_inflow_library.GetErrorHandling().error_message.data(), "");
-
-    aerodyn_inflow_library.PreInitialize();
-
-    EXPECT_EQ(aerodyn_inflow_library.GetErrorHandling().error_status, 0);
-    EXPECT_STREQ(aerodyn_inflow_library.GetErrorHandling().error_message.data(), "");
-}
-
 TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
     // Set up simulation parameters
     util::SimulationControls sim_controls{
@@ -558,7 +545,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
         .interpolation_order = 2,
         .store_HH_wind_speed = false,
         .transpose_DCM = 1,
-        .debug_level = 4,
+        .debug_level = 1,
         .output_format = 0,
         .output_time_step = 0.1};
 
@@ -604,6 +591,71 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
     EXPECT_NO_THROW(
         aerodyn_inflow_library.Initialize(adiAD_input_string_array, adiIfW_input_string_array)
     );
+
+    // Set up motion data for hub, nacelle, root, and mesh
+    util::MeshMotionData hub_motion(
+        {{0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0}}, {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+        {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}}
+    );
+    util::MeshMotionData nacelle_motion(
+        {{0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0}}, {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+        {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}}
+    );
+    util::MeshMotionData root_motion(
+        {{0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0},
+         {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0},
+         {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0}},
+        {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+         {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+         {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+        {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+         {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+         {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
+        3
+    );
+
+    // Get the number of mesh points from the structural mesh
+    size_t n_mesh_points = 1;
+
+    // Create mesh motion data with the correct number of mesh points
+    std::vector<std::array<double, 7>> mesh_positions(
+        n_mesh_points, {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0}
+    );
+    std::vector<std::array<float, 6>> mesh_velocities(
+        n_mesh_points, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}
+    );
+    std::vector<std::array<float, 6>> mesh_accelerations(
+        n_mesh_points, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}
+    );
+
+    util::MeshMotionData mesh_motion(
+        mesh_positions, mesh_velocities, mesh_accelerations, n_mesh_points
+    );
+
+    // Set up rotor motion
+    EXPECT_NO_THROW(aerodyn_inflow_library.SetupRotorMotion(
+        1, hub_motion, nacelle_motion, root_motion, mesh_motion
+    ));
+
+    // Simulate for a few time steps
+    double current_time = 0.0;
+    double next_time = sim_controls.time_step;
+    std::vector<float> output_channel_values;
+    std::vector<std::array<float, 6>> mesh_force_moment(1);  // Assuming 1 mesh point
+
+    for (int i = 0; i < 10; ++i) {
+        EXPECT_NO_THROW(aerodyn_inflow_library.UpdateStates(current_time, next_time));
+        EXPECT_NO_THROW(
+            aerodyn_inflow_library.CalculateOutputChannels(next_time, output_channel_values)
+        );
+        EXPECT_NO_THROW(aerodyn_inflow_library.GetRotorAerodynamicLoads(1, mesh_force_moment));
+
+        current_time = next_time;
+        next_time += sim_controls.time_step;
+    }
+
+    // End simulation
+    EXPECT_NO_THROW(aerodyn_inflow_library.Finalize());
 }
 
 #endif

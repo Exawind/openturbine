@@ -619,7 +619,6 @@ public:
             error_handling_.error_message.data()  // output: Error message
         );
 
-        std::cout << "ADI_C_PreInit completed" << std::endl;
         error_handling_.CheckError();
     }
 
@@ -686,9 +685,7 @@ public:
             error_handling_.error_message.data()  // output: Error message buffer
         );
 
-        std::cout << "ADI_C_SetupRotor completed" << std::endl;
         error_handling_.CheckError();
-        // is_initialized_ = true;
     }
 
     /**
@@ -757,8 +754,8 @@ public:
             error_handling_.error_message.data()          // output: error message buffer
         );
 
-        std::cout << "ADI_C_Init completed" << std::endl;
         error_handling_.CheckError();
+        is_initialized_ = true;
     }
 
     /**
