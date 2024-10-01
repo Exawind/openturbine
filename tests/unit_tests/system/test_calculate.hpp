@@ -44,7 +44,6 @@ inline void CompareWithExpected(
     }
 }
 
-// NOLINTBEGIN(readability-function-cognitive-complexity)
 inline void CompareWithExpected(
     const Kokkos::View<const double*****>::host_mirror_type& result,
     const Kokkos::View<const double*****, Kokkos::HostSpace>& expected
@@ -61,5 +60,4 @@ inline void CompareWithExpected(
         }
     }
 }
-// NOLINTEND(readability-function-cognitive-complexity)
 }  // namespace openturbine::tests
