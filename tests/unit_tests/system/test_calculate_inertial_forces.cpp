@@ -70,7 +70,8 @@ TEST(CalculateInertialForcesTests, OneNode) {
     Kokkos::parallel_for(
         "CalculateInertialForces", 1,
         CalculateInertialForces{
-            0, Muu, u_ddot, omega, omega_dot, eta_tilde, omega_tilde, omega_dot_tilde, rho, eta, FI}
+            0, Muu, u_ddot, omega, omega_dot, eta_tilde, omega_tilde, omega_dot_tilde, rho, eta, FI
+        }
     );
 
     constexpr auto omega_tilde_exact_data = std::array{0., -42., 41., 42., 0., -40., -41., 40., 0.};

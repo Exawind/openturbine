@@ -19,7 +19,8 @@ struct CalculateDisplacement {
         }
 
         auto delta_data = Kokkos::Array<double, 3>{
-            h * q_delta(i_node, 3), h * q_delta(i_node, 4), h * q_delta(i_node, 5)};
+            h * q_delta(i_node, 3), h * q_delta(i_node, 4), h * q_delta(i_node, 5)
+        };
         auto delta =
             Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{delta_data.data()};
 
@@ -28,7 +29,8 @@ struct CalculateDisplacement {
             Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{quat_delta_data.data()};
         RotationVectorToQuaternion(delta, quat_delta);
         auto quat_prev_data = Kokkos::Array<double, 4>{
-            q_prev(i_node, 3), q_prev(i_node, 4), q_prev(i_node, 5), q_prev(i_node, 6)};
+            q_prev(i_node, 3), q_prev(i_node, 4), q_prev(i_node, 5), q_prev(i_node, 6)
+        };
         auto quat_prev =
             Kokkos::View<double[4], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{quat_prev_data.data()};
         auto quat_new_data = Kokkos::Array<double, 4>{};

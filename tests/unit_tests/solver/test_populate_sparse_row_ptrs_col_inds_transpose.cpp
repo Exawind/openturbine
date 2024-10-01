@@ -32,7 +32,8 @@ TEST(PopulateSparseRowPtrsColInds_Transpose, DenseSquare) {
     Kokkos::parallel_for(
         "PopulateSparseRowPtrsColInds_Transpose", 1,
         PopulateSparseRowPtrsColInds_Transpose<Kokkos::View<size_t*>, Kokkos::View<size_t*>>{
-            rows, cols, row_ptrs, col_inds, col_count, temp_row_ptr, row_ptrs_trans, col_inds_trans}
+            rows, cols, row_ptrs, col_inds, col_count, temp_row_ptr, row_ptrs_trans, col_inds_trans
+        }
     );
 
     constexpr auto row_ptrs_trans_exact_data = row_ptrs_host_data;
@@ -81,7 +82,8 @@ TEST(PopulateSparseRowPtrsColInds_Transpose, DenseRectangle) {
     Kokkos::parallel_for(
         "PopulateSparseRowPtrsColInds_Transpose", 1,
         PopulateSparseRowPtrsColInds_Transpose<Kokkos::View<size_t*>, Kokkos::View<size_t*>>{
-            rows, cols, row_ptrs, col_inds, col_count, temp_row_ptr, row_ptrs_trans, col_inds_trans}
+            rows, cols, row_ptrs, col_inds, col_count, temp_row_ptr, row_ptrs_trans, col_inds_trans
+        }
     );
 
     constexpr auto row_ptrs_trans_exact_data = std::array<size_t, cols + 1U>{0U, 1U, 2U, 3U, 4U, 5U};

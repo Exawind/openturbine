@@ -455,7 +455,8 @@ TEST(RotorTest, IEA15RotorController) {
     // Pitch control variable
     auto blade_pitch_command = std::array<double*, 3>{
         &controller.io.pitch_blade1_command, &controller.io.pitch_blade2_command,
-        &controller.io.pitch_blade3_command};
+        &controller.io.pitch_blade3_command
+    };
 
     // Define hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});

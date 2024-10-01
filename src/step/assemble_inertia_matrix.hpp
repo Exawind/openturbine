@@ -20,7 +20,8 @@ inline void AssembleInertiaMatrix(const Beams& beams, double beta_prime, double 
         IntegrateInertiaMatrix{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.qp_weight,
             beams.qp_jacobian, beams.shape_interp, beams.qp_Muu, beams.qp_Guu, beta_prime,
-            gamma_prime, beams.inertia_matrix_terms}
+            gamma_prime, beams.inertia_matrix_terms
+        }
     );
 }
 
