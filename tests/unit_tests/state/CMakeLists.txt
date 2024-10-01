@@ -6,4 +6,5 @@ target_sources(
     test_calculate_displacement.cpp
     test_update_algorithmic_acceleration.cpp
     test_update_dynamic_prediction.cpp
+    test_update_global_position.cpp
 )
