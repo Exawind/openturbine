@@ -493,6 +493,14 @@ TEST(AerodynInflowTest, JoinStringArray_StringsContainingDelimiter) {
     EXPECT_EQ(util::JoinStringArray(input, ';'), expected);
 }
 
+// Add a test with null characters in the input strings
+TEST(AerodynInflowTest, JoinStringArray_NullCharacters) {
+    std::vector<std::string> input = {"one", "two", "three"};
+    std::string expected = "one\0two\0three";
+    util::JoinStringArray(input, '\0');
+    // EXPECT_EQ(util::JoinStringArray(input, '\0'), expected);
+}
+
 /// Helper function to get the shared library path
 std::string GetSharedLibraryPath() {
     const std::filesystem::path project_root = FindProjectRoot();
@@ -538,6 +546,64 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_PreInitialize) {
 
     EXPECT_EQ(aerodyn_inflow_library.GetErrorHandling().error_status, 0);
     EXPECT_STREQ(aerodyn_inflow_library.GetErrorHandling().error_message.data(), "");
+}
+
+TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
+    // Set up simulation parameters
+    util::SimulationControls sim_controls{
+        .aerodyn_input_passed = false,
+        .inflowwind_input_passed = false,
+        .time_step = 0.0125,
+        .max_time = 10.0,
+        .interpolation_order = 2,
+        .store_HH_wind_speed = false,
+        .transpose_DCM = 1,
+        .debug_level = 4,
+        .output_format = 0,
+        .output_time_step = 0.1};
+
+    // Set up environmental conditions and fluid properties
+    util::EnvironmentalConditions env_conditions{
+        .gravity = 9.80665f, .atm_pressure = 103500.0f, .water_depth = 0.0f, .msl_offset = 0.0f};
+
+    util::FluidProperties fluid_props{
+        .density = 1.225f,
+        .kinematic_viscosity = 1.464E-05f,
+        .sound_speed = 335.0f,
+        .vapor_pressure = 1700.0f};
+
+    // Set up turbine settings
+    std::array<double, 7> hub_data = {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0};
+    std::array<double, 7> nacelle_data = {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0};
+    std::vector<std::array<double, 7>> root_data(3, {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0});
+
+    util::TurbineSettings turbine_settings(hub_data, nacelle_data, root_data, 1, 3);
+
+    // Set up VTK settings
+    util::VTKSettings vtk_settings{};
+
+    // Load the shared library and initialize AeroDynInflowLibrary
+    const std::string path = GetSharedLibraryPath();
+    util::AeroDynInflowLibrary aerodyn_inflow_library(
+        path, util::ErrorHandling{}, fluid_props, env_conditions, turbine_settings,
+        util::StructuralMesh{}, sim_controls, vtk_settings
+    );
+
+    // Pre-initialize and setup rotor
+    EXPECT_NO_THROW(aerodyn_inflow_library.PreInitialize());
+    EXPECT_NO_THROW(aerodyn_inflow_library.SetupRotor(1, true, {0.0f, 0.0f, 0.0f}));
+
+    // Initialize with input files
+    const std::filesystem::path project_root = FindProjectRoot();
+    std::filesystem::path input_path = project_root /
+                                       "build/external/OpenFAST_ADI/src/OpenFAST_ADI/reg_tests/"
+                                       "r-test/modules/aerodyn/py_ad_5MW_OC4Semi_WSt_WavesWN/";
+    std::vector<std::string> adiAD_input_string_array = {(input_path / "ad_primary.dat").string()};
+    std::vector<std::string> adiIfW_input_string_array = {(input_path / "ifw_primary.dat").string()};
+
+    EXPECT_NO_THROW(
+        aerodyn_inflow_library.Initialize(adiAD_input_string_array, adiIfW_input_string_array)
+    );
 }
 
 #endif

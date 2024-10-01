@@ -407,8 +407,8 @@ struct SimulationControls {
     int debug_level{0};              //< Debug level (0-4)
 
     // Outputs
-    int output_format{0};        //< File format for writing outputs
-    float output_time_step{0.};  //< Timestep for outputs to file
+    int output_format{0};         //< File format for writing outputs
+    double output_time_step{0.};  //< Timestep for outputs to file
     std::array<char, kDefaultStringLength> output_root_name{
         "Output_ADIlib_default"  //< Root name for output files
     };
@@ -619,6 +619,7 @@ public:
             error_handling_.error_message.data()  // output: Error message
         );
 
+        std::cout << "ADI_C_PreInit completed" << std::endl;
         error_handling_.CheckError();
     }
 
@@ -685,6 +686,7 @@ public:
             error_handling_.error_message.data()  // output: Error message buffer
         );
 
+        std::cout << "ADI_C_SetupRotor completed" << std::endl;
         error_handling_.CheckError();
         // is_initialized_ = true;
     }
@@ -702,21 +704,10 @@ public:
         std::vector<std::string> aerodyn_input_string_array,
         std::vector<std::string> inflowwind_input_string_array
     ) {
-        auto ADI_C_Init =
-            lib_
-                .get_function<
-                    void(int*, const char*, int*, int*, const char*, int*, char*, float*, float*, float*, float*, float*, float*, float*, float*, int*, double*, double*, int*, int*, int*, float*, float*, int*, float*, int*, char*, char*, int*, char*)>(
-                    "ADI_C_Init"
-                );
-
-        // Primary input files will be passed as a single string joined by C_NULL_CHAR i.e. '\0'
-        std::string aerodyn_input_string = JoinStringArray(aerodyn_input_string_array, '\0');
-        aerodyn_input_string = aerodyn_input_string + '\0';
-        int aerodyn_input_string_length = static_cast<int>(aerodyn_input_string.size());
-
-        std::string inflowwind_input_string = JoinStringArray(inflowwind_input_string_array, '\0');
-        inflowwind_input_string = inflowwind_input_string + '\0';
-        int inflowwind_input_string_length = static_cast<int>(inflowwind_input_string.size());
+        auto ADI_C_Init = lib_.get_function<
+            void(int*, char**, int*, int*, char**, int*, char*, float*, float*, float*, float*, float*, float*, float*, float*, int*, double*, double*, int*, int*, int*, float*, float*, int*, double*, int*, char*, char*, int*, char*)>(
+            "ADI_C_Init"
+        );
 
         // Convert bool -> int to pass to the Fortran routine
         int aerodyn_input_passed_int = sim_controls_.aerodyn_input_passed ? 1 : 0;
@@ -724,12 +715,21 @@ public:
         int store_HH_wind_speed_int = sim_controls_.store_HH_wind_speed ? 1 : 0;
         int write_vtk_int = vtk_settings_.write_vtk ? 1 : 0;
 
+        // Primary input files will be passed as a single string joined by C_NULL_CHAR i.e. '\0'
+        std::string aerodyn_input_string = JoinStringArray(aerodyn_input_string_array, '\0');
+        int aerodyn_input_string_length = static_cast<int>(aerodyn_input_string.size());
+        char* aerodyn_input_cstring = aerodyn_input_string.data();
+
+        std::string inflowwind_input_string = JoinStringArray(inflowwind_input_string_array, '\0');
+        int inflowwind_input_string_length = static_cast<int>(inflowwind_input_string.size());
+        char* inflowwind_input_cstring = inflowwind_input_string.data();
+
         ADI_C_Init(
             &aerodyn_input_passed_int,                    // input: AD input file is passed?
-            aerodyn_input_string.data(),                  // input: AD input file as string
+            &aerodyn_input_cstring,                       // input: AD input file as string array
             &aerodyn_input_string_length,                 // input: AD input file string length
             &inflowwind_input_passed_int,                 // input: IfW input file is passed?
-            inflowwind_input_string.data(),               // input: IfW input file as string
+            &inflowwind_input_cstring,                    // input: IfW input file as string array
             &inflowwind_input_string_length,              // input: IfW input file string length
             sim_controls_.output_root_name.data(),        // input: rootname for ADI file writing
             &env_conditions_.gravity,                     // input: gravity
@@ -757,6 +757,7 @@ public:
             error_handling_.error_message.data()          // output: error message buffer
         );
 
+        std::cout << "ADI_C_Init completed" << std::endl;
         error_handling_.CheckError();
     }
 
