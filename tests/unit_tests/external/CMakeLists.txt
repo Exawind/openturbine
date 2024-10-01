@@ -26,7 +26,10 @@ if (OpenTurbine_BUILD_ROSCO_CONTROLLER AND OpenTurbine_BUILD_OPENFAST_ADI AND
                 ${CMAKE_CURRENT_SOURCE_DIR}/IEA-15-240-RWT_InflowFile.dat
                 ${CMAKE_CURRENT_SOURCE_DIR}/IEA-15-240-RWT_AeroDyn15.dat
                 ${CMAKE_CURRENT_SOURCE_DIR}/IEA-15-240-RWT_DISCON.IN
-                ${CMAKE_BINARY_DIR}/tests/unit_tests)
+                ${CMAKE_BINARY_DIR}/tests/unit_tests
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_CURRENT_SOURCE_DIR}/Airfoils
+                ${CMAKE_BINARY_DIR}/tests/unit_tests/Airfoils)
 endif()
 
 

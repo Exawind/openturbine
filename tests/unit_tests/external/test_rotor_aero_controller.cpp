@@ -57,7 +57,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     const std::string controller_simulation_name{"IEA-15-240-RWT"};
 
     // Aerodynamics and Inflow library
-    const std::string adi_shared_lib_path{"./libaerodyn_inflow_c_binding.dylib"};
+    const std::string adi_shared_lib_path{"./aerodyn_inflow_c_binding.dll"};
 
     // Solution parameters
     constexpr bool is_dynamic_solve{true};

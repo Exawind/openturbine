@@ -252,12 +252,12 @@ struct SimulationControls {
     int store_HH_wind_speed{1};  //< Flag to store HH wind speed
 
     // Outputs
-    int output_format{1};                                //< File format for writing outputs
-    double output_time_step{0.1};                        //< Timestep for outputs to file
-    std::array<char, 1025> output_root_name{"ADI_out"};  //< Root name for output files
-    int n_channels{0};                                   //< Number of channels returned
-    std::array<char, 20 * 8000> channel_names_c{};       //< Output channel names
-    std::array<char, 20 * 8000> channel_units_c{};       //< Output channel units
+    int output_format{1};                               //< File format for writing outputs
+    double output_time_step{0.1};                       //< Timestep for outputs to file
+    std::string output_root_name{"ADI_out"};            //< Root name for output files
+    int n_channels{0};                                  //< Number of channels returned
+    std::array<char, 20 * 8000 + 1> channel_names_c{};  //< Output channel names
+    std::array<char, 20 * 8000 + 1> channel_units_c{};  //< Output channel units
 };
 
 /**
@@ -300,10 +300,7 @@ struct AeroDynInflowLibrary {
         Max = 4,
     };
 
-    util::dylib lib{
-        "libaerodyn_inflow_c_binding.dylib",
-        util::dylib::no_filename_decorations  //< Dynamic library object for AeroDyn Inflow
-    };
+    util::dylib lib;
     ErrorHandling error_handling;            //< Error handling settings
     FluidProperties air;                     //< Properties of the working fluid (air)
     EnvironmentalConditions env_conditions;  //< Environmental conditions
@@ -317,11 +314,9 @@ struct AeroDynInflowLibrary {
         std::string shared_lib_path = "", SimulationControls sc = SimulationControls{},
         VTKSettings vtk = VTKSettings{}
     )
-        : sim_controls(sc), vtk_settings(vtk) {
-        if (!shared_lib_path.empty()) {
-            lib = util::dylib(shared_lib_path, util::dylib::no_filename_decorations);
-        }
-    }
+        : lib(shared_lib_path, util::dylib::no_filename_decorations),
+          sim_controls(sc),
+          vtk_settings(vtk) {}
 
     /// Wrapper for ADI_C_PreInit routine to initialize AeroDyn Inflow library
     void Initialize(
@@ -401,10 +396,11 @@ struct AeroDynInflowLibrary {
         // ADI_C_Init
         //----------------------------------------------------------------------
 
-        auto ADI_C_Init = this->lib.get_function<
-            void(int*, const char*, int*, int*, const char*, int*, char*, float*, float*, float*, float*, float*, float*, float*, float*, int*, double*, double*, int*, int*, int*, float*, float*, int*, double*, int*, char*, char*, int*, char*)>(
-            "ADI_C_Init"
-        );
+        auto ADI_C_Init =
+            this->lib.get_function<
+                void(int*, char**, int*, int*, char**, int*, const char*, float*, float*, float*, float*, float*, float*, float*, float*, int*, double*, double*, int*, int*, int*, float*, float*, int*, double*, int*, char*, char*, int*, char*)>(
+                "ADI_C_Init"
+            );
 
         // Flatten arrays to pass
         auto vtk_nacelle_dim_flat = std::array<float, 6>{};
@@ -415,45 +411,46 @@ struct AeroDynInflowLibrary {
 
         // Primary input files will be passed as a single string joined by C_NULL_CHAR i.e. '\0'
 
+        char* aerodyn_input_pointer{this->sim_controls.aerodyn_input.data()};
         int32_t aerodyn_input_is_passed = this->sim_controls.aerodyn_input_is_path ? 0 : 1;
-        std::string aerodyn_input_string = this->sim_controls.aerodyn_input + '\0';
-        int32_t aerodyn_input_string_length = static_cast<int>(aerodyn_input_string.size());
+        int32_t aerodyn_input_length = static_cast<int32_t>(this->sim_controls.aerodyn_input.size());
 
+        char* inflowwind_input_pointer{this->sim_controls.inflowwind_input.data()};
         int32_t inflowwind_input_is_passed = this->sim_controls.inflowwind_input_is_path ? 0 : 1;
-        std::string inflowwind_input_string = this->sim_controls.inflowwind_input + '\0';
-        int32_t inflowwind_input_string_length = static_cast<int>(inflowwind_input_string.size());
+        int32_t inflowwind_input_length =
+            static_cast<int32_t>(this->sim_controls.inflowwind_input.size());
 
         ADI_C_Init(
-            &aerodyn_input_is_passed,              // input: AD input is passed
-            aerodyn_input_string.data(),           // input: AD input file as string
-            &aerodyn_input_string_length,          // input: AD input file string length
-            &inflowwind_input_is_passed,           // input: IfW input is passed
-            inflowwind_input_string.data(),        // input: IfW input file as string
-            &inflowwind_input_string_length,       // input: IfW input file string length
-            sim_controls.output_root_name.data(),  // input: rootname for ADI file writing
-            &env_conditions.gravity,               // input: gravity
-            &air.density,                          // input: air density
-            &air.kinematic_viscosity,              // input: kinematic viscosity
-            &air.sound_speed,                      // input: speed of sound
-            &env_conditions.atm_pressure,          // input: atmospheric pressure
-            &air.vapor_pressure,                   // input: vapor pressure
-            &env_conditions.water_depth,           // input: water depth
-            &env_conditions.msl_offset,            // input: MSL to SWL offset
-            &sim_controls.interpolation_order,     // input: interpolation order
-            &sim_controls.time_step,               // input: time step
-            &sim_controls.max_time,                // input: maximum simulation time
-            &sim_controls.store_HH_wind_speed,     // input: store HH wind speed
-            &vtk_settings.write_vtk,               // input: write VTK output
-            &vtk_settings.vtk_type,                // input: VTK output type
-            vtk_nacelle_dim_flat.data(),           // input: VTK nacelle dimensions
-            &vtk_settings.vtk_hub_radius,          // input: VTK hub radius
-            &sim_controls.output_format,           // input: output format
-            &sim_controls.output_time_step,        // input: output time step
-            &sim_controls.n_channels,              // output: number of channels
-            sim_controls.channel_names_c.data(),   // output: output channel names
-            sim_controls.channel_units_c.data(),   // output: output channel units
-            &error_handling.error_status,          // output: error status
-            error_handling.error_message.data()    // output: error message buffer
+            &aerodyn_input_is_passed,               // input: AD input is passed
+            &aerodyn_input_pointer,                 // input: AD input file as string
+            &aerodyn_input_length,                  // input: AD input file string length
+            &inflowwind_input_is_passed,            // input: IfW input is passed
+            &inflowwind_input_pointer,              // input: IfW input file as string
+            &inflowwind_input_length,               // input: IfW input file string length
+            sim_controls.output_root_name.c_str(),  // input: rootname for ADI file writing
+            &env_conditions.gravity,                // input: gravity
+            &air.density,                           // input: air density
+            &air.kinematic_viscosity,               // input: kinematic viscosity
+            &air.sound_speed,                       // input: speed of sound
+            &env_conditions.atm_pressure,           // input: atmospheric pressure
+            &air.vapor_pressure,                    // input: vapor pressure
+            &env_conditions.water_depth,            // input: water depth
+            &env_conditions.msl_offset,             // input: MSL to SWL offset
+            &sim_controls.interpolation_order,      // input: interpolation order
+            &sim_controls.time_step,                // input: time step
+            &sim_controls.max_time,                 // input: maximum simulation time
+            &sim_controls.store_HH_wind_speed,      // input: store HH wind speed
+            &vtk_settings.write_vtk,                // input: write VTK output
+            &vtk_settings.vtk_type,                 // input: VTK output type
+            vtk_nacelle_dim_flat.data(),            // input: VTK nacelle dimensions
+            &vtk_settings.vtk_hub_radius,           // input: VTK hub radius
+            &sim_controls.output_format,            // input: output format
+            &sim_controls.output_time_step,         // input: output time step
+            &sim_controls.n_channels,               // output: number of channels
+            sim_controls.channel_names_c.data(),    // output: output channel names
+            sim_controls.channel_units_c.data(),    // output: output channel units
+            &error_handling.error_status,           // output: error status
+            error_handling.error_message.data()     // output: error message buffer
         );
 
         error_handling.CheckError();
