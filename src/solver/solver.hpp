@@ -93,7 +93,7 @@ struct Solver {
           R("R", num_dofs),
           x("x", num_dofs) {
         auto K_num_rows = this->num_system_dofs;
-        auto K_num_columns = this->num_system_dofs;
+        auto K_num_columns = K_num_rows;
         auto K_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros", num_nodes_per_element.extent(0),

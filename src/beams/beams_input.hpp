@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <numeric>
 #include <vector>
 
 #include "beam_element.hpp"
@@ -18,35 +19,45 @@ struct BeamsInput {
     [[nodiscard]] size_t NumElements() const { return elements.size(); };
 
     [[nodiscard]] size_t NumNodes() const {
-        size_t num_nodes{0};
-        for (const auto& e : this->elements) {
-            num_nodes += e.nodes.size();
-        }
-        return num_nodes;
+        return std::transform_reduce(
+            elements.begin(), elements.end(), size_t{0U}, std::plus{},
+            [](const BeamElement& e) {
+                return e.nodes.size();
+            }
+        );
     }
 
     [[nodiscard]] size_t NumQuadraturePoints() const {
-        size_t num_qps{0};
-        for (const auto& e : this->elements) {
-            num_qps += e.quadrature.size();
-        }
-        return num_qps;
+        return std::transform_reduce(
+            elements.begin(), elements.end(), size_t{0U}, std::plus{},
+            [](const BeamElement& e) {
+                return e.quadrature.size();
+            }
+        );
     }
 
     [[nodiscard]] size_t MaxElemNodes() const {
-        size_t max_elem_nodes{0};
-        for (const auto& e : this->elements) {
-            max_elem_nodes = std::max(max_elem_nodes, e.nodes.size());
-        }
-        return max_elem_nodes;
+        return std::transform_reduce(
+            elements.begin(), elements.end(), size_t{0U},
+            [](size_t a, size_t b) {
+                return std::max(a, b);
+            },
+            [](const BeamElement& e) {
+                return e.nodes.size();
+            }
+        );
     }
 
     [[nodiscard]] size_t MaxElemQuadraturePoints() const {
-        size_t max_elem_qps{0};
-        for (const auto& e : this->elements) {
-            max_elem_qps = std::max(max_elem_qps, e.quadrature.size());
-        }
-        return max_elem_qps;
+        return std::transform_reduce(
+            elements.begin(), elements.end(), size_t{0U},
+            [](size_t a, size_t b) {
+                return std::max(a, b);
+            },
+            [](const BeamElement& e) {
+                return e.quadrature.size();
+            }
+        );
     }
 };
 

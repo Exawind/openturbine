@@ -29,8 +29,8 @@ struct IntegrateInertiaMatrixElement {
         const auto i_index = ij_index / simd_nodes;
         const auto j_index = (ij_index % simd_nodes) * width;
 
-        auto mask = mask_type([j_index, num_nodes = this->num_nodes](size_t lane) {
-            return j_index + lane < num_nodes;
+        auto mask = mask_type([j_index, final_node = this->num_nodes](size_t lane) {
+            return j_index + lane < final_node;
         });
         auto local_M_data = Kokkos::Array<simd_type, 36>{};
         const auto local_M = Kokkos::View<simd_type[6][6]>(local_M_data.data());
