@@ -1,11 +1,8 @@
-#include <fstream>
 
 #include <gtest/gtest.h>
 
-#include "test_utilities.hpp"
-
 #include "src/utilities/aerodynamics/aerodyn_inflow.hpp"
-#include "src/vendor/dylib/dylib.hpp"
+#include "tests/unit_tests/regression/test_utilities.hpp"
 
 namespace openturbine::tests {
 
@@ -505,15 +502,8 @@ TEST(AerodynInflowTest, JoinStringArray_NullCharacters) {
 std::string GetSharedLibraryPath() {
     const std::filesystem::path project_root = FindProjectRoot();
     const std::filesystem::path full_path =
-        project_root / "build/tests/unit_tests/libaerodyn_inflow_c_binding";
-
-#ifdef __APPLE__
-    return full_path.string() + ".dylib";
-#elif __linux__
-    return full_path.string() + ".so";
-#else  // Windows
-    return full_path.string() + ".dll";
-#endif
+        project_root / "build/tests/unit_tests/aerodyn_inflow_c_binding.dll";
+    return full_path.string();
 }
 
 TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
@@ -582,9 +572,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
 
     // Initialize with input files
     const std::filesystem::path project_root = FindProjectRoot();
-    std::filesystem::path input_path = project_root /
-                                       "build/external/OpenFAST_ADI/src/OpenFAST_ADI/reg_tests/"
-                                       "r-test/modules/aerodyn/py_ad_5MW_OC4Semi_WSt_WavesWN/";
+    std::filesystem::path input_path = project_root / "tests/unit_tests/external/";
     std::vector<std::string> adiAD_input_string_array = {(input_path / "ad_primary.dat").string()};
     std::vector<std::string> adiIfW_input_string_array = {(input_path / "ifw_primary.dat").string()};
 

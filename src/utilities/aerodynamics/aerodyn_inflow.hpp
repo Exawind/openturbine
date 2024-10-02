@@ -561,23 +561,20 @@ class AeroDynInflowLibrary {
 public:
     /// Constructor to initialize AeroDyn Inflow library with default settings and optional path
     AeroDynInflowLibrary(
-        std::string shared_lib_path = "", ErrorHandling eh = ErrorHandling{},
-        FluidProperties fp = FluidProperties{},
+        std::string shared_lib_path = "aerodyn_inflow_c_binding.dll",
+        ErrorHandling eh = ErrorHandling{}, FluidProperties fp = FluidProperties{},
         EnvironmentalConditions ec = EnvironmentalConditions{},
         TurbineSettings ts = TurbineSettings{}, StructuralMesh sm = StructuralMesh{},
         SimulationControls sc = SimulationControls{}, VTKSettings vtk = VTKSettings{}
     )
-        : error_handling_(std::move(eh)),
+        : lib_{shared_lib_path, util::dylib::no_filename_decorations},
+          error_handling_(std::move(eh)),
           air_(std::move(fp)),
           env_conditions_(std::move(ec)),
           turbine_settings_(std::move(ts)),
           structural_mesh_(std::move(sm)),
           sim_controls_(std::move(sc)),
-          vtk_settings_(std::move(vtk)) {
-        if (!shared_lib_path.empty()) {
-            lib_ = util::dylib(shared_lib_path, util::dylib::no_filename_decorations);
-        }
-    }
+          vtk_settings_(std::move(vtk)) {}
 
     /// Destructor to take care of Fortran-side cleanup if the library is initialized
     ~AeroDynInflowLibrary() noexcept {
@@ -953,11 +950,8 @@ public:
     }
 
 private:
-    bool is_initialized_{false};  //< Flag to check if the library is initialized
-    util::dylib lib_{
-        "libaerodyn_inflow_c_binding.dylib",
-        util::dylib::no_filename_decorations  //< Dynamic library object for AeroDyn Inflow
-    };
+    bool is_initialized_{false};              //< Flag to check if the library is initialized
+    util::dylib lib_;                         //< Dynamic library object for AeroDyn Inflow
     ErrorHandling error_handling_;            //< Error handling settings
     FluidProperties air_;                     //< Properties of the working fluid (air)
     EnvironmentalConditions env_conditions_;  //< Environmental conditions
