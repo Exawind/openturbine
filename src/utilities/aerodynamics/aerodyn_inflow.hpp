@@ -109,6 +109,47 @@ inline void SetPositionAndOrientation(
 }
 
 /**
+ * @brief Configuration for the initial state of a turbine
+ *
+ * This struct encapsulates the initial configuration data for a wind turbine,
+ * including its type, reference position, and initial positions of key components
+ * in 7x1 arrays [x, y, z, qw, qx, qy, qz]
+ */
+struct TurbineInitialState {
+    /**
+     * @brief Initial state for a single blade of a turbine
+     *
+     * Stores the initial positions of a blade's root and nodes.
+     */
+    struct BladeInitialState {
+        Array_7 root_initial_pos;               //< Initial root position of the blade
+        std::vector<Array_7> node_initial_pos;  //< Initial node positions of the blade
+
+        /// Constructor to initialize all data based on provided inputs
+        BladeInitialState(const Array_7& root, const std::vector<Array_7>& nodes)
+            : root_initial_pos(root), node_initial_pos(nodes) {}
+    };
+
+    bool is_horizontal_axis{true};                           //< Is a horizontal axis turbine?
+    std::array<float, 3> reference_position{0.f, 0.f, 0.f};  //< Reference position of the turbine
+    Array_7 hub_initial_position;                            //< Initial hub position
+    Array_7 nacelle_initial_position;                        //< Initial nacelle position
+    std::vector<BladeInitialState>
+        blade_initial_states;  //< Initial root and node positions of blades
+
+    /// Constructor to initialize all data based on provided inputs
+    TurbineInitialState(
+        bool is_horizontal_axis, const std::array<float, 3>& ref_pos, const Array_7& hub_pos,
+        const Array_7& nacelle_pos, const std::vector<BladeInitialState>& blade_states
+    )
+        : is_horizontal_axis(is_horizontal_axis),
+          reference_position(ref_pos),
+          hub_initial_position(hub_pos),
+          nacelle_initial_position(nacelle_pos),
+          blade_initial_states(blade_states) {}
+};
+
+/**
  * @brief Struct to hold the initial settings/motion for the turbine
  *
  * @details This struct holds the initial settings/motion for the turbine, including the number of
