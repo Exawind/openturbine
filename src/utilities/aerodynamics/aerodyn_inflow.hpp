@@ -437,6 +437,80 @@ struct MeshData {
 };
 
 /**
+ * @brief Struct to hold turbine-specific data
+ *
+ * @details This struct contains data for a single turbine, including the number of blades,
+ * mesh data for various components, and blade node mappings.
+ */
+struct TurbineData {
+    int32_t n_blades;                                    //< Number of blades
+    MeshData hub;                                        //< Hub data (1 point)
+    MeshData nacelle;                                    //< Nacelle data (1 point)
+    MeshData blade_roots;                                //< Blade roots data (n_blades points)
+    MeshData blade_nodes;                                //< Blade nodes data
+    std::vector<int32_t> blade_nodes_to_blade_num;       //< Blade node to blade number mapping as 1D
+                                                         // array
+    std::vector<std::vector<size_t>> blade_nodes_index;  //< Blade nodes index as 2D array
+
+    /// Constructor to initialize TurbineData from TurbineConfig
+    explicit TurbineData(const TurbineConfig& tc)
+        : n_blades(static_cast<int32_t>(tc.blade_initial_states.size())),
+          hub(1),
+          nacelle(1),
+          blade_roots(tc.blade_initial_states.size()),
+          blade_nodes(CalculateTotalBladeNodes(tc)),
+          blade_nodes_index(tc.blade_initial_states.size()) {
+        InitializeHubAndNacelle(tc);
+        InitializeBlades(tc);
+    }
+
+private:
+    /// Calculates the total number of blade nodes across all blades
+    static size_t CalculateTotalBladeNodes(const TurbineConfig& tc) {
+        return std::accumulate(
+            tc.blade_initial_states.begin(), tc.blade_initial_states.end(), size_t{0},
+            [](size_t sum, const auto& blade) {
+                return sum + blade.node_initial_positions.size();
+            }
+        );
+    }
+
+    /// Initializes the hub and nacelle positions and orientations
+    void InitializeHubAndNacelle(const TurbineConfig& tc) {
+        SetPositionAndOrientation(tc.hub_initial_position, hub.position[0], hub.orientation[0]);
+        SetPositionAndOrientation(
+            tc.nacelle_initial_position, nacelle.position[0], nacelle.orientation[0]
+        );
+    }
+
+    /// Initializes blade data including roots, nodes, and mappings
+    void InitializeBlades(const TurbineConfig& tc) {
+        size_t i_blade{0};
+        size_t i_node{0};
+
+        // Initialize blade roots and nodes
+        for (const auto& blade : tc.blade_initial_states) {
+            // Initialize blade root
+            SetPositionAndOrientation(
+                blade.root_initial_position, blade_roots.position[i_blade],
+                blade_roots.orientation[i_blade]
+            );
+
+            // Initialize blade nodes
+            for (const auto& node : blade.node_initial_positions) {
+                SetPositionAndOrientation(
+                    node, blade_nodes.position[i_node], blade_nodes.orientation[i_node]
+                );
+                blade_nodes_index[i_blade].emplace_back(i_node);
+                blade_nodes_to_blade_num.emplace_back(static_cast<int32_t>(i_blade + 1));
+                ++i_node;
+            }
+            ++i_blade;
+        }
+    }
+};
+
+/**
  * @brief Struct to hold the settings for simulation controls
  *
  * @details This struct holds the settings for simulation controls, including input file
