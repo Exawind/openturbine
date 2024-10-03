@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <numeric>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -115,19 +116,19 @@ inline void SetPositionAndOrientation(
  * including its type, reference position, and initial positions of key components
  * in 7x1 arrays [x, y, z, qw, qx, qy, qz]
  */
-struct TurbineInitialState {
+struct TurbineConfig {
     /**
      * @brief Initial state for a single blade of a turbine
      *
      * Stores the initial positions of a blade's root and nodes.
      */
     struct BladeInitialState {
-        Array_7 root_initial_pos;               //< Initial root position of the blade
-        std::vector<Array_7> node_initial_pos;  //< Initial node positions of the blade
+        Array_7 root_initial_position;                //< Initial root position of the blade
+        std::vector<Array_7> node_initial_positions;  //< Initial node positions of the blade
 
         /// Constructor to initialize all data based on provided inputs
         BladeInitialState(const Array_7& root, const std::vector<Array_7>& nodes)
-            : root_initial_pos(root), node_initial_pos(nodes) {}
+            : root_initial_position(root), node_initial_positions(nodes) {}
     };
 
     bool is_horizontal_axis{true};                           //< Is a horizontal axis turbine?
@@ -138,11 +139,11 @@ struct TurbineInitialState {
         blade_initial_states;  //< Initial root and node positions of blades
 
     /// Constructor to initialize all data based on provided inputs
-    TurbineInitialState(
-        bool is_horizontal_axis, const std::array<float, 3>& ref_pos, const Array_7& hub_pos,
+    TurbineConfig(
+        bool is_hawt, const std::array<float, 3>& ref_pos, const Array_7& hub_pos,
         const Array_7& nacelle_pos, const std::vector<BladeInitialState>& blade_states
     )
-        : is_horizontal_axis(is_horizontal_axis),
+        : is_horizontal_axis(is_hawt),
           reference_position(ref_pos),
           hub_initial_position(hub_pos),
           nacelle_initial_position(nacelle_pos),

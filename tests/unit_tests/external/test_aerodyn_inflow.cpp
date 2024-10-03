@@ -6,8 +6,6 @@
 
 namespace openturbine::tests {
 
-#ifdef OpenTurbine_BUILD_OPENFAST_ADI
-
 TEST(AerodynInflowTest, ErrorHandling_NoThrow) {
     util::ErrorHandling error_handling;
     EXPECT_NO_THROW(error_handling.CheckError());
@@ -275,6 +273,54 @@ TEST(AerodynInflowTest, MeshData_Constructor_Data) {
     ExpectArrayNear(mesh_motion_data.velocity[0], {1.f, 2.f, 3.f, 4.f, 5.f, 6.f});
     ExpectArrayNear(mesh_motion_data.acceleration[0], {7.f, 8.f, 9.f, 10.f, 11.f, 12.f});
     ExpectArrayNear(mesh_motion_data.loads[0], {13.f, 14.f, 15.f, 16.f, 17.f, 18.f});
+}
+
+TEST(AerodynInflowTest, BladeInitialState_Constructor) {
+    Array_7 root{1., 2., 3., 1., 0., 0., 0.};
+    std::vector<Array_7> nodes{{4., 5., 6., 1., 0., 0., 0.}, {7., 8., 9., 1., 0., 0., 0.}};
+    util::TurbineConfig::BladeInitialState blade_state{root, nodes};
+
+    EXPECT_EQ(blade_state.root_initial_position, root);
+    EXPECT_EQ(blade_state.node_initial_positions, nodes);
+}
+
+TEST(AerodynInflowTest, TurbineConfig_Constructor) {
+    bool is_hawt{true};
+    std::array<float, 3> ref_pos{10.f, 20.f, 30.f};
+    Array_7 hub_pos{1., 2., 3., 1., 0., 0., 0.};
+    Array_7 nacelle_pos{4., 5., 6., 1., 0., 0., 0.};
+
+    std::vector<util::TurbineConfig::BladeInitialState> blade_states;
+    for (int i = 0; i < 3; ++i) {
+        Array_7 root = {static_cast<double>(i), 0., 0., 1., 0., 0., 0.};
+        std::vector<Array_7> nodes = {
+            {static_cast<double>(i), 1., 0., 1., 0., 0., 0.},
+            {static_cast<double>(i), 2., 0., 1., 0., 0., 0.}};
+        blade_states.emplace_back(root, nodes);
+    }
+
+    util::TurbineConfig turbine_config{is_hawt, ref_pos, hub_pos, nacelle_pos, blade_states};
+
+    EXPECT_EQ(turbine_config.is_horizontal_axis, is_hawt);
+    EXPECT_EQ(turbine_config.reference_position, ref_pos);
+    EXPECT_EQ(turbine_config.hub_initial_position, hub_pos);
+    EXPECT_EQ(turbine_config.nacelle_initial_position, nacelle_pos);
+    EXPECT_EQ(turbine_config.blade_initial_states.size(), 3);
+
+    for (size_t i = 0; i < 3; ++i) {
+        EXPECT_EQ(
+            turbine_config.blade_initial_states[i].root_initial_position[0], static_cast<double>(i)
+        );
+        EXPECT_EQ(turbine_config.blade_initial_states[i].node_initial_positions.size(), 2);
+        EXPECT_EQ(
+            turbine_config.blade_initial_states[i].node_initial_positions[0][0],
+            static_cast<double>(i)
+        );
+        EXPECT_EQ(
+            turbine_config.blade_initial_states[i].node_initial_positions[1][0],
+            static_cast<double>(i)
+        );
+    }
 }
 
 TEST(AerodynInflowTest, MeshData_CheckArraySize_NoThrow) {
@@ -633,7 +679,5 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
     // End simulation
     EXPECT_NO_THROW(aerodyn_inflow_library.Finalize());
 }
-
-#endif
 
 }  // namespace openturbine::tests
