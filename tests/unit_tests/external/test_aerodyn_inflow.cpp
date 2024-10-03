@@ -244,51 +244,73 @@ TEST(AerodynInflowTest, StructuralMesh_Validate_MismatchedBladeNumbers) {
     EXPECT_THROW(structural_mesh.Validate(), std::invalid_argument);
 }
 
-TEST(AerodynInflowTest, MeshMotionData_Default) {
-    util::MeshMotionData mesh_motion_data;
-    EXPECT_EQ(mesh_motion_data.position.size(), 0);
-    EXPECT_EQ(mesh_motion_data.orientation.size(), 0);
-    EXPECT_EQ(mesh_motion_data.velocity.size(), 0);
-    EXPECT_EQ(mesh_motion_data.acceleration.size(), 0);
-}
-
-TEST(AerodynInflowTest, MeshMotionData_Set) {
-    std::vector<std::array<double, 7>> mesh_data = {{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
-    std::vector<std::array<float, 6>> mesh_velocities = {{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
-    std::vector<std::array<float, 6>> mesh_accelerations = {{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
-    util::MeshMotionData mesh_motion_data(mesh_data, mesh_velocities, mesh_accelerations, 1);
-
+TEST(AerodynInflowTest, MeshData_Constructor_NumberOfNodes) {
+    util::MeshData mesh_motion_data{1};
+    EXPECT_EQ(mesh_motion_data.n_mesh_points, 1);
     EXPECT_EQ(mesh_motion_data.position.size(), 1);
     EXPECT_EQ(mesh_motion_data.orientation.size(), 1);
     EXPECT_EQ(mesh_motion_data.velocity.size(), 1);
     EXPECT_EQ(mesh_motion_data.acceleration.size(), 1);
+    EXPECT_EQ(mesh_motion_data.loads.size(), 1);
+}
+
+TEST(AerodynInflowTest, MeshData_Constructor_Data) {
+    size_t n_mesh_points{1};
+    std::vector<std::array<double, 7>> mesh_data{{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
+    std::vector<std::array<float, 6>> mesh_velocities{{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
+    std::vector<std::array<float, 6>> mesh_accelerations{{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+    std::vector<std::array<float, 6>> mesh_loads = {{13.f, 14.f, 15.f, 16.f, 17.f, 18.f}};
+    util::MeshData mesh_motion_data(
+        n_mesh_points, mesh_data, mesh_velocities, mesh_accelerations, mesh_loads
+    );
+
+    EXPECT_EQ(mesh_motion_data.n_mesh_points, n_mesh_points);
+    EXPECT_EQ(mesh_motion_data.position.size(), n_mesh_points);
+    EXPECT_EQ(mesh_motion_data.orientation.size(), n_mesh_points);
+    EXPECT_EQ(mesh_motion_data.velocity.size(), n_mesh_points);
+    EXPECT_EQ(mesh_motion_data.acceleration.size(), n_mesh_points);
+    EXPECT_EQ(mesh_motion_data.loads.size(), n_mesh_points);
     ExpectArrayNear(mesh_motion_data.position[0], {1.f, 2.f, 3.f});
     ExpectArrayNear(mesh_motion_data.orientation[0], {1., 0., 0., 0., 0., -1., 0., 1., 0.});
     ExpectArrayNear(mesh_motion_data.velocity[0], {1.f, 2.f, 3.f, 4.f, 5.f, 6.f});
     ExpectArrayNear(mesh_motion_data.acceleration[0], {7.f, 8.f, 9.f, 10.f, 11.f, 12.f});
+    ExpectArrayNear(mesh_motion_data.loads[0], {13.f, 14.f, 15.f, 16.f, 17.f, 18.f});
 }
 
-TEST(AerodynInflowTest, MeshMotionData_CheckArraySize_NoThrow) {
-    std::vector<std::array<double, 7>> mesh_data = {{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
-    std::vector<std::array<float, 6>> mesh_velocities = {{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
-    std::vector<std::array<float, 6>> mesh_accelerations = {{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
-    util::MeshMotionData mesh_motion_data(mesh_data, mesh_velocities, mesh_accelerations, 1);
+TEST(AerodynInflowTest, MeshData_CheckArraySize_NoThrow) {
+    size_t n_mesh_points{1};
+    std::vector<std::array<double, 7>> mesh_data{{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
+    std::vector<std::array<float, 6>> mesh_velocities{{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
+    std::vector<std::array<float, 6>> mesh_accelerations{{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+    std::vector<std::array<float, 6>> mesh_loads{{13.f, 14.f, 15.f, 16.f, 17.f, 18.f}};
+    util::MeshData mesh_motion_data(
+        n_mesh_points, mesh_data, mesh_velocities, mesh_accelerations, mesh_loads
+    );
 
-    mesh_motion_data.CheckArraySize(mesh_motion_data.position, 1, 3, "position", "mesh motion data");
     mesh_motion_data.CheckArraySize(
-        mesh_motion_data.orientation, 1, 9, "orientation", "mesh motion data"
+        mesh_motion_data.position, n_mesh_points, 3, "position", "mesh motion data"
+    );
+    mesh_motion_data.CheckArraySize(
+        mesh_motion_data.orientation, n_mesh_points, 9, "orientation", "mesh motion data"
     );
     mesh_motion_data.CheckArraySize(mesh_motion_data.velocity, 1, 6, "velocity", "mesh motion data");
     mesh_motion_data.CheckArraySize(
-        mesh_motion_data.acceleration, 1, 6, "acceleration", "mesh motion data"
+        mesh_motion_data.acceleration, n_mesh_points, 6, "acceleration", "mesh motion data"
+    );
+    mesh_motion_data.CheckArraySize(
+        mesh_motion_data.loads, n_mesh_points, 6, "loads", "mesh motion data"
     );
 }
 
-TEST(AerodynInflowTest, MeshMotionData_CheckArraySize_ExpectThrow) {
-    std::vector<std::array<double, 7>> mesh_data = {{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
-    std::vector<std::array<float, 6>> mesh_velocities = {{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
-    std::vector<std::array<float, 6>> mesh_accelerations = {{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
-    util::MeshMotionData mesh_motion_data(mesh_data, mesh_velocities, mesh_accelerations, 1);
+TEST(AerodynInflowTest, MeshData_CheckArraySize_ExpectThrow) {
+    size_t n_mesh_points{1};
+    std::vector<std::array<double, 7>> mesh_data{{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
+    std::vector<std::array<float, 6>> mesh_velocities{{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
+    std::vector<std::array<float, 6>> mesh_accelerations{{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+    std::vector<std::array<float, 6>> mesh_loads{{13.f, 14.f, 15.f, 16.f, 17.f, 18.f}};
+    util::MeshData mesh_motion_data(
+        n_mesh_points, mesh_data, mesh_velocities, mesh_accelerations, mesh_loads
+    );
 
     EXPECT_THROW(
         mesh_motion_data.CheckArraySize(
@@ -581,44 +603,10 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
     );
 
     // Set up motion data for hub, nacelle, root, and mesh
-    util::MeshMotionData hub_motion(
-        {{0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0}}, {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-        {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}}
-    );
-    util::MeshMotionData nacelle_motion(
-        {{0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0}}, {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-        {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}}
-    );
-    util::MeshMotionData root_motion(
-        {{0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0},
-         {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0},
-         {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0}},
-        {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-         {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-         {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-        {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-         {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-         {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}},
-        3
-    );
-
-    // Get the number of mesh points from the structural mesh
-    size_t n_mesh_points = 1;
-
-    // Create mesh motion data with the correct number of mesh points
-    std::vector<std::array<double, 7>> mesh_positions(
-        n_mesh_points, {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0}
-    );
-    std::vector<std::array<float, 6>> mesh_velocities(
-        n_mesh_points, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}
-    );
-    std::vector<std::array<float, 6>> mesh_accelerations(
-        n_mesh_points, {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}
-    );
-
-    util::MeshMotionData mesh_motion(
-        mesh_positions, mesh_velocities, mesh_accelerations, n_mesh_points
-    );
+    util::MeshData hub_motion{1};
+    util::MeshData nacelle_motion{1};
+    util::MeshData root_motion{3};
+    util::MeshData mesh_motion{1};
 
     // Set up rotor motion
     EXPECT_NO_THROW(aerodyn_inflow_library.SetupRotorMotion(

@@ -261,34 +261,49 @@ struct StructuralMesh {
 };
 
 /**
- * @brief Struct to hold the motion data of any structural mesh component
+ * @brief Struct to hold the motion + loads data of any structural mesh component
  *
  * @details This struct holds the motion data (i.e. position, orientation,
- * velocity, and acceleration) of the structural mesh, which can be the hub, nacelle, root, or
- * mesh points/nodes.
+ * velocity, and acceleration) and loads of the structural mesh, which can be
+ * the hub, nacelle, root, or mesh points/nodes
  */
-struct MeshMotionData {
+struct MeshData {
+    size_t n_mesh_points;                            //< Number of mesh points (nodes)
     std::vector<std::array<float, 3>> position;      //< N x 3 array [x, y, z]
     std::vector<std::array<double, 9>> orientation;  //< N x 9 array [r11, r12, ..., r33]
     std::vector<std::array<float, 6>> velocity;      //< N x 6 array [u, v, w, p, q, r]
     std::vector<std::array<float, 6>>
         acceleration;  //< N x 6 array [u_dot, v_dot, w_dot, p_dot, q_dot, r_dot]
+    std::vector<std::array<float, 6>> loads;  //< N x 6 array [Fx, Fy, Fz, Mx, My, Mz]
 
-    /// Default constructor
-    MeshMotionData() = default;
+    /// Constructor to initialize all mesh data to zero based on provided number of nodes
+    MeshData(size_t n_nodes)
+        : n_mesh_points(n_nodes),
+          position(std::vector<std::array<float, 3>>(n_nodes, {0.f, 0.f, 0.f})),
+          orientation(
+              std::vector<std::array<double, 9>>(n_nodes, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
+          ),
+          velocity(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})),
+          acceleration(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})),
+          loads(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})) {}
 
-    /// Constructor to initialize all data based on provided inputs
-    MeshMotionData(
-        const std::vector<std::array<double, 7>>& mesh_data,
-        const std::vector<std::array<float, 6>>& mesh_velocities,
-        const std::vector<std::array<float, 6>>& mesh_accelerations, size_t n_mesh_points = 1
+    /// Constructor to initialize all mesh data based on provided inputs
+    MeshData(
+        size_t n_mesh_points, const std::vector<std::array<double, 7>>& mesh_data,
+        const std::vector<std::array<float, 6>>& velocities,
+        const std::vector<std::array<float, 6>>& accelerations,
+        const std::vector<std::array<float, 6>>& loads
     )
-        : position(n_mesh_points),
-          orientation(n_mesh_points),
-          velocity(std::move(mesh_velocities)),
-          acceleration(std::move(mesh_accelerations)) {
-        if (mesh_data.size() != n_mesh_points || mesh_velocities.size() != n_mesh_points ||
-            mesh_accelerations.size() != n_mesh_points) {
+        : n_mesh_points(n_mesh_points),
+          position(std::vector<std::array<float, 3>>(n_mesh_points, {0.f, 0.f, 0.f})),
+          orientation(
+              std::vector<std::array<double, 9>>(n_mesh_points, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
+          ),
+          velocity(std::move(velocities)),
+          acceleration(std::move(accelerations)),
+          loads(std::move(loads)) {
+        if (mesh_data.size() != n_mesh_points || velocities.size() != n_mesh_points ||
+            accelerations.size() != n_mesh_points || loads.size() != n_mesh_points) {
             throw std::invalid_argument("Input vector sizes must match n_mesh_points");
         }
 
@@ -768,8 +783,8 @@ public:
      * @param mesh_motion Motion data for the mesh points
      */
     void SetupRotorMotion(
-        int turbine_number, MeshMotionData hub_motion, MeshMotionData nacelle_motion,
-        MeshMotionData root_motion, MeshMotionData mesh_motion
+        int turbine_number, MeshData hub_motion, MeshData nacelle_motion, MeshData root_motion,
+        MeshData mesh_motion
     ) {
         auto ADI_C_SetRotorMotion = lib_.get_function<
             void(int*, float*, double*, float*, float*, float*, double*, float*, float*, float*, double*, float*, float*, int*, float*, double*, float*, float*, int*, char*)>(
