@@ -443,14 +443,29 @@ struct MeshData {
  * mesh data for various components, and blade node mappings.
  */
 struct TurbineData {
-    int32_t n_blades;                                    //< Number of blades
-    MeshData hub;                                        //< Hub data (1 point)
-    MeshData nacelle;                                    //< Nacelle data (1 point)
-    MeshData blade_roots;                                //< Blade roots data (n_blades points)
-    MeshData blade_nodes;                                //< Blade nodes data
-    std::vector<int32_t> blade_nodes_to_blade_num;       //< Blade node to blade number mapping as 1D
-                                                         // array
-    std::vector<std::vector<size_t>> blade_nodes_index;  //< Blade nodes index as 2D array
+    int32_t n_blades;      //< Number of blades
+    MeshData hub;          //< Hub data (1 point)
+    MeshData nacelle;      //< Nacelle data (1 point)
+    MeshData blade_roots;  //< Blade roots data (n_blades points)
+    MeshData blade_nodes;  //< Blade nodes data
+    /**
+     * @brief Mapping of blade nodes to blade numbers (1D array)
+     *
+     * This vector stores the blade number (1-based index) for each blade node.
+     * It allows quick lookup of which blade a particular node belongs to.
+     * The size of this vector is equal to the total number of blade nodes across all blades.
+     */
+    std::vector<int32_t> blade_nodes_to_blade_num_mapping;
+
+    /**
+     * @brief Unique indices of nodes for each blade (2D array)
+     *
+     * This is a vector of vectors where each inner vector contains the unique indices of nodes
+     * belonging to a specific blade. The outer vector's size is equal to the number of blades,
+     * and each inner vector's size is equal to the number of nodes on that blade.
+     * This structure allows quick access to all nodes of a particular blade.
+     */
+    std::vector<std::vector<size_t>> node_indices_by_blade;
 
     /// Constructor to initialize TurbineData from TurbineConfig
     explicit TurbineData(const TurbineConfig& tc)
@@ -459,7 +474,7 @@ struct TurbineData {
           nacelle(1),
           blade_roots(tc.blade_initial_states.size()),
           blade_nodes(CalculateTotalBladeNodes(tc)),
-          blade_nodes_index(tc.blade_initial_states.size()) {
+          node_indices_by_blade(tc.blade_initial_states.size()) {
         InitializeHubAndNacelle(tc);
         InitializeBlades(tc);
     }
@@ -501,8 +516,8 @@ private:
                 SetPositionAndOrientation(
                     node, blade_nodes.position[i_node], blade_nodes.orientation[i_node]
                 );
-                blade_nodes_index[i_blade].emplace_back(i_node);
-                blade_nodes_to_blade_num.emplace_back(static_cast<int32_t>(i_blade + 1));
+                node_indices_by_blade[i_blade].emplace_back(i_node);
+                blade_nodes_to_blade_num_mapping.emplace_back(static_cast<int32_t>(i_blade + 1));
                 ++i_node;
             }
             ++i_blade;

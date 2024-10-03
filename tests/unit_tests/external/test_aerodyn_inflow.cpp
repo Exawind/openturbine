@@ -386,6 +386,85 @@ TEST(AerodynInflowTest, SimulationControls_Default) {
     EXPECT_STREQ(simulation_controls.channel_units_c.data(), "");
 }
 
+TEST(AerodynInflowTest, TurbineData_Constructor) {
+    // Set up 3 blades with 2 nodes each
+    std::vector<util::TurbineConfig::BladeInitialState> blade_states;
+    for (size_t i = 0; i < 3; ++i) {
+        util::TurbineConfig::BladeInitialState blade_state(
+            {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
+            {
+                {0., 5., 90., 1., 0., 0., 0.},  // node_initial_positions - 1
+                {0., 10., 90., 1., 0., 0., 0.}  // node_initial_positions - 2
+            }
+
+        );
+        blade_states.push_back(blade_state);
+    }
+    util::TurbineConfig tc(
+        true,                           // is_horizontal_axis
+        {0.f, 0.f, 0.f},                // reference_position
+        {0., 0., 90., 1., 0., 0., 0.},  // hub_initial_position
+        {0., 0., 90., 1., 0., 0., 0.},  // nacelle_initial_position
+        blade_states
+    );
+
+    util::TurbineData turbine_data(tc);
+
+    // Check basic properties
+    EXPECT_EQ(turbine_data.n_blades, 3);
+    EXPECT_EQ(turbine_data.hub.n_mesh_points, 1);
+    EXPECT_EQ(turbine_data.nacelle.n_mesh_points, 1);
+    EXPECT_EQ(turbine_data.blade_roots.n_mesh_points, 3);
+    EXPECT_EQ(turbine_data.blade_nodes.n_mesh_points, 6);  // 3 blades * 2 nodes each
+
+    // Check hub and nacelle positions
+    ExpectArrayNear(turbine_data.hub.position[0], {0.f, 0.f, 90.f});
+    ExpectArrayNear(turbine_data.nacelle.position[0], {0.f, 0.f, 90.f});
+
+    // Check blade roots
+    for (size_t i = 0; i < 3; ++i) {
+        ExpectArrayNear(turbine_data.blade_roots.position[i], {0.f, 0.f, 90.f});
+    }
+
+    // Check blade nodes
+    for (size_t i = 0; i < 6; ++i) {
+        float expected_y = (i % 2 == 0) ? 5.f : 10.f;
+        ExpectArrayNear(turbine_data.blade_nodes.position[i], {0.f, expected_y, 90.f});
+    }
+
+    // Check blade_nodes_to_blade_num_mapping
+    std::vector<int32_t> expected_blade_nodes_to_blade_num_mapping = {1, 1, 2, 2, 3, 3};
+    ASSERT_EQ(turbine_data.blade_nodes_to_blade_num_mapping.size(), 6);
+    for (size_t i = 0; i < 6; ++i) {
+        EXPECT_EQ(
+            turbine_data.blade_nodes_to_blade_num_mapping[i],
+            expected_blade_nodes_to_blade_num_mapping[i]
+        ) << "Mismatch at index "
+          << i;
+    }
+
+    // Check node_indices_by_blade
+    ASSERT_EQ(turbine_data.node_indices_by_blade.size(), 3);
+    std::vector<std::vector<size_t>> expected_node_indices_by_blade = {{0, 1}, {2, 3}, {4, 5}};
+    for (size_t blade = 0; blade < 3; ++blade) {
+        ASSERT_EQ(turbine_data.node_indices_by_blade[blade].size(), 2)
+            << "Incorrect number of nodes for blade " << blade;
+        EXPECT_EQ(turbine_data.node_indices_by_blade[blade], expected_node_indices_by_blade[blade])
+            << "Incorrect node indices for blade " << blade;
+    }
+
+    // Additional check: Verify that node_indices_by_blade correctly maps to
+    // blade_nodes_to_blade_num_mapping
+    for (size_t blade = 0; blade < 3; ++blade) {
+        for (size_t node : turbine_data.node_indices_by_blade[blade]) {
+            EXPECT_EQ(turbine_data.blade_nodes_to_blade_num_mapping[node], blade + 1)
+                << "Mismatch between node_indices_by_blade and blade_nodes_to_blade_num_mapping for "
+                   "blade "
+                << blade;
+        }
+    }
+}
+
 TEST(AerodynInflowTest, SimulationControls_Set) {
     util::SimulationControls simulation_controls;
     simulation_controls.aerodyn_input_passed = 0;
