@@ -215,86 +215,37 @@ struct MeshData {
         for (size_t i = 0; i < n_mesh_points; ++i) {
             SetPositionAndOrientation(mesh_data[i], position[i], orientation[i]);
         }
+
+        Validate();
     }
 
-    /**
-     * @brief Method to check the dimensions of the input arrays
-     *
-     * @param array The input array to check
-     * @param expected_rows The expected number of rows
-     * @param expected_cols The expected number of columns
-     * @param array_name The name of the array
-     * @param node_label The label of the node (e.g., "hub", "nacelle", "root", "mesh")
-     */
-    template <typename T, size_t N>
-    void CheckArraySize(
-        const std::vector<std::array<T, N>>& array, size_t expected_rows, size_t expected_cols,
-        const std::string& array_name, const std::string& node_label
-    ) const {
-        if (array.size() != expected_rows) {
-            throw std::invalid_argument(
-                "Expecting a " + std::to_string(expected_rows) + "x" +
-                std::to_string(expected_cols) + " array of " + node_label + " " + array_name +
-                " with " + std::to_string(expected_rows) + " rows, but got " +
-                std::to_string(array.size()) + " rows."
-            );
+    /// Validate the consistency and validity of the mesh data
+    void Validate() const {
+        if (n_mesh_points <= 0) {
+            throw std::invalid_argument("Number of mesh points must be at least 1");
         }
 
-        if (!array.empty() && array[0].size() != expected_cols) {
-            throw std::invalid_argument(
-                "Expecting a " + std::to_string(expected_rows) + "x" +
-                std::to_string(expected_cols) + " array of " + node_label + " " + array_name +
-                " with " + std::to_string(expected_cols) + " columns, but got " +
-                std::to_string(array[0].size()) + " columns."
-            );
-        }
-    }
+        const size_t expected_size = static_cast<size_t>(n_mesh_points);
 
-    void CheckInputMotions(
-        const std::string& node_label, size_t expected_number_of_nodes,
-        size_t expected_position_dim = 3, size_t expected_orientation_dim = 9,
-        size_t expected_vel_acc_dim = 6
-    ) const {
-        CheckArraySize(
-            position, expected_number_of_nodes, expected_position_dim, "positions", node_label
-        );
-        CheckArraySize(
-            orientation, expected_number_of_nodes, expected_orientation_dim, "orientations",
-            node_label
-        );
-        CheckArraySize(
-            velocity, expected_number_of_nodes, expected_vel_acc_dim, "velocities", node_label
-        );
-        CheckArraySize(
-            acceleration, expected_number_of_nodes, expected_vel_acc_dim, "accelerations", node_label
-        );
-    }
-
-    void CheckNodeInputMotions(
-        const std::string& node_name, size_t expected_number_of_nodes, size_t initial_number_of_nodes
-    ) const {
-        if (expected_number_of_nodes != initial_number_of_nodes) {
-            throw std::invalid_argument(
-                "The number of " + node_name + " points changed from the initial value of " +
-                std::to_string(initial_number_of_nodes) + " to " +
-                std::to_string(expected_number_of_nodes) +
-                ". This is not permitted during the simulation."
-            );
+        if (position.size() != expected_size) {
+            throw std::invalid_argument("Position vector size does not match n_mesh_points");
         }
 
-        CheckInputMotions(node_name, expected_number_of_nodes);
-    }
+        if (orientation.size() != expected_size) {
+            throw std::invalid_argument("Orientation vector size does not match n_mesh_points");
+        }
 
-    void CheckHubNacelleInputMotions(const std::string& node_name) const {
-        CheckInputMotions(node_name, 1);
-    }
+        if (velocity.size() != expected_size) {
+            throw std::invalid_argument("Velocity vector size does not match n_mesh_points");
+        }
 
-    void CheckRootInputMotions(size_t n_blades, size_t init_n_blades) const {
-        CheckNodeInputMotions("root", n_blades, init_n_blades);
-    }
+        if (acceleration.size() != expected_size) {
+            throw std::invalid_argument("Acceleration vector size does not match n_mesh_points");
+        }
 
-    void CheckMeshInputMotions(size_t n_mesh_pts, size_t init_n_mesh_pts) const {
-        CheckNodeInputMotions("mesh", n_mesh_pts, init_n_mesh_pts);
+        if (loads.size() != expected_size) {
+            throw std::invalid_argument("Loads vector size does not match n_mesh_points");
+        }
     }
 };
 
@@ -601,14 +552,14 @@ public:
             // Turbine number is 1 indexed i.e. 1, 2, 3, ...
             ++turbine_number;
 
-            // Validate the turbine config
-            // turbine_settings_.Validate();
-            // structural_mesh_.Validate();
-
             // Convert bool -> int to pass to the Fortran routine
             int32_t is_horizontal_axis_int = tc.is_horizontal_axis ? 1 : 0;
 
+            // Validate the turbine config
+            tc.Validate();
+
             // Create new turbine data
+            // Note: TurbineData and MeshData are validated during construction
             turbines_.emplace_back(TurbineData(tc));
             auto& td = turbines_.back();
 

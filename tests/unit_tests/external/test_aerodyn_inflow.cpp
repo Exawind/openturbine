@@ -59,62 +59,6 @@ TEST(AerodynInflowTest, EnvironmentalConditions_Set) {
     EXPECT_NEAR(environmental_conditions.msl_offset, 10.f, 1e-6f);
 }
 
-/// Check if members of the provided array is equal to the provided expected array
-template <typename T, size_t N>
-void ExpectArrayNear(
-    const std::array<T, N>& actual, const std::array<T, N>& expected,
-    T epsilon = static_cast<T>(1e-6)
-) {
-    ASSERT_EQ(actual.size(), expected.size());
-    for (size_t i = 0; i < N; ++i) {
-        EXPECT_NEAR(actual[i], expected[i], epsilon) << "Element mismatch at index " << i;
-    }
-}
-
-TEST(AerodynInflowTest, SetPositionAndOrientation) {
-    std::array<double, 7> data = {1., 2., 3., 0.707107, 0.707107, 0., 0.};
-    std::array<float, 3> position;
-    std::array<double, 9> orientation;
-
-    util::SetPositionAndOrientation(data, position, orientation);
-
-    ExpectArrayNear(position, {1.f, 2.f, 3.f});
-    ExpectArrayNear(orientation, {1., 0., 0., 0., 0., -1., 0., 1., 0.});
-}
-
-TEST(AerodynInflowTest, MeshData_Constructor_NumberOfNodes) {
-    util::MeshData mesh_motion_data{1};
-    EXPECT_EQ(mesh_motion_data.n_mesh_points, 1);
-    EXPECT_EQ(mesh_motion_data.position.size(), 1);
-    EXPECT_EQ(mesh_motion_data.orientation.size(), 1);
-    EXPECT_EQ(mesh_motion_data.velocity.size(), 1);
-    EXPECT_EQ(mesh_motion_data.acceleration.size(), 1);
-    EXPECT_EQ(mesh_motion_data.loads.size(), 1);
-}
-
-TEST(AerodynInflowTest, MeshData_Constructor_Data) {
-    size_t n_mesh_points{1};
-    std::vector<std::array<double, 7>> mesh_data{{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
-    std::vector<std::array<float, 6>> mesh_velocities{{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
-    std::vector<std::array<float, 6>> mesh_accelerations{{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
-    std::vector<std::array<float, 6>> mesh_loads = {{13.f, 14.f, 15.f, 16.f, 17.f, 18.f}};
-    util::MeshData mesh_motion_data(
-        n_mesh_points, mesh_data, mesh_velocities, mesh_accelerations, mesh_loads
-    );
-
-    EXPECT_EQ(mesh_motion_data.n_mesh_points, n_mesh_points);
-    EXPECT_EQ(mesh_motion_data.position.size(), n_mesh_points);
-    EXPECT_EQ(mesh_motion_data.orientation.size(), n_mesh_points);
-    EXPECT_EQ(mesh_motion_data.velocity.size(), n_mesh_points);
-    EXPECT_EQ(mesh_motion_data.acceleration.size(), n_mesh_points);
-    EXPECT_EQ(mesh_motion_data.loads.size(), n_mesh_points);
-    ExpectArrayNear(mesh_motion_data.position[0], {1.f, 2.f, 3.f});
-    ExpectArrayNear(mesh_motion_data.orientation[0], {1., 0., 0., 0., 0., -1., 0., 1., 0.});
-    ExpectArrayNear(mesh_motion_data.velocity[0], {1.f, 2.f, 3.f, 4.f, 5.f, 6.f});
-    ExpectArrayNear(mesh_motion_data.acceleration[0], {7.f, 8.f, 9.f, 10.f, 11.f, 12.f});
-    ExpectArrayNear(mesh_motion_data.loads[0], {13.f, 14.f, 15.f, 16.f, 17.f, 18.f});
-}
-
 TEST(AerodynInflowTest, BladeInitialState_Constructor) {
     Array_7 root{1., 2., 3., 1., 0., 0., 0.};
     std::vector<Array_7> nodes{{4., 5., 6., 1., 0., 0., 0.}, {7., 8., 9., 1., 0., 0., 0.}};
@@ -177,47 +121,107 @@ TEST(AerodynInflowTest, TurbineConfig_Validate_InvalidConfiguration) {
     );
 }
 
-TEST(AerodynInflowTest, MeshData_CheckArraySize_NoThrow) {
-    size_t n_mesh_points{1};
-    std::vector<std::array<double, 7>> mesh_data{{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
-    std::vector<std::array<float, 6>> mesh_velocities{{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
-    std::vector<std::array<float, 6>> mesh_accelerations{{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
-    std::vector<std::array<float, 6>> mesh_loads{{13.f, 14.f, 15.f, 16.f, 17.f, 18.f}};
-    util::MeshData mesh_motion_data(
-        n_mesh_points, mesh_data, mesh_velocities, mesh_accelerations, mesh_loads
-    );
-
-    mesh_motion_data.CheckArraySize(
-        mesh_motion_data.position, n_mesh_points, 3, "position", "mesh motion data"
-    );
-    mesh_motion_data.CheckArraySize(
-        mesh_motion_data.orientation, n_mesh_points, 9, "orientation", "mesh motion data"
-    );
-    mesh_motion_data.CheckArraySize(mesh_motion_data.velocity, 1, 6, "velocity", "mesh motion data");
-    mesh_motion_data.CheckArraySize(
-        mesh_motion_data.acceleration, n_mesh_points, 6, "acceleration", "mesh motion data"
-    );
-    mesh_motion_data.CheckArraySize(
-        mesh_motion_data.loads, n_mesh_points, 6, "loads", "mesh motion data"
-    );
+/// Check if members of the provided array is equal to the provided expected array
+template <typename T, size_t N>
+void ExpectArrayNear(
+    const std::array<T, N>& actual, const std::array<T, N>& expected,
+    T epsilon = static_cast<T>(1e-6)
+) {
+    ASSERT_EQ(actual.size(), expected.size());
+    for (size_t i = 0; i < N; ++i) {
+        EXPECT_NEAR(actual[i], expected[i], epsilon) << "Element mismatch at index " << i;
+    }
 }
 
-TEST(AerodynInflowTest, MeshData_CheckArraySize_ExpectThrow) {
+TEST(AerodynInflowTest, SetPositionAndOrientation) {
+    std::array<double, 7> data = {1., 2., 3., 0.707107, 0.707107, 0., 0.};
+    std::array<float, 3> position;
+    std::array<double, 9> orientation;
+
+    util::SetPositionAndOrientation(data, position, orientation);
+
+    ExpectArrayNear(position, {1.f, 2.f, 3.f});
+    ExpectArrayNear(orientation, {1., 0., 0., 0., 0., -1., 0., 1., 0.});
+}
+
+TEST(AerodynInflowTest, MeshData_Constructor_NumberOfNodes) {
+    util::MeshData mesh_motion_data{1};
+    EXPECT_EQ(mesh_motion_data.n_mesh_points, 1);
+    EXPECT_EQ(mesh_motion_data.position.size(), 1);
+    EXPECT_EQ(mesh_motion_data.orientation.size(), 1);
+    EXPECT_EQ(mesh_motion_data.velocity.size(), 1);
+    EXPECT_EQ(mesh_motion_data.acceleration.size(), 1);
+    EXPECT_EQ(mesh_motion_data.loads.size(), 1);
+}
+
+TEST(AerodynInflowTest, MeshData_Constructor_Data) {
     size_t n_mesh_points{1};
     std::vector<std::array<double, 7>> mesh_data{{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
     std::vector<std::array<float, 6>> mesh_velocities{{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
     std::vector<std::array<float, 6>> mesh_accelerations{{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
-    std::vector<std::array<float, 6>> mesh_loads{{13.f, 14.f, 15.f, 16.f, 17.f, 18.f}};
+    std::vector<std::array<float, 6>> mesh_loads = {{13.f, 14.f, 15.f, 16.f, 17.f, 18.f}};
     util::MeshData mesh_motion_data(
         n_mesh_points, mesh_data, mesh_velocities, mesh_accelerations, mesh_loads
     );
 
-    EXPECT_THROW(
-        mesh_motion_data.CheckArraySize(
-            mesh_motion_data.position, 2, 3, "position", "mesh motion data"  // Expected 1 row
-        ),
-        std::invalid_argument
-    );
+    EXPECT_EQ(mesh_motion_data.n_mesh_points, n_mesh_points);
+    EXPECT_EQ(mesh_motion_data.position.size(), n_mesh_points);
+    EXPECT_EQ(mesh_motion_data.orientation.size(), n_mesh_points);
+    EXPECT_EQ(mesh_motion_data.velocity.size(), n_mesh_points);
+    EXPECT_EQ(mesh_motion_data.acceleration.size(), n_mesh_points);
+    EXPECT_EQ(mesh_motion_data.loads.size(), n_mesh_points);
+    ExpectArrayNear(mesh_motion_data.position[0], {1.f, 2.f, 3.f});
+    ExpectArrayNear(mesh_motion_data.orientation[0], {1., 0., 0., 0., 0., -1., 0., 1., 0.});
+    ExpectArrayNear(mesh_motion_data.velocity[0], {1.f, 2.f, 3.f, 4.f, 5.f, 6.f});
+    ExpectArrayNear(mesh_motion_data.acceleration[0], {7.f, 8.f, 9.f, 10.f, 11.f, 12.f});
+    ExpectArrayNear(mesh_motion_data.loads[0], {13.f, 14.f, 15.f, 16.f, 17.f, 18.f});
+}
+
+class MeshDataValidationTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        // Create a mesh data with 2 mesh points
+        mesh_data = std::make_unique<util::MeshData>(2);
+        mesh_data->position = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
+        mesh_data->orientation = {
+            {1., 0., 0., 0., 1., 0., 0., 0., 1.}, {0., 1., 0., -1., 0., 0., 0., 0., 1.}};
+        mesh_data->velocity = {{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}, {7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+        mesh_data->acceleration = {
+            {1.f, 2.f, 3.f, 4.f, 5.f, 6.f}, {7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+        mesh_data->loads = {{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}, {7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+    }
+
+    std::unique_ptr<util::MeshData> mesh_data;
+};
+
+TEST_F(MeshDataValidationTest, InvalidNumberOfMeshPoints) {
+    mesh_data->n_mesh_points = 0;  // Should be at least 1
+    EXPECT_THROW(mesh_data->Validate(), std::invalid_argument);
+}
+
+TEST_F(MeshDataValidationTest, MismatchedPositionSize) {
+    mesh_data->position.pop_back();
+    EXPECT_THROW(mesh_data->Validate(), std::invalid_argument);
+}
+
+TEST_F(MeshDataValidationTest, MismatchedOrientationSize) {
+    mesh_data->orientation.pop_back();
+    EXPECT_THROW(mesh_data->Validate(), std::invalid_argument);
+}
+
+TEST_F(MeshDataValidationTest, MismatchedVelocitySize) {
+    mesh_data->velocity.pop_back();
+    EXPECT_THROW(mesh_data->Validate(), std::invalid_argument);
+}
+
+TEST_F(MeshDataValidationTest, MismatchedAccelerationSize) {
+    mesh_data->acceleration.pop_back();
+    EXPECT_THROW(mesh_data->Validate(), std::invalid_argument);
+}
+
+TEST_F(MeshDataValidationTest, MismatchedLoadsSize) {
+    mesh_data->loads.pop_back();
+    EXPECT_THROW(mesh_data->Validate(), std::invalid_argument);
 }
 
 TEST(AerodynInflowTest, TurbineData_Constructor) {
