@@ -103,7 +103,6 @@ struct TurbineConfig {
         Array_7 root_initial_position;                //< Initial root position of the blade
         std::vector<Array_7> node_initial_positions;  //< Initial node positions of the blade
 
-        /// Constructor to initialize all data based on provided inputs
         BladeInitialState(const Array_7& root, const std::vector<Array_7>& nodes)
             : root_initial_position(root), node_initial_positions(nodes) {}
     };
@@ -115,16 +114,31 @@ struct TurbineConfig {
     std::vector<BladeInitialState>
         blade_initial_states;  //< Initial root and node positions of blades
 
-    /// Constructor to initialize all data based on provided inputs
     TurbineConfig(
-        bool is_hawt, const std::array<float, 3>& ref_pos, const Array_7& hub_pos,
-        const Array_7& nacelle_pos, const std::vector<BladeInitialState>& blade_states
+        bool is_hawt, std::array<float, 3> ref_pos, Array_7 hub_pos, Array_7 nacelle_pos,
+        std::vector<BladeInitialState> blade_states
     )
         : is_horizontal_axis(is_hawt),
-          reference_position(ref_pos),
-          hub_initial_position(hub_pos),
-          nacelle_initial_position(nacelle_pos),
-          blade_initial_states(blade_states) {}
+          reference_position(std::move(ref_pos)),
+          hub_initial_position(std::move(hub_pos)),
+          nacelle_initial_position(std::move(nacelle_pos)),
+          blade_initial_states(std::move(blade_states)) {
+        Validate();
+    }
+
+    void Validate() const {
+        if (blade_initial_states.empty()) {
+            throw std::runtime_error("No blades defined. At least one blade is required.");
+        }
+
+        for (const auto& blade : blade_initial_states) {
+            if (blade.node_initial_positions.empty()) {
+                throw std::runtime_error(
+                    "No nodes defined for a blade. At least one node is required."
+                );
+            }
+        }
+    }
 };
 
 /**
@@ -295,7 +309,7 @@ struct TurbineData {
     MeshData hub;          //< Hub data (1 point)
     MeshData nacelle;      //< Nacelle data (1 point)
     MeshData blade_roots;  //< Blade roots data (n_blades points)
-    MeshData blade_nodes;  //< Blade nodes data
+    MeshData blade_nodes;  //< Blade nodes data (sum of nodes per blade)
     /**
      * @brief Mapping of blade nodes to blade numbers (1D array)
      *
@@ -315,7 +329,6 @@ struct TurbineData {
      */
     std::vector<std::vector<size_t>> node_indices_by_blade;
 
-    /// Constructor to initialize TurbineData from TurbineConfig
     TurbineData(const TurbineConfig& tc)
         : n_blades(static_cast<int32_t>(tc.blade_initial_states.size())),
           hub(1),
@@ -325,6 +338,39 @@ struct TurbineData {
           node_indices_by_blade(tc.blade_initial_states.size()) {
         InitializeHubAndNacelle(tc);
         InitializeBlades(tc);
+        Validate();
+    }
+
+    void Validate() const {
+        if (n_blades < 1) {
+            throw std::runtime_error("Invalid number of blades. Must be at least 1.");
+        }
+
+        if (blade_roots.n_mesh_points != n_blades) {
+            throw std::runtime_error("Number of blade roots does not match number of blades.");
+        }
+
+        if (blade_nodes_to_blade_num_mapping.size() !=
+            static_cast<size_t>(blade_nodes.n_mesh_points)) {
+            throw std::runtime_error("Blade node to blade number mapping size mismatch.");
+        }
+
+        if (node_indices_by_blade.size() != static_cast<size_t>(n_blades)) {
+            throw std::runtime_error("Node indices by blade size mismatch.");
+        }
+
+        size_t total_nodes = 0;
+        for (const auto& bn : node_indices_by_blade) {
+            total_nodes += bn.size();
+        }
+        if (total_nodes != static_cast<size_t>(blade_nodes.n_mesh_points)) {
+            throw std::runtime_error("Total number of blade nodes mismatch.");
+        }
+
+        // Validate hub and nacelle data
+        if (hub.n_mesh_points != 1 || nacelle.n_mesh_points != 1) {
+            throw std::runtime_error("Hub and nacelle should have exactly one mesh point each.");
+        }
     }
 
 private:

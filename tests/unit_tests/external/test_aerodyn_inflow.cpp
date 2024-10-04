@@ -163,6 +163,20 @@ TEST(AerodynInflowTest, TurbineConfig_Constructor) {
     }
 }
 
+TEST(AerodynInflowTest, TurbineConfig_Validate_InvalidConfiguration) {
+    // Invalid configuration: No blades
+    bool is_hawt{true};
+    std::array<float, 3> ref_pos{10.f, 20.f, 30.f};
+    Array_7 hub_pos{1., 2., 3., 1., 0., 0., 0.};
+    Array_7 nacelle_pos{4., 5., 6., 1., 0., 0., 0.};
+    std::vector<util::TurbineConfig::BladeInitialState> empty_blade_states;
+
+    EXPECT_THROW(
+        util::TurbineConfig(is_hawt, ref_pos, hub_pos, nacelle_pos, empty_blade_states),
+        std::runtime_error
+    );
+}
+
 TEST(AerodynInflowTest, MeshData_CheckArraySize_NoThrow) {
     size_t n_mesh_points{1};
     std::vector<std::array<double, 7>> mesh_data{{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
@@ -283,6 +297,71 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
                 << blade;
         }
     }
+}
+
+class TurbineDataValidationTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        blade_states.clear();
+        // Set up 3 blades with 2 nodes each
+        for (size_t i = 0; i < 3; ++i) {
+            util::TurbineConfig::BladeInitialState blade_state(
+                {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
+                {
+                    {0., 5., 90., 1., 0., 0., 0.},  // node_initial_positions - 1
+                    {0., 10., 90., 1., 0., 0., 0.}  // node_initial_positions - 2
+                }
+            );
+            blade_states.push_back(blade_state);
+        }
+        tc = std::make_unique<util::TurbineConfig>(
+            true,                                                // is_horizontal_axis
+            std::array<float, 3>{0.f, 0.f, 0.f},                 // reference_position
+            std::array<double, 7>{0., 0., 90., 1., 0., 0., 0.},  // hub_initial_position
+            std::array<double, 7>{0., 0., 90., 1., 0., 0., 0.},  // nacelle_initial_position
+            blade_states
+        );
+        turbine_data = std::make_unique<util::TurbineData>(*tc);
+    }
+
+    std::vector<util::TurbineConfig::BladeInitialState> blade_states;
+    std::unique_ptr<util::TurbineConfig> tc;
+    std::unique_ptr<util::TurbineData> turbine_data;
+};
+
+TEST_F(TurbineDataValidationTest, InvalidNumberOfBlades) {
+    turbine_data->n_blades = 0;  // Should be at least 1
+    EXPECT_THROW(turbine_data->Validate(), std::runtime_error);
+}
+
+TEST_F(TurbineDataValidationTest, MismatchBladeRoots) {
+    turbine_data->blade_roots.n_mesh_points = 2;  // Should be 3
+    EXPECT_THROW(turbine_data->Validate(), std::runtime_error);
+}
+
+TEST_F(TurbineDataValidationTest, MismatchBladeNodeMapping) {
+    turbine_data->blade_nodes_to_blade_num_mapping.pop_back();
+    EXPECT_THROW(turbine_data->Validate(), std::runtime_error);
+}
+
+TEST_F(TurbineDataValidationTest, MismatchNodeIndices) {
+    turbine_data->node_indices_by_blade.pop_back();
+    EXPECT_THROW(turbine_data->Validate(), std::runtime_error);
+}
+
+TEST_F(TurbineDataValidationTest, MismatchTotalBladeNodes) {
+    turbine_data->blade_nodes.n_mesh_points = 5;  // Should be 6
+    EXPECT_THROW(turbine_data->Validate(), std::runtime_error);
+}
+
+TEST_F(TurbineDataValidationTest, InvalidHubMeshPoints) {
+    turbine_data->hub.n_mesh_points = 2;  // Should be 1
+    EXPECT_THROW(turbine_data->Validate(), std::runtime_error);
+}
+
+TEST_F(TurbineDataValidationTest, InvalidNacelleMeshPoints) {
+    turbine_data->nacelle.n_mesh_points = 0;  // Should be 1
+    EXPECT_THROW(turbine_data->Validate(), std::runtime_error);
 }
 
 TEST(AerodynInflowTest, SimulationControls_Default) {
