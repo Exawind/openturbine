@@ -621,8 +621,10 @@ public:
             );
 
         // Convert bool -> int to pass to the Fortran routine
-        int32_t aerodyn_input_is_passed = sim_controls_.is_aerodyn_input_path ? 1 : 0;
-        int32_t inflowwind_input_is_passed = sim_controls_.is_inflowwind_input_path ? 1 : 0;
+        int32_t is_aerodyn_input_passed_as_string =
+            sim_controls_.is_aerodyn_input_path ? 0 : 1;  // reverse of is_aerodyn_input_path
+        int32_t is_inflowwind_input_passed_as_string =
+            sim_controls_.is_inflowwind_input_path ? 0 : 1;  // reverse of is_inflowwind_input_path
         int32_t store_HH_wind_speed_int = sim_controls_.store_HH_wind_speed ? 1 : 0;
         int32_t write_vtk_int = vtk_settings_.write_vtk ? 1 : 0;
 
@@ -635,10 +637,10 @@ public:
             static_cast<int32_t>(sim_controls_.inflowwind_input.size());
 
         ADI_C_Init(
-            &aerodyn_input_is_passed,                     // input: AD input is passed
+            &is_aerodyn_input_passed_as_string,           // input: AD input is passed
             &aerodyn_input_pointer,                       // input: AD input file as string
             &aerodyn_input_length,                        // input: AD input file string length
-            &inflowwind_input_is_passed,                  // input: IfW input is passed
+            &is_inflowwind_input_passed_as_string,        // input: IfW input is passed
             &inflowwind_input_pointer,                    // input: IfW input file as string
             &inflowwind_input_length,                     // input: IfW input file string length
             sim_controls_.output_root_name.c_str(),       // input: rootname for ADI file writing

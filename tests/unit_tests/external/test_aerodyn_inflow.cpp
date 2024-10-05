@@ -536,12 +536,16 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
     EXPECT_EQ(aerodyn_inflow_library.GetVTKSettings().write_vtk, 0);
 }
 
-/* TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
+TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
+    const std::filesystem::path project_root = FindProjectRoot();
+    std::filesystem::path input_path = project_root / "tests/unit_tests/external/";
+
     // Set up simulation parameters
     util::SimulationControls sim_controls{
         .is_aerodyn_input_path = true,
         .is_inflowwind_input_path = true,
-
+        .aerodyn_input = (input_path / "ad_primary.dat").string(),
+        .inflowwind_input = (input_path / "ifw_primary.dat").string(),
         .time_step = 0.0125,
         .max_time = 10.0,
         .interpolation_order = 2,
@@ -617,6 +621,6 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
 
     // End simulation
     EXPECT_NO_THROW(aerodyn_inflow_library.Finalize());
-} */
+}
 
 }  // namespace openturbine::tests
