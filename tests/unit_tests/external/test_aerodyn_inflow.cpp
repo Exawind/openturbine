@@ -368,6 +368,64 @@ TEST_F(TurbineDataValidationTest, InvalidNacelleMeshPoints) {
     EXPECT_THROW(turbine_data->Validate(), std::runtime_error);
 }
 
+TEST(AerodynInflowTest, TurbineData_SetBladeNodeValues) {
+    // Set up 3 blades with 2 nodes each
+    std::vector<util::TurbineConfig::BladeInitialState> blade_states;
+    for (size_t i = 0; i < 3; ++i) {
+        util::TurbineConfig::BladeInitialState blade_state(
+            {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
+            {
+                {0., 5., 90., 1., 0., 0., 0.},  // node_initial_positions - 1
+                {0., 10., 90., 1., 0., 0., 0.}  // node_initial_positions - 2
+            }
+        );
+        blade_states.push_back(blade_state);
+    }
+    util::TurbineConfig tc(
+        true,                           // is_horizontal_axis
+        {0.f, 0.f, 0.f},                // reference_position
+        {0., 0., 90., 1., 0., 0., 0.},  // hub_initial_position
+        {0., 0., 90., 1., 0., 0., 0.},  // nacelle_initial_position
+        blade_states
+    );
+
+    util::TurbineData turbine_data(tc);
+
+    // Verify the current values for the first blade and node
+    size_t blade_number = 1;
+    size_t node_number = 0;
+    size_t node_index = turbine_data.node_indices_by_blade[blade_number][node_number];
+    ExpectArrayNear(turbine_data.blade_nodes.position[node_index], {0.f, 5.f, 90.f});
+    ExpectArrayNear(
+        turbine_data.blade_nodes.orientation[node_index], {1., 0., 0., 0., 1., 0., 0., 0., 1.}
+    );
+    ExpectArrayNear(turbine_data.blade_nodes.velocity[node_index], {0.f, 0.f, 0.f, 0.f, 0.f, 0.f});
+    ExpectArrayNear(
+        turbine_data.blade_nodes.acceleration[node_index], {0.f, 0.f, 0.f, 0.f, 0.f, 0.f}
+    );
+    ExpectArrayNear(turbine_data.blade_nodes.loads[node_index], {0.f, 0.f, 0.f, 0.f, 0.f, 0.f});
+
+    // Define new values for the node
+    std::array<float, 3> new_position = {1.f, 2.f, 3.f};
+    std::array<double, 9> new_orientation = {1., 0., 0., 0., 1., 0., 0., 0., 1.};
+    std::array<float, 6> new_velocity = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
+    std::array<float, 6> new_acceleration = {7.f, 8.f, 9.f, 10.f, 11.f, 12.f};
+    std::array<float, 6> new_loads = {13.f, 14.f, 15.f, 16.f, 17.f, 18.f};
+
+    // Call the method to set new values
+    turbine_data.SetBladeNodeValues(
+        blade_number, node_number, new_position, new_orientation, new_velocity, new_acceleration,
+        new_loads
+    );
+
+    // Verify that the values were set correctly
+    ExpectArrayNear(turbine_data.blade_nodes.position[node_index], new_position);
+    ExpectArrayNear(turbine_data.blade_nodes.orientation[node_index], new_orientation);
+    ExpectArrayNear(turbine_data.blade_nodes.velocity[node_index], new_velocity);
+    ExpectArrayNear(turbine_data.blade_nodes.acceleration[node_index], new_acceleration);
+    ExpectArrayNear(turbine_data.blade_nodes.loads[node_index], new_loads);
+}
+
 TEST(AerodynInflowTest, SimulationControls_Default) {
     util::SimulationControls simulation_controls;
     EXPECT_EQ(simulation_controls.is_aerodyn_input_path, true);
@@ -481,14 +539,15 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
 /* TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
     // Set up simulation parameters
     util::SimulationControls sim_controls{
-        .is_aerodyn_input_path = false,
-        .is_inflowwind_input_path = false,
+        .is_aerodyn_input_path = true,
+        .is_inflowwind_input_path = true,
+
         .time_step = 0.0125,
         .max_time = 10.0,
         .interpolation_order = 2,
         .store_HH_wind_speed = false,
-        .transpose_DCM = 1,
-        .debug_level = 1,
+        .transpose_DCM = true,
+        .debug_level = static_cast<int>(util::SimulationControls::DebugLevel::kSummary),
         .output_format = 0,
         .output_time_step = 0.1};
 
@@ -502,60 +561,55 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
         .sound_speed = 335.0f,
         .vapor_pressure = 1700.0f};
 
-    // Set up turbine settings
-    std::array<double, 7> hub_data = {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0};
-    std::array<double, 7> nacelle_data = {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0};
-    std::vector<std::array<double, 7>> root_data(3, {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0});
-
-    util::TurbineSettings turbine_settings(hub_data, nacelle_data, root_data, 1, 3);
-
     // Set up VTK settings
     util::VTKSettings vtk_settings{};
+
+    // Set up turbine configuration
+    std::array<double, 7> hub_pos = {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0};
+    std::array<double, 7> nacelle_pos = {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0};
+    std::vector<util::TurbineConfig::BladeInitialState> blade_states;
+    for (int i = 0; i < 3; ++i) {
+        util::TurbineConfig::BladeInitialState blade_state(
+            {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
+            {
+                {0., 5., 90., 1., 0., 0., 0.},   // node_initial_positions - 1
+                {0., 10., 90., 1., 0., 0., 0.},  // node_initial_positions - 2
+            }
+        );
+        blade_states.push_back(blade_state);
+    }
+    util::TurbineConfig turbine_config(
+        true,             // is_horizontal_axis
+        {0.f, 0.f, 0.f},  // reference_position
+        hub_pos,          // hub_initial_position
+        nacelle_pos,      // nacelle_initial_position
+        blade_states
+    );
 
     // Load the shared library and initialize AeroDynInflowLibrary
     const std::string path = GetSharedLibraryPath();
     util::AeroDynInflowLibrary aerodyn_inflow_library(
-        path, util::ErrorHandling{}, fluid_props, env_conditions, turbine_settings,
-        util::StructuralMesh{}, sim_controls, vtk_settings
+        path, util::ErrorHandling{}, fluid_props, env_conditions, sim_controls, vtk_settings
     );
 
-    // Pre-initialize and setup rotor
-    EXPECT_NO_THROW(aerodyn_inflow_library.PreInitialize());
-    EXPECT_NO_THROW(aerodyn_inflow_library.SetupRotor(1, true, {0.0f, 0.0f, 0.0f}));
-
-    // Initialize with input files
-    const std::filesystem::path project_root = FindProjectRoot();
-    std::filesystem::path input_path = project_root / "tests/unit_tests/external/";
-    std::vector<std::string> adiAD_input_string_array = {(input_path / "ad_primary.dat").string()};
-    std::vector<std::string> adiIfW_input_string_array = {(input_path / "ifw_primary.dat").string()};
-
-    EXPECT_NO_THROW(
-        aerodyn_inflow_library.Initialize(adiAD_input_string_array, adiIfW_input_string_array)
-    );
-
-    // Set up motion data for hub, nacelle, root, and mesh
-    util::MeshData hub_motion{1};
-    util::MeshData nacelle_motion{1};
-    util::MeshData root_motion{3};
-    util::MeshData mesh_motion{1};
-
-    // Set up rotor motion
-    EXPECT_NO_THROW(aerodyn_inflow_library.SetupRotorMotion(
-        1, hub_motion, nacelle_motion, root_motion, mesh_motion
-    ));
+    // Initialize with turbine configuration
+    std::vector<util::TurbineConfig> turbine_configs = {turbine_config};
+    EXPECT_NO_THROW(aerodyn_inflow_library.Initialize(turbine_configs));
 
     // Simulate for a few time steps
     double current_time = 0.0;
     double next_time = sim_controls.time_step;
     std::vector<float> output_channel_values;
-    std::vector<std::array<float, 6>> mesh_force_moment(1);  // Assuming 1 mesh point
 
     for (int i = 0; i < 10; ++i) {
+        // Update motion data for each time step (if needed)
+        EXPECT_NO_THROW(aerodyn_inflow_library.SetupRotorMotion());
+
         EXPECT_NO_THROW(aerodyn_inflow_library.UpdateStates(current_time, next_time));
         EXPECT_NO_THROW(
             aerodyn_inflow_library.CalculateOutputChannels(next_time, output_channel_values)
         );
-        EXPECT_NO_THROW(aerodyn_inflow_library.GetRotorAerodynamicLoads(1, mesh_force_moment));
+        EXPECT_NO_THROW(aerodyn_inflow_library.GetRotorAerodynamicLoads());
 
         current_time = next_time;
         next_time += sim_controls.time_step;

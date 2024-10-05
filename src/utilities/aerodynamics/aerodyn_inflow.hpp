@@ -206,11 +206,6 @@ struct MeshData {
           velocity(std::move(velocities)),
           acceleration(std::move(accelerations)),
           loads(std::move(loads)) {
-        if (mesh_data.size() != n_mesh_points || velocities.size() != n_mesh_points ||
-            accelerations.size() != n_mesh_points || loads.size() != n_mesh_points) {
-            throw std::invalid_argument("Input vector sizes must match n_mesh_points");
-        }
-
         // Set mesh position and orientation
         for (size_t i = 0; i < n_mesh_points; ++i) {
             SetPositionAndOrientation(mesh_data[i], position[i], orientation[i]);
@@ -219,7 +214,6 @@ struct MeshData {
         Validate();
     }
 
-    /// Validate the consistency and validity of the mesh data
     void Validate() const {
         if (n_mesh_points <= 0) {
             throw std::invalid_argument("Number of mesh points must be at least 1");
@@ -227,25 +221,18 @@ struct MeshData {
 
         const size_t expected_size = static_cast<size_t>(n_mesh_points);
 
-        if (position.size() != expected_size) {
-            throw std::invalid_argument("Position vector size does not match n_mesh_points");
-        }
+        auto check_vector_size = [](const auto& vec, size_t expected_size,
+                                    const std::string& vec_name) {
+            if (vec.size() != expected_size) {
+                throw std::invalid_argument(vec_name + " vector size does not match n_mesh_points");
+            }
+        };
 
-        if (orientation.size() != expected_size) {
-            throw std::invalid_argument("Orientation vector size does not match n_mesh_points");
-        }
-
-        if (velocity.size() != expected_size) {
-            throw std::invalid_argument("Velocity vector size does not match n_mesh_points");
-        }
-
-        if (acceleration.size() != expected_size) {
-            throw std::invalid_argument("Acceleration vector size does not match n_mesh_points");
-        }
-
-        if (loads.size() != expected_size) {
-            throw std::invalid_argument("Loads vector size does not match n_mesh_points");
-        }
+        check_vector_size(position, expected_size, "Position");
+        check_vector_size(orientation, expected_size, "Orientation");
+        check_vector_size(velocity, expected_size, "Velocity");
+        check_vector_size(acceleration, expected_size, "Acceleration");
+        check_vector_size(loads, expected_size, "Loads");
     }
 };
 
@@ -253,7 +240,8 @@ struct MeshData {
  * @brief Struct to hold turbine-specific data
  *
  * @details This struct contains data for a single turbine, including the number of blades,
- * mesh data for various components, and blade node mappings.
+ * mesh data for various components (hub, nacelle, blade roots, blade nodes), and blade node
+ * mappings.
  */
 struct TurbineData {
     int32_t n_blades;      //< Number of blades
@@ -322,6 +310,40 @@ struct TurbineData {
         if (hub.n_mesh_points != 1 || nacelle.n_mesh_points != 1) {
             throw std::runtime_error("Hub and nacelle should have exactly one mesh point each.");
         }
+    }
+
+    /**
+     * @brief Sets the blade node values based on blade number and node number.
+     *
+     * This method updates the blade node values in the mesh based on the provided blade number and
+     * node number. It simplifies the process of updating blade node values by abstracting away the
+     * indexing logic.
+     *
+     * @param blade_number The number of the blade to update.
+     * @param node_number The number of the node to update within the specified blade.
+     * @param position The new position of the node [x, y, z]
+     * @param orientation The new orientation of the node [r11, r12, ..., r33]
+     * @param velocity The new velocity of the node [u, v, w, p, q, r]
+     * @param acceleration The new acceleration of the node [u_dot, v_dot, w_dot, p_dot, q_dot,
+     * r_dot]
+     * @param loads The new loads on the node [Fx, Fy, Fz, Mx, My, Mz]
+     */
+    void SetBladeNodeValues(
+        size_t blade_number, size_t node_number, const std::array<float, 3>& position,
+        const std::array<double, 9>& orientation, const std::array<float, 6>& velocity,
+        const std::array<float, 6>& acceleration, const std::array<float, 6>& loads
+    ) {
+        if (blade_number >= static_cast<size_t>(n_blades) ||
+            node_number >= node_indices_by_blade[blade_number].size()) {
+            throw std::out_of_range("Blade or node number out of range.");
+        }
+
+        size_t node_index = node_indices_by_blade[blade_number][node_number];
+        blade_nodes.position[node_index] = position;
+        blade_nodes.orientation[node_index] = orientation;
+        blade_nodes.velocity[node_index] = velocity;
+        blade_nodes.acceleration[node_index] = acceleration;
+        blade_nodes.loads[node_index] = loads;
     }
 
 private:
