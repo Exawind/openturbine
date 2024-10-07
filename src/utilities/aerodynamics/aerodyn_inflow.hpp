@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <numeric>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -11,170 +12,31 @@
 namespace openturbine::util {
 
 /**
- * AeroDynInflowLibrary: A C++ wrapper for the AeroDyn/InflowWind (ADI) shared library
+ * AeroDynInflowLibrary: C++ wrapper for the AeroDyn/InflowWind (ADI) shared library
  *
- * ## Overview
+ * Provides a modern C++ interface to AeroDyn x InflowWind functionality, encapsulating
+ * the C-bindings of the Fortran library.
  *
- * This wrapper simplifies interaction with the ADI library, providing a modern C++ interface for
- * OpenTurbine developers to utilize AeroDyn and InflowWind functionality. It encapsulates the
- * C-bindings of the Fortran library, drawing inspiration from the existing Python
- * interface.
+ * Key Features:
+ * - AeroDyn: Blade element momentum (BEM) theory for aerodynamic force calculations
+ *   (dynamic stall, unsteady aerodynamics, tower shadow, wind shear, tip/hub losses)
+ * - InflowWind: Simulates complex inflow conditions (turbulence, wind shear, gusts)
  *
- * ## Features
+ * Usage:
+ * 1. Instantiate AeroDynInflowLibrary with shared library path
+ * 2. Initialize: PreInitialize() -> SetupRotor() -> Initialize()
+ * 3. Simulate: SetupRotorMotion() -> UpdateStates() -> CalculateOutputChannels() ->
+ *              GetRotorAerodynamicLoads()
+ * 4. Finalize() and handle errors
  *
- * AeroDyn utilizes blade element momentum (BEM) theory to calculate aerodynamic forces acting
- * on each blade section. It accounts for factors such as:
- *  - Dynamic stall (Beddoes-Leishman or OLAF models)
- *  - Unsteady aerodynamics
- *  - Tower shadow effects
- *  - Wind shear
- *  - Tip and hub losses
+ * See unit tests for detailed usage examples.
  *
- * InflowWind simulates the inflow conditions around wind turbines by modeling spatially and
- * temporally varying wind fields. It enables the simulation of complex wind phenomena, including:
- *  - Atmospheric turbulence (e.g., Kaimal, von Karman spectra)
- *  - Wind shear (power law or logarithmic profiles)
- *  - Discrete gusts and extreme events
- *  - Various wind field types (uniform, full-field turbulence, user-defined)
- *
- * ## Usage
- *
- * 1. Instantiate the AeroDynInflowLibrary class with the path to the shared library
- * 2. Initialize the AeroDyn/InflowWind modules:
- *    - PreInitialize(): Set up general parameters
- *    - SetupRotor(): Configure rotor-specific settings (iterate over turbines)
- *    - Initialize(): Complete initialization with input files
- * 3. Perform the simulation by iterating over timesteps:
- *    - SetupRotorMotion(): Update rotor motion (iterate over turbines)
- *    - UpdateStates(): Advance internal states
- *    - CalculateOutputChannels(): Compute output values
- *    - GetRotorAerodynamicLoads(): Retrieve aerodynamic forces and moments
- * 4. Complete the simulation:
- *    - Finalize(): Clean up and release resources
- *    - Handle any resulting errors using the ErrorHandling struct
- *
- * Note: Refer to the unit tests for more detailed examples of how to use this wrapper.
- *
- * ## References
- *
- * - OpenFAST/AeroDyn documentation:
- *   https://openfast.readthedocs.io/en/main/source/user/aerodyn/index.html
- * - OpenFAST/InflowWind documentation:
- *   https://openfast.readthedocs.io/en/main/source/user/inflowwind/index.html
- * - AeroDyn InflowWind C bindings:
- *   https://github.com/OpenFAST/openfast/blob/dev/modules/aerodyn/src/AeroDyn_Inflow_C_Binding.f90
+ * References:
+ * - OpenFAST/AeroDyn: https://openfast.readthedocs.io/en/main/source/user/aerodyn/index.html
+ * - OpenFAST/InflowWind: https://openfast.readthedocs.io/en/main/source/user/inflowwind/index.html
+ * - C bindings:
+ * https://github.com/OpenFAST/openfast/blob/dev/modules/aerodyn/src/AeroDyn_Inflow_C_Binding.f90
  */
-
-/**
- * @brief Converts a 7-element array of position and quaternion to separate position and orientation
- * arrays
- * @param data Input array: [x, y, z, qw, qx, qy, qz]
- * @param position Output array for position [x, y, z]
- * @param orientation Output array for flattened 3x3 rotation matrix
- */
-inline void SetPositionAndOrientation(
-    const std::array<double, 7>& data, std::array<float, 3>& position,
-    std::array<double, 9>& orientation
-) {
-    // Set position (first 3 elements)
-    for (size_t i = 0; i < 3; ++i) {
-        position[i] = static_cast<float>(data[i]);
-    }
-
-    // Set orientation (convert last 4 elements to 3x3 rotation matrix)
-    auto orientation_2D = QuaternionToRotationMatrix({data[3], data[4], data[5], data[6]});
-
-    // Flatten the 3x3 matrix to a 1D array
-    std::copy(&orientation_2D[0][0], &orientation_2D[0][0] + 9, orientation.begin());
-}
-
-/**
- * @brief Struct to hold the motion data of any structural mesh component
- *
- * @details This struct holds the motion data (i.e. position, orientation,
- * velocity, and acceleration) of the structural mesh, which can be the hub, nacelle, root, or
- * mesh points/nodes.
- */
-struct MeshData {
-    int n_mesh_points;
-    std::vector<std::array<float, 3>> position;
-    std::vector<std::array<double, 9>> orientation;
-    std::vector<std::array<float, 6>> velocity;
-    std::vector<std::array<float, 6>> acceleration;
-    std::vector<std::array<float, 6>> loads;
-
-    /// Default constructor
-    MeshData() = default;
-
-    /// Constructor to initialize all data based on provided inputs
-    MeshData(size_t n_nodes)
-        : n_mesh_points(static_cast<int>(n_nodes)),
-          position(std::vector<std::array<float, 3>>(n_nodes, {0., 0., 0.})),
-          orientation(
-              std::vector<std::array<double, 9>>(n_nodes, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
-          ),
-          velocity(std::vector<std::array<float, 6>>(n_nodes, {0., 0., 0., 0., 0., 0.})),
-          acceleration(std::vector<std::array<float, 6>>(n_nodes, {0., 0., 0., 0., 0., 0.})),
-          loads(std::vector<std::array<float, 6>>(n_nodes, {0., 0., 0., 0., 0., 0.})) {}
-};
-
-struct TurbineConfig {
-    struct BladeConfig {
-        Array_7 root_initial_pos;
-        std::vector<Array_7> node_initial_pos;
-    };
-    std::array<float, 3> reference_pos{0., 0., 0.};
-    Array_7 hub_initial_pos;
-    Array_7 nacelle_initial_pos;
-    std::vector<BladeConfig> blades;
-    bool is_horizontal_axis{true};
-};
-
-struct TurbineData {
-    int32_t n_blades;
-    MeshData hub;
-    MeshData nacelle;
-    MeshData blade_roots;
-    MeshData blade_nodes;
-    std::vector<int32_t> blade_nodes_to_blade_num;
-    std::vector<std::vector<size_t>> blade_node_index;
-
-    TurbineData(const TurbineConfig& tc)
-        : n_blades(static_cast<int32_t>(tc.blades.size())),
-          hub(1),
-          nacelle(1),
-          blade_roots(tc.blades.size()),
-          blade_nodes(std::accumulate(
-              tc.blades.begin(), tc.blades.end(), 0U,
-              [](size_t sum, const TurbineConfig::BladeConfig& bc) {
-                  return sum + bc.node_initial_pos.size();
-              }
-          )),
-          blade_node_index(std::vector<std::vector<size_t>>(tc.blades.size(), std::vector<size_t>{})
-          ) {
-        SetPositionAndOrientation(tc.hub_initial_pos, hub.position[0], hub.orientation[0]);
-        SetPositionAndOrientation(
-            tc.nacelle_initial_pos, nacelle.position[0], nacelle.orientation[0]
-        );
-
-        size_t i_blade{0};
-        size_t i_node{0};
-        for (const auto& bc : tc.blades) {
-            SetPositionAndOrientation(
-                bc.root_initial_pos, blade_roots.position[i_blade], blade_roots.orientation[i_blade]
-            );
-            for (const auto& bn : bc.node_initial_pos) {
-                SetPositionAndOrientation(
-                    bn, blade_nodes.position[i_node], blade_nodes.orientation[i_node]
-                );
-                blade_node_index.back().emplace_back(i_node);
-                blade_nodes_to_blade_num.emplace_back(static_cast<int>(i_blade + 1));
-                ++i_node;
-            }
-            ++i_blade;
-        }
-    }
-};
 
 /**
  * @brief Struct for error handling settings
@@ -225,19 +87,334 @@ struct EnvironmentalConditions {
 };
 
 /**
+ * @brief Configuration for the initial state of a turbine
+ *
+ * This struct encapsulates the initial configuration data for a wind turbine,
+ * including its type, reference position, and initial positions of key components
+ * in 7x1 arrays [x, y, z, qw, qx, qy, qz]
+ */
+struct TurbineConfig {
+    /**
+     * @brief Initial state for a single blade of a turbine
+     *
+     * Stores the initial positions of a blade's root and nodes.
+     */
+    struct BladeInitialState {
+        Array_7 root_initial_position;                //< Initial root position of the blade
+        std::vector<Array_7> node_initial_positions;  //< Initial node positions of the blade
+
+        BladeInitialState(const Array_7& root, const std::vector<Array_7>& nodes)
+            : root_initial_position(root), node_initial_positions(nodes) {}
+    };
+
+    bool is_horizontal_axis{true};                           //< Is a horizontal axis turbine?
+    std::array<float, 3> reference_position{0.f, 0.f, 0.f};  //< Reference position of the turbine
+    Array_7 hub_initial_position;                            //< Initial hub position
+    Array_7 nacelle_initial_position;                        //< Initial nacelle position
+    std::vector<BladeInitialState>
+        blade_initial_states;  //< Initial root and node positions of blades
+
+    TurbineConfig(
+        bool is_hawt, std::array<float, 3> ref_pos, Array_7 hub_pos, Array_7 nacelle_pos,
+        std::vector<BladeInitialState> blade_states
+    )
+        : is_horizontal_axis(is_hawt),
+          reference_position(std::move(ref_pos)),
+          hub_initial_position(std::move(hub_pos)),
+          nacelle_initial_position(std::move(nacelle_pos)),
+          blade_initial_states(std::move(blade_states)) {
+        Validate();
+    }
+
+    void Validate() const {
+        if (blade_initial_states.empty()) {
+            throw std::runtime_error("No blades defined. At least one blade is required.");
+        }
+
+        for (const auto& blade : blade_initial_states) {
+            if (blade.node_initial_positions.empty()) {
+                throw std::runtime_error(
+                    "No nodes defined for a blade. At least one node is required."
+                );
+            }
+        }
+    }
+};
+
+/**
+ * @brief Converts a 7-element array of position and quaternion to separate position and orientation
+ * arrays
+ * @param data Input array: [x, y, z, qw, qx, qy, qz]
+ * @param position Output array for position [x, y, z]
+ * @param orientation Output array for flattened 3x3 rotation matrix
+ */
+inline void SetPositionAndOrientation(
+    const std::array<double, 7>& data, std::array<float, 3>& position,
+    std::array<double, 9>& orientation
+) {
+    // Set position (first 3 elements)
+    for (size_t i = 0; i < 3; ++i) {
+        position[i] = static_cast<float>(data[i]);
+    }
+
+    // Set orientation (convert last 4 elements i.e. quaternion to 3x3 rotation matrix)
+    auto orientation_2D = QuaternionToRotationMatrix({data[3], data[4], data[5], data[6]});
+
+    // Flatten the 3x3 matrix to a 1D array
+    std::copy(&orientation_2D[0][0], &orientation_2D[0][0] + 9, orientation.begin());
+}
+
+/**
+ * @brief Struct to hold the motion + loads data of any structural mesh component
+ *
+ * @details This struct holds the motion data (i.e. position, orientation,
+ * velocity, and acceleration) and loads of the structural mesh, which can be
+ * the hub, nacelle, root, or mesh points/nodes
+ */
+struct MeshData {
+    int32_t n_mesh_points;                           //< Number of mesh points (nodes)
+    std::vector<std::array<float, 3>> position;      //< N x 3 array [x, y, z]
+    std::vector<std::array<double, 9>> orientation;  //< N x 9 array [r11, r12, ..., r33]
+    std::vector<std::array<float, 6>> velocity;      //< N x 6 array [u, v, w, p, q, r]
+    std::vector<std::array<float, 6>>
+        acceleration;  //< N x 6 array [u_dot, v_dot, w_dot, p_dot, q_dot, r_dot]
+    std::vector<std::array<float, 6>> loads;  //< N x 6 array [Fx, Fy, Fz, Mx, My, Mz]
+
+    /// Constructor to initialize all mesh data to zero based on provided number of nodes
+    MeshData(size_t n_nodes)
+        : n_mesh_points(static_cast<int32_t>(n_nodes)),
+          position(std::vector<std::array<float, 3>>(n_nodes, {0.f, 0.f, 0.f})),
+          orientation(
+              std::vector<std::array<double, 9>>(n_nodes, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
+          ),
+          velocity(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})),
+          acceleration(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})),
+          loads(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})) {}
+
+    /// Constructor to initialize all mesh data based on provided inputs
+    MeshData(
+        size_t n_mesh_points, const std::vector<std::array<double, 7>>& mesh_data,
+        const std::vector<std::array<float, 6>>& velocities,
+        const std::vector<std::array<float, 6>>& accelerations,
+        const std::vector<std::array<float, 6>>& loads
+    )
+        : n_mesh_points(static_cast<int32_t>(n_mesh_points)),
+          position(std::vector<std::array<float, 3>>(n_mesh_points, {0.f, 0.f, 0.f})),
+          orientation(
+              std::vector<std::array<double, 9>>(n_mesh_points, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
+          ),
+          velocity(std::move(velocities)),
+          acceleration(std::move(accelerations)),
+          loads(std::move(loads)) {
+        // Set mesh position and orientation
+        for (size_t i = 0; i < n_mesh_points; ++i) {
+            SetPositionAndOrientation(mesh_data[i], position[i], orientation[i]);
+        }
+
+        Validate();
+    }
+
+    void Validate() const {
+        if (n_mesh_points <= 0) {
+            throw std::invalid_argument("Number of mesh points must be at least 1");
+        }
+
+        const size_t expected_size = static_cast<size_t>(n_mesh_points);
+
+        auto check_vector_size = [](const auto& vec, size_t expected_size,
+                                    const std::string& vec_name) {
+            if (vec.size() != expected_size) {
+                throw std::invalid_argument(vec_name + " vector size does not match n_mesh_points");
+            }
+        };
+
+        check_vector_size(position, expected_size, "Position");
+        check_vector_size(orientation, expected_size, "Orientation");
+        check_vector_size(velocity, expected_size, "Velocity");
+        check_vector_size(acceleration, expected_size, "Acceleration");
+        check_vector_size(loads, expected_size, "Loads");
+    }
+};
+
+/**
+ * @brief Struct to hold turbine-specific data
+ *
+ * @details This struct contains data for a single turbine, including the number of blades,
+ * mesh data for various components (hub, nacelle, blade roots, blade nodes), and blade node
+ * mappings.
+ */
+struct TurbineData {
+    int32_t n_blades;      //< Number of blades
+    MeshData hub;          //< Hub data (1 point)
+    MeshData nacelle;      //< Nacelle data (1 point)
+    MeshData blade_roots;  //< Blade roots data (n_blades points)
+    MeshData blade_nodes;  //< Blade nodes data (sum of nodes per blade)
+    /**
+     * @brief Mapping of blade nodes to blade numbers (1D array)
+     *
+     * This vector stores the blade number (1-based index) for each blade node.
+     * It allows quick lookup of which blade a particular node belongs to.
+     * The size of this vector is equal to the total number of blade nodes across all blades.
+     */
+    std::vector<int32_t> blade_nodes_to_blade_num_mapping;
+
+    /**
+     * @brief Unique indices of nodes for each blade (2D array)
+     *
+     * This is a vector of vectors where each inner vector contains the unique indices of nodes
+     * belonging to a specific blade. The outer vector's size is equal to the number of blades,
+     * and each inner vector's size is equal to the number of nodes on that blade.
+     * This structure allows quick access to all nodes of a particular blade.
+     */
+    std::vector<std::vector<size_t>> node_indices_by_blade;
+
+    TurbineData(const TurbineConfig& tc)
+        : n_blades(static_cast<int32_t>(tc.blade_initial_states.size())),
+          hub(1),
+          nacelle(1),
+          blade_roots(tc.blade_initial_states.size()),
+          blade_nodes(CalculateTotalBladeNodes(tc)),
+          node_indices_by_blade(tc.blade_initial_states.size()) {
+        InitializeHubAndNacelle(tc);
+        InitializeBlades(tc);
+        Validate();
+    }
+
+    void Validate() const {
+        if (n_blades < 1) {
+            throw std::runtime_error("Invalid number of blades. Must be at least 1.");
+        }
+
+        if (blade_roots.n_mesh_points != n_blades) {
+            throw std::runtime_error("Number of blade roots does not match number of blades.");
+        }
+
+        if (blade_nodes_to_blade_num_mapping.size() !=
+            static_cast<size_t>(blade_nodes.n_mesh_points)) {
+            throw std::runtime_error("Blade node to blade number mapping size mismatch.");
+        }
+
+        if (node_indices_by_blade.size() != static_cast<size_t>(n_blades)) {
+            throw std::runtime_error("Node indices by blade size mismatch.");
+        }
+
+        size_t total_nodes = 0;
+        for (const auto& bn : node_indices_by_blade) {
+            total_nodes += bn.size();
+        }
+        if (total_nodes != static_cast<size_t>(blade_nodes.n_mesh_points)) {
+            throw std::runtime_error("Total number of blade nodes mismatch.");
+        }
+
+        // Validate hub and nacelle data
+        if (hub.n_mesh_points != 1 || nacelle.n_mesh_points != 1) {
+            throw std::runtime_error("Hub and nacelle should have exactly one mesh point each.");
+        }
+    }
+
+    /**
+     * @brief Sets the blade node values based on blade number and node number.
+     *
+     * This method updates the blade node values in the mesh based on the provided blade number and
+     * node number. It simplifies the process of updating blade node values by abstracting away the
+     * indexing logic.
+     *
+     * @param blade_number The number of the blade to update.
+     * @param node_number The number of the node to update within the specified blade.
+     * @param position The new position of the node [x, y, z]
+     * @param orientation The new orientation of the node [r11, r12, ..., r33]
+     * @param velocity The new velocity of the node [u, v, w, p, q, r]
+     * @param acceleration The new acceleration of the node [u_dot, v_dot, w_dot, p_dot, q_dot,
+     * r_dot]
+     * @param loads The new loads on the node [Fx, Fy, Fz, Mx, My, Mz]
+     */
+    void SetBladeNodeValues(
+        size_t blade_number, size_t node_number, const std::array<float, 3>& position,
+        const std::array<double, 9>& orientation, const std::array<float, 6>& velocity,
+        const std::array<float, 6>& acceleration, const std::array<float, 6>& loads
+    ) {
+        if (blade_number >= static_cast<size_t>(n_blades) ||
+            node_number >= node_indices_by_blade[blade_number].size()) {
+            throw std::out_of_range("Blade or node number out of range.");
+        }
+
+        size_t node_index = node_indices_by_blade[blade_number][node_number];
+        blade_nodes.position[node_index] = position;
+        blade_nodes.orientation[node_index] = orientation;
+        blade_nodes.velocity[node_index] = velocity;
+        blade_nodes.acceleration[node_index] = acceleration;
+        blade_nodes.loads[node_index] = loads;
+    }
+
+private:
+    /// Calculates the total number of blade nodes across all blades
+    static size_t CalculateTotalBladeNodes(const TurbineConfig& tc) {
+        return std::accumulate(
+            tc.blade_initial_states.begin(), tc.blade_initial_states.end(), size_t{0},
+            [](size_t sum, const auto& blade) {
+                return sum + blade.node_initial_positions.size();
+            }
+        );
+    }
+
+    /// Initializes the hub and nacelle positions and orientations
+    void InitializeHubAndNacelle(const TurbineConfig& tc) {
+        SetPositionAndOrientation(tc.hub_initial_position, hub.position[0], hub.orientation[0]);
+        SetPositionAndOrientation(
+            tc.nacelle_initial_position, nacelle.position[0], nacelle.orientation[0]
+        );
+    }
+
+    /// Initializes blade data including roots, nodes, and mappings
+    void InitializeBlades(const TurbineConfig& tc) {
+        size_t i_blade{0};
+        size_t i_node{0};
+
+        // Initialize blade roots and nodes
+        for (const auto& blade : tc.blade_initial_states) {
+            // Initialize blade root
+            SetPositionAndOrientation(
+                blade.root_initial_position, blade_roots.position[i_blade],
+                blade_roots.orientation[i_blade]
+            );
+
+            // Initialize blade nodes
+            for (const auto& node : blade.node_initial_positions) {
+                SetPositionAndOrientation(
+                    node, blade_nodes.position[i_node], blade_nodes.orientation[i_node]
+                );
+                node_indices_by_blade[i_blade].emplace_back(i_node);
+                blade_nodes_to_blade_num_mapping.emplace_back(static_cast<int32_t>(i_blade + 1));
+                ++i_node;
+            }
+            ++i_blade;
+        }
+    }
+};
+
+/**
  * @brief Struct to hold the settings for simulation controls
  *
  * @details This struct holds the settings for simulation controls, including input file
  * handling, interpolation order, time-related variables, and flags.
  */
 struct SimulationControls {
+    /// Debug levels used in AeroDyn-Inflow C bindings
+    enum class DebugLevel {
+        kNone = 0,        //< No debug output
+        kSummary = 1,     //< Some summary info
+        kDetailed = 2,    //< Above + all position/orientation info
+        kInputFiles = 3,  //< Above + input files (if directly passed)
+        kAll = 4,         //< Above + meshes
+    };
+
     static constexpr size_t kDefaultStringLength{1025};  //< Max length for output filenames
 
     // Input file handling
-    std::string aerodyn_input;
-    bool aerodyn_input_is_path{true};
-    std::string inflowwind_input;
-    bool inflowwind_input_is_path{true};
+    bool is_aerodyn_input_path{true};     //< Input file passed for AeroDyn module?
+    bool is_inflowwind_input_path{true};  //< Input file passed for InflowWind module?
+    std::string aerodyn_input;            //< Path to AeroDyn input file
+    std::string inflowwind_input;         //< Path to InflowWind input file
 
     // Interpolation order (must be either 1: linear, or 2: quadratic)
     int interpolation_order{1};  //< Interpolation order - linear by default
@@ -249,7 +426,9 @@ struct SimulationControls {
     int n_time_steps{0};            //< Number of time steps
 
     // Flags
-    int store_HH_wind_speed{1};  //< Flag to store HH wind speed
+    bool store_HH_wind_speed{true};  //< Flag to store HH wind speed
+    bool transpose_DCM{true};        //< Flag to transpose the direction cosine matrix
+    int debug_level{static_cast<int>(DebugLevel::kNone)};  //< Debug level (0-4)
 
     // Outputs
     int output_format{1};                               //< File format for writing outputs
@@ -267,7 +446,7 @@ struct SimulationControls {
  * output, the type of VTK output, and the nacelle dimensions for VTK rendering.
  */
 struct VTKSettings {
-    int write_vtk{false};                       //< Flag to write VTK output
+    bool write_vtk{false};                      //< Flag to write VTK output
     int vtk_type{1};                            //< Type of VTK output (1: surface meshes)
     std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
                                                 -2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f};
@@ -277,103 +456,140 @@ struct VTKSettings {
 /**
  * @brief Wrapper class for the AeroDynInflow (ADI) shared library
  *
- * @details This class provides an interface for interacting with the AeroDynInflow (ADI) shared
- * library, which is a Fortran library offering C bindings for the AeroDyn x InflowWind modules
- * of OpenFAST.
+ * @details This class provides a C++ interface for interacting with the AeroDynInflow (ADI) shared
+ * library, which offers C bindings for the AeroDyn x InflowWind modules of OpenFAST.
+ * It encapsulates key functions for AeroDyn/InflowWind simulation, including initialization,
+ * rotor setup, state updates, and load calculations.
  *
- * The class encapsulates the following key functions:
- *  - PreInitialize (ADI_C_PreInit): Pre-initializes the AeroDynInflow module
- *  - SetupRotor (ADI_C_SetupRotor): Configures rotor-specific parameters before simulation
- *  - Initialize (ADI_C_Init): Initializes the AeroDynInflow module for simulation
- *  - SetupRotorMotion (ADI_C_SetRotorMotion): Sets rotor motion for a given time step
- *  - GetRotorAerodynamicLoads (ADI_C_GetRotorLoads): Retrieves aerodynamic loads on the rotor
- *  - CalculateOutputChannels (ADI_C_CalcOutput): Calculates output channels at a given time
- *  - UpdateStates (ADI_C_UpdateStates): Updates states for the next time step
- *  - Finalize (ADI_C_End): Ends the AeroDynInflow module and frees memory
+ * Key functions:
+ * - Initialize: Set up the simulation environment
+ * - SetupRotorMotion: Update rotor motion for each timestep
+ * - UpdateStates: Advance internal states
+ * - CalculateOutputChannels: Compute output values
+ * - GetRotorAerodynamicLoads: Retrieve aerodynamic forces and moments
+ * - Finalize: Clean up and release resources
+ *
+ * @note This class manages the lifecycle of the ADI library, ensuring proper initialization
+ * and cleanup.
  */
-struct AeroDynInflowLibrary {
-    enum class DebugLevel {
-        None = 0,
-        Basic = 1,
-        Low = 2,
-        Medium = 3,
-        Max = 4,
-    };
-
-    util::dylib lib;
-    ErrorHandling error_handling;            //< Error handling settings
-    FluidProperties air;                     //< Properties of the working fluid (air)
-    EnvironmentalConditions env_conditions;  //< Environmental conditions
-    SimulationControls sim_controls;         //< Simulation control settings
-    VTKSettings vtk_settings;                //< VTK output settings
-
-    std::vector<TurbineData> turbines;
-
-    /// Constructor to initialize AeroDyn Inflow library with default settings and optional path
+class AeroDynInflowLibrary {
+public:
+    /**
+     * @brief Construct a new AeroDynInflowLibrary object
+     *
+     * @param shared_lib_path Path to the ADI shared library
+     * @param eh Error handling settings
+     * @param fp Fluid properties
+     * @param ec Environmental conditions
+     * @param sc Simulation control settings
+     * @param vtk VTK output settings
+     */
     AeroDynInflowLibrary(
-        std::string shared_lib_path = "", SimulationControls sc = SimulationControls{},
-        VTKSettings vtk = VTKSettings{}
+        std::string shared_lib_path = "aerodyn_inflow_c_binding.dll",
+        ErrorHandling eh = ErrorHandling{}, FluidProperties fp = FluidProperties{},
+        EnvironmentalConditions ec = EnvironmentalConditions{},
+        SimulationControls sc = SimulationControls{}, VTKSettings vtk = VTKSettings{}
     )
-        : lib(shared_lib_path, util::dylib::no_filename_decorations),
-          sim_controls(sc),
-          vtk_settings(vtk) {}
+        : lib_{shared_lib_path, util::dylib::no_filename_decorations},
+          error_handling_(std::move(eh)),
+          air_(std::move(fp)),
+          env_conditions_(std::move(ec)),
+          sim_controls_(std::move(sc)),
+          vtk_settings_(std::move(vtk)) {}
 
-    /// Wrapper for ADI_C_PreInit routine to initialize AeroDyn Inflow library
-    void Initialize(
-        std::vector<TurbineConfig> turbine_configs, DebugLevel debug_level = DebugLevel::None,
-        bool transpose_dcm = false
-    ) {
-        //----------------------------------------------------------------------
-        // ADI_C_PreInit
-        //----------------------------------------------------------------------
+    /// Destructor to take care of Fortran-side cleanup if the library is initialized
+    ~AeroDynInflowLibrary() noexcept {
+        try {
+            if (is_initialized_) {
+                Finalize();
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Error during AeroDynInflowLibrary destruction: " << e.what() << std::endl;
+        }
+    }
 
-        auto ADI_C_PreInit =
-            this->lib.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
+    /// Getter methods for the private member variables
+    const ErrorHandling& GetErrorHandling() const { return error_handling_; }
+    const EnvironmentalConditions& GetEnvironmentalConditions() const { return env_conditions_; }
+    const FluidProperties& GetFluidProperties() const { return air_; }
+    const SimulationControls& GetSimulationControls() const { return sim_controls_; }
+    const VTKSettings& GetVTKSettings() const { return vtk_settings_; }
 
-        int32_t debug_level_int{static_cast<int>(debug_level)};
-        int32_t transpose_dcm_int{transpose_dcm ? 1 : 0};
-        int32_t n_turbines{static_cast<int32_t>(turbine_configs.size())};
+    /**
+     * @brief Initialize the AeroDyn Inflow library
+     *
+     * @details Performs a complete initialization of the AeroDyn Inflow library through a
+     * three-step process:
+     * 1. Pre-initialization (ADI_C_PreInit)
+     * 2. Rotor setup (ADI_C_SetupRotor)
+     * 3. Final initialization (ADI_C_Init)
+     *
+     * @param turbine_configs Vector of TurbineConfig objects, each representing a single turbine
+     */
+    void Initialize(std::vector<TurbineConfig> turbine_configs) {
+        PreInitialize(turbine_configs.size());
+        SetupRotors(turbine_configs);
+        FinalizeInitialization();
+        is_initialized_ = true;
+    }
+
+    /**
+     * @brief Performs pre-initialization setup
+     *
+     * @param n_turbines Number of turbines in the simulation
+     */
+    void PreInitialize(size_t n_turbines) {
+        auto ADI_C_PreInit = lib_.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
+
+        // Convert bool and other types to int32_t for Fortran compatibility
+        int32_t debug_level_int = static_cast<int32_t>(sim_controls_.debug_level);
+        int32_t transpose_dcm_int = sim_controls_.transpose_DCM ? 1 : 0;
+        int32_t n_turbines_int = static_cast<int32_t>(n_turbines);
 
         ADI_C_PreInit(
-            &n_turbines,                         // input: Number of turbines
-            &transpose_dcm_int,                  // input: Transpose DCM?
-            &debug_level_int,                    // input: Debug level
-            &error_handling.error_status,        // output: Error status
-            error_handling.error_message.data()  // output: Error message
+            &n_turbines_int,                      // input: Number of turbines
+            &transpose_dcm_int,                   // input: Transpose DCM?
+            &debug_level_int,                     // input: Debug level
+            &error_handling_.error_status,        // output: Error status
+            error_handling_.error_message.data()  // output: Error message
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
+    }
 
-        //----------------------------------------------------------------------
-        // ADI_C_SetupRotor
-        //----------------------------------------------------------------------
-
-        auto ADI_C_SetupRotor = this->lib.get_function<
+    /**
+     * @brief Sets up rotor configurations for all turbines
+     *
+     * @param turbine_configs Vector of turbine configurations
+     */
+    void SetupRotors(const std::vector<TurbineConfig>& turbine_configs) {
+        auto ADI_C_SetupRotor = lib_.get_function<
             void(int*, int*, const float*, float*, double*, float*, double*, int*, float*, double*, int*, float*, double*, int*, int*, char*)>(
             "ADI_C_SetupRotor"
         );
 
-        int32_t turbine_number{0};
-
         // Loop through turbine configurations
+        int32_t turbine_number{0};
         for (const auto& tc : turbine_configs) {
-            // Turbine number (1 is first turbine)
+            // Turbine number is 1 indexed i.e. 1, 2, 3, ...
             ++turbine_number;
 
-            // Get is HAWT as integer
-            int32_t is_horizontal_axis{tc.is_horizontal_axis ? 1 : 0};
+            // Convert bool -> int to pass to the Fortran routine
+            int32_t is_horizontal_axis_int = tc.is_horizontal_axis ? 1 : 0;
+
+            // Validate the turbine config
+            tc.Validate();
 
             // Create new turbine data
-            turbines.emplace_back(TurbineData(tc));
-
-            // Get data
-            auto& td = turbines.back();
+            // Note: TurbineData and MeshData are validated during construction
+            turbines_.emplace_back(TurbineData(tc));
+            auto& td = turbines_.back();
 
             // Call setup rotor for each turbine
             ADI_C_SetupRotor(
                 &turbine_number,                            // input: current turbine number
-                &is_horizontal_axis,                        // input: 1: HAWT, 0: VAWT or cross-flow
-                tc.reference_pos.data(),                    // input: turbine reference position
+                &is_horizontal_axis_int,                    // input: 1: HAWT, 0: VAWT or cross-flow
+                tc.reference_position.data(),               // input: turbine reference position
                 td.hub.position.data()->data(),             // input: initial hub position
                 td.hub.orientation.data()->data(),          // input: initial hub orientation
                 td.nacelle.position.data()->data(),         // input: initial nacelle position
@@ -384,87 +600,98 @@ struct AeroDynInflowLibrary {
                 &td.blade_nodes.n_mesh_points,              // input: number of mesh points
                 td.blade_nodes.position.data()->data(),     // input: initial node positions
                 td.blade_nodes.orientation.data()->data(),  // input: initial node orientation
-                td.blade_nodes_to_blade_num.data(),  // input: blade node to blade number mapping
-                &error_handling.error_status,        // output: Error status
-                error_handling.error_message.data()  // output: Error message buffer
+                td.blade_nodes_to_blade_num_mapping.data(
+                ),                                    // input: blade node to blade number mapping
+                &error_handling_.error_status,        // output: Error status
+                error_handling_.error_message.data()  // output: Error message buffer
             );
 
-            error_handling.CheckError();
+            error_handling_.CheckError();
         }
+    }
 
-        //----------------------------------------------------------------------
-        // ADI_C_Init
-        //----------------------------------------------------------------------
-
+    /**
+     * @brief Finalizes the initialization process
+     */
+    void FinalizeInitialization() {
         auto ADI_C_Init =
-            this->lib.get_function<
+            lib_.get_function<
                 void(int*, char**, int*, int*, char**, int*, const char*, float*, float*, float*, float*, float*, float*, float*, float*, int*, double*, double*, int*, int*, int*, float*, float*, int*, double*, int*, char*, char*, int*, char*)>(
                 "ADI_C_Init"
             );
 
-        // Flatten arrays to pass
-        auto vtk_nacelle_dim_flat = std::array<float, 6>{};
-        std::copy(
-            vtk_settings.vtk_nacelle_dimensions.begin(), vtk_settings.vtk_nacelle_dimensions.end(),
-            vtk_nacelle_dim_flat.begin()
-        );
+        // Convert bool -> int to pass to the Fortran routine
+        int32_t is_aerodyn_input_passed_as_string =
+            sim_controls_.is_aerodyn_input_path ? 0 : 1;  // reverse of is_aerodyn_input_path
+        int32_t is_inflowwind_input_passed_as_string =
+            sim_controls_.is_inflowwind_input_path ? 0 : 1;  // reverse of is_inflowwind_input_path
+        int32_t store_HH_wind_speed_int = sim_controls_.store_HH_wind_speed ? 1 : 0;
+        int32_t write_vtk_int = vtk_settings_.write_vtk ? 1 : 0;
 
-        // Primary input files will be passed as a single string joined by C_NULL_CHAR i.e. '\0'
+        // Primary input file will be passed as path to the file
+        char* aerodyn_input_pointer{sim_controls_.aerodyn_input.data()};
+        int32_t aerodyn_input_length = static_cast<int32_t>(sim_controls_.aerodyn_input.size());
 
-        char* aerodyn_input_pointer{this->sim_controls.aerodyn_input.data()};
-        int32_t aerodyn_input_is_passed = this->sim_controls.aerodyn_input_is_path ? 0 : 1;
-        int32_t aerodyn_input_length = static_cast<int32_t>(this->sim_controls.aerodyn_input.size());
-
-        char* inflowwind_input_pointer{this->sim_controls.inflowwind_input.data()};
-        int32_t inflowwind_input_is_passed = this->sim_controls.inflowwind_input_is_path ? 0 : 1;
+        char* inflowwind_input_pointer{sim_controls_.inflowwind_input.data()};
         int32_t inflowwind_input_length =
-            static_cast<int32_t>(this->sim_controls.inflowwind_input.size());
+            static_cast<int32_t>(sim_controls_.inflowwind_input.size());
 
         ADI_C_Init(
-            &aerodyn_input_is_passed,               // input: AD input is passed
-            &aerodyn_input_pointer,                 // input: AD input file as string
-            &aerodyn_input_length,                  // input: AD input file string length
-            &inflowwind_input_is_passed,            // input: IfW input is passed
-            &inflowwind_input_pointer,              // input: IfW input file as string
-            &inflowwind_input_length,               // input: IfW input file string length
-            sim_controls.output_root_name.c_str(),  // input: rootname for ADI file writing
-            &env_conditions.gravity,                // input: gravity
-            &air.density,                           // input: air density
-            &air.kinematic_viscosity,               // input: kinematic viscosity
-            &air.sound_speed,                       // input: speed of sound
-            &env_conditions.atm_pressure,           // input: atmospheric pressure
-            &air.vapor_pressure,                    // input: vapor pressure
-            &env_conditions.water_depth,            // input: water depth
-            &env_conditions.msl_offset,             // input: MSL to SWL offset
-            &sim_controls.interpolation_order,      // input: interpolation order
-            &sim_controls.time_step,                // input: time step
-            &sim_controls.max_time,                 // input: maximum simulation time
-            &sim_controls.store_HH_wind_speed,      // input: store HH wind speed
-            &vtk_settings.write_vtk,                // input: write VTK output
-            &vtk_settings.vtk_type,                 // input: VTK output type
-            vtk_nacelle_dim_flat.data(),            // input: VTK nacelle dimensions
-            &vtk_settings.vtk_hub_radius,           // input: VTK hub radius
-            &sim_controls.output_format,            // input: output format
-            &sim_controls.output_time_step,         // input: output time step
-            &sim_controls.n_channels,               // output: number of channels
-            sim_controls.channel_names_c.data(),    // output: output channel names
-            sim_controls.channel_units_c.data(),    // output: output channel units
-            &error_handling.error_status,           // output: error status
-            error_handling.error_message.data()     // output: error message buffer
+            &is_aerodyn_input_passed_as_string,           // input: AD input is passed
+            &aerodyn_input_pointer,                       // input: AD input file as string
+            &aerodyn_input_length,                        // input: AD input file string length
+            &is_inflowwind_input_passed_as_string,        // input: IfW input is passed
+            &inflowwind_input_pointer,                    // input: IfW input file as string
+            &inflowwind_input_length,                     // input: IfW input file string length
+            sim_controls_.output_root_name.c_str(),       // input: rootname for ADI file writing
+            &env_conditions_.gravity,                     // input: gravity
+            &air_.density,                                // input: air density
+            &air_.kinematic_viscosity,                    // input: kinematic viscosity
+            &air_.sound_speed,                            // input: speed of sound
+            &env_conditions_.atm_pressure,                // input: atmospheric pressure
+            &air_.vapor_pressure,                         // input: vapor pressure
+            &env_conditions_.water_depth,                 // input: water depth
+            &env_conditions_.msl_offset,                  // input: MSL to SWL offset
+            &sim_controls_.interpolation_order,           // input: interpolation order
+            &sim_controls_.time_step,                     // input: time step
+            &sim_controls_.max_time,                      // input: maximum simulation time
+            &store_HH_wind_speed_int,                     // input: store HH wind speed
+            &write_vtk_int,                               // input: write VTK output
+            &vtk_settings_.vtk_type,                      // input: VTK output type
+            vtk_settings_.vtk_nacelle_dimensions.data(),  // input: VTK nacelle dimensions
+            &vtk_settings_.vtk_hub_radius,                // input: VTK hub radius
+            &sim_controls_.output_format,                 // input: output format
+            &sim_controls_.output_time_step,              // input: output time step
+            &sim_controls_.n_channels,                    // output: number of channels
+            sim_controls_.channel_names_c.data(),         // output: output channel names
+            sim_controls_.channel_units_c.data(),         // output: output channel units
+            &error_handling_.error_status,                // output: error status
+            error_handling_.error_message.data()          // output: error message buffer
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
+        is_initialized_ = true;
     }
 
-    // Wrapper for ADI_C_SetRotorMotion routine to set rotor motion i.e. motion of the hub,
-    // nacelle, root, and mesh points from the structural mesh
-    void SetRotorMotion() {
-        auto ADI_C_SetRotorMotion = this->lib.get_function<void(int*, const float*, const double*, const float*, const float*, const float*, const double*, const float*, const float*, const float*, const double*, const float*, const float*, const int*, const float*, const double*, const float*, const float*, int*, char*)>(
-            "ADI_C_SetRotorMotion"
-        );
+    /**
+     * @brief Set up the rotor motion for the current simulation step
+     *
+     * @details Updates the motion data (position, orientation, velocity, acceleration) for
+     * the hub, nacelle, blade roots, and blade nodes of each turbine.
+     */
+    void SetupRotorMotion() {
+        auto
+            ADI_C_SetRotorMotion =
+                lib_
+                    .get_function<
+                        void(int*, const float*, const double*, const float*, const float*, const float*, const double*, const float*, const float*, const float*, const double*, const float*, const float*, const int*, const float*, const double*, const float*, const float*, int*, char*)>(
+                        "ADI_C_SetRotorMotion"
+                    );
 
+        // Loop through turbines and set the rotor motion
         int32_t turbine_number{0};
-        for (const auto& td : this->turbines) {
+        for (const auto& td : turbines_) {
+            // Turbine number is 1 indexed i.e. 1, 2, 3, ...
             ++turbine_number;
             ADI_C_SetRotorMotion(
                 &turbine_number,                             // input: current turbine number
@@ -485,86 +712,122 @@ struct AeroDynInflowLibrary {
                 td.blade_nodes.orientation.data()->data(),   // input: mesh orientations
                 td.blade_nodes.velocity.data()->data(),      // input: mesh velocities
                 td.blade_nodes.acceleration.data()->data(),  // input: mesh accelerations
-                &error_handling.error_status,                // output: error status
-                error_handling.error_message.data()          // output: error message buffer
+                &error_handling_.error_status,               // output: error status
+                error_handling_.error_message.data()         // output: error message buffer
             );
 
-            error_handling.CheckError();
+            error_handling_.CheckError();
         }
     }
 
-    // Wrapper for ADI_C_GetRotorLoads routine to get aerodynamic loads on the rotor
+    /**
+     * @brief Gets the aerodynamic loads on the rotor
+     *
+     * @details Fetches the current aerodynamic forces and moments acting on each blade node
+     * for all turbines in the simulation.
+     */
     void GetRotorAerodynamicLoads() {
         auto ADI_C_GetRotorLoads =
-            this->lib.get_function<void(int*, int*, float*, int*, char*)>("ADI_C_GetRotorLoads");
+            lib_.get_function<void(int*, int*, float*, int*, char*)>("ADI_C_GetRotorLoads");
 
+        // Loop through turbines and get the rotor loads
         int32_t turbine_number{0};
-        for (auto& td : this->turbines) {
+        for (auto& td : turbines_) {
+            // Turbine number is 1 indexed i.e. 1, 2, 3, ...
             ++turbine_number;
 
             ADI_C_GetRotorLoads(
                 &turbine_number,                      // input: current turbine number
                 &td.blade_nodes.n_mesh_points,        // input: number of mesh points
                 td.blade_nodes.loads.data()->data(),  // output: mesh force/moment array
-                &error_handling.error_status,         // output: error status
-                error_handling.error_message.data()   // output: error message buffer
+                &error_handling_.error_status,        // output: error status
+                error_handling_.error_message.data()  // output: error message buffer
             );
 
-            error_handling.CheckError();
+            error_handling_.CheckError();
         }
     }
 
-    // Wrapper for ADI_C_CalcOutput routine to calculate output channels at a given time
+    /**
+     * @brief Calculates the output channels at a given time
+     *
+     * @details This function calculates the output channels at a given time by passing the time
+     * and the output channel values to the Fortran routine.
+     *
+     * @param time Time at which to calculate the output channels
+     * @param output_channel_values Output channel values
+     */
     void CalculateOutputChannels(double time, std::vector<float>& output_channel_values) {
         auto ADI_C_CalcOutput =
-            this->lib.get_function<void(double*, float*, int*, char*)>("ADI_C_CalcOutput");
+            lib_.get_function<void(double*, float*, int*, char*)>("ADI_C_CalcOutput");
 
         // Set up output channel values
         auto output_channel_values_c =
-            std::vector<float>(static_cast<size_t>(sim_controls.n_channels));
+            std::vector<float>(static_cast<size_t>(sim_controls_.n_channels), 0.f);
 
-        // Run ADI_C_CalcOutput
         ADI_C_CalcOutput(
-            &time,                               // input: time at which to calculate output forces
-            output_channel_values_c.data(),      // output: output channel values
-            &error_handling.error_status,        // output: error status
-            error_handling.error_message.data()  // output: error message buffer
+            &time,                                // input: time at which to calculate output forces
+            output_channel_values_c.data(),       // output: output channel values
+            &error_handling_.error_status,        // output: error status
+            error_handling_.error_message.data()  // output: error message buffer
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
 
-        // Copy the output channel values back to the original array
+        // Convert output channel values back into the output vector
         output_channel_values = output_channel_values_c;
     }
 
-    // Wrapper for ADI_C_UpdateStates routine to calculate output forces at a given time
-    void UpdateStates(double time, double time_next) {
+    /**
+     * @brief Updates the states of the AeroDyn Inflow library
+     *
+     * @details This function updates the states of the AeroDyn Inflow library by passing the current
+     * time and the next time to the Fortran routine.
+     *
+     * @param current_time Current time
+     * @param next_time Next time
+     */
+    void UpdateStates(double current_time, double next_time) {
         auto ADI_C_UpdateStates =
-            this->lib.get_function<void(double*, double*, int*, char*)>("ADI_C_UpdateStates");
+            lib_.get_function<void(double*, double*, int*, char*)>("ADI_C_UpdateStates");
 
-        // Run ADI_C_UpdateStates
         ADI_C_UpdateStates(
-            &time,                               // input: time at which to calculate output forces
-            &time_next,                          // input: time T+dt we are stepping to
-            &error_handling.error_status,        // output: error status
-            error_handling.error_message.data()  // output: error message buffer
+            &current_time,                        // input: current time
+            &next_time,                           // input: next time step
+            &error_handling_.error_status,        // output: error status
+            error_handling_.error_message.data()  // output: error message buffer
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
     }
 
-    // Wrapper for ADI_C_End routine to end the AeroDyn Inflow library
+    /**
+     * @brief Ends the simulation and frees memory
+     *
+     * @details This function ends the simulation and frees memory by passing the error status
+     * and error message buffer to the Fortran routine.
+     */
     void Finalize() {
-        auto ADI_C_End = this->lib.get_function<void(int*, char*)>("ADI_C_End");
+        auto ADI_C_End = lib_.get_function<void(int*, char*)>("ADI_C_End");
 
-        // Run ADI_C_End
         ADI_C_End(
-            &error_handling.error_status,        // output: error status
-            error_handling.error_message.data()  // output: error message buffer
+            &error_handling_.error_status,        // output: error status
+            error_handling_.error_message.data()  // output: error message buffer
         );
 
-        error_handling.CheckError();
+        error_handling_.CheckError();
+        is_initialized_ = false;
     }
+
+private:
+    bool is_initialized_{false};              //< Flag to check if the library is initialized
+    util::dylib lib_;                         //< Dynamic library object for AeroDyn Inflow
+    ErrorHandling error_handling_;            //< Error handling settings
+    FluidProperties air_;                     //< Properties of the working fluid (air)
+    EnvironmentalConditions env_conditions_;  //< Environmental conditions
+    SimulationControls sim_controls_;         //< Simulation control settings
+    VTKSettings vtk_settings_;                //< VTK output settings
+    std::vector<TurbineData> turbines_;       //< Turbine data (1 per turbine)
 };
 
 }  // namespace openturbine::util

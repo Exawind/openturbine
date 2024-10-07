@@ -38,12 +38,13 @@ function(openturbine_setup_dependencies)
       GIT_SUBMODULES ""              # Skip downloading r-test
       CMAKE_ARGS
         -DBUILD_TESTING=OFF          # Disable testing
-        -DCMAKE_BUILD_TYPE=Debug
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}  # Use the same build type as the main project
       BUILD_IN_SOURCE OFF            # Build in a separate directory for cleaner output
       BINARY_DIR ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build
       # Build only the aerodyn_inflow_c_binding target and do it sequentially (avoid parallel build)
       BUILD_COMMAND ${CMAKE_COMMAND} --build . --target aerodyn_inflow_c_binding -- -j 1
       INSTALL_COMMAND
+        # Copy the built library to the tests directory
         ${CMAKE_COMMAND} -E copy
         ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build/modules/aerodyn/${CMAKE_SHARED_LIBRARY_PREFIX}aerodyn_inflow_c_binding${CMAKE_SHARED_LIBRARY_SUFFIX}
         ${CMAKE_BINARY_DIR}/tests/unit_tests/aerodyn_inflow_c_binding.dll
@@ -52,7 +53,7 @@ function(openturbine_setup_dependencies)
 
   # Conditionally add external project to build the ROSCO Controller library
   if(OpenTurbine_BUILD_ROSCO_CONTROLLER)
-    if (NOT ROSCO_BUILD_TAG) 
+    if (NOT ROSCO_BUILD_TAG)
       set(ROSCO_BUILD_TAG "v2.9.4")
     endif()
     message(STATUS "Building ROSCO Controller library")
