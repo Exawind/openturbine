@@ -292,6 +292,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 #ifdef OpenTurbine_ENABLE_VTK
     const std::filesystem::path step_dir("steps/IEA15RotorAeroController");
     RemoveDirectoryWithRetries(step_dir);
+    std::filesystem::create_directory(step_dir.parent_path());
     std::filesystem::create_directory(step_dir);
 
     // Write quadrature point global positions to file and VTK
