@@ -39,54 +39,6 @@ namespace openturbine::util {
  */
 
 /**
- * @brief Struct for error handling settings
- *
- * @details This struct holds the error handling settings for the AeroDynInflow library wrapper. It
- * includes an error level enum, a maximum error message length, and methods for checking and
- * handling errors.
- */
-struct ErrorHandling {
-    /// Error levels used in InflowWind
-    enum class ErrorLevel {
-        kNone = 0,
-        kInfo = 1,
-        kWarning = 2,
-        kSevereError = 3,
-        kFatalError = 4
-    };
-
-    static constexpr size_t kErrorMessagesLength{1025U};  //< Max error message length
-    int abort_error_level{
-        static_cast<int>(ErrorLevel::kFatalError)  //< Error level at which to abort
-    };
-    int error_status{0};                                     //< Error status
-    std::array<char, kErrorMessagesLength> error_message{};  //< Error message buffer
-
-    /// Checks for errors and throws an exception if found
-    void CheckError() const {
-        if (error_status != 0) {
-            throw std::runtime_error(error_message.data());
-        }
-    }
-};
-
-/// Struct to hold the properties of the working fluid (air)
-struct FluidProperties {
-    float density{1.225f};                 //< Air density (kg/m^3)
-    float kinematic_viscosity{1.464E-5f};  //< Kinematic viscosity (m^2/s)
-    float sound_speed{335.f};              //< Speed of sound in the working fluid (m/s)
-    float vapor_pressure{1700.f};          //< Vapor pressure of the working fluid (Pa)
-};
-
-/// Struct to hold the environmental conditions
-struct EnvironmentalConditions {
-    float gravity{9.80665f};       //< Gravitational acceleration (m/s^2)
-    float atm_pressure{103500.f};  //< Atmospheric pressure (Pa)
-    float water_depth{0.f};        //< Water depth (m)
-    float msl_offset{0.f};         //< Mean sea level to still water level offset (m)
-};
-
-/**
  * @brief Configuration for the initial state of a turbine
  *
  * This struct encapsulates the initial configuration data for a wind turbine,
@@ -477,6 +429,54 @@ struct SimulationControls {
 };
 
 /**
+ * @brief Struct for error handling settings
+ *
+ * @details This struct holds the error handling settings for the AeroDynInflow library wrapper. It
+ * includes an error level enum, a maximum error message length, and methods for checking and
+ * handling errors.
+ */
+struct ErrorHandling {
+    /// Error levels used in InflowWind
+    enum class ErrorLevel {
+        kNone = 0,
+        kInfo = 1,
+        kWarning = 2,
+        kSevereError = 3,
+        kFatalError = 4
+    };
+
+    static constexpr size_t kErrorMessagesLength{1025U};  //< Max error message length
+    int abort_error_level{
+        static_cast<int>(ErrorLevel::kFatalError)  //< Error level at which to abort
+    };
+    int error_status{0};                                     //< Error status
+    std::array<char, kErrorMessagesLength> error_message{};  //< Error message buffer
+
+    /// Checks for errors and throws an exception if found
+    void CheckError() const {
+        if (error_status != 0) {
+            throw std::runtime_error(error_message.data());
+        }
+    }
+};
+
+/// Struct to hold the properties of the working fluid (air)
+struct FluidProperties {
+    float density{1.225f};                 //< Air density (kg/m^3)
+    float kinematic_viscosity{1.464E-5f};  //< Kinematic viscosity (m^2/s)
+    float sound_speed{335.f};              //< Speed of sound in the working fluid (m/s)
+    float vapor_pressure{1700.f};          //< Vapor pressure of the working fluid (Pa)
+};
+
+/// Struct to hold the environmental conditions
+struct EnvironmentalConditions {
+    float gravity{9.80665f};       //< Gravitational acceleration (m/s^2)
+    float atm_pressure{103500.f};  //< Atmospheric pressure (Pa)
+    float water_depth{0.f};        //< Water depth (m)
+    float msl_offset{0.f};         //< Mean sea level to still water level offset (m)
+};
+
+/**
  * @brief Struct to hold the settings for VTK output
  *
  * @details This struct holds the settings for VTK output, including the flag to write VTK
@@ -551,6 +551,7 @@ public:
     const FluidProperties& GetFluidProperties() const { return air_; }
     const SimulationControls& GetSimulationControls() const { return sim_controls_; }
     const VTKSettings& GetVTKSettings() const { return vtk_settings_; }
+    const std::vector<TurbineData>& GetTurbines() const { return turbines_; }
 
     /**
      * @brief Initialize the AeroDyn Inflow library
@@ -611,14 +612,15 @@ public:
             // Turbine number is 1 indexed i.e. 1, 2, 3, ...
             ++turbine_number;
 
-            // Convert bool -> int to pass to the Fortran routine
+            // Convert bool -> int32_t to pass to the Fortran routine
             int32_t is_horizontal_axis_int = tc.is_horizontal_axis ? 1 : 0;
 
             // Validate the turbine config
             tc.Validate();
 
-            // Create new turbine data
-            // Note: TurbineData and MeshData are validated during construction
+            // Create new turbine data to store the updates
+            // Note: TurbineData and MeshData are validated during construction, so no need to
+            // perform additional checks here
             turbines_.emplace_back(TurbineData(tc));
             auto& td = turbines_.back();
 
@@ -657,7 +659,7 @@ public:
                 "ADI_C_Init"
             );
 
-        // Convert bool -> int to pass to the Fortran routine
+        // Convert bool -> int32_t to pass to the Fortran routine
         int32_t is_aerodyn_input_passed_as_string =
             sim_controls_.is_aerodyn_input_path ? 0 : 1;  // reverse of is_aerodyn_input_path
         int32_t is_inflowwind_input_passed_as_string =
@@ -713,7 +715,7 @@ public:
     /**
      * @brief Set up the rotor motion for the current simulation step
      *
-     * @details Updates the motion data (position, orientation, velocity, acceleration) for
+     * @details Sets up the motion data (position, orientation, velocity, acceleration) for
      * the hub, nacelle, blade roots, and blade nodes of each turbine.
      */
     void SetupRotorMotion() {

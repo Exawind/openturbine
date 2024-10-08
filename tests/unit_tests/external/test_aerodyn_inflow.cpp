@@ -539,7 +539,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
     EXPECT_EQ(aerodyn_inflow_library.GetVTKSettings().write_vtk, 0);
 }
 
-TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
+TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
     const std::filesystem::path project_root = FindProjectRoot();
     std::filesystem::path input_path = project_root / "tests/unit_tests/external/";
 
@@ -554,7 +554,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
     sim_controls.interpolation_order = 2;
     sim_controls.store_HH_wind_speed = false;
     sim_controls.transpose_DCM = true;
-    sim_controls.debug_level = static_cast<int>(util::SimulationControls::DebugLevel::kSummary);
+    sim_controls.debug_level = static_cast<int>(util::SimulationControls::DebugLevel::kNone);
 
     // Set up fluid properties
     util::FluidProperties fluid_props;
@@ -605,13 +605,12 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
     std::vector<util::TurbineConfig> turbine_configs = {turbine_config};
     EXPECT_NO_THROW(aerodyn_inflow_library.Initialize(turbine_configs));
 
-    // Simulate for a few time steps
+    // Simulate for 10 time steps
     double current_time = 0.;
     double next_time = sim_controls.time_step;
     std::vector<float> output_channel_values;
 
     for (int i = 0; i < 10; ++i) {
-        // Update motion data for each time step (if needed)
         EXPECT_NO_THROW(aerodyn_inflow_library.SetupRotorMotion());
 
         EXPECT_NO_THROW(aerodyn_inflow_library.UpdateStates(current_time, next_time));
@@ -620,6 +619,27 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
         );
         EXPECT_NO_THROW(aerodyn_inflow_library.GetRotorAerodynamicLoads());
 
+        // Assert loads on blade nodes - they don't change since we're not updating the motion
+        auto expected_loads = std::vector<std::array<float, 6>>{
+            {11132.2f, -1938.43f, 0.f, 44472.6f, 323391.f, 50444.8f},  // Blade 1, Node 1
+            {0.f, 0.f, 0.f, 0.f, 0.f, 0.f},                            // Blade 1, Node 2
+            {11132.2f, -1938.43f, 0.f, 44472.6f, 323391.f, 50444.8f},  // Blade 2, Node 1
+            {0.f, 0.f, 0.f, 0.f, 0.f, 0.f},                            // Blade 2, Node 2
+            {11132.2f, -1938.43f, 0.f, 44472.6f, 323391.f, 50444.8f},  // Blade 3, Node 1
+            {0.f, 0.f, 0.f, 0.f, 0.f, 0.f}                             // Blade 3, Node 2
+        };
+
+        const auto& turbine = aerodyn_inflow_library.GetTurbines()[0];
+        for (size_t ii = 0; ii < turbine.NumberOfBlades(); ++ii) {
+            for (size_t jj = 0; jj < turbine.node_indices_by_blade[ii].size(); ++jj) {
+                auto node_index = turbine.node_indices_by_blade[ii][jj];
+                const auto& node_loads = turbine.blade_nodes.loads[node_index];
+                const auto& e_loads = expected_loads[ii * 2 + jj];
+                for (size_t k = 0; k < 3; ++k) {
+                    EXPECT_NEAR(node_loads[k], e_loads[k], 1e-1f);
+                }
+            }
+        }
         current_time = next_time;
         next_time += sim_controls.time_step;
     }
