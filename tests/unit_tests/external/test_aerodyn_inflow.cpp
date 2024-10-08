@@ -610,9 +610,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
         EXPECT_NO_THROW(aerodyn_inflow_library.SetupRotorMotion());
 
         EXPECT_NO_THROW(aerodyn_inflow_library.UpdateStates(current_time, next_time));
-        EXPECT_NO_THROW(
-            aerodyn_inflow_library.CalculateOutputChannels(next_time, output_channel_values)
-        );
+        EXPECT_NO_THROW(aerodyn_inflow_library.CalculateOutput(next_time, output_channel_values));
         EXPECT_NO_THROW(aerodyn_inflow_library.GetRotorAerodynamicLoads());
 
         current_time = next_time;
