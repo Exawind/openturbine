@@ -6,59 +6,6 @@
 
 namespace openturbine::tests {
 
-TEST(AerodynInflowTest, ErrorHandling_NoThrow) {
-    util::ErrorHandling error_handling;
-    EXPECT_NO_THROW(error_handling.CheckError());
-}
-
-TEST(AerodynInflowTest, ErrorHandling_Throw) {
-    util::ErrorHandling error_handling;
-    error_handling.error_status = 1;  // Set error status to 1 to trigger an error
-    EXPECT_THROW(error_handling.CheckError(), std::runtime_error);
-}
-
-TEST(AerodynInflowTest, FluidProperties_Default) {
-    util::FluidProperties fluid_properties;
-    EXPECT_NEAR(fluid_properties.density, 1.225f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.kinematic_viscosity, 1.464E-5f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.sound_speed, 335.f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.vapor_pressure, 1700.f, 1e-6f);
-}
-
-TEST(AerodynInflowTest, FluidProperties_Set) {
-    util::FluidProperties fluid_properties;
-    fluid_properties.density = 1.1f;
-    fluid_properties.kinematic_viscosity = 1.5E-5f;
-    fluid_properties.sound_speed = 340.f;
-    fluid_properties.vapor_pressure = 1800.f;
-
-    EXPECT_NEAR(fluid_properties.density, 1.1f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.kinematic_viscosity, 1.5E-5f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.sound_speed, 340.f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.vapor_pressure, 1800.f, 1e-6f);
-}
-
-TEST(AerodynInflowTest, EnvironmentalConditions_Default) {
-    util::EnvironmentalConditions environmental_conditions;
-    EXPECT_NEAR(environmental_conditions.gravity, 9.80665f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.atm_pressure, 103500.f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.water_depth, 0.f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.msl_offset, 0.f, 1e-6f);
-}
-
-TEST(AerodynInflowTest, EnvironmentalConditions_Set) {
-    util::EnvironmentalConditions environmental_conditions;
-    environmental_conditions.gravity = 9.79665f;
-    environmental_conditions.atm_pressure = 103000.f;
-    environmental_conditions.water_depth = 100.f;
-    environmental_conditions.msl_offset = 10.f;
-
-    EXPECT_NEAR(environmental_conditions.gravity, 9.79665f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.atm_pressure, 103000.f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.water_depth, 100.f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.msl_offset, 10.f, 1e-6f);
-}
-
 TEST(AerodynInflowTest, BladeInitialState_Constructor) {
     Array_7 root{1., 2., 3., 1., 0., 0., 0.};
     std::vector<Array_7> nodes{{4., 5., 6., 1., 0., 0., 0.}, {7., 8., 9., 1., 0., 0., 0.}};
@@ -74,6 +21,7 @@ TEST(AerodynInflowTest, TurbineConfig_Constructor) {
     Array_7 hub_pos{1., 2., 3., 1., 0., 0., 0.};
     Array_7 nacelle_pos{4., 5., 6., 1., 0., 0., 0.};
 
+    // Create 3 blades with 2 nodes each
     std::vector<util::TurbineConfig::BladeInitialState> blade_states;
     for (int i = 0; i < 3; ++i) {
         Array_7 root = {static_cast<double>(i), 0., 0., 1., 0., 0., 0.};
@@ -89,9 +37,9 @@ TEST(AerodynInflowTest, TurbineConfig_Constructor) {
     EXPECT_EQ(turbine_config.reference_position, ref_pos);
     EXPECT_EQ(turbine_config.hub_initial_position, hub_pos);
     EXPECT_EQ(turbine_config.nacelle_initial_position, nacelle_pos);
-    EXPECT_EQ(turbine_config.blade_initial_states.size(), 3);
+    EXPECT_EQ(turbine_config.NumberOfBlades(), 3);
 
-    for (size_t i = 0; i < 3; ++i) {
+    for (size_t i = 0; i < turbine_config.NumberOfBlades(); ++i) {
         EXPECT_EQ(
             turbine_config.blade_initial_states[i].root_initial_position[0], static_cast<double>(i)
         );
@@ -146,7 +94,7 @@ TEST(AerodynInflowTest, SetPositionAndOrientation) {
 
 TEST(AerodynInflowTest, MeshData_Constructor_NumberOfNodes) {
     util::MeshData mesh_motion_data{1};
-    EXPECT_EQ(mesh_motion_data.n_mesh_points, 1);
+    EXPECT_EQ(mesh_motion_data.NumberOfMeshPoints(), 1);
     EXPECT_EQ(mesh_motion_data.position.size(), 1);
     EXPECT_EQ(mesh_motion_data.orientation.size(), 1);
     EXPECT_EQ(mesh_motion_data.velocity.size(), 1);
@@ -164,7 +112,7 @@ TEST(AerodynInflowTest, MeshData_Constructor_Data) {
         n_mesh_points, mesh_data, mesh_velocities, mesh_accelerations, mesh_loads
     );
 
-    EXPECT_EQ(mesh_motion_data.n_mesh_points, n_mesh_points);
+    EXPECT_EQ(mesh_motion_data.NumberOfMeshPoints(), n_mesh_points);
     EXPECT_EQ(mesh_motion_data.position.size(), n_mesh_points);
     EXPECT_EQ(mesh_motion_data.orientation.size(), n_mesh_points);
     EXPECT_EQ(mesh_motion_data.velocity.size(), n_mesh_points);
@@ -249,31 +197,34 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
     util::TurbineData turbine_data(tc);
 
     // Check basic properties
-    EXPECT_EQ(turbine_data.n_blades, 3);
-    EXPECT_EQ(turbine_data.hub.n_mesh_points, 1);
-    EXPECT_EQ(turbine_data.nacelle.n_mesh_points, 1);
-    EXPECT_EQ(turbine_data.blade_roots.n_mesh_points, 3);
-    EXPECT_EQ(turbine_data.blade_nodes.n_mesh_points, 6);  // 3 blades * 2 nodes each
+    EXPECT_EQ(turbine_data.NumberOfBlades(), 3);
+    EXPECT_EQ(turbine_data.hub.NumberOfMeshPoints(), 1);
+    EXPECT_EQ(turbine_data.nacelle.NumberOfMeshPoints(), 1);
+    EXPECT_EQ(turbine_data.blade_roots.NumberOfMeshPoints(), 3);
+    EXPECT_EQ(turbine_data.blade_nodes.NumberOfMeshPoints(), 6);  // 3 blades * 2 nodes each
 
     // Check hub and nacelle positions
     ExpectArrayNear(turbine_data.hub.position[0], {0.f, 0.f, 90.f});
     ExpectArrayNear(turbine_data.nacelle.position[0], {0.f, 0.f, 90.f});
 
     // Check blade roots
-    for (size_t i = 0; i < 3; ++i) {
+    for (size_t i = 0; i < turbine_data.NumberOfBlades(); ++i) {
         ExpectArrayNear(turbine_data.blade_roots.position[i], {0.f, 0.f, 90.f});
     }
 
     // Check blade nodes
-    for (size_t i = 0; i < 6; ++i) {
+    for (size_t i = 0; i < turbine_data.blade_nodes.NumberOfMeshPoints(); ++i) {
         float expected_y = (i % 2 == 0) ? 5.f : 10.f;
         ExpectArrayNear(turbine_data.blade_nodes.position[i], {0.f, expected_y, 90.f});
     }
 
     // Check blade_nodes_to_blade_num_mapping
     std::vector<int32_t> expected_blade_nodes_to_blade_num_mapping = {1, 1, 2, 2, 3, 3};
-    ASSERT_EQ(turbine_data.blade_nodes_to_blade_num_mapping.size(), 6);
-    for (size_t i = 0; i < 6; ++i) {
+    ASSERT_EQ(
+        turbine_data.blade_nodes_to_blade_num_mapping.size(),
+        turbine_data.blade_nodes.NumberOfMeshPoints()
+    );
+    for (size_t i = 0; i < turbine_data.blade_nodes.NumberOfMeshPoints(); ++i) {
         EXPECT_EQ(
             turbine_data.blade_nodes_to_blade_num_mapping[i],
             expected_blade_nodes_to_blade_num_mapping[i]
@@ -282,9 +233,9 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
     }
 
     // Check node_indices_by_blade
-    ASSERT_EQ(turbine_data.node_indices_by_blade.size(), 3);
+    ASSERT_EQ(turbine_data.node_indices_by_blade.size(), turbine_data.NumberOfBlades());
     std::vector<std::vector<size_t>> expected_node_indices_by_blade = {{0, 1}, {2, 3}, {4, 5}};
-    for (size_t blade = 0; blade < 3; ++blade) {
+    for (size_t blade = 0; blade < turbine_data.NumberOfBlades(); ++blade) {
         ASSERT_EQ(turbine_data.node_indices_by_blade[blade].size(), 2)
             << "Incorrect number of nodes for blade " << blade;
         EXPECT_EQ(turbine_data.node_indices_by_blade[blade], expected_node_indices_by_blade[blade])
@@ -293,7 +244,7 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
 
     // Additional check: Verify that node_indices_by_blade correctly maps to
     // blade_nodes_to_blade_num_mapping
-    for (size_t blade = 0; blade < 3; ++blade) {
+    for (size_t blade = 0; blade < turbine_data.NumberOfBlades(); ++blade) {
         for (size_t node : turbine_data.node_indices_by_blade[blade]) {
             EXPECT_EQ(turbine_data.blade_nodes_to_blade_num_mapping[node], blade + 1)
                 << "Mismatch between node_indices_by_blade and blade_nodes_to_blade_num_mapping for "
@@ -392,9 +343,10 @@ TEST(AerodynInflowTest, TurbineData_SetBladeNodeValues) {
     util::TurbineData turbine_data(tc);
 
     // Verify the current values for the first blade and node
-    size_t blade_number = 1;
-    size_t node_number = 0;
-    size_t node_index = turbine_data.node_indices_by_blade[blade_number][node_number];
+    size_t blade_number{1};
+    size_t node_number{0};
+    size_t node_index{turbine_data.node_indices_by_blade[blade_number][node_number]};
+
     ExpectArrayNear(turbine_data.blade_nodes.position[node_index], {0.f, 5.f, 90.f});
     ExpectArrayNear(
         turbine_data.blade_nodes.orientation[node_index], {1., 0., 0., 0., 1., 0., 0., 0., 1.}
@@ -411,8 +363,6 @@ TEST(AerodynInflowTest, TurbineData_SetBladeNodeValues) {
     std::array<float, 6> new_velocity = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
     std::array<float, 6> new_acceleration = {7.f, 8.f, 9.f, 10.f, 11.f, 12.f};
     std::array<float, 6> new_loads = {13.f, 14.f, 15.f, 16.f, 17.f, 18.f};
-
-    // Call the method to set new values
     turbine_data.SetBladeNodeValues(
         blade_number, node_number, new_position, new_orientation, new_velocity, new_acceleration,
         new_loads
@@ -432,8 +382,8 @@ TEST(AerodynInflowTest, SimulationControls_Default) {
     EXPECT_EQ(simulation_controls.is_inflowwind_input_path, true);
     EXPECT_EQ(simulation_controls.interpolation_order, 1);
     EXPECT_EQ(simulation_controls.time_step, 0.1);
-    EXPECT_EQ(simulation_controls.max_time, 600.0);
-    EXPECT_EQ(simulation_controls.total_elapsed_time, 0.0);
+    EXPECT_EQ(simulation_controls.max_time, 600.);
+    EXPECT_EQ(simulation_controls.total_elapsed_time, 0.);
     EXPECT_EQ(simulation_controls.n_time_steps, 0);
     EXPECT_EQ(simulation_controls.store_HH_wind_speed, 1);
     EXPECT_EQ(simulation_controls.transpose_DCM, 1);
@@ -452,14 +402,14 @@ TEST(AerodynInflowTest, SimulationControls_Set) {
     simulation_controls.is_inflowwind_input_path = false;
     simulation_controls.interpolation_order = 2;
     simulation_controls.time_step = 0.2;
-    simulation_controls.max_time = 1200.0;
-    simulation_controls.total_elapsed_time = 100.0;
+    simulation_controls.max_time = 1200.;
+    simulation_controls.total_elapsed_time = 100.;
     simulation_controls.n_time_steps = 10;
     simulation_controls.store_HH_wind_speed = 0;
     simulation_controls.transpose_DCM = 0;
     simulation_controls.debug_level = 1;
     simulation_controls.output_format = 1;
-    simulation_controls.output_time_step = 1.0;
+    simulation_controls.output_time_step = 1.;
     simulation_controls.n_channels = 1;
     std::strncpy(
         simulation_controls.channel_names_c.data(), "test_channel",
@@ -476,18 +426,71 @@ TEST(AerodynInflowTest, SimulationControls_Set) {
     EXPECT_EQ(simulation_controls.is_inflowwind_input_path, 0);
     EXPECT_EQ(simulation_controls.interpolation_order, 2);
     EXPECT_EQ(simulation_controls.time_step, 0.2);
-    EXPECT_EQ(simulation_controls.max_time, 1200.0);
-    EXPECT_EQ(simulation_controls.total_elapsed_time, 100.0);
+    EXPECT_EQ(simulation_controls.max_time, 1200.);
+    EXPECT_EQ(simulation_controls.total_elapsed_time, 100.);
     EXPECT_EQ(simulation_controls.n_time_steps, 10);
     EXPECT_EQ(simulation_controls.store_HH_wind_speed, 0);
     EXPECT_EQ(simulation_controls.transpose_DCM, 0);
     EXPECT_EQ(simulation_controls.debug_level, 1);
     EXPECT_EQ(simulation_controls.output_format, 1);
-    EXPECT_EQ(simulation_controls.output_time_step, 1.0);
+    EXPECT_EQ(simulation_controls.output_time_step, 1.);
     EXPECT_STREQ(simulation_controls.output_root_name.data(), "ADI_out");
     EXPECT_EQ(simulation_controls.n_channels, 1);
     EXPECT_STREQ(simulation_controls.channel_names_c.data(), "test_channel");
     EXPECT_STREQ(simulation_controls.channel_units_c.data(), "test_unit");
+}
+
+TEST(AerodynInflowTest, ErrorHandling_NoThrow) {
+    util::ErrorHandling error_handling;
+    EXPECT_NO_THROW(error_handling.CheckError());
+}
+
+TEST(AerodynInflowTest, ErrorHandling_Throw) {
+    util::ErrorHandling error_handling;
+    error_handling.error_status = 1;  // Set error status to 1 to trigger an error
+    EXPECT_THROW(error_handling.CheckError(), std::runtime_error);
+}
+
+TEST(AerodynInflowTest, FluidProperties_Default) {
+    util::FluidProperties fluid_properties;
+    EXPECT_NEAR(fluid_properties.density, 1.225f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.kinematic_viscosity, 1.464E-5f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.sound_speed, 335.f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.vapor_pressure, 1700.f, 1e-6f);
+}
+
+TEST(AerodynInflowTest, FluidProperties_Set) {
+    util::FluidProperties fluid_properties;
+    fluid_properties.density = 1.1f;
+    fluid_properties.kinematic_viscosity = 1.5E-5f;
+    fluid_properties.sound_speed = 340.f;
+    fluid_properties.vapor_pressure = 1800.f;
+
+    EXPECT_NEAR(fluid_properties.density, 1.1f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.kinematic_viscosity, 1.5E-5f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.sound_speed, 340.f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.vapor_pressure, 1800.f, 1e-6f);
+}
+
+TEST(AerodynInflowTest, EnvironmentalConditions_Default) {
+    util::EnvironmentalConditions environmental_conditions;
+    EXPECT_NEAR(environmental_conditions.gravity, 9.80665f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.atm_pressure, 103500.f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.water_depth, 0.f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.msl_offset, 0.f, 1e-6f);
+}
+
+TEST(AerodynInflowTest, EnvironmentalConditions_Set) {
+    util::EnvironmentalConditions environmental_conditions;
+    environmental_conditions.gravity = 9.79665f;
+    environmental_conditions.atm_pressure = 103000.f;
+    environmental_conditions.water_depth = 100.f;
+    environmental_conditions.msl_offset = 10.f;
+
+    EXPECT_NEAR(environmental_conditions.gravity, 9.79665f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.atm_pressure, 103000.f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.water_depth, 100.f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.msl_offset, 10.f, 1e-6f);
 }
 
 TEST(AerodynInflowTest, VTKSettings_Default) {
@@ -503,12 +506,12 @@ TEST(AerodynInflowTest, VTKSettings_Set) {
     vtk_settings.write_vtk = 1;
     vtk_settings.vtk_type = 2;
     vtk_settings.vtk_nacelle_dimensions = {-1.5f, -1.5f, 0.f, 5.f, 2.5f, 2.5f};
-    vtk_settings.vtk_hub_radius = 1.0f;
+    vtk_settings.vtk_hub_radius = 1.f;
 
     EXPECT_EQ(vtk_settings.write_vtk, 1);
     EXPECT_EQ(vtk_settings.vtk_type, 2);
     ExpectArrayNear(vtk_settings.vtk_nacelle_dimensions, {-1.5f, -1.5f, 0.f, 5.f, 2.5f, 2.5f});
-    EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.0f);
+    EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.f);
 }
 
 /// Helper function to get the shared library path
@@ -541,36 +544,38 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
     std::filesystem::path input_path = project_root / "tests/unit_tests/external/";
 
     // Set up simulation parameters
-    util::SimulationControls sim_controls{
-        .is_aerodyn_input_path = true,
-        .is_inflowwind_input_path = true,
-        .aerodyn_input = (input_path / "ad_primary.dat").string(),
-        .inflowwind_input = (input_path / "ifw_primary.dat").string(),
-        .time_step = 0.0125,
-        .max_time = 10.0,
-        .interpolation_order = 2,
-        .store_HH_wind_speed = false,
-        .transpose_DCM = true,
-        .debug_level = static_cast<int>(util::SimulationControls::DebugLevel::kSummary),
-        .output_format = 0,
-        .output_time_step = 0.1};
+    util::SimulationControls sim_controls;
+    sim_controls.is_aerodyn_input_path = true;
+    sim_controls.is_inflowwind_input_path = true;
+    sim_controls.aerodyn_input = (input_path / "ad_primary.dat").string();
+    sim_controls.inflowwind_input = (input_path / "ifw_primary.dat").string();
+    sim_controls.time_step = 0.0125;
+    sim_controls.max_time = 10.;
+    sim_controls.interpolation_order = 2;
+    sim_controls.store_HH_wind_speed = false;
+    sim_controls.transpose_DCM = true;
+    sim_controls.debug_level = static_cast<int>(util::SimulationControls::DebugLevel::kSummary);
 
-    // Set up environmental conditions and fluid properties
-    util::EnvironmentalConditions env_conditions{
-        .gravity = 9.80665f, .atm_pressure = 103500.0f, .water_depth = 0.0f, .msl_offset = 0.0f};
+    // Set up fluid properties
+    util::FluidProperties fluid_props;
+    fluid_props.density = 1.225f;
+    fluid_props.kinematic_viscosity = 1.464E-05f;
+    fluid_props.sound_speed = 335.f;
+    fluid_props.vapor_pressure = 1700.f;
 
-    util::FluidProperties fluid_props{
-        .density = 1.225f,
-        .kinematic_viscosity = 1.464E-05f,
-        .sound_speed = 335.0f,
-        .vapor_pressure = 1700.0f};
+    // Set up environmental conditions
+    util::EnvironmentalConditions env_conditions;
+    env_conditions.gravity = 9.80665f;
+    env_conditions.atm_pressure = 103500.f;
+    env_conditions.water_depth = 0.f;
+    env_conditions.msl_offset = 0.f;
 
     // Set up VTK settings
     util::VTKSettings vtk_settings{};
 
     // Set up turbine configuration
-    std::array<double, 7> hub_pos = {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0};
-    std::array<double, 7> nacelle_pos = {0.0, 0.0, 90.0, 1.0, 0.0, 0.0, 0.0};
+    std::array<double, 7> hub_pos = {0., 0., 90., 1., 0., 0., 0.};
+    std::array<double, 7> nacelle_pos = {0., 0., 90., 1., 0., 0., 0.};
     std::vector<util::TurbineConfig::BladeInitialState> blade_states;
     for (int i = 0; i < 3; ++i) {
         util::TurbineConfig::BladeInitialState blade_state(
@@ -601,7 +606,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
     EXPECT_NO_THROW(aerodyn_inflow_library.Initialize(turbine_configs));
 
     // Simulate for a few time steps
-    double current_time = 0.0;
+    double current_time = 0.;
     double next_time = sim_controls.time_step;
     std::vector<float> output_channel_values;
 
