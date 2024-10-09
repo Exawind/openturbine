@@ -153,22 +153,22 @@ struct MeshData {
 
     /// Constructor to initialize all mesh data based on provided inputs
     MeshData(
-        size_t n_mesh_points, const std::vector<std::array<double, 7>>& mesh_data,
-        const std::vector<std::array<float, 6>>& velocities,
-        const std::vector<std::array<float, 6>>& accelerations,
-        const std::vector<std::array<float, 6>>& loads
+        size_t n_mesh_pts, const std::vector<std::array<double, 7>>& pos,
+        const std::vector<std::array<float, 6>>& vel,
+        const std::vector<std::array<float, 6>>& acc,
+        const std::vector<std::array<float, 6>>& ld
     )
-        : n_mesh_points(static_cast<int32_t>(n_mesh_points)),
-          position(std::vector<std::array<float, 3>>(n_mesh_points, {0.f, 0.f, 0.f})),
+        : n_mesh_points(static_cast<int32_t>(n_mesh_pts)),
+          position(std::vector<std::array<float, 3>>(n_mesh_pts, {0.f, 0.f, 0.f})),
           orientation(
-              std::vector<std::array<double, 9>>(n_mesh_points, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
+              std::vector<std::array<double, 9>>(n_mesh_pts, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
           ),
-          velocity(std::move(velocities)),
-          acceleration(std::move(accelerations)),
-          loads(std::move(loads)) {
+          velocity(std::move(vel)),
+          acceleration(std::move(acc)),
+          loads(std::move(ld)) {
         // Set mesh position and orientation from 7x1 array [x, y, z, qw, qx, qy, qz]
-        for (size_t i = 0; i < n_mesh_points; ++i) {
-            SetPositionAndOrientation(mesh_data[i], position[i], orientation[i]);
+        for (size_t i = 0; i < NumberOfMeshPoints(); ++i) {
+            SetPositionAndOrientation(pos[i], position[i], orientation[i]);
         }
 
         // Make sure the mesh data is valid
@@ -182,14 +182,14 @@ struct MeshData {
         }
 
         // Check all vectors are the same size as the number of mesh points
-        const size_t expected_size = static_cast<size_t>(n_mesh_points);
-        auto check_vector_size = [](const auto& vec, size_t expected_size,
+        auto check_vector_size = [](const auto& vec, size_t exp_size,
                                     const std::string& vec_name) {
-            if (vec.size() != expected_size) {
+            if (vec.size() != exp_size) {
                 throw std::invalid_argument(vec_name + " vector size does not match n_mesh_points");
             }
         };
 
+        const auto expected_size = NumberOfMeshPoints();
         check_vector_size(position, expected_size, "Position");
         check_vector_size(orientation, expected_size, "Orientation");
         check_vector_size(velocity, expected_size, "Velocity");
@@ -275,8 +275,7 @@ struct TurbineData {
         }
 
         // Check if the blade nodes to blade number mapping is valid - should be the same size
-        if (blade_nodes_to_blade_num_mapping.size() !=
-            static_cast<size_t>(blade_nodes.NumberOfMeshPoints())) {
+        if (blade_nodes_to_blade_num_mapping.size() != blade_nodes.NumberOfMeshPoints()) {
             throw std::runtime_error("Blade node to blade number mapping size mismatch.");
         }
 
