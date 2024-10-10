@@ -1131,9 +1131,9 @@ struct Drivetrain {
                                      // simple generator scaling
     double generator_mass_user{};    // User input override of generator mass, only used when using
                                      // simple generator mass scaling
-    GeneratorRpmEfficiencyUser
-        generator_rpm_efficiency_user{};  // User input override of generator rpm-efficiency values,
-                                          // with rpm as grid input and eff as values input
+    GeneratorRpmEfficiencyUser generator_rpm_efficiency_user{
+    };  // User input override of generator rpm-efficiency values,
+        // with rpm as grid input and eff as values input
     double gear_ratio{};  // Gear ratio of the drivetrain. Set it to 1 for direct drive machines.
     double gearbox_length_user{};  // User input override of gearbox length along shaft, only used
                                    // when using gearbox_mass_user is > 0
@@ -1608,10 +1608,10 @@ struct OuterShape_1 {
     std::vector<double> side_lengths2;  // Polygon side lengths at joint1
     std::vector<double> angles;  // Polygon angles with the ordering such that angle[i] is between
                                  // side_length[i] and side_length[i+1]
-    double
-        rotation{};  // Angle between principle axes of the cross-section and the member coordinate
-                     // system.  Essentially the rotation of the member if both joints were placed
-                     // on the global x-y axis with the first side length along the z-axis
+    double rotation{
+    };  // Angle between principle axes of the cross-section and the member coordinate
+        // system.  Essentially the rotation of the member if both joints were placed
+        // on the global x-y axis with the first side length along the z-axis
 
     void parse(const YAML::Node& node) {
         shape = node["shape"].as<std::string>("");
@@ -1916,9 +1916,9 @@ struct LineTypes {
                         // having the same displacement per unit length
     std::string type;   // Type of material for property lookup
     double mass_density{};  // mass per unit length (in air)
-    double
-        stiffness{};  // axial line stiffness, product of elasticity modulus and cross-sectional area
-    double cost{};    // cost per unit length
+    double stiffness{
+    };  // axial line stiffness, product of elasticity modulus and cross-sectional area
+    double cost{};                   // cost per unit length
     double breaking_load{};          // line break tension
     double damping{};                // internal damping (BA)
     double transverse_added_mass{};  // transverse added mass coefficient (with respect to line
@@ -2171,9 +2171,9 @@ struct Materials {
                          // https://www.nrel.gov/docs/fy19osti/73585.pdf to define the manufacturing
                          // process behind the laminate. 0 - coating, 1 - sandwich filler , 2 - shell
                          // skin, 3 - shear webs, 4 - spar caps, 5 - TE reinf.
-    double
-        waste{};  // Fraction of material that ends up wasted during manufacturing. This quantity is
-                  // used in the NREL blade cost model https://www.nrel.gov/docs/fy19osti/73585.pdf
+    double waste{
+    };  // Fraction of material that ends up wasted during manufacturing. This quantity is
+        // used in the NREL blade cost model https://www.nrel.gov/docs/fy19osti/73585.pdf
     double roll_mass{};  // Mass of a fabric roll. This quantity is used in the NREL blade cost model
                          // https://www.nrel.gov/docs/fy19osti/73585.pdf
     double gic{};   // Mode 1 critical energy-release rate. It is used by NuMAD from Sandia National
@@ -2408,11 +2408,11 @@ struct Costs {
                                                   // cost/rating ratio
     double crane_cost{};                          // crane cost if present
     double electricity_price{};  // Electricity price used to compute value in beyond lcoe metrics
-    double
-        reserve_margin_price{};  // Reserve margin price used to compute value in beyond lcoe metrics
-    double capacity_credit{};    // Capacity credit used to compute value in beyond lcoe metrics
-    double
-        benchmark_price{};  // Benchmark price used to nondimensionalize value in beyond lcoe metrics
+    double reserve_margin_price{
+    };  // Reserve margin price used to compute value in beyond lcoe metrics
+    double capacity_credit{};  // Capacity credit used to compute value in beyond lcoe metrics
+    double benchmark_price{
+    };  // Benchmark price used to nondimensionalize value in beyond lcoe metrics
 
     void parse(const YAML::Node& node) {
         wake_loss_factor = node["wake_loss_factor"].as<double>(0.);

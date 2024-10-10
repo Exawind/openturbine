@@ -92,7 +92,8 @@ struct IntegrateResidualVector {
         const auto node_range = Kokkos::TeamThreadRange(member, num_nodes);
         const auto element_integrator = IntegrateResidualVectorElement{
             i_elem,  num_qps, qp_weight, qp_jacobian, shape_interp, shape_deriv,
-            node_FX, qp_Fc,   qp_Fd,     qp_Fi,       qp_Fg,        residual_vector_terms_};
+            node_FX, qp_Fc,   qp_Fd,     qp_Fi,       qp_Fg,        residual_vector_terms_
+        };
         Kokkos::parallel_for(node_range, element_integrator);
     }
 };

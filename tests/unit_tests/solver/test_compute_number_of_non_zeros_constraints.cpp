@@ -9,11 +9,13 @@ TEST(ComputeNumberOfNonZeros_Constraints, OneOfEach) {
     constexpr auto num_constraints = 5U;
     constexpr auto type_host_data = std::array{
         ConstraintType::kFixedBC, ConstraintType::kPrescribedBC, ConstraintType::kRigidJoint,
-        ConstraintType::kRevoluteJoint, ConstraintType::kRotationControl};
+        ConstraintType::kRevoluteJoint, ConstraintType::kRotationControl
+    };
     constexpr auto row_range_host_data = std::array{
         Kokkos::pair<size_t, size_t>{0U, 6U}, Kokkos::pair<size_t, size_t>{6U, 12U},
         Kokkos::pair<size_t, size_t>{12U, 18U}, Kokkos::pair<size_t, size_t>{18U, 24U},
-        Kokkos::pair<size_t, size_t>{24U, 30U}};
+        Kokkos::pair<size_t, size_t>{24U, 30U}
+    };
 
     const auto type_host =
         Kokkos::View<const ConstraintType[num_constraints], Kokkos::HostSpace>(type_host_data.data()

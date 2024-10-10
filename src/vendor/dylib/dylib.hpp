@@ -175,22 +175,19 @@ public:
 
 #ifdef DYLIB_CPP17
     explicit dylib(const std::filesystem::path& lib_path)
-        : dylib("", lib_path.string().c_str(), no_filename_decorations) {
-    }
+        : dylib("", lib_path.string().c_str(), no_filename_decorations) {}
 
     dylib(
         const std::filesystem::path& dir_path, const std::string& lib_name,
         bool decorations = add_filename_decorations
     )
-        : dylib(dir_path.string().c_str(), lib_name.c_str(), decorations) {
-    }
+        : dylib(dir_path.string().c_str(), lib_name.c_str(), decorations) {}
 
     dylib(
         const std::filesystem::path& dir_path, const char* lib_name,
         bool decorations = add_filename_decorations
     )
-        : dylib(dir_path.string().c_str(), lib_name, decorations) {
-    }
+        : dylib(dir_path.string().c_str(), lib_name, decorations) {}
 #endif
     ///@}
 
@@ -307,9 +304,7 @@ public:
     /**
      *  @return the dynamic library handle
      */
-    native_handle_type native_handle() noexcept {
-        return m_handle;
-    }
+    native_handle_type native_handle() noexcept { return m_handle; }
 
 protected:
     native_handle_type m_handle{nullptr};

@@ -85,7 +85,8 @@ constexpr auto stiffness_matrix_unity = std::array{
 
 // Node locations (GLL quadrature)
 const auto node_s = std::vector{
-    0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.};
+    0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.
+};
 
 // Element quadrature
 const auto quadrature = BeamQuadrature{
@@ -224,8 +225,8 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
                     const auto v = CrossProduct(omega, pos);
                     return BeamNode(
                         s, *model.AddNode(
-                               {pos[0], pos[1], pos[2], q_root[0], q_root[1], q_root[2],
-                                q_root[3]},                                      // position
+                               {pos[0], pos[1], pos[2], q_root[0], q_root[1], q_root[2], q_root[3]
+                               },                                                // position
                                {0., 0., 0., 1., 0., 0., 0.},                     // displacement
                                {v[0], v[1], v[2], omega[0], omega[1], omega[2]}  // velocity
                            )
@@ -330,8 +331,8 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
                     auto v = CrossProduct(omega, pos);
                     return BeamNode(
                         s, *model.AddNode(
-                               {pos[0], pos[1], pos[2], q_root[0], q_root[1], q_root[2],
-                                q_root[3]},                                      // position
+                               {pos[0], pos[1], pos[2], q_root[0], q_root[1], q_root[2], q_root[3]
+                               },                                                // position
                                {0., 0., 0., 1., 0., 0., 0.},                     // displacement
                                {v[0], v[1], v[2], omega[0], omega[1], omega[2]}  // velocity
                            )
