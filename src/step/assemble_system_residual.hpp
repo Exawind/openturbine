@@ -20,7 +20,8 @@ inline void AssembleSystemResidual(Solver& solver, Beams& beams) {
         "ContributeElementsToVector", vector_policy,
         ContributeElementsToVector{
             beams.num_nodes_per_element, beams.node_state_indices, beams.residual_vector_terms,
-            solver.R}
+            solver.R
+        }
     );
 }
 

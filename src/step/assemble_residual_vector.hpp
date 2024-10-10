@@ -25,7 +25,8 @@ inline void AssembleResidualVector(const Beams& beams) {
         IntegrateResidualVector{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.qp_weight,
             beams.qp_jacobian, beams.shape_interp, beams.shape_deriv, beams.node_FX, beams.qp_Fc,
-            beams.qp_Fd, beams.qp_Fi, beams.qp_Fg, beams.residual_vector_terms}
+            beams.qp_Fd, beams.qp_Fi, beams.qp_Fg, beams.residual_vector_terms
+        }
     );
 }
 

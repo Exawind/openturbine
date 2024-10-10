@@ -99,7 +99,8 @@ struct CalculateQuadraturePointValues {
             Kokkos::TeamThreadRange(member, num_qps),
             CalculateInertialForces{
                 i_elem, qp_Muu_, qp_u_ddot_, qp_omega_, qp_omega_dot_, qp_eta_tilde_,
-                qp_omega_tilde_, qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_FI_}
+                qp_omega_tilde_, qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_FI_
+            }
         );
         member.team_barrier();
 
@@ -131,14 +132,16 @@ struct CalculateQuadraturePointValues {
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             CalculateGyroscopicMatrix{
-                i_elem, qp_Muu_, qp_omega_, qp_omega_tilde_, qp_rho_, qp_eta_, qp_Guu_}
+                i_elem, qp_Muu_, qp_omega_, qp_omega_tilde_, qp_rho_, qp_eta_, qp_Guu_
+            }
         );
 
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             CalculateInertiaStiffnessMatrix{
                 i_elem, qp_Muu_, qp_u_ddot_, qp_omega_, qp_omega_dot_, qp_omega_tilde_,
-                qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_Kuu_}
+                qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_Kuu_
+            }
         );
     }
 };
