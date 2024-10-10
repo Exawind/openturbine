@@ -7,25 +7,25 @@
 namespace openturbine::tests {
 
 TEST(AerodynInflowTest, BladeInitialState_Constructor) {
-    Array_7 root{1., 2., 3., 1., 0., 0., 0.};
-    std::vector<Array_7> nodes{{4., 5., 6., 1., 0., 0., 0.}, {7., 8., 9., 1., 0., 0., 0.}};
-    util::TurbineConfig::BladeInitialState blade_state{root, nodes};
+    const Array_7 root{1., 2., 3., 1., 0., 0., 0.};
+    const std::vector<Array_7> nodes{{4., 5., 6., 1., 0., 0., 0.}, {7., 8., 9., 1., 0., 0., 0.}};
+    const util::TurbineConfig::BladeInitialState blade_state{root, nodes};
 
     EXPECT_EQ(blade_state.root_initial_position, root);
     EXPECT_EQ(blade_state.node_initial_positions, nodes);
 }
 
 TEST(AerodynInflowTest, TurbineConfig_Constructor) {
-    bool is_hawt{true};
-    std::array<float, 3> ref_pos{10.f, 20.f, 30.f};
-    Array_7 hub_pos{1., 2., 3., 1., 0., 0., 0.};
-    Array_7 nacelle_pos{4., 5., 6., 1., 0., 0., 0.};
+    const bool is_hawt{true};
+    const std::array<float, 3> ref_pos{10.F, 20.F, 30.F};
+    const Array_7 hub_pos{1., 2., 3., 1., 0., 0., 0.};
+    const Array_7 nacelle_pos{4., 5., 6., 1., 0., 0., 0.};
 
     // Create 3 blades with 2 nodes each
     std::vector<util::TurbineConfig::BladeInitialState> blade_states;
     for (int i = 0; i < 3; ++i) {
-        Array_7 root = {static_cast<double>(i), 0., 0., 1., 0., 0., 0.};
-        std::vector<Array_7> nodes = {
+        const Array_7 root = {static_cast<double>(i), 0., 0., 1., 0., 0., 0.};
+        const std::vector<Array_7> nodes = {
             {static_cast<double>(i), 1., 0., 1., 0., 0., 0.},
             {static_cast<double>(i), 2., 0., 1., 0., 0., 0.}};
         blade_states.emplace_back(root, nodes);
@@ -57,11 +57,11 @@ TEST(AerodynInflowTest, TurbineConfig_Constructor) {
 
 TEST(AerodynInflowTest, TurbineConfig_Validate_InvalidConfiguration) {
     // Invalid configuration: No blades
-    bool is_hawt{true};
-    std::array<float, 3> ref_pos{10.f, 20.f, 30.f};
-    Array_7 hub_pos{1., 2., 3., 1., 0., 0., 0.};
-    Array_7 nacelle_pos{4., 5., 6., 1., 0., 0., 0.};
-    std::vector<util::TurbineConfig::BladeInitialState> empty_blade_states;
+    const bool is_hawt{true};
+    const std::array<float, 3> ref_pos{10.F, 20.F, 30.F};
+    const Array_7 hub_pos{1., 2., 3., 1., 0., 0., 0.};
+    const Array_7 nacelle_pos{4., 5., 6., 1., 0., 0., 0.};
+    const std::vector<util::TurbineConfig::BladeInitialState> empty_blade_states;
 
     EXPECT_THROW(
         util::TurbineConfig(is_hawt, ref_pos, hub_pos, nacelle_pos, empty_blade_states),
@@ -82,18 +82,18 @@ void ExpectArrayNear(
 }
 
 TEST(AerodynInflowTest, SetPositionAndOrientation) {
-    std::array<double, 7> data = {1., 2., 3., 0.707107, 0.707107, 0., 0.};
-    std::array<float, 3> position;
-    std::array<double, 9> orientation;
+    const std::array<double, 7> data = {1., 2., 3., 0.707107, 0.707107, 0., 0.};
+    std::array<float, 3> position{0.F};
+    std::array<double, 9> orientation{0.};
 
     util::SetPositionAndOrientation(data, position, orientation);
 
-    ExpectArrayNear(position, {1.f, 2.f, 3.f});
+    ExpectArrayNear(position, {1.F, 2.F, 3.F});
     ExpectArrayNear(orientation, {1., 0., 0., 0., 0., -1., 0., 1., 0.});
 }
 
 TEST(AerodynInflowTest, MeshData_Constructor_NumberOfNodes) {
-    util::MeshData mesh_motion_data{1};
+    const util::MeshData mesh_motion_data{1};
     EXPECT_EQ(mesh_motion_data.NumberOfMeshPoints(), 1);
     EXPECT_EQ(mesh_motion_data.position.size(), 1);
     EXPECT_EQ(mesh_motion_data.orientation.size(), 1);
@@ -103,11 +103,11 @@ TEST(AerodynInflowTest, MeshData_Constructor_NumberOfNodes) {
 }
 
 TEST(AerodynInflowTest, MeshData_Constructor_Data) {
-    size_t n_mesh_points{1};
-    std::vector<std::array<double, 7>> mesh_data{{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
-    std::vector<std::array<float, 6>> mesh_velocities{{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}};
-    std::vector<std::array<float, 6>> mesh_accelerations{{7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
-    std::vector<std::array<float, 6>> mesh_loads = {{13.f, 14.f, 15.f, 16.f, 17.f, 18.f}};
+    const size_t n_mesh_points{1};
+    const std::vector<std::array<double, 7>> mesh_data{{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
+    const std::vector<std::array<float, 6>> mesh_velocities{{1.F, 2.F, 3.F, 4.F, 5.F, 6.F}};
+    const std::vector<std::array<float, 6>> mesh_accelerations{{7.F, 8.F, 9.F, 10.F, 11.F, 12.F}};
+    const std::vector<std::array<float, 6>> mesh_loads = {{13.F, 14.F, 15.F, 16.F, 17.F, 18.F}};
     util::MeshData mesh_motion_data(
         n_mesh_points, mesh_data, mesh_velocities, mesh_accelerations, mesh_loads
     );
@@ -118,11 +118,11 @@ TEST(AerodynInflowTest, MeshData_Constructor_Data) {
     EXPECT_EQ(mesh_motion_data.velocity.size(), n_mesh_points);
     EXPECT_EQ(mesh_motion_data.acceleration.size(), n_mesh_points);
     EXPECT_EQ(mesh_motion_data.loads.size(), n_mesh_points);
-    ExpectArrayNear(mesh_motion_data.position[0], {1.f, 2.f, 3.f});
+    ExpectArrayNear(mesh_motion_data.position[0], {1.F, 2.F, 3.F});
     ExpectArrayNear(mesh_motion_data.orientation[0], {1., 0., 0., 0., 0., -1., 0., 1., 0.});
-    ExpectArrayNear(mesh_motion_data.velocity[0], {1.f, 2.f, 3.f, 4.f, 5.f, 6.f});
-    ExpectArrayNear(mesh_motion_data.acceleration[0], {7.f, 8.f, 9.f, 10.f, 11.f, 12.f});
-    ExpectArrayNear(mesh_motion_data.loads[0], {13.f, 14.f, 15.f, 16.f, 17.f, 18.f});
+    ExpectArrayNear(mesh_motion_data.velocity[0], {1.F, 2.F, 3.F, 4.F, 5.F, 6.F});
+    ExpectArrayNear(mesh_motion_data.acceleration[0], {7.F, 8.F, 9.F, 10.F, 11.F, 12.F});
+    ExpectArrayNear(mesh_motion_data.loads[0], {13.F, 14.F, 15.F, 16.F, 17.F, 18.F});
 }
 
 class MeshDataValidationTest : public ::testing::Test {
@@ -130,13 +130,13 @@ protected:
     void SetUp() override {
         // Create a mesh data with 2 mesh points
         mesh_data = std::make_unique<util::MeshData>(2);
-        mesh_data->position = {{1.f, 2.f, 3.f}, {4.f, 5.f, 6.f}};
+        mesh_data->position = {{1.F, 2.F, 3.F}, {4.F, 5.F, 6.F}};
         mesh_data->orientation = {
             {1., 0., 0., 0., 1., 0., 0., 0., 1.}, {0., 1., 0., -1., 0., 0., 0., 0., 1.}};
-        mesh_data->velocity = {{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}, {7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+        mesh_data->velocity = {{1.F, 2.F, 3.F, 4.F, 5.F, 6.F}, {7.F, 8.F, 9.F, 10.F, 11.F, 12.F}};
         mesh_data->acceleration = {
-            {1.f, 2.f, 3.f, 4.f, 5.f, 6.f}, {7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
-        mesh_data->loads = {{1.f, 2.f, 3.f, 4.f, 5.f, 6.f}, {7.f, 8.f, 9.f, 10.f, 11.f, 12.f}};
+            {1.F, 2.F, 3.F, 4.F, 5.F, 6.F}, {7.F, 8.F, 9.F, 10.F, 11.F, 12.F}};
+        mesh_data->loads = {{1.F, 2.F, 3.F, 4.F, 5.F, 6.F}, {7.F, 8.F, 9.F, 10.F, 11.F, 12.F}};
     }
 
     std::unique_ptr<util::MeshData> mesh_data;
@@ -176,7 +176,7 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
     // Set up 3 blades with 2 nodes each
     std::vector<util::TurbineConfig::BladeInitialState> blade_states;
     for (size_t i = 0; i < 3; ++i) {
-        util::TurbineConfig::BladeInitialState blade_state(
+        const util::TurbineConfig::BladeInitialState blade_state(
             {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
             {
                 {0., 5., 90., 1., 0., 0., 0.},  // node_initial_positions - 1
@@ -186,9 +186,9 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
         );
         blade_states.push_back(blade_state);
     }
-    util::TurbineConfig tc(
+    const util::TurbineConfig tc(
         true,                           // is_horizontal_axis
-        {0.f, 0.f, 0.f},                // reference_position
+        {0.F, 0.F, 0.F},                // reference_position
         {0., 0., 90., 1., 0., 0., 0.},  // hub_initial_position
         {0., 0., 90., 1., 0., 0., 0.},  // nacelle_initial_position
         blade_states
@@ -204,18 +204,18 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
     EXPECT_EQ(turbine_data.blade_nodes.NumberOfMeshPoints(), 6);  // 3 blades * 2 nodes each
 
     // Check hub and nacelle positions
-    ExpectArrayNear(turbine_data.hub.position[0], {0.f, 0.f, 90.f});
-    ExpectArrayNear(turbine_data.nacelle.position[0], {0.f, 0.f, 90.f});
+    ExpectArrayNear(turbine_data.hub.position[0], {0.F, 0.F, 90.F});
+    ExpectArrayNear(turbine_data.nacelle.position[0], {0.F, 0.F, 90.F});
 
     // Check blade roots
     for (size_t i = 0; i < turbine_data.NumberOfBlades(); ++i) {
-        ExpectArrayNear(turbine_data.blade_roots.position[i], {0.f, 0.f, 90.f});
+        ExpectArrayNear(turbine_data.blade_roots.position[i], {0.F, 0.F, 90.F});
     }
 
     // Check blade nodes
     for (size_t i = 0; i < turbine_data.blade_nodes.NumberOfMeshPoints(); ++i) {
-        float expected_y = (i % 2 == 0) ? 5.f : 10.f;
-        ExpectArrayNear(turbine_data.blade_nodes.position[i], {0.f, expected_y, 90.f});
+        const float expected_y = (i % 2 == 0) ? 5.F : 10.F;
+        ExpectArrayNear(turbine_data.blade_nodes.position[i], {0.F, expected_y, 90.F});
     }
 
     // Check blade_nodes_to_blade_num_mapping
@@ -245,7 +245,7 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
     // Additional check: Verify that node_indices_by_blade correctly maps to
     // blade_nodes_to_blade_num_mapping
     for (size_t blade = 0; blade < turbine_data.NumberOfBlades(); ++blade) {
-        for (size_t node : turbine_data.node_indices_by_blade[blade]) {
+        for (const size_t node : turbine_data.node_indices_by_blade[blade]) {
             EXPECT_EQ(turbine_data.blade_nodes_to_blade_num_mapping[node], blade + 1)
                 << "Mismatch between node_indices_by_blade and blade_nodes_to_blade_num_mapping for "
                    "blade "
@@ -260,7 +260,7 @@ protected:
         blade_states.clear();
         // Set up 3 blades with 2 nodes each
         for (size_t i = 0; i < 3; ++i) {
-            util::TurbineConfig::BladeInitialState blade_state(
+            const util::TurbineConfig::BladeInitialState blade_state(
                 {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
                 {
                     {0., 5., 90., 1., 0., 0., 0.},  // node_initial_positions - 1
@@ -271,7 +271,7 @@ protected:
         }
         tc = std::make_unique<util::TurbineConfig>(
             true,                                                // is_horizontal_axis
-            std::array<float, 3>{0.f, 0.f, 0.f},                 // reference_position
+            std::array<float, 3>{0.F, 0.F, 0.F},                 // reference_position
             std::array<double, 7>{0., 0., 90., 1., 0., 0., 0.},  // hub_initial_position
             std::array<double, 7>{0., 0., 90., 1., 0., 0., 0.},  // nacelle_initial_position
             blade_states
@@ -323,7 +323,7 @@ TEST(AerodynInflowTest, TurbineData_SetBladeNodeValues) {
     // Set up 3 blades with 2 nodes each
     std::vector<util::TurbineConfig::BladeInitialState> blade_states;
     for (size_t i = 0; i < 3; ++i) {
-        util::TurbineConfig::BladeInitialState blade_state(
+        const util::TurbineConfig::BladeInitialState blade_state(
             {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
             {
                 {0., 5., 90., 1., 0., 0., 0.},  // node_initial_positions - 1
@@ -332,9 +332,9 @@ TEST(AerodynInflowTest, TurbineData_SetBladeNodeValues) {
         );
         blade_states.push_back(blade_state);
     }
-    util::TurbineConfig tc(
+    const util::TurbineConfig tc(
         true,                           // is_horizontal_axis
-        {0.f, 0.f, 0.f},                // reference_position
+        {0.F, 0.F, 0.F},                // reference_position
         {0., 0., 90., 1., 0., 0., 0.},  // hub_initial_position
         {0., 0., 90., 1., 0., 0., 0.},  // nacelle_initial_position
         blade_states
@@ -343,26 +343,26 @@ TEST(AerodynInflowTest, TurbineData_SetBladeNodeValues) {
     util::TurbineData turbine_data(tc);
 
     // Verify the current values for the first blade and node
-    size_t blade_number{1};
-    size_t node_number{0};
-    size_t node_index{turbine_data.node_indices_by_blade[blade_number][node_number]};
+    const size_t blade_number{1};
+    const size_t node_number{0};
+    const size_t node_index{turbine_data.node_indices_by_blade[blade_number][node_number]};
 
-    ExpectArrayNear(turbine_data.blade_nodes.position[node_index], {0.f, 5.f, 90.f});
+    ExpectArrayNear(turbine_data.blade_nodes.position[node_index], {0.F, 5.F, 90.F});
     ExpectArrayNear(
         turbine_data.blade_nodes.orientation[node_index], {1., 0., 0., 0., 1., 0., 0., 0., 1.}
     );
-    ExpectArrayNear(turbine_data.blade_nodes.velocity[node_index], {0.f, 0.f, 0.f, 0.f, 0.f, 0.f});
+    ExpectArrayNear(turbine_data.blade_nodes.velocity[node_index], {0.F, 0.F, 0.F, 0.F, 0.F, 0.F});
     ExpectArrayNear(
-        turbine_data.blade_nodes.acceleration[node_index], {0.f, 0.f, 0.f, 0.f, 0.f, 0.f}
+        turbine_data.blade_nodes.acceleration[node_index], {0.F, 0.F, 0.F, 0.F, 0.F, 0.F}
     );
-    ExpectArrayNear(turbine_data.blade_nodes.loads[node_index], {0.f, 0.f, 0.f, 0.f, 0.f, 0.f});
+    ExpectArrayNear(turbine_data.blade_nodes.loads[node_index], {0.F, 0.F, 0.F, 0.F, 0.F, 0.F});
 
     // Define new values for the node
-    std::array<float, 3> new_position = {1.f, 2.f, 3.f};
-    std::array<double, 9> new_orientation = {1., 0., 0., 0., 1., 0., 0., 0., 1.};
-    std::array<float, 6> new_velocity = {1.f, 2.f, 3.f, 4.f, 5.f, 6.f};
-    std::array<float, 6> new_acceleration = {7.f, 8.f, 9.f, 10.f, 11.f, 12.f};
-    std::array<float, 6> new_loads = {13.f, 14.f, 15.f, 16.f, 17.f, 18.f};
+    const std::array<float, 3> new_position = {1.F, 2.F, 3.F};
+    const std::array<double, 9> new_orientation = {1., 0., 0., 0., 1., 0., 0., 0., 1.};
+    const std::array<float, 6> new_velocity = {1.F, 2.F, 3.F, 4.F, 5.F, 6.F};
+    const std::array<float, 6> new_acceleration = {7.F, 8.F, 9.F, 10.F, 11.F, 12.F};
+    const std::array<float, 6> new_loads = {13.F, 14.F, 15.F, 16.F, 17.F, 18.F};
     turbine_data.SetBladeNodeValues(
         blade_number, node_number, new_position, new_orientation, new_velocity, new_acceleration,
         new_loads
@@ -405,9 +405,9 @@ TEST(AerodynInflowTest, SimulationControls_Set) {
     simulation_controls.max_time = 1200.;
     simulation_controls.total_elapsed_time = 100.;
     simulation_controls.n_time_steps = 10;
-    simulation_controls.store_HH_wind_speed = 0;
-    simulation_controls.transpose_DCM = 0;
-    simulation_controls.debug_level = 1;
+    simulation_controls.store_HH_wind_speed = false;
+    simulation_controls.transpose_DCM = false;
+    simulation_controls.debug_level = static_cast<int>(util::SimulationControls::DebugLevel::kSummary);
     simulation_controls.output_format = 1;
     simulation_controls.output_time_step = 1.;
     simulation_controls.n_channels = 1;
@@ -441,7 +441,7 @@ TEST(AerodynInflowTest, SimulationControls_Set) {
 }
 
 TEST(AerodynInflowTest, ErrorHandling_NoThrow) {
-    util::ErrorHandling error_handling;
+    const util::ErrorHandling error_handling;
     EXPECT_NO_THROW(error_handling.CheckError());
 }
 
@@ -452,66 +452,66 @@ TEST(AerodynInflowTest, ErrorHandling_Throw) {
 }
 
 TEST(AerodynInflowTest, FluidProperties_Default) {
-    util::FluidProperties fluid_properties;
-    EXPECT_NEAR(fluid_properties.density, 1.225f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.kinematic_viscosity, 1.464E-5f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.sound_speed, 335.f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.vapor_pressure, 1700.f, 1e-6f);
+    const util::FluidProperties fluid_properties;
+    EXPECT_NEAR(fluid_properties.density, 1.225F, 1e-6F);
+    EXPECT_NEAR(fluid_properties.kinematic_viscosity, 1.464E-5F, 1e-6F);
+    EXPECT_NEAR(fluid_properties.sound_speed, 335.F, 1e-6F);
+    EXPECT_NEAR(fluid_properties.vapor_pressure, 1700.F, 1e-6F);
 }
 
 TEST(AerodynInflowTest, FluidProperties_Set) {
     util::FluidProperties fluid_properties;
-    fluid_properties.density = 1.1f;
-    fluid_properties.kinematic_viscosity = 1.5E-5f;
-    fluid_properties.sound_speed = 340.f;
-    fluid_properties.vapor_pressure = 1800.f;
+    fluid_properties.density = 1.1F;
+    fluid_properties.kinematic_viscosity = 1.5E-5F;
+    fluid_properties.sound_speed = 340.F;
+    fluid_properties.vapor_pressure = 1800.F;
 
-    EXPECT_NEAR(fluid_properties.density, 1.1f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.kinematic_viscosity, 1.5E-5f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.sound_speed, 340.f, 1e-6f);
-    EXPECT_NEAR(fluid_properties.vapor_pressure, 1800.f, 1e-6f);
+    EXPECT_NEAR(fluid_properties.density, 1.1F, 1e-6F);
+    EXPECT_NEAR(fluid_properties.kinematic_viscosity, 1.5E-5F, 1e-6F);
+    EXPECT_NEAR(fluid_properties.sound_speed, 340.F, 1e-6F);
+    EXPECT_NEAR(fluid_properties.vapor_pressure, 1800.F, 1e-6F);
 }
 
 TEST(AerodynInflowTest, EnvironmentalConditions_Default) {
-    util::EnvironmentalConditions environmental_conditions;
-    EXPECT_NEAR(environmental_conditions.gravity, 9.80665f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.atm_pressure, 103500.f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.water_depth, 0.f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.msl_offset, 0.f, 1e-6f);
+    const util::EnvironmentalConditions environmental_conditions;
+    EXPECT_NEAR(environmental_conditions.gravity, 9.80665F, 1e-6F);
+    EXPECT_NEAR(environmental_conditions.atm_pressure, 103500.F, 1e-6F);
+    EXPECT_NEAR(environmental_conditions.water_depth, 0.F, 1e-6F);
+    EXPECT_NEAR(environmental_conditions.msl_offset, 0.F, 1e-6F);
 }
 
 TEST(AerodynInflowTest, EnvironmentalConditions_Set) {
     util::EnvironmentalConditions environmental_conditions;
-    environmental_conditions.gravity = 9.79665f;
-    environmental_conditions.atm_pressure = 103000.f;
-    environmental_conditions.water_depth = 100.f;
-    environmental_conditions.msl_offset = 10.f;
+    environmental_conditions.gravity = 9.79665F;
+    environmental_conditions.atm_pressure = 103000.F;
+    environmental_conditions.water_depth = 100.F;
+    environmental_conditions.msl_offset = 10.F;
 
-    EXPECT_NEAR(environmental_conditions.gravity, 9.79665f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.atm_pressure, 103000.f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.water_depth, 100.f, 1e-6f);
-    EXPECT_NEAR(environmental_conditions.msl_offset, 10.f, 1e-6f);
+    EXPECT_NEAR(environmental_conditions.gravity, 9.79665F, 1e-6F);
+    EXPECT_NEAR(environmental_conditions.atm_pressure, 103000.F, 1e-6F);
+    EXPECT_NEAR(environmental_conditions.water_depth, 100.F, 1e-6F);
+    EXPECT_NEAR(environmental_conditions.msl_offset, 10.F, 1e-6F);
 }
 
 TEST(AerodynInflowTest, VTKSettings_Default) {
-    util::VTKSettings vtk_settings;
-    EXPECT_EQ(vtk_settings.write_vtk, 0);
+    const util::VTKSettings vtk_settings;
+    EXPECT_EQ(vtk_settings.write_vtk, false);
     EXPECT_EQ(vtk_settings.vtk_type, 1);
-    ExpectArrayNear(vtk_settings.vtk_nacelle_dimensions, {-2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f});
-    EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.5f);
+    ExpectArrayNear(vtk_settings.vtk_nacelle_dimensions, {-2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F});
+    EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.5F);
 }
 
 TEST(AerodynInflowTest, VTKSettings_Set) {
     util::VTKSettings vtk_settings;
-    vtk_settings.write_vtk = 1;
+    vtk_settings.write_vtk = true;
     vtk_settings.vtk_type = 2;
-    vtk_settings.vtk_nacelle_dimensions = {-1.5f, -1.5f, 0.f, 5.f, 2.5f, 2.5f};
-    vtk_settings.vtk_hub_radius = 1.f;
+    vtk_settings.vtk_nacelle_dimensions = {-1.5F, -1.5F, 0.F, 5.F, 2.5F, 2.5F};
+    vtk_settings.vtk_hub_radius = 1.F;
 
-    EXPECT_EQ(vtk_settings.write_vtk, 1);
+    EXPECT_EQ(vtk_settings.write_vtk, true);
     EXPECT_EQ(vtk_settings.vtk_type, 2);
-    ExpectArrayNear(vtk_settings.vtk_nacelle_dimensions, {-1.5f, -1.5f, 0.f, 5.f, 2.5f, 2.5f});
-    EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.f);
+    ExpectArrayNear(vtk_settings.vtk_nacelle_dimensions, {-1.5F, -1.5F, 0.F, 5.F, 2.5F, 2.5F});
+    EXPECT_EQ(vtk_settings.vtk_hub_radius, 1.F);
 }
 
 /// Helper function to get the shared library path
@@ -525,15 +525,15 @@ std::string GetSharedLibraryPath() {
 TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
     // Load the shared library
     const std::string path = GetSharedLibraryPath();
-    util::AeroDynInflowLibrary aerodyn_inflow_library(path);
+    const util::AeroDynInflowLibrary aerodyn_inflow_library(path);
 
     // Check initial error handling state
     EXPECT_EQ(aerodyn_inflow_library.GetErrorHandling().error_status, 0);
     EXPECT_STREQ(aerodyn_inflow_library.GetErrorHandling().error_message.data(), "");
 
     // Check default values for other important members
-    EXPECT_EQ(aerodyn_inflow_library.GetFluidProperties().density, 1.225f);
-    EXPECT_EQ(aerodyn_inflow_library.GetEnvironmentalConditions().gravity, 9.80665f);
+    EXPECT_EQ(aerodyn_inflow_library.GetFluidProperties().density, 1.225F);
+    EXPECT_EQ(aerodyn_inflow_library.GetEnvironmentalConditions().gravity, 9.80665F);
     EXPECT_EQ(aerodyn_inflow_library.GetSimulationControls().debug_level, 0);
     EXPECT_EQ(aerodyn_inflow_library.GetSimulationControls().transpose_DCM, 1);
     EXPECT_EQ(aerodyn_inflow_library.GetVTKSettings().write_vtk, 0);
@@ -541,7 +541,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
 
 TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
     const std::filesystem::path project_root = FindProjectRoot();
-    std::filesystem::path input_path = project_root / "tests/unit_tests/external/";
+    const std::filesystem::path input_path = project_root / "tests/unit_tests/external/";
 
     // Set up simulation parameters
     util::SimulationControls sim_controls;
@@ -558,27 +558,27 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
 
     // Set up fluid properties
     util::FluidProperties fluid_props;
-    fluid_props.density = 1.225f;
-    fluid_props.kinematic_viscosity = 1.464E-05f;
-    fluid_props.sound_speed = 335.f;
-    fluid_props.vapor_pressure = 1700.f;
+    fluid_props.density = 1.225F;
+    fluid_props.kinematic_viscosity = 1.464E-05F;
+    fluid_props.sound_speed = 335.F;
+    fluid_props.vapor_pressure = 1700.F;
 
     // Set up environmental conditions
     util::EnvironmentalConditions env_conditions;
-    env_conditions.gravity = 9.80665f;
-    env_conditions.atm_pressure = 103500.f;
-    env_conditions.water_depth = 0.f;
-    env_conditions.msl_offset = 0.f;
+    env_conditions.gravity = 9.80665F;
+    env_conditions.atm_pressure = 103500.F;
+    env_conditions.water_depth = 0.F;
+    env_conditions.msl_offset = 0.F;
 
     // Set up VTK settings
-    util::VTKSettings vtk_settings{};
+    const util::VTKSettings vtk_settings{};
 
     // Set up turbine configuration
-    std::array<double, 7> hub_pos = {0., 0., 90., 1., 0., 0., 0.};
-    std::array<double, 7> nacelle_pos = {0., 0., 90., 1., 0., 0., 0.};
+    const std::array<double, 7> hub_pos = {0., 0., 90., 1., 0., 0., 0.};
+    const std::array<double, 7> nacelle_pos = {0., 0., 90., 1., 0., 0., 0.};
     std::vector<util::TurbineConfig::BladeInitialState> blade_states;
     for (int i = 0; i < 3; ++i) {
-        util::TurbineConfig::BladeInitialState blade_state(
+        const util::TurbineConfig::BladeInitialState blade_state(
             {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
             {
                 {0., 5., 90., 1., 0., 0., 0.},   // node_initial_positions - 1
@@ -587,9 +587,9 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
         );
         blade_states.push_back(blade_state);
     }
-    util::TurbineConfig turbine_config(
+    const util::TurbineConfig turbine_config(
         true,             // is_horizontal_axis
-        {0.f, 0.f, 0.f},  // reference_position
+        {0.F, 0.F, 0.F},  // reference_position
         hub_pos,          // hub_initial_position
         nacelle_pos,      // nacelle_initial_position
         blade_states
@@ -602,7 +602,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
     );
 
     // Initialize with turbine configuration
-    std::vector<util::TurbineConfig> turbine_configs = {turbine_config};
+    const std::vector<util::TurbineConfig> turbine_configs = {turbine_config};
     EXPECT_NO_THROW(aerodyn_inflow_library.Initialize(turbine_configs));
 
     // Simulate for 10 time steps
@@ -621,12 +621,12 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
 
         // Assert loads on blade nodes - they don't change since we're not updating the motion
         auto expected_loads = std::vector<std::array<float, 6>>{
-            {11132.2f, -1938.43f, 0.f, 44472.6f, 323391.f, 50444.8f},  // Blade 1, Node 1
-            {0.f, 0.f, 0.f, 0.f, 0.f, 0.f},                            // Blade 1, Node 2
-            {11132.2f, -1938.43f, 0.f, 44472.6f, 323391.f, 50444.8f},  // Blade 2, Node 1
-            {0.f, 0.f, 0.f, 0.f, 0.f, 0.f},                            // Blade 2, Node 2
-            {11132.2f, -1938.43f, 0.f, 44472.6f, 323391.f, 50444.8f},  // Blade 3, Node 1
-            {0.f, 0.f, 0.f, 0.f, 0.f, 0.f}                             // Blade 3, Node 2
+            {11132.2F, -1938.43F, 0.F, 44472.6F, 323391.F, 50444.8F},  // Blade 1, Node 1
+            {0.F, 0.F, 0.F, 0.F, 0.F, 0.F},                            // Blade 1, Node 2
+            {11132.2F, -1938.43F, 0.F, 44472.6F, 323391.F, 50444.8F},  // Blade 2, Node 1
+            {0.F, 0.F, 0.F, 0.F, 0.F, 0.F},                            // Blade 2, Node 2
+            {11132.2F, -1938.43F, 0.F, 44472.6F, 323391.F, 50444.8F},  // Blade 3, Node 1
+            {0.F, 0.F, 0.F, 0.F, 0.F, 0.F}                             // Blade 3, Node 2
         };
 
         const auto& turbine = aerodyn_inflow_library.GetTurbines()[0];
@@ -636,7 +636,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
                 const auto& node_loads = turbine.blade_nodes.loads[node_index];
                 const auto& e_loads = expected_loads[ii * 2 + jj];
                 for (size_t k = 0; k < 3; ++k) {
-                    EXPECT_NEAR(node_loads[k], e_loads[k], 1e-1f);
+                    EXPECT_NEAR(node_loads[k], e_loads[k], 1e-1F);
                 }
             }
         }

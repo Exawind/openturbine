@@ -61,7 +61,7 @@ struct TurbineConfig {
     };
 
     bool is_horizontal_axis{true};                           //< Is a horizontal axis turbine?
-    std::array<float, 3> reference_position{0.f, 0.f, 0.f};  //< Reference position of the turbine
+    std::array<float, 3> reference_position{0.F, 0.F, 0.F};  //< Reference position of the turbine
     Array_7 hub_initial_position;                            //< Initial hub position
     Array_7 nacelle_initial_position;                        //< Initial nacelle position
     std::vector<BladeInitialState>
@@ -72,9 +72,9 @@ struct TurbineConfig {
         std::vector<BladeInitialState> blade_states
     )
         : is_horizontal_axis(is_hawt),
-          reference_position(std::move(ref_pos)),
-          hub_initial_position(std::move(hub_pos)),
-          nacelle_initial_position(std::move(nacelle_pos)),
+          reference_position(ref_pos),
+          hub_initial_position(hub_pos),
+          nacelle_initial_position(nacelle_pos),
           blade_initial_states(std::move(blade_states)) {
         // Make sure the initial states are valid
         Validate();
@@ -97,7 +97,7 @@ struct TurbineConfig {
     }
 
     /// Returns the number of blades in the turbine
-    size_t NumberOfBlades() const { return blade_initial_states.size(); }
+    [[nodiscard]] size_t NumberOfBlades() const { return blade_initial_states.size(); }
 };
 
 /**
@@ -120,7 +120,11 @@ inline void SetPositionAndOrientation(
     auto orientation_2D = QuaternionToRotationMatrix({data[3], data[4], data[5], data[6]});
 
     // Flatten the 3x3 matrix to a 1D array
-    std::copy(&orientation_2D[0][0], &orientation_2D[0][0] + 9, orientation.begin());
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            orientation[i * 3 + j] = orientation_2D[i][j];
+        }
+    }
 }
 
 /**
@@ -143,13 +147,13 @@ struct MeshData {
     /// Constructor to initialize all mesh data to zero based on provided number of nodes
     MeshData(size_t n_nodes)
         : n_mesh_points(static_cast<int32_t>(n_nodes)),
-          position(std::vector<std::array<float, 3>>(n_nodes, {0.f, 0.f, 0.f})),
+          position(std::vector<std::array<float, 3>>(n_nodes, {0.F, 0.F, 0.F})),
           orientation(
               std::vector<std::array<double, 9>>(n_nodes, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
           ),
-          velocity(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})),
-          acceleration(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})),
-          loads(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})) {}
+          velocity(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})),
+          acceleration(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})),
+          loads(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})) {}
 
     /// Constructor to initialize all mesh data based on provided inputs
     MeshData(
@@ -159,13 +163,13 @@ struct MeshData {
         const std::vector<std::array<float, 6>>& ld
     )
         : n_mesh_points(static_cast<int32_t>(n_mesh_pts)),
-          position(std::vector<std::array<float, 3>>(n_mesh_pts, {0.f, 0.f, 0.f})),
+          position(std::vector<std::array<float, 3>>(n_mesh_pts, {0.F, 0.F, 0.F})),
           orientation(
               std::vector<std::array<double, 9>>(n_mesh_pts, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
           ),
-          velocity(std::move(vel)),
-          acceleration(std::move(acc)),
-          loads(std::move(ld)) {
+          velocity(vel),
+          acceleration(acc),
+          loads(ld) {
         // Set mesh position and orientation from 7x1 array [x, y, z, qw, qx, qy, qz]
         for (size_t i = 0; i < NumberOfMeshPoints(); ++i) {
             SetPositionAndOrientation(pos[i], position[i], orientation[i]);
@@ -198,7 +202,7 @@ struct MeshData {
     }
 
     /// Returns the number of mesh points as size_t
-    size_t NumberOfMeshPoints() const { return static_cast<size_t>(n_mesh_points); }
+    [[nodiscard]] size_t NumberOfMeshPoints() const { return static_cast<size_t>(n_mesh_points); }
 };
 
 /**
@@ -296,7 +300,7 @@ struct TurbineData {
     }
 
     /// Returns the number of blades as size_t
-    size_t NumberOfBlades() const { return static_cast<size_t>(n_blades); }
+    [[nodiscard]] size_t NumberOfBlades() const { return static_cast<size_t>(n_blades); }
 
     /**
      * @brief Sets the blade node values based on blade number and node number.
@@ -326,7 +330,7 @@ struct TurbineData {
         }
 
         // Get the node index and set the values for the node
-        size_t node_index = node_indices_by_blade[blade_number][node_number];
+        const size_t node_index = node_indices_by_blade[blade_number][node_number];
         blade_nodes.position[node_index] = position;
         blade_nodes.orientation[node_index] = orientation;
         blade_nodes.velocity[node_index] = velocity;
@@ -388,7 +392,7 @@ private:
  */
 struct SimulationControls {
     /// Debug levels used in AeroDyn-Inflow C bindings
-    enum class DebugLevel {
+    enum class DebugLevel : std::uint8_t {
         kNone = 0,        //< No debug output
         kSummary = 1,     //< Some summary info
         kDetailed = 2,    //< Above + all position/orientation info
@@ -436,7 +440,7 @@ struct SimulationControls {
  */
 struct ErrorHandling {
     /// Error levels used in InflowWind
-    enum class ErrorLevel {
+    enum class ErrorLevel : std::uint8_t {
         kNone = 0,
         kInfo = 1,
         kWarning = 2,
@@ -461,18 +465,18 @@ struct ErrorHandling {
 
 /// Struct to hold the properties of the working fluid (air)
 struct FluidProperties {
-    float density{1.225f};                 //< Air density (kg/m^3)
-    float kinematic_viscosity{1.464E-5f};  //< Kinematic viscosity (m^2/s)
-    float sound_speed{335.f};              //< Speed of sound in the working fluid (m/s)
-    float vapor_pressure{1700.f};          //< Vapor pressure of the working fluid (Pa)
+    float density{1.225F};                 //< Air density (kg/m^3)
+    float kinematic_viscosity{1.464E-5F};  //< Kinematic viscosity (m^2/s)
+    float sound_speed{335.F};              //< Speed of sound in the working fluid (m/s)
+    float vapor_pressure{1700.F};          //< Vapor pressure of the working fluid (Pa)
 };
 
 /// Struct to hold the environmental conditions
 struct EnvironmentalConditions {
-    float gravity{9.80665f};       //< Gravitational acceleration (m/s^2)
-    float atm_pressure{103500.f};  //< Atmospheric pressure (Pa)
-    float water_depth{0.f};        //< Water depth (m)
-    float msl_offset{0.f};         //< Mean sea level to still water level offset (m)
+    float gravity{9.80665F};       //< Gravitational acceleration (m/s^2)
+    float atm_pressure{103500.F};  //< Atmospheric pressure (Pa)
+    float water_depth{0.F};        //< Water depth (m)
+    float msl_offset{0.F};         //< Mean sea level to still water level offset (m)
 };
 
 /**
@@ -485,8 +489,8 @@ struct VTKSettings {
     bool write_vtk{false};                      //< Flag to write VTK output
     int vtk_type{1};                            //< Type of VTK output (1: surface meshes)
     std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
-                                                -2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f};
-    float vtk_hub_radius{1.5f};  //< Hub radius for VTK rendering
+                                                -2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F};
+    float vtk_hub_radius{1.5F};  //< Hub radius for VTK rendering
 };
 
 /**
@@ -521,36 +525,25 @@ public:
      * @param vtk VTK output settings
      */
     AeroDynInflowLibrary(
-        std::string shared_lib_path = "aerodyn_inflow_c_binding.dll",
+        const std::string& shared_lib_path = "aerodyn_inflow_c_binding.dll",
         ErrorHandling eh = ErrorHandling{}, FluidProperties fp = FluidProperties{},
         EnvironmentalConditions ec = EnvironmentalConditions{},
         SimulationControls sc = SimulationControls{}, VTKSettings vtk = VTKSettings{}
     )
         : lib_{shared_lib_path, util::dylib::no_filename_decorations},
-          error_handling_(std::move(eh)),
-          air_(std::move(fp)),
-          env_conditions_(std::move(ec)),
-          sim_controls_(std::move(sc)),
-          vtk_settings_(std::move(vtk)) {}
-
-    /// Destructor to take care of Fortran-side cleanup if the library is initialized
-    ~AeroDynInflowLibrary() noexcept {
-        try {
-            if (is_initialized_) {
-                Finalize();
-            }
-        } catch (const std::exception& e) {
-            std::cerr << "Error during AeroDynInflowLibrary destruction: " << e.what() << std::endl;
-        }
-    }
+          error_handling_{eh},
+          air_{fp},
+          env_conditions_{ec},
+          sim_controls_{std::move(sc)},
+          vtk_settings_{vtk} {}
 
     /// Getter methods for the private member variables
-    const ErrorHandling& GetErrorHandling() const { return error_handling_; }
-    const EnvironmentalConditions& GetEnvironmentalConditions() const { return env_conditions_; }
-    const FluidProperties& GetFluidProperties() const { return air_; }
-    const SimulationControls& GetSimulationControls() const { return sim_controls_; }
-    const VTKSettings& GetVTKSettings() const { return vtk_settings_; }
-    const std::vector<TurbineData>& GetTurbines() const { return turbines_; }
+    [[nodiscard]] const ErrorHandling& GetErrorHandling() const { return error_handling_; }
+    [[nodiscard]] const EnvironmentalConditions& GetEnvironmentalConditions() const { return env_conditions_; }
+    [[nodiscard]] const FluidProperties& GetFluidProperties() const { return air_; }
+    [[nodiscard]] const SimulationControls& GetSimulationControls() const { return sim_controls_; }
+    [[nodiscard]] const VTKSettings& GetVTKSettings() const { return vtk_settings_; }
+    [[nodiscard]] const std::vector<TurbineData>& GetTurbines() const { return turbines_; }
 
     /**
      * @brief Initialize the AeroDyn Inflow library
@@ -563,7 +556,7 @@ public:
      *
      * @param turbine_configs Vector of TurbineConfig objects, each representing a single turbine
      */
-    void Initialize(std::vector<TurbineConfig> turbine_configs) {
+    void Initialize(const std::vector<TurbineConfig>& turbine_configs) {
         PreInitialize(turbine_configs.size());
         SetupRotors(turbine_configs);
         FinalizeInitialization();
@@ -579,9 +572,9 @@ public:
         auto ADI_C_PreInit = lib_.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
 
         // Convert bool and other types to int32_t for Fortran compatibility
-        int32_t debug_level_int = static_cast<int32_t>(sim_controls_.debug_level);
-        int32_t transpose_dcm_int = sim_controls_.transpose_DCM ? 1 : 0;
-        int32_t n_turbines_int = static_cast<int32_t>(n_turbines);
+        auto debug_level_int = static_cast<int32_t>(sim_controls_.debug_level);
+        auto transpose_dcm_int = sim_controls_.transpose_DCM ? 1 : 0;
+        auto n_turbines_int = static_cast<int32_t>(n_turbines);
 
         ADI_C_PreInit(
             &n_turbines_int,                      // input: Number of turbines
@@ -620,7 +613,7 @@ public:
             // Create new turbine data to store the updates
             // Note: TurbineData and MeshData are validated during construction, so no need to
             // perform additional checks here
-            turbines_.emplace_back(TurbineData(tc));
+            turbines_.emplace_back(tc);
             auto& td = turbines_.back();
 
             // Call setup rotor for each turbine
@@ -668,10 +661,10 @@ public:
 
         // Primary input file will be passed as path to the file
         char* aerodyn_input_pointer{sim_controls_.aerodyn_input.data()};
-        int32_t aerodyn_input_length = static_cast<int32_t>(sim_controls_.aerodyn_input.size());
+        auto aerodyn_input_length = static_cast<int32_t>(sim_controls_.aerodyn_input.size());
 
         char* inflowwind_input_pointer{sim_controls_.inflowwind_input.data()};
-        int32_t inflowwind_input_length =
+        auto inflowwind_input_length =
             static_cast<int32_t>(sim_controls_.inflowwind_input.size());
 
         ADI_C_Init(
@@ -801,7 +794,7 @@ public:
 
         // Set up output channel values
         auto output_channel_values_c =
-            std::vector<float>(static_cast<size_t>(sim_controls_.n_channels), 0.f);
+            std::vector<float>(static_cast<size_t>(sim_controls_.n_channels), 0.F);
 
         ADI_C_CalcOutput(
             &time,                                // input: time at which to calculate output forces
