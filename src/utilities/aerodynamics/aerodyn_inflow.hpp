@@ -158,8 +158,7 @@ struct MeshData {
     /// Constructor to initialize all mesh data based on provided inputs
     MeshData(
         size_t n_mesh_pts, const std::vector<std::array<double, 7>>& pos,
-        const std::vector<std::array<float, 6>>& vel,
-        const std::vector<std::array<float, 6>>& acc,
+        const std::vector<std::array<float, 6>>& vel, const std::vector<std::array<float, 6>>& acc,
         const std::vector<std::array<float, 6>>& ld
     )
         : n_mesh_points(static_cast<int32_t>(n_mesh_pts)),
@@ -186,8 +185,7 @@ struct MeshData {
         }
 
         // Check all vectors are the same size as the number of mesh points
-        auto check_vector_size = [](const auto& vec, size_t exp_size,
-                                    const std::string& vec_name) {
+        auto check_vector_size = [](const auto& vec, size_t exp_size, const std::string& vec_name) {
             if (vec.size() != exp_size) {
                 throw std::invalid_argument(vec_name + " vector size does not match n_mesh_points");
             }
@@ -489,7 +487,8 @@ struct VTKSettings {
     bool write_vtk{false};                      //< Flag to write VTK output
     int vtk_type{1};                            //< Type of VTK output (1: surface meshes)
     std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
-                                                -2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F};
+                                                -2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F
+    };
     float vtk_hub_radius{1.5F};  //< Hub radius for VTK rendering
 };
 
@@ -539,7 +538,9 @@ public:
 
     /// Getter methods for the private member variables
     [[nodiscard]] const ErrorHandling& GetErrorHandling() const { return error_handling_; }
-    [[nodiscard]] const EnvironmentalConditions& GetEnvironmentalConditions() const { return env_conditions_; }
+    [[nodiscard]] const EnvironmentalConditions& GetEnvironmentalConditions() const {
+        return env_conditions_;
+    }
     [[nodiscard]] const FluidProperties& GetFluidProperties() const { return air_; }
     [[nodiscard]] const SimulationControls& GetSimulationControls() const { return sim_controls_; }
     [[nodiscard]] const VTKSettings& GetVTKSettings() const { return vtk_settings_; }
@@ -664,8 +665,7 @@ public:
         auto aerodyn_input_length = static_cast<int32_t>(sim_controls_.aerodyn_input.size());
 
         char* inflowwind_input_pointer{sim_controls_.inflowwind_input.data()};
-        auto inflowwind_input_length =
-            static_cast<int32_t>(sim_controls_.inflowwind_input.size());
+        auto inflowwind_input_length = static_cast<int32_t>(sim_controls_.inflowwind_input.size());
 
         ADI_C_Init(
             &is_aerodyn_input_passed_as_string,           // input: AD input is passed

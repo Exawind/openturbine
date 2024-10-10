@@ -27,7 +27,8 @@ TEST(AerodynInflowTest, TurbineConfig_Constructor) {
         const Array_7 root = {static_cast<double>(i), 0., 0., 1., 0., 0., 0.};
         const std::vector<Array_7> nodes = {
             {static_cast<double>(i), 1., 0., 1., 0., 0., 0.},
-            {static_cast<double>(i), 2., 0., 1., 0., 0., 0.}};
+            {static_cast<double>(i), 2., 0., 1., 0., 0., 0.}
+        };
         blade_states.emplace_back(root, nodes);
     }
 
@@ -132,10 +133,12 @@ protected:
         mesh_data = std::make_unique<util::MeshData>(2);
         mesh_data->position = {{1.F, 2.F, 3.F}, {4.F, 5.F, 6.F}};
         mesh_data->orientation = {
-            {1., 0., 0., 0., 1., 0., 0., 0., 1.}, {0., 1., 0., -1., 0., 0., 0., 0., 1.}};
+            {1., 0., 0., 0., 1., 0., 0., 0., 1.}, {0., 1., 0., -1., 0., 0., 0., 0., 1.}
+        };
         mesh_data->velocity = {{1.F, 2.F, 3.F, 4.F, 5.F, 6.F}, {7.F, 8.F, 9.F, 10.F, 11.F, 12.F}};
         mesh_data->acceleration = {
-            {1.F, 2.F, 3.F, 4.F, 5.F, 6.F}, {7.F, 8.F, 9.F, 10.F, 11.F, 12.F}};
+            {1.F, 2.F, 3.F, 4.F, 5.F, 6.F}, {7.F, 8.F, 9.F, 10.F, 11.F, 12.F}
+        };
         mesh_data->loads = {{1.F, 2.F, 3.F, 4.F, 5.F, 6.F}, {7.F, 8.F, 9.F, 10.F, 11.F, 12.F}};
     }
 
@@ -407,7 +410,8 @@ TEST(AerodynInflowTest, SimulationControls_Set) {
     simulation_controls.n_time_steps = 10;
     simulation_controls.store_HH_wind_speed = false;
     simulation_controls.transpose_DCM = false;
-    simulation_controls.debug_level = static_cast<int>(util::SimulationControls::DebugLevel::kSummary);
+    simulation_controls.debug_level =
+        static_cast<int>(util::SimulationControls::DebugLevel::kSummary);
     simulation_controls.output_format = 1;
     simulation_controls.output_time_step = 1.;
     simulation_controls.n_channels = 1;
