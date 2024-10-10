@@ -1,5 +1,6 @@
-# Specify the ROSCO controller test source files for the unit test executable
-if (OpenTurbine_BUILD_ROSCO_CONTROLLER)
+# Test ROSCO controller
+if (OpenTurbine_BUILD_ROSCO_CONTROLLER AND
+    (NOT OpenTurbine_ENABLE_SANITIZER_LEAK))
     target_sources(
         openturbine_unit_tests
         PRIVATE
@@ -7,4 +8,12 @@ if (OpenTurbine_BUILD_ROSCO_CONTROLLER)
     )
 endif()
 
-
+# Test AeroDyn Inflow
+if (OpenTurbine_BUILD_OPENFAST_ADI AND
+    (NOT OpenTurbine_ENABLE_SANITIZER_LEAK))
+    target_sources(
+        openturbine_unit_tests
+        PRIVATE
+        test_aerodyn_inflow.cpp
+    )
+endif()
