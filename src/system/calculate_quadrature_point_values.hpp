@@ -47,6 +47,7 @@ struct CalculateQuadraturePointValues {
     Kokkos::View<double** [6]> qp_FC_;
     Kokkos::View<double** [6]> qp_FD_;
     Kokkos::View<double** [6]> qp_FI_;
+    Kokkos::View<double** [6]> qp_FE_;
     Kokkos::View<double** [6]> qp_FG_;
     Kokkos::View<double** [6][6]> qp_Muu_;
     Kokkos::View<double** [6][6]> qp_Cuu_;
@@ -145,4 +146,5 @@ struct CalculateQuadraturePointValues {
         );
     }
 };
+
 }  // namespace openturbine

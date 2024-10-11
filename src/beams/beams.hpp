@@ -69,6 +69,7 @@ struct Beams {
     Kokkos::View<double** [6]> qp_Fc;                  // Elastic force
     Kokkos::View<double** [6]> qp_Fd;                  // Elastic force
     Kokkos::View<double** [6]> qp_Fi;                  // Inertial force
+    Kokkos::View<double** [6]> qp_Fe;                  // External force
     Kokkos::View<double** [6]> qp_Fg;                  // Gravity force
     Kokkos::View<double** [6][6]> qp_RR0;              // Global rotation
     Kokkos::View<double** [6][6]> qp_Muu;              // Mass in global frame
@@ -139,6 +140,7 @@ struct Beams {
           qp_Fc("qp_Fc", num_elems, max_elem_qps),
           qp_Fd("qp_Fd", num_elems, max_elem_qps),
           qp_Fi("qp_Fi", num_elems, max_elem_qps),
+          qp_Fe("qp_Fe", num_elems, max_elem_qps),
           qp_Fg("qp_Fg", num_elems, max_elem_qps),
           qp_RR0("qp_RR0", num_elems, max_elem_qps),
           qp_Muu("qp_Muu", num_elems, max_elem_qps),

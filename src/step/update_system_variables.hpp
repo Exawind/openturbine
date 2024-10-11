@@ -74,6 +74,7 @@ inline void UpdateSystemVariables(StepParameters& parameters, const Beams& beams
             beams.qp_Fc,
             beams.qp_Fd,
             beams.qp_Fi,
+            beams.qp_Fe,
             beams.qp_Fg,
             beams.qp_Muu,
             beams.qp_Cuu,
