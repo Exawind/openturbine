@@ -16,9 +16,11 @@ inline void AssembleResidualVector(const Beams& beams) {
     const auto weight_size = Kokkos::View<double*>::shmem_size(beams.max_elem_qps);
     const auto node_variable_size = Kokkos::View<double* [6]>::shmem_size(beams.max_elem_nodes);
     const auto qp_variable_size = Kokkos::View<double* [6]>::shmem_size(beams.max_elem_qps);
+    // TODO We need to make sure that the scratch space is sufficient for all the views and not use
+    // magic numbers here
     range_policy.set_scratch_size(
         1,
-        Kokkos::PerTeam(2 * shape_size + 2 * weight_size + node_variable_size + 4 * qp_variable_size)
+        Kokkos::PerTeam(2 * shape_size + 2 * weight_size + node_variable_size + 5 * qp_variable_size)
     );
     Kokkos::parallel_for(
         "IntegrateResidualVector", range_policy,
