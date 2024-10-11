@@ -11,6 +11,7 @@ target_sources(
     test_calculate_strain.cpp
     test_calculate_mass_matrix_components.cpp
     test_calculate_temporary_variables.cpp
+    test_calculate_external_forces.cpp
     test_calculate_force_FC.cpp
     test_calculate_force_FD.cpp
     test_calculate_inertial_forces.cpp
