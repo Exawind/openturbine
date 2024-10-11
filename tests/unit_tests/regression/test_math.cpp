@@ -203,7 +203,7 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
     TestRotationToQuaternion(phi, {0.707107, 0., 0., 0.707107});
 }
 
-TEST(QuaternionTest, QuaternionToRotationVector_1) {
+void test_quaternion_to_rotation_vector_2() {
     const auto n = 100U;
     const auto dtheta = M_PI / static_cast<double>(n);
     for (size_t i = 0; i < n; ++i) {
@@ -221,6 +221,10 @@ TEST(QuaternionTest, QuaternionToRotationVector_1) {
         );
         expect_kokkos_view_1D_equal(phi2, {rot_vec[0], rot_vec[1], rot_vec[2]});
     }
+}
+
+TEST(QuaternionTest, QuaternionToRotationVector_1) {
+    test_quaternion_to_rotation_vector_2();
 }
 
 TEST(QuaternionTest, QuaternionToRotationVector_2) {
