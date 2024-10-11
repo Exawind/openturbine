@@ -2,6 +2,7 @@
 target_sources(
     openturbine_unit_tests
     PRIVATE
+    test_beams_input.cpp
     test_interpolate_QP_state.cpp
     test_interpolate_QP_vector.cpp
 )
