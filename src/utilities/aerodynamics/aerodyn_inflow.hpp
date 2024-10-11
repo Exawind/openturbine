@@ -335,13 +335,12 @@ struct TurbineData {
      *
      * @param blade_number The number of the blade to update.
      * @param node_number The number of the node to update within the specified blade.
-     * @param position The new position of the node [x, y, z]
-     * @param orientation The new orientation of the node [r11, r12, ..., r33]
+     * @param position The new position of the node [x, y, z, qw, qx, qy, qz]
      * @param velocity The new velocity of the node [u, v, w, p, q, r]
      * @param acceleration The new acceleration of the node [u_dot, v_dot, w_dot, p_dot, q_dot,
      * r_dot]
      */
-    void SetBladeNodeValues(
+    void SetBladeNodeMotion(
         size_t blade_number, size_t node_number, const std::array<double, 7>& position,
         const std::array<double, 6>& velocity, const std::array<double, 6>& acceleration
     ) {
@@ -367,6 +366,97 @@ struct TurbineData {
         blade_nodes.SetValues(node_index, position_new, velocity, acceleration);
     }
 
+    /**
+     * @brief Sets the blade root values based on blade number.
+     *
+     * This method updates the blade root values in the mesh based on the provided blade number and
+     * node number. It handles orientation conversion so Z is along blade axis.
+     *
+     * @param blade_number The number of the blade to update.
+     * @param position The new position of the node [x, y, z, qw, qx, qy, qz]
+     * @param velocity The new velocity of the node [u, v, w, p, q, r]
+     * @param acceleration The new acceleration of the node [u_dot, v_dot, w_dot, p_dot, q_dot,
+     * r_dot]
+     */
+    void SetBladeRootMotion(
+        size_t blade_number, const std::array<double, 7>& position,
+        const std::array<double, 6>& velocity, const std::array<double, 6>& acceleration
+    ) {
+        if (blade_number >= static_cast<size_t>(n_blades)) {
+            throw std::out_of_range("Blade number out of range.");
+        }
+
+        // Rotation to convert blade orientation
+        const auto r_x2z = RotationVectorToQuaternion({0., M_PI / 2., 0.});
+
+        // Original orientation
+        const Array_4 r{position[3], position[4], position[5], position[6]};
+
+        // Converted orientation
+        const auto r_adi = QuaternionCompose(r, r_x2z);
+
+        // Position with new orientation
+        const Array_7 position_new{position[0], position[1], position[2], r_adi[0],
+                                   r_adi[1],    r_adi[2],    r_adi[3]};
+
+        blade_roots.SetValues(blade_number, position_new, velocity, acceleration);
+    }
+
+    /**
+     * @brief Sets the hub motion values.
+     *
+     * This method updates the hub motion values.
+     *
+     * @param position The new position of the node [x, y, z, qw, qx, qy, qz]
+     * @param velocity The new velocity of the node [u, v, w, p, q, r]
+     * @param acceleration The new acceleration of the node [u_dot, v_dot, w_dot, p_dot, q_dot,
+     * r_dot]
+     */
+    void SetHubMotion(
+        const std::array<double, 7>& position, const std::array<double, 6>& velocity,
+        const std::array<double, 6>& acceleration
+    ) {
+        this->hub.SetValues(0, position, velocity, acceleration);
+    }
+
+    /**
+     * @brief Sets the nacelle motion values.
+     *
+     * This method sets the nacelle motion values.
+     *
+     * @param position The new position of the node [x, y, z, qw, qx, qy, qz]
+     * @param velocity The new velocity of the node [u, v, w, p, q, r]
+     * @param acceleration The new acceleration of the node [u_dot, v_dot, w_dot, p_dot, q_dot,
+     * r_dot]
+     */
+    void SetNacelleMotion(
+        const std::array<double, 7>& position, const std::array<double, 6>& velocity,
+        const std::array<double, 6>& acceleration
+    ) {
+        this->nacelle.SetValues(0, position, velocity, acceleration);
+    }
+
+    /**
+     * @brief Gets the blade node loads based on blade number and node number.
+     *
+     * This method returns the blade node loads based on the provided blade number and
+     * node number. It simplifies the process by abstracting away the indexing logic.
+     *
+     * @param blade_number The number of the blade to update.
+     * @param node_number The number of the node to update within the specified blade.
+     */
+    Array_6 GetBladeNodeLoad(size_t blade_number, size_t node_number) {
+        if (blade_number >= static_cast<size_t>(n_blades) ||
+            node_number >= node_indices_by_blade[blade_number].size()) {
+            throw std::out_of_range("Blade or node number out of range.");
+        }
+
+        // Get the loads for this blade and node
+        size_t node_index = node_indices_by_blade[blade_number][node_number];
+
+        return blade_nodes.load[node_index];
+    }
+
 private:
     /// Calculates the total number of blade nodes across all blades
     static size_t CalculateTotalBladeNodes(const TurbineConfig& tc) {
@@ -389,24 +479,28 @@ private:
     /// Initializes blade data including roots, nodes, and mappings
     void InitializeBlades(const TurbineConfig& tc) {
         size_t i_blade{0};
-        size_t i_node{0};
+        size_t i_node_total{0};
 
         // Initialize blade roots and nodes
         for (const auto& blade : tc.blade_initial_states) {
             // Initialize blade root
-            SetPositionAndOrientation(
-                blade.root_initial_position, blade_roots.position[i_blade],
-                blade_roots.orientation[i_blade]
+            this->SetBladeRootMotion(
+                i_blade, blade.root_initial_position, Array_6{0., 0., 0., 0., 0., 0.},
+                Array_6{0., 0., 0., 0., 0., 0.}
             );
 
             // Initialize blade nodes
-            for (const auto& node : blade.node_initial_positions) {
-                SetPositionAndOrientation(
-                    node, blade_nodes.position[i_node], blade_nodes.orientation[i_node]
-                );
-                node_indices_by_blade[i_blade].emplace_back(i_node);
+            size_t i_node{0};
+            for (const auto& position : blade.node_initial_positions) {
+                node_indices_by_blade[i_blade].emplace_back(i_node_total);
                 blade_nodes_to_blade_num_mapping.emplace_back(static_cast<int32_t>(i_blade + 1));
+
+                this->SetBladeNodeMotion(
+                    i_blade, i_node, position, Array_6{0., 0., 0., 0., 0., 0.},  // velocity
+                    Array_6{0., 0., 0., 0., 0., 0.}                              // acceleration
+                );
                 ++i_node;
+                ++i_node_total;
             }
             ++i_blade;
         }
@@ -447,15 +541,15 @@ struct SimulationControls {
     int n_time_steps{0};            //< Number of time steps
 
     // Flags
-    bool store_HH_wind_speed{true};  //< Flag to store HH wind speed
-    bool transpose_DCM{true};        //< Flag to transpose the direction cosine matrix
-    int debug_level{static_cast<int>(DebugLevel::kNone)};  //< Debug level (0-4)
+    bool store_HH_wind_speed{true};             //< Flag to store HH wind speed
+    bool transpose_DCM{true};                   //< Flag to transpose the direction cosine matrix
+    DebugLevel debug_level{DebugLevel::kNone};  //< Debug level (0-4)
 
     // Outputs
     int output_format{1};                     //< File format for writing outputs
     double output_time_step{0.1};             //< Timestep for outputs to file
     std::string output_root_name{"ADI_out"};  //< Root name for output files
-    int n_channels{0};                        //< Number of channels returned
+    size_t n_channels{0};                     //< Number of channels returned
 };
 
 /**
@@ -468,7 +562,8 @@ struct VTKSettings {
     int write_vtk{0};                           //< Flag to write VTK output
     int vtk_type{1};                            //< Type of VTK output (1: surface meshes)
     std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
-                                                -2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f};
+                                                -2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f
+    };
     float vtk_hub_radius{1.5f};  //< Hub radius for VTK rendering
 };
 
@@ -561,9 +656,9 @@ public:
         auto ADI_C_PreInit = lib_.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
 
         // Convert bool and other types to int32_t for Fortran compatibility
-        int32_t debug_level_int = sim_controls_.debug_level;
-        int32_t transpose_dcm_int = sim_controls_.transpose_DCM ? 1 : 0;
-        int32_t n_turbines_int = static_cast<int32_t>(n_turbines);
+        int32_t debug_level_int{static_cast<int32_t>(sim_controls_.debug_level)};
+        int32_t transpose_dcm_int{sim_controls_.transpose_DCM ? 1 : 0};
+        int32_t n_turbines_int{static_cast<int32_t>(n_turbines)};
 
         ADI_C_PreInit(
             &n_turbines_int,                      // input: Number of turbines
@@ -654,6 +749,13 @@ public:
         int32_t inflowwind_input_length =
             static_cast<int32_t>(sim_controls_.inflowwind_input.size());
 
+        // Channel name and channel unit string arrays
+        std::string channel_names_c(20 * 8000 + 1, ' ');  //< Output channel names
+        std::string channel_units_c(20 * 8000 + 1, ' ');  //< Output channel units
+
+        // Number of output channels (set by ADI_C_Init)
+        int32_t n_channels{0};
+
         ADI_C_Init(
             &is_aerodyn_input_passed_as_string,           // input: AD input is passed
             &aerodyn_input_pointer,                       // input: AD input file as string
@@ -680,7 +782,7 @@ public:
             &vtk_settings_.vtk_hub_radius,                // input: VTK hub radius
             &sim_controls_.output_format,                 // input: output format
             &sim_controls_.output_time_step,              // input: output time step
-            &sim_controls_.n_channels,                    // output: number of channels
+            &n_channels,                                  // output: number of channels
             channel_names_c.data(),                       // output: output channel names
             channel_units_c.data(),                       // output: output channel units
             &error_handling_.error_status,                // output: error status
@@ -688,9 +790,21 @@ public:
         );
 
         // Allocate vector of output channel values
-        channel_values = std::vector<float>(static_cast<size_t>(sim_controls_.n_channels), 0.f);
+        sim_controls_.n_channels = static_cast<size_t>(n_channels);
+        this->channel_values = std::vector<float>(sim_controls_.n_channels, 0.f);
+        this->channel_names.resize(sim_controls_.n_channels);
+        this->channel_units.resize(sim_controls_.n_channels);
+        std::string tmp;
+        for (size_t i = 0; i < sim_controls_.n_channels; ++i) {
+            tmp = channel_names_c.substr(20 * i, 20);
+            tmp.erase(tmp.find_last_not_of(" ") + 1);
+            this->channel_names[i] = tmp;
+            tmp = channel_units_c.substr(20 * i, 20);
+            tmp.erase(tmp.find_last_not_of(" ") + 1);
+            this->channel_units[i] = tmp;
+        }
 
-        error_handling_.CheckError();
+        this->error_handling_.CheckError();
         is_initialized_ = true;
     }
 
@@ -700,7 +814,7 @@ public:
      * @details Updates the motion data (position, orientation, velocity, acceleration) for
      * the hub, nacelle, blade roots, and blade nodes of each turbine.
      */
-    void SetupRotorMotion() {
+    void SetRotorMotion() {
         auto
             ADI_C_SetRotorMotion =
                 lib_
@@ -742,12 +856,27 @@ public:
     }
 
     /**
-     * @brief Gets the aerodynamic loads on the rotor
+     * @brief Calculates the output channels at a given time
      *
-     * @details Fetches the current aerodynamic forces and moments acting on each blade node
-     * for all turbines in the simulation.
+     * @details This function calculates the output channels at a given time by passing the time
+     * and the output channel values to the Fortran routine. It also populates the turbine loads.
+     *
+     * @param time Time at which to calculate the output channels
+     * @param output_channel_values Output channel values
      */
-    void GetRotorAerodynamicLoads() {
+    void CalculateOutput(double time) {
+        auto ADI_C_CalcOutput =
+            lib_.get_function<void(double*, float*, int*, char*)>("ADI_C_CalcOutput");
+
+        ADI_C_CalcOutput(
+            &time,                                // input: time at which to calculate output forces
+            channel_values.data(),                // output: output channel values
+            &error_handling_.error_status,        // output: error status
+            error_handling_.error_message.data()  // output: error message buffer
+        );
+
+        error_handling_.CheckError();
+
         auto ADI_C_GetRotorLoads =
             lib_.get_function<void(int*, int*, float*, int*, char*)>("ADI_C_GetRotorLoads");
 
@@ -767,29 +896,6 @@ public:
 
             error_handling_.CheckError();
         }
-    }
-
-    /**
-     * @brief Calculates the output channels at a given time
-     *
-     * @details This function calculates the output channels at a given time by passing the time
-     * and the output channel values to the Fortran routine.
-     *
-     * @param time Time at which to calculate the output channels
-     * @param output_channel_values Output channel values
-     */
-    void CalculateOutput(double time) {
-        auto ADI_C_CalcOutput =
-            lib_.get_function<void(double*, float*, int*, char*)>("ADI_C_CalcOutput");
-
-        ADI_C_CalcOutput(
-            &time,                                // input: time at which to calculate output forces
-            channel_values.data(),                // output: output channel values
-            &error_handling_.error_status,        // output: error status
-            error_handling_.error_message.data()  // output: error message buffer
-        );
-
-        error_handling_.CheckError();
     }
 
     /**
@@ -833,10 +939,10 @@ public:
         is_initialized_ = false;
     }
 
-    std::vector<TurbineData> turbines;                  //< Turbine data (1 per turbine)
-    std::array<char, 20 * 8000 + 1> channel_names_c{};  //< Output channel names
-    std::array<char, 20 * 8000 + 1> channel_units_c{};  //< Output channel units
-    std::vector<float> channel_values{};                //< Output channel values
+    std::vector<TurbineData> turbines;         //< Turbine data (1 per turbine)
+    std::vector<std::string> channel_names{};  //< Output channel names
+    std::vector<std::string> channel_units{};  //< Output channel units
+    std::vector<float> channel_values{};       //< Output channel values
 
 private:
     bool is_initialized_{false};              //< Flag to check if the library is initialized

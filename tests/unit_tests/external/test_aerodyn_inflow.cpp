@@ -413,7 +413,7 @@ TEST(AerodynInflowTest, TurbineData_SetBladeNodeValues) {
     std::array<float, 6> new_loads = {13.f, 14.f, 15.f, 16.f, 17.f, 18.f};
 
     // Call the method to set new values
-    turbine_data.SetBladeNodeValues(
+    turbine_data.SetBladeNodeMotion(
         blade_number, node_number, new_position, new_orientation, new_velocity, new_acceleration,
         new_loads
     );
@@ -607,7 +607,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoop) {
 
     for (int i = 0; i < 10; ++i) {
         // Update motion data for each time step (if needed)
-        EXPECT_NO_THROW(aerodyn_inflow_library.SetupRotorMotion());
+        EXPECT_NO_THROW(aerodyn_inflow_library.SetRotorMotion());
 
         EXPECT_NO_THROW(aerodyn_inflow_library.UpdateStates(current_time, next_time));
         EXPECT_NO_THROW(aerodyn_inflow_library.CalculateOutput(next_time, output_channel_values));
