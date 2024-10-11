@@ -48,7 +48,7 @@ struct CalculateQuadraturePointValues {
     Kokkos::View<double** [6]> qp_FC_;
     Kokkos::View<double** [6]> qp_FD_;
     Kokkos::View<double** [6]> qp_FI_;
-    Kokkos::View<double** [6]> qp_Fe_;
+    Kokkos::View<double** [6]> qp_FE_;
     Kokkos::View<double** [6]> qp_FG_;
     Kokkos::View<double** [6][6]> qp_Muu_;
     Kokkos::View<double** [6][6]> qp_Cuu_;
@@ -110,7 +110,7 @@ struct CalculateQuadraturePointValues {
             Kokkos::TeamThreadRange(member, num_qps),
             CalculateExternalForces{
                 i_elem, qp_Muu_, qp_u_ddot_, qp_omega_, qp_omega_dot_, qp_eta_tilde_,
-                qp_omega_tilde_, qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_Fe_
+                qp_omega_tilde_, qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_FE_
             }
         );
         member.team_barrier();
