@@ -6,7 +6,6 @@
 #include "calculate_Puu.hpp"
 #include "calculate_Quu.hpp"
 #include "calculate_RR0.hpp"
-#include "calculate_external_forces.hpp"
 #include "calculate_force_FC.hpp"
 #include "calculate_force_FD.hpp"
 #include "calculate_gravity_force.hpp"
@@ -102,15 +101,6 @@ struct CalculateQuadraturePointValues {
             CalculateInertialForces{
                 i_elem, qp_Muu_, qp_u_ddot_, qp_omega_, qp_omega_dot_, qp_eta_tilde_,
                 qp_omega_tilde_, qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_FI_
-            }
-        );
-        member.team_barrier();
-
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateExternalForces{
-                i_elem, qp_Muu_, qp_u_ddot_, qp_omega_, qp_omega_dot_, qp_eta_tilde_,
-                qp_omega_tilde_, qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_FE_
             }
         );
         member.team_barrier();

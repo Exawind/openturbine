@@ -28,6 +28,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fc) {
     const auto qp_Fc = get_qp_Fc<number_of_qps>({1., 2., 3., 4., 5., 6.});
     const auto qp_Fd = QpVectorView("qp_Fd");
     const auto qp_Fi = QpVectorView("qp_Fi");
+    const auto qp_Fe = QpVectorView("qp_Fe");
     const auto qp_Fg = QpVectorView("qp_Fg");
 
     const auto residual_vector_terms =
@@ -37,7 +38,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fc) {
         "IntegrateResidualVectorElement", number_of_nodes,
         IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fg, residual_vector_terms
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
         }
     );
 
@@ -71,6 +72,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fd) {
     const auto qp_Fc = QpVectorView("qp_Fc");
     const auto qp_Fd = get_qp_Fd<number_of_qps>({1., 2., 3., 4., 5., 6.});
     const auto qp_Fi = QpVectorView("qp_Fi");
+    const auto qp_Fe = QpVectorView("qp_Fe");
     const auto qp_Fg = QpVectorView("qp_Fg");
 
     const auto residual_vector_terms =
@@ -80,7 +82,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fd) {
         "IntegrateResidualVectorElement", number_of_nodes,
         IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fg, residual_vector_terms
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
         }
     );
 
@@ -114,6 +116,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fi) {
     const auto qp_Fc = QpVectorView("qp_Fc");
     const auto qp_Fd = QpVectorView("qp_Fd");
     const auto qp_Fi = get_qp_Fi<number_of_qps>({1., 2., 3., 4., 5., 6.});
+    const auto qp_Fe = QpVectorView("qp_Fe");
     const auto qp_Fg = QpVectorView("qp_Fg");
 
     const auto residual_vector_terms =
@@ -123,7 +126,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fi) {
         "IntegrateResidualVectorElement", number_of_nodes,
         IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fg, residual_vector_terms
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
         }
     );
 
@@ -157,6 +160,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fg) {
     const auto qp_Fc = QpVectorView("qp_Fc");
     const auto qp_Fd = QpVectorView("qp_Fd");
     const auto qp_Fi = QpVectorView("qp_Fi");
+    const auto qp_Fe = QpVectorView("qp_Fe");
     const auto qp_Fg = get_qp_Fg<number_of_qps>({1., 2., 3., 4., 5., 6.});
 
     const auto residual_vector_terms =
@@ -166,7 +170,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fg) {
         "IntegrateResidualVectorElement", number_of_nodes,
         IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fg, residual_vector_terms
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
         }
     );
 
@@ -199,6 +203,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_FX) {
     const auto qp_Fc = QpVectorView("qp_Fc");
     const auto qp_Fd = QpVectorView("qp_Fd");
     const auto qp_Fi = QpVectorView("qp_Fi");
+    const auto qp_Fe = QpVectorView("qp_Fe");
     const auto qp_Fg = QpVectorView("qp_Fg");
 
     const auto residual_vector_terms =
@@ -208,7 +213,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_FX) {
         "IntegrateResidualVectorElement", number_of_nodes,
         IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fg, residual_vector_terms
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
         }
     );
 
@@ -243,6 +248,7 @@ TEST(IntegrateResidualVector, TwoElementsOneNodeOneQP) {
     const auto qp_Fc_2 = get_qp_Fc<number_of_qps>({2., 4., 6., 8., 10., 12.});
     const auto qp_Fd = QpVectorView("qp_Fd");
     const auto qp_Fi = QpVectorView("qp_Fi");
+    const auto qp_Fe = QpVectorView("qp_Fe");
     const auto qp_Fg = QpVectorView("qp_Fg");
 
     const auto residual_vector_terms =
@@ -252,7 +258,7 @@ TEST(IntegrateResidualVector, TwoElementsOneNodeOneQP) {
         "IntegrateResidualVectorElement", number_of_nodes,
         IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc_1,
-            qp_Fd, qp_Fi, qp_Fg, residual_vector_terms
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
         }
     );
 
@@ -260,7 +266,7 @@ TEST(IntegrateResidualVector, TwoElementsOneNodeOneQP) {
         "IntegrateResidualVectorElement", number_of_nodes,
         IntegrateResidualVectorElement{
             1U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc_2,
-            qp_Fd, qp_Fi, qp_Fg, residual_vector_terms
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
         }
     );
 
@@ -295,6 +301,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeTwoQPs) {
     const auto qp_Fc = get_qp_Fc<number_of_qps>({1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12.});
     const auto qp_Fd = QpVectorView("qp_Fd");
     const auto qp_Fi = QpVectorView("qp_Fi");
+    const auto qp_Fe = QpVectorView("qp_Fe");
     const auto qp_Fg = QpVectorView("qp_Fg");
 
     const auto residual_vector_terms =
@@ -304,7 +311,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeTwoQPs) {
         "IntegrateResidualVectorElement", number_of_nodes,
         IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fg, residual_vector_terms
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
         }
     );
 
@@ -338,6 +345,7 @@ TEST(IntegrateResidualVector, OneElementTwoNodesOneQP) {
     const auto qp_Fc = get_qp_Fc<number_of_qps>({1., 2., 3., 4., 5., 6.});
     const auto qp_Fd = QpVectorView("qp_Fd");
     const auto qp_Fi = QpVectorView("qp_Fi");
+    const auto qp_Fe = QpVectorView("qp_Fe");
     const auto qp_Fg = QpVectorView("qp_Fg");
 
     const auto residual_vector_terms =
@@ -347,7 +355,7 @@ TEST(IntegrateResidualVector, OneElementTwoNodesOneQP) {
         "IntegrateResidualVectorElement", number_of_nodes,
         IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fg, residual_vector_terms
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
         }
     );
 
