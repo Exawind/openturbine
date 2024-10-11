@@ -69,6 +69,8 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Aerodynamics and Inflow library
     const std::string adi_shared_lib_path{"./aerodyn_inflow_c_binding.dll"};
+    const std::string aerodyn_input_path{"./IEA-15-240-RWT/AeroDyn15.dat"};
+    const std::string inflowwind_input_path{"./IEA-15-240-RWT/InflowFile.dat"};
 
     // Solution parameters
     constexpr bool is_dynamic_solve{true};
@@ -108,7 +110,7 @@ TEST(Milestone, IEA15RotorAeroController) {
         rotor_speed_init * gear_box_ratio;  // Generator speed (rad/s)
     controller.io.generator_torque_actual =
         generator_power_init / (rotor_speed_init * gear_box_ratio);  // Generator torque
-    controller.io.electrical_power_actual = generator_power_init;    // Generator power (W)
+    controller.io.generator_power_actual = generator_power_init;     // Generator power (W)
     controller.io.rotor_speed_actual = rotor_speed_init;             // Rotor speed (rad/s)
     controller.io.horizontal_wind_speed = hub_wind_speed_init;       // Hub wind speed (m/s)
 
@@ -312,8 +314,8 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Simulation controls
     util::SimulationControls sc;
-    sc.aerodyn_input = "./IEA-15-240-RWT/AeroDyn15.dat";
-    sc.inflowwind_input = "./IEA-15-240-RWT/InflowFile.dat";
+    sc.aerodyn_input = aerodyn_input_path;
+    sc.inflowwind_input = inflowwind_input_path;
     sc.time_step = step_size;
     sc.max_time = t_end;
     sc.total_elapsed_time = 0.;
@@ -324,7 +326,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // VTK settings
     util::VTKSettings vtk_settings;
-    vtk_settings.write_vtk = 0;  // Animation
+    vtk_settings.write_vtk = 2;  // Animation
     vtk_settings.vtk_type = 2;   // Lines
     vtk_settings.vtk_nacelle_dimensions = {-2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f};
     vtk_settings.vtk_hub_radius = static_cast<float>(hub_radius);
@@ -390,9 +392,6 @@ TEST(Milestone, IEA15RotorAeroController) {
       << std::setw(16) << "RtFldFxg"   //
       << std::setw(16) << "RtFldFyg"   //
       << std::setw(16) << "RtFldFzg"   //
-      << std::setw(16) << "RtFldMxg"   //
-      << std::setw(16) << "RtFldMyg"   //
-      << std::setw(16) << "RtFldMzg"   //
       << "\n";
     w << std::setw(16) << "(s)"     //
       << std::setw(16) << "(m/s)"   //
@@ -405,9 +404,6 @@ TEST(Milestone, IEA15RotorAeroController) {
       << std::setw(16) << "(N)"     //
       << std::setw(16) << "(N)"     //
       << std::setw(16) << "(N)"     //
-      << std::setw(16) << "(N-m)"   //
-      << std::setw(16) << "(N-m)"   //
-      << std::setw(16) << "(N-m)"   //
       << "\n";
 
     //--------------------------------------------------------------------------
@@ -420,18 +416,16 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
-        // Write VTK output to file
-        // auto tmp = std::to_string(i);
-        // WriteVTKBeamsQP(
-        //     beams,
-        //     step_dir / (std::string("step_") + std::string(4 - tmp.size(), '0') + tmp + ".vtu")
-        // );
+        auto tmp = std::to_string(i);
+        WriteVTKBeamsQP(
+            beams,
+            step_dir / (std::string("step_") + std::string(4 - tmp.size(), '0') + tmp + ".vtu")
+        );
 
-        // WriteVTKBeamsNodes(
-        //     beams,
-        //     step_dir / (std::string("step_nodes_") + std::string(4 - tmp.size(), '0') + tmp +
-        //     ".vtu")
-        // );
+        WriteVTKBeamsNodes(
+            beams,
+            step_dir / (std::string("step_nodes_") + std::string(4 - tmp.size(), '0') + tmp + ".vtu")
+        );
 
         // Get current time and next time
         const auto current_time{step_size * static_cast<double>(i)};
@@ -501,10 +495,10 @@ TEST(Milestone, IEA15RotorAeroController) {
         controller.io.pitch_blade1_actual = pitch_actual;
         controller.io.pitch_blade2_actual = pitch_actual;
         controller.io.pitch_blade3_actual = pitch_actual;
-        controller.io.generator_speed_actual = generator_speed;       // Generator speed (rad/s)
-        controller.io.electrical_power_actual = generator_power;      // Generator power (W)
-        controller.io.generator_torque_actual = torque_actual;        // Generator torque (N-m)
         controller.io.rotor_speed_actual = rotor_speed;               // Rotor speed (rad/s)
+        controller.io.generator_speed_actual = generator_speed;       // Generator speed (rad/s)
+        controller.io.generator_power_actual = generator_power;       // Generator power (W)
+        controller.io.generator_torque_actual = torque_actual;        // Generator torque (N-m)
         controller.io.horizontal_wind_speed = adi.channel_values[0];  // Hub wind speed (m/s)
         controller.CallController();
 
@@ -520,13 +514,10 @@ TEST(Milestone, IEA15RotorAeroController) {
           << std::setw(16) << rotor_speed / rpm_to_radps                            //
           << std::setw(16) << generator_speed / rpm_to_radps                        //
           << std::setw(16) << controller.io.generator_torque_command / 1000.        //
-          << std::setw(16) << controller.io.electrical_power_actual / 1000.         //
+          << std::setw(16) << controller.io.generator_power_actual / 1000.          //
           << std::setw(16) << load_sum[0]                                           //
           << std::setw(16) << load_sum[1]                                           //
           << std::setw(16) << load_sum[2]                                           //
-          << std::setw(16) << load_sum[3]                                           //
-          << std::setw(16) << load_sum[4]                                           //
-          << std::setw(16) << load_sum[5]                                           //
           << "\n";
 
         // Predict state at end of step

@@ -14,7 +14,7 @@ struct ControllerIO {
     double dt = 0.;    // Input: Communication interval (sec)
     double pitch_blade1_actual = 0.;      // Input: Blade 1 pitch angle (rad)
     double pitch_actuator_type_req = 0.;  // Input: Pitch actuator type [0=position, 1=rate] (-)
-    double electrical_power_actual = 0.;  // Input: Measured electrical power output (W)
+    double generator_power_actual = 0.;   // Input: Measured electrical power output (W)
     double generator_speed_actual = 0.;   // Input: Measured generator speed (rad/s)
     double rotor_speed_actual = 0.;       // Input: Measured rotor speed (rad/s)
     double generator_torque_actual = 0.;  // Input: Measured generator torque (Nm)
@@ -55,7 +55,7 @@ struct ControllerIO {
         swap_array[2] = static_cast<float>(dt);
         swap_array[3] = static_cast<float>(pitch_blade1_actual);
         swap_array[9] = static_cast<float>(pitch_actuator_type_req);
-        swap_array[14] = static_cast<float>(electrical_power_actual);
+        swap_array[14] = static_cast<float>(generator_power_actual);
         swap_array[19] = static_cast<float>(generator_speed_actual);
         swap_array[20] = static_cast<float>(rotor_speed_actual);
         swap_array[22] = static_cast<float>(generator_torque_actual);
@@ -97,7 +97,7 @@ struct ControllerIO {
         dt = static_cast<double>(swap_array[2]);
         pitch_blade1_actual = static_cast<double>(swap_array[3]);
         pitch_actuator_type_req = static_cast<double>(swap_array[9]);
-        electrical_power_actual = static_cast<double>(swap_array[14]);
+        generator_power_actual = static_cast<double>(swap_array[14]);
         generator_speed_actual = static_cast<double>(swap_array[19]);
         rotor_speed_actual = static_cast<double>(swap_array[20]);
         generator_torque_actual = static_cast<double>(swap_array[22]);

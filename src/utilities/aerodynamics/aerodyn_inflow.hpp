@@ -80,9 +80,9 @@ struct FluidProperties {
 
 /// Struct to hold the environmental conditions
 struct EnvironmentalConditions {
-    float gravity{9.80665f};       //< Gravitational acceleration (m/s^2)
+    float gravity{9.81f};          //< Gravitational acceleration (m/s^2)
     float atm_pressure{103500.f};  //< Atmospheric pressure (Pa)
-    float water_depth{0.f};        //< Water depth (m)
+    float water_depth{30.f};       //< Water depth (m)
     float msl_offset{0.f};         //< Mean sea level to still water level offset (m)
 };
 
@@ -453,8 +453,9 @@ struct TurbineData {
 
         // Get the loads for this blade and node
         size_t node_index = node_indices_by_blade[blade_number][node_number];
+        const auto loads = blade_nodes.load[node_index];
 
-        return blade_nodes.load[node_index];
+        return Array_6{loads[0], loads[1], loads[2], loads[3], loads[4], loads[5]};
     }
 
 private:
