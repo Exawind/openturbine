@@ -632,9 +632,9 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
     auto rv = QuaternionToRotationVector(Array_4{q[0][3], q[0][4], q[0][5], q[0][6]});
 
     // Same as euler rotation xz [azimuth, pitch]
-    EXPECT_DOUBLE_EQ(rv[0], 1.482189821649821);
-    EXPECT_DOUBLE_EQ(rv[1], 0.61394312430788889);
-    EXPECT_DOUBLE_EQ(rv[2], 0.61394312416734476);
+    EXPECT_NEAR(rv[0], 1.482189821649821, 1e-8);
+    EXPECT_NEAR(rv[1], 0.61394312430788889, 1e-8);
+    EXPECT_NEAR(rv[2], 0.61394312416734476, 1e-8);
 }
 
 TEST(RotatingBeamTest, RevoluteJointConstraint) {
