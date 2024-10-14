@@ -74,12 +74,17 @@ struct Constraint {
                      v[2] * v[0] * k - v[1],
                      v[2] * v[1] * k + v[0],
                      v[2] * v[2] * k + c,
-                 }}};
+                 }}
+            };
 
             // Set orthogonal unit vectors from the rotation matrix
             x_axis = {R[0][0], R[1][0], R[2][0]};
             y_axis = {R[0][1], R[1][1], R[2][1]};
             z_axis = {R[0][2], R[1][2], R[2][2]};
+            return;
+
+        } else if (type == ConstraintType::kRotationControl) {
+            x_axis = UnitVector(vec);
             return;
         }
 

@@ -363,4 +363,97 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     writer->Write();
 }
 
+inline void WriteVTKPoint(
+    Array_7 position, Array_6 velocity, Array_6 acceleration, const std::string& filename
+) {
+    // Create a grid object and add the points to it.
+    vtkNew<vtkUnstructuredGrid> gd;
+    gd->Allocate(1);
+    std::vector<vtkIdType> pts;
+    pts.push_back(static_cast<vtkIdType>(1));  // first qp
+    gd->InsertNextCell(VTK_VERTEX, static_cast<vtkIdType>(1), pts.data());
+
+    Array_3 tmp{0., 0., 0.};
+
+    //--------------------------------------------------------------------------
+    // Position
+    //--------------------------------------------------------------------------
+
+    // Create qp position points
+    vtkNew<vtkPoints> point_pos;
+    point_pos->InsertNextPoint(position[0], position[1], position[2]);
+    gd->SetPoints(point_pos);
+
+    // Add orientation point data
+    vtkNew<vtkFloatArray> orientation_x;
+    orientation_x->SetNumberOfComponents(3);
+    orientation_x->SetName("OrientationX");
+    vtkNew<vtkFloatArray> orientation_y;
+    orientation_y->SetNumberOfComponents(3);
+    orientation_y->SetName("OrientationY");
+    vtkNew<vtkFloatArray> orientation_z;
+    orientation_z->SetNumberOfComponents(3);
+    orientation_z->SetName("OrientationZ");
+    auto R = QuaternionToRotationMatrix(Array_4{position[3], position[4], position[5], position[6]});
+    const auto ori_x = std::array{R[0][0], R[1][0], R[2][0]};
+    const auto ori_y = std::array{R[0][1], R[1][1], R[2][1]};
+    const auto ori_z = std::array{R[0][2], R[1][2], R[2][2]};
+    orientation_x->InsertNextTuple(ori_x.data());
+    orientation_y->InsertNextTuple(ori_y.data());
+    orientation_z->InsertNextTuple(ori_z.data());
+    gd->GetPointData()->AddArray(orientation_x);
+    gd->GetPointData()->AddArray(orientation_y);
+    gd->GetPointData()->AddArray(orientation_z);
+
+    //--------------------------------------------------------------------------
+    // Velocity
+    //--------------------------------------------------------------------------
+
+    // Add translational velocity point data
+    vtkNew<vtkFloatArray> translational_velocity;
+    translational_velocity->SetNumberOfComponents(3);
+    translational_velocity->SetName("TranslationalVelocity");
+    tmp = Array_3{velocity[0], velocity[1], velocity[2]};
+    translational_velocity->InsertNextTuple(tmp.data());
+    gd->GetPointData()->AddArray(translational_velocity);
+
+    // Add rotational velocity point data
+    vtkNew<vtkFloatArray> rotational_velocity;
+    rotational_velocity->SetNumberOfComponents(3);
+    rotational_velocity->SetName("RotationalVelocity");
+    tmp = Array_3{velocity[3], velocity[4], velocity[5]};
+    rotational_velocity->InsertNextTuple(tmp.data());
+    gd->GetPointData()->AddArray(rotational_velocity);
+
+    //--------------------------------------------------------------------------
+    // Acceleration
+    //--------------------------------------------------------------------------
+
+    // Add translational acceleration point data
+    vtkNew<vtkFloatArray> translational_accel;
+    translational_accel->SetNumberOfComponents(3);
+    translational_accel->SetName("TranslationalAcceleration");
+    tmp = Array_3{acceleration[0], acceleration[1], acceleration[2]};
+    translational_accel->InsertNextTuple(tmp.data());
+    gd->GetPointData()->AddArray(translational_accel);
+
+    // Add rotational acceleration point data
+    vtkNew<vtkFloatArray> rotational_accel;
+    rotational_accel->SetNumberOfComponents(3);
+    rotational_accel->SetName("RotationalAcceleration");
+    tmp = Array_3{velocity[3], velocity[4], velocity[5]};
+    rotational_accel->InsertNextTuple(tmp.data());
+    gd->GetPointData()->AddArray(rotational_accel);
+
+    //--------------------------------------------------------------------------
+    // Write file
+    //--------------------------------------------------------------------------
+
+    vtkNew<vtkXMLUnstructuredGridWriter> writer;
+    writer->SetFileName(filename.c_str());
+    writer->SetInputData(gd);
+    writer->SetDataModeToAscii();
+    writer->Write();
+}
+
 }  // namespace openturbine::tests

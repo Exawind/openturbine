@@ -615,24 +615,26 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
         constraints.row_range
     );
 
+    double azimuth = 0.;
+
     // Perform 10 time steps and check for convergence within max_iter iterations
-    for (auto i = 0; i < 10; ++i) {
+    for (auto i = 0; i < 100; ++i) {
         const auto t = step_size * static_cast<double>(i + 1);
-        // Set pitch
         pitch = t * M_PI / 2.;
-        auto q = RotationVectorToQuaternion(Array_3{0., 0., pitch});
+        azimuth = 0.5 * t * M_PI / 2.;
+        auto q = RotationVectorToQuaternion(Array_3{0., 0., azimuth});
         constraints.UpdateDisplacement(hub_bc->ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
         const auto converged = Step(parameters, solver, beams, state, constraints);
         EXPECT_EQ(converged, true);
     }
 
     auto q = kokkos_view_2D_to_vector(state.q);
-
     auto rv = QuaternionToRotationVector(Array_4{q[0][3], q[0][4], q[0][5], q[0][6]});
 
-    EXPECT_DOUBLE_EQ(rv[0], pitch);  // Pitch constraint rotation about x
-    EXPECT_DOUBLE_EQ(rv[1], 0.);     // Should this be zero?
-    EXPECT_DOUBLE_EQ(rv[2], pitch);  // Prescribed displacement about z
+    // Same as euler rotation xz [azimuth, pitch]
+    EXPECT_DOUBLE_EQ(rv[0], 1.482189821649821);
+    EXPECT_DOUBLE_EQ(rv[1], 0.61394312430788889);
+    EXPECT_DOUBLE_EQ(rv[2], 0.61394312416734476);
 }
 
 TEST(RotatingBeamTest, RevoluteJointConstraint) {

@@ -59,6 +59,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     constexpr Array_3 shaft_axis = {1., 0., 0};              // Shaft along x-axis
     constexpr double hub_wind_speed_init{10.59};             // Hub height wind speed (m/s)
     constexpr double generator_power_init{15.0e6};           // Generator power (W)
+    constexpr double blade_pitch_init{0.};                   // Initial blade pitch (rad)
     constexpr auto gravity = std::array{0., 0., -9.81};      // Gravity (m/s/s)
 
     // Controller parameters
@@ -101,11 +102,11 @@ TEST(Milestone, IEA15RotorAeroController) {
     controller.io.n_blades = n_blades;          // Number of blades
 
     // Controller current values
-    controller.io.time = 0.;                     // Current time (seconds)
-    controller.io.azimuth_angle = azimuth_init;  // Initial azimuth
-    controller.io.pitch_blade1_actual = 0.;      // Blade pitch (rad)
-    controller.io.pitch_blade2_actual = 0.;      // Blade pitch (rad)
-    controller.io.pitch_blade3_actual = 0.;      // Blade pitch (rad)
+    controller.io.time = 0.;                               // Current time (seconds)
+    controller.io.azimuth_angle = azimuth_init;            // Initial azimuth
+    controller.io.pitch_blade1_actual = blade_pitch_init;  // Blade pitch (rad)
+    controller.io.pitch_blade2_actual = blade_pitch_init;  // Blade pitch (rad)
+    controller.io.pitch_blade3_actual = blade_pitch_init;  // Blade pitch (rad)
     controller.io.generator_speed_actual =
         rotor_speed_init * gear_box_ratio;  // Generator speed (rad/s)
     controller.io.generator_torque_actual =
@@ -121,8 +122,8 @@ TEST(Milestone, IEA15RotorAeroController) {
     controller.CallController();
 
     // Actual torque applied to shaft
-    double torque_actual{controller.io.generator_torque_command};
-    double pitch_actual{controller.io.pitch_collective_command};
+    double torque_actual{controller.io.generator_torque_actual};
+    double pitch_actual{blade_pitch_init};
 
     //--------------------------------------------------------------------------
     // Blade nodes and elements
@@ -369,6 +370,9 @@ TEST(Milestone, IEA15RotorAeroController) {
         constraints.row_range
     );
 
+    // Transfer initial state to beams for writing output
+    UpdateSystemVariables(parameters, beams, state);
+
     //--------------------------------------------------------------------------
     // Output
     //--------------------------------------------------------------------------
@@ -417,15 +421,10 @@ TEST(Milestone, IEA15RotorAeroController) {
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         auto tmp = std::to_string(i);
-        WriteVTKBeamsQP(
-            beams,
-            step_dir / (std::string("step_") + std::string(4 - tmp.size(), '0') + tmp + ".vtu")
-        );
+        tmp = std::string(4 - tmp.size(), '0') + tmp;
+        WriteVTKBeamsQP(beams, step_dir / (std::string("step.") + tmp + ".vtu"));
 
-        WriteVTKBeamsNodes(
-            beams,
-            step_dir / (std::string("step_nodes_") + std::string(4 - tmp.size(), '0') + tmp + ".vtu")
-        );
+        WriteVTKBeamsNodes(beams, step_dir / (std::string("step_nodes.") + tmp + ".vtu"));
 
         // Get current time and next time
         const auto current_time{step_size * static_cast<double>(i)};
@@ -450,11 +449,17 @@ TEST(Milestone, IEA15RotorAeroController) {
 
         // Loop through blades
         for (size_t j = 0; j < n_blades; ++j) {
-            // Root node
-            adi.turbines[0].SetBladeRootMotion(
-                j, GetState(root_nodes[j]->ID, host_state_x),
-                GetState(root_nodes[j]->ID, host_state_v), GetState(root_nodes[j]->ID, host_state_vd)
+            auto root_pos = GetState(root_nodes[j]->ID, host_state_x);
+            auto root_vel = GetState(root_nodes[j]->ID, host_state_v);
+            auto root_acc = GetState(root_nodes[j]->ID, host_state_vd);
+
+            WriteVTKPoint(
+                root_pos, root_vel, root_acc,
+                step_dir / (std::string("blade_root_") + std::to_string(j + 1) + "." + tmp + ".vtu")
             );
+
+            // Root node
+            adi.turbines[0].SetBladeRootMotion(j, root_pos, root_vel, root_acc);
 
             // Loop through blade nodes
             for (size_t k = 0; k < beam_elems[j].nodes.size(); ++k) {
