@@ -329,7 +329,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     util::VTKSettings vtk_settings;
     vtk_settings.write_vtk = 2;  // Animation
     vtk_settings.vtk_type = 2;   // Lines
-    vtk_settings.vtk_nacelle_dimensions = {-2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f};
+    vtk_settings.vtk_nacelle_dimensions = {-2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F};
     vtk_settings.vtk_hub_radius = static_cast<float>(hub_radius);
 
     util::AeroDynInflowLibrary adi(

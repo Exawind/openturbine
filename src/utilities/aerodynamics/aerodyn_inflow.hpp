@@ -48,7 +48,7 @@ namespace openturbine::util {
  */
 struct ErrorHandling {
     /// Error levels used in InflowWind
-    enum class ErrorLevel {
+    enum class ErrorLevel : uint8_t {
         kNone = 0,
         kInfo = 1,
         kWarning = 2,
@@ -75,16 +75,16 @@ struct ErrorHandling {
 struct FluidProperties {
     float density{1.225f};                 //< Air density (kg/m^3)
     float kinematic_viscosity{1.464E-5f};  //< Kinematic viscosity (m^2/s)
-    float sound_speed{335.f};              //< Speed of sound in the working fluid (m/s)
-    float vapor_pressure{1700.f};          //< Vapor pressure of the working fluid (Pa)
+    float sound_speed{335.F};              //< Speed of sound in the working fluid (m/s)
+    float vapor_pressure{1700.F};          //< Vapor pressure of the working fluid (Pa)
 };
 
 /// Struct to hold the environmental conditions
 struct EnvironmentalConditions {
     float gravity{9.81f};          //< Gravitational acceleration (m/s^2)
-    float atm_pressure{103500.f};  //< Atmospheric pressure (Pa)
-    float water_depth{30.f};       //< Water depth (m)
-    float msl_offset{0.f};         //< Mean sea level to still water level offset (m)
+    float atm_pressure{103500.F};  //< Atmospheric pressure (Pa)
+    float water_depth{30.F};       //< Water depth (m)
+    float msl_offset{0.F};         //< Mean sea level to still water level offset (m)
 };
 
 /**
@@ -399,7 +399,7 @@ struct TurbineData {
         const Array_7 position_new{position[0], position[1], position[2], r_adi[0],
                                    r_adi[1],    r_adi[2],    r_adi[3]};
 
-        size_t node_index = node_indices_by_blade[blade_number][node_number];
+        const size_t node_index = node_indices_by_blade[blade_number][node_number];
         blade_nodes.SetValues(node_index, position_new, velocity, acceleration);
     }
 
@@ -487,10 +487,14 @@ struct TurbineData {
         }
 
         // Get the loads for this blade and node
-        size_t node_index = node_indices_by_blade[blade_number][node_number];
+        const size_t node_index = node_indices_by_blade[blade_number][node_number];
         const auto loads = blade_nodes.load[node_index];
 
-        return Array_6{loads[0], loads[1], loads[2], loads[3], loads[4], loads[5]};
+        return Array_6{
+            static_cast<double>(loads[0]), static_cast<double>(loads[1]),
+            static_cast<double>(loads[2]), static_cast<double>(loads[3]),
+            static_cast<double>(loads[4]), static_cast<double>(loads[5]),
+        };
     }
 
 private:
@@ -598,7 +602,7 @@ struct VTKSettings {
     int write_vtk{0};                           //< Flag to write VTK output
     int vtk_type{1};                            //< Type of VTK output (1: surface meshes)
     std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
-                                                -2.5f, -2.5f, 0.f, 10.f, 5.f, 5.f
+                                                -2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F
     };
     float vtk_hub_radius{1.5f};  //< Hub radius for VTK rendering
 };
@@ -818,16 +822,16 @@ public:
 
         // Allocate vector of output channel values
         sim_controls_.n_channels = static_cast<size_t>(n_channels);
-        channel_values = std::vector<float>(sim_controls_.n_channels, 0.f);
+        channel_values = std::vector<float>(sim_controls_.n_channels, 0.F);
         channel_names.resize(sim_controls_.n_channels);
         channel_units.resize(sim_controls_.n_channels);
         std::string tmp;
         for (size_t i = 0; i < sim_controls_.n_channels; ++i) {
             tmp = channel_names_c.substr(20 * i, 20);
-            tmp.erase(tmp.find_last_not_of(" ") + 1);
+            tmp.erase(tmp.find_last_not_of(' ') + 1);
             channel_names[i] = tmp;
             tmp = channel_units_c.substr(20 * i, 20);
-            tmp.erase(tmp.find_last_not_of(" ") + 1);
+            tmp.erase(tmp.find_last_not_of(' ') + 1);
             channel_units[i] = tmp;
         }
 
@@ -966,10 +970,10 @@ public:
         is_initialized_ = false;
     }
 
-    std::vector<TurbineData> turbines;         //< Turbine data (1 per turbine)
-    std::vector<std::string> channel_names{};  //< Output channel names
-    std::vector<std::string> channel_units{};  //< Output channel units
-    std::vector<float> channel_values{};       //< Output channel values
+    std::vector<TurbineData> turbines;       //< Turbine data (1 per turbine)
+    std::vector<std::string> channel_names;  //< Output channel names
+    std::vector<std::string> channel_units;  //< Output channel units
+    std::vector<float> channel_values;       //< Output channel values
 
 private:
     bool is_initialized_{false};              //< Flag to check if the library is initialized

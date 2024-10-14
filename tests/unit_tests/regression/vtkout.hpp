@@ -65,8 +65,8 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     vtkNew<vtkFloatArray> orientation_z;
     orientation_z->SetNumberOfComponents(3);
     orientation_z->SetName("OrientationZ");
-    for (size_t el = 0; el < beams.num_elems; ++el) {
-        for (size_t i = 0; i < num_qps_per_element(el); ++i) {
+    for (auto el = 0U; el < beams.num_elems; ++el) {
+        for (auto i = 0U; i < num_qps_per_element(el); ++i) {
             auto R = QuaternionToRotationMatrix(
                 {qp_x(el, i, 3), qp_x(el, i, 4), qp_x(el, i, 5), qp_x(el, i, 6)}
             );
@@ -158,10 +158,10 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     );
     auto qp_deformation = Kokkos::create_mirror(beams.qp_deformation);
     Kokkos::deep_copy(qp_deformation, beams.qp_deformation);
-    for (size_t i = 0; i < beams.num_elems; ++i) {
+    for (auto i = 0U; i < beams.num_elems; ++i) {
         // Get the undeformed shape
         auto num_qps = num_qps_per_element(i);
-        for (size_t j = 0; j < num_qps; ++j) {
+        for (auto j = 0U; j < num_qps; ++j) {
             const Array_3 u{
                 qp_deformation(i, j, 0),
                 qp_deformation(i, j, 1),
@@ -188,14 +188,14 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     // Create a grid object and add the points to it.
     vtkNew<vtkUnstructuredGrid> gd;
     gd->Allocate(static_cast<vtkIdType>(beams.num_elems));
-    auto first_node = size_t{0U};
-    for (size_t i = 0; i < beams.num_elems; ++i) {
+    size_t first_node{0U};
+    for (auto i = 0U; i < beams.num_elems; ++i) {
         const auto num_node = num_nodes_per_element(i);
         const auto last_node = first_node + num_node - 1U;
         std::vector<vtkIdType> pts;
         pts.push_back(static_cast<vtkIdType>(first_node));  // first qp
         pts.push_back(static_cast<vtkIdType>(last_node));   // last qp
-        for (size_t j = first_node; j < last_node - 1U; ++j) {
+        for (auto j = first_node; j < last_node - 1U; ++j) {
             pts.push_back(static_cast<vtkIdType>(j));
         }
         gd->InsertNextCell(VTK_LAGRANGE_CURVE, static_cast<vtkIdType>(num_node), pts.data());
@@ -234,8 +234,8 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     vtkNew<vtkFloatArray> orientation_z;
     orientation_z->SetNumberOfComponents(3);
     orientation_z->SetName("OrientationZ");
-    for (size_t el = 0; el < beams.num_elems; ++el) {
-        for (size_t i = 0; i < num_nodes_per_element(el); ++i) {
+    for (auto el = 0U; el < beams.num_elems; ++el) {
+        for (auto i = 0U; i < num_nodes_per_element(el); ++i) {
             auto q = QuaternionCompose(
                 {node_u(el, i, 3), node_u(el, i, 4), node_u(el, i, 5), node_u(el, i, 6)},
                 {node_x0(el, i, 3), node_x0(el, i, 4), node_x0(el, i, 5), node_x0(el, i, 6)}
@@ -290,35 +290,35 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     // Acceleration
     //--------------------------------------------------------------------------
 
-    const auto node_u_ddot = Kokkos::create_mirror(beams.node_u_ddot);
-    Kokkos::deep_copy(node_u_ddot, beams.node_u_ddot);
+    // const auto node_u_ddot = Kokkos::create_mirror(beams.node_u_ddot);
+    // Kokkos::deep_copy(node_u_ddot, beams.node_u_ddot);
 
-    // Add translational acceleration point data
-    vtkNew<vtkFloatArray> translational_accel;
-    translational_accel->SetNumberOfComponents(3);
-    translational_accel->SetName("TranslationalAcceleration");
+    // // Add translational acceleration point data
+    // vtkNew<vtkFloatArray> translational_accel;
+    // translational_accel->SetNumberOfComponents(3);
+    // translational_accel->SetName("TranslationalAcceleration");
 
-    for (auto el = 0U; el < beams.num_elems; ++el) {
-        for (auto p = 0U; p < num_nodes_per_element(el); ++p) {
-            const auto tv =
-                std::array{node_u_ddot(el, p, 0), node_u_ddot(el, p, 1), node_u_ddot(el, p, 2)};
-            translational_accel->InsertNextTuple(tv.data());
-        }
-    }
-    gd->GetPointData()->AddArray(translational_accel);
+    // for (auto el = 0U; el < beams.num_elems; ++el) {
+    //     for (auto p = 0U; p < num_nodes_per_element(el); ++p) {
+    //         const auto tv =
+    //             std::array{node_u_ddot(el, p, 0), node_u_ddot(el, p, 1), node_u_ddot(el, p, 2)};
+    //         translational_accel->InsertNextTuple(tv.data());
+    //     }
+    // }
+    // gd->GetPointData()->AddArray(translational_accel);
 
-    // Add rotational acceleration point data
-    vtkNew<vtkFloatArray> rotational_accel;
-    rotational_accel->SetNumberOfComponents(3);
-    rotational_accel->SetName("RotationalAcceleration");
-    for (auto el = 0U; el < beams.num_elems; ++el) {
-        for (auto p = 0U; p < num_nodes_per_element(el); ++p) {
-            const auto rv =
-                std::array{node_u_ddot(el, p, 3), node_u_ddot(el, p, 4), node_u_ddot(el, p, 5)};
-            rotational_accel->InsertNextTuple(rv.data());
-        }
-    }
-    gd->GetPointData()->AddArray(rotational_accel);
+    // // Add rotational acceleration point data
+    // vtkNew<vtkFloatArray> rotational_accel;
+    // rotational_accel->SetNumberOfComponents(3);
+    // rotational_accel->SetName("RotationalAcceleration");
+    // for (auto el = 0U; el < beams.num_elems; ++el) {
+    //     for (auto p = 0U; p < num_nodes_per_element(el); ++p) {
+    //         const auto rv =
+    //             std::array{node_u_ddot(el, p, 3), node_u_ddot(el, p, 4), node_u_ddot(el, p, 5)};
+    //         rotational_accel->InsertNextTuple(rv.data());
+    //     }
+    // }
+    // gd->GetPointData()->AddArray(rotational_accel);
 
     //--------------------------------------------------------------------------
     // Loads
