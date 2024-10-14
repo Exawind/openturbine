@@ -73,15 +73,15 @@ struct ErrorHandling {
 
 /// Struct to hold the properties of the working fluid (air)
 struct FluidProperties {
-    float density{1.225f};                 //< Air density (kg/m^3)
-    float kinematic_viscosity{1.464E-5f};  //< Kinematic viscosity (m^2/s)
+    float density{1.225F};                 //< Air density (kg/m^3)
+    float kinematic_viscosity{1.464E-5F};  //< Kinematic viscosity (m^2/s)
     float sound_speed{335.F};              //< Speed of sound in the working fluid (m/s)
     float vapor_pressure{1700.F};          //< Vapor pressure of the working fluid (Pa)
 };
 
 /// Struct to hold the environmental conditions
 struct EnvironmentalConditions {
-    float gravity{9.81f};          //< Gravitational acceleration (m/s^2)
+    float gravity{9.81F};          //< Gravitational acceleration (m/s^2)
     float atm_pressure{103500.F};  //< Atmospheric pressure (Pa)
     float water_depth{30.F};       //< Water depth (m)
     float msl_offset{0.F};         //< Mean sea level to still water level offset (m)
@@ -604,7 +604,7 @@ struct VTKSettings {
     std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
                                                 -2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F
     };
-    float vtk_hub_radius{1.5f};  //< Hub radius for VTK rendering
+    float vtk_hub_radius{1.5F};  //< Hub radius for VTK rendering
 };
 
 /**

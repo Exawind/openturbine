@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vtkCellArray.h>
 #include <vtkCellType.h>
 #include <vtkDoubleArray.h>
 #include <vtkFloatArray.h>
@@ -44,6 +43,10 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
         first_qp += num_qp;
     }
 
+    //--------------------------------------------------------------------------
+    // Position
+    //--------------------------------------------------------------------------
+
     // Create qp position points
     auto qp_x = Kokkos::create_mirror(beams.qp_x);
     Kokkos::deep_copy(qp_x, beams.qp_x);
@@ -54,6 +57,10 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
         }
     }
     gd->SetPoints(qp_pos);
+
+    //--------------------------------------------------------------------------
+    // Orientation
+    //--------------------------------------------------------------------------
 
     // Add orientation point data
     vtkNew<vtkFloatArray> orientation_x;
@@ -82,6 +89,10 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     gd->GetPointData()->AddArray(orientation_y);
     gd->GetPointData()->AddArray(orientation_z);
 
+    //--------------------------------------------------------------------------
+    // Velocity
+    //--------------------------------------------------------------------------
+
     // Add translational velocity point data
     vtkNew<vtkFloatArray> translational_velocity;
     translational_velocity->SetNumberOfComponents(3);
@@ -109,6 +120,10 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
         }
     }
     gd->GetPointData()->AddArray(rotational_velocity);
+
+    //--------------------------------------------------------------------------
+    // Acceleration
+    //--------------------------------------------------------------------------
 
     // Add translational acceleration point data
     vtkNew<vtkFloatArray> translational_accel;
@@ -139,6 +154,42 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
         }
     }
     gd->GetPointData()->AddArray(rotational_accel);
+
+    //--------------------------------------------------------------------------
+    // Loads
+    //--------------------------------------------------------------------------
+
+    const auto qp_Fe = Kokkos::create_mirror(beams.qp_Fe);
+    Kokkos::deep_copy(qp_Fe, beams.qp_Fe);
+
+    // Add translational acceleration point data
+    vtkNew<vtkFloatArray> force;
+    force->SetNumberOfComponents(3);
+    force->SetName("Force");
+
+    for (auto el = 0U; el < beams.num_elems; ++el) {
+        for (auto p = 0U; p < num_qps_per_element(el); ++p) {
+            const auto tv = std::array{qp_Fe(el, p, 0), qp_Fe(el, p, 1), qp_Fe(el, p, 2)};
+            force->InsertNextTuple(tv.data());
+        }
+    }
+    gd->GetPointData()->AddArray(force);
+
+    // Add rotational acceleration point data
+    vtkNew<vtkFloatArray> moment;
+    moment->SetNumberOfComponents(3);
+    moment->SetName("Moment");
+    for (auto el = 0U; el < beams.num_elems; ++el) {
+        for (auto p = 0U; p < num_qps_per_element(el); ++p) {
+            const auto rv = std::array{qp_Fe(el, p, 3), qp_Fe(el, p, 4), qp_Fe(el, p, 5)};
+            moment->InsertNextTuple(rv.data());
+        }
+    }
+    gd->GetPointData()->AddArray(moment);
+
+    //--------------------------------------------------------------------------
+    // Deformation
+    //--------------------------------------------------------------------------
 
     // Add deformation point data
     vtkNew<vtkFloatArray> deformation_vector;
