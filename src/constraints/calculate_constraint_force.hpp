@@ -23,7 +23,8 @@ struct CalculateConstraintForce {
             case ConstraintType::kRevoluteJoint: {
                 // Applies the torque from a revolute joint constraint to the system residual
                 CalculateRevoluteJointForce{
-                    target_node_index, axes, inputs, node_u, system_residual_terms}(i_constraint);
+                    target_node_index, axes, inputs, node_u, system_residual_terms
+                }(i_constraint);
             } break;
             default: {
                 // Do nothing

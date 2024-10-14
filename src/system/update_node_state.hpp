@@ -47,7 +47,8 @@ struct UpdateNodeState {
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_nodes),
             UpdateNodeStateElement{
-                i_elem, node_state_indices, node_u, node_u_dot, node_u_ddot, Q, V, A}
+                i_elem, node_state_indices, node_u, node_u_dot, node_u_ddot, Q, V, A
+            }
         );
     }
 };

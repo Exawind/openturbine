@@ -23,15 +23,17 @@ struct CalculateStrain {
     void operator()(const int i_qp) const {
         auto x0_prime_data = Kokkos::Array<double, 3>{
             qp_x0_prime_(i_elem, i_qp, 0), qp_x0_prime_(i_elem, i_qp, 1),
-            qp_x0_prime_(i_elem, i_qp, 2)};
+            qp_x0_prime_(i_elem, i_qp, 2)
+        };
         auto x0_prime = Kokkos::View<double[3]>(x0_prime_data.data());
         auto u_prime_data = Kokkos::Array<double, 3>{
-            qp_u_prime_(i_elem, i_qp, 0), qp_u_prime_(i_elem, i_qp, 1),
-            qp_u_prime_(i_elem, i_qp, 2)};
+            qp_u_prime_(i_elem, i_qp, 0), qp_u_prime_(i_elem, i_qp, 1), qp_u_prime_(i_elem, i_qp, 2)
+        };
         auto u_prime = Kokkos::View<double[3]>(u_prime_data.data());
         auto R_data = Kokkos::Array<double, 4>{
             qp_r_(i_elem, i_qp, 0), qp_r_(i_elem, i_qp, 1), qp_r_(i_elem, i_qp, 2),
-            qp_r_(i_elem, i_qp, 3)};
+            qp_r_(i_elem, i_qp, 3)
+        };
         auto R = Kokkos::View<double[4]>(R_data.data());
 
         auto R_x0_prime_data = Kokkos::Array<double, 3>{};
@@ -46,7 +48,8 @@ struct CalculateStrain {
         QuaternionDerivative(R, E);
         auto R_prime_data = Kokkos::Array<double, 4>{
             qp_r_prime_(i_elem, i_qp, 0), qp_r_prime_(i_elem, i_qp, 1), qp_r_prime_(i_elem, i_qp, 2),
-            qp_r_prime_(i_elem, i_qp, 3)};
+            qp_r_prime_(i_elem, i_qp, 3)
+        };
         auto R_prime = Kokkos::View<double[4]>(R_prime_data.data());
         auto e2_data = Kokkos::Array<double, 3>{};
         auto e2 = Kokkos::View<double[4]>{e2_data.data()};

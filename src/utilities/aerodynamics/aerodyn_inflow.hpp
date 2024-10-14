@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "src/math/quaternion_operations.hpp"
+#include "src/types.hpp"
 #include "src/vendor/dylib/dylib.hpp"
 
 namespace openturbine::util {
@@ -90,17 +91,18 @@ struct EnvironmentalConditions {
  * @brief Configuration for the initial state of a turbine
  *
  * This struct encapsulates the initial configuration data for a wind turbine,
- * including its type, reference position, and initial positions of key components
+ * including its type, reference position, and initial position of key components
  * in 7x1 arrays [x, y, z, qw, qx, qy, qz]
  */
 struct TurbineConfig {
     /**
      * @brief Initial state for a single blade of a turbine
      *
-     * Stores the initial positions of a blade's root and nodes.
+     * Stores the initial position of a blade's root and nodes in 7x1 arrays [x, y, z, qw, qx, qy,
+     * qz]
      */
     struct BladeInitialState {
-        Array_7 root_initial_position;                //< Initial root position of the blade
+        Array_7 root_initial_position;  //< Initial root position of the blade (1 per blade)
         std::vector<Array_7> node_initial_positions;  //< Initial node positions of the blade
 
         BladeInitialState(const Array_7& root, const std::vector<Array_7>& nodes)
@@ -108,29 +110,32 @@ struct TurbineConfig {
     };
 
     bool is_horizontal_axis{true};                           //< Is a horizontal axis turbine?
-    std::array<float, 3> reference_position{0.f, 0.f, 0.f};  //< Reference position of the turbine
+    std::array<float, 3> reference_position{0.F, 0.F, 0.F};  //< Reference position of the turbine
     Array_7 hub_initial_position;                            //< Initial hub position
     Array_7 nacelle_initial_position;                        //< Initial nacelle position
     std::vector<BladeInitialState>
-        blade_initial_states;  //< Initial root and node positions of blades
+        blade_initial_states;  //< Initial root and node positions of blades (size = n_blades)
 
     TurbineConfig(
         bool is_hawt, std::array<float, 3> ref_pos, Array_7 hub_pos, Array_7 nacelle_pos,
         std::vector<BladeInitialState> blade_states
     )
         : is_horizontal_axis(is_hawt),
-          reference_position(std::move(ref_pos)),
-          hub_initial_position(std::move(hub_pos)),
-          nacelle_initial_position(std::move(nacelle_pos)),
+          reference_position(ref_pos),
+          hub_initial_position(hub_pos),
+          nacelle_initial_position(nacelle_pos),
           blade_initial_states(std::move(blade_states)) {
+        // Make sure the initial states are valid
         Validate();
     }
 
     void Validate() const {
+        // Check if there are any blades defined
         if (blade_initial_states.empty()) {
             throw std::runtime_error("No blades defined. At least one blade is required.");
         }
 
+        // Check if there are any nodes defined for each blade
         for (const auto& blade : blade_initial_states) {
             if (blade.node_initial_positions.empty()) {
                 throw std::runtime_error(
@@ -139,6 +144,9 @@ struct TurbineConfig {
             }
         }
     }
+
+    /// Returns the number of blades in the turbine
+    [[nodiscard]] size_t NumberOfBlades() const { return blade_initial_states.size(); }
 };
 
 /**
@@ -149,27 +157,31 @@ struct TurbineConfig {
  * @param orientation Output array for flattened 3x3 rotation matrix
  */
 inline void SetPositionAndOrientation(
-    const std::array<double, 7>& data, std::array<float, 3>& position,
-    std::array<double, 9>& orientation
+    const Array_7& data, std::array<float, 3>& position, std::array<double, 9>& orientation
 ) {
     // Set position (first 3 elements)
     for (size_t i = 0; i < 3; ++i) {
         position[i] = static_cast<float>(data[i]);
     }
 
-    // Set orientation (convert last 4 elements i.e. quaternion to 3x3 rotation matrix)
+    // Set orientation (converts last 4 elements i.e. quaternion -> 3x3 rotation matrix)
     auto orientation_2D = QuaternionToRotationMatrix({data[3], data[4], data[5], data[6]});
 
     // Flatten the 3x3 matrix to a 1D array
-    std::copy(&orientation_2D[0][0], &orientation_2D[0][0] + 9, orientation.begin());
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            orientation[i * 3 + j] = orientation_2D[i][j];
+        }
+    }
 }
 
 /**
- * @brief Struct to hold the motion + loads data of any structural mesh component
+ * @brief Struct to hold the motion + loads data of any structural mesh component in
+ * AeroDyn/InflowWind compatible format
  *
- * @details This struct holds the motion data (i.e. position, orientation,
- * velocity, and acceleration) and loads of the structural mesh, which can be
- * the hub, nacelle, root, or mesh points/nodes
+ * @details This struct holds the motion data (i.e. position 3x1, orientation 9x1,
+ * velocity 6x1, and acceleration 6x1) and aerodynamic loads 6x1 of the structural
+ *  mesh components-- which can be the hub, nacelle, root, or blade
  */
 struct MeshData {
     int32_t n_points;                                //< Number of mesh points (nodes)
@@ -183,76 +195,78 @@ struct MeshData {
     /// Constructor to initialize all mesh data to zero based on provided number of nodes
     MeshData(size_t n_nodes)
         : n_points(static_cast<int32_t>(n_nodes)),
-          position(std::vector<std::array<float, 3>>(n_nodes, {0.f, 0.f, 0.f})),
+          position(std::vector<std::array<float, 3>>(n_nodes, {0.F, 0.F, 0.F})),
           orientation(
               std::vector<std::array<double, 9>>(n_nodes, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
           ),
-          velocity(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})),
-          acceleration(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})),
-          load(std::vector<std::array<float, 6>>(n_nodes, {0.f, 0.f, 0.f, 0.f, 0.f, 0.f})) {}
+          velocity(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})),
+          acceleration(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})),
+          load(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})) {}
 
     /// Constructor to initialize all mesh data based on provided inputs
     MeshData(
-        size_t n_mesh_points, const std::vector<std::array<double, 7>>& mesh_data,
-        const std::vector<std::array<float, 6>>& velocities,
-        const std::vector<std::array<float, 6>>& accelerations,
-        const std::vector<std::array<float, 6>>& loads
+        size_t n_mesh_pts, const std::vector<Array_7>& pos,
+        const std::vector<std::array<float, 6>>& vel, const std::vector<std::array<float, 6>>& acc,
+        const std::vector<std::array<float, 6>>& ld
     )
-        : n_points(static_cast<int32_t>(n_mesh_points)),
-          position(std::vector<std::array<float, 3>>(n_mesh_points, {0.f, 0.f, 0.f})),
+        : n_points(static_cast<int32_t>(n_mesh_pts)),
+          position(std::vector<std::array<float, 3>>(n_mesh_pts, {0.F, 0.F, 0.F})),
           orientation(
-              std::vector<std::array<double, 9>>(n_mesh_points, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
+              std::vector<std::array<double, 9>>(n_mesh_pts, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
           ),
-          velocity(std::move(velocities)),
-          acceleration(std::move(accelerations)),
-          load(std::move(loads)) {
-        // Set mesh position and orientation
-        for (size_t i = 0; i < n_mesh_points; ++i) {
-            SetPositionAndOrientation(mesh_data[i], position[i], orientation[i]);
+          velocity(vel),
+          acceleration(acc),
+          load(ld) {
+        // Set mesh position and orientation from 7x1 array [x, y, z, qw, qx, qy, qz]
+        for (size_t i = 0; i < NumberOfMeshPoints(); ++i) {
+            SetPositionAndOrientation(pos[i], position[i], orientation[i]);
         }
 
+        // Make sure the mesh data is valid
         Validate();
     }
 
     void Validate() const {
+        // Check we have at least one node
         if (n_points <= 0) {
             throw std::invalid_argument("Number of mesh points must be at least 1");
         }
 
-        const size_t expected_size = static_cast<size_t>(n_points);
-
-        auto check_vector_size = [&](const auto& vec, const std::string& vec_name) {
-            if (vec.size() != expected_size) {
+        // Check all vectors are the same size as the number of mesh points
+        auto check_vector_size = [](const auto& vec, size_t exp_size, const std::string& vec_name) {
+            if (vec.size() != exp_size) {
                 throw std::invalid_argument(vec_name + " vector size does not match n_mesh_points");
             }
         };
 
-        check_vector_size(position, "Position");
-        check_vector_size(orientation, "Orientation");
-        check_vector_size(velocity, "Velocity");
-        check_vector_size(acceleration, "Acceleration");
-        check_vector_size(load, "Loads");
+        const auto expected_size = NumberOfMeshPoints();
+        check_vector_size(position, expected_size, "Position");
+        check_vector_size(orientation, expected_size, "Orientation");
+        check_vector_size(velocity, expected_size, "Velocity");
+        check_vector_size(acceleration, expected_size, "Acceleration");
+        check_vector_size(load, expected_size, "Loads");
     }
 
-    void SetValues(
-        size_t point_number, const std::array<double, 7>& position_,
-        const std::array<double, 6>& velocity_, const std::array<double, 6>& acceleration_
-    ) {
+    /// Returns the number of mesh points as size_t
+    [[nodiscard]] size_t NumberOfMeshPoints() const { return static_cast<size_t>(n_points); }
+
+    // Updates the values at the given point number
+    void SetValues(size_t point_number, const Array_7& pos, const Array_6& vel, const Array_6& acc) {
         if (point_number >= static_cast<size_t>(n_points)) {
             throw std::out_of_range("point number out of range.");
         }
         SetPositionAndOrientation(
-            position_, this->position[point_number], this->orientation[point_number]
+            pos, this->position[point_number], this->orientation[point_number]
         );
         for (size_t i = 0; i < kLieAlgebraComponents; ++i) {
-            this->velocity[point_number][i] = static_cast<float>(velocity_[i]);
-            this->acceleration[point_number][i] = static_cast<float>(acceleration_[i]);
+            this->velocity[point_number][i] = static_cast<float>(vel[i]);
+            this->acceleration[point_number][i] = static_cast<float>(acc[i]);
         }
     }
 };
 
 /**
- * @brief Struct to hold turbine-specific data
+ * @brief Struct to hold and manage turbine-specific data
  *
  * @details This struct contains data for a single turbine, including the number of blades,
  * mesh data for various components (hub, nacelle, blade roots, blade nodes), and blade node
@@ -283,48 +297,70 @@ struct TurbineData {
      */
     std::vector<std::vector<size_t>> node_indices_by_blade;
 
+    /**
+     * @brief Constructor for TurbineData based on a TurbineConfig object
+     *
+     * @details This constructor initializes the turbine data in AeroDyn/InflowWind compatible format
+     * based on the provided TurbineConfig object in 7x1 arrays i.e. OpenTurbine format.
+     *
+     * @param tc The TurbineConfig object containing the initial state of the turbine
+     */
     TurbineData(const TurbineConfig& tc)
-        : n_blades(static_cast<int32_t>(tc.blade_initial_states.size())),
+        : n_blades(static_cast<int32_t>(tc.NumberOfBlades())),
           hub(1),
           nacelle(1),
-          blade_roots(tc.blade_initial_states.size()),
+          blade_roots(tc.NumberOfBlades()),
           blade_nodes(CalculateTotalBladeNodes(tc)),
-          node_indices_by_blade(tc.blade_initial_states.size()) {
+          node_indices_by_blade(tc.NumberOfBlades()) {
+        // Initialize hub and nacelle data
         InitializeHubAndNacelle(tc);
+
+        // Initialize blade data
         InitializeBlades(tc);
+
+        // Make sure the turbine data is valid
         Validate();
     }
 
     void Validate() const {
+        // Check if the number of blades is valid
         if (n_blades < 1) {
             throw std::runtime_error("Invalid number of blades. Must be at least 1.");
         }
 
-        if (blade_roots.n_points != n_blades) {
+        // Validate hub and nacelle data - should have exactly one mesh point each
+        if (hub.NumberOfMeshPoints() != 1 || nacelle.NumberOfMeshPoints() != 1) {
+            throw std::runtime_error("Hub and nacelle should have exactly one mesh point each.");
+        }
+
+        // Check if the number of blade roots matches the number of blades
+        if (blade_roots.NumberOfMeshPoints() != NumberOfBlades()) {
             throw std::runtime_error("Number of blade roots does not match number of blades.");
         }
 
-        if (blade_nodes_to_blade_num_mapping.size() != static_cast<size_t>(blade_nodes.n_points)) {
+        // Check if the blade nodes to blade number mapping is valid - should be the same size
+        if (blade_nodes_to_blade_num_mapping.size() != blade_nodes.NumberOfMeshPoints()) {
             throw std::runtime_error("Blade node to blade number mapping size mismatch.");
         }
 
-        if (node_indices_by_blade.size() != static_cast<size_t>(n_blades)) {
+        // Check if the node indices by blade are valid - should be same size as number of blades
+        if (node_indices_by_blade.size() != NumberOfBlades()) {
             throw std::runtime_error("Node indices by blade size mismatch.");
         }
 
+        // Check if the total number of blade nodes is valid - should be the same as the number of
+        // aggregrated blade nodes
         size_t total_nodes = 0;
-        for (const auto& bn : node_indices_by_blade) {
-            total_nodes += bn.size();
+        for (const auto& bl : node_indices_by_blade) {
+            total_nodes += bl.size();
         }
-        if (total_nodes != static_cast<size_t>(blade_nodes.n_points)) {
+        if (total_nodes != blade_nodes.NumberOfMeshPoints()) {
             throw std::runtime_error("Total number of blade nodes mismatch.");
         }
-
-        // Validate hub and nacelle data
-        if (hub.n_points != 1 || nacelle.n_points != 1) {
-            throw std::runtime_error("Hub and nacelle should have exactly one mesh point each.");
-        }
     }
+
+    /// Returns the number of blades as size_t
+    [[nodiscard]] size_t NumberOfBlades() const { return static_cast<size_t>(n_blades); }
 
     /**
      * @brief Sets the blade node values based on blade number and node number.
@@ -341,10 +377,11 @@ struct TurbineData {
      * r_dot]
      */
     void SetBladeNodeMotion(
-        size_t blade_number, size_t node_number, const std::array<double, 7>& position,
-        const std::array<double, 6>& velocity, const std::array<double, 6>& acceleration
+        size_t blade_number, size_t node_number, const Array_7& position, const Array_6& velocity,
+        const Array_6& acceleration
     ) {
-        if (blade_number >= static_cast<size_t>(n_blades) ||
+        // Check if the blade and node numbers are within the valid range
+        if (blade_number >= NumberOfBlades() ||
             node_number >= node_indices_by_blade[blade_number].size()) {
             throw std::out_of_range("Blade or node number out of range.");
         }
@@ -379,8 +416,8 @@ struct TurbineData {
      * r_dot]
      */
     void SetBladeRootMotion(
-        size_t blade_number, const std::array<double, 7>& position,
-        const std::array<double, 6>& velocity, const std::array<double, 6>& acceleration
+        size_t blade_number, const Array_7& position, const Array_6& velocity,
+        const Array_6& acceleration
     ) {
         if (blade_number >= static_cast<size_t>(n_blades)) {
             throw std::out_of_range("Blade number out of range.");
@@ -413,8 +450,7 @@ struct TurbineData {
      * r_dot]
      */
     void SetHubMotion(
-        const std::array<double, 7>& position, const std::array<double, 6>& velocity,
-        const std::array<double, 6>& acceleration
+        const Array_7& position, const Array_6& velocity, const Array_6& acceleration
     ) {
         this->hub.SetValues(0, position, velocity, acceleration);
     }
@@ -430,8 +466,7 @@ struct TurbineData {
      * r_dot]
      */
     void SetNacelleMotion(
-        const std::array<double, 7>& position, const std::array<double, 6>& velocity,
-        const std::array<double, 6>& acceleration
+        const Array_7& position, const Array_6& velocity, const Array_6& acceleration
     ) {
         this->nacelle.SetValues(0, position, velocity, acceleration);
     }
@@ -516,7 +551,7 @@ private:
  */
 struct SimulationControls {
     /// Debug levels used in AeroDyn-Inflow C bindings
-    enum class DebugLevel {
+    enum class DebugLevel : std::uint8_t {
         kNone = 0,        //< No debug output
         kSummary = 1,     //< Some summary info
         kDetailed = 2,    //< Above + all position/orientation info
@@ -600,35 +635,26 @@ public:
      * @param vtk VTK output settings
      */
     AeroDynInflowLibrary(
-        std::string shared_lib_path = "aerodyn_inflow_c_binding.dll",
+        const std::string& shared_lib_path = "aerodyn_inflow_c_binding.dll",
         ErrorHandling eh = ErrorHandling{}, FluidProperties fp = FluidProperties{},
         EnvironmentalConditions ec = EnvironmentalConditions{},
         SimulationControls sc = SimulationControls{}, VTKSettings vtk = VTKSettings{}
     )
         : lib_{shared_lib_path, util::dylib::no_filename_decorations},
-          error_handling_(std::move(eh)),
-          air_(std::move(fp)),
-          env_conditions_(std::move(ec)),
-          sim_controls_(std::move(sc)),
-          vtk_settings_(std::move(vtk)) {}
-
-    /// Destructor to take care of Fortran-side cleanup if the library is initialized
-    ~AeroDynInflowLibrary() noexcept {
-        try {
-            if (is_initialized_) {
-                Finalize();
-            }
-        } catch (const std::exception& e) {
-            std::cerr << "Error during AeroDynInflowLibrary destruction: " << e.what() << std::endl;
-        }
-    }
+          error_handling_{eh},
+          air_{fp},
+          env_conditions_{ec},
+          sim_controls_{std::move(sc)},
+          vtk_settings_{vtk} {}
 
     /// Getter methods for the private member variables
-    const ErrorHandling& GetErrorHandling() const { return error_handling_; }
-    const EnvironmentalConditions& GetEnvironmentalConditions() const { return env_conditions_; }
-    const FluidProperties& GetFluidProperties() const { return air_; }
-    const SimulationControls& GetSimulationControls() const { return sim_controls_; }
-    const VTKSettings& GetVTKSettings() const { return vtk_settings_; }
+    [[nodiscard]] const ErrorHandling& GetErrorHandling() const { return error_handling_; }
+    [[nodiscard]] const EnvironmentalConditions& GetEnvironmentalConditions() const {
+        return env_conditions_;
+    }
+    [[nodiscard]] const FluidProperties& GetFluidProperties() const { return air_; }
+    [[nodiscard]] const SimulationControls& GetSimulationControls() const { return sim_controls_; }
+    [[nodiscard]] const VTKSettings& GetVTKSettings() const { return vtk_settings_; }
 
     /**
      * @brief Initialize the AeroDyn Inflow library
@@ -641,7 +667,7 @@ public:
      *
      * @param turbine_configs Vector of TurbineConfig objects, each representing a single turbine
      */
-    void Initialize(std::vector<TurbineConfig> turbine_configs) {
+    void Initialize(const std::vector<TurbineConfig>& turbine_configs) {
         PreInitialize(turbine_configs.size());
         SetupRotors(turbine_configs);
         FinalizeInitialization();
@@ -657,9 +683,9 @@ public:
         auto ADI_C_PreInit = lib_.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
 
         // Convert bool and other types to int32_t for Fortran compatibility
-        int32_t debug_level_int{static_cast<int32_t>(sim_controls_.debug_level)};
-        int32_t transpose_dcm_int{sim_controls_.transpose_DCM ? 1 : 0};
-        int32_t n_turbines_int{static_cast<int32_t>(n_turbines)};
+        auto debug_level_int = static_cast<int32_t>(sim_controls_.debug_level);
+        auto transpose_dcm_int = sim_controls_.transpose_DCM ? 1 : 0;
+        auto n_turbines_int = static_cast<int32_t>(n_turbines);
 
         ADI_C_PreInit(
             &n_turbines_int,                      // input: Number of turbines
@@ -689,15 +715,16 @@ public:
             // Turbine number is 1 indexed i.e. 1, 2, 3, ...
             ++turbine_number;
 
-            // Convert bool -> int to pass to the Fortran routine
+            // Convert bool -> int32_t to pass to the Fortran routine
             int32_t is_horizontal_axis_int = tc.is_horizontal_axis ? 1 : 0;
 
             // Validate the turbine config
             tc.Validate();
 
-            // Create new turbine data
-            // Note: TurbineData and MeshData are validated during construction
-            turbines.emplace_back(TurbineData(tc));
+            // Create new turbine data to store the updates
+            // Note: TurbineData and MeshData are validated during construction, so no need to
+            // perform additional checks here
+            turbines.emplace_back(tc);
             auto& td = turbines.back();
 
             // Call setup rotor for each turbine
@@ -735,7 +762,7 @@ public:
                 "ADI_C_Init"
             );
 
-        // Convert bool -> int to pass to the Fortran routine
+        // Convert bool -> int32_t to pass to the Fortran routine
         int32_t is_aerodyn_input_passed_as_string =
             sim_controls_.is_aerodyn_input_path ? 0 : 1;  // reverse of is_aerodyn_input_path
         int32_t is_inflowwind_input_passed_as_string =
@@ -744,11 +771,10 @@ public:
 
         // Primary input file will be passed as path to the file
         char* aerodyn_input_pointer{sim_controls_.aerodyn_input.data()};
-        int32_t aerodyn_input_length = static_cast<int32_t>(sim_controls_.aerodyn_input.size());
+        auto aerodyn_input_length = static_cast<int32_t>(sim_controls_.aerodyn_input.size());
 
         char* inflowwind_input_pointer{sim_controls_.inflowwind_input.data()};
-        int32_t inflowwind_input_length =
-            static_cast<int32_t>(sim_controls_.inflowwind_input.size());
+        auto inflowwind_input_length = static_cast<int32_t>(sim_controls_.inflowwind_input.size());
 
         // Channel name and channel unit string arrays
         std::string channel_names_c(20 * 8000 + 1, ' ');  //< Output channel names
@@ -792,27 +818,27 @@ public:
 
         // Allocate vector of output channel values
         sim_controls_.n_channels = static_cast<size_t>(n_channels);
-        this->channel_values = std::vector<float>(sim_controls_.n_channels, 0.f);
-        this->channel_names.resize(sim_controls_.n_channels);
-        this->channel_units.resize(sim_controls_.n_channels);
+        channel_values = std::vector<float>(sim_controls_.n_channels, 0.f);
+        channel_names.resize(sim_controls_.n_channels);
+        channel_units.resize(sim_controls_.n_channels);
         std::string tmp;
         for (size_t i = 0; i < sim_controls_.n_channels; ++i) {
             tmp = channel_names_c.substr(20 * i, 20);
             tmp.erase(tmp.find_last_not_of(" ") + 1);
-            this->channel_names[i] = tmp;
+            channel_names[i] = tmp;
             tmp = channel_units_c.substr(20 * i, 20);
             tmp.erase(tmp.find_last_not_of(" ") + 1);
-            this->channel_units[i] = tmp;
+            channel_units[i] = tmp;
         }
 
-        this->error_handling_.CheckError();
+        error_handling_.CheckError();
         is_initialized_ = true;
     }
 
     /**
      * @brief Set up the rotor motion for the current simulation step
      *
-     * @details Updates the motion data (position, orientation, velocity, acceleration) for
+     * @details Sets up the motion data (position, orientation, velocity, acceleration) for
      * the hub, nacelle, blade roots, and blade nodes of each turbine.
      */
     void SetRotorMotion() {

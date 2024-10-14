@@ -30,7 +30,8 @@ inline void AssembleSystemMatrix(Solver& solver, Beams& beams) {
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,
         ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{
-            solver.K, beams.stiffness_matrix_terms}
+            solver.K, beams.stiffness_matrix_terms
+        }
     );
 
     Kokkos::fence();

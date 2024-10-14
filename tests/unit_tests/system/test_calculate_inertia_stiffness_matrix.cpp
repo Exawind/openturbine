@@ -84,13 +84,15 @@ TEST(CalculateInertiaStiffnessMatrixTests, OneNode) {
     Kokkos::parallel_for(
         "CalculateInertiaStiffnessMatrix", 1,
         CalculateInertiaStiffnessMatrix{
-            0, Muu, u_ddot, omega, omega_dot, omega_tilde, omega_dot_tilde, rho, eta, Kuu}
+            0, Muu, u_ddot, omega, omega_dot, omega_tilde, omega_dot_tilde, rho, eta, Kuu
+        }
     );
 
     constexpr auto Kuu_exact_data = std::array<double, 36>{
         0., 0., 0., 3396.,    -6792.,   3396.,    0., 0., 0., 3609.,    -7218.,   3609.,
         0., 0., 0., 3822.,    -7644.,   3822.,    0., 0., 0., 1407766., 1481559., 1465326.,
-        0., 0., 0., 1496300., 1558384., 1576048., 0., 0., 0., 1604122., 1652877., 1652190.};
+        0., 0., 0., 1496300., 1558384., 1576048., 0., 0., 0., 1604122., 1652877., 1652190.
+    };
     const auto Kuu_exact =
         Kokkos::View<const double[1][1][6][6], Kokkos::HostSpace>(Kuu_exact_data.data());
 

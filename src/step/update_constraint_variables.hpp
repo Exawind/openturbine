@@ -23,7 +23,8 @@ inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
         "CalculateConstraintForce", constraints.num,
         CalculateConstraintForce{
             constraints.type, constraints.target_node_index, constraints.axes, constraints.input,
-            state.q, constraints.system_residual_terms}
+            state.q, constraints.system_residual_terms
+        }
     );
 
     Kokkos::parallel_for(
@@ -31,7 +32,8 @@ inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
         CalculateConstraintResidualGradient{
             constraints.type, constraints.base_node_index, constraints.target_node_index,
             constraints.X0, constraints.axes, constraints.input, state.q, constraints.residual_terms,
-            constraints.base_gradient_terms, constraints.target_gradient_terms}
+            constraints.base_gradient_terms, constraints.target_gradient_terms
+        }
     );
 }
 

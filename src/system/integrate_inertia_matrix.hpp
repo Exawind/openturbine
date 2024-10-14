@@ -117,9 +117,10 @@ struct IntegrateInertiaMatrix {
         member.team_barrier();
 
         const auto node_range = Kokkos::TeamThreadRange(member, num_nodes * simd_nodes);
-        const auto element_integrator = IntegrateInertiaMatrixElement{
-            i_elem, num_nodes, num_qps,     qp_weight,    qp_jacobian, shape_interp,
-            qp_Muu, qp_Guu,    beta_prime_, gamma_prime_, gbl_M_};
+        const auto element_integrator =
+            IntegrateInertiaMatrixElement{i_elem,      num_nodes,    num_qps, qp_weight,
+                                          qp_jacobian, shape_interp, qp_Muu,  qp_Guu,
+                                          beta_prime_, gamma_prime_, gbl_M_};
         Kokkos::parallel_for(node_range, element_integrator);
     }
 };
