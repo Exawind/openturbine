@@ -138,7 +138,8 @@ struct IntegrateStiffnessMatrix {
         const auto node_range = Kokkos::TeamThreadRange(member, num_nodes * simd_nodes);
         const auto element_integrator = IntegrateStiffnessMatrixElement{
             i_elem, num_nodes, num_qps, qp_weight, qp_jacobian, shape_interp, shape_deriv,
-            qp_Kuu, qp_Puu,    qp_Cuu,  qp_Ouu,    qp_Quu,      gbl_M_};
+            qp_Kuu, qp_Puu,    qp_Cuu,  qp_Ouu,    qp_Quu,      gbl_M_
+        };
         Kokkos::parallel_for(node_range, element_integrator);
     }
 };

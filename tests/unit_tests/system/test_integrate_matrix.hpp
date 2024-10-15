@@ -148,6 +148,11 @@ auto get_qp_Fi(const std::array<double, n_qps * 6>& Fi_data) {
 }
 
 template <size_t n_qps>
+auto get_qp_Fe(const std::array<double, n_qps * 6>& Fe_data) {
+    return get_qp_vector<n_qps>("Fe", Fe_data);
+}
+
+template <size_t n_qps>
 auto get_qp_Fg(const std::array<double, n_qps * 6>& Fg_data) {
     return get_qp_vector<n_qps>("Fg", Fg_data);
 }

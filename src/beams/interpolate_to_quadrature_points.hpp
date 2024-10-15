@@ -55,27 +55,30 @@ struct InterpolateToQuadraturePoints {
             Kokkos::TeamThreadRange(member, num_qps),
             InterpolateQPVector{
                 i_elem, num_nodes, shape_interp,
-                Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot}
+                Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot
+            }
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             InterpolateQPVector{
                 i_elem, num_nodes, shape_interp,
-                Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(3, 6)), qp_omega}
+                Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(3, 6)), qp_omega
+            }
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             InterpolateQPVector{
                 i_elem, num_nodes, shape_interp,
-                Kokkos::subview(node_u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)),
-                qp_u_ddot}
+                Kokkos::subview(node_u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_ddot
+            }
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             InterpolateQPVector{
                 i_elem, num_nodes, shape_interp,
                 Kokkos::subview(node_u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(3, 6)),
-                qp_omega_dot}
+                qp_omega_dot
+            }
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),

@@ -23,7 +23,8 @@ struct CalculateFixedBCConstraint {
 
         // Initial difference between nodes
         const auto X0_data = Kokkos::Array<double, 3>{
-            X0_(i_constraint, 0), X0_(i_constraint, 1), X0_(i_constraint, 2)};
+            X0_(i_constraint, 0), X0_(i_constraint, 1), X0_(i_constraint, 2)
+        };
         const auto X0 = View_3::const_type{X0_data.data()};
 
         // Base node displacement
@@ -34,7 +35,8 @@ struct CalculateFixedBCConstraint {
 
         // Target node displacement
         const auto R2_data = Kokkos::Array<double, 4>{
-            node_u(i_node2, 3), node_u(i_node2, 4), node_u(i_node2, 5), node_u(i_node2, 6)};
+            node_u(i_node2, 3), node_u(i_node2, 4), node_u(i_node2, 5), node_u(i_node2, 6)
+        };
         const auto R2 = Kokkos::View<double[4]>::const_type{R2_data.data()};
         const auto u2_data =
             Kokkos::Array<double, 3>{node_u(i_node2, 0), node_u(i_node2, 1), node_u(i_node2, 2)};

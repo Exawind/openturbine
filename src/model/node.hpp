@@ -48,7 +48,8 @@ struct Node {
     void Rotate(const Array_3& axis, double angle) {
         auto q = Array_4{
             cos(angle / 2.), sin(angle / 2.) * axis[0], sin(angle / 2.) * axis[1],
-            sin(angle / 2.) * axis[2]};
+            sin(angle / 2.) * axis[2]
+        };
         Rotate(q);
     }
 };

@@ -51,7 +51,8 @@ inline void SetUpSolverAndAssemble() {
 
     // Node locations (GLL quadrature)
     constexpr auto node_s = std::array{
-        0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.};
+        0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.
+    };
 
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
@@ -287,7 +288,8 @@ inline void SetupAndTakeNoSteps() {
 
     // Node locations (GLL quadrature)
     constexpr auto node_s = std::array{
-        0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.};
+        0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.
+    };
 
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
@@ -494,7 +496,8 @@ inline auto SetupAndTakeTwoSteps() {
 
     // Node locations (GLL quadrature)
     constexpr auto node_s = std::array{
-        0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.};
+        0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.
+    };
 
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a

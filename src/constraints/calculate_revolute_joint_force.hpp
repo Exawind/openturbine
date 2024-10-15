@@ -23,7 +23,8 @@ struct CalculateRevoluteJointForce {
 
         // Initial difference between nodes
         const auto X0_data = Kokkos::Array<double, 3>{
-            axes(i_constraint, 0, 0), axes(i_constraint, 0, 1), axes(i_constraint, 0, 2)};
+            axes(i_constraint, 0, 0), axes(i_constraint, 0, 1), axes(i_constraint, 0, 2)
+        };
         const auto X0 = View_3::const_type{X0_data.data()};
 
         auto R2_X0_data = Kokkos::Array<double, 3>{};
@@ -31,7 +32,8 @@ struct CalculateRevoluteJointForce {
 
         // Target node displacement
         const auto R2_data = Kokkos::Array<double, 4>{
-            node_u(i_node2, 3), node_u(i_node2, 4), node_u(i_node2, 5), node_u(i_node2, 6)};
+            node_u(i_node2, 3), node_u(i_node2, 4), node_u(i_node2, 5), node_u(i_node2, 6)
+        };
         const auto R2 = Kokkos::View<double[4]>::const_type{R2_data.data()};
 
         //----------------------------------------------------------------------
