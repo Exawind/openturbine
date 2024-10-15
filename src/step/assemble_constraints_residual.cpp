@@ -18,7 +18,8 @@ void AssembleConstraintsResidual(const Solver& solver, const Constraints& constr
     Kokkos::parallel_for(
         "ContributeConstraintsSystemResidualToVector", constraints.num,
         ContributeConstraintsSystemResidualToVector{
-            constraints.target_node_index, solver.R, constraints.system_residual_terms}
+            constraints.target_node_index, solver.R, constraints.system_residual_terms
+        }
     );
 
     auto R = Solver::ValuesType(
@@ -42,7 +43,8 @@ void AssembleConstraintsResidual(const Solver& solver, const Constraints& constr
         CopyConstraintsResidualToVector{
             constraints.row_range,
             Kokkos::subview(solver.R, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs)),
-            constraints.residual_terms}
+            constraints.residual_terms
+        }
     );
 }
 
