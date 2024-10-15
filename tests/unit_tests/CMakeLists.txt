@@ -22,9 +22,6 @@ target_link_libraries(openturbine_unit_tests PRIVATE
 
 # Link system libraries and dependencies
 target_link_system_libraries(openturbine_unit_tests PRIVATE
-  KokkosKernels::kokkoskernels
-  Amesos2::amesos2
-  yaml-cpp
   GTest::gtest
   GTest::gtest_main
 )
