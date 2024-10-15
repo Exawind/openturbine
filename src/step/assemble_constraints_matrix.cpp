@@ -24,7 +24,8 @@ void AssembleConstraintsMatrix(Solver& solver, const Constraints& constraints) {
             CopyConstraintsToSparseMatrix<Solver::CrsMatrixType>{
                 constraints.row_range, constraints.base_node_col_range,
                 constraints.target_node_col_range, solver.B, constraints.base_gradient_terms,
-                constraints.target_gradient_terms}
+                constraints.target_gradient_terms
+            }
         );
     }
 
