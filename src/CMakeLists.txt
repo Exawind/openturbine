@@ -16,12 +16,19 @@ target_link_libraries(openturbine_library PRIVATE
 )
 
 # Link system libraries
-target_link_system_libraries(openturbine_library PRIVATE
+target_link_system_libraries(openturbine_library PUBLIC
   KokkosKernels::kokkoskernels
   Amesos2::amesos2
   yaml-cpp
   ${FS_LIB}
 )
+
+# Link MPI if it is defined by TPLs
+if(TARGET MPI::MPI_CXX)
+  target_link_system_libraries(openturbine_library PUBLIC
+    MPI::MPI_CXX
+  )
+endif()
 
 # Include shared libraries for the OpenTurbine library
 include(../cmake/SharedLibraries.cmake)
