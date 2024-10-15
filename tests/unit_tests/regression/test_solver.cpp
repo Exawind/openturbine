@@ -10,6 +10,7 @@
 #include "src/beams/beams.hpp"
 #include "src/beams/beams_input.hpp"
 #include "src/beams/create_beams.hpp"
+#include "src/constraints/constraints.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -21,6 +22,7 @@
 #include "src/step/step.hpp"
 #include "src/step/step_parameters.hpp"
 #include "src/step/update_constraint_variables.hpp"
+#include "src/step/update_system_variables.hpp"
 #include "src/types.hpp"
 
 namespace openturbine::tests {
