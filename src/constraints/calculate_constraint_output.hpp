@@ -26,7 +26,8 @@ struct CalculateConstraintOutput {
             case ConstraintType::kRevoluteJoint: {
                 // Axis of rotation unit vector
                 const auto joint_axis0_data = Kokkos::Array<double, 3>{
-                    axes(i_constraint, 0, 0), axes(i_constraint, 0, 1), axes(i_constraint, 0, 2)};
+                    axes(i_constraint, 0, 0), axes(i_constraint, 0, 1), axes(i_constraint, 0, 2)
+                };
                 const auto joint_axis0 = View_3::const_type{joint_axis0_data.data()};
 
                 // Target node index
@@ -34,12 +35,14 @@ struct CalculateConstraintOutput {
 
                 // Target node initial rotation
                 const auto R0_data = Kokkos::Array<double, 4>{
-                    node_u(i_node, 3), node_u(i_node, 4), node_u(i_node, 5), node_u(i_node, 6)};
+                    node_u(i_node, 3), node_u(i_node, 4), node_u(i_node, 5), node_u(i_node, 6)
+                };
                 const auto R0 = View_Quaternion::const_type{R0_data.data()};
 
                 // Target node rotational displacement
                 const auto R_data = Kokkos::Array<double, 4>{
-                    node_u(i_node, 3), node_u(i_node, 4), node_u(i_node, 5), node_u(i_node, 6)};
+                    node_u(i_node, 3), node_u(i_node, 4), node_u(i_node, 5), node_u(i_node, 6)
+                };
                 const auto R = View_Quaternion::const_type{R_data.data()};
 
                 // Calculate current orientation
@@ -54,12 +57,14 @@ struct CalculateConstraintOutput {
 
                 // Target node rotational velocity vector
                 auto omega_data = Kokkos::Array<double, 3>{
-                    node_udot(i_node, 3), node_udot(i_node, 4), node_udot(i_node, 5)};
+                    node_udot(i_node, 3), node_udot(i_node, 4), node_udot(i_node, 5)
+                };
                 auto omega = View_3{omega_data.data()};
 
                 // Target node rotational acceleration vector
                 auto omega_dot_data = Kokkos::Array<double, 3>{
-                    node_uddot(i_node, 3), node_uddot(i_node, 4), node_uddot(i_node, 5)};
+                    node_uddot(i_node, 3), node_uddot(i_node, 4), node_uddot(i_node, 5)
+                };
                 auto omega_dot = View_3{omega_dot_data.data()};
 
                 // Calculate joint axis in current configuration

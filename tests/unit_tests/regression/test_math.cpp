@@ -203,7 +203,7 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
     TestRotationToQuaternion(phi, {0.707107, 0., 0., 0.707107});
 }
 
-TEST(QuaternionTest, QuaternionToRotationVector_1) {
+void test_quaternion_to_rotation_vector_2() {
     const auto n = 100U;
     const auto dtheta = M_PI / static_cast<double>(n);
     for (size_t i = 0; i < n; ++i) {
@@ -223,6 +223,10 @@ TEST(QuaternionTest, QuaternionToRotationVector_1) {
     }
 }
 
+TEST(QuaternionTest, QuaternionToRotationVector_1) {
+    test_quaternion_to_rotation_vector_2();
+}
+
 TEST(QuaternionTest, QuaternionToRotationVector_2) {
     const auto n = 100U;
     const auto dtheta = M_PI / static_cast<double>(n);
@@ -238,9 +242,7 @@ TEST(QuaternionTest, QuaternionToRotationVector_2) {
 
 void TestVecTilde(const Kokkos::View<double[3]>& v, const std::vector<std::vector<double>>& exact) {
     auto m = Kokkos::View<double[3][3]>("m");
-    Kokkos::parallel_for(
-        "VecTilde", 1, KOKKOS_LAMBDA(int) { VecTilde(v, m); }
-    );
+    Kokkos::parallel_for("VecTilde", 1, KOKKOS_LAMBDA(int) { VecTilde(v, m); });
     expect_kokkos_view_2D_equal(m, exact);
 }
 
@@ -314,9 +316,7 @@ TEST(VectorTest, VectorTest_UnitVector_Set3_Test) {
 inline void test_AX_Matrix() {
     auto A = Create2DView<3, 3>({{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}});
     auto out = Create2DView<3, 3>({{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}});
-    Kokkos::parallel_for(
-        1, KOKKOS_LAMBDA(int) { AX_Matrix(A, out); }
-    );
+    Kokkos::parallel_for(1, KOKKOS_LAMBDA(int) { AX_Matrix(A, out); });
     auto tmp = kokkos_view_2D_to_vector(out);
     expect_kokkos_view_2D_equal(
         out,

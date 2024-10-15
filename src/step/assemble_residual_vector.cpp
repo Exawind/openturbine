@@ -16,14 +16,14 @@ void AssembleResidualVector(const Beams& beams) {
     const auto qp_variable_size = Kokkos::View<double* [6]>::shmem_size(beams.max_elem_qps);
     range_policy.set_scratch_size(
         1,
-        Kokkos::PerTeam(2 * shape_size + 2 * weight_size + node_variable_size + 4 * qp_variable_size)
+        Kokkos::PerTeam(2 * shape_size + 2 * weight_size + node_variable_size + 5 * qp_variable_size)
     );
     Kokkos::parallel_for(
         "IntegrateResidualVector", range_policy,
         IntegrateResidualVector{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.qp_weight,
             beams.qp_jacobian, beams.shape_interp, beams.shape_deriv, beams.node_FX, beams.qp_Fc,
-            beams.qp_Fd, beams.qp_Fi, beams.qp_Fg, beams.residual_vector_terms}
+            beams.qp_Fd, beams.qp_Fi, beams.qp_Fe, beams.qp_Fg, beams.residual_vector_terms}
     );
 }
 

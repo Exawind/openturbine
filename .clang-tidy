@@ -21,6 +21,8 @@ Checks: "bugprone*,
          -bugprone-easily-swappable-parameters,
          -readability-named-parameter,
 "
+CheckOptions:
+  readability-function-cognitive-complexity.IgnoreMacros: 'true'
 WarningsAsErrors: ''
 HeaderFilterRegex: '.*'
 FormatStyle:     none

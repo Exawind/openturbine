@@ -151,7 +151,8 @@ struct Solver {
             "PopulateSparseRowPtrsColInds_Constraints", 1,
             PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
                 constraint_type, constraint_base_node_index, constraint_target_node_index,
-                constraint_row_range, B_row_ptrs, B_col_ind}
+                constraint_row_range, B_row_ptrs, B_col_ind
+            }
         );
         auto B_values = ValuesType("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);
@@ -172,7 +173,8 @@ struct Solver {
             "PopulateSparseRowPtrsColInds_Transpose", 1,
             PopulateSparseRowPtrsColInds_Transpose<RowPtrType, IndicesType>{
                 B_num_rows, B_num_columns, B_row_ptrs, B_col_ind, col_count, tmp_row_ptrs,
-                B_t_row_ptrs, B_t_col_inds}
+                B_t_row_ptrs, B_t_col_inds
+            }
         );
         B_t = CrsMatrixType(
             "B_t", static_cast<int>(B_t_num_rows), static_cast<int>(B_t_num_columns),
@@ -203,7 +205,8 @@ struct Solver {
         Kokkos::parallel_for(
             "FillUnshiftedRowPtrs", num_dofs + 1,
             FillUnshiftedRowPtrs<RowPtrType>{
-                num_system_dofs, system_matrix.graph.row_map, system_matrix_full_row_ptrs}
+                num_system_dofs, system_matrix.graph.row_map, system_matrix_full_row_ptrs
+            }
         );
         system_matrix_full = CrsMatrixType(
             "system_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs),
@@ -230,7 +233,8 @@ struct Solver {
         Kokkos::parallel_for(
             "FillUnshiftedRowPtrs", num_dofs + 1,
             FillUnshiftedRowPtrs<RowPtrType>{
-                num_system_dofs, B_t.graph.row_map, transpose_matrix_full_row_ptrs}
+                num_system_dofs, B_t.graph.row_map, transpose_matrix_full_row_ptrs
+            }
         );
         auto transpose_matrix_full_indices = IndicesType("transpose_matrix_full_indices", B_t.nnz());
         Kokkos::deep_copy(transpose_matrix_full_indices, static_cast<int>(num_system_dofs));
