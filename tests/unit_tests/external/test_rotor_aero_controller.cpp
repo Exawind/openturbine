@@ -184,8 +184,8 @@ TEST(Milestone, IEA15RotorAeroController) {
     constexpr size_t max_iter{6};
     constexpr double step_size{0.01};  // seconds
     constexpr double rho_inf{0.0};
-    // constexpr double t_end{60.0};  // seconds
-    constexpr double t_end{1.0};  // seconds
+    constexpr double t_end{30.0};  // seconds
+    // constexpr double t_end{1.0};  // seconds
     constexpr auto num_steps{static_cast<size_t>(t_end / step_size + 1.)};
 
     // Create model for adding nodes and constraints
@@ -301,6 +301,12 @@ TEST(Milestone, IEA15RotorAeroController) {
         }
     );
 
+    // Vector of blade tip nodes
+    std::vector<Node> tip_nodes;
+    for (size_t i = 0; i < n_blades; ++i) {
+        tip_nodes.emplace_back(beam_elems[i].nodes[beam_elems[i].nodes.size() - 1].node);
+    }
+
     // Blade root nodes
     std::vector<std::shared_ptr<Node>> root_nodes;
     for (size_t i = 0; i < n_blades; ++i) {
@@ -393,6 +399,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Create mirrors for accessing node data
     auto host_state_x = Kokkos::create_mirror(state.x);
+    auto host_state_q = Kokkos::create_mirror(state.q);
     auto host_state_v = Kokkos::create_mirror(state.v);
     auto host_state_vd = Kokkos::create_mirror(state.vd);
 
@@ -454,7 +461,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     };
 
     // Define turbine initial position
-    std::vector<util::TurbineConfig> turbine_configs{
+    const std::vector<util::TurbineConfig> turbine_configs{
         util::TurbineConfig(
             true,          // is horizontal axis wind turbine
             {0., 0., 0.},  // reference position
@@ -480,6 +487,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     sc.point_load_output = use_node_loads;
     sc.debug_level = util::SimulationControls::DebugLevel::kNone;
     sc.transpose_DCM = false;
+    sc.output_format = util::SimulationControls::OutputFormat::kNone;
 
     // VTK settings
     util::VTKSettings vtk_settings;
@@ -510,26 +518,38 @@ TEST(Milestone, IEA15RotorAeroController) {
     std::filesystem::create_directory(step_dir.parent_path());
     std::filesystem::create_directory(step_dir);
 
+    // Write output file header
     std::ofstream w("IEA15RotorAeroController.out");
     w << std::scientific;
-    w << std::setw(16) << "Time"       //
-      << std::setw(16) << "Wind1VelX"  //
-      << std::setw(16) << "Azimuth"    //
-      << std::setw(16) << "BldPitch1"  //
-      << std::setw(16) << "RtSpeed"    //
-      << std::setw(16) << "GenSpeed"   //
-      << std::setw(16) << "GenTq"      //
-      << std::setw(16) << "GenPwr"     //
-      << "\n";
-    w << std::setw(16) << "(s)"     //
-      << std::setw(16) << "(m/s)"   //
-      << std::setw(16) << "(deg)"   //
-      << std::setw(16) << "(deg)"   //
-      << std::setw(16) << "(rpm)"   //
-      << std::setw(16) << "(rpm)"   //
-      << std::setw(16) << "(kN-m)"  //
-      << std::setw(16) << "(kW)"    //
-      << "\n";
+    w << std::left;
+    const std::vector<std::array<std::string, 2>> header_data{
+        {"Time", "(s)"},         //
+        {"ConvIter", "(-)"},     //
+        {"ConvError", "(-)"},    //
+        {"Azimuth", "(deg)"},    //
+        {"BldPitch1", "(deg)"},  //
+        {"GenSpeed", "(rpm)"},   //
+        {"GenTq", "(kN-m)"},     //
+        {"GenPwr", "(kW)"},      //
+        {"B1TipTDxr", "(m)"},    //
+        {"B2TipTDxr", "(m)"},    //
+        {"B3TipTDxr", "(m)"},
+    };
+    for (const auto& item : header_data) {
+        w << "\t" << item[0];
+    }
+    for (const auto& name : adi.channel_names) {
+        w << "\t" << name;
+    }
+    w << "\n";
+    for (const auto& item : header_data) {
+        w << "\t" << item[1];
+    }
+    for (const auto& unit : adi.channel_units) {
+        w << "\t" << unit;
+    }
+    w << "\n";
+    w << std::right;
 
     //--------------------------------------------------------------------------
     // Time stepping
@@ -543,7 +563,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     for (size_t i = 0; i < num_steps; ++i) {
 #ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i);
-        tmp = std::string(4 - tmp.size(), '0') + tmp;
+        tmp.insert(0, 5 - tmp.size(), '0');
         WriteVTKBeamsQP(beams, step_dir / (std::string("step_qp.") + tmp + ".vtu"));
         WriteVTKBeamsNodes(beams, step_dir / (std::string("step_node.") + tmp + ".vtu"));
 #endif
@@ -554,6 +574,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 
         // Copy state matrices from device to host
         Kokkos::deep_copy(host_state_x, state.x);
+        Kokkos::deep_copy(host_state_q, state.q);
         Kokkos::deep_copy(host_state_v, state.v);
         Kokkos::deep_copy(host_state_vd, state.vd);
 
@@ -600,16 +621,23 @@ TEST(Milestone, IEA15RotorAeroController) {
         torque_actual = controller.io.generator_torque_command;
         pitch_actual = controller.io.pitch_collective_command;
 
-        // Write output
-        w << std::setw(16) << current_time                                          //
-          << std::setw(16) << controller.io.horizontal_wind_speed                   //
-          << std::setw(16) << azimuth * 180. / M_PI                                 //
-          << std::setw(16) << controller.io.pitch_collective_command * 180. / M_PI  //
-          << std::setw(16) << rotor_speed / rpm_to_radps                            //
-          << std::setw(16) << generator_speed / rpm_to_radps                        //
-          << std::setw(16) << controller.io.generator_torque_command / 1000.        //
-          << std::setw(16) << controller.io.generator_power_actual / 1000.          //
-          << "\n";
+        // Write data to output file
+        const auto conv_err{solver.convergence_err.size() > 0 ? solver.convergence_err.back() : 0.};
+        w << "\t" << current_time                                    // current time (s)
+          << "\t" << solver.convergence_err.size()                   // num convergence iterations
+          << "\t" << conv_err                                        // convergence error
+          << "\t" << azimuth * 180. / M_PI                           // azimuth angle (deg)
+          << "\t" << pitch_actual * 180. / M_PI                      // blade pitch (deg)
+          << "\t" << generator_speed / rpm_to_radps                  //
+          << "\t" << controller.io.generator_torque_command / 1000.  //
+          << "\t" << controller.io.generator_power_actual / 1000.    //
+          << "\t" << GetNodeData(tip_nodes[0].ID, host_state_q)[0]   // x displacement of tip nodes
+          << "\t" << GetNodeData(tip_nodes[1].ID, host_state_q)[0]   // x displacement of tip nodes
+          << "\t" << GetNodeData(tip_nodes[2].ID, host_state_q)[0];  // x displacement of tip nodes
+        for (const auto& value : adi.channel_values) {
+            w << "\t" << value;
+        }
+        w << "\n";
 
         // Predict state at end of step
         auto converged = Step(parameters, solver, beams, state, constraints);

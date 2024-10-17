@@ -306,6 +306,7 @@ struct TurbineData {
           nacelle(1),
           blade_roots(tc.NumberOfBlades()),
           blade_nodes(CalculateTotalBladeNodes(tc)),
+          hh_vel({0.F, 0.F, 0.F}),
           node_indices_by_blade(tc.NumberOfBlades()) {
         // Initialize hub and nacelle data
         InitializeHubAndNacelle(tc);
@@ -475,7 +476,7 @@ struct TurbineData {
      * @param blade_number The number of the blade to update.
      * @param node_number The number of the node to update within the specified blade.
      */
-    Array_6 GetBladeNodeLoad(size_t blade_number, size_t node_number) const {
+    [[nodiscard]] Array_6 GetBladeNodeLoad(size_t blade_number, size_t node_number) const {
         if (blade_number >= static_cast<size_t>(n_blades) ||
             node_number >= node_indices_by_blade[blade_number].size()) {
             throw std::out_of_range("Blade or node number out of range.");
