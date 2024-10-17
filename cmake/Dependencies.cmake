@@ -32,8 +32,10 @@ function(openturbine_setup_dependencies)
     include(ExternalProject)
     ExternalProject_Add(OpenFAST_ADI
       PREFIX ${CMAKE_BINARY_DIR}/external
-      GIT_REPOSITORY https://github.com/OpenFAST/openfast.git
-      GIT_TAG dev                    # Use the "dev" branch
+      # GIT_REPOSITORY https://github.com/OpenFAST/openfast.git
+      GIT_REPOSITORY https://github.com/deslaughter/openfast.git
+      # GIT_TAG dev                    # Use the "dev" branch
+      GIT_TAG f/adi_line_mesh        # Use the "dev" branch
       GIT_SHALLOW TRUE               # Clone only the latest commit
       GIT_SUBMODULES ""              # Skip downloading r-test
       CMAKE_ARGS
