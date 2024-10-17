@@ -157,7 +157,7 @@ struct TurbineConfig {
  * @param orientation Output array for flattened 3x3 rotation matrix
  */
 inline void SetPositionAndOrientation(
-    const Array_7& data, std::array<float, 3>& position, std::array<double, 9>& orientation
+    const Array_7& data, std::array<float, 3>& position, Array_3x3& orientation
 ) {
     // Set position (first 3 elements)
     for (size_t i = 0; i < 3; ++i) {
@@ -165,14 +165,7 @@ inline void SetPositionAndOrientation(
     }
 
     // Set orientation (converts last 4 elements i.e. quaternion -> 3x3 rotation matrix)
-    auto orientation_2D = QuaternionToRotationMatrix({data[3], data[4], data[5], data[6]});
-
-    // Flatten the 3x3 matrix to a 1D array
-    for (size_t i = 0; i < 3; ++i) {
-        for (size_t j = 0; j < 3; ++j) {
-            orientation[i * 3 + j] = orientation_2D[i][j];
-        }
-    }
+    orientation = QuaternionToRotationMatrix({data[3], data[4], data[5], data[6]});
 }
 
 /**
@@ -184,10 +177,10 @@ inline void SetPositionAndOrientation(
  *  mesh components-- which can be the hub, nacelle, root, or blade
  */
 struct MeshData {
-    int32_t n_points;                                //< Number of mesh points (nodes)
-    std::vector<std::array<float, 3>> position;      //< N x 3 array [x, y, z]
-    std::vector<std::array<double, 9>> orientation;  //< N x 9 array [r11, r12, ..., r33]
-    std::vector<std::array<float, 6>> velocity;      //< N x 6 array [u, v, w, p, q, r]
+    int32_t n_points;                            //< Number of mesh points (nodes)
+    std::vector<std::array<float, 3>> position;  //< N x 3 array [x, y, z]
+    std::vector<Array_3x3> orientation;          //< N x 9 array [r11, r12, ..., r33]
+    std::vector<std::array<float, 6>> velocity;  //< N x 6 array [u, v, w, p, q, r]
     std::vector<std::array<float, 6>>
         acceleration;  //< N x 6 array [u_dot, v_dot, w_dot, p_dot, q_dot, r_dot]
     std::vector<std::array<float, 6>> load;  //< N x 6 array [Fx, Fy, Fz, Mx, My, Mz]
@@ -197,7 +190,7 @@ struct MeshData {
         : n_points(static_cast<int32_t>(n_nodes)),
           position(std::vector<std::array<float, 3>>(n_nodes, {0.F, 0.F, 0.F})),
           orientation(
-              std::vector<std::array<double, 9>>(n_nodes, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
+              std::vector<Array_3x3>(n_nodes, Array_3x3{{{0., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}})
           ),
           velocity(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})),
           acceleration(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})),
@@ -212,7 +205,7 @@ struct MeshData {
         : n_points(static_cast<int32_t>(n_mesh_pts)),
           position(std::vector<std::array<float, 3>>(n_mesh_pts, {0.F, 0.F, 0.F})),
           orientation(
-              std::vector<std::array<double, 9>>(n_mesh_pts, {0., 0., 0., 0., 0., 0., 0., 0., 0.})
+              std::vector<Array_3x3>(n_mesh_pts, {{{0., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}})
           ),
           velocity(vel),
           acceleration(acc),
@@ -565,6 +558,14 @@ struct SimulationControls {
         kAll = 4,         //< Above + meshes
     };
 
+    /// Write output format
+    enum class OutputFormat : std::uint8_t {
+        kNone = 0,         //< Disable write output
+        kText = 1,         //< Write text file
+        kBinary = 2,       //< Write binary file
+        kText_Binary = 3,  //< Write text file and binary file
+    };
+
     static constexpr size_t kDefaultStringLength{1025};  //< Max length for output filenames
 
     // Input file handling
@@ -586,10 +587,10 @@ struct SimulationControls {
     DebugLevel debug_level{DebugLevel::kNone};  //< Debug level (0-4)
 
     // Outputs
-    int output_format{1};                     //< File format for writing outputs
-    double output_time_step{0.1};             //< Timestep for outputs to file
-    std::string output_root_name{"ADI_out"};  //< Root name for output files
-    size_t n_channels{0};                     //< Number of channels returned
+    OutputFormat output_format{OutputFormat::kNone};  //< File format for writing outputs
+    std::string output_root_name{"ADI_out"};          //< Root name for output files
+    double output_time_step{0.1};                     //< Time step for outputs to file
+    size_t n_channels{0};                             //< Number of channels returned
 };
 
 /**
@@ -599,8 +600,22 @@ struct SimulationControls {
  * output, the type of VTK output, and the nacelle dimensions for VTK rendering.
  */
 struct VTKSettings {
-    int write_vtk{0};                           //< Flag to write VTK output
-    int vtk_type{1};                            //< Type of VTK output (1: surface meshes)
+    /// Write type
+    enum class WriteType : std::uint8_t {
+        kNone = 0,       //< Disable VTK output
+        kInit = 1,       //< Data at initialization
+        kAnimation = 2,  //< Animation
+    };
+
+    /// Mesh output type
+    enum class OutputType : std::uint8_t {
+        kSurface = 1,       //< Surfaces
+        kLine = 2,          //< Lines
+        kSurface_Line = 3,  //< Both surfaces and lines
+    };
+
+    WriteType write_vtk{WriteType::kNone};      //< Flag to write VTK output
+    OutputType vtk_type{OutputType::kLine};     //< Type of VTK output
     std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
                                                 -2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F
     };
@@ -740,15 +755,17 @@ public:
                 &is_horizontal_axis_int,                    // input: 1: HAWT, 0: VAWT or cross-flow
                 tc.reference_position.data(),               // input: turbine reference position
                 td.hub.position.data()->data(),             // input: initial hub position
-                td.hub.orientation.data()->data(),          // input: initial hub orientation
+                td.hub.orientation.data()->data()->data(),  // input: initial hub orientation
                 td.nacelle.position.data()->data(),         // input: initial nacelle position
-                td.nacelle.orientation.data()->data(),      // input: initial nacelle orientation
-                &td.n_blades,                               // input: number of blades
-                td.blade_roots.position.data()->data(),     // input: initial blade root positions
-                td.blade_roots.orientation.data()->data(),  // input: initial blade root orientation
-                &td.blade_nodes.n_points,                   // input: number of mesh points
-                td.blade_nodes.position.data()->data(),     // input: initial node positions
-                td.blade_nodes.orientation.data()->data(),  // input: initial node orientation
+                td.nacelle.orientation.data()->data()->data(),  // input: initial nacelle orientation
+                &td.n_blades,                                   // input: number of blades
+                td.blade_roots.position.data()->data(),  // input: initial blade root positions
+                td.blade_roots.orientation.data()->data()->data(
+                ),                                       // input: initial blade root orientation
+                &td.blade_nodes.n_points,                // input: number of mesh points
+                td.blade_nodes.position.data()->data(),  // input: initial node positions
+                td.blade_nodes.orientation.data()->data()->data(
+                ),  // input: initial node orientation
                 td.blade_nodes_to_blade_num_mapping.data(
                 ),                                    // input: blade node to blade number mapping
                 &error_handling_.error_status,        // output: Error status
@@ -788,6 +805,13 @@ public:
         // Number of output channels (set by ADI_C_Init)
         int32_t n_channels{0};
 
+        // Write output format as integer for Fortran routine
+        auto output_format = static_cast<int32_t>(sim_controls_.output_format);
+
+        // VTK write type and output type as integers
+        auto write_vtk = static_cast<int32_t>(vtk_settings_.write_vtk);
+        auto vtk_type = static_cast<int32_t>(vtk_settings_.vtk_type);
+
         ADI_C_Init(
             &is_aerodyn_input_passed_as_string,           // input: AD input is passed
             &aerodyn_input_pointer,                       // input: AD input file as string
@@ -808,11 +832,11 @@ public:
             &sim_controls_.time_step,                     // input: time step
             &sim_controls_.max_time,                      // input: maximum simulation time
             &store_HH_wind_speed_int,                     // input: store HH wind speed
-            &vtk_settings_.write_vtk,                     // input: write VTK output
-            &vtk_settings_.vtk_type,                      // input: VTK output type
+            &write_vtk,                                   // input: write VTK output
+            &vtk_type,                                    // input: VTK output type
             vtk_settings_.vtk_nacelle_dimensions.data(),  // input: VTK nacelle dimensions
             &vtk_settings_.vtk_hub_radius,                // input: VTK hub radius
-            &sim_controls_.output_format,                 // input: output format
+            &output_format,                               // input: output format
             &sim_controls_.output_time_step,              // input: output time step
             &n_channels,                                  // output: number of channels
             channel_names_c.data(),                       // output: output channel names
@@ -861,26 +885,26 @@ public:
             // Turbine number is 1 indexed i.e. 1, 2, 3, ...
             ++turbine_number;
             ADI_C_SetRotorMotion(
-                &turbine_number,                             // input: current turbine number
-                td.hub.position.data()->data(),              // input: hub positions
-                td.hub.orientation.data()->data(),           // input: hub orientations
-                td.hub.velocity.data()->data(),              // input: hub velocities
-                td.hub.acceleration.data()->data(),          // input: hub accelerations
-                td.nacelle.position.data()->data(),          // input: nacelle positions
-                td.nacelle.orientation.data()->data(),       // input: nacelle orientations
-                td.nacelle.velocity.data()->data(),          // input: nacelle velocities
-                td.nacelle.acceleration.data()->data(),      // input: nacelle accelerations
-                td.blade_roots.position.data()->data(),      // input: root positions
-                td.blade_roots.orientation.data()->data(),   // input: root orientations
-                td.blade_roots.velocity.data()->data(),      // input: root velocities
-                td.blade_roots.acceleration.data()->data(),  // input: root accelerations
-                &td.blade_nodes.n_points,                    // input: number of mesh points
-                td.blade_nodes.position.data()->data(),      // input: mesh positions
-                td.blade_nodes.orientation.data()->data(),   // input: mesh orientations
-                td.blade_nodes.velocity.data()->data(),      // input: mesh velocities
-                td.blade_nodes.acceleration.data()->data(),  // input: mesh accelerations
-                &error_handling_.error_status,               // output: error status
-                error_handling_.error_message.data()         // output: error message buffer
+                &turbine_number,                                    // input: current turbine number
+                td.hub.position.data()->data(),                     // input: hub positions
+                td.hub.orientation.data()->data()->data(),          // input: hub orientations
+                td.hub.velocity.data()->data(),                     // input: hub velocities
+                td.hub.acceleration.data()->data(),                 // input: hub accelerations
+                td.nacelle.position.data()->data(),                 // input: nacelle positions
+                td.nacelle.orientation.data()->data()->data(),      // input: nacelle orientations
+                td.nacelle.velocity.data()->data(),                 // input: nacelle velocities
+                td.nacelle.acceleration.data()->data(),             // input: nacelle accelerations
+                td.blade_roots.position.data()->data(),             // input: root positions
+                td.blade_roots.orientation.data()->data()->data(),  // input: root orientations
+                td.blade_roots.velocity.data()->data(),             // input: root velocities
+                td.blade_roots.acceleration.data()->data(),         // input: root accelerations
+                &td.blade_nodes.n_points,                           // input: number of mesh points
+                td.blade_nodes.position.data()->data(),             // input: mesh positions
+                td.blade_nodes.orientation.data()->data()->data(),  // input: mesh orientations
+                td.blade_nodes.velocity.data()->data(),             // input: mesh velocities
+                td.blade_nodes.acceleration.data()->data(),         // input: mesh accelerations
+                &error_handling_.error_status,                      // output: error status
+                error_handling_.error_message.data()                // output: error message buffer
             );
 
             error_handling_.CheckError();

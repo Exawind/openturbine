@@ -25,18 +25,21 @@
 #include "src/vendor/dylib/dylib.hpp"
 #include "tests/unit_tests/regression/iea15_rotor_data.hpp"
 #include "tests/unit_tests/regression/test_utilities.hpp"
+
+#ifdef OpenTurbine_ENABLE_VTK
 #include "tests/unit_tests/regression/vtkout.hpp"
+#endif
 
 namespace openturbine::tests {
 
-KOKKOS_INLINE_FUNCTION Array_6 GetState(const size_t index, const View_Nx6& state_matrix) {
+KOKKOS_INLINE_FUNCTION Array_6 GetNodeData(const size_t index, const View_Nx6& state_matrix) {
     return Array_6{
         state_matrix(index, 0), state_matrix(index, 1), state_matrix(index, 2),
         state_matrix(index, 3), state_matrix(index, 4), state_matrix(index, 5),
     };
 }
 
-KOKKOS_INLINE_FUNCTION Array_7 GetState(const size_t index, const View_Nx7& state_matrix) {
+KOKKOS_INLINE_FUNCTION Array_7 GetNodeData(const size_t index, const View_Nx7& state_matrix) {
     return Array_7{
         state_matrix(index, 0), state_matrix(index, 1), state_matrix(index, 2),
         state_matrix(index, 3), state_matrix(index, 4), state_matrix(index, 5),
@@ -81,6 +84,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     // constexpr double t_end{60.0};  // seconds
     constexpr double t_end{1.0};  // seconds
     constexpr auto num_steps{static_cast<size_t>(t_end / step_size + 1.)};
+    constexpr auto use_node_loads = true;
 
     // Create model for adding nodes and constraints
     auto model = Model();
@@ -279,22 +283,79 @@ TEST(Milestone, IEA15RotorAeroController) {
     auto constraints = Constraints(model.GetConstraints());
 
     //--------------------------------------------------------------------------
+    // State
+    //--------------------------------------------------------------------------
+
+    // Create state
+    auto state = model.CreateState();
+
+    // Create mirrors for accessing node data
+    auto host_state_x = Kokkos::create_mirror(state.x);
+    auto host_state_v = Kokkos::create_mirror(state.v);
+    auto host_state_vd = Kokkos::create_mirror(state.vd);
+
+    //--------------------------------------------------------------------------
+    // Solver
+    //--------------------------------------------------------------------------
+
+    // Create solver parameters
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+
+    // Create solver
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
+    );
+
+    // Transfer initial state to beams for writing output
+    UpdateSystemVariables(parameters, beams, state);
+
+    //--------------------------------------------------------------------------
     // AeroDyn / InflowWind library
     //--------------------------------------------------------------------------
 
+    // Create mirrors for accessing qp data
+    auto host_qp_x = Kokkos::create_mirror(beams.qp_x);
+    auto host_qp_u_dot = Kokkos::create_mirror(beams.qp_u_dot);
+    auto host_qp_omega = Kokkos::create_mirror(beams.qp_omega);
+    auto host_qp_u_ddot = Kokkos::create_mirror(beams.qp_u_ddot);
+    auto host_qp_omega_dot = Kokkos::create_mirror(beams.qp_omega_dot);
+    auto host_qp_Fe = Kokkos::create_mirror(beams.qp_Fe);
+
+    Kokkos::deep_copy(host_qp_x, beams.qp_x);
+    Kokkos::deep_copy(host_qp_u_dot, beams.qp_u_dot);
+    Kokkos::deep_copy(host_qp_omega, beams.qp_omega);
+    Kokkos::deep_copy(host_qp_u_ddot, beams.qp_u_ddot);
+    Kokkos::deep_copy(host_qp_omega_dot, beams.qp_omega_dot);
+
     // Create lambda for building blade configuration
-    auto build_blade_config = [&](size_t blade_num) {
-        std::vector<Array_7> node_positions;
-        std::transform(
-            beam_elems[blade_num].nodes.begin(), beam_elems[blade_num].nodes.end(),
-            std::back_inserter(node_positions),
-            [](const BeamNode& n) {
-                return n.node.x;
+    auto build_blade_config = [&](size_t i_blade) {
+        std::vector<Array_7> mesh_positions;
+        if (use_node_loads) {
+            std::transform(
+                beam_elems[i_blade].nodes.begin(), beam_elems[i_blade].nodes.end(),
+                std::back_inserter(mesh_positions),
+                [](const BeamNode& n) {
+                    return n.node.x;
+                }
+            );
+        } else {
+            for (auto i_qp = 0U; i_qp < beam_elems[i_blade].quadrature.size(); ++i_qp) {
+                mesh_positions.emplace_back(Array_7{
+                    host_qp_x(i_blade, i_qp, 0),
+                    host_qp_x(i_blade, i_qp, 1),
+                    host_qp_x(i_blade, i_qp, 2),
+                    host_qp_x(i_blade, i_qp, 3),
+                    host_qp_x(i_blade, i_qp, 4),
+                    host_qp_x(i_blade, i_qp, 5),
+                    host_qp_x(i_blade, i_qp, 6),
+                });
             }
-        );
+        }
         return util::TurbineConfig::BladeInitialState{
-            root_nodes[blade_num]->x,  // Root node
-            node_positions,            // Blade nodes
+            root_nodes[i_blade]->x,  // Root node
+            mesh_positions,          // Blade nodes
         };
     };
 
@@ -322,13 +383,14 @@ TEST(Milestone, IEA15RotorAeroController) {
     sc.total_elapsed_time = 0.;
     sc.n_time_steps = num_steps;
     sc.output_time_step = step_size;
+    sc.point_load_output = use_node_loads;
     sc.debug_level = util::SimulationControls::DebugLevel::kNone;
     sc.transpose_DCM = false;
 
     // VTK settings
     util::VTKSettings vtk_settings;
-    vtk_settings.write_vtk = 2;  // Animation
-    vtk_settings.vtk_type = 2;   // Lines
+    vtk_settings.write_vtk = util::VTKSettings::WriteType::kAnimation;  // Animation
+    vtk_settings.vtk_type = util::VTKSettings::OutputType::kLine;       // Lines
     vtk_settings.vtk_nacelle_dimensions = {-2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F};
     vtk_settings.vtk_hub_radius = static_cast<float>(hub_radius);
 
@@ -338,40 +400,11 @@ TEST(Milestone, IEA15RotorAeroController) {
     );
 
     // Remove the ADI vtk folder if outputting animation
-    if (vtk_settings.write_vtk == 2) {
+    if (vtk_settings.write_vtk != util::VTKSettings::WriteType::kNone) {
         RemoveDirectoryWithRetries("vtk-ADI");
     }
 
     adi.Initialize(turbine_configs);
-
-    //--------------------------------------------------------------------------
-    // State
-    //--------------------------------------------------------------------------
-
-    // Create state
-    auto state = model.CreateState();
-
-    // Create mirrors for accessing mode data
-    auto host_state_x = Kokkos::create_mirror(state.x);
-    auto host_state_v = Kokkos::create_mirror(state.v);
-    auto host_state_vd = Kokkos::create_mirror(state.vd);
-
-    //--------------------------------------------------------------------------
-    // Solver
-    //--------------------------------------------------------------------------
-
-    // Create solver parameters
-    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
-
-    // Create solver
-    auto solver = Solver(
-        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
-        constraints.type, constraints.base_node_index, constraints.target_node_index,
-        constraints.row_range
-    );
-
-    // Transfer initial state to beams for writing output
-    UpdateSystemVariables(parameters, beams, state);
 
     //--------------------------------------------------------------------------
     // Output
@@ -396,7 +429,7 @@ TEST(Milestone, IEA15RotorAeroController) {
       << std::setw(16) << "RtFldFxg"   //
       << std::setw(16) << "RtFldFyg"   //
       << std::setw(16) << "RtFldFzg"   //
-      << "\n";
+      << std::endl;
     w << std::setw(16) << "(s)"     //
       << std::setw(16) << "(m/s)"   //
       << std::setw(16) << "(deg)"   //
@@ -408,7 +441,7 @@ TEST(Milestone, IEA15RotorAeroController) {
       << std::setw(16) << "(N)"     //
       << std::setw(16) << "(N)"     //
       << std::setw(16) << "(N)"     //
-      << "\n";
+      << std::endl;
 
     //--------------------------------------------------------------------------
     // Time stepping
@@ -420,11 +453,12 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
+#ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i);
         tmp = std::string(4 - tmp.size(), '0') + tmp;
-        WriteVTKBeamsQP(beams, step_dir / (std::string("step.") + tmp + ".vtu"));
-
-        WriteVTKBeamsNodes(beams, step_dir / (std::string("step_nodes.") + tmp + ".vtu"));
+        WriteVTKBeamsQP(beams, step_dir / (std::string("step_qp.") + tmp + ".vtu"));
+        WriteVTKBeamsNodes(beams, step_dir / (std::string("step_node.") + tmp + ".vtu"));
+#endif
 
         // Get current time and next time
         const auto current_time{step_size * static_cast<double>(i)};
@@ -435,39 +469,74 @@ TEST(Milestone, IEA15RotorAeroController) {
         Kokkos::deep_copy(host_state_v, state.v);
         Kokkos::deep_copy(host_state_vd, state.vd);
 
+        Kokkos::deep_copy(host_qp_x, beams.qp_x);
+        Kokkos::deep_copy(host_qp_u_dot, beams.qp_u_dot);
+        Kokkos::deep_copy(host_qp_omega, beams.qp_omega);
+        Kokkos::deep_copy(host_qp_u_ddot, beams.qp_u_ddot);
+        Kokkos::deep_copy(host_qp_omega_dot, beams.qp_omega_dot);
+
         // Set rotor motion for current time
         adi.turbines[0].SetHubMotion(
-            GetState(hub_node->ID, host_state_x), GetState(hub_node->ID, host_state_v),
-            GetState(hub_node->ID, host_state_vd)
+            GetNodeData(hub_node->ID, host_state_x), GetNodeData(hub_node->ID, host_state_v),
+            GetNodeData(hub_node->ID, host_state_vd)
         );
 
         // Set rotor nacelle motion for current time (same as hub)
         adi.turbines[0].SetNacelleMotion(
-            GetState(hub_node->ID, host_state_x), GetState(hub_node->ID, host_state_v),
-            GetState(hub_node->ID, host_state_vd)
+            GetNodeData(hub_node->ID, host_state_x), GetNodeData(hub_node->ID, host_state_v),
+            GetNodeData(hub_node->ID, host_state_vd)
         );
 
         // Loop through blades
         for (size_t j = 0; j < n_blades; ++j) {
-            auto root_pos = GetState(root_nodes[j]->ID, host_state_x);
-            auto root_vel = GetState(root_nodes[j]->ID, host_state_v);
-            auto root_acc = GetState(root_nodes[j]->ID, host_state_vd);
-
-            WriteVTKPoint(
-                root_pos, root_vel, root_acc,
-                step_dir / (std::string("blade_root_") + std::to_string(j + 1) + "." + tmp + ".vtu")
-            );
+            auto root_pos = GetNodeData(root_nodes[j]->ID, host_state_x);
+            auto root_vel = GetNodeData(root_nodes[j]->ID, host_state_v);
+            auto root_acc = GetNodeData(root_nodes[j]->ID, host_state_vd);
 
             // Root node
             adi.turbines[0].SetBladeRootMotion(j, root_pos, root_vel, root_acc);
 
-            // Loop through blade nodes
-            for (size_t k = 0; k < beam_elems[j].nodes.size(); ++k) {
-                adi.turbines[0].SetBladeNodeMotion(
-                    j, k, GetState(beam_elems[j].nodes[k].node.ID, host_state_x),
-                    GetState(beam_elems[j].nodes[k].node.ID, host_state_v),
-                    GetState(beam_elems[j].nodes[k].node.ID, host_state_vd)
-                );
+            if (use_node_loads) {
+                // Loop through blade nodes
+                for (size_t k = 0; k < beam_elems[j].nodes.size(); ++k) {
+                    adi.turbines[0].SetBladeNodeMotion(
+                        j, k, GetNodeData(beam_elems[j].nodes[k].node.ID, host_state_x),
+                        GetNodeData(beam_elems[j].nodes[k].node.ID, host_state_v),
+                        GetNodeData(beam_elems[j].nodes[k].node.ID, host_state_vd)
+                    );
+                }
+            } else {
+                // Loop through blade qps
+                for (size_t k = 0; k < beam_elems[j].quadrature.size(); ++k) {
+                    adi.turbines[0].SetBladeNodeMotion(
+                        j, k,
+                        {
+                            host_qp_x(j, k, 0),
+                            host_qp_x(j, k, 1),
+                            host_qp_x(j, k, 2),
+                            host_qp_x(j, k, 3),
+                            host_qp_x(j, k, 4),
+                            host_qp_x(j, k, 5),
+                            host_qp_x(j, k, 6),
+                        },
+                        {
+                            host_qp_u_dot(j, k, 0),
+                            host_qp_u_dot(j, k, 1),
+                            host_qp_u_dot(j, k, 2),
+                            host_qp_omega(j, k, 0),
+                            host_qp_omega(j, k, 1),
+                            host_qp_omega(j, k, 2),
+                        },
+                        {
+                            host_qp_u_ddot(j, k, 0),
+                            host_qp_u_ddot(j, k, 1),
+                            host_qp_u_ddot(j, k, 2),
+                            host_qp_omega_dot(j, k, 0),
+                            host_qp_omega_dot(j, k, 1),
+                            host_qp_omega_dot(j, k, 2),
+                        }
+                    );
+                }
             }
         }
         adi.SetRotorMotion();
@@ -480,16 +549,29 @@ TEST(Milestone, IEA15RotorAeroController) {
 
         // Loop through blades and copy loads
         Array_6 load_sum{0., 0., 0., 0., 0., 0.};
-        for (size_t j = 0; j < n_blades; ++j) {
-            for (size_t k = 0; k < beam_elems[j].nodes.size(); ++k) {
-                const auto loads = adi.turbines[0].GetBladeNodeLoad(j, k);
-                for (size_t m = 0; m < 6U; ++m) {
-                    host_node_FX(j, k, m) = loads[m];
-                    load_sum[m] += loads[m];
+        if (use_node_loads) {
+            for (size_t j = 0; j < n_blades; ++j) {
+                for (size_t k = 0; k < beam_elems[j].nodes.size(); ++k) {
+                    const auto loads = adi.turbines[0].GetBladeNodeLoad(j, k);
+                    for (size_t m = 0; m < 6U; ++m) {
+                        host_node_FX(j, k, m) = loads[m];
+                        load_sum[m] += loads[m];
+                    }
                 }
             }
+            Kokkos::deep_copy(beams.node_FX, host_node_FX);
+        } else {
+            for (size_t j = 0; j < n_blades; ++j) {
+                for (size_t k = 0; k < beam_elems[j].quadrature.size(); ++k) {
+                    const auto loads = adi.turbines[0].GetBladeNodeLoad(j, k);
+                    for (size_t m = 0; m < 6U; ++m) {
+                        host_qp_Fe(j, k, m) = loads[m];
+                        load_sum[m] += loads[m];
+                    }
+                }
+            }
+            Kokkos::deep_copy(beams.qp_Fe, host_qp_Fe);
         }
-        Kokkos::deep_copy(beams.node_FX, host_node_FX);
 
         // Set controller inputs and call controller to get commands for this step
         const auto generator_speed = rotor_speed * gear_box_ratio;
@@ -500,11 +582,11 @@ TEST(Milestone, IEA15RotorAeroController) {
         controller.io.pitch_blade1_actual = pitch_actual;
         controller.io.pitch_blade2_actual = pitch_actual;
         controller.io.pitch_blade3_actual = pitch_actual;
-        controller.io.rotor_speed_actual = rotor_speed;               // Rotor speed (rad/s)
-        controller.io.generator_speed_actual = generator_speed;       // Generator speed (rad/s)
-        controller.io.generator_power_actual = generator_power;       // Generator power (W)
-        controller.io.generator_torque_actual = torque_actual;        // Generator torque (N-m)
-        controller.io.horizontal_wind_speed = adi.channel_values[0];  // Hub wind speed (m/s)
+        controller.io.rotor_speed_actual = rotor_speed;                   // Rotor speed (rad/s)
+        controller.io.generator_speed_actual = generator_speed;           // Generator speed (rad/s)
+        controller.io.generator_power_actual = generator_power;           // Generator power (W)
+        controller.io.generator_torque_actual = torque_actual;            // Generator torque (N-m)
+        controller.io.horizontal_wind_speed = adi.turbines[0].hh_vel[0];  // Hub wind speed (m/s)
         controller.CallController();
 
         // Update the generator torque and blade pitch
@@ -523,14 +605,10 @@ TEST(Milestone, IEA15RotorAeroController) {
           << std::setw(16) << load_sum[0]                                           //
           << std::setw(16) << load_sum[1]                                           //
           << std::setw(16) << load_sum[2]                                           //
-          << "\n";
+          << std::endl;
 
         // Predict state at end of step
         auto converged = Step(parameters, solver, beams, state, constraints);
-        if (!converged) {
-            cout << "failed to converge";
-            break;
-        }
         EXPECT_EQ(converged, true);
 
         // Update rotor azimuth and speed
