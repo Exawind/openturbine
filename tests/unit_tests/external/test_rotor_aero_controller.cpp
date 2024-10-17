@@ -232,7 +232,8 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     constexpr Array_3 omega{
         rotor_speed_init * shaft_axis[0], rotor_speed_init * shaft_axis[1],
-        rotor_speed_init * shaft_axis[2]};
+        rotor_speed_init * shaft_axis[2]
+    };
     std::transform(
         std::cbegin(blade_list), std::cend(blade_list), std::back_inserter(beam_elems),
         [&](const size_t i) {

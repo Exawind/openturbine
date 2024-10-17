@@ -10,9 +10,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Display clang-format version
+      run: |
+        clang-format --version
+
+    - name: Display clang-format versions
+      run: |
+        ls /usr/bin/clang-format*
+
     - name: Run clang-format
       run: |
-        find . -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format-18 -i {} \;
+        find . -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -i {} \;
         
     - name: Check for formatting changes
       run: |
