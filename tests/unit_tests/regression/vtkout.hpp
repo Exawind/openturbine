@@ -125,35 +125,36 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     // Acceleration
     //--------------------------------------------------------------------------
 
-    // Add translational acceleration point data
-    vtkNew<vtkFloatArray> translational_accel;
-    translational_accel->SetNumberOfComponents(3);
-    translational_accel->SetName("TranslationalAcceleration");
-    const auto qp_u_ddot = Kokkos::create_mirror(beams.qp_u_ddot);
-    Kokkos::deep_copy(qp_u_ddot, beams.qp_u_ddot);
-    for (auto el = 0U; el < beams.num_elems; ++el) {
-        for (auto p = 0U; p < num_qps_per_element(el); ++p) {
-            const auto tv =
-                std::array{qp_u_ddot(el, p, 0), qp_u_ddot(el, p, 1), qp_u_ddot(el, p, 2)};
-            translational_accel->InsertNextTuple(tv.data());
-        }
-    }
-    gd->GetPointData()->AddArray(translational_accel);
+    // // Add translational acceleration point data
+    // vtkNew<vtkFloatArray> translational_accel;
+    // translational_accel->SetNumberOfComponents(3);
+    // translational_accel->SetName("TranslationalAcceleration");
+    // const auto qp_u_ddot = Kokkos::create_mirror(beams.qp_u_ddot);
+    // Kokkos::deep_copy(qp_u_ddot, beams.qp_u_ddot);
+    // for (auto el = 0U; el < beams.num_elems; ++el) {
+    //     for (auto p = 0U; p < num_qps_per_element(el); ++p) {
+    //         const auto tv =
+    //             std::array{qp_u_ddot(el, p, 0), qp_u_ddot(el, p, 1), qp_u_ddot(el, p, 2)};
+    //         translational_accel->InsertNextTuple(tv.data());
+    //     }
+    // }
+    // gd->GetPointData()->AddArray(translational_accel);
 
-    // Add rotational acceleration point data
-    vtkNew<vtkFloatArray> rotational_accel;
-    rotational_accel->SetNumberOfComponents(3);
-    rotational_accel->SetName("RotationalAcceleration");
-    const auto qp_omega_dot = Kokkos::create_mirror(beams.qp_omega_dot);
-    Kokkos::deep_copy(qp_omega_dot, beams.qp_omega_dot);
-    for (auto el = 0U; el < beams.num_elems; ++el) {
-        for (auto p = 0U; p < num_qps_per_element(el); ++p) {
-            const auto rv =
-                std::array{qp_omega_dot(el, p, 0), qp_omega_dot(el, p, 1), qp_omega_dot(el, p, 2)};
-            rotational_accel->InsertNextTuple(rv.data());
-        }
-    }
-    gd->GetPointData()->AddArray(rotational_accel);
+    // // Add rotational acceleration point data
+    // vtkNew<vtkFloatArray> rotational_accel;
+    // rotational_accel->SetNumberOfComponents(3);
+    // rotational_accel->SetName("RotationalAcceleration");
+    // const auto qp_omega_dot = Kokkos::create_mirror(beams.qp_omega_dot);
+    // Kokkos::deep_copy(qp_omega_dot, beams.qp_omega_dot);
+    // for (auto el = 0U; el < beams.num_elems; ++el) {
+    //     for (auto p = 0U; p < num_qps_per_element(el); ++p) {
+    //         const auto rv =
+    //             std::array{qp_omega_dot(el, p, 0), qp_omega_dot(el, p, 1), qp_omega_dot(el, p,
+    //             2)};
+    //         rotational_accel->InsertNextTuple(rv.data());
+    //     }
+    // }
+    // gd->GetPointData()->AddArray(rotational_accel);
 
     //--------------------------------------------------------------------------
     // Loads
