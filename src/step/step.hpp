@@ -106,6 +106,7 @@ inline bool Step(
             constraints.output,
         }
     );
+    Kokkos::deep_copy(constraints.host_output, constraints.output);
 
     return true;
 }

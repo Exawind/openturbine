@@ -366,7 +366,7 @@ TEST(AerodynInflowTest, TurbineData_SetBladeNodeValues) {
     const std::array<float, 6> new_velocity = {1.F, 2.F, 3.F, 4.F, 5.F, 6.F};
     const std::array<float, 6> new_acceleration = {7.F, 8.F, 9.F, 10.F, 11.F, 12.F};
     const std::array<float, 6> new_loads = {13.F, 14.F, 15.F, 16.F, 17.F, 18.F};
-    turbine_data.SetBladeNodeValues(
+    turbine_data.SetBladeNodeMotion(
         blade_number, node_number, new_position, new_orientation, new_velocity, new_acceleration,
         new_loads
     );
@@ -615,12 +615,11 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
     std::vector<float> output_channel_values;
 
     for (int i = 0; i < 10; ++i) {
-        EXPECT_NO_THROW(aerodyn_inflow_library.SetupRotorMotion());
+        // Update motion data for each time step (if needed)
+        EXPECT_NO_THROW(aerodyn_inflow_library.SetRotorMotion());
 
         EXPECT_NO_THROW(aerodyn_inflow_library.UpdateStates(current_time, next_time));
-        EXPECT_NO_THROW(
-            aerodyn_inflow_library.CalculateOutputChannels(next_time, output_channel_values)
-        );
+        EXPECT_NO_THROW(aerodyn_inflow_library.CalculateOutput(next_time, output_channel_values));
         EXPECT_NO_THROW(aerodyn_inflow_library.GetRotorAerodynamicLoads());
 
         // Assert loads on blade nodes - they don't change since we're not updating the motion

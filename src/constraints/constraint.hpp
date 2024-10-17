@@ -82,6 +82,10 @@ struct Constraint {
             y_axis = {R[0][1], R[1][1], R[2][1]};
             z_axis = {R[0][2], R[1][2], R[2][2]};
             return;
+
+        } else if (type == ConstraintType::kRotationControl) {
+            x_axis = UnitVector(vec);
+            return;
         }
 
         // If not a revolute/hinge joint, set axes to the input vector

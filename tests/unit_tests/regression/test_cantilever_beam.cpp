@@ -86,6 +86,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
 
     // Define beam initialization
     const auto beams_input = BeamsInput({BeamElement(beam_nodes, sections, quadrature)}, gravity);
+    const auto num_nodes = beam_nodes.size();
 
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
@@ -112,7 +113,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
 
     // First step
     Kokkos::deep_copy(
-        Kokkos::subview(beams.node_FX, 0, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.005)
+        Kokkos::subview(beams.node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.005)
     );
     auto converged = Step(parameters, solver, beams, state, constraints);
     EXPECT_EQ(converged, true);
@@ -123,7 +124,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     }
     // Second step
     Kokkos::deep_copy(
-        Kokkos::subview(beams.node_FX, 0, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.010)
+        Kokkos::subview(beams.node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.010)
     );
     converged = Step(parameters, solver, beams, state, constraints);
     EXPECT_EQ(converged, true);
@@ -135,7 +136,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
 
     // Third step
     Kokkos::deep_copy(
-        Kokkos::subview(beams.node_FX, 0, beams.num_nodes - 1, 2), 100. * std::sin(10.0 * 0.015)
+        Kokkos::subview(beams.node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.015)
     );
     converged = Step(parameters, solver, beams, state, constraints);
     EXPECT_EQ(converged, true);
