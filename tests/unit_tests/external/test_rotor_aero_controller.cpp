@@ -159,8 +159,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     constexpr Array_3 omega{
         rotor_speed_init * shaft_axis[0], rotor_speed_init * shaft_axis[1],
-        rotor_speed_init * shaft_axis[2]
-    };
+        rotor_speed_init * shaft_axis[2]};
     std::transform(
         std::cbegin(blade_list), std::cend(blade_list), std::back_inserter(beam_elems),
         [&](const size_t i) {
@@ -429,7 +428,7 @@ TEST(Milestone, IEA15RotorAeroController) {
       << std::setw(16) << "RtFldFxg"   //
       << std::setw(16) << "RtFldFyg"   //
       << std::setw(16) << "RtFldFzg"   //
-      << std::endl;
+      << "\n";
     w << std::setw(16) << "(s)"     //
       << std::setw(16) << "(m/s)"   //
       << std::setw(16) << "(deg)"   //
@@ -441,7 +440,7 @@ TEST(Milestone, IEA15RotorAeroController) {
       << std::setw(16) << "(N)"     //
       << std::setw(16) << "(N)"     //
       << std::setw(16) << "(N)"     //
-      << std::endl;
+      << "\n";
 
     //--------------------------------------------------------------------------
     // Time stepping
@@ -605,7 +604,7 @@ TEST(Milestone, IEA15RotorAeroController) {
           << std::setw(16) << load_sum[0]                                           //
           << std::setw(16) << load_sum[1]                                           //
           << std::setw(16) << load_sum[2]                                           //
-          << std::endl;
+          << "\n";
 
         // Predict state at end of step
         auto converged = Step(parameters, solver, beams, state, constraints);
