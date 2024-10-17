@@ -47,6 +47,79 @@ KOKKOS_INLINE_FUNCTION Array_7 GetNodeData(const size_t index, const View_Nx7& s
     };
 }
 
+template <typename T1, typename T2>
+KOKKOS_INLINE_FUNCTION Array_6
+GetQPData(const size_t i, const size_t j, const T1& translation_data, const T2& rotation_data) {
+    return Array_6{
+        translation_data(i, j, 0), translation_data(i, j, 1), translation_data(i, j, 2),
+        rotation_data(i, j, 0),    rotation_data(i, j, 1),    rotation_data(i, j, 2),
+    };
+}
+
+template <typename T1>
+KOKKOS_INLINE_FUNCTION Array_7 GetQPData(const size_t i, const size_t j, const T1& position_matrix) {
+    return Array_7{
+        position_matrix(i, j, 0), position_matrix(i, j, 1), position_matrix(i, j, 2),
+        position_matrix(i, j, 3), position_matrix(i, j, 4), position_matrix(i, j, 5),
+        position_matrix(i, j, 6),
+    };
+}
+
+template <
+    typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7,
+    typename T8>
+void SetRotorMotion(
+    util::TurbineData turbine, const std::vector<BeamElement>& beam_elems,
+    const std::vector<std::shared_ptr<Node>>& root_nodes,
+    const std::shared_ptr<openturbine::Node>& hub_node, bool use_node_loads, const T1& host_state_x,
+    const T2& host_state_v, const T3& host_state_vd, const T4& host_qp_x, const T5& host_qp_u_dot,
+    const T6& host_qp_omega, const T7& host_qp_u_ddot, const T8& host_qp_omega_dot
+) {
+    // Set rotor motion for current time
+    turbine.SetHubMotion(
+        GetNodeData(hub_node->ID, host_state_x), GetNodeData(hub_node->ID, host_state_v),
+        GetNodeData(hub_node->ID, host_state_vd)
+    );
+
+    // Set rotor nacelle motion for current time (same as hub)
+    turbine.SetNacelleMotion(
+        GetNodeData(hub_node->ID, host_state_x), GetNodeData(hub_node->ID, host_state_v),
+        GetNodeData(hub_node->ID, host_state_vd)
+    );
+
+    // Loop through blades and set blade root motion
+    for (auto j = 0U; j < beam_elems.size(); ++j) {
+        turbine.SetBladeRootMotion(
+            j, GetNodeData(root_nodes[j]->ID, host_state_x),
+            GetNodeData(root_nodes[j]->ID, host_state_v),
+            GetNodeData(root_nodes[j]->ID, host_state_vd)
+        );
+    }
+
+    if (use_node_loads) {
+        // Loop through blade nodes
+        for (auto j = 0U; j < beam_elems.size(); ++j) {
+            for (auto k = 0U; k < beam_elems[j].nodes.size(); ++k) {
+                turbine.SetBladeNodeMotion(
+                    j, k, GetNodeData(beam_elems[j].nodes[k].node.ID, host_state_x),
+                    GetNodeData(beam_elems[j].nodes[k].node.ID, host_state_v),
+                    GetNodeData(beam_elems[j].nodes[k].node.ID, host_state_vd)
+                );
+            }
+        }
+    } else {
+        // Loop through blade qps
+        for (auto j = 0U; j < beam_elems.size(); ++j) {
+            for (auto k = 0U; k < beam_elems[j].quadrature.size(); ++k) {
+                turbine.SetBladeNodeMotion(
+                    j, k, GetQPData(j, k, host_qp_x), GetQPData(j, k, host_qp_u_dot, host_qp_omega),
+                    GetQPData(j, k, host_qp_u_ddot, host_qp_omega_dot)
+                );
+            }
+        }
+    }
+}
+
 TEST(Milestone, IEA15RotorAeroController) {
     // Conversions
     constexpr double rpm_to_radps{0.104719755};  // RPM to rad/s
@@ -183,14 +256,14 @@ TEST(Milestone, IEA15RotorAeroController) {
                 pos[2] += hub_height;
 
                 // Create beam node
-                beam_nodes.emplace_back(BeamNode(
+                beam_nodes.emplace_back(
                     node_loc[j],
                     *model.AddNode(
                         {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
                         {0., 0., 0., 1., 0., 0., 0.},                              // displacement
                         {v[0], v[1], v[2], omega[0], omega[1], omega[2]}           // velocity
                     )
-                ));
+                );
             }
 
             // Add beam element
@@ -341,15 +414,7 @@ TEST(Milestone, IEA15RotorAeroController) {
             );
         } else {
             for (auto i_qp = 0U; i_qp < beam_elems[i_blade].quadrature.size(); ++i_qp) {
-                mesh_positions.emplace_back(Array_7{
-                    host_qp_x(i_blade, i_qp, 0),
-                    host_qp_x(i_blade, i_qp, 1),
-                    host_qp_x(i_blade, i_qp, 2),
-                    host_qp_x(i_blade, i_qp, 3),
-                    host_qp_x(i_blade, i_qp, 4),
-                    host_qp_x(i_blade, i_qp, 5),
-                    host_qp_x(i_blade, i_qp, 6),
-                });
+                mesh_positions.emplace_back(GetQPData(i_blade, i_qp, host_qp_x));
             }
         }
         return util::TurbineConfig::BladeInitialState{
@@ -474,70 +539,12 @@ TEST(Milestone, IEA15RotorAeroController) {
         Kokkos::deep_copy(host_qp_u_ddot, beams.qp_u_ddot);
         Kokkos::deep_copy(host_qp_omega_dot, beams.qp_omega_dot);
 
-        // Set rotor motion for current time
-        adi.turbines[0].SetHubMotion(
-            GetNodeData(hub_node->ID, host_state_x), GetNodeData(hub_node->ID, host_state_v),
-            GetNodeData(hub_node->ID, host_state_vd)
+        // Set rotor motion from nodes or quadrature points
+        SetRotorMotion(
+            adi.turbines[0], beam_elems, root_nodes, hub_node, use_node_loads, host_state_x,
+            host_state_v, host_state_vd, host_qp_x, host_qp_u_dot, host_qp_omega, host_qp_u_ddot,
+            host_qp_omega_dot
         );
-
-        // Set rotor nacelle motion for current time (same as hub)
-        adi.turbines[0].SetNacelleMotion(
-            GetNodeData(hub_node->ID, host_state_x), GetNodeData(hub_node->ID, host_state_v),
-            GetNodeData(hub_node->ID, host_state_vd)
-        );
-
-        // Loop through blades
-        for (size_t j = 0; j < n_blades; ++j) {
-            auto root_pos = GetNodeData(root_nodes[j]->ID, host_state_x);
-            auto root_vel = GetNodeData(root_nodes[j]->ID, host_state_v);
-            auto root_acc = GetNodeData(root_nodes[j]->ID, host_state_vd);
-
-            // Root node
-            adi.turbines[0].SetBladeRootMotion(j, root_pos, root_vel, root_acc);
-
-            if (use_node_loads) {
-                // Loop through blade nodes
-                for (size_t k = 0; k < beam_elems[j].nodes.size(); ++k) {
-                    adi.turbines[0].SetBladeNodeMotion(
-                        j, k, GetNodeData(beam_elems[j].nodes[k].node.ID, host_state_x),
-                        GetNodeData(beam_elems[j].nodes[k].node.ID, host_state_v),
-                        GetNodeData(beam_elems[j].nodes[k].node.ID, host_state_vd)
-                    );
-                }
-            } else {
-                // Loop through blade qps
-                for (size_t k = 0; k < beam_elems[j].quadrature.size(); ++k) {
-                    adi.turbines[0].SetBladeNodeMotion(
-                        j, k,
-                        {
-                            host_qp_x(j, k, 0),
-                            host_qp_x(j, k, 1),
-                            host_qp_x(j, k, 2),
-                            host_qp_x(j, k, 3),
-                            host_qp_x(j, k, 4),
-                            host_qp_x(j, k, 5),
-                            host_qp_x(j, k, 6),
-                        },
-                        {
-                            host_qp_u_dot(j, k, 0),
-                            host_qp_u_dot(j, k, 1),
-                            host_qp_u_dot(j, k, 2),
-                            host_qp_omega(j, k, 0),
-                            host_qp_omega(j, k, 1),
-                            host_qp_omega(j, k, 2),
-                        },
-                        {
-                            host_qp_u_ddot(j, k, 0),
-                            host_qp_u_ddot(j, k, 1),
-                            host_qp_u_ddot(j, k, 2),
-                            host_qp_omega_dot(j, k, 0),
-                            host_qp_omega_dot(j, k, 1),
-                            host_qp_omega_dot(j, k, 2),
-                        }
-                    );
-                }
-            }
-        }
         adi.SetRotorMotion();
 
         // Advance ADI library from current time to end of step
