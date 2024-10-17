@@ -32,6 +32,8 @@
 
 namespace openturbine::tests {
 
+constexpr bool use_node_loads = true;
+
 KOKKOS_INLINE_FUNCTION Array_6 GetNodeData(const size_t index, const View_Nx6& state_matrix) {
     return Array_6{
         state_matrix(index, 0), state_matrix(index, 1), state_matrix(index, 2),
@@ -69,9 +71,9 @@ template <
     typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7,
     typename T8>
 void SetRotorMotion(
-    util::TurbineData turbine, const std::vector<BeamElement>& beam_elems,
+    util::TurbineData& turbine, const std::vector<BeamElement>& beam_elems,
     const std::vector<std::shared_ptr<Node>>& root_nodes,
-    const std::shared_ptr<openturbine::Node>& hub_node, bool use_node_loads, const T1& host_state_x,
+    const std::shared_ptr<openturbine::Node>& hub_node, const T1& host_state_x,
     const T2& host_state_v, const T3& host_state_vd, const T4& host_qp_x, const T5& host_qp_u_dot,
     const T6& host_qp_omega, const T7& host_qp_u_ddot, const T8& host_qp_omega_dot
 ) {
@@ -120,6 +122,34 @@ void SetRotorMotion(
     }
 }
 
+template <typename T1, typename T2>
+void SetAeroLoads(
+    Beams& beams, const std::vector<BeamElement>& beam_elems, const util::TurbineData& turbine,
+    const T1& host_node_FX, const T2& host_qp_Fe
+) {
+    if (use_node_loads) {
+        for (size_t j = 0; j < beam_elems.size(); ++j) {
+            for (size_t k = 0; k < beam_elems[j].nodes.size(); ++k) {
+                const auto loads = turbine.GetBladeNodeLoad(j, k);
+                for (size_t m = 0; m < 6U; ++m) {
+                    host_node_FX(j, k, m) = loads[m];
+                }
+            }
+        }
+        Kokkos::deep_copy(beams.node_FX, host_node_FX);
+    } else {
+        for (size_t j = 0; j < beam_elems.size(); ++j) {
+            for (size_t k = 0; k < beam_elems[j].quadrature.size(); ++k) {
+                const auto loads = turbine.GetBladeNodeLoad(j, k);
+                for (size_t m = 0; m < 6U; ++m) {
+                    host_qp_Fe(j, k, m) = loads[m];
+                }
+            }
+        }
+        Kokkos::deep_copy(beams.qp_Fe, host_qp_Fe);
+    }
+}
+
 TEST(Milestone, IEA15RotorAeroController) {
     // Conversions
     constexpr double rpm_to_radps{0.104719755};  // RPM to rad/s
@@ -157,7 +187,6 @@ TEST(Milestone, IEA15RotorAeroController) {
     // constexpr double t_end{60.0};  // seconds
     constexpr double t_end{1.0};  // seconds
     constexpr auto num_steps{static_cast<size_t>(t_end / step_size + 1.)};
-    constexpr auto use_node_loads = true;
 
     // Create model for adding nodes and constraints
     auto model = Model();
@@ -491,9 +520,6 @@ TEST(Milestone, IEA15RotorAeroController) {
       << std::setw(16) << "GenSpeed"   //
       << std::setw(16) << "GenTq"      //
       << std::setw(16) << "GenPwr"     //
-      << std::setw(16) << "RtFldFxg"   //
-      << std::setw(16) << "RtFldFyg"   //
-      << std::setw(16) << "RtFldFzg"   //
       << "\n";
     w << std::setw(16) << "(s)"     //
       << std::setw(16) << "(m/s)"   //
@@ -503,9 +529,6 @@ TEST(Milestone, IEA15RotorAeroController) {
       << std::setw(16) << "(rpm)"   //
       << std::setw(16) << "(kN-m)"  //
       << std::setw(16) << "(kW)"    //
-      << std::setw(16) << "(N)"     //
-      << std::setw(16) << "(N)"     //
-      << std::setw(16) << "(N)"     //
       << "\n";
 
     //--------------------------------------------------------------------------
@@ -542,9 +565,8 @@ TEST(Milestone, IEA15RotorAeroController) {
 
         // Set rotor motion from nodes or quadrature points
         SetRotorMotion(
-            adi.turbines[0], beam_elems, root_nodes, hub_node, use_node_loads, host_state_x,
-            host_state_v, host_state_vd, host_qp_x, host_qp_u_dot, host_qp_omega, host_qp_u_ddot,
-            host_qp_omega_dot
+            adi.turbines[0], beam_elems, root_nodes, hub_node, host_state_x, host_state_v,
+            host_state_vd, host_qp_x, host_qp_u_dot, host_qp_omega, host_qp_u_ddot, host_qp_omega_dot
         );
         adi.SetRotorMotion();
 
@@ -554,31 +576,8 @@ TEST(Milestone, IEA15RotorAeroController) {
         // Calculate outputs and loads at the end of the step
         adi.CalculateOutput(next_time);
 
-        // Loop through blades and copy loads
-        Array_6 load_sum{0., 0., 0., 0., 0., 0.};
-        if (use_node_loads) {
-            for (size_t j = 0; j < n_blades; ++j) {
-                for (size_t k = 0; k < beam_elems[j].nodes.size(); ++k) {
-                    const auto loads = adi.turbines[0].GetBladeNodeLoad(j, k);
-                    for (size_t m = 0; m < 6U; ++m) {
-                        host_node_FX(j, k, m) = loads[m];
-                        load_sum[m] += loads[m];
-                    }
-                }
-            }
-            Kokkos::deep_copy(beams.node_FX, host_node_FX);
-        } else {
-            for (size_t j = 0; j < n_blades; ++j) {
-                for (size_t k = 0; k < beam_elems[j].quadrature.size(); ++k) {
-                    const auto loads = adi.turbines[0].GetBladeNodeLoad(j, k);
-                    for (size_t m = 0; m < 6U; ++m) {
-                        host_qp_Fe(j, k, m) = loads[m];
-                        load_sum[m] += loads[m];
-                    }
-                }
-            }
-            Kokkos::deep_copy(beams.qp_Fe, host_qp_Fe);
-        }
+        // Copy aerodynamic loads to structure
+        SetAeroLoads(beams, beam_elems, adi.turbines[0], host_node_FX, host_qp_Fe);
 
         // Set controller inputs and call controller to get commands for this step
         const auto generator_speed = rotor_speed * gear_box_ratio;
@@ -610,9 +609,6 @@ TEST(Milestone, IEA15RotorAeroController) {
           << std::setw(16) << generator_speed / rpm_to_radps                        //
           << std::setw(16) << controller.io.generator_torque_command / 1000.        //
           << std::setw(16) << controller.io.generator_power_actual / 1000.          //
-          << std::setw(16) << load_sum[0]                                           //
-          << std::setw(16) << load_sum[1]                                           //
-          << std::setw(16) << load_sum[2]                                           //
           << "\n";
 
         // Predict state at end of step
