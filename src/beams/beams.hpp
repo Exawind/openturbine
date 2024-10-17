@@ -89,13 +89,8 @@ struct Beams {
     Kokkos::View<double***> shape_deriv;   // Shape function derivatives
 
     // Constructor which initializes views based on given sizes
-    Beams(
-        const size_t n_beams, const size_t n_nodes, const size_t n_qps, const size_t max_e_nodes,
-        const size_t max_e_qps
-    )
+    Beams(const size_t n_beams, const size_t max_e_nodes, const size_t max_e_qps)
         : num_elems(n_beams),
-          num_nodes(n_nodes),
-          num_qps(n_qps),
           max_elem_nodes(max_e_nodes),
           max_elem_qps(max_e_qps),
           // Element Data
