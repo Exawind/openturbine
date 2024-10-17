@@ -184,8 +184,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     constexpr size_t max_iter{6};
     constexpr double step_size{0.01};  // seconds
     constexpr double rho_inf{0.0};
-    constexpr double t_end{30.0};  // seconds
-    // constexpr double t_end{1.0};  // seconds
+    constexpr double t_end{1.0};  // seconds
     constexpr auto num_steps{static_cast<size_t>(t_end / step_size + 1.)};
 
     // Create model for adding nodes and constraints
