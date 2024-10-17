@@ -588,11 +588,12 @@ TEST(Milestone, IEA15RotorAeroController) {
         controller.io.pitch_blade1_actual = pitch_actual;
         controller.io.pitch_blade2_actual = pitch_actual;
         controller.io.pitch_blade3_actual = pitch_actual;
-        controller.io.rotor_speed_actual = rotor_speed;                   // Rotor speed (rad/s)
-        controller.io.generator_speed_actual = generator_speed;           // Generator speed (rad/s)
-        controller.io.generator_power_actual = generator_power;           // Generator power (W)
-        controller.io.generator_torque_actual = torque_actual;            // Generator torque (N-m)
-        controller.io.horizontal_wind_speed = adi.turbines[0].hh_vel[0];  // Hub wind speed (m/s)
+        controller.io.rotor_speed_actual = rotor_speed;          // Rotor speed (rad/s)
+        controller.io.generator_speed_actual = generator_speed;  // Generator speed (rad/s)
+        controller.io.generator_power_actual = generator_power;  // Generator power (W)
+        controller.io.generator_torque_actual = torque_actual;   // Generator torque (N-m)
+        controller.io.horizontal_wind_speed =
+            static_cast<double>(adi.turbines[0].hh_vel[0]);  // Hub wind speed (m/s)
         controller.CallController();
 
         // Update the generator torque and blade pitch
