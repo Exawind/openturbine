@@ -156,13 +156,12 @@ False                  SumPrint    - Generate a summary file listing input optio
 0                      NTwOuts     - Number of tower node outputs [0 - 9] (-)
 0                      TwOutNd     - Tower nodes whose values will be output (-)
                        OutList     - The next line(s) contains a list of output parameters.  See OutListParameters.xlsx for a listing of available output channels, (-)
-"RtFldFxh"
-"RtFldFyh"
-"RtFldFzh"
-"RtFldMxh"
-"RtFldMyh"
-"RtFldMzh"
-"RtVAvgxh"
+"RtFldFxg"
+"RtFldFyg"
+"RtFldFzg"
+"RtFldMxg"
+"RtFldMyg"
+"RtFldMzg"
 "RtFldCp"
 "RtFldCt"
 "RtArea"
@@ -170,7 +169,7 @@ False                  SumPrint    - Generate a summary file listing input optio
 "RtTSR"
 END of input file (the word "END" must appear in the first 3 columns of this last OutList line)
 ====== Outputs for all blade stations (same ending as above for B1N1.... =========================== [optional section]
-1                      BldNd_BladesOut - Number of blades to output all node information at. Up to number of blades on turbine. (-)
+3                      BldNd_BladesOut - Number of blades to output all node information at. Up to number of blades on turbine. (-)
 "All"                  BldNd_BlOutNd - Future feature will allow selecting a portion of the nodes to output. Not implemented yet. (-)
                        OutList_Nodal - The next line(s) contains a list of output parameters.  See OutListParameters.xlsx for a listing of available output channels, (-)
 Vrel
@@ -179,10 +178,12 @@ Vindx
 Vindy
 Cn
 Ct
-Fn
-Ft
-Fx
-Fy
+Fxi
+Fyi
+Fzi
+Mxi
+Myi
+Mzi
 TnInd
 AxInd
 END (the word "END" must appear in the first 3 columns of this last OutList line in the optional nodal output section)
