@@ -273,11 +273,13 @@ struct MeshData {
  * mappings.
  */
 struct TurbineData {
-    int32_t n_blades;      //< Number of blades
-    MeshData hub;          //< Hub data (1 point)
-    MeshData nacelle;      //< Nacelle data (1 point)
-    MeshData blade_roots;  //< Blade roots data (n_blades points)
-    MeshData blade_nodes;  //< Blade nodes data (sum of nodes per blade)
+    int32_t n_blades;             //< Number of blades
+    MeshData hub;                 //< Hub data (1 point)
+    MeshData nacelle;             //< Nacelle data (1 point)
+    MeshData blade_roots;         //< Blade roots data (n_blades points)
+    MeshData blade_nodes;         //< Blade nodes data (sum of nodes per blade)
+    std::array<float, 3> hh_vel;  // Hub height wind velocity
+
     /**
      * @brief Mapping of blade nodes to blade numbers (1D array)
      *
@@ -566,10 +568,8 @@ struct SimulationControls {
     static constexpr size_t kDefaultStringLength{1025};  //< Max length for output filenames
 
     // Input file handling
-    bool is_aerodyn_input_path{true};     //< Input file passed for AeroDyn module?
-    bool is_inflowwind_input_path{true};  //< Input file passed for InflowWind module?
-    std::string aerodyn_input;            //< Path to AeroDyn input file
-    std::string inflowwind_input;         //< Path to InflowWind input file
+    std::string aerodyn_input;     //< Path to AeroDyn input file
+    std::string inflowwind_input;  //< Path to InflowWind input file
 
     // Interpolation order (must be either 1: linear, or 2: quadratic)
     int interpolation_order{1};  //< Interpolation order - linear by default
@@ -581,8 +581,8 @@ struct SimulationControls {
     int n_time_steps{0};            //< Number of time steps
 
     // Flags
-    bool store_HH_wind_speed{true};             //< Flag to store HH wind speed
     bool transpose_DCM{true};                   //< Flag to transpose the direction cosine matrix
+    bool point_load_output{true};               //< Flag to output point loads
     DebugLevel debug_level{DebugLevel::kNone};  //< Debug level (0-4)
 
     // Outputs
@@ -684,16 +684,19 @@ public:
      * @param n_turbines Number of turbines in the simulation
      */
     void PreInitialize(size_t n_turbines) {
-        auto ADI_C_PreInit = lib_.get_function<void(int*, int*, int*, int*, char*)>("ADI_C_PreInit");
+        auto ADI_C_PreInit =
+            lib_.get_function<void(int*, int*, int*, int*, int*, char*)>("ADI_C_PreInit");
 
         // Convert bool and other types to int32_t for Fortran compatibility
         auto debug_level_int = static_cast<int32_t>(sim_controls_.debug_level);
         auto transpose_dcm_int = sim_controls_.transpose_DCM ? 1 : 0;
         auto n_turbines_int = static_cast<int32_t>(n_turbines);
+        auto point_load_output_int = sim_controls_.point_load_output ? 1 : 0;
 
         ADI_C_PreInit(
             &n_turbines_int,                      // input: Number of turbines
             &transpose_dcm_int,                   // input: Transpose DCM?
+            &point_load_output_int,               // input: output point loads?
             &debug_level_int,                     // input: Debug level
             &error_handling_.error_status,        // output: Error status
             error_handling_.error_message.data()  // output: Error message
@@ -767,11 +770,9 @@ public:
             );
 
         // Convert bool -> int32_t to pass to the Fortran routine
-        int32_t is_aerodyn_input_passed_as_string =
-            sim_controls_.is_aerodyn_input_path ? 0 : 1;  // reverse of is_aerodyn_input_path
-        int32_t is_inflowwind_input_passed_as_string =
-            sim_controls_.is_inflowwind_input_path ? 0 : 1;  // reverse of is_inflowwind_input_path
-        int32_t store_HH_wind_speed_int = sim_controls_.store_HH_wind_speed ? 1 : 0;
+        int32_t is_aerodyn_input_passed_as_string = 0;     // AeroDyn input is path to file
+        int32_t is_inflowwind_input_passed_as_string = 0;  // InflowWind input is path to file
+        int32_t store_HH_wind_speed_int = 1;
 
         // Primary input file will be passed as path to the file
         char* aerodyn_input_pointer{sim_controls_.aerodyn_input.data()};
@@ -909,7 +910,7 @@ public:
         error_handling_.CheckError();
 
         auto ADI_C_GetRotorLoads =
-            lib_.get_function<void(int*, int*, float*, int*, char*)>("ADI_C_GetRotorLoads");
+            lib_.get_function<void(int*, int*, float*, float*, int*, char*)>("ADI_C_GetRotorLoads");
 
         // Loop through turbines and get the rotor loads
         int32_t turbine_number{0};
@@ -921,6 +922,7 @@ public:
                 &turbine_number,                      // input: current turbine number
                 &td.blade_nodes.n_points,             // input: number of mesh points
                 td.blade_nodes.load.data()->data(),   // output: mesh force/moment array
+                td.hh_vel.data(),                     // output: hub height wind velocity array
                 &error_handling_.error_status,        // output: error status
                 error_handling_.error_message.data()  // output: error message buffer
             );
