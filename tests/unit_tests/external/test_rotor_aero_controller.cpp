@@ -622,7 +622,7 @@ TEST(Milestone, IEA15RotorAeroController) {
         pitch_actual = controller.io.pitch_collective_command;
 
         // Write data to output file
-        const auto conv_err{solver.convergence_err.size() > 0 ? solver.convergence_err.back() : 0.};
+        const auto conv_err{solver.convergence_err.empty() ? 0. : solver.convergence_err.back()};
         w << "\t" << current_time                                    // current time (s)
           << "\t" << solver.convergence_err.size()                   // num convergence iterations
           << "\t" << conv_err                                        // convergence error
