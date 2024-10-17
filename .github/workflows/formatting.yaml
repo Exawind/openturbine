@@ -12,7 +12,7 @@ jobs:
 
     - name: Run clang-format
       run: |
-        find . -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -i {} \;
+        find . -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format-18 -i {} \;
         
     - name: Check for formatting changes
       run: |
