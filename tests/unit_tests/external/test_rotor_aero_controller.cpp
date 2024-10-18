@@ -34,14 +34,14 @@ namespace openturbine::tests {
 
 constexpr bool use_node_loads = true;
 
-KOKKOS_INLINE_FUNCTION Array_6 GetNodeData(const size_t index, const View_Nx6& state_matrix) {
+Array_6 GetNodeData(const size_t index, const View_Nx6::HostMirror& state_matrix) {
     return Array_6{
         state_matrix(index, 0), state_matrix(index, 1), state_matrix(index, 2),
         state_matrix(index, 3), state_matrix(index, 4), state_matrix(index, 5),
     };
 }
 
-KOKKOS_INLINE_FUNCTION Array_7 GetNodeData(const size_t index, const View_Nx7& state_matrix) {
+Array_7 GetNodeData(const size_t index, const View_Nx7::HostMirror& state_matrix) {
     return Array_7{
         state_matrix(index, 0), state_matrix(index, 1), state_matrix(index, 2),
         state_matrix(index, 3), state_matrix(index, 4), state_matrix(index, 5),
@@ -50,8 +50,9 @@ KOKKOS_INLINE_FUNCTION Array_7 GetNodeData(const size_t index, const View_Nx7& s
 }
 
 template <typename T1, typename T2>
-KOKKOS_INLINE_FUNCTION Array_6
-GetQPData(const size_t i, const size_t j, const T1& translation_data, const T2& rotation_data) {
+Array_6 GetQPData(
+    const size_t i, const size_t j, const T1& translation_data, const T2& rotation_data
+) {
     return Array_6{
         translation_data(i, j, 0), translation_data(i, j, 1), translation_data(i, j, 2),
         rotation_data(i, j, 0),    rotation_data(i, j, 1),    rotation_data(i, j, 2),
@@ -59,7 +60,7 @@ GetQPData(const size_t i, const size_t j, const T1& translation_data, const T2& 
 }
 
 template <typename T1>
-KOKKOS_INLINE_FUNCTION Array_7 GetQPData(const size_t i, const size_t j, const T1& position_matrix) {
+Array_7 GetQPData(const size_t i, const size_t j, const T1& position_matrix) {
     return Array_7{
         position_matrix(i, j, 0), position_matrix(i, j, 1), position_matrix(i, j, 2),
         position_matrix(i, j, 3), position_matrix(i, j, 4), position_matrix(i, j, 5),
@@ -490,8 +491,8 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // VTK settings
     util::VTKSettings vtk_settings;
-    vtk_settings.write_vtk = util::VTKSettings::WriteType::kAnimation;  // Animation
-    vtk_settings.vtk_type = util::VTKSettings::OutputType::kLine;       // Lines
+    vtk_settings.write_vtk = util::VTKSettings::WriteType::kNone;  // Animation
+    vtk_settings.vtk_type = util::VTKSettings::OutputType::kLine;  // Lines
     vtk_settings.vtk_nacelle_dimensions = {-2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F};
     vtk_settings.vtk_hub_radius = static_cast<float>(hub_radius);
 
@@ -560,6 +561,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
+        auto time_step_region = Kokkos::Profiling::ScopedRegion("Time Step");
 #ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i);
         tmp.insert(0, 5 - tmp.size(), '0');
@@ -571,33 +573,37 @@ TEST(Milestone, IEA15RotorAeroController) {
         const auto current_time{step_size * static_cast<double>(i)};
         const auto next_time{step_size * static_cast<double>(i + 1)};
 
-        // Copy state matrices from device to host
-        Kokkos::deep_copy(host_state_x, state.x);
-        Kokkos::deep_copy(host_state_q, state.q);
-        Kokkos::deep_copy(host_state_v, state.v);
-        Kokkos::deep_copy(host_state_vd, state.vd);
+        {
+            auto aerodyn_region = Kokkos::Profiling::ScopedRegion("AeroDyn");
+            // Copy state matrices from device to host
+            Kokkos::deep_copy(host_state_x, state.x);
+            Kokkos::deep_copy(host_state_q, state.q);
+            Kokkos::deep_copy(host_state_v, state.v);
+            Kokkos::deep_copy(host_state_vd, state.vd);
 
-        Kokkos::deep_copy(host_qp_x, beams.qp_x);
-        Kokkos::deep_copy(host_qp_u_dot, beams.qp_u_dot);
-        Kokkos::deep_copy(host_qp_omega, beams.qp_omega);
-        Kokkos::deep_copy(host_qp_u_ddot, beams.qp_u_ddot);
-        Kokkos::deep_copy(host_qp_omega_dot, beams.qp_omega_dot);
+            Kokkos::deep_copy(host_qp_x, beams.qp_x);
+            Kokkos::deep_copy(host_qp_u_dot, beams.qp_u_dot);
+            Kokkos::deep_copy(host_qp_omega, beams.qp_omega);
+            Kokkos::deep_copy(host_qp_u_ddot, beams.qp_u_ddot);
+            Kokkos::deep_copy(host_qp_omega_dot, beams.qp_omega_dot);
 
-        // Set rotor motion from nodes or quadrature points
-        SetRotorMotion(
-            adi.turbines[0], beam_elems, root_nodes, hub_node, host_state_x, host_state_v,
-            host_state_vd, host_qp_x, host_qp_u_dot, host_qp_omega, host_qp_u_ddot, host_qp_omega_dot
-        );
-        adi.SetRotorMotion();
+            // Set rotor motion from nodes or quadrature points
+            SetRotorMotion(
+                adi.turbines[0], beam_elems, root_nodes, hub_node, host_state_x, host_state_v,
+                host_state_vd, host_qp_x, host_qp_u_dot, host_qp_omega, host_qp_u_ddot,
+                host_qp_omega_dot
+            );
+            adi.SetRotorMotion();
 
-        // Advance ADI library from current time to end of step
-        adi.UpdateStates(current_time, next_time);
+            // Advance ADI library from current time to end of step
+            adi.UpdateStates(current_time, next_time);
 
-        // Calculate outputs and loads at the end of the step
-        adi.CalculateOutput(next_time);
+            // Calculate outputs and loads at the end of the step
+            adi.CalculateOutput(next_time);
 
-        // Copy aerodynamic loads to structure
-        SetAeroLoads(beams, beam_elems, adi.turbines[0], host_node_FX, host_qp_Fe);
+            // Copy aerodynamic loads to structure
+            SetAeroLoads(beams, beam_elems, adi.turbines[0], host_node_FX, host_qp_Fe);
+        }
 
         // Set controller inputs and call controller to get commands for this step
         const auto generator_speed = rotor_speed * gear_box_ratio;
