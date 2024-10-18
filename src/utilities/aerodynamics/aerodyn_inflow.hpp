@@ -752,21 +752,20 @@ public:
 
             // Call setup rotor for each turbine
             ADI_C_SetupRotor(
-                &turbine_number,                            // input: current turbine number
-                &is_horizontal_axis_int,                    // input: 1: HAWT, 0: VAWT or cross-flow
-                tc.reference_position.data(),               // input: turbine reference position
-                td.hub.position.data()->data(),             // input: initial hub position
-                td.hub.orientation.data()->data()->data(),  // input: initial hub orientation
-                td.nacelle.position.data()->data(),         // input: initial nacelle position
-                td.nacelle.orientation.data()->data()->data(),  // input: initial nacelle orientation
-                &td.n_blades,                                   // input: number of blades
-                td.blade_roots.position.data()->data(),  // input: initial blade root positions
-                td.blade_roots.orientation.data()->data()->data(
-                ),                                       // input: initial blade root orientation
-                &td.blade_nodes.n_points,                // input: number of mesh points
-                td.blade_nodes.position.data()->data(),  // input: initial node positions
-                td.blade_nodes.orientation.data()->data()->data(
-                ),  // input: initial node orientation
+                &turbine_number,                      // input: current turbine number
+                &is_horizontal_axis_int,              // input: 1: HAWT, 0: VAWT or cross-flow
+                tc.reference_position.data(),         // input: turbine reference position
+                td.hub.position[0].data(),            // input: initial hub position
+                td.hub.orientation[0][0].data(),      // input: initial hub orientation
+                td.nacelle.position[0].data(),        // input: initial nacelle position
+                td.nacelle.orientation[0][0].data(),  // input: initial nacelle orientation
+                &td.n_blades,                         // input: number of blades
+                td.blade_roots.position[0].data(),    // input: initial blade root positions
+                td.blade_roots.orientation[0].data()->data(
+                ),                                        // input: initial blade root orientation
+                &td.blade_nodes.n_points,                 // input: number of mesh points
+                td.blade_nodes.position[0].data(),        // input: initial node positions
+                td.blade_nodes.orientation[0][0].data(),  // input: initial node orientation
                 td.blade_nodes_to_blade_num_mapping.data(
                 ),                                    // input: blade node to blade number mapping
                 &error_handling_.error_status,        // output: Error status
@@ -886,26 +885,26 @@ public:
             // Turbine number is 1 indexed i.e. 1, 2, 3, ...
             ++turbine_number;
             ADI_C_SetRotorMotion(
-                &turbine_number,                                    // input: current turbine number
-                td.hub.position.data()->data(),                     // input: hub positions
-                td.hub.orientation.data()->data()->data(),          // input: hub orientations
-                td.hub.velocity.data()->data(),                     // input: hub velocities
-                td.hub.acceleration.data()->data(),                 // input: hub accelerations
-                td.nacelle.position.data()->data(),                 // input: nacelle positions
-                td.nacelle.orientation.data()->data()->data(),      // input: nacelle orientations
-                td.nacelle.velocity.data()->data(),                 // input: nacelle velocities
-                td.nacelle.acceleration.data()->data(),             // input: nacelle accelerations
-                td.blade_roots.position.data()->data(),             // input: root positions
-                td.blade_roots.orientation.data()->data()->data(),  // input: root orientations
-                td.blade_roots.velocity.data()->data(),             // input: root velocities
-                td.blade_roots.acceleration.data()->data(),         // input: root accelerations
-                &td.blade_nodes.n_points,                           // input: number of mesh points
-                td.blade_nodes.position.data()->data(),             // input: mesh positions
-                td.blade_nodes.orientation.data()->data()->data(),  // input: mesh orientations
-                td.blade_nodes.velocity.data()->data(),             // input: mesh velocities
-                td.blade_nodes.acceleration.data()->data(),         // input: mesh accelerations
-                &error_handling_.error_status,                      // output: error status
-                error_handling_.error_message.data()                // output: error message buffer
+                &turbine_number,                          // input: current turbine number
+                td.hub.position[0].data(),                // input: hub positions
+                td.hub.orientation[0][0].data(),          // input: hub orientations
+                td.hub.velocity[0].data(),                // input: hub velocities
+                td.hub.acceleration[0].data(),            // input: hub accelerations
+                td.nacelle.position[0].data(),            // input: nacelle positions
+                td.nacelle.orientation[0][0].data(),      // input: nacelle orientations
+                td.nacelle.velocity[0].data(),            // input: nacelle velocities
+                td.nacelle.acceleration[0].data(),        // input: nacelle accelerations
+                td.blade_roots.position[0].data(),        // input: root positions
+                td.blade_roots.orientation[0][0].data(),  // input: root orientations
+                td.blade_roots.velocity[0].data(),        // input: root velocities
+                td.blade_roots.acceleration[0].data(),    // input: root accelerations
+                &td.blade_nodes.n_points,                 // input: number of mesh points
+                td.blade_nodes.position[0].data(),        // input: mesh positions
+                td.blade_nodes.orientation[0][0].data(),  // input: mesh orientations
+                td.blade_nodes.velocity[0].data(),        // input: mesh velocities
+                td.blade_nodes.acceleration[0].data(),    // input: mesh accelerations
+                &error_handling_.error_status,            // output: error status
+                error_handling_.error_message.data()      // output: error message buffer
             );
 
             error_handling_.CheckError();
@@ -946,7 +945,7 @@ public:
             ADI_C_GetRotorLoads(
                 &turbine_number,                      // input: current turbine number
                 &td.blade_nodes.n_points,             // input: number of mesh points
-                td.blade_nodes.load.data()->data(),   // output: mesh force/moment array
+                td.blade_nodes.load[0].data(),        // output: mesh force/moment array
                 td.hh_vel.data(),                     // output: hub height wind velocity array
                 &error_handling_.error_status,        // output: error status
                 error_handling_.error_message.data()  // output: error message buffer
