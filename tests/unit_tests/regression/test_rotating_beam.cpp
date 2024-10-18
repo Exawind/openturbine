@@ -572,6 +572,71 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     );
 }
 
+TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
+    auto model = Model();
+
+    // Gravity vector
+    constexpr auto gravity = std::array{0., 0., 0.};
+
+    // Build vector of nodes (straight along x axis, no rotation)
+    std::vector<BeamNode> beam_nodes;
+    std::transform(
+        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
+        [&](auto s) {
+            return BeamNode(s, *model.AddNode({10 * s + 2., 0., 0., 1., 0., 0., 0.}));
+        }
+    );
+
+    // Define beam initialization
+    const auto beams_input = BeamsInput({BeamElement(beam_nodes, sections, quadrature)}, gravity);
+
+    // Initialize beams from element inputs
+    auto beams = CreateBeams(beams_input);
+
+    // Add hub node and associated constraints
+    auto pitch = 0.;
+    auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
+    model.AddRotationControl(*hub_node, beam_nodes[0].node, {1., 0., 0.}, &pitch);
+    auto hub_bc = model.AddPrescribedBC(*hub_node);
+
+    // Solution parameters
+    const bool is_dynamic_solve(true);
+    const int max_iter(5);
+    const double step_size(0.01);  // seconds
+    const double rho_inf(0.9);
+
+    // Create solver
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+    auto constraints = Constraints(model.GetConstraints());
+    auto state = model.CreateState();
+    auto solver = Solver(
+        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.row_range
+    );
+
+    double azimuth = 0.;
+
+    // Perform 10 time steps and check for convergence within max_iter iterations
+    for (auto i = 0; i < 100; ++i) {
+        const auto t = step_size * static_cast<double>(i + 1);
+        pitch = t * M_PI / 2.;
+        azimuth = 0.5 * t * M_PI / 2.;
+        auto q = RotationVectorToQuaternion(Array_3{0., 0., azimuth});
+        constraints.UpdateDisplacement(hub_bc->ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
+        const auto converged = Step(parameters, solver, beams, state, constraints);
+        EXPECT_EQ(converged, true);
+    }
+
+    auto q = kokkos_view_2D_to_vector(state.q);
+    auto rv = QuaternionToRotationVector(Array_4{q[0][3], q[0][4], q[0][5], q[0][6]});
+
+    // Same as euler rotation xz [azimuth, pitch]
+    EXPECT_NEAR(rv[0], 1.482189821649821, 1e-8);
+    EXPECT_NEAR(rv[1], 0.61394312430788889, 1e-8);
+    EXPECT_NEAR(rv[2], 0.61394312416734476, 1e-8);
+}
+
 TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto model = Model();
 
@@ -646,7 +711,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     UpdateSystemVariables(parameters, beams, state);
     RemoveDirectoryWithRetries("steps");
     std::filesystem::create_directory("steps");
-    BeamsWriteVTK(beams, "steps/step_0000.vtu");
+    WriteVTKBeamsQP(beams, "steps/step_0000.vtu");
 #endif
 
     // Run 10 steps
@@ -656,7 +721,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
 #ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i + 1);
         auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-        BeamsWriteVTK(beams, file_name + ".vtu");
+        WriteVTKBeamsQP(beams, file_name + ".vtu");
 #endif
     }
 
@@ -764,7 +829,7 @@ void GeneratorTorqueWithAxisTilt(
     UpdateSystemVariables(parameters, beams, state);
     RemoveDirectoryWithRetries("steps");
     std::filesystem::create_directory("steps");
-    BeamsWriteVTK(beams, "steps/step_0000.vtu");
+    WriteVTKBeamsQP(beams, "steps/step_0000.vtu");
 #endif
 
     // Run 10 steps
@@ -774,7 +839,7 @@ void GeneratorTorqueWithAxisTilt(
 #ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i + 1);
         auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-        BeamsWriteVTK(beams, file_name + ".vtu");
+        WriteVTKBeamsQP(beams, file_name + ".vtu");
 #endif
     }
 

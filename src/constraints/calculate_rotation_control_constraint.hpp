@@ -22,8 +22,8 @@ struct CalculateRotationControlConstraint {
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
-        const auto i_node1 = base_node_index(i_constraint);
-        const auto i_node2 = target_node_index(i_constraint);
+        const auto i_base = base_node_index(i_constraint);
+        const auto i_target = target_node_index(i_constraint);
 
         // Initial difference between nodes
         const auto X0_data = Kokkos::Array<double, 3>{
@@ -31,43 +31,52 @@ struct CalculateRotationControlConstraint {
         };
         const auto X0 = View_3::const_type{X0_data.data()};
 
-        // Base node displacement
-        const auto u1_data =
-            Kokkos::Array<double, 3>{node_u(i_node1, 0), node_u(i_node1, 1), node_u(i_node1, 2)};
-        const auto R1_data = Kokkos::Array<double, 4>{
-            node_u(i_node1, 3), node_u(i_node1, 4), node_u(i_node1, 5), node_u(i_node1, 6)
+        // Base node displacement (translation and rotation)
+        const auto ub_data =
+            Kokkos::Array<double, 3>{node_u(i_base, 0), node_u(i_base, 1), node_u(i_base, 2)};
+        const auto Rb_data = Kokkos::Array<double, 4>{
+            node_u(i_base, 3), node_u(i_base, 4), node_u(i_base, 5), node_u(i_base, 6)
         };
-        const auto u1 = View_3::const_type{u1_data.data()};
-        const auto R1 = Kokkos::View<double[4]>::const_type{R1_data.data()};
+        const auto ub = View_3::const_type{ub_data.data()};
+        const auto Rb = Kokkos::View<double[4]>::const_type{Rb_data.data()};
 
-        // Target node displacement
-        const auto R2_data = Kokkos::Array<double, 4>{
-            node_u(i_node2, 3), node_u(i_node2, 4), node_u(i_node2, 5), node_u(i_node2, 6)
+        // Target node displacement (translation and rotation)
+        const auto ut_data =
+            Kokkos::Array<double, 3>{node_u(i_target, 0), node_u(i_target, 1), node_u(i_target, 2)};
+        const auto ut = View_3::const_type{ut_data.data()};
+        const auto Rt_data = Kokkos::Array<double, 4>{
+            node_u(i_target, 3), node_u(i_target, 4), node_u(i_target, 5), node_u(i_target, 6)
         };
-        const auto R2 = Kokkos::View<double[4]>::const_type{R2_data.data()};
-        const auto u2_data =
-            Kokkos::Array<double, 3>{node_u(i_node2, 0), node_u(i_node2, 1), node_u(i_node2, 2)};
-        const auto u2 = View_3::const_type{u2_data.data()};
+        const auto Rt = Kokkos::View<double[4]>::const_type{Rt_data.data()};
+
+        auto AX_data = Kokkos::Array<double, 3>{};
+        const auto AX = Kokkos::View<double[3]>{AX_data.data()};
+
+        // Control rotation vector
+        auto RV_data = Kokkos::Array<double, 3>{};
+        const auto RV = Kokkos::View<double[3]>{RV_data.data()};
 
         // Rotation control
-        auto RC_data = Kokkos::Array<double, 4>{};
-        const auto RC = Kokkos::View<double[4]>{RC_data.data()};
-        auto RCt_data = Kokkos::Array<double, 4>{};
-        const auto RCt = Kokkos::View<double[4]>{RCt_data.data()};
-        auto RV_data = Kokkos::Array<double, 4>{};
-        const auto RV = Kokkos::View<double[4]>{RV_data.data()};
+        auto Rc_data = Kokkos::Array<double, 4>{};
+        const auto Rc = Kokkos::View<double[4]>{Rc_data.data()};
+        auto RcT_data = Kokkos::Array<double, 4>{};
+        const auto RcT = Kokkos::View<double[4]>{RcT_data.data()};
 
-        auto R1t_data = Kokkos::Array<double, 4>{};
-        const auto R1t = Kokkos::View<double[4]>{R1t_data.data()};
+        // Base rotation transpose
+        auto RbT_data = Kokkos::Array<double, 4>{};
+        const auto RbT = Kokkos::View<double[4]>{RbT_data.data()};
 
-        auto R1_X0_data = Kokkos::Array<double, 4>{};
-        const auto R1_X0 = Kokkos::View<double[4]>{R1_X0_data.data()};
+        // Base rotation * X0
+        auto Rb_X0_data = Kokkos::Array<double, 4>{};
+        const auto Rb_X0 = Kokkos::View<double[4]>{Rb_X0_data.data()};
 
-        auto R2_RCt_data = Kokkos::Array<double, 4>{};
-        const auto R2_RCt = Kokkos::View<double[4]>{R2_RCt_data.data()};
+        // Target rotation * Control rotation transpose
+        auto Rt_RcT_data = Kokkos::Array<double, 4>{};
+        const auto Rt_RcT = Kokkos::View<double[4]>{Rt_RcT_data.data()};
 
-        auto R2_RCt_R1t_data = Kokkos::Array<double, 4>{};
-        const auto R2_RCt_R1t = Kokkos::View<double[4]>{R2_RCt_R1t_data.data()};
+        // Target rotation * Control rotation transpose * Base rotation transpose
+        auto Rt_RcT_RbT_data = Kokkos::Array<double, 4>{};
+        const auto Rt_RcT_RbT = Kokkos::View<double[4]>{Rt_RcT_RbT_data.data()};
 
         auto A_data = Kokkos::Array<double, 9>{};
         const auto A = View_3x3{A_data.data()};
@@ -79,30 +88,38 @@ struct CalculateRotationControlConstraint {
         const auto V3 = View_3{V3_data.data()};
 
         //----------------------------------------------------------------------
-        // Residual Vector
+        // Position residual
         //----------------------------------------------------------------------
 
-        // Phi(0:3) = u2 + X0 - u1 - R1*X0
-        QuaternionInverse(R1, R1t);
-        RotateVectorByQuaternion(R1, X0, R1_X0);
+        // Phi(0:3) = ut + X0 - ub - Rb*X0
+        RotateVectorByQuaternion(Rb, X0, Rb_X0);
         for (int i = 0; i < 3; ++i) {
-            residual_terms(i_constraint, i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
+            residual_terms(i_constraint, i) = ut(i) + X0(i) - ub(i) - Rb_X0(i);
         }
 
-        // Angular residual
-        // If this is a rotation control constraint, calculate RC from control and axis
+        //----------------------------------------------------------------------
+        // Rotation residual
+        //----------------------------------------------------------------------
+
+        auto rotation_command = constraint_inputs(i_constraint, 0);
+
+        // Copy rotation axis for this constraint
         for (auto i = 0U; i < 3U; ++i) {
-            RV(i) = axes(i_constraint, 0, i) * constraint_inputs(i_constraint, 0);
+            AX(i) = axes(i_constraint, 0, i);
+            RV(i) = AX(i) * rotation_command;
         }
-        RotationVectorToQuaternion(RV, RC);
-        QuaternionInverse(RC, RCt);
 
-        // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
-        QuaternionCompose(R2, RCt, R2_RCt);
-        QuaternionCompose(R2_RCt, R1t, R2_RCt_R1t);
-        QuaternionToRotationMatrix(R2_RCt_R1t, C);
+        // Convert scaled axis to quaternion and calculate inverse
+        RotationVectorToQuaternion(RV, Rc);
+        QuaternionInverse(Rc, RcT);
+
+        // Phi(3:6) = axial(Rt*inv(Rc)*inv(Rb))
+        QuaternionInverse(Rb, RbT);
+        QuaternionCompose(Rt, RcT, Rt_RcT);
+        QuaternionCompose(Rt_RcT, RbT, Rt_RcT_RbT);
+        QuaternionToRotationMatrix(Rt_RcT_RbT, C);
         AxialVectorOfMatrix(C, V3);
-        for (int i = 0; i < 3; ++i) {
+        for (auto i = 0U; i < 3U; ++i) {
             residual_terms(i_constraint, i + 3) = V3(i);
         }
 
@@ -119,7 +136,7 @@ struct CalculateRotationControlConstraint {
                 target_gradient_terms(i_constraint, i, i) = 1.;
             }
 
-            // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
+            // B(3:6,3:6) = AX(Rb*Rc*inv(Rt)) = transpose(AX(Rt*inv(Rc)*inv(Rb)))
             AX_Matrix(C, A);
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 3; ++j) {
@@ -136,15 +153,15 @@ struct CalculateRotationControlConstraint {
                 base_gradient_terms(i_constraint, i, i) = -1.;
             }
 
-            // B(0:3,3:6) = tilde(R1*X0)
-            VecTilde(R1_X0, A);
+            // B(0:3,3:6) = tilde(Rb*X0)
+            VecTilde(Rb_X0, A);
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 3; ++j) {
                     base_gradient_terms(i_constraint, i, j + 3) = A(i, j);
                 }
             }
 
-            // B(3:6,3:6) = -AX(R2*inv(RC)*inv(R1))
+            // B(3:6,3:6) = -AX(Rt*inv(Rc)*inv(Rb))
             AX_Matrix(C, A);
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 3; ++j) {

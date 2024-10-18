@@ -20,8 +20,6 @@ namespace openturbine {
  */
 struct Beams {
     size_t num_elems;       // Total number of element
-    size_t num_nodes;       // Total number of nodes
-    size_t num_qps;         // Total number of quadrature points
     size_t max_elem_nodes;  // Maximum number of nodes per element
     size_t max_elem_qps;    // Maximum number of quadrature points per element
 
@@ -89,13 +87,8 @@ struct Beams {
     Kokkos::View<double***> shape_deriv;   // Shape function derivatives
 
     // Constructor which initializes views based on given sizes
-    Beams(
-        const size_t n_beams, const size_t n_nodes, const size_t n_qps, const size_t max_e_nodes,
-        const size_t max_e_qps
-    )
+    Beams(const size_t n_beams, const size_t max_e_nodes, const size_t max_e_qps)
         : num_elems(n_beams),
-          num_nodes(n_nodes),
-          num_qps(n_qps),
           max_elem_nodes(max_e_nodes),
           max_elem_qps(max_e_qps),
           // Element Data

@@ -11,8 +11,7 @@ namespace openturbine {
 
 inline Beams CreateBeams(const BeamsInput& beams_input) {
     Beams beams(
-        beams_input.NumElements(), beams_input.NumNodes(), beams_input.NumQuadraturePoints(),
-        beams_input.MaxElemNodes(), beams_input.MaxElemQuadraturePoints()
+        beams_input.NumElements(), beams_input.MaxElemNodes(), beams_input.MaxElemQuadraturePoints()
     );
 
     auto host_gravity = Kokkos::create_mirror(beams.gravity);

@@ -66,6 +66,8 @@ function(openturbine_setup_dependencies)
       BUILD_IN_SOURCE OFF            # Build in a separate directory for cleaner output
       BINARY_DIR ${CMAKE_BINARY_DIR}/ROSCO_build
       SOURCE_SUBDIR rosco/controller
+      CMAKE_ARGS
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}  # Use the same build type as the main project
       BUILD_COMMAND ${CMAKE_COMMAND} --build . -- -j 1
       INSTALL_COMMAND
         ${CMAKE_COMMAND} -E copy
