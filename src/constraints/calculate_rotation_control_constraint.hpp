@@ -22,8 +22,8 @@ struct CalculateRotationControlConstraint {
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
-        const auto i_b = base_node_index(i_constraint);
-        const auto i_t = target_node_index(i_constraint);
+        const auto i_base = base_node_index(i_constraint);
+        const auto i_target = target_node_index(i_constraint);
 
         // Initial difference between nodes
         const auto X0_data = Kokkos::Array<double, 3>{
@@ -33,18 +33,20 @@ struct CalculateRotationControlConstraint {
 
         // Base node displacement (translation and rotation)
         const auto ub_data =
-            Kokkos::Array<double, 3>{node_u(i_b, 0), node_u(i_b, 1), node_u(i_b, 2)};
-        const auto Rb_data =
-            Kokkos::Array<double, 4>{node_u(i_b, 3), node_u(i_b, 4), node_u(i_b, 5), node_u(i_b, 6)};
+            Kokkos::Array<double, 3>{node_u(i_base, 0), node_u(i_base, 1), node_u(i_base, 2)};
+        const auto Rb_data = Kokkos::Array<double, 4>{
+            node_u(i_base, 3), node_u(i_base, 4), node_u(i_base, 5), node_u(i_base, 6)
+        };
         const auto ub = View_3::const_type{ub_data.data()};
         const auto Rb = Kokkos::View<double[4]>::const_type{Rb_data.data()};
 
         // Target node displacement (translation and rotation)
         const auto ut_data =
-            Kokkos::Array<double, 3>{node_u(i_t, 0), node_u(i_t, 1), node_u(i_t, 2)};
+            Kokkos::Array<double, 3>{node_u(i_target, 0), node_u(i_target, 1), node_u(i_target, 2)};
         const auto ut = View_3::const_type{ut_data.data()};
-        const auto Rt_data =
-            Kokkos::Array<double, 4>{node_u(i_t, 3), node_u(i_t, 4), node_u(i_t, 5), node_u(i_t, 6)};
+        const auto Rt_data = Kokkos::Array<double, 4>{
+            node_u(i_target, 3), node_u(i_target, 4), node_u(i_target, 5), node_u(i_target, 6)
+        };
         const auto Rt = Kokkos::View<double[4]>::const_type{Rt_data.data()};
 
         auto AX_data = Kokkos::Array<double, 3>{};
