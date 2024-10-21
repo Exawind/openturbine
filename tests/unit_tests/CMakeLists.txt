@@ -9,6 +9,7 @@ add_subdirectory(regression)
 add_subdirectory(solver)
 add_subdirectory(state)
 add_subdirectory(system)
+add_subdirectory(utilities)
 
 # Specify the source files for the unit tests
 target_sources(openturbine_unit_tests PRIVATE utest_main.cpp)

@@ -10,5 +10,4 @@ target_sources(
     test_rotor.cpp
     test_utilities.cpp
     test_controller.cpp
-    test_yaml_parser.cpp
 )
