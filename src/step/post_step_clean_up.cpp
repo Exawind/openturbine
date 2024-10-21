@@ -46,5 +46,6 @@ void PostStepCleanUp(
             constraints.output,
         }
     );
+    Kokkos::deep_copy(constraints.host_output, constraints.output);
 }
 }  // namespace openturbine
