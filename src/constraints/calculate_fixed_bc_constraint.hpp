@@ -4,6 +4,7 @@
 
 #include "constraints.hpp"
 
+#include "src/math/matrix_operations.hpp"
 #include "src/math/quaternion_operations.hpp"
 #include "src/math/vector_operations.hpp"
 
