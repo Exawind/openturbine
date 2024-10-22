@@ -1,3 +1,6 @@
+# Run this from the root of the OpenTurbine repository e.g.
+# docker build -f recipes/Dockerfile -t openturbine:latest .
+
 FROM ubuntu:latest
 
 # Use bash as the default shell
