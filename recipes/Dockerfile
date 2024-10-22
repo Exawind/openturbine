@@ -42,15 +42,10 @@ WORKDIR /projects/openturbine
 COPY . .
 
 # Step 4: Load necessary libraries and build the project
-ARG CMAKE_OPTIONS="-DOpenTurbine_ENABLE_SANITIZER_ADDRESS=ON \
-    -DOpenTurbine_ENABLE_SANITIZER_LEAK=ON \
-    -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=ON \
-    -DOpenTurbine_ENABLE_CPPCHECK=ON \
-    -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
-    -DOpenTurbine_ENABLE_VTK=ON \
+ARG CMAKE_OPTIONS="-DOpenTurbine_ENABLE_VTK=ON \
     -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
     -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
-    -DCMAKE_BUILD_TYPE=Debug"
+    -DCMAKE_BUILD_TYPE=Release"
 
 ARG N_PARALLEL_JOBS=4
 
