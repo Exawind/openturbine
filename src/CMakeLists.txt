@@ -19,7 +19,7 @@ target_link_libraries(openturbine_library PRIVATE
 target_link_system_libraries(openturbine_library PRIVATE
   KokkosKernels::kokkoskernels
   Amesos2::amesos2
-  yaml-cpp
+  yaml-cpp::yaml-cpp
   ${FS_LIB}
 )
 
