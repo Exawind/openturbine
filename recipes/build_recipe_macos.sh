@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # -----------------------------------------------------------------------------
 # Run this from the root of the OpenTurbine repository with the following arguments:
 # ./recipes/build_recipe_macos.sh <path_to_openturbine_root> <path_to_spack_root>
@@ -35,46 +33,29 @@ install_if_missing() {
 }
 
 install_if_missing googletest
-install_if_missing llvm
 install_if_missing cppcheck
 install_if_missing yaml-cpp
-install_if_missing "vtk~mpi~opengl2"
 install_if_missing "trilinos@16.0.0~mpi~epetra"
+#install_if_missing llvm # add if clang-tidy is needed
+#install_if_missing "vtk~mpi~opengl2" # add if VTK is needed
 
-# Load required packages
-spack load llvm
-spack load cppcheck
-spack load trilinos
-spack load googletest
-spack load yaml-cpp
-spack load vtk
+spack load cppcheck trilinos googletest yaml-cpp #llvm vtk
 
-# Find gfortran compiler
-if ! command -v brew &> /dev/null; then
-    echo "Homebrew is not installed. Please install it first."
+# Check if FC (Fortran Compiler) is set
+if [ -z "${FC}" ]; then
+    echo "Error: FC (Fortran Compiler) environment variable is not set."
+    echo "Please set FC to your preferred Fortran compiler before running this script."
+    echo "For example: export FC=/path/to/your/gfortran"
     exit 1
 fi
-export FC=$(find /opt/homebrew/ -name gfortran | tr ' ' '\n' | grep "/gcc/.*gfortran")
 
-# Build OpenTurbine with following options - modify as needed
-BUILD_TYPE="Release" # Release, Debug, RelWithDebInfo
-CXX_COMPILER="clang++" # g++, clang++
-BUILD_EXTERNAL="all" # all, none
-
-mkdir -p build
-cd build
+# Build OpenTurbine with the specified options
+mkdir -p build-from-script
+cd build-from-script
 cmake .. \
-  -DOpenTurbine_ENABLE_SANITIZER_ADDRESS=$([[ "$BUILD_EXTERNAL" == "none" ]] && echo "ON" || echo "OFF") \
-  -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=$([[ "$BUILD_EXTERNAL" == "none" ]] && echo "ON" || echo "OFF") \
-  -DOpenTurbine_ENABLE_CPPCHECK=ON \
-  -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
   -DOpenTurbine_ENABLE_VTK=ON \
-  -DOpenTurbine_BUILD_OPENFAST_ADI=$([[ "$BUILD_EXTERNAL" == "all" ]] && echo "ON" || echo "OFF") \
-  -DOpenTurbine_BUILD_ROSCO_CONTROLLER=$([[ "$BUILD_EXTERNAL" == "all" ]] && echo "ON" || echo "OFF") \
-  -DCMAKE_CXX_COMPILER="$CXX_COMPILER" \
-  -DCMAKE_BUILD_TYPE="$BUILD_TYPE"
+  -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
+  -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
+  -DCMAKE_BUILD_TYPE="Release"
 
 cmake --build .
-
-# Run tests
-ctest --output-on-failure
