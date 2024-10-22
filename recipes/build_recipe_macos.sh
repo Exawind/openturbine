@@ -1,23 +1,30 @@
 #!/bin/bash
 
+# -----------------------------------------------------------------------------
+# Run this from the root of the OpenTurbine repository with the following arguments:
+# ./recipes/build_recipe_macos.sh <path_to_openturbine_root> <path_to_spack_root>
+# -----------------------------------------------------------------------------
+
 # Exit on error
 set -e
 
-# Clone OpenTurbine repository if not present
-if [ ! -d "openturbine" ]; then
-    git clone --recursive https://github.com/Exawind/openturbine.git
+# Clone OpenTurbine repository if not present in the provided path
+openturbine_path=$(dirname "$1") # Get the directory of the provided path
+if [ ! -d "$openturbine_path/openturbine" ]; then
+    git clone --recursive https://github.com/Exawind/openturbine.git $openturbine_path/openturbine
 fi
-cd openturbine
+cd $openturbine_path/openturbine
 
-# Install dependencies using Spack
-if [ ! -d "spack" ]; then
-    git clone https://github.com/spack/spack.git
+# Install Spack if not present in the provided path
+spack_path=$(dirname "$2") # Get the directory of the provided path
+if [ ! -d "$spack_path/spack" ]; then
+    git clone https://github.com/spack/spack.git $spack_path/spack
 fi
-source spack/share/spack/setup-env.sh
+source $spack_path/spack/share/spack/setup-env.sh
 spack compiler find
 spack external find
 
-# Install required packages
+# Install required packages using Spack if not present
 install_if_missing() {
     if ! spack find -l "$1" | grep -q "$1"; then
         echo "Installing $1..."
