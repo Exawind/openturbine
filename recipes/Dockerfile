@@ -17,6 +17,7 @@ RUN apt-get update -qq && \
         make \
         python3 \
         python3-pip \
+        unzip \
         wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -48,11 +49,12 @@ ARG CMAKE_OPTIONS="-DOpenTurbine_ENABLE_SANITIZER_ADDRESS=ON \
     -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
     -DCMAKE_BUILD_TYPE=Debug"
 
+ARG N_PARALLEL_JOBS=4
+
 RUN . /spack/share/spack/setup-env.sh && \
-    spack load trilinos && \
-    spack load yaml-cpp && \
-    spack load vtk && \
+    spack load cppcheck googletest trilinos vtk yaml-cpp && \
     mkdir docker-build && \
     cd docker-build && \
     cmake .. ${CMAKE_OPTIONS} && \
-    cmake --build . -j 4
+    cmake --build . -j ${N_PARALLEL_JOBS} && \
+    ctest --output-on-failure -j ${N_PARALLEL_JOBS}
