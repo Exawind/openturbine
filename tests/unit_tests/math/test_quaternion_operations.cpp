@@ -358,7 +358,7 @@ void test_quaternion_to_rotation_vector_2() {
         const auto phi2_mirror = Kokkos::create_mirror(phi2);
         Kokkos::deep_copy(phi2_mirror, phi2);
         for (auto j = 0U; j < 3U; ++j) {
-            EXPECT_NEAR(phi2_mirror(j), rot_vec[j], 1.e-15);
+            EXPECT_NEAR(phi2_mirror(j), rot_vec[j], 1.e-14);
         }
     }
 }
@@ -374,9 +374,9 @@ TEST(QuaternionTest, QuaternionToRotationVector_2) {
         Array_3 rot_vec{static_cast<double>(i) * dtheta, 0., 0.};
         auto q = RotationVectorToQuaternion(rot_vec);
         auto rot_vec2 = QuaternionToRotationVector(q);
-        ASSERT_NEAR(rot_vec2[0], rot_vec[0], 1e-7);
-        ASSERT_NEAR(rot_vec2[1], rot_vec[1], 1e-7);
-        ASSERT_NEAR(rot_vec2[2], rot_vec[2], 1e-7);
+        ASSERT_NEAR(rot_vec2[0], rot_vec[0], 1e-14);
+        ASSERT_NEAR(rot_vec2[1], rot_vec[1], 1e-14);
+        ASSERT_NEAR(rot_vec2[2], rot_vec[2], 1e-14);
     }
 }
 

@@ -5,7 +5,7 @@
 
 namespace openturbine::tests {
 
-template <unsigned rows, unsigned cols>
+template <size_t rows, size_t cols>
 Kokkos::View<double[rows][cols]> Create2DView(const std::array<double, rows * cols>& input) {
     auto view = Kokkos::View<double[rows][cols]>("view");
     auto view_host = Kokkos::View<const double[rows][cols], Kokkos::HostSpace>(input.data());
