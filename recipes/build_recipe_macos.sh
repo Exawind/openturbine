@@ -9,19 +9,30 @@ if [ ! -d "openturbine" ]; then
 fi
 cd openturbine
 
-# Install dependencies using Spack (assumes spack is not present in the system)
+# Install dependencies using Spack
 if [ ! -d "spack" ]; then
     git clone https://github.com/spack/spack.git
 fi
 source spack/share/spack/setup-env.sh
 spack compiler find
 spack external find
-spack install googletest
-spack install llvm
-spack install cppcheck
-spack install yaml-cpp
-spack install vtk~mpi~opengl2
-spack install trilinos@master~mpi~epetra
+
+# Install required packages
+install_if_missing() {
+    if ! spack find -l "$1" | grep -q "$1"; then
+        echo "Installing $1..."
+        spack install "$1"
+    else
+        echo "$1 is already installed."
+    fi
+}
+
+install_if_missing googletest
+install_if_missing llvm
+install_if_missing cppcheck
+install_if_missing yaml-cpp
+install_if_missing "vtk~mpi~opengl2"
+install_if_missing "trilinos@16.0.0~mpi~epetra"
 
 # Load required packages
 spack load llvm
