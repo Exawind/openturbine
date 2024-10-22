@@ -6,7 +6,7 @@
 namespace openturbine::tests {
 
 template <unsigned rows, unsigned cols>
-Kokkos::View<double[rows][cols]> Create2DView(const std::array<double, rows*cols>& input) {
+Kokkos::View<double[rows][cols]> Create2DView(const std::array<double, rows * cols>& input) {
     auto view = Kokkos::View<double[rows][cols]>("view");
     auto view_host = Kokkos::View<const double[rows][cols], Kokkos::HostSpace>(input.data());
     auto view_mirror = Kokkos::create_mirror(view);
@@ -23,10 +23,11 @@ inline void test_AX_Matrix() {
     Kokkos::deep_copy(out_mirror, out);
 
     constexpr auto expected_data = std::array{7., -1., -1.5, -2., 5., -3., -3.5, -4., 3.};
-    const auto expected = Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type(expected_data.data());
+    const auto expected =
+        Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for(auto i = 0U; i < 3U; ++i) {
-        for(auto j = 0U; j < 3U; ++j) {
+    for (auto i = 0U; i < 3U; ++i) {
+        for (auto j = 0U; j < 3U; ++j) {
             EXPECT_NEAR(out_mirror(i, j), expected(i, j), 1.e-15);
         }
     }
@@ -35,7 +36,6 @@ inline void test_AX_Matrix() {
 TEST(MatrixTest, AX_Matrix) {
     test_AX_Matrix();
 }
-
 
 Kokkos::View<double[3]> TestAxialVectorOfMatrix(const Kokkos::View<const double[3][3]>& m) {
     auto v = Kokkos::View<double[3]>("v");
@@ -53,11 +53,12 @@ TEST(MatrixTest, AxialVectorOfMatrix) {
     Kokkos::deep_copy(v_mirror, v);
 
     constexpr auto expected_data = std::array{0., 0., 1.};
-    const auto expected = Kokkos::View<double[3], Kokkos::HostSpace>::const_type(expected_data.data());
+    const auto expected =
+        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for(auto i = 0U; i < 3U; ++i) {
+    for (auto i = 0U; i < 3U; ++i) {
         EXPECT_NEAR(v_mirror(i), expected(i), 1.e-15);
     }
 }
 
-}
+}  // namespace openturbine::tests

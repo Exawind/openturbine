@@ -8,7 +8,8 @@ namespace openturbine::tests {
 template <unsigned size>
 Kokkos::View<double[size]> Create1DView(const std::array<double, size>& input) {
     auto view = Kokkos::View<double[size]>("view");
-    auto view_host = typename Kokkos::View<double[size], Kokkos::HostSpace>::const_type(input.data());
+    auto view_host =
+        typename Kokkos::View<double[size], Kokkos::HostSpace>::const_type(input.data());
     Kokkos::deep_copy(view, view_host);
     return view;
 }
@@ -27,10 +28,11 @@ TEST(VectorTest, VecTilde) {
     Kokkos::deep_copy(m_mirror, m);
 
     constexpr auto expected_data = std::array{0., -3., 2., 3., 0., -1., -2., 1., 0.};
-    const auto expected = Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type(expected_data.data());
+    const auto expected =
+        Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for(auto i = 0U; i < 3U; ++i) {
-        for(auto j = 0U; j < 3U; ++j) {
+    for (auto i = 0U; i < 3U; ++i) {
+        for (auto j = 0U; j < 3U; ++j) {
             EXPECT_NEAR(m_mirror(i, j), expected(i, j), 1.e-15);
         }
     }

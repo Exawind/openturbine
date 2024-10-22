@@ -6,7 +6,8 @@
 namespace openturbine::tests {
 
 TEST(ParserTest, ParseIEA15MWName) {
-    const std::string input = "name: IEA 15MW Offshore Reference Turbine, with taped chord tip design";
+    const std::string input =
+        "name: IEA 15MW Offshore Reference Turbine, with taped chord tip design";
     const YAML::Node config = YAML::Load(input);
     Turbine turbine;
     turbine.parse(config);
@@ -14,7 +15,10 @@ TEST(ParserTest, ParseIEA15MWName) {
 }
 
 TEST(ParserTest, ParseIEA15MWAssembly) {
-    const std::string input = "assembly:\n   turbine_class: I\n   turbulence_class: B\n   drivetrain: direct_drive\n   rotor_orientation: Upwind\n   number_of_blades: 3\n   hub_height: 150\n   rotor_diameter: 241.94\n   rated_power: 15.e+6\n   lifetime: 25\n";
+    const std::string input =
+        "assembly:\n   turbine_class: I\n   turbulence_class: B\n   drivetrain: direct_drive\n   "
+        "rotor_orientation: Upwind\n   number_of_blades: 3\n   hub_height: 150\n   rotor_diameter: "
+        "241.94\n   rated_power: 15.e+6\n   lifetime: 25\n";
     const YAML::Node config = YAML::Load(input);
     Turbine turbine;
     turbine.parse(config);
@@ -30,7 +34,7 @@ TEST(ParserTest, ParseIEA15MWAssembly) {
 }
 
 TEST(ParserTest, ParseIEA15MWMultipleMaterials) {
-    const std::string input = "materials:\n   [name: first, name: second]"; 
+    const std::string input = "materials:\n   [name: first, name: second]";
     const YAML::Node config = YAML::Load(input);
     Turbine turbine;
     turbine.parse(config);
