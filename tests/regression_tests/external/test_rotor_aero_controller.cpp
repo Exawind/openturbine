@@ -23,11 +23,11 @@
 #include "src/utilities/controllers/discon.hpp"
 #include "src/utilities/controllers/turbine_controller.hpp"
 #include "src/vendor/dylib/dylib.hpp"
-#include "tests/unit_tests/regression/iea15_rotor_data.hpp"
-#include "tests/unit_tests/regression/test_utilities.hpp"
+#include "tests/regression_tests/regression/iea15_rotor_data.hpp"
+#include "tests/regression_tests/regression/test_utilities.hpp"
 
 #ifdef OpenTurbine_ENABLE_VTK
-#include "tests/unit_tests/regression/vtkout.hpp"
+#include "tests/regression_tests/regression/vtkout.hpp"
 #endif
 
 namespace openturbine::tests {

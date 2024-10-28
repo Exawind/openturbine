@@ -1,6 +1,6 @@
-# Specify the source files for the unit test executable
+# Specify the source files for the regression test executable
 target_sources(
-    openturbine_unit_tests
+    openturbine_regression_tests
     PRIVATE
     test_beams.cpp
     test_solver.cpp
