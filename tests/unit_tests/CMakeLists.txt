@@ -3,10 +3,8 @@ add_executable(openturbine_unit_tests)
 
 # Add subdirectories for additional components
 add_subdirectory(beams)
-add_subdirectory(external)
 add_subdirectory(math)
 add_subdirectory(model)
-add_subdirectory(regression)
 add_subdirectory(solver)
 add_subdirectory(state)
 add_subdirectory(system)
@@ -36,17 +34,6 @@ target_link_system_libraries(openturbine_unit_tests PRIVATE
   GTest::gtest
   GTest::gtest_main
 )
-
-# Conditional linking for VTK if enabled
-if(OpenTurbine_ENABLE_VTK)
-  target_link_system_libraries(openturbine_unit_tests PRIVATE VTK::IOXML)
-  target_compile_definitions(openturbine_unit_tests PRIVATE OpenTurbine_ENABLE_VTK)
-endif()
-
-# Add compile definitions for OpenTurbine_BUILD_OPENFAST_ADI if enabled
-if(OpenTurbine_BUILD_OPENFAST_ADI)
-  target_compile_definitions(openturbine_unit_tests PRIVATE OpenTurbine_BUILD_OPENFAST_ADI)
-endif()
 
 # Include GoogleTest module and discover tests
 include(GoogleTest)

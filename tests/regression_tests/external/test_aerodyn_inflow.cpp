@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "src/utilities/aerodynamics/aerodyn_inflow.hpp"
-#include "tests/unit_tests/regression/test_utilities.hpp"
+#include "tests/regression_tests/regression/test_utilities.hpp"
 
 namespace openturbine::tests {
 
@@ -522,7 +522,7 @@ TEST(AerodynInflowTest, VTKSettings_Set) {
 std::string GetSharedLibraryPath() {
     const std::filesystem::path project_root = FindProjectRoot();
     const std::filesystem::path full_path =
-        project_root / "build/tests/unit_tests/aerodyn_inflow_c_binding.dll";
+        project_root / "build/tests/regression_tests/aerodyn_inflow_c_binding.dll";
     return full_path.string();
 }
 
@@ -545,7 +545,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
 
 TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
     const std::filesystem::path project_root = FindProjectRoot();
-    const std::filesystem::path input_path = project_root / "tests/unit_tests/external/";
+    const std::filesystem::path input_path = project_root / "tests/regression_tests/external/";
 
     // Set up simulation parameters
     util::SimulationControls sim_controls;
