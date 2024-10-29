@@ -2,6 +2,7 @@
 
 #include <array>
 #include <vector>
+#include <numeric>
 
 #include <Kokkos_Core.hpp>
 

@@ -3,6 +3,7 @@ add_executable(openturbine_unit_tests)
 
 # Add subdirectories for additional components
 add_subdirectory(beams)
+add_subdirectory(constraints)
 add_subdirectory(external)
 add_subdirectory(model)
 add_subdirectory(regression)
