@@ -75,10 +75,13 @@ struct InterpolateQPState_r {
         );
         static constexpr auto length_zero_result = Kokkos::Array<double, 4>{1., 0., 0., 0.};
         if (length == 0.) {
-            local_total = length_zero_result;
-        }
-        for (auto k = 0U; k < 4U; ++k) {
-            qp_r(i_elem, j_index, k) = local_total[k];
+            for (auto k = 0U; k < 4U; ++k) {
+                qp_r(i_elem, j_index, k) = length_zero_result[k];
+            }
+        } else {
+            for (auto k = 0U; k < 4U; ++k) {
+                qp_r(i_elem, j_index, k) = local_total[k] / length;
+            }
         }
     }
 };
