@@ -1,5 +1,6 @@
-/** \file utest_main.cpp
- *  Entry point for unit tests
+/**
+ * \file rtest_main.cpp
+ * Entry point for executing regression tests suite
  */
 
 #include <Kokkos_Core.hpp>
