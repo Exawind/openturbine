@@ -2,9 +2,8 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "constraint_type.hpp"
-
 #include "calculate_revolute_joint_output.hpp"
+#include "constraint_type.hpp"
 
 namespace openturbine {
 
@@ -22,7 +21,8 @@ struct CalculateConstraintOutput {
     void operator()(const int i_constraint) const {
         switch (type(i_constraint)) {
             case ConstraintType::kRevoluteJoint: {
-                CalculateRevoluteJointOutput{target_node_index, axes, node_x0, node_u, node_udot, node_uddot, outputs}(i_constraint);
+                CalculateRevoluteJointOutput{target_node_index, axes,       node_x0, node_u,
+                                             node_udot,         node_uddot, outputs}(i_constraint);
             } break;
             default: {
                 // Do nothing

@@ -80,8 +80,7 @@ struct CalculateRevoluteJointOutput {
         outputs(i_constraint, 0) = angular_rotation;
         outputs(i_constraint, 1) = angular_velocity;
         outputs(i_constraint, 2) = angular_acceleration;
-
     }
 };
 
-}
+}  // namespace openturbine
