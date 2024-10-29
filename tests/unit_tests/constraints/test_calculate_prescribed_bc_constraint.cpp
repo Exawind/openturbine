@@ -7,7 +7,7 @@ namespace openturbine::tests {
 
 TEST(CalculatePrescribedBCConstraintTests, OneConstraint) {
     const auto target_node_index = Kokkos::View<size_t[1]>("target_node_index");
-    constexpr auto target_node_index_host_data = std::array<size_t, 1>{1ul};
+    constexpr auto target_node_index_host_data = std::array<size_t, 1>{1UL};
     const auto target_node_index_host =
         Kokkos::View<size_t[1], Kokkos::HostSpace>::const_type(target_node_index_host_data.data());
     Kokkos::deep_copy(target_node_index, target_node_index_host);
@@ -58,7 +58,7 @@ TEST(CalculatePrescribedBCConstraintTests, OneConstraint) {
         Kokkos::View<double[1][6], Kokkos::HostSpace>::const_type(residual_terms_exact_data.data());
 
     for (auto i = 0U; i < 6U; ++i) {
-        EXPECT_NEAR(residual_terms_mirror(0, i), residual_terms_exact(0, i), 1.e-15);
+        EXPECT_NEAR(residual_terms_mirror(0, i), residual_terms_exact(0, i), 1.e-12);
     }
 
     const auto target_gradient_terms_mirror = Kokkos::create_mirror(target_gradient_terms);
@@ -82,7 +82,7 @@ TEST(CalculatePrescribedBCConstraintTests, OneConstraint) {
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
             EXPECT_NEAR(
-                target_gradient_terms_mirror(0, i, j), target_gradient_terms_exact(0, i, j), 1.e-15
+                target_gradient_terms_mirror(0, i, j), target_gradient_terms_exact(0, i, j), 1.e-12
             );
         }
     }

@@ -7,13 +7,13 @@ namespace openturbine::tests {
 
 TEST(CalculateRevoluteJointConstraintTests, OneConstraint) {
     const auto target_node_index = Kokkos::View<size_t[1]>("target_node_index");
-    constexpr auto target_node_index_host_data = std::array<size_t, 1>{1ul};
+    constexpr auto target_node_index_host_data = std::array<size_t, 1>{1UL};
     const auto target_node_index_host =
         Kokkos::View<size_t[1], Kokkos::HostSpace>::const_type(target_node_index_host_data.data());
     Kokkos::deep_copy(target_node_index, target_node_index_host);
 
     const auto base_node_index = Kokkos::View<size_t[1]>("base_node_index");
-    constexpr auto base_node_index_host_data = std::array<size_t, 1>{2ul};
+    constexpr auto base_node_index_host_data = std::array<size_t, 1>{2UL};
     const auto base_node_index_host =
         Kokkos::View<size_t[1], Kokkos::HostSpace>::const_type(base_node_index_host_data.data());
     Kokkos::deep_copy(base_node_index, base_node_index_host);
