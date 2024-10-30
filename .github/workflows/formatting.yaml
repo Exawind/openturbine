@@ -4,7 +4,7 @@ on: push
 
 jobs:
   clang-format:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout repository
@@ -12,7 +12,8 @@ jobs:
 
     - name: Run clang-format
       run: |
-        find . -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -i {} \;
+        clang-format --version
+        find . -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format-18 -i {} \;
         
     - name: Check for formatting changes
       run: |

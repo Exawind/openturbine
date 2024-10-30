@@ -63,10 +63,10 @@ TEST(InterpolateQPStateTests, r_OneNodeOneQP) {
     auto qp_r_mirror = Kokkos::create_mirror(qp_r);
     Kokkos::deep_copy(qp_r_mirror, qp_r);
     constexpr auto tolerance = 1.e-16;
-    EXPECT_NEAR(qp_r_mirror(0, 0, 0), 8., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 0, 1), 10., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 0, 2), 12., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 0, 3), 14., tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 0), 8. / (6. * std::sqrt(14.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 1), 10. / (6. * std::sqrt(14.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 2), 12. / (6. * std::sqrt(14.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 3), 14. / (6. * std::sqrt(14.)), tolerance);
 }
 
 TEST(InterpolateQPStateTests, rprime_OneNodeOneQP) {
@@ -139,15 +139,15 @@ TEST(InterpolateQPStateTests, r_OneNodeTwoQP) {
     auto qp_r_mirror = Kokkos::create_mirror(qp_r);
     Kokkos::deep_copy(qp_r_mirror, qp_r);
     constexpr auto tolerance = 1.e-16;
-    EXPECT_NEAR(qp_r_mirror(0, 0, 0), 8., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 0, 1), 10., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 0, 2), 12., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 0, 3), 14., tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 0), 8. / (6. * std::sqrt(14.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 1), 10. / (6. * std::sqrt(14.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 2), 12. / (6. * std::sqrt(14.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 3), 14. / (6. * std::sqrt(14.)), tolerance);
 
-    EXPECT_NEAR(qp_r_mirror(0, 1, 0), 16., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 1, 1), 20., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 1, 2), 24., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 1, 3), 28., tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 1, 0), 16. / (12. * std::sqrt(14.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 1, 1), 20. / (12. * std::sqrt(14.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 1, 2), 24. / (12. * std::sqrt(14.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 1, 3), 28. / (12. * std::sqrt(14.)), tolerance);
 }
 
 TEST(InterpolateQPStateTests, rprime_OneNodeTwoQP) {
@@ -239,15 +239,15 @@ TEST(InterpolateQPStateTests, r_TwoNodeTwoQP) {
     auto qp_r_mirror = Kokkos::create_mirror(qp_r);
     Kokkos::deep_copy(qp_r_mirror, qp_r);
     constexpr auto tolerance = 1.e-16;
-    EXPECT_NEAR(qp_r_mirror(0, 0, 0), 52., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 0, 1), 58., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 0, 2), 64., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 0, 3), 70., tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 0), 52. / (2. * std::sqrt(3766.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 1), 58. / (2. * std::sqrt(3766.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 2), 64. / (2. * std::sqrt(3766.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 0, 3), 70. / (2. * std::sqrt(3766.)), tolerance);
 
-    EXPECT_NEAR(qp_r_mirror(0, 1, 0), 67., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 1, 1), 75., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 1, 2), 83., tolerance);
-    EXPECT_NEAR(qp_r_mirror(0, 1, 3), 91., tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 1, 0), 67. / (14. * std::sqrt(129.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 1, 1), 75. / (14. * std::sqrt(129.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 1, 2), 83. / (14. * std::sqrt(129.)), tolerance);
+    EXPECT_NEAR(qp_r_mirror(0, 1, 3), 91. / (14. * std::sqrt(129.)), tolerance);
 }
 
 TEST(InterpolateQPStateTests, rprime_TwoNodeTwoQP) {

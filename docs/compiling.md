@@ -57,6 +57,11 @@ If building for CUDA platforms, Trilinos must be configured with CUDA support
 spack install trilinos~mpi~epetra+basker+cuda+cuda_rdc
 ```
 
+If building for ROCm platforms, Trilinos must be configured with ROCm support
+```bash
+spack install trilinos~mpi~epetra+basker+rocm
+```
+
 ### Load the TPLs into your environment
 ```bash
 spack load googletest
@@ -91,6 +96,11 @@ cmake ../
 If Trilinos was built with CUDA support, you will need to use the nvcc_wrapper for compilation
 ```bash
 cmake ../ -DCMAKE_CXX_COMPILER=nvcc_wrapper
+```
+
+If Trilinos was built with ROCm support, you will need to use the hipcc program for compilation
+```bash
+cmake ../ -DCMAKE_CXX_COMPILER=hipcc
 ```
 
 ### Build and Test

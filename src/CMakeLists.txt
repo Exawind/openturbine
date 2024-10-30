@@ -16,10 +16,16 @@ target_link_libraries(openturbine_library PRIVATE
 )
 
 # Link system libraries
+if(TARGET yaml-cpp::yaml-cpp)
+  set(YAML_CPP_TARGET yaml-cpp::yaml-cpp)
+else()
+  set(YAML_CPP_TARGET yaml-cpp)
+endif()
+
 target_link_system_libraries(openturbine_library PUBLIC
   KokkosKernels::kokkoskernels
   Amesos2::amesos2
-  yaml-cpp
+  ${YAML_CPP_TARGET}
   ${FS_LIB}
 )
 
