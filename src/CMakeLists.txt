@@ -22,12 +22,19 @@ else()
   set(YAML_CPP_TARGET yaml-cpp)
 endif()
 
-target_link_system_libraries(openturbine_library PRIVATE
+target_link_system_libraries(openturbine_library PUBLIC
   KokkosKernels::kokkoskernels
   Amesos2::amesos2
   ${YAML_CPP_TARGET}
   ${FS_LIB}
 )
+
+# Link MPI if it is defined by TPLs
+if(TARGET MPI::MPI_CXX)
+  target_link_system_libraries(openturbine_library PUBLIC
+    MPI::MPI_CXX
+  )
+endif()
 
 # Include shared libraries for the OpenTurbine library
 include(../cmake/SharedLibraries.cmake)

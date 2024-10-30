@@ -9,6 +9,10 @@ function(openturbine_setup_dependencies)
     find_package(MKL REQUIRED)
   endif()
 
+  if(Amesos2_ENABLE_MPI)
+    find_package(MPI REQUIRED)
+  endif()
+
   # Conditionally find and link VTK if enabled
   if(OpenTurbine_ENABLE_VTK)
     find_package(VTK REQUIRED COMPONENTS IOXML)

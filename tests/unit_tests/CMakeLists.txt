@@ -20,17 +20,7 @@ target_link_libraries(openturbine_unit_tests PRIVATE
   OpenTurbine::openturbine_library
 )
 
-# Link system libraries and dependencies
-if(TARGET yaml-cpp::yaml-cpp)
-  set(YAML_CPP_TARGET yaml-cpp::yaml-cpp)
-else()
-  set(YAML_CPP_TARGET yaml-cpp)
-endif()
-
 target_link_system_libraries(openturbine_unit_tests PRIVATE
-  KokkosKernels::kokkoskernels
-  Amesos2::amesos2
-  ${YAML_CPP_TARGET}
   GTest::gtest
   GTest::gtest_main
 )
