@@ -9,6 +9,10 @@ function(openturbine_setup_dependencies)
     find_package(MKL REQUIRED)
   endif()
 
+  if(Amesos2_ENABLE_MPI)
+    find_package(MPI REQUIRED)
+  endif()
+
   # Conditionally find and link VTK if enabled
   if(OpenTurbine_ENABLE_VTK)
     find_package(VTK REQUIRED COMPONENTS IOXML)
@@ -47,7 +51,7 @@ function(openturbine_setup_dependencies)
         # Copy the built library to the tests directory
         ${CMAKE_COMMAND} -E copy
         ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build/modules/aerodyn/${CMAKE_SHARED_LIBRARY_PREFIX}aerodyn_inflow_c_binding${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_BINARY_DIR}/tests/unit_tests/aerodyn_inflow_c_binding.dll
+        ${CMAKE_BINARY_DIR}/tests/regression_tests/aerodyn_inflow_c_binding.dll
     )
   endif()
 
@@ -72,11 +76,11 @@ function(openturbine_setup_dependencies)
       INSTALL_COMMAND
         ${CMAKE_COMMAND} -E copy
         ${CMAKE_BINARY_DIR}/ROSCO_build/${CMAKE_SHARED_LIBRARY_PREFIX}discon${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_BINARY_DIR}/tests/unit_tests/ROSCO.dll
+        ${CMAKE_BINARY_DIR}/tests/regression_tests/ROSCO.dll
       COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_BINARY_DIR}/external/src/ROSCO_Controller/Examples/Test_Cases/NREL-5MW/Cp_Ct_Cq.NREL5MW.txt
         ${CMAKE_BINARY_DIR}/external/src/ROSCO_Controller/Examples/Test_Cases/NREL-5MW/DISCON.IN
-        ${CMAKE_BINARY_DIR}/tests/unit_tests
+        ${CMAKE_BINARY_DIR}/tests/regression_tests
     )
   endif()
 endfunction()

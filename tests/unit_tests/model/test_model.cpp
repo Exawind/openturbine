@@ -4,7 +4,6 @@
 
 #include "src/beams/beam_element.hpp"
 #include "src/model/model.hpp"
-#include "tests/unit_tests/regression/test_utilities.hpp"
 
 namespace openturbine::tests {
 
@@ -185,14 +184,29 @@ TEST(Model, ModelCreateState) {
     auto state = model.CreateState();
 
     // Verify initial position
-    expect_kokkos_view_2D_equal(state.x0, {{1., 2., 3., R1[0], R1[1], R1[2], R1[3]}});
+    const auto x0 = Kokkos::create_mirror(state.x0);
+    Kokkos::deep_copy(x0, state.x0);
+    const auto exact_x0 = std::array{1., 2., 3., R1[0], R1[1], R1[2], R1[3]};
+    for (auto i = 0U; i < 7U; ++i) {
+        EXPECT_NEAR(x0(0, i), exact_x0[i], 1.e-15);
+    }
 
     // Verify initial displacement
-    expect_kokkos_view_2D_equal(state.q, {{3., 2., 1., R2[0], R2[1], R2[2], R2[3]}});
+    const auto q = Kokkos::create_mirror(state.q);
+    Kokkos::deep_copy(q, state.q);
+    const auto exact_q = std::array{3., 2., 1., R2[0], R2[1], R2[2], R2[3]};
+    for (auto i = 0U; i < 7U; ++i) {
+        EXPECT_NEAR(q(0, i), exact_q[i], 1.e-15);
+    }
 
     // Verify current position (initial position plus displacement)
     auto Rt = QuaternionCompose(R2, R1);
-    expect_kokkos_view_2D_equal(state.x, {{4., 4., 4., Rt[0], Rt[1], Rt[2], Rt[3]}});
+    const auto x = Kokkos::create_mirror(state.x);
+    Kokkos::deep_copy(x, state.x);
+    const auto exact_x = std::array{4., 4., 4., Rt[0], Rt[1], Rt[2], Rt[3]};
+    for (auto i = 0U; i < 7U; ++i) {
+        EXPECT_NEAR(x(0, i), exact_x[i], 1.e-15);
+    }
 }
 
 }  // namespace openturbine::tests
