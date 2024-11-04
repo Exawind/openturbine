@@ -2,6 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "src/dof_management/freedom_signature.hpp"
 #include "src/types.hpp"
 
 namespace openturbine {
@@ -26,6 +27,9 @@ struct Beams {
     Kokkos::View<size_t*> num_nodes_per_element;
     Kokkos::View<size_t*> num_qps_per_element;
     Kokkos::View<size_t**> node_state_indices;  // State row index for each node
+    Kokkos::View<FreedomSignature**> element_freedom_signature;
+    Kokkos::View<size_t** [7]> element_freedom_table;
+
 
     View_3 gravity;
 
@@ -95,6 +99,8 @@ struct Beams {
           num_nodes_per_element("num_nodes_per_element", num_elems),
           num_qps_per_element("num_qps_per_element", num_elems),
           node_state_indices("node_state_indices", num_elems, max_elem_nodes),
+          element_freedom_signature("element_freedom_signature", num_elems, max_elem_nodes),
+          element_freedom_table("element_freedom_table", num_elems, max_elem_nodes),
           gravity("gravity"),
           // Node Data
           node_x0("node_x0", num_elems, max_elem_nodes),
@@ -150,7 +156,9 @@ struct Beams {
           inertia_matrix_terms("inertia_matrix_terms", num_elems, max_elem_nodes, max_elem_nodes),
           // Shape Function data
           shape_interp("shape_interp", num_elems, max_elem_nodes, max_elem_qps),
-          shape_deriv("deriv_interp", num_elems, max_elem_nodes, max_elem_qps) {}
+          shape_deriv("deriv_interp", num_elems, max_elem_nodes, max_elem_qps) {
+    Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
+}
 };
 
 }  // namespace openturbine

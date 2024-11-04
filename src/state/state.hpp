@@ -1,5 +1,6 @@
 #pragma once
 
+#include "src/dof_management/freedom_signature.hpp"
 #include "src/types.hpp"
 
 namespace openturbine {
@@ -10,6 +11,9 @@ namespace openturbine {
 struct State {
     size_t num_system_nodes;  //< Number of system nodes
     Kokkos::View<size_t*> ID;
+    Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
+    Kokkos::View<size_t*> node_freedom_map_table;
+
     View_Nx7 x0;       //< Initial global position/rotation
     View_Nx7 x;        //< Current global position/rotation
     View_Nx6 q_delta;  //< Displacement increment
@@ -23,6 +27,8 @@ struct State {
     explicit State(size_t num_system_nodes_)
         : num_system_nodes(num_system_nodes_),
           ID("ID", num_system_nodes),
+          node_freedom_allocation_table("node_freedom_allocation_table", num_system_nodes),
+          node_freedom_map_table("node_freedom_map_table", num_system_nodes),
           x0("x0", num_system_nodes),
           x("x", num_system_nodes),
           q_delta("q_delta", num_system_nodes),

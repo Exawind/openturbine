@@ -19,6 +19,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
     auto host_num_nodes_per_element = Kokkos::create_mirror(beams.num_nodes_per_element);
     auto host_num_qps_per_element = Kokkos::create_mirror(beams.num_qps_per_element);
     auto host_node_state_indices = Kokkos::create_mirror(beams.node_state_indices);
+    auto host_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
     auto host_node_x0 = Kokkos::create_mirror(beams.node_x0);
     auto host_node_u = Kokkos::create_mirror(beams.node_u);
     auto host_node_u_dot = Kokkos::create_mirror(beams.node_u_dot);
@@ -48,6 +49,9 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
         for (size_t j = 0; j < num_nodes; ++j) {
             host_node_state_indices(i, j) =
                 static_cast<size_t>(beams_input.elements[i].nodes[j].node.ID);
+            for (size_t k = 0; k < num_nodes; ++k) {
+                host_element_freedom_table(i, j, k) = host_node_state_indices(i, j) + k;
+            }
         }
 
         // Populate views for this element
@@ -76,6 +80,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
     Kokkos::deep_copy(beams.num_nodes_per_element, host_num_nodes_per_element);
     Kokkos::deep_copy(beams.num_qps_per_element, host_num_qps_per_element);
     Kokkos::deep_copy(beams.node_state_indices, host_node_state_indices);
+    Kokkos::deep_copy(beams.element_freedom_table, host_element_freedom_table);
     Kokkos::deep_copy(beams.node_x0, host_node_x0);
     Kokkos::deep_copy(beams.node_u, host_node_u);
     Kokkos::deep_copy(beams.node_u_dot, host_node_u_dot);
