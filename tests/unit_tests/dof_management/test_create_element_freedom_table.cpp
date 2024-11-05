@@ -17,14 +17,14 @@ TEST(TestCreateElementFreedomTable, OneBeamOneNode) {
     const auto host_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
     Kokkos::deep_copy(host_element_freedom_table, beams.element_freedom_table);
 
-    for (auto k = 0U; k < 7U; ++k) {
+    for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(host_element_freedom_table(0, 0, k), k);
     }
 }
 
 TEST(TestCreateElementFreedomTable, OneBeamTwoNodes) {
     auto state = State(2U);
-    constexpr auto host_node_freedom_map_table_data = std::array{0UL, 7UL};
+    constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
@@ -47,17 +47,17 @@ TEST(TestCreateElementFreedomTable, OneBeamTwoNodes) {
     const auto host_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
     Kokkos::deep_copy(host_element_freedom_table, beams.element_freedom_table);
 
-    for (auto k = 0U; k < 7U; ++k) {
+    for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(host_element_freedom_table(0, 0, k), k);
     }
-    for (auto k = 0U; k < 7U; ++k) {
-        EXPECT_EQ(host_element_freedom_table(0, 1, k), k + 7U);
+    for (auto k = 0U; k < 6U; ++k) {
+        EXPECT_EQ(host_element_freedom_table(0, 1, k), k + 6U);
     }
 }
 
 TEST(TestCreateElementFreedomTable, TwoBeamsOneNode) {
     auto state = State(2U);
-    constexpr auto host_node_freedom_map_table_data = std::array{0UL, 7UL};
+    constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
@@ -80,11 +80,11 @@ TEST(TestCreateElementFreedomTable, TwoBeamsOneNode) {
     const auto host_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
     Kokkos::deep_copy(host_element_freedom_table, beams.element_freedom_table);
 
-    for (auto k = 0U; k < 7U; ++k) {
+    for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(host_element_freedom_table(0, 0, k), k);
     }
-    for (auto k = 0U; k < 7U; ++k) {
-        EXPECT_EQ(host_element_freedom_table(1, 0, k), k + 7U);
+    for (auto k = 0U; k < 6U; ++k) {
+        EXPECT_EQ(host_element_freedom_table(1, 0, k), k + 6U);
     }
 }
 

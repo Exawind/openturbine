@@ -17,7 +17,7 @@ inline void create_element_freedom_table(Beams& beams, const State& state) {
                 const auto num_nodes = beams.num_nodes_per_element(i);
                 for (auto j = 0U; j < num_nodes; ++j) {
                     const auto node_index = beams.node_state_indices(i, j);
-                    for (auto k = 0U; k < 7U; ++k) {
+                    for (auto k = 0U; k < 6U; ++k) {
                         beams.element_freedom_table(i, j, k) =
                             state.node_freedom_map_table(node_index) + k;
                     }

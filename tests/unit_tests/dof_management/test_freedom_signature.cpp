@@ -29,11 +29,11 @@ TEST(TestFreedomSignature, CountActiveDofs_Position) {
 
 TEST(TestFreedomSignature, CountActiveDofs_Rotation) {
     auto x = count_active_dofs(FreedomSignature::JustRotation);
-    EXPECT_EQ(x, 4);
+    EXPECT_EQ(x, 3);
 }
 
 TEST(TestFreedomSignature, CountActiveDofs_AllComponents) {
     auto x = count_active_dofs(FreedomSignature::AllComponents);
-    EXPECT_EQ(x, 7);
+    EXPECT_EQ(x, 6);
 }
 }  // namespace openturbine::tests

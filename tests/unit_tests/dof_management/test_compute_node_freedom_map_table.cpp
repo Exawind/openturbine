@@ -4,7 +4,7 @@
 
 namespace openturbine::tests {
 
-TEST(TestAssembleNodeFreedomMapTable, OneNode) {
+TEST(TestComputeNodeFreedomMapTable, OneNode) {
     auto state = State(1U);
     Kokkos::deep_copy(state.node_freedom_allocation_table, FreedomSignature::AllComponents);
 
@@ -16,7 +16,7 @@ TEST(TestAssembleNodeFreedomMapTable, OneNode) {
     EXPECT_EQ(host_node_freedom_map_table(0), 0);
 }
 
-TEST(TestAssembleNodeFreedomMapTable, FourNodes) {
+TEST(TestComputeNodeFreedomMapTable, FourNodes) {
     auto state = State(4U);
     constexpr auto host_node_freedom_allocation_table_data = std::array{
         FreedomSignature::AllComponents, FreedomSignature::JustPosition,
@@ -37,9 +37,9 @@ TEST(TestAssembleNodeFreedomMapTable, FourNodes) {
     Kokkos::deep_copy(host_node_freedom_map_table, state.node_freedom_map_table);
 
     EXPECT_EQ(host_node_freedom_map_table(0), 0);
-    EXPECT_EQ(host_node_freedom_map_table(1), 7);
-    EXPECT_EQ(host_node_freedom_map_table(2), 10);
-    EXPECT_EQ(host_node_freedom_map_table(3), 14);
+    EXPECT_EQ(host_node_freedom_map_table(1), 6);
+    EXPECT_EQ(host_node_freedom_map_table(2), 9);
+    EXPECT_EQ(host_node_freedom_map_table(3), 12);
 }
 
 }  // namespace openturbine::tests

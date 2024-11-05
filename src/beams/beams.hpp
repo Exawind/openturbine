@@ -28,7 +28,7 @@ struct Beams {
     Kokkos::View<size_t*> num_qps_per_element;
     Kokkos::View<size_t**> node_state_indices;  // State row index for each node
     Kokkos::View<FreedomSignature**> element_freedom_signature;
-    Kokkos::View<size_t** [7]> element_freedom_table;
+    Kokkos::View<size_t** [6]> element_freedom_table;
 
     View_3 gravity;
 
