@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "src/math/vector_operations.hpp"
+#include "src/math/quaternion_operations.hpp"
 
 namespace openturbine {
 
@@ -78,21 +78,8 @@ struct InterpolateQPState_r {
             }
         }
 
-        // Normalize the quaternion to make sure a unit quaternion is returned
-        // TODO: Write a function in math/quaternion_operations.hpp to do this?
-        const auto length = Kokkos::sqrt(
-            local_total[0] * local_total[0] + local_total[1] * local_total[1] +
-            local_total[2] * local_total[2] + local_total[3] * local_total[3]
-        );
-        static constexpr auto length_zero_result = Kokkos::Array<double, 4>{1., 0., 0., 0.};
-        if (length == 0.) {
-            for (auto k = 0U; k < 4U; ++k) {
-                qp_r(i_elem, j_index, k) = length_zero_result[k];
-            }
-            return;
-        }
         for (auto k = 0U; k < 4U; ++k) {
-            qp_r(i_elem, j_index, k) = local_total[k] / length;
+            qp_r(i_elem, j_index, k) = NormalizeQuaternion(local_total)[k];
         }
     }
 };

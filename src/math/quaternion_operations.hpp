@@ -8,7 +8,9 @@
 
 namespace openturbine {
 
-/// Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result
+/**
+ * @brief Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result
+ */
 template <typename Quaternion, typename RotationMatrix>
 KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(
     const Quaternion& q, const RotationMatrix& R
@@ -24,7 +26,9 @@ KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(
     R(2, 2) = q(0) * q(0) - q(1) * q(1) - q(2) * q(2) + q(3) * q(3);
 }
 
-/// Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result
+/**
+ * @brief Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result
+ */
 inline std::array<Array_3, 3> QuaternionToRotationMatrix(const Array_4& q) {
     return std::array<Array_3, 3>{{
         {
@@ -45,7 +49,9 @@ inline std::array<Array_3, 3> QuaternionToRotationMatrix(const Array_4& q) {
     }};
 }
 
-/// Rotates provided vector by provided *unit* quaternion and returns the result
+/**
+ * @brief Rotates provided vector by provided *unit* quaternion and returns the result
+ */
 template <typename Quaternion, typename View1, typename View2>
 KOKKOS_INLINE_FUNCTION void RotateVectorByQuaternion(
     const Quaternion& q, const View1& v, const View2& v_rot
@@ -59,6 +65,9 @@ KOKKOS_INLINE_FUNCTION void RotateVectorByQuaternion(
                (q(0) * q(0) - q(1) * q(1) - q(2) * q(2) + q(3) * q(3)) * v(2);
 }
 
+/**
+ * @brief Rotates provided vector by provided *unit* quaternion and returns the result
+ */
 inline std::array<double, 3> RotateVectorByQuaternion(const Array_4& q, const Array_3& v) {
     auto v_rot = std::array<double, 3>{};
     v_rot[0] = (q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]) * v[0] +
@@ -71,7 +80,9 @@ inline std::array<double, 3> RotateVectorByQuaternion(const Array_4& q, const Ar
     return v_rot;
 }
 
-/// Computes the derivative of a quaternion and stores the result in a 3x4 matrix
+/**
+ * @brief Computes the derivative of a quaternion and stores the result in a 3x4 matrix
+ */
 template <typename Quaternion, typename Matrix>
 KOKKOS_INLINE_FUNCTION void QuaternionDerivative(const Quaternion& q, const Matrix& m) {
     m(0, 0) = -q(1);
@@ -88,7 +99,9 @@ KOKKOS_INLINE_FUNCTION void QuaternionDerivative(const Quaternion& q, const Matr
     m(2, 3) = q(0);
 }
 
-/// Computes the inverse of a quaternion
+/**
+ * @brief Computes the inverse of a quaternion
+ */
 template <typename QuaternionInput, typename QuaternionOutput>
 KOKKOS_INLINE_FUNCTION void QuaternionInverse(
     const QuaternionInput& q_in, const QuaternionOutput& q_out
@@ -103,7 +116,9 @@ KOKKOS_INLINE_FUNCTION void QuaternionInverse(
     }
 }
 
-/// Composes (i.e. multiplies) two quaternions and stores the result in a third quaternion
+/**
+ * @brief Composes (i.e. multiplies) two quaternions and stores the result in a third quaternion
+ */
 template <typename Quaternion1, typename Quaternion2, typename QuaternionN>
 KOKKOS_INLINE_FUNCTION void QuaternionCompose(
     const Quaternion1& q1, const Quaternion2& q2, QuaternionN& qn
@@ -114,6 +129,9 @@ KOKKOS_INLINE_FUNCTION void QuaternionCompose(
     qn(3) = q1(0) * q2(3) + q1(1) * q2(2) - q1(2) * q2(1) + q1(3) * q2(0);
 }
 
+/**
+ * @brief Composes (i.e. multiplies) two quaternions and returns the result
+ */
 inline Array_4 QuaternionCompose(const Array_4& q1, const Array_4& q2) {
     auto qn = std::array<double, 4>{};
     qn[0] = q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3];
@@ -123,7 +141,9 @@ inline Array_4 QuaternionCompose(const Array_4& q1, const Array_4& q2) {
     return qn;
 }
 
-/// Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map
+/**
+ * @brief Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map
+ */
 template <typename Vector, typename Quaternion>
 KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(
     const Vector& phi, const Quaternion& quaternion
@@ -138,7 +158,9 @@ KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(
     }
 }
 
-/// Returns a 3-D rotation vector from provided 4-D quaternion
+/**
+ * @brief Returns a 3-D rotation vector from provided 4-D quaternion, i.e. the logarithmic map
+ */
 template <typename Quaternion, typename Vector>
 KOKKOS_INLINE_FUNCTION void QuaternionToRotationVector(
     const Quaternion& quaternion, const Vector& phi
@@ -156,7 +178,9 @@ KOKKOS_INLINE_FUNCTION void QuaternionToRotationVector(
     }
 }
 
-/// Returns a 3-D rotation vector from provided 4-D quaternion
+/**
+ * @brief Returns a 3-D rotation vector from provided 4-D quaternion
+ */
 inline Array_3 QuaternionToRotationVector(const Array_4& quaternion) {
     auto theta = 2. * Kokkos::acos(quaternion[0]);
     const auto sin_half_theta = std::sqrt(1. - quaternion[0] * quaternion[0]);
@@ -173,6 +197,9 @@ inline Array_3 QuaternionToRotationVector(const Array_4& quaternion) {
     return phi;
 }
 
+/**
+ * @brief Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map
+ */
 inline Array_4 RotationVectorToQuaternion(const Array_3& phi) {
     const auto angle = std::sqrt(phi[0] * phi[0] + phi[1] * phi[1] + phi[2] * phi[2]);
 
@@ -184,6 +211,38 @@ inline Array_4 RotationVectorToQuaternion(const Array_3& phi) {
     const auto cos_angle = std::cos(angle / 2.);
     const auto factor = sin_angle / angle;
     return std::array<double, 4>{cos_angle, phi[0] * factor, phi[1] * factor, phi[2] * factor};
+}
+
+/**
+ * @brief Normalizes a quaternion to ensure it is a unit quaternion
+ *
+ * @details If the length of the quaternion is zero, it returns a default unit quaternion.
+ * Otherwise, it normalizes the quaternion and returns the result.
+ *
+ * @param q The input quaternion as a Kokkos::Array<double, 4>
+ * @return Kokkos::Array<double, 4> The normalized quaternion
+ */
+KOKKOS_INLINE_FUNCTION
+Kokkos::Array<double, 4> NormalizeQuaternion(const Kokkos::Array<double, 4>& q) {
+    const auto length_squared = q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3];
+
+    // If the length is 1, our work is done
+    if (std::abs(length_squared - 1.) < kTolerance) {
+        return q;
+    }
+
+    // If the length of the quaternion is zero, return a default unit quaternion
+    if (std::abs(length_squared) < kTolerance) {
+        return Kokkos::Array<double, 4>{1., 0., 0., 0.};
+    }
+
+    // Normalize the quaternion
+    const auto length = std::sqrt(length_squared);
+    auto normalized_quaternion = Kokkos::Array<double, 4>{};
+    for (auto k = 0U; k < 4U; ++k) {
+        normalized_quaternion[k] = q[k] / length;
+    }
+    return normalized_quaternion;
 }
 
 }  // namespace openturbine
