@@ -1,5 +1,6 @@
-#include <gtest/gtest.h>
 #include <bitset>
+
+#include <gtest/gtest.h>
 
 #include "src/dof_management/freedom_signature.hpp"
 

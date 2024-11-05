@@ -13,7 +13,8 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamOneNode) {
 
     assemble_node_freedom_allocation_table(state, beams);
 
-    const auto host_node_freedom_allocation_table = Kokkos::create_mirror(state.node_freedom_allocation_table);
+    const auto host_node_freedom_allocation_table =
+        Kokkos::create_mirror(state.node_freedom_allocation_table);
     Kokkos::deep_copy(host_node_freedom_allocation_table, state.node_freedom_allocation_table);
 
     EXPECT_EQ(host_node_freedom_allocation_table(0), FreedomSignature::AllComponents);
@@ -24,7 +25,9 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamTwoNodes) {
 
     auto beams = Beams(1U, 2U, 1U);
     constexpr auto host_node_state_indices_data = std::array{0UL, 1UL};
-    const auto host_node_state_indices = Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data());
+    const auto host_node_state_indices =
+        Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
+        );
     const auto mirror_node_state_indices = Kokkos::create_mirror(beams.node_state_indices);
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
@@ -32,7 +35,8 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamTwoNodes) {
 
     assemble_node_freedom_allocation_table(state, beams);
 
-    const auto host_node_freedom_allocation_table = Kokkos::create_mirror(state.node_freedom_allocation_table);
+    const auto host_node_freedom_allocation_table =
+        Kokkos::create_mirror(state.node_freedom_allocation_table);
     Kokkos::deep_copy(host_node_freedom_allocation_table, state.node_freedom_allocation_table);
 
     EXPECT_EQ(host_node_freedom_allocation_table(0), FreedomSignature::AllComponents);
@@ -44,7 +48,9 @@ TEST(TestAssembleNodeFreedomAllocationTable, TwoBeamsOneNode) {
 
     auto beams = Beams(2U, 1U, 1U);
     constexpr auto host_node_state_indices_data = std::array{0UL, 1UL};
-    const auto host_node_state_indices = Kokkos::View<size_t[2][1], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data());
+    const auto host_node_state_indices =
+        Kokkos::View<size_t[2][1], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
+        );
     const auto mirror_node_state_indices = Kokkos::create_mirror(beams.node_state_indices);
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
@@ -52,7 +58,8 @@ TEST(TestAssembleNodeFreedomAllocationTable, TwoBeamsOneNode) {
 
     assemble_node_freedom_allocation_table(state, beams);
 
-    const auto host_node_freedom_allocation_table = Kokkos::create_mirror(state.node_freedom_allocation_table);
+    const auto host_node_freedom_allocation_table =
+        Kokkos::create_mirror(state.node_freedom_allocation_table);
     Kokkos::deep_copy(host_node_freedom_allocation_table, state.node_freedom_allocation_table);
 
     EXPECT_EQ(host_node_freedom_allocation_table(0), FreedomSignature::AllComponents);

@@ -18,9 +18,16 @@ TEST(TestAssembleNodeFreedomMapTable, OneNode) {
 
 TEST(TestAssembleNodeFreedomMapTable, FourNodes) {
     auto state = State(4U);
-    constexpr auto host_node_freedom_allocation_table_data = std::array{FreedomSignature::AllComponents, FreedomSignature::JustPosition, FreedomSignature::JustRotation, FreedomSignature::NoComponents};
-    const auto host_node_freedom_allocation_table = Kokkos::View<FreedomSignature[4], Kokkos::HostSpace>::const_type(host_node_freedom_allocation_table_data.data());
-    const auto mirror_node_freedom_allocation_table = Kokkos::create_mirror(state.node_freedom_allocation_table);
+    constexpr auto host_node_freedom_allocation_table_data = std::array{
+        FreedomSignature::AllComponents, FreedomSignature::JustPosition,
+        FreedomSignature::JustRotation, FreedomSignature::NoComponents
+    };
+    const auto host_node_freedom_allocation_table =
+        Kokkos::View<FreedomSignature[4], Kokkos::HostSpace>::const_type(
+            host_node_freedom_allocation_table_data.data()
+        );
+    const auto mirror_node_freedom_allocation_table =
+        Kokkos::create_mirror(state.node_freedom_allocation_table);
     Kokkos::deep_copy(mirror_node_freedom_allocation_table, host_node_freedom_allocation_table);
     Kokkos::deep_copy(state.node_freedom_allocation_table, mirror_node_freedom_allocation_table);
 

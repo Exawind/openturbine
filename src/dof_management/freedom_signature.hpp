@@ -22,13 +22,13 @@ FreedomSignature operator|(FreedomSignature x, FreedomSignature y) {
 KOKKOS_INLINE_FUNCTION
 size_t count_active_dofs(FreedomSignature x) {
     using T = std::underlying_type_t<FreedomSignature>;
-    auto count = 0ul;
+    auto count = 0UL;
     constexpr auto zero = T{0};
     constexpr auto one = T{1};
-    for(auto value = static_cast<T>(x); value > zero; value = value >> 1) {
+    for (auto value = static_cast<T>(x); value > zero; value = value >> 1) {
         count += value & one;
     }
     return count;
 }
 
-}
+}  // namespace openturbine

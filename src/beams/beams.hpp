@@ -156,8 +156,8 @@ struct Beams {
           // Shape Function data
           shape_interp("shape_interp", num_elems, max_elem_nodes, max_elem_qps),
           shape_deriv("deriv_interp", num_elems, max_elem_nodes, max_elem_qps) {
-    Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
-}
+        Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
+    }
 };
 
 }  // namespace openturbine
