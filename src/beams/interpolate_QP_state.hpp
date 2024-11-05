@@ -2,8 +2,13 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "src/math/vector_operations.hpp"
+
 namespace openturbine {
 
+/**
+ * @brief Interpolates the displacement (u) part of the state at a quadrature point
+ */
 struct InterpolateQPState_u {
     size_t i_elem;
     size_t num_nodes;
@@ -13,7 +18,6 @@ struct InterpolateQPState_u {
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
-        // const auto j = first_qp + j_index;
         auto local_total = Kokkos::Array<double, 3>{};
         for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
             const auto phi = shape_interp(i_elem, i_index, j_index);
@@ -27,6 +31,9 @@ struct InterpolateQPState_u {
     }
 };
 
+/**
+ * @brief Interpolates the displacement derivative (u') part of the state at a quadrature point
+ */
 struct InterpolateQPState_uprime {
     size_t i_elem;
     size_t num_nodes;
@@ -37,7 +44,6 @@ struct InterpolateQPState_uprime {
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
-        // const auto j = first_qp + j_index;
         const auto jacobian = qp_jacobian(i_elem, j_index);
         auto local_total = Kokkos::Array<double, 3>{};
         for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
@@ -52,6 +58,9 @@ struct InterpolateQPState_uprime {
     }
 };
 
+/**
+ * @brief Interpolates the rotation (r) part of the state at a quadrature point
+ */
 struct InterpolateQPState_r {
     size_t i_elem;
     size_t num_nodes;
@@ -61,7 +70,6 @@ struct InterpolateQPState_r {
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
-        // const auto j = first_qp + j_index;
         auto local_total = Kokkos::Array<double, 4>{};
         for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
             const auto phi = shape_interp(i_elem, i_index, j_index);
@@ -69,6 +77,9 @@ struct InterpolateQPState_r {
                 local_total[k] += node_u(i_elem, i_index, k + 3) * phi;
             }
         }
+
+        // Normalize the quaternion to make sure a unit quaternion is returned
+        // TODO: Write a function in math/quaternion_operations.hpp to do this?
         const auto length = Kokkos::sqrt(
             local_total[0] * local_total[0] + local_total[1] * local_total[1] +
             local_total[2] * local_total[2] + local_total[3] * local_total[3]
@@ -78,14 +89,17 @@ struct InterpolateQPState_r {
             for (auto k = 0U; k < 4U; ++k) {
                 qp_r(i_elem, j_index, k) = length_zero_result[k];
             }
-        } else {
-            for (auto k = 0U; k < 4U; ++k) {
-                qp_r(i_elem, j_index, k) = local_total[k] / length;
-            }
+            return;
+        }
+        for (auto k = 0U; k < 4U; ++k) {
+            qp_r(i_elem, j_index, k) = local_total[k] / length;
         }
     }
 };
 
+/**
+ * @brief Interpolates the rotation derivative (r') part of the state at a quadrature point
+ */
 struct InterpolateQPState_rprime {
     size_t i_elem;
     size_t num_nodes;
@@ -96,7 +110,6 @@ struct InterpolateQPState_rprime {
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
-        // const auto j = first_qp + j_index;
         const auto jacobian = qp_jacobian(i_elem, j_index);
         auto local_total = Kokkos::Array<double, 4>{};
         for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
