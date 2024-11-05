@@ -30,7 +30,6 @@ struct Beams {
     Kokkos::View<FreedomSignature**> element_freedom_signature;
     Kokkos::View<size_t** [7]> element_freedom_table;
 
-
     View_3 gravity;
 
     // Node-based data

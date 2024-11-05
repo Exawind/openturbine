@@ -10,6 +10,7 @@ enum class FreedomSignature : std::uint8_t {
     AllComponents = 0b01111111,
     JustPosition = 0b01110000,
     JustRotation = 0b00001111,
+    NoComponents = 0b00000000
 };
 
 KOKKOS_INLINE_FUNCTION
