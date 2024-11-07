@@ -109,4 +109,37 @@ inline void LagrangePolynomialDerivWeights(
     }
 }
 
+/**
+ * @brief Calculates the value of Legendre polynomial of order n at point x
+ * @details Uses the recurrence relation for Legendre polynomials:
+ *          P_n(x) = ((2n-1)xP_{n-1}(x) - (n-1)P_{n-2}(x))/n
+ *          Reference: Deville et al. (2002) "High-Order Methods for Incompressible Fluid Flow"
+ *          DOI: https://doi.org/10.1017/CBO9780511546792, Eq. B.1.15, p.446
+ *
+ * @param n Order of the Legendre polynomial (n >= 0)
+ * @param x Point at which to evaluate the polynomial, typically in [-1,1]
+ * @return Value of the nth order Legendre polynomial at x
+ */
+inline double LegendrePolynomial(const size_t n, const double x) {
+    // Base cases
+    if (n == 0) {
+        return 1.;
+    }
+    if (n == 1) {
+        return x;
+    }
+
+    // Compute the nth Legendre polynomial iteratively
+    double p_n_minus_2{1.};  // P_{n-2}(x)
+    double p_n_minus_1{x};   // P_{n-1}(x)
+    double p_n{0.};          // P_n(x)
+    for (size_t i = 2; i <= n; ++i) {
+        const auto i_double = static_cast<double>(i);
+        p_n = ((2. * i_double - 1.) * x * p_n_minus_1 - (i_double - 1.) * p_n_minus_2) / i_double;
+        p_n_minus_2 = p_n_minus_1;
+        p_n_minus_1 = p_n;
+    }
+    return p_n;
+}
+
 }  // namespace openturbine

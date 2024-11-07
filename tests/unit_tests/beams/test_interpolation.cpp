@@ -277,4 +277,36 @@ TEST(InterpolationTest, LagrangePolynomialDerivWeights_FourthOrder) {
     EXPECT_NEAR(weights[4], -0.03099999999999978, tol);
 }
 
+TEST(InterpolationTest, LegendrePolynomial_ZerothOrder) {
+    EXPECT_EQ(LegendrePolynomial(0, -1.), 1.);
+    EXPECT_EQ(LegendrePolynomial(0, 0.), 1.);
+    EXPECT_EQ(LegendrePolynomial(0, 1.), 1.);
+}
+
+TEST(InterpolationTest, LegendrePolynomial_FirstOrder) {
+    EXPECT_EQ(LegendrePolynomial(1, -1.), -1.);
+    EXPECT_EQ(LegendrePolynomial(1, 0.), 0.);
+    EXPECT_EQ(LegendrePolynomial(1, 1.), 1.);
+}
+
+TEST(InterpolationTest, LegendrePolynomial_SecondOrder) {
+    EXPECT_EQ(LegendrePolynomial(2, -1.), 1.);
+    EXPECT_EQ(LegendrePolynomial(2, 0.), -0.5);
+    EXPECT_EQ(LegendrePolynomial(2, 1.), 1.);
+}
+
+TEST(InterpolationTest, LegendrePolynomial_ThirdOrder) {
+    EXPECT_EQ(LegendrePolynomial(3, -1.), -1.);
+    EXPECT_EQ(LegendrePolynomial(3, 0.), 0.);
+    EXPECT_EQ(LegendrePolynomial(3, 1.), 1.);
+}
+
+TEST(InterpolationTest, LegendrePolynomial_FourthOrder) {
+    EXPECT_EQ(LegendrePolynomial(4, -1.), 1.);
+    EXPECT_EQ(LegendrePolynomial(4, -0.6546536707079771), -0.4285714285714286);
+    EXPECT_EQ(LegendrePolynomial(4, 0.), 0.375);
+    EXPECT_EQ(LegendrePolynomial(4, 0.6546536707079771), -0.4285714285714286);
+    EXPECT_EQ(LegendrePolynomial(4, 1.), 1.);
+}
+
 }  // namespace openturbine::tests
