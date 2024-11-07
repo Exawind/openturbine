@@ -4,28 +4,37 @@
 
 namespace openturbine {
 
+/**
+ * @brief Computes weights for linear interpolation
+ *
+ * @param x Evaluation point
+ * @param xs Interpolation nodes (sorted)
+ * @return weights Weights for linear interpolation (same size as xs)
+ */
 inline void LinearInterpWeights(
     double x, const std::vector<double>& xs, std::vector<double>& weights
 ) {
     const auto n = xs.size();
-
-    weights.clear();
-    weights.resize(n, 0.);
+    weights.assign(n, 0.);
 
     const auto lower = std::lower_bound(xs.begin(), xs.end(), x);
-
+    // If x is less than the first node, first weight -> 1 and our work is done
     if (lower == xs.begin()) {
-        weights.front() = 1.0;
-    } else if (lower == xs.end()) {
-        weights.back() = 1.0;
-    } else {
-        auto index = static_cast<unsigned>(std::distance(xs.begin(), lower));
-        auto lower_loc = xs[index - 1];
-        auto upper_loc = xs[index];
-        auto weight_upper = (x - lower_loc) / (upper_loc - lower_loc);
-        weights[index - 1] = 1.0 - weight_upper;
-        weights[index] = weight_upper;
+        weights.front() = 1.;
+        return;
     }
+    // If x is greater than the last node, last weight -> 1 and our work is done
+    if (lower == xs.end()) {
+        weights.back() = 1.;
+        return;
+    }
+    // x is between two nodes, so compute weights for closest nodes
+    const auto index = static_cast<unsigned>(std::distance(xs.begin(), lower));
+    const auto lower_loc = xs[index - 1];
+    const auto upper_loc = xs[index];
+    const auto weight_upper = (x - lower_loc) / (upper_loc - lower_loc);
+    weights[index - 1] = 1. - weight_upper;
+    weights[index] = weight_upper;
 }
 
 inline void LagrangePolynomialInterpWeights(
