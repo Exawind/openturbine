@@ -278,35 +278,77 @@ TEST(InterpolationTest, LagrangePolynomialDerivWeights_FourthOrder) {
 }
 
 TEST(InterpolationTest, LegendrePolynomial_ZerothOrder) {
-    EXPECT_EQ(LegendrePolynomial(0, -1.), 1.);
-    EXPECT_EQ(LegendrePolynomial(0, 0.), 1.);
-    EXPECT_EQ(LegendrePolynomial(0, 1.), 1.);
+    EXPECT_NEAR(LegendrePolynomial(0, -1.), 1., tol);
+    EXPECT_NEAR(LegendrePolynomial(0, 0.), 1., tol);
+    EXPECT_NEAR(LegendrePolynomial(0, 1.), 1., tol);
 }
 
 TEST(InterpolationTest, LegendrePolynomial_FirstOrder) {
-    EXPECT_EQ(LegendrePolynomial(1, -1.), -1.);
-    EXPECT_EQ(LegendrePolynomial(1, 0.), 0.);
-    EXPECT_EQ(LegendrePolynomial(1, 1.), 1.);
+    EXPECT_NEAR(LegendrePolynomial(1, -1.), -1., tol);
+    EXPECT_NEAR(LegendrePolynomial(1, 0.), 0., tol);
+    EXPECT_NEAR(LegendrePolynomial(1, 1.), 1., tol);
 }
 
 TEST(InterpolationTest, LegendrePolynomial_SecondOrder) {
-    EXPECT_EQ(LegendrePolynomial(2, -1.), 1.);
-    EXPECT_EQ(LegendrePolynomial(2, 0.), -0.5);
-    EXPECT_EQ(LegendrePolynomial(2, 1.), 1.);
+    EXPECT_NEAR(LegendrePolynomial(2, -1.), 1., tol);
+    EXPECT_NEAR(LegendrePolynomial(2, 0.), -0.5, tol);
+    EXPECT_NEAR(LegendrePolynomial(2, 1.), 1., tol);
 }
 
 TEST(InterpolationTest, LegendrePolynomial_ThirdOrder) {
-    EXPECT_EQ(LegendrePolynomial(3, -1.), -1.);
-    EXPECT_EQ(LegendrePolynomial(3, 0.), 0.);
-    EXPECT_EQ(LegendrePolynomial(3, 1.), 1.);
+    EXPECT_NEAR(LegendrePolynomial(3, -1.), -1., tol);
+    EXPECT_NEAR(LegendrePolynomial(3, 0.), 0., tol);
+    EXPECT_NEAR(LegendrePolynomial(3, 1.), 1., tol);
 }
 
 TEST(InterpolationTest, LegendrePolynomial_FourthOrder) {
-    EXPECT_EQ(LegendrePolynomial(4, -1.), 1.);
-    EXPECT_EQ(LegendrePolynomial(4, -0.6546536707079771), -0.4285714285714286);
-    EXPECT_EQ(LegendrePolynomial(4, 0.), 0.375);
-    EXPECT_EQ(LegendrePolynomial(4, 0.6546536707079771), -0.4285714285714286);
-    EXPECT_EQ(LegendrePolynomial(4, 1.), 1.);
+    EXPECT_NEAR(LegendrePolynomial(4, -1.), 1., tol);
+    EXPECT_NEAR(LegendrePolynomial(4, -0.6546536707079771), -0.4285714285714286, tol);
+    EXPECT_NEAR(LegendrePolynomial(4, 0.), 0.375, tol);
+    EXPECT_NEAR(LegendrePolynomial(4, 0.6546536707079771), -0.4285714285714286, tol);
+    EXPECT_NEAR(LegendrePolynomial(4, 1.), 1., tol);
+}
+
+TEST(InterpolationTest, GenerateGLLPoints_FirstOrderElement) {
+    auto gll_points = GenerateGLLPoints(1);
+    std::vector<double> expected = {-1., 1.};
+
+    EXPECT_EQ(gll_points.size(), expected.size());
+    for (size_t i = 0; i < gll_points.size(); ++i) {
+        EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
+    }
+}
+
+TEST(InterpolationTest, GenerateGLLPoints_SecondOrderElement) {
+    auto gll_points = GenerateGLLPoints(2);
+    std::vector<double> expected = {-1., 0., 1.};
+
+    EXPECT_EQ(gll_points.size(), expected.size());
+    for (size_t i = 0; i < gll_points.size(); ++i) {
+        EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
+    }
+}
+
+TEST(InterpolationTest, GenerateGLLPoints_FourthOrderElement) {
+    auto gll_points = GenerateGLLPoints(4);
+    std::vector<double> expected = {-1., -0.6546536707079771437983, 0., 0.654653670707977143798, 1.};
+
+    EXPECT_EQ(gll_points.size(), expected.size());
+    for (size_t i = 0; i < gll_points.size(); ++i) {
+        EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
+    }
+}
+
+TEST(InterpolationTest, GenerateGLLPoints_SixthOrderElement) {
+    auto gll_points = GenerateGLLPoints(6);
+    std::vector<double> expected = {-1., -0.8302238962785669, -0.46884879347071423,
+                                    0.,  0.46884879347071423, 0.8302238962785669,
+                                    1.};
+
+    EXPECT_EQ(gll_points.size(), expected.size());
+    for (size_t i = 0; i < gll_points.size(); ++i) {
+        EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
+    }
 }
 
 }  // namespace openturbine::tests

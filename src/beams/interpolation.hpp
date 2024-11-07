@@ -4,6 +4,12 @@
 
 namespace openturbine {
 
+/// Maximum number of iterations allowed for Newton's method
+static constexpr size_t kMaxIterations{1000};
+
+/// Tolerance for Newton's method to machine precision
+static constexpr double kConvergenceTolerance{std::numeric_limits<double>::epsilon()};
+
 /**
  * @brief Computes weights for linear interpolation
  *
@@ -140,6 +146,71 @@ inline double LegendrePolynomial(const size_t n, const double x) {
         p_n_minus_1 = p_n;
     }
     return p_n;
+}
+
+/**
+ * @brief Generates Gauss-Lobatto-Legendre (GLL) points for spectral element discretization
+ * @details Computes the GLL points, i.e. the roots of the Legendre polynomial, using
+ *          Newton-Raphson iteration. GLL points are optimal interpolation nodes for
+ *          spectral methods.
+ *
+ * @param order Order of the polynomial interpolation (must be >= 1)
+ * @return Vector of GLL points sorted in ascending order, size = order + 1
+ * @throws std::invalid_argument if order < 1
+ * @throws std::runtime_error if Newton-Raphson iteration fails to converge
+ */
+inline std::vector<double> GenerateGLLPoints(const size_t order) {
+    if (order < 1) {
+        throw std::invalid_argument("Polynomial order must be >= 1.");
+    }
+
+    const size_t n_nodes = order + 1;
+    std::vector<double> gll_points(n_nodes, 0.);
+
+    // Set the endpoints (-1 and 1)
+    gll_points.front() = -1.;
+    gll_points.back() = 1.;
+
+    // Preallocate storage for Legendre polynomials
+    std::vector<double> legendre_poly(n_nodes, 0.);
+
+    // Find interior GLL points using Newton-Raphson iteration
+    for (size_t i = 1; i < order; ++i) {
+        // Initial guess using Chebyshev-Gauss-Lobatto nodes
+        auto x_it = -std::cos(static_cast<double>(i) * M_PI / order);
+        bool converged{false};
+
+        for (size_t iter = 0; iter < kMaxIterations; ++iter) {
+            const auto x_old = x_it;
+
+            // Compute Legendre polynomials up to order n
+            for (size_t k = 0; k < n_nodes; ++k) {
+                legendre_poly[k] = LegendrePolynomial(k, x_it);
+            }
+
+            // Newton update: x_{n+1} = x_n - f(x_n)/f'(x_n)
+            const double numerator = x_it * legendre_poly[n_nodes - 1] - legendre_poly[n_nodes - 2];
+            const double denominator = n_nodes * legendre_poly[n_nodes - 1];
+            x_it -= numerator / denominator;
+
+            // Check for convergence
+            if (std::abs(x_it - x_old) <= kConvergenceTolerance) {
+                converged = true;
+                break;
+            }
+        }
+
+        if (!converged) {
+            throw std::runtime_error(
+                "Newton-Raphson iteration failed to converge for GLL point index " +
+                std::to_string(i)
+            );
+        }
+
+        gll_points[i] = x_it;
+    }
+
+    return gll_points;
 }
 
 }  // namespace openturbine
