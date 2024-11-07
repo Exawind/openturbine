@@ -6,52 +6,23 @@ namespace openturbine::tests {
 
 constexpr auto tol = 1.e-15;
 
-TEST(InterpolationTest, LinearInterpWeight_BetweenNodes) {
+TEST(InterpolationTest, LinearInterpWeight) {
     std::vector<double> xs = {0., 1., 2.};
     std::vector<double> weights;
-
-    // Test point at x = 0.5 (between first two nodes)
-    LinearInterpWeights(0.5, xs, weights);
-    ASSERT_EQ(weights.size(), 3);
-    EXPECT_NEAR(weights[0], 0.5, tol);
-    EXPECT_NEAR(weights[1], 0.5, tol);
-    EXPECT_NEAR(weights[2], 0., tol);
-}
-
-TEST(InterpolationTest, LinearInterpWeight_ExactlyOnNode) {
-    std::vector<double> xs = {0., 1., 2.};
-    std::vector<double> weights;
-
-    // Test point exactly on middle node
-    LinearInterpWeights(1., xs, weights);
-    ASSERT_EQ(weights.size(), 3);
-    EXPECT_NEAR(weights[0], 0., tol);
-    EXPECT_NEAR(weights[1], 1., tol);
-    EXPECT_NEAR(weights[2], 0., tol);
-}
-
-TEST(InterpolationTest, LinearInterpWeight_BeforeFirstNode) {
-    std::vector<double> xs = {0., 1., 2.};
-    std::vector<double> weights;
-
-    // Test point before first node
-    LinearInterpWeights(-1., xs, weights);
-    ASSERT_EQ(weights.size(), 3);
-    EXPECT_NEAR(weights[0], 1., tol);
-    EXPECT_NEAR(weights[1], 0., tol);
-    EXPECT_NEAR(weights[2], 0., tol);
-}
-
-TEST(InterpolationTest, LinearInterpWeight_AfterLastNode) {
-    std::vector<double> xs = {0., 1., 2.};
-    std::vector<double> weights;
-
-    // Test point after last node
-    LinearInterpWeights(3.0, xs, weights);
-    ASSERT_EQ(weights.size(), 3);
-    EXPECT_NEAR(weights[0], 0., tol);
-    EXPECT_NEAR(weights[1], 0., tol);
-    EXPECT_NEAR(weights[2], 1., tol);
+    std::vector<std::pair<double, std::vector<double>>> test_cases = {
+        {-1.0, {1., 0., 0.}},   // Before first node
+        {1.0, {0., 1., 0.}},    // Exactly on first node
+        {0.5, {0.5, 0.5, 0.}},  // Between nodes 2 & 3
+        {3.0, {0., 0., 1.}}     // After last node
+    };
+    for (const auto& [x, expected] : test_cases) {
+        LinearInterpWeights(x, xs, weights);
+        ASSERT_EQ(weights.size(), expected.size()) << "Failed at x = " << x;
+        for (size_t i = 0; i < weights.size(); ++i) {
+            EXPECT_NEAR(weights[i], expected[i], tol)
+                << "Mismatch at x = " << x << ", index = " << i;
+        }
+    }
 }
 
 TEST(InterpolationTest, LagrangePolynomialInterpWeight_FirstOrder) {
@@ -79,7 +50,8 @@ TEST(InterpolationTest, LagrangePolynomialInterpWeight_FirstOrder) {
 }
 
 TEST(InterpolationTest, LagrangePolynomialInterpWeight_SecondOrder) {
-    std::vector<double> xs = {-1., 0., 1.};  // 3 nodes for second order polynomial
+    // 3 nodes at GLL points for second order polynomial
+    std::vector<double> xs = {-1., 0., 1.};
     std::vector<double> weights;
 
     // Test point at -1 (on first node)
@@ -105,9 +77,8 @@ TEST(InterpolationTest, LagrangePolynomialInterpWeight_SecondOrder) {
 }
 
 TEST(InterpolationTest, LagrangePolynomialInterpWeight_FourthOrder) {
-    std::vector<double> xs = {
-        -1., -0.6546536707079771, 0., 0.6546536707079771, 1.
-    };  // 5 nodes for fourth order polynomial
+    // 5 nodes at GLL points for fourth order polynomial
+    std::vector<double> xs = {-1., -0.6546536707079771, 0., 0.6546536707079771, 1.};
     std::vector<double> weights;
 
     // Test point at -1 (on first node)
