@@ -65,24 +65,45 @@ inline void LagrangePolynomialInterpWeights(
     }
 }
 
+/**
+ * @brief Computes weights for Lagrange polynomial derivative interpolation
+ *
+ * @param x Evaluation point
+ * @param xs Interpolation nodes (sorted)
+ * @return weights Weights for Lagrange polynomial derivative interpolation (same size as xs)
+ */
 inline void LagrangePolynomialDerivWeights(
     double x, const std::vector<double>& xs, std::vector<double>& weights
 ) {
     const auto n = xs.size();
+    weights.assign(n, 0.);
 
-    weights.clear();
-    weights.resize(n, 0.);
+    // Pre-compute (x - xs[k]) terms to avoid repeated calculations
+    std::vector<double> x_minus_xk(n);
+    for (size_t k = 0; k < n; ++k) {
+        x_minus_xk[k] = x - xs[k];
+    }
+
+    // Pre-compute denominators (xs[i] - xs[k]) to avoid repeated calculations
+    std::vector<std::vector<double>> denom(n, std::vector<double>(n));
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t k = 0; k < n; ++k) {
+            if (k != i) {
+                denom[i][k] = xs[i] - xs[k];
+            }
+        }
+    }
 
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < n; ++j) {
             if (j != i) {
-                double prod = 1.0;
+                double prod = 1.;
                 for (size_t k = 0; k < n; ++k) {
                     if (k != i && k != j) {
-                        prod *= (x - xs[k]) / (xs[i] - xs[k]);
+                        prod *= x_minus_xk[k] / denom[i][k];
                     }
                 }
-                weights[i] += prod / (xs[i] - xs[j]);
+                weights[i] += prod / denom[i][j];
             }
         }
     }
