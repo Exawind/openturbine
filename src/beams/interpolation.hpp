@@ -37,18 +37,29 @@ inline void LinearInterpWeights(
     weights[index] = weight_upper;
 }
 
+/**
+ * @brief Computes weights for Lagrange polynomial interpolation
+ *
+ * @param x Evaluation point
+ * @param xs Interpolation nodes (sorted)
+ * @return weights Weights for Lagrange polynomial interpolation (same size as xs)
+ */
 inline void LagrangePolynomialInterpWeights(
     double x, const std::vector<double>& xs, std::vector<double>& weights
 ) {
     const auto n = xs.size();
+    weights.assign(n, 1.);
 
-    weights.clear();
-    weights.resize(n, 1.);
+    // Pre-compute (x - xs[m]) terms to avoid repeated calculations
+    std::vector<double> x_minus_xm(n);
+    for (size_t m = 0; m < n; ++m) {
+        x_minus_xm[m] = x - xs[m];
+    }
 
     for (size_t j = 0; j < n; ++j) {
         for (size_t m = 0; m < n; ++m) {
             if (j != m) {
-                weights[j] *= (x - xs[m]) / (xs[j] - xs[m]);
+                weights[j] *= x_minus_xm[m] / (xs[j] - xs[m]);
             }
         }
     }
