@@ -174,10 +174,8 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
     gll_points.front() = -1.;
     gll_points.back() = 1.;
 
-    // Preallocate storage for Legendre polynomials
-    std::vector<double> legendre_poly(n_nodes, 0.);
-
     // Find interior GLL points (1, ..., order - 1) using Newton-Raphson iteration
+    std::vector<double> legendre_poly(n_nodes, 0.);
     for (size_t i = 1; i < order; ++i) {
         // Initial guess using Chebyshev-Gauss-Lobatto nodes
         auto x_it = -std::cos(static_cast<double>(i) * M_PI / order);

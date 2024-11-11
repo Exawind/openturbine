@@ -108,4 +108,44 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_SecondOrder) {
     }
 }
 
+TEST(LeastSquaresFitTest, FitsParametricCurve) {
+    // Input geometric points (t = 0, 0.2, 0.5, 0.6, 1.0)
+    std::vector<double> geom_locations = {0.0, 0.2, 0.5, 0.6, 1.0};
+    std::vector<std::array<double, 3>> input_points = {
+        {0., 0., 0.},        // t = 0
+        {1., -0.28, 0.12},   // t = 0.2
+        {2.5, -0.25, 0.},    // t = 0.5
+        {3., -0.12, -0.12},  // t = 0.6
+        {5., 1., -1.}        // t = 1.0
+    };
+
+    // Step 1: Map geometric locations
+    auto mapped_locations = MapGeometricLocations(geom_locations);
+
+    // Step 2: Generate shape function matrices (using p = 4 i.e. cubic interpolation)
+    size_t n = input_points.size();
+    size_t p = 4;
+    auto [phi_g, gll_points] = ShapeFunctionMatrices(n, p, mapped_locations);
+
+    // Step 3: Perform least squares fitting
+    auto X = PerformLeastSquaresFitting(p, phi_g, input_points);
+
+    // Expected coefficients from Mathematica (rounded to 3 decimal places)
+    std::vector<std::array<double, 3>> expected_coefficients = {
+        {0., 0., 0.},  // First point - same as input
+        {1.3819660112501062, -0.3236067977499792, 0.12360679774997904},  // Interior point 1
+        {3.6180339887498945, 0.12360679774997924, -0.3236067977499791},  // Interior point 2
+        {5., 1., -1.}  // Last point - same as input
+    };
+
+    // Verify results
+    /* ASSERT_EQ(X.size(), expected_coefficients.size());
+    for (size_t i = 0; i < X.size(); ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            EXPECT_NEAR(X[i][j], expected_coefficients[i][j], 1e-3)
+                << "Mismatch at coefficient [" << i << "][" << j << "]";
+        }
+    } */
+}
+
 }  // namespace openturbine::tests

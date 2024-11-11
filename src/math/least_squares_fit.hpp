@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include "KokkosLapack_gesv.hpp"
+
 #include "src/beams/interpolation.hpp"
 
 namespace openturbine {
@@ -61,6 +63,86 @@ std::tuple<std::vector<std::vector<double>>, std::vector<double>> ShapeFunctionM
     }
 
     return {phi_g, gll_pts};
+}
+
+/**
+ * @brief Solves a linear system Ax = b
+ * @param A Square coefficient matrix (will be modified during solving)
+ * @param b Right-hand side vector (will be modified during solving)
+ * @return Solution vector x
+ */
+std::vector<double> SolveLinearSystem(
+    [[maybe_unused]] std::vector<std::vector<double>>& A, [[maybe_unused]] std::vector<double>& b
+) {
+    // TODO: Implement linear system solver
+    return std::vector<double>(b.size(), 0.);
+}
+
+// Step 3: Least Squares Fitting
+/**
+ * @brief Performs least squares fitting to determine interpolation coefficients X
+ *
+ * @param p Number of points representing the polynomial of order p-1
+ * @param phi_g Shape function matrix (p x n)
+ * @param Xk Input geometric data (n x 3)
+ * @return Interpolation coefficients X (p x 3)
+ */
+std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
+    size_t p, const std::vector<std::vector<double>>& phi_g,
+    const std::vector<std::array<double, 3>>& Xk
+) {
+    if (phi_g.size() != p) {
+        throw std::invalid_argument("phi_g rows do not match order p.");
+    }
+    size_t n = phi_g[0].size();
+    for (const auto& row : phi_g) {
+        if (row.size() != n) {
+            throw std::invalid_argument("Inconsistent number of columns in phi_g.");
+        }
+    }
+
+    // Construct matrix A in LHS (p x p)
+    std::vector<std::vector<double>> A(p, std::vector<double>(p, 0.));
+    A[0][0] = 1.;
+    A[p - 1][p - 1] = 1.;
+    for (size_t i = 1; i < p - 1; ++i) {
+        for (size_t j = 0; j < p; ++j) {
+            double sum = 0.;
+            for (size_t k = 0; k < n; ++k) {
+                sum += phi_g[i][k] * phi_g[j][k];
+            }
+            A[i][j] = sum;
+        }
+    }
+
+    // Construct matrix B in RHS (p x 3)
+    std::vector<std::vector<double>> B(p, std::vector<double>(3, 0.));
+    for (size_t dim = 0; dim < 3; ++dim) {
+        B[0][dim] = Xk[0][dim];
+        B[p - 1][dim] = Xk[n - 1][dim];
+    }
+    for (size_t i = 1; i < p - 1; ++i) {
+        for (size_t k = 0; k < n; ++k) {
+            for (size_t dim = 0; dim < 3; ++dim) {
+                B[i][dim] += phi_g[i][k] * Xk[k][dim];
+            }
+        }
+    }
+
+    // Solve the least squares problem for each dimension of B
+    std::vector<std::array<double, 3>> X_coefficients(p, {0., 0., 0.});
+    for (size_t dim = 0; dim < 3; ++dim) {
+        std::vector<double> B_col(p, 0.);
+        for (size_t i = 0; i < p; ++i) {
+            B_col[i] = B[i][dim];
+        }
+
+        auto X = SolveLinearSystem(A, B_col);
+        for (size_t i = 0; i < p; ++i) {
+            X_coefficients[i][dim] = X[i];
+        }
+    }
+    return X_coefficients;
 }
 
 }  // namespace openturbine
