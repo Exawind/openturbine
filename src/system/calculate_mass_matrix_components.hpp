@@ -20,11 +20,9 @@ struct CalculateMassMatrixComponents {
         auto rho = Kokkos::subview(rho_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto eta_tilde = Kokkos::subview(eta_tilde_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
 
-        auto m = Muu(0, 0);
+        const auto m = Muu(0, 0);
         if (m == 0.) {
-            eta(0) = 0.;
-            eta(1) = 0.;
-            eta(2) = 0.;
+            eta(0) = eta(1) = eta(2) = 0.;
         } else {
             eta(0) = Muu(5, 1) / m;
             eta(1) = -Muu(5, 0) / m;
