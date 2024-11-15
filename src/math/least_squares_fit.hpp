@@ -4,24 +4,21 @@
 #include <stdexcept>
 #include <vector>
 
-#include "KokkosLapack_gesv.hpp"
-
 #include "src/beams/interpolation.hpp"
 
 namespace openturbine {
 
-// Step 1: Mapping Geometric Locations
 /**
  * @brief Maps input geometric locations -> normalized domain using linear mapping
  *
- * @param geom_input_locations Input geometric locations (typically in domain [0, 1]),
- *                             sorted
+ * @param geom_locations Input geometric locations (typically in domain [0, 1]),
+ *                       sorted in ascending order
  * @return std::vector<double> Mapped/normalized evaluation points in domain [-1, 1]
  */
-std::vector<double> MapGeometricLocations(const std::vector<double>& geom_input_locations) {
+std::vector<double> MapGeometricLocations(const std::vector<double>& geom_locations) {
     // Get first and last points of the input domain (assumed to be sorted)
-    double domain_start = geom_input_locations.front();
-    double domain_end = geom_input_locations.back();
+    double domain_start = geom_locations.front();
+    double domain_end = geom_locations.back();
     if (domain_end == domain_start) {
         throw std::invalid_argument(
             "Invalid geometric locations: domain start and end points are equal."
@@ -29,75 +26,72 @@ std::vector<double> MapGeometricLocations(const std::vector<double>& geom_input_
     }
 
     // Map each point from domain -> [-1, 1]
-    std::vector<double> mapped_locations(geom_input_locations.size());
+    std::vector<double> mapped_locations(geom_locations.size());
     auto domain_span = domain_end - domain_start;
-    for (size_t i = 0; i < geom_input_locations.size(); ++i) {
-        mapped_locations[i] = 2. * (geom_input_locations[i] - domain_start) / domain_span - 1.;
+    for (size_t i = 0; i < geom_locations.size(); ++i) {
+        mapped_locations[i] = 2. * (geom_locations[i] - domain_start) / domain_span - 1.;
     }
     return mapped_locations;
 }
 
-// Step 2: Shape Function Matrices
 /**
  * @brief Computes shape function matrices ϕg at points ξg
  *
  * @param n Number of geometric points to fit (>=2)
  * @param p Number of points representing the polynomial of order p-1 (2 <= p <= n)
- * @param xi_g Evaluation points in [-1, 1]
+ * @param evaluation_pts Evaluation points in [-1, 1]
  * @return Tuple containing shape function matrix and GLL points
  */
 std::tuple<std::vector<std::vector<double>>, std::vector<double>> ShapeFunctionMatrices(
-    size_t n, size_t p, const std::vector<double>& xi_g
+    size_t n, size_t p, const std::vector<double>& evaluation_pts
 ) {
     // Compute GLL points which will act as the nodes for the shape functions
     auto gll_pts = GenerateGLLPoints(p - 1);
 
-    // Compute weights for the shape functions at the nodes
+    // Compute weights for the shape functions at the evaluation points
     std::vector<double> weights(p, 0.);
-    std::vector<std::vector<double>> phi_g(p, std::vector<double>(n, 0.));
+    std::vector<std::vector<double>> shape_functions(p, std::vector<double>(n, 0.));
     for (size_t j = 0; j < n; ++j) {
-        LagrangePolynomialInterpWeights(xi_g[j], gll_pts, weights);
+        LagrangePolynomialInterpWeights(evaluation_pts[j], gll_pts, weights);
         for (size_t k = 0; k < p; ++k) {
-            phi_g[k][j] = weights[k];
+            shape_functions[k][j] = weights[k];
         }
     }
 
-    return {phi_g, gll_pts};
+    return {shape_functions, gll_pts};
 }
 
-/**
- * @brief Solves a linear system Ax = b
- * @param A Square coefficient matrix (will be modified during solving)
- * @param b Right-hand side vector (will be modified during solving)
- * @return Solution vector x
- */
+// TODO: Implement a dense linear systems solver and put it in its own .hpp file similar to the
+//       sparse direct solver
 std::vector<double> SolveLinearSystem(
     [[maybe_unused]] std::vector<std::vector<double>>& A, [[maybe_unused]] std::vector<double>& b
 ) {
-    // TODO: Implement linear system solver
     return std::vector<double>(b.size(), 0.);
 }
 
-// Step 3: Least Squares Fitting
 /**
- * @brief Performs least squares fitting to determine interpolation coefficients X
+ * @brief Performs least squares fitting to determine interpolation coefficients
+ * @details Performs least squares fitting to determine interpolation coefficients
+ *          by solving a dense linear system [A][X] = [B], where [A] is the shape
+ *          function matrix (p x n), [B] is the input points (n x 3), and [X] is the
+ *          interpolation coefficients (p x 3)
  *
  * @param p Number of points representing the polynomial of order p-1
- * @param phi_g Shape function matrix (p x n)
- * @param Xk Input geometric data (n x 3)
- * @return Interpolation coefficients X (p x 3)
+ * @param shape_functions Shape function matrix (p x n)
+ * @param points_to_fit x,y,z coordinates of the points to fit (n x 3)
+ * @return Interpolation coefficients (p x 3)
  */
 std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
-    size_t p, const std::vector<std::vector<double>>& phi_g,
-    const std::vector<std::array<double, 3>>& Xk
+    size_t p, const std::vector<std::vector<double>>& shape_functions,
+    const std::vector<std::array<double, 3>>& points_to_fit
 ) {
-    if (phi_g.size() != p) {
-        throw std::invalid_argument("phi_g rows do not match order p.");
+    if (shape_functions.size() != p) {
+        throw std::invalid_argument("shape_functions rows do not match order p.");
     }
-    size_t n = phi_g[0].size();
-    for (const auto& row : phi_g) {
+    size_t n = shape_functions[0].size();
+    for (const auto& row : shape_functions) {
         if (row.size() != n) {
-            throw std::invalid_argument("Inconsistent number of columns in phi_g.");
+            throw std::invalid_argument("Inconsistent number of columns in shape_functions.");
         }
     }
 
@@ -109,7 +103,7 @@ std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
         for (size_t j = 0; j < p; ++j) {
             double sum = 0.;
             for (size_t k = 0; k < n; ++k) {
-                sum += phi_g[i][k] * phi_g[j][k];
+                sum += shape_functions[i][k] * shape_functions[j][k];
             }
             A[i][j] = sum;
         }
@@ -118,19 +112,19 @@ std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     // Construct matrix B in RHS (p x 3)
     std::vector<std::vector<double>> B(p, std::vector<double>(3, 0.));
     for (size_t dim = 0; dim < 3; ++dim) {
-        B[0][dim] = Xk[0][dim];
-        B[p - 1][dim] = Xk[n - 1][dim];
+        B[0][dim] = points_to_fit[0][dim];
+        B[p - 1][dim] = points_to_fit[n - 1][dim];
     }
     for (size_t i = 1; i < p - 1; ++i) {
         for (size_t k = 0; k < n; ++k) {
             for (size_t dim = 0; dim < 3; ++dim) {
-                B[i][dim] += phi_g[i][k] * Xk[k][dim];
+                B[i][dim] += shape_functions[i][k] * points_to_fit[k][dim];
             }
         }
     }
 
     // Solve the least squares problem for each dimension of B
-    std::vector<std::array<double, 3>> X_coefficients(p, {0., 0., 0.});
+    std::vector<std::array<double, 3>> interpolation_coefficients(p, {0., 0., 0.});
     for (size_t dim = 0; dim < 3; ++dim) {
         std::vector<double> B_col(p, 0.);
         for (size_t i = 0; i < p; ++i) {
@@ -139,10 +133,10 @@ std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
 
         auto X = SolveLinearSystem(A, B_col);
         for (size_t i = 0; i < p; ++i) {
-            X_coefficients[i][dim] = X[i];
+            interpolation_coefficients[i][dim] = X[i];
         }
     }
-    return X_coefficients;
+    return interpolation_coefficients;
 }
 
 }  // namespace openturbine
