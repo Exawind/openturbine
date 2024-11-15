@@ -122,9 +122,6 @@ inline void LagrangePolynomialDerivWeights(
  */
 inline double LegendrePolynomial(const size_t n, const double x) {
     // Base cases
-    if (n < 0) {
-        throw std::invalid_argument("Legendre polynomial order must be >= 0");
-    }
     if (n == 0) {
         return 1.;
     }
@@ -178,7 +175,7 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
     std::vector<double> legendre_poly(n_nodes, 0.);
     for (size_t i = 1; i < order; ++i) {
         // Initial guess using Chebyshev-Gauss-Lobatto nodes
-        auto x_it = -std::cos(static_cast<double>(i) * M_PI / order);
+        auto x_it = -std::cos(static_cast<double>(i) * M_PI / static_cast<double>(order));
 
         bool converged{false};
         for (size_t it = 0; it < kMaxIterations; ++it) {
@@ -191,7 +188,7 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
 
             // Newton update: x_{n+1} = x_n - f(x_n)/f'(x_n)
             const auto numerator = x_it * legendre_poly[n_nodes - 1] - legendre_poly[n_nodes - 2];
-            const auto denominator = n_nodes * legendre_poly[n_nodes - 1];
+            const auto denominator = static_cast<double>(n_nodes) * legendre_poly[n_nodes - 1];
             x_it -= numerator / denominator;
 
             // Check for convergence
