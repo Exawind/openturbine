@@ -6,13 +6,29 @@
 
 namespace openturbine {
 
+/**
+ * @brief Functor to calculate mass matrix components for beam elements
+ *
+ * This struct serves as a functor to compute three key components from the mass matrix:
+ * - eta: The offset vector representing the distance between mass center and elastic axis
+ * - rho: The 3x3 mass matrix for rotational terms
+ * - eta_tilde: The skew-symmetric matrix derived from eta
+ *
+ * The calculations are performed for each quadrature point (i_qp) of a given element (i_elem)
+ */
 struct CalculateMassMatrixComponents {
-    size_t i_elem;
-    Kokkos::View<double** [6][6]>::const_type qp_Muu_;
-    Kokkos::View<double** [3]> eta_;
-    Kokkos::View<double** [3][3]> rho_;
-    Kokkos::View<double** [3][3]> eta_tilde_;
+    size_t i_elem;                                      //< element index
+    Kokkos::View<double** [6][6]>::const_type qp_Muu_;  //< mass matrix in inertial csys
+    Kokkos::View<double** [3]> eta_;                    //< offset between mass center and
+                                                        //< elastic axis
+    Kokkos::View<double** [3][3]> rho_;                 //< rotational mass matrix
+    Kokkos::View<double** [3][3]> eta_tilde_;           //< skew-symmetric matrix derived from eta
 
+    /**
+     * @brief Operator to perform the mass matrix component calculations
+     *
+     * @param i_qp The quadrature point index
+     */
     KOKKOS_FUNCTION
     void operator()(int i_qp) const {
         auto Muu = Kokkos::subview(qp_Muu_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
@@ -20,17 +36,22 @@ struct CalculateMassMatrixComponents {
         auto rho = Kokkos::subview(rho_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto eta_tilde = Kokkos::subview(eta_tilde_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
 
+        // Compute eta components using off-diagonal terms in lower left 3x3 block of Muu
         eta(0) = eta(1) = eta(2) = 0.;
         if (const auto m = Muu(0, 0); m != 0.) {
             eta(0) = Muu(5, 1) / m;
             eta(1) = -Muu(5, 0) / m;
             eta(2) = Muu(4, 0) / m;
         }
+
+        // Extract the rotational mass terms from the lower-right 3x3 block of Muu
         for (int i = 0; i < rho.extent_int(0); ++i) {
             for (int j = 0; j < rho.extent_int(1); ++j) {
                 rho(i, j) = Muu(i + 3, j + 3);
             }
         }
+
+        // Generate the skew-symmetric matrix eta_tilde from eta
         VecTilde(eta, eta_tilde);
     }
 };
