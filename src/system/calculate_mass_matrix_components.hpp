@@ -7,9 +7,10 @@
 namespace openturbine {
 
 /**
- * @brief Functor to calculate mass matrix components for beam elements
+ * @brief Functor to calculate mass matrix components from mass matrix in inertial csys
  *
- * This struct serves as a functor to compute three key components from the mass matrix:
+ * This struct serves as a function object to compute three key components from the provided mass
+ * matrix:
  * - eta: The offset vector representing the distance between mass center and elastic axis
  * - rho: The 3x3 mass matrix for rotational terms
  * - eta_tilde: The skew-symmetric matrix derived from eta
@@ -17,18 +18,13 @@ namespace openturbine {
  * The calculations are performed for each quadrature point (i_qp) of a given element (i_elem)
  */
 struct CalculateMassMatrixComponents {
-    size_t i_elem;                                      //< element index
-    Kokkos::View<double** [6][6]>::const_type qp_Muu_;  //< mass matrix in inertial csys
-    Kokkos::View<double** [3]> eta_;                    //< offset between mass center and
+    size_t i_elem;                                      //< Element index
+    Kokkos::View<double** [6][6]>::const_type qp_Muu_;  //< Mass matrix in inertial csys
+    Kokkos::View<double** [3]> eta_;                    //< Offset between mass center and
                                                         //< elastic axis
-    Kokkos::View<double** [3][3]> rho_;                 //< rotational mass matrix
-    Kokkos::View<double** [3][3]> eta_tilde_;           //< skew-symmetric matrix derived from eta
+    Kokkos::View<double** [3][3]> rho_;                 //< Rotational part of mass matrix
+    Kokkos::View<double** [3][3]> eta_tilde_;           //< Skew-symmetric matrix derived from eta
 
-    /**
-     * @brief Operator to perform the mass matrix component calculations
-     *
-     * @param i_qp The quadrature point index
-     */
     KOKKOS_FUNCTION
     void operator()(int i_qp) const {
         auto Muu = Kokkos::subview(qp_Muu_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
