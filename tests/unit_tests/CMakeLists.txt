@@ -4,6 +4,7 @@ add_executable(openturbine_unit_tests)
 # Add subdirectories for additional components
 add_subdirectory(beams)
 add_subdirectory(dof_management)
+add_subdirectory(mass_elements)
 add_subdirectory(math)
 add_subdirectory(model)
 add_subdirectory(solver)
