@@ -15,9 +15,9 @@ namespace openturbine {
  * elements, including both translational and rotational effects. The formulation follows the
  * "SO(3)-based GEBT Beam" chapter of the OpenTurbine theory documentation (Eq. 32):
  *
- * Inertial force vector = {
- *   {m * u_ddot + (omega_dot_tilde + omega_tilde * omega_tilde) * m * eta}
- *   {m * eta_tilde * u_ddot + rho * omega_dot + omega_tilde * rho * omega} }
+ * Inertial force vector, FI = {
+ *     {FI_1} = {m * u_ddot + (omega_dot_tilde + omega_tilde * omega_tilde) * m * eta}
+ *     {FI_2} = {m * eta_tilde * u_ddot + rho * omega_dot + omega_tilde * rho * omega}
  * }
  *
  * The forces are computed for each quadrature point (i_qp) of a given element (i_elem).
