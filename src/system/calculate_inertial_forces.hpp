@@ -9,11 +9,16 @@
 namespace openturbine {
 
 /**
- * @brief Functor to calculate inertial forces in a beam element
+ * @brief Functor to calculate inertial forces in a beam/mass element
  *
  * This struct serves as a function object to compute inertial forces for beam and rigid body
  * elements, including both translational and rotational effects. The formulation follows the
- * "SO(3)-based GEBT Beam" chapter of the OpenTurbine theory documentation.
+ * "SO(3)-based GEBT Beam" chapter of the OpenTurbine theory documentation (Eq. 32):
+ *
+ * Inertial force vector = {
+ *   {m * u_ddot + (omega_dot_tilde + omega_tilde * omega_tilde) * m * eta}
+ *   {m * eta_tilde * u_ddot + rho * omega_dot + omega_tilde * rho * omega} }
+ * }
  *
  * The forces are computed for each quadrature point (i_qp) of a given element (i_elem).
  */
@@ -31,16 +36,10 @@ struct CalculateInertialForces {
     Kokkos::View<double** [3][3]>::const_type eta_tilde_;  //< Skew-symmetric matrix derived from eta
     Kokkos::View<double** [3][3]> omega_tilde_;      //< Skew-symmetric matrix from rot. velocity
     Kokkos::View<double** [3][3]> omega_dot_tilde_;  //< Skew-symmetric matrix from rot. acceleration
-    Kokkos::View<double** [3][3]>::const_type rho_;  //< Rotational part of mass matrix
+    Kokkos::View<double** [3][3]>::const_type rho_;  //< Rotational inertia part of mass matrix
     Kokkos::View<double** [3]>::const_type eta_;     //< Offset between mass center and elastic axis
     Kokkos::View<double** [6]> qp_FI_;               //< Inertial forces (computed in this functor)
 
-    /**
-     * Inertial force vector = {
-     *   {m * u_ddot + (omega_dot_tilde + omega_tilde * omega_tilde) * m * eta}
-     *   {m * eta_tilde * u_ddot + rho * omega_dot + omega_tilde * rho * omega} }
-     * }
-     */
     KOKKOS_FUNCTION
     void operator()(int i_qp) const {
         auto Muu = Kokkos::subview(qp_Muu_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
@@ -53,12 +52,16 @@ struct CalculateInertialForces {
             Kokkos::subview(omega_dot_tilde_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto rho = Kokkos::subview(rho_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto eta = Kokkos::subview(eta_, i_elem, i_qp, Kokkos::ALL);
+
+        // Define temporary views for intermediate results
         auto v1 = Kokkos::Array<double, 3>{};
         auto V1 = View_3(v1.data());
         auto m1 = Kokkos::Array<double, 9>{};
         auto M1 = View_3x3(m1.data());
         auto FI = Kokkos::subview(qp_FI_, i_elem, i_qp, Kokkos::ALL);
 
+        // Compute FI_1
+        // FI_1 = m * u_ddot + (omega_dot_tilde + omega_tilde * omega_tilde) * m * eta
         VecTilde(omega, omega_tilde);
         VecTilde(omega_dot, omega_dot_tilde);
         auto FI_1 = Kokkos::subview(FI, Kokkos::make_pair(0, 3));
@@ -68,6 +71,8 @@ struct CalculateInertialForces {
         Gemv::invoke(1., M1, eta, 0., FI_1);
         KokkosBlas::serial_axpy(m, u_ddot, FI_1);
 
+        // Compute FI_2
+        // FI_2 = m * eta_tilde * u_ddot + rho * omega_dot + omega_tilde * rho * omega
         auto FI_2 = Kokkos::subview(FI, Kokkos::make_pair(3, 6));
         KokkosBlas::serial_axpy(m, u_ddot, V1);
         Gemv::invoke(1., eta_tilde, V1, 0., FI_2);

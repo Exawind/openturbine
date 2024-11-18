@@ -32,7 +32,7 @@ struct CalculateMassMatrixComponents {
         auto rho = Kokkos::subview(rho_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
         auto eta_tilde = Kokkos::subview(eta_tilde_, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL);
 
-        // Compute eta components using off-diagonal terms in lower left 3x3 block of Muu
+        // Compute eta components using off-diagonal terms in lower-left 3x3 block of Muu
         eta(0) = eta(1) = eta(2) = 0.;
         if (const auto m = Muu(0, 0); m != 0.) {
             eta(0) = Muu(5, 1) / m;
