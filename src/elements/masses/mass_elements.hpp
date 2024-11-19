@@ -3,6 +3,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "src/dof_management/freedom_signature.hpp"
+#include "src/elements/elements.hpp"
 #include "src/types.hpp"
 
 namespace openturbine {
@@ -24,7 +25,7 @@ namespace openturbine {
  * 2. Node-based quantities (positions, displacements, velocities, accelerations)
  * 3. Quadrature point quantities (mass matrices, forces, kinematic variables)
  */
-struct Masses {
+struct Masses : public Elements {
     // Metadata for mass elements in the mesh
     size_t num_elems;       //< Total number of elements
     size_t max_elem_nodes;  //< Maximum number of nodes per element
@@ -104,6 +105,9 @@ struct Masses {
           qp_Muu("qp_Muu", num_elems, max_elem_qps) {
         Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
     }
+
+    /// Returns the element type
+    ElementsType ElementType() const override { return ElementsType::kMasses; }
 };
 
 }  // namespace openturbine
