@@ -5,8 +5,8 @@
 #include "copy_nodes_to_state.hpp"
 #include "node.hpp"
 
-#include "src/beams/beam_element.hpp"
 #include "src/constraints/constraint.hpp"
+#include "src/elements/beams/beam_element.hpp"
 #include "src/state/state.hpp"
 #include "src/types.hpp"
 

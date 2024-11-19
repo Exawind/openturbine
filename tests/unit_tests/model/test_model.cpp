@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "src/beams/beam_element.hpp"
+#include "src/elements/beams/beam_element.hpp"
 #include "src/model/model.hpp"
 
 namespace openturbine::tests {

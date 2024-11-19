@@ -6,12 +6,12 @@
 
 #include "test_utilities.hpp"
 
-#include "src/beams/beam_element.hpp"
-#include "src/beams/beam_node.hpp"
-#include "src/beams/beam_section.hpp"
-#include "src/beams/beams.hpp"
-#include "src/beams/beams_input.hpp"
-#include "src/beams/create_beams.hpp"
+#include "src/elements/beams/beam_element.hpp"
+#include "src/elements/beams/beam_node.hpp"
+#include "src/elements/beams/beam_section.hpp"
+#include "src/elements/beams/beams.hpp"
+#include "src/elements/beams/beams_input.hpp"
+#include "src/elements/beams/create_beams.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"

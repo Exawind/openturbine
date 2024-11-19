@@ -6,7 +6,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/beams/beams.hpp"
+#include "src/elements/beams/beams.hpp"
 #include "src/solver/contribute_elements_to_sparse_matrix.hpp"
 #include "src/solver/copy_into_sparse_matrix.hpp"
 #include "src/solver/populate_sparse_indices.hpp"

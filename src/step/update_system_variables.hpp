@@ -8,8 +8,8 @@
 #include "assemble_stiffness_matrix.hpp"
 #include "step_parameters.hpp"
 
-#include "src/beams/beams.hpp"
-#include "src/beams/interpolate_to_quadrature_points.hpp"
+#include "src/elements/beams/beams.hpp"
+#include "src/elements/beams/interpolate_to_quadrature_points.hpp"
 #include "src/state/state.hpp"
 #include "src/system/calculate_quadrature_point_values.hpp"
 #include "src/system/update_node_state.hpp"

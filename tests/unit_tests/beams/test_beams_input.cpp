@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "src/beams/beams_input.hpp"
+#include "src/elements/beams/beams_input.hpp"
 #include "src/model/model.hpp"
 
 namespace openturbine::tests {
