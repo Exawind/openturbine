@@ -78,41 +78,32 @@ struct Solver {
 
     Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
-    Solver(
-        const Kokkos::View<size_t*>::const_type& node_IDs,
-        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
-        const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
-        const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
-        const Kokkos::View<size_t**>::const_type& node_state_indices, size_t num_constraint_dofs,
-        const Kokkos::View<ConstraintType*>::const_type& constraint_type,
-        const Kokkos::View<size_t*>::const_type& constraint_base_node_index,
-        const Kokkos::View<size_t*>::const_type& constraint_target_node_index,
-        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
-    )
-        : num_system_nodes(node_IDs.extent(0)) {
+private:
+    [[nodiscard]] static size_t ComputeNumSystemDofs(
+        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
+    ) {
         const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
         Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
-
-        const auto nfmt_host = Kokkos::create_mirror(node_freedom_map_table);
-        Kokkos::deep_copy(nfmt_host, node_freedom_map_table);
-
-        num_system_dofs = 0UL;
-        for (auto i = 0U; i < num_system_nodes; ++i) {
-            num_system_dofs += count_active_dofs(nfat_host(i));
+        auto total_system_dofs = 0UL;
+        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
+            total_system_dofs += count_active_dofs(nfat_host(i));
         }
-        num_dofs = num_system_dofs + num_constraint_dofs;
+        return total_system_dofs;
+    }
 
-        R = Kokkos::View<double*>("R", num_dofs);
-        x = Kokkos::View<double*>("x", num_dofs);
-
-        const auto K_num_rows = num_system_dofs;
-        const auto K_num_columns = K_num_rows;
-        auto K_num_non_zero = 0UL;
+    [[nodiscard]] static size_t ComputeKNumNonZero(
+        const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
+        const Kokkos::View<size_t**>::const_type& node_state_indices,
+        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
+    ) {
+        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
+        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
         const auto nnpe_host = Kokkos::create_mirror(num_nodes_per_element);
         Kokkos::deep_copy(nnpe_host, num_nodes_per_element);
         const auto nsi_host = Kokkos::create_mirror(node_state_indices);
         Kokkos::deep_copy(nsi_host, node_state_indices);
-        // compute off-diagonal non-zero terms
+
+        auto K_num_non_zero = 0UL;
         for (auto i = 0U; i < nnpe_host.extent(0); ++i) {
             auto num_element_dof = 0UL;
             for (auto j = 0U; j < nnpe_host(i); ++j) {
@@ -127,22 +118,41 @@ struct Solver {
             }
             K_num_non_zero += num_element_non_zero - num_diagonal_non_zero;
         }
-        // compute diagonal non-zero terms
-        for (auto i = 0U; i < num_system_nodes; ++i) {
+        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
             const auto num_node_dof = count_active_dofs(nfat_host(i));
             const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
             K_num_non_zero += num_diagonal_non_zero;
         }
-        auto K_row_ptrs = RowPtrType("row_ptrs", K_num_rows + 1);
-        auto K_col_inds = IndicesType("col_inds", K_num_non_zero);
 
+        return K_num_non_zero;
+    }
+
+    [[nodiscard]] static RowPtrType ComputeKRowPtrs(
+        size_t K_num_rows,
+        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
+        const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
+        const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
+        const Kokkos::View<size_t**>::const_type& node_state_indices
+    ) {
+        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
+        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
+
+        const auto nfmt_host = Kokkos::create_mirror(node_freedom_map_table);
+        Kokkos::deep_copy(nfmt_host, node_freedom_map_table);
+
+        const auto nnpe_host = Kokkos::create_mirror(num_nodes_per_element);
+        Kokkos::deep_copy(nnpe_host, num_nodes_per_element);
+
+        const auto nsi_host = Kokkos::create_mirror(node_state_indices);
+        Kokkos::deep_copy(nsi_host, node_state_indices);
+
+        const auto K_row_ptrs = RowPtrType("row_ptrs", K_num_rows + 1);
         const auto K_row_ptrs_host = Kokkos::create_mirror(K_row_ptrs);
-        const auto K_col_inds_host = Kokkos::create_mirror(K_col_inds);
 
-        const auto K_row_entries = RowPtrType("row_entries", K_num_rows);
-        const auto K_row_entries_host = Kokkos::create_mirror(K_row_entries);
+        const auto K_row_entries = RowPtrType("row_ptrs", K_num_rows);
+        const auto K_row_entries_host = Kokkos::create_mirror(K_row_ptrs);
 
-        for (auto i = 0U; i < num_system_nodes; ++i) {
+        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
             const auto this_node_num_dof = count_active_dofs(nfat_host(i));
             const auto this_node_dof_index = nfmt_host(i);
 
@@ -169,20 +179,49 @@ struct Solver {
             }
         }
 
-        for (auto i = 0U; i < num_system_dofs; ++i) {
+        for (auto i = 0U; i < K_row_entries_host.extent(0); ++i) {
             K_row_ptrs_host(i + 1) = K_row_ptrs_host(i) + K_row_entries_host(i);
         }
 
         Kokkos::deep_copy(K_row_ptrs, K_row_ptrs_host);
 
-        for (auto i = 0U; i < num_system_nodes; ++i) {
+        return K_row_ptrs;
+    }
+
+    // Suppress cognitive complexity check for now - this will be extended and refactored soon
+    // NOLINTBEGIN(readability-function-cognitive-complexity)
+    [[nodiscard]] static IndicesType ComputeKColInds(
+        size_t K_num_non_zero,
+        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
+        const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
+        const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
+        const Kokkos::View<size_t**>::const_type& node_state_indices, const RowPtrType& K_row_ptrs
+    ) {
+        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
+        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
+
+        const auto nfmt_host = Kokkos::create_mirror(node_freedom_map_table);
+        Kokkos::deep_copy(nfmt_host, node_freedom_map_table);
+
+        const auto nnpe_host = Kokkos::create_mirror(num_nodes_per_element);
+        Kokkos::deep_copy(nnpe_host, num_nodes_per_element);
+
+        const auto nsi_host = Kokkos::create_mirror(node_state_indices);
+        Kokkos::deep_copy(nsi_host, node_state_indices);
+
+        const auto K_row_ptrs_host = Kokkos::create_mirror(K_row_ptrs);
+        Kokkos::deep_copy(K_row_ptrs_host, K_row_ptrs);
+
+        auto K_col_inds = IndicesType("col_inds", K_num_non_zero);
+        const auto K_col_inds_host = Kokkos::create_mirror(K_col_inds);
+
+        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
             const auto this_node_num_dof = count_active_dofs(nfat_host(i));
             const auto this_node_dof_index = nfmt_host(i);
 
             for (auto j = 0U; j < this_node_num_dof; ++j) {
                 auto current_dof_index = K_row_ptrs_host(this_node_dof_index + j);
 
-                // entries from current node
                 for (auto k = 0U; k < this_node_num_dof; ++k, ++current_dof_index) {
                     K_col_inds_host(current_dof_index) = static_cast<int>(this_node_dof_index + k);
                 }
@@ -210,31 +249,44 @@ struct Solver {
             }
         }
         Kokkos::deep_copy(K_col_inds, K_col_inds_host);
+        return K_col_inds;
+    }
+    // NOLINTEND(readability-function-cognitive-complexity)
 
-        auto K_values = ValuesType("K values", K_num_non_zero);
-        KokkosSparse::sort_crs_matrix(K_row_ptrs, K_col_inds, K_values);
-        K = CrsMatrixType(
-            "K", static_cast<int>(K_num_rows), static_cast<int>(K_num_columns), K_num_non_zero,
-            K_values, K_row_ptrs, K_col_inds
-        );
+    [[nodiscard]] static size_t ComputeTNumNonZero(
+        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
+    ) {
+        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
+        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
 
-        // Tangent operator sparse matrix
         auto T_num_non_zero = 0UL;
-        for (auto i = 0U; i < num_system_nodes; ++i) {
+        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
             const auto num_node_dof = count_active_dofs(nfat_host(i));
             const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
             T_num_non_zero += num_diagonal_non_zero;
         }
-        auto T_row_ptrs = RowPtrType("T_row_ptrs", K_num_rows + 1);
-        auto T_col_inds = IndicesType("T_indices", T_num_non_zero);
 
-        auto T_row_ptrs_host = Kokkos::create_mirror(T_row_ptrs);
-        auto T_col_inds_host = Kokkos::create_mirror(T_col_inds);
+        return T_num_non_zero;
+    }
 
-        const auto T_row_entries = RowPtrType("row_entries", K_num_rows);
+    [[nodiscard]] static RowPtrType ComputeTRowPtrs(
+        size_t T_num_rows,
+        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
+        const Kokkos::View<size_t*>::const_type& node_freedom_map_table
+    ) {
+        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
+        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
+
+        const auto nfmt_host = Kokkos::create_mirror(node_freedom_map_table);
+        Kokkos::deep_copy(nfmt_host, node_freedom_map_table);
+
+        const auto T_row_ptrs = RowPtrType("T_row_ptrs", T_num_rows + 1);
+        const auto T_row_ptrs_host = Kokkos::create_mirror(T_row_ptrs);
+
+        const auto T_row_entries = RowPtrType("row_entries", T_num_rows);
         const auto T_row_entries_host = Kokkos::create_mirror(T_row_entries);
 
-        for (auto i = 0U; i < num_system_nodes; ++i) {
+        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
             const auto this_node_num_dof = count_active_dofs(nfat_host(i));
             const auto this_node_dof_index = nfmt_host(i);
 
@@ -245,13 +297,33 @@ struct Solver {
             }
         }
 
-        for (auto i = 0U; i < num_system_dofs; ++i) {
+        for (auto i = 0U; i < T_row_entries_host.extent(0); ++i) {
             T_row_ptrs_host(i + 1) = T_row_ptrs_host(i) + T_row_entries_host(i);
         }
 
         Kokkos::deep_copy(T_row_ptrs, T_row_ptrs_host);
 
-        for (auto i = 0U; i < num_system_nodes; ++i) {
+        return T_row_ptrs;
+    }
+
+    [[nodiscard]] static IndicesType ComputeTColInds(
+        size_t T_num_non_zero,
+        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
+        const Kokkos::View<size_t*>::const_type node_freedom_map_table, const RowPtrType& T_row_ptrs
+    ) {
+        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
+        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
+
+        const auto nfmt_host = Kokkos::create_mirror(node_freedom_map_table);
+        Kokkos::deep_copy(nfmt_host, node_freedom_map_table);
+
+        const auto T_row_ptrs_host = Kokkos::create_mirror(T_row_ptrs);
+        Kokkos::deep_copy(T_row_ptrs_host, T_row_ptrs);
+
+        const auto T_col_inds = IndicesType("T_indices", T_num_non_zero);
+        const auto T_col_inds_host = Kokkos::create_mirror(T_col_inds);
+
+        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
             const auto this_node_num_dof = count_active_dofs(nfat_host(i));
             const auto this_node_dof_index = nfmt_host(i);
 
@@ -263,25 +335,91 @@ struct Solver {
                 }
             }
         }
+
         Kokkos::deep_copy(T_col_inds, T_col_inds_host);
 
-        auto T_values = ValuesType("T values", T_num_non_zero);
-        KokkosSparse::sort_crs_matrix(T_row_ptrs, T_col_inds, T_values);
-        T = CrsMatrixType(
-            "T", static_cast<int>(K_num_rows), static_cast<int>(K_num_columns), T_num_non_zero,
-            T_values, T_row_ptrs, T_col_inds
-        );
-        // Initialize contraint for indexing for sparse matrices
+        return T_col_inds;
+    }
+
+    [[nodiscard]] static size_t ComputeBNumNonZero(
+        const Kokkos::View<ConstraintType*>::const_type& constraint_type,
+        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
+    ) {
         auto B_num_non_zero = size_t{0U};
         Kokkos::parallel_reduce(
             "ComputeNumberOfNonZeros_Constraints", constraint_type.extent(0),
             ComputeNumberOfNonZeros_Constraints{constraint_type, constraint_row_range},
             B_num_non_zero
         );
-        auto B_num_rows = num_constraint_dofs;
-        auto B_num_columns = this->num_system_dofs;
-        auto B_row_ptrs = RowPtrType("b_row_ptrs", B_num_rows + 1);
-        auto B_col_ind = IndicesType("b_indices", B_num_non_zero);
+        return B_num_non_zero;
+    }
+
+    [[nodiscard]] static CrsMatrixType CreateKMatrix(
+        size_t system_dofs,
+        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
+        const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
+        const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
+        const Kokkos::View<size_t**>::const_type& node_state_indices
+    ) {
+        const auto K_num_rows = system_dofs;
+        const auto K_num_columns = K_num_rows;
+        const auto K_num_non_zero = ComputeKNumNonZero(
+            num_nodes_per_element, node_state_indices, node_freedom_allocation_table
+        );
+
+        const auto K_row_ptrs = ComputeKRowPtrs(
+            K_num_rows, node_freedom_allocation_table, node_freedom_map_table, num_nodes_per_element,
+            node_state_indices
+        );
+        const auto K_col_inds = ComputeKColInds(
+            K_num_non_zero, node_freedom_allocation_table, node_freedom_map_table,
+            num_nodes_per_element, node_state_indices, K_row_ptrs
+        );
+        const auto K_values = ValuesType("K values", K_num_non_zero);
+
+        KokkosSparse::sort_crs_matrix(K_row_ptrs, K_col_inds, K_values);
+        return CrsMatrixType(
+            "K", static_cast<int>(K_num_rows), static_cast<int>(K_num_columns), K_num_non_zero,
+            K_values, K_row_ptrs, K_col_inds
+        );
+    }
+
+    [[nodiscard]] static CrsMatrixType CreateTMatrix(
+        size_t system_dofs,
+        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
+        const Kokkos::View<size_t*>::const_type& node_freedom_map_table
+    ) {
+        const auto T_num_rows = system_dofs;
+        const auto T_num_columns = T_num_rows;
+        const auto T_num_non_zero = ComputeTNumNonZero(node_freedom_allocation_table);
+
+        const auto T_row_ptrs =
+            ComputeTRowPtrs(T_num_rows, node_freedom_allocation_table, node_freedom_map_table);
+        const auto T_col_inds = ComputeTColInds(
+            T_num_non_zero, node_freedom_allocation_table, node_freedom_map_table, T_row_ptrs
+        );
+        const auto T_values = ValuesType("T values", T_num_non_zero);
+
+        KokkosSparse::sort_crs_matrix(T_row_ptrs, T_col_inds, T_values);
+        return CrsMatrixType(
+            "T", static_cast<int>(T_num_rows), static_cast<int>(T_num_columns), T_num_non_zero,
+            T_values, T_row_ptrs, T_col_inds
+        );
+    }
+
+    [[nodiscard]] static CrsMatrixType CreateBMatrix(
+        size_t system_dofs, size_t constraint_dofs,
+        const Kokkos::View<ConstraintType*>::const_type& constraint_type,
+        const Kokkos::View<size_t*>::const_type& constraint_base_node_index,
+        const Kokkos::View<size_t*>::const_type& constraint_target_node_index,
+        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
+    ) {
+        const auto B_num_rows = constraint_dofs;
+        const auto B_num_columns = system_dofs;
+        const auto B_num_non_zero = ComputeBNumNonZero(constraint_type, constraint_row_range);
+
+        const auto B_row_ptrs = RowPtrType("b_row_ptrs", B_num_rows + 1);
+        const auto B_col_ind = IndicesType("b_indices", B_num_non_zero);
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Constraints", 1,
             PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
@@ -289,16 +427,41 @@ struct Solver {
                 constraint_row_range, B_row_ptrs, B_col_ind
             }
         );
-        auto B_values = ValuesType("B values", B_num_non_zero);
+        const auto B_values = ValuesType("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);
-        B = CrsMatrixType(
+        return CrsMatrixType(
             "B", static_cast<int>(B_num_rows), static_cast<int>(B_num_columns), B_num_non_zero,
             B_values, B_row_ptrs, B_col_ind
         );
+    }
 
-        auto B_t_num_rows = B_num_columns;
-        auto B_t_num_columns = B_num_rows;
-        auto B_t_num_non_zero = B_num_non_zero;
+    [[nodiscard]] static CrsMatrixType CreateBtMatrix(
+        size_t system_dofs, size_t constraint_dofs,
+        const Kokkos::View<ConstraintType*>::const_type& constraint_type,
+        const Kokkos::View<size_t*>::const_type& constraint_base_node_index,
+        const Kokkos::View<size_t*>::const_type& constraint_target_node_index,
+        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
+    ) {
+        const auto B_num_rows = constraint_dofs;
+        const auto B_num_columns = system_dofs;
+        const auto B_num_non_zero = ComputeBNumNonZero(constraint_type, constraint_row_range);
+
+        const auto B_row_ptrs = RowPtrType("b_row_ptrs", B_num_rows + 1);
+        const auto B_col_ind = IndicesType("b_indices", B_num_non_zero);
+        Kokkos::parallel_for(
+            "PopulateSparseRowPtrsColInds_Constraints", 1,
+            PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
+                constraint_type, constraint_base_node_index, constraint_target_node_index,
+                constraint_row_range, B_row_ptrs, B_col_ind
+            }
+        );
+        const auto B_values = ValuesType("B values", B_num_non_zero);
+        KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);
+
+        const auto B_t_num_rows = system_dofs;
+        const auto B_t_num_columns = constraint_dofs;
+        const auto B_t_num_non_zero = ComputeBNumNonZero(constraint_type, constraint_row_range);
+
         auto col_count = IndicesType("col_count", B_num_columns);
         auto tmp_row_ptrs = RowPtrType("tmp_row_ptrs", B_t_num_rows + 1);
         auto B_t_row_ptrs = RowPtrType("b_t_row_ptrs", B_t_num_rows + 1);
@@ -312,11 +475,42 @@ struct Solver {
             }
         );
         KokkosSparse::sort_crs_matrix(B_t_row_ptrs, B_t_col_inds, B_t_values);
-        B_t = CrsMatrixType(
+        return CrsMatrixType(
             "B_t", static_cast<int>(B_t_num_rows), static_cast<int>(B_t_num_columns),
             B_t_num_non_zero, B_t_values, B_t_row_ptrs, B_t_col_inds
         );
+    }
 
+public:
+    Solver(
+        const Kokkos::View<size_t*>::const_type& node_IDs,
+        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
+        const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
+        const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
+        const Kokkos::View<size_t**>::const_type& node_state_indices, size_t num_constraint_dofs,
+        const Kokkos::View<ConstraintType*>::const_type& constraint_type,
+        const Kokkos::View<size_t*>::const_type& constraint_base_node_index,
+        const Kokkos::View<size_t*>::const_type& constraint_target_node_index,
+        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
+    )
+        : num_system_nodes(node_IDs.extent(0)),
+          num_system_dofs(ComputeNumSystemDofs(node_freedom_allocation_table)),
+          num_dofs(num_system_dofs + num_constraint_dofs),
+          K(CreateKMatrix(
+              num_system_dofs, node_freedom_allocation_table, node_freedom_map_table,
+              num_nodes_per_element, node_state_indices
+          )),
+          T(CreateTMatrix(num_system_dofs, node_freedom_allocation_table, node_freedom_map_table)),
+          B(CreateBMatrix(
+              num_system_dofs, num_constraint_dofs, constraint_type, constraint_base_node_index,
+              constraint_target_node_index, constraint_row_range
+          )),
+          B_t(CreateBtMatrix(
+              num_system_dofs, num_constraint_dofs, constraint_type, constraint_base_node_index,
+              constraint_target_node_index, constraint_row_range
+          )),
+          R("R", num_dofs),
+          x("x", num_dofs) {
         system_spgemm_handle.create_spgemm_handle();
         KokkosSparse::spgemm_symbolic(
             system_spgemm_handle, K, false, T, false, static_system_matrix
