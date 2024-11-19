@@ -11,7 +11,7 @@
 #include "calculate_gravity_force.hpp"
 #include "calculate_gyroscopic_matrix.hpp"
 #include "calculate_inertia_stiffness_matrix.hpp"
-#include "calculate_inertial_forces.hpp"
+#include "calculate_inertial_force.hpp"
 #include "calculate_mass_matrix_components.hpp"
 #include "calculate_strain.hpp"
 #include "calculate_temporary_variables.hpp"
