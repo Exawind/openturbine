@@ -24,7 +24,7 @@ namespace openturbine {
  * 2. Node-based quantities (positions, displacements, velocities, accelerations)
  * 3. Quadrature point quantities (mass matrices, forces, kinematic variables)
  */
-struct MassElements {
+struct Masses {
     // Metadata for mass elements in the mesh
     size_t num_elems;       //< Total number of elements
     size_t max_elem_nodes;  //< Maximum number of nodes per element
@@ -65,7 +65,7 @@ struct MassElements {
     Kokkos::View<double* [6][6]> qp_RR0;              //< Global rotation
     Kokkos::View<double* [6][6]> qp_Muu;              //< Mass matrix in global frame
 
-    MassElements(const size_t n_mass_elems, const size_t max_e_nodes, const size_t max_e_qps)
+    Masses(const size_t n_mass_elems, const size_t max_e_nodes, const size_t max_e_qps)
         :  // Metadata
           num_elems(n_mass_elems),
           max_elem_nodes(max_e_nodes),
