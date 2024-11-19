@@ -5,11 +5,18 @@
 #include "freedom_signature.hpp"
 
 #include "src/beams/beams.hpp"
+#include "src/constraints/constraints.hpp"
 #include "src/state/state.hpp"
 
 namespace openturbine {
 
-inline void assemble_node_freedom_allocation_table(State& state, const Beams& beams) {
+inline void assemble_node_freedom_allocation_table(
+    State& state, const Beams& beams, const Constraints& constraints
+) {
+    const auto constraints_target_node_index = constraints.target_node_index;
+    const auto constraints_target_node_freedom_signature = constraints.target_node_freedom_signature;
+    const auto constraints_base_node_index = constraints.base_node_index;
+    const auto constraints_base_node_freedom_signature = constraints.base_node_freedom_signature;
     Kokkos::parallel_for(
         "Assemble Node Freedom Map Table", 1,
         KOKKOS_LAMBDA(size_t) {
@@ -19,6 +26,24 @@ inline void assemble_node_freedom_allocation_table(State& state, const Beams& be
                     const auto node_index = beams.node_state_indices(i, j);
                     const auto current_signature = state.node_freedom_allocation_table(node_index);
                     const auto contributed_signature = beams.element_freedom_signature(i, j);
+                    state.node_freedom_allocation_table(node_index) =
+                        current_signature | contributed_signature;
+                }
+            }
+
+            for (auto i = 0U; i < constraints.num; ++i) {
+                {
+                    const auto node_index = constraints_target_node_index(i);
+                    const auto current_signature = state.node_freedom_allocation_table(node_index);
+                    const auto contributed_signature = constraints_target_node_freedom_signature(i);
+                    state.node_freedom_allocation_table(node_index) =
+                        current_signature | contributed_signature;
+                }
+
+                if (GetNumberOfNodes(constraints.type(i)) == 2U) {
+                    const auto node_index = constraints_base_node_index(i);
+                    const auto current_signature = state.node_freedom_allocation_table(node_index);
+                    const auto contributed_signature = constraints_base_node_freedom_signature(i);
                     state.node_freedom_allocation_table(node_index) =
                         current_signature | contributed_signature;
                 }

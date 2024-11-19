@@ -11,7 +11,9 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamOneNode) {
     Kokkos::deep_copy(beams.node_state_indices, 0U);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
 
-    assemble_node_freedom_allocation_table(state, beams);
+    auto constraints = Constraints({});
+
+    assemble_node_freedom_allocation_table(state, beams, constraints);
 
     const auto host_node_freedom_allocation_table =
         Kokkos::create_mirror(state.node_freedom_allocation_table);
@@ -33,7 +35,9 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamTwoNodes) {
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
 
-    assemble_node_freedom_allocation_table(state, beams);
+    auto constraints = Constraints({});
+
+    assemble_node_freedom_allocation_table(state, beams, constraints);
 
     const auto host_node_freedom_allocation_table =
         Kokkos::create_mirror(state.node_freedom_allocation_table);
@@ -56,7 +60,9 @@ TEST(TestAssembleNodeFreedomAllocationTable, TwoBeamsOneNode) {
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
 
-    assemble_node_freedom_allocation_table(state, beams);
+    auto constraints = Constraints({});
+
+    assemble_node_freedom_allocation_table(state, beams, constraints);
 
     const auto host_node_freedom_allocation_table =
         Kokkos::create_mirror(state.node_freedom_allocation_table);
