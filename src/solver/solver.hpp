@@ -309,7 +309,7 @@ private:
     [[nodiscard]] static IndicesType ComputeTColInds(
         size_t T_num_non_zero,
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
-        const Kokkos::View<size_t*>::const_type node_freedom_map_table, const RowPtrType& T_row_ptrs
+        const Kokkos::View<size_t*>::const_type& node_freedom_map_table, const RowPtrType& T_row_ptrs
     ) {
         const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
         Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
@@ -378,10 +378,15 @@ private:
         const auto K_values = ValuesType("K values", K_num_non_zero);
 
         KokkosSparse::sort_crs_matrix(K_row_ptrs, K_col_inds, K_values);
-        return CrsMatrixType(
-            "K", static_cast<int>(K_num_rows), static_cast<int>(K_num_columns), K_num_non_zero,
-            K_values, K_row_ptrs, K_col_inds
-        );
+        return {
+            "K",
+            static_cast<int>(K_num_rows),
+            static_cast<int>(K_num_columns),
+            K_num_non_zero,
+            K_values,
+            K_row_ptrs,
+            K_col_inds
+        };
     }
 
     [[nodiscard]] static CrsMatrixType CreateTMatrix(
@@ -401,10 +406,15 @@ private:
         const auto T_values = ValuesType("T values", T_num_non_zero);
 
         KokkosSparse::sort_crs_matrix(T_row_ptrs, T_col_inds, T_values);
-        return CrsMatrixType(
-            "T", static_cast<int>(T_num_rows), static_cast<int>(T_num_columns), T_num_non_zero,
-            T_values, T_row_ptrs, T_col_inds
-        );
+        return {
+            "T",
+            static_cast<int>(T_num_rows),
+            static_cast<int>(T_num_columns),
+            T_num_non_zero,
+            T_values,
+            T_row_ptrs,
+            T_col_inds
+        };
     }
 
     [[nodiscard]] static CrsMatrixType CreateBMatrix(
@@ -429,10 +439,15 @@ private:
         );
         const auto B_values = ValuesType("B values", B_num_non_zero);
         KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);
-        return CrsMatrixType(
-            "B", static_cast<int>(B_num_rows), static_cast<int>(B_num_columns), B_num_non_zero,
-            B_values, B_row_ptrs, B_col_ind
-        );
+        return {
+            "B",
+            static_cast<int>(B_num_rows),
+            static_cast<int>(B_num_columns),
+            B_num_non_zero,
+            B_values,
+            B_row_ptrs,
+            B_col_ind
+        };
     }
 
     [[nodiscard]] static CrsMatrixType CreateBtMatrix(
@@ -475,10 +490,15 @@ private:
             }
         );
         KokkosSparse::sort_crs_matrix(B_t_row_ptrs, B_t_col_inds, B_t_values);
-        return CrsMatrixType(
-            "B_t", static_cast<int>(B_t_num_rows), static_cast<int>(B_t_num_columns),
-            B_t_num_non_zero, B_t_values, B_t_row_ptrs, B_t_col_inds
-        );
+        return {
+            "B_t",
+            static_cast<int>(B_t_num_rows),
+            static_cast<int>(B_t_num_columns),
+            B_t_num_non_zero,
+            B_t_values,
+            B_t_row_ptrs,
+            B_t_col_inds
+        };
     }
 
 public:
