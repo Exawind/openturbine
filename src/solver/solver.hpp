@@ -150,7 +150,7 @@ private:
         const auto K_row_ptrs_host = Kokkos::create_mirror(K_row_ptrs);
 
         const auto K_row_entries = RowPtrType("row_ptrs", K_num_rows);
-        const auto K_row_entries_host = Kokkos::create_mirror(K_row_ptrs);
+        const auto K_row_entries_host = Kokkos::create_mirror(K_row_entries);
 
         for (auto i = 0U; i < nfat_host.extent(0); ++i) {
             const auto this_node_num_dof = count_active_dofs(nfat_host(i));
