@@ -8,6 +8,8 @@
 
 #include "constraint.hpp"
 
+#include "src/dof_management/freedom_signature.hpp"
+
 namespace openturbine {
 
 /// @brief Constraints struct holds all constraint data
@@ -25,6 +27,8 @@ struct Constraints {
     Kokkos::View<Kokkos::pair<size_t, size_t>*> target_node_col_range;
     Kokkos::View<size_t*> base_node_index;
     Kokkos::View<size_t*> target_node_index;
+    Kokkos::View<FreedomSignature*> base_node_freedom_signature;
+    Kokkos::View<FreedomSignature*> target_node_freedom_signature;
     Kokkos::View<double* [3]> X0;
     Kokkos::View<double* [3][3]> axes;
 
@@ -53,6 +57,8 @@ struct Constraints {
           target_node_col_range("target_row_col_range", num),
           base_node_index("base_node_index", num),
           target_node_index("target_node_index", num),
+          base_node_freedom_signature("base_node_freedom_signature", num),
+          target_node_freedom_signature("target_node_freedom_signature", num),
           X0("X0", num),
           axes("axes", num),
           input("inputs", num),
@@ -64,6 +70,9 @@ struct Constraints {
           system_residual_terms("system_residual_terms", num),
           base_gradient_terms("base_gradient_terms", num),
           target_gradient_terms("target_gradient_terms", num) {
+        Kokkos::deep_copy(base_node_freedom_signature, FreedomSignature::AllComponents);
+        Kokkos::deep_copy(target_node_freedom_signature, FreedomSignature::AllComponents);
+
         // Create host mirror for constraint data
         auto host_type = Kokkos::create_mirror(type);
         auto host_row_range = Kokkos::create_mirror(row_range);

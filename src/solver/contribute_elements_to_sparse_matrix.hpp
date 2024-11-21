@@ -31,7 +31,6 @@ struct ContributeElementsToSparseMatrix {
         });
         member.team_barrier();
         Kokkos::single(Kokkos::PerTeam(member), [&]() {
-            // sparse.sumIntoValues(i, col_idx.data(), row.length, row_data.data(), true, true);
             sparse.replaceValues(i, col_idx.data(), row.length, row_data.data());
         });
     }

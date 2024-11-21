@@ -17,6 +17,9 @@
 #include "src/beams/beams.hpp"
 #include "src/beams/beams_input.hpp"
 #include "src/beams/create_beams.hpp"
+#include "src/dof_management/assemble_node_freedom_allocation_table.hpp"
+#include "src/dof_management/compute_node_freedom_map_table.hpp"
+#include "src/dof_management/create_element_freedom_table.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -152,8 +155,12 @@ TEST(RotatingBeamTest, StepConvergence) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
+    assemble_node_freedom_allocation_table(state, beams, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(beams, state);
     auto solver = Solver(
-        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
+        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
         constraints.row_range
     );
@@ -256,8 +263,12 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
+    assemble_node_freedom_allocation_table(state, beams, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(beams, state);
     auto solver = Solver(
-        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
+        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
         constraints.row_range
     );
@@ -375,8 +386,12 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
+    assemble_node_freedom_allocation_table(state, beams, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(beams, state);
     auto solver = Solver(
-        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
+        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
         constraints.row_range
     );
@@ -461,8 +476,12 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
+    assemble_node_freedom_allocation_table(state, beams, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(beams, state);
     auto solver = Solver(
-        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
+        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
         constraints.row_range
     );
@@ -533,8 +552,12 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
+    assemble_node_freedom_allocation_table(state, beams, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(beams, state);
     auto solver = Solver(
-        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
+        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
         constraints.row_range
     );
@@ -609,8 +632,12 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
+    assemble_node_freedom_allocation_table(state, beams, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(beams, state);
     auto solver = Solver(
-        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
+        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
         constraints.row_range
     );
@@ -701,8 +728,12 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
+    assemble_node_freedom_allocation_table(state, beams, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(beams, state);
     auto solver = Solver(
-        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
+        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
         constraints.row_range
     );
@@ -819,8 +850,12 @@ void GeneratorTorqueWithAxisTilt(
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
+    assemble_node_freedom_allocation_table(state, beams, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(beams, state);
     auto solver = Solver(
-        state.ID, beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
+        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
         constraints.type, constraints.base_node_index, constraints.target_node_index,
         constraints.row_range
     );
