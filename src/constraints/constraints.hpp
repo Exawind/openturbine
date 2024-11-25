@@ -29,6 +29,8 @@ struct Constraints {
     Kokkos::View<size_t*> target_node_index;
     Kokkos::View<FreedomSignature*> base_node_freedom_signature;
     Kokkos::View<FreedomSignature*> target_node_freedom_signature;
+    Kokkos::View<size_t* [6]> target_node_freedom_table;
+    Kokkos::View<size_t* [6]> base_node_freedom_table;
     Kokkos::View<double* [3]> X0;
     Kokkos::View<double* [3][3]> axes;
 
@@ -59,6 +61,8 @@ struct Constraints {
           target_node_index("target_node_index", num),
           base_node_freedom_signature("base_node_freedom_signature", num),
           target_node_freedom_signature("target_node_freedom_signature", num),
+          base_node_freedom_table("base_node_freedom_table", num),
+          target_node_freedom_table("target_node_freedom_table", num),
           X0("X0", num),
           axes("axes", num),
           input("inputs", num),
