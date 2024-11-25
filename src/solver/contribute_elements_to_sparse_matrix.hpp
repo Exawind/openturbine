@@ -20,6 +20,8 @@ struct ContributeElementsToSparseMatrix {
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
         const auto i = member.league_rank();
         const auto num_nodes = num_nodes_per_element(i);
+        constexpr auto is_sorted = false;
+        constexpr auto force_atomic = true;
         Kokkos::parallel_for(Kokkos::TeamThreadRange(member, num_nodes), [&](size_t node_1) {
             const auto num_dofs = count_active_dofs(element_freedom_signature(i, node_1));
             auto row_map = sparse.graph.row_map;
@@ -35,8 +37,9 @@ struct ContributeElementsToSparseMatrix {
                             static_cast<int>(element_freedom_table(i, node_2, component_2));
                         row_data(component_2) = dense(i, node_1, node_2, component_1, component_2);
                     }
-                    sparse.replaceValues(
-                        static_cast<int>(row_num), col_idx.data(), static_cast<int>(num_dofs), row_data.data()
+                    sparse.sumIntoValues(
+                        static_cast<int>(row_num), col_idx.data(), static_cast<int>(num_dofs),
+                        row_data.data(), is_sorted, force_atomic
                     );
                 }
             }
