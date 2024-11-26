@@ -9,8 +9,8 @@ namespace openturbine {
 template <typename RowPtrType, typename IndicesType>
 struct PopulateSparseRowPtrsColInds_Constraints {
     Kokkos::View<ConstraintType*>::const_type type;
-    Kokkos::View<size_t*>::const_type base_node_index;
-    Kokkos::View<size_t*>::const_type target_node_index;
+    Kokkos::View<size_t* [6]>::const_type base_node_freedom_table;
+    Kokkos::View<size_t* [6]>::const_type target_node_freedom_table;
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
     RowPtrType B_row_ptrs;
     IndicesType B_col_inds;
@@ -28,7 +28,7 @@ struct PopulateSparseRowPtrsColInds_Constraints {
                 // Add column indices for target node
                 for (auto j = 0U; j < 6U; ++j) {
                     B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
-                        target_node_index(i_constraint) * 6U + j
+                        target_node_freedom_table(i_constraint, j)
                     );
                     ind_col++;
                 }
@@ -38,7 +38,7 @@ struct PopulateSparseRowPtrsColInds_Constraints {
                     // Add column indices for base node
                     for (auto j = 0U; j < 6U; ++j) {
                         B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
-                            base_node_index(i_constraint) * 6U + j
+                            base_node_freedom_table(i_constraint, j)
                         );
                         ind_col++;
                     }

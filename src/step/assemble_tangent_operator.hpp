@@ -13,19 +13,20 @@ namespace openturbine {
 inline void AssembleTangentOperator(Solver& solver, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Tangent Operator");
 
-    const auto num_rows = solver.num_system_dofs;
-
+    const auto num_nodes = state.num_system_nodes;
     const auto max_row_entries = 6U;
     const auto row_data_size = Kokkos::View<double*>::shmem_size(max_row_entries);
     const auto col_idx_size = Kokkos::View<int*>::shmem_size(max_row_entries);
-    auto sparse_matrix_policy = Kokkos::TeamPolicy<>(static_cast<int>(num_rows), Kokkos::AUTO());
+    auto sparse_matrix_policy = Kokkos::TeamPolicy<>(static_cast<int>(num_nodes), Kokkos::AUTO());
 
-    sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
+    sparse_matrix_policy.set_scratch_size(1, Kokkos::PerThread(row_data_size + col_idx_size));
 
     Kokkos::parallel_for(
-        "CopyTangentIntoSparseMatrix", sparse_matrix_policy,
-        CopyTangentToSparseMatrix<Solver::CrsMatrixType>{solver.T, state.tangent}
+        "CopyTangentToSparseMatris", sparse_matrix_policy,
+        CopyTangentToSparseMatrix<Solver::CrsMatrixType>{
+            state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
+            state.tangent, solver.T
+        }
     );
 }
-
 }  // namespace openturbine

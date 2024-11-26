@@ -5,7 +5,7 @@
 namespace openturbine {
 struct ContributeElementsToVector {
     Kokkos::View<size_t*>::const_type num_nodes_per_element;
-    Kokkos::View<size_t**>::const_type node_state_indices;
+    Kokkos::View<size_t** [6]>::const_type element_freedom_table;
     Kokkos::View<double** [6]>::const_type elements;
     Kokkos::View<double*> vector;
 
@@ -15,9 +15,8 @@ struct ContributeElementsToVector {
         const auto num_nodes = num_nodes_per_element(i_elem);
 
         Kokkos::parallel_for(Kokkos::TeamThreadRange(member, num_nodes), [&](size_t i_node) {
-            const auto node_start = node_state_indices(i_elem, i_node) * 6U;
-            for (auto j = 0U; j < 6U; ++j) {
-                vector(node_start + j) = elements(i_elem, i_node, j);
+            for (auto j = 0U; j < element_freedom_table.extent(2); ++j) {
+                vector(element_freedom_table(i_elem, i_node, j)) += elements(i_elem, i_node, j);
             }
         });
     }
