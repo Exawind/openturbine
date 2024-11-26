@@ -15,10 +15,10 @@ namespace openturbine {
  *                       sorted in ascending order
  * @return std::vector<double> Mapped/normalized evaluation points in domain [-1, 1]
  */
-std::vector<double> MapGeometricLocations(const std::vector<double>& geom_locations) {
+inline std::vector<double> MapGeometricLocations(const std::vector<double>& geom_locations) {
     // Get first and last points of the input domain (assumed to be sorted)
-    double domain_start = geom_locations.front();
-    double domain_end = geom_locations.back();
+    const double domain_start = geom_locations.front();
+    const double domain_end = geom_locations.back();
     if (domain_end == domain_start) {
         throw std::invalid_argument(
             "Invalid geometric locations: domain start and end points are equal."
@@ -27,7 +27,7 @@ std::vector<double> MapGeometricLocations(const std::vector<double>& geom_locati
 
     // Map each point from domain -> [-1, 1]
     std::vector<double> mapped_locations(geom_locations.size());
-    auto domain_span = domain_end - domain_start;
+    const auto domain_span = domain_end - domain_start;
     for (size_t i = 0; i < geom_locations.size(); ++i) {
         mapped_locations[i] = 2. * (geom_locations[i] - domain_start) / domain_span - 1.;
     }
@@ -42,7 +42,7 @@ std::vector<double> MapGeometricLocations(const std::vector<double>& geom_locati
  * @param evaluation_pts Evaluation points in [-1, 1]
  * @return Tuple containing shape function matrix and GLL points
  */
-std::tuple<std::vector<std::vector<double>>, std::vector<double>> ShapeFunctionMatrices(
+inline std::tuple<std::vector<std::vector<double>>, std::vector<double>> ShapeFunctionMatrices(
     size_t n, size_t p, const std::vector<double>& evaluation_pts
 ) {
     // Compute GLL points which will act as the nodes for the shape functions
@@ -63,10 +63,11 @@ std::tuple<std::vector<std::vector<double>>, std::vector<double>> ShapeFunctionM
 
 // TODO: Implement a dense linear systems solver and put it in its own .hpp file similar to the
 //       sparse direct solver
-std::vector<double> SolveLinearSystem(
+inline std::vector<double> SolveLinearSystem(
     [[maybe_unused]] std::vector<std::vector<double>>& A, [[maybe_unused]] std::vector<double>& b
 ) {
-    return std::vector<double>(b.size(), 0.);
+    const auto temp_return = std::vector(b.size(), 0.);
+    return temp_return;
 }
 
 /**
@@ -81,14 +82,14 @@ std::vector<double> SolveLinearSystem(
  * @param points_to_fit x,y,z coordinates of the points to fit (n x 3)
  * @return Interpolation coefficients (p x 3)
  */
-std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
+inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     size_t p, const std::vector<std::vector<double>>& shape_functions,
     const std::vector<std::array<double, 3>>& points_to_fit
 ) {
     if (shape_functions.size() != p) {
         throw std::invalid_argument("shape_functions rows do not match order p.");
     }
-    size_t n = shape_functions[0].size();
+    const size_t n = shape_functions[0].size();
     for (const auto& row : shape_functions) {
         if (row.size() != n) {
             throw std::invalid_argument("Inconsistent number of columns in shape_functions.");

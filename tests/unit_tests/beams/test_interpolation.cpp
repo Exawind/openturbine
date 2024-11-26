@@ -7,9 +7,9 @@ namespace openturbine::tests {
 constexpr auto tol = 1.e-12;
 
 TEST(InterpolationTest, LinearInterpWeight) {
-    std::vector<double> xs = {0., 1., 2.};
+    const std::vector<double> xs = {0., 1., 2.};
     std::vector<double> weights;
-    std::vector<std::pair<double, std::vector<double>>> test_cases = {
+    const std::vector<std::pair<double, std::vector<double>>> test_cases = {
         {-1., {1., 0., 0.}},    // Before first node
         {1., {0., 1., 0.}},     // Exactly on first node
         {0.5, {0.5, 0.5, 0.}},  // Between nodes 2 & 3
@@ -28,7 +28,7 @@ TEST(InterpolationTest, LinearInterpWeight) {
 
 TEST(InterpolationTest, LagrangePolynomialInterpWeight_FirstOrder) {
     // 2 nodes at GLL points for first order polynomial
-    std::vector<double> xs = {-1., 1.};
+    const std::vector<double> xs = {-1., 1.};
     std::vector<double> weights;
 
     // Test point at -1 (on first node)
@@ -52,7 +52,7 @@ TEST(InterpolationTest, LagrangePolynomialInterpWeight_FirstOrder) {
 
 TEST(InterpolationTest, LagrangePolynomialInterpWeight_SecondOrder) {
     // 3 nodes at GLL points for second order polynomial
-    std::vector<double> xs = {-1., 0., 1.};
+    const std::vector<double> xs = {-1., 0., 1.};
     std::vector<double> weights;
 
     // Test point at -1 (on first node)
@@ -79,7 +79,7 @@ TEST(InterpolationTest, LagrangePolynomialInterpWeight_SecondOrder) {
 
 TEST(InterpolationTest, LagrangePolynomialInterpWeight_FourthOrder) {
     // 5 nodes at GLL points for fourth order polynomial
-    std::vector<double> xs = {-1., -0.6546536707079771, 0., 0.6546536707079771, 1.};
+    const std::vector<double> xs = {-1., -0.6546536707079771, 0., 0.6546536707079771, 1.};
     std::vector<double> weights;
 
     // Test point at -1 (on first node)
@@ -156,7 +156,7 @@ TEST(InterpolationTest, LagrangePolynomialInterpWeight_FourthOrder) {
 }
 
 TEST(InterpolationTest, LagrangePolynomialInterpWeight_NodesNotAtGLLPoints) {
-    std::vector<double> xs = {0., 1., 2.};
+    const std::vector<double> xs = {0., 1., 2.};
     std::vector<double> weights;
 
     // Test point at x = 0.5 (between first two nodes)
@@ -183,7 +183,7 @@ TEST(InterpolationTest, LagrangePolynomialInterpWeight_NodesNotAtGLLPoints) {
 
 TEST(InterpolationTest, LagrangePolynomialDerivWeights_FirstOrder) {
     // 2 nodes at GLL points for first order polynomial
-    std::vector<double> xs = {-1., 1.};
+    const std::vector<double> xs = {-1., 1.};
     std::vector<double> weights;
 
     // Test point at x = -1 (on first node)
@@ -201,7 +201,7 @@ TEST(InterpolationTest, LagrangePolynomialDerivWeights_FirstOrder) {
 
 TEST(InterpolationTest, LagrangePolynomialDerivWeights_FourthOrder) {
     // 5 nodes at GLL points for fourth order polynomial
-    std::vector<double> xs = {-1., -0.6546536707079771, 0., 0.6546536707079771, 1.};
+    const std::vector<double> xs = {-1., -0.6546536707079771, 0., 0.6546536707079771, 1.};
     std::vector<double> weights;
 
     // Test point at x = -1 (on first node)

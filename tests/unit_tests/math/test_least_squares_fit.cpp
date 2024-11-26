@@ -6,10 +6,10 @@
 namespace openturbine::tests {
 
 TEST(LeastSquaresFitTest, MapGeometricLocations_PositiveRange) {
-    std::vector<double> input = {0., 2.5, 5.};
-    std::vector<double> expected = {-1., 0., 1.};
+    const std::vector<double> input = {0., 2.5, 5.};
+    const std::vector<double> expected = {-1., 0., 1.};
 
-    auto result = openturbine::MapGeometricLocations(input);
+    const auto result = openturbine::MapGeometricLocations(input);
 
     ASSERT_EQ(result.size(), expected.size());
     for (size_t i = 0; i < result.size(); ++i) {
@@ -18,10 +18,10 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_PositiveRange) {
 }
 
 TEST(LeastSquaresFitTest, MapGeometricLocations_NegativeRange) {
-    std::vector<double> input = {-10., -5., 0.};
-    std::vector<double> expected = {-1., 0., 1.};
+    const std::vector<double> input = {-10., -5., 0.};
+    const std::vector<double> expected = {-1., 0., 1.};
 
-    auto result = openturbine::MapGeometricLocations(input);
+    const auto result = openturbine::MapGeometricLocations(input);
 
     ASSERT_EQ(result.size(), expected.size());
     for (size_t i = 0; i < result.size(); ++i) {
@@ -30,8 +30,8 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_NegativeRange) {
 }
 
 TEST(LeastSquaresFitTest, MapGeometricLocations_UnitRange) {
-    std::vector<double> input = {0., 0.5, 1.};
-    std::vector<double> expected = {-1., 0., 1.};
+    const std::vector<double> input = {0., 0.5, 1.};
+    const std::vector<double> expected = {-1., 0., 1.};
 
     auto result = openturbine::MapGeometricLocations(input);
 
@@ -42,16 +42,16 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_UnitRange) {
 }
 
 TEST(LeastSquaresFitTest, MapGeometricLocations_InvalidInput) {
-    std::vector<double> input = {1., 1.};
+    const std::vector<double> input = {1., 1.};
 
     EXPECT_THROW(openturbine::MapGeometricLocations(input), std::invalid_argument);
 }
 
 TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
-    size_t n{3};                               // Number of pts to fit
-    size_t p{2};                               // Polynomial order + 1
-    std::vector<double> xi_g = {-1., 0., 1.};  // Evaluation points
-    auto [phi_g, gll_pts] = openturbine::ShapeFunctionMatrices(n, p, xi_g);
+    const size_t n{3};                               // Number of pts to fit
+    const size_t p{2};                               // Polynomial order + 1
+    const std::vector<double> xi_g = {-1., 0., 1.};  // Evaluation points
+    const auto [phi_g, gll_pts] = openturbine::ShapeFunctionMatrices(n, p, xi_g);
 
     // Check GLL points (2 at -1 and 1)
     ASSERT_EQ(gll_pts.size(), p);
@@ -64,7 +64,7 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
     ASSERT_EQ(phi_g[1].size(), n);
 
     // Check shape function values at evaluation points
-    std::vector<std::vector<double>> expected = {
+    const std::vector<std::vector<double>> expected = {
         {1., 0.5, 0.},  // First shape function
         {0., 0.5, 1.}   // Second shape function
     };
@@ -77,10 +77,10 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
 }
 
 TEST(LeastSquaresFitTest, ShapeFunctionMatrices_SecondOrder) {
-    size_t n{5};                                          // Number of pts to fit
-    size_t p{3};                                          // Polynomial order + 1
-    std::vector<double> xi_g = {-1., -0.5, 0., 0.5, 1.};  // Evaluation points
-    auto [phi_g, gll_pts] = openturbine::ShapeFunctionMatrices(n, p, xi_g);
+    const size_t n{5};                                          // Number of pts to fit
+    const size_t p{3};                                          // Polynomial order + 1
+    const std::vector<double> xi_g = {-1., -0.5, 0., 0.5, 1.};  // Evaluation points
+    const auto [phi_g, gll_pts] = openturbine::ShapeFunctionMatrices(n, p, xi_g);
 
     // Check GLL points (3 at -1, 0, and 1)
     ASSERT_EQ(gll_pts.size(), 3);
@@ -95,7 +95,7 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_SecondOrder) {
     }
 
     // Check shape function values at evaluation points
-    std::vector<std::vector<double>> expected = {
+    const std::vector<std::vector<double>> expected = {
         {1.0, 0.375, 0.0, -0.125, 0.0},  // First shape function
         {0.0, 0.75, 1.0, 0.75, 0.0},     // Second shape function
         {0.0, -0.125, 0.0, 0.375, 1.0}   // Third shape function
@@ -110,8 +110,8 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_SecondOrder) {
 
 TEST(LeastSquaresFitTest, FitsParametricCurve) {
     // Input geometric points (t = 0, 0.2, 0.5, 0.6, 1.0)
-    std::vector<double> geom_locations = {0.0, 0.2, 0.5, 0.6, 1.0};
-    std::vector<std::array<double, 3>> input_points = {
+    const std::vector<double> geom_locations = {0.0, 0.2, 0.5, 0.6, 1.0};
+    const std::vector<std::array<double, 3>> input_points = {
         {0., 0., 0.},        // t = 0
         {1., -0.28, 0.12},   // t = 0.2
         {2.5, -0.25, 0.},    // t = 0.5
@@ -123,15 +123,15 @@ TEST(LeastSquaresFitTest, FitsParametricCurve) {
     auto mapped_locations = MapGeometricLocations(geom_locations);
 
     // Step 2: Generate shape function matrices (using p = 4 i.e. cubic interpolation)
-    size_t n = input_points.size();
-    size_t p = 4;
-    auto [phi_g, gll_points] = ShapeFunctionMatrices(n, p, mapped_locations);
+    const size_t n = input_points.size();
+    const size_t p = 4;
+    const auto [phi_g, gll_points] = ShapeFunctionMatrices(n, p, mapped_locations);
 
     // Step 3: Perform least squares fitting
-    auto X = PerformLeastSquaresFitting(p, phi_g, input_points);
+    const auto X = PerformLeastSquaresFitting(p, phi_g, input_points);
 
     // Expected coefficients from Mathematica (rounded to 3 decimal places)
-    std::vector<std::array<double, 3>> expected_coefficients = {
+    const std::vector<std::array<double, 3>> expected_coefficients = {
         {0., 0., 0.},  // First point - same as input
         {1.3819660112501062, -0.3236067977499792, 0.12360679774997904},  // Interior point 1
         {3.6180339887498945, 0.12360679774997924, -0.3236067977499791},  // Interior point 2
