@@ -90,7 +90,6 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
         }
     }
 
-
     // Construct matrix A in LHS (p x p)
     const auto A = Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace>("A", p, p);
     A(0, 0) = 1.;
@@ -106,7 +105,7 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     }
 
     // Construct matrix B in RHS (p x 3)
-    const auto B = Kokkos::View<double*[3], Kokkos::LayoutLeft, Kokkos::HostSpace>("B", p);
+    const auto B = Kokkos::View<double* [3], Kokkos::LayoutLeft, Kokkos::HostSpace>("B", p);
     for (auto dim = 0U; dim < 3U; ++dim) {
         B(0, dim) = points_to_fit[0][dim];
         B(p - 1, dim) = points_to_fit[n - 1][dim];
@@ -126,8 +125,8 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
 
     auto result = std::vector<std::array<double, 3>>(B.extent(0));
 
-    for(auto i = 0U; i < result.size(); ++i) {
-        for(auto j = 0U; j < result.front().size(); ++j) {
+    for (auto i = 0U; i < result.size(); ++i) {
+        for (auto j = 0U; j < result.front().size(); ++j) {
             result[i][j] = B(i, j);
         }
     }

@@ -31,7 +31,7 @@ jobs:
         spack install googletest
         spack install cppcheck
         spack install yaml-cpp
-        spack install trilinos@master~epetra
+        spack install trilinos@master~epetra ^kokkos-kernels+blas+lapack+serial
     - name: Clone
       uses: actions/checkout@v4
       with:
