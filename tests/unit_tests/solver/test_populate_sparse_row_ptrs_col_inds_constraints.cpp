@@ -8,6 +8,7 @@ namespace openturbine::tests {
 TEST(PopulateSparseRowPtrsColInds_Constraints, OneOfEach) {
     constexpr auto num_constraints = 5U;
     constexpr auto num_constraint_dofs = 29U;
+    constexpr auto num_node_dofs = 30U;
     constexpr auto num_non_zero = 288U;
     constexpr auto type_host_data = std::array{
         ConstraintType::kFixedBC, ConstraintType::kPrescribedBC, ConstraintType::kRigidJoint,
@@ -19,13 +20,13 @@ TEST(PopulateSparseRowPtrsColInds_Constraints, OneOfEach) {
         Kokkos::pair<size_t, size_t>{23U, 29U}
     };
     constexpr auto base_node_freedom_table_host_data =
-        std::array<size_t, num_constraints * 6>{6U,  7U,  8U,  9U,  10U, 11U, 18U, 19U, 20U, 21U,
-                                                22U, 23U, 30U, 31U, 32U, 33U, 34U, 35U, 42U, 43U,
-                                                44U, 45U, 46U, 47U, 54U, 55U, 56U, 57U, 58U, 59U};
-    constexpr auto target_node_freedom_table_host_data = 
-        std::array<size_t, num_constraints * 6>{12U, 13U, 14U, 15U, 16U, 17U, 24U, 25U, 26U, 27U,
-                                                28U, 29U, 36U, 37U, 38U, 39U, 40U, 41U, 48U, 49U,
-                                                50U, 51U, 52U, 53U, 60U, 61U, 62U, 63U, 64U, 65U};
+        std::array<size_t, num_node_dofs>{6U,  7U,  8U,  9U,  10U, 11U, 18U, 19U, 20U, 21U,
+                                          22U, 23U, 30U, 31U, 32U, 33U, 34U, 35U, 42U, 43U,
+                                          44U, 45U, 46U, 47U, 54U, 55U, 56U, 57U, 58U, 59U};
+    constexpr auto target_node_freedom_table_host_data =
+        std::array<size_t, num_node_dofs>{12U, 13U, 14U, 15U, 16U, 17U, 24U, 25U, 26U, 27U,
+                                          28U, 29U, 36U, 37U, 38U, 39U, 40U, 41U, 48U, 49U,
+                                          50U, 51U, 52U, 53U, 60U, 61U, 62U, 63U, 64U, 65U};
     const auto type_host =
         Kokkos::View<const ConstraintType[num_constraints], Kokkos::HostSpace>(type_host_data.data()
         );
