@@ -64,31 +64,35 @@ inline std::tuple<std::vector<std::vector<double>>, std::vector<double>> ShapeFu
     return {shape_functions, gll_pts};
 }
 
-inline std::vector<double> SolveLinearSystem(const std::vector<std::vector<double>>& A, const std::vector<double>& b) {
+inline std::vector<std::array<double, 3>> SolveLinearSystem(const std::vector<std::vector<double>>& A, const std::vector<std::vector<double>>& B) {
     const auto A_internal = Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace>("A", A.size(), A.front().size());
-    const auto b_internal = Kokkos::View<double*, Kokkos::LayoutLeft, Kokkos::HostSpace>("b", b.size());
-    const auto IPIV = Kokkos::View<int*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", b.size());
+    const auto B_internal = Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace>("B", B.size(), B.front().size());
+    const auto IPIV = Kokkos::View<int*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", B.size());
 
     for(auto i = 0U; i < A.size(); ++i) {
         for(auto j = 0U; j < A.front().size(); ++j) {
             A_internal(i, j) = A[i][j];
         }
     }
-    for(auto i = 0U; i < b.size(); ++i) {
-        b_internal(i) = b[i];
+
+    for(auto i = 0U; i < B.size(); ++i) {
+        for(auto j = 0U; j < B.front().size(); ++j) {
+            B_internal(i, j) = B[i][j];
+        }
     }
 
-    KokkosLapack::gesv(A_internal, b_internal, IPIV);
+    KokkosLapack::gesv(A_internal, B_internal, IPIV);
 
-    auto result = std::vector(b.size(), 0.);
+    auto result = std::vector<std::array<double, 3>>(B.size());
 
     for(auto i = 0U; i < result.size(); ++i) {
-        result[i] = b_internal(i);
+        for(auto j = 0U; j < result.front().size(); ++j) {
+            result[i][j] = B_internal(i, j);
+        }
     }
 
     return result;
 }
-
 /**
  * @brief Performs least squares fitting to determine interpolation coefficients
  * @details Performs least squares fitting to determine interpolation coefficients
@@ -144,19 +148,7 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     }
 
     // Solve the least squares problem for each dimension of B
-    std::vector<std::array<double, 3>> interpolation_coefficients(p, {0., 0., 0.});
-    for (size_t dim = 0; dim < 3; ++dim) {
-        std::vector<double> B_col(p, 0.);
-        for (size_t i = 0; i < p; ++i) {
-            B_col[i] = B[i][dim];
-        }
-
-        auto X = SolveLinearSystem(A, B_col);
-        for (size_t i = 0; i < p; ++i) {
-            interpolation_coefficients[i][dim] = X[i];
-        }
-    }
-    return interpolation_coefficients;
+    return SolveLinearSystem(A, B);
 }
 
 }  // namespace openturbine
