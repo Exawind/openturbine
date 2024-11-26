@@ -26,7 +26,6 @@ inline void AssembleSystemMatrix(Solver& solver, Beams& beams) {
     auto sparse_matrix_policy = Kokkos::TeamPolicy<>(static_cast<int>(num_rows), Kokkos::AUTO());
 
     sparse_matrix_policy.set_scratch_size(1, Kokkos::PerTeam(row_data_size + col_idx_size));
-
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,
         ContributeElementsToSparseMatrix<Solver::CrsMatrixType>{
