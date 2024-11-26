@@ -33,8 +33,16 @@ inline void AssembleResidualVector(const Elements& elements) {
                 beams.qp_Fd, beams.qp_Fi, beams.qp_Fe, beams.qp_Fg, beams.residual_vector_terms
             }
         );
+
     } else if (elements.ElementType() == ElementsType::kMasses) {
-        // TODO
+        // For mass elements, numerical integration is not required. Instead, compute the following
+        // terms to obtain the full residual vector:
+        // 1. Inertial forces (system/CalculateInertialForces)
+        // 2. Gravitational forces (system/CalculateGravityForce)
+        // 3. External forces (No explicit method for it yet)
+        // 4. Constraint forces (constraints/CalculateConstraintForce)
+    } else if (elements.ElementType() == ElementsType::kLinearSprings) {
+        // TODO: Implement residual vector assembly for linear springs
     } else {
         throw std::invalid_argument("Element type not supported");
     }
