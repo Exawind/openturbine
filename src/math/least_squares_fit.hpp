@@ -64,21 +64,6 @@ inline std::tuple<std::vector<std::vector<double>>, std::vector<double>> ShapeFu
     return {shape_functions, gll_pts};
 }
 
-inline std::vector<std::array<double, 3>> SolveLinearSystem(const Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace>& A, const Kokkos::View<double*[3], Kokkos::LayoutLeft, Kokkos::HostSpace>& B) {
-    const auto IPIV = Kokkos::View<int*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", B.extent(0));
-
-    KokkosLapack::gesv(A, B, IPIV);
-
-    auto result = std::vector<std::array<double, 3>>(B.extent(0));
-
-    for(auto i = 0U; i < result.size(); ++i) {
-        for(auto j = 0U; j < result.front().size(); ++j) {
-            result[i][j] = B(i, j);
-        }
-    }
-
-    return result;
-}
 /**
  * @brief Performs least squares fitting to determine interpolation coefficients
  * @details Performs least squares fitting to determine interpolation coefficients
@@ -135,7 +120,19 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     }
 
     // Solve the least squares problem for each dimension of B
-    return SolveLinearSystem(A, B);
+    const auto IPIV = Kokkos::View<int*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", B.extent(0));
+
+    KokkosLapack::gesv(A, B, IPIV);
+
+    auto result = std::vector<std::array<double, 3>>(B.extent(0));
+
+    for(auto i = 0U; i < result.size(); ++i) {
+        for(auto j = 0U; j < result.front().size(); ++j) {
+            result[i][j] = B(i, j);
+        }
+    }
+
+    return result;
 }
 
 }  // namespace openturbine
