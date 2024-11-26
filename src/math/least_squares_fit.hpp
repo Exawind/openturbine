@@ -64,30 +64,16 @@ inline std::tuple<std::vector<std::vector<double>>, std::vector<double>> ShapeFu
     return {shape_functions, gll_pts};
 }
 
-inline std::vector<std::array<double, 3>> SolveLinearSystem(const std::vector<std::vector<double>>& A, const std::vector<std::vector<double>>& B) {
-    const auto A_internal = Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace>("A", A.size(), A.front().size());
-    const auto B_internal = Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace>("B", B.size(), B.front().size());
-    const auto IPIV = Kokkos::View<int*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", B.size());
+inline std::vector<std::array<double, 3>> SolveLinearSystem(const Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace>& A, const Kokkos::View<double*[3], Kokkos::LayoutLeft, Kokkos::HostSpace>& B) {
+    const auto IPIV = Kokkos::View<int*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", B.extent(0));
 
-    for(auto i = 0U; i < A.size(); ++i) {
-        for(auto j = 0U; j < A.front().size(); ++j) {
-            A_internal(i, j) = A[i][j];
-        }
-    }
+    KokkosLapack::gesv(A, B, IPIV);
 
-    for(auto i = 0U; i < B.size(); ++i) {
-        for(auto j = 0U; j < B.front().size(); ++j) {
-            B_internal(i, j) = B[i][j];
-        }
-    }
-
-    KokkosLapack::gesv(A_internal, B_internal, IPIV);
-
-    auto result = std::vector<std::array<double, 3>>(B.size());
+    auto result = std::vector<std::array<double, 3>>(B.extent(0));
 
     for(auto i = 0U; i < result.size(); ++i) {
         for(auto j = 0U; j < result.front().size(); ++j) {
-            result[i][j] = B_internal(i, j);
+            result[i][j] = B(i, j);
         }
     }
 
@@ -119,30 +105,31 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
         }
     }
 
+
     // Construct matrix A in LHS (p x p)
-    std::vector<std::vector<double>> A(p, std::vector<double>(p, 0.));
-    A[0][0] = 1.;
-    A[p - 1][p - 1] = 1.;
-    for (size_t i = 1; i < p - 1; ++i) {
-        for (size_t j = 0; j < p; ++j) {
-            double sum = 0.;
-            for (size_t k = 0; k < n; ++k) {
+    const auto A = Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace>("A", p, p);
+    A(0, 0) = 1.;
+    A(p - 1, p - 1) = 1.;
+    for (auto j = 0U; j < p; ++j) {
+        for (auto i = 1U; i < p - 1; ++i) {
+            auto sum = 0.;
+            for (auto k = 0U; k < n; ++k) {
                 sum += shape_functions[i][k] * shape_functions[j][k];
             }
-            A[i][j] = sum;
+            A(i, j) = sum;
         }
     }
 
     // Construct matrix B in RHS (p x 3)
-    std::vector<std::vector<double>> B(p, std::vector<double>(3, 0.));
-    for (size_t dim = 0; dim < 3; ++dim) {
-        B[0][dim] = points_to_fit[0][dim];
-        B[p - 1][dim] = points_to_fit[n - 1][dim];
+    const auto B = Kokkos::View<double*[3], Kokkos::LayoutLeft, Kokkos::HostSpace>("B", p);
+    for (auto dim = 0U; dim < 3U; ++dim) {
+        B(0, dim) = points_to_fit[0][dim];
+        B(p - 1, dim) = points_to_fit[n - 1][dim];
     }
-    for (size_t i = 1; i < p - 1; ++i) {
-        for (size_t k = 0; k < n; ++k) {
-            for (size_t dim = 0; dim < 3; ++dim) {
-                B[i][dim] += shape_functions[i][k] * points_to_fit[k][dim];
+    for (auto i = 1U; i < p - 1; ++i) {
+        for (auto k = 0U; k < n; ++k) {
+            for (auto dim = 0U; dim < 3U; ++dim) {
+                B(i, dim) += shape_functions[i][k] * points_to_fit[k][dim];
             }
         }
     }
