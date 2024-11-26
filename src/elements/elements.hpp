@@ -11,8 +11,9 @@ namespace openturbine {
  * @brief Enumeration to define the type of the element
  */
 enum class ElementsType : std::uint8_t {
-    kBeams = 0,   //< Beam elements
-    kMasses = 1,  //< Mass/rigid body elements
+    kBeams = 0,          //< Beam elements
+    kMasses = 1,         //< Mass/rigid body elements
+    kLinearSprings = 2,  //< Linear spring elements
 };
 
 /**
