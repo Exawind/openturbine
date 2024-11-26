@@ -9,21 +9,13 @@
 namespace openturbine {
 
 /**
- * @brief Data structure containing field variables for element-level computations of mass elements.
+ * @brief Contains field variables for mass elements (aka, rigid bodies) to compute per-element
+ * contributions to the residual vector and system/iteration matrix.
  *
- * This struct holds all the necessary field variables needed to compute per-element
- * contributions to the residual vector and system matrix for mass-only/rigid body elements.
- *
- * @details The data is organized using Kokkos::View containers with the following conventions:
- * - All Views use element index as their first dimension
+ * - All mass elements consist of a single node. hence no element number used in the Views
  * - Views prefixed with `node_` use node index as their second dimension
  * - Views prefixed with `qp_` use quadrature point index as their second dimension
  * - Additional dimensions represent physical components (e.g., xyz coordinates, rotations)
- *
- * The struct contains three main categories of data:
- * 1. Element metadata (sizes, indices, freedom signatures)
- * 2. Node-based quantities (positions, displacements, velocities, accelerations)
- * 3. Quadrature point quantities (mass matrices, forces, kinematic variables)
  */
 struct Masses : public Elements {
     // Metadata for mass elements in the mesh
