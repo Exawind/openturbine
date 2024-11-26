@@ -139,13 +139,13 @@ TEST(LeastSquaresFitTest, FitsParametricCurve) {
     };
 
     // Verify results
-    /* ASSERT_EQ(X.size(), expected_coefficients.size());
+    ASSERT_EQ(X.size(), expected_coefficients.size());
     for (size_t i = 0; i < X.size(); ++i) {
         for (size_t j = 0; j < 3; ++j) {
             EXPECT_NEAR(X[i][j], expected_coefficients[i][j], 1e-3)
                 << "Mismatch at coefficient [" << i << "][" << j << "]";
         }
-    } */
+    }
 }
 
 }  // namespace openturbine::tests

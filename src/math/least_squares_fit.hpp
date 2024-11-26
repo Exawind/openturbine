@@ -4,6 +4,9 @@
 #include <stdexcept>
 #include <vector>
 
+#include <KokkosLapack_gesv.hpp>
+#include <Kokkos_Core.hpp>
+
 #include "src/beams/interpolation.hpp"
 
 namespace openturbine {
@@ -61,13 +64,29 @@ inline std::tuple<std::vector<std::vector<double>>, std::vector<double>> ShapeFu
     return {shape_functions, gll_pts};
 }
 
-// TODO: Implement a dense linear systems solver and put it in its own .hpp file similar to the
-//       sparse direct solver
-inline std::vector<double> SolveLinearSystem(
-    [[maybe_unused]] std::vector<std::vector<double>>& A, [[maybe_unused]] std::vector<double>& b
-) {
-    const auto temp_return = std::vector(b.size(), 0.);
-    return temp_return;
+inline std::vector<double> SolveLinearSystem(const std::vector<std::vector<double>>& A, const std::vector<double>& b) {
+    const auto A_internal = Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace>("A", A.size(), A.front().size());
+    const auto b_internal = Kokkos::View<double*, Kokkos::LayoutLeft, Kokkos::HostSpace>("b", b.size());
+    const auto IPIV = Kokkos::View<int*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", b.size());
+
+    for(auto i = 0U; i < A.size(); ++i) {
+        for(auto j = 0U; j < A.front().size(); ++j) {
+            A_internal(i, j) = A[i][j];
+        }
+    }
+    for(auto i = 0U; i < b.size(); ++i) {
+        b_internal(i) = b[i];
+    }
+
+    KokkosLapack::gesv(A_internal, b_internal, IPIV);
+
+    auto result = std::vector(b.size(), 0.);
+
+    for(auto i = 0U; i < result.size(); ++i) {
+        result[i] = b_internal(i);
+    }
+
+    return result;
 }
 
 /**
