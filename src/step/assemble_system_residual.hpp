@@ -19,7 +19,7 @@ inline void AssembleSystemResidual(Solver& solver, Beams& beams) {
     Kokkos::parallel_for(
         "ContributeElementsToVector", vector_policy,
         ContributeElementsToVector{
-            beams.num_nodes_per_element, beams.node_state_indices, beams.residual_vector_terms,
+            beams.num_nodes_per_element, beams.element_freedom_table, beams.residual_vector_terms,
             solver.R
         }
     );

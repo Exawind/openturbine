@@ -12,6 +12,7 @@
 #include "src/beams/create_beams.hpp"
 #include "src/dof_management/assemble_node_freedom_allocation_table.hpp"
 #include "src/dof_management/compute_node_freedom_map_table.hpp"
+#include "src/dof_management/create_constraint_freedom_table.hpp"
 #include "src/dof_management/create_element_freedom_table.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
@@ -117,10 +118,11 @@ inline void SetUpSolverAndAssemble() {
     assemble_node_freedom_allocation_table(state, beams, constraints);
     compute_node_freedom_map_table(state);
     create_element_freedom_table(beams, state);
+    create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
         beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
-        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
 
@@ -358,10 +360,11 @@ inline void SetupAndTakeNoSteps() {
     assemble_node_freedom_allocation_table(state, beams, constraints);
     compute_node_freedom_map_table(state);
     create_element_freedom_table(beams, state);
+    create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
         beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
-        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
 
@@ -570,10 +573,11 @@ inline auto SetupAndTakeTwoSteps() {
     assemble_node_freedom_allocation_table(state, beams, constraints);
     compute_node_freedom_map_table(state);
     create_element_freedom_table(beams, state);
+    create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
         beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
-        constraints.type, constraints.base_node_index, constraints.target_node_index,
+        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
 

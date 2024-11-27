@@ -420,8 +420,8 @@ private:
     [[nodiscard]] static CrsMatrixType CreateBMatrix(
         size_t system_dofs, size_t constraint_dofs,
         const Kokkos::View<ConstraintType*>::const_type& constraint_type,
-        const Kokkos::View<size_t*>::const_type& constraint_base_node_index,
-        const Kokkos::View<size_t*>::const_type& constraint_target_node_index,
+        const Kokkos::View<size_t* [6]>::const_type& constraint_base_node_freedom_table,
+        const Kokkos::View<size_t* [6]>::const_type& constraint_target_node_freedom_table,
         const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
     ) {
         const auto B_num_rows = constraint_dofs;
@@ -433,8 +433,8 @@ private:
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Constraints", 1,
             PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
-                constraint_type, constraint_base_node_index, constraint_target_node_index,
-                constraint_row_range, B_row_ptrs, B_col_ind
+                constraint_type, constraint_base_node_freedom_table,
+                constraint_target_node_freedom_table, constraint_row_range, B_row_ptrs, B_col_ind
             }
         );
         const auto B_values = ValuesType("B values", B_num_non_zero);
@@ -453,8 +453,8 @@ private:
     [[nodiscard]] static CrsMatrixType CreateBtMatrix(
         size_t system_dofs, size_t constraint_dofs,
         const Kokkos::View<ConstraintType*>::const_type& constraint_type,
-        const Kokkos::View<size_t*>::const_type& constraint_base_node_index,
-        const Kokkos::View<size_t*>::const_type& constraint_target_node_index,
+        const Kokkos::View<size_t* [6]>::const_type& constraint_base_node_freedom_table,
+        const Kokkos::View<size_t* [6]>::const_type& constraint_target_node_freedom_table,
         const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
     ) {
         const auto B_num_rows = constraint_dofs;
@@ -466,8 +466,8 @@ private:
         Kokkos::parallel_for(
             "PopulateSparseRowPtrsColInds_Constraints", 1,
             PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
-                constraint_type, constraint_base_node_index, constraint_target_node_index,
-                constraint_row_range, B_row_ptrs, B_col_ind
+                constraint_type, constraint_base_node_freedom_table,
+                constraint_target_node_freedom_table, constraint_row_range, B_row_ptrs, B_col_ind
             }
         );
         const auto B_values = ValuesType("B values", B_num_non_zero);
@@ -509,8 +509,8 @@ public:
         const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
         const Kokkos::View<size_t**>::const_type& node_state_indices, size_t num_constraint_dofs,
         const Kokkos::View<ConstraintType*>::const_type& constraint_type,
-        const Kokkos::View<size_t*>::const_type& constraint_base_node_index,
-        const Kokkos::View<size_t*>::const_type& constraint_target_node_index,
+        const Kokkos::View<size_t* [6]>::const_type& constraint_base_node_freedom_table,
+        const Kokkos::View<size_t* [6]>::const_type& constraint_target_node_freedom_table,
         const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
     )
         : num_system_nodes(node_IDs.extent(0)),
@@ -522,12 +522,14 @@ public:
           )),
           T(CreateTMatrix(num_system_dofs, node_freedom_allocation_table, node_freedom_map_table)),
           B(CreateBMatrix(
-              num_system_dofs, num_constraint_dofs, constraint_type, constraint_base_node_index,
-              constraint_target_node_index, constraint_row_range
+              num_system_dofs, num_constraint_dofs, constraint_type,
+              constraint_base_node_freedom_table, constraint_target_node_freedom_table,
+              constraint_row_range
           )),
           B_t(CreateBtMatrix(
-              num_system_dofs, num_constraint_dofs, constraint_type, constraint_base_node_index,
-              constraint_target_node_index, constraint_row_range
+              num_system_dofs, num_constraint_dofs, constraint_type,
+              constraint_base_node_freedom_table, constraint_target_node_freedom_table,
+              constraint_row_range
           )),
           R("R", num_dofs),
           x("x", num_dofs) {
