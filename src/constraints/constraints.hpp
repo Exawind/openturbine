@@ -46,7 +46,7 @@ struct Constraints {
         : num{constraints.size()},
           num_dofs{std::transform_reduce(
               constraints.cbegin(), constraints.cend(), 0U, std::plus{},
-              [](auto c) {
+              [](const auto& c) {
                   return NumDOFsForConstraint(c->type);
               }
           )},

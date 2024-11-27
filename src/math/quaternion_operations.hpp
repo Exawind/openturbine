@@ -32,19 +32,19 @@ KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(
 inline std::array<Array_3, 3> QuaternionToRotationMatrix(const Array_4& q) {
     return std::array<Array_3, 3>{{
         {
-            q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3],
-            2. * (q[1] * q[2] - q[0] * q[3]),
-            2. * (q[1] * q[3] + q[0] * q[2]),
+            (q[0] * q[0]) + (q[1] * q[1]) - (q[2] * q[2]) - (q[3] * q[3]),
+            2. * ((q[1] * q[2]) - (q[0] * q[3])),
+            2. * ((q[1] * q[3]) + (q[0] * q[2])),
         },
         {
-            2. * (q[1] * q[2] + q[0] * q[3]),
-            q[0] * q[0] - q[1] * q[1] + q[2] * q[2] - q[3] * q[3],
-            2. * (q[2] * q[3] - q[0] * q[1]),
+            2. * ((q[1] * q[2]) + (q[0] * q[3])),
+            (q[0] * q[0]) - (q[1] * q[1]) + (q[2] * q[2]) - (q[3] * q[3]),
+            2. * ((q[2] * q[3]) - (q[0] * q[1])),
         },
         {
-            2. * (q[1] * q[3] - q[0] * q[2]),
-            2. * (q[2] * q[3] + q[0] * q[1]),
-            q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3],
+            2. * ((q[1] * q[3]) - (q[0] * q[2])),
+            2. * ((q[2] * q[3]) + (q[0] * q[1])),
+            (q[0] * q[0]) - (q[1] * q[1]) - (q[2] * q[2]) + (q[3] * q[3]),
         },
     }};
 }
@@ -107,7 +107,7 @@ KOKKOS_INLINE_FUNCTION void QuaternionInverse(
     const QuaternionInput& q_in, const QuaternionOutput& q_out
 ) {
     auto length =
-        Kokkos::sqrt(q_in(0) * q_in(0) + q_in(1) * q_in(1) + q_in(2) * q_in(2) + q_in(3) * q_in(3));
+        Kokkos::sqrt((q_in(0) * q_in(0)) + (q_in(1) * q_in(1)) + (q_in(2) * q_in(2)) + (q_in(3) * q_in(3)));
 
     // Inverse of a quaternion is the conjugate divided by the length
     q_out(0) = q_in(0) / length;
@@ -148,7 +148,7 @@ template <typename Vector, typename Quaternion>
 KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(
     const Vector& phi, const Quaternion& quaternion
 ) {
-    const auto angle = Kokkos::sqrt(phi(0) * phi(0) + phi(1) * phi(1) + phi(2) * phi(2));
+    const auto angle = Kokkos::sqrt((phi(0) * phi(0)) + (phi(1) * phi(1)) + (phi(2) * phi(2)));
     const auto cos_angle = Kokkos::cos(angle / 2.);
     const auto factor = (Kokkos::abs(angle) < 1.e-12) ? 0. : Kokkos::sin(angle / 2.) / angle;
 
@@ -166,7 +166,7 @@ KOKKOS_INLINE_FUNCTION void QuaternionToRotationVector(
     const Quaternion& quaternion, const Vector& phi
 ) {
     auto theta = 2. * Kokkos::acos(quaternion(0));
-    const auto sin_half_theta = std::sqrt(1. - quaternion(0) * quaternion(0));
+    const auto sin_half_theta = std::sqrt(1. - (quaternion(0) * quaternion(0)));
     if (sin_half_theta > 1e-12) {
         phi(0) = theta * quaternion(1) / sin_half_theta;
         phi(1) = theta * quaternion(2) / sin_half_theta;
@@ -201,7 +201,7 @@ inline Array_3 QuaternionToRotationVector(const Array_4& quaternion) {
  * @brief Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map
  */
 inline Array_4 RotationVectorToQuaternion(const Array_3& phi) {
-    const auto angle = std::sqrt(phi[0] * phi[0] + phi[1] * phi[1] + phi[2] * phi[2]);
+    const auto angle = std::sqrt((phi[0] * phi[0]) + (phi[1] * phi[1]) + (phi[2] * phi[2]));
 
     if (std::abs(angle) < 1e-12) {
         return std::array<double, 4>{1., 0., 0., 0.};
@@ -224,7 +224,7 @@ inline Array_4 RotationVectorToQuaternion(const Array_3& phi) {
  */
 KOKKOS_INLINE_FUNCTION
 Kokkos::Array<double, 4> NormalizeQuaternion(const Kokkos::Array<double, 4>& q) {
-    const auto length_squared = q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3];
+    const auto length_squared = (q[0] * q[0]) + (q[1] * q[1]) + (q[2] * q[2]) + (q[3] * q[3]);
 
     // If the length is 1, our work is done
     if (std::abs(length_squared - 1.) < kTolerance) {

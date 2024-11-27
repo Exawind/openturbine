@@ -7,7 +7,7 @@
 
 namespace openturbine::tests {
 
-inline auto create_node_u_OneNode() {
+static auto create_node_u_OneNode() {
     constexpr auto num_nodes = 1;
     constexpr auto num_entries = num_nodes * 7;
     auto node_u = Kokkos::View<double[1][num_nodes][7]>("node_u");
@@ -174,7 +174,7 @@ TEST(InterpolateQPStateTests, rprime_OneNodeTwoQP) {
     EXPECT_NEAR(qp_rprime_mirror(0, 1, 3), 21., tolerance);
 }
 
-inline auto create_node_u_TwoNode() {
+static auto create_node_u_TwoNode() {
     constexpr auto num_nodes = 2;
     constexpr auto num_entries = num_nodes * 7;
     auto node_u = Kokkos::View<double[1][num_nodes][7]>("node_u");
