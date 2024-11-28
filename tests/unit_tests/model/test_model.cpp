@@ -132,11 +132,34 @@ TEST(Model, AddBeamElementToModel) {
     ASSERT_EQ(elements.size(), 1);
 }
 
+TEST(Model, AddMassElementToModel) {
+    Model model;
+
+    // Add a node to the model
+    auto node = model.AddNode(
+        {0., 0., 0., 1., 0., 0., 0.},  // position
+        {0., 0., 0., 1., 0., 0., 0.},  // displacement
+        {0., 0., 0., 0., 0., 0.}       // velocity
+    );
+
+    // Add a mass element to the model
+    auto mass_matrix = std::array<std::array<double, 6>, 6>{};
+    auto mass_element = model.AddMassElement(*node, mass_matrix);
+
+    // Get number of elements in the model
+    ASSERT_EQ(model.NumMassElements(), 1);
+
+    // Get the elements in the model and check their number
+    auto elements = model.GetMassElements();
+    ASSERT_EQ(elements.size(), 1);
+}
+
 TEST(Model, ModelConstructorWithDefaults) {
     // Create an empty model
     const Model model;
     ASSERT_EQ(model.NumNodes(), 0);
     ASSERT_EQ(model.NumBeamElements(), 0);
+    ASSERT_EQ(model.NumMassElements(), 0);
     ASSERT_EQ(model.NumConstraints(), 0);
 }
 
@@ -144,11 +167,13 @@ TEST(Model, ModelConstructorWithObjects) {
     // Create a model with a couple of nodes, elements and constraints
     auto nodes = std::vector<Node>{Node{0, {0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.}}};
     auto beam_elements = std::vector<BeamElement>{};
+    auto mass_elements = std::vector<MassElement>{};
     auto constraints = std::vector<Constraint>{};
 
-    const Model model(nodes, beam_elements, constraints);
+    const Model model(nodes, beam_elements, mass_elements, constraints);
     ASSERT_EQ(model.NumNodes(), 1);
     ASSERT_EQ(model.NumBeamElements(), 0);
+    ASSERT_EQ(model.NumMassElements(), 0);
     ASSERT_EQ(model.NumConstraints(), 0);
 }
 
@@ -159,11 +184,13 @@ TEST(Model, ModelConstructorWithPointers) {
         0, std::array{0., 0., 0., 0., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0., 0.}
     ));
     const auto beam_elements = std::vector<std::shared_ptr<BeamElement>>{};
+    const auto mass_elements = std::vector<std::shared_ptr<MassElement>>{};
     const auto constraints = std::vector<std::shared_ptr<Constraint>>{};
 
-    const Model model(nodes, beam_elements, constraints);
+    const Model model(nodes, beam_elements, mass_elements, constraints);
     ASSERT_EQ(model.NumNodes(), 1);
     ASSERT_EQ(model.NumBeamElements(), 0);
+    ASSERT_EQ(model.NumMassElements(), 0);
     ASSERT_EQ(model.NumConstraints(), 0);
 }
 

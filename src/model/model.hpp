@@ -7,6 +7,7 @@
 
 #include "src/constraints/constraint.hpp"
 #include "src/elements/beams/beam_element.hpp"
+#include "src/elements/masses/mass_element.hpp"
 #include "src/state/state.hpp"
 #include "src/types.hpp"
 
@@ -40,13 +41,16 @@ public:
      */
     Model(
         const std::vector<Node>& nodes, const std::vector<BeamElement>& beam_elements,
-        const std::vector<Constraint>& constraints
+        const std::vector<MassElement>& mass_elements, const std::vector<Constraint>& constraints
     ) {
         for (const auto& n : nodes) {
             this->nodes_.emplace_back(std::make_shared<Node>(n));
         }
         for (const auto& e : beam_elements) {
             this->beam_elements_.emplace_back(std::make_shared<BeamElement>(e));
+        }
+        for (const auto& m : mass_elements) {
+            this->mass_elements_.emplace_back(std::make_shared<MassElement>(m));
         }
         for (const auto& c : constraints) {
             this->constraints_.emplace_back(std::make_shared<Constraint>(c));
@@ -64,10 +68,12 @@ public:
     Model(
         std::vector<std::shared_ptr<Node>> nodes,
         std::vector<std::shared_ptr<BeamElement>> beam_elements,
+        std::vector<std::shared_ptr<MassElement>> mass_elements,
         std::vector<std::shared_ptr<Constraint>> constraints
     )
         : nodes_(std::move(nodes)),
           beam_elements_(std::move(beam_elements)),
+          mass_elements_(std::move(mass_elements)),
           constraints_(std::move(constraints)) {}
 
     /**
@@ -125,6 +131,30 @@ public:
 
     /// Returns the number of beam elements present in the model
     [[nodiscard]] size_t NumBeamElements() const { return this->beam_elements_.size(); }
+
+    /// Adds a mass element to the model and returns a shared pointer to the element
+    std::shared_ptr<MassElement> AddMassElement(
+        const Node& node, const std::array<std::array<double, 6>, 6>& mass
+    ) {
+        return this->mass_elements_.emplace_back(std::make_shared<MassElement>(node, mass));
+    }
+
+    /// Adds a mass element to the model and returns a shared pointer to the element
+    /// Returns a mass element by ID - const/read-only version
+    [[nodiscard]] const MassElement& GetMassElement(size_t id) const {
+        return *this->mass_elements_[id];
+    }
+
+    /// Returns a mass element by ID - non-const version
+    [[nodiscard]] MassElement& GetMassElement(size_t id) { return *this->mass_elements_[id]; }
+
+    /// Returns a reference to the mass elements present in the model
+    [[nodiscard]] const std::vector<std::shared_ptr<MassElement>>& GetMassElements() const {
+        return this->mass_elements_;
+    }
+
+    /// Returns the number of mass elements present in the model
+    [[nodiscard]] size_t NumMassElements() const { return this->mass_elements_.size(); }
 
     /// Adds a rigid constraint to the model and returns a handle to the constraint
     std::shared_ptr<Constraint> AddRigidJointConstraint(const Node& node1, const Node& node2) {
@@ -187,6 +217,7 @@ public:
 private:
     std::vector<std::shared_ptr<Node>> nodes_;                 //< Nodes in the model
     std::vector<std::shared_ptr<BeamElement>> beam_elements_;  //< Beam elements in the model
+    std::vector<std::shared_ptr<MassElement>> mass_elements_;  //< Mass elements in the model
     std::vector<std::shared_ptr<Constraint>> constraints_;     //< Constraints in the model
 };
 

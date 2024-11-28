@@ -12,7 +12,7 @@ namespace openturbine {
  * @brief Contains field variables for mass elements (aka, rigid bodies) to compute per-element
  * contributions to the residual vector and system/iteration matrix.
  *
- * - All mass elements consist of a single node. hence no element number used in the Views
+ * - Mass elements consist of a single node, hence no element number used in the Views
  * - Views prefixed with `node_` use node index as their second dimension
  * - Views prefixed with `qp_` use quadrature point index as their second dimension
  * - Additional dimensions represent physical components (e.g., xyz coordinates, rotations)
