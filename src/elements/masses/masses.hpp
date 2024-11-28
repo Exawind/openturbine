@@ -17,7 +17,7 @@ namespace openturbine {
  * - Views prefixed with `qp_` use quadrature point index as their second dimension
  * - Additional dimensions represent physical components (e.g., xyz coordinates, rotations)
  */
-struct Masses : public Elements {
+struct Masses {
     // Metadata for mass elements in the mesh
     size_t num_elems;       //< Total number of elements
     size_t max_elem_nodes;  //< Maximum number of nodes per element
@@ -97,9 +97,6 @@ struct Masses : public Elements {
           qp_Muu("qp_Muu", num_elems, max_elem_qps) {
         Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
     }
-
-    /// Returns the element type
-    ElementsType ElementType() const override { return ElementsType::kMasses; }
 };
 
 }  // namespace openturbine

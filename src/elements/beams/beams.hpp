@@ -20,7 +20,7 @@ namespace openturbine {
  * - The remaining dimensions are the number of components as defined by physics
  * - Additionally, shape_interp and shape_deriv have dimensions num_elems x num_nodes x num_qps
  */
-struct Beams : public Elements {
+struct Beams {
     size_t num_elems;       // Total number of element
     size_t max_elem_nodes;  // Maximum number of nodes per element
     size_t max_elem_qps;    // Maximum number of quadrature points per element
@@ -159,9 +159,6 @@ struct Beams : public Elements {
           shape_deriv("deriv_interp", num_elems, max_elem_nodes, max_elem_qps) {
         Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
     }
-
-    /// Returns the element type
-    ElementsType ElementType() const override { return ElementsType::kBeams; }
 };
 
 }  // namespace openturbine
