@@ -2,5 +2,5 @@
 target_sources(
     openturbine_unit_tests
     PRIVATE
-    test_mass_elements_input.cpp
+    test_masses_input.cpp
 )
