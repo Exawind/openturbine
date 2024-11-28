@@ -18,7 +18,7 @@
 
 namespace openturbine::tests {
 
-inline auto SetUpBeams() {
+static auto SetUpBeams() {
     // Stiffness matrix for uniform composite beam section
     constexpr auto stiffness_matrix = std::array{
         std::array{1., 2., 3., 4., 5., 6.},      std::array{2., 4., 6., 8., 10., 12.},

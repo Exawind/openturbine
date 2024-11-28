@@ -183,7 +183,7 @@ KOKKOS_INLINE_FUNCTION void QuaternionToRotationVector(
  */
 inline Array_3 QuaternionToRotationVector(const Array_4& quaternion) {
     auto theta = 2. * Kokkos::acos(quaternion[0]);
-    const auto sin_half_theta = std::sqrt(1. - quaternion[0] * quaternion[0]);
+    const auto sin_half_theta = std::sqrt(1. - (quaternion[0] * quaternion[0]));
     Array_3 phi;
     if (sin_half_theta > 1e-12) {
         phi[0] = theta * quaternion[1] / sin_half_theta;

@@ -38,14 +38,14 @@ namespace openturbine::tests {
 
 constexpr bool use_node_loads = true;
 
-Array_6 GetNodeData(const size_t index, const View_Nx6::HostMirror& state_matrix) {
+static Array_6 GetNodeData(const size_t index, const View_Nx6::HostMirror& state_matrix) {
     return Array_6{
         state_matrix(index, 0), state_matrix(index, 1), state_matrix(index, 2),
         state_matrix(index, 3), state_matrix(index, 4), state_matrix(index, 5),
     };
 }
 
-Array_7 GetNodeData(const size_t index, const View_Nx7::HostMirror& state_matrix) {
+static Array_7 GetNodeData(const size_t index, const View_Nx7::HostMirror& state_matrix) {
     return Array_7{
         state_matrix(index, 0), state_matrix(index, 1), state_matrix(index, 2),
         state_matrix(index, 3), state_matrix(index, 4), state_matrix(index, 5),
@@ -54,7 +54,7 @@ Array_7 GetNodeData(const size_t index, const View_Nx7::HostMirror& state_matrix
 }
 
 template <typename T1, typename T2>
-Array_6 GetQPData(
+static Array_6 GetQPData(
     const size_t i, const size_t j, const T1& translation_data, const T2& rotation_data
 ) {
     return Array_6{
@@ -64,7 +64,7 @@ Array_6 GetQPData(
 }
 
 template <typename T1>
-Array_7 GetQPData(const size_t i, const size_t j, const T1& position_matrix) {
+static Array_7 GetQPData(const size_t i, const size_t j, const T1& position_matrix) {
     return Array_7{
         position_matrix(i, j, 0), position_matrix(i, j, 1), position_matrix(i, j, 2),
         position_matrix(i, j, 3), position_matrix(i, j, 4), position_matrix(i, j, 5),
@@ -75,7 +75,7 @@ Array_7 GetQPData(const size_t i, const size_t j, const T1& position_matrix) {
 template <
     typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7,
     typename T8>
-void SetRotorMotion(
+static void SetRotorMotion(
     util::TurbineData& turbine, const std::vector<BeamElement>& beam_elems,
     const std::vector<std::shared_ptr<Node>>& root_nodes,
     const std::shared_ptr<openturbine::Node>& hub_node, const T1& host_state_x,
@@ -128,7 +128,7 @@ void SetRotorMotion(
 }
 
 template <typename T1, typename T2>
-void SetAeroLoads(
+static void SetAeroLoads(
     Beams& beams, const std::vector<BeamElement>& beam_elems, const util::TurbineData& turbine,
     const T1& host_node_FX, const T2& host_qp_Fe
 ) {
@@ -190,7 +190,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     constexpr double step_size{0.01};  // seconds
     constexpr double rho_inf{0.0};
     constexpr double t_end{1.0};  // seconds
-    constexpr auto num_steps{static_cast<size_t>(t_end / step_size + 1.)};
+    constexpr auto num_steps{static_cast<size_t>((t_end / step_size) + 1.)};
 
     // Create model for adding nodes and constraints
     auto model = Model();
@@ -259,7 +259,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     std::vector<Array_4> q_roots;
     for (size_t i = 0; i < n_blades; ++i) {
         q_roots.emplace_back(
-            RotationVectorToQuaternion({d_theta * static_cast<double>(i) + azimuth_init, 0., 0.})
+            RotationVectorToQuaternion({(d_theta * static_cast<double>(i)) + azimuth_init, 0., 0.})
         );
     }
 
@@ -307,6 +307,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Vector of blade tip nodes
     std::vector<Node> tip_nodes;
+    tip_nodes.reserve(n_blades);
     for (size_t i = 0; i < n_blades; ++i) {
         tip_nodes.emplace_back(beam_elems[i].nodes[beam_elems[i].nodes.size() - 1].node);
     }

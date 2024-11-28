@@ -29,7 +29,7 @@
 
 namespace openturbine::tests {
 
-inline void SetUpSolverAndAssemble() {
+static void SetUpSolverAndAssemble() {
     // Mass matrix for uniform composite beam section
     constexpr auto mass_matrix = std::array{
         std::array{8.538e-2, 0., 0., 0., 0., 0.},   std::array{0., 8.538e-2, 0., 0., 0., 0.},
@@ -66,7 +66,7 @@ inline void SetUpSolverAndAssemble() {
     std::transform(
         std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
         [&](auto s) {
-            const auto x = 10 * s + 2.;
+            const auto x = (10 * s) + 2.;
             return BeamNode(
                 s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.},
@@ -484,7 +484,7 @@ TEST(SolverStep1Test, SolutionVector) {
     SetupAndTakeNoSteps();
 }
 
-inline auto SetupAndTakeTwoSteps() {
+static auto SetupAndTakeTwoSteps() {
     // Mass matrix for uniform composite beam section
     constexpr auto mass_matrix = std::array{
         std::array{8.538e-2, 0., 0., 0., 0., 0.},   std::array{0., 8.538e-2, 0., 0., 0., 0.},
@@ -521,7 +521,7 @@ inline auto SetupAndTakeTwoSteps() {
     std::transform(
         std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
         [&](auto s) {
-            const auto x = 10 * s + 2.;
+            const auto x = (10 * s) + 2.;
             return BeamNode(
                 s, *model.AddNode(
                        {x, 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.},
