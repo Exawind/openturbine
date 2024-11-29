@@ -1,5 +1,6 @@
 #pragma once
 
+#include "src/model/node.hpp"
 #include "src/types.hpp"
 
 namespace openturbine {
