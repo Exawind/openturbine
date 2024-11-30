@@ -10,12 +10,13 @@
 namespace openturbine {
 
 /**
- * @brief Represents the input data for beam simulations
+ * @brief Represents the input data for creating flexible beams
  *
- * This struct encapsulates all necessary input parameters for beam simulations,
- * including the beam elements and environmental factors such as gravity.
- * It also provides utility methods for accessing and computing various
- * properties of the beam structure.
+ * This struct encapsulates all necessary input parameters for instantiating flex beams in
+ * openturbine i.e. the beam elements and environmental factors such as gravity.
+ * It also provides some utilities for computing properties such as
+ * - total number of nodes/quadrature points
+ * - maximum number of nodes/quadrature points per element etc.
  */
 struct BeamsInput {
     std::vector<BeamElement> elements;  //< Elements in the beam

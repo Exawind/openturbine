@@ -8,7 +8,7 @@ namespace openturbine::tests {
 class MassesInputTest : public ::testing::Test {
 protected:
     static auto CreateTestElements() {
-        // Create a mock Model for creating nodes
+        // Create a mock Model and add 2 nodes
         auto model = Model();
         for (int i = 0; i < 2; ++i) {
             model.AddNode(
@@ -17,15 +17,17 @@ protected:
             );
         }
 
-        // Create mass matrix (identity matrix)
+        // Create an identity mass matrix
         constexpr auto mass_matrix = std::array{
             std::array{1.0, 0.0, 0.0, 0.0, 0.0, 0.0}, std::array{0.0, 1.0, 0.0, 0.0, 0.0, 0.0},
             std::array{0.0, 0.0, 1.0, 0.0, 0.0, 0.0}, std::array{0.0, 0.0, 0.0, 1.0, 0.0, 0.0},
             std::array{0.0, 0.0, 0.0, 0.0, 1.0, 0.0}, std::array{0.0, 0.0, 0.0, 0.0, 0.0, 1.0},
         };
 
+        // Create 2 mass elements
         return std::vector<MassElement>{
-            MassElement(model.GetNode(0), mass_matrix), MassElement(model.GetNode(1), mass_matrix)
+            MassElement(model.GetNode(0), mass_matrix),  // element 1
+            MassElement(model.GetNode(1), mass_matrix)   // element 2
         };
     }
 
