@@ -166,7 +166,8 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
     }
 
     const size_t n_nodes = order + 1;
-    std::vector<double> gll_points(n_nodes, 0.);
+    auto gll_points = std::vector<double>(n_nodes, 0.);
+    gll_points.resize(n_nodes);
 
     // Set the endpoints fixed at [-1, 1]
     gll_points.front() = -1.;

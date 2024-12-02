@@ -29,11 +29,11 @@ jobs:
         spack compiler find
         spack external find
         spack install googletest
-        spack install llvm
+        spack install llvm@18
         spack install cppcheck
         spack install yaml-cpp
         spack install vtk~mpi~opengl2
-        spack install trilinos@master~mpi~epetra
+        spack install trilinos@master~mpi~epetra ^kokkos-kernels+blas+lapack
     - name: Clone
       uses: actions/checkout@v4
       with:
