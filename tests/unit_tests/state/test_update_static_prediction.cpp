@@ -10,6 +10,27 @@ TEST(UpdateStaticPrediction, TwoNodes) {
     constexpr auto beta_prime = 20.;
     constexpr auto gamma_prime = 50.;
 
+    constexpr auto node_freedom_allocation_table_host_data =
+        std::array{FreedomSignature::AllComponents, FreedomSignature::AllComponents};
+    const auto node_freedom_allocation_table_host =
+        Kokkos::View<FreedomSignature[2], Kokkos::HostSpace>::const_type(
+            node_freedom_allocation_table_host_data.data()
+        );
+    const auto node_freedom_allocation_table = Kokkos::View<FreedomSignature[2]>("nfat");
+    const auto node_freedom_allocation_table_mirror =
+        Kokkos::create_mirror(node_freedom_allocation_table);
+    Kokkos::deep_copy(node_freedom_allocation_table_mirror, node_freedom_allocation_table_host);
+    Kokkos::deep_copy(node_freedom_allocation_table, node_freedom_allocation_table_mirror);
+
+    constexpr auto node_freedom_map_table_host_data = std::array{0UL, 6UL};
+    const auto node_freedom_map_table_host = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
+        node_freedom_map_table_host_data.data()
+    );
+    const auto node_freedom_map_table = Kokkos::View<size_t[2]>("nfmt");
+    const auto node_freedom_map_table_mirror = Kokkos::create_mirror(node_freedom_map_table);
+    Kokkos::deep_copy(node_freedom_map_table_mirror, node_freedom_map_table_host);
+    Kokkos::deep_copy(node_freedom_map_table, node_freedom_map_table_mirror);
+
     const auto x_delta = Kokkos::View<double[12]>("x_delta");
     constexpr auto x_delta_host_data =
         std::array{2., 4., 6., 8., 10., 12., 14., 16., 18., 20., 22., 24.};
@@ -23,7 +44,10 @@ TEST(UpdateStaticPrediction, TwoNodes) {
 
     Kokkos::parallel_for(
         "UpdateStaticPrediction", 2,
-        UpdateStaticPrediction{h, beta_prime, gamma_prime, x_delta, q_delta}
+        UpdateStaticPrediction{
+            h, beta_prime, gamma_prime, node_freedom_allocation_table, node_freedom_map_table,
+            x_delta, q_delta
+        }
     );
 
     constexpr auto q_delta_exact_data =

@@ -24,6 +24,8 @@ inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solv
                 parameters.h,
                 parameters.beta_prime,
                 parameters.gamma_prime,
+                state.node_freedom_allocation_table,
+                state.node_freedom_map_table,
                 x_system,
                 state.q_delta,
                 state.v,
@@ -37,6 +39,8 @@ inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solv
                 parameters.h,
                 parameters.beta_prime,
                 parameters.gamma_prime,
+                state.node_freedom_allocation_table,
+                state.node_freedom_map_table,
                 x_system,
                 state.q_delta,
             }
