@@ -12,17 +12,16 @@ protected:
         auto model = Model();
         for (int i = 0; i < 2; ++i) {
             model.AddNode(
-                {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0},
-                {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
+                {0., 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.},
+                {0., 0., 0., 0., 0., 0.}
             );
         }
 
         // Create an identity mass matrix
-        constexpr auto mass_matrix = std::array{
-            std::array{1.0, 0.0, 0.0, 0.0, 0.0, 0.0}, std::array{0.0, 1.0, 0.0, 0.0, 0.0, 0.0},
-            std::array{0.0, 0.0, 1.0, 0.0, 0.0, 0.0}, std::array{0.0, 0.0, 0.0, 1.0, 0.0, 0.0},
-            std::array{0.0, 0.0, 0.0, 0.0, 1.0, 0.0}, std::array{0.0, 0.0, 0.0, 0.0, 0.0, 1.0},
-        };
+        constexpr auto mass_matrix =
+            std::array{std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
+                       std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
+                       std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.}};
 
         // Create 2 mass elements
         return std::vector<MassElement>{
@@ -32,13 +31,13 @@ protected:
     }
 
     static MassesInput CreateTestMassesInput() {
-        return MassesInput(CreateTestElements(), {0.0, 0.0, -9.81});
+        return MassesInput(CreateTestElements(), {0., 0., -9.81});
     }
 };
 
 TEST_F(MassesInputTest, Constructor) {
     const auto elements = CreateTestElements();
-    const std::array<double, 3> gravity = {0.0, 0.0, -9.81};
+    const std::array<double, 3> gravity = {0., 0., -9.81};
     const MassesInput input(elements, gravity);
 
     EXPECT_EQ(input.elements.size(), 2);
