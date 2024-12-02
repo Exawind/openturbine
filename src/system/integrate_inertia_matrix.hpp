@@ -25,7 +25,7 @@ struct IntegrateInertiaMatrixElement {
         using tag_type = Kokkos::Experimental::element_aligned_tag;
         constexpr auto width = simd_type::size();
         const auto extra_component = num_nodes % width == 0U ? 0U : 1U;
-        const auto simd_nodes = (num_nodes / width) + extra_component;
+        const auto simd_nodes = num_nodes / width + extra_component;
         const auto i_index = ij_index / simd_nodes;
         const auto j_index = (ij_index % simd_nodes) * width;
 
@@ -44,17 +44,17 @@ struct IntegrateInertiaMatrixElement {
             const auto coeff = w * phi_i * phi_j * jacobian;
             for (auto m = 0U; m < 6U; ++m) {
                 local_M(m, 0) +=
-                    coeff * ((beta_prime_ * qp_Muu_(k, m, 0)) + (gamma_prime_ * qp_Guu_(k, m, 0)));
+                    coeff * (beta_prime_ * qp_Muu_(k, m, 0) + gamma_prime_ * qp_Guu_(k, m, 0));
                 local_M(m, 1) +=
-                    coeff * ((beta_prime_ * qp_Muu_(k, m, 1)) + (gamma_prime_ * qp_Guu_(k, m, 1)));
+                    coeff * (beta_prime_ * qp_Muu_(k, m, 1) + gamma_prime_ * qp_Guu_(k, m, 1));
                 local_M(m, 2) +=
-                    coeff * ((beta_prime_ * qp_Muu_(k, m, 2)) + (gamma_prime_ * qp_Guu_(k, m, 2)));
+                    coeff * (beta_prime_ * qp_Muu_(k, m, 2) + gamma_prime_ * qp_Guu_(k, m, 2));
                 local_M(m, 3) +=
-                    coeff * ((beta_prime_ * qp_Muu_(k, m, 3)) + (gamma_prime_ * qp_Guu_(k, m, 3)));
+                    coeff * (beta_prime_ * qp_Muu_(k, m, 3) + gamma_prime_ * qp_Guu_(k, m, 3));
                 local_M(m, 4) +=
-                    coeff * ((beta_prime_ * qp_Muu_(k, m, 4)) + (gamma_prime_ * qp_Guu_(k, m, 4)));
+                    coeff * (beta_prime_ * qp_Muu_(k, m, 4) + gamma_prime_ * qp_Guu_(k, m, 4));
                 local_M(m, 5) +=
-                    coeff * ((beta_prime_ * qp_Muu_(k, m, 5)) + (gamma_prime_ * qp_Guu_(k, m, 5)));
+                    coeff * (beta_prime_ * qp_Muu_(k, m, 5) + gamma_prime_ * qp_Guu_(k, m, 5));
             }
         }
         for (auto lane = 0U; lane < width && mask[lane]; ++lane) {
@@ -90,7 +90,7 @@ struct IntegrateInertiaMatrix {
         const auto num_qps = num_qps_per_element(i_elem);
         constexpr auto width = simd_type::size();
         const auto extra_component = num_nodes % width == 0U ? 0U : 1U;
-        const auto simd_nodes = (num_nodes / width) + extra_component;
+        const auto simd_nodes = num_nodes / width + extra_component;
 
         const auto shape_interp =
             Kokkos::View<double**, Kokkos::LayoutLeft>(member.team_scratch(1), num_nodes, num_qps);

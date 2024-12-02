@@ -20,7 +20,7 @@ inline void AssembleResidualVector(const Beams& beams) {
     // magic numbers here
     range_policy.set_scratch_size(
         1,
-        Kokkos::PerTeam((2 * shape_size) + (2 * weight_size) + node_variable_size + (5 * qp_variable_size))
+        Kokkos::PerTeam(2 * shape_size + 2 * weight_size + node_variable_size + 5 * qp_variable_size)
     );
     Kokkos::parallel_for(
         "IntegrateResidualVector", range_policy,

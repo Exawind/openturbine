@@ -799,8 +799,8 @@ public:
         auto inflowwind_input_length = static_cast<int32_t>(sim_controls_.inflowwind_input.size());
 
         // Channel name and channel unit string arrays
-        std::string channel_names_c((20 * 8000 + 1), ' ');  //< Output channel names
-        std::string channel_units_c((20 * 8000 + 1), ' ');  //< Output channel units
+        std::string channel_names_c(20 * 8000 + 1, ' ');  //< Output channel names
+        std::string channel_units_c(20 * 8000 + 1, ' ');  //< Output channel units
 
         // Number of output channels (set by ADI_C_Init)
         int32_t n_channels{0};

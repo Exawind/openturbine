@@ -13,7 +13,7 @@ struct ContributeConstraintsSystemResidualToVector {
     void operator()(size_t i_constraint) const {
         const auto node_index = target_node_index(i_constraint);
         for (auto i = 0U; i < 6U; ++i) {
-            residual((node_index * 6U) + i) += system_residual_terms(i_constraint, i);
+            residual(node_index * 6U + i) += system_residual_terms(i_constraint, i);
         }
     }
 };

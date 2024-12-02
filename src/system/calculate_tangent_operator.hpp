@@ -29,7 +29,7 @@ struct CalculateTangentOperator {
         auto rv_data = Kokkos::Array<double, 3>{};
         auto rv = Kokkos::View<double[3], Kokkos::MemoryTraits<Kokkos::Unmanaged>>{rv_data.data()};
         KokkosBlas::serial_axpy(h, Kokkos::subview(q_delta, i_node, Kokkos::make_pair(3, 6)), rv);
-        auto phi = Kokkos::sqrt((rv(0) * rv(0)) + (rv(1) * rv(1)) + (rv(2) * rv(2)));
+        auto phi = Kokkos::sqrt(rv(0) * rv(0) + rv(1) * rv(1) + rv(2) * rv(2));
 
         auto m1_data = Kokkos::Array<double, 9>{};
         auto m1 =
