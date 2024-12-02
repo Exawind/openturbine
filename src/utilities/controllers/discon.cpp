@@ -242,7 +242,9 @@ inline void VariableSpeedTorqueControl(ControllerIO& swap, InternalState& state)
         }
 
         // Saturate the commanded torque using the maximum torque limit
-        gen_trq = std::min(gen_trq, kVS_MaxTq);
+        if (gen_trq > kVS_MaxTq) {
+            gen_trq = kVS_MaxTq;
+        }
 
         // Initialize the value of generator_torque_lastest on the first pass only
         if (swap.status == 0) {
@@ -332,7 +334,7 @@ inline void PitchControl(ControllerIO& swap, InternalState& state) {
             std::cbegin(blade_pitch), std::cend(blade_pitch), std::cbegin(pitch_rate),
             std::begin(state.pitch_commanded_latest),
             [&](auto pitch, auto rate) {
-                auto commanded = pitch + (rate * elapsed_time);
+                auto commanded = pitch + rate * elapsed_time;
                 return std::clamp(commanded, kPC_MinPit, kPC_MaxPit);
             }
         );
