@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "src/beams/interpolation.hpp"
+#include "src/elements/beams/interpolation.hpp"
 
 namespace openturbine {
 
