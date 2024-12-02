@@ -49,4 +49,5 @@ struct CalculateQPPosition {
         qp_x_(i_elem, i_qp, 6) = RR0(3);
     }
 };
+
 }  // namespace openturbine

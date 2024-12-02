@@ -3,7 +3,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "src/dof_management/freedom_signature.hpp"
-#include "src/elements/elements.hpp"
 #include "src/types.hpp"
 
 namespace openturbine {
@@ -12,89 +11,46 @@ namespace openturbine {
  * @brief Contains field variables for mass elements (aka, rigid bodies) to compute per-element
  * contributions to the residual vector and system/iteration matrix.
  *
- * - Mass elements consist of a single node, hence no element number used in the Views
- * - Views prefixed with `node_` use node index as their second dimension
- * - Views prefixed with `qp_` use quadrature point index as their second dimension
- * - Additional dimensions represent physical components (e.g., xyz coordinates, rotations)
+ * @note Mass elements consist of a single node and no quadrature points are used, hence no node/qp
+ * prefix is used in the Views (as opposed to beam elements)
  */
 struct Masses {
-    // Metadata for mass elements in the mesh
-    size_t num_elems;       //< Total number of elements
-    size_t max_elem_nodes;  //< Maximum number of nodes per element
-    size_t max_elem_qps;    //< Maximum number of quadrature points per element
-
-    Kokkos::View<size_t*> num_nodes_per_element;
-    Kokkos::View<size_t*> num_qps_per_element;
-    Kokkos::View<size_t**> node_state_indices;  //< State row index for each node
+    size_t num_elems;                     //< Total number of elements
+    Kokkos::View<size_t*> state_indices;  //< State row index for each element
     Kokkos::View<FreedomSignature**> element_freedom_signature;
     Kokkos::View<size_t* [6]> element_freedom_table;
-
     View_3 gravity;
+    Kokkos::View<double* [7]> x0;        //< Initial position/rotation
+    Kokkos::View<double* [7]> u;         //< State: translation/rotation displacement
+    Kokkos::View<double* [6]> u_dot;     //< State: translation/rotation velocity
+    Kokkos::View<double* [6]> u_ddot;    //< State: translation/rotation acceleration
+    Kokkos::View<double* [7]> x;         //< Current position/orientation
+    Kokkos::View<double* [6][6]> Mstar;  //< Mass matrix in material frame
+    Kokkos::View<double* [3]> eta;       //
+    Kokkos::View<double* [3][3]> rho;    //
+    Kokkos::View<double* [6]> Fi;        //< Inertial force
+    Kokkos::View<double* [6]> Fg;        //< Gravity force
+    Kokkos::View<double* [6][6]> RR0;    //< Global rotation
+    Kokkos::View<double* [6][6]> Muu;    //< Mass matrix in global frame
 
-    // Node-based data
-    Kokkos::View<double* [7]> node_x0;      //< Initial position/rotation
-    Kokkos::View<double* [7]> node_u;       //< State: translation/rotation displacement
-    Kokkos::View<double* [6]> node_u_dot;   //< State: translation/rotation velocity
-    Kokkos::View<double* [6]> node_u_ddot;  //< State: translation/rotation acceleration
-
-    // Quadrature point data
-    Kokkos::View<double* [6][6]> qp_Mstar;            //< Mass matrix in material frame
-    Kokkos::View<double* [7]> qp_x;                   //< Current position/orientation
-    Kokkos::View<double* [3]> qp_x0;                  //< Initial position
-    Kokkos::View<double* [4]> qp_r0;                  //< Initial rotation
-    Kokkos::View<double* [3]> qp_u;                   //< State: translation displacement
-    Kokkos::View<double* [3]> qp_u_dot;               //< State: translation velocity
-    Kokkos::View<double* [3]> qp_u_ddot;              //< State: translation acceleration
-    Kokkos::View<double* [4]> qp_r;                   //< State: rotation
-    Kokkos::View<double* [3]> qp_omega;               //< State: angular velocity
-    Kokkos::View<double* [3]> qp_omega_dot;           //< State: position/rotation
-    Kokkos::View<double* [3][3]> qp_eta_tilde;        //
-    Kokkos::View<double* [3][3]> qp_omega_tilde;      //
-    Kokkos::View<double* [3][3]> qp_omega_dot_tilde;  //
-    Kokkos::View<double* [3]> qp_eta;                 //
-    Kokkos::View<double* [3][3]> qp_rho;              //
-    Kokkos::View<double* [6]> qp_Fi;                  //< Inertial force
-    Kokkos::View<double* [6]> qp_Fg;                  //< Gravity force
-    Kokkos::View<double* [6][6]> qp_RR0;              //< Global rotation
-    Kokkos::View<double* [6][6]> qp_Muu;              //< Mass matrix in global frame
-
-    Masses(const size_t n_mass_elems, const size_t max_e_nodes, const size_t max_e_qps)
-        :  // Metadata
-          num_elems(n_mass_elems),
-          max_elem_nodes(max_e_nodes),
-          max_elem_qps(max_e_qps),
-          // Element data
-          num_nodes_per_element("num_nodes_per_element", num_elems),
-          num_qps_per_element("num_qps_per_element", num_elems),
-          node_state_indices("node_state_indices", num_elems, max_elem_nodes),
-          element_freedom_signature("element_freedom_signature", num_elems, max_elem_nodes),
-          element_freedom_table("element_freedom_table", num_elems, max_elem_nodes),
+    Masses(const size_t n_mass_elems)
+        : num_elems(n_mass_elems),
+          state_indices("state_indices", num_elems),
+          element_freedom_signature("element_freedom_signature", num_elems),
+          element_freedom_table("element_freedom_table", num_elems),
           gravity("gravity"),
-          // Node data
-          node_x0("node_x0", num_elems, max_elem_nodes),
-          node_u("node_u", num_elems, max_elem_nodes),
-          node_u_dot("node_u_dot", num_elems, max_elem_nodes),
-          node_u_ddot("node_u_ddot", num_elems, max_elem_nodes),
-          // Quadrature point data
-          qp_Mstar("qp_Mstar", num_elems, max_elem_qps),
-          qp_x("qp_x", num_elems, max_elem_qps),
-          qp_x0("qp_x0", num_elems, max_elem_qps),
-          qp_r0("qp_r0", num_elems, max_elem_qps),
-          qp_u("qp_u", num_elems, max_elem_qps),
-          qp_u_dot("qp_u_dot", num_elems, max_elem_qps),
-          qp_u_ddot("qp_u_ddot", num_elems, max_elem_qps),
-          qp_r("qp_r", num_elems, max_elem_qps),
-          qp_omega("qp_omega", num_elems, max_elem_qps),
-          qp_omega_dot("qp_omega_dot", num_elems, max_elem_qps),
-          qp_eta_tilde("R1_3x3", num_elems, max_elem_qps),
-          qp_omega_tilde("R1_3x3", num_elems, max_elem_qps),
-          qp_omega_dot_tilde("R1_3x3", num_elems, max_elem_qps),
-          qp_eta("V_3", num_elems, max_elem_qps),
-          qp_rho("R1_3x3", num_elems, max_elem_qps),
-          qp_Fi("qp_Fi", num_elems, max_elem_qps),
-          qp_Fg("qp_Fg", num_elems, max_elem_qps),
-          qp_RR0("qp_RR0", num_elems, max_elem_qps),
-          qp_Muu("qp_Muu", num_elems, max_elem_qps) {
+          x0("x0", num_elems),
+          u("u", num_elems),
+          u_dot("u_dot", num_elems),
+          u_ddot("u_ddot", num_elems),
+          x("x", num_elems),
+          Mstar("Mstar", num_elems),
+          eta("eta", num_elems),
+          rho("rho", num_elems),
+          Fi("Fi", num_elems),
+          Fg("Fg", num_elems),
+          RR0("RR0", num_elems),
+          Muu("Muu", num_elems) {
         Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
     }
 };
