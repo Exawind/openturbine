@@ -189,7 +189,7 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
             }
 
             // Newton update: x_{n+1} = x_n - f(x_n)/f'(x_n)
-            const auto numerator = (x_it * legendre_poly[n_nodes - 1]) - legendre_poly[n_nodes - 2];
+            const auto numerator = x_it * legendre_poly[n_nodes - 1] - legendre_poly[n_nodes - 2];
             const auto denominator = static_cast<double>(n_nodes) * legendre_poly[n_nodes - 1];
             x_it -= numerator / denominator;
 

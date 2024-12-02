@@ -32,7 +32,7 @@ KOKKOS_INLINE_FUNCTION double DotProduct(const VectorType& a, const VectorType& 
 
 /// Calculate the dot product between two vector views
 constexpr double DotProduct(const Array_3& a, const Array_3& b) {
-    return (a[0] * b[0]) + (a[1] * b[1]) + (a[2] * b[2]);
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
 /// Calculate the cross product between two vector views
@@ -48,15 +48,15 @@ KOKKOS_INLINE_FUNCTION void CrossProduct(
 /// Calculate the cross product between two vectors
 constexpr Array_3 CrossProduct(const Array_3& a, const Array_3& b) {
     return Array_3{
-        (a[1] * b[2]) - (a[2] * b[1]),
-        (a[2] * b[0]) - (a[0] * b[2]),
-        (a[0] * b[1]) - (a[1] * b[0]),
+        a[1] * b[2] - a[2] * b[1],
+        a[2] * b[0] - a[0] * b[2],
+        a[0] * b[1] - a[1] * b[0],
     };
 }
 
 /// Calculate the norm of a given vector
 constexpr double Norm(const Array_3& v) {
-    return std::sqrt((v[0] * v[0]) + (v[1] * v[1]) + (v[2] * v[2]));
+    return std::sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
 /// UnitVector returns the unit vector of the given vector

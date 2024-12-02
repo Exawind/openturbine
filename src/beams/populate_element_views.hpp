@@ -8,8 +8,8 @@ namespace openturbine {
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
 inline void PopulateElementViews(
-    const BeamElement& elem, const T1& node_x0, const T2& qp_weight, const T3& qp_Mstar, const T4& qp_Cstar, const T5& shape_interp,
-    const T6& shape_deriv
+    const BeamElement& elem, T1 node_x0, T2 qp_weight, T3 qp_Mstar, T4 qp_Cstar, T5 shape_interp,
+    T6 shape_deriv
 ) {
     std::vector<double> node_xi(elem.nodes.size());
     for (size_t i = 0; i < elem.nodes.size(); ++i) {
