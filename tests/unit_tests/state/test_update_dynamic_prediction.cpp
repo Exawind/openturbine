@@ -21,6 +21,27 @@ TEST(UpdateDynamicPrediction, OneNode) {
     constexpr auto beta_prime = 2.;
     constexpr auto gamma_prime = 3.;
 
+    constexpr auto node_freedom_allocation_table_host_data =
+        std::array{FreedomSignature::AllComponents};
+    const auto node_freedom_allocation_table_host =
+        Kokkos::View<FreedomSignature[1], Kokkos::HostSpace>::const_type(
+            node_freedom_allocation_table_host_data.data()
+        );
+    const auto node_freedom_allocation_table = Kokkos::View<FreedomSignature[1]>("nfat");
+    const auto node_freedom_allocation_table_mirror =
+        Kokkos::create_mirror(node_freedom_allocation_table);
+    Kokkos::deep_copy(node_freedom_allocation_table_mirror, node_freedom_allocation_table_host);
+    Kokkos::deep_copy(node_freedom_allocation_table, node_freedom_allocation_table_mirror);
+
+    constexpr auto node_freedom_map_table_host_data = std::array{0UL};
+    const auto node_freedom_map_table_host = Kokkos::View<size_t[1], Kokkos::HostSpace>::const_type(
+        node_freedom_map_table_host_data.data()
+    );
+    const auto node_freedom_map_table = Kokkos::View<size_t[1]>("nfmt");
+    const auto node_freedom_map_table_mirror = Kokkos::create_mirror(node_freedom_map_table);
+    Kokkos::deep_copy(node_freedom_map_table_mirror, node_freedom_map_table_host);
+    Kokkos::deep_copy(node_freedom_map_table, node_freedom_map_table_mirror);
+
     constexpr auto x_delta_host_data = std::array{1., 2., 3., 4., 5., 6.};
     const auto x_delta_host =
         Kokkos::View<double[6], Kokkos::HostSpace>::const_type(x_delta_host_data.data());
@@ -35,7 +56,10 @@ TEST(UpdateDynamicPrediction, OneNode) {
 
     Kokkos::parallel_for(
         "UpdateDynamicPrediction", 1,
-        UpdateDynamicPrediction{h, beta_prime, gamma_prime, x_delta, q_delta, v, vd}
+        UpdateDynamicPrediction{
+            h, beta_prime, gamma_prime, node_freedom_allocation_table, node_freedom_map_table,
+            x_delta, q_delta, v, vd
+        }
     );
 
     constexpr auto q_delta_exact_data = std::array{2., 4., 6., 8., 10., 12.};
