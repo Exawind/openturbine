@@ -22,7 +22,7 @@ TEST(UpdateDynamicPrediction, OneNode) {
     constexpr auto gamma_prime = 3.;
 
     constexpr auto node_freedom_allocation_table_host_data =
-        std::array{FreedomSignature::AllComponents};
+        std::array<FreedomSignature, 1>{FreedomSignature::AllComponents};
     const auto node_freedom_allocation_table_host =
         Kokkos::View<FreedomSignature[1], Kokkos::HostSpace>::const_type(
             node_freedom_allocation_table_host_data.data()
@@ -33,7 +33,7 @@ TEST(UpdateDynamicPrediction, OneNode) {
     Kokkos::deep_copy(node_freedom_allocation_table_mirror, node_freedom_allocation_table_host);
     Kokkos::deep_copy(node_freedom_allocation_table, node_freedom_allocation_table_mirror);
 
-    constexpr auto node_freedom_map_table_host_data = std::array{0UL};
+    constexpr auto node_freedom_map_table_host_data = std::array<size_t, 1>{0UL};
     const auto node_freedom_map_table_host = Kokkos::View<size_t[1], Kokkos::HostSpace>::const_type(
         node_freedom_map_table_host_data.data()
     );
