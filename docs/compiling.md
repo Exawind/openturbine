@@ -38,29 +38,32 @@ spack install googletest
 
 ### Install Trilinos.
 
-For building OpenTurbine, Trilinos must be configured without MPI and with the Basker solver enabled.
+For building OpenTurbine, Kokkos Kernels must be configured to use the LAPACK and BLAS TPLs.
+When building for GPU, the Trilinos must be build with support for the Basker linear solver
 We also commonly disable EPetra explicitly to prevent deprication warnings.
 At the time of this writing, OpenTurbine is known to work with Trilinos version 16.0.0 - the latest and default version in spack 
 
 For a simple serial build
 ```bash
-spack install trilinos~mpi~epetra+basker
+spack install trilinos~epetra ^kokkos-kernels+blas+lapack
 ```
 
 Trilinos can also be compiled with OpenMP support for parallelism on CPU based machines
 ```bash
-spack install trilinos~mpi~epetra+basker+openmp
+spack install trilinos~epetra+openmp ^kokkos-kernels+blas+lapack
 ```
 
 If building for CUDA platforms, Trilinos must be configured with CUDA support
 ```bash
-spack install trilinos~mpi~epetra+basker+cuda+cuda_rdc
+spack install trilinos~epetra+basker+cuda ^kokkos-kernels+blas+lapack
 ```
 
 If building for ROCm platforms, Trilinos must be configured with ROCm support
 ```bash
-spack install trilinos~mpi~epetra+basker+rocm
+spack install trilinos~epetra+basker+rocm ^kokkos-kernels+blas+lapack
 ```
+
+Trilinos can be built with or without mpi support.
 
 ### Load the TPLs into your environment
 ```bash
