@@ -4,8 +4,10 @@
 #include "src/state/clone_state.hpp"
 #include "src/state/state.hpp"
 
+namespace {
+
 template <typename T>
-static void Compare(const T& field_1, const T& field_2) {
+void Compare(const T& field_1, const T& field_2) {
     const auto mirror_1 = Kokkos::create_mirror(field_1);
     Kokkos::deep_copy(mirror_1, field_1);
     const auto mirror_2 = Kokkos::create_mirror(field_2);
@@ -32,7 +34,7 @@ static void Compare(const T& field_1, const T& field_2) {
     }
 }
 
-static void CompareStates(const openturbine::State& state_1, const openturbine::State& state_2) {
+void CompareStates(const openturbine::State& state_1, const openturbine::State& state_2) {
     EXPECT_EQ(state_1.num_system_nodes, state_2.num_system_nodes);
     Compare(state_1.ID, state_2.ID);
     Compare(state_1.node_freedom_allocation_table, state_2.node_freedom_allocation_table);
@@ -48,7 +50,7 @@ static void CompareStates(const openturbine::State& state_1, const openturbine::
     Compare(state_1.tangent, state_2.tangent);
 }
 
-static openturbine::State CreateTestState() {
+openturbine::State CreateTestState() {
     constexpr auto num_system_nodes = 2UL;
     auto state = openturbine::State(num_system_nodes);
     Kokkos::deep_copy(state.ID, 1UL);
@@ -67,6 +69,8 @@ static openturbine::State CreateTestState() {
     Kokkos::deep_copy(state.tangent, 12.);
     return state;
 }
+
+}  // namespace
 
 namespace openturbine::tests {
 
