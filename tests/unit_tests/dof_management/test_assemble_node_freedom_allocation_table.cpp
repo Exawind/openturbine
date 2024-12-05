@@ -23,6 +23,24 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithOneNode_NoMassEle
     EXPECT_EQ(host_node_freedom_allocation_table(0), FreedomSignature::AllComponents);
 }
 
+TEST(TestAssembleNodeFreedomAllocationTable, NoBeamElements_OneMassElementWithOneNode) {
+    auto state = State(1U);  // 1 node in the system
+
+    auto masses = std::make_shared<Masses>(1U);  // 1 mass element with 1 node
+    Kokkos::deep_copy(masses->state_indices, 0U);
+    auto elements = Elements{nullptr, masses};  // No beam elements in the model
+
+    auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{});
+
+    assemble_node_freedom_allocation_table(state, elements, constraints);
+
+    const auto host_node_freedom_allocation_table =
+        Kokkos::create_mirror(state.node_freedom_allocation_table);
+    Kokkos::deep_copy(host_node_freedom_allocation_table, state.node_freedom_allocation_table);
+
+    EXPECT_EQ(host_node_freedom_allocation_table(0), FreedomSignature::AllComponents);
+}
+
 TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithOneNode_OneMassElementWithOneNode) {
     auto state = State(2U);  // 2 nodes in the system
 
@@ -43,24 +61,6 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithOneNode_OneMassEl
 
     EXPECT_EQ(host_node_freedom_allocation_table(0), FreedomSignature::AllComponents);
     EXPECT_EQ(host_node_freedom_allocation_table(1), FreedomSignature::AllComponents);
-}
-
-TEST(TestAssembleNodeFreedomAllocationTable, NoBeamElements_OneMassElementWithOneNode) {
-    auto state = State(1U);  // 1 node in the system
-
-    auto masses = std::make_shared<Masses>(1U);  // 1 mass element with 1 node
-    Kokkos::deep_copy(masses->state_indices, 0U);
-    auto elements = Elements{nullptr, masses};  // No beam elements in the model
-
-    auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{});
-
-    assemble_node_freedom_allocation_table(state, elements, constraints);
-
-    const auto host_node_freedom_allocation_table =
-        Kokkos::create_mirror(state.node_freedom_allocation_table);
-    Kokkos::deep_copy(host_node_freedom_allocation_table, state.node_freedom_allocation_table);
-
-    EXPECT_EQ(host_node_freedom_allocation_table(0), FreedomSignature::AllComponents);
 }
 
 TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithTwoNodes_NoMassElement) {

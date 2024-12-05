@@ -23,17 +23,7 @@ inline void create_element_freedom_table(Elements& elements, const State& state)
         has_beams ? elements.beams->element_freedom_table
                   : Kokkos::View<size_t** [6]>("beams_element_freedom_table", 0);
 
-    // Masses data
-    auto has_masses = elements.masses != nullptr;
-    const auto masses_num_elems = has_masses ? elements.masses->num_elems : 0U;
-    const auto masses_node_state_indices =
-        has_masses ? elements.masses->state_indices
-                   : Kokkos::View<size_t*>("masses_node_state_indices", 0);
-    auto masses_element_freedom_table =
-        has_masses ? elements.masses->element_freedom_table
-                   : Kokkos::View<size_t* [6]>("masses_element_freedom_table", 0);
-
-    // Beams
+    // Beams element freedom table
     Kokkos::parallel_for(
         "Create Beams Element Freedom Table", 1,
         KOKKOS_LAMBDA(size_t) {
@@ -50,7 +40,17 @@ inline void create_element_freedom_table(Elements& elements, const State& state)
         }
     );
 
-    // Masses
+    // Masses data
+    auto has_masses = elements.masses != nullptr;
+    const auto masses_num_elems = has_masses ? elements.masses->num_elems : 0U;
+    const auto masses_node_state_indices =
+        has_masses ? elements.masses->state_indices
+                   : Kokkos::View<size_t*>("masses_node_state_indices", 0);
+    auto masses_element_freedom_table =
+        has_masses ? elements.masses->element_freedom_table
+                   : Kokkos::View<size_t* [6]>("masses_element_freedom_table", 0);
+
+    // Masses element freedom table
     Kokkos::parallel_for(
         "Create Masses Element Freedom Table", 1,
         KOKKOS_LAMBDA(size_t) {
