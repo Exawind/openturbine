@@ -3,7 +3,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "src/dof_management/freedom_signature.hpp"
-#include "src/elements/elements.hpp"
 #include "src/types.hpp"
 
 namespace openturbine {
