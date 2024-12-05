@@ -37,6 +37,7 @@ public:
      *
      * @param nodes Vector of nodes
      * @param beam_elements Vector of beam elements
+     * @param mass_elements Vector of mass elements
      * @param constraints Vector of constraints
      */
     Model(
@@ -63,6 +64,7 @@ public:
      *
      * @param nodes Vector of shared pointers to nodes
      * @param beam_elements Vector of shared pointers to beam elements
+     * @param mass_elements Vector of shared pointers to mass elements
      * @param constraints Vector of shared pointers to constraints
      */
     Model(

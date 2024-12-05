@@ -5,24 +5,30 @@
 
 namespace openturbine {
 
-/// @brief State struct holds all state data
-/// @details State struct holds all state data and provides methods to update the
-/// state variables during the simulation
+/* @brief Container for storing the complete system state of the simulation at a given
+ * time increment
+ * @details This struct maintains all state variables required for the dynamic simulation,
+ * including:
+ * - Node configuration and freedom allocation
+ * - Position and rotation states (current, previous, and initial)
+ * - Velocity and acceleration states
+ * - Tangent matrix
+ */
 struct State {
-    size_t num_system_nodes;  //< Number of system nodes
+    size_t num_system_nodes;
     Kokkos::View<size_t*> ID;
     Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
     Kokkos::View<size_t*> node_freedom_map_table;
 
-    View_Nx7 x0;       //< Initial global position/rotation
-    View_Nx7 x;        //< Current global position/rotation
-    View_Nx6 q_delta;  //< Displacement increment
-    View_Nx7 q_prev;   //< Previous state
-    View_Nx7 q;        //< Current state
-    View_Nx6 v;        //< Velocity
-    View_Nx6 vd;       //< Acceleration
-    View_Nx6 a;        //< Algorithmic acceleration
-    Kokkos::View<double* [6][6]> tangent;
+    View_Nx7 x0;                           //< Initial global position/rotation
+    View_Nx7 x;                            //< Current global position/rotation
+    View_Nx6 q_delta;                      //< Displacement increment
+    View_Nx7 q_prev;                       //< Previous state
+    View_Nx7 q;                            //< Current state
+    View_Nx6 v;                            //< Velocity
+    View_Nx6 vd;                           //< Acceleration
+    View_Nx6 a;                            //< Algorithmic acceleration
+    Kokkos::View<double* [6][6]> tangent;  //< Tangent matrix
 
     explicit State(size_t num_system_nodes_)
         : num_system_nodes(num_system_nodes_),
