@@ -17,7 +17,7 @@ namespace openturbine {
 struct Masses {
     size_t num_elems;                     //< Total number of elements
     Kokkos::View<size_t*> state_indices;  //< State row index for each element
-    Kokkos::View<FreedomSignature**> element_freedom_signature;
+    Kokkos::View<FreedomSignature*> element_freedom_signature;
     Kokkos::View<size_t* [6]> element_freedom_table;
     View_3 gravity;
     Kokkos::View<double* [7]> x0;        //< Initial position/rotation
