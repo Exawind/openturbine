@@ -5,7 +5,6 @@
 #include "freedom_signature.hpp"
 
 #include "src/constraints/constraints.hpp"
-#include "src/elements/beams/beams.hpp"
 #include "src/elements/elements.hpp"
 #include "src/state/state.hpp"
 
