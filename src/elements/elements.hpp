@@ -20,6 +20,11 @@ struct Elements {
             throw std::invalid_argument("Beams and masses cannot both be empty");
         }
     }
+
+    /// Returns the total number of elements across all types in the system
+    size_t NumElementsInSystem() const {
+        return (beams ? beams->num_elems : 0) + (masses ? masses->num_elems : 0);
+    }
 };
 
 }  // namespace openturbine
