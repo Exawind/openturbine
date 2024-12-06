@@ -8,7 +8,7 @@
 
 namespace openturbine {
 
-inline void AssembleResidualVector(const Beams& beams) {
+inline void AssembleResidualVectorBeams(const Beams& beams) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Residual");
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     const auto shape_size =
