@@ -22,7 +22,7 @@
 
 #include "src/constraints/calculate_constraint_output.hpp"
 #include "src/constraints/constraints.hpp"
-#include "src/elements/beams/beams.hpp"
+#include "src/elements/elements.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
 #include "src/state/update_algorithmic_acceleration.hpp"
@@ -30,28 +30,38 @@
 
 namespace openturbine {
 
+/**
+ * @brief Attempts to complete a single time step in the dynamic FEA simulation
+ *
+ * @param parameters Simulation step parameters including time step size and convergence criteria
+ * @param solver     Solver object containing system matrices and solution methods
+ * @param elements   Collection of elements (beams, masses etc.) in the FE mesh
+ * @param state      Current state of the system (positions, velocities, accelerations, etc.)
+ * @param constraints System constraints and their associated data
+ *
+ * @return true if the step converged within the maximum allowed iterations, otherwise false
+ */
 inline bool Step(
-    StepParameters& parameters, Solver& solver, Beams& beams, State& state, Constraints& constraints
+    StepParameters& parameters, Solver& solver, Elements& elements, State& state,
+    Constraints& constraints
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Step");
-    PredictNextState(parameters, state);
 
+    PredictNextState(parameters, state);
     ResetConstraints(constraints);
 
     solver.convergence_err.clear();
-
-    double err = 1000.0;
-
-    for (auto iter = 0U; err > 1.0; ++iter) {
-        UpdateSystemVariables(parameters, beams, state);
+    double err{1000.};
+    for (auto iter = 0U; err > 1.; ++iter) {
+        UpdateSystemVariables(parameters, elements, state);
 
         UpdateTangentOperator(parameters, state);
 
         AssembleTangentOperator(solver, state);
 
-        AssembleSystemResidual(solver, beams);
+        AssembleSystemResidual(solver, elements);
 
-        AssembleSystemMatrix(solver, beams);
+        AssembleSystemMatrix(solver, elements);
 
         UpdateConstraintVariables(state, constraints);
 
