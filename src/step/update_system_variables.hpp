@@ -16,82 +16,75 @@
 
 namespace openturbine {
 
-inline void UpdateBeamVariables(
-    std::shared_ptr<Beams> beams, State& state, double beta_prime, double gamma_prime
+inline void UpdateSystemVariablesBeams(
+    StepParameters& parameters, const Beams& beams, State& state
 ) {
     auto range_policy_beams =
-        Kokkos::TeamPolicy<>(static_cast<int>(beams->num_elems), Kokkos::AUTO());
+        Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(
         "UpdateNodeState_Beams", range_policy_beams,
         UpdateNodeState{
-            beams->num_nodes_per_element,
-            beams->node_state_indices,
-            beams->node_u,
-            beams->node_u_dot,
-            beams->node_u_ddot,
-            state.q,
-            state.v,
-            state.vd,
+            beams.num_nodes_per_element, beams.node_state_indices, beams.node_u, beams.node_u_dot,
+            beams.node_u_ddot, state.q, state.v, state.vd
         }
     );
 
     Kokkos::parallel_for(
         "InterpolateToQuadraturePoints", range_policy_beams,
         InterpolateToQuadraturePoints{
-            beams->num_nodes_per_element, beams->num_qps_per_element, beams->shape_interp,
-            beams->shape_deriv, beams->qp_jacobian, beams->node_u, beams->node_u_dot,
-            beams->node_u_ddot, beams->qp_x0, beams->qp_r0, beams->qp_u, beams->qp_u_prime,
-            beams->qp_r, beams->qp_r_prime, beams->qp_u_dot, beams->qp_omega, beams->qp_u_ddot,
-            beams->qp_omega_dot, beams->qp_x
+            beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
+            beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.node_u_dot, beams.node_u_ddot,
+            beams.qp_x0, beams.qp_r0, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime,
+            beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot, beams.qp_omega_dot, beams.qp_x
         }
     );
 
     Kokkos::parallel_for(
         "CalculateQuadraturePointValues", range_policy_beams,
         CalculateQuadraturePointValues{
-            beams->num_qps_per_element,
-            beams->gravity,
-            beams->qp_u,
-            beams->qp_u_prime,
-            beams->qp_r,
-            beams->qp_r_prime,
-            beams->qp_r0,
-            beams->qp_x0,
-            beams->qp_x0_prime,
-            beams->qp_u_ddot,
-            beams->qp_omega,
-            beams->qp_omega_dot,
-            beams->qp_Mstar,
-            beams->qp_Cstar,
-            beams->qp_x,
-            beams->qp_RR0,
-            beams->qp_strain,
-            beams->qp_eta,
-            beams->qp_rho,
-            beams->qp_eta_tilde,
-            beams->qp_x0pupss,
-            beams->qp_M_tilde,
-            beams->qp_N_tilde,
-            beams->qp_omega_tilde,
-            beams->qp_omega_dot_tilde,
-            beams->qp_Fc,
-            beams->qp_Fd,
-            beams->qp_Fi,
-            beams->qp_Fe,
-            beams->qp_Fg,
-            beams->qp_Muu,
-            beams->qp_Cuu,
-            beams->qp_Ouu,
-            beams->qp_Puu,
-            beams->qp_Quu,
-            beams->qp_Guu,
-            beams->qp_Kuu
+            beams.num_qps_per_element,
+            beams.gravity,
+            beams.qp_u,
+            beams.qp_u_prime,
+            beams.qp_r,
+            beams.qp_r_prime,
+            beams.qp_r0,
+            beams.qp_x0,
+            beams.qp_x0_prime,
+            beams.qp_u_ddot,
+            beams.qp_omega,
+            beams.qp_omega_dot,
+            beams.qp_Mstar,
+            beams.qp_Cstar,
+            beams.qp_x,
+            beams.qp_RR0,
+            beams.qp_strain,
+            beams.qp_eta,
+            beams.qp_rho,
+            beams.qp_eta_tilde,
+            beams.qp_x0pupss,
+            beams.qp_M_tilde,
+            beams.qp_N_tilde,
+            beams.qp_omega_tilde,
+            beams.qp_omega_dot_tilde,
+            beams.qp_Fc,
+            beams.qp_Fd,
+            beams.qp_Fi,
+            beams.qp_Fe,
+            beams.qp_Fg,
+            beams.qp_Muu,
+            beams.qp_Cuu,
+            beams.qp_Ouu,
+            beams.qp_Puu,
+            beams.qp_Quu,
+            beams.qp_Guu,
+            beams.qp_Kuu
         }
     );
 
     AssembleResidualVector(beams);
     AssembleStiffnessMatrix(beams);
-    AssembleInertiaMatrix(beams, beta_prime, gamma_prime);
+    AssembleInertiaMatrix(beams, parameters.beta_prime, parameters.gamma_prime);
 }
 
 inline void UpdateSystemVariables(
@@ -101,7 +94,7 @@ inline void UpdateSystemVariables(
 
     // Update Beams variables
     if (elements.beams) {
-        UpdateBeamVariables(elements.beams, state, parameters.beta_prime, parameters.gamma_prime);
+        UpdateSystemVariablesBeams(parameters, *elements.beams, state);
     }
 
     // TODO: Update Masses variables

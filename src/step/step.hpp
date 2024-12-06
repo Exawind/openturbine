@@ -36,7 +36,7 @@ namespace openturbine {
  * @param parameters Simulation step parameters including time step size and convergence criteria
  * @param solver     Solver object containing system matrices and solution methods
  * @param elements   Collection of elements (beams, masses etc.) in the FE mesh
- * @param state      Current state of the system (positions, velocities, accelerations, etc.)
+ * @param state      Current state of the system (positions, velocities, accelerations etc.)
  * @param constraints System constraints and their associated data
  *
  * @return true if the step converged within the maximum allowed iterations, otherwise false
