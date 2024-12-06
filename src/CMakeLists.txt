@@ -54,8 +54,8 @@ target_include_directories(openturbine_library
 target_compile_features(openturbine_library PUBLIC cxx_std_17)
 
 # Add subdirectories for additional components of the library
-add_subdirectory(beams)
 add_subdirectory(constraints)
+add_subdirectory(elements)
 add_subdirectory(math)
 add_subdirectory(model)
 add_subdirectory(solver)

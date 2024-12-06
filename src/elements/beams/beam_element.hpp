@@ -10,6 +10,13 @@
 
 namespace openturbine {
 
+/**
+ * @brief Beam element constitutes flexible beams material behavior in openturbine.
+ *
+ * @details A beam element is defined by a set of nodes and sections. Each section is defined by a
+ * 6x6 mass matrix and a 6x6 stiffness matrix. The element quadrature is used to integrate the
+ * mass and stiffness matrices along the length of the beam.
+ */
 struct BeamElement {
     std::vector<BeamNode> nodes;        // Element node positions/rotations in material frame
     std::vector<BeamSection> sections;  // Element mass/stiffness in material frame

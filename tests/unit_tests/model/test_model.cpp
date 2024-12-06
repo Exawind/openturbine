@@ -2,33 +2,29 @@
 
 #include <gtest/gtest.h>
 
-#include "src/beams/beam_element.hpp"
+#include "src/elements/beams/beam_element.hpp"
 #include "src/model/model.hpp"
 
 namespace openturbine::tests {
 
 TEST(Model, AddNodeToModel) {
     Model model;
+    ASSERT_EQ(model.NumNodes(), 0);
 
+    // Add a node to the model
     constexpr auto pos = std::array{0., 0., 0.};
     constexpr auto rot = std::array{1., 0., 0., 0.};
     constexpr auto v = std::array{0., 0., 0.};
     constexpr auto omega = std::array{0., 0., 0.};
-
-    ASSERT_EQ(model.NumNodes(), 0);
-
-    // Add a node to the model and check the ID
     auto node = model.AddNode(
         {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
         {0., 0., 0., 1., 0., 0., 0.},                              // displacement
         {v[0], v[1], v[2], omega[0], omega[1], omega[2]}           // velocity
     );
-    ASSERT_EQ(node->ID, 0);
 
-    // Check the number of nodes in the model
+    ASSERT_EQ(node->ID, 0);
     ASSERT_EQ(model.NumNodes(), 1);
 
-    // Get the nodes in the model and check their number
     auto nodes = model.GetNodes();
     ASSERT_EQ(nodes.size(), 1);
 }
@@ -41,14 +37,13 @@ TEST(Model, TranslateModelNode) {
     constexpr auto v = std::array{0., 0., 0.};
     constexpr auto omega = std::array{0., 0., 0.};
 
-    // Add a node to the model and check the ID
+    // Add a node to the model and check the initial position
     auto node = model.AddNode(
         {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
         {0., 0., 0., 1., 0., 0., 0.},                              // displacement
         {v[0], v[1], v[2], omega[0], omega[1], omega[2]}           // velocity
     );
 
-    // Get the node and check the position
     auto node_0 = model.GetNode(0);
     ASSERT_EQ(node_0.ID, 0);
     ASSERT_EQ(node_0.x[0], pos[0]);  // 0.
@@ -71,7 +66,6 @@ TEST(Model, RotateModelNode) {
     constexpr auto v = std::array{0., 0., 0.};
     constexpr auto omega = std::array{0., 0., 0.};
 
-    // Add a node to the model and check the ID
     auto node = model.AddNode(
         {pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3]},  // position
         {0., 0., 0., 1., 0., 0., 0.},                              // displacement
@@ -124,46 +118,62 @@ TEST(Model, AddBeamElementToModel) {
     auto quadrature = BeamQuadrature{};
     auto beam_element = model.AddBeamElement(nodes, sections, quadrature);
 
-    // Get number of elements in the model
     ASSERT_EQ(model.NumBeamElements(), 1);
 
-    // Get the elements in the model and check their number
     auto elements = model.GetBeamElements();
     ASSERT_EQ(elements.size(), 1);
 }
 
+TEST(Model, AddMassElementToModel) {
+    Model model;
+    auto node = model.AddNode(
+        {0., 0., 0., 1., 0., 0., 0.},  // position
+        {0., 0., 0., 1., 0., 0., 0.},  // displacement
+        {0., 0., 0., 0., 0., 0.}       // velocity
+    );
+    auto mass_matrix = std::array<std::array<double, 6>, 6>{};
+    auto mass_element = model.AddMassElement(*node, mass_matrix);
+
+    ASSERT_EQ(model.NumMassElements(), 1);
+
+    auto elements = model.GetMassElements();
+    ASSERT_EQ(elements.size(), 1);
+}
+
 TEST(Model, ModelConstructorWithDefaults) {
-    // Create an empty model
     const Model model;
     ASSERT_EQ(model.NumNodes(), 0);
     ASSERT_EQ(model.NumBeamElements(), 0);
+    ASSERT_EQ(model.NumMassElements(), 0);
     ASSERT_EQ(model.NumConstraints(), 0);
 }
 
 TEST(Model, ModelConstructorWithObjects) {
-    // Create a model with a couple of nodes, elements and constraints
-    auto nodes = std::vector<Node>{Node{0, {0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.}}};
-    auto beam_elements = std::vector<BeamElement>{};
-    auto constraints = std::vector<Constraint>{};
+    auto nodes = std::vector<Node>{Node{0, {0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.}}};  // 1 node
+    auto beam_elements = std::vector<BeamElement>{};  // 0 beam elements
+    auto mass_elements = std::vector<MassElement>{};  // 0 mass elements
+    auto constraints = std::vector<Constraint>{};     // 0 constraints
 
-    const Model model(nodes, beam_elements, constraints);
+    const Model model(nodes, beam_elements, mass_elements, constraints);
     ASSERT_EQ(model.NumNodes(), 1);
     ASSERT_EQ(model.NumBeamElements(), 0);
+    ASSERT_EQ(model.NumMassElements(), 0);
     ASSERT_EQ(model.NumConstraints(), 0);
 }
 
 TEST(Model, ModelConstructorWithPointers) {
-    // Create a model with a couple of nodes, elements and constraints
     auto nodes = std::vector<std::shared_ptr<Node>>{};
     nodes.push_back(std::make_shared<Node>(
         0, std::array{0., 0., 0., 0., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0., 0.}
-    ));
-    const auto beam_elements = std::vector<std::shared_ptr<BeamElement>>{};
-    const auto constraints = std::vector<std::shared_ptr<Constraint>>{};
+    ));                                                                      // 1 node
+    const auto beam_elements = std::vector<std::shared_ptr<BeamElement>>{};  // 0 beam elements
+    const auto mass_elements = std::vector<std::shared_ptr<MassElement>>{};  // 0 mass elements
+    const auto constraints = std::vector<std::shared_ptr<Constraint>>{};     // 0 constraints
 
-    const Model model(nodes, beam_elements, constraints);
+    const Model model(nodes, beam_elements, mass_elements, constraints);
     ASSERT_EQ(model.NumNodes(), 1);
     ASSERT_EQ(model.NumBeamElements(), 0);
+    ASSERT_EQ(model.NumMassElements(), 0);
     ASSERT_EQ(model.NumConstraints(), 0);
 }
 
