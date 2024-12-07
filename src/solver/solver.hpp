@@ -22,9 +22,18 @@
 
 namespace openturbine {
 
-/// @brief Solver struct holds all solver data
-/// @details Solver struct holds all solver data and provides methods to update the
-/// solver variables during the simulation
+/** @brief A linear systems solver for assembling and solving system matrices and constraints in
+ * OpenTurbine. The solver wraps Trilinos packages (Tpetra, Amesos2) for handling sparse matrix
+ * operations and linear system solution.
+ *
+ * @details This solver manages the assembly and solution of linear systems arising from the
+ * geometrically nonlinear, generalized-alpha time integration based dynamic structural analysis.
+ * The linear systems include:
+ *   - System stiffness matrix (K)
+ *   - Tangent operator matrix (T)
+ *   - Constraint matrices (B and B_t)
+ *   - Combined system matrices for the complete structural problem
+ */
 struct Solver {
     // Define some types for the solver to make the code more readable
     using GlobalCrsMatrixType = Tpetra::CrsMatrix<>;
@@ -50,23 +59,23 @@ struct Solver {
     size_t num_system_dofs;   //< Number of system degrees of freedom
     size_t num_dofs;          //< Number of degrees of freedom
 
-    CrsMatrixType K;                        //< Stiffness matrix
-    CrsMatrixType T;                        //< Tangent operator
-    CrsMatrixType B;                        //< Constraints matrix
-    CrsMatrixType B_t;                      //< Transpose of constraints matrix
-    CrsMatrixType static_system_matrix;     //< Static system matrix
-    CrsMatrixType system_matrix;            //< System matrix
-    CrsMatrixType constraints_matrix;       //< Constraints matrix
-    CrsMatrixType system_matrix_full;       //< System matrix with constraints
-    CrsMatrixType constraints_matrix_full;  //< Constraints matrix with system
-    CrsMatrixType transpose_matrix_full;
+    CrsMatrixType K;                           //< Stiffness matrix
+    CrsMatrixType T;                           //< Tangent operator
+    CrsMatrixType B;                           //< Constraints matrix
+    CrsMatrixType B_t;                         //< Transpose of constraints matrix
+    CrsMatrixType static_system_matrix;        //< Static system matrix
+    CrsMatrixType system_matrix;               //< System matrix
+    CrsMatrixType constraints_matrix;          //< Constraints matrix
+    CrsMatrixType system_matrix_full;          //< System matrix with constraints
+    CrsMatrixType constraints_matrix_full;     //< Constraints matrix with system
+    CrsMatrixType transpose_matrix_full;       //< Transpose of system matrix with constraints
     CrsMatrixType system_plus_constraints;     //< System matrix with constraints
     CrsMatrixType full_matrix;                 //< Full system matrix
-    Teuchos::RCP<GlobalCrsMatrixType> A;       // System matrix
-    Teuchos::RCP<GlobalMultiVectorType> b;     // System RHS
-    Teuchos::RCP<GlobalMultiVectorType> x_mv;  // System solution
-    Kokkos::View<double*> R;                   // System residual vector
-    Kokkos::View<double*> x;                   // System solution vector
+    Teuchos::RCP<GlobalCrsMatrixType> A;       //< System matrix
+    Teuchos::RCP<GlobalMultiVectorType> b;     //< System RHS
+    Teuchos::RCP<GlobalMultiVectorType> x_mv;  //< System solution
+    Kokkos::View<double*> R;                   //< System residual vector
+    Kokkos::View<double*> x;                   //< System solution vector
 
     std::vector<double> convergence_err;
 
@@ -79,6 +88,7 @@ struct Solver {
     Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
 private:
+    /// Computes the total number of active degrees of freedom in the system
     [[nodiscard]] static size_t ComputeNumSystemDofs(
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
     ) {
@@ -91,6 +101,7 @@ private:
         return total_system_dofs;
     }
 
+    /// Computes the number of non-zero entries in the stiffness matrix (K) for sparse storage
     [[nodiscard]] static size_t ComputeKNumNonZero(
         const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
         const Kokkos::View<size_t**>::const_type& node_state_indices,
@@ -104,6 +115,7 @@ private:
         Kokkos::deep_copy(nsi_host, node_state_indices);
 
         auto K_num_non_zero = 0UL;
+        // Contributions to non-diagonal blocks from coupled nodes
         for (auto i = 0U; i < nnpe_host.extent(0); ++i) {
             auto num_element_dof = 0UL;
             for (auto j = 0U; j < nnpe_host(i); ++j) {
@@ -118,6 +130,7 @@ private:
             }
             K_num_non_zero += num_element_non_zero - num_diagonal_non_zero;
         }
+        // Contributions to diagonal blocks for each node
         for (auto i = 0U; i < nfat_host.extent(0); ++i) {
             const auto num_node_dof = count_active_dofs(nfat_host(i));
             const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
@@ -354,6 +367,7 @@ private:
         return B_num_non_zero;
     }
 
+    /// Creates the system stiffness matrix K in sparse CRS format
     [[nodiscard]] static CrsMatrixType CreateKMatrix(
         size_t system_dofs,
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
@@ -389,6 +403,7 @@ private:
         };
     }
 
+    /// Creates the tangent operator matrix T in sparse CRS format
     [[nodiscard]] static CrsMatrixType CreateTMatrix(
         size_t system_dofs,
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
@@ -417,6 +432,7 @@ private:
         };
     }
 
+    /// Creates the constraint matrix B in sparse CRS format
     [[nodiscard]] static CrsMatrixType CreateBMatrix(
         size_t system_dofs, size_t constraint_dofs,
         const Kokkos::View<ConstraintType*>::const_type& constraint_type,
@@ -450,6 +466,7 @@ private:
         };
     }
 
+    /// Creates the constraint matrix B_t in sparse CRS format
     [[nodiscard]] static CrsMatrixType CreateBtMatrix(
         size_t system_dofs, size_t constraint_dofs,
         const Kokkos::View<ConstraintType*>::const_type& constraint_type,
@@ -502,6 +519,26 @@ private:
     }
 
 public:
+    /** @brief Constructs a sparse linear systems solver for OpenTurbine
+     *
+     * @details Creates and initializes the sparse matrices needed for solving the structural system:
+     *   - System stiffness matrix (K)
+     *   - Tangent operator matrix (T)
+     *   - Constraint matrices (B and B_t)
+     *   - Combined system matrices
+     * Also initializes the linear solver (Amesos2) for the full system.
+     *
+     * @param node_IDs View containing the global IDs for each node
+     * @param node_freedom_allocation_table View containing the freedom signature for each node
+     * @param node_freedom_map_table View mapping node indices to DOF indices
+     * @param num_nodes_per_element View containing number of nodes per element
+     * @param node_state_indices View containing element-to-node connectivity
+     * @param num_constraint_dofs Number of constraint degrees of freedom
+     * @param constraint_type View containing the type of each constraint
+     * @param constraint_base_node_freedom_table View containing base node DOFs for constraints
+     * @param constraint_target_node_freedom_table View containing target node DOFs for constraints
+     * @param constraint_row_range View containing row ranges for each constraint
+     */
     Solver(
         const Kokkos::View<size_t*>::const_type& node_IDs,
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
