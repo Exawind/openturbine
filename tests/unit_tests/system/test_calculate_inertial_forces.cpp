@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/calculate_inertial_forces.hpp"
+#include "src/system/calculate_inertial_force.hpp"
 
 namespace openturbine::tests {
 
