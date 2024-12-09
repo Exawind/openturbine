@@ -8,10 +8,15 @@
 #include <KokkosSparse_spadd.hpp>
 #include <Kokkos_Core.hpp>
 
+#include "compute_number_of_non_zeros.hpp"
 #include "compute_number_of_non_zeros_constraints.hpp"
 #include "fill_unshifted_row_ptrs.hpp"
+#include "populate_sparse_indices.hpp"
+#include "populate_sparse_row_ptrs.hpp"
 #include "populate_sparse_row_ptrs_col_inds_constraints.hpp"
 #include "populate_sparse_row_ptrs_col_inds_transpose.hpp"
+#include "populate_tangent_indices.hpp"
+#include "populate_tangent_row_ptrs.hpp"
 
 #include "src/constraints/constraint_type.hpp"
 
