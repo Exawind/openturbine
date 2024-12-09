@@ -11,9 +11,9 @@
 #include "src/elements/beams/beam_element.hpp"
 #include "src/elements/beams/beam_node.hpp"
 #include "src/elements/beams/beam_section.hpp"
-#include "src/elements/beams/beams.hpp"
 #include "src/elements/beams/beams_input.hpp"
 #include "src/elements/beams/create_beams.hpp"
+#include "src/elements/elements.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -100,7 +100,10 @@ inline void SetUpSolverAndAssemble() {
     );
 
     // Initialize beams from element inputs
-    auto beams = CreateBeams(beams_input);
+    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+
+    // Create elements from beams
+    auto elements = Elements{beams, nullptr};
 
     // Constraint inputs
     model.AddPrescribedBC(model.GetNode(0));
@@ -115,13 +118,13 @@ inline void SetUpSolverAndAssemble() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
@@ -133,9 +136,9 @@ inline void SetUpSolverAndAssemble() {
     PredictNextState(parameters, state);
 
     // Update beam elements state from solvers
-    UpdateSystemVariables(parameters, beams, state);
-    AssembleSystemMatrix(solver, beams);
-    AssembleSystemResidual(solver, beams);
+    UpdateSystemVariables(parameters, elements, state);
+    AssembleSystemMatrix(solver, elements);
+    AssembleSystemResidual(solver, elements);
 
     UpdateConstraintVariables(state, constraints);
     AssembleConstraintsMatrix(solver, constraints);
@@ -342,7 +345,10 @@ inline void SetupAndTakeNoSteps() {
     );
 
     // Initialize beams from element inputs
-    auto beams = CreateBeams(beams_input);
+    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+
+    // Create elements from beams
+    auto elements = Elements{beams, nullptr};
 
     // Constraint inputs
     model.AddPrescribedBC(model.GetNode(0));
@@ -357,13 +363,13 @@ inline void SetupAndTakeNoSteps() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
@@ -371,7 +377,7 @@ inline void SetupAndTakeNoSteps() {
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
     constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
 
-    Step(parameters, solver, beams, state, constraints);
+    Step(parameters, solver, elements, state, constraints);
 
     expect_kokkos_view_1D_equal(
         solver.x,
@@ -555,7 +561,10 @@ inline auto SetupAndTakeTwoSteps() {
     );
 
     // Initialize beams from element inputs
-    auto beams = CreateBeams(beams_input);
+    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+
+    // Create elements from beams
+    auto elements = Elements{beams, nullptr};
 
     // Constraint inputs
     model.AddPrescribedBC(model.GetNode(0));
@@ -570,13 +579,13 @@ inline auto SetupAndTakeTwoSteps() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
@@ -584,7 +593,7 @@ inline auto SetupAndTakeTwoSteps() {
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
     constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
 
-    Step(parameters, solver, beams, state, constraints);
+    Step(parameters, solver, elements, state, constraints);
 
     expect_kokkos_view_2D_equal(
         constraints.residual_terms, {{
