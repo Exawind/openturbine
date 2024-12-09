@@ -30,7 +30,7 @@ struct Elements {
      * @brief Returns the number of nodes per element for each element in the system
      *
      * @return Kokkos::View<size_t*> A 1D view containing the number of nodes for each element,
-     *         concatenated in the order: beams / masses
+     *         concatenated in the order: beams | masses | ...
      */
     Kokkos::View<size_t*> NumberOfNodesPerElement() const {
         Kokkos::View<size_t*> result("num_nodes_per_element", NumElementsInSystem());
@@ -53,6 +53,43 @@ struct Elements {
             Kokkos::View<size_t*> ones("ones", masses->num_elems);
             Kokkos::deep_copy(ones, 1U);
             copy_with_offset(ones, current_offset, masses->num_elems);
+        }
+
+        return result;
+    }
+
+    /**
+     * @brief Returns the state indices for each node of each element in the system
+     *
+     * @return Kokkos::View<size_t**> A 2D view containing the state indices for each node,
+     *         concatenated in the order: beams | masses | ...
+     */
+    Kokkos::View<size_t**> NodeStateIndices() const {
+        const size_t max_nodes = beams ? beams->max_elem_nodes : 1;
+        Kokkos::View<size_t**> result("node_state_indices", NumElementsInSystem(), max_nodes);
+
+        auto copy_with_offset = [&result](
+                                    const Kokkos::View<size_t**>& source, const size_t offset,
+                                    const size_t count
+                                ) {
+            auto subview = Kokkos::subview(
+                result, Kokkos::pair<size_t, size_t>(offset, offset + count), Kokkos::ALL()
+            );
+            Kokkos::deep_copy(subview, source);
+            return offset + count;
+        };
+
+        size_t current_offset{0};
+        if (beams) {
+            current_offset =
+                copy_with_offset(beams->node_state_indices, current_offset, beams->num_elems);
+        }
+        if (masses) {
+            // Create a temporary 2D view for masses (num_masses x 1)
+            Kokkos::View<size_t**> mass_indices("mass_indices", masses->num_elems, 1);
+            auto mass_flat = Kokkos::subview(mass_indices, Kokkos::ALL(), 0);
+            Kokkos::deep_copy(mass_flat, masses->state_indices);
+            copy_with_offset(mass_indices, current_offset, masses->num_elems);
         }
 
         return result;
