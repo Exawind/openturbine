@@ -83,9 +83,13 @@ private:
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
     ) {
         auto total_system_dofs = 0UL;
-        Kokkos::parallel_reduce("ComputeNumSystemDofs", node_freedom_allocation_table.extent(0), KOKKOS_LAMBDA(size_t i, size_t& update) {
-            update += count_active_dofs(node_freedom_allocation_table(i));
-        }, total_system_dofs);
+        Kokkos::parallel_reduce(
+            "ComputeNumSystemDofs", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
+                update += count_active_dofs(node_freedom_allocation_table(i));
+            },
+            total_system_dofs
+        );
         return total_system_dofs;
     }
 
@@ -95,26 +99,36 @@ private:
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
     ) {
         auto K_num_non_zero_off_diagonal = 0UL;
-        Kokkos::parallel_reduce("ComputeKNumNonZero_OffDiagonal", num_nodes_per_element.extent(0), KOKKOS_LAMBDA(size_t i, size_t& update) {
-            auto num_element_dof = 0UL;
-            for (auto j = 0U; j < num_nodes_per_element(i); ++j) {
-                const auto num_node_dof = count_active_dofs(node_freedom_allocation_table(node_state_indices(i, j)));
-                num_element_dof += num_node_dof;
-            }
-            const auto num_element_non_zero = num_element_dof * num_element_dof;
-            auto num_diagonal_non_zero = 0UL;
-            for (auto j = 0U; j < num_nodes_per_element(i); ++j) {
-                const auto num_node_dof = count_active_dofs(node_freedom_allocation_table(node_state_indices(i, j)));
-                num_diagonal_non_zero += num_node_dof * num_node_dof;
-            }
-            update += num_element_non_zero - num_diagonal_non_zero;
-        }, K_num_non_zero_off_diagonal);
+        Kokkos::parallel_reduce(
+            "ComputeKNumNonZero_OffDiagonal", num_nodes_per_element.extent(0),
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
+                auto num_element_dof = 0UL;
+                for (auto j = 0U; j < num_nodes_per_element(i); ++j) {
+                    const auto num_node_dof =
+                        count_active_dofs(node_freedom_allocation_table(node_state_indices(i, j)));
+                    num_element_dof += num_node_dof;
+                }
+                const auto num_element_non_zero = num_element_dof * num_element_dof;
+                auto num_diagonal_non_zero = 0UL;
+                for (auto j = 0U; j < num_nodes_per_element(i); ++j) {
+                    const auto num_node_dof =
+                        count_active_dofs(node_freedom_allocation_table(node_state_indices(i, j)));
+                    num_diagonal_non_zero += num_node_dof * num_node_dof;
+                }
+                update += num_element_non_zero - num_diagonal_non_zero;
+            },
+            K_num_non_zero_off_diagonal
+        );
         auto K_num_non_zero_diagonal = 0UL;
-        Kokkos::parallel_reduce("ComputeKNumNonZero_Diagonal", node_freedom_allocation_table.extent(0), KOKKOS_LAMBDA(size_t i, size_t& update) {
-            const auto num_node_dof = count_active_dofs(node_freedom_allocation_table(i));
-            const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
-            update += num_diagonal_non_zero;
-        }, K_num_non_zero_diagonal);
+        Kokkos::parallel_reduce(
+            "ComputeKNumNonZero_Diagonal", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
+                const auto num_node_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
+                update += num_diagonal_non_zero;
+            },
+            K_num_non_zero_diagonal
+        );
         return K_num_non_zero_off_diagonal + K_num_non_zero_diagonal;
     }
 
@@ -128,40 +142,49 @@ private:
         auto K_row_ptrs = RowPtrType("row_ptrs", K_num_rows + 1);
         const auto K_row_entries = RowPtrType("row_ptrs", K_num_rows);
 
-        Kokkos::parallel_for("ComputeKRowEntries", node_freedom_allocation_table.extent(0), KOKKOS_LAMBDA(size_t i) {
-            const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
-            const auto this_node_dof_index = node_freedom_map_table(i);
+        Kokkos::parallel_for(
+            "ComputeKRowEntries", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i) {
+                const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto this_node_dof_index = node_freedom_map_table(i);
 
-            auto num_entries_in_row = this_node_num_dof;
-            bool node_found_in_system = false;
+                auto num_entries_in_row = this_node_num_dof;
+                bool node_found_in_system = false;
 
-            // contributions to non-diagonal block from coupled nodes
-            for (auto e = 0U; e < num_nodes_per_element.extent(0); ++e) {
-                bool contains_node = false;
-                auto num_entries_in_element = 0UL;
-                for (auto j = 0U; j < num_nodes_per_element(e); ++j) {
-                    contains_node = contains_node || (node_state_indices(e, j) == i);
-                    num_entries_in_element += count_active_dofs(node_freedom_allocation_table(node_state_indices(e, j)));
+                // contributions to non-diagonal block from coupled nodes
+                for (auto e = 0U; e < num_nodes_per_element.extent(0); ++e) {
+                    bool contains_node = false;
+                    auto num_entries_in_element = 0UL;
+                    for (auto j = 0U; j < num_nodes_per_element(e); ++j) {
+                        contains_node = contains_node || (node_state_indices(e, j) == i);
+                        num_entries_in_element +=
+                            count_active_dofs(node_freedom_allocation_table(node_state_indices(e, j))
+                            );
+                    }
+                    if (contains_node) {
+                        node_found_in_system = true;
+                        num_entries_in_row += num_entries_in_element - this_node_num_dof;
+                    }
                 }
-                if (contains_node) {
-                    node_found_in_system = true;
-                    num_entries_in_row += num_entries_in_element - this_node_num_dof;
+                if (node_found_in_system) {
+                    for (auto j = 0U; j < this_node_num_dof; ++j) {
+                        K_row_entries(this_node_dof_index + j) = num_entries_in_row;
+                    }
                 }
             }
-            if (node_found_in_system) {
-                for (auto j = 0U; j < this_node_num_dof; ++j) {
-                    K_row_entries(this_node_dof_index + j) = num_entries_in_row;
-                }
-            }
-        });
+        );
 
         auto result = 0UL;
-        Kokkos::parallel_scan("ComputeKRowPtrs", K_row_entries.extent(0), KOKKOS_LAMBDA(size_t& i, size_t& update, bool is_final) {
-            update += K_row_entries(i);
-            if (is_final) {
-                K_row_ptrs(i+1) = update;
-            }
-        }, result);
+        Kokkos::parallel_scan(
+            "ComputeKRowPtrs", K_row_entries.extent(0),
+            KOKKOS_LAMBDA(size_t & i, size_t & update, bool is_final) {
+                update += K_row_entries(i);
+                if (is_final) {
+                    K_row_ptrs(i + 1) = update;
+                }
+            },
+            result
+        );
 
         return K_row_ptrs;
     }
@@ -175,40 +198,45 @@ private:
     ) {
         auto K_col_inds = IndicesType("col_inds", K_num_non_zero);
 
-        Kokkos::parallel_for("ComputeKColInds", node_freedom_allocation_table.extent(0), KOKKOS_LAMBDA(size_t i) {
-            const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
-            const auto this_node_dof_index = node_freedom_map_table(i);
+        Kokkos::parallel_for(
+            "ComputeKColInds", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i) {
+                const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto this_node_dof_index = node_freedom_map_table(i);
 
-            for (auto j = 0U; j < this_node_num_dof; ++j) {
-                auto current_dof_index = K_row_ptrs(this_node_dof_index + j);
+                for (auto j = 0U; j < this_node_num_dof; ++j) {
+                    auto current_dof_index = K_row_ptrs(this_node_dof_index + j);
 
-                for (auto k = 0U; k < this_node_num_dof; ++k, ++current_dof_index) {
-                    K_col_inds(current_dof_index) = static_cast<int>(this_node_dof_index + k);
-                }
-
-                for (auto e = 0U; e < num_nodes_per_element.extent(0); ++e) {
-                    bool contains_node = false;
-                    for (auto n = 0U; n < num_nodes_per_element(e); ++n) {
-                        contains_node = contains_node || (node_state_indices(e, n) == i);
+                    for (auto k = 0U; k < this_node_num_dof; ++k, ++current_dof_index) {
+                        K_col_inds(current_dof_index) = static_cast<int>(this_node_dof_index + k);
                     }
-                    if (!contains_node) {
-                        continue;
-                    }
-                    for (auto n = 0U; n < num_nodes_per_element(e); ++n) {
-                        if (node_state_indices(e, n) != i) {
-                            const auto target_node_num_dof =
-                                count_active_dofs(node_freedom_allocation_table(node_state_indices(e, n)));
-                            const auto target_node_dof_index = node_freedom_map_table(node_state_indices(e, n));
-                            for (auto k = 0U; k < target_node_num_dof;
-                                 ++k, ++current_dof_index) {
-                                K_col_inds(current_dof_index) =
-                                    static_cast<int>(target_node_dof_index + k);
+
+                    for (auto e = 0U; e < num_nodes_per_element.extent(0); ++e) {
+                        bool contains_node = false;
+                        for (auto n = 0U; n < num_nodes_per_element(e); ++n) {
+                            contains_node = contains_node || (node_state_indices(e, n) == i);
+                        }
+                        if (!contains_node) {
+                            continue;
+                        }
+                        for (auto n = 0U; n < num_nodes_per_element(e); ++n) {
+                            if (node_state_indices(e, n) != i) {
+                                const auto target_node_num_dof = count_active_dofs(
+                                    node_freedom_allocation_table(node_state_indices(e, n))
+                                );
+                                const auto target_node_dof_index =
+                                    node_freedom_map_table(node_state_indices(e, n));
+                                for (auto k = 0U; k < target_node_num_dof;
+                                     ++k, ++current_dof_index) {
+                                    K_col_inds(current_dof_index) =
+                                        static_cast<int>(target_node_dof_index + k);
+                                }
                             }
                         }
                     }
                 }
             }
-        });
+        );
 
         return K_col_inds;
     }
@@ -217,12 +245,15 @@ private:
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
     ) {
         auto T_num_non_zero = 0UL;
-        Kokkos::parallel_reduce("ComputeTNumNonZero", node_freedom_allocation_table.extent(0), KOKKOS_LAMBDA(size_t i, size_t& update) {
-            const auto num_node_dof = count_active_dofs(node_freedom_allocation_table(i));
-            const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
-            update += num_diagonal_non_zero;
-
-        }, T_num_non_zero);
+        Kokkos::parallel_reduce(
+            "ComputeTNumNonZero", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
+                const auto num_node_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
+                update += num_diagonal_non_zero;
+            },
+            T_num_non_zero
+        );
 
         return T_num_non_zero;
     }
@@ -235,25 +266,31 @@ private:
         auto T_row_ptrs = RowPtrType("T_row_ptrs", T_num_rows + 1);
         const auto T_row_entries = RowPtrType("row_entries", T_num_rows);
 
-        Kokkos::parallel_for("ComputeTRowEntries", node_freedom_allocation_table.extent(0), KOKKOS_LAMBDA(size_t i) {
-            const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
-            const auto this_node_dof_index = node_freedom_map_table(i);
+        Kokkos::parallel_for(
+            "ComputeTRowEntries", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i) {
+                const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto this_node_dof_index = node_freedom_map_table(i);
 
-            auto num_entries_in_row = this_node_num_dof;
+                auto num_entries_in_row = this_node_num_dof;
 
-            for (auto j = 0U; j < this_node_num_dof; ++j) {
-                T_row_entries(this_node_dof_index + j) = num_entries_in_row;
+                for (auto j = 0U; j < this_node_num_dof; ++j) {
+                    T_row_entries(this_node_dof_index + j) = num_entries_in_row;
+                }
             }
-
-        });
+        );
 
         auto result = 0UL;
-        Kokkos::parallel_scan("ComputeTRowPtrs", T_row_entries.extent(0), KOKKOS_LAMBDA(size_t& i, size_t& update, bool is_final) {
-            update += T_row_entries(i);
-            if (is_final) {
-                T_row_ptrs(i+1) = update;
-            }
-        }, result);
+        Kokkos::parallel_scan(
+            "ComputeTRowPtrs", T_row_entries.extent(0),
+            KOKKOS_LAMBDA(size_t & i, size_t & update, bool is_final) {
+                update += T_row_entries(i);
+                if (is_final) {
+                    T_row_ptrs(i + 1) = update;
+                }
+            },
+            result
+        );
 
         return T_row_ptrs;
     }
@@ -265,17 +302,20 @@ private:
     ) {
         auto T_col_inds = IndicesType("T_indices", T_num_non_zero);
 
-        Kokkos::parallel_for("ComputeTColInds", node_freedom_allocation_table.extent(0), KOKKOS_LAMBDA(size_t i) {
-            const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
-            const auto this_node_dof_index = node_freedom_map_table(i);
+        Kokkos::parallel_for(
+            "ComputeTColInds", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i) {
+                const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto this_node_dof_index = node_freedom_map_table(i);
 
-            for (auto j = 0U; j < this_node_num_dof; ++j) {
-                for (auto k = 0UL, current_dof_index = T_row_ptrs(this_node_dof_index + j); k < this_node_num_dof; ++k, ++current_dof_index) {
-                    T_col_inds(current_dof_index) = static_cast<int>(this_node_dof_index + k);
+                for (auto j = 0U; j < this_node_num_dof; ++j) {
+                    for (auto k = 0UL, current_dof_index = T_row_ptrs(this_node_dof_index + j);
+                         k < this_node_num_dof; ++k, ++current_dof_index) {
+                        T_col_inds(current_dof_index) = static_cast<int>(this_node_dof_index + k);
+                    }
                 }
             }
-
-        });
+        );
 
         return T_col_inds;
     }
