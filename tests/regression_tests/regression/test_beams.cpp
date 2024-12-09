@@ -12,8 +12,7 @@
 #include "src/elements/beams/create_beams.hpp"
 #include "src/model/model.hpp"
 #include "src/state/state.hpp"
-#include "src/step/assemble_residual_vector.hpp"
-#include "src/step/update_system_variables.hpp"
+#include "src/step/update_system_variables_beams.hpp"
 #include "src/types.hpp"
 
 namespace openturbine::tests {
@@ -112,7 +111,7 @@ inline auto SetUpBeams() {
     auto state = model.CreateState();
 
     // Set the beam's initial state
-    UpdateSystemVariables(parameters, beams, state);
+    UpdateSystemVariablesBeams(parameters, beams, state);
 
     return beams;
 }
