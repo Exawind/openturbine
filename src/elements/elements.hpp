@@ -85,8 +85,11 @@ struct Elements {
                 copy_with_offset(beams->node_state_indices, current_offset, beams->num_elems);
         }
         if (masses) {
-            // Create a temporary 2D view for masses (num_masses x 1)
-            Kokkos::View<size_t**> mass_indices("mass_indices", masses->num_elems, 1);
+            // Create a temporary 2D view for masses (num_masses x max_elem_nodes from beams)
+            auto max_nodes_from_beams = beams ? beams->max_elem_nodes : 1;
+            Kokkos::View<size_t**> mass_indices(
+                "mass_indices", masses->num_elems, max_nodes_from_beams
+            );
             auto mass_flat = Kokkos::subview(mass_indices, Kokkos::ALL(), 0);
             Kokkos::deep_copy(mass_flat, masses->state_indices);
             copy_with_offset(mass_indices, current_offset, masses->num_elems);
