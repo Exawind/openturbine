@@ -27,7 +27,13 @@ struct CreateElementFreedomTable {
 };
 
 inline void create_element_freedom_table(Beams& beams, const State& state) {
-    Kokkos::parallel_for("Create Element Freedom Table", beams.num_elems, CreateElementFreedomTable{beams.num_nodes_per_element, beams.node_state_indices, state.node_freedom_map_table, beams.element_freedom_table});
+    Kokkos::parallel_for(
+        "Create Element Freedom Table", beams.num_elems,
+        CreateElementFreedomTable{
+            beams.num_nodes_per_element, beams.node_state_indices, state.node_freedom_map_table,
+            beams.element_freedom_table
+        }
+    );
 }
 
 }  // namespace openturbine

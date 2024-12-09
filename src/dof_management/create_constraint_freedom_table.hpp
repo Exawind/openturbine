@@ -19,18 +19,18 @@ struct CreateConstraintFreedomTable {
 
     KOKKOS_FUNCTION
     void operator()(size_t i) const {
-       {
-           const auto node_index = target_node_index(i);
-           for (auto k = 0U; k < 6U; ++k) {
-               target_node_freedom_table(i, k) = node_freedom_map_table(node_index) + k;
-           }
-       }
-       if (GetNumberOfNodes(type(i)) == 2U) {
-           const auto node_index = base_node_index(i);
-           for (auto k = 0U; k < 6U; ++k) {
-               base_node_freedom_table(i, k) = node_freedom_map_table(node_index) + k;
-           }
-       }
+        {
+            const auto node_index = target_node_index(i);
+            for (auto k = 0U; k < 6U; ++k) {
+                target_node_freedom_table(i, k) = node_freedom_map_table(node_index) + k;
+            }
+        }
+        if (GetNumberOfNodes(type(i)) == 2U) {
+            const auto node_index = base_node_index(i);
+            for (auto k = 0U; k < 6U; ++k) {
+                base_node_freedom_table(i, k) = node_freedom_map_table(node_index) + k;
+            }
+        }
     }
 };
 
@@ -43,7 +43,14 @@ inline void create_constraint_freedom_table(Constraints& constraints, const Stat
 
     const auto state_node_freedom_map_table = state.node_freedom_map_table;
 
-    Kokkos::parallel_for("Create Constraint Node Freedom Table", constraints.num, CreateConstraintFreedomTable{constraints.type, constraints.target_node_index, constraints.base_node_index, state.node_freedom_map_table, constraints.target_node_freedom_table, constraints.base_node_freedom_table});
+    Kokkos::parallel_for(
+        "Create Constraint Node Freedom Table", constraints.num,
+        CreateConstraintFreedomTable{
+            constraints.type, constraints.target_node_index, constraints.base_node_index,
+            state.node_freedom_map_table, constraints.target_node_freedom_table,
+            constraints.base_node_freedom_table
+        }
+    );
 }
 
 }  // namespace openturbine
