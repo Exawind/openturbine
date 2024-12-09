@@ -27,7 +27,7 @@ inline void compute_node_freedom_map_table(State& state) {
     Kokkos::deep_copy(state.node_freedom_map_table, 0UL);
     auto result = 0UL;
     Kokkos::parallel_scan(
-        "Compute Node Freedom Map Table", state.num_system_nodes,
+        "Compute Node Freedom Map Table", state.num_system_nodes - 1UL,
         ComputeNodeFreedomMapTable{
             state.node_freedom_allocation_table, state.node_freedom_map_table
         },
