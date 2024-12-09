@@ -23,12 +23,12 @@
 namespace openturbine {
 
 /** @brief A linear systems solver for assembling and solving system matrices and constraints in
- * OpenTurbine. The solver wraps Trilinos packages (Tpetra, Amesos2) for handling sparse matrix
- * operations and linear system solution.
+ * OpenTurbine. This wraps Trilinos packages (Tpetra, Amesos2) for handling sparse matrix
+ * operations and linear systems solution.
  *
  * @details This solver manages the assembly and solution of linear systems arising from the
- * geometrically nonlinear, generalized-alpha time integration based dynamic structural analysis.
- * The linear systems include:
+ * generalized-alpha based time integration of the dynamic structural problem. The linear systems
+ * include:
  *   - System stiffness matrix (K)
  *   - Tangent operator matrix (T)
  *   - Constraint matrices (B and B_t)
@@ -101,7 +101,7 @@ private:
         return total_system_dofs;
     }
 
-    /// Computes the number of non-zero entries in the stiffness matrix (K) for sparse storage
+    /// Computes the number of non-zero entries in the stiffness matrix K for sparse storage
     [[nodiscard]] static size_t ComputeKNumNonZero(
         const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
         const Kokkos::View<size_t**>::const_type& node_state_indices,
@@ -140,6 +140,7 @@ private:
         return K_num_non_zero;
     }
 
+    /// Computes the row pointers for the sparse stiffness matrix K in CSR format
     [[nodiscard]] static RowPtrType ComputeKRowPtrs(
         size_t K_num_rows,
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
@@ -521,13 +522,6 @@ private:
 public:
     /** @brief Constructs a sparse linear systems solver for OpenTurbine
      *
-     * @details Creates and initializes the sparse matrices needed for solving the structural system:
-     *   - System stiffness matrix (K)
-     *   - Tangent operator matrix (T)
-     *   - Constraint matrices (B and B_t)
-     *   - Combined system matrices
-     * Also initializes the linear solver (Amesos2) for the full system.
-     *
      * @param node_IDs View containing the global IDs for each node
      * @param node_freedom_allocation_table View containing the freedom signature for each node
      * @param node_freedom_map_table View mapping node indices to DOF indices
@@ -652,14 +646,16 @@ public:
         );
 
         auto comm = Teuchos::createSerialComm<LocalOrdinalType>();
-        auto rowMap = Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(
+        auto row_map = Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(
             static_cast<size_t>(full_matrix.numRows()), comm
         );
-        auto colMap = Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(
+        auto col_map = Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(
             static_cast<size_t>(full_matrix.numCols()), comm
         );
 
-        A = Teuchos::make_rcp<GlobalCrsMatrixType>(rowMap, colMap, CrsMatrixType("A", full_matrix));
+        A = Teuchos::make_rcp<GlobalCrsMatrixType>(
+            row_map, col_map, CrsMatrixType("A", full_matrix)
+        );
         b = Tpetra::createMultiVector<ScalarType>(A->getRangeMap(), 1);
         x_mv = Tpetra::createMultiVector<ScalarType>(A->getDomainMap(), 1);
 
