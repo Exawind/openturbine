@@ -125,7 +125,7 @@ private:
         const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
         const Kokkos::View<size_t**>::const_type& node_state_indices
     ) {
-        const auto K_row_ptrs = RowPtrType("row_ptrs", K_num_rows + 1);
+        auto K_row_ptrs = RowPtrType("row_ptrs", K_num_rows + 1);
         const auto K_row_entries = RowPtrType("row_ptrs", K_num_rows);
 
         Kokkos::parallel_for("ComputeKRowEntries", node_freedom_allocation_table.extent(0), KOKKOS_LAMBDA(size_t i) {
@@ -166,8 +166,6 @@ private:
         return K_row_ptrs;
     }
 
-    // Suppress cognitive complexity check for now - this will be extended and refactored soon
-    // NOLINTBEGIN(readability-function-cognitive-complexity)
     [[nodiscard]] static IndicesType ComputeKColInds(
         size_t K_num_non_zero,
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
@@ -193,17 +191,18 @@ private:
                     for (auto n = 0U; n < num_nodes_per_element(e); ++n) {
                         contains_node = contains_node || (node_state_indices(e, n) == i);
                     }
-                    if (contains_node) {
-                        for (auto n = 0U; n < num_nodes_per_element(e); ++n) {
-                            if (node_state_indices(e, n) != i) {
-                                const auto target_node_num_dof =
-                                    count_active_dofs(node_freedom_allocation_table(node_state_indices(e, n)));
-                                const auto target_node_dof_index = node_freedom_map_table(node_state_indices(e, n));
-                                for (auto k = 0U; k < target_node_num_dof;
-                                     ++k, ++current_dof_index) {
-                                    K_col_inds(current_dof_index) =
-                                        static_cast<int>(target_node_dof_index + k);
-                                }
+                    if (!contains_node) {
+                        continue;
+                    }
+                    for (auto n = 0U; n < num_nodes_per_element(e); ++n) {
+                        if (node_state_indices(e, n) != i) {
+                            const auto target_node_num_dof =
+                                count_active_dofs(node_freedom_allocation_table(node_state_indices(e, n)));
+                            const auto target_node_dof_index = node_freedom_map_table(node_state_indices(e, n));
+                            for (auto k = 0U; k < target_node_num_dof;
+                                 ++k, ++current_dof_index) {
+                                K_col_inds(current_dof_index) =
+                                    static_cast<int>(target_node_dof_index + k);
                             }
                         }
                     }
@@ -213,7 +212,6 @@ private:
 
         return K_col_inds;
     }
-    // NOLINTEND(readability-function-cognitive-complexity)
 
     [[nodiscard]] static size_t ComputeTNumNonZero(
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
@@ -234,7 +232,7 @@ private:
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
         const Kokkos::View<size_t*>::const_type& node_freedom_map_table
     ) {
-        const auto T_row_ptrs = RowPtrType("T_row_ptrs", T_num_rows + 1);
+        auto T_row_ptrs = RowPtrType("T_row_ptrs", T_num_rows + 1);
         const auto T_row_entries = RowPtrType("row_entries", T_num_rows);
 
         Kokkos::parallel_for("ComputeTRowEntries", node_freedom_allocation_table.extent(0), KOKKOS_LAMBDA(size_t i) {
@@ -265,7 +263,7 @@ private:
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
         const Kokkos::View<size_t*>::const_type& node_freedom_map_table, const RowPtrType& T_row_ptrs
     ) {
-        const auto T_col_inds = IndicesType("T_indices", T_num_non_zero);
+        auto T_col_inds = IndicesType("T_indices", T_num_non_zero);
 
         Kokkos::parallel_for("ComputeTColInds", node_freedom_allocation_table.extent(0), KOKKOS_LAMBDA(size_t i) {
             const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
