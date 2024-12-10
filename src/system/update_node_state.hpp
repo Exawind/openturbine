@@ -4,6 +4,9 @@
 
 namespace openturbine {
 
+/**
+ * @brief Functor to update nodal states for a single element from global state vectors
+ */
 struct UpdateNodeStateElement {
     size_t i_elem;
     Kokkos::View<size_t**>::const_type node_state_indices;
@@ -28,6 +31,12 @@ struct UpdateNodeStateElement {
     }
 };
 
+/**
+ * @brief Functor to update nodal states for all elements in the mesh
+ *
+ * Iterates over all elements, updating the nodal states for each element using the provided
+ * global state vectors.
+ */
 struct UpdateNodeState {
     Kokkos::View<size_t*>::const_type num_nodes_per_element;
     Kokkos::View<size_t**>::const_type node_state_indices;
