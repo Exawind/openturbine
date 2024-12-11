@@ -30,12 +30,14 @@ struct Masses {
     Kokkos::View<double* [1][6]> u_ddot;    //< State: translation/rotation acceleration
     Kokkos::View<double* [1][7]> x;         //< Current position/orientation
     Kokkos::View<double* [1][6][6]> Mstar;  //< Mass matrix in material frame
+    Kokkos::View<double* [1][6][6]> RR0;    //< Global rotation
+    Kokkos::View<double* [1][6][6]> Muu;    //< Mass matrix in global/inertial frame
     Kokkos::View<double* [1][3]> eta;       //< Offset between mass center and elastic axis
     Kokkos::View<double* [1][3][3]> rho;    //< Rotational inertia part of mass matrix
     Kokkos::View<double* [1][6]> Fi;        //< Inertial force
     Kokkos::View<double* [1][6]> Fg;        //< Gravity force
-    Kokkos::View<double* [1][6][6]> RR0;    //< Global rotation
-    Kokkos::View<double* [1][6][6]> Muu;    //< Mass matrix in global frame
+    Kokkos::View<double* [1][6][6]> Guu;    //< Gyroscopic/inertial damping matrix
+    Kokkos::View<double* [1][6][6]> Kuu;    //< Inertia stiffness matrix
 
     Masses(const size_t n_mass_elems)
         : num_elems(n_mass_elems),
@@ -50,12 +52,14 @@ struct Masses {
           u_ddot("u_ddot", num_elems),
           x("x", num_elems),
           Mstar("Mstar", num_elems),
+          RR0("RR0", num_elems),
+          Muu("Muu", num_elems),
           eta("eta", num_elems),
           rho("rho", num_elems),
           Fi("Fi", num_elems),
           Fg("Fg", num_elems),
-          RR0("RR0", num_elems),
-          Muu("Muu", num_elems) {
+          Guu("Guu", num_elems),
+          Kuu("Kuu", num_elems) {
         Kokkos::deep_copy(num_nodes_per_element, 1);  // Always 1 node per element
         Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
     }

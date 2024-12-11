@@ -18,10 +18,9 @@ namespace openturbine {
 inline void UpdateSystemVariablesBeams(
     StepParameters& parameters, const Beams& beams, State& state
 ) {
-    auto range_policy_beams =
-        Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
+    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(
-        "UpdateNodeState_Beams", range_policy_beams,
+        "UpdateNodeState", range_policy,
         UpdateNodeState{
             beams.num_nodes_per_element, beams.node_state_indices, beams.node_u, beams.node_u_dot,
             beams.node_u_ddot, state.q, state.v, state.vd
@@ -29,7 +28,7 @@ inline void UpdateSystemVariablesBeams(
     );
 
     Kokkos::parallel_for(
-        "InterpolateToQuadraturePoints", range_policy_beams,
+        "InterpolateToQuadraturePoints", range_policy,
         InterpolateToQuadraturePoints{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
             beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.node_u_dot, beams.node_u_ddot,
@@ -39,7 +38,7 @@ inline void UpdateSystemVariablesBeams(
     );
 
     Kokkos::parallel_for(
-        "CalculateQuadraturePointValues", range_policy_beams,
+        "CalculateQuadraturePointValues", range_policy,
         CalculateQuadraturePointValues{
             beams.num_qps_per_element,
             beams.gravity,

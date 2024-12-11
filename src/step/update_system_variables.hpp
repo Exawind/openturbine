@@ -4,6 +4,7 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "update_system_variables_beams.hpp"
+#include "update_system_variables_masses.hpp"
 
 #include "src/elements/elements.hpp"
 #include "src/state/state.hpp"
