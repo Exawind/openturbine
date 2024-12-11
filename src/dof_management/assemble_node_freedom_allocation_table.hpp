@@ -33,10 +33,10 @@ inline void assemble_node_freedom_allocation_table(
     const auto masses_num_elems = has_masses ? elements.masses->num_elems : 0U;
     const auto masses_node_state_indices =
         has_masses ? elements.masses->state_indices
-                   : Kokkos::View<size_t*>("masses_node_state_indices", 0);
+                   : Kokkos::View<size_t* [1]>("masses_node_state_indices", 0);
     const auto masses_element_freedom_signature =
         has_masses ? elements.masses->element_freedom_signature
-                   : Kokkos::View<FreedomSignature*>("masses_element_freedom_signature", 0);
+                   : Kokkos::View<FreedomSignature* [1]>("masses_element_freedom_signature", 0);
 
     // Constraints data
     const auto constraints_num = constraints.num;
@@ -63,11 +63,14 @@ inline void assemble_node_freedom_allocation_table(
 
             // Assemble mass element contributions
             for (auto i = 0U; i < masses_num_elems; ++i) {
-                const auto node_index = masses_node_state_indices(i);
-                const auto current_signature = state_node_freedom_allocation_table(node_index);
-                const auto contributed_signature = masses_element_freedom_signature(i);
-                state_node_freedom_allocation_table(node_index) =
-                    current_signature | contributed_signature;
+                const auto num_nodes = 1U;
+                for (auto j = 0U; j < num_nodes; ++j) {
+                    const auto node_index = masses_node_state_indices(i, j);
+                    const auto current_signature = state_node_freedom_allocation_table(node_index);
+                    const auto contributed_signature = masses_element_freedom_signature(i, j);
+                    state_node_freedom_allocation_table(node_index) =
+                        current_signature | contributed_signature;
+                }
             }
 
             // Assemble constraint contributions

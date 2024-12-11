@@ -45,20 +45,23 @@ inline void create_element_freedom_table(Elements& elements, const State& state)
     const auto masses_num_elems = has_masses ? elements.masses->num_elems : 0U;
     const auto masses_node_state_indices =
         has_masses ? elements.masses->state_indices
-                   : Kokkos::View<size_t*>("masses_node_state_indices", 0);
+                   : Kokkos::View<size_t* [1]>("masses_node_state_indices", 0);
     auto masses_element_freedom_table =
         has_masses ? elements.masses->element_freedom_table
-                   : Kokkos::View<size_t* [6]>("masses_element_freedom_table", 0);
+                   : Kokkos::View<size_t* [1][6]>("masses_element_freedom_table", 0);
 
     // Masses element freedom table
     Kokkos::parallel_for(
         "Create Masses Element Freedom Table", 1,
         KOKKOS_LAMBDA(size_t) {
             for (auto i = 0U; i < masses_num_elems; ++i) {
-                const auto node_index = masses_node_state_indices(i);
-                for (auto j = 0U; j < 6U; ++j) {
-                    masses_element_freedom_table(i, j) =
-                        state.node_freedom_map_table(node_index) + j;
+                const auto num_nodes = 1U;
+                for (auto j = 0U; j < num_nodes; ++j) {
+                    const auto node_index = masses_node_state_indices(i, j);
+                    for (auto k = 0U; k < 6U; ++k) {
+                        masses_element_freedom_table(i, j, k) =
+                            state.node_freedom_map_table(node_index) + k;
+                    }
                 }
             }
         }

@@ -44,7 +44,7 @@ TEST(TestCreateElementFreedomTable, NoBeamElement_OneMassElementWithOneNode) {
 
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
-            host_element_freedom_table(0, k), k
+            host_element_freedom_table(0, 0, k), k
         );  // Mass Element 1 Node 1 DOFs: 0, 1, 2, 3, 4, 5
     }
 }
@@ -124,7 +124,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
     Kokkos::deep_copy(host_masses_element_freedom_table, masses->element_freedom_table);
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
-            host_masses_element_freedom_table(0, k), k + 6U
+            host_masses_element_freedom_table(0, 0, k), k + 6U
         );  // Mass Element 1 Node 1 DOFs: 6, 7, 8, 9, 10, 11
     }
 }
@@ -315,7 +315,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
     Kokkos::deep_copy(host_masses_element_freedom_table, masses->element_freedom_table);
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
-            host_masses_element_freedom_table(0, k), k + 12U
+            host_masses_element_freedom_table(0, 0, k), k + 12U
         );  // Mass Element 1 Node 1 DOFs: 12, 13, 14, 15, 16, 17
     }
 }

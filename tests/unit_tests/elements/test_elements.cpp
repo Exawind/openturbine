@@ -115,9 +115,9 @@ TEST(ElementsTest, NodeStateIndicesMassesOnly) {
     auto masses = std::make_shared<Masses>(3);  // 3 mass elements
     // Set up state indices for masses: [10, 20, 30]
     auto host_mass_indices = Kokkos::create_mirror_view(masses->state_indices);
-    host_mass_indices(0) = 10;
-    host_mass_indices(1) = 20;
-    host_mass_indices(2) = 30;
+    host_mass_indices(0, 0) = 10;
+    host_mass_indices(1, 0) = 20;
+    host_mass_indices(2, 0) = 30;
     Kokkos::deep_copy(masses->state_indices, host_mass_indices);
 
     Elements elements{nullptr, masses};
@@ -132,19 +132,18 @@ TEST(ElementsTest, NodeStateIndicesMassesOnly) {
 }
 
 TEST(ElementsTest, NodeStateIndicesMixedElements) {
-    auto beams = std::make_shared<Beams>(1, 2, 2);  // 1 beam element with 2 nodes
+    auto beams = std::make_shared<Beams>(1, 1, 1);  // 1 beam element with 1 node
     auto masses = std::make_shared<Masses>(2);      // 2 mass elements
 
-    // Set up state indices for beam nodes: [0, 1]
+    // Set up state indices for beam nodes: [0]
     auto host_beam_indices = Kokkos::create_mirror_view(beams->node_state_indices);
     host_beam_indices(0, 0) = 0;
-    host_beam_indices(0, 1) = 1;
     Kokkos::deep_copy(beams->node_state_indices, host_beam_indices);
 
-    // Set up state indices for masses: [2, 3]
+    // Set up state indices for masses: [1, 2]
     auto host_mass_indices = Kokkos::create_mirror_view(masses->state_indices);
-    host_mass_indices(0) = 2;
-    host_mass_indices(1) = 3;
+    host_mass_indices(0, 0) = 1;
+    host_mass_indices(1, 0) = 2;
     Kokkos::deep_copy(masses->state_indices, host_mass_indices);
 
     Elements elements{beams, masses};
@@ -152,13 +151,12 @@ TEST(ElementsTest, NodeStateIndicesMixedElements) {
     auto host_indices = Kokkos::create_mirror_view(indices);
     Kokkos::deep_copy(host_indices, indices);
 
-    // Verify beam element indices - 1 element with 2 nodes
+    // Verify beam element indices - 1 element with 1 node
     EXPECT_EQ(host_indices(0, 0), 0);
-    EXPECT_EQ(host_indices(0, 1), 1);
 
     // Verify mass element indices - 2 elements with 1 node each
-    EXPECT_EQ(host_indices(1, 0), 2);
-    EXPECT_EQ(host_indices(2, 0), 3);
+    EXPECT_EQ(host_indices(1, 0), 1);
+    EXPECT_EQ(host_indices(2, 0), 2);
 }
 
 }  // namespace openturbine::tests
