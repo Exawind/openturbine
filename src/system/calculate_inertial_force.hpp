@@ -9,18 +9,20 @@
 namespace openturbine {
 
 /**
- * @brief Functor to calculate inertial forces in a beam/mass element
+ * @brief Functor to calculate inertial forces in Beams/Masses elements
  *
- * This struct serves as a function object to compute inertial forces for beam and rigid body
- * elements, including both translational and rotational effects. The formulation follows the
- * "SO(3)-based GEBT Beam" chapter of the OpenTurbine theory documentation (Eq. 32):
+ * @details This struct serves as a function object to compute inertial forces for beam or
+ * mass/rigid body elements, taking both translational and rotational effects into account.
+ * The formulation follows the "SO(3)-based GEBT Beam" section of the OpenTurbine theory
+ * documentation (Eq. 32):
  *
- * Inertial force vector, FI = {
- *     {FI_1} = {m * u_ddot + (omega_dot_tilde + omega_tilde * omega_tilde) * m * eta}
- *     {FI_2} = {m * eta_tilde * u_ddot + rho * omega_dot + omega_tilde * rho * omega}
- * }
+ * Inertial force vector, {FI} =
+ *     {m * u_ddot + (omega_dot_tilde + omega_tilde * omega_tilde) * m * eta}
+ *     {m * eta_tilde * u_ddot + rho * omega_dot + omega_tilde * rho * omega}
  *
- * The forces are computed for each quadrature point (i_qp) of a given element (i_elem).
+ * The forces are computed for each quadrature point (i_qp) of a given element (i_elem) for
+ * beam elements. For mass elements, the forces are computed at the (only) node of the
+ * element.
  */
 struct CalculateInertialForces {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
@@ -60,7 +62,7 @@ struct CalculateInertialForces {
         auto M1 = View_3x3(m1.data());
         auto FI = Kokkos::subview(qp_FI_, i_elem, i_qp, Kokkos::ALL);
 
-        // Compute FI_1
+        // Compute first 3 components of FI
         // FI_1 = m * u_ddot + (omega_dot_tilde + omega_tilde * omega_tilde) * m * eta
         VecTilde(omega, omega_tilde);
         VecTilde(omega_dot, omega_dot_tilde);
@@ -71,7 +73,7 @@ struct CalculateInertialForces {
         Gemv::invoke(1., M1, eta, 0., FI_1);
         KokkosBlas::serial_axpy(m, u_ddot, FI_1);
 
-        // Compute FI_2
+        // Compute last 3 components of FI
         // FI_2 = m * eta_tilde * u_ddot + rho * omega_dot + omega_tilde * rho * omega
         auto FI_2 = Kokkos::subview(FI, Kokkos::make_pair(3, 6));
         KokkosBlas::serial_axpy(m, u_ddot, V1);
