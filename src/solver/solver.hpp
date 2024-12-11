@@ -73,16 +73,17 @@ struct Solver {
 
     Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
-private:
     [[nodiscard]] static size_t ComputeNumSystemDofs(
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
     ) {
-        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
-        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
         auto total_system_dofs = 0UL;
-        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
-            total_system_dofs += count_active_dofs(nfat_host(i));
-        }
+        Kokkos::parallel_reduce(
+            "ComputeNumSystemDofs", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
+                update += count_active_dofs(node_freedom_allocation_table(i));
+            },
+            total_system_dofs
+        );
         return total_system_dofs;
     }
 
@@ -91,35 +92,38 @@ private:
         const Kokkos::View<size_t**>::const_type& node_state_indices,
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
     ) {
-        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
-        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
-        const auto nnpe_host = Kokkos::create_mirror(num_nodes_per_element);
-        Kokkos::deep_copy(nnpe_host, num_nodes_per_element);
-        const auto nsi_host = Kokkos::create_mirror(node_state_indices);
-        Kokkos::deep_copy(nsi_host, node_state_indices);
-
-        auto K_num_non_zero = 0UL;
-        for (auto i = 0U; i < nnpe_host.extent(0); ++i) {
-            auto num_element_dof = 0UL;
-            for (auto j = 0U; j < nnpe_host(i); ++j) {
-                const auto num_node_dof = count_active_dofs(nfat_host(nsi_host(i, j)));
-                num_element_dof += num_node_dof;
-            }
-            const auto num_element_non_zero = num_element_dof * num_element_dof;
-            auto num_diagonal_non_zero = 0UL;
-            for (auto j = 0U; j < nnpe_host(i); ++j) {
-                const auto num_node_dof = count_active_dofs(nfat_host(nsi_host(i, j)));
-                num_diagonal_non_zero += num_node_dof * num_node_dof;
-            }
-            K_num_non_zero += num_element_non_zero - num_diagonal_non_zero;
-        }
-        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
-            const auto num_node_dof = count_active_dofs(nfat_host(i));
-            const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
-            K_num_non_zero += num_diagonal_non_zero;
-        }
-
-        return K_num_non_zero;
+        auto K_num_non_zero_off_diagonal = 0UL;
+        Kokkos::parallel_reduce(
+            "ComputeKNumNonZero_OffDiagonal", num_nodes_per_element.extent(0),
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
+                auto num_element_dof = 0UL;
+                for (auto j = 0U; j < num_nodes_per_element(i); ++j) {
+                    const auto num_node_dof =
+                        count_active_dofs(node_freedom_allocation_table(node_state_indices(i, j)));
+                    num_element_dof += num_node_dof;
+                }
+                const auto num_element_non_zero = num_element_dof * num_element_dof;
+                auto num_diagonal_non_zero = 0UL;
+                for (auto j = 0U; j < num_nodes_per_element(i); ++j) {
+                    const auto num_node_dof =
+                        count_active_dofs(node_freedom_allocation_table(node_state_indices(i, j)));
+                    num_diagonal_non_zero += num_node_dof * num_node_dof;
+                }
+                update += num_element_non_zero - num_diagonal_non_zero;
+            },
+            K_num_non_zero_off_diagonal
+        );
+        auto K_num_non_zero_diagonal = 0UL;
+        Kokkos::parallel_reduce(
+            "ComputeKNumNonZero_Diagonal", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
+                const auto num_node_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
+                update += num_diagonal_non_zero;
+            },
+            K_num_non_zero_diagonal
+        );
+        return K_num_non_zero_off_diagonal + K_num_non_zero_diagonal;
     }
 
     [[nodiscard]] static RowPtrType ComputeKRowPtrs(
@@ -129,62 +133,56 @@ private:
         const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
         const Kokkos::View<size_t**>::const_type& node_state_indices
     ) {
-        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
-        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
-
-        const auto nfmt_host = Kokkos::create_mirror(node_freedom_map_table);
-        Kokkos::deep_copy(nfmt_host, node_freedom_map_table);
-
-        const auto nnpe_host = Kokkos::create_mirror(num_nodes_per_element);
-        Kokkos::deep_copy(nnpe_host, num_nodes_per_element);
-
-        const auto nsi_host = Kokkos::create_mirror(node_state_indices);
-        Kokkos::deep_copy(nsi_host, node_state_indices);
-
-        const auto K_row_ptrs = RowPtrType("row_ptrs", K_num_rows + 1);
-        const auto K_row_ptrs_host = Kokkos::create_mirror(K_row_ptrs);
-
+        auto K_row_ptrs = RowPtrType("row_ptrs", K_num_rows + 1);
         const auto K_row_entries = RowPtrType("row_ptrs", K_num_rows);
-        const auto K_row_entries_host = Kokkos::create_mirror(K_row_entries);
 
-        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
-            const auto this_node_num_dof = count_active_dofs(nfat_host(i));
-            const auto this_node_dof_index = nfmt_host(i);
+        Kokkos::parallel_for(
+            "ComputeKRowEntries", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i) {
+                const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto this_node_dof_index = node_freedom_map_table(i);
 
-            auto num_entries_in_row = this_node_num_dof;
-            bool node_found_in_system = false;
+                auto num_entries_in_row = this_node_num_dof;
+                bool node_found_in_system = false;
 
-            // contributions to non-diagonal block from coupled nodes
-            for (auto e = 0U; e < nnpe_host.extent(0); ++e) {
-                bool contains_node = false;
-                auto num_entries_in_element = 0UL;
-                for (auto j = 0U; j < nnpe_host(e); ++j) {
-                    contains_node = contains_node || (nsi_host(e, j) == i);
-                    num_entries_in_element += count_active_dofs(nfat_host(nsi_host(e, j)));
+                // contributions to non-diagonal block from coupled nodes
+                for (auto e = 0U; e < num_nodes_per_element.extent(0); ++e) {
+                    bool contains_node = false;
+                    auto num_entries_in_element = 0UL;
+                    for (auto j = 0U; j < num_nodes_per_element(e); ++j) {
+                        contains_node = contains_node || (node_state_indices(e, j) == i);
+                        num_entries_in_element +=
+                            count_active_dofs(node_freedom_allocation_table(node_state_indices(e, j))
+                            );
+                    }
+                    if (contains_node) {
+                        node_found_in_system = true;
+                        num_entries_in_row += num_entries_in_element - this_node_num_dof;
+                    }
                 }
-                if (contains_node) {
-                    node_found_in_system = true;
-                    num_entries_in_row += num_entries_in_element - this_node_num_dof;
+                if (node_found_in_system) {
+                    for (auto j = 0U; j < this_node_num_dof; ++j) {
+                        K_row_entries(this_node_dof_index + j) = num_entries_in_row;
+                    }
                 }
             }
-            if (node_found_in_system) {
-                for (auto j = 0U; j < this_node_num_dof; ++j) {
-                    K_row_entries_host(this_node_dof_index + j) = num_entries_in_row;
+        );
+
+        auto result = 0UL;
+        Kokkos::parallel_scan(
+            "ComputeKRowPtrs", K_row_entries.extent(0),
+            KOKKOS_LAMBDA(size_t i, size_t & update, bool is_final) {
+                update += K_row_entries(i);
+                if (is_final) {
+                    K_row_ptrs(i + 1) = update;
                 }
-            }
-        }
-
-        for (auto i = 0U; i < K_row_entries_host.extent(0); ++i) {
-            K_row_ptrs_host(i + 1) = K_row_ptrs_host(i) + K_row_entries_host(i);
-        }
-
-        Kokkos::deep_copy(K_row_ptrs, K_row_ptrs_host);
+            },
+            result
+        );
 
         return K_row_ptrs;
     }
 
-    // Suppress cognitive complexity check for now - this will be extended and refactored soon
-    // NOLINTBEGIN(readability-function-cognitive-complexity)
     [[nodiscard]] static IndicesType ComputeKColInds(
         size_t K_num_non_zero,
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
@@ -192,49 +190,39 @@ private:
         const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
         const Kokkos::View<size_t**>::const_type& node_state_indices, const RowPtrType& K_row_ptrs
     ) {
-        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
-        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
-
-        const auto nfmt_host = Kokkos::create_mirror(node_freedom_map_table);
-        Kokkos::deep_copy(nfmt_host, node_freedom_map_table);
-
-        const auto nnpe_host = Kokkos::create_mirror(num_nodes_per_element);
-        Kokkos::deep_copy(nnpe_host, num_nodes_per_element);
-
-        const auto nsi_host = Kokkos::create_mirror(node_state_indices);
-        Kokkos::deep_copy(nsi_host, node_state_indices);
-
-        const auto K_row_ptrs_host = Kokkos::create_mirror(K_row_ptrs);
-        Kokkos::deep_copy(K_row_ptrs_host, K_row_ptrs);
-
         auto K_col_inds = IndicesType("col_inds", K_num_non_zero);
-        const auto K_col_inds_host = Kokkos::create_mirror(K_col_inds);
 
-        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
-            const auto this_node_num_dof = count_active_dofs(nfat_host(i));
-            const auto this_node_dof_index = nfmt_host(i);
+        Kokkos::parallel_for(
+            "ComputeKColInds", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i) {
+                const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto this_node_dof_index = node_freedom_map_table(i);
 
-            for (auto j = 0U; j < this_node_num_dof; ++j) {
-                auto current_dof_index = K_row_ptrs_host(this_node_dof_index + j);
+                for (auto j = 0U; j < this_node_num_dof; ++j) {
+                    auto current_dof_index = K_row_ptrs(this_node_dof_index + j);
 
-                for (auto k = 0U; k < this_node_num_dof; ++k, ++current_dof_index) {
-                    K_col_inds_host(current_dof_index) = static_cast<int>(this_node_dof_index + k);
-                }
-
-                for (auto e = 0U; e < nnpe_host.extent(0); ++e) {
-                    bool contains_node = false;
-                    for (auto n = 0U; n < nnpe_host(e); ++n) {
-                        contains_node = contains_node || (nsi_host(e, n) == i);
+                    for (auto k = 0U; k < this_node_num_dof; ++k, ++current_dof_index) {
+                        K_col_inds(current_dof_index) = static_cast<int>(this_node_dof_index + k);
                     }
-                    if (contains_node) {
-                        for (auto n = 0U; n < nnpe_host(e); ++n) {
-                            if (nsi_host(e, n) != i) {
-                                const auto target_node_num_dof =
-                                    count_active_dofs(nfat_host(nsi_host(e, n)));
-                                const auto target_node_dof_index = nfmt_host(nsi_host(e, n));
+
+                    for (auto e = 0U; e < num_nodes_per_element.extent(0); ++e) {
+                        bool contains_node = false;
+                        for (auto n = 0U; n < num_nodes_per_element(e); ++n) {
+                            contains_node = contains_node || (node_state_indices(e, n) == i);
+                        }
+                        if (!contains_node) {
+                            continue;
+                        }
+                        for (auto n = 0U; n < num_nodes_per_element(e); ++n) {
+                            if (node_state_indices(e, n) != i) {
+                                const auto target_node_num_dof = count_active_dofs(
+                                    node_freedom_allocation_table(node_state_indices(e, n))
+                                );
+                                const auto target_node_dof_index =
+                                    node_freedom_map_table(node_state_indices(e, n));
                                 for (auto k = 0U; k < target_node_num_dof;
                                      ++k, ++current_dof_index) {
-                                    K_col_inds_host(current_dof_index) =
+                                    K_col_inds(current_dof_index) =
                                         static_cast<int>(target_node_dof_index + k);
                                 }
                             }
@@ -242,24 +230,24 @@ private:
                     }
                 }
             }
-        }
-        Kokkos::deep_copy(K_col_inds, K_col_inds_host);
+        );
+
         return K_col_inds;
     }
-    // NOLINTEND(readability-function-cognitive-complexity)
 
     [[nodiscard]] static size_t ComputeTNumNonZero(
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
     ) {
-        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
-        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
-
         auto T_num_non_zero = 0UL;
-        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
-            const auto num_node_dof = count_active_dofs(nfat_host(i));
-            const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
-            T_num_non_zero += num_diagonal_non_zero;
-        }
+        Kokkos::parallel_reduce(
+            "ComputeTNumNonZero", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
+                const auto num_node_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
+                update += num_diagonal_non_zero;
+            },
+            T_num_non_zero
+        );
 
         return T_num_non_zero;
     }
@@ -269,34 +257,34 @@ private:
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
         const Kokkos::View<size_t*>::const_type& node_freedom_map_table
     ) {
-        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
-        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
-
-        const auto nfmt_host = Kokkos::create_mirror(node_freedom_map_table);
-        Kokkos::deep_copy(nfmt_host, node_freedom_map_table);
-
-        const auto T_row_ptrs = RowPtrType("T_row_ptrs", T_num_rows + 1);
-        const auto T_row_ptrs_host = Kokkos::create_mirror(T_row_ptrs);
-
+        auto T_row_ptrs = RowPtrType("T_row_ptrs", T_num_rows + 1);
         const auto T_row_entries = RowPtrType("row_entries", T_num_rows);
-        const auto T_row_entries_host = Kokkos::create_mirror(T_row_entries);
 
-        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
-            const auto this_node_num_dof = count_active_dofs(nfat_host(i));
-            const auto this_node_dof_index = nfmt_host(i);
+        Kokkos::parallel_for(
+            "ComputeTRowEntries", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i) {
+                const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto this_node_dof_index = node_freedom_map_table(i);
 
-            auto num_entries_in_row = this_node_num_dof;
+                auto num_entries_in_row = this_node_num_dof;
 
-            for (auto j = 0U; j < this_node_num_dof; ++j) {
-                T_row_entries_host(this_node_dof_index + j) = num_entries_in_row;
+                for (auto j = 0U; j < this_node_num_dof; ++j) {
+                    T_row_entries(this_node_dof_index + j) = num_entries_in_row;
+                }
             }
-        }
+        );
 
-        for (auto i = 0U; i < T_row_entries_host.extent(0); ++i) {
-            T_row_ptrs_host(i + 1) = T_row_ptrs_host(i) + T_row_entries_host(i);
-        }
-
-        Kokkos::deep_copy(T_row_ptrs, T_row_ptrs_host);
+        auto result = 0UL;
+        Kokkos::parallel_scan(
+            "ComputeTRowPtrs", T_row_entries.extent(0),
+            KOKKOS_LAMBDA(size_t i, size_t & update, bool is_final) {
+                update += T_row_entries(i);
+                if (is_final) {
+                    T_row_ptrs(i + 1) = update;
+                }
+            },
+            result
+        );
 
         return T_row_ptrs;
     }
@@ -306,32 +294,22 @@ private:
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
         const Kokkos::View<size_t*>::const_type& node_freedom_map_table, const RowPtrType& T_row_ptrs
     ) {
-        const auto nfat_host = Kokkos::create_mirror(node_freedom_allocation_table);
-        Kokkos::deep_copy(nfat_host, node_freedom_allocation_table);
+        auto T_col_inds = IndicesType("T_indices", T_num_non_zero);
 
-        const auto nfmt_host = Kokkos::create_mirror(node_freedom_map_table);
-        Kokkos::deep_copy(nfmt_host, node_freedom_map_table);
+        Kokkos::parallel_for(
+            "ComputeTColInds", node_freedom_allocation_table.extent(0),
+            KOKKOS_LAMBDA(size_t i) {
+                const auto this_node_num_dof = count_active_dofs(node_freedom_allocation_table(i));
+                const auto this_node_dof_index = node_freedom_map_table(i);
 
-        const auto T_row_ptrs_host = Kokkos::create_mirror(T_row_ptrs);
-        Kokkos::deep_copy(T_row_ptrs_host, T_row_ptrs);
-
-        const auto T_col_inds = IndicesType("T_indices", T_num_non_zero);
-        const auto T_col_inds_host = Kokkos::create_mirror(T_col_inds);
-
-        for (auto i = 0U; i < nfat_host.extent(0); ++i) {
-            const auto this_node_num_dof = count_active_dofs(nfat_host(i));
-            const auto this_node_dof_index = nfmt_host(i);
-
-            for (auto j = 0U; j < this_node_num_dof; ++j) {
-                auto current_dof_index = T_row_ptrs_host(this_node_dof_index + j);
-
-                for (auto k = 0U; k < this_node_num_dof; ++k, ++current_dof_index) {
-                    T_col_inds_host(current_dof_index) = static_cast<int>(this_node_dof_index + k);
+                for (auto j = 0U; j < this_node_num_dof; ++j) {
+                    for (auto k = 0UL, current_dof_index = T_row_ptrs(this_node_dof_index + j);
+                         k < this_node_num_dof; ++k, ++current_dof_index) {
+                        T_col_inds(current_dof_index) = static_cast<int>(this_node_dof_index + k);
+                    }
                 }
             }
-        }
-
-        Kokkos::deep_copy(T_col_inds, T_col_inds_host);
+        );
 
         return T_col_inds;
     }
@@ -496,7 +474,6 @@ private:
         };
     }
 
-public:
     Solver(
         const Kokkos::View<size_t*>::const_type& node_IDs,
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
