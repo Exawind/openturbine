@@ -82,9 +82,19 @@ struct Elements {
                 copy_with_offset(beams->node_state_indices, current_offset, beams->num_elems);
         }
         if (masses) {
-            // TODO: We are making an assumption here that the number of nodes per element is 1 for
-            // all elements -- which we need to fix
-            copy_with_offset(masses->state_indices, current_offset, masses->num_elems);
+            // Create a temporary 2D view for masses with the same shape as beams (num_masses x
+            // max_elem_nodes from beams)
+            Kokkos::View<size_t**> mass_state_indices(
+                "mass_state_indices", masses->num_elems, max_nodes
+            );
+            // Copy the state indices from masses (1 node per element) to the temporary view
+            Kokkos::parallel_for(
+                masses->num_elems,
+                KOKKOS_LAMBDA(const size_t i_elem) {
+                    mass_state_indices(i_elem, 0) = masses->state_indices(i_elem, 0);
+                }
+            );
+            copy_with_offset(mass_state_indices, current_offset, masses->num_elems);
         }
         return result;
     }
