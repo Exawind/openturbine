@@ -8,7 +8,15 @@
 namespace openturbine {
 
 /**
- * @brief A container for all structural elements present in a model
+ * @brief A container providing handle to all structural elements present in the model
+ *
+ * @details This class serves as a container for wrapping all structural elements
+ *          in the model, including beams and point masses, effectively providing
+ *          the entire mesh as a single object to be used by the gen-alpha solver
+ *          logic.
+ *
+ * @note The class ensures that at least one type of element (beams or masses) is present
+ *       in the model
  */
 struct Elements {
     std::shared_ptr<Beams> beams;
@@ -30,7 +38,7 @@ struct Elements {
      * @brief Returns the number of nodes per element for each element in the system
      *
      * @return Kokkos::View<size_t*> A 1D view containing the number of nodes for each element,
-     *         concatenated in the order: beams | masses | ...
+     *         concatenated in the order: [beams] -> [masses] -> ...
      */
     Kokkos::View<size_t*> NumberOfNodesPerElement() const {
         Kokkos::View<size_t*> result("num_nodes_per_element", NumElementsInSystem());
@@ -59,7 +67,7 @@ struct Elements {
      * @brief Returns the state indices for each node of each element in the system
      *
      * @return Kokkos::View<size_t**> A 2D view containing the state indices for each node,
-     *         concatenated in the order: beams | masses | ...
+     *         concatenated in the order: [beams] -> [masses] -> ...
      */
     Kokkos::View<size_t**> NodeStateIndices() const {
         const size_t max_nodes = beams ? beams->max_elem_nodes : 1;
@@ -82,8 +90,8 @@ struct Elements {
                 copy_with_offset(beams->node_state_indices, current_offset, beams->num_elems);
         }
         if (masses) {
-            // Create a temporary 2D view for masses with the same shape as beams (num_masses x
-            // max_elem_nodes from beams)
+            // Create a 2D view for masses with the same 2nd dimension as beams i.e.
+            // (masses->num_elems x max_nodes) for size compatibility
             Kokkos::View<size_t**> mass_state_indices(
                 "mass_state_indices", masses->num_elems, max_nodes
             );
