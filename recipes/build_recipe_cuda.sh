@@ -3,6 +3,14 @@
 # ./recipes/build_recipe_macos.sh <path_to_openturbine_root> <path_to_spack_root>
 # -----------------------------------------------------------------------------
 
+# -----------------------------------------------------------------------------
+# Note that many systems have CUDA already built and properly configured.  If this
+# is the case for you, make sure that all modules are loaded and paths set correctly.
+# You may have to manually set some of this for Spack configuration.
+# You may also need to add the cuda_arch option for your platform to the Spack spec 
+# for Trilinos.
+# -----------------------------------------------------------------------------
+
 # Exit on error
 set -e
 
@@ -42,7 +50,7 @@ install_if_missing() {
 
 install_if_missing googletest
 install_if_missing yaml-cpp
-install_if_missing "trilinos@16.0.0~mpi~epetra ^kokkos-kernels+blas+lapack"
+install_if_missing "trilinos@16.0.0~mpi~epetra+cuda+basker ^kokkos-kernels+blas+lapack"
 #install_if_missing cppcheck # add if CppCheck is needed
 #install_if_missing llvm # add if clang-tidy is needed
 #install_if_missing "vtk~mpi~opengl2" # add if VTK is needed
@@ -53,6 +61,7 @@ spack load trilinos googletest yaml-cpp #llvm vtk cppcheck
 mkdir -p build-from-script
 cd build-from-script
 cmake .. \
+  -DCMAKE_CXX_COMPILER=nvcc_wrapper \
   -DOpenTurbine_ENABLE_VTK=ON \
   -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
   -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
