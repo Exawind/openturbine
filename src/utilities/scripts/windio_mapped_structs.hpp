@@ -1,4 +1,5 @@
 #include <string>
+#include <variant>
 #include <vector>
 
 // Assembly
