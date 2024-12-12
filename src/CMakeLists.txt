@@ -53,6 +53,8 @@ target_include_directories(openturbine_library
 # Set the C++ standard for the target
 target_compile_features(openturbine_library PUBLIC cxx_std_17)
 
+set_target_properties(openturbine_library PROPERTIES PUBLIC_HEADER "types.hpp")
+
 # Add subdirectories for additional components of the library
 add_subdirectory(beams)
 add_subdirectory(constraints)
@@ -64,3 +66,11 @@ add_subdirectory(step)
 add_subdirectory(system)
 add_subdirectory(utilities)
 add_subdirectory(vendor)
+
+install(
+  TARGETS openturbine_library
+  EXPORT ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} 
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${PACKAGE_NAME}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTAL_INCLUDEDIR})
