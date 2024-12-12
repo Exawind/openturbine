@@ -39,6 +39,10 @@ struct Masses {
     Kokkos::View<double* [1][6][6]> Guu;    //< Gyroscopic/inertial damping matrix
     Kokkos::View<double* [1][6][6]> Kuu;    //< Inertia stiffness matrix
 
+    Kokkos::View<double* [1][6]> residual_vector_terms;
+    Kokkos::View<double* [1][6][6]> stiffness_matrix_terms;
+    Kokkos::View<double* [1][6][6]> inertia_matrix_terms;
+
     Masses(const size_t n_mass_elems)
         : num_elems(n_mass_elems),
           num_nodes_per_element("num_nodes_per_element", num_elems),
@@ -59,7 +63,10 @@ struct Masses {
           Fi("Fi", num_elems),
           Fg("Fg", num_elems),
           Guu("Guu", num_elems),
-          Kuu("Kuu", num_elems) {
+          Kuu("Kuu", num_elems),
+          residual_vector_terms("residual_vector_terms", num_elems),
+          stiffness_matrix_terms("stiffness_matrix_terms", num_elems),
+          inertia_matrix_terms("inertia_matrix_terms", num_elems) {
         Kokkos::deep_copy(num_nodes_per_element, 1);  // Always 1 node per element
         Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
     }

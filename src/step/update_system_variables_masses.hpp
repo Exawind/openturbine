@@ -2,6 +2,9 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "assemble_inertia_matrix_masses.hpp"
+#include "assemble_residual_vector_masses.hpp"
+#include "assemble_stiffness_matrix_masses.hpp"
 #include "step_parameters.hpp"
 
 #include "src/elements/masses/masses.hpp"
@@ -14,7 +17,7 @@
 namespace openturbine {
 
 inline void UpdateSystemVariablesMasses(
-    StepParameters& parameters, const Masses& masses, State& state
+    [[maybe_unused]] StepParameters& parameters, const Masses& masses, State& state
 ) {
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(masses.num_elems), Kokkos::AUTO());
 
@@ -47,7 +50,7 @@ inline void UpdateSystemVariablesMasses(
     auto omega_tilde = Kokkos::View<double* [1][3][3]>("omega_tilde", masses.num_elems);
     auto omega_dot_tilde = Kokkos::View<double* [1][3][3]>("omega_dot_tilde", masses.num_elems);
 
-    // Calculate mass element values - parallel approach to quadrature point values calc. for beams
+    // Calculate system variables for mass elements
     Kokkos::parallel_for(
         range_policy,
         KOKKOS_LAMBDA(const Kokkos::TeamPolicy<>::member_type& member) {
@@ -100,9 +103,9 @@ inline void UpdateSystemVariablesMasses(
         }
     );
 
-    // AssembleResidualVectorMasses(masses);
-    // AssembleStiffnessMatrixMasses(masses);
-    // AssembleInertiaMatrixMasses(masses, parameters.beta_prime, parameters.gamma_prime);
+    AssembleResidualVectorMasses(masses);
+    AssembleStiffnessMatrixMasses(masses);
+    AssembleInertiaMatrixMasses(masses, parameters.beta_prime, parameters.gamma_prime);
 }
 
 }  // namespace openturbine
