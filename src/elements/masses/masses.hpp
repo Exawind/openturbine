@@ -40,8 +40,8 @@ struct Masses {
     Kokkos::View<double* [1][6][6]> Kuu;    //< Inertia stiffness matrix
 
     Kokkos::View<double* [1][6]> residual_vector_terms;
-    Kokkos::View<double* [1][6][6]> stiffness_matrix_terms;
-    Kokkos::View<double* [1][6][6]> inertia_matrix_terms;
+    Kokkos::View<double* [1][1][6][6]> stiffness_matrix_terms;
+    Kokkos::View<double* [1][1][6][6]> inertia_matrix_terms;
 
     Masses(const size_t n_mass_elems)
         : num_elems(n_mass_elems),

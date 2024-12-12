@@ -16,12 +16,13 @@ inline void UpdateSystemVariables(
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Update System Variables");
 
-    // Update Beams variables
     if (elements.beams) {
         UpdateSystemVariablesBeams(parameters, *elements.beams, state);
     }
 
-    // TODO: Update Masses variables
+    if (elements.masses) {
+        UpdateSystemVariablesMasses(parameters, *elements.masses, state);
+    }
 }
 
 }  // namespace openturbine
