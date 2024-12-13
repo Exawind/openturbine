@@ -57,8 +57,7 @@ struct Elements {
                 copy_with_offset(beams->num_nodes_per_element, current_offset, beams->num_elems);
         }
         if (masses) {
-                // Start of Selection
-                copy_with_offset(masses->num_nodes_per_element, current_offset, masses->num_elems);
+            copy_with_offset(masses->num_nodes_per_element, current_offset, masses->num_elems);
         }
         return result;
     }

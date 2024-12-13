@@ -12,7 +12,7 @@ TEST(ElementsTest, ExpectThrowOnNullElements) {
 
 TEST(ElementsTest, ConstructorWithBeams) {
     auto beams = std::make_shared<Beams>(1, 2, 2);  // 1 beam element with 2 nodes, 2 qps
-    const Elements elements(beams);                    // No mass elements in the model
+    const Elements elements(beams);                 // No mass elements in the model
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams->num_elems, 1);
     EXPECT_EQ(elements.masses, nullptr);
@@ -20,7 +20,7 @@ TEST(ElementsTest, ConstructorWithBeams) {
 
 TEST(ElementsTest, ConstructorWithMasses) {
     auto masses = std::make_shared<Masses>(1);  // 1 mass element
-    const Elements elements(nullptr, masses);         // No beam elements in the model
+    const Elements elements(nullptr, masses);   // No beam elements in the model
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams, nullptr);
     EXPECT_EQ(elements.masses->num_elems, 1);
