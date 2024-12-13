@@ -9,63 +9,43 @@
 
 namespace openturbine {
 
+struct CreateElementFreedomTable {
+    Kokkos::View<size_t*>::const_type num_nodes_per_element;
+    Kokkos::View<size_t**>::const_type node_state_indices;
+    Kokkos::View<size_t*>::const_type node_freedom_map_table;
+    Kokkos::View<size_t***> element_freedom_table;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i) const {
+        for (auto j = 0U; j < num_nodes_per_element(i); ++j) {
+            const auto node_index = node_state_indices(i, j);
+            for (auto k = 0U; k < 6U; ++k) {
+                element_freedom_table(i, j, k) = node_freedom_map_table(node_index) + k;
+            }
+        }
+    }
+};
+
 inline void create_element_freedom_table(Elements& elements, const State& state) {
-    // Beams data
-    auto has_beams = elements.beams != nullptr;
-    const auto beams_num_elems = has_beams ? elements.beams->num_elems : 0U;
-    const auto beams_node_state_indices =
-        has_beams ? elements.beams->node_state_indices
-                  : Kokkos::View<size_t**>("beams_node_state_indices", 0);
-    const auto beams_num_nodes_per_element =
-        has_beams ? elements.beams->num_nodes_per_element
-                  : Kokkos::View<size_t*>("beams_num_nodes_per_element", 0);
-    auto beams_element_freedom_table =
-        has_beams ? elements.beams->element_freedom_table
-                  : Kokkos::View<size_t** [6]>("beams_element_freedom_table", 0);
-
-    // Beams element freedom table
-    Kokkos::parallel_for(
-        "Create Beams Element Freedom Table", 1,
-        KOKKOS_LAMBDA(size_t) {
-            for (auto i = 0U; i < beams_num_elems; ++i) {
-                const auto num_nodes = beams_num_nodes_per_element(i);
-                for (auto j = 0U; j < num_nodes; ++j) {
-                    const auto node_index = beams_node_state_indices(i, j);
-                    for (auto k = 0U; k < 6U; ++k) {
-                        beams_element_freedom_table(i, j, k) =
-                            state.node_freedom_map_table(node_index) + k;
-                    }
-                }
+    if (elements.beams) {
+        Kokkos::parallel_for(
+            "Create Element Freedom Table", elements.beams->num_elems,
+            CreateElementFreedomTable{
+                elements.beams->num_nodes_per_element, elements.beams->node_state_indices,
+                state.node_freedom_map_table, elements.beams->element_freedom_table
             }
-        }
-    );
+        );
+    }
 
-    // Masses data
-    auto has_masses = elements.masses != nullptr;
-    const auto masses_num_elems = has_masses ? elements.masses->num_elems : 0U;
-    const auto masses_node_state_indices =
-        has_masses ? elements.masses->state_indices
-                   : Kokkos::View<size_t* [1]>("masses_node_state_indices", 0);
-    auto masses_element_freedom_table =
-        has_masses ? elements.masses->element_freedom_table
-                   : Kokkos::View<size_t* [1][6]>("masses_element_freedom_table", 0);
-
-    // Masses element freedom table
-    Kokkos::parallel_for(
-        "Create Masses Element Freedom Table", 1,
-        KOKKOS_LAMBDA(size_t) {
-            for (auto i = 0U; i < masses_num_elems; ++i) {
-                const auto num_nodes = 1U;
-                for (auto j = 0U; j < num_nodes; ++j) {
-                    const auto node_index = masses_node_state_indices(i, j);
-                    for (auto k = 0U; k < 6U; ++k) {
-                        masses_element_freedom_table(i, j, k) =
-                            state.node_freedom_map_table(node_index) + k;
-                    }
-                }
+    if (elements.masses) {
+        Kokkos::parallel_for(
+            "Create Element Freedom Table", elements.masses->num_elems,
+            CreateElementFreedomTable{
+                elements.masses->num_nodes_per_element, elements.masses->state_indices,
+                state.node_freedom_map_table, elements.masses->element_freedom_table
             }
-        }
-    );
+        );
+    }
 }
 
 }  // namespace openturbine

@@ -13,14 +13,12 @@
 
 namespace openturbine {
 
-inline void AssembleSystemMatrixBeams(Solver& solver, const Beams& beams) {
-    const auto num_beam_dofs = 6U;
-    const auto row_data_size = Kokkos::View<double*>::shmem_size(num_beam_dofs);
-    const auto col_idx_size = Kokkos::View<int*>::shmem_size(num_beam_dofs);
+inline void AssembleSystemMatrixBeams(Solver& solver, Beams& beams) {
+    auto region = Kokkos::Profiling::ScopedRegion("Assemble System Matrix");
+
     auto sparse_matrix_policy =
         Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
 
-    sparse_matrix_policy.set_scratch_size(1, Kokkos::PerThread(row_data_size + col_idx_size));
     Kokkos::deep_copy(solver.K.values, 0.);
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,
