@@ -174,7 +174,7 @@ TEST(RotorTest, IEA15Rotor) {
 
         // Write quadrature point global positions to file and VTK
         // Write vtk visualization file
-        WriteVTKBeamsQP(elements, "steps/step_0000.vtu");
+        WriteVTKBeamsQP(*beams, "steps/step_0000.vtu");
 #endif
     }
 
@@ -210,7 +210,7 @@ TEST(RotorTest, IEA15Rotor) {
             // Write VTK output to file
             auto tmp = std::to_string(i + 1);
             auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-            WriteVTKBeamsQP(elements, file_name + ".vtu");
+            WriteVTKBeamsQP(*beams, file_name + ".vtu");
 #endif
         }
     }
@@ -337,7 +337,7 @@ TEST(RotorTest, IEA15RotorHub) {
 
         // Write quadrature point global positions to file and VTK
         // Write vtk visualization file
-        WriteVTKBeamsQP(elements, "steps/step_0000.vtu");
+        WriteVTKBeamsQP(*beams, "steps/step_0000.vtu");
 #endif
     }
 
@@ -368,7 +368,7 @@ TEST(RotorTest, IEA15RotorHub) {
             // Write VTK output to file
             auto tmp = std::to_string(i + 1);
             auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-            WriteVTKBeamsQP(elements, file_name + ".vtu");
+            WriteVTKBeamsQP(*beams, file_name + ".vtu");
 #endif
         }
     }
@@ -528,7 +528,7 @@ TEST(RotorTest, IEA15RotorController) {
 
         // Write quadrature point global positions to file and VTK
         // Write vtk visualization file
-        WriteVTKBeamsQP(elements, "steps/step_0000.vtu");
+        WriteVTKBeamsQP(*beams, "steps/step_0000.vtu");
 #endif
     }
 
@@ -562,7 +562,7 @@ TEST(RotorTest, IEA15RotorController) {
             // Write VTK output to file
             auto tmp = std::to_string(i + 1);
             auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-            WriteVTKBeamsQP(elements, file_name + ".vtu");
+            WriteVTKBeamsQP(*beams, file_name + ".vtu");
 #endif
         }
     }
