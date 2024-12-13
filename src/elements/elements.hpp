@@ -22,8 +22,8 @@ struct Elements {
     std::shared_ptr<Beams> beams;
     std::shared_ptr<Masses> masses;
 
-    Elements(std::shared_ptr<Beams> beams = nullptr, std::shared_ptr<Masses> masses = nullptr)
-        : beams(beams), masses(masses) {
+    Elements(std::shared_ptr<Beams> b = nullptr, std::shared_ptr<Masses> m = nullptr)
+        : beams(b), masses(m) {
         if (beams == nullptr && masses == nullptr) {
             throw std::invalid_argument("Beams and masses cannot both be empty");
         }

@@ -18,6 +18,7 @@
 #include "src/elements/beams/beams.hpp"
 #include "src/elements/beams/beams_input.hpp"
 #include "src/elements/beams/create_beams.hpp"
+#include "src/elements/elements.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -340,6 +341,9 @@ TEST(Milestone, IEA15RotorAeroController) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
+    // Create elements from beams
+    auto elements = Elements{std::make_shared<Beams>(beams), nullptr};
+
     // Host mirror of beam external forces
     auto host_node_FX = Kokkos::create_mirror(beams.node_FX);
 
@@ -415,19 +419,19 @@ TEST(Milestone, IEA15RotorAeroController) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
 
     // Transfer initial state to beams for writing output
-    UpdateSystemVariables(parameters, beams, state);
+    UpdateSystemVariables(parameters, elements, state);
 
     //--------------------------------------------------------------------------
     // AeroDyn / InflowWind library
@@ -654,7 +658,7 @@ TEST(Milestone, IEA15RotorAeroController) {
         w << "\n";
 
         // Predict state at end of step
-        auto converged = Step(parameters, solver, beams, state, constraints);
+        auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
 
         // Update rotor azimuth and speed
