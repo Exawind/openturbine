@@ -72,24 +72,23 @@ inline auto SetUpPrecessionTest() {
     );
 
     // Run simulation for 500 steps
-    for (size_t i = 0; i < 1; ++i) {
+    for (size_t i = 0; i < 500; ++i) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }
+    const auto q = state.q;
+
+    auto euler_angles = Kokkos::View<double[3]>("euler_angles");
+    QuaternionToRotationVector(Kokkos::subview(q, 0, Kokkos::make_pair(3, 7)), euler_angles);
+
+    EXPECT_NEAR(euler_angles[0], -1.413542763236864, 1e-12);
+    EXPECT_NEAR(euler_angles[1], 0.999382175365794, 1e-12);
+    EXPECT_NEAR(euler_angles[2], 0.213492011335111, 1e-12);
 }
 
 TEST(PrecessionTest, FinalRotation) {
     SetUpPrecessionTest();
 
-    /*     // Get final quaternion
-        const auto q = final_state.q;
-
-        auto euler_angles = Kokkos::View<double[3]>("euler_angles");
-        QuaternionToRotationVector(Kokkos::subview(q, 0, Kokkos::make_pair(3, 7)), euler_angles);
-
-        EXPECT_NEAR(euler_angles[0], -1.413542763236864, 1e-12);
-        EXPECT_NEAR(euler_angles[1], 0.999382175365794, 1e-12);
-        EXPECT_NEAR(euler_angles[2], 0.213492011335111, 1e-12); */
 }
 
 }  // namespace openturbine::tests

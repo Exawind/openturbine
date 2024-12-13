@@ -15,7 +15,7 @@ inline void AssembleStiffnessMatrixMasses(const Masses& masses) {
             // Add stiffness terms to global stiffness matrix
             for (auto i_dof = 0U; i_dof < 6U; ++i_dof) {
                 for (auto j_dof = 0U; j_dof < 6U; ++j_dof) {
-                    masses.stiffness_matrix_terms(i_elem, 0U, 0U, i_dof, j_dof) +=
+                    masses.stiffness_matrix_terms(i_elem, 0U, 0U, i_dof, j_dof) =
                         masses.Kuu(i_elem, 0U, i_dof, j_dof);
                 }
             }
