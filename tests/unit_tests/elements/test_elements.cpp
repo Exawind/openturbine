@@ -12,7 +12,7 @@ TEST(ElementsTest, ExpectThrowOnNullElements) {
 
 TEST(ElementsTest, ConstructorWithBeams) {
     auto beams = std::make_shared<Beams>(1, 2, 2);  // 1 beam element with 2 nodes, 2 qps
-    Elements elements(beams);                       // No mass elements in the model
+    const Elements elements(beams);                    // No mass elements in the model
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams->num_elems, 1);
     EXPECT_EQ(elements.masses, nullptr);
@@ -20,7 +20,7 @@ TEST(ElementsTest, ConstructorWithBeams) {
 
 TEST(ElementsTest, ConstructorWithMasses) {
     auto masses = std::make_shared<Masses>(1);  // 1 mass element
-    Elements elements(nullptr, masses);         // No beam elements in the model
+    const Elements elements(nullptr, masses);         // No beam elements in the model
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams, nullptr);
     EXPECT_EQ(elements.masses->num_elems, 1);
@@ -29,7 +29,7 @@ TEST(ElementsTest, ConstructorWithMasses) {
 TEST(ElementsTest, ConstructorWithBothElements) {
     auto beams = std::make_shared<Beams>(1, 2, 2);  // 1 beam element with 2 nodes, 2 qps
     auto masses = std::make_shared<Masses>(1);      // 1 mass element
-    Elements elements(beams, masses);
+    const Elements elements(beams, masses);
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
     EXPECT_EQ(elements.beams->num_elems, 1);
     EXPECT_EQ(elements.masses->num_elems, 1);
@@ -38,7 +38,7 @@ TEST(ElementsTest, ConstructorWithBothElements) {
 TEST(ElementsTest, NumberOfNodesPerElementBeamsOnly) {
     auto beams = std::make_shared<Beams>(2, 3, 2);  // 2 beam elements with 3 nodes each
     Kokkos::deep_copy(beams->num_nodes_per_element, 3U);
-    Elements elements{beams};
+    const Elements elements{beams};
 
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
 
@@ -51,7 +51,7 @@ TEST(ElementsTest, NumberOfNodesPerElementBeamsOnly) {
 
 TEST(ElementsTest, NumberOfNodesPerElementMassesOnly) {
     auto masses = std::make_shared<Masses>(3);  // 3 mass elements
-    Elements elements{nullptr, masses};
+    const Elements elements{nullptr, masses};
 
     EXPECT_EQ(elements.NumElementsInSystem(), 3);
 
@@ -68,7 +68,7 @@ TEST(ElementsTest, NumberOfNodesPerElementMixedElements) {
     auto beams = std::make_shared<Beams>(2, 4, 2);  // 2 beam elements with 4 nodes each
     Kokkos::deep_copy(beams->num_nodes_per_element, 4U);
     auto masses = std::make_shared<Masses>(2);  // 2 mass elements
-    Elements elements{beams, masses};
+    const Elements elements{beams, masses};
 
     EXPECT_EQ(elements.NumElementsInSystem(), 4);
 
@@ -97,7 +97,7 @@ TEST(ElementsTest, NodeStateIndicesBeamsOnly) {
     host_beam_indices(1, 2) = 4;
     Kokkos::deep_copy(beams->node_state_indices, host_beam_indices);
 
-    Elements elements{beams};
+    const Elements elements{beams};
     auto indices = elements.NodeStateIndices();
     auto host_indices = Kokkos::create_mirror_view(indices);
     Kokkos::deep_copy(host_indices, indices);
@@ -120,7 +120,7 @@ TEST(ElementsTest, NodeStateIndicesMassesOnly) {
     host_mass_indices(2, 0) = 30;
     Kokkos::deep_copy(masses->state_indices, host_mass_indices);
 
-    Elements elements{nullptr, masses};
+    const Elements elements{nullptr, masses};
     auto indices = elements.NodeStateIndices();
     auto host_indices = Kokkos::create_mirror_view(indices);
     Kokkos::deep_copy(host_indices, indices);
@@ -147,7 +147,7 @@ TEST(ElementsTest, NodeStateIndicesMixedElements) {
     host_mass_indices(1, 0) = 20;
     Kokkos::deep_copy(masses->state_indices, host_mass_indices);
 
-    Elements elements{beams, masses};
+    const Elements elements{beams, masses};
     auto indices = elements.NodeStateIndices();
     auto host_indices = Kokkos::create_mirror_view(indices);
     Kokkos::deep_copy(host_indices, indices);

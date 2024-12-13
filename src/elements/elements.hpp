@@ -23,14 +23,14 @@ struct Elements {
     std::shared_ptr<Masses> masses;
 
     Elements(std::shared_ptr<Beams> b = nullptr, std::shared_ptr<Masses> m = nullptr)
-        : beams(b), masses(m) {
+        : beams(std::move(b)), masses(std::move(m)) {
         if (beams == nullptr && masses == nullptr) {
             throw std::invalid_argument("Beams and masses cannot both be empty");
         }
     }
 
     /// Returns the total number of elements across all types in the system
-    size_t NumElementsInSystem() const {
+    [[nodiscard]] size_t NumElementsInSystem() const {
         return (beams ? beams->num_elems : 0) + (masses ? masses->num_elems : 0);
     }
 
@@ -40,7 +40,7 @@ struct Elements {
      * @return Kokkos::View<size_t*> A 1D view containing the number of nodes for each element,
      *         concatenated in the order: [beams] -> [masses] -> ...
      */
-    Kokkos::View<size_t*> NumberOfNodesPerElement() const {
+    [[nodiscard]] Kokkos::View<size_t*> NumberOfNodesPerElement() const {
         Kokkos::View<size_t*> result("num_nodes_per_element", NumElementsInSystem());
 
         auto copy_with_offset =
@@ -57,7 +57,7 @@ struct Elements {
                 copy_with_offset(beams->num_nodes_per_element, current_offset, beams->num_elems);
         }
         if (masses) {
-            current_offset =
+                // Start of Selection
                 copy_with_offset(masses->num_nodes_per_element, current_offset, masses->num_elems);
         }
         return result;
@@ -69,7 +69,7 @@ struct Elements {
      * @return Kokkos::View<size_t**> A 2D view containing the state indices for each node,
      *         concatenated in the order: [beams] -> [masses] -> ...
      */
-    Kokkos::View<size_t**> NodeStateIndices() const {
+    [[nodiscard]] Kokkos::View<size_t**> NodeStateIndices() const {
         const size_t max_nodes = beams ? beams->max_elem_nodes : 1;
         Kokkos::View<size_t**> result("node_state_indices", NumElementsInSystem(), max_nodes);
 
@@ -92,7 +92,7 @@ struct Elements {
         if (masses) {
             // Create a 2D view for masses with the same 2nd dimension as beams i.e.
             // (masses->num_elems x max_nodes) for size compatibility
-            Kokkos::View<size_t**> mass_state_indices(
+            const Kokkos::View<size_t**> mass_state_indices(
                 "mass_state_indices", masses->num_elems, max_nodes
             );
             // Copy the state indices from masses (1 node per element) to the temporary view
