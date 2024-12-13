@@ -6,6 +6,7 @@ target_sources(
     test_cantilever_beam.cpp
     test_controller.cpp
     test_masses.cpp
+    test_precession.cpp
     test_rotating_beam.cpp
     test_rotor.cpp
     test_solver.cpp

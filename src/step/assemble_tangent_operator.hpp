@@ -19,7 +19,10 @@ inline void AssembleTangentOperator(Solver& solver, State& state) {
     const auto col_idx_size = Kokkos::View<int*>::shmem_size(max_row_entries);
     auto sparse_matrix_policy = Kokkos::TeamPolicy<>(static_cast<int>(num_nodes), Kokkos::AUTO());
 
-    sparse_matrix_policy.set_scratch_size(1, Kokkos::PerThread(row_data_size + col_idx_size));
+    // TODO: Hack to avoid the segfault. Why do we need to increase the scratch size here?
+    sparse_matrix_policy.set_scratch_size(
+        1, Kokkos::PerThread(6 * row_data_size + 6 * col_idx_size)
+    );
 
     Kokkos::parallel_for(
         "CopyTangentToSparseMatris", sparse_matrix_policy,
@@ -29,4 +32,5 @@ inline void AssembleTangentOperator(Solver& solver, State& state) {
         }
     );
 }
+
 }  // namespace openturbine
