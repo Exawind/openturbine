@@ -3,4 +3,5 @@ target_sources(
     openturbine_unit_tests
     PRIVATE
     test_spring_element.cpp
+    test_springs_input.cpp
 )
