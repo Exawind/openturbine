@@ -3,4 +3,5 @@ target_sources(
     PRIVATE
     test_calculate_distance_components.cpp
     test_calculate_length.cpp
+    test_calculate_force_coefficients.cpp
 )
