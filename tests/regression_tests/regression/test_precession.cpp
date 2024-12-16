@@ -76,14 +76,16 @@ inline auto SetUpPrecessionTest() {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }
-    const auto q = state.q;
 
-    auto euler_angles = Kokkos::View<double[3]>("euler_angles");
-    QuaternionToRotationVector(Kokkos::subview(q, 0, Kokkos::make_pair(3, 7)), euler_angles);
-
-    EXPECT_NEAR(euler_angles[0], -1.413542763236864, 1e-12);
-    EXPECT_NEAR(euler_angles[1], 0.999382175365794, 1e-12);
-    EXPECT_NEAR(euler_angles[2], 0.213492011335111, 1e-12);
+    auto q_host = Kokkos::create_mirror(state.q);
+    Kokkos::deep_copy(q_host, state.q);
+    EXPECT_NEAR(q_host(0, 0), 0., 1.e-12);
+    EXPECT_NEAR(q_host(0, 1), 0., 1.e-12);
+    EXPECT_NEAR(q_host(0, 2), 0., 1.e-12);
+    EXPECT_NEAR(q_host(0, 3), -0.6305304765029902, 1.e-12);
+    EXPECT_NEAR(q_host(0, 4), 0.6055602536398981, 1.e-12);
+    EXPECT_NEAR(q_host(0, 5), -0.30157705376951366, 1.e-12);
+    EXPECT_NEAR(q_host(0, 6), -0.3804988542061519, 1.e-12);
 }
 
 TEST(PrecessionTest, FinalRotation) {

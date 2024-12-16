@@ -26,7 +26,6 @@ inline Masses CreateMasses(const MassesInput& masses_input) {
         }
 
         // Populate the mass matrix at material frame
-        Kokkos::deep_copy(Mstar, 0.);
         for (size_t m = 0; m < 6; ++m) {
             for (size_t n = 0; n < 6; ++n) {
                 Mstar(m, n) = elem.M_star[m][n];

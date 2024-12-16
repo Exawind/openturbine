@@ -14,13 +14,9 @@
 namespace openturbine {
 
 inline void AssembleSystemMatrixMasses(Solver& solver, const Masses& masses) {
-    const auto num_mass_dofs = 6U;
-    const auto row_data_size = Kokkos::View<double*>::shmem_size(num_mass_dofs);
-    const auto col_idx_size = Kokkos::View<int*>::shmem_size(num_mass_dofs);
     auto sparse_matrix_policy =
         Kokkos::TeamPolicy<>(static_cast<int>(masses.num_elems), Kokkos::AUTO());
 
-    sparse_matrix_policy.set_scratch_size(1, Kokkos::PerThread(row_data_size + col_idx_size));
     Kokkos::deep_copy(solver.K.values, 0.);
     Kokkos::parallel_for(
         "ContributeElementsToSparseMatrix", sparse_matrix_policy,
