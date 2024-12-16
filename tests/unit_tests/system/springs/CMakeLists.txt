@@ -4,4 +4,5 @@ target_sources(
     test_calculate_distance_components.cpp
     test_calculate_length.cpp
     test_calculate_force_coefficients.cpp
+    test_calculate_force_vectors.cpp
 )

@@ -7,12 +7,12 @@
 
 namespace openturbine {
 
-struct CalculateForceCalculationCoefficients {
-    Kokkos::View<double*> c1_;
-    Kokkos::View<double*> c2_;
+struct CalculateForceCoefficients {
     Kokkos::View<double*>::const_type k_;
     Kokkos::View<double*>::const_type l_ref_;
     Kokkos::View<double*>::const_type l_;
+    Kokkos::View<double*> c1_;
+    Kokkos::View<double*> c2_;
 
     KOKKOS_FUNCTION
     void operator()(int i_elem) const {
