@@ -8,7 +8,6 @@
 #include "step_parameters.hpp"
 
 #include "src/elements/beams/calculate_QP_position.hpp"
-
 #include "src/elements/masses/masses.hpp"
 #include "src/math/vector_operations.hpp"
 #include "src/state/state.hpp"
@@ -35,13 +34,21 @@ inline void UpdateSystemVariablesMasses(
     // Calculate some ancillary values (angular velocity - omega, angular acceleration - omega_dot,
     // linear acceleration - u_ddot) before calculating the mass element values
     auto x0 = Kokkos::View<double* [1][3]>("x0", masses.num_elems);
-    Kokkos::deep_copy(x0, Kokkos::subview(masses.x0, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(0, 3)));
+    Kokkos::deep_copy(
+        x0, Kokkos::subview(masses.x0, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(0, 3))
+    );
     auto u = Kokkos::View<double* [1][3]>("u", masses.num_elems);
-    Kokkos::deep_copy(u, Kokkos::subview(masses.u, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(0, 3)));
+    Kokkos::deep_copy(
+        u, Kokkos::subview(masses.u, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(0, 3))
+    );
     auto r0 = Kokkos::View<double* [1][4]>("r0", masses.num_elems);
-    Kokkos::deep_copy(r0, Kokkos::subview(masses.x0, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(3, 7)));
+    Kokkos::deep_copy(
+        r0, Kokkos::subview(masses.x0, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(3, 7))
+    );
     auto r = Kokkos::View<double* [1][4]>("r", masses.num_elems);
-    Kokkos::deep_copy(r, Kokkos::subview(masses.u, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(3, 7)));
+    Kokkos::deep_copy(
+        r, Kokkos::subview(masses.u, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(3, 7))
+    );
 
     auto omega = Kokkos::View<double* [1][3]>("omega", masses.num_elems);
     Kokkos::deep_copy(
@@ -56,9 +63,10 @@ inline void UpdateSystemVariablesMasses(
         u_ddot, Kokkos::subview(masses.u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(0, 3))
     );
 
-    Kokkos::parallel_for(masses.num_elems, KOKKOS_LAMBDA(size_t i_elem) {
-        CalculateQPPosition{i_elem, x0, u, r0, r, masses.x}(0);
-    });
+    Kokkos::parallel_for(
+        masses.num_elems,
+        KOKKOS_LAMBDA(size_t i_elem) { CalculateQPPosition{i_elem, x0, u, r0, r, masses.x}(0); }
+    );
 
     // Define some Views to store the skew-symmetric matrices
     auto eta_tilde = Kokkos::View<double* [1][3][3]>("eta_tilde", masses.num_elems);
@@ -84,13 +92,18 @@ inline void UpdateSystemVariablesMasses(
             CalculateGravityForce{i_elem, masses.gravity, masses.Muu, eta_tilde, masses.Fg}(0);
 
             // Calculate inertial forces
-            CalculateInertialForces{i_elem, masses.Muu, u_ddot, omega, omega_dot, eta_tilde, omega_tilde, omega_dot_tilde, masses.rho, masses.eta, masses.Fi}(0);
+            CalculateInertialForces{i_elem,     masses.Muu, u_ddot,      omega,
+                                    omega_dot,  eta_tilde,  omega_tilde, omega_dot_tilde,
+                                    masses.rho, masses.eta, masses.Fi}(0);
 
             // Calculate gyroscopic/inertial damping matrix
-            CalculateGyroscopicMatrix{i_elem, masses.Muu, omega, omega_tilde, masses.rho, masses.eta, masses.Guu}(0);
+            CalculateGyroscopicMatrix{i_elem,     masses.Muu, omega,     omega_tilde,
+                                      masses.rho, masses.eta, masses.Guu}(0);
 
             // Calculate inertia stiffness matrix
-            CalculateInertiaStiffnessMatrix{i_elem, masses.Muu, u_ddot, omega, omega_dot, omega_tilde, omega_dot_tilde, masses.rho, masses.eta, masses.Kuu}(0);
+            CalculateInertiaStiffnessMatrix{i_elem,     masses.Muu,  u_ddot,          omega,
+                                            omega_dot,  omega_tilde, omega_dot_tilde, masses.rho,
+                                            masses.eta, masses.Kuu}(0);
         }
     );
 

@@ -90,7 +90,6 @@ inline auto SetUpPrecessionTest() {
 
 TEST(PrecessionTest, FinalRotation) {
     SetUpPrecessionTest();
-
 }
 
 }  // namespace openturbine::tests

@@ -90,7 +90,7 @@ private:
         auto total_system_dofs = 0UL;
         Kokkos::parallel_reduce(
             "ComputeNumSystemDofs", node_freedom_allocation_table.extent(0),
-            KOKKOS_LAMBDA(size_t i, size_t& update) {
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
                 update += count_active_dofs(node_freedom_allocation_table(i));
             },
             total_system_dofs
@@ -107,7 +107,7 @@ private:
         auto K_num_non_zero_off_diagonal = 0UL;
         Kokkos::parallel_reduce(
             "ComputeKNumNonZero_OffDiagonal", num_nodes_per_element.extent(0),
-            KOKKOS_LAMBDA(size_t i, size_t& update) {
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
                 auto num_element_dof = 0UL;
                 for (auto j = 0U; j < num_nodes_per_element(i); ++j) {
                     const auto num_node_dof =
@@ -128,7 +128,7 @@ private:
         auto K_num_non_zero_diagonal = 0UL;
         Kokkos::parallel_reduce(
             "ComputeKNumNonZero_Diagonal", node_freedom_allocation_table.extent(0),
-            KOKKOS_LAMBDA(size_t i, size_t& update) {
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
                 const auto num_node_dof = count_active_dofs(node_freedom_allocation_table(i));
                 const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
                 update += num_diagonal_non_zero;
@@ -184,7 +184,7 @@ private:
         auto result = 0UL;
         Kokkos::parallel_scan(
             "ComputeKRowPtrs", K_row_entries.extent(0),
-            KOKKOS_LAMBDA(size_t i, size_t& update, bool is_final) {
+            KOKKOS_LAMBDA(size_t i, size_t & update, bool is_final) {
                 update += K_row_entries(i);
                 if (is_final) {
                     K_row_ptrs(i + 1) = update;
@@ -254,7 +254,7 @@ private:
         auto T_num_non_zero = 0UL;
         Kokkos::parallel_reduce(
             "ComputeTNumNonZero", node_freedom_allocation_table.extent(0),
-            KOKKOS_LAMBDA(size_t i, size_t& update) {
+            KOKKOS_LAMBDA(size_t i, size_t & update) {
                 const auto num_node_dof = count_active_dofs(node_freedom_allocation_table(i));
                 const auto num_diagonal_non_zero = num_node_dof * num_node_dof;
                 update += num_diagonal_non_zero;
@@ -290,7 +290,7 @@ private:
         auto result = 0UL;
         Kokkos::parallel_scan(
             "ComputeTRowPtrs", T_row_entries.extent(0),
-            KOKKOS_LAMBDA(size_t i, size_t& update, bool is_final) {
+            KOKKOS_LAMBDA(size_t i, size_t & update, bool is_final) {
                 update += T_row_entries(i);
                 if (is_final) {
                     T_row_ptrs(i + 1) = update;
