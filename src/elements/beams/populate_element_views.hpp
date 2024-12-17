@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "beam_element.hpp"
 #include "interpolation.hpp"
 
 namespace openturbine {

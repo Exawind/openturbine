@@ -22,6 +22,7 @@
 #include "src/elements/beams/beams_input.hpp"
 #include "src/elements/beams/create_beams.hpp"
 #include "src/elements/elements.hpp"
+#include "src/elements/masses/create_masses.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -142,10 +143,14 @@ TEST(RotatingBeamTest, StepConvergence) {
     );
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Constraint inputs
     model.AddPrescribedBC(model.GetNode(0));
@@ -257,10 +262,14 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     const auto beams_input = BeamsInput(blade_elems, gravity);
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -372,10 +381,14 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     const auto beams_input = BeamsInput(blade_elems, gravity);
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -463,10 +476,14 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     const auto beams_input = BeamsInput({BeamElement(beam_nodes, sections, quadrature)}, gravity);
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Add hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
@@ -552,10 +569,14 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     const auto beams_input = BeamsInput({BeamElement(beam_nodes, sections, quadrature)}, gravity);
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Add hub node and associated constraints
     auto pitch = 0.;
@@ -636,10 +657,14 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
     const auto beams_input = BeamsInput({BeamElement(beam_nodes, sections, quadrature)}, gravity);
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Add hub node and associated constraints
     auto pitch = 0.;
@@ -719,10 +744,14 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     const auto beams_input = BeamsInput({BeamElement(beam_nodes, sections, quadrature)}, gravity);
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Add hub node and ground node
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
@@ -841,10 +870,14 @@ void GeneratorTorqueWithAxisTilt(
     const auto beams_input = BeamsInput({BeamElement(beam_nodes, sections, quadrature)}, gravity);
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Add shaft base, azimuth, and hub nodes as massless points
     auto shaft_base = model.AddNode({0, 0., 0., 1., 0., 0., 0.});

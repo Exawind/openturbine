@@ -71,25 +71,21 @@ struct AssembleNodeFreedomMapTable_Constraints {
 inline void assemble_node_freedom_allocation_table(
     State& state, const Elements& elements, const Constraints& constraints
 ) {
-    if (elements.beams != nullptr) {
-        Kokkos::parallel_for(
-            "AssembleNodeFreedomMapTable_Beams", elements.beams->num_elems,
-            AssembleNodeFreedomMapTable_Beams{
-                elements.beams->num_nodes_per_element, elements.beams->node_state_indices,
-                elements.beams->element_freedom_signature, state.node_freedom_allocation_table
-            }
-        );
-    }
-
-    if (elements.masses != nullptr) {
-        Kokkos::parallel_for(
-            "AssembleNodeFreedomMapTable_Masses", elements.masses->num_elems,
-            AssembleNodeFreedomMapTable_Masses{
-                elements.masses->state_indices, elements.masses->element_freedom_signature,
-                state.node_freedom_allocation_table
-            }
-        );
-    }
+    Kokkos::parallel_for(
+        "AssembleNodeFreedomMapTable_Beams", elements.beams.num_elems,
+        AssembleNodeFreedomMapTable_Beams{
+            elements.beams.num_nodes_per_element, elements.beams.node_state_indices,
+            elements.beams.element_freedom_signature, state.node_freedom_allocation_table
+        }
+    );
+    
+    Kokkos::parallel_for(
+        "AssembleNodeFreedomMapTable_Masses", elements.masses.num_elems,
+        AssembleNodeFreedomMapTable_Masses{
+            elements.masses.state_indices, elements.masses.element_freedom_signature,
+            state.node_freedom_allocation_table
+        }
+    );
 
     Kokkos::parallel_for(
         "AssembleNodeFreedomMapTable_Constraints", constraints.num,

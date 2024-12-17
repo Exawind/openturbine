@@ -1,6 +1,7 @@
 #pragma once
 
 #include "beams.hpp"
+#include "beams_input.hpp"
 #include "calculate_jacobian.hpp"
 #include "interpolate_QP_position.hpp"
 #include "interpolate_QP_rotation.hpp"

@@ -19,6 +19,7 @@
 #include "src/elements/beams/beams_input.hpp"
 #include "src/elements/beams/create_beams.hpp"
 #include "src/elements/elements.hpp"
+#include "src/elements/masses/create_masses.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -137,10 +138,14 @@ TEST(RotorTest, IEA15Rotor) {
     const auto beams_input = BeamsInput(beam_elems, gravity);
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Define hub node and associated constraints
     auto prescribed_bc = std::vector<Constraint>{};
@@ -302,10 +307,14 @@ TEST(RotorTest, IEA15RotorHub) {
     const auto beams_input = BeamsInput(beam_elems, gravity);
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Define hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
@@ -461,10 +470,14 @@ TEST(RotorTest, IEA15RotorController) {
     const auto beams_input = BeamsInput(beam_elems, gravity);
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Add logic related to TurbineController
     // provide shared library path and controller function name to clamp

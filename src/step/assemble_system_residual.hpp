@@ -17,13 +17,8 @@ inline void AssembleSystemResidual(Solver& solver, Elements& elements) {
     const auto num_rows = solver.num_system_dofs;
     Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, num_rows)), 0.);
 
-    if (elements.beams) {
-        AssembleSystemResidualBeams(solver, *elements.beams);
-    }
-
-    if (elements.masses) {
-        AssembleSystemResidualMasses(solver, *elements.masses);
-    }
+    AssembleSystemResidualBeams(solver, elements.beams);
+    AssembleSystemResidualMasses(solver, elements.masses);
 }
 
 }  // namespace openturbine
