@@ -95,10 +95,11 @@ struct Elements {
                 "mass_state_indices", masses->num_elems, max_nodes
             );
             // Copy the state indices from masses (1 node per element) to the temporary view
+            const auto state_indices = masses->state_indices;
             Kokkos::parallel_for(
                 masses->num_elems,
                 KOKKOS_LAMBDA(const size_t i_elem) {
-                    mass_state_indices(i_elem, 0) = masses->state_indices(i_elem, 0);
+                    mass_state_indices(i_elem, 0) = state_indices(i_elem, 0);
                 }
             );
             copy_with_offset(mass_state_indices, current_offset, masses->num_elems);

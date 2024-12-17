@@ -82,7 +82,6 @@ struct Solver {
 
     Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
-private:
     /// Computes the total number of active degrees of freedom in the system
     [[nodiscard]] static size_t ComputeNumSystemDofs(
         const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table
@@ -491,7 +490,6 @@ private:
         };
     }
 
-public:
     /** @brief Constructs a sparse linear systems solver for OpenTurbine
      *
      * @param node_IDs View containing the global IDs for each node
