@@ -24,10 +24,10 @@ struct Masses {
 
     View_3 gravity;
 
-    Kokkos::View<double* [1][7]> node_x0;        //< Initial position/rotation
-    Kokkos::View<double* [1][7]> node_u;         //< State: translation/rotation displacement
-    Kokkos::View<double* [1][6]> node_u_dot;     //< State: translation/rotation velocity
-    Kokkos::View<double* [1][6]> node_u_ddot;    //< State: translation/rotation acceleration
+    Kokkos::View<double* [1][7]> node_x0;      //< Initial position/rotation
+    Kokkos::View<double* [1][7]> node_u;       //< State: translation/rotation displacement
+    Kokkos::View<double* [1][6]> node_u_dot;   //< State: translation/rotation velocity
+    Kokkos::View<double* [1][6]> node_u_ddot;  //< State: translation/rotation acceleration
 
     Kokkos::View<double* [1][6][6]> qp_Mstar;  //< Mass matrix in material frame
     Kokkos::View<double* [1][7]> qp_x;         //< Current position/orientation
@@ -41,14 +41,14 @@ struct Masses {
     Kokkos::View<double* [1][3][3]> qp_eta_tilde;
     Kokkos::View<double* [1][3][3]> qp_omega_tilde;
     Kokkos::View<double* [1][3][3]> qp_omega_dot_tilde;
-    Kokkos::View<double* [1][3]> qp_eta;       //< Offset between mass center and elastic axis
-    Kokkos::View<double* [1][3][3]> qp_rho;    //< Rotational inertia part of mass matrix
-    Kokkos::View<double* [1][6]> qp_Fi;        //< Inertial force
-    Kokkos::View<double* [1][6]> qp_Fg;        //< Gravity force
-    Kokkos::View<double* [1][6][6]> qp_RR0;    //< Global rotation
-    Kokkos::View<double* [1][6][6]> qp_Muu;    //< Mass matrix in global/inertial frame
-    Kokkos::View<double* [1][6][6]> qp_Guu;    //< Gyroscopic/inertial damping matrix
-    Kokkos::View<double* [1][6][6]> qp_Kuu;    //< Inertia stiffness matrix
+    Kokkos::View<double* [1][3]> qp_eta;     //< Offset between mass center and elastic axis
+    Kokkos::View<double* [1][3][3]> qp_rho;  //< Rotational inertia part of mass matrix
+    Kokkos::View<double* [1][6]> qp_Fi;      //< Inertial force
+    Kokkos::View<double* [1][6]> qp_Fg;      //< Gravity force
+    Kokkos::View<double* [1][6][6]> qp_RR0;  //< Global rotation
+    Kokkos::View<double* [1][6][6]> qp_Muu;  //< Mass matrix in global/inertial frame
+    Kokkos::View<double* [1][6][6]> qp_Guu;  //< Gyroscopic/inertial damping matrix
+    Kokkos::View<double* [1][6][6]> qp_Kuu;  //< Inertia stiffness matrix
 
     Kokkos::View<double* [1][6]> residual_vector_terms;
     Kokkos::View<double* [1][1][6][6]> stiffness_matrix_terms;
