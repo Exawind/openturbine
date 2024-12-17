@@ -78,7 +78,7 @@ inline void assemble_node_freedom_allocation_table(
             elements.beams.element_freedom_signature, state.node_freedom_allocation_table
         }
     );
-    
+
     Kokkos::parallel_for(
         "AssembleNodeFreedomMapTable_Masses", elements.masses.num_elems,
         AssembleNodeFreedomMapTable_Masses{

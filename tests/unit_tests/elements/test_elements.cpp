@@ -16,8 +16,8 @@ TEST(ElementsTest, ConstructorWithBeams) {
 
 TEST(ElementsTest, ConstructorWithMasses) {
     auto beams = Beams(0U, 0U, 0U);
-    auto masses = Masses(1);  // 1 mass element
-    const auto elements = Elements(beams, masses);   // No beam elements in the model
+    auto masses = Masses(1);                        // 1 mass element
+    const auto elements = Elements(beams, masses);  // No beam elements in the model
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams.num_elems, 0);
     EXPECT_EQ(elements.masses.num_elems, 1);

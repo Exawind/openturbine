@@ -22,14 +22,10 @@ struct Elements {
     Beams beams;
     Masses masses;
 
-    Elements(Beams b, Masses m)
-        : beams(std::move(b)), masses(std::move(m)) {
-    }
+    Elements(Beams b, Masses m) : beams(std::move(b)), masses(std::move(m)) {}
 
     /// Returns the total number of elements across all types in the system
-    [[nodiscard]] size_t NumElementsInSystem() const {
-        return beams.num_elems + masses.num_elems;
-    }
+    [[nodiscard]] size_t NumElementsInSystem() const { return beams.num_elems + masses.num_elems; }
 
     /**
      * @brief Returns the number of nodes per element for each element in the system
@@ -48,7 +44,8 @@ struct Elements {
                 return offset + count;
             };
 
-        const auto beams_offset = copy_with_offset(beams.num_nodes_per_element, 0UL, beams.num_elems);
+        const auto beams_offset =
+            copy_with_offset(beams.num_nodes_per_element, 0UL, beams.num_elems);
         copy_with_offset(masses.num_nodes_per_element, beams_offset, masses.num_elems);
 
         return result;
@@ -64,16 +61,22 @@ struct Elements {
         const auto max_nodes = std::max(beams.max_elem_nodes, 1UL);
         Kokkos::View<size_t**> result("node_state_indices", NumElementsInSystem(), max_nodes);
 
-        Kokkos::parallel_for(beams.num_elems, KOKKOS_LAMBDA(size_t i_elem) {
-            const auto num_nodes = beams.num_nodes_per_element(i_elem);
-            for(auto j = 0U; j < num_nodes; ++j) {
-                result(i_elem, j) = beams.node_state_indices(i_elem, j);
+        Kokkos::parallel_for(
+            beams.num_elems,
+            KOKKOS_LAMBDA(size_t i_elem) {
+                const auto num_nodes = beams.num_nodes_per_element(i_elem);
+                for (auto j = 0U; j < num_nodes; ++j) {
+                    result(i_elem, j) = beams.node_state_indices(i_elem, j);
+                }
             }
-        });
+        );
         const auto beams_offset = beams.num_elems;
-        Kokkos::parallel_for(masses.num_elems, KOKKOS_LAMBDA(size_t i_elem) {
-            result(i_elem + beams_offset, 0) = masses.state_indices(i_elem, 0);
-        });
+        Kokkos::parallel_for(
+            masses.num_elems,
+            KOKKOS_LAMBDA(size_t i_elem) {
+                result(i_elem + beams_offset, 0) = masses.state_indices(i_elem, 0);
+            }
+        );
 
         return result;
     }

@@ -34,7 +34,7 @@ inline void create_element_freedom_table(Elements& elements, const State& state)
             state.node_freedom_map_table, elements.beams.element_freedom_table
         }
     );
-    
+
     Kokkos::parallel_for(
         "Create Element Freedom Table", elements.masses.num_elems,
         CreateElementFreedomTable{

@@ -113,8 +113,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
 
     create_element_freedom_table(elements, state);
 
-    const auto host_beams_element_freedom_table =
-        Kokkos::create_mirror(beams.element_freedom_table);
+    const auto host_beams_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
     Kokkos::deep_copy(host_beams_element_freedom_table, beams.element_freedom_table);
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
@@ -302,8 +301,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
 
     create_element_freedom_table(elements, state);
 
-    const auto host_beams_element_freedom_table =
-        Kokkos::create_mirror(beams.element_freedom_table);
+    const auto host_beams_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
     Kokkos::deep_copy(host_beams_element_freedom_table, beams.element_freedom_table);
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
