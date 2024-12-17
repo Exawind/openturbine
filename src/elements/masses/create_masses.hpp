@@ -12,8 +12,8 @@ inline Masses CreateMasses(const MassesInput& masses_input) {
 
     auto host_gravity = Kokkos::create_mirror(masses.gravity);
     auto host_state_indices = Kokkos::create_mirror(masses.state_indices);
-    auto host_x0 = Kokkos::create_mirror(masses.x0);
-    auto host_Mstar = Kokkos::create_mirror(masses.Mstar);
+    auto host_x0 = Kokkos::create_mirror(masses.node_x0);
+    auto host_Mstar = Kokkos::create_mirror(masses.qp_Mstar);
 
     host_gravity(0) = masses_input.gravity[0];
     host_gravity(1) = masses_input.gravity[1];
@@ -44,8 +44,8 @@ inline Masses CreateMasses(const MassesInput& masses_input) {
 
     Kokkos::deep_copy(masses.gravity, host_gravity);
     Kokkos::deep_copy(masses.state_indices, host_state_indices);
-    Kokkos::deep_copy(masses.x0, host_x0);
-    Kokkos::deep_copy(masses.Mstar, host_Mstar);
+    Kokkos::deep_copy(masses.node_x0, host_x0);
+    Kokkos::deep_copy(masses.qp_Mstar, host_Mstar);
 
     return masses;
 }

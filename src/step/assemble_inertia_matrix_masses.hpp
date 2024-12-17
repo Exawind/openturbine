@@ -19,8 +19,8 @@ inline void AssembleInertiaMatrixMasses(
             for (auto i_dof = 0U; i_dof < 6U; ++i_dof) {
                 for (auto j_dof = 0U; j_dof < 6U; ++j_dof) {
                     masses.inertia_matrix_terms(i_elem, 0U, 0U, i_dof, j_dof) =
-                        beta_prime * masses.Muu(i_elem, 0U, i_dof, j_dof) +
-                        gamma_prime * masses.Guu(i_elem, 0U, i_dof, j_dof);
+                        beta_prime * masses.qp_Muu(i_elem, 0U, i_dof, j_dof) +
+                        gamma_prime * masses.qp_Guu(i_elem, 0U, i_dof, j_dof);
                 }
             }
         }
