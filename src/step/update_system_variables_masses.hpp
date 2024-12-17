@@ -17,9 +17,7 @@
 
 namespace openturbine {
 
-inline void UpdateSystemVariablesMasses(
-    [[maybe_unused]] StepParameters& parameters, const Masses& masses, State& state
-) {
+inline void UpdateSystemVariablesMasses(const StepParameters& parameters, const Masses& masses, State& state) {
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(masses.num_elems), Kokkos::AUTO());
 
     // Update the node states for masses to get the current position/rotation
@@ -62,10 +60,8 @@ inline void UpdateSystemVariablesMasses(
 
     // Calculate system variables for mass elements
     Kokkos::parallel_for(
-        range_policy,
-        KOKKOS_LAMBDA(const Kokkos::TeamPolicy<>::member_type& member) {
-            const auto i_elem = static_cast<size_t>(member.league_rank());
-
+        masses.num_elems,
+        KOKKOS_LAMBDA(const size_t i_elem) {
             // Calculate global rotation matrix
             CalculateRR0{i_elem, masses.qp_x, masses.qp_RR0}(0);
 
