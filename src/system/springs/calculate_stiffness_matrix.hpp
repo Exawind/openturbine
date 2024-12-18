@@ -28,7 +28,7 @@ struct CalculateStiffnessMatrix {
         auto a = Kokkos::subview(a_, i_elem, Kokkos::ALL, Kokkos::ALL);
 
         // diagonal terms: c1 - c2 * l^2
-        double diag_term = c1_(i_elem) - c2_(i_elem) * l_(i_elem) * l_(i_elem);
+        const double diag_term = c1_(i_elem) - c2_(i_elem) * l_(i_elem) * l_(i_elem);
         a(0, 0) = diag_term;
         a(1, 1) = diag_term;
         a(2, 2) = diag_term;
