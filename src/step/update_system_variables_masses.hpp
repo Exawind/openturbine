@@ -77,9 +77,7 @@ inline void UpdateSystemVariablesMasses(
             masses::CalculateRR0{i_elem, masses.qp_x, masses.qp_RR0}();
 
             // Rotate mass matrix from material -> inertial frame
-            masses::RotateSectionMatrix{
-                i_elem, masses.qp_RR0, masses.qp_Mstar, masses.qp_Muu
-            }();
+            masses::RotateSectionMatrix{i_elem, masses.qp_RR0, masses.qp_Mstar, masses.qp_Muu}();
 
             // Calculate mass matrix components
             masses::CalculateMassMatrixComponents{
@@ -107,10 +105,10 @@ inline void UpdateSystemVariablesMasses(
             }();
 
             // Calculate gyroscopic/inertial damping matrix
-            masses::CalculateGyroscopicMatrix{
-                i_elem,        masses.qp_Muu, masses.qp_omega, masses.qp_omega_tilde,
-                masses.qp_rho, masses.qp_eta, masses.qp_Guu
-            }();
+            masses::CalculateGyroscopicMatrix{i_elem,          masses.qp_Muu,
+                                              masses.qp_omega, masses.qp_omega_tilde,
+                                              masses.qp_rho,   masses.qp_eta,
+                                              masses.qp_Guu}();
 
             // Calculate inertia stiffness matrix
             masses::CalculateInertiaStiffnessMatrix{

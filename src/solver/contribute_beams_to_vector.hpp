@@ -20,7 +20,7 @@ struct ContributeBeamsToVector {
             for (auto j = 0U; j < element_freedom_table.extent(2); ++j) {
                 if constexpr (force_atomic) {
                     Kokkos::atomic_add(
-                        vector(&element_freedom_table(i_elem, i_node, j)),
+                        &vector(element_freedom_table(i_elem, i_node, j)),
                         elements(i_elem, i_node, j)
                     );
                 } else {

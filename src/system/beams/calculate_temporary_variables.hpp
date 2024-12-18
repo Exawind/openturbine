@@ -21,8 +21,7 @@ struct CalculateTemporaryVariables {
         };
         auto x0pup = View_3{x0pup_data.data()};
         auto u_prime_data = Kokkos::Array<double, 3>{
-            qp_u_prime_(i_elem, i_qp, 0), qp_u_prime_(i_elem, i_qp, 1),
-            qp_u_prime_(i_elem, i_qp, 2)
+            qp_u_prime_(i_elem, i_qp, 0), qp_u_prime_(i_elem, i_qp, 1), qp_u_prime_(i_elem, i_qp, 2)
         };
         auto u_prime = View_3{u_prime_data.data()};
         KokkosBlas::serial_axpy(1., u_prime, x0pup);
