@@ -20,9 +20,9 @@ struct CalculateDistanceComponents {
         auto u2 = Kokkos::subview(u2_, i_elem, Kokkos::ALL);
         auto r = Kokkos::subview(r_, i_elem, Kokkos::ALL);
 
-        r(0) = x0(0) + u2(0) - u1(0);
-        r(1) = x0(1) + u2(1) - u1(1);
-        r(2) = x0(2) + u2(2) - u1(2);
+        for (int i = 0; i < 3; ++i) {
+            r(i) = x0(i) + u2(i) - u1(i);
+        }
     }
 };
 

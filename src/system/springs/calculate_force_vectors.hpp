@@ -18,9 +18,9 @@ struct CalculateForceVectors {
         auto f = Kokkos::subview(f_, i_elem, Kokkos::ALL);
 
         // Calculate force vector components: f = c1 * r
-        f(0) = c1_(i_elem) * r(0);
-        f(1) = c1_(i_elem) * r(1);
-        f(2) = c1_(i_elem) * r(2);
+        for (int i = 0; i < 3; ++i) {
+            f(i) = c1_(i_elem) * r(i);
+        }
     }
 };
 

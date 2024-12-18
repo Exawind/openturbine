@@ -23,7 +23,7 @@ protected:
         };
     }
 
-    static SpringsInput CreateTestSpringsInput() { return SpringsInput(CreateTestElements()); }
+    static SpringsInput CreateTestSpringsInput() { return SpringsInput{CreateTestElements()}; }
 };
 
 TEST_F(SpringsInputTest, Constructor) {

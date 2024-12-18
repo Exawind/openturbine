@@ -53,9 +53,9 @@ TEST(CalculateStiffnessMatrixTests, OneElement) {
     // Expected a matrix: diag_term * I - c2 * r_tilde * r_tilde
     // where diag_term = c1 - c2 * l^2 = 2. - 1. * 1. = 1.
     constexpr auto a_exact_data = std::array{
-        14.0, -2.0, -3.0,  // row 1
-        -2.0, 11.0, -6.0,  // row 2
-        -3.0, -6.0, 6.0    // row 3
+        14., -2., -3.,  // row 1
+        -2., 11., -6.,  // row 2
+        -3., -6., 6.    // row 3
     };
 
     const auto r_tilde_exact =
