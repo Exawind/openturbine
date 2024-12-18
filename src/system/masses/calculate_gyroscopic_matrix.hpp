@@ -69,4 +69,4 @@ struct CalculateGyroscopicMatrix {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::masses

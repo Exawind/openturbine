@@ -13,8 +13,7 @@ struct CalculateRR0 {
 
     KOKKOS_FUNCTION void operator()() const {
         auto RR0_quaternion_data = Kokkos::Array<double, 4>{
-            qp_x_(i_elem, 3), qp_x_(i_elem, 4), qp_x_(i_elem, 5),
-            qp_x_(i_elem, 6)
+            qp_x_(i_elem, 3), qp_x_(i_elem, 4), qp_x_(i_elem, 5), qp_x_(i_elem, 6)
         };
         auto RR0_quaternion = Kokkos::View<double[4]>::const_type(RR0_quaternion_data.data());
         auto RR0_data = Kokkos::Array<double, 9>{};
@@ -28,4 +27,4 @@ struct CalculateRR0 {
         }
     }
 };
-}  // namespace openturbine
+}  // namespace openturbine::masses

@@ -30,8 +30,8 @@ inline void AssembleSystemMatrix(Solver& solver, Elements& elements) {
     Kokkos::parallel_for(
         "ContributeMassesToSparseMatrix", masses_sparse_matrix_policy,
         ContributeMassesToSparseMatrix<Solver::CrsMatrixType>{
-            elements.masses.element_freedom_signature,
-            elements.masses.element_freedom_table, elements.masses.stiffness_matrix_terms, solver.K
+            elements.masses.element_freedom_signature, elements.masses.element_freedom_table,
+            elements.masses.stiffness_matrix_terms, solver.K
         }
     );
 
@@ -56,8 +56,8 @@ inline void AssembleSystemMatrix(Solver& solver, Elements& elements) {
     Kokkos::parallel_for(
         "ContributeMassesToSparseMatrix", masses_sparse_matrix_policy,
         ContributeMassesToSparseMatrix<Solver::CrsMatrixType>{
-            elements.masses.element_freedom_signature,
-            elements.masses.element_freedom_table, elements.masses.inertia_matrix_terms, solver.K
+            elements.masses.element_freedom_signature, elements.masses.element_freedom_table,
+            elements.masses.inertia_matrix_terms, solver.K
         }
     );
 

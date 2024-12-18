@@ -52,8 +52,8 @@ inline void create_element_freedom_table(Elements& elements, const State& state)
     Kokkos::parallel_for(
         "CreateElementFreedomTable_Masses", elements.masses.num_elems,
         CreateElementFreedomTable_Masses{
-            elements.masses.state_indices,
-            state.node_freedom_map_table, elements.masses.element_freedom_table
+            elements.masses.state_indices, state.node_freedom_map_table,
+            elements.masses.element_freedom_table
         }
     );
 }

@@ -35,8 +35,7 @@ struct CalculateInertiaStiffnessMatrix {
         auto omega = Kokkos::subview(qp_omega_, i_elem, Kokkos::ALL);
         auto omega_dot = Kokkos::subview(qp_omega_dot_, i_elem, Kokkos::ALL);
         auto omega_tilde = Kokkos::subview(omega_tilde_, i_elem, Kokkos::ALL, Kokkos::ALL);
-        auto omega_dot_tilde =
-            Kokkos::subview(omega_dot_tilde_, i_elem, Kokkos::ALL, Kokkos::ALL);
+        auto omega_dot_tilde = Kokkos::subview(omega_dot_tilde_, i_elem, Kokkos::ALL, Kokkos::ALL);
         auto rho = Kokkos::subview(rho_, i_elem, Kokkos::ALL, Kokkos::ALL);
         auto eta = Kokkos::subview(eta_, i_elem, Kokkos::ALL);
         auto v1 = Kokkos::Array<double, 3>{};
@@ -70,4 +69,4 @@ struct CalculateInertiaStiffnessMatrix {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::masses

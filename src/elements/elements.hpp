@@ -36,13 +36,17 @@ struct Elements {
     [[nodiscard]] Kokkos::View<size_t*> NumberOfNodesPerElement() const {
         Kokkos::View<size_t*> result("num_nodes_per_element", NumElementsInSystem());
 
-        Kokkos::parallel_for(beams.num_elems, KOKKOS_LAMBDA(size_t i_elem) {
-            result(i_elem) = beams.num_nodes_per_element(i_elem);
-        });
+        Kokkos::parallel_for(
+            beams.num_elems,
+            KOKKOS_LAMBDA(size_t i_elem) { result(i_elem) = beams.num_nodes_per_element(i_elem); }
+        );
         auto beams_offset = beams.num_elems;
-        Kokkos::parallel_for(masses.num_elems, KOKKOS_LAMBDA(size_t i_elem) {
-            result(i_elem + beams_offset) = masses.num_nodes_per_element(i_elem);
-        });
+        Kokkos::parallel_for(
+            masses.num_elems,
+            KOKKOS_LAMBDA(size_t i_elem) {
+                result(i_elem + beams_offset) = masses.num_nodes_per_element(i_elem);
+            }
+        );
 
         return result;
     }
@@ -68,10 +72,8 @@ struct Elements {
         );
         const auto beams_offset = beams.num_elems;
         Kokkos::parallel_for(
-            masses.num_elems,
-            KOKKOS_LAMBDA(size_t i_elem) {
-                result(i_elem + beams_offset, 0) = masses.state_indices(i_elem);
-            }
+            masses.num_elems, KOKKOS_LAMBDA(size_t i_elem
+                              ) { result(i_elem + beams_offset, 0) = masses.state_indices(i_elem); }
         );
 
         return result;

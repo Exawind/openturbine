@@ -26,8 +26,7 @@ struct ContributeMassesToSparseMatrix {
         auto col_idx = ColIdxType(col_idx_data.data(), num_dofs);
 
         for (auto component_2 = 0U; component_2 < num_dofs; ++component_2) {
-                    col_idx(component_2) =
-                        static_cast<int>(element_freedom_table(i, component_2));
+            col_idx(component_2) = static_cast<int>(element_freedom_table(i, component_2));
         }
         for (auto component_1 = 0U; component_1 < num_dofs; ++component_1) {
             const auto row_num = element_freedom_table(i, component_1);

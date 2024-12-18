@@ -19,9 +19,10 @@ struct ContributeBeamsToVector {
         Kokkos::parallel_for(Kokkos::TeamThreadRange(member, num_nodes), [&](size_t i_node) {
             for (auto j = 0U; j < element_freedom_table.extent(2); ++j) {
                 if constexpr (force_atomic) {
-                    Kokkos::atomic_add(&element_freedom_table(i_elem, i_node, j), elements(i_elem, i_node, j));
-                }
-                else {
+                    Kokkos::atomic_add(
+                        &element_freedom_table(i_elem, i_node, j), elements(i_elem, i_node, j)
+                    );
+                } else {
                     vector(element_freedom_table(i_elem, i_node, j)) += elements(i_elem, i_node, j);
                 }
             }

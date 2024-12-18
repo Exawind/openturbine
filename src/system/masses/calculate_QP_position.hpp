@@ -50,4 +50,4 @@ struct CalculateQPPosition {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::masses

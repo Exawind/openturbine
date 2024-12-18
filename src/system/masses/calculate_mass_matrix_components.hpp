@@ -18,7 +18,7 @@ namespace openturbine::masses {
  * The calculations are performed for each quadrature point (i_qp) of a given element (i_elem)
  */
 struct CalculateMassMatrixComponents {
-    size_t i_elem;                                      //< Element index
+    size_t i_elem;                                     //< Element index
     Kokkos::View<double* [6][6]>::const_type qp_Muu_;  //< Mass matrix in inertial csys
     Kokkos::View<double* [3]> eta_;                    //< Offset between mass center and
                                                        //< elastic axis
@@ -52,4 +52,4 @@ struct CalculateMassMatrixComponents {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::masses

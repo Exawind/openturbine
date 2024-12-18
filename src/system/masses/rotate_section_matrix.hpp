@@ -34,8 +34,7 @@ struct RotateSectionMatrix {
         GemmNN::invoke(1., RR0, Cstar_top, 0., Ctmp_top);
         GemmNN::invoke(1., RR0, Cstar_bottom, 0., Ctmp_bottom);
 
-        const auto Cuu_left =
-            Kokkos::subview(qp_Cuu_, i_elem, Kokkos::ALL, Kokkos::make_pair(0, 3));
+        const auto Cuu_left = Kokkos::subview(qp_Cuu_, i_elem, Kokkos::ALL, Kokkos::make_pair(0, 3));
         const auto Cuu_right =
             Kokkos::subview(qp_Cuu_, i_elem, Kokkos::ALL, Kokkos::make_pair(3, 6));
         GemmNT::invoke(1., Ctmp_left, RR0, 0., Cuu_left);
@@ -43,4 +42,4 @@ struct RotateSectionMatrix {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::masses

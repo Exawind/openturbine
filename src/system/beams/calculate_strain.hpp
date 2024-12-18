@@ -27,7 +27,8 @@ struct CalculateStrain {
         };
         auto x0_prime = Kokkos::View<double[3]>(x0_prime_data.data());
         auto u_prime_data = Kokkos::Array<double, 3>{
-            qp_u_prime_(i_elem, i_qp, 0), qp_u_prime_(i_elem, i_qp, 1), qp_u_prime_(i_elem, i_qp, 2)
+            qp_u_prime_(i_elem, i_qp, 0), qp_u_prime_(i_elem, i_qp, 1),
+            qp_u_prime_(i_elem, i_qp, 2)
         };
         auto u_prime = Kokkos::View<double[3]>(u_prime_data.data());
         auto R_data = Kokkos::Array<double, 4>{

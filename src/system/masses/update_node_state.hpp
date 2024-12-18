@@ -33,4 +33,4 @@ struct UpdateNodeState {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::masses

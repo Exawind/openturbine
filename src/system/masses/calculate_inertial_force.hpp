@@ -30,7 +30,7 @@ struct CalculateInertialForces {
     using GemvDefault = KokkosBlas::Algo::Gemv::Default;
     using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, GemmDefault>;
     using Gemv = KokkosBlas::SerialGemv<NoTranspose, GemvDefault>;
-    size_t i_elem;                                         //< Element index
+    size_t i_elem;                                        //< Element index
     Kokkos::View<double* [6][6]>::const_type qp_Muu_;     //< Mass matrix in inertial csys
     Kokkos::View<double* [3]>::const_type qp_u_ddot_;     //< Acceleration vector
     Kokkos::View<double* [3]>::const_type qp_omega_;      //< Angular velocity vector
@@ -50,8 +50,7 @@ struct CalculateInertialForces {
         auto omega_dot = Kokkos::subview(qp_omega_dot_, i_elem, Kokkos::ALL);
         auto eta_tilde = Kokkos::subview(eta_tilde_, i_elem, Kokkos::ALL, Kokkos::ALL);
         auto omega_tilde = Kokkos::subview(omega_tilde_, i_elem, Kokkos::ALL, Kokkos::ALL);
-        auto omega_dot_tilde =
-            Kokkos::subview(omega_dot_tilde_, i_elem, Kokkos::ALL, Kokkos::ALL);
+        auto omega_dot_tilde = Kokkos::subview(omega_dot_tilde_, i_elem, Kokkos::ALL, Kokkos::ALL);
         auto rho = Kokkos::subview(rho_, i_elem, Kokkos::ALL, Kokkos::ALL);
         auto eta = Kokkos::subview(eta_, i_elem, Kokkos::ALL);
 
@@ -84,4 +83,4 @@ struct CalculateInertialForces {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::masses

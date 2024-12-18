@@ -36,9 +36,7 @@ struct AssembleNodeFreedomMapTable_Masses {
     KOKKOS_FUNCTION
     void operator()(size_t i) const {
         const auto node_index = node_state_indices(i);
-        Kokkos::atomic_or(
-            &node_freedom_allocation_table(node_index), element_freedom_signature(i)
-        );
+        Kokkos::atomic_or(&node_freedom_allocation_table(node_index), element_freedom_signature(i));
     }
 };
 

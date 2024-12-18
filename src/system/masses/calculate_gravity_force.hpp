@@ -25,7 +25,7 @@ struct CalculateGravityForce {
     using Default = KokkosBlas::Algo::Gemv::Default;
     using Gemv = KokkosBlas::SerialGemv<NoTranspose, Default>;
     size_t i_elem;
-    Kokkos::View<double[3]>::const_type gravity;           //< Gravitational acceleration vector
+    Kokkos::View<double[3]>::const_type gravity;          //< Gravitational acceleration vector
     Kokkos::View<double* [6][6]>::const_type qp_Muu_;     //< Mass matrix in inertial csys
     Kokkos::View<double* [3][3]>::const_type eta_tilde_;  //< Skew-symmetric matrix derived from eta
     Kokkos::View<double* [6]> qp_FG_;  //< Gravity forces (computed in this functor)
@@ -48,4 +48,4 @@ struct CalculateGravityForce {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::masses
