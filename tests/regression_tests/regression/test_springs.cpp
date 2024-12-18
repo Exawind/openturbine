@@ -31,8 +31,10 @@ inline auto SetUpSprings() {
 
 TEST(SpringsTest, NodeStateIndices) {
     const auto springs = SetUpSprings();
-    EXPECT_EQ(springs.node_state_indices(0, 0), 0);
-    EXPECT_EQ(springs.node_state_indices(0, 1), 1);
+    auto node_state_indices_host = Kokkos::create_mirror(springs.node_state_indices);
+    Kokkos::deep_copy(node_state_indices_host, springs.node_state_indices);
+    EXPECT_EQ(node_state_indices_host(0, 0), 0);
+    EXPECT_EQ(node_state_indices_host(0, 1), 1);
 }
 
 TEST(SpringsTest, InitialPositionVector) {
