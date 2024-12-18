@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "src/system/springs/calculate_length.hpp"
-#include "tests/unit_tests/system/test_calculate.hpp"
+#include "tests/unit_tests/system/beams/test_calculate.hpp"
 
 namespace openturbine::tests {
 
