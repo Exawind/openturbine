@@ -36,15 +36,17 @@ struct Elements {
     [[nodiscard]] Kokkos::View<size_t*> NumberOfNodesPerElement() const {
         Kokkos::View<size_t*> result("num_nodes_per_element", NumElementsInSystem());
 
+        auto beams_num_nodes_per_element = beams.num_nodes_per_element;
         Kokkos::parallel_for(
             beams.num_elems,
-            KOKKOS_LAMBDA(size_t i_elem) { result(i_elem) = beams.num_nodes_per_element(i_elem); }
+            KOKKOS_LAMBDA(size_t i_elem) { result(i_elem) = beams_num_nodes_per_element(i_elem); }
         );
         auto beams_offset = beams.num_elems;
+        auto masses_num_nodes_per_element = masses.num_nodes_per_element;
         Kokkos::parallel_for(
             masses.num_elems,
             KOKKOS_LAMBDA(size_t i_elem) {
-                result(i_elem + beams_offset) = masses.num_nodes_per_element(i_elem);
+                result(i_elem + beams_offset) = masses_num_nodes_per_element(i_elem);
             }
         );
 
@@ -61,19 +63,22 @@ struct Elements {
         const auto max_nodes = std::max(beams.max_elem_nodes, 1UL);
         Kokkos::View<size_t**> result("node_state_indices", NumElementsInSystem(), max_nodes);
 
+        auto beams_num_nodes_per_element = beams.num_nodes_per_element;
+        auto beams_node_state_indices = beams.node_state_indices;
         Kokkos::parallel_for(
             beams.num_elems,
             KOKKOS_LAMBDA(size_t i_elem) {
-                const auto num_nodes = beams.num_nodes_per_element(i_elem);
+                const auto num_nodes = beams_num_nodes_per_element(i_elem);
                 for (auto j = 0U; j < num_nodes; ++j) {
-                    result(i_elem, j) = beams.node_state_indices(i_elem, j);
+                    result(i_elem, j) = beams_node_state_indices(i_elem, j);
                 }
             }
         );
         const auto beams_offset = beams.num_elems;
+        auto masses_state_indices = masses.state_indices;
         Kokkos::parallel_for(
             masses.num_elems, KOKKOS_LAMBDA(size_t i_elem
-                              ) { result(i_elem + beams_offset, 0) = masses.state_indices(i_elem); }
+                              ) { result(i_elem + beams_offset, 0) = masses_state_indices(i_elem); }
         );
 
         return result;
