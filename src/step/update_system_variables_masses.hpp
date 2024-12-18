@@ -10,96 +10,119 @@
 #include "src/elements/masses/masses.hpp"
 #include "src/math/vector_operations.hpp"
 #include "src/state/state.hpp"
-#include "src/system/calculate_RR0.hpp"
-#include "src/system/calculate_inertial_force.hpp"
-#include "src/system/update_node_state.hpp"
+#include "src/system/masses/calculate_QP_position.hpp"
+#include "src/system/masses/calculate_RR0.hpp"
+#include "src/system/masses/calculate_gravity_force.hpp"
+#include "src/system/masses/calculate_gyroscopic_matrix.hpp"
+#include "src/system/masses/calculate_inertia_stiffness_matrix.hpp"
+#include "src/system/masses/calculate_inertial_force.hpp"
+#include "src/system/masses/calculate_mass_matrix_components.hpp"
+#include "src/system/masses/rotate_section_matrix.hpp"
+#include "src/system/masses/update_node_state.hpp"
 
 namespace openturbine {
 
 inline void UpdateSystemVariablesMasses(
-    [[maybe_unused]] StepParameters& parameters, const Masses& masses, State& state
+    const StepParameters& parameters, const Masses& masses, State& state
 ) {
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(masses.num_elems), Kokkos::AUTO());
 
     // Update the node states for masses to get the current position/rotation
     Kokkos::parallel_for(
-        range_policy,
-        UpdateNodeState{
-            masses.num_nodes_per_element, masses.state_indices, masses.u, masses.u_ddot,
-            masses.u_ddot, state.q, state.v, state.a
+        masses.num_elems,
+        masses::UpdateNodeState{
+            masses.state_indices, masses.node_u, masses.node_u_dot, masses.node_u_ddot, state.q,
+            state.v, state.vd
         }
     );
 
     // Calculate some ancillary values (angular velocity - omega, angular acceleration - omega_dot,
     // linear acceleration - u_ddot) before calculating the mass element values
-    auto omega = Kokkos::View<double* [1][3]>("omega", masses.num_elems);
     Kokkos::deep_copy(
-        omega, Kokkos::subview(masses.u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(3, 6))
+        masses.qp_x0, Kokkos::subview(masses.node_x0, Kokkos::ALL, Kokkos::make_pair(0, 3))
     );
-    auto omega_dot = Kokkos::View<double* [1][3]>("omega_dot", masses.num_elems);
     Kokkos::deep_copy(
-        omega_dot, Kokkos::subview(masses.u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(3, 6))
+        masses.qp_u, Kokkos::subview(masses.node_u, Kokkos::ALL, Kokkos::make_pair(0, 3))
     );
-    auto u_ddot = Kokkos::View<double* [1][3]>("u_ddot", masses.num_elems);
     Kokkos::deep_copy(
-        u_ddot, Kokkos::subview(masses.u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(0, 3))
+        masses.qp_r0, Kokkos::subview(masses.node_x0, Kokkos::ALL, Kokkos::make_pair(3, 7))
+    );
+    Kokkos::deep_copy(
+        masses.qp_u_ddot, Kokkos::subview(masses.node_u_ddot, Kokkos::ALL, Kokkos::make_pair(0, 3))
+    );
+    Kokkos::deep_copy(
+        masses.qp_r, Kokkos::subview(masses.node_u, Kokkos::ALL, Kokkos::make_pair(3, 7))
+    );
+    Kokkos::deep_copy(
+        masses.qp_omega, Kokkos::subview(masses.node_u_dot, Kokkos::ALL, Kokkos::make_pair(3, 6))
+    );
+    Kokkos::deep_copy(
+        masses.qp_omega_dot,
+        Kokkos::subview(masses.node_u_ddot, Kokkos::ALL, Kokkos::make_pair(3, 6))
     );
 
-    // Define some Views to store the skew-symmetric matrices
-    auto eta_tilde = Kokkos::View<double* [1][3][3]>("eta_tilde", masses.num_elems);
-    auto omega_tilde = Kokkos::View<double* [1][3][3]>("omega_tilde", masses.num_elems);
-    auto omega_dot_tilde = Kokkos::View<double* [1][3][3]>("omega_dot_tilde", masses.num_elems);
+    Kokkos::parallel_for(
+        masses.num_elems,
+        KOKKOS_LAMBDA(size_t i_elem) {
+            masses::CalculateQPPosition{i_elem,       masses.qp_x0, masses.qp_u,
+                                        masses.qp_r0, masses.qp_r,  masses.qp_x}();
+        }
+    );
 
     // Calculate system variables for mass elements
     Kokkos::parallel_for(
-        range_policy,
-        KOKKOS_LAMBDA(const Kokkos::TeamPolicy<>::member_type& member) {
-            const auto i_elem = static_cast<size_t>(member.league_rank());
-
+        masses.num_elems,
+        KOKKOS_LAMBDA(const size_t i_elem) {
             // Calculate global rotation matrix
-            Kokkos::parallel_for(1, CalculateRR0{i_elem, masses.x, masses.RR0});
+            masses::CalculateRR0{i_elem, masses.qp_x, masses.qp_RR0}();
 
             // Rotate mass matrix from material -> inertial frame
-            Kokkos::parallel_for(
-                1, RotateSectionMatrix{i_elem, masses.RR0, masses.Mstar, masses.Muu}
-            );
+            masses::RotateSectionMatrix{i_elem, masses.qp_RR0, masses.qp_Mstar, masses.qp_Muu}();
 
             // Calculate mass matrix components
-            Kokkos::parallel_for(
-                1,
-                CalculateMassMatrixComponents{i_elem, masses.Muu, masses.eta, masses.rho, eta_tilde}
-            );
+            masses::CalculateMassMatrixComponents{
+                i_elem, masses.qp_Muu, masses.qp_eta, masses.qp_rho, masses.qp_eta_tilde
+            }();
 
             // Calculate gravity forces
-            Kokkos::parallel_for(
-                1, CalculateGravityForce{i_elem, masses.gravity, masses.Muu, eta_tilde, masses.Fg}
-            );
+            masses::CalculateGravityForce{
+                i_elem, masses.gravity, masses.qp_Muu, masses.qp_eta_tilde, masses.qp_Fg
+            }();
 
             // Calculate inertial forces
-            Kokkos::parallel_for(
-                1,
-                CalculateInertialForces{
-                    i_elem, masses.Muu, u_ddot, omega, omega_dot, eta_tilde, omega_tilde,
-                    omega_dot_tilde, masses.rho, masses.eta, masses.Fi
-                }
-            );
+            masses::CalculateInertialForces{
+                i_elem,
+                masses.qp_Muu,
+                masses.qp_u_ddot,
+                masses.qp_omega,
+                masses.qp_omega_dot,
+                masses.qp_eta_tilde,
+                masses.qp_omega_tilde,
+                masses.qp_omega_dot_tilde,
+                masses.qp_rho,
+                masses.qp_eta,
+                masses.qp_Fi
+            }();
 
             // Calculate gyroscopic/inertial damping matrix
-            Kokkos::parallel_for(
-                1,
-                CalculateGyroscopicMatrix{
-                    i_elem, masses.Muu, omega, omega_tilde, masses.rho, masses.eta, masses.Guu
-                }
-            );
+            masses::CalculateGyroscopicMatrix{i_elem,          masses.qp_Muu,
+                                              masses.qp_omega, masses.qp_omega_tilde,
+                                              masses.qp_rho,   masses.qp_eta,
+                                              masses.qp_Guu}();
 
             // Calculate inertia stiffness matrix
-            Kokkos::parallel_for(
-                1,
-                CalculateInertiaStiffnessMatrix{
-                    i_elem, masses.Muu, u_ddot, omega, omega_dot, omega_tilde, omega_dot_tilde,
-                    masses.rho, masses.eta, masses.Kuu
-                }
-            );
+            masses::CalculateInertiaStiffnessMatrix{
+                i_elem,
+                masses.qp_Muu,
+                masses.qp_u_ddot,
+                masses.qp_omega,
+                masses.qp_omega_dot,
+                masses.qp_omega_tilde,
+                masses.qp_omega_dot_tilde,
+                masses.qp_rho,
+                masses.qp_eta,
+                masses.qp_Kuu
+            }();
         }
     );
 

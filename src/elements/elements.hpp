@@ -19,20 +19,13 @@ namespace openturbine {
  *       in the model
  */
 struct Elements {
-    std::shared_ptr<Beams> beams;
-    std::shared_ptr<Masses> masses;
+    Beams beams;
+    Masses masses;
 
-    Elements(std::shared_ptr<Beams> b = nullptr, std::shared_ptr<Masses> m = nullptr)
-        : beams(std::move(b)), masses(std::move(m)) {
-        if (beams == nullptr && masses == nullptr) {
-            throw std::invalid_argument("Beams and masses cannot both be empty");
-        }
-    }
+    Elements(Beams b, Masses m) : beams(std::move(b)), masses(std::move(m)) {}
 
     /// Returns the total number of elements across all types in the system
-    [[nodiscard]] size_t NumElementsInSystem() const {
-        return (beams ? beams->num_elems : 0) + (masses ? masses->num_elems : 0);
-    }
+    [[nodiscard]] size_t NumElementsInSystem() const { return beams.num_elems + masses.num_elems; }
 
     /**
      * @brief Returns the number of nodes per element for each element in the system
@@ -43,22 +36,18 @@ struct Elements {
     [[nodiscard]] Kokkos::View<size_t*> NumberOfNodesPerElement() const {
         Kokkos::View<size_t*> result("num_nodes_per_element", NumElementsInSystem());
 
-        auto copy_with_offset =
-            [&result](const Kokkos::View<size_t*>& source, const size_t offset, const size_t count) {
-                auto subview =
-                    Kokkos::subview(result, Kokkos::pair<size_t, size_t>(offset, offset + count));
-                Kokkos::deep_copy(subview, source);
-                return offset + count;
-            };
+        Kokkos::parallel_for(
+            beams.num_elems,
+            KOKKOS_LAMBDA(size_t i_elem) { result(i_elem) = beams.num_nodes_per_element(i_elem); }
+        );
+        auto beams_offset = beams.num_elems;
+        Kokkos::parallel_for(
+            masses.num_elems,
+            KOKKOS_LAMBDA(size_t i_elem) {
+                result(i_elem + beams_offset) = masses.num_nodes_per_element(i_elem);
+            }
+        );
 
-        size_t current_offset{0};
-        if (beams) {
-            current_offset =
-                copy_with_offset(beams->num_nodes_per_element, current_offset, beams->num_elems);
-        }
-        if (masses) {
-            copy_with_offset(masses->num_nodes_per_element, current_offset, masses->num_elems);
-        }
         return result;
     }
 
@@ -69,40 +58,24 @@ struct Elements {
      *         concatenated in the order: [beams] -> [masses] -> ...
      */
     [[nodiscard]] Kokkos::View<size_t**> NodeStateIndices() const {
-        const size_t max_nodes = beams ? beams->max_elem_nodes : 1;
+        const auto max_nodes = std::max(beams.max_elem_nodes, 1UL);
         Kokkos::View<size_t**> result("node_state_indices", NumElementsInSystem(), max_nodes);
 
-        auto copy_with_offset = [&result](
-                                    const Kokkos::View<size_t**>& source, const size_t offset,
-                                    const size_t count
-                                ) {
-            auto subview = Kokkos::subview(
-                result, Kokkos::pair<size_t, size_t>(offset, offset + count), Kokkos::ALL()
-            );
-            Kokkos::deep_copy(subview, source);
-            return offset + count;
-        };
-
-        size_t current_offset{0};
-        if (beams) {
-            current_offset =
-                copy_with_offset(beams->node_state_indices, current_offset, beams->num_elems);
-        }
-        if (masses) {
-            // Create a 2D view for masses with the same 2nd dimension as beams i.e.
-            // (masses->num_elems x max_nodes) for size compatibility
-            const Kokkos::View<size_t**> mass_state_indices(
-                "mass_state_indices", masses->num_elems, max_nodes
-            );
-            // Copy the state indices from masses (1 node per element) to the temporary view
-            Kokkos::parallel_for(
-                masses->num_elems,
-                KOKKOS_LAMBDA(const size_t i_elem) {
-                    mass_state_indices(i_elem, 0) = masses->state_indices(i_elem, 0);
+        Kokkos::parallel_for(
+            beams.num_elems,
+            KOKKOS_LAMBDA(size_t i_elem) {
+                const auto num_nodes = beams.num_nodes_per_element(i_elem);
+                for (auto j = 0U; j < num_nodes; ++j) {
+                    result(i_elem, j) = beams.node_state_indices(i_elem, j);
                 }
-            );
-            copy_with_offset(mass_state_indices, current_offset, masses->num_elems);
-        }
+            }
+        );
+        const auto beams_offset = beams.num_elems;
+        Kokkos::parallel_for(
+            masses.num_elems, KOKKOS_LAMBDA(size_t i_elem
+                              ) { result(i_elem + beams_offset, 0) = masses.state_indices(i_elem); }
+        );
+
         return result;
     }
 };

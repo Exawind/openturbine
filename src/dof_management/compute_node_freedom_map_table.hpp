@@ -4,7 +4,6 @@
 
 #include "freedom_signature.hpp"
 
-#include "src/elements/beams/beams.hpp"
 #include "src/state/state.hpp"
 
 namespace openturbine {

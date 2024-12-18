@@ -6,6 +6,7 @@
 #include "src/dof_management/compute_node_freedom_map_table.hpp"
 #include "src/dof_management/create_constraint_freedom_table.hpp"
 #include "src/dof_management/create_element_freedom_table.hpp"
+#include "src/elements/beams/create_beams.hpp"
 #include "src/elements/elements.hpp"
 #include "src/elements/masses/create_masses.hpp"
 #include "src/math/quaternion_operations.hpp"
@@ -47,6 +48,9 @@ inline auto SetUpPrecessionTest() {
 
     auto masses = CreateMasses(masses_input);
 
+    const auto beams_input = BeamsInput({}, {0., 0., 0.});
+    auto beams = CreateBeams(beams_input);
+
     // Set up step parameters
     constexpr bool is_dynamic_solve(true);
     constexpr size_t max_iter(6);
@@ -57,7 +61,7 @@ inline auto SetUpPrecessionTest() {
     // Create solver with initial node state
     auto state = model.CreateState();
     auto constraints = Constraints(model.GetConstraints());
-    auto elements = Elements{nullptr, std::make_shared<Masses>(masses)};
+    auto elements = Elements{beams, masses};
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
@@ -72,24 +76,24 @@ inline auto SetUpPrecessionTest() {
     );
 
     // Run simulation for 500 steps
-    for (size_t i = 0; i < 1; ++i) {
+    for (size_t i = 0; i < 500; ++i) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }
+
+    auto q_host = Kokkos::create_mirror(state.q);
+    Kokkos::deep_copy(q_host, state.q);
+    EXPECT_NEAR(q_host(0, 0), 0., 1.e-12);
+    EXPECT_NEAR(q_host(0, 1), 0., 1.e-12);
+    EXPECT_NEAR(q_host(0, 2), 0., 1.e-12);
+    EXPECT_NEAR(q_host(0, 3), -0.6305304765029902, 1.e-12);
+    EXPECT_NEAR(q_host(0, 4), 0.6055602536398981, 1.e-12);
+    EXPECT_NEAR(q_host(0, 5), -0.30157705376951366, 1.e-12);
+    EXPECT_NEAR(q_host(0, 6), -0.3804988542061519, 1.e-12);
 }
 
 TEST(PrecessionTest, FinalRotation) {
     SetUpPrecessionTest();
-
-    /*     // Get final quaternion
-        const auto q = final_state.q;
-
-        auto euler_angles = Kokkos::View<double[3]>("euler_angles");
-        QuaternionToRotationVector(Kokkos::subview(q, 0, Kokkos::make_pair(3, 7)), euler_angles);
-
-        EXPECT_NEAR(euler_angles[0], -1.413542763236864, 1e-12);
-        EXPECT_NEAR(euler_angles[1], 0.999382175365794, 1e-12);
-        EXPECT_NEAR(euler_angles[2], 0.213492011335111, 1e-12); */
 }
 
 }  // namespace openturbine::tests

@@ -17,6 +17,7 @@
 #include "src/elements/beams/beams_input.hpp"
 #include "src/elements/beams/create_beams.hpp"
 #include "src/elements/elements.hpp"
+#include "src/elements/masses/create_masses.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -94,10 +95,14 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     const auto num_nodes = beam_nodes.size();
 
     // Initialize beams from element inputs
-    auto beams = std::make_shared<Beams>(CreateBeams(beams_input));
+    auto beams = CreateBeams(beams_input);
+
+    // No Masses for this problem
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, nullptr};
+    auto elements = Elements{beams, masses};
 
     // Constraint inputs
     model.AddFixedBC(model.GetNode(0));
@@ -125,7 +130,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
 
     // First step
     Kokkos::deep_copy(
-        Kokkos::subview(beams->node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.005)
+        Kokkos::subview(beams.node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.005)
     );
     auto converged = Step(parameters, solver, elements, state, constraints);
     EXPECT_EQ(converged, true);
@@ -136,7 +141,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     }
     // Second step
     Kokkos::deep_copy(
-        Kokkos::subview(beams->node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.010)
+        Kokkos::subview(beams.node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.010)
     );
     converged = Step(parameters, solver, elements, state, constraints);
     EXPECT_EQ(converged, true);
@@ -148,7 +153,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
 
     // Third step
     Kokkos::deep_copy(
-        Kokkos::subview(beams->node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.015)
+        Kokkos::subview(beams.node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.015)
     );
     converged = Step(parameters, solver, elements, state, constraints);
     EXPECT_EQ(converged, true);

@@ -21,6 +21,3 @@ target_sources(
     test_calculate_gyroscopic_matrix.cpp
     test_calculate_inertia_stiffness_matrix.cpp
 )
-
-add_subdirectory(springs)
-add_subdirectory(beams)

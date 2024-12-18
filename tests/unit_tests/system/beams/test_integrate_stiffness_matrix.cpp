@@ -5,7 +5,7 @@
 #include "test_integrate_matrix.hpp"
 
 #include "src/elements/beams/beams.hpp"
-#include "src/system/integrate_stiffness_matrix.hpp"
+#include "src/system/beams/integrate_stiffness_matrix.hpp"
 
 namespace openturbine::tests {
 
