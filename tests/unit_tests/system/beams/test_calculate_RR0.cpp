@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/calculate_RR0.hpp"
+#include "src/system/beams/calculate_RR0.hpp"
 
 namespace openturbine::tests {
 

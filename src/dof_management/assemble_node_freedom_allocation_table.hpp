@@ -29,15 +29,15 @@ struct AssembleNodeFreedomMapTable_Beams {
 };
 
 struct AssembleNodeFreedomMapTable_Masses {
-    Kokkos::View<size_t* [1]>::const_type node_state_indices;
-    Kokkos::View<FreedomSignature* [1]>::const_type element_freedom_signature;
+    Kokkos::View<size_t*>::const_type node_state_indices;
+    Kokkos::View<FreedomSignature*>::const_type element_freedom_signature;
     Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t i) const {
-        const auto node_index = node_state_indices(i, 0);
+        const auto node_index = node_state_indices(i);
         Kokkos::atomic_or(
-            &node_freedom_allocation_table(node_index), element_freedom_signature(i, 0)
+            &node_freedom_allocation_table(node_index), element_freedom_signature(i)
         );
     }
 };

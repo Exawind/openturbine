@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/calculate_temporary_variables.hpp"
+#include "src/system/beams/calculate_temporary_variables.hpp"
 
 namespace openturbine::tests {
 

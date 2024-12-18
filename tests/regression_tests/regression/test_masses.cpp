@@ -44,7 +44,7 @@ inline auto SetUpMasses() {
 TEST(MassesTest, NodeInitialPosition) {
     const auto masses = SetUpMasses();
     expect_kokkos_view_2D_equal(
-        Kokkos::subview(masses.qp_x0, Kokkos::ALL, 0, Kokkos::ALL),
+        masses.qp_x0,
         {
             {0., 0., 0., 1., 0., 0., 0.},
         }
@@ -54,7 +54,7 @@ TEST(MassesTest, NodeInitialPosition) {
 TEST(MassesTest, NodeInitialDisplacement) {
     const auto masses = SetUpMasses();
     expect_kokkos_view_2D_equal(
-        Kokkos::subview(masses.node_u, Kokkos::ALL, 0, Kokkos::ALL),
+        masses.node_u,
         {
             {0., 0., 0., 1., 0., 0., 0.},
         }
@@ -64,7 +64,7 @@ TEST(MassesTest, NodeInitialDisplacement) {
 TEST(MassesTest, NodeInitialVelocity) {
     const auto masses = SetUpMasses();
     expect_kokkos_view_2D_equal(
-        Kokkos::subview(masses.node_u_dot, Kokkos::ALL, 0, Kokkos::ALL),
+        masses.node_u_dot,
         {
             {0., 0., 0., 0., 0., 0.},
         }
@@ -74,7 +74,7 @@ TEST(MassesTest, NodeInitialVelocity) {
 TEST(MassesTest, NodeInitialAcceleration) {
     const auto masses = SetUpMasses();
     expect_kokkos_view_2D_equal(
-        Kokkos::subview(masses.node_u_ddot, Kokkos::ALL, 0, Kokkos::ALL),
+        masses.node_u_ddot,
         {
             {0., 0., 0., 0., 0., 0.},
         }
@@ -84,7 +84,7 @@ TEST(MassesTest, NodeInitialAcceleration) {
 TEST(MassesTest, MassMatrixInMaterialFrame) {
     const auto masses = SetUpMasses();
     expect_kokkos_view_2D_equal(
-        Kokkos::subview(masses.qp_Mstar, 0, 0, Kokkos::ALL, Kokkos::ALL),
+        Kokkos::subview(masses.qp_Mstar, 0, Kokkos::ALL, Kokkos::ALL),
         {
             {1., 0., 0., 0., 0., 0.},
             {0., 1., 0., 0., 0., 0.},

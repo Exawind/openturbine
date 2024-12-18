@@ -36,17 +36,13 @@ struct Elements {
     [[nodiscard]] Kokkos::View<size_t*> NumberOfNodesPerElement() const {
         Kokkos::View<size_t*> result("num_nodes_per_element", NumElementsInSystem());
 
-        auto copy_with_offset =
-            [&result](const Kokkos::View<size_t*>& source, const size_t offset, const size_t count) {
-                auto subview =
-                    Kokkos::subview(result, Kokkos::pair<size_t, size_t>(offset, offset + count));
-                Kokkos::deep_copy(subview, source);
-                return offset + count;
-            };
-
-        const auto beams_offset =
-            copy_with_offset(beams.num_nodes_per_element, 0UL, beams.num_elems);
-        copy_with_offset(masses.num_nodes_per_element, beams_offset, masses.num_elems);
+        Kokkos::parallel_for(beams.num_elems, KOKKOS_LAMBDA(size_t i_elem) {
+            result(i_elem) = beams.num_nodes_per_element(i_elem);
+        });
+        auto beams_offset = beams.num_elems;
+        Kokkos::parallel_for(masses.num_elems, KOKKOS_LAMBDA(size_t i_elem) {
+            result(i_elem + beams_offset) = masses.num_nodes_per_element(i_elem);
+        });
 
         return result;
     }
@@ -74,7 +70,7 @@ struct Elements {
         Kokkos::parallel_for(
             masses.num_elems,
             KOKKOS_LAMBDA(size_t i_elem) {
-                result(i_elem + beams_offset, 0) = masses.state_indices(i_elem, 0);
+                result(i_elem + beams_offset, 0) = masses.state_indices(i_elem);
             }
         );
 

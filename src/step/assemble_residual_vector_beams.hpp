@@ -4,7 +4,7 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "src/elements/beams/beams.hpp"
-#include "src/system/integrate_residual_vector.hpp"
+#include "src/system/beams/integrate_residual_vector.hpp"
 
 namespace openturbine {
 

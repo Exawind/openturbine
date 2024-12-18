@@ -117,9 +117,9 @@ TEST(ElementsTest, NodeStateIndicesMassesOnly) {
     auto masses = Masses(3);  // 3 mass elements
     // Set up state indices for masses: [10, 20, 30]
     auto host_mass_indices = Kokkos::create_mirror_view(masses.state_indices);
-    host_mass_indices(0, 0) = 10;
-    host_mass_indices(1, 0) = 20;
-    host_mass_indices(2, 0) = 30;
+    host_mass_indices(0) = 10;
+    host_mass_indices(1) = 20;
+    host_mass_indices(2) = 30;
     Kokkos::deep_copy(masses.state_indices, host_mass_indices);
 
     const Elements elements{beams, masses};
@@ -146,8 +146,8 @@ TEST(ElementsTest, NodeStateIndicesMixedElements) {
 
     // Set up state indices for masses: [10, 20]
     auto host_mass_indices = Kokkos::create_mirror_view(masses.state_indices);
-    host_mass_indices(0, 0) = 10;
-    host_mass_indices(1, 0) = 20;
+    host_mass_indices(0) = 10;
+    host_mass_indices(1) = 20;
     Kokkos::deep_copy(masses.state_indices, host_mass_indices);
 
     const Elements elements{beams, masses};

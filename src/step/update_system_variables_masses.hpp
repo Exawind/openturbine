@@ -7,13 +7,18 @@
 #include "assemble_stiffness_matrix_masses.hpp"
 #include "step_parameters.hpp"
 
-#include "src/elements/beams/calculate_QP_position.hpp"
+#include "src/system/masses/calculate_QP_position.hpp"
 #include "src/elements/masses/masses.hpp"
 #include "src/math/vector_operations.hpp"
 #include "src/state/state.hpp"
-#include "src/system/calculate_RR0.hpp"
-#include "src/system/calculate_inertial_force.hpp"
-#include "src/system/update_node_state.hpp"
+#include "src/system/masses/calculate_RR0.hpp"
+#include "src/system/masses/calculate_inertial_force.hpp"
+#include "src/system/masses/calculate_inertia_stiffness_matrix.hpp"
+#include "src/system/masses/calculate_gravity_force.hpp"
+#include "src/system/masses/calculate_gyroscopic_matrix.hpp"
+#include "src/system/masses/calculate_mass_matrix_components.hpp"
+#include "src/system/masses/rotate_section_matrix.hpp"
+#include "src/system/masses/update_node_state.hpp"
 
 namespace openturbine {
 
@@ -24,9 +29,9 @@ inline void UpdateSystemVariablesMasses(
 
     // Update the node states for masses to get the current position/rotation
     Kokkos::parallel_for(
-        range_policy,
-        UpdateNodeState{
-            masses.num_nodes_per_element, masses.state_indices, masses.node_u, masses.node_u_dot,
+        masses.num_elems,
+        masses::UpdateNodeState{
+            masses.state_indices, masses.node_u, masses.node_u_dot,
             masses.node_u_ddot, state.q, state.v, state.vd
         }
     );
@@ -35,38 +40,38 @@ inline void UpdateSystemVariablesMasses(
     // linear acceleration - u_ddot) before calculating the mass element values
     Kokkos::deep_copy(
         masses.qp_x0,
-        Kokkos::subview(masses.node_x0, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(0, 3))
+        Kokkos::subview(masses.node_x0, Kokkos::ALL, Kokkos::make_pair(0, 3))
     );
     Kokkos::deep_copy(
         masses.qp_u,
-        Kokkos::subview(masses.node_u, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(0, 3))
+        Kokkos::subview(masses.node_u, Kokkos::ALL, Kokkos::make_pair(0, 3))
     );
     Kokkos::deep_copy(
         masses.qp_r0,
-        Kokkos::subview(masses.node_x0, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(3, 7))
+        Kokkos::subview(masses.node_x0, Kokkos::ALL, Kokkos::make_pair(3, 7))
     );
     Kokkos::deep_copy(
         masses.qp_u_ddot,
-        Kokkos::subview(masses.node_u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(0, 3))
+        Kokkos::subview(masses.node_u_ddot, Kokkos::ALL, Kokkos::make_pair(0, 3))
     );
     Kokkos::deep_copy(
         masses.qp_r,
-        Kokkos::subview(masses.node_u, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(3, 7))
+        Kokkos::subview(masses.node_u, Kokkos::ALL, Kokkos::make_pair(3, 7))
     );
     Kokkos::deep_copy(
         masses.qp_omega,
-        Kokkos::subview(masses.node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(3, 6))
+        Kokkos::subview(masses.node_u_dot, Kokkos::ALL, Kokkos::make_pair(3, 6))
     );
     Kokkos::deep_copy(
         masses.qp_omega_dot,
-        Kokkos::subview(masses.node_u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::make_pair(3, 6))
+        Kokkos::subview(masses.node_u_ddot, Kokkos::ALL, Kokkos::make_pair(3, 6))
     );
 
     Kokkos::parallel_for(
         masses.num_elems,
         KOKKOS_LAMBDA(size_t i_elem) {
-            CalculateQPPosition{i_elem,       masses.qp_x0, masses.qp_u,
-                                masses.qp_r0, masses.qp_r,  masses.qp_x}(0);
+            masses::CalculateQPPosition{i_elem,       masses.qp_x0, masses.qp_u,
+                                masses.qp_r0, masses.qp_r,  masses.qp_x}();
         }
     );
 
@@ -75,23 +80,23 @@ inline void UpdateSystemVariablesMasses(
         masses.num_elems,
         KOKKOS_LAMBDA(const size_t i_elem) {
             // Calculate global rotation matrix
-            CalculateRR0{i_elem, masses.qp_x, masses.qp_RR0}(0);
+            masses::CalculateRR0{i_elem, masses.qp_x, masses.qp_RR0}();
 
             // Rotate mass matrix from material -> inertial frame
-            RotateSectionMatrix{i_elem, masses.qp_RR0, masses.qp_Mstar, masses.qp_Muu}(0);
+            masses::RotateSectionMatrix{i_elem, masses.qp_RR0, masses.qp_Mstar, masses.qp_Muu}();
 
             // Calculate mass matrix components
-            CalculateMassMatrixComponents{
+            masses::CalculateMassMatrixComponents{
                 i_elem, masses.qp_Muu, masses.qp_eta, masses.qp_rho, masses.qp_eta_tilde
-            }(0);
+            }();
 
             // Calculate gravity forces
-            CalculateGravityForce{
+            masses::CalculateGravityForce{
                 i_elem, masses.gravity, masses.qp_Muu, masses.qp_eta_tilde, masses.qp_Fg
-            }(0);
+            }();
 
             // Calculate inertial forces
-            CalculateInertialForces{
+            masses::CalculateInertialForces{
                 i_elem,
                 masses.qp_Muu,
                 masses.qp_u_ddot,
@@ -103,16 +108,16 @@ inline void UpdateSystemVariablesMasses(
                 masses.qp_rho,
                 masses.qp_eta,
                 masses.qp_Fi
-            }(0);
+            }();
 
             // Calculate gyroscopic/inertial damping matrix
-            CalculateGyroscopicMatrix{i_elem,          masses.qp_Muu,
+            masses::CalculateGyroscopicMatrix{i_elem,          masses.qp_Muu,
                                       masses.qp_omega, masses.qp_omega_tilde,
                                       masses.qp_rho,   masses.qp_eta,
-                                      masses.qp_Guu}(0);
+                                      masses.qp_Guu}();
 
             // Calculate inertia stiffness matrix
-            CalculateInertiaStiffnessMatrix{
+            masses::CalculateInertiaStiffnessMatrix{
                 i_elem,
                 masses.qp_Muu,
                 masses.qp_u_ddot,
@@ -123,7 +128,7 @@ inline void UpdateSystemVariablesMasses(
                 masses.qp_rho,
                 masses.qp_eta,
                 masses.qp_Kuu
-            }(0);
+            }();
         }
     );
 
