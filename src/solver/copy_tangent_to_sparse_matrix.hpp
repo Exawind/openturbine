@@ -27,8 +27,10 @@ struct CopyTangentToSparseMatrix {
             const auto row_num = first_entry + dof;
             auto row_map = sparse.graph.row_map;
             auto cols = sparse.graph.entries;
-            auto row_data = RowDataType(member.thread_scratch(1), num_dofs);
-            auto col_idx = ColIdxType(member.thread_scratch(1), num_dofs);
+            auto row_data_data = Kokkos::Array<typename RowDataType::value_type, 6>{};
+            auto col_idx_data = Kokkos::Array<typename ColIdxType::value_type, 6>{};
+            auto row_data = RowDataType(row_data_data.data(), num_dofs);
+            auto col_idx = ColIdxType(col_idx_data.data(), num_dofs);
 
             for (auto entry = 0U; entry < num_dofs; ++entry) {
                 col_idx(entry) = cols(row_map(row_num) + entry);
