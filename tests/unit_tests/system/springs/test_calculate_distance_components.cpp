@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "src/system/springs/calculate_distance_components.hpp"
+#include "tests/unit_tests/system/test_calculate.hpp"
 
 namespace openturbine::tests {
 
@@ -35,15 +36,17 @@ TEST(CalculateDistanceComponentsTests, OneElement) {
         "CalculateDistanceComponents", 1, CalculateDistanceComponents{x0, u1, u2, r}
     );
 
-    constexpr auto r_exact_data = std::array{1.3, 2.3, 3.3};
+    constexpr auto r_exact_data = std::array{
+        1. - 0.1 + 0.4,  // 1.3
+        2. - 0.2 + 0.5,  // 2.3
+        3. - 0.3 + 0.6   // 3.3
+    };
     const auto r_exact = Kokkos::View<const double[1][3], Kokkos::HostSpace>(r_exact_data.data());
 
     const auto r_mirror = Kokkos::create_mirror(r);
     Kokkos::deep_copy(r_mirror, r);
 
-    for (int i = 0; i < 3; ++i) {
-        EXPECT_DOUBLE_EQ(r_mirror(0, i), r_exact(0, i));
-    }
+    CompareWithExpected(r_mirror, r_exact);
 }
 
 }  // namespace openturbine::tests

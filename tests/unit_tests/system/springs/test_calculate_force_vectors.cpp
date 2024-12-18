@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "src/system/springs/calculate_force_vectors.hpp"
+#include "tests/unit_tests/system/test_calculate.hpp"
 
 namespace openturbine::tests {
 
@@ -41,11 +42,7 @@ TEST(CalculateForceVectorsTests, ThreeElements) {
     const auto f_result = Kokkos::create_mirror(f);
     Kokkos::deep_copy(f_result, f);
 
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            EXPECT_DOUBLE_EQ(f_result(i, j), f_exact(i, j));
-        }
-    }
+    CompareWithExpected(f_result, f_exact);
 }
 
 }  // namespace openturbine::tests

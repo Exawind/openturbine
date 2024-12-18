@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "src/system/springs/calculate_force_coefficients.hpp"
+#include "tests/unit_tests/system/test_calculate.hpp"
 
 namespace openturbine::tests {
 
@@ -55,10 +56,8 @@ TEST(CalculateForceCoefficientsTests, ThreeElements) {
     Kokkos::deep_copy(c1_result, c1);
     Kokkos::deep_copy(c2_result, c2);
 
-    for (int i = 0; i < 3; ++i) {
-        EXPECT_NEAR(c1_result(i), c1_exact(i), 1e-10);
-        EXPECT_NEAR(c2_result(i), c2_exact(i), 1e-10);
-    }
+    CompareWithExpected(c1_result, c1_exact);
+    CompareWithExpected(c2_result, c2_exact);
 }
 
 }  // namespace openturbine::tests
