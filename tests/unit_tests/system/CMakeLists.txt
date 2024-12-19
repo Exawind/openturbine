@@ -6,3 +6,4 @@ target_sources(
 
 add_subdirectory(springs)
 add_subdirectory(beams)
+add_subdirectory(masses)
