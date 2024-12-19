@@ -10,5 +10,6 @@ target_sources(
     test_rotating_beam.cpp
     test_rotor.cpp
     test_solver.cpp
+    test_springs.cpp
     test_utilities.cpp
 )
