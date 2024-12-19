@@ -40,6 +40,22 @@ struct AssembleNodeFreedomMapTable_Masses {
     }
 };
 
+struct AssembleNodeFreedomMapTable_Springs {
+    Kokkos::View<size_t* [2]>::const_type node_state_indices;
+    Kokkos::View<FreedomSignature* [2]>::const_type element_freedom_signature;
+    Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i) const {
+        for (auto j = 0U; j < 2; ++j) {
+            const auto node_index = node_state_indices(i, j);
+            Kokkos::atomic_or(
+                &node_freedom_allocation_table(node_index), element_freedom_signature(i, j)
+            );
+        }
+    }
+};
+
 struct AssembleNodeFreedomMapTable_Constraints {
     Kokkos::View<ConstraintType*>::const_type type;
     Kokkos::View<size_t*>::const_type target_node_index;
@@ -81,6 +97,14 @@ inline void assemble_node_freedom_allocation_table(
         "AssembleNodeFreedomMapTable_Masses", elements.masses.num_elems,
         AssembleNodeFreedomMapTable_Masses{
             elements.masses.state_indices, elements.masses.element_freedom_signature,
+            state.node_freedom_allocation_table
+        }
+    );
+
+    Kokkos::parallel_for(
+        "AssembleNodeFreedomMapTable_Springs", elements.springs.num_elems,
+        AssembleNodeFreedomMapTable_Springs{
+            elements.springs.node_state_indices, elements.springs.element_freedom_signature,
             state.node_freedom_allocation_table
         }
     );
