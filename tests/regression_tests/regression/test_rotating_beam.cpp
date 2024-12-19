@@ -23,6 +23,7 @@
 #include "src/elements/beams/create_beams.hpp"
 #include "src/elements/elements.hpp"
 #include "src/elements/masses/create_masses.hpp"
+#include "src/elements/springs/create_springs.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -145,12 +146,14 @@ TEST(RotatingBeamTest, StepConvergence) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // No Masses
+    // No Masses/Springs
     const auto masses_input = MassesInput({}, gravity);
     auto masses = CreateMasses(masses_input);
+    const auto springs_input = SpringsInput({});
+    auto springs = CreateSprings(springs_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, masses};
+    auto elements = Elements{beams, masses, springs};
 
     // Constraint inputs
     model.AddPrescribedBC(model.GetNode(0));
@@ -264,12 +267,14 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // No Masses
+    // No Masses/Springs
     const auto masses_input = MassesInput({}, gravity);
     auto masses = CreateMasses(masses_input);
+    const auto springs_input = SpringsInput({});
+    auto springs = CreateSprings(springs_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, masses};
+    auto elements = Elements{beams, masses, springs};
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -383,12 +388,14 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // No Masses
+    // No Masses/Springs
     const auto masses_input = MassesInput({}, gravity);
     auto masses = CreateMasses(masses_input);
+    const auto springs_input = SpringsInput({});
+    auto springs = CreateSprings(springs_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, masses};
+    auto elements = Elements{beams, masses, springs};
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -478,12 +485,14 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // No Masses
+    // No Masses/Springs
     const auto masses_input = MassesInput({}, gravity);
     auto masses = CreateMasses(masses_input);
+    const auto springs_input = SpringsInput({});
+    auto springs = CreateSprings(springs_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, masses};
+    auto elements = Elements{beams, masses, springs};
 
     // Add hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
@@ -571,12 +580,14 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // No Masses
+    // No Masses/Springs
     const auto masses_input = MassesInput({}, gravity);
     auto masses = CreateMasses(masses_input);
+    const auto springs_input = SpringsInput({});
+    auto springs = CreateSprings(springs_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, masses};
+    auto elements = Elements{beams, masses, springs};
 
     // Add hub node and associated constraints
     auto pitch = 0.;
@@ -659,12 +670,14 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // No Masses
+    // No Masses/Springs
     const auto masses_input = MassesInput({}, gravity);
     auto masses = CreateMasses(masses_input);
+    const auto springs_input = SpringsInput({});
+    auto springs = CreateSprings(springs_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, masses};
+    auto elements = Elements{beams, masses, springs};
 
     // Add hub node and associated constraints
     auto pitch = 0.;
@@ -746,12 +759,14 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // No Masses
+    // No Masses/Springs
     const auto masses_input = MassesInput({}, gravity);
     auto masses = CreateMasses(masses_input);
+    const auto springs_input = SpringsInput({});
+    auto springs = CreateSprings(springs_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, masses};
+    auto elements = Elements{beams, masses, springs};
 
     // Add hub node and ground node
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
@@ -872,12 +887,14 @@ void GeneratorTorqueWithAxisTilt(
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // No Masses
+    // No Masses/Springs
     const auto masses_input = MassesInput({}, gravity);
     auto masses = CreateMasses(masses_input);
+    const auto springs_input = SpringsInput({});
+    auto springs = CreateSprings(springs_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, masses};
+    auto elements = Elements{beams, masses, springs};
 
     // Add shaft base, azimuth, and hub nodes as massless points
     auto shaft_base = model.AddNode({0, 0., 0., 1., 0., 0., 0.});
