@@ -35,6 +35,7 @@ struct AssembleNodeFreedomMapTable_Masses {
 
     KOKKOS_FUNCTION
     void operator()(size_t i) const {
+        // Masses always have one node per element
         const auto node_index = node_state_indices(i);
         Kokkos::atomic_or(&node_freedom_allocation_table(node_index), element_freedom_signature(i));
     }
@@ -47,7 +48,8 @@ struct AssembleNodeFreedomMapTable_Springs {
 
     KOKKOS_FUNCTION
     void operator()(size_t i) const {
-        for (auto j = 0U; j < 2; ++j) {
+        // Springs always have two nodes per element
+        for (auto j = 0U; j < 2U; ++j) {
             const auto node_index = node_state_indices(i, j);
             Kokkos::atomic_or(
                 &node_freedom_allocation_table(node_index), element_freedom_signature(i, j)

@@ -95,8 +95,11 @@ struct Elements {
         const auto beams_offset = beams.num_elems;
         auto masses_state_indices = masses.state_indices;
         Kokkos::parallel_for(
-            masses.num_elems, KOKKOS_LAMBDA(size_t i_elem
-                              ) { result(i_elem + beams_offset, 0) = masses_state_indices(i_elem); }
+            masses.num_elems,
+            KOKKOS_LAMBDA(size_t i_elem) {
+                // Masses always have one node per element
+                result(i_elem + beams_offset, 0) = masses_state_indices(i_elem);
+            }
         );
 
         // Springs
@@ -105,6 +108,7 @@ struct Elements {
         Kokkos::parallel_for(
             springs.num_elems,
             KOKKOS_LAMBDA(size_t i_elem) {
+                // Springs always have two nodes per element
                 result(i_elem + beams_and_masses_offset, 0) = springs_node_state_indices(i_elem, 0);
                 result(i_elem + beams_and_masses_offset, 1) = springs_node_state_indices(i_elem, 1);
             }
