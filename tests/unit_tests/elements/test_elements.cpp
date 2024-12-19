@@ -60,7 +60,7 @@ TEST(ElementsTest, ConstructorWithBeamsMassesSprings) {
     EXPECT_EQ(elements.springs.num_elems, 1);
 }
 
-TEST(ElementsTest, NumberOfNodesPerElementBeamsOnly) {
+TEST(ElementsTest, NumberOfNodesPerElementBeams) {
     auto beams = Beams(2, 3, 2);  // 2 beam elements with 3 nodes each
     Kokkos::deep_copy(beams.num_nodes_per_element, 3U);
     auto masses = Masses(0U);
@@ -76,7 +76,7 @@ TEST(ElementsTest, NumberOfNodesPerElementBeamsOnly) {
     EXPECT_EQ(host_nodes_per_elem(1), 3);  // Second beam element has 3 nodes
 }
 
-TEST(ElementsTest, NumberOfNodesPerElementMassesOnly) {
+TEST(ElementsTest, NumberOfNodesPerElementMasses) {
     auto beams = Beams(0U, 0U, 0U);
     auto masses = Masses(3);  // 3 mass elements
     auto springs = Springs(0U);
@@ -93,7 +93,7 @@ TEST(ElementsTest, NumberOfNodesPerElementMassesOnly) {
     EXPECT_EQ(host_nodes_per_elem(2), 1);
 }
 
-TEST(ElementsTest, NumberofNodesPerElementSpringsOnly) {
+TEST(ElementsTest, NumberofNodesPerElementSprings) {
     auto beams = Beams(0U, 0U, 0U);
     auto masses = Masses(0U);
     auto springs = Springs(3);  // 3 spring elements
@@ -131,7 +131,7 @@ TEST(ElementsTest, NumberOfNodesPerElementBeamsMasses) {
     EXPECT_EQ(host_nodes_per_elem(3), 1);
 }
 
-TEST(ElementsTest, NodeStateIndicesBeamsOnly) {
+TEST(ElementsTest, NodeStateIndicesBeams) {
     auto beams = Beams(2, 3, 2);  // 2 beam elements with 3 nodes each
     auto masses = Masses(0U);
     auto springs = Springs(0U);
@@ -161,7 +161,7 @@ TEST(ElementsTest, NodeStateIndicesBeamsOnly) {
     EXPECT_EQ(host_indices(1, 2), 4);
 }
 
-TEST(ElementsTest, NodeStateIndicesMassesOnly) {
+TEST(ElementsTest, NodeStateIndicesMasses) {
     auto beams = Beams(0U, 0U, 0U);
     auto masses = Masses(3);  // 3 mass elements
     auto springs = Springs(0U);
@@ -184,7 +184,7 @@ TEST(ElementsTest, NodeStateIndicesMassesOnly) {
     EXPECT_EQ(host_indices(2, 0), 30);
 }
 
-TEST(ElementsTest, NodeStateIndicesSpringsOnly) {
+TEST(ElementsTest, NodeStateIndicesSprings) {
     auto beams = Beams(0U, 0U, 0U);
     auto masses = Masses(0U);
     auto springs = Springs(1);  // 1 spring element

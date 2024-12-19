@@ -12,7 +12,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithOneNode_NoMassNoS
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
     auto masses = Masses(0U);
     auto springs = Springs(0U);
-    auto elements = Elements{beams, masses, springs};  // No mass or spring elements in the model
+    auto elements = Elements{beams, masses, springs};
 
     auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{});
 
@@ -32,7 +32,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneMassElementWithOneNode_NoBeamNoS
     auto masses = Masses(1U);  // 1 mass element with 1 node
     Kokkos::deep_copy(masses.state_indices, 0U);
     auto springs = Springs(0U);
-    auto elements = Elements{beams, masses, springs};  // No beam elements in the model
+    auto elements = Elements{beams, masses, springs};
 
     auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{});
 
@@ -58,7 +58,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneSpringElementWithTwoNodes_NoBeam
     const auto mirror_node_state_indices = Kokkos::create_mirror(springs.node_state_indices);
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(springs.node_state_indices, mirror_node_state_indices);
-    auto elements = Elements{beams, masses, springs};  // No beam or mass elements in the model
+    auto elements = Elements{beams, masses, springs};
 
     auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{});
 
@@ -112,7 +112,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithTwoNodes_NoMassNo
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
     auto masses = Masses(0U);
     auto springs = Springs(0U);
-    auto elements = Elements{beams, masses, springs};  // No mass or spring elements in the model
+    auto elements = Elements{beams, masses, springs};
 
     auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{});
 
@@ -140,7 +140,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, TwoBeamElementsWithOneNode_NoMassNo
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
     auto masses = Masses(0U);
     auto springs = Springs(0U);
-    auto elements = Elements{beams, masses, springs};  // No mass or spring elements in the model
+    auto elements = Elements{beams, masses, springs};
 
     auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{});
 
@@ -156,7 +156,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, TwoBeamElementsWithOneNode_NoMassNo
 
 TEST(
     TestAssembleNodeFreedomAllocationTable,
-    OneBeamElementWithOneNode_OneMassElementWithTwoNodes_OneSpringElementWithTwoNodes
+    OneBeamElementWithTwoNodes_OneMassElementWithOneNode_OneSpringElementWithTwoNodes
 ) {
     auto state = State(5U);  // 5 nodes in the system
 
