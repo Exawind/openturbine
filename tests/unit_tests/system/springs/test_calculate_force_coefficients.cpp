@@ -34,7 +34,7 @@ TEST(CalculateForceCoefficientsTests, ThreeElements) {
     Kokkos::deep_copy(l, l_mirror);
 
     Kokkos::parallel_for(
-        "CalculateForceCoefficients", 3, CalculateForceCoefficients{k, l_ref, l, c1, c2}
+        "CalculateForceCoefficients", 3, springs::CalculateForceCoefficients{k, l_ref, l, c1, c2}
     );
 
     constexpr auto c1_exact_data = std::array{

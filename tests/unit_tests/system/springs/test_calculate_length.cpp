@@ -19,7 +19,7 @@ TEST(CalculateLengthTests, ThreeElements) {
     Kokkos::deep_copy(r, r_mirror);
 
     const auto l = Kokkos::View<double[3]>("l");
-    Kokkos::parallel_for("CalculateLength", 3, CalculateLength{r, l});
+    Kokkos::parallel_for("CalculateLength", 3, springs::CalculateLength{r, l});
 
     constexpr auto l_exact_data = std::array{1., 5., 3.};
     const auto l_exact = Kokkos::View<const double[3], Kokkos::HostSpace>(l_exact_data.data());

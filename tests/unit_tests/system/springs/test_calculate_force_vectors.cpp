@@ -30,7 +30,7 @@ TEST(CalculateForceVectorsTests, ThreeElements) {
     Kokkos::deep_copy(r, r_mirror);
     Kokkos::deep_copy(c1, c1_mirror);
 
-    Kokkos::parallel_for("CalculateForceVectors", 3, CalculateForceVectors{r, c1, f});
+    Kokkos::parallel_for("CalculateForceVectors", 3, springs::CalculateForceVectors{r, c1, f});
 
     constexpr auto f_exact_data = std::array{
         2.,  4.,  6.,   // Element 1

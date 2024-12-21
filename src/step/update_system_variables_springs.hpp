@@ -24,23 +24,29 @@ inline void UpdateSystemVariablesSprings(const Springs& springs, State& state) {
         springs::UpdateNodeState{springs.node_state_indices, springs.u1, springs.u2, state.q}
     );
 
-    // Calculate system variables for Spring elements
+    // Calculate system variables and perform assembly
     Kokkos::parallel_for(
         springs.num_elems,
         KOKKOS_LAMBDA(const size_t i_elem) {
-            CalculateDistanceComponents{
+            // Calculate the relative distance vector between the two nodes
+            springs::CalculateDistanceComponents{
                 springs.x0, springs.u1, springs.u2, springs.r
             }(static_cast<int>(i_elem));
 
-            CalculateLength{springs.r, springs.l}(static_cast<int>(i_elem));
+            // Calculate the current length of the spring
+            springs::CalculateLength{springs.r, springs.l}(static_cast<int>(i_elem));
 
-            CalculateForceCoefficients{
+            // Calculate the force coefficients
+            springs::CalculateForceCoefficients{
                 springs.k, springs.l_ref, springs.l, springs.c1, springs.c2
             }(static_cast<int>(i_elem));
 
-            CalculateForceVectors{springs.r, springs.c1, springs.f}(static_cast<int>(i_elem));
+            // Calculate the force vector
+            springs::CalculateForceVectors{springs.r, springs.c1, springs.f}(static_cast<int>(i_elem)
+            );
 
-            CalculateStiffnessMatrix{
+            // Calculate the stiffness matrix
+            springs::CalculateStiffnessMatrix{
                 springs.c1, springs.c2, springs.r, springs.l, springs.r_tilde, springs.a
             }(static_cast<int>(i_elem));
         }

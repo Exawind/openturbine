@@ -5,12 +5,15 @@
 
 #include "src/math/vector_operations.hpp"
 
-namespace openturbine {
+namespace openturbine::springs {
 
+/**
+ * @brief Functor to calculate force vectors for spring elements
+ */
 struct CalculateForceVectors {
-    Kokkos::View<double* [3]>::const_type r_;
-    Kokkos::View<double*>::const_type c1_;
-    Kokkos::View<double* [3]> f_;
+    Kokkos::View<double* [3]>::const_type r_;  //< Relative distance vector between nodes
+    Kokkos::View<double*>::const_type c1_;     //< Force coefficient 1
+    Kokkos::View<double* [3]> f_;              //< Force vector
 
     KOKKOS_FUNCTION
     void operator()(int i_elem) const {
@@ -24,4 +27,4 @@ struct CalculateForceVectors {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::springs

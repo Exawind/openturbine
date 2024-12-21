@@ -8,18 +8,21 @@
 
 #include "src/math/vector_operations.hpp"
 
-namespace openturbine {
+namespace openturbine::springs {
 
+/**
+ * @brief Functor to calculate the stiffness matrix for spring elements
+ */
 struct CalculateStiffnessMatrix {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
     using GemmDefault = KokkosBatched::Algo::Gemm::Default;
     using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, GemmDefault>;
-    Kokkos::View<double*>::const_type c1_;
-    Kokkos::View<double*>::const_type c2_;
-    Kokkos::View<double* [3]>::const_type r_;
-    Kokkos::View<double*>::const_type l_;
-    Kokkos::View<double* [3][3]> r_tilde_;
-    Kokkos::View<double* [3][3]> a_;
+    Kokkos::View<double*>::const_type c1_;     //< Force coefficient 1
+    Kokkos::View<double*>::const_type c2_;     //< Force coefficient 2
+    Kokkos::View<double* [3]>::const_type r_;  //< Relative distance vector between nodes
+    Kokkos::View<double*>::const_type l_;      //< Current length
+    Kokkos::View<double* [3][3]> r_tilde_;     //< Skew-symmetric matrix of r
+    Kokkos::View<double* [3][3]> a_;           //< Stiffness matrix
 
     KOKKOS_FUNCTION
     void operator()(int i_elem) const {
@@ -42,4 +45,4 @@ struct CalculateStiffnessMatrix {
     };
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::springs
