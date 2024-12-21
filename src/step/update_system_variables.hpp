@@ -5,6 +5,7 @@
 
 #include "update_system_variables_beams.hpp"
 #include "update_system_variables_masses.hpp"
+#include "update_system_variables_springs.hpp"
 
 #include "src/elements/elements.hpp"
 #include "src/state/state.hpp"
@@ -16,8 +17,15 @@ inline void UpdateSystemVariables(
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Update System Variables");
 
-    UpdateSystemVariablesBeams(parameters, elements.beams, state);
-    UpdateSystemVariablesMasses(parameters, elements.masses, state);
+    if (elements.beams.num_elems > 0) {
+        UpdateSystemVariablesBeams(parameters, elements.beams, state);
+    }
+    if (elements.masses.num_elems > 0) {
+        UpdateSystemVariablesMasses(parameters, elements.masses, state);
+    }
+    if (elements.springs.num_elems > 0) {
+        UpdateSystemVariablesSprings(elements.springs, state);
+    }
 }
 
 }  // namespace openturbine

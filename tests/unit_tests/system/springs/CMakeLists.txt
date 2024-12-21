@@ -6,4 +6,5 @@ target_sources(
     test_calculate_force_vectors.cpp
     test_calculate_length.cpp
     test_calculate_stiffness_matrix.cpp
+    test_update_node_state.cpp
 )
