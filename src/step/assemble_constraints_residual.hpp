@@ -24,17 +24,22 @@ inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints
         }
     );
 
-    auto R = Solver::ValuesType(
+    using CrsMatrixType = Solver::CrsMatrixType;
+    using VectorType = CrsMatrixType::values_type::non_const_type;
+
+    auto R = VectorType(
         Kokkos::view_alloc(Kokkos::WithoutInitializing, "R_local"), solver.num_system_dofs
     );
     Kokkos::deep_copy(
         R, Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs))
     );
-    auto lambda = Solver::ValuesType(
+    auto lambda = VectorType(
         Kokkos::view_alloc(Kokkos::WithoutInitializing, "lambda"), constraints.lambda.extent(0)
     );
     Kokkos::deep_copy(lambda, constraints.lambda);
-    auto spmv_handle = Solver::SpmvHandle();
+
+    auto spmv_handle =
+        KokkosSparse::SPMVHandle<Solver::ExecutionSpace, CrsMatrixType, VectorType, VectorType>();
     KokkosSparse::spmv(&spmv_handle, "T", 1., solver.B, lambda, 1., R);
     Kokkos::deep_copy(
         Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs)), R
