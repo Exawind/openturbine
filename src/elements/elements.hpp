@@ -75,7 +75,7 @@ struct Elements {
      *         concatenated in the order: [beams] -> [masses] -> [springs]
      */
     [[nodiscard]] Kokkos::View<size_t**> NodeStateIndices() const {
-        const auto max_nodes = std::max(beams.max_elem_nodes, 1UL);
+        const auto max_nodes = std::max(beams.max_elem_nodes, springs.num_elems > 0 ? 2UL : 1UL);
         Kokkos::View<size_t**> result("node_state_indices", NumElementsInSystem(), max_nodes);
 
         // Beams

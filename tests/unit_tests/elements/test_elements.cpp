@@ -6,9 +6,9 @@
 namespace openturbine::tests {
 
 TEST(ElementsTest, ConstructorWithBeams) {
-    auto beams = Beams(1, 2, 2);  // 1 beam element with 2 nodes, 2 qps
-    auto masses = Masses(0U);     // 0 mass elements
-    auto springs = Springs(0U);   // 0 spring elements
+    auto beams = Beams(1U, 2U, 2U);  // 1 beam element with 2 nodes, 2 qps
+    auto masses = Masses(0U);        // 0 mass elements
+    auto springs = Springs(0U);      // 0 spring elements
     const auto elements = Elements(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams.num_elems, 1);
@@ -18,7 +18,7 @@ TEST(ElementsTest, ConstructorWithBeams) {
 
 TEST(ElementsTest, ConstructorWithMasses) {
     auto beams = Beams(0U, 0U, 0U);  // 0 beam elements
-    auto masses = Masses(1);         // 1 mass element
+    auto masses = Masses(1U);        // 1 mass element
     auto springs = Springs(0U);      // 0 spring elements
     const auto elements = Elements(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
@@ -30,7 +30,7 @@ TEST(ElementsTest, ConstructorWithMasses) {
 TEST(ElementsTest, ConstructorWithSprings) {
     auto beams = Beams(0U, 0U, 0U);  // 0 beam elements
     auto masses = Masses(0U);        // 0 mass elements
-    auto springs = Springs(1);       // 1 spring element
+    auto springs = Springs(1U);      // 1 spring element
     const auto elements = Elements(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams.num_elems, 0);
@@ -50,18 +50,18 @@ TEST(ElementsTest, ConstructorWithBeamsMasses) {
 }
 
 TEST(ElementsTest, ConstructorWithBeamsMassesSprings) {
-    auto beams = Beams(1, 2, 2);  // 1 beam element with 2 nodes, 2 qps
-    auto masses = Masses(1);      // 1 mass element
-    auto springs = Springs(1);    // 1 spring element
+    auto beams = Beams(1U, 2U, 2U);  // 1 beam element with 2 nodes, 2 qps
+    auto masses = Masses(1U);        // 1 mass element
+    auto springs = Springs(1U);      // 1 spring element
     const auto elements = Elements(beams, masses, springs);
-    EXPECT_EQ(elements.NumElementsInSystem(), 3);
+    EXPECT_EQ(elements.NumElementsInSystem(), 3U);
     EXPECT_EQ(elements.beams.num_elems, 1);
     EXPECT_EQ(elements.masses.num_elems, 1);
     EXPECT_EQ(elements.springs.num_elems, 1);
 }
 
 TEST(ElementsTest, NumberOfNodesPerElementBeams) {
-    auto beams = Beams(2, 3, 2);  // 2 beam elements with 3 nodes each
+    auto beams = Beams(2U, 3U, 2U);  // 2 beam elements with 3 nodes each
     Kokkos::deep_copy(beams.num_nodes_per_element, 3U);
     auto masses = Masses(0U);
     auto springs = Springs(0U);
@@ -78,7 +78,7 @@ TEST(ElementsTest, NumberOfNodesPerElementBeams) {
 
 TEST(ElementsTest, NumberOfNodesPerElementMasses) {
     auto beams = Beams(0U, 0U, 0U);
-    auto masses = Masses(3);  // 3 mass elements
+    auto masses = Masses(3U);  // 3 mass elements
     auto springs = Springs(0U);
     const auto elements = Elements{beams, masses, springs};
 
@@ -96,7 +96,7 @@ TEST(ElementsTest, NumberOfNodesPerElementMasses) {
 TEST(ElementsTest, NumberofNodesPerElementSprings) {
     auto beams = Beams(0U, 0U, 0U);
     auto masses = Masses(0U);
-    auto springs = Springs(3);  // 3 spring elements
+    auto springs = Springs(3U);  // 3 spring elements
     const auto elements = Elements{beams, masses, springs};
 
     EXPECT_EQ(elements.NumElementsInSystem(), 3);
@@ -111,9 +111,9 @@ TEST(ElementsTest, NumberofNodesPerElementSprings) {
 }
 
 TEST(ElementsTest, NumberOfNodesPerElementBeamsMasses) {
-    auto beams = Beams(2, 4, 2);  // 2 beam elements with 4 nodes each
+    auto beams = Beams(2U, 4U, 2U);  // 2 beam elements with 4 nodes each
     Kokkos::deep_copy(beams.num_nodes_per_element, 4U);
-    auto masses = Masses(2);     // 2 mass elements
+    auto masses = Masses(2U);    // 2 mass elements
     auto springs = Springs(0U);  // 0 spring elements
     const auto elements = Elements{beams, masses, springs};
 
@@ -132,7 +132,7 @@ TEST(ElementsTest, NumberOfNodesPerElementBeamsMasses) {
 }
 
 TEST(ElementsTest, NodeStateIndicesBeams) {
-    auto beams = Beams(2, 3, 2);  // 2 beam elements with 3 nodes each
+    auto beams = Beams(2U, 3U, 2U);  // 2 beam elements with 3 nodes each
     auto masses = Masses(0U);
     auto springs = Springs(0U);
 
@@ -163,7 +163,7 @@ TEST(ElementsTest, NodeStateIndicesBeams) {
 
 TEST(ElementsTest, NodeStateIndicesMasses) {
     auto beams = Beams(0U, 0U, 0U);
-    auto masses = Masses(3);  // 3 mass elements
+    auto masses = Masses(3U);  // 3 mass elements
     auto springs = Springs(0U);
 
     // Set up state indices for masses: [10, 20, 30]
@@ -187,7 +187,7 @@ TEST(ElementsTest, NodeStateIndicesMasses) {
 TEST(ElementsTest, NodeStateIndicesSprings) {
     auto beams = Beams(0U, 0U, 0U);
     auto masses = Masses(0U);
-    auto springs = Springs(1);  // 1 spring element
+    auto springs = Springs(1U);  // 1 spring element
 
     // Set up state indices for springs: [0,1]
     auto host_spring_indices = Kokkos::create_mirror_view(springs.node_state_indices);
@@ -204,9 +204,9 @@ TEST(ElementsTest, NodeStateIndicesSprings) {
 }
 
 TEST(ElementsTest, NodeStateIndicesBeamsMassesSprings) {
-    auto beams = Beams(1, 2, 2);  // 1 beam element with 2 nodes
-    auto masses = Masses(2);      // 2 mass elements
-    auto springs = Springs(1);    // 1 spring element
+    auto beams = Beams(1U, 2U, 2U);  // 1 beam element with 2 nodes
+    auto masses = Masses(2U);        // 2 mass elements
+    auto springs = Springs(1U);      // 1 spring element
 
     // Set up state indices for beam nodes: [0, 1]
     auto host_beam_indices = Kokkos::create_mirror_view(beams.node_state_indices);
