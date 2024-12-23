@@ -27,7 +27,8 @@ struct ComputeKColIndsFunction {
     }
 
     KOKKOS_FUNCTION
-    void ComputeColInds(size_t element, size_t node, RowPtrValueType current_dof_index) const {
+    RowPtrValueType ComputeColInds(size_t element, size_t node, RowPtrValueType current_dof_index)
+        const {
         for (auto n = 0U; n < num_nodes_per_element(element); ++n) {
             const auto node_state_index = node_state_indices(element, n);
             if (node_state_index != node) {
@@ -40,6 +41,7 @@ struct ComputeKColIndsFunction {
                 }
             }
         }
+        return current_dof_index;
     }
 
     KOKKOS_FUNCTION
@@ -58,7 +60,7 @@ struct ComputeKColIndsFunction {
                 if (!ContainsNode(e, i)) {
                     continue;
                 }
-                ComputeColInds(e, i, current_dof_index);
+                current_dof_index = ComputeColInds(e, i, current_dof_index);
             }
         }
     }

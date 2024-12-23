@@ -21,8 +21,8 @@ template <typename CrsMatrixType>
     const Kokkos::View<size_t**>::const_type& node_state_indices
 ) {
     using ValuesType = typename CrsMatrixType::values_type::non_const_type;
-    using RowPtrType = typename CrsMatrixType::staticcrsgraph_type::row_map_type::non_const_type;
-    using IndicesType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
+    using RowPtrType = typename CrsMatrixType::row_map_type::non_const_type;
+    using IndicesType = typename CrsMatrixType::index_type::non_const_type;
 
     const auto K_num_rows = system_dofs;
     const auto K_num_columns = K_num_rows;

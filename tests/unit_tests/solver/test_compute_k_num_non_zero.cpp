@@ -1,36 +1,78 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/solver/compute_number_of_non_zeros.hpp"
+#include "src/solver/compute_k_num_non_zero.hpp"
 
 namespace openturbine::tests {
 
-TEST(ComputeNumberOfNonZeros, SingleElement) {
-    auto num_nodes = Kokkos::View<size_t[1]>("num_nodes");
-    auto num_nodes_host = Kokkos::create_mirror(num_nodes);
-    num_nodes_host(0) = size_t{5U};
-    Kokkos::deep_copy(num_nodes, num_nodes_host);
+TEST(ComputeKNumNonZero, OneElementFiveNodes) {
+    auto num_nodes_per_element = Kokkos::View<size_t[1]>("num_nodes_per_element");
+    Kokkos::deep_copy(num_nodes_per_element, 5UL);
 
-    auto num_non_zero = size_t{0U};
-    Kokkos::parallel_reduce(1, ComputeNumberOfNonZeros{num_nodes}, num_non_zero);
-    constexpr auto num_dof = 5 * 6;
-    constexpr auto expected_num_non_zero = num_dof * num_dof;
-    EXPECT_EQ(num_non_zero, expected_num_non_zero);
+    auto node_state_indices = Kokkos::View<size_t[1][5]>("node_state_indices");
+    constexpr auto node_state_indices_host_data = std::array{0UL, 1UL, 2UL, 3UL, 4UL};
+    const auto node_state_indices_host =
+        Kokkos::View<size_t[1][5], Kokkos::HostSpace>::const_type(node_state_indices_host_data.data()
+        );
+    const auto node_state_indices_mirror = Kokkos::create_mirror(node_state_indices);
+    Kokkos::deep_copy(node_state_indices_mirror, node_state_indices_host);
+    Kokkos::deep_copy(node_state_indices, node_state_indices_mirror);
+
+    auto node_freedom_allocation_table =
+        Kokkos::View<FreedomSignature[5]>("node_freedom_allocation_table");
+    Kokkos::deep_copy(node_freedom_allocation_table, FreedomSignature::AllComponents);
+
+    const auto num_non_zero =
+        ComputeKNumNonZero(num_nodes_per_element, node_state_indices, node_freedom_allocation_table);
+
+    EXPECT_EQ(num_non_zero, 900UL);
 }
 
-TEST(ComputeNumberOfNonZeros, TwoElements) {
-    auto num_nodes = Kokkos::View<size_t[2]>("num_nodes");
-    auto num_nodes_host = Kokkos::create_mirror(num_nodes);
-    num_nodes_host(0) = size_t{5U};
-    num_nodes_host(1) = size_t{3U};
-    Kokkos::deep_copy(num_nodes, num_nodes_host);
+TEST(ComputeKNumNonZero, TwoElementsFiveNodesNoOverlap) {
+    auto num_nodes_per_element = Kokkos::View<size_t[2]>("num_nodes_per_element");
+    Kokkos::deep_copy(num_nodes_per_element, 5UL);
 
-    auto num_non_zero = size_t{0U};
-    Kokkos::parallel_reduce(2, ComputeNumberOfNonZeros{num_nodes}, num_non_zero);
-    constexpr auto num_dof_elem1 = 5U * 6U;
-    constexpr auto num_dof_elem2 = 3U * 6U;
-    constexpr auto expected_num_non_zero =
-        num_dof_elem1 * num_dof_elem1 + num_dof_elem2 * num_dof_elem2;
-    EXPECT_EQ(num_non_zero, expected_num_non_zero);
+    auto node_state_indices = Kokkos::View<size_t[2][5]>("node_state_indices");
+    constexpr auto node_state_indices_host_data =
+        std::array{0UL, 1UL, 2UL, 3UL, 4UL, 5UL, 6UL, 7UL, 8UL, 9UL};
+    const auto node_state_indices_host =
+        Kokkos::View<size_t[2][5], Kokkos::HostSpace>::const_type(node_state_indices_host_data.data()
+        );
+    const auto node_state_indices_mirror = Kokkos::create_mirror(node_state_indices);
+    Kokkos::deep_copy(node_state_indices_mirror, node_state_indices_host);
+    Kokkos::deep_copy(node_state_indices, node_state_indices_mirror);
+
+    auto node_freedom_allocation_table =
+        Kokkos::View<FreedomSignature[10]>("node_freedom_allocation_table");
+    Kokkos::deep_copy(node_freedom_allocation_table, FreedomSignature::AllComponents);
+
+    const auto num_non_zero =
+        ComputeKNumNonZero(num_nodes_per_element, node_state_indices, node_freedom_allocation_table);
+
+    EXPECT_EQ(num_non_zero, 1800UL);
+}
+
+TEST(ComputeKNumNonZero, TwoElementsFiveNodesOverlap) {
+    auto num_nodes_per_element = Kokkos::View<size_t[2]>("num_nodes_per_element");
+    Kokkos::deep_copy(num_nodes_per_element, 5UL);
+
+    auto node_state_indices = Kokkos::View<size_t[2][5]>("node_state_indices");
+    constexpr auto node_state_indices_host_data =
+        std::array{0UL, 1UL, 2UL, 3UL, 4UL, 4UL, 5UL, 6UL, 7UL, 8UL};
+    const auto node_state_indices_host =
+        Kokkos::View<size_t[2][5], Kokkos::HostSpace>::const_type(node_state_indices_host_data.data()
+        );
+    const auto node_state_indices_mirror = Kokkos::create_mirror(node_state_indices);
+    Kokkos::deep_copy(node_state_indices_mirror, node_state_indices_host);
+    Kokkos::deep_copy(node_state_indices, node_state_indices_mirror);
+
+    auto node_freedom_allocation_table =
+        Kokkos::View<FreedomSignature[9]>("node_freedom_allocation_table");
+    Kokkos::deep_copy(node_freedom_allocation_table, FreedomSignature::AllComponents);
+
+    const auto num_non_zero =
+        ComputeKNumNonZero(num_nodes_per_element, node_state_indices, node_freedom_allocation_table);
+
+    EXPECT_EQ(num_non_zero, 1764UL);
 }
 }  // namespace openturbine::tests
