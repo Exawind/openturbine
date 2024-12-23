@@ -51,7 +51,8 @@ template <typename RowPtrType>
     Kokkos::parallel_for(
         "ComputeTRowEntries", node_freedom_allocation_table.extent(0),
         ComputeTRowEntries<RowPtrType>{
-            node_freedom_allocation_table, node_freedom_map_table, T_row_entries}
+            node_freedom_allocation_table, node_freedom_map_table, T_row_entries
+        }
     );
 
     auto result = 0UL;

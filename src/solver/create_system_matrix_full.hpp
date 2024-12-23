@@ -17,7 +17,8 @@ template <typename CrsMatrixType>
     Kokkos::parallel_for(
         "FillUnshiftedRowPtrs", num_dofs + 1,
         FillUnshiftedRowPtrs<RowPtrType>{
-            num_system_dofs, system_matrix.graph.row_map, system_matrix_full_row_ptrs}
+            num_system_dofs, system_matrix.graph.row_map, system_matrix_full_row_ptrs
+        }
     );
     return CrsMatrixType(
         "system_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs),

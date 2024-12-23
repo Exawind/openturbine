@@ -41,7 +41,8 @@ template <typename RowPtrType, typename IndicesType>
     Kokkos::parallel_for(
         "ComputeTColInds", node_freedom_allocation_table.extent(0),
         ComputeTColIndsFunction<RowPtrType, IndicesType>{
-            node_freedom_allocation_table, node_freedom_map_table, T_row_ptrs, T_col_inds}
+            node_freedom_allocation_table, node_freedom_map_table, T_row_ptrs, T_col_inds
+        }
     );
 
     return T_col_inds;

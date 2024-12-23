@@ -81,7 +81,8 @@ template <typename RowPtrType, typename IndicesType>
         "ComputeKColInds", node_freedom_allocation_table.extent(0),
         ComputeKColIndsFunction<RowPtrType, IndicesType>{
             node_freedom_allocation_table, node_freedom_map_table, num_nodes_per_element,
-            node_state_indices, K_row_ptrs, K_col_inds}
+            node_state_indices, K_row_ptrs, K_col_inds
+        }
     );
 
     return K_col_inds;

@@ -18,7 +18,8 @@ template <typename CrsMatrixType>
     Kokkos::parallel_for(
         "FillUnshiftedRowPtrs", num_dofs + 1,
         FillUnshiftedRowPtrs<RowPtrType>{
-            num_system_dofs, B_t.graph.row_map, transpose_matrix_full_row_ptrs}
+            num_system_dofs, B_t.graph.row_map, transpose_matrix_full_row_ptrs
+        }
     );
     auto transpose_matrix_full_indices = IndicesType("transpose_matrix_full_indices", B_t.nnz());
     Kokkos::deep_copy(transpose_matrix_full_indices, static_cast<int>(num_system_dofs));

@@ -193,8 +193,9 @@ TEST(ComputeKColInds, TwoElementsTwoNodesOverlap) {
     Kokkos::deep_copy(node_state_indices, node_state_indices_mirror);
 
     const auto K_row_ptrs = Kokkos::View<int[19]>("K_row_ptrs");
-    constexpr auto K_row_ptrs_host_data = std::array{
-        0, 12, 24, 36, 48, 60, 72, 90, 108, 126, 144, 162, 180, 192, 204, 216, 228, 240, 252};
+    constexpr auto K_row_ptrs_host_data =
+        std::array{0,   12,  24,  36,  48,  60,  72,  90,  108, 126,
+                   144, 162, 180, 192, 204, 216, 228, 240, 252};
     const auto K_row_ptrs_host =
         Kokkos::View<int[19], Kokkos::HostSpace>::const_type(K_row_ptrs_host_data.data());
     const auto K_row_ptrs_mirror = Kokkos::create_mirror(K_row_ptrs);

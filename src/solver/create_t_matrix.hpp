@@ -42,6 +42,7 @@ template <typename CrsMatrixType>
         T_num_non_zero,
         T_values,
         T_row_ptrs,
-        T_col_inds};
+        T_col_inds
+    };
 }
 }  // namespace openturbine

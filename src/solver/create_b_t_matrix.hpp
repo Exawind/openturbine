@@ -32,7 +32,8 @@ template <typename CrsMatrixType>
         "PopulateSparseRowPtrsColInds_Constraints", 1,
         PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
             constraint_type, constraint_base_node_freedom_table,
-            constraint_target_node_freedom_table, constraint_row_range, B_row_ptrs, B_col_ind}
+            constraint_target_node_freedom_table, constraint_row_range, B_row_ptrs, B_col_ind
+        }
     );
     const auto B_values = ValuesType("B values", B_num_non_zero);
     KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);
@@ -50,7 +51,8 @@ template <typename CrsMatrixType>
         "PopulateSparseRowPtrsColInds_Transpose", 1,
         PopulateSparseRowPtrsColInds_Transpose<RowPtrType, IndicesType>{
             B_num_rows, B_num_columns, B_row_ptrs, B_col_ind, col_count, tmp_row_ptrs, B_t_row_ptrs,
-            B_t_col_inds}
+            B_t_col_inds
+        }
     );
     KokkosSparse::sort_crs_matrix(B_t_row_ptrs, B_t_col_inds, B_t_values);
     return {
@@ -60,6 +62,7 @@ template <typename CrsMatrixType>
         B_t_num_non_zero,
         B_t_values,
         B_t_row_ptrs,
-        B_t_col_inds};
+        B_t_col_inds
+    };
 }
 }  // namespace openturbine

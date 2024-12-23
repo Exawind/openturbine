@@ -51,7 +51,8 @@ struct ComputeKNumNonZero_Diagonal {
     Kokkos::parallel_reduce(
         "ComputeKNumNonZero_OffDiagonal", num_nodes_per_element.extent(0),
         ComputeKNumNonZero_OffDiagonal{
-            num_nodes_per_element, node_state_indices, node_freedom_allocation_table},
+            num_nodes_per_element, node_state_indices, node_freedom_allocation_table
+        },
         K_num_non_zero_off_diagonal
     );
     auto K_num_non_zero_diagonal = 0UL;
