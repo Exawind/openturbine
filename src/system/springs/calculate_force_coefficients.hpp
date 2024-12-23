@@ -20,7 +20,7 @@ struct CalculateForceCoefficients {
     KOKKOS_FUNCTION
     void operator()(int i_elem) const {
         // c1 = k * (l_ref/l - 1)
-        c1_(i_elem) = k_(i_elem) * (l_ref_(i_elem) / l_(i_elem) - 1.0);
+        c1_(i_elem) = k_(i_elem) * (l_ref_(i_elem) / l_(i_elem) - 1.);
         // c2 = k * l_ref/(l^3)
         c2_(i_elem) = k_(i_elem) * l_ref_(i_elem) / (l_(i_elem) * l_(i_elem) * l_(i_elem));
     }

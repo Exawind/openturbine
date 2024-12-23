@@ -72,7 +72,7 @@ inline auto SetUpPrecessionTest() {
     create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
 
-    [[maybe_unused]] auto solver = Solver(
+    auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
         elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
