@@ -615,8 +615,10 @@ struct VTKSettings {
         kSurface_Line = 3,  //< Both surfaces and lines
     };
 
+    std::string output_dir_name{"ADI_vtk"};     //< VTK output directory name
     WriteType write_vtk{WriteType::kNone};      //< Flag to write VTK output
     OutputType vtk_type{OutputType::kLine};     //< Type of VTK output
+    double vtk_dt{0.};                          //< VTK output time step
     std::array<float, 6> vtk_nacelle_dimensions{//< Nacelle dimensions for VTK rendering
                                                 -2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F
     };
@@ -665,7 +667,7 @@ public:
           air_{fp},
           env_conditions_{ec},
           sim_controls_{std::move(sc)},
-          vtk_settings_{vtk} {}
+          vtk_settings_{std::move(vtk)} {}
 
     /// Getter methods for the private member variables
     [[nodiscard]] const ErrorHandling& GetErrorHandling() const { return error_handling_; }
@@ -780,11 +782,10 @@ public:
      * @brief Finalizes the initialization process
      */
     void FinalizeInitialization() {
-        auto ADI_C_Init =
-            lib_.get_function<
-                void(int*, char**, int*, int*, char**, int*, const char*, float*, float*, float*, float*, float*, float*, float*, float*, int*, double*, double*, int*, int*, int*, float*, float*, int*, double*, int*, char*, char*, int*, char*)>(
-                "ADI_C_Init"
-            );
+        auto ADI_C_Init = lib_.get_function<
+            void(int*, char**, int*, int*, char**, int*, const char*, const char*, float*, float*, float*, float*, float*, float*, float*, float*, int*, double*, double*, int*, int*, int*, double*, float*, float*, int*, double*, int*, char*, char*, int*, char*)>(
+            "ADI_C_Init"
+        );
 
         // Convert bool -> int32_t to pass to the Fortran routine
         int32_t is_aerodyn_input_passed_as_string = 0;     // AeroDyn input is path to file
@@ -820,6 +821,7 @@ public:
             &inflowwind_input_pointer,                    // input: IfW input file as string
             &inflowwind_input_length,                     // input: IfW input file string length
             sim_controls_.output_root_name.c_str(),       // input: rootname for ADI file writing
+            vtk_settings_.output_dir_name.c_str(),        // input: VTK output directory name
             &env_conditions_.gravity,                     // input: gravity
             &air_.density,                                // input: air density
             &air_.kinematic_viscosity,                    // input: kinematic viscosity
@@ -834,6 +836,7 @@ public:
             &store_HH_wind_speed_int,                     // input: store HH wind speed
             &write_vtk,                                   // input: write VTK output
             &vtk_type,                                    // input: VTK output type
+            &vtk_settings_.vtk_dt,                        // input: VTK output time step
             vtk_settings_.vtk_nacelle_dimensions.data(),  // input: VTK nacelle dimensions
             &vtk_settings_.vtk_hub_radius,                // input: VTK hub radius
             &output_format,                               // input: output format
