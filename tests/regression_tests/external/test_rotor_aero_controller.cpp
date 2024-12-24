@@ -511,19 +511,17 @@ TEST(Milestone, IEA15RotorAeroController) {
     util::VTKSettings vtk_settings;
     vtk_settings.write_vtk = util::VTKSettings::WriteType::kNone;  // Animation
     vtk_settings.vtk_type = util::VTKSettings::OutputType::kLine;  // Lines
+    vtk_settings.vtk_dt = step_size;
     vtk_settings.vtk_nacelle_dimensions = {-2.5F, -2.5F, 0.F, 10.F, 5.F, 5.F};
     vtk_settings.vtk_hub_radius = static_cast<float>(hub_radius);
-
     util::AeroDynInflowLibrary adi(
         adi_shared_lib_path, util::ErrorHandling{}, util::FluidProperties{},
         util::EnvironmentalConditions{}, sc, vtk_settings
     );
-
     // Remove the ADI vtk folder if outputting animation
     if (vtk_settings.write_vtk != util::VTKSettings::WriteType::kNone) {
         RemoveDirectoryWithRetries("vtk-ADI");
     }
-
     adi.Initialize(turbine_configs);
 
     //--------------------------------------------------------------------------
