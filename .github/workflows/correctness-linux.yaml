@@ -53,6 +53,7 @@ jobs:
           -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=${{ matrix.build_external == 'none' }} \
           -DOpenTurbine_ENABLE_CPPCHECK=ON \
           -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
+          -DOpenTurbine_WARNINGS_AS_ERRORS=ON \
           -DOpenTurbine_BUILD_OPENFAST_ADI=${{ matrix.build_external == 'all' }} \
           -DOpenTurbine_BUILD_ROSCO_CONTROLLER=${{ matrix.build_external == 'all' }} \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
