@@ -4,16 +4,15 @@
 
 #include "test_utilities.hpp"
 
-#include "src/beams/beam_element.hpp"
-#include "src/beams/beam_node.hpp"
-#include "src/beams/beam_section.hpp"
-#include "src/beams/beams.hpp"
-#include "src/beams/beams_input.hpp"
-#include "src/beams/create_beams.hpp"
+#include "src/elements/beams/beam_element.hpp"
+#include "src/elements/beams/beam_node.hpp"
+#include "src/elements/beams/beam_section.hpp"
+#include "src/elements/beams/beams.hpp"
+#include "src/elements/beams/beams_input.hpp"
+#include "src/elements/beams/create_beams.hpp"
 #include "src/model/model.hpp"
 #include "src/state/state.hpp"
-#include "src/step/assemble_residual_vector.hpp"
-#include "src/step/update_system_variables.hpp"
+#include "src/step/update_system_variables_beams.hpp"
 #include "src/types.hpp"
 
 namespace openturbine::tests {
@@ -112,7 +111,7 @@ inline auto SetUpBeams() {
     auto state = model.CreateState();
 
     // Set the beam's initial state
-    UpdateSystemVariables(parameters, beams, state);
+    UpdateSystemVariablesBeams(parameters, beams, state);
 
     return beams;
 }

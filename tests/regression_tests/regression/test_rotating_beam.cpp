@@ -11,16 +11,18 @@
 #include "vtkout.hpp"
 #endif
 
-#include "src/beams/beam_element.hpp"
-#include "src/beams/beam_node.hpp"
-#include "src/beams/beam_section.hpp"
-#include "src/beams/beams.hpp"
-#include "src/beams/beams_input.hpp"
-#include "src/beams/create_beams.hpp"
 #include "src/dof_management/assemble_node_freedom_allocation_table.hpp"
 #include "src/dof_management/compute_node_freedom_map_table.hpp"
 #include "src/dof_management/create_constraint_freedom_table.hpp"
 #include "src/dof_management/create_element_freedom_table.hpp"
+#include "src/elements/beams/beam_element.hpp"
+#include "src/elements/beams/beam_node.hpp"
+#include "src/elements/beams/beam_section.hpp"
+#include "src/elements/beams/beams.hpp"
+#include "src/elements/beams/beams_input.hpp"
+#include "src/elements/beams/create_beams.hpp"
+#include "src/elements/elements.hpp"
+#include "src/elements/masses/create_masses.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -143,6 +145,13 @@ TEST(RotatingBeamTest, StepConvergence) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
+
+    // Create elements from beams
+    auto elements = Elements{beams, masses};
+
     // Constraint inputs
     model.AddPrescribedBC(model.GetNode(0));
 
@@ -156,13 +165,13 @@ TEST(RotatingBeamTest, StepConvergence) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
@@ -172,7 +181,7 @@ TEST(RotatingBeamTest, StepConvergence) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
         constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
-        const auto converged = Step(parameters, solver, beams, state, constraints);
+        const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
 
@@ -255,6 +264,13 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
+
+    // Create elements from beams
+    auto elements = Elements{beams, masses};
+
     // Solution parameters
     const bool is_dynamic_solve(true);
     const int max_iter(1);
@@ -265,13 +281,13 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
@@ -291,7 +307,7 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
 
     // Take step, don't check for convergence, the following tests check that
     // all the elements were assembled properly
-    Step(parameters, solver, beams, state, constraints);
+    Step(parameters, solver, elements, state, constraints);
 
     auto n = solver.num_system_dofs / 2;
     auto m = constraints.num_dofs / 2;
@@ -367,6 +383,13 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
+
+    // Create elements from beams
+    auto elements = Elements{beams, masses};
+
     // Solution parameters
     const bool is_dynamic_solve(true);
     const int max_iter(4);
@@ -389,13 +412,13 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
@@ -417,7 +440,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         }
 
         // Take step
-        auto converged = Step(parameters, solver, beams, state, constraints);
+        auto converged = Step(parameters, solver, elements, state, constraints);
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
@@ -455,6 +478,13 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
+
+    // Create elements from beams
+    auto elements = Elements{beams, masses};
+
     // Add hub node and associated constraints
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
     model.AddRigidJointConstraint(*hub_node, model.GetNode(0));
@@ -480,13 +510,13 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
@@ -496,7 +526,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
         constraints.UpdateDisplacement(hub_bc->ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
-        const auto converged = Step(parameters, solver, beams, state, constraints);
+        const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
 
@@ -541,6 +571,13 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
+
+    // Create elements from beams
+    auto elements = Elements{beams, masses};
+
     // Add hub node and associated constraints
     auto pitch = 0.;
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
@@ -557,13 +594,13 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
@@ -573,7 +610,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
         const auto t = step_size * static_cast<double>(i + 1);
         // Set pitch
         pitch = t * M_PI / 2.;
-        const auto converged = Step(parameters, solver, beams, state, constraints);
+        const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
 
@@ -622,6 +659,13 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
+
+    // Create elements from beams
+    auto elements = Elements{beams, masses};
+
     // Add hub node and associated constraints
     auto pitch = 0.;
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
@@ -638,13 +682,13 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
@@ -658,7 +702,7 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
         azimuth = 0.5 * t * M_PI / 2.;
         auto q = RotationVectorToQuaternion(Array_3{0., 0., azimuth});
         constraints.UpdateDisplacement(hub_bc->ID, {0., 0., 0., q[0], q[1], q[2], q[3]});
-        const auto converged = Step(parameters, solver, beams, state, constraints);
+        const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
 
@@ -702,6 +746,13 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
+
+    // Create elements from beams
+    auto elements = Elements{beams, masses};
+
     // Add hub node and ground node
     auto hub_node = model.AddNode({0., 0., 0., 1., 0., 0., 0.});
     auto ground_node = model.AddNode({0, 0., -1., 1., 0., 0., 0.});
@@ -735,32 +786,32 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
 
 #ifdef OpenTurbine_ENABLE_VTK
-    UpdateSystemVariables(parameters, beams, state);
+    UpdateSystemVariables(parameters, elements, state);
     RemoveDirectoryWithRetries("steps");
     std::filesystem::create_directory("steps");
-    WriteVTKBeamsQP(beams, "steps/step_0000.vtu");
+    WriteVTKBeamsQP(elements.beams, "steps/step_0000.vtu");
 #endif
 
     // Run 10 steps
     for (int i = 0; i < 5; ++i) {
-        const auto converged = Step(parameters, solver, beams, state, constraints);
+        const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
 #ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i + 1);
         auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-        WriteVTKBeamsQP(beams, file_name + ".vtu");
+        WriteVTKBeamsQP(elements.beams, file_name + ".vtu");
 #endif
     }
 
@@ -821,6 +872,13 @@ void GeneratorTorqueWithAxisTilt(
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
+    // No Masses
+    const auto masses_input = MassesInput({}, gravity);
+    auto masses = CreateMasses(masses_input);
+
+    // Create elements from beams
+    auto elements = Elements{beams, masses};
+
     // Add shaft base, azimuth, and hub nodes as massless points
     auto shaft_base = model.AddNode({0, 0., 0., 1., 0., 0., 0.});
     auto azimuth = model.AddNode({0, 0, 0, 1., 0., 0., 0.});
@@ -858,19 +916,19 @@ void GeneratorTorqueWithAxisTilt(
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto constraints = Constraints(model.GetConstraints());
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, beams, constraints);
+    assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
-    create_element_freedom_table(beams, state);
+    create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
     auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        beams.num_nodes_per_element, beams.node_state_indices, constraints.num_dofs,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
         constraints.row_range
     );
 
 #ifdef OpenTurbine_ENABLE_VTK
-    UpdateSystemVariables(parameters, beams, state);
+    UpdateSystemVariables(parameters, elements, state);
     RemoveDirectoryWithRetries("steps");
     std::filesystem::create_directory("steps");
     WriteVTKBeamsQP(beams, "steps/step_0000.vtu");
@@ -878,7 +936,7 @@ void GeneratorTorqueWithAxisTilt(
 
     // Run 10 steps
     for (int i = 0; i < 10; ++i) {
-        const auto converged = Step(parameters, solver, beams, state, constraints);
+        const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
 #ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i + 1);

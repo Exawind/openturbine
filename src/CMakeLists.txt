@@ -56,8 +56,8 @@ target_compile_features(openturbine_library PUBLIC cxx_std_17)
 set_target_properties(openturbine_library PROPERTIES PUBLIC_HEADER "types.hpp")
 
 # Add subdirectories for additional components of the library
-add_subdirectory(beams)
 add_subdirectory(constraints)
+add_subdirectory(elements)
 add_subdirectory(math)
 add_subdirectory(model)
 add_subdirectory(solver)

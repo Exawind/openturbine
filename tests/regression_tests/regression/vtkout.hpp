@@ -15,8 +15,8 @@
 
 #include "test_utilities.hpp"
 
-#include "src/beams/beams.hpp"
-#include "src/beams/calculate_QP_deformation.hpp"
+#include "src/elements/beams/beams.hpp"
+#include "src/elements/beams/calculate_QP_deformation.hpp"
 #include "src/math/quaternion_operations.hpp"
 
 namespace openturbine::tests {
@@ -27,7 +27,7 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     Kokkos::deep_copy(num_qps_per_element, beams.num_qps_per_element);
 
     // Create a grid object and add the points to it.
-    vtkNew<vtkUnstructuredGrid> gd;
+    const auto gd = vtkNew<vtkUnstructuredGrid>();
     gd->Allocate(static_cast<vtkIdType>(beams.num_elems));
     auto first_qp = size_t{0U};
     for (size_t i = 0; i < beams.num_elems; ++i) {
@@ -50,7 +50,7 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     // Create qp position points
     auto qp_x = Kokkos::create_mirror(beams.qp_x);
     Kokkos::deep_copy(qp_x, beams.qp_x);
-    vtkNew<vtkPoints> qp_pos;
+    const auto qp_pos = vtkNew<vtkPoints>();
     for (size_t j = 0; j < beams.num_elems; ++j) {
         for (size_t k = 0; k < num_qps_per_element(j); ++k) {
             qp_pos->InsertNextPoint(qp_x(j, k, 0), qp_x(j, k, 1), qp_x(j, k, 2));
@@ -63,13 +63,13 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     //--------------------------------------------------------------------------
 
     // Add orientation point data
-    vtkNew<vtkFloatArray> orientation_x;
+    const auto orientation_x = vtkNew<vtkFloatArray>();
     orientation_x->SetNumberOfComponents(3);
     orientation_x->SetName("OrientationX");
-    vtkNew<vtkFloatArray> orientation_y;
+    const auto orientation_y = vtkNew<vtkFloatArray>();
     orientation_y->SetNumberOfComponents(3);
     orientation_y->SetName("OrientationY");
-    vtkNew<vtkFloatArray> orientation_z;
+    const auto orientation_z = vtkNew<vtkFloatArray>();
     orientation_z->SetNumberOfComponents(3);
     orientation_z->SetName("OrientationZ");
     for (auto el = 0U; el < beams.num_elems; ++el) {
@@ -94,7 +94,7 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     //--------------------------------------------------------------------------
 
     // Add translational velocity point data
-    vtkNew<vtkFloatArray> translational_velocity;
+    const auto translational_velocity = vtkNew<vtkFloatArray>();
     translational_velocity->SetNumberOfComponents(3);
     translational_velocity->SetName("TranslationalVelocity");
     const auto qp_u_dot = Kokkos::create_mirror(beams.qp_u_dot);
@@ -108,7 +108,7 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     gd->GetPointData()->AddArray(translational_velocity);
 
     // Add rotational velocity point data
-    vtkNew<vtkFloatArray> rotational_velocity;
+    const auto rotational_velocity = vtkNew<vtkFloatArray>();
     rotational_velocity->SetNumberOfComponents(3);
     rotational_velocity->SetName("RotationalVelocity");
     const auto qp_omega = Kokkos::create_mirror(beams.qp_omega);
@@ -164,7 +164,7 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     Kokkos::deep_copy(qp_Fe, beams.qp_Fe);
 
     // Add translational acceleration point data
-    vtkNew<vtkFloatArray> force;
+    const auto force = vtkNew<vtkFloatArray>();
     force->SetNumberOfComponents(3);
     force->SetName("Force");
 
@@ -177,7 +177,7 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     gd->GetPointData()->AddArray(force);
 
     // Add rotational acceleration point data
-    vtkNew<vtkFloatArray> moment;
+    const auto moment = vtkNew<vtkFloatArray>();
     moment->SetNumberOfComponents(3);
     moment->SetName("Moment");
     for (auto el = 0U; el < beams.num_elems; ++el) {
@@ -193,7 +193,7 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     //--------------------------------------------------------------------------
 
     // Add deformation point data
-    vtkNew<vtkFloatArray> deformation_vector;
+    const auto deformation_vector = vtkNew<vtkFloatArray>();
     deformation_vector->SetNumberOfComponents(3);
     deformation_vector->SetName("DeformationVector");
     // TODO: use hierarchical parallelism to make this function better.
@@ -225,7 +225,7 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
     gd->GetPointData()->AddArray(deformation_vector);
 
     // Write the file
-    vtkNew<vtkXMLUnstructuredGridWriter> writer;
+    const auto writer = vtkNew<vtkXMLUnstructuredGridWriter>();
     writer->SetFileName(filename.c_str());
     writer->SetInputData(gd);
     writer->SetDataModeToAscii();
@@ -238,7 +238,7 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     Kokkos::deep_copy(num_nodes_per_element, beams.num_nodes_per_element);
 
     // Create a grid object and add the points to it.
-    vtkNew<vtkUnstructuredGrid> gd;
+    const auto gd = vtkNew<vtkUnstructuredGrid>();
     gd->Allocate(static_cast<vtkIdType>(beams.num_elems));
     size_t first_node{0U};
     for (auto i = 0U; i < beams.num_elems; ++i) {
@@ -265,7 +265,7 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     Kokkos::deep_copy(node_u, beams.node_u);
 
     // Create qp position points
-    vtkNew<vtkPoints> node_pos;
+    const auto node_pos = vtkNew<vtkPoints>();
     for (size_t j = 0; j < beams.num_elems; ++j) {
         for (size_t k = 0; k < num_nodes_per_element(j); ++k) {
             node_pos->InsertNextPoint(
@@ -277,13 +277,13 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     gd->SetPoints(node_pos);
 
     // Add orientation point data
-    vtkNew<vtkFloatArray> orientation_x;
+    const auto orientation_x = vtkNew<vtkFloatArray>();
     orientation_x->SetNumberOfComponents(3);
     orientation_x->SetName("OrientationX");
-    vtkNew<vtkFloatArray> orientation_y;
+    const auto orientation_y = vtkNew<vtkFloatArray>();
     orientation_y->SetNumberOfComponents(3);
     orientation_y->SetName("OrientationY");
-    vtkNew<vtkFloatArray> orientation_z;
+    const auto orientation_z = vtkNew<vtkFloatArray>();
     orientation_z->SetNumberOfComponents(3);
     orientation_z->SetName("OrientationZ");
     for (auto el = 0U; el < beams.num_elems; ++el) {
@@ -313,7 +313,7 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     Kokkos::deep_copy(node_u_dot, beams.node_u_dot);
 
     // Add translational velocity point data
-    vtkNew<vtkFloatArray> translational_velocity;
+    const auto translational_velocity = vtkNew<vtkFloatArray>();
     translational_velocity->SetNumberOfComponents(3);
     translational_velocity->SetName("TranslationalVelocity");
     for (auto el = 0U; el < beams.num_elems; ++el) {
@@ -326,7 +326,7 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     gd->GetPointData()->AddArray(translational_velocity);
 
     // Add rotational velocity point data
-    vtkNew<vtkFloatArray> rotational_velocity;
+    const auto rotational_velocity = vtkNew<vtkFloatArray>();
     rotational_velocity->SetNumberOfComponents(3);
     rotational_velocity->SetName("RotationalVelocity");
     for (auto el = 0U; el < beams.num_elems; ++el) {
@@ -380,7 +380,7 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     Kokkos::deep_copy(node_FX, beams.node_FX);
 
     // Add translational acceleration point data
-    vtkNew<vtkFloatArray> force;
+    const auto force = vtkNew<vtkFloatArray>();
     force->SetNumberOfComponents(3);
     force->SetName("Force");
 
@@ -393,7 +393,7 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     gd->GetPointData()->AddArray(force);
 
     // Add rotational acceleration point data
-    vtkNew<vtkFloatArray> moment;
+    const auto moment = vtkNew<vtkFloatArray>();
     moment->SetNumberOfComponents(3);
     moment->SetName("Moment");
     for (auto el = 0U; el < beams.num_elems; ++el) {
@@ -408,7 +408,7 @@ inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
     // Write file
     //--------------------------------------------------------------------------
 
-    vtkNew<vtkXMLUnstructuredGridWriter> writer;
+    const auto writer = vtkNew<vtkXMLUnstructuredGridWriter>();
     writer->SetFileName(filename.c_str());
     writer->SetInputData(gd);
     writer->SetDataModeToAscii();
@@ -419,7 +419,7 @@ inline void WriteVTKPoint(
     Array_7 position, Array_6 velocity, Array_6 acceleration, const std::string& filename
 ) {
     // Create a grid object and add the points to it.
-    vtkNew<vtkUnstructuredGrid> gd;
+    const auto gd = vtkNew<vtkUnstructuredGrid>();
     gd->Allocate(1);
     std::vector<vtkIdType> pts;
     pts.push_back(static_cast<vtkIdType>(1));  // first qp
@@ -432,18 +432,18 @@ inline void WriteVTKPoint(
     //--------------------------------------------------------------------------
 
     // Create qp position points
-    vtkNew<vtkPoints> point_pos;
+    const auto point_pos = vtkNew<vtkPoints>();
     point_pos->InsertNextPoint(position[0], position[1], position[2]);
     gd->SetPoints(point_pos);
 
     // Add orientation point data
-    vtkNew<vtkFloatArray> orientation_x;
+    const auto orientation_x = vtkNew<vtkFloatArray>();
     orientation_x->SetNumberOfComponents(3);
     orientation_x->SetName("OrientationX");
-    vtkNew<vtkFloatArray> orientation_y;
+    const auto orientation_y = vtkNew<vtkFloatArray>();
     orientation_y->SetNumberOfComponents(3);
     orientation_y->SetName("OrientationY");
-    vtkNew<vtkFloatArray> orientation_z;
+    const auto orientation_z = vtkNew<vtkFloatArray>();
     orientation_z->SetNumberOfComponents(3);
     orientation_z->SetName("OrientationZ");
     auto R = QuaternionToRotationMatrix(Array_4{position[3], position[4], position[5], position[6]});
@@ -462,7 +462,7 @@ inline void WriteVTKPoint(
     //--------------------------------------------------------------------------
 
     // Add translational velocity point data
-    vtkNew<vtkFloatArray> translational_velocity;
+    const auto translational_velocity = vtkNew<vtkFloatArray>();
     translational_velocity->SetNumberOfComponents(3);
     translational_velocity->SetName("TranslationalVelocity");
     tmp = Array_3{velocity[0], velocity[1], velocity[2]};
@@ -470,7 +470,7 @@ inline void WriteVTKPoint(
     gd->GetPointData()->AddArray(translational_velocity);
 
     // Add rotational velocity point data
-    vtkNew<vtkFloatArray> rotational_velocity;
+    const auto rotational_velocity = vtkNew<vtkFloatArray>();
     rotational_velocity->SetNumberOfComponents(3);
     rotational_velocity->SetName("RotationalVelocity");
     tmp = Array_3{velocity[3], velocity[4], velocity[5]};
@@ -482,7 +482,7 @@ inline void WriteVTKPoint(
     //--------------------------------------------------------------------------
 
     // Add translational acceleration point data
-    vtkNew<vtkFloatArray> translational_accel;
+    const auto translational_accel = vtkNew<vtkFloatArray>();
     translational_accel->SetNumberOfComponents(3);
     translational_accel->SetName("TranslationalAcceleration");
     tmp = Array_3{acceleration[0], acceleration[1], acceleration[2]};
@@ -490,7 +490,7 @@ inline void WriteVTKPoint(
     gd->GetPointData()->AddArray(translational_accel);
 
     // Add rotational acceleration point data
-    vtkNew<vtkFloatArray> rotational_accel;
+    const auto rotational_accel = vtkNew<vtkFloatArray>();
     rotational_accel->SetNumberOfComponents(3);
     rotational_accel->SetName("RotationalAcceleration");
     tmp = Array_3{velocity[3], velocity[4], velocity[5]};
@@ -501,7 +501,7 @@ inline void WriteVTKPoint(
     // Write file
     //--------------------------------------------------------------------------
 
-    vtkNew<vtkXMLUnstructuredGridWriter> writer;
+    const auto writer = vtkNew<vtkXMLUnstructuredGridWriter>();
     writer->SetFileName(filename.c_str());
     writer->SetInputData(gd);
     writer->SetDataModeToAscii();
