@@ -35,7 +35,7 @@ inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) 
         auto trans_region = Kokkos::Profiling::ScopedRegion("Transpose Constraints Matrix");
         auto B_num_rows = solver.B.numRows();
         auto constraint_transpose_policy = Kokkos::TeamPolicy<>(B_num_rows, Kokkos::AUTO());
-        auto tmp_row_map = Solver::RowPtrType(
+        auto tmp_row_map = Solver::CrsMatrixType::row_map_type::non_const_type(
             Kokkos::view_alloc(Kokkos::WithoutInitializing, "tmp_row_map"),
             solver.B_t.graph.row_map.extent(0)
         );
