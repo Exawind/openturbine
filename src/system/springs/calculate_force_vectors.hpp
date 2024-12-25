@@ -11,12 +11,13 @@ namespace openturbine::springs {
  * @brief Functor to calculate force vectors for spring elements
  */
 struct CalculateForceVectors {
+    size_t i_elem;                             //< Element index
     Kokkos::View<double* [3]>::const_type r_;  //< Relative distance vector between nodes
     Kokkos::View<double*>::const_type c1_;     //< Force coefficient 1
     Kokkos::View<double* [3]> f_;              //< Force vector
 
     KOKKOS_FUNCTION
-    void operator()(int i_elem) const {
+    void operator()() const {
         auto r = Kokkos::subview(r_, i_elem, Kokkos::ALL);
         auto f = Kokkos::subview(f_, i_elem, Kokkos::ALL);
 

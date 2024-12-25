@@ -40,7 +40,10 @@ TEST(CalculateStiffnessMatrixTests, OneElement) {
     Kokkos::deep_copy(l, l_mirror);
 
     Kokkos::parallel_for(
-        "CalculateStiffnessMatrix", 1, springs::CalculateStiffnessMatrix{c1, c2, r, l, r_tilde, a}
+        "CalculateStiffnessMatrix", 1,
+        KOKKOS_LAMBDA(const size_t i_elem) {
+            springs::CalculateStiffnessMatrix{i_elem, c1, c2, r, l, r_tilde, a}();
+        }
     );
 
     // Expected r_tilde matrix (skew-symmetric matrix from r vector)

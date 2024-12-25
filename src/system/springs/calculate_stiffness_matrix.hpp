@@ -12,6 +12,7 @@ namespace openturbine::springs {
  * @brief Functor to calculate the stiffness matrix for spring elements
  */
 struct CalculateStiffnessMatrix {
+    size_t i_elem;  //< Element index
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
     using GemmDefault = KokkosBatched::Algo::Gemm::Default;
     using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, GemmDefault>;
@@ -23,7 +24,7 @@ struct CalculateStiffnessMatrix {
     Kokkos::View<double* [3][3]> a_;           //< Stiffness matrix
 
     KOKKOS_FUNCTION
-    void operator()(int i_elem) const {
+    void operator()() const {
         auto r = Kokkos::subview(r_, i_elem, Kokkos::ALL);
         auto r_tilde = Kokkos::subview(r_tilde_, i_elem, Kokkos::ALL, Kokkos::ALL);
         auto a = Kokkos::subview(a_, i_elem, Kokkos::ALL, Kokkos::ALL);

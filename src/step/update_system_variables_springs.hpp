@@ -30,25 +30,22 @@ inline void UpdateSystemVariablesSprings(const Springs& springs, State& state) {
         KOKKOS_LAMBDA(const size_t i_elem) {
             // Calculate the relative distance vector between the two nodes
             springs::CalculateDistanceComponents{
-                springs.x0, springs.u1, springs.u2, springs.r
-            }(static_cast<int>(i_elem));
+                i_elem, springs.x0, springs.u1, springs.u2, springs.r
+            }();
 
             // Calculate the current length of the spring
-            springs::CalculateLength{springs.r, springs.l}(static_cast<int>(i_elem));
+            springs::CalculateLength{i_elem, springs.r, springs.l}();
 
             // Calculate the force coefficients
-            springs::CalculateForceCoefficients{
-                springs.k, springs.l_ref, springs.l, springs.c1, springs.c2
-            }(static_cast<int>(i_elem));
+            springs::CalculateForceCoefficients{i_elem,    springs.k,  springs.l_ref,
+                                                springs.l, springs.c1, springs.c2}();
 
             // Calculate the force vector
-            springs::CalculateForceVectors{springs.r, springs.c1, springs.f}(static_cast<int>(i_elem)
-            );
+            springs::CalculateForceVectors{i_elem, springs.r, springs.c1, springs.f}();
 
             // Calculate the stiffness matrix
-            springs::CalculateStiffnessMatrix{
-                springs.c1, springs.c2, springs.r, springs.l, springs.r_tilde, springs.a
-            }(static_cast<int>(i_elem));
+            springs::CalculateStiffnessMatrix{i_elem,    springs.c1,      springs.c2, springs.r,
+                                              springs.l, springs.r_tilde, springs.a}();
         }
     );
 

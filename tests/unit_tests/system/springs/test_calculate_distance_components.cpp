@@ -33,7 +33,8 @@ TEST(CalculateDistanceComponentsTests, OneElement) {
     Kokkos::deep_copy(u2, u2_mirror);
 
     Kokkos::parallel_for(
-        "CalculateDistanceComponents", 1, springs::CalculateDistanceComponents{x0, u1, u2, r}
+        "CalculateDistanceComponents", 1,
+        KOKKOS_LAMBDA(const size_t) { springs::CalculateDistanceComponents{0, x0, u1, u2, r}(); }
     );
 
     constexpr auto r_exact_data = std::array{
