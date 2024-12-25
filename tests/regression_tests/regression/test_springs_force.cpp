@@ -54,9 +54,11 @@ TEST(SpringsForceTest, ZeroDisplacement) {
     EXPECT_DOUBLE_EQ(l_ref_host(0), 1.);  // Undeformed length = 1.
     EXPECT_DOUBLE_EQ(l_host(0), 1.);      // Current length = 1.
     EXPECT_DOUBLE_EQ(c1_host(0), 0.);     // c1 = 0.
-    expect_kokkos_view_1D_equal(Kokkos::subview(f_host, 0, Kokkos::ALL), {0., 0., 0.});  // No force
+    expect_kokkos_view_1D_equal(
+        Kokkos::subview(springs.f, 0, Kokkos::ALL), {0., 0., 0.}
+    );  // No force
     expect_kokkos_view_2D_equal(
-        Kokkos::subview(a_host, 0, Kokkos::ALL, Kokkos::ALL),
+        Kokkos::subview(springs.a, 0, Kokkos::ALL, Kokkos::ALL),
         {{-10., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}
     );
 }
@@ -86,10 +88,10 @@ TEST(SpringsForceTest, UnitDisplacement) {
     EXPECT_DOUBLE_EQ(c1_host(0), -5.);                         // c1 = -5.
     EXPECT_DOUBLE_EQ(c2_host(0), 10. * 1. / std::pow(2., 3));  // c2 = 10. / 8.
     expect_kokkos_view_1D_equal(
-        Kokkos::subview(f_host, 0, Kokkos::ALL), {-10., 0., 0.}
+        Kokkos::subview(springs.f, 0, Kokkos::ALL), {-10., 0., 0.}
     );  // Force = c1 * {r}
     expect_kokkos_view_2D_equal(
-        Kokkos::subview(a_host, 0, Kokkos::ALL, Kokkos::ALL),
+        Kokkos::subview(springs.a, 0, Kokkos::ALL, Kokkos::ALL),
         {{-10., 0., 0.}, {0., -5., 0.}, {0., 0., -5.}}
     );
 }
