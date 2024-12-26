@@ -5,16 +5,20 @@
 
 #include "src/math/vector_operations.hpp"
 
-namespace openturbine {
+namespace openturbine::springs {
 
+/**
+ * @brief Functor to calculate relative distance vector between spring element nodes
+ */
 struct CalculateDistanceComponents {
-    Kokkos::View<double* [3]>::const_type x0_;
-    Kokkos::View<double* [3]>::const_type u1_;
-    Kokkos::View<double* [3]>::const_type u2_;
-    Kokkos::View<double* [3]> r_;
+    size_t i_elem;                              //< Element index
+    Kokkos::View<double* [3]>::const_type x0_;  //< Initial distance vector between nodes
+    Kokkos::View<double* [3]>::const_type u1_;  //< Displacement vector of node 1
+    Kokkos::View<double* [3]>::const_type u2_;  //< Displacement vector of node 2
+    Kokkos::View<double* [3]> r_;               //< Relative distance vector between the two nodes
 
     KOKKOS_FUNCTION
-    void operator()(int i_elem) const {
+    void operator()() const {
         auto x0 = Kokkos::subview(x0_, i_elem, Kokkos::ALL);
         auto u1 = Kokkos::subview(u1_, i_elem, Kokkos::ALL);
         auto u2 = Kokkos::subview(u2_, i_elem, Kokkos::ALL);
@@ -26,4 +30,4 @@ struct CalculateDistanceComponents {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::springs

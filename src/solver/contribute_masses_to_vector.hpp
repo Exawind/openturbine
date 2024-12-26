@@ -3,6 +3,7 @@
 #include <Kokkos_Core.hpp>
 
 namespace openturbine {
+
 struct ContributeMassesToVector {
     Kokkos::View<size_t* [6]>::const_type element_freedom_table;
     Kokkos::View<double* [6]>::const_type elements;
@@ -15,4 +16,5 @@ struct ContributeMassesToVector {
         }
     }
 };
+
 }  // namespace openturbine

@@ -9,6 +9,7 @@
 #include "src/elements/beams/create_beams.hpp"
 #include "src/elements/elements.hpp"
 #include "src/elements/masses/create_masses.hpp"
+#include "src/elements/springs/create_springs.hpp"
 #include "src/math/quaternion_operations.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
@@ -51,6 +52,9 @@ inline auto SetUpPrecessionTest() {
     const auto beams_input = BeamsInput({}, {0., 0., 0.});
     auto beams = CreateBeams(beams_input);
 
+    const auto springs_input = SpringsInput({});
+    auto springs = CreateSprings(springs_input);
+
     // Set up step parameters
     constexpr bool is_dynamic_solve(true);
     constexpr size_t max_iter(6);
@@ -61,14 +65,14 @@ inline auto SetUpPrecessionTest() {
     // Create solver with initial node state
     auto state = model.CreateState();
     auto constraints = Constraints(model.GetConstraints());
-    auto elements = Elements{beams, masses};
+    auto elements = Elements{beams, masses, springs};
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
     create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
 
-    [[maybe_unused]] auto solver = Solver(
+    auto solver = Solver(
         state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
         elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
         constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,

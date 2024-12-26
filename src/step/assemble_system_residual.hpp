@@ -6,6 +6,7 @@
 #include "src/elements/elements.hpp"
 #include "src/solver/contribute_beams_to_vector.hpp"
 #include "src/solver/contribute_masses_to_vector.hpp"
+#include "src/solver/contribute_springs_to_vector.hpp"
 #include "src/solver/solver.hpp"
 
 namespace openturbine {
@@ -17,6 +18,8 @@ inline void AssembleSystemResidual(Solver& solver, Elements& elements) {
         Kokkos::TeamPolicy<>(static_cast<int>(elements.beams.num_elems), Kokkos::AUTO());
     auto masses_vector_policy =
         Kokkos::RangePolicy<>(0, static_cast<int>(elements.masses.num_elems));
+    auto springs_vector_policy =
+        Kokkos::RangePolicy<>(0, static_cast<int>(elements.springs.num_elems));
 
     const auto num_rows = solver.num_system_dofs;
     Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, num_rows)), 0.);
@@ -35,6 +38,14 @@ inline void AssembleSystemResidual(Solver& solver, Elements& elements) {
             elements.masses.element_freedom_table, elements.masses.residual_vector_terms, solver.R
         }
     );
+    Kokkos::fence();
+    Kokkos::parallel_for(
+        "ContributeSpringsToVector", springs_vector_policy,
+        ContributeSpringsToVector{
+            elements.springs.element_freedom_table, elements.springs.residual_vector_terms, solver.R
+        }
+    );
+    Kokkos::fence();
 }
 
 }  // namespace openturbine

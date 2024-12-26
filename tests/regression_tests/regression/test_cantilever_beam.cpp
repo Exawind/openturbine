@@ -18,6 +18,7 @@
 #include "src/elements/beams/create_beams.hpp"
 #include "src/elements/elements.hpp"
 #include "src/elements/masses/create_masses.hpp"
+#include "src/elements/springs/create_springs.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -97,12 +98,14 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // No Masses for this problem
+    // No Masses/Springs for this problem
     const auto masses_input = MassesInput({}, gravity);
     auto masses = CreateMasses(masses_input);
+    const auto springs_input = SpringsInput({});
+    auto springs = CreateSprings(springs_input);
 
     // Create elements from beams
-    auto elements = Elements{beams, masses};
+    auto elements = Elements{beams, masses, springs};
 
     // Constraint inputs
     model.AddFixedBC(model.GetNode(0));

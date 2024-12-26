@@ -25,8 +25,6 @@ namespace openturbine {
 inline void UpdateSystemVariablesMasses(
     const StepParameters& parameters, const Masses& masses, State& state
 ) {
-    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(masses.num_elems), Kokkos::AUTO());
-
     // Update the node states for masses to get the current position/rotation
     Kokkos::parallel_for(
         masses.num_elems,
@@ -37,7 +35,7 @@ inline void UpdateSystemVariablesMasses(
     );
 
     // Calculate some ancillary values (angular velocity - omega, angular acceleration - omega_dot,
-    // linear acceleration - u_ddot) before calculating the mass element values
+    // linear acceleration - u_ddot etc.) that will be required by system kernels
     Kokkos::deep_copy(
         masses.qp_x0, Kokkos::subview(masses.node_x0, Kokkos::ALL, Kokkos::make_pair(0, 3))
     );
@@ -69,17 +67,17 @@ inline void UpdateSystemVariablesMasses(
         }
     );
 
-    // Calculate system variables for mass elements
+    // Calculate system variables by executing the system kernels and perform assembly
     Kokkos::parallel_for(
         masses.num_elems,
         KOKKOS_LAMBDA(const size_t i_elem) {
-            // Calculate global rotation matrix
+            // Calculate the global rotation matrix
             masses::CalculateRR0{i_elem, masses.qp_x, masses.qp_RR0}();
 
-            // Rotate mass matrix from material -> inertial frame
+            // Transform mass matrix from material -> inertial frame
             masses::RotateSectionMatrix{i_elem, masses.qp_RR0, masses.qp_Mstar, masses.qp_Muu}();
 
-            // Calculate mass matrix components
+            // Calculate mass matrix components i.e. eta, rho, and eta_tilde
             masses::CalculateMassMatrixComponents{
                 i_elem, masses.qp_Muu, masses.qp_eta, masses.qp_rho, masses.qp_eta_tilde
             }();
@@ -89,7 +87,8 @@ inline void UpdateSystemVariablesMasses(
                 i_elem, masses.gravity, masses.qp_Muu, masses.qp_eta_tilde, masses.qp_Fg
             }();
 
-            // Calculate inertial forces
+            // Calculate inertial forces i.e. forces due to linear + angular
+            // acceleration
             masses::CalculateInertialForces{
                 i_elem,
                 masses.qp_Muu,
@@ -104,13 +103,14 @@ inline void UpdateSystemVariablesMasses(
                 masses.qp_Fi
             }();
 
-            // Calculate gyroscopic/inertial damping matrix
+            // Calculate the gyroscopic/inertial damping matrix
             masses::CalculateGyroscopicMatrix{i_elem,          masses.qp_Muu,
                                               masses.qp_omega, masses.qp_omega_tilde,
                                               masses.qp_rho,   masses.qp_eta,
                                               masses.qp_Guu}();
 
-            // Calculate inertia stiffness matrix
+            // Calculate the inertial stiffness matrix i.e. contributions from mass distribution and
+            // rotational dynamics
             masses::CalculateInertiaStiffnessMatrix{
                 i_elem,
                 masses.qp_Muu,

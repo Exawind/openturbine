@@ -11,5 +11,6 @@ target_sources(
     test_rotor.cpp
     test_solver.cpp
     test_springs.cpp
+    test_springs_force.cpp
     test_utilities.cpp
 )

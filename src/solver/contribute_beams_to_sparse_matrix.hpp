@@ -6,6 +6,7 @@
 #include "src/dof_management/freedom_signature.hpp"
 
 namespace openturbine {
+
 template <typename CrsMatrixType>
 struct ContributeBeamsToSparseMatrix {
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
@@ -49,4 +50,5 @@ struct ContributeBeamsToSparseMatrix {
         });
     }
 };
+
 }  // namespace openturbine

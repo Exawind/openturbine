@@ -9,6 +9,7 @@ add_subdirectory(math)
 add_subdirectory(model)
 add_subdirectory(solver)
 add_subdirectory(state)
+add_subdirectory(step)
 add_subdirectory(system)
 add_subdirectory(utilities)
 

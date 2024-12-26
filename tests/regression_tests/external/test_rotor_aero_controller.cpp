@@ -20,6 +20,7 @@
 #include "src/elements/beams/create_beams.hpp"
 #include "src/elements/elements.hpp"
 #include "src/elements/masses/create_masses.hpp"
+#include "src/elements/springs/create_springs.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -342,12 +343,15 @@ TEST(Milestone, IEA15RotorAeroController) {
     // Initialize beams from element inputs
     auto beams = CreateBeams(beams_input);
 
-    // No Masses
+    // No Masses/Springs
     const auto masses_input = MassesInput({}, gravity);
     auto masses = CreateMasses(masses_input);
 
+    const auto springs_input = SpringsInput({});
+    auto springs = CreateSprings(springs_input);
+
     // Create elements from beams
-    auto elements = Elements{beams, masses};
+    auto elements = Elements{beams, masses, springs};
 
     // Host mirror of beam external forces
     auto host_node_FX = Kokkos::create_mirror(beams.node_FX);
