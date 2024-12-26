@@ -2,9 +2,18 @@
 
 #include "test_utilities.hpp"
 
+#include "src/dof_management/assemble_node_freedom_allocation_table.hpp"
+#include "src/dof_management/compute_node_freedom_map_table.hpp"
+#include "src/dof_management/create_constraint_freedom_table.hpp"
+#include "src/dof_management/create_element_freedom_table.hpp"
+#include "src/elements/beams/create_beams.hpp"
+#include "src/elements/elements.hpp"
+#include "src/elements/masses/create_masses.hpp"
 #include "src/elements/springs/create_springs.hpp"
 #include "src/elements/springs/springs.hpp"
 #include "src/model/model.hpp"
+#include "src/solver/solver.hpp"
+#include "src/step/step.hpp"
 #include "src/step/update_system_variables_springs.hpp"
 
 namespace openturbine::tests {
@@ -95,5 +104,63 @@ TEST(SpringsForceTest, UnitDisplacement) {
         {{-10., 0., 0.}, {0., -5., 0.}, {0., 0., -5.}}
     );
 }
+
+inline auto SetUpSpringsForceTestUsingSolver() {
+    auto model = Model();
+
+    // Add two nodes for the spring element
+    model.AddNode(
+        {0, 0, 0, 1, 0, 0, 0},  // First node at origin
+        {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
+    );
+    model.AddNode(
+        {1, 0, 0, 1, 0, 0, 0},  // Second node at (1,0,0)
+        {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
+    );
+
+    const auto springs_input = SpringsInput({SpringElement(
+        std::array{model.GetNode(0), model.GetNode(1)},
+        10.,  // Spring stiffness coeff.
+        1.    // Undeformed length
+    )});
+
+    // Create all element types (even if some are empty)
+    const auto beams_input = BeamsInput({}, {0., 0., 0.});
+    auto beams = CreateBeams(beams_input);
+    const auto masses_input = MassesInput({}, {0., 0., 0.});
+    auto masses = CreateMasses(masses_input);
+    auto springs = CreateSprings(springs_input);
+
+    // Set up step parameters
+    constexpr bool is_dynamic_solve(true);
+    constexpr size_t max_iter(6);
+    constexpr double step_size(0.01);
+    constexpr double rho_inf(1.0);
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+
+    // Set up solver components
+    auto state = model.CreateState();
+    auto constraints = Constraints(model.GetConstraints());
+    auto elements = Elements{beams, masses, springs};
+
+    assemble_node_freedom_allocation_table(state, elements, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(elements, state);
+    create_constraint_freedom_table(constraints, state);
+
+    auto solver = Solver(
+        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
+        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
+        constraints.row_range
+    );
+
+    auto converged = Step(parameters, solver, elements, state, constraints);
+    EXPECT_TRUE(converged);
+}
+
+/* TEST(SpringsForceTestUsingSolver, ZeroDisplacement) {
+    SetUpSpringsForceTestUsingSolver();
+} */
 
 }  // namespace openturbine::tests
