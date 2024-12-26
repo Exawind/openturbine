@@ -16,10 +16,22 @@ inline void AssembleStiffnessMatrixSprings(const Springs& springs) {
                 for (auto j_dof = 0U; j_dof < 3U; ++j_dof) {
                     springs.stiffness_matrix_terms(i_elem, 0, 0, i_dof, j_dof) =
                         springs.a(i_elem, i_dof, j_dof);
+                }
+            }
+            for (auto i_dof = 0U; i_dof < 3U; ++i_dof) {
+                for (auto j_dof = 0U; j_dof < 3U; ++j_dof) {
                     springs.stiffness_matrix_terms(i_elem, 0, 1, i_dof, j_dof) =
                         -springs.a(i_elem, i_dof, j_dof);
+                }
+            }
+            for (auto i_dof = 0U; i_dof < 3U; ++i_dof) {
+                for (auto j_dof = 0U; j_dof < 3U; ++j_dof) {
                     springs.stiffness_matrix_terms(i_elem, 1, 0, i_dof, j_dof) =
                         -springs.a(i_elem, i_dof, j_dof);
+                }
+            }
+            for (auto i_dof = 0U; i_dof < 3U; ++i_dof) {
+                for (auto j_dof = 0U; j_dof < 3U; ++j_dof) {
                     springs.stiffness_matrix_terms(i_elem, 1, 1, i_dof, j_dof) =
                         springs.a(i_elem, i_dof, j_dof);
                 }
