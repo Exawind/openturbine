@@ -25,6 +25,7 @@ constexpr size_t GetNumberOfNodes(ConstraintType t) {
     const auto has_two_nodes = t == ConstraintType::kRigidJoint ||
                                t == ConstraintType::kRevoluteJoint ||
                                t == ConstraintType::kRotationControl;
+
     // Default is one node (fixed and prescribed BCs)
     return 1U + static_cast<size_t>(has_two_nodes);
 }
@@ -32,22 +33,19 @@ constexpr size_t GetNumberOfNodes(ConstraintType t) {
 /// Returns the number of degrees of freedom prescribed/fixed by the constraint type
 KOKKOS_INLINE_FUNCTION
 constexpr size_t NumDOFsForConstraint(ConstraintType type) {
-    switch (type) {
-        case ConstraintType::kRevoluteJoint:
-            return 5U;  // A revolute joint constraint fixes 5 DOFs
-        case ConstraintType::kNone:
-            [[fallthrough]];
-        case ConstraintType::kFixedBC:
-            [[fallthrough]];
-        case ConstraintType::kPrescribedBC:
-            [[fallthrough]];
-        case ConstraintType::kRigidJoint:
-            [[fallthrough]];
-        case ConstraintType::kRotationControl:
-            return 6U;  // All other constraints fix 6 DOFs
-        default:
-            throw std::runtime_error("Invalid constraint type");
+    // A revolute joint constraint fixes 5 DOFs
+    if (type == ConstraintType::kRevoluteJoint) {
+        return 5U;
     }
+
+    // All other constraints fix 6 DOFs
+    if (type == ConstraintType::kNone || type == ConstraintType::kFixedBC ||
+        type == ConstraintType::kPrescribedBC || type == ConstraintType::kRigidJoint ||
+        type == ConstraintType::kRotationControl) {
+        return 6U;
+    }
+
+    throw std::runtime_error("Invalid constraint type");
 }
 
 }  // namespace openturbine

@@ -5,30 +5,55 @@
 
 namespace openturbine::tests {
 
-TEST(ConstraintTypeTest, GetNumberOfNodesReturnsCorrectCount) {
-    // Single node constraints
+TEST(ConstraintTypeTest, NoneConstraintHasOneNode) {
     EXPECT_EQ(GetNumberOfNodes(ConstraintType::kNone), 1U);
-    EXPECT_EQ(GetNumberOfNodes(ConstraintType::kFixedBC), 1U);
-    EXPECT_EQ(GetNumberOfNodes(ConstraintType::kPrescribedBC), 1U);
+}
 
-    // Two node constraints
+TEST(ConstraintTypeTest, FixedBCHasOneNode) {
+    EXPECT_EQ(GetNumberOfNodes(ConstraintType::kFixedBC), 1U);
+}
+
+TEST(ConstraintTypeTest, PrescribedBCHasOneNode) {
+    EXPECT_EQ(GetNumberOfNodes(ConstraintType::kPrescribedBC), 1U);
+}
+
+TEST(ConstraintTypeTest, RigidJointHasTwoNodes) {
     EXPECT_EQ(GetNumberOfNodes(ConstraintType::kRigidJoint), 2U);
+}
+
+TEST(ConstraintTypeTest, RevoluteJointHasTwoNodes) {
     EXPECT_EQ(GetNumberOfNodes(ConstraintType::kRevoluteJoint), 2U);
+}
+
+TEST(ConstraintTypeTest, RotationControlHasTwoNodes) {
     EXPECT_EQ(GetNumberOfNodes(ConstraintType::kRotationControl), 2U);
 }
 
-TEST(ConstraintTypeTest, NumDOFsForConstraintReturnsCorrectCount) {
-    // Special case: Revolute joint has 5 DOFs
+TEST(ConstraintTypeTest, RevoluteJointHasFiveDOFs) {
     EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kRevoluteJoint), 5U);
+}
 
-    // All other constraints have 6 DOFs
+TEST(ConstraintTypeTest, NoneConstraintHasSixDOFs) {
     EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kNone), 6U);
-    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kFixedBC), 6U);
-    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kPrescribedBC), 6U);
-    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kRigidJoint), 6U);
-    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kRotationControl), 6U);
+}
 
-    // Expect a runtime error for an invalid constraint type
+TEST(ConstraintTypeTest, FixedBCHasSixDOFs) {
+    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kFixedBC), 6U);
+}
+
+TEST(ConstraintTypeTest, PrescribedBCHasSixDOFs) {
+    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kPrescribedBC), 6U);
+}
+
+TEST(ConstraintTypeTest, RigidJointHasSixDOFs) {
+    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kRigidJoint), 6U);
+}
+
+TEST(ConstraintTypeTest, RotationControlHasSixDOFs) {
+    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kRotationControl), 6U);
+}
+
+TEST(ConstraintTypeTest, InvalidConstraintTypeThrowsError) {
     EXPECT_THROW(NumDOFsForConstraint(static_cast<ConstraintType>(100)), std::runtime_error);
 }
 
