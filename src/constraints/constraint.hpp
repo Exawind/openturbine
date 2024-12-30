@@ -7,11 +7,14 @@
 
 namespace openturbine {
 
-/// @brief Struct to define a constraint between two nodes or enforce a boundary condition at a
-/// single node
-/// @details A constraint is a relationship between two nodes that restricts their relative
-/// motion in some way. Constraints can be used to model fixed boundary conditions, prescribed
-/// displacements, rigid body motion, lower-pair kinematic joints, control signals etc.
+/**
+ * @brief Defines a constraint between two nodes or enforces a boundary condition at a single node
+ *
+ * @details A constraint establishes a relationship between two nodes, restricting their relative
+ * motion in specific ways. This can be utilized to model various scenarios such as fixed boundary
+ * conditions, prescribed displacements, rigid body motions, lower-pair kinematic joints, and control
+ * signals.
+ */
 struct Constraint {
     ConstraintType type;        //< Type of constraint
     size_t ID;                  //< Unique identifier for constraint

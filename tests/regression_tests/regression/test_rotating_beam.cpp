@@ -301,7 +301,7 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
 
     // Update constraint displacements
-    for (auto j = 0U; j < constraints.num; ++j) {
+    for (auto j = 0U; j < constraints.num_constraints; ++j) {
         constraints.UpdateDisplacement(j, u_hub);
     }
 
@@ -435,7 +435,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
 
         // Update constraint displacements
-        for (auto j = 0U; j < constraints.num; ++j) {
+        for (auto j = 0U; j < constraints.num_constraints; ++j) {
             constraints.UpdateDisplacement(j, u_hub);
         }
 

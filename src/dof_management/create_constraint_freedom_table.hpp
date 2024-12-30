@@ -44,7 +44,7 @@ inline void create_constraint_freedom_table(Constraints& constraints, const Stat
     const auto state_node_freedom_map_table = state.node_freedom_map_table;
 
     Kokkos::parallel_for(
-        "Create Constraint Node Freedom Table", constraints.num,
+        "Create Constraint Node Freedom Table", constraints.num_constraints,
         CreateConstraintFreedomTable{
             constraints.type, constraints.target_node_index, constraints.base_node_index,
             state.node_freedom_map_table, constraints.target_node_freedom_table,

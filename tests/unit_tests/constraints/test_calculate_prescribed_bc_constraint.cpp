@@ -65,14 +65,14 @@ TEST(CalculatePrescribedBCConstraintTests, OneConstraint) {
     Kokkos::deep_copy(target_gradient_terms_mirror, target_gradient_terms);
 
     // clang-format off
-    constexpr auto target_gradient_terms_exact_data =
-        std::array{1., 0., 0., 0., 0., 0.,
-                   0., 1., 0., 0., 0., 0.,
-                   0., 0., 1., 0., 0., 0.,
-                   0., 0., 0., 961.99999999999977, 50.666666666666714, -1.3333333333333379,
-                   0., 0., 0., -50.666666666666714, 962.6666666666664, 25.333333333333329,
-                   0., 0., 0., -1.3333333333333308, -25.333333333333329, 959.99999999999977 
-        };
+    constexpr auto target_gradient_terms_exact_data = std::array{
+        1., 0., 0., 0., 0., 0.,  // Row 1
+        0., 1., 0., 0., 0., 0.,  // Row 2
+        0., 0., 1., 0., 0., 0.,  // Row 3
+        0., 0., 0., 961.99999999999977, 50.666666666666714, -1.3333333333333379,  // Row 4
+        0., 0., 0., -50.666666666666714, 962.6666666666664, 25.333333333333329,   // Row 5
+        0., 0., 0., -1.3333333333333308, -25.333333333333329, 959.99999999999977  // Row 6
+    };
     // clang-format on
     const auto target_gradient_terms_exact =
         Kokkos::View<double[1][6][6], Kokkos::HostSpace>::const_type(

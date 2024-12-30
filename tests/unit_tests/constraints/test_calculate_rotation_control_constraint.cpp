@@ -82,13 +82,14 @@ TEST(CalculateRotationControlConstraintTests, OneConstraint) {
     Kokkos::deep_copy(base_gradient_terms_mirror, base_gradient_terms);
 
     // clang-format off
-    constexpr auto base_gradient_terms_exact_data = 
-        std::array{-1., 0., 0., 0., -4158., 2380.,  //
-                    0., -1., 0., 4158., 0., -5894.,  //
-                    0., 0., -1., -2380., 5894., 0.,  //
-                    0., 0., 0., 352.78065407508194, 393.20409838557617, 238.18605213460458,  //
-                    0., 0., 0., 22.279123154088261, -51.458926551935804, 408.91100181659226,  //
-                    0., 0., 0., 459.17937572387484, -114.4338400472094, 107.94957687179453
+    constexpr auto base_gradient_terms_exact_data =
+        std::array{
+            -1., 0., 0., 0., -4158., 2380.,  // Row 1
+            0., -1., 0., 4158., 0., -5894.,  // Row 2
+            0., 0., -1., -2380., 5894., 0.,  // Row 3
+            0., 0., 0., 352.78065407508194, 393.20409838557617, 238.18605213460458,   // Row 4
+            0., 0., 0., 22.279123154088261, -51.458926551935804, 408.91100181659226,  // Row 5
+            0., 0., 0., 459.17937572387484, -114.4338400472094, 107.94957687179453    // Row 6
         };
     // clang-format on
     const auto base_gradient_terms_exact =
@@ -108,13 +109,14 @@ TEST(CalculateRotationControlConstraintTests, OneConstraint) {
     Kokkos::deep_copy(target_gradient_terms_mirror, target_gradient_terms);
 
     // clang-format off
-    constexpr auto target_gradient_terms_exact_data = 
-        std::array{1., 0., 0., 0., 0., 0.,
-                   0., 1., 0., 0., 0., 0.,
-                   0., 0., 1., 0., 0., 0.,
-                   0., 0., 0., -352.78065407508194, -22.279123154088261, -459.17937572387484,
-                   0., 0., 0., -393.20409838557617, 51.458926551935804, 114.4338400472094,
-                   0., 0., 0., -238.18605213460458, -408.91100181659226, -107.94957687179453
+    constexpr auto target_gradient_terms_exact_data =
+        std::array{
+            1., 0., 0., 0., 0., 0.,  // Row 1
+            0., 1., 0., 0., 0., 0.,  // Row 2
+            0., 0., 1., 0., 0., 0.,  // Row 3
+            0., 0., 0., -352.78065407508194, -22.279123154088261, -459.17937572387484,  // Row 4
+            0., 0., 0., -393.20409838557617, 51.458926551935804, 114.4338400472094,     // Row 5
+            0., 0., 0., -238.18605213460458, -408.91100181659226, -107.94957687179453   // Row 6
         };
     // clang-format on
     const auto target_gradient_terms_exact =

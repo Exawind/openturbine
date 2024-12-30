@@ -80,13 +80,14 @@ TEST(CalculateRevoluteJointConstraintTests, OneConstraint) {
     const auto base_gradient_terms_mirror = Kokkos::create_mirror(base_gradient_terms);
     Kokkos::deep_copy(base_gradient_terms_mirror, base_gradient_terms);
 
-    constexpr auto base_gradient_terms_exact_data =
-        std::array{-1., 0.,  0.,  0.,         0.,         0.,         //
-                   0.,  -1., 0.,  0.,         0.,         0.,         //
-                   0.,  0.,  -1., 0.,         0.,         0.,         //
-                   0.,  0.,  0.,  -10930136., -15850520., 24566248.,  //
-                   0.,  0.,  0.,  -5585804.,  -8091272.,  12549292.,  //
-                   0.,  0.,  0.,  0.,         0.,         0.};        //
+    constexpr auto base_gradient_terms_exact_data = std::array{
+        -1., 0.,  0.,  0.,         0.,         0.,         // Row 1
+        0.,  -1., 0.,  0.,         0.,         0.,         // Row 2
+        0.,  0.,  -1., 0.,         0.,         0.,         // Row 3
+        0.,  0.,  0.,  -10930136., -15850520., 24566248.,  // Row 4
+        0.,  0.,  0.,  -5585804.,  -8091272.,  12549292.,  // Row 5
+        0.,  0.,  0.,  0.,         0.,         0.          // Row 6
+    };
     const auto base_gradient_terms_exact =
         Kokkos::View<double[1][6][6], Kokkos::HostSpace>::const_type(
             base_gradient_terms_exact_data.data()
