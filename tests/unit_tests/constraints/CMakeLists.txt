@@ -9,5 +9,6 @@ target_sources(
     test_calculate_revolute_joint_output.cpp
     test_calculate_rigid_joint_constraint.cpp
     test_calculate_rotation_control_constraint.cpp
+    test_constraint.cpp
     test_constraint_type.cpp
 )

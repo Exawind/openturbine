@@ -30,9 +30,11 @@ TEST(CalculateRevoluteJointForceTests, OneConstraint) {
     Kokkos::deep_copy(constraint_inputs, constraint_inputs_mirror);
 
     const auto node_u = Kokkos::View<double[3][7]>("node_u");
-    constexpr auto node_u_host_data =
-        std::array{0.,  0.,  0.,  0.,  0.,  0.,  0.,  11., 12., 13., 14.,
-                   15., 16., 17., 18., 19., 20., 21., 22., 23., 24.};
+    constexpr auto node_u_host_data = std::array{
+        0.,  0.,  0.,  0.,  0.,  0.,  0.,   // Row 1
+        11., 12., 13., 14., 15., 16., 17.,  // Row 2
+        18., 19., 20., 21., 22., 23., 24.   // Row 3
+    };
     const auto node_u_host =
         Kokkos::View<double[3][7], Kokkos::HostSpace>::const_type(node_u_host_data.data());
     const auto node_u_mirror = Kokkos::create_mirror(node_u);
