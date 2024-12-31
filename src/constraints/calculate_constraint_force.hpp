@@ -19,16 +19,11 @@ struct CalculateConstraintForce {
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
-        switch (type(i_constraint)) {
-            case ConstraintType::kRevoluteJoint: {
-                // Applies the torque from a revolute joint constraint to the system residual
-                CalculateRevoluteJointForce{
-                    target_node_index, axes, inputs, node_u, system_residual_terms
-                }(i_constraint);
-            } break;
-            default: {
-                // Do nothing
-            } break;
+        if (type(i_constraint) == ConstraintType::kRevoluteJoint) {
+            // Applies the torque from a revolute joint constraint to the system residual
+            CalculateRevoluteJointForce{i_constraint, target_node_index,    axes, inputs,
+                                        node_u,       system_residual_terms}();
+            return;
         }
     }
 };

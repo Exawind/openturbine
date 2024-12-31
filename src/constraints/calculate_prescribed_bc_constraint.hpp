@@ -11,6 +11,7 @@
 namespace openturbine {
 
 struct CalculatePrescribedBCConstraint {
+    int i_constraint;
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3]>::const_type X0_;
     Kokkos::View<double* [7]>::const_type constraint_inputs;
@@ -19,7 +20,7 @@ struct CalculatePrescribedBCConstraint {
     Kokkos::View<double* [6][6]> target_gradient_terms;
 
     KOKKOS_FUNCTION
-    void operator()(const int i_constraint) const {
+    void operator()() const {
         const auto i_node2 = target_node_index(i_constraint);
 
         // Initial difference between nodes

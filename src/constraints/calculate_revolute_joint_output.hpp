@@ -9,6 +9,7 @@
 namespace openturbine {
 
 struct CalculateRevoluteJointOutput {
+    int i_constraint;
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3][3]>::const_type axes;
     Kokkos::View<double* [7]>::const_type node_x0;     // Initial position
@@ -18,7 +19,7 @@ struct CalculateRevoluteJointOutput {
     Kokkos::View<double* [3]> outputs;
 
     KOKKOS_FUNCTION
-    void operator()(const int i_constraint) const {
+    void operator()() const {
         // Axis of rotation unit vector
         const auto joint_axis0_data = Kokkos::Array<double, 3>{
             axes(i_constraint, 0, 0), axes(i_constraint, 0, 1), axes(i_constraint, 0, 2)

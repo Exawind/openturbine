@@ -11,6 +11,7 @@
 namespace openturbine {
 
 struct CalculateRotationControlConstraint {
+    int i_constraint;
     Kokkos::View<size_t*>::const_type base_node_index;
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3]>::const_type X0_;
@@ -22,7 +23,7 @@ struct CalculateRotationControlConstraint {
     Kokkos::View<double* [6][6]> target_gradient_terms;
 
     KOKKOS_FUNCTION
-    void operator()(const int i_constraint) const {
+    void operator()() const {
         const auto i_base = base_node_index(i_constraint);
         const auto i_target = target_node_index(i_constraint);
 

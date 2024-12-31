@@ -5,6 +5,26 @@
 
 namespace openturbine::tests {
 
+struct ExecuteCalculateRigidJointConstraint {
+    int i_constraint;
+    Kokkos::View<size_t*>::const_type base_node_index;
+    Kokkos::View<size_t*>::const_type target_node_index;
+    Kokkos::View<double* [3]>::const_type X0;
+    Kokkos::View<double* [7]>::const_type constraint_inputs;
+    Kokkos::View<double* [7]>::const_type node_u;
+    Kokkos::View<double* [6]> residual_terms;
+    Kokkos::View<double* [6][6]> base_gradient_terms;
+    Kokkos::View<double* [6][6]> target_gradient_terms;
+
+    KOKKOS_FUNCTION
+    void operator()(int) const {
+        CalculateRigidJointConstraint{
+            i_constraint,   base_node_index,     target_node_index,    X0, constraint_inputs, node_u,
+            residual_terms, base_gradient_terms, target_gradient_terms
+        }();
+    }
+};
+
 TEST(CalculateRigidJointConstraintTests, OneConstraint) {
     const auto target_node_index = Kokkos::View<size_t[1]>("target_node_index");
     constexpr auto target_node_index_host_data = std::array<size_t, 1>{1UL};
@@ -51,8 +71,8 @@ TEST(CalculateRigidJointConstraintTests, OneConstraint) {
 
     Kokkos::parallel_for(
         "CalculatePrescribedBCConstraint", 1,
-        CalculateRigidJointConstraint{
-            base_node_index, target_node_index, X0, constraint_inputs, node_u, residual_terms,
+        ExecuteCalculateRigidJointConstraint{
+            0, base_node_index, target_node_index, X0, constraint_inputs, node_u, residual_terms,
             base_gradient_terms, target_gradient_terms
         }
     );
