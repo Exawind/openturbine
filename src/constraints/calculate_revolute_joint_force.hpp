@@ -11,6 +11,7 @@
 namespace openturbine {
 
 struct CalculateRevoluteJointForce {
+    int i_constraint;
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3][3]>::const_type axes;
     Kokkos::View<double* [7]>::const_type inputs;
@@ -18,7 +19,7 @@ struct CalculateRevoluteJointForce {
     Kokkos::View<double* [6]> system_residual_terms;
 
     KOKKOS_FUNCTION
-    void operator()(const int i_constraint) const {
+    void operator()() const {
         const auto i_node2 = target_node_index(i_constraint);
 
         // Initial difference between nodes

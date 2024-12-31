@@ -104,7 +104,7 @@ inline bool Step(
     );
 
     Kokkos::parallel_for(
-        "CalculateConstraintOutput", constraints.num,
+        "CalculateConstraintOutput", constraints.num_constraints,
         CalculateConstraintOutput{
             constraints.type,
             constraints.target_node_index,

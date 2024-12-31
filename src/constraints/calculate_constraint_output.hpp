@@ -19,14 +19,10 @@ struct CalculateConstraintOutput {
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
-        switch (type(i_constraint)) {
-            case ConstraintType::kRevoluteJoint: {
-                CalculateRevoluteJointOutput{target_node_index, axes,       node_x0, node_u,
-                                             node_udot,         node_uddot, outputs}(i_constraint);
-            } break;
-            default: {
-                // Do nothing
-            } break;
+        if (type(i_constraint) == ConstraintType::kRevoluteJoint) {
+            CalculateRevoluteJointOutput{i_constraint, target_node_index, axes,       node_x0,
+                                         node_u,       node_udot,         node_uddot, outputs}();
+            return;
         }
     }
 };

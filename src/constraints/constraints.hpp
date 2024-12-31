@@ -12,72 +12,88 @@
 
 namespace openturbine {
 
-/// @brief Constraints struct holds all constraint data
-/// @details Constraints struct holds all constraint data and provides methods
-/// to update the prescribed displacements and control signals.
-/// @note The struct is used to transfer data between the solver and the
-/// constraint objects.
+/**
+ * @brief Container class for managing multiple constraints in a simulation
+ *
+ * @details Manages a collection of constraints between nodes, including their properties,
+ * freedom signatures, and computational data structures. This class handles both single-node
+ * boundary conditions and two-node constraints (like joints). It provides facilities for:
+ * - Storing constraint properties (types, node indices, axes)
+ * - Managing degrees of freedom and freedom signatures
+ * - Handling control signals and prescribed displacements
+ * - Maintaining computational views for residuals and gradients
+ */
 struct Constraints {
-    size_t num;       //< Number of constraints
-    size_t num_dofs;  //< Number of degrees of freedom
-    std::vector<double*> control_signal;
-    Kokkos::View<ConstraintType*> type;
+    size_t num_constraints;  //< Total number of constraints
+    size_t num_dofs;         //< Total number of degrees of freedom
+
+    // Constraint properties
+    std::vector<double*> control_signal;      //< Control signal for each constraint
+    Kokkos::View<ConstraintType*> type;       //< Type of each constraint
+    Kokkos::View<size_t*> base_node_index;    //< Index of the base node for each constraint
+    Kokkos::View<size_t*> target_node_index;  //< Index of the target node for each constraint
+
+    // DOF management
     Kokkos::View<Kokkos::pair<size_t, size_t>*> row_range;
     Kokkos::View<Kokkos::pair<size_t, size_t>*> base_node_col_range;
     Kokkos::View<Kokkos::pair<size_t, size_t>*> target_node_col_range;
-    Kokkos::View<size_t*> base_node_index;
-    Kokkos::View<size_t*> target_node_index;
     Kokkos::View<FreedomSignature*> base_node_freedom_signature;
     Kokkos::View<FreedomSignature*> target_node_freedom_signature;
     Kokkos::View<size_t* [6]> base_node_freedom_table;
     Kokkos::View<size_t* [6]> target_node_freedom_table;
-    Kokkos::View<double* [3]> X0;
-    Kokkos::View<double* [3][3]> axes;
 
-    Kokkos::View<double* [7]> input;                    //< Inputs
-    Kokkos::View<double* [3]> output;                   //< Outputs
-    Kokkos::View<double* [7]>::HostMirror host_input;   //< Inputs mirror on host
-    Kokkos::View<double* [3]>::HostMirror host_output;  //< Outputs mirror on host
-    Kokkos::View<double*> lambda;
+    // Geometric configuration
+    Kokkos::View<double* [3]> X0;       //< Initial relative position
+    Kokkos::View<double* [3][3]> axes;  //< Rotation axes
+
+    // State variables
+    Kokkos::View<double* [7]> input;   //< Current state input
+    Kokkos::View<double* [3]> output;  //< Current state output
+    Kokkos::View<double*> lambda;      //< Lagrange multipliers
+
+    // Host mirrors for CPU access
+    Kokkos::View<double* [7]>::HostMirror host_input;
+    Kokkos::View<double* [3]>::HostMirror host_output;
+
+    // System contributions
     Kokkos::View<double* [6]> residual_terms;
     Kokkos::View<double* [6]> system_residual_terms;
     Kokkos::View<double* [6][6]> base_gradient_terms;
     Kokkos::View<double* [6][6]> target_gradient_terms;
 
     explicit Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints)
-        : num{constraints.size()},
+        : num_constraints{constraints.size()},
           num_dofs{std::transform_reduce(
               constraints.cbegin(), constraints.cend(), 0U, std::plus{},
               [](auto c) {
                   return NumDOFsForConstraint(c->type);
               }
           )},
-          control_signal(num),
-          type("type", num),
-          row_range("row_range", num),
-          base_node_col_range("base_row_col_range", num),
-          target_node_col_range("target_row_col_range", num),
-          base_node_index("base_node_index", num),
-          target_node_index("target_node_index", num),
-          base_node_freedom_signature("base_node_freedom_signature", num),
-          target_node_freedom_signature("target_node_freedom_signature", num),
-          base_node_freedom_table("base_node_freedom_table", num),
-          target_node_freedom_table("target_node_freedom_table", num),
-          X0("X0", num),
-          axes("axes", num),
-          input("inputs", num),
-          output("outputs", num),
-          host_input("host_input", num),
-          host_output("host_output", num),
+          control_signal(num_constraints),
+          type("type", num_constraints),
+          base_node_index("base_node_index", num_constraints),
+          target_node_index("target_node_index", num_constraints),
+          row_range("row_range", num_constraints),
+          base_node_col_range("base_row_col_range", num_constraints),
+          target_node_col_range("target_row_col_range", num_constraints),
+          base_node_freedom_signature("base_node_freedom_signature", num_constraints),
+          target_node_freedom_signature("target_node_freedom_signature", num_constraints),
+          base_node_freedom_table("base_node_freedom_table", num_constraints),
+          target_node_freedom_table("target_node_freedom_table", num_constraints),
+          X0("X0", num_constraints),
+          axes("axes", num_constraints),
+          input("inputs", num_constraints),
+          output("outputs", num_constraints),
           lambda("lambda", num_dofs),
-          residual_terms("residual_terms", num),
-          system_residual_terms("system_residual_terms", num),
-          base_gradient_terms("base_gradient_terms", num),
-          target_gradient_terms("target_gradient_terms", num) {
+          host_input("host_input", num_constraints),
+          host_output("host_output", num_constraints),
+          residual_terms("residual_terms", num_constraints),
+          system_residual_terms("system_residual_terms", num_constraints),
+          base_gradient_terms("base_gradient_terms", num_constraints),
+          target_gradient_terms("target_gradient_terms", num_constraints) {
         Kokkos::deep_copy(base_node_freedom_signature, FreedomSignature::AllComponents);
         Kokkos::deep_copy(target_node_freedom_signature, FreedomSignature::AllComponents);
 
-        // Create host mirror for constraint data
         auto host_type = Kokkos::create_mirror(type);
         auto host_row_range = Kokkos::create_mirror(row_range);
         auto host_base_node_col_range = Kokkos::create_mirror(base_node_col_range);
@@ -87,14 +103,11 @@ struct Constraints {
         auto host_X0 = Kokkos::create_mirror(X0);
         auto host_axes = Kokkos::create_mirror(axes);
 
-        // Loop through constraint input and set data
         auto start_row = size_t{0U};
-        for (auto i = 0U; i < num; ++i) {
-            // Set Host constraint data
+        for (auto i = 0U; i < num_constraints; ++i) {
             host_type(i) = constraints[i]->type;
             control_signal[i] = constraints[i]->control;
 
-            // Set constraint rows
             auto dofs = NumDOFsForConstraint(host_type(i));
             host_row_range(i) = Kokkos::make_pair(start_row, start_row + dofs);
             start_row += dofs;
@@ -115,7 +128,6 @@ struct Constraints {
                 host_target_node_col_range(i) = Kokkos::make_pair(0U, kLieAlgebraComponents);
             }
 
-            // Set base node and target node index
             host_base_node_index(i) = constraints[i]->base_node.ID;
             host_target_node_index(i) = constraints[i]->target_node.ID;
 
@@ -128,7 +140,6 @@ struct Constraints {
             }
         }
 
-        // Update data
         Kokkos::deep_copy(type, host_type);
         Kokkos::deep_copy(row_range, host_row_range);
         Kokkos::deep_copy(base_node_col_range, host_base_node_col_range);
@@ -138,22 +149,20 @@ struct Constraints {
         Kokkos::deep_copy(X0, host_X0);
         Kokkos::deep_copy(axes, host_axes);
 
-        // Set initial rotation to identity
-        Kokkos::deep_copy(Kokkos::subview(this->input, Kokkos::ALL, 3), 1.0);
+        Kokkos::deep_copy(Kokkos::subview(this->input, Kokkos::ALL, 3), 1.);
     }
 
     /// Sets the new displacement for the given constraint
-    void UpdateDisplacement(size_t id, const std::array<double, 7>& u_) const {
+    void UpdateDisplacement(size_t constraint_id, const std::array<double, 7>& disp) const {
         for (auto i = 0U; i < 7U; ++i) {
-            host_input(id, i) = u_[i];
+            host_input(constraint_id, i) = disp[i];
         }
     }
 
     /// Transfers new prescribed displacements and control signals to Views
     void UpdateViews() {
-        // Loop through constraints and copy control signal to host
-        for (auto i = 0U; i < this->num; ++i) {
-            if (control_signal[i] != nullptr) {
+        for (auto i = 0U; i < this->num_constraints; ++i) {
+            if (control_signal[i]) {
                 host_input(i, 0) = *control_signal[i];
             }
         }

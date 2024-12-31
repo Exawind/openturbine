@@ -28,25 +28,32 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
-        if (type(i_constraint) == ConstraintType::kFixedBC) {
-            CalculateFixedBCConstraint{target_node_index, X0_,
-                                       constraint_inputs, node_u,
-                                       residual_terms,    target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kPrescribedBC) {
-            CalculatePrescribedBCConstraint{target_node_index, X0_,
-                                            constraint_inputs, node_u,
-                                            residual_terms,    target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kRigidJoint) {
-            CalculateRigidJointConstraint{base_node_index,
-                                          target_node_index,
-                                          X0_,
-                                          constraint_inputs,
-                                          node_u,
-                                          residual_terms,
-                                          base_gradient_terms,
-                                          target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kRevoluteJoint) {
-            CalculateRevoluteJointConstraint{base_node_index,
+        auto constraint_type = type(i_constraint);
+        if (constraint_type == ConstraintType::kFixedBC) {
+            CalculateFixedBCConstraint{
+                i_constraint,   target_node_index,    X0_, constraint_inputs, node_u,
+                residual_terms, target_gradient_terms
+            }();
+            return;
+        };
+        if (constraint_type == ConstraintType::kPrescribedBC) {
+            CalculatePrescribedBCConstraint{
+                i_constraint,   target_node_index,    X0_, constraint_inputs, node_u,
+                residual_terms, target_gradient_terms
+            }();
+            return;
+        };
+        if (constraint_type == ConstraintType::kRigidJoint) {
+            CalculateRigidJointConstraint{i_constraint,         base_node_index,
+                                          target_node_index,    X0_,
+                                          constraint_inputs,    node_u,
+                                          residual_terms,       base_gradient_terms,
+                                          target_gradient_terms}();
+            return;
+        };
+        if (constraint_type == ConstraintType::kRevoluteJoint) {
+            CalculateRevoluteJointConstraint{i_constraint,
+                                             base_node_index,
                                              target_node_index,
                                              X0_,
                                              axes,
@@ -54,9 +61,12 @@ struct CalculateConstraintResidualGradient {
                                              node_u,
                                              residual_terms,
                                              base_gradient_terms,
-                                             target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kRotationControl) {
-            CalculateRotationControlConstraint{base_node_index,
+                                             target_gradient_terms}();
+            return;
+        };
+        if (constraint_type == ConstraintType::kRotationControl) {
+            CalculateRotationControlConstraint{i_constraint,
+                                               base_node_index,
                                                target_node_index,
                                                X0_,
                                                axes,
@@ -64,9 +74,10 @@ struct CalculateConstraintResidualGradient {
                                                node_u,
                                                residual_terms,
                                                base_gradient_terms,
-                                               target_gradient_terms}(i_constraint);
+                                               target_gradient_terms}();
+            return;
         }
-    }
+    };
 };
 
 }  // namespace openturbine
