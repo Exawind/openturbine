@@ -24,27 +24,38 @@ namespace openturbine {
  * - Maintaining computational views for residuals and gradients
  */
 struct Constraints {
-    size_t num_constraints;  //< Number of constraints
-    size_t num_dofs;         //< Number of degrees of freedom
-    std::vector<double*> control_signal;
-    Kokkos::View<ConstraintType*> type;
+    size_t num_constraints;  //< Total number of constraints
+    size_t num_dofs;         //< Total number of degrees of freedom
+
+    // Constraint properties
+    std::vector<double*> control_signal;      //< Control signal for each constraint
+    Kokkos::View<ConstraintType*> type;       //< Type of each constraint
+    Kokkos::View<size_t*> base_node_index;    //< Index of the base node for each constraint
+    Kokkos::View<size_t*> target_node_index;  //< Index of the target node for each constraint
+
+    // DOF management
     Kokkos::View<Kokkos::pair<size_t, size_t>*> row_range;
     Kokkos::View<Kokkos::pair<size_t, size_t>*> base_node_col_range;
     Kokkos::View<Kokkos::pair<size_t, size_t>*> target_node_col_range;
-    Kokkos::View<size_t*> base_node_index;
-    Kokkos::View<size_t*> target_node_index;
     Kokkos::View<FreedomSignature*> base_node_freedom_signature;
     Kokkos::View<FreedomSignature*> target_node_freedom_signature;
     Kokkos::View<size_t* [6]> base_node_freedom_table;
     Kokkos::View<size_t* [6]> target_node_freedom_table;
-    Kokkos::View<double* [3]> X0;
-    Kokkos::View<double* [3][3]> axes;
 
-    Kokkos::View<double* [7]> input;
-    Kokkos::View<double* [3]> output;
+    // Geometric configuration
+    Kokkos::View<double* [3]> X0;       //< Initial relative position
+    Kokkos::View<double* [3][3]> axes;  //< Rotation axes
+
+    // State variables
+    Kokkos::View<double* [7]> input;   //< Current state input
+    Kokkos::View<double* [3]> output;  //< Current state output
+    Kokkos::View<double*> lambda;      //< Lagrange multipliers
+
+    // Host mirrors for CPU access
     Kokkos::View<double* [7]>::HostMirror host_input;
     Kokkos::View<double* [3]>::HostMirror host_output;
-    Kokkos::View<double*> lambda;
+
+    // System contributions
     Kokkos::View<double* [6]> residual_terms;
     Kokkos::View<double* [6]> system_residual_terms;
     Kokkos::View<double* [6][6]> base_gradient_terms;
@@ -60,11 +71,11 @@ struct Constraints {
           )},
           control_signal(num_constraints),
           type("type", num_constraints),
+          base_node_index("base_node_index", num_constraints),
+          target_node_index("target_node_index", num_constraints),
           row_range("row_range", num_constraints),
           base_node_col_range("base_row_col_range", num_constraints),
           target_node_col_range("target_row_col_range", num_constraints),
-          base_node_index("base_node_index", num_constraints),
-          target_node_index("target_node_index", num_constraints),
           base_node_freedom_signature("base_node_freedom_signature", num_constraints),
           target_node_freedom_signature("target_node_freedom_signature", num_constraints),
           base_node_freedom_table("base_node_freedom_table", num_constraints),
@@ -73,9 +84,9 @@ struct Constraints {
           axes("axes", num_constraints),
           input("inputs", num_constraints),
           output("outputs", num_constraints),
+          lambda("lambda", num_dofs),
           host_input("host_input", num_constraints),
           host_output("host_output", num_constraints),
-          lambda("lambda", num_dofs),
           residual_terms("residual_terms", num_constraints),
           system_residual_terms("system_residual_terms", num_constraints),
           base_gradient_terms("base_gradient_terms", num_constraints),
@@ -142,9 +153,9 @@ struct Constraints {
     }
 
     /// Sets the new displacement for the given constraint
-    void UpdateDisplacement(size_t id, const std::array<double, 7>& u_) const {
+    void UpdateDisplacement(size_t constraint_id, const std::array<double, 7>& disp) const {
         for (auto i = 0U; i < 7U; ++i) {
-            host_input(id, i) = u_[i];
+            host_input(constraint_id, i) = disp[i];
         }
     }
 
