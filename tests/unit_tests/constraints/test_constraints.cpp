@@ -12,7 +12,7 @@ TEST(ConstraintsTest, EmptyConstructor) {
     EXPECT_EQ(constraints.num_dofs, 0);
 }
 
-TEST(ConstraintsTest, SingleConstraintConstructor) {
+TEST(ConstraintsTest, SingleConstraintConstructorWithFixedBC) {
     auto node1 = Node(0, Array_7{0., 0., 0., 1., 0., 0., 0.});
     auto node2 = Node(1, Array_7{1., 0., 0., 1., 0., 0., 0.});
     auto constraint = std::make_shared<Constraint>(ConstraintType::kFixedBC, 0, node1, node2);
@@ -27,6 +27,25 @@ TEST(ConstraintsTest, SingleConstraintConstructor) {
     Kokkos::deep_copy(host_target_node_index, constraints.target_node_index);
     EXPECT_EQ(host_base_node_index(0), 0);
     EXPECT_EQ(host_target_node_index(0), 1);
+    // Assert on the node dofs
+}
+
+TEST(ConstraintsTest, SingleConstraintConstructorWithRigidJoint3DOFs) {
+    auto node1 = Node(101, Array_7{0., 0., 0., 1., 0., 0., 0.});
+    auto node2 = Node(102, Array_7{1., 0., 0., 1., 0., 0., 0.});
+    auto constraint =
+        std::make_shared<Constraint>(ConstraintType::kRigidJoint3DOFs, 5, node1, node2);
+
+    const auto constraints = Constraints({constraint});
+    EXPECT_EQ(constraints.num_constraints, 1);
+    EXPECT_EQ(constraints.num_dofs, 3);  // Rigid joint with 3 DOFs fixes 3 DOFs
+
+    auto host_base_node_index = Kokkos::create_mirror_view(constraints.base_node_index);
+    auto host_target_node_index = Kokkos::create_mirror_view(constraints.target_node_index);
+    Kokkos::deep_copy(host_base_node_index, constraints.base_node_index);
+    Kokkos::deep_copy(host_target_node_index, constraints.target_node_index);
+    EXPECT_EQ(host_base_node_index(0), 101);
+    EXPECT_EQ(host_target_node_index(0), 102);
 }
 
 TEST(ConstraintsTest, MultipleConstraintsConstructor) {

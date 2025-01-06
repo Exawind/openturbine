@@ -12,9 +12,11 @@ enum class ConstraintType : std::uint8_t {
                            //< are specified => all DOFs are defined at the node
     kRigidJoint = 3,       //< Rigid constraint between two nodes -- no relative motion permitted
                            //< between the nodes => all DOFs of target node are constrained
-    kRevoluteJoint = 4,    //< Target node rotates freely around a specified axis --
+    kRigidJoint3DOFs = 4,  //< Rigid constraint between two nodes -- only translational DOFs
+                           //< are constrained (3 DOFs)
+    kRevoluteJoint = 5,    //< Target node rotates freely around a specified axis --
                            //< all but one DOFs are constrained
-    kRotationControl = 5,  //< A rotation is specified about a given axis and other DOFs
+    kRotationControl = 6   //< A rotation is specified about a given axis and other DOFs
                            //< are constrained => all DOFs are constrained/specified
 };
 
@@ -22,9 +24,9 @@ enum class ConstraintType : std::uint8_t {
 KOKKOS_INLINE_FUNCTION
 constexpr size_t GetNumberOfNodes(ConstraintType t) {
     // Rigid joint/revolute joint/rotation control constraints require two nodes
-    const auto has_two_nodes = t == ConstraintType::kRigidJoint ||
-                               t == ConstraintType::kRevoluteJoint ||
-                               t == ConstraintType::kRotationControl;
+    const auto has_two_nodes =
+        t == ConstraintType::kRigidJoint || t == ConstraintType::kRigidJoint3DOFs ||
+        t == ConstraintType::kRevoluteJoint || t == ConstraintType::kRotationControl;
 
     // Default is one node (fixed and prescribed BCs)
     return 1U + static_cast<size_t>(has_two_nodes);
@@ -33,6 +35,11 @@ constexpr size_t GetNumberOfNodes(ConstraintType t) {
 /// Returns the number of degrees of freedom prescribed/fixed by the constraint type
 KOKKOS_INLINE_FUNCTION
 constexpr size_t NumDOFsForConstraint(ConstraintType type) {
+    // A rigid joint with only translational DOFs fixes 3 DOFs
+    if (type == ConstraintType::kRigidJoint3DOFs) {
+        return 3U;
+    }
+
     // A revolute joint constraint fixes 5 DOFs
     if (type == ConstraintType::kRevoluteJoint) {
         return 5U;

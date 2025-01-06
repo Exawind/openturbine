@@ -21,12 +21,20 @@ TEST(ConstraintTypeTest, RigidJointHasTwoNodes) {
     EXPECT_EQ(GetNumberOfNodes(ConstraintType::kRigidJoint), 2U);
 }
 
+TEST(ConstraintTypeTest, RigidJoint3DOFsHasTwoNodes) {
+    EXPECT_EQ(GetNumberOfNodes(ConstraintType::kRigidJoint3DOFs), 2U);
+}
+
 TEST(ConstraintTypeTest, RevoluteJointHasTwoNodes) {
     EXPECT_EQ(GetNumberOfNodes(ConstraintType::kRevoluteJoint), 2U);
 }
 
 TEST(ConstraintTypeTest, RotationControlHasTwoNodes) {
     EXPECT_EQ(GetNumberOfNodes(ConstraintType::kRotationControl), 2U);
+}
+
+TEST(ConstraintTypeTest, RigidJoint3DOFsHasThreeDOFs) {
+    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kRigidJoint3DOFs), 3U);
 }
 
 TEST(ConstraintTypeTest, RevoluteJointHasFiveDOFs) {
