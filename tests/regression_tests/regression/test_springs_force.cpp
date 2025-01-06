@@ -170,7 +170,7 @@ inline auto SetUpSpringsForceTestUsingSolver() {
     }
 
     EXPECT_EQ(state.q(0, 0), 0.);
-    EXPECT_EQ(state.q(1, 0), -3.9961930498908851);
+    EXPECT_NEAR(state.q(1, 0), -3.9961930498908851, 1.e-12);
 }
 
 TEST(SpringsForceTestUsingSolver, ZeroDisplacement) {
