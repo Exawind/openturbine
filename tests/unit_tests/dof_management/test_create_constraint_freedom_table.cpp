@@ -86,7 +86,7 @@ TEST(TestCreateConstraintFreedomTable, TwoNodeConstraint_RigidBC) {
     auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{rigid_bc});
 
     auto state = State(3U);  // 3 nodes in the system
-    constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL, 12UL};
+    constexpr auto host_node_freedom_map_table_data = std::array{0UL, 3UL, 9UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[3], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
@@ -120,18 +120,18 @@ TEST(TestCreateConstraintFreedomTable, TwoNodeConstraint_RigidBC) {
         host_target_node_freedom_signature(0), FreedomSignature::AllComponents
     );  // target node has 6 DOFs which will be fixed relative to base node
     for (auto k = 0U; k < 6U; ++k) {
-        EXPECT_EQ(host_base_node_freedom_table(0, k), k + 6);  // base node DOFs: 6, 7, 8, 9, 10, 11
+        EXPECT_EQ(host_base_node_freedom_table(0, k), k + 3);  // base node DOFs: 3, 4, 5, 6, 7, 8
     }
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
-            host_target_node_freedom_table(0, k), k + 12
-        );  // target node DOFs: 12, 13, 14, 15, 16, 17
+            host_target_node_freedom_table(0, k), k + 9
+        );  // target node DOFs: 9, 10, 11, 12, 13, 14
     }
 }
 
 TEST(TestCreateConstraintFreedomTable, TwoNodeConstraint_RevoluteJoint) {
-    auto node_1 = Node(1U, {0., 0., 0., 1., 0., 0., 0.});  // base node - index is 1
-    auto node_2 = Node(2U, {1., 0., 0., 1., 0., 0., 0.});  // target node - index is 2
+    auto node_1 = Node(3U, {0., 0., 0., 1., 0., 0., 0.});   // base node - index is 3
+    auto node_2 = Node(11U, {1., 0., 0., 1., 0., 0., 0.});  // target node - index is 11
     const Array_3 rotation_axis = {0., 0., 1.};
     double torque = 0.;
     auto revolute_joint = std::make_shared<Constraint>(
@@ -139,9 +139,10 @@ TEST(TestCreateConstraintFreedomTable, TwoNodeConstraint_RevoluteJoint) {
     );
     auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{revolute_joint});
 
-    auto state = State(3U);  // 3 nodes in the system
-    constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL, 12UL};
-    const auto host_node_freedom_map_table = Kokkos::View<size_t[3], Kokkos::HostSpace>::const_type(
+    auto state = State(12U);  // 12 nodes in the system
+    constexpr auto host_node_freedom_map_table_data =
+        std::array{0UL, 3UL, 6UL, 9UL, 12UL, 15UL, 18UL, 21UL, 24UL, 27UL, 30UL, 33UL};
+    const auto host_node_freedom_map_table = Kokkos::View<size_t[12], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
     const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
@@ -165,8 +166,8 @@ TEST(TestCreateConstraintFreedomTable, TwoNodeConstraint_RevoluteJoint) {
     const auto host_target_node_freedom_table = create_mirror(constraints.target_node_freedom_table);
     Kokkos::deep_copy(host_target_node_freedom_table, constraints.target_node_freedom_table);
 
-    EXPECT_EQ(host_base_node_index(0), 1);    // base node index is 1
-    EXPECT_EQ(host_target_node_index(0), 2);  // target node index is 2
+    EXPECT_EQ(host_base_node_index(0), 3);     // base node index is 3
+    EXPECT_EQ(host_target_node_index(0), 11);  // target node index is 11
     EXPECT_EQ(
         host_base_node_freedom_signature(0), FreedomSignature::AllComponents
     );  // base node has all 6 DOFs
@@ -175,12 +176,14 @@ TEST(TestCreateConstraintFreedomTable, TwoNodeConstraint_RevoluteJoint) {
     );  // target node has all 6 DOFs as well
 
     for (auto k = 0U; k < 6U; ++k) {
-        EXPECT_EQ(host_base_node_freedom_table(0, k), k + 6);  // base node DOFs: 6, 7, 8, 9, 10, 11
+        EXPECT_EQ(
+            host_base_node_freedom_table(0, k), k + 9
+        );  // base node DOFs: 9, 10, 11, 12, 13, 14
     }
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
-            host_target_node_freedom_table(0, k), k + 12
-        );  // target node DOFs: 12, 13, 14, 15, 16, 17
+            host_target_node_freedom_table(0, k), k + 33
+        );  // target node DOFs: 33, 34, 35, 36, 37, 38
     }
 }
 
