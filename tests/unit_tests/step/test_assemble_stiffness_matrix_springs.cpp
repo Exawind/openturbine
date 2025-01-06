@@ -88,7 +88,7 @@ TEST(AssembleStiffnessMatrixSpringsTest, StiffnessMatrixMatchesGeneralStiffness)
     // | 3 6 9 |
     for (size_t i = 0; i < 3; ++i) {
         for (size_t j = 0; j < 3; ++j) {
-            a_host(0, i, j) = (i + 1) * (j + 1);
+            a_host(0, i, j) = static_cast<double>((i + 1) * (j + 1));
         }
     }
     Kokkos::deep_copy(springs.a, a_host);
@@ -100,7 +100,7 @@ TEST(AssembleStiffnessMatrixSpringsTest, StiffnessMatrixMatchesGeneralStiffness)
     for (size_t i = 0; i < springs.num_elems; ++i) {
         for (size_t m = 0; m < 3; ++m) {
             for (size_t n = 0; n < 3; ++n) {
-                double value = (m + 1) * (n + 1);
+                auto value = static_cast<double>((m + 1) * (n + 1));
                 // Node 1-1 block
                 EXPECT_DOUBLE_EQ(stiffness_host(i, 0, 0, m, n), value);
                 // Node 1-2 block
