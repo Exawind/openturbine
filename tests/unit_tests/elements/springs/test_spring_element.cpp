@@ -47,7 +47,7 @@ TEST(SpringElement, CreateSpringWithComputedLength) {
 
     // Create spring with only stiffness specified (length should be computed)
     constexpr double k = 100.;  // stiffness
-    SpringElement spring({*node1, *node2}, k);
+    SpringElement spring({*node1, *node2}, k, 3.);
 
     EXPECT_EQ(spring.stiffness, k);
     EXPECT_NEAR(spring.undeformed_length, 3., 1e-12);

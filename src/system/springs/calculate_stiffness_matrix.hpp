@@ -2,6 +2,7 @@
 
 #include <KokkosBatched_Gemm_Decl.hpp>
 #include <KokkosBlas.hpp>
+#include <KokkosBlas1_set.hpp>
 #include <Kokkos_Core.hpp>
 
 #include "src/math/vector_operations.hpp"
@@ -29,6 +30,8 @@ struct CalculateStiffnessMatrix {
         auto r_tilde = Kokkos::subview(r_tilde_, i_elem, Kokkos::ALL, Kokkos::ALL);
         auto a = Kokkos::subview(a_, i_elem, Kokkos::ALL, Kokkos::ALL);
 
+        KokkosBlas::SerialSet::invoke(0., a);
+
         // diagonal terms: c1 - c2 * l^2
         const double diag_term = c1_(i_elem) - c2_(i_elem) * l_(i_elem) * l_(i_elem);
         a(0, 0) = diag_term;
@@ -39,8 +42,7 @@ struct CalculateStiffnessMatrix {
         auto temp = Kokkos::Array<double, 9>{0.};
         auto temp_view = View_3x3(temp.data());
         VecTilde(r, r_tilde);
-        Gemm::invoke(1., r_tilde, r_tilde, 0., temp_view);
-        KokkosBlas::serial_axpy(-c2_(i_elem), temp_view, a);
+        Gemm::invoke(-c2_(i_elem), r_tilde, r_tilde, 1., a);
     };
 };
 

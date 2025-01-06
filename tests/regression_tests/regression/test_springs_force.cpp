@@ -114,28 +114,37 @@ inline auto SetUpSpringsForceTestUsingSolver() {
         {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
     );
     model.AddNode(
-        {1, 0, 0, 1, 0, 0, 0},  // Second node at (1,0,0)
+        {2, 0, 0, 1, 0, 0, 0},  // Second node at (1,0,0)
         {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
     );
 
     const auto springs_input = SpringsInput({SpringElement(
         std::array{model.GetNode(0), model.GetNode(1)},
-        10.,  // Spring stiffness coeff.
-        1.    // Undeformed length
+        10.,     // Spring stiffness coeff.
+        0.00000  // Undeformed length
     )});
+
+    constexpr auto mass_matrix = std::array{
+        std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
+        std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
+        std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.},
+    };
 
     // Create all element types (even if some are empty)
     const auto beams_input = BeamsInput({}, {0., 0., 0.});
     auto beams = CreateBeams(beams_input);
-    const auto masses_input = MassesInput({}, {0., 0., 0.});
+    const auto masses_input =
+        MassesInput({MassElement(model.GetNode(1), mass_matrix)}, {0., 0., 0.});
     auto masses = CreateMasses(masses_input);
     auto springs = CreateSprings(springs_input);
+
+    model.AddFixedBC(model.GetNode(0));
 
     // Set up step parameters
     constexpr bool is_dynamic_solve(true);
     constexpr size_t max_iter(6);
     constexpr double step_size(0.01);
-    constexpr double rho_inf(1.0);
+    constexpr double rho_inf(0.0);
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Set up solver components
@@ -155,12 +164,17 @@ inline auto SetUpSpringsForceTestUsingSolver() {
         constraints.row_range
     );
 
-    auto converged = Step(parameters, solver, elements, state, constraints);
-    EXPECT_TRUE(converged);
+    for (auto time_step = 0U; time_step < 300; ++time_step) {
+        auto converged = Step(parameters, solver, elements, state, constraints);
+        EXPECT_TRUE(converged);
+    }
+
+    EXPECT_EQ(state.q(0, 0), 0.);
+    EXPECT_EQ(state.q(1, 0), -3.9961930498908851);
 }
 
-/* TEST(SpringsForceTestUsingSolver, ZeroDisplacement) {
+TEST(SpringsForceTestUsingSolver, ZeroDisplacement) {
     SetUpSpringsForceTestUsingSolver();
-} */
+}
 
 }  // namespace openturbine::tests

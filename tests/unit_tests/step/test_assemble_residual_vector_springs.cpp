@@ -40,7 +40,7 @@ TEST(AssembleResidualVectorSpringsTest, ResidualVectorIsZeroWhenNoForcesApplied)
 TEST(AssembleResidualVectorSpringsTest, ResidualVectorMatchesUnitForceInXDirection) {
     auto springs = SetUpSpringResidualTest();
     auto f_host = Kokkos::create_mirror_view(springs.f);
-    f_host(0, 0) = 1.;   // Node 1 DOF 1
+    f_host(0, 0) = 1.;  // Node 1 DOF 1
     Kokkos::deep_copy(springs.f, f_host);
 
     AssembleResidualVectorSprings(springs);
@@ -61,9 +61,9 @@ TEST(AssembleResidualVectorSpringsTest, ResidualVectorMatchesAppliedForcesInAllD
     auto springs = SetUpSpringResidualTest();
 
     auto f_host = Kokkos::create_mirror_view(springs.f);
-    f_host(0, 0) = 2.;    // Node 1 DOF 1
-    f_host(0, 1) = 1.5;   // Node 1 DOF 2
-    f_host(0, 2) = -1.;   // Node 1 DOF 3
+    f_host(0, 0) = 2.;   // Node 1 DOF 1
+    f_host(0, 1) = 1.5;  // Node 1 DOF 2
+    f_host(0, 2) = -1.;  // Node 1 DOF 3
     Kokkos::deep_copy(springs.f, f_host);
 
     AssembleResidualVectorSprings(springs);
