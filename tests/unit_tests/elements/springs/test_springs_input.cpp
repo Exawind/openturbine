@@ -18,8 +18,8 @@ protected:
         }
         // Create 2 spring elements based on the nodes
         return std::vector<SpringElement>{
-            SpringElement(std::array{model.GetNode(0), model.GetNode(1)}, 1000.),
-            SpringElement(std::array{model.GetNode(2), model.GetNode(3)}, 2000.)
+            SpringElement(std::array{model.GetNode(0), model.GetNode(1)}, 1000., 0.),
+            SpringElement(std::array{model.GetNode(2), model.GetNode(3)}, 2000., 0.)
         };
     }
 

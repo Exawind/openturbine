@@ -4,9 +4,7 @@
 #include "src/system/springs/calculate_length.hpp"
 #include "tests/unit_tests/system/beams/test_calculate.hpp"
 
-namespace openturbine::tests {
-
-TEST(CalculateLengthTests, ThreeElements) {
+void TestCalclateLengthTests_ThreeElements() {
     const auto r = Kokkos::View<double[3][3]>("r");
     constexpr auto r_data = std::array{
         1., 0., 0.,  // Element 1: length = 1.
@@ -19,7 +17,10 @@ TEST(CalculateLengthTests, ThreeElements) {
     Kokkos::deep_copy(r, r_mirror);
 
     const auto l = Kokkos::View<double[3]>("l");
-    Kokkos::parallel_for("CalculateLength", 3, CalculateLength{r, l});
+    Kokkos::parallel_for(
+        "CalculateLength", 3,
+        KOKKOS_LAMBDA(const size_t i_elem) { openturbine::springs::CalculateLength{i_elem, r, l}(); }
+    );
 
     constexpr auto l_exact_data = std::array{1., 5., 3.};
     const auto l_exact = Kokkos::View<const double[3], Kokkos::HostSpace>(l_exact_data.data());
@@ -27,7 +28,13 @@ TEST(CalculateLengthTests, ThreeElements) {
     const auto l_mirror = Kokkos::create_mirror(l);
     Kokkos::deep_copy(l_mirror, l);
 
-    CompareWithExpected(l_mirror, l_exact);
+    openturbine::tests::CompareWithExpected(l_mirror, l_exact);
+}
+
+namespace openturbine::tests {
+
+TEST(CalculateLengthTests, ThreeElements) {
+    TestCalclateLengthTests_ThreeElements();
 }
 
 }  // namespace openturbine::tests

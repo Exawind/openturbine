@@ -4,9 +4,9 @@
 #include "src/system/springs/calculate_force_coefficients.hpp"
 #include "tests/unit_tests/system/beams/test_calculate.hpp"
 
-namespace openturbine::tests {
+namespace {
 
-TEST(CalculateForceCoefficientsTests, ThreeElements) {
+void TestCalculateForceCoefficientsTests_ThreeElements() {
     const auto k = Kokkos::View<double[3]>("k");
     const auto l_ref = Kokkos::View<double[3]>("l_ref");
     const auto l = Kokkos::View<double[3]>("l");
@@ -34,7 +34,10 @@ TEST(CalculateForceCoefficientsTests, ThreeElements) {
     Kokkos::deep_copy(l, l_mirror);
 
     Kokkos::parallel_for(
-        "CalculateForceCoefficients", 3, CalculateForceCoefficients{k, l_ref, l, c1, c2}
+        "CalculateForceCoefficients", 3,
+        KOKKOS_LAMBDA(const size_t i_elem) {
+            openturbine::springs::CalculateForceCoefficients{i_elem, k, l_ref, l, c1, c2}();
+        }
     );
 
     constexpr auto c1_exact_data = std::array{
@@ -56,8 +59,16 @@ TEST(CalculateForceCoefficientsTests, ThreeElements) {
     Kokkos::deep_copy(c1_result, c1);
     Kokkos::deep_copy(c2_result, c2);
 
-    CompareWithExpected(c1_result, c1_exact);
-    CompareWithExpected(c2_result, c2_exact);
+    openturbine::tests::CompareWithExpected(c1_result, c1_exact);
+    openturbine::tests::CompareWithExpected(c2_result, c2_exact);
+}
+
+}  // namespace
+
+namespace openturbine::tests {
+
+TEST(CalculateForceCoefficientsTests, ThreeElements) {
+    TestCalculateForceCoefficientsTests_ThreeElements();
 }
 
 }  // namespace openturbine::tests
