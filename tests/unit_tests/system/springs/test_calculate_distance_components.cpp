@@ -4,6 +4,8 @@
 #include "src/system/springs/calculate_distance_components.hpp"
 #include "tests/unit_tests/system/beams/test_calculate.hpp"
 
+namespace {
+
 static void TestCalculateDistanceComponentsTests_OneElement() {
     const auto x0 = Kokkos::View<double[1][3]>("x0");
     const auto u1 = Kokkos::View<double[1][3]>("u1");
@@ -49,6 +51,8 @@ static void TestCalculateDistanceComponentsTests_OneElement() {
 
     openturbine::tests::CompareWithExpected(r_mirror, r_exact);
 }
+
+}  // namespace
 
 namespace openturbine::tests {
 

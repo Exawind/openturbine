@@ -4,6 +4,8 @@
 #include "src/system/springs/calculate_force_vectors.hpp"
 #include "tests/unit_tests/system/beams/test_calculate.hpp"
 
+namespace {
+
 static void TestCalculateForceVectorsTests_ThreeElements() {
     const auto r = Kokkos::View<double[3][3]>("r");
     const auto c1 = Kokkos::View<double[3]>("c1");
@@ -47,6 +49,7 @@ static void TestCalculateForceVectorsTests_ThreeElements() {
 
     openturbine::tests::CompareWithExpected(f_result, f_exact);
 }
+}  // namespace
 
 namespace openturbine::tests {
 
