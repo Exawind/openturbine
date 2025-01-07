@@ -164,13 +164,16 @@ inline auto SetUpSpringsForceTestUsingSolver() {
         constraints.row_range
     );
 
-    for (auto time_step = 0U; time_step < 300; ++time_step) {
+    for (auto time_step = 0U; time_step < 300U; ++time_step) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }
 
-    EXPECT_EQ(state.q(0, 0), 0.);
-    EXPECT_NEAR(state.q(1, 0), -3.9961930498908851, 1.e-12);
+    auto q = Kokkos::create_mirror(state.q);
+    Kokkos::deep_copy(q, state.q);
+
+    EXPECT_EQ(q(0, 0), 0.);
+    EXPECT_NEAR(q(1, 0), -3.9961930498908851, 1.e-12);
 }
 
 TEST(SpringsForceTestUsingSolver, ZeroDisplacement) {

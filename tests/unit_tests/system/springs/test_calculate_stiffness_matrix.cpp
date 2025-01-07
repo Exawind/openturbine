@@ -4,9 +4,7 @@
 #include "src/system/springs/calculate_stiffness_matrix.hpp"
 #include "tests/unit_tests/system/beams/test_calculate.hpp"
 
-namespace openturbine::tests {
-
-TEST(CalculateStiffnessMatrixTests, OneElement) {
+static void TestCalculateStiffnessMatrixTests_OneElement() {
     const auto c1 = Kokkos::View<double[1]>("c1");
     const auto c2 = Kokkos::View<double[1]>("c2");
     const auto r = Kokkos::View<double[1][3]>("r");
@@ -42,7 +40,7 @@ TEST(CalculateStiffnessMatrixTests, OneElement) {
     Kokkos::parallel_for(
         "CalculateStiffnessMatrix", 1,
         KOKKOS_LAMBDA(const size_t i_elem) {
-            springs::CalculateStiffnessMatrix{i_elem, c1, c2, r, l, r_tilde, a}();
+            openturbine::springs::CalculateStiffnessMatrix{i_elem, c1, c2, r, l, r_tilde, a}();
         }
     );
 
@@ -70,8 +68,14 @@ TEST(CalculateStiffnessMatrixTests, OneElement) {
     Kokkos::deep_copy(r_tilde_result, r_tilde);
     Kokkos::deep_copy(a_result, a);
 
-    CompareWithExpected(r_tilde_result, r_tilde_exact);
-    CompareWithExpected(a_result, a_exact);
+    openturbine::tests::CompareWithExpected(r_tilde_result, r_tilde_exact);
+    openturbine::tests::CompareWithExpected(a_result, a_exact);
+}
+
+namespace openturbine::tests {
+
+TEST(CalculateStiffnessMatrixTests, OneElement) {
+    TestCalculateStiffnessMatrixTests_OneElement();
 }
 
 }  // namespace openturbine::tests

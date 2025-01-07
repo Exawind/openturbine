@@ -4,9 +4,7 @@
 #include "src/system/springs/calculate_force_vectors.hpp"
 #include "tests/unit_tests/system/beams/test_calculate.hpp"
 
-namespace openturbine::tests {
-
-TEST(CalculateForceVectorsTests, ThreeElements) {
+static void TestCalculateForceVectorsTests_ThreeElements() {
     const auto r = Kokkos::View<double[3][3]>("r");
     const auto c1 = Kokkos::View<double[3]>("c1");
     const auto f = Kokkos::View<double[3][3]>("f");
@@ -32,7 +30,7 @@ TEST(CalculateForceVectorsTests, ThreeElements) {
 
     Kokkos::parallel_for(
         "CalculateForceVectors", 3,
-        KOKKOS_LAMBDA(const size_t i_elem) { springs::CalculateForceVectors{i_elem, r, c1, f}(); }
+        KOKKOS_LAMBDA(const size_t i_elem) { openturbine::springs::CalculateForceVectors{i_elem, r, c1, f}(); }
     );
 
     constexpr auto f_exact_data = std::array{
@@ -45,7 +43,13 @@ TEST(CalculateForceVectorsTests, ThreeElements) {
     const auto f_result = Kokkos::create_mirror(f);
     Kokkos::deep_copy(f_result, f);
 
-    CompareWithExpected(f_result, f_exact);
+    openturbine::tests::CompareWithExpected(f_result, f_exact);
+}
+
+namespace openturbine::tests {
+
+TEST(CalculateForceVectorsTests, ThreeElements) {
+    TestCalculateForceVectorsTests_ThreeElements();
 }
 
 }  // namespace openturbine::tests
