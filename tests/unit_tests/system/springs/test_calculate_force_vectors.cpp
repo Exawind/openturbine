@@ -30,7 +30,9 @@ static void TestCalculateForceVectorsTests_ThreeElements() {
 
     Kokkos::parallel_for(
         "CalculateForceVectors", 3,
-        KOKKOS_LAMBDA(const size_t i_elem) { openturbine::springs::CalculateForceVectors{i_elem, r, c1, f}(); }
+        KOKKOS_LAMBDA(const size_t i_elem) {
+            openturbine::springs::CalculateForceVectors{i_elem, r, c1, f}();
+        }
     );
 
     constexpr auto f_exact_data = std::array{

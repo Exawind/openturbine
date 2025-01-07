@@ -32,7 +32,9 @@ static void TestCalculateDistanceComponentsTests_OneElement() {
 
     Kokkos::parallel_for(
         "CalculateDistanceComponents", 1,
-        KOKKOS_LAMBDA(const size_t) { openturbine::springs::CalculateDistanceComponents{0, x0, u1, u2, r}(); }
+        KOKKOS_LAMBDA(const size_t) {
+            openturbine::springs::CalculateDistanceComponents{0, x0, u1, u2, r}();
+        }
     );
 
     constexpr auto r_exact_data = std::array{

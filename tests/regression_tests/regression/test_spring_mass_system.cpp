@@ -88,9 +88,11 @@ inline auto SetUpSpringMassSystem() {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }
-    EXPECT_EQ(state.q(0, 0), 0.);  // First node is fixed
+    auto q = Kokkos::create_mirror(state.q);
+    Kokkos::deep_copy(q, state.q);
+    EXPECT_EQ(q(0, 0), 0.);  // First node is fixed
     EXPECT_NEAR(
-        state.q(1, 0), -3.9999201563071107, 1.e-12
+        q(1, 0), -3.9999201563071107, 1.e-12
     );  // Second node should have displcement close to -4.0 after T/2
 
     // Run simulation for a total of ~T seconds
@@ -98,9 +100,11 @@ inline auto SetUpSpringMassSystem() {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }
-    EXPECT_EQ(state.q(0, 0), 0.);  // First node is fixed
+
+    Kokkos::deep_copy(q, state.q);
+    EXPECT_EQ(q(0, 0), 0.);  // First node is fixed
     EXPECT_NEAR(
-        state.q(1, 0), -0.00015948103228367424, 1.e-12
+        q(1, 0), -0.00015948103228367424, 1.e-12
     );  // Second node should have displcement close to 0. after T
 }
 
