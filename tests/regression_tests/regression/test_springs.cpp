@@ -13,62 +13,12 @@ inline auto SetUpSprings() {
     auto model = Model();
     // Add two nodes for the spring element
     model.AddNode(
-        {0, 0, 0, 1, 0, 0, 0},  // First node at origin
-        {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
+        {0., 0., 0., 1., 0., 0., 0.},  // First node at origin
+        {0., 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}
     );
     model.AddNode(
-        {1, 0, 0, 1, 0, 0, 0},  // Second node at (1,0,0)
-        {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
-    );
-
-    const auto springs_input = SpringsInput({SpringElement(
-        std::array{model.GetNode(0), model.GetNode(1)},
-        1000.,  // Spring stiffness
-        1.      // Undeformed length
-    )});
-
-    return CreateSprings(springs_input);
-}
-
-TEST(SpringsTest, NodeStateIndices) {
-    const auto springs = SetUpSprings();
-    auto node_state_indices_host = Kokkos::create_mirror(springs.node_state_indices);
-    Kokkos::deep_copy(node_state_indices_host, springs.node_state_indices);
-    EXPECT_EQ(node_state_indices_host(0, 0), 0);
-    EXPECT_EQ(node_state_indices_host(0, 1), 1);
-}
-
-TEST(SpringsTest, InitialPositionVector) {
-    const auto springs = SetUpSprings();
-    expect_kokkos_view_2D_equal(
-        springs.x0,
-        {
-            {1., 0., 0.},  // Vector from node 0 to node 1
-        }
-    );
-}
-
-TEST(SpringsTest, ReferenceLength) {
-    const auto springs = SetUpSprings();
-    expect_kokkos_view_1D_equal(springs.l_ref, {1.});  // Undeformed length
-}
-
-TEST(SpringsTest, SpringStiffness) {
-    const auto springs = SetUpSprings();
-    expect_kokkos_view_1D_equal(springs.k, {1000.});  // Spring stiffness
-}
-
-inline auto SetUpSpringsForceTest() {
-    auto model = Model();
-
-    // Add two nodes for the spring element
-    model.AddNode(
-        {0, 0, 0, 1, 0, 0, 0},  // First node at origin
-        {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
-    );
-    model.AddNode(
-        {1, 0, 0, 1, 0, 0, 0},  // Second node at (1,0,0)
-        {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
+        {1., 0., 0., 1., 0., 0., 0.},  // Second node at (1,0,0)
+        {0., 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}
     );
 
     const auto springs_input = SpringsInput({SpringElement(
@@ -83,9 +33,36 @@ inline auto SetUpSpringsForceTest() {
     return std::make_tuple(springs, state);
 }
 
-TEST(SpringsForceTest, ZeroDisplacement) {
-    auto [springs, state] = SetUpSpringsForceTest();
+TEST(SpringsTest, NodeStateIndices) {
+    auto [springs, _] = SetUpSprings();
+    auto node_state_indices_host = Kokkos::create_mirror(springs.node_state_indices);
+    Kokkos::deep_copy(node_state_indices_host, springs.node_state_indices);
+    EXPECT_EQ(node_state_indices_host(0, 0), 0);
+    EXPECT_EQ(node_state_indices_host(0, 1), 1);
+}
 
+TEST(SpringsTest, InitialPositionVector) {
+    auto [springs, _] = SetUpSprings();
+    expect_kokkos_view_2D_equal(
+        springs.x0,
+        {
+            {1., 0., 0.},  // Vector from node 0 to node 1
+        }
+    );
+}
+
+TEST(SpringsTest, ReferenceLength) {
+    auto [springs, _] = SetUpSprings();
+    expect_kokkos_view_1D_equal(springs.l_ref, {1.});  // Undeformed length
+}
+
+TEST(SpringsTest, SpringStiffness) {
+    auto [springs, _] = SetUpSprings();
+    expect_kokkos_view_1D_equal(springs.k, {10.});  // Spring stiffness
+}
+
+TEST(SpringsTest, SpringsForceWithZeroDisplacement) {
+    auto [springs, state] = SetUpSprings();
     UpdateSystemVariablesSprings(springs, state);
 
     auto l_ref_host = Kokkos::create_mirror(springs.l_ref);
@@ -108,8 +85,8 @@ TEST(SpringsForceTest, ZeroDisplacement) {
     );
 }
 
-TEST(SpringsForceTest, UnitDisplacement) {
-    auto [springs, state] = SetUpSpringsForceTest();
+TEST(SpringsTest, SpringsForceWithUnitDisplacement) {
+    auto [springs, state] = SetUpSprings();
 
     auto q = Kokkos::create_mirror(state.q);
     q(1, 0) = 1.;  // Displace second node in x direction

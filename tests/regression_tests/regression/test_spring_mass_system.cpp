@@ -22,12 +22,12 @@ inline auto SetUpSpringMassSystem() {
 
     // Add two nodes for the spring element
     model.AddNode(
-        {0, 0, 0, 1, 0, 0, 0},  // First node at origin
-        {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
+        {0., 0., 0., 1., 0., 0., 0.},  // First node at origin
+        {0., 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}
     );
     model.AddNode(
-        {2, 0, 0, 1, 0, 0, 0},  // Second node at (2,0,0)
-        {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
+        {2., 0., 0., 1., 0., 0., 0.},  // Second node at (2., 0., 0.) initially
+        {0., 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}
     );
 
     // No beams
@@ -73,7 +73,7 @@ inline auto SetUpSpringMassSystem() {
     );
 
     // The spring-mass system should move periodically between -2 and 2 (position of the second node)
-    // with simple harmonic motion where the time period is 2 * pi * sqrt(m / k) = 1.98691765316s
+    // with simple harmonic motion where the time period is 2 * pi * sqrt(m / k) = 1.98691765316 s
     constexpr double T = 1.98691765316;
 
     // Set up step parameters
@@ -88,12 +88,13 @@ inline auto SetUpSpringMassSystem() {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }
+
     auto q = Kokkos::create_mirror(state.q);
     Kokkos::deep_copy(q, state.q);
     EXPECT_EQ(q(0, 0), 0.);  // First node is fixed
     EXPECT_NEAR(
         q(1, 0), -3.9999201563071107, 1.e-12
-    );  // Second node should have displcement close to -4.0 after T/2
+    );  // Second node should have displcement close to -4.0 after T/2 seconds
 
     // Run simulation for a total of ~T seconds
     for (auto time_step = 0U; time_step <= 500; ++time_step) {
@@ -105,7 +106,7 @@ inline auto SetUpSpringMassSystem() {
     EXPECT_EQ(q(0, 0), 0.);  // First node is fixed
     EXPECT_NEAR(
         q(1, 0), -0.00015948103228367424, 1.e-12
-    );  // Second node should have displcement close to 0. after T
+    );  // Second node should have displcement close to 0. after T seconds
 }
 
 TEST(SpringMassSystemTest, FinalDisplacement) {
