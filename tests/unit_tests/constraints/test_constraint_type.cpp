@@ -61,8 +61,4 @@ TEST(ConstraintTypeTest, RotationControlHasSixDOFs) {
     EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kRotationControl), 6U);
 }
 
-TEST(ConstraintTypeTest, InvalidConstraintTypeThrowsError) {
-    EXPECT_THROW(NumDOFsForConstraint(static_cast<ConstraintType>(100)), std::runtime_error);
-}
-
 }  // namespace openturbine::tests

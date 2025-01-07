@@ -14,7 +14,7 @@ protected:
 };
 
 TEST_F(ConstraintTest, FixedBCInitialization) {
-    Constraint constraint(ConstraintType::kFixedBC, id, node1, node2);
+    const auto constraint = Constraint(ConstraintType::kFixedBC, id, node1, node2);
 
     EXPECT_EQ(constraint.type, ConstraintType::kFixedBC);
     EXPECT_EQ(constraint.ID, id);
@@ -22,17 +22,17 @@ TEST_F(ConstraintTest, FixedBCInitialization) {
     EXPECT_EQ(constraint.target_node.x, node2.x);
 
     // For fixed BC, X0 should be at the target node position
-    Array_3 expected_X0{2., 0., 0.};
+    const Array_3 expected_X0{2., 0., 0.};
     EXPECT_EQ(constraint.X0, expected_X0);
 }
 
 TEST_F(ConstraintTest, RevoluteJointInitialization) {
-    Constraint constraint(ConstraintType::kRevoluteJoint, id, node1, node2, ref_vec);
+    const auto constraint = Constraint(ConstraintType::kRevoluteJoint, id, node1, node2, ref_vec);
 
     EXPECT_EQ(constraint.type, ConstraintType::kRevoluteJoint);
 
     // For revolute joint, X0 should be the relative position between the nodes
-    Array_3 expected_X0{1., 0., 0.};
+    const Array_3 expected_X0{1., 0., 0.};
     EXPECT_EQ(constraint.X0, expected_X0);
 
     // For revolute joint, axes should form an orthonormal basis
@@ -45,24 +45,24 @@ TEST_F(ConstraintTest, RevoluteJointInitialization) {
 }
 
 TEST_F(ConstraintTest, RotationControlInitialization) {
-    Constraint constraint(ConstraintType::kRotationControl, id, node1, node2, ref_vec);
+    const auto constraint = Constraint(ConstraintType::kRotationControl, id, node1, node2, ref_vec);
 
     EXPECT_EQ(constraint.type, ConstraintType::kRotationControl);
 
     // For rotation control, X0 should be the relative position between the nodes
-    Array_3 expected_X0{1., 0., 0.};
+    const Array_3 expected_X0{1., 0., 0.};
     EXPECT_EQ(constraint.X0, expected_X0);
 
     // For rotation control, x_axis should be unit vector of reference vector
-    Array_3 expected_x_axis = UnitVector(ref_vec);
+    const Array_3 expected_x_axis = UnitVector(ref_vec);
     EXPECT_EQ(constraint.x_axis, expected_x_axis);
 }
 
 TEST_F(ConstraintTest, DefaultInitialization) {
-    Constraint constraint(ConstraintType::kNone, id, node1, node2);
+    const auto constraint = Constraint(ConstraintType::kNone, id, node1, node2);
 
     // X0 should be relative position between nodes
-    Array_3 expected_X0{1., 0., 0.};
+    const Array_3 expected_X0{1., 0., 0.};
     EXPECT_EQ(constraint.X0, expected_X0);
 }
 

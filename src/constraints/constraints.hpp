@@ -162,7 +162,7 @@ struct Constraints {
     /// Transfers new prescribed displacements and control signals to Views
     void UpdateViews() {
         for (auto i = 0U; i < this->num_constraints; ++i) {
-            if (control_signal[i]) {
+            if (control_signal[i] != nullptr) {
                 host_input(i, 0) = *control_signal[i];
             }
         }
