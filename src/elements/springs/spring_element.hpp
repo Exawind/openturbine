@@ -9,7 +9,7 @@ namespace openturbine {
 
 /**
  * @brief Spring element represents a constitutively linear spring connecting two nodes and defined
- * by its scalar stiffness and undeformed length.
+ * by its scalar stiffness and undeformed length
  */
 struct SpringElement {
     std::array<Node, 2> nodes;  // 2 nodes (start and end points of spring)

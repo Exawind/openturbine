@@ -5,7 +5,7 @@
 
 namespace openturbine::tests {
 
-TEST(SpringElement, CreateSpringWithSpecifiedLength) {
+TEST(SpringElement, CreateSpringElement_ZeroUndeformedLength) {
     Model model;
 
     // Create two nodes
@@ -21,19 +21,19 @@ TEST(SpringElement, CreateSpringWithSpecifiedLength) {
     );
 
     constexpr double k = 100.;  // stiffness
-    constexpr double l0 = 2.;   // undeformed length
+    constexpr double l0 = 0.;   // undeformed length
     SpringElement spring({*node1, *node2}, k, l0);
 
     EXPECT_EQ(spring.stiffness, k);
     EXPECT_EQ(spring.undeformed_length, l0);
-    EXPECT_EQ(spring.nodes[0].x[0], 0.0);
-    EXPECT_EQ(spring.nodes[1].x[0], 1.0);
+    EXPECT_EQ(spring.nodes[0].x[0], 0.);
+    EXPECT_EQ(spring.nodes[1].x[0], 1.);
 }
 
-TEST(SpringElement, CreateSpringWithComputedLength) {
+TEST(SpringElement, CreateSpringElement_NonZeroUndeformedLength) {
     Model model;
 
-    // Create two nodes with 3 units of distance between them
+    // Create two nodes
     auto node1 = model.AddNode(
         {0., 0., 0., 1., 0., 0., 0.},  // position
         {0., 0., 0., 1., 0., 0., 0.},  // displacement
@@ -45,14 +45,14 @@ TEST(SpringElement, CreateSpringWithComputedLength) {
         {0., 0., 0., 0., 0., 0.}       // velocity
     );
 
-    // Create spring with only stiffness specified (length should be computed)
     constexpr double k = 100.;  // stiffness
-    SpringElement spring({*node1, *node2}, k, 3.);
+    constexpr double l0 = 3.;   // undeformed length
+    SpringElement spring({*node1, *node2}, k, l0);
 
     EXPECT_EQ(spring.stiffness, k);
-    EXPECT_NEAR(spring.undeformed_length, 3., 1e-12);
-    EXPECT_EQ(spring.nodes[0].x[0], 0.0);
-    EXPECT_EQ(spring.nodes[1].x[0], 2.0);
+    EXPECT_EQ(spring.undeformed_length, l0);
+    EXPECT_EQ(spring.nodes[0].x[0], 0.);
+    EXPECT_EQ(spring.nodes[1].x[0], 2.);
 }
 
 }  // namespace openturbine::tests
