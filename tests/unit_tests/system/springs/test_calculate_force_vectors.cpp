@@ -6,7 +6,7 @@
 
 namespace {
 
-static void TestCalculateForceVectorsTests_ThreeElements() {
+void TestCalculateForceVectorsTests_ThreeElements() {
     const auto r = Kokkos::View<double[3][3]>("r");
     const auto c1 = Kokkos::View<double[3]>("c1");
     const auto f = Kokkos::View<double[3][3]>("f");

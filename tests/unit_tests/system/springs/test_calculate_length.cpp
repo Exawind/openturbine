@@ -4,7 +4,7 @@
 #include "src/system/springs/calculate_length.hpp"
 #include "tests/unit_tests/system/beams/test_calculate.hpp"
 
-static void TestCalclateLengthTests_ThreeElements() {
+void TestCalclateLengthTests_ThreeElements() {
     const auto r = Kokkos::View<double[3][3]>("r");
     constexpr auto r_data = std::array{
         1., 0., 0.,  // Element 1: length = 1.

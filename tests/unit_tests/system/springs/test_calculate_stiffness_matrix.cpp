@@ -4,7 +4,7 @@
 #include "src/system/springs/calculate_stiffness_matrix.hpp"
 #include "tests/unit_tests/system/beams/test_calculate.hpp"
 
-static void TestCalculateStiffnessMatrixTests_OneElement() {
+void TestCalculateStiffnessMatrixTests_OneElement() {
     const auto c1 = Kokkos::View<double[1]>("c1");
     const auto c2 = Kokkos::View<double[1]>("c2");
     const auto r = Kokkos::View<double[1][3]>("r");

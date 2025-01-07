@@ -6,7 +6,7 @@
 
 namespace {
 
-static void TestCalculateDistanceComponentsTests_OneElement() {
+void TestCalculateDistanceComponentsTests_OneElement() {
     const auto x0 = Kokkos::View<double[1][3]>("x0");
     const auto u1 = Kokkos::View<double[1][3]>("u1");
     const auto u2 = Kokkos::View<double[1][3]>("u2");
