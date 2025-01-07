@@ -22,16 +22,16 @@ inline auto SetUpSpringMassSystem() {
 
     // Add two nodes for the spring element
     model.AddNode(
-        {0., 0., 0., 1., 0., 0., 0.},  // First node at origin
-        {0., 0., 0., 1., 0., 0., 0.},  //
-        {0., 0., 0., 0., 0., 0.},      //
-        {0., 0., 0., 0., 0., 0.}
+        {0., 0., 0., 1., 0., 0., 0.},  // First node at origin -- initial position
+        {0., 0., 0., 1., 0., 0., 0.},  // initial displacement
+        {0., 0., 0., 0., 0., 0.},      // initial velocity
+        {0., 0., 0., 0., 0., 0.}       // initial acceleration
     );
     model.AddNode(
-        {2., 0., 0., 1., 0., 0., 0.},  // Second node at (2,0,0)
-        {0., 0., 0., 1., 0., 0., 0.},  //
-        {0., 0., 0., 0., 0., 0.},      //
-        {0., 0., 0., 0., 0., 0.}
+        {2., 0., 0., 1., 0., 0., 0.},  // Second node at (2,0,0) -- initial position
+        {0., 0., 0., 1., 0., 0., 0.},  // initial displacement
+        {0., 0., 0., 0., 0., 0.},      // initial velocity
+        {0., 0., 0., 0., 0., 0.}       // initial acceleration
     );
 
     // No beams
@@ -42,13 +42,14 @@ inline auto SetUpSpringMassSystem() {
     constexpr auto m = 1.;
     constexpr auto j = 1.;
     constexpr auto mass_matrix = std::array{
-        std::array{m, 0., 0., 0., 0., 0.},  //
-        std::array{0., m, 0., 0., 0., 0.},  //
-        std::array{0., 0., m, 0., 0., 0.},  //
-        std::array{0., 0., 0., j, 0., 0.},  //
-        std::array{0., 0., 0., 0., j, 0.},  //
-        std::array{0., 0., 0., 0., 0., j},
+        std::array{m, 0., 0., 0., 0., 0.},  // mass in x-direction
+        std::array{0., m, 0., 0., 0., 0.},  // mass in y-direction
+        std::array{0., 0., m, 0., 0., 0.},  // mass in z-direction
+        std::array{0., 0., 0., j, 0., 0.},  // inertia around x-axis
+        std::array{0., 0., 0., 0., j, 0.},  // inertia around y-axis
+        std::array{0., 0., 0., 0., 0., j},  // inertia around z-axis
     };
+
     const auto masses_input =
         MassesInput({MassElement(model.GetNode(1), mass_matrix)}, {0., 0., 0.});
     auto masses = CreateMasses(masses_input);
@@ -83,9 +84,8 @@ inline auto SetUpSpringMassSystem() {
     );
 
     // The spring-mass system should move periodically between -2 and 2 (position of the second node)
-    // with simple harmonic motion where the time period is 2 * pi * sqrt(m / k) = 1.98691765316s
-    const double T = 2. * M_PI / sqrt(k / m);
-
+    // with simple harmonic motion where the time period is 2 * pi * sqrt(m / k)
+    const double T = 2. * M_PI * sqrt(m / k);
     constexpr auto num_steps = 1000;
 
     // Set up step parameters
@@ -98,18 +98,19 @@ inline auto SetUpSpringMassSystem() {
     auto q = Kokkos::create_mirror(state.q);
 
     // Run simulation for T seconds
-    for (auto time_step = 1U; time_step <= 1000; ++time_step) {
+    for (auto time_step = 1U; time_step <= num_steps; ++time_step) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
-        // Kokkos::deep_copy(q, state.q);
-        // std::cout << time_step * step_size << " ," << q(1, 0) << '\n';
-        if (time_step == num_steps / 2) {  // T/2
+        // Simulation at time T / 2
+        if (time_step == num_steps / 2) {
             Kokkos::deep_copy(q, state.q);
             EXPECT_EQ(q(0, 0), 0.);  // First node is fixed
             EXPECT_NEAR(
                 q(1, 0), -3.9999200547674469, 1.e-12
             );  // Second node should have displacement close to -4.0 after T/2
-        } else if (time_step == num_steps) {  // T
+        }
+        // Simulation at time T
+        if (time_step == num_steps) {
             Kokkos::deep_copy(q, state.q);
             EXPECT_EQ(q(0, 0), 0.);  // First node is fixed
             EXPECT_NEAR(
