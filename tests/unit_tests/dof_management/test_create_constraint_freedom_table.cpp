@@ -79,7 +79,7 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_PrescribedBC) {
     }
 }
 
-TEST(TestCreateConstraintFreedomTable, TwoNodeConstraint_RigidBC) {
+TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RigidBC) {
     auto node_1 = Node(1U, {0., 0., 0., 1., 0., 0., 0.});  // base node - index is 1
     auto node_2 = Node(2U, {1., 0., 0., 1., 0., 0., 0.});  // target node - index is 2
     auto rigid_bc = std::make_shared<Constraint>(ConstraintType::kRigidJoint, 1, node_1, node_2);
@@ -129,7 +129,7 @@ TEST(TestCreateConstraintFreedomTable, TwoNodeConstraint_RigidBC) {
     }
 }
 
-TEST(TestCreateConstraintFreedomTable, TwoNodeConstraint_RevoluteJoint) {
+TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RevoluteJoint) {
     auto node_1 = Node(3U, {0., 0., 0., 1., 0., 0., 0.});   // base node - index is 3
     auto node_2 = Node(11U, {1., 0., 0., 1., 0., 0., 0.});  // target node - index is 11
     const Array_3 rotation_axis = {0., 0., 1.};
