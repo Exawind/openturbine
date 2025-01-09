@@ -127,7 +127,7 @@ public:
         return *this;
     }
 
-    size_t Build() { return this->node.ID; }
+    size_t Build() const { return this->node.ID; }
 
 private:
     Node& node;

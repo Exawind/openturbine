@@ -81,7 +81,7 @@ public:
      */
     NodeBuilder AddNode() {
         const auto id = this->nodes_.size();
-        this->nodes_.emplace_back(Node(id));
+        this->nodes_.emplace_back(id);
         return NodeBuilder(this->nodes_.back());
     }
 
@@ -107,7 +107,7 @@ public:
         const BeamQuadrature& quadrature
     ) {
         const auto elem_id = this->beam_elements_.size();
-        this->beam_elements_.emplace_back(BeamElement(elem_id, node_ids, sections, quadrature));
+        this->beam_elements_.emplace_back(elem_id, node_ids, sections, quadrature);
         return elem_id;
     }
 
@@ -144,7 +144,7 @@ public:
     /// Adds a mass element to the model and returns a shared pointer to the element
     size_t AddMassElement(const size_t node_id, const std::array<std::array<double, 6>, 6>& mass) {
         const auto elem_id = this->mass_elements_.size();
-        this->mass_elements_.emplace_back(MassElement(elem_id, node_id, mass));
+        this->mass_elements_.emplace_back(elem_id, node_id, mass);
         return elem_id;
     }
 
@@ -183,7 +183,7 @@ public:
     ) {
         const auto elem_id = this->spring_elements_.size();
         this->spring_elements_.emplace_back(
-            SpringElement(elem_id, {node1_id, node2_id}, stiffness, undeformed_length)
+            elem_id, std::array{node1_id, node2_id}, stiffness, undeformed_length
         );
         return elem_id;
     }
@@ -237,7 +237,7 @@ public:
     size_t AddRigidJointConstraint(const size_t node1_id, const size_t node2_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            Constraint(ConstraintType::kRigidJoint, constraints_.size(), node1_id, node2_id)
+            ConstraintType::kRigidJoint, constraints_.size(), node1_id, node2_id
         );
         return id;
     }
@@ -246,9 +246,9 @@ public:
     /// constraint
     size_t AddPrescribedBC(const size_t node_id, const Array_3& ref_position = {0., 0., 0.}) {
         const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(Constraint(
+        this->constraints_.emplace_back(
             ConstraintType::kPrescribedBC, constraints_.size(), InvalidNodeID, node_id, ref_position
-        ));
+        );
         return id;
     }
 
@@ -267,9 +267,9 @@ public:
         const size_t node1_id, const size_t node2_id, const Array_3& axis, double* torque
     ) {
         const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(Constraint(
+        this->constraints_.emplace_back(
             ConstraintType::kRevoluteJoint, constraints_.size(), node1_id, node2_id, axis, torque
-        ));
+        );
         return id;
     }
 
@@ -278,9 +278,9 @@ public:
         const size_t node1_id, const size_t node2_id, const Array_3& axis, double* control
     ) {
         const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(Constraint(
+        this->constraints_.emplace_back(
             ConstraintType::kRotationControl, constraints_.size(), node1_id, node2_id, axis, control
-        ));
+        );
         return id;
     }
 
