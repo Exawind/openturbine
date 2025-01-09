@@ -9,9 +9,9 @@ namespace openturbine::tests {
 
 inline auto SetUpSpringStiffnessTest() {
     auto model = Model();
-    model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
-    model.AddNode().SetPosition(1., 0., 0., 1., 0., 0., 0.).Build();
-    const auto springs_input = SpringsInput({SpringElement(0U, {0U, 1U}, 1., 1.)});
+    auto node1_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
+    auto node2_id = model.AddNode().SetPosition(1., 0., 0., 1., 0., 0., 0.).Build();
+    const auto springs_input = SpringsInput({SpringElement(0U, {node1_id, node2_id}, 1., 1.)});
     return CreateSprings(springs_input, model.GetNodes());
 }
 

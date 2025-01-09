@@ -82,7 +82,7 @@ public:
     NodeBuilder AddNode() {
         const auto id = this->nodes_.size();
         this->nodes_.emplace_back(id);
-        return NodeBuilder(this->nodes_.back());
+        return this->nodes_.back();
     }
 
     /// Returns a node by ID - const/read-only version
@@ -128,9 +128,7 @@ public:
     [[nodiscard]] size_t NumBeamElements() const { return this->beam_elements_.size(); }
 
     /// Returns initialized BeamsInput struct
-    [[nodiscard]] BeamsInput CreateBeamsInput() {
-        return BeamsInput(this->beam_elements_, this->gravity_);
-    }
+    [[nodiscard]] BeamsInput CreateBeamsInput() { return {this->beam_elements_, this->gravity_}; }
 
     /// Returns Beams struct initialized with beams
     [[nodiscard]] Beams CreateBeams() {
@@ -257,7 +255,7 @@ public:
     size_t AddFixedBC(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            Constraint(ConstraintType::kFixedBC, constraints_.size(), InvalidNodeID, node_id)
+            ConstraintType::kFixedBC, constraints_.size(), InvalidNodeID, node_id
         );
         return id;
     }
@@ -296,7 +294,9 @@ public:
     // Solver
     //--------------------------------------------------------------------------
 
-    [[nodiscard]] Solver CreateSolver(State& state, Elements& elements, Constraints& constraints) {
+    [[nodiscard]] Solver static CreateSolver(
+        State& state, Elements& elements, Constraints& constraints
+    ) {
         assemble_node_freedom_allocation_table(state, elements, constraints);
         compute_node_freedom_map_table(state);
         create_element_freedom_table(elements, state);
@@ -308,35 +308,6 @@ public:
             constraints.target_node_freedom_table, constraints.row_range
         );
         return solver;
-    }
-
-    //--------------------------------------------------------------------------
-    // Solution
-    //--------------------------------------------------------------------------
-
-    /// @brief Creates all data structures needed for solution
-    /// @return Solution structure initialized with state, elements, constraints, and solver
-    [[nodiscard]] Solution CreateSolution(
-        bool is_dynamic_solve, size_t max_iter, double step_size, double rho_inf
-    ) {
-        auto state = this->CreateState();
-        auto elements = this->CreateElements();
-        auto constraints = this->CreateConstraints();
-        assemble_node_freedom_allocation_table(state, elements, constraints);
-        compute_node_freedom_map_table(state);
-        create_element_freedom_table(elements, state);
-        create_constraint_freedom_table(constraints, state);
-        auto solver = Solver(
-            state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-            elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
-            constraints.type, constraints.base_node_freedom_table,
-            constraints.target_node_freedom_table, constraints.row_range
-        );
-        return Solution{
-            std::move(state),       std::move(elements),
-            std::move(constraints), StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf),
-            std::move(solver),
-        };
     }
 
 private:

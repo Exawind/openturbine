@@ -10,9 +10,10 @@ protected:
     static auto CreateTestElements() {
         // Create a mock Model and add 2 nodes
         auto model = Model();
-        for (int i = 0; i < 2; ++i) {
-            model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
-        }
+        std::vector<size_t> node_ids{
+            model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build(),
+            model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build(),
+        };
 
         // Create an identity mass matrix
         constexpr auto mass_matrix = std::array{

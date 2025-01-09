@@ -30,11 +30,14 @@ protected:
         // Create a mock Model for creating nodes
         auto model = Model();
         std::vector<double> s{0., 0.5, 1.0, 0., 1., 0., 0.33, 0.67, 1.0};
+        std::vector<size_t> node_ids;
         for (size_t i = 0; i < 9; ++i) {
-            model.AddNode()
-                .SetElemLocation(s[i])
-                .SetPosition(static_cast<double>(i), 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
-                .Build();
+            node_ids.emplace_back(
+                model.AddNode()
+                    .SetElemLocation(s[i])
+                    .SetPosition(static_cast<double>(i), 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+                    .Build()
+            );
         }
 
         // Create 3 elements with different numbers of nodes and quadrature points

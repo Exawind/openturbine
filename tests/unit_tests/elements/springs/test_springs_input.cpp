@@ -10,9 +10,13 @@ protected:
     static auto CreateTestElements() {
         auto model = Model();
         // Add 4 nodes to the model
-        for (int i = 0; i < 4; ++i) {
-            model.AddNode().SetPosition(static_cast<double>(i), 0., 0., 1., 0., 0., 0.).Build();
-        }
+        std::vector<size_t> node_ids{
+            model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build(),
+            model.AddNode().SetPosition(1., 0., 0., 1., 0., 0., 0.).Build(),
+            model.AddNode().SetPosition(2., 0., 0., 1., 0., 0., 0.).Build(),
+            model.AddNode().SetPosition(3., 0., 0., 1., 0., 0., 0.).Build(),
+        };
+
         // Create 2 spring elements based on the nodes
         return std::vector<SpringElement>{
             SpringElement(0U, {0U, 1U}, 1000., 0.),  // element 1

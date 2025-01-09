@@ -29,7 +29,7 @@ struct Node {
         Array_6 velocity = Array_6{0., 0., 0., 0., 0., 0.},
         Array_6 acceleration = Array_6{0., 0., 0., 0., 0., 0.}
     )
-        : ID(id), x(position), u(displacement), v(velocity), vd(acceleration) {}
+        : ID(id), x(position), u(displacement), v(velocity), vd(acceleration), s(0.) {}
 
     /// Translate node by a displacement vector
     void Translate(const Array_3& displacement) {
@@ -67,6 +67,11 @@ struct Node {
 class NodeBuilder {
 public:
     NodeBuilder(Node& n) : node(n) {}
+    ~NodeBuilder() = default;
+    NodeBuilder(const NodeBuilder&) = delete;
+    NodeBuilder(NodeBuilder&&) = delete;
+    NodeBuilder& operator=(const NodeBuilder&) = delete;
+    NodeBuilder& operator=(NodeBuilder&&) = delete;
 
     NodeBuilder& SetPosition(
         const double x, const double y, const double z, const double w, const double i,
@@ -127,7 +132,7 @@ public:
         return *this;
     }
 
-    size_t Build() const { return this->node.ID; }
+    [[nodiscard]] size_t Build() const { return this->node.ID; }
 
 private:
     Node& node;
