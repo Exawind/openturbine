@@ -26,14 +26,6 @@
 
 namespace openturbine {
 
-struct Solution {
-    State state;
-    Elements elements;
-    Constraints constraints;
-    StepParameters parameters;
-    Solver solver;
-};
-
 /// Represents an invalid node in constraints that only uses the target node
 static const size_t InvalidNodeID(0U);
 

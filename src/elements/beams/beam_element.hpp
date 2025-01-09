@@ -23,10 +23,7 @@ struct BeamElement {
     BeamQuadrature quadrature;          // Element quadrature points and weights
 
     BeamElement(size_t id, std::vector<size_t> n, std::vector<BeamSection> s, BeamQuadrature q)
-        : ID(std::move(id)),
-          node_ids(std::move(n)),
-          sections(std::move(s)),
-          quadrature(std::move(q)) {}
+        : ID(id), node_ids(std::move(n)), sections(std::move(s)), quadrature(std::move(q)) {}
 };
 
 }  // namespace openturbine

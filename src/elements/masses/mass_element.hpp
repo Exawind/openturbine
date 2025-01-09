@@ -14,7 +14,7 @@ struct MassElement {
     std::array<std::array<double, 6>, 6> M_star;  // Mass matrix in material frame
 
     MassElement(size_t id, size_t n_id, std::array<std::array<double, 6>, 6> mass_matrix)
-        : ID(std::move(id)), node_id(n_id), M_star(mass_matrix) {}
+        : ID(id), node_id(n_id), M_star(mass_matrix) {}
 };
 
 }  // namespace openturbine
