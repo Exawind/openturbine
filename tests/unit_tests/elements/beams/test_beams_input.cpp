@@ -10,74 +10,68 @@ protected:
     static auto CreateTestElements() {
         // Create mass and stiffness matrices (identity matrices)
         constexpr auto mass_matrix = std::array{
-            std::array{1.0, 0.0, 0.0, 0.0, 0.0, 0.0}, std::array{0.0, 1.0, 0.0, 0.0, 0.0, 0.0},
-            std::array{0.0, 0.0, 1.0, 0.0, 0.0, 0.0}, std::array{0.0, 0.0, 0.0, 1.0, 0.0, 0.0},
-            std::array{0.0, 0.0, 0.0, 0.0, 1.0, 0.0}, std::array{0.0, 0.0, 0.0, 0.0, 0.0, 1.0},
+            std::array{1.0, 0.0, 0.0, 0.0, 0.0, 0.0},  //
+            std::array{0.0, 1.0, 0.0, 0.0, 0.0, 0.0},  //
+            std::array{0.0, 0.0, 1.0, 0.0, 0.0, 0.0},  //
+            std::array{0.0, 0.0, 0.0, 1.0, 0.0, 0.0},  //
+            std::array{0.0, 0.0, 0.0, 0.0, 1.0, 0.0},  //
+            std::array{0.0, 0.0, 0.0, 0.0, 0.0, 1.0},  //
         };
 
         constexpr auto stiffness_matrix = std::array{
-            std::array{1.0, 0.0, 0.0, 0.0, 0.0, 0.0}, std::array{0.0, 1.0, 0.0, 0.0, 0.0, 0.0},
-            std::array{0.0, 0.0, 1.0, 0.0, 0.0, 0.0}, std::array{0.0, 0.0, 0.0, 1.0, 0.0, 0.0},
-            std::array{0.0, 0.0, 0.0, 0.0, 1.0, 0.0}, std::array{0.0, 0.0, 0.0, 0.0, 0.0, 1.0},
+            std::array{1.0, 0.0, 0.0, 0.0, 0.0, 0.0},  //
+            std::array{0.0, 1.0, 0.0, 0.0, 0.0, 0.0},  //
+            std::array{0.0, 0.0, 1.0, 0.0, 0.0, 0.0},  //
+            std::array{0.0, 0.0, 0.0, 1.0, 0.0, 0.0},  //
+            std::array{0.0, 0.0, 0.0, 0.0, 1.0, 0.0},  //
+            std::array{0.0, 0.0, 0.0, 0.0, 0.0, 1.0},  //
         };
 
         // Create a mock Model for creating nodes
         auto model = Model();
-        for (int i = 0; i < 9; ++i) {
-            model.AddNode(
-                {static_cast<double>(i), 0.0, 0.0, 1.0, 0.0, 0.0, 0.0},
-                {0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-                {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
-            );
+        std::vector<double> s{0., 0.5, 1.0, 0., 1., 0., 0.33, 0.67, 1.0};
+        for (size_t i = 0; i < 9; ++i) {
+            model.AddNode()
+                .SetElemLocation(s[i])
+                .SetPosition(static_cast<double>(i), 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+                .Build();
         }
 
         // Create 3 elements with different numbers of nodes and quadrature points
-        return std::vector<BeamElement>{
-            // Element 1 - 3 nodes, 2 quadrature points
-            BeamElement(
-                {
-                    BeamNode(0.0, model.GetNode(0)),
-                    BeamNode(0.5, model.GetNode(1)),
-                    BeamNode(1.0, model.GetNode(2)),
-                },
-                {
-                    BeamSection(0.0, mass_matrix, stiffness_matrix),
-                    BeamSection(1.0, mass_matrix, stiffness_matrix),
-                },
-                BeamQuadrature{{-0.5, 0.5}, {0.5, 0.5}}
-            ),
-            // Element 2 - 2 nodes, 2 quadrature points
-            BeamElement(
-                {
-                    BeamNode(0.0, model.GetNode(3)),
-                    BeamNode(1.0, model.GetNode(4)),
-                },
-                {
-                    BeamSection(0.0, mass_matrix, stiffness_matrix),
-                    BeamSection(1.0, mass_matrix, stiffness_matrix),
-                },
-                BeamQuadrature{{-0.5773502691896257, 1.0}, {0.5773502691896257, 1.0}}
-            ),
-            // Element 3 - 4 nodes, 4 quadrature points
-            BeamElement(
-                {
-                    BeamNode(0.0, model.GetNode(5)),
-                    BeamNode(0.33, model.GetNode(6)),
-                    BeamNode(0.67, model.GetNode(7)),
-                    BeamNode(1.0, model.GetNode(8)),
-                },
-                {
-                    BeamSection(0.0, mass_matrix, stiffness_matrix),
-                    BeamSection(1.0, mass_matrix, stiffness_matrix),
-                },
-                BeamQuadrature{
-                    {-0.861136311594053, 0.347854845137454},
-                    {-0.339981043584856, 0.652145154862546},
-                    {0.339981043584856, 0.652145154862546},
-                    {0.861136311594053, 0.347854845137454}
-                }
-            )
-        };
+        // Element 1 - 3 nodes, 2 quadrature points
+        model.AddBeamElement(
+            {0U, 1U, 2U},
+            {
+                BeamSection(0.0, mass_matrix, stiffness_matrix),
+                BeamSection(1.0, mass_matrix, stiffness_matrix),
+            },
+            BeamQuadrature{{-0.5, 0.5}, {0.5, 0.5}}
+        );
+        // Element 2 - 2 nodes, 2 quadrature points
+        model.AddBeamElement(
+            {3, 4},
+            {
+                BeamSection(0.0, mass_matrix, stiffness_matrix),
+                BeamSection(1.0, mass_matrix, stiffness_matrix),
+            },
+            BeamQuadrature{{-0.5773502691896257, 1.0}, {0.5773502691896257, 1.0}}
+        );
+        // Element 3 - 4 nodes, 4 quadrature points
+        model.AddBeamElement(
+            {5, 6, 7, 8},
+            {
+                BeamSection(0.0, mass_matrix, stiffness_matrix),
+                BeamSection(1.0, mass_matrix, stiffness_matrix),
+            },
+            BeamQuadrature{
+                {-0.861136311594053, 0.347854845137454},
+                {-0.339981043584856, 0.652145154862546},
+                {0.339981043584856, 0.652145154862546},
+                {0.861136311594053, 0.347854845137454}
+            }
+        );
+
+        return model.GetBeamElements();
     }
 
     static BeamsInput CreateTestBeamsInput() {

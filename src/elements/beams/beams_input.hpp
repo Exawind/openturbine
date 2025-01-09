@@ -56,7 +56,7 @@ struct BeamsInput {
     /// Returns the total number of nodes in the beam
     [[nodiscard]] size_t NumNodes() const {
         return ComputeSum([](const BeamElement& e) {
-            return e.nodes.size();
+            return e.node_ids.size();
         });
     }
 
@@ -70,7 +70,7 @@ struct BeamsInput {
     /// Returns the maximum number of nodes in any element of the beam
     [[nodiscard]] size_t MaxElemNodes() const {
         return ComputeMax([](const BeamElement& e) {
-            return e.nodes.size();
+            return e.node_ids.size();
         });
     }
 

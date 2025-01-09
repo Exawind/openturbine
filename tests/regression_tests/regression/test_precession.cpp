@@ -23,37 +23,21 @@ namespace openturbine::tests {
 inline auto SetUpPrecessionTest() {
     auto model = Model();
 
-    // Set up mass matrix (6x6 diagonal matrix)
-    constexpr auto m = 1.0;
-    constexpr auto mass_matrix = std::array{
-        std::array{m, 0., 0., 0., 0., 0.},  std::array{0., m, 0., 0., 0., 0.},
-        std::array{0., 0., m, 0., 0., 0.},  std::array{0., 0., 0., 1., 0., 0.},
-        std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 0.5},
-    };
-
     // Add node with initial position and velocity
-    model.AddNode(
-        {0., 0., 0., 1., 0., 0., 0.},  // Initial position and orientation
-        {0., 0., 0., 1., 0., 0., 0.},  // Initial displacement
-        {0., 0., 0., 0.5, 0.5, 1.0},   // Initial velocity
-        {0., 0., 0., 0., 0., 0.}       // Initial acceleration
+    auto node_id = model.AddNode().SetVelocity(0., 0., 0., 0.5, 0.5, 1.0).Build();
+
+    // Add masses element
+    constexpr auto m = 1.0;
+    model.AddMassElement(
+        node_id, {{
+                     {m, 0., 0., 0., 0., 0.},    //
+                     {0., m, 0., 0., 0., 0.},    //
+                     {0., 0., m, 0., 0., 0.},    //
+                     {0., 0., 0., 1., 0., 0.},   //
+                     {0., 0., 0., 0., 1., 0.},   //
+                     {0., 0., 0., 0., 0., 0.5},  //
+                 }}
     );
-
-    // Create masses element
-    const auto masses_input = MassesInput(
-        {
-            MassElement(model.GetNode(0), mass_matrix),
-        },
-        {0., 0., 0.}  // No gravity for this test
-    );
-
-    auto masses = CreateMasses(masses_input);
-
-    const auto beams_input = BeamsInput({}, {0., 0., 0.});
-    auto beams = CreateBeams(beams_input);
-
-    const auto springs_input = SpringsInput({});
-    auto springs = CreateSprings(springs_input);
 
     // Set up step parameters
     constexpr bool is_dynamic_solve(true);
@@ -62,22 +46,11 @@ inline auto SetUpPrecessionTest() {
     constexpr double rho_inf(1.0);
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
-    // Create solver with initial node state
+    // Create solver, elements, constraints, and state
     auto state = model.CreateState();
-    auto constraints = Constraints(model.GetConstraints());
-    auto elements = Elements{beams, masses, springs};
-
-    assemble_node_freedom_allocation_table(state, elements, constraints);
-    compute_node_freedom_map_table(state);
-    create_element_freedom_table(elements, state);
-    create_constraint_freedom_table(constraints, state);
-
-    auto solver = Solver(
-        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
-        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
-        constraints.row_range
-    );
+    auto elements = model.CreateElements();
+    auto constraints = model.CreateConstraints();
+    auto solver = model.CreateSolver(state, elements, constraints);
 
     // Run simulation for 500 steps
     for (size_t i = 0; i < 500; ++i) {

@@ -11,15 +11,12 @@ protected:
         auto model = Model();
         // Add 4 nodes to the model
         for (int i = 0; i < 4; ++i) {
-            model.AddNode(
-                {static_cast<double>(i), 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.},
-                {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}
-            );
+            model.AddNode().SetPosition(static_cast<double>(i), 0., 0., 1., 0., 0., 0.).Build();
         }
         // Create 2 spring elements based on the nodes
         return std::vector<SpringElement>{
-            SpringElement(std::array{model.GetNode(0), model.GetNode(1)}, 1000., 0.),
-            SpringElement(std::array{model.GetNode(2), model.GetNode(3)}, 2000., 0.)
+            SpringElement(0U, {0U, 1U}, 1000., 0.),  // element 1
+            SpringElement(1U, {2U, 3U}, 2000., 0.)   // element 2
         };
     }
 

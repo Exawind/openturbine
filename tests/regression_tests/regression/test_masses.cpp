@@ -12,30 +12,34 @@
 namespace openturbine::tests {
 
 inline auto SetUpMasses() {
+    // Create model object
     auto model = Model();
-    constexpr auto mass_matrix = std::array{
-        std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
-        std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
-        std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.},
-    };
-    model.AddNode(
-        {0, 0, 0, 1, 0, 0, 0},  // Initial position and orientation
-        {0, 0, 0, 1, 0, 0, 0},  // Initial displacement
-        {0, 0, 0, 0, 0, 0},     // Initial velocity
-        {0, 0, 0, 0, 0, 0}      // Initial acceleration
-    );
-    constexpr auto gravity = std::array{0., 0., 9.81};
-    const auto masses_input = MassesInput(
-        {
-            MassElement(model.GetNode(0), mass_matrix),
-        },
-        gravity
+
+    // Set gravity
+    model.SetGravity(0., 0., 9.81);
+
+    // Add node
+    const auto node_id = model.AddNode().SetPosition(0, 0, 0, 1, 0, 0, 0).Build();
+
+    // Add mass element
+    model.AddMassElement(
+        node_id, {{
+                     {1., 0., 0., 0., 0., 0.},
+                     {0., 1., 0., 0., 0., 0.},
+                     {0., 0., 1., 0., 0., 0.},
+                     {0., 0., 0., 1., 0., 0.},
+                     {0., 0., 0., 0., 1., 0.},
+                     {0., 0., 0., 0., 0., 1.},
+                 }}
     );
 
-    auto masses = CreateMasses(masses_input);
+    // Initialize masses
+    auto masses = model.CreateMasses();
+
+    // Create state
+    auto state = model.CreateState();
 
     auto parameters = StepParameters(false, 0, 0., 0.);
-    auto state = model.CreateState();
     UpdateSystemVariablesMasses(parameters, masses, state);
 
     return masses;
