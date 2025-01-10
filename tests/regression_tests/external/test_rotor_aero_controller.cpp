@@ -550,8 +550,8 @@ TEST(Milestone, IEA15RotorAeroController) {
 #ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i);
         tmp.insert(0, 5 - tmp.size(), '0');
-        WriteVTKBeamsQP(beams, step_dir / (std::string("step_qp.") + tmp + ".vtu"));
-        WriteVTKBeamsNodes(beams, step_dir / (std::string("step_node.") + tmp + ".vtu"));
+        WriteVTKBeamsQP(elements.beams, step_dir / (std::string("step_qp.") + tmp + ".vtu"));
+        WriteVTKBeamsNodes(elements.beams, step_dir / (std::string("step_node.") + tmp + ".vtu"));
 #endif
 
         // Get current time and next time

@@ -10,7 +10,7 @@ protected:
     static auto CreateTestElements() {
         // Create a mock Model and add 2 nodes
         auto model = Model();
-        std::vector<size_t> node_ids{
+        const std::vector<size_t> node_ids{
             model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build(),
             model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build(),
         };

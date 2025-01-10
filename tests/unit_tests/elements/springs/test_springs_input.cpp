@@ -10,7 +10,7 @@ protected:
     static auto CreateTestElements() {
         auto model = Model();
         // Add 4 nodes to the model
-        std::vector<size_t> node_ids{
+        const std::vector<size_t> node_ids{
             model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build(),
             model.AddNode().SetPosition(1., 0., 0., 1., 0., 0., 0.).Build(),
             model.AddNode().SetPosition(2., 0., 0., 1., 0., 0., 0.).Build(),
