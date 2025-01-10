@@ -281,12 +281,12 @@ public:
     }
 
 private:
-    Array_3 gravity_ = {0., 0., 0.};                   //< Gravity components
-    std::vector<Node> nodes_ = {};                     //< Nodes in the model
-    std::vector<BeamElement> beam_elements_ = {};      //< Beam elements in the model
-    std::vector<MassElement> mass_elements_ = {};      //< Mass elements in the model
-    std::vector<SpringElement> spring_elements_ = {};  //< Spring elements in the model
-    std::vector<Constraint> constraints_ = {};         //< Constraints in the model
+    Array_3 gravity_ = {0., 0., 0.};              //< Gravity components
+    std::vector<Node> nodes_;                     //< Nodes in the model
+    std::vector<BeamElement> beam_elements_;      //< Beam elements in the model
+    std::vector<MassElement> mass_elements_;      //< Mass elements in the model
+    std::vector<SpringElement> spring_elements_;  //< Spring elements in the model
+    std::vector<Constraint> constraints_;         //< Constraints in the model
 };
 
 /// @brief Compute freedom tables for state, elements, and constraints, then construct and return
@@ -298,12 +298,18 @@ private:
     compute_node_freedom_map_table(state);
     create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
-    return Solver(
-        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
-        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
+    return {
+        state.ID,
+        state.node_freedom_allocation_table,
+        state.node_freedom_map_table,
+        elements.NumberOfNodesPerElement(),
+        elements.NodeStateIndices(),
+        constraints.num_dofs,
+        constraints.type,
+        constraints.base_node_freedom_table,
+        constraints.target_node_freedom_table,
         constraints.row_range
-    );
+    };
 }
 
 }  // namespace openturbine
