@@ -140,7 +140,7 @@ TEST(RotorTest, IEA15Rotor) {
     auto state = model.CreateState();
     auto elements = model.CreateElements();
     auto constraints = model.CreateConstraints();
-    auto solver = Model::CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver(state, elements, constraints);
 
     // Remove output directory for writing step data
     if (write_output) {
@@ -283,7 +283,7 @@ TEST(RotorTest, IEA15RotorHub) {
     auto state = model.CreateState();
     auto elements = model.CreateElements();
     auto constraints = model.CreateConstraints();
-    auto solver = Model::CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver(state, elements, constraints);
 
     // Remove output directory for writing step data
     if (write_output) {
@@ -446,7 +446,7 @@ TEST(RotorTest, IEA15RotorController) {
     auto state = model.CreateState();
     auto elements = model.CreateElements();
     auto constraints = model.CreateConstraints();
-    auto solver = Model::CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver(state, elements, constraints);
 
     // Remove output directory for writing step data
     if (write_output) {

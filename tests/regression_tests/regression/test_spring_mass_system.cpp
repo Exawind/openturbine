@@ -64,7 +64,7 @@ inline auto SetUpSpringMassSystem() {
     auto state = model.CreateState();
     auto elements = model.CreateElements();
     auto constraints = model.CreateConstraints();
-    auto solver = Model::CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver(state, elements, constraints);
 
     auto q = Kokkos::create_mirror(state.q);
 

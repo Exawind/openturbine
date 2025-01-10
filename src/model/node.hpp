@@ -73,13 +73,51 @@ public:
     NodeBuilder& operator=(const NodeBuilder&) = delete;
     NodeBuilder& operator=(NodeBuilder&&) = delete;
 
-    NodeBuilder& SetPosition(
-        const double x, const double y, const double z, const double w, const double i,
-        const double j, const double k
-    ) {
+    //--------------------------------------------------------------------------
+    // Set position
+    //--------------------------------------------------------------------------
+
+    NodeBuilder& SetPosition(const Array_7& p) {
+        this->node.x = p;
+        return *this;
+    }
+
+    NodeBuilder& SetPosition(double x, double y, double z, double w, double i, double j, double k) {
+        this->node.x = {x, y, z, w, i, j, k};
+        return *this;
+    }
+
+    NodeBuilder& SetPosition(const Array_3& p) {
+        this->node.x[0] = p[0];
+        this->node.x[1] = p[1];
+        this->node.x[2] = p[2];
+        return *this;
+    }
+
+    NodeBuilder& SetPosition(double x, double y, double z) {
         this->node.x[0] = x;
         this->node.x[1] = y;
         this->node.x[2] = z;
+        return *this;
+    }
+
+    //--------------------------------------------------------------------------
+    // Set orientation
+    //--------------------------------------------------------------------------
+
+    /// @brief Sets the node orientation from quaternion
+    /// @param p quaternion (w,i,j,k)
+    NodeBuilder& SetOrientation(const Array_4& p) {
+        this->node.x[3] = p[0];
+        this->node.x[4] = p[1];
+        this->node.x[5] = p[2];
+        this->node.x[6] = p[3];
+        return *this;
+    }
+
+    /// @brief Sets the node orientation from quaternion components
+    /// @param p quaternion (w,i,j,k)
+    NodeBuilder& SetOrientation(double w, double i, double j, double k) {
         this->node.x[3] = w;
         this->node.x[4] = i;
         this->node.x[5] = j;
@@ -87,51 +125,106 @@ public:
         return *this;
     }
 
+    //--------------------------------------------------------------------------
+    // Set displacement
+    //--------------------------------------------------------------------------
+
+    NodeBuilder& SetDisplacement(const Array_7& p) {
+        this->node.u = p;
+        return *this;
+    }
+
     NodeBuilder& SetDisplacement(
-        const double x, const double y, const double z, const double w, const double i,
-        const double j, const double k
+        double x, double y, double z, double w, double i, double j, double k
     ) {
+        this->node.u = {x, y, z, w, i, j, k};
+        return *this;
+    }
+
+    NodeBuilder& SetDisplacement(const Array_3& p) {
+        this->node.u[0] = p[0];
+        this->node.u[1] = p[1];
+        this->node.u[2] = p[2];
+        return *this;
+    }
+
+    NodeBuilder& SetDisplacement(double x, double y, double z) {
         this->node.u[0] = x;
         this->node.u[1] = y;
         this->node.u[2] = z;
-        this->node.u[3] = w;
-        this->node.u[4] = i;
-        this->node.u[5] = j;
-        this->node.u[6] = k;
         return *this;
     }
 
-    NodeBuilder& SetVelocity(
-        const double x, const double y, const double z, const double rx, const double ry,
-        const double rz
-    ) {
+    //--------------------------------------------------------------------------
+    // Set velocity
+    //--------------------------------------------------------------------------
+
+    NodeBuilder& SetVelocity(double x, double y, double z, double rx, double ry, double rz) {
+        this->node.v = {x, y, z, rx, ry, rz};
+        return *this;
+    }
+
+    NodeBuilder& SetVelocity(const Array_6& v) {
+        this->node.v = v;
+        return *this;
+    }
+
+    NodeBuilder& SetVelocity(double x, double y, double z) {
         this->node.v[0] = x;
         this->node.v[1] = y;
         this->node.v[2] = z;
-        this->node.v[3] = rx;
-        this->node.v[4] = ry;
-        this->node.v[5] = rz;
         return *this;
     }
 
-    NodeBuilder& SetAcceleration(
-        const double x, const double y, const double z, const double rx, const double ry,
-        const double rz
-    ) {
+    NodeBuilder& SetVelocity(const Array_3& v) {
+        this->node.v[0] = v[0];
+        this->node.v[1] = v[1];
+        this->node.v[2] = v[2];
+        return *this;
+    }
+
+    //--------------------------------------------------------------------------
+    // Set acceleration
+    //--------------------------------------------------------------------------
+
+    NodeBuilder& SetAcceleration(double x, double y, double z, double rx, double ry, double rz) {
+        this->node.vd = {x, y, z, rx, ry, rz};
+        return *this;
+    }
+
+    NodeBuilder& SetAcceleration(const Array_6& v) {
+        this->node.vd = v;
+        return *this;
+    }
+
+    NodeBuilder& SetAcceleration(double x, double y, double z) {
         this->node.vd[0] = x;
         this->node.vd[1] = y;
         this->node.vd[2] = z;
-        this->node.vd[3] = rx;
-        this->node.vd[4] = ry;
-        this->node.vd[5] = rz;
         return *this;
     }
+
+    NodeBuilder& SetAcceleration(const Array_3& v) {
+        this->node.vd[0] = v[0];
+        this->node.vd[1] = v[1];
+        this->node.vd[2] = v[2];
+        return *this;
+    }
+
+    //--------------------------------------------------------------------------
+    // Element location
+    //--------------------------------------------------------------------------
 
     NodeBuilder& SetElemLocation(double loc) {
         this->node.s = loc;
         return *this;
     }
 
+    //--------------------------------------------------------------------------
+    // Build
+    //--------------------------------------------------------------------------
+
+    /// Build finalizes construction of node and returns the node's ID
     [[nodiscard]] size_t Build() const { return this->node.ID; }
 
 private:

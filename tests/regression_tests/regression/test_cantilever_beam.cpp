@@ -107,7 +107,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     auto state = model.CreateState();
     auto elements = model.CreateElements();
     auto constraints = model.CreateConstraints();
-    auto solver = Model::CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver(state, elements, constraints);
 
     // Get ID of last node
     const auto last_node_id = beam_node_ids.back();

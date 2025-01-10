@@ -64,7 +64,7 @@ public:
     //--------------------------------------------------------------------------
 
     /**
-     * @brief Adds a node to the model and returns a shared pointer to the node
+     * @brief Adds a node to the model and returns the index of the node
      *
      * @param position Position vector
      * @param displacement Displacement vector
@@ -93,7 +93,7 @@ public:
     // Beam Elements
     //--------------------------------------------------------------------------
 
-    /// Adds a beam element to the model and returns a shared pointer handle to the element
+    /// Adds a beam element to the model and returns the index of the element
     size_t AddBeamElement(
         const std::vector<size_t>& node_ids, const std::vector<BeamSection>& sections,
         const BeamQuadrature& quadrature
@@ -131,14 +131,13 @@ public:
     // Mass Elements
     //--------------------------------------------------------------------------
 
-    /// Adds a mass element to the model and returns a shared pointer to the element
+    /// Adds a mass element to the model and returns the index of the element
     size_t AddMassElement(const size_t node_id, const std::array<std::array<double, 6>, 6>& mass) {
         const auto elem_id = this->mass_elements_.size();
         this->mass_elements_.emplace_back(elem_id, node_id, mass);
         return elem_id;
     }
 
-    /// Adds a mass element to the model and returns a shared pointer to the element
     /// Returns a mass element by ID - const/read-only version
     [[nodiscard]] const MassElement& GetMassElement(size_t id) const {
         return this->mass_elements_[id];
@@ -166,7 +165,7 @@ public:
     // Spring Elements
     //--------------------------------------------------------------------------
 
-    /// Adds a spring element to the model and returns a shared pointer to the element
+    /// Adds a spring element to the model and returns the index of the element
     size_t AddSpringElement(
         const size_t node1_id, const size_t node2_id, const double stiffness,
         const double undeformed_length
@@ -178,7 +177,6 @@ public:
         return elem_id;
     }
 
-    /// Adds a spring element to the model and returns a shared pointer to the element
     /// Returns a spring element by ID - const/read-only version
     [[nodiscard]] const SpringElement& GetSpringElement(size_t id) const {
         return this->spring_elements_[id];
@@ -282,33 +280,30 @@ public:
         return Constraints(this->constraints_, this->nodes_);
     }
 
-    //--------------------------------------------------------------------------
-    // Solver
-    //--------------------------------------------------------------------------
-
-    [[nodiscard]] Solver static CreateSolver(
-        State& state, Elements& elements, Constraints& constraints
-    ) {
-        assemble_node_freedom_allocation_table(state, elements, constraints);
-        compute_node_freedom_map_table(state);
-        create_element_freedom_table(elements, state);
-        create_constraint_freedom_table(constraints, state);
-        auto solver = Solver(
-            state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-            elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
-            constraints.type, constraints.base_node_freedom_table,
-            constraints.target_node_freedom_table, constraints.row_range
-        );
-        return solver;
-    }
-
 private:
-    Array_3 gravity_ = {0., 0., 0.};              //< Gravity components
-    std::vector<Node> nodes_;                     //< Nodes in the model
-    std::vector<BeamElement> beam_elements_;      //< Beam elements in the model
-    std::vector<MassElement> mass_elements_;      //< Mass elements in the model
-    std::vector<SpringElement> spring_elements_;  //< Spring elements in the model
-    std::vector<Constraint> constraints_;         //< Constraints in the model
+    Array_3 gravity_ = {0., 0., 0.};                   //< Gravity components
+    std::vector<Node> nodes_ = {};                     //< Nodes in the model
+    std::vector<BeamElement> beam_elements_ = {};      //< Beam elements in the model
+    std::vector<MassElement> mass_elements_ = {};      //< Mass elements in the model
+    std::vector<SpringElement> spring_elements_ = {};  //< Spring elements in the model
+    std::vector<Constraint> constraints_ = {};         //< Constraints in the model
 };
+
+/// @brief Compute freedom tables for state, elements, and constraints, then construct and return
+/// solver.
+[[nodiscard]] inline Solver CreateSolver(
+    State& state, Elements& elements, Constraints& constraints
+) {
+    assemble_node_freedom_allocation_table(state, elements, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(elements, state);
+    create_constraint_freedom_table(constraints, state);
+    return Solver(
+        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
+        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
+        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
+        constraints.row_range
+    );
+}
 
 }  // namespace openturbine
