@@ -732,7 +732,7 @@ void GeneratorTorqueWithAxisTilt(
     UpdateSystemVariables(parameters, elements, state);
     RemoveDirectoryWithRetries("steps");
     std::filesystem::create_directory("steps");
-    WriteVTKBeamsQP(beams, "steps/step_0000.vtu");
+    WriteVTKBeamsQP(elements.beams, "steps/step_0000.vtu");
 #endif
 
     // Run 10 steps
@@ -742,7 +742,7 @@ void GeneratorTorqueWithAxisTilt(
 #ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i + 1);
         auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-        WriteVTKBeamsQP(beams, file_name + ".vtu");
+        WriteVTKBeamsQP(elements.beams, file_name + ".vtu");
 #endif
     }
 
