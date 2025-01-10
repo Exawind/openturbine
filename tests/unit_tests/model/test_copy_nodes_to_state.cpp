@@ -10,8 +10,7 @@ TEST(CopyNodesToState, OneNode_ID) {
     constexpr auto q_exact = std::array<double, 7>{};
     constexpr auto v_exact = std::array<double, 6>{};
     constexpr auto vd_exact = std::array<double, 6>{};
-    auto nodes =
-        std::vector{std::make_shared<Node>(size_t{1234U}, x0_exact, q_exact, v_exact, vd_exact)};
+    auto nodes = std::vector{Node(size_t{1234U}, x0_exact, q_exact, v_exact, vd_exact)};
 
     CopyNodesToState(state, nodes);
 
@@ -26,8 +25,7 @@ TEST(CopyNodesToState, OneNode_Position) {
     constexpr auto q_exact = std::array{8., 9., 10., 11., 12., 13., 14.};
     constexpr auto v_exact = std::array<double, 6>{};
     constexpr auto vd_exact = std::array<double, 6>{};
-    auto nodes =
-        std::vector{std::make_shared<Node>(size_t{1234U}, x0_exact, q_exact, v_exact, vd_exact)};
+    auto nodes = std::vector{Node(size_t{1234U}, x0_exact, q_exact, v_exact, vd_exact)};
 
     CopyNodesToState(state, nodes);
 
@@ -58,8 +56,7 @@ TEST(CopyNodesToState, OneNode_Velocity) {
     constexpr auto q_exact = std::array<double, 7>{};
     constexpr auto v_exact = std::array{15., 16., 17., 18., 19., 20.};
     constexpr auto vd_exact = std::array{21., 22., 23., 24., 25., 26.};
-    auto nodes =
-        std::vector{std::make_shared<Node>(size_t{1234U}, x0_exact, q_exact, v_exact, vd_exact)};
+    auto nodes = std::vector{Node(size_t{1234U}, x0_exact, q_exact, v_exact, vd_exact)};
 
     CopyNodesToState(state, nodes);
 

@@ -9,15 +9,10 @@ namespace openturbine::tests {
 
 inline auto SetUpSpringStiffnessTest() {
     auto model = Model();
-    model.AddNode(
-        {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
-    );
-    model.AddNode(
-        {1, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0}
-    );
-    const auto springs_input =
-        SpringsInput({SpringElement(std::array{model.GetNode(0), model.GetNode(1)}, 1., 1.)});
-    return CreateSprings(springs_input);
+    auto node1_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
+    auto node2_id = model.AddNode().SetPosition(1., 0., 0., 1., 0., 0., 0.).Build();
+    const auto springs_input = SpringsInput({SpringElement(0U, {node1_id, node2_id}, 1., 1.)});
+    return CreateSprings(springs_input, model.GetNodes());
 }
 
 TEST(AssembleStiffnessMatrixSpringsTest, StiffnessMatrixMatchesUnitStiffnessInXDirection) {

@@ -27,19 +27,19 @@ namespace openturbine {
  */
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
 inline void PopulateElementViews(
-    const BeamElement& elem, T1 node_x0, T2 qp_weight, T3 qp_Mstar, T4 qp_Cstar, T5 shape_interp,
-    T6 shape_deriv
+    const BeamElement& elem, const std::vector<Node>& nodes, T1 node_x0, T2 qp_weight, T3 qp_Mstar,
+    T4 qp_Cstar, T5 shape_interp, T6 shape_deriv
 ) {
     // Map node positions from [0,1] to [-1,1]
-    std::vector<double> node_xi(elem.nodes.size());
-    for (size_t i = 0; i < elem.nodes.size(); ++i) {
-        node_xi[i] = 2 * elem.nodes[i].position - 1;
+    std::vector<double> node_xi(elem.node_ids.size());
+    for (size_t i = 0; i < elem.node_ids.size(); ++i) {
+        node_xi[i] = 2 * nodes[elem.node_ids[i]].s - 1;
     }
 
     // Populate node initial position and orientation
-    for (size_t j = 0; j < elem.nodes.size(); ++j) {
-        for (size_t k = 0; k < elem.nodes[j].node.x.size(); ++k) {
-            node_x0(j, k) = elem.nodes[j].node.x[k];
+    for (size_t j = 0; j < elem.node_ids.size(); ++j) {
+        for (size_t k = 0U; k < kLieGroupComponents; ++k) {
+            node_x0(j, k) = nodes[elem.node_ids[j]].x[k];
         }
     }
 

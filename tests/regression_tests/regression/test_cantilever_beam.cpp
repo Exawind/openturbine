@@ -10,15 +10,6 @@
 #include "src/dof_management/compute_node_freedom_map_table.hpp"
 #include "src/dof_management/create_constraint_freedom_table.hpp"
 #include "src/dof_management/create_element_freedom_table.hpp"
-#include "src/elements/beams/beam_element.hpp"
-#include "src/elements/beams/beam_node.hpp"
-#include "src/elements/beams/beam_section.hpp"
-#include "src/elements/beams/beams.hpp"
-#include "src/elements/beams/beams_input.hpp"
-#include "src/elements/beams/create_beams.hpp"
-#include "src/elements/elements.hpp"
-#include "src/elements/masses/create_masses.hpp"
-#include "src/elements/springs/create_springs.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
@@ -64,51 +55,44 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     // Node locations (GLL quadrature)
     const auto node_s = std::vector{0., 0.17267316464601146, 0.5, 0.8273268353539885, 1.};
 
-    // Element quadrature
-    const auto quadrature = BeamQuadrature{
-        {-0.9491079123427585, 0.1294849661688697},  {-0.7415311855993943, 0.27970539148927664},
-        {-0.40584515137739696, 0.3818300505051189}, {6.123233995736766e-17, 0.4179591836734694},
-        {0.4058451513773971, 0.3818300505051189},   {0.7415311855993945, 0.27970539148927664},
-        {0.9491079123427585, 0.1294849661688697},
-    };
-    const auto sections = std::vector{
-        BeamSection(0., mass_matrix, stiffness_matrix),
-        BeamSection(1., mass_matrix, stiffness_matrix),
-    };
-
-    // Gravity vector
-    constexpr auto gravity = std::array{0., 0., 0.};
-
     // Create model for managing nodes and constraints
     auto model = Model();
 
+    // Set gravity in model
+    model.SetGravity(0., 0., 0.);
+
     // Build vector of nodes (straight along x axis, no rotation)
-    std::vector<BeamNode> beam_nodes;
+    std::vector<size_t> beam_node_ids;
     std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
+        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
         [&](auto s) {
-            return BeamNode(s, *model.AddNode({10 * s, 0., 0., 1., 0., 0., 0.}));
+            return model.AddNode()
+                .SetElemLocation(s)
+                .SetPosition(10 * s, 0., 0., 1., 0., 0., 0.)
+                .Build();
         }
     );
 
-    // Define beam initialization
-    const auto beams_input = BeamsInput({BeamElement(beam_nodes, sections, quadrature)}, gravity);
-    const auto num_nodes = beam_nodes.size();
+    // Add beam element
+    model.AddBeamElement(
+        beam_node_ids,
+        {
+            BeamSection(0., mass_matrix, stiffness_matrix),
+            BeamSection(1., mass_matrix, stiffness_matrix),
+        },
+        BeamQuadrature{
+            {-0.9491079123427585, 0.1294849661688697},
+            {-0.7415311855993943, 0.27970539148927664},
+            {-0.40584515137739696, 0.3818300505051189},
+            {6.123233995736766e-17, 0.4179591836734694},
+            {0.4058451513773971, 0.3818300505051189},
+            {0.7415311855993945, 0.27970539148927664},
+            {0.9491079123427585, 0.1294849661688697},
+        }
+    );
 
-    // Initialize beams from element inputs
-    auto beams = CreateBeams(beams_input);
-
-    // No Masses/Springs for this problem
-    const auto masses_input = MassesInput({}, gravity);
-    auto masses = CreateMasses(masses_input);
-    const auto springs_input = SpringsInput({});
-    auto springs = CreateSprings(springs_input);
-
-    // Create elements from beams
-    auto elements = Elements{beams, masses, springs};
-
-    // Constraint inputs
-    model.AddFixedBC(model.GetNode(0));
+    // Fix first node position
+    model.AddFixedBC(beam_node_ids[0]);
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -116,24 +100,21 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     const double step_size(0.005);  // seconds
     const double rho_inf(0.0);
 
-    // Create solver
+    // Create solver parameters
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
-    auto constraints = Constraints(model.GetConstraints());
+
+    // Create solver, elements, constraints, and state
     auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, elements, constraints);
-    compute_node_freedom_map_table(state);
-    create_element_freedom_table(elements, state);
-    create_constraint_freedom_table(constraints, state);
-    auto solver = Solver(
-        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
-        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
-        constraints.row_range
-    );
+    auto elements = model.CreateElements();
+    auto constraints = model.CreateConstraints();
+    auto solver = CreateSolver(state, elements, constraints);
+
+    // Get ID of last node
+    const auto last_node_id = beam_node_ids.back();
 
     // First step
     Kokkos::deep_copy(
-        Kokkos::subview(beams.node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.005)
+        Kokkos::subview(elements.beams.node_FX, 0, last_node_id, 2), 100. * std::sin(10.0 * 0.005)
     );
     auto converged = Step(parameters, solver, elements, state, constraints);
     EXPECT_EQ(converged, true);
@@ -144,7 +125,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     }
     // Second step
     Kokkos::deep_copy(
-        Kokkos::subview(beams.node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.010)
+        Kokkos::subview(elements.beams.node_FX, 0, last_node_id, 2), 100. * std::sin(10.0 * 0.010)
     );
     converged = Step(parameters, solver, elements, state, constraints);
     EXPECT_EQ(converged, true);
@@ -156,7 +137,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
 
     // Third step
     Kokkos::deep_copy(
-        Kokkos::subview(beams.node_FX, 0, num_nodes - 1, 2), 100. * std::sin(10.0 * 0.015)
+        Kokkos::subview(elements.beams.node_FX, 0, last_node_id, 2), 100. * std::sin(10.0 * 0.015)
     );
     converged = Step(parameters, solver, elements, state, constraints);
     EXPECT_EQ(converged, true);
