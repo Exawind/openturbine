@@ -74,7 +74,7 @@ public:
     NodeBuilder AddNode() {
         const auto id = this->nodes_.size();
         this->nodes_.emplace_back(id);
-        return this->nodes_.back();
+        return NodeBuilder(this->nodes_.back());
     }
 
     /// Returns a node by ID - const/read-only version

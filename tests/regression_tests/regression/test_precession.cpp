@@ -50,7 +50,7 @@ inline auto SetUpPrecessionTest() {
     auto state = model.CreateState();
     auto elements = model.CreateElements();
     auto constraints = model.CreateConstraints();
-    auto solver = model.CreateSolver(state, elements, constraints);
+    auto solver = Model::CreateSolver(state, elements, constraints);
 
     // Run simulation for 500 steps
     for (size_t i = 0; i < 500; ++i) {

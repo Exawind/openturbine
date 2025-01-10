@@ -14,7 +14,7 @@ struct Node {
     double s;    //< Position of node in element on range [0, 1]
 
     /// @brief Construct a node with an ID
-    Node(size_t id)
+    explicit Node(size_t id)
         : ID(id),
           x(Array_7{0., 0., 0., 1., 0., 0., 0.}),
           u(Array_7{0., 0., 0., 1., 0., 0., 0.}),
@@ -66,7 +66,7 @@ struct Node {
 
 class NodeBuilder {
 public:
-    NodeBuilder(Node& n) : node(n) {}
+    explicit NodeBuilder(Node& n) : node(n) {}
     ~NodeBuilder() = default;
     NodeBuilder(const NodeBuilder&) = delete;
     NodeBuilder(NodeBuilder&&) = delete;

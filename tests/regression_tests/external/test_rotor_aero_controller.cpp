@@ -392,7 +392,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     auto state = model.CreateState();
     auto elements = model.CreateElements();
     auto constraints = model.CreateConstraints();
-    auto solver = model.CreateSolver(state, elements, constraints);
+    auto solver = Model::CreateSolver(state, elements, constraints);
 
     // Transfer initial state to beams for writing output
     UpdateSystemVariables(parameters, elements, state);
