@@ -10,7 +10,7 @@
 
 namespace openturbine {
 
-inline Beams CreateBeams(const BeamsInput& beams_input) {
+inline Beams CreateBeams(const BeamsInput& beams_input, const std::vector<Node>& nodes) {
     Beams beams(
         beams_input.NumElements(), beams_input.MaxElemNodes(), beams_input.MaxElemQuadraturePoints()
     );
@@ -38,7 +38,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
 
     for (size_t i = 0; i < beams_input.NumElements(); i++) {
         // Get number of nodes and quadrature points in element
-        const auto num_nodes = beams_input.elements[i].nodes.size();
+        const auto num_nodes = beams_input.elements[i].node_ids.size();
         const auto num_qps = beams_input.elements[i].quadrature.size();
 
         // Create element indices and set in host mirror
@@ -47,13 +47,13 @@ inline Beams CreateBeams(const BeamsInput& beams_input) {
 
         // Populate beam node->state indices
         for (size_t j = 0; j < num_nodes; ++j) {
-            host_node_state_indices(i, j) =
-                static_cast<size_t>(beams_input.elements[i].nodes[j].node.ID);
+            host_node_state_indices(i, j) = beams_input.elements[i].node_ids[j];
         }
 
         // Populate views for this element
         PopulateElementViews(
             beams_input.elements[i],  // Element inputs
+            nodes,
             Kokkos::subview(host_node_x0, i, Kokkos::make_pair(size_t{0U}, num_nodes), Kokkos::ALL),
             Kokkos::subview(host_qp_weight, i, Kokkos::make_pair(size_t{0U}, num_qps)),
             Kokkos::subview(

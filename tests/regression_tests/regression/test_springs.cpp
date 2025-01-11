@@ -11,23 +11,18 @@ namespace openturbine::tests {
 
 inline auto SetUpSprings() {
     auto model = Model();
+
     // Add two nodes for the spring element
-    model.AddNode(
-        {0., 0., 0., 1., 0., 0., 0.},  // First node at origin
-        {0., 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}
-    );
-    model.AddNode(
-        {1., 0., 0., 1., 0., 0., 0.},  // Second node at (1,0,0)
-        {0., 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}, {0., 0., 0., 0., 0., 0.}
-    );
+    auto node1_id =
+        model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();  // First node at origin
+    auto node2_id =
+        model.AddNode().SetPosition(1., 0., 0., 1., 0., 0., 0.).Build();  // Second node at (1,0,0)
 
-    const auto springs_input = SpringsInput({SpringElement(
-        std::array{model.GetNode(0), model.GetNode(1)},
-        10.,  // Spring stiffness coeff.
-        1.    // Undeformed length
-    )});
+    const auto k = 10.;  // Spring stiffness coeff.
+    const auto l0 = 1.;  // Undeformed length
+    model.AddSpringElement(node1_id, node2_id, k, l0);
 
-    auto springs = CreateSprings(springs_input);
+    auto springs = model.CreateSprings();
     auto state = model.CreateState();
 
     return std::make_tuple(springs, state);

@@ -1,20 +1,33 @@
 #pragma once
 
 #include <functional>
+#include <tuple>
 
 #include "copy_nodes_to_state.hpp"
 #include "node.hpp"
 
 #include "src/constraints/constraint.hpp"
-#include "src/elements/beams/beam_element.hpp"
-#include "src/elements/masses/mass_element.hpp"
+#include "src/constraints/constraints.hpp"
+#include "src/dof_management/assemble_node_freedom_allocation_table.hpp"
+#include "src/dof_management/compute_node_freedom_map_table.hpp"
+#include "src/dof_management/create_constraint_freedom_table.hpp"
+#include "src/dof_management/create_element_freedom_table.hpp"
+#include "src/elements/beams/beams_input.hpp"
+#include "src/elements/beams/create_beams.hpp"
+#include "src/elements/elements.hpp"
+#include "src/elements/masses/create_masses.hpp"
+#include "src/elements/masses/masses_input.hpp"
+#include "src/elements/springs/create_springs.hpp"
+#include "src/elements/springs/springs_input.hpp"
+#include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
+#include "src/step/step_parameters.hpp"
 #include "src/types.hpp"
 
 namespace openturbine {
 
 /// Represents an invalid node in constraints that only uses the target node
-static const Node InvalidNode(0U, {0., 0., 0., 1., 0., 0., 0.});
+static const size_t InvalidNodeID(0U);
 
 /**
  * @brief Struct to define a turbine model with nodes, elements, and constraints
@@ -32,182 +45,170 @@ public:
     /// Default constructor
     Model() = default;
 
-    /**
-     * @brief Constructs a model from vectors of nodes, beam elements, and constraints
-     *
-     * @param nodes Vector of nodes
-     * @param beam_elements Vector of beam elements
-     * @param mass_elements Vector of mass elements
-     * @param constraints Vector of constraints
-     */
-    Model(
-        const std::vector<Node>& nodes, const std::vector<BeamElement>& beam_elements,
-        const std::vector<MassElement>& mass_elements, const std::vector<Constraint>& constraints
-    ) {
-        for (const auto& n : nodes) {
-            this->nodes_.emplace_back(std::make_shared<Node>(n));
-        }
-        for (const auto& e : beam_elements) {
-            this->beam_elements_.emplace_back(std::make_shared<BeamElement>(e));
-        }
-        for (const auto& m : mass_elements) {
-            this->mass_elements_.emplace_back(std::make_shared<MassElement>(m));
-        }
-        for (const auto& c : constraints) {
-            this->constraints_.emplace_back(std::make_shared<Constraint>(c));
-        }
+    //--------------------------------------------------------------------------
+    // Miscellaneous
+    //--------------------------------------------------------------------------
+
+    /// @brief Sets the gravity components for the model
+    /// @param x X gravity component
+    /// @param y Y gravity component
+    /// @param z Z gravity component
+    void SetGravity(double x, double y, double z) {
+        this->gravity_[0] = x;
+        this->gravity_[1] = y;
+        this->gravity_[2] = z;
     }
 
-    /**
-     * @brief Constructs a model from vectors of shared pointers to nodes, beam elements, and
-     * constraints
-     *
-     * @param nodes Vector of shared pointers to nodes
-     * @param beam_elements Vector of shared pointers to beam elements
-     * @param mass_elements Vector of shared pointers to mass elements
-     * @param constraints Vector of shared pointers to constraints
-     */
-    Model(
-        std::vector<std::shared_ptr<Node>> nodes,
-        std::vector<std::shared_ptr<BeamElement>> beam_elements,
-        std::vector<std::shared_ptr<MassElement>> mass_elements,
-        std::vector<std::shared_ptr<Constraint>> constraints
-    )
-        : nodes_(std::move(nodes)),
-          beam_elements_(std::move(beam_elements)),
-          mass_elements_(std::move(mass_elements)),
-          constraints_(std::move(constraints)) {}
+    //--------------------------------------------------------------------------
+    // Nodes
+    //--------------------------------------------------------------------------
 
     /**
-     * @brief Adds a node to the model and returns a shared pointer to the node
+     * @brief Adds a node to the model and returns the index of the node
      *
      * @param position Position vector
      * @param displacement Displacement vector
      * @param velocity Velocity vector
      * @param acceleration Acceleration vector
      */
-    std::shared_ptr<Node> AddNode(
-        const Array_7& position, const Array_7& displacement = Array_7{0., 0., 0., 1., 0., 0., 0.},
-        const Array_6& velocity = Array_6{0., 0., 0., 0., 0., 0.},
-        const Array_6& acceleration = Array_6{0., 0., 0., 0., 0., 0.}
-    ) {
-        return this->nodes_.emplace_back(
-            std::make_shared<Node>(nodes_.size(), position, displacement, velocity, acceleration)
-        );
+    NodeBuilder AddNode() {
+        const auto id = this->nodes_.size();
+        this->nodes_.emplace_back(id);
+        return NodeBuilder(this->nodes_.back());
     }
 
     /// Returns a node by ID - const/read-only version
-    [[nodiscard]] const Node& GetNode(size_t id) const { return *this->nodes_[id]; }
+    [[nodiscard]] const Node& GetNode(size_t id) const { return this->nodes_[id]; }
 
     /// Returns a node by ID - non-const version
-    [[nodiscard]] Node& GetNode(size_t id) { return *this->nodes_[id]; }
-
-    /// Returns a reference to the nodes in the model (as vector of shared pointers)
-    [[nodiscard]] const std::vector<std::shared_ptr<Node>>& GetNodes() const { return this->nodes_; }
+    [[nodiscard]] Node& GetNode(size_t id) { return this->nodes_[id]; }
 
     /// Returns the number of nodes present in the model
     [[nodiscard]] size_t NumNodes() const { return this->nodes_.size(); }
 
-    /// Adds a beam element to the model and returns a shared pointer handle to the element
-    std::shared_ptr<BeamElement> AddBeamElement(
-        const std::vector<BeamNode>& nodes, const std::vector<BeamSection>& sections,
+    /// Returns constant reference to nodes vector
+    [[nodiscard]] const std::vector<Node>& GetNodes() const { return this->nodes_; }
+
+    //--------------------------------------------------------------------------
+    // Beam Elements
+    //--------------------------------------------------------------------------
+
+    /// Adds a beam element to the model and returns the index of the element
+    size_t AddBeamElement(
+        const std::vector<size_t>& node_ids, const std::vector<BeamSection>& sections,
         const BeamQuadrature& quadrature
     ) {
-        return this->beam_elements_.emplace_back(
-            std::make_shared<BeamElement>(nodes, sections, quadrature)
-        );
+        const auto elem_id = this->beam_elements_.size();
+        this->beam_elements_.emplace_back(elem_id, node_ids, sections, quadrature);
+        return elem_id;
     }
 
     /// Returns a beam element by ID - const/read-only version
     [[nodiscard]] const BeamElement& GetBeamElement(size_t id) const {
-        return *this->beam_elements_[id];
+        return this->beam_elements_[id];
     }
 
     /// Returns a beam element by ID - non-const version
-    [[nodiscard]] BeamElement& GetBeamElement(size_t id) { return *this->beam_elements_[id]; }
+    [[nodiscard]] BeamElement& GetBeamElement(size_t id) { return this->beam_elements_[id]; }
 
     /// Returns a reference to the beam elements present in the model
-    [[nodiscard]] const std::vector<std::shared_ptr<BeamElement>>& GetBeamElements() const {
+    [[nodiscard]] const std::vector<BeamElement>& GetBeamElements() const {
         return this->beam_elements_;
     }
 
     /// Returns the number of beam elements present in the model
     [[nodiscard]] size_t NumBeamElements() const { return this->beam_elements_.size(); }
 
-    /// Adds a mass element to the model and returns a shared pointer to the element
-    std::shared_ptr<MassElement> AddMassElement(
-        const Node& node, const std::array<std::array<double, 6>, 6>& mass
-    ) {
-        return this->mass_elements_.emplace_back(std::make_shared<MassElement>(node, mass));
+    /// Returns initialized BeamsInput struct
+    [[nodiscard]] BeamsInput CreateBeamsInput() { return {this->beam_elements_, this->gravity_}; }
+
+    /// Returns Beams struct initialized with beams
+    [[nodiscard]] Beams CreateBeams() {
+        return openturbine::CreateBeams(this->CreateBeamsInput(), this->nodes_);
     }
 
-    /// Adds a mass element to the model and returns a shared pointer to the element
+    //--------------------------------------------------------------------------
+    // Mass Elements
+    //--------------------------------------------------------------------------
+
+    /// Adds a mass element to the model and returns the index of the element
+    size_t AddMassElement(const size_t node_id, const std::array<std::array<double, 6>, 6>& mass) {
+        const auto elem_id = this->mass_elements_.size();
+        this->mass_elements_.emplace_back(elem_id, node_id, mass);
+        return elem_id;
+    }
+
     /// Returns a mass element by ID - const/read-only version
     [[nodiscard]] const MassElement& GetMassElement(size_t id) const {
-        return *this->mass_elements_[id];
+        return this->mass_elements_[id];
     }
 
     /// Returns a mass element by ID - non-const version
-    [[nodiscard]] MassElement& GetMassElement(size_t id) { return *this->mass_elements_[id]; }
+    [[nodiscard]] MassElement& GetMassElement(size_t id) { return this->mass_elements_[id]; }
 
     /// Returns a reference to the mass elements present in the model
-    [[nodiscard]] const std::vector<std::shared_ptr<MassElement>>& GetMassElements() const {
+    [[nodiscard]] const std::vector<MassElement>& GetMassElements() const {
         return this->mass_elements_;
     }
 
     /// Returns the number of mass elements present in the model
     [[nodiscard]] size_t NumMassElements() const { return this->mass_elements_.size(); }
 
-    /// Adds a rigid constraint to the model and returns a handle to the constraint
-    std::shared_ptr<Constraint> AddRigidJointConstraint(const Node& node1, const Node& node2) {
-        return this->constraints_.emplace_back(std::make_shared<Constraint>(
-            ConstraintType::kRigidJoint, constraints_.size(), node1, node2
-        ));
+    /// Returns Masses struct initialized from mass elements
+    [[nodiscard]] Masses CreateMasses() {
+        return openturbine::CreateMasses(
+            MassesInput(this->mass_elements_, this->gravity_), this->nodes_
+        );
     }
 
-    /// Adds a prescribed boundary condition constraint to the model and returns a handle to the
-    /// constraint
-    std::shared_ptr<Constraint> AddPrescribedBC(
-        const Node& node, const Array_3& ref_position = {0., 0., 0.}
+    //--------------------------------------------------------------------------
+    // Spring Elements
+    //--------------------------------------------------------------------------
+
+    /// Adds a spring element to the model and returns the index of the element
+    size_t AddSpringElement(
+        const size_t node1_id, const size_t node2_id, const double stiffness,
+        const double undeformed_length
     ) {
-        return this->constraints_.emplace_back(std::make_shared<Constraint>(
-            ConstraintType::kPrescribedBC, constraints_.size(), InvalidNode, node, ref_position
-        ));
+        const auto elem_id = this->spring_elements_.size();
+        this->spring_elements_.emplace_back(
+            elem_id, std::array{node1_id, node2_id}, stiffness, undeformed_length
+        );
+        return elem_id;
     }
 
-    /// Adds a fixed boundary condition constraint to the model and returns a handle to the
-    /// constraint
-    std::shared_ptr<Constraint> AddFixedBC(const Node& node) {
-        return this->constraints_.emplace_back(std::make_shared<Constraint>(
-            ConstraintType::kFixedBC, constraints_.size(), InvalidNode, node
-        ));
+    /// Returns a spring element by ID - const/read-only version
+    [[nodiscard]] const SpringElement& GetSpringElement(size_t id) const {
+        return this->spring_elements_[id];
     }
 
-    /// Adds a revolute/hinge constraint to the model and returns a handle to the constraint
-    std::shared_ptr<Constraint> AddRevoluteJointConstraint(
-        const Node& node1, const Node& node2, const Array_3& axis, double* torque
-    ) {
-        return this->constraints_.emplace_back(std::make_shared<Constraint>(
-            ConstraintType::kRevoluteJoint, constraints_.size(), node1, node2, axis, torque
-        ));
+    /// Returns a spring element by ID - non-const version
+    [[nodiscard]] SpringElement& GetSpringElement(size_t id) { return this->spring_elements_[id]; }
+
+    /// Returns the number of spring elements present in the model
+    [[nodiscard]] size_t NumSpringElements() const { return this->spring_elements_.size(); }
+
+    /// Returns Springs struct initialized from spring elements
+    [[nodiscard]] Springs CreateSprings() {
+        return openturbine::CreateSprings(SpringsInput(this->spring_elements_), this->nodes_);
     }
 
-    /// Adds a rotation control constraint to the model and returns a handle to the constraint
-    std::shared_ptr<Constraint> AddRotationControl(
-        const Node& node1, const Node& node2, const Array_3& axis, double* control
-    ) {
-        return this->constraints_.emplace_back(std::make_shared<Constraint>(
-            ConstraintType::kRotationControl, constraints_.size(), node1, node2, axis, control
-        ));
+    //--------------------------------------------------------------------------
+    // Elements
+    //--------------------------------------------------------------------------
+
+    /// Returns Elements struct initialized with elements
+    [[nodiscard]] Elements CreateElements() {
+        return Elements{
+            this->CreateBeams(),
+            this->CreateMasses(),
+            this->CreateSprings(),
+        };
     }
 
-    /// Returns the constraints in the model (as vector of shared pointers)
-    [[nodiscard]] const std::vector<std::shared_ptr<Constraint>>& GetConstraints() const {
-        return this->constraints_;
-    }
-
-    /// Returns the number of constraints present in the model
-    [[nodiscard]] size_t NumConstraints() const { return this->constraints_.size(); }
+    //--------------------------------------------------------------------------
+    // State
+    //--------------------------------------------------------------------------
 
     /// Returns a State object initialized from the model nodes
     [[nodiscard]] State CreateState() const {
@@ -216,11 +217,99 @@ public:
         return state;
     }
 
+    //--------------------------------------------------------------------------
+    // Constraints
+    //--------------------------------------------------------------------------
+
+    /// Adds a rigid constraint to the model and returns a handle to the constraint
+    size_t AddRigidJointConstraint(const size_t node1_id, const size_t node2_id) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(
+            ConstraintType::kRigidJoint, constraints_.size(), node1_id, node2_id
+        );
+        return id;
+    }
+
+    /// Adds a prescribed boundary condition constraint to the model and returns a handle to the
+    /// constraint
+    size_t AddPrescribedBC(const size_t node_id, const Array_3& ref_position = {0., 0., 0.}) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(
+            ConstraintType::kPrescribedBC, constraints_.size(), InvalidNodeID, node_id, ref_position
+        );
+        return id;
+    }
+
+    /// Adds a fixed boundary condition constraint to the model and returns a handle to the
+    /// constraint
+    size_t AddFixedBC(const size_t node_id) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(
+            ConstraintType::kFixedBC, constraints_.size(), InvalidNodeID, node_id
+        );
+        return id;
+    }
+
+    /// Adds a revolute/hinge constraint to the model and returns a handle to the constraint
+    size_t AddRevoluteJointConstraint(
+        const size_t node1_id, const size_t node2_id, const Array_3& axis, double* torque
+    ) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(
+            ConstraintType::kRevoluteJoint, constraints_.size(), node1_id, node2_id, axis, torque
+        );
+        return id;
+    }
+
+    /// Adds a rotation control constraint to the model and returns a handle to the constraint
+    size_t AddRotationControl(
+        const size_t node1_id, const size_t node2_id, const Array_3& axis, double* control
+    ) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(
+            ConstraintType::kRotationControl, constraints_.size(), node1_id, node2_id, axis, control
+        );
+        return id;
+    }
+
+    /// Returns the number of constraints present in the model
+    [[nodiscard]] size_t NumConstraints() const { return this->constraints_.size(); }
+
+    /// Returns a Constraints object initialized from the model constraints
+    [[nodiscard]] Constraints CreateConstraints() const {
+        return Constraints(this->constraints_, this->nodes_);
+    }
+
 private:
-    std::vector<std::shared_ptr<Node>> nodes_;                 //< Nodes in the model
-    std::vector<std::shared_ptr<BeamElement>> beam_elements_;  //< Beam elements in the model
-    std::vector<std::shared_ptr<MassElement>> mass_elements_;  //< Mass elements in the model
-    std::vector<std::shared_ptr<Constraint>> constraints_;     //< Constraints in the model
+    Array_3 gravity_ = {0., 0., 0.};              //< Gravity components
+    std::vector<Node> nodes_;                     //< Nodes in the model
+    std::vector<BeamElement> beam_elements_;      //< Beam elements in the model
+    std::vector<MassElement> mass_elements_;      //< Mass elements in the model
+    std::vector<SpringElement> spring_elements_;  //< Spring elements in the model
+    std::vector<Constraint> constraints_;         //< Constraints in the model
 };
+
+/// @brief Compute freedom tables for state, elements, and constraints, then construct and return
+/// solver.
+[[nodiscard]] inline Solver CreateSolver(
+    State& state, Elements& elements, Constraints& constraints
+) {
+    assemble_node_freedom_allocation_table(state, elements, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(elements, state);
+    create_constraint_freedom_table(constraints, state);
+    return {
+        state.ID,
+        state.node_freedom_allocation_table,
+        state.node_freedom_map_table,
+        elements.NumberOfNodesPerElement(),
+        elements.NodeStateIndices(),
+        constraints.num_dofs,
+        constraints.type,
+        constraints.base_node_freedom_table,
+        constraints.target_node_freedom_table,
+        constraints.row_range
+    };
+}
 
 }  // namespace openturbine

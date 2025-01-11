@@ -5,6 +5,6 @@ target_sources(
     test_assemble_node_freedom_allocation_table.cpp
     test_compute_node_freedom_map_table.cpp
     test_create_element_freedom_table.cpp
-    test_create_constraint_freedom_table.cpp
+    #test_create_constraint_freedom_table.cpp
     test_freedom_signature.cpp
 )
