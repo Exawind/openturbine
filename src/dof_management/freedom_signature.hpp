@@ -7,7 +7,7 @@
 namespace openturbine {
 
 /**
- * @brief Represents the active degrees of freedom for a node or element
+ * @brief Represents the active degrees of freedom for a node
  *
  * Each bit in the 6-bit signature represents a degree of freedom:
  * - Bits 5-3: Translational DOFs (x, y, z positions)

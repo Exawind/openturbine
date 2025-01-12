@@ -143,10 +143,10 @@ struct Constraints {
             }
 
             // Calculate rotation axes
-            const auto axes_matrix = CalculateAxes(c, x0);
+            const auto rotation_matrix = CalculateAxes(c, x0);
             for (size_t j = 0; j < 3; ++j) {
                 for (size_t k = 0; k < 3; ++k) {
-                    host_axes(i, j, k) = axes_matrix[j][k];
+                    host_axes(i, j, k) = rotation_matrix[j][k];
                 }
             }
         }
@@ -168,13 +168,15 @@ struct Constraints {
         const Constraint& constraint, const Node& target_node, const Node& base_node
     ) {
         Array_3 x0{0., 0., 0.};
-        // Set X0 to the prescribed displacement for fixed and prescribed BCs
+        // Set X0 to the prescribed displacement for fixed and prescribed BCs i.e. constraints
+        // with 1 node
         if (GetNumberOfNodes(constraint.type) == 1) {
             x0[0] = target_node.x[0] - constraint.vec[0];
             x0[1] = target_node.x[1] - constraint.vec[1];
             x0[2] = target_node.x[2] - constraint.vec[2];
             return x0;
         }
+
         // Default: set X0 to the relative position between nodes
         x0[0] = target_node.x[0] - base_node.x[0];
         x0[1] = target_node.x[1] - base_node.x[1];
@@ -184,7 +186,7 @@ struct Constraints {
 
     /// Calculates the rotation axes for a constraint based on its type and configuration
     Array_3x3 CalculateAxes(const Constraint& constraint, const Array_3& x0) {
-        Array_3x3 axes_matrix{};
+        Array_3x3 rotation_matrix{};
         if (constraint.type == ConstraintType::kRevoluteJoint) {
             constexpr Array_3 x = {1., 0., 0.};
             const Array_3 x_hat =
@@ -196,32 +198,35 @@ struct Constraints {
             const auto k = 1. / (1. + dot_product);
 
             // Set orthogonal unit vectors from the rotation matrix
-            axes_matrix[0][0] = cross_product[0] * cross_product[0] * k + dot_product;
-            axes_matrix[0][1] = cross_product[1] * cross_product[0] * k + cross_product[2];
-            axes_matrix[0][2] = cross_product[2] * cross_product[0] * k - cross_product[1];
+            rotation_matrix[0][0] = cross_product[0] * cross_product[0] * k + dot_product;
+            rotation_matrix[0][1] = cross_product[1] * cross_product[0] * k + cross_product[2];
+            rotation_matrix[0][2] = cross_product[2] * cross_product[0] * k - cross_product[1];
 
-            axes_matrix[1][0] = cross_product[0] * cross_product[1] * k - cross_product[2];
-            axes_matrix[1][1] = cross_product[1] * cross_product[1] * k + dot_product;
-            axes_matrix[1][2] = cross_product[2] * cross_product[1] * k + cross_product[0];
+            rotation_matrix[1][0] = cross_product[0] * cross_product[1] * k - cross_product[2];
+            rotation_matrix[1][1] = cross_product[1] * cross_product[1] * k + dot_product;
+            rotation_matrix[1][2] = cross_product[2] * cross_product[1] * k + cross_product[0];
 
-            axes_matrix[2][0] = cross_product[0] * cross_product[2] * k + cross_product[1];
-            axes_matrix[2][1] = cross_product[1] * cross_product[2] * k - cross_product[0];
-            axes_matrix[2][2] = cross_product[2] * cross_product[2] * k + dot_product;
+            rotation_matrix[2][0] = cross_product[0] * cross_product[2] * k + cross_product[1];
+            rotation_matrix[2][1] = cross_product[1] * cross_product[2] * k - cross_product[0];
+            rotation_matrix[2][2] = cross_product[2] * cross_product[2] * k + dot_product;
 
-            return axes_matrix;
+            return rotation_matrix;
         }
+
+        // Set rotation_matrix to the unit vector of the constraint axis for rotation control
         if (constraint.type == ConstraintType::kRotationControl) {
             const auto unit_vector = UnitVector(constraint.vec);
-            axes_matrix[0][0] = unit_vector[0];
-            axes_matrix[0][1] = unit_vector[1];
-            axes_matrix[0][2] = unit_vector[2];
-            return axes_matrix;
+            rotation_matrix[0][0] = unit_vector[0];
+            rotation_matrix[0][1] = unit_vector[1];
+            rotation_matrix[0][2] = unit_vector[2];
+            return rotation_matrix;
         }
-        // If not a revolute/hinge joint, set axes_matrix to the input vector
-        axes_matrix[0][0] = constraint.vec[0];
-        axes_matrix[0][1] = constraint.vec[1];
-        axes_matrix[0][2] = constraint.vec[2];
-        return axes_matrix;
+
+        // If not a revolute/hinge joint, set rotation_matrix to the input vector
+        rotation_matrix[0][0] = constraint.vec[0];
+        rotation_matrix[0][1] = constraint.vec[1];
+        rotation_matrix[0][2] = constraint.vec[2];
+        return rotation_matrix;
     }
 
     /// Sets the new displacement for the given constraint

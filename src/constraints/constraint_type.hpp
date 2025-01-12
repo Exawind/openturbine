@@ -21,12 +21,12 @@ enum class ConstraintType : std::uint8_t {
 /// Returns the number of nodes used/required by the constraint type
 KOKKOS_INLINE_FUNCTION
 constexpr size_t GetNumberOfNodes(ConstraintType t) {
-    // Rigid joint/revolute joint/rotation control constraints require two nodes
+    // Rigid joint, Revolute joint, Rotation control constraints require two nodes
     const auto has_two_nodes = t == ConstraintType::kRigidJoint ||
                                t == ConstraintType::kRevoluteJoint ||
                                t == ConstraintType::kRotationControl;
 
-    // Default is one node (fixed and prescribed BCs)
+    // Default is one node -- Fixed and Prescribed BCs
     return 1U + static_cast<size_t>(has_two_nodes);
 }
 
