@@ -7,6 +7,7 @@ namespace openturbine::tests {
 
 struct ExecuteCalculateRigidJointConstraint {
     int i_constraint;
+    Kokkos::View<size_t* [2]>::const_type node_num_dofs;
     Kokkos::View<size_t*>::const_type base_node_index;
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3]>::const_type X0;
@@ -18,14 +19,26 @@ struct ExecuteCalculateRigidJointConstraint {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        CalculateRigidJointConstraint{
-            i_constraint,   base_node_index,     target_node_index,    X0, constraint_inputs, node_u,
-            residual_terms, base_gradient_terms, target_gradient_terms
-        }();
+        CalculateRigidJointConstraint{i_constraint,
+                                      node_num_dofs,
+                                      base_node_index,
+                                      target_node_index,
+                                      X0,
+                                      constraint_inputs,
+                                      node_u,
+                                      residual_terms,
+                                      base_gradient_terms,
+                                      target_gradient_terms}();
     }
 };
 
 TEST(CalculateRigidJointConstraintTests, OneConstraint) {
+    const auto node_num_dofs = Kokkos::View<size_t[1][2]>("node_num_dofs");
+    constexpr auto node_num_dofs_host_data = std::array<size_t, 2>{6UL, 6UL};
+    const auto node_num_dofs_host =
+        Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(node_num_dofs_host_data.data());
+    Kokkos::deep_copy(node_num_dofs, node_num_dofs_host);
+
     const auto target_node_index = Kokkos::View<size_t[1]>("target_node_index");
     constexpr auto target_node_index_host_data = std::array<size_t, 1>{1UL};
     const auto target_node_index_host =
@@ -72,8 +85,8 @@ TEST(CalculateRigidJointConstraintTests, OneConstraint) {
     Kokkos::parallel_for(
         "CalculatePrescribedBCConstraint", 1,
         ExecuteCalculateRigidJointConstraint{
-            0, base_node_index, target_node_index, X0, constraint_inputs, node_u, residual_terms,
-            base_gradient_terms, target_gradient_terms
+            0, node_num_dofs, base_node_index, target_node_index, X0, constraint_inputs, node_u,
+            residual_terms, base_gradient_terms, target_gradient_terms
         }
     );
 

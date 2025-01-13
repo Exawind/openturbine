@@ -12,6 +12,7 @@ namespace openturbine {
 
 struct CalculatePrescribedBCConstraint {
     int i_constraint;
+    Kokkos::View<size_t* [2]>::const_type node_num_dofs;
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3]>::const_type X0_;
     Kokkos::View<double* [7]>::const_type constraint_inputs;
@@ -85,6 +86,12 @@ struct CalculatePrescribedBCConstraint {
         RotateVectorByQuaternion(R1, X0, R1_X0);
         for (int i = 0; i < 3; ++i) {
             residual_terms(i_constraint, i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
+        }
+
+        const auto min_num_dofs =
+            std::min(node_num_dofs(i_constraint, 0), node_num_dofs(i_constraint, 1));
+        if (min_num_dofs == 3) {
+            return;
         }
 
         // Angular residual

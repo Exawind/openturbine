@@ -16,6 +16,7 @@ namespace openturbine {
 
 struct CalculateConstraintResidualGradient {
     Kokkos::View<ConstraintType*>::const_type type;
+    Kokkos::View<size_t* [2]>::const_type node_num_dofs;
     Kokkos::View<size_t*>::const_type base_node_index;
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3]>::const_type X0_;
@@ -37,17 +38,22 @@ struct CalculateConstraintResidualGradient {
             return;
         };
         if (constraint_type == ConstraintType::kPrescribedBC) {
-            CalculatePrescribedBCConstraint{
-                i_constraint,   target_node_index,    X0_, constraint_inputs, node_u,
-                residual_terms, target_gradient_terms
-            }();
+            CalculatePrescribedBCConstraint{i_constraint,      node_num_dofs,
+                                            target_node_index, X0_,
+                                            constraint_inputs, node_u,
+                                            residual_terms,    target_gradient_terms}();
             return;
         };
         if (constraint_type == ConstraintType::kRigidJoint) {
-            CalculateRigidJointConstraint{i_constraint,         base_node_index,
-                                          target_node_index,    X0_,
-                                          constraint_inputs,    node_u,
-                                          residual_terms,       base_gradient_terms,
+            CalculateRigidJointConstraint{i_constraint,
+                                          node_num_dofs,
+                                          base_node_index,
+                                          target_node_index,
+                                          X0_,
+                                          constraint_inputs,
+                                          node_u,
+                                          residual_terms,
+                                          base_gradient_terms,
                                           target_gradient_terms}();
             return;
         };

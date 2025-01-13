@@ -24,12 +24,13 @@ namespace openturbine {
  * - Maintaining computational views for residuals and gradients
  */
 struct Constraints {
-    size_t num_constraints;  //< Total number of constraints
-    size_t num_dofs;         //< Total number of degrees of freedom
+    size_t num_constraints;  //< Total number of constraints in the system
+    size_t num_dofs;         //< Total number of degrees of freedom controlled by constraints
 
     // Constraint properties
-    std::vector<double*> control_signal;      //< Control signal for each constraint
     Kokkos::View<ConstraintType*> type;       //< Type of each constraint
+    Kokkos::View<size_t* [2]> node_num_dofs;  //< Number of DOFs: {base_node, target_node}
+    std::vector<double*> control_signal;      //< Control signal for each constraint
     Kokkos::View<size_t*> base_node_index;    //< Index of the base node for each constraint
     Kokkos::View<size_t*> target_node_index;  //< Index of the target node for each constraint
 
@@ -69,8 +70,9 @@ struct Constraints {
                   return NumDOFsForConstraint(c.type);
               }
           )},
-          control_signal(num_constraints),
           type("type", num_constraints),
+          node_num_dofs("node_num_dofs", num_constraints),
+          control_signal(num_constraints),
           base_node_index("base_node_index", num_constraints),
           target_node_index("target_node_index", num_constraints),
           row_range("row_range", num_constraints),
@@ -95,6 +97,7 @@ struct Constraints {
         Kokkos::deep_copy(target_node_freedom_signature, FreedomSignature::AllComponents);
 
         auto host_type = Kokkos::create_mirror(type);
+        auto host_node_num_dofs = Kokkos::create_mirror(node_num_dofs);
         auto host_row_range = Kokkos::create_mirror(row_range);
         auto host_base_node_col_range = Kokkos::create_mirror(base_node_col_range);
         auto host_target_node_col_range = Kokkos::create_mirror(target_node_col_range);
@@ -109,6 +112,8 @@ struct Constraints {
 
             // Set constraint properties
             host_type(i) = c.type;
+            host_node_num_dofs(i, 0) = c.node_num_dofs[0];
+            host_node_num_dofs(i, 1) = c.node_num_dofs[1];
             control_signal[i] = c.control;
 
             // Set base and target node index
@@ -152,6 +157,7 @@ struct Constraints {
         }
 
         Kokkos::deep_copy(type, host_type);
+        Kokkos::deep_copy(node_num_dofs, host_node_num_dofs);
         Kokkos::deep_copy(row_range, host_row_range);
         Kokkos::deep_copy(base_node_col_range, host_base_node_col_range);
         Kokkos::deep_copy(target_node_col_range, host_target_node_col_range);
