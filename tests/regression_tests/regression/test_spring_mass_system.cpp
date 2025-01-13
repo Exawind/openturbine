@@ -124,15 +124,25 @@ TEST(SpringMassSystemTest, FinalDisplacement) {
     SetUpSpringMassSystem();
 }
 
+/*
+ * A chain of identical masses held together by identical springs and anchored at both ends.
+ * When the masses are equidistant from eachother, the system shoud stay in perfect static
+ * equilibrium. By adjusting the variable number_of_masses, the size of the system can be scaled up
+ * or down.
+ *
+ * ASCII Art of the system with three masses (M) and anchor points (A):
+ *
+ * A ---/\/\/--- M ---/\/\/--- M ---/\/\/--- M ---/\/\/--- A
+ */
 inline auto SetUpSpringMassChainSystem() {
     auto model = Model();
 
-    // Add two nodes for the spring element
+    // Add nodes for each mass and an anchor point on each side
     constexpr auto number_of_masses = 10U;
-    constexpr auto displacement = .5;
+    constexpr auto displacement = 0.5;
     auto position = 0.;
     model.AddNode(
-        {position, 0., 0., 1., 0., 0., 0.},  // First node at origin -- initial position
+        {position, 0., 0., 1., 0., 0., 0.},  // Left anchor point
         {0., 0., 0., 1., 0., 0., 0.},        // initial displacement
         {0., 0., 0., 0., 0., 0.},            // initial velocity
         {0., 0., 0., 0., 0., 0.}             // initial acceleration
@@ -140,7 +150,7 @@ inline auto SetUpSpringMassChainSystem() {
     for (auto mass_number = 0U; mass_number < number_of_masses; ++mass_number) {
         position += displacement;
         model.AddNode(
-            {position, 0., 0., 1., 0., 0., 0.},  // Second node at (2,0,0) -- initial position
+            {position, 0., 0., 1., 0., 0., 0.},  // Mass location
             {0., 0., 0., 1., 0., 0., 0.},        // initial displacement
             {0., 0., 0., 0., 0., 0.},            // initial velocity
             {0., 0., 0., 0., 0., 0.}             // initial acceleration
@@ -148,7 +158,7 @@ inline auto SetUpSpringMassChainSystem() {
     }
     position += displacement;
     model.AddNode(
-        {position, 0., 0., 1., 0., 0., 0.},  // Second node at (2,0,0) -- initial position
+        {position, 0., 0., 1., 0., 0., 0.},  // Right anchor point
         {0., 0., 0., 1., 0., 0., 0.},        // initial displacement
         {0., 0., 0., 0., 0., 0.},            // initial velocity
         {0., 0., 0., 0., 0., 0.}             // initial acceleration
@@ -158,7 +168,7 @@ inline auto SetUpSpringMassChainSystem() {
     const auto beams_input = BeamsInput({}, {0., 0., 0.});
     auto beams = CreateBeams(beams_input);
 
-    // We need to add a mass element with identity for mass matrix to create a spring-mass system
+    // Mass matrix (Identical for all masses)
     constexpr auto m = 1.;
     constexpr auto j = 1.;
     constexpr auto mass_matrix = std::array{
@@ -191,7 +201,7 @@ inline auto SetUpSpringMassChainSystem() {
     // Create elements
     auto elements = Elements{beams, masses, springs};
 
-    // Add fixed BC to the first node
+    // Add fixed BC to the anchor nodes
     model.AddFixedBC(model.GetNode(0));
     model.AddFixedBC(model.GetNode(number_of_masses + 1));
 
@@ -209,8 +219,6 @@ inline auto SetUpSpringMassChainSystem() {
         constraints.row_range
     );
 
-    // The spring-mass system should move periodically between -2 and 2 (position of the second node)
-    // with simple harmonic motion where the time period is 2 * pi * sqrt(m / k)
     const double T = 2. * M_PI * sqrt(m / k);
     constexpr auto num_steps = 1000;
 
