@@ -172,7 +172,7 @@ inline auto SetUpSpringMassChainSystem() {
 
     auto mass_elements = std::vector<MassElement>{};
     for (auto mass_number = 0U; mass_number < number_of_masses; ++mass_number) {
-        mass_elements.emplace_back(MassElement(model.GetNode(mass_number + 1), mass_matrix));
+        mass_elements.emplace_back(model.GetNode(mass_number + 1), mass_matrix);
     }
     const auto masses_input = MassesInput(mass_elements, {0., 0., 0.});
     auto masses = CreateMasses(masses_input);
@@ -181,9 +181,9 @@ inline auto SetUpSpringMassChainSystem() {
     const auto k = 10.;
     auto spring_elements = std::vector<SpringElement>{};
     for (auto mass_number = 0U; mass_number <= number_of_masses; ++mass_number) {
-        spring_elements.emplace_back(SpringElement{
+        spring_elements.emplace_back(
             std::array{model.GetNode(mass_number), model.GetNode(mass_number + 1)}, k, 0.
-        });
+        );
     }
     const auto springs_input = SpringsInput(spring_elements);
     auto springs = CreateSprings(springs_input);
