@@ -16,21 +16,22 @@ namespace openturbine {
  * signals.
  */
 struct Constraint {
-    ConstraintType type;        //< Type of constraint
-    size_t ID;                  //< Unique identifier for constraint
-    size_t base_node_id;        //< Base node for constraint
-    size_t target_node_id;      //< Target node for constraint
-    Array_3 vec = {0.};         //< Vector for initialization data
-    double* control = nullptr;  //< Pointer to control signal (if any)
+    size_t ID;                            //< Unique identifier for constraint
+    ConstraintType type;                  //< Type of constraint
+    std::array<size_t, 2> node_ids;       //< Node IDs for: {base_node, target_node}
+    std::array<size_t, 2> node_num_dofs;  //< Number of DOFs associated w/: {base_node, target_node}
+    Array_3 vec = {0.};                   //< Vector for initialization data
+    double* control = nullptr;            //< Pointer to control signal (if any)
 
     Constraint(
-        ConstraintType constraint_type, size_t id, const size_t node1_id, const size_t node2_id,
-        const Array_3& v = {0., 0., 0.}, double* ctrl = nullptr
+        size_t id, ConstraintType constraint_type, const std::array<size_t, 2>& ids,
+        const std::array<size_t, 2>& n_dofs = {6U, 6U}, const Array_3& v = {0., 0., 0.},
+        double* ctrl = nullptr
     )
-        : type(constraint_type),
-          ID(id),
-          base_node_id(node1_id),
-          target_node_id(node2_id),
+        : ID(id),
+          type(constraint_type),
+          node_ids(ids),
+          node_num_dofs(n_dofs),
           vec(v),
           control(ctrl) {}
 };

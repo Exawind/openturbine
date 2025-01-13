@@ -221,53 +221,55 @@ public:
     // Constraints
     //--------------------------------------------------------------------------
 
-    /// Adds a rigid constraint to the model and returns a handle to the constraint
-    size_t AddRigidJointConstraint(const size_t node1_id, const size_t node2_id) {
-        const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(
-            ConstraintType::kRigidJoint, constraints_.size(), node1_id, node2_id
-        );
-        return id;
-    }
-
-    /// Adds a prescribed boundary condition constraint to the model and returns a handle to the
-    /// constraint
-    size_t AddPrescribedBC(const size_t node_id, const Array_3& ref_position = {0., 0., 0.}) {
-        const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(
-            ConstraintType::kPrescribedBC, constraints_.size(), InvalidNodeID, node_id, ref_position
-        );
-        return id;
-    }
-
-    /// Adds a fixed boundary condition constraint to the model and returns a handle to the
-    /// constraint
+    /// Adds a fixed boundary condition constraint to the model and returns the ID
     size_t AddFixedBC(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            ConstraintType::kFixedBC, constraints_.size(), InvalidNodeID, node_id
+            id, ConstraintType::kFixedBC, std::array{InvalidNodeID, node_id}
         );
         return id;
     }
 
-    /// Adds a revolute/hinge constraint to the model and returns a handle to the constraint
+    /// Adds a prescribed boundary condition constraint to the model and returns the ID
+    size_t AddPrescribedBC(
+        const size_t node_id, const std::array<size_t, 2>& n_dofs = {6U, 6U},
+        const Array_3& ref_position = {0., 0., 0.}
+    ) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(
+            id, ConstraintType::kPrescribedBC, std::array{InvalidNodeID, node_id}, n_dofs,
+            ref_position
+        );
+        return id;
+    }
+
+    /// Adds a rigid constraint to the model and returns the ID
+    size_t AddRigidJointConstraint(const std::array<size_t, 2>& ids) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(id, ConstraintType::kRigidJoint, ids);
+        return id;
+    }
+
+    /// Adds a revolute/hinge constraint to the model and returns the ID
     size_t AddRevoluteJointConstraint(
-        const size_t node1_id, const size_t node2_id, const Array_3& axis, double* torque
+        const std::array<size_t, 2>& ids, const std::array<size_t, 2>& n_dofs, const Array_3& axis,
+        double* torque
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            ConstraintType::kRevoluteJoint, constraints_.size(), node1_id, node2_id, axis, torque
+            id, ConstraintType::kRevoluteJoint, ids, n_dofs, axis, torque
         );
         return id;
     }
 
-    /// Adds a rotation control constraint to the model and returns a handle to the constraint
+    /// Adds a rotation control constraint to the model and returns the ID
     size_t AddRotationControl(
-        const size_t node1_id, const size_t node2_id, const Array_3& axis, double* control
+        const std::array<size_t, 2>& ids, const std::array<size_t, 2>& n_dofs, const Array_3& axis,
+        double* control
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            ConstraintType::kRotationControl, constraints_.size(), node1_id, node2_id, axis, control
+            id, ConstraintType::kRotationControl, ids, n_dofs, axis, control
         );
         return id;
     }
@@ -289,8 +291,8 @@ private:
     std::vector<Constraint> constraints_;         //< Constraints in the model
 };
 
-/// @brief Compute freedom tables for state, elements, and constraints, then construct and return
-/// solver.
+/// @brief Compute freedom tables for state, elements, and constraints -> then construct and return
+/// solver
 [[nodiscard]] inline Solver CreateSolver(
     State& state, Elements& elements, Constraints& constraints
 ) {

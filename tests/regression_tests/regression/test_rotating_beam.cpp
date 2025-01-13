@@ -388,7 +388,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
 
     // Add hub node and associated constraints
     auto hub_node_id_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
-    model.AddRigidJointConstraint(hub_node_id_id, beam_node_ids[0]);
+    model.AddRigidJointConstraint({hub_node_id_id, beam_node_ids[0]});
     auto hub_bc_id = model.AddPrescribedBC(hub_node_id_id);
 
     // Solution parameters
@@ -457,7 +457,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     // Add hub node and associated constraints
     auto pitch = 0.;
     auto hub_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
-    model.AddRotationControl(hub_node_id, beam_node_ids[0], {1., 0., 0.}, &pitch);
+    model.AddRotationControl({hub_node_id, beam_node_ids[0]}, {6U, 6U}, {1., 0., 0.}, &pitch);
     model.AddFixedBC(hub_node_id);
 
     // Solution parameters
@@ -530,7 +530,7 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
     // Add hub node and associated constraints
     auto pitch = 0.;
     auto hub_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
-    model.AddRotationControl(hub_node_id, beam_node_ids[0], {1., 0., 0.}, &pitch);
+    model.AddRotationControl({hub_node_id, beam_node_ids[0]}, {6U, 6U}, {1., 0., 0.}, &pitch);
     auto hub_bc_id = model.AddPrescribedBC(hub_node_id);
 
     // Solution parameters
@@ -603,10 +603,10 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
 
     // Revolute joint constraint
     auto torque = 0.;
-    model.AddRevoluteJointConstraint(ground_node_id, hub_node_id, {0., 0., 0.}, &torque);
+    model.AddRevoluteJointConstraint({ground_node_id, hub_node_id}, {6U, 6U}, {0., 0., 0.}, &torque);
 
     // Hub node is rigidly connected
-    model.AddRigidJointConstraint(hub_node_id, beam_node_ids[0]);
+    model.AddRigidJointConstraint({hub_node_id, beam_node_ids[0]});
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -706,14 +706,15 @@ void GeneratorTorqueWithAxisTilt(
     // Add torque to the azimuth node to simulate generator torque
     auto torque = 100.;
     auto shaft_rj_id = model.AddRevoluteJointConstraint(  // Azimuth can rotate around shaft base
-        shaft_base_node_id, azimuth_node_id, {0., std::sin(tilt), std::cos(tilt)}, &torque
+        {shaft_base_node_id, azimuth_node_id}, {6U, 6U}, {0., std::sin(tilt), std::cos(tilt)},
+        &torque
     );
 
     // Hub is rigidly attached to azimuth
-    model.AddRigidJointConstraint(azimuth_node_id, hub_node_id);
+    model.AddRigidJointConstraint({azimuth_node_id, hub_node_id});
 
     // Beam is rigidly attached to hub
-    model.AddRigidJointConstraint(hub_node_id, beam_node_ids[0]);
+    model.AddRigidJointConstraint({hub_node_id, beam_node_ids[0]});
 
     // Solution parameters
     const bool is_dynamic_solve(true);

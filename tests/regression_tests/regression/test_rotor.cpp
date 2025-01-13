@@ -127,9 +127,7 @@ TEST(RotorTest, IEA15Rotor) {
     std::transform(
         beam_elem_ids.cbegin(), beam_elem_ids.cend(), std::back_inserter(prescribed_bc_ids),
         [&model](const auto& beam_elem_id) {
-            return model.AddPrescribedBC(
-                model.GetBeamElement(beam_elem_id).node_ids[0], {0., 0., 0.}
-            );
+            return model.AddPrescribedBC(model.GetBeamElement(beam_elem_id).node_ids[0]);
         }
     );
 
@@ -272,9 +270,9 @@ TEST(RotorTest, IEA15RotorHub) {
     // Define hub node and associated constraints
     auto hub_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
     for (const auto& beam_elem_id : beam_elem_ids) {
-        model.AddRigidJointConstraint(hub_node_id, model.GetBeamElement(beam_elem_id).node_ids[0]);
+        model.AddRigidJointConstraint({hub_node_id, model.GetBeamElement(beam_elem_id).node_ids[0]});
     }
-    auto hub_bc_id = model.AddPrescribedBC(hub_node_id, {0., 0., 0.});
+    auto hub_bc_id = model.AddPrescribedBC(hub_node_id);
 
     // Create solver with initial node state
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
@@ -435,11 +433,11 @@ TEST(RotorTest, IEA15RotorController) {
         );
         const auto pitch_axis = RotateVectorByQuaternion(q_root, {1., 0., 0.});
         model.AddRotationControl(
-            hub_node_d, model.GetBeamElement(beam_elem_ids[i]).node_ids[0], pitch_axis,
+            {hub_node_d, model.GetBeamElement(beam_elem_ids[i]).node_ids[0]}, {6U, 6U}, pitch_axis,
             blade_pitch_command[i]
         );
     }
-    auto hub_bc_id = model.AddPrescribedBC(hub_node_d, {0., 0., 0.});
+    auto hub_bc_id = model.AddPrescribedBC(hub_node_d);
 
     // Create solver, elements, constraints, and state
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);

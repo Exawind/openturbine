@@ -112,8 +112,8 @@ struct Constraints {
             control_signal[i] = c.control;
 
             // Set base and target node index
-            const auto base_node_id = c.base_node_id;
-            const auto target_node_id = c.target_node_id;
+            const auto base_node_id = c.node_ids[0];
+            const auto target_node_id = c.node_ids[1];
             host_base_node_index(i) = base_node_id;
             host_target_node_index(i) = target_node_id;
 
