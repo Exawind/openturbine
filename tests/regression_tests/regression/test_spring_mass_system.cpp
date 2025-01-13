@@ -112,32 +112,13 @@ inline auto SetUpSpringMassChainSystem() {
     constexpr auto number_of_masses = 10U;
     constexpr auto displacement = 0.5;
     auto position = 0.;
-    model.AddNode(
-        {position, 0., 0., 1., 0., 0., 0.},  // Left anchor point
-        {0., 0., 0., 1., 0., 0., 0.},        // initial displacement
-        {0., 0., 0., 0., 0., 0.},            // initial velocity
-        {0., 0., 0., 0., 0., 0.}             // initial acceleration
-    );
+    model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.);
     for (auto mass_number = 0U; mass_number < number_of_masses; ++mass_number) {
         position += displacement;
-        model.AddNode(
-            {position, 0., 0., 1., 0., 0., 0.},  // Mass location
-            {0., 0., 0., 1., 0., 0., 0.},        // initial displacement
-            {0., 0., 0., 0., 0., 0.},            // initial velocity
-            {0., 0., 0., 0., 0., 0.}             // initial acceleration
-        );
+        model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.);
     }
     position += displacement;
-    model.AddNode(
-        {position, 0., 0., 1., 0., 0., 0.},  // Right anchor point
-        {0., 0., 0., 1., 0., 0., 0.},        // initial displacement
-        {0., 0., 0., 0., 0., 0.},            // initial velocity
-        {0., 0., 0., 0., 0., 0.}             // initial acceleration
-    );
-
-    // No beams
-    const auto beams_input = BeamsInput({}, {0., 0., 0.});
-    auto beams = CreateBeams(beams_input);
+    model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.);
 
     // Mass matrix (Identical for all masses)
     constexpr auto m = 1.;
@@ -151,44 +132,25 @@ inline auto SetUpSpringMassChainSystem() {
         std::array{0., 0., 0., 0., 0., j},  // inertia around z-axis
     };
 
-    auto mass_elements = std::vector<MassElement>{};
     for (auto mass_number = 0U; mass_number < number_of_masses; ++mass_number) {
-        mass_elements.emplace_back(model.GetNode(mass_number + 1), mass_matrix);
+        model.AddMassElement(mass_number + 1, {mass_matrix});
     }
-    const auto masses_input = MassesInput(mass_elements, {0., 0., 0.});
-    auto masses = CreateMasses(masses_input);
 
     // Create springs
     const auto k = 10.;
-    auto spring_elements = std::vector<SpringElement>{};
     for (auto mass_number = 0U; mass_number <= number_of_masses; ++mass_number) {
-        spring_elements.emplace_back(
-            std::array{model.GetNode(mass_number), model.GetNode(mass_number + 1)}, k, 0.
-        );
+        model.AddSpringElement(mass_number, mass_number + 1, k, 0.);
     }
-    const auto springs_input = SpringsInput(spring_elements);
-    auto springs = CreateSprings(springs_input);
-
-    // Create elements
-    auto elements = Elements{beams, masses, springs};
 
     // Add fixed BC to the anchor nodes
-    model.AddFixedBC(model.GetNode(0));
-    model.AddFixedBC(model.GetNode(number_of_masses + 1));
+    model.AddFixedBC(0);
+    model.AddFixedBC(number_of_masses + 1);
 
     // Set up solver components
     auto state = model.CreateState();
-    auto constraints = Constraints(model.GetConstraints());
-    assemble_node_freedom_allocation_table(state, elements, constraints);
-    compute_node_freedom_map_table(state);
-    create_element_freedom_table(elements, state);
-    create_constraint_freedom_table(constraints, state);
-    auto solver = Solver(
-        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
-        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
-        constraints.row_range
-    );
+    auto elements = model.CreateElements();
+    auto constraints = model.CreateConstraints();
+    auto solver = CreateSolver(state, elements, constraints);
 
     const double T = 2. * M_PI * sqrt(m / k);
     constexpr auto num_steps = 1000;
