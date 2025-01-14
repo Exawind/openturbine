@@ -2,21 +2,8 @@
 
 #include "test_utilities.hpp"
 
-#include "src/dof_management/assemble_node_freedom_allocation_table.hpp"
-#include "src/dof_management/compute_node_freedom_map_table.hpp"
-#include "src/dof_management/create_constraint_freedom_table.hpp"
-#include "src/dof_management/create_element_freedom_table.hpp"
-#include "src/elements/beams/create_beams.hpp"
-#include "src/elements/elements.hpp"
-#include "src/elements/masses/create_masses.hpp"
-#include "src/elements/springs/create_springs.hpp"
-#include "src/math/quaternion_operations.hpp"
 #include "src/model/model.hpp"
-#include "src/solver/solver.hpp"
-#include "src/state/state.hpp"
 #include "src/step/step.hpp"
-#include "src/step/update_system_variables.hpp"
-#include "src/types.hpp"
 
 namespace openturbine::tests {
 
@@ -60,11 +47,6 @@ inline auto SetUpHeavyTopTest() {
     auto ground_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
     model.AddRigidJointConstraint({mass_node_id, ground_node_id}, {6U, 3U});
     model.AddPrescribedBC(ground_node_id, {6U, 3U});
-
-    // Add spring element
-    constexpr auto k = 0.;   // stiffness
-    constexpr auto l0 = 0.;  // undeformed length
-    model.AddSpringElement(ground_node_id, mass_node_id, k, l0);
 
     // Set up step parameters
     constexpr bool is_dynamic_solve(true);

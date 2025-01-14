@@ -81,6 +81,9 @@ struct CalculatePrescribedBCConstraint {
         // Residual Vector
         //----------------------------------------------------------------------
 
+        const auto min_num_dofs =
+            std::min(node_num_dofs(i_constraint, 0), node_num_dofs(i_constraint, 1));
+
         // Phi(0:3) = u2 + X0 - u1 - R1*X0
         QuaternionInverse(R1, R1t);
         RotateVectorByQuaternion(R1, X0, R1_X0);
@@ -88,20 +91,16 @@ struct CalculatePrescribedBCConstraint {
             residual_terms(i_constraint, i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
         }
 
-        const auto min_num_dofs =
-            std::min(node_num_dofs(i_constraint, 0), node_num_dofs(i_constraint, 1));
-        if (min_num_dofs == 3) {
-            return;
-        }
-
         // Angular residual
         // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
-        QuaternionCompose(R2, RCt, R2_RCt);
-        QuaternionCompose(R2_RCt, R1t, R2_RCt_R1t);
-        QuaternionToRotationMatrix(R2_RCt_R1t, C);
-        AxialVectorOfMatrix(C, V3);
-        for (int i = 0; i < 3; ++i) {
-            residual_terms(i_constraint, i + 3) = V3(i);
+        if (min_num_dofs == 6) {
+            QuaternionCompose(R2, RCt, R2_RCt);
+            QuaternionCompose(R2_RCt, R1t, R2_RCt_R1t);
+            QuaternionToRotationMatrix(R2_RCt_R1t, C);
+            AxialVectorOfMatrix(C, V3);
+            for (int i = 0; i < 3; ++i) {
+                residual_terms(i_constraint, i + 3) = V3(i);
+            }
         }
 
         //----------------------------------------------------------------------
@@ -118,10 +117,12 @@ struct CalculatePrescribedBCConstraint {
         }
 
         // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
-        AX_Matrix(C, A);
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 3; ++j) {
-                target_gradient_terms(i_constraint, i + 3, j + 3) = A(j, i);
+        if (min_num_dofs == 6) {
+            AX_Matrix(C, A);
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    target_gradient_terms(i_constraint, i + 3, j + 3) = A(j, i);
+                }
             }
         }
     }

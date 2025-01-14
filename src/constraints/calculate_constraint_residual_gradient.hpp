@@ -31,10 +31,10 @@ struct CalculateConstraintResidualGradient {
     void operator()(const int i_constraint) const {
         auto constraint_type = type(i_constraint);
         if (constraint_type == ConstraintType::kFixedBC) {
-            CalculateFixedBCConstraint{
-                i_constraint,   target_node_index,    X0_, constraint_inputs, node_u,
-                residual_terms, target_gradient_terms
-            }();
+            CalculateFixedBCConstraint{i_constraint,      node_num_dofs,
+                                       target_node_index, X0_,
+                                       constraint_inputs, node_u,
+                                       residual_terms,    target_gradient_terms}();
             return;
         };
         if (constraint_type == ConstraintType::kPrescribedBC) {
