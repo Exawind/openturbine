@@ -28,6 +28,7 @@ struct State {
     View_Nx6 v;                            //< Velocity
     View_Nx6 vd;                           //< Acceleration
     View_Nx6 a;                            //< Algorithmic acceleration
+    View_Nx6 f;                            //< External forces
     Kokkos::View<double* [6][6]> tangent;  //< Tangent matrix
 
     explicit State(size_t num_system_nodes_)
@@ -43,6 +44,7 @@ struct State {
           v("v", num_system_nodes),
           vd("vd", num_system_nodes),
           a("a", num_system_nodes),
+          f("f", num_system_nodes),
           tangent("tangent", num_system_nodes) {
         // Initialize q and q_prev rotation to identity
         Kokkos::deep_copy(Kokkos::subview(this->q_prev, Kokkos::ALL, 3), 1.);

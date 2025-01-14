@@ -12,6 +12,7 @@ inline void CopyStateData(State& copy, const State& old) {
     Kokkos::deep_copy(copy.v, old.v);
     Kokkos::deep_copy(copy.vd, old.vd);
     Kokkos::deep_copy(copy.a, old.a);
+    Kokkos::deep_copy(copy.f, old.f);
     Kokkos::deep_copy(copy.tangent, old.tangent);
 }
 

@@ -17,6 +17,7 @@ inline State CloneState(const State& old) {
     Kokkos::deep_copy(clone.v, old.v);
     Kokkos::deep_copy(clone.vd, old.vd);
     Kokkos::deep_copy(clone.a, old.a);
+    Kokkos::deep_copy(clone.f, old.f);
     Kokkos::deep_copy(clone.tangent, old.tangent);
     return clone;
 }
