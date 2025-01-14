@@ -93,9 +93,6 @@ struct Constraints {
           system_residual_terms("system_residual_terms", num_constraints),
           base_gradient_terms("base_gradient_terms", num_constraints),
           target_gradient_terms("target_gradient_terms", num_constraints) {
-        Kokkos::deep_copy(base_node_freedom_signature, FreedomSignature::AllComponents);
-        Kokkos::deep_copy(target_node_freedom_signature, FreedomSignature::AllComponents);
-
         auto host_type = Kokkos::create_mirror(type);
         auto host_node_num_dofs = Kokkos::create_mirror(node_num_dofs);
         auto host_row_range = Kokkos::create_mirror(row_range);
@@ -103,12 +100,16 @@ struct Constraints {
         auto host_target_node_col_range = Kokkos::create_mirror(target_node_col_range);
         auto host_base_node_index = Kokkos::create_mirror(base_node_index);
         auto host_target_node_index = Kokkos::create_mirror(target_node_index);
+        auto host_base_freedom = Kokkos::create_mirror(base_node_freedom_signature);
+        auto host_target_freedom = Kokkos::create_mirror(target_node_freedom_signature);
         auto host_X0 = Kokkos::create_mirror(X0);
         auto host_axes = Kokkos::create_mirror(axes);
 
         auto start_row = size_t{0U};
         for (auto i = 0U; i < num_constraints; ++i) {
             const auto& c = constraints[i];
+            const auto base_node_id = c.node_ids[0];
+            const auto target_node_id = c.node_ids[1];
 
             // Set constraint properties
             host_type(i) = c.type;
@@ -117,10 +118,14 @@ struct Constraints {
             control_signal[i] = c.control;
 
             // Set base and target node index
-            const auto base_node_id = c.node_ids[0];
-            const auto target_node_id = c.node_ids[1];
             host_base_node_index(i) = base_node_id;
             host_target_node_index(i) = target_node_id;
+
+            // Set freedom signatures based on node DOFs
+            host_target_freedom(i) = nodes[target_node_id].active_dofs;
+            if (GetNumberOfNodes(c.type) == 2) {
+                host_base_freedom(i) = nodes[base_node_id].active_dofs;
+            }
 
             // Set constraint rows
             auto dofs = NumDOFsForConstraint(host_type(i));
@@ -163,6 +168,8 @@ struct Constraints {
         Kokkos::deep_copy(target_node_col_range, host_target_node_col_range);
         Kokkos::deep_copy(base_node_index, host_base_node_index);
         Kokkos::deep_copy(target_node_index, host_target_node_index);
+        Kokkos::deep_copy(base_node_freedom_signature, host_base_freedom);
+        Kokkos::deep_copy(target_node_freedom_signature, host_target_freedom);
         Kokkos::deep_copy(X0, host_X0);
         Kokkos::deep_copy(axes, host_axes);
 
