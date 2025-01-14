@@ -7,10 +7,10 @@
 namespace openturbine::tests {
 
 TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_FixedBC) {
-    auto invalid_node = Node(0U, {0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
-    auto node_1 = Node(1U, {1., 0., 0., 1., 0., 0., 0.});        // target node - index is 1
-    auto fixed_bc = std::make_shared<Constraint>(ConstraintType::kFixedBC, 1, invalid_node, node_1);
-    auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{fixed_bc});
+    auto invalid_node = Node(0U, Array_7{0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
+    auto node_1 = Node(1U, Array_7{1., 0., 0., 1., 0., 0., 0.});        // target node - index is 1
+    auto fixed_bc = Constraint(0, ConstraintType::kFixedBC, {0, 1});
+    auto constraints = Constraints({fixed_bc}, {invalid_node, node_1});
 
     auto state = State(2U);  // 2 nodes in the system
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 17UL};
@@ -43,11 +43,10 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_FixedBC) {
 }
 
 TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_PrescribedBC) {
-    auto invalid_node = Node(0U, {0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
-    auto node_1 = Node(4U, {1., 0., 0., 1., 0., 0., 0.});        // target node - index is 4
-    auto prescribed_bc =
-        std::make_shared<Constraint>(ConstraintType::kPrescribedBC, 1, invalid_node, node_1);
-    auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{prescribed_bc});
+    auto invalid_node = Node(0U, Array_7{0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
+    auto node_1 = Node(4U, Array_7{1., 0., 0., 1., 0., 0., 0.});        // target node - index is 4
+    auto prescribed_bc = Constraint(0, ConstraintType::kPrescribedBC, {0, 4});
+    auto constraints = Constraints({prescribed_bc}, {invalid_node, node_1});
 
     auto state = State(5U);  // 5 nodes in the system
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL, 15UL, 18UL, 24UL};
@@ -80,10 +79,10 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_PrescribedBC) {
 }
 
 TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RigidBC) {
-    auto node_1 = Node(1U, {0., 0., 0., 1., 0., 0., 0.});  // base node - index is 1
-    auto node_2 = Node(2U, {1., 0., 0., 1., 0., 0., 0.});  // target node - index is 2
-    auto rigid_bc = std::make_shared<Constraint>(ConstraintType::kRigidJoint, 1, node_1, node_2);
-    auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{rigid_bc});
+    auto node_1 = Node(1U, Array_7{0., 0., 0., 1., 0., 0., 0.});  // base node - index is 1
+    auto node_2 = Node(2U, Array_7{1., 0., 0., 1., 0., 0., 0.});  // target node - index is 2
+    auto rigid_bc = Constraint(0, ConstraintType::kRigidJoint, {1, 2});
+    auto constraints = Constraints({rigid_bc}, {node_1, node_2});
 
     auto state = State(3U);  // 3 nodes in the system
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 3UL, 9UL};
@@ -130,14 +129,13 @@ TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RigidBC) {
 }
 
 TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RevoluteJoint) {
-    auto node_1 = Node(3U, {0., 0., 0., 1., 0., 0., 0.});   // base node - index is 3
-    auto node_2 = Node(11U, {1., 0., 0., 1., 0., 0., 0.});  // target node - index is 11
+    auto node_1 = Node(3U, Array_7{0., 0., 0., 1., 0., 0., 0.});   // base node - index is 3
+    auto node_2 = Node(11U, Array_7{1., 0., 0., 1., 0., 0., 0.});  // target node - index is 11
     const Array_3 rotation_axis = {0., 0., 1.};
     double torque = 0.;
-    auto revolute_joint = std::make_shared<Constraint>(
-        ConstraintType::kRevoluteJoint, 1, node_1, node_2, rotation_axis, &torque
-    );
-    auto constraints = Constraints(std::vector<std::shared_ptr<Constraint>>{revolute_joint});
+    auto revolute_joint =
+        Constraint(0, ConstraintType::kRevoluteJoint, {3, 11}, {6U, 6U}, rotation_axis, &torque);
+    auto constraints = Constraints({revolute_joint}, {node_1, node_2});
 
     auto state = State(12U);  // 12 nodes in the system
     constexpr auto host_node_freedom_map_table_data =
