@@ -170,7 +170,7 @@ struct Constraints {
     }
 
     /// Calculates the initial relative position (X0) based on constraint type and nodes
-    Array_3 CalculateX0(
+    static Array_3 CalculateX0(
         const Constraint& constraint, const Node& target_node, const Node& base_node
     ) {
         Array_3 x0{0., 0., 0.};
@@ -191,7 +191,7 @@ struct Constraints {
     }
 
     /// Calculates the rotation axes for a constraint based on its type and configuration
-    Array_3x3 CalculateAxes(const Constraint& constraint, const Array_3& x0) {
+    static Array_3x3 CalculateAxes(const Constraint& constraint, const Array_3& x0) {
         Array_3x3 rotation_matrix{};
         if (constraint.type == ConstraintType::kRevoluteJoint) {
             constexpr Array_3 x = {1., 0., 0.};
