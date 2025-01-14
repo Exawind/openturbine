@@ -46,7 +46,7 @@ public:
     Model() = default;
 
     // Constructor with gravity specified
-    Model(std::array<double, 3> gravity) : gravity_(gravity) {}
+    explicit Model(std::array<double, 3> gravity) : gravity_(gravity) {}
 
     //--------------------------------------------------------------------------
     // Miscellaneous
