@@ -159,8 +159,7 @@ void SetTurbineLoads(const Turbine& turbine, State& state) {
 //------------------------------------------------------------------------------
 
 InterfaceOT::InterfaceOT(const InterfaceInput& input)
-    : model(),
-      turbine(NewTurbine(input.turbine, model)),
+    : turbine(NewTurbine(input.turbine, model)),
       state(model.CreateState()),
       elements(model.CreateElements()),
       constraints(model.CreateConstraints()),
