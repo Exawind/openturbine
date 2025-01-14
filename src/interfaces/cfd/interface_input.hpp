@@ -8,7 +8,7 @@ namespace openturbine::cfd {
 
 struct InterfaceInput {
     /// @brief Array of gravity components (XYZ)
-    std::array<double, 3> gravity[3]{};
+    std::array<double, 3> gravity{};
 
     /// @brief Solver time step
     double time_step = 0.01;

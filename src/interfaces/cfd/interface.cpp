@@ -1,4 +1,4 @@
-#include "src/interfaces/cfd/interface_ot.hpp"
+#include "src/interfaces/cfd/interface.hpp"
 
 #include "src/interfaces/cfd/floating_platform.hpp"
 #include "src/interfaces/cfd/floating_platform_input.hpp"
@@ -20,17 +20,18 @@ namespace openturbine::cfd {
 //------------------------------------------------------------------------------
 
 void GetNodeMotion(
-    NodeData& node, const std::vector<std::vector<double>>& state_x,
-    const std::vector<std::vector<double>>& state_q, const std::vector<std::vector<double>>& state_v,
-    const std::vector<std::vector<double>>& state_vd
+    NodeData& node, const Kokkos::View<double* [7]>::HostMirror::const_type& host_state_x,
+    const Kokkos::View<double* [7]>::HostMirror::const_type& host_state_q,
+    const Kokkos::View<double* [6]>::HostMirror::const_type& host_state_v,
+    const Kokkos::View<double* [6]>::HostMirror::const_type& host_state_vd
 ) {
     for (auto i = 0U; i < kLieGroupComponents; ++i) {
-        node.position[i] = state_x[node.id][i];
-        node.displacement[i] = state_q[node.id][i];
+        node.position[i] = host_state_x(node.id, i);
+        node.displacement[i] = host_state_q(node.id, i);
     }
     for (auto i = 0U; i < kLieAlgebraComponents; ++i) {
-        node.velocity[i] = state_v[node.id][i];
-        node.acceleration[i] = state_vd[node.id][i];
+        node.velocity[i] = host_state_v(node.id, i);
+        node.acceleration[i] = host_state_vd(node.id, i);
     }
 }
 
@@ -38,7 +39,7 @@ void GetNodeMotion(
 // Floating Platform
 //------------------------------------------------------------------------------
 
-FloatingPlatform NewFloatingPlatform(const FloatingPlatformInput& input, Model& model) {
+FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Model& model) {
     // Instantiate floating platform
     FloatingPlatform platform{};
 
@@ -109,9 +110,11 @@ void SetPlatformLoads(const FloatingPlatform& platform, State& state) {
 }
 
 void GetFloatingPlatformMotion(
-    FloatingPlatform& platform, const std::vector<std::vector<double>>& state_x,
-    const std::vector<std::vector<double>>& state_q, const std::vector<std::vector<double>>& state_v,
-    const std::vector<std::vector<double>>& state_vd
+    FloatingPlatform& platform,
+    const Kokkos::View<double* [7]>::HostMirror::const_type& host_state_x,
+    const Kokkos::View<double* [7]>::HostMirror::const_type& host_state_q,
+    const Kokkos::View<double* [6]>::HostMirror::const_type& host_state_v,
+    const Kokkos::View<double* [6]>::HostMirror::const_type& host_state_vd
 ) {
     // If platform is not active, return
     if (!platform.active) {
@@ -119,15 +122,15 @@ void GetFloatingPlatformMotion(
     }
 
     // Populate platform node motion
-    GetNodeMotion(platform.node, state_x, state_q, state_v, state_vd);
+    GetNodeMotion(platform.node, host_state_x, host_state_q, host_state_v, host_state_vd);
 
     // Loop through mooring lines
     for (auto& ml : platform.mooring_lines) {
         // Populate fairlead node motion
-        GetNodeMotion(ml.fairlead_node, state_x, state_q, state_v, state_vd);
+        GetNodeMotion(ml.fairlead_node, host_state_x, host_state_q, host_state_v, host_state_vd);
 
         // Populate anchor node motion
-        GetNodeMotion(ml.anchor_node, state_x, state_q, state_v, state_vd);
+        GetNodeMotion(ml.anchor_node, host_state_x, host_state_q, host_state_v, host_state_vd);
     }
 }
 
@@ -135,40 +138,47 @@ void GetFloatingPlatformMotion(
 // Turbine
 //------------------------------------------------------------------------------
 
-Turbine NewTurbine(const TurbineInput& input, Model& model) {
+Turbine CreateTurbine(const TurbineInput& input, Model& model) {
     return {
-        NewFloatingPlatform(input.floating_platform, model),
+        CreateFloatingPlatform(input.floating_platform, model),
     };
-}
-
-void GetTurbineMotion(Turbine& turbine, const State& state) {
-    const auto state_x = kokkos_view_2D_to_vector(state.x);
-    const auto state_q = kokkos_view_2D_to_vector(state.q);
-    const auto state_v = kokkos_view_2D_to_vector(state.v);
-    const auto state_vd = kokkos_view_2D_to_vector(state.vd);
-
-    GetFloatingPlatformMotion(turbine.floating_platform, state_x, state_q, state_v, state_vd);
 }
 
 void SetTurbineLoads(const Turbine& turbine, State& state) {
     SetPlatformLoads(turbine.floating_platform, state);
 }
 
+void GetTurbineMotion(
+    Turbine& turbine, const Kokkos::View<double* [7]>::HostMirror::const_type& host_state_x,
+    const Kokkos::View<double* [7]>::HostMirror::const_type& host_state_q,
+    const Kokkos::View<double* [6]>::HostMirror::const_type& host_state_v,
+    const Kokkos::View<double* [6]>::HostMirror::const_type& host_state_vd
+) {
+    GetFloatingPlatformMotion(
+        turbine.floating_platform, host_state_x, host_state_q, host_state_v, host_state_vd
+    );
+}
+
 //------------------------------------------------------------------------------
 // Interface implementation
 //------------------------------------------------------------------------------
 
-InterfaceOT::InterfaceOT(const InterfaceInput& input)
-    : turbine(NewTurbine(input.turbine, model)),
+Interface::Interface(const InterfaceInput& input)
+    : model(input.gravity),
+      turbine(CreateTurbine(input.turbine, model)),
       state(model.CreateState()),
       elements(model.CreateElements()),
       constraints(model.CreateConstraints()),
       parameters(true, input.max_iter, input.time_step, input.rho_inf),
       solver(CreateSolver(state, elements, constraints)),
-      state_save(CloneState(state)) {
+      state_save(CloneState(state)),
+      host_state_x("host_state_x", state.num_system_nodes),
+      host_state_q("host_state_q", state.num_system_nodes),
+      host_state_v("host_state_v", state.num_system_nodes),
+      host_state_vd("host_state_vd", state.num_system_nodes) {
 }
 
-void InterfaceOT::Step() {
+void Interface::Step() {
     // Transfer loads to solver
     SetTurbineLoads(this->turbine, this->state);
 
@@ -180,19 +190,37 @@ void InterfaceOT::Step() {
         throw std::runtime_error("Failed to converge during solver step");
     }
 
+    // Copy state motion members from device to host
+    Kokkos::deep_copy(this->host_state_x, this->state.x);
+    Kokkos::deep_copy(this->host_state_q, this->state.q);
+    Kokkos::deep_copy(this->host_state_v, this->state.v);
+    Kokkos::deep_copy(this->host_state_vd, this->state.vd);
+
     // Update the turbine motion
-    GetTurbineMotion(this->turbine, this->state);
+    GetTurbineMotion(
+        this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
+        this->host_state_vd
+    );
 }
 
-void InterfaceOT::SaveState() {
+void Interface::SaveState() {
     CopyStateData(this->state_save, this->state);
 }
 
-void InterfaceOT::RestoreState() {
+void Interface::RestoreState() {
     CopyStateData(this->state, this->state_save);
 
+    // Copy state motion members from device to host
+    Kokkos::deep_copy(this->host_state_x, this->state.x);
+    Kokkos::deep_copy(this->host_state_q, this->state.q);
+    Kokkos::deep_copy(this->host_state_v, this->state.v);
+    Kokkos::deep_copy(this->host_state_vd, this->state.vd);
+
     // Update the turbine motion to match restored state
-    GetTurbineMotion(this->turbine, this->state);
+    GetTurbineMotion(
+        this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
+        this->host_state_vd
+    );
 }
 
 }  // namespace openturbine::cfd

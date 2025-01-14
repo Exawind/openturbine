@@ -2,7 +2,7 @@
 
 #include "src/elements/elements.hpp"
 #include "src/elements/masses/create_masses.hpp"
-#include "src/interfaces/cfd/interface_ot.hpp"
+#include "src/interfaces/cfd/interface.hpp"
 #include "src/model/model.hpp"
 #include "src/state/set_node_external_loads.hpp"
 #include "src/state/state.hpp"
@@ -16,7 +16,7 @@ using namespace openturbine::cfd;
 
 TEST(CFDInterfaceTest, PrecessionTest) {
     // Create cfd interface
-    InterfaceOT interface(InterfaceInput{
+    Interface interface(InterfaceInput{
         {{0., 0., 0.}},  // gravity
         0.01,            // time step
         1.,              // rho infinity (numerical damping)

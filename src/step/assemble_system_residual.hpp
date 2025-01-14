@@ -27,6 +27,7 @@ inline void AssembleSystemResidual(Solver& solver, Elements& elements, State& st
     const auto num_rows = solver.num_system_dofs;
     Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, num_rows)), 0.);
 
+    Kokkos::deep_copy(state.f, state.host_f);
     Kokkos::parallel_for(
         "ContributeForcesToVector", forces_vector_policy,
         ContributeForcesToVector{

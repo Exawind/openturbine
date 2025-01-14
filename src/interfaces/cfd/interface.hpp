@@ -1,29 +1,52 @@
-/// Fluid-Structure Interaction Interface to AMR-Wind and Nalu-Wind CFD Codes
-
 #pragma once
 
 #include "src/interfaces/cfd/interface_input.hpp"
 #include "src/interfaces/cfd/turbine.hpp"
+#include "src/model/model.hpp"
 
 namespace openturbine::cfd {
 
 class Interface {
 public:
+    explicit Interface(const InterfaceInput& input);
+
     /// @brief Step forward in time
-    virtual void Step() = 0;
+    void Step();
 
     /// @brief Save state for correction step
-    virtual void SaveState() = 0;
+    void SaveState();
 
     /// @brief Restore state for correction step
-    virtual void RestoreState() = 0;
+    void RestoreState();
 
-    virtual ~Interface() = default;
-    Interface() = default;
-    Interface(const Interface&) = default;
-    Interface& operator=(const Interface&) = default;
-    Interface(Interface&&) = default;
-    Interface& operator=(Interface&&) = default;
+    /// @brief  OpenTurbine class used for model construction
+    Model model;
+
+    /// @brief Turbine model input/output data
+    Turbine turbine;
+
+    /// @brief  OpenTurbine class for storing system state
+    State state;
+
+    /// @brief  OpenTurbine class for model elements (beams, masses, springs)
+    Elements elements;
+
+    /// @brief  OpenTurbine class for constraints tying elements together
+    Constraints constraints;
+
+    /// @brief  OpenTurbine class containing solution parameters
+    StepParameters parameters;
+
+    /// @brief  OpenTurbine class for solving the dynamic system
+    Solver solver;
+
+    /// @brief  OpenTurbine class state class for temporarily saving state
+    State state_save;
+
+    Kokkos::View<double* [7]>::HostMirror host_state_x;
+    Kokkos::View<double* [7]>::HostMirror host_state_q;
+    Kokkos::View<double* [6]>::HostMirror host_state_v;
+    Kokkos::View<double* [6]>::HostMirror host_state_vd;
 };
 
 }  // namespace openturbine::cfd
