@@ -43,9 +43,11 @@ inline auto SetUpHeavyTopTest() {
                       }}
     );
 
-    // TODO: Make the ground node 3-DOF only
-    // Add ground node and constraints
-    auto ground_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
+    // Add ground node with 3 DOFs
+    auto ground_node_id =
+        model.AddNode().SetPosition(0., 0., 0.).Build();  // Only translational DOFs
+
+    // Add rigid joint constraint and fixed BC
     model.AddRigidJointConstraint({mass_node_id, ground_node_id}, {6U, 3U});
     model.AddPrescribedBC(ground_node_id, {6U, 3U});
 
