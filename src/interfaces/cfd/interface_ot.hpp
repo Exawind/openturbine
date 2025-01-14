@@ -7,7 +7,7 @@ namespace openturbine::cfd {
 
 class InterfaceOT : public Interface {
 public:
-    InterfaceOT(const InterfaceInput& input);
+    explicit InterfaceOT(const InterfaceInput& input);
 
     /// @brief  OpenTurbine class used for model construction
     Model model;

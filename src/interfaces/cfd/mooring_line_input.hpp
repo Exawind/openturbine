@@ -30,4 +30,4 @@ struct MooringLineInput {
     std::array<double, 3> anchor_acceleration = {0.};
 };
 
-}
+}  // namespace openturbine::cfd

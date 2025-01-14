@@ -27,4 +27,4 @@ struct MooringLine {
           rigid_constraint_id(rigid_constraint_id_) {}
 };
 
-}
+}  // namespace openturbine::cfd
