@@ -23,4 +23,4 @@ struct InterfaceInput {
     TurbineInput turbine;
 };
 
-}
+}  // namespace openturbine::cfd
