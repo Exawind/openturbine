@@ -1,17 +1,19 @@
 #pragma once
 
+#include "src/dof_management/freedom_signature.hpp"
 #include "src/math/quaternion_operations.hpp"
 #include "src/types.hpp"
 
 namespace openturbine {
 
 struct Node {
-    size_t ID;   //< Node identifier
-    Array_7 x;   //< Node positions and orientations
-    Array_7 u;   //< Node displacement
-    Array_6 v;   //< Node velocity
-    Array_6 vd;  //< Node acceleration
-    double s;    //< Position of node in element on range [0, 1]
+    size_t ID;                     //< Node identifier
+    Array_7 x;                     //< Node positions and orientations
+    Array_7 u;                     //< Node displacement
+    Array_6 v;                     //< Node velocity
+    Array_6 vd;                    //< Node acceleration
+    double s;                      //< Position of node in element on range [0, 1]
+    FreedomSignature active_dofs;  //< Active degrees of freedom in the node
 
     /// @brief Construct a node with an ID
     explicit Node(size_t id)
@@ -20,7 +22,8 @@ struct Node {
           u(Array_7{0., 0., 0., 1., 0., 0., 0.}),
           v(Array_6{0., 0., 0., 0., 0., 0.}),
           vd(Array_6{0., 0., 0., 0., 0., 0.}),
-          s(0.) {}
+          s(0.),
+          active_dofs(FreedomSignature::NoComponents) {}
 
     /// @brief Construct a node with an ID, position, displacement, velocity, and acceleration
     /// vectors
@@ -29,7 +32,13 @@ struct Node {
         Array_6 velocity = Array_6{0., 0., 0., 0., 0., 0.},
         Array_6 acceleration = Array_6{0., 0., 0., 0., 0., 0.}
     )
-        : ID(id), x(position), u(displacement), v(velocity), vd(acceleration), s(0.) {}
+        : ID(id),
+          x(position),
+          u(displacement),
+          v(velocity),
+          vd(acceleration),
+          s(0.),
+          active_dofs(FreedomSignature::NoComponents) {}
 
     /// Translate node by a displacement vector
     void Translate(const Array_3& displacement) {
@@ -79,11 +88,13 @@ public:
 
     NodeBuilder& SetPosition(const Array_7& p) {
         this->node.x = p;
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
     NodeBuilder& SetPosition(double x, double y, double z, double w, double i, double j, double k) {
         this->node.x = {x, y, z, w, i, j, k};
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
@@ -91,6 +102,7 @@ public:
         this->node.x[0] = p[0];
         this->node.x[1] = p[1];
         this->node.x[2] = p[2];
+        this->node.active_dofs = FreedomSignature::JustPosition;
         return *this;
     }
 
@@ -98,6 +110,7 @@ public:
         this->node.x[0] = x;
         this->node.x[1] = y;
         this->node.x[2] = z;
+        this->node.active_dofs = FreedomSignature::JustPosition;
         return *this;
     }
 
@@ -112,6 +125,7 @@ public:
         this->node.x[4] = p[1];
         this->node.x[5] = p[2];
         this->node.x[6] = p[3];
+        this->node.active_dofs = FreedomSignature::JustRotation;
         return *this;
     }
 
@@ -122,6 +136,7 @@ public:
         this->node.x[4] = i;
         this->node.x[5] = j;
         this->node.x[6] = k;
+        this->node.active_dofs = FreedomSignature::JustRotation;
         return *this;
     }
 
@@ -131,6 +146,7 @@ public:
 
     NodeBuilder& SetDisplacement(const Array_7& p) {
         this->node.u = p;
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
@@ -138,6 +154,7 @@ public:
         double x, double y, double z, double w, double i, double j, double k
     ) {
         this->node.u = {x, y, z, w, i, j, k};
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
@@ -145,6 +162,7 @@ public:
         this->node.u[0] = p[0];
         this->node.u[1] = p[1];
         this->node.u[2] = p[2];
+        this->node.active_dofs = FreedomSignature::JustPosition;
         return *this;
     }
 
@@ -152,6 +170,7 @@ public:
         this->node.u[0] = x;
         this->node.u[1] = y;
         this->node.u[2] = z;
+        this->node.active_dofs = FreedomSignature::JustPosition;
         return *this;
     }
 
@@ -161,11 +180,13 @@ public:
 
     NodeBuilder& SetVelocity(double x, double y, double z, double rx, double ry, double rz) {
         this->node.v = {x, y, z, rx, ry, rz};
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
     NodeBuilder& SetVelocity(const Array_6& v) {
         this->node.v = v;
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
@@ -173,6 +194,7 @@ public:
         this->node.v[0] = x;
         this->node.v[1] = y;
         this->node.v[2] = z;
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
@@ -180,6 +202,7 @@ public:
         this->node.v[0] = v[0];
         this->node.v[1] = v[1];
         this->node.v[2] = v[2];
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
@@ -189,11 +212,13 @@ public:
 
     NodeBuilder& SetAcceleration(double x, double y, double z, double rx, double ry, double rz) {
         this->node.vd = {x, y, z, rx, ry, rz};
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
     NodeBuilder& SetAcceleration(const Array_6& v) {
         this->node.vd = v;
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
@@ -201,6 +226,7 @@ public:
         this->node.vd[0] = x;
         this->node.vd[1] = y;
         this->node.vd[2] = z;
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
@@ -208,6 +234,7 @@ public:
         this->node.vd[0] = v[0];
         this->node.vd[1] = v[1];
         this->node.vd[2] = v[2];
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 
@@ -217,6 +244,7 @@ public:
 
     NodeBuilder& SetElemLocation(double loc) {
         this->node.s = loc;
+        this->node.active_dofs = FreedomSignature::AllComponents;
         return *this;
     }
 

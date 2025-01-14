@@ -7,7 +7,7 @@
 
 namespace openturbine::tests {
 
-TEST(Model, AddNodeToModel) {
+TEST(Model, AddNodeToModel_AllComponentsActive) {
     Model model;
     ASSERT_EQ(model.NumNodes(), 0);
 
@@ -24,9 +24,22 @@ TEST(Model, AddNodeToModel) {
     ASSERT_EQ(node_id, 0);
     ASSERT_EQ(node.ID, 0);
     ASSERT_EQ(model.NumNodes(), 1);
+    ASSERT_EQ(node.active_dofs, FreedomSignature::AllComponents);
 
     auto nodes = model.GetNodes();
     ASSERT_EQ(nodes.size(), 1);
+}
+
+TEST(Model, AddNodeToModel_NoComponentsActive) {
+    Model model;
+    ASSERT_EQ(model.NumNodes(), 0);
+
+    auto node_id = model.AddNode().Build();
+    auto node = model.GetNode(node_id);
+    ASSERT_EQ(node_id, 0);
+    ASSERT_EQ(node.ID, 0);
+    ASSERT_EQ(model.NumNodes(), 1);
+    ASSERT_EQ(node.active_dofs, FreedomSignature::NoComponents);
 }
 
 TEST(Model, TranslateModelNode) {
@@ -45,6 +58,7 @@ TEST(Model, TranslateModelNode) {
 
     auto node_0 = model.GetNode(node_id);
     ASSERT_EQ(node_0.ID, 0);
+    ASSERT_EQ(node_0.active_dofs, FreedomSignature::AllComponents);
     ASSERT_EQ(node_0.x[0], pos[0]);  // 0.
     ASSERT_EQ(node_0.x[1], pos[1]);  // 0.
     ASSERT_EQ(node_0.x[2], pos[2]);  // 0.
