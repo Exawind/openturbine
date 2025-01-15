@@ -176,6 +176,17 @@ Interface::Interface(const InterfaceInput& input)
       host_state_q("host_state_q", state.num_system_nodes),
       host_state_v("host_state_v", state.num_system_nodes),
       host_state_vd("host_state_vd", state.num_system_nodes) {
+    // Copy state motion members from device to host
+    Kokkos::deep_copy(this->host_state_x, this->state.x);
+    Kokkos::deep_copy(this->host_state_q, this->state.q);
+    Kokkos::deep_copy(this->host_state_v, this->state.v);
+    Kokkos::deep_copy(this->host_state_vd, this->state.vd);
+
+    // Update the turbine motion to match restored state
+    GetTurbineMotion(
+        this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
+        this->host_state_vd
+    );
 }
 
 void Interface::Step() {
