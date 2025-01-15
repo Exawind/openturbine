@@ -3,6 +3,7 @@
 #include <Kokkos_Core.hpp>
 
 namespace openturbine {
+
 struct ContributeBeamsToVector {
     Kokkos::View<size_t*>::const_type num_nodes_per_element;
     Kokkos::View<size_t** [6]>::const_type element_freedom_table;
@@ -30,4 +31,5 @@ struct ContributeBeamsToVector {
         });
     }
 };
+
 }  // namespace openturbine

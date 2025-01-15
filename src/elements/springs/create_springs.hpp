@@ -5,7 +5,7 @@
 
 namespace openturbine {
 
-inline Springs CreateSprings(const SpringsInput& springs_input) {
+inline Springs CreateSprings(const SpringsInput& springs_input, const std::vector<Node>& nodes) {
     Springs springs(springs_input.NumElements());
 
     auto host_node_state_indices = Kokkos::create_mirror(springs.node_state_indices);
@@ -16,11 +16,11 @@ inline Springs CreateSprings(const SpringsInput& springs_input) {
     for (size_t i_elem = 0; i_elem < springs_input.NumElements(); i_elem++) {
         const auto& element = springs_input.elements[i_elem];
 
-        host_node_state_indices(i_elem, 0U) = static_cast<size_t>(element.nodes[0].ID);
-        host_node_state_indices(i_elem, 1U) = static_cast<size_t>(element.nodes[1].ID);
+        host_node_state_indices(i_elem, 0U) = static_cast<size_t>(element.node_ids[0]);
+        host_node_state_indices(i_elem, 1U) = static_cast<size_t>(element.node_ids[1]);
 
         for (size_t i = 0; i < 3; i++) {
-            host_x0(i_elem, i) = element.nodes[1].x[i] - element.nodes[0].x[i];
+            host_x0(i_elem, i) = nodes[element.node_ids[1]].x[i] - nodes[element.node_ids[0]].x[i];
         }
 
         host_l_ref(i_elem) = element.undeformed_length;

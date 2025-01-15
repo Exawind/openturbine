@@ -44,12 +44,12 @@ struct Constraints {
     Kokkos::View<double* [6][6]> base_gradient_terms;
     Kokkos::View<double* [6][6]> target_gradient_terms;
 
-    explicit Constraints(const std::vector<std::shared_ptr<Constraint>>& constraints)
+    explicit Constraints(const std::vector<Constraint>& constraints, const std::vector<Node>& nodes)
         : num{constraints.size()},
           num_dofs{std::transform_reduce(
               constraints.cbegin(), constraints.cend(), 0U, std::plus{},
               [](auto c) {
-                  return NumDOFsForConstraint(c->type);
+                  return NumDOFsForConstraint(c.type);
               }
           )},
           control_signal(num),
@@ -90,18 +90,21 @@ struct Constraints {
         // Loop through constraint input and set data
         auto start_row = size_t{0U};
         for (auto i = 0U; i < num; ++i) {
+            // Get reference to current constraint
+            const auto& c = constraints[i];
+
             // Set Host constraint data
-            host_type(i) = constraints[i]->type;
-            control_signal[i] = constraints[i]->control;
+            host_type(i) = c.type;
+            control_signal[i] = c.control;
 
             // Set constraint rows
             auto dofs = NumDOFsForConstraint(host_type(i));
             host_row_range(i) = Kokkos::make_pair(start_row, start_row + dofs);
             start_row += dofs;
 
-            if (GetNumberOfNodes(constraints[i]->type) == 2) {
-                const auto target_node_id = constraints[i]->target_node.ID;
-                const auto base_node_id = constraints[i]->base_node.ID;
+            if (GetNumberOfNodes(c.type) == 2) {
+                const auto target_node_id = c.target_node_id;
+                const auto base_node_id = c.base_node_id;
                 const auto target_start_col =
                     (target_node_id < base_node_id) ? 0U : kLieAlgebraComponents;
                 host_target_node_col_range(i) =
@@ -116,15 +119,63 @@ struct Constraints {
             }
 
             // Set base node and target node index
-            host_base_node_index(i) = constraints[i]->base_node.ID;
-            host_target_node_index(i) = constraints[i]->target_node.ID;
+            host_base_node_index(i) = c.base_node_id;
+            host_target_node_index(i) = c.target_node_id;
 
-            // Set initial relative location between nodes and rotation axes
-            for (auto j = 0U; j < 3U; ++j) {
-                host_X0(i, j) = constraints[i]->X0[j];
-                host_axes(i, 0, j) = constraints[i]->x_axis[j];
-                host_axes(i, 1, j) = constraints[i]->y_axis[j];
-                host_axes(i, 2, j) = constraints[i]->z_axis[j];
+            // Get reference to target node
+            const auto& target_node = nodes[c.target_node_id];
+
+            // Calculate X0
+            Array_3 x0{0., 0., 0.};
+            if (c.type == ConstraintType::kFixedBC || c.type == ConstraintType::kPrescribedBC) {
+                // Set X0 to the prescribed displacement for fixed and prescribed BCs
+                x0[0] = target_node.x[0] - c.vec[0];
+                x0[1] = target_node.x[1] - c.vec[1];
+                x0[2] = target_node.x[2] - c.vec[2];
+            } else {
+                // Default: set X0 to the relative position between nodes
+                const auto& base_node = nodes[c.base_node_id];
+                x0[0] = target_node.x[0] - base_node.x[0];
+                x0[1] = target_node.x[1] - base_node.x[1];
+                x0[2] = target_node.x[2] - base_node.x[2];
+            }
+            for (size_t j = 0; j < 3; ++j) {
+                host_X0(i, j) = x0[j];
+            }
+
+            // Calculate host axes
+            if (c.type == ConstraintType::kRevoluteJoint) {
+                constexpr Array_3 x = {1., 0., 0.};
+                const Array_3 x_hat = Norm(c.vec) != 0. ? UnitVector(c.vec) : UnitVector(x0);
+
+                // Create rotation matrix to rotate x to match vector
+                const auto v = CrossProduct(x, x_hat);
+                const auto dp = DotProduct(x_hat, x);
+                const auto k = 1. / (1. + dp);
+
+                // Set orthogonal unit vectors from the rotation matrix
+                host_axes(i, 0, 0) = v[0] * v[0] * k + dp;
+                host_axes(i, 0, 1) = v[1] * v[0] * k + v[2];
+                host_axes(i, 0, 2) = v[2] * v[0] * k - v[1];
+
+                host_axes(i, 1, 0) = v[0] * v[1] * k - v[2];
+                host_axes(i, 1, 1) = v[1] * v[1] * k + dp;
+                host_axes(i, 1, 2) = v[2] * v[1] * k + v[0];
+
+                host_axes(i, 2, 0) = v[0] * v[2] * k + v[1];
+                host_axes(i, 2, 1) = v[1] * v[2] * k - v[0];
+                host_axes(i, 2, 2) = v[2] * v[2] * k + dp;
+
+            } else if (c.type == ConstraintType::kRotationControl) {
+                const auto uvec = UnitVector(c.vec);
+                host_axes(i, 0, 0) = uvec[0];
+                host_axes(i, 0, 1) = uvec[1];
+                host_axes(i, 0, 2) = uvec[2];
+            } else {
+                // If not a revolute/hinge joint, set axes to the input vector
+                host_axes(i, 0, 0) = c.vec[0];
+                host_axes(i, 0, 1) = c.vec[1];
+                host_axes(i, 0, 2) = c.vec[2];
             }
         }
 

@@ -53,8 +53,6 @@ target_include_directories(openturbine_library
 # Set the C++ standard for the target
 target_compile_features(openturbine_library PUBLIC cxx_std_17)
 
-set(openturbine_public_headers "types.hpp" "constraints/calculate_constraint_force.hpp")
-
 # Add subdirectories for additional components of the library
 add_subdirectory(constraints)
 add_subdirectory(elements)
@@ -67,6 +65,9 @@ add_subdirectory(system)
 add_subdirectory(utilities)
 add_subdirectory(vendor)
 
+add_subdirectory(interfaces/cfd)
+
+set(openturbine_public_headers "interfaces/cfd/interface.hpp")
 set_target_properties(openturbine_library PROPERTIES PUBLIC_HEADER "${openturbine_public_headers}")
 
 install(

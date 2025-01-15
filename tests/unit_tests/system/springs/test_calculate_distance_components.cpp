@@ -4,9 +4,9 @@
 #include "src/system/springs/calculate_distance_components.hpp"
 #include "tests/unit_tests/system/beams/test_calculate.hpp"
 
-namespace openturbine::tests {
+namespace {
 
-TEST(CalculateDistanceComponentsTests, OneElement) {
+void TestCalculateDistanceComponentsTests_OneElement() {
     const auto x0 = Kokkos::View<double[1][3]>("x0");
     const auto u1 = Kokkos::View<double[1][3]>("u1");
     const auto u2 = Kokkos::View<double[1][3]>("u2");
@@ -33,7 +33,10 @@ TEST(CalculateDistanceComponentsTests, OneElement) {
     Kokkos::deep_copy(u2, u2_mirror);
 
     Kokkos::parallel_for(
-        "CalculateDistanceComponents", 1, CalculateDistanceComponents{x0, u1, u2, r}
+        "CalculateDistanceComponents", 1,
+        KOKKOS_LAMBDA(const size_t) {
+            openturbine::springs::CalculateDistanceComponents{0, x0, u1, u2, r}();
+        }
     );
 
     constexpr auto r_exact_data = std::array{
@@ -46,7 +49,15 @@ TEST(CalculateDistanceComponentsTests, OneElement) {
     const auto r_mirror = Kokkos::create_mirror(r);
     Kokkos::deep_copy(r_mirror, r);
 
-    CompareWithExpected(r_mirror, r_exact);
+    openturbine::tests::CompareWithExpected(r_mirror, r_exact);
+}
+
+}  // namespace
+
+namespace openturbine::tests {
+
+TEST(CalculateDistanceComponentsTests, OneElement) {
+    TestCalculateDistanceComponentsTests_OneElement();
 }
 
 }  // namespace openturbine::tests

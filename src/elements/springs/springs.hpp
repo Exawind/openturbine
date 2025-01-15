@@ -32,10 +32,10 @@ struct Springs {
     Kokkos::View<double* [3][3]> a;        //< Stiffness matrices
     Kokkos::View<double* [3][3]> r_tilde;  //< Skew-symmetric matrix of r
 
-    Kokkos::View<double* [3]> residual_vector_terms;
+    Kokkos::View<double* [2][3]> residual_vector_terms;
     Kokkos::View<double* [2][2][3][3]> stiffness_matrix_terms;
 
-    Springs(const size_t n_spring_elems)
+    explicit Springs(const size_t n_spring_elems)
         : num_elems(n_spring_elems),
           num_nodes_per_element("num_nodes_per_element", num_elems),
           node_state_indices("node_state_indices", num_elems),

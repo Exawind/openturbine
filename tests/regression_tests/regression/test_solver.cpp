@@ -4,24 +4,9 @@
 
 #include "test_utilities.hpp"
 
-#include "src/dof_management/assemble_node_freedom_allocation_table.hpp"
-#include "src/dof_management/compute_node_freedom_map_table.hpp"
-#include "src/dof_management/create_constraint_freedom_table.hpp"
-#include "src/dof_management/create_element_freedom_table.hpp"
-#include "src/elements/beams/beam_element.hpp"
-#include "src/elements/beams/beam_node.hpp"
-#include "src/elements/beams/beam_section.hpp"
-#include "src/elements/beams/beams_input.hpp"
-#include "src/elements/beams/create_beams.hpp"
-#include "src/elements/elements.hpp"
-#include "src/elements/masses/create_masses.hpp"
 #include "src/model/model.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
-#include "src/step/assemble_constraints_matrix.hpp"
-#include "src/step/assemble_constraints_residual.hpp"
-#include "src/step/assemble_system_matrix.hpp"
-#include "src/step/assemble_system_residual.hpp"
 #include "src/step/predict_next_state.hpp"
 #include "src/step/step.hpp"
 #include "src/step/step_parameters.hpp"
@@ -52,7 +37,7 @@ inline void SetUpSolverAndAssemble() {
     auto model = Model();
 
     // Gravity vector
-    constexpr auto gravity = std::array{0., 0., 0.};
+    model.SetGravity(0., 0., 0.);
 
     // Node locations (GLL quadrature)
     constexpr auto node_s = std::array{
@@ -63,76 +48,50 @@ inline void SetUpSolverAndAssemble() {
     // Calculate displacement, velocity, acceleration assuming a
     // 0.1 rad/s angular velocity around the z axis
     constexpr auto omega = 0.1;
-    std::vector<BeamNode> beam_nodes;
+    std::vector<size_t> beam_node_ids;
     std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
+        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
         [&](auto s) {
             const auto x = 10 * s + 2.;
-            return BeamNode(
-                s, *model.AddNode(
-                       {x, 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.},
-                       {0., x * omega, 0., 0., 0., omega}, {0., 0., 0., 0., 0., 0.}
-                   )
-            );
+            return model.AddNode()
+                .SetElemLocation(s)
+                .SetPosition(x, 0., 0., 1., 0., 0., 0.)
+                .SetVelocity(0., x * omega, 0., 0., 0., omega)
+                .Build();
         }
     );
 
-    // Define beam initialization
-    const auto beams_input = BeamsInput(
+    // Add beam element
+    model.AddBeamElement(
+        beam_node_ids,
         {
-            BeamElement(
-                beam_nodes,
-                {
-                    BeamSection(0., mass_matrix, stiffness_matrix),
-                    BeamSection(1., mass_matrix, stiffness_matrix),
-                },
-                BeamQuadrature{
-                    {-0.9491079123427585, 0.1294849661688697},
-                    {-0.7415311855993943, 0.27970539148927664},
-                    {-0.40584515137739696, 0.3818300505051189},
-                    {6.123233995736766e-17, 0.4179591836734694},
-                    {0.4058451513773971, 0.3818300505051189},
-                    {0.7415311855993945, 0.27970539148927664},
-                    {0.9491079123427585, 0.1294849661688697},
-                }
-            ),
+            BeamSection(0., mass_matrix, stiffness_matrix),
+            BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        gravity
+        BeamQuadrature{
+            {-0.9491079123427585, 0.1294849661688697},
+            {-0.7415311855993943, 0.27970539148927664},
+            {-0.40584515137739696, 0.3818300505051189},
+            {6.123233995736766e-17, 0.4179591836734694},
+            {0.4058451513773971, 0.3818300505051189},
+            {0.7415311855993945, 0.27970539148927664},
+            {0.9491079123427585, 0.1294849661688697},
+        }
     );
 
-    // Initialize beams from element inputs
-    auto beams = CreateBeams(beams_input);
-
-    // No Masses
-    const auto masses_input = MassesInput({}, gravity);
-    auto masses = CreateMasses(masses_input);
-
-    // Create elements from beams
-    auto elements = Elements{beams, masses};
-
-    // Constraint inputs
-    model.AddPrescribedBC(model.GetNode(0));
+    // Add prescribed BC on beam root node
+    model.AddPrescribedBC(beam_node_ids[0]);
 
     // Solution parameters
     constexpr auto max_iter = 10U;
     constexpr auto is_dynamic_solve = true;
     constexpr auto step_size = 0.01;  // seconds
     constexpr auto rho_inf = 0.9;
-
-    // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
-    auto constraints = Constraints(model.GetConstraints());
-    auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, elements, constraints);
-    compute_node_freedom_map_table(state);
-    create_element_freedom_table(elements, state);
-    create_constraint_freedom_table(constraints, state);
-    auto solver = Solver(
-        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
-        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
-        constraints.row_range
-    );
+
+    // Create solver, elements, constraints, and state
+    auto [state, elements, constraints] = model.CreateSystem();
+    auto solver = CreateSolver(state, elements, constraints);
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
     constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
@@ -143,7 +102,7 @@ inline void SetUpSolverAndAssemble() {
     // Update beam elements state from solvers
     UpdateSystemVariables(parameters, elements, state);
     AssembleSystemMatrix(solver, elements);
-    AssembleSystemResidual(solver, elements);
+    AssembleSystemResidual(solver, elements, state);
 
     UpdateConstraintVariables(state, constraints);
     AssembleConstraintsMatrix(solver, constraints);
@@ -301,7 +260,7 @@ inline void SetupAndTakeNoSteps() {
     auto model = Model();
 
     // Gravity vector
-    constexpr auto gravity = std::array{0., 0., 0.};
+    model.SetGravity(0., 0., 0.);
 
     // Node locations (GLL quadrature)
     constexpr auto node_s = std::array{
@@ -312,76 +271,50 @@ inline void SetupAndTakeNoSteps() {
     // Calculate displacement, velocity, acceleration assuming a
     // 0.1 rad/s angular velocity around the z axis
     constexpr auto omega = 0.1;
-    std::vector<BeamNode> beam_nodes;
+    std::vector<size_t> beam_node_ids;
     std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
+        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
         [&](auto s) {
             const auto x = 10 * s + 2.;
-            return BeamNode(
-                s, *model.AddNode(
-                       {x, 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.},
-                       {0., x * omega, 0., 0., 0., omega}, {0., 0., 0., 0., 0., 0.}
-                   )
-            );
+            return model.AddNode()
+                .SetElemLocation(s)
+                .SetPosition(x, 0., 0., 1., 0., 0., 0.)
+                .SetVelocity(0., x * omega, 0., 0., 0., omega)
+                .Build();
         }
     );
 
-    // Define beam initialization
-    const auto beams_input = BeamsInput(
+    // Add beam element
+    model.AddBeamElement(
+        beam_node_ids,
         {
-            BeamElement(
-                beam_nodes,
-                {
-                    BeamSection(0., mass_matrix, stiffness_matrix),
-                    BeamSection(1., mass_matrix, stiffness_matrix),
-                },
-                BeamQuadrature{
-                    {-0.9491079123427585, 0.1294849661688697},
-                    {-0.7415311855993943, 0.27970539148927664},
-                    {-0.40584515137739696, 0.3818300505051189},
-                    {6.123233995736766e-17, 0.4179591836734694},
-                    {0.4058451513773971, 0.3818300505051189},
-                    {0.7415311855993945, 0.27970539148927664},
-                    {0.9491079123427585, 0.1294849661688697},
-                }
-            ),
+            BeamSection(0., mass_matrix, stiffness_matrix),
+            BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        gravity
+        BeamQuadrature{
+            {-0.9491079123427585, 0.1294849661688697},
+            {-0.7415311855993943, 0.27970539148927664},
+            {-0.40584515137739696, 0.3818300505051189},
+            {6.123233995736766e-17, 0.4179591836734694},
+            {0.4058451513773971, 0.3818300505051189},
+            {0.7415311855993945, 0.27970539148927664},
+            {0.9491079123427585, 0.1294849661688697},
+        }
     );
 
-    // Initialize beams from element inputs
-    auto beams = CreateBeams(beams_input);
-
-    // No Masses
-    const auto masses_input = MassesInput({}, gravity);
-    auto masses = CreateMasses(masses_input);
-
-    // Create elements from beams
-    auto elements = Elements{beams, masses};
-
-    // Constraint inputs
-    model.AddPrescribedBC(model.GetNode(0));
+    // Add prescribed boundary condition to first node
+    model.AddPrescribedBC(beam_node_ids[0]);
 
     // Solution parameters
     constexpr auto max_iter = 0U;
     constexpr auto is_dynamic_solve = true;
     constexpr auto step_size = 0.01;  // seconds
     constexpr auto rho_inf = 0.9;
-
-    // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
-    auto constraints = Constraints(model.GetConstraints());
-    auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, elements, constraints);
-    compute_node_freedom_map_table(state);
-    create_element_freedom_table(elements, state);
-    create_constraint_freedom_table(constraints, state);
-    auto solver = Solver(
-        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
-        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
-        constraints.row_range
-    );
+
+    // Create solver, elements, constraints, and state
+    auto [state, elements, constraints] = model.CreateSystem();
+    auto solver = CreateSolver(state, elements, constraints);
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
     constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
@@ -521,7 +454,7 @@ inline auto SetupAndTakeTwoSteps() {
     auto model = Model();
 
     // Gravity vector
-    constexpr auto gravity = std::array{0., 0., 0.};
+    model.SetGravity(0., 0., 0.);
 
     // Node locations (GLL quadrature)
     constexpr auto node_s = std::array{
@@ -532,76 +465,50 @@ inline auto SetupAndTakeTwoSteps() {
     // Calculate displacement, velocity, acceleration assuming a
     // 0.1 rad/s angular velocity around the z axis
     constexpr auto omega = 0.1;
-    std::vector<BeamNode> beam_nodes;
+    std::vector<size_t> beam_node_ids;
     std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_nodes),
+        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
         [&](auto s) {
             const auto x = 10 * s + 2.;
-            return BeamNode(
-                s, *model.AddNode(
-                       {x, 0., 0., 1., 0., 0., 0.}, {0., 0., 0., 1., 0., 0., 0.},
-                       {0., x * omega, 0., 0., 0., omega}, {0., 0., 0., 0., 0., 0.}
-                   )
-            );
+            return model.AddNode()
+                .SetElemLocation(s)
+                .SetPosition(x, 0., 0., 1., 0., 0., 0.)
+                .SetVelocity(0., x * omega, 0., 0., 0., omega)
+                .Build();
         }
     );
 
-    // Define beam initialization
-    const auto beams_input = BeamsInput(
+    // Add beam element
+    model.AddBeamElement(
+        beam_node_ids,
         {
-            BeamElement(
-                beam_nodes,
-                {
-                    BeamSection(0., mass_matrix, stiffness_matrix),
-                    BeamSection(1., mass_matrix, stiffness_matrix),
-                },
-                BeamQuadrature{
-                    {-0.9491079123427585, 0.1294849661688697},
-                    {-0.7415311855993943, 0.27970539148927664},
-                    {-0.40584515137739696, 0.3818300505051189},
-                    {6.123233995736766e-17, 0.4179591836734694},
-                    {0.4058451513773971, 0.3818300505051189},
-                    {0.7415311855993945, 0.27970539148927664},
-                    {0.9491079123427585, 0.1294849661688697},
-                }
-            ),
+            BeamSection(0., mass_matrix, stiffness_matrix),
+            BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        gravity
+        BeamQuadrature{
+            {-0.9491079123427585, 0.1294849661688697},
+            {-0.7415311855993943, 0.27970539148927664},
+            {-0.40584515137739696, 0.3818300505051189},
+            {6.123233995736766e-17, 0.4179591836734694},
+            {0.4058451513773971, 0.3818300505051189},
+            {0.7415311855993945, 0.27970539148927664},
+            {0.9491079123427585, 0.1294849661688697},
+        }
     );
 
-    // Initialize beams from element inputs
-    auto beams = CreateBeams(beams_input);
-
-    // No Masses
-    const auto masses_input = MassesInput({}, gravity);
-    auto masses = CreateMasses(masses_input);
-
-    // Create elements from beams
-    auto elements = Elements{beams, masses};
-
     // Constraint inputs
-    model.AddPrescribedBC(model.GetNode(0));
+    model.AddPrescribedBC(beam_node_ids[0]);
 
     // Solution parameters
     constexpr auto max_iter = 2U;
     constexpr auto is_dynamic_solve = true;
     constexpr auto step_size = 0.01;  // seconds
     constexpr auto rho_inf = 0.9;
-
-    // Create solver
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
-    auto constraints = Constraints(model.GetConstraints());
-    auto state = model.CreateState();
-    assemble_node_freedom_allocation_table(state, elements, constraints);
-    compute_node_freedom_map_table(state);
-    create_element_freedom_table(elements, state);
-    create_constraint_freedom_table(constraints, state);
-    auto solver = Solver(
-        state.ID, state.node_freedom_allocation_table, state.node_freedom_map_table,
-        elements.NumberOfNodesPerElement(), elements.NodeStateIndices(), constraints.num_dofs,
-        constraints.type, constraints.base_node_freedom_table, constraints.target_node_freedom_table,
-        constraints.row_range
-    );
+
+    // Create solver, elements, constraints, and state
+    auto [state, elements, constraints] = model.CreateSystem();
+    auto solver = CreateSolver(state, elements, constraints);
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
     constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
