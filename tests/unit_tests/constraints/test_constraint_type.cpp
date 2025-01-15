@@ -29,6 +29,18 @@ TEST(ConstraintTypeTest, RotationControlHasTwoNodes) {
     EXPECT_EQ(GetNumberOfNodes(ConstraintType::kRotationControl), 2U);
 }
 
+TEST(ConstraintTypeTest, FixedBC6DOFsTo3DOFsHasOneNode) {
+    EXPECT_EQ(GetNumberOfNodes(ConstraintType::kFixedBC6DOFsTo3DOFs), 1U);
+}
+
+TEST(ConstraintTypeTest, PrescribedBC6DOFsTo3DOFsHasOneNode) {
+    EXPECT_EQ(GetNumberOfNodes(ConstraintType::kPrescribedBC6DOFsTo3DOFs), 1U);
+}
+
+TEST(ConstraintTypeTest, RigidJoint6DOFsTo3DOFsHasTwoNodes) {
+    EXPECT_EQ(GetNumberOfNodes(ConstraintType::kRigidJoint6DOFsTo3DOFs), 2U);
+}
+
 TEST(ConstraintTypeTest, RevoluteJointHasFiveDOFs) {
     EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kRevoluteJoint), 5U);
 }
@@ -51,6 +63,18 @@ TEST(ConstraintTypeTest, RigidJointHasSixDOFs) {
 
 TEST(ConstraintTypeTest, RotationControlHasSixDOFs) {
     EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kRotationControl), 6U);
+}
+
+TEST(ConstraintTypeTest, FixedBC6DOFsTo3DOFsHasThreeDOFs) {
+    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kFixedBC6DOFsTo3DOFs), 3U);
+}
+
+TEST(ConstraintTypeTest, PrescribedBC6DOFsTo3DOFsHasThreeDOFs) {
+    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kPrescribedBC6DOFsTo3DOFs), 3U);
+}
+
+TEST(ConstraintTypeTest, RigidJoint6DOFsTo3DOFsHasThreeDOFs) {
+    EXPECT_EQ(NumDOFsForConstraint(ConstraintType::kRigidJoint6DOFsTo3DOFs), 3U);
 }
 
 }  // namespace openturbine::tests
