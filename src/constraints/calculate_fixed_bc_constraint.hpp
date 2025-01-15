@@ -12,7 +12,7 @@ namespace openturbine {
 
 struct CalculateFixedBCConstraint {
     int i_constraint;
-    Kokkos::View<size_t* [2]>::const_type node_num_dofs;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type target_node_col_range;
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3]>::const_type X0_;
     Kokkos::View<double* [7]>::const_type constraint_inputs;
@@ -74,8 +74,8 @@ struct CalculateFixedBCConstraint {
         // Residual Vector
         //----------------------------------------------------------------------
 
-        const auto min_num_dofs =
-            std::min(node_num_dofs(i_constraint, 0), node_num_dofs(i_constraint, 1));
+        const auto target_node_cols =
+            target_node_col_range(i_constraint).second - target_node_col_range(i_constraint).first;
 
         // Phi(0:3) = u2 + X0 - u1 - R1*X0
         QuaternionInverse(R1, R1t);
@@ -86,7 +86,7 @@ struct CalculateFixedBCConstraint {
 
         // Angular residual
         // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
-        if (min_num_dofs == 6) {
+        if (target_node_cols == 6) {
             QuaternionCompose(R2, RCt, R2_RCt);
             QuaternionCompose(R2_RCt, R1t, R2_RCt_R1t);
             QuaternionToRotationMatrix(R2_RCt_R1t, C);
@@ -110,7 +110,7 @@ struct CalculateFixedBCConstraint {
         }
 
         // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
-        if (min_num_dofs == 6) {
+        if (target_node_cols == 6) {
             AX_Matrix(C, A);
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 3; ++j) {

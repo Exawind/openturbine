@@ -15,7 +15,9 @@ template <typename CrsMatrixType>
     const Kokkos::View<ConstraintType*>::const_type& constraint_type,
     const Kokkos::View<size_t* [6]>::const_type& constraint_base_node_freedom_table,
     const Kokkos::View<size_t* [6]>::const_type& constraint_target_node_freedom_table,
-    const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
+    const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range,
+    const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_base_node_col_range,
+    const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_target_node_col_range
 ) {
     using ValuesType = typename CrsMatrixType::values_type::non_const_type;
     using RowPtrType = typename CrsMatrixType::staticcrsgraph_type::row_map_type::non_const_type;
@@ -23,7 +25,10 @@ template <typename CrsMatrixType>
 
     const auto B_num_rows = constraint_dofs;
     const auto B_num_columns = system_dofs;
-    const auto B_num_non_zero = ComputeBNumNonZero(constraint_type, constraint_row_range);
+    const auto B_num_non_zero = ComputeBNumNonZero(
+        constraint_type, constraint_row_range, constraint_base_node_col_range,
+        constraint_target_node_col_range
+    );
 
     const auto B_row_ptrs = RowPtrType("b_row_ptrs", B_num_rows + 1);
     const auto B_col_ind = IndicesType("b_indices", B_num_non_zero);
@@ -31,7 +36,8 @@ template <typename CrsMatrixType>
         "PopulateSparseRowPtrsColInds_Constraints", 1,
         PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
             constraint_type, constraint_base_node_freedom_table,
-            constraint_target_node_freedom_table, constraint_row_range, B_row_ptrs, B_col_ind
+            constraint_target_node_freedom_table, constraint_row_range,
+            constraint_base_node_col_range, constraint_target_node_col_range, B_row_ptrs, B_col_ind
         }
     );
     const auto B_values = ValuesType("B values", B_num_non_zero);

@@ -48,7 +48,9 @@ static const size_t InvalidNodeID(0U);
         constraints.type,
         constraints.base_node_freedom_table,
         constraints.target_node_freedom_table,
-        constraints.row_range
+        constraints.row_range,
+        constraints.base_node_col_range,
+        constraints.target_node_col_range,
     };
 }
 
@@ -298,7 +300,7 @@ public:
     size_t AddFixedBC6DOFsTo3DOFs(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kFixedBC6DOFsTo3DOFs, std::array{InvalidNodeID, node_id}
+            id, ConstraintType::kFixedBC3DOFs, std::array{InvalidNodeID, node_id}
         );
         return id;
     }
@@ -310,8 +312,7 @@ public:
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kPrescribedBC6DOFsTo3DOFs, std::array{InvalidNodeID, node_id},
-            ref_position
+            id, ConstraintType::kPrescribedBC3DOFs, std::array{InvalidNodeID, node_id}, ref_position
         );
         return id;
     }

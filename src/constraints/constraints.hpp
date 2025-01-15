@@ -29,7 +29,6 @@ struct Constraints {
 
     // Constraint properties
     Kokkos::View<ConstraintType*> type;       //< Type of each constraint
-    Kokkos::View<size_t* [2]> node_num_dofs;  //< Number of DOFs: {base_node, target_node}
     std::vector<double*> control_signal;      //< Control signal for each constraint
     Kokkos::View<size_t*> base_node_index;    //< Index of the base node for each constraint
     Kokkos::View<size_t*> target_node_index;  //< Index of the target node for each constraint
@@ -67,11 +66,10 @@ struct Constraints {
           num_dofs{std::transform_reduce(
               constraints.cbegin(), constraints.cend(), 0U, std::plus{},
               [](auto c) {
-                  return NumDOFsForConstraint(c.type);
+                  return NumRowsForConstraint(c.type);
               }
           )},
           type("type", num_constraints),
-          node_num_dofs("node_num_dofs", num_constraints),
           control_signal(num_constraints),
           base_node_index("base_node_index", num_constraints),
           target_node_index("target_node_index", num_constraints),
@@ -93,11 +91,7 @@ struct Constraints {
           system_residual_terms("system_residual_terms", num_constraints),
           base_gradient_terms("base_gradient_terms", num_constraints),
           target_gradient_terms("target_gradient_terms", num_constraints) {
-        Kokkos::deep_copy(base_node_freedom_signature, FreedomSignature::AllComponents);
-        Kokkos::deep_copy(target_node_freedom_signature, FreedomSignature::AllComponents);
-
         auto host_type = Kokkos::create_mirror(type);
-        auto host_node_num_dofs = Kokkos::create_mirror(node_num_dofs);
         auto host_row_range = Kokkos::create_mirror(row_range);
         auto host_base_node_col_range = Kokkos::create_mirror(base_node_col_range);
         auto host_target_node_col_range = Kokkos::create_mirror(target_node_col_range);
@@ -116,8 +110,25 @@ struct Constraints {
 
             // Set constraint properties
             host_type(i) = c.type;
-            host_node_num_dofs(i, 0) = 6U;                                  // Base node has 6 DOFs
-            host_node_num_dofs(i, 1) = NumDOFsForConstraint(host_type(i));  // Target node DOFs
+
+            // Set the freedom signature from the constraint types
+            if (c.type == ConstraintType::kFixedBC || c.type == ConstraintType::kPrescribedBC) {
+                host_base_freedom(i) = FreedomSignature::NoComponents;
+                host_target_freedom(i) = FreedomSignature::AllComponents;
+            } else if (c.type == ConstraintType::kRigidJoint ||
+                       c.type == ConstraintType::kRevoluteJoint ||
+                       c.type == ConstraintType::kRotationControl) {
+                host_base_freedom(i) = FreedomSignature::AllComponents;
+                host_target_freedom(i) = FreedomSignature::AllComponents;
+            } else if (c.type == ConstraintType::kFixedBC3DOFs ||
+                       c.type == ConstraintType::kPrescribedBC3DOFs) {
+                host_base_freedom(i) = FreedomSignature::NoComponents;
+                host_target_freedom(i) = FreedomSignature::JustPosition;
+            } else if (c.type == ConstraintType::kRigidJoint6DOFsTo3DOFs) {
+                host_base_freedom(i) = FreedomSignature::AllComponents;
+                host_target_freedom(i) = FreedomSignature::JustPosition;
+            }
+
             control_signal[i] = c.control;
 
             // Set base and target node index
@@ -125,19 +136,22 @@ struct Constraints {
             host_target_node_index(i) = target_node_id;
 
             // Set constraint rows
-            auto dofs = NumDOFsForConstraint(host_type(i));
-            host_row_range(i) = Kokkos::make_pair(start_row, start_row + dofs);
-            start_row += dofs;
+            auto n_rows = NumRowsForConstraint(host_type(i));
+            host_row_range(i) = Kokkos::make_pair(start_row, start_row + n_rows);
+            start_row += n_rows;
 
             // Set constraint columns
-            host_target_node_col_range(i) = Kokkos::make_pair(0U, 6U);
-            if (GetNumberOfNodes(host_type(i)) == 2) {
-                const auto target_start_col = (target_node_id < base_node_id) ? 0U : 6U;
-                host_target_node_col_range(i) =
-                    Kokkos::make_pair(target_start_col, target_start_col + 6U);
-
-                const auto base_start_col = (base_node_id < target_node_id) ? 0U : 6U;
-                host_base_node_col_range(i) = Kokkos::make_pair(base_start_col, base_start_col + 6U);
+            const auto num_cols = NumColsForConstraint(host_type(i));
+            const auto num_target_cols = num_cols - 6U;  // number of target node columns
+            if (num_cols <= 6U) {
+                host_base_node_col_range(i) = Kokkos::make_pair(0U, 0U);
+                host_target_node_col_range(i) = Kokkos::make_pair(0U, num_cols);
+            } else if (target_node_id < base_node_id) {
+                host_target_node_col_range(i) = Kokkos::make_pair(0U, num_target_cols);
+                host_base_node_col_range(i) = Kokkos::make_pair(num_target_cols, num_cols);
+            } else {
+                host_base_node_col_range(i) = Kokkos::make_pair(0U, 6U);
+                host_target_node_col_range(i) = Kokkos::make_pair(6U, num_cols);
             }
 
             // Calculate initial relative position (X0)
@@ -156,12 +170,13 @@ struct Constraints {
         }
 
         Kokkos::deep_copy(type, host_type);
-        Kokkos::deep_copy(node_num_dofs, host_node_num_dofs);
         Kokkos::deep_copy(row_range, host_row_range);
         Kokkos::deep_copy(base_node_col_range, host_base_node_col_range);
         Kokkos::deep_copy(target_node_col_range, host_target_node_col_range);
         Kokkos::deep_copy(base_node_index, host_base_node_index);
         Kokkos::deep_copy(target_node_index, host_target_node_index);
+        Kokkos::deep_copy(base_node_freedom_signature, host_base_freedom);
+        Kokkos::deep_copy(target_node_freedom_signature, host_target_freedom);
         Kokkos::deep_copy(X0, host_X0);
         Kokkos::deep_copy(axes, host_axes);
 

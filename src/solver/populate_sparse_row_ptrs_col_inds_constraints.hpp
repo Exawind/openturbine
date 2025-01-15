@@ -12,6 +12,8 @@ struct PopulateSparseRowPtrsColInds_Constraints {
     Kokkos::View<size_t* [6]>::const_type base_node_freedom_table;
     Kokkos::View<size_t* [6]>::const_type target_node_freedom_table;
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type constraint_base_node_col_range;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type constraint_target_node_col_range;
     RowPtrType B_row_ptrs;
     IndicesType B_col_inds;
 
@@ -26,22 +28,24 @@ struct PopulateSparseRowPtrsColInds_Constraints {
                 B_row_ptrs(i_row) = ind_col;
 
                 // Add column indices for target node
-                for (auto j = 0U; j < 6U; ++j) {
+                const auto n_target_node_cols =
+                    constraint_target_node_col_range(i_constraint).second -
+                    constraint_target_node_col_range(i_constraint).first;
+                for (auto j = 0U; j < n_target_node_cols; ++j) {
                     B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
                         target_node_freedom_table(i_constraint, j)
                     );
                     ind_col++;
                 }
 
-                // Add column indices for base node if it has a valid index
-                if (GetNumberOfNodes(type(i_constraint)) == 2U) {
-                    // Add column indices for base node
-                    for (auto j = 0U; j < 6U; ++j) {
-                        B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
-                            base_node_freedom_table(i_constraint, j)
-                        );
-                        ind_col++;
-                    }
+                // Add column indices for base node
+                const auto n_base_node_cols = constraint_base_node_col_range(i_constraint).second -
+                                              constraint_base_node_col_range(i_constraint).first;
+                for (auto j = 0U; j < n_base_node_cols; ++j) {
+                    B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
+                        base_node_freedom_table(i_constraint, j)
+                    );
+                    ind_col++;
                 }
             }
         }
