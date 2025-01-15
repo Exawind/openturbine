@@ -61,11 +61,9 @@ inline auto SetUpSpringMassSystem() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
+    // Create host mirror for checking solution
     auto q = Kokkos::create_mirror(state.q);
 
     // Run simulation for T seconds
@@ -146,10 +144,8 @@ inline auto SetUpSpringMassChainSystem() {
     model.AddFixedBC(0);
     model.AddFixedBC(number_of_masses + 1);
 
-    // Set up solver components
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    // Create system and solver
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
     const double T = 2. * M_PI * sqrt(m / k);

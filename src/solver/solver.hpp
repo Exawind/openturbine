@@ -147,6 +147,82 @@ struct Solver {
           amesos_solver(
               CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x_mv, b)
           ) {}
+
+    Solver(const Solver& other)
+        : num_system_nodes(other.num_system_nodes),
+          num_system_dofs(other.num_system_dofs),
+          num_dofs(other.num_dofs),
+          K("K", other.K),
+          T("T", other.T),
+          B("B", other.B),
+          B_t("B_t", other.B_t),
+          static_system_matrix(CreateMatrixSpgemm(K, T, system_spgemm_handle)),
+          system_matrix(CreateMatrixSpadd(K, static_system_matrix, system_spadd_handle)),
+          constraints_matrix(CreateMatrixSpgemm(B, T, constraints_spgemm_handle)),
+          system_matrix_full(CreateSystemMatrixFull(num_system_dofs, num_dofs, system_matrix)),
+          constraints_matrix_full(
+              CreateConstraintsMatrixFull(num_system_dofs, num_dofs, constraints_matrix)
+          ),
+          transpose_matrix_full(CreateTransposeMatrixFull(num_system_dofs, num_dofs, B_t)),
+          system_plus_constraints(
+              CreateMatrixSpadd(system_matrix_full, constraints_matrix_full, spc_spadd_handle)
+          ),
+          full_matrix(CreateMatrixSpadd(
+              system_plus_constraints, transpose_matrix_full, full_system_spadd_handle
+          )),
+          A(CreateGlobalMatrix<GlobalCrsMatrixType, GlobalMultiVectorType>(full_matrix)),
+          b(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getRangeMap(), 1)),
+          x_mv(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),
+          R("R", num_dofs),
+          x("x", num_dofs),
+          amesos_solver(
+              CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x_mv, b)
+          ) {}
+
+    Solver(Solver&& other) noexcept = delete;
+    ~Solver() = default;
+
+    Solver& operator=(const Solver& other) {
+        if (this == &other) {
+            return *this;
+        }
+
+        auto tmp = other;
+        std::swap(num_system_nodes, tmp.num_system_nodes);
+        std::swap(num_system_dofs, tmp.num_system_dofs);
+        std::swap(num_dofs, tmp.num_dofs);
+
+        std::swap(system_spgemm_handle, tmp.system_spgemm_handle);
+        std::swap(constraints_spgemm_handle, tmp.constraints_spgemm_handle);
+        std::swap(system_spadd_handle, tmp.system_spadd_handle);
+        std::swap(spc_spadd_handle, tmp.spc_spadd_handle);
+        std::swap(full_system_spadd_handle, tmp.full_system_spadd_handle);
+
+        std::swap(K, tmp.K);
+        std::swap(T, tmp.T);
+        std::swap(B, tmp.B);
+        std::swap(B_t, tmp.B_t);
+        std::swap(static_system_matrix, tmp.static_system_matrix);
+        std::swap(system_matrix, tmp.system_matrix);
+        std::swap(constraints_matrix, tmp.constraints_matrix);
+        std::swap(system_matrix_full, tmp.system_matrix_full);
+        std::swap(constraints_matrix_full, tmp.constraints_matrix_full);
+        std::swap(transpose_matrix_full, tmp.transpose_matrix_full);
+        std::swap(system_plus_constraints, tmp.system_plus_constraints);
+        std::swap(full_matrix, tmp.full_matrix);
+        std::swap(A, tmp.A);
+        std::swap(b, tmp.b);
+        std::swap(x_mv, tmp.x_mv);
+        std::swap(R, tmp.R);
+        std::swap(x, tmp.x);
+
+        std::swap(convergence_err, tmp.convergence_err);
+
+        std::swap(amesos_solver, tmp.amesos_solver);
+        return *this;
+    }
+
+    Solver& operator=(Solver&& other) noexcept = delete;
 };
 
 }  // namespace openturbine
