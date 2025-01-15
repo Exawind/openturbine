@@ -44,12 +44,11 @@ inline auto SetUpHeavyTopTest() {
     );
 
     // Add ground node with 3 DOFs
-    auto ground_node_id =
-        model.AddNode().SetPosition(0., 0., 0.).Build();  // Only translational DOFs
+    auto ground_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
 
-    // Add rigid joint constraint and fixed BC
-    model.AddRigidJointConstraint({mass_node_id, ground_node_id}, {6U, 3U});
-    model.AddPrescribedBC(ground_node_id, {6U, 3U});
+    // Add constraints
+    model.AddRigidJoint6DOFsTo3DOFs({mass_node_id, ground_node_id});
+    model.AddPrescribedBC6DOFsTo3DOFs(ground_node_id);
 
     // Set up step parameters
     constexpr bool is_dynamic_solve(true);

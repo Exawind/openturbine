@@ -116,7 +116,7 @@ struct Constraints {
 
             // Set constraint properties
             host_type(i) = c.type;
-            host_node_num_dofs(i, 0) = 6U;                                  // Base node has 6 nodes
+            host_node_num_dofs(i, 0) = 6U;                                  // Base node has 6 DOFs
             host_node_num_dofs(i, 1) = NumDOFsForConstraint(host_type(i));  // Target node DOFs
             control_signal[i] = c.control;
 

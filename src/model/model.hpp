@@ -294,6 +294,35 @@ public:
         return id;
     }
 
+    /// Adds a fixed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the ID
+    size_t AddFixedBC6DOFsTo3DOFs(const size_t node_id) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(
+            id, ConstraintType::kFixedBC6DOFsTo3DOFs, std::array{InvalidNodeID, node_id}
+        );
+        return id;
+    }
+
+    /// Adds a prescribed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the
+    /// ID
+    size_t AddPrescribedBC6DOFsTo3DOFs(
+        const size_t node_id, const Array_3& ref_position = {0., 0., 0.}
+    ) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(
+            id, ConstraintType::kPrescribedBC6DOFsTo3DOFs, std::array{InvalidNodeID, node_id},
+            ref_position
+        );
+        return id;
+    }
+
+    /// Adds a rigid joint constraint (6DOFs to 3DOFs) to the model and returns the ID
+    size_t AddRigidJoint6DOFsTo3DOFs(const std::array<size_t, 2>& node_ids) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(id, ConstraintType::kRigidJoint6DOFsTo3DOFs, node_ids);
+        return id;
+    }
+
     /// Returns the number of constraints present in the model
     [[nodiscard]] size_t NumConstraints() const { return this->constraints_.size(); }
 
