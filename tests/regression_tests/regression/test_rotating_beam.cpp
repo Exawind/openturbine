@@ -129,9 +129,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     model.AddPrescribedBC(node_ids[0]);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
     // Create solver parameters
@@ -231,9 +229,7 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
     // Calculate hub rotation for this time step
@@ -331,9 +327,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
     // Perform time steps and check for convergence within max_iter iterations
@@ -399,9 +393,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
     // Perform 10 time steps and check for convergence within max_iter iterations
@@ -468,9 +460,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
     // Perform 10 time steps and check for convergence within max_iter iterations
@@ -541,9 +531,7 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
     double azimuth = 0.;
@@ -616,9 +604,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
 #ifdef OpenTurbine_ENABLE_VTK
@@ -723,9 +709,7 @@ void GeneratorTorqueWithAxisTilt(
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
 #ifdef OpenTurbine_ENABLE_VTK

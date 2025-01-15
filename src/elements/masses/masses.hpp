@@ -54,7 +54,7 @@ struct Masses {
     Kokkos::View<double* [6][6]> stiffness_matrix_terms;
     Kokkos::View<double* [6][6]> inertia_matrix_terms;
 
-    Masses(const size_t n_mass_elems)
+    explicit Masses(const size_t n_mass_elems)
         : num_elems(n_mass_elems),
           num_nodes_per_element("num_nodes_per_element", num_elems),
           state_indices("state_indices", num_elems),

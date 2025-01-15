@@ -4,6 +4,7 @@ add_executable(openturbine_regression_tests)
 # Add subdirectories for additional components
 add_subdirectory(external)
 add_subdirectory(regression)
+add_subdirectory(interfaces)
 
 # Specify the source files for the regression tests
 target_sources(openturbine_regression_tests PRIVATE rtest_main.cpp)

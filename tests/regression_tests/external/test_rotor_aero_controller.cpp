@@ -389,10 +389,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
     // Transfer initial state to beams for writing output
     UpdateSystemVariables(parameters, elements, state);

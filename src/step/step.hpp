@@ -59,7 +59,7 @@ inline bool Step(
 
         AssembleTangentOperator(solver, state);
 
-        AssembleSystemResidual(solver, elements);
+        AssembleSystemResidual(solver, elements, state);
 
         AssembleSystemMatrix(solver, elements);
 

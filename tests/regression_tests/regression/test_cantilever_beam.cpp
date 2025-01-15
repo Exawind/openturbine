@@ -104,9 +104,7 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
     // Get ID of last node

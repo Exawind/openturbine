@@ -29,6 +29,29 @@ namespace openturbine {
 /// Represents an invalid node in constraints that only uses the target node
 static const size_t InvalidNodeID(0U);
 
+/// @brief Compute freedom tables for state, elements, and constraints, then construct and return
+/// solver.
+[[nodiscard]] inline Solver CreateSolver(
+    State& state, Elements& elements, Constraints& constraints
+) {
+    assemble_node_freedom_allocation_table(state, elements, constraints);
+    compute_node_freedom_map_table(state);
+    create_element_freedom_table(elements, state);
+    create_constraint_freedom_table(constraints, state);
+    return {
+        state.ID,
+        state.node_freedom_allocation_table,
+        state.node_freedom_map_table,
+        elements.NumberOfNodesPerElement(),
+        elements.NodeStateIndices(),
+        constraints.num_dofs,
+        constraints.type,
+        constraints.base_node_freedom_table,
+        constraints.target_node_freedom_table,
+        constraints.row_range
+    };
+}
+
 /**
  * @brief Struct to define a turbine model with nodes, elements, and constraints
  *
@@ -44,6 +67,9 @@ class Model {
 public:
     /// Default constructor
     Model() = default;
+
+    // Constructor with gravity specified
+    explicit Model(std::array<double, 3> gravity) : gravity_(gravity) {}
 
     //--------------------------------------------------------------------------
     // Miscellaneous
@@ -120,10 +146,12 @@ public:
     [[nodiscard]] size_t NumBeamElements() const { return this->beam_elements_.size(); }
 
     /// Returns initialized BeamsInput struct
-    [[nodiscard]] BeamsInput CreateBeamsInput() { return {this->beam_elements_, this->gravity_}; }
+    [[nodiscard]] BeamsInput CreateBeamsInput() const {
+        return {this->beam_elements_, this->gravity_};
+    }
 
     /// Returns Beams struct initialized with beams
-    [[nodiscard]] Beams CreateBeams() {
+    [[nodiscard]] Beams CreateBeams() const {
         return openturbine::CreateBeams(this->CreateBeamsInput(), this->nodes_);
     }
 
@@ -155,7 +183,7 @@ public:
     [[nodiscard]] size_t NumMassElements() const { return this->mass_elements_.size(); }
 
     /// Returns Masses struct initialized from mass elements
-    [[nodiscard]] Masses CreateMasses() {
+    [[nodiscard]] Masses CreateMasses() const {
         return openturbine::CreateMasses(
             MassesInput(this->mass_elements_, this->gravity_), this->nodes_
         );
@@ -189,7 +217,7 @@ public:
     [[nodiscard]] size_t NumSpringElements() const { return this->spring_elements_.size(); }
 
     /// Returns Springs struct initialized from spring elements
-    [[nodiscard]] Springs CreateSprings() {
+    [[nodiscard]] Springs CreateSprings() const {
         return openturbine::CreateSprings(SpringsInput(this->spring_elements_), this->nodes_);
     }
 
@@ -198,7 +226,7 @@ public:
     //--------------------------------------------------------------------------
 
     /// Returns Elements struct initialized with elements
-    [[nodiscard]] Elements CreateElements() {
+    [[nodiscard]] Elements CreateElements() const {
         return Elements{
             this->CreateBeams(),
             this->CreateMasses(),
@@ -274,6 +302,18 @@ public:
         return Constraints(this->constraints_, this->nodes_);
     }
 
+    // Returns a State, Elements, and Constraints object initialized from the model
+    [[nodiscard]] std::tuple<State, Elements, Constraints> CreateSystem() const {
+        return {this->CreateState(), this->CreateElements(), this->CreateConstraints()};
+    }
+
+    // Returns a State, Elements, Constraints, and Solver object initialized from the model
+    [[nodiscard]] std::tuple<State, Elements, Constraints, Solver> CreateSystemWithSolver() const {
+        auto [state, elements, constraints] = this->CreateSystem();
+        auto solver = CreateSolver(state, elements, constraints);
+        return {state, elements, constraints, solver};
+    }
+
 private:
     Array_3 gravity_ = {0., 0., 0.};              //< Gravity components
     std::vector<Node> nodes_;                     //< Nodes in the model
@@ -282,28 +322,5 @@ private:
     std::vector<SpringElement> spring_elements_;  //< Spring elements in the model
     std::vector<Constraint> constraints_;         //< Constraints in the model
 };
-
-/// @brief Compute freedom tables for state, elements, and constraints -> then construct and return
-/// solver
-[[nodiscard]] inline Solver CreateSolver(
-    State& state, Elements& elements, Constraints& constraints
-) {
-    assemble_node_freedom_allocation_table(state, elements, constraints);
-    compute_node_freedom_map_table(state);
-    create_element_freedom_table(elements, state);
-    create_constraint_freedom_table(constraints, state);
-    return {
-        state.ID,
-        state.node_freedom_allocation_table,
-        state.node_freedom_map_table,
-        elements.NumberOfNodesPerElement(),
-        elements.NodeStateIndices(),
-        constraints.num_dofs,
-        constraints.type,
-        constraints.base_node_freedom_table,
-        constraints.target_node_freedom_table,
-        constraints.row_range
-    };
-}
 
 }  // namespace openturbine

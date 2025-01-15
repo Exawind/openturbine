@@ -90,9 +90,7 @@ inline void SetUpSolverAndAssemble() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -104,7 +102,7 @@ inline void SetUpSolverAndAssemble() {
     // Update beam elements state from solvers
     UpdateSystemVariables(parameters, elements, state);
     AssembleSystemMatrix(solver, elements);
-    AssembleSystemResidual(solver, elements);
+    AssembleSystemResidual(solver, elements, state);
 
     UpdateConstraintVariables(state, constraints);
     AssembleConstraintsMatrix(solver, constraints);
@@ -315,9 +313,7 @@ inline void SetupAndTakeNoSteps() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
@@ -511,9 +507,7 @@ inline auto SetupAndTakeTwoSteps() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
+    auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
