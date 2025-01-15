@@ -17,9 +17,11 @@ inline auto SetUpHeavyTopTest() {
     const auto x = std::array<double, 3>{0., 1., 0.};              // initial position
     const auto omega = std::array<double, 3>{0., 150., -4.61538};  // initial angular velocity
     const auto x_dot = CrossProduct(omega, x);                     // {4.61538, 0., 0.}
-    const auto omega_dot = std::array<double, 3>{661.3461692307692, 0., 0.};  // From pilot rust code
-    const auto x_ddot =
-        std::array<double, 3>{0., -21.3017325444, -30.960830769230824};  // From pilot rust code
+    const auto omega_dot =
+        std::array<double, 3>{661.3461692307691919, 0., 0.};  // From pilot rust code
+    const auto x_ddot = std::array<double, 3>{
+        0., -21.3017325444000001, -30.9608307692308244
+    };  // From pilot rust code
 
     // Add node with initial position and velocity
     auto mass_node_id =
@@ -43,10 +45,10 @@ inline auto SetUpHeavyTopTest() {
                       }}
     );
 
-    // Add ground node with 3 DOFs
+    // Add ground node at origin
     auto ground_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
 
-    // Add constraints
+    // Add constraints (6 DOF base node -> 3 DOF target node)
     model.AddRigidJoint6DOFsTo3DOFs({mass_node_id, ground_node_id});
     model.AddPrescribedBC6DOFsTo3DOFs(ground_node_id);
 
