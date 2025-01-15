@@ -10,7 +10,6 @@ namespace openturbine::tests {
 TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_FixedBC) {
     auto invalid_node = Node(0U, Array_7{0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
     auto node_1 = Node(1U, Array_7{1., 0., 0., 1., 0., 0., 0.});        // target node - index is 1
-    node_1.active_dofs = FreedomSignature::AllComponents;               // all 6 DOFs will be fixed
     auto fixed_bc = Constraint(0, ConstraintType::kFixedBC, {0, 1});
     auto constraints = Constraints({fixed_bc}, {invalid_node, node_1});
 
@@ -50,7 +49,6 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_FixedBC) {
 TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_PrescribedBC) {
     auto invalid_node = Node(0U, Array_7{0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
     auto node_1 = Node(1U, Array_7{1., 0., 0., 1., 0., 0., 0.});        // target node - index is 1
-    node_1.active_dofs = FreedomSignature::JustPosition;  // only position DOFs will be prescribed
     auto prescribed_bc = Constraint(0, ConstraintType::kPrescribedBC, {0, 1});
     auto constraints = Constraints({prescribed_bc}, {invalid_node, node_1});
 
@@ -78,18 +76,18 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_PrescribedBC) {
 
     EXPECT_EQ(host_target_node_index(0), 1);  // target node index is 4
     EXPECT_EQ(
-        host_target_node_freedom_signature(0), FreedomSignature::JustPosition
+        host_target_node_freedom_signature(0), FreedomSignature::AllComponents
     );  // taget node has 6 DOFs which will be prescribed
-    for (auto k = 0U; k < 3U; ++k) {
-        EXPECT_EQ(host_target_node_freedom_table(0, k), k + 24);  // target node DOFs: 24, 25, 26
+    for (auto k = 0U; k < 6U; ++k) {
+        EXPECT_EQ(
+            host_target_node_freedom_table(0, k), k + 24
+        );  // target node DOFs: 24, 25, 26, 27, 28, 29
     }
 }
 
 TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RigidBC) {
     auto node_1 = Node(0U, Array_7{0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
-    node_1.active_dofs = FreedomSignature::AllComponents;         // all 6 DOFs are present
     auto node_2 = Node(1U, Array_7{1., 0., 0., 1., 0., 0., 0.});  // target node - index is 1
-    node_2.active_dofs = FreedomSignature::JustPosition;  // only position DOFs will be prescribed
     auto rigid_bc = Constraint(0, ConstraintType::kRigidJoint, {0, 1});
     auto constraints = Constraints({rigid_bc}, {node_1, node_2});
 
@@ -128,13 +126,15 @@ TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RigidBC) {
         host_base_node_freedom_signature(0), FreedomSignature::AllComponents
     );  // base node has 6 DOFs
     EXPECT_EQ(
-        host_target_node_freedom_signature(0), FreedomSignature::JustPosition
-    );  // target node has 3 DOFs which will be fixed relative to base node
+        host_target_node_freedom_signature(0), FreedomSignature::AllComponents
+    );  // target node has 6 DOFs which will be fixed relative to base node
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(host_base_node_freedom_table(0, k), k);  // base node DOFs: 0, 1, 2, 3, 4, 5
     }
-    for (auto k = 0U; k < 3U; ++k) {
-        EXPECT_EQ(host_target_node_freedom_table(0, k), k + 6);  // target node DOFs: 6, 7, 8
+    for (auto k = 0U; k < 6U; ++k) {
+        EXPECT_EQ(
+            host_target_node_freedom_table(0, k), k + 6
+        );  // target node DOFs: 6, 7, 8, 9, 10, 11
     }
 }
 
