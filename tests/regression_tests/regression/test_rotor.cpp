@@ -433,7 +433,7 @@ TEST(RotorTest, IEA15RotorController) {
         );
         const auto pitch_axis = RotateVectorByQuaternion(q_root, {1., 0., 0.});
         model.AddRotationControl(
-            {hub_node_d, model.GetBeamElement(beam_elem_ids[i]).node_ids[0]}, {6U, 6U}, pitch_axis,
+            {hub_node_d, model.GetBeamElement(beam_elem_ids[i]).node_ids[0]}, pitch_axis,
             blade_pitch_command[i]
         );
     }

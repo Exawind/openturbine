@@ -21,32 +21,27 @@ TEST_F(ConstraintTest, FixedBCInitialization) {
     EXPECT_EQ(constraint.type, ConstraintType::kFixedBC);
     EXPECT_EQ(constraint.node_ids[0], node1_id);
     EXPECT_EQ(constraint.node_ids[1], node2_id);
-    EXPECT_EQ(constraint.node_num_dofs, (std::array<size_t, 2>{6U, 6U}));  // Default DOFs
 }
 
 TEST_F(ConstraintTest, RevoluteJointInitialization) {
-    const auto constraint =
-        Constraint(id, ConstraintType::kRevoluteJoint, node_ids, {6U, 6U}, ref_vec);
+    const auto constraint = Constraint(id, ConstraintType::kRevoluteJoint, node_ids, ref_vec);
 
     EXPECT_EQ(constraint.ID, id);
     EXPECT_EQ(constraint.type, ConstraintType::kRevoluteJoint);
     EXPECT_EQ(constraint.node_ids[0], node1_id);
     EXPECT_EQ(constraint.node_ids[1], node2_id);
-    EXPECT_EQ(constraint.node_num_dofs, (std::array<size_t, 2>{6U, 6U}));
     EXPECT_EQ(constraint.vec, ref_vec);
 }
 
 TEST_F(ConstraintTest, RotationControlInitialization) {
     double control_signal = 0.;
-    const auto constraint = Constraint(
-        id, ConstraintType::kRotationControl, node_ids, {6U, 3U}, ref_vec, &control_signal
-    );
+    const auto constraint =
+        Constraint(id, ConstraintType::kRotationControl, node_ids, ref_vec, &control_signal);
 
     EXPECT_EQ(constraint.ID, id);
     EXPECT_EQ(constraint.type, ConstraintType::kRotationControl);
     EXPECT_EQ(constraint.node_ids[0], node1_id);
     EXPECT_EQ(constraint.node_ids[1], node2_id);
-    EXPECT_EQ(constraint.node_num_dofs, (std::array<size_t, 2>{6U, 3U}));
     EXPECT_EQ(constraint.vec, ref_vec);
     EXPECT_EQ(constraint.control, &control_signal);
 }

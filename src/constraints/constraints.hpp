@@ -116,8 +116,8 @@ struct Constraints {
 
             // Set constraint properties
             host_type(i) = c.type;
-            host_node_num_dofs(i, 0) = c.node_num_dofs[0];
-            host_node_num_dofs(i, 1) = c.node_num_dofs[1];
+            host_node_num_dofs(i, 0) = 6U;                                  // Base node has 6 nodes
+            host_node_num_dofs(i, 1) = NumDOFsForConstraint(host_type(i));  // Target node DOFs
             control_signal[i] = c.control;
 
             // Set base and target node index
@@ -131,7 +131,7 @@ struct Constraints {
 
             // Set constraint columns
             host_target_node_col_range(i) = Kokkos::make_pair(0U, 6U);
-            if (GetNumberOfNodes(c.type) == 2) {
+            if (GetNumberOfNodes(host_type(i)) == 2) {
                 const auto target_start_col = (target_node_id < base_node_id) ? 0U : 6U;
                 host_target_node_col_range(i) =
                     Kokkos::make_pair(target_start_col, target_start_col + 6U);

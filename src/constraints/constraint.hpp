@@ -16,24 +16,17 @@ namespace openturbine {
  * signals.
  */
 struct Constraint {
-    size_t ID;                            //< Unique identifier for constraint
-    ConstraintType type;                  //< Type of constraint
-    std::array<size_t, 2> node_ids;       //< Node IDs for: {base_node, target_node}
-    std::array<size_t, 2> node_num_dofs;  //< Number of DOFs associated w/: {base_node, target_node}
-    Array_3 vec = {0.};                   //< Vector for initialization data
-    double* control = nullptr;            //< Pointer to control signal (if any)
+    size_t ID;                       //< Unique identifier for constraint
+    ConstraintType type;             //< Type of constraint
+    std::array<size_t, 2> node_ids;  //< Node IDs for: {base_node, target_node}
+    Array_3 vec = {0.};              //< Vector for initialization data
+    double* control = nullptr;       //< Pointer to control signal (if any)
 
     Constraint(
         size_t id, ConstraintType constraint_type, const std::array<size_t, 2>& ids,
-        const std::array<size_t, 2>& n_dofs = {6U, 6U}, const Array_3& v = {0., 0., 0.},
-        double* ctrl = nullptr
+        const Array_3& v = {0., 0., 0.}, double* ctrl = nullptr
     )
-        : ID(id),
-          type(constraint_type),
-          node_ids(ids),
-          node_num_dofs(n_dofs),
-          vec(v),
-          control(ctrl) {}
+        : ID(id), type(constraint_type), node_ids(ids), vec(v), control(ctrl) {}
 };
 
 }  // namespace openturbine

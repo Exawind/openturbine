@@ -37,7 +37,7 @@ TEST(ConstraintsTest, MultipleConstraintsConstructor) {
     auto fixed_constraint = Constraint(0, ConstraintType::kFixedBC, {0, 1});
 
     auto revolute_constraint =
-        Constraint(1, ConstraintType::kRevoluteJoint, {1, 2}, {6U, 6U}, Array_3{0., 1., 0.});
+        Constraint(1, ConstraintType::kRevoluteJoint, {1, 2}, Array_3{0., 1., 0.});
 
     const auto constraints =
         Constraints({fixed_constraint, revolute_constraint}, {node1, node2, node3});
@@ -67,7 +67,7 @@ TEST(ConstraintsTest, UpdateViewsWithControlSignal) {
     auto node1 = Node(0, Array_7{0., 0., 0., 1., 0., 0., 0.});
     double control_signal = 1.5;
     auto constraint = Constraint(
-        0, ConstraintType::kRotationControl, {0, 0}, {6U, 6U}, Array_3{1., 0., 0.}, &control_signal
+        0, ConstraintType::kRotationControl, {0, 0}, Array_3{1., 0., 0.}, &control_signal
     );
 
     auto constraints = Constraints({constraint}, {node1});

@@ -231,47 +231,37 @@ public:
     }
 
     /// Adds a prescribed boundary condition constraint to the model and returns the ID
-    size_t AddPrescribedBC(
-        const size_t node_id, const std::array<size_t, 2>& node_num_dofs = {6U, 6U},
-        const Array_3& ref_position = {0., 0., 0.}
-    ) {
+    size_t AddPrescribedBC(const size_t node_id, const Array_3& ref_position = {0., 0., 0.}) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kPrescribedBC, std::array{InvalidNodeID, node_id}, node_num_dofs,
-            ref_position
+            id, ConstraintType::kPrescribedBC, std::array{InvalidNodeID, node_id}, ref_position
         );
         return id;
     }
 
     /// Adds a rigid constraint to the model and returns the ID
-    size_t AddRigidJointConstraint(
-        const std::array<size_t, 2>& node_ids, const std::array<size_t, 2>& node_num_dofs = {6U, 6U}
-    ) {
+    size_t AddRigidJointConstraint(const std::array<size_t, 2>& node_ids) {
         const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(id, ConstraintType::kRigidJoint, node_ids, node_num_dofs);
+        this->constraints_.emplace_back(id, ConstraintType::kRigidJoint, node_ids);
         return id;
     }
 
     /// Adds a revolute/hinge constraint to the model and returns the ID
     size_t AddRevoluteJointConstraint(
-        const std::array<size_t, 2>& node_ids, const std::array<size_t, 2>& node_num_dofs,
-        const Array_3& axis, double* torque
+        const std::array<size_t, 2>& node_ids, const Array_3& axis, double* torque
     ) {
         const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(
-            id, ConstraintType::kRevoluteJoint, node_ids, node_num_dofs, axis, torque
-        );
+        this->constraints_.emplace_back(id, ConstraintType::kRevoluteJoint, node_ids, axis, torque);
         return id;
     }
 
     /// Adds a rotation control constraint to the model and returns the ID
     size_t AddRotationControl(
-        const std::array<size_t, 2>& node_ids, const std::array<size_t, 2>& node_num_dofs,
-        const Array_3& axis, double* control
+        const std::array<size_t, 2>& node_ids, const Array_3& axis, double* control
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kRotationControl, node_ids, node_num_dofs, axis, control
+            id, ConstraintType::kRotationControl, node_ids, axis, control
         );
         return id;
     }
