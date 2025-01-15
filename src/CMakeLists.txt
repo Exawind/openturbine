@@ -64,3 +64,5 @@ add_subdirectory(step)
 add_subdirectory(system)
 add_subdirectory(utilities)
 add_subdirectory(vendor)
+
+add_subdirectory(interfaces/cfd)
