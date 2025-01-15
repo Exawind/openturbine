@@ -30,21 +30,24 @@ struct CalculateConstraintResidualGradient {
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
         auto constraint_type = type(i_constraint);
-        if (constraint_type == ConstraintType::kFixedBC) {
+        if (constraint_type == ConstraintType::kFixedBC ||
+            constraint_type == ConstraintType::kFixedBC6DOFsTo3DOFs) {
             CalculateFixedBCConstraint{i_constraint,      node_num_dofs,
                                        target_node_index, X0_,
                                        constraint_inputs, node_u,
                                        residual_terms,    target_gradient_terms}();
             return;
         };
-        if (constraint_type == ConstraintType::kPrescribedBC) {
+        if (constraint_type == ConstraintType::kPrescribedBC ||
+            constraint_type == ConstraintType::kPrescribedBC6DOFsTo3DOFs) {
             CalculatePrescribedBCConstraint{i_constraint,      node_num_dofs,
                                             target_node_index, X0_,
                                             constraint_inputs, node_u,
                                             residual_terms,    target_gradient_terms}();
             return;
         };
-        if (constraint_type == ConstraintType::kRigidJoint) {
+        if (constraint_type == ConstraintType::kRigidJoint ||
+            constraint_type == ConstraintType::kRigidJoint6DOFsTo3DOFs) {
             CalculateRigidJointConstraint{i_constraint,
                                           node_num_dofs,
                                           base_node_index,

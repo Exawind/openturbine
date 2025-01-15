@@ -92,6 +92,9 @@ struct CalculatePrescribedBCConstraint {
         }
 
         // Angular residual
+        for (int i = 0; i < 3; ++i) {
+            residual_terms(i_constraint, i + 3) = 0.;
+        }
         // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
         if (min_num_dofs == 6) {
             QuaternionCompose(R2, RCt, R2_RCt);
@@ -116,6 +119,12 @@ struct CalculatePrescribedBCConstraint {
             target_gradient_terms(i_constraint, i, i) = 1.;
         }
 
+        // B(3:6,3:6) -> initialize to 0
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                target_gradient_terms(i_constraint, i + 3, j + 3) = 0.;
+            }
+        }
         // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
         if (min_num_dofs == 6) {
             AX_Matrix(C, A);
