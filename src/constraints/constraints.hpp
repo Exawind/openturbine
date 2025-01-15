@@ -133,17 +133,14 @@ struct Constraints {
             start_row += dofs;
 
             // Set constraint columns
-            host_target_node_col_range(i) = Kokkos::make_pair(0U, kLieAlgebraComponents);
+            host_target_node_col_range(i) = Kokkos::make_pair(0U, 6U);
             if (GetNumberOfNodes(c.type) == 2) {
-                const auto target_start_col =
-                    (target_node_id < base_node_id) ? 0U : kLieAlgebraComponents;
+                const auto target_start_col = (target_node_id < base_node_id) ? 0U : 6U;
                 host_target_node_col_range(i) =
-                    Kokkos::make_pair(target_start_col, target_start_col + kLieAlgebraComponents);
+                    Kokkos::make_pair(target_start_col, target_start_col + 6U);
 
-                const auto base_start_col =
-                    (base_node_id < target_node_id) ? 0U : kLieAlgebraComponents;
-                host_base_node_col_range(i) =
-                    Kokkos::make_pair(base_start_col, base_start_col + kLieAlgebraComponents);
+                const auto base_start_col = (base_node_id < target_node_id) ? 0U : 6U;
+                host_base_node_col_range(i) = Kokkos::make_pair(base_start_col, base_start_col + 6U);
             }
 
             // Calculate initial relative position (X0)
