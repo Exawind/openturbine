@@ -111,7 +111,7 @@ inline void assemble_node_freedom_allocation_table(
         }
     );
     Kokkos::parallel_for(
-        "AssembleNodeFreedomMapTable_Constraints", constraints.num,
+        "AssembleNodeFreedomMapTable_Constraints", constraints.num_constraints,
         AssembleNodeFreedomMapTable_Constraints{
             constraints.type, constraints.target_node_index, constraints.base_node_index,
             constraints.target_node_freedom_signature, constraints.base_node_freedom_signature,

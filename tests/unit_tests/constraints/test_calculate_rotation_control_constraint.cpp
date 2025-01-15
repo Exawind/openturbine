@@ -5,6 +5,33 @@
 
 namespace openturbine::tests {
 
+struct ExecuteCalculateRotationControlConstraint {
+    int i_constraint;
+    Kokkos::View<size_t*>::const_type base_node_index;
+    Kokkos::View<size_t*>::const_type target_node_index;
+    Kokkos::View<double* [3]>::const_type X0;
+    Kokkos::View<double* [3][3]>::const_type axes;
+    Kokkos::View<double* [7]>::const_type constraint_inputs;
+    Kokkos::View<double* [7]>::const_type node_u;
+    Kokkos::View<double* [6]> residual_terms;
+    Kokkos::View<double* [6][6]> base_gradient_terms;
+    Kokkos::View<double* [6][6]> target_gradient_terms;
+
+    KOKKOS_FUNCTION
+    void operator()(int) const {
+        CalculateRotationControlConstraint{i_constraint,
+                                           base_node_index,
+                                           target_node_index,
+                                           X0,
+                                           axes,
+                                           constraint_inputs,
+                                           node_u,
+                                           residual_terms,
+                                           base_gradient_terms,
+                                           target_gradient_terms}();
+    }
+};
+
 TEST(CalculateRotationControlConstraintTests, OneConstraint) {
     const auto target_node_index = Kokkos::View<size_t[1]>("target_node_index");
     constexpr auto target_node_index_host_data = std::array<size_t, 1>{1UL};
@@ -58,10 +85,10 @@ TEST(CalculateRotationControlConstraintTests, OneConstraint) {
     const auto target_gradient_terms = Kokkos::View<double[1][6][6]>("target_gradient_terms");
 
     Kokkos::parallel_for(
-        "CalculatePrescribedBCConstraint", 1,
-        CalculateRotationControlConstraint{
-            base_node_index, target_node_index, X0, axes, constraint_inputs, node_u, residual_terms,
-            base_gradient_terms, target_gradient_terms
+        "CalculateRotationControlConstraint", 1,
+        ExecuteCalculateRotationControlConstraint{
+            0, base_node_index, target_node_index, X0, axes, constraint_inputs, node_u,
+            residual_terms, base_gradient_terms, target_gradient_terms
         }
     );
 
@@ -82,13 +109,14 @@ TEST(CalculateRotationControlConstraintTests, OneConstraint) {
     Kokkos::deep_copy(base_gradient_terms_mirror, base_gradient_terms);
 
     // clang-format off
-    constexpr auto base_gradient_terms_exact_data = 
-        std::array{-1., 0., 0., 0., -4158., 2380.,  //
-                    0., -1., 0., 4158., 0., -5894.,  //
-                    0., 0., -1., -2380., 5894., 0.,  //
-                    0., 0., 0., 352.78065407508194, 393.20409838557617, 238.18605213460458,  //
-                    0., 0., 0., 22.279123154088261, -51.458926551935804, 408.91100181659226,  //
-                    0., 0., 0., 459.17937572387484, -114.4338400472094, 107.94957687179453
+    constexpr auto base_gradient_terms_exact_data =
+        std::array{
+            -1., 0., 0., 0., -4158., 2380.,  // Row 1
+            0., -1., 0., 4158., 0., -5894.,  // Row 2
+            0., 0., -1., -2380., 5894., 0.,  // Row 3
+            0., 0., 0., 352.78065407508194, 393.20409838557617, 238.18605213460458,   // Row 4
+            0., 0., 0., 22.279123154088261, -51.458926551935804, 408.91100181659226,  // Row 5
+            0., 0., 0., 459.17937572387484, -114.4338400472094, 107.94957687179453    // Row 6
         };
     // clang-format on
     const auto base_gradient_terms_exact =
@@ -108,13 +136,14 @@ TEST(CalculateRotationControlConstraintTests, OneConstraint) {
     Kokkos::deep_copy(target_gradient_terms_mirror, target_gradient_terms);
 
     // clang-format off
-    constexpr auto target_gradient_terms_exact_data = 
-        std::array{1., 0., 0., 0., 0., 0.,
-                   0., 1., 0., 0., 0., 0.,
-                   0., 0., 1., 0., 0., 0.,
-                   0., 0., 0., -352.78065407508194, -22.279123154088261, -459.17937572387484,
-                   0., 0., 0., -393.20409838557617, 51.458926551935804, 114.4338400472094,
-                   0., 0., 0., -238.18605213460458, -408.91100181659226, -107.94957687179453
+    constexpr auto target_gradient_terms_exact_data =
+        std::array{
+            1., 0., 0., 0., 0., 0.,  // Row 1
+            0., 1., 0., 0., 0., 0.,  // Row 2
+            0., 0., 1., 0., 0., 0.,  // Row 3
+            0., 0., 0., -352.78065407508194, -22.279123154088261, -459.17937572387484,  // Row 4
+            0., 0., 0., -393.20409838557617, 51.458926551935804, 114.4338400472094,     // Row 5
+            0., 0., 0., -238.18605213460458, -408.91100181659226, -107.94957687179453   // Row 6
         };
     // clang-format on
     const auto target_gradient_terms_exact =

@@ -5,7 +5,32 @@
 
 namespace openturbine::tests {
 
+struct ExecuteCalculatePrescribedBCConstraint {
+    int i_constraint;
+    Kokkos::View<size_t* [2]>::const_type node_num_dofs;
+    Kokkos::View<size_t*>::const_type target_node_index;
+    Kokkos::View<double* [3]>::const_type X0;
+    Kokkos::View<double* [7]>::const_type constraint_inputs;
+    Kokkos::View<double* [7]>::const_type node_u;
+    Kokkos::View<double* [6]> residual_terms;
+    Kokkos::View<double* [6][6]> target_gradient_terms;
+
+    KOKKOS_FUNCTION
+    void operator()(int) const {
+        CalculatePrescribedBCConstraint{i_constraint,      node_num_dofs,
+                                        target_node_index, X0,
+                                        constraint_inputs, node_u,
+                                        residual_terms,    target_gradient_terms}();
+    }
+};
+
 TEST(CalculatePrescribedBCConstraintTests, OneConstraint) {
+    const auto node_num_dofs = Kokkos::View<size_t[1][2]>("node_num_dofs");
+    constexpr auto node_num_dofs_host_data = std::array<size_t, 2>{6UL, 6UL};
+    const auto node_num_dofs_host =
+        Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(node_num_dofs_host_data.data());
+    Kokkos::deep_copy(node_num_dofs, node_num_dofs_host);
+
     const auto target_node_index = Kokkos::View<size_t[1]>("target_node_index");
     constexpr auto target_node_index_host_data = std::array<size_t, 1>{1UL};
     const auto target_node_index_host =
@@ -43,8 +68,9 @@ TEST(CalculatePrescribedBCConstraintTests, OneConstraint) {
 
     Kokkos::parallel_for(
         "CalculatePrescribedBCConstraint", 1,
-        CalculatePrescribedBCConstraint{
-            target_node_index, X0, constraint_inputs, node_u, residual_terms, target_gradient_terms
+        ExecuteCalculatePrescribedBCConstraint{
+            0, node_num_dofs, target_node_index, X0, constraint_inputs, node_u, residual_terms,
+            target_gradient_terms
         }
     );
 
@@ -65,14 +91,14 @@ TEST(CalculatePrescribedBCConstraintTests, OneConstraint) {
     Kokkos::deep_copy(target_gradient_terms_mirror, target_gradient_terms);
 
     // clang-format off
-    constexpr auto target_gradient_terms_exact_data =
-        std::array{1., 0., 0., 0., 0., 0.,
-                   0., 1., 0., 0., 0., 0.,
-                   0., 0., 1., 0., 0., 0.,
-                   0., 0., 0., 961.99999999999977, 50.666666666666714, -1.3333333333333379,
-                   0., 0., 0., -50.666666666666714, 962.6666666666664, 25.333333333333329,
-                   0., 0., 0., -1.3333333333333308, -25.333333333333329, 959.99999999999977 
-        };
+    constexpr auto target_gradient_terms_exact_data = std::array{
+        1., 0., 0., 0., 0., 0.,  // Row 1
+        0., 1., 0., 0., 0., 0.,  // Row 2
+        0., 0., 1., 0., 0., 0.,  // Row 3
+        0., 0., 0., 961.99999999999977, 50.666666666666714, -1.3333333333333379,  // Row 4
+        0., 0., 0., -50.666666666666714, 962.6666666666664, 25.333333333333329,   // Row 5
+        0., 0., 0., -1.3333333333333308, -25.333333333333329, 959.99999999999977  // Row 6
+    };
     // clang-format on
     const auto target_gradient_terms_exact =
         Kokkos::View<double[1][6][6], Kokkos::HostSpace>::const_type(

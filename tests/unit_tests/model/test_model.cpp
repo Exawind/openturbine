@@ -226,7 +226,7 @@ TEST(Model, ModelCreateSystem) {
     }
 
     EXPECT_EQ(elements.NumElementsInSystem(), 0);
-    EXPECT_EQ(constraints.num, 0);
+    EXPECT_EQ(constraints.num_constraints, 0);
 }
 
 }  // namespace openturbine::tests

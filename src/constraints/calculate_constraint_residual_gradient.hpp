@@ -16,6 +16,7 @@ namespace openturbine {
 
 struct CalculateConstraintResidualGradient {
     Kokkos::View<ConstraintType*>::const_type type;
+    Kokkos::View<size_t* [2]>::const_type node_num_dofs;
     Kokkos::View<size_t*>::const_type base_node_index;
     Kokkos::View<size_t*>::const_type target_node_index;
     Kokkos::View<double* [3]>::const_type X0_;
@@ -28,25 +29,40 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
-        if (type(i_constraint) == ConstraintType::kFixedBC) {
-            CalculateFixedBCConstraint{target_node_index, X0_,
+        auto constraint_type = type(i_constraint);
+        if (constraint_type == ConstraintType::kFixedBC ||
+            constraint_type == ConstraintType::kFixedBC6DOFsTo3DOFs) {
+            CalculateFixedBCConstraint{i_constraint,      node_num_dofs,
+                                       target_node_index, X0_,
                                        constraint_inputs, node_u,
-                                       residual_terms,    target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kPrescribedBC) {
-            CalculatePrescribedBCConstraint{target_node_index, X0_,
+                                       residual_terms,    target_gradient_terms}();
+            return;
+        };
+        if (constraint_type == ConstraintType::kPrescribedBC ||
+            constraint_type == ConstraintType::kPrescribedBC6DOFsTo3DOFs) {
+            CalculatePrescribedBCConstraint{i_constraint,      node_num_dofs,
+                                            target_node_index, X0_,
                                             constraint_inputs, node_u,
-                                            residual_terms,    target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kRigidJoint) {
-            CalculateRigidJointConstraint{base_node_index,
+                                            residual_terms,    target_gradient_terms}();
+            return;
+        };
+        if (constraint_type == ConstraintType::kRigidJoint ||
+            constraint_type == ConstraintType::kRigidJoint6DOFsTo3DOFs) {
+            CalculateRigidJointConstraint{i_constraint,
+                                          node_num_dofs,
+                                          base_node_index,
                                           target_node_index,
                                           X0_,
                                           constraint_inputs,
                                           node_u,
                                           residual_terms,
                                           base_gradient_terms,
-                                          target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kRevoluteJoint) {
-            CalculateRevoluteJointConstraint{base_node_index,
+                                          target_gradient_terms}();
+            return;
+        };
+        if (constraint_type == ConstraintType::kRevoluteJoint) {
+            CalculateRevoluteJointConstraint{i_constraint,
+                                             base_node_index,
                                              target_node_index,
                                              X0_,
                                              axes,
@@ -54,9 +70,12 @@ struct CalculateConstraintResidualGradient {
                                              node_u,
                                              residual_terms,
                                              base_gradient_terms,
-                                             target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kRotationControl) {
-            CalculateRotationControlConstraint{base_node_index,
+                                             target_gradient_terms}();
+            return;
+        };
+        if (constraint_type == ConstraintType::kRotationControl) {
+            CalculateRotationControlConstraint{i_constraint,
+                                               base_node_index,
                                                target_node_index,
                                                X0_,
                                                axes,
@@ -64,9 +83,10 @@ struct CalculateConstraintResidualGradient {
                                                node_u,
                                                residual_terms,
                                                base_gradient_terms,
-                                               target_gradient_terms}(i_constraint);
+                                               target_gradient_terms}();
+            return;
         }
-    }
+    };
 };
 
 }  // namespace openturbine

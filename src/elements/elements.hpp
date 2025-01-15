@@ -21,6 +21,8 @@ struct Elements {
     Masses masses;
     Springs springs;
 
+    Elements() : beams(0U, 0U, 0U), masses(0U), springs(0U) {}
+
     Elements(Beams b, Masses m, Springs s)
         : beams(std::move(b)), masses(std::move(m)), springs(std::move(s)) {}
 

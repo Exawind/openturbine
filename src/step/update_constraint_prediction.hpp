@@ -14,7 +14,7 @@ inline void UpdateConstraintPrediction(Solver& solver, Constraints& constraints)
     const auto x_lambda =
         Kokkos::subview(solver.x, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs));
 
-    if (constraints.num > 0) {
+    if (constraints.num_constraints > 0) {
         Kokkos::parallel_for(
             "UpdateLambdaPrediction", constraints.num_dofs,
             UpdateLambdaPrediction{
