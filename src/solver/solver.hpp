@@ -148,6 +148,7 @@ struct Solver {
               CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x_mv, b)
           ) {}
 
+    // cppcheck-suppress missingMemberCopy
     Solver(const Solver& other)
         : num_system_nodes(other.num_system_nodes),
           num_system_dofs(other.num_system_dofs),
@@ -175,6 +176,7 @@ struct Solver {
           x_mv(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),
           R("R", num_dofs),
           x("x", num_dofs),
+          convergence_err(other.convergence_err),
           amesos_solver(
               CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x_mv, b)
           ) {}
