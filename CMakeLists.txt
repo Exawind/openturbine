@@ -50,8 +50,15 @@ configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/OpenTurbineConfi
     INSTALL_DESTINATION lib/cmake/OpenTurbine
 )
 
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/OpenTurbineConfigVersion.cmake"
+  VERSION "${version}"
+  COMPATIBILITY AnyNewerVersion
+)
+
 install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/OpenTurbineConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/OpenTurbineConfigVersion.cmake"
     DESTINATION lib/cmake/OpenTurbine
 )
 

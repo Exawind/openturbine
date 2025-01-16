@@ -71,9 +71,14 @@ set(openturbine_public_headers "interfaces/cfd/interface.hpp")
 set_target_properties(openturbine_library PROPERTIES PUBLIC_HEADER "${openturbine_public_headers}")
 
 install(
-  TARGETS openturbine_library
-  EXPORT ${PROJECT_NAME}
+  TARGETS openturbine_library openturbine_options openturbine_warnings
+  EXPORT OpenTurbineTargets
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} 
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${PACKAGE_NAME}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTAL_INCLUDEDIR})
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(EXPORT OpenTurbineTargets
+        FILE OpenTurbineTargets.cmake
+        NAMESPACE OpenTurbine::
+        DESTINATION lib/cmake/OpenTurbine)
