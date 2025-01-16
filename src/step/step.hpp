@@ -71,7 +71,7 @@ inline bool Step(
 
         SolveSystem(parameters, solver);
 
-        err = CalculateConvergenceError(solver, state);
+        err = CalculateConvergenceError(parameters, solver, state);
 
         solver.convergence_err.push_back(err);
 

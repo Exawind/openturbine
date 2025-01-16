@@ -6,13 +6,14 @@
 #include "src/solver/calculate_error_sum_squares.hpp"
 #include "src/solver/solver.hpp"
 #include "src/state/state.hpp"
+#include "src/step/step_parameters.hpp"
 
 namespace openturbine {
 
-inline double CalculateConvergenceError(Solver& solver, State& state) {
+inline double CalculateConvergenceError(StepParameters& parameters, Solver& solver, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Calculate Convergence Error");
-    const double atol = 1e-7;
-    const double rtol = 1e-5;
+    const double atol = parameters.absolute_convergence_tol;
+    const double rtol = parameters.relative_convergence_tol;
     double sum_error_squared = 0.;
     Kokkos::parallel_reduce(
         solver.num_system_dofs,
