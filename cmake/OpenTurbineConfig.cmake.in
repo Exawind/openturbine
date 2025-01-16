@@ -1,0 +1,3 @@
+@PACKAGE_INIT@
+
+INCLUDE("${OpenTurbine_CMAKE_DIR}/OpenTurbineTargets.cmake")

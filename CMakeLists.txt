@@ -32,12 +32,28 @@ openturbine_local_options()
 set(GIT_SHA "Unknown" CACHE STRING "SHA this build was generated from")
 string(SUBSTRING "${GIT_SHA}" 0 8 GIT_SHORT_SHA)
 
+# Set Openturbine Version
+set(OPENTURBINE_VERSION_MAJOR 0 CACHE STRING "major version" FORCE)
+set(OPENTURBINE_VERSION_MINOR 1 CACHE STRING "minor version" FORCE)
+set(OPENTURBINE_VERSION ${OPENTURBINE_VERSION_MAJOR}.${OPENTURBINE_VERSION_MINOR} CACHE STRING "version" FORCE)
+
 # Alias libraries for ease of use in targets
 add_library(OpenTurbine::openturbine_options ALIAS openturbine_options)
 add_library(OpenTurbine::openturbine_warnings ALIAS openturbine_warnings)
 
 # Add the main source directory
 add_subdirectory(src)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/OpenTurbineConfig.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/OpenTurbineConfig.cmake"
+    INSTALL_DESTINATION lib/cmake/OpenTurbine
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/OpenTurbineConfig.cmake"
+    DESTINATION lib/cmake/OpenTurbine
+)
 
 # Enable testing if requested
 include(CTest)
