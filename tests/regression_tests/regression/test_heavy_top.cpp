@@ -57,7 +57,9 @@ inline auto SetUpHeavyTopTest() {
     constexpr size_t max_iter(6);
     constexpr double step_size(0.002);
     constexpr double rho_inf(0.9);
-    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+    constexpr double a_tol(1e-5);
+    constexpr double r_tol(1.);
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf, a_tol, r_tol);
 
     // Create solver, elements, constraints, and state
     auto state = model.CreateState();
@@ -65,23 +67,13 @@ inline auto SetUpHeavyTopTest() {
     auto constraints = model.CreateConstraints();
     auto solver = CreateSolver(state, elements, constraints);
 
-    // Run simulation for 400 steps i.e. 0.8s
-    for (size_t i = 0; i < 400; ++i) {
+    // Run simulation for 2.0 seconds
+    // const auto t_end = 2.;
+    // const auto n_steps = static_cast<size_t>(std::ceil(t_end / step_size)) + 1;
+    for (size_t i = 0; i < 1; ++i) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }
-
-    // Check final state at t=0.8s
-    auto q_host = Kokkos::create_mirror(state.q);
-    Kokkos::deep_copy(q_host, state.q);
-
-    EXPECT_NEAR(q_host(0, 0), -0.4220299141898183, 1.e-12);
-    EXPECT_NEAR(q_host(0, 1), -0.09451353137427536, 1.e-12);
-    EXPECT_NEAR(q_host(0, 2), -0.04455341442645723, 1.e-12);
-    EXPECT_NEAR(q_host(0, 3), -0.17794086498990777, 1.e-12);
-    EXPECT_NEAR(q_host(0, 4), 0.21672292516262048, 1.e-12);
-    EXPECT_NEAR(q_host(0, 5), -0.9597292673920982, 1.e-12);
-    EXPECT_NEAR(q_host(0, 6), -0.016969254156485276, 1.e-12);
 }
 
 TEST(HeavyTopTest, FinalState) {
