@@ -17,8 +17,8 @@ struct StepParameters {
     double relative_convergence_tol;
 
     StepParameters(
-        bool is_dynamic_solve_, size_t max_iter_, double h_, double rho_inf, double a_tol = 1e-7,
-        double r_tol = 1e-5
+        bool is_dynamic_solve_, size_t max_iter_, double h_, double rho_inf, double a_tol = 1e-5,
+        double r_tol = 1e-3
     )
         : is_dynamic_solve(is_dynamic_solve_),
           max_iter(max_iter_),

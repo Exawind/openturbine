@@ -53,6 +53,10 @@ inline bool Step(
     solver.convergence_err.clear();
     double err{1000.};
     for (auto iter = 0U; err > 1.; ++iter) {
+        if (iter >= parameters.max_iter) {
+            return false;
+        }
+
         UpdateSystemVariables(parameters, elements, state);
 
         UpdateTangentOperator(parameters, state);
@@ -71,17 +75,13 @@ inline bool Step(
 
         SolveSystem(parameters, solver);
 
-        err = CalculateConvergenceError(parameters, solver, state);
+        err = CalculateConvergenceError(parameters, solver, state, constraints);
 
         solver.convergence_err.push_back(err);
 
         UpdateStatePrediction(parameters, solver, state);
 
         UpdateConstraintPrediction(solver, constraints);
-
-        if (iter >= parameters.max_iter) {
-            return false;
-        }
     }
 
     Kokkos::parallel_for(

@@ -54,11 +54,11 @@ inline auto SetUpHeavyTopTest() {
 
     // Set up step parameters
     constexpr bool is_dynamic_solve(true);
-    constexpr size_t max_iter(6);
+    constexpr size_t max_iter(10);
     constexpr double step_size(0.002);
     constexpr double rho_inf(0.9);
     constexpr double a_tol(1e-5);
-    constexpr double r_tol(1.);
+    constexpr double r_tol(1e-3);
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf, a_tol, r_tol);
 
     // Create solver, elements, constraints, and state
