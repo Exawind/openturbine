@@ -306,7 +306,7 @@ inline void SetupAndTakeNoSteps() {
     model.AddPrescribedBC(beam_node_ids[0]);
 
     // Solution parameters
-    constexpr auto max_iter = 0U;
+    constexpr auto max_iter = 1U;
     constexpr auto is_dynamic_solve = true;
     constexpr auto step_size = 0.01;  // seconds
     constexpr auto rho_inf = 0.9;
@@ -340,7 +340,7 @@ inline void SetupAndTakeNoSteps() {
             2.0316113427113777E-8,     2.1788291524533811E-8,   -0.000033726153743119725,
         }
     );
-    EXPECT_NEAR(solver.convergence_err[0], 14.796392074134879, 1.e-7);
+    EXPECT_NEAR(solver.convergence_err[0], 1669.0476965480718, 1.e-7);
     expect_kokkos_view_2D_equal(
         state.q_delta,
         {
