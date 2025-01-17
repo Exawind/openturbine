@@ -1,14 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "src/elements/elements.hpp"
-#include "src/elements/masses/create_masses.hpp"
 #include "src/interfaces/cfd/interface.hpp"
-#include "src/model/model.hpp"
-#include "src/state/set_node_external_loads.hpp"
-#include "src/state/state.hpp"
-#include "src/step/step.hpp"
-#include "src/step/update_system_variables.hpp"
-#include "src/types.hpp"
 #include "src/viz/vtk_lines.hpp"
 #include "tests/regression_tests/regression/test_utilities.hpp"
 
