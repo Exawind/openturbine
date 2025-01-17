@@ -16,10 +16,10 @@ struct FloatingPlatform {
     bool active = false;
 
     /// @brief Platform node data (ID, motion, loads)
-    NodeData node{0};
+    NodeData node;
 
     /// @brief Platform mass element identifier
-    size_t mass_element_id = 0;
+    size_t mass_element_id;
 
     /// @brief Mooring line data array
     std::vector<MooringLine> mooring_lines;

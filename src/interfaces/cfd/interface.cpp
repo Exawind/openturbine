@@ -40,26 +40,33 @@ void GetNodeMotion(
 //------------------------------------------------------------------------------
 
 FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Model& model) {
-    // Instantiate floating platform
-    FloatingPlatform platform{};
-
     // If floating platform is not enabled, return
     if (!input.enable) {
-        return platform;
+        return {
+            false,         // active
+            NodeData(0U),  // platform node
+            0U,            // mass element ID
+            {},            // mooring lines
+        };
     }
 
-    // Set platform active to true
-    platform.active = true;
+    FloatingPlatform platform{
+        // Set platform active to true
+        true,
 
-    // Construct platform node and save ID
-    platform.node.id = model.AddNode()
-                           .SetPosition(input.position)
-                           .SetVelocity(input.velocity)
-                           .SetAcceleration(input.acceleration)
-                           .Build();
+        // Construct platform node and save ID
+        NodeData(model.AddNode()
+                     .SetPosition(input.position)
+                     .SetVelocity(input.velocity)
+                     .SetAcceleration(input.acceleration)
+                     .Build()),
 
-    // Add element for platform mass
-    platform.mass_element_id = model.AddMassElement(platform.node.id, input.mass_matrix);
+        // Add element for platform mass
+        model.AddMassElement(platform.node.id, input.mass_matrix),
+
+        // Mooring lines
+        {},
+    };
 
     // Construct mooring lines
     std::transform(
