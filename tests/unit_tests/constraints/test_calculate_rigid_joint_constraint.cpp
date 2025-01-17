@@ -5,6 +5,35 @@
 
 namespace openturbine::tests {
 
+struct ExecuteCalculateRigidJointConstraint {
+    int i_constraint;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*> target_node_col_range;
+    Kokkos::View<size_t*>::const_type base_node_index;
+    Kokkos::View<size_t*>::const_type target_node_index;
+    Kokkos::View<double* [3]>::const_type X0;
+    Kokkos::View<double* [7]>::const_type constraint_inputs;
+    Kokkos::View<double* [7]>::const_type node_u;
+    Kokkos::View<double* [6]> residual_terms;
+    Kokkos::View<double* [6][6]> base_gradient_terms;
+    Kokkos::View<double* [6][6]> target_gradient_terms;
+
+    KOKKOS_FUNCTION
+    void operator()(int) const {
+        CalculateRigidJointConstraint{
+            i_constraint,
+            target_node_col_range,
+            base_node_index,
+            target_node_index,
+            X0,
+            constraint_inputs,
+            node_u,
+            residual_terms,
+            base_gradient_terms,
+            target_gradient_terms
+        }();
+    }
+};
+
 TEST(CalculateRigidJointConstraintTests, OneConstraint) {
     const auto target_node_index = Kokkos::View<size_t[1]>("target_node_index");
     constexpr auto target_node_index_host_data = std::array<size_t, 1>{1UL};
@@ -17,6 +46,11 @@ TEST(CalculateRigidJointConstraintTests, OneConstraint) {
     const auto base_node_index_host =
         Kokkos::View<size_t[1], Kokkos::HostSpace>::const_type(base_node_index_host_data.data());
     Kokkos::deep_copy(base_node_index, base_node_index_host);
+
+    const auto target_node_col_range =
+        Kokkos::View<Kokkos::pair<size_t, size_t>*>("target_node_col_range");
+    const auto target_node_col_range_host = Kokkos::make_pair(6U, 12U);
+    Kokkos::deep_copy(target_node_col_range, target_node_col_range_host);
 
     const auto X0 = Kokkos::View<double[1][3]>("X0");
     constexpr auto X0_host_data = std::array{1., 2., 3.};
@@ -51,9 +85,9 @@ TEST(CalculateRigidJointConstraintTests, OneConstraint) {
 
     Kokkos::parallel_for(
         "CalculatePrescribedBCConstraint", 1,
-        CalculateRigidJointConstraint{
-            base_node_index, target_node_index, X0, constraint_inputs, node_u, residual_terms,
-            base_gradient_terms, target_gradient_terms
+        ExecuteCalculateRigidJointConstraint{
+            0, target_node_col_range, base_node_index, target_node_index, X0, constraint_inputs,
+            node_u, residual_terms, base_gradient_terms, target_gradient_terms
         }
     );
 
@@ -74,14 +108,15 @@ TEST(CalculateRigidJointConstraintTests, OneConstraint) {
     Kokkos::deep_copy(base_gradient_terms_mirror, base_gradient_terms);
 
     // clang-format off
-    constexpr auto base_gradient_terms_exact_data =
-        std::array{-1., 0., 0., 0., -4158., 2380.,
-                    0., -1., 0., 4158., 0., -5894.,
-                    0., 0., -1., -2380., 5894., 0.,
-                    0., 0., 0., -965.42068965517251, -19.310344827586228, 0.1931034482758299,
-                    0., 0., 0., 19.310344827586228, -965.51724137931046, -9.6551724137931245,
-                    0., 0., 0., 0.19310344827589546, 9.6551724137931245, -965.13103448275876
-        };
+        constexpr auto base_gradient_terms_exact_data =
+            std::array{
+                -1., 0., 0., 0., -4158., 2380.,  // Row 1
+                0., -1., 0., 4158., 0., -5894.,  // Row 2
+                0., 0., -1., -2380., 5894., 0.,  // Row 3
+                0., 0., 0., -965.42068965517251, -19.310344827586228, 0.1931034482758299,  // Row 4
+                0., 0., 0., 19.310344827586228, -965.51724137931046, -9.6551724137931245,  // Row 5
+                0., 0., 0., 0.19310344827589546, 9.6551724137931245, -965.13103448275876   // Row 6
+            };
     // clang-format on
     const auto base_gradient_terms_exact =
         Kokkos::View<double[1][6][6], Kokkos::HostSpace>::const_type(
@@ -97,14 +132,15 @@ TEST(CalculateRigidJointConstraintTests, OneConstraint) {
     }
 
     // clang-format off
-    constexpr auto target_gradient_terms_exact_data = 
-        std::array{1., 0., 0., 0., 0., 0.,
-                   0., 1., 0., 0., 0., 0.,
-                   0., 0., 1., 0., 0., 0.,
-                   0., 0., 0., 965.42068965517251, -19.310344827586228, -0.19310344827589564,
-                   0., 0., 0., 19.310344827586228, 965.51724137931046, -9.6551724137931245,
-                   0., 0., 0., -0.1931034482758299, 9.6551724137931245, 965.13103448275876
-        };
+        constexpr auto target_gradient_terms_exact_data =
+            std::array{
+                1., 0., 0., 0., 0., 0.,  // Row 1
+                0., 1., 0., 0., 0., 0.,  // Row 2
+                0., 0., 1., 0., 0., 0.,  // Row 3
+                0., 0., 0., 965.42068965517251, -19.310344827586228, -0.19310344827589564,  // Row 4
+                0., 0., 0., 19.310344827586228, 965.51724137931046, -9.6551724137931245,    // Row 5
+                0., 0., 0., -0.1931034482758299, 9.6551724137931245, 965.13103448275876     // Row 6
+            };
     // clang-format on
     const auto target_gradient_terms_exact =
         Kokkos::View<double[1][6][6], Kokkos::HostSpace>::const_type(

@@ -7,29 +7,26 @@
 
 namespace openturbine {
 
-/// @brief Struct to define a constraint between two nodes or enforce a boundary condition at a
-/// single node
-/// @details A constraint is a relationship between two nodes that restricts their relative
-/// motion in some way. Constraints can be used to model fixed boundary conditions, prescribed
-/// displacements, rigid body motion, lower-pair kinematic joints, control signals etc.
+/**
+ * @brief Defines a constraint between two nodes or enforces a boundary condition at a single node
+ *
+ * @details A constraint establishes a relationship between two nodes, restricting their relative
+ * motion in specific ways. This can be utilized to model various scenarios such as fixed boundary
+ * conditions, prescribed displacements, rigid body motions, lower-pair kinematic joints, and control
+ * signals.
+ */
 struct Constraint {
-    ConstraintType type;        //< Type of constraint
-    size_t ID;                  //< Unique identifier for constraint
-    size_t base_node_id;        //< Base node for constraint
-    size_t target_node_id;      //< Target node for constraint
-    Array_3 vec = {0.};         //< Vector for initialization data
-    double* control = nullptr;  //< Pointer to control signal (if any)
+    size_t ID;                       //< Unique identifier for constraint
+    ConstraintType type;             //< Type of constraint
+    std::array<size_t, 2> node_ids;  //< Node IDs for: {base_node, target_node}
+    Array_3 vec = {0.};              //< Vector for initialization data
+    double* control = nullptr;       //< Pointer to control signal (if any)
 
     Constraint(
-        ConstraintType constraint_type, size_t id, const size_t node1_id, const size_t node2_id,
+        size_t id, ConstraintType constraint_type, const std::array<size_t, 2>& ids,
         const Array_3& v = {0., 0., 0.}, double* ctrl = nullptr
     )
-        : type(constraint_type),
-          ID(id),
-          base_node_id(node1_id),
-          target_node_id(node2_id),
-          vec(v),
-          control(ctrl) {}
+        : ID(id), type(constraint_type), node_ids(ids), vec(v), control(ctrl) {}
 };
 
 }  // namespace openturbine

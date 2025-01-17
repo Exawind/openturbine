@@ -11,20 +11,14 @@ struct MooringLine {
     /// @brief Anchor node
     NodeData anchor_node;
 
-    /// @brief Spring element identifier
-    size_t spring_element_id = 0;
+    /// @brief Fixed constraint identifier for the anchor node
+    size_t fixed_constraint_id{0U};
 
-    /// @brief Rigid constraint identifier
-    size_t rigid_constraint_id = 0;
+    /// @brief Rigid constraint identifier between fairlead and platform nodes
+    size_t rigid_constraint_id{0U};
 
-    MooringLine(
-        size_t fairlead_node_id, size_t anchor_node_id, size_t spring_element_id_,
-        size_t rigid_constraint_id_
-    )
-        : fairlead_node(fairlead_node_id),
-          anchor_node(anchor_node_id),
-          spring_element_id(spring_element_id_),
-          rigid_constraint_id(rigid_constraint_id_) {}
+    /// @brief Spring element identifier between fairlead and anchor nodes
+    size_t spring_element_id{0U};
 };
 
 }  // namespace openturbine::cfd

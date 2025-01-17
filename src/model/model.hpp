@@ -48,7 +48,9 @@ static const size_t InvalidNodeID(0U);
         constraints.type,
         constraints.base_node_freedom_table,
         constraints.target_node_freedom_table,
-        constraints.row_range
+        constraints.row_range,
+        constraints.base_node_col_range,
+        constraints.target_node_col_range,
     };
 }
 
@@ -249,54 +251,74 @@ public:
     // Constraints
     //--------------------------------------------------------------------------
 
-    /// Adds a rigid constraint to the model and returns a handle to the constraint
-    size_t AddRigidJointConstraint(const size_t node1_id, const size_t node2_id) {
-        const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(
-            ConstraintType::kRigidJoint, constraints_.size(), node1_id, node2_id
-        );
-        return id;
-    }
-
-    /// Adds a prescribed boundary condition constraint to the model and returns a handle to the
-    /// constraint
-    size_t AddPrescribedBC(const size_t node_id, const Array_3& ref_position = {0., 0., 0.}) {
-        const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(
-            ConstraintType::kPrescribedBC, constraints_.size(), InvalidNodeID, node_id, ref_position
-        );
-        return id;
-    }
-
-    /// Adds a fixed boundary condition constraint to the model and returns a handle to the
-    /// constraint
+    /// Adds a fixed boundary condition constraint to the model and returns the ID
     size_t AddFixedBC(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            ConstraintType::kFixedBC, constraints_.size(), InvalidNodeID, node_id
+            id, ConstraintType::kFixedBC, std::array{InvalidNodeID, node_id}
         );
         return id;
     }
 
-    /// Adds a revolute/hinge constraint to the model and returns a handle to the constraint
+    /// Adds a prescribed boundary condition constraint to the model and returns the ID
+    size_t AddPrescribedBC(const size_t node_id, const Array_3& ref_position = {0., 0., 0.}) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(
+            id, ConstraintType::kPrescribedBC, std::array{InvalidNodeID, node_id}, ref_position
+        );
+        return id;
+    }
+
+    /// Adds a rigid constraint to the model and returns the ID
+    size_t AddRigidJointConstraint(const std::array<size_t, 2>& node_ids) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(id, ConstraintType::kRigidJoint, node_ids);
+        return id;
+    }
+
+    /// Adds a revolute/hinge constraint to the model and returns the ID
     size_t AddRevoluteJointConstraint(
-        const size_t node1_id, const size_t node2_id, const Array_3& axis, double* torque
+        const std::array<size_t, 2>& node_ids, const Array_3& axis, double* torque
+    ) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(id, ConstraintType::kRevoluteJoint, node_ids, axis, torque);
+        return id;
+    }
+
+    /// Adds a rotation control constraint to the model and returns the ID
+    size_t AddRotationControl(
+        const std::array<size_t, 2>& node_ids, const Array_3& axis, double* control
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            ConstraintType::kRevoluteJoint, constraints_.size(), node1_id, node2_id, axis, torque
+            id, ConstraintType::kRotationControl, node_ids, axis, control
         );
         return id;
     }
 
-    /// Adds a rotation control constraint to the model and returns a handle to the constraint
-    size_t AddRotationControl(
-        const size_t node1_id, const size_t node2_id, const Array_3& axis, double* control
-    ) {
+    /// Adds a fixed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the ID
+    size_t AddFixedBC3DOFs(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            ConstraintType::kRotationControl, constraints_.size(), node1_id, node2_id, axis, control
+            id, ConstraintType::kFixedBC3DOFs, std::array{InvalidNodeID, node_id}
         );
+        return id;
+    }
+
+    /// Adds a prescribed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the
+    /// ID
+    size_t AddPrescribedBC3DOFs(const size_t node_id, const Array_3& ref_position = {0., 0., 0.}) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(
+            id, ConstraintType::kPrescribedBC3DOFs, std::array{InvalidNodeID, node_id}, ref_position
+        );
+        return id;
+    }
+
+    /// Adds a rigid joint constraint (6DOFs to 3DOFs) to the model and returns the ID
+    size_t AddRigidJoint6DOFsTo3DOFs(const std::array<size_t, 2>& node_ids) {
+        const auto id = this->constraints_.size();
+        this->constraints_.emplace_back(id, ConstraintType::kRigidJoint6DOFsTo3DOFs, node_ids);
         return id;
     }
 

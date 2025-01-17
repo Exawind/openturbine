@@ -13,14 +13,14 @@ namespace openturbine {
 inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Constraint Variables");
 
-    if (constraints.num == 0) {
+    if (constraints.num_constraints == 0) {
         return;
     }
 
     constraints.UpdateViews();
 
     Kokkos::parallel_for(
-        "CalculateConstraintForce", constraints.num,
+        "CalculateConstraintForce", constraints.num_constraints,
         CalculateConstraintForce{
             constraints.type, constraints.target_node_index, constraints.axes, constraints.input,
             state.q, constraints.system_residual_terms
@@ -28,11 +28,12 @@ inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
     );
 
     Kokkos::parallel_for(
-        "CalculateConstraintResidualGradient", constraints.num,
+        "CalculateConstraintResidualGradient", constraints.num_constraints,
         CalculateConstraintResidualGradient{
-            constraints.type, constraints.base_node_index, constraints.target_node_index,
-            constraints.X0, constraints.axes, constraints.input, state.q, constraints.residual_terms,
-            constraints.base_gradient_terms, constraints.target_gradient_terms
+            constraints.type, constraints.target_node_col_range, constraints.base_node_index,
+            constraints.target_node_index, constraints.X0, constraints.axes, constraints.input,
+            state.q, constraints.residual_terms, constraints.base_gradient_terms,
+            constraints.target_gradient_terms
         }
     );
 }

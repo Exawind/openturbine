@@ -12,14 +12,14 @@ namespace openturbine {
 inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Matrix");
 
-    if (constraints.num == 0) {
+    if (constraints.num_constraints == 0) {
         return;
     }
 
     {
         auto const_region = Kokkos::Profiling::ScopedRegion("Constraints Matrix");
         auto constraint_policy =
-            Kokkos::TeamPolicy<>(static_cast<int>(constraints.num), Kokkos::AUTO());
+            Kokkos::TeamPolicy<>(static_cast<int>(constraints.num_constraints), Kokkos::AUTO());
 
         Kokkos::parallel_for(
             "CopyConstraintsToSparseMatrix", constraint_policy,

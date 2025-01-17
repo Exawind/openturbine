@@ -306,7 +306,7 @@ inline void SetupAndTakeNoSteps() {
     model.AddPrescribedBC(beam_node_ids[0]);
 
     // Solution parameters
-    constexpr auto max_iter = 0U;
+    constexpr auto max_iter = 1U;
     constexpr auto is_dynamic_solve = true;
     constexpr auto step_size = 0.01;  // seconds
     constexpr auto rho_inf = 0.9;
@@ -340,7 +340,7 @@ inline void SetupAndTakeNoSteps() {
             2.0316113427113777E-8,     2.1788291524533811E-8,   -0.000033726153743119725,
         }
     );
-    EXPECT_NEAR(solver.convergence_err[0], 14.796392074134879, 1.e-7);
+    EXPECT_NEAR(solver.convergence_err[0], 1669.0476965480718, 1.e-6);
     expect_kokkos_view_2D_equal(
         state.q_delta,
         {
@@ -418,12 +418,12 @@ inline void SetupAndTakeNoSteps() {
     expect_kokkos_view_1D_equal(
         constraints.lambda,
         {
-            -0.10816660597819647,
-            -0.000095455157310304377,
+            0.10816660597819647,
+            0.000095455157310304377,
             2.1220160418770112E-9,
             -2.0316113427113777E-8,
             -2.1788291524533811E-8,
-            0.000033726153743119725,
+            -0.000033726153743119725,
         }
     );
 }
@@ -528,7 +528,7 @@ inline auto SetupAndTakeTwoSteps() {
     expect_kokkos_view_1D_equal(
         solver.R,
         {
-            -0.0000059926097477785435,
+            -1.6976609407260757e-15,
             -5.288375554255456E-9,
             1.1889571903333178E-13,
             -1.1240653642481715E-12,
@@ -587,8 +587,8 @@ inline auto SetupAndTakeTwoSteps() {
             -6.4825821213015845E-17, 2.6903185401857071E-15,  -1.1004628463528681E-15,
             -2.8438123968141702E-16, -1.3829871537755664E-14, 1.4293886089416713E-16,
             -7.9353195214248362E-17, 2.5707926448736107E-15,  -1.3780235858853489E-15,
-            0.21633321196105559,     0.00019091040135282763,  -4.2445828198259645E-9,
-            4.0632386057053241E-8,   4.3576751058673394E-8,   -0.000067452108435714744,
+            -1.179058346509202e-11,  8.6709875777896587e-11,  -4.2445828198259645E-9,
+            4.0632386057053241E-8,   4.3576751058673394E-8,   1.9904737297204642e-10,
         }
     );
 }

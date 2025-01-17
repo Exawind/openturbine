@@ -357,11 +357,11 @@ TEST(Milestone, IEA15RotorAeroController) {
     // Add revolute joint between shaft base and azimuth node, rotation about shaft axis,
     // connect torque to generator torque command
     auto azimuth_constraint_id = model.AddRevoluteJointConstraint(
-        shaft_base_node_id, azimuth_node_id, shaft_axis, &torque_actual
+        {shaft_base_node_id, azimuth_node_id}, shaft_axis, &torque_actual
     );
 
     // Add rigid constraint between azimuth node and hub
-    model.AddRigidJointConstraint(azimuth_node_id, hub_node_id);
+    model.AddRigidJointConstraint({azimuth_node_id, hub_node_id});
 
     // Add rotation control constraints between hub and blade root nodes
     for (size_t i = 0; i < n_blades; ++i) {
@@ -373,11 +373,11 @@ TEST(Milestone, IEA15RotorAeroController) {
         };
 
         // Add rotation control constraint between hub and root node
-        model.AddRotationControl(hub_node_id, root_node_ids[i], pitch_axis, &pitch_actual);
+        model.AddRotationControl({hub_node_id, root_node_ids[i]}, pitch_axis, &pitch_actual);
 
         // Add rigid constraint between root node and first blade node
         model.AddRigidJointConstraint(
-            root_node_ids[i], model.GetBeamElement(beam_elem_ids[i]).node_ids[0]
+            {root_node_ids[i], model.GetBeamElement(beam_elem_ids[i]).node_ids[0]}
         );
     }
 

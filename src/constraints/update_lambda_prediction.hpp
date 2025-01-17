@@ -9,7 +9,7 @@ struct UpdateLambdaPrediction {
     Kokkos::View<double*> lambda;
 
     KOKKOS_FUNCTION
-    void operator()(const int i_lambda) const { lambda(i_lambda) -= lambda_delta(i_lambda); }
+    void operator()(const int i_lambda) const { lambda(i_lambda) += lambda_delta(i_lambda); }
 };
 
 }  // namespace openturbine

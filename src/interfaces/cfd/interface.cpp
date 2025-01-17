@@ -40,26 +40,33 @@ void GetNodeMotion(
 //------------------------------------------------------------------------------
 
 FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Model& model) {
-    // Instantiate floating platform
-    FloatingPlatform platform{};
-
     // If floating platform is not enabled, return
     if (!input.enable) {
-        return platform;
+        return {
+            false,         // active
+            NodeData(0U),  // platform node
+            0U,            // mass element ID
+            {},
+        };
     }
 
-    // Set platform active to true
-    platform.active = true;
-
     // Construct platform node and save ID
-    platform.node.id = model.AddNode()
-                           .SetPosition(input.position)
-                           .SetVelocity(input.velocity)
-                           .SetAcceleration(input.acceleration)
-                           .Build();
+    const auto platform_node_id = model.AddNode()
+                                      .SetPosition(input.position)
+                                      .SetVelocity(input.velocity)
+                                      .SetAcceleration(input.acceleration)
+                                      .Build();
 
     // Add element for platform mass
-    platform.mass_element_id = model.AddMassElement(platform.node.id, input.mass_matrix);
+    const auto mass_element_id = model.AddMassElement(platform_node_id, input.mass_matrix);
+
+    // Instantiate platform
+    FloatingPlatform platform{
+        true,  // enable platform
+        NodeData(platform_node_id),
+        mass_element_id,
+        {},
+    };
 
     // Construct mooring lines
     std::transform(
@@ -80,9 +87,12 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
                                       .SetAcceleration(ml_input.anchor_acceleration)
                                       .Build();
 
-            // Add constraint from fairlead node to platform node
-            auto rigid_constraint_id = 0U;
-            //     model.AddRigidJointConstraint(platform.node.id, fairlead_node_id);
+            // Add fixed constraint to anchor node
+            auto fixed_constraint_id = model.AddFixedBC3DOFs(anchor_node_id);
+
+            // Add rigid constraint from fairlead node to platform node
+            auto rigid_constraint_id =
+                model.AddRigidJoint6DOFsTo3DOFs({platform.node.id, fairlead_node_id});
 
             // Add spring from fairlead to anchor
             auto spring_element_id = model.AddSpringElement(
@@ -90,9 +100,10 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
             );
 
             // Add mooring line data to platform
-            return MooringLine(
-                fairlead_node_id, anchor_node_id, spring_element_id, rigid_constraint_id
-            );
+            return MooringLine{
+                NodeData(fairlead_node_id), NodeData(anchor_node_id), fixed_constraint_id,
+                rigid_constraint_id,        spring_element_id,
+            };
         }
     );
 
@@ -176,9 +187,20 @@ Interface::Interface(const InterfaceInput& input)
       host_state_q("host_state_q", state.num_system_nodes),
       host_state_v("host_state_v", state.num_system_nodes),
       host_state_vd("host_state_vd", state.num_system_nodes) {
+    // Copy state motion members from device to host
+    Kokkos::deep_copy(this->host_state_x, this->state.x);
+    Kokkos::deep_copy(this->host_state_q, this->state.q);
+    Kokkos::deep_copy(this->host_state_v, this->state.v);
+    Kokkos::deep_copy(this->host_state_vd, this->state.vd);
+
+    // Update the turbine motion to match restored state
+    GetTurbineMotion(
+        this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
+        this->host_state_vd
+    );
 }
 
-void Interface::Step() {
+bool Interface::Step() {
     // Transfer loads to solver
     SetTurbineLoads(this->turbine, this->state);
 
@@ -187,7 +209,7 @@ void Interface::Step() {
         this->parameters, this->solver, this->elements, this->state, this->constraints
     );
     if (!converged) {
-        throw std::runtime_error("Failed to converge during solver step");
+        return false;
     }
 
     // Copy state motion members from device to host
@@ -201,6 +223,8 @@ void Interface::Step() {
         this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
         this->host_state_vd
     );
+
+    return true;
 }
 
 void Interface::SaveState() {
