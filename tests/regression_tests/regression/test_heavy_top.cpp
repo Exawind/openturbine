@@ -62,18 +62,23 @@ inline auto SetUpHeavyTopTest() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf, a_tol, r_tol);
 
     // Create solver, elements, constraints, and state
-    auto state = model.CreateState();
-    auto elements = model.CreateElements();
-    auto constraints = model.CreateConstraints();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
-    // Run simulation for 2.0 seconds
-    // const auto t_end = 2.;
-    // const auto n_steps = static_cast<size_t>(std::ceil(t_end / step_size)) + 1;
-    for (size_t i = 0; i < 1; ++i) {
+    // Run simulation for 0.8 seconds
+    for (size_t i = 0; i < 400; ++i) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }
+
+    const auto q = kokkos_view_2D_to_vector(state.q);
+
+    EXPECT_NEAR(q[0][0], -0.42217588230602943, 1e-10);
+    EXPECT_NEAR(q[0][1], -0.094581314972310801, 1e-10);
+    EXPECT_NEAR(q[0][2], -0.044548054997683689, 1e-10);
+    EXPECT_NEAR(q[0][3], -0.17925889552379232, 1e-10);
+    EXPECT_NEAR(q[0][4], 0.21677585003948013, 1e-10);
+    EXPECT_NEAR(q[0][5], -0.95946635439403072, 1e-10);
+    EXPECT_NEAR(q[0][6], -0.017285658826872257, 1e-10);
 }
 
 TEST(HeavyTopTest, FinalState) {
