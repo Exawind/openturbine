@@ -46,26 +46,24 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
             false,         // active
             NodeData(0U),  // platform node
             0U,            // mass element ID
-            {},            // mooring lines
         };
     }
 
+    // Construct platform node and save ID
+    const auto platform_node_id = model.AddNode()
+                                      .SetPosition(input.position)
+                                      .SetVelocity(input.velocity)
+                                      .SetAcceleration(input.acceleration)
+                                      .Build();
+
+    // Add element for platform mass
+    const auto mass_element_id = model.AddMassElement(platform_node_id, input.mass_matrix);
+
+    // Instantiate platform
     FloatingPlatform platform{
-        // Set platform active to true
-        true,
-
-        // Construct platform node and save ID
-        NodeData(model.AddNode()
-                     .SetPosition(input.position)
-                     .SetVelocity(input.velocity)
-                     .SetAcceleration(input.acceleration)
-                     .Build()),
-
-        // Add element for platform mass
-        model.AddMassElement(platform.node.id, input.mass_matrix),
-
-        // Mooring lines
-        {},
+        true,  // enable platform
+        NodeData(platform_node_id),
+        mass_element_id,
     };
 
     // Construct mooring lines

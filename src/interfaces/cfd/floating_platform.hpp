@@ -22,7 +22,7 @@ struct FloatingPlatform {
     size_t mass_element_id;
 
     /// @brief Mooring line data array
-    std::vector<MooringLine> mooring_lines;
+    std::vector<MooringLine> mooring_lines{};
 };
 
 }  // namespace openturbine::cfd
