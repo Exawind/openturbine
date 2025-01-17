@@ -46,6 +46,7 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
             false,         // active
             NodeData(0U),  // platform node
             0U,            // mass element ID
+            {},
         };
     }
 
@@ -64,6 +65,7 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
         true,  // enable platform
         NodeData(platform_node_id),
         mass_element_id,
+        {},
     };
 
     // Construct mooring lines
