@@ -23,6 +23,103 @@ struct CalculateRigidJointConstraint {
     Kokkos::View<double* [6][6]> target_gradient_terms;
 
     KOKKOS_FUNCTION
+    static void CalculateResidualTerms(
+        const int constraint_index, const size_t n_target_node_cols,
+        const Kokkos::View<double[4]>::const_type& R1, const Kokkos::View<double[4]>::const_type& R2,
+        const Kokkos::View<double[4]>::const_type& RCt, const View_3::const_type& X0,
+        const View_3::const_type& u1, const View_3::const_type& u2,
+        const Kokkos::View<double[4]>& R1t, const Kokkos::View<double[4]>& R1_X0,
+        const Kokkos::View<double[4]>& R2_RCt, const Kokkos::View<double[4]>& R2_RCt_R1t,
+        const View_3x3& C, const View_3& V3, const Kokkos::View<double* [6]>& residual
+    ) {
+        // Phi(0:3) = u2 + X0 - u1 - R1*X0
+        QuaternionInverse(R1, R1t);
+        RotateVectorByQuaternion(R1, X0, R1_X0);
+        for (int i = 0; i < 3; ++i) {
+            residual(constraint_index, i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
+        }
+
+        // Angular residual
+        for (int i = 0; i < 3; ++i) {
+            residual(constraint_index, i + 3) = 0.;
+        }
+        // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
+        if (n_target_node_cols == 6) {
+            QuaternionCompose(R2, RCt, R2_RCt);
+            QuaternionCompose(R2_RCt, R1t, R2_RCt_R1t);
+            QuaternionToRotationMatrix(R2_RCt_R1t, C);
+            AxialVectorOfMatrix(C, V3);
+            for (int i = 0; i < 3; ++i) {
+                residual(constraint_index, i + 3) = V3(i);
+            }
+        }
+    }
+
+    KOKKOS_FUNCTION
+    static void CalculateGradientTerms(
+        const int constraint_index, const size_t n_target_node_cols,
+        const Kokkos::View<double[4]>::const_type& R1_X0, const View_3x3& C, const View_3x3& A,
+        const Kokkos::View<double* [6][6]>& target_gradient,
+        const Kokkos::View<double* [6][6]>& base_gradient
+    ) {
+        // Target Node gradients
+        {
+            // B(0:3,0:3) = I
+            for (int i = 0; i < 3; ++i) {
+                target_gradient(constraint_index, i, i) = 1.;
+            }
+
+            // B(3:6,3:6) -> initialize to 0
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    target_gradient(constraint_index, i + 3, j + 3) = 0.;
+                }
+            }
+            // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
+            if (n_target_node_cols == 6) {
+                AX_Matrix(C, A);
+                for (int i = 0; i < 3; ++i) {
+                    for (int j = 0; j < 3; ++j) {
+                        target_gradient(constraint_index, i + 3, j + 3) = A(j, i);
+                    }
+                }
+            }
+        }
+
+        // Base Node gradients
+        {
+            // B(0:3,0:3) = -I
+            for (int i = 0; i < 3; ++i) {
+                base_gradient(constraint_index, i, i) = -1.;
+            }
+
+            // B(0:3,3:6) = tilde(R1*X0)
+            VecTilde(R1_X0, A);
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    base_gradient(constraint_index, i, j + 3) = A(i, j);
+                }
+            }
+
+            // B(3:6,3:6) -> initialize to 0
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    base_gradient(constraint_index, i + 3, j + 3) = 0.;
+                }
+            }
+            // B(3:6,3:6) = -AX(R2*inv(RC)*inv(R1))
+            if (n_target_node_cols == 6) {
+                AX_Matrix(C, A);
+                for (int i = 0; i < 3; ++i) {
+                    for (int j = 0; j < 3; ++j) {
+                        base_gradient(constraint_index, i + 3, j + 3) = -A(i, j);
+                    }
+                }
+            }
+        }
+    }
+
+    KOKKOS_FUNCTION
     void operator()() const {
         const auto i_node1 = base_node_index(i_constraint);
         const auto i_node2 = target_node_index(i_constraint);
@@ -83,90 +180,18 @@ struct CalculateRigidJointConstraint {
         const auto n_target_node_cols =
             target_node_col_range(i_constraint).second - target_node_col_range(i_constraint).first;
 
-        // Phi(0:3) = u2 + X0 - u1 - R1*X0
-        QuaternionInverse(R1, R1t);
-        RotateVectorByQuaternion(R1, X0, R1_X0);
-        for (int i = 0; i < 3; ++i) {
-            residual_terms(i_constraint, i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
-        }
-
-        // Angular residual
-        for (int i = 0; i < 3; ++i) {
-            residual_terms(i_constraint, i + 3) = 0.;
-        }
-        // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
-        if (n_target_node_cols == 6) {
-            QuaternionCompose(R2, RCt, R2_RCt);
-            QuaternionCompose(R2_RCt, R1t, R2_RCt_R1t);
-            QuaternionToRotationMatrix(R2_RCt_R1t, C);
-            AxialVectorOfMatrix(C, V3);
-            for (int i = 0; i < 3; ++i) {
-                residual_terms(i_constraint, i + 3) = V3(i);
-            }
-        }
+        CalculateResidualTerms(
+            i_constraint, n_target_node_cols, R1, R2, RCt, X0, u1, u2, R1t, R1_X0, R2_RCt,
+            R2_RCt_R1t, C, V3, residual_terms
+        );
 
         //----------------------------------------------------------------------
         // Constraint Gradient Matrix
         //----------------------------------------------------------------------
 
-        //---------------------------------
-        // Target Node
-        //---------------------------------
-        {
-            // B(0:3,0:3) = I
-            for (int i = 0; i < 3; ++i) {
-                target_gradient_terms(i_constraint, i, i) = 1.;
-            }
-
-            // B(3:6,3:6) -> initialize to 0
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    target_gradient_terms(i_constraint, i + 3, j + 3) = 0.;
-                }
-            }
-            // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
-            if (n_target_node_cols == 6) {
-                AX_Matrix(C, A);
-                for (int i = 0; i < 3; ++i) {
-                    for (int j = 0; j < 3; ++j) {
-                        target_gradient_terms(i_constraint, i + 3, j + 3) = A(j, i);
-                    }
-                }
-            }
-        }
-        //---------------------------------
-        // Base Node
-        //---------------------------------
-        {
-            // B(0:3,0:3) = -I
-            for (int i = 0; i < 3; ++i) {
-                base_gradient_terms(i_constraint, i, i) = -1.;
-            }
-
-            // B(0:3,3:6) = tilde(R1*X0)
-            VecTilde(R1_X0, A);
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    base_gradient_terms(i_constraint, i, j + 3) = A(i, j);
-                }
-            }
-
-            // B(3:6,3:6) -> initialize to 0
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    base_gradient_terms(i_constraint, i + 3, j + 3) = 0.;
-                }
-            }
-            // B(3:6,3:6) = -AX(R2*inv(RC)*inv(R1))
-            if (n_target_node_cols == 6) {
-                AX_Matrix(C, A);
-                for (int i = 0; i < 3; ++i) {
-                    for (int j = 0; j < 3; ++j) {
-                        base_gradient_terms(i_constraint, i + 3, j + 3) = -A(i, j);
-                    }
-                }
-            }
-        }
+        CalculateGradientTerms(
+            i_constraint, n_target_node_cols, R1_X0, C, A, target_gradient_terms, base_gradient_terms
+        );
     }
 };
 
