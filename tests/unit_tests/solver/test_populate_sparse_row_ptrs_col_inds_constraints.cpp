@@ -27,6 +27,18 @@ TEST(PopulateSparseRowPtrsColInds_Constraints, OneOfEach) {
         std::array<size_t, num_node_dofs>{12U, 13U, 14U, 15U, 16U, 17U, 24U, 25U, 26U, 27U,
                                           28U, 29U, 36U, 37U, 38U, 39U, 40U, 41U, 48U, 49U,
                                           50U, 51U, 52U, 53U, 60U, 61U, 62U, 63U, 64U, 65U};
+
+    const auto base_node_col_range_host_data = std::array{
+        Kokkos::pair<size_t, size_t>{0U, 0U}, Kokkos::pair<size_t, size_t>{0U, 0U},
+        Kokkos::pair<size_t, size_t>{0U, 6U}, Kokkos::pair<size_t, size_t>{0U, 6U},
+        Kokkos::pair<size_t, size_t>{0U, 6U}
+    };
+    const auto target_node_col_range_host_data = std::array{
+        Kokkos::pair<size_t, size_t>{6U, 12U}, Kokkos::pair<size_t, size_t>{6U, 12U},
+        Kokkos::pair<size_t, size_t>{6U, 12U}, Kokkos::pair<size_t, size_t>{6U, 12U},
+        Kokkos::pair<size_t, size_t>{6U, 12U}
+    };
+
     const auto type_host =
         Kokkos::View<const ConstraintType[num_constraints], Kokkos::HostSpace>(type_host_data.data()
         );
@@ -60,14 +72,30 @@ TEST(PopulateSparseRowPtrsColInds_Constraints, OneOfEach) {
     Kokkos::deep_copy(target_node_freedom_table_mirror, target_node_freedom_table_host);
     Kokkos::deep_copy(target_node_freedom_table, target_node_freedom_table_mirror);
 
+    const auto base_node_col_range_host =
+        Kokkos::View<const Kokkos::pair<size_t, size_t>[num_constraints], Kokkos::HostSpace>(
+            base_node_col_range_host_data.data()
+        );
+    const auto base_node_col_range =
+        Kokkos::View<Kokkos::pair<size_t, size_t>[num_constraints]>("base_node_col_range");
+    Kokkos::deep_copy(base_node_col_range, base_node_col_range_host);
+
+    const auto target_node_col_range_host =
+        Kokkos::View<const Kokkos::pair<size_t, size_t>[num_constraints], Kokkos::HostSpace>(
+            target_node_col_range_host_data.data()
+        );
+    const auto target_node_col_range =
+        Kokkos::View<Kokkos::pair<size_t, size_t>[num_constraints]>("target_node_col_range");
+    Kokkos::deep_copy(target_node_col_range, target_node_col_range_host);
+
     const auto B_row_ptrs = Kokkos::View<size_t[num_constraint_dofs + 1U]>("B_row_ptrs");
     const auto B_col_inds = Kokkos::View<size_t[num_non_zero]>("B_col_inds");
 
     Kokkos::parallel_for(
         "PopulateSparseRowPtrsColInds_Constraints", 1,
         PopulateSparseRowPtrsColInds_Constraints<Kokkos::View<size_t*>, Kokkos::View<size_t*>>{
-            type, base_node_freedom_table, target_node_freedom_table, row_range, B_row_ptrs,
-            B_col_inds
+            type, base_node_freedom_table, target_node_freedom_table, row_range, base_node_col_range,
+            target_node_col_range, B_row_ptrs, B_col_inds
         }
     );
 

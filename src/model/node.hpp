@@ -1,5 +1,6 @@
 #pragma once
 
+#include "src/dof_management/freedom_signature.hpp"
 #include "src/math/quaternion_operations.hpp"
 #include "src/types.hpp"
 

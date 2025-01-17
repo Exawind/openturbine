@@ -36,6 +36,7 @@ inline void CopyNodesToState(State& state, const std::vector<Node>& nodes) {
     Kokkos::deep_copy(state.q, host_q);
     Kokkos::deep_copy(state.v, host_v);
     Kokkos::deep_copy(state.vd, host_vd);
+    Kokkos::deep_copy(state.a, state.vd);  // initialize algorithmic acceleration to acceleration
 
     // Set previous state to current state
     Kokkos::deep_copy(state.q_prev, state.q);
