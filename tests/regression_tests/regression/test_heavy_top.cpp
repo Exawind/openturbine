@@ -50,7 +50,7 @@ inline auto SetUpHeavyTopTest() {
 
     // Add constraints (6 DOF base node -> 3 DOF target node)
     model.AddRigidJoint6DOFsTo3DOFs({mass_node_id, ground_node_id});
-    model.AddPrescribedBC6DOFsTo3DOFs(ground_node_id);
+    model.AddPrescribedBC3DOFs(ground_node_id);
 
     // Set up step parameters
     constexpr bool is_dynamic_solve(true);

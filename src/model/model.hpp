@@ -297,7 +297,7 @@ public:
     }
 
     /// Adds a fixed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the ID
-    size_t AddFixedBC6DOFsTo3DOFs(const size_t node_id) {
+    size_t AddFixedBC3DOFs(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
             id, ConstraintType::kFixedBC3DOFs, std::array{InvalidNodeID, node_id}
@@ -307,9 +307,7 @@ public:
 
     /// Adds a prescribed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the
     /// ID
-    size_t AddPrescribedBC6DOFsTo3DOFs(
-        const size_t node_id, const Array_3& ref_position = {0., 0., 0.}
-    ) {
+    size_t AddPrescribedBC3DOFs(const size_t node_id, const Array_3& ref_position = {0., 0., 0.}) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
             id, ConstraintType::kPrescribedBC3DOFs, std::array{InvalidNodeID, node_id}, ref_position
