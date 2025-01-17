@@ -15,7 +15,6 @@ namespace openturbine {
     Kokkos::parallel_reduce(
         "ComputeNumberOfNonZeros_Constraints", constraint_type.extent(0),
         ComputeNumberOfNonZeros_Constraints{
-            constraint_type,
             constraint_row_range,
             constraint_base_node_col_range,
             constraint_target_node_col_range,
