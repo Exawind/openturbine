@@ -5,17 +5,11 @@
 
 #ifdef OpenTurbine_ENABLE_VTK
 
-#include <vtkCellType.h>
-#include <vtkDoubleArray.h>
-#include <vtkFloatArray.h>
 #include <vtkLine.h>
-#include <vtkNew.h>
-#include <vtkPointData.h>
 #include <vtkPoints.h>
 #include <vtkPolyData.h>
-#include <vtkUnstructuredGrid.h>
+#include <vtkSmartPointer.h>
 #include <vtkXMLPolyDataWriter.h>
-#include <vtkXMLUnstructuredGridWriter.h>
 
 #endif
 
@@ -24,30 +18,35 @@ namespace openturbine {
 #ifdef OpenTurbine_ENABLE_VTK
 
 inline void WriteLinesVTK(
-    const std::vector<std::array<size_t, 2>>& lines,
+    const std::vector<std::array<size_t, 2>>& lines_data,
     const std::vector<std::array<double, 7>>& points, const std::string& filename
 ) {
-    // Create a grid object and add the points to it.
-    const auto gd = vtkNew<vtkUnstructuredGrid>();
-    gd->Allocate(static_cast<vtkIdType>(lines.size()));
-    for (const auto& line : lines) {
-        std::vector<vtkIdType> pts;
-        pts.push_back(static_cast<vtkIdType>(line[0]));
-        pts.push_back(static_cast<vtkIdType>(line[1]));
-        gd->InsertNextCell(VTK_LINE, static_cast<vtkIdType>(2), pts.data());
+    auto lines = vtkSmartPointer<vtkCellArray>::New();
+    for (const auto& line_data : lines_data) {
+        auto line = vtkSmartPointer<vtkLine>::New();
+        line->GetPointIds()->SetId(0, static_cast<vtkIdType>(line_data[0]));
+        line->GetPointIds()->SetId(1, static_cast<vtkIdType>(line_data[1]));
+        lines->InsertNextCell(line);
     }
 
     // Set point positions
-    const auto pt_pos = vtkNew<vtkPoints>();
+    auto pt_pos = vtkSmartPointer<vtkPoints>::New();
     for (const auto& point : points) {
-        pt_pos->InsertNextPoint(point[0], point[1], point[2]);
+        pt_pos->InsertNextPoint(
+            static_cast<double>(static_cast<float>(point[0])),
+            static_cast<double>(static_cast<float>(point[1])),
+            static_cast<double>(static_cast<float>(point[2]))
+        );
     }
-    gd->SetPoints(pt_pos);
+
+    auto lines_poly_data = vtkSmartPointer<vtkPolyData>::New();
+    lines_poly_data->SetPoints(pt_pos);
+    lines_poly_data->SetLines(lines);
 
     // Write the file
-    const auto writer = vtkNew<vtkXMLUnstructuredGridWriter>();
-    writer->SetFileName(filename.c_str());
-    writer->SetInputData(gd);
+    const auto writer = vtkSmartPointer<vtkXMLPolyDataWriter>::New();
+    writer->SetFileName((filename + ".vtp").c_str());
+    writer->SetInputData(lines_poly_data);
     writer->SetDataModeToAscii();
     writer->Write();
 }
