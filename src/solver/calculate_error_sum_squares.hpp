@@ -4,7 +4,7 @@
 
 namespace openturbine {
 
-struct CalculateErrorSumSquares {
+struct CalculateSystemErrorSumSquares {
     using value_type = double;
     double atol;
     double rtol;
@@ -19,13 +19,14 @@ struct CalculateErrorSumSquares {
         const auto n_node_dofs = count_active_dofs(node_freedom_allocation_table(i_node));
         const auto node_first_dof = node_freedom_map_table(i_node);
         for (auto j = 0U; j < n_node_dofs; ++j) {
-            const auto qd = q_delta(i_node, j) * h;
-            err += Kokkos::pow(x(node_first_dof + j) / (atol + rtol * Kokkos::abs(qd)), 2.);
+            const auto pi = x(node_first_dof + j);
+            const auto xi = q_delta(i_node, j) * h;
+            err += Kokkos::pow(pi / (atol + rtol * Kokkos::abs(xi)), 2.);
         }
     }
 };
 
-struct CalculateErrorSumSquares2 {
+struct CalculateConstraintsErrorSumSquares {
     using value_type = double;
     double atol;
     double rtol;

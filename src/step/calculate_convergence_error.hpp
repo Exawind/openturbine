@@ -11,6 +11,7 @@
 
 namespace openturbine {
 
+/// @brief Calculation based on Table 1 of DOI: 10.1115/1.4033441
 inline double CalculateConvergenceError(
     const StepParameters& parameters, const Solver& solver, const State& state,
     const Constraints& constraints
@@ -19,7 +20,7 @@ inline double CalculateConvergenceError(
     double sum_error_squared = 0.;
     Kokkos::parallel_reduce(
         solver.num_system_nodes,
-        CalculateErrorSumSquares{
+        CalculateSystemErrorSumSquares{
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,
             parameters.h,
@@ -32,7 +33,7 @@ inline double CalculateConvergenceError(
     );
     Kokkos::parallel_reduce(
         constraints.num_dofs,
-        CalculateErrorSumSquares2{
+        CalculateConstraintsErrorSumSquares{
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,
             solver.num_system_dofs,
