@@ -47,7 +47,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
 
     // Run simulation for 500 steps
     for (size_t i = 0; i < 500; ++i) {
-        interface.Step();
+        EXPECT_EQ(interface.Step(), true);
     }
 
     // Check results at 500 steps
@@ -64,7 +64,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
 
     // Run simulation for an additional 100 steps
     for (size_t i = 500; i < 600; ++i) {
-        interface.Step();
+        EXPECT_EQ(interface.Step(), true);
     }
 
     // Check results at 600 steps
@@ -90,7 +90,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
 
     // Run simulation from 500 to 600 steps
     for (size_t i = 500; i < 600; ++i) {
-        interface.Step();
+        EXPECT_EQ(interface.Step(), true);
     }
 
     // Check that simulation gives same results at 600 steps
@@ -103,10 +103,10 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[6], -0.83263383019736148, 1.e-12);
 }
 
-void OutputLines(const FloatingPlatform& platform, size_t step_num, const std::string& output_dir) {
 #ifdef OpenTurbine_ENABLE_VTK
-    auto tmp = std::to_string(step_num + 1);
-    auto step_num_str = std::string(4 - tmp.size(), '0') + tmp;
+void OutputLines(const FloatingPlatform& platform, size_t step_num, const std::string& output_dir) {
+    auto tmp = std::to_string(step_num);
+    auto step_num_str = std::string(5 - tmp.size(), '0') + tmp;
     WriteLinesVTK(
         {
             {0, 1},
@@ -119,7 +119,7 @@ void OutputLines(const FloatingPlatform& platform, size_t step_num, const std::s
             platform.mooring_lines[1].fairlead_node.position,
             platform.mooring_lines[2].fairlead_node.position,
         },
-        output_dir + "/platform_" + step_num_str + ".vtu"
+        output_dir + "/platform_" + step_num_str
     );
 
     WriteLinesVTK(
@@ -136,16 +136,19 @@ void OutputLines(const FloatingPlatform& platform, size_t step_num, const std::s
             platform.mooring_lines[2].fairlead_node.position,
             platform.mooring_lines[2].anchor_node.position,
         },
-        output_dir + "/mooring_" + step_num_str + ".vtu"
+        output_dir + "/mooring_" + step_num_str
     );
-#endif
 }
+#else
+void OutputLines(const FloatingPlatform&, size_t, const std::string&) {
+}
+#endif
 
 TEST(CFDInterfaceTest, FloatingPlatform) {
     // Solution parameters
     constexpr auto time_step = 0.01;
-    constexpr auto t_end = 1.;
-    constexpr auto rho_inf = 1.0;
+    constexpr auto t_end = 120.;
+    constexpr auto rho_inf = 0.0;
     constexpr auto max_iter = 5;
     const auto n_steps{static_cast<size_t>(ceil(t_end / time_step)) + 1};
 
@@ -226,15 +229,17 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
 
     // Save the initial state, then take first step
     interface.SaveState();
-    interface.Step();
+    auto converged = interface.Step();
+    EXPECT_EQ(converged, true);
 
-    // Get acceleration in z direction and calculate buoyancy force to apply
-    const auto acc_z = interface.turbine.floating_platform.node.acceleration[2];
-    const auto buoyancy_force = 1.01 * platform_mass * acc_z;
+    // Calculate buoyancy force as percentage of gravitational force plus spring forces times
+    const auto spring_f = kokkos_view_2D_to_vector(interface.elements.springs.f);
+    const auto initial_spring_force = spring_f[0][2] + spring_f[1][2] + spring_f[2][2];
+    const auto platform_gravity_force = -gravity[2] * platform_mass;
+    const auto buoyancy_force = initial_spring_force + platform_gravity_force;
 
     // Reset to initial state and apply
     interface.RestoreState();
-    interface.turbine.floating_platform.node.loads[2] = buoyancy_force;
 
     const std::string output_dir{"FloatingPlatform"};
     RemoveDirectoryWithRetries(output_dir);
@@ -248,13 +253,21 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
         // Write VTK visualization output
         OutputLines(interface.turbine.floating_platform, i, output_dir);
 
+        // Apply load in y direction
+        interface.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
+
+        // Apply time varying buoyancy force
+        interface.turbine.floating_platform.node.loads[2] =
+            buoyancy_force + 0.5 * initial_spring_force * sin(2. * M_PI / 20. * t);
+
         // Apply time varying moments to platform node
         interface.turbine.floating_platform.node.loads[3] = 5.0e5 * sin(2. * M_PI / 15. * t);  // rx
         interface.turbine.floating_platform.node.loads[4] = 1.0e6 * sin(2. * M_PI / 30. * t);  // ry
         interface.turbine.floating_platform.node.loads[5] = 2.0e7 * sin(2. * M_PI / 60. * t);  // rz
 
         // Step
-        interface.Step();
+        converged = interface.Step();
+        EXPECT_EQ(converged, true);
     }
 }
 
