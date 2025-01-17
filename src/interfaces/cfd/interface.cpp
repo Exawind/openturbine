@@ -80,9 +80,12 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
                                       .SetAcceleration(ml_input.anchor_acceleration)
                                       .Build();
 
-            // Add constraint from fairlead node to platform node
-            auto rigid_constraint_id = 0U;
-            //     model.AddRigidJointConstraint(platform.node.id, fairlead_node_id);
+            // Add fixed constraint to anchor node
+            auto fixed_constraint_id = model.AddFixedBC3DOFs(anchor_node_id);
+
+            // Add rigid constraint from fairlead node to platform node
+            auto rigid_constraint_id =
+                model.AddRigidJoint6DOFsTo3DOFs({platform.node.id, fairlead_node_id});
 
             // Add spring from fairlead to anchor
             auto spring_element_id = model.AddSpringElement(
@@ -90,9 +93,10 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
             );
 
             // Add mooring line data to platform
-            return MooringLine(
-                fairlead_node_id, anchor_node_id, spring_element_id, rigid_constraint_id
-            );
+            return MooringLine{
+                NodeData(fairlead_node_id), NodeData(anchor_node_id), fixed_constraint_id,
+                rigid_constraint_id,        spring_element_id,
+            };
         }
     );
 
@@ -189,7 +193,7 @@ Interface::Interface(const InterfaceInput& input)
     );
 }
 
-void Interface::Step() {
+bool Interface::Step() {
     // Transfer loads to solver
     SetTurbineLoads(this->turbine, this->state);
 
@@ -198,7 +202,7 @@ void Interface::Step() {
         this->parameters, this->solver, this->elements, this->state, this->constraints
     );
     if (!converged) {
-        throw std::runtime_error("Failed to converge during solver step");
+        return false;
     }
 
     // Copy state motion members from device to host
@@ -212,6 +216,8 @@ void Interface::Step() {
         this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
         this->host_state_vd
     );
+
+    return true;
 }
 
 void Interface::SaveState() {
