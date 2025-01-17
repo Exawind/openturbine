@@ -11,12 +11,12 @@ namespace openturbine {
 struct CalculateRevoluteJointOutput {
     int i_constraint;
     Kokkos::View<size_t*>::const_type target_node_index;
-    Kokkos::View<double* [3][3]>::const_type axes;
-    Kokkos::View<double* [7]>::const_type node_x0;     // Initial position
-    Kokkos::View<double* [7]>::const_type node_u;      // Displacement
-    Kokkos::View<double* [6]>::const_type node_udot;   // Velocity
-    Kokkos::View<double* [6]>::const_type node_uddot;  // Acceleration
-    Kokkos::View<double* [3]> outputs;
+    View_Nx3x3::const_type axes;
+    View_Nx7::const_type node_x0;     // Initial position
+    View_Nx7::const_type node_u;      // Displacement
+    View_Nx6::const_type node_udot;   // Velocity
+    View_Nx6::const_type node_uddot;  // Acceleration
+    View_Nx3 outputs;
 
     KOKKOS_FUNCTION
     void operator()() const {

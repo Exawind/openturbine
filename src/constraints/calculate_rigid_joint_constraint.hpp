@@ -64,9 +64,11 @@ struct CalculateRigidJointConstraint {
     KOKKOS_FUNCTION
     static void CalculateGradientTerms(
         const int constraint_index, const size_t n_target_node_cols, const View_3::const_type& R1_X0,
-        const View_3x3& C, const View_3x3& A, const View_Nx6x6& target_gradient,
-        const View_Nx6x6& base_gradient
+        const View_3x3& C, const View_Nx6x6& target_gradient, const View_Nx6x6& base_gradient
     ) {
+        auto A_data = Kokkos::Array<double, 9>{};
+        auto A = View_3x3{A_data.data()};
+
         // Target Node gradients
         {
             // B(0:3,0:3) = I
@@ -160,9 +162,6 @@ struct CalculateRigidJointConstraint {
         auto R1_X0_data = Kokkos::Array<double, 3>{};
         auto R1_X0 = Kokkos::View<double[3]>{R1_X0_data.data()};
 
-        auto A_data = Kokkos::Array<double, 9>{};
-        auto A = View_3x3{A_data.data()};
-
         auto C_data = Kokkos::Array<double, 9>{};
         auto C = View_3x3{C_data.data()};
 
@@ -182,7 +181,7 @@ struct CalculateRigidJointConstraint {
         //----------------------------------------------------------------------
 
         CalculateGradientTerms(
-            i_constraint, n_target_node_cols, R1_X0, C, A, target_gradient_terms, base_gradient_terms
+            i_constraint, n_target_node_cols, R1_X0, C, target_gradient_terms, base_gradient_terms
         );
     }
 };

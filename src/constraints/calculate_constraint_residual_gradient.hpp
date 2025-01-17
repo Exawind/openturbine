@@ -19,13 +19,13 @@ struct CalculateConstraintResidualGradient {
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type target_node_col_range;
     Kokkos::View<size_t*>::const_type base_node_index;
     Kokkos::View<size_t*>::const_type target_node_index;
-    Kokkos::View<double* [3]>::const_type X0_;
-    Kokkos::View<double* [3][3]>::const_type axes;
-    Kokkos::View<double* [7]>::const_type constraint_inputs;
-    Kokkos::View<double* [7]>::const_type node_u;
-    Kokkos::View<double* [6]> residual_terms;
-    Kokkos::View<double* [6][6]> base_gradient_terms;
-    Kokkos::View<double* [6][6]> target_gradient_terms;
+    View_Nx3::const_type X0_;
+    View_Nx3x3::const_type axes;
+    View_Nx7::const_type constraint_inputs;
+    View_Nx7::const_type node_u;
+    View_Nx6 residual_terms;
+    View_Nx6x6 base_gradient_terms;
+    View_Nx6x6 target_gradient_terms;
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
