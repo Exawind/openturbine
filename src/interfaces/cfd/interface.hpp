@@ -11,7 +11,7 @@ public:
     explicit Interface(const InterfaceInput& input);
 
     /// @brief Step forward in time
-    void Step();
+    [[nodiscard]] bool Step();
 
     /// @brief Save state for correction step
     void SaveState();
