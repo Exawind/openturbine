@@ -268,6 +268,18 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
         // Step
         converged = interface.Step();
         EXPECT_EQ(converged, true);
+
+        // Check for expected displacements/rotations of platform node
+        if (i == 100) {
+            const auto& platform_u = interface.turbine.floating_platform.node.displacement;
+            EXPECT_NEAR(platform_u[0], 3.4379940641493395e-06, 1e-12);
+            EXPECT_NEAR(platform_u[1], 0.0036709089002912518, 1e-12);
+            EXPECT_NEAR(platform_u[2], 0.0034998271929752248, 1e-12);
+            EXPECT_NEAR(platform_u[3], 0.99999999992274302, 1e-12);
+            EXPECT_NEAR(platform_u[4], 1.3448158662549561e-06, 1e-12);
+            EXPECT_NEAR(platform_u[5], 1.2713890988278111e-06, 1e-12);
+            EXPECT_NEAR(platform_u[6], 1.2291853012439073e-05, 1e-12);
+        }
     }
 }
 
