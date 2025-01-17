@@ -16,57 +16,83 @@ namespace openturbine {
 
 struct CalculateConstraintResidualGradient {
     Kokkos::View<ConstraintType*>::const_type type;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type target_node_col_range;
     Kokkos::View<size_t*>::const_type base_node_index;
     Kokkos::View<size_t*>::const_type target_node_index;
-    Kokkos::View<double* [3]>::const_type X0_;
-    Kokkos::View<double* [3][3]>::const_type axes;
-    Kokkos::View<double* [7]>::const_type constraint_inputs;
-    Kokkos::View<double* [7]>::const_type node_u;
-    Kokkos::View<double* [6]> residual_terms;
-    Kokkos::View<double* [6][6]> base_gradient_terms;
-    Kokkos::View<double* [6][6]> target_gradient_terms;
+    View_Nx3::const_type X0_;
+    View_Nx3x3::const_type axes;
+    View_Nx7::const_type constraint_inputs;
+    View_Nx7::const_type node_u;
+    View_Nx6 residual_terms;
+    View_Nx6x6 base_gradient_terms;
+    View_Nx6x6 target_gradient_terms;
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
-        if (type(i_constraint) == ConstraintType::kFixedBC) {
-            CalculateFixedBCConstraint{target_node_index, X0_,
-                                       constraint_inputs, node_u,
-                                       residual_terms,    target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kPrescribedBC) {
-            CalculatePrescribedBCConstraint{target_node_index, X0_,
-                                            constraint_inputs, node_u,
-                                            residual_terms,    target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kRigidJoint) {
-            CalculateRigidJointConstraint{base_node_index,
-                                          target_node_index,
-                                          X0_,
-                                          constraint_inputs,
-                                          node_u,
-                                          residual_terms,
-                                          base_gradient_terms,
-                                          target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kRevoluteJoint) {
-            CalculateRevoluteJointConstraint{base_node_index,
-                                             target_node_index,
-                                             X0_,
-                                             axes,
-                                             constraint_inputs,
-                                             node_u,
-                                             residual_terms,
-                                             base_gradient_terms,
-                                             target_gradient_terms}(i_constraint);
-        } else if (type(i_constraint) == ConstraintType::kRotationControl) {
-            CalculateRotationControlConstraint{base_node_index,
-                                               target_node_index,
-                                               X0_,
-                                               axes,
-                                               constraint_inputs,
-                                               node_u,
-                                               residual_terms,
-                                               base_gradient_terms,
-                                               target_gradient_terms}(i_constraint);
+        auto constraint_type = type(i_constraint);
+        if (constraint_type == ConstraintType::kFixedBC ||
+            constraint_type == ConstraintType::kFixedBC3DOFs) {
+            CalculateFixedBCConstraint{
+                i_constraint, target_node_col_range, target_node_index,     X0_, constraint_inputs,
+                node_u,       residual_terms,        target_gradient_terms,
+            }();
+            return;
+        };
+        if (constraint_type == ConstraintType::kPrescribedBC ||
+            constraint_type == ConstraintType::kPrescribedBC3DOFs) {
+            CalculatePrescribedBCConstraint{
+                i_constraint, target_node_col_range, target_node_index,     X0_, constraint_inputs,
+                node_u,       residual_terms,        target_gradient_terms,
+            }();
+            return;
+        };
+        if (constraint_type == ConstraintType::kRigidJoint ||
+            constraint_type == ConstraintType::kRigidJoint6DOFsTo3DOFs) {
+            CalculateRigidJointConstraint{
+                i_constraint,
+                target_node_col_range,
+                base_node_index,
+                target_node_index,
+                X0_,
+                constraint_inputs,
+                node_u,
+                residual_terms,
+                base_gradient_terms,
+                target_gradient_terms,
+            }();
+            return;
+        };
+        if (constraint_type == ConstraintType::kRevoluteJoint) {
+            CalculateRevoluteJointConstraint{
+                i_constraint,
+                base_node_index,
+                target_node_index,
+                X0_,
+                axes,
+                constraint_inputs,
+                node_u,
+                residual_terms,
+                base_gradient_terms,
+                target_gradient_terms,
+            }();
+            return;
+        };
+        if (constraint_type == ConstraintType::kRotationControl) {
+            CalculateRotationControlConstraint{
+                i_constraint,
+                base_node_index,
+                target_node_index,
+                X0_,
+                axes,
+                constraint_inputs,
+                node_u,
+                residual_terms,
+                base_gradient_terms,
+                target_gradient_terms,
+            }();
+            return;
         }
-    }
+    };
 };
 
 }  // namespace openturbine

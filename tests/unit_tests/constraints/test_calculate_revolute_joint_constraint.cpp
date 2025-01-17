@@ -5,6 +5,33 @@
 
 namespace openturbine::tests {
 
+struct ExecuteCalculateRevoluteJointConstraint {
+    int i_constraint;
+    Kokkos::View<size_t*>::const_type base_node_index;
+    Kokkos::View<size_t*>::const_type target_node_index;
+    Kokkos::View<double* [3]>::const_type X0;
+    Kokkos::View<double* [3][3]>::const_type axes;
+    Kokkos::View<double* [7]>::const_type constraint_inputs;
+    Kokkos::View<double* [7]>::const_type node_u;
+    Kokkos::View<double* [6]> residual_terms;
+    Kokkos::View<double* [6][6]> base_gradient_terms;
+    Kokkos::View<double* [6][6]> target_gradient_terms;
+
+    KOKKOS_FUNCTION
+    void operator()(int) const {
+        CalculateRevoluteJointConstraint{i_constraint,
+                                         base_node_index,
+                                         target_node_index,
+                                         X0,
+                                         axes,
+                                         constraint_inputs,
+                                         node_u,
+                                         residual_terms,
+                                         base_gradient_terms,
+                                         target_gradient_terms}();
+    }
+};
+
 TEST(CalculateRevoluteJointConstraintTests, OneConstraint) {
     const auto target_node_index = Kokkos::View<size_t[1]>("target_node_index");
     constexpr auto target_node_index_host_data = std::array<size_t, 1>{1UL};
@@ -59,9 +86,9 @@ TEST(CalculateRevoluteJointConstraintTests, OneConstraint) {
 
     Kokkos::parallel_for(
         "CalculateRevoluteJointConstraint", 1,
-        CalculateRevoluteJointConstraint{
-            base_node_index, target_node_index, X0, axes, constraint_inputs, node_u, residual_terms,
-            base_gradient_terms, target_gradient_terms
+        ExecuteCalculateRevoluteJointConstraint{
+            0, base_node_index, target_node_index, X0, axes, constraint_inputs, node_u,
+            residual_terms, base_gradient_terms, target_gradient_terms
         }
     );
 
@@ -80,13 +107,14 @@ TEST(CalculateRevoluteJointConstraintTests, OneConstraint) {
     const auto base_gradient_terms_mirror = Kokkos::create_mirror(base_gradient_terms);
     Kokkos::deep_copy(base_gradient_terms_mirror, base_gradient_terms);
 
-    constexpr auto base_gradient_terms_exact_data =
-        std::array{-1., 0.,  0.,  0.,         0.,         0.,         //
-                   0.,  -1., 0.,  0.,         0.,         0.,         //
-                   0.,  0.,  -1., 0.,         0.,         0.,         //
-                   0.,  0.,  0.,  -10930136., -15850520., 24566248.,  //
-                   0.,  0.,  0.,  -5585804.,  -8091272.,  12549292.,  //
-                   0.,  0.,  0.,  0.,         0.,         0.};        //
+    constexpr auto base_gradient_terms_exact_data = std::array{
+        -1., 0.,  0.,  0.,         0.,         0.,         // Row 1
+        0.,  -1., 0.,  0.,         0.,         0.,         // Row 2
+        0.,  0.,  -1., 0.,         0.,         0.,         // Row 3
+        0.,  0.,  0.,  -10930136., -15850520., 24566248.,  // Row 4
+        0.,  0.,  0.,  -5585804.,  -8091272.,  12549292.,  // Row 5
+        0.,  0.,  0.,  0.,         0.,         0.          // Row 6
+    };
     const auto base_gradient_terms_exact =
         Kokkos::View<double[1][6][6], Kokkos::HostSpace>::const_type(
             base_gradient_terms_exact_data.data()

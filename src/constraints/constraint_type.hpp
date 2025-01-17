@@ -1,53 +1,83 @@
 #pragma once
 
+#include <stdexcept>
+
 namespace openturbine {
 
-/**
- * @brief Enumeration to define the type of the constraint
- */
 enum class ConstraintType : std::uint8_t {
-    kNone = 0,           //< No constraint (default)
-    kFixedBC = 1,        //< Fixed boundary condition/clamped constraint (all 6 DOFs fixed)
-    kPrescribedBC = 2,   //< Prescribed boundary condition (displacement and rotation are specified
-                         // i.e. all 6 DOFs are fixed)
-    kRigidJoint = 3,     // Rigid constraint between two nodes (no relative motion between nodes i.e.
-                         // all 6 DOFs of target node constrained)
-    kRevoluteJoint = 4,  //< Target node rotates freely around a specified axis (5 DOFs constrained)
-    kRotationControl = 5,  //< A rotation is specified about a given axis (1 DOF allowed about the
-                           // axis specified by the user - the other 5 DOFs are constrained)
+    kNone = 0,               //< No constraint -- default type
+    kFixedBC = 1,            //< Fixed boundary condition/clamped constraint -- all DOFs fixed at
+                             //< the node where the constraint is applied
+    kPrescribedBC = 2,       //< Prescribed boundary condition -- displacement and orientation values
+                             //< are specified => all DOFs are defined at the node
+    kRigidJoint = 3,         //< Rigid constraint between two nodes -- no relative motion permitted
+                             //< between the nodes => all DOFs of target node are constrained
+    kRevoluteJoint = 4,      //< Target node rotates freely around a specified axis --
+                             //< all but one DOFs are constrained
+    kRotationControl = 5,    //< A rotation is specified about a given axis and other DOFs
+                             //< are constrained => all DOFs are constrained/specified
+    kFixedBC3DOFs = 6,       //< Fixed BC applied to a node with 3 DOFs
+    kPrescribedBC3DOFs = 7,  //< Prescribed BC applied to a node with 3 DOFs
+    kRigidJoint6DOFsTo3DOFs = 8  //< Rigid joint with target node having 3 DOFs
 };
 
-/**
- * @brief Returns the number of nodes used by the constraint type
- *
- * @param t Constraint type
- * @return Number of nodes
- */
+/// Returns the number of nodes used/required by the constraint type
 KOKKOS_INLINE_FUNCTION
 constexpr size_t GetNumberOfNodes(ConstraintType t) {
-    // Rigid joint, revolute joint, and rotation control have two nodes
-    const auto has_two_nodes = t == ConstraintType::kRigidJoint ||
-                               t == ConstraintType::kRevoluteJoint ||
-                               t == ConstraintType::kRotationControl;
-    // Default is one node (fixed and prescribed BCs)
+    // Rigid joint, Revolute joint, Rotation control constraints require two nodes
+    const auto has_two_nodes =
+        t == ConstraintType::kRigidJoint || t == ConstraintType::kRevoluteJoint ||
+        t == ConstraintType::kRotationControl || t == ConstraintType::kRigidJoint6DOFsTo3DOFs;
+
+    // Default is one node -- Fixed and Prescribed BCs
     return 1U + static_cast<size_t>(has_two_nodes);
 }
 
-/**
- * @brief Returns the number of degrees of freedom used/fixed by the constraint type
- *
- * @param type Constraint type
- * @return Number of degrees of freedom
- */
+/// Returns the number of degrees of freedom prescribed/fixed by the constraint type
 KOKKOS_INLINE_FUNCTION
-constexpr size_t NumDOFsForConstraint(ConstraintType type) {
-    switch (type) {
-        case ConstraintType::kRevoluteJoint: {
-            return 5U;  // A revolute joint constraint fixes 5 DOFs
-        } break;
-        default:
-            return static_cast<size_t>(6U);  // Default: Fixes 6 DOFs
+constexpr size_t NumColsForConstraint(ConstraintType type) {
+    // Fixed 3 DOFs on the target node
+    if (type == ConstraintType::kFixedBC3DOFs || type == ConstraintType::kPrescribedBC3DOFs) {
+        return 3U;
     }
+
+    // 6 DOFs base node to 3 DOFs target node
+    if (type == ConstraintType::kRigidJoint6DOFsTo3DOFs) {
+        return 9U;
+    }
+
+    // All other constraints have 12 columns
+    if (type == ConstraintType::kRevoluteJoint || type == ConstraintType::kNone ||
+        type == ConstraintType::kFixedBC || type == ConstraintType::kPrescribedBC ||
+        type == ConstraintType::kRigidJoint || type == ConstraintType::kRotationControl) {
+        return 12U;
+    }
+
+    throw std::runtime_error("Invalid constraint type");
+}
+
+/// Returns the number of degrees of freedom prescribed/fixed by the constraint type
+KOKKOS_INLINE_FUNCTION
+constexpr size_t NumRowsForConstraint(ConstraintType type) {
+    // 6 to 3 DOF constraints fix 3 DOFs on the target node
+    if (type == ConstraintType::kFixedBC3DOFs || type == ConstraintType::kPrescribedBC3DOFs ||
+        type == ConstraintType::kRigidJoint6DOFsTo3DOFs) {
+        return 3U;
+    }
+
+    // A revolute joint constraint fixes 5 DOFs
+    if (type == ConstraintType::kRevoluteJoint) {
+        return 5U;
+    }
+
+    // All other constraints fix 6 DOFs
+    if (type == ConstraintType::kNone || type == ConstraintType::kFixedBC ||
+        type == ConstraintType::kPrescribedBC || type == ConstraintType::kRigidJoint ||
+        type == ConstraintType::kRotationControl) {
+        return 6U;
+    }
+
+    throw std::runtime_error("Invalid constraint type");
 }
 
 }  // namespace openturbine

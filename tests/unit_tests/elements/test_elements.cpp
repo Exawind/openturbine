@@ -5,6 +5,14 @@
 
 namespace openturbine::tests {
 
+TEST(ElementsTest, DefaultConstructor) {
+    const auto elements = Elements();
+    EXPECT_EQ(elements.NumElementsInSystem(), 0);
+    EXPECT_EQ(elements.beams.num_elems, 0);
+    EXPECT_EQ(elements.masses.num_elems, 0);
+    EXPECT_EQ(elements.springs.num_elems, 0);
+}
+
 TEST(ElementsTest, ConstructorWithBeams) {
     auto beams = Beams(1U, 2U, 2U);  // 1 beam element with 2 nodes, 2 qps
     auto masses = Masses(0U);        // 0 mass elements

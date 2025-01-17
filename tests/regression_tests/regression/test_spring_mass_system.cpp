@@ -17,6 +17,18 @@
 
 namespace openturbine::tests {
 
+/*
+ * A simple spring-mass system with one mass attached to a fixed point by a spring.
+ * The mass oscillates horizontally with simple harmonic motion. The system is initialized
+ * with the mass displaced 2 units from equilibrium position.
+ *
+ * Schematic of the system with mass (M) and spring (/\/\/), fixed BC at left end node displacement
+ * applied at right node:
+ *
+ * /|
+ * /|o---/\/\/--- ( M )o---->
+ * /|
+ */
 inline auto SetUpSpringMassSystem() {
     auto model = Model();
 
@@ -75,7 +87,7 @@ inline auto SetUpSpringMassSystem() {
             Kokkos::deep_copy(q, state.q);
             EXPECT_EQ(q(0, 0), 0.);  // First node is fixed
             EXPECT_NEAR(
-                q(1, 0), -3.9999200547674469, 1.e-12
+                q(1, 0), -3.9999199193098396, 1.e-12
             );  // Second node should have displacement close to -4.0 after T/2
         }
         // Simulation at time T
@@ -83,7 +95,7 @@ inline auto SetUpSpringMassSystem() {
             Kokkos::deep_copy(q, state.q);
             EXPECT_EQ(q(0, 0), 0.);  // First node is fixed
             EXPECT_NEAR(
-                q(1, 0), -8.0949125285126051e-05, 1.e-12
+                q(1, 0), -8.1226588438437419e-05, 1.e-12
             );  // Second node should have displacement close to 0. after T
         }
     }

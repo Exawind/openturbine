@@ -93,6 +93,10 @@ struct Solver {
      * @param constraint_base_node_freedom_table View containing base node DOFs for constraints
      * @param constraint_target_node_freedom_table View containing target node DOFs for constraints
      * @param constraint_row_range View containing row ranges for each constraint
+     * @param constraint_base_node_col_range View containing col ranges for base node of each
+     * constraint
+     * @param constraint_target_node_col_range View containing col ranges for target node of each
+     * constraint
      */
     Solver(
         const Kokkos::View<size_t*>::const_type& node_IDs,
@@ -103,7 +107,11 @@ struct Solver {
         const Kokkos::View<ConstraintType*>::const_type& constraint_type,
         const Kokkos::View<size_t* [6]>::const_type& constraint_base_node_freedom_table,
         const Kokkos::View<size_t* [6]>::const_type& constraint_target_node_freedom_table,
-        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
+        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range,
+        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type&
+            constraint_base_node_col_range,
+        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type&
+            constraint_target_node_col_range
     )
         : num_system_nodes(node_IDs.extent(0)),
           num_system_dofs(ComputeNumSystemDofs(node_freedom_allocation_table)),
@@ -118,12 +126,12 @@ struct Solver {
           B(CreateBMatrix<CrsMatrixType>(
               num_system_dofs, num_constraint_dofs, constraint_type,
               constraint_base_node_freedom_table, constraint_target_node_freedom_table,
-              constraint_row_range
+              constraint_row_range, constraint_base_node_col_range, constraint_target_node_col_range
           )),
           B_t(CreateBtMatrix<CrsMatrixType>(
               num_system_dofs, num_constraint_dofs, constraint_type,
               constraint_base_node_freedom_table, constraint_target_node_freedom_table,
-              constraint_row_range
+              constraint_row_range, constraint_base_node_col_range, constraint_target_node_col_range
           )),
           static_system_matrix(CreateMatrixSpgemm(K, T, system_spgemm_handle)),
           system_matrix(CreateMatrixSpadd(K, static_system_matrix, system_spadd_handle)),
@@ -148,6 +156,7 @@ struct Solver {
               CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x_mv, b)
           ) {}
 
+    // cppcheck-suppress missingMemberCopy
     Solver(const Solver& other)
         : num_system_nodes(other.num_system_nodes),
           num_system_dofs(other.num_system_dofs),
@@ -175,6 +184,7 @@ struct Solver {
           x_mv(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),
           R("R", num_dofs),
           x("x", num_dofs),
+          convergence_err(other.convergence_err),
           amesos_solver(
               CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x_mv, b)
           ) {}

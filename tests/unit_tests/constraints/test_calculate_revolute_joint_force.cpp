@@ -5,6 +5,21 @@
 
 namespace openturbine::tests {
 
+struct ExecuteCalculateRevoluteJointForce {
+    int i_constraint;
+    Kokkos::View<size_t*>::const_type target_node_index;
+    Kokkos::View<double* [3][3]>::const_type axes;
+    Kokkos::View<double* [7]>::const_type constraint_inputs;
+    Kokkos::View<double* [7]>::const_type node_u;
+    Kokkos::View<double* [6]> residual_terms;
+
+    KOKKOS_FUNCTION
+    void operator()(int) const {
+        CalculateRevoluteJointForce{i_constraint, target_node_index, axes, constraint_inputs,
+                                    node_u,       residual_terms}();
+    }
+};
+
 TEST(CalculateRevoluteJointForceTests, OneConstraint) {
     const auto target_node_index = Kokkos::View<size_t[1]>("target_node_index");
     constexpr auto target_node_index_host_data = std::array<size_t, 1>{1UL};
@@ -30,9 +45,11 @@ TEST(CalculateRevoluteJointForceTests, OneConstraint) {
     Kokkos::deep_copy(constraint_inputs, constraint_inputs_mirror);
 
     const auto node_u = Kokkos::View<double[3][7]>("node_u");
-    constexpr auto node_u_host_data =
-        std::array{0.,  0.,  0.,  0.,  0.,  0.,  0.,  11., 12., 13., 14.,
-                   15., 16., 17., 18., 19., 20., 21., 22., 23., 24.};
+    constexpr auto node_u_host_data = std::array{
+        0.,  0.,  0.,  0.,  0.,  0.,  0.,   // Row 1
+        11., 12., 13., 14., 15., 16., 17.,  // Row 2
+        18., 19., 20., 21., 22., 23., 24.   // Row 3
+    };
     const auto node_u_host =
         Kokkos::View<double[3][7], Kokkos::HostSpace>::const_type(node_u_host_data.data());
     const auto node_u_mirror = Kokkos::create_mirror(node_u);
@@ -43,8 +60,8 @@ TEST(CalculateRevoluteJointForceTests, OneConstraint) {
 
     Kokkos::parallel_for(
         "CalculateRevoluteJointConstraint", 1,
-        CalculateRevoluteJointForce{
-            target_node_index, axes, constraint_inputs, node_u, residual_terms
+        ExecuteCalculateRevoluteJointForce{
+            0, target_node_index, axes, constraint_inputs, node_u, residual_terms
         }
     );
 
