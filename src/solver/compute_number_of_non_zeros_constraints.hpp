@@ -9,7 +9,6 @@ namespace openturbine {
 /// ComputeNumberOfNonZeros_Constraints calculates the total number of nonzero values in the
 /// constraint gradient matrix based on the block layout of the constraints.
 struct ComputeNumberOfNonZeros_Constraints {
-    Kokkos::View<ConstraintType*>::const_type type;
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type base_node_col_range;
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type target_node_col_range;
@@ -23,4 +22,5 @@ struct ComputeNumberOfNonZeros_Constraints {
         update += num_rows * (num_base_cols + num_target_cols);
     }
 };
+
 }  // namespace openturbine

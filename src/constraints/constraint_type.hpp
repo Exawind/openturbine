@@ -53,7 +53,7 @@ constexpr size_t NumColsForConstraint(ConstraintType type) {
         return 12U;
     }
 
-    throw std::runtime_error("Invalid constraint type");
+    return 0U;
 }
 
 /// Returns the number of degrees of freedom prescribed/fixed by the constraint type
@@ -77,7 +77,7 @@ constexpr size_t NumRowsForConstraint(ConstraintType type) {
         return 6U;
     }
 
-    throw std::runtime_error("Invalid constraint type");
+    return 0U;
 }
 
 }  // namespace openturbine
