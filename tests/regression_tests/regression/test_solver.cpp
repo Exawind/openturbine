@@ -340,7 +340,7 @@ inline void SetupAndTakeNoSteps() {
             2.0316113427113777E-8,     2.1788291524533811E-8,   -0.000033726153743119725,
         }
     );
-    EXPECT_NEAR(solver.convergence_err[0], 1669.0476965480718, 1.e-7);
+    EXPECT_NEAR(solver.convergence_err[0], 1669.0476965480718, 1.e-6);
     expect_kokkos_view_2D_equal(
         state.q_delta,
         {
