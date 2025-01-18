@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #include "constraint_type.hpp"
 #include "math/vector_operations.hpp"
 #include "model/node.hpp"

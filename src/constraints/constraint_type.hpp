@@ -1,6 +1,9 @@
 #pragma once
 
+#include <cstdint>
 #include <stdexcept>
+
+#include <Kokkos_Core.hpp>
 
 namespace openturbine {
 
