@@ -8,20 +8,20 @@
 
 #include <gtest/gtest.h>
 
-#include "src/model/model.hpp"
-#include "src/solver/solver.hpp"
-#include "src/state/state.hpp"
-#include "src/step/step.hpp"
-#include "src/types.hpp"
-#include "src/utilities/aerodynamics/aerodyn_inflow.hpp"
-#include "src/utilities/controllers/discon.hpp"
-#include "src/utilities/controllers/turbine_controller.hpp"
-#include "src/vendor/dylib/dylib.hpp"
-#include "tests/regression_tests/regression/iea15_rotor_data.hpp"
-#include "tests/regression_tests/regression/test_utilities.hpp"
+#include "model/model.hpp"
+#include "solver/solver.hpp"
+#include "state/state.hpp"
+#include "step/step.hpp"
+#include "types.hpp"
+#include "utilities/aerodynamics/aerodyn_inflow.hpp"
+#include "utilities/controllers/discon.hpp"
+#include "utilities/controllers/turbine_controller.hpp"
+#include "vendor/dylib/dylib.hpp"
+#include "regression/iea15_rotor_data.hpp"
+#include "regression/test_utilities.hpp"
 
 #ifdef OpenTurbine_ENABLE_VTK
-#include "tests/regression_tests/regression/vtkout.hpp"
+#include "regression/vtkout.hpp"
 #endif
 
 namespace openturbine::tests {
