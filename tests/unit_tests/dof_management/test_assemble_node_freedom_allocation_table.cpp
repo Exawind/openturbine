@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "src/dof_management/assemble_node_freedom_allocation_table.hpp"
+#include "dof_management/assemble_node_freedom_allocation_table.hpp"
 
 namespace openturbine::tests {
 

@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/system/springs/update_node_state.hpp"
+#include "system/springs/update_node_state.hpp"
 
 namespace openturbine::tests {
 

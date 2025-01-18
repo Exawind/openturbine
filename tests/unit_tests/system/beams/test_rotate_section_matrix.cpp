@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/beams/rotate_section_matrix.hpp"
+#include "system/beams/rotate_section_matrix.hpp"
 
 namespace openturbine::tests {
 

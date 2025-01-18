@@ -4,8 +4,8 @@
 #include "test_calculate.hpp"
 #include "test_integrate_matrix.hpp"
 
-#include "src/elements/beams/beams.hpp"
-#include "src/system/beams/integrate_inertia_matrix.hpp"
+#include "elements/beams/beams.hpp"
+#include "system/beams/integrate_inertia_matrix.hpp"
 
 namespace openturbine::tests {
 

@@ -4,14 +4,14 @@
 
 #include "test_utilities.hpp"
 
-#include "src/model/model.hpp"
-#include "src/solver/solver.hpp"
-#include "src/state/state.hpp"
-#include "src/step/predict_next_state.hpp"
-#include "src/step/step.hpp"
-#include "src/step/step_parameters.hpp"
-#include "src/step/update_constraint_variables.hpp"
-#include "src/types.hpp"
+#include "model/model.hpp"
+#include "solver/solver.hpp"
+#include "state/state.hpp"
+#include "step/predict_next_state.hpp"
+#include "step/step.hpp"
+#include "step/step_parameters.hpp"
+#include "step/update_constraint_variables.hpp"
+#include "types.hpp"
 
 namespace openturbine::tests {
 

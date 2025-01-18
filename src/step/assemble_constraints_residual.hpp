@@ -3,10 +3,10 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/constraints/constraints.hpp"
-#include "src/solver/contribute_constraints_system_residual_to_vector.hpp"
-#include "src/solver/copy_constraints_residual_to_vector.hpp"
-#include "src/solver/solver.hpp"
+#include "constraints/constraints.hpp"
+#include "solver/contribute_constraints_system_residual_to_vector.hpp"
+#include "solver/copy_constraints_residual_to_vector.hpp"
+#include "solver/solver.hpp"
 
 namespace openturbine {
 

@@ -4,8 +4,8 @@
 
 #include "freedom_signature.hpp"
 
-#include "src/constraints/constraints.hpp"
-#include "src/state/state.hpp"
+#include "constraints/constraints.hpp"
+#include "state/state.hpp"
 
 namespace openturbine {
 

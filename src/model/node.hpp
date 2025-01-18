@@ -1,8 +1,8 @@
 #pragma once
 
-#include "src/dof_management/freedom_signature.hpp"
-#include "src/math/quaternion_operations.hpp"
-#include "src/types.hpp"
+#include "dof_management/freedom_signature.hpp"
+#include "math/quaternion_operations.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 

@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "src/types.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 

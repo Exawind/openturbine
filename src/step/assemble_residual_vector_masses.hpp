@@ -3,7 +3,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/elements/masses/masses.hpp"
+#include "elements/masses/masses.hpp"
 
 namespace openturbine {
 

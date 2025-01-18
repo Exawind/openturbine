@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "src/math/quaternion_operations.hpp"
+#include "math/quaternion_operations.hpp"
 
 namespace openturbine {
 

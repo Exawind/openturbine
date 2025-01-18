@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/solver/compute_t_num_non_zero.hpp"
+#include "solver/compute_t_num_non_zero.hpp"
 
 namespace openturbine::tests {
 TEST(ComputeTNumNonZero, OneNode) {

@@ -3,7 +3,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/elements/springs/springs.hpp"
+#include "elements/springs/springs.hpp"
 
 namespace openturbine {
 

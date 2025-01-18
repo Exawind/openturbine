@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/solver/populate_sparse_row_ptrs_col_inds_transpose.hpp"
+#include "solver/populate_sparse_row_ptrs_col_inds_transpose.hpp"
 
 namespace openturbine::tests {
 

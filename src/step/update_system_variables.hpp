@@ -7,8 +7,8 @@
 #include "update_system_variables_masses.hpp"
 #include "update_system_variables_springs.hpp"
 
-#include "src/elements/elements.hpp"
-#include "src/state/state.hpp"
+#include "elements/elements.hpp"
+#include "state/state.hpp"
 
 namespace openturbine {
 

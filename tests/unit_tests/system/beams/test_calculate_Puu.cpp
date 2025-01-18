@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/beams/calculate_Puu.hpp"
+#include "system/beams/calculate_Puu.hpp"
 
 namespace openturbine::tests {
 

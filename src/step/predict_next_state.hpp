@@ -5,10 +5,10 @@
 
 #include "step_parameters.hpp"
 
-#include "src/solver/solver.hpp"
-#include "src/state/calculate_displacement.hpp"
-#include "src/state/calculate_next_state.hpp"
-#include "src/state/state.hpp"
+#include "solver/solver.hpp"
+#include "state/calculate_displacement.hpp"
+#include "state/calculate_next_state.hpp"
+#include "state/state.hpp"
 
 namespace openturbine {
 

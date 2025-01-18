@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/beams/calculate_Ouu.hpp"
+#include "system/beams/calculate_Ouu.hpp"
 
 namespace openturbine::tests {
 

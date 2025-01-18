@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "src/elements/elements.hpp"
-#include "src/step/step.hpp"
+#include "elements/elements.hpp"
+#include "step/step.hpp"
 
 namespace openturbine::tests {
 

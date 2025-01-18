@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/state/update_algorithmic_acceleration.hpp"
+#include "state/update_algorithmic_acceleration.hpp"
 
 namespace openturbine::tests {
 TEST(UpdateAlgorithmicAcceleration, OneNode) {

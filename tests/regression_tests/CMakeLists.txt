@@ -42,6 +42,8 @@ if(OpenTurbine_BUILD_OPENFAST_ADI)
   target_compile_definitions(openturbine_regression_tests PRIVATE OpenTurbine_BUILD_OPENFAST_ADI)
 endif()
 
+target_include_directories(openturbine_regression_tests PRIVATE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/tests/regression_tests>)
+
 # Include GoogleTest module and discover tests
 include(GoogleTest)
 gtest_discover_tests(openturbine_regression_tests PROPERTIES DISCOVERY_TIMEOUT 60000)

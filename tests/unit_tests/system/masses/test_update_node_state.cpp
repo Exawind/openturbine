@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/masses/update_node_state.hpp"
+#include "system/masses/update_node_state.hpp"
 
 namespace openturbine::tests {
 

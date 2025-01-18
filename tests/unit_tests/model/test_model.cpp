@@ -2,8 +2,8 @@
 
 #include <gtest/gtest.h>
 
-#include "src/elements/beams/beam_element.hpp"
-#include "src/model/model.hpp"
+#include "elements/beams/beam_element.hpp"
+#include "model/model.hpp"
 
 namespace openturbine::tests {
 

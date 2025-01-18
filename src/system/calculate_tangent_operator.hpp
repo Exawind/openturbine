@@ -4,8 +4,8 @@
 #include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "src/math/vector_operations.hpp"
-#include "src/types.hpp"
+#include "math/vector_operations.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 

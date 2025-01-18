@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/beams/calculate_strain.hpp"
+#include "system/beams/calculate_strain.hpp"
 
 namespace openturbine::tests {
 

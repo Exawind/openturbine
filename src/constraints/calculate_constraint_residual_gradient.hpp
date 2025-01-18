@@ -9,8 +9,8 @@
 #include "calculate_rotation_control_constraint.hpp"
 #include "constraints.hpp"
 
-#include "src/math/quaternion_operations.hpp"
-#include "src/math/vector_operations.hpp"
+#include "math/quaternion_operations.hpp"
+#include "math/vector_operations.hpp"
 
 namespace openturbine {
 

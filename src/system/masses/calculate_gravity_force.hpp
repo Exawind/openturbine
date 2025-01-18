@@ -3,7 +3,7 @@
 #include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "src/math/vector_operations.hpp"
+#include "math/vector_operations.hpp"
 
 namespace openturbine::masses {
 

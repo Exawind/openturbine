@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/state/calculate_next_state.hpp"
+#include "state/calculate_next_state.hpp"
 
 namespace openturbine::tests {
 

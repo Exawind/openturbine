@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/solver/fill_unshifted_row_ptrs.hpp"
+#include "solver/fill_unshifted_row_ptrs.hpp"
 
 namespace openturbine::tests {
 

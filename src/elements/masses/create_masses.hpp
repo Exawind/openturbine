@@ -3,7 +3,7 @@
 #include "masses.hpp"
 #include "masses_input.hpp"
 
-#include "src/elements/beams/calculate_QP_position.hpp"
+#include "elements/beams/calculate_QP_position.hpp"
 
 namespace openturbine {
 

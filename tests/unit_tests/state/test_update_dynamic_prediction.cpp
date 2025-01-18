@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/state/update_dynamic_prediction.hpp"
+#include "state/update_dynamic_prediction.hpp"
 
 namespace openturbine::tests {
 

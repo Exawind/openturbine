@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <yaml-cpp/yaml.h>
 
-#include "src/utilities/scripts/windio_mapped_structs.hpp"
+#include "utilities/scripts/windio_mapped_structs.hpp"
 
 namespace openturbine::tests {
 

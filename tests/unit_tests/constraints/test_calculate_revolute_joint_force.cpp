@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/constraints/calculate_revolute_joint_force.hpp"
+#include "constraints/calculate_revolute_joint_force.hpp"
 
 namespace openturbine::tests {
 

@@ -2,14 +2,14 @@
 
 #include "test_utilities.hpp"
 
-#include "src/elements/elements.hpp"
-#include "src/elements/masses/create_masses.hpp"
-#include "src/model/model.hpp"
-#include "src/state/set_node_external_loads.hpp"
-#include "src/state/state.hpp"
-#include "src/step/step.hpp"
-#include "src/step/update_system_variables.hpp"
-#include "src/types.hpp"
+#include "elements/elements.hpp"
+#include "elements/masses/create_masses.hpp"
+#include "model/model.hpp"
+#include "state/set_node_external_loads.hpp"
+#include "state/state.hpp"
+#include "step/step.hpp"
+#include "step/update_system_variables.hpp"
+#include "types.hpp"
 
 namespace openturbine::tests {
 

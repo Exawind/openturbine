@@ -2,8 +2,8 @@
 
 #include "constraint_type.hpp"
 
-#include "src/math/vector_operations.hpp"
-#include "src/model/node.hpp"
+#include "math/vector_operations.hpp"
+#include "model/node.hpp"
 
 namespace openturbine {
 

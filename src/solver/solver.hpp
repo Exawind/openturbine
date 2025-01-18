@@ -22,7 +22,7 @@
 #include "create_transpose_matrix_full.hpp"
 #include "fill_unshifted_row_ptrs.hpp"
 
-#include "src/constraints/constraint_type.hpp"
+#include "constraints/constraint_type.hpp"
 
 namespace openturbine {
 

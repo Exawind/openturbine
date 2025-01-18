@@ -11,9 +11,9 @@
 #include "vtkout.hpp"
 #endif
 
-#include "src/model/model.hpp"
-#include "src/step/step.hpp"
-#include "src/types.hpp"
+#include "model/model.hpp"
+#include "step/step.hpp"
+#include "types.hpp"
 
 using Array_7 = std::array<double, 7>;
 

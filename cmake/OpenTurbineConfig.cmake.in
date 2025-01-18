@@ -1,5 +1,5 @@
 @PACKAGE_INIT@
 
-INCLUDE("${OpenTurbine_CMAKE_DIR}/OpenTurbineTargets.cmake")
+INCLUDE("${CMAKE_CURRENT_LIST_DIR}/OpenTurbineTargets.cmake")
 
 check_required_components(openturbine_library)

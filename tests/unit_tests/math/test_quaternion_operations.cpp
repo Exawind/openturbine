@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/math/quaternion_operations.hpp"
+#include "math/quaternion_operations.hpp"
 
 namespace openturbine::tests {
 

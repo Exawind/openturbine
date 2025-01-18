@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/masses/rotate_section_matrix.hpp"
+#include "system/masses/rotate_section_matrix.hpp"
 
 namespace openturbine::tests {
 

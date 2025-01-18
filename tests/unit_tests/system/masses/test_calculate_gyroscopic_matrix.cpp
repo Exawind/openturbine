@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/masses/calculate_gyroscopic_matrix.hpp"
+#include "system/masses/calculate_gyroscopic_matrix.hpp"
 
 namespace openturbine::tests {
 

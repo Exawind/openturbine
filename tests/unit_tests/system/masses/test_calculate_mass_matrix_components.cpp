@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/masses/calculate_mass_matrix_components.hpp"
+#include "system/masses/calculate_mass_matrix_components.hpp"
 
 namespace openturbine::tests {
 

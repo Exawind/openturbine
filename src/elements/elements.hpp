@@ -2,9 +2,9 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "src/elements/beams/beams.hpp"
-#include "src/elements/masses/masses.hpp"
-#include "src/elements/springs/springs.hpp"
+#include "elements/beams/beams.hpp"
+#include "elements/masses/masses.hpp"
+#include "elements/springs/springs.hpp"
 
 namespace openturbine {
 

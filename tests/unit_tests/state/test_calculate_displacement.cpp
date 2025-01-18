@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/state/calculate_displacement.hpp"
+#include "state/calculate_displacement.hpp"
 
 namespace openturbine::tests {
 TEST(CalculateDisplacement, OneNode) {

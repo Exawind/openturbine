@@ -4,9 +4,9 @@
 
 #include "constraints.hpp"
 
-#include "src/math/quaternion_operations.hpp"
-#include "src/math/vector_operations.hpp"
-#include "src/types.hpp"
+#include "math/quaternion_operations.hpp"
+#include "math/vector_operations.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 

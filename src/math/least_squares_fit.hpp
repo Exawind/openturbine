@@ -7,7 +7,7 @@
 #include <KokkosLapack_gesv.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "src/elements/beams/interpolation.hpp"
+#include "elements/beams/interpolation.hpp"
 
 namespace openturbine {
 

@@ -2,7 +2,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/state/update_static_prediction.hpp"
+#include "state/update_static_prediction.hpp"
 
 namespace openturbine::tests {
 TEST(UpdateStaticPrediction, TwoNodes) {

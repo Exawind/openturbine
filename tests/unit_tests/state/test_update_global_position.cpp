@@ -2,7 +2,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/state/update_global_position.hpp"
+#include "state/update_global_position.hpp"
 
 namespace openturbine::tests {
 TEST(UpdateGlobalPosition, OneNode) {

@@ -1,4 +1,4 @@
-#include "src/utilities/controllers/turbine_controller.hpp"
+#include "turbine_controller.hpp"
 
 #include <functional>
 #include <iostream>

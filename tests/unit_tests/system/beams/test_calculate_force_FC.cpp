@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/beams/calculate_force_FC.hpp"
+#include "system/beams/calculate_force_FC.hpp"
 
 namespace openturbine::tests {
 

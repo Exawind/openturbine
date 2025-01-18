@@ -2,8 +2,8 @@
 
 #include "test_utilities.hpp"
 
-#include "src/model/model.hpp"
-#include "src/step/step.hpp"
+#include "model/model.hpp"
+#include "step/step.hpp"
 
 namespace openturbine::tests {
 

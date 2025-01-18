@@ -3,7 +3,7 @@
 #include <array>
 #include <vector>
 
-#include "src/interfaces/cfd/mooring_line_input.hpp"
+#include "interfaces/cfd/mooring_line_input.hpp"
 
 namespace openturbine::cfd {
 

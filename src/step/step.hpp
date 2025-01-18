@@ -20,13 +20,13 @@
 #include "update_system_variables.hpp"
 #include "update_tangent_operator.hpp"
 
-#include "src/constraints/calculate_constraint_output.hpp"
-#include "src/constraints/constraints.hpp"
-#include "src/elements/elements.hpp"
-#include "src/solver/solver.hpp"
-#include "src/state/state.hpp"
-#include "src/state/update_algorithmic_acceleration.hpp"
-#include "src/state/update_global_position.hpp"
+#include "constraints/calculate_constraint_output.hpp"
+#include "constraints/constraints.hpp"
+#include "elements/elements.hpp"
+#include "solver/solver.hpp"
+#include "state/state.hpp"
+#include "state/update_algorithmic_acceleration.hpp"
+#include "state/update_global_position.hpp"
 
 namespace openturbine {
 

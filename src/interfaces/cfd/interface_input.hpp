@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "src/interfaces/cfd/turbine_input.hpp"
+#include "interfaces/cfd/turbine_input.hpp"
 
 namespace openturbine::cfd {
 

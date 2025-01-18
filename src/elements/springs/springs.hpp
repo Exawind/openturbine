@@ -2,8 +2,8 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "src/dof_management/freedom_signature.hpp"
-#include "src/types.hpp"
+#include "dof_management/freedom_signature.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 

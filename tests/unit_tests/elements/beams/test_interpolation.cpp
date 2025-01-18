@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "src/elements/beams/interpolation.hpp"
+#include "elements/beams/interpolation.hpp"
 
 namespace openturbine::tests {
 

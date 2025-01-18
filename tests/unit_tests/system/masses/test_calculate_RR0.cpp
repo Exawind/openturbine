@@ -3,7 +3,7 @@
 
 #include "test_calculate.hpp"
 
-#include "src/system/masses/calculate_RR0.hpp"
+#include "system/masses/calculate_RR0.hpp"
 
 namespace openturbine::tests {
 

@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/constraints/calculate_rotation_control_constraint.hpp"
+#include "constraints/calculate_rotation_control_constraint.hpp"
 
 namespace openturbine::tests {
 
