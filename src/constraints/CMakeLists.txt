@@ -1,2 +1,19 @@
 target_sources(openturbine_library PRIVATE)
-set(openturbine_public_headers "${openturbine_public_headers}" "constraints/calculate_constraint_force.hpp")
+
+install(FILES
+        calculate_constraint_force.hpp
+        calculate_constraint_output.hpp
+        calculate_constraint_residual_gradient.hpp
+        calculate_fixed_bc_constraint.hpp
+        calculate_prescribed_bc_constraint.hpp
+        calculate_revolute_joint_constraint.hpp
+        calculate_revolute_joint_force.hpp
+        calculate_revolute_joint_output.hpp
+        calculate_rigid_joint_constraint.hpp
+        calculate_rotation_control_constraint.hpp
+        constraint.hpp
+        constraints.hpp
+        constraint_type.hpp
+        update_lambda_prediction.hpp
+        DESTINATION include/OpenTurbine/constraints
+)

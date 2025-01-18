@@ -41,6 +41,9 @@ if(TARGET MPI::MPI_CXX)
   target_link_system_libraries(openturbine_library PUBLIC
     MPI::MPI_CXX
   )
+  target_link_system_libraries(openturbine_library INTERFACE
+    MPI::MPI_CXX
+  )
 endif()
 
 # Include shared libraries for the OpenTurbine library
@@ -56,14 +59,16 @@ target_include_directories(openturbine_library
   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>   # Include source directory during build
 )
 
-target_include_directories(openturbine_library INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
+target_include_directories(openturbine_library INTERFACE $<INSTALL_INTERFACE:include/OpenTurbine>)
 
 # Set the C++ standard for the target
 target_compile_features(openturbine_library PUBLIC cxx_std_17)
 
 # Add subdirectories for additional components of the library
 add_subdirectory(constraints)
+add_subdirectory(dof_management)
 add_subdirectory(elements)
+add_subdirectory(interfaces)
 add_subdirectory(math)
 add_subdirectory(model)
 add_subdirectory(solver)
@@ -73,20 +78,22 @@ add_subdirectory(system)
 add_subdirectory(utilities)
 add_subdirectory(vendor)
 
-add_subdirectory(interfaces/cfd)
-
-set(openturbine_public_headers "interfaces/cfd/interface.hpp")
-set_target_properties(openturbine_library PROPERTIES PUBLIC_HEADER "${openturbine_public_headers}")
-
 install(
   TARGETS openturbine_library openturbine_options openturbine_warnings
   EXPORT OpenTurbineTargets
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} 
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${PACKAGE_NAME}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
 install(EXPORT OpenTurbineTargets
         FILE OpenTurbineTargets.cmake
         NAMESPACE OpenTurbine::
-        DESTINATION lib/cmake/OpenTurbine)
+        DESTINATION lib/cmake/OpenTurbine
+)
+
+install(FILES
+        types.hpp
+        DESTINATION include/OpenTurbine/
+)

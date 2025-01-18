@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Project declaration
 project(
   OpenTurbine
-  VERSION 0.0.0
+  VERSION 0.1.0
   DESCRIPTION "A flexible multibody structural dynamics code for wind turbines"
   LANGUAGES CXX
 )

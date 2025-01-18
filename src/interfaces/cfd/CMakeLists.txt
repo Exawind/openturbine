@@ -2,3 +2,16 @@ target_sources(openturbine_library
   PRIVATE
   interface.cpp
 )
+
+install(FILES
+        floating_platform.hpp
+        floating_platform_input.hpp
+        interface.hpp
+        interface_input.hpp
+        mooring_line.hpp
+        mooring_line_input.hpp
+        node_data.hpp
+        turbine.hpp
+        turbine_input.hpp
+        DESTINATION include/OpenTurbine/interfaces/cfd/
+)

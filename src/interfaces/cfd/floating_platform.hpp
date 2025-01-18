@@ -1,6 +1,7 @@
 #pragma once
 
-#include "vector"
+#include <cstddef>
+#include <vector>
 
 #include "interfaces/cfd/mooring_line.hpp"
 #include "interfaces/cfd/node_data.hpp"

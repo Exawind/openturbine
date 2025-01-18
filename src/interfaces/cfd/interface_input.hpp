@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cstddef>
 
 #include "interfaces/cfd/turbine_input.hpp"
 
