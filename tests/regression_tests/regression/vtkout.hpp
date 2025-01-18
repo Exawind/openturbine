@@ -13,11 +13,10 @@
 #include <vtkXMLPolyDataWriter.h>
 #include <vtkXMLUnstructuredGridWriter.h>
 
-#include "test_utilities.hpp"
-
 #include "elements/beams/beams.hpp"
 #include "elements/beams/calculate_QP_deformation.hpp"
 #include "math/quaternion_operations.hpp"
+#include "test_utilities.hpp"
 
 namespace openturbine::tests {
 

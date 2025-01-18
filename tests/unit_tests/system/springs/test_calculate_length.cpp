@@ -1,8 +1,8 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "system/springs/calculate_length.hpp"
 #include "system/beams/test_calculate.hpp"
+#include "system/springs/calculate_length.hpp"
 
 void TestCalclateLengthTests_ThreeElements() {
     const auto r = Kokkos::View<double[3][3]>("r");

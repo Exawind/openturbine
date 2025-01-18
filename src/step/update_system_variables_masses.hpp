@@ -5,11 +5,10 @@
 #include "assemble_inertia_matrix_masses.hpp"
 #include "assemble_residual_vector_masses.hpp"
 #include "assemble_stiffness_matrix_masses.hpp"
-#include "step_parameters.hpp"
-
 #include "elements/masses/masses.hpp"
 #include "math/vector_operations.hpp"
 #include "state/state.hpp"
+#include "step_parameters.hpp"
 #include "system/masses/calculate_QP_position.hpp"
 #include "system/masses/calculate_RR0.hpp"
 #include "system/masses/calculate_gravity_force.hpp"

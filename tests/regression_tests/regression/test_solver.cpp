@@ -2,8 +2,6 @@
 
 #include <gtest/gtest.h>
 
-#include "test_utilities.hpp"
-
 #include "model/model.hpp"
 #include "solver/solver.hpp"
 #include "state/state.hpp"
@@ -11,6 +9,7 @@
 #include "step/step.hpp"
 #include "step/step_parameters.hpp"
 #include "step/update_constraint_variables.hpp"
+#include "test_utilities.hpp"
 #include "types.hpp"
 
 namespace openturbine::tests {

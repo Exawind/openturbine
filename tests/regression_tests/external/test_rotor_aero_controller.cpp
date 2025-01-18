@@ -9,6 +9,8 @@
 #include <gtest/gtest.h>
 
 #include "model/model.hpp"
+#include "regression/iea15_rotor_data.hpp"
+#include "regression/test_utilities.hpp"
 #include "solver/solver.hpp"
 #include "state/state.hpp"
 #include "step/step.hpp"
@@ -17,8 +19,6 @@
 #include "utilities/controllers/discon.hpp"
 #include "utilities/controllers/turbine_controller.hpp"
 #include "vendor/dylib/dylib.hpp"
-#include "regression/iea15_rotor_data.hpp"
-#include "regression/test_utilities.hpp"
 
 #ifdef OpenTurbine_ENABLE_VTK
 #include "regression/vtkout.hpp"

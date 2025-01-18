@@ -5,11 +5,10 @@
 #include "assemble_inertia_matrix_beams.hpp"
 #include "assemble_residual_vector_beams.hpp"
 #include "assemble_stiffness_matrix_beams.hpp"
-#include "step_parameters.hpp"
-
 #include "elements/beams/beams.hpp"
 #include "elements/beams/interpolate_to_quadrature_points.hpp"
 #include "state/state.hpp"
+#include "step_parameters.hpp"
 #include "system/beams/calculate_quadrature_point_values.hpp"
 #include "system/beams/update_node_state.hpp"
 

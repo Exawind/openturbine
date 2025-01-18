@@ -7,7 +7,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "constraint.hpp"
-
 #include "dof_management/freedom_signature.hpp"
 
 namespace openturbine {

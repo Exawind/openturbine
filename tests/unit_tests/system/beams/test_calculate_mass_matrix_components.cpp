@@ -1,9 +1,8 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "test_calculate.hpp"
-
 #include "system/beams/calculate_mass_matrix_components.hpp"
+#include "test_calculate.hpp"
 
 namespace openturbine::tests {
 

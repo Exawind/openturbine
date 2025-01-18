@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "interfaces/cfd/interface.hpp"
-#include "viz/vtk_lines.hpp"
 #include "regression/test_utilities.hpp"
+#include "viz/vtk_lines.hpp"
 
 namespace openturbine::tests {
 

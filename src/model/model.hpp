@@ -3,11 +3,9 @@
 #include <functional>
 #include <tuple>
 
-#include "copy_nodes_to_state.hpp"
-#include "node.hpp"
-
 #include "constraints/constraint.hpp"
 #include "constraints/constraints.hpp"
+#include "copy_nodes_to_state.hpp"
 #include "dof_management/assemble_node_freedom_allocation_table.hpp"
 #include "dof_management/compute_node_freedom_map_table.hpp"
 #include "dof_management/create_constraint_freedom_table.hpp"
@@ -19,6 +17,7 @@
 #include "elements/masses/masses_input.hpp"
 #include "elements/springs/create_springs.hpp"
 #include "elements/springs/springs_input.hpp"
+#include "node.hpp"
 #include "solver/solver.hpp"
 #include "state/state.hpp"
 #include "step/step_parameters.hpp"

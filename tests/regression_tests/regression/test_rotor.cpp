@@ -6,12 +6,11 @@
 #include <gtest/gtest.h>
 
 #include "iea15_rotor_data.hpp"
-#include "test_utilities.hpp"
-
 #include "model/model.hpp"
 #include "solver/solver.hpp"
 #include "state/state.hpp"
 #include "step/step.hpp"
+#include "test_utilities.hpp"
 #include "types.hpp"
 #include "utilities/controllers/discon.hpp"
 #include "utilities/controllers/turbine_controller.hpp"

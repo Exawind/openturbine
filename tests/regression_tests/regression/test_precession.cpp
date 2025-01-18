@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 
-#include "test_utilities.hpp"
-
 #include "dof_management/assemble_node_freedom_allocation_table.hpp"
 #include "dof_management/compute_node_freedom_map_table.hpp"
 #include "dof_management/create_constraint_freedom_table.hpp"
@@ -16,6 +14,7 @@
 #include "state/state.hpp"
 #include "step/step.hpp"
 #include "step/update_system_variables.hpp"
+#include "test_utilities.hpp"
 #include "types.hpp"
 
 namespace openturbine::tests {

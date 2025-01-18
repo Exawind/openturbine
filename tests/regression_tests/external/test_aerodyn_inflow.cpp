@@ -1,8 +1,8 @@
 
 #include <gtest/gtest.h>
 
-#include "utilities/aerodynamics/aerodyn_inflow.hpp"
 #include "regression/test_utilities.hpp"
+#include "utilities/aerodynamics/aerodyn_inflow.hpp"
 
 namespace openturbine::tests {
 

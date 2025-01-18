@@ -8,7 +8,6 @@
 #include "calculate_rigid_joint_constraint.hpp"
 #include "calculate_rotation_control_constraint.hpp"
 #include "constraints.hpp"
-
 #include "math/quaternion_operations.hpp"
 #include "math/vector_operations.hpp"
 

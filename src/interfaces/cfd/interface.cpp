@@ -2,16 +2,16 @@
 
 #include "floating_platform.hpp"
 #include "floating_platform_input.hpp"
+#include "model/model.hpp"
 #include "mooring_line_input.hpp"
 #include "node_data.hpp"
-#include "turbine.hpp"
-#include "turbine_input.hpp"
-#include "model/model.hpp"
 #include "state/clone_state.hpp"
 #include "state/copy_state_data.hpp"
 #include "state/set_node_external_loads.hpp"
 #include "state/state.hpp"
 #include "step/step.hpp"
+#include "turbine.hpp"
+#include "turbine_input.hpp"
 
 namespace openturbine::cfd {
 

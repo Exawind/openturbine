@@ -3,7 +3,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "constraints.hpp"
-
 #include "math/matrix_operations.hpp"
 #include "math/quaternion_operations.hpp"
 #include "math/vector_operations.hpp"

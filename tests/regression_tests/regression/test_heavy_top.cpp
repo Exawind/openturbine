@@ -1,9 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "test_utilities.hpp"
-
 #include "model/model.hpp"
 #include "step/step.hpp"
+#include "test_utilities.hpp"
 
 namespace openturbine::tests {
 

@@ -1,8 +1,8 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "system/springs/calculate_force_vectors.hpp"
 #include "system/beams/test_calculate.hpp"
+#include "system/springs/calculate_force_vectors.hpp"
 
 namespace {
 

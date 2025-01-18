@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "node.hpp"
-
 #include "state/state.hpp"
 #include "state/update_global_position.hpp"
 

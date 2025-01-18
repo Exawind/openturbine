@@ -3,12 +3,11 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
+#include "elements/elements.hpp"
+#include "state/state.hpp"
 #include "update_system_variables_beams.hpp"
 #include "update_system_variables_masses.hpp"
 #include "update_system_variables_springs.hpp"
-
-#include "elements/elements.hpp"
-#include "state/state.hpp"
 
 namespace openturbine {
 

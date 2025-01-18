@@ -4,10 +4,9 @@
 
 #include "assemble_residual_vector_springs.hpp"
 #include "assemble_stiffness_matrix_springs.hpp"
-#include "step_parameters.hpp"
-
 #include "elements/springs/springs.hpp"
 #include "state/state.hpp"
+#include "step_parameters.hpp"
 #include "system/springs/calculate_distance_components.hpp"
 #include "system/springs/calculate_force_coefficients.hpp"
 #include "system/springs/calculate_force_vectors.hpp"

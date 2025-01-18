@@ -3,10 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "step_parameters.hpp"
-
 #include "solver/condition_system.hpp"
 #include "solver/solver.hpp"
+#include "step_parameters.hpp"
 
 namespace openturbine {
 

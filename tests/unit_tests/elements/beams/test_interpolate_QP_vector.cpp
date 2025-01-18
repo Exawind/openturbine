@@ -1,9 +1,8 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "test_interpolate_QP.hpp"
-
 #include "elements/beams/interpolate_QP_vector.hpp"
+#include "test_interpolate_QP.hpp"
 
 namespace openturbine::tests {
 
