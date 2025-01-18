@@ -6,9 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "src/math/quaternion_operations.hpp"
-#include "src/types.hpp"
-#include "src/vendor/dylib/dylib.hpp"
+#include "math/quaternion_operations.hpp"
+#include "types.hpp"
+#include "vendor/dylib/dylib.hpp"
 
 namespace openturbine::util {
 

@@ -15,9 +15,9 @@
 
 #include "test_utilities.hpp"
 
-#include "src/elements/beams/beams.hpp"
-#include "src/elements/beams/calculate_QP_deformation.hpp"
-#include "src/math/quaternion_operations.hpp"
+#include "elements/beams/beams.hpp"
+#include "elements/beams/calculate_QP_deformation.hpp"
+#include "math/quaternion_operations.hpp"
 
 namespace openturbine::tests {
 
