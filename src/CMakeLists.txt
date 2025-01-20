@@ -29,19 +29,9 @@ target_link_system_libraries(openturbine_library PUBLIC
   ${FS_LIB}
 )
 
-target_link_system_libraries(openturbine_library INTERFACE
-  KokkosKernels::kokkoskernels
-  Amesos2::amesos2
-  ${YAML_CPP_TARGET}
-  ${FS_LIB}
-)
-
 # Link MPI if it is defined by TPLs
 if(TARGET MPI::MPI_CXX)
   target_link_system_libraries(openturbine_library PUBLIC
-    MPI::MPI_CXX
-  )
-  target_link_system_libraries(openturbine_library INTERFACE
     MPI::MPI_CXX
   )
 endif()
@@ -56,10 +46,9 @@ add_shared_library(DISCON_ROTOR_TEST_CONTROLLER)
 # Set include directories for the library
 target_include_directories(openturbine_library
   PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>   # Include source directory during build
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
+  $<INSTALL_INTERFACE:include/OpenTurbine>
 )
-
-target_include_directories(openturbine_library INTERFACE $<INSTALL_INTERFACE:include/OpenTurbine>)
 
 # Set the C++ standard for the target
 target_compile_features(openturbine_library PUBLIC cxx_std_17)
