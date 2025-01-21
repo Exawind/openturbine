@@ -3,11 +3,11 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/elements/elements.hpp"
-#include "src/solver/contribute_beams_to_sparse_matrix.hpp"
-#include "src/solver/contribute_masses_to_sparse_matrix.hpp"
-#include "src/solver/contribute_springs_to_sparse_matrix.hpp"
-#include "src/solver/solver.hpp"
+#include "elements/elements.hpp"
+#include "solver/contribute_beams_to_sparse_matrix.hpp"
+#include "solver/contribute_masses_to_sparse_matrix.hpp"
+#include "solver/contribute_springs_to_sparse_matrix.hpp"
+#include "solver/solver.hpp"
 
 namespace openturbine {
 

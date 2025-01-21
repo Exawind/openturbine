@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "src/elements/springs/springs_input.hpp"
-#include "src/model/model.hpp"
+#include "elements/springs/springs_input.hpp"
+#include "model/model.hpp"
 
 namespace openturbine::tests {
 

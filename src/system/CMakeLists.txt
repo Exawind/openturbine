@@ -1,5 +1,10 @@
 target_sources(openturbine_library PRIVATE)
 
-add_subdirectory(springs)
-add_subdirectory(masses)
+install(FILES
+        calculate_tangent_operator.hpp
+        DESTINATION include/OpenTurbine/system/
+)
+
 add_subdirectory(beams)
+add_subdirectory(masses)
+add_subdirectory(springs)

@@ -1,8 +1,8 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/system/springs/calculate_force_coefficients.hpp"
-#include "tests/unit_tests/system/beams/test_calculate.hpp"
+#include "system/beams/test_calculate.hpp"
+#include "system/springs/calculate_force_coefficients.hpp"
 
 namespace {
 

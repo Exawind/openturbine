@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "src/dof_management/freedom_signature.hpp"
+#include "dof_management/freedom_signature.hpp"
 
 namespace openturbine::tests {
 

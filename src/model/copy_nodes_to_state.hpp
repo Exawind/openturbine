@@ -4,9 +4,8 @@
 #include <vector>
 
 #include "node.hpp"
-
-#include "src/state/state.hpp"
-#include "src/state/update_global_position.hpp"
+#include "state/state.hpp"
+#include "state/update_global_position.hpp"
 
 namespace openturbine {
 

@@ -6,16 +6,15 @@
 #include <gtest/gtest.h>
 
 #include "iea15_rotor_data.hpp"
+#include "model/model.hpp"
+#include "solver/solver.hpp"
+#include "state/state.hpp"
+#include "step/step.hpp"
 #include "test_utilities.hpp"
-
-#include "src/model/model.hpp"
-#include "src/solver/solver.hpp"
-#include "src/state/state.hpp"
-#include "src/step/step.hpp"
-#include "src/types.hpp"
-#include "src/utilities/controllers/discon.hpp"
-#include "src/utilities/controllers/turbine_controller.hpp"
-#include "src/vendor/dylib/dylib.hpp"
+#include "types.hpp"
+#include "utilities/controllers/discon.hpp"
+#include "utilities/controllers/turbine_controller.hpp"
+#include "vendor/dylib/dylib.hpp"
 
 #ifdef OpenTurbine_ENABLE_VTK
 #include "vtkout.hpp"

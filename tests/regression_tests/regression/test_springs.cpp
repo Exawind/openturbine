@@ -1,11 +1,10 @@
 #include <gtest/gtest.h>
 
+#include "elements/springs/create_springs.hpp"
+#include "elements/springs/springs.hpp"
+#include "model/model.hpp"
+#include "step/update_system_variables_springs.hpp"
 #include "test_utilities.hpp"
-
-#include "src/elements/springs/create_springs.hpp"
-#include "src/elements/springs/springs.hpp"
-#include "src/model/model.hpp"
-#include "src/step/update_system_variables_springs.hpp"
 
 namespace openturbine::tests {
 

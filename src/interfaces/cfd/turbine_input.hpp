@@ -1,6 +1,6 @@
 #pragma once
 
-#include "src/interfaces/cfd/floating_platform_input.hpp"
+#include "interfaces/cfd/floating_platform_input.hpp"
 
 namespace openturbine::cfd {
 

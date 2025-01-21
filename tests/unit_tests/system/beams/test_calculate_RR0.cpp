@@ -1,9 +1,8 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
+#include "system/beams/calculate_RR0.hpp"
 #include "test_calculate.hpp"
-
-#include "src/system/beams/calculate_RR0.hpp"
 
 namespace openturbine::tests {
 

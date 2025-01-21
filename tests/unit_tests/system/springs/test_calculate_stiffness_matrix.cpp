@@ -1,8 +1,8 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/system/springs/calculate_stiffness_matrix.hpp"
-#include "tests/unit_tests/system/beams/test_calculate.hpp"
+#include "system/beams/test_calculate.hpp"
+#include "system/springs/calculate_stiffness_matrix.hpp"
 
 void TestCalculateStiffnessMatrixTests_OneElement() {
     const auto c1 = Kokkos::View<double[1]>("c1");

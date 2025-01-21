@@ -4,16 +4,15 @@
 
 #include "assemble_residual_vector_springs.hpp"
 #include "assemble_stiffness_matrix_springs.hpp"
+#include "elements/springs/springs.hpp"
+#include "state/state.hpp"
 #include "step_parameters.hpp"
-
-#include "src/elements/springs/springs.hpp"
-#include "src/state/state.hpp"
-#include "src/system/springs/calculate_distance_components.hpp"
-#include "src/system/springs/calculate_force_coefficients.hpp"
-#include "src/system/springs/calculate_force_vectors.hpp"
-#include "src/system/springs/calculate_length.hpp"
-#include "src/system/springs/calculate_stiffness_matrix.hpp"
-#include "src/system/springs/update_node_state.hpp"
+#include "system/springs/calculate_distance_components.hpp"
+#include "system/springs/calculate_force_coefficients.hpp"
+#include "system/springs/calculate_force_vectors.hpp"
+#include "system/springs/calculate_length.hpp"
+#include "system/springs/calculate_stiffness_matrix.hpp"
+#include "system/springs/update_node_state.hpp"
 
 namespace openturbine {
 

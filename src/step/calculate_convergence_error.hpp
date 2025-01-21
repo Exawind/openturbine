@@ -3,11 +3,11 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/constraints/constraints.hpp"
-#include "src/solver/calculate_error_sum_squares.hpp"
-#include "src/solver/solver.hpp"
-#include "src/state/state.hpp"
-#include "src/step/step_parameters.hpp"
+#include "constraints/constraints.hpp"
+#include "solver/calculate_error_sum_squares.hpp"
+#include "solver/solver.hpp"
+#include "state/state.hpp"
+#include "step/step_parameters.hpp"
 
 namespace openturbine {
 

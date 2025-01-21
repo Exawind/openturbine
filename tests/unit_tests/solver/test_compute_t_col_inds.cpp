@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/solver/compute_t_col_inds.hpp"
+#include "solver/compute_t_col_inds.hpp"
 
 namespace openturbine::tests {
 

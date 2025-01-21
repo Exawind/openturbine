@@ -3,10 +3,10 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/solver/copy_tangent_to_sparse_matrix.hpp"
-#include "src/solver/solver.hpp"
-#include "src/state/state.hpp"
-#include "src/system/calculate_tangent_operator.hpp"
+#include "solver/copy_tangent_to_sparse_matrix.hpp"
+#include "solver/solver.hpp"
+#include "state/state.hpp"
+#include "system/calculate_tangent_operator.hpp"
 
 namespace openturbine {
 

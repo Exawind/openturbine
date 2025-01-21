@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/math/vector_operations.hpp"
+#include "math/vector_operations.hpp"
 
 namespace openturbine::tests {
 

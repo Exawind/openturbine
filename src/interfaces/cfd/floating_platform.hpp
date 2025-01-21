@@ -1,9 +1,10 @@
 #pragma once
 
-#include "vector"
+#include <cstddef>
+#include <vector>
 
-#include "src/interfaces/cfd/mooring_line.hpp"
-#include "src/interfaces/cfd/node_data.hpp"
+#include "interfaces/cfd/mooring_line.hpp"
+#include "interfaces/cfd/node_data.hpp"
 
 namespace openturbine::cfd {
 

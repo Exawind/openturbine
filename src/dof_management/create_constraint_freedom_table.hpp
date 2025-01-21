@@ -2,10 +2,9 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "constraints/constraints.hpp"
 #include "freedom_signature.hpp"
-
-#include "src/constraints/constraints.hpp"
-#include "src/state/state.hpp"
+#include "state/state.hpp"
 
 namespace openturbine {
 

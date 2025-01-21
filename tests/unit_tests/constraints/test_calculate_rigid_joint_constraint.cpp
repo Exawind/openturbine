@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/constraints/calculate_rigid_joint_constraint.hpp"
+#include "constraints/calculate_rigid_joint_constraint.hpp"
 
 namespace openturbine::tests {
 

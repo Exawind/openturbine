@@ -9,6 +9,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "compute_num_system_dofs.hpp"
+#include "constraints/constraint_type.hpp"
 #include "create_b_matrix.hpp"
 #include "create_b_t_matrix.hpp"
 #include "create_constraints_matrix_full.hpp"
@@ -21,8 +22,6 @@
 #include "create_t_matrix.hpp"
 #include "create_transpose_matrix_full.hpp"
 #include "fill_unshifted_row_ptrs.hpp"
-
-#include "src/constraints/constraint_type.hpp"
 
 namespace openturbine {
 

@@ -46,8 +46,8 @@ add_shared_library(DISCON_ROTOR_TEST_CONTROLLER)
 # Set include directories for the library
 target_include_directories(openturbine_library
   PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>   # Include source directory during build
-  $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>   # Include binary directory during build
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
+  $<INSTALL_INTERFACE:include/OpenTurbine>
 )
 
 # Set the C++ standard for the target
@@ -55,7 +55,9 @@ target_compile_features(openturbine_library PUBLIC cxx_std_17)
 
 # Add subdirectories for additional components of the library
 add_subdirectory(constraints)
+add_subdirectory(dof_management)
 add_subdirectory(elements)
+add_subdirectory(interfaces)
 add_subdirectory(math)
 add_subdirectory(model)
 add_subdirectory(solver)
@@ -65,4 +67,22 @@ add_subdirectory(system)
 add_subdirectory(utilities)
 add_subdirectory(vendor)
 
-add_subdirectory(interfaces/cfd)
+install(
+  TARGETS openturbine_library openturbine_options openturbine_warnings
+  EXPORT OpenTurbineTargets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} 
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${PACKAGE_NAME}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(EXPORT OpenTurbineTargets
+        FILE OpenTurbineTargets.cmake
+        NAMESPACE OpenTurbine::
+        DESTINATION lib/cmake/OpenTurbine
+)
+
+install(FILES
+        types.hpp
+        DESTINATION include/OpenTurbine/
+)

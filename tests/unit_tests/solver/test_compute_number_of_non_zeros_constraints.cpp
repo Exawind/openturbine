@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/solver/compute_number_of_non_zeros_constraints.hpp"
+#include "solver/compute_number_of_non_zeros_constraints.hpp"
 
 namespace openturbine::tests {
 

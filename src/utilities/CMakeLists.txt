@@ -1,1 +1,2 @@
+add_subdirectory(aerodynamics)
 add_subdirectory(controllers)

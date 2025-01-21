@@ -3,10 +3,10 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/constraints/calculate_constraint_force.hpp"
-#include "src/constraints/calculate_constraint_residual_gradient.hpp"
-#include "src/constraints/constraints.hpp"
-#include "src/state/state.hpp"
+#include "constraints/calculate_constraint_force.hpp"
+#include "constraints/calculate_constraint_residual_gradient.hpp"
+#include "constraints/constraints.hpp"
+#include "state/state.hpp"
 
 namespace openturbine {
 

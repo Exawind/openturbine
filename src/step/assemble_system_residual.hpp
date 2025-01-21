@@ -3,13 +3,13 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/elements/elements.hpp"
-#include "src/solver/contribute_beams_to_vector.hpp"
-#include "src/solver/contribute_forces_to_vector.hpp"
-#include "src/solver/contribute_masses_to_vector.hpp"
-#include "src/solver/contribute_springs_to_vector.hpp"
-#include "src/solver/solver.hpp"
-#include "src/state/state.hpp"
+#include "elements/elements.hpp"
+#include "solver/contribute_beams_to_vector.hpp"
+#include "solver/contribute_forces_to_vector.hpp"
+#include "solver/contribute_masses_to_vector.hpp"
+#include "solver/contribute_springs_to_vector.hpp"
+#include "solver/solver.hpp"
+#include "state/state.hpp"
 
 namespace openturbine {
 

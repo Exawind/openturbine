@@ -4,8 +4,7 @@
 
 #include "calculate_revolute_joint_force.hpp"
 #include "constraint_type.hpp"
-
-#include "src/types.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 

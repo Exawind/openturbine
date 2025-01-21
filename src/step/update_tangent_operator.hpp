@@ -3,10 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
+#include "state/state.hpp"
 #include "step_parameters.hpp"
-
-#include "src/state/state.hpp"
-#include "src/system/calculate_tangent_operator.hpp"
+#include "system/calculate_tangent_operator.hpp"
 
 namespace openturbine {
 

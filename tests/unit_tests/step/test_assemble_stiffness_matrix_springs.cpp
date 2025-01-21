@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "src/elements/springs/create_springs.hpp"
-#include "src/elements/springs/springs.hpp"
-#include "src/model/model.hpp"
-#include "src/step/assemble_stiffness_matrix_springs.hpp"
+#include "elements/springs/create_springs.hpp"
+#include "elements/springs/springs.hpp"
+#include "model/model.hpp"
+#include "step/assemble_stiffness_matrix_springs.hpp"
 
 namespace openturbine::tests {
 

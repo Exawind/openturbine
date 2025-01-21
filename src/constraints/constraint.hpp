@@ -1,9 +1,10 @@
 #pragma once
 
-#include "constraint_type.hpp"
+#include <cstddef>
 
-#include "src/math/vector_operations.hpp"
-#include "src/model/node.hpp"
+#include "constraint_type.hpp"
+#include "math/vector_operations.hpp"
+#include "model/node.hpp"
 
 namespace openturbine {
 

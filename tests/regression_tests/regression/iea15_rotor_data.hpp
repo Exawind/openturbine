@@ -1,7 +1,7 @@
 #pragma once
 
-#include "src/elements/beams/beam_section.hpp"
-#include "src/types.hpp"
+#include "elements/beams/beam_section.hpp"
+#include "types.hpp"
 
 namespace openturbine::tests {
 

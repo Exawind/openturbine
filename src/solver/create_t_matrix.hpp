@@ -6,8 +6,7 @@
 #include "compute_t_col_inds.hpp"
 #include "compute_t_num_non_zero.hpp"
 #include "compute_t_row_ptrs.hpp"
-
-#include "src/dof_management/freedom_signature.hpp"
+#include "dof_management/freedom_signature.hpp"
 
 namespace openturbine {
 

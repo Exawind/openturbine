@@ -3,10 +3,10 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/constraints/constraints.hpp"
-#include "src/solver/copy_constraints_to_sparse_matrix.hpp"
-#include "src/solver/copy_sparse_values_to_transpose.hpp"
-#include "src/solver/solver.hpp"
+#include "constraints/constraints.hpp"
+#include "solver/copy_constraints_to_sparse_matrix.hpp"
+#include "solver/copy_sparse_values_to_transpose.hpp"
+#include "solver/solver.hpp"
 
 namespace openturbine {
 inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) {

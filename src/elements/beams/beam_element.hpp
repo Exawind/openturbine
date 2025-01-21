@@ -4,8 +4,7 @@
 #include <vector>
 
 #include "beam_section.hpp"
-
-#include "src/types.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 

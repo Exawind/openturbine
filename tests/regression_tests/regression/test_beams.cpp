@@ -2,12 +2,11 @@
 
 #include <gtest/gtest.h>
 
+#include "model/model.hpp"
+#include "state/state.hpp"
+#include "step/update_system_variables_beams.hpp"
 #include "test_utilities.hpp"
-
-#include "src/model/model.hpp"
-#include "src/state/state.hpp"
-#include "src/step/update_system_variables_beams.hpp"
-#include "src/types.hpp"
+#include "types.hpp"
 
 namespace openturbine::tests {
 

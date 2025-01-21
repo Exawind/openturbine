@@ -1,9 +1,9 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/state/clone_state.hpp"
-#include "src/state/copy_state_data.hpp"
-#include "src/state/state.hpp"
+#include "state/clone_state.hpp"
+#include "state/copy_state_data.hpp"
+#include "state/state.hpp"
 
 namespace {
 

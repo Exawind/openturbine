@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/constraints/calculate_fixed_bc_constraint.hpp"
+#include "constraints/calculate_fixed_bc_constraint.hpp"
 
 namespace openturbine::tests {
 

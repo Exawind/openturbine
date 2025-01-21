@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "src/dof_management/create_element_freedom_table.hpp"
+#include "dof_management/create_element_freedom_table.hpp"
 
 namespace openturbine::tests {
 

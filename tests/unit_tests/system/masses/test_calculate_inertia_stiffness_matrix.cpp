@@ -1,9 +1,8 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
+#include "system/masses/calculate_inertia_stiffness_matrix.hpp"
 #include "test_calculate.hpp"
-
-#include "src/system/masses/calculate_inertia_stiffness_matrix.hpp"
 
 namespace openturbine::tests {
 

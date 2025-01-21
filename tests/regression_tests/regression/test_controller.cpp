@@ -1,11 +1,10 @@
 #include <gtest/gtest.h>
 
 #include "test_utilities.hpp"
-
-#include "src/utilities/controllers/controller_io.hpp"
-#include "src/utilities/controllers/discon.hpp"
-#include "src/utilities/controllers/turbine_controller.hpp"
-#include "src/vendor/dylib/dylib.hpp"
+#include "utilities/controllers/controller_io.hpp"
+#include "utilities/controllers/discon.hpp"
+#include "utilities/controllers/turbine_controller.hpp"
+#include "vendor/dylib/dylib.hpp"
 
 namespace openturbine::tests {
 

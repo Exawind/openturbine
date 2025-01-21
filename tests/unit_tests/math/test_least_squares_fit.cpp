@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/math/least_squares_fit.hpp"
+#include "math/least_squares_fit.hpp"
 
 namespace openturbine::tests {
 

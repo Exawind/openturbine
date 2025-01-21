@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/constraints/calculate_revolute_joint_output.hpp"
+#include "constraints/calculate_revolute_joint_output.hpp"
 
 namespace openturbine::tests {
 

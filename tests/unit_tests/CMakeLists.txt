@@ -16,6 +16,8 @@ add_subdirectory(utilities)
 # Specify the source files for the unit tests
 target_sources(openturbine_unit_tests PRIVATE utest_main.cpp)
 
+target_include_directories(openturbine_unit_tests PRIVATE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/tests/unit_tests>)
+
 # Link internal libraries to the unit test executable
 target_link_libraries(openturbine_unit_tests PRIVATE
   openturbine_warnings

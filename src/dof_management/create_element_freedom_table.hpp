@@ -2,10 +2,9 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "elements/elements.hpp"
 #include "freedom_signature.hpp"
-
-#include "src/elements/elements.hpp"
-#include "src/state/state.hpp"
+#include "state/state.hpp"
 
 namespace openturbine {
 

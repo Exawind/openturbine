@@ -3,7 +3,7 @@
 #include <array>
 #include <cmath>
 
-#include "src/model/node.hpp"
+#include "model/node.hpp"
 
 namespace openturbine {
 

@@ -1,9 +1,8 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
+#include "system/masses/update_node_state.hpp"
 #include "test_calculate.hpp"
-
-#include "src/system/masses/update_node_state.hpp"
 
 namespace openturbine::tests {
 

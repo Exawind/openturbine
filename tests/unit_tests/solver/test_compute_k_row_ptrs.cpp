@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/solver/compute_k_row_ptrs.hpp"
+#include "solver/compute_k_row_ptrs.hpp"
 
 namespace openturbine::tests {
 

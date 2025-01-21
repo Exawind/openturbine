@@ -1,8 +1,8 @@
 #pragma once
 
-#include "src/interfaces/cfd/interface_input.hpp"
-#include "src/interfaces/cfd/turbine.hpp"
-#include "src/model/model.hpp"
+#include "interfaces/cfd/interface_input.hpp"
+#include "interfaces/cfd/turbine.hpp"
+#include "model/model.hpp"
 
 namespace openturbine::cfd {
 

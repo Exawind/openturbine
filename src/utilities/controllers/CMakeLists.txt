@@ -12,3 +12,11 @@ target_sources(DISCON_ROTOR_TEST_CONTROLLER
   PRIVATE
   discon_rotor_test_controller.cpp
 )
+
+install(FILES
+        controller_io.hpp
+        discon.hpp
+        discon_rotor_test_controller.hpp
+        turbine_controller.hpp
+        DESTINATION include/OpenTurbine/utilities/controllers/
+)

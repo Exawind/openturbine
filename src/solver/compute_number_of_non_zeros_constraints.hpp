@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "src/constraints/constraint_type.hpp"
+#include "constraints/constraint_type.hpp"
 
 namespace openturbine {
 

@@ -3,9 +3,9 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "src/constraints/constraints.hpp"
-#include "src/constraints/update_lambda_prediction.hpp"
-#include "src/solver/solver.hpp"
+#include "constraints/constraints.hpp"
+#include "constraints/update_lambda_prediction.hpp"
+#include "solver/solver.hpp"
 
 namespace openturbine {
 

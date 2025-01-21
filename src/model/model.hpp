@@ -3,26 +3,25 @@
 #include <functional>
 #include <tuple>
 
+#include "constraints/constraint.hpp"
+#include "constraints/constraints.hpp"
 #include "copy_nodes_to_state.hpp"
+#include "dof_management/assemble_node_freedom_allocation_table.hpp"
+#include "dof_management/compute_node_freedom_map_table.hpp"
+#include "dof_management/create_constraint_freedom_table.hpp"
+#include "dof_management/create_element_freedom_table.hpp"
+#include "elements/beams/beams_input.hpp"
+#include "elements/beams/create_beams.hpp"
+#include "elements/elements.hpp"
+#include "elements/masses/create_masses.hpp"
+#include "elements/masses/masses_input.hpp"
+#include "elements/springs/create_springs.hpp"
+#include "elements/springs/springs_input.hpp"
 #include "node.hpp"
-
-#include "src/constraints/constraint.hpp"
-#include "src/constraints/constraints.hpp"
-#include "src/dof_management/assemble_node_freedom_allocation_table.hpp"
-#include "src/dof_management/compute_node_freedom_map_table.hpp"
-#include "src/dof_management/create_constraint_freedom_table.hpp"
-#include "src/dof_management/create_element_freedom_table.hpp"
-#include "src/elements/beams/beams_input.hpp"
-#include "src/elements/beams/create_beams.hpp"
-#include "src/elements/elements.hpp"
-#include "src/elements/masses/create_masses.hpp"
-#include "src/elements/masses/masses_input.hpp"
-#include "src/elements/springs/create_springs.hpp"
-#include "src/elements/springs/springs_input.hpp"
-#include "src/solver/solver.hpp"
-#include "src/state/state.hpp"
-#include "src/step/step_parameters.hpp"
-#include "src/types.hpp"
+#include "solver/solver.hpp"
+#include "state/state.hpp"
+#include "step/step_parameters.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 

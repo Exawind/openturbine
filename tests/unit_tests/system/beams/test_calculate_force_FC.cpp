@@ -1,9 +1,8 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
+#include "system/beams/calculate_force_FC.hpp"
 #include "test_calculate.hpp"
-
-#include "src/system/beams/calculate_force_FC.hpp"
 
 namespace openturbine::tests {
 

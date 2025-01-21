@@ -1,9 +1,8 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
+#include "system/beams/rotate_section_matrix.hpp"
 #include "test_calculate.hpp"
-
-#include "src/system/beams/rotate_section_matrix.hpp"
 
 namespace openturbine::tests {
 

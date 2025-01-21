@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "src/dof_management/compute_node_freedom_map_table.hpp"
+#include "dof_management/compute_node_freedom_map_table.hpp"
 
 namespace openturbine::tests {
 

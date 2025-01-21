@@ -1,7 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "src/constraints/constraint.hpp"
+#include "constraints/constraint.hpp"
 
 namespace openturbine::tests {
 
