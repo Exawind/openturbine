@@ -14,7 +14,7 @@ directly from Sphinx in the `sphinx:` section.
 
 The online documentation is hosted on GitHub Pages and is built and
 deployed automatically whenever any file in the `docs/` directory is
-modified. Refer to the workflow at `.github/workflows/deploy-pages.yaml`
+modified. Refer to the workflow at `.github/workflows/deploy_docs.yaml`
 for more details.
 
 ## Building Locally
