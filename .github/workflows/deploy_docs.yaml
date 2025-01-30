@@ -20,8 +20,8 @@ jobs:
       run: |
         pip install -r docs/requirements.txt
     - name: Build
-      working-directory: ${{ runner.workspace }}/docs
       run: |
+        cd docs
         jupyter-book build .
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v4
