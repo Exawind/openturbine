@@ -1,13 +1,13 @@
-name: deploy-documentation
+name: Deploy OpenTurbine Documentation
 
 on:
   push:
     paths:
     - docs/**
-    - .github/workflows/deploy-docs.yaml
+    - .github/workflows/deploy_docs.yaml
 
 jobs:
-  deploy-docs:
+  Deploy-Docs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
