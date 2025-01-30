@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" >
+<html lang="en" data-content_root="./" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Compiling &#8212; OpenTurbine</title>
   
@@ -15,59 +14,60 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/clipboard.min.js"></script>
-    <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="_static/togglebutton.js"></script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'compiling';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="The Docs" href="documentation.html" />
+    <link rel="next" title="Documentation" href="documentation.html" />
     <link rel="prev" title="OpenTurbine Development Plan" href="dev_plan.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -75,23 +75,16 @@ const thebe_selector_output = ".output, .cell_output"
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+  <div id="pst-scroll-pixel-helper"></div>
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
   
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -99,7 +92,6 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -107,16 +99,25 @@ const thebe_selector_output = ".output, .cell_output"
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -129,6 +130,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
+  
+    
   
 
 <a class="navbar-brand logo" href="intro.html">
@@ -137,10 +141,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   
+  
     <p class="title logo__title">OpenTurbine</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -155,14 +167,14 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials / How-To</a></li>
 <li class="toctree-l1"><a class="reference internal" href="input_file.html">Input File</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="dev_guide.html">Developer’s Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="dev_guide.html">Developer’s Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="dev_plan.html">OpenTurbine Development Plan</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Compiling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="documentation.html">The Docs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation.html">Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html">Developer Tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_docs.html">API Documentation</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 
     </div>
@@ -171,14 +183,19 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -187,14 +204,14 @@ const thebe_selector_output = ".output, .cell_output"
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -333,26 +350,20 @@ const thebe_selector_output = ".output, .cell_output"
 </button>
 
 
-<script>
-document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
-  </button>
-`);
-</script>
 
-<script>
-document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-  </button>
-`);
-</script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -374,39 +385,18 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-kokkos">Installing Kokkos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-system">Build system</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-options">Architecture options</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-openmp">OTURB_ENABLE_OPENMP</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-cuda">OTURB_ENABLE_CUDA</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-rocm">OTURB_ENABLE_ROCM</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-dpcpp">OTURB_ENABLE_DPCPP</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-precision">OTURB_PRECISION</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-third-party-librariess">Installing Third Party Librariess</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-the-spack-repository-load-the-spack-environment-and-let-spack-learn-about-your-system">Clone the spack repository, load the spack environment, and let spack learn about your system</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-googletest">Install GoogleTest</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-trilinos">Install Trilinos.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-tpls-into-your-environment">Load the TPLs into your environment</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-openturbine-specific-options">Other OpenTurbine specific options</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-tests">OTURB_ENABLE_TESTS</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-all-warnings">OTURB_ENABLE_ALL_WARNINGS</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-cmake-options">General CMake options</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cmake-install-prefix">CMAKE_INSTALL_PREFIX</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cmake-build-type">CMAKE_BUILD_TYPE</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cmake-cxx-compiler">CMAKE_CXX_COMPILER</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cmake-cxx-flags">CMAKE_CXX_FLAGS</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step">Step by step</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-or-install-dependencies">1. Load or install dependencies</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-the-repository">2. Clone the repository</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-and-build">3. Configure and build</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-build">4. Test your build</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quirks-and-issues">Quirks and issues</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gtest-from-conda-forge">GTest from conda-forge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-openturbine">Building OpenTurbine</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-openturbine-and-setup-a-build-directory">Clone OpenTurbine and setup a build directory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-cmake">Configure cmake</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-test">Build and Test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-options">Build Options</a></li>
 </ul>
 </li>
 </ul>
@@ -418,280 +408,144 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="compiling">
-<span id="id1"></span><h1>Compiling<a class="headerlink" href="#compiling" title="Permalink to this heading">#</a></h1>
-<p>OpenTurbine is written in C++ and compiles into both an executable and
-a static or shared library. The procedure and considerations for compiling
-OpenTurbine are described here.</p>
+<h1>Compiling<a class="headerlink" href="#compiling" title="Link to this heading">#</a></h1>
+<p>OpenTurbine is written in C++17 and should be buildable on all systems with a compliant compiler.
+Because it leverages Kokkos and Trilinos for performance portability, OpenTurbine is expected to run anywhere that those projects support.
+Every effort is made to test on a variety of platforms, including both Linux and MacOS, but it is unlikely that we routinely cover all possibilities.
+This page documents the build proceedure as known to work on Linux (RHEL8).<br />
+Please reach out to the developers if additional guidance is needed for your particular situation.</p>
 <section id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading">#</a></h2>
-<p>The third party dependencies used in OpenTurbine are listed below.
-These can be installed by any means appropriate for the target
-use. For HPC, it is recommended to use vendor specific libraries
-when available. For workstations, package managers such as
-conda, APT, and Homebrew will provide the easiest experience
-for linking and runtime path searches.</p>
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
+<p>Before building OpenTurbine, you’ll need the following:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://cmake.org/">CMake</a> version 3.20 or higher</p></li>
-<li><p>C++ compiler that supports the C++17 standard</p>
-<ul>
-<li><p>GCC version 10 or higher</p></li>
-<li><p>LLVM Clang 7 or higher</p></li>
-<li><p>Intel 2020 (oneAPI) or higher</p></li>
-</ul>
-</li>
-<li><p><a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a> core programming model for performance portability (see <a class="reference internal" href="#installing-kokkos"><span class="std std-ref">Installing Kokkos</span></a>)</p></li>
-<li><p><a class="reference external" href="https://www.netlib.org/lapack/">LAPACK</a> for linear algebra operations</p></li>
-<li><p>OS: OpenTurbine is regularly tested on Linux and macOS</p></li>
-<li><p>(Optional) Google Test (gtest) for the test infrastructure (via conda-forge)</p></li>
-<li><p>(Optional) clang-format for linting (via conda-forge or brew)</p></li>
+<li><p>C++ compiler that supports the C++17 standard</p></li>
+<li><p><a class="reference external" href="https://cmake.org/">CMake</a> the default build system for C++ projects, version 3.21+</p></li>
+<li><p><a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a> core programming model for performance portability</p></li>
+<li><p><a class="reference external" href="https://github.com/kokkos/kokkoskernels">KokkosKernels</a> performance portable linear algebra library</p></li>
+<li><p><a class="reference external" href="https://github.com/trilinos/Trilinos">Trilinos</a> primarily for the Amesos2 sparse direct linear solver package</p></li>
+<li><p><a class="reference external" href="https://github.com/google/googletest">GoogleTest</a> unit testing package</p></li>
 </ul>
 </section>
-<section id="installing-kokkos">
-<span id="id2"></span><h2>Installing Kokkos<a class="headerlink" href="#installing-kokkos" title="Permalink to this heading">#</a></h2>
-<p>OpenTurbine relies heavily on Kokkos for portability between systems,
-compilers, and hardware types. It is at the core of this software.
-Therefore, the Kokkos library used should be tuned to your specific
-use case. See the <a class="reference external" href="https://kokkos.github.io/kokkos-core-wiki/building.html">Kokkos documentation</a>
-for instructions on building that library.</p>
-<p>For use in OpenTurbine, the Kokkos library must be available
-within a typical search path, or you must provide the search
-path via the <code class="docutils literal notranslate"><span class="pre">Kokkos_DIR</span></code> environment variable. This will
-typically be the install location from your Kokkos build.
-It should be set in the shell session where you’re compiling
-OpenTurbine. See the example below.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configure CMake in OpenTurbine without setting the environment variable</span>
-cmake<span class="w"> </span>..
-
-<span class="c1"># Results in this error:</span>
-<span class="c1"># CMake Error at src/CMakeLists.txt:3 (find_package):</span>
-<span class="c1">#   By not providing &quot;FindKokkos.cmake&quot; in CMAKE_MODULE_PATH this project has</span>
-<span class="c1">#   asked CMake to find a package configuration file provided by &quot;Kokkos&quot;, but</span>
-<span class="c1">#   CMake did not find one.</span>
-<span class="c1">#</span>
-<span class="c1">#   Could not find a package configuration file provided by &quot;Kokkos&quot; with any</span>
-<span class="c1">#   of the following names:</span>
-<span class="c1">#</span>
-<span class="c1">#     KokkosConfig.cmake</span>
-<span class="c1">#     kokkos-config.cmake</span>
-<span class="c1">#</span>
-<span class="c1">#   Add the installation prefix of &quot;Kokkos&quot; to CMAKE_PREFIX_PATH or set</span>
-<span class="c1">#   &quot;Kokkos_DIR&quot; to a directory containing one of the above files.  If &quot;Kokkos&quot;</span>
-<span class="c1">#   provides a separate development package or SDK, be sure it has been</span>
-<span class="c1">#   installed.</span>
-
-<span class="c1"># Set the environment variable</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">Kokkos_DIR</span><span class="o">=</span>~/Development/kokkos/install
-
-<span class="c1"># Test that is was set correctly</span>
-<span class="nb">echo</span><span class="w"> </span><span class="nv">$Kokkos_DIR</span>
-<span class="c1"># Displays:</span>
-<span class="c1"># ~/Development/kokkos/install</span>
-
-<span class="c1"># Reconfigure CMake in OpenTurbine</span>
-cmake<span class="w"> </span>..
-</pre></div>
-</div>
-<p>If you installed Kokkos using Spack, you can find the installation
-directory via spack and extract the path using grep as follows.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find the Kokkos and KokkosKernels installation directory via spack and</span>
-<span class="c1"># extract the path via grep &amp; awk</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">Kokkos_DIR</span><span class="o">=</span><span class="k">$(</span>spack<span class="w"> </span>find<span class="w"> </span>-p<span class="w"> </span>kokkos<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-m<span class="w"> </span><span class="m">1</span><span class="w"> </span>kokkos<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+<section id="installing-third-party-librariess">
+<h2>Installing Third Party Librariess<a class="headerlink" href="#installing-third-party-librariess" title="Link to this heading">#</a></h2>
+<p>While there are many ways to get the required Third Party Libraries (TPLs) for building, the easiest is the use the <a class="reference external" href="https://github.com/spack/spack">spack</a> package manager.
+Spack provides a rich featureset for development and dependency management.
+The following should be considered a quick-start guide for installing and loading the TPLs you’ll need for building OpenTurbine.</p>
+<section id="clone-the-spack-repository-load-the-spack-environment-and-let-spack-learn-about-your-system">
+<h3>Clone the spack repository, load the spack environment, and let spack learn about your system<a class="headerlink" href="#clone-the-spack-repository-load-the-spack-environment-and-let-spack-learn-about-your-system" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:spack/spack.git
+<span class="nb">source</span><span class="w"> </span>spack/share/spack/setup-env.sh
+spack<span class="w"> </span>compiler<span class="w"> </span>find
+spack<span class="w"> </span>external<span class="w"> </span>find
 </pre></div>
 </div>
 </section>
-<section id="build-system">
-<h2>Build system<a class="headerlink" href="#build-system" title="Permalink to this heading">#</a></h2>
-<p>The build system is defined entirely within a CMake project.
-It is configured via configuration variables that accept either
-boolean (<code class="docutils literal notranslate"><span class="pre">ON</span></code>/<code class="docutils literal notranslate"><span class="pre">OFF</span></code>) or string arguments. This is typically
-done via the command line interface for CMake.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>..<span class="w"> </span>-DBOOL_FLAG<span class="o">=</span>ON<span class="w"> </span>-DSTRING_FLAG<span class="o">=</span><span class="s2">&quot;value&quot;</span>
-</pre></div>
-</div>
-<p>See the <a class="reference external" href="https://cmake.org/documentation/">CMake documentation</a>
-for a full reference on CMake. The primary targets available to build
-are listed below.</p>
-<table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Target</p></th>
-<th class="head"><p>Type</p></th>
-<th class="head"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>openturbine</p></td>
-<td><p>Exe</p></td>
-<td><p>Primary executable including the <code class="docutils literal notranslate"><span class="pre">main</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>openturbine_obj</p></td>
-<td><p>Lib</p></td>
-<td><p>Library including all code used by <code class="docutils literal notranslate"><span class="pre">main</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>openturbine_unit_tests</p></td>
-<td><p>Exe</p></td>
-<td><p>Unit test driver executable including all tests and links to the Google Test</p></td>
-</tr>
-</tbody>
-</table>
-<section id="architecture-options">
-<h3>Architecture options<a class="headerlink" href="#architecture-options" title="Permalink to this heading">#</a></h3>
-<section id="oturb-enable-openmp">
-<h4>OTURB_ENABLE_OPENMP<a class="headerlink" href="#oturb-enable-openmp" title="Permalink to this heading">#</a></h4>
-<p>Enable OpenMP threading support for CPU builds. It is not recommended to
-combine this with GPU builds. Default: OFF</p>
-</section>
-<section id="oturb-enable-cuda">
-<h4>OTURB_ENABLE_CUDA<a class="headerlink" href="#oturb-enable-cuda" title="Permalink to this heading">#</a></h4>
-<p>Enable <a class="reference external" href="https://developer.nvidia.com/cuda-zone">NVIDIA CUDA GPU</a> builds. Default: OFF</p>
-</section>
-<section id="oturb-enable-rocm">
-<h4>OTURB_ENABLE_ROCM<a class="headerlink" href="#oturb-enable-rocm" title="Permalink to this heading">#</a></h4>
-<p>Enable <a class="reference external" href="https://rocmdocs.amd.com/en/latest/">AMD ROCm GPU</a> builds. Default: OFF</p>
-</section>
-<section id="oturb-enable-dpcpp">
-<span id="id3"></span><h4>OTURB_ENABLE_DPCPP<a class="headerlink" href="#oturb-enable-dpcpp" title="Permalink to this heading">#</a></h4>
-<p>Enable <a class="reference external" href="https://software.intel.com/content/www/us/en/develop/tools/oneapi.html">Intel OneAPI DPC++</a> builds. Default: OFF</p>
-</section>
-<section id="oturb-precision">
-<h4>OTURB_PRECISION<a class="headerlink" href="#oturb-precision" title="Permalink to this heading">#</a></h4>
-<p>Specifies the floating point precision; can be one of “SINGLE” or “DOUBLE”. Default: DOUBLE</p>
-</section>
-</section>
-<section id="other-openturbine-specific-options">
-<h3>Other OpenTurbine specific options<a class="headerlink" href="#other-openturbine-specific-options" title="Permalink to this heading">#</a></h3>
-<section id="oturb-enable-tests">
-<h4>OTURB_ENABLE_TESTS<a class="headerlink" href="#oturb-enable-tests" title="Permalink to this heading">#</a></h4>
-<p>Adds the testing infrastructure to the build. Default: OFF</p>
-</section>
-<section id="oturb-enable-all-warnings">
-<h4>OTURB_ENABLE_ALL_WARNINGS<a class="headerlink" href="#oturb-enable-all-warnings" title="Permalink to this heading">#</a></h4>
-<p>Enable compiler warnings during build. Default: OFF</p>
-</section>
-</section>
-<section id="general-cmake-options">
-<h3>General CMake options<a class="headerlink" href="#general-cmake-options" title="Permalink to this heading">#</a></h3>
-<section id="cmake-install-prefix">
-<h4>CMAKE_INSTALL_PREFIX<a class="headerlink" href="#cmake-install-prefix" title="Permalink to this heading">#</a></h4>
-<p>The directory where the compiled executables and libraries as well as headers
-are installed. For example, passing
-<code class="docutils literal notranslate"><span class="pre">-DCMAKE_INSTALL_PREFIX=${HOME}/software</span></code> will install the executables in
-<code class="docutils literal notranslate"><span class="pre">${HOME}/software/bin</span></code> when the user executes the <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code> command.</p>
-</section>
-<section id="cmake-build-type">
-<h4>CMAKE_BUILD_TYPE<a class="headerlink" href="#cmake-build-type" title="Permalink to this heading">#</a></h4>
-<p>Controls the optimization levels for compilation. This variable can take the
-following values:</p>
-<table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Value</p></th>
-<th class="head"><p>Typical flags</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>RELEASE</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">-O3</span> <span class="pre">-DNDEBUG</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>DEBUG</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">-g</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>RelWithDebInfo</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">-O2</span> <span class="pre">-g</span></code></p></td>
-</tr>
-</tbody>
-</table>
-<p>Example: <code class="docutils literal notranslate"><span class="pre">-DCMAKE_BUILD_TYPE:STRING=RELEASE</span></code></p>
-</section>
-<section id="cmake-cxx-compiler">
-<h4>CMAKE_CXX_COMPILER<a class="headerlink" href="#cmake-cxx-compiler" title="Permalink to this heading">#</a></h4>
-<p>Set the C++ compiler used for compiling the code.</p>
-<p>For Intel DPC++ builds (see <a class="reference internal" href="#oturb-enable-dpcpp"><span class="std std-ref">OTURB_ENABLE_DPCPP</span></a>) this should be
-set to <code class="docutils literal notranslate"><span class="pre">dpcpp</span></code>.</p>
-</section>
-<section id="cmake-cxx-flags">
-<h4>CMAKE_CXX_FLAGS<a class="headerlink" href="#cmake-cxx-flags" title="Permalink to this heading">#</a></h4>
-<p>Additional flags to be passed to the C++ compiler during compilation.</p>
-</section>
-</section>
-</section>
-<section id="step-by-step">
-<h2>Step by step<a class="headerlink" href="#step-by-step" title="Permalink to this heading">#</a></h2>
-<section id="load-or-install-dependencies">
-<h3>1. Load or install dependencies<a class="headerlink" href="#load-or-install-dependencies" title="Permalink to this heading">#</a></h3>
-<p>If you are on an HPC system that provides Modules Environment, load the
-necessary dependencies. If targeting GPUs, load CUDA
-modules.</p>
-</section>
-<section id="clone-the-repository">
-<h3>2. Clone the repository<a class="headerlink" href="#clone-the-repository" title="Permalink to this heading">#</a></h3>
-<p>This creates a local copy of the software repository
-from GitHub.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/exawind/openturbine.git
+<section id="install-googletest">
+<h3>Install GoogleTest<a class="headerlink" href="#install-googletest" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>install<span class="w"> </span>googletest
 </pre></div>
 </div>
 </section>
-<section id="configure-and-build">
-<h3>3. Configure and build<a class="headerlink" href="#configure-and-build" title="Permalink to this heading">#</a></h3>
-<p>This step configures the CMake project and compiles the
-code into a “build/” directory within the repository directory.
-Be sure to note the location from where the commands are run.
-The final step can be run with no additional arguments
-to compile all targets or with a specific target. No arguments
-instructs to compile all targets.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>openturbine/build
-<span class="nb">cd</span><span class="w"> </span>openturbine/build
-
-cmake<span class="w"> </span>..<span class="w"> </span>-DOTURB_ENABLE_TESTS:BOOL<span class="o">=</span>ON
-make
+<section id="install-trilinos">
+<h3>Install Trilinos.<a class="headerlink" href="#install-trilinos" title="Link to this heading">#</a></h3>
+<p>For building OpenTurbine, Kokkos Kernels must be configured to use the LAPACK and BLAS TPLs.
+When building for GPU, the Trilinos must be build with support for the Basker linear solver
+We also commonly disable EPetra explicitly to prevent deprication warnings.
+At the time of this writing, OpenTurbine is known to work with Trilinos version 16.0.0 - the latest and default version in spack</p>
+<p>For a simple serial build</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>install<span class="w"> </span>trilinos~epetra<span class="w"> </span>^kokkos-kernels+blas+lapack
 </pre></div>
 </div>
-<p>Upon successfully building, two executables should be available
-in the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory:</p>
+<p>Trilinos can also be compiled with OpenMP support for parallelism on CPU based machines</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>install<span class="w"> </span>trilinos~epetra+openmp<span class="w"> </span>^kokkos-kernels+blas+lapack
+</pre></div>
+</div>
+<p>If building for CUDA platforms, Trilinos must be configured with CUDA support</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>install<span class="w"> </span>trilinos~epetra+basker+cuda<span class="w"> </span>^kokkos-kernels+blas+lapack
+</pre></div>
+</div>
+<p>If building for ROCm platforms, Trilinos must be configured with ROCm support</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>install<span class="w"> </span>trilinos~epetra+basker+rocm<span class="w"> </span>^kokkos-kernels+blas+lapack
+</pre></div>
+</div>
+<p>Trilinos can be built with or without mpi support.</p>
+</section>
+<section id="load-the-tpls-into-your-environment">
+<h3>Load the TPLs into your environment<a class="headerlink" href="#load-the-tpls-into-your-environment" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>load<span class="w"> </span>googletest
+spack<span class="w"> </span>load<span class="w"> </span>trilinos
+</pre></div>
+</div>
+<p>Trilinos can also be compiled with support for other platforms.
+It is assumed that OpenTurbine will inherit compatibility with them, but they have not been tested at the time of writing.</p>
+<p>For those that choose not to use spack, you must build all of the dependencies manually.<br />
+You will have to ensure the the <code class="docutils literal notranslate"><span class="pre">Amesos2_DIR</span></code>, <code class="docutils literal notranslate"><span class="pre">GTest_DIR</span></code>, and <code class="docutils literal notranslate"><span class="pre">KokkosKernels_DIR</span></code> environment variables are properly set for those packages, or otherwise make sure that cmake’s <code class="docutils literal notranslate"><span class="pre">find_package</span></code> utility will be able to find them.</p>
+</section>
+</section>
+<section id="building-openturbine">
+<h2>Building OpenTurbine<a class="headerlink" href="#building-openturbine" title="Link to this heading">#</a></h2>
+<p>The following is written assuming the TPLs in hand and the environment configured as described above.</p>
+<section id="clone-openturbine-and-setup-a-build-directory">
+<h3>Clone OpenTurbine and setup a build directory<a class="headerlink" href="#clone-openturbine-and-setup-a-build-directory" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:Exawind/openturbine.git
+<span class="nb">cd</span><span class="w"> </span>openturbine
+mkdir<span class="w"> </span>build
+<span class="nb">cd</span><span class="w"> </span>build
+</pre></div>
+</div>
+</section>
+<section id="configure-cmake">
+<h3>Configure cmake<a class="headerlink" href="#configure-cmake" title="Link to this heading">#</a></h3>
+<p>For a CPU-based build which includes building unit tests, use</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>../
+</pre></div>
+</div>
+<p>If Trilinos was built with CUDA support, you will need to use the nvcc_wrapper for compilation</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>../<span class="w"> </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>nvcc_wrapper
+</pre></div>
+</div>
+<p>If Trilinos was built with ROCm support, you will need to use the hipcc program for compilation</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>../<span class="w"> </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>hipcc
+</pre></div>
+</div>
+</section>
+<section id="build-and-test">
+<h3>Build and Test<a class="headerlink" href="#build-and-test" title="Link to this heading">#</a></h3>
+<p>At this time, OpenTurbine builds several shared libraries by default.<br />
+In order for thier unit tests to pass, they will have to be copied into the directory where your tests are run.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>-j
+cp<span class="w"> </span>src/*.dll<span class="w"> </span>tests/unit_tests/
+ctest<span class="w"> </span>--output-on-failure
+</pre></div>
+</div>
+<p>Once built, the unit test executable can also be run directly from the build directory</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>src/*.dll<span class="w"> </span>./
+./tests/unit_tests/openturbine_unit_tests
+</pre></div>
+</div>
+</section>
+<section id="build-options">
+<h3>Build Options<a class="headerlink" href="#build-options" title="Link to this heading">#</a></h3>
+<p>OpenTurbine has several build options which can be set either when running cmake from the commandline or through a GUI such as ccmake.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">openturbine</span></code>: main driver for the software</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">openturbine_unit_tests</span></code>: driver for the unit tests</p></li>
+<li><p>[OpenTurbine_ENABLE_CLANG_TIDY] enables the Clang-Tidy static analysis tool</p></li>
+<li><p>[OpenTurbine_ENABLE_COVERAGE] enables code coverage analysis using gcov</p></li>
+<li><p>[OpenTurbine_ENABLE_CPPCHECK] enables the CppCheck static analysis tool</p></li>
+<li><p>[OpenTurbine_ENABLE_IPO] enables link time optimization</p></li>
+<li><p>[OpenTurbine_ENABLE_PCH] builds precompiled headers to potentially decrease compilation time</p></li>
+<li><p>[OpenTurbine_ENABLE_SANITIZER_ADDRESS] enables the address sanitizer runtime analysis tool</p></li>
+<li><p>[OpenTurbine_ENABLE_SANITIZER_LEAK] enables the leak sanitizer runtime analysis tool</p></li>
+<li><p>[OpenTurbine_ENABLE_SANITIZER_MEMORY] enables the memory sanitizer runtime analysis tool</p></li>
+<li><p>[OpenTurbine_ENABLE_SANITIZER_THREAD] enables the thread sanitizer runtime analysis tool</p></li>
+<li><p>[OpenTurbine_ENABLE_SANITIZER_UNDEFINED] enables the undefined behavior sanitizer runtime analysis tool</p></li>
+<li><p>[OpenTurbine_ENABLE_TESTS] builds OpenTurbine’s test suite</p></li>
+<li><p>[OpenTurbine_ENABLE_UNITY_BUILD] uses unity builds to potentially decrease compilation time</p></li>
+<li><p>[OpenTurbine_ENABLE_VTK] builds OpenTurbine with VTK support for visualization in tests.  Will need the VTK TPL to be properly configured</p></li>
+<li><p>[OpenTurbine_WARNINGS_AS_ERRORS] treats warnings as errors, including warnings from static analysis tools</p></li>
 </ul>
-</section>
-<section id="test-your-build">
-<h3>4. Test your build<a class="headerlink" href="#test-your-build" title="Permalink to this heading">#</a></h3>
-<p>Ensure the code is compiled and linked correctly by running the
-included tests. These involve low-level unit tests as well
-as high-level regression tests. See Testing for more info.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ctest<span class="w"> </span>--output-on-failure
-</pre></div>
-</div>
-</section>
-</section>
-<section id="quirks-and-issues">
-<h2>Quirks and issues<a class="headerlink" href="#quirks-and-issues" title="Permalink to this heading">#</a></h2>
-<p>Here’s a list of known issues or oddities and workarounds.</p>
-<section id="gtest-from-conda-forge">
-<h3>GTest from conda-forge<a class="headerlink" href="#gtest-from-conda-forge" title="Permalink to this heading">#</a></h3>
-<p>If you’ve installed Google Test (GTest) with conda, you
-must also install Google Mock (GMock) as it is a dependency
-but it is not automatically included. The command below
-installs both.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>gtest<span class="w"> </span>gmock<span class="w"> </span>-c<span class="w"> </span>conda-forge
-</pre></div>
-</div>
-<p>On Linux with GTest from conda-forge and the GNU
-compiler, you may see this error:
-<code class="docutils literal notranslate"><span class="pre">undefined</span> <span class="pre">reference</span> <span class="pre">to</span> <span class="pre">'std::__throw_bad_array_new_length()&#64;GLIBCXX_3.4.29'</span></code>.
-In that case, upgrade to GCC 11 (<code class="docutils literal notranslate"><span class="pre">g++-11</span></code>). GTest in conda-forge is linked
-to <code class="docutils literal notranslate"><span class="pre">GLIBCXX_3.4.29</span></code> but GCC 10 has <code class="docutils literal notranslate"><span class="pre">GLIBCXX_3.4.28</span></code>.
-Check installed versions with this command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>strings<span class="w"> </span>/lib/x86_64-linux-gnu/libstdc++.so.6<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>GLIBCXX
-</pre></div>
-</div>
-<p>For Ubuntu 20.04, instructions on upgrading GCC are <a class="reference external" href="https://lindevs.com/install-gcc-on-ubuntu">here</a>.</p>
-<p>On macOS with GTest from conda-forge, you must include the
-GTest directory in the library search path since it will not
-be found automatically by rpath.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">DYLD_LIBRARY_PATH</span><span class="o">=</span>~/miniconda3/envs/openturbine/lib<span class="w">  </span><span class="c1"># customize this to your path</span>
-</pre></div>
-</div>
 </section>
 </section>
 </section>
@@ -721,11 +575,10 @@ be found automatically by rpath.</p>
 
               
               
-                <footer class="bd-footer-article">
+              
+              
+                <footer class="prev-next-footer d-print-none">
                   
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="dev_plan.html"
@@ -741,21 +594,20 @@ be found automatically by rpath.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">The Docs</p>
+        <p class="prev-next-title">Documentation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -764,39 +616,18 @@ be found automatically by rpath.</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-kokkos">Installing Kokkos</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-system">Build system</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture-options">Architecture options</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-openmp">OTURB_ENABLE_OPENMP</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-cuda">OTURB_ENABLE_CUDA</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-rocm">OTURB_ENABLE_ROCM</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-dpcpp">OTURB_ENABLE_DPCPP</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-precision">OTURB_PRECISION</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-third-party-librariess">Installing Third Party Librariess</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-the-spack-repository-load-the-spack-environment-and-let-spack-learn-about-your-system">Clone the spack repository, load the spack environment, and let spack learn about your system</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-googletest">Install GoogleTest</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-trilinos">Install Trilinos.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-tpls-into-your-environment">Load the TPLs into your environment</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-openturbine-specific-options">Other OpenTurbine specific options</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-tests">OTURB_ENABLE_TESTS</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oturb-enable-all-warnings">OTURB_ENABLE_ALL_WARNINGS</a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-cmake-options">General CMake options</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cmake-install-prefix">CMAKE_INSTALL_PREFIX</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cmake-build-type">CMAKE_BUILD_TYPE</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cmake-cxx-compiler">CMAKE_CXX_COMPILER</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cmake-cxx-flags">CMAKE_CXX_FLAGS</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step">Step by step</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-or-install-dependencies">1. Load or install dependencies</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-the-repository">2. Clone the repository</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-and-build">3. Configure and build</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-build">4. Test your build</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quirks-and-issues">Quirks and issues</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gtest-from-conda-forge">GTest from conda-forge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-openturbine">Building OpenTurbine</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-openturbine-and-setup-a-build-directory">Clone OpenTurbine and setup a build directory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-cmake">Configure cmake</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-test">Build and Test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-options">Build Options</a></li>
 </ul>
 </li>
 </ul>
@@ -820,6 +651,7 @@ By National Renewable Energy Laboratory
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
       © Copyright 2023.
@@ -846,8 +678,8 @@ By National Renewable Energy Laboratory
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>
