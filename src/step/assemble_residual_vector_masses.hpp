@@ -7,17 +7,29 @@
 
 namespace openturbine {
 
+namespace masses {
+
+struct AssembleMassesResidual {
+    Kokkos::View<double* [6]>::const_type qp_Fi;
+    Kokkos::View<double* [6]>::const_type qp_Fg;
+
+    Kokkos::View<double* [6]> residual_vector_terms;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t i_elem) const {
+        for (auto i_dof = 0U; i_dof < 6U; ++i_dof) {
+            residual_vector_terms(i_elem, i_dof) = qp_Fi(i_elem, i_dof) - qp_Fg(i_elem, i_dof);
+        }
+    }
+};
+
+}  // namespace masses
+
 inline void AssembleResidualVectorMasses(const Masses& masses) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Masses Residual");
     Kokkos::parallel_for(
         "AssembleMassesResidual", masses.num_elems,
-        KOKKOS_LAMBDA(const int i_elem) {
-            // Add inertial (Fi) to and subtract gravity (Fg) forces from residual
-            for (auto i_dof = 0U; i_dof < 6U; ++i_dof) {
-                masses.residual_vector_terms(i_elem, i_dof) =
-                    masses.qp_Fi(i_elem, i_dof) - masses.qp_Fg(i_elem, i_dof);
-            }
-        }
+        masses::AssembleMassesResidual{masses.qp_Fi, masses.qp_Fg, masses.residual_vector_terms}
     );
 }
 

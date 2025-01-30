@@ -22,7 +22,7 @@ namespace openturbine::masses {
  * @param qp_x_ Output current positions and orientations (num_elems x num_qps x 7)
  *              where [0:3] = position, [3:7] = orientation quaternion
  */
-struct CalculateQPPosition {
+struct CalculateQPPosition_Element {
     size_t i_elem;
     Kokkos::View<double* [3]>::const_type qp_x0_;
     Kokkos::View<double* [3]>::const_type qp_u_;
@@ -50,4 +50,15 @@ struct CalculateQPPosition {
     }
 };
 
+struct CalculateQPPosition {
+    Kokkos::View<double* [3]>::const_type qp_x0_;
+    Kokkos::View<double* [3]>::const_type qp_u_;
+    Kokkos::View<double* [4]>::const_type qp_r0_;
+    Kokkos::View<double* [4]>::const_type qp_r_;
+    Kokkos::View<double* [7]> qp_x_;
+
+    KOKKOS_FUNCTION void operator()(size_t i_elem) const {
+        CalculateQPPosition_Element{i_elem, qp_x0_, qp_u_, qp_r0_, qp_r_, qp_x_}();
+    }
+};
 }  // namespace openturbine::masses
