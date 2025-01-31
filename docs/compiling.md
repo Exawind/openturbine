@@ -1,27 +1,39 @@
 # Compiling
 
-OpenTurbine is written in C++17 and should be buildable on all systems with a compliant compiler.
-Because it leverages Kokkos and Trilinos for performance portability, OpenTurbine is expected to run anywhere that those projects support.
-Every effort is made to test on a variety of platforms, including both Linux and MacOS, but it is unlikely that we routinely cover all possibilities.
-This page documents the build proceedure as known to work on Linux (RHEL8).  
-Please reach out to the developers if additional guidance is needed for your particular situation.
+OpenTurbine is developed in C++17 and is designed to be buildable on any
+system with a compliant compiler. It utilizes
+[Kokkos](https://github.com/kokkos/kokkos) and
+[Trilinos](https://github.com/trilinos/Trilinos) to ensure performance
+portability, allowing it to run on any platform supported by these projects.
+We strive to test OpenTurbine on a wide range of platforms, including Linux
+and macOS, although it is not feasible to cover every possible configuration.
+This document outlines the build procedure verified to work on Linux (RHEL8).
+For additional assistance tailored to your specific setup, please contact the
+developers.
 
 ## Dependencies
 
 Before building OpenTurbine, you'll need the following:
 
 - C++ compiler that supports the C++17 standard
-- [CMake](<https://cmake.org/>) the default build system for C++ projects, version 3.21+
-- [Kokkos](https://github.com/kokkos/kokkos) core programming model for performance portability
-- [KokkosKernels](https://github.com/kokkos/kokkoskernels) performance portable linear algebra library
-- [Trilinos](https://github.com/trilinos/Trilinos) primarily for the Amesos2 sparse direct linear solver package
-- [GoogleTest](https://github.com/google/googletest) unit testing package
+- [CMake](https://cmake.org/): the default build system for C++ projects,
+  version 3.21 or later
+- [Kokkos](https://github.com/kokkos/kokkos): core programming model for
+  performance portability
+- [KokkosKernels](https://github.com/kokkos/kokkoskernels): performance
+  portable linear algebra library
+- [Trilinos](https://github.com/trilinos/Trilinos): primarily for the
+  Amesos2 sparse direct linear solver package
+- [GoogleTest](https://github.com/google/googletest): unit testing package
 
-## Installing Third Party Librariess
+## Installing Third Party Libraries
 
-While there are many ways to get the required Third Party Libraries (TPLs) for building, the easiest is the use the [spack](https://github.com/spack/spack) package manager.
-Spack provides a rich featureset for development and dependency management.
-The following should be considered a quick-start guide for installing and loading the TPLs you'll need for building OpenTurbine.
+There are several methods to obtain the necessary Third Party Libraries
+(TPLs) for building OpenTurbine, however the simplest is to use the
+[spack](https://github.com/spack/spack) package manager. Spack offers a
+comprehensive set of features for development and dependency management. The
+following is a quick-start guide for installing and loading the TPLs required
+to build OpenTurbine.
 
 ### Clone the spack repository, load the spack environment, and let spack learn about your system
 ```bash
@@ -36,12 +48,13 @@ spack external find
 spack install googletest
 ```
 
-### Install Trilinos.
+### Install Trilinos
 
-For building OpenTurbine, Kokkos Kernels must be configured to use the LAPACK and BLAS TPLs.
-When building for GPU, the Trilinos must be build with support for the Basker linear solver
-We also commonly disable EPetra explicitly to prevent deprication warnings.
-At the time of this writing, OpenTurbine is known to work with Trilinos version 16.0.0 - the latest and default version in spack 
+To build OpenTurbine, Kokkos Kernels must be configured to use the LAPACK
+and BLAS TPLs. For GPU builds, Trilinos should be compiled with support for
+the Basker linear solver. Additionally, we typically disable EPetra to avoid
+deprecation warnings. As of this writing, OpenTurbine is compatible with
+Trilinos version 16.0.0, which is the latest and default version in spack.
 
 For a simple serial build
 ```bash
@@ -63,7 +76,7 @@ If building for ROCm platforms, Trilinos must be configured with ROCm support
 spack install trilinos~epetra+basker+rocm ^kokkos-kernels+blas+lapack
 ```
 
-Trilinos can be built with or without mpi support.
+Trilinos can be built with or without MPI support.
 
 ### Load the TPLs into your environment
 ```bash
@@ -71,15 +84,19 @@ spack load googletest
 spack load trilinos
 ```
 
-Trilinos can also be compiled with support for other platforms.
-It is assumed that OpenTurbine will inherit compatibility with them, but they have not been tested at the time of writing.
+Trilinos can be compiled with support for various platforms. While it is
+assumed that OpenTurbine will inherit compatibility with these platforms,
+they have not been tested at the time of writing.
 
-For those that choose not to use spack, you must build all of the dependencies manually.  
-You will have to ensure the the `Amesos2_DIR`, `GTest_DIR`, and `KokkosKernels_DIR` environment variables are properly set for those packages, or otherwise make sure that cmake's `find_package` utility will be able to find them.  
+If you choose not to use Spack, you must manually build all dependencies.
+Please ensure that the `Amesos2_DIR`, `GTest_DIR`, and `KokkosKernels_DIR`
+environment variables are correctly set for these packages. Alternatively,
+make sure that CMake's `find_package` utility can locate them.
 
 ## Building OpenTurbine
 
-The following is written assuming the TPLs in hand and the environment configured as described above.
+The following is written assuming the TPLs in hand and the environment
+configured as described above.
 
 ### Clone OpenTurbine and setup a build directory
 ```bash
@@ -96,26 +113,30 @@ For a CPU-based build which includes building unit tests, use
 cmake ../
 ```
 
-If Trilinos was built with CUDA support, you will need to use the nvcc_wrapper for compilation
+If Trilinos was built with CUDA support, you will need to use the nvcc_wrapper
+for compilation
 ```bash
 cmake ../ -DCMAKE_CXX_COMPILER=nvcc_wrapper
 ```
 
-If Trilinos was built with ROCm support, you will need to use the hipcc program for compilation
+If Trilinos was built with ROCm support, you will need to use the hipcc program
+for compilation
 ```bash
 cmake ../ -DCMAKE_CXX_COMPILER=hipcc
 ```
 
 ### Build and Test
-At this time, OpenTurbine builds several shared libraries by default.  
-In order for thier unit tests to pass, they will have to be copied into the directory where your tests are run.
+Currently, OpenTurbine builds several shared libraries by default. To ensure
+that their unit tests pass, these libraries must be copied into the directory
+where the tests are executed.
 ```bash
 make -j
 cp src/*.dll tests/unit_tests/
 ctest --output-on-failure
 ```
 
-Once built, the unit test executable can also be run directly from the build directory
+Once built, the unit test executable can also be run directly from the build
+directory
 ```bash
 cp src/*.dll ./
 ./tests/unit_tests/openturbine_unit_tests
@@ -123,19 +144,29 @@ cp src/*.dll ./
 
 ### Build Options
 
-OpenTurbine has several build options which can be set either when running cmake from the commandline or through a GUI such as ccmake.
+OpenTurbine has several build options which can be set either when running
+CMake from the command line or through a GUI such as ccmake.
 
 - [OpenTurbine_ENABLE_CLANG_TIDY] enables the Clang-Tidy static analysis tool
 - [OpenTurbine_ENABLE_COVERAGE] enables code coverage analysis using gcov
 - [OpenTurbine_ENABLE_CPPCHECK] enables the CppCheck static analysis tool
 - [OpenTurbine_ENABLE_IPO] enables link time optimization
-- [OpenTurbine_ENABLE_PCH] builds precompiled headers to potentially decrease compilation time
-- [OpenTurbine_ENABLE_SANITIZER_ADDRESS] enables the address sanitizer runtime analysis tool
-- [OpenTurbine_ENABLE_SANITIZER_LEAK] enables the leak sanitizer runtime analysis tool
-- [OpenTurbine_ENABLE_SANITIZER_MEMORY] enables the memory sanitizer runtime analysis tool
-- [OpenTurbine_ENABLE_SANITIZER_THREAD] enables the thread sanitizer runtime analysis tool
-- [OpenTurbine_ENABLE_SANITIZER_UNDEFINED] enables the undefined behavior sanitizer runtime analysis tool
+- [OpenTurbine_ENABLE_PCH] builds precompiled headers to potentially decrease
+  compilation time
+- [OpenTurbine_ENABLE_SANITIZER_ADDRESS] enables the address sanitizer runtime
+  analysis tool
+- [OpenTurbine_ENABLE_SANITIZER_LEAK] enables the leak sanitizer runtime
+  analysis tool
+- [OpenTurbine_ENABLE_SANITIZER_MEMORY] enables the memory sanitizer runtime
+  analysis tool
+- [OpenTurbine_ENABLE_SANITIZER_THREAD] enables the thread sanitizer runtime
+  analysis tool
+- [OpenTurbine_ENABLE_SANITIZER_UNDEFINED] enables the undefined behavior
+  sanitizer runtime analysis tool
 - [OpenTurbine_ENABLE_TESTS] builds OpenTurbine's test suite
-- [OpenTurbine_ENABLE_UNITY_BUILD] uses unity builds to potentially decrease compilation time
-- [OpenTurbine_ENABLE_VTK] builds OpenTurbine with VTK support for visualization in tests.  Will need the VTK TPL to be properly configured
-- [OpenTurbine_WARNINGS_AS_ERRORS] treats warnings as errors, including warnings from static analysis tools
+- [OpenTurbine_ENABLE_UNITY_BUILD] uses unity builds to potentially decrease
+  compilation time
+- [OpenTurbine_ENABLE_VTK] builds OpenTurbine with VTK support for
+  visualization in tests. Will need the VTK TPL to be properly configured
+- [OpenTurbine_WARNINGS_AS_ERRORS] treats warnings as errors, including
+  warnings from static analysis tools
