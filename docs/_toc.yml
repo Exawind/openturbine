@@ -1,13 +1,10 @@
 # Table of contents
-# Learn more at https://jupyterbook.org/customize/toc.html
-
 format: jb-book
 root: intro
 chapters:
 - file: getting_started
-- file: tutorials
-- file: input_file
-- file: reference
+- file: user_guide
+- file: theory_guide
 - file: dev_guide
   sections:
   - file: dev_plan
