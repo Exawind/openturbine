@@ -166,7 +166,9 @@
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="theory_guide.html">Theory Manual</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="rigid_body.html">Rigid Body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flexible_beam.html">SO(3)-based GEBT Beam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigid_body.html">R3xSO(3)-based Rigid Body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nonlinear_spring.html">R3-based geometrically nonlinear, constitutively linear spring</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="dev_guide.html">Developer’s Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -386,6 +388,9 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spack-installation">Spack Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development-using-spack-developer-workflow">Development using Spack Developer Workflow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-and-developing-in-openturbine-directly">Building and Developing in OpenTurbine Directly</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-third-party-libraries">Installing Third Party Libraries</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-the-spack-repository-load-the-spack-environment-and-let-spack-learn-about-your-system">Clone the spack repository, load the spack environment, and let spack learn about your system</a></li>
@@ -424,6 +429,74 @@ and macOS, although it is not feasible to cover every possible configuration.
 This document outlines the build procedure verified to work on Linux (RHEL8).
 For additional assistance tailored to your specific setup, please contact the
 developers.</p>
+<section id="spack-installation">
+<h2>Spack Installation<a class="headerlink" href="#spack-installation" title="Link to this heading">#</a></h2>
+<p>The easiest way to use OpenTurbine is through the <a class="reference external" href="https://spack.io/">Spack</a>
+package manager. Once you have downloaded and set up Spack for your
+environment, simply run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>install<span class="w"> </span>openturbine
+</pre></div>
+</div>
+<p>To see the latest list of supported configuration options, check out the
+package file or run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>info<span class="w"> </span>openturbine
+</pre></div>
+</div>
+<p>Once it is installed, you can load the OpenTurbine library and its
+dependencies into your environment using</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>load<span class="w"> </span>openturbine
+</pre></div>
+</div>
+</section>
+<section id="development-using-spack-developer-workflow">
+<h2>Development using Spack Developer Workflow<a class="headerlink" href="#development-using-spack-developer-workflow" title="Link to this heading">#</a></h2>
+<p>One easy way to set up a development environment for OpenTurbine is to use
+Spack’s Developer Workflow. To setup an environment for working on
+OpenTurbine, setup Spack and then run the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>openturbine
+<span class="nb">cd</span><span class="w"> </span>openturbine
+spack<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-d<span class="w"> </span>.
+spack<span class="w"> </span>env<span class="w"> </span>activate<span class="w"> </span>.
+spack<span class="w"> </span>add<span class="w"> </span>openturbine+tests
+spack<span class="w"> </span>install
+spack<span class="w"> </span>develop<span class="w"> </span>openturbine@main
+spack<span class="w"> </span>concretize<span class="w"> </span>-f
+spack<span class="w"> </span>install
+</pre></div>
+</div>
+<p>OpenTurbine’s source code will now be located in the openturbine folder, but
+can be accessed from anywhere by</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>-c<span class="w"> </span>openturbine
+</pre></div>
+</div>
+<p>After editing the code here, it can be rebuilt by running</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>install
+</pre></div>
+</div>
+<p>To run the tests, first access the build folder through the spack command</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>-b<span class="w"> </span>openturbine
+</pre></div>
+</div>
+<p>Next, the tests can be run either through ctest or directly from the unit
+test or regression test executables</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ctest
+./tests/unit_tests/openturbine_unit_tests
+./tests/regression_tests/openturbine_regression_tests
+</pre></div>
+</div>
+<p>You can also build OpenTurbine from this folder using standard make
+commands.</p>
+<p>For more information, please see Spack’s documentation:
+<a class="reference external" href="https://spack-tutorial.readthedocs.io/en/latest/tutorial_developer_workflows.html">https://spack-tutorial.readthedocs.io/en/latest/tutorial_developer_workflows.html</a></p>
+</section>
+<section id="building-and-developing-in-openturbine-directly">
+<h2>Building and Developing in OpenTurbine Directly<a class="headerlink" href="#building-and-developing-in-openturbine-directly" title="Link to this heading">#</a></h2>
+<p>The following sections outline how to build and develop OpenTurbine without
+Spack’s Developer Workflows. The main complication here is that developers
+will have to manage their environment and dependencies manually, which may
+be an unnecessary complication or a freeing feature, depending on your
+perspective.</p>
+</section>
 <section id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
 <p>Before building OpenTurbine, you’ll need the following:</p>
@@ -444,7 +517,7 @@ Amesos2 sparse direct linear solver package</p></li>
 <h2>Installing Third Party Libraries<a class="headerlink" href="#installing-third-party-libraries" title="Link to this heading">#</a></h2>
 <p>There are several methods to obtain the necessary Third Party Libraries
 (TPLs) for building OpenTurbine, however the simplest is to use the
-<a class="reference external" href="https://github.com/spack/spack">spack</a> package manager. Spack offers a
+<a class="reference external" href="https://spack.io/">spack</a> package manager. Spack offers a
 comprehensive set of features for development and dependency management. The
 following is a quick-start guide for installing and loading the TPLs required
 to build OpenTurbine.</p>
@@ -545,8 +618,7 @@ ctest<span class="w"> </span>--output-on-failure
 </div>
 <p>Once built, the unit test executable can also be run directly from the build
 directory</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>src/*.dll<span class="w"> </span>./
-./tests/unit_tests/openturbine_unit_tests
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tests/unit_tests/openturbine_unit_tests
 </pre></div>
 </div>
 </section>
@@ -648,6 +720,9 @@ warnings from static analysis tools</p></li>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spack-installation">Spack Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development-using-spack-developer-workflow">Development using Spack Developer Workflow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-and-developing-in-openturbine-directly">Building and Developing in OpenTurbine Directly</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-third-party-libraries">Installing Third Party Libraries</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-the-spack-repository-load-the-spack-environment-and-let-spack-learn-about-your-system">Clone the spack repository, load the spack environment, and let spack learn about your system</a></li>

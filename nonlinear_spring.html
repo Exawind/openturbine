@@ -6,7 +6,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Search - OpenTurbine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>R3-based geometrically nonlinear, constitutively linear spring &#8212; OpenTurbine</title>
   
   
   
@@ -58,20 +60,13 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">
-import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
-window.addEventListener("load", () => mermaid.run());
-</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'search';</script>
-  <script src="_static/searchtools.js"></script>
-  <script src="_static/language_data.js"></script>
-  <script src="searchindex.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'nonlinear_spring';</script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Developer’s Guide" href="dev_guide.html" />
+    <link rel="prev" title="R3xSO(3)-based Rigid Body" href="rigid_body.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -93,7 +88,7 @@ window.addEventListener("load", () => mermaid.run());
   <dialog id="pst-search-dialog">
     
 <form class="bd-search d-flex align-items-center"
-      action="#"
+      action="search.html"
       method="get">
   <i class="fa-solid fa-magnifying-glass"></i>
   <input type="search"
@@ -122,8 +117,6 @@ window.addEventListener("load", () => mermaid.run());
     <div class="bd-container__inner bd-page-width">
       
       
-      
-        
       
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
@@ -171,13 +164,13 @@ window.addEventListener("load", () => mermaid.run());
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="theory_guide.html">Theory Manual</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="theory_guide.html">Theory Manual</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="flexible_beam.html">SO(3)-based GEBT Beam</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigid_body.html">R3xSO(3)-based Rigid Body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nonlinear_spring.html">R3-based geometrically nonlinear, constitutively linear spring</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">R3-based geometrically nonlinear, constitutively linear spring</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="dev_guide.html">Developer’s Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -264,7 +257,24 @@ window.addEventListener("load", () => mermaid.run());
       
       
       
-      <li><a href="https://github.com/exawind/openturbine/issues/new?title=Issue%20on%20page%20%2Fsearch.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/exawind/openturbine/edit/main/docs/nonlinear_spring.rst" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/exawind/openturbine/issues/new?title=Issue%20on%20page%20%2Fnonlinear_spring.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -276,6 +286,54 @@ window.addEventListener("load", () => mermaid.run());
   </span>
 <span class="btn__text-container">Open issue</span>
 </a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/nonlinear_spring.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
 </li>
       
   </ul>
@@ -318,41 +376,93 @@ window.addEventListener("load", () => mermaid.run());
 </div>
               
               
-  <div class="bd-search-container">
-    <h1>Search</h1>
-    <noscript>
-      <div class="admonition error">
-        <p class="admonition-title">Error</p>
-        <p>Please activate JavaScript to enable the search functionality.</p>
-      </div>
-    </noscript>
-    
-<form class="bd-search d-flex align-items-center"
-      action="#"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-    <div id="search-results"></div>
-  </div>
-  <script>
-    // Activate the search field on page load
-    let searchInput = document.querySelector("form.bd-search input");
-    if (searchInput) {
-        searchInput.focus();
-        searchInput.select();
-        console.log("[PST]: Set focus on search field.");
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>R3-based geometrically nonlinear, constitutively linear spring</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="r3-based-geometrically-nonlinear-constitutively-linear-spring">
+<h1>R3-based geometrically nonlinear, constitutively linear spring<a class="headerlink" href="#r3-based-geometrically-nonlinear-constitutively-linear-spring" title="Link to this heading">#</a></h1>
+<p><strong>Overview:</strong> Geometrically nonlinear and constitutively linear spring defined in <span class="math notranslate nohighlight">\(\underline{\underline{R}}^3\)</span></p>
+<p><strong>Spring Model Input at Initialization:</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\underline{x}_1^0 \in \mathbb{R}^3\)</span>: node 1 reference position; inertial CS</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{x}_2^0 \in \mathbb{R}^3\)</span>: node 2 reference position; inertial CS</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{u}_1^i \in \mathbb{R}^3\)</span>: node 1 initial displacement</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{u}_2^i \in \mathbb{R}^3\)</span>: node 2 initial displacement</p></li>
+<li><p><span class="math notranslate nohighlight">\(k\)</span> constitutively linear spring stiffness</p></li>
+<li><p><span class="math notranslate nohighlight">\(\ell^\mathrm{us}\)</span> unstretched reference length</p></li>
+</ul>
+<p><strong>Degrees of Freedom:</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\underline{u}_1 \in \mathbb{R}^3\)</span>: node 1 displacement at time <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{u}_2 \in \mathbb{R}^3\)</span>: node 2 displacement at time <span class="math notranslate nohighlight">\(t\)</span></p></li>
+</ul>
+<p><strong>Force:</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{F} = \begin{bmatrix}
+\underline{f} \\
+-\underline{f}
+\end{bmatrix}
+\,, \mathrm{where}\, \underline{F} \in \mathbb{R}^6\end{split}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\underline{f} = -k \frac{\underline{r} }{| \underline{r} |} \left( | \underline{r} | - \ell^\mathrm{us} \right)
+\,, \mathrm{where}\, \underline{r} = \underline{x}_2^0 + \underline{u}_2 - \underline{x}_1^0  - \underline{u}_1\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\delta \underline{f} = \underline{\underline{K}}_t
+\begin{bmatrix}
+\delta \underline{u}_1\\
+\delta \underline{u}_2
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{K}}_t =  \begin{bmatrix}
+\underline{\underline{A}} &amp; -\underline{\underline{A}} \\
+- \underline{\underline{A}} &amp; \underline{\underline{A}}
+\end{bmatrix}\end{split}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\underline{\underline{A}} =  k \left( \frac{\ell^\mathrm{us} }{|\underline{r} |} - 1\right) \underline{\underline{I}}
+- \frac{k \ell^\mathrm{us}}{|\underline{r}|^3}\left( \widetilde{r} \widetilde{r} + \underline{\underline{I}} (\underline{r}^T \underline{r} ) \right)\]</div>
+<p>Aside: For <span class="math notranslate nohighlight">\(\underline{a},\underline{r}\in \mathbb{R}^3\)</span>,
+<span class="math notranslate nohighlight">\(\underline{r} (\underline{a}^T \underline{r}) =
+\left[ \widetilde{r} \widetilde{r} + \underline{\underline{I}} \left( \underline{r}^T \underline{r} \right)
+\right] \underline{a}\)</span></p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
     }
-  </script>
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
 
               
               
@@ -361,6 +471,24 @@ window.addEventListener("load", () => mermaid.run());
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="rigid_body.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">R3xSO(3)-based Rigid Body</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dev_guide.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Developer’s Guide</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               

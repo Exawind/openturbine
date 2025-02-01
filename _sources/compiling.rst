@@ -12,6 +12,93 @@ This document outlines the build procedure verified to work on Linux (RHEL8).
 For additional assistance tailored to your specific setup, please contact the
 developers.
 
+Spack Installation
+------------------
+
+The easiest way to use OpenTurbine is through the `Spack <https://spack.io/>`_
+package manager. Once you have downloaded and set up Spack for your
+environment, simply run
+
+.. code-block:: bash
+
+    spack install openturbine
+
+To see the latest list of supported configuration options, check out the
+package file or run
+
+.. code-block:: bash
+
+    spack info openturbine
+
+Once it is installed, you can load the OpenTurbine library and its
+dependencies into your environment using
+
+.. code-block:: bash
+
+    spack load openturbine
+
+Development using Spack Developer Workflow
+------------------------------------------
+
+One easy way to set up a development environment for OpenTurbine is to use
+Spack's Developer Workflow. To setup an environment for working on
+OpenTurbine, setup Spack and then run the following commands:
+
+.. code-block:: bash
+
+    mkdir openturbine
+    cd openturbine
+    spack env create -d .
+    spack env activate .
+    spack add openturbine+tests
+    spack install
+    spack develop openturbine@main
+    spack concretize -f
+    spack install
+
+OpenTurbine's source code will now be located in the openturbine folder, but
+can be accessed from anywhere by
+
+.. code-block:: bash
+
+    spack cd -c openturbine
+
+After editing the code here, it can be rebuilt by running
+
+.. code-block:: bash
+
+    spack install
+
+To run the tests, first access the build folder through the spack command
+
+.. code-block:: bash
+
+    spack cd -b openturbine
+
+Next, the tests can be run either through ctest or directly from the unit
+test or regression test executables
+
+.. code-block:: bash
+
+    ctest
+    ./tests/unit_tests/openturbine_unit_tests
+    ./tests/regression_tests/openturbine_regression_tests
+
+You can also build OpenTurbine from this folder using standard make
+commands.
+
+For more information, please see Spack's documentation:
+https://spack-tutorial.readthedocs.io/en/latest/tutorial_developer_workflows.html
+
+Building and Developing in OpenTurbine Directly
+-----------------------------------------------
+
+The following sections outline how to build and develop OpenTurbine without
+Spack's Developer Workflows. The main complication here is that developers
+will have to manage their environment and dependencies manually, which may
+be an unnecessary complication or a freeing feature, depending on your
+perspective.
+
 Dependencies
 ------------
 
@@ -33,7 +120,7 @@ Installing Third Party Libraries
 
 There are several methods to obtain the necessary Third Party Libraries
 (TPLs) for building OpenTurbine, however the simplest is to use the
-`spack <https://github.com/spack/spack>`_ package manager. Spack offers a
+`spack <https://spack.io/>`_ package manager. Spack offers a
 comprehensive set of features for development and dependency management. The
 following is a quick-start guide for installing and loading the TPLs required
 to build OpenTurbine.
@@ -164,7 +251,6 @@ directory
 
 .. code-block:: bash
 
-    cp src/*.dll ./
     ./tests/unit_tests/openturbine_unit_tests
 
 Build Options
