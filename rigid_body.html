@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorials / How-To &#8212; OpenTurbine</title>
+    <title>Rigid Body &#8212; OpenTurbine</title>
   
   
   
@@ -60,11 +60,13 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials';</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'rigid_body';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Input File" href="input_file.html" />
-    <link rel="prev" title="Getting Started" href="getting_started.html" />
+    <link rel="next" title="Developer’s Guide" href="dev_guide.html" />
+    <link rel="prev" title="Theory Manual" href="theory_guide.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -158,15 +160,17 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    OpenTurbine: A flexible multibody structural dynamics code for wind turbines
+                    OpenTurbine
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Tutorials / How-To</a></li>
-<li class="toctree-l1"><a class="reference internal" href="input_file.html">Input File</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="theory_guide.html">Theory Manual</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Rigid Body</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="dev_guide.html">Developer’s Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="dev_plan.html">OpenTurbine Development Plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Compiling</a></li>
@@ -251,7 +255,7 @@
       
       
       
-      <li><a href="https://github.com/exawind/openturbine/edit/main/docs/tutorials.md" target="_blank"
+      <li><a href="https://github.com/exawind/openturbine/edit/main/docs/rigid_body.rst" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -268,7 +272,7 @@
       
       
       
-      <li><a href="https://github.com/exawind/openturbine/issues/new?title=Issue%20on%20page%20%2Ftutorials.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/exawind/openturbine/issues/new?title=Issue%20on%20page%20%2Frigid_body.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -298,7 +302,7 @@
       
       
       
-      <li><a href="_sources/tutorials.md" target="_blank"
+      <li><a href="_sources/rigid_body.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -308,7 +312,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.md</span>
+<span class="btn__text-container">.rst</span>
 </a>
 </li>
       
@@ -361,7 +365,9 @@
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -372,11 +378,23 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Tutorials / How-To</h1>
+    <h1>Rigid Body</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rigid-body-model-input-at-initialization">Rigid-Body Model Input at Initialization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#degrees-of-freedom">Degrees of Freedom</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residual">Residual</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-integration">Time Integration</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -386,13 +404,128 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="tutorials-how-to">
-<span id="tutorials"></span><h1>Tutorials / How-To<a class="headerlink" href="#tutorials-how-to" title="Link to this heading">#</a></h1>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This page is under construction. Check back here throughout FY23
-for updates, and see activity at <a class="github reference external" href="https://github.com/exawind/openturbine">exawind/openturbine</a>.</p>
-</div>
+  <section id="rigid-body">
+<h1>Rigid Body<a class="headerlink" href="#rigid-body" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>Details for a rigid-body solver. Unlike Bruls et al (2012), this is formulated in inertial coordinates.</p>
+</section>
+<section id="rigid-body-model-input-at-initialization">
+<h2>Rigid-Body Model Input at Initialization<a class="headerlink" href="#rigid-body-model-input-at-initialization" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>M</strong>* ∈ ℝ<sup>6×6</sup>: Rigid body mass matrix in material coordinate system (CS)</p></li>
+<li><p><strong>x</strong><sup>0</sup> ∈ ℝ<sup>3</sup>: Rigid body reference position; inertial CS</p></li>
+<li><p><strong>R</strong><sup>0</sup> ∈ ℝ<sup>3×3</sup>: Rigid body reference orientation</p></li>
+<li><p><strong>u</strong><sup>i</sup> ∈ ℝ<sup>3</sup>: Rigid body initial displacement</p></li>
+<li><p><strong>R</strong><sup>i</sup> ∈ ℝ<sup>3×3</sup>: Rigid body initial orientation</p></li>
+<li><p><strong>u̇</strong><sup>i</sup> ∈ ℝ<sup>3</sup>: Rigid body initial velocity</p></li>
+<li><p><strong>ω</strong><sup>i</sup> ∈ ℝ<sup>3</sup>: Rigid body initial angular velocity</p></li>
+</ul>
+</section>
+<section id="degrees-of-freedom">
+<h2>Degrees of Freedom<a class="headerlink" href="#degrees-of-freedom" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>u</strong> ∈ ℝ<sup>3</sup>: Rigid body displacement at time <em>t</em></p></li>
+<li><p><strong>R</strong> ∈ ℝ<sup>3×3</sup>: Rigid-body orientation at time <em>t</em> (represented as <strong>q̂</strong> ∈ ℝ<sup>4</sup> quaternion)</p></li>
+<li><p><strong>ω</strong> ∈ ℝ<sup>3</sup>: Rigid body angular velocity at time <em>t</em></p></li>
+<li><p>Generalized coordinates:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}q = \begin{bmatrix}
+u \\
+R \\
+\end{bmatrix}
+, \quad
+\dot{q} = \begin{bmatrix}
+\dot{u} \\
+\omega \\
+\end{bmatrix}
+, \quad
+\ddot{q} = \begin{bmatrix}
+\ddot{u} \\
+\dot{\omega} \\
+\end{bmatrix}\end{split}\]</div>
+</section>
+<section id="residual">
+<h2>Residual<a class="headerlink" href="#residual" title="Link to this heading">#</a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}R^{\mathrm{rb}} =
+\begin{bmatrix}
+M^{\mathrm{rb}}\, \ddot{q} + g^{\mathrm{rb}} - F^{\mathrm{rb}} + B^T\lambda \\
+\Phi
+\end{bmatrix}
+\in \mathbb{R}^{6+nc}\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}B \in \mathbb{R}^{nc \times 6}\,, \quad
+\lambda \in \mathbb{R}^{nc}\,, \quad
+\Phi \in \mathbb{R}^{nc}\,, \quad
+F^{\mathrm{rb}}
+=
+\begin{bmatrix}
+f\\
+m\\
+\end{bmatrix}
+\in \mathbb{R}^{6}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}M^{\mathrm{rb}}
+= \begin{bmatrix}
+m I_3 &amp; m \tilde{\eta}^T \\
+m \tilde{\eta} &amp; \rho
+\end{bmatrix}
+= \mathcal{RR}^0\, M^* {\mathcal{RR}^0}^T
+%
+\in \mathbb{R}^{6\times 6}
+\,,\quad
+g^{\mathrm{rb}} = \begin{bmatrix}
+m \tilde{\omega} \tilde{\omega} \eta  \\
+\tilde{\omega} \rho \omega
+\end{bmatrix}\end{split}\]</div>
+<p>and where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathcal{RR}^0 =
+\begin{bmatrix}
+R^0 &amp; 0 \\
+0 &amp; R^0
+\end{bmatrix}
+\quad \text{for } \mathcal{RR}^0 \in \mathbb{R}^{6\times6}\end{split}\]</div>
+</section>
+<section id="time-integration">
+<h2>Time Integration<a class="headerlink" href="#time-integration" title="Link to this heading">#</a></h2>
+<p>Iteration matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}S_t =
+\begin{bmatrix}
+M_t \beta'+C_t \gamma' + K_t
+T(h \Delta q) &amp; B^T \\
+B\,T(h \Delta q)                     &amp; 0
+\end{bmatrix}
+, \quad S_{t} \in \mathbb{R}^{(6+nc) \times (6+nc)}\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[M_t = M^{\mathrm{rb}}\in \mathbb{R}^{6\times 6} \,, \quad
+C_t = \mathcal{G}^{\mathrm{rb}}\in \mathbb{R}^{6\times 6} \,, \quad
+K_t = \mathcal{K}^{\mathrm{rb}} \in \mathbb{R}^{6\times 6}\]</div>
+<p>and where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathcal{G}^{\mathrm{rb}} =
+\begin{bmatrix}
+0 &amp; \widetilde{ \widetilde{\omega} m \eta }^T
+         + \widetilde{\omega} m \widetilde{\eta}^T\\
+0 &amp; \widetilde{\omega} \rho - \widetilde{\rho \omega}
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathcal{K}^{\mathrm{rb}} =
+\begin{bmatrix}
+0 &amp; \left( \dot{\widetilde{\omega}} + \tilde{\omega}\tilde{\omega}
+        \right) m \widetilde{\eta}^T\\
+0 &amp; \ddot{\widetilde{u}} m \widetilde{\eta}
+         + \left(\rho\dot{\widetilde{\omega}}
+                 -\widetilde{\rho \dot{\omega}} \right)
+         + \widetilde{\omega} \left( \rho \widetilde{\omega}
+         - \widetilde{ \rho\omega} \right)
+\end{bmatrix}\end{split}\]</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -426,20 +559,20 @@ for updates, and see activity at <a class="github reference external" href="http
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="getting_started.html"
+       href="theory_guide.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Getting Started</p>
+        <p class="prev-next-title">Theory Manual</p>
       </div>
     </a>
     <a class="right-next"
-       href="input_file.html"
+       href="dev_guide.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Input File</p>
+        <p class="prev-next-title">Developer’s Guide</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -450,6 +583,26 @@ for updates, and see activity at <a class="github reference external" href="http
             
             
               
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rigid-body-model-input-at-initialization">Rigid-Body Model Input at Initialization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#degrees-of-freedom">Degrees of Freedom</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residual">Residual</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-integration">Time Integration</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
             
           </div>
           <footer class="bd-footer-content">
@@ -459,7 +612,7 @@ for updates, and see activity at <a class="github reference external" href="http
   <div class="footer-item">
     
 <p class="component-author">
-By National Renewable Energy Laboratory
+By National Renewable Energy Laboratory (NREL)
 </p>
 
   </div>
@@ -469,7 +622,7 @@ By National Renewable Energy Laboratory
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2023 - Present.
       <br/>
     
   </p>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>OpenTurbine: A flexible multibody structural dynamics code for wind turbines &#8212; OpenTurbine</title>
+    <title>OpenTurbine &#8212; OpenTurbine</title>
   
   
   
@@ -60,6 +60,8 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -159,15 +161,17 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1 current active">
                 <a class="reference internal" href="#">
-                    OpenTurbine: A flexible multibody structural dynamics code for wind turbines
+                    OpenTurbine
                 </a>
             </li>
         </ul>
         <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials / How-To</a></li>
-<li class="toctree-l1"><a class="reference internal" href="input_file.html">Input File</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="theory_guide.html">Theory Manual</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rigid_body.html">Rigid Body</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="dev_guide.html">Developer’s Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="dev_plan.html">OpenTurbine Development Plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Compiling</a></li>
@@ -373,7 +377,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>OpenTurbine: A flexible multibody structural dynamics code for wind turbines</h1>
+    <h1>OpenTurbine</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -387,47 +391,41 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="openturbine-a-flexible-multibody-structural-dynamics-code-for-wind-turbines">
-<h1>OpenTurbine: A flexible multibody structural dynamics code for wind turbines<a class="headerlink" href="#openturbine-a-flexible-multibody-structural-dynamics-code-for-wind-turbines" title="Link to this heading">#</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This page is under construction. Please check back here throughout FY23
-for updates, and see development activity at <a class="github reference external" href="https://github.com/exawind/openturbine">exawind/openturbine</a>.</p>
-</div>
-<p>OpenTurbine is a new, open-source wind turbine structural dynamics simulation
-code designed to meet the research needs of Wind Energy Technologies Office (WETO)
-and the broader wind energy community for land-based and offshore wind turbines.
-OpenTurbine will provide high-fidelity, highly performant structural dynamics
-models that can couple with low-fidelity aerodynamic/hydrodynamic models like those
+  <section class="tex2jax_ignore mathjax_ignore" id="openturbine">
+<h1>OpenTurbine<a class="headerlink" href="#openturbine" title="Link to this heading">#</a></h1>
+<p>OpenTurbine is an open-source wind turbine structural dynamics simulation
+code designed to meet the research needs of the Wind Energy Technologies Office (WETO)
+and the broader wind energy community for both land-based and offshore wind turbines.
+OpenTurbine offers high-fidelity, high-performance structural dynamics
+models that can integrate with low-fidelity aerodynamic/hydrodynamic models, such as those
 in <a class="reference external" href="https://github.com/OpenFAST/openfast">OpenFAST</a>, as well as high-fidelity
-computational fluid dynamics (CFD) models like those in the WETO and Office
-of Science supported <a class="reference external" href="https://github.com/Exawind">ExaWind</a> code suite.</p>
-<p>Following describes the high-level development objectives conceived for OpenTurbine:</p>
+computational fluid dynamics (CFD) models, like those in the WETO and Office
+of Science-supported <a class="reference external" href="https://github.com/Exawind">ExaWind</a> code suite.</p>
+<p>Following are the high-level development objectives for OpenTurbine:</p>
 <ul class="simple">
-<li><p>OpenTurbine will follow modern software development best practices. The
-development process will require test-driven development (TDD), version control,
-hierarchical automated testing, and continuous integration leading to a
+<li><p>OpenTurbine adheres to modern software development best practices. The
+development process emphasizes test-driven development (TDD), version control,
+hierarchical automated testing, and continuous integration, leading to a
 robust development environment.</p></li>
-<li><p>The core data structures will be memory efficient and will enable vectorization
+<li><p>OpenTurbine is being developed in modern C++ and leverages <a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a>
+as its performance-portability library, drawing inspiration from the ExaWind stack.</p></li>
+<li><p>The core data structures are crafted to be memory efficient, enabling vectorization
 and parallelization at multiple levels.</p></li>
-<li><p>They will be data-oriented to exploit methods for accelerated computing including
-high utilization of chip resources (e.g., single instruction multiple data i.e. SIMD),
+<li><p>These structures are data-oriented to leverage accelerated computing methods, including
+high utilization of chip resources (e.g., single instruction multiple data, SIMD),
 parallelization through GPGPUs or other hardware, and support for memory-efficient
 architectures.</p></li>
-<li><p>The computational algorithms will incorporate robust open-source libraries for
+<li><p>The computational algorithms incorporate robust open-source libraries for
 mathematical operations, resource allocation, and data management.</p></li>
-<li><p>The API design will consider multiple stakeholder needs and ensure
+<li><p>The API design considers the needs of multiple stakeholders, ensuring
 integration with existing and future ecosystems for data science, machine learning,
 and AI.</p></li>
-<li><p>OpenTurbine will be written in modern C++ and will leverage <a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a>
-as its performance-portability library with inspiration from the ExaWind stack.</p></li>
 </ul>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials / How-To</a></li>
-<li class="toctree-l1"><a class="reference internal" href="input_file.html">Input File</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory_guide.html">Theory Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev_guide.html">Developer’s Guide</a></li>
 </ul>
 </div>
@@ -488,7 +486,7 @@ as its performance-portability library with inspiration from the ExaWind stack.<
   <div class="footer-item">
     
 <p class="component-author">
-By National Renewable Energy Laboratory
+By National Renewable Energy Laboratory (NREL)
 </p>
 
   </div>
@@ -498,7 +496,7 @@ By National Renewable Energy Laboratory
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2023 - Present.
       <br/>
     
   </p>

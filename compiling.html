@@ -158,15 +158,17 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    OpenTurbine: A flexible multibody structural dynamics code for wind turbines
+                    OpenTurbine
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials / How-To</a></li>
-<li class="toctree-l1"><a class="reference internal" href="input_file.html">Input File</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="theory_guide.html">Theory Manual</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rigid_body.html">Rigid Body</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="dev_guide.html">Developer’s Guide</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="dev_plan.html">OpenTurbine Development Plan</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Compiling</a></li>
@@ -251,7 +253,7 @@
       
       
       
-      <li><a href="https://github.com/exawind/openturbine/edit/main/docs/compiling.md" target="_blank"
+      <li><a href="https://github.com/exawind/openturbine/edit/main/docs/compiling.rst" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -298,7 +300,7 @@
       
       
       
-      <li><a href="_sources/compiling.md" target="_blank"
+      <li><a href="_sources/compiling.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -308,7 +310,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.md</span>
+<span class="btn__text-container">.rst</span>
 </a>
 </li>
       
@@ -385,10 +387,10 @@
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-third-party-librariess">Installing Third Party Librariess</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-third-party-libraries">Installing Third Party Libraries</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-the-spack-repository-load-the-spack-environment-and-let-spack-learn-about-your-system">Clone the spack repository, load the spack environment, and let spack learn about your system</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-googletest">Install GoogleTest</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-trilinos">Install Trilinos.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-trilinos">Install Trilinos</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-tpls-into-your-environment">Load the TPLs into your environment</a></li>
 </ul>
 </li>
@@ -396,9 +398,9 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-openturbine-and-setup-a-build-directory">Clone OpenTurbine and setup a build directory</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-cmake">Configure cmake</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-test">Build and Test</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-options">Build Options</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-options">Build Options</a></li>
 </ul>
             </nav>
         </div>
@@ -410,30 +412,42 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="compiling">
+  <section id="compiling">
 <h1>Compiling<a class="headerlink" href="#compiling" title="Link to this heading">#</a></h1>
-<p>OpenTurbine is written in C++17 and should be buildable on all systems with a compliant compiler.
-Because it leverages Kokkos and Trilinos for performance portability, OpenTurbine is expected to run anywhere that those projects support.
-Every effort is made to test on a variety of platforms, including both Linux and MacOS, but it is unlikely that we routinely cover all possibilities.
-This page documents the build proceedure as known to work on Linux (RHEL8).<br />
-Please reach out to the developers if additional guidance is needed for your particular situation.</p>
+<p>OpenTurbine is developed in C++17 and is designed to be buildable on any
+system with a compliant compiler. It utilizes
+<a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a> and
+<a class="reference external" href="https://github.com/trilinos/Trilinos">Trilinos</a> to ensure performance
+portability, allowing it to run on any platform supported by these projects.
+We strive to test OpenTurbine on a wide range of platforms, including Linux
+and macOS, although it is not feasible to cover every possible configuration.
+This document outlines the build procedure verified to work on Linux (RHEL8).
+For additional assistance tailored to your specific setup, please contact the
+developers.</p>
 <section id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">#</a></h2>
 <p>Before building OpenTurbine, you’ll need the following:</p>
 <ul class="simple">
 <li><p>C++ compiler that supports the C++17 standard</p></li>
-<li><p><a class="reference external" href="https://cmake.org/">CMake</a> the default build system for C++ projects, version 3.21+</p></li>
-<li><p><a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a> core programming model for performance portability</p></li>
-<li><p><a class="reference external" href="https://github.com/kokkos/kokkoskernels">KokkosKernels</a> performance portable linear algebra library</p></li>
-<li><p><a class="reference external" href="https://github.com/trilinos/Trilinos">Trilinos</a> primarily for the Amesos2 sparse direct linear solver package</p></li>
-<li><p><a class="reference external" href="https://github.com/google/googletest">GoogleTest</a> unit testing package</p></li>
+<li><p><a class="reference external" href="https://cmake.org/">CMake</a>: the default build system for C++ projects,
+version 3.21 or later</p></li>
+<li><p><a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a>: core programming model for
+performance portability</p></li>
+<li><p><a class="reference external" href="https://github.com/kokkos/kokkoskernels">KokkosKernels</a>: performance
+portable linear algebra library</p></li>
+<li><p><a class="reference external" href="https://github.com/trilinos/Trilinos">Trilinos</a>: primarily for the
+Amesos2 sparse direct linear solver package</p></li>
+<li><p><a class="reference external" href="https://github.com/google/googletest">GoogleTest</a>: unit testing package</p></li>
 </ul>
 </section>
-<section id="installing-third-party-librariess">
-<h2>Installing Third Party Librariess<a class="headerlink" href="#installing-third-party-librariess" title="Link to this heading">#</a></h2>
-<p>While there are many ways to get the required Third Party Libraries (TPLs) for building, the easiest is the use the <a class="reference external" href="https://github.com/spack/spack">spack</a> package manager.
-Spack provides a rich featureset for development and dependency management.
-The following should be considered a quick-start guide for installing and loading the TPLs you’ll need for building OpenTurbine.</p>
+<section id="installing-third-party-libraries">
+<h2>Installing Third Party Libraries<a class="headerlink" href="#installing-third-party-libraries" title="Link to this heading">#</a></h2>
+<p>There are several methods to obtain the necessary Third Party Libraries
+(TPLs) for building OpenTurbine, however the simplest is to use the
+<a class="reference external" href="https://github.com/spack/spack">spack</a> package manager. Spack offers a
+comprehensive set of features for development and dependency management. The
+following is a quick-start guide for installing and loading the TPLs required
+to build OpenTurbine.</p>
 <section id="clone-the-spack-repository-load-the-spack-environment-and-let-spack-learn-about-your-system">
 <h3>Clone the spack repository, load the spack environment, and let spack learn about your system<a class="headerlink" href="#clone-the-spack-repository-load-the-spack-environment-and-let-spack-learn-about-your-system" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:spack/spack.git
@@ -450,11 +464,12 @@ spack<span class="w"> </span>external<span class="w"> </span>find
 </div>
 </section>
 <section id="install-trilinos">
-<h3>Install Trilinos.<a class="headerlink" href="#install-trilinos" title="Link to this heading">#</a></h3>
-<p>For building OpenTurbine, Kokkos Kernels must be configured to use the LAPACK and BLAS TPLs.
-When building for GPU, the Trilinos must be build with support for the Basker linear solver
-We also commonly disable EPetra explicitly to prevent deprication warnings.
-At the time of this writing, OpenTurbine is known to work with Trilinos version 16.0.0 - the latest and default version in spack</p>
+<h3>Install Trilinos<a class="headerlink" href="#install-trilinos" title="Link to this heading">#</a></h3>
+<p>To build OpenTurbine, Kokkos Kernels must be configured to use the LAPACK
+and BLAS TPLs. For GPU builds, Trilinos should be compiled with support for
+the Basker linear solver. Additionally, we typically disable EPetra to avoid
+deprecation warnings. As of this writing, OpenTurbine is compatible with
+Trilinos version 16.0.0, which is the latest and default version in spack.</p>
 <p>For a simple serial build</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>install<span class="w"> </span>trilinos~epetra<span class="w"> </span>^kokkos-kernels+blas+lapack
 </pre></div>
@@ -471,7 +486,7 @@ At the time of this writing, OpenTurbine is known to work with Trilinos version 
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>install<span class="w"> </span>trilinos~epetra+basker+rocm<span class="w"> </span>^kokkos-kernels+blas+lapack
 </pre></div>
 </div>
-<p>Trilinos can be built with or without mpi support.</p>
+<p>Trilinos can be built with or without MPI support.</p>
 </section>
 <section id="load-the-tpls-into-your-environment">
 <h3>Load the TPLs into your environment<a class="headerlink" href="#load-the-tpls-into-your-environment" title="Link to this heading">#</a></h3>
@@ -479,15 +494,19 @@ At the time of this writing, OpenTurbine is known to work with Trilinos version 
 spack<span class="w"> </span>load<span class="w"> </span>trilinos
 </pre></div>
 </div>
-<p>Trilinos can also be compiled with support for other platforms.
-It is assumed that OpenTurbine will inherit compatibility with them, but they have not been tested at the time of writing.</p>
-<p>For those that choose not to use spack, you must build all of the dependencies manually.<br />
-You will have to ensure the the <code class="docutils literal notranslate"><span class="pre">Amesos2_DIR</span></code>, <code class="docutils literal notranslate"><span class="pre">GTest_DIR</span></code>, and <code class="docutils literal notranslate"><span class="pre">KokkosKernels_DIR</span></code> environment variables are properly set for those packages, or otherwise make sure that cmake’s <code class="docutils literal notranslate"><span class="pre">find_package</span></code> utility will be able to find them.</p>
+<p>Trilinos can be compiled with support for various platforms. While it is
+assumed that OpenTurbine will inherit compatibility with these platforms,
+they have not been tested at the time of writing.</p>
+<p>If you choose not to use Spack, you must manually build all dependencies.
+Please ensure that the <code class="docutils literal notranslate"><span class="pre">Amesos2_DIR</span></code>, <code class="docutils literal notranslate"><span class="pre">GTest_DIR</span></code>, and <code class="docutils literal notranslate"><span class="pre">KokkosKernels_DIR</span></code>
+environment variables are correctly set for these packages. Alternatively,
+make sure that CMake’s <code class="docutils literal notranslate"><span class="pre">find_package</span></code> utility can locate them.</p>
 </section>
 </section>
 <section id="building-openturbine">
 <h2>Building OpenTurbine<a class="headerlink" href="#building-openturbine" title="Link to this heading">#</a></h2>
-<p>The following is written assuming the TPLs in hand and the environment configured as described above.</p>
+<p>The following is written assuming the TPLs in hand and the environment
+configured as described above.</p>
 <section id="clone-openturbine-and-setup-a-build-directory">
 <h3>Clone OpenTurbine and setup a build directory<a class="headerlink" href="#clone-openturbine-and-setup-a-build-directory" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:Exawind/openturbine.git
@@ -503,50 +522,64 @@ mkdir<span class="w"> </span>build
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>../
 </pre></div>
 </div>
-<p>If Trilinos was built with CUDA support, you will need to use the nvcc_wrapper for compilation</p>
+<p>If Trilinos was built with CUDA support, you will need to use the nvcc_wrapper
+for compilation</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>../<span class="w"> </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>nvcc_wrapper
 </pre></div>
 </div>
-<p>If Trilinos was built with ROCm support, you will need to use the hipcc program for compilation</p>
+<p>If Trilinos was built with ROCm support, you will need to use the hipcc program
+for compilation</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>../<span class="w"> </span>-DCMAKE_CXX_COMPILER<span class="o">=</span>hipcc
 </pre></div>
 </div>
 </section>
 <section id="build-and-test">
 <h3>Build and Test<a class="headerlink" href="#build-and-test" title="Link to this heading">#</a></h3>
-<p>At this time, OpenTurbine builds several shared libraries by default.<br />
-In order for thier unit tests to pass, they will have to be copied into the directory where your tests are run.</p>
+<p>Currently, OpenTurbine builds several shared libraries by default. To ensure
+that their unit tests pass, these libraries must be copied into the directory
+where the tests are executed.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>-j
 cp<span class="w"> </span>src/*.dll<span class="w"> </span>tests/unit_tests/
 ctest<span class="w"> </span>--output-on-failure
 </pre></div>
 </div>
-<p>Once built, the unit test executable can also be run directly from the build directory</p>
+<p>Once built, the unit test executable can also be run directly from the build
+directory</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>src/*.dll<span class="w"> </span>./
 ./tests/unit_tests/openturbine_unit_tests
 </pre></div>
 </div>
 </section>
-<section id="build-options">
-<h3>Build Options<a class="headerlink" href="#build-options" title="Link to this heading">#</a></h3>
-<p>OpenTurbine has several build options which can be set either when running cmake from the commandline or through a GUI such as ccmake.</p>
-<ul class="simple">
-<li><p>[OpenTurbine_ENABLE_CLANG_TIDY] enables the Clang-Tidy static analysis tool</p></li>
-<li><p>[OpenTurbine_ENABLE_COVERAGE] enables code coverage analysis using gcov</p></li>
-<li><p>[OpenTurbine_ENABLE_CPPCHECK] enables the CppCheck static analysis tool</p></li>
-<li><p>[OpenTurbine_ENABLE_IPO] enables link time optimization</p></li>
-<li><p>[OpenTurbine_ENABLE_PCH] builds precompiled headers to potentially decrease compilation time</p></li>
-<li><p>[OpenTurbine_ENABLE_SANITIZER_ADDRESS] enables the address sanitizer runtime analysis tool</p></li>
-<li><p>[OpenTurbine_ENABLE_SANITIZER_LEAK] enables the leak sanitizer runtime analysis tool</p></li>
-<li><p>[OpenTurbine_ENABLE_SANITIZER_MEMORY] enables the memory sanitizer runtime analysis tool</p></li>
-<li><p>[OpenTurbine_ENABLE_SANITIZER_THREAD] enables the thread sanitizer runtime analysis tool</p></li>
-<li><p>[OpenTurbine_ENABLE_SANITIZER_UNDEFINED] enables the undefined behavior sanitizer runtime analysis tool</p></li>
-<li><p>[OpenTurbine_ENABLE_TESTS] builds OpenTurbine’s test suite</p></li>
-<li><p>[OpenTurbine_ENABLE_UNITY_BUILD] uses unity builds to potentially decrease compilation time</p></li>
-<li><p>[OpenTurbine_ENABLE_VTK] builds OpenTurbine with VTK support for visualization in tests.  Will need the VTK TPL to be properly configured</p></li>
-<li><p>[OpenTurbine_WARNINGS_AS_ERRORS] treats warnings as errors, including warnings from static analysis tools</p></li>
-</ul>
 </section>
+<section id="build-options">
+<h2>Build Options<a class="headerlink" href="#build-options" title="Link to this heading">#</a></h2>
+<p>OpenTurbine has several build options which can be set either when running
+CMake from the command line or through a GUI such as ccmake.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_CLANG_TIDY</span></code> enables the Clang-Tidy static analysis tool</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_COVERAGE</span></code> enables code coverage analysis using gcov</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_CPPCHECK</span></code> enables the CppCheck static analysis tool</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_IPO</span></code> enables link time optimization</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_PCH</span></code> builds precompiled headers to potentially decrease
+compilation time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_SANITIZER_ADDRESS</span></code> enables the address sanitizer runtime
+analysis tool</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_SANITIZER_LEAK</span></code> enables the leak sanitizer runtime
+analysis tool</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_SANITIZER_MEMORY</span></code> enables the memory sanitizer runtime
+analysis tool</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_SANITIZER_THREAD</span></code> enables the thread sanitizer runtime
+analysis tool</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_SANITIZER_UNDEFINED</span></code> enables the undefined behavior
+sanitizer runtime analysis tool</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_TESTS</span></code> builds OpenTurbine’s test suite</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_UNITY_BUILD</span></code> uses unity builds to potentially decrease
+compilation time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_VTK</span></code> builds OpenTurbine with VTK support for
+visualization in tests. Will need the VTK TPL to be properly configured</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenTurbine_WARNINGS_AS_ERRORS</span></code> treats warnings as errors, including
+warnings from static analysis tools</p></li>
+</ul>
 </section>
 </section>
 
@@ -616,10 +649,10 @@ ctest<span class="w"> </span>--output-on-failure
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-third-party-librariess">Installing Third Party Librariess</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-third-party-libraries">Installing Third Party Libraries</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-the-spack-repository-load-the-spack-environment-and-let-spack-learn-about-your-system">Clone the spack repository, load the spack environment, and let spack learn about your system</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-googletest">Install GoogleTest</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-trilinos">Install Trilinos.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-trilinos">Install Trilinos</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-tpls-into-your-environment">Load the TPLs into your environment</a></li>
 </ul>
 </li>
@@ -627,9 +660,9 @@ ctest<span class="w"> </span>--output-on-failure
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clone-openturbine-and-setup-a-build-directory">Clone OpenTurbine and setup a build directory</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configure-cmake">Configure cmake</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-test">Build and Test</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-options">Build Options</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-options">Build Options</a></li>
 </ul>
   </nav></div>
 
@@ -644,7 +677,7 @@ ctest<span class="w"> </span>--output-on-failure
   <div class="footer-item">
     
 <p class="component-author">
-By National Renewable Energy Laboratory
+By National Renewable Energy Laboratory (NREL)
 </p>
 
   </div>
@@ -654,7 +687,7 @@ By National Renewable Energy Laboratory
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2023 - Present.
       <br/>
     
   </p>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Input File &#8212; OpenTurbine</title>
+    <title>User Guide &#8212; OpenTurbine</title>
   
   
   
@@ -60,11 +60,11 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'input_file';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Reference" href="reference.html" />
-    <link rel="prev" title="Tutorials / How-To" href="tutorials.html" />
+    <link rel="next" title="Theory Manual" href="theory_guide.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -158,15 +158,17 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    OpenTurbine: A flexible multibody structural dynamics code for wind turbines
+                    OpenTurbine
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials / How-To</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Input File</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">User Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="theory_guide.html">Theory Manual</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rigid_body.html">Rigid Body</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="dev_guide.html">Developer’s Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="dev_plan.html">OpenTurbine Development Plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Compiling</a></li>
@@ -251,7 +253,7 @@
       
       
       
-      <li><a href="https://github.com/exawind/openturbine/edit/main/docs/input_file.md" target="_blank"
+      <li><a href="https://github.com/exawind/openturbine/edit/main/docs/user_guide.md" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -268,7 +270,7 @@
       
       
       
-      <li><a href="https://github.com/exawind/openturbine/issues/new?title=Issue%20on%20page%20%2Finput_file.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/exawind/openturbine/issues/new?title=Issue%20on%20page%20%2Fuser_guide.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -298,7 +300,7 @@
       
       
       
-      <li><a href="_sources/input_file.md" target="_blank"
+      <li><a href="_sources/user_guide.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -372,7 +374,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Input File</h1>
+    <h1>User Guide</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -386,14 +388,9 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="input-file">
-<span id="id1"></span><h1>Input File<a class="headerlink" href="#input-file" title="Link to this heading">#</a></h1>
-<p>This page describes the input file.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This page is under construction. Check back here throughout FY23
-for updates, and see activity at <a class="github reference external" href="https://github.com/exawind/openturbine">exawind/openturbine</a>.</p>
-</div>
+  <section class="tex2jax_ignore mathjax_ignore" id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading">#</a></h1>
+<p>This section describes the practical aspects of using OpenTurbine.</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -427,20 +424,20 @@ for updates, and see activity at <a class="github reference external" href="http
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="tutorials.html"
+       href="getting_started.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Tutorials / How-To</p>
+        <p class="prev-next-title">Getting Started</p>
       </div>
     </a>
     <a class="right-next"
-       href="reference.html"
+       href="theory_guide.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Reference</p>
+        <p class="prev-next-title">Theory Manual</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -460,7 +457,7 @@ for updates, and see activity at <a class="github reference external" href="http
   <div class="footer-item">
     
 <p class="component-author">
-By National Renewable Energy Laboratory
+By National Renewable Energy Laboratory (NREL)
 </p>
 
   </div>
@@ -470,7 +467,7 @@ By National Renewable Energy Laboratory
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2023 - Present.
       <br/>
     
   </p>
