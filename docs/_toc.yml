@@ -6,7 +6,9 @@ chapters:
 - file: user_guide
 - file: theory_guide
   sections:
+  - file: flexible_beam
   - file: rigid_body
+  - file: nonlinear_spring
 - file: dev_guide
   sections:
   - file: dev_plan

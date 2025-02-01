@@ -1,5 +1,5 @@
-Rigid Body
-=============
+R3xSO(3)-based Rigid Body
+==========================
 
 Overview
 --------
