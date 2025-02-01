@@ -5,6 +5,8 @@ chapters:
 - file: getting_started
 - file: user_guide
 - file: theory_guide
+  sections:
+  - file: rigid_body
 - file: dev_guide
   sections:
   - file: dev_plan

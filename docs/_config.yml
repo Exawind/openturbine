@@ -25,3 +25,4 @@ sphinx:
   mermaid_version: 8.13.3
   extra_extensions:
     - 'sphinxcontrib.mermaid'
+    - 'sphinx.ext.mathjax'
