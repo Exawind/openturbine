@@ -16,5 +16,5 @@ chapters:
   - file: documentation
   - file: tools
   - file: api_docs
-  - url: https://exawind.github.io/openturbine/doxygen/html/index.html
+  - url: https://exawind.github.io/openturbine/docs/doxygen/html/index.html
     title: API Documentation
