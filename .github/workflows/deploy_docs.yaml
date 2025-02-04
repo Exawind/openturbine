@@ -19,6 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r docs/requirements.txt
+        sudo apt-get install doxygen
     - name: Build Doxygen documentation
       working-directory: ${{runner.workspace}}/docs
       run: |
