@@ -19,7 +19,12 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r docs/requirements.txt
-    - name: Build
+    - name: Build Doxygen documentation
+      working-directory: ${{runner.workspace}}/docs
+      run: |
+        doxygen docs/doxygen/Doxyfile
+        cp -r docs/doxygen/html docs/_build/doxygen
+    - name: Build Jupyter Book
       run: |
         cd docs
         jupyter-book build .

@@ -1,28 +1,28 @@
 # Book settings
-title: OpenTurbine
-author: National Renewable Energy Laboratory (NREL)
-copyright: '2023 - Present'
-only_build_toc_files: true
+title: OpenTurbine - Flexible Multibody Structural Dynamics Code for Wind Turbines
+author: National Renewable Energy Laboratory (NREL) and Sandia National Laboratories (SNL)
+copyright: 2023 - Present, MIT License
+only_build_toc_files: false # build all files
 
-# Force re-execution of notebooks on each build
+# Execution settings
 execute:
-  execute_notebooks: auto
+  execute_notebooks: auto # force re-execution of notebooks on each build
 
-# Information about where the book exists on the web
-repository:
-  url: https://github.com/exawind/openturbine
-  path_to_book: docs
-  branch: main
-
-# Add GitHub buttons
+# HTML-specific settings
 html:
   use_issues_button: true
   use_repository_button: true
   use_edit_page_button: true
 
+# Github repository info
+repository:
+  url: https://github.com/exawind/openturbine
+  path_to_book: docs
+  branch: main
+
 # Configure Sphinx
 sphinx:
   mermaid_version: 8.13.3
   extra_extensions:
-    - 'sphinxcontrib.mermaid'
-    - 'sphinx.ext.mathjax'
+    - 'sphinxcontrib.mermaid' # for diagrams
+    - 'sphinx.ext.mathjax'    # for math
