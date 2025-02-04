@@ -1,5 +1,7 @@
 #pragma once
 
+#include <filesystem>
+
 #include "interfaces/cfd/interface_input.hpp"
 #include "interfaces/cfd/turbine.hpp"
 #include "model/model.hpp"
@@ -18,6 +20,12 @@ public:
 
     /// @brief Restore state for correction step
     void RestoreState();
+
+    /// @brief Write restart file
+    void WriteRestart(const std::filesystem::path& filename) const;
+
+    /// @brief Read restart file
+    void ReadRestart(const std::filesystem::path& filename);
 
     /// @brief  OpenTurbine class used for model construction
     Model model;
