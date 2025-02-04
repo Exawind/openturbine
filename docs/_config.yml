@@ -1,6 +1,7 @@
 # Book settings
-title: OpenTurbine - Flexible Multibody Structural Dynamics Code for Wind Turbines
+title: OpenTurbine
 author: National Renewable Energy Laboratory (NREL) and Sandia National Laboratories (SNL)
+logo: images/oturb_logo_v1.jpeg
 copyright: 2023 - Present, MIT License
 only_build_toc_files: false # build all files
 
