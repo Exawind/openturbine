@@ -1,9 +1,10 @@
 name: OpenTurbine-CI
 
-on: push
-  paths-ignore:
-    - 'docs/**'
-    - .github/workflows/deploy_docs.yaml
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/deploy_docs.yaml'
 
 jobs:
   Correctness-MacOS:
