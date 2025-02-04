@@ -275,4 +275,124 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     }
 }
 
+TEST(CFDInterfaceTest, Restart) {
+    // Solution parameters
+    constexpr auto time_step = 0.01;
+    constexpr auto rho_inf = 0.0;
+    constexpr auto max_iter = 5;
+
+    // Construct platform mass matrix
+    constexpr auto platform_mass{1.419625E+7};                           // kg
+    constexpr Array_3 gravity{0., 0., -9.8124};                          // m/s/s
+    constexpr Array_3 platform_moi{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
+    constexpr Array_3 platform_cm_position{0., 0., -7.53};               // m
+    constexpr Array_6x6 platform_mass_matrix{{
+        {platform_mass, 0., 0., 0., 0., 0.},    // Row 1
+        {0., platform_mass, 0., 0., 0., 0.},    // Row 2
+        {0., 0., platform_mass, 0., 0., 0.},    // Row 3
+        {0., 0., 0., platform_moi[0], 0., 0.},  // Row 4
+        {0., 0., 0., 0., platform_moi[1], 0.},  // Row 5
+        {0., 0., 0., 0., 0., platform_moi[2]},  // Row 6
+    }};
+
+    // Mooring line properties
+    constexpr auto mooring_line_stiffness{48.9e3};       // N
+    constexpr auto mooring_line_initial_length{55.432};  // m
+
+    auto interface_input = InterfaceInput{
+        gravity,
+        time_step,  // time step
+        rho_inf,    // rho infinity (numerical damping)
+        max_iter,   // max convergence iterations
+        TurbineInput{
+            FloatingPlatformInput{
+                true,  // enable
+                {
+                    platform_cm_position[0],
+                    platform_cm_position[1],
+                    platform_cm_position[2],
+                    1.,
+                    0.,
+                    0.,
+                    0.,
+                },                         // position
+                {0., 0., 0., 0., 0., 0.},  // velocity
+                {0., 0., 0., 0., 0., 0.},  // acceleration
+                platform_mass_matrix,
+                {
+                    {
+                        mooring_line_stiffness,
+                        mooring_line_initial_length,
+                        {-40.87, 0.0, -14.},    // Fairlead node coordinates
+                        {0., 0., 0.},           // Fairlead node velocity
+                        {0., 0., 0.},           // Fairlead node acceleration
+                        {-105.47, 0.0, -58.4},  // Anchor node coordinates
+                        {0., 0., 0.},           // Anchor node velocity
+                        {0., 0., 0.},           // Anchor node acceleration
+                    },
+                    {
+                        mooring_line_stiffness,
+                        mooring_line_initial_length,
+                        {20.43, -35.39, -14.},   // Fairlead node coordinates
+                        {0., 0., 0.},            // Fairlead node velocity
+                        {0., 0., 0.},            // Fairlead node acceleration
+                        {52.73, -91.34, -58.4},  // Anchor node coordinates
+                        {0., 0., 0.},            // Anchor node velocity
+                        {0., 0., 0.},            // Anchor node acceleration
+                    },
+                    {
+                        mooring_line_stiffness,
+                        mooring_line_initial_length,
+                        {20.43, 35.39, -14.},   // Fairlead node coordinates
+                        {0., 0., 0.},           // Fairlead node velocity
+                        {0., 0., 0.},           // Fairlead node acceleration
+                        {52.73, 91.34, -58.4},  // Anchor node coordinates
+                        {0., 0., 0.},           // Anchor node velocity
+                        {0., 0., 0.},           // Anchor node acceleration
+                    },
+                },
+            },
+        },
+    };
+
+    auto interface1 = Interface(interface_input);
+
+    // Take 10 initial steps
+    for (auto i = 0U; i < 100U; ++i) {
+        const auto t = static_cast<double>(i) * time_step;
+        interface1.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
+        auto converged = interface1.Step();
+        EXPECT_TRUE(converged);
+    }
+
+    interface1.WriteRestart("test_restart.dat");
+
+    // Take 10 more steps using original system
+    for (auto i = 0U; i < 100U; ++i) {
+        const auto t = static_cast<double>(i) * time_step;
+        interface1.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
+        auto converged = interface1.Step();
+        EXPECT_TRUE(converged);
+    }
+
+    auto interface2 = Interface(interface_input);
+    interface2.ReadRestart("test_restart.dat");
+
+    // Take 10 steps using restarted system
+    for (auto i = 0U; i < 100U; ++i) {
+        const auto t = static_cast<double>(i) * time_step;
+        interface2.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
+        auto converged = interface2.Step();
+        EXPECT_TRUE(converged);
+    }
+
+    const auto& platform_u_1 = interface1.turbine.floating_platform.node.displacement;
+    const auto& platform_u_2 = interface2.turbine.floating_platform.node.displacement;
+    // Ensure platform location is the same for original and restarted system
+    for (auto i = 0U; i < 7U; ++i) {
+        EXPECT_EQ(platform_u_1[i], platform_u_2[i]);
+    }
+
+    std::filesystem::remove("test_restart.dat");
+}
 }  // namespace openturbine::tests
