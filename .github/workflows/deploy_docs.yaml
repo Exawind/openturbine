@@ -21,7 +21,6 @@ jobs:
         pip install -r docs/requirements.txt
         sudo apt-get install doxygen
     - name: Build Doxygen documentation
-      working-directory: ${{runner.workspace}}/docs
       run: |
         doxygen docs/doxygen/Doxyfile
         cp -r docs/doxygen/html docs/_build/doxygen
