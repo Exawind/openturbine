@@ -1,20 +1,28 @@
 # Table of contents
 format: jb-book
 root: intro
-chapters:
-- file: getting_started
-- file: user_guide
-- file: theory_guide
-  sections:
-  - file: flexible_beam
-  - file: rigid_body
-  - file: nonlinear_spring
-- file: dev_guide
-  sections:
-  - file: dev_plan
-  - file: compiling
-  - file: documentation
-  - file: api_docs
-  - url: https://exawind.github.io/openturbine/_static/doxygen/html/index.html
-    title: API Documentation
-  - file: tools
+parts:
+  - caption: Getting Started
+    chapters:
+    - file: compiling
+
+  - caption: User Guide
+    chapters:
+    - file: user_guide_placeholder
+
+  - caption: Theory Guide
+    chapters:
+    - file: theory_guide_intro
+    - file: flexible_beam
+    - file: rigid_body
+    - file: nonlinear_spring
+
+  - caption: Developer Guide
+    chapters:
+    - file: dev_guide_intro
+    - file: dev_plan
+    - file: documentation
+    - file: api_docs
+    - url: https://exawind.github.io/openturbine/_static/doxygen/html/index.html
+      title: API Documentation
+    - file: tools

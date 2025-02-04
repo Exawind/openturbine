@@ -1,4 +1,4 @@
-# OpenTurbine
+# OpenTurbine -- Flexible Multibody Dynamics of Wind Turbines
 
 OpenTurbine is an open-source wind turbine structural dynamics simulation
 code designed to meet the research needs of the Wind Energy Technologies Office (WETO)
