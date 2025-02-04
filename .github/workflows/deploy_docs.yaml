@@ -1,0 +1,36 @@
+name: Deploy OpenTurbine Documentation
+
+on:
+  push:
+    paths:
+    - docs/**
+    - .github/workflows/deploy_docs.yaml
+
+jobs:
+  Deploy-Docs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - name: Install dependencies
+      run: |
+        pip install -r docs/requirements.txt
+        sudo apt-get install doxygen
+    - name: Build Doxygen documentation
+      run: |
+        doxygen docs/doxygen/Doxyfile
+        mkdir -p docs/_static/doxygen
+        cp -r docs/doxygen/html docs/_static/doxygen
+    - name: Build Jupyter Book
+      run: |
+        cd docs
+        jupyter-book build .
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/_build/html

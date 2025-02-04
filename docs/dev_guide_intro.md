@@ -1,6 +1,6 @@
 (dev-guide)=
 
-# Developer's Guide
+# Overview
 
 Developers of OpenTurbine should understand the workflows described here.
 Adherence to these processes ensures high quality code with minimal maintenance.
@@ -8,11 +8,6 @@ The development process involves orchestating a few different systems
 and people so that work is not duplicated or conflicting. The primary
 objective of these processes is communication and signaling to
 other developers and ourselves now and in the future.
-
-:::{warning}
-This page is under construction. Check back here throughout FY23
-for updates, and see activity at https://github.com/exawind/openturbine.
-:::
 
 ```{contents}
 ```
