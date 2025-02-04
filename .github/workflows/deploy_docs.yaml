@@ -23,8 +23,6 @@ jobs:
     - name: Build Doxygen documentation
       run: |
         doxygen docs/doxygen/Doxyfile
-        mkdir -p docs/_static/doxygen
-        cp -r docs/doxygen/html docs/_static/doxygen
     - name: Build Jupyter Book
       run: |
         cd docs
