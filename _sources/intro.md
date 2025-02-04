@@ -9,7 +9,7 @@ in [OpenFAST](https://github.com/OpenFAST/openfast), as well as high-fidelity
 computational fluid dynamics (CFD) models, like those in the WETO and Office
 of Science-supported [ExaWind](https://github.com/Exawind) code suite.
 
-Following are the high-level development objectives for OpenTurbine:
+Following are the high-level development objectives of OpenTurbine:
 - OpenTurbine adheres to modern software development best practices. The
 development process emphasizes test-driven development (TDD), version control,
 hierarchical automated testing, and continuous integration, leading to a
