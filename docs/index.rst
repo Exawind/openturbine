@@ -38,7 +38,7 @@ Following are the high-level development objectives of OpenTurbine:
 
    walkthrough/index
    user/user
-   theory/theory
+   theory/index
    developer/index
 
 
