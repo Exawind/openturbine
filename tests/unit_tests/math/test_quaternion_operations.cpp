@@ -380,4 +380,20 @@ TEST(QuaternionTest, QuaternionToRotationVector_2) {
     }
 }
 
+TEST(QuaternionTest, TangentTwistToQuaternion_1) {
+    const auto q_act = TangentTwistToQuaternion({1., 0., 0.}, 45.);
+    const auto q_exp = Array_4{0.92387953251128674, 0.38268343236508978, 0., 0.};
+    ASSERT_NEAR(q_act[0], q_exp[0], 1e-14);
+    ASSERT_NEAR(q_act[1], q_exp[1], 1e-14);
+    ASSERT_NEAR(q_act[2], q_exp[2], 1e-14);
+}
+
+TEST(QuaternionTest, TangentTwistToQuaternion_2) {
+    const auto q_act = TangentTwistToQuaternion({1., 1., 0.}, 180.);
+    const auto q_exp = Array_4{0., 0.92387953251128685, 0.38268343236508978, 0.};
+    ASSERT_NEAR(q_act[0], q_exp[0], 1e-14);
+    ASSERT_NEAR(q_act[1], q_exp[1], 1e-14);
+    ASSERT_NEAR(q_act[2], q_exp[2], 1e-14);
+}
+
 }  // namespace openturbine::tests

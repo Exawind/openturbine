@@ -5,6 +5,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "types.hpp"
+#include "vector_operations.hpp"
 
 namespace openturbine {
 
@@ -47,6 +48,65 @@ inline std::array<Array_3, 3> QuaternionToRotationMatrix(const Array_4& q) {
             q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3],
         },
     }};
+}
+
+/**
+ * @brief Converts a 3x3 rotation matrix to a 4x1 quaternion and returns the result
+ */
+inline Array_4 RotationMatrixToQuaternion(const Array_3x3& m) {
+    auto m22_p_m33 = m[1][1] + m[2][2];
+    auto m22_m_m33 = m[1][1] - m[2][2];
+    Array_4 vals{
+        m[0][0] + m22_p_m33,
+        m[0][0] - m22_p_m33,
+        -m[0][0] + m22_m_m33,
+        -m[0][0] - m22_m_m33,
+    };
+    size_t max_idx{0};
+    double max_num{vals[0]};
+    for (auto i = 1U; i < vals.size(); ++i) {
+        if (vals[i] > max_num) {
+            max_idx = i;
+            max_num = vals[i];
+        }
+    }
+
+    auto tmp = sqrt(max_num + 1.);
+    auto c = 0.5 / tmp;
+
+    if (max_idx == 0) {
+        return Array_4{
+            0.5 * tmp,
+            (m[2][1] - m[1][2]) * c,
+            (m[0][2] - m[2][0]) * c,
+            (m[1][0] - m[0][1]) * c,
+        };
+    }
+    if (max_idx == 1) {
+        return Array_4{
+            (m[2][1] - m[1][2]) * c,
+            0.5 * tmp,
+            (m[0][1] + m[1][0]) * c,
+            (m[0][2] + m[2][0]) * c,
+        };
+    }
+    if (max_idx == 2) {
+        return Array_4{
+            (m[0][2] - m[2][0]) * c,
+            (m[0][1] + m[1][0]) * c,
+            0.5 * tmp,
+            (m[1][2] + m[2][1]) * c,
+        };
+    }
+    if (max_idx == 3) {
+        return Array_4{
+            (m[1][0] - m[0][1]) * c,
+            (m[0][2] + m[2][0]) * c,
+            (m[1][2] + m[2][1]) * c,
+            0.5 * tmp,
+        };
+    }
+    return Array_4{1., 0., 0., 0};
 }
 
 /**
@@ -243,6 +303,32 @@ Kokkos::Array<double, 4> NormalizeQuaternion(const Kokkos::Array<double, 4>& q) 
         normalized_quaternion[k] = q[k] / length;
     }
     return normalized_quaternion;
+}
+
+/**
+ * @brief Returns a 4-D quaternion from provided tangent vector and twist (degrees) about tangent
+ */
+inline Array_4 TangentTwistToQuaternion(const Array_3& tangent, const double twist) {
+    const auto e1 = UnitVector(tangent);
+    auto a = e1[0] > 0. ? 1. : -1.;
+    const Array_3 e2{
+        -a * e1[1] / sqrt(e1[0] * e1[0] + e1[1] * e1[1]),
+        a * e1[0] / sqrt(e1[0] * e1[0] + e1[1] * e1[1]),
+        0.,
+    };
+    const auto e3 = CrossProduct(e1, e2);
+
+    auto q_tan = RotationMatrixToQuaternion({{
+        {e1[0], e2[0], e3[0]},
+        {e1[1], e2[1], e3[1]},
+        {e1[2], e2[2], e3[2]},
+    }});
+
+    const auto twist_rad = twist * M_PI / 180.;
+    auto q_twist =
+        RotationVectorToQuaternion({e1[0] * twist_rad, e1[1] * twist_rad, e1[2] * twist_rad});
+
+    return QuaternionCompose(q_twist, q_tan);
 }
 
 }  // namespace openturbine
