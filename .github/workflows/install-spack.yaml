@@ -20,7 +20,7 @@ jobs:
         spack compiler find
         spack env create -d .
         spack env activate .
-        spack add openturbine
+        spack add openturbine ^trilinos~epetra~mpi
         spack install
         spack develop openturbine@main
         spack concretize -f
