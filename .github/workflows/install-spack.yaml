@@ -15,7 +15,7 @@ jobs:
     steps:
     - name: Install OpenTurbine
       run: |
-        git clone https:://github.com/spack/spack.git
+        git clone https://github.com/spack/spack.git
         source spack/share/spack/setup-env.sh
         spack compiler find
         spack env create -d .
