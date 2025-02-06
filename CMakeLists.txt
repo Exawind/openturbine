@@ -67,3 +67,9 @@ include(CTest)
 if(OpenTurbine_ENABLE_TESTS)
   add_subdirectory(tests)
 endif()
+
+# Enable documentation
+if(OpenTurbine_ENABLE_DOCUMENTATION)
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+  add_subdirectory(docs)
+endif()

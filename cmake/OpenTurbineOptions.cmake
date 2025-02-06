@@ -3,6 +3,7 @@ include(cmake/SystemLink.cmake)
 macro(openturbine_setup_options)
   # Define project options with default values
   option(OpenTurbine_ENABLE_TESTS "Build Tests" ON)
+  option(OpenTurbine_ENABLE_DOCUMENTATION "Build Documentation" ON)
   option(OpenTurbine_ENABLE_COVERAGE "Enable coverage reporting" OFF)
   option(OpenTurbine_ENABLE_IPO "Enable IPO/LTO (Interprocedural Optimization/Link Time Optimization)" OFF)
   option(OpenTurbine_WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
