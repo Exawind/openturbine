@@ -23,9 +23,9 @@ jobs:
         python3 -m pip install --upgrade pip
         pip install -r docs/requirements.txt
     - name: Install Doxygen
-        uses: ssciwr/doxygen-install@v1.6.0
-        with:
-          version: "1.12.0"
+      uses: ssciwr/doxygen-install@v1.6.0
+      with:
+        version: "1.12.0"
     - name: Build Documentation
       run: |
         mkdir -p build-docs
