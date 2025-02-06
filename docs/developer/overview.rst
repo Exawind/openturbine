@@ -13,7 +13,7 @@ other developers and ourselves now and in the future.
 .. contents::
 
 Version control
---------------
+---------------
 
 OpenTurbine uses git with a basic version of git-flow. The ``main`` branch is
 stable, contains release-ready code, and is updated least frequently. The
@@ -46,7 +46,7 @@ Some tips:
   rebase: ``git rebase -i``.
 
 Pull requests
-------------
+-------------
 
 The driving question for each pull request should be "How can I
 convince reviewers that this pull request should be merged?"
@@ -66,7 +66,7 @@ body of information that can ultimately be compiled into more formal
 documentation or serve as an informal reference on GitHub itself.
 
 Developer workflow
-----------------
+------------------
 
 Prior to starting work on a new project, a Discussion should be created
 to describe the scope of work and design the implementation. The original
@@ -86,7 +86,7 @@ Finally, when the work is complete, a pull request should be created and
 reviewers assigned.
 
 Adding unit tests
-----------------
+-----------------
 
 All pull requests should be maximally tested in the unit test suite. This
 includes new code as well as existing code that is modified. To add a new
@@ -122,7 +122,7 @@ command:
     ./openturbine_unit_tests --gtest_list_tests
 
 Checklist for code contributions
-------------------------------
+--------------------------------
 
 Ensure that all of these steps are complete prior to submitting a pull request
 as ready for review.

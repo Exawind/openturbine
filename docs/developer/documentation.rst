@@ -53,7 +53,7 @@ Building documentation
 ----------------------
 
 Documentation Dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~
+```````````````````````````
 
 To generate the OpenTurbine documentation locally, several dependencies are required:
 
@@ -64,10 +64,10 @@ To generate the OpenTurbine documentation locally, several dependencies are requ
 * ``doxysphinx`` - For integrating Doxygen with Sphinx
 
 Installation
-~~~~~~~~~~~
+```````````````````````````
 
 System Dependencies
-^^^^^^^^^^^^^^^^^
+```````````````````````````
 
 For Ubuntu/Debian Linux:
 
@@ -82,7 +82,7 @@ For macOS using Homebrew:
     $ brew install doxygen graphviz enchant
 
 Python Dependencies
-^^^^^^^^^^^^^^^^^
+```````````````````````````
 
 Install required Python packages using pip:
 
@@ -91,7 +91,7 @@ Install required Python packages using pip:
     $ pip install sphinx sphinx_rtd_theme sphinx_toolbox sphinx_copybutton pyenchant sphinxcontrib-spelling doxysphinx
 
 Building Documentation
-~~~~~~~~~~~~~~~~~~~
+```````````````````````````
 
 To build the documentation:
 

@@ -14,18 +14,21 @@ extensions = [
     'sphinxcontrib.spelling'    # Spelling checker
 ]
 
+bibtex_bibfiles = []
+
 #--------------------------------------------------------------------------
 # Project information
 #--------------------------------------------------------------------------
-templates_path = ['_templates']
-source_suffix = ['.rst']
-master_doc = 'index'  # The master toctree document
+templates_path = ['_templates'] # path relative to conf.py
+source_suffix = ['.rst']  # options ['.rst', '.md']
+main_doc = 'index'        # top-level toctree document
 project = 'OpenTurbine'
+title = 'OpenTurbine Documentation'
 copyright = '2023 - Present, MIT License'
 author = 'National Renewable Energy Laboratory (NREL) and Sandia National Laboratories (SNL)'
 
 # Version info
-version = '0.0'  # The short X.Y version
+version = '0.0'    # The short X.Y version
 release = '0.0.1'  # The full version, including alpha/beta/rc tags
 
 #--------------------------------------------------------------------------
@@ -33,8 +36,8 @@ release = '0.0.1'  # The full version, including alpha/beta/rc tags
 #--------------------------------------------------------------------------
 spelling_word_list_filename = "spelling_wordlist.txt"
 spelling_exclude_patterns = ["doxygen/html/*"]
-spelling_show_suggestions = True
-spelling_warning = True
+spelling_show_suggestions = False
+spelling_warning = False
 spelling_ignore_contributor_names = False
 
 #--------------------------------------------------------------------------
@@ -58,8 +61,8 @@ numfig_format = {'figure': '%s', 'table': '%s', 'code-block': '%s'}
 #--------------------------------------------------------------------------
 html_theme = 'sphinx_rtd_theme'
 html_logo = '_static/oturb_logo_v1.jpeg'
-html_static_path = ['_static']  # Path to static files
-html_show_copyright = False  # Show copyright in the footer
+html_static_path = ['_static']         # Path to static files
+html_show_copyright = True             # Show copyright in the footer
 htmlhelp_basename = 'openturbine_doc'  # Output file base name for HTML help builder
 
 #--------------------------------------------------------------------------
@@ -67,11 +70,11 @@ htmlhelp_basename = 'openturbine_doc'  # Output file base name for HTML help bui
 #--------------------------------------------------------------------------
 # Group the document tree into LaTeX files
 latex_documents = [(
-    master_doc,                  # source start file
-    'openturbine.tex',           # target name
-    'OpenTurbine Documentation', # title
-    author,                      # author
-    'manual'                     # documentclass [howto, manual, or own class]
+    main_doc,          # source start file
+    'openturbine.tex', # target name
+    title,             # title
+    author,            # author
+    'manual'           # documentclass [howto, manual, or own class]
 )]
 
 #--------------------------------------------------------------------------
@@ -79,11 +82,11 @@ latex_documents = [(
 #--------------------------------------------------------------------------
 # One entry per manual page
 man_pages = [(
-    master_doc,                  # source start file
-    'openturbine',               # name
-    u'OpenTurbine Documentation', # description
-    [author],                    # authors
-    1                            # manual section
+    main_doc,          # source start file
+    'openturbine',     # name
+    title,             # description
+    [author],          # authors
+    1                  # manual section
 )]
 
 #--------------------------------------------------------------------------
@@ -91,13 +94,13 @@ man_pages = [(
 #--------------------------------------------------------------------------
 # Grouping the document tree into Texinfo files
 texinfo_documents = [(
-    master_doc,                   # source start file
-    'openturbine',                # name
-    u'OpenTurbine Documentation', # description
-    author,                       # author
-    'OpenTurbine',                # project
+    main_doc,          # source start file
+    'openturbine',     # name
+    title,             # description
+    author,            # author
+    project,           # project
     'Flexible Multibody Dynamics of Wind Turbines', # description
-    'Miscellaneous'),             # category
+    'Miscellaneous'),  # category
 ]
 
 def setup(app):

@@ -1,10 +1,10 @@
 .. _dev-plan:
 
 OpenTurbine Development Plan
-###########################
+############################
 
 Background and overview
-**********************
+***********************
 
 OpenTurbine development started in early 2023 with primary funding from the
 U.S. Department of Energy (DOE) Wind Energy Technologies Office (WETO) and with
@@ -24,7 +24,7 @@ deliberately to address shortcomings of wind turbine structural models and codes
 are critical to the success of WETO modeling efforts.
 
 Development priorities and use cases
-**********************************
+************************************
 
 **Development priorities:** Considering lessons learned from nearly a decade of
 OpenFAST development, OpenTurbine will follow modern software development best
@@ -42,7 +42,7 @@ Apple M-series chips.
 coupled to computational fluid dynamics for fluid-structure-interaction.
 
 Design drivers and considerations
-*******************************
+*********************************
 
 OpenTurbine is a relatively small, narrowly scoped software project.
 Organizationally, it is very lean with a minimal and focused development
@@ -56,7 +56,7 @@ in the future, and external stakeholders will be able to understand
 the nuances of the code. In short, **don't be clever** and **keep it simple**.
 
 Lean software
-============
+=============
 
 The scope of this software should be defined early in the development process,
 and any expansion of the scope should be critically evaluated before accepting.
@@ -73,7 +73,7 @@ should be leveraged, and preference should be given to software internal to
 NREL or funded by WETO.
 
 Modular architecture
-==================
+====================
 
 The code architecture should be structured such that each portion of code
 is responsible for a minimal unit of work. Low-level units can be combined
@@ -138,7 +138,7 @@ to change any library for another that accomplishes a similar task
 even if by alternative methods.
 
 Performance first
-===============
+=================
 
 A key design consideration of OpenTurbine is computational efficiency
 or performance. Both the quantity of work and the efficiency of data should
@@ -158,7 +158,7 @@ described above in that it supports swapping accelerators or parallelization
 methods.
 
 Data-oriented design
-------------------
+--------------------
 
 OpenTurbine developers designing new algorithms and data structures
 should become familiar with the concepts of
@@ -177,7 +177,7 @@ difference between structures of arrays and arrays of structures for a data
 type consisting of three components of a location and a magnitude such as
 a point in 3D space (i.e., voxel or point in a fluid domain).
 
-.. image:: images/AoS_SoA.pdf
+.. image:: AoS_SoA.pdf
    :alt: aos_soa
    :width: 400px
    :align: center
@@ -191,7 +191,7 @@ for a computation, the AoS pattern structures the memory in a contiguous
 form.
 
 Accessible software
-================
+===================
 
 Access to the software is an important consideration for the
 longevity and relevance of OpenTurbine. In short, if the software is
@@ -216,7 +216,7 @@ through common computational tools. For example, it is typical to include
 a Python interface to compiled code for easier data generation and scripting.
 
 Programming language and models
-****************************
+*******************************
 
 OpenTurbine is envisioned with a core written in C++ and leveraging
 `Kokkos <https://github.com/kokkos/kokkos>`_ as its performance-portability
@@ -224,7 +224,7 @@ library with inspiration from the ExaWind
 stack including `Nalu-Wind <https://github.com/Exawind/nalu-wind>`_.
 
 Application Programming Interface (API)
-***********************************
+***************************************
 
 The primary goal of the API is to provide data structures and interfaces
 necessary for coupling OpenTurbine to the ExaWind CFD codes for
@@ -241,7 +241,7 @@ the API will be expanded to handle mapping from the structure surface mesh (if
 solid/shell elements are used) to the CFD mesh.
 
 Key numerical algorithms
-*********************
+************************
 
 The models necessary for mid- to high-fidelity simulation of wind turbine
 structural dynamics include linear and nonlinear finite-element models coupled
@@ -272,7 +272,7 @@ singularity free but require four parameters to represent rotation, i.e., they d
 not form a minimum set.
 
 Verification and validation cases
-******************************
+*********************************
 
 The list of verification and validation cases is a work in progress. By way of
 semantics, verification cases are those for which an analytical solution exists and
@@ -293,13 +293,13 @@ numerical simulations such as shell or solid finite element models.
 * IEA 15-megawatt turbine where benchmark is a highly resolved shell-element Ansys model
 
 Target baseline turbines
-**********************
+************************
 
 * `NREL 5-megawatt reference turbine <https://www.nrel.gov/docs/fy09osti/38060.pdf>`_
 * `IEA 15-megawatt reference turbine <https://github.com/IEAWindTask37/IEA-15-240-RWT>`_
 
 High-level development timeline
-****************************
+*******************************
 
 CY = calendar year, FY = fiscal year
 
@@ -328,5 +328,3 @@ system. Fluid will be represented in two ways. First, through a simple Blade Ele
 **CY25 Q1**: Release a robust, well-documented, well-tested version of OpenTurbine for land-based
 turbine simulations. Demonstrate whole turbine simulation (tower, nacelle, drivetrain) capabilities
 with FSI coupling to ExaWind.
-
-

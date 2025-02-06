@@ -1,12 +1,12 @@
 Developer Tools
-==============
+===============
 
 This page describes tools used in the development of OpenTurbine. These should
 generally be adopted by all developers so that expectations and systems are
 aligned.
 
 clang-format
------------
+------------
 
 `ClangFormat <https://clang.llvm.org/docs/ClangFormat.html>`_ is used for
 linting to enforce a consistent code style. It can be installed with most package
