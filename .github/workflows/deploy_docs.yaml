@@ -18,18 +18,21 @@ jobs:
         python-version: '3.12'
     - name: Install dependencies
       run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends graphviz libenchant-2-dev
+        python3 -m pip install --upgrade pip
         pip install -r docs/requirements.txt
-        sudo apt-get install doxygen
-    - name: Build Doxygen documentation
+    - name: Install Doxygen
+        uses: ssciwr/doxygen-install@v1.6.0
+        with:
+          version: "1.12.0"
+    - name: Build Documentation
       run: |
-        doxygen docs/doxygen/Doxyfile
-        mkdir -p docs/_static/doxygen
-        cp -r docs/doxygen/html docs/_static/doxygen
-    - name: Build Jupyter Book
-      run: |
-        cd docs
-        jupyter-book build .
-    - name: Deploy
+        mkdir -p build-docs
+        cd build-docs
+        cmake .. -DOpenTurbine_ENABLE_DOCUMENTATION=ON
+        cmake --build .
+    - name: Deploy Documentation
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
