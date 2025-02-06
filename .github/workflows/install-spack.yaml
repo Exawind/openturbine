@@ -28,5 +28,6 @@ jobs:
         cd openturbine/tests/documentation_tests/floating_platform
         mkdir build
         cd build
+        spack build-env openturbine -- bash
         cmake ../
         ./floating_platform
