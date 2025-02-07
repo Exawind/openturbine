@@ -72,4 +72,9 @@ constexpr Array_3 UnitVector(const Array_3& v) {
     };
 }
 
+/// Dot3 returns the dot product of two 3-component vectors
+constexpr double Dot3(const Array_3& v1, const Array_3& v2) {
+    return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
+}
+
 }  // namespace openturbine

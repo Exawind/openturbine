@@ -51,7 +51,9 @@ inline std::array<Array_3, 3> QuaternionToRotationMatrix(const Array_4& q) {
 }
 
 /**
- * @brief Converts a 3x3 rotation matrix to a 4x1 quaternion and returns the result
+ * @brief Converts a 3x3 rotation matrix to a 4x1 quaternion and returns the result, see
+ * https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/ for
+ * implementation details
  */
 inline Array_4 RotationMatrixToQuaternion(const Array_3x3& m) {
     auto m22_p_m33 = m[1][1] + m[2][2];
@@ -62,16 +64,12 @@ inline Array_4 RotationMatrixToQuaternion(const Array_3x3& m) {
         -m[0][0] + m22_m_m33,
         -m[0][0] - m22_m_m33,
     };
-    size_t max_idx{0};
-    double max_num{vals[0]};
-    for (auto i = 1U; i < vals.size(); ++i) {
-        if (vals[i] > max_num) {
-            max_idx = i;
-            max_num = vals[i];
-        }
-    }
 
-    auto tmp = sqrt(max_num + 1.);
+    // Get maximum value and index of maximum value
+    auto max_num = std::max_element(vals.begin(), vals.end());
+    auto max_idx = std::distance(vals.begin(), max_num);
+
+    auto tmp = sqrt(*max_num + 1.);
     auto c = 0.5 / tmp;
 
     if (max_idx == 0) {
@@ -310,12 +308,16 @@ Kokkos::Array<double, 4> NormalizeQuaternion(const Kokkos::Array<double, 4>& q) 
  */
 inline Array_4 TangentTwistToQuaternion(const Array_3& tangent, const double twist) {
     const auto e1 = UnitVector(tangent);
-    auto a = e1[0] > 0. ? 1. : -1.;
-    const Array_3 e2{
-        -a * e1[1] / sqrt(e1[0] * e1[0] + e1[1] * e1[1]),
-        a * e1[0] / sqrt(e1[0] * e1[0] + e1[1] * e1[1]),
-        0.,
-    };
+    Array_3 temp{0., 1., 0.};
+    if (std::abs(Dot3(e1, temp)) > 0.9) {
+        temp = {1., 0., 0.};
+    }
+    const auto a = Dot3(e1, temp);
+
+    // Construct e2 orthogonal to e1 and lying in the y-z plane
+    Array_3 e2 = UnitVector({temp[0] - e1[0] * a, temp[1] - e1[1] * a, temp[2] - e1[2] * a});
+
+    // Construct e3 as cross product
     const auto e3 = CrossProduct(e1, e2);
 
     auto q_tan = RotationMatrixToQuaternion({{
