@@ -78,6 +78,23 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutZAxi
     }
 }
 
+TEST(QuaternionTest, ConvertRotationMatrixToQuaternion) {
+    const auto n = 25U;
+    const auto dtheta = M_PI / static_cast<double>(n);
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < n; ++j) {
+            auto q_ref = RotationVectorToQuaternion(
+                {static_cast<double>(i) * dtheta, static_cast<double>(j) * dtheta, 0.}
+            );
+            auto r = QuaternionToRotationMatrix(q_ref);
+            auto q_new = RotationMatrixToQuaternion(r);
+            for (auto m = 0U; m < 4; ++m) {
+                EXPECT_NEAR(q_ref[m], q_new[m], 1e-12);
+            }
+        }
+    }
+}
+
 Kokkos::View<double[3]> TestRotateVectorByQuaternion(
     const Kokkos::View<double[4]>::const_type& q, const Kokkos::View<double[3]>::const_type& v
 ) {
@@ -377,6 +394,38 @@ TEST(QuaternionTest, QuaternionToRotationVector_2) {
         ASSERT_NEAR(rot_vec2[0], rot_vec[0], 1e-14);
         ASSERT_NEAR(rot_vec2[1], rot_vec[1], 1e-14);
         ASSERT_NEAR(rot_vec2[2], rot_vec[2], 1e-14);
+    }
+}
+
+TEST(QuaternionTest, CheckTangentTwistToQuaternion) {
+    struct TestData {
+        double twist;
+        Array_3 tan;
+        Array_4 q_exp;
+    };
+    for (const auto& td : std::vector<TestData>{
+             {
+                 45.,
+                 {1., 0., 0.},
+                 {0.92387953251128674, 0.38268343236508978, 0., 0.},
+             },
+             {
+                 180.,
+                 {1., 1., 0.},
+                 {0., 0.92387953251128685, 0.38268343236508978, 0.},
+             },
+             {
+                 45.,
+                 {0., 0., 1.},
+                 {0.65328148243818829, 0.27059805007309845, -0.65328148243818818, 0.27059805007309851
+                 },
+             },
+         }) {
+        const auto q_act = TangentTwistToQuaternion(td.tan, td.twist);
+        ASSERT_NEAR(q_act[0], td.q_exp[0], 1e-14);
+        ASSERT_NEAR(q_act[1], td.q_exp[1], 1e-14);
+        ASSERT_NEAR(q_act[2], td.q_exp[2], 1e-14);
+        ASSERT_NEAR(q_act[3], td.q_exp[3], 1e-14);
     }
 }
 
