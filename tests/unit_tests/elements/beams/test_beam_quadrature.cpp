@@ -10,7 +10,7 @@ TEST(BeamQuadratureTest, CheckCreateTrapezoidalQuadrature) {
         BeamQuadrature q_exp;
     };
 
-    std::vector<TestData> test_data{
+    const std::vector<TestData> test_data{
         {
             {0., 0.2, 0.4, 0.6, 0.8, 1.0},  // Grid
             {
