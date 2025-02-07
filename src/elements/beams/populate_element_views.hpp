@@ -72,11 +72,15 @@ inline void PopulateElementViews(
 
     // Populate section mass and stiffness matrices at quadrature points by
     // linearly interpolating between section values
-    Kokkos::deep_copy(qp_Mstar, 0.);
-    Kokkos::deep_copy(qp_Cstar, 0.);
     for (size_t i = 0; i < elem.quadrature.size(); ++i) {
         auto qp_xi = elem.quadrature[i][0];
         LinearInterpWeights(qp_xi, section_xi, weights);
+        for (size_t m = 0; m < 6; ++m) {
+            for (size_t n = 0; n < 6; ++n) {
+                qp_Mstar(i, m, n) = 0.;
+                qp_Cstar(i, m, n) = 0.;
+            }
+        }
         for (size_t j = 0; j < section_xi.size(); ++j) {
             for (size_t m = 0; m < 6; ++m) {
                 for (size_t n = 0; n < 6; ++n) {

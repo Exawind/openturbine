@@ -24,14 +24,17 @@ struct ContributeBeamsToSparseMatrix {
         constexpr auto is_sorted = true;
         constexpr auto force_atomic =
             !std::is_same_v<Kokkos::TeamPolicy<>::member_type::execution_space, Kokkos::Serial>;
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, num_nodes), [&](size_t node_1) {
-            const auto num_dofs = count_active_dofs(element_freedom_signature(i, node_1));
-            auto row_data_data = Kokkos::Array<typename RowDataType::value_type, 6>{};
-            auto col_idx_data = Kokkos::Array<typename ColIdxType::value_type, 6>{};
-            auto row_data = RowDataType(row_data_data.data(), num_dofs);
-            auto col_idx = ColIdxType(col_idx_data.data(), num_dofs);
+        Kokkos::parallel_for(
+            Kokkos::TeamThreadRange(member, num_nodes * num_nodes),
+            [&](size_t node_12) {
+                const auto node_1 = node_12 % num_nodes;
+                const auto node_2 = node_12 / num_nodes;
+                const auto num_dofs = count_active_dofs(element_freedom_signature(i, node_1));
+                auto row_data_data = Kokkos::Array<typename RowDataType::value_type, 6>{};
+                auto col_idx_data = Kokkos::Array<typename ColIdxType::value_type, 6>{};
+                auto row_data = RowDataType(row_data_data.data(), num_dofs);
+                auto col_idx = ColIdxType(col_idx_data.data(), num_dofs);
 
-            for (auto node_2 = 0U; node_2 < num_nodes; ++node_2) {
                 for (auto component_2 = 0U; component_2 < num_dofs; ++component_2) {
                     col_idx(component_2) =
                         static_cast<int>(element_freedom_table(i, node_2, component_2));
@@ -47,7 +50,7 @@ struct ContributeBeamsToSparseMatrix {
                     );
                 }
             }
-        });
+        );
     }
 };
 
