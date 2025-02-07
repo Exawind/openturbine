@@ -66,7 +66,7 @@ inline Array_4 RotationMatrixToQuaternion(const Array_3x3& m) {
     };
 
     // Get maximum value and index of maximum value
-    auto max_num = std::max_element(vals.begin(), vals.end());
+    auto* max_num = std::max_element(vals.begin(), vals.end());
     auto max_idx = std::distance(vals.begin(), max_num);
 
     auto tmp = sqrt(*max_num + 1.);
