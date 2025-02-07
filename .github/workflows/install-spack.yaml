@@ -30,4 +30,5 @@ jobs:
         cd build
         spack build-env openturbine -- bash
         cmake ../
+        make -j 2
         ./floating_platform
