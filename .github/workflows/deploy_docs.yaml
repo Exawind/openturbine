@@ -10,13 +10,25 @@ jobs:
   Deploy-Docs:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    - name: Cache install source dependencies
+      id: cache-dependencies
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/spack
+        key: linux-spack
+    - name: Install source dependencies
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      run: |
+        git clone https://github.com/spack/spack.git
+        source spack/share/spack/setup-env.sh
+        spack compiler find
+        spack install yaml-cpp
+        spack install trilinos@master~epetra ^kokkos-kernels+blas+lapack
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
-    - name: Install dependencies
+    - name: Install documentation dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends graphviz libenchant-2-dev
@@ -26,14 +38,25 @@ jobs:
       uses: ssciwr/doxygen-install@v1.6.0
       with:
         version: "1.12.0"
-    - name: Build Documentation
+    - name: Clone repository
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+        path: openturbine
+    - name: Build OpenTurbine with documentation
       run: |
-        mkdir -p build-docs
+        source spack/share/spack/setup-env.sh
+        spack load trilinos
+        spack load yaml-cpp
+        cd openturbine
+        mkdir build-docs
         cd build-docs
-        cmake .. -DOpenTurbine_ENABLE_DOCUMENTATION=ON
+        cmake .. \
+          -DOpenTurbine_ENABLE_DOCUMENTATION=ON \
+          -DCMAKE_BUILD_TYPE=Release
         cmake --build .
     - name: Deploy Documentation
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs/_build/html
+        publish_dir: ../docs/_build/html
