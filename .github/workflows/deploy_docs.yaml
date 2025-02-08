@@ -30,25 +30,21 @@ jobs:
         python-version: '3.12'
     - name: Clone repository
       uses: actions/checkout@v4
-      with:
-        submodules: true
-        path: openturbine
     - name: Install documentation dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends graphviz libenchant-2-dev
         python3 -m pip install --upgrade pip
-        pip install -r openturbine/docs/requirements.txt
+        pip install -r docs/requirements.txt
     - name: Install Doxygen
       uses: ssciwr/doxygen-install@v1.6.0
       with:
         version: "1.12.0"
     - name: Build OpenTurbine with documentation
       run: |
-        source spack/share/spack/setup-env.sh
+        source ../spack/share/spack/setup-env.sh
         spack load trilinos
         spack load yaml-cpp
-        cd openturbine
         mkdir build-docs
         cd build-docs
         cmake .. \
