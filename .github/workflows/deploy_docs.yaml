@@ -52,6 +52,7 @@ jobs:
         mkdir build-docs
         cd build-docs
         cmake .. \
+          -DOpenTurbine_ENABLE_TESTS=OFF \
           -DOpenTurbine_ENABLE_DOCUMENTATION=ON \
           -DCMAKE_BUILD_TYPE=Release
         cmake --build .
