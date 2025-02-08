@@ -42,11 +42,11 @@ jobs:
         version: "1.12.0"
     - name: Build OpenTurbine with documentation
       run: |
-        source ${{ github.workspace }}/spack/share/spack/setup-env.sh
+        source ${{ github.workspace }}/../spack/share/spack/setup-env.sh
         spack load trilinos
         spack load yaml-cpp
-        mkdir build-docs
-        cd build-docs
+        mkdir build
+        cd build
         cmake .. \
           -DOpenTurbine_ENABLE_TESTS=OFF \
           -DOpenTurbine_ENABLE_DOCUMENTATION=ON \
