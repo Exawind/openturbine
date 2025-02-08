@@ -35,6 +35,7 @@ jobs:
         path: openturbine
     - name: Install documentation dependencies
       run: |
+        cd openturbine
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends graphviz libenchant-2-dev
         python3 -m pip install --upgrade pip
@@ -48,7 +49,6 @@ jobs:
         source spack/share/spack/setup-env.sh
         spack load trilinos
         spack load yaml-cpp
-        cd openturbine
         mkdir build-docs
         cd build-docs
         cmake .. \
