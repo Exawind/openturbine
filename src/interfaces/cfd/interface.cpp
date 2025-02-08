@@ -7,8 +7,10 @@
 #include "node_data.hpp"
 #include "state/clone_state.hpp"
 #include "state/copy_state_data.hpp"
+#include "state/read_state_from_file.hpp"
 #include "state/set_node_external_loads.hpp"
 #include "state/state.hpp"
+#include "state/write_state_to_file.hpp"
 #include "step/step.hpp"
 #include "turbine.hpp"
 #include "turbine_input.hpp"
@@ -194,6 +196,26 @@ Interface::Interface(const InterfaceInput& input)
     Kokkos::deep_copy(this->host_state_vd, this->state.vd);
 
     // Update the turbine motion to match restored state
+    GetTurbineMotion(
+        this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
+        this->host_state_vd
+    );
+}
+
+void Interface::WriteRestart(const std::filesystem::path& filename) const {
+    auto output = std::ofstream(filename);
+    WriteStateToFile(output, state);
+}
+
+void Interface::ReadRestart(const std::filesystem::path& filename) {
+    auto input = std::ifstream(filename);
+    ReadStateFromFile(input, state);
+
+    Kokkos::deep_copy(this->host_state_x, this->state.x);
+    Kokkos::deep_copy(this->host_state_q, this->state.q);
+    Kokkos::deep_copy(this->host_state_v, this->state.v);
+    Kokkos::deep_copy(this->host_state_vd, this->state.vd);
+
     GetTurbineMotion(
         this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
         this->host_state_vd
