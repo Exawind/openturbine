@@ -1,0 +1,34 @@
+name: OpenTurbine-Install
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Correctness-Linux:
+    runs-on: ubuntu-latest
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: 4
+      CTEST_PARALLEL_LEVEL: 2
+      CXX: g++
+    steps:
+    - name: Install OpenTurbine
+      run: |
+        git clone https://github.com/spack/spack.git
+        source spack/share/spack/setup-env.sh
+        spack compiler find
+        spack env create -d .
+        spack env activate .
+        spack add openturbine ^trilinos~epetra~mpi
+        spack install
+        spack develop openturbine@main
+        spack concretize -f
+        spack install
+        cd openturbine/tests/documentation_tests/floating_platform
+        mkdir build
+        cd build
+        spack build-env openturbine -- bash
+        cmake ../
+        make -j 2
+        ./floating_platform

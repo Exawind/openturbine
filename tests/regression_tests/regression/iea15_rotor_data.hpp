@@ -1,5 +1,6 @@
 #pragma once
 
+#include "elements/beams/beam_quadrature.hpp"
 #include "elements/beams/beam_section.hpp"
 #include "types.hpp"
 

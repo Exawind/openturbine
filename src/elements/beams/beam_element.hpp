@@ -3,6 +3,7 @@
 #include <array>
 #include <vector>
 
+#include "beam_quadrature.hpp"
 #include "beam_section.hpp"
 #include "types.hpp"
 
