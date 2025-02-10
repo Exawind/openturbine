@@ -121,7 +121,7 @@ struct InterfaceBuilder {
         return *this;
     }
 
-    Interface Build() const { return Interface(interface_in); }
+    [[nodiscard]] Interface Build() const { return Interface(interface_in); }
 
 private:
     InterfaceInput interface_in;
