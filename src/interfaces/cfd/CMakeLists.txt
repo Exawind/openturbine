@@ -7,6 +7,7 @@ install(FILES
         floating_platform.hpp
         floating_platform_input.hpp
         interface.hpp
+        interface_builder.hpp
         interface_input.hpp
         mooring_line.hpp
         mooring_line_input.hpp
