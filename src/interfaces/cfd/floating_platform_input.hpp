@@ -24,7 +24,7 @@ struct FloatingPlatformInput {
     std::array<std::array<double, 6>, 6> mass_matrix{};
 
     /// Mooring line array
-    std::vector<MooringLineInput> mooring_lines{};
+    std::vector<MooringLineInput> mooring_lines;
 };
 
 }  // namespace openturbine::cfd
