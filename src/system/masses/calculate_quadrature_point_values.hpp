@@ -15,18 +15,18 @@ struct CalculateQuadraturePointValues {
     double beta_prime;
     double gamma_prime;
 
-    Kokkos::View<double*[7]>::const_type Q;
-    Kokkos::View<double*[6]>::const_type V;
-    Kokkos::View<double*[6]>::const_type A;
+    Kokkos::View<double* [7]>::const_type Q;
+    Kokkos::View<double* [6]>::const_type V;
+    Kokkos::View<double* [6]>::const_type A;
 
     Kokkos::View<size_t*>::const_type node_state_indices;
     Kokkos::View<double[3]>::const_type gravity;
     Kokkos::View<double* [6][6]>::const_type qp_Mstar;
     Kokkos::View<double* [7]>::const_type node_x0;
 
-    Kokkos::View<double*[6]> residual_vector_terms;
-    Kokkos::View<double*[6][6]> stiffness_matrix_terms;
-    Kokkos::View<double*[6][6]> inertia_matrix_terms;
+    Kokkos::View<double* [6]> residual_vector_terms;
+    Kokkos::View<double* [6][6]> stiffness_matrix_terms;
+    Kokkos::View<double* [6][6]> inertia_matrix_terms;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
@@ -34,10 +34,13 @@ struct CalculateQuadraturePointValues {
 
         // Allocate scratch views
         auto Mstar_data = Kokkos::Array<double, 36>{};
-        const auto x0_data = Kokkos::Array<double, 3>{node_x0(i_elem, 0), node_x0(i_elem, 1), node_x0(i_elem, 2)};
-        const auto r0_data = Kokkos::Array<double, 4>{node_x0(i_elem, 3), node_x0(i_elem, 4), node_x0(i_elem, 5), node_x0(i_elem, 6)};
+        const auto x0_data =
+            Kokkos::Array<double, 3>{node_x0(i_elem, 0), node_x0(i_elem, 1), node_x0(i_elem, 2)};
+        const auto r0_data = Kokkos::Array<double, 4>{
+            node_x0(i_elem, 3), node_x0(i_elem, 4), node_x0(i_elem, 5), node_x0(i_elem, 6)};
         const auto u_data = Kokkos::Array<double, 3>{Q(index, 0), Q(index, 1), Q(index, 2)};
-        const auto r_data = Kokkos::Array<double, 4>{Q(index, 3), Q(index, 4), Q(index, 5), Q(index, 6)};
+        const auto r_data =
+            Kokkos::Array<double, 4>{Q(index, 3), Q(index, 4), Q(index, 5), Q(index, 6)};
         auto xr_data = Kokkos::Array<double, 4>{};
         const auto u_ddot_data = Kokkos::Array<double, 3>{A(index, 0), A(index, 1), A(index, 2)};
         const auto omega_data = Kokkos::Array<double, 3>{V(index, 3), V(index, 4), V(index, 5)};
@@ -75,8 +78,8 @@ struct CalculateQuadraturePointValues {
         auto Kuu = Kokkos::View<double[6][6]>(Kuu_data.data());
 
         // Do the math
-        for(auto i = 0U; i < 6U; ++i) { 
-            for(auto j = 0U; j < 6U; ++j) {
+        for (auto i = 0U; i < 6U; ++i) {
+            for (auto j = 0U; j < 6U; ++j) {
                 Mstar(i, j) = qp_Mstar(i_elem, i, j);
             }
         }
@@ -92,25 +95,28 @@ struct CalculateQuadraturePointValues {
         CalculateRho(Muu, rho);
 
         CalculateGravityForce(mass, gravity, eta_tilde, Fg);
-        CalculateInertialForce(mass, u_ddot, omega, omega_dot, eta, eta_tilde, rho, omega_tilde, omega_dot_tilde, Fi);
+        CalculateInertialForce(
+            mass, u_ddot, omega, omega_dot, eta, eta_tilde, rho, omega_tilde, omega_dot_tilde, Fi
+        );
 
         CalculateGyroscopicMatrix(mass, omega, eta, rho, omega_tilde, Guu);
-        CalculateInertiaStiffnessMatrix(mass, u_ddot, omega, omega_dot, eta, rho, omega_tilde, omega_dot_tilde, Kuu);
+        CalculateInertiaStiffnessMatrix(
+            mass, u_ddot, omega, omega_dot, eta, rho, omega_tilde, omega_dot_tilde, Kuu
+        );
 
         // Contribute terms to main matrices
         for (auto i = 0U; i < 6U; ++i) {
             residual_vector_terms(i_elem, i) = Fi(i) - Fg(i);
         }
-        for(auto i = 0U; i < 6U; ++i) {
-            for(auto j = 0U; j < 6U; ++j) {
+        for (auto i = 0U; i < 6U; ++i) {
+            for (auto j = 0U; j < 6U; ++j) {
                 stiffness_matrix_terms(i_elem, i, j) = Kuu(i, j);
             }
         }
         for (auto i = 0U; i < 6U; ++i) {
             for (auto j = 0U; j < 6U; ++j) {
                 inertia_matrix_terms(i_elem, i, j) =
-                    beta_prime * Muu(i, j) +
-                    gamma_prime * Guu(i, j);
+                    beta_prime * Muu(i, j) + gamma_prime * Guu(i, j);
             }
         }
     }

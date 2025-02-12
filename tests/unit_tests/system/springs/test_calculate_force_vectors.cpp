@@ -36,9 +36,12 @@ void TestCalculateForceVectorsTests_ThreeElements() {
     constexpr auto f1_exact_data = std::array{-4., -5., -6.};
     constexpr auto f2_exact_data = std::array{3.5, 4., 4.5};
 
-    const auto f0_exact = Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f0_exact_data.data());
-    const auto f1_exact = Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f1_exact_data.data());
-    const auto f2_exact = Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f2_exact_data.data());
+    const auto f0_exact =
+        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f0_exact_data.data());
+    const auto f1_exact =
+        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f1_exact_data.data());
+    const auto f2_exact =
+        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f2_exact_data.data());
 
     const auto f0_result = Kokkos::create_mirror(f0);
     const auto f1_result = Kokkos::create_mirror(f1);

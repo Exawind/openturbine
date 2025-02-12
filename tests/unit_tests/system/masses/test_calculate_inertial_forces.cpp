@@ -20,7 +20,9 @@ struct ExecuteCalculateInertialForces {
 
     KOKKOS_FUNCTION
     void operator()(size_t) const {
-        masses::CalculateInertialForce(mass, u_ddot, omega, omega_dot, eta, eta_tilde, rho, omega_tilde, omega_dot_tilde, FI);
+        masses::CalculateInertialForce(
+            mass, u_ddot, omega, omega_dot, eta, eta_tilde, rho, omega_tilde, omega_dot_tilde, FI
+        );
     }
 };
 
@@ -80,8 +82,7 @@ TEST(CalculateInertialForcesTestsMasses, OneNode) {
     Kokkos::deep_copy(omega_tilde, omega_tilde_mirror);
 
     const auto omega_dot_tilde = Kokkos::View<double[3][3]>("omega_dot_tilde");
-    constexpr auto omega_dot_tilde_data =
-        std::array{0., -45., 44., 45., 0., -43., -44., 43., 0.};
+    constexpr auto omega_dot_tilde_data = std::array{0., -45., 44., 45., 0., -43., -44., 43., 0.};
     const auto omega_dot_tilde_host =
         Kokkos::View<const double[3][3], Kokkos::HostSpace>(omega_dot_tilde_data.data());
     const auto omega_dot_tilde_mirror = Kokkos::create_mirror(omega_dot_tilde);
@@ -93,8 +94,7 @@ TEST(CalculateInertialForcesTestsMasses, OneNode) {
     Kokkos::parallel_for(
         "CalculateInertialForces", 1,
         ExecuteCalculateInertialForces{
-            mass, u_ddot, omega, omega_dot, eta_tilde, omega_tilde, omega_dot_tilde, rho, eta, FI
-        }
+            mass, u_ddot, omega, omega_dot, eta_tilde, omega_tilde, omega_dot_tilde, rho, eta, FI}
     );
 
     constexpr auto FI_exact_data = std::array{-2984., 32., 2922., 20624., -2248., 22100.};

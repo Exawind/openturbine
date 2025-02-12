@@ -32,13 +32,11 @@ TEST(CalculateMassMatrixComponentsMassesTests, OneQuadPoint) {
     const auto rho = Kokkos::View<double[3][3]>("rho");
 
     Kokkos::parallel_for(
-        "CalculateMassMatrixComponents", 1,
-        ExecuteCalculateMassMatrixComponents{Muu, eta, rho}
+        "CalculateMassMatrixComponents", 1, ExecuteCalculateMassMatrixComponents{Muu, eta, rho}
     );
 
     constexpr auto eta_exact_data = std::array{32., -31., 25.};
-    const auto eta_exact =
-        Kokkos::View<const double[3], Kokkos::HostSpace>(eta_exact_data.data());
+    const auto eta_exact = Kokkos::View<const double[3], Kokkos::HostSpace>(eta_exact_data.data());
 
     const auto eta_mirror = Kokkos::create_mirror(eta);
     Kokkos::deep_copy(eta_mirror, eta);

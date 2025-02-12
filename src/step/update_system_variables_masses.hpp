@@ -16,8 +16,9 @@ inline void UpdateSystemVariablesMasses(
     Kokkos::parallel_for(
         "masses::CalculateQuadraturePointValues", masses.num_elems,
         masses::CalculateQuadraturePointValues{
-            parameters.beta_prime, parameters.gamma_prime, state.q, state.v, state.vd, masses.state_indices, masses.gravity, masses.qp_Mstar, masses.node_x0, masses.residual_vector_terms, masses.stiffness_matrix_terms, masses.inertia_matrix_terms
-        }
+            parameters.beta_prime, parameters.gamma_prime, state.q, state.v, state.vd,
+            masses.state_indices, masses.gravity, masses.qp_Mstar, masses.node_x0,
+            masses.residual_vector_terms, masses.stiffness_matrix_terms, masses.inertia_matrix_terms}
     );
 }
 

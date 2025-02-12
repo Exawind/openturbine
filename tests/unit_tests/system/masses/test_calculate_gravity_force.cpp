@@ -13,9 +13,7 @@ struct ExecuteCalculateGravityForce {
     Kokkos::View<double[6]> FG;
 
     KOKKOS_FUNCTION
-    void operator()(size_t) const {
-        masses::CalculateGravityForce(mass, gravity, eta_tilde, FG);
-    }
+    void operator()(size_t) const { masses::CalculateGravityForce(mass, gravity, eta_tilde, FG); }
 };
 
 TEST(CalculateGravityForceTestsMasses, OneNode) {

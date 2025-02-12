@@ -13,8 +13,7 @@ int main() {
         constexpr auto rho_inf = 0.0;     // Time stepping damping factor
         constexpr auto max_iter = 5;      // Maximum number of nonlinear steps per time ste[
         const auto n_steps{
-            static_cast<size_t>(ceil(t_end / time_step)) + 1
-        };  // Number of time steps
+            static_cast<size_t>(ceil(t_end / time_step)) + 1};  // Number of time steps
 
         // Define gravity vector
         constexpr auto gravity = std::array{0., 0., -9.8124};  // m/s/s

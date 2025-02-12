@@ -16,8 +16,8 @@ inline void UpdateSystemVariablesSprings(const Springs& springs, State& state) {
     Kokkos::parallel_for(
         "Calculate System Variables Springs", springs.num_elems,
         springs::CalculateQuadraturePointValues{
-            state.q, springs.node_state_indices, springs.x0, springs.l_ref, springs.k, springs.residual_vector_terms, springs.stiffness_matrix_terms
-        }
+            state.q, springs.node_state_indices, springs.x0, springs.l_ref, springs.k,
+            springs.residual_vector_terms, springs.stiffness_matrix_terms}
     );
 }
 

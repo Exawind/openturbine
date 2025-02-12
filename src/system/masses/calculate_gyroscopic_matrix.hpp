@@ -10,7 +10,11 @@
 namespace openturbine::masses {
 
 KOKKOS_FUNCTION
-inline void CalculateGyroscopicMatrix(double mass, const Kokkos::View<double[3]>::const_type& omega, const Kokkos::View<double[3]>::const_type& eta, const Kokkos::View<double[3][3]>::const_type rho, const Kokkos::View<double[3][3]>::const_type& omega_tilde, const Kokkos::View<double[6][6]>& Guu) {
+inline void CalculateGyroscopicMatrix(
+    double mass, const Kokkos::View<double[3]>::const_type& omega,
+    const Kokkos::View<double[3]>::const_type& eta, const Kokkos::View<double[3][3]>::const_type rho,
+    const Kokkos::View<double[3][3]>::const_type& omega_tilde, const Kokkos::View<double[6][6]>& Guu
+) {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
     using Transpose = KokkosBatched::Trans::Transpose;
     using GemmDefault = KokkosBatched::Algo::Gemm::Default;

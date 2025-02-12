@@ -9,7 +9,16 @@
 namespace openturbine::masses {
 
 KOKKOS_FUNCTION
-inline void CalculateInertialForce(double mass, const Kokkos::View<double[3]>::const_type& u_ddot, const Kokkos::View<double[3]>::const_type& omega, const Kokkos::View<double[3]>::const_type& omega_dot, const Kokkos::View<double[3]>::const_type& eta, const Kokkos::View<double[3][3]>::const_type& eta_tilde, const Kokkos::View<double[3][3]>::const_type& rho, const Kokkos::View<double[3][3]>::const_type& omega_tilde, const Kokkos::View<double[3][3]>::const_type& omega_dot_tilde, const Kokkos::View<double[6]>& FI) {
+inline void CalculateInertialForce(
+    double mass, const Kokkos::View<double[3]>::const_type& u_ddot,
+    const Kokkos::View<double[3]>::const_type& omega,
+    const Kokkos::View<double[3]>::const_type& omega_dot,
+    const Kokkos::View<double[3]>::const_type& eta,
+    const Kokkos::View<double[3][3]>::const_type& eta_tilde,
+    const Kokkos::View<double[3][3]>::const_type& rho,
+    const Kokkos::View<double[3][3]>::const_type& omega_tilde,
+    const Kokkos::View<double[3][3]>::const_type& omega_dot_tilde, const Kokkos::View<double[6]>& FI
+) {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
     using GemmDefault = KokkosBatched::Algo::Gemm::Default;
     using GemvDefault = KokkosBlas::Algo::Gemv::Default;

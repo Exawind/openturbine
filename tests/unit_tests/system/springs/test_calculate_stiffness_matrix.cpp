@@ -39,7 +39,7 @@ void TestCalculateStiffnessMatrixTests_OneElement() {
     openturbine::tests::CompareWithExpected(a_result, a_exact);
 }
 
-}
+}  // namespace
 namespace openturbine::tests {
 
 TEST(CalculateStiffnessMatrixTests, OneElement) {

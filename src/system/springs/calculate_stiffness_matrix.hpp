@@ -10,7 +10,10 @@
 namespace openturbine::springs {
 
 KOKKOS_FUNCTION
-inline void CalculateStiffnessMatrix(double c1, double c2, const Kokkos::View<double[3]>::const_type& r, double l, const Kokkos::View<double[3][3]>& a) {
+inline void CalculateStiffnessMatrix(
+    double c1, double c2, const Kokkos::View<double[3]>::const_type& r, double l,
+    const Kokkos::View<double[3][3]>& a
+) {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
     using GemmDefault = KokkosBatched::Algo::Gemm::Default;
     using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, GemmDefault>;

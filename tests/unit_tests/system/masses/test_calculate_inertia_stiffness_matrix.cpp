@@ -93,8 +93,7 @@ TEST(CalculateInertiaStiffnessMatrixMassesTests, OneNode) {
     Kokkos::parallel_for(
         "CalculateInertiaStiffnessMatrix", 1,
         ExecuteCalculateInertiaStiffnessMatrix{
-            mass, u_ddot, omega, omega_dot, omega_tilde, omega_dot_tilde, rho, eta, Kuu
-        }
+            mass, u_ddot, omega, omega_dot, omega_tilde, omega_dot_tilde, rho, eta, Kuu}
     );
 
     constexpr auto Kuu_exact_data = std::array<double, 36>{

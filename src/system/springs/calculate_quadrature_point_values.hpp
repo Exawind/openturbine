@@ -26,7 +26,8 @@ struct CalculateQuadraturePointValues {
         const auto index_0 = node_state_indices(i_elem, 0);
         const auto index_1 = node_state_indices(i_elem, 1);
 
-        const auto x0_data = Kokkos::Array<double, 3>{x0_(i_elem, 0), x0_(i_elem, 1), x0_(i_elem, 2)};
+        const auto x0_data =
+            Kokkos::Array<double, 3>{x0_(i_elem, 0), x0_(i_elem, 1), x0_(i_elem, 2)};
         const auto u1_data = Kokkos::Array<double, 3>{Q(index_0, 0), Q(index_0, 1), Q(index_0, 2)};
         const auto u2_data = Kokkos::Array<double, 3>{Q(index_1, 0), Q(index_1, 1), Q(index_1, 2)};
         auto r_data = Kokkos::Array<double, 3>{};
@@ -54,7 +55,7 @@ struct CalculateQuadraturePointValues {
             residual_vector_terms(i_elem, 0, i) = f(i);
             residual_vector_terms(i_elem, 1, i) = -f(i);
         }
-        
+
         for (auto i = 0U; i < 3U; ++i) {
             for (auto j = 0U; j < 3U; ++j) {
                 stiffness_matrix_terms(i_elem, 0, 0, i, j) = a(i, j);
@@ -75,7 +76,6 @@ struct CalculateQuadraturePointValues {
                 stiffness_matrix_terms(i_elem, 1, 1, i, j) = a(i, j);
             }
         }
-
     }
 };
 
