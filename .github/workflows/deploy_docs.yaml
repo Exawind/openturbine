@@ -35,18 +35,13 @@ jobs:
     - name: Install documentation dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y --no-install-recommends graphviz libenchant-2-dev
+        sudo apt-get install -y --no-install-recommends graphviz libenchant-2-dev doxygen
         python3 -m pip install --upgrade pip
         pip install -r openturbine/docs/requirements.txt
-    - name: Install Doxygen
-      uses: ssciwr/doxygen-install@v1.6.0
-      with:
-        version: "1.12.0"
     - name: Build OpenTurbine with documentation
       run: |
         source spack/share/spack/setup-env.sh
-        spack load trilinos
-        spack load yaml-cpp
+        spack load trilinos yaml-cpp
         cd openturbine
         mkdir build
         cd build
@@ -59,4 +54,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ../docs/_build/html
+        publish_dir: docs/sphinx/html
