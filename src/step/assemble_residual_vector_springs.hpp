@@ -24,6 +24,7 @@ struct AssembleSpringsResidual {
 };
 
 }  // namespace springs
+
 inline void AssembleResidualVectorSprings(const Springs& springs) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Springs Residual");
     Kokkos::parallel_for(
