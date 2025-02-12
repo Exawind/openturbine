@@ -13,57 +13,107 @@
 namespace openturbine::masses {
 
 struct CalculateQuadraturePointValues {
+    double beta_prime;
+    double gamma_prime;
+
+    Kokkos::View<double*[7]>::const_type Q;
+    Kokkos::View<double*[6]>::const_type V;
+    Kokkos::View<double*[6]>::const_type A;
+
+    Kokkos::View<size_t*>::const_type node_state_indices;
     Kokkos::View<double[3]>::const_type gravity;
     Kokkos::View<double* [6][6]>::const_type qp_Mstar;
-    Kokkos::View<double* [7]>::const_type qp_x;
-    Kokkos::View<double* [3]>::const_type qp_u_ddot;
-    Kokkos::View<double* [3]>::const_type qp_omega;
-    Kokkos::View<double* [3]>::const_type qp_omega_dot;
+    Kokkos::View<double* [7]>::const_type node_x0;
 
-    Kokkos::View<double* [3]> qp_eta;
-    Kokkos::View<double* [3][3]> qp_rho;
-    Kokkos::View<double* [3][3]> qp_eta_tilde;
-    Kokkos::View<double* [3][3]> qp_omega_tilde;
-    Kokkos::View<double* [3][3]> qp_omega_dot_tilde;
-    Kokkos::View<double* [6]> qp_Fi;
-    Kokkos::View<double* [6]> qp_Fg;
-    Kokkos::View<double* [6][6]> qp_RR0;
-    Kokkos::View<double* [6][6]> qp_Muu;
-    Kokkos::View<double* [6][6]> qp_Guu;
-    Kokkos::View<double* [6][6]> qp_Kuu;
+    Kokkos::View<double*[6]> residual_vector_terms;
+    Kokkos::View<double*[6][6]> stiffness_matrix_terms;
+    Kokkos::View<double*[6][6]> inertia_matrix_terms;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
-        // Calculate the global rotation matrix
-        masses::CalculateRR0{i_elem, qp_x, qp_RR0}();
+        const auto index = node_state_indices(i_elem);
 
-        // Transform mass matrix from material -> inertial frame
-        masses::RotateSectionMatrix{i_elem, qp_RR0, qp_Mstar, qp_Muu}();
+        // Allocate scratch views
+        auto Mstar_data = Kokkos::Array<double, 36>{};
+        const auto x0_data = Kokkos::Array<double, 3>{node_x0(i_elem, 0), node_x0(i_elem, 1), node_x0(i_elem, 2)};
+        const auto r0_data = Kokkos::Array<double, 4>{node_x0(i_elem, 3), node_x0(i_elem, 4), node_x0(i_elem, 5), node_x0(i_elem, 6)};
+        const auto u_data = Kokkos::Array<double, 3>{Q(index, 0), Q(index, 1), Q(index, 2)};
+        const auto r_data = Kokkos::Array<double, 4>{Q(index, 3), Q(index, 4), Q(index, 5), Q(index, 6)};
+        auto xr_data = Kokkos::Array<double, 4>{};
+        const auto u_ddot_data = Kokkos::Array<double, 3>{A(index, 0), A(index, 1), A(index, 2)};
+        const auto omega_data = Kokkos::Array<double, 3>{V(index, 3), V(index, 4), V(index, 5)};
+        const auto omega_dot_data = Kokkos::Array<double, 3>{A(index, 3), A(index, 4), A(index, 5)};
+        auto Muu_data = Kokkos::Array<double, 36>{};
+        auto Fg_data = Kokkos::Array<double, 6>{};
+        auto eta_data = Kokkos::Array<double, 3>{};
+        auto eta_tilde_data = Kokkos::Array<double, 9>{};
+        auto rho_data = Kokkos::Array<double, 9>{};
+        auto omega_tilde_data = Kokkos::Array<double, 9>{};
+        auto omega_dot_tilde_data = Kokkos::Array<double, 9>{};
+        auto Fi_data = Kokkos::Array<double, 6>{};
+        auto Guu_data = Kokkos::Array<double, 36>{};
+        auto Kuu_data = Kokkos::Array<double, 36>{};
 
-        // Calculate mass matrix components i.e. eta, rho, and eta_tilde
-        masses::CalculateMassMatrixComponents{i_elem, qp_Muu, qp_eta, qp_rho, qp_eta_tilde}();
+        // Set up Views
+        const auto Mstar = Kokkos::View<double[6][6]>(Mstar_data.data());
+        const auto x0 = Kokkos::View<double[3]>::const_type(x0_data.data());
+        const auto r0 = Kokkos::View<double[4]>::const_type(r0_data.data());
+        const auto u = Kokkos::View<double[3]>::const_type(u_data.data());
+        const auto r = Kokkos::View<double[4]>::const_type(r_data.data());
+        const auto xr = Kokkos::View<double[4]>(xr_data.data());
+        const auto u_ddot = Kokkos::View<double[3]>::const_type(u_ddot_data.data());
+        const auto omega = Kokkos::View<double[3]>::const_type(omega_data.data());
+        const auto omega_dot = Kokkos::View<double[3]>::const_type(omega_dot_data.data());
+        auto Muu = Kokkos::View<double[6][6]>(Muu_data.data());
+        auto Fg = Kokkos::View<double[6]>(Fg_data.data());
+        auto eta = Kokkos::View<double[3]>(eta_data.data());
+        auto eta_tilde = Kokkos::View<double[3][3]>(eta_tilde_data.data());
+        auto rho = Kokkos::View<double[3][3]>(rho_data.data());
+        auto omega_tilde = Kokkos::View<double[3][3]>(omega_tilde_data.data());
+        auto omega_dot_tilde = Kokkos::View<double[3][3]>(omega_dot_tilde_data.data());
+        auto Fi = Kokkos::View<double[6]>(Fi_data.data());
+        auto Guu = Kokkos::View<double[6][6]>(Guu_data.data());
+        auto Kuu = Kokkos::View<double[6][6]>(Kuu_data.data());
 
-        // Calculate gravity forces
-        masses::CalculateGravityForce{i_elem, gravity, qp_Muu, qp_eta_tilde, qp_Fg}();
+        // Do the math
+        for(auto i = 0U; i < 6U; ++i) { 
+            for(auto j = 0U; j < 6U; ++j) {
+                Mstar(i, j) = qp_Mstar(i_elem, i, j);
+            }
+        }
+        QuaternionCompose(r, r0, xr);
+        VecTilde(omega, omega_tilde);
+        VecTilde(omega_dot, omega_dot_tilde);
 
-        // Calculate inertial forces i.e. forces due to linear + angular
-        // acceleration
-        masses::CalculateInertialForces{
-            i_elem,       qp_Muu,       qp_u_ddot,      qp_omega,
-            qp_omega_dot, qp_eta_tilde, qp_omega_tilde, qp_omega_dot_tilde,
-            qp_rho,       qp_eta,       qp_Fi
-        }();
+        RotateSectionMatrix(xr, Mstar, Muu);
 
-        // Calculate the gyroscopic/inertial damping matrix
-        masses::CalculateGyroscopicMatrix{i_elem, qp_Muu, qp_omega, qp_omega_tilde,
-                                          qp_rho, qp_eta, qp_Guu}();
+        const auto mass = Muu(0, 0);
+        CalculateEta(Muu, eta);
+        VecTilde(eta, eta_tilde);
+        CalculateRho(Muu, rho);
 
-        // Calculate the inertial stiffness matrix i.e. contributions from mass distribution and
-        // rotational dynamics
-        masses::CalculateInertiaStiffnessMatrix{
-            i_elem, qp_Muu, qp_u_ddot, qp_omega, qp_omega_dot, qp_omega_tilde, qp_omega_dot_tilde,
-            qp_rho, qp_eta, qp_Kuu
-        }();
+        CalculateGravityForce(mass, gravity, eta_tilde, Fg);
+        CalculateInertialForce(mass, u_ddot, omega, omega_dot, eta, eta_tilde, rho, omega_tilde, omega_dot_tilde, Fi);
+
+        CalculateGyroscopicMatrix(mass, omega, eta, rho, omega_tilde, Guu);
+        CalculateInertiaStiffnessMatrix(mass, u_ddot, omega, omega_dot, eta, rho, omega_tilde, omega_dot_tilde, Kuu);
+
+        // Contribute terms to main matrices
+        for (auto i = 0U; i < 6U; ++i) {
+            residual_vector_terms(i_elem, i) = Fi(i) - Fg(i);
+        }
+        for(auto i = 0U; i < 6U; ++i) {
+            for(auto j = 0U; j < 6U; ++j) {
+                stiffness_matrix_terms(i_elem, i, j) = Kuu(i, j);
+            }
+        }
+        for (auto i = 0U; i < 6U; ++i) {
+            for (auto j = 0U; j < 6U; ++j) {
+                inertia_matrix_terms(i_elem, i, j) =
+                    beta_prime * Muu(i, j) +
+                    gamma_prime * Guu(i, j);
+            }
+        }
     }
 };
 

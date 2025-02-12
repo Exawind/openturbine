@@ -139,7 +139,7 @@ void OutputLines(const FloatingPlatform&, size_t, const std::string&) {
 TEST(CFDInterfaceTest, FloatingPlatform) {
     // Solution parameters
     constexpr auto time_step = 0.01;
-    constexpr auto t_end = 1.;
+    constexpr auto t_end = 100.;
     constexpr auto rho_inf = 0.0;
     constexpr auto max_iter = 5;
     const auto n_steps{static_cast<size_t>(ceil(t_end / time_step)) + 1};
