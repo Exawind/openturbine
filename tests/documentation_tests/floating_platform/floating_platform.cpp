@@ -93,19 +93,10 @@ int main() {
             },
         });
 
-        // Save the initial state, then take first step
-        interface.SaveState();
-        auto converged = interface.Step();
-
         // Calculate buoyancy force as percentage of gravitational force plus spring forces times
-        const auto spring_f = Kokkos::create_mirror(interface.elements.springs.f);
-        Kokkos::deep_copy(spring_f, interface.elements.springs.f);
-        const auto initial_spring_force = spring_f(0, 2) + spring_f(1, 2) + spring_f(2, 2);
+        const auto initial_spring_force = 1907514.4912628897;
         const auto platform_gravity_force = -gravity[2] * platform_mass;
         const auto buoyancy_force = initial_spring_force + platform_gravity_force;
-
-        // Reset to initial state and apply
-        interface.RestoreState();
 
         // Iterate through time steps
         for (size_t i = 0U; i < n_steps; ++i) {
@@ -128,7 +119,7 @@ int main() {
                 2.0e7 * sin(2. * M_PI / 60. * t);  // rz
 
             // Take a single time step
-            converged = interface.Step();
+            auto converged = interface.Step();
             assert(converged);
         }
     }

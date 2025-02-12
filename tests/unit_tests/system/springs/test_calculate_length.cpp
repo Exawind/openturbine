@@ -5,21 +5,22 @@
 #include "system/springs/calculate_length.hpp"
 
 void TestCalclateLengthTests_ThreeElements() {
-    const auto r = Kokkos::View<double[3][3]>("r");
-    constexpr auto r_data = std::array{
-        1., 0., 0.,  // Element 1: length = 1.
-        3., 4., 0.,  // Element 2: length = 5.
-        1., 2., 2.   // Element 3: length = 3.
-    };
-    const auto r_host = Kokkos::View<const double[3][3], Kokkos::HostSpace>(r_data.data());
-    const auto r_mirror = Kokkos::create_mirror(r);
-    Kokkos::deep_copy(r_mirror, r_host);
-    Kokkos::deep_copy(r, r_mirror);
-
     const auto l = Kokkos::View<double[3]>("l");
     Kokkos::parallel_for(
-        "CalculateLength", 3,
-        KOKKOS_LAMBDA(const size_t i_elem) { openturbine::springs::CalculateLength{i_elem, r, l}(); }
+        "CalculateLength", 1,
+        KOKKOS_LAMBDA(const size_t) {
+            constexpr auto r0_data = Kokkos::Array<double, 3>{1., 0., 0.};
+            constexpr auto r1_data = Kokkos::Array<double, 3>{3., 4., 0.};
+            constexpr auto r2_data = Kokkos::Array<double, 3>{1., 2., 2.};
+
+            const auto r0 = Kokkos::View<double[3]>::const_type(r0_data.data());
+            const auto r1 = Kokkos::View<double[3]>::const_type(r1_data.data());
+            const auto r2 = Kokkos::View<double[3]>::const_type(r2_data.data());
+
+            l(0) = openturbine::springs::CalculateLength(r0);
+            l(1) = openturbine::springs::CalculateLength(r1);
+            l(2) = openturbine::springs::CalculateLength(r2);
+        }
     );
 
     constexpr auto l_exact_data = std::array{1., 5., 3.};
