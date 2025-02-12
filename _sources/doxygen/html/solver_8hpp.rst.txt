@@ -1,0 +1,14 @@
+.. meta::31dcf22fdb04e02e104de1d2cde8d4f8c0251929f179123a73a4bbac109d915312521644ab30041cbd48fd79bcf63591b7498203ec2acade558e82ebeed4c595
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/solver.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/solver.hpp File Reference
+==========================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: solver_8hpp.html

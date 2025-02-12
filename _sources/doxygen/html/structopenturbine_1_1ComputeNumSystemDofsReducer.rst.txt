@@ -1,0 +1,14 @@
+.. meta::997d5fd5f2624e7eee8c35b88ecdf4421f74729f45f7dbc4ca53d610482b996ad69057308519e5a5e3fa88e33a5af6f92ad2a4f5e10e01cee31d06d26765464b
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::ComputeNumSystemDofsReducer Struct Reference
+
+ComputeNumSystemDofsReducer Struct Reference
+============================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1ComputeNumSystemDofsReducer.html

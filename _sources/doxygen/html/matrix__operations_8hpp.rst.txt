@@ -1,0 +1,14 @@
+.. meta::6dcbfa394a578aef6147543f167b97a78c7c02dda7f3af92b27ed1c6481b2aba5746081364e42374647b68048ef98a0d8395992bbf403d7b003e2ed895da72ae
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/math/matrix_operations.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/math/matrix\_operations.hpp File Reference
+====================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: matrix__operations_8hpp.html

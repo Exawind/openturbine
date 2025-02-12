@@ -1,0 +1,14 @@
+.. meta::e46426ad9061c9cca2c4f363f4fefc446f214c3f0a2022247be3e70ddd35288403dde87ff7b236d3cd239b89dbcf458dcf854f7f5183eb88a2e47751d06e7323
+
+:orphan:
+
+.. title:: OpenTurbine API: Supervisory Struct Reference
+
+Supervisory Struct Reference
+============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structSupervisory.html

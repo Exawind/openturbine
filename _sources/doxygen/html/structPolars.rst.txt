@@ -1,0 +1,14 @@
+.. meta::94a058ec613258af5513bb2cae964d030b8c6f8ebe2443b89b4dfb367f0adf33679bfe30299bdd10050fabbe7ce896ab1f346923b8d78f1975f64d30c07210d7
+
+:orphan:
+
+.. title:: OpenTurbine API: Polars Struct Reference
+
+Polars Struct Reference
+=======================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structPolars.html

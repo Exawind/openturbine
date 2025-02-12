@@ -1,0 +1,14 @@
+.. meta::8f92bcf83e3742e30bf075e2cc3d239fea2af218e5b39dba57ce75aaaab7885337d55bdbbfa50ea77bd89e24fe69c50ef4cf284e8f3a29bbbdef4460cc91af60
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/create_transpose_matrix_full.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/create\_transpose\_matrix\_full.hpp File Reference
+===================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: create__transpose__matrix__full_8hpp.html

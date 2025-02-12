@@ -1,0 +1,14 @@
+.. meta::ed849b90520629e0902d2c8eec7828ba581c7b2145d3b605b5ca3457707bf2dff90ea1b165057f5ae562396d78cb0fb4035ac6c0fbd9fe3f770b7b8a261caf37
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/masses/masses.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/elements/masses/masses.hpp File Reference
+===================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: masses_8hpp.html

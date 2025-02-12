@@ -1,0 +1,14 @@
+.. meta::399c021c0b55165cd6b86a661306dd6054a03e3cb08ea4b739b94a2dc778729b2e7e8fc30579be08b38ce2193ee3aaa2459ea21ed46e24cee834225aa146f115
+
+:orphan:
+
+.. title:: OpenTurbine API: Class Members - Variables
+
+Class Members - Variables
+=========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: functions_vars_m.html

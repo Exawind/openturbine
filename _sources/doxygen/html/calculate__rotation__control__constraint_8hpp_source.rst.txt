@@ -1,0 +1,14 @@
+.. meta::492f31934da50c32e40b85c8b68ec559bf5369323558ef81482f2edcf03ebe1a5291d48332f68fe5a96ebca13c450842ce6df94b88230d4ef6ee7134f0f23f7b
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate_rotation_control_constraint.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate\_rotation\_control\_constraint.hpp Source File
+==============================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: calculate__rotation__control__constraint_8hpp_source.html

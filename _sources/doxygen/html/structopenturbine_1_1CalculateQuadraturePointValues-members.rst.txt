@@ -1,0 +1,14 @@
+.. meta::857c291ea2bd11a997d93703fb1b63b8625c598b08993171c2579e17d9cb0c0f1e45820baf28e19c4f7d8410bbe7dd72e655c41981ac7f12c85c0286e800fb70
+
+:orphan:
+
+.. title:: OpenTurbine API: Member List
+
+Member List
+===========
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateQuadraturePointValues-members.html

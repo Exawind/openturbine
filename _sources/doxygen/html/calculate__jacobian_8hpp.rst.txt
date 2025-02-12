@@ -1,0 +1,14 @@
+.. meta::3fbcb01c22a0d8df1e1a665efc702c984cc7eb017b4875b2f3754cd441e7d2a2809e783fe36b302462b6fda790a14fd544a595146ddb6e82f8b91bb3cc320f46
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/calculate_jacobian.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/calculate\_jacobian.hpp File Reference
+===============================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: calculate__jacobian_8hpp.html

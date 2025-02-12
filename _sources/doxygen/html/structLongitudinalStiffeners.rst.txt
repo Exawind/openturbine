@@ -1,0 +1,14 @@
+.. meta::623eb5136fd715fe4bd33b0f3003bac253911ae52421f3a3edad504ecc5a435a30280bfdb966866cb1f1afb5198f8c3bedb92af62d71bd16d6a14bbeaa4f4415
+
+:orphan:
+
+.. title:: OpenTurbine API: LongitudinalStiffeners Struct Reference
+
+LongitudinalStiffeners Struct Reference
+=======================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structLongitudinalStiffeners.html

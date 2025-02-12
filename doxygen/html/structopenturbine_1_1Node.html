@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::Node Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::Node Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1Node.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="node-struct-reference">
+<h1>Node Struct Reference<a class="headerlink" href="#node-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::Node Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1Node.html">Node</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1Node-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::Node Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="node_8hpp_source.html">node.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a7004fab360cbf1f5629e877755e10005" id="r_a7004fab360cbf1f5629e877755e10005"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#a7004fab360cbf1f5629e877755e10005">Node</a> (size_t id)</td></tr>
+<tr class="memdesc:a7004fab360cbf1f5629e877755e10005"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a node with an ID.  <br /></td></tr>
+<tr class="separator:a7004fab360cbf1f5629e877755e10005"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23f5e94c420bfbc4e09ac7bcf37fa035" id="r_a23f5e94c420bfbc4e09ac7bcf37fa035"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#a23f5e94c420bfbc4e09ac7bcf37fa035">Node</a> (size_t id, <a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a> position, <a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a> displacement=<a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a>{0., 0., 0., 1., 0., 0., 0.}, <a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a> velocity=<a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a>{0., 0., 0., 0., 0., 0.}, <a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a> acceleration=<a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a>{0., 0., 0., 0., 0., 0.})</td></tr>
+<tr class="memdesc:a23f5e94c420bfbc4e09ac7bcf37fa035"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a node with an ID, position, displacement, velocity, and acceleration vectors.  <br /></td></tr>
+<tr class="separator:a23f5e94c420bfbc4e09ac7bcf37fa035"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18e2f02534b9fa834d56440971194e9a" id="r_a18e2f02534b9fa834d56440971194e9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#a18e2f02534b9fa834d56440971194e9a">Translate</a> (const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;displacement)</td></tr>
+<tr class="memdesc:a18e2f02534b9fa834d56440971194e9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Translate node by a displacement vector.  <br /></td></tr>
+<tr class="separator:a18e2f02534b9fa834d56440971194e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fef9b0ea73b13598808bbf2f1326e14" id="r_a1fef9b0ea73b13598808bbf2f1326e14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#a1fef9b0ea73b13598808bbf2f1326e14">Rotate</a> (const <a class="el" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a> &amp;q)</td></tr>
+<tr class="memdesc:a1fef9b0ea73b13598808bbf2f1326e14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotate node by a quaternion.  <br /></td></tr>
+<tr class="separator:a1fef9b0ea73b13598808bbf2f1326e14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2aee6dd56a7aa57144a998dc364bf624" id="r_a2aee6dd56a7aa57144a998dc364bf624"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#a2aee6dd56a7aa57144a998dc364bf624">Rotate</a> (const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;axis, double angle)</td></tr>
+<tr class="memdesc:a2aee6dd56a7aa57144a998dc364bf624"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotate node by a rotation axis and angle.  <br /></td></tr>
+<tr class="separator:a2aee6dd56a7aa57144a998dc364bf624"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a048b25f3b1b4891d2bb9553505fe8b13" id="r_a048b25f3b1b4891d2bb9553505fe8b13"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#a048b25f3b1b4891d2bb9553505fe8b13">ID</a></td></tr>
+<tr class="separator:a048b25f3b1b4891d2bb9553505fe8b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae73d31efecee5d959c397baf8b136e57" id="r_ae73d31efecee5d959c397baf8b136e57"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#ae73d31efecee5d959c397baf8b136e57">x</a></td></tr>
+<tr class="separator:ae73d31efecee5d959c397baf8b136e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40e31751061161213e4c77a847fdac89" id="r_a40e31751061161213e4c77a847fdac89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#a40e31751061161213e4c77a847fdac89">u</a></td></tr>
+<tr class="separator:a40e31751061161213e4c77a847fdac89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5b753a6d5828c343f8a5f8bb3b7ab6d" id="r_aa5b753a6d5828c343f8a5f8bb3b7ab6d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#aa5b753a6d5828c343f8a5f8bb3b7ab6d">v</a></td></tr>
+<tr class="separator:aa5b753a6d5828c343f8a5f8bb3b7ab6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8745ec5ff17e282bb02aeb7af7665f8" id="r_ae8745ec5ff17e282bb02aeb7af7665f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#ae8745ec5ff17e282bb02aeb7af7665f8">vd</a></td></tr>
+<tr class="separator:ae8745ec5ff17e282bb02aeb7af7665f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af400827a120ce05261433c066cfdd6b8" id="r_af400827a120ce05261433c066cfdd6b8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#af400827a120ce05261433c066cfdd6b8">s</a></td></tr>
+<tr class="separator:af400827a120ce05261433c066cfdd6b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a7004fab360cbf1f5629e877755e10005" name="a7004fab360cbf1f5629e877755e10005"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7004fab360cbf1f5629e877755e10005">&#9670;&#160;</a></span>Node() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::Node::Node </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a node with an ID. </p>
+
+</div>
+</div>
+<a id="a23f5e94c420bfbc4e09ac7bcf37fa035" name="a23f5e94c420bfbc4e09ac7bcf37fa035"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23f5e94c420bfbc4e09ac7bcf37fa035">&#9670;&#160;</a></span>Node() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::Node::Node </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a>&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a>&#160;</td>
+          <td class="paramname"><em>displacement</em> = <code><a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a>{0.,&#160;0.,&#160;0.,&#160;1.,&#160;0.,&#160;0.,&#160;0.}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a>&#160;</td>
+          <td class="paramname"><em>velocity</em> = <code><a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a>{0.,&#160;0.,&#160;0.,&#160;0.,&#160;0.,&#160;0.}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a>&#160;</td>
+          <td class="paramname"><em>acceleration</em> = <code><a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a>{0.,&#160;0.,&#160;0.,&#160;0.,&#160;0.,&#160;0.}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a node with an ID, position, displacement, velocity, and acceleration vectors. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2aee6dd56a7aa57144a998dc364bf624" name="a2aee6dd56a7aa57144a998dc364bf624"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2aee6dd56a7aa57144a998dc364bf624">&#9670;&#160;</a></span>Rotate() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::Node::Rotate </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;&#160;</td>
+          <td class="paramname"><em>axis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>angle</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Rotate node by a rotation axis and angle. </p>
+
+</div>
+</div>
+<a id="a1fef9b0ea73b13598808bbf2f1326e14" name="a1fef9b0ea73b13598808bbf2f1326e14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fef9b0ea73b13598808bbf2f1326e14">&#9670;&#160;</a></span>Rotate() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::Node::Rotate </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a> &amp;&#160;</td>
+          <td class="paramname"><em>q</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Rotate node by a quaternion. </p>
+
+</div>
+</div>
+<a id="a18e2f02534b9fa834d56440971194e9a" name="a18e2f02534b9fa834d56440971194e9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18e2f02534b9fa834d56440971194e9a">&#9670;&#160;</a></span>Translate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::Node::Translate </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;&#160;</td>
+          <td class="paramname"><em>displacement</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Translate node by a displacement vector. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a048b25f3b1b4891d2bb9553505fe8b13" name="a048b25f3b1b4891d2bb9553505fe8b13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a048b25f3b1b4891d2bb9553505fe8b13">&#9670;&#160;</a></span>ID</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::Node::ID</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af400827a120ce05261433c066cfdd6b8" name="af400827a120ce05261433c066cfdd6b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af400827a120ce05261433c066cfdd6b8">&#9670;&#160;</a></span>s</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::Node::s</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a40e31751061161213e4c77a847fdac89" name="a40e31751061161213e4c77a847fdac89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40e31751061161213e4c77a847fdac89">&#9670;&#160;</a></span>u</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a> openturbine::Node::u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa5b753a6d5828c343f8a5f8bb3b7ab6d" name="aa5b753a6d5828c343f8a5f8bb3b7ab6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5b753a6d5828c343f8a5f8bb3b7ab6d">&#9670;&#160;</a></span>v</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a> openturbine::Node::v</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae8745ec5ff17e282bb02aeb7af7665f8" name="ae8745ec5ff17e282bb02aeb7af7665f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8745ec5ff17e282bb02aeb7af7665f8">&#9670;&#160;</a></span>vd</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a> openturbine::Node::vd</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae73d31efecee5d959c397baf8b136e57" name="ae73d31efecee5d959c397baf8b136e57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae73d31efecee5d959c397baf8b136e57">&#9670;&#160;</a></span>x</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a> openturbine::Node::x</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/model/<a class="el" href="node_8hpp_source.html">node.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

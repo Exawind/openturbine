@@ -1,0 +1,14 @@
+.. meta::57594c25d28d09de8bf9a3ed0a174afa7f340b19f9bfa04f7867a75401b4ed433addb397da7e31315898172e3e550c90cbad9ea50a2ff8dd2212e9b26f69094d
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::ComputeKColIndsFunction&lt; RowPtrType, IndicesType &gt; Struct Template Reference
+
+ComputeKColIndsFunction&lt; RowPtrType, IndicesType &gt; Struct Template Reference
+==================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1ComputeKColIndsFunction.html

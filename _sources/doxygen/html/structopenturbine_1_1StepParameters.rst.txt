@@ -1,0 +1,14 @@
+.. meta::a228e26304a928e11ef3e8db8566a14974aeb543533f4c56ccab3fa8a916849e70f70034c8e396c85f2701b609971fb7ca0fd35933dce8c68d504669e5c01944
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::StepParameters Struct Reference
+
+StepParameters Struct Reference
+===============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1StepParameters.html

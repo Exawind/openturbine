@@ -1,0 +1,14 @@
+.. meta::7e2eb609fb11e4289370fdf2aa544c3e1dfe5b6033c19d9f9631ea4b85f270b2335c7263e823d855bb0a34dc4cc0dc72b5a1ac84236061efe6a16d4527766455
+
+:orphan:
+
+.. title:: OpenTurbine API: CL Struct Reference
+
+CL Struct Reference
+===================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structCL.html

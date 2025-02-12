@@ -1,0 +1,14 @@
+.. meta::2b646f7d3746c7f3afae9fe9edf5861b89459f58b1d05f93ea391d9b7a201f3b291ddd6cebc4acd470f117659894cb031d4072d377ee1a3a823ebc8dbd39f582
+
+:orphan:
+
+.. title:: OpenTurbine API: Control Struct Reference
+
+Control Struct Reference
+========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structControl.html

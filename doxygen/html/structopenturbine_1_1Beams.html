@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::Beams Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::Beams Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1Beams.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="beams-struct-reference">
+<h1>Beams Struct Reference<a class="headerlink" href="#beams-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::Beams Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1Beams.html">Beams</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1Beams-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::Beams Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Contains the field variables needed to compute the per-element contributions to the residual vector and system matrix.  
+ <a href="structopenturbine_1_1Beams.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="beams_8hpp_source.html">beams.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a4025a9f28712c088a27d9d783c4d3609" id="r_a4025a9f28712c088a27d9d783c4d3609"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a4025a9f28712c088a27d9d783c4d3609">Beams</a> (const size_t n_beams, const size_t max_e_nodes, const size_t max_e_qps)</td></tr>
+<tr class="separator:a4025a9f28712c088a27d9d783c4d3609"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a14099a8214e363aca1681f2de065aa5c" id="r_a14099a8214e363aca1681f2de065aa5c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a14099a8214e363aca1681f2de065aa5c">num_elems</a></td></tr>
+<tr class="separator:a14099a8214e363aca1681f2de065aa5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56d38f8a65e2289b048c1e6646303c73" id="r_a56d38f8a65e2289b048c1e6646303c73"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a56d38f8a65e2289b048c1e6646303c73">max_elem_nodes</a></td></tr>
+<tr class="separator:a56d38f8a65e2289b048c1e6646303c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5358d0c5388a991a2ea6a263bed5c6ed" id="r_a5358d0c5388a991a2ea6a263bed5c6ed"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a5358d0c5388a991a2ea6a263bed5c6ed">max_elem_qps</a></td></tr>
+<tr class="separator:a5358d0c5388a991a2ea6a263bed5c6ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03166cab2084794a14d3d2d4cafda289" id="r_a03166cab2084794a14d3d2d4cafda289"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a03166cab2084794a14d3d2d4cafda289">num_nodes_per_element</a></td></tr>
+<tr class="separator:a03166cab2084794a14d3d2d4cafda289"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8e78e789c5cd9506f715da85229ed19" id="r_ac8e78e789c5cd9506f715da85229ed19"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#ac8e78e789c5cd9506f715da85229ed19">num_qps_per_element</a></td></tr>
+<tr class="separator:ac8e78e789c5cd9506f715da85229ed19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a173c6ea75523c4004d6afa9f7d91a2cd" id="r_a173c6ea75523c4004d6afa9f7d91a2cd"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t ** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a173c6ea75523c4004d6afa9f7d91a2cd">node_state_indices</a></td></tr>
+<tr class="separator:a173c6ea75523c4004d6afa9f7d91a2cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe8d87ad6c5e674a4916e46a2b312479" id="r_abe8d87ad6c5e674a4916e46a2b312479"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> ** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#abe8d87ad6c5e674a4916e46a2b312479">element_freedom_signature</a></td></tr>
+<tr class="separator:abe8d87ad6c5e674a4916e46a2b312479"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6b9025a64e5d19e571578e28979ae9a" id="r_aa6b9025a64e5d19e571578e28979ae9a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#aa6b9025a64e5d19e571578e28979ae9a">element_freedom_table</a></td></tr>
+<tr class="separator:aa6b9025a64e5d19e571578e28979ae9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9187b5cee351c25774a96af4c10f671b" id="r_a9187b5cee351c25774a96af4c10f671b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a5c3e2136acb58cc49d15dc2d88c76a66">View_3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a9187b5cee351c25774a96af4c10f671b">gravity</a></td></tr>
+<tr class="separator:a9187b5cee351c25774a96af4c10f671b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a373a874ed08597546a6f156b6567a82e" id="r_a373a874ed08597546a6f156b6567a82e"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a373a874ed08597546a6f156b6567a82e">node_x0</a></td></tr>
+<tr class="separator:a373a874ed08597546a6f156b6567a82e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d845a0da8a536b029e82248710fc0b3" id="r_a9d845a0da8a536b029e82248710fc0b3"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a9d845a0da8a536b029e82248710fc0b3">node_u</a></td></tr>
+<tr class="separator:a9d845a0da8a536b029e82248710fc0b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e596838d3fb66d816ab3530a627f423" id="r_a6e596838d3fb66d816ab3530a627f423"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a6e596838d3fb66d816ab3530a627f423">node_u_dot</a></td></tr>
+<tr class="separator:a6e596838d3fb66d816ab3530a627f423"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dd8b8d111c9634efa6d9967dfd4eb04" id="r_a7dd8b8d111c9634efa6d9967dfd4eb04"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a7dd8b8d111c9634efa6d9967dfd4eb04">node_u_ddot</a></td></tr>
+<tr class="separator:a7dd8b8d111c9634efa6d9967dfd4eb04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bbc061cbfe18be63ebd9caa6c9643df" id="r_a7bbc061cbfe18be63ebd9caa6c9643df"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a7bbc061cbfe18be63ebd9caa6c9643df">node_FX</a></td></tr>
+<tr class="separator:a7bbc061cbfe18be63ebd9caa6c9643df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82fd8ba4c5e9e713a86c38f2f1b0bf3d" id="r_a82fd8ba4c5e9e713a86c38f2f1b0bf3d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a82fd8ba4c5e9e713a86c38f2f1b0bf3d">qp_weight</a></td></tr>
+<tr class="separator:a82fd8ba4c5e9e713a86c38f2f1b0bf3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a315943f3466cdf227df284a508fba276" id="r_a315943f3466cdf227df284a508fba276"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a315943f3466cdf227df284a508fba276">qp_jacobian</a></td></tr>
+<tr class="separator:a315943f3466cdf227df284a508fba276"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec5545337d7bf3b2017db63e47ad4af9" id="r_aec5545337d7bf3b2017db63e47ad4af9"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#aec5545337d7bf3b2017db63e47ad4af9">qp_Mstar</a></td></tr>
+<tr class="separator:aec5545337d7bf3b2017db63e47ad4af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d87871c71bf52dde3abd2c54a1e62f8" id="r_a7d87871c71bf52dde3abd2c54a1e62f8"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a7d87871c71bf52dde3abd2c54a1e62f8">qp_Cstar</a></td></tr>
+<tr class="separator:a7d87871c71bf52dde3abd2c54a1e62f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec429f432e2d82cc4a5c93ed2b0a284b" id="r_aec429f432e2d82cc4a5c93ed2b0a284b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#aec429f432e2d82cc4a5c93ed2b0a284b">qp_x</a></td></tr>
+<tr class="separator:aec429f432e2d82cc4a5c93ed2b0a284b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ba06721f14ae4d82f8fc68d251cfacf" id="r_a7ba06721f14ae4d82f8fc68d251cfacf"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a7ba06721f14ae4d82f8fc68d251cfacf">qp_x0</a></td></tr>
+<tr class="separator:a7ba06721f14ae4d82f8fc68d251cfacf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ca8e3126ad501b50276fa414b3a7a7f" id="r_a5ca8e3126ad501b50276fa414b3a7a7f"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a5ca8e3126ad501b50276fa414b3a7a7f">qp_x0_prime</a></td></tr>
+<tr class="separator:a5ca8e3126ad501b50276fa414b3a7a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae79ef06fa9542928c92699b676e6081" id="r_aae79ef06fa9542928c92699b676e6081"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[4]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#aae79ef06fa9542928c92699b676e6081">qp_r0</a></td></tr>
+<tr class="separator:aae79ef06fa9542928c92699b676e6081"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03ab13b2d407764a456172c39537d2ba" id="r_a03ab13b2d407764a456172c39537d2ba"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a03ab13b2d407764a456172c39537d2ba">qp_u</a></td></tr>
+<tr class="separator:a03ab13b2d407764a456172c39537d2ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1830ed446cd507b93db594f92d68d57c" id="r_a1830ed446cd507b93db594f92d68d57c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a1830ed446cd507b93db594f92d68d57c">qp_u_prime</a></td></tr>
+<tr class="separator:a1830ed446cd507b93db594f92d68d57c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5623cbb0ab89925f899cc6324308675" id="r_ad5623cbb0ab89925f899cc6324308675"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#ad5623cbb0ab89925f899cc6324308675">qp_u_dot</a></td></tr>
+<tr class="separator:ad5623cbb0ab89925f899cc6324308675"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab352b8a566ec39a9bc47738eb0cb708d" id="r_ab352b8a566ec39a9bc47738eb0cb708d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#ab352b8a566ec39a9bc47738eb0cb708d">qp_u_ddot</a></td></tr>
+<tr class="separator:ab352b8a566ec39a9bc47738eb0cb708d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8727e094c444590bcadcfc1cbc14918b" id="r_a8727e094c444590bcadcfc1cbc14918b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[4]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a8727e094c444590bcadcfc1cbc14918b">qp_r</a></td></tr>
+<tr class="separator:a8727e094c444590bcadcfc1cbc14918b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaaf3df49245c396df2a19579300694d9" id="r_aaaf3df49245c396df2a19579300694d9"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[4]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#aaaf3df49245c396df2a19579300694d9">qp_r_prime</a></td></tr>
+<tr class="separator:aaaf3df49245c396df2a19579300694d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56a2baacaceb37c7f5e1412cfe249f5a" id="r_a56a2baacaceb37c7f5e1412cfe249f5a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a56a2baacaceb37c7f5e1412cfe249f5a">qp_omega</a></td></tr>
+<tr class="separator:a56a2baacaceb37c7f5e1412cfe249f5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21b416bd96258b616dae1e37eb5c689d" id="r_a21b416bd96258b616dae1e37eb5c689d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a21b416bd96258b616dae1e37eb5c689d">qp_omega_dot</a></td></tr>
+<tr class="separator:a21b416bd96258b616dae1e37eb5c689d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad273daa53d34d389853e090534206401" id="r_ad273daa53d34d389853e090534206401"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#ad273daa53d34d389853e090534206401">qp_deformation</a></td></tr>
+<tr class="separator:ad273daa53d34d389853e090534206401"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cf94021cddd4d8d593ec4f4330c733a" id="r_a5cf94021cddd4d8d593ec4f4330c733a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3][4]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a5cf94021cddd4d8d593ec4f4330c733a">qp_E</a></td></tr>
+<tr class="separator:a5cf94021cddd4d8d593ec4f4330c733a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7ac45aaa1536a3d75a87a40be866da2" id="r_af7ac45aaa1536a3d75a87a40be866da2"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3][3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#af7ac45aaa1536a3d75a87a40be866da2">qp_eta_tilde</a></td></tr>
+<tr class="separator:af7ac45aaa1536a3d75a87a40be866da2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a478b4b402505c969d14d57d35ea79dbd" id="r_a478b4b402505c969d14d57d35ea79dbd"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3][3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a478b4b402505c969d14d57d35ea79dbd">qp_omega_tilde</a></td></tr>
+<tr class="separator:a478b4b402505c969d14d57d35ea79dbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3f9d5db17a7b2b48ec9069d835f45dd" id="r_aa3f9d5db17a7b2b48ec9069d835f45dd"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3][3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#aa3f9d5db17a7b2b48ec9069d835f45dd">qp_omega_dot_tilde</a></td></tr>
+<tr class="separator:aa3f9d5db17a7b2b48ec9069d835f45dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a630cea15712d61ab664c682f14d5a473" id="r_a630cea15712d61ab664c682f14d5a473"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3][3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a630cea15712d61ab664c682f14d5a473">qp_x0pupss</a></td></tr>
+<tr class="separator:a630cea15712d61ab664c682f14d5a473"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66f8d185ac566f84fced6c16738635db" id="r_a66f8d185ac566f84fced6c16738635db"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3][3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a66f8d185ac566f84fced6c16738635db">qp_M_tilde</a></td></tr>
+<tr class="separator:a66f8d185ac566f84fced6c16738635db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cab3fe7f0bf67e13b6ecac72b28e2d8" id="r_a8cab3fe7f0bf67e13b6ecac72b28e2d8"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3][3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a8cab3fe7f0bf67e13b6ecac72b28e2d8">qp_N_tilde</a></td></tr>
+<tr class="separator:a8cab3fe7f0bf67e13b6ecac72b28e2d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dbfe3b07364aebdac6e79dc087889e1" id="r_a0dbfe3b07364aebdac6e79dc087889e1"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a0dbfe3b07364aebdac6e79dc087889e1">qp_eta</a></td></tr>
+<tr class="separator:a0dbfe3b07364aebdac6e79dc087889e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60f93a6c8d0156fb6c41a0d02d227221" id="r_a60f93a6c8d0156fb6c41a0d02d227221"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3][3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a60f93a6c8d0156fb6c41a0d02d227221">qp_rho</a></td></tr>
+<tr class="separator:a60f93a6c8d0156fb6c41a0d02d227221"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5db1c49d486df11a1f2118740a608755" id="r_a5db1c49d486df11a1f2118740a608755"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a5db1c49d486df11a1f2118740a608755">qp_strain</a></td></tr>
+<tr class="separator:a5db1c49d486df11a1f2118740a608755"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b9b670aa860668906d12252bac54190" id="r_a8b9b670aa860668906d12252bac54190"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a8b9b670aa860668906d12252bac54190">qp_Fc</a></td></tr>
+<tr class="separator:a8b9b670aa860668906d12252bac54190"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49d100fdd21f282c171d1fa73a834c74" id="r_a49d100fdd21f282c171d1fa73a834c74"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a49d100fdd21f282c171d1fa73a834c74">qp_Fd</a></td></tr>
+<tr class="separator:a49d100fdd21f282c171d1fa73a834c74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a388178f5b172ee6726e935a3314a6bfc" id="r_a388178f5b172ee6726e935a3314a6bfc"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a388178f5b172ee6726e935a3314a6bfc">qp_Fi</a></td></tr>
+<tr class="separator:a388178f5b172ee6726e935a3314a6bfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5de75af6e56e3e3edeb7b002df414823" id="r_a5de75af6e56e3e3edeb7b002df414823"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a5de75af6e56e3e3edeb7b002df414823">qp_Fe</a></td></tr>
+<tr class="separator:a5de75af6e56e3e3edeb7b002df414823"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd01a17e173f713a3da129abc35e8b88" id="r_afd01a17e173f713a3da129abc35e8b88"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#afd01a17e173f713a3da129abc35e8b88">qp_Fg</a></td></tr>
+<tr class="separator:afd01a17e173f713a3da129abc35e8b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a613036de2c74957c22308f1017ca33e1" id="r_a613036de2c74957c22308f1017ca33e1"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a613036de2c74957c22308f1017ca33e1">qp_RR0</a></td></tr>
+<tr class="separator:a613036de2c74957c22308f1017ca33e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1a635fa058c96709bffb9e3f844243d" id="r_ae1a635fa058c96709bffb9e3f844243d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#ae1a635fa058c96709bffb9e3f844243d">qp_Muu</a></td></tr>
+<tr class="separator:ae1a635fa058c96709bffb9e3f844243d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20c51e161061cafd7abe4e260fd55a7f" id="r_a20c51e161061cafd7abe4e260fd55a7f"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a20c51e161061cafd7abe4e260fd55a7f">qp_Cuu</a></td></tr>
+<tr class="separator:a20c51e161061cafd7abe4e260fd55a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad348f7a30cb92e273717fc0c656d511d" id="r_ad348f7a30cb92e273717fc0c656d511d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#ad348f7a30cb92e273717fc0c656d511d">qp_Ouu</a></td></tr>
+<tr class="separator:ad348f7a30cb92e273717fc0c656d511d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7f0ccbf2ee5daba37690fff62d179a0" id="r_af7f0ccbf2ee5daba37690fff62d179a0"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#af7f0ccbf2ee5daba37690fff62d179a0">qp_Puu</a></td></tr>
+<tr class="separator:af7f0ccbf2ee5daba37690fff62d179a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab66fbd152f94989fab2bfebd99f018ec" id="r_ab66fbd152f94989fab2bfebd99f018ec"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#ab66fbd152f94989fab2bfebd99f018ec">qp_Quu</a></td></tr>
+<tr class="separator:ab66fbd152f94989fab2bfebd99f018ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0db63e140fa674763a62f04a30606feb" id="r_a0db63e140fa674763a62f04a30606feb"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a0db63e140fa674763a62f04a30606feb">qp_Guu</a></td></tr>
+<tr class="separator:a0db63e140fa674763a62f04a30606feb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a962bb4feb6c9eddad5a5f6a13172614c" id="r_a962bb4feb6c9eddad5a5f6a13172614c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a962bb4feb6c9eddad5a5f6a13172614c">qp_Kuu</a></td></tr>
+<tr class="separator:a962bb4feb6c9eddad5a5f6a13172614c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a231b3f938de571b31aa0e2b028f21dea" id="r_a231b3f938de571b31aa0e2b028f21dea"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a231b3f938de571b31aa0e2b028f21dea">residual_vector_terms</a></td></tr>
+<tr class="separator:a231b3f938de571b31aa0e2b028f21dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bb630820a374424c5d13bfec37ce79c" id="r_a2bb630820a374424c5d13bfec37ce79c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ***[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a2bb630820a374424c5d13bfec37ce79c">stiffness_matrix_terms</a></td></tr>
+<tr class="separator:a2bb630820a374424c5d13bfec37ce79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7497f95827bdee8a449873b6d0e5c048" id="r_a7497f95827bdee8a449873b6d0e5c048"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ***[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a7497f95827bdee8a449873b6d0e5c048">inertia_matrix_terms</a></td></tr>
+<tr class="separator:a7497f95827bdee8a449873b6d0e5c048"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b29f64034a23d17fd4cdc4cf97e1b5a" id="r_a6b29f64034a23d17fd4cdc4cf97e1b5a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a6b29f64034a23d17fd4cdc4cf97e1b5a">shape_interp</a></td></tr>
+<tr class="separator:a6b29f64034a23d17fd4cdc4cf97e1b5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c06ac9e204d435437b5f2c9aef9dd51" id="r_a8c06ac9e204d435437b5f2c9aef9dd51"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a8c06ac9e204d435437b5f2c9aef9dd51">shape_deriv</a></td></tr>
+<tr class="separator:a8c06ac9e204d435437b5f2c9aef9dd51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Contains the field variables needed to compute the per-element contributions to the residual vector and system matrix. </p>
+<ul>
+<li>In all Views, the first dimension corresponds to the element number</li>
+<li>In Views prefixed <code>node_</code>, the second dimension corresponds to the node number within that element</li>
+<li>In Views prefixed <code>qp_</code>, the second dimension corresponds to the quadrature point within that element</li>
+<li>The remaining dimensions are the number of components as defined by physics</li>
+<li>Additionally, shape_interp and shape_deriv have dimensions num_elems x num_nodes x num_qps </li>
+</ul>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a4025a9f28712c088a27d9d783c4d3609" name="a4025a9f28712c088a27d9d783c4d3609"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4025a9f28712c088a27d9d783c4d3609">&#9670;&#160;</a></span>Beams()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::Beams::Beams </td>
+          <td>(</td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>n_beams</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>max_e_nodes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>max_e_qps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="abe8d87ad6c5e674a4916e46a2b312479" name="abe8d87ad6c5e674a4916e46a2b312479"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe8d87ad6c5e674a4916e46a2b312479">&#9670;&#160;</a></span>element_freedom_signature</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>**&gt; openturbine::Beams::element_freedom_signature</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa6b9025a64e5d19e571578e28979ae9a" name="aa6b9025a64e5d19e571578e28979ae9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6b9025a64e5d19e571578e28979ae9a">&#9670;&#160;</a></span>element_freedom_table</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;size_t** [6]&gt; openturbine::Beams::element_freedom_table</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9187b5cee351c25774a96af4c10f671b" name="a9187b5cee351c25774a96af4c10f671b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9187b5cee351c25774a96af4c10f671b">&#9670;&#160;</a></span>gravity</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceopenturbine.html#a5c3e2136acb58cc49d15dc2d88c76a66">View_3</a> openturbine::Beams::gravity</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7497f95827bdee8a449873b6d0e5c048" name="a7497f95827bdee8a449873b6d0e5c048"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7497f95827bdee8a449873b6d0e5c048">&#9670;&#160;</a></span>inertia_matrix_terms</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*** [6][6]&gt; openturbine::Beams::inertia_matrix_terms</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a56d38f8a65e2289b048c1e6646303c73" name="a56d38f8a65e2289b048c1e6646303c73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56d38f8a65e2289b048c1e6646303c73">&#9670;&#160;</a></span>max_elem_nodes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::Beams::max_elem_nodes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5358d0c5388a991a2ea6a263bed5c6ed" name="a5358d0c5388a991a2ea6a263bed5c6ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5358d0c5388a991a2ea6a263bed5c6ed">&#9670;&#160;</a></span>max_elem_qps</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::Beams::max_elem_qps</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7bbc061cbfe18be63ebd9caa6c9643df" name="a7bbc061cbfe18be63ebd9caa6c9643df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bbc061cbfe18be63ebd9caa6c9643df">&#9670;&#160;</a></span>node_FX</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::Beams::node_FX</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a173c6ea75523c4004d6afa9f7d91a2cd" name="a173c6ea75523c4004d6afa9f7d91a2cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a173c6ea75523c4004d6afa9f7d91a2cd">&#9670;&#160;</a></span>node_state_indices</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;size_t**&gt; openturbine::Beams::node_state_indices</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9d845a0da8a536b029e82248710fc0b3" name="a9d845a0da8a536b029e82248710fc0b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d845a0da8a536b029e82248710fc0b3">&#9670;&#160;</a></span>node_u</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [7]&gt; openturbine::Beams::node_u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7dd8b8d111c9634efa6d9967dfd4eb04" name="a7dd8b8d111c9634efa6d9967dfd4eb04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dd8b8d111c9634efa6d9967dfd4eb04">&#9670;&#160;</a></span>node_u_ddot</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::Beams::node_u_ddot</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6e596838d3fb66d816ab3530a627f423" name="a6e596838d3fb66d816ab3530a627f423"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e596838d3fb66d816ab3530a627f423">&#9670;&#160;</a></span>node_u_dot</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::Beams::node_u_dot</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a373a874ed08597546a6f156b6567a82e" name="a373a874ed08597546a6f156b6567a82e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a373a874ed08597546a6f156b6567a82e">&#9670;&#160;</a></span>node_x0</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [7]&gt; openturbine::Beams::node_x0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a14099a8214e363aca1681f2de065aa5c" name="a14099a8214e363aca1681f2de065aa5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14099a8214e363aca1681f2de065aa5c">&#9670;&#160;</a></span>num_elems</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::Beams::num_elems</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a03166cab2084794a14d3d2d4cafda289" name="a03166cab2084794a14d3d2d4cafda289"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03166cab2084794a14d3d2d4cafda289">&#9670;&#160;</a></span>num_nodes_per_element</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;size_t*&gt; openturbine::Beams::num_nodes_per_element</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac8e78e789c5cd9506f715da85229ed19" name="ac8e78e789c5cd9506f715da85229ed19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8e78e789c5cd9506f715da85229ed19">&#9670;&#160;</a></span>num_qps_per_element</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;size_t*&gt; openturbine::Beams::num_qps_per_element</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7d87871c71bf52dde3abd2c54a1e62f8" name="a7d87871c71bf52dde3abd2c54a1e62f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d87871c71bf52dde3abd2c54a1e62f8">&#9670;&#160;</a></span>qp_Cstar</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6][6]&gt; openturbine::Beams::qp_Cstar</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a20c51e161061cafd7abe4e260fd55a7f" name="a20c51e161061cafd7abe4e260fd55a7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20c51e161061cafd7abe4e260fd55a7f">&#9670;&#160;</a></span>qp_Cuu</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6][6]&gt; openturbine::Beams::qp_Cuu</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad273daa53d34d389853e090534206401" name="ad273daa53d34d389853e090534206401"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad273daa53d34d389853e090534206401">&#9670;&#160;</a></span>qp_deformation</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3]&gt; openturbine::Beams::qp_deformation</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5cf94021cddd4d8d593ec4f4330c733a" name="a5cf94021cddd4d8d593ec4f4330c733a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cf94021cddd4d8d593ec4f4330c733a">&#9670;&#160;</a></span>qp_E</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3][4]&gt; openturbine::Beams::qp_E</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0dbfe3b07364aebdac6e79dc087889e1" name="a0dbfe3b07364aebdac6e79dc087889e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dbfe3b07364aebdac6e79dc087889e1">&#9670;&#160;</a></span>qp_eta</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3]&gt; openturbine::Beams::qp_eta</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af7ac45aaa1536a3d75a87a40be866da2" name="af7ac45aaa1536a3d75a87a40be866da2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7ac45aaa1536a3d75a87a40be866da2">&#9670;&#160;</a></span>qp_eta_tilde</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3][3]&gt; openturbine::Beams::qp_eta_tilde</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b9b670aa860668906d12252bac54190" name="a8b9b670aa860668906d12252bac54190"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b9b670aa860668906d12252bac54190">&#9670;&#160;</a></span>qp_Fc</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::Beams::qp_Fc</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a49d100fdd21f282c171d1fa73a834c74" name="a49d100fdd21f282c171d1fa73a834c74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49d100fdd21f282c171d1fa73a834c74">&#9670;&#160;</a></span>qp_Fd</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::Beams::qp_Fd</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5de75af6e56e3e3edeb7b002df414823" name="a5de75af6e56e3e3edeb7b002df414823"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5de75af6e56e3e3edeb7b002df414823">&#9670;&#160;</a></span>qp_Fe</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::Beams::qp_Fe</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afd01a17e173f713a3da129abc35e8b88" name="afd01a17e173f713a3da129abc35e8b88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd01a17e173f713a3da129abc35e8b88">&#9670;&#160;</a></span>qp_Fg</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::Beams::qp_Fg</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a388178f5b172ee6726e935a3314a6bfc" name="a388178f5b172ee6726e935a3314a6bfc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a388178f5b172ee6726e935a3314a6bfc">&#9670;&#160;</a></span>qp_Fi</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::Beams::qp_Fi</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0db63e140fa674763a62f04a30606feb" name="a0db63e140fa674763a62f04a30606feb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0db63e140fa674763a62f04a30606feb">&#9670;&#160;</a></span>qp_Guu</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6][6]&gt; openturbine::Beams::qp_Guu</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a315943f3466cdf227df284a508fba276" name="a315943f3466cdf227df284a508fba276"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a315943f3466cdf227df284a508fba276">&#9670;&#160;</a></span>qp_jacobian</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**&gt; openturbine::Beams::qp_jacobian</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a962bb4feb6c9eddad5a5f6a13172614c" name="a962bb4feb6c9eddad5a5f6a13172614c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a962bb4feb6c9eddad5a5f6a13172614c">&#9670;&#160;</a></span>qp_Kuu</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6][6]&gt; openturbine::Beams::qp_Kuu</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a66f8d185ac566f84fced6c16738635db" name="a66f8d185ac566f84fced6c16738635db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66f8d185ac566f84fced6c16738635db">&#9670;&#160;</a></span>qp_M_tilde</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3][3]&gt; openturbine::Beams::qp_M_tilde</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aec5545337d7bf3b2017db63e47ad4af9" name="aec5545337d7bf3b2017db63e47ad4af9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec5545337d7bf3b2017db63e47ad4af9">&#9670;&#160;</a></span>qp_Mstar</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6][6]&gt; openturbine::Beams::qp_Mstar</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae1a635fa058c96709bffb9e3f844243d" name="ae1a635fa058c96709bffb9e3f844243d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1a635fa058c96709bffb9e3f844243d">&#9670;&#160;</a></span>qp_Muu</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6][6]&gt; openturbine::Beams::qp_Muu</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8cab3fe7f0bf67e13b6ecac72b28e2d8" name="a8cab3fe7f0bf67e13b6ecac72b28e2d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cab3fe7f0bf67e13b6ecac72b28e2d8">&#9670;&#160;</a></span>qp_N_tilde</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3][3]&gt; openturbine::Beams::qp_N_tilde</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a56a2baacaceb37c7f5e1412cfe249f5a" name="a56a2baacaceb37c7f5e1412cfe249f5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56a2baacaceb37c7f5e1412cfe249f5a">&#9670;&#160;</a></span>qp_omega</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3]&gt; openturbine::Beams::qp_omega</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a21b416bd96258b616dae1e37eb5c689d" name="a21b416bd96258b616dae1e37eb5c689d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21b416bd96258b616dae1e37eb5c689d">&#9670;&#160;</a></span>qp_omega_dot</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3]&gt; openturbine::Beams::qp_omega_dot</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa3f9d5db17a7b2b48ec9069d835f45dd" name="aa3f9d5db17a7b2b48ec9069d835f45dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3f9d5db17a7b2b48ec9069d835f45dd">&#9670;&#160;</a></span>qp_omega_dot_tilde</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3][3]&gt; openturbine::Beams::qp_omega_dot_tilde</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a478b4b402505c969d14d57d35ea79dbd" name="a478b4b402505c969d14d57d35ea79dbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a478b4b402505c969d14d57d35ea79dbd">&#9670;&#160;</a></span>qp_omega_tilde</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3][3]&gt; openturbine::Beams::qp_omega_tilde</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad348f7a30cb92e273717fc0c656d511d" name="ad348f7a30cb92e273717fc0c656d511d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad348f7a30cb92e273717fc0c656d511d">&#9670;&#160;</a></span>qp_Ouu</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6][6]&gt; openturbine::Beams::qp_Ouu</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af7f0ccbf2ee5daba37690fff62d179a0" name="af7f0ccbf2ee5daba37690fff62d179a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7f0ccbf2ee5daba37690fff62d179a0">&#9670;&#160;</a></span>qp_Puu</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6][6]&gt; openturbine::Beams::qp_Puu</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab66fbd152f94989fab2bfebd99f018ec" name="ab66fbd152f94989fab2bfebd99f018ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab66fbd152f94989fab2bfebd99f018ec">&#9670;&#160;</a></span>qp_Quu</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6][6]&gt; openturbine::Beams::qp_Quu</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8727e094c444590bcadcfc1cbc14918b" name="a8727e094c444590bcadcfc1cbc14918b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8727e094c444590bcadcfc1cbc14918b">&#9670;&#160;</a></span>qp_r</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [4]&gt; openturbine::Beams::qp_r</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aae79ef06fa9542928c92699b676e6081" name="aae79ef06fa9542928c92699b676e6081"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae79ef06fa9542928c92699b676e6081">&#9670;&#160;</a></span>qp_r0</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [4]&gt; openturbine::Beams::qp_r0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaaf3df49245c396df2a19579300694d9" name="aaaf3df49245c396df2a19579300694d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaaf3df49245c396df2a19579300694d9">&#9670;&#160;</a></span>qp_r_prime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [4]&gt; openturbine::Beams::qp_r_prime</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a60f93a6c8d0156fb6c41a0d02d227221" name="a60f93a6c8d0156fb6c41a0d02d227221"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60f93a6c8d0156fb6c41a0d02d227221">&#9670;&#160;</a></span>qp_rho</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3][3]&gt; openturbine::Beams::qp_rho</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a613036de2c74957c22308f1017ca33e1" name="a613036de2c74957c22308f1017ca33e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a613036de2c74957c22308f1017ca33e1">&#9670;&#160;</a></span>qp_RR0</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6][6]&gt; openturbine::Beams::qp_RR0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5db1c49d486df11a1f2118740a608755" name="a5db1c49d486df11a1f2118740a608755"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5db1c49d486df11a1f2118740a608755">&#9670;&#160;</a></span>qp_strain</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::Beams::qp_strain</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a03ab13b2d407764a456172c39537d2ba" name="a03ab13b2d407764a456172c39537d2ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03ab13b2d407764a456172c39537d2ba">&#9670;&#160;</a></span>qp_u</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3]&gt; openturbine::Beams::qp_u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab352b8a566ec39a9bc47738eb0cb708d" name="ab352b8a566ec39a9bc47738eb0cb708d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab352b8a566ec39a9bc47738eb0cb708d">&#9670;&#160;</a></span>qp_u_ddot</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3]&gt; openturbine::Beams::qp_u_ddot</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad5623cbb0ab89925f899cc6324308675" name="ad5623cbb0ab89925f899cc6324308675"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5623cbb0ab89925f899cc6324308675">&#9670;&#160;</a></span>qp_u_dot</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3]&gt; openturbine::Beams::qp_u_dot</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1830ed446cd507b93db594f92d68d57c" name="a1830ed446cd507b93db594f92d68d57c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1830ed446cd507b93db594f92d68d57c">&#9670;&#160;</a></span>qp_u_prime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3]&gt; openturbine::Beams::qp_u_prime</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a82fd8ba4c5e9e713a86c38f2f1b0bf3d" name="a82fd8ba4c5e9e713a86c38f2f1b0bf3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82fd8ba4c5e9e713a86c38f2f1b0bf3d">&#9670;&#160;</a></span>qp_weight</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**&gt; openturbine::Beams::qp_weight</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aec429f432e2d82cc4a5c93ed2b0a284b" name="aec429f432e2d82cc4a5c93ed2b0a284b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec429f432e2d82cc4a5c93ed2b0a284b">&#9670;&#160;</a></span>qp_x</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [7]&gt; openturbine::Beams::qp_x</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7ba06721f14ae4d82f8fc68d251cfacf" name="a7ba06721f14ae4d82f8fc68d251cfacf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ba06721f14ae4d82f8fc68d251cfacf">&#9670;&#160;</a></span>qp_x0</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3]&gt; openturbine::Beams::qp_x0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5ca8e3126ad501b50276fa414b3a7a7f" name="a5ca8e3126ad501b50276fa414b3a7a7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ca8e3126ad501b50276fa414b3a7a7f">&#9670;&#160;</a></span>qp_x0_prime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3]&gt; openturbine::Beams::qp_x0_prime</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a630cea15712d61ab664c682f14d5a473" name="a630cea15712d61ab664c682f14d5a473"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a630cea15712d61ab664c682f14d5a473">&#9670;&#160;</a></span>qp_x0pupss</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3][3]&gt; openturbine::Beams::qp_x0pupss</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a231b3f938de571b31aa0e2b028f21dea" name="a231b3f938de571b31aa0e2b028f21dea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a231b3f938de571b31aa0e2b028f21dea">&#9670;&#160;</a></span>residual_vector_terms</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::Beams::residual_vector_terms</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8c06ac9e204d435437b5f2c9aef9dd51" name="a8c06ac9e204d435437b5f2c9aef9dd51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c06ac9e204d435437b5f2c9aef9dd51">&#9670;&#160;</a></span>shape_deriv</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double***&gt; openturbine::Beams::shape_deriv</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6b29f64034a23d17fd4cdc4cf97e1b5a" name="a6b29f64034a23d17fd4cdc4cf97e1b5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b29f64034a23d17fd4cdc4cf97e1b5a">&#9670;&#160;</a></span>shape_interp</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double***&gt; openturbine::Beams::shape_interp</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2bb630820a374424c5d13bfec37ce79c" name="a2bb630820a374424c5d13bfec37ce79c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bb630820a374424c5d13bfec37ce79c">&#9670;&#160;</a></span>stiffness_matrix_terms</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*** [6][6]&gt; openturbine::Beams::stiffness_matrix_terms</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/<a class="el" href="beams_8hpp_source.html">beams.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

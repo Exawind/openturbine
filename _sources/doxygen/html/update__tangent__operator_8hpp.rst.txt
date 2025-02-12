@@ -1,0 +1,14 @@
+.. meta::269d8aafc8f91d1113ac7c0b36600e099a6e4ecb6cd74bc82d3f7d2bf9bd10e9f751f8edbc74bd0ef5fcc87ab979eb5bca7f103316822f1bc9bde5d1ac037727
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/step/update_tangent_operator.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/step/update\_tangent\_operator.hpp File Reference
+===========================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: update__tangent__operator_8hpp.html

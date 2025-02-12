@@ -1,0 +1,14 @@
+.. meta::3011316a8d6223362ca1c1f3cdec3d96d46e7622d56f1c0198a0ac0de88b38aaa0aeb4899894802a13253628f16fcdc5678d8424219d6ce6e4aa39bc578b5f4a
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/compute_b_num_non_zero.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/compute\_b\_num\_non\_zero.hpp File Reference
+==============================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: compute__b__num__non__zero_8hpp.html

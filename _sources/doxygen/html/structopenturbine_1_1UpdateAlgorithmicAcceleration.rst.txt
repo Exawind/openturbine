@@ -1,0 +1,14 @@
+.. meta::2267c570bc12f2fbdfe7b646f2fefb9c5baec78b63d7da3129510b720c60299f3778cdae6aa687ddfdc80f0921a99102478cc2dcbab88391c120abdf7e29383d
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::UpdateAlgorithmicAcceleration Struct Reference
+
+UpdateAlgorithmicAcceleration Struct Reference
+==============================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1UpdateAlgorithmicAcceleration.html

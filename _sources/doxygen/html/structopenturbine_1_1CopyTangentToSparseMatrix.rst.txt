@@ -1,0 +1,14 @@
+.. meta::a17bf5c23126fa949bbee2ab71171f57ca6e01ff1868d96d00951e84b7c81154ed530de6accc9dda5e7fa20b3d5e5beabda4a630e51da43eaaedcf4907d1f450
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CopyTangentToSparseMatrix&lt; CrsMatrixType &gt; Struct Template Reference
+
+CopyTangentToSparseMatrix&lt; CrsMatrixType &gt; Struct Template Reference
+==========================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CopyTangentToSparseMatrix.html

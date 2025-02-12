@@ -1,0 +1,14 @@
+.. meta::b054760aa05c6642700d07234c2465402ac3a573cb72bed57215e2e91a972a5d2328e02f8bff73a37b2cd37110fb650e3fd285d854b4c7198831e3b5e8c30b0b
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/calculate_QP_deformation.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/calculate\_QP\_deformation.hpp File Reference
+======================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: calculate__QP__deformation_8hpp.html

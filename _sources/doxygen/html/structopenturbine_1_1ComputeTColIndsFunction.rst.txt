@@ -1,0 +1,14 @@
+.. meta::72d3647fc96e8b52bf8a288aad9ee345e806ad50593e1aa1a75604d25dce18d3e55cd30e85c4b7c9137f90995695b532edfe8cff39e13b651a13461daf655eb1
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::ComputeTColIndsFunction&lt; RowPtrType, IndicesType &gt; Struct Template Reference
+
+ComputeTColIndsFunction&lt; RowPtrType, IndicesType &gt; Struct Template Reference
+==================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1ComputeTColIndsFunction.html

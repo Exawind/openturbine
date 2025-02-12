@@ -1,0 +1,14 @@
+.. meta::236d7f197843ee55cc133663ba9205e3933dabef1dc5a11764bcbff8899e9c2f2b0e345dd4fc0bdd03072f0cae0c51829721c35d36ac01a08c45958c2d68bfcc
+
+:orphan:
+
+.. title:: OpenTurbine API: GeneratorRpmEfficiencyUser Struct Reference
+
+GeneratorRpmEfficiencyUser Struct Reference
+===========================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structGeneratorRpmEfficiencyUser.html

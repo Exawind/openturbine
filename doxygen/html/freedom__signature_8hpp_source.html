@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/dof_management/freedom_signature.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/dof_management/freedom_signature.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/freedom__signature_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-dof-management-freedom-signature-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/dof_management/freedom_signature.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-dof-management-freedom-signature-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/dof_management/freedom_signature.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_9f0ad9a02a69a51b839bfa342adb9cf5.html">dof_management</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">freedom_signature.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="freedom__signature_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">   18</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> : std::uint8_t {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <a class="code hl_enumvalue" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15ca3b833b799f6bc70091f2d9cf4e10f41e">AllComponents</a> = 0b00111111,  <span class="comment">//&lt; Enable all 6 degrees of freedom</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <a class="code hl_enumvalue" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15cac3f1ed4c290648ed6b685b415448430d">JustPosition</a> = 0b00111000,   <span class="comment">//&lt; Enable only translational DOFs</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <a class="code hl_enumvalue" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15ca6bd15481aa8778fbfe716b3aee6fa8be">JustRotation</a> = 0b00000111,   <span class="comment">//&lt; Enable only rotational DOFs</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <a class="code hl_enumvalue" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15cad777bc3d604905978e7e68786d91dd67">NoComponents</a> = 0b00000000    <span class="comment">//&lt; Disable all degrees of freedom</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>};</div>
+</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>KOKKOS_INLINE_FUNCTION</div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="}">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a46c42f508c32ce963cde7215e5acd063">   33</a></span><a class="code hl_enumeration" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> <a class="code hl_function" href="namespaceopenturbine.html#a46c42f508c32ce963cde7215e5acd063">operator|</a>(<a class="code hl_enumeration" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> x, <a class="code hl_enumeration" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> y) {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">using </span>T = std::underlying_type_t&lt;FreedomSignature&gt;;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a><span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(x) | <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(y));</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
+</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>KOKKOS_INLINE_FUNCTION</div>
+<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#ac49461f4e15c88f90f8383dffa5ac51b">   45</a></span><span class="keywordtype">size_t</span> <a class="code hl_function" href="namespaceopenturbine.html#ac49461f4e15c88f90f8383dffa5ac51b">count_active_dofs</a>(<a class="code hl_enumeration" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> x) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">using </span>T = std::underlying_type_t&lt;FreedomSignature&gt;;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">auto</span> count = 0UL;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> zero = T{0};</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> one = T{1};</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> value = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(x); value &gt; zero; value = value &gt;&gt; 1) {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        count += value &amp; one;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordflow">return</span> count;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>}</div>
+</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_force.hpp:9</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a46c42f508c32ce963cde7215e5acd063"><div class="ttname"><a href="namespaceopenturbine.html#a46c42f508c32ce963cde7215e5acd063">openturbine::operator|</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION FreedomSignature operator|(FreedomSignature x, FreedomSignature y)</div><div class="ttdoc">Combines two freedom signatures using bitwise OR.</div><div class="ttdef"><b>Definition</b> freedom_signature.hpp:33</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac49461f4e15c88f90f8383dffa5ac51b"><div class="ttname"><a href="namespaceopenturbine.html#ac49461f4e15c88f90f8383dffa5ac51b">openturbine::count_active_dofs</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION size_t count_active_dofs(FreedomSignature x)</div><div class="ttdoc">Counts the number of active degrees of freedom in a signature.</div><div class="ttdef"><b>Definition</b> freedom_signature.hpp:45</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac4a0c4b14f459d6be7082dd819d5e15c"><div class="ttname"><a href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">openturbine::FreedomSignature</a></div><div class="ttdeci">FreedomSignature</div><div class="ttdoc">Represents the active degrees of freedom for a node.</div><div class="ttdef"><b>Definition</b> freedom_signature.hpp:18</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac4a0c4b14f459d6be7082dd819d5e15ca3b833b799f6bc70091f2d9cf4e10f41e"><div class="ttname"><a href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15ca3b833b799f6bc70091f2d9cf4e10f41e">openturbine::FreedomSignature::AllComponents</a></div><div class="ttdeci">@ AllComponents</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac4a0c4b14f459d6be7082dd819d5e15ca6bd15481aa8778fbfe716b3aee6fa8be"><div class="ttname"><a href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15ca6bd15481aa8778fbfe716b3aee6fa8be">openturbine::FreedomSignature::JustRotation</a></div><div class="ttdeci">@ JustRotation</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac4a0c4b14f459d6be7082dd819d5e15cac3f1ed4c290648ed6b685b415448430d"><div class="ttname"><a href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15cac3f1ed4c290648ed6b685b415448430d">openturbine::FreedomSignature::JustPosition</a></div><div class="ttdeci">@ JustPosition</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac4a0c4b14f459d6be7082dd819d5e15cad777bc3d604905978e7e68786d91dd67"><div class="ttname"><a href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15cad777bc3d604905978e7e68786d91dd67">openturbine::FreedomSignature::NoComponents</a></div><div class="ttdeci">@ NoComponents</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

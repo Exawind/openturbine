@@ -1,0 +1,14 @@
+.. meta::61d62fb2506aaec3f057e8473ae3fbd426a46dccb74aec9eee8508a054356fba442809c4d4ffb6e6069c398931858a87059b22921873be0c47bd0989aebe49d5
+
+:orphan:
+
+.. title:: OpenTurbine API: ReferenceAxis Struct Reference
+
+ReferenceAxis Struct Reference
+==============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structReferenceAxis.html

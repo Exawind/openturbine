@@ -1,0 +1,14 @@
+.. meta::68e6b03036ca43f6bed94e3e8a60a099555853d505cf5e499eb272bb26f94336907826ffdfeb621a7cfb4ecae88ab580f5a0c119a991d7b1205934e168966744
+
+:orphan:
+
+.. title:: OpenTurbine API: Joints Struct Reference
+
+Joints Struct Reference
+=======================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structJoints.html

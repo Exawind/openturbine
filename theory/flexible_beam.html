@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SO(3)-based GEBT Beam &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="R3xSO(3)-based Rigid Body" href="rigid_body.html" />
+    <link rel="prev" title="Theory Manual" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SO(3)-based GEBT Beam</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#useful-equations">Useful Equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#finite-element-formulation">Finite Element Formulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linearization">Linearization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rigid_body.html">R3xSO(3)-based Rigid Body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nonlinear_spring.html">R3-based geometrically nonlinear, constitutively linear spring</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+      <li class="breadcrumb-item active">SO(3)-based GEBT Beam</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/flexible_beam.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="so-3-based-gebt-beam">
+<h1>SO(3)-based GEBT Beam<a class="headerlink" href="#so-3-based-gebt-beam" title="Permalink to this heading"></a></h1>
+<p>This document’s purpose is to document the equations needed for a spectral-finite element implementation of Geometrically Exact Beam Theory (GEBT), where rotations are modeled in SO(3), rather than as Wiener-Milenkovicz parameters like in BeamDyn. The derivation is based on that described in Bauchau (2011).</p>
+<div class="section" id="useful-equations">
+<h2>Useful Equations<a class="headerlink" href="#useful-equations" title="Permalink to this heading"></a></h2>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\underline{\psi} = \log \left(\underline{\underline{R}}\right)\\\underline{\delta \psi} = \mathrm{axial}\left(\delta \underline{\underline{R}}\,\underline{\underline{R}}^T\right)\\\underline{\omega} = \mathrm{axial}\left(\dot{\underline{\underline{R}}}\,\underline{\underline{R}}^T\right)\\\underline{\kappa} = \mathrm{axial}\left(\underline{\underline{R}}'\,\underline{\underline{R}}^T\right)\end{aligned}\end{align} \]</div>
+<p>which are the Cartesian rotation vector, the virtual rotation vector, the angular velocity (<span class="math notranslate nohighlight">\(\in \mathbb{R}^3\)</span>), and the curvature (<span class="math notranslate nohighlight">\(\in \mathbb{R}^3\)</span>), respectively, for rotation tensor <span class="math notranslate nohighlight">\(\underline{\underline{R}} \in SO(3)\)</span>, and where a overdot denotes a time derivative and a prime denotes spatial derivative along the beam’s reference line.</p>
+<p>Also useful: For any <span class="math notranslate nohighlight">\(\underline{a} \in \mathbb{R}^3\)</span> and <span class="math notranslate nohighlight">\(\underline{\underline{A}} \in \mathbb{R}^{3\times 3}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\tilde{a} =
+\begin{bmatrix}
+0 &amp; -a_3 &amp; a_2 \\
+a_3 &amp; 0 &amp; -a_1 \\
+-a_2 &amp; a_1 &amp; 0
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathrm{axial}\left(\underline{\underline{A}}\right) =
+\frac{1}{2}
+\begin{bmatrix}
+a_{32}-a_{23} \\
+a_{13}-a_{31} \\
+a_{21}-a_{12}
+\end{bmatrix}\end{split}\]</div>
+<p>If <span class="math notranslate nohighlight">\(\underline{\underline{R}}\)</span> is represented by an Euler parameter, i.e., unit quaternion, <span class="math notranslate nohighlight">\(\hat{q}^T= (q_0,q_1,q_2,q_3)\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\underline{\omega} = 2 F(\hat{q}) \dot{\hat{q}}\\\underline{\kappa} = 2 F(\hat{q}) \hat{q}'\end{aligned}\end{align} \]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}F =
+\begin{bmatrix}
+-q_1 &amp; +q_0 &amp; -q_3 &amp;  +q_2  \\
+-q_2 &amp; +q_3 &amp; +q_0 &amp;  -q_1  \\
+-q_3 &amp; -q_2 &amp; +q_1 &amp;  +q_0  \\
+\end{bmatrix}\end{split}\]</div>
+<p>For any <span class="math notranslate nohighlight">\(\underline{a},\underline{b} \in \mathbb{R}^3\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\widetilde{a}\underline{b} = -\widetilde{b}\underline{a}\\\widetilde{a}^T = -\widetilde{a}\\\widetilde{ \widetilde{a} \underline{b} } - \widetilde{a} \widetilde{b} = - \widetilde{b} \widetilde{a}\end{aligned}\end{align} \]</div>
+<p>Define:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{RR}^0}} =
+\begin{bmatrix}
+\underline{\underline{R}}~\underline{\underline{R}}^0 &amp; \underline{\underline{0}} \\
+\underline{\underline{0}} &amp; \underline{\underline{R}}~\underline{\underline{R}}^0
+\end{bmatrix}\end{split}\]</div>
+<p>for <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{RR}^0}} \in \mathbb{R}^{6\times6}\)</span></p>
+<p>Sectional stiffness and mass matrices (see B, p. 688):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\underline{\underline{\mathcal{C}}} = \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{\mathcal{C}}}^*\, \underline{\underline{\mathcal{RR}^0}}^T\\\underline{\underline{\mathcal{M}}} = \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{\mathcal{M}}}^*\, \underline{\underline{\mathcal{RR}^0}}^T\end{aligned}\end{align} \]</div>
+<p>for user-provided property-matrices <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{C}}}^*, \underline{\underline{\mathcal{M}}}^* \in \mathbb{R}^{6\times6}\)</span>.</p>
+<p>Reference beam line in <span class="math notranslate nohighlight">\(0 \le \zeta  \le L\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\mathcal{Q}}^0 =
+\begin{Bmatrix}
+\underline{x}^0(\zeta) \\
+\underline{\underline{R}}^0(\zeta)
+\end{Bmatrix}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{\mathcal{Q}}^0 \in G = \mathbb{R}^3 \times SO(3)\)</span></p>
+<p>Generalized displacements (intertal basis) of beam line in <span class="math notranslate nohighlight">\(0 \le \zeta \le L\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\mathcal{Q}} =
+\begin{Bmatrix}
+\underline{u}(\zeta) \\
+\underline{\underline{R}}(\zeta)
+\end{Bmatrix}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{\mathcal{Q}} \in G = \mathbb{R}^3 \times SO(3)\)</span></p>
+<p>Generalized velocities (intertal basis) of beam line in <span class="math notranslate nohighlight">\(0 \le \zeta \le L\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\mathcal{V}} =
+\begin{Bmatrix}
+\dot{\underline{u}}(\zeta) \\
+\underline{\omega}(\zeta)
+\end{Bmatrix}\end{split}\]</div>
+<p>Generalized velocities (material basis) of beam line in <span class="math notranslate nohighlight">\(0 \le \zeta \le L\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\underline{\mathcal{V}}^* = \underline{\underline{\mathcal{RR}^0}}^T \mathcal{V}\]</div>
+<p>Sectional strain measure for a beam in the inertial basis (B 16.45):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{e}=
+\begin{Bmatrix}
+\underline{\epsilon} \\ \underline{\kappa}
+\end{Bmatrix}
+= \begin{Bmatrix}
+\underline{x}{^0}'+\underline{u}'-\left(\underline{\underline{R}}~\underline{\underline{R}}^0 \right) \overline{i}_1 \\
+\mathrm{axial}\left(\underline{\underline{R}}'\underline{\underline{R}}^T\right)
+\end{Bmatrix}\end{split}\]</div>
+<p>Sectional strain measure for a beam in the material basis:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{e}^*=
+\begin{Bmatrix}
+\underline{\epsilon}^* \\ \underline{\kappa}^*
+\end{Bmatrix}
+= \begin{Bmatrix}
+\left( \underline{\underline{R}}~\underline{\underline{R}}^0 \right)^T \left(\underline{x}^{0\prime}+\underline{u}'\right)-\overline{i}_1 \\
+\left( \underline{\underline{R}}~\underline{\underline{R}}^0 \right)^T \mathrm{axial}\left(\underline{\underline{R}}'\underline{\underline{R}}^T\right)
+\end{Bmatrix}\end{split}\]</div>
+<p>Sectional elastic forces and moments in material/inertial systems (B 16.47):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{Bmatrix}
+\underline{N}^* \\ \underline{M}^*
+\end{Bmatrix}
+=\underline{\underline{\mathcal{C}}}^* \underline{e}^* \qquad
+\begin{Bmatrix}
+\underline{N} \\ \underline{M}
+\end{Bmatrix}
+=\underline{\underline{\mathcal{C}}}\, \underline{e}\end{split}\]</div>
+<p>for <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{C}}}^*, \underline{\underline{\mathcal{C}}} \in \mathbb{R}^{6\times6}\)</span>, where <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{C}}} = \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{\mathcal{C}}}^*\, \underline{\underline{\mathcal{RR}^0}}^T\)</span>.</p>
+<p>Through principle of virtual work, one can show (B 16.50):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\underline{N}' = -\underline{f}\\\underline{M}'+ \left(\tilde{x}^{0\prime}+\tilde{u}'\right) \underline{N} = -\underline{m}\end{aligned}\end{align} \]</div>
+<p>Sectional linear and angular momenta in material/inertial system (B 16.60):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}\underline{\mathcal{P}}^* =
+\begin{Bmatrix}
+\underline{h}^* \\ \underline{g}^*
+\end{Bmatrix}
+=\underline{\underline{\mathcal{M}}}^* \underline{\mathcal{V}}^*\end{split}\\\begin{split}\underline{\mathcal{P}} =
+\begin{Bmatrix}
+\underline{h} \\ \underline{g}
+\end{Bmatrix}
+=\underline{\underline{\mathcal{M}}}\, \underline{\mathcal{V}}\end{split}\end{aligned}\end{align} \]</div>
+<p>for <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{M}}} \in \mathbb{R}^{6\times6}\)</span>,</p>
+<p>Through Hamilton’s principle, one can show (B 16.63):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\dot{\underline{h}} - \underline{N}' = \underline{f}\\\dot{g} + \dot{\tilde{u}} \underline{h} - \underline{M}'- \left(\tilde{x}'^0+\tilde{u}'\right) \underline{N} = \underline{m}\end{aligned}\end{align} \]</div>
+</div>
+<div class="section" id="finite-element-formulation">
+<h2>Finite Element Formulation<a class="headerlink" href="#finite-element-formulation" title="Permalink to this heading"></a></h2>
+<p>The inertial forces are (B 17.106):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}\underline{\mathcal{F}}^I = \dot{\underline{\mathcal{P}}} +
+\begin{bmatrix} \underline{\underline{0}} &amp; \underline{\underline{0}} \\ \underline{\underline{0}} &amp; \dot{\tilde{u}}  \end{bmatrix}
+\underline{\mathcal{P}}\end{split}\\\underline{\mathcal{F}}^I \in \mathbb{R}^6\end{aligned}\end{align} \]</div>
+<p>which can be written (B 17.110) (note the term <span class="math notranslate nohighlight">\(m \dot{\tilde{u}}\dot{\underline{u}}\)</span>, which arises in chain rule, is identically zero):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\mathcal{F}}^I = \begin{bmatrix}
+m \ddot{\underline{u}} +
+\left( \dot{\tilde{\omega}}+ \tilde{\omega} \tilde{\omega} \right) m \underline{\eta}\\
+m \tilde{\eta} \ddot{\underline{u}} + \underline{\underline{\rho}} \dot{\underline{\omega}}
+ + \tilde{\omega} \underline{\underline{\rho}} \underline{\omega}
+\end{bmatrix}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(m\)</span>, <span class="math notranslate nohighlight">\(\underline{\eta}\)</span>, and <span class="math notranslate nohighlight">\(\underline{\underline{\rho}}\)</span> are readily extracted from the section mass matrix in inertial coordinates:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{M}}} = \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{\mathcal{M}}}^*\, \underline{\underline{\mathcal{RR}^0}}^T =
+\begin{bmatrix}
+m \underline{\underline{I}}_3 &amp; m \tilde{\eta}^T\\
+m \tilde{\eta} &amp; \underline{\underline{\rho}}
+\end{bmatrix}\end{split}\]</div>
+<p>The elastic forces are (B 17.118):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}\underline{\mathcal{F}}^C =
+\begin{Bmatrix} \underline{\mathcal{F}}^C_1 \\ \underline{\mathcal{F}}^C_2  \end{Bmatrix}=
+\begin{Bmatrix} \underline{N} \\ \underline{M} \end{Bmatrix} = \underline{\underline{\mathcal{C}}}\, \underline{e}\end{split}\\\begin{split}\underline{\mathcal{F}}^D =
+\begin{Bmatrix} \underline{0} \\ \left(\tilde{x}'^0+\tilde{u}'\right)^T\underline{\mathcal{F}}^C_1 \end{Bmatrix} =
+\begin{Bmatrix} \underline{0} \\ \left(\tilde{x}'^0+\tilde{u}'\right)^T\underline{N} \end{Bmatrix}\end{split}\\\underline{\mathcal{F}}^C, \underline{\mathcal{F}}^D \in \mathbb{R}^6\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{C}}} = \begin{bmatrix}
+\underline{\underline{\mathcal{C}}}_{11} &amp; \underline{\underline{\mathcal{C}}}_{12} \\
+\underline{\underline{\mathcal{C}}}_{21} &amp; \underline{\underline{\mathcal{C}}}_{22} \end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}\underline{e} = \begin{Bmatrix} \underline{e}_1 \\ \underline{e}_2  \end{Bmatrix}\end{split}\\\underline{e}_1 = \underline{x}^{0\prime}+\underline{u}'-\left(\underline{\underline{R}}\,\underline{\underline{R}}^0\right) \overline{i}_1\\\underline{e}_2 = \underline{\kappa} = \mathrm{axial}\left( \underline{\underline{R}}' \underline{\underline{R}}^T \right)
+= 2 F(\hat{q}) \hat{q}^\prime\end{aligned}\end{align} \]</div>
+<p>In the above for <span class="math notranslate nohighlight">\(\underline{e}_1\)</span> there is a potential problem at non-node quadrature points. The tangent, <span class="math notranslate nohighlight">\(\underline{x}^{0 \prime}\)</span>, is unlikely to match <span class="math notranslate nohighlight">\(\underline{\underline{R}}^0 \overline{i}_1\)</span>; that mismatch would cause incorrect strain. We will use the following equivalent definition for <span class="math notranslate nohighlight">\(\underline{e}_1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\underline{e}_1 = \underline{x}^{0 \prime} +\underline{u}'-\underline{\underline{R}}\, \underline{x}^{0 \prime}\]</div>
+<p>which will guarantee no strain in reference configuration (i.e., <span class="math notranslate nohighlight">\(\underline{e}_1 = 0\)</span> when <span class="math notranslate nohighlight">\(\underline{u}^\prime=0\)</span> and <span class="math notranslate nohighlight">\(\underline{\underline{R}}=\underline{\underline{I}}\)</span>).</p>
+</div>
+<div class="section" id="linearization">
+<h2>Linearization<a class="headerlink" href="#linearization" title="Permalink to this heading"></a></h2>
+<p>Inertial terms (see B 17.111)</p>
+<div class="math notranslate nohighlight">
+\[\Delta \underline{\mathcal{F}}^I =
+\underline{\underline{\mathcal{M}}} \Delta \ddot{\underline{q}}
++ \underline{\underline{\mathcal{G}}} \Delta \dot{\underline{q}}
++ \underline{\underline{\mathcal{K}}} \Delta \underline{q}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{G}}} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \widetilde{ \widetilde{\omega} m \underline{\eta} }^T
+         + \widetilde{\omega} m \widetilde{\eta}^T\\
+\underline{\underline{0}} &amp; \widetilde{\omega} \underline{\underline{\rho}} - \widetilde{\underline{\underline{\rho}} \underline{\omega}}
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{K}}} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \left( \dot{\widetilde{\omega}} + \tilde{\omega}\tilde{\omega}
+        \right) m \widetilde{\eta}^T\\
+\underline{\underline{0}} &amp; \ddot{\widetilde{u}} m \widetilde{\eta}
+         + \left(\underline{\underline{\rho}}\dot{\widetilde{\omega}}
+                 -\widetilde{\underline{\underline{\rho}} \dot{\underline{\omega}}} \right)
+         + \widetilde{\omega} \left( \underline{\underline{\rho}} \widetilde{\omega}
+         - \widetilde{ \underline{\underline{\rho}}\underline{\omega}} \right)
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\Delta \underline{\mathcal{F}}^C =
+\underline{\underline{\mathcal{C}}} \Delta \underline{q}' + \underline{\underline{\mathcal{O}}} \Delta \underline{q}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{O}}} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp;  -\widetilde{N} + \underline{\underline{\mathcal{C}}}_{11}\left(  \tilde{x}^{0 \prime}+ \tilde{u}' \right)   \\
+\underline{\underline{0}} &amp;  -\widetilde{M} + \underline{\underline{\mathcal{C}}}_{21}\left( \tilde{x}^{0 \prime} + \tilde{u}' \right)
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}\Delta \underline{q} = \begin{Bmatrix} \Delta \underline{u} \\ \underline{\Delta \psi} \end{Bmatrix}\end{split}\\\begin{split}\Delta \underline{q}' = \begin{Bmatrix} \Delta \underline{u}' \\ \underline{\Delta \psi}' \end{Bmatrix}\end{split}\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[\Delta \underline{\mathcal{F}}^D =
+\underline{\underline{\mathcal{P}}} \Delta \underline{q}' + \underline{\underline{\mathcal{Q}}} \Delta \underline{q}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{P}}} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \underline{\underline{0}} \\
+ \widetilde{N} + \left(  \tilde{x}^{0 \prime}+ \tilde{u}' \right)^T
+\underline{\underline{\mathcal{C}}}_{11} &amp;
+\left( \tilde{x}^{0 \prime} + \tilde{u}' \right)^T
+\underline{\underline{\mathcal{C}}}_{12}
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{Q}}} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \underline{\underline{0}} \\
+ \underline{\underline{0}} &amp;
+\left( \tilde{x}^{0 \prime} + \tilde{u}' \right)^T
+\left[-\widetilde{N} + \underline{C}_{11} \left( \tilde{x}^{0 \prime} + \tilde{u}' \right) \right]
+\end{bmatrix}\end{split}\]</div>
+<p>Finite-element representation:</p>
+<div class="math notranslate nohighlight">
+\[\underline{q}(s) = \sum_{j=0}^{N} \phi_j(s) \widehat{\underline{q}}_j, \qquad \underline{q}, \widehat{\underline{q}}_j \in \mathbb{R}^7\]</div>
+<p>Strong Form:</p>
+<div class="math notranslate nohighlight">
+\[{\underline{\mathcal{F}}^{I}}
+-{\underline{\mathcal{F}}^{C}}'+\underline{\mathcal{F}}^D-\underline{\mathcal{F}}^G
+-\underline{\mathcal{F}}^{\mathrm{ext}} = \underline{0}\]</div>
+<p>Weak Form (Residual):</p>
+<div class="math notranslate nohighlight">
+\[\int_{-1}^{1} \phi_i \left(
+{\underline{\mathcal{F}}^{I}}
+-{\underline{\mathcal{F}}^{C}}'
++\underline{\mathcal{F}}^D-\underline{\mathcal{F}}^G
+-\underline{\mathcal{F}}^{\mathrm{ext}}\right) J(s) dx = \underline{0}\]</div>
+<div class="math notranslate nohighlight">
+\[\int_{-1}^{1} \left(
+J(s) \phi_i \underline{\mathcal{F}}^I
++ \phi'_i{\underline{\mathcal{F}}^{C}}+ J(s) \phi_i \underline{\mathcal{F}}^D\right)ds
+-\int_{-1}^{1} \phi_i\left(\underline{\mathcal{F}}^G
++\underline{\mathcal{F}}^{\mathrm{ext}}\right) J(s) dx = \underline{0}, \quad \forall i\in\{0,1,\ldots,N\}\]</div>
+<p>Elastic nodal force vector:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{F}_i^E =
+\sum_{\ell=0}^{n^Q}
+\left[ \phi'_i(s_\ell)
+{\underline{\mathcal{F}}^{C}}(s_\ell)+ J(s_\ell) \phi_i(s_\ell) \underline{\mathcal{F}}^D(s_\ell) \right] w_\ell\, \quad
+\forall i\in\{0,1,\ldots,N\}\,, \\
+\underline{F}_i^E \in \mathbb{R}^6\end{split}\]</div>
+<p>Inertial nodal force vector:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{F}_i^{I} =
+\sum_{\ell=0}^{n^Q}
+J(s_\ell) \phi_i(s_\ell) \underline{\mathcal{F}}^I(s_\ell) w_\ell\, \quad
+\forall i\in\{0,1,\ldots,N\}\,, \\
+\underline{F}_i^I \in \mathbb{R}^6\end{split}\]</div>
+<p>External nodal force vector:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{F}_i^{ext} =
+\sum_{\ell=0}^{n^Q} \phi_i (s_\ell)
+\underline{F}^{ext}(s_\ell) J(s_\ell) w_\ell \,,
+\quad \forall i\in\{0,1,\ldots,N\}\,,\\
+\underline{F}_i^{ext} \in \mathbb{R}^6\end{split}\]</div>
+<p>Gravity nodal force vector:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{F}_i^g =
+\sum_{\ell=0}^{n^Q} \phi_i (s_\ell) \underline{\mathcal{F}}^G(s_\ell)
+J(s_\ell) w_\ell, \,
+\quad \forall i\in\{0,1,\ldots,N\}\,,\\
+\underline{F}_i^g \in \mathbb{R}^6\end{split}\]</div>
+<p>Spectral finite-element portion of the residual vector:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{R}^{FE} =
+\begin{bmatrix}
+\underline{{F}}_{0}^I + \underline{{F}}_{0}^{E} -
+\underline{{F}}_{0}^{ext} - \underline{{F}}_{0}^{g}\\
+\underline{{F}}_{1}^I + \underline{{F}}_{1}^{E} -
+\underline{{F}}_{1}^{ext} - \underline{{F}}_{1}^{g}\\
+\vdots \\
+\underline{{F}}_{N}^I + \underline{{F}}_{N}^{E} -
+\underline{{F}}_{N}^{ext} - \underline{{F}}_{N}^{g}\\
+\end{bmatrix}\,, \quad
+\underline{R}^{FE} \in \mathbb{R}^{6(N+1)}\end{split}\]</div>
+<p>Linearized form for finite-element (FE) portion of iteration matrix (inertial contributions):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{M}}_{ij} =
+\sum_{\ell=0}^{n^Q} &amp;
+\phi_i(s_\ell) \underline{\underline{\mathcal{M}}}(s_\ell) \phi_j(s_\ell) J(s_\ell) w_\ell \\
+&amp;\forall i,j\in\{0,1,\ldots,N\}
+, \quad \underline{\underline{M}}_{ij} \in \mathbb{R}^{6\times 6}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{G}}_{ij} =
+\sum_{\ell=0}^{n^Q} &amp;
+\phi_i(s_\ell) \underline{\underline{\mathcal{G}}}(s_\ell) \phi_j(s_\ell) J(s_\ell) w_\ell \\
+&amp;\forall i,j\in\{0,1,\ldots,N\}
+, \quad \underline{\underline{G}}_{ij} \in \mathbb{R}^{6\times 6}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{K}}_{ij}^I =
+\sum_{\ell=0}^{n^Q} &amp;
+\phi_i(s_\ell) \underline{\underline{\mathcal{K}}}(s_\ell) \phi_j(s_\ell) J(s_\ell) w_\ell \\
+&amp;\forall i,j\in\{0,1,\ldots,N\}
+, \quad \underline{\underline{K}}_{ij}^I \in \mathbb{R}^{6\times 6}\end{split}\]</div>
+<p>Linearized form for finite-element (FE) portion of iteration matrix (elastic contribution):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{K}}_{ij}^E =
+\sum_{\ell=0}^{n^Q} \big[&amp;
+\phi_i(s_\ell) \underline{\underline{\mathcal{P}}}(s_\ell) \phi'_j(s_\ell) +
+\phi_i(s_\ell) \underline{\underline{\mathcal{Q}}}(s_\ell) \phi_j(s_\ell) J(s_\ell)+ \\
+&amp;
+\phi'_i(s_\ell) \underline{\underline{\mathcal{C}}}(s_\ell) \phi'_j(s_\ell) \frac{1}{J(s_\ell)}+
+\phi'_i(s_\ell) \underline{\underline{\mathcal{O}}}(s_\ell) \phi_j(s_\ell)
+\big] w_\ell \\
+&amp;\forall i,j\in\{0,1,\ldots,N\}
+, \quad \underline{\underline{K}}_{ij}^E \in \mathbb{R}^{6\times 6}\end{split}\]</div>
+<p>Spectral finite-element portion of the iteration matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{K}}^{FE} =
+\begin{bmatrix}
+\underline{\underline{K}}_{00}^I + \underline{\underline{K}}_{00}^E&amp;
+\underline{\underline{K}}_{01}^I + \underline{\underline{K}}_{01}^E&amp; \ldots &amp;
+\underline{\underline{K}}_{0N}^I + \underline{\underline{K}}_{0N}^E\\
+\underline{\underline{K}}_{10}^I + \underline{\underline{K}}_{10}^E &amp;
+ \underline{\underline{K}}_{11}^I  + \underline{\underline{K}}_{11}^E&amp;
+\ldots &amp;
+\underline{\underline{K}}_{1N}^I + \underline{\underline{K}}_{1N}^E\\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+\underline{\underline{K}}_{N0}^I + \underline{\underline{K}}_{N0}^E&amp;
+\underline{\underline{K}}_{N1}^I + \underline{\underline{K}}_{N1}^E&amp; \ldots &amp;
+\underline{\underline{K}}_{NN}^I + \underline{\underline{K}}_{NN}^E\\
+\end{bmatrix}, \,
+\underline{\underline{K}}^{FE} \in \mathbb{R}^{6 (N+1) \times 6 (N+1)}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{M}}^{FE} =
+\begin{bmatrix}
+\underline{\underline{M}}_{00}&amp;
+\underline{\underline{M}}_{01}&amp; \ldots &amp;
+\underline{\underline{M}}_{0N}\\
+\underline{\underline{M}}_{10} &amp;
+\underline{\underline{M}}_{11}&amp;
+\ldots &amp;
+\underline{\underline{M}}_{1N}\\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+\underline{\underline{M}}_{N0}&amp;
+\underline{\underline{M}}_{N1}&amp; \ldots &amp;
+\underline{\underline{M}}_{NN}\\
+\end{bmatrix},\,
+\underline{\underline{M}}^{FE} \in \mathbb{R}^{6 (N+1) \times 6 (N+1)}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{G}}^{FE} =
+\begin{bmatrix}
+\underline{\underline{G}}_{00}&amp;
+\underline{\underline{G}}_{01}&amp; \ldots &amp;
+\underline{\underline{G}}_{0N}\\
+\underline{\underline{G}}_{10} &amp;
+\underline{\underline{G}}_{11}&amp;
+\ldots &amp;
+\underline{\underline{G}}_{1N}\\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+\underline{\underline{G}}_{N0}&amp;
+\underline{\underline{G}}_{N1}&amp; \ldots &amp;
+\underline{\underline{G}}_{NN}\\
+\end{bmatrix},\,
+\underline{\underline{G}}^{FE} \in \mathbb{R}^{6 (N+1) \times 6 (N+1)}\end{split}\]</div>
+<p>Constraints (zero subscripts denote the zeroth/root nodal value):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\Phi} =
+\begin{Bmatrix}
+\underline{u}_0- \underline{u}_\mathrm{BC} \\ \underline{\psi}_0-\underline{\psi}_\mathrm{BC}
+\end{Bmatrix}, \quad \underline{\Phi} \in \mathbb{R}^6\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\underline{F}^C = \underline{\underline{B}}^T \underline{\lambda}
+\,, \quad \underline{F}^C \in \mathbb{R}^{6 (N+1)}, \quad \underline{\lambda} \in \mathbb{R}^6\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{B}} =
+\begin{bmatrix}
+\underline{\underline{I}} &amp; \underline{\underline{0}} &amp;  \underline{\underline{0}} &amp;\ldots &amp; \underline{\underline{0}} \\
+\underline{\underline{0}} &amp; \underline{\underline{I}} &amp; \underline{\underline{0}} &amp;\ldots &amp; \underline{\underline{0}}
+\end{bmatrix}\,, \quad \underline{\underline{B}} \in \mathbb{R}^{6\times 6 (N+1)}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{K}}^C =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \ldots &amp; \underline{\underline{0}} \\
+\vdots &amp; \vdots &amp; \ldots &amp; \vdots \\
+\underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \ldots &amp; \underline{\underline{0}}
+\end{bmatrix} \,, \quad \underline{\underline{K}}^C
+\in \mathbb{R}^{\{6 (N+1)\}\times \{6 (N+1)\}}\end{split}\]</div>
+<p>Full residual:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{R}} =
+\begin{Bmatrix}
+\underline{R}^{FE} + \underline{F}^C \\
+\underline{\Phi}
+\end{Bmatrix}
+, \quad \underline{R}_{t} \in \mathbb{R}^{6(N+1)+6}\end{split}\]</div>
+<p>Iteration matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{S}}_t =
+\begin{bmatrix}
+\underline{\underline{M}}^{FE} \beta'+\underline{\underline{G}}^{FE} \gamma' + \left(\underline{\underline{K}}^{FE} + \underline{\underline{K}}^C\right)
+\underline{\underline{T}}(h \Delta q) &amp; \underline{\underline{B}}^T \\
+\underline{\underline{B}}\,\underline{\underline{T}}(h \Delta q)                     &amp; \underline{\underline{0}}
+\end{bmatrix}
+, \quad \underline{\underline{S}}_{t} \in \mathbb{R}^{\{6(N+1)+6\} \times \{6(N+1)+6\}}\end{split}\]</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Theory Manual" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rigid_body.html" class="btn btn-neutral float-right" title="R3xSO(3)-based Rigid Body" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+.. meta::6e06290439422179ca863157e7cb54db58755343afbe42eb876db4fb574669cd5942c85defe4b034ad0ce4c980fc41c8aa540c9e4d52f9c61677ecb06b06c9b5
+
+:orphan:
+
+.. title:: OpenTurbine API: Member List
+
+Member List
+===========
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1InterpolateQPRotationDerivative-members.html

@@ -1,0 +1,14 @@
+.. meta::7784d10fb1e8c97aaa20ff91aacd77ffe922782f87bf2d924689d4eb65b4fdcad7c1e03054a890bd388e243f7632b65b60bfb6b8fde81df1b9de313293641bec
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::util::TurbineConfig::BladeInitialState Struct Reference
+
+BladeInitialState Struct Reference
+==================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1util_1_1TurbineConfig_1_1BladeInitialState.html

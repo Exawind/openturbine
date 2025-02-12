@@ -1,0 +1,14 @@
+.. meta::9c636bd5eca9eeaabaa6cda9be71deba0b878a86bf0a128f471a4c7182fb1d99876ff32c21a677a3b6babb516f0c7bdb8bbeed4239e5808c959ddcb2a937d9b9
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_strain.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate\_strain.hpp Source File
+========================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: calculate__strain_8hpp_source.html

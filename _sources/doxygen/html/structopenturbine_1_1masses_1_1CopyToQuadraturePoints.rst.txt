@@ -1,0 +1,14 @@
+.. meta::1674114e57cc4533a357902c933dc2daf6e15730599ee6223834ab9d0c79b31e56ed671b2b33a403dc876d143ef1bcd67510cb16a4de55679f8fdf3bfbdcd35c
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::masses::CopyToQuadraturePoints Struct Reference
+
+CopyToQuadraturePoints Struct Reference
+=======================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html

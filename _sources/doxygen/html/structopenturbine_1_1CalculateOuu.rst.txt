@@ -1,0 +1,14 @@
+.. meta::b45a0f25c7216037157fa247b69d1d9d8487a619511e9b03049ae36734cea2d536ed5253c4efeacdd26b97e12d56fe7a708f3af6cf36509d9ff37c174c8abc57
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CalculateOuu Struct Reference
+
+CalculateOuu Struct Reference
+=============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateOuu.html

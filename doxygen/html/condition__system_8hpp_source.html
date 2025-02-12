@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/condition_system.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/condition_system.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/condition__system_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-solver-condition-system-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/solver/condition_system.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-solver-condition-system-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/condition_system.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">condition_system.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="condition__system_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="types_8hpp.html">types.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="foldopen" id="foldopen00009" data-start="{" data-end="};">
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="structopenturbine_1_1PreconditionSt.html">    9</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1PreconditionSt.html">PreconditionSt</a> {</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="structopenturbine_1_1PreconditionSt.html#ade602464d044f851a9b1b987be8041c7">   10</a></span>    <a class="code hl_typedef" href="namespaceopenturbine.html#aa19d634665e36e551b0d7f35077b04f2">View_NxN</a> <a class="code hl_variable" href="structopenturbine_1_1PreconditionSt.html#ade602464d044f851a9b1b987be8041c7">St</a>;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="structopenturbine_1_1PreconditionSt.html#a386d3b11772076f9e1fbd702db55701d">   11</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1PreconditionSt.html#a386d3b11772076f9e1fbd702db55701d">conditioner</a>;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    KOKKOS_FUNCTION</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="structopenturbine_1_1PreconditionSt.html#a4fbb4659d02f9b5681e31947e80aa9a8">   14</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1PreconditionSt.html#a4fbb4659d02f9b5681e31947e80aa9a8">operator()</a>(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j)<span class="keyword"> const </span>{ <a class="code hl_variable" href="structopenturbine_1_1PreconditionSt.html#ade602464d044f851a9b1b987be8041c7">St</a>(i, j) *= <a class="code hl_variable" href="structopenturbine_1_1PreconditionSt.html#a386d3b11772076f9e1fbd702db55701d">conditioner</a>; }</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>};</div>
+</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structopenturbine_1_1PostconditionSt.html">   17</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1PostconditionSt.html">PostconditionSt</a> {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="structopenturbine_1_1PostconditionSt.html#aa70fa9e922a93d1e1c82ac3fcd1a3dcd">   18</a></span>    <a class="code hl_typedef" href="namespaceopenturbine.html#aa19d634665e36e551b0d7f35077b04f2">View_NxN</a> <a class="code hl_variable" href="structopenturbine_1_1PostconditionSt.html#aa70fa9e922a93d1e1c82ac3fcd1a3dcd">St</a>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="structopenturbine_1_1PostconditionSt.html#a93e800402e8a0452f7868e207bcfeea2">   19</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1PostconditionSt.html#a93e800402e8a0452f7868e207bcfeea2">conditioner</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    KOKKOS_FUNCTION</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="structopenturbine_1_1PostconditionSt.html#a8064ed4d29813930561e7a2a9349c588">   22</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1PostconditionSt.html#a8064ed4d29813930561e7a2a9349c588">operator()</a>(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j)<span class="keyword"> const </span>{ <a class="code hl_variable" href="structopenturbine_1_1PostconditionSt.html#aa70fa9e922a93d1e1c82ac3fcd1a3dcd">St</a>(i, j) /= <a class="code hl_variable" href="structopenturbine_1_1PostconditionSt.html#a93e800402e8a0452f7868e207bcfeea2">conditioner</a>; }</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>};</div>
+</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="foldopen" id="foldopen00025" data-start="{" data-end="};">
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structopenturbine_1_1ConditionR.html">   25</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1ConditionR.html">ConditionR</a> {</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="structopenturbine_1_1ConditionR.html#a30ca529f49344de5aab34b435ffe55dd">   26</a></span>    <a class="code hl_typedef" href="namespaceopenturbine.html#a2f08f5f95d20c3c68e44852de2d7c454">View_N</a> <a class="code hl_variable" href="structopenturbine_1_1ConditionR.html#a30ca529f49344de5aab34b435ffe55dd">R</a>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="structopenturbine_1_1ConditionR.html#acdb5e1b5a03d4d613b267e65895ddbaf">   27</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1ConditionR.html#acdb5e1b5a03d4d613b267e65895ddbaf">conditioner</a>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    KOKKOS_FUNCTION</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="structopenturbine_1_1ConditionR.html#a349ec392b2d3553b1790f56d9fac1aad">   30</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1ConditionR.html#a349ec392b2d3553b1790f56d9fac1aad">operator()</a>(<span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <a class="code hl_variable" href="structopenturbine_1_1ConditionR.html#a30ca529f49344de5aab34b435ffe55dd">R</a>(i) *= <a class="code hl_variable" href="structopenturbine_1_1ConditionR.html#acdb5e1b5a03d4d613b267e65895ddbaf">conditioner</a>; }</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>};</div>
+</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="};">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="structopenturbine_1_1ConditionSystem.html">   33</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1ConditionSystem.html">ConditionSystem</a> {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="structopenturbine_1_1ConditionSystem.html#aa69ab305099af90ca6634c52155849c1">   34</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#aa69ab305099af90ca6634c52155849c1">num_system_dofs</a>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="structopenturbine_1_1ConditionSystem.html#a11982b9ebaff3e84082b5ffa487a25cb">   35</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a11982b9ebaff3e84082b5ffa487a25cb">num_dofs</a>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="structopenturbine_1_1ConditionSystem.html#a65e5ea8f71f6a7b7cd4f6d9aec5ba8ef">   36</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a65e5ea8f71f6a7b7cd4f6d9aec5ba8ef">conditioner</a>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="structopenturbine_1_1ConditionSystem.html#a81952992a53c1811de36ed41dbb2286e">   37</a></span>    <a class="code hl_typedef" href="namespaceopenturbine.html#aa19d634665e36e551b0d7f35077b04f2">View_NxN</a> <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a81952992a53c1811de36ed41dbb2286e">St</a>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="structopenturbine_1_1ConditionSystem.html#a9212884392a354d7a7f14d6e100a9626">   38</a></span>    <a class="code hl_typedef" href="namespaceopenturbine.html#a2f08f5f95d20c3c68e44852de2d7c454">View_N</a> <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a9212884392a354d7a7f14d6e100a9626">R</a>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    KOKKOS_FUNCTION</div>
+<div class="foldopen" id="foldopen00041" data-start="{" data-end="}">
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="structopenturbine_1_1ConditionSystem.html#a2758079c3ed43575371cd72c654ba846">   41</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1ConditionSystem.html#a2758079c3ed43575371cd72c654ba846">operator()</a>(<span class="keyword">const</span> <span class="keywordtype">int</span>)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#aa69ab305099af90ca6634c52155849c1">num_system_dofs</a>; ++i) {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a11982b9ebaff3e84082b5ffa487a25cb">num_dofs</a>; ++j) {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a81952992a53c1811de36ed41dbb2286e">St</a>(i, j) *= <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a65e5ea8f71f6a7b7cd4f6d9aec5ba8ef">conditioner</a>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            }</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        }</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a11982b9ebaff3e84082b5ffa487a25cb">num_dofs</a>; ++i) {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#aa69ab305099af90ca6634c52155849c1">num_system_dofs</a>; j &lt; <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a11982b9ebaff3e84082b5ffa487a25cb">num_dofs</a>; ++j) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a81952992a53c1811de36ed41dbb2286e">St</a>(i, j) /= <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a65e5ea8f71f6a7b7cd4f6d9aec5ba8ef">conditioner</a>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#aa69ab305099af90ca6634c52155849c1">num_system_dofs</a>; ++i) {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a9212884392a354d7a7f14d6e100a9626">R</a>(i) *= <a class="code hl_variable" href="structopenturbine_1_1ConditionSystem.html#a65e5ea8f71f6a7b7cd4f6d9aec5ba8ef">conditioner</a>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        }</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    }</div>
+</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>};</div>
+</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="foldopen" id="foldopen00060" data-start="{" data-end="};">
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="structopenturbine_1_1UnconditionSolution.html">   60</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1UnconditionSolution.html">UnconditionSolution</a> {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="structopenturbine_1_1UnconditionSolution.html#aacc5893cf8aa278757b96571a6ccca66">   61</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1UnconditionSolution.html#aacc5893cf8aa278757b96571a6ccca66">num_system_dofs</a>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="structopenturbine_1_1UnconditionSolution.html#a0e6b9d3374a3ef322cfc73b24c2ca6da">   62</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1UnconditionSolution.html#a0e6b9d3374a3ef322cfc73b24c2ca6da">conditioner</a>;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="structopenturbine_1_1UnconditionSolution.html#ae0168f1e3ad631d0698f167a72b100e3">   63</a></span>    <a class="code hl_typedef" href="namespaceopenturbine.html#a2f08f5f95d20c3c68e44852de2d7c454">View_N</a> <a class="code hl_variable" href="structopenturbine_1_1UnconditionSolution.html#ae0168f1e3ad631d0698f167a72b100e3">x</a>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    KOKKOS_FUNCTION</div>
+<div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="structopenturbine_1_1UnconditionSolution.html#a9ad67867ca5762702ea3bff26d4b2906">   66</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1UnconditionSolution.html#a9ad67867ca5762702ea3bff26d4b2906">operator()</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> i)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(i) &gt;= <a class="code hl_variable" href="structopenturbine_1_1UnconditionSolution.html#aacc5893cf8aa278757b96571a6ccca66">num_system_dofs</a>) {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            <a class="code hl_variable" href="structopenturbine_1_1UnconditionSolution.html#ae0168f1e3ad631d0698f167a72b100e3">x</a>(i) /= <a class="code hl_variable" href="structopenturbine_1_1UnconditionSolution.html#a0e6b9d3374a3ef322cfc73b24c2ca6da">conditioner</a>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        }</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    }</div>
+</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>};</div>
+</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_force.hpp:9</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a2f08f5f95d20c3c68e44852de2d7c454"><div class="ttname"><a href="namespaceopenturbine.html#a2f08f5f95d20c3c68e44852de2d7c454">openturbine::View_N</a></div><div class="ttdeci">Kokkos::View&lt; double * &gt; View_N</div><div class="ttdef"><b>Definition</b> types.hpp:18</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_aa19d634665e36e551b0d7f35077b04f2"><div class="ttname"><a href="namespaceopenturbine.html#aa19d634665e36e551b0d7f35077b04f2">openturbine::View_NxN</a></div><div class="ttdeci">Kokkos::View&lt; double ** &gt; View_NxN</div><div class="ttdef"><b>Definition</b> types.hpp:27</div></div>
+<div class="ttc" id="astructopenturbine_1_1ConditionR_html"><div class="ttname"><a href="structopenturbine_1_1ConditionR.html">openturbine::ConditionR</a></div><div class="ttdef"><b>Definition</b> condition_system.hpp:25</div></div>
+<div class="ttc" id="astructopenturbine_1_1ConditionR_html_a30ca529f49344de5aab34b435ffe55dd"><div class="ttname"><a href="structopenturbine_1_1ConditionR.html#a30ca529f49344de5aab34b435ffe55dd">openturbine::ConditionR::R</a></div><div class="ttdeci">View_N R</div><div class="ttdef"><b>Definition</b> condition_system.hpp:26</div></div>
+<div class="ttc" id="astructopenturbine_1_1ConditionR_html_a349ec392b2d3553b1790f56d9fac1aad"><div class="ttname"><a href="structopenturbine_1_1ConditionR.html#a349ec392b2d3553b1790f56d9fac1aad">openturbine::ConditionR::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(int i) const</div><div class="ttdef"><b>Definition</b> condition_system.hpp:30</div></div>
+<div class="ttc" id="astructopenturbine_1_1ConditionR_html_acdb5e1b5a03d4d613b267e65895ddbaf"><div class="ttname"><a href="structopenturbine_1_1ConditionR.html#acdb5e1b5a03d4d613b267e65895ddbaf">openturbine::ConditionR::conditioner</a></div><div class="ttdeci">double conditioner</div><div class="ttdef"><b>Definition</b> condition_system.hpp:27</div></div>
+<div class="ttc" id="astructopenturbine_1_1ConditionSystem_html"><div class="ttname"><a href="structopenturbine_1_1ConditionSystem.html">openturbine::ConditionSystem</a></div><div class="ttdef"><b>Definition</b> condition_system.hpp:33</div></div>
+<div class="ttc" id="astructopenturbine_1_1ConditionSystem_html_a11982b9ebaff3e84082b5ffa487a25cb"><div class="ttname"><a href="structopenturbine_1_1ConditionSystem.html#a11982b9ebaff3e84082b5ffa487a25cb">openturbine::ConditionSystem::num_dofs</a></div><div class="ttdeci">int num_dofs</div><div class="ttdef"><b>Definition</b> condition_system.hpp:35</div></div>
+<div class="ttc" id="astructopenturbine_1_1ConditionSystem_html_a2758079c3ed43575371cd72c654ba846"><div class="ttname"><a href="structopenturbine_1_1ConditionSystem.html#a2758079c3ed43575371cd72c654ba846">openturbine::ConditionSystem::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(const int) const</div><div class="ttdef"><b>Definition</b> condition_system.hpp:41</div></div>
+<div class="ttc" id="astructopenturbine_1_1ConditionSystem_html_a65e5ea8f71f6a7b7cd4f6d9aec5ba8ef"><div class="ttname"><a href="structopenturbine_1_1ConditionSystem.html#a65e5ea8f71f6a7b7cd4f6d9aec5ba8ef">openturbine::ConditionSystem::conditioner</a></div><div class="ttdeci">double conditioner</div><div class="ttdef"><b>Definition</b> condition_system.hpp:36</div></div>
+<div class="ttc" id="astructopenturbine_1_1ConditionSystem_html_a81952992a53c1811de36ed41dbb2286e"><div class="ttname"><a href="structopenturbine_1_1ConditionSystem.html#a81952992a53c1811de36ed41dbb2286e">openturbine::ConditionSystem::St</a></div><div class="ttdeci">View_NxN St</div><div class="ttdef"><b>Definition</b> condition_system.hpp:37</div></div>
+<div class="ttc" id="astructopenturbine_1_1ConditionSystem_html_a9212884392a354d7a7f14d6e100a9626"><div class="ttname"><a href="structopenturbine_1_1ConditionSystem.html#a9212884392a354d7a7f14d6e100a9626">openturbine::ConditionSystem::R</a></div><div class="ttdeci">View_N R</div><div class="ttdef"><b>Definition</b> condition_system.hpp:38</div></div>
+<div class="ttc" id="astructopenturbine_1_1ConditionSystem_html_aa69ab305099af90ca6634c52155849c1"><div class="ttname"><a href="structopenturbine_1_1ConditionSystem.html#aa69ab305099af90ca6634c52155849c1">openturbine::ConditionSystem::num_system_dofs</a></div><div class="ttdeci">int num_system_dofs</div><div class="ttdef"><b>Definition</b> condition_system.hpp:34</div></div>
+<div class="ttc" id="astructopenturbine_1_1PostconditionSt_html"><div class="ttname"><a href="structopenturbine_1_1PostconditionSt.html">openturbine::PostconditionSt</a></div><div class="ttdef"><b>Definition</b> condition_system.hpp:17</div></div>
+<div class="ttc" id="astructopenturbine_1_1PostconditionSt_html_a8064ed4d29813930561e7a2a9349c588"><div class="ttname"><a href="structopenturbine_1_1PostconditionSt.html#a8064ed4d29813930561e7a2a9349c588">openturbine::PostconditionSt::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(int i, int j) const</div><div class="ttdef"><b>Definition</b> condition_system.hpp:22</div></div>
+<div class="ttc" id="astructopenturbine_1_1PostconditionSt_html_a93e800402e8a0452f7868e207bcfeea2"><div class="ttname"><a href="structopenturbine_1_1PostconditionSt.html#a93e800402e8a0452f7868e207bcfeea2">openturbine::PostconditionSt::conditioner</a></div><div class="ttdeci">double conditioner</div><div class="ttdef"><b>Definition</b> condition_system.hpp:19</div></div>
+<div class="ttc" id="astructopenturbine_1_1PostconditionSt_html_aa70fa9e922a93d1e1c82ac3fcd1a3dcd"><div class="ttname"><a href="structopenturbine_1_1PostconditionSt.html#aa70fa9e922a93d1e1c82ac3fcd1a3dcd">openturbine::PostconditionSt::St</a></div><div class="ttdeci">View_NxN St</div><div class="ttdef"><b>Definition</b> condition_system.hpp:18</div></div>
+<div class="ttc" id="astructopenturbine_1_1PreconditionSt_html"><div class="ttname"><a href="structopenturbine_1_1PreconditionSt.html">openturbine::PreconditionSt</a></div><div class="ttdef"><b>Definition</b> condition_system.hpp:9</div></div>
+<div class="ttc" id="astructopenturbine_1_1PreconditionSt_html_a386d3b11772076f9e1fbd702db55701d"><div class="ttname"><a href="structopenturbine_1_1PreconditionSt.html#a386d3b11772076f9e1fbd702db55701d">openturbine::PreconditionSt::conditioner</a></div><div class="ttdeci">double conditioner</div><div class="ttdef"><b>Definition</b> condition_system.hpp:11</div></div>
+<div class="ttc" id="astructopenturbine_1_1PreconditionSt_html_a4fbb4659d02f9b5681e31947e80aa9a8"><div class="ttname"><a href="structopenturbine_1_1PreconditionSt.html#a4fbb4659d02f9b5681e31947e80aa9a8">openturbine::PreconditionSt::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(int i, int j) const</div><div class="ttdef"><b>Definition</b> condition_system.hpp:14</div></div>
+<div class="ttc" id="astructopenturbine_1_1PreconditionSt_html_ade602464d044f851a9b1b987be8041c7"><div class="ttname"><a href="structopenturbine_1_1PreconditionSt.html#ade602464d044f851a9b1b987be8041c7">openturbine::PreconditionSt::St</a></div><div class="ttdeci">View_NxN St</div><div class="ttdef"><b>Definition</b> condition_system.hpp:10</div></div>
+<div class="ttc" id="astructopenturbine_1_1UnconditionSolution_html"><div class="ttname"><a href="structopenturbine_1_1UnconditionSolution.html">openturbine::UnconditionSolution</a></div><div class="ttdef"><b>Definition</b> condition_system.hpp:60</div></div>
+<div class="ttc" id="astructopenturbine_1_1UnconditionSolution_html_a0e6b9d3374a3ef322cfc73b24c2ca6da"><div class="ttname"><a href="structopenturbine_1_1UnconditionSolution.html#a0e6b9d3374a3ef322cfc73b24c2ca6da">openturbine::UnconditionSolution::conditioner</a></div><div class="ttdeci">double conditioner</div><div class="ttdef"><b>Definition</b> condition_system.hpp:62</div></div>
+<div class="ttc" id="astructopenturbine_1_1UnconditionSolution_html_a9ad67867ca5762702ea3bff26d4b2906"><div class="ttname"><a href="structopenturbine_1_1UnconditionSolution.html#a9ad67867ca5762702ea3bff26d4b2906">openturbine::UnconditionSolution::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(const int i) const</div><div class="ttdef"><b>Definition</b> condition_system.hpp:66</div></div>
+<div class="ttc" id="astructopenturbine_1_1UnconditionSolution_html_aacc5893cf8aa278757b96571a6ccca66"><div class="ttname"><a href="structopenturbine_1_1UnconditionSolution.html#aacc5893cf8aa278757b96571a6ccca66">openturbine::UnconditionSolution::num_system_dofs</a></div><div class="ttdeci">size_t num_system_dofs</div><div class="ttdef"><b>Definition</b> condition_system.hpp:61</div></div>
+<div class="ttc" id="astructopenturbine_1_1UnconditionSolution_html_ae0168f1e3ad631d0698f167a72b100e3"><div class="ttname"><a href="structopenturbine_1_1UnconditionSolution.html#ae0168f1e3ad631d0698f167a72b100e3">openturbine::UnconditionSolution::x</a></div><div class="ttdeci">View_N x</div><div class="ttdef"><b>Definition</b> condition_system.hpp:63</div></div>
+<div class="ttc" id="atypes_8hpp_html"><div class="ttname"><a href="types_8hpp.html">types.hpp</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

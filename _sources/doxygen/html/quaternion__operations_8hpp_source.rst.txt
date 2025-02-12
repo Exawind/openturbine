@@ -1,0 +1,14 @@
+.. meta::17671c93f8e5acdf0563335ed1f0ad69199edecf28a7feeb16edba1e0e25fa50ea2d2a490dc87beafe7ce577c067e78c002503fed8c9f0c53a914c64102d87a3
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/math/quaternion_operations.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/math/quaternion\_operations.hpp Source File
+=====================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: quaternion__operations_8hpp_source.html

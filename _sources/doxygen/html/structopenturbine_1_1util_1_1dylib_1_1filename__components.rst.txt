@@ -1,0 +1,14 @@
+.. meta::f73d41e62843bffda15edef8f633c072ddbba0cc073cd0391a9b88783e27afeff5938cf39f8d548ba172411298fa04d3a44411a55255e9f7de31dfe4307c844c
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::util::dylib::filename_components Struct Reference
+
+filename\_components Struct Reference
+=====================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1util_1_1dylib_1_1filename__components.html

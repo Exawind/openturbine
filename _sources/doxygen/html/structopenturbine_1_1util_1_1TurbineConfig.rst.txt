@@ -1,0 +1,14 @@
+.. meta::5c9eeb8afa745770a44208090788e0087fa37947af6f9b37c12da1aa41466f01d36452bd0c5a07de09a350187b518a81b890dd28de0d36bb92ee169c41556ef4
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::util::TurbineConfig Struct Reference
+
+TurbineConfig Struct Reference
+==============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1util_1_1TurbineConfig.html

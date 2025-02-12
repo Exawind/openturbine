@@ -1,0 +1,14 @@
+.. meta::fb23020cfb115bde0a8182388c763ddffd41e47fb889e211ac589560c81d0ca018ee73bfb9e187cc450eb4c447ed49fd26ddff25f2983a06ff6973d41e447913
+
+:orphan:
+
+.. title:: OpenTurbine API: XCe Struct Reference
+
+XCe Struct Reference
+====================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structXCe.html

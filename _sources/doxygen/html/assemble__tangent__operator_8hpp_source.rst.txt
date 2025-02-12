@@ -1,0 +1,14 @@
+.. meta::70bed4ec6c8e210d79aa1b25944ac98aeb4c19d103586b535beecef88bbef4f6f379d44b6df89ddc6e5911f8e729796cb7c3ddac92ff88b0156f5c29380002cd
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/step/assemble_tangent_operator.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/step/assemble\_tangent\_operator.hpp Source File
+==========================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: assemble__tangent__operator_8hpp_source.html

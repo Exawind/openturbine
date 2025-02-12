@@ -1,0 +1,14 @@
+.. meta::71ce69cdc7de61d09809647a58d6bb642400ec99ea65c701a6e9630b342428aec5c527d2bbc909a999a471281f07ffbdfea33297c8caf197667df288ac803d2e
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::UpdateLambdaPrediction Struct Reference
+
+UpdateLambdaPrediction Struct Reference
+=======================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1UpdateLambdaPrediction.html

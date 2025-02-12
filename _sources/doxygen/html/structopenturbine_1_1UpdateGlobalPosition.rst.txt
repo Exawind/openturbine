@@ -1,0 +1,14 @@
+.. meta::d094e2e9f1b90a1c7e1ce356c0da8108513bd7502bbd4b08396602381924e94a096810efc8799213ae339be0d32e905f97877968049b2b4d6fe9dca403740512
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::UpdateGlobalPosition Struct Reference
+
+UpdateGlobalPosition Struct Reference
+=====================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1UpdateGlobalPosition.html

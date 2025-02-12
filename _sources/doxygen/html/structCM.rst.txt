@@ -1,0 +1,14 @@
+.. meta::c26f5f2221189570191cb5a6f4ede22fbf18af315a312ee3e5b3e8b5a44dcdf6d38d32c17ab4f71d4878427a644ab2c7f80da0d380927e745de62c454f620054
+
+:orphan:
+
+.. title:: OpenTurbine API: CM Struct Reference
+
+CM Struct Reference
+===================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structCM.html

@@ -1,0 +1,14 @@
+.. meta::8a5ff8269a9c103493b9dce02bfd91b1d82c15751aa73224645d21fe8aea471ab937e34c173c16f0e5b79c41457f2811d7f26512e6785c89c1a992b7e2471036
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CopyConstraintsResidualToVector Struct Reference
+
+CopyConstraintsResidualToVector Struct Reference
+================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CopyConstraintsResidualToVector.html

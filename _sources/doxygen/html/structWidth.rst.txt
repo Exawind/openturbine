@@ -1,0 +1,14 @@
+.. meta::ddd3a2ed6b66b85ff619f37a465673e08e04d38df1a040caabd197b3237a2cd1741f4f921c6c0c6d46ff5cb80ef8a5a11f7b4def9e6571e244d3b4283b0996c4
+
+:orphan:
+
+.. title:: OpenTurbine API: Width Struct Reference
+
+Width Struct Reference
+======================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structWidth.html

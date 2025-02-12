@@ -1,0 +1,14 @@
+.. meta::e97049866e35bad194af6eb3580e347cbfb358953e7751a684521bd8d72fd76de52f46d6ea0749df7f480f2290507df33bc2005caf4075d2e86e9d2aa93a3a90
+
+:orphan:
+
+.. title:: OpenTurbine API: AxialJoints Struct Reference
+
+AxialJoints Struct Reference
+============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structAxialJoints.html

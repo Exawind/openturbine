@@ -1,0 +1,14 @@
+.. meta::3953e58b2d5d42860bfbdf299b1e0fbd5b46a1489829f064ff008a4ece148435b986f046e66784295be0e57886eb13dac9ff2880e74cf5d898750a5ec9a9cff6
+
+:orphan:
+
+.. title:: OpenTurbine API: Costs Struct Reference
+
+Costs Struct Reference
+======================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structCosts.html

@@ -1,0 +1,14 @@
+.. meta::9012c362fff1e46de14853dc43bdf9d0d367e63c31b76aaf688d7afacc823a243b1c51ce88c4eb7af4d1501c870d227485577ab1bb1734de8c14a599592cd7f3
+
+:orphan:
+
+.. title:: OpenTurbine API: Member List
+
+Member List
+===========
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateTangentOperator-members.html

@@ -1,0 +1,14 @@
+.. meta::7b5843055c72312899416745d15b48233e2571ad9ef90f181efb688bd75943c1fcc6aaa035f96daffbf4f504517d5ebc55f71c2e3a4ae016b8580851ce9d455f
+
+:orphan:
+
+.. title:: OpenTurbine API: Chord Struct Reference
+
+Chord Struct Reference
+======================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structChord.html

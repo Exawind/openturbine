@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/vendor/dylib/dylib.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/vendor/dylib/dylib.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/dylib_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-vendor-dylib-dylib-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/vendor/dylib/dylib.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-vendor-dylib-dylib-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/vendor/dylib/dylib.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_90da97247338d9e3ac7f8bf7df478e67.html">vendor</a></li><li class="navelem"><a class="el" href="dir_51bd94ef5d49ac7d026d5e490999b31a.html">dylib</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">dylib.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="dylib_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#if ((defined(_MSVC_LANG) &amp;&amp; _MSVC_LANG &gt;= 201703L) || __cplusplus &gt;= 201703L)</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define DYLIB_CPP17</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#if (defined(_WIN32) || defined(_WIN64))</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#ifndef WIN32_LEAN_AND_MEAN</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#define WIN32_LEAN_AND_MEAN</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#define DYLIB_UNDEFINE_LEAN_AND_MEAN</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#ifndef NOMINMAX</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#define NOMINMAX</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#define DYLIB_UNDEFINE_NOMINMAX</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &lt;windows.h&gt;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#ifdef DYLIB_UNDEFINE_LEAN_AND_MEAN</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#undef WIN32_LEAN_AND_MEAN</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#undef DYLIB_UNDEFINE_LEAN_AND_MEAN</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#ifdef DYLIB_UNDEFINE_NOMINMAX</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#undef NOMINMAX</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#undef DYLIB_UNDEFINE_NOMINMAX</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &lt;dlfcn.h&gt;</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#if (defined(_WIN32) || defined(_WIN64))                            </span><span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#define DYLIB_WIN_MAC_OTHER(win_def, mac_def, other_def) win_def    </span><span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#define DYLIB_WIN_OTHER(win_def, other_def) win_def                 </span><span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#elif defined(__APPLE__)                                            </span><span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#define DYLIB_WIN_MAC_OTHER(win_def, mac_def, other_def) mac_def    </span><span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#define DYLIB_WIN_OTHER(win_def, other_def) other_def               </span><span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#else                                                               </span><span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="dylib_8hpp.html#a253cf867b86c33f7b403dccfe0abc0f2">   53</a></span><span class="preprocessor">#define DYLIB_WIN_MAC_OTHER(win_def, mac_def, other_def) other_def  </span><span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="dylib_8hpp.html#a2a23606f9131c6eacaa11090dd0b0901">   54</a></span><span class="preprocessor">#define DYLIB_WIN_OTHER(win_def, other_def) other_def               </span><span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#endif                                                              </span><span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1util.html">openturbine::util</a> {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="foldopen" id="foldopen00063" data-start="{" data-end="};">
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html">   63</a></span><span class="keyword">class </span><a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a> {</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00065" data-start="{" data-end="};">
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="structopenturbine_1_1util_1_1dylib_1_1filename__components.html">   65</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1util_1_1dylib_1_1filename__components.html">filename_components</a> {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="structopenturbine_1_1util_1_1dylib_1_1filename__components.html#acf5768d81a1b07abd34792274cb50f16">   66</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="structopenturbine_1_1util_1_1dylib_1_1filename__components.html#acf5768d81a1b07abd34792274cb50f16">prefix</a> = <a class="code hl_define" href="dylib_8hpp.html#a2a23606f9131c6eacaa11090dd0b0901">DYLIB_WIN_OTHER</a>(<span class="stringliteral">&quot;&quot;</span>, <span class="stringliteral">&quot;lib&quot;</span>);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="structopenturbine_1_1util_1_1dylib_1_1filename__components.html#a48fb66c2b48675bf15bf5b607f923c8f">   67</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_variable" href="structopenturbine_1_1util_1_1dylib_1_1filename__components.html#a48fb66c2b48675bf15bf5b607f923c8f">suffix</a> = <a class="code hl_define" href="dylib_8hpp.html#a253cf867b86c33f7b403dccfe0abc0f2">DYLIB_WIN_MAC_OTHER</a>(<span class="stringliteral">&quot;.dll&quot;</span>, <span class="stringliteral">&quot;.dylib&quot;</span>, <span class="stringliteral">&quot;.so&quot;</span>);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    };</div>
+</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a2cf04cfbb47a3f55d3b5c0230e551250">   69</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classopenturbine_1_1util_1_1dylib.html#a2cf04cfbb47a3f55d3b5c0230e551250">native_handle_type</a> = <a class="code hl_define" href="dylib_8hpp.html#a2a23606f9131c6eacaa11090dd0b0901">DYLIB_WIN_OTHER</a>(HINSTANCE, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a48ef45196b53422950bd1da492b5b9d0">   70</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classopenturbine_1_1util_1_1dylib.html#a48ef45196b53422950bd1da492b5b9d0">native_symbol_type</a> = <a class="code hl_define" href="dylib_8hpp.html#a2a23606f9131c6eacaa11090dd0b0901">DYLIB_WIN_OTHER</a>(FARPROC, <span class="keywordtype">void</span>*);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">static_assert</span>(std::is_pointer_v&lt;native_handle_type&gt;, <span class="stringliteral">&quot;Expecting HINSTANCE to be a pointer&quot;</span>);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keyword">static_assert</span>(std::is_pointer_v&lt;native_symbol_type&gt;, <span class="stringliteral">&quot;Expecting FARPROC to be a pointer&quot;</span>);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a7a29fef2f151205b2816c2c8476e8203">   75</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#a7a29fef2f151205b2816c2c8476e8203">add_filename_decorations</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#ab71fc951e0f4026a65b012527644c75d">   76</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#ab71fc951e0f4026a65b012527644c75d">no_filename_decorations</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="foldopen" id="foldopen00081" data-start="{" data-end="};">
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib_1_1exception.html">   81</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classopenturbine_1_1util_1_1dylib_1_1exception.html">exception</a> : <span class="keyword">public</span> std::runtime_error {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="keyword">using </span>std::runtime_error::runtime_error;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    };</div>
+</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="foldopen" id="foldopen00088" data-start="{" data-end="};">
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib_1_1load__error.html">   88</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classopenturbine_1_1util_1_1dylib_1_1load__error.html">load_error</a> : <span class="keyword">public</span> <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib_1_1exception.html">exception</a> {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keyword">using </span>exception::exception;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    };</div>
+</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="foldopen" id="foldopen00095" data-start="{" data-end="};">
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib_1_1symbol__error.html">   95</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classopenturbine_1_1util_1_1dylib_1_1symbol__error.html">symbol_error</a> : <span class="keyword">public</span> <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib_1_1exception.html">exception</a> {</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="keyword">using </span>exception::exception;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    };</div>
+</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a401ebc8ddd0d4d4855feb74a40c60065">   99</a></span>    <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a401ebc8ddd0d4d4855feb74a40c60065">dylib</a>(<span class="keyword">const</span> <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#ab7fa5c86c3b775a2a0d2036ccb6084f7">  100</a></span>    <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>&amp; <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ab7fa5c86c3b775a2a0d2036ccb6084f7">operator=</a>(<span class="keyword">const</span> <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#ad032dd6a7b9de646f4451f0adec854aa">  102</a></span>    <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ad032dd6a7b9de646f4451f0adec854aa">dylib</a>(<a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>&amp;&amp; other) noexcept : <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a>(other.m_handle) { other.m_handle = <span class="keyword">nullptr</span>; }</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="foldopen" id="foldopen00104" data-start="{" data-end="}">
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#ace52df68cb8a1980c83c149c1fc158a5">  104</a></span>    <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>&amp; <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ace52df68cb8a1980c83c149c1fc158a5">operator=</a>(<a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>&amp;&amp; other) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;other) {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            std::swap(<a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a>, other.m_handle);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    }</div>
+</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="foldopen" id="foldopen00123" data-start="{" data-end="}">
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#ae2ce65ab87a3d03eadf0ad5eff1d5eb4">  123</a></span>    <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ae2ce65ab87a3d03eadf0ad5eff1d5eb4">dylib</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* dir_path, <span class="keyword">const</span> <span class="keywordtype">char</span>* lib_name, <span class="keywordtype">bool</span> decorations = <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#a7a29fef2f151205b2816c2c8476e8203">add_filename_decorations</a>) {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">if</span> (dir_path == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;The directory path is null&quot;</span>);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        }</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="keywordflow">if</span> (lib_name == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;The library name is null&quot;</span>);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        }</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        std::string final_name = lib_name;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        std::string final_path = dir_path;</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        <span class="keywordflow">if</span> (decorations) {</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            final_name = <a class="code hl_variable" href="structopenturbine_1_1util_1_1dylib_1_1filename__components.html#acf5768d81a1b07abd34792274cb50f16">filename_components::prefix</a> + final_name + <a class="code hl_variable" href="structopenturbine_1_1util_1_1dylib_1_1filename__components.html#a48fb66c2b48675bf15bf5b607f923c8f">filename_components::suffix</a>;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        }</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        <span class="keywordflow">if</span> (!final_path.empty() &amp;&amp; final_path.find_last_of(<span class="charliteral">&#39;/&#39;</span>) != final_path.size() - 1) {</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            final_path += <span class="charliteral">&#39;/&#39;</span>;</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        }</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a> = <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a34962a398c14f47b55d101761cbe899c">open</a>((final_path + final_name).c_str());</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a> == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>            <span class="keywordflow">throw</span> <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib_1_1load__error.html">load_error</a>(</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                <span class="stringliteral">&quot;Could not load library \&quot;&quot;</span> + final_path + final_name + <span class="stringliteral">&quot;\&quot;\n&quot;</span> +</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ad4d984c09e9148d1882651534227c65b">get_error_description</a>()</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            );</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        }</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    }</div>
+</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
+<div class="foldopen" id="foldopen00152" data-start="{" data-end="}">
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a7b9b011d75cb44cf42d519ed466cfeaf">  152</a></span>    <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a7b9b011d75cb44cf42d519ed466cfeaf">dylib</a>(</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="keyword">const</span> std::string&amp; dir_path, <span class="keyword">const</span> std::string&amp; lib_name,</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        <span class="keywordtype">bool</span> decorations = <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#a7a29fef2f151205b2816c2c8476e8203">add_filename_decorations</a></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    )</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        : <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>(dir_path.c_str(), lib_name.c_str(), decorations) {}</div>
+</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
+<div class="foldopen" id="foldopen00158" data-start="{" data-end="}">
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a1e6978c5bf42fbfde094512846d9b3c1">  158</a></span>    <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a1e6978c5bf42fbfde094512846d9b3c1">dylib</a>(</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        <span class="keyword">const</span> std::string&amp; dir_path, <span class="keyword">const</span> <span class="keywordtype">char</span>* lib_name,</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="keywordtype">bool</span> decorations = <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#a7a29fef2f151205b2816c2c8476e8203">add_filename_decorations</a></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    )</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        : <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>(dir_path.c_str(), lib_name, decorations) {}</div>
+</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
+<div class="foldopen" id="foldopen00164" data-start="{" data-end="}">
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a89f5a3d369cf970dc9b320c823711b4e">  164</a></span>    <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a89f5a3d369cf970dc9b320c823711b4e">dylib</a>(</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <span class="keyword">const</span> <span class="keywordtype">char</span>* dir_path, <span class="keyword">const</span> std::string&amp; lib_name,</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <span class="keywordtype">bool</span> decorations = <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#a7a29fef2f151205b2816c2c8476e8203">add_filename_decorations</a></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    )</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        : <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>(dir_path, lib_name.c_str(), decorations) {}</div>
+</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
+<div class="foldopen" id="foldopen00170" data-start="{" data-end="}">
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a392239e5c57a6e28f0ccf39497b3143a">  170</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a392239e5c57a6e28f0ccf39497b3143a">dylib</a>(<span class="keyword">const</span> std::string&amp; lib_name, <span class="keywordtype">bool</span> decorations = <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#a7a29fef2f151205b2816c2c8476e8203">add_filename_decorations</a>)</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        : <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>(<span class="stringliteral">&quot;&quot;</span>, lib_name.c_str(), decorations) {}</div>
+</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
+<div class="foldopen" id="foldopen00173" data-start="{" data-end="}">
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#aa1089a9ccb3bc2c5c84b4719f068f7cc">  173</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#aa1089a9ccb3bc2c5c84b4719f068f7cc">dylib</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* lib_name, <span class="keywordtype">bool</span> decorations = <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#a7a29fef2f151205b2816c2c8476e8203">add_filename_decorations</a>)</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        : <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>(<span class="stringliteral">&quot;&quot;</span>, lib_name, decorations) {}</div>
+</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="preprocessor">#ifdef DYLIB_CPP17</span></div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>(<span class="keyword">const</span> std::filesystem::path&amp; lib_path)</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        : <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib.html">dylib</a>(<span class="stringliteral">&quot;&quot;</span>, lib_path.string().c_str(), <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#ab71fc951e0f4026a65b012527644c75d">no_filename_decorations</a>) {}</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    dylib(</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        <span class="keyword">const</span> std::filesystem::path&amp; dir_path, <span class="keyword">const</span> std::string&amp; lib_name,</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        <span class="keywordtype">bool</span> decorations = <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#a7a29fef2f151205b2816c2c8476e8203">add_filename_decorations</a></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    )</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        : dylib(dir_path.string().c_str(), lib_name.c_str(), decorations) {}</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    dylib(</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        <span class="keyword">const</span> std::filesystem::path&amp; dir_path, <span class="keyword">const</span> <span class="keywordtype">char</span>* lib_name,</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        <span class="keywordtype">bool</span> decorations = <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#a7a29fef2f151205b2816c2c8476e8203">add_filename_decorations</a></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    )</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        : dylib(dir_path.string().c_str(), lib_name, decorations) {}</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
+<div class="foldopen" id="foldopen00194" data-start="{" data-end="}">
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a5c5827125d89fad91d61f0b24b6edb83">  194</a></span>    <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a5c5827125d89fad91d61f0b24b6edb83">~dylib</a>() {</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a> != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ae3eacca51f89dee648190a7cb847a514">close</a>(<a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a>);</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        }</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    }</div>
+</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
+<div class="foldopen" id="foldopen00210" data-start="{" data-end="}">
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a4d86656d5f1ca7b1c7529332a332ebac">  210</a></span>    <a class="code hl_typedef" href="classopenturbine_1_1util_1_1dylib.html#a48ef45196b53422950bd1da492b5b9d0">native_symbol_type</a> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a4d86656d5f1ca7b1c7529332a332ebac">get_symbol</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* symbol_name)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        <span class="keywordflow">if</span> (symbol_name == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;The symbol name to lookup is null&quot;</span>);</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        }</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a> == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            <span class="keywordflow">throw</span> std::logic_error(</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                <span class="stringliteral">&quot;The dynamic library handle is null. This object may have been moved from.&quot;</span></div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            );</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        }</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        <span class="keyword">auto</span>* symbol = <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ab90a550648f294a21dfcad9430a08d75">locate_symbol</a>(<a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a>, symbol_name);</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keywordflow">if</span> (symbol == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>            <span class="keywordflow">throw</span> <a class="code hl_class" href="classopenturbine_1_1util_1_1dylib_1_1symbol__error.html">symbol_error</a>(</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                <span class="stringliteral">&quot;Could not get symbol \&quot;&quot;</span> + std::string(symbol_name) + <span class="stringliteral">&quot;\&quot;\n&quot;</span> +</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ad4d984c09e9148d1882651534227c65b">get_error_description</a>()</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>            );</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        }</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        <span class="keywordflow">return</span> symbol;</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    }</div>
+</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
+<div class="foldopen" id="foldopen00231" data-start="{" data-end="}">
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#aeb339fcb1cfc34c3d782dae96e0c7fc9">  231</a></span>    [[nodiscard]] <a class="code hl_typedef" href="classopenturbine_1_1util_1_1dylib.html#a48ef45196b53422950bd1da492b5b9d0">native_symbol_type</a> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#aeb339fcb1cfc34c3d782dae96e0c7fc9">get_symbol</a>(<span class="keyword">const</span> std::string&amp; symbol_name)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a4d86656d5f1ca7b1c7529332a332ebac">get_symbol</a>(symbol_name.c_str());</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    }</div>
+</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00247" data-start="{" data-end="}">
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#ad6d0c001bd8763ab45406b998537a9e3">  247</a></span>    T* <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ad6d0c001bd8763ab45406b998537a9e3">get_function</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* symbol_name)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="preprocessor">#if (defined(__GNUC__) &amp;&amp; __GNUC__ &gt;= 8)</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="preprocessor">#pragma GCC diagnostic push</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="preprocessor">#pragma GCC diagnostic ignored &quot;-Wcast-function-type&quot;</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        <span class="keywordflow">return</span> <span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(<a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a4d86656d5f1ca7b1c7529332a332ebac">get_symbol</a>(symbol_name));  <span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="preprocessor">#if (defined(__GNUC__) &amp;&amp; __GNUC__ &gt;= 8)</span></div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="preprocessor">#pragma GCC diagnostic pop</span></div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    }</div>
+</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00259" data-start="{" data-end="}">
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a68097795dfacfa9c0042cda0ad32f318">  259</a></span>    T* <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a68097795dfacfa9c0042cda0ad32f318">get_function</a>(<span class="keyword">const</span> std::string&amp; symbol_name)<span class="keyword"> const </span>{  <span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="keywordflow">return</span> get_function&lt;T&gt;(symbol_name.c_str());</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    }</div>
+</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00275" data-start="{" data-end="}">
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a03b5e489a271553e11b94d052f838155">  275</a></span>    T&amp; <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a03b5e489a271553e11b94d052f838155">get_variable</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* symbol_name)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        <span class="keywordflow">return</span> *<span class="keyword">reinterpret_cast&lt;</span>T*<span class="keyword">&gt;</span>(<a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a4d86656d5f1ca7b1c7529332a332ebac">get_symbol</a>(symbol_name));  <span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    }</div>
+</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00280" data-start="{" data-end="}">
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a543d781aebdbbd70ca2b0235a338f172">  280</a></span>    T&amp; <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a543d781aebdbbd70ca2b0235a338f172">get_variable</a>(<span class="keyword">const</span> std::string&amp; symbol_name)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        <span class="keywordflow">return</span> get_variable&lt;T&gt;(symbol_name.c_str());</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    }</div>
+</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
+<div class="foldopen" id="foldopen00293" data-start="{" data-end="}">
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a268b929e73c218571162e6baf867237b">  293</a></span>    [[nodiscard]] <span class="keywordtype">bool</span> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a268b929e73c218571162e6baf867237b">has_symbol</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* symbol_name) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a> == <span class="keyword">nullptr</span> || symbol_name == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>        }</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ab90a550648f294a21dfcad9430a08d75">locate_symbol</a>(<a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a>, symbol_name) != <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    }</div>
+</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
+<div class="foldopen" id="foldopen00300" data-start="{" data-end="}">
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#abe184bea79af69518e02ed934b08bc86">  300</a></span>    [[nodiscard]] <span class="keywordtype">bool</span> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#abe184bea79af69518e02ed934b08bc86">has_symbol</a>(<span class="keyword">const</span> std::string&amp; symbol) <span class="keyword">const</span> <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a268b929e73c218571162e6baf867237b">has_symbol</a>(symbol.c_str());</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    }</div>
+</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#aed4b9b555eba356b34b8a08005ca747a">  307</a></span>    <a class="code hl_typedef" href="classopenturbine_1_1util_1_1dylib.html#a2cf04cfbb47a3f55d3b5c0230e551250">native_handle_type</a> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#aed4b9b555eba356b34b8a08005ca747a">native_handle</a>() noexcept { <span class="keywordflow">return</span> <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a>; }</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span> </div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">  310</a></span>    <a class="code hl_typedef" href="classopenturbine_1_1util_1_1dylib.html#a2cf04cfbb47a3f55d3b5c0230e551250">native_handle_type</a> <a class="code hl_variable" href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">m_handle</a>{<span class="keyword">nullptr</span>};</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span> </div>
+<div class="foldopen" id="foldopen00312" data-start="{" data-end="}">
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#a34962a398c14f47b55d101761cbe899c">  312</a></span>    <span class="keyword">static</span> <a class="code hl_typedef" href="classopenturbine_1_1util_1_1dylib.html#a2cf04cfbb47a3f55d3b5c0230e551250">native_handle_type</a> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#a34962a398c14f47b55d101761cbe899c">open</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* path) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span><span class="preprocessor">#if (defined(_WIN32) || defined(_WIN64))</span></div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        <span class="keywordflow">return</span> LoadLibraryA(path);</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        <span class="keywordflow">return</span> dlopen(path, RTLD_NOW | RTLD_LOCAL);</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    }</div>
+</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span> </div>
+<div class="foldopen" id="foldopen00320" data-start="{" data-end="}">
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#ab90a550648f294a21dfcad9430a08d75">  320</a></span>    <span class="keyword">static</span> <a class="code hl_typedef" href="classopenturbine_1_1util_1_1dylib.html#a48ef45196b53422950bd1da492b5b9d0">native_symbol_type</a> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ab90a550648f294a21dfcad9430a08d75">locate_symbol</a>(<a class="code hl_typedef" href="classopenturbine_1_1util_1_1dylib.html#a2cf04cfbb47a3f55d3b5c0230e551250">native_handle_type</a> lib, <span class="keyword">const</span> <span class="keywordtype">char</span>* name) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        <span class="keywordflow">return</span> <a class="code hl_define" href="dylib_8hpp.html#a2a23606f9131c6eacaa11090dd0b0901">DYLIB_WIN_OTHER</a>(GetProcAddress, dlsym)(lib, name);</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    }</div>
+</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span> </div>
+<div class="foldopen" id="foldopen00324" data-start="{" data-end="}">
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#ae3eacca51f89dee648190a7cb847a514">  324</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ae3eacca51f89dee648190a7cb847a514">close</a>(<a class="code hl_typedef" href="classopenturbine_1_1util_1_1dylib.html#a2cf04cfbb47a3f55d3b5c0230e551250">native_handle_type</a> lib) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <a class="code hl_define" href="dylib_8hpp.html#a2a23606f9131c6eacaa11090dd0b0901">DYLIB_WIN_OTHER</a>(FreeLibrary, dlclose)(lib);</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    }</div>
+</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
+<div class="foldopen" id="foldopen00328" data-start="{" data-end="}">
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1dylib.html#ad4d984c09e9148d1882651534227c65b">  328</a></span>    <span class="keyword">static</span> std::string <a class="code hl_function" href="classopenturbine_1_1util_1_1dylib.html#ad4d984c09e9148d1882651534227c65b">get_error_description</a>() {</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span><span class="preprocessor">#if (defined(_WIN32) || defined(_WIN64))</span></div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        <span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> BUF_SIZE = 512;</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        <span class="keyword">const</span> <span class="keyword">auto</span> error_code = GetLastError();</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        <span class="keywordflow">if</span> (!error_code)</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>            <span class="keywordflow">return</span> <span class="stringliteral">&quot;No error reported by GetLastError&quot;</span>;</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <span class="keywordtype">char</span> description[BUF_SIZE];</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        <span class="keyword">const</span> <span class="keyword">auto</span> lang = MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        <span class="keyword">const</span> DWORD length = FormatMessageA(</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            FORMAT_MESSAGE_FROM_SYSTEM, <span class="keyword">nullptr</span>, error_code, lang, description, BUF_SIZE, <span class="keyword">nullptr</span></div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        );</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        <span class="keywordflow">return</span> (length == 0) ? <span class="stringliteral">&quot;Unknown error (FormatMessage failed)&quot;</span> : description;</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        <span class="keyword">const</span> <span class="keyword">auto</span>* <span class="keyword">const</span> description = dlerror();</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        <span class="keywordflow">return</span> (description == <span class="keyword">nullptr</span>) ? <span class="stringliteral">&quot;No error reported by dlerror&quot;</span> : description;</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    }</div>
+</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>};</div>
+</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span> </div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span><span class="preprocessor">#undef DYLIB_WIN_MAC_OTHER</span></div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span><span class="preprocessor">#undef DYLIB_WIN_OTHER</span></div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span><span class="preprocessor">#undef DYLIB_CPP17</span></div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>}  <span class="comment">// namespace openturbine::util</span></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_1_1exception_html"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib_1_1exception.html">openturbine::util::dylib::exception</a></div><div class="ttdef"><b>Definition</b> dylib.hpp:81</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_1_1load__error_html"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib_1_1load__error.html">openturbine::util::dylib::load_error</a></div><div class="ttdef"><b>Definition</b> dylib.hpp:88</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_1_1symbol__error_html"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib_1_1symbol__error.html">openturbine::util::dylib::symbol_error</a></div><div class="ttdef"><b>Definition</b> dylib.hpp:95</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html">openturbine::util::dylib</a></div><div class="ttdef"><b>Definition</b> dylib.hpp:63</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a03b5e489a271553e11b94d052f838155"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a03b5e489a271553e11b94d052f838155">openturbine::util::dylib::get_variable</a></div><div class="ttdeci">T &amp; get_variable(const char *symbol_name) const</div><div class="ttdef"><b>Definition</b> dylib.hpp:275</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a1e6978c5bf42fbfde094512846d9b3c1"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a1e6978c5bf42fbfde094512846d9b3c1">openturbine::util::dylib::dylib</a></div><div class="ttdeci">dylib(const std::string &amp;dir_path, const char *lib_name, bool decorations=add_filename_decorations)</div><div class="ttdef"><b>Definition</b> dylib.hpp:158</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a268b929e73c218571162e6baf867237b"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a268b929e73c218571162e6baf867237b">openturbine::util::dylib::has_symbol</a></div><div class="ttdeci">bool has_symbol(const char *symbol_name) const noexcept</div><div class="ttdef"><b>Definition</b> dylib.hpp:293</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a2cf04cfbb47a3f55d3b5c0230e551250"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a2cf04cfbb47a3f55d3b5c0230e551250">openturbine::util::dylib::native_handle_type</a></div><div class="ttdeci">DYLIB_WIN_OTHER(HINSTANCE, void *) native_handle_type</div><div class="ttdef"><b>Definition</b> dylib.hpp:69</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a34962a398c14f47b55d101761cbe899c"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a34962a398c14f47b55d101761cbe899c">openturbine::util::dylib::open</a></div><div class="ttdeci">static native_handle_type open(const char *path) noexcept</div><div class="ttdef"><b>Definition</b> dylib.hpp:312</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a392239e5c57a6e28f0ccf39497b3143a"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a392239e5c57a6e28f0ccf39497b3143a">openturbine::util::dylib::dylib</a></div><div class="ttdeci">dylib(const std::string &amp;lib_name, bool decorations=add_filename_decorations)</div><div class="ttdef"><b>Definition</b> dylib.hpp:170</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a401ebc8ddd0d4d4855feb74a40c60065"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a401ebc8ddd0d4d4855feb74a40c60065">openturbine::util::dylib::dylib</a></div><div class="ttdeci">dylib(const dylib &amp;)=delete</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a48ef45196b53422950bd1da492b5b9d0"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a48ef45196b53422950bd1da492b5b9d0">openturbine::util::dylib::native_symbol_type</a></div><div class="ttdeci">DYLIB_WIN_OTHER(FARPROC, void *) native_symbol_type</div><div class="ttdef"><b>Definition</b> dylib.hpp:70</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a4d86656d5f1ca7b1c7529332a332ebac"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a4d86656d5f1ca7b1c7529332a332ebac">openturbine::util::dylib::get_symbol</a></div><div class="ttdeci">native_symbol_type get_symbol(const char *symbol_name) const</div><div class="ttdef"><b>Definition</b> dylib.hpp:210</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a543d781aebdbbd70ca2b0235a338f172"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a543d781aebdbbd70ca2b0235a338f172">openturbine::util::dylib::get_variable</a></div><div class="ttdeci">T &amp; get_variable(const std::string &amp;symbol_name) const</div><div class="ttdef"><b>Definition</b> dylib.hpp:280</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a5c5827125d89fad91d61f0b24b6edb83"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a5c5827125d89fad91d61f0b24b6edb83">openturbine::util::dylib::~dylib</a></div><div class="ttdeci">~dylib()</div><div class="ttdef"><b>Definition</b> dylib.hpp:194</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a68097795dfacfa9c0042cda0ad32f318"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a68097795dfacfa9c0042cda0ad32f318">openturbine::util::dylib::get_function</a></div><div class="ttdeci">T * get_function(const std::string &amp;symbol_name) const</div><div class="ttdef"><b>Definition</b> dylib.hpp:259</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a7a29fef2f151205b2816c2c8476e8203"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a7a29fef2f151205b2816c2c8476e8203">openturbine::util::dylib::add_filename_decorations</a></div><div class="ttdeci">static constexpr bool add_filename_decorations</div><div class="ttdef"><b>Definition</b> dylib.hpp:75</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a7b9b011d75cb44cf42d519ed466cfeaf"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a7b9b011d75cb44cf42d519ed466cfeaf">openturbine::util::dylib::dylib</a></div><div class="ttdeci">dylib(const std::string &amp;dir_path, const std::string &amp;lib_name, bool decorations=add_filename_decorations)</div><div class="ttdef"><b>Definition</b> dylib.hpp:152</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_a89f5a3d369cf970dc9b320c823711b4e"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#a89f5a3d369cf970dc9b320c823711b4e">openturbine::util::dylib::dylib</a></div><div class="ttdeci">dylib(const char *dir_path, const std::string &amp;lib_name, bool decorations=add_filename_decorations)</div><div class="ttdef"><b>Definition</b> dylib.hpp:164</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_aa1089a9ccb3bc2c5c84b4719f068f7cc"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#aa1089a9ccb3bc2c5c84b4719f068f7cc">openturbine::util::dylib::dylib</a></div><div class="ttdeci">dylib(const char *lib_name, bool decorations=add_filename_decorations)</div><div class="ttdef"><b>Definition</b> dylib.hpp:173</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_ab71fc951e0f4026a65b012527644c75d"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#ab71fc951e0f4026a65b012527644c75d">openturbine::util::dylib::no_filename_decorations</a></div><div class="ttdeci">static constexpr bool no_filename_decorations</div><div class="ttdef"><b>Definition</b> dylib.hpp:76</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_ab7fa5c86c3b775a2a0d2036ccb6084f7"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#ab7fa5c86c3b775a2a0d2036ccb6084f7">openturbine::util::dylib::operator=</a></div><div class="ttdeci">dylib &amp; operator=(const dylib &amp;)=delete</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_ab90a550648f294a21dfcad9430a08d75"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#ab90a550648f294a21dfcad9430a08d75">openturbine::util::dylib::locate_symbol</a></div><div class="ttdeci">static native_symbol_type locate_symbol(native_handle_type lib, const char *name) noexcept</div><div class="ttdef"><b>Definition</b> dylib.hpp:320</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_abe184bea79af69518e02ed934b08bc86"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#abe184bea79af69518e02ed934b08bc86">openturbine::util::dylib::has_symbol</a></div><div class="ttdeci">bool has_symbol(const std::string &amp;symbol) const noexcept</div><div class="ttdef"><b>Definition</b> dylib.hpp:300</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_ace52df68cb8a1980c83c149c1fc158a5"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#ace52df68cb8a1980c83c149c1fc158a5">openturbine::util::dylib::operator=</a></div><div class="ttdeci">dylib &amp; operator=(dylib &amp;&amp;other) noexcept</div><div class="ttdef"><b>Definition</b> dylib.hpp:104</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_ad032dd6a7b9de646f4451f0adec854aa"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#ad032dd6a7b9de646f4451f0adec854aa">openturbine::util::dylib::dylib</a></div><div class="ttdeci">dylib(dylib &amp;&amp;other) noexcept</div><div class="ttdef"><b>Definition</b> dylib.hpp:102</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_ad4d984c09e9148d1882651534227c65b"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#ad4d984c09e9148d1882651534227c65b">openturbine::util::dylib::get_error_description</a></div><div class="ttdeci">static std::string get_error_description()</div><div class="ttdef"><b>Definition</b> dylib.hpp:328</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_ad6d0c001bd8763ab45406b998537a9e3"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#ad6d0c001bd8763ab45406b998537a9e3">openturbine::util::dylib::get_function</a></div><div class="ttdeci">T * get_function(const char *symbol_name) const</div><div class="ttdef"><b>Definition</b> dylib.hpp:247</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_ae2ce65ab87a3d03eadf0ad5eff1d5eb4"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#ae2ce65ab87a3d03eadf0ad5eff1d5eb4">openturbine::util::dylib::dylib</a></div><div class="ttdeci">dylib(const char *dir_path, const char *lib_name, bool decorations=add_filename_decorations)</div><div class="ttdef"><b>Definition</b> dylib.hpp:123</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_ae3eacca51f89dee648190a7cb847a514"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#ae3eacca51f89dee648190a7cb847a514">openturbine::util::dylib::close</a></div><div class="ttdeci">static void close(native_handle_type lib) noexcept</div><div class="ttdef"><b>Definition</b> dylib.hpp:324</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_aeb339fcb1cfc34c3d782dae96e0c7fc9"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#aeb339fcb1cfc34c3d782dae96e0c7fc9">openturbine::util::dylib::get_symbol</a></div><div class="ttdeci">native_symbol_type get_symbol(const std::string &amp;symbol_name) const</div><div class="ttdef"><b>Definition</b> dylib.hpp:231</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_aed4b9b555eba356b34b8a08005ca747a"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#aed4b9b555eba356b34b8a08005ca747a">openturbine::util::dylib::native_handle</a></div><div class="ttdeci">native_handle_type native_handle() noexcept</div><div class="ttdef"><b>Definition</b> dylib.hpp:307</div></div>
+<div class="ttc" id="aclassopenturbine_1_1util_1_1dylib_html_afac4e2a77f676585a8005059f001d95b"><div class="ttname"><a href="classopenturbine_1_1util_1_1dylib.html#afac4e2a77f676585a8005059f001d95b">openturbine::util::dylib::m_handle</a></div><div class="ttdeci">native_handle_type m_handle</div><div class="ttdef"><b>Definition</b> dylib.hpp:310</div></div>
+<div class="ttc" id="adylib_8hpp_html_a253cf867b86c33f7b403dccfe0abc0f2"><div class="ttname"><a href="dylib_8hpp.html#a253cf867b86c33f7b403dccfe0abc0f2">DYLIB_WIN_MAC_OTHER</a></div><div class="ttdeci">#define DYLIB_WIN_MAC_OTHER(win_def, mac_def, other_def)</div><div class="ttdef"><b>Definition</b> dylib.hpp:53</div></div>
+<div class="ttc" id="adylib_8hpp_html_a2a23606f9131c6eacaa11090dd0b0901"><div class="ttname"><a href="dylib_8hpp.html#a2a23606f9131c6eacaa11090dd0b0901">DYLIB_WIN_OTHER</a></div><div class="ttdeci">#define DYLIB_WIN_OTHER(win_def, other_def)</div><div class="ttdef"><b>Definition</b> dylib.hpp:54</div></div>
+<div class="ttc" id="anamespaceopenturbine_1_1util_html"><div class="ttname"><a href="namespaceopenturbine_1_1util.html">openturbine::util</a></div><div class="ttdef"><b>Definition</b> aerodyn_inflow.hpp:13</div></div>
+<div class="ttc" id="astructopenturbine_1_1util_1_1dylib_1_1filename__components_html"><div class="ttname"><a href="structopenturbine_1_1util_1_1dylib_1_1filename__components.html">openturbine::util::dylib::filename_components</a></div><div class="ttdef"><b>Definition</b> dylib.hpp:65</div></div>
+<div class="ttc" id="astructopenturbine_1_1util_1_1dylib_1_1filename__components_html_a48fb66c2b48675bf15bf5b607f923c8f"><div class="ttname"><a href="structopenturbine_1_1util_1_1dylib_1_1filename__components.html#a48fb66c2b48675bf15bf5b607f923c8f">openturbine::util::dylib::filename_components::suffix</a></div><div class="ttdeci">static constexpr const char * suffix</div><div class="ttdef"><b>Definition</b> dylib.hpp:67</div></div>
+<div class="ttc" id="astructopenturbine_1_1util_1_1dylib_1_1filename__components_html_acf5768d81a1b07abd34792274cb50f16"><div class="ttname"><a href="structopenturbine_1_1util_1_1dylib_1_1filename__components.html#acf5768d81a1b07abd34792274cb50f16">openturbine::util::dylib::filename_components::prefix</a></div><div class="ttdeci">static constexpr const char * prefix</div><div class="ttdef"><b>Definition</b> dylib.hpp:66</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+.. meta::3f14d3c81d4609b261f31aef3104c3d37ab3f6712e757e006bfa9026c4c4a6c0895ffca145ea07fc8e92dd2f56c43a3695b86fadf40d9486e7508c39dc95c78d
+
+:orphan:
+
+.. title:: OpenTurbine API: DeltaTheta Struct Reference
+
+DeltaTheta Struct Reference
+===========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structDeltaTheta.html

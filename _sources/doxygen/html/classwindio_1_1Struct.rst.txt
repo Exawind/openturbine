@@ -1,0 +1,14 @@
+.. meta::9c3ad3be1c524e5b13bf2eff4c2812e02dea1e77b70099164c085d30dae84d6354d8c4254b3e74d1acbfb6924db7cc06f545c3a3b94ba92590d2c061798ac242
+
+:orphan:
+
+.. title:: OpenTurbine API: windio.Struct Class Reference
+
+windio.Struct Class Reference
+=============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classwindio_1_1Struct.html

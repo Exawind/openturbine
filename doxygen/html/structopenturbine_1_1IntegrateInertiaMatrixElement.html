@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::IntegrateInertiaMatrixElement Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::IntegrateInertiaMatrixElement Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1IntegrateInertiaMatrixElement.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="integrateinertiamatrixelement-struct-reference">
+<h1>IntegrateInertiaMatrixElement Struct Reference<a class="headerlink" href="#integrateinertiamatrixelement-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::IntegrateInertiaMatrixElement Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html">IntegrateInertiaMatrixElement</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1IntegrateInertiaMatrixElement-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::IntegrateInertiaMatrixElement Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="integrate__inertia__matrix_8hpp_source.html">integrate_inertia_matrix.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a7c9b39876a6a740d177f3bc91afdb92c" id="r_a7c9b39876a6a740d177f3bc91afdb92c"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#a7c9b39876a6a740d177f3bc91afdb92c">operator()</a> (size_t ij_index) const</td></tr>
+<tr class="separator:a7c9b39876a6a740d177f3bc91afdb92c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ac3be0e89c10a3a088dd997629d56a6dd" id="r_ac3be0e89c10a3a088dd997629d56a6dd"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#ac3be0e89c10a3a088dd997629d56a6dd">i_elem</a></td></tr>
+<tr class="separator:ac3be0e89c10a3a088dd997629d56a6dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf9c51450c5e315139dcc5bb4074abc6" id="r_adf9c51450c5e315139dcc5bb4074abc6"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#adf9c51450c5e315139dcc5bb4074abc6">num_nodes</a></td></tr>
+<tr class="separator:adf9c51450c5e315139dcc5bb4074abc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1614e57e2a0e4df72a10de2abbd0f37" id="r_ac1614e57e2a0e4df72a10de2abbd0f37"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#ac1614e57e2a0e4df72a10de2abbd0f37">num_qps</a></td></tr>
+<tr class="separator:ac1614e57e2a0e4df72a10de2abbd0f37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfdea884d2e20bfa85c7d5aa1f6eef6f" id="r_adfdea884d2e20bfa85c7d5aa1f6eef6f"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#adfdea884d2e20bfa85c7d5aa1f6eef6f">qp_weight_</a></td></tr>
+<tr class="separator:adfdea884d2e20bfa85c7d5aa1f6eef6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f5626824d57f30d17aad7380cc367af" id="r_a0f5626824d57f30d17aad7380cc367af"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#a0f5626824d57f30d17aad7380cc367af">qp_jacobian_</a></td></tr>
+<tr class="separator:a0f5626824d57f30d17aad7380cc367af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18ccdcad5cd4e483c6acc1adff142421" id="r_a18ccdcad5cd4e483c6acc1adff142421"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **, Kokkos::LayoutLeft &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#a18ccdcad5cd4e483c6acc1adff142421">shape_interp_</a></td></tr>
+<tr class="separator:a18ccdcad5cd4e483c6acc1adff142421"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05b701dc65730e9ffdd3308f9417167a" id="r_a05b701dc65730e9ffdd3308f9417167a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#a05b701dc65730e9ffdd3308f9417167a">qp_Muu_</a></td></tr>
+<tr class="separator:a05b701dc65730e9ffdd3308f9417167a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6477dff81ee7da18d8aaf377d61a9721" id="r_a6477dff81ee7da18d8aaf377d61a9721"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#a6477dff81ee7da18d8aaf377d61a9721">qp_Guu_</a></td></tr>
+<tr class="separator:a6477dff81ee7da18d8aaf377d61a9721"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7693324ad9cb88392ee733ec79a0c434" id="r_a7693324ad9cb88392ee733ec79a0c434"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#a7693324ad9cb88392ee733ec79a0c434">beta_prime_</a></td></tr>
+<tr class="separator:a7693324ad9cb88392ee733ec79a0c434"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a52de57bb9dd6db6e295353f56d1c17" id="r_a1a52de57bb9dd6db6e295353f56d1c17"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#a1a52de57bb9dd6db6e295353f56d1c17">gamma_prime_</a></td></tr>
+<tr class="separator:a1a52de57bb9dd6db6e295353f56d1c17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b66eddd4791d1bf13d4285af4ebfdd0" id="r_a1b66eddd4791d1bf13d4285af4ebfdd0"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ***[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1IntegrateInertiaMatrixElement.html#a1b66eddd4791d1bf13d4285af4ebfdd0">gbl_M_</a></td></tr>
+<tr class="separator:a1b66eddd4791d1bf13d4285af4ebfdd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a7c9b39876a6a740d177f3bc91afdb92c" name="a7c9b39876a6a740d177f3bc91afdb92c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c9b39876a6a740d177f3bc91afdb92c">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::IntegrateInertiaMatrixElement::operator() </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>ij_index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a7693324ad9cb88392ee733ec79a0c434" name="a7693324ad9cb88392ee733ec79a0c434"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7693324ad9cb88392ee733ec79a0c434">&#9670;&#160;</a></span>beta_prime_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::IntegrateInertiaMatrixElement::beta_prime_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1a52de57bb9dd6db6e295353f56d1c17" name="a1a52de57bb9dd6db6e295353f56d1c17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a52de57bb9dd6db6e295353f56d1c17">&#9670;&#160;</a></span>gamma_prime_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::IntegrateInertiaMatrixElement::gamma_prime_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1b66eddd4791d1bf13d4285af4ebfdd0" name="a1b66eddd4791d1bf13d4285af4ebfdd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b66eddd4791d1bf13d4285af4ebfdd0">&#9670;&#160;</a></span>gbl_M_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*** [6][6]&gt; openturbine::IntegrateInertiaMatrixElement::gbl_M_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac3be0e89c10a3a088dd997629d56a6dd" name="ac3be0e89c10a3a088dd997629d56a6dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3be0e89c10a3a088dd997629d56a6dd">&#9670;&#160;</a></span>i_elem</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::IntegrateInertiaMatrixElement::i_elem</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adf9c51450c5e315139dcc5bb4074abc6" name="adf9c51450c5e315139dcc5bb4074abc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf9c51450c5e315139dcc5bb4074abc6">&#9670;&#160;</a></span>num_nodes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::IntegrateInertiaMatrixElement::num_nodes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac1614e57e2a0e4df72a10de2abbd0f37" name="ac1614e57e2a0e4df72a10de2abbd0f37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1614e57e2a0e4df72a10de2abbd0f37">&#9670;&#160;</a></span>num_qps</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::IntegrateInertiaMatrixElement::num_qps</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6477dff81ee7da18d8aaf377d61a9721" name="a6477dff81ee7da18d8aaf377d61a9721"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6477dff81ee7da18d8aaf377d61a9721">&#9670;&#160;</a></span>qp_Guu_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[6][6]&gt;::const_type openturbine::IntegrateInertiaMatrixElement::qp_Guu_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0f5626824d57f30d17aad7380cc367af" name="a0f5626824d57f30d17aad7380cc367af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f5626824d57f30d17aad7380cc367af">&#9670;&#160;</a></span>qp_jacobian_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*&gt;::const_type openturbine::IntegrateInertiaMatrixElement::qp_jacobian_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a05b701dc65730e9ffdd3308f9417167a" name="a05b701dc65730e9ffdd3308f9417167a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05b701dc65730e9ffdd3308f9417167a">&#9670;&#160;</a></span>qp_Muu_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[6][6]&gt;::const_type openturbine::IntegrateInertiaMatrixElement::qp_Muu_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adfdea884d2e20bfa85c7d5aa1f6eef6f" name="adfdea884d2e20bfa85c7d5aa1f6eef6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfdea884d2e20bfa85c7d5aa1f6eef6f">&#9670;&#160;</a></span>qp_weight_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*&gt;::const_type openturbine::IntegrateInertiaMatrixElement::qp_weight_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a18ccdcad5cd4e483c6acc1adff142421" name="a18ccdcad5cd4e483c6acc1adff142421"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18ccdcad5cd4e483c6acc1adff142421">&#9670;&#160;</a></span>shape_interp_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**,Kokkos::LayoutLeft&gt;::const_type openturbine::IntegrateInertiaMatrixElement::shape_interp_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/<a class="el" href="integrate__inertia__matrix_8hpp_source.html">integrate_inertia_matrix.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

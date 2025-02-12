@@ -1,0 +1,14 @@
+.. meta::be4b11b35e62d7ce0fabdaf6dc068b7fb3be3f5d218474ab4af9d0453a9232ffd3c64da648281f74a7fa9d80dcd145ded5a80fcd878af4aeda34b2583b4b33e3
+
+:orphan:
+
+.. title:: OpenTurbine API: Environment Struct Reference
+
+Environment Struct Reference
+============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structEnvironment.html

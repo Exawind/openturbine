@@ -1,0 +1,14 @@
+.. meta::32f5e7fe53d07d569af53cb7399cecca1949c47ea6f00d69cec5b608ddb184aa2dd8e8cefb02d1687214d683a1c51a9703bbb7734ae163f88617009a05972209
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/utilities/aerodynamics Directory Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/utilities/aerodynamics Directory Reference
+====================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: dir_b9944db450501d91a7c738e9cfe3a21c.html

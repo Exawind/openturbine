@@ -1,0 +1,14 @@
+.. meta::0f902addc670aa2cb1728c32092b053d5043df039c9eb6f9c972014571d3d5e9e227366eb57a434f0acefc995407c1e77a018b31481dc7478521bb8202018884
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/springs/calculate_quadrature_point_values.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/system/springs/calculate\_quadrature\_point\_values.hpp File Reference
+================================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: springs_2calculate__quadrature__point__values_8hpp.html

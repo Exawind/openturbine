@@ -1,0 +1,14 @@
+.. meta::0eb763f0738b250b3f9e8b7af8b61dae903b57433101762522c50869e9e8d8590b100e3a743305d5e5a11d131d73b3eef2ada5d0d59435f4f4382bd08a35ff19
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/copy_tangent_to_sparse_matrix.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/copy\_tangent\_to\_sparse\_matrix.hpp Source File
+==================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: copy__tangent__to__sparse__matrix_8hpp_source.html

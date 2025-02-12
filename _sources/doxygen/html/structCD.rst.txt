@@ -1,0 +1,14 @@
+.. meta::6fa1c7265576bdfa8e694937b6ea9dcd34cf323c5df3b849136ad99c7c94c7a8377325eb81e214bd7c3cb0c93fbf59d7e932db0e7552ef832df396433d435ba8
+
+:orphan:
+
+.. title:: OpenTurbine API: CD Struct Reference
+
+CD Struct Reference
+===================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structCD.html

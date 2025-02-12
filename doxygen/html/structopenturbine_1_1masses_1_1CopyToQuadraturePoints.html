@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::masses::CopyToQuadraturePoints Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::masses::CopyToQuadraturePoints Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1masses_1_1CopyToQuadraturePoints.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="copytoquadraturepoints-struct-reference">
+<h1>CopyToQuadraturePoints Struct Reference<a class="headerlink" href="#copytoquadraturepoints-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::masses::CopyToQuadraturePoints Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1masses.html">masses</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html">CopyToQuadraturePoints</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::masses::CopyToQuadraturePoints Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="copy__to__quadrature__points_8hpp_source.html">copy_to_quadrature_points.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a2f84da1cb53dce2027a38cd75bcd89ec" id="r_a2f84da1cb53dce2027a38cd75bcd89ec"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a2f84da1cb53dce2027a38cd75bcd89ec">operator()</a> (size_t i_elem) const</td></tr>
+<tr class="separator:a2f84da1cb53dce2027a38cd75bcd89ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:aa1e15eb32e8a04f8327384eca2034063" id="r_aa1e15eb32e8a04f8327384eca2034063"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#aa1e15eb32e8a04f8327384eca2034063">node_x0</a></td></tr>
+<tr class="separator:aa1e15eb32e8a04f8327384eca2034063"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a989d27d8e4f2ff3ab508154f70a2ac11" id="r_a989d27d8e4f2ff3ab508154f70a2ac11"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a989d27d8e4f2ff3ab508154f70a2ac11">node_u</a></td></tr>
+<tr class="separator:a989d27d8e4f2ff3ab508154f70a2ac11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01d0105ef2b480d55f43b400e313f542" id="r_a01d0105ef2b480d55f43b400e313f542"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a01d0105ef2b480d55f43b400e313f542">node_u_dot</a></td></tr>
+<tr class="separator:a01d0105ef2b480d55f43b400e313f542"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bff7e4ce1f0b1bcf97e73c15fe0236b" id="r_a7bff7e4ce1f0b1bcf97e73c15fe0236b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a7bff7e4ce1f0b1bcf97e73c15fe0236b">node_u_ddot</a></td></tr>
+<tr class="separator:a7bff7e4ce1f0b1bcf97e73c15fe0236b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30fc35e4252fc4f0229fd8b3368f77cb" id="r_a30fc35e4252fc4f0229fd8b3368f77cb"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a30fc35e4252fc4f0229fd8b3368f77cb">qp_x0</a></td></tr>
+<tr class="separator:a30fc35e4252fc4f0229fd8b3368f77cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada751ba9d1ff8b416ac826e26e5e3a9b" id="r_ada751ba9d1ff8b416ac826e26e5e3a9b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[4]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#ada751ba9d1ff8b416ac826e26e5e3a9b">qp_r0</a></td></tr>
+<tr class="separator:ada751ba9d1ff8b416ac826e26e5e3a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ad0fa2b1fccffecd2b8e89714a60b16" id="r_a8ad0fa2b1fccffecd2b8e89714a60b16"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a8ad0fa2b1fccffecd2b8e89714a60b16">qp_u</a></td></tr>
+<tr class="separator:a8ad0fa2b1fccffecd2b8e89714a60b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e2fd48a20a91456e7fbf76ce7a23860" id="r_a7e2fd48a20a91456e7fbf76ce7a23860"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[4]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a7e2fd48a20a91456e7fbf76ce7a23860">qp_r</a></td></tr>
+<tr class="separator:a7e2fd48a20a91456e7fbf76ce7a23860"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abaa22449e5d2054cdb08161349d4c07a" id="r_abaa22449e5d2054cdb08161349d4c07a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#abaa22449e5d2054cdb08161349d4c07a">qp_u_ddot</a></td></tr>
+<tr class="separator:abaa22449e5d2054cdb08161349d4c07a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36a576945fd535323eba6866cb5c8d6e" id="r_a36a576945fd535323eba6866cb5c8d6e"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a36a576945fd535323eba6866cb5c8d6e">qp_omega</a></td></tr>
+<tr class="separator:a36a576945fd535323eba6866cb5c8d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89154e265812c98c921591c6a30e8db9" id="r_a89154e265812c98c921591c6a30e8db9"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a89154e265812c98c921591c6a30e8db9">qp_omega_dot</a></td></tr>
+<tr class="separator:a89154e265812c98c921591c6a30e8db9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2f84da1cb53dce2027a38cd75bcd89ec" name="a2f84da1cb53dce2027a38cd75bcd89ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f84da1cb53dce2027a38cd75bcd89ec">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::masses::CopyToQuadraturePoints::operator() </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>i_elem</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a989d27d8e4f2ff3ab508154f70a2ac11" name="a989d27d8e4f2ff3ab508154f70a2ac11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a989d27d8e4f2ff3ab508154f70a2ac11">&#9670;&#160;</a></span>node_u</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[7]&gt;::const_type openturbine::masses::CopyToQuadraturePoints::node_u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7bff7e4ce1f0b1bcf97e73c15fe0236b" name="a7bff7e4ce1f0b1bcf97e73c15fe0236b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bff7e4ce1f0b1bcf97e73c15fe0236b">&#9670;&#160;</a></span>node_u_ddot</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[6]&gt;::const_type openturbine::masses::CopyToQuadraturePoints::node_u_ddot</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a01d0105ef2b480d55f43b400e313f542" name="a01d0105ef2b480d55f43b400e313f542"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01d0105ef2b480d55f43b400e313f542">&#9670;&#160;</a></span>node_u_dot</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[6]&gt;::const_type openturbine::masses::CopyToQuadraturePoints::node_u_dot</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa1e15eb32e8a04f8327384eca2034063" name="aa1e15eb32e8a04f8327384eca2034063"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1e15eb32e8a04f8327384eca2034063">&#9670;&#160;</a></span>node_x0</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[7]&gt;::const_type openturbine::masses::CopyToQuadraturePoints::node_x0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a36a576945fd535323eba6866cb5c8d6e" name="a36a576945fd535323eba6866cb5c8d6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36a576945fd535323eba6866cb5c8d6e">&#9670;&#160;</a></span>qp_omega</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [3]&gt; openturbine::masses::CopyToQuadraturePoints::qp_omega</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a89154e265812c98c921591c6a30e8db9" name="a89154e265812c98c921591c6a30e8db9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89154e265812c98c921591c6a30e8db9">&#9670;&#160;</a></span>qp_omega_dot</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [3]&gt; openturbine::masses::CopyToQuadraturePoints::qp_omega_dot</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7e2fd48a20a91456e7fbf76ce7a23860" name="a7e2fd48a20a91456e7fbf76ce7a23860"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e2fd48a20a91456e7fbf76ce7a23860">&#9670;&#160;</a></span>qp_r</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [4]&gt; openturbine::masses::CopyToQuadraturePoints::qp_r</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ada751ba9d1ff8b416ac826e26e5e3a9b" name="ada751ba9d1ff8b416ac826e26e5e3a9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada751ba9d1ff8b416ac826e26e5e3a9b">&#9670;&#160;</a></span>qp_r0</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [4]&gt; openturbine::masses::CopyToQuadraturePoints::qp_r0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8ad0fa2b1fccffecd2b8e89714a60b16" name="a8ad0fa2b1fccffecd2b8e89714a60b16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ad0fa2b1fccffecd2b8e89714a60b16">&#9670;&#160;</a></span>qp_u</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [3]&gt; openturbine::masses::CopyToQuadraturePoints::qp_u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abaa22449e5d2054cdb08161349d4c07a" name="abaa22449e5d2054cdb08161349d4c07a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abaa22449e5d2054cdb08161349d4c07a">&#9670;&#160;</a></span>qp_u_ddot</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [3]&gt; openturbine::masses::CopyToQuadraturePoints::qp_u_ddot</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a30fc35e4252fc4f0229fd8b3368f77cb" name="a30fc35e4252fc4f0229fd8b3368f77cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30fc35e4252fc4f0229fd8b3368f77cb">&#9670;&#160;</a></span>qp_x0</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [3]&gt; openturbine::masses::CopyToQuadraturePoints::qp_x0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/system/masses/<a class="el" href="copy__to__quadrature__points_8hpp_source.html">copy_to_quadrature_points.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::CalculateNextState Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::CalculateNextState Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1CalculateNextState.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="calculatenextstate-struct-reference">
+<h1>CalculateNextState Struct Reference<a class="headerlink" href="#calculatenextstate-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::CalculateNextState Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1CalculateNextState.html">CalculateNextState</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1CalculateNextState-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::CalculateNextState Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="calculate__next__state_8hpp_source.html">calculate_next_state.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a2b119c6aaa9278071d01520f2248d05f" id="r_a2b119c6aaa9278071d01520f2248d05f"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html#a2b119c6aaa9278071d01520f2248d05f">operator()</a> (const size_t i) const</td></tr>
+<tr class="separator:a2b119c6aaa9278071d01520f2248d05f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ad244d83f21cf2d8a5ff64aa3bc8e74ff" id="r_ad244d83f21cf2d8a5ff64aa3bc8e74ff"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html#ad244d83f21cf2d8a5ff64aa3bc8e74ff">h</a></td></tr>
+<tr class="separator:ad244d83f21cf2d8a5ff64aa3bc8e74ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8007263e644335c14081ac4cbdedb99" id="r_ab8007263e644335c14081ac4cbdedb99"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html#ab8007263e644335c14081ac4cbdedb99">alpha_f</a></td></tr>
+<tr class="separator:ab8007263e644335c14081ac4cbdedb99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7ad0d9e13da5195a14345e7ac0a6a7d" id="r_ac7ad0d9e13da5195a14345e7ac0a6a7d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html#ac7ad0d9e13da5195a14345e7ac0a6a7d">alpha_m</a></td></tr>
+<tr class="separator:ac7ad0d9e13da5195a14345e7ac0a6a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7356f45ec18435030b9a79d42945435" id="r_ae7356f45ec18435030b9a79d42945435"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html#ae7356f45ec18435030b9a79d42945435">beta</a></td></tr>
+<tr class="separator:ae7356f45ec18435030b9a79d42945435"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45fd950b9387ba3493b0a9fc5f400102" id="r_a45fd950b9387ba3493b0a9fc5f400102"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html#a45fd950b9387ba3493b0a9fc5f400102">gamma</a></td></tr>
+<tr class="separator:a45fd950b9387ba3493b0a9fc5f400102"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada0e7881eb993222769023b2c9ff8382" id="r_ada0e7881eb993222769023b2c9ff8382"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html#ada0e7881eb993222769023b2c9ff8382">q_delta</a></td></tr>
+<tr class="separator:ada0e7881eb993222769023b2c9ff8382"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5aea2edfd473e290b616871dd7641370" id="r_a5aea2edfd473e290b616871dd7641370"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html#a5aea2edfd473e290b616871dd7641370">v</a></td></tr>
+<tr class="separator:a5aea2edfd473e290b616871dd7641370"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a874232ead94e240fb07e88063d539ad3" id="r_a874232ead94e240fb07e88063d539ad3"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html#a874232ead94e240fb07e88063d539ad3">vd</a></td></tr>
+<tr class="separator:a874232ead94e240fb07e88063d539ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfb88f253a669c45cd8190ead801fa1f" id="r_adfb88f253a669c45cd8190ead801fa1f"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html#adfb88f253a669c45cd8190ead801fa1f">a</a></td></tr>
+<tr class="separator:adfb88f253a669c45cd8190ead801fa1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2b119c6aaa9278071d01520f2248d05f" name="a2b119c6aaa9278071d01520f2248d05f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b119c6aaa9278071d01520f2248d05f">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateNextState::operator() </td>
+          <td>(</td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="adfb88f253a669c45cd8190ead801fa1f" name="adfb88f253a669c45cd8190ead801fa1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfb88f253a669c45cd8190ead801fa1f">&#9670;&#160;</a></span>a</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [6]&gt; openturbine::CalculateNextState::a</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab8007263e644335c14081ac4cbdedb99" name="ab8007263e644335c14081ac4cbdedb99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8007263e644335c14081ac4cbdedb99">&#9670;&#160;</a></span>alpha_f</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::CalculateNextState::alpha_f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac7ad0d9e13da5195a14345e7ac0a6a7d" name="ac7ad0d9e13da5195a14345e7ac0a6a7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7ad0d9e13da5195a14345e7ac0a6a7d">&#9670;&#160;</a></span>alpha_m</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::CalculateNextState::alpha_m</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7356f45ec18435030b9a79d42945435" name="ae7356f45ec18435030b9a79d42945435"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7356f45ec18435030b9a79d42945435">&#9670;&#160;</a></span>beta</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::CalculateNextState::beta</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a45fd950b9387ba3493b0a9fc5f400102" name="a45fd950b9387ba3493b0a9fc5f400102"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45fd950b9387ba3493b0a9fc5f400102">&#9670;&#160;</a></span>gamma</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::CalculateNextState::gamma</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad244d83f21cf2d8a5ff64aa3bc8e74ff" name="ad244d83f21cf2d8a5ff64aa3bc8e74ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad244d83f21cf2d8a5ff64aa3bc8e74ff">&#9670;&#160;</a></span>h</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::CalculateNextState::h</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ada0e7881eb993222769023b2c9ff8382" name="ada0e7881eb993222769023b2c9ff8382"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada0e7881eb993222769023b2c9ff8382">&#9670;&#160;</a></span>q_delta</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [6]&gt; openturbine::CalculateNextState::q_delta</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5aea2edfd473e290b616871dd7641370" name="a5aea2edfd473e290b616871dd7641370"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5aea2edfd473e290b616871dd7641370">&#9670;&#160;</a></span>v</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [6]&gt; openturbine::CalculateNextState::v</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a874232ead94e240fb07e88063d539ad3" name="a874232ead94e240fb07e88063d539ad3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a874232ead94e240fb07e88063d539ad3">&#9670;&#160;</a></span>vd</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [6]&gt; openturbine::CalculateNextState::vd</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/state/<a class="el" href="calculate__next__state_8hpp_source.html">calculate_next_state.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

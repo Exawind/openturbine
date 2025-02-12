@@ -1,0 +1,14 @@
+.. meta::647f8f858bb54377026a190c0479ae32467b2cdb7177acb6fe96155b80fc59a45cb081b1616cd5b114383847a529566c9f09a07c8b644bac6c177cd9ac8065d5
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CalculateTangentOperator Struct Reference
+
+CalculateTangentOperator Struct Reference
+=========================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateTangentOperator.html

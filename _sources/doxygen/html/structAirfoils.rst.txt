@@ -1,0 +1,14 @@
+.. meta::0ca042907a59158fff557d10cd5e997d10857d94eb988057686a4485fda5497c3cf9642398e2b235da41f2064acab3e0f109159333f23b94d3f2faedb80baeab
+
+:orphan:
+
+.. title:: OpenTurbine API: Airfoils Struct Reference
+
+Airfoils Struct Reference
+=========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structAirfoils.html

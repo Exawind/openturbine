@@ -1,0 +1,14 @@
+.. meta::0e0a360a1ac165a62c3a221fb66f2659b90c071ecf60620999ace9ff20959d1db9f07aa0fd84426718518d98968de3fd556c8da5cee66a1ebc1152e1de819389
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::ComputeTRowPtrsScanner&lt; RowPtrType &gt; Struct Template Reference
+
+ComputeTRowPtrsScanner&lt; RowPtrType &gt; Struct Template Reference
+====================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1ComputeTRowPtrsScanner.html

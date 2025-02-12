@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate_inertial_force.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate_inertial_force.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/masses_2calculate__inertial__force_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-system-masses-calculate-inertial-force-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate_inertial_force.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-system-masses-calculate-inertial-force-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate_inertial_force.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d501334aeb1b78ad67cd3c72c37b1e87.html">system</a></li><li class="navelem"><a class="el" href="dir_ba23874a222465ade7a5165dd0aa9e2a.html">masses</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">calculate_inertial_force.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="masses_2calculate__inertial__force_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;KokkosBatched_Gemm_Decl.hpp&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;KokkosBlas.hpp&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="vector__operations_8hpp.html">math/vector_operations.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1masses.html">openturbine::masses</a> {</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="foldopen" id="foldopen00027" data-start="{" data-end="};">
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html">   27</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html">CalculateInertialForces</a> {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a6db6dda5d8fac6d094fe7094b6fbe8ff">   28</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a6db6dda5d8fac6d094fe7094b6fbe8ff">NoTranspose</a> = KokkosBatched::Trans::NoTranspose;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a6ec1c19852ca416bd5c8233d93911d62">   29</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a6ec1c19852ca416bd5c8233d93911d62">GemmDefault</a> = KokkosBatched::Algo::Gemm::Default;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a2c1993f362e2705def3aba3caab4b531">   30</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a2c1993f362e2705def3aba3caab4b531">GemvDefault</a> = KokkosBlas::Algo::Gemv::Default;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a331cc0ca64d907794aeef3941b7294e3">   31</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a331cc0ca64d907794aeef3941b7294e3">Gemm</a> = KokkosBatched::SerialGemm&lt;NoTranspose, NoTranspose, GemmDefault&gt;;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a5834fa7385cf489d736f28e6887cc94a">   32</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a5834fa7385cf489d736f28e6887cc94a">Gemv</a> = KokkosBlas::SerialGemv&lt;NoTranspose, GemvDefault&gt;;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">   33</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">i_elem</a>;                                        <span class="comment">//&lt; Element index</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a1159da9434bb3b0c1925bb51545b08e5">   34</a></span>    Kokkos::View&lt;double* [6][6]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a1159da9434bb3b0c1925bb51545b08e5">qp_Muu_</a>;     <span class="comment">//&lt; Mass matrix in inertial csys</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a858205cf50bbf7d9e6774f902bc4b231">   35</a></span>    Kokkos::View&lt;double* [3]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a858205cf50bbf7d9e6774f902bc4b231">qp_u_ddot_</a>;     <span class="comment">//&lt; Acceleration vector</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aefe5bda8fc69e4627a607a1c832999c0">   36</a></span>    Kokkos::View&lt;double* [3]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aefe5bda8fc69e4627a607a1c832999c0">qp_omega_</a>;      <span class="comment">//&lt; Angular velocity vector</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aa90b234897b815c3b2a1035b310ef6c9">   37</a></span>    Kokkos::View&lt;double* [3]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aa90b234897b815c3b2a1035b310ef6c9">qp_omega_dot_</a>;  <span class="comment">//&lt; Angular acceleration vector</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a67328300c15bdd29407b077cec0f1970">   38</a></span>    Kokkos::View&lt;double* [3][3]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a67328300c15bdd29407b077cec0f1970">eta_tilde_</a>;  <span class="comment">//&lt; Skew-symmetric matrix derived from eta</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a7ebffc6f64b081dd5287ccf6f3a7fa68">   39</a></span>    Kokkos::View&lt;double* [3][3]&gt; <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a7ebffc6f64b081dd5287ccf6f3a7fa68">omega_tilde_</a>;      <span class="comment">//&lt; Skew-symmetric matrix from rot. velocity</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a96ab85ecdbc407b2f4d219421305a31e">   40</a></span>    Kokkos::View&lt;double* [3][3]&gt; <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a96ab85ecdbc407b2f4d219421305a31e">omega_dot_tilde_</a>;  <span class="comment">//&lt; Skew-symmetric matrix from rot. acceleration</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a7d5a08a550b33a90a2d865f1346366d3">   41</a></span>    Kokkos::View&lt;double* [3][3]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a7d5a08a550b33a90a2d865f1346366d3">rho_</a>;  <span class="comment">//&lt; Rotational inertia part of mass matrix</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aefee0eb7cbe16e653c3b240cae219e9b">   42</a></span>    Kokkos::View&lt;double* [3]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aefee0eb7cbe16e653c3b240cae219e9b">eta_</a>;     <span class="comment">//&lt; Offset between mass center and elastic axis</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a3f408d8ab2a2249159b52e4552baacb7">   43</a></span>    Kokkos::View&lt;double* [6]&gt; <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a3f408d8ab2a2249159b52e4552baacb7">qp_FI_</a>;               <span class="comment">//&lt; Inertial forces (computed in this functor)</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    KOKKOS_FUNCTION</div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a93d022c0964c9a52565ef65455614742">   46</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a93d022c0964c9a52565ef65455614742">operator()</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keyword">auto</span> Muu = Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a1159da9434bb3b0c1925bb51545b08e5">qp_Muu_</a>, <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">i_elem</a>, Kokkos::ALL, Kokkos::ALL);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keyword">auto</span> u_ddot = Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a858205cf50bbf7d9e6774f902bc4b231">qp_u_ddot_</a>, <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">i_elem</a>, Kokkos::ALL);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keyword">auto</span> omega = Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aefe5bda8fc69e4627a607a1c832999c0">qp_omega_</a>, <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">i_elem</a>, Kokkos::ALL);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keyword">auto</span> omega_dot = Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aa90b234897b815c3b2a1035b310ef6c9">qp_omega_dot_</a>, <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">i_elem</a>, Kokkos::ALL);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keyword">auto</span> eta_tilde = Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a67328300c15bdd29407b077cec0f1970">eta_tilde_</a>, <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">i_elem</a>, Kokkos::ALL, Kokkos::ALL);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keyword">auto</span> omega_tilde = Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a7ebffc6f64b081dd5287ccf6f3a7fa68">omega_tilde_</a>, <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">i_elem</a>, Kokkos::ALL, Kokkos::ALL);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keyword">auto</span> omega_dot_tilde = Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a96ab85ecdbc407b2f4d219421305a31e">omega_dot_tilde_</a>, <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">i_elem</a>, Kokkos::ALL, Kokkos::ALL);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">auto</span> rho = Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a7d5a08a550b33a90a2d865f1346366d3">rho_</a>, <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">i_elem</a>, Kokkos::ALL, Kokkos::ALL);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keyword">auto</span> eta = Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aefee0eb7cbe16e653c3b240cae219e9b">eta_</a>, <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">i_elem</a>, Kokkos::ALL);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="comment">// Define temporary views for intermediate results</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keyword">auto</span> v1 = Kokkos::Array&lt;double, 3&gt;{};</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keyword">auto</span> V1 = <a class="code hl_typedef" href="namespaceopenturbine.html#a5c3e2136acb58cc49d15dc2d88c76a66">View_3</a>(v1.data());</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">auto</span> m1 = Kokkos::Array&lt;double, 9&gt;{};</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">auto</span> M1 = <a class="code hl_typedef" href="namespaceopenturbine.html#a3f8d7abc1184fa2c3b6a3ba577fd7d69">View_3x3</a>(m1.data());</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">auto</span> FI = Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a3f408d8ab2a2249159b52e4552baacb7">qp_FI_</a>, <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">i_elem</a>, Kokkos::ALL);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="comment">// Compute first 3 components of FI</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="comment">// FI_1 = m * u_ddot + (omega_dot_tilde + omega_tilde * omega_tilde) * m * eta</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <a class="code hl_function" href="namespaceopenturbine.html#a27b4aa8d797ea86827404834f2a0173d">VecTilde</a>(omega, omega_tilde);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <a class="code hl_function" href="namespaceopenturbine.html#a27b4aa8d797ea86827404834f2a0173d">VecTilde</a>(omega_dot, omega_dot_tilde);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keyword">auto</span> FI_1 = Kokkos::subview(FI, Kokkos::make_pair(0, 3));</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keyword">auto</span> m = Muu(0, 0);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        Gemm::invoke(m, omega_tilde, omega_tilde, 0., M1);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        KokkosBlas::serial_axpy(m, omega_dot_tilde, M1);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        Gemv::invoke(1., M1, eta, 0., FI_1);</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        KokkosBlas::serial_axpy(m, u_ddot, FI_1);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="comment">// Compute last 3 components of FI</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="comment">// FI_2 = m * eta_tilde * u_ddot + rho * omega_dot + omega_tilde * rho * omega</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keyword">auto</span> FI_2 = Kokkos::subview(FI, Kokkos::make_pair(3, 6));</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        KokkosBlas::serial_axpy(m, u_ddot, V1);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        Gemv::invoke(1., eta_tilde, V1, 0., FI_2);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        Gemv::invoke(1., rho, omega_dot, 1., FI_2);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        Gemm::invoke(1., omega_tilde, rho, 0., M1);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        Gemv::invoke(1., M1, omega, 1., FI_2);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    }</div>
+</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>};</div>
+</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>}  <span class="comment">// namespace openturbine::masses</span></div>
+<div class="ttc" id="anamespaceopenturbine_1_1masses_html"><div class="ttname"><a href="namespaceopenturbine_1_1masses.html">openturbine::masses</a></div><div class="ttdef"><b>Definition</b> assemble_inertia_matrix_masses.hpp:10</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a27b4aa8d797ea86827404834f2a0173d"><div class="ttname"><a href="namespaceopenturbine.html#a27b4aa8d797ea86827404834f2a0173d">openturbine::VecTilde</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void VecTilde(const VectorType &amp;vector, const MatrixType &amp;matrix)</div><div class="ttdoc">Converts a 3x1 vector to a 3x3 skew-symmetric matrix and returns the result.</div><div class="ttdef"><b>Definition</b> vector_operations.hpp:11</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a3f8d7abc1184fa2c3b6a3ba577fd7d69"><div class="ttname"><a href="namespaceopenturbine.html#a3f8d7abc1184fa2c3b6a3ba577fd7d69">openturbine::View_3x3</a></div><div class="ttdeci">Kokkos::View&lt; double[3][3]&gt; View_3x3</div><div class="ttdef"><b>Definition</b> types.hpp:20</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a5c3e2136acb58cc49d15dc2d88c76a66"><div class="ttname"><a href="namespaceopenturbine.html#a5c3e2136acb58cc49d15dc2d88c76a66">openturbine::View_3</a></div><div class="ttdeci">Kokkos::View&lt; double[3]&gt; View_3</div><div class="ttdef"><b>Definition</b> types.hpp:16</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html">openturbine::masses::CalculateInertialForces</a></div><div class="ttdoc">Functor to calculate inertial forces in Beams/Masses elements.</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:27</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a1159da9434bb3b0c1925bb51545b08e5"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a1159da9434bb3b0c1925bb51545b08e5">openturbine::masses::CalculateInertialForces::qp_Muu_</a></div><div class="ttdeci">Kokkos::View&lt; double *[6][6]&gt;::const_type qp_Muu_</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:34</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a2c1993f362e2705def3aba3caab4b531"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a2c1993f362e2705def3aba3caab4b531">openturbine::masses::CalculateInertialForces::GemvDefault</a></div><div class="ttdeci">KokkosBlas::Algo::Gemv::Default GemvDefault</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:30</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a331cc0ca64d907794aeef3941b7294e3"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a331cc0ca64d907794aeef3941b7294e3">openturbine::masses::CalculateInertialForces::Gemm</a></div><div class="ttdeci">KokkosBatched::SerialGemm&lt; NoTranspose, NoTranspose, GemmDefault &gt; Gemm</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:31</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a3f408d8ab2a2249159b52e4552baacb7"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a3f408d8ab2a2249159b52e4552baacb7">openturbine::masses::CalculateInertialForces::qp_FI_</a></div><div class="ttdeci">Kokkos::View&lt; double *[6]&gt; qp_FI_</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:43</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a5834fa7385cf489d736f28e6887cc94a"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a5834fa7385cf489d736f28e6887cc94a">openturbine::masses::CalculateInertialForces::Gemv</a></div><div class="ttdeci">KokkosBlas::SerialGemv&lt; NoTranspose, GemvDefault &gt; Gemv</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:32</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a67328300c15bdd29407b077cec0f1970"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a67328300c15bdd29407b077cec0f1970">openturbine::masses::CalculateInertialForces::eta_tilde_</a></div><div class="ttdeci">Kokkos::View&lt; double *[3][3]&gt;::const_type eta_tilde_</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:38</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a6db6dda5d8fac6d094fe7094b6fbe8ff"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a6db6dda5d8fac6d094fe7094b6fbe8ff">openturbine::masses::CalculateInertialForces::NoTranspose</a></div><div class="ttdeci">KokkosBatched::Trans::NoTranspose NoTranspose</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:28</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a6ec1c19852ca416bd5c8233d93911d62"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a6ec1c19852ca416bd5c8233d93911d62">openturbine::masses::CalculateInertialForces::GemmDefault</a></div><div class="ttdeci">KokkosBatched::Algo::Gemm::Default GemmDefault</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:29</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a72347397952310cc8127ae80677dd435"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a72347397952310cc8127ae80677dd435">openturbine::masses::CalculateInertialForces::i_elem</a></div><div class="ttdeci">size_t i_elem</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:33</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a7d5a08a550b33a90a2d865f1346366d3"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a7d5a08a550b33a90a2d865f1346366d3">openturbine::masses::CalculateInertialForces::rho_</a></div><div class="ttdeci">Kokkos::View&lt; double *[3][3]&gt;::const_type rho_</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:41</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a7ebffc6f64b081dd5287ccf6f3a7fa68"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a7ebffc6f64b081dd5287ccf6f3a7fa68">openturbine::masses::CalculateInertialForces::omega_tilde_</a></div><div class="ttdeci">Kokkos::View&lt; double *[3][3]&gt; omega_tilde_</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:39</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a858205cf50bbf7d9e6774f902bc4b231"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a858205cf50bbf7d9e6774f902bc4b231">openturbine::masses::CalculateInertialForces::qp_u_ddot_</a></div><div class="ttdeci">Kokkos::View&lt; double *[3]&gt;::const_type qp_u_ddot_</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:35</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a93d022c0964c9a52565ef65455614742"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a93d022c0964c9a52565ef65455614742">openturbine::masses::CalculateInertialForces::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()() const</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:46</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_a96ab85ecdbc407b2f4d219421305a31e"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#a96ab85ecdbc407b2f4d219421305a31e">openturbine::masses::CalculateInertialForces::omega_dot_tilde_</a></div><div class="ttdeci">Kokkos::View&lt; double *[3][3]&gt; omega_dot_tilde_</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:40</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_aa90b234897b815c3b2a1035b310ef6c9"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aa90b234897b815c3b2a1035b310ef6c9">openturbine::masses::CalculateInertialForces::qp_omega_dot_</a></div><div class="ttdeci">Kokkos::View&lt; double *[3]&gt;::const_type qp_omega_dot_</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:37</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_aefe5bda8fc69e4627a607a1c832999c0"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aefe5bda8fc69e4627a607a1c832999c0">openturbine::masses::CalculateInertialForces::qp_omega_</a></div><div class="ttdeci">Kokkos::View&lt; double *[3]&gt;::const_type qp_omega_</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:36</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CalculateInertialForces_html_aefee0eb7cbe16e653c3b240cae219e9b"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CalculateInertialForces.html#aefee0eb7cbe16e653c3b240cae219e9b">openturbine::masses::CalculateInertialForces::eta_</a></div><div class="ttdeci">Kokkos::View&lt; double *[3]&gt;::const_type eta_</div><div class="ttdef"><b>Definition</b> calculate_inertial_force.hpp:42</div></div>
+<div class="ttc" id="avector__operations_8hpp_html"><div class="ttname"><a href="vector__operations_8hpp.html">vector_operations.hpp</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

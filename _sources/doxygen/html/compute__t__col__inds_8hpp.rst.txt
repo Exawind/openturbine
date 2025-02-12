@@ -1,0 +1,14 @@
+.. meta::30eb3f019e403d8dcae9e7ad17309aa79381cbb4242829649ec63e0f0f714d85acb3d98341690a2bde00b1844acc6ba5499cdd36e985e498f58ee5e5e03f859e
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/compute_t_col_inds.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/compute\_t\_col\_inds.hpp File Reference
+=========================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: compute__t__col__inds_8hpp.html

@@ -1,0 +1,14 @@
+.. meta::d39aebc95db95d921e50e012b4d0ba8ae0f19b53a78db58686c9e50e53054b121176251dc5ce2fbf788385e1944e758353fc8aaf126893ebe99a088dfd97daf4
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/create_b_matrix.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/create\_b\_matrix.hpp Source File
+==================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: create__b__matrix_8hpp_source.html

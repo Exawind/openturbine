@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::CalculateRigidJointConstraint Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::CalculateRigidJointConstraint Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1CalculateRigidJointConstraint.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="calculaterigidjointconstraint-struct-reference">
+<h1>CalculateRigidJointConstraint Struct Reference<a class="headerlink" href="#calculaterigidjointconstraint-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::CalculateRigidJointConstraint Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html">CalculateRigidJointConstraint</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1CalculateRigidJointConstraint-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::CalculateRigidJointConstraint Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="calculate__rigid__joint__constraint_8hpp_source.html">calculate_rigid_joint_constraint.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a249736312f3d1a8e67e8921d0cb34ead" id="r_a249736312f3d1a8e67e8921d0cb34ead"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#a249736312f3d1a8e67e8921d0cb34ead">operator()</a> () const</td></tr>
+<tr class="separator:a249736312f3d1a8e67e8921d0cb34ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ab6ed6b3ed0bc9785bb50a5a71a81ff48" id="r_ab6ed6b3ed0bc9785bb50a5a71a81ff48"><td class="memItemLeft" align="right" valign="top">static KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#ab6ed6b3ed0bc9785bb50a5a71a81ff48">CalculateResidualTerms</a> (const int constraint_index, const size_t n_target_node_cols, const View_Quaternion::const_type &amp;R1, const View_Quaternion::const_type &amp;R2, const View_3::const_type &amp;X0, const View_3::const_type &amp;u1, const View_3::const_type &amp;u2, const <a class="el" href="namespaceopenturbine.html#a5c3e2136acb58cc49d15dc2d88c76a66">View_3</a> &amp;R1_X0, const <a class="el" href="namespaceopenturbine.html#a3f8d7abc1184fa2c3b6a3ba577fd7d69">View_3x3</a> &amp;C, const <a class="el" href="namespaceopenturbine.html#a2464cbd056dc563006be24d81413d2c1">View_Nx6</a> &amp;residual)</td></tr>
+<tr class="separator:ab6ed6b3ed0bc9785bb50a5a71a81ff48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6150c1ac52224429af6615bf317845be" id="r_a6150c1ac52224429af6615bf317845be"><td class="memItemLeft" align="right" valign="top">static KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#a6150c1ac52224429af6615bf317845be">CalculateGradientTerms</a> (const int constraint_index, const size_t n_target_node_cols, const View_3::const_type &amp;R1_X0, const <a class="el" href="namespaceopenturbine.html#a3f8d7abc1184fa2c3b6a3ba577fd7d69">View_3x3</a> &amp;C, const <a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a> &amp;target_gradient, const <a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a> &amp;base_gradient)</td></tr>
+<tr class="separator:a6150c1ac52224429af6615bf317845be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a985ffded88ae77005ba0ea30566cf5a6" id="r_a985ffded88ae77005ba0ea30566cf5a6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#a985ffded88ae77005ba0ea30566cf5a6">i_constraint</a></td></tr>
+<tr class="separator:a985ffded88ae77005ba0ea30566cf5a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc13bddbfcd8c8fee147ed608293f073" id="r_adc13bddbfcd8c8fee147ed608293f073"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#adc13bddbfcd8c8fee147ed608293f073">target_node_col_range</a></td></tr>
+<tr class="separator:adc13bddbfcd8c8fee147ed608293f073"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49ab5b75f5d19374dfe12c214215e06a" id="r_a49ab5b75f5d19374dfe12c214215e06a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#a49ab5b75f5d19374dfe12c214215e06a">base_node_index</a></td></tr>
+<tr class="separator:a49ab5b75f5d19374dfe12c214215e06a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea02df213b9cc904d4b115309c9efcc9" id="r_aea02df213b9cc904d4b115309c9efcc9"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#aea02df213b9cc904d4b115309c9efcc9">target_node_index</a></td></tr>
+<tr class="separator:aea02df213b9cc904d4b115309c9efcc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5748c955f3c01e9a733c7cedfc75e1a9" id="r_a5748c955f3c01e9a733c7cedfc75e1a9"><td class="memItemLeft" align="right" valign="top">View_Nx3::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#a5748c955f3c01e9a733c7cedfc75e1a9">X0_</a></td></tr>
+<tr class="separator:a5748c955f3c01e9a733c7cedfc75e1a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac403e3131be8ee212eadc80aae501d5c" id="r_ac403e3131be8ee212eadc80aae501d5c"><td class="memItemLeft" align="right" valign="top">View_Nx7::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#ac403e3131be8ee212eadc80aae501d5c">constraint_inputs</a></td></tr>
+<tr class="separator:ac403e3131be8ee212eadc80aae501d5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35795579dfddd31b24754d0603171c26" id="r_a35795579dfddd31b24754d0603171c26"><td class="memItemLeft" align="right" valign="top">View_Nx7::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#a35795579dfddd31b24754d0603171c26">node_u</a></td></tr>
+<tr class="separator:a35795579dfddd31b24754d0603171c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c07fd8eb13ae5eb8795a23257d9b4fa" id="r_a6c07fd8eb13ae5eb8795a23257d9b4fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a2464cbd056dc563006be24d81413d2c1">View_Nx6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#a6c07fd8eb13ae5eb8795a23257d9b4fa">residual_terms</a></td></tr>
+<tr class="separator:a6c07fd8eb13ae5eb8795a23257d9b4fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa289f3aa44b5f0b0822c8ffe57c4bc1c" id="r_aa289f3aa44b5f0b0822c8ffe57c4bc1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#aa289f3aa44b5f0b0822c8ffe57c4bc1c">base_gradient_terms</a></td></tr>
+<tr class="separator:aa289f3aa44b5f0b0822c8ffe57c4bc1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a129042a49804d7997419a7d4531595e7" id="r_a129042a49804d7997419a7d4531595e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html#a129042a49804d7997419a7d4531595e7">target_gradient_terms</a></td></tr>
+<tr class="separator:a129042a49804d7997419a7d4531595e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6150c1ac52224429af6615bf317845be" name="a6150c1ac52224429af6615bf317845be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6150c1ac52224429af6615bf317845be">&#9670;&#160;</a></span>CalculateGradientTerms()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static KOKKOS_FUNCTION void openturbine::CalculateRigidJointConstraint::CalculateGradientTerms </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>constraint_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>n_target_node_cols</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const View_3::const_type &amp;&#160;</td>
+          <td class="paramname"><em>R1_X0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#a3f8d7abc1184fa2c3b6a3ba577fd7d69">View_3x3</a> &amp;&#160;</td>
+          <td class="paramname"><em>C</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a> &amp;&#160;</td>
+          <td class="paramname"><em>target_gradient</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a> &amp;&#160;</td>
+          <td class="paramname"><em>base_gradient</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab6ed6b3ed0bc9785bb50a5a71a81ff48" name="ab6ed6b3ed0bc9785bb50a5a71a81ff48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6ed6b3ed0bc9785bb50a5a71a81ff48">&#9670;&#160;</a></span>CalculateResidualTerms()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static KOKKOS_FUNCTION void openturbine::CalculateRigidJointConstraint::CalculateResidualTerms </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>constraint_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const size_t&#160;</td>
+          <td class="paramname"><em>n_target_node_cols</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const View_Quaternion::const_type &amp;&#160;</td>
+          <td class="paramname"><em>R1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const View_Quaternion::const_type &amp;&#160;</td>
+          <td class="paramname"><em>R2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const View_3::const_type &amp;&#160;</td>
+          <td class="paramname"><em>X0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const View_3::const_type &amp;&#160;</td>
+          <td class="paramname"><em>u1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const View_3::const_type &amp;&#160;</td>
+          <td class="paramname"><em>u2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#a5c3e2136acb58cc49d15dc2d88c76a66">View_3</a> &amp;&#160;</td>
+          <td class="paramname"><em>R1_X0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#a3f8d7abc1184fa2c3b6a3ba577fd7d69">View_3x3</a> &amp;&#160;</td>
+          <td class="paramname"><em>C</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#a2464cbd056dc563006be24d81413d2c1">View_Nx6</a> &amp;&#160;</td>
+          <td class="paramname"><em>residual</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a249736312f3d1a8e67e8921d0cb34ead" name="a249736312f3d1a8e67e8921d0cb34ead"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a249736312f3d1a8e67e8921d0cb34ead">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateRigidJointConstraint::operator() </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aa289f3aa44b5f0b0822c8ffe57c4bc1c" name="aa289f3aa44b5f0b0822c8ffe57c4bc1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa289f3aa44b5f0b0822c8ffe57c4bc1c">&#9670;&#160;</a></span>base_gradient_terms</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a> openturbine::CalculateRigidJointConstraint::base_gradient_terms</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a49ab5b75f5d19374dfe12c214215e06a" name="a49ab5b75f5d19374dfe12c214215e06a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49ab5b75f5d19374dfe12c214215e06a">&#9670;&#160;</a></span>base_node_index</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;size_t*&gt;::const_type openturbine::CalculateRigidJointConstraint::base_node_index</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac403e3131be8ee212eadc80aae501d5c" name="ac403e3131be8ee212eadc80aae501d5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac403e3131be8ee212eadc80aae501d5c">&#9670;&#160;</a></span>constraint_inputs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">View_Nx7::const_type openturbine::CalculateRigidJointConstraint::constraint_inputs</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a985ffded88ae77005ba0ea30566cf5a6" name="a985ffded88ae77005ba0ea30566cf5a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a985ffded88ae77005ba0ea30566cf5a6">&#9670;&#160;</a></span>i_constraint</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::CalculateRigidJointConstraint::i_constraint</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a35795579dfddd31b24754d0603171c26" name="a35795579dfddd31b24754d0603171c26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35795579dfddd31b24754d0603171c26">&#9670;&#160;</a></span>node_u</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">View_Nx7::const_type openturbine::CalculateRigidJointConstraint::node_u</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6c07fd8eb13ae5eb8795a23257d9b4fa" name="a6c07fd8eb13ae5eb8795a23257d9b4fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c07fd8eb13ae5eb8795a23257d9b4fa">&#9670;&#160;</a></span>residual_terms</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceopenturbine.html#a2464cbd056dc563006be24d81413d2c1">View_Nx6</a> openturbine::CalculateRigidJointConstraint::residual_terms</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a129042a49804d7997419a7d4531595e7" name="a129042a49804d7997419a7d4531595e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a129042a49804d7997419a7d4531595e7">&#9670;&#160;</a></span>target_gradient_terms</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a> openturbine::CalculateRigidJointConstraint::target_gradient_terms</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc13bddbfcd8c8fee147ed608293f073" name="adc13bddbfcd8c8fee147ed608293f073"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc13bddbfcd8c8fee147ed608293f073">&#9670;&#160;</a></span>target_node_col_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*&gt;::const_type openturbine::CalculateRigidJointConstraint::target_node_col_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aea02df213b9cc904d4b115309c9efcc9" name="aea02df213b9cc904d4b115309c9efcc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea02df213b9cc904d4b115309c9efcc9">&#9670;&#160;</a></span>target_node_index</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;size_t*&gt;::const_type openturbine::CalculateRigidJointConstraint::target_node_index</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5748c955f3c01e9a733c7cedfc75e1a9" name="a5748c955f3c01e9a733c7cedfc75e1a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5748c955f3c01e9a733c7cedfc75e1a9">&#9670;&#160;</a></span>X0_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">View_Nx3::const_type openturbine::CalculateRigidJointConstraint::X0_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/constraints/<a class="el" href="calculate__rigid__joint__constraint_8hpp_source.html">calculate_rigid_joint_constraint.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

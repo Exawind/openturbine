@@ -1,0 +1,14 @@
+.. meta::d1576d3848d4e03f6420e8cc2c11e6cf75ab2fae6c9de009998ed0f2d25a2d9e0cbe0d9aea2ab11c99515e960fc7cc56d27d589d2286d497c9e54262e40732b4
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::springs::CalculateForceCoefficients Struct Reference
+
+CalculateForceCoefficients Struct Reference
+===========================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1springs_1_1CalculateForceCoefficients.html

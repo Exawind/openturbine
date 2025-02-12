@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: windio.Schema Class Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: windio.Schema Class Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/classwindio_1_1Schema.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="windio-schema-class-reference">
+<h1>windio.Schema Class Reference<a class="headerlink" href="#windio-schema-class-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: windio.Schema Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacewindio.html">windio</a></li><li class="navelem"><a class="el" href="classwindio_1_1Schema.html">Schema</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="classwindio_1_1Schema-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">windio.Schema Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a5384d4e7cef90281994fd78a080de416" id="r_a5384d4e7cef90281994fd78a080de416"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a5384d4e7cef90281994fd78a080de416">__init__</a> (self, data)</td></tr>
+<tr class="separator:a5384d4e7cef90281994fd78a080de416"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a722fef33d6b894fc05ca9f02f7aaed62" id="r_a722fef33d6b894fc05ca9f02f7aaed62"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a722fef33d6b894fc05ca9f02f7aaed62">description</a></td></tr>
+<tr class="separator:a722fef33d6b894fc05ca9f02f7aaed62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51489c7d0cfed8359d053b765ff226f0" id="r_a51489c7d0cfed8359d053b765ff226f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a51489c7d0cfed8359d053b765ff226f0">type</a></td></tr>
+<tr class="separator:a51489c7d0cfed8359d053b765ff226f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a074b8fba20cd3bad77af2bd63d8b9c4e" id="r_a074b8fba20cd3bad77af2bd63d8b9c4e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a074b8fba20cd3bad77af2bd63d8b9c4e">properties</a></td></tr>
+<tr class="separator:a074b8fba20cd3bad77af2bd63d8b9c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37518ca28cc54221de8476a08fc31a49" id="r_a37518ca28cc54221de8476a08fc31a49"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a37518ca28cc54221de8476a08fc31a49">items</a></td></tr>
+<tr class="separator:a37518ca28cc54221de8476a08fc31a49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7df113ddb5634cc46d0460b178a10701" id="r_a7df113ddb5634cc46d0460b178a10701"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a7df113ddb5634cc46d0460b178a10701">reference</a></td></tr>
+<tr class="separator:a7df113ddb5634cc46d0460b178a10701"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa64101f57c4e6c17a6859b2d49b13bde" id="r_aa64101f57c4e6c17a6859b2d49b13bde"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#aa64101f57c4e6c17a6859b2d49b13bde">one_of</a></td></tr>
+<tr class="separator:aa64101f57c4e6c17a6859b2d49b13bde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b905d775a0bcad3cfb1189c4975cc95" id="r_a0b905d775a0bcad3cfb1189c4975cc95"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a0b905d775a0bcad3cfb1189c4975cc95">default</a></td></tr>
+<tr class="separator:a0b905d775a0bcad3cfb1189c4975cc95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0e3b57fb627b07ef0cb1cce0e30cf62" id="r_ae0e3b57fb627b07ef0cb1cce0e30cf62"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#ae0e3b57fb627b07ef0cb1cce0e30cf62">unit</a></td></tr>
+<tr class="separator:ae0e3b57fb627b07ef0cb1cce0e30cf62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a0c0390f97feeaba83e6994408eac35" id="r_a8a0c0390f97feeaba83e6994408eac35"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a8a0c0390f97feeaba83e6994408eac35">required</a></td></tr>
+<tr class="separator:a8a0c0390f97feeaba83e6994408eac35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dddd017becf536b3140dbf066898dd6" id="r_a7dddd017becf536b3140dbf066898dd6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a7dddd017becf536b3140dbf066898dd6">optional</a></td></tr>
+<tr class="separator:a7dddd017becf536b3140dbf066898dd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1966bf93a2dd88ef6715e7d5d771200f" id="r_a1966bf93a2dd88ef6715e7d5d771200f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a1966bf93a2dd88ef6715e7d5d771200f">specification</a></td></tr>
+<tr class="separator:a1966bf93a2dd88ef6715e7d5d771200f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca79760cdcba081dc214e2c85bdb713a" id="r_aca79760cdcba081dc214e2c85bdb713a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#aca79760cdcba081dc214e2c85bdb713a">id</a></td></tr>
+<tr class="separator:aca79760cdcba081dc214e2c85bdb713a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7bba94d23266ebbb619df44c3cfa908" id="r_ab7bba94d23266ebbb619df44c3cfa908"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#ab7bba94d23266ebbb619df44c3cfa908">title</a></td></tr>
+<tr class="separator:ab7bba94d23266ebbb619df44c3cfa908"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2172430ade3d16d4ff209a6a4a9d2f49" id="r_a2172430ade3d16d4ff209a6a4a9d2f49"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a2172430ade3d16d4ff209a6a4a9d2f49">definitions</a></td></tr>
+<tr class="separator:a2172430ade3d16d4ff209a6a4a9d2f49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1789c9bec539232f4848dcb3613d8db2" id="r_a1789c9bec539232f4848dcb3613d8db2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classwindio_1_1Schema.html#a1789c9bec539232f4848dcb3613d8db2">generated</a></td></tr>
+<tr class="separator:a1789c9bec539232f4848dcb3613d8db2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a5384d4e7cef90281994fd78a080de416" name="a5384d4e7cef90281994fd78a080de416"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5384d4e7cef90281994fd78a080de416">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a0b905d775a0bcad3cfb1189c4975cc95" name="a0b905d775a0bcad3cfb1189c4975cc95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b905d775a0bcad3cfb1189c4975cc95">&#9670;&#160;</a></span>default</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.default</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2172430ade3d16d4ff209a6a4a9d2f49" name="a2172430ade3d16d4ff209a6a4a9d2f49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2172430ade3d16d4ff209a6a4a9d2f49">&#9670;&#160;</a></span>definitions</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.definitions</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a722fef33d6b894fc05ca9f02f7aaed62" name="a722fef33d6b894fc05ca9f02f7aaed62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a722fef33d6b894fc05ca9f02f7aaed62">&#9670;&#160;</a></span>description</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.description</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1789c9bec539232f4848dcb3613d8db2" name="a1789c9bec539232f4848dcb3613d8db2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1789c9bec539232f4848dcb3613d8db2">&#9670;&#160;</a></span>generated</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.generated</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca79760cdcba081dc214e2c85bdb713a" name="aca79760cdcba081dc214e2c85bdb713a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca79760cdcba081dc214e2c85bdb713a">&#9670;&#160;</a></span>id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.id</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a37518ca28cc54221de8476a08fc31a49" name="a37518ca28cc54221de8476a08fc31a49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37518ca28cc54221de8476a08fc31a49">&#9670;&#160;</a></span>items</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.items</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa64101f57c4e6c17a6859b2d49b13bde" name="aa64101f57c4e6c17a6859b2d49b13bde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa64101f57c4e6c17a6859b2d49b13bde">&#9670;&#160;</a></span>one_of</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.one_of</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7dddd017becf536b3140dbf066898dd6" name="a7dddd017becf536b3140dbf066898dd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dddd017becf536b3140dbf066898dd6">&#9670;&#160;</a></span>optional</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.optional</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a074b8fba20cd3bad77af2bd63d8b9c4e" name="a074b8fba20cd3bad77af2bd63d8b9c4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a074b8fba20cd3bad77af2bd63d8b9c4e">&#9670;&#160;</a></span>properties</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.properties</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7df113ddb5634cc46d0460b178a10701" name="a7df113ddb5634cc46d0460b178a10701"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7df113ddb5634cc46d0460b178a10701">&#9670;&#160;</a></span>reference</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.reference</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8a0c0390f97feeaba83e6994408eac35" name="a8a0c0390f97feeaba83e6994408eac35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a0c0390f97feeaba83e6994408eac35">&#9670;&#160;</a></span>required</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.required</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1966bf93a2dd88ef6715e7d5d771200f" name="a1966bf93a2dd88ef6715e7d5d771200f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1966bf93a2dd88ef6715e7d5d771200f">&#9670;&#160;</a></span>specification</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.specification</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab7bba94d23266ebbb619df44c3cfa908" name="ab7bba94d23266ebbb619df44c3cfa908"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7bba94d23266ebbb619df44c3cfa908">&#9670;&#160;</a></span>title</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.title</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a51489c7d0cfed8359d053b765ff226f0" name="a51489c7d0cfed8359d053b765ff226f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51489c7d0cfed8359d053b765ff226f0">&#9670;&#160;</a></span>type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae0e3b57fb627b07ef0cb1cce0e30cf62" name="ae0e3b57fb627b07ef0cb1cce0e30cf62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0e3b57fb627b07ef0cb1cce0e30cf62">&#9670;&#160;</a></span>unit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">windio.Schema.unit</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/utilities/scripts/<a class="el" href="windio_8py.html">windio.py</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

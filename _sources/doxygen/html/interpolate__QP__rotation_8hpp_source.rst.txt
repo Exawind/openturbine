@@ -1,0 +1,14 @@
+.. meta::55fdde8bfd46dc1366f67dae7165e018f9055ac24e2d01af911528850550d3bbdad8b991618fc7fbe20f66fae5df307f0b45ec2ba75e6e8b7e4f3d4ff5be3099
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolate_QP_rotation.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolate\_QP\_rotation.hpp Source File
+==================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: interpolate__QP__rotation_8hpp_source.html

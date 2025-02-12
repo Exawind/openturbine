@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: CpLambdaBeam Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: CpLambdaBeam Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structCpLambdaBeam.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="cplambdabeam-struct-reference">
+<h1>CpLambdaBeam Struct Reference<a class="headerlink" href="#cplambdabeam-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: CpLambdaBeam Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structCpLambdaBeam-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">CpLambdaBeam Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="windio__mapped__structs_8hpp_source.html">windio_mapped_structs.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:af883fe094c7b82c691807515a0e77b02" id="r_af883fe094c7b82c691807515a0e77b02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#af883fe094c7b82c691807515a0e77b02">parse</a> (const YAML::Node &amp;node)</td></tr>
+<tr class="separator:af883fe094c7b82c691807515a0e77b02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:aace0a4f90b059a62b0fcf2edd75f277e" id="r_aace0a4f90b059a62b0fcf2edd75f277e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structReferenceAxis.html">ReferenceAxis</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#aace0a4f90b059a62b0fcf2edd75f277e">reference_axis</a></td></tr>
+<tr class="separator:aace0a4f90b059a62b0fcf2edd75f277e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe146ed9a5649cb49e323c5e61e15ded" id="r_afe146ed9a5649cb49e323c5e61e15ded"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structT11.html">T11</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#afe146ed9a5649cb49e323c5e61e15ded">t11</a></td></tr>
+<tr class="separator:afe146ed9a5649cb49e323c5e61e15ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa8a6c96538e82379880af45f51c5115" id="r_aaa8a6c96538e82379880af45f51c5115"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structT22.html">T22</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#aaa8a6c96538e82379880af45f51c5115">t22</a></td></tr>
+<tr class="separator:aaa8a6c96538e82379880af45f51c5115"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada47fd39095c46bcc55077a829f96a8b" id="r_ada47fd39095c46bcc55077a829f96a8b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structEa.html">Ea</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#ada47fd39095c46bcc55077a829f96a8b">ea</a></td></tr>
+<tr class="separator:ada47fd39095c46bcc55077a829f96a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab81b99178a2291d5879b405aa3438d1" id="r_aab81b99178a2291d5879b405aa3438d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structE11.html">E11</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#aab81b99178a2291d5879b405aa3438d1">e11</a></td></tr>
+<tr class="separator:aab81b99178a2291d5879b405aa3438d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7626c60515cfccc99de6cf8f3991b8ec" id="r_a7626c60515cfccc99de6cf8f3991b8ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structE22.html">E22</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#a7626c60515cfccc99de6cf8f3991b8ec">e22</a></td></tr>
+<tr class="separator:a7626c60515cfccc99de6cf8f3991b8ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a796e8efd0f3f84a773b9076966794208" id="r_a796e8efd0f3f84a773b9076966794208"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structGj.html">Gj</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#a796e8efd0f3f84a773b9076966794208">gj</a></td></tr>
+<tr class="separator:a796e8efd0f3f84a773b9076966794208"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8d6862482b780b83f4d8d73d6229b76" id="r_ac8d6862482b780b83f4d8d73d6229b76"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structXCe.html">XCe</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#ac8d6862482b780b83f4d8d73d6229b76">x_ce</a></td></tr>
+<tr class="separator:ac8d6862482b780b83f4d8d73d6229b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d11174dd9bda6790b83d4aa5e61234c" id="r_a9d11174dd9bda6790b83d4aa5e61234c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structYCe.html">YCe</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#a9d11174dd9bda6790b83d4aa5e61234c">y_ce</a></td></tr>
+<tr class="separator:a9d11174dd9bda6790b83d4aa5e61234c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f1288226c233d40121dc1524a9f66c1" id="r_a4f1288226c233d40121dc1524a9f66c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDm.html">Dm</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#a4f1288226c233d40121dc1524a9f66c1">dm</a></td></tr>
+<tr class="separator:a4f1288226c233d40121dc1524a9f66c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0175180ea7517a2b5e275497419694a" id="r_aa0175180ea7517a2b5e275497419694a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDeltaTheta.html">DeltaTheta</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#aa0175180ea7517a2b5e275497419694a">delta_theta</a></td></tr>
+<tr class="separator:aa0175180ea7517a2b5e275497419694a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab502ac66a7661dbfcf31d811afcfc10" id="r_aab502ac66a7661dbfcf31d811afcfc10"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structXSh.html">XSh</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#aab502ac66a7661dbfcf31d811afcfc10">x_sh</a></td></tr>
+<tr class="separator:aab502ac66a7661dbfcf31d811afcfc10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa27d66a91f5d1a0477486207bdd9096a" id="r_aa27d66a91f5d1a0477486207bdd9096a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structYSh.html">YSh</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#aa27d66a91f5d1a0477486207bdd9096a">y_sh</a></td></tr>
+<tr class="separator:aa27d66a91f5d1a0477486207bdd9096a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a351d977e0347785634b9daee1fa77950" id="r_a351d977e0347785634b9daee1fa77950"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structJ1.html">J1</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#a351d977e0347785634b9daee1fa77950">j1</a></td></tr>
+<tr class="separator:a351d977e0347785634b9daee1fa77950"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9100f2e609c37c7edc636344429ab97d" id="r_a9100f2e609c37c7edc636344429ab97d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structJ2.html">J2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#a9100f2e609c37c7edc636344429ab97d">j2</a></td></tr>
+<tr class="separator:a9100f2e609c37c7edc636344429ab97d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1774a107e0c5293ab2d683743c108734" id="r_a1774a107e0c5293ab2d683743c108734"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structJ3.html">J3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#a1774a107e0c5293ab2d683743c108734">j3</a></td></tr>
+<tr class="separator:a1774a107e0c5293ab2d683743c108734"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39c7a8b2844712ef41ea881646c6503b" id="r_a39c7a8b2844712ef41ea881646c6503b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structXCg.html">XCg</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#a39c7a8b2844712ef41ea881646c6503b">x_cg</a></td></tr>
+<tr class="separator:a39c7a8b2844712ef41ea881646c6503b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab787ad33fab7c6ffccbb80e74ef6f52a" id="r_ab787ad33fab7c6ffccbb80e74ef6f52a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structYCg.html">YCg</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCpLambdaBeam.html#ab787ad33fab7c6ffccbb80e74ef6f52a">y_cg</a></td></tr>
+<tr class="separator:ab787ad33fab7c6ffccbb80e74ef6f52a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="af883fe094c7b82c691807515a0e77b02" name="af883fe094c7b82c691807515a0e77b02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af883fe094c7b82c691807515a0e77b02">&#9670;&#160;</a></span>parse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CpLambdaBeam::parse </td>
+          <td>(</td>
+          <td class="paramtype">const YAML::Node &amp;&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aa0175180ea7517a2b5e275497419694a" name="aa0175180ea7517a2b5e275497419694a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0175180ea7517a2b5e275497419694a">&#9670;&#160;</a></span>delta_theta</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDeltaTheta.html">DeltaTheta</a> CpLambdaBeam::delta_theta</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4f1288226c233d40121dc1524a9f66c1" name="a4f1288226c233d40121dc1524a9f66c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f1288226c233d40121dc1524a9f66c1">&#9670;&#160;</a></span>dm</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDm.html">Dm</a> CpLambdaBeam::dm</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aab81b99178a2291d5879b405aa3438d1" name="aab81b99178a2291d5879b405aa3438d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab81b99178a2291d5879b405aa3438d1">&#9670;&#160;</a></span>e11</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structE11.html">E11</a> CpLambdaBeam::e11</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7626c60515cfccc99de6cf8f3991b8ec" name="a7626c60515cfccc99de6cf8f3991b8ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7626c60515cfccc99de6cf8f3991b8ec">&#9670;&#160;</a></span>e22</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structE22.html">E22</a> CpLambdaBeam::e22</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ada47fd39095c46bcc55077a829f96a8b" name="ada47fd39095c46bcc55077a829f96a8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada47fd39095c46bcc55077a829f96a8b">&#9670;&#160;</a></span>ea</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structEa.html">Ea</a> CpLambdaBeam::ea</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a796e8efd0f3f84a773b9076966794208" name="a796e8efd0f3f84a773b9076966794208"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a796e8efd0f3f84a773b9076966794208">&#9670;&#160;</a></span>gj</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structGj.html">Gj</a> CpLambdaBeam::gj</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a351d977e0347785634b9daee1fa77950" name="a351d977e0347785634b9daee1fa77950"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a351d977e0347785634b9daee1fa77950">&#9670;&#160;</a></span>j1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structJ1.html">J1</a> CpLambdaBeam::j1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9100f2e609c37c7edc636344429ab97d" name="a9100f2e609c37c7edc636344429ab97d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9100f2e609c37c7edc636344429ab97d">&#9670;&#160;</a></span>j2</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structJ2.html">J2</a> CpLambdaBeam::j2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1774a107e0c5293ab2d683743c108734" name="a1774a107e0c5293ab2d683743c108734"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1774a107e0c5293ab2d683743c108734">&#9670;&#160;</a></span>j3</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structJ3.html">J3</a> CpLambdaBeam::j3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aace0a4f90b059a62b0fcf2edd75f277e" name="aace0a4f90b059a62b0fcf2edd75f277e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aace0a4f90b059a62b0fcf2edd75f277e">&#9670;&#160;</a></span>reference_axis</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structReferenceAxis.html">ReferenceAxis</a> CpLambdaBeam::reference_axis</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afe146ed9a5649cb49e323c5e61e15ded" name="afe146ed9a5649cb49e323c5e61e15ded"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe146ed9a5649cb49e323c5e61e15ded">&#9670;&#160;</a></span>t11</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structT11.html">T11</a> CpLambdaBeam::t11</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaa8a6c96538e82379880af45f51c5115" name="aaa8a6c96538e82379880af45f51c5115"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa8a6c96538e82379880af45f51c5115">&#9670;&#160;</a></span>t22</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structT22.html">T22</a> CpLambdaBeam::t22</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac8d6862482b780b83f4d8d73d6229b76" name="ac8d6862482b780b83f4d8d73d6229b76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8d6862482b780b83f4d8d73d6229b76">&#9670;&#160;</a></span>x_ce</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structXCe.html">XCe</a> CpLambdaBeam::x_ce</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a39c7a8b2844712ef41ea881646c6503b" name="a39c7a8b2844712ef41ea881646c6503b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39c7a8b2844712ef41ea881646c6503b">&#9670;&#160;</a></span>x_cg</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structXCg.html">XCg</a> CpLambdaBeam::x_cg</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aab502ac66a7661dbfcf31d811afcfc10" name="aab502ac66a7661dbfcf31d811afcfc10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab502ac66a7661dbfcf31d811afcfc10">&#9670;&#160;</a></span>x_sh</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structXSh.html">XSh</a> CpLambdaBeam::x_sh</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9d11174dd9bda6790b83d4aa5e61234c" name="a9d11174dd9bda6790b83d4aa5e61234c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d11174dd9bda6790b83d4aa5e61234c">&#9670;&#160;</a></span>y_ce</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structYCe.html">YCe</a> CpLambdaBeam::y_ce</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab787ad33fab7c6ffccbb80e74ef6f52a" name="ab787ad33fab7c6ffccbb80e74ef6f52a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab787ad33fab7c6ffccbb80e74ef6f52a">&#9670;&#160;</a></span>y_cg</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structYCg.html">YCg</a> CpLambdaBeam::y_cg</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa27d66a91f5d1a0477486207bdd9096a" name="aa27d66a91f5d1a0477486207bdd9096a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa27d66a91f5d1a0477486207bdd9096a">&#9670;&#160;</a></span>y_sh</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structYSh.html">YSh</a> CpLambdaBeam::y_sh</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/utilities/scripts/<a class="el" href="windio__mapped__structs_8hpp_source.html">windio_mapped_structs.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

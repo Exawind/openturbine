@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::masses::CalculateGyroscopicMatrix Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::masses::CalculateGyroscopicMatrix Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="calculategyroscopicmatrix-struct-reference">
+<h1>CalculateGyroscopicMatrix Struct Reference<a class="headerlink" href="#calculategyroscopicmatrix-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::masses::CalculateGyroscopicMatrix Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1masses.html">masses</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html">CalculateGyroscopicMatrix</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::masses::CalculateGyroscopicMatrix Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="masses_2calculate__gyroscopic__matrix_8hpp_source.html">calculate_gyroscopic_matrix.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:aeb3d8ced367ff88063bdea0e1d6d4f78" id="r_aeb3d8ced367ff88063bdea0e1d6d4f78"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aeb3d8ced367ff88063bdea0e1d6d4f78">NoTranspose</a> = KokkosBatched::Trans::NoTranspose</td></tr>
+<tr class="separator:aeb3d8ced367ff88063bdea0e1d6d4f78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b4929b2824aa56301b78fba48789fe1" id="r_a8b4929b2824aa56301b78fba48789fe1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a8b4929b2824aa56301b78fba48789fe1">Transpose</a> = KokkosBatched::Trans::Transpose</td></tr>
+<tr class="separator:a8b4929b2824aa56301b78fba48789fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab751836a0e3b077c1024f4306ec3d8e7" id="r_ab751836a0e3b077c1024f4306ec3d8e7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#ab751836a0e3b077c1024f4306ec3d8e7">GemmDefault</a> = KokkosBatched::Algo::Gemm::Default</td></tr>
+<tr class="separator:ab751836a0e3b077c1024f4306ec3d8e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99403e2c5f1534911c291ebbd1ed1612" id="r_a99403e2c5f1534911c291ebbd1ed1612"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a99403e2c5f1534911c291ebbd1ed1612">GemvDefault</a> = KokkosBatched::Algo::Gemv::Default</td></tr>
+<tr class="separator:a99403e2c5f1534911c291ebbd1ed1612"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9c94bf1d5022463d2fe1bd6d4b22db1" id="r_aa9c94bf1d5022463d2fe1bd6d4b22db1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aa9c94bf1d5022463d2fe1bd6d4b22db1">GemmNN</a> = KokkosBatched::SerialGemm&lt; <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aeb3d8ced367ff88063bdea0e1d6d4f78">NoTranspose</a>, <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aeb3d8ced367ff88063bdea0e1d6d4f78">NoTranspose</a>, <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#ab751836a0e3b077c1024f4306ec3d8e7">GemmDefault</a> &gt;</td></tr>
+<tr class="separator:aa9c94bf1d5022463d2fe1bd6d4b22db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ae29f75af2be2e3172eab15046ac74b" id="r_a7ae29f75af2be2e3172eab15046ac74b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a7ae29f75af2be2e3172eab15046ac74b">GemmNT</a> = KokkosBatched::SerialGemm&lt; <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aeb3d8ced367ff88063bdea0e1d6d4f78">NoTranspose</a>, <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a8b4929b2824aa56301b78fba48789fe1">Transpose</a>, <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#ab751836a0e3b077c1024f4306ec3d8e7">GemmDefault</a> &gt;</td></tr>
+<tr class="separator:a7ae29f75af2be2e3172eab15046ac74b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a350381e5b02b52ae88490a6b2c54aa39" id="r_a350381e5b02b52ae88490a6b2c54aa39"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a350381e5b02b52ae88490a6b2c54aa39">Gemv</a> = KokkosBlas::SerialGemv&lt; <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aeb3d8ced367ff88063bdea0e1d6d4f78">NoTranspose</a>, <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a99403e2c5f1534911c291ebbd1ed1612">GemvDefault</a> &gt;</td></tr>
+<tr class="separator:a350381e5b02b52ae88490a6b2c54aa39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a41123dedb1c19bdc0cc6dfdae95d6df1" id="r_a41123dedb1c19bdc0cc6dfdae95d6df1"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a41123dedb1c19bdc0cc6dfdae95d6df1">operator()</a> () const</td></tr>
+<tr class="separator:a41123dedb1c19bdc0cc6dfdae95d6df1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ad37253950c56a4ca88b86c2cdf7af391" id="r_ad37253950c56a4ca88b86c2cdf7af391"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#ad37253950c56a4ca88b86c2cdf7af391">i_elem</a></td></tr>
+<tr class="separator:ad37253950c56a4ca88b86c2cdf7af391"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dc0c3a81ee4d727bc74275dd786a94a" id="r_a7dc0c3a81ee4d727bc74275dd786a94a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a7dc0c3a81ee4d727bc74275dd786a94a">qp_Muu_</a></td></tr>
+<tr class="separator:a7dc0c3a81ee4d727bc74275dd786a94a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad321a0ed50900c50d623a2ced1907d91" id="r_ad321a0ed50900c50d623a2ced1907d91"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#ad321a0ed50900c50d623a2ced1907d91">qp_omega_</a></td></tr>
+<tr class="separator:ad321a0ed50900c50d623a2ced1907d91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71e7634205cdb94bdf662a9e7b462c5c" id="r_a71e7634205cdb94bdf662a9e7b462c5c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3][3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a71e7634205cdb94bdf662a9e7b462c5c">omega_tilde_</a></td></tr>
+<tr class="separator:a71e7634205cdb94bdf662a9e7b462c5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6241a21025f6d18bd3926d91b6de44c" id="r_ab6241a21025f6d18bd3926d91b6de44c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3][3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#ab6241a21025f6d18bd3926d91b6de44c">rho_</a></td></tr>
+<tr class="separator:ab6241a21025f6d18bd3926d91b6de44c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef75cac49b6f6bbf19cf9ef8d5bf4666" id="r_aef75cac49b6f6bbf19cf9ef8d5bf4666"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aef75cac49b6f6bbf19cf9ef8d5bf4666">eta_</a></td></tr>
+<tr class="separator:aef75cac49b6f6bbf19cf9ef8d5bf4666"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0aea6efe51f17332399f630ee316e357" id="r_a0aea6efe51f17332399f630ee316e357"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a0aea6efe51f17332399f630ee316e357">qp_Guu_</a></td></tr>
+<tr class="separator:a0aea6efe51f17332399f630ee316e357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="ab751836a0e3b077c1024f4306ec3d8e7" name="ab751836a0e3b077c1024f4306ec3d8e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab751836a0e3b077c1024f4306ec3d8e7">&#9670;&#160;</a></span>GemmDefault</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#ab751836a0e3b077c1024f4306ec3d8e7">openturbine::masses::CalculateGyroscopicMatrix::GemmDefault</a> =  KokkosBatched::Algo::Gemm::Default</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa9c94bf1d5022463d2fe1bd6d4b22db1" name="aa9c94bf1d5022463d2fe1bd6d4b22db1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9c94bf1d5022463d2fe1bd6d4b22db1">&#9670;&#160;</a></span>GemmNN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aa9c94bf1d5022463d2fe1bd6d4b22db1">openturbine::masses::CalculateGyroscopicMatrix::GemmNN</a> =  KokkosBatched::SerialGemm&lt;<a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aeb3d8ced367ff88063bdea0e1d6d4f78">NoTranspose</a>, <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aeb3d8ced367ff88063bdea0e1d6d4f78">NoTranspose</a>, <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#ab751836a0e3b077c1024f4306ec3d8e7">GemmDefault</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7ae29f75af2be2e3172eab15046ac74b" name="a7ae29f75af2be2e3172eab15046ac74b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ae29f75af2be2e3172eab15046ac74b">&#9670;&#160;</a></span>GemmNT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a7ae29f75af2be2e3172eab15046ac74b">openturbine::masses::CalculateGyroscopicMatrix::GemmNT</a> =  KokkosBatched::SerialGemm&lt;<a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aeb3d8ced367ff88063bdea0e1d6d4f78">NoTranspose</a>, <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a8b4929b2824aa56301b78fba48789fe1">Transpose</a>, <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#ab751836a0e3b077c1024f4306ec3d8e7">GemmDefault</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a350381e5b02b52ae88490a6b2c54aa39" name="a350381e5b02b52ae88490a6b2c54aa39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a350381e5b02b52ae88490a6b2c54aa39">&#9670;&#160;</a></span>Gemv</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a350381e5b02b52ae88490a6b2c54aa39">openturbine::masses::CalculateGyroscopicMatrix::Gemv</a> =  KokkosBlas::SerialGemv&lt;<a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aeb3d8ced367ff88063bdea0e1d6d4f78">NoTranspose</a>, <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a99403e2c5f1534911c291ebbd1ed1612">GemvDefault</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a99403e2c5f1534911c291ebbd1ed1612" name="a99403e2c5f1534911c291ebbd1ed1612"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99403e2c5f1534911c291ebbd1ed1612">&#9670;&#160;</a></span>GemvDefault</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a99403e2c5f1534911c291ebbd1ed1612">openturbine::masses::CalculateGyroscopicMatrix::GemvDefault</a> =  KokkosBatched::Algo::Gemv::Default</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeb3d8ced367ff88063bdea0e1d6d4f78" name="aeb3d8ced367ff88063bdea0e1d6d4f78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb3d8ced367ff88063bdea0e1d6d4f78">&#9670;&#160;</a></span>NoTranspose</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#aeb3d8ced367ff88063bdea0e1d6d4f78">openturbine::masses::CalculateGyroscopicMatrix::NoTranspose</a> =  KokkosBatched::Trans::NoTranspose</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b4929b2824aa56301b78fba48789fe1" name="a8b4929b2824aa56301b78fba48789fe1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b4929b2824aa56301b78fba48789fe1">&#9670;&#160;</a></span>Transpose</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html#a8b4929b2824aa56301b78fba48789fe1">openturbine::masses::CalculateGyroscopicMatrix::Transpose</a> =  KokkosBatched::Trans::Transpose</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a41123dedb1c19bdc0cc6dfdae95d6df1" name="a41123dedb1c19bdc0cc6dfdae95d6df1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41123dedb1c19bdc0cc6dfdae95d6df1">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::masses::CalculateGyroscopicMatrix::operator() </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aef75cac49b6f6bbf19cf9ef8d5bf4666" name="aef75cac49b6f6bbf19cf9ef8d5bf4666"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef75cac49b6f6bbf19cf9ef8d5bf4666">&#9670;&#160;</a></span>eta_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[3]&gt;::const_type openturbine::masses::CalculateGyroscopicMatrix::eta_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad37253950c56a4ca88b86c2cdf7af391" name="ad37253950c56a4ca88b86c2cdf7af391"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad37253950c56a4ca88b86c2cdf7af391">&#9670;&#160;</a></span>i_elem</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::masses::CalculateGyroscopicMatrix::i_elem</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a71e7634205cdb94bdf662a9e7b462c5c" name="a71e7634205cdb94bdf662a9e7b462c5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71e7634205cdb94bdf662a9e7b462c5c">&#9670;&#160;</a></span>omega_tilde_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[3][3]&gt;::const_type openturbine::masses::CalculateGyroscopicMatrix::omega_tilde_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0aea6efe51f17332399f630ee316e357" name="a0aea6efe51f17332399f630ee316e357"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0aea6efe51f17332399f630ee316e357">&#9670;&#160;</a></span>qp_Guu_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [6][6]&gt; openturbine::masses::CalculateGyroscopicMatrix::qp_Guu_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7dc0c3a81ee4d727bc74275dd786a94a" name="a7dc0c3a81ee4d727bc74275dd786a94a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dc0c3a81ee4d727bc74275dd786a94a">&#9670;&#160;</a></span>qp_Muu_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[6][6]&gt;::const_type openturbine::masses::CalculateGyroscopicMatrix::qp_Muu_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad321a0ed50900c50d623a2ced1907d91" name="ad321a0ed50900c50d623a2ced1907d91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad321a0ed50900c50d623a2ced1907d91">&#9670;&#160;</a></span>qp_omega_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[3]&gt;::const_type openturbine::masses::CalculateGyroscopicMatrix::qp_omega_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab6241a21025f6d18bd3926d91b6de44c" name="ab6241a21025f6d18bd3926d91b6de44c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6241a21025f6d18bd3926d91b6de44c">&#9670;&#160;</a></span>rho_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[3][3]&gt;::const_type openturbine::masses::CalculateGyroscopicMatrix::rho_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/system/masses/<a class="el" href="masses_2calculate__gyroscopic__matrix_8hpp_source.html">calculate_gyroscopic_matrix.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

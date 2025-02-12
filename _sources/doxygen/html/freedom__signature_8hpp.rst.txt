@@ -1,0 +1,14 @@
+.. meta::5dc2321b02ef924c14cc0499c2459692fd3498f0a0834a6addb5fee1c2ace2db1e66391e12f330fd8a7c559b61876745f6aa9145360ec1d529fcc0e0efdab333
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/dof_management/freedom_signature.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/dof\_management/freedom\_signature.hpp File Reference
+===============================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: freedom__signature_8hpp.html

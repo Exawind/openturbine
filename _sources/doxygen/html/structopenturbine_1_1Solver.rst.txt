@@ -1,0 +1,14 @@
+.. meta::b793073eb66cda8af541cde553149f7b5fd06139384e84a4dc2402999f535307878056108eadce4073d9fe5f0607855c31914adfb485e5c3f1e59fb5a14ed3d3
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::Solver Struct Reference
+
+Solver Struct Reference
+=======================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1Solver.html

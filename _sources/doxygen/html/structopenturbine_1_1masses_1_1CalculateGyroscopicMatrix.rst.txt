@@ -1,0 +1,14 @@
+.. meta::72ebdc1ee5c1fa97d79761826c62a6996217fd3976043f315a9c5a8867e6d0dbcd4e3b45a27bdb91de1de1a46a89e680c8fba458fd8d96b22458cd27a8d91976
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::masses::CalculateGyroscopicMatrix Struct Reference
+
+CalculateGyroscopicMatrix Struct Reference
+==========================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html

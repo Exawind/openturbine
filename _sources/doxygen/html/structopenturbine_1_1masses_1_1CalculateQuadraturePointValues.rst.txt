@@ -1,0 +1,14 @@
+.. meta::2d86b0193360bec37c944ba8057894a0cd37cc84907db4442d60c0df1b6e20f5c9fe9e78afa815a7e95de2759725aba8d470943c303d405d8fb5d3404509bc52
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::masses::CalculateQuadraturePointValues Struct Reference
+
+CalculateQuadraturePointValues Struct Reference
+===============================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html

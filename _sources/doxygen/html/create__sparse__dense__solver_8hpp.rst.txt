@@ -1,0 +1,14 @@
+.. meta::3150909222f598e433e0ec2e9b3423a8367a1a151ed9dcb8ba56a8d5dc5f486eced3783f111659a584a62290e4a4d625fd45dd5b2371ab6b88d43665a2b56f3b
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/create_sparse_dense_solver.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/create\_sparse\_dense\_solver.hpp File Reference
+=================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: create__sparse__dense__solver_8hpp.html

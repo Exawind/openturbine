@@ -1,0 +1,14 @@
+.. meta::4582a6bf6cf91cf7248130a1982092b3e212af917c343e282bbe324dea79bdc7936c27e42d98a9782596bb538a8036a782457449c0893458cbac6e1ac0d28ff2
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate_rigid_joint_constraint.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate\_rigid\_joint\_constraint.hpp Source File
+=========================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: calculate__rigid__joint__constraint_8hpp_source.html

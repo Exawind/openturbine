@@ -1,0 +1,14 @@
+.. meta::a3a4a93d50684be9cfd53bcf31438dc9381ad89c24b1a24c7c78a029d02c8625e87df7b78417ca3c17dba52f38db4fffe93aa3ea0e8e25baa461bec09b3a6485
+
+:orphan:
+
+.. title:: OpenTurbine API: XSh Struct Reference
+
+XSh Struct Reference
+====================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structXSh.html

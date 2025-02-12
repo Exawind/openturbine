@@ -1,0 +1,14 @@
+.. meta::c4b009b1508272cf72d004e3d17a29d286132ff6a8d20d159ae41a310d251ae0ebcb374cbde034b233d82ab0dcf3f7ed3bb2e359d877314c6c78df98631940a0
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CalculateDisplacement Struct Reference
+
+CalculateDisplacement Struct Reference
+======================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateDisplacement.html

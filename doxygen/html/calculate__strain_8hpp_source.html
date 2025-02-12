@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_strain.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_strain.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/calculate__strain_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-system-beams-calculate-strain-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_strain.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-system-beams-calculate-strain-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_strain.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d501334aeb1b78ad67cd3c72c37b1e87.html">system</a></li><li class="navelem"><a class="el" href="dir_37eb4ec866a8ba29a0a8baa7630b26f9.html">beams</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">calculate_strain.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="calculate__strain_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;KokkosBatched_Gemv_Decl.hpp&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;KokkosBlas.hpp&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="quaternion__operations_8hpp.html">math/quaternion_operations.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="foldopen" id="foldopen00011" data-start="{" data-end="};">
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateStrain.html">   11</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1CalculateStrain.html">CalculateStrain</a> {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateStrain.html#a0d647db743930156d3e07733a9a9e219">   12</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="structopenturbine_1_1CalculateStrain.html#a0d647db743930156d3e07733a9a9e219">NoTranspose</a> = KokkosBlas::Trans::NoTranspose;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateStrain.html#aeaa108831a9dcbbec9829993768dbd47">   13</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="structopenturbine_1_1CalculateStrain.html#aeaa108831a9dcbbec9829993768dbd47">Default</a> = KokkosBlas::Algo::Gemv::Default;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateStrain.html#af4975be61d7d68163409e50b2f003b80">   14</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="structopenturbine_1_1CalculateStrain.html#af4975be61d7d68163409e50b2f003b80">Gemv</a> = KokkosBlas::SerialGemv&lt;NoTranspose, Default&gt;;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">   15</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateStrain.html#ab8c3f79f7b6074dcd8d0ce7aa577fab2">   16</a></span>    Kokkos::View&lt;double** [3]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#ab8c3f79f7b6074dcd8d0ce7aa577fab2">qp_x0_prime_</a>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateStrain.html#a04d87a70e4c3bbd6a5edda772ab4ef62">   17</a></span>    Kokkos::View&lt;double** [3]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a04d87a70e4c3bbd6a5edda772ab4ef62">qp_u_prime_</a>;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateStrain.html#aaa8aed8192a6eeee3133848a0da80f34">   18</a></span>    Kokkos::View&lt;double** [4]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#aaa8aed8192a6eeee3133848a0da80f34">qp_r_</a>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateStrain.html#a5125f265d870b5210efe3a9c0b06e9d3">   19</a></span>    Kokkos::View&lt;double** [4]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a5125f265d870b5210efe3a9c0b06e9d3">qp_r_prime_</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateStrain.html#a0d6b12ed8ffa4b7ef2458a790e1e32b8">   20</a></span>    Kokkos::View&lt;double** [6]&gt; <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a0d6b12ed8ffa4b7ef2458a790e1e32b8">qp_strain_</a>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    KOKKOS_FUNCTION</div>
+<div class="foldopen" id="foldopen00023" data-start="{" data-end="}">
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateStrain.html#a32c6ae87c17ff7ba3c1e0ebd1b6c71f6">   23</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1CalculateStrain.html#a32c6ae87c17ff7ba3c1e0ebd1b6c71f6">operator()</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> i_qp)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keyword">auto</span> x0_prime_data = Kokkos::Array&lt;double, 3&gt;{</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#ab8c3f79f7b6074dcd8d0ce7aa577fab2">qp_x0_prime_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 0), <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#ab8c3f79f7b6074dcd8d0ce7aa577fab2">qp_x0_prime_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 1),</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#ab8c3f79f7b6074dcd8d0ce7aa577fab2">qp_x0_prime_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 2)</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        };</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="keyword">auto</span> x0_prime = Kokkos::View&lt;double[3]&gt;(x0_prime_data.data());</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keyword">auto</span> u_prime_data = Kokkos::Array&lt;double, 3&gt;{</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a04d87a70e4c3bbd6a5edda772ab4ef62">qp_u_prime_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 0), <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a04d87a70e4c3bbd6a5edda772ab4ef62">qp_u_prime_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 1), <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a04d87a70e4c3bbd6a5edda772ab4ef62">qp_u_prime_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 2)</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        };</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keyword">auto</span> u_prime = Kokkos::View&lt;double[3]&gt;(u_prime_data.data());</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keyword">auto</span> R_data = Kokkos::Array&lt;double, 4&gt;{</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#aaa8aed8192a6eeee3133848a0da80f34">qp_r_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 0), <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#aaa8aed8192a6eeee3133848a0da80f34">qp_r_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 1), <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#aaa8aed8192a6eeee3133848a0da80f34">qp_r_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 2),</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#aaa8aed8192a6eeee3133848a0da80f34">qp_r_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 3)</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        };</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keyword">auto</span> R = Kokkos::View&lt;double[4]&gt;(R_data.data());</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keyword">auto</span> R_x0_prime_data = Kokkos::Array&lt;double, 3&gt;{};</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="keyword">auto</span> R_x0_prime = Kokkos::View&lt;double[3]&gt;(R_x0_prime_data.data());</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <a class="code hl_function" href="namespaceopenturbine.html#ac72faf839870c2324c1201669f4874fd">RotateVectorByQuaternion</a>(R, x0_prime, R_x0_prime);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        KokkosBlas::serial_axpy(-1., u_prime, R_x0_prime);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        KokkosBlas::serial_axpy(-1., x0_prime, R_x0_prime);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keyword">auto</span> E_data = Kokkos::Array&lt;double, 12&gt;{};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keyword">auto</span> <a class="code hl_struct" href="structE.html">E</a> = Kokkos::View&lt;double[3][4]&gt;(E_data.data());</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <a class="code hl_function" href="namespaceopenturbine.html#ad1a13950d555c0d5711557490e098167">QuaternionDerivative</a>(R, <a class="code hl_struct" href="structE.html">E</a>);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keyword">auto</span> R_prime_data = Kokkos::Array&lt;double, 4&gt;{</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a5125f265d870b5210efe3a9c0b06e9d3">qp_r_prime_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 0), <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a5125f265d870b5210efe3a9c0b06e9d3">qp_r_prime_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 1), <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a5125f265d870b5210efe3a9c0b06e9d3">qp_r_prime_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 2),</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a5125f265d870b5210efe3a9c0b06e9d3">qp_r_prime_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 3)</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        };</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keyword">auto</span> R_prime = Kokkos::View&lt;double[4]&gt;(R_prime_data.data());</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">auto</span> e2_data = Kokkos::Array&lt;double, 3&gt;{};</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keyword">auto</span> e2 = Kokkos::View&lt;double[4]&gt;{e2_data.data()};</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        Gemv::invoke(2., <a class="code hl_struct" href="structE.html">E</a>, R_prime, 0., e2);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a0d6b12ed8ffa4b7ef2458a790e1e32b8">qp_strain_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 0) = -R_x0_prime(0);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a0d6b12ed8ffa4b7ef2458a790e1e32b8">qp_strain_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 1) = -R_x0_prime(1);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a0d6b12ed8ffa4b7ef2458a790e1e32b8">qp_strain_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 2) = -R_x0_prime(2);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a0d6b12ed8ffa4b7ef2458a790e1e32b8">qp_strain_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 3) = e2(0);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a0d6b12ed8ffa4b7ef2458a790e1e32b8">qp_strain_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 4) = e2(1);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a0d6b12ed8ffa4b7ef2458a790e1e32b8">qp_strain_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">i_elem</a>, i_qp, 5) = e2(2);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    }</div>
+</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
+</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_force.hpp:9</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac72faf839870c2324c1201669f4874fd"><div class="ttname"><a href="namespaceopenturbine.html#ac72faf839870c2324c1201669f4874fd">openturbine::RotateVectorByQuaternion</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void RotateVectorByQuaternion(const Quaternion &amp;q, const View1 &amp;v, const View2 &amp;v_rot)</div><div class="ttdoc">Rotates provided vector by provided unit quaternion and returns the result.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:56</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ad1a13950d555c0d5711557490e098167"><div class="ttname"><a href="namespaceopenturbine.html#ad1a13950d555c0d5711557490e098167">openturbine::QuaternionDerivative</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void QuaternionDerivative(const Quaternion &amp;q, const Matrix &amp;m)</div><div class="ttdoc">Computes the derivative of a quaternion and stores the result in a 3x4 matrix.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:87</div></div>
+<div class="ttc" id="aquaternion__operations_8hpp_html"><div class="ttname"><a href="quaternion__operations_8hpp.html">quaternion_operations.hpp</a></div></div>
+<div class="ttc" id="astructE_html"><div class="ttname"><a href="structE.html">E</a></div><div class="ttdef"><b>Definition</b> windio_mapped_structs.hpp:248</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateStrain_html"><div class="ttname"><a href="structopenturbine_1_1CalculateStrain.html">openturbine::CalculateStrain</a></div><div class="ttdef"><b>Definition</b> calculate_strain.hpp:11</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateStrain_html_a04d87a70e4c3bbd6a5edda772ab4ef62"><div class="ttname"><a href="structopenturbine_1_1CalculateStrain.html#a04d87a70e4c3bbd6a5edda772ab4ef62">openturbine::CalculateStrain::qp_u_prime_</a></div><div class="ttdeci">Kokkos::View&lt; double **[3]&gt;::const_type qp_u_prime_</div><div class="ttdef"><b>Definition</b> calculate_strain.hpp:17</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateStrain_html_a0d647db743930156d3e07733a9a9e219"><div class="ttname"><a href="structopenturbine_1_1CalculateStrain.html#a0d647db743930156d3e07733a9a9e219">openturbine::CalculateStrain::NoTranspose</a></div><div class="ttdeci">KokkosBlas::Trans::NoTranspose NoTranspose</div><div class="ttdef"><b>Definition</b> calculate_strain.hpp:12</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateStrain_html_a0d6b12ed8ffa4b7ef2458a790e1e32b8"><div class="ttname"><a href="structopenturbine_1_1CalculateStrain.html#a0d6b12ed8ffa4b7ef2458a790e1e32b8">openturbine::CalculateStrain::qp_strain_</a></div><div class="ttdeci">Kokkos::View&lt; double **[6]&gt; qp_strain_</div><div class="ttdef"><b>Definition</b> calculate_strain.hpp:20</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateStrain_html_a32c6ae87c17ff7ba3c1e0ebd1b6c71f6"><div class="ttname"><a href="structopenturbine_1_1CalculateStrain.html#a32c6ae87c17ff7ba3c1e0ebd1b6c71f6">openturbine::CalculateStrain::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(const int i_qp) const</div><div class="ttdef"><b>Definition</b> calculate_strain.hpp:23</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateStrain_html_a5125f265d870b5210efe3a9c0b06e9d3"><div class="ttname"><a href="structopenturbine_1_1CalculateStrain.html#a5125f265d870b5210efe3a9c0b06e9d3">openturbine::CalculateStrain::qp_r_prime_</a></div><div class="ttdeci">Kokkos::View&lt; double **[4]&gt;::const_type qp_r_prime_</div><div class="ttdef"><b>Definition</b> calculate_strain.hpp:19</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateStrain_html_a7155efa4113470d621c015d763ff3c71"><div class="ttname"><a href="structopenturbine_1_1CalculateStrain.html#a7155efa4113470d621c015d763ff3c71">openturbine::CalculateStrain::i_elem</a></div><div class="ttdeci">size_t i_elem</div><div class="ttdef"><b>Definition</b> calculate_strain.hpp:15</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateStrain_html_aaa8aed8192a6eeee3133848a0da80f34"><div class="ttname"><a href="structopenturbine_1_1CalculateStrain.html#aaa8aed8192a6eeee3133848a0da80f34">openturbine::CalculateStrain::qp_r_</a></div><div class="ttdeci">Kokkos::View&lt; double **[4]&gt;::const_type qp_r_</div><div class="ttdef"><b>Definition</b> calculate_strain.hpp:18</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateStrain_html_ab8c3f79f7b6074dcd8d0ce7aa577fab2"><div class="ttname"><a href="structopenturbine_1_1CalculateStrain.html#ab8c3f79f7b6074dcd8d0ce7aa577fab2">openturbine::CalculateStrain::qp_x0_prime_</a></div><div class="ttdeci">Kokkos::View&lt; double **[3]&gt;::const_type qp_x0_prime_</div><div class="ttdef"><b>Definition</b> calculate_strain.hpp:16</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateStrain_html_aeaa108831a9dcbbec9829993768dbd47"><div class="ttname"><a href="structopenturbine_1_1CalculateStrain.html#aeaa108831a9dcbbec9829993768dbd47">openturbine::CalculateStrain::Default</a></div><div class="ttdeci">KokkosBlas::Algo::Gemv::Default Default</div><div class="ttdef"><b>Definition</b> calculate_strain.hpp:13</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateStrain_html_af4975be61d7d68163409e50b2f003b80"><div class="ttname"><a href="structopenturbine_1_1CalculateStrain.html#af4975be61d7d68163409e50b2f003b80">openturbine::CalculateStrain::Gemv</a></div><div class="ttdeci">KokkosBlas::SerialGemv&lt; NoTranspose, Default &gt; Gemv</div><div class="ttdef"><b>Definition</b> calculate_strain.hpp:14</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

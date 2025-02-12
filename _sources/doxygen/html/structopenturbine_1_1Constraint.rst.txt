@@ -1,0 +1,14 @@
+.. meta::dd5169e30a30f4b0f717fe35efdd10358b64af8003a93254b64d112ed2917f46f367cea58b0ba9763d6fd4027ae31f8acd6d994ead89e2252f27c8a63e65a0e5
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::Constraint Struct Reference
+
+Constraint Struct Reference
+===========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1Constraint.html

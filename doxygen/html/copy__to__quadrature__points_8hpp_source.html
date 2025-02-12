@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/copy_to_quadrature_points.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/copy_to_quadrature_points.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/copy__to__quadrature__points_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-system-masses-copy-to-quadrature-points-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/system/masses/copy_to_quadrature_points.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-system-masses-copy-to-quadrature-points-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/copy_to_quadrature_points.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d501334aeb1b78ad67cd3c72c37b1e87.html">system</a></li><li class="navelem"><a class="el" href="dir_ba23874a222465ade7a5165dd0aa9e2a.html">masses</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">copy_to_quadrature_points.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="copy__to__quadrature__points_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1masses.html">openturbine::masses</a> {</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="foldopen" id="foldopen00007" data-start="{" data-end="};">
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html">    7</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html">CopyToQuadraturePoints</a> {</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#aa1e15eb32e8a04f8327384eca2034063">    8</a></span>    Kokkos::View&lt;double* [7]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#aa1e15eb32e8a04f8327384eca2034063">node_x0</a>;</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a989d27d8e4f2ff3ab508154f70a2ac11">    9</a></span>    Kokkos::View&lt;double* [7]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a989d27d8e4f2ff3ab508154f70a2ac11">node_u</a>;</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a01d0105ef2b480d55f43b400e313f542">   10</a></span>    Kokkos::View&lt;double* [6]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a01d0105ef2b480d55f43b400e313f542">node_u_dot</a>;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a7bff7e4ce1f0b1bcf97e73c15fe0236b">   11</a></span>    Kokkos::View&lt;double* [6]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a7bff7e4ce1f0b1bcf97e73c15fe0236b">node_u_ddot</a>;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a30fc35e4252fc4f0229fd8b3368f77cb">   13</a></span>    Kokkos::View&lt;double* [3]&gt; <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a30fc35e4252fc4f0229fd8b3368f77cb">qp_x0</a>;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#ada751ba9d1ff8b416ac826e26e5e3a9b">   14</a></span>    Kokkos::View&lt;double* [4]&gt; <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#ada751ba9d1ff8b416ac826e26e5e3a9b">qp_r0</a>;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a8ad0fa2b1fccffecd2b8e89714a60b16">   15</a></span>    Kokkos::View&lt;double* [3]&gt; <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a8ad0fa2b1fccffecd2b8e89714a60b16">qp_u</a>;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a7e2fd48a20a91456e7fbf76ce7a23860">   16</a></span>    Kokkos::View&lt;double* [4]&gt; <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a7e2fd48a20a91456e7fbf76ce7a23860">qp_r</a>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#abaa22449e5d2054cdb08161349d4c07a">   17</a></span>    Kokkos::View&lt;double* [3]&gt; <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#abaa22449e5d2054cdb08161349d4c07a">qp_u_ddot</a>;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a36a576945fd535323eba6866cb5c8d6e">   18</a></span>    Kokkos::View&lt;double* [3]&gt; <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a36a576945fd535323eba6866cb5c8d6e">qp_omega</a>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a89154e265812c98c921591c6a30e8db9">   19</a></span>    Kokkos::View&lt;double* [3]&gt; <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a89154e265812c98c921591c6a30e8db9">qp_omega_dot</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    KOKKOS_FUNCTION</div>
+<div class="foldopen" id="foldopen00022" data-start="{" data-end="}">
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a2f84da1cb53dce2027a38cd75bcd89ec">   22</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a2f84da1cb53dce2027a38cd75bcd89ec">operator()</a>(<span class="keywordtype">size_t</span> i_elem)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; 3U; ++i) {</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a30fc35e4252fc4f0229fd8b3368f77cb">qp_x0</a>(i_elem, i) = <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#aa1e15eb32e8a04f8327384eca2034063">node_x0</a>(i_elem, i);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a8ad0fa2b1fccffecd2b8e89714a60b16">qp_u</a>(i_elem, i) = <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a989d27d8e4f2ff3ab508154f70a2ac11">node_u</a>(i_elem, i);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#abaa22449e5d2054cdb08161349d4c07a">qp_u_ddot</a>(i_elem, i) = <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a7bff7e4ce1f0b1bcf97e73c15fe0236b">node_u_ddot</a>(i_elem, i);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a36a576945fd535323eba6866cb5c8d6e">qp_omega</a>(i_elem, i) = <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a01d0105ef2b480d55f43b400e313f542">node_u_dot</a>(i_elem, i + 3);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a89154e265812c98c921591c6a30e8db9">qp_omega_dot</a>(i_elem, i) = <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a7bff7e4ce1f0b1bcf97e73c15fe0236b">node_u_ddot</a>(i_elem, i + 3);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; 4U; ++i) {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#ada751ba9d1ff8b416ac826e26e5e3a9b">qp_r0</a>(i_elem, i) = <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#aa1e15eb32e8a04f8327384eca2034063">node_x0</a>(i_elem, i + 3);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a7e2fd48a20a91456e7fbf76ce7a23860">qp_r</a>(i_elem, i) = <a class="code hl_variable" href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a989d27d8e4f2ff3ab508154f70a2ac11">node_u</a>(i_elem, i + 3);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        }</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }</div>
+</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
+</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}  <span class="comment">// namespace openturbine::masses</span></div>
+<div class="ttc" id="anamespaceopenturbine_1_1masses_html"><div class="ttname"><a href="namespaceopenturbine_1_1masses.html">openturbine::masses</a></div><div class="ttdef"><b>Definition</b> assemble_inertia_matrix_masses.hpp:10</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html">openturbine::masses::CopyToQuadraturePoints</a></div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:7</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_a01d0105ef2b480d55f43b400e313f542"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a01d0105ef2b480d55f43b400e313f542">openturbine::masses::CopyToQuadraturePoints::node_u_dot</a></div><div class="ttdeci">Kokkos::View&lt; double *[6]&gt;::const_type node_u_dot</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:10</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_a2f84da1cb53dce2027a38cd75bcd89ec"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a2f84da1cb53dce2027a38cd75bcd89ec">openturbine::masses::CopyToQuadraturePoints::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(size_t i_elem) const</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:22</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_a30fc35e4252fc4f0229fd8b3368f77cb"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a30fc35e4252fc4f0229fd8b3368f77cb">openturbine::masses::CopyToQuadraturePoints::qp_x0</a></div><div class="ttdeci">Kokkos::View&lt; double *[3]&gt; qp_x0</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:13</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_a36a576945fd535323eba6866cb5c8d6e"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a36a576945fd535323eba6866cb5c8d6e">openturbine::masses::CopyToQuadraturePoints::qp_omega</a></div><div class="ttdeci">Kokkos::View&lt; double *[3]&gt; qp_omega</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:18</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_a7bff7e4ce1f0b1bcf97e73c15fe0236b"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a7bff7e4ce1f0b1bcf97e73c15fe0236b">openturbine::masses::CopyToQuadraturePoints::node_u_ddot</a></div><div class="ttdeci">Kokkos::View&lt; double *[6]&gt;::const_type node_u_ddot</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:11</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_a7e2fd48a20a91456e7fbf76ce7a23860"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a7e2fd48a20a91456e7fbf76ce7a23860">openturbine::masses::CopyToQuadraturePoints::qp_r</a></div><div class="ttdeci">Kokkos::View&lt; double *[4]&gt; qp_r</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:16</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_a89154e265812c98c921591c6a30e8db9"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a89154e265812c98c921591c6a30e8db9">openturbine::masses::CopyToQuadraturePoints::qp_omega_dot</a></div><div class="ttdeci">Kokkos::View&lt; double *[3]&gt; qp_omega_dot</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:19</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_a8ad0fa2b1fccffecd2b8e89714a60b16"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a8ad0fa2b1fccffecd2b8e89714a60b16">openturbine::masses::CopyToQuadraturePoints::qp_u</a></div><div class="ttdeci">Kokkos::View&lt; double *[3]&gt; qp_u</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:15</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_a989d27d8e4f2ff3ab508154f70a2ac11"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#a989d27d8e4f2ff3ab508154f70a2ac11">openturbine::masses::CopyToQuadraturePoints::node_u</a></div><div class="ttdeci">Kokkos::View&lt; double *[7]&gt;::const_type node_u</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:9</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_aa1e15eb32e8a04f8327384eca2034063"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#aa1e15eb32e8a04f8327384eca2034063">openturbine::masses::CopyToQuadraturePoints::node_x0</a></div><div class="ttdeci">Kokkos::View&lt; double *[7]&gt;::const_type node_x0</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:8</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_abaa22449e5d2054cdb08161349d4c07a"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#abaa22449e5d2054cdb08161349d4c07a">openturbine::masses::CopyToQuadraturePoints::qp_u_ddot</a></div><div class="ttdeci">Kokkos::View&lt; double *[3]&gt; qp_u_ddot</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:17</div></div>
+<div class="ttc" id="astructopenturbine_1_1masses_1_1CopyToQuadraturePoints_html_ada751ba9d1ff8b416ac826e26e5e3a9b"><div class="ttname"><a href="structopenturbine_1_1masses_1_1CopyToQuadraturePoints.html#ada751ba9d1ff8b416ac826e26e5e3a9b">openturbine::masses::CopyToQuadraturePoints::qp_r0</a></div><div class="ttdeci">Kokkos::View&lt; double *[4]&gt; qp_r0</div><div class="ttdef"><b>Definition</b> copy_to_quadrature_points.hpp:14</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

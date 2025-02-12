@@ -1,0 +1,14 @@
+.. meta::0c7e11b7a5bd56c292a386ca54ccb8f32e215b5edfe4ea76156933ffcc33f6803b305b9a34df598f3f534c032641cdb7627423e5d01ff65601e9d7fd74da0797
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/rotate_section_matrix.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/rotate\_section\_matrix.hpp File Reference
+=================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: beams_2rotate__section__matrix_8hpp.html

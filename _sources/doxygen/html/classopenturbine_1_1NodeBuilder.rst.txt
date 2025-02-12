@@ -1,0 +1,14 @@
+.. meta::13f367865465654cede89d00a2df74884adb5c1163479814b979d62234e0f273e72b2733290393fd0bd424da525e05ec1c1fd26e1ca471e95c7a3d9fd1e09473
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::NodeBuilder Class Reference
+
+NodeBuilder Class Reference
+===========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classopenturbine_1_1NodeBuilder.html

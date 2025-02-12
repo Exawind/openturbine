@@ -1,0 +1,14 @@
+.. meta::2060f092291fbd57255f6ceb35cb7847a8fdfa872bee3ffcb29f7b02fc4a875dbd5b8e31b874cdc3034826bec5951cbcddcb3f3d66d785934086177c6090d14e
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::SpringsInput Struct Reference
+
+SpringsInput Struct Reference
+=============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1SpringsInput.html

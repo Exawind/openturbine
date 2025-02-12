@@ -1,0 +1,14 @@
+.. meta::17edd89711e7a9822430b7e5f390b42d92745bb2e6f94396461cc6a2570858f9d38f3fc029e8e853f31db16fb8712d7074c7ab2a9fdf30e65a1497c6c98798ae
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::PopulateSparseRowPtrsColInds_Transpose&lt; RowPtrType, IndicesType &gt; Struct Template Reference
+
+PopulateSparseRowPtrsColInds\_Transpose&lt; RowPtrType, IndicesType &gt; Struct Template Reference
+==================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1PopulateSparseRowPtrsColInds__Transpose.html

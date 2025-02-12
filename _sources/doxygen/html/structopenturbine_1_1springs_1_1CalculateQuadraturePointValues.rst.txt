@@ -1,0 +1,14 @@
+.. meta::14176ee58639e1afb9d49ab45076fb749c5f1b504c9e60eb5702a50913b0388df2568d310aeb8434e62274c533a55d7b1b29be77f7b50691a093169714830826
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::springs::CalculateQuadraturePointValues Struct Reference
+
+CalculateQuadraturePointValues Struct Reference
+===============================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1springs_1_1CalculateQuadraturePointValues.html

@@ -1,0 +1,14 @@
+.. meta::f66974159d7f2efab35bb8fcdaa7ef4e78ea6d903968c3acc9bf3d889cc714f56c59999b229c4829159022c9e2390a194d1bf7063f449a574fa6e81d85357bc8
+
+:orphan:
+
+.. title:: OpenTurbine API: Mooring Struct Reference
+
+Mooring Struct Reference
+========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structMooring.html

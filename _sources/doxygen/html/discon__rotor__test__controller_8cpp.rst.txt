@@ -1,0 +1,14 @@
+.. meta::81bda90dd31da76f1287a025d9986829ec150182c3824ffba11bb00e978d2b230570a766325c8a634108962476f1ea1d48616e80c5c6f4bb29e1c0388c8da13f
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/utilities/controllers/discon_rotor_test_controller.cpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/utilities/controllers/discon\_rotor\_test\_controller.cpp File Reference
+==================================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: discon__rotor__test__controller_8cpp.html

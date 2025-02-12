@@ -1,0 +1,14 @@
+.. meta::dca6035286b47d91ca0917478b1a60f04d9be85df86f682f55d71f760c69de5510ec67853d6d7df1b8ea8f271c3114b9e5c5ad557ad1bbfe570866842ae8c275
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/create_k_matrix.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/create\_k\_matrix.hpp File Reference
+=====================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: create__k__matrix_8hpp.html

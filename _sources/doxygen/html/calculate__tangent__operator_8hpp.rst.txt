@@ -1,0 +1,14 @@
+.. meta::56ff697e3556a61377dafcaa043e139b355e5e3ca2577df619b4bda317c93aafea239ceee02d54f5bd6a6d610f76f2556048647c5f3c400522d3403465501309
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/calculate_tangent_operator.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/system/calculate\_tangent\_operator.hpp File Reference
+================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: calculate__tangent__operator_8hpp.html

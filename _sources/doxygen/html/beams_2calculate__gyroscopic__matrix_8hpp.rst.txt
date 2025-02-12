@@ -1,0 +1,14 @@
+.. meta::6031442c221e51c6a699da39f22b45aa7014f6cb61ba10129980c5e849fb6554647920dd2f7bb29c89a4074eab3548f67176a82dbcc981e931268d1c6a8f2c1a
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_gyroscopic_matrix.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate\_gyroscopic\_matrix.hpp File Reference
+=======================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: beams_2calculate__gyroscopic__matrix_8hpp.html

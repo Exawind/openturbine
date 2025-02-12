@@ -1,0 +1,14 @@
+.. meta::eb1bdc62ceb9abed88216883a491bcbe5ed918032beb237409becebe5c874a19981174300821b0f80f57347c2a04aab42833b59b8ddcad5a3c279015de4cb405
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/math/vector_operations.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/math/vector\_operations.hpp File Reference
+====================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: vector__operations_8hpp.html

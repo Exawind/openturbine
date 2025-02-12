@@ -1,0 +1,14 @@
+.. meta::cb1c1476f25487816e3e4d6fb6851f2e7f2ca148fa904424b7f39616662867ded4b87b6ce6b43675fa26d2ab304e2590caeb5b039e472a5e43b0b435524c3377
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::MassesInput Struct Reference
+
+MassesInput Struct Reference
+============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1MassesInput.html

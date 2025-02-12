@@ -1,0 +1,14 @@
+.. meta::0bee664ac771bb154a3ac0617fe68670f737fc66c7c6474545a674bdcc51402dff3101d2a77265a1970f0c87841a4c2136e6e05ec2829b43503f43a4caba6811
+
+:orphan:
+
+.. title:: OpenTurbine API: OffsetYPa Struct Reference
+
+OffsetYPa Struct Reference
+==========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structOffsetYPa.html

@@ -1,0 +1,14 @@
+.. meta::f5f3b8cc340ffc97dc48206bf6268c039caa0ec66d2b853cced77d0881fdb691849e5049fd912d93b2186d9901635892111e9e33880c9cf4eca5cbbbd0daba9f
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::ConditionR Struct Reference
+
+ConditionR Struct Reference
+===========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1ConditionR.html

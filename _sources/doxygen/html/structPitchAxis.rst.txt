@@ -1,0 +1,14 @@
+.. meta::b3a8a9d2166ff4b3695221b1a41503017dda106d11863b690a95794a0add04ec8f2196f5820f58520644a130cbe7c0a805fff1f39fa773e10351583fca9602b8
+
+:orphan:
+
+.. title:: OpenTurbine API: PitchAxis Struct Reference
+
+PitchAxis Struct Reference
+==========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structPitchAxis.html

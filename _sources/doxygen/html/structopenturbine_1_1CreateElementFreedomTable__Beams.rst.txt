@@ -1,0 +1,14 @@
+.. meta::292cbe56f1840d09a7a79c5050b863d61c69d324865fbe0557a33318937f118e22a0872ad1f40b51bb27d5eca2859d4b4a7758c28425b31336e04f4b6612fc74
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CreateElementFreedomTable_Beams Struct Reference
+
+CreateElementFreedomTable\_Beams Struct Reference
+=================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CreateElementFreedomTable__Beams.html

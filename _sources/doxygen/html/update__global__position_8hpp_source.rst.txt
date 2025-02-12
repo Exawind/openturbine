@@ -1,0 +1,14 @@
+.. meta::055acb3affdafce1c411255b94509cdf98a60a8b27795c303f39070b74be03310513177d12c04371c3c007454f2020ce9a7803bf10380f1526e1dfaec8c66e2e
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/state/update_global_position.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/state/update\_global\_position.hpp Source File
+========================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: update__global__position_8hpp_source.html

@@ -1,0 +1,14 @@
+.. meta::d5ad57150f77df37846ea03a50e0fe6b9e3f10d8bbb20e728f24f102cc996303b5ed68eccc8a52eb3b1110af1901291c09eadb571226d14f64e7196a089e69a0
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::InterpolateQPRotation Struct Reference
+
+InterpolateQPRotation Struct Reference
+======================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1InterpolateQPRotation.html

@@ -1,0 +1,14 @@
+.. meta::f0990280a9491d527aec525e31c6dcf7050b575710da921ed983a7b1185bdd0bfeb1397bd7be08530f96662a664e96879053b2505247fc332a1d62a6a7ccaaf3
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolate_QP_rotation_derivative.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolate\_QP\_rotation\_derivative.hpp File Reference
+=================================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: interpolate__QP__rotation__derivative_8hpp.html

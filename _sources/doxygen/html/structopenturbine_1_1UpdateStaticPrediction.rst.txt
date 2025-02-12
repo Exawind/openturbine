@@ -1,0 +1,14 @@
+.. meta::01736b35c3c5a4035105366f74da1062ce81ac2538b1db71afdad8cf1c9b2abff61378bf7ee87c124b2f21fcec3495075199bb857f7af411662c0223f94ab087
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::UpdateStaticPrediction Struct Reference
+
+UpdateStaticPrediction Struct Reference
+=======================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1UpdateStaticPrediction.html

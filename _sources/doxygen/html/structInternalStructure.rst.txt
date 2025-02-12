@@ -1,0 +1,14 @@
+.. meta::457e46d7b0b5e8d802cd512b271e4d483600473a03e01d06a192832a1f1e7cd6be667005d2863fa26de1ffffda84031072bf467f84637352c2d26369af743b71
+
+:orphan:
+
+.. title:: OpenTurbine API: InternalStructure Struct Reference
+
+InternalStructure Struct Reference
+==================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structInternalStructure.html

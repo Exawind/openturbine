@@ -1,0 +1,14 @@
+.. meta::d0bdc5e8f3eff4e601a48deb0524e87b8272cebd7824cf7375b5e95f201d2b2e76deac9ef19e5a55545325b8d84f8e3885bc3f81aafab68487d750e62b2b03d5
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/create_matrix_spgemm.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/create\_matrix\_spgemm.hpp File Reference
+==========================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: create__matrix__spgemm_8hpp.html

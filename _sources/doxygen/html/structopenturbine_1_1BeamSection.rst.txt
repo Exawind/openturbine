@@ -1,0 +1,14 @@
+.. meta::15c03b1d36132f25507ae33563d96d67bc03f7b53bd85f7fc0ad15e59b25ff40fc61be403bddc10fdad37850c4c6f563d23ba20ec32acd9dd5588ddbc3f1ed02
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::BeamSection Struct Reference
+
+BeamSection Struct Reference
+============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1BeamSection.html

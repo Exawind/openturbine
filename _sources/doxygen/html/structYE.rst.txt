@@ -1,0 +1,14 @@
+.. meta::75a136a0c8a6d3a206ed7b015020fae8e43c193271f73f9333c57a73c7a129d76892b2318158ca07d17f2ce7f6f2402315889d6706c28698c006ca95e54865e6
+
+:orphan:
+
+.. title:: OpenTurbine API: YE Struct Reference
+
+YE Struct Reference
+===================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structYE.html

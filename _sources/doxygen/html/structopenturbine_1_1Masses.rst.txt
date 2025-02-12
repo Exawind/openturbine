@@ -1,0 +1,14 @@
+.. meta::2b5bef0f25ac6236ba8aa63eb8a8cb9c55d9ef54e93f7273c74a6b46af75494dbcb8ad974f18f8202bf5089c70908774029c14de7a5f27d332909de94ba40168
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::Masses Struct Reference
+
+Masses Struct Reference
+=======================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1Masses.html

@@ -1,0 +1,14 @@
+.. meta::9f9d3e72d426a74503229ece1a4f7142a9edd2c85e01c603671960e5e6cbd6f4d5e22f9bed954f7db8824cb2f2c9343bf9b842ebebaefd3c57ab222182bbf432
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CalculateQPPosition Struct Reference
+
+CalculateQPPosition Struct Reference
+====================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateQPPosition.html

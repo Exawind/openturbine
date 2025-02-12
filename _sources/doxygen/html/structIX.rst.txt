@@ -1,0 +1,14 @@
+.. meta::a6d8c8899b61907f0067d5c8a63d8842e059c4652c19ae51207e550e12bea2650dbfc1651b824cee7bf736e2081121ae07ccdc8e489dea587797c4b1c007e6f3
+
+:orphan:
+
+.. title:: OpenTurbine API: IX Struct Reference
+
+IX Struct Reference
+===================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structIX.html

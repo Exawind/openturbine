@@ -1,0 +1,14 @@
+.. meta::a4e44b65d618f597497d905b3664402b25f5932f602e040be8e2ef8c679dc0d7571c81c2a76d5b7f9bade5cfb86e8bd2bfbf6244b18c57b352a31a5c2879ac2d
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CalculateRR0 Struct Reference
+
+CalculateRR0 Struct Reference
+=============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateRR0.html

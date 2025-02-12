@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::CalculateForceFC Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::CalculateForceFC Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1CalculateForceFC.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="calculateforcefc-struct-reference">
+<h1>CalculateForceFC Struct Reference<a class="headerlink" href="#calculateforcefc-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::CalculateForceFC Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1CalculateForceFC.html">CalculateForceFC</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1CalculateForceFC-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::CalculateForceFC Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="calculate__force__FC_8hpp_source.html">calculate_force_FC.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ab143a12aad15070a9b934758445693d1" id="r_ab143a12aad15070a9b934758445693d1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateForceFC.html#ab143a12aad15070a9b934758445693d1">NoTranspose</a> = KokkosBlas::Trans::NoTranspose</td></tr>
+<tr class="separator:ab143a12aad15070a9b934758445693d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad06b63d3a42ce6795b736e0a960b3d5a" id="r_ad06b63d3a42ce6795b736e0a960b3d5a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateForceFC.html#ad06b63d3a42ce6795b736e0a960b3d5a">Default</a> = KokkosBlas::Algo::Gemv::Default</td></tr>
+<tr class="separator:ad06b63d3a42ce6795b736e0a960b3d5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a863b15de341d21edefff49b8aa3613c0" id="r_a863b15de341d21edefff49b8aa3613c0"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateForceFC.html#a863b15de341d21edefff49b8aa3613c0">Gemv</a> = KokkosBlas::SerialGemv&lt; <a class="el" href="structopenturbine_1_1CalculateForceFC.html#ab143a12aad15070a9b934758445693d1">NoTranspose</a>, <a class="el" href="structopenturbine_1_1CalculateForceFC.html#ad06b63d3a42ce6795b736e0a960b3d5a">Default</a> &gt;</td></tr>
+<tr class="separator:a863b15de341d21edefff49b8aa3613c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aba6c1a5265ba4350f54a8680b77b15e5" id="r_aba6c1a5265ba4350f54a8680b77b15e5"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateForceFC.html#aba6c1a5265ba4350f54a8680b77b15e5">operator()</a> (int i_qp) const</td></tr>
+<tr class="separator:aba6c1a5265ba4350f54a8680b77b15e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a33cde129a81b0b418618bb669037984a" id="r_a33cde129a81b0b418618bb669037984a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateForceFC.html#a33cde129a81b0b418618bb669037984a">i_elem</a></td></tr>
+<tr class="separator:a33cde129a81b0b418618bb669037984a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabbc21f8fc5c53fa161fc17bd8b8740a" id="r_aabbc21f8fc5c53fa161fc17bd8b8740a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateForceFC.html#aabbc21f8fc5c53fa161fc17bd8b8740a">qp_Cuu_</a></td></tr>
+<tr class="separator:aabbc21f8fc5c53fa161fc17bd8b8740a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a251f7a0191b4062fc6a85dae52eccfbc" id="r_a251f7a0191b4062fc6a85dae52eccfbc"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateForceFC.html#a251f7a0191b4062fc6a85dae52eccfbc">qp_strain_</a></td></tr>
+<tr class="separator:a251f7a0191b4062fc6a85dae52eccfbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8d6fd1d0037500298efd04b9a398128" id="r_ac8d6fd1d0037500298efd04b9a398128"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateForceFC.html#ac8d6fd1d0037500298efd04b9a398128">qp_FC_</a></td></tr>
+<tr class="separator:ac8d6fd1d0037500298efd04b9a398128"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b58cb3db9af8ce65206b19a784b3e5c" id="r_a5b58cb3db9af8ce65206b19a784b3e5c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3][3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateForceFC.html#a5b58cb3db9af8ce65206b19a784b3e5c">M_tilde_</a></td></tr>
+<tr class="separator:a5b58cb3db9af8ce65206b19a784b3e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58492c1524e09a2c9a57f8e996425432" id="r_a58492c1524e09a2c9a57f8e996425432"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3][3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateForceFC.html#a58492c1524e09a2c9a57f8e996425432">N_tilde_</a></td></tr>
+<tr class="separator:a58492c1524e09a2c9a57f8e996425432"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="ad06b63d3a42ce6795b736e0a960b3d5a" name="ad06b63d3a42ce6795b736e0a960b3d5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad06b63d3a42ce6795b736e0a960b3d5a">&#9670;&#160;</a></span>Default</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1CalculateForceFC.html#ad06b63d3a42ce6795b736e0a960b3d5a">openturbine::CalculateForceFC::Default</a> =  KokkosBlas::Algo::Gemv::Default</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a863b15de341d21edefff49b8aa3613c0" name="a863b15de341d21edefff49b8aa3613c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a863b15de341d21edefff49b8aa3613c0">&#9670;&#160;</a></span>Gemv</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1CalculateForceFC.html#a863b15de341d21edefff49b8aa3613c0">openturbine::CalculateForceFC::Gemv</a> =  KokkosBlas::SerialGemv&lt;<a class="el" href="structopenturbine_1_1CalculateForceFC.html#ab143a12aad15070a9b934758445693d1">NoTranspose</a>, <a class="el" href="structopenturbine_1_1CalculateForceFC.html#ad06b63d3a42ce6795b736e0a960b3d5a">Default</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab143a12aad15070a9b934758445693d1" name="ab143a12aad15070a9b934758445693d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab143a12aad15070a9b934758445693d1">&#9670;&#160;</a></span>NoTranspose</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1CalculateForceFC.html#ab143a12aad15070a9b934758445693d1">openturbine::CalculateForceFC::NoTranspose</a> =  KokkosBlas::Trans::NoTranspose</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aba6c1a5265ba4350f54a8680b77b15e5" name="aba6c1a5265ba4350f54a8680b77b15e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba6c1a5265ba4350f54a8680b77b15e5">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateForceFC::operator() </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i_qp</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a33cde129a81b0b418618bb669037984a" name="a33cde129a81b0b418618bb669037984a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33cde129a81b0b418618bb669037984a">&#9670;&#160;</a></span>i_elem</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::CalculateForceFC::i_elem</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5b58cb3db9af8ce65206b19a784b3e5c" name="a5b58cb3db9af8ce65206b19a784b3e5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b58cb3db9af8ce65206b19a784b3e5c">&#9670;&#160;</a></span>M_tilde_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3][3]&gt; openturbine::CalculateForceFC::M_tilde_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a58492c1524e09a2c9a57f8e996425432" name="a58492c1524e09a2c9a57f8e996425432"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58492c1524e09a2c9a57f8e996425432">&#9670;&#160;</a></span>N_tilde_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [3][3]&gt; openturbine::CalculateForceFC::N_tilde_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aabbc21f8fc5c53fa161fc17bd8b8740a" name="aabbc21f8fc5c53fa161fc17bd8b8740a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabbc21f8fc5c53fa161fc17bd8b8740a">&#9670;&#160;</a></span>qp_Cuu_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**[6][6]&gt;::const_type openturbine::CalculateForceFC::qp_Cuu_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac8d6fd1d0037500298efd04b9a398128" name="ac8d6fd1d0037500298efd04b9a398128"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8d6fd1d0037500298efd04b9a398128">&#9670;&#160;</a></span>qp_FC_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::CalculateForceFC::qp_FC_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a251f7a0191b4062fc6a85dae52eccfbc" name="a251f7a0191b4062fc6a85dae52eccfbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a251f7a0191b4062fc6a85dae52eccfbc">&#9670;&#160;</a></span>qp_strain_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**[6]&gt;::const_type openturbine::CalculateForceFC::qp_strain_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/<a class="el" href="calculate__force__FC_8hpp_source.html">calculate_force_FC.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

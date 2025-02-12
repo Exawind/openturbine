@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate_rotation_control_constraint.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate_rotation_control_constraint.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/calculate__rotation__control__constraint_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-constraints-calculate-rotation-control-constraint-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate_rotation_control_constraint.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-constraints-calculate-rotation-control-constraint-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate_rotation_control_constraint.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_af3783685badc1c88dedef1a43f7fad6.html">constraints</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">calculate_rotation_control_constraint.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="calculate__rotation__control__constraint_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="constraints_8hpp.html">constraints.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="matrix__operations_8hpp.html">math/matrix_operations.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="quaternion__operations_8hpp.html">math/quaternion_operations.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="vector__operations_8hpp.html">math/vector_operations.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html">   12</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1CalculateRotationControlConstraint.html">CalculateRotationControlConstraint</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">   13</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html#aa92e2d169a9761197774463b2525e84c">   14</a></span>    Kokkos::View&lt;size_t*&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#aa92e2d169a9761197774463b2525e84c">base_node_index</a>;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html#aeb433f0367506ce608a228bb96b9c312">   15</a></span>    Kokkos::View&lt;size_t*&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#aeb433f0367506ce608a228bb96b9c312">target_node_index</a>;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a83d6229d7547f7e16d4273cb8956e3f5">   16</a></span>    View_Nx3::const_type <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a83d6229d7547f7e16d4273cb8956e3f5">X0_</a>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a53dac53eeb2d76fba97a75e554eade9b">   17</a></span>    View_Nx3x3::const_type <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a53dac53eeb2d76fba97a75e554eade9b">axes</a>;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a1019f1f8ec3e949fa6fda8d007879661">   18</a></span>    View_Nx7::const_type <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a1019f1f8ec3e949fa6fda8d007879661">constraint_inputs</a>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">   19</a></span>    View_Nx7::const_type <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a9f1b07721c53d607f16d9eef288492e8">   20</a></span>    <a class="code hl_typedef" href="namespaceopenturbine.html#a2464cbd056dc563006be24d81413d2c1">View_Nx6</a> <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a9f1b07721c53d607f16d9eef288492e8">residual_terms</a>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad3d671e13276c0176ae91566742d4c44">   21</a></span>    <a class="code hl_typedef" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a> <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad3d671e13276c0176ae91566742d4c44">base_gradient_terms</a>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a78204db8e7b161b0e4c863476ab5972e">   22</a></span>    <a class="code hl_typedef" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a> <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a78204db8e7b161b0e4c863476ab5972e">target_gradient_terms</a>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    KOKKOS_FUNCTION</div>
+<div class="foldopen" id="foldopen00025" data-start="{" data-end="}">
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a406359996c38effc75191145e815d820">   25</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a406359996c38effc75191145e815d820">operator()</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">const</span> <span class="keyword">auto</span> i_base = <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#aa92e2d169a9761197774463b2525e84c">base_node_index</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keyword">const</span> <span class="keyword">auto</span> i_target = <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#aeb433f0367506ce608a228bb96b9c312">target_node_index</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="comment">// Initial difference between nodes</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keyword">const</span> <span class="keyword">auto</span> X0_data = Kokkos::Array&lt;double, 3&gt;{</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a83d6229d7547f7e16d4273cb8956e3f5">X0_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, 0), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a83d6229d7547f7e16d4273cb8956e3f5">X0_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, 1), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a83d6229d7547f7e16d4273cb8956e3f5">X0_</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, 2)</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        };</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keyword">const</span> <span class="keyword">auto</span> X0 = View_3::const_type{X0_data.data()};</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="comment">// Base node displacement (translation and rotation)</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keyword">const</span> <span class="keyword">auto</span> ub_data =</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            Kokkos::Array&lt;double, 3&gt;{<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_base, 0), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_base, 1), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_base, 2)};</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keyword">const</span> <span class="keyword">auto</span> Rb_data = Kokkos::Array&lt;double, 4&gt;{</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_base, 3), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_base, 4), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_base, 5), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_base, 6)</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        };</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keyword">const</span> <span class="keyword">auto</span> ub = View_3::const_type{ub_data.data()};</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keyword">const</span> <span class="keyword">auto</span> Rb = Kokkos::View&lt;double[4]&gt;::const_type{Rb_data.data()};</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="comment">// Target node displacement (translation and rotation)</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">const</span> <span class="keyword">auto</span> ut_data =</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            Kokkos::Array&lt;double, 3&gt;{<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_target, 0), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_target, 1), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_target, 2)};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keyword">const</span> <span class="keyword">auto</span> ut = View_3::const_type{ut_data.data()};</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keyword">const</span> <span class="keyword">auto</span> Rt_data = Kokkos::Array&lt;double, 4&gt;{</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_target, 3), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_target, 4), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_target, 5), <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">node_u</a>(i_target, 6)</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        };</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keyword">const</span> <span class="keyword">auto</span> Rt = Kokkos::View&lt;double[4]&gt;::const_type{Rt_data.data()};</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keyword">auto</span> AX_data = Kokkos::Array&lt;double, 3&gt;{};</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">const</span> <span class="keyword">auto</span> AX = Kokkos::View&lt;double[3]&gt;{AX_data.data()};</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="comment">// Control rotation vector</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keyword">auto</span> RV_data = Kokkos::Array&lt;double, 3&gt;{};</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keyword">const</span> <span class="keyword">auto</span> RV = Kokkos::View&lt;double[3]&gt;{RV_data.data()};</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="comment">// Rotation control</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">auto</span> Rc_data = Kokkos::Array&lt;double, 4&gt;{};</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">const</span> <span class="keyword">auto</span> Rc = Kokkos::View&lt;double[4]&gt;{Rc_data.data()};</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keyword">auto</span> RcT_data = Kokkos::Array&lt;double, 4&gt;{};</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keyword">const</span> <span class="keyword">auto</span> RcT = Kokkos::View&lt;double[4]&gt;{RcT_data.data()};</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="comment">// Base rotation transpose</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keyword">auto</span> RbT_data = Kokkos::Array&lt;double, 4&gt;{};</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keyword">const</span> <span class="keyword">auto</span> RbT = Kokkos::View&lt;double[4]&gt;{RbT_data.data()};</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="comment">// Base rotation * X0</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keyword">auto</span> Rb_X0_data = Kokkos::Array&lt;double, 4&gt;{};</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keyword">const</span> <span class="keyword">auto</span> Rb_X0 = Kokkos::View&lt;double[4]&gt;{Rb_X0_data.data()};</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="comment">// Target rotation * Control rotation transpose</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keyword">auto</span> Rt_RcT_data = Kokkos::Array&lt;double, 4&gt;{};</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">const</span> <span class="keyword">auto</span> Rt_RcT = Kokkos::View&lt;double[4]&gt;{Rt_RcT_data.data()};</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="comment">// Target rotation * Control rotation transpose * Base rotation transpose</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">auto</span> Rt_RcT_RbT_data = Kokkos::Array&lt;double, 4&gt;{};</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keyword">const</span> <span class="keyword">auto</span> Rt_RcT_RbT = Kokkos::View&lt;double[4]&gt;{Rt_RcT_RbT_data.data()};</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="keyword">auto</span> A_data = Kokkos::Array&lt;double, 9&gt;{};</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keyword">const</span> <span class="keyword">auto</span> <a class="code hl_struct" href="structA.html">A</a> = <a class="code hl_typedef" href="namespaceopenturbine.html#a3f8d7abc1184fa2c3b6a3ba577fd7d69">View_3x3</a>{A_data.data()};</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="keyword">auto</span> C_data = Kokkos::Array&lt;double, 9&gt;{};</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keyword">const</span> <span class="keyword">auto</span> C = <a class="code hl_typedef" href="namespaceopenturbine.html#a3f8d7abc1184fa2c3b6a3ba577fd7d69">View_3x3</a>{C_data.data()};</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keyword">auto</span> V3_data = Kokkos::Array&lt;double, 3&gt;{};</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keyword">const</span> <span class="keyword">auto</span> V3 = <a class="code hl_typedef" href="namespaceopenturbine.html#a5c3e2136acb58cc49d15dc2d88c76a66">View_3</a>{V3_data.data()};</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="comment">//----------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="comment">// Position residual</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="comment">//----------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="comment">// Phi(0:3) = ut + X0 - ub - Rb*X0</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <a class="code hl_function" href="namespaceopenturbine.html#ac72faf839870c2324c1201669f4874fd">RotateVectorByQuaternion</a>(Rb, X0, Rb_X0);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 3; ++i) {</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a9f1b07721c53d607f16d9eef288492e8">residual_terms</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, i) = ut(i) + X0(i) - ub(i) - Rb_X0(i);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        }</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="comment">//----------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="comment">// Rotation residual</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="comment">//----------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keyword">auto</span> rotation_command = <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a1019f1f8ec3e949fa6fda8d007879661">constraint_inputs</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, 0);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="comment">// Copy rotation axis for this constraint</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; 3U; ++i) {</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            AX(i) = <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a53dac53eeb2d76fba97a75e554eade9b">axes</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, 0, i);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>            RV(i) = AX(i) * rotation_command;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        }</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="comment">// Convert scaled axis to quaternion and calculate inverse</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <a class="code hl_function" href="namespaceopenturbine.html#a9f941e64c14f9edcfb3d8f62efc34633">RotationVectorToQuaternion</a>(RV, Rc);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <a class="code hl_function" href="namespaceopenturbine.html#a92ca747f32ff26a16f5338a76bd5ce76">QuaternionInverse</a>(Rc, RcT);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="comment">// Phi(3:6) = axial(Rt*inv(Rc)*inv(Rb))</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <a class="code hl_function" href="namespaceopenturbine.html#a92ca747f32ff26a16f5338a76bd5ce76">QuaternionInverse</a>(Rb, RbT);</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <a class="code hl_function" href="namespaceopenturbine.html#aed4cf00f5ca47c84e3062aca99acb262">QuaternionCompose</a>(Rt, RcT, Rt_RcT);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <a class="code hl_function" href="namespaceopenturbine.html#aed4cf00f5ca47c84e3062aca99acb262">QuaternionCompose</a>(Rt_RcT, RbT, Rt_RcT_RbT);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <a class="code hl_function" href="namespaceopenturbine.html#a6031a1228dd8c9d2d5340a579a2b7c8c">QuaternionToRotationMatrix</a>(Rt_RcT_RbT, C);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        <a class="code hl_function" href="matrix__operations_8hpp.html#ac3d4b6c7c695faebbfe38e1e9e307828">AxialVectorOfMatrix</a>(C, V3);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; 3U; ++i) {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a9f1b07721c53d607f16d9eef288492e8">residual_terms</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, i + 3) = V3(i);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        }</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="comment">//----------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="comment">// Constraint Gradient Matrix</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="comment">//----------------------------------------------------------------------</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="comment">//---------------------------------</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="comment">// Target Node</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        <span class="comment">//---------------------------------</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        {</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            <span class="comment">// B(0:3,0:3) = I</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 3; ++i) {</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a78204db8e7b161b0e4c863476ab5972e">target_gradient_terms</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, i, i) = 1.;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            }</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            <span class="comment">// B(3:6,3:6) = AX(Rb*Rc*inv(Rt)) = transpose(AX(Rt*inv(Rc)*inv(Rb)))</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>            <a class="code hl_function" href="matrix__operations_8hpp.html#a367fda764f427cc89a0c6d7e1f5a23c8">AX_Matrix</a>(C, <a class="code hl_struct" href="structA.html">A</a>);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 3; ++i) {</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; 3; ++j) {</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                    <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a78204db8e7b161b0e4c863476ab5972e">target_gradient_terms</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, i + 3, j + 3) = <a class="code hl_struct" href="structA.html">A</a>(j, i);</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                }</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>            }</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        }</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        <span class="comment">//---------------------------------</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        <span class="comment">// Base Node</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        <span class="comment">//---------------------------------</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        {</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="comment">// B(0:3,0:3) = -I</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 3; ++i) {</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad3d671e13276c0176ae91566742d4c44">base_gradient_terms</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, i, i) = -1.;</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            }</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            <span class="comment">// B(0:3,3:6) = tilde(Rb*X0)</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            <a class="code hl_function" href="namespaceopenturbine.html#a27b4aa8d797ea86827404834f2a0173d">VecTilde</a>(Rb_X0, <a class="code hl_struct" href="structA.html">A</a>);</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 3; ++i) {</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; 3; ++j) {</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                    <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad3d671e13276c0176ae91566742d4c44">base_gradient_terms</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, i, j + 3) = <a class="code hl_struct" href="structA.html">A</a>(i, j);</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                }</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            }</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            <span class="comment">// B(3:6,3:6) = -AX(Rt*inv(Rc)*inv(Rb))</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <a class="code hl_function" href="matrix__operations_8hpp.html#a367fda764f427cc89a0c6d7e1f5a23c8">AX_Matrix</a>(C, <a class="code hl_struct" href="structA.html">A</a>);</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 3; ++i) {</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; 3; ++j) {</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                    <a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad3d671e13276c0176ae91566742d4c44">base_gradient_terms</a>(<a class="code hl_variable" href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">i_constraint</a>, i + 3, j + 3) = -<a class="code hl_struct" href="structA.html">A</a>(i, j);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                }</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            }</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        }</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    }</div>
+</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>};</div>
+</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="ttc" id="aconstraints_8hpp_html"><div class="ttname"><a href="constraints_8hpp.html">constraints.hpp</a></div></div>
+<div class="ttc" id="amatrix__operations_8hpp_html"><div class="ttname"><a href="matrix__operations_8hpp.html">matrix_operations.hpp</a></div></div>
+<div class="ttc" id="amatrix__operations_8hpp_html_a367fda764f427cc89a0c6d7e1f5a23c8"><div class="ttname"><a href="matrix__operations_8hpp.html#a367fda764f427cc89a0c6d7e1f5a23c8">AX_Matrix</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void AX_Matrix(const Matrix &amp;A, const Matrix &amp;AX_A)</div><div class="ttdoc">Computes AX(A) of a square matrix.</div><div class="ttdef"><b>Definition</b> matrix_operations.hpp:12</div></div>
+<div class="ttc" id="amatrix__operations_8hpp_html_ac3d4b6c7c695faebbfe38e1e9e307828"><div class="ttname"><a href="matrix__operations_8hpp.html#ac3d4b6c7c695faebbfe38e1e9e307828">AxialVectorOfMatrix</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void AxialVectorOfMatrix(const Matrix &amp;m, const Vector &amp;v)</div><div class="ttdoc">Computes the axial vector (also known as the vector representation) of a 3x3 skew-symmetric matrix.</div><div class="ttdef"><b>Definition</b> matrix_operations.hpp:40</div></div>
+<div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_force.hpp:9</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a2464cbd056dc563006be24d81413d2c1"><div class="ttname"><a href="namespaceopenturbine.html#a2464cbd056dc563006be24d81413d2c1">openturbine::View_Nx6</a></div><div class="ttdeci">Kokkos::View&lt; double *[6]&gt; View_Nx6</div><div class="ttdef"><b>Definition</b> types.hpp:25</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a27b4aa8d797ea86827404834f2a0173d"><div class="ttname"><a href="namespaceopenturbine.html#a27b4aa8d797ea86827404834f2a0173d">openturbine::VecTilde</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void VecTilde(const VectorType &amp;vector, const MatrixType &amp;matrix)</div><div class="ttdoc">Converts a 3x1 vector to a 3x3 skew-symmetric matrix and returns the result.</div><div class="ttdef"><b>Definition</b> vector_operations.hpp:11</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a3f8d7abc1184fa2c3b6a3ba577fd7d69"><div class="ttname"><a href="namespaceopenturbine.html#a3f8d7abc1184fa2c3b6a3ba577fd7d69">openturbine::View_3x3</a></div><div class="ttdeci">Kokkos::View&lt; double[3][3]&gt; View_3x3</div><div class="ttdef"><b>Definition</b> types.hpp:20</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a5c3e2136acb58cc49d15dc2d88c76a66"><div class="ttname"><a href="namespaceopenturbine.html#a5c3e2136acb58cc49d15dc2d88c76a66">openturbine::View_3</a></div><div class="ttdeci">Kokkos::View&lt; double[3]&gt; View_3</div><div class="ttdef"><b>Definition</b> types.hpp:16</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a6031a1228dd8c9d2d5340a579a2b7c8c"><div class="ttname"><a href="namespaceopenturbine.html#a6031a1228dd8c9d2d5340a579a2b7c8c">openturbine::QuaternionToRotationMatrix</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(const Quaternion &amp;q, const RotationMatrix &amp;R)</div><div class="ttdoc">Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:15</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a92ca747f32ff26a16f5338a76bd5ce76"><div class="ttname"><a href="namespaceopenturbine.html#a92ca747f32ff26a16f5338a76bd5ce76">openturbine::QuaternionInverse</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void QuaternionInverse(const QuaternionInput &amp;q_in, const QuaternionOutput &amp;q_out)</div><div class="ttdoc">Computes the inverse of a quaternion.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:106</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a9f941e64c14f9edcfb3d8f62efc34633"><div class="ttname"><a href="namespaceopenturbine.html#a9f941e64c14f9edcfb3d8f62efc34633">openturbine::RotationVectorToQuaternion</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(const Vector &amp;phi, const Quaternion &amp;quaternion)</div><div class="ttdoc">Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:148</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac72faf839870c2324c1201669f4874fd"><div class="ttname"><a href="namespaceopenturbine.html#ac72faf839870c2324c1201669f4874fd">openturbine::RotateVectorByQuaternion</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void RotateVectorByQuaternion(const Quaternion &amp;q, const View1 &amp;v, const View2 &amp;v_rot)</div><div class="ttdoc">Rotates provided vector by provided unit quaternion and returns the result.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:56</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_aed4cf00f5ca47c84e3062aca99acb262"><div class="ttname"><a href="namespaceopenturbine.html#aed4cf00f5ca47c84e3062aca99acb262">openturbine::QuaternionCompose</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void QuaternionCompose(const Quaternion1 &amp;q1, const Quaternion2 &amp;q2, QuaternionN &amp;qn)</div><div class="ttdoc">Composes (i.e. multiplies) two quaternions and stores the result in a third quaternion.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:123</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_afcf69cafaa3c50d68131bcd609d49949"><div class="ttname"><a href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">openturbine::View_Nx6x6</a></div><div class="ttdeci">Kokkos::View&lt; double *[6][6]&gt; View_Nx6x6</div><div class="ttdef"><b>Definition</b> types.hpp:31</div></div>
+<div class="ttc" id="aquaternion__operations_8hpp_html"><div class="ttname"><a href="quaternion__operations_8hpp.html">quaternion_operations.hpp</a></div></div>
+<div class="ttc" id="astructA_html"><div class="ttname"><a href="structA.html">A</a></div><div class="ttdef"><b>Definition</b> windio_mapped_structs.hpp:237</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html">openturbine::CalculateRotationControlConstraint</a></div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:12</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html_a0fa693cbcb75062097e9e25d8eafb9e8"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html#a0fa693cbcb75062097e9e25d8eafb9e8">openturbine::CalculateRotationControlConstraint::i_constraint</a></div><div class="ttdeci">int i_constraint</div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:13</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html_a1019f1f8ec3e949fa6fda8d007879661"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html#a1019f1f8ec3e949fa6fda8d007879661">openturbine::CalculateRotationControlConstraint::constraint_inputs</a></div><div class="ttdeci">View_Nx7::const_type constraint_inputs</div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:18</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html_a406359996c38effc75191145e815d820"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html#a406359996c38effc75191145e815d820">openturbine::CalculateRotationControlConstraint::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()() const</div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:25</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html_a53dac53eeb2d76fba97a75e554eade9b"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html#a53dac53eeb2d76fba97a75e554eade9b">openturbine::CalculateRotationControlConstraint::axes</a></div><div class="ttdeci">View_Nx3x3::const_type axes</div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:17</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html_a78204db8e7b161b0e4c863476ab5972e"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html#a78204db8e7b161b0e4c863476ab5972e">openturbine::CalculateRotationControlConstraint::target_gradient_terms</a></div><div class="ttdeci">View_Nx6x6 target_gradient_terms</div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:22</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html_a83d6229d7547f7e16d4273cb8956e3f5"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html#a83d6229d7547f7e16d4273cb8956e3f5">openturbine::CalculateRotationControlConstraint::X0_</a></div><div class="ttdeci">View_Nx3::const_type X0_</div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:16</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html_a9f1b07721c53d607f16d9eef288492e8"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html#a9f1b07721c53d607f16d9eef288492e8">openturbine::CalculateRotationControlConstraint::residual_terms</a></div><div class="ttdeci">View_Nx6 residual_terms</div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:20</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html_aa92e2d169a9761197774463b2525e84c"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html#aa92e2d169a9761197774463b2525e84c">openturbine::CalculateRotationControlConstraint::base_node_index</a></div><div class="ttdeci">Kokkos::View&lt; size_t * &gt;::const_type base_node_index</div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:14</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html_ad3d671e13276c0176ae91566742d4c44"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad3d671e13276c0176ae91566742d4c44">openturbine::CalculateRotationControlConstraint::base_gradient_terms</a></div><div class="ttdeci">View_Nx6x6 base_gradient_terms</div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:21</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html_ad46f5a980922f566af2e567be57f4ef6"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html#ad46f5a980922f566af2e567be57f4ef6">openturbine::CalculateRotationControlConstraint::node_u</a></div><div class="ttdeci">View_Nx7::const_type node_u</div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:19</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateRotationControlConstraint_html_aeb433f0367506ce608a228bb96b9c312"><div class="ttname"><a href="structopenturbine_1_1CalculateRotationControlConstraint.html#aeb433f0367506ce608a228bb96b9c312">openturbine::CalculateRotationControlConstraint::target_node_index</a></div><div class="ttdeci">Kokkos::View&lt; size_t * &gt;::const_type target_node_index</div><div class="ttdef"><b>Definition</b> calculate_rotation_control_constraint.hpp:15</div></div>
+<div class="ttc" id="avector__operations_8hpp_html"><div class="ttname"><a href="vector__operations_8hpp.html">vector_operations.hpp</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

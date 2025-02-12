@@ -1,0 +1,14 @@
+.. meta::a48e914b48b2cd6b8dff6cae1309e2b2cdca94604c82260130d8d4b3ea1f5d07974c6b3c54f571aa9c50cefa621fb0bffd129f927031bab8e85d7f486b3824c8
+
+:orphan:
+
+.. title:: OpenTurbine API: A Struct Reference
+
+A Struct Reference
+==================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structA.html

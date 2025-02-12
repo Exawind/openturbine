@@ -1,0 +1,14 @@
+.. meta::c82a3b7a68984e031bb3fe6fd2a093bad9691be3e4acf88d2de4f84222ebb28853d717df54ed1fad1338cb7a86c7b81f5686e4a2f92f84a8edb9bb428082da13
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CalculateNextState Struct Reference
+
+CalculateNextState Struct Reference
+===================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateNextState.html

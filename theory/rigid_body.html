@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>R3xSO(3)-based Rigid Body &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="R3-based geometrically nonlinear, constitutively linear spring" href="nonlinear_spring.html" />
+    <link rel="prev" title="SO(3)-based GEBT Beam" href="flexible_beam.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="flexible_beam.html">SO(3)-based GEBT Beam</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">R3xSO(3)-based Rigid Body</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rigid-body-model-input-at-initialization">Rigid-Body Model Input at Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#degrees-of-freedom">Degrees of Freedom</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#residual">Residual</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#time-integration">Time Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nonlinear_spring.html">R3-based geometrically nonlinear, constitutively linear spring</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+      <li class="breadcrumb-item active">R3xSO(3)-based Rigid Body</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/rigid_body.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="r3xso-3-based-rigid-body">
+<h1>R3xSO(3)-based Rigid Body<a class="headerlink" href="#r3xso-3-based-rigid-body" title="Permalink to this heading"></a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>Details for a rigid-body solver. Unlike Bruls et al (2012), this is formulated in inertial coordinates.</p>
+</div>
+<div class="section" id="rigid-body-model-input-at-initialization">
+<h2>Rigid-Body Model Input at Initialization<a class="headerlink" href="#rigid-body-model-input-at-initialization" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>M</strong>* ∈ ℝ<sup>6×6</sup>: Rigid body mass matrix in material coordinate system (CS)</p></li>
+<li><p><strong>x</strong><sup>0</sup> ∈ ℝ<sup>3</sup>: Rigid body reference position; inertial CS</p></li>
+<li><p><strong>R</strong><sup>0</sup> ∈ ℝ<sup>3×3</sup>: Rigid body reference orientation</p></li>
+<li><p><strong>u</strong><sup>i</sup> ∈ ℝ<sup>3</sup>: Rigid body initial displacement</p></li>
+<li><p><strong>R</strong><sup>i</sup> ∈ ℝ<sup>3×3</sup>: Rigid body initial orientation</p></li>
+<li><p><strong>u̇</strong><sup>i</sup> ∈ ℝ<sup>3</sup>: Rigid body initial velocity</p></li>
+<li><p><strong>ω</strong><sup>i</sup> ∈ ℝ<sup>3</sup>: Rigid body initial angular velocity</p></li>
+</ul>
+</div>
+<div class="section" id="degrees-of-freedom">
+<h2>Degrees of Freedom<a class="headerlink" href="#degrees-of-freedom" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>u</strong> ∈ ℝ<sup>3</sup>: Rigid body displacement at time <em>t</em></p></li>
+<li><p><strong>R</strong> ∈ ℝ<sup>3×3</sup>: Rigid-body orientation at time <em>t</em> (represented as <strong>q̂</strong> ∈ ℝ<sup>4</sup> quaternion)</p></li>
+<li><p><strong>ω</strong> ∈ ℝ<sup>3</sup>: Rigid body angular velocity at time <em>t</em></p></li>
+<li><p>Generalized coordinates:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}q = \begin{bmatrix}
+u \\
+R \\
+\end{bmatrix}
+, \quad
+\dot{q} = \begin{bmatrix}
+\dot{u} \\
+\omega \\
+\end{bmatrix}
+, \quad
+\ddot{q} = \begin{bmatrix}
+\ddot{u} \\
+\dot{\omega} \\
+\end{bmatrix}\end{split}\]</div>
+</div>
+<div class="section" id="residual">
+<h2>Residual<a class="headerlink" href="#residual" title="Permalink to this heading"></a></h2>
+<div class="math notranslate nohighlight">
+\[\begin{split}R^{\mathrm{rb}} =
+\begin{bmatrix}
+M^{\mathrm{rb}}\, \ddot{q} + g^{\mathrm{rb}} - F^{\mathrm{rb}} + B^T\lambda \\
+\Phi
+\end{bmatrix}
+\in \mathbb{R}^{6+nc}\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}B \in \mathbb{R}^{nc \times 6}\,, \quad
+\lambda \in \mathbb{R}^{nc}\,, \quad
+\Phi \in \mathbb{R}^{nc}\,, \quad
+F^{\mathrm{rb}}
+=
+\begin{bmatrix}
+f\\
+m\\
+\end{bmatrix}
+\in \mathbb{R}^{6}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}M^{\mathrm{rb}}
+= \begin{bmatrix}
+m I_3 &amp; m \tilde{\eta}^T \\
+m \tilde{\eta} &amp; \rho
+\end{bmatrix}
+= \mathcal{RR}^0\, M^* {\mathcal{RR}^0}^T
+%
+\in \mathbb{R}^{6\times 6}
+\,,\quad
+g^{\mathrm{rb}} = \begin{bmatrix}
+m \tilde{\omega} \tilde{\omega} \eta  \\
+\tilde{\omega} \rho \omega
+\end{bmatrix}\end{split}\]</div>
+<p>and where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathcal{RR}^0 =
+\begin{bmatrix}
+R^0 &amp; 0 \\
+0 &amp; R^0
+\end{bmatrix}
+\quad \text{for } \mathcal{RR}^0 \in \mathbb{R}^{6\times6}\end{split}\]</div>
+</div>
+<div class="section" id="time-integration">
+<h2>Time Integration<a class="headerlink" href="#time-integration" title="Permalink to this heading"></a></h2>
+<p>Iteration matrix:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}S_t =
+\begin{bmatrix}
+M_t \beta'+C_t \gamma' + K_t
+T(h \Delta q) &amp; B^T \\
+B\,T(h \Delta q)                     &amp; 0
+\end{bmatrix}
+, \quad S_{t} \in \mathbb{R}^{(6+nc) \times (6+nc)}\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[M_t = M^{\mathrm{rb}}\in \mathbb{R}^{6\times 6} \,, \quad
+C_t = \mathcal{G}^{\mathrm{rb}}\in \mathbb{R}^{6\times 6} \,, \quad
+K_t = \mathcal{K}^{\mathrm{rb}} \in \mathbb{R}^{6\times 6}\]</div>
+<p>and where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathcal{G}^{\mathrm{rb}} =
+\begin{bmatrix}
+0 &amp; \widetilde{ \widetilde{\omega} m \eta }^T
+         + \widetilde{\omega} m \widetilde{\eta}^T\\
+0 &amp; \widetilde{\omega} \rho - \widetilde{\rho \omega}
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathcal{K}^{\mathrm{rb}} =
+\begin{bmatrix}
+0 &amp; \left( \dot{\widetilde{\omega}} + \tilde{\omega}\tilde{\omega}
+        \right) m \widetilde{\eta}^T\\
+0 &amp; \ddot{\widetilde{u}} m \widetilde{\eta}
+         + \left(\rho\dot{\widetilde{\omega}}
+                 -\widetilde{\rho \dot{\omega}} \right)
+         + \widetilde{\omega} \left( \rho \widetilde{\omega}
+         - \widetilde{ \rho\omega} \right)
+\end{bmatrix}\end{split}\]</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="flexible_beam.html" class="btn btn-neutral float-left" title="SO(3)-based GEBT Beam" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nonlinear_spring.html" class="btn btn-neutral float-right" title="R3-based geometrically nonlinear, constitutively linear spring" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::util::ControllerIO Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::util::ControllerIO Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1util_1_1ControllerIO.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="controllerio-struct-reference">
+<h1>ControllerIO Struct Reference<a class="headerlink" href="#controllerio-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::util::ControllerIO Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1util.html">util</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html">ControllerIO</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1util_1_1ControllerIO-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::util::ControllerIO Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="controller__io_8hpp_source.html">controller_io.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:acc7e18e5ba0831fb9efcf1560e700df9" id="r_acc7e18e5ba0831fb9efcf1560e700df9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#acc7e18e5ba0831fb9efcf1560e700df9">CopyToSwapArray</a> (std::array&lt; float, <a class="el" href="namespaceopenturbine_1_1util.html#a19b3bb03ce462ac6698016822e34bf79">kSwapArraySize</a> &gt; &amp;swap_array) const</td></tr>
+<tr class="separator:acc7e18e5ba0831fb9efcf1560e700df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d80a1793c7f0821b78d085eb67fbc12" id="r_a8d80a1793c7f0821b78d085eb67fbc12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a8d80a1793c7f0821b78d085eb67fbc12">CopyFromSwapArray</a> (const std::array&lt; float, <a class="el" href="namespaceopenturbine_1_1util.html#a19b3bb03ce462ac6698016822e34bf79">kSwapArraySize</a> &gt; &amp;swap_array)</td></tr>
+<tr class="separator:a8d80a1793c7f0821b78d085eb67fbc12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a6344e466e188ad2918a4fc8c58749295" id="r_a6344e466e188ad2918a4fc8c58749295"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a6344e466e188ad2918a4fc8c58749295">status</a> = 0</td></tr>
+<tr class="separator:a6344e466e188ad2918a4fc8c58749295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1786ffb224123186d625c8585e59ed67" id="r_a1786ffb224123186d625c8585e59ed67"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a1786ffb224123186d625c8585e59ed67">time</a> = 0.</td></tr>
+<tr class="separator:a1786ffb224123186d625c8585e59ed67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19afe78665094af527eb4db8db5d04d9" id="r_a19afe78665094af527eb4db8db5d04d9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a19afe78665094af527eb4db8db5d04d9">dt</a> = 0.</td></tr>
+<tr class="separator:a19afe78665094af527eb4db8db5d04d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affb747b902bb9f92a2a6aa7448b51bca" id="r_affb747b902bb9f92a2a6aa7448b51bca"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#affb747b902bb9f92a2a6aa7448b51bca">pitch_blade1_actual</a> = 0.</td></tr>
+<tr class="separator:affb747b902bb9f92a2a6aa7448b51bca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2399ee85baf71ed3ec563a44a7a19a9e" id="r_a2399ee85baf71ed3ec563a44a7a19a9e"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a2399ee85baf71ed3ec563a44a7a19a9e">pitch_actuator_type_req</a> = 0.</td></tr>
+<tr class="separator:a2399ee85baf71ed3ec563a44a7a19a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08c6900a3710c748816f117c8a83dcc1" id="r_a08c6900a3710c748816f117c8a83dcc1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a08c6900a3710c748816f117c8a83dcc1">generator_power_actual</a> = 0.</td></tr>
+<tr class="separator:a08c6900a3710c748816f117c8a83dcc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a553a630985e9eed9b4c51bf208e61ea9" id="r_a553a630985e9eed9b4c51bf208e61ea9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a553a630985e9eed9b4c51bf208e61ea9">generator_speed_actual</a> = 0.</td></tr>
+<tr class="separator:a553a630985e9eed9b4c51bf208e61ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67e229676c178139fba3fe58e846cfac" id="r_a67e229676c178139fba3fe58e846cfac"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a67e229676c178139fba3fe58e846cfac">rotor_speed_actual</a> = 0.</td></tr>
+<tr class="separator:a67e229676c178139fba3fe58e846cfac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c7d2ab6765745443f0baf2bc43a5dcd" id="r_a4c7d2ab6765745443f0baf2bc43a5dcd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a4c7d2ab6765745443f0baf2bc43a5dcd">generator_torque_actual</a> = 0.</td></tr>
+<tr class="separator:a4c7d2ab6765745443f0baf2bc43a5dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f7748e999a7997e6237ac12b9339a76" id="r_a5f7748e999a7997e6237ac12b9339a76"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a5f7748e999a7997e6237ac12b9339a76">yaw_error_actual</a> = 0.</td></tr>
+<tr class="separator:a5f7748e999a7997e6237ac12b9339a76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06e9882b23fcf85073284b2616b8f395" id="r_a06e9882b23fcf85073284b2616b8f395"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a06e9882b23fcf85073284b2616b8f395">horizontal_wind_speed</a> = 0.</td></tr>
+<tr class="separator:a06e9882b23fcf85073284b2616b8f395"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2fb62c3bf720cd4925f1212a4d6c4f9" id="r_af2fb62c3bf720cd4925f1212a4d6c4f9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#af2fb62c3bf720cd4925f1212a4d6c4f9">pitch_control_type</a> = 0.</td></tr>
+<tr class="separator:af2fb62c3bf720cd4925f1212a4d6c4f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac490151a7157af7657bce6f1aa9d0532" id="r_ac490151a7157af7657bce6f1aa9d0532"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#ac490151a7157af7657bce6f1aa9d0532">pitch_blade2_actual</a> = 0.</td></tr>
+<tr class="separator:ac490151a7157af7657bce6f1aa9d0532"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d5431954c0e05ddbd5b73dc2d4fc1e7" id="r_a3d5431954c0e05ddbd5b73dc2d4fc1e7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a3d5431954c0e05ddbd5b73dc2d4fc1e7">pitch_blade3_actual</a> = 0.</td></tr>
+<tr class="separator:a3d5431954c0e05ddbd5b73dc2d4fc1e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a896f356b665215b0f5e7a2bf8376897b" id="r_a896f356b665215b0f5e7a2bf8376897b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a896f356b665215b0f5e7a2bf8376897b">generator_contactor_status</a> = 0</td></tr>
+<tr class="separator:a896f356b665215b0f5e7a2bf8376897b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc0469c3a21945f285e7706964d0ab6d" id="r_acc0469c3a21945f285e7706964d0ab6d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#acc0469c3a21945f285e7706964d0ab6d">shaft_brake_status</a> = 0</td></tr>
+<tr class="separator:acc0469c3a21945f285e7706964d0ab6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96b439b796ecee29b96f71c37a9cc1e6" id="r_a96b439b796ecee29b96f71c37a9cc1e6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a96b439b796ecee29b96f71c37a9cc1e6">yaw_angle_actual</a> = 0</td></tr>
+<tr class="separator:a96b439b796ecee29b96f71c37a9cc1e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca98f64db3d315fc23e04a25138a907a" id="r_aca98f64db3d315fc23e04a25138a907a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#aca98f64db3d315fc23e04a25138a907a">yaw_actuator_torque_command</a> = 0.</td></tr>
+<tr class="separator:aca98f64db3d315fc23e04a25138a907a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59f83a2e9fc415d0330879204cebf147" id="r_a59f83a2e9fc415d0330879204cebf147"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a59f83a2e9fc415d0330879204cebf147">pitch_blade1_command</a> = 0.</td></tr>
+<tr class="separator:a59f83a2e9fc415d0330879204cebf147"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a643587f0401e1c75a0a35271c0bb2e80" id="r_a643587f0401e1c75a0a35271c0bb2e80"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a643587f0401e1c75a0a35271c0bb2e80">pitch_blade2_command</a> = 0.</td></tr>
+<tr class="separator:a643587f0401e1c75a0a35271c0bb2e80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2db00f8e4efda75934b6da21d24de3f" id="r_ad2db00f8e4efda75934b6da21d24de3f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#ad2db00f8e4efda75934b6da21d24de3f">pitch_blade3_command</a> = 0.</td></tr>
+<tr class="separator:ad2db00f8e4efda75934b6da21d24de3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e2fa6fc2c2af62a9fba1462556c95d3" id="r_a1e2fa6fc2c2af62a9fba1462556c95d3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a1e2fa6fc2c2af62a9fba1462556c95d3">pitch_collective_command</a> = 0.</td></tr>
+<tr class="separator:a1e2fa6fc2c2af62a9fba1462556c95d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8317f147fb76325361921bc330b2800f" id="r_a8317f147fb76325361921bc330b2800f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a8317f147fb76325361921bc330b2800f">pitch_rate_command</a> = 0.</td></tr>
+<tr class="separator:a8317f147fb76325361921bc330b2800f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab040d16f19e582933e1e9ed4675c1494" id="r_ab040d16f19e582933e1e9ed4675c1494"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#ab040d16f19e582933e1e9ed4675c1494">generator_torque_command</a> = 0.</td></tr>
+<tr class="separator:ab040d16f19e582933e1e9ed4675c1494"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3adfe581f6f780ded39a69fc05fafc51" id="r_a3adfe581f6f780ded39a69fc05fafc51"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a3adfe581f6f780ded39a69fc05fafc51">nacelle_yaw_rate_command</a> = 0.</td></tr>
+<tr class="separator:a3adfe581f6f780ded39a69fc05fafc51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d1ed3eea697499f996f645f6e071059" id="r_a0d1ed3eea697499f996f645f6e071059"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a0d1ed3eea697499f996f645f6e071059">message_array_size</a> = 0U</td></tr>
+<tr class="separator:a0d1ed3eea697499f996f645f6e071059"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae553e721817ada3d9871179073183fdc" id="r_ae553e721817ada3d9871179073183fdc"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#ae553e721817ada3d9871179073183fdc">infile_array_size</a> = 0U</td></tr>
+<tr class="separator:ae553e721817ada3d9871179073183fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb193f4e2bf124141f2cf60b0b24b85d" id="r_aeb193f4e2bf124141f2cf60b0b24b85d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#aeb193f4e2bf124141f2cf60b0b24b85d">outname_array_size</a> = 0U</td></tr>
+<tr class="separator:aeb193f4e2bf124141f2cf60b0b24b85d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98f2f08f1d4b7dd736a688465cf7cf9f" id="r_a98f2f08f1d4b7dd736a688465cf7cf9f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a98f2f08f1d4b7dd736a688465cf7cf9f">tower_top_fore_aft_accel</a> = 0.</td></tr>
+<tr class="separator:a98f2f08f1d4b7dd736a688465cf7cf9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad393db87f3e75ee175f5aca9afa8b4b4" id="r_ad393db87f3e75ee175f5aca9afa8b4b4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#ad393db87f3e75ee175f5aca9afa8b4b4">pitch_override</a> = 0</td></tr>
+<tr class="separator:ad393db87f3e75ee175f5aca9afa8b4b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8434a03764991a30b2f7f866b8f6d7bd" id="r_a8434a03764991a30b2f7f866b8f6d7bd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a8434a03764991a30b2f7f866b8f6d7bd">torque_override</a> = 0</td></tr>
+<tr class="separator:a8434a03764991a30b2f7f866b8f6d7bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a830eb88fda09d963242f03bdae587f7d" id="r_a830eb88fda09d963242f03bdae587f7d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a830eb88fda09d963242f03bdae587f7d">azimuth_angle</a> = 0.</td></tr>
+<tr class="separator:a830eb88fda09d963242f03bdae587f7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f8c693f41dc47314ad6477b2746da48" id="r_a7f8c693f41dc47314ad6477b2746da48"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a7f8c693f41dc47314ad6477b2746da48">n_blades</a> = 0U</td></tr>
+<tr class="separator:a7f8c693f41dc47314ad6477b2746da48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25a2f35dcacaa54c16bdb5073ddc6536" id="r_a25a2f35dcacaa54c16bdb5073ddc6536"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a25a2f35dcacaa54c16bdb5073ddc6536">n_log_variables</a> = 0U</td></tr>
+<tr class="separator:a25a2f35dcacaa54c16bdb5073ddc6536"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4567c2579072af7eb4c25fd9f40a0ce" id="r_ae4567c2579072af7eb4c25fd9f40a0ce"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#ae4567c2579072af7eb4c25fd9f40a0ce">generator_startup_resistance</a> = 0.</td></tr>
+<tr class="separator:ae4567c2579072af7eb4c25fd9f40a0ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1eac3c4ab21e53f01423611a6be5fb2" id="r_ad1eac3c4ab21e53f01423611a6be5fb2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#ad1eac3c4ab21e53f01423611a6be5fb2">loads_request</a> = 0</td></tr>
+<tr class="separator:ad1eac3c4ab21e53f01423611a6be5fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a251678f0485d14a8cd586cd22cf9ec37" id="r_a251678f0485d14a8cd586cd22cf9ec37"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a251678f0485d14a8cd586cd22cf9ec37">variable_slip_status</a> = 0</td></tr>
+<tr class="separator:a251678f0485d14a8cd586cd22cf9ec37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5db8a1ffc34213da4f5fc4245a0923d" id="r_aa5db8a1ffc34213da4f5fc4245a0923d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#aa5db8a1ffc34213da4f5fc4245a0923d">variable_slip_demand</a> = 0</td></tr>
+<tr class="separator:aa5db8a1ffc34213da4f5fc4245a0923d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b0c2d80f989087b8e8667847073419f" id="r_a0b0c2d80f989087b8e8667847073419f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html#a0b0c2d80f989087b8e8667847073419f">nacelle_nodding_accel</a> = 0.</td></tr>
+<tr class="separator:a0b0c2d80f989087b8e8667847073419f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Structure defining the swap layout (See Appendix <a class="el" href="structA.html">A</a> of Bladed User's Guide) Ref: <a href="https://openfast.readthedocs.io/en/main/source/user/servodyn/ExtendedBladedInterface.html">https://openfast.readthedocs.io/en/main/source/user/servodyn/ExtendedBladedInterface.html</a> </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8d80a1793c7f0821b78d085eb67fbc12" name="a8d80a1793c7f0821b78d085eb67fbc12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d80a1793c7f0821b78d085eb67fbc12">&#9670;&#160;</a></span>CopyFromSwapArray()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::util::ControllerIO::CopyFromSwapArray </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; float, <a class="el" href="namespaceopenturbine_1_1util.html#a19b3bb03ce462ac6698016822e34bf79">kSwapArraySize</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>swap_array</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acc7e18e5ba0831fb9efcf1560e700df9" name="acc7e18e5ba0831fb9efcf1560e700df9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc7e18e5ba0831fb9efcf1560e700df9">&#9670;&#160;</a></span>CopyToSwapArray()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::util::ControllerIO::CopyToSwapArray </td>
+          <td>(</td>
+          <td class="paramtype">std::array&lt; float, <a class="el" href="namespaceopenturbine_1_1util.html#a19b3bb03ce462ac6698016822e34bf79">kSwapArraySize</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>swap_array</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a830eb88fda09d963242f03bdae587f7d" name="a830eb88fda09d963242f03bdae587f7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a830eb88fda09d963242f03bdae587f7d">&#9670;&#160;</a></span>azimuth_angle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::azimuth_angle = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a19afe78665094af527eb4db8db5d04d9" name="a19afe78665094af527eb4db8db5d04d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19afe78665094af527eb4db8db5d04d9">&#9670;&#160;</a></span>dt</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::dt = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a896f356b665215b0f5e7a2bf8376897b" name="a896f356b665215b0f5e7a2bf8376897b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a896f356b665215b0f5e7a2bf8376897b">&#9670;&#160;</a></span>generator_contactor_status</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::ControllerIO::generator_contactor_status = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a08c6900a3710c748816f117c8a83dcc1" name="a08c6900a3710c748816f117c8a83dcc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08c6900a3710c748816f117c8a83dcc1">&#9670;&#160;</a></span>generator_power_actual</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::generator_power_actual = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a553a630985e9eed9b4c51bf208e61ea9" name="a553a630985e9eed9b4c51bf208e61ea9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a553a630985e9eed9b4c51bf208e61ea9">&#9670;&#160;</a></span>generator_speed_actual</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::generator_speed_actual = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae4567c2579072af7eb4c25fd9f40a0ce" name="ae4567c2579072af7eb4c25fd9f40a0ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4567c2579072af7eb4c25fd9f40a0ce">&#9670;&#160;</a></span>generator_startup_resistance</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::generator_startup_resistance = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4c7d2ab6765745443f0baf2bc43a5dcd" name="a4c7d2ab6765745443f0baf2bc43a5dcd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c7d2ab6765745443f0baf2bc43a5dcd">&#9670;&#160;</a></span>generator_torque_actual</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::generator_torque_actual = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab040d16f19e582933e1e9ed4675c1494" name="ab040d16f19e582933e1e9ed4675c1494"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab040d16f19e582933e1e9ed4675c1494">&#9670;&#160;</a></span>generator_torque_command</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::generator_torque_command = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a06e9882b23fcf85073284b2616b8f395" name="a06e9882b23fcf85073284b2616b8f395"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06e9882b23fcf85073284b2616b8f395">&#9670;&#160;</a></span>horizontal_wind_speed</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::horizontal_wind_speed = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae553e721817ada3d9871179073183fdc" name="ae553e721817ada3d9871179073183fdc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae553e721817ada3d9871179073183fdc">&#9670;&#160;</a></span>infile_array_size</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::util::ControllerIO::infile_array_size = 0U</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad1eac3c4ab21e53f01423611a6be5fb2" name="ad1eac3c4ab21e53f01423611a6be5fb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1eac3c4ab21e53f01423611a6be5fb2">&#9670;&#160;</a></span>loads_request</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::ControllerIO::loads_request = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0d1ed3eea697499f996f645f6e071059" name="a0d1ed3eea697499f996f645f6e071059"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d1ed3eea697499f996f645f6e071059">&#9670;&#160;</a></span>message_array_size</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::util::ControllerIO::message_array_size = 0U</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7f8c693f41dc47314ad6477b2746da48" name="a7f8c693f41dc47314ad6477b2746da48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f8c693f41dc47314ad6477b2746da48">&#9670;&#160;</a></span>n_blades</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::util::ControllerIO::n_blades = 0U</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a25a2f35dcacaa54c16bdb5073ddc6536" name="a25a2f35dcacaa54c16bdb5073ddc6536"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25a2f35dcacaa54c16bdb5073ddc6536">&#9670;&#160;</a></span>n_log_variables</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::util::ControllerIO::n_log_variables = 0U</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0b0c2d80f989087b8e8667847073419f" name="a0b0c2d80f989087b8e8667847073419f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b0c2d80f989087b8e8667847073419f">&#9670;&#160;</a></span>nacelle_nodding_accel</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::nacelle_nodding_accel = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3adfe581f6f780ded39a69fc05fafc51" name="a3adfe581f6f780ded39a69fc05fafc51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3adfe581f6f780ded39a69fc05fafc51">&#9670;&#160;</a></span>nacelle_yaw_rate_command</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::nacelle_yaw_rate_command = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeb193f4e2bf124141f2cf60b0b24b85d" name="aeb193f4e2bf124141f2cf60b0b24b85d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb193f4e2bf124141f2cf60b0b24b85d">&#9670;&#160;</a></span>outname_array_size</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::util::ControllerIO::outname_array_size = 0U</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2399ee85baf71ed3ec563a44a7a19a9e" name="a2399ee85baf71ed3ec563a44a7a19a9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2399ee85baf71ed3ec563a44a7a19a9e">&#9670;&#160;</a></span>pitch_actuator_type_req</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::pitch_actuator_type_req = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="affb747b902bb9f92a2a6aa7448b51bca" name="affb747b902bb9f92a2a6aa7448b51bca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affb747b902bb9f92a2a6aa7448b51bca">&#9670;&#160;</a></span>pitch_blade1_actual</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::pitch_blade1_actual = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a59f83a2e9fc415d0330879204cebf147" name="a59f83a2e9fc415d0330879204cebf147"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59f83a2e9fc415d0330879204cebf147">&#9670;&#160;</a></span>pitch_blade1_command</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::pitch_blade1_command = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac490151a7157af7657bce6f1aa9d0532" name="ac490151a7157af7657bce6f1aa9d0532"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac490151a7157af7657bce6f1aa9d0532">&#9670;&#160;</a></span>pitch_blade2_actual</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::pitch_blade2_actual = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a643587f0401e1c75a0a35271c0bb2e80" name="a643587f0401e1c75a0a35271c0bb2e80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a643587f0401e1c75a0a35271c0bb2e80">&#9670;&#160;</a></span>pitch_blade2_command</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::pitch_blade2_command = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3d5431954c0e05ddbd5b73dc2d4fc1e7" name="a3d5431954c0e05ddbd5b73dc2d4fc1e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d5431954c0e05ddbd5b73dc2d4fc1e7">&#9670;&#160;</a></span>pitch_blade3_actual</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::pitch_blade3_actual = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad2db00f8e4efda75934b6da21d24de3f" name="ad2db00f8e4efda75934b6da21d24de3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2db00f8e4efda75934b6da21d24de3f">&#9670;&#160;</a></span>pitch_blade3_command</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::pitch_blade3_command = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1e2fa6fc2c2af62a9fba1462556c95d3" name="a1e2fa6fc2c2af62a9fba1462556c95d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e2fa6fc2c2af62a9fba1462556c95d3">&#9670;&#160;</a></span>pitch_collective_command</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::pitch_collective_command = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af2fb62c3bf720cd4925f1212a4d6c4f9" name="af2fb62c3bf720cd4925f1212a4d6c4f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2fb62c3bf720cd4925f1212a4d6c4f9">&#9670;&#160;</a></span>pitch_control_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::pitch_control_type = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad393db87f3e75ee175f5aca9afa8b4b4" name="ad393db87f3e75ee175f5aca9afa8b4b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad393db87f3e75ee175f5aca9afa8b4b4">&#9670;&#160;</a></span>pitch_override</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::ControllerIO::pitch_override = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8317f147fb76325361921bc330b2800f" name="a8317f147fb76325361921bc330b2800f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8317f147fb76325361921bc330b2800f">&#9670;&#160;</a></span>pitch_rate_command</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::pitch_rate_command = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a67e229676c178139fba3fe58e846cfac" name="a67e229676c178139fba3fe58e846cfac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67e229676c178139fba3fe58e846cfac">&#9670;&#160;</a></span>rotor_speed_actual</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::rotor_speed_actual = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acc0469c3a21945f285e7706964d0ab6d" name="acc0469c3a21945f285e7706964d0ab6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc0469c3a21945f285e7706964d0ab6d">&#9670;&#160;</a></span>shaft_brake_status</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::ControllerIO::shaft_brake_status = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6344e466e188ad2918a4fc8c58749295" name="a6344e466e188ad2918a4fc8c58749295"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6344e466e188ad2918a4fc8c58749295">&#9670;&#160;</a></span>status</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::ControllerIO::status = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1786ffb224123186d625c8585e59ed67" name="a1786ffb224123186d625c8585e59ed67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1786ffb224123186d625c8585e59ed67">&#9670;&#160;</a></span>time</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::time = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8434a03764991a30b2f7f866b8f6d7bd" name="a8434a03764991a30b2f7f866b8f6d7bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8434a03764991a30b2f7f866b8f6d7bd">&#9670;&#160;</a></span>torque_override</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::ControllerIO::torque_override = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a98f2f08f1d4b7dd736a688465cf7cf9f" name="a98f2f08f1d4b7dd736a688465cf7cf9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98f2f08f1d4b7dd736a688465cf7cf9f">&#9670;&#160;</a></span>tower_top_fore_aft_accel</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::tower_top_fore_aft_accel = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa5db8a1ffc34213da4f5fc4245a0923d" name="aa5db8a1ffc34213da4f5fc4245a0923d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5db8a1ffc34213da4f5fc4245a0923d">&#9670;&#160;</a></span>variable_slip_demand</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::ControllerIO::variable_slip_demand = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a251678f0485d14a8cd586cd22cf9ec37" name="a251678f0485d14a8cd586cd22cf9ec37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a251678f0485d14a8cd586cd22cf9ec37">&#9670;&#160;</a></span>variable_slip_status</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::ControllerIO::variable_slip_status = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca98f64db3d315fc23e04a25138a907a" name="aca98f64db3d315fc23e04a25138a907a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca98f64db3d315fc23e04a25138a907a">&#9670;&#160;</a></span>yaw_actuator_torque_command</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::yaw_actuator_torque_command = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a96b439b796ecee29b96f71c37a9cc1e6" name="a96b439b796ecee29b96f71c37a9cc1e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96b439b796ecee29b96f71c37a9cc1e6">&#9670;&#160;</a></span>yaw_angle_actual</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::yaw_angle_actual = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5f7748e999a7997e6237ac12b9339a76" name="a5f7748e999a7997e6237ac12b9339a76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f7748e999a7997e6237ac12b9339a76">&#9670;&#160;</a></span>yaw_error_actual</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::util::ControllerIO::yaw_error_actual = 0.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/utilities/controllers/<a class="el" href="controller__io_8hpp_source.html">controller_io.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

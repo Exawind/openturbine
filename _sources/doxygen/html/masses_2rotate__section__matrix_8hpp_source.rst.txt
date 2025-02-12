@@ -1,0 +1,14 @@
+.. meta::fec15827b025133ba92ada233c2d747cbd16827b9583258949fc3311b7bf682538b81bd09fe093db98e7616ec1da1b65413c8a42275d092c006635c32e6707db
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/rotate_section_matrix.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/system/masses/rotate\_section\_matrix.hpp Source File
+===============================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: masses_2rotate__section__matrix_8hpp_source.html

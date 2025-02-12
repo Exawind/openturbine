@@ -1,0 +1,14 @@
+.. meta::f2fe4ef7f21e800452a0221de8a06f66ce076d90e28d4d8b2d5594c1d0dcf1aae115a672c066d3e206a94d73624ff1cfee5624e9b81e438acd1397c38eea12be
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/compute_k_col_inds.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/compute\_k\_col\_inds.hpp Source File
+======================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: compute__k__col__inds_8hpp_source.html

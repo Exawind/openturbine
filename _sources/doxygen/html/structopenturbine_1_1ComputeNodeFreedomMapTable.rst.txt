@@ -1,0 +1,14 @@
+.. meta::072b18cc95b0868ca9e0e5d3074c3945a1c2362775aae43605c119088235dcfa186a0924a89dd718fcb1a0cfc42e4f689b298ac29b0245bd0ccd51cb564adbb3
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::ComputeNodeFreedomMapTable Struct Reference
+
+ComputeNodeFreedomMapTable Struct Reference
+===========================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1ComputeNodeFreedomMapTable.html

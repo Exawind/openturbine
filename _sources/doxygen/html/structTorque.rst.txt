@@ -1,0 +1,14 @@
+.. meta::9775323c4d6c833109a60ffef45d5015846b466161d92a6ed5db466b54bc8f92ae90f28b5f0dd53e38984252b04ce3227adebd4ffd3508783ff35b15bb3e2e28
+
+:orphan:
+
+.. title:: OpenTurbine API: Torque Struct Reference
+
+Torque Struct Reference
+=======================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structTorque.html

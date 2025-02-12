@@ -1,0 +1,14 @@
+.. meta::cecfb37ff563a6f4e95b57ce245ce43d2f7bd070f36ca71ac8b7ae71d09b375ed810341104d8481b6de77c1c72edb882a82cb810d40f45d51fbf6339671a0b1a
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::util::TurbineController Class Reference
+
+TurbineController Class Reference
+=================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classopenturbine_1_1util_1_1TurbineController.html

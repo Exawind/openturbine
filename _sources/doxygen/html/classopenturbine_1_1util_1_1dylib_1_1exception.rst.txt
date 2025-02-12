@@ -1,0 +1,14 @@
+.. meta::d0a672f2c58528755e0cec494bdb44e850e121addce060bbef258ed1460403c53fa4566e36fdba982c8a9dc292fad659b8bc2bbfbb9f611fd25b03262fcd47f8
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::util::dylib::exception Class Reference
+
+exception Class Reference
+=========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classopenturbine_1_1util_1_1dylib_1_1exception.html

@@ -1,0 +1,14 @@
+.. meta::36a1305c6373b8d860f99a7efd039b89ebe410656e12e3f7a4cb66c4e293736833c4c45a9c15067d109b14cf237ce4d70ff6fadbd2ae0db54ef337b136d7eb5b
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::cfd::TurbineInput Struct Reference
+
+TurbineInput Struct Reference
+=============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1cfd_1_1TurbineInput.html

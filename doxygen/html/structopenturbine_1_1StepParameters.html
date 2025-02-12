@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::StepParameters Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::StepParameters Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1StepParameters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="stepparameters-struct-reference">
+<h1>StepParameters Struct Reference<a class="headerlink" href="#stepparameters-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::StepParameters Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1StepParameters-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::StepParameters Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="step__parameters_8hpp_source.html">step_parameters.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aa3768db050f3ad800d9641c9c8e8891e" id="r_aa3768db050f3ad800d9641c9c8e8891e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#aa3768db050f3ad800d9641c9c8e8891e">StepParameters</a> (bool is_dynamic_solve_, size_t max_iter_, double h_, double rho_inf, double a_tol=1e-5, double r_tol=1e-3)</td></tr>
+<tr class="separator:aa3768db050f3ad800d9641c9c8e8891e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a17db32936a726c2d8a5ad6e2b9a3b3c2" id="r_a17db32936a726c2d8a5ad6e2b9a3b3c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#a17db32936a726c2d8a5ad6e2b9a3b3c2">is_dynamic_solve</a></td></tr>
+<tr class="separator:a17db32936a726c2d8a5ad6e2b9a3b3c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9f4d98fbe2504f608d33320f37a26da" id="r_ac9f4d98fbe2504f608d33320f37a26da"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#ac9f4d98fbe2504f608d33320f37a26da">max_iter</a></td></tr>
+<tr class="separator:ac9f4d98fbe2504f608d33320f37a26da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40a84c9729594b734d88ee774de01fe3" id="r_a40a84c9729594b734d88ee774de01fe3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#a40a84c9729594b734d88ee774de01fe3">h</a></td></tr>
+<tr class="separator:a40a84c9729594b734d88ee774de01fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4e08639d38f827148854255f1b80f7d" id="r_ab4e08639d38f827148854255f1b80f7d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#ab4e08639d38f827148854255f1b80f7d">alpha_m</a></td></tr>
+<tr class="separator:ab4e08639d38f827148854255f1b80f7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cee439e456bf516ca18febd376be17a" id="r_a3cee439e456bf516ca18febd376be17a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#a3cee439e456bf516ca18febd376be17a">alpha_f</a></td></tr>
+<tr class="separator:a3cee439e456bf516ca18febd376be17a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9c88a7cd5757c0a5a4782083ad12675" id="r_ac9c88a7cd5757c0a5a4782083ad12675"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#ac9c88a7cd5757c0a5a4782083ad12675">gamma</a></td></tr>
+<tr class="separator:ac9c88a7cd5757c0a5a4782083ad12675"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab05864920b337f4c6aed52101a52cbac" id="r_ab05864920b337f4c6aed52101a52cbac"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#ab05864920b337f4c6aed52101a52cbac">beta</a></td></tr>
+<tr class="separator:ab05864920b337f4c6aed52101a52cbac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ba6a53b994599a41cbf3466336c1190" id="r_a4ba6a53b994599a41cbf3466336c1190"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#a4ba6a53b994599a41cbf3466336c1190">gamma_prime</a></td></tr>
+<tr class="separator:a4ba6a53b994599a41cbf3466336c1190"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3c1bfd00eea75380909266315d3b099" id="r_ac3c1bfd00eea75380909266315d3b099"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#ac3c1bfd00eea75380909266315d3b099">beta_prime</a></td></tr>
+<tr class="separator:ac3c1bfd00eea75380909266315d3b099"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a825cdff3a295789c05a0eb05623ae8ba" id="r_a825cdff3a295789c05a0eb05623ae8ba"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#a825cdff3a295789c05a0eb05623ae8ba">conditioner</a></td></tr>
+<tr class="separator:a825cdff3a295789c05a0eb05623ae8ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3fe0d41ce6701b25f2866777bc808b2" id="r_ac3fe0d41ce6701b25f2866777bc808b2"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#ac3fe0d41ce6701b25f2866777bc808b2">absolute_convergence_tol</a></td></tr>
+<tr class="separator:ac3fe0d41ce6701b25f2866777bc808b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abde3d74e83fb9d65ea2362f01259635f" id="r_abde3d74e83fb9d65ea2362f01259635f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#abde3d74e83fb9d65ea2362f01259635f">relative_convergence_tol</a></td></tr>
+<tr class="separator:abde3d74e83fb9d65ea2362f01259635f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aa3768db050f3ad800d9641c9c8e8891e" name="aa3768db050f3ad800d9641c9c8e8891e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3768db050f3ad800d9641c9c8e8891e">&#9670;&#160;</a></span>StepParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::StepParameters::StepParameters </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_dynamic_solve_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>max_iter_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>h_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>rho_inf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>a_tol</em> = <code>1e-5</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>r_tol</em> = <code>1e-3</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ac3fe0d41ce6701b25f2866777bc808b2" name="ac3fe0d41ce6701b25f2866777bc808b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3fe0d41ce6701b25f2866777bc808b2">&#9670;&#160;</a></span>absolute_convergence_tol</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::StepParameters::absolute_convergence_tol</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3cee439e456bf516ca18febd376be17a" name="a3cee439e456bf516ca18febd376be17a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cee439e456bf516ca18febd376be17a">&#9670;&#160;</a></span>alpha_f</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::StepParameters::alpha_f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab4e08639d38f827148854255f1b80f7d" name="ab4e08639d38f827148854255f1b80f7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4e08639d38f827148854255f1b80f7d">&#9670;&#160;</a></span>alpha_m</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::StepParameters::alpha_m</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab05864920b337f4c6aed52101a52cbac" name="ab05864920b337f4c6aed52101a52cbac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab05864920b337f4c6aed52101a52cbac">&#9670;&#160;</a></span>beta</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::StepParameters::beta</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac3c1bfd00eea75380909266315d3b099" name="ac3c1bfd00eea75380909266315d3b099"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3c1bfd00eea75380909266315d3b099">&#9670;&#160;</a></span>beta_prime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::StepParameters::beta_prime</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a825cdff3a295789c05a0eb05623ae8ba" name="a825cdff3a295789c05a0eb05623ae8ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a825cdff3a295789c05a0eb05623ae8ba">&#9670;&#160;</a></span>conditioner</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::StepParameters::conditioner</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac9c88a7cd5757c0a5a4782083ad12675" name="ac9c88a7cd5757c0a5a4782083ad12675"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9c88a7cd5757c0a5a4782083ad12675">&#9670;&#160;</a></span>gamma</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::StepParameters::gamma</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4ba6a53b994599a41cbf3466336c1190" name="a4ba6a53b994599a41cbf3466336c1190"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ba6a53b994599a41cbf3466336c1190">&#9670;&#160;</a></span>gamma_prime</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::StepParameters::gamma_prime</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a40a84c9729594b734d88ee774de01fe3" name="a40a84c9729594b734d88ee774de01fe3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40a84c9729594b734d88ee774de01fe3">&#9670;&#160;</a></span>h</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::StepParameters::h</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a17db32936a726c2d8a5ad6e2b9a3b3c2" name="a17db32936a726c2d8a5ad6e2b9a3b3c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17db32936a726c2d8a5ad6e2b9a3b3c2">&#9670;&#160;</a></span>is_dynamic_solve</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool openturbine::StepParameters::is_dynamic_solve</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac9f4d98fbe2504f608d33320f37a26da" name="ac9f4d98fbe2504f608d33320f37a26da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9f4d98fbe2504f608d33320f37a26da">&#9670;&#160;</a></span>max_iter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::StepParameters::max_iter</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abde3d74e83fb9d65ea2362f01259635f" name="abde3d74e83fb9d65ea2362f01259635f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abde3d74e83fb9d65ea2362f01259635f">&#9670;&#160;</a></span>relative_convergence_tol</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::StepParameters::relative_convergence_tol</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/step/<a class="el" href="step__parameters_8hpp_source.html">step_parameters.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+.. meta::5455396d62f2161555ecc73b3a841a0e322db8ae4b04dd8b8998e642ac96b1364d7b79fb0d59e0552a659164581d883d34073b2e8de53762025930480f21f5e1
+
+:orphan:
+
+.. title:: OpenTurbine API: Member List
+
+Member List
+===========
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structCoordinates-members.html

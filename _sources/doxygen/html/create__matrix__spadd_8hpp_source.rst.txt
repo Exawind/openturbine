@@ -1,0 +1,14 @@
+.. meta::d71b29091566e7ee6901795562638999a3a09ab1f06041342c8dc1d22ee930ec2c73fb077bb8918554476f76cd1206cca173a1901b0e39e24b70544d1c033cd6
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/create_matrix_spadd.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/create\_matrix\_spadd.hpp Source File
+======================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: create__matrix__spadd_8hpp_source.html

@@ -1,0 +1,14 @@
+.. meta::b4b67311edd688cb4a5c0c716e18d66dda6de7b75af6a5e7eafcf47e1080956901be726ed2bc3e5d6a0aa28fdc4780ef5af4eb145dcf5f6f6998b8ae0757d42e
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/compute_k_num_non_zero.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/compute\_k\_num\_non\_zero.hpp File Reference
+==============================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: compute__k__num__non__zero_8hpp.html

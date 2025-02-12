@@ -1,0 +1,14 @@
+.. meta::0ad081fc03e68dc2043ba61af3a2185105679171b4ea4e4b2579663ef49436caaeb2782bc17bdd87895051f2b748c4b4684bd91a49394f78f826f125f413751b
+
+:orphan:
+
+.. title:: OpenTurbine API: OuterShapeBem Struct Reference
+
+OuterShapeBem Struct Reference
+==============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structOuterShapeBem.html

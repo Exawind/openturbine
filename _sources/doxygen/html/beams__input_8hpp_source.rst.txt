@@ -1,0 +1,14 @@
+.. meta::c09d38e259d41bacc27647ebf9baf7017c8a56cbfa9b9082dddef5e7d9bf21273e1f1a81053ce9f883a59bc68c949532181dab6af14902dcd8c3df7c7cb12f62
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/beams_input.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/beams\_input.hpp Source File
+=====================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: beams__input_8hpp_source.html

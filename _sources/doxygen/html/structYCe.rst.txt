@@ -1,0 +1,14 @@
+.. meta::9d3a2132a99244348cc49e87f9a1f01e92a6653c267bd650b186d71d4a7a288bfb3055c40a3b9a93925e28b1950d56000a5f79abd4903d204a508a972d69a838
+
+:orphan:
+
+.. title:: OpenTurbine API: YCe Struct Reference
+
+YCe Struct Reference
+====================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structYCe.html

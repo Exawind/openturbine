@@ -1,0 +1,14 @@
+.. meta::0a8387ef698f0231cdecb73e49b7b7c6935ad50f99b679a8c65fc990ef25d5a4899c441092b50c8e59bceaa4786347e542f8f59b5c5cd79cc504c7970f38ada1
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver Directory Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver Directory Reference
+====================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: dir_041db6ad6a3d44280e40e5af409429cb.html

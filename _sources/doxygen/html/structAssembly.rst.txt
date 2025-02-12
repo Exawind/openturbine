@@ -1,0 +1,14 @@
+.. meta::1d8097193cdbdb5f5649eff43d08f1c7657d5cc88478cd637f0de3353a4e42f454cb5bc72d92af11e7a07d0fd39480a8f44ec92f47d3dd181c1a0962c446fa1e
+
+:orphan:
+
+.. title:: OpenTurbine API: Assembly Struct Reference
+
+Assembly Struct Reference
+=========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structAssembly.html

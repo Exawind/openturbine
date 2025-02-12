@@ -1,0 +1,14 @@
+.. meta::c818e1a9ea0e4aed8fccb43d4fe58f2cedb1c74658eccd0d37faa5c07c451dd723ee3d892c34a170b064bc4f8b431fbd0ca56783c6ad5d9a03490210ea711b0c
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::AssembleNodeFreedomMapTable_Masses Struct Reference
+
+AssembleNodeFreedomMapTable\_Masses Struct Reference
+====================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1AssembleNodeFreedomMapTable__Masses.html

@@ -1,0 +1,14 @@
+.. meta::430a0a167f6e189b7585412a5f6d16b05099c31b48b1564d32bf718faf374814eb73f77846b990b6728004b3cbf365f20f9f7542bd331bf445cf514551ffd18d
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::RotateSectionMatrix Struct Reference
+
+RotateSectionMatrix Struct Reference
+====================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1RotateSectionMatrix.html

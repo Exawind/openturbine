@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Walkthrough" href="walkthrough/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            OpenTurbine
+              <img src="_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="openturbine">
+<h1>OpenTurbine<a class="headerlink" href="#openturbine" title="Permalink to this heading"></a></h1>
+<p><a class="reference external" href="https://github.com/exawind/openturbine">OpenTurbine</a> is an open-source wind
+turbine structural dynamics simulation code designed to meet the research needs of
+the Wind Energy Technologies Office (WETO) and the broader wind energy community
+for both land-based and offshore wind turbines. OpenTurbine offers high-fidelity,
+high-performance structural dynamics models that can integrate with low-fidelity
+aerodynamic/hydrodynamic models, such as those in
+<a class="reference external" href="https://github.com/OpenFAST/openfast">OpenFAST</a>, as well as high-fidelity
+computational fluid dynamics (CFD) models, like those in the WETO and Office of
+Science-supported <a class="reference external" href="https://github.com/Exawind">ExaWind</a> code suite.</p>
+<p>Following are the high-level development objectives of OpenTurbine:</p>
+<ul class="simple">
+<li><p>OpenTurbine adheres to modern software development best practices. The
+development process emphasizes test-driven development (TDD), version control,
+hierarchical automated testing, and continuous integration, leading to a robust
+development environment.</p></li>
+<li><p>OpenTurbine is being developed in modern C++ and leverages
+<a class="reference external" href="https://github.com/kokkos/kokkos">Kokkos</a> as its performance-portability
+library, drawing inspiration from the ExaWind stack.</p></li>
+<li><p>The core data structures are crafted to be memory efficient, enabling
+vectorization and parallelization at multiple levels.</p></li>
+<li><p>These structures are data-oriented to leverage accelerated computing methods,
+including high utilization of chip resources (e.g., single instruction multiple
+data, SIMD), parallelization through GPGPUs or other hardware, and support for
+memory-efficient architectures.</p></li>
+<li><p>The computational algorithms incorporate robust open-source libraries for
+mathematical operations, resource allocation, and data management.</p></li>
+<li><p>The API design considers the needs of multiple stakeholders, ensuring
+integration with existing and future ecosystems for data science, machine
+learning, and AI.</p></li>
+</ul>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="walkthrough/index.html">Walkthrough</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="walkthrough/compiling.html">Compiling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user/user.html">User Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user/features.html">Capabilities and Roadmap</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="theory/index.html">Theory Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="theory/flexible_beam.html">SO(3)-based GEBT Beam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/rigid_body.html">R3xSO(3)-based Rigid Body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/nonlinear_spring.html">R3-based geometrically nonlinear, constitutively linear spring</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer/index.html">Developer Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developer/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer/dev_plan.html">OpenTurbine Development Plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer/documentation.html">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doxygen/html/index.html">OpenTurbine API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer/tools.html">Developer Tools</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="walkthrough/index.html" class="btn btn-neutral float-right" title="Walkthrough" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+.. meta::8cf79d4e219569efba492fd5e5abdaa8384c5ca971e1b92886b4e5cf6d590d8b15b4a4bfe3596574b069842a1cc9ba9c057e0c7fdd1161a4e5fae7562625498f
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/state/update_algorithmic_acceleration.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/state/update\_algorithmic\_acceleration.hpp Source File
+=================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: update__algorithmic__acceleration_8hpp_source.html

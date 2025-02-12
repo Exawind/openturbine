@@ -1,0 +1,14 @@
+.. meta::fa35242c6b92c95ef816ea3c305f7b66c7053c73e48517a8f7f70e7d2c80e0a1535841a7e4f650bacc66d0089ffc8475c22494d8d5a12c28f0be9d0acb3912d3
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CopyIntoSparseMatrix&lt; CrsMatrixType &gt; Struct Template Reference
+
+CopyIntoSparseMatrix&lt; CrsMatrixType &gt; Struct Template Reference
+=====================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CopyIntoSparseMatrix.html

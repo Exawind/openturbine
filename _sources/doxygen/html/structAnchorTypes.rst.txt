@@ -1,0 +1,14 @@
+.. meta::772d6293da91e52582da541d8898be461300b78ec2233d4e7865207af7a9dd12f0a57e16c7fc83722f8cf6ba7ffd5d1f8b8f9c1438600788e92e3e79a6a1d36a
+
+:orphan:
+
+.. title:: OpenTurbine API: AnchorTypes Struct Reference
+
+AnchorTypes Struct Reference
+============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structAnchorTypes.html

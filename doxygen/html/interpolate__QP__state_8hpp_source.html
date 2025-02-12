@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolate_QP_state.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolate_QP_state.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/interpolate__QP__state_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-elements-beams-interpolate-qp-state-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolate_QP_state.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-elements-beams-interpolate-qp-state-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolate_QP_state.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b2470cdf236b10787c6012057be7848d.html">elements</a></li><li class="navelem"><a class="el" href="dir_467ef56e72de87001669b22649121af0.html">beams</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">interpolate_QP_state.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="interpolate__QP__state_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="quaternion__operations_8hpp.html">math/quaternion_operations.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__u.html">   12</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1InterpolateQPState__u.html">InterpolateQPState_u</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__u.html#a71f10c57cce7fa72a3ccd7d896cf108d">   13</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#a71f10c57cce7fa72a3ccd7d896cf108d">i_elem</a>;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__u.html#a2c466f8e02eab044f37c083f1e691f55">   14</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#a2c466f8e02eab044f37c083f1e691f55">num_nodes</a>;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__u.html#af68207baaaf4b7c0150de81363471738">   15</a></span>    Kokkos::View&lt;double***&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#af68207baaaf4b7c0150de81363471738">shape_interp</a>;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__u.html#ae315c64633605e7417c3cdbc6ee4f106">   16</a></span>    Kokkos::View&lt;double** [7]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#ae315c64633605e7417c3cdbc6ee4f106">node_u</a>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__u.html#ab95227a73829adbabb905f25dd2ce457">   17</a></span>    Kokkos::View&lt;double** [3]&gt; <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#ab95227a73829adbabb905f25dd2ce457">qp_u</a>;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    KOKKOS_FUNCTION</div>
+<div class="foldopen" id="foldopen00020" data-start="{" data-end="}">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__u.html#ad1905a5dd42670ff612d32316668f424">   20</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1InterpolateQPState__u.html#ad1905a5dd42670ff612d32316668f424">operator()</a>(<span class="keywordtype">size_t</span> j_index)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keyword">auto</span> local_total = Kokkos::Array&lt;double, 3&gt;{};</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i_index = 0U; i_index &lt; <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#a2c466f8e02eab044f37c083f1e691f55">num_nodes</a>; ++i_index) {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            <span class="keyword">const</span> <span class="keyword">auto</span> phi = <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#af68207baaaf4b7c0150de81363471738">shape_interp</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#a71f10c57cce7fa72a3ccd7d896cf108d">i_elem</a>, i_index, j_index);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 3U; ++k) {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                local_total[k] += <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#ae315c64633605e7417c3cdbc6ee4f106">node_u</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#a71f10c57cce7fa72a3ccd7d896cf108d">i_elem</a>, i_index, k) * phi;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            }</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        }</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 3U; ++k) {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#ab95227a73829adbabb905f25dd2ce457">qp_u</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__u.html#a71f10c57cce7fa72a3ccd7d896cf108d">i_elem</a>, j_index, k) = local_total[k];</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        }</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    }</div>
+</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>};</div>
+</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="foldopen" id="foldopen00037" data-start="{" data-end="};">
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__uprime.html">   37</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1InterpolateQPState__uprime.html">InterpolateQPState_uprime</a> {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__uprime.html#a9299b3a03927121490c026cdc3a80f2a">   38</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#a9299b3a03927121490c026cdc3a80f2a">i_elem</a>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__uprime.html#aebbada9838e5a515929f41ee9b0d3156">   39</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#aebbada9838e5a515929f41ee9b0d3156">num_nodes</a>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__uprime.html#acda62898a219f5c7406e70ea912e0873">   40</a></span>    Kokkos::View&lt;double***&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#acda62898a219f5c7406e70ea912e0873">shape_deriv</a>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__uprime.html#a4ad1d9df0ce6507368678a94ae309ace">   41</a></span>    Kokkos::View&lt;double**&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#a4ad1d9df0ce6507368678a94ae309ace">qp_jacobian</a>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__uprime.html#aa50f16e840c74c8d42413f5efa92b538">   42</a></span>    Kokkos::View&lt;double** [7]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#aa50f16e840c74c8d42413f5efa92b538">node_u</a>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__uprime.html#af5ef75f10445fce9f2e696a6166fb24c">   43</a></span>    Kokkos::View&lt;double** [3]&gt; <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#af5ef75f10445fce9f2e696a6166fb24c">qp_uprime</a>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    KOKKOS_FUNCTION</div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__uprime.html#aaf04100b6ef9e15f781b13ffdd048c31">   46</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1InterpolateQPState__uprime.html#aaf04100b6ef9e15f781b13ffdd048c31">operator()</a>(<span class="keywordtype">size_t</span> j_index)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keyword">const</span> <span class="keyword">auto</span> jacobian = <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#a4ad1d9df0ce6507368678a94ae309ace">qp_jacobian</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#a9299b3a03927121490c026cdc3a80f2a">i_elem</a>, j_index);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keyword">auto</span> local_total = Kokkos::Array&lt;double, 3&gt;{};</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i_index = 0U; i_index &lt; <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#aebbada9838e5a515929f41ee9b0d3156">num_nodes</a>; ++i_index) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            <span class="keyword">const</span> <span class="keyword">auto</span> dphi = <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#acda62898a219f5c7406e70ea912e0873">shape_deriv</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#a9299b3a03927121490c026cdc3a80f2a">i_elem</a>, i_index, j_index);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 3U; ++k) {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                local_total[k] += <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#aa50f16e840c74c8d42413f5efa92b538">node_u</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#a9299b3a03927121490c026cdc3a80f2a">i_elem</a>, i_index, k) * dphi / jacobian;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 3U; ++k) {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#af5ef75f10445fce9f2e696a6166fb24c">qp_uprime</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__uprime.html#a9299b3a03927121490c026cdc3a80f2a">i_elem</a>, j_index, k) = local_total[k];</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    }</div>
+</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>};</div>
+</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="foldopen" id="foldopen00064" data-start="{" data-end="};">
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__r.html">   64</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1InterpolateQPState__r.html">InterpolateQPState_r</a> {</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__r.html#a73accef506038f5755dd0d9b03ef9f26">   65</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#a73accef506038f5755dd0d9b03ef9f26">i_elem</a>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__r.html#afa0abe131a99994bbfae7e492730bc1c">   66</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#afa0abe131a99994bbfae7e492730bc1c">num_nodes</a>;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__r.html#af3002a7a969e386fb0e759c21c129cd7">   67</a></span>    Kokkos::View&lt;double***&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#af3002a7a969e386fb0e759c21c129cd7">shape_interp</a>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__r.html#ac2f071600ea94825a992794e2c654a45">   68</a></span>    Kokkos::View&lt;double** [7]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#ac2f071600ea94825a992794e2c654a45">node_u</a>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__r.html#a72c121a93f68e5bc284a57e54635e41e">   69</a></span>    Kokkos::View&lt;double** [4]&gt; <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#a72c121a93f68e5bc284a57e54635e41e">qp_r</a>;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    KOKKOS_FUNCTION</div>
+<div class="foldopen" id="foldopen00072" data-start="{" data-end="}">
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__r.html#a91bdbc65f2f1f2bfba8dfca6e794097b">   72</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1InterpolateQPState__r.html#a91bdbc65f2f1f2bfba8dfca6e794097b">operator()</a>(<span class="keywordtype">size_t</span> j_index)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keyword">auto</span> local_total = Kokkos::Array&lt;double, 4&gt;{};</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i_index = 0U; i_index &lt; <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#afa0abe131a99994bbfae7e492730bc1c">num_nodes</a>; ++i_index) {</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            <span class="keyword">const</span> <span class="keyword">auto</span> phi = <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#af3002a7a969e386fb0e759c21c129cd7">shape_interp</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#a73accef506038f5755dd0d9b03ef9f26">i_elem</a>, i_index, j_index);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 4U; ++k) {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                local_total[k] += <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#ac2f071600ea94825a992794e2c654a45">node_u</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#a73accef506038f5755dd0d9b03ef9f26">i_elem</a>, i_index, k + 3) * phi;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            }</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        }</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 4U; ++k) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#a72c121a93f68e5bc284a57e54635e41e">qp_r</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__r.html#a73accef506038f5755dd0d9b03ef9f26">i_elem</a>, j_index, k) = <a class="code hl_function" href="namespaceopenturbine.html#ac8b39de2d4c5546c48b34c5f3f8bfa71">NormalizeQuaternion</a>(local_total)[k];</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        }</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    }</div>
+</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>};</div>
+</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="foldopen" id="foldopen00090" data-start="{" data-end="};">
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__rprime.html">   90</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1InterpolateQPState__rprime.html">InterpolateQPState_rprime</a> {</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__rprime.html#a5a320209ac26106149cf0b2ced9ff9aa">   91</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#a5a320209ac26106149cf0b2ced9ff9aa">i_elem</a>;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__rprime.html#a0749890fdc362e6dff266fe35d8be0f7">   92</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#a0749890fdc362e6dff266fe35d8be0f7">num_nodes</a>;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__rprime.html#ae684ef3d83da473f6f3b1c911a826654">   93</a></span>    Kokkos::View&lt;double***&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#ae684ef3d83da473f6f3b1c911a826654">shape_deriv</a>;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__rprime.html#a1f86f64aa95c2fd0ff19a8cb3d91fcb2">   94</a></span>    Kokkos::View&lt;double**&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#a1f86f64aa95c2fd0ff19a8cb3d91fcb2">qp_jacobian</a>;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__rprime.html#a4bf08ac49b77168b30658a4867ad08f4">   95</a></span>    Kokkos::View&lt;double** [7]&gt;::const_type <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#a4bf08ac49b77168b30658a4867ad08f4">node_u</a>;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__rprime.html#afe0034e9323d92cd517e3111ba2af0b2">   96</a></span>    Kokkos::View&lt;double** [4]&gt; <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#afe0034e9323d92cd517e3111ba2af0b2">qp_rprime</a>;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    KOKKOS_FUNCTION</div>
+<div class="foldopen" id="foldopen00099" data-start="{" data-end="}">
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="structopenturbine_1_1InterpolateQPState__rprime.html#a6ec39a0a34c43f067d7923e615d57955">   99</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1InterpolateQPState__rprime.html#a6ec39a0a34c43f067d7923e615d57955">operator()</a>(<span class="keywordtype">size_t</span> j_index)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keyword">const</span> <span class="keyword">auto</span> jacobian = <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#a1f86f64aa95c2fd0ff19a8cb3d91fcb2">qp_jacobian</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#a5a320209ac26106149cf0b2ced9ff9aa">i_elem</a>, j_index);</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="keyword">auto</span> local_total = Kokkos::Array&lt;double, 4&gt;{};</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i_index = 0U; i_index &lt; <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#a0749890fdc362e6dff266fe35d8be0f7">num_nodes</a>; ++i_index) {</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            <span class="keyword">const</span> <span class="keyword">auto</span> dphi = <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#ae684ef3d83da473f6f3b1c911a826654">shape_deriv</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#a5a320209ac26106149cf0b2ced9ff9aa">i_elem</a>, i_index, j_index);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 4U; ++k) {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                local_total[k] += <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#a4bf08ac49b77168b30658a4867ad08f4">node_u</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#a5a320209ac26106149cf0b2ced9ff9aa">i_elem</a>, i_index, k + 3) * dphi / jacobian;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 4U; ++k) {</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            <a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#afe0034e9323d92cd517e3111ba2af0b2">qp_rprime</a>(<a class="code hl_variable" href="structopenturbine_1_1InterpolateQPState__rprime.html#a5a320209ac26106149cf0b2ced9ff9aa">i_elem</a>, j_index, k) = local_total[k];</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        }</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    }</div>
+</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>};</div>
+</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_force.hpp:9</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac8b39de2d4c5546c48b34c5f3f8bfa71"><div class="ttname"><a href="namespaceopenturbine.html#ac8b39de2d4c5546c48b34c5f3f8bfa71">openturbine::NormalizeQuaternion</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION Kokkos::Array&lt; double, 4 &gt; NormalizeQuaternion(const Kokkos::Array&lt; double, 4 &gt; &amp;q)</div><div class="ttdoc">Normalizes a quaternion to ensure it is a unit quaternion.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:226</div></div>
+<div class="ttc" id="aquaternion__operations_8hpp_html"><div class="ttname"><a href="quaternion__operations_8hpp.html">quaternion_operations.hpp</a></div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__r_html"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__r.html">openturbine::InterpolateQPState_r</a></div><div class="ttdoc">Interpolates the rotation (r) part of the state at a quadrature point.</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:64</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__r_html_a72c121a93f68e5bc284a57e54635e41e"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__r.html#a72c121a93f68e5bc284a57e54635e41e">openturbine::InterpolateQPState_r::qp_r</a></div><div class="ttdeci">Kokkos::View&lt; double **[4]&gt; qp_r</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:69</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__r_html_a73accef506038f5755dd0d9b03ef9f26"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__r.html#a73accef506038f5755dd0d9b03ef9f26">openturbine::InterpolateQPState_r::i_elem</a></div><div class="ttdeci">size_t i_elem</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:65</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__r_html_a91bdbc65f2f1f2bfba8dfca6e794097b"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__r.html#a91bdbc65f2f1f2bfba8dfca6e794097b">openturbine::InterpolateQPState_r::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(size_t j_index) const</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:72</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__r_html_ac2f071600ea94825a992794e2c654a45"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__r.html#ac2f071600ea94825a992794e2c654a45">openturbine::InterpolateQPState_r::node_u</a></div><div class="ttdeci">Kokkos::View&lt; double **[7]&gt;::const_type node_u</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:68</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__r_html_af3002a7a969e386fb0e759c21c129cd7"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__r.html#af3002a7a969e386fb0e759c21c129cd7">openturbine::InterpolateQPState_r::shape_interp</a></div><div class="ttdeci">Kokkos::View&lt; double *** &gt;::const_type shape_interp</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:67</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__r_html_afa0abe131a99994bbfae7e492730bc1c"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__r.html#afa0abe131a99994bbfae7e492730bc1c">openturbine::InterpolateQPState_r::num_nodes</a></div><div class="ttdeci">size_t num_nodes</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:66</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__rprime_html"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__rprime.html">openturbine::InterpolateQPState_rprime</a></div><div class="ttdoc">Interpolates the rotation derivative (r') part of the state at a quadrature point.</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:90</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__rprime_html_a0749890fdc362e6dff266fe35d8be0f7"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__rprime.html#a0749890fdc362e6dff266fe35d8be0f7">openturbine::InterpolateQPState_rprime::num_nodes</a></div><div class="ttdeci">size_t num_nodes</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:92</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__rprime_html_a1f86f64aa95c2fd0ff19a8cb3d91fcb2"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__rprime.html#a1f86f64aa95c2fd0ff19a8cb3d91fcb2">openturbine::InterpolateQPState_rprime::qp_jacobian</a></div><div class="ttdeci">Kokkos::View&lt; double ** &gt;::const_type qp_jacobian</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:94</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__rprime_html_a4bf08ac49b77168b30658a4867ad08f4"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__rprime.html#a4bf08ac49b77168b30658a4867ad08f4">openturbine::InterpolateQPState_rprime::node_u</a></div><div class="ttdeci">Kokkos::View&lt; double **[7]&gt;::const_type node_u</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:95</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__rprime_html_a5a320209ac26106149cf0b2ced9ff9aa"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__rprime.html#a5a320209ac26106149cf0b2ced9ff9aa">openturbine::InterpolateQPState_rprime::i_elem</a></div><div class="ttdeci">size_t i_elem</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:91</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__rprime_html_a6ec39a0a34c43f067d7923e615d57955"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__rprime.html#a6ec39a0a34c43f067d7923e615d57955">openturbine::InterpolateQPState_rprime::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(size_t j_index) const</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:99</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__rprime_html_ae684ef3d83da473f6f3b1c911a826654"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__rprime.html#ae684ef3d83da473f6f3b1c911a826654">openturbine::InterpolateQPState_rprime::shape_deriv</a></div><div class="ttdeci">Kokkos::View&lt; double *** &gt;::const_type shape_deriv</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:93</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__rprime_html_afe0034e9323d92cd517e3111ba2af0b2"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__rprime.html#afe0034e9323d92cd517e3111ba2af0b2">openturbine::InterpolateQPState_rprime::qp_rprime</a></div><div class="ttdeci">Kokkos::View&lt; double **[4]&gt; qp_rprime</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:96</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__u_html"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__u.html">openturbine::InterpolateQPState_u</a></div><div class="ttdoc">Interpolates the displacement (u) part of the state at a quadrature point.</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:12</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__u_html_a2c466f8e02eab044f37c083f1e691f55"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__u.html#a2c466f8e02eab044f37c083f1e691f55">openturbine::InterpolateQPState_u::num_nodes</a></div><div class="ttdeci">size_t num_nodes</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:14</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__u_html_a71f10c57cce7fa72a3ccd7d896cf108d"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__u.html#a71f10c57cce7fa72a3ccd7d896cf108d">openturbine::InterpolateQPState_u::i_elem</a></div><div class="ttdeci">size_t i_elem</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:13</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__u_html_ab95227a73829adbabb905f25dd2ce457"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__u.html#ab95227a73829adbabb905f25dd2ce457">openturbine::InterpolateQPState_u::qp_u</a></div><div class="ttdeci">Kokkos::View&lt; double **[3]&gt; qp_u</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:17</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__u_html_ad1905a5dd42670ff612d32316668f424"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__u.html#ad1905a5dd42670ff612d32316668f424">openturbine::InterpolateQPState_u::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(size_t j_index) const</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:20</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__u_html_ae315c64633605e7417c3cdbc6ee4f106"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__u.html#ae315c64633605e7417c3cdbc6ee4f106">openturbine::InterpolateQPState_u::node_u</a></div><div class="ttdeci">Kokkos::View&lt; double **[7]&gt;::const_type node_u</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:16</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__u_html_af68207baaaf4b7c0150de81363471738"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__u.html#af68207baaaf4b7c0150de81363471738">openturbine::InterpolateQPState_u::shape_interp</a></div><div class="ttdeci">Kokkos::View&lt; double *** &gt;::const_type shape_interp</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:15</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__uprime_html"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__uprime.html">openturbine::InterpolateQPState_uprime</a></div><div class="ttdoc">Interpolates the displacement derivative (u') part of the state at a quadrature point.</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:37</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__uprime_html_a4ad1d9df0ce6507368678a94ae309ace"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__uprime.html#a4ad1d9df0ce6507368678a94ae309ace">openturbine::InterpolateQPState_uprime::qp_jacobian</a></div><div class="ttdeci">Kokkos::View&lt; double ** &gt;::const_type qp_jacobian</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:41</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__uprime_html_a9299b3a03927121490c026cdc3a80f2a"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__uprime.html#a9299b3a03927121490c026cdc3a80f2a">openturbine::InterpolateQPState_uprime::i_elem</a></div><div class="ttdeci">size_t i_elem</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:38</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__uprime_html_aa50f16e840c74c8d42413f5efa92b538"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__uprime.html#aa50f16e840c74c8d42413f5efa92b538">openturbine::InterpolateQPState_uprime::node_u</a></div><div class="ttdeci">Kokkos::View&lt; double **[7]&gt;::const_type node_u</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:42</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__uprime_html_aaf04100b6ef9e15f781b13ffdd048c31"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__uprime.html#aaf04100b6ef9e15f781b13ffdd048c31">openturbine::InterpolateQPState_uprime::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(size_t j_index) const</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:46</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__uprime_html_acda62898a219f5c7406e70ea912e0873"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__uprime.html#acda62898a219f5c7406e70ea912e0873">openturbine::InterpolateQPState_uprime::shape_deriv</a></div><div class="ttdeci">Kokkos::View&lt; double *** &gt;::const_type shape_deriv</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:40</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__uprime_html_aebbada9838e5a515929f41ee9b0d3156"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__uprime.html#aebbada9838e5a515929f41ee9b0d3156">openturbine::InterpolateQPState_uprime::num_nodes</a></div><div class="ttdeci">size_t num_nodes</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:39</div></div>
+<div class="ttc" id="astructopenturbine_1_1InterpolateQPState__uprime_html_af5ef75f10445fce9f2e696a6166fb24c"><div class="ttname"><a href="structopenturbine_1_1InterpolateQPState__uprime.html#af5ef75f10445fce9f2e696a6166fb24c">openturbine::InterpolateQPState_uprime::qp_uprime</a></div><div class="ttdeci">Kokkos::View&lt; double **[3]&gt; qp_uprime</div><div class="ttdef"><b>Definition</b> interpolate_QP_state.hpp:43</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

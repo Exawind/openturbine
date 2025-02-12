@@ -1,0 +1,14 @@
+.. meta::2b0df0d415bf01b5d3d5b0a01ffd2d3ac34a2b275f7027eee68614034a88d13a40d6f90d3717bd6ea59aad576e44f46a25ecfa080d33c785003c1cdc192c0322
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/utilities/controllers/turbine_controller.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/utilities/controllers/turbine\_controller.hpp File Reference
+======================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: turbine__controller_8hpp.html

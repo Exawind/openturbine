@@ -1,0 +1,14 @@
+.. meta::25c2f2c8929bd45c18b9de0c879168b71218b01a4804293d40bdb0216cfd864d7e27eca32c1fe67ef0084b84edee8a97c6e6fa49f30411a565afa370c49c8cb8
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/state/calculate_next_state.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/state/calculate\_next\_state.hpp File Reference
+=========================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: calculate__next__state_8hpp.html
