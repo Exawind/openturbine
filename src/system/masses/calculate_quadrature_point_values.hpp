@@ -37,7 +37,8 @@ struct CalculateQuadraturePointValues {
         const auto x0_data =
             Kokkos::Array<double, 3>{node_x0(i_elem, 0), node_x0(i_elem, 1), node_x0(i_elem, 2)};
         const auto r0_data = Kokkos::Array<double, 4>{
-            node_x0(i_elem, 3), node_x0(i_elem, 4), node_x0(i_elem, 5), node_x0(i_elem, 6)};
+            node_x0(i_elem, 3), node_x0(i_elem, 4), node_x0(i_elem, 5), node_x0(i_elem, 6)
+        };
         const auto u_data = Kokkos::Array<double, 3>{Q(index, 0), Q(index, 1), Q(index, 2)};
         const auto r_data =
             Kokkos::Array<double, 4>{Q(index, 3), Q(index, 4), Q(index, 5), Q(index, 6)};

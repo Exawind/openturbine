@@ -19,9 +19,9 @@ struct Springs {
     Kokkos::View<FreedomSignature* [2]> element_freedom_signature;
     Kokkos::View<size_t* [2][3]> element_freedom_table;  //< Only translational DOFs for springs
 
-    Kokkos::View<double* [3]> x0;          //< Initial distance vector between nodes
-    Kokkos::View<double*> l_ref;           //< Initial length of springs
-    Kokkos::View<double*> k;               //< Spring stiffness coefficients
+    Kokkos::View<double* [3]> x0;  //< Initial distance vector between nodes
+    Kokkos::View<double*> l_ref;   //< Initial length of springs
+    Kokkos::View<double*> k;       //< Spring stiffness coefficients
 
     Kokkos::View<double* [2][3]> residual_vector_terms;
     Kokkos::View<double* [2][2][3][3]> stiffness_matrix_terms;
