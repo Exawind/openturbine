@@ -94,7 +94,8 @@ TEST(CalculateInertialForcesTestsMasses, OneNode) {
     Kokkos::parallel_for(
         "CalculateInertialForces", 1,
         ExecuteCalculateInertialForces{
-            mass, u_ddot, omega, omega_dot, eta_tilde, omega_tilde, omega_dot_tilde, rho, eta, FI}
+            mass, u_ddot, omega, omega_dot, eta_tilde, omega_tilde, omega_dot_tilde, rho, eta, FI
+        }
     );
 
     constexpr auto FI_exact_data = std::array{-2984., 32., 2922., 20624., -2248., 22100.};
