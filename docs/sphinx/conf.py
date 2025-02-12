@@ -20,8 +20,8 @@ bibtex_bibfiles = []
 # Project information
 #--------------------------------------------------------------------------
 templates_path = ['_templates'] # path relative to conf.py
-source_suffix = ['.rst']  # options ['.rst', '.md']
-main_doc = 'index'        # top-level toctree document
+source_suffix = ['.rst']        # options ['.rst', '.md']
+main_doc = 'index'              # top-level toctree document
 project = 'OpenTurbine'
 title = 'OpenTurbine Documentation'
 copyright = '2023 - Present, MIT License'

@@ -1,18 +1,12 @@
 #--------------------------------------------------------------------------
 # Directory Setup
 #--------------------------------------------------------------------------
-set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
-message(STATUS "SPHINX_SOURCE: ${SPHINX_SOURCE}")
-set(SPHINX_BUILD ${CMAKE_CURRENT_SOURCE_DIR}/_build)
-message(STATUS "SPHINX_BUILD: ${SPHINX_BUILD}")
+set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/sphinx)
+set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
 set(DOXYGEN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doxygen)
-message(STATUS "DOXYGEN_SOURCE_DIR: ${DOXYGEN_SOURCE_DIR}")
 set(DOXYGEN_INPUT_DIR ${CMAKE_SOURCE_DIR}/src)
-message(STATUS "DOXYGEN_INPUT_DIR: ${DOXYGEN_INPUT_DIR}")
 set(DOXYGEN_OUTPUT_DIR ${SPHINX_SOURCE}/doxygen)
-message(STATUS "DOXYGEN_OUTPUT_DIR: ${DOXYGEN_OUTPUT_DIR}")
 set(DOXYGEN_HTML_OUTPUT_DIR ${DOXYGEN_OUTPUT_DIR}/html)
-message(STATUS "DOXYGEN_HTML_OUTPUT_DIR: ${DOXYGEN_HTML_OUTPUT_DIR}")
 
 # Create output directory if it doesn't exist
 file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
@@ -85,6 +79,7 @@ add_custom_target(sphinx
   COMMENT "Generating HTML documentation with Sphinx"
 )
 # add_dependencies(sphinx sphinx-spelling)
+add_dependencies(sphinx doxysphinx)
 
 #--------------------------------------------------------------------------
 # Main Documentation Target

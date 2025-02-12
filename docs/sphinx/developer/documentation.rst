@@ -36,7 +36,7 @@ Source code documentation
 Source code (C++ files) are commented using a special format that
 allows Doxygen to extract the annotated comments and create source
 code documentation as well as inheritance diagrams. The
-:doc:`../doxygen/html/index` documentation for the latest snapshot of
+documentation for the latest snapshot of
 the codebase can be browsed in this manual. The `Doxygen manual
 <http://www.doxygen.nl/manual/index.html>`_ provides an overview of
 the syntax that must be used. Please follow the Doxygen style of
