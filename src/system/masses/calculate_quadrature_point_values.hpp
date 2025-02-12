@@ -2,7 +2,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "system/masses/calculate_RR0.hpp"
 #include "system/masses/calculate_gravity_force.hpp"
 #include "system/masses/calculate_gyroscopic_matrix.hpp"
 #include "system/masses/calculate_inertia_stiffness_matrix.hpp"
