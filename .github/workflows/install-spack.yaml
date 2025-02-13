@@ -1,9 +1,9 @@
 name: OpenTurbine-Install
 
-on:
-  push:
-    branches:
-      - main
+on: push
+#on:
+#  push:
+#    branches: [main]
 
 jobs:
   Correctness-Linux:
@@ -22,7 +22,7 @@ jobs:
         spack env activate .
         spack add openturbine ^trilinos~epetra~mpi
         spack install
-        spack develop openturbine@main
+        spack develop openturbine@fix-oturb-install-workflow-error
         spack concretize -f
         spack install
         cd openturbine/tests/documentation_tests/floating_platform
