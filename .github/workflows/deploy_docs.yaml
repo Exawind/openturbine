@@ -2,9 +2,13 @@ name: Deploy OpenTurbine Documentation
 
 on:
   push:
-    paths:
-    - docs/**
-    - .github/workflows/deploy_docs.yaml
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{github.ref}}-${{github.head_ref}}-docs
+  cancel-in-progress: true
 
 jobs:
   Deploy-Docs:
@@ -50,7 +54,8 @@ jobs:
           -DOpenTurbine_ENABLE_DOCUMENTATION=ON \
           -DCMAKE_BUILD_TYPE=Release
         cmake --build .
-    - name: Deploy Documentation
+    - name: Deploy documentation
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
