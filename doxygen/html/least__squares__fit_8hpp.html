@@ -168,6 +168,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">least_squares_fit.hpp File Reference</div></div>
 </div><!--header-->
@@ -186,17 +187,22 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespaceopenturbine" id="r_namespaceopenturbine"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html">openturbine</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:afc4eb55fdc2ade4087eeb28b84a443b1" id="r_afc4eb55fdc2ade4087eeb28b84a443b1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">openturbine::Matrix</a> = std::vector&lt; std::vector&lt; double &gt; &gt;</td></tr>
+<tr class="separator:afc4eb55fdc2ade4087eeb28b84a443b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a0205ddd45198a3c2892ebfb251c18be6" id="r_a0205ddd45198a3c2892ebfb251c18be6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a0205ddd45198a3c2892ebfb251c18be6">openturbine::MapGeometricLocations</a> (const std::vector&lt; double &gt; &amp;geom_locations)</td></tr>
 <tr class="memdesc:a0205ddd45198a3c2892ebfb251c18be6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps input geometric locations -&gt; normalized domain using linear mapping.  <br /></td></tr>
 <tr class="separator:a0205ddd45198a3c2892ebfb251c18be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a453889f5491bc8e614b26078df992b96" id="r_a453889f5491bc8e614b26078df992b96"><td class="memItemLeft" align="right" valign="top">std::tuple&lt; std::vector&lt; std::vector&lt; double &gt; &gt;, std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a453889f5491bc8e614b26078df992b96">openturbine::ShapeFunctionMatrices</a> (size_t n, size_t p, const std::vector&lt; double &gt; &amp;evaluation_pts)</td></tr>
-<tr class="memdesc:a453889f5491bc8e614b26078df992b96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function matrices ϕg at points ξg.  <br /></td></tr>
-<tr class="separator:a453889f5491bc8e614b26078df992b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55ac2ab5492e98dbb225554c19dc9935" id="r_a55ac2ab5492e98dbb225554c19dc9935"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; double, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a55ac2ab5492e98dbb225554c19dc9935">openturbine::PerformLeastSquaresFitting</a> (size_t p, const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;shape_functions, const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;points_to_fit)</td></tr>
-<tr class="memdesc:a55ac2ab5492e98dbb225554c19dc9935"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs least squares fitting to determine interpolation coefficients.  <br /></td></tr>
-<tr class="separator:a55ac2ab5492e98dbb225554c19dc9935"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae376a2d9dff8ebb21504140773963bb2" id="r_ae376a2d9dff8ebb21504140773963bb2"><td class="memItemLeft" align="right" valign="top">std::tuple&lt; <a class="el" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">Matrix</a>, <a class="el" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">Matrix</a>, std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ae376a2d9dff8ebb21504140773963bb2">openturbine::ShapeFunctionMatrices</a> (size_t n, size_t p, const std::vector&lt; double &gt; &amp;evaluation_pts)</td></tr>
+<tr class="memdesc:ae376a2d9dff8ebb21504140773963bb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function matrices ϕg and their derivatives dϕg at points ξg.  <br /></td></tr>
+<tr class="separator:ae376a2d9dff8ebb21504140773963bb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8684936dbf65ffcd95d6d760e5808f5" id="r_ad8684936dbf65ffcd95d6d760e5808f5"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; double, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ad8684936dbf65ffcd95d6d760e5808f5">openturbine::PerformLeastSquaresFitting</a> (size_t p, const <a class="el" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">Matrix</a> &amp;shape_functions, const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;points_to_fit)</td></tr>
+<tr class="memdesc:ad8684936dbf65ffcd95d6d760e5808f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs least squares fitting to determine interpolation coefficients.  <br /></td></tr>
+<tr class="separator:ad8684936dbf65ffcd95d6d760e5808f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

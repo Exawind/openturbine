@@ -33,7 +33,7 @@ var searchData=
   ['count_5factive_5fdofs_30',['count_active_dofs',['../namespaceopenturbine.html#ac49461f4e15c88f90f8383dffa5ac51b',1,'openturbine']]],
   ['create_5fconstraint_5ffreedom_5ftable_31',['create_constraint_freedom_table',['../namespaceopenturbine.html#a11b7ef0873eaa4135fcc955cc3fd5ba4',1,'openturbine']]],
   ['create_5felement_5ffreedom_5ftable_32',['create_element_freedom_table',['../namespaceopenturbine.html#a91c6946effee6a339849b0ee801424bf',1,'openturbine']]],
-  ['createbeams_33',['createbeams',['../classopenturbine_1_1Model.html#adc00d72518a7b03eb70e93b2e7ab2f83',1,'openturbine::Model::CreateBeams()'],['../namespaceopenturbine.html#a03813256f55e200252c09662bc3afb08',1,'openturbine::CreateBeams()']]],
+  ['createbeams_33',['createbeams',['../namespaceopenturbine.html#a03813256f55e200252c09662bc3afb08',1,'openturbine::CreateBeams()'],['../classopenturbine_1_1Model.html#adc00d72518a7b03eb70e93b2e7ab2f83',1,'openturbine::Model::CreateBeams() const']]],
   ['createbeamsinput_34',['CreateBeamsInput',['../classopenturbine_1_1Model.html#a47b3b0afba667cc40fe6cb9a4aca3e61',1,'openturbine::Model']]],
   ['createbmatrix_35',['CreateBMatrix',['../namespaceopenturbine.html#acba5c364c92e43d08c9e1bee9755576e',1,'openturbine']]],
   ['createbtmatrix_36',['CreateBtMatrix',['../namespaceopenturbine.html#a0aa626a98a92ab481e233ec3997225c7',1,'openturbine']]],
@@ -55,6 +55,7 @@ var searchData=
   ['createsystemwithsolver_52',['CreateSystemWithSolver',['../classopenturbine_1_1Model.html#a13d9214ffc69a6fa6a2cf2881127a95c',1,'openturbine::Model']]],
   ['createtmatrix_53',['CreateTMatrix',['../namespaceopenturbine.html#ad79a45968c0210eeaaaa3c3524fb3eb5',1,'openturbine']]],
   ['createtransposematrixfull_54',['CreateTransposeMatrixFull',['../namespaceopenturbine.html#a83a161190197243a5d0585e26726203c',1,'openturbine']]],
-  ['createturbine_55',['CreateTurbine',['../namespaceopenturbine_1_1cfd.html#a82ac195aae999409d37792a37ae7f1f5',1,'openturbine::cfd']]],
-  ['crossproduct_56',['crossproduct',['../namespaceopenturbine.html#a11e9b029e366a7f2939f8e4b6368e6f1',1,'openturbine::CrossProduct(const VectorType &amp;a, const VectorType &amp;b, const VectorType &amp;c)'],['../namespaceopenturbine.html#a2bfd501aea850989cf0b595ef1f1ff43',1,'openturbine::CrossProduct(const Array_3 &amp;a, const Array_3 &amp;b)']]]
+  ['createtrapezoidalquadrature_55',['CreateTrapezoidalQuadrature',['../namespaceopenturbine.html#abf227a76a63e51fdd3f8c22aae66bce3',1,'openturbine']]],
+  ['createturbine_56',['CreateTurbine',['../namespaceopenturbine_1_1cfd.html#a82ac195aae999409d37792a37ae7f1f5',1,'openturbine::cfd']]],
+  ['crossproduct_57',['crossproduct',['../namespaceopenturbine.html#a11e9b029e366a7f2939f8e4b6368e6f1',1,'openturbine::CrossProduct(const VectorType &amp;a, const VectorType &amp;b, const VectorType &amp;c)'],['../namespaceopenturbine.html#a2bfd501aea850989cf0b595ef1f1ff43',1,'openturbine::CrossProduct(const Array_3 &amp;a, const Array_3 &amp;b)']]]
 ];

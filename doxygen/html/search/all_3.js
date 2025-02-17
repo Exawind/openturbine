@@ -268,15 +268,16 @@ var searchData=
   ['creatematrixspgemm_265',['CreateMatrixSpgemm',['../namespaceopenturbine.html#a5cb95a31ef6ad343a2d8e8bb532bbfe9',1,'openturbine']]],
   ['createsolver_266',['CreateSolver',['../namespaceopenturbine.html#a42af80d85ffd0f7fc1f3ea81928540af',1,'openturbine']]],
   ['createsparsedensesolver_267',['CreateSparseDenseSolver',['../namespaceopenturbine.html#a07a856d693f3f09d39d447894826785a',1,'openturbine']]],
-  ['createsprings_268',['createsprings',['../namespaceopenturbine.html#a5fa5ad5bb401e044e23069c2eebd4100',1,'openturbine::CreateSprings()'],['../classopenturbine_1_1Model.html#a7c75ce26779f671b45c67ecf358cd838',1,'openturbine::Model::CreateSprings() const']]],
+  ['createsprings_268',['createsprings',['../classopenturbine_1_1Model.html#a7c75ce26779f671b45c67ecf358cd838',1,'openturbine::Model::CreateSprings()'],['../namespaceopenturbine.html#a5fa5ad5bb401e044e23069c2eebd4100',1,'openturbine::CreateSprings()']]],
   ['createstate_269',['CreateState',['../classopenturbine_1_1Model.html#a3673adf4c73fdd802f69d3063610f3af',1,'openturbine::Model']]],
   ['createsystem_270',['CreateSystem',['../classopenturbine_1_1Model.html#a897bac2b9e4f16426294fc9876e9ebdc',1,'openturbine::Model']]],
   ['createsystemmatrixfull_271',['CreateSystemMatrixFull',['../namespaceopenturbine.html#aac621bed110d59415cbd941313d0ed14',1,'openturbine']]],
   ['createsystemwithsolver_272',['CreateSystemWithSolver',['../classopenturbine_1_1Model.html#a13d9214ffc69a6fa6a2cf2881127a95c',1,'openturbine::Model']]],
   ['createtmatrix_273',['CreateTMatrix',['../namespaceopenturbine.html#ad79a45968c0210eeaaaa3c3524fb3eb5',1,'openturbine']]],
   ['createtransposematrixfull_274',['CreateTransposeMatrixFull',['../namespaceopenturbine.html#a83a161190197243a5d0585e26726203c',1,'openturbine']]],
-  ['createturbine_275',['CreateTurbine',['../namespaceopenturbine_1_1cfd.html#a82ac195aae999409d37792a37ae7f1f5',1,'openturbine::cfd']]],
-  ['crossproduct_276',['crossproduct',['../namespaceopenturbine.html#a11e9b029e366a7f2939f8e4b6368e6f1',1,'openturbine::CrossProduct(const VectorType &amp;a, const VectorType &amp;b, const VectorType &amp;c)'],['../namespaceopenturbine.html#a2bfd501aea850989cf0b595ef1f1ff43',1,'openturbine::CrossProduct(const Array_3 &amp;a, const Array_3 &amp;b)']]],
-  ['crsmatrixtype_277',['CrsMatrixType',['../structopenturbine_1_1Solver.html#aa7a0f88cf347a868a7d33afedf0dd903',1,'openturbine::Solver']]],
-  ['cylindrical_278',['cylindrical',['../structJoints.html#a40c7ec44a7e85dba5dafa208b68eff72',1,'Joints']]]
+  ['createtrapezoidalquadrature_275',['CreateTrapezoidalQuadrature',['../namespaceopenturbine.html#abf227a76a63e51fdd3f8c22aae66bce3',1,'openturbine']]],
+  ['createturbine_276',['CreateTurbine',['../namespaceopenturbine_1_1cfd.html#a82ac195aae999409d37792a37ae7f1f5',1,'openturbine::cfd']]],
+  ['crossproduct_277',['crossproduct',['../namespaceopenturbine.html#a11e9b029e366a7f2939f8e4b6368e6f1',1,'openturbine::CrossProduct(const VectorType &amp;a, const VectorType &amp;b, const VectorType &amp;c)'],['../namespaceopenturbine.html#a2bfd501aea850989cf0b595ef1f1ff43',1,'openturbine::CrossProduct(const Array_3 &amp;a, const Array_3 &amp;b)']]],
+  ['crsmatrixtype_278',['CrsMatrixType',['../structopenturbine_1_1Solver.html#aa7a0f88cf347a868a7d33afedf0dd903',1,'openturbine::Solver']]],
+  ['cylindrical_279',['cylindrical',['../structJoints.html#a40c7ec44a7e85dba5dafa208b68eff72',1,'Joints']]]
 ];
