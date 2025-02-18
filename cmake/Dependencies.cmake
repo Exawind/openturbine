@@ -41,8 +41,8 @@ function(openturbine_setup_dependencies)
   # NetCDF and HDF5
   #----------------------------------------
   if(OpenTurbine_ENABLE_NETCDF_OUTPUTS)
-    find_package(NetCDF REQUIRED)
     find_package(HDF5 REQUIRED)
+    find_package(NetCDF REQUIRED)
   endif()
 
   #--------------------------------------------------------------------------
