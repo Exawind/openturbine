@@ -40,6 +40,7 @@ macro(openturbine_setup_options)
   option(OpenTurbine_ENABLE_VTK "Use VTK for visualization" OFF)
   option(OpenTurbine_BUILD_OPENFAST_ADI "Build the OpenFAST ADI external project" OFF)
   option(OpenTurbine_BUILD_ROSCO_CONTROLLER "Build the ROSCO controller external project" OFF)
+  option(OpenTurbine_ENABLE_NETCDF_OUTPUTS "Enable NetCDF support for writing outputs" OFF)
 endmacro()
 
 #--------------------------------------------------------------------------
