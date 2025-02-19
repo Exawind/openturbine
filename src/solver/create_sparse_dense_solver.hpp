@@ -12,12 +12,7 @@ CreateSparseDenseSolver(
     Teuchos::RCP<GlobalCrsMatrixType>& A, Teuchos::RCP<GlobalMultiVectorType>& x_mv,
     Teuchos::RCP<GlobalMultiVectorType>& b
 ) {
-    using ExecutionSpace = typename GlobalCrsMatrixType::execution_space;
-
-    const auto solver_name = (std::is_same_v<ExecutionSpace, Kokkos::DefaultHostExecutionSpace>)
-                                 ? std::string{"klu2"}
-                                 : std::string{"basker"};
-
+    const auto solver_name = std::string{"klu2"};
     auto amesos_solver =
         Amesos2::create<GlobalCrsMatrixType, GlobalMultiVectorType>(solver_name, A, x_mv, b);
     amesos_solver->symbolicFactorization();

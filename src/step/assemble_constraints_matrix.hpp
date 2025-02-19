@@ -44,7 +44,10 @@ inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) 
             "CopySparseValuesToTranspose", constraint_transpose_policy,
             CopySparseValuesToTranspose<Solver::CrsMatrixType>{solver.B, tmp_row_map, solver.B_t}
         );
-        KokkosSparse::sort_crs_matrix(solver.B_t);
+        {
+            auto sort_region = Kokkos::Profiling::ScopedRegion("Sort");
+            KokkosSparse::sort_crs_matrix(solver.B_t);
+        }
     }
 
     {
