@@ -17,7 +17,7 @@ struct ExecuteCalculateGravityForce {
 };
 
 TEST(CalculateGravityForceTestsMasses, OneNode) {
-    double mass = 1.;
+    constexpr double mass = 1.;
 
     const auto eta_tilde = Kokkos::View<double[3][3]>("eta_tilde");
     constexpr auto eta_tilde_data = std::array{37., 38., 39., 40., 41., 42., 43., 44., 45.};

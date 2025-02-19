@@ -11,7 +11,7 @@ void TestCalculateStiffnessMatrixTests_OneElement() {
 
     Kokkos::parallel_for(
         "CalculateStiffnessMatrix", 1,
-        KOKKOS_LAMBDA(const size_t i_elem) {
+        KOKKOS_LAMBDA(size_t) {
             constexpr auto c1 = 2.;
             constexpr auto c2 = 1.;
             constexpr auto l = 1.;

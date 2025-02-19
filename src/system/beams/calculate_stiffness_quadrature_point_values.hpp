@@ -39,8 +39,7 @@ struct CalculateStiffnessQuadraturePointValues {
             qp_r0(i_elem, i_qp, 3)
         };
         const auto x0_prime_data = Kokkos::Array<double, 3>{
-            qp_x0_prime(i_elem, i_qp, 0), qp_x0_prime(i_elem, i_qp, 1),
-            qp_x0_prime(i_elem, i_qp, 2)
+            qp_x0_prime(i_elem, i_qp, 0), qp_x0_prime(i_elem, i_qp, 1), qp_x0_prime(i_elem, i_qp, 2)
         };
         auto xr_data = Kokkos::Array<double, 4>{};
         auto u_data = Kokkos::Array<double, 3>{};
