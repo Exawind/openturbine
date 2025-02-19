@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include <Kokkos_Core.hpp>
@@ -26,3 +27,4 @@ inline void AssembleInertiaMatrixBeams(const Beams& beams, double beta_prime, do
 }
 
 }  // namespace openturbine
+*/

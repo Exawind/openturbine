@@ -2,15 +2,10 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "assemble_inertia_matrix_beams.hpp"
-#include "assemble_residual_vector_beams.hpp"
-#include "assemble_stiffness_matrix_beams.hpp"
 #include "elements/beams/beams.hpp"
-#include "elements/beams/interpolate_to_quadrature_points.hpp"
 #include "state/state.hpp"
 #include "step_parameters.hpp"
 #include "system/beams/calculate_quadrature_point_values.hpp"
-#include "system/beams/update_node_state.hpp"
 
 namespace openturbine {
 
@@ -18,70 +13,44 @@ inline void UpdateSystemVariablesBeams(
     StepParameters& parameters, const Beams& beams, State& state
 ) {
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
-    Kokkos::parallel_for(
-        "UpdateNodeState", range_policy,
-        UpdateNodeState{
-            beams.num_nodes_per_element, beams.node_state_indices, beams.node_u, beams.node_u_dot,
-            beams.node_u_ddot, state.q, state.v, state.vd
-        }
-    );
-
-    Kokkos::parallel_for(
-        "InterpolateToQuadraturePoints", range_policy,
-        InterpolateToQuadraturePoints{
-            beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
-            beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.node_u_dot, beams.node_u_ddot,
-            beams.qp_x0, beams.qp_r0, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime,
-            beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot, beams.qp_omega_dot, beams.qp_x
-        }
-    );
+    const auto shape_size =
+        Kokkos::View<double**>::shmem_size(beams.max_elem_nodes, beams.max_elem_qps);
+    const auto weight_size = Kokkos::View<double*>::shmem_size(beams.max_elem_qps);
+    const auto node_variable_size = Kokkos::View<double* [7]>::shmem_size(beams.max_elem_nodes);
+    const auto qp_variable_size = Kokkos::View<double* [6]>::shmem_size(beams.max_elem_qps);
+    const auto qp_matrix_size = Kokkos::View<double* [6][6]>::shmem_size(beams.max_elem_qps);
+    auto smem = 2 * shape_size + 2 * weight_size + 4 * node_variable_size + 5 * qp_variable_size +
+                7 * qp_matrix_size;
+    range_policy.set_scratch_size(1, Kokkos::PerTeam(smem));
 
     Kokkos::parallel_for(
         "CalculateQuadraturePointValues", range_policy,
-        CalculateQuadraturePointValues{
+        beams::CalculateQuadraturePointValues{
+            parameters.beta_prime,
+            parameters.gamma_prime,
+            state.q,
+            state.v,
+            state.vd,
+            beams.node_state_indices,
+            beams.num_nodes_per_element,
             beams.num_qps_per_element,
+            beams.qp_weight,
+            beams.qp_jacobian,
+            beams.shape_interp,
+            beams.shape_deriv,
             beams.gravity,
-            beams.qp_u,
-            beams.qp_u_prime,
-            beams.qp_r,
-            beams.qp_r_prime,
+            beams.node_FX,
             beams.qp_r0,
             beams.qp_x0,
             beams.qp_x0_prime,
-            beams.qp_u_ddot,
-            beams.qp_omega,
-            beams.qp_omega_dot,
             beams.qp_Mstar,
             beams.qp_Cstar,
-            beams.qp_x,
-            beams.qp_RR0,
-            beams.qp_strain,
-            beams.qp_eta,
-            beams.qp_rho,
-            beams.qp_eta_tilde,
-            beams.qp_x0pupss,
-            beams.qp_M_tilde,
-            beams.qp_N_tilde,
-            beams.qp_omega_tilde,
-            beams.qp_omega_dot_tilde,
-            beams.qp_Fc,
-            beams.qp_Fd,
-            beams.qp_Fi,
             beams.qp_Fe,
-            beams.qp_Fg,
-            beams.qp_Muu,
-            beams.qp_Cuu,
-            beams.qp_Ouu,
-            beams.qp_Puu,
-            beams.qp_Quu,
-            beams.qp_Guu,
-            beams.qp_Kuu
+            beams.residual_vector_terms,
+            beams.stiffness_matrix_terms,
+            beams.inertia_matrix_terms
         }
     );
-
-    AssembleResidualVectorBeams(beams);
-    AssembleStiffnessMatrixBeams(beams);
-    AssembleInertiaMatrixBeams(beams, parameters.beta_prime, parameters.gamma_prime);
 }
 
 }  // namespace openturbine

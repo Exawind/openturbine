@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include <Kokkos_Core.hpp>
@@ -35,3 +36,4 @@ inline void AssembleStiffnessMatrixBeams(const Beams& beams) {
 }
 
 }  // namespace openturbine
+*/
