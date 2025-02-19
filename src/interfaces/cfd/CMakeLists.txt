@@ -1,4 +1,4 @@
-target_sources(openturbine_library 
+target_sources(openturbine_library
   PRIVATE
   interface.cpp
 )
