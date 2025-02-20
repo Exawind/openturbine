@@ -31,11 +31,10 @@ struct CalculateTangentOperator {
             T(k, k) = 1.;
         }
 
+        KokkosBlas::serial_axpy(h, Kokkos::subview(q_delta, i_node, Kokkos::make_pair(3, 6)), rv);
         auto phi = KokkosBlas::serial_nrm2(rv);
         const auto tmp1 = (phi > 1.e-16) ? (Kokkos::cos(phi) - 1.) / (phi * phi) : 0.;
         const auto tmp2 = (phi > 1.e-16) ? (1. - Kokkos::sin(phi) / phi) / (phi * phi) : 0.;
-
-        KokkosBlas::serial_axpy(h, Kokkos::subview(q_delta, i_node, Kokkos::make_pair(3, 6)), rv);
 
         VecTilde(rv, m2);
         KokkosBatched::SerialCopy<>::invoke(m2, m1);
