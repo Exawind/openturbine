@@ -7,47 +7,53 @@
 namespace {
 
 void TestCalculateForceVectorsTests_ThreeElements() {
-    const auto r = Kokkos::View<double[3][3]>("r");
-    const auto c1 = Kokkos::View<double[3]>("c1");
-    const auto f = Kokkos::View<double[3][3]>("f");
-
-    constexpr auto r_data = std::array{
-        1., 2., 3.,  // Element 1
-        4., 5., 6.,  // Element 2
-        7., 8., 9.   // Element 3
-    };
-    constexpr auto c1_data = std::array{2., -1., 0.5};  // Force coefficients
-
-    const auto r_host = Kokkos::View<const double[3][3], Kokkos::HostSpace>(r_data.data());
-    const auto c1_host = Kokkos::View<const double[3], Kokkos::HostSpace>(c1_data.data());
-
-    const auto r_mirror = Kokkos::create_mirror(r);
-    const auto c1_mirror = Kokkos::create_mirror(c1);
-
-    Kokkos::deep_copy(r_mirror, r_host);
-    Kokkos::deep_copy(c1_mirror, c1_host);
-
-    Kokkos::deep_copy(r, r_mirror);
-    Kokkos::deep_copy(c1, c1_mirror);
+    const auto f0 = Kokkos::View<double[3]>("f0");
+    const auto f1 = Kokkos::View<double[3]>("f1");
+    const auto f2 = Kokkos::View<double[3]>("f2");
 
     Kokkos::parallel_for(
-        "CalculateForceVectors", 3,
-        KOKKOS_LAMBDA(const size_t i_elem) {
-            openturbine::springs::CalculateForceVectors{i_elem, r, c1, f}();
+        "CalculateForceVectors", 1,
+        KOKKOS_LAMBDA(const size_t) {
+            constexpr auto r0_data = Kokkos::Array<double, 3>{1., 2., 3.};
+            constexpr auto r1_data = Kokkos::Array<double, 3>{4., 5., 6.};
+            constexpr auto r2_data = Kokkos::Array<double, 3>{7., 8., 9.};
+
+            const auto r0 = Kokkos::View<double[3]>::const_type(r0_data.data());
+            const auto r1 = Kokkos::View<double[3]>::const_type(r1_data.data());
+            const auto r2 = Kokkos::View<double[3]>::const_type(r2_data.data());
+
+            constexpr auto c10 = 2.;
+            constexpr auto c11 = -1.;
+            constexpr auto c12 = 0.5;
+
+            openturbine::springs::CalculateForceVectors(r0, c10, f0);
+            openturbine::springs::CalculateForceVectors(r1, c11, f1);
+            openturbine::springs::CalculateForceVectors(r2, c12, f2);
         }
     );
 
-    constexpr auto f_exact_data = std::array{
-        2.,  4.,  6.,   // Element 1
-        -4., -5., -6.,  // Element 2
-        3.5, 4.,  4.5   // Element 3
-    };
-    const auto f_exact = Kokkos::View<const double[3][3], Kokkos::HostSpace>(f_exact_data.data());
+    constexpr auto f0_exact_data = std::array{2., 4., 6.};
+    constexpr auto f1_exact_data = std::array{-4., -5., -6.};
+    constexpr auto f2_exact_data = std::array{3.5, 4., 4.5};
 
-    const auto f_result = Kokkos::create_mirror(f);
-    Kokkos::deep_copy(f_result, f);
+    const auto f0_exact =
+        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f0_exact_data.data());
+    const auto f1_exact =
+        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f1_exact_data.data());
+    const auto f2_exact =
+        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f2_exact_data.data());
 
-    openturbine::tests::CompareWithExpected(f_result, f_exact);
+    const auto f0_result = Kokkos::create_mirror(f0);
+    const auto f1_result = Kokkos::create_mirror(f1);
+    const auto f2_result = Kokkos::create_mirror(f2);
+
+    Kokkos::deep_copy(f0_result, f0);
+    Kokkos::deep_copy(f1_result, f1);
+    Kokkos::deep_copy(f2_result, f2);
+
+    openturbine::tests::CompareWithExpected(f0_result, f0_exact);
+    openturbine::tests::CompareWithExpected(f1_result, f1_exact);
+    openturbine::tests::CompareWithExpected(f2_result, f2_exact);
 }
 }  // namespace
 

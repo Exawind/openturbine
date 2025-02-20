@@ -6,6 +6,15 @@
 namespace openturbine::tests {
 
 inline void CompareWithExpected(
+    const Kokkos::View<const double*>::host_mirror_type& result,
+    const Kokkos::View<const double*, Kokkos::HostSpace>& expected
+) {
+    for (auto i = 0U; i < result.extent(0); ++i) {
+        EXPECT_DOUBLE_EQ(result(i), expected(i));
+    }
+}
+
+inline void CompareWithExpected(
     const Kokkos::View<const double**>::host_mirror_type& result,
     const Kokkos::View<const double**, Kokkos::HostSpace>& expected
 ) {
