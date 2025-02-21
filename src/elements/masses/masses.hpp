@@ -28,8 +28,7 @@ struct Masses {
     Kokkos::View<double* [6][6]> qp_Mstar;  //< Mass matrix in material frame
 
     Kokkos::View<double* [6]> residual_vector_terms;
-    Kokkos::View<double* [6][6]> stiffness_matrix_terms;
-    Kokkos::View<double* [6][6]> inertia_matrix_terms;
+    Kokkos::View<double* [6][6]> system_matrix_terms;
 
     explicit Masses(const size_t n_mass_elems)
         : num_elems(n_mass_elems),
@@ -41,8 +40,7 @@ struct Masses {
           node_x0("node_x0", num_elems),
           qp_Mstar("qp_Mstar", num_elems),
           residual_vector_terms("residual_vector_terms", num_elems),
-          stiffness_matrix_terms("stiffness_matrix_terms", num_elems),
-          inertia_matrix_terms("inertia_matrix_terms", num_elems) {
+          system_matrix_terms("system_matrix_terms", num_elems) {
         Kokkos::deep_copy(num_nodes_per_element, 1);  // Always 1 node per element
         Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
     }

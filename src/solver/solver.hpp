@@ -52,17 +52,13 @@ struct Solver {
     size_t num_system_dofs;   //< Number of system degrees of freedom
     size_t num_dofs;          //< Number of degrees of freedom
 
-    KernelHandle system_spgemm_handle;
     KernelHandle constraints_spgemm_handle;
-    KernelHandle system_spadd_handle;
     KernelHandle spc_spadd_handle;
     KernelHandle full_system_spadd_handle;
 
-    CrsMatrixType K;                           //< Stiffness matrix
     CrsMatrixType T;                           //< Tangent operator
     CrsMatrixType B;                           //< Constraints matrix
     CrsMatrixType B_t;                         //< Transpose of constraints matrix
-    CrsMatrixType static_system_matrix;        //< Static system matrix
     CrsMatrixType system_matrix;               //< System matrix
     CrsMatrixType constraints_matrix;          //< Constraints matrix
     CrsMatrixType system_matrix_full;          //< System matrix with constraints
@@ -115,10 +111,6 @@ struct Solver {
         : num_system_nodes(node_IDs.extent(0)),
           num_system_dofs(ComputeNumSystemDofs(node_freedom_allocation_table)),
           num_dofs(num_system_dofs + num_constraint_dofs),
-          K(CreateKMatrix<CrsMatrixType>(
-              num_system_dofs, node_freedom_allocation_table, node_freedom_map_table,
-              num_nodes_per_element, node_state_indices
-          )),
           T(CreateTMatrix<CrsMatrixType>(
               num_system_dofs, node_freedom_allocation_table, node_freedom_map_table
           )),
@@ -132,8 +124,10 @@ struct Solver {
               constraint_base_node_freedom_table, constraint_target_node_freedom_table,
               constraint_row_range, constraint_base_node_col_range, constraint_target_node_col_range
           )),
-          static_system_matrix(CreateMatrixSpgemm(K, T, system_spgemm_handle)),
-          system_matrix(CreateMatrixSpadd(K, static_system_matrix, system_spadd_handle)),
+          system_matrix(CreateKMatrix<CrsMatrixType>(
+              num_system_dofs, node_freedom_allocation_table, node_freedom_map_table,
+              num_nodes_per_element, node_state_indices
+          )),
           constraints_matrix(CreateMatrixSpgemm(B, T, constraints_spgemm_handle)),
           system_matrix_full(CreateSystemMatrixFull(num_system_dofs, num_dofs, system_matrix)),
           constraints_matrix_full(
@@ -160,12 +154,10 @@ struct Solver {
         : num_system_nodes(other.num_system_nodes),
           num_system_dofs(other.num_system_dofs),
           num_dofs(other.num_dofs),
-          K("K", other.K),
           T("T", other.T),
           B("B", other.B),
           B_t("B_t", other.B_t),
-          static_system_matrix(CreateMatrixSpgemm(K, T, system_spgemm_handle)),
-          system_matrix(CreateMatrixSpadd(K, static_system_matrix, system_spadd_handle)),
+          system_matrix("system_matrix", other.system_matrix),
           constraints_matrix(CreateMatrixSpgemm(B, T, constraints_spgemm_handle)),
           system_matrix_full(CreateSystemMatrixFull(num_system_dofs, num_dofs, system_matrix)),
           constraints_matrix_full(
@@ -201,17 +193,13 @@ struct Solver {
         std::swap(num_system_dofs, tmp.num_system_dofs);
         std::swap(num_dofs, tmp.num_dofs);
 
-        std::swap(system_spgemm_handle, tmp.system_spgemm_handle);
         std::swap(constraints_spgemm_handle, tmp.constraints_spgemm_handle);
-        std::swap(system_spadd_handle, tmp.system_spadd_handle);
         std::swap(spc_spadd_handle, tmp.spc_spadd_handle);
         std::swap(full_system_spadd_handle, tmp.full_system_spadd_handle);
 
-        std::swap(K, tmp.K);
         std::swap(T, tmp.T);
         std::swap(B, tmp.B);
         std::swap(B_t, tmp.B_t);
-        std::swap(static_system_matrix, tmp.static_system_matrix);
         std::swap(system_matrix, tmp.system_matrix);
         std::swap(constraints_matrix, tmp.constraints_matrix);
         std::swap(system_matrix_full, tmp.system_matrix_full);
