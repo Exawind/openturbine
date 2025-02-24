@@ -9,7 +9,7 @@
 
 namespace openturbine {
 
-struct CalculatePrescribedBCConstraint {
+struct CalculateFixedBC3DOFConstraint {
     int i_constraint;
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type target_node_col_range;
     Kokkos::View<size_t*>::const_type target_node_index;
@@ -30,16 +30,9 @@ struct CalculatePrescribedBCConstraint {
         const auto X0 = View_3::const_type{X0_data.data()};
 
         // Base node displacement
-        const auto u1_data = Kokkos::Array<double, 3>{
-            constraint_inputs(i_constraint, 0), constraint_inputs(i_constraint, 1),
-            constraint_inputs(i_constraint, 2)
-        };
-        auto u1 = View_3::const_type{u1_data.data()};
-
-        const auto R1_data = Kokkos::Array<double, 4>{
-            constraint_inputs(i_constraint, 3), constraint_inputs(i_constraint, 4),
-            constraint_inputs(i_constraint, 5), constraint_inputs(i_constraint, 6)
-        };
+        constexpr auto u1_data = Kokkos::Array<double, 3>{0., 0., 0.};
+        const auto u1 = View_3::const_type{u1_data.data()};
+        constexpr auto R1_data = Kokkos::Array<double, 4>{1., 0., 0., 0.};
         const auto R1 = Kokkos::View<double[4]>::const_type{R1_data.data()};
 
         // Target node displacement
@@ -80,15 +73,6 @@ struct CalculatePrescribedBCConstraint {
             residual_terms(i_constraint, i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
         }
 
-        // Angular residual
-        // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
-            QuaternionCompose(R2, R1t, R2_R1t);
-            QuaternionToRotationMatrix(R2_R1t, C);
-            AxialVectorOfMatrix(C, V3);
-            for (int i = 0; i < 3; ++i) {
-                residual_terms(i_constraint, i + 3) = V3(i);
-            }
-
         //----------------------------------------------------------------------
         // Constraint Gradient Matrix
         //----------------------------------------------------------------------
@@ -101,15 +85,7 @@ struct CalculatePrescribedBCConstraint {
         for (int i = 0; i < 3; ++i) {
             target_gradient_terms(i_constraint, i, i) = 1.;
         }
-
-        // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
-            AX_Matrix(C, A);
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    target_gradient_terms(i_constraint, i + 3, j + 3) = A(j, i);
-                }
-            }
-    }
+    };
 };
 
 }  // namespace openturbine

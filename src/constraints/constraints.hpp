@@ -59,6 +59,8 @@ struct Constraints {
     Kokkos::View<double* [6]> system_residual_terms;
     Kokkos::View<double* [6][6]> base_gradient_terms;
     Kokkos::View<double* [6][6]> target_gradient_terms;
+    Kokkos::View<double* [6][6]> base_gradient_transpose_terms;
+    Kokkos::View<double* [6][6]> target_gradient_transpose_terms;
 
     explicit Constraints(const std::vector<Constraint>& constraints, const std::vector<Node>& nodes)
         : num_constraints{constraints.size()},
@@ -89,7 +91,9 @@ struct Constraints {
           residual_terms("residual_terms", num_constraints),
           system_residual_terms("system_residual_terms", num_constraints),
           base_gradient_terms("base_gradient_terms", num_constraints),
-          target_gradient_terms("target_gradient_terms", num_constraints) {
+          target_gradient_terms("target_gradient_terms", num_constraints),
+          base_gradient_transpose_terms("base_gradient_transpose_terms", num_constraints),
+          target_gradient_transpose_terms("target_gradient_transpose_terms", num_constraints) {
         auto host_type = Kokkos::create_mirror(type);
         auto host_row_range = Kokkos::create_mirror(row_range);
         auto host_base_node_col_range = Kokkos::create_mirror(base_node_col_range);

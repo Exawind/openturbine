@@ -63,8 +63,7 @@ template <typename CrsMatrixType>
             B_t_col_inds
         }
     );
-    KokkosSparse::sort_crs_matrix(B_t_row_ptrs, B_t_col_inds, B_t_values);
-    return {
+    return KokkosSparse::sort_and_merge_matrix(CrsMatrixType{
         "B_t",
         static_cast<int>(B_t_num_rows),
         static_cast<int>(B_t_num_columns),
@@ -72,6 +71,6 @@ template <typename CrsMatrixType>
         B_t_values,
         B_t_row_ptrs,
         B_t_col_inds
-    };
+    });
 }
 }  // namespace openturbine

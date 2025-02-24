@@ -66,9 +66,6 @@ struct CalculateFixedBCConstraint {
         // Residual Vector
         //----------------------------------------------------------------------
 
-        const auto target_node_cols =
-            target_node_col_range(i_constraint).second - target_node_col_range(i_constraint).first;
-
         // Phi(0:3) = u2 + X0 - u1 - R1*X0
         QuaternionInverse(R1, R1t);
         RotateVectorByQuaternion(R1, X0, R1_X0);
@@ -78,14 +75,12 @@ struct CalculateFixedBCConstraint {
 
         // Angular residual
         // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
-        if (target_node_cols == 6) {
             QuaternionCompose(R2, R1t, R2_R1t);
             QuaternionToRotationMatrix(R2_R1t, C);
             AxialVectorOfMatrix(C, V3);
             for (int i = 0; i < 3; ++i) {
                 residual_terms(i_constraint, i + 3) = V3(i);
             }
-        }
 
         //----------------------------------------------------------------------
         // Constraint Gradient Matrix
@@ -101,14 +96,12 @@ struct CalculateFixedBCConstraint {
         }
 
         // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
-        if (target_node_cols == 6) {
             AX_Matrix(C, A);
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < 3; ++j) {
                     target_gradient_terms(i_constraint, i + 3, j + 3) = A(j, i);
                 }
             }
-        }
     };
 };
 
