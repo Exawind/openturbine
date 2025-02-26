@@ -1,0 +1,14 @@
+.. meta::ae3c07e799973d5085b9378309d326f2897a999296d5cc5d5657301de6ceccd89a46e9fd284b9c75101a39404dfca7b0491d9581a258d116e792246bb951f279
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/calculate_QP_position.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/calculate\_QP\_position.hpp File Reference
+===================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: calculate__QP__position_8hpp.html

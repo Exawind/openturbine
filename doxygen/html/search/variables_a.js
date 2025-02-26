@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['k_0',['k',['../structopenturbine_1_1springs_1_1CalculateQuadraturePointValues.html#ac0418e200c9a8f6082e588437a20ba24',1,'openturbine::springs::CalculateQuadraturePointValues::k'],['../structopenturbine_1_1Springs.html#ae721ab31237bbdf6f82c976ad7851bdc',1,'openturbine::Springs::k'],['../structopenturbine_1_1Solver.html#a75638efebc4e4f23866366451cef89de',1,'openturbine::Solver::K'],['../structTimoschenkoHawc.html#a9763501e96c1c215ebb5f91b90b5dac5',1,'TimoschenkoHawc::k']]],
-  ['k_5f_1',['k_',['../structopenturbine_1_1springs_1_1CalculateForceCoefficients.html#a4f5888f62f7005909c6dc88cc0fe5663',1,'openturbine::springs::CalculateForceCoefficients']]],
+  ['k_0',['k',['../structopenturbine_1_1Springs.html#ae721ab31237bbdf6f82c976ad7851bdc',1,'openturbine::Springs::k'],['../structopenturbine_1_1Solver.html#a75638efebc4e4f23866366451cef89de',1,'openturbine::Solver::K'],['../structTimoschenkoHawc.html#a9763501e96c1c215ebb5f91b90b5dac5',1,'TimoschenkoHawc::k']]],
+  ['k_5f_1',['k_',['../structopenturbine_1_1springs_1_1CalculateQuadraturePointValues.html#a681db88d1aa6c29d9374c7a806168503',1,'openturbine::springs::CalculateQuadraturePointValues']]],
   ['k_5fcol_5finds_2',['K_col_inds',['../structopenturbine_1_1ComputeKColIndsFunction.html#a4df367c4500e3779d5fc066d56d92ef7',1,'openturbine::ComputeKColIndsFunction']]],
   ['k_5ffes_3',['k_fes',['../structGenerator.html#a76b49dd404a606e0be906734251245f1',1,'Generator']]],
   ['k_5ffillr_4',['k_fillr',['../structGenerator.html#a87d4003d7934622fdb4f1b5ba7d44554',1,'Generator']]],

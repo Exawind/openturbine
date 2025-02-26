@@ -12,7 +12,7 @@ Namespace Members
    .. toctree::
       :maxdepth: 4
 
-      All <namespacemembers>
+      All <namespacemembers_all>
       Functions <namespacemembers_func>
       Variables <namespacemembers_vars>
       Typedefs <namespacemembers_type>

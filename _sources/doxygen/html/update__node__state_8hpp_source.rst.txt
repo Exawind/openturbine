@@ -1,0 +1,14 @@
+.. meta::5d11dc176739aad59fef3c22fa7cdd317d626ef609d5b793b476af970a877e963ae5e64742cb90999a4327ff015391bb5bfa1daf1cb8b30ad98b1b1e7d52880e
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/update_node_state.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/update\_node\_state.hpp Source File
+==========================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: update__node__state_8hpp_source.html

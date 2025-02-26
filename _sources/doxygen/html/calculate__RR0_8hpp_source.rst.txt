@@ -1,0 +1,14 @@
+.. meta::81ac9f2a090ec119098fb57615d665050dd146b8643649cb66781221316b02e41c623fdf75da686f351419061f4eeb5ef54eaa439b97cbd11ba3c89e33ebede2
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_RR0.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate\_RR0.hpp Source File
+=====================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: calculate__RR0_8hpp_source.html

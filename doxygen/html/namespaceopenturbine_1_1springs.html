@@ -167,38 +167,287 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">openturbine::springs Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1springs_1_1AssembleSpringsResidual.html">AssembleSpringsResidual</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1springs_1_1AssembleSpringsStiffness.html">AssembleSpringsStiffness</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1springs_1_1CalculateDistanceComponents.html">CalculateDistanceComponents</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor to calculate relative distance vector between spring element nodes.  <a href="structopenturbine_1_1springs_1_1CalculateDistanceComponents.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1springs_1_1CalculateForceCoefficients.html">CalculateForceCoefficients</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor to calculate force coefficients for spring elements.  <a href="structopenturbine_1_1springs_1_1CalculateForceCoefficients.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1springs_1_1CalculateForceVectors.html">CalculateForceVectors</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor to calculate force vectors for spring elements.  <a href="structopenturbine_1_1springs_1_1CalculateForceVectors.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1springs_1_1CalculateLength.html">CalculateLength</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor to calculate the current length of a spring element.  <a href="structopenturbine_1_1springs_1_1CalculateLength.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1springs_1_1CalculateQuadraturePointValues.html">CalculateQuadraturePointValues</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1springs_1_1CalculateStiffnessMatrix.html">CalculateStiffnessMatrix</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor to calculate the stiffness matrix for spring elements.  <a href="structopenturbine_1_1springs_1_1CalculateStiffnessMatrix.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1springs_1_1UpdateNodeState.html">UpdateNodeState</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor to update the nodal displacement vectors for all spring elements based on the current state Q.  <a href="structopenturbine_1_1springs_1_1UpdateNodeState.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a5834961918b01e68694918672a051e75" id="r_a5834961918b01e68694918672a051e75"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1springs.html#a5834961918b01e68694918672a051e75">CalculateDistanceComponents</a> (const Kokkos::View&lt; double[3]&gt;::const_type &amp;x0, const Kokkos::View&lt; double[3]&gt;::const_type &amp;u1, const Kokkos::View&lt; double[3]&gt;::const_type &amp;u2, const Kokkos::View&lt; double[3]&gt; &amp;r)</td></tr>
+<tr class="separator:a5834961918b01e68694918672a051e75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19a79ae7143de60014743b5af253e6a9" id="r_a19a79ae7143de60014743b5af253e6a9"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1springs.html#a19a79ae7143de60014743b5af253e6a9">CalculateForceCoefficient1</a> (double k, double l_ref, double l)</td></tr>
+<tr class="separator:a19a79ae7143de60014743b5af253e6a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8d4010dd67fd1c506cf91ed406ae09b" id="r_af8d4010dd67fd1c506cf91ed406ae09b"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1springs.html#af8d4010dd67fd1c506cf91ed406ae09b">CalculateForceCoefficient2</a> (double k, double l_ref, double l)</td></tr>
+<tr class="separator:af8d4010dd67fd1c506cf91ed406ae09b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5842b6be4352bc5066db44a4485c073" id="r_af5842b6be4352bc5066db44a4485c073"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1springs.html#af5842b6be4352bc5066db44a4485c073">CalculateForceVectors</a> (const Kokkos::View&lt; double[3]&gt;::const_type &amp;r, double c1, const Kokkos::View&lt; double[3]&gt; &amp;f)</td></tr>
+<tr class="separator:af5842b6be4352bc5066db44a4485c073"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3555c9036b7ca2542c70dd91ef23299" id="r_aa3555c9036b7ca2542c70dd91ef23299"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1springs.html#aa3555c9036b7ca2542c70dd91ef23299">CalculateLength</a> (const Kokkos::View&lt; double[3]&gt;::const_type &amp;r)</td></tr>
+<tr class="separator:aa3555c9036b7ca2542c70dd91ef23299"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9e855f4a534f7b19d7d4adf7fc589c0" id="r_ab9e855f4a534f7b19d7d4adf7fc589c0"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1springs.html#ab9e855f4a534f7b19d7d4adf7fc589c0">CalculateStiffnessMatrix</a> (double c1, double c2, const Kokkos::View&lt; double[3]&gt;::const_type &amp;r, double l, const Kokkos::View&lt; double[3][3]&gt; &amp;a)</td></tr>
+<tr class="separator:ab9e855f4a534f7b19d7d4adf7fc589c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a5834961918b01e68694918672a051e75" name="a5834961918b01e68694918672a051e75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5834961918b01e68694918672a051e75">&#9670;&#160;</a></span>CalculateDistanceComponents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::springs::CalculateDistanceComponents </td>
+          <td>(</td>
+          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramname"><em>x0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramname"><em>u1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramname"><em>u2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Kokkos::View&lt; double[3]&gt; &amp;&#160;</td>
+          <td class="paramname"><em>r</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a19a79ae7143de60014743b5af253e6a9" name="a19a79ae7143de60014743b5af253e6a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19a79ae7143de60014743b5af253e6a9">&#9670;&#160;</a></span>CalculateForceCoefficient1()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION double openturbine::springs::CalculateForceCoefficient1 </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>k</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>l_ref</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>l</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af8d4010dd67fd1c506cf91ed406ae09b" name="af8d4010dd67fd1c506cf91ed406ae09b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8d4010dd67fd1c506cf91ed406ae09b">&#9670;&#160;</a></span>CalculateForceCoefficient2()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION double openturbine::springs::CalculateForceCoefficient2 </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>k</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>l_ref</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>l</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af5842b6be4352bc5066db44a4485c073" name="af5842b6be4352bc5066db44a4485c073"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5842b6be4352bc5066db44a4485c073">&#9670;&#160;</a></span>CalculateForceVectors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::springs::CalculateForceVectors </td>
+          <td>(</td>
+          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>c1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Kokkos::View&lt; double[3]&gt; &amp;&#160;</td>
+          <td class="paramname"><em>f</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa3555c9036b7ca2542c70dd91ef23299" name="aa3555c9036b7ca2542c70dd91ef23299"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3555c9036b7ca2542c70dd91ef23299">&#9670;&#160;</a></span>CalculateLength()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION double openturbine::springs::CalculateLength </td>
+          <td>(</td>
+          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramname"><em>r</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab9e855f4a534f7b19d7d4adf7fc589c0" name="ab9e855f4a534f7b19d7d4adf7fc589c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9e855f4a534f7b19d7d4adf7fc589c0">&#9670;&#160;</a></span>CalculateStiffnessMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::springs::CalculateStiffnessMatrix </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>c1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>c2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>l</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Kokkos::View&lt; double[3][3]&gt; &amp;&#160;</td>
+          <td class="paramname"><em>a</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

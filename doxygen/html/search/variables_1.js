@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['b_0',['b',['../structopenturbine_1_1Solver.html#a29b89f77500235772ffc3eea8583b614',1,'openturbine::Solver::b'],['../structopenturbine_1_1Solver.html#a95590fb78b0d22b0557d5929f10859fb',1,'openturbine::Solver::B']]],
+  ['b_0',['b',['../structopenturbine_1_1Solver.html#a95590fb78b0d22b0557d5929f10859fb',1,'openturbine::Solver::B'],['../structopenturbine_1_1Solver.html#a29b89f77500235772ffc3eea8583b614',1,'openturbine::Solver::b']]],
   ['b_5fcol_5finds_1',['B_col_inds',['../structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html#aebefa1387ebe81f4c4141b64ca79afda',1,'openturbine::PopulateSparseRowPtrsColInds_Constraints']]],
   ['b_5fr_2',['b_r',['../structGenerator.html#ae925615bbe7cdc52f3d668ef4bb50176',1,'Generator']]],
   ['b_5fr_5ftau_5fr_3',['b_r_tau_r',['../structGenerator.html#a62761dab9d6fe82666cf9e103504472b',1,'Generator']]],
@@ -28,7 +28,7 @@ var searchData=
   ['bedplate_5fweb_5fthickness_25',['bedplate_web_thickness',['../structDrivetrain.html#ad09768168d9a9c70913929dec27e26ad',1,'Drivetrain']]],
   ['benchmark_5fprice_26',['benchmark_price',['../structCosts.html#a9ccfd78bd828321872d27736708afa99',1,'Costs']]],
   ['beta_27',['beta',['../structopenturbine_1_1CalculateNextState.html#ae7356f45ec18435030b9a79d42945435',1,'openturbine::CalculateNextState::beta'],['../structopenturbine_1_1StepParameters.html#ab05864920b337f4c6aed52101a52cbac',1,'openturbine::StepParameters::beta']]],
-  ['beta_5fprime_28',['beta_prime',['../structopenturbine_1_1UpdateDynamicPrediction.html#ab2f524fcd2d9eb021e98e8827b940b16',1,'openturbine::UpdateDynamicPrediction::beta_prime'],['../structopenturbine_1_1UpdateStaticPrediction.html#abe04ee07d977618047df0b20e03cf279',1,'openturbine::UpdateStaticPrediction::beta_prime'],['../structopenturbine_1_1masses_1_1AssembleMassesInertia.html#a76daa1c0a19bc2e304558467bc4c1512',1,'openturbine::masses::AssembleMassesInertia::beta_prime'],['../structopenturbine_1_1StepParameters.html#ac3c1bfd00eea75380909266315d3b099',1,'openturbine::StepParameters::beta_prime']]],
+  ['beta_5fprime_28',['beta_prime',['../structopenturbine_1_1UpdateDynamicPrediction.html#ab2f524fcd2d9eb021e98e8827b940b16',1,'openturbine::UpdateDynamicPrediction::beta_prime'],['../structopenturbine_1_1UpdateStaticPrediction.html#abe04ee07d977618047df0b20e03cf279',1,'openturbine::UpdateStaticPrediction::beta_prime'],['../structopenturbine_1_1StepParameters.html#ac3c1bfd00eea75380909266315d3b099',1,'openturbine::StepParameters::beta_prime'],['../structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#ac5726682b223fe7b4d4a0c45da772184',1,'openturbine::masses::CalculateQuadraturePointValues::beta_prime']]],
   ['beta_5fprime_5f_29',['beta_prime_',['../structopenturbine_1_1IntegrateInertiaMatrix.html#acad47765e38eb77fd8987ac923b6f24c',1,'openturbine::IntegrateInertiaMatrix::beta_prime_'],['../structopenturbine_1_1IntegrateInertiaMatrixElement.html#a7693324ad9cb88392ee733ec79a0c434',1,'openturbine::IntegrateInertiaMatrixElement::beta_prime_']]],
   ['blade_30',['blade',['../structComponents.html#ad8133620287d352e44adeca4dbcd8add',1,'Components']]],
   ['blade_5finitial_5fstates_31',['blade_initial_states',['../structopenturbine_1_1util_1_1TurbineConfig.html#acbcc12e84128c36da81a3a87cec83564',1,'openturbine::util::TurbineConfig']]],
