@@ -2,8 +2,6 @@
 target_sources(
     openturbine_unit_tests
     PRIVATE
-    test_update_node_state.cpp
-    test_calculate_RR0.cpp
     test_rotate_section_matrix.cpp
     test_calculate_mass_matrix_components.cpp
     test_calculate_inertial_forces.cpp
