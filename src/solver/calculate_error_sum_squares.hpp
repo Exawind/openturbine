@@ -31,14 +31,19 @@ struct CalculateConstraintsErrorSumSquares {
     double atol;
     double rtol;
     size_t num_system_dofs;
-    Kokkos::View<double*>::const_type lambda;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
+    Kokkos::View<double* [6]>::const_type lambda;
     Kokkos::View<double*>::const_type x;
 
     KOKKOS_INLINE_FUNCTION
-    void operator()(const size_t i_dof, double& err) const {
-        const auto pi = x(num_system_dofs + i_dof);
-        const auto xi = lambda(i_dof);
-        err += Kokkos::pow(pi / (atol + rtol * Kokkos::abs(xi)), 2.);
+    void operator()(const size_t i_constraint, double& err) const {
+        const auto first_index = row_range(i_constraint).first;
+        const auto max_index = row_range(i_constraint).second;
+        for (auto row = first_index; row < max_index; ++row) {
+            const auto pi = x(num_system_dofs + row);
+            const auto xi = lambda(i_constraint, row - first_index);
+            err += Kokkos::pow(pi / (atol + rtol * Kokkos::abs(xi)), 2.);
+        }
     }
 };
 

@@ -18,6 +18,7 @@ install(FILES
         contribute_elements_to_sparse_matrix.hpp
         contribute_elements_to_vector.hpp
         contribute_forces_to_vector.hpp
+        contribute_lambda_to_vector.hpp
         contribute_masses_to_sparse_matrix.hpp
         contribute_masses_to_vector.hpp
         contribute_springs_to_sparse_matrix.hpp

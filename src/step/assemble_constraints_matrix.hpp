@@ -27,7 +27,7 @@ inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) 
             CopyConstraintsToSparseMatrix<Solver::CrsMatrixType>{
                 constraints.row_range, constraints.base_node_col_range,
                 constraints.target_node_col_range, constraints.base_gradient_terms,
-                constraints.target_gradient_terms, solver.B
+                constraints.target_gradient_terms, solver.constraints_matrix
             }
         );
     }
@@ -46,14 +46,6 @@ inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) 
             }
         );
 
-    }
-
-    {
-        auto mult_region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Matrix");
-        KokkosSparse::spgemm_numeric(
-            solver.constraints_spgemm_handle, solver.B, false, solver.T, false,
-            solver.constraints_matrix
-        );
     }
 }
 }  // namespace openturbine
