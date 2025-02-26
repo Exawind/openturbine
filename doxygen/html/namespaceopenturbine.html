@@ -586,10 +586,30 @@ Functions</h2></td></tr>
 <tr class="memitem:ae36ce634a21ee775c8246f924dc2fd2d" id="r_ae36ce634a21ee775c8246f924dc2fd2d"><td class="memTemplParams" colspan="2">template&lt;typename shape_matrix_type , typename jacobian_type , typename node_type , typename qp_type &gt; </td></tr>
 <tr class="memitem:ae36ce634a21ee775c8246f924dc2fd2d"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ae36ce634a21ee775c8246f924dc2fd2d">InterpVector4Deriv</a> (const shape_matrix_type &amp;shape_matrix_deriv, const jacobian_type &amp;jacobian, const node_type &amp;node_v, const qp_type &amp;qp_v)</td></tr>
 <tr class="separator:ae36ce634a21ee775c8246f924dc2fd2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3d2b43a3bf2bb0fb4b1b9e5ff7165f8" id="r_af3d2b43a3bf2bb0fb4b1b9e5ff7165f8"><td class="memTemplParams" colspan="2">template&lt;typename T1 , typename T2 , typename T3 , typename T4 , typename T5 , typename T6 &gt; </td></tr>
-<tr class="memitem:af3d2b43a3bf2bb0fb4b1b9e5ff7165f8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#af3d2b43a3bf2bb0fb4b1b9e5ff7165f8">PopulateElementViews</a> (const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;elem, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes, T1 node_x0, T2 qp_weight, T3 qp_Mstar, T4 qp_Cstar, T5 shape_interp, T6 shape_deriv)</td></tr>
-<tr class="memdesc:af3d2b43a3bf2bb0fb4b1b9e5ff7165f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates Views with beam element data for numerical integration.  <br /></td></tr>
-<tr class="separator:af3d2b43a3bf2bb0fb4b1b9e5ff7165f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a888000afce26299dbe662ce083412bab" id="r_a888000afce26299dbe662ce083412bab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a888000afce26299dbe662ce083412bab">PopulateNodeX0</a> (const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;elem, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes, const Kokkos::View&lt; double *[7], Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;node_x0)</td></tr>
+<tr class="memdesc:a888000afce26299dbe662ce083412bab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populate the node initial position and orientation.  <br /></td></tr>
+<tr class="separator:a888000afce26299dbe662ce083412bab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4610aa881d666d9e5bddb6a5067339c2" id="r_a4610aa881d666d9e5bddb6a5067339c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a4610aa881d666d9e5bddb6a5067339c2">PopulateQPWeight</a> (const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;elem, const Kokkos::View&lt; double *, Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;qp_weight)</td></tr>
+<tr class="memdesc:a4610aa881d666d9e5bddb6a5067339c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populate the integration weights at each quadrature point.  <br /></td></tr>
+<tr class="separator:a4610aa881d666d9e5bddb6a5067339c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45278089c85b116e991de15af3ac44ce" id="r_a45278089c85b116e991de15af3ac44ce"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a45278089c85b116e991de15af3ac44ce">MapNodePositions</a> (const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;elem, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
+<tr class="memdesc:a45278089c85b116e991de15af3ac44ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map node positions from [0,1] to [-1,1].  <br /></td></tr>
+<tr class="separator:a45278089c85b116e991de15af3ac44ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa12109372869418dcc0abca332b0d6c5" id="r_aa12109372869418dcc0abca332b0d6c5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aa12109372869418dcc0abca332b0d6c5">PopulateShapeFunctionValues</a> (const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;elem, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes, const Kokkos::View&lt; double **, Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;shape_interp)</td></tr>
+<tr class="memdesc:aa12109372869418dcc0abca332b0d6c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populate shape function values at each quadrature point.  <br /></td></tr>
+<tr class="separator:aa12109372869418dcc0abca332b0d6c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4c08713ed08661e503dd8c5b5f16b2b" id="r_ad4c08713ed08661e503dd8c5b5f16b2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ad4c08713ed08661e503dd8c5b5f16b2b">PopulateShapeFunctionDerivatives</a> (const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;elem, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes, const Kokkos::View&lt; double **, Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;shape_deriv)</td></tr>
+<tr class="memdesc:ad4c08713ed08661e503dd8c5b5f16b2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populate shape function derivatives at each quadrature point.  <br /></td></tr>
+<tr class="separator:ad4c08713ed08661e503dd8c5b5f16b2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeaadd42bbad5c5402c33c5dbdb445179" id="r_aeaadd42bbad5c5402c33c5dbdb445179"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aeaadd42bbad5c5402c33c5dbdb445179">MapSectionPositions</a> (const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;elem)</td></tr>
+<tr class="memdesc:aeaadd42bbad5c5402c33c5dbdb445179"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map section positions from [0,1] to [-1,1].  <br /></td></tr>
+<tr class="separator:aeaadd42bbad5c5402c33c5dbdb445179"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6c1b8370d0c393e360ce3a358460901" id="r_aa6c1b8370d0c393e360ce3a358460901"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aa6c1b8370d0c393e360ce3a358460901">PopulateQPMstar</a> (const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;elem, const Kokkos::View&lt; double *[6][6], Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;qp_Mstar)</td></tr>
+<tr class="memdesc:aa6c1b8370d0c393e360ce3a358460901"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populate mass matrix values at each quadrature point.  <br /></td></tr>
+<tr class="separator:aa6c1b8370d0c393e360ce3a358460901"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad04aed28bc5a0aa6e48f1f1d3fdd7590" id="r_ad04aed28bc5a0aa6e48f1f1d3fdd7590"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ad04aed28bc5a0aa6e48f1f1d3fdd7590">PopulateQPCstar</a> (const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;elem, const Kokkos::View&lt; double *[6][6], Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;qp_Cstar)</td></tr>
+<tr class="memdesc:ad04aed28bc5a0aa6e48f1f1d3fdd7590"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populate stiffness matrix values at each quadrature point.  <br /></td></tr>
+<tr class="separator:ad04aed28bc5a0aa6e48f1f1d3fdd7590"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ca207a510f1203f25828fcac23e58dd" id="r_a6ca207a510f1203f25828fcac23e58dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Masses.html">Masses</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6ca207a510f1203f25828fcac23e58dd">CreateMasses</a> (const <a class="el" href="structopenturbine_1_1MassesInput.html">MassesInput</a> &amp;masses_input, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
 <tr class="separator:a6ca207a510f1203f25828fcac23e58dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fa5ad5bb401e044e23069c2eebd4100" id="r_a5fa5ad5bb401e044e23069c2eebd4100"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Springs.html">Springs</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a5fa5ad5bb401e044e23069c2eebd4100">CreateSprings</a> (const <a class="el" href="structopenturbine_1_1SpringsInput.html">SpringsInput</a> &amp;springs_input, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
@@ -3873,6 +3893,72 @@ template&lt;typename shape_matrix_type , typename jacobian_type , typename node_
 
 </div>
 </div>
+<a id="a45278089c85b116e991de15af3ac44ce" name="a45278089c85b116e991de15af3ac44ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45278089c85b116e991de15af3ac44ce">&#9670;&#160;</a></span>MapNodePositions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; double &gt; openturbine::MapNodePositions </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;&#160;</td>
+          <td class="paramname"><em>elem</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>nodes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Map node positions from [0,1] to [-1,1]. </p>
+
+</div>
+</div>
+<a id="aeaadd42bbad5c5402c33c5dbdb445179" name="aeaadd42bbad5c5402c33c5dbdb445179"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeaadd42bbad5c5402c33c5dbdb445179">&#9670;&#160;</a></span>MapSectionPositions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; double &gt; openturbine::MapSectionPositions </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;&#160;</td>
+          <td class="paramname"><em>elem</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Map section positions from [0,1] to [-1,1]. </p>
+
+</div>
+</div>
 <a id="a01e338b1d66dc436c24b099e9a784008" name="a01e338b1d66dc436c24b099e9a784008"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a01e338b1d66dc436c24b099e9a784008">&#9670;&#160;</a></span>Norm()</h2>
 
@@ -4077,19 +4163,17 @@ template&lt;typename shape_matrix_type , typename jacobian_type , typename node_
 
 </div>
 </div>
-<a id="af3d2b43a3bf2bb0fb4b1b9e5ff7165f8" name="af3d2b43a3bf2bb0fb4b1b9e5ff7165f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3d2b43a3bf2bb0fb4b1b9e5ff7165f8">&#9670;&#160;</a></span>PopulateElementViews()</h2>
+<a id="a888000afce26299dbe662ce083412bab" name="a888000afce26299dbe662ce083412bab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a888000afce26299dbe662ce083412bab">&#9670;&#160;</a></span>PopulateNodeX0()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T1 , typename T2 , typename T3 , typename T4 , typename T5 , typename T6 &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void openturbine::PopulateElementViews </td>
+          <td class="memname">void openturbine::PopulateNodeX0 </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;&#160;</td>
           <td class="paramname"><em>elem</em>, </td>
@@ -4103,37 +4187,165 @@ template&lt;typename T1 , typename T2 , typename T3 , typename T4 , typename T5 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">T1&#160;</td>
-          <td class="paramname"><em>node_x0</em>, </td>
+          <td class="paramtype">const Kokkos::View&lt; double *[7], Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;&#160;</td>
+          <td class="paramname"><em>node_x0</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Populate the node initial position and orientation. </p>
+
+</div>
+</div>
+<a id="ad04aed28bc5a0aa6e48f1f1d3fdd7590" name="ad04aed28bc5a0aa6e48f1f1d3fdd7590"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad04aed28bc5a0aa6e48f1f1d3fdd7590">&#9670;&#160;</a></span>PopulateQPCstar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::PopulateQPCstar </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;&#160;</td>
+          <td class="paramname"><em>elem</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">T2&#160;</td>
-          <td class="paramname"><em>qp_weight</em>, </td>
+          <td class="paramtype">const Kokkos::View&lt; double *[6][6], Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;&#160;</td>
+          <td class="paramname"><em>qp_Cstar</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Populate stiffness matrix values at each quadrature point. </p>
+
+</div>
+</div>
+<a id="aa6c1b8370d0c393e360ce3a358460901" name="aa6c1b8370d0c393e360ce3a358460901"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6c1b8370d0c393e360ce3a358460901">&#9670;&#160;</a></span>PopulateQPMstar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::PopulateQPMstar </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;&#160;</td>
+          <td class="paramname"><em>elem</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">T3&#160;</td>
-          <td class="paramname"><em>qp_Mstar</em>, </td>
+          <td class="paramtype">const Kokkos::View&lt; double *[6][6], Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;&#160;</td>
+          <td class="paramname"><em>qp_Mstar</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Populate mass matrix values at each quadrature point. </p>
+
+</div>
+</div>
+<a id="a4610aa881d666d9e5bddb6a5067339c2" name="a4610aa881d666d9e5bddb6a5067339c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4610aa881d666d9e5bddb6a5067339c2">&#9670;&#160;</a></span>PopulateQPWeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::PopulateQPWeight </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;&#160;</td>
+          <td class="paramname"><em>elem</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">T4&#160;</td>
-          <td class="paramname"><em>qp_Cstar</em>, </td>
+          <td class="paramtype">const Kokkos::View&lt; double *, Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;&#160;</td>
+          <td class="paramname"><em>qp_weight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Populate the integration weights at each quadrature point. </p>
+
+</div>
+</div>
+<a id="ad4c08713ed08661e503dd8c5b5f16b2b" name="ad4c08713ed08661e503dd8c5b5f16b2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4c08713ed08661e503dd8c5b5f16b2b">&#9670;&#160;</a></span>PopulateShapeFunctionDerivatives()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::PopulateShapeFunctionDerivatives </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;&#160;</td>
+          <td class="paramname"><em>elem</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">T5&#160;</td>
-          <td class="paramname"><em>shape_interp</em>, </td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>nodes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">T6&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double **, Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;&#160;</td>
           <td class="paramname"><em>shape_deriv</em>&#160;</td>
         </tr>
         <tr>
@@ -4149,24 +4361,51 @@ template&lt;typename T1 , typename T2 , typename T3 , typename T4 , typename T5 
 </table>
 </div><div class="memdoc">
 
-<p>Populates Views with beam element data for numerical integration. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">elem</td><td>The beam element containing node, quadrature, and section data </td></tr>
-    <tr><td class="paramname">node_x0</td><td>View for initial nodal positions and orientations (size = num_nodes x num_dofs) </td></tr>
-    <tr><td class="paramname">qp_weight</td><td>View for quadrature point weights (size = num_qps) </td></tr>
-    <tr><td class="paramname">qp_Mstar</td><td>View for interpolated mass matrices at quadrature points (size = num_qps x 6 x 6) </td></tr>
-    <tr><td class="paramname">qp_Cstar</td><td>View for interpolated stiffness matrices at quadrature points (size = num_qps x 6 x 6) </td></tr>
-    <tr><td class="paramname">shape_interp</td><td>View for shape function interpolation weights (size = num_nodes x num_qps) </td></tr>
-    <tr><td class="paramname">shape_deriv</td><td>View for shape function derivative weights (size = num_nodes x num_qps)</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>This function transforms element data into a format suitable for numerical integration:</p><ul>
-<li>Maps node and section positions from [0,1] to [-1,1]</li>
-<li>Computes shape function weights for interpolation and derivatives using Lagrange polynomials</li>
-<li>Interpolates section properties (mass and stiffness) at quadrature points using linear interpolation </li>
-</ul>
+<p>Populate shape function derivatives at each quadrature point. </p>
+
+</div>
+</div>
+<a id="aa12109372869418dcc0abca332b0d6c5" name="aa12109372869418dcc0abca332b0d6c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa12109372869418dcc0abca332b0d6c5">&#9670;&#160;</a></span>PopulateShapeFunctionValues()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::PopulateShapeFunctionValues </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;&#160;</td>
+          <td class="paramname"><em>elem</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>nodes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Kokkos::View&lt; double **, Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;&#160;</td>
+          <td class="paramname"><em>shape_interp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Populate shape function values at each quadrature point. </p>
 
 </div>
 </div>

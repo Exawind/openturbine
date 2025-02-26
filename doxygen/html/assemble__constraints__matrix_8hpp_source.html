@@ -221,19 +221,22 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            <span class="stringliteral">&quot;CopySparseValuesToTranspose&quot;</span>, constraint_transpose_policy,</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            <a class="code hl_struct" href="structopenturbine_1_1CopySparseValuesToTranspose.html">CopySparseValuesToTranspose&lt;Solver::CrsMatrixType&gt;</a>{solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a95590fb78b0d22b0557d5929f10859fb">B</a>, tmp_row_map, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a24d3477d3b0494bf9d3257ab7daac58a">B_t</a>}</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        );</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        KokkosSparse::sort_crs_matrix(solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a24d3477d3b0494bf9d3257ab7daac58a">B_t</a>);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keyword">auto</span> mult_region = Kokkos::Profiling::ScopedRegion(<span class="stringliteral">&quot;Assemble Constraints Matrix&quot;</span>);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        KokkosSparse::spgemm_numeric(</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a9a415b434425682a271e21b93876a2e2">constraints_spgemm_handle</a>, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a95590fb78b0d22b0557d5929f10859fb">B</a>, <span class="keyword">false</span>, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a8aa50e63e83b1affc4a516bebf4ca7f8">T</a>, <span class="keyword">false</span>,</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#aca46db80b0237a501a83056b64bb820b">constraints_matrix</a></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        );</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    }</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            <span class="keyword">auto</span> sort_region = Kokkos::Profiling::ScopedRegion(<span class="stringliteral">&quot;Sort&quot;</span>);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            KokkosSparse::sort_crs_matrix(solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a24d3477d3b0494bf9d3257ab7daac58a">B_t</a>);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        }</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">auto</span> mult_region = Kokkos::Profiling::ScopedRegion(<span class="stringliteral">&quot;Assemble Constraints Matrix&quot;</span>);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        KokkosSparse::spgemm_numeric(</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a9a415b434425682a271e21b93876a2e2">constraints_spgemm_handle</a>, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a95590fb78b0d22b0557d5929f10859fb">B</a>, <span class="keyword">false</span>, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a8aa50e63e83b1affc4a516bebf4ca7f8">T</a>, <span class="keyword">false</span>,</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#aca46db80b0237a501a83056b64bb820b">constraints_matrix</a></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        );</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
 </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="aconstraints_8hpp_html"><div class="ttname"><a href="constraints_8hpp.html">constraints.hpp</a></div></div>
 <div class="ttc" id="acopy__constraints__to__sparse__matrix_8hpp_html"><div class="ttname"><a href="copy__constraints__to__sparse__matrix_8hpp.html">copy_constraints_to_sparse_matrix.hpp</a></div></div>
 <div class="ttc" id="acopy__sparse__values__to__transpose_8hpp_html"><div class="ttname"><a href="copy__sparse__values__to__transpose_8hpp.html">copy_sparse_values_to_transpose.hpp</a></div></div>
