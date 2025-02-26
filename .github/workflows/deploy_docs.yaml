@@ -1,0 +1,62 @@
+name: Deploy OpenTurbine Documentation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{github.ref}}-${{github.head_ref}}-docs
+  cancel-in-progress: true
+
+jobs:
+  Deploy-Docs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Cache install source dependencies
+      id: cache-dependencies
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/spack
+        key: linux-spack
+    - name: Install source dependencies
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      run: |
+        git clone https://github.com/spack/spack.git
+        source spack/share/spack/setup-env.sh
+        spack compiler find
+        spack install yaml-cpp
+        spack install trilinos@master~epetra ^kokkos-kernels+blas+lapack
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - name: Clone repository
+      uses: actions/checkout@v4
+      with:
+        path: openturbine
+    - name: Install documentation dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends graphviz libenchant-2-dev doxygen
+        python3 -m pip install --upgrade pip
+        pip install -r openturbine/docs/requirements.txt
+    - name: Build OpenTurbine with documentation
+      run: |
+        source spack/share/spack/setup-env.sh
+        spack load trilinos yaml-cpp
+        cd openturbine
+        mkdir build
+        cd build
+        cmake .. \
+          -DOpenTurbine_ENABLE_TESTS=OFF \
+          -DOpenTurbine_ENABLE_DOCUMENTATION=ON \
+          -DCMAKE_BUILD_TYPE=Release
+        cmake --build .
+    - name: Deploy documentation
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ${{ github.workspace }}/openturbine/build/docs/sphinx/html

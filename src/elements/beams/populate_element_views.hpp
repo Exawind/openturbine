@@ -7,17 +7,19 @@
 
 namespace openturbine {
 
+/// @brief Populate the node initial position and orientation
 inline void PopulateNodeX0(
     const BeamElement& elem, const std::vector<Node>& nodes,
     const Kokkos::View<double* [7], Kokkos::LayoutStride, Kokkos::HostSpace>& node_x0
 ) {
     for (size_t j = 0; j < elem.node_ids.size(); ++j) {
-        for (size_t k = 0U; k < kLieGroupComponents; ++k) {
+        for (size_t k = 0U; k < 7U; ++k) {
             node_x0(j, k) = nodes[elem.node_ids[j]].x[k];
         }
     }
 }
 
+/// @brief Populate the integration weights at each quadrature point
 inline void PopulateQPWeight(
     const BeamElement& elem,
     const Kokkos::View<double*, Kokkos::LayoutStride, Kokkos::HostSpace>& qp_weight
@@ -27,14 +29,23 @@ inline void PopulateQPWeight(
     }
 }
 
-inline void PopulateShapeFunctionValues(
-    const BeamElement& elem, const std::vector<Node>& nodes,
-    const Kokkos::View<double**, Kokkos::LayoutStride, Kokkos::HostSpace>& shape_interp
+/// @brief Map node positions from [0,1] to [-1,1]
+inline std::vector<double> MapNodePositions(
+    const BeamElement& elem, const std::vector<Node>& nodes
 ) {
     std::vector<double> node_xi(elem.node_ids.size());
     for (size_t i = 0; i < elem.node_ids.size(); ++i) {
         node_xi[i] = 2 * nodes[elem.node_ids[i]].s - 1;
     }
+    return node_xi;
+}
+
+/// @brief Populate shape function values at each quadrature point
+inline void PopulateShapeFunctionValues(
+    const BeamElement& elem, const std::vector<Node>& nodes,
+    const Kokkos::View<double**, Kokkos::LayoutStride, Kokkos::HostSpace>& shape_interp
+) {
+    const auto node_xi = MapNodePositions(elem, nodes);
 
     std::vector<double> weights;
     for (size_t j = 0; j < elem.quadrature.size(); ++j) {
@@ -47,14 +58,12 @@ inline void PopulateShapeFunctionValues(
     }
 }
 
+/// @brief Populate shape function derivatives at each quadrature point
 inline void PopulateShapeFunctionDerivatives(
     const BeamElement& elem, const std::vector<Node>& nodes,
     const Kokkos::View<double**, Kokkos::LayoutStride, Kokkos::HostSpace>& shape_deriv
 ) {
-    std::vector<double> node_xi(elem.node_ids.size());
-    for (size_t i = 0; i < elem.node_ids.size(); ++i) {
-        node_xi[i] = 2 * nodes[elem.node_ids[i]].s - 1;
-    }
+    const auto node_xi = MapNodePositions(elem, nodes);
 
     std::vector<double> weights;
     for (size_t j = 0; j < elem.quadrature.size(); ++j) {
@@ -67,15 +76,22 @@ inline void PopulateShapeFunctionDerivatives(
     }
 }
 
-inline void PopulateQPMstar(
-    const BeamElement& elem,
-    const Kokkos::View<double* [6][6], Kokkos::LayoutStride, Kokkos::HostSpace>& qp_Mstar
-) {
-    std::vector<double> weights(elem.sections.size());
+/// @brief Map section positions from [0,1] to [-1,1]
+inline std::vector<double> MapSectionPositions(const BeamElement& elem) {
     std::vector<double> section_xi(elem.sections.size());
     for (size_t i = 0; i < elem.sections.size(); ++i) {
         section_xi[i] = 2 * elem.sections[i].position - 1;
     }
+    return section_xi;
+}
+
+/// @brief Populate mass matrix values at each quadrature point
+inline void PopulateQPMstar(
+    const BeamElement& elem,
+    const Kokkos::View<double* [6][6], Kokkos::LayoutStride, Kokkos::HostSpace>& qp_Mstar
+) {
+    const auto section_xi = MapSectionPositions(elem);
+    std::vector<double> weights(elem.sections.size());
 
     for (size_t i = 0; i < elem.quadrature.size(); ++i) {
         auto qp_xi = elem.quadrature[i][0];
@@ -95,15 +111,13 @@ inline void PopulateQPMstar(
     }
 }
 
+/// @brief Populate stiffness matrix values at each quadrature point
 inline void PopulateQPCstar(
     const BeamElement& elem,
     const Kokkos::View<double* [6][6], Kokkos::LayoutStride, Kokkos::HostSpace>& qp_Cstar
 ) {
+    const auto section_xi = MapSectionPositions(elem);
     std::vector<double> weights(elem.sections.size());
-    std::vector<double> section_xi(elem.sections.size());
-    for (size_t i = 0; i < elem.sections.size(); ++i) {
-        section_xi[i] = 2 * elem.sections[i].position - 1;
-    }
 
     for (size_t i = 0; i < elem.quadrature.size(); ++i) {
         auto qp_xi = elem.quadrature[i][0];

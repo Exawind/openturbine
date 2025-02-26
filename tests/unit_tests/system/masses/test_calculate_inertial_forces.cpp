@@ -27,7 +27,7 @@ struct ExecuteCalculateInertialForces {
 };
 
 TEST(CalculateInertialForcesTestsMasses, OneNode) {
-    constexpr double mass = 1.;
+    constexpr auto mass = 1.;
 
     const auto u_ddot = Kokkos::View<double[3]>("u_ddot");
     constexpr auto u_ddot_data = std::array{37., 38., 39.};
