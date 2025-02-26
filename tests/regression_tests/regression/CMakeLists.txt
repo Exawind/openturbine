@@ -14,5 +14,5 @@ target_sources(
     test_springs.cpp
     test_spring_mass_system.cpp
     test_utilities.cpp
-    test_netcdf_writer.cpp
+    #test_netcdf_writer.cpp
 )

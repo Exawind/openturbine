@@ -2,5 +2,6 @@
 target_sources(
     openturbine_unit_tests
     PRIVATE
+    test_netcdf_utilities.cpp
     test_turbine_parsing.cpp
 )

@@ -1,6 +1,6 @@
 target_sources(openturbine_library PRIVATE)
 
 install(FILES
-  write_netcdf_outputs.hpp
+  netcdf_utilities.hpp
   DESTINATION include/OpenTurbine/utilities/outputs/
 )
