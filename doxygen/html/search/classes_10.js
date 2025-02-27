@@ -7,7 +7,6 @@ var searchData=
   ['rix_4',['RiX',['../structRiX.html',1,'']]],
   ['riy_5',['RiY',['../structRiY.html',1,'']]],
   ['root_6',['Root',['../structRoot.html',1,'']]],
-  ['rotatesectionmatrix_7',['RotateSectionMatrix',['../structopenturbine_1_1RotateSectionMatrix.html',1,'openturbine']]],
-  ['rotation_8',['Rotation',['../structRotation.html',1,'']]],
-  ['rthick_9',['Rthick',['../structRthick.html',1,'']]]
+  ['rotation_7',['Rotation',['../structRotation.html',1,'']]],
+  ['rthick_8',['Rthick',['../structRthick.html',1,'']]]
 ];

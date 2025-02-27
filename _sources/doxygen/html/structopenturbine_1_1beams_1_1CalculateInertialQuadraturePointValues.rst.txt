@@ -1,0 +1,14 @@
+.. meta::0b7d6953971e98aca4292c68d8402a80f2aa5cb1329e538953038114db1809002a447f21dfddf0ddb9b129ab06ffe9c46f9d7d4aea540b3b3257c4916742b123
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::beams::CalculateInertialQuadraturePointValues Struct Reference
+
+CalculateInertialQuadraturePointValues Struct Reference
+=======================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1beams_1_1CalculateInertialQuadraturePointValues.html

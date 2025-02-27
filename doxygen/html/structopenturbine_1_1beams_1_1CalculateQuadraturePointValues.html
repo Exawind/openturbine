@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::beams::CalculateQuadraturePointValues Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::beams::CalculateQuadraturePointValues Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="calculatequadraturepointvalues-struct-reference">
+<h1>CalculateQuadraturePointValues Struct Reference<a class="headerlink" href="#calculatequadraturepointvalues-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::beams::CalculateQuadraturePointValues Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1beams.html">beams</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html">CalculateQuadraturePointValues</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::beams::CalculateQuadraturePointValues Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="beams_2calculate__quadrature__point__values_8hpp_source.html">calculate_quadrature_point_values.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ad98f72b2b44ec5772c22c921554559cf" id="r_ad98f72b2b44ec5772c22c921554559cf"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#ad98f72b2b44ec5772c22c921554559cf">operator()</a> (Kokkos::TeamPolicy&lt;&gt;::member_type member) const</td></tr>
+<tr class="separator:ad98f72b2b44ec5772c22c921554559cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a1aef4c9d5121fb01eadbc5988e1ad08d" id="r_a1aef4c9d5121fb01eadbc5988e1ad08d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a1aef4c9d5121fb01eadbc5988e1ad08d">beta_prime_</a></td></tr>
+<tr class="separator:a1aef4c9d5121fb01eadbc5988e1ad08d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dcb64e258c05b61b93ad5624e2a9146" id="r_a0dcb64e258c05b61b93ad5624e2a9146"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a0dcb64e258c05b61b93ad5624e2a9146">gamma_prime_</a></td></tr>
+<tr class="separator:a0dcb64e258c05b61b93ad5624e2a9146"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acceb2080a2f4e9626dcd00655f63d149" id="r_acceb2080a2f4e9626dcd00655f63d149"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#acceb2080a2f4e9626dcd00655f63d149">Q</a></td></tr>
+<tr class="separator:acceb2080a2f4e9626dcd00655f63d149"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c8579618643a2ad02bb9b2d2351a99e" id="r_a1c8579618643a2ad02bb9b2d2351a99e"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a1c8579618643a2ad02bb9b2d2351a99e">V</a></td></tr>
+<tr class="separator:a1c8579618643a2ad02bb9b2d2351a99e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31ec09d26cfa0ff46fa5e68ab4415f81" id="r_a31ec09d26cfa0ff46fa5e68ab4415f81"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a31ec09d26cfa0ff46fa5e68ab4415f81">A</a></td></tr>
+<tr class="separator:a31ec09d26cfa0ff46fa5e68ab4415f81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad07109df0ca3b6591f88aaa9fd04d5e3" id="r_ad07109df0ca3b6591f88aaa9fd04d5e3"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t ** &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#ad07109df0ca3b6591f88aaa9fd04d5e3">node_state_indices</a></td></tr>
+<tr class="separator:ad07109df0ca3b6591f88aaa9fd04d5e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a820a75817c744c53a1e125b2d5c0bfcc" id="r_a820a75817c744c53a1e125b2d5c0bfcc"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a820a75817c744c53a1e125b2d5c0bfcc">num_nodes_per_element</a></td></tr>
+<tr class="separator:a820a75817c744c53a1e125b2d5c0bfcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bb8a0d3aee86d3af88ebd9477108824" id="r_a2bb8a0d3aee86d3af88ebd9477108824"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a2bb8a0d3aee86d3af88ebd9477108824">num_qps_per_element</a></td></tr>
+<tr class="separator:a2bb8a0d3aee86d3af88ebd9477108824"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2149433613f1d29838c55e503b31b291" id="r_a2149433613f1d29838c55e503b31b291"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ** &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a2149433613f1d29838c55e503b31b291">qp_weight_</a></td></tr>
+<tr class="separator:a2149433613f1d29838c55e503b31b291"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d0840ceb16c2380c4082d2b6155e92b" id="r_a3d0840ceb16c2380c4082d2b6155e92b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ** &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a3d0840ceb16c2380c4082d2b6155e92b">qp_jacobian_</a></td></tr>
+<tr class="separator:a3d0840ceb16c2380c4082d2b6155e92b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcf50e1a2deae70c3ca3e70b6201fd14" id="r_afcf50e1a2deae70c3ca3e70b6201fd14"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *** &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#afcf50e1a2deae70c3ca3e70b6201fd14">shape_interp_</a></td></tr>
+<tr class="separator:afcf50e1a2deae70c3ca3e70b6201fd14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30f88f73fbb7d6a575abc963081bb0c6" id="r_a30f88f73fbb7d6a575abc963081bb0c6"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *** &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a30f88f73fbb7d6a575abc963081bb0c6">shape_deriv_</a></td></tr>
+<tr class="separator:a30f88f73fbb7d6a575abc963081bb0c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57bcbf894e5319f5a7783e304f67a716" id="r_a57bcbf894e5319f5a7783e304f67a716"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double[3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a57bcbf894e5319f5a7783e304f67a716">gravity_</a></td></tr>
+<tr class="separator:a57bcbf894e5319f5a7783e304f67a716"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c96323cc515bf186d654d77c770eee3" id="r_a3c96323cc515bf186d654d77c770eee3"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a3c96323cc515bf186d654d77c770eee3">node_FX_</a></td></tr>
+<tr class="separator:a3c96323cc515bf186d654d77c770eee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a882bfb9e6ea1c955642bb2f5c4340669" id="r_a882bfb9e6ea1c955642bb2f5c4340669"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[4]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a882bfb9e6ea1c955642bb2f5c4340669">qp_r0_</a></td></tr>
+<tr class="separator:a882bfb9e6ea1c955642bb2f5c4340669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10220cc5b8c68fba6b78de123944ec45" id="r_a10220cc5b8c68fba6b78de123944ec45"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a10220cc5b8c68fba6b78de123944ec45">qp_x0_</a></td></tr>
+<tr class="separator:a10220cc5b8c68fba6b78de123944ec45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53cd14fd069c4c28bbcd3784fc72dd3e" id="r_a53cd14fd069c4c28bbcd3784fc72dd3e"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a53cd14fd069c4c28bbcd3784fc72dd3e">qp_x0_prime_</a></td></tr>
+<tr class="separator:a53cd14fd069c4c28bbcd3784fc72dd3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3ebb2ed2618f099599f0cf9a77f5d8b" id="r_ae3ebb2ed2618f099599f0cf9a77f5d8b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#ae3ebb2ed2618f099599f0cf9a77f5d8b">qp_Mstar_</a></td></tr>
+<tr class="separator:ae3ebb2ed2618f099599f0cf9a77f5d8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaed101498693da54365d4cd7df2765a3" id="r_aaed101498693da54365d4cd7df2765a3"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6][6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#aaed101498693da54365d4cd7df2765a3">qp_Cstar_</a></td></tr>
+<tr class="separator:aaed101498693da54365d4cd7df2765a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b3b53665aad31394ec3fc56bab9bc46" id="r_a9b3b53665aad31394ec3fc56bab9bc46"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a9b3b53665aad31394ec3fc56bab9bc46">qp_FE_</a></td></tr>
+<tr class="separator:a9b3b53665aad31394ec3fc56bab9bc46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18f86a5b75afd58437cf8ba5b62b90b4" id="r_a18f86a5b75afd58437cf8ba5b62b90b4"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a18f86a5b75afd58437cf8ba5b62b90b4">residual_vector_terms_</a></td></tr>
+<tr class="separator:a18f86a5b75afd58437cf8ba5b62b90b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a547e47c9581e3ae83b788d7e3af69781" id="r_a547e47c9581e3ae83b788d7e3af69781"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ***[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#a547e47c9581e3ae83b788d7e3af69781">stiffness_matrix_terms_</a></td></tr>
+<tr class="separator:a547e47c9581e3ae83b788d7e3af69781"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abab7558ffb77ba773fe8d70568e0a48b" id="r_abab7558ffb77ba773fe8d70568e0a48b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ***[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateQuadraturePointValues.html#abab7558ffb77ba773fe8d70568e0a48b">inertia_matrix_terms_</a></td></tr>
+<tr class="separator:abab7558ffb77ba773fe8d70568e0a48b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad98f72b2b44ec5772c22c921554559cf" name="ad98f72b2b44ec5772c22c921554559cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad98f72b2b44ec5772c22c921554559cf">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::beams::CalculateQuadraturePointValues::operator() </td>
+          <td>(</td>
+          <td class="paramtype">Kokkos::TeamPolicy&lt;&gt;::member_type&#160;</td>
+          <td class="paramname"><em>member</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a31ec09d26cfa0ff46fa5e68ab4415f81" name="a31ec09d26cfa0ff46fa5e68ab4415f81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31ec09d26cfa0ff46fa5e68ab4415f81">&#9670;&#160;</a></span>A</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[6]&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::A</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1aef4c9d5121fb01eadbc5988e1ad08d" name="a1aef4c9d5121fb01eadbc5988e1ad08d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1aef4c9d5121fb01eadbc5988e1ad08d">&#9670;&#160;</a></span>beta_prime_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::beams::CalculateQuadraturePointValues::beta_prime_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0dcb64e258c05b61b93ad5624e2a9146" name="a0dcb64e258c05b61b93ad5624e2a9146"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dcb64e258c05b61b93ad5624e2a9146">&#9670;&#160;</a></span>gamma_prime_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::beams::CalculateQuadraturePointValues::gamma_prime_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a57bcbf894e5319f5a7783e304f67a716" name="a57bcbf894e5319f5a7783e304f67a716"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57bcbf894e5319f5a7783e304f67a716">&#9670;&#160;</a></span>gravity_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double[3]&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::gravity_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abab7558ffb77ba773fe8d70568e0a48b" name="abab7558ffb77ba773fe8d70568e0a48b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abab7558ffb77ba773fe8d70568e0a48b">&#9670;&#160;</a></span>inertia_matrix_terms_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*** [6][6]&gt; openturbine::beams::CalculateQuadraturePointValues::inertia_matrix_terms_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3c96323cc515bf186d654d77c770eee3" name="a3c96323cc515bf186d654d77c770eee3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c96323cc515bf186d654d77c770eee3">&#9670;&#160;</a></span>node_FX_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**[6]&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::node_FX_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad07109df0ca3b6591f88aaa9fd04d5e3" name="ad07109df0ca3b6591f88aaa9fd04d5e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad07109df0ca3b6591f88aaa9fd04d5e3">&#9670;&#160;</a></span>node_state_indices</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;size_t**&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::node_state_indices</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a820a75817c744c53a1e125b2d5c0bfcc" name="a820a75817c744c53a1e125b2d5c0bfcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a820a75817c744c53a1e125b2d5c0bfcc">&#9670;&#160;</a></span>num_nodes_per_element</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;size_t*&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::num_nodes_per_element</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2bb8a0d3aee86d3af88ebd9477108824" name="a2bb8a0d3aee86d3af88ebd9477108824"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bb8a0d3aee86d3af88ebd9477108824">&#9670;&#160;</a></span>num_qps_per_element</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;size_t*&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::num_qps_per_element</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acceb2080a2f4e9626dcd00655f63d149" name="acceb2080a2f4e9626dcd00655f63d149"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acceb2080a2f4e9626dcd00655f63d149">&#9670;&#160;</a></span>Q</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[7]&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::Q</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaed101498693da54365d4cd7df2765a3" name="aaed101498693da54365d4cd7df2765a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaed101498693da54365d4cd7df2765a3">&#9670;&#160;</a></span>qp_Cstar_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**[6][6]&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::qp_Cstar_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9b3b53665aad31394ec3fc56bab9bc46" name="a9b3b53665aad31394ec3fc56bab9bc46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b3b53665aad31394ec3fc56bab9bc46">&#9670;&#160;</a></span>qp_FE_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::beams::CalculateQuadraturePointValues::qp_FE_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3d0840ceb16c2380c4082d2b6155e92b" name="a3d0840ceb16c2380c4082d2b6155e92b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d0840ceb16c2380c4082d2b6155e92b">&#9670;&#160;</a></span>qp_jacobian_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::qp_jacobian_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae3ebb2ed2618f099599f0cf9a77f5d8b" name="ae3ebb2ed2618f099599f0cf9a77f5d8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3ebb2ed2618f099599f0cf9a77f5d8b">&#9670;&#160;</a></span>qp_Mstar_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**[6][6]&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::qp_Mstar_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a882bfb9e6ea1c955642bb2f5c4340669" name="a882bfb9e6ea1c955642bb2f5c4340669"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a882bfb9e6ea1c955642bb2f5c4340669">&#9670;&#160;</a></span>qp_r0_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**[4]&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::qp_r0_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2149433613f1d29838c55e503b31b291" name="a2149433613f1d29838c55e503b31b291"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2149433613f1d29838c55e503b31b291">&#9670;&#160;</a></span>qp_weight_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::qp_weight_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a10220cc5b8c68fba6b78de123944ec45" name="a10220cc5b8c68fba6b78de123944ec45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10220cc5b8c68fba6b78de123944ec45">&#9670;&#160;</a></span>qp_x0_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**[3]&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::qp_x0_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a53cd14fd069c4c28bbcd3784fc72dd3e" name="a53cd14fd069c4c28bbcd3784fc72dd3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53cd14fd069c4c28bbcd3784fc72dd3e">&#9670;&#160;</a></span>qp_x0_prime_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double**[3]&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::qp_x0_prime_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a18f86a5b75afd58437cf8ba5b62b90b4" name="a18f86a5b75afd58437cf8ba5b62b90b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18f86a5b75afd58437cf8ba5b62b90b4">&#9670;&#160;</a></span>residual_vector_terms_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double** [6]&gt; openturbine::beams::CalculateQuadraturePointValues::residual_vector_terms_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a30f88f73fbb7d6a575abc963081bb0c6" name="a30f88f73fbb7d6a575abc963081bb0c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30f88f73fbb7d6a575abc963081bb0c6">&#9670;&#160;</a></span>shape_deriv_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double***&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::shape_deriv_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afcf50e1a2deae70c3ca3e70b6201fd14" name="afcf50e1a2deae70c3ca3e70b6201fd14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcf50e1a2deae70c3ca3e70b6201fd14">&#9670;&#160;</a></span>shape_interp_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double***&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::shape_interp_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a547e47c9581e3ae83b788d7e3af69781" name="a547e47c9581e3ae83b788d7e3af69781"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a547e47c9581e3ae83b788d7e3af69781">&#9670;&#160;</a></span>stiffness_matrix_terms_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*** [6][6]&gt; openturbine::beams::CalculateQuadraturePointValues::stiffness_matrix_terms_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1c8579618643a2ad02bb9b2d2351a99e" name="a1c8579618643a2ad02bb9b2d2351a99e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c8579618643a2ad02bb9b2d2351a99e">&#9670;&#160;</a></span>V</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[6]&gt;::const_type openturbine::beams::CalculateQuadraturePointValues::V</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/<a class="el" href="beams_2calculate__quadrature__point__values_8hpp_source.html">calculate_quadrature_point_values.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

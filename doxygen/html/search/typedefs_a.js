@@ -1,6 +1,20 @@
 var searchData=
 [
-  ['rowdatatype_0',['rowdatatype',['../structopenturbine_1_1ContributeBeamsToSparseMatrix.html#afe3a17ceddb3dacf3f903d9644ae7b4b',1,'openturbine::ContributeBeamsToSparseMatrix::RowDataType'],['../structopenturbine_1_1ContributeElementsToSparseMatrix.html#a7ace3c087337ebdb90952e69dc28ffa1',1,'openturbine::ContributeElementsToSparseMatrix::RowDataType'],['../structopenturbine_1_1ContributeMassesToSparseMatrix.html#abd6072772f45041ef71dfbffc742940c',1,'openturbine::ContributeMassesToSparseMatrix::RowDataType'],['../structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a607e9ca91bc72f3393d9f8b5ea59f835',1,'openturbine::ContributeSpringsToSparseMatrix::RowDataType'],['../structopenturbine_1_1CopyConstraintsToSparseMatrix.html#af254d644e3cbd84435cc327525c3e16b',1,'openturbine::CopyConstraintsToSparseMatrix::RowDataType'],['../structopenturbine_1_1CopyIntoSparseMatrix.html#a3f2b89e91a669cfda8f4dcb95776dca0',1,'openturbine::CopyIntoSparseMatrix::RowDataType'],['../structopenturbine_1_1CopyIntoSparseMatrix__Transpose.html#a90d7675cc2e5dff077598f26fbce582a',1,'openturbine::CopyIntoSparseMatrix_Transpose::RowDataType'],['../structopenturbine_1_1CopyTangentToSparseMatrix.html#af1ee9acc8fd98847fe7d828045db6cff',1,'openturbine::CopyTangentToSparseMatrix::RowDataType']]],
-  ['rowmaptype_1',['RowMapType',['../structopenturbine_1_1CopySparseValuesToTranspose.html#adaa4ec471f47a8eb7edd46398aa563b4',1,'openturbine::CopySparseValuesToTranspose']]],
-  ['rowptrvaluetype_2',['RowPtrValueType',['../structopenturbine_1_1ComputeKColIndsFunction.html#aed66da0a95606e4224e5fd5521ae5b89',1,'openturbine::ComputeKColIndsFunction']]]
+  ['value_5ftype_0',['value_type',['../structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#a22930d2c756a58351acae65df87cf338',1,'openturbine::CalculateConstraintsErrorSumSquares::value_type'],['../structopenturbine_1_1CalculateSystemErrorSumSquares.html#ade01fb3544d88fc05e067483a1c7aa73',1,'openturbine::CalculateSystemErrorSumSquares::value_type']]],
+  ['view_5f3_1',['View_3',['../namespaceopenturbine.html#a5c3e2136acb58cc49d15dc2d88c76a66',1,'openturbine']]],
+  ['view_5f3x3_2',['View_3x3',['../namespaceopenturbine.html#a3f8d7abc1184fa2c3b6a3ba577fd7d69',1,'openturbine']]],
+  ['view_5f3x4_3',['View_3x4',['../namespaceopenturbine.html#ab976b2079ff11e5fc6c688ccf5137d8a',1,'openturbine']]],
+  ['view_5f6x6_4',['View_6x6',['../namespaceopenturbine.html#a211dc8a11ae80cf412d99093545a4035',1,'openturbine']]],
+  ['view_5fn_5',['View_N',['../namespaceopenturbine.html#a2f08f5f95d20c3c68e44852de2d7c454',1,'openturbine']]],
+  ['view_5fn_5fatomic_6',['View_N_atomic',['../namespaceopenturbine.html#ac9ae6ffe72ffd22363d68866bf34bb82',1,'openturbine']]],
+  ['view_5fnx3_7',['View_Nx3',['../namespaceopenturbine.html#a4bd64c8b4c4f2eb749f5920d2dd7cba7',1,'openturbine']]],
+  ['view_5fnx3x3_8',['View_Nx3x3',['../namespaceopenturbine.html#a867acfc7d2d4f96b74eb24dd5f018336',1,'openturbine']]],
+  ['view_5fnx3x4_9',['View_Nx3x4',['../namespaceopenturbine.html#aef51ebaddc2cbaa0e7a3c80b3972ac51',1,'openturbine']]],
+  ['view_5fnx4_10',['View_Nx4',['../namespaceopenturbine.html#a948e9534ac6863b7bed63f5753f395ba',1,'openturbine']]],
+  ['view_5fnx6_11',['View_Nx6',['../namespaceopenturbine.html#a2464cbd056dc563006be24d81413d2c1',1,'openturbine']]],
+  ['view_5fnx6x6_12',['View_Nx6x6',['../namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949',1,'openturbine']]],
+  ['view_5fnx7_13',['View_Nx7',['../namespaceopenturbine.html#a26aa3f501f334a7c96279b7273603855',1,'openturbine']]],
+  ['view_5fnxn_14',['View_NxN',['../namespaceopenturbine.html#aa19d634665e36e551b0d7f35077b04f2',1,'openturbine']]],
+  ['view_5fnxn_5fatomic_15',['View_NxN_atomic',['../namespaceopenturbine.html#a6c4c9a0dccec506ea80d3bfcd5ac6911',1,'openturbine']]],
+  ['view_5fquaternion_16',['View_Quaternion',['../namespaceopenturbine.html#afe4f47322136b8412f65292a1a2b601d',1,'openturbine']]]
 ];

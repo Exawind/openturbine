@@ -16,12 +16,9 @@ var searchData=
   ['assemble_5fnode_5ffreedom_5fallocation_5ftable_13',['assemble_node_freedom_allocation_table',['../namespaceopenturbine.html#a73df7db3151390957bb059cad4aaacc6',1,'openturbine']]],
   ['assembleconstraintsmatrix_14',['AssembleConstraintsMatrix',['../namespaceopenturbine.html#adbb84d11219dbe3386b8b6cad8156047',1,'openturbine']]],
   ['assembleconstraintsresidual_15',['AssembleConstraintsResidual',['../namespaceopenturbine.html#a585d940eebc7f182933ce6991df76cd9',1,'openturbine']]],
-  ['assembleinertiamatrixbeams_16',['AssembleInertiaMatrixBeams',['../namespaceopenturbine.html#a2991c3f02ea033cb6b6e4b3af51b9c4d',1,'openturbine']]],
-  ['assembleresidualvectorbeams_17',['AssembleResidualVectorBeams',['../namespaceopenturbine.html#a42382d9e3c8386e004a248a57b3ddd10',1,'openturbine']]],
-  ['assemblestiffnessmatrixbeams_18',['AssembleStiffnessMatrixBeams',['../namespaceopenturbine.html#a0e040a954db340952f1d6002e2b5f0f4',1,'openturbine']]],
-  ['assemblesystemmatrix_19',['AssembleSystemMatrix',['../namespaceopenturbine.html#ab990ee62b639ef94d46b4d1f6f2ef47e',1,'openturbine']]],
-  ['assemblesystemresidual_20',['AssembleSystemResidual',['../namespaceopenturbine.html#a4843e81da1b3c1b7c379c61b26634588',1,'openturbine']]],
-  ['assembletangentoperator_21',['AssembleTangentOperator',['../namespaceopenturbine.html#a7f6f366681dcb7eafb080224fa5b87ca',1,'openturbine']]],
-  ['ax_5fmatrix_22',['AX_Matrix',['../matrix__operations_8hpp.html#a367fda764f427cc89a0c6d7e1f5a23c8',1,'matrix_operations.hpp']]],
-  ['axialvectorofmatrix_23',['AxialVectorOfMatrix',['../matrix__operations_8hpp.html#ac3d4b6c7c695faebbfe38e1e9e307828',1,'matrix_operations.hpp']]]
+  ['assemblesystemmatrix_16',['AssembleSystemMatrix',['../namespaceopenturbine.html#ab990ee62b639ef94d46b4d1f6f2ef47e',1,'openturbine']]],
+  ['assemblesystemresidual_17',['AssembleSystemResidual',['../namespaceopenturbine.html#a4843e81da1b3c1b7c379c61b26634588',1,'openturbine']]],
+  ['assembletangentoperator_18',['AssembleTangentOperator',['../namespaceopenturbine.html#a7f6f366681dcb7eafb080224fa5b87ca',1,'openturbine']]],
+  ['ax_5fmatrix_19',['AX_Matrix',['../matrix__operations_8hpp.html#a367fda764f427cc89a0c6d7e1f5a23c8',1,'matrix_operations.hpp']]],
+  ['axialvectorofmatrix_20',['AxialVectorOfMatrix',['../matrix__operations_8hpp.html#ac3d4b6c7c695faebbfe38e1e9e307828',1,'matrix_operations.hpp']]]
 ];

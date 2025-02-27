@@ -1,0 +1,14 @@
+.. meta::8361d0859230bd690dde3a626ab38dba3f84a6f698af0b21f71e92c29be6206aa0fbad6522cfce991608bede02b294f8ac10c9d2231e2600abdaddbcc5eb98de
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::beams::CalculateStiffnessQuadraturePointValues Struct Reference
+
+CalculateStiffnessQuadraturePointValues Struct Reference
+========================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1beams_1_1CalculateStiffnessQuadraturePointValues.html

@@ -1,0 +1,14 @@
+.. meta::f52ba109732fa93897fd90f13f4d4d71aaa5e2ceb66a6e07d544fdd28b65616faae411b4504c1e18c810cff7bf00eb2c0200ca3d949a81f7354dcd5aedd3ed8a
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::beams::UpdateNodeStateElement Struct Reference
+
+UpdateNodeStateElement Struct Reference
+=======================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1beams_1_1UpdateNodeStateElement.html

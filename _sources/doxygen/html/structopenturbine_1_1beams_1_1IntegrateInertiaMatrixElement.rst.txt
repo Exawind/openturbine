@@ -1,0 +1,14 @@
+.. meta::563d7268d7e1180e05030146af6f5fc2bbc27048e55b4d8eb791c2d7d26ed3617762342cc4919b4d56f1b29c14a2da0da166e38bbd515518daf4044999c28ebd
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::beams::IntegrateInertiaMatrixElement Struct Reference
+
+IntegrateInertiaMatrixElement Struct Reference
+==============================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html

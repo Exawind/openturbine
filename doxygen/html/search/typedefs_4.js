@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['executionspace_0',['ExecutionSpace',['../structopenturbine_1_1Solver.html#a6d18513ab415a6b1e146b56446b7ffcb',1,'openturbine::Solver']]]
+  ['globalcrsmatrixtype_0',['GlobalCrsMatrixType',['../structopenturbine_1_1Solver.html#a13adc760a63b9e8751758d38bfaa35e1',1,'openturbine::Solver']]],
+  ['globalmultivectortype_1',['GlobalMultiVectorType',['../structopenturbine_1_1Solver.html#af542cae6ed23cd5a9a6a1a943c0ae198',1,'openturbine::Solver']]]
 ];
