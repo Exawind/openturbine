@@ -1,6 +1,10 @@
 name: OpenTurbine-CI
 
-on: push
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/deploy_docs.yaml'
 
 jobs:
   Correctness-MacOS:
@@ -31,8 +35,8 @@ jobs:
         spack install googletest
         spack install llvm@18
         spack install cppcheck
+        spack install netcdf-c~mpi
         spack install yaml-cpp
-        spack install vtk~mpi~opengl2
         spack install trilinos@master~mpi~epetra ^kokkos-kernels+blas+lapack
     - name: Clone
       uses: actions/checkout@v4
@@ -48,8 +52,8 @@ jobs:
         spack load cppcheck
         spack load trilinos
         spack load googletest
+        spack load netcdf-c~mpi
         spack load yaml-cpp
-        spack load vtk
         cd openturbine
         mkdir build
         cd build
@@ -58,7 +62,6 @@ jobs:
           -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=${{ matrix.build_external == 'none' }} \
           -DOpenTurbine_ENABLE_CPPCHECK=ON \
           -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
-          -DOpenTurbine_ENABLE_VTK=ON \
           -DOpenTurbine_WARNINGS_AS_ERRORS=ON \
           -DOpenTurbine_BUILD_OPENFAST_ADI=${{ matrix.build_external == 'all' }} \
           -DOpenTurbine_BUILD_ROSCO_CONTROLLER=${{ matrix.build_external == 'all' }} \

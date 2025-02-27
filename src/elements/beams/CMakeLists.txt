@@ -2,6 +2,7 @@ target_sources(openturbine_library PRIVATE)
 
 install(FILES
         beam_element.hpp
+        beam_quadrature.hpp
         beam_section.hpp
         beams.hpp
         beams_input.hpp
