@@ -139,6 +139,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input, const std::vector<Node>&
             beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot, beams.qp_omega_dot, beams.qp_x
         }
     );
+
     return beams;
 }
 
