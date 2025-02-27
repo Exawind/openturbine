@@ -9,84 +9,39 @@
 
 namespace openturbine {
 
-struct CalculateRotationControlConstraint {
-    int i_constraint;
-    Kokkos::View<size_t*>::const_type base_node_index;
-    Kokkos::View<size_t*>::const_type target_node_index;
-    View_Nx3::const_type X0_;
-    View_Nx3x3::const_type axes;
-    View_Nx7::const_type constraint_inputs;
-    View_Nx7::const_type node_u;
-    View_Nx6 residual_terms;
-    View_Nx6x6 base_gradient_terms;
-    View_Nx6x6 target_gradient_terms;
-
-    KOKKOS_FUNCTION
-    void operator()() const {
-        const auto i_base = base_node_index(i_constraint);
-        const auto i_target = target_node_index(i_constraint);
-
-        // Initial difference between nodes
-        const auto X0_data = Kokkos::Array<double, 3>{
-            X0_(i_constraint, 0), X0_(i_constraint, 1), X0_(i_constraint, 2)
-        };
-        const auto X0 = View_3::const_type{X0_data.data()};
-
-        // Base node displacement (translation and rotation)
-        const auto ub_data =
-            Kokkos::Array<double, 3>{node_u(i_base, 0), node_u(i_base, 1), node_u(i_base, 2)};
-        const auto Rb_data = Kokkos::Array<double, 4>{
-            node_u(i_base, 3), node_u(i_base, 4), node_u(i_base, 5), node_u(i_base, 6)
-        };
-        const auto ub = View_3::const_type{ub_data.data()};
-        const auto Rb = Kokkos::View<double[4]>::const_type{Rb_data.data()};
-
-        // Target node displacement (translation and rotation)
-        const auto ut_data =
-            Kokkos::Array<double, 3>{node_u(i_target, 0), node_u(i_target, 1), node_u(i_target, 2)};
-        const auto ut = View_3::const_type{ut_data.data()};
-        const auto Rt_data = Kokkos::Array<double, 4>{
-            node_u(i_target, 3), node_u(i_target, 4), node_u(i_target, 5), node_u(i_target, 6)
-        };
-        const auto Rt = Kokkos::View<double[4]>::const_type{Rt_data.data()};
-
+KOKKOS_FUNCTION
+inline void CalculateRotationControlConstraint(const Kokkos::View<double[3]>::const_type& X0, const Kokkos::View<double[3][3]>::const_type& axes, const Kokkos::View<double[7]>::const_type& inputs, const Kokkos::View<double[7]>::const_type& base_node_u, const Kokkos::View<double[7]>::const_type& target_node_u, const Kokkos::View<double[6]>& residual_terms, const Kokkos::View<double[6][6]>& base_gradient_terms, const Kokkos::View<double[6][6]>& target_gradient_terms) {
+        const auto ub_data = Kokkos::Array<double, 3>{base_node_u(0), base_node_u(1), base_node_u(2)};
+        const auto Rb_data = Kokkos::Array<double, 4>{base_node_u(3), base_node_u(4), base_node_u(5), base_node_u(6)};
+        const auto ut_data = Kokkos::Array<double, 3>{target_node_u(0), target_node_u(1), target_node_u(2)};
+        const auto Rt_data = Kokkos::Array<double, 4>{target_node_u(3), target_node_u(4), target_node_u(5), target_node_u(6)};
         auto AX_data = Kokkos::Array<double, 3>{};
-        const auto AX = Kokkos::View<double[3]>{AX_data.data()};
-
-        // Control rotation vector
         auto RV_data = Kokkos::Array<double, 3>{};
-        const auto RV = Kokkos::View<double[3]>{RV_data.data()};
-
-        // Rotation control
         auto Rc_data = Kokkos::Array<double, 4>{};
-        const auto Rc = Kokkos::View<double[4]>{Rc_data.data()};
         auto RcT_data = Kokkos::Array<double, 4>{};
-        const auto RcT = Kokkos::View<double[4]>{RcT_data.data()};
-
-        // Base rotation transpose
         auto RbT_data = Kokkos::Array<double, 4>{};
-        const auto RbT = Kokkos::View<double[4]>{RbT_data.data()};
-
-        // Base rotation * X0
         auto Rb_X0_data = Kokkos::Array<double, 4>{};
-        const auto Rb_X0 = Kokkos::View<double[4]>{Rb_X0_data.data()};
-
-        // Target rotation * Control rotation transpose
         auto Rt_RcT_data = Kokkos::Array<double, 4>{};
-        const auto Rt_RcT = Kokkos::View<double[4]>{Rt_RcT_data.data()};
-
-        // Target rotation * Control rotation transpose * Base rotation transpose
         auto Rt_RcT_RbT_data = Kokkos::Array<double, 4>{};
-        const auto Rt_RcT_RbT = Kokkos::View<double[4]>{Rt_RcT_RbT_data.data()};
-
         auto A_data = Kokkos::Array<double, 9>{};
-        const auto A = View_3x3{A_data.data()};
-
         auto C_data = Kokkos::Array<double, 9>{};
-        const auto C = View_3x3{C_data.data()};
-
         auto V3_data = Kokkos::Array<double, 3>{};
-        const auto V3 = View_3{V3_data.data()};
+
+        const auto ub = Kokkos::View<double[3]>::const_type{ub_data.data()};
+        const auto Rb = Kokkos::View<double[4]>::const_type{Rb_data.data()};
+        const auto ut = Kokkos::View<double[3]>::const_type{ut_data.data()};
+        const auto Rt = Kokkos::View<double[4]>::const_type{Rt_data.data()};
+        const auto AX = Kokkos::View<double[3]>{AX_data.data()};
+        const auto RV = Kokkos::View<double[3]>{RV_data.data()};
+        const auto Rc = Kokkos::View<double[4]>{Rc_data.data()};
+        const auto RcT = Kokkos::View<double[4]>{RcT_data.data()};
+        const auto RbT = Kokkos::View<double[4]>{RbT_data.data()};
+        const auto Rb_X0 = Kokkos::View<double[4]>{Rb_X0_data.data()};
+        const auto Rt_RcT = Kokkos::View<double[4]>{Rt_RcT_data.data()};
+        const auto Rt_RcT_RbT = Kokkos::View<double[4]>{Rt_RcT_RbT_data.data()};
+        const auto A = Kokkos::View<double[3][3]>{A_data.data()};
+        const auto C = Kokkos::View<double[3][3]>{C_data.data()};
+        const auto V3 = Kokkos::View<double[3]>{V3_data.data()};
 
         //----------------------------------------------------------------------
         // Position residual
@@ -95,18 +50,18 @@ struct CalculateRotationControlConstraint {
         // Phi(0:3) = ut + X0 - ub - Rb*X0
         RotateVectorByQuaternion(Rb, X0, Rb_X0);
         for (int i = 0; i < 3; ++i) {
-            residual_terms(i_constraint, i) = ut(i) + X0(i) - ub(i) - Rb_X0(i);
+            residual_terms(i) = ut(i) + X0(i) - ub(i) - Rb_X0(i);
         }
 
         //----------------------------------------------------------------------
         // Rotation residual
         //----------------------------------------------------------------------
 
-        auto rotation_command = constraint_inputs(i_constraint, 0);
+        auto rotation_command = inputs(0);
 
         // Copy rotation axis for this constraint
         for (auto i = 0U; i < 3U; ++i) {
-            AX(i) = axes(i_constraint, 0, i);
+            AX(i) = axes(0, i);
             RV(i) = AX(i) * rotation_command;
         }
 
@@ -121,7 +76,7 @@ struct CalculateRotationControlConstraint {
         QuaternionToRotationMatrix(Rt_RcT_RbT, C);
         AxialVectorOfMatrix(C, V3);
         for (auto i = 0U; i < 3U; ++i) {
-            residual_terms(i_constraint, i + 3) = V3(i);
+            residual_terms(i + 3) = V3(i);
         }
 
         //----------------------------------------------------------------------
@@ -131,46 +86,41 @@ struct CalculateRotationControlConstraint {
         //---------------------------------
         // Target Node
         //---------------------------------
-        {
-            // B(0:3,0:3) = I
-            for (int i = 0; i < 3; ++i) {
-                target_gradient_terms(i_constraint, i, i) = 1.;
-            }
+        // B(0:3,0:3) = I
+        for (int i = 0; i < 3; ++i) {
+            target_gradient_terms(i, i) = 1.;
+        }
 
-            // B(3:6,3:6) = AX(Rb*Rc*inv(Rt)) = transpose(AX(Rt*inv(Rc)*inv(Rb)))
-            AX_Matrix(C, A);
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    target_gradient_terms(i_constraint, i + 3, j + 3) = A(j, i);
-                }
+        // B(3:6,3:6) = AX(Rb*Rc*inv(Rt)) = transpose(AX(Rt*inv(Rc)*inv(Rb)))
+        AX_Matrix(C, A);
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                target_gradient_terms(i + 3, j + 3) = A(j, i);
             }
         }
         //---------------------------------
         // Base Node
         //---------------------------------
-        {
-            // B(0:3,0:3) = -I
-            for (int i = 0; i < 3; ++i) {
-                base_gradient_terms(i_constraint, i, i) = -1.;
-            }
+        // B(0:3,0:3) = -I
+        for (int i = 0; i < 3; ++i) {
+            base_gradient_terms(i, i) = -1.;
+        }
 
-            // B(0:3,3:6) = tilde(Rb*X0)
-            VecTilde(Rb_X0, A);
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    base_gradient_terms(i_constraint, i, j + 3) = A(i, j);
-                }
-            }
-
-            // B(3:6,3:6) = -AX(Rt*inv(Rc)*inv(Rb))
-            AX_Matrix(C, A);
-            for (int i = 0; i < 3; ++i) {
-                for (int j = 0; j < 3; ++j) {
-                    base_gradient_terms(i_constraint, i + 3, j + 3) = -A(i, j);
-                }
+        // B(0:3,3:6) = tilde(Rb*X0)
+        VecTilde(Rb_X0, A);
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                base_gradient_terms(i, j + 3) = A(i, j);
             }
         }
-    }
-};
 
+        // B(3:6,3:6) = -AX(Rt*inv(Rc)*inv(Rb))
+        AX_Matrix(C, A);
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                base_gradient_terms(i + 3, j + 3) = -A(i, j);
+            }
+        }
+
+}
 }  // namespace openturbine
