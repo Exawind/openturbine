@@ -35,6 +35,7 @@ jobs:
         spack install googletest
         spack install llvm@18
         spack install cppcheck
+        spack install netcdf-c~mpi
         spack install yaml-cpp
         spack install vtk~mpi~opengl2
         spack install trilinos@master~mpi~epetra ^kokkos-kernels+blas+lapack
@@ -52,6 +53,7 @@ jobs:
         spack load cppcheck
         spack load trilinos
         spack load googletest
+        spack load netcdf-c~mpi
         spack load yaml-cpp
         spack load vtk
         cd openturbine
