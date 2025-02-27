@@ -61,8 +61,7 @@ struct Beams {
     Kokkos::View<double** [6]> qp_Fe;           // External force
 
     Kokkos::View<double** [6]> residual_vector_terms;
-    Kokkos::View<double*** [6][6]> stiffness_matrix_terms;
-    Kokkos::View<double*** [6][6]> inertia_matrix_terms;
+    Kokkos::View<double*** [6][6]> system_matrix_terms;
 
     // Shape Function data
     Kokkos::View<double***> shape_interp;  // Shape function values
@@ -107,10 +106,7 @@ struct Beams {
           qp_E("qp_E", num_elems, max_elem_qps),
           qp_Fe("qp_Fe", num_elems, max_elem_qps),
           residual_vector_terms("residual_vector_terms", num_elems, max_elem_nodes),
-          stiffness_matrix_terms(
-              "stiffness_matrix_terms", num_elems, max_elem_nodes, max_elem_nodes
-          ),
-          inertia_matrix_terms("inertia_matrix_terms", num_elems, max_elem_nodes, max_elem_nodes),
+          system_matrix_terms("system_matrix_terms", num_elems, max_elem_nodes, max_elem_nodes),
           // Shape Function data
           shape_interp("shape_interp", num_elems, max_elem_nodes, max_elem_qps),
           shape_deriv("deriv_interp", num_elems, max_elem_nodes, max_elem_qps) {

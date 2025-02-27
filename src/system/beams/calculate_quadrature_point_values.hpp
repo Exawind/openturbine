@@ -4,6 +4,7 @@
 
 #include "calculate_inertial_quadrature_point_values.hpp"
 #include "calculate_stiffness_quadrature_point_values.hpp"
+#include "calculate_system_matrix.hpp"
 #include "integrate_inertia_matrix.hpp"
 #include "integrate_residual_vector.hpp"
 #include "integrate_stiffness_matrix.hpp"
@@ -16,6 +17,7 @@ struct CalculateQuadraturePointValues {
     Kokkos::View<double* [7]>::const_type Q;
     Kokkos::View<double* [6]>::const_type V;
     Kokkos::View<double* [6]>::const_type A;
+    Kokkos::View<double* [6][6]>::const_type tangent;
     Kokkos::View<size_t**>::const_type node_state_indices;
     Kokkos::View<size_t*>::const_type num_nodes_per_element;
     Kokkos::View<size_t*>::const_type num_qps_per_element;
@@ -32,8 +34,7 @@ struct CalculateQuadraturePointValues {
     Kokkos::View<double** [6][6]>::const_type qp_Cstar_;
     Kokkos::View<double** [6]> qp_FE_;
     Kokkos::View<double** [6]> residual_vector_terms_;
-    Kokkos::View<double*** [6][6]> stiffness_matrix_terms_;
-    Kokkos::View<double*** [6][6]> inertia_matrix_terms_;
+    Kokkos::View<double*** [6][6]> system_matrix_terms_;
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
@@ -47,7 +48,8 @@ struct CalculateQuadraturePointValues {
 
         const auto qp_range = Kokkos::TeamThreadRange(member, num_qps);
         const auto node_range = Kokkos::TeamThreadRange(member, num_nodes);
-        const auto node_squared_range = Kokkos::TeamThreadRange(member, num_nodes * simd_nodes);
+        const auto node_squared_range = Kokkos::TeamThreadRange(member, num_nodes * num_nodes);
+        const auto node_squared_simd_range = Kokkos::TeamThreadRange(member, num_nodes * simd_nodes);
 
         const auto shape_interp =
             Kokkos::View<double**, Kokkos::LayoutLeft>(member.team_scratch(1), num_nodes, num_qps);
@@ -75,6 +77,10 @@ struct CalculateQuadraturePointValues {
         const auto qp_Muu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
         const auto qp_Guu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
 
+        const auto stiffness_matrix_terms =
+            Kokkos::View<double** [6][6]>(member.team_scratch(1), num_nodes, num_nodes);
+        const auto inertia_matrix_terms =
+            Kokkos::View<double** [6][6]>(member.team_scratch(1), num_nodes, num_nodes);
         KokkosBatched::TeamVectorCopy<Kokkos::TeamPolicy<>::member_type>::invoke(
             member, Kokkos::subview(shape_interp_, i_elem, Kokkos::ALL, Kokkos::ALL), shape_interp
         );
@@ -114,23 +120,35 @@ struct CalculateQuadraturePointValues {
         Kokkos::parallel_for(qp_range, stiffness_quad_point_calculator);
         member.team_barrier();
 
-        const auto residual_integrator = IntegrateResidualVectorElement{
+        const auto residual_integrator = beams::IntegrateResidualVectorElement{
             i_elem, num_qps, qp_weight, qp_jacobian, shape_interp, shape_deriv,           node_FX,
             qp_Fc,  qp_Fd,   qp_Fi,     qp_Fe,       qp_Fg,        residual_vector_terms_
         };
         Kokkos::parallel_for(node_range, residual_integrator);
 
-        const auto stiffness_matrix_integrator = IntegrateStiffnessMatrixElement{
-            i_elem, num_nodes, num_qps, qp_weight, qp_jacobian, shape_interp,           shape_deriv,
-            qp_Kuu, qp_Puu,    qp_Cuu,  qp_Ouu,    qp_Quu,      stiffness_matrix_terms_
+        const auto stiffness_matrix_integrator = beams::IntegrateStiffnessMatrixElement{
+            i_elem, num_nodes, num_qps, qp_weight, qp_jacobian, shape_interp,          shape_deriv,
+            qp_Kuu, qp_Puu,    qp_Cuu,  qp_Ouu,    qp_Quu,      stiffness_matrix_terms
         };
-        Kokkos::parallel_for(node_squared_range, stiffness_matrix_integrator);
+        Kokkos::parallel_for(node_squared_simd_range, stiffness_matrix_integrator);
 
-        const auto inertia_matrix_integrator = IntegrateInertiaMatrixElement{
-            i_elem, num_nodes, num_qps,     qp_weight,    qp_jacobian,          shape_interp,
-            qp_Muu, qp_Guu,    beta_prime_, gamma_prime_, inertia_matrix_terms_
+        const auto inertia_matrix_integrator = beams::IntegrateInertiaMatrixElement{
+            i_elem, num_nodes, num_qps,     qp_weight,    qp_jacobian,         shape_interp,
+            qp_Muu, qp_Guu,    beta_prime_, gamma_prime_, inertia_matrix_terms
         };
-        Kokkos::parallel_for(node_squared_range, inertia_matrix_integrator);
+        Kokkos::parallel_for(node_squared_simd_range, inertia_matrix_integrator);
+        member.team_barrier();
+
+        const auto system_matrix_calculator = beams::CalculateSystemMatrix{
+            i_elem,
+            num_nodes,
+            tangent,
+            node_state_indices,
+            stiffness_matrix_terms,
+            inertia_matrix_terms,
+            system_matrix_terms_
+        };
+        Kokkos::parallel_for(node_squared_range, system_matrix_calculator);
     }
 };
 

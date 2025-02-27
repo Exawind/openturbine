@@ -27,7 +27,7 @@ inline void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Muu() {
                                    5001., 5002., 5003., 5004., 5005., 5006., 6001., 6002., 6003.,
                                    6004., 6005., 6006., 7001., 7002., 7003., 7004., 7005., 7006.});
 
-    const auto gbl_M = Kokkos::View<double[1][1][1][6][6]>("global_M");
+    const auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
 
     const auto policy = Kokkos::RangePolicy(0, number_of_nodes * number_of_simd_nodes);
     const auto integrator = beams::IntegrateInertiaMatrixElement{
@@ -44,7 +44,7 @@ inline void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Muu() {
                    450150., 450300., 450450., 450600., 450750., 450900., 600150., 600300., 600450.,
                    600600., 600750., 600900., 750150., 750300., 750450., 750600., 750750., 750900.};
     const auto exact_M =
-        Kokkos::View<const double[1][1][1][6][6], Kokkos::HostSpace>(exact_M_data.data());
+        Kokkos::View<double[1][1][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
     auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
     Kokkos::deep_copy(gbl_M_mirror, gbl_M);
@@ -74,7 +74,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Guu() {
                                    4001., 4002., 4003., 4004., 4005., 4006., 5001., 5002., 5003.,
                                    5004., 5005., 5006., 6001., 6002., 6003., 6004., 6005., 6006.});
 
-    const auto gbl_M = Kokkos::View<double[1][1][1][6][6]>("global_M");
+    const auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
 
     const auto policy = Kokkos::RangePolicy(0, number_of_nodes * number_of_simd_nodes);
     const auto integrator = beams::IntegrateInertiaMatrixElement{
@@ -90,7 +90,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Guu() {
                    600150., 600300., 600450., 600600., 600750., 600900., 750150., 750300., 750450.,
                    750600., 750750., 750900., 900150., 900300., 900450., 900600., 900750., 900900.};
     const auto exact_M =
-        Kokkos::View<const double[1][1][1][6][6], Kokkos::HostSpace>(exact_M_data.data());
+        Kokkos::View<double[1][1][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
     auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
     Kokkos::deep_copy(gbl_M_mirror, gbl_M);
@@ -99,73 +99,6 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Guu() {
 
 TEST(IntegrateInertiaMatrixTests, OneElementOneNodeOneQP_Guu) {
     IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Guu();
-}
-
-void IntegrateInertiaMatrix_TestTwoElementsOneNodeOneQP() {
-    constexpr auto number_of_nodes = size_t{1U};
-    constexpr auto number_of_simd_nodes = size_t{1U};
-    constexpr auto number_of_qps = size_t{1U};
-
-    const auto qp_weights = get_qp_weights<number_of_qps>({1.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({1.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({1.});
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-
-    const auto qp_Guu = QpMatrixView("Guu");
-    const auto gbl_M = Kokkos::View<double[2][1][1][6][6]>("global_M");
-
-    {
-        const auto qp_Muu = get_qp_Muu<number_of_qps>(
-            {00001., 00002., 00003., 00004., 00005., 00006., 00101., 00102., 00103.,
-             00104., 00105., 00106., 00201., 00202., 00203., 00204., 00205., 00206.,
-             00301., 00302., 00303., 00304., 00305., 00306., 00401., 00402., 00403.,
-             00404., 00405., 00406., 00501., 00502., 00503., 00504., 00505., 00506.}
-        );
-        const auto policy = Kokkos::RangePolicy(0, number_of_nodes * number_of_simd_nodes);
-        const auto integrator = beams::IntegrateInertiaMatrixElement{
-            0U,           number_of_nodes, number_of_qps, qp_weights, qp_jacobian,
-            shape_interp, qp_Muu,          qp_Guu,        1.,         0.,
-            gbl_M
-        };
-        Kokkos::parallel_for(policy, integrator);
-    }
-
-    {
-        const auto qp_Muu = get_qp_Muu<number_of_qps>(
-            {00001., 00002., 00003., 00004., 00005., 00006., 10001., 10002., 10003.,
-             10004., 10005., 10006., 20001., 20002., 20003., 20004., 20005., 20006.,
-             30001., 30002., 30003., 30004., 30005., 30006., 40001., 40002., 40003.,
-             40004., 40005., 40006., 50001., 50002., 50003., 50004., 50005., 50006.}
-        );
-        const auto policy = Kokkos::RangePolicy(0, number_of_nodes * number_of_simd_nodes);
-        const auto integrator = beams::IntegrateInertiaMatrixElement{
-            1U,           number_of_nodes, number_of_qps, qp_weights, qp_jacobian,
-            shape_interp, qp_Muu,          qp_Guu,        1.,         0.,
-            gbl_M
-        };
-        Kokkos::parallel_for(policy, integrator);
-    }
-
-    constexpr auto exact_M_data =
-        std::array{00001., 00002., 00003., 00004., 00005., 00006., 00101., 00102., 00103.,
-                   00104., 00105., 00106., 00201., 00202., 00203., 00204., 00205., 00206.,
-                   00301., 00302., 00303., 00304., 00305., 00306., 00401., 00402., 00403.,
-                   00404., 00405., 00406., 00501., 00502., 00503., 00504., 00505., 00506.,
-
-                   00001., 00002., 00003., 00004., 00005., 00006., 10001., 10002., 10003.,
-                   10004., 10005., 10006., 20001., 20002., 20003., 20004., 20005., 20006.,
-                   30001., 30002., 30003., 30004., 30005., 30006., 40001., 40002., 40003.,
-                   40004., 40005., 40006., 50001., 50002., 50003., 50004., 50005., 50006.};
-    const auto exact_M =
-        Kokkos::View<const double[2][1][1][6][6], Kokkos::HostSpace>(exact_M_data.data());
-
-    auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
-    Kokkos::deep_copy(gbl_M_mirror, gbl_M);
-    CompareWithExpected(gbl_M_mirror, exact_M);
-}
-
-TEST(IntegrateInertiaMatrixTests, TwoElementsOneNodeOneQP) {
-    IntegrateInertiaMatrix_TestTwoElementsOneNodeOneQP();
 }
 
 void IntegrateInertiaMatrix_TestOneElementTwoNodesOneQP() {
@@ -185,7 +118,7 @@ void IntegrateInertiaMatrix_TestOneElementTwoNodesOneQP() {
                                    0404., 0405., 0406., 0501., 0502., 0503., 0504., 0505., 0506.});
     const auto qp_Guu = QpMatrixView("Guu");
 
-    const auto gbl_M = Kokkos::View<double[1][2][2][6][6]>("global_M");
+    const auto gbl_M = Kokkos::View<double[2][2][6][6]>("global_M");
 
     const auto policy = Kokkos::RangePolicy(0, number_of_nodes * number_of_simd_nodes);
     const auto integrator = beams::IntegrateInertiaMatrixElement{
@@ -211,7 +144,7 @@ void IntegrateInertiaMatrix_TestOneElementTwoNodesOneQP() {
     };
 
     const auto exact_M =
-        Kokkos::View<const double[1][2][2][6][6], Kokkos::HostSpace>(exact_M_data.data());
+        Kokkos::View<double[2][2][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
     auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
     Kokkos::deep_copy(gbl_M_mirror, gbl_M);
@@ -244,7 +177,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeTwoQPs() {
     );
     const auto qp_Guu = QpMatrixView("Guu");
 
-    const auto gbl_M = Kokkos::View<double[1][1][1][6][6]>("global_M");
+    const auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
 
     const auto policy = Kokkos::RangePolicy(0, number_of_nodes * number_of_simd_nodes);
     const auto integrator = beams::IntegrateInertiaMatrixElement{
@@ -260,7 +193,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeTwoQPs() {
                    31031., 32032., 33033., 34034., 35035., 36036., 41041., 42042., 43043.,
                    44044., 45045., 46046., 51051., 52052., 53053., 54054., 55055., 56056.};
     const auto exact_M =
-        Kokkos::View<const double[1][1][1][6][6], Kokkos::HostSpace>(exact_M_data.data());
+        Kokkos::View<double[1][1][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
     auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
     Kokkos::deep_copy(gbl_M_mirror, gbl_M);
@@ -288,7 +221,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_WithMultiplicationFactor(
     const auto qp_Guu = QpMatrixView("Guu");
     const auto multiplication_factor = 5.;
 
-    const auto gbl_M = Kokkos::View<double[1][1][1][6][6]>("global_M");
+    const auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
 
     const auto policy = Kokkos::RangePolicy(0, number_of_nodes * number_of_simd_nodes);
     const auto integrator = beams::IntegrateInertiaMatrixElement{
@@ -303,7 +236,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_WithMultiplicationFactor(
                    15005., 15010., 15015., 15020., 15025., 15030., 20005., 20010., 20015.,
                    20020., 20025., 20030., 25005., 25010., 25015., 25020., 25025., 25030.};
     const auto exact_M =
-        Kokkos::View<const double[1][1][1][6][6], Kokkos::HostSpace>(exact_M_data.data());
+        Kokkos::View<double[1][1][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
     auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
     Kokkos::deep_copy(gbl_M_mirror, gbl_M);
