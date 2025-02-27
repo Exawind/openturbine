@@ -2,6 +2,9 @@ name: OpenTurbine-CI
 
 on:
   push:
+    # deactivate workflow on feature branch for now
+    branches:
+      - main
     paths-ignore:
       - 'docs/**'
       - '.github/workflows/deploy_docs.yaml'
