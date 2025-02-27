@@ -205,4 +205,60 @@ TEST_F(NodeStateWriterTest, ThrowsOnMismatchedVectorSizes) {
     );
 }
 
+class TimeSeriesWriterTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        test_file = "test_time_series.nc";
+        std::filesystem::remove(test_file);
+    }
+
+    void TearDown() override { std::filesystem::remove(test_file); }
+
+    std::string test_file;
+};
+
+TEST_F(TimeSeriesWriterTest, ConstructorCreatesTimeDimension) {
+    TimeSeriesWriter writer(test_file);
+    const auto& file = writer.GetFile();
+
+    EXPECT_NO_THROW({
+        int time_dim_id = file.GetDimensionId("time");
+        EXPECT_GE(time_dim_id, 0);
+    });
+}
+
+TEST_F(TimeSeriesWriterTest, WriteValuesCreatesVariableAndDimension) {
+    TimeSeriesWriter writer(test_file);
+    std::vector<double> values = {100., 200., 300.};
+
+    EXPECT_NO_THROW({
+        writer.WriteValues("rotor_power", 0, values);
+        const auto& file = writer.GetFile();
+        EXPECT_GE(file.GetDimensionId("rotor_power_dim"), 0);
+        EXPECT_GE(file.GetVariableId("rotor_power"), 0);
+    });
+}
+
+TEST_F(TimeSeriesWriterTest, WriteValuesSavesCorrectData) {
+    TimeSeriesWriter writer(test_file);
+    std::vector<double> values1 = {100., 200., 300.};
+    std::vector<double> values2 = {400., 500., 600.};
+
+    EXPECT_NO_THROW({
+        writer.WriteValues("rotor_power", 0, values1);
+        writer.WriteValues("rotor_power", 1, values2);
+    });
+}
+
+TEST_F(TimeSeriesWriterTest, WriteValueCreatesVariableAndWritesSingleValue) {
+    TimeSeriesWriter writer(test_file);
+
+    EXPECT_NO_THROW({
+        writer.WriteValue("rotor_power", 0, 100.);
+        const auto& file = writer.GetFile();
+        EXPECT_GE(file.GetDimensionId("rotor_power_dim"), 0);
+        EXPECT_GE(file.GetVariableId("rotor_power"), 0);
+    });
+}
+
 }  // namespace openturbine::tests
