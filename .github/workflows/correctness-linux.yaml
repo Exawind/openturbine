@@ -34,6 +34,7 @@ jobs:
         spack compiler find
         spack install googletest
         spack install cppcheck
+        spack install netcdf-c
         spack install yaml-cpp
         spack install trilinos@master~epetra ^kokkos-kernels+blas+lapack
     - name: Clone
@@ -47,6 +48,7 @@ jobs:
         spack load trilinos
         spack load googletest
         spack load cppcheck
+        spack load netcdf-c
         spack load yaml-cpp
         cd openturbine
         mkdir build
