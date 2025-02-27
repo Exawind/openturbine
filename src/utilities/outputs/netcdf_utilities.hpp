@@ -9,25 +9,21 @@
 
 #include <netcdf.h>
 
-/**
- * @brief Checks the result of a NetCDF operation and throws an exception if it fails
- */
+/// @brief Checks the result of a NetCDF operation and throws an exception if it fails
 inline void check_netCDF_error(int status, const std::string& message = "") {
     if (status != NC_NOERR) {
         throw std::runtime_error(message + ": " + nc_strerror(status));
     }
 }
 
-/**
- * @brief Class for managing NetCDF files
- */
+/// @brief Class for managing NetCDF files for writing outputs
 class NetCDFFile {
 public:
     /**
      * @brief Constructor to create a NetCDFFile object
      *
      * This constructor creates a new NetCDF file if the create flag is true.
-     * If the create flag is false, it opens an existing NetCDF file.
+     * Otherwise, it opens an existing NetCDF file.
      */
     explicit NetCDFFile(const std::string& file_path, bool create = true) : netcdf_id_(-1) {
         if (create) {
@@ -43,24 +39,25 @@ public:
         );
     }
 
-    /**
-     * @brief Destructor to close the NetCDF file
-     *
-     * This function is a wrapper around the NetCDF library's nc_close function.
-     * It closes the NetCDF file with the given (valid) ID.
-     */
-    ~NetCDFFile() {
-        // Check if the NetCDF file ID is valid
-        if (netcdf_id_ != -1) {
-            nc_close(netcdf_id_);
-        }
-    }
-
-    // Prevent copying and moving since we don't want copies made
+    // Prevent copying and moving (since we don't want copies made)
     NetCDFFile(const NetCDFFile&) = delete;
     NetCDFFile& operator=(const NetCDFFile&) = delete;
     NetCDFFile(NetCDFFile&&) = delete;
     NetCDFFile& operator=(NetCDFFile&&) = delete;
+
+    /**
+     * @brief Destructor to close the NetCDF file
+     *
+     * This function is a wrapper around the NetCDF library's "nc_close" function.
+     * It closes the NetCDF file with the given (valid) ID.
+     */
+    ~NetCDFFile() {
+        // Close if NetCDF file ID is valid
+        if (netcdf_id_ != -1) {
+            nc_close(netcdf_id_);
+            netcdf_id_ = -1;
+        }
+    }
 
     //--------------------------------------------------------------------------
     // Setter methods
@@ -69,11 +66,11 @@ public:
     /**
      * @brief Adds a dimension to the NetCDF file
      *
-     * This function is a wrapper around the NetCDF library's nc_def_dim function.
+     * This function is a wrapper around the NetCDF library's "nc_def_dim" function.
      * It creates a new dimension with the given name and length in the NetCDF file.
      */
     int AddDimension(const std::string& name, size_t length) {
-        int dim_id;
+        int dim_id{-1};
         check_netCDF_error(
             nc_def_dim(netcdf_id_, name.c_str(), length, &dim_id),
             "Failed to create dimension " + name
@@ -84,13 +81,13 @@ public:
     /**
      * @brief Adds a variable to the NetCDF file
      *
-     * This function is a wrapper around the NetCDF library's nc_def_var function.
+     * This function is a wrapper around the NetCDF library's "nc_def_var" function.
      * It creates a new variable with the given name and dimension IDs in the NetCDF file.
      * The NetCDF type is automatically determined from the template parameter.
      */
     template <typename T>
     int AddVariable(const std::string& name, const std::vector<int>& dim_ids) {
-        int var_id;
+        int var_id{-1};
         check_netCDF_error(
             nc_def_var(
                 netcdf_id_, name.c_str(), GetNetCDFType<T>(), static_cast<int>(dim_ids.size()),
@@ -103,10 +100,14 @@ public:
 
     /**
      * @brief Adds an attribute to a variable in the NetCDF file
+     *
+     * This function is a wrapper around the NetCDF library's "nc_put_att_text" and "nc_put_att"
+     * functions. It adds an attribute (e.g. metadata) to a variable in the NetCDF file.
      */
     template <typename T>
     void AddAttribute(const std::string& var_name, const std::string& attr_name, const T& value) {
         int var_id = this->GetVariableId(var_name);
+        // string attributes
         if constexpr (std::is_same_v<T, std::string>) {
             check_netCDF_error(
                 nc_put_att_text(
@@ -116,7 +117,7 @@ public:
             );
             return;
         }
-
+        // primitive/numeric attributes
         check_netCDF_error(
             nc_put_att(netcdf_id_, var_id, attr_name.c_str(), GetNetCDFType<T>(), 1, &value),
             "Failed to write attribute " + attr_name
@@ -126,7 +127,7 @@ public:
     /**
      * @brief Writes data to a variable in the NetCDF file
      *
-     * This function is a wrapper around the NetCDF library's nc_put_var function.
+     * This function is a wrapper around the NetCDF library's "nc_put_var" function.
      * It writes the provided data to the variable with the given name.
      */
     template <typename T>
@@ -139,6 +140,9 @@ public:
 
     /**
      * @brief Writes data to a variable at specific indices in the NetCDF file
+     *
+     * This function is a wrapper around the NetCDF library's "nc_put_vara" function.
+     * It writes the provided data to the variable with the given name at the specified indices.
      *
      * @tparam T The data type of the variable
      * @param name The name of the variable to write to
@@ -158,36 +162,28 @@ public:
         );
     }
 
-    /**
-     * @brief Synchronizes (flushes) the NetCDF file to disk
-     */
+    /// @brief Synchronizes (flushes) the NetCDF file to disk
     void Sync() { check_netCDF_error(nc_sync(netcdf_id_), "Failed to sync NetCDF file"); }
 
     //--------------------------------------------------------------------------
     // Getter methods
     //--------------------------------------------------------------------------
 
-    /**
-     * @brief Gets the NetCDF file ID
-     */
+    /// @brief Returns the NetCDF file ID
     int GetNetCDFId() const { return netcdf_id_; }
 
-    /**
-     * @brief Gets the dimension ID for a given dimension name
-     */
+    /// @brief Returns the dimension ID for a given dimension name
     int GetDimensionId(const std::string& name) const {
-        int dim_id;
+        int dim_id{-1};
         check_netCDF_error(
             nc_inq_dimid(netcdf_id_, name.c_str(), &dim_id), "Failed to get dimension ID for " + name
         );
         return dim_id;
     }
 
-    /**
-     * @brief Gets the variable ID for a given variable name
-     */
+    /// @brief Returns the variable ID for a given variable name
     int GetVariableId(const std::string& name) const {
-        int var_id;
+        int var_id{-1};
         check_netCDF_error(
             nc_inq_varid(netcdf_id_, name.c_str(), &var_id), "Failed to get variable ID for " + name
         );
@@ -197,8 +193,12 @@ public:
 private:
     int netcdf_id_;
 
+    //--------------------------------------------------------------------------
+    // Helper functions
+    //--------------------------------------------------------------------------
+
     /**
-     * @brief Helper function to convert C++ type -> NetCDF type
+     * @brief Method to convert C++ type -> NetCDF type
      *
      * @tparam T The data type to get the NetCDF type for
      * @return The NetCDF type for the given data type
@@ -223,7 +223,19 @@ private:
 };
 
 /**
- * @brief Class for writing state data of the nodes to NetCDF file
+ * @brief Class for writing OpenTurbine nodal state data to NetCDF-based output files
+ *
+ * This class handles the writing of nodal state data for OpenTurbine simulations to NetCDF format.
+ * It manages the output of:
+ *   - Position (x, y, z, w, i, j, k)
+ *   - Displacement (x, y, z, w, i, j, k)
+ *   - Velocity (x, y, z, i, j, k)
+ *   - Acceleration (x, y, z, i, j, k)
+ *   - Force (x, y, z, i, j, k)
+ *
+ * Each item is stored as a separate variable in the NetCDF file, organized by timestep
+ * and node index. The file structure uses an unlimited time dimension to allow for
+ * continuous writing of timesteps during simulation.
  */
 class NodeStateWriter {
 public:
@@ -239,14 +251,14 @@ public:
         // Define dimensions
         int time_dim = file_.AddDimension("time", NC_UNLIMITED);  // Unlimited timesteps can be added
         int node_dim = file_.AddDimension("nodes", num_nodes);
-        std::vector<int> dims = {time_dim, node_dim};
+        std::vector<int> dimensions = {time_dim, node_dim};
 
         // Define variables for each state component
-        this->DefineStateVariables("x", dims, true);   // Position (all 7 components)
-        this->DefineStateVariables("u", dims, true);   // Displacement (all 7 components)
-        this->DefineStateVariables("v", dims, false);  // Velocity (6 components)
-        this->DefineStateVariables("a", dims, false);  // Acceleration (6 components)
-        this->DefineStateVariables("f", dims, false);  // Force (6 components)
+        this->DefineStateVariables("x", dimensions, true);   // Position
+        this->DefineStateVariables("u", dimensions, true);   // Displacement
+        this->DefineStateVariables("v", dimensions, false);  // Velocity
+        this->DefineStateVariables("a", dimensions, false);  // Acceleration
+        this->DefineStateVariables("f", dimensions, false);  // Force
     }
 
     /**
@@ -254,13 +266,13 @@ public:
      *
      * @param timestep Current timestep index
      * @param component_prefix Prefix for the component
-     * @param x Data for x component
-     * @param y Data for y component
-     * @param z Data for z component
-     * @param i Data for i component
-     * @param j Data for j component
-     * @param k Data for k component
-     * @param w Data for w component (optional, only used for position and displacement)
+     * @param x Data for component 1
+     * @param y Data for component 2
+     * @param z Data for component 3
+     * @param i Data for component 4
+     * @param j Data for component 5
+     * @param k Data for component 6
+     * @param w Data for component 7 (optional, only used for position and displacement)
      */
     void WriteStateData(
         size_t timestep, const std::string& component_prefix, const std::vector<double>& x,
@@ -268,7 +280,7 @@ public:
         const std::vector<double>& j, const std::vector<double>& k,
         const std::vector<double>& w = std::vector<double>()
     ) {
-        // Validate component prefix
+        // Validate the component prefix
         static const std::array<std::string_view, 5> valid_prefixes = {"x", "u", "v", "a", "f"};
         if (std::none_of(valid_prefixes.begin(), valid_prefixes.end(), [&](const auto& prefix) {
                 return prefix == component_prefix;
@@ -312,16 +324,18 @@ private:
      * @param prefix Prefix for the variable names
      * @param dims Vector of dimension IDs
      */
-    void DefineStateVariables(const std::string& prefix, const std::vector<int>& dims, bool has_w) {
-        file_.AddVariable<double>(prefix + "_x", dims);
-        file_.AddVariable<double>(prefix + "_y", dims);
-        file_.AddVariable<double>(prefix + "_z", dims);
-        file_.AddVariable<double>(prefix + "_i", dims);
-        file_.AddVariable<double>(prefix + "_j", dims);
-        file_.AddVariable<double>(prefix + "_k", dims);
+    void DefineStateVariables(
+        const std::string& prefix, const std::vector<int>& dimensions, bool has_w
+    ) {
+        file_.AddVariable<double>(prefix + "_x", dimensions);
+        file_.AddVariable<double>(prefix + "_y", dimensions);
+        file_.AddVariable<double>(prefix + "_z", dimensions);
+        file_.AddVariable<double>(prefix + "_i", dimensions);
+        file_.AddVariable<double>(prefix + "_j", dimensions);
+        file_.AddVariable<double>(prefix + "_k", dimensions);
 
         if (has_w) {
-            file_.AddVariable<double>(prefix + "_w", dims);
+            file_.AddVariable<double>(prefix + "_w", dimensions);
         }
     }
 };
@@ -341,8 +355,7 @@ public:
         try {
             time_dim_ = file_.GetDimensionId("time");
         } catch (const std::runtime_error&) {
-            time_dim_ =
-                file_.AddDimension("time", NC_UNLIMITED);  // Unlimited timesteps can be added
+            time_dim_ = file_.AddDimension("time", NC_UNLIMITED);
         }
     }
 
@@ -358,20 +371,19 @@ public:
     void WriteValues(
         const std::string& variable_name, size_t timestep, const std::vector<T>& values
     ) {
-        [[maybe_unused]] int var_id;
         try {
-            var_id = file_.GetVariableId(variable_name);
+            file_.GetVariableId(variable_name);
         } catch (const std::runtime_error&) {
-            int value_dim;
-            const std::string value_dim_name = variable_name + "_dim";
+            int value_dim{-1};
+            const std::string value_dim_name = variable_name + "_dimension";
             try {
                 value_dim = file_.GetDimensionId(value_dim_name);
             } catch (const std::runtime_error&) {
                 value_dim = file_.AddDimension(value_dim_name, values.size());
             }
 
-            std::vector<int> dims = {time_dim_, value_dim};
-            var_id = file_.AddVariable<T>(variable_name, dims);
+            std::vector<int> dimensions = {time_dim_, value_dim};
+            file_.AddVariable<T>(variable_name, dimensions);
         }
 
         std::vector<size_t> start = {timestep, 0};

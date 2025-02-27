@@ -232,10 +232,10 @@ TEST_F(TimeSeriesWriterTest, WriteValuesCreatesVariableAndDimension) {
     std::vector<double> values = {100., 200., 300.};
 
     EXPECT_NO_THROW({
-        writer.WriteValues("rotor_power", 0, values);
+        writer.WriteValues("hub_height_wind_speed", 0, values);
         const auto& file = writer.GetFile();
-        EXPECT_GE(file.GetDimensionId("rotor_power_dim"), 0);
-        EXPECT_GE(file.GetVariableId("rotor_power"), 0);
+        EXPECT_GE(file.GetVariableId("hub_height_wind_speed"), 0);
+        EXPECT_GE(file.GetDimensionId("hub_height_wind_speed_dimension"), 0);
     });
 }
 
@@ -245,8 +245,8 @@ TEST_F(TimeSeriesWriterTest, WriteValuesSavesCorrectData) {
     std::vector<double> values2 = {400., 500., 600.};
 
     EXPECT_NO_THROW({
-        writer.WriteValues("rotor_power", 0, values1);
-        writer.WriteValues("rotor_power", 1, values2);
+        writer.WriteValues("rotor_torque", 0, values1);
+        writer.WriteValues("rotor_torque", 1, values2);
     });
 }
 
@@ -256,8 +256,8 @@ TEST_F(TimeSeriesWriterTest, WriteValueCreatesVariableAndWritesSingleValue) {
     EXPECT_NO_THROW({
         writer.WriteValue("rotor_power", 0, 100.);
         const auto& file = writer.GetFile();
-        EXPECT_GE(file.GetDimensionId("rotor_power_dim"), 0);
         EXPECT_GE(file.GetVariableId("rotor_power"), 0);
+        EXPECT_GE(file.GetDimensionId("rotor_power_dimension"), 0);
     });
 }
 
