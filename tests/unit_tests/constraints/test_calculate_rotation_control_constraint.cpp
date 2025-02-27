@@ -17,22 +17,17 @@ struct ExecuteCalculateRotationControlConstraint {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        CalculateRotationControlConstraint(X0,
-                                           axes,
-                                           constraint_inputs,
-                                           base_node_u,
-                                           target_node_u,
-                                           residual_terms,
-                                           base_gradient_terms,
-                                           target_gradient_terms);
+        CalculateRotationControlConstraint(
+            X0, axes, constraint_inputs, base_node_u, target_node_u, residual_terms,
+            base_gradient_terms, target_gradient_terms
+        );
     }
 };
 
 TEST(CalculateRotationControlConstraintTests, OneConstraint) {
     const auto X0 = Kokkos::View<double[3]>("X0");
     constexpr auto X0_host_data = std::array{1., 2., 3.};
-    const auto X0_host =
-        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(X0_host_data.data());
+    const auto X0_host = Kokkos::View<double[3], Kokkos::HostSpace>::const_type(X0_host_data.data());
     const auto X0_mirror = Kokkos::create_mirror(X0);
     Kokkos::deep_copy(X0_mirror, X0_host);
     Kokkos::deep_copy(X0, X0_mirror);
@@ -48,8 +43,7 @@ TEST(CalculateRotationControlConstraintTests, OneConstraint) {
     const auto constraint_inputs = Kokkos::View<double[7]>("constraint_inputs");
     constexpr auto constraint_inputs_host_data = std::array{4., 5., 6., 7., 8., 9., 10.};
     const auto constraint_inputs_host =
-        Kokkos::View<double[7], Kokkos::HostSpace>::const_type(constraint_inputs_host_data.data()
-        );
+        Kokkos::View<double[7], Kokkos::HostSpace>::const_type(constraint_inputs_host_data.data());
     const auto constraint_inputs_mirror = Kokkos::create_mirror(constraint_inputs);
     Kokkos::deep_copy(constraint_inputs_mirror, constraint_inputs_host);
     Kokkos::deep_copy(constraint_inputs, constraint_inputs_mirror);
@@ -77,9 +71,8 @@ TEST(CalculateRotationControlConstraintTests, OneConstraint) {
     Kokkos::parallel_for(
         "CalculateRotationControlConstraint", 1,
         ExecuteCalculateRotationControlConstraint{
-            X0, axes, constraint_inputs, base_node_u, target_node_u,
-            residual_terms, base_gradient_terms, target_gradient_terms
-        }
+            X0, axes, constraint_inputs, base_node_u, target_node_u, residual_terms,
+            base_gradient_terms, target_gradient_terms}
     );
 
     const auto residual_terms_mirror = Kokkos::create_mirror(residual_terms);
@@ -109,16 +102,13 @@ TEST(CalculateRotationControlConstraintTests, OneConstraint) {
             0., 0., 0., 459.17937572387484, -114.4338400472094, 107.94957687179453    // Row 6
         };
     // clang-format on
-    const auto base_gradient_terms_exact =
-        Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type(
-            base_gradient_terms_exact_data.data()
-        );
+    const auto base_gradient_terms_exact = Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type(
+        base_gradient_terms_exact_data.data()
+    );
 
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
-            EXPECT_NEAR(
-                base_gradient_terms_mirror(i, j), base_gradient_terms_exact(i, j), 1.e-12
-            );
+            EXPECT_NEAR(base_gradient_terms_mirror(i, j), base_gradient_terms_exact(i, j), 1.e-12);
         }
     }
 

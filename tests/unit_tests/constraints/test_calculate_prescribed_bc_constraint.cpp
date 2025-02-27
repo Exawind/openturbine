@@ -21,8 +21,7 @@ struct ExecuteCalculatePrescribedBCConstraint {
 TEST(CalculatePrescribedBCConstraintTests, OneConstraint) {
     const auto X0 = Kokkos::View<double[3]>("X0");
     constexpr auto X0_host_data = std::array{1., 2., 3.};
-    const auto X0_host =
-        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(X0_host_data.data());
+    const auto X0_host = Kokkos::View<double[3], Kokkos::HostSpace>::const_type(X0_host_data.data());
     const auto X0_mirror = Kokkos::create_mirror(X0);
     Kokkos::deep_copy(X0_mirror, X0_host);
     Kokkos::deep_copy(X0, X0_mirror);
@@ -30,8 +29,7 @@ TEST(CalculatePrescribedBCConstraintTests, OneConstraint) {
     const auto constraint_inputs = Kokkos::View<double[7]>("constraint_inputs");
     constexpr auto constraint_inputs_host_data = std::array{4., 5., 6., 7., 8., 9., 10.};
     const auto constraint_inputs_host =
-        Kokkos::View<double[7], Kokkos::HostSpace>::const_type(constraint_inputs_host_data.data()
-        );
+        Kokkos::View<double[7], Kokkos::HostSpace>::const_type(constraint_inputs_host_data.data());
     const auto constraint_inputs_mirror = Kokkos::create_mirror(constraint_inputs);
     Kokkos::deep_copy(constraint_inputs_mirror, constraint_inputs_host);
     Kokkos::deep_copy(constraint_inputs, constraint_inputs_mirror);
@@ -49,7 +47,8 @@ TEST(CalculatePrescribedBCConstraintTests, OneConstraint) {
 
     Kokkos::parallel_for(
         "CalculatePrescribedBCConstraint", 1,
-        ExecuteCalculatePrescribedBCConstraint{X0, constraint_inputs, node_u, residual_terms, target_gradient_terms}
+        ExecuteCalculatePrescribedBCConstraint{
+            X0, constraint_inputs, node_u, residual_terms, target_gradient_terms}
     );
 
     const auto residual_terms_mirror = Kokkos::create_mirror(residual_terms);

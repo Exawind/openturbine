@@ -27,8 +27,7 @@ inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) 
             CopyConstraintsToSparseMatrix<Solver::CrsMatrixType>{
                 constraints.row_range, constraints.base_node_col_range,
                 constraints.target_node_col_range, constraints.base_gradient_terms,
-                constraints.target_gradient_terms, solver.constraints_matrix
-            }
+                constraints.target_gradient_terms, solver.constraints_matrix}
         );
     }
 
@@ -41,11 +40,11 @@ inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) 
             "CopyConstraintsTransposeToSparseMatrix", constraint_policy,
             CopyConstraintsTransposeToSparseMatrix<Solver::CrsMatrixType>{
                 constraints.row_range, constraints.base_node_col_range,
-                constraints.target_node_col_range, constraints.base_node_freedom_signature, constraints.target_node_freedom_signature, constraints.base_node_freedom_table, constraints.target_node_freedom_table, constraints.base_gradient_transpose_terms,
-                constraints.target_gradient_transpose_terms, solver.B_t
-            }
+                constraints.target_node_col_range, constraints.base_node_freedom_signature,
+                constraints.target_node_freedom_signature, constraints.base_node_freedom_table,
+                constraints.target_node_freedom_table, constraints.base_gradient_transpose_terms,
+                constraints.target_gradient_transpose_terms, solver.B_t}
         );
-
     }
 }
 }  // namespace openturbine

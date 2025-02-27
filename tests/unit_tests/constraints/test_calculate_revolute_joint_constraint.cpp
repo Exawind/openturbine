@@ -16,21 +16,17 @@ struct ExecuteCalculateRevoluteJointConstraint {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        CalculateRevoluteJointConstraint(X0,
-                                         axes,
-                                         base_node_u,
-                                         target_node_u,
-                                         residual_terms,
-                                         base_gradient_terms,
-                                         target_gradient_terms);
+        CalculateRevoluteJointConstraint(
+            X0, axes, base_node_u, target_node_u, residual_terms, base_gradient_terms,
+            target_gradient_terms
+        );
     }
 };
 
 TEST(CalculateRevoluteJointConstraintTests, OneConstraint) {
     const auto X0 = Kokkos::View<double[3]>("X0");
     constexpr auto X0_host_data = std::array{1., 2., 3.};
-    const auto X0_host =
-        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(X0_host_data.data());
+    const auto X0_host = Kokkos::View<double[3], Kokkos::HostSpace>::const_type(X0_host_data.data());
     const auto X0_mirror = Kokkos::create_mirror(X0);
     Kokkos::deep_copy(X0_mirror, X0_host);
     Kokkos::deep_copy(X0, X0_mirror);
@@ -66,8 +62,8 @@ TEST(CalculateRevoluteJointConstraintTests, OneConstraint) {
     Kokkos::parallel_for(
         "CalculateRevoluteJointConstraint", 1,
         ExecuteCalculateRevoluteJointConstraint{
-            X0, axes, base_node_u, target_node_u, residual_terms, base_gradient_terms, target_gradient_terms
-        }
+            X0, axes, base_node_u, target_node_u, residual_terms, base_gradient_terms,
+            target_gradient_terms}
     );
 
     const auto residual_terms_mirror = Kokkos::create_mirror(residual_terms);
@@ -93,16 +89,13 @@ TEST(CalculateRevoluteJointConstraintTests, OneConstraint) {
         0.,  0.,  0.,  -5585804.,  -8091272.,  12549292.,  // Row 5
         0.,  0.,  0.,  0.,         0.,         0.          // Row 6
     };
-    const auto base_gradient_terms_exact =
-        Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type(
-            base_gradient_terms_exact_data.data()
-        );
+    const auto base_gradient_terms_exact = Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type(
+        base_gradient_terms_exact_data.data()
+    );
 
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
-            EXPECT_NEAR(
-                base_gradient_terms_mirror(i, j), base_gradient_terms_exact(i, j), 1.e-15
-            );
+            EXPECT_NEAR(base_gradient_terms_mirror(i, j), base_gradient_terms_exact(i, j), 1.e-15);
         }
     }
 

@@ -25,7 +25,14 @@ inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints
         }
     );
 
-        Kokkos::parallel_for("ContributeLambdaToVector", constraints.num_constraints, ContributeLambdaToVector{constraints.base_node_freedom_signature, constraints.target_node_freedom_signature, constraints.base_node_freedom_table, constraints.target_node_freedom_table, constraints.base_lambda_residual_terms, constraints.target_lambda_residual_terms, solver.R});
+    Kokkos::parallel_for(
+        "ContributeLambdaToVector", constraints.num_constraints,
+        ContributeLambdaToVector{
+            constraints.base_node_freedom_signature, constraints.target_node_freedom_signature,
+            constraints.base_node_freedom_table, constraints.target_node_freedom_table,
+            constraints.base_lambda_residual_terms, constraints.target_lambda_residual_terms,
+            solver.R}
+    );
 
     Kokkos::parallel_for(
         "CopyConstraintsResidualToVector", constraints.num_constraints,

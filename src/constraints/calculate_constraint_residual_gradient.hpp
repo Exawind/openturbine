@@ -1,17 +1,17 @@
 #pragma once
 
-#include <Kokkos_Core.hpp>
-#include <KokkosBlas.hpp>
 #include <KokkosBatched_Copy_Decl.hpp>
+#include <KokkosBlas.hpp>
+#include <Kokkos_Core.hpp>
 
-#include "calculate_fixed_bc_constraint.hpp"
 #include "calculate_fixed_bc_3DOF_constraint.hpp"
-#include "calculate_prescribed_bc_constraint.hpp"
+#include "calculate_fixed_bc_constraint.hpp"
 #include "calculate_prescribed_bc_3DOF_constraint.hpp"
+#include "calculate_prescribed_bc_constraint.hpp"
 #include "calculate_revolute_joint_constraint.hpp"
 #include "calculate_revolute_joint_force.hpp"
-#include "calculate_rigid_joint_constraint.hpp"
 #include "calculate_rigid_joint_3DOF_constraint.hpp"
+#include "calculate_rigid_joint_constraint.hpp"
 #include "calculate_rotation_control_constraint.hpp"
 #include "constraints.hpp"
 #include "math/quaternion_operations.hpp"
@@ -21,7 +21,9 @@ namespace openturbine {
 
 struct CalculateConstraintResidualGradient {
     using MatrixTranspose = KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>;
-    using Gemm = KokkosBatched::SerialGemm<KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default>;
+    using Gemm = KokkosBatched::SerialGemm<
+        KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+        KokkosBatched::Algo::Gemm::Default>;
     using VectorCopy = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>;
     using MatrixCopy = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 2>;
 
@@ -46,9 +48,9 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void FixedBC(size_t i) const {
-        using KokkosBlas::Experimental::serial_gemv;
-        using Kokkos::subview;
         using Kokkos::ALL;
+        using Kokkos::subview;
+        using KokkosBlas::Experimental::serial_gemv;
 
         auto X0_data = Kokkos::Array<double, 3>{};
         auto t_node_u_data = Kokkos::Array<double, 7>{};
@@ -91,9 +93,9 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void FixedBC3DOF(size_t i) const {
-        using KokkosBlas::Experimental::serial_gemv;
-        using Kokkos::subview;
         using Kokkos::ALL;
+        using Kokkos::subview;
+        using KokkosBlas::Experimental::serial_gemv;
 
         auto X0_data = Kokkos::Array<double, 3>{};
         auto t_node_u_data = Kokkos::Array<double, 7>{};
@@ -136,9 +138,9 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void PrescribedBC(size_t i) const {
-        using KokkosBlas::Experimental::serial_gemv;
-        using Kokkos::subview;
         using Kokkos::ALL;
+        using Kokkos::subview;
+        using KokkosBlas::Experimental::serial_gemv;
 
         auto X0_data = Kokkos::Array<double, 3>{};
         auto inputs_data = Kokkos::Array<double, 7>{};
@@ -184,9 +186,9 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void PrescribedBC3DOF(size_t i) const {
-        using KokkosBlas::Experimental::serial_gemv;
-        using Kokkos::subview;
         using Kokkos::ALL;
+        using Kokkos::subview;
+        using KokkosBlas::Experimental::serial_gemv;
 
         auto X0_data = Kokkos::Array<double, 3>{};
         auto inputs_data = Kokkos::Array<double, 7>{};
@@ -232,9 +234,9 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void RigidJoint(size_t i) const {
-        using KokkosBlas::Experimental::serial_gemv;
-        using Kokkos::subview;
         using Kokkos::ALL;
+        using Kokkos::subview;
+        using KokkosBlas::Experimental::serial_gemv;
 
         auto X0_data = Kokkos::Array<double, 3>{};
         auto b_node_u_data = Kokkos::Array<double, 7>{};
@@ -298,9 +300,9 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void RigidJoint3DOF(size_t i) const {
-        using KokkosBlas::Experimental::serial_gemv;
-        using Kokkos::subview;
         using Kokkos::ALL;
+        using Kokkos::subview;
+        using KokkosBlas::Experimental::serial_gemv;
 
         auto X0_data = Kokkos::Array<double, 3>{};
         auto b_node_u_data = Kokkos::Array<double, 7>{};
@@ -364,16 +366,16 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void RevoluteJoint(size_t i) const {
-        using KokkosBlas::Experimental::serial_gemv;
-        using Kokkos::subview;
         using Kokkos::ALL;
+        using Kokkos::subview;
+        using KokkosBlas::Experimental::serial_gemv;
 
         auto X0_data = Kokkos::Array<double, 3>{};
         auto inputs_data = Kokkos::Array<double, 7>{};
         auto b_node_u_data = Kokkos::Array<double, 7>{};
         auto t_node_u_data = Kokkos::Array<double, 7>{};
         auto lambda_data = Kokkos::Array<double, 6>{};
-        auto axes_data = Kokkos::Array<double, 9>{}; 
+        auto axes_data = Kokkos::Array<double, 9>{};
         auto res_data = Kokkos::Array<double, 6>{};
         auto b_lambda_res_data = Kokkos::Array<double, 6>{};
         auto t_lambda_res_data = Kokkos::Array<double, 6>{};
@@ -440,16 +442,16 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void RotationControl(size_t i) const {
-        using KokkosBlas::Experimental::serial_gemv;
-        using Kokkos::subview;
         using Kokkos::ALL;
+        using Kokkos::subview;
+        using KokkosBlas::Experimental::serial_gemv;
 
         auto X0_data = Kokkos::Array<double, 3>{};
         auto inputs_data = Kokkos::Array<double, 7>{};
         auto b_node_u_data = Kokkos::Array<double, 7>{};
         auto t_node_u_data = Kokkos::Array<double, 7>{};
         auto lambda_data = Kokkos::Array<double, 6>{};
-        auto axes_data = Kokkos::Array<double, 9>{}; 
+        auto axes_data = Kokkos::Array<double, 9>{};
         auto res_data = Kokkos::Array<double, 6>{};
         auto b_lambda_res_data = Kokkos::Array<double, 6>{};
         auto t_lambda_res_data = Kokkos::Array<double, 6>{};
@@ -492,7 +494,9 @@ struct CalculateConstraintResidualGradient {
         MatrixCopy::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
         MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculateRotationControlConstraint(X0, axes, inputs, b_node_u, t_node_u, res, b_grad, t_grad);
+        CalculateRotationControlConstraint(
+            X0, axes, inputs, b_node_u, t_node_u, res, b_grad, t_grad
+        );
 
         MatrixTranspose::invoke(b_grad, b_grad_trans);
         MatrixTranspose::invoke(t_grad, t_grad_trans);
@@ -516,29 +520,22 @@ struct CalculateConstraintResidualGradient {
 
         if (constraint_type == ConstraintType::kFixedBC) {
             FixedBC(i);
-        }
-        else if (constraint_type == ConstraintType::kFixedBC3DOFs) {
+        } else if (constraint_type == ConstraintType::kFixedBC3DOFs) {
             FixedBC3DOF(i);
-        }
-        else if (constraint_type == ConstraintType::kPrescribedBC) {
+        } else if (constraint_type == ConstraintType::kPrescribedBC) {
             PrescribedBC(i);
-        }
-        else if (constraint_type == ConstraintType::kPrescribedBC3DOFs) {
+        } else if (constraint_type == ConstraintType::kPrescribedBC3DOFs) {
             PrescribedBC3DOF(i);
-        }
-        else if (constraint_type == ConstraintType::kRigidJoint) {
+        } else if (constraint_type == ConstraintType::kRigidJoint) {
             RigidJoint(i);
-        }
-        else if (constraint_type == ConstraintType::kRigidJoint6DOFsTo3DOFs) {
+        } else if (constraint_type == ConstraintType::kRigidJoint6DOFsTo3DOFs) {
             RigidJoint3DOF(i);
-        }
-        else if (constraint_type == ConstraintType::kRevoluteJoint) {
+        } else if (constraint_type == ConstraintType::kRevoluteJoint) {
             RevoluteJoint(i);
-        }
-        else if (constraint_type == ConstraintType::kRotationControl) {
+        } else if (constraint_type == ConstraintType::kRotationControl) {
             RotationControl(i);
         }
     };
 };
 
-} // namespace openturbine
+}  // namespace openturbine

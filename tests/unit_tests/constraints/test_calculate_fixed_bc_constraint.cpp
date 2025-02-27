@@ -20,15 +20,13 @@ struct ExecuteCalculateFixedBCConstraint {
 TEST(CalculateFixedBCConstraintTests, OneConstraint) {
     const auto X0 = Kokkos::View<double[3]>("X0");
     constexpr auto X0_host_data = std::array{1., 2., 3.};
-    const auto X0_host =
-        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(X0_host_data.data());
+    const auto X0_host = Kokkos::View<double[3], Kokkos::HostSpace>::const_type(X0_host_data.data());
     const auto X0_mirror = Kokkos::create_mirror(X0);
     Kokkos::deep_copy(X0_mirror, X0_host);
     Kokkos::deep_copy(X0, X0_mirror);
 
     const auto node_u = Kokkos::View<double[7]>("node_u");
-    constexpr auto node_u_host_data =
-        std::array{11., 12., 13., 14., 15., 16., 17.};
+    constexpr auto node_u_host_data = std::array{11., 12., 13., 14., 15., 16., 17.};
     const auto node_u_host =
         Kokkos::View<double[7], Kokkos::HostSpace>::const_type(node_u_host_data.data());
     const auto node_u_mirror = Kokkos::create_mirror(node_u);
@@ -40,9 +38,7 @@ TEST(CalculateFixedBCConstraintTests, OneConstraint) {
 
     Kokkos::parallel_for(
         "CalculateFixedBCConstraint", 1,
-        ExecuteCalculateFixedBCConstraint{
-            X0, node_u, residual_terms, target_gradient_terms
-        }
+        ExecuteCalculateFixedBCConstraint{X0, node_u, residual_terms, target_gradient_terms}
     );
 
     const auto residual_terms_mirror = Kokkos::create_mirror(residual_terms);

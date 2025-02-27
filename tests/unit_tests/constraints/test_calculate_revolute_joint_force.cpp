@@ -13,8 +13,7 @@ struct ExecuteCalculateRevoluteJointForce {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        CalculateRevoluteJointForce(axes, constraint_inputs,
-                                    node_u,       residual_terms);
+        CalculateRevoluteJointForce(axes, constraint_inputs, node_u, residual_terms);
     }
 };
 
@@ -30,8 +29,7 @@ TEST(CalculateRevoluteJointForceTests, OneConstraint) {
     const auto constraint_inputs = Kokkos::View<double[7]>("constraint_inputs");
     constexpr auto constraint_inputs_host_data = std::array{4., 5., 6., 7., 8., 9., 10.};
     const auto constraint_inputs_host =
-        Kokkos::View<double[7], Kokkos::HostSpace>::const_type(constraint_inputs_host_data.data()
-        );
+        Kokkos::View<double[7], Kokkos::HostSpace>::const_type(constraint_inputs_host_data.data());
     const auto constraint_inputs_mirror = Kokkos::create_mirror(constraint_inputs);
     Kokkos::deep_copy(constraint_inputs_mirror, constraint_inputs_host);
     Kokkos::deep_copy(constraint_inputs, constraint_inputs_mirror);
