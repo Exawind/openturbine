@@ -14,18 +14,21 @@ jobs:
   Deploy-Docs:
     runs-on: ubuntu-latest
     steps:
-    - name: Cache install source dependencies
+    - name: Cache install Dependencies
       id: cache-dependencies
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/spack
-        key: linux-spack-documentation
-    - name: Install source dependencies
+        key: linux-spack
+    - name: Install Dependencies
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
         git clone https://github.com/spack/spack.git
         source spack/share/spack/setup-env.sh
         spack compiler find
+        spack install googletest
+        spack install cppcheck
+        spack install netcdf-c
         spack install yaml-cpp
         spack install trilinos@master~epetra ^kokkos-kernels+blas+lapack
     - name: Set up Python
