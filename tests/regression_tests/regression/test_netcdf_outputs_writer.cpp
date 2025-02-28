@@ -65,12 +65,12 @@ TEST(NetCDFOutputsWriterTest, SpringMassSystemOutputs) {
             time_step,
             "u",                 // displacement
             {q(0, 0), q(1, 0)},  // x component
-            {q(0, 1), q(1, 1)},  //
-            {q(0, 2), q(1, 2)},  //
-            {q(0, 3), q(1, 3)},  //
-            {q(0, 4), q(1, 4)},  //
-            {q(0, 5), q(1, 5)},  //
-            {q(0, 6), q(1, 6)}   //
+            {q(0, 1), q(1, 1)},  // Empty
+            {q(0, 2), q(1, 2)},  // Empty
+            {q(0, 3), q(1, 3)},  // Empty
+            {q(0, 4), q(1, 4)},  // Empty
+            {q(0, 5), q(1, 5)},  // Empty
+            {q(0, 6), q(1, 6)}   // Empty
         );
 
         // Step the simulation forward
@@ -81,6 +81,24 @@ TEST(NetCDFOutputsWriterTest, SpringMassSystemOutputs) {
     }
 
     EXPECT_TRUE(std::filesystem::exists(output_file));
+
+    // Verify netcdf output data
+    util::NetCDFFile file(output_file, false);
+    std::vector<double> x_displacements(2);
+
+    // Check displacement at T/2
+    std::vector<size_t> start_t_half = {num_steps / 2, 0};
+    std::vector<size_t> count = {1, 2};
+    file.ReadVariableAt("u_x", start_t_half, count, x_displacements.data());
+    EXPECT_EQ(x_displacements[0], 0.);                             // First node is fixed
+    EXPECT_NEAR(x_displacements[1], -3.9999199193098396, 1.e-12);  // Second node at T/2
+
+    // Check displacement at T
+    std::vector<size_t> start_t = {num_steps, 0};
+    file.ReadVariableAt("u_x", start_t, count, x_displacements.data());
+    EXPECT_EQ(x_displacements[0], 0.);  // First node is fixed
+    EXPECT_NEAR(x_displacements[1], -8.1226588438437419e-05, 1.e-12);
+
     std::filesystem::remove(output_file);
 }
 
