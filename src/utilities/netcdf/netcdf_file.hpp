@@ -62,7 +62,7 @@ public:
     }
 
     //--------------------------------------------------------------------------
-    // Setter methods
+    // Setter/Write methods
     //--------------------------------------------------------------------------
 
     /**
@@ -202,7 +202,7 @@ public:
     void Sync() { check_netCDF_error(nc_sync(netcdf_id_), "Failed to sync NetCDF file"); }
 
     //--------------------------------------------------------------------------
-    // Getter methods
+    // Getter/Read methods
     //--------------------------------------------------------------------------
 
     /// @brief Returns the NetCDF file ID
@@ -226,11 +226,200 @@ public:
         return var_id;
     }
 
+    /**
+     * @brief Gets the number of dimensions of a variable in the NetCDF file
+     *
+     * @param var_name The name of the variable
+     * @return The number of dimensions
+     */
+    size_t GetNumberOfDimensions(const std::string& var_name) const {
+        int var_id = GetVariableId(var_name);
+        int num_dims{0};
+        check_netCDF_error(
+            nc_inq_varndims(netcdf_id_, var_id, &num_dims),
+            "Failed to get number of dimensions for variable " + var_name
+        );
+        return static_cast<size_t>(num_dims);
+    }
+
+    /**
+     * @brief Gets the length of a dimension in the NetCDF file
+     *
+     * @param dim_id The ID of the dimension
+     * @return The length of the dimension
+     */
+    size_t GetDimensionLength(int dim_id) const {
+        size_t length;
+        check_netCDF_error(
+            nc_inq_dimlen(netcdf_id_, dim_id, &length), "Failed to get dimension length"
+        );
+        return length;
+    }
+
+    /// @brief Gets the length of a dimension in the NetCDF file based on name
+    size_t GetDimensionLength(const std::string& name) const {
+        return GetDimensionLength(GetDimensionId(name));
+    }
+
+    /**
+     * @brief Gets the shape (dimension lengths) of a variable in the NetCDF file
+     *
+     * @param var_name The name of the variable
+     * @return Vector containing the length of each dimension of the variable
+     */
+    std::vector<size_t> GetShape(const std::string& var_name) const {
+        int var_id = GetVariableId(var_name);
+        size_t num_dims = GetNumberOfDimensions(var_name);
+
+        std::vector<int> dim_ids(num_dims);
+        check_netCDF_error(
+            nc_inq_vardimid(netcdf_id_, var_id, dim_ids.data()),
+            "Failed to get dimension IDs for variable " + var_name
+        );
+
+        std::vector<size_t> shape(num_dims);
+        for (size_t i = 0; i < num_dims; ++i) {
+            shape[i] = GetDimensionLength(dim_ids[i]);
+        }
+        return shape;
+    }
+
+    /**
+     * @brief Reads data from a variable in the NetCDF file
+     *
+     * This function is a wrapper around the NetCDF library's type-specific get functions.
+     * Supports the following types:
+     * - float (NC_FLOAT)
+     * - double (NC_DOUBLE)
+     * - int (NC_INT)
+     *
+     * @param name The name of the variable to read from
+     * @param data Pointer to the buffer where data will be stored
+     */
+    template <typename T>
+    void ReadVariable(const std::string& name, T* data) const {
+        int var_id = this->GetVariableId(name);
+        if constexpr (std::is_same_v<T, double>) {
+            check_netCDF_error(
+                nc_get_var_double(netcdf_id_, var_id, data), "Failed to read double variable " + name
+            );
+            return;
+        }
+        if constexpr (std::is_same_v<T, float>) {
+            check_netCDF_error(
+                nc_get_var_float(netcdf_id_, var_id, data), "Failed to read float variable " + name
+            );
+            return;
+        }
+        if constexpr (std::is_same_v<T, int>) {
+            check_netCDF_error(
+                nc_get_var_int(netcdf_id_, var_id, data), "Failed to read int variable " + name
+            );
+            return;
+        }
+
+        // TODO Add support for reading std:string data
+
+        // Default: not supported
+        throw std::runtime_error("Unsupported type for reading NetCDF variable");
+    }
+
+    /**
+     * @brief Reads data from a variable at specific indices in the NetCDF file
+     *
+     * @tparam T The data type to read (float, double, or int)
+     * @param name The name of the variable to read from
+     * @param start Array specifying the starting index in each dimension
+     * @param count Array specifying the number of values to read in each dimension
+     * @param data Pointer to the buffer where data will be stored
+     */
+    template <typename T>
+    void ReadVariableAt(
+        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
+        T* data
+    ) const {
+        int var_id = this->GetVariableId(name);
+        if constexpr (std::is_same_v<T, double>) {
+            check_netCDF_error(
+                nc_get_vara_double(netcdf_id_, var_id, start.data(), count.data(), data),
+                "Failed to read double variable " + name
+            );
+            return;
+        }
+        if constexpr (std::is_same_v<T, float>) {
+            check_netCDF_error(
+                nc_get_vara_float(netcdf_id_, var_id, start.data(), count.data(), data),
+                "Failed to read float variable " + name
+            );
+            return;
+        }
+        if constexpr (std::is_same_v<T, int>) {
+            check_netCDF_error(
+                nc_get_vara_int(netcdf_id_, var_id, start.data(), count.data(), data),
+                "Failed to read int variable " + name
+            );
+            return;
+        }
+
+        // TODO Add support for reading std:string data
+
+        // Default: not supported
+        throw std::runtime_error("Unsupported type for reading NetCDF variable");
+    }
+
+    /**
+     * @brief Reads data from a variable with specified stride in the NetCDF file
+     *
+     * @tparam T The data type to read (float, double, or int)
+     * @param name The name of the variable to read from
+     * @param start Array specifying the starting index in each dimension
+     * @param count Array specifying the number of values to read in each dimension
+     * @param stride Array specifying the stride in each dimension
+     * @param data Pointer to the buffer where data will be stored
+     */
+    template <typename T>
+    void ReadVariableWithStride(
+        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
+        const std::vector<ptrdiff_t>& stride, T* data
+    ) const {
+        int var_id = this->GetVariableId(name);
+        if constexpr (std::is_same_v<T, double>) {
+            check_netCDF_error(
+                nc_get_vars_double(
+                    netcdf_id_, var_id, start.data(), count.data(), stride.data(), data
+                ),
+                "Failed to read double variable with stride " + name
+            );
+            return;
+        }
+        if constexpr (std::is_same_v<T, float>) {
+            check_netCDF_error(
+                nc_get_vars_float(
+                    netcdf_id_, var_id, start.data(), count.data(), stride.data(), data
+                ),
+                "Failed to read float variable with stride " + name
+            );
+            return;
+        }
+        if constexpr (std::is_same_v<T, int>) {
+            check_netCDF_error(
+                nc_get_vars_int(netcdf_id_, var_id, start.data(), count.data(), stride.data(), data),
+                "Failed to read int variable with stride " + name
+            );
+            return;
+        }
+
+        // TODO Add support for reading std:string data
+
+        // Default: not supported
+        throw std::runtime_error("Unsupported type for reading NetCDF variable with stride");
+    }
+
 private:
     int netcdf_id_;
 
     //--------------------------------------------------------------------------
-    // Helper functions
+    // Helper methods
     //--------------------------------------------------------------------------
 
     /**
