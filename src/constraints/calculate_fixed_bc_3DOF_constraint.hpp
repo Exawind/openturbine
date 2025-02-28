@@ -10,7 +10,7 @@
 namespace openturbine {
 
 KOKKOS_FUNCTION
-inline void CalculateFixedBCConstraint(
+inline void CalculateFixedBC3DOFConstraint(
     const Kokkos::View<double[3]>::const_type& X0, const Kokkos::View<double[7]>::const_type& node_u,
     const Kokkos::View<double[6]>& residual_terms,
     const Kokkos::View<double[6][6]>& target_gradient_terms
@@ -48,15 +48,6 @@ inline void CalculateFixedBCConstraint(
         residual_terms(i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
     }
 
-    // Angular residual
-    // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
-    QuaternionCompose(R2, R1t, R2_R1t);
-    QuaternionToRotationMatrix(R2_R1t, C);
-    AxialVectorOfMatrix(C, V3);
-    for (int i = 0; i < 3; ++i) {
-        residual_terms(i + 3) = V3(i);
-    }
-
     //----------------------------------------------------------------------
     // Constraint Gradient Matrix
     //----------------------------------------------------------------------
@@ -69,13 +60,6 @@ inline void CalculateFixedBCConstraint(
     for (int i = 0; i < 3; ++i) {
         target_gradient_terms(i, i) = 1.;
     }
-
-    // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
-    AX_Matrix(C, A);
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            target_gradient_terms(i + 3, j + 3) = A(j, i);
-        }
-    }
 }
+
 }  // namespace openturbine

@@ -8,7 +8,6 @@
 #include "assemble_constraints_residual.hpp"
 #include "assemble_system_matrix.hpp"
 #include "assemble_system_residual.hpp"
-#include "assemble_tangent_operator.hpp"
 #include "calculate_convergence_error.hpp"
 #include "constraints/calculate_constraint_output.hpp"
 #include "constraints/constraints.hpp"
@@ -59,8 +58,6 @@ inline bool Step(
         UpdateTangentOperator(parameters, state);
 
         UpdateSystemVariables(parameters, elements, state);
-
-        AssembleTangentOperator(solver, state);
 
         AssembleSystemResidual(solver, elements, state);
 

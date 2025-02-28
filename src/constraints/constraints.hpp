@@ -48,7 +48,7 @@ struct Constraints {
     // State variables
     Kokkos::View<double* [7]> input;   //< Current state input
     Kokkos::View<double* [3]> output;  //< Current state output
-    Kokkos::View<double*> lambda;      //< Lagrange multipliers
+    Kokkos::View<double* [6]> lambda;
 
     // Host mirrors for CPU access
     Kokkos::View<double* [7]>::HostMirror host_input;
@@ -56,9 +56,13 @@ struct Constraints {
 
     // System contributions
     Kokkos::View<double* [6]> residual_terms;
+    Kokkos::View<double* [6]> base_lambda_residual_terms;
+    Kokkos::View<double* [6]> target_lambda_residual_terms;
     Kokkos::View<double* [6]> system_residual_terms;
     Kokkos::View<double* [6][6]> base_gradient_terms;
     Kokkos::View<double* [6][6]> target_gradient_terms;
+    Kokkos::View<double* [6][6]> base_gradient_transpose_terms;
+    Kokkos::View<double* [6][6]> target_gradient_transpose_terms;
 
     explicit Constraints(const std::vector<Constraint>& constraints, const std::vector<Node>& nodes)
         : num_constraints{constraints.size()},
@@ -83,13 +87,17 @@ struct Constraints {
           axes("axes", num_constraints),
           input("inputs", num_constraints),
           output("outputs", num_constraints),
-          lambda("lambda", num_dofs),
+          lambda("lambda", num_constraints),
           host_input("host_input", num_constraints),
           host_output("host_output", num_constraints),
           residual_terms("residual_terms", num_constraints),
+          base_lambda_residual_terms("base_lambda_residual_terms", num_constraints),
+          target_lambda_residual_terms("target_lambda_residual_terms", num_constraints),
           system_residual_terms("system_residual_terms", num_constraints),
           base_gradient_terms("base_gradient_terms", num_constraints),
-          target_gradient_terms("target_gradient_terms", num_constraints) {
+          target_gradient_terms("target_gradient_terms", num_constraints),
+          base_gradient_transpose_terms("base_gradient_transpose_terms", num_constraints),
+          target_gradient_transpose_terms("target_gradient_transpose_terms", num_constraints) {
         auto host_type = Kokkos::create_mirror(type);
         auto host_row_range = Kokkos::create_mirror(row_range);
         auto host_base_node_col_range = Kokkos::create_mirror(base_node_col_range);

@@ -11,18 +11,12 @@ namespace openturbine {
 
 inline void UpdateConstraintPrediction(Solver& solver, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Constraint Prediction");
-    const auto x_lambda =
-        Kokkos::subview(solver.x, Kokkos::make_pair(solver.num_system_dofs, solver.num_dofs));
-
-    if (constraints.num_constraints > 0) {
-        Kokkos::parallel_for(
-            "UpdateLambdaPrediction", constraints.num_dofs,
-            UpdateLambdaPrediction{
-                x_lambda,
-                constraints.lambda,
-            }
-        );
-    }
+    Kokkos::parallel_for(
+        "UpdateLambdaPrediction", constraints.num_constraints,
+        UpdateLambdaPrediction{
+            solver.num_system_dofs, constraints.row_range, solver.x, constraints.lambda
+        }
+    );
 }
 
 }  // namespace openturbine

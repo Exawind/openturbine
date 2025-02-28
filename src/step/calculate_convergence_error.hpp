@@ -32,11 +32,12 @@ inline double CalculateConvergenceError(
         sum_error_squared
     );
     Kokkos::parallel_reduce(
-        constraints.num_dofs,
+        constraints.num_constraints,
         CalculateConstraintsErrorSumSquares{
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,
             solver.num_system_dofs,
+            constraints.row_range,
             constraints.lambda,
             solver.x,
         },

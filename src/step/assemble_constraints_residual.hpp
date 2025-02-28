@@ -5,6 +5,7 @@
 
 #include "constraints/constraints.hpp"
 #include "solver/contribute_constraints_system_residual_to_vector.hpp"
+#include "solver/contribute_lambda_to_vector.hpp"
 #include "solver/copy_constraints_residual_to_vector.hpp"
 #include "solver/solver.hpp"
 
@@ -24,25 +25,14 @@ inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints
         }
     );
 
-    using CrsMatrixType = Solver::CrsMatrixType;
-    using VectorType = CrsMatrixType::values_type::non_const_type;
-
-    auto R = VectorType(
-        Kokkos::view_alloc(Kokkos::WithoutInitializing, "R_local"), solver.num_system_dofs
-    );
-    Kokkos::deep_copy(
-        R, Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs))
-    );
-    auto lambda = VectorType(
-        Kokkos::view_alloc(Kokkos::WithoutInitializing, "lambda"), constraints.lambda.extent(0)
-    );
-    Kokkos::deep_copy(lambda, constraints.lambda);
-
-    auto spmv_handle =
-        KokkosSparse::SPMVHandle<Solver::ExecutionSpace, CrsMatrixType, VectorType, VectorType>();
-    KokkosSparse::spmv(&spmv_handle, "T", 1., solver.B, lambda, 1., R);
-    Kokkos::deep_copy(
-        Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, solver.num_system_dofs)), R
+    Kokkos::parallel_for(
+        "ContributeLambdaToVector", constraints.num_constraints,
+        ContributeLambdaToVector{
+            constraints.base_node_freedom_signature, constraints.target_node_freedom_signature,
+            constraints.base_node_freedom_table, constraints.target_node_freedom_table,
+            constraints.base_lambda_residual_terms, constraints.target_lambda_residual_terms,
+            solver.R
+        }
     );
 
     Kokkos::parallel_for(

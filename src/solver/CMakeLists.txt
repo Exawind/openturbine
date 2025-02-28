@@ -18,12 +18,14 @@ install(FILES
         contribute_elements_to_sparse_matrix.hpp
         contribute_elements_to_vector.hpp
         contribute_forces_to_vector.hpp
+        contribute_lambda_to_vector.hpp
         contribute_masses_to_sparse_matrix.hpp
         contribute_masses_to_vector.hpp
         contribute_springs_to_sparse_matrix.hpp
         contribute_springs_to_vector.hpp
         copy_constraints_residual_to_vector.hpp
         copy_constraints_to_sparse_matrix.hpp
+        copy_constraints_transpose_to_sparse_matrix.hpp
         copy_into_sparse_matrix.hpp
         copy_into_sparse_matrix_transpose.hpp
         copy_sparse_values_to_transpose.hpp

@@ -11,9 +11,9 @@ struct CopyConstraintsToSparseMatrix {
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type base_node_col_range;
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type target_node_col_range;
+    Kokkos::View<double* [6][6]>::const_type base_dense;
+    Kokkos::View<double* [6][6]>::const_type target_dense;
     CrsMatrixType sparse;
-    Kokkos::View<const double* [6][6]> base_dense;
-    Kokkos::View<const double* [6][6]> target_dense;
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
