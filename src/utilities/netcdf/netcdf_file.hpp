@@ -129,12 +129,29 @@ public:
     /**
      * @brief Writes data to a variable in the NetCDF file
      *
-     * This function is a wrapper around the NetCDF library's "nc_put_var" function.
-     * It writes the provided data to the variable with the given name.
+     * This function is a wrapper around the NetCDF library's "nc_put_var" and "nc_put_var_string"
+     * functions. It writes the provided data to the variable with the given name.
+     * Supports the following types:
+     * - float (NC_FLOAT)
+     * - double (NC_DOUBLE)
+     * - int (NC_INT)
+     * - std::string (NC_STRING)
      */
     template <typename T>
     void WriteVariable(const std::string& name, const std::vector<T>& data) {
         int var_id = this->GetVariableId(name);
+        if constexpr (std::is_same_v<T, std::string>) {
+            std::vector<const char*> c_strs;
+            c_strs.reserve(data.size());
+            for (const auto& str : data) {
+                c_strs.push_back(str.c_str());
+            }
+            check_netCDF_error(
+                nc_put_var_string(netcdf_id_, var_id, c_strs.data()),
+                "Failed to write string variable " + name
+            );
+            return;
+        }
         check_netCDF_error(
             nc_put_var(netcdf_id_, var_id, data.data()), "Failed to write variable " + name
         );
@@ -143,8 +160,13 @@ public:
     /**
      * @brief Writes data to a variable at specific indices in the NetCDF file
      *
-     * This function is a wrapper around the NetCDF library's "nc_put_vara" function.
-     * It writes the provided data to the variable with the given name at the specified indices.
+     * This function is a wrapper around the NetCDF library's "nc_put_vara" and "nc_put_vara_string"
+     * functions. It writes the provided data to the variable with the given name at the specified
+     * indices. Supports the following types:
+     * - float (NC_FLOAT)
+     * - double (NC_DOUBLE)
+     * - int (NC_INT)
+     * - std::string (NC_STRING)
      *
      * @tparam T The data type of the variable
      * @param name The name of the variable to write to
@@ -158,6 +180,18 @@ public:
         const std::vector<T>& data
     ) {
         int var_id = this->GetVariableId(name);
+        if constexpr (std::is_same_v<T, std::string>) {
+            std::vector<const char*> c_strs;
+            c_strs.reserve(data.size());
+            for (const auto& str : data) {
+                c_strs.push_back(str.c_str());
+            }
+            check_netCDF_error(
+                nc_put_vara_string(netcdf_id_, var_id, start.data(), count.data(), c_strs.data()),
+                "Failed to write string variable " + name
+            );
+            return;
+        }
         check_netCDF_error(
             nc_put_vara(netcdf_id_, var_id, start.data(), count.data(), data.data()),
             "Failed to write variable " + name
