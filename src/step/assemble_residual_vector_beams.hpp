@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include <Kokkos_Core.hpp>
@@ -33,3 +34,4 @@ inline void AssembleResidualVectorBeams(const Beams& beams) {
 }
 
 }  // namespace openturbine
+*/

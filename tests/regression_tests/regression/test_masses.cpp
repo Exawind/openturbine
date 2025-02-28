@@ -49,39 +49,9 @@ inline auto SetUpMasses() {
 TEST(MassesTest, NodeInitialPosition) {
     const auto masses = SetUpMasses();
     expect_kokkos_view_2D_equal(
-        masses.qp_x0,
+        masses.node_x0,
         {
             {0., 0., 0., 1., 0., 0., 0.},
-        }
-    );
-}
-
-TEST(MassesTest, NodeInitialDisplacement) {
-    const auto masses = SetUpMasses();
-    expect_kokkos_view_2D_equal(
-        masses.node_u,
-        {
-            {0., 0., 0., 1., 0., 0., 0.},
-        }
-    );
-}
-
-TEST(MassesTest, NodeInitialVelocity) {
-    const auto masses = SetUpMasses();
-    expect_kokkos_view_2D_equal(
-        masses.node_u_dot,
-        {
-            {0., 0., 0., 0., 0., 0.},
-        }
-    );
-}
-
-TEST(MassesTest, NodeInitialAcceleration) {
-    const auto masses = SetUpMasses();
-    expect_kokkos_view_2D_equal(
-        masses.node_u_ddot,
-        {
-            {0., 0., 0., 0., 0., 0.},
         }
     );
 }

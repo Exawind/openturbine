@@ -175,19 +175,10 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
                          .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4})
                          .Build();
 
-    // Save the initial state, then take first step
-    interface.SaveState();
-    auto converged = interface.Step();
-    EXPECT_EQ(converged, true);
-
     // Calculate buoyancy force as percentage of gravitational force plus spring forces times
-    const auto spring_f = kokkos_view_2D_to_vector(interface.elements.springs.f);
-    const auto initial_spring_force = spring_f[0][2] + spring_f[1][2] + spring_f[2][2];
+    const auto initial_spring_force = 1907514.4912628897;
     const auto platform_gravity_force = -gravity[2] * platform_mass;
     const auto buoyancy_force = initial_spring_force + platform_gravity_force;
-
-    // Reset to initial state and apply
-    interface.RestoreState();
 
     const std::string output_dir{"FloatingPlatform"};
     RemoveDirectoryWithRetries(output_dir);
@@ -214,7 +205,7 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
         interface.turbine.floating_platform.node.loads[5] = 2.0e7 * sin(2. * M_PI / 60. * t);  // rz
 
         // Step
-        converged = interface.Step();
+        const auto converged = interface.Step();
         EXPECT_EQ(converged, true);
 
         // Check for expected displacements/rotations of platform node

@@ -7,18 +7,18 @@
 namespace {
 
 void TestCalculateDistanceComponentsTests_OneElement() {
-    const auto x0 = Kokkos::View<double[1][3]>("x0");
-    const auto u1 = Kokkos::View<double[1][3]>("u1");
-    const auto u2 = Kokkos::View<double[1][3]>("u2");
-    const auto r = Kokkos::View<double[1][3]>("r");
+    const auto x0 = Kokkos::View<double[3]>("x0");
+    const auto u1 = Kokkos::View<double[3]>("u1");
+    const auto u2 = Kokkos::View<double[3]>("u2");
+    const auto r = Kokkos::View<double[3]>("r");
 
     constexpr auto x0_data = std::array{1., 2., 3.};
     constexpr auto u1_data = std::array{0.1, 0.2, 0.3};
     constexpr auto u2_data = std::array{0.4, 0.5, 0.6};
 
-    const auto x0_host = Kokkos::View<const double[1][3], Kokkos::HostSpace>(x0_data.data());
-    const auto u1_host = Kokkos::View<const double[1][3], Kokkos::HostSpace>(u1_data.data());
-    const auto u2_host = Kokkos::View<const double[1][3], Kokkos::HostSpace>(u2_data.data());
+    const auto x0_host = Kokkos::View<const double[3], Kokkos::HostSpace>(x0_data.data());
+    const auto u1_host = Kokkos::View<const double[3], Kokkos::HostSpace>(u1_data.data());
+    const auto u2_host = Kokkos::View<const double[3], Kokkos::HostSpace>(u2_data.data());
 
     const auto x0_mirror = Kokkos::create_mirror(x0);
     const auto u1_mirror = Kokkos::create_mirror(u1);
@@ -35,7 +35,7 @@ void TestCalculateDistanceComponentsTests_OneElement() {
     Kokkos::parallel_for(
         "CalculateDistanceComponents", 1,
         KOKKOS_LAMBDA(const size_t) {
-            openturbine::springs::CalculateDistanceComponents{0, x0, u1, u2, r}();
+            openturbine::springs::CalculateDistanceComponents(x0, u1, u2, r);
         }
     );
 
@@ -44,7 +44,7 @@ void TestCalculateDistanceComponentsTests_OneElement() {
         2. - 0.2 + 0.5,  // 2.3
         3. - 0.3 + 0.6   // 3.3
     };
-    const auto r_exact = Kokkos::View<const double[1][3], Kokkos::HostSpace>(r_exact_data.data());
+    const auto r_exact = Kokkos::View<const double[3], Kokkos::HostSpace>(r_exact_data.data());
 
     const auto r_mirror = Kokkos::create_mirror(r);
     Kokkos::deep_copy(r_mirror, r);

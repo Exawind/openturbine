@@ -1,20 +1,21 @@
 name: OpenTurbine-CI
 
-on: push
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/deploy_docs.yaml'
 
 jobs:
   clang-format:
     runs-on: ubuntu-24.04
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
     - name: Run clang-format
       run: |
         clang-format --version
         find . -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format-18 -i {} \;
-        
     - name: Check for formatting changes
       run: |
         if [[ `git status --porcelain` ]]; then
@@ -24,4 +25,3 @@ jobs:
         else
           echo "Code is properly formatted."
         fi
-
