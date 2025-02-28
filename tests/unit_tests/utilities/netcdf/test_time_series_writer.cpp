@@ -32,12 +32,15 @@ TEST_F(TimeSeriesWriterTest, WriteValuesCreatesVariableAndDimension) {
     util::TimeSeriesWriter writer(test_file);
     std::vector<double> values = {100., 200., 300.};
 
-    EXPECT_NO_THROW({
-        writer.WriteValues("hub_height_wind_speed", 0, values);
-        const auto& file = writer.GetFile();
-        EXPECT_GE(file.GetVariableId("hub_height_wind_speed"), 0);
-        EXPECT_GE(file.GetDimensionId("hub_height_wind_speed_dimension"), 0);
-    });
+    EXPECT_NO_THROW({ writer.WriteValues("hub_height_wind_speed", 0, values); });
+
+    const auto& file = writer.GetFile();
+    EXPECT_GE(file.GetVariableId("hub_height_wind_speed"), 0);
+    EXPECT_GE(file.GetDimensionId("hub_height_wind_speed_dimension"), 0);
+
+    std::vector<double> read_data(values.size());
+    file.ReadVariable("hub_height_wind_speed", read_data.data());
+    EXPECT_EQ(read_data, values);
 }
 
 TEST_F(TimeSeriesWriterTest, WriteValuesSavesCorrectData) {
@@ -49,17 +52,34 @@ TEST_F(TimeSeriesWriterTest, WriteValuesSavesCorrectData) {
         writer.WriteValues("rotor_torque", 0, values1);
         writer.WriteValues("rotor_torque", 1, values2);
     });
+
+    const auto& file = writer.GetFile();
+    std::vector<double> read_data(values1.size());
+
+    std::vector<size_t> start_1 = {0, 0};
+    std::vector<size_t> count = {1, values1.size()};
+    file.ReadVariableAt("rotor_torque", start_1, count, read_data.data());
+    EXPECT_EQ(read_data, values1);
+
+    std::vector<size_t> start_2 = {1, 0};
+    file.ReadVariableAt("rotor_torque", start_2, count, read_data.data());
+    EXPECT_EQ(read_data, values2);
 }
 
 TEST_F(TimeSeriesWriterTest, WriteValueCreatesVariableAndWritesSingleValue) {
     util::TimeSeriesWriter writer(test_file);
 
-    EXPECT_NO_THROW({
-        writer.WriteValue("rotor_power", 0, 100.);
-        const auto& file = writer.GetFile();
-        EXPECT_GE(file.GetVariableId("rotor_power"), 0);
-        EXPECT_GE(file.GetDimensionId("rotor_power_dimension"), 0);
-    });
+    EXPECT_NO_THROW({ writer.WriteValue("rotor_power", 0, 100.); });
+
+    const auto& file = writer.GetFile();
+    EXPECT_GE(file.GetVariableId("rotor_power"), 0);
+    EXPECT_GE(file.GetDimensionId("rotor_power_dimension"), 0);
+
+    std::vector<double> read_data(1);
+    std::vector<size_t> start = {0, 0};
+    std::vector<size_t> count = {1, 1};
+    file.ReadVariableAt("rotor_power", start, count, read_data.data());
+    EXPECT_EQ(read_data[0], 100.);
 }
 
 }  // namespace openturbine::tests

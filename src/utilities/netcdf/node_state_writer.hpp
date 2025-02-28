@@ -95,7 +95,7 @@ public:
         file_.WriteVariableAt(component_prefix + "_k", start, count, k);
 
         // Write w component only for position and displacement
-        if (!w.empty() && (component_prefix == "position" || component_prefix == "displacement")) {
+        if (!w.empty() && (component_prefix == "x" || component_prefix == "u")) {
             file_.WriteVariableAt(component_prefix + "_w", start, count, w);
         }
     }

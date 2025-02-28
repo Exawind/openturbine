@@ -87,6 +87,30 @@ TEST_F(NodeStateWriterTest, WriteStateDataForPosition) {
     std::vector<double> w = {1., 1., 1.};
 
     EXPECT_NO_THROW(writer.WriteStateData(0, "x", x, y, z, i, j, k, w));
+
+    const auto& file = writer.GetFile();
+    std::vector<double> read_data(num_nodes);
+
+    file.ReadVariable("x_x", read_data.data());
+    EXPECT_EQ(read_data, x);
+
+    file.ReadVariable("x_y", read_data.data());
+    EXPECT_EQ(read_data, y);
+
+    file.ReadVariable("x_z", read_data.data());
+    EXPECT_EQ(read_data, z);
+
+    file.ReadVariable("x_i", read_data.data());
+    EXPECT_EQ(read_data, i);
+
+    file.ReadVariable("x_j", read_data.data());
+    EXPECT_EQ(read_data, j);
+
+    file.ReadVariable("x_k", read_data.data());
+    EXPECT_EQ(read_data, k);
+
+    file.ReadVariable("x_w", read_data.data());
+    EXPECT_EQ(read_data, w);
 }
 
 TEST_F(NodeStateWriterTest, WriteStateDataForVelocity) {
@@ -100,6 +124,29 @@ TEST_F(NodeStateWriterTest, WriteStateDataForVelocity) {
     std::vector<double> k = {0.7, 0.8, 0.9};
 
     EXPECT_NO_THROW(writer.WriteStateData(0, "v", x, y, z, i, j, k));
+
+    const auto& file = writer.GetFile();
+    std::vector<double> read_data(num_nodes);
+    std::vector<size_t> start = {0, 0};
+    std::vector<size_t> count = {1, num_nodes};
+
+    file.ReadVariableAt("v_x", start, count, read_data.data());
+    EXPECT_EQ(read_data, x);
+
+    file.ReadVariableAt("v_y", start, count, read_data.data());
+    EXPECT_EQ(read_data, y);
+
+    file.ReadVariableAt("v_z", start, count, read_data.data());
+    EXPECT_EQ(read_data, z);
+
+    file.ReadVariableAt("v_i", start, count, read_data.data());
+    EXPECT_EQ(read_data, i);
+
+    file.ReadVariableAt("v_j", start, count, read_data.data());
+    EXPECT_EQ(read_data, j);
+
+    file.ReadVariableAt("v_k", start, count, read_data.data());
+    EXPECT_EQ(read_data, k);
 }
 
 TEST_F(NodeStateWriterTest, ThrowsOnInvalidComponentPrefix) {
