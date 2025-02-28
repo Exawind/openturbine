@@ -1,0 +1,65 @@
+#include <filesystem>
+
+#include <gtest/gtest.h>
+
+#include "utilities/netcdf/time_series_writer.hpp"
+
+namespace openturbine::tests {
+
+class TimeSeriesWriterTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        test_file = "test_time_series.nc";
+        std::filesystem::remove(test_file);
+    }
+
+    void TearDown() override { std::filesystem::remove(test_file); }
+
+    std::string test_file;
+};
+
+TEST_F(TimeSeriesWriterTest, ConstructorCreatesTimeDimension) {
+    util::TimeSeriesWriter writer(test_file);
+    const auto& file = writer.GetFile();
+
+    EXPECT_NO_THROW({
+        int time_dim_id = file.GetDimensionId("time");
+        EXPECT_GE(time_dim_id, 0);
+    });
+}
+
+TEST_F(TimeSeriesWriterTest, WriteValuesCreatesVariableAndDimension) {
+    util::TimeSeriesWriter writer(test_file);
+    std::vector<double> values = {100., 200., 300.};
+
+    EXPECT_NO_THROW({
+        writer.WriteValues("hub_height_wind_speed", 0, values);
+        const auto& file = writer.GetFile();
+        EXPECT_GE(file.GetVariableId("hub_height_wind_speed"), 0);
+        EXPECT_GE(file.GetDimensionId("hub_height_wind_speed_dimension"), 0);
+    });
+}
+
+TEST_F(TimeSeriesWriterTest, WriteValuesSavesCorrectData) {
+    util::TimeSeriesWriter writer(test_file);
+    std::vector<double> values1 = {100., 200., 300.};
+    std::vector<double> values2 = {400., 500., 600.};
+
+    EXPECT_NO_THROW({
+        writer.WriteValues("rotor_torque", 0, values1);
+        writer.WriteValues("rotor_torque", 1, values2);
+    });
+}
+
+TEST_F(TimeSeriesWriterTest, WriteValueCreatesVariableAndWritesSingleValue) {
+    util::TimeSeriesWriter writer(test_file);
+
+    EXPECT_NO_THROW({
+        writer.WriteValue("rotor_power", 0, 100.);
+        const auto& file = writer.GetFile();
+        EXPECT_GE(file.GetVariableId("rotor_power"), 0);
+        EXPECT_GE(file.GetDimensionId("rotor_power_dimension"), 0);
+    });
+}
+
+}  // namespace openturbine::tests
