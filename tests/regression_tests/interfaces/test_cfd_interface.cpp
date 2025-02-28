@@ -151,30 +151,59 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     constexpr auto mooring_line_stiffness{48.9e3};       // N
     constexpr auto mooring_line_initial_length{55.432};  // m
 
-    // Create cfd interface
     auto interface = InterfaceBuilder{}
                          .SetGravity(gravity)
                          .SetTimeStep(time_step)
                          .SetDampingFactor(rho_inf)
                          .SetMaximumNonlinearIterations(max_iter)
-                         .EnableFloatingPlatform(true)
-                         .SetFloatingPlatformPosition({0., 0., -7.53, 1., 0., 0., 0.})
-                         .SetFloatingPlatformMassMatrix(platform_mass_matrix)
-                         .SetNumberOfMooringLines(3)
-                         .SetMooringLineStiffness(0, mooring_line_stiffness)
-                         .SetMooringLineUndeformedLength(0, mooring_line_initial_length)
-                         .SetMooringLineFairleadPosition(0, {-40.87, 0.0, -14.})
-                         .SetMooringLineAnchorPosition(0, {-105.47, 0.0, -58.4})
-                         .SetMooringLineStiffness(1, mooring_line_stiffness)
-                         .SetMooringLineUndeformedLength(1, mooring_line_initial_length)
-                         .SetMooringLineFairleadPosition(1, {20.43, -35.39, -14.})
-                         .SetMooringLineAnchorPosition(1, {52.73, -91.34, -58.4})
-                         .SetMooringLineStiffness(2, mooring_line_stiffness)
-                         .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
-                         .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
-                         .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4})
+                         .StartFloatingPlatform()
+                         .SetPosition({0., 0., -7.53, 1., 0., 0., 0.})
+                         .SetMassMatrix(platform_mass_matrix)
+                         .EndFloatingPlatform()
+                         .AddMooringLine()
+                         .SetStiffness(mooring_line_stiffness)
+                         .SetUndeformedLength(mooring_line_initial_length)
+                         .SetFairleadPosition({-40.87, 0.0, -14.})
+                         .SetAnchorPosition({-105.47, 0.0, -58.4})
+                         .EndMooringLine()
+                         .AddMooringLine()
+                         .SetStiffness(mooring_line_stiffness)
+                         .SetUndeformedLength(mooring_line_initial_length)
+                         .SetFairleadPosition({20.43, -35.39, -14.})
+                         .SetAnchorPosition({52.73, -91.34, -58.4})
+                         .EndMooringLine()
+                         .AddMooringLine()
+                         .SetStiffness(mooring_line_stiffness)
+                         .SetUndeformedLength(mooring_line_initial_length)
+                         .SetFairleadPosition({20.43, 35.39, -14.})
+                         .SetAnchorPosition({52.73, 91.34, -58.4})
+                         .EndMooringLine()
                          .Build();
-
+    /*
+        // Create cfd interface
+        auto interface = InterfaceBuilder{}
+                             .SetGravity(gravity)
+                             .SetTimeStep(time_step)
+                             .SetDampingFactor(rho_inf)
+                             .SetMaximumNonlinearIterations(max_iter)
+                             .EnableFloatingPlatform(true)
+                             .SetFloatingPlatformPosition({0., 0., -7.53, 1., 0., 0., 0.})
+                             .SetFloatingPlatformMassMatrix(platform_mass_matrix)
+                             .SetNumberOfMooringLines(3)
+                             .SetMooringLineStiffness(0, mooring_line_stiffness)
+                             .SetMooringLineUndeformedLength(0, mooring_line_initial_length)
+                             .SetMooringLineFairleadPosition(0, {-40.87, 0.0, -14.})
+                             .SetMooringLineAnchorPosition(0, {-105.47, 0.0, -58.4})
+                             .SetMooringLineStiffness(1, mooring_line_stiffness)
+                             .SetMooringLineUndeformedLength(1, mooring_line_initial_length)
+                             .SetMooringLineFairleadPosition(1, {20.43, -35.39, -14.})
+                             .SetMooringLineAnchorPosition(1, {52.73, -91.34, -58.4})
+                             .SetMooringLineStiffness(2, mooring_line_stiffness)
+                             .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
+                             .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
+                             .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4})
+                             .Build();
+    */
     // Calculate buoyancy force as percentage of gravitational force plus spring forces times
     const auto initial_spring_force = 1907514.4912628897;
     const auto platform_gravity_force = -gravity[2] * platform_mass;
