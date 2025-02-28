@@ -48,7 +48,8 @@ TEST(CalculatePrescribedBCConstraintTests, OneConstraint) {
     Kokkos::parallel_for(
         "CalculatePrescribedBCConstraint", 1,
         ExecuteCalculatePrescribedBCConstraint{
-            X0, constraint_inputs, node_u, residual_terms, target_gradient_terms}
+            X0, constraint_inputs, node_u, residual_terms, target_gradient_terms
+        }
     );
 
     const auto residual_terms_mirror = Kokkos::create_mirror(residual_terms);

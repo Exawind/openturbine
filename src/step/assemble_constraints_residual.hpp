@@ -31,7 +31,8 @@ inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints
             constraints.base_node_freedom_signature, constraints.target_node_freedom_signature,
             constraints.base_node_freedom_table, constraints.target_node_freedom_table,
             constraints.base_lambda_residual_terms, constraints.target_lambda_residual_terms,
-            solver.R}
+            solver.R
+        }
     );
 
     Kokkos::parallel_for(

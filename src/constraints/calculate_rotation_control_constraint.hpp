@@ -26,7 +26,8 @@ inline void CalculateRotationControlConstraint(
     const auto ut_data =
         Kokkos::Array<double, 3>{target_node_u(0), target_node_u(1), target_node_u(2)};
     const auto Rt_data = Kokkos::Array<double, 4>{
-        target_node_u(3), target_node_u(4), target_node_u(5), target_node_u(6)};
+        target_node_u(3), target_node_u(4), target_node_u(5), target_node_u(6)
+    };
     auto AX_data = Kokkos::Array<double, 3>{};
     auto RV_data = Kokkos::Array<double, 3>{};
     auto Rc_data = Kokkos::Array<double, 4>{};

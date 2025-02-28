@@ -36,19 +36,21 @@ struct CopyConstraintsTransposeToSparseMatrix {
                 const auto row_data = RowDataType(row_data_data.data(), num_cols);
                 const auto col_idx = ColIdxType(col_idx_data.data(), num_cols);
                 for (auto entry = 0U; entry < num_cols; ++entry) {
-                    col_idx(entry) = row_range(i_constraint).first + entry;
+                    col_idx(entry) = static_cast<int>(row_range(i_constraint).first + entry);
                 }
                 for (auto entry = 0U; entry < num_cols; ++entry) {
                     row_data(entry) = base_dense(i_constraint, row_number, entry);
                 }
-                sparse.replaceValues(i, col_idx.data(), num_cols, row_data.data(), is_sorted);
+                sparse.replaceValues(
+                    static_cast<int>(i), col_idx.data(), static_cast<int>(num_cols), row_data.data(),
+                    is_sorted
+                );
             }
         );
 
         const auto num_target_dofs = count_active_dofs(target_node_freedom_signature(i_constraint));
         const auto target_start_row = target_node_freedom_table(i_constraint, 0);
         const auto target_end_row = target_start_row + num_target_dofs;
-        ;
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, target_start_row, target_end_row),
             [&](size_t i) {
@@ -58,13 +60,16 @@ struct CopyConstraintsTransposeToSparseMatrix {
                 const auto row_data = RowDataType(row_data_data.data(), num_cols);
                 const auto col_idx = ColIdxType(col_idx_data.data(), num_cols);
                 for (auto entry = 0U; entry < num_cols; ++entry) {
-                    col_idx(entry) = row_range(i_constraint).first + entry;
+                    col_idx(entry) = static_cast<int>(row_range(i_constraint).first + entry);
                 }
                 for (auto entry = 0U; entry < num_cols; ++entry) {
                     row_data(entry) = target_dense(i_constraint, row_number, entry);
                 }
 
-                sparse.replaceValues(i, col_idx.data(), num_cols, row_data.data(), is_sorted);
+                sparse.replaceValues(
+                    static_cast<int>(i), col_idx.data(), static_cast<int>(num_cols), row_data.data(),
+                    is_sorted
+                );
             }
         );
     }

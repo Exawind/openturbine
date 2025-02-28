@@ -27,7 +27,8 @@ inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
             constraints.base_lambda_residual_terms, constraints.target_lambda_residual_terms,
             constraints.system_residual_terms, constraints.base_gradient_terms,
             constraints.target_gradient_terms, constraints.base_gradient_transpose_terms,
-            constraints.target_gradient_transpose_terms}
+            constraints.target_gradient_transpose_terms
+        }
     );
 }
 

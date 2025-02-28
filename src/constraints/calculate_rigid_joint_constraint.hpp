@@ -24,7 +24,8 @@ inline void CalculateRigidJointConstraint(
     const auto u2_data =
         Kokkos::Array<double, 3>{target_node_u(0), target_node_u(1), target_node_u(2)};
     const auto R2_data = Kokkos::Array<double, 4>{
-        target_node_u(3), target_node_u(4), target_node_u(5), target_node_u(6)};
+        target_node_u(3), target_node_u(4), target_node_u(5), target_node_u(6)
+    };
     auto R1_X0_data = Kokkos::Array<double, 3>{};
     auto C_data = Kokkos::Array<double, 9>{};
     auto R1t_data = Kokkos::Array<double, 4>{};

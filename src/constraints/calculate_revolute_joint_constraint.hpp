@@ -24,7 +24,8 @@ inline void CalculateRevoluteJointConstraint(
     const auto u2_data =
         Kokkos::Array<double, 3>{target_node_u(0), target_node_u(1), target_node_u(2)};
     const auto R2_data = Kokkos::Array<double, 4>{
-        target_node_u(3), target_node_u(4), target_node_u(5), target_node_u(6)};
+        target_node_u(3), target_node_u(4), target_node_u(5), target_node_u(6)
+    };
     const auto x0_data = Kokkos::Array<double, 3>{axes(0, 0), axes(0, 1), axes(0, 2)};
     const auto y0_data = Kokkos::Array<double, 3>{axes(1, 0), axes(1, 1), axes(1, 2)};
     const auto z0_data = Kokkos::Array<double, 3>{axes(2, 0), axes(2, 1), axes(2, 2)};

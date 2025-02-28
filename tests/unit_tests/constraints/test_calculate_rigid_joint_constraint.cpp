@@ -54,7 +54,8 @@ TEST(CalculateRigidJointConstraintTests, OneConstraint) {
         "CalculatePrescribedBCConstraint", 1,
         ExecuteCalculateRigidJointConstraint{
             X0, base_node_u, target_node_u, residual_terms, base_gradient_terms,
-            target_gradient_terms}
+            target_gradient_terms
+        }
     );
 
     const auto residual_terms_mirror = Kokkos::create_mirror(residual_terms);
@@ -74,27 +75,24 @@ TEST(CalculateRigidJointConstraintTests, OneConstraint) {
     Kokkos::deep_copy(base_gradient_terms_mirror, base_gradient_terms);
 
     // clang-format off
-        constexpr auto base_gradient_terms_exact_data =
-            std::array{
-                -1., 0., 0., 0., -4158., 2380.,  // Row 1
-                0., -1., 0., 4158., 0., -5894.,  // Row 2
-                0., 0., -1., -2380., 5894., 0.,  // Row 3
-                0., 0., 0., -965.42068965517251, -19.310344827586228, 0.1931034482758299,  // Row 4
-                0., 0., 0., 19.310344827586228, -965.51724137931046, -9.6551724137931245,  // Row 5
-                0., 0., 0., 0.19310344827589546, 9.6551724137931245, -965.13103448275876   // Row 6
-            };
+    constexpr auto base_gradient_terms_exact_data =
+        std::array{
+            -1., 0., 0., 0., -4158., 2380.,  // Row 1
+            0., -1., 0., 4158., 0., -5894.,  // Row 2
+            0., 0., -1., -2380., 5894., 0.,  // Row 3
+            0., 0., 0., -965.42068965517251, -19.310344827586228, 0.1931034482758299,  // Row 4
+            0., 0., 0., 19.310344827586228, -965.51724137931046, -9.6551724137931245,  // Row 5
+            0., 0., 0., 0.19310344827589546, 9.6551724137931245, -965.13103448275876   // Row 6
+        };
     // clang-format on
-        const auto base_gradient_terms_exact =
-            Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type(
-                base_gradient_terms_exact_data.data()
-            );
+    const auto base_gradient_terms_exact = Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type(
+        base_gradient_terms_exact_data.data()
+    );
 
-        for (auto i = 0U; i < 6U; ++i) {
-            for (auto j = 0U; j < 6U; ++j) {
-                EXPECT_NEAR(
-                    base_gradient_terms_mirror(i, j), base_gradient_terms_exact(i, j), 1.e-12
-                );
-            }
+    for (auto i = 0U; i < 6U; ++i) {
+        for (auto j = 0U; j < 6U; ++j) {
+            EXPECT_NEAR(base_gradient_terms_mirror(i, j), base_gradient_terms_exact(i, j), 1.e-12);
+        }
     }
 
     // clang-format off
@@ -108,20 +106,20 @@ TEST(CalculateRigidJointConstraintTests, OneConstraint) {
                 0., 0., 0., -0.1931034482758299, 9.6551724137931245, 965.13103448275876     // Row 6
             };
     // clang-format on
-        const auto target_gradient_terms_exact =
-            Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type(
-                target_gradient_terms_exact_data.data()
+    const auto target_gradient_terms_exact =
+        Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type(
+            target_gradient_terms_exact_data.data()
+        );
+
+    const auto target_gradient_terms_mirror = Kokkos::create_mirror(target_gradient_terms);
+    Kokkos::deep_copy(target_gradient_terms_mirror, target_gradient_terms);
+
+    for (auto i = 0U; i < 6U; ++i) {
+        for (auto j = 0U; j < 6U; ++j) {
+            EXPECT_NEAR(
+                target_gradient_terms_mirror(i, j), target_gradient_terms_exact(i, j), 1.e-12
             );
-
-        const auto target_gradient_terms_mirror = Kokkos::create_mirror(target_gradient_terms);
-        Kokkos::deep_copy(target_gradient_terms_mirror, target_gradient_terms);
-
-        for (auto i = 0U; i < 6U; ++i) {
-            for (auto j = 0U; j < 6U; ++j) {
-                EXPECT_NEAR(
-                    target_gradient_terms_mirror(i, j), target_gradient_terms_exact(i, j), 1.e-12
-                );
-            }
+        }
     }
 }
 

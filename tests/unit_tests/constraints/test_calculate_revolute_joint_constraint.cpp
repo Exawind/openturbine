@@ -63,7 +63,8 @@ TEST(CalculateRevoluteJointConstraintTests, OneConstraint) {
         "CalculateRevoluteJointConstraint", 1,
         ExecuteCalculateRevoluteJointConstraint{
             X0, axes, base_node_u, target_node_u, residual_terms, base_gradient_terms,
-            target_gradient_terms}
+            target_gradient_terms
+        }
     );
 
     const auto residual_terms_mirror = Kokkos::create_mirror(residual_terms);

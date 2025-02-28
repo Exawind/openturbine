@@ -25,6 +25,7 @@ install(FILES
         contribute_springs_to_vector.hpp
         copy_constraints_residual_to_vector.hpp
         copy_constraints_to_sparse_matrix.hpp
+        copy_constraints_transpose_to_sparse_matrix.hpp
         copy_into_sparse_matrix.hpp
         copy_into_sparse_matrix_transpose.hpp
         copy_sparse_values_to_transpose.hpp
