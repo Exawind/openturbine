@@ -12,41 +12,25 @@
 namespace openturbine {
 inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Matrix");
+    auto constraint_policy =
+        Kokkos::TeamPolicy<>(static_cast<int>(constraints.num_constraints), Kokkos::AUTO());
 
-    if (constraints.num_constraints == 0) {
-        return;
-    }
+    Kokkos::parallel_for(
+        "CopyConstraintsToSparseMatrix", constraint_policy,
+        CopyConstraintsToSparseMatrix<Solver::CrsMatrixType>{
+            solver.num_system_dofs, constraints.row_range, constraints.base_node_freedom_signature,
+            constraints.target_node_freedom_signature, constraints.base_node_freedom_table,
+            constraints.target_node_freedom_table, constraints.base_gradient_terms,
+            constraints.target_gradient_terms, solver.A->getLocalMatrixDevice()}
+    );
 
-    {
-        auto const_region = Kokkos::Profiling::ScopedRegion("Constraints Matrix");
-        auto constraint_policy =
-            Kokkos::TeamPolicy<>(static_cast<int>(constraints.num_constraints), Kokkos::AUTO());
-
-        Kokkos::parallel_for(
-            "CopyConstraintsToSparseMatrix", constraint_policy,
-            CopyConstraintsToSparseMatrix<Solver::CrsMatrixType>{
-                constraints.row_range, constraints.base_node_col_range,
-                constraints.target_node_col_range, constraints.base_gradient_terms,
-                constraints.target_gradient_terms, solver.constraints_matrix
-            }
-        );
-    }
-
-    {
-        auto trans_region = Kokkos::Profiling::ScopedRegion("Transpose Constraints Matrix");
-        auto constraint_policy =
-            Kokkos::TeamPolicy<>(static_cast<int>(constraints.num_constraints), Kokkos::AUTO());
-
-        Kokkos::parallel_for(
-            "CopyConstraintsTransposeToSparseMatrix", constraint_policy,
-            CopyConstraintsTransposeToSparseMatrix<Solver::CrsMatrixType>{
-                constraints.row_range, constraints.base_node_col_range,
-                constraints.target_node_col_range, constraints.base_node_freedom_signature,
-                constraints.target_node_freedom_signature, constraints.base_node_freedom_table,
-                constraints.target_node_freedom_table, constraints.base_gradient_transpose_terms,
-                constraints.target_gradient_transpose_terms, solver.B_t
-            }
-        );
-    }
+    Kokkos::parallel_for(
+        "CopyConstraintsTransposeToSparseMatrix", constraint_policy,
+        CopyConstraintsTransposeToSparseMatrix<Solver::CrsMatrixType>{
+            solver.num_system_dofs, constraints.row_range, constraints.base_node_freedom_signature,
+            constraints.target_node_freedom_signature, constraints.base_node_freedom_table,
+            constraints.target_node_freedom_table, constraints.base_gradient_transpose_terms,
+            constraints.target_gradient_transpose_terms, solver.A->getLocalMatrixDevice()}
+    );
 }
 }  // namespace openturbine

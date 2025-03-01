@@ -7,8 +7,9 @@ namespace openturbine {
 
 template <typename CrsMatrixType, typename KernelHandle>
 [[nodiscard]] inline CrsMatrixType CreateMatrixSpadd(
-    const CrsMatrixType& A, const CrsMatrixType& B, KernelHandle& handle
+    const CrsMatrixType& A, const CrsMatrixType& B
 ) {
+    auto handle = KernelHandle{};
     auto C = CrsMatrixType{};
     handle.create_spadd_handle(true, true);
     KokkosSparse::spadd_symbolic(&handle, A, B, C);
