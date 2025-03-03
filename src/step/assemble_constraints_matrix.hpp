@@ -6,7 +6,6 @@
 #include "constraints/constraints.hpp"
 #include "solver/copy_constraints_to_sparse_matrix.hpp"
 #include "solver/copy_constraints_transpose_to_sparse_matrix.hpp"
-#include "solver/copy_sparse_values_to_transpose.hpp"
 #include "solver/solver.hpp"
 
 namespace openturbine {
