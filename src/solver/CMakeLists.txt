@@ -29,7 +29,6 @@ install(FILES
         create_b_t_matrix.hpp
         create_constraints_matrix_full.hpp
         create_full_matrix.hpp
-        create_global_matrix.hpp
         create_k_matrix.hpp
         create_matrix_spadd.hpp
         create_matrix_spgemm.hpp
