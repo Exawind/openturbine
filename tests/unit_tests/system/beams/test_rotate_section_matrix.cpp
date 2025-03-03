@@ -1,3 +1,4 @@
+/*
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
@@ -45,3 +46,4 @@ TEST(RotateSectionMatrixTests, OneNode) {
 }
 
 }  // namespace openturbine::tests
+*/

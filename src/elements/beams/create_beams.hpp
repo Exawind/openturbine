@@ -51,24 +51,38 @@ inline Beams CreateBeams(const BeamsInput& beams_input, const std::vector<Node>&
         }
 
         // Populate views for this element
-        PopulateElementViews(
-            beams_input.elements[i],  // Element inputs
-            nodes,
-            Kokkos::subview(host_node_x0, i, Kokkos::make_pair(size_t{0U}, num_nodes), Kokkos::ALL),
-            Kokkos::subview(host_qp_weight, i, Kokkos::make_pair(size_t{0U}, num_qps)),
+        PopulateNodeX0(
+            beams_input.elements[i], nodes,
+            Kokkos::subview(host_node_x0, i, Kokkos::make_pair(0UL, num_nodes), Kokkos::ALL)
+        );
+        PopulateQPWeight(
+            beams_input.elements[i],
+            Kokkos::subview(host_qp_weight, i, Kokkos::make_pair(0UL, num_qps))
+        );
+        PopulateShapeFunctionValues(
+            beams_input.elements[i], nodes,
             Kokkos::subview(
-                host_qp_Mstar, i, Kokkos::make_pair(size_t{0U}, num_qps), Kokkos::ALL, Kokkos::ALL
-            ),
+                host_shape_interp, i, Kokkos::make_pair(0UL, num_nodes),
+                Kokkos::make_pair(0UL, num_qps)
+            )
+        );
+        PopulateShapeFunctionDerivatives(
+            beams_input.elements[i], nodes,
             Kokkos::subview(
-                host_qp_Cstar, i, Kokkos::make_pair(size_t{0U}, num_qps), Kokkos::ALL, Kokkos::ALL
-            ),
+                host_shape_deriv, i, Kokkos::make_pair(0UL, num_nodes),
+                Kokkos::make_pair(0UL, num_qps)
+            )
+        );
+        PopulateQPMstar(
+            beams_input.elements[i],
             Kokkos::subview(
-                host_shape_interp, i, Kokkos::make_pair(size_t{0U}, num_nodes),
-                Kokkos::make_pair(size_t{0U}, num_qps)
-            ),
+                host_qp_Mstar, i, Kokkos::make_pair(0UL, num_qps), Kokkos::ALL, Kokkos::ALL
+            )
+        );
+        PopulateQPCstar(
+            beams_input.elements[i],
             Kokkos::subview(
-                host_shape_deriv, i, Kokkos::make_pair(size_t{0U}, num_nodes),
-                Kokkos::make_pair(size_t{0U}, num_qps)
+                host_qp_Cstar, i, Kokkos::make_pair(0UL, num_qps), Kokkos::ALL, Kokkos::ALL
             )
         );
     }
@@ -125,6 +139,7 @@ inline Beams CreateBeams(const BeamsInput& beams_input, const std::vector<Node>&
             beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot, beams.qp_omega_dot, beams.qp_x
         }
     );
+
     return beams;
 }
 

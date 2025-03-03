@@ -2,149 +2,136 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "calculate_Ouu.hpp"
-#include "calculate_Puu.hpp"
-#include "calculate_Quu.hpp"
-#include "calculate_RR0.hpp"
-#include "calculate_force_FC.hpp"
-#include "calculate_force_FD.hpp"
-#include "calculate_gravity_force.hpp"
-#include "calculate_gyroscopic_matrix.hpp"
-#include "calculate_inertia_stiffness_matrix.hpp"
-#include "calculate_inertial_force.hpp"
-#include "calculate_mass_matrix_components.hpp"
-#include "calculate_strain.hpp"
-#include "calculate_temporary_variables.hpp"
-#include "rotate_section_matrix.hpp"
+#include "calculate_inertial_quadrature_point_values.hpp"
+#include "calculate_stiffness_quadrature_point_values.hpp"
+#include "integrate_inertia_matrix.hpp"
+#include "integrate_residual_vector.hpp"
+#include "integrate_stiffness_matrix.hpp"
+#include "update_node_state.hpp"
 
-namespace openturbine {
+namespace openturbine::beams {
 struct CalculateQuadraturePointValues {
+    double beta_prime_;
+    double gamma_prime_;
+    Kokkos::View<double* [7]>::const_type Q;
+    Kokkos::View<double* [6]>::const_type V;
+    Kokkos::View<double* [6]>::const_type A;
+    Kokkos::View<size_t**>::const_type node_state_indices;
+    Kokkos::View<size_t*>::const_type num_nodes_per_element;
     Kokkos::View<size_t*>::const_type num_qps_per_element;
+    Kokkos::View<double**>::const_type qp_weight_;
+    Kokkos::View<double**>::const_type qp_jacobian_;
+    Kokkos::View<double***>::const_type shape_interp_;
+    Kokkos::View<double***>::const_type shape_deriv_;
     Kokkos::View<double[3]>::const_type gravity_;
-    Kokkos::View<double** [3]>::const_type qp_u_;
-    Kokkos::View<double** [3]>::const_type qp_u_prime_;
-    Kokkos::View<double** [4]>::const_type qp_r_;
-    Kokkos::View<double** [4]>::const_type qp_r_prime_;
+    Kokkos::View<double** [6]>::const_type node_FX_;
     Kokkos::View<double** [4]>::const_type qp_r0_;
     Kokkos::View<double** [3]>::const_type qp_x0_;
     Kokkos::View<double** [3]>::const_type qp_x0_prime_;
-    Kokkos::View<double** [3]>::const_type qp_u_ddot_;
-    Kokkos::View<double** [3]>::const_type qp_omega_;
-    Kokkos::View<double** [3]>::const_type qp_omega_dot_;
     Kokkos::View<double** [6][6]>::const_type qp_Mstar_;
     Kokkos::View<double** [6][6]>::const_type qp_Cstar_;
-    Kokkos::View<double** [7]> qp_x_;
-    Kokkos::View<double** [6][6]> qp_RR0_;
-    Kokkos::View<double** [6]> qp_strain_;
-    Kokkos::View<double** [3]> qp_eta_;
-    Kokkos::View<double** [3][3]> qp_rho_;
-    Kokkos::View<double** [3][3]> qp_eta_tilde_;
-    Kokkos::View<double** [3][3]> qp_x0pupSS_;
-    Kokkos::View<double** [3][3]> qp_M_tilde_;
-    Kokkos::View<double** [3][3]> qp_N_tilde_;
-    Kokkos::View<double** [3][3]> qp_omega_tilde_;
-    Kokkos::View<double** [3][3]> qp_omega_dot_tilde_;
-    Kokkos::View<double** [6]> qp_FC_;
-    Kokkos::View<double** [6]> qp_FD_;
-    Kokkos::View<double** [6]> qp_FI_;
     Kokkos::View<double** [6]> qp_FE_;
-    Kokkos::View<double** [6]> qp_FG_;
-    Kokkos::View<double** [6][6]> qp_Muu_;
-    Kokkos::View<double** [6][6]> qp_Cuu_;
-    Kokkos::View<double** [6][6]> qp_Ouu_;
-    Kokkos::View<double** [6][6]> qp_Puu_;
-    Kokkos::View<double** [6][6]> qp_Quu_;
-    Kokkos::View<double** [6][6]> qp_Guu_;
-    Kokkos::View<double** [6][6]> qp_Kuu_;
+    Kokkos::View<double** [6]> residual_vector_terms_;
+    Kokkos::View<double*** [6][6]> stiffness_matrix_terms_;
+    Kokkos::View<double*** [6][6]> inertia_matrix_terms_;
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
+        using simd_type = Kokkos::Experimental::native_simd<double>;
         const auto i_elem = static_cast<size_t>(member.league_rank());
+        const auto num_nodes = num_nodes_per_element(i_elem);
         const auto num_qps = num_qps_per_element(i_elem);
+        constexpr auto width = simd_type::size();
+        const auto extra_component = num_nodes % width == 0U ? 0U : 1U;
+        const auto simd_nodes = num_nodes / width + extra_component;
 
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps), CalculateRR0{i_elem, qp_x_, qp_RR0_}
+        const auto qp_range = Kokkos::TeamThreadRange(member, num_qps);
+        const auto node_range = Kokkos::TeamThreadRange(member, num_nodes);
+        const auto node_squared_range = Kokkos::TeamThreadRange(member, num_nodes * simd_nodes);
+
+        const auto shape_interp =
+            Kokkos::View<double**, Kokkos::LayoutLeft>(member.team_scratch(1), num_nodes, num_qps);
+        const auto shape_deriv =
+            Kokkos::View<double**, Kokkos::LayoutLeft>(member.team_scratch(1), num_nodes, num_qps);
+
+        const auto qp_weight = Kokkos::View<double*>(member.team_scratch(1), num_qps);
+        const auto qp_jacobian = Kokkos::View<double*>(member.team_scratch(1), num_qps);
+
+        const auto node_u = Kokkos::View<double* [7]>(member.team_scratch(1), num_nodes);
+        const auto node_u_dot = Kokkos::View<double* [6]>(member.team_scratch(1), num_nodes);
+        const auto node_u_ddot = Kokkos::View<double* [6]>(member.team_scratch(1), num_nodes);
+        const auto node_FX = Kokkos::View<double* [6]>(member.team_scratch(1), num_nodes);
+        const auto qp_Fc = Kokkos::View<double* [6]>(member.team_scratch(1), num_qps);
+        const auto qp_Fd = Kokkos::View<double* [6]>(member.team_scratch(1), num_qps);
+        const auto qp_Fi = Kokkos::View<double* [6]>(member.team_scratch(1), num_qps);
+        const auto qp_Fe = Kokkos::View<double* [6]>(member.team_scratch(1), num_qps);
+        const auto qp_Fg = Kokkos::View<double* [6]>(member.team_scratch(1), num_qps);
+
+        const auto qp_Kuu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+        const auto qp_Puu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+        const auto qp_Cuu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+        const auto qp_Ouu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+        const auto qp_Quu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+        const auto qp_Muu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+        const auto qp_Guu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
+
+        KokkosBatched::TeamVectorCopy<Kokkos::TeamPolicy<>::member_type>::invoke(
+            member, Kokkos::subview(shape_interp_, i_elem, Kokkos::ALL, Kokkos::ALL), shape_interp
         );
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateTemporaryVariables{i_elem, qp_x0_prime_, qp_u_prime_, qp_x0pupSS_}
+        KokkosBatched::TeamVectorCopy<Kokkos::TeamPolicy<>::member_type>::invoke(
+            member, Kokkos::subview(shape_deriv_, i_elem, Kokkos::ALL, Kokkos::ALL), shape_deriv
         );
+        KokkosBatched::TeamVectorCopy<Kokkos::TeamPolicy<>::member_type>::invoke(
+            member, Kokkos::subview(qp_FE_, i_elem, Kokkos::ALL, Kokkos::ALL), qp_Fe
+        );
+        KokkosBatched::TeamVectorCopy<Kokkos::TeamPolicy<>::member_type>::invoke(
+            member, Kokkos::subview(node_FX_, i_elem, Kokkos::ALL, Kokkos::ALL), node_FX
+        );
+
+        KokkosBatched::TeamVectorCopy<
+            Kokkos::TeamPolicy<>::member_type, KokkosBatched::Trans::NoTranspose,
+            1>::invoke(member, Kokkos::subview(qp_weight_, i_elem, Kokkos::ALL), qp_weight);
+        KokkosBatched::TeamVectorCopy<
+            Kokkos::TeamPolicy<>::member_type, KokkosBatched::Trans::NoTranspose,
+            1>::invoke(member, Kokkos::subview(qp_jacobian_, i_elem, Kokkos::ALL), qp_jacobian);
+
+        const auto node_state_updater = beams::UpdateNodeStateElement{
+            i_elem, node_state_indices, node_u, node_u_dot, node_u_ddot, Q, V, A
+        };
+        Kokkos::parallel_for(node_range, node_state_updater);
         member.team_barrier();
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            RotateSectionMatrix{i_elem, qp_RR0_, qp_Mstar_, qp_Muu_}
-        );
 
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            RotateSectionMatrix{i_elem, qp_RR0_, qp_Cstar_, qp_Cuu_}
-        );
+        const auto inertia_quad_point_calculator = beams::CalculateInertialQuadraturePointValues{
+            i_elem,      shape_interp, gravity_, qp_r0_, qp_Mstar_, node_u, node_u_dot,
+            node_u_ddot, qp_Fi,        qp_Fg,    qp_Muu, qp_Guu,    qp_Kuu
+        };
+        Kokkos::parallel_for(qp_range, inertia_quad_point_calculator);
 
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateStrain{i_elem, qp_x0_prime_, qp_u_prime_, qp_r_, qp_r_prime_, qp_strain_}
-        );
-        member.team_barrier();
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateMassMatrixComponents{i_elem, qp_Muu_, qp_eta_, qp_rho_, qp_eta_tilde_}
-        );
-
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateForceFC{i_elem, qp_Cuu_, qp_strain_, qp_FC_, qp_M_tilde_, qp_N_tilde_}
-        );
+        const auto stiffness_quad_point_calculator = beams::CalculateStiffnessQuadraturePointValues{
+            i_elem, qp_jacobian, shape_interp, shape_deriv, qp_r0_, qp_x0_prime_, qp_Cstar_,
+            node_u, qp_Fc,       qp_Fd,        qp_Cuu,      qp_Ouu, qp_Puu,       qp_Quu
+        };
+        Kokkos::parallel_for(qp_range, stiffness_quad_point_calculator);
         member.team_barrier();
 
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateInertialForces{
-                i_elem, qp_Muu_, qp_u_ddot_, qp_omega_, qp_omega_dot_, qp_eta_tilde_,
-                qp_omega_tilde_, qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_FI_
-            }
-        );
-        member.team_barrier();
+        const auto residual_integrator = IntegrateResidualVectorElement{
+            i_elem, num_qps, qp_weight, qp_jacobian, shape_interp, shape_deriv,           node_FX,
+            qp_Fc,  qp_Fd,   qp_Fi,     qp_Fe,       qp_Fg,        residual_vector_terms_
+        };
+        Kokkos::parallel_for(node_range, residual_integrator);
 
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateForceFD{i_elem, qp_x0pupSS_, qp_FC_, qp_FD_}
-        );
+        const auto stiffness_matrix_integrator = IntegrateStiffnessMatrixElement{
+            i_elem, num_nodes, num_qps, qp_weight, qp_jacobian, shape_interp,           shape_deriv,
+            qp_Kuu, qp_Puu,    qp_Cuu,  qp_Ouu,    qp_Quu,      stiffness_matrix_terms_
+        };
+        Kokkos::parallel_for(node_squared_range, stiffness_matrix_integrator);
 
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateGravityForce{i_elem, gravity_, qp_Muu_, qp_eta_tilde_, qp_FG_}
-        );
-
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateOuu{i_elem, qp_Cuu_, qp_x0pupSS_, qp_M_tilde_, qp_N_tilde_, qp_Ouu_}
-        );
-
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculatePuu{i_elem, qp_Cuu_, qp_x0pupSS_, qp_N_tilde_, qp_Puu_}
-        );
-
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateQuu{i_elem, qp_Cuu_, qp_x0pupSS_, qp_N_tilde_, qp_Quu_}
-        );
-
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateGyroscopicMatrix{
-                i_elem, qp_Muu_, qp_omega_, qp_omega_tilde_, qp_rho_, qp_eta_, qp_Guu_
-            }
-        );
-
-        Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, num_qps),
-            CalculateInertiaStiffnessMatrix{
-                i_elem, qp_Muu_, qp_u_ddot_, qp_omega_, qp_omega_dot_, qp_omega_tilde_,
-                qp_omega_dot_tilde_, qp_rho_, qp_eta_, qp_Kuu_
-            }
-        );
+        const auto inertia_matrix_integrator = IntegrateInertiaMatrixElement{
+            i_elem, num_nodes, num_qps,     qp_weight,    qp_jacobian,          shape_interp,
+            qp_Muu, qp_Guu,    beta_prime_, gamma_prime_, inertia_matrix_terms_
+        };
+        Kokkos::parallel_for(node_squared_range, inertia_matrix_integrator);
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

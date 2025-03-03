@@ -3,7 +3,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_SIMD.hpp>
 
-namespace openturbine {
+namespace openturbine::beams {
 
 struct IntegrateInertiaMatrixElement {
     size_t i_elem;
@@ -69,59 +69,4 @@ struct IntegrateInertiaMatrixElement {
         }
     }
 };
-
-struct IntegrateInertiaMatrix {
-    Kokkos::View<size_t*>::const_type num_nodes_per_element;
-    Kokkos::View<size_t*>::const_type num_qps_per_element;
-    Kokkos::View<double**>::const_type qp_weight_;
-    Kokkos::View<double**>::const_type qp_jacobian_;
-    Kokkos::View<double***>::const_type shape_interp_;
-    Kokkos::View<double** [6][6]>::const_type qp_Muu_;
-    Kokkos::View<double** [6][6]>::const_type qp_Guu_;
-    double beta_prime_;
-    double gamma_prime_;
-    Kokkos::View<double*** [6][6]> gbl_M_;
-
-    KOKKOS_FUNCTION
-    void operator()(const Kokkos::TeamPolicy<>::member_type& member) const {
-        using simd_type = Kokkos::Experimental::native_simd<double>;
-        const auto i_elem = static_cast<size_t>(member.league_rank());
-        const auto num_nodes = num_nodes_per_element(i_elem);
-        const auto num_qps = num_qps_per_element(i_elem);
-        constexpr auto width = simd_type::size();
-        const auto extra_component = num_nodes % width == 0U ? 0U : 1U;
-        const auto simd_nodes = num_nodes / width + extra_component;
-
-        const auto shape_interp =
-            Kokkos::View<double**, Kokkos::LayoutLeft>(member.team_scratch(1), num_nodes, num_qps);
-
-        const auto qp_weight = Kokkos::View<double*>(member.team_scratch(1), num_qps);
-        const auto qp_jacobian = Kokkos::View<double*>(member.team_scratch(1), num_qps);
-
-        const auto qp_Muu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
-        const auto qp_Guu = Kokkos::View<double* [6][6]>(member.team_scratch(1), num_qps);
-
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, num_qps), [&](size_t k) {
-            for (auto i = 0U; i < num_nodes; ++i) {
-                shape_interp(i, k) = shape_interp_(i_elem, i, k);
-            }
-            qp_weight(k) = qp_weight_(i_elem, k);
-            qp_jacobian(k) = qp_jacobian_(i_elem, k);
-            for (auto m = 0U; m < 6U; ++m) {
-                for (auto n = 0U; n < 6U; ++n) {
-                    qp_Muu(k, m, n) = qp_Muu_(i_elem, k, m, n);
-                    qp_Guu(k, m, n) = qp_Guu_(i_elem, k, m, n);
-                }
-            }
-        });
-        member.team_barrier();
-
-        const auto node_range = Kokkos::TeamThreadRange(member, num_nodes * simd_nodes);
-        const auto element_integrator =
-            IntegrateInertiaMatrixElement{i_elem,      num_nodes,    num_qps, qp_weight,
-                                          qp_jacobian, shape_interp, qp_Muu,  qp_Guu,
-                                          beta_prime_, gamma_prime_, gbl_M_};
-        Kokkos::parallel_for(node_range, element_integrator);
-    }
-};
-}  // namespace openturbine
+}  // namespace openturbine::beams
