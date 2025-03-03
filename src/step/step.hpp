@@ -61,7 +61,7 @@ inline bool Step(
 
         AssembleSystemResidual(solver, elements, state);
 
-        AssembleSystemMatrix(solver, elements);
+        AssembleSystemMatrix(parameters, solver, elements);
 
         UpdateConstraintVariables(state, constraints);
 

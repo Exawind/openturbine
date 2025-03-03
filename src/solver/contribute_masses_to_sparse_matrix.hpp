@@ -11,8 +11,9 @@ template <typename CrsMatrixType>
 struct ContributeMassesToSparseMatrix {
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
-    Kokkos::View<FreedomSignature*> element_freedom_signature;
-    Kokkos::View<size_t* [6]> element_freedom_table;
+    double conditioner{};
+    Kokkos::View<FreedomSignature*>::const_type element_freedom_signature;
+    Kokkos::View<size_t* [6]>::const_type element_freedom_table;
     Kokkos::View<double* [6][6]>::const_type dense;
     CrsMatrixType sparse;
 
@@ -32,7 +33,7 @@ struct ContributeMassesToSparseMatrix {
         for (auto component_1 = 0U; component_1 < num_dofs; ++component_1) {
             const auto row_num = element_freedom_table(i, component_1);
             for (auto component_2 = 0U; component_2 < num_dofs; ++component_2) {
-                row_data(component_2) = dense(i, component_1, component_2);
+                row_data(component_2) = dense(i, component_1, component_2) * conditioner;
             }
             sparse.sumIntoValues(
                 static_cast<int>(row_num), col_idx.data(), static_cast<int>(num_dofs),

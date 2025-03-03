@@ -8,7 +8,6 @@ install(FILES
         assemble_stiffness_matrix_beams.hpp
         assemble_system_matrix.hpp
         assemble_system_residual.hpp
-        assemble_tangent_operator.hpp
         calculate_convergence_error.hpp
         predict_next_state.hpp
         reset_constraints.hpp
