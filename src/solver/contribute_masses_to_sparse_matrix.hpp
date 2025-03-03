@@ -11,7 +11,7 @@ template <typename CrsMatrixType>
 struct ContributeMassesToSparseMatrix {
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
-    double conditioner;
+    double conditioner{};
     Kokkos::View<FreedomSignature*>::const_type element_freedom_signature;
     Kokkos::View<size_t* [6]>::const_type element_freedom_table;
     Kokkos::View<double* [6][6]>::const_type dense;

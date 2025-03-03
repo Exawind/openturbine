@@ -28,21 +28,24 @@ inline void AssembleSystemMatrix(StepParameters& parameters, Solver& solver, Ele
         ContributeBeamsToSparseMatrix<Solver::CrsMatrixType>{
             parameters.conditioner, elements.beams.num_nodes_per_element,
             elements.beams.element_freedom_signature, elements.beams.element_freedom_table,
-            elements.beams.system_matrix_terms, solver.A->getLocalMatrixDevice()}
+            elements.beams.system_matrix_terms, solver.A->getLocalMatrixDevice()
+        }
     );
     Kokkos::parallel_for(
         "ContributeMassesToSparseMatrix", masses_sparse_matrix_policy,
         ContributeMassesToSparseMatrix<Solver::CrsMatrixType>{
             parameters.conditioner, elements.masses.element_freedom_signature,
             elements.masses.element_freedom_table, elements.masses.system_matrix_terms,
-            solver.A->getLocalMatrixDevice()}
+            solver.A->getLocalMatrixDevice()
+        }
     );
     Kokkos::parallel_for(
         "ContributeSpringsToSparseMatrix", springs_sparse_matrix_policy,
         ContributeSpringsToSparseMatrix<Solver::CrsMatrixType>{
             parameters.conditioner, elements.springs.element_freedom_signature,
             elements.springs.element_freedom_table, elements.springs.stiffness_matrix_terms,
-            solver.A->getLocalMatrixDevice()}
+            solver.A->getLocalMatrixDevice()
+        }
     );
 }
 

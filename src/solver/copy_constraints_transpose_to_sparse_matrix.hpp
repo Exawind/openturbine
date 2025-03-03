@@ -8,7 +8,7 @@ template <typename CrsMatrixType>
 struct CopyConstraintsTransposeToSparseMatrix {
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
-    size_t num_system_cols;
+    size_t num_system_cols{};
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
     Kokkos::View<FreedomSignature*> base_node_freedom_signature;
     Kokkos::View<FreedomSignature*> target_node_freedom_signature;

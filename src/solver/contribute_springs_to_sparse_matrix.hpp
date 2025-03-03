@@ -10,7 +10,7 @@ template <typename CrsMatrixType>
 struct ContributeSpringsToSparseMatrix {
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
-    double conditioner;
+    double conditioner{};
     Kokkos::View<FreedomSignature* [2]>::const_type element_freedom_signature;
     Kokkos::View<size_t* [2][3]>::const_type element_freedom_table;
     Kokkos::View<double* [2][2][3][3]>::const_type dense;  //< Element Stiffness matrices
