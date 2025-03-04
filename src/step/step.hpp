@@ -14,6 +14,7 @@
 #include "elements/elements.hpp"
 #include "predict_next_state.hpp"
 #include "reset_constraints.hpp"
+#include "reset_solver.hpp"
 #include "solve_system.hpp"
 #include "solver/solver.hpp"
 #include "state/state.hpp"
@@ -54,6 +55,7 @@ inline bool Step(
         if (iter >= parameters.max_iter) {
             return false;
         }
+        ResetSolver(solver);
 
         UpdateTangentOperator(parameters, state);
 

@@ -11,6 +11,7 @@ install(FILES
         calculate_convergence_error.hpp
         predict_next_state.hpp
         reset_constraints.hpp
+        reset_solver.hpp
         solve_system.hpp
         step.hpp
         step_parameters.hpp

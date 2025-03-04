@@ -24,14 +24,13 @@ inline void AssembleSystemResidual(Solver& solver, Elements& elements, State& st
     auto springs_vector_policy =
         Kokkos::RangePolicy<>(0, static_cast<int>(elements.springs.num_elems));
 
-    const auto num_rows = solver.num_system_dofs;
-    Kokkos::deep_copy(Kokkos::subview(solver.R, Kokkos::make_pair(size_t{0U}, num_rows)), 0.);
+    const auto b = solver.b->getLocalViewDevice(Tpetra::Access::ReadWrite);
 
     Kokkos::deep_copy(state.f, state.host_f);
     Kokkos::parallel_for(
         "ContributeForcesToVector", forces_vector_policy,
         ContributeForcesToVector{
-            state.node_freedom_allocation_table, state.node_freedom_map_table, state.f, solver.R
+            state.node_freedom_allocation_table, state.node_freedom_map_table, state.f, b
         }
     );
     Kokkos::fence();
@@ -39,21 +38,21 @@ inline void AssembleSystemResidual(Solver& solver, Elements& elements, State& st
         "ContributeBeamsToVector", beams_vector_policy,
         ContributeBeamsToVector{
             elements.beams.num_nodes_per_element, elements.beams.element_freedom_table,
-            elements.beams.residual_vector_terms, solver.R
+            elements.beams.residual_vector_terms, b
         }
     );
     Kokkos::fence();
     Kokkos::parallel_for(
         "ContributeMassesToVector", masses_vector_policy,
         ContributeMassesToVector{
-            elements.masses.element_freedom_table, elements.masses.residual_vector_terms, solver.R
+            elements.masses.element_freedom_table, elements.masses.residual_vector_terms, b
         }
     );
     Kokkos::fence();
     Kokkos::parallel_for(
         "ContributeSpringsToVector", springs_vector_policy,
         ContributeSpringsToVector{
-            elements.springs.element_freedom_table, elements.springs.residual_vector_terms, solver.R
+            elements.springs.element_freedom_table, elements.springs.residual_vector_terms, b
         }
     );
     Kokkos::fence();

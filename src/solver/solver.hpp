@@ -42,11 +42,9 @@ struct Solver {
     size_t num_system_dofs;   //< Number of system degrees of freedom
     size_t num_dofs;          //< Number of degrees of freedom
 
-    Teuchos::RCP<GlobalCrsMatrixType> A;       //< System matrix
-    Teuchos::RCP<GlobalMultiVectorType> b;     //< System RHS
-    Teuchos::RCP<GlobalMultiVectorType> x_mv;  //< System solution
-    Kokkos::View<double*> R;                   //< System residual vector
-    Kokkos::View<double*> x;                   //< System solution vector
+    Teuchos::RCP<GlobalCrsMatrixType> A;    //< System matrix
+    Teuchos::RCP<GlobalMultiVectorType> b;  //< System RHS
+    Teuchos::RCP<GlobalMultiVectorType> x;  //< System solution
 
     std::vector<double> convergence_err;
 
@@ -95,11 +93,8 @@ struct Solver {
               node_state_indices
           )),
           b(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getRangeMap(), 1)),
-          x_mv(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),
-          R("R", num_dofs),
-          x("x", num_dofs),
-          amesos_solver(
-              CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x_mv, b)
+          x(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),
+          amesos_solver(CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x, b)
           ) {}
 
     // cppcheck-suppress missingMemberCopy
@@ -108,13 +103,10 @@ struct Solver {
           num_system_dofs(other.num_system_dofs),
           num_dofs(other.num_dofs),
           A(other.A),
-          b(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getRangeMap(), 1)),
-          x_mv(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),
-          R("R", num_dofs),
-          x("x", num_dofs),
+          b(other.b),
+          x(other.x),
           convergence_err(other.convergence_err),
-          amesos_solver(
-              CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x_mv, b)
+          amesos_solver(CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x, b)
           ) {}
 
     Solver(Solver&& other) noexcept = delete;
@@ -131,12 +123,8 @@ struct Solver {
         std::swap(num_dofs, tmp.num_dofs);
         std::swap(A, tmp.A);
         std::swap(b, tmp.b);
-        std::swap(x_mv, tmp.x_mv);
-        std::swap(R, tmp.R);
         std::swap(x, tmp.x);
-
         std::swap(convergence_err, tmp.convergence_err);
-
         std::swap(amesos_solver, tmp.amesos_solver);
         return *this;
     }
