@@ -2,6 +2,7 @@
 
 #include <KokkosSparse.hpp>
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "compute_b_num_non_zero.hpp"
 #include "populate_sparse_row_ptrs_col_inds_constraints.hpp"
@@ -20,6 +21,8 @@ template <typename CrsMatrixType>
     const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_base_node_col_range,
     const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_target_node_col_range
 ) {
+    auto region = Kokkos::Profiling::ScopedRegion("Create Transpose B Matrix");
+
     using ValuesType = typename CrsMatrixType::values_type::non_const_type;
     using RowPtrType = typename CrsMatrixType::staticcrsgraph_type::row_map_type::non_const_type;
     using IndicesType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
