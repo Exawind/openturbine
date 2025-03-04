@@ -2,6 +2,7 @@
 
 #include <KokkosSparse.hpp>
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "compute_k_col_inds.hpp"
 #include "compute_k_num_non_zero.hpp"
@@ -19,6 +20,8 @@ template <typename CrsMatrixType>
     const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
     const Kokkos::View<size_t**>::const_type& node_state_indices
 ) {
+    auto region = Kokkos::Profiling::ScopedRegion("Create System Matrix");
+
     using ValuesType = typename CrsMatrixType::values_type::non_const_type;
     using RowPtrType = typename CrsMatrixType::row_map_type::non_const_type;
     using IndicesType = typename CrsMatrixType::index_type::non_const_type;

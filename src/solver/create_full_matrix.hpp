@@ -3,6 +3,7 @@
 #include <Amesos2.hpp>
 #include <KokkosSparse.hpp>
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "create_b_matrix.hpp"
 #include "create_b_t_matrix.hpp"
@@ -28,6 +29,8 @@ template <typename GlobalCrsMatrixType>
     const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
     const Kokkos::View<size_t**>::const_type& node_state_indices
 ) {
+    auto region = Kokkos::Profiling::ScopedRegion("Create Full Matrix");
+
     using CrsMatrixType = typename GlobalCrsMatrixType::local_matrix_device_type;
     using LocalOrdinalType = typename GlobalCrsMatrixType::local_ordinal_type;
     using GlobalOrdinalType = typename GlobalCrsMatrixType::global_ordinal_type;
