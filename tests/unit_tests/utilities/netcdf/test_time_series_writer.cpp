@@ -32,7 +32,7 @@ TEST_F(TimeSeriesWriterTest, WriteValuesCreatesVariableAndDimension) {
     util::TimeSeriesWriter writer(test_file);
     std::vector<double> values = {100., 200., 300.};
 
-    EXPECT_NO_THROW({ writer.WriteValues("hub_height_wind_speed", 0, values); });
+    EXPECT_NO_THROW({ writer.WriteValuesAtTimestep("hub_height_wind_speed", 0, values); });
 
     const auto& file = writer.GetFile();
     EXPECT_GE(file.GetVariableId("hub_height_wind_speed"), 0);
@@ -45,12 +45,12 @@ TEST_F(TimeSeriesWriterTest, WriteValuesCreatesVariableAndDimension) {
 
 TEST_F(TimeSeriesWriterTest, WriteValuesSavesCorrectData) {
     util::TimeSeriesWriter writer(test_file);
-    std::vector<double> values1 = {100., 200., 300.};
-    std::vector<double> values2 = {400., 500., 600.};
+    std::vector<double> values1 = {100., 200., 300.};  // dimensions = 3
+    std::vector<double> values2 = {400., 500., 600.};  // dimensions = 3
 
     EXPECT_NO_THROW({
-        writer.WriteValues("rotor_torque", 0, values1);
-        writer.WriteValues("rotor_torque", 1, values2);
+        writer.WriteValuesAtTimestep("rotor_torque", 0, values1);
+        writer.WriteValuesAtTimestep("rotor_torque", 1, values2);
     });
 
     const auto& file = writer.GetFile();
@@ -69,7 +69,7 @@ TEST_F(TimeSeriesWriterTest, WriteValuesSavesCorrectData) {
 TEST_F(TimeSeriesWriterTest, WriteValueCreatesVariableAndWritesSingleValue) {
     util::TimeSeriesWriter writer(test_file);
 
-    EXPECT_NO_THROW({ writer.WriteValue("rotor_power", 0, 100.); });
+    EXPECT_NO_THROW({ writer.WriteValueAtTimestep("rotor_power", 0, 100.); });
 
     const auto& file = writer.GetFile();
     EXPECT_GE(file.GetVariableId("rotor_power"), 0);

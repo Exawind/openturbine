@@ -61,7 +61,7 @@ TEST(NetCDFOutputsWriterTest, SpringMassSystemOutputs) {
         Kokkos::deep_copy(q, state.q);
 
         // Write only displacement data
-        writer.WriteStateData(
+        writer.WriteStateDataAtTimestep(
             time_step,
             "u",                 // displacement
             {q(0, 0), q(1, 0)},  // x component

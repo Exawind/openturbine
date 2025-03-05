@@ -75,7 +75,7 @@ TEST_F(NodeStateWriterTest, ConstructorCreatesExpectedDimensionsAndVariables) {
     });
 }
 
-TEST_F(NodeStateWriterTest, WriteStateDataForPosition) {
+TEST_F(NodeStateWriterTest, WriteStateDataAtTimestepForPosition) {
     util::NodeStateWriter writer(test_file, true, num_nodes);
 
     std::vector<double> x = {1., 2., 3.};
@@ -86,7 +86,7 @@ TEST_F(NodeStateWriterTest, WriteStateDataForPosition) {
     std::vector<double> k = {0.7, 0.8, 0.9};
     std::vector<double> w = {1., 1., 1.};
 
-    EXPECT_NO_THROW(writer.WriteStateData(0, "x", x, y, z, i, j, k, w));
+    EXPECT_NO_THROW(writer.WriteStateDataAtTimestep(0, "x", x, y, z, i, j, k, w));
 
     const auto& file = writer.GetFile();
     std::vector<double> read_data(num_nodes);
@@ -113,7 +113,7 @@ TEST_F(NodeStateWriterTest, WriteStateDataForPosition) {
     EXPECT_EQ(read_data, w);
 }
 
-TEST_F(NodeStateWriterTest, WriteStateDataForVelocity) {
+TEST_F(NodeStateWriterTest, WriteStateDataAtTimestepForVelocity) {
     util::NodeStateWriter writer(test_file, true, num_nodes);
 
     std::vector<double> x = {1., 2., 3.};
@@ -123,7 +123,7 @@ TEST_F(NodeStateWriterTest, WriteStateDataForVelocity) {
     std::vector<double> j = {0.4, 0.5, 0.6};
     std::vector<double> k = {0.7, 0.8, 0.9};
 
-    EXPECT_NO_THROW(writer.WriteStateData(0, "v", x, y, z, i, j, k));
+    EXPECT_NO_THROW(writer.WriteStateDataAtTimestep(0, "v", x, y, z, i, j, k));
 
     const auto& file = writer.GetFile();
     std::vector<double> read_data(num_nodes);
@@ -154,7 +154,7 @@ TEST_F(NodeStateWriterTest, ThrowsOnInvalidComponentPrefix) {
     std::vector<double> data(num_nodes, 1.);
 
     EXPECT_THROW(
-        writer.WriteStateData(0, "invalid_prefix", data, data, data, data, data, data),
+        writer.WriteStateDataAtTimestep(0, "invalid_prefix", data, data, data, data, data, data),
         std::invalid_argument
     );
 }
@@ -162,11 +162,11 @@ TEST_F(NodeStateWriterTest, ThrowsOnInvalidComponentPrefix) {
 TEST_F(NodeStateWriterTest, ThrowsOnMismatchedVectorSizes) {
     util::NodeStateWriter writer(test_file, true, num_nodes);
 
-    std::vector<double> correct_size(num_nodes, 1.);    // 3
-    std::vector<double> wrong_size(num_nodes + 1, 1.);  // 4
+    std::vector<double> correct_size(num_nodes, 1.);    // write data to 3 nodes
+    std::vector<double> wrong_size(num_nodes + 1, 1.);  // write data to 4 nodes
 
     EXPECT_THROW(
-        writer.WriteStateData(
+        writer.WriteStateDataAtTimestep(
             0, "position", correct_size, wrong_size, correct_size, correct_size, correct_size,
             correct_size, correct_size
         ),
