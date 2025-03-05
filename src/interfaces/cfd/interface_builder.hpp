@@ -61,32 +61,32 @@ struct InterfaceBuilder {
     }
 
     InterfaceBuilder& SetMooringLineStiffness(size_t line, double stiffness) {
-        interface_input.turbine.floating_platform.mooring_lines[line].stiffness = stiffness;
+        interface_input.turbine.floating_platform.mooring_lines.at(line).stiffness = stiffness;
         return *this;
     }
 
     InterfaceBuilder& SetMooringLineUndeformedLength(size_t line, double length) {
-        interface_input.turbine.floating_platform.mooring_lines[line].undeformed_length = length;
+        interface_input.turbine.floating_platform.mooring_lines.at(line).undeformed_length = length;
         return *this;
     }
 
     InterfaceBuilder& SetMooringLineFairleadPosition(size_t line, const std::array<double, 3>& p) {
-        interface_input.turbine.floating_platform.mooring_lines[line].fairlead_position = p;
+        interface_input.turbine.floating_platform.mooring_lines.at(line).fairlead_position = p;
         return *this;
     }
 
     InterfaceBuilder& SetMooringLineAnchorPosition(size_t line, const std::array<double, 3>& p) {
-        interface_input.turbine.floating_platform.mooring_lines[line].anchor_position = p;
+        interface_input.turbine.floating_platform.mooring_lines.at(line).anchor_position = p;
         return *this;
     }
 
     InterfaceBuilder& SetMooringLineAnchorVelocity(size_t line, const std::array<double, 3>& v) {
-        interface_input.turbine.floating_platform.mooring_lines[line].anchor_velocity = v;
+        interface_input.turbine.floating_platform.mooring_lines.at(line).anchor_velocity = v;
         return *this;
     }
 
     InterfaceBuilder& SetMooringLineAnchorAcceleration(size_t line, const std::array<double, 3>& a) {
-        interface_input.turbine.floating_platform.mooring_lines[line].anchor_acceleration = a;
+        interface_input.turbine.floating_platform.mooring_lines.at(line).anchor_acceleration = a;
         return *this;
     }
 
