@@ -5,6 +5,7 @@
 #include "interfaces/cfd/interface_input.hpp"
 #include "interfaces/cfd/turbine.hpp"
 #include "model/model.hpp"
+#include "utilities/netcdf/node_state_writer.hpp"
 
 namespace openturbine::cfd {
 
@@ -26,6 +27,9 @@ public:
 
     /// @brief Read restart file
     void ReadRestart(const std::filesystem::path& filename);
+
+    /// @brief Write current state to output file if configured
+    void WriteOutputs();
 
     /// @brief  OpenTurbine class used for model construction
     Model model;
@@ -55,6 +59,12 @@ public:
     Kokkos::View<double* [7]>::HostMirror host_state_q;
     Kokkos::View<double* [6]>::HostMirror host_state_v;
     Kokkos::View<double* [6]>::HostMirror host_state_vd;
+
+    /// @brief Current timestep index
+    size_t current_timestep_;
+
+    /// @brief Optional NetCDF output writer
+    std::unique_ptr<util::NodeStateWriter> output_writer_;
 };
 
 }  // namespace openturbine::cfd
