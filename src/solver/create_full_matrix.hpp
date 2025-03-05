@@ -19,11 +19,11 @@ template <typename GlobalCrsMatrixType>
 [[nodiscard]] inline Teuchos::RCP<GlobalCrsMatrixType> CreateFullMatrix(
     size_t num_system_dofs, size_t num_dofs, size_t num_constraint_dofs,
     const Kokkos::View<ConstraintType*>::const_type& constraint_type,
+    const Kokkos::View<FreedomSignature*>::const_type& base_node_freedom_signature,
+    const Kokkos::View<FreedomSignature*>::const_type& target_node_freedom_signature,
     const Kokkos::View<size_t* [6]>::const_type& base_node_freedom_table,
     const Kokkos::View<size_t* [6]>::const_type& target_node_freedom_table,
     const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& row_range,
-    const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& base_node_col_range,
-    const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& target_node_col_range,
     const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
     const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
     const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
@@ -70,11 +70,11 @@ template <typename GlobalCrsMatrixType>
                                num_system_dofs,
                                num_constraint_dofs,
                                constraint_type,
+                               base_node_freedom_signature,
+                               target_node_freedom_signature,
                                base_node_freedom_table,
                                target_node_freedom_table,
-                               row_range,
-                               base_node_col_range,
-                               target_node_col_range
+                               row_range
                            )
                        )
                    ),
@@ -85,11 +85,11 @@ template <typename GlobalCrsMatrixType>
                            num_system_dofs,
                            num_constraint_dofs,
                            constraint_type,
+                           base_node_freedom_signature,
+                           target_node_freedom_signature,
                            base_node_freedom_table,
                            target_node_freedom_table,
-                           row_range,
-                           base_node_col_range,
-                           target_node_col_range
+                           row_range
                        )
                    )
                )

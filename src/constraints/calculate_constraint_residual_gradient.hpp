@@ -28,7 +28,6 @@ struct CalculateConstraintResidualGradient {
     using MatrixCopy = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 2>;
 
     Kokkos::View<ConstraintType*>::const_type type_;
-    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type target_node_col_range_;
     Kokkos::View<size_t*>::const_type base_node_index_;
     Kokkos::View<size_t*>::const_type target_node_index_;
     Kokkos::View<double* [3]>::const_type X0_;

@@ -21,13 +21,12 @@ inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
     Kokkos::parallel_for(
         "CalculateConstraintResidualGradient", constraints.num_constraints,
         CalculateConstraintResidualGradient{
-            constraints.type, constraints.target_node_col_range, constraints.base_node_index,
-            constraints.target_node_index, constraints.X0, constraints.axes, constraints.input,
-            constraints.lambda, state.tangent, state.q, constraints.residual_terms,
-            constraints.base_lambda_residual_terms, constraints.target_lambda_residual_terms,
-            constraints.system_residual_terms, constraints.base_gradient_terms,
-            constraints.target_gradient_terms, constraints.base_gradient_transpose_terms,
-            constraints.target_gradient_transpose_terms
+            constraints.type, constraints.base_node_index, constraints.target_node_index,
+            constraints.X0, constraints.axes, constraints.input, constraints.lambda, state.tangent,
+            state.q, constraints.residual_terms, constraints.base_lambda_residual_terms,
+            constraints.target_lambda_residual_terms, constraints.system_residual_terms,
+            constraints.base_gradient_terms, constraints.target_gradient_terms,
+            constraints.base_gradient_transpose_terms, constraints.target_gradient_transpose_terms
         }
     );
 }

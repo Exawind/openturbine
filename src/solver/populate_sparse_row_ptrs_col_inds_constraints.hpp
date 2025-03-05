@@ -3,6 +3,7 @@
 #include <Kokkos_Core.hpp>
 
 #include "constraints/constraint_type.hpp"
+#include "dof_management/freedom_signature.hpp"
 
 namespace openturbine {
 
@@ -12,8 +13,8 @@ struct PopulateSparseRowPtrsColInds_Constraints {
     Kokkos::View<size_t* [6]>::const_type base_node_freedom_table;
     Kokkos::View<size_t* [6]>::const_type target_node_freedom_table;
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
-    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type constraint_base_node_col_range;
-    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type constraint_target_node_col_range;
+    Kokkos::View<FreedomSignature*>::const_type base_node_freedom_signature;
+    Kokkos::View<FreedomSignature*>::const_type target_node_freedom_signature;
     RowPtrType B_row_ptrs;
     IndicesType B_col_inds;
 
@@ -29,8 +30,7 @@ struct PopulateSparseRowPtrsColInds_Constraints {
 
                 // Add column indices for target node
                 const auto n_target_node_cols =
-                    constraint_target_node_col_range(i_constraint).second -
-                    constraint_target_node_col_range(i_constraint).first;
+                    count_active_dofs(target_node_freedom_signature(i_constraint));
                 for (auto j = 0U; j < n_target_node_cols; ++j) {
                     B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
                         target_node_freedom_table(i_constraint, j)
@@ -39,8 +39,8 @@ struct PopulateSparseRowPtrsColInds_Constraints {
                 }
 
                 // Add column indices for base node
-                const auto n_base_node_cols = constraint_base_node_col_range(i_constraint).second -
-                                              constraint_base_node_col_range(i_constraint).first;
+                const auto n_base_node_cols =
+                    count_active_dofs(base_node_freedom_signature(i_constraint));
                 for (auto j = 0U; j < n_base_node_cols; ++j) {
                     B_col_inds(ind_col) = static_cast<typename IndicesType::value_type>(
                         base_node_freedom_table(i_constraint, j)
