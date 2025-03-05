@@ -19,11 +19,17 @@ struct InterfaceBuilder {
     }
 
     InterfaceBuilder& SetTimeStep(double time_step) {
+        if (time_step < 0.) {
+            throw std::out_of_range("time_step must be positive");
+        }
         interface_input.time_step = time_step;
         return *this;
     }
 
     InterfaceBuilder& SetDampingFactor(double rho_inf) {
+        if (rho_inf < 0. || rho_inf > 1.) {
+            throw std::out_of_range("rho_inf must be in range [0., 1.]");
+        }
         interface_input.rho_inf = rho_inf;
         return *this;
     }
@@ -61,11 +67,17 @@ struct InterfaceBuilder {
     }
 
     InterfaceBuilder& SetMooringLineStiffness(size_t line, double stiffness) {
+        if (stiffness < 0.) {
+            throw std::out_of_range("stiffness must be positive");
+        }
         interface_input.turbine.floating_platform.mooring_lines.at(line).stiffness = stiffness;
         return *this;
     }
 
     InterfaceBuilder& SetMooringLineUndeformedLength(size_t line, double length) {
+        if (length < 0.) {
+            throw std::out_of_range("undeformed length must be positive");
+        }
         interface_input.turbine.floating_platform.mooring_lines.at(line).undeformed_length = length;
         return *this;
     }
@@ -87,11 +99,6 @@ struct InterfaceBuilder {
 
     InterfaceBuilder& SetMooringLineAnchorAcceleration(size_t line, const std::array<double, 3>& a) {
         interface_input.turbine.floating_platform.mooring_lines.at(line).anchor_acceleration = a;
-        return *this;
-    }
-
-    InterfaceBuilder& SetTurbine(const TurbineInput& turbine_in) {
-        interface_input.turbine = turbine_in;
         return *this;
     }
 
