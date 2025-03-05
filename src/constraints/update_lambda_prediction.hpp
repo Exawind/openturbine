@@ -9,7 +9,7 @@ namespace openturbine {
 struct UpdateLambdaPrediction {
     size_t num_system_dofs;
     Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
-    Kokkos::View<double*>::const_type x;
+    Kokkos::View<double* [1], Kokkos::LayoutLeft>::const_type x;
     Kokkos::View<double* [6]> lambda;
 
     KOKKOS_FUNCTION
@@ -17,7 +17,7 @@ struct UpdateLambdaPrediction {
         const auto first_index = row_range(i_constraint).first;
         const auto max_index = row_range(i_constraint).second;
         for (auto row = first_index; row < max_index; ++row) {
-            lambda(i_constraint, row - first_index) += x(num_system_dofs + row);
+            lambda(i_constraint, row - first_index) += x(num_system_dofs + row, 0);
         }
     }
 };

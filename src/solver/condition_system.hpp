@@ -23,11 +23,11 @@ struct PostconditionSt {
 };
 
 struct ConditionR {
-    View_N R;
     double conditioner;
+    Kokkos::View<double* [1], Kokkos::LayoutLeft> R;
 
     KOKKOS_FUNCTION
-    void operator()(int i) const { R(i) *= conditioner; }
+    void operator()(int i) const { R(i, 0) *= conditioner; }
 };
 
 struct ConditionSystem {
@@ -60,14 +60,10 @@ struct ConditionSystem {
 struct UnconditionSolution {
     size_t num_system_dofs;
     double conditioner;
-    View_N x;
+    Kokkos::View<double* [1], Kokkos::LayoutLeft> x;
 
     KOKKOS_FUNCTION
-    void operator()(const int i) const {
-        if (static_cast<size_t>(i) >= num_system_dofs) {
-            x(i) /= conditioner;
-        }
-    }
+    void operator()(size_t i) const { x(i + num_system_dofs, 0) /= conditioner; }
 };
 
 }  // namespace openturbine

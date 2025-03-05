@@ -253,9 +253,9 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     auto m = constraints.num_dofs / 2;
 
     // Check that R vector is the same for both beams
-    auto R = kokkos_view_1D_to_vector(solver.R);
+    auto b = solver.b->getLocalViewHost(Tpetra::Access::ReadOnly);
     for (auto i = 0U; i < n; ++i) {
-        EXPECT_NEAR(R[i], R[n + i], 1.e-10);
+        EXPECT_NEAR(b(i, 0), b(n + i, 0), 1.e-10);
     }
 
     // Check that Phi vector is the same for both beams

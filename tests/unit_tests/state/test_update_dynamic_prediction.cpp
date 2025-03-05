@@ -44,8 +44,8 @@ TEST(UpdateDynamicPrediction, OneNode) {
 
     constexpr auto x_delta_host_data = std::array{1., 2., 3., 4., 5., 6.};
     const auto x_delta_host =
-        Kokkos::View<double[6], Kokkos::HostSpace>::const_type(x_delta_host_data.data());
-    const auto x_delta = Kokkos::View<double[6]>("x_delta");
+        Kokkos::View<double[6][1], Kokkos::HostSpace>::const_type(x_delta_host_data.data());
+    const auto x_delta = Kokkos::View<double[6][1], Kokkos::LayoutLeft>("x_delta");
     const auto x_delta_mirror = Kokkos::create_mirror(x_delta);
     Kokkos::deep_copy(x_delta_mirror, x_delta_host);
     Kokkos::deep_copy(x_delta, x_delta_mirror);

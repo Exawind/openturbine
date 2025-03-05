@@ -8,7 +8,7 @@ struct ContributeBeamsToVector {
     Kokkos::View<size_t*>::const_type num_nodes_per_element;
     Kokkos::View<size_t** [6]>::const_type element_freedom_table;
     Kokkos::View<double** [6]>::const_type elements;
-    Kokkos::View<double*> vector;
+    Kokkos::View<double* [1], Kokkos::LayoutLeft> vector;
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
@@ -21,11 +21,12 @@ struct ContributeBeamsToVector {
             for (auto j = 0U; j < element_freedom_table.extent(2); ++j) {
                 if constexpr (force_atomic) {
                     Kokkos::atomic_add(
-                        &vector(element_freedom_table(i_elem, i_node, j)),
+                        &vector(element_freedom_table(i_elem, i_node, j), 0),
                         elements(i_elem, i_node, j)
                     );
                 } else {
-                    vector(element_freedom_table(i_elem, i_node, j)) += elements(i_elem, i_node, j);
+                    vector(element_freedom_table(i_elem, i_node, j), 0) +=
+                        elements(i_elem, i_node, j);
                 }
             }
         });
