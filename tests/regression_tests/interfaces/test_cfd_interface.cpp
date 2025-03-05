@@ -32,6 +32,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
                 {},                             // no mooring lines
             },
         },
+        std::string("precession_test.nc")
     });
 
     // Create reference to platform node in interface
@@ -50,6 +51,39 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[4], 0.6055602536398981, 1.e-12);
     EXPECT_NEAR(platform_node.displacement[5], -0.30157705376951366, 1.e-12);
     EXPECT_NEAR(platform_node.displacement[6], -0.3804988542061519, 1.e-12);
+
+    // Verify NetCDF output file exists and contains expected data
+    const std::string output_file = "precession_test.nc";
+    EXPECT_TRUE(std::filesystem::exists(output_file));
+
+    // Read and verify data from NetCDF file
+    util::NetCDFFile file(output_file, false);
+    std::vector<double> displacements(1);
+
+    // Check displacement at step 500, platform node
+    std::vector<size_t> start = {499, platform_node.id};
+    std::vector<size_t> count = {1, 1};
+
+    file.ReadVariableAt("u_x", start, count, displacements.data());
+    EXPECT_NEAR(displacements[0], 0., 1.e-12);
+
+    file.ReadVariableAt("u_y", start, count, displacements.data());
+    EXPECT_NEAR(displacements[0], 0., 1.e-12);
+
+    file.ReadVariableAt("u_z", start, count, displacements.data());
+    EXPECT_NEAR(displacements[0], 0., 1.e-12);
+
+    file.ReadVariableAt("u_w", start, count, displacements.data());
+    EXPECT_NEAR(displacements[0], -0.6305304765029902, 1.e-12);
+
+    file.ReadVariableAt("u_i", start, count, displacements.data());
+    EXPECT_NEAR(displacements[0], 0.6055602536398981, 1.e-12);
+
+    file.ReadVariableAt("u_j", start, count, displacements.data());
+    EXPECT_NEAR(displacements[0], -0.30157705376951366, 1.e-12);
+
+    file.ReadVariableAt("u_k", start, count, displacements.data());
+    EXPECT_NEAR(displacements[0], -0.3804988542061519, 1.e-12);
 
     // Save the current state
     interface.SaveState();
@@ -93,6 +127,8 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[4], 0.31963473392384162, 1.e-12);
     EXPECT_NEAR(platform_node.displacement[5], -0.2758730482813182, 1.e-12);
     EXPECT_NEAR(platform_node.displacement[6], -0.83263383019736148, 1.e-12);
+
+    std::filesystem::remove(output_file);
 }
 
 #ifdef OpenTurbine_ENABLE_VTK
@@ -217,6 +253,7 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
                 },
             },
         },
+        std::string()  // no output file
     });
 
     // Calculate buoyancy force as percentage of gravitational force plus spring forces times
@@ -344,6 +381,7 @@ TEST(CFDInterfaceTest, Restart) {
                 },
             },
         },
+        std::string()  // no output file
     };
 
     auto interface1 = Interface(interface_input);
@@ -386,4 +424,5 @@ TEST(CFDInterfaceTest, Restart) {
 
     std::filesystem::remove("test_restart.dat");
 }
+
 }  // namespace openturbine::tests
