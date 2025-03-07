@@ -21,11 +21,8 @@ install(FILES
         copy_constraints_residual_to_vector.hpp
         copy_constraints_to_sparse_matrix.hpp
         copy_constraints_transpose_to_sparse_matrix.hpp
-        create_b_matrix.hpp
-        create_b_t_matrix.hpp
         create_constraints_matrix_full.hpp
         create_full_matrix.hpp
-        create_k_matrix.hpp
         create_matrix_spadd.hpp
         create_sparse_dense_solver.hpp
         create_system_matrix_full.hpp

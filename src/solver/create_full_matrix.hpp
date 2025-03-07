@@ -5,10 +5,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "create_b_matrix.hpp"
-#include "create_b_t_matrix.hpp"
 #include "create_constraints_matrix_full.hpp"
-#include "create_k_matrix.hpp"
 #include "create_matrix_spadd.hpp"
 #include "create_system_matrix_full.hpp"
 #include "create_transpose_matrix_full.hpp"
@@ -52,37 +49,17 @@ template <typename GlobalCrsMatrixType>
                ), 
                CreateMatrixSpadd<CrsMatrixType, KernelHandle>(
                    CreateMatrixSpadd<CrsMatrixType, KernelHandle>(
-                       CreateSystemMatrixFull(
+                       CreateSystemMatrixFull<CrsMatrixType>(
                            num_system_dofs,
                            num_dofs,
-                           CreateKMatrix<CrsMatrixType>(
-                               num_system_dofs,
-                               node_freedom_allocation_table,
-                               node_freedom_map_table,
-                               num_nodes_per_element,
-                               node_state_indices
-                           )
+                           node_freedom_allocation_table,
+                           node_freedom_map_table,
+                           num_nodes_per_element,
+                           node_state_indices
                        ),
-                       CreateConstraintsMatrixFull(
+                       CreateConstraintsMatrixFull<CrsMatrixType>(
                            num_system_dofs,
                            num_dofs,
-                           CreateBMatrix<CrsMatrixType>(
-                               num_system_dofs,
-                               num_constraint_dofs,
-                               constraint_type,
-                               base_node_freedom_signature,
-                               target_node_freedom_signature,
-                               base_node_freedom_table,
-                               target_node_freedom_table,
-                               row_range
-                           )
-                       )
-                   ),
-                   CreateTransposeMatrixFull(
-                       num_system_dofs,
-                       num_dofs,
-                       CreateBtMatrix<CrsMatrixType>(
-                           num_system_dofs,
                            num_constraint_dofs,
                            constraint_type,
                            base_node_freedom_signature,
@@ -91,6 +68,17 @@ template <typename GlobalCrsMatrixType>
                            target_node_freedom_table,
                            row_range
                        )
+                   ),
+                   CreateTransposeMatrixFull<CrsMatrixType>(
+                       num_system_dofs,
+                       num_dofs,
+                       num_constraint_dofs,
+                       constraint_type,
+                       base_node_freedom_signature,
+                       target_node_freedom_signature,
+                       base_node_freedom_table,
+                       target_node_freedom_table,
+                       row_range
                    )
                )
            );
