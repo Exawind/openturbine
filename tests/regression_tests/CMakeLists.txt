@@ -23,6 +23,12 @@ else()
   set(YAML_CPP_TARGET yaml-cpp)
 endif()
 
+if(TARGET netCDF::netcdf)
+  set(NETCDF_TARGET netCDF::netcdf)
+else()
+  set(NETCDF_TARGET netCDF)
+endif()
+
 target_link_system_libraries(openturbine_regression_tests PRIVATE
   KokkosKernels::kokkoskernels
   Amesos2::amesos2

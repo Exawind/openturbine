@@ -5,6 +5,8 @@ function(openturbine_setup_dependencies)
   find_package(KokkosKernels REQUIRED)
   find_package(Amesos2 REQUIRED)
   find_package(yaml-cpp REQUIRED)
+  find_package(HDF5 REQUIRED)
+  find_package(NetCDF REQUIRED)
 
   #--------------------------------------------------------------------------
   # Optional packages
@@ -35,14 +37,6 @@ function(openturbine_setup_dependencies)
   #----------------------------------------
   if(OpenTurbine_ENABLE_TESTS)
     find_package(GTest REQUIRED)
-  endif()
-
-  #----------------------------------------
-  # NetCDF and HDF5
-  #----------------------------------------
-  if(OpenTurbine_ENABLE_NETCDF_OUTPUTS)
-    find_package(HDF5 REQUIRED)
-    find_package(NetCDF REQUIRED)
   endif()
 
   #--------------------------------------------------------------------------

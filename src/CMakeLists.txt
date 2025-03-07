@@ -36,12 +36,10 @@ endif()
 #----------------------------------------
 # NetCDF
 #----------------------------------------
-if(OpenTurbine_ENABLE_NETCDF_OUTPUTS)
-  if(TARGET netCDF::netcdf)
-    set(NETCDF_TARGET netCDF::netcdf)
-  else()
-    set(NETCDF_TARGET netCDF)
-  endif()
+if(TARGET netCDF::netcdf)
+  set(NETCDF_TARGET netCDF::netcdf)
+else()
+  set(NETCDF_TARGET netCDF)
 endif()
 
 #--------------------------------------------------------------------------

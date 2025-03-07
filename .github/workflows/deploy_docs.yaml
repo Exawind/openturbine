@@ -48,7 +48,7 @@ jobs:
     - name: Build OpenTurbine with documentation
       run: |
         source spack/share/spack/setup-env.sh
-        spack load trilinos yaml-cpp
+        spack load trilinos yaml-cpp netcdf-c
         cd openturbine
         mkdir build
         cd build

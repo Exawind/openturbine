@@ -25,6 +25,12 @@ target_link_libraries(openturbine_unit_tests PRIVATE
   OpenTurbine::openturbine_library
 )
 
+if(TARGET netCDF::netcdf)
+  set(NETCDF_TARGET netCDF::netcdf)
+else()
+  set(NETCDF_TARGET netCDF)
+endif()
+
 target_link_system_libraries(openturbine_unit_tests PRIVATE
   GTest::gtest
   GTest::gtest_main
