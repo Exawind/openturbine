@@ -12,7 +12,7 @@ struct UpdateDynamicPrediction {
     double gamma_prime;
     Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
     Kokkos::View<size_t*> node_freedom_map_table;
-    Kokkos::View<double*>::const_type x_delta;
+    Kokkos::View<double* [1], Kokkos::LayoutLeft>::const_type x_delta;
     Kokkos::View<double* [6]> q_delta;
     Kokkos::View<double* [6]> v;
     Kokkos::View<double* [6]> vd;
@@ -22,7 +22,7 @@ struct UpdateDynamicPrediction {
         const auto num_dof = count_active_dofs(node_freedom_allocation_table(i_node));
         const auto first_dof = node_freedom_map_table(i_node);
         for (auto j = 0U; j < num_dof; ++j) {
-            const auto delta = x_delta(first_dof + j);
+            const auto delta = x_delta(first_dof + j, 0);
             q_delta(i_node, j) += delta / h;
             v(i_node, j) += gamma_prime * delta;
             vd(i_node, j) += beta_prime * delta;

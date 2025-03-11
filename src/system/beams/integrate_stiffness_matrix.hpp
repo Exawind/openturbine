@@ -17,7 +17,7 @@ struct IntegrateStiffnessMatrixElement {
     Kokkos::View<double* [6][6]>::const_type qp_Cuu_;
     Kokkos::View<double* [6][6]>::const_type qp_Ouu_;
     Kokkos::View<double* [6][6]>::const_type qp_Quu_;
-    Kokkos::View<double*** [6][6]> gbl_M_;
+    Kokkos::View<double** [6][6]> gbl_M_;
 
     KOKKOS_FUNCTION
     void operator()(size_t ij_index) const {
@@ -67,12 +67,12 @@ struct IntegrateStiffnessMatrixElement {
         }
         for (auto lane = 0U; lane < width && mask[lane]; ++lane) {
             for (auto m = 0U; m < 6U; ++m) {
-                gbl_M_(i_elem, i_index, j_index + lane, m, 0) = local_M(m, 0)[lane];
-                gbl_M_(i_elem, i_index, j_index + lane, m, 1) = local_M(m, 1)[lane];
-                gbl_M_(i_elem, i_index, j_index + lane, m, 2) = local_M(m, 2)[lane];
-                gbl_M_(i_elem, i_index, j_index + lane, m, 3) = local_M(m, 3)[lane];
-                gbl_M_(i_elem, i_index, j_index + lane, m, 4) = local_M(m, 4)[lane];
-                gbl_M_(i_elem, i_index, j_index + lane, m, 5) = local_M(m, 5)[lane];
+                gbl_M_(i_index, j_index + lane, m, 0) = local_M(m, 0)[lane];
+                gbl_M_(i_index, j_index + lane, m, 1) = local_M(m, 1)[lane];
+                gbl_M_(i_index, j_index + lane, m, 2) = local_M(m, 2)[lane];
+                gbl_M_(i_index, j_index + lane, m, 3) = local_M(m, 3)[lane];
+                gbl_M_(i_index, j_index + lane, m, 4) = local_M(m, 4)[lane];
+                gbl_M_(i_index, j_index + lane, m, 5) = local_M(m, 5)[lane];
             }
         }
     }

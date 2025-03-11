@@ -34,8 +34,6 @@ struct Constraints {
 
     // DOF management
     Kokkos::View<Kokkos::pair<size_t, size_t>*> row_range;
-    Kokkos::View<Kokkos::pair<size_t, size_t>*> base_node_col_range;
-    Kokkos::View<Kokkos::pair<size_t, size_t>*> target_node_col_range;
     Kokkos::View<FreedomSignature*> base_node_freedom_signature;
     Kokkos::View<FreedomSignature*> target_node_freedom_signature;
     Kokkos::View<size_t* [6]> base_node_freedom_table;
@@ -48,7 +46,7 @@ struct Constraints {
     // State variables
     Kokkos::View<double* [7]> input;   //< Current state input
     Kokkos::View<double* [3]> output;  //< Current state output
-    Kokkos::View<double*> lambda;      //< Lagrange multipliers
+    Kokkos::View<double* [6]> lambda;
 
     // Host mirrors for CPU access
     Kokkos::View<double* [7]>::HostMirror host_input;
@@ -56,9 +54,13 @@ struct Constraints {
 
     // System contributions
     Kokkos::View<double* [6]> residual_terms;
+    Kokkos::View<double* [6]> base_lambda_residual_terms;
+    Kokkos::View<double* [6]> target_lambda_residual_terms;
     Kokkos::View<double* [6]> system_residual_terms;
     Kokkos::View<double* [6][6]> base_gradient_terms;
     Kokkos::View<double* [6][6]> target_gradient_terms;
+    Kokkos::View<double* [6][6]> base_gradient_transpose_terms;
+    Kokkos::View<double* [6][6]> target_gradient_transpose_terms;
 
     explicit Constraints(const std::vector<Constraint>& constraints, const std::vector<Node>& nodes)
         : num_constraints{constraints.size()},
@@ -73,8 +75,6 @@ struct Constraints {
           base_node_index("base_node_index", num_constraints),
           target_node_index("target_node_index", num_constraints),
           row_range("row_range", num_constraints),
-          base_node_col_range("base_row_col_range", num_constraints),
-          target_node_col_range("target_row_col_range", num_constraints),
           base_node_freedom_signature("base_node_freedom_signature", num_constraints),
           target_node_freedom_signature("target_node_freedom_signature", num_constraints),
           base_node_freedom_table("base_node_freedom_table", num_constraints),
@@ -83,17 +83,19 @@ struct Constraints {
           axes("axes", num_constraints),
           input("inputs", num_constraints),
           output("outputs", num_constraints),
-          lambda("lambda", num_dofs),
+          lambda("lambda", num_constraints),
           host_input("host_input", num_constraints),
           host_output("host_output", num_constraints),
           residual_terms("residual_terms", num_constraints),
+          base_lambda_residual_terms("base_lambda_residual_terms", num_constraints),
+          target_lambda_residual_terms("target_lambda_residual_terms", num_constraints),
           system_residual_terms("system_residual_terms", num_constraints),
           base_gradient_terms("base_gradient_terms", num_constraints),
-          target_gradient_terms("target_gradient_terms", num_constraints) {
+          target_gradient_terms("target_gradient_terms", num_constraints),
+          base_gradient_transpose_terms("base_gradient_transpose_terms", num_constraints),
+          target_gradient_transpose_terms("target_gradient_transpose_terms", num_constraints) {
         auto host_type = Kokkos::create_mirror(type);
         auto host_row_range = Kokkos::create_mirror(row_range);
-        auto host_base_node_col_range = Kokkos::create_mirror(base_node_col_range);
-        auto host_target_node_col_range = Kokkos::create_mirror(target_node_col_range);
         auto host_base_node_index = Kokkos::create_mirror(base_node_index);
         auto host_target_node_index = Kokkos::create_mirror(target_node_index);
         auto host_base_freedom = Kokkos::create_mirror(base_node_freedom_signature);
@@ -139,20 +141,6 @@ struct Constraints {
             host_row_range(i) = Kokkos::make_pair(start_row, start_row + n_rows);
             start_row += n_rows;
 
-            // Set constraint columns
-            const auto num_cols = NumColsForConstraint(host_type(i));
-            const auto num_target_cols = num_cols - 6U;  // number of target node columns
-            if (num_cols <= 6U) {
-                host_base_node_col_range(i) = Kokkos::make_pair(0U, 0U);
-                host_target_node_col_range(i) = Kokkos::make_pair(0U, num_cols);
-            } else if (target_node_id < base_node_id) {
-                host_target_node_col_range(i) = Kokkos::make_pair(0U, num_target_cols);
-                host_base_node_col_range(i) = Kokkos::make_pair(num_target_cols, num_cols);
-            } else {
-                host_base_node_col_range(i) = Kokkos::make_pair(0U, 6U);
-                host_target_node_col_range(i) = Kokkos::make_pair(6U, num_cols);
-            }
-
             // Calculate initial relative position (X0)
             const auto x0 = CalculateX0(c, nodes[target_node_id], nodes[base_node_id]);
             for (size_t j = 0; j < 3; ++j) {
@@ -170,8 +158,6 @@ struct Constraints {
 
         Kokkos::deep_copy(type, host_type);
         Kokkos::deep_copy(row_range, host_row_range);
-        Kokkos::deep_copy(base_node_col_range, host_base_node_col_range);
-        Kokkos::deep_copy(target_node_col_range, host_target_node_col_range);
         Kokkos::deep_copy(base_node_index, host_base_node_index);
         Kokkos::deep_copy(target_node_index, host_target_node_index);
         Kokkos::deep_copy(base_node_freedom_signature, host_base_freedom);

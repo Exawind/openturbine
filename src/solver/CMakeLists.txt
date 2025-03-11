@@ -8,36 +8,27 @@ install(FILES
         compute_k_row_ptrs.hpp
         compute_number_of_non_zeros_constraints.hpp
         compute_num_system_dofs.hpp
-        compute_t_col_inds.hpp
-        compute_t_num_non_zero.hpp
-        compute_t_row_ptrs.hpp
         condition_system.hpp
         contribute_beams_to_sparse_matrix.hpp
         contribute_beams_to_vector.hpp
         contribute_constraints_system_residual_to_vector.hpp
-        contribute_elements_to_sparse_matrix.hpp
-        contribute_elements_to_vector.hpp
         contribute_forces_to_vector.hpp
+        contribute_lambda_to_vector.hpp
         contribute_masses_to_sparse_matrix.hpp
         contribute_masses_to_vector.hpp
         contribute_springs_to_sparse_matrix.hpp
         contribute_springs_to_vector.hpp
         copy_constraints_residual_to_vector.hpp
         copy_constraints_to_sparse_matrix.hpp
-        copy_into_sparse_matrix.hpp
-        copy_into_sparse_matrix_transpose.hpp
-        copy_sparse_values_to_transpose.hpp
-        copy_tangent_to_sparse_matrix.hpp
+        copy_constraints_transpose_to_sparse_matrix.hpp
         create_b_matrix.hpp
         create_b_t_matrix.hpp
         create_constraints_matrix_full.hpp
-        create_global_matrix.hpp
+        create_full_matrix.hpp
         create_k_matrix.hpp
         create_matrix_spadd.hpp
-        create_matrix_spgemm.hpp
         create_sparse_dense_solver.hpp
         create_system_matrix_full.hpp
-        create_t_matrix.hpp
         create_transpose_matrix_full.hpp
         fill_unshifted_row_ptrs.hpp
         populate_sparse_row_ptrs_col_inds_constraints.hpp

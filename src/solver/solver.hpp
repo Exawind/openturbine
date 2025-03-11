@@ -10,18 +10,8 @@
 
 #include "compute_num_system_dofs.hpp"
 #include "constraints/constraint_type.hpp"
-#include "create_b_matrix.hpp"
-#include "create_b_t_matrix.hpp"
-#include "create_constraints_matrix_full.hpp"
-#include "create_global_matrix.hpp"
-#include "create_k_matrix.hpp"
-#include "create_matrix_spadd.hpp"
-#include "create_matrix_spgemm.hpp"
+#include "create_full_matrix.hpp"
 #include "create_sparse_dense_solver.hpp"
-#include "create_system_matrix_full.hpp"
-#include "create_t_matrix.hpp"
-#include "create_transpose_matrix_full.hpp"
-#include "fill_unshifted_row_ptrs.hpp"
 
 namespace openturbine {
 
@@ -52,29 +42,9 @@ struct Solver {
     size_t num_system_dofs;   //< Number of system degrees of freedom
     size_t num_dofs;          //< Number of degrees of freedom
 
-    KernelHandle system_spgemm_handle;
-    KernelHandle constraints_spgemm_handle;
-    KernelHandle system_spadd_handle;
-    KernelHandle spc_spadd_handle;
-    KernelHandle full_system_spadd_handle;
-
-    CrsMatrixType K;                           //< Stiffness matrix
-    CrsMatrixType T;                           //< Tangent operator
-    CrsMatrixType B;                           //< Constraints matrix
-    CrsMatrixType B_t;                         //< Transpose of constraints matrix
-    CrsMatrixType static_system_matrix;        //< Static system matrix
-    CrsMatrixType system_matrix;               //< System matrix
-    CrsMatrixType constraints_matrix;          //< Constraints matrix
-    CrsMatrixType system_matrix_full;          //< System matrix with constraints
-    CrsMatrixType constraints_matrix_full;     //< Constraints matrix with system
-    CrsMatrixType transpose_matrix_full;       //< Transpose of system matrix with constraints
-    CrsMatrixType system_plus_constraints;     //< System matrix with constraints
-    CrsMatrixType full_matrix;                 //< Full system matrix
-    Teuchos::RCP<GlobalCrsMatrixType> A;       //< System matrix
-    Teuchos::RCP<GlobalMultiVectorType> b;     //< System RHS
-    Teuchos::RCP<GlobalMultiVectorType> x_mv;  //< System solution
-    Kokkos::View<double*> R;                   //< System residual vector
-    Kokkos::View<double*> x;                   //< System solution vector
+    Teuchos::RCP<GlobalCrsMatrixType> A;    //< System matrix
+    Teuchos::RCP<GlobalMultiVectorType> b;  //< System RHS
+    Teuchos::RCP<GlobalMultiVectorType> x;  //< System solution
 
     std::vector<double> convergence_err;
 
@@ -89,13 +59,13 @@ struct Solver {
      * @param node_state_indices View containing element-to-node connectivity
      * @param num_constraint_dofs Number of constraint degrees of freedom
      * @param constraint_type View containing the type of each constraint
+     * @param base_node_freedom_signature View containing the base node freedom signature of the
+     * constraints
+     * @param target_node_freedom_signature View containing the target node freedom signature of the
+     * constraints
      * @param constraint_base_node_freedom_table View containing base node DOFs for constraints
      * @param constraint_target_node_freedom_table View containing target node DOFs for constraints
      * @param constraint_row_range View containing row ranges for each constraint
-     * @param constraint_base_node_col_range View containing col ranges for base node of each
-     * constraint
-     * @param constraint_target_node_col_range View containing col ranges for target node of each
-     * constraint
      */
     Solver(
         const Kokkos::View<size_t*>::const_type& node_IDs,
@@ -104,55 +74,25 @@ struct Solver {
         const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
         const Kokkos::View<size_t**>::const_type& node_state_indices, size_t num_constraint_dofs,
         const Kokkos::View<ConstraintType*>::const_type& constraint_type,
+        const Kokkos::View<FreedomSignature*>::const_type& base_node_freedom_signature,
+        const Kokkos::View<FreedomSignature*>::const_type& target_node_freedom_signature,
         const Kokkos::View<size_t* [6]>::const_type& constraint_base_node_freedom_table,
         const Kokkos::View<size_t* [6]>::const_type& constraint_target_node_freedom_table,
-        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range,
-        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type&
-            constraint_base_node_col_range,
-        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type&
-            constraint_target_node_col_range
+        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
     )
         : num_system_nodes(node_IDs.extent(0)),
           num_system_dofs(ComputeNumSystemDofs(node_freedom_allocation_table)),
           num_dofs(num_system_dofs + num_constraint_dofs),
-          K(CreateKMatrix<CrsMatrixType>(
-              num_system_dofs, node_freedom_allocation_table, node_freedom_map_table,
+          A(CreateFullMatrix<GlobalCrsMatrixType>(
+              num_system_dofs, num_dofs, num_constraint_dofs, constraint_type,
+              base_node_freedom_signature, target_node_freedom_signature,
+              constraint_base_node_freedom_table, constraint_target_node_freedom_table,
+              constraint_row_range, node_freedom_allocation_table, node_freedom_map_table,
               num_nodes_per_element, node_state_indices
           )),
-          T(CreateTMatrix<CrsMatrixType>(
-              num_system_dofs, node_freedom_allocation_table, node_freedom_map_table
-          )),
-          B(CreateBMatrix<CrsMatrixType>(
-              num_system_dofs, num_constraint_dofs, constraint_type,
-              constraint_base_node_freedom_table, constraint_target_node_freedom_table,
-              constraint_row_range, constraint_base_node_col_range, constraint_target_node_col_range
-          )),
-          B_t(CreateBtMatrix<CrsMatrixType>(
-              num_system_dofs, num_constraint_dofs, constraint_type,
-              constraint_base_node_freedom_table, constraint_target_node_freedom_table,
-              constraint_row_range, constraint_base_node_col_range, constraint_target_node_col_range
-          )),
-          static_system_matrix(CreateMatrixSpgemm(K, T, system_spgemm_handle)),
-          system_matrix(CreateMatrixSpadd(K, static_system_matrix, system_spadd_handle)),
-          constraints_matrix(CreateMatrixSpgemm(B, T, constraints_spgemm_handle)),
-          system_matrix_full(CreateSystemMatrixFull(num_system_dofs, num_dofs, system_matrix)),
-          constraints_matrix_full(
-              CreateConstraintsMatrixFull(num_system_dofs, num_dofs, constraints_matrix)
-          ),
-          transpose_matrix_full(CreateTransposeMatrixFull(num_system_dofs, num_dofs, B_t)),
-          system_plus_constraints(
-              CreateMatrixSpadd(system_matrix_full, constraints_matrix_full, spc_spadd_handle)
-          ),
-          full_matrix(CreateMatrixSpadd(
-              system_plus_constraints, transpose_matrix_full, full_system_spadd_handle
-          )),
-          A(CreateGlobalMatrix<GlobalCrsMatrixType, GlobalMultiVectorType>(full_matrix)),
           b(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getRangeMap(), 1)),
-          x_mv(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),
-          R("R", num_dofs),
-          x("x", num_dofs),
-          amesos_solver(
-              CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x_mv, b)
+          x(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),
+          amesos_solver(CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x, b)
           ) {}
 
     // cppcheck-suppress missingMemberCopy
@@ -160,32 +100,11 @@ struct Solver {
         : num_system_nodes(other.num_system_nodes),
           num_system_dofs(other.num_system_dofs),
           num_dofs(other.num_dofs),
-          K("K", other.K),
-          T("T", other.T),
-          B("B", other.B),
-          B_t("B_t", other.B_t),
-          static_system_matrix(CreateMatrixSpgemm(K, T, system_spgemm_handle)),
-          system_matrix(CreateMatrixSpadd(K, static_system_matrix, system_spadd_handle)),
-          constraints_matrix(CreateMatrixSpgemm(B, T, constraints_spgemm_handle)),
-          system_matrix_full(CreateSystemMatrixFull(num_system_dofs, num_dofs, system_matrix)),
-          constraints_matrix_full(
-              CreateConstraintsMatrixFull(num_system_dofs, num_dofs, constraints_matrix)
-          ),
-          transpose_matrix_full(CreateTransposeMatrixFull(num_system_dofs, num_dofs, B_t)),
-          system_plus_constraints(
-              CreateMatrixSpadd(system_matrix_full, constraints_matrix_full, spc_spadd_handle)
-          ),
-          full_matrix(CreateMatrixSpadd(
-              system_plus_constraints, transpose_matrix_full, full_system_spadd_handle
-          )),
-          A(CreateGlobalMatrix<GlobalCrsMatrixType, GlobalMultiVectorType>(full_matrix)),
-          b(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getRangeMap(), 1)),
-          x_mv(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),
-          R("R", num_dofs),
-          x("x", num_dofs),
+          A(other.A),
+          b(other.b),
+          x(other.x),
           convergence_err(other.convergence_err),
-          amesos_solver(
-              CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x_mv, b)
+          amesos_solver(CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x, b)
           ) {}
 
     Solver(Solver&& other) noexcept = delete;
@@ -200,33 +119,10 @@ struct Solver {
         std::swap(num_system_nodes, tmp.num_system_nodes);
         std::swap(num_system_dofs, tmp.num_system_dofs);
         std::swap(num_dofs, tmp.num_dofs);
-
-        std::swap(system_spgemm_handle, tmp.system_spgemm_handle);
-        std::swap(constraints_spgemm_handle, tmp.constraints_spgemm_handle);
-        std::swap(system_spadd_handle, tmp.system_spadd_handle);
-        std::swap(spc_spadd_handle, tmp.spc_spadd_handle);
-        std::swap(full_system_spadd_handle, tmp.full_system_spadd_handle);
-
-        std::swap(K, tmp.K);
-        std::swap(T, tmp.T);
-        std::swap(B, tmp.B);
-        std::swap(B_t, tmp.B_t);
-        std::swap(static_system_matrix, tmp.static_system_matrix);
-        std::swap(system_matrix, tmp.system_matrix);
-        std::swap(constraints_matrix, tmp.constraints_matrix);
-        std::swap(system_matrix_full, tmp.system_matrix_full);
-        std::swap(constraints_matrix_full, tmp.constraints_matrix_full);
-        std::swap(transpose_matrix_full, tmp.transpose_matrix_full);
-        std::swap(system_plus_constraints, tmp.system_plus_constraints);
-        std::swap(full_matrix, tmp.full_matrix);
         std::swap(A, tmp.A);
         std::swap(b, tmp.b);
-        std::swap(x_mv, tmp.x_mv);
-        std::swap(R, tmp.R);
         std::swap(x, tmp.x);
-
         std::swap(convergence_err, tmp.convergence_err);
-
         std::swap(amesos_solver, tmp.amesos_solver);
         return *this;
     }

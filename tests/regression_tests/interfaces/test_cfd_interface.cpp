@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "interfaces/cfd/interface.hpp"
+#include "interfaces/cfd/interface_builder.hpp"
 #include "regression/test_utilities.hpp"
 #include "viz/vtk_lines.hpp"
 
@@ -10,30 +11,18 @@ using namespace openturbine::cfd;
 
 TEST(CFDInterfaceTest, PrecessionTest) {
     // Create cfd interface
-    Interface interface(InterfaceInput{
-        {{0., 0., 0.}},  // gravity
-        0.01,            // time step
-        1.,              // rho infinity (numerical damping)
-        5,               // max convergence iterations
-        TurbineInput{
-            FloatingPlatformInput{
-                true,                          // enable
-                {0., 0., 0., 1., 0., 0., 0.},  // position
-                {0., 0., 0., 0.5, 0.5, 1.0},   // velocity
-                {0., 0., 0., 0., 0., 0.},      // acceleration
-                {{
-                    {1., 0., 0., 0., 0., 0.},   //
-                    {0., 1., 0., 0., 0., 0.},   //
-                    {0., 0., 1., 0., 0., 0.},   //
-                    {0., 0., 0., 1., 0., 0.},   //
-                    {0., 0., 0., 0., 1., 0.},   //
-                    {0., 0., 0., 0., 0., 0.5},  //
-                }},                             // platform mass matrix
-                {},                             // no mooring lines
-            },
-        },
-        std::string("precession_test.nc")
-    });
+    constexpr auto mass_matrix =
+        std::array{std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
+                   std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
+                   std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., .5}};
+    auto interface = InterfaceBuilder{}
+                         .SetTimeStep(0.01)
+                         .SetDampingFactor(1.)
+                         .SetMaximumNonlinearIterations(5U)
+                         .EnableFloatingPlatform(true)
+                         .SetFloatingPlatformVelocity({0., 0., 0., 0.5, 0.5, 1.})
+                         .SetFloatingPlatformMassMatrix(mass_matrix)
+                         .Build();
 
     // Create reference to platform node in interface
     auto& platform_node = interface.turbine.floating_platform.node;
@@ -184,7 +173,6 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     constexpr auto platform_mass{1.419625E+7};                           // kg
     constexpr Array_3 gravity{0., 0., -9.8124};                          // m/s/s
     constexpr Array_3 platform_moi{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
-    constexpr Array_3 platform_cm_position{0., 0., -7.53};               // m
     constexpr Array_6x6 platform_mass_matrix{{
         {platform_mass, 0., 0., 0., 0., 0.},    // Row 1
         {0., platform_mass, 0., 0., 0., 0.},    // Row 2
@@ -199,62 +187,28 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     constexpr auto mooring_line_initial_length{55.432};  // m
 
     // Create cfd interface
-    Interface interface(InterfaceInput{
-        gravity,
-        time_step,  // time step
-        rho_inf,    // rho infinity (numerical damping)
-        max_iter,   // max convergence iterations
-        TurbineInput{
-            FloatingPlatformInput{
-                true,  // enable
-                {
-                    platform_cm_position[0],
-                    platform_cm_position[1],
-                    platform_cm_position[2],
-                    1.,
-                    0.,
-                    0.,
-                    0.,
-                },                         // position
-                {0., 0., 0., 0., 0., 0.},  // velocity
-                {0., 0., 0., 0., 0., 0.},  // acceleration
-                platform_mass_matrix,
-                {
-                    {
-                        mooring_line_stiffness,
-                        mooring_line_initial_length,
-                        {-40.87, 0.0, -14.},    // Fairlead node coordinates
-                        {0., 0., 0.},           // Fairlead node velocity
-                        {0., 0., 0.},           // Fairlead node acceleration
-                        {-105.47, 0.0, -58.4},  // Anchor node coordinates
-                        {0., 0., 0.},           // Anchor node velocity
-                        {0., 0., 0.},           // Anchor node acceleration
-                    },
-                    {
-                        mooring_line_stiffness,
-                        mooring_line_initial_length,
-                        {20.43, -35.39, -14.},   // Fairlead node coordinates
-                        {0., 0., 0.},            // Fairlead node velocity
-                        {0., 0., 0.},            // Fairlead node acceleration
-                        {52.73, -91.34, -58.4},  // Anchor node coordinates
-                        {0., 0., 0.},            // Anchor node velocity
-                        {0., 0., 0.},            // Anchor node acceleration
-                    },
-                    {
-                        mooring_line_stiffness,
-                        mooring_line_initial_length,
-                        {20.43, 35.39, -14.},   // Fairlead node coordinates
-                        {0., 0., 0.},           // Fairlead node velocity
-                        {0., 0., 0.},           // Fairlead node acceleration
-                        {52.73, 91.34, -58.4},  // Anchor node coordinates
-                        {0., 0., 0.},           // Anchor node velocity
-                        {0., 0., 0.},           // Anchor node acceleration
-                    },
-                },
-            },
-        },
-        std::string()  // no output file
-    });
+    auto interface = InterfaceBuilder{}
+                         .SetGravity(gravity)
+                         .SetTimeStep(time_step)
+                         .SetDampingFactor(rho_inf)
+                         .SetMaximumNonlinearIterations(max_iter)
+                         .EnableFloatingPlatform(true)
+                         .SetFloatingPlatformPosition({0., 0., -7.53, 1., 0., 0., 0.})
+                         .SetFloatingPlatformMassMatrix(platform_mass_matrix)
+                         .SetNumberOfMooringLines(3)
+                         .SetMooringLineStiffness(0, mooring_line_stiffness)
+                         .SetMooringLineUndeformedLength(0, mooring_line_initial_length)
+                         .SetMooringLineFairleadPosition(0, {-40.87, 0.0, -14.})
+                         .SetMooringLineAnchorPosition(0, {-105.47, 0.0, -58.4})
+                         .SetMooringLineStiffness(1, mooring_line_stiffness)
+                         .SetMooringLineUndeformedLength(1, mooring_line_initial_length)
+                         .SetMooringLineFairleadPosition(1, {20.43, -35.39, -14.})
+                         .SetMooringLineAnchorPosition(1, {52.73, -91.34, -58.4})
+                         .SetMooringLineStiffness(2, mooring_line_stiffness)
+                         .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
+                         .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
+                         .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4})
+                         .Build();
 
     // Calculate buoyancy force as percentage of gravitational force plus spring forces times
     const auto initial_spring_force = 1907514.4912628897;
@@ -313,7 +267,6 @@ TEST(CFDInterfaceTest, Restart) {
     constexpr auto platform_mass{1.419625E+7};                           // kg
     constexpr Array_3 gravity{0., 0., -9.8124};                          // m/s/s
     constexpr Array_3 platform_moi{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
-    constexpr Array_3 platform_cm_position{0., 0., -7.53};               // m
     constexpr Array_6x6 platform_mass_matrix{{
         {platform_mass, 0., 0., 0., 0., 0.},    // Row 1
         {0., platform_mass, 0., 0., 0., 0.},    // Row 2
@@ -327,64 +280,30 @@ TEST(CFDInterfaceTest, Restart) {
     constexpr auto mooring_line_stiffness{48.9e3};       // N
     constexpr auto mooring_line_initial_length{55.432};  // m
 
-    auto interface_input = InterfaceInput{
-        gravity,
-        time_step,  // time step
-        rho_inf,    // rho infinity (numerical damping)
-        max_iter,   // max convergence iterations
-        TurbineInput{
-            FloatingPlatformInput{
-                true,  // enable
-                {
-                    platform_cm_position[0],
-                    platform_cm_position[1],
-                    platform_cm_position[2],
-                    1.,
-                    0.,
-                    0.,
-                    0.,
-                },                         // position
-                {0., 0., 0., 0., 0., 0.},  // velocity
-                {0., 0., 0., 0., 0., 0.},  // acceleration
-                platform_mass_matrix,
-                {
-                    {
-                        mooring_line_stiffness,
-                        mooring_line_initial_length,
-                        {-40.87, 0.0, -14.},    // Fairlead node coordinates
-                        {0., 0., 0.},           // Fairlead node velocity
-                        {0., 0., 0.},           // Fairlead node acceleration
-                        {-105.47, 0.0, -58.4},  // Anchor node coordinates
-                        {0., 0., 0.},           // Anchor node velocity
-                        {0., 0., 0.},           // Anchor node acceleration
-                    },
-                    {
-                        mooring_line_stiffness,
-                        mooring_line_initial_length,
-                        {20.43, -35.39, -14.},   // Fairlead node coordinates
-                        {0., 0., 0.},            // Fairlead node velocity
-                        {0., 0., 0.},            // Fairlead node acceleration
-                        {52.73, -91.34, -58.4},  // Anchor node coordinates
-                        {0., 0., 0.},            // Anchor node velocity
-                        {0., 0., 0.},            // Anchor node acceleration
-                    },
-                    {
-                        mooring_line_stiffness,
-                        mooring_line_initial_length,
-                        {20.43, 35.39, -14.},   // Fairlead node coordinates
-                        {0., 0., 0.},           // Fairlead node velocity
-                        {0., 0., 0.},           // Fairlead node acceleration
-                        {52.73, 91.34, -58.4},  // Anchor node coordinates
-                        {0., 0., 0.},           // Anchor node velocity
-                        {0., 0., 0.},           // Anchor node acceleration
-                    },
-                },
-            },
-        },
-        std::string()  // no output file
-    };
+    auto builder = InterfaceBuilder{}
+                       .SetGravity(gravity)
+                       .SetTimeStep(time_step)
+                       .SetDampingFactor(rho_inf)
+                       .SetMaximumNonlinearIterations(max_iter)
+                       .EnableFloatingPlatform(true)
+                       .SetFloatingPlatformPosition({0., 0., -7.53, 1., 0., 0., 0.})
+                       .SetFloatingPlatformMassMatrix(platform_mass_matrix)
+                       .SetNumberOfMooringLines(3)
+                       .SetMooringLineStiffness(0, mooring_line_stiffness)
+                       .SetMooringLineUndeformedLength(0, mooring_line_initial_length)
+                       .SetMooringLineFairleadPosition(0, {-40.87, 0.0, -14.})
+                       .SetMooringLineAnchorPosition(0, {-105.47, 0.0, -58.4})
+                       .SetMooringLineStiffness(1, mooring_line_stiffness)
+                       .SetMooringLineUndeformedLength(1, mooring_line_initial_length)
+                       .SetMooringLineFairleadPosition(1, {20.43, -35.39, -14.})
+                       .SetMooringLineAnchorPosition(1, {52.73, -91.34, -58.4})
+                       .SetMooringLineStiffness(2, mooring_line_stiffness)
+                       .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
+                       .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
+                       .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4});
 
-    auto interface1 = Interface(interface_input);
+    auto interface1 = builder.Build();
+    ;
 
     // Take 10 initial steps
     for (auto i = 0U; i < 100U; ++i) {
@@ -404,7 +323,7 @@ TEST(CFDInterfaceTest, Restart) {
         EXPECT_TRUE(converged);
     }
 
-    auto interface2 = Interface(interface_input);
+    auto interface2 = builder.Build();
     interface2.ReadRestart("test_restart.dat");
 
     // Take 10 steps using restarted system

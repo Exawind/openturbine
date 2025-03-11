@@ -21,7 +21,7 @@ struct FloatingPlatformInput {
     std::array<double, 6> acceleration{0., 0., 0., 0., 0., 0.};
 
     /// Platform point mass matrix
-    std::array<std::array<double, 6>, 6> mass_matrix;
+    std::array<std::array<double, 6>, 6> mass_matrix{};
 
     /// Mooring line array
     std::vector<MooringLineInput> mooring_lines;

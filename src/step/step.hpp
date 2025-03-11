@@ -8,13 +8,13 @@
 #include "assemble_constraints_residual.hpp"
 #include "assemble_system_matrix.hpp"
 #include "assemble_system_residual.hpp"
-#include "assemble_tangent_operator.hpp"
 #include "calculate_convergence_error.hpp"
 #include "constraints/calculate_constraint_output.hpp"
 #include "constraints/constraints.hpp"
 #include "elements/elements.hpp"
 #include "predict_next_state.hpp"
 #include "reset_constraints.hpp"
+#include "reset_solver.hpp"
 #include "solve_system.hpp"
 #include "solver/solver.hpp"
 #include "state/state.hpp"
@@ -55,16 +55,15 @@ inline bool Step(
         if (iter >= parameters.max_iter) {
             return false;
         }
-
-        UpdateSystemVariables(parameters, elements, state);
+        ResetSolver(solver);
 
         UpdateTangentOperator(parameters, state);
 
-        AssembleTangentOperator(solver, state);
+        UpdateSystemVariables(parameters, elements, state);
 
         AssembleSystemResidual(solver, elements, state);
 
-        AssembleSystemMatrix(solver, elements);
+        AssembleSystemMatrix(parameters, solver, elements);
 
         UpdateConstraintVariables(state, constraints);
 

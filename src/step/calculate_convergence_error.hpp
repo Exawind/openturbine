@@ -17,6 +17,7 @@ inline double CalculateConvergenceError(
     const Constraints& constraints
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Calculate Convergence Error");
+    const auto x = solver.x->getLocalViewDevice(Tpetra::Access::ReadOnly);
     double sum_error_squared = 0.;
     Kokkos::parallel_reduce(
         solver.num_system_nodes,
@@ -27,18 +28,19 @@ inline double CalculateConvergenceError(
             state.node_freedom_allocation_table,
             state.node_freedom_map_table,
             state.q_delta,
-            solver.x,
+            x,
         },
         sum_error_squared
     );
     Kokkos::parallel_reduce(
-        constraints.num_dofs,
+        constraints.num_constraints,
         CalculateConstraintsErrorSumSquares{
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,
             solver.num_system_dofs,
+            constraints.row_range,
             constraints.lambda,
-            solver.x,
+            x,
         },
         sum_error_squared
     );

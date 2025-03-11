@@ -45,11 +45,11 @@ static const size_t InvalidNodeID(0U);
         elements.NodeStateIndices(),
         constraints.num_dofs,
         constraints.type,
+        constraints.base_node_freedom_signature,
+        constraints.target_node_freedom_signature,
         constraints.base_node_freedom_table,
         constraints.target_node_freedom_table,
         constraints.row_range,
-        constraints.base_node_col_range,
-        constraints.target_node_col_range,
     };
 }
 
