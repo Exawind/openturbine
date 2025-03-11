@@ -189,7 +189,6 @@ Interface::Interface(const InterfaceInput& input)
       host_state_q("host_state_q", state.num_system_nodes),
       host_state_v("host_state_v", state.num_system_nodes),
       host_state_vd("host_state_vd", state.num_system_nodes),
-      current_timestep_(0),
       output_writer_(nullptr) {
     // Copy state motion members from device to host
     Kokkos::deep_copy(this->host_state_x, this->state.x);
@@ -286,7 +285,7 @@ void Interface::RestoreState() {
 //------------------------------------------------------------------------------
 // Write outputs
 //------------------------------------------------------------------------------
-void Interface::WriteOutputs() {
+void Interface::WriteOutputs() const {
     const size_t num_nodes = state.num_system_nodes;
     std::vector<double> x(num_nodes);
     std::vector<double> y(num_nodes);

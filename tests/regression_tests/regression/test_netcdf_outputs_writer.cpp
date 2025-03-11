@@ -83,18 +83,18 @@ TEST(NetCDFOutputsWriterTest, SpringMassSystemOutputs) {
     EXPECT_TRUE(std::filesystem::exists(output_file));
 
     // Verify netcdf output data
-    util::NetCDFFile file(output_file, false);
+    const util::NetCDFFile file(output_file, false);
     std::vector<double> x_displacements(2);
 
     // Check displacement at T/2
-    std::vector<size_t> start_t_half = {num_steps / 2, 0};
-    std::vector<size_t> count = {1, 2};
+    const std::vector<size_t> start_t_half = {num_steps / 2, 0};
+    const std::vector<size_t> count = {1, 2};
     file.ReadVariableAt("u_x", start_t_half, count, x_displacements.data());
     EXPECT_EQ(x_displacements[0], 0.);                             // First node is fixed
     EXPECT_NEAR(x_displacements[1], -3.9999199193098396, 1.e-12);  // Second node at T/2
 
     // Check displacement at T
-    std::vector<size_t> start_t = {num_steps, 0};
+    const std::vector<size_t> start_t = {num_steps, 0};
     file.ReadVariableAt("u_x", start_t, count, x_displacements.data());
     EXPECT_EQ(x_displacements[0], 0.);  // First node is fixed
     EXPECT_NEAR(x_displacements[1], -8.1226588438437419e-05, 1.e-12);

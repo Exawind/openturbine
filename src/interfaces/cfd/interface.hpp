@@ -29,7 +29,7 @@ public:
     void ReadRestart(const std::filesystem::path& filename);
 
     /// @brief Write current state to output file if configured
-    void WriteOutputs();
+    void WriteOutputs() const;
 
     /// @brief  OpenTurbine class used for model construction
     Model model;
@@ -61,7 +61,7 @@ public:
     Kokkos::View<double* [6]>::HostMirror host_state_vd;
 
     /// @brief Current timestep index
-    size_t current_timestep_;
+    size_t current_timestep_{0};
 
     /// @brief Optional NetCDF output writer
     std::unique_ptr<util::NodeStateWriter> output_writer_;

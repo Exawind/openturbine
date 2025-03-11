@@ -27,7 +27,7 @@ public:
      * This constructor creates a new NetCDF file if the create flag is true.
      * Otherwise, it opens an existing NetCDF file.
      */
-    explicit NetCDFFile(const std::string& file_path, bool create = true) : netcdf_id_(-1) {
+    explicit NetCDFFile(const std::string& file_path, bool create = true) {
         if (create) {
             check_netCDF_error(
                 nc_create(file_path.c_str(), NC_CLOBBER | NC_NETCDF4, &netcdf_id_),
@@ -71,7 +71,7 @@ public:
      * This function is a wrapper around the NetCDF library's "nc_def_dim" function.
      * It creates a new dimension with the given name and length in the NetCDF file.
      */
-    int AddDimension(const std::string& name, size_t length) {
+    [[nodiscard]] int AddDimension(const std::string& name, size_t length) const {
         int dim_id{-1};
         check_netCDF_error(
             nc_def_dim(netcdf_id_, name.c_str(), length, &dim_id),
@@ -88,7 +88,7 @@ public:
      * The NetCDF type is automatically determined from the template parameter.
      */
     template <typename T>
-    int AddVariable(const std::string& name, const std::vector<int>& dim_ids) {
+    [[nodiscard]] int AddVariable(const std::string& name, const std::vector<int>& dim_ids) const {
         int var_id{-1};
         check_netCDF_error(
             nc_def_var(
@@ -107,8 +107,9 @@ public:
      * functions. It adds an attribute (e.g. metadata) to a variable in the NetCDF file.
      */
     template <typename T>
-    void AddAttribute(const std::string& var_name, const std::string& attr_name, const T& value) {
-        int var_id = this->GetVariableId(var_name);
+    void AddAttribute(const std::string& var_name, const std::string& attr_name, const T& value)
+        const {
+        const int var_id = this->GetVariableId(var_name);
         // string attributes
         if constexpr (std::is_same_v<T, std::string>) {
             check_netCDF_error(
@@ -138,14 +139,17 @@ public:
      * - std::string (NC_STRING)
      */
     template <typename T>
-    void WriteVariable(const std::string& name, const std::vector<T>& data) {
-        int var_id = this->GetVariableId(name);
+    void WriteVariable(const std::string& name, const std::vector<T>& data) const {
+        const int var_id = this->GetVariableId(name);
         if constexpr (std::is_same_v<T, std::string>) {
             std::vector<const char*> c_strs;
             c_strs.reserve(data.size());
-            for (const auto& str : data) {
-                c_strs.push_back(str.c_str());
-            }
+            std::transform(
+                data.begin(), data.end(), std::back_inserter(c_strs),
+                [](const std::string& str) {
+                    return str.c_str();
+                }
+            );
             check_netCDF_error(
                 nc_put_var_string(netcdf_id_, var_id, c_strs.data()),
                 "Failed to write string variable " + name
@@ -178,14 +182,17 @@ public:
     void WriteVariableAt(
         const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
         const std::vector<T>& data
-    ) {
-        int var_id = this->GetVariableId(name);
+    ) const {
+        const int var_id = this->GetVariableId(name);
         if constexpr (std::is_same_v<T, std::string>) {
             std::vector<const char*> c_strs;
             c_strs.reserve(data.size());
-            for (const auto& str : data) {
-                c_strs.push_back(str.c_str());
-            }
+            std::transform(
+                data.begin(), data.end(), std::back_inserter(c_strs),
+                [](const std::string& str) {
+                    return str.c_str();
+                }
+            );
             check_netCDF_error(
                 nc_put_vara_string(netcdf_id_, var_id, start.data(), count.data(), c_strs.data()),
                 "Failed to write string variable " + name
@@ -199,17 +206,17 @@ public:
     }
 
     /// @brief Synchronizes (flushes) the NetCDF file to disk
-    void Sync() { check_netCDF_error(nc_sync(netcdf_id_), "Failed to sync NetCDF file"); }
+    void Sync() const { check_netCDF_error(nc_sync(netcdf_id_), "Failed to sync NetCDF file"); }
 
     //--------------------------------------------------------------------------
     // Getter/Read methods
     //--------------------------------------------------------------------------
 
     /// @brief Returns the NetCDF file ID
-    int GetNetCDFId() const { return netcdf_id_; }
+    [[nodiscard]] int GetNetCDFId() const { return netcdf_id_; }
 
     /// @brief Returns the dimension ID for a given dimension name
-    int GetDimensionId(const std::string& name) const {
+    [[nodiscard]] int GetDimensionId(const std::string& name) const {
         int dim_id{-1};
         check_netCDF_error(
             nc_inq_dimid(netcdf_id_, name.c_str(), &dim_id), "Failed to get dimension ID for " + name
@@ -218,7 +225,7 @@ public:
     }
 
     /// @brief Returns the variable ID for a given variable name
-    int GetVariableId(const std::string& name) const {
+    [[nodiscard]] int GetVariableId(const std::string& name) const {
         int var_id{-1};
         check_netCDF_error(
             nc_inq_varid(netcdf_id_, name.c_str(), &var_id), "Failed to get variable ID for " + name
@@ -232,8 +239,8 @@ public:
      * @param var_name The name of the variable
      * @return The number of dimensions
      */
-    size_t GetNumberOfDimensions(const std::string& var_name) const {
-        int var_id = GetVariableId(var_name);
+    [[nodiscard]] size_t GetNumberOfDimensions(const std::string& var_name) const {
+        const int var_id = GetVariableId(var_name);
         int num_dims{0};
         check_netCDF_error(
             nc_inq_varndims(netcdf_id_, var_id, &num_dims),
@@ -248,8 +255,8 @@ public:
      * @param dim_id The ID of the dimension
      * @return The length of the dimension
      */
-    size_t GetDimensionLength(int dim_id) const {
-        size_t length;
+    [[nodiscard]] size_t GetDimensionLength(int dim_id) const {
+        size_t length{0};
         check_netCDF_error(
             nc_inq_dimlen(netcdf_id_, dim_id, &length), "Failed to get dimension length"
         );
@@ -257,7 +264,7 @@ public:
     }
 
     /// @brief Gets the length of a dimension in the NetCDF file based on name
-    size_t GetDimensionLength(const std::string& name) const {
+    [[nodiscard]] size_t GetDimensionLength(const std::string& name) const {
         return GetDimensionLength(GetDimensionId(name));
     }
 
@@ -267,9 +274,9 @@ public:
      * @param var_name The name of the variable
      * @return Vector containing the length of each dimension of the variable
      */
-    std::vector<size_t> GetShape(const std::string& var_name) const {
-        int var_id = GetVariableId(var_name);
-        size_t num_dims = GetNumberOfDimensions(var_name);
+    [[nodiscard]] std::vector<size_t> GetShape(const std::string& var_name) const {
+        const int var_id = GetVariableId(var_name);
+        const size_t num_dims = GetNumberOfDimensions(var_name);
 
         std::vector<int> dim_ids(num_dims);
         check_netCDF_error(
@@ -298,7 +305,7 @@ public:
      */
     template <typename T>
     void ReadVariable(const std::string& name, T* data) const {
-        int var_id = this->GetVariableId(name);
+        const int var_id = this->GetVariableId(name);
         if constexpr (std::is_same_v<T, double>) {
             check_netCDF_error(
                 nc_get_var_double(netcdf_id_, var_id, data), "Failed to read double variable " + name
@@ -338,7 +345,7 @@ public:
         const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
         T* data
     ) const {
-        int var_id = this->GetVariableId(name);
+        const int var_id = this->GetVariableId(name);
         if constexpr (std::is_same_v<T, double>) {
             check_netCDF_error(
                 nc_get_vara_double(netcdf_id_, var_id, start.data(), count.data(), data),
@@ -382,7 +389,7 @@ public:
         const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
         const std::vector<ptrdiff_t>& stride, T* data
     ) const {
-        int var_id = this->GetVariableId(name);
+        const int var_id = this->GetVariableId(name);
         if constexpr (std::is_same_v<T, double>) {
             check_netCDF_error(
                 nc_get_vars_double(
@@ -416,7 +423,7 @@ public:
     }
 
 private:
-    int netcdf_id_;
+    int netcdf_id_{-1};
 
     //--------------------------------------------------------------------------
     // Helper methods

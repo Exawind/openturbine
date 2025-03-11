@@ -17,11 +17,11 @@ protected:
     void TearDown() override { std::filesystem::remove(test_file); }
 
     std::string test_file;
-    size_t num_nodes;
+    size_t num_nodes{0};
 };
 
 TEST_F(NodeStateWriterTest, ConstructorCreatesExpectedDimensionsAndVariables) {
-    util::NodeStateWriter writer(test_file, true, num_nodes);
+    const util::NodeStateWriter writer(test_file, true, num_nodes);
     const auto& file = writer.GetFile();
 
     EXPECT_EQ(writer.GetNumNodes(), num_nodes);
@@ -78,13 +78,13 @@ TEST_F(NodeStateWriterTest, ConstructorCreatesExpectedDimensionsAndVariables) {
 TEST_F(NodeStateWriterTest, WriteStateDataAtTimestepForPosition) {
     util::NodeStateWriter writer(test_file, true, num_nodes);
 
-    std::vector<double> x = {1., 2., 3.};
-    std::vector<double> y = {4., 5., 6.};
-    std::vector<double> z = {7., 8., 9.};
-    std::vector<double> i = {0.1, 0.2, 0.3};
-    std::vector<double> j = {0.4, 0.5, 0.6};
-    std::vector<double> k = {0.7, 0.8, 0.9};
-    std::vector<double> w = {1., 1., 1.};
+    const std::vector<double> x = {1., 2., 3.};
+    const std::vector<double> y = {4., 5., 6.};
+    const std::vector<double> z = {7., 8., 9.};
+    const std::vector<double> i = {0.1, 0.2, 0.3};
+    const std::vector<double> j = {0.4, 0.5, 0.6};
+    const std::vector<double> k = {0.7, 0.8, 0.9};
+    const std::vector<double> w = {1., 1., 1.};
 
     EXPECT_NO_THROW(writer.WriteStateDataAtTimestep(0, "x", x, y, z, i, j, k, w));
 
@@ -116,19 +116,19 @@ TEST_F(NodeStateWriterTest, WriteStateDataAtTimestepForPosition) {
 TEST_F(NodeStateWriterTest, WriteStateDataAtTimestepForVelocity) {
     util::NodeStateWriter writer(test_file, true, num_nodes);
 
-    std::vector<double> x = {1., 2., 3.};
-    std::vector<double> y = {4., 5., 6.};
-    std::vector<double> z = {7., 8., 9.};
-    std::vector<double> i = {0.1, 0.2, 0.3};
-    std::vector<double> j = {0.4, 0.5, 0.6};
-    std::vector<double> k = {0.7, 0.8, 0.9};
+    const std::vector<double> x = {1., 2., 3.};
+    const std::vector<double> y = {4., 5., 6.};
+    const std::vector<double> z = {7., 8., 9.};
+    const std::vector<double> i = {0.1, 0.2, 0.3};
+    const std::vector<double> j = {0.4, 0.5, 0.6};
+    const std::vector<double> k = {0.7, 0.8, 0.9};
 
     EXPECT_NO_THROW(writer.WriteStateDataAtTimestep(0, "v", x, y, z, i, j, k));
 
     const auto& file = writer.GetFile();
     std::vector<double> read_data(num_nodes);
-    std::vector<size_t> start = {0, 0};
-    std::vector<size_t> count = {1, num_nodes};
+    const std::vector<size_t> start = {0, 0};
+    const std::vector<size_t> count = {1, num_nodes};
 
     file.ReadVariableAt("v_x", start, count, read_data.data());
     EXPECT_EQ(read_data, x);
@@ -151,7 +151,7 @@ TEST_F(NodeStateWriterTest, WriteStateDataAtTimestepForVelocity) {
 
 TEST_F(NodeStateWriterTest, ThrowsOnInvalidComponentPrefix) {
     util::NodeStateWriter writer(test_file, true, num_nodes);
-    std::vector<double> data(num_nodes, 1.);
+    const std::vector<double> data(num_nodes, 1.);
 
     EXPECT_THROW(
         writer.WriteStateDataAtTimestep(0, "invalid_prefix", data, data, data, data, data, data),
@@ -162,8 +162,8 @@ TEST_F(NodeStateWriterTest, ThrowsOnInvalidComponentPrefix) {
 TEST_F(NodeStateWriterTest, ThrowsOnMismatchedVectorSizes) {
     util::NodeStateWriter writer(test_file, true, num_nodes);
 
-    std::vector<double> correct_size(num_nodes, 1.);    // write data to 3 nodes
-    std::vector<double> wrong_size(num_nodes + 1, 1.);  // write data to 4 nodes
+    const std::vector<double> correct_size(num_nodes, 1.);    // write data to 3 nodes
+    const std::vector<double> wrong_size(num_nodes + 1, 1.);  // write data to 4 nodes
 
     EXPECT_THROW(
         writer.WriteStateDataAtTimestep(

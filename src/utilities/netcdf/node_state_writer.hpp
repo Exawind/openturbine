@@ -39,9 +39,10 @@ public:
         : file_(file_path, create), num_nodes_(num_nodes) {
         // Define dimensions for time and nodes
         // NOTE: We are assuming these dimensions were not added previously
-        int time_dim = file_.AddDimension("time", NC_UNLIMITED);  // Unlimited timesteps can be added
-        int node_dim = file_.AddDimension("nodes", num_nodes);
-        std::vector<int> dimensions = {time_dim, node_dim};
+        const int time_dim =
+            file_.AddDimension("time", NC_UNLIMITED);  // Unlimited timesteps can be added
+        const int node_dim = file_.AddDimension("nodes", num_nodes);
+        const std::vector<int> dimensions = {time_dim, node_dim};
 
         // Define variables for each state component
         this->DefineStateVariables("x", dimensions, true);   // Position (x, y, z, w, i, j, k)
@@ -91,8 +92,10 @@ public:
         }
 
         // Write data to variables
-        std::vector<size_t> start = {timestep, 0};  // start at the current timestep and node 0
-        std::vector<size_t> count = {1, x.size()};  // write one timestep worth of data for all nodes
+        const std::vector<size_t> start = {timestep, 0};  // start at the current timestep and node 0
+        const std::vector<size_t> count = {
+            1, x.size()
+        };  // write one timestep worth of data for all nodes
         file_.WriteVariableAt(component_prefix + "_x", start, count, x);
         file_.WriteVariableAt(component_prefix + "_y", start, count, y);
         file_.WriteVariableAt(component_prefix + "_z", start, count, z);
@@ -107,10 +110,10 @@ public:
     }
 
     /// @brief Get the NetCDF file object
-    const NetCDFFile& GetFile() const { return file_; }
+    [[nodiscard]] const NetCDFFile& GetFile() const { return file_; }
 
     /// @brief Get the number of nodes with state data in output file
-    size_t GetNumNodes() const { return num_nodes_; }
+    [[nodiscard]] size_t GetNumNodes() const { return num_nodes_; }
 
 private:
     NetCDFFile file_;
@@ -126,15 +129,15 @@ private:
     void DefineStateVariables(
         const std::string& prefix, const std::vector<int>& dimensions, bool has_w
     ) {
-        file_.AddVariable<double>(prefix + "_x", dimensions);
-        file_.AddVariable<double>(prefix + "_y", dimensions);
-        file_.AddVariable<double>(prefix + "_z", dimensions);
-        file_.AddVariable<double>(prefix + "_i", dimensions);
-        file_.AddVariable<double>(prefix + "_j", dimensions);
-        file_.AddVariable<double>(prefix + "_k", dimensions);
+        (void)file_.AddVariable<double>(prefix + "_x", dimensions);
+        (void)file_.AddVariable<double>(prefix + "_y", dimensions);
+        (void)file_.AddVariable<double>(prefix + "_z", dimensions);
+        (void)file_.AddVariable<double>(prefix + "_i", dimensions);
+        (void)file_.AddVariable<double>(prefix + "_j", dimensions);
+        (void)file_.AddVariable<double>(prefix + "_k", dimensions);
 
         if (has_w) {
-            file_.AddVariable<double>(prefix + "_w", dimensions);
+            (void)file_.AddVariable<double>(prefix + "_w", dimensions);
         }
     }
 };

@@ -57,12 +57,12 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_TRUE(std::filesystem::exists(output_file));
 
     // Read and verify data from NetCDF file
-    util::NetCDFFile file(output_file, false);
+    const util::NetCDFFile file(output_file, false);
     std::vector<double> displacements(1);
 
     // Check displacement at step 500, platform node
-    std::vector<size_t> start = {499, platform_node.id};
-    std::vector<size_t> count = {1, 1};
+    const std::vector<size_t> start = {499, platform_node.id};
+    const std::vector<size_t> count = {1, 1};
 
     file.ReadVariableAt("u_x", start, count, displacements.data());
     EXPECT_NEAR(displacements[0], 0., 1.e-12);

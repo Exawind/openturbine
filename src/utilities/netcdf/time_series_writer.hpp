@@ -46,7 +46,7 @@ public:
     ) {
         // Check if the variable already exists in the file
         try {
-            file_.GetVariableId(variable_name);
+            (void)file_.GetVariableId(variable_name);
         } catch (const std::runtime_error&) {
             int value_dim{-1};
             const std::string value_dim_name = variable_name + "_dimension";
@@ -58,13 +58,15 @@ public:
             }
 
             // Add the variable to the file
-            std::vector<int> dimensions = {time_dim_, value_dim};
-            file_.AddVariable<T>(variable_name, dimensions);
+            const std::vector<int> dimensions = {time_dim_, value_dim};
+            (void)file_.AddVariable<T>(variable_name, dimensions);
         }
 
         // Write the values to the time-series variable
-        std::vector<size_t> start = {timestep, 0};  // Start at the current timestep and value 0
-        std::vector<size_t> count = {
+        const std::vector<size_t> start = {
+            timestep, 0
+        };  // Start at the current timestep and value 0
+        const std::vector<size_t> count = {
             1, values.size()
         };  // Write one timestep worth of data for all values
         file_.WriteVariableAt(variable_name, start, count, values);
@@ -84,7 +86,7 @@ public:
     }
 
     /// @brief Get the NetCDF file object
-    const NetCDFFile& GetFile() const { return file_; }
+    [[nodiscard]] const NetCDFFile& GetFile() const { return file_; }
 
 private:
     NetCDFFile file_;

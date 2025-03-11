@@ -19,18 +19,18 @@ protected:
 };
 
 TEST_F(TimeSeriesWriterTest, ConstructorCreatesTimeDimension) {
-    util::TimeSeriesWriter writer(test_file);
+    const util::TimeSeriesWriter writer(test_file);
     const auto& file = writer.GetFile();
 
     EXPECT_NO_THROW({
-        int time_dim_id = file.GetDimensionId("time");
+        const int time_dim_id = file.GetDimensionId("time");
         EXPECT_GE(time_dim_id, 0);
     });
 }
 
 TEST_F(TimeSeriesWriterTest, WriteValuesCreatesVariableAndDimension) {
     util::TimeSeriesWriter writer(test_file);
-    std::vector<double> values = {100., 200., 300.};
+    const std::vector<double> values = {100., 200., 300.};
 
     EXPECT_NO_THROW({ writer.WriteValuesAtTimestep("hub_height_wind_speed", 0, values); });
 
@@ -45,8 +45,8 @@ TEST_F(TimeSeriesWriterTest, WriteValuesCreatesVariableAndDimension) {
 
 TEST_F(TimeSeriesWriterTest, WriteValuesSavesCorrectData) {
     util::TimeSeriesWriter writer(test_file);
-    std::vector<double> values1 = {100., 200., 300.};  // dimensions = 3
-    std::vector<double> values2 = {400., 500., 600.};  // dimensions = 3
+    const std::vector<double> values1 = {100., 200., 300.};  // dimensions = 3
+    const std::vector<double> values2 = {400., 500., 600.};  // dimensions = 3
 
     EXPECT_NO_THROW({
         writer.WriteValuesAtTimestep("rotor_torque", 0, values1);
@@ -56,12 +56,12 @@ TEST_F(TimeSeriesWriterTest, WriteValuesSavesCorrectData) {
     const auto& file = writer.GetFile();
     std::vector<double> read_data(values1.size());
 
-    std::vector<size_t> start_1 = {0, 0};
-    std::vector<size_t> count = {1, values1.size()};
+    const std::vector<size_t> start_1 = {0, 0};
+    const std::vector<size_t> count = {1, values1.size()};
     file.ReadVariableAt("rotor_torque", start_1, count, read_data.data());
     EXPECT_EQ(read_data, values1);
 
-    std::vector<size_t> start_2 = {1, 0};
+    const std::vector<size_t> start_2 = {1, 0};
     file.ReadVariableAt("rotor_torque", start_2, count, read_data.data());
     EXPECT_EQ(read_data, values2);
 }
@@ -76,8 +76,8 @@ TEST_F(TimeSeriesWriterTest, WriteValueCreatesVariableAndWritesSingleValue) {
     EXPECT_GE(file.GetDimensionId("rotor_power_dimension"), 0);
 
     std::vector<double> read_data(1);
-    std::vector<size_t> start = {0, 0};
-    std::vector<size_t> count = {1, 1};
+    const std::vector<size_t> start = {0, 0};
+    const std::vector<size_t> count = {1, 1};
     file.ReadVariableAt("rotor_power", start, count, read_data.data());
     EXPECT_EQ(read_data[0], 100.);
 }
