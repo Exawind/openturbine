@@ -10,8 +10,9 @@ template <typename CrsMatrixType>
 struct ContributeSpringsToSparseMatrix {
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
-    Kokkos::View<FreedomSignature* [2]> element_freedom_signature;
-    Kokkos::View<size_t* [2][3]> element_freedom_table;
+    double conditioner{};
+    Kokkos::View<FreedomSignature* [2]>::const_type element_freedom_signature;
+    Kokkos::View<size_t* [2][3]>::const_type element_freedom_table;
     Kokkos::View<double* [2][2][3][3]>::const_type dense;  //< Element Stiffness matrices
     CrsMatrixType sparse;                                  //< Global sparse stiffness matrix
 
@@ -35,7 +36,7 @@ struct ContributeSpringsToSparseMatrix {
                     const auto row_num = element_freedom_table(i_elem, node_1, component_1);
                     for (auto component_2 = 0U; component_2 < 3U; ++component_2) {
                         row_data(component_2) =
-                            dense(i_elem, node_1, node_2, component_1, component_2);
+                            dense(i_elem, node_1, node_2, component_1, component_2) * conditioner;
                     }
                     sparse.sumIntoValues(
                         static_cast<int>(row_num), col_idx.data(), 3, row_data.data(), is_sorted,

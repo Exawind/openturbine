@@ -100,7 +100,7 @@ inline void SetUpSolverAndAssemble() {
 
     // Update beam elements state from solvers
     UpdateSystemVariables(parameters, elements, state);
-    AssembleSystemMatrix(solver, elements);
+    AssembleSystemMatrix(parameters, solver, elements);
     AssembleSystemResidual(solver, elements, state);
 
     UpdateConstraintVariables(state, constraints);
