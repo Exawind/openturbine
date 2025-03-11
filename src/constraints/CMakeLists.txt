@@ -1,7 +1,6 @@
 target_sources(openturbine_library PRIVATE)
 
 install(FILES
-        calculate_constraint_force.hpp
         calculate_constraint_output.hpp
         calculate_constraint_residual_gradient.hpp
         calculate_fixed_bc_constraint.hpp

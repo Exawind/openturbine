@@ -3,9 +3,6 @@ target_sources(openturbine_library PRIVATE)
 install(FILES
         assemble_constraints_matrix.hpp
         assemble_constraints_residual.hpp
-        assemble_inertia_matrix_beams.hpp
-        assemble_residual_vector_beams.hpp
-        assemble_stiffness_matrix_beams.hpp
         assemble_system_matrix.hpp
         assemble_system_residual.hpp
         calculate_convergence_error.hpp
