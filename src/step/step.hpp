@@ -56,9 +56,9 @@ inline bool Step(
             return false;
         }
 
-        UpdateSystemVariables(parameters, elements, state);
-
         UpdateTangentOperator(parameters, state);
+
+        UpdateSystemVariables(parameters, elements, state);
 
         AssembleTangentOperator(solver, state);
 

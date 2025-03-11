@@ -21,69 +21,29 @@ inline void AssembleSystemMatrix(Solver& solver, Elements& elements) {
     auto springs_sparse_matrix_policy =
         Kokkos::RangePolicy<>(0, static_cast<int>(elements.springs.num_elems));
 
-    // Assemble stiffness matrix by contributing beam, mass, and spring stiffness matrices to the
-    // global sparse matrix
-    Kokkos::deep_copy(solver.K.values, 0.);
+    Kokkos::deep_copy(solver.system_matrix.values, 0.);
     Kokkos::parallel_for(
         "ContributeBeamsToSparseMatrix", beams_sparse_matrix_policy,
         ContributeBeamsToSparseMatrix<Solver::CrsMatrixType>{
             elements.beams.num_nodes_per_element, elements.beams.element_freedom_signature,
-            elements.beams.element_freedom_table, elements.beams.stiffness_matrix_terms, solver.K
+            elements.beams.element_freedom_table, elements.beams.system_matrix_terms,
+            solver.system_matrix
         }
     );
-    Kokkos::fence();
     Kokkos::parallel_for(
         "ContributeMassesToSparseMatrix", masses_sparse_matrix_policy,
         ContributeMassesToSparseMatrix<Solver::CrsMatrixType>{
             elements.masses.element_freedom_signature, elements.masses.element_freedom_table,
-            elements.masses.stiffness_matrix_terms, solver.K
+            elements.masses.system_matrix_terms, solver.system_matrix
         }
     );
-    Kokkos::fence();
     Kokkos::parallel_for(
         "ContributeSpringsToSparseMatrix", springs_sparse_matrix_policy,
         ContributeSpringsToSparseMatrix<Solver::CrsMatrixType>{
             elements.springs.element_freedom_signature, elements.springs.element_freedom_table,
-            elements.springs.stiffness_matrix_terms, solver.K
+            elements.springs.stiffness_matrix_terms, solver.system_matrix
         }
     );
-
-    Kokkos::fence();
-    {
-        auto static_region = Kokkos::Profiling::ScopedRegion("Assemble Static System Matrix");
-        KokkosSparse::spgemm_numeric(
-            solver.system_spgemm_handle, solver.K, false, solver.T, false,
-            solver.static_system_matrix
-        );
-    }
-
-    // Assemble inertia matrix by contributing beam and mass inertia matrices to the global
-    // sparse matrix
-    Kokkos::deep_copy(solver.K.values, 0.);
-    Kokkos::parallel_for(
-        "ContributeBeamsToSparseMatrix", beams_sparse_matrix_policy,
-        ContributeBeamsToSparseMatrix<Solver::CrsMatrixType>{
-            elements.beams.num_nodes_per_element, elements.beams.element_freedom_signature,
-            elements.beams.element_freedom_table, elements.beams.inertia_matrix_terms, solver.K
-        }
-    );
-    Kokkos::fence();
-    Kokkos::parallel_for(
-        "ContributeMassesToSparseMatrix", masses_sparse_matrix_policy,
-        ContributeMassesToSparseMatrix<Solver::CrsMatrixType>{
-            elements.masses.element_freedom_signature, elements.masses.element_freedom_table,
-            elements.masses.inertia_matrix_terms, solver.K
-        }
-    );
-
-    Kokkos::fence();
-    {
-        auto system_region = Kokkos::Profiling::ScopedRegion("Assemble System Matrix");
-        KokkosSparse::spadd_numeric(
-            &solver.system_spadd_handle, 1., solver.K, 1., solver.static_system_matrix,
-            solver.system_matrix
-        );
-    }
 }
 
 }  // namespace openturbine

@@ -6,6 +6,16 @@
 
 namespace {
 
+struct TestFunctionObject {
+    Kokkos::View<double[6][6]>::const_type Cuu;
+    Kokkos::View<double[3][3]>::const_type x0pupSS;
+    Kokkos::View<double[3][3]>::const_type N_tilde;
+    Kokkos::View<double[6][6]> Puu;
+
+    KOKKOS_FUNCTION
+    void operator()(size_t) const { openturbine::beams::CalculatePuu(Cuu, x0pupSS, N_tilde, Puu); }
+};
+
 void TestCalculatePuu() {
     const auto Cuu = Kokkos::View<double[6][6]>("Cuu");
     constexpr auto Cuu_data = std::array{1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,  10., 11., 12.,
@@ -34,10 +44,7 @@ void TestCalculatePuu() {
 
     const auto Puu = Kokkos::View<double[6][6]>("Puu");
 
-    Kokkos::parallel_for(
-        "CalculatePuu", 1,
-        KOKKOS_LAMBDA(size_t) { openturbine::beams::CalculatePuu(Cuu, x0pupSS, N_tilde, Puu); }
-    );
+    Kokkos::parallel_for("CalculatePuu", 1, TestFunctionObject{Cuu, x0pupSS, N_tilde, Puu});
 
     constexpr auto Puu_exact_data =
         std::array{0.,   0.,    0.,    0.,    0.,    0.,    0.,   0.,    0.,    0.,    0.,    0.,

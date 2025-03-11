@@ -10,6 +10,7 @@ install(FILES
         calculate_quadrature_point_values.hpp
         calculate_stiffness_quadrature_point_values.hpp
         calculate_strain.hpp
+        calculate_system_matrix.hpp
         calculate_temporary_variables.hpp
         integrate_inertia_matrix.hpp
         integrate_residual_vector.hpp

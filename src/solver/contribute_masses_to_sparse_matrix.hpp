@@ -19,7 +19,7 @@ struct ContributeMassesToSparseMatrix {
     KOKKOS_FUNCTION
     void operator()(size_t i) const {
         constexpr auto is_sorted = true;
-        constexpr auto force_atomic = false;
+        constexpr auto force_atomic = !std::is_same_v<Kokkos::DefaultExecutionSpace, Kokkos::Serial>;
         const auto num_dofs = count_active_dofs(element_freedom_signature(i));
         auto row_data_data = Kokkos::Array<typename RowDataType::value_type, 6>{};
         auto col_idx_data = Kokkos::Array<typename ColIdxType::value_type, 6>{};

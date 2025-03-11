@@ -19,14 +19,14 @@ struct CalculateQuadraturePointValues {
     Kokkos::View<double* [6]>::const_type V;
     Kokkos::View<double* [6]>::const_type A;
 
+    Kokkos::View<double* [6][6]>::const_type tangent;
     Kokkos::View<size_t*>::const_type node_state_indices;
     Kokkos::View<double[3]>::const_type gravity;
     Kokkos::View<double* [6][6]>::const_type qp_Mstar;
     Kokkos::View<double* [7]>::const_type node_x0;
 
     Kokkos::View<double* [6]> residual_vector_terms;
-    Kokkos::View<double* [6][6]> stiffness_matrix_terms;
-    Kokkos::View<double* [6][6]> inertia_matrix_terms;
+    Kokkos::View<double* [6][6]> system_matrix_terms;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
@@ -56,6 +56,8 @@ struct CalculateQuadraturePointValues {
         auto Fi_data = Kokkos::Array<double, 6>{};
         auto Guu_data = Kokkos::Array<double, 36>{};
         auto Kuu_data = Kokkos::Array<double, 36>{};
+        auto T_data = Kokkos::Array<double, 36>{};
+        auto STpI_data = Kokkos::Array<double, 36>{};
 
         // Set up Views
         const auto Mstar = Kokkos::View<double[6][6]>(Mstar_data.data());
@@ -77,13 +79,13 @@ struct CalculateQuadraturePointValues {
         auto Fi = Kokkos::View<double[6]>(Fi_data.data());
         auto Guu = Kokkos::View<double[6][6]>(Guu_data.data());
         auto Kuu = Kokkos::View<double[6][6]>(Kuu_data.data());
+        auto T = Kokkos::View<double[6][6]>(T_data.data());
+        auto STpI = Kokkos::View<double[6][6]>(STpI_data.data());
 
         // Do the math
-        for (auto i = 0U; i < 6U; ++i) {
-            for (auto j = 0U; j < 6U; ++j) {
-                Mstar(i, j) = qp_Mstar(i_elem, i, j);
-            }
-        }
+        KokkosBatched::SerialCopy<>::invoke(
+            Kokkos::subview(qp_Mstar, i_elem, Kokkos::ALL, Kokkos::ALL), Mstar
+        );
         QuaternionCompose(r, r0, xr);
         VecTilde(omega, omega_tilde);
         VecTilde(omega_dot, omega_dot_tilde);
@@ -109,17 +111,21 @@ struct CalculateQuadraturePointValues {
         for (auto i = 0U; i < 6U; ++i) {
             residual_vector_terms(i_elem, i) = Fi(i) - Fg(i);
         }
+        KokkosBatched::SerialCopy<>::invoke(
+            Kokkos::subview(tangent, index, Kokkos::ALL, Kokkos::ALL), T
+        );
         for (auto i = 0U; i < 6U; ++i) {
             for (auto j = 0U; j < 6U; ++j) {
-                stiffness_matrix_terms(i_elem, i, j) = Kuu(i, j);
+                STpI(i, j) = beta_prime * Muu(i, j) + gamma_prime * Guu(i, j);
             }
         }
-        for (auto i = 0U; i < 6U; ++i) {
-            for (auto j = 0U; j < 6U; ++j) {
-                inertia_matrix_terms(i_elem, i, j) =
-                    beta_prime * Muu(i, j) + gamma_prime * Guu(i, j);
-            }
-        }
+        KokkosBatched::SerialGemm<
+            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
+            KokkosBatched::Algo::Gemm::Default>::invoke(1., Kuu, T, 1., STpI);
+
+        KokkosBatched::SerialCopy<>::invoke(
+            STpI, Kokkos::subview(system_matrix_terms, i_elem, Kokkos::ALL, Kokkos::ALL)
+        );
     }
 };
 
