@@ -1,0 +1,14 @@
+.. meta::547d6618cb98693ce1af412d93722d608db4620bc3975cd6b6d50a2982016fbf2de13a3dbf710286b4c07944644334830925463dd1f0ac17ba376f0cce9e2599
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/step/reset_solver.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/step/reset\_solver.hpp Source File
+============================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: reset__solver_8hpp_source.html

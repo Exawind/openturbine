@@ -1,0 +1,14 @@
+.. meta::4ac0ca4ba94e52803423c8be02249ff3a9bf1122b502ba445dcb926a9e0595ce5a189adeb564605a5be79979607cbbb7954421ade5074af5f0a0fe12e464bd29
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/create_full_matrix.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/create\_full\_matrix.hpp File Reference
+========================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: create__full__matrix_8hpp.html

@@ -191,10 +191,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a77fda774810b6f4168631a9f781bb850"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a047c38a39ff7efc09bfb750ad431e6c2" id="r_a047c38a39ff7efc09bfb750ad431e6c2"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html#a047c38a39ff7efc09bfb750ad431e6c2">row_range</a></td></tr>
 <tr class="separator:a047c38a39ff7efc09bfb750ad431e6c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95a52b891504cca45df597e05df34dbe" id="r_a95a52b891504cca45df597e05df34dbe"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html#a95a52b891504cca45df597e05df34dbe">constraint_base_node_col_range</a></td></tr>
-<tr class="separator:a95a52b891504cca45df597e05df34dbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9591c1b130a747a2e243d68c7a66db2f" id="r_a9591c1b130a747a2e243d68c7a66db2f"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html#a9591c1b130a747a2e243d68c7a66db2f">constraint_target_node_col_range</a></td></tr>
-<tr class="separator:a9591c1b130a747a2e243d68c7a66db2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96165cc8c2bd8660e8a878ad235a2bd1" id="r_a96165cc8c2bd8660e8a878ad235a2bd1"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html#a96165cc8c2bd8660e8a878ad235a2bd1">base_node_freedom_signature</a></td></tr>
+<tr class="separator:a96165cc8c2bd8660e8a878ad235a2bd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac90eab3dddd4ae0c6e28038991e8509d" id="r_ac90eab3dddd4ae0c6e28038991e8509d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html#ac90eab3dddd4ae0c6e28038991e8509d">target_node_freedom_signature</a></td></tr>
+<tr class="separator:ac90eab3dddd4ae0c6e28038991e8509d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5fe8d3a3da6b34ac33e41726b8a8712" id="r_aa5fe8d3a3da6b34ac33e41726b8a8712"><td class="memItemLeft" align="right" valign="top">RowPtrType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html#aa5fe8d3a3da6b34ac33e41726b8a8712">B_row_ptrs</a></td></tr>
 <tr class="separator:aa5fe8d3a3da6b34ac33e41726b8a8712"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebefa1387ebe81f4c4141b64ca79afda" id="r_aebefa1387ebe81f4c4141b64ca79afda"><td class="memItemLeft" align="right" valign="top">IndicesType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html#aebefa1387ebe81f4c4141b64ca79afda">B_col_inds</a></td></tr>
@@ -262,6 +262,22 @@ template&lt;typename RowPtrType , typename IndicesType &gt; </div>
 
 </div>
 </div>
+<a id="a96165cc8c2bd8660e8a878ad235a2bd1" name="a96165cc8c2bd8660e8a878ad235a2bd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96165cc8c2bd8660e8a878ad235a2bd1">&#9670;&#160;</a></span>base_node_freedom_signature</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename RowPtrType , typename IndicesType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*&gt;::const_type <a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html">openturbine::PopulateSparseRowPtrsColInds_Constraints</a>&lt; RowPtrType, IndicesType &gt;::base_node_freedom_signature</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aefaf40f9ad97fe09870a74bcec0ca792" name="aefaf40f9ad97fe09870a74bcec0ca792"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aefaf40f9ad97fe09870a74bcec0ca792">&#9670;&#160;</a></span>base_node_freedom_table</h2>
 
@@ -278,38 +294,6 @@ template&lt;typename RowPtrType , typename IndicesType &gt; </div>
 
 </div>
 </div>
-<a id="a95a52b891504cca45df597e05df34dbe" name="a95a52b891504cca45df597e05df34dbe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95a52b891504cca45df597e05df34dbe">&#9670;&#160;</a></span>constraint_base_node_col_range</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename RowPtrType , typename IndicesType &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*&gt;::const_type <a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html">openturbine::PopulateSparseRowPtrsColInds_Constraints</a>&lt; RowPtrType, IndicesType &gt;::constraint_base_node_col_range</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9591c1b130a747a2e243d68c7a66db2f" name="a9591c1b130a747a2e243d68c7a66db2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9591c1b130a747a2e243d68c7a66db2f">&#9670;&#160;</a></span>constraint_target_node_col_range</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename RowPtrType , typename IndicesType &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*&gt;::const_type <a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html">openturbine::PopulateSparseRowPtrsColInds_Constraints</a>&lt; RowPtrType, IndicesType &gt;::constraint_target_node_col_range</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a047c38a39ff7efc09bfb750ad431e6c2" name="a047c38a39ff7efc09bfb750ad431e6c2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a047c38a39ff7efc09bfb750ad431e6c2">&#9670;&#160;</a></span>row_range</h2>
 
@@ -320,6 +304,22 @@ template&lt;typename RowPtrType , typename IndicesType &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*&gt;::const_type <a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html">openturbine::PopulateSparseRowPtrsColInds_Constraints</a>&lt; RowPtrType, IndicesType &gt;::row_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac90eab3dddd4ae0c6e28038991e8509d" name="ac90eab3dddd4ae0c6e28038991e8509d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac90eab3dddd4ae0c6e28038991e8509d">&#9670;&#160;</a></span>target_node_freedom_signature</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename RowPtrType , typename IndicesType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*&gt;::const_type <a class="el" href="structopenturbine_1_1PopulateSparseRowPtrsColInds__Constraints.html">openturbine::PopulateSparseRowPtrsColInds_Constraints</a>&lt; RowPtrType, IndicesType &gt;::target_node_freedom_signature</td>
         </tr>
       </table>
 </div><div class="memdoc">

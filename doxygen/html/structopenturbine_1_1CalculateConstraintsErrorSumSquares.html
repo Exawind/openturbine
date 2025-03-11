@@ -184,8 +184,8 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af2b31555f98320215066f3d64fa8b327" id="r_af2b31555f98320215066f3d64fa8b327"><td class="memItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#af2b31555f98320215066f3d64fa8b327">operator()</a> (const size_t i_dof, double &amp;err) const</td></tr>
-<tr class="separator:af2b31555f98320215066f3d64fa8b327"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47eeb742f04feddea3a9ad7387202415" id="r_a47eeb742f04feddea3a9ad7387202415"><td class="memItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#a47eeb742f04feddea3a9ad7387202415">operator()</a> (const size_t i_constraint, double &amp;err) const</td></tr>
+<tr class="separator:a47eeb742f04feddea3a9ad7387202415"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -195,10 +195,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ac74b03d0836639e3d4b0338e0bdf2e67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1ab6fc350872a87f0d1dd57ecb7c76a" id="r_ac1ab6fc350872a87f0d1dd57ecb7c76a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#ac1ab6fc350872a87f0d1dd57ecb7c76a">num_system_dofs</a></td></tr>
 <tr class="separator:ac1ab6fc350872a87f0d1dd57ecb7c76a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2927fe876207d5bb23ba2624415bfb8" id="r_aa2927fe876207d5bb23ba2624415bfb8"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#aa2927fe876207d5bb23ba2624415bfb8">lambda</a></td></tr>
-<tr class="separator:aa2927fe876207d5bb23ba2624415bfb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e3ff990b92e07384688536f7021ca7b" id="r_a5e3ff990b92e07384688536f7021ca7b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#a5e3ff990b92e07384688536f7021ca7b">x</a></td></tr>
-<tr class="separator:a5e3ff990b92e07384688536f7021ca7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ac1bb724a6114f2b83eed030d95d912" id="r_a2ac1bb724a6114f2b83eed030d95d912"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#a2ac1bb724a6114f2b83eed030d95d912">row_range</a></td></tr>
+<tr class="separator:a2ac1bb724a6114f2b83eed030d95d912"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4a672091462903256976a8c66c12f0d" id="r_ae4a672091462903256976a8c66c12f0d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#ae4a672091462903256976a8c66c12f0d">lambda</a></td></tr>
+<tr class="separator:ae4a672091462903256976a8c66c12f0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0295ea8c3555cce59d82e7c65ab81bb" id="r_ad0295ea8c3555cce59d82e7c65ab81bb"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[1], Kokkos::LayoutLeft &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#ad0295ea8c3555cce59d82e7c65ab81bb">x</a></td></tr>
+<tr class="separator:ad0295ea8c3555cce59d82e7c65ab81bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a22930d2c756a58351acae65df87cf338" name="a22930d2c756a58351acae65df87cf338"></a>
@@ -216,8 +218,8 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af2b31555f98320215066f3d64fa8b327" name="af2b31555f98320215066f3d64fa8b327"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2b31555f98320215066f3d64fa8b327">&#9670;&#160;</a></span>operator()()</h2>
+<a id="a47eeb742f04feddea3a9ad7387202415" name="a47eeb742f04feddea3a9ad7387202415"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47eeb742f04feddea3a9ad7387202415">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -229,7 +231,7 @@ Public Attributes</h2></td></tr>
           <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::CalculateConstraintsErrorSumSquares::operator() </td>
           <td>(</td>
           <td class="paramtype">const size_t&#160;</td>
-          <td class="paramname"><em>i_dof</em>, </td>
+          <td class="paramname"><em>i_constraint</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -267,14 +269,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa2927fe876207d5bb23ba2624415bfb8" name="aa2927fe876207d5bb23ba2624415bfb8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa2927fe876207d5bb23ba2624415bfb8">&#9670;&#160;</a></span>lambda</h2>
+<a id="ae4a672091462903256976a8c66c12f0d" name="ae4a672091462903256976a8c66c12f0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4a672091462903256976a8c66c12f0d">&#9670;&#160;</a></span>lambda</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*&gt;::const_type openturbine::CalculateConstraintsErrorSumSquares::lambda</td>
+          <td class="memname">Kokkos::View&lt;double*[6]&gt;::const_type openturbine::CalculateConstraintsErrorSumSquares::lambda</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -295,6 +297,20 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a2ac1bb724a6114f2b83eed030d95d912" name="a2ac1bb724a6114f2b83eed030d95d912"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ac1bb724a6114f2b83eed030d95d912">&#9670;&#160;</a></span>row_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*&gt;::const_type openturbine::CalculateConstraintsErrorSumSquares::row_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac74b03d0836639e3d4b0338e0bdf2e67" name="ac74b03d0836639e3d4b0338e0bdf2e67"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac74b03d0836639e3d4b0338e0bdf2e67">&#9670;&#160;</a></span>rtol</h2>
 
@@ -309,14 +325,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5e3ff990b92e07384688536f7021ca7b" name="a5e3ff990b92e07384688536f7021ca7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e3ff990b92e07384688536f7021ca7b">&#9670;&#160;</a></span>x</h2>
+<a id="ad0295ea8c3555cce59d82e7c65ab81bb" name="ad0295ea8c3555cce59d82e7c65ab81bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0295ea8c3555cce59d82e7c65ab81bb">&#9670;&#160;</a></span>x</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*&gt;::const_type openturbine::CalculateConstraintsErrorSumSquares::x</td>
+          <td class="memname">Kokkos::View&lt;double*[1],Kokkos::LayoutLeft&gt;::const_type openturbine::CalculateConstraintsErrorSumSquares::x</td>
         </tr>
       </table>
 </div><div class="memdoc">

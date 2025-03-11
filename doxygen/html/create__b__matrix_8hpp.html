@@ -174,6 +174,7 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;KokkosSparse.hpp&gt;</code><br />
 <code>#include &lt;Kokkos_Core.hpp&gt;</code><br />
+<code>#include &lt;Kokkos_Profiling_ScopedRegion.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="compute__b__num__non__zero_8hpp_source.html">compute_b_num_non_zero.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="populate__sparse__row__ptrs__col__inds__constraints_8hpp_source.html">populate_sparse_row_ptrs_col_inds_constraints.hpp</a>&quot;</code><br />
 </div>
@@ -186,10 +187,10 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:acba5c364c92e43d08c9e1bee9755576e" id="r_acba5c364c92e43d08c9e1bee9755576e"><td class="memTemplParams" colspan="2">template&lt;typename CrsMatrixType &gt; </td></tr>
-<tr class="memitem:acba5c364c92e43d08c9e1bee9755576e"><td class="memTemplItemLeft" align="right" valign="top">CrsMatrixType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#acba5c364c92e43d08c9e1bee9755576e">openturbine::CreateBMatrix</a> (size_t system_dofs, size_t constraint_dofs, const Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> * &gt;::const_type &amp;constraint_type, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_row_range, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_base_node_col_range, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_target_node_col_range)</td></tr>
-<tr class="memdesc:acba5c364c92e43d08c9e1bee9755576e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the constraint matrix B in sparse CRS format.  <br /></td></tr>
-<tr class="separator:acba5c364c92e43d08c9e1bee9755576e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83409664eab7414ecf71ac210995ec1e" id="r_a83409664eab7414ecf71ac210995ec1e"><td class="memTemplParams" colspan="2">template&lt;typename CrsMatrixType &gt; </td></tr>
+<tr class="memitem:a83409664eab7414ecf71ac210995ec1e"><td class="memTemplItemLeft" align="right" valign="top">CrsMatrixType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a83409664eab7414ecf71ac210995ec1e">openturbine::CreateBMatrix</a> (size_t system_dofs, size_t constraint_dofs, const Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> * &gt;::const_type &amp;constraint_type, const Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;::const_type &amp;base_node_freedom_signature, const Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;::const_type &amp;target_node_freedom_signature, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_row_range)</td></tr>
+<tr class="memdesc:a83409664eab7414ecf71ac210995ec1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the constraint matrix B in sparse CRS format.  <br /></td></tr>
+<tr class="separator:a83409664eab7414ecf71ac210995ec1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

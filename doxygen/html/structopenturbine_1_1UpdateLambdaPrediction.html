@@ -178,19 +178,23 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a21e3a8bf20e78fca270c1b0a4edad27d" id="r_a21e3a8bf20e78fca270c1b0a4edad27d"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateLambdaPrediction.html#a21e3a8bf20e78fca270c1b0a4edad27d">operator()</a> (const int i_lambda) const</td></tr>
-<tr class="separator:a21e3a8bf20e78fca270c1b0a4edad27d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5f5c86224560efe708d29c0ae182740" id="r_ad5f5c86224560efe708d29c0ae182740"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateLambdaPrediction.html#ad5f5c86224560efe708d29c0ae182740">operator()</a> (size_t i_constraint) const</td></tr>
+<tr class="separator:ad5f5c86224560efe708d29c0ae182740"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a2aaef3c63b96e349ff392a890773c0a1" id="r_a2aaef3c63b96e349ff392a890773c0a1"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateLambdaPrediction.html#a2aaef3c63b96e349ff392a890773c0a1">lambda_delta</a></td></tr>
-<tr class="separator:a2aaef3c63b96e349ff392a890773c0a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c4a021979365f0e56c510f93211393d" id="r_a1c4a021979365f0e56c510f93211393d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateLambdaPrediction.html#a1c4a021979365f0e56c510f93211393d">lambda</a></td></tr>
-<tr class="separator:a1c4a021979365f0e56c510f93211393d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c70d88987f613d3ef0a67137ec33269" id="r_a4c70d88987f613d3ef0a67137ec33269"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateLambdaPrediction.html#a4c70d88987f613d3ef0a67137ec33269">num_system_dofs</a></td></tr>
+<tr class="separator:a4c70d88987f613d3ef0a67137ec33269"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a723fbe3c37ba7e5cf4ff46de5d141f2c" id="r_a723fbe3c37ba7e5cf4ff46de5d141f2c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateLambdaPrediction.html#a723fbe3c37ba7e5cf4ff46de5d141f2c">row_range</a></td></tr>
+<tr class="separator:a723fbe3c37ba7e5cf4ff46de5d141f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9367aea104f3e7023cf4c9c9d227acbf" id="r_a9367aea104f3e7023cf4c9c9d227acbf"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[1], Kokkos::LayoutLeft &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateLambdaPrediction.html#a9367aea104f3e7023cf4c9c9d227acbf">x</a></td></tr>
+<tr class="separator:a9367aea104f3e7023cf4c9c9d227acbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53ce18462228a782a35ef5671447b353" id="r_a53ce18462228a782a35ef5671447b353"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateLambdaPrediction.html#a53ce18462228a782a35ef5671447b353">lambda</a></td></tr>
+<tr class="separator:a53ce18462228a782a35ef5671447b353"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a21e3a8bf20e78fca270c1b0a4edad27d" name="a21e3a8bf20e78fca270c1b0a4edad27d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21e3a8bf20e78fca270c1b0a4edad27d">&#9670;&#160;</a></span>operator()()</h2>
+<a id="ad5f5c86224560efe708d29c0ae182740" name="ad5f5c86224560efe708d29c0ae182740"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5f5c86224560efe708d29c0ae182740">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -201,8 +205,8 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">KOKKOS_FUNCTION void openturbine::UpdateLambdaPrediction::operator() </td>
           <td>(</td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>i_lambda</em></td><td>)</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>i_constraint</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -216,28 +220,56 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a1c4a021979365f0e56c510f93211393d" name="a1c4a021979365f0e56c510f93211393d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c4a021979365f0e56c510f93211393d">&#9670;&#160;</a></span>lambda</h2>
+<a id="a53ce18462228a782a35ef5671447b353" name="a53ce18462228a782a35ef5671447b353"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53ce18462228a782a35ef5671447b353">&#9670;&#160;</a></span>lambda</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*&gt; openturbine::UpdateLambdaPrediction::lambda</td>
+          <td class="memname">Kokkos::View&lt;double* [6]&gt; openturbine::UpdateLambdaPrediction::lambda</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a2aaef3c63b96e349ff392a890773c0a1" name="a2aaef3c63b96e349ff392a890773c0a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2aaef3c63b96e349ff392a890773c0a1">&#9670;&#160;</a></span>lambda_delta</h2>
+<a id="a4c70d88987f613d3ef0a67137ec33269" name="a4c70d88987f613d3ef0a67137ec33269"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c70d88987f613d3ef0a67137ec33269">&#9670;&#160;</a></span>num_system_dofs</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*&gt;::const_type openturbine::UpdateLambdaPrediction::lambda_delta</td>
+          <td class="memname">size_t openturbine::UpdateLambdaPrediction::num_system_dofs</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a723fbe3c37ba7e5cf4ff46de5d141f2c" name="a723fbe3c37ba7e5cf4ff46de5d141f2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a723fbe3c37ba7e5cf4ff46de5d141f2c">&#9670;&#160;</a></span>row_range</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*&gt;::const_type openturbine::UpdateLambdaPrediction::row_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9367aea104f3e7023cf4c9c9d227acbf" name="a9367aea104f3e7023cf4c9c9d227acbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9367aea104f3e7023cf4c9c9d227acbf">&#9670;&#160;</a></span>x</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[1],Kokkos::LayoutLeft&gt;::const_type openturbine::UpdateLambdaPrediction::x</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -204,10 +204,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a366d5c056912c5c235cacf2d6c1431eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addfa530209d0b8f593ec9e874ec00f7d" id="r_addfa530209d0b8f593ec9e874ec00f7d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Masses.html#addfa530209d0b8f593ec9e874ec00f7d">residual_vector_terms</a></td></tr>
 <tr class="separator:addfa530209d0b8f593ec9e874ec00f7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed8c65cf0347e361d184f6170cd8131c" id="r_aed8c65cf0347e361d184f6170cd8131c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Masses.html#aed8c65cf0347e361d184f6170cd8131c">stiffness_matrix_terms</a></td></tr>
-<tr class="separator:aed8c65cf0347e361d184f6170cd8131c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79a32e72d8c7308ebe1985965d0c3685" id="r_a79a32e72d8c7308ebe1985965d0c3685"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Masses.html#a79a32e72d8c7308ebe1985965d0c3685">inertia_matrix_terms</a></td></tr>
-<tr class="separator:a79a32e72d8c7308ebe1985965d0c3685"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91dbe241b5abf65d72a51aa580a71291" id="r_a91dbe241b5abf65d72a51aa580a71291"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Masses.html#a91dbe241b5abf65d72a51aa580a71291">system_matrix_terms</a></td></tr>
+<tr class="separator:a91dbe241b5abf65d72a51aa580a71291"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains field variables for mass elements (aka, rigid bodies) to compute per-element contributions to the residual vector and system/iteration matrix. </p>
@@ -276,20 +274,6 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceopenturbine.html#a5c3e2136acb58cc49d15dc2d88c76a66">View_3</a> openturbine::Masses::gravity</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a79a32e72d8c7308ebe1985965d0c3685" name="a79a32e72d8c7308ebe1985965d0c3685"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79a32e72d8c7308ebe1985965d0c3685">&#9670;&#160;</a></span>inertia_matrix_terms</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Kokkos::View&lt;double* [6][6]&gt; openturbine::Masses::inertia_matrix_terms</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -380,14 +364,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aed8c65cf0347e361d184f6170cd8131c" name="aed8c65cf0347e361d184f6170cd8131c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed8c65cf0347e361d184f6170cd8131c">&#9670;&#160;</a></span>stiffness_matrix_terms</h2>
+<a id="a91dbe241b5abf65d72a51aa580a71291" name="a91dbe241b5abf65d72a51aa580a71291"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91dbe241b5abf65d72a51aa580a71291">&#9670;&#160;</a></span>system_matrix_terms</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [6][6]&gt; openturbine::Masses::stiffness_matrix_terms</td>
+          <td class="memname">Kokkos::View&lt;double* [6][6]&gt; openturbine::Masses::system_matrix_terms</td>
         </tr>
       </table>
 </div><div class="memdoc">

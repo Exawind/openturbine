@@ -254,10 +254,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a5de75af6e56e3e3edeb7b002df414823"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a231b3f938de571b31aa0e2b028f21dea" id="r_a231b3f938de571b31aa0e2b028f21dea"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a231b3f938de571b31aa0e2b028f21dea">residual_vector_terms</a></td></tr>
 <tr class="separator:a231b3f938de571b31aa0e2b028f21dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bb630820a374424c5d13bfec37ce79c" id="r_a2bb630820a374424c5d13bfec37ce79c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ***[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a2bb630820a374424c5d13bfec37ce79c">stiffness_matrix_terms</a></td></tr>
-<tr class="separator:a2bb630820a374424c5d13bfec37ce79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7497f95827bdee8a449873b6d0e5c048" id="r_a7497f95827bdee8a449873b6d0e5c048"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ***[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a7497f95827bdee8a449873b6d0e5c048">inertia_matrix_terms</a></td></tr>
-<tr class="separator:a7497f95827bdee8a449873b6d0e5c048"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a7f3ceb15ee9aab4136967d99c62e9a" id="r_a2a7f3ceb15ee9aab4136967d99c62e9a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ***[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a2a7f3ceb15ee9aab4136967d99c62e9a">system_matrix_terms</a></td></tr>
+<tr class="separator:a2a7f3ceb15ee9aab4136967d99c62e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b29f64034a23d17fd4cdc4cf97e1b5a" id="r_a6b29f64034a23d17fd4cdc4cf97e1b5a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a6b29f64034a23d17fd4cdc4cf97e1b5a">shape_interp</a></td></tr>
 <tr class="separator:a6b29f64034a23d17fd4cdc4cf97e1b5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c06ac9e204d435437b5f2c9aef9dd51" id="r_a8c06ac9e204d435437b5f2c9aef9dd51"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Beams.html#a8c06ac9e204d435437b5f2c9aef9dd51">shape_deriv</a></td></tr>
@@ -352,20 +350,6 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespaceopenturbine.html#a5c3e2136acb58cc49d15dc2d88c76a66">View_3</a> openturbine::Beams::gravity</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7497f95827bdee8a449873b6d0e5c048" name="a7497f95827bdee8a449873b6d0e5c048"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7497f95827bdee8a449873b6d0e5c048">&#9670;&#160;</a></span>inertia_matrix_terms</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Kokkos::View&lt;double*** [6][6]&gt; openturbine::Beams::inertia_matrix_terms</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -834,14 +818,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a2bb630820a374424c5d13bfec37ce79c" name="a2bb630820a374424c5d13bfec37ce79c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2bb630820a374424c5d13bfec37ce79c">&#9670;&#160;</a></span>stiffness_matrix_terms</h2>
+<a id="a2a7f3ceb15ee9aab4136967d99c62e9a" name="a2a7f3ceb15ee9aab4136967d99c62e9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a7f3ceb15ee9aab4136967d99c62e9a">&#9670;&#160;</a></span>system_matrix_terms</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*** [6][6]&gt; openturbine::Beams::stiffness_matrix_terms</td>
+          <td class="memname">Kokkos::View&lt;double*** [6][6]&gt; openturbine::Beams::system_matrix_terms</td>
         </tr>
       </table>
 </div><div class="memdoc">

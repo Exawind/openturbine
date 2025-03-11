@@ -174,6 +174,7 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;KokkosSparse.hpp&gt;</code><br />
 <code>#include &lt;Kokkos_Core.hpp&gt;</code><br />
+<code>#include &lt;Kokkos_Profiling_ScopedRegion.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="compute__b__num__non__zero_8hpp_source.html">compute_b_num_non_zero.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="populate__sparse__row__ptrs__col__inds__constraints_8hpp_source.html">populate_sparse_row_ptrs_col_inds_constraints.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="populate__sparse__row__ptrs__col__inds__transpose_8hpp_source.html">populate_sparse_row_ptrs_col_inds_transpose.hpp</a>&quot;</code><br />
@@ -187,10 +188,10 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0aa626a98a92ab481e233ec3997225c7" id="r_a0aa626a98a92ab481e233ec3997225c7"><td class="memTemplParams" colspan="2">template&lt;typename CrsMatrixType &gt; </td></tr>
-<tr class="memitem:a0aa626a98a92ab481e233ec3997225c7"><td class="memTemplItemLeft" align="right" valign="top">CrsMatrixType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a0aa626a98a92ab481e233ec3997225c7">openturbine::CreateBtMatrix</a> (size_t system_dofs, size_t constraint_dofs, const Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> * &gt;::const_type &amp;constraint_type, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_row_range, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_base_node_col_range, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_target_node_col_range)</td></tr>
-<tr class="memdesc:a0aa626a98a92ab481e233ec3997225c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the constraint matrix B_t in sparse CRS format.  <br /></td></tr>
-<tr class="separator:a0aa626a98a92ab481e233ec3997225c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab43390870d705d862ed999a9234b6f2" id="r_aab43390870d705d862ed999a9234b6f2"><td class="memTemplParams" colspan="2">template&lt;typename CrsMatrixType &gt; </td></tr>
+<tr class="memitem:aab43390870d705d862ed999a9234b6f2"><td class="memTemplItemLeft" align="right" valign="top">CrsMatrixType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aab43390870d705d862ed999a9234b6f2">openturbine::CreateBtMatrix</a> (size_t system_dofs, size_t constraint_dofs, const Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> * &gt;::const_type &amp;constraint_type, const Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;::const_type &amp;base_node_freedom_signature, const Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;::const_type &amp;target_node_freedom_signature, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_row_range)</td></tr>
+<tr class="memdesc:aab43390870d705d862ed999a9234b6f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the constraint matrix B_t in sparse CRS format.  <br /></td></tr>
+<tr class="separator:aab43390870d705d862ed999a9234b6f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

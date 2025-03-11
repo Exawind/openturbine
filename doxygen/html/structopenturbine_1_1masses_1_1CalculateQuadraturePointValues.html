@@ -193,6 +193,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a0da58acf7468a9a800349e43f6c61686"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa035165892508fac24dff716314254d" id="r_afa035165892508fac24dff716314254d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#afa035165892508fac24dff716314254d">A</a></td></tr>
 <tr class="separator:afa035165892508fac24dff716314254d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87b6e446a608fa2ab3c0d4b41d144854" id="r_a87b6e446a608fa2ab3c0d4b41d144854"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#a87b6e446a608fa2ab3c0d4b41d144854">tangent</a></td></tr>
+<tr class="separator:a87b6e446a608fa2ab3c0d4b41d144854"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe9bee9bbe12c1417b2233556eb44e0d" id="r_abe9bee9bbe12c1417b2233556eb44e0d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#abe9bee9bbe12c1417b2233556eb44e0d">node_state_indices</a></td></tr>
 <tr class="separator:abe9bee9bbe12c1417b2233556eb44e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80be436b8a2d087c436f932b563805c0" id="r_a80be436b8a2d087c436f932b563805c0"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double[3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#a80be436b8a2d087c436f932b563805c0">gravity</a></td></tr>
@@ -203,10 +205,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a51e9df4f48a4fd01b002b6f856d7efc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0034974fcb2cef3a930689b39e48f2b" id="r_aa0034974fcb2cef3a930689b39e48f2b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#aa0034974fcb2cef3a930689b39e48f2b">residual_vector_terms</a></td></tr>
 <tr class="separator:aa0034974fcb2cef3a930689b39e48f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d016fb308a511977f42e5adc4b1494d" id="r_a9d016fb308a511977f42e5adc4b1494d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#a9d016fb308a511977f42e5adc4b1494d">stiffness_matrix_terms</a></td></tr>
-<tr class="separator:a9d016fb308a511977f42e5adc4b1494d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89dfd4372936aabae27fcceafca817c7" id="r_a89dfd4372936aabae27fcceafca817c7"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#a89dfd4372936aabae27fcceafca817c7">inertia_matrix_terms</a></td></tr>
-<tr class="separator:a89dfd4372936aabae27fcceafca817c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15a2dc73864e81d4abb684eb70bda6c1" id="r_a15a2dc73864e81d4abb684eb70bda6c1"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#a15a2dc73864e81d4abb684eb70bda6c1">system_matrix_terms</a></td></tr>
+<tr class="separator:a15a2dc73864e81d4abb684eb70bda6c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a896b34884697826b78b105c8ff0ac651" name="a896b34884697826b78b105c8ff0ac651"></a>
@@ -292,20 +292,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a89dfd4372936aabae27fcceafca817c7" name="a89dfd4372936aabae27fcceafca817c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89dfd4372936aabae27fcceafca817c7">&#9670;&#160;</a></span>inertia_matrix_terms</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Kokkos::View&lt;double* [6][6]&gt; openturbine::masses::CalculateQuadraturePointValues::inertia_matrix_terms</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="abe9bee9bbe12c1417b2233556eb44e0d" name="abe9bee9bbe12c1417b2233556eb44e0d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abe9bee9bbe12c1417b2233556eb44e0d">&#9670;&#160;</a></span>node_state_indices</h2>
 
@@ -376,14 +362,28 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9d016fb308a511977f42e5adc4b1494d" name="a9d016fb308a511977f42e5adc4b1494d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d016fb308a511977f42e5adc4b1494d">&#9670;&#160;</a></span>stiffness_matrix_terms</h2>
+<a id="a15a2dc73864e81d4abb684eb70bda6c1" name="a15a2dc73864e81d4abb684eb70bda6c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15a2dc73864e81d4abb684eb70bda6c1">&#9670;&#160;</a></span>system_matrix_terms</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [6][6]&gt; openturbine::masses::CalculateQuadraturePointValues::stiffness_matrix_terms</td>
+          <td class="memname">Kokkos::View&lt;double* [6][6]&gt; openturbine::masses::CalculateQuadraturePointValues::system_matrix_terms</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a87b6e446a608fa2ab3c0d4b41d144854" name="a87b6e446a608fa2ab3c0d4b41d144854"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87b6e446a608fa2ab3c0d4b41d144854">&#9670;&#160;</a></span>tangent</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[6][6]&gt;::const_type openturbine::masses::CalculateQuadraturePointValues::tangent</td>
         </tr>
       </table>
 </div><div class="memdoc">

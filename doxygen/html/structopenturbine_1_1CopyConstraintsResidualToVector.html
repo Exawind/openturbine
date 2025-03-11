@@ -183,12 +183,14 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:add006cd22b8c2712fdb327b06da9c44c" id="r_add006cd22b8c2712fdb327b06da9c44c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#add006cd22b8c2712fdb327b06da9c44c">start_row</a></td></tr>
+<tr class="separator:add006cd22b8c2712fdb327b06da9c44c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d154b83d5e9e582da67b7cfeab3f059" id="r_a0d154b83d5e9e582da67b7cfeab3f059"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a0d154b83d5e9e582da67b7cfeab3f059">row_range</a></td></tr>
 <tr class="separator:a0d154b83d5e9e582da67b7cfeab3f059"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea79be6e5fa80678d3d08467ec2f2879" id="r_aea79be6e5fa80678d3d08467ec2f2879"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#aea79be6e5fa80678d3d08467ec2f2879">residual</a></td></tr>
-<tr class="separator:aea79be6e5fa80678d3d08467ec2f2879"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad16643404c78c1d7fa8ff34d8b5947a5" id="r_ad16643404c78c1d7fa8ff34d8b5947a5"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ad16643404c78c1d7fa8ff34d8b5947a5">constraint_residual_terms</a></td></tr>
 <tr class="separator:ad16643404c78c1d7fa8ff34d8b5947a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac6734734ac1a42ecaa13727b891da2c" id="r_aac6734734ac1a42ecaa13727b891da2c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[1], Kokkos::LayoutLeft &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#aac6734734ac1a42ecaa13727b891da2c">residual</a></td></tr>
+<tr class="separator:aac6734734ac1a42ecaa13727b891da2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="acc09811052500f18facd1f8966c32149" name="acc09811052500f18facd1f8966c32149"></a>
@@ -232,14 +234,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aea79be6e5fa80678d3d08467ec2f2879" name="aea79be6e5fa80678d3d08467ec2f2879"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea79be6e5fa80678d3d08467ec2f2879">&#9670;&#160;</a></span>residual</h2>
+<a id="aac6734734ac1a42ecaa13727b891da2c" name="aac6734734ac1a42ecaa13727b891da2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac6734734ac1a42ecaa13727b891da2c">&#9670;&#160;</a></span>residual</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*&gt; openturbine::CopyConstraintsResidualToVector::residual</td>
+          <td class="memname">Kokkos::View&lt;double* [1], Kokkos::LayoutLeft&gt; openturbine::CopyConstraintsResidualToVector::residual</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -254,6 +256,20 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*&gt;::const_type openturbine::CopyConstraintsResidualToVector::row_range</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="add006cd22b8c2712fdb327b06da9c44c" name="add006cd22b8c2712fdb327b06da9c44c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add006cd22b8c2712fdb327b06da9c44c">&#9670;&#160;</a></span>start_row</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::CopyConstraintsResidualToVector::start_row</td>
         </tr>
       </table>
 </div><div class="memdoc">

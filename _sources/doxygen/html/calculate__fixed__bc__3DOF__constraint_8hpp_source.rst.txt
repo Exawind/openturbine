@@ -1,0 +1,14 @@
+.. meta::7fc1ce6154f0ace308690999897948661bd2df115291f92ef7d5d9b870a1dfa7b34df03aa3646a51cc88a01af847207df6ea391accce283ea8175874539c68fc
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate_fixed_bc_3DOF_constraint.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate\_fixed\_bc\_3DOF\_constraint.hpp Source File
+============================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: calculate__fixed__bc__3DOF__constraint_8hpp_source.html

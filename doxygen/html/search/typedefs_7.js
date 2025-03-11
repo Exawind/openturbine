@@ -1,5 +1,7 @@
 var searchData=
 [
   ['matrix_0',['Matrix',['../namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1',1,'openturbine']]],
-  ['memoryspace_1',['MemorySpace',['../structopenturbine_1_1Solver.html#a027dfd83d4b63164754efd2e31d7df30',1,'openturbine::Solver']]]
+  ['matrixcopy_1',['MatrixCopy',['../structopenturbine_1_1CalculateConstraintResidualGradient.html#ae146374dcdfcabe5a00c3165593e23d6',1,'openturbine::CalculateConstraintResidualGradient']]],
+  ['matrixtranspose_2',['MatrixTranspose',['../structopenturbine_1_1CalculateConstraintResidualGradient.html#a7bfce0b0fc6b6961504f5a15630401e3',1,'openturbine::CalculateConstraintResidualGradient']]],
+  ['memoryspace_3',['MemorySpace',['../structopenturbine_1_1Solver.html#a027dfd83d4b63164754efd2e31d7df30',1,'openturbine::Solver']]]
 ];

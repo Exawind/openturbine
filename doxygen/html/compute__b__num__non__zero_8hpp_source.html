@@ -179,22 +179,22 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="compute__number__of__non__zeros__constraints_8hpp.html">compute_number_of_non_zeros_constraints.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
-<div class="foldopen" id="foldopen00008" data-start="{" data-end="}">
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a2d6a1d7ec417deea38e4c69e05ae44f8">    8</a></span>[[nodiscard]] <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code hl_function" href="namespaceopenturbine.html#a2d6a1d7ec417deea38e4c69e05ae44f8">ComputeBNumNonZero</a>(</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="keyword">const</span> Kokkos::View&lt;ConstraintType*&gt;::const_type&amp; constraint_type,</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">const</span> Kokkos::View&lt;Kokkos::pair&lt;size_t, size_t&gt;*&gt;::const_type&amp; constraint_row_range,</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keyword">const</span> Kokkos::View&lt;Kokkos::pair&lt;size_t, size_t&gt;*&gt;::const_type&amp; constraint_base_node_col_range,</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keyword">const</span> Kokkos::View&lt;Kokkos::pair&lt;size_t, size_t&gt;*&gt;::const_type&amp; constraint_target_node_col_range</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="constraint__type_8hpp.html">constraints/constraint_type.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
+<div class="foldopen" id="foldopen00009" data-start="{" data-end="}">
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a68091876e55a38d05cf5d1dd53affe3d">    9</a></span>[[nodiscard]] <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code hl_function" href="namespaceopenturbine.html#a68091876e55a38d05cf5d1dd53affe3d">ComputeBNumNonZero</a>(</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">const</span> Kokkos::View&lt;Kokkos::pair&lt;size_t, size_t&gt;*&gt;::const_type&amp; row_range,</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keyword">const</span> Kokkos::View&lt;FreedomSignature*&gt;::const_type&amp; base_node_freedom_signature,</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keyword">const</span> Kokkos::View&lt;FreedomSignature*&gt;::const_type&amp; target_node_freedom_signature</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>) {</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keyword">auto</span> B_num_non_zero = <span class="keywordtype">size_t</span>{0U};</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    Kokkos::parallel_reduce(</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="stringliteral">&quot;ComputeNumberOfNonZeros_Constraints&quot;</span>, constraint_type.extent(0),</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="stringliteral">&quot;ComputeNumberOfNonZeros_Constraints&quot;</span>, row_range.extent(0),</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <a class="code hl_struct" href="structopenturbine_1_1ComputeNumberOfNonZeros__Constraints.html">ComputeNumberOfNonZeros_Constraints</a>{</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>            constraint_row_range,</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>            constraint_base_node_col_range,</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>            constraint_target_node_col_range,</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>            row_range,</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>            base_node_freedom_signature,</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>            target_node_freedom_signature,</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        },</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        B_num_non_zero</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    );</div>
@@ -203,8 +203,9 @@ $(document).ready(function() { init_codefold(0); });
 </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="acompute__number__of__non__zeros__constraints_8hpp_html"><div class="ttname"><a href="compute__number__of__non__zeros__constraints_8hpp.html">compute_number_of_non_zeros_constraints.hpp</a></div></div>
-<div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_force.hpp:9</div></div>
-<div class="ttc" id="anamespaceopenturbine_html_a2d6a1d7ec417deea38e4c69e05ae44f8"><div class="ttname"><a href="namespaceopenturbine.html#a2d6a1d7ec417deea38e4c69e05ae44f8">openturbine::ComputeBNumNonZero</a></div><div class="ttdeci">static size_t ComputeBNumNonZero(const Kokkos::View&lt; ConstraintType * &gt;::const_type &amp;constraint_type, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_row_range, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_base_node_col_range, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_target_node_col_range)</div><div class="ttdef"><b>Definition</b> compute_b_num_non_zero.hpp:8</div></div>
+<div class="ttc" id="aconstraint__type_8hpp_html"><div class="ttname"><a href="constraint__type_8hpp.html">constraint_type.hpp</a></div></div>
+<div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a68091876e55a38d05cf5d1dd53affe3d"><div class="ttname"><a href="namespaceopenturbine.html#a68091876e55a38d05cf5d1dd53affe3d">openturbine::ComputeBNumNonZero</a></div><div class="ttdeci">static size_t ComputeBNumNonZero(const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;row_range, const Kokkos::View&lt; FreedomSignature * &gt;::const_type &amp;base_node_freedom_signature, const Kokkos::View&lt; FreedomSignature * &gt;::const_type &amp;target_node_freedom_signature)</div><div class="ttdef"><b>Definition</b> compute_b_num_non_zero.hpp:9</div></div>
 <div class="ttc" id="astructopenturbine_1_1ComputeNumberOfNonZeros__Constraints_html"><div class="ttname"><a href="structopenturbine_1_1ComputeNumberOfNonZeros__Constraints.html">openturbine::ComputeNumberOfNonZeros_Constraints</a></div><div class="ttdef"><b>Definition</b> compute_number_of_non_zeros_constraints.hpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

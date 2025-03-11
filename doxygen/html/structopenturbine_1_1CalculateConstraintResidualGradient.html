@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1CalculateConstraintResidualGradient-members.html">List of all members</a>  </div>
@@ -176,39 +177,187 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="calculate__constraint__residual__gradient_8hpp_source.html">calculate_constraint_residual_gradient.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a7bfce0b0fc6b6961504f5a15630401e3" id="r_a7bfce0b0fc6b6961504f5a15630401e3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a7bfce0b0fc6b6961504f5a15630401e3">MatrixTranspose</a> = KokkosBatched::SerialCopy&lt; KokkosBatched::Trans::Transpose &gt;</td></tr>
+<tr class="separator:a7bfce0b0fc6b6961504f5a15630401e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e7196ceb8ab597e9be85311eb5da418" id="r_a4e7196ceb8ab597e9be85311eb5da418"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a4e7196ceb8ab597e9be85311eb5da418">Gemm</a> = KokkosBatched::SerialGemm&lt; KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default &gt;</td></tr>
+<tr class="separator:a4e7196ceb8ab597e9be85311eb5da418"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75bd5b8755d9fce09440b9b659a2e3bd" id="r_a75bd5b8755d9fce09440b9b659a2e3bd"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a75bd5b8755d9fce09440b9b659a2e3bd">VectorCopy</a> = KokkosBatched::SerialCopy&lt; KokkosBatched::Trans::NoTranspose, 1 &gt;</td></tr>
+<tr class="separator:a75bd5b8755d9fce09440b9b659a2e3bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae146374dcdfcabe5a00c3165593e23d6" id="r_ae146374dcdfcabe5a00c3165593e23d6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#ae146374dcdfcabe5a00c3165593e23d6">MatrixCopy</a> = KokkosBatched::SerialCopy&lt; KokkosBatched::Trans::NoTranspose, 2 &gt;</td></tr>
+<tr class="separator:ae146374dcdfcabe5a00c3165593e23d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aef187647b781fca6688cd9f5b722a59e" id="r_aef187647b781fca6688cd9f5b722a59e"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#aef187647b781fca6688cd9f5b722a59e">operator()</a> (const int i_constraint) const</td></tr>
-<tr class="separator:aef187647b781fca6688cd9f5b722a59e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ab00ef62af09580e62b123ac8b96628" id="r_a4ab00ef62af09580e62b123ac8b96628"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a4ab00ef62af09580e62b123ac8b96628">FixedBC</a> (size_t i) const</td></tr>
+<tr class="separator:a4ab00ef62af09580e62b123ac8b96628"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c56b7c5b2c0051023649fe5825547ef" id="r_a3c56b7c5b2c0051023649fe5825547ef"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a3c56b7c5b2c0051023649fe5825547ef">FixedBC3DOF</a> (size_t i) const</td></tr>
+<tr class="separator:a3c56b7c5b2c0051023649fe5825547ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60267856b05e3a8474b578001f7c92f4" id="r_a60267856b05e3a8474b578001f7c92f4"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a60267856b05e3a8474b578001f7c92f4">PrescribedBC</a> (size_t i) const</td></tr>
+<tr class="separator:a60267856b05e3a8474b578001f7c92f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a833e63ac3f28fa4132b20f8e0169c06b" id="r_a833e63ac3f28fa4132b20f8e0169c06b"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a833e63ac3f28fa4132b20f8e0169c06b">PrescribedBC3DOF</a> (size_t i) const</td></tr>
+<tr class="separator:a833e63ac3f28fa4132b20f8e0169c06b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b8b8d8047beb34f927bbbbc5431334a" id="r_a2b8b8d8047beb34f927bbbbc5431334a"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a2b8b8d8047beb34f927bbbbc5431334a">RigidJoint</a> (size_t i) const</td></tr>
+<tr class="separator:a2b8b8d8047beb34f927bbbbc5431334a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c3d3c065e81e8a86249929ecfed980c" id="r_a0c3d3c065e81e8a86249929ecfed980c"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a0c3d3c065e81e8a86249929ecfed980c">RigidJoint3DOF</a> (size_t i) const</td></tr>
+<tr class="separator:a0c3d3c065e81e8a86249929ecfed980c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69ddd0f0959833b351515d36e144199b" id="r_a69ddd0f0959833b351515d36e144199b"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a69ddd0f0959833b351515d36e144199b">RevoluteJoint</a> (size_t i) const</td></tr>
+<tr class="separator:a69ddd0f0959833b351515d36e144199b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd40ec5768ffe393e98c84390a3a0d2d" id="r_abd40ec5768ffe393e98c84390a3a0d2d"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#abd40ec5768ffe393e98c84390a3a0d2d">RotationControl</a> (size_t i) const</td></tr>
+<tr class="separator:abd40ec5768ffe393e98c84390a3a0d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a989ead5f9c21a1255189930bdceee442" id="r_a989ead5f9c21a1255189930bdceee442"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a989ead5f9c21a1255189930bdceee442">operator()</a> (size_t i) const</td></tr>
+<tr class="separator:a989ead5f9c21a1255189930bdceee442"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a163df4dde4c36e4cef5f8011a34e20aa" id="r_a163df4dde4c36e4cef5f8011a34e20aa"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a163df4dde4c36e4cef5f8011a34e20aa">type</a></td></tr>
-<tr class="separator:a163df4dde4c36e4cef5f8011a34e20aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5987d780160947da1a4e35b490ae64f8" id="r_a5987d780160947da1a4e35b490ae64f8"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a5987d780160947da1a4e35b490ae64f8">target_node_col_range</a></td></tr>
-<tr class="separator:a5987d780160947da1a4e35b490ae64f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0677f7b90a5a6f5f4ecb3fd4778db4cc" id="r_a0677f7b90a5a6f5f4ecb3fd4778db4cc"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a0677f7b90a5a6f5f4ecb3fd4778db4cc">base_node_index</a></td></tr>
-<tr class="separator:a0677f7b90a5a6f5f4ecb3fd4778db4cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea76f54f7787b5709e8eb9a9ad2d87db" id="r_aea76f54f7787b5709e8eb9a9ad2d87db"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#aea76f54f7787b5709e8eb9a9ad2d87db">target_node_index</a></td></tr>
-<tr class="separator:aea76f54f7787b5709e8eb9a9ad2d87db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57908b0fd9a02d806e1a8ab399cd2027" id="r_a57908b0fd9a02d806e1a8ab399cd2027"><td class="memItemLeft" align="right" valign="top">View_Nx3::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a57908b0fd9a02d806e1a8ab399cd2027">X0_</a></td></tr>
-<tr class="separator:a57908b0fd9a02d806e1a8ab399cd2027"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d16fd02dd7e98e1425b751f1d102777" id="r_a3d16fd02dd7e98e1425b751f1d102777"><td class="memItemLeft" align="right" valign="top">View_Nx3x3::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a3d16fd02dd7e98e1425b751f1d102777">axes</a></td></tr>
-<tr class="separator:a3d16fd02dd7e98e1425b751f1d102777"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70f4caaebc54a3f75627886e653204d9" id="r_a70f4caaebc54a3f75627886e653204d9"><td class="memItemLeft" align="right" valign="top">View_Nx7::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a70f4caaebc54a3f75627886e653204d9">constraint_inputs</a></td></tr>
-<tr class="separator:a70f4caaebc54a3f75627886e653204d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaae0429ade665ea382e2d3937bb68829" id="r_aaae0429ade665ea382e2d3937bb68829"><td class="memItemLeft" align="right" valign="top">View_Nx7::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#aaae0429ade665ea382e2d3937bb68829">node_u</a></td></tr>
-<tr class="separator:aaae0429ade665ea382e2d3937bb68829"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bf4c652b1979b54e31d58ecc0708f83" id="r_a8bf4c652b1979b54e31d58ecc0708f83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a2464cbd056dc563006be24d81413d2c1">View_Nx6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a8bf4c652b1979b54e31d58ecc0708f83">residual_terms</a></td></tr>
-<tr class="separator:a8bf4c652b1979b54e31d58ecc0708f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc555ba82e8966a27077359c360ebfb7" id="r_adc555ba82e8966a27077359c360ebfb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#adc555ba82e8966a27077359c360ebfb7">base_gradient_terms</a></td></tr>
-<tr class="separator:adc555ba82e8966a27077359c360ebfb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a716052bc5d8d2b003f12343cae8d68ec" id="r_a716052bc5d8d2b003f12343cae8d68ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a716052bc5d8d2b003f12343cae8d68ec">target_gradient_terms</a></td></tr>
-<tr class="separator:a716052bc5d8d2b003f12343cae8d68ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd8481dcc2e295bc26ffb597fbf6e49b" id="r_abd8481dcc2e295bc26ffb597fbf6e49b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#abd8481dcc2e295bc26ffb597fbf6e49b">type_</a></td></tr>
+<tr class="separator:abd8481dcc2e295bc26ffb597fbf6e49b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae24f74ec98679d42eae97c4aefc0635b" id="r_ae24f74ec98679d42eae97c4aefc0635b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#ae24f74ec98679d42eae97c4aefc0635b">base_node_index_</a></td></tr>
+<tr class="separator:ae24f74ec98679d42eae97c4aefc0635b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef368761c8e02b3eba12c2561eb15173" id="r_aef368761c8e02b3eba12c2561eb15173"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#aef368761c8e02b3eba12c2561eb15173">target_node_index_</a></td></tr>
+<tr class="separator:aef368761c8e02b3eba12c2561eb15173"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0621a1d76a4fa02102c8a9d7cd8916b4" id="r_a0621a1d76a4fa02102c8a9d7cd8916b4"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a0621a1d76a4fa02102c8a9d7cd8916b4">X0_</a></td></tr>
+<tr class="separator:a0621a1d76a4fa02102c8a9d7cd8916b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bb0a0bfb0ac4b1b32aab92186191e72" id="r_a6bb0a0bfb0ac4b1b32aab92186191e72"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3][3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a6bb0a0bfb0ac4b1b32aab92186191e72">axes_</a></td></tr>
+<tr class="separator:a6bb0a0bfb0ac4b1b32aab92186191e72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a770f5d1a282435d3b9d3e6ba38af3087" id="r_a770f5d1a282435d3b9d3e6ba38af3087"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a770f5d1a282435d3b9d3e6ba38af3087">constraint_inputs_</a></td></tr>
+<tr class="separator:a770f5d1a282435d3b9d3e6ba38af3087"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4be7927cf62362edfd699e832022ab04" id="r_a4be7927cf62362edfd699e832022ab04"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a4be7927cf62362edfd699e832022ab04">lambda_</a></td></tr>
+<tr class="separator:a4be7927cf62362edfd699e832022ab04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28bf03bdb18317828529ee878185849b" id="r_a28bf03bdb18317828529ee878185849b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a28bf03bdb18317828529ee878185849b">tangent_</a></td></tr>
+<tr class="separator:a28bf03bdb18317828529ee878185849b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1f0ff6622325be8389323a0eec36d39" id="r_ab1f0ff6622325be8389323a0eec36d39"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#ab1f0ff6622325be8389323a0eec36d39">node_u_</a></td></tr>
+<tr class="separator:ab1f0ff6622325be8389323a0eec36d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b3e28308628983e14db87148232a504" id="r_a7b3e28308628983e14db87148232a504"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a7b3e28308628983e14db87148232a504">res_</a></td></tr>
+<tr class="separator:a7b3e28308628983e14db87148232a504"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af502bd476bef351763985d5cb222fd0a" id="r_af502bd476bef351763985d5cb222fd0a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#af502bd476bef351763985d5cb222fd0a">b_lambda_res_</a></td></tr>
+<tr class="separator:af502bd476bef351763985d5cb222fd0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a198ce08ecde07c5d23737389b2b6ebe3" id="r_a198ce08ecde07c5d23737389b2b6ebe3"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a198ce08ecde07c5d23737389b2b6ebe3">t_lambda_res_</a></td></tr>
+<tr class="separator:a198ce08ecde07c5d23737389b2b6ebe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaac3423d33df8866bd04fd83235d44be" id="r_aaac3423d33df8866bd04fd83235d44be"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#aaac3423d33df8866bd04fd83235d44be">system_res_</a></td></tr>
+<tr class="separator:aaac3423d33df8866bd04fd83235d44be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43dbfad9d6d6c0daa0782cc9c97d001c" id="r_a43dbfad9d6d6c0daa0782cc9c97d001c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a43dbfad9d6d6c0daa0782cc9c97d001c">b_grad_</a></td></tr>
+<tr class="separator:a43dbfad9d6d6c0daa0782cc9c97d001c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af642173ba5de9d4d1601207696b4add8" id="r_af642173ba5de9d4d1601207696b4add8"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#af642173ba5de9d4d1601207696b4add8">t_grad_</a></td></tr>
+<tr class="separator:af642173ba5de9d4d1601207696b4add8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a343f99c438c90ce9d0dfc46a3a2767eb" id="r_a343f99c438c90ce9d0dfc46a3a2767eb"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a343f99c438c90ce9d0dfc46a3a2767eb">b_grad_trans_</a></td></tr>
+<tr class="separator:a343f99c438c90ce9d0dfc46a3a2767eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3962dee0b3451e322fc7541ae686db54" id="r_a3962dee0b3451e322fc7541ae686db54"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a3962dee0b3451e322fc7541ae686db54">t_grad_trans_</a></td></tr>
+<tr class="separator:a3962dee0b3451e322fc7541ae686db54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a4e7196ceb8ab597e9be85311eb5da418" name="a4e7196ceb8ab597e9be85311eb5da418"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e7196ceb8ab597e9be85311eb5da418">&#9670;&#160;</a></span>Gemm</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a4e7196ceb8ab597e9be85311eb5da418">openturbine::CalculateConstraintResidualGradient::Gemm</a> =  KokkosBatched::SerialGemm&lt; KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae146374dcdfcabe5a00c3165593e23d6" name="ae146374dcdfcabe5a00c3165593e23d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae146374dcdfcabe5a00c3165593e23d6">&#9670;&#160;</a></span>MatrixCopy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#ae146374dcdfcabe5a00c3165593e23d6">openturbine::CalculateConstraintResidualGradient::MatrixCopy</a> =  KokkosBatched::SerialCopy&lt;KokkosBatched::Trans::NoTranspose, 2&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7bfce0b0fc6b6961504f5a15630401e3" name="a7bfce0b0fc6b6961504f5a15630401e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bfce0b0fc6b6961504f5a15630401e3">&#9670;&#160;</a></span>MatrixTranspose</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a7bfce0b0fc6b6961504f5a15630401e3">openturbine::CalculateConstraintResidualGradient::MatrixTranspose</a> =  KokkosBatched::SerialCopy&lt;KokkosBatched::Trans::Transpose&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a75bd5b8755d9fce09440b9b659a2e3bd" name="a75bd5b8755d9fce09440b9b659a2e3bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75bd5b8755d9fce09440b9b659a2e3bd">&#9670;&#160;</a></span>VectorCopy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a75bd5b8755d9fce09440b9b659a2e3bd">openturbine::CalculateConstraintResidualGradient::VectorCopy</a> =  KokkosBatched::SerialCopy&lt;KokkosBatched::Trans::NoTranspose, 1&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aef187647b781fca6688cd9f5b722a59e" name="aef187647b781fca6688cd9f5b722a59e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef187647b781fca6688cd9f5b722a59e">&#9670;&#160;</a></span>operator()()</h2>
+<a id="a4ab00ef62af09580e62b123ac8b96628" name="a4ab00ef62af09580e62b123ac8b96628"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ab00ef62af09580e62b123ac8b96628">&#9670;&#160;</a></span>FixedBC()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateConstraintResidualGradient::FixedBC </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3c56b7c5b2c0051023649fe5825547ef" name="a3c56b7c5b2c0051023649fe5825547ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c56b7c5b2c0051023649fe5825547ef">&#9670;&#160;</a></span>FixedBC3DOF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateConstraintResidualGradient::FixedBC3DOF </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a989ead5f9c21a1255189930bdceee442" name="a989ead5f9c21a1255189930bdceee442"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a989ead5f9c21a1255189930bdceee442">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,8 +368,164 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateConstraintResidualGradient::operator() </td>
           <td>(</td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>i_constraint</em></td><td>)</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a60267856b05e3a8474b578001f7c92f4" name="a60267856b05e3a8474b578001f7c92f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60267856b05e3a8474b578001f7c92f4">&#9670;&#160;</a></span>PrescribedBC()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateConstraintResidualGradient::PrescribedBC </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a833e63ac3f28fa4132b20f8e0169c06b" name="a833e63ac3f28fa4132b20f8e0169c06b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a833e63ac3f28fa4132b20f8e0169c06b">&#9670;&#160;</a></span>PrescribedBC3DOF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateConstraintResidualGradient::PrescribedBC3DOF </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a69ddd0f0959833b351515d36e144199b" name="a69ddd0f0959833b351515d36e144199b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69ddd0f0959833b351515d36e144199b">&#9670;&#160;</a></span>RevoluteJoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateConstraintResidualGradient::RevoluteJoint </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2b8b8d8047beb34f927bbbbc5431334a" name="a2b8b8d8047beb34f927bbbbc5431334a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b8b8d8047beb34f927bbbbc5431334a">&#9670;&#160;</a></span>RigidJoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateConstraintResidualGradient::RigidJoint </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0c3d3c065e81e8a86249929ecfed980c" name="a0c3d3c065e81e8a86249929ecfed980c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c3d3c065e81e8a86249929ecfed980c">&#9670;&#160;</a></span>RigidJoint3DOF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateConstraintResidualGradient::RigidJoint3DOF </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abd40ec5768ffe393e98c84390a3a0d2d" name="abd40ec5768ffe393e98c84390a3a0d2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd40ec5768ffe393e98c84390a3a0d2d">&#9670;&#160;</a></span>RotationControl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateConstraintResidualGradient::RotationControl </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -234,154 +539,238 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a3d16fd02dd7e98e1425b751f1d102777" name="a3d16fd02dd7e98e1425b751f1d102777"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d16fd02dd7e98e1425b751f1d102777">&#9670;&#160;</a></span>axes</h2>
+<a id="a6bb0a0bfb0ac4b1b32aab92186191e72" name="a6bb0a0bfb0ac4b1b32aab92186191e72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bb0a0bfb0ac4b1b32aab92186191e72">&#9670;&#160;</a></span>axes_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">View_Nx3x3::const_type openturbine::CalculateConstraintResidualGradient::axes</td>
+          <td class="memname">Kokkos::View&lt;double*[3][3]&gt;::const_type openturbine::CalculateConstraintResidualGradient::axes_</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="adc555ba82e8966a27077359c360ebfb7" name="adc555ba82e8966a27077359c360ebfb7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc555ba82e8966a27077359c360ebfb7">&#9670;&#160;</a></span>base_gradient_terms</h2>
+<a id="a43dbfad9d6d6c0daa0782cc9c97d001c" name="a43dbfad9d6d6c0daa0782cc9c97d001c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43dbfad9d6d6c0daa0782cc9c97d001c">&#9670;&#160;</a></span>b_grad_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a> openturbine::CalculateConstraintResidualGradient::base_gradient_terms</td>
+          <td class="memname">Kokkos::View&lt;double* [6][6]&gt; openturbine::CalculateConstraintResidualGradient::b_grad_</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a0677f7b90a5a6f5f4ecb3fd4778db4cc" name="a0677f7b90a5a6f5f4ecb3fd4778db4cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0677f7b90a5a6f5f4ecb3fd4778db4cc">&#9670;&#160;</a></span>base_node_index</h2>
+<a id="a343f99c438c90ce9d0dfc46a3a2767eb" name="a343f99c438c90ce9d0dfc46a3a2767eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a343f99c438c90ce9d0dfc46a3a2767eb">&#9670;&#160;</a></span>b_grad_trans_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*&gt;::const_type openturbine::CalculateConstraintResidualGradient::base_node_index</td>
+          <td class="memname">Kokkos::View&lt;double* [6][6]&gt; openturbine::CalculateConstraintResidualGradient::b_grad_trans_</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a70f4caaebc54a3f75627886e653204d9" name="a70f4caaebc54a3f75627886e653204d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a70f4caaebc54a3f75627886e653204d9">&#9670;&#160;</a></span>constraint_inputs</h2>
+<a id="af502bd476bef351763985d5cb222fd0a" name="af502bd476bef351763985d5cb222fd0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af502bd476bef351763985d5cb222fd0a">&#9670;&#160;</a></span>b_lambda_res_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">View_Nx7::const_type openturbine::CalculateConstraintResidualGradient::constraint_inputs</td>
+          <td class="memname">Kokkos::View&lt;double* [6]&gt; openturbine::CalculateConstraintResidualGradient::b_lambda_res_</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aaae0429ade665ea382e2d3937bb68829" name="aaae0429ade665ea382e2d3937bb68829"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaae0429ade665ea382e2d3937bb68829">&#9670;&#160;</a></span>node_u</h2>
+<a id="ae24f74ec98679d42eae97c4aefc0635b" name="ae24f74ec98679d42eae97c4aefc0635b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae24f74ec98679d42eae97c4aefc0635b">&#9670;&#160;</a></span>base_node_index_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">View_Nx7::const_type openturbine::CalculateConstraintResidualGradient::node_u</td>
+          <td class="memname">Kokkos::View&lt;size_t*&gt;::const_type openturbine::CalculateConstraintResidualGradient::base_node_index_</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a8bf4c652b1979b54e31d58ecc0708f83" name="a8bf4c652b1979b54e31d58ecc0708f83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8bf4c652b1979b54e31d58ecc0708f83">&#9670;&#160;</a></span>residual_terms</h2>
+<a id="a770f5d1a282435d3b9d3e6ba38af3087" name="a770f5d1a282435d3b9d3e6ba38af3087"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a770f5d1a282435d3b9d3e6ba38af3087">&#9670;&#160;</a></span>constraint_inputs_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceopenturbine.html#a2464cbd056dc563006be24d81413d2c1">View_Nx6</a> openturbine::CalculateConstraintResidualGradient::residual_terms</td>
+          <td class="memname">Kokkos::View&lt;double*[7]&gt;::const_type openturbine::CalculateConstraintResidualGradient::constraint_inputs_</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a716052bc5d8d2b003f12343cae8d68ec" name="a716052bc5d8d2b003f12343cae8d68ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a716052bc5d8d2b003f12343cae8d68ec">&#9670;&#160;</a></span>target_gradient_terms</h2>
+<a id="a4be7927cf62362edfd699e832022ab04" name="a4be7927cf62362edfd699e832022ab04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4be7927cf62362edfd699e832022ab04">&#9670;&#160;</a></span>lambda_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceopenturbine.html#afcf69cafaa3c50d68131bcd609d49949">View_Nx6x6</a> openturbine::CalculateConstraintResidualGradient::target_gradient_terms</td>
+          <td class="memname">Kokkos::View&lt;double*[6]&gt;::const_type openturbine::CalculateConstraintResidualGradient::lambda_</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a5987d780160947da1a4e35b490ae64f8" name="a5987d780160947da1a4e35b490ae64f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5987d780160947da1a4e35b490ae64f8">&#9670;&#160;</a></span>target_node_col_range</h2>
+<a id="ab1f0ff6622325be8389323a0eec36d39" name="ab1f0ff6622325be8389323a0eec36d39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1f0ff6622325be8389323a0eec36d39">&#9670;&#160;</a></span>node_u_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*&gt;::const_type openturbine::CalculateConstraintResidualGradient::target_node_col_range</td>
+          <td class="memname">Kokkos::View&lt;double*[7]&gt;::const_type openturbine::CalculateConstraintResidualGradient::node_u_</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aea76f54f7787b5709e8eb9a9ad2d87db" name="aea76f54f7787b5709e8eb9a9ad2d87db"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea76f54f7787b5709e8eb9a9ad2d87db">&#9670;&#160;</a></span>target_node_index</h2>
+<a id="a7b3e28308628983e14db87148232a504" name="a7b3e28308628983e14db87148232a504"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b3e28308628983e14db87148232a504">&#9670;&#160;</a></span>res_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*&gt;::const_type openturbine::CalculateConstraintResidualGradient::target_node_index</td>
+          <td class="memname">Kokkos::View&lt;double* [6]&gt; openturbine::CalculateConstraintResidualGradient::res_</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a163df4dde4c36e4cef5f8011a34e20aa" name="a163df4dde4c36e4cef5f8011a34e20aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a163df4dde4c36e4cef5f8011a34e20aa">&#9670;&#160;</a></span>type</h2>
+<a id="aaac3423d33df8866bd04fd83235d44be" name="aaac3423d33df8866bd04fd83235d44be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaac3423d33df8866bd04fd83235d44be">&#9670;&#160;</a></span>system_res_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a>*&gt;::const_type openturbine::CalculateConstraintResidualGradient::type</td>
+          <td class="memname">Kokkos::View&lt;double* [6]&gt; openturbine::CalculateConstraintResidualGradient::system_res_</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a57908b0fd9a02d806e1a8ab399cd2027" name="a57908b0fd9a02d806e1a8ab399cd2027"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57908b0fd9a02d806e1a8ab399cd2027">&#9670;&#160;</a></span>X0_</h2>
+<a id="af642173ba5de9d4d1601207696b4add8" name="af642173ba5de9d4d1601207696b4add8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af642173ba5de9d4d1601207696b4add8">&#9670;&#160;</a></span>t_grad_</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">View_Nx3::const_type openturbine::CalculateConstraintResidualGradient::X0_</td>
+          <td class="memname">Kokkos::View&lt;double* [6][6]&gt; openturbine::CalculateConstraintResidualGradient::t_grad_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3962dee0b3451e322fc7541ae686db54" name="a3962dee0b3451e322fc7541ae686db54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3962dee0b3451e322fc7541ae686db54">&#9670;&#160;</a></span>t_grad_trans_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [6][6]&gt; openturbine::CalculateConstraintResidualGradient::t_grad_trans_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a198ce08ecde07c5d23737389b2b6ebe3" name="a198ce08ecde07c5d23737389b2b6ebe3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a198ce08ecde07c5d23737389b2b6ebe3">&#9670;&#160;</a></span>t_lambda_res_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double* [6]&gt; openturbine::CalculateConstraintResidualGradient::t_lambda_res_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a28bf03bdb18317828529ee878185849b" name="a28bf03bdb18317828529ee878185849b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28bf03bdb18317828529ee878185849b">&#9670;&#160;</a></span>tangent_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[6][6]&gt;::const_type openturbine::CalculateConstraintResidualGradient::tangent_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aef368761c8e02b3eba12c2561eb15173" name="aef368761c8e02b3eba12c2561eb15173"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef368761c8e02b3eba12c2561eb15173">&#9670;&#160;</a></span>target_node_index_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;size_t*&gt;::const_type openturbine::CalculateConstraintResidualGradient::target_node_index_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abd8481dcc2e295bc26ffb597fbf6e49b" name="abd8481dcc2e295bc26ffb597fbf6e49b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd8481dcc2e295bc26ffb597fbf6e49b">&#9670;&#160;</a></span>type_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a>*&gt;::const_type openturbine::CalculateConstraintResidualGradient::type_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0621a1d76a4fa02102c8a9d7cd8916b4" name="a0621a1d76a4fa02102c8a9d7cd8916b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0621a1d76a4fa02102c8a9d7cd8916b4">&#9670;&#160;</a></span>X0_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Kokkos::View&lt;double*[3]&gt;::const_type openturbine::CalculateConstraintResidualGradient::X0_</td>
         </tr>
       </table>
 </div><div class="memdoc">

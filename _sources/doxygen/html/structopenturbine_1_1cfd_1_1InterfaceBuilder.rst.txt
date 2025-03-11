@@ -1,0 +1,14 @@
+.. meta::13e1a4af64bf0a17695c9c5714c678319b08c76bf2b4c3b1c41953624d0a5bd5b4506b4d22b899e4e98af7e74486d6c210ffe1ea25efb76931f1b28442bba349
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::cfd::InterfaceBuilder Struct Reference
+
+InterfaceBuilder Struct Reference
+=================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1cfd_1_1InterfaceBuilder.html
