@@ -54,6 +54,7 @@ template <typename CrsMatrixType>
         ),
         B_row_ptrs
     );
+
     return CrsMatrixType(
         "constraints_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs),
         B_num_non_zero, B_values, constraints_matrix_full_row_ptrs,

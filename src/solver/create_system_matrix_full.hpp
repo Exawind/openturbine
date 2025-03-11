@@ -50,6 +50,7 @@ template <typename CrsMatrixType>
             num_system_dofs, K_row_ptrs, system_matrix_full_row_ptrs
         }
     );
+
     return CrsMatrixType(
         "system_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs),
         K_num_non_zero, K_values, system_matrix_full_row_ptrs,

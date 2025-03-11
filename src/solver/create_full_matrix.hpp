@@ -49,13 +49,16 @@ template <typename GlobalCrsMatrixType>
                ), 
                CreateMatrixSpadd<CrsMatrixType, KernelHandle>(
                    CreateMatrixSpadd<CrsMatrixType, KernelHandle>(
-                       CreateSystemMatrixFull<CrsMatrixType>(
+                       CreateTransposeMatrixFull<CrsMatrixType>(
                            num_system_dofs,
                            num_dofs,
-                           node_freedom_allocation_table,
-                           node_freedom_map_table,
-                           num_nodes_per_element,
-                           node_state_indices
+                           num_constraint_dofs,
+                           constraint_type,
+                           base_node_freedom_signature,
+                           target_node_freedom_signature,
+                           base_node_freedom_table,
+                           target_node_freedom_table,
+                           row_range
                        ),
                        CreateConstraintsMatrixFull<CrsMatrixType>(
                            num_system_dofs,
@@ -69,16 +72,13 @@ template <typename GlobalCrsMatrixType>
                            row_range
                        )
                    ),
-                   CreateTransposeMatrixFull<CrsMatrixType>(
+                   CreateSystemMatrixFull<CrsMatrixType>(
                        num_system_dofs,
                        num_dofs,
-                       num_constraint_dofs,
-                       constraint_type,
-                       base_node_freedom_signature,
-                       target_node_freedom_signature,
-                       base_node_freedom_table,
-                       target_node_freedom_table,
-                       row_range
+                       node_freedom_allocation_table,
+                       node_freedom_map_table,
+                       num_nodes_per_element,
+                       node_state_indices
                    )
                )
            );
