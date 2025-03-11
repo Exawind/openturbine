@@ -9,7 +9,11 @@ namespace openturbine::tests {
 class NodeStateWriterTest : public ::testing::Test {
 protected:
     void SetUp() override {
-        test_file = "test_node_state.nc";
+        // Create a unique filename using the test info to avoid race condition
+        const testing::TestInfo* const test_info =
+            testing::UnitTest::GetInstance()->current_test_info();
+        test_file =
+            std::string(test_info->test_case_name()) + "_" + std::string(test_info->name()) + ".nc";
         std::filesystem::remove(test_file);
         num_nodes = 3;
     }
