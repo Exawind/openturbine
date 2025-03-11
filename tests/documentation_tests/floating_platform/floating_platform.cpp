@@ -38,7 +38,7 @@ int main() {
         constexpr auto mooring_line_initial_length{55.432};  // m
 
         // Create cfd interface
-        auto interface = InterfaceBuilder{}
+        auto interface = openturbine::cfd::InterfaceBuilder{}
                              .SetGravity(gravity)
                              .SetTimeStep(time_step)
                              .SetDampingFactor(rho_inf)
