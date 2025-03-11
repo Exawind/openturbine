@@ -11,7 +11,24 @@ Provides the following variables:
   * `NetCDF::NetCDF`: A target to use with `target_link_libraries`.
 #]==]
 
-# Try to find a CMake-built NetCDF.
+# Set policy CMP0144 to NEW to properly handle package root variables
+if(POLICY CMP0144)
+  cmake_policy(SET CMP0144 NEW)
+endif()
+
+# First try to find nc-config to get the installation prefix
+find_program(NC_CONFIG "nc-config")
+if(NC_CONFIG)
+  execute_process(
+    COMMAND ${NC_CONFIG} --prefix
+    OUTPUT_VARIABLE NETCDF_ROOT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  set(NetCDF_ROOT ${NETCDF_ROOT})
+  set(CMAKE_PREFIX_PATH ${NETCDF_ROOT} ${CMAKE_PREFIX_PATH})
+endif()
+
+# Try to find a CMake-built NetCDF
 find_package(netCDF CONFIG QUIET)
 if (netCDF_FOUND)
   # Forward the variables in a consistent way.

@@ -38,8 +38,12 @@ endif()
 #----------------------------------------
 if(TARGET netCDF::netcdf)
   set(NETCDF_TARGET netCDF::netcdf)
+elseif(TARGET NetCDF::NetCDF)
+  set(NETCDF_TARGET NetCDF::NetCDF)
+elseif(TARGET netcdf)
+  set(NETCDF_TARGET netcdf)
 else()
-  set(NETCDF_TARGET netCDF)
+  message(FATAL_ERROR "NetCDF library not found")
 endif()
 
 #--------------------------------------------------------------------------
