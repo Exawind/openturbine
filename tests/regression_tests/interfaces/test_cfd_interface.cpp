@@ -22,6 +22,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
                          .EnableFloatingPlatform(true)
                          .SetFloatingPlatformVelocity({0., 0., 0., 0.5, 0.5, 1.})
                          .SetFloatingPlatformMassMatrix(mass_matrix)
+                         .SetOutputFile("precession_test.nc")
                          .Build();
 
     // Create reference to platform node in interface
