@@ -107,7 +107,7 @@ inline void SetUpSolverAndAssemble() {
     AssembleConstraintsMatrix(solver, constraints);
     AssembleConstraintsResidual(solver, constraints);
 
-    expect_kokkos_view_1D_equal(constraints.lambda, {0., 0., 0., 0., 0., 0.});
+    expect_kokkos_view_2D_equal(constraints.lambda, {{0., 0., 0., 0., 0., 0.}});
     expect_kokkos_view_2D_equal(
         state.q_prev,
         {
@@ -414,16 +414,15 @@ inline void SetupAndTakeNoSteps() {
              0.00049999976934543534},
         }
     );
-    expect_kokkos_view_1D_equal(
-        constraints.lambda,
-        {
-            0.10816660597819647,
-            0.000095455157310304377,
-            2.1220160418770112E-9,
-            -2.0316113427113777E-8,
-            -2.1788291524533811E-8,
-            -0.000033726153743119725,
-        }
+    expect_kokkos_view_2D_equal(
+        constraints.lambda, {{
+                                0.10816660597819647,
+                                0.000095455157310304377,
+                                2.1220160418770112E-9,
+                                -2.0316113427113777E-8,
+                                -2.1788291524533811E-8,
+                                -0.000033726153743119725,
+                            }}
     );
 }
 
