@@ -2,6 +2,7 @@
 
 #include <KokkosSparse.hpp>
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "fill_unshifted_row_ptrs.hpp"
 
@@ -11,6 +12,8 @@ template <typename CrsMatrixType>
 [[nodiscard]] inline CrsMatrixType CreateSystemMatrixFull(
     size_t num_system_dofs, size_t num_dofs, const CrsMatrixType& system_matrix
 ) {
+    auto region = Kokkos::Profiling::ScopedRegion("Create Full System Matrix");
+
     using RowPtrType = typename CrsMatrixType::staticcrsgraph_type::row_map_type::non_const_type;
 
     auto system_matrix_full_row_ptrs = RowPtrType("system_matrix_full_row_ptrs", num_dofs + 1);
