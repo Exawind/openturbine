@@ -1,43 +1,66 @@
 function(openturbine_setup_dependencies)
-  # Find and link required packages
+  #--------------------------------------------------------------------------
+  # Required packages
+  #--------------------------------------------------------------------------
   find_package(KokkosKernels REQUIRED)
   find_package(Amesos2 REQUIRED)
   find_package(yaml-cpp REQUIRED)
+  find_package(HDF5 REQUIRED)
+  find_package(NetCDF REQUIRED)
 
-  # Optionally find and link MKL if available
+  #--------------------------------------------------------------------------
+  # Optional packages
+  #--------------------------------------------------------------------------
+  #----------------------------------------
+  # MKL
+  #----------------------------------------
   if(TARGET Kokkos::MKL)
     find_package(MKL REQUIRED)
   endif()
 
+  #----------------------------------------
+  # MPI
+  #----------------------------------------
   if(Amesos2_ENABLE_MPI)
     find_package(MPI REQUIRED)
   endif()
 
-  # Conditionally find and link VTK if enabled
+  #----------------------------------------
+  # VTK
+  #----------------------------------------
   if(OpenTurbine_ENABLE_VTK)
     find_package(VTK REQUIRED COMPONENTS IOXML)
   endif()
 
-  # Conditionally find and link GTest if testing is enabled
+  #----------------------------------------
+  # GTest
+  #----------------------------------------
   if(OpenTurbine_ENABLE_TESTS)
     find_package(GTest REQUIRED)
   endif()
 
-  # Link filesystem library for older GCC versions
+  #--------------------------------------------------------------------------
+  # Compiler-specific settings
+  #--------------------------------------------------------------------------
   if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
       set(FS_LIB stdc++fs)
     endif()
   endif()
 
-  # Conditionally add external project to build the OpenFAST/AerodynInflow (ADI) library
+  #--------------------------------------------------------------------------
+  # External projects
+  #--------------------------------------------------------------------------
+  #----------------------------------------
+  # OpenFAST/AerodynInflow (ADI) library
+  #----------------------------------------
   if(OpenTurbine_BUILD_OPENFAST_ADI)
     message(STATUS "Building OpenFAST AerodynInflow (ADI) library")
     include(ExternalProject)
     ExternalProject_Add(OpenFAST_ADI
       PREFIX ${CMAKE_BINARY_DIR}/external
       GIT_REPOSITORY https://github.com/OpenFAST/openfast.git
-      GIT_TAG v4.0.0                 # Use the "dev" branch
+      GIT_TAG v4.0.0                 # Pin to a specific release
       GIT_SHALLOW TRUE               # Clone only the latest commit
       GIT_SUBMODULES ""              # Skip downloading r-test
       CMAKE_ARGS
@@ -55,7 +78,9 @@ function(openturbine_setup_dependencies)
     )
   endif()
 
-  # Conditionally add external project to build the ROSCO Controller library
+  #----------------------------------------
+  # ROSCO Controller library
+  #----------------------------------------
   if(OpenTurbine_BUILD_ROSCO_CONTROLLER)
     if (NOT ROSCO_BUILD_TAG)
       set(ROSCO_BUILD_TAG "v2.9.4")

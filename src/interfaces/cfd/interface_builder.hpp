@@ -102,6 +102,11 @@ struct InterfaceBuilder {
         return *this;
     }
 
+    InterfaceBuilder& SetOutputFile(const std::string& path) {
+        interface_input.output_file = path;
+        return *this;
+    }
+
     [[nodiscard]] Interface Build() const { return Interface(interface_input); }
 
 private:
