@@ -39,7 +39,7 @@ static const size_t InvalidNodeID(0U);
     create_constraint_freedom_table(constraints, state);
     return {
         state.ID,
-        state.node_freedom_allocation_table,
+        state.active_dofs,
         state.node_freedom_map_table,
         elements.NumberOfNodesPerElement(),
         elements.NodeStateIndices(),

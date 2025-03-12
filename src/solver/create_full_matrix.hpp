@@ -21,7 +21,7 @@ template <typename GlobalCrsMatrixType>
     const Kokkos::View<size_t* [6]>::const_type& base_node_freedom_table,
     const Kokkos::View<size_t* [6]>::const_type& target_node_freedom_table,
     const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& row_range,
-    const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
+    const Kokkos::View<size_t*>::const_type& active_dofs,
     const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
     const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
     const Kokkos::View<size_t**>::const_type& node_state_indices
@@ -75,7 +75,7 @@ template <typename GlobalCrsMatrixType>
                    CreateSystemMatrixFull<CrsMatrixType>(
                        num_system_dofs,
                        num_dofs,
-                       node_freedom_allocation_table,
+                       active_dofs,
                        node_freedom_map_table,
                        num_nodes_per_element,
                        node_state_indices

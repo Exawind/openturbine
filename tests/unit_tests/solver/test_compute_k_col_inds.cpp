@@ -9,9 +9,8 @@ namespace openturbine::tests {
 TEST(ComputeKColInds, OneElementOneNode) {
     constexpr auto K_num_non_zero = 36UL;
 
-    const auto node_freedom_allocation_table =
-        Kokkos::View<FreedomSignature[1]>("node_freedom_allocation_table");
-    Kokkos::deep_copy(node_freedom_allocation_table, FreedomSignature::AllComponents);
+    const auto active_dofs = Kokkos::View<size_t[1]>("active_dofs");
+    Kokkos::deep_copy(active_dofs, 6UL);
 
     const auto node_freedom_map_table = Kokkos::View<size_t[1]>("node_freedom_map_table");
     Kokkos::deep_copy(node_freedom_map_table, 0UL);
@@ -31,7 +30,7 @@ TEST(ComputeKColInds, OneElementOneNode) {
     Kokkos::deep_copy(K_row_ptrs, K_row_ptrs_mirror);
 
     const auto col_inds = ComputeKColInds<Kokkos::View<int[7]>, Kokkos::View<int*>>(
-        K_num_non_zero, node_freedom_allocation_table, node_freedom_map_table, num_nodes_per_element,
+        K_num_non_zero, active_dofs, node_freedom_map_table, num_nodes_per_element,
         node_state_indices, K_row_ptrs
     );
 
@@ -48,9 +47,8 @@ TEST(ComputeKColInds, OneElementOneNode) {
 TEST(ComputeKColInds, OneElementTwoNodes) {
     constexpr auto K_num_non_zero = 144UL;
 
-    const auto node_freedom_allocation_table =
-        Kokkos::View<FreedomSignature[2]>("node_freedom_allocation_table");
-    Kokkos::deep_copy(node_freedom_allocation_table, FreedomSignature::AllComponents);
+    const auto active_dofs = Kokkos::View<size_t[2]>("active_dofs");
+    Kokkos::deep_copy(active_dofs, 6UL);
 
     const auto node_freedom_map_table = Kokkos::View<size_t[2]>("node_freedom_map_table");
     constexpr auto node_freedom_map_table_host_data = std::array{0UL, 6UL};
@@ -85,7 +83,7 @@ TEST(ComputeKColInds, OneElementTwoNodes) {
     const auto K_values = Kokkos::View<double*>("K_values", K_num_non_zero);
 
     const auto col_inds = ComputeKColInds<Kokkos::View<int[13]>, Kokkos::View<int*>>(
-        K_num_non_zero, node_freedom_allocation_table, node_freedom_map_table, num_nodes_per_element,
+        K_num_non_zero, active_dofs, node_freedom_map_table, num_nodes_per_element,
         node_state_indices, K_row_ptrs
     );
 
@@ -104,9 +102,8 @@ TEST(ComputeKColInds, OneElementTwoNodes) {
 TEST(ComputeKColInds, TwoElementsTwoNodesNoOverlap) {
     constexpr auto K_num_non_zero = 288UL;
 
-    const auto node_freedom_allocation_table =
-        Kokkos::View<FreedomSignature[4]>("node_freedom_allocation_table");
-    Kokkos::deep_copy(node_freedom_allocation_table, FreedomSignature::AllComponents);
+    const auto active_dofs = Kokkos::View<size_t[4]>("active_dofs");
+    Kokkos::deep_copy(active_dofs, 6UL);
 
     const auto node_freedom_map_table = Kokkos::View<size_t[4]>("node_freedom_map_table");
     constexpr auto node_freedom_map_table_host_data = std::array{0UL, 6UL, 12UL, 18UL};
@@ -142,7 +139,7 @@ TEST(ComputeKColInds, TwoElementsTwoNodesNoOverlap) {
     const auto K_values = Kokkos::View<double*>("K_values", K_num_non_zero);
 
     const auto col_inds = ComputeKColInds<Kokkos::View<int[25]>, Kokkos::View<int*>>(
-        K_num_non_zero, node_freedom_allocation_table, node_freedom_map_table, num_nodes_per_element,
+        K_num_non_zero, active_dofs, node_freedom_map_table, num_nodes_per_element,
         node_state_indices, K_row_ptrs
     );
 
@@ -167,9 +164,8 @@ TEST(ComputeKColInds, TwoElementsTwoNodesNoOverlap) {
 TEST(ComputeKColInds, TwoElementsTwoNodesOverlap) {
     constexpr auto K_num_non_zero = 252UL;
 
-    const auto node_freedom_allocation_table =
-        Kokkos::View<FreedomSignature[3]>("node_freedom_allocation_table");
-    Kokkos::deep_copy(node_freedom_allocation_table, FreedomSignature::AllComponents);
+    const auto active_dofs = Kokkos::View<size_t[3]>("active_dofs");
+    Kokkos::deep_copy(active_dofs, 6UL);
 
     const auto node_freedom_map_table = Kokkos::View<size_t[3]>("node_freedom_map_table");
     constexpr auto node_freedom_map_table_host_data = std::array{0UL, 6UL, 12UL};
@@ -205,7 +201,7 @@ TEST(ComputeKColInds, TwoElementsTwoNodesOverlap) {
     const auto K_values = Kokkos::View<double*>("K_values", K_num_non_zero);
 
     const auto col_inds = ComputeKColInds<Kokkos::View<int[19]>, Kokkos::View<int*>>(
-        K_num_non_zero, node_freedom_allocation_table, node_freedom_map_table, num_nodes_per_element,
+        K_num_non_zero, active_dofs, node_freedom_map_table, num_nodes_per_element,
         node_state_indices, K_row_ptrs
     );
 

@@ -4,7 +4,6 @@ install(FILES
         calculate_error_sum_squares.hpp
         compute_b_num_non_zero.hpp
         compute_k_col_inds.hpp
-        compute_k_num_non_zero.hpp
         compute_k_row_ptrs.hpp
         compute_number_of_non_zeros_constraints.hpp
         compute_num_system_dofs.hpp
