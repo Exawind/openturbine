@@ -1,0 +1,14 @@
+.. meta::fde7745d5675afdbc633fd543b6ff36a5292b6f5a5cc6bf6b58ab72d564fc4e9cb78f28e8ac394d4a4bc144a59d408d8d64ad3f5b39271cb96e2e4930257f18f
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/utilities/netcdf Directory Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/utilities/netcdf Directory Reference
+==============================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: dir_dfd496548bd0e6b170ca3799a60244c5.html

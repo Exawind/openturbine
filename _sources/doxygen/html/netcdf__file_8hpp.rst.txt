@@ -1,0 +1,14 @@
+.. meta::43028b6f27987cd09dd36a18fa85f2d0c4de88a2fc670ed3bd2006737ccc83a9596e3efb9fd5237526dcac8e376500db9fff3ef6d7f791185a9c24805ce34b44
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/utilities/netcdf/netcdf_file.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/utilities/netcdf/netcdf\_file.hpp File Reference
+==========================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: netcdf__file_8hpp.html

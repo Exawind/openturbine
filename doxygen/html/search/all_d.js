@@ -45,7 +45,7 @@ var searchData=
   ['midpoint_5fnd_5farc_42',['midpoint_nd_arc',['../structLayers.html#aeaa6171f60528f280dff7649947a2f21',1,'Layers']]],
   ['midpointndarc_43',['MidpointNdArc',['../structMidpointNdArc.html',1,'']]],
   ['min_5fpitch_44',['min_pitch',['../structPitch__1.html#a1815a9774fd28fcdc208b55ee6ca4b38',1,'Pitch_1']]],
-  ['model_45',['model',['../classopenturbine_1_1Model.html',1,'openturbine::Model'],['../classopenturbine_1_1Model.html#a78cd86c47d200dcd53c357b66c9c4418',1,'openturbine::Model::Model()=default'],['../classopenturbine_1_1Model.html#a3bccca2ab9795e08cc7ba7f12c0566d1',1,'openturbine::Model::Model(std::array&lt; double, 3 &gt; gravity)'],['../classopenturbine_1_1cfd_1_1Interface.html#aed5e24cd06403b631820d65fe74d02a6',1,'openturbine::cfd::Interface::model']]],
+  ['model_45',['model',['../classopenturbine_1_1Model.html',1,'openturbine::Model'],['../classopenturbine_1_1cfd_1_1Interface.html#aed5e24cd06403b631820d65fe74d02a6',1,'openturbine::cfd::Interface::model'],['../classopenturbine_1_1Model.html#a78cd86c47d200dcd53c357b66c9c4418',1,'openturbine::Model::Model()=default'],['../classopenturbine_1_1Model.html#a3bccca2ab9795e08cc7ba7f12c0566d1',1,'openturbine::Model::Model(std::array&lt; double, 3 &gt; gravity)']]],
   ['model_2ehpp_46',['model.hpp',['../model_8hpp.html',1,'']]],
   ['modify_5fname_47',['modify_name',['../namespacewindio.html#aec699dc0b2bc8bf889172a21d52bd5b4',1,'windio']]],
   ['modify_5fvariable_5fname_48',['modify_variable_name',['../namespacewindio.html#ae911df8d11908da457209829e84c7671',1,'windio']]],

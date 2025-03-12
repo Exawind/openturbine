@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::util::NetCDFFile Class Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::util::NetCDFFile Class Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/classopenturbine_1_1util_1_1NetCDFFile.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="netcdffile-class-reference">
+<h1>NetCDFFile Class Reference<a class="headerlink" href="#netcdffile-class-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::util::NetCDFFile Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1util.html">util</a></li><li class="navelem"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classopenturbine_1_1util_1_1NetCDFFile-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::util::NetCDFFile Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Class for managing NetCDF files for writing outputs.  
+ <a href="classopenturbine_1_1util_1_1NetCDFFile.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="netcdf__file_8hpp_source.html">netcdf_file.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a0a7e24df707ec2a3f39b10ee87b5e8e3" id="r_a0a7e24df707ec2a3f39b10ee87b5e8e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#a0a7e24df707ec2a3f39b10ee87b5e8e3">NetCDFFile</a> (const std::string &amp;file_path, bool create=true)</td></tr>
+<tr class="memdesc:a0a7e24df707ec2a3f39b10ee87b5e8e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor to create a <a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html" title="Class for managing NetCDF files for writing outputs.">NetCDFFile</a> object.  <br /></td></tr>
+<tr class="separator:a0a7e24df707ec2a3f39b10ee87b5e8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab56a568556939122cb9fd5955f942045" id="r_ab56a568556939122cb9fd5955f942045"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#ab56a568556939122cb9fd5955f942045">NetCDFFile</a> (const <a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;)=delete</td></tr>
+<tr class="separator:ab56a568556939122cb9fd5955f942045"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada213bef23aea863df48abc213cb201b" id="r_ada213bef23aea863df48abc213cb201b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#ada213bef23aea863df48abc213cb201b">operator=</a> (const <a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;)=delete</td></tr>
+<tr class="separator:ada213bef23aea863df48abc213cb201b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa48149ddb708bfbcb40138c493011b8d" id="r_aa48149ddb708bfbcb40138c493011b8d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#aa48149ddb708bfbcb40138c493011b8d">NetCDFFile</a> (<a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:aa48149ddb708bfbcb40138c493011b8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab897196f566872c1ac19e567ebe06b20" id="r_ab897196f566872c1ac19e567ebe06b20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#ab897196f566872c1ac19e567ebe06b20">operator=</a> (<a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;&amp;)=delete</td></tr>
+<tr class="separator:ab897196f566872c1ac19e567ebe06b20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24e72564aa2f61d217f70497cb31e2c5" id="r_a24e72564aa2f61d217f70497cb31e2c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#a24e72564aa2f61d217f70497cb31e2c5">~NetCDFFile</a> ()</td></tr>
+<tr class="memdesc:a24e72564aa2f61d217f70497cb31e2c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor to close the NetCDF file.  <br /></td></tr>
+<tr class="separator:a24e72564aa2f61d217f70497cb31e2c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1a15afa591dfc4e0c652413719d63f9" id="r_ab1a15afa591dfc4e0c652413719d63f9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#ab1a15afa591dfc4e0c652413719d63f9">AddDimension</a> (const std::string &amp;name, size_t length) const</td></tr>
+<tr class="memdesc:ab1a15afa591dfc4e0c652413719d63f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a dimension to the NetCDF file.  <br /></td></tr>
+<tr class="separator:ab1a15afa591dfc4e0c652413719d63f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb57a18a8978b942bd3f02de2e509163" id="r_adb57a18a8978b942bd3f02de2e509163"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:adb57a18a8978b942bd3f02de2e509163"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#adb57a18a8978b942bd3f02de2e509163">AddVariable</a> (const std::string &amp;name, const std::vector&lt; int &gt; &amp;dim_ids) const</td></tr>
+<tr class="memdesc:adb57a18a8978b942bd3f02de2e509163"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a variable to the NetCDF file.  <br /></td></tr>
+<tr class="separator:adb57a18a8978b942bd3f02de2e509163"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31c3b20a0aa03ac428b296c601f38141" id="r_a31c3b20a0aa03ac428b296c601f38141"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a31c3b20a0aa03ac428b296c601f38141"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#a31c3b20a0aa03ac428b296c601f38141">AddAttribute</a> (const std::string &amp;var_name, const std::string &amp;attr_name, const T &amp;value) const</td></tr>
+<tr class="memdesc:a31c3b20a0aa03ac428b296c601f38141"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an attribute to a variable in the NetCDF file.  <br /></td></tr>
+<tr class="separator:a31c3b20a0aa03ac428b296c601f38141"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa5e857db1eea44c092daa9747e7dd68" id="r_aaa5e857db1eea44c092daa9747e7dd68"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aaa5e857db1eea44c092daa9747e7dd68"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#aaa5e857db1eea44c092daa9747e7dd68">WriteVariable</a> (const std::string &amp;name, const std::vector&lt; T &gt; &amp;data) const</td></tr>
+<tr class="memdesc:aaa5e857db1eea44c092daa9747e7dd68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes data to a variable in the NetCDF file.  <br /></td></tr>
+<tr class="separator:aaa5e857db1eea44c092daa9747e7dd68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4516043762ac7d6db33907c20563ce3f" id="r_a4516043762ac7d6db33907c20563ce3f"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a4516043762ac7d6db33907c20563ce3f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#a4516043762ac7d6db33907c20563ce3f">WriteVariableAt</a> (const std::string &amp;name, const std::vector&lt; size_t &gt; &amp;start, const std::vector&lt; size_t &gt; &amp;count, const std::vector&lt; T &gt; &amp;data) const</td></tr>
+<tr class="memdesc:a4516043762ac7d6db33907c20563ce3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes data to a variable at specific indices in the NetCDF file.  <br /></td></tr>
+<tr class="separator:a4516043762ac7d6db33907c20563ce3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6cda8efb716f7aa7cf6325f9e75a676" id="r_ac6cda8efb716f7aa7cf6325f9e75a676"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#ac6cda8efb716f7aa7cf6325f9e75a676">Sync</a> () const</td></tr>
+<tr class="memdesc:ac6cda8efb716f7aa7cf6325f9e75a676"><td class="mdescLeft">&#160;</td><td class="mdescRight">Synchronizes (flushes) the NetCDF file to disk.  <br /></td></tr>
+<tr class="separator:ac6cda8efb716f7aa7cf6325f9e75a676"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3ef7ad72d4f888f53d04a3e43a9a277" id="r_ab3ef7ad72d4f888f53d04a3e43a9a277"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#ab3ef7ad72d4f888f53d04a3e43a9a277">GetNetCDFId</a> () const</td></tr>
+<tr class="memdesc:ab3ef7ad72d4f888f53d04a3e43a9a277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the NetCDF file ID.  <br /></td></tr>
+<tr class="separator:ab3ef7ad72d4f888f53d04a3e43a9a277"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a038a15dfbb7d4ba0e76873e1fbfbf195" id="r_a038a15dfbb7d4ba0e76873e1fbfbf195"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#a038a15dfbb7d4ba0e76873e1fbfbf195">GetDimensionId</a> (const std::string &amp;name) const</td></tr>
+<tr class="memdesc:a038a15dfbb7d4ba0e76873e1fbfbf195"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the dimension ID for a given dimension name.  <br /></td></tr>
+<tr class="separator:a038a15dfbb7d4ba0e76873e1fbfbf195"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a806fe1c1f536ee0649a3d16adc23e9f5" id="r_a806fe1c1f536ee0649a3d16adc23e9f5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#a806fe1c1f536ee0649a3d16adc23e9f5">GetVariableId</a> (const std::string &amp;name) const</td></tr>
+<tr class="memdesc:a806fe1c1f536ee0649a3d16adc23e9f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the variable ID for a given variable name.  <br /></td></tr>
+<tr class="separator:a806fe1c1f536ee0649a3d16adc23e9f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47bf975979d50a4a91af97b4bab27ffe" id="r_a47bf975979d50a4a91af97b4bab27ffe"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#a47bf975979d50a4a91af97b4bab27ffe">GetNumberOfDimensions</a> (const std::string &amp;var_name) const</td></tr>
+<tr class="memdesc:a47bf975979d50a4a91af97b4bab27ffe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the number of dimensions of a variable in the NetCDF file.  <br /></td></tr>
+<tr class="separator:a47bf975979d50a4a91af97b4bab27ffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4455b0f18a61650375d15439557fc204" id="r_a4455b0f18a61650375d15439557fc204"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#a4455b0f18a61650375d15439557fc204">GetDimensionLength</a> (int dim_id) const</td></tr>
+<tr class="memdesc:a4455b0f18a61650375d15439557fc204"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the length of a dimension in the NetCDF file.  <br /></td></tr>
+<tr class="separator:a4455b0f18a61650375d15439557fc204"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6a947371d38361d4626f85fef8c6641" id="r_af6a947371d38361d4626f85fef8c6641"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#af6a947371d38361d4626f85fef8c6641">GetDimensionLength</a> (const std::string &amp;name) const</td></tr>
+<tr class="memdesc:af6a947371d38361d4626f85fef8c6641"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the length of a dimension in the NetCDF file based on name.  <br /></td></tr>
+<tr class="separator:af6a947371d38361d4626f85fef8c6641"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45d76fa0d485e11e0b66e26d98c6676a" id="r_a45d76fa0d485e11e0b66e26d98c6676a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#a45d76fa0d485e11e0b66e26d98c6676a">GetShape</a> (const std::string &amp;var_name) const</td></tr>
+<tr class="memdesc:a45d76fa0d485e11e0b66e26d98c6676a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the shape (dimension lengths) of a variable in the NetCDF file.  <br /></td></tr>
+<tr class="separator:a45d76fa0d485e11e0b66e26d98c6676a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78de6a3d716d466852bf92d41a1ff0f9" id="r_a78de6a3d716d466852bf92d41a1ff0f9"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a78de6a3d716d466852bf92d41a1ff0f9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#a78de6a3d716d466852bf92d41a1ff0f9">ReadVariable</a> (const std::string &amp;name, T *data) const</td></tr>
+<tr class="memdesc:a78de6a3d716d466852bf92d41a1ff0f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from a variable in the NetCDF file.  <br /></td></tr>
+<tr class="separator:a78de6a3d716d466852bf92d41a1ff0f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae91f0586ee6999a5f6e0d5429556274b" id="r_ae91f0586ee6999a5f6e0d5429556274b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ae91f0586ee6999a5f6e0d5429556274b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#ae91f0586ee6999a5f6e0d5429556274b">ReadVariableAt</a> (const std::string &amp;name, const std::vector&lt; size_t &gt; &amp;start, const std::vector&lt; size_t &gt; &amp;count, T *data) const</td></tr>
+<tr class="memdesc:ae91f0586ee6999a5f6e0d5429556274b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from a variable at specific indices in the NetCDF file.  <br /></td></tr>
+<tr class="separator:ae91f0586ee6999a5f6e0d5429556274b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42418f2e7a00cb0363740236100d9b68" id="r_a42418f2e7a00cb0363740236100d9b68"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a42418f2e7a00cb0363740236100d9b68"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html#a42418f2e7a00cb0363740236100d9b68">ReadVariableWithStride</a> (const std::string &amp;name, const std::vector&lt; size_t &gt; &amp;start, const std::vector&lt; size_t &gt; &amp;count, const std::vector&lt; ptrdiff_t &gt; &amp;stride, T *data) const</td></tr>
+<tr class="memdesc:a42418f2e7a00cb0363740236100d9b68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from a variable with specified stride in the NetCDF file.  <br /></td></tr>
+<tr class="separator:a42418f2e7a00cb0363740236100d9b68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class for managing NetCDF files for writing outputs. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a0a7e24df707ec2a3f39b10ee87b5e8e3" name="a0a7e24df707ec2a3f39b10ee87b5e8e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a7e24df707ec2a3f39b10ee87b5e8e3">&#9670;&#160;</a></span>NetCDFFile() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::util::NetCDFFile::NetCDFFile </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>file_path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>create</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor to create a <a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html" title="Class for managing NetCDF files for writing outputs.">NetCDFFile</a> object. </p>
+<p>This constructor creates a new NetCDF file if the create flag is true. Otherwise, it opens an existing NetCDF file. </p>
+
+</div>
+</div>
+<a id="ab56a568556939122cb9fd5955f942045" name="ab56a568556939122cb9fd5955f942045"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab56a568556939122cb9fd5955f942045">&#9670;&#160;</a></span>NetCDFFile() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::util::NetCDFFile::NetCDFFile </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa48149ddb708bfbcb40138c493011b8d" name="aa48149ddb708bfbcb40138c493011b8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa48149ddb708bfbcb40138c493011b8d">&#9670;&#160;</a></span>NetCDFFile() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::util::NetCDFFile::NetCDFFile </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a24e72564aa2f61d217f70497cb31e2c5" name="a24e72564aa2f61d217f70497cb31e2c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24e72564aa2f61d217f70497cb31e2c5">&#9670;&#160;</a></span>~NetCDFFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::util::NetCDFFile::~NetCDFFile </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Destructor to close the NetCDF file. </p>
+<p>This function is a wrapper around the NetCDF library's "nc_close" function. It closes the NetCDF file with the given (valid) ID. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a31c3b20a0aa03ac428b296c601f38141" name="a31c3b20a0aa03ac428b296c601f38141"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31c3b20a0aa03ac428b296c601f38141">&#9670;&#160;</a></span>AddAttribute()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::util::NetCDFFile::AddAttribute </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>var_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>attr_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds an attribute to a variable in the NetCDF file. </p>
+<p>This function is a wrapper around the NetCDF library's "nc_put_att_text" and "nc_put_att" functions. It adds an attribute (e.g. metadata) to a variable in the NetCDF file. </p>
+
+</div>
+</div>
+<a id="ab1a15afa591dfc4e0c652413719d63f9" name="ab1a15afa591dfc4e0c652413719d63f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1a15afa591dfc4e0c652413719d63f9">&#9670;&#160;</a></span>AddDimension()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::NetCDFFile::AddDimension </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds a dimension to the NetCDF file. </p>
+<p>This function is a wrapper around the NetCDF library's "nc_def_dim" function. It creates a new dimension with the given name and length in the NetCDF file. </p>
+
+</div>
+</div>
+<a id="adb57a18a8978b942bd3f02de2e509163" name="adb57a18a8978b942bd3f02de2e509163"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb57a18a8978b942bd3f02de2e509163">&#9670;&#160;</a></span>AddVariable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::NetCDFFile::AddVariable </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>dim_ids</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds a variable to the NetCDF file. </p>
+<p>This function is a wrapper around the NetCDF library's "nc_def_var" function. It creates a new variable with the given name and dimension IDs in the NetCDF file. The NetCDF type is automatically determined from the template parameter. </p>
+
+</div>
+</div>
+<a id="a038a15dfbb7d4ba0e76873e1fbfbf195" name="a038a15dfbb7d4ba0e76873e1fbfbf195"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a038a15dfbb7d4ba0e76873e1fbfbf195">&#9670;&#160;</a></span>GetDimensionId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::NetCDFFile::GetDimensionId </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the dimension ID for a given dimension name. </p>
+
+</div>
+</div>
+<a id="af6a947371d38361d4626f85fef8c6641" name="af6a947371d38361d4626f85fef8c6641"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6a947371d38361d4626f85fef8c6641">&#9670;&#160;</a></span>GetDimensionLength() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::util::NetCDFFile::GetDimensionLength </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the length of a dimension in the NetCDF file based on name. </p>
+
+</div>
+</div>
+<a id="a4455b0f18a61650375d15439557fc204" name="a4455b0f18a61650375d15439557fc204"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4455b0f18a61650375d15439557fc204">&#9670;&#160;</a></span>GetDimensionLength() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::util::NetCDFFile::GetDimensionLength </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>dim_id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the length of a dimension in the NetCDF file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dim_id</td><td>The ID of the dimension </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The length of the dimension </dd></dl>
+
+</div>
+</div>
+<a id="ab3ef7ad72d4f888f53d04a3e43a9a277" name="ab3ef7ad72d4f888f53d04a3e43a9a277"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3ef7ad72d4f888f53d04a3e43a9a277">&#9670;&#160;</a></span>GetNetCDFId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::NetCDFFile::GetNetCDFId </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the NetCDF file ID. </p>
+
+</div>
+</div>
+<a id="a47bf975979d50a4a91af97b4bab27ffe" name="a47bf975979d50a4a91af97b4bab27ffe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47bf975979d50a4a91af97b4bab27ffe">&#9670;&#160;</a></span>GetNumberOfDimensions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::util::NetCDFFile::GetNumberOfDimensions </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>var_name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the number of dimensions of a variable in the NetCDF file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">var_name</td><td>The name of the variable </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of dimensions </dd></dl>
+
+</div>
+</div>
+<a id="a45d76fa0d485e11e0b66e26d98c6676a" name="a45d76fa0d485e11e0b66e26d98c6676a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45d76fa0d485e11e0b66e26d98c6676a">&#9670;&#160;</a></span>GetShape()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; size_t &gt; openturbine::util::NetCDFFile::GetShape </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>var_name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the shape (dimension lengths) of a variable in the NetCDF file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">var_name</td><td>The name of the variable </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector containing the length of each dimension of the variable </dd></dl>
+
+</div>
+</div>
+<a id="a806fe1c1f536ee0649a3d16adc23e9f5" name="a806fe1c1f536ee0649a3d16adc23e9f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a806fe1c1f536ee0649a3d16adc23e9f5">&#9670;&#160;</a></span>GetVariableId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int openturbine::util::NetCDFFile::GetVariableId </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the variable ID for a given variable name. </p>
+
+</div>
+</div>
+<a id="ada213bef23aea863df48abc213cb201b" name="ada213bef23aea863df48abc213cb201b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada213bef23aea863df48abc213cb201b">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp; openturbine::util::NetCDFFile::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab897196f566872c1ac19e567ebe06b20" name="ab897196f566872c1ac19e567ebe06b20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab897196f566872c1ac19e567ebe06b20">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp; openturbine::util::NetCDFFile::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a78de6a3d716d466852bf92d41a1ff0f9" name="a78de6a3d716d466852bf92d41a1ff0f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78de6a3d716d466852bf92d41a1ff0f9">&#9670;&#160;</a></span>ReadVariable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::util::NetCDFFile::ReadVariable </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reads data from a variable in the NetCDF file. </p>
+<p>This function is a wrapper around the NetCDF library's type-specific get functions. Supports the following types:</p><ul>
+<li>float (NC_FLOAT)</li>
+<li>double (NC_DOUBLE)</li>
+<li>int (NC_INT)</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable to read from </td></tr>
+    <tr><td class="paramname">data</td><td>Pointer to the buffer where data will be stored </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae91f0586ee6999a5f6e0d5429556274b" name="ae91f0586ee6999a5f6e0d5429556274b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae91f0586ee6999a5f6e0d5429556274b">&#9670;&#160;</a></span>ReadVariableAt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::util::NetCDFFile::ReadVariableAt </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reads data from a variable at specific indices in the NetCDF file. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The data type to read (float, double, or int) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable to read from </td></tr>
+    <tr><td class="paramname">start</td><td>Array specifying the starting index in each dimension </td></tr>
+    <tr><td class="paramname">count</td><td>Array specifying the number of values to read in each dimension </td></tr>
+    <tr><td class="paramname">data</td><td>Pointer to the buffer where data will be stored </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a42418f2e7a00cb0363740236100d9b68" name="a42418f2e7a00cb0363740236100d9b68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42418f2e7a00cb0363740236100d9b68">&#9670;&#160;</a></span>ReadVariableWithStride()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::util::NetCDFFile::ReadVariableWithStride </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; ptrdiff_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>stride</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reads data from a variable with specified stride in the NetCDF file. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The data type to read (float, double, or int) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable to read from </td></tr>
+    <tr><td class="paramname">start</td><td>Array specifying the starting index in each dimension </td></tr>
+    <tr><td class="paramname">count</td><td>Array specifying the number of values to read in each dimension </td></tr>
+    <tr><td class="paramname">stride</td><td>Array specifying the stride in each dimension </td></tr>
+    <tr><td class="paramname">data</td><td>Pointer to the buffer where data will be stored </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac6cda8efb716f7aa7cf6325f9e75a676" name="ac6cda8efb716f7aa7cf6325f9e75a676"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6cda8efb716f7aa7cf6325f9e75a676">&#9670;&#160;</a></span>Sync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::util::NetCDFFile::Sync </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Synchronizes (flushes) the NetCDF file to disk. </p>
+
+</div>
+</div>
+<a id="aaa5e857db1eea44c092daa9747e7dd68" name="aaa5e857db1eea44c092daa9747e7dd68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa5e857db1eea44c092daa9747e7dd68">&#9670;&#160;</a></span>WriteVariable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::util::NetCDFFile::WriteVariable </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Writes data to a variable in the NetCDF file. </p>
+<p>This function is a wrapper around the NetCDF library's "nc_put_var" and "nc_put_var_string" functions. It writes the provided data to the variable with the given name. Supports the following types:</p><ul>
+<li>float (NC_FLOAT)</li>
+<li>double (NC_DOUBLE)</li>
+<li>int (NC_INT)</li>
+<li>std::string (NC_STRING) </li>
+</ul>
+
+</div>
+</div>
+<a id="a4516043762ac7d6db33907c20563ce3f" name="a4516043762ac7d6db33907c20563ce3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4516043762ac7d6db33907c20563ce3f">&#9670;&#160;</a></span>WriteVariableAt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::util::NetCDFFile::WriteVariableAt </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Writes data to a variable at specific indices in the NetCDF file. </p>
+<p>This function is a wrapper around the NetCDF library's "nc_put_vara" and "nc_put_vara_string" functions. It writes the provided data to the variable with the given name at the specified indices. Supports the following types:</p><ul>
+<li>float (NC_FLOAT)</li>
+<li>double (NC_DOUBLE)</li>
+<li>int (NC_INT)</li>
+<li>std::string (NC_STRING)</li>
+</ul>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The data type of the variable </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the variable to write to </td></tr>
+    <tr><td class="paramname">start</td><td>Array specifying the starting index in each dimension </td></tr>
+    <tr><td class="paramname">count</td><td>Array specifying the number of values to write in each dimension </td></tr>
+    <tr><td class="paramname">data</td><td>The vector containing the data to write </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/utilities/netcdf/<a class="el" href="netcdf__file_8hpp_source.html">netcdf_file.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

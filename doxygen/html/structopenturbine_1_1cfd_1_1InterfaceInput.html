@@ -183,7 +183,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ae45f7aed408593e79b723d06514a6e50" id="r_ae45f7aed408593e79b723d06514a6e50"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1cfd_1_1InterfaceInput.html#ae45f7aed408593e79b723d06514a6e50">time_step</a> {0.01}</td></tr>
 <tr class="memdesc:ae45f7aed408593e79b723d06514a6e50"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1Solver.html" title="A linear systems solver for assembling and solving system matrices and constraints in OpenTurbine....">Solver</a> time step.  <br /></td></tr>
 <tr class="separator:ae45f7aed408593e79b723d06514a6e50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f5751a3ce954766c772c2c0e890a7ab" id="r_a6f5751a3ce954766c772c2c0e890a7ab"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1cfd_1_1InterfaceInput.html#a6f5751a3ce954766c772c2c0e890a7ab">rho_inf</a> {0.0}</td></tr>
+<tr class="memitem:a6f5751a3ce954766c772c2c0e890a7ab" id="r_a6f5751a3ce954766c772c2c0e890a7ab"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1cfd_1_1InterfaceInput.html#a6f5751a3ce954766c772c2c0e890a7ab">rho_inf</a> {0.}</td></tr>
 <tr class="memdesc:a6f5751a3ce954766c772c2c0e890a7ab"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1Solver.html" title="A linear systems solver for assembling and solving system matrices and constraints in OpenTurbine....">Solver</a> numerical damping factor (0 = maximum damping)  <br /></td></tr>
 <tr class="separator:a6f5751a3ce954766c772c2c0e890a7ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bd11643789e34970ff9cb1b20fd592b" id="r_a5bd11643789e34970ff9cb1b20fd592b"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1cfd_1_1InterfaceInput.html#a5bd11643789e34970ff9cb1b20fd592b">max_iter</a> {5U}</td></tr>
@@ -192,6 +192,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ae5b8c478b548d266d829ac364537a12f" id="r_ae5b8c478b548d266d829ac364537a12f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1cfd_1_1TurbineInput.html">TurbineInput</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1cfd_1_1InterfaceInput.html#ae5b8c478b548d266d829ac364537a12f">turbine</a></td></tr>
 <tr class="memdesc:ae5b8c478b548d266d829ac364537a12f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1cfd_1_1Turbine.html">Turbine</a> input data.  <br /></td></tr>
 <tr class="separator:ae5b8c478b548d266d829ac364537a12f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14a2070f5935f81f4e8faf14d87e88bf" id="r_a14a2070f5935f81f4e8faf14d87e88bf"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1cfd_1_1InterfaceInput.html#a14a2070f5935f81f4e8faf14d87e88bf">output_file</a></td></tr>
+<tr class="memdesc:a14a2070f5935f81f4e8faf14d87e88bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output file path for NetCDF results (empty = no outputs will be written)  <br /></td></tr>
+<tr class="separator:a14a2070f5935f81f4e8faf14d87e88bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a50efdf52a769c5fb522d82545602abb0" name="a50efdf52a769c5fb522d82545602abb0"></a>
@@ -226,6 +229,22 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a14a2070f5935f81f4e8faf14d87e88bf" name="a14a2070f5935f81f4e8faf14d87e88bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14a2070f5935f81f4e8faf14d87e88bf">&#9670;&#160;</a></span>output_file</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string openturbine::cfd::InterfaceInput::output_file</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Output file path for NetCDF results (empty = no outputs will be written) </p>
+
+</div>
+</div>
 <a id="a6f5751a3ce954766c772c2c0e890a7ab" name="a6f5751a3ce954766c772c2c0e890a7ab"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6f5751a3ce954766c772c2c0e890a7ab">&#9670;&#160;</a></span>rho_inf</h2>
 
@@ -233,7 +252,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double openturbine::cfd::InterfaceInput::rho_inf {0.0}</td>
+          <td class="memname">double openturbine::cfd::InterfaceInput::rho_inf {0.}</td>
         </tr>
       </table>
 </div><div class="memdoc">

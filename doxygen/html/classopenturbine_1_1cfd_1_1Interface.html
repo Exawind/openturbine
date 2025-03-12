@@ -195,6 +195,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab3a2d743a434d3d16f2f6294de32193d" id="r_ab3a2d743a434d3d16f2f6294de32193d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#ab3a2d743a434d3d16f2f6294de32193d">ReadRestart</a> (const std::filesystem::path &amp;filename)</td></tr>
 <tr class="memdesc:ab3a2d743a434d3d16f2f6294de32193d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read restart file.  <br /></td></tr>
 <tr class="separator:ab3a2d743a434d3d16f2f6294de32193d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a99e76978bf016ee154e9565891d00c" id="r_a1a99e76978bf016ee154e9565891d00c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a1a99e76978bf016ee154e9565891d00c">WriteOutputs</a> () const</td></tr>
+<tr class="memdesc:a1a99e76978bf016ee154e9565891d00c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write current state to output file if configured.  <br /></td></tr>
+<tr class="separator:a1a99e76978bf016ee154e9565891d00c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -230,6 +233,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a0554a17000eead27c42b864eb152d5bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7905d0a8f1d707e61d10df6eb8681f8" id="r_ae7905d0a8f1d707e61d10df6eb8681f8"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;::HostMirror&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#ae7905d0a8f1d707e61d10df6eb8681f8">host_state_vd</a></td></tr>
 <tr class="separator:ae7905d0a8f1d707e61d10df6eb8681f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a957db056642e90260c7b5e7c4e4638ad" id="r_a957db056642e90260c7b5e7c4e4638ad"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a957db056642e90260c7b5e7c4e4638ad">current_timestep_</a> {0}</td></tr>
+<tr class="memdesc:a957db056642e90260c7b5e7c4e4638ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current timestep index.  <br /></td></tr>
+<tr class="separator:a957db056642e90260c7b5e7c4e4638ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d2bf69b7af4f20e4b9c268a61378c14" id="r_a9d2bf69b7af4f20e4b9c268a61378c14"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classopenturbine_1_1util_1_1NodeStateWriter.html">util::NodeStateWriter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a9d2bf69b7af4f20e4b9c268a61378c14">output_writer_</a></td></tr>
+<tr class="memdesc:a9d2bf69b7af4f20e4b9c268a61378c14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional NetCDF output writer.  <br /></td></tr>
+<tr class="separator:a9d2bf69b7af4f20e4b9c268a61378c14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae4781e76ce13e8bf2a296e06e72a4467" name="ae4781e76ce13e8bf2a296e06e72a4467"></a>
@@ -336,6 +345,25 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a1a99e76978bf016ee154e9565891d00c" name="a1a99e76978bf016ee154e9565891d00c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a99e76978bf016ee154e9565891d00c">&#9670;&#160;</a></span>WriteOutputs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::cfd::Interface::WriteOutputs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write current state to output file if configured. </p>
+
+</div>
+</div>
 <a id="a7ba4a5047dacb02861c9c26329cf966a" name="a7ba4a5047dacb02861c9c26329cf966a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7ba4a5047dacb02861c9c26329cf966a">&#9670;&#160;</a></span>WriteRestart()</h2>
 
@@ -370,6 +398,22 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>OpenTurbine class for constraints tying elements together. </p>
+
+</div>
+</div>
+<a id="a957db056642e90260c7b5e7c4e4638ad" name="a957db056642e90260c7b5e7c4e4638ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a957db056642e90260c7b5e7c4e4638ad">&#9670;&#160;</a></span>current_timestep_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::cfd::Interface::current_timestep_ {0}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Current timestep index. </p>
 
 </div>
 </div>
@@ -458,6 +502,22 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>OpenTurbine class used for model construction. </p>
+
+</div>
+</div>
+<a id="a9d2bf69b7af4f20e4b9c268a61378c14" name="a9d2bf69b7af4f20e4b9c268a61378c14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d2bf69b7af4f20e4b9c268a61378c14">&#9670;&#160;</a></span>output_writer_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classopenturbine_1_1util_1_1NodeStateWriter.html">util::NodeStateWriter</a>&gt; openturbine::cfd::Interface::output_writer_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Optional NetCDF output writer. </p>
 
 </div>
 </div>

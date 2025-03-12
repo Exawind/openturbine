@@ -197,8 +197,17 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1MeshData.html">MeshData</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct to hold the motion + loads data of any structural mesh component in AeroDyn/InflowWind compatible format.  <a href="structopenturbine_1_1util_1_1MeshData.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for managing NetCDF files for writing outputs.  <a href="classopenturbine_1_1util_1_1NetCDFFile.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NodeStateWriter.html">NodeStateWriter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for writing OpenTurbine nodal state data to NetCDF-based output files.  <a href="classopenturbine_1_1util_1_1NodeStateWriter.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1SimulationControls.html">SimulationControls</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct to hold the settings for simulation controls.  <a href="structopenturbine_1_1util_1_1SimulationControls.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html">TimeSeriesWriter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for writing time-series data to NetCDF file.  <a href="classopenturbine_1_1util_1_1TimeSeriesWriter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1TurbineConfig.html">TurbineConfig</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for the initial state of a turbine.  <a href="structopenturbine_1_1util_1_1TurbineConfig.html#details">More...</a><br /></td></tr>
@@ -236,6 +245,9 @@ Functions</h2></td></tr>
 <tr class="separator:a893b448b5a61ba4f253795dd8f99aef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3062d680624c7dc3424ff6251474a39" id="r_ae3062d680624c7dc3424ff6251474a39"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1util.html#ae3062d680624c7dc3424ff6251474a39">PITCH_CONTROLLER</a> (float avrSWAP[], int *aviFAIL, const char *const, char *const, char *const avcMSG)</td></tr>
 <tr class="separator:ae3062d680624c7dc3424ff6251474a39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61dcf061b09f78b1870316d0e2b27d62" id="r_a61dcf061b09f78b1870316d0e2b27d62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1util.html#a61dcf061b09f78b1870316d0e2b27d62">check_netCDF_error</a> (int status, const std::string &amp;message=&quot;&quot;)</td></tr>
+<tr class="memdesc:a61dcf061b09f78b1870316d0e2b27d62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks the result of a NetCDF operation and throws an exception if it fails.  <br /></td></tr>
+<tr class="separator:a61dcf061b09f78b1870316d0e2b27d62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -300,6 +312,44 @@ Variables</h2></td></tr>
 <tr class="separator:a246e7dd9b5fcc1491bd5488604007d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a61dcf061b09f78b1870316d0e2b27d62" name="a61dcf061b09f78b1870316d0e2b27d62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61dcf061b09f78b1870316d0e2b27d62">&#9670;&#160;</a></span>check_netCDF_error()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::util::check_netCDF_error </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>status</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>message</em> = <code>&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks the result of a NetCDF operation and throws an exception if it fails. </p>
+
+</div>
+</div>
 <a id="a998d6cd1116edd9c05a538cf9f1fed61" name="a998d6cd1116edd9c05a538cf9f1fed61"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a998d6cd1116edd9c05a538cf9f1fed61">&#9670;&#160;</a></span>ComputeControl()</h2>
 
