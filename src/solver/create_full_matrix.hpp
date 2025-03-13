@@ -14,10 +14,9 @@ namespace openturbine {
 
 template <typename GlobalCrsMatrixType>
 [[nodiscard]] inline Teuchos::RCP<GlobalCrsMatrixType> CreateFullMatrix(
-    size_t num_system_dofs, size_t num_dofs, size_t num_constraint_dofs,
-    const Kokkos::View<ConstraintType*>::const_type& constraint_type,
-    const Kokkos::View<FreedomSignature*>::const_type& base_node_freedom_signature,
-    const Kokkos::View<FreedomSignature*>::const_type& target_node_freedom_signature,
+    size_t num_system_dofs, size_t num_dofs,
+    const Kokkos::View<size_t*>::const_type& base_active_dofs,
+    const Kokkos::View<size_t*>::const_type& target_active_dofs,
     const Kokkos::View<size_t* [6]>::const_type& base_node_freedom_table,
     const Kokkos::View<size_t* [6]>::const_type& target_node_freedom_table,
     const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& row_range,
@@ -52,10 +51,10 @@ template <typename GlobalCrsMatrixType>
                        CreateTransposeMatrixFull<CrsMatrixType>(
                            num_system_dofs,
                            num_dofs,
-                           num_constraint_dofs,
-                           constraint_type,
-                           base_node_freedom_signature,
-                           target_node_freedom_signature,
+                           active_dofs,
+                           node_freedom_map_table,
+                           base_active_dofs,
+                           target_active_dofs,
                            base_node_freedom_table,
                            target_node_freedom_table,
                            row_range
@@ -63,10 +62,8 @@ template <typename GlobalCrsMatrixType>
                        CreateConstraintsMatrixFull<CrsMatrixType>(
                            num_system_dofs,
                            num_dofs,
-                           num_constraint_dofs,
-                           constraint_type,
-                           base_node_freedom_signature,
-                           target_node_freedom_signature,
+                           base_active_dofs,
+                           target_active_dofs,
                            base_node_freedom_table,
                            target_node_freedom_table,
                            row_range

@@ -26,7 +26,7 @@ template <typename CrsMatrixType>
     using RowPtrType = typename CrsMatrixType::row_map_type::non_const_type;
     using IndicesType = typename CrsMatrixType::index_type::non_const_type;
 
-    const auto K_num_rows = num_system_dofs;
+    const auto K_num_rows = num_dofs;
 
     const auto K_row_ptrs = ComputeKRowPtrs<RowPtrType>(
         K_num_rows, active_dofs, node_freedom_map_table, num_nodes_per_element,
@@ -44,17 +44,9 @@ template <typename CrsMatrixType>
 
     KokkosSparse::sort_crs_matrix(K_row_ptrs, K_col_inds, K_values);
 
-    auto system_matrix_full_row_ptrs = RowPtrType("system_matrix_full_row_ptrs", num_dofs + 1);
-    Kokkos::parallel_for(
-        "FillUnshiftedRowPtrs", num_dofs + 1,
-        FillUnshiftedRowPtrs<RowPtrType>{
-            num_system_dofs, K_row_ptrs, system_matrix_full_row_ptrs
-        }
-    );
-
     return CrsMatrixType(
         "system_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs),
-        K_num_non_zero, K_values, system_matrix_full_row_ptrs,
+        K_num_non_zero, K_values, K_row_ptrs,
         K_col_inds
     );
 }

@@ -4,21 +4,16 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "compute_b_num_non_zero.hpp"
-#include "populate_sparse_row_ptrs_col_inds_constraints.hpp"
-#include "populate_sparse_row_ptrs_col_inds_transpose.hpp"
-#include "fill_unshifted_row_ptrs.hpp"
-
 namespace openturbine {
 
 template <typename CrsMatrixType>
 [[nodiscard]] inline CrsMatrixType CreateTransposeMatrixFull(
     size_t num_system_dofs,
     size_t num_dofs,
-    size_t num_constraint_dofs,
-    const Kokkos::View<ConstraintType*>::const_type& constraint_type,
-    const Kokkos::View<FreedomSignature*>::const_type& base_node_freedom_signature,
-    const Kokkos::View<FreedomSignature*>::const_type& target_node_freedom_signature,
+    const Kokkos::View<size_t*>::const_type& active_dofs,
+    const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
+    const Kokkos::View<size_t*>::const_type& base_active_dofs,
+    const Kokkos::View<size_t*>::const_type& target_active_dofs,
     const Kokkos::View<size_t* [6]>::const_type& constraint_base_node_freedom_table,
     const Kokkos::View<size_t* [6]>::const_type& constraint_target_node_freedom_table,
     const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
@@ -29,57 +24,78 @@ template <typename CrsMatrixType>
     using RowPtrType = typename CrsMatrixType::staticcrsgraph_type::row_map_type::non_const_type;
     using IndicesType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
 
-    const auto B_num_rows = num_constraint_dofs;
-    const auto B_num_columns = num_system_dofs;
+    const auto constraints_row_ptrs = RowPtrType("row_ptrs", num_dofs + 1);
+    const auto constraints_row_entries = RowPtrType("row_entries", num_dofs);
 
-    const auto B_num_non_zero = ComputeBNumNonZero(
-        constraint_row_range, base_node_freedom_signature, target_node_freedom_signature
-    );
+    Kokkos::parallel_for("ComputeTransposeConstraintsRowEntries", active_dofs.extent(0), KOKKOS_LAMBDA(size_t i) {
+        const auto this_node_num_dof = active_dofs(i);
+        const auto this_node_dof_index = node_freedom_map_table(i);
 
-    const auto B_row_ptrs = RowPtrType("b_row_ptrs", B_num_rows + 1);
-    const auto B_col_ind = IndicesType("b_indices", B_num_non_zero);
-    Kokkos::parallel_for(
-        "PopulateSparseRowPtrsColInds_Constraints", 1,
-        PopulateSparseRowPtrsColInds_Constraints<RowPtrType, IndicesType>{
-            constraint_type, constraint_base_node_freedom_table,
-            constraint_target_node_freedom_table, constraint_row_range, base_node_freedom_signature,
-            target_node_freedom_signature, B_row_ptrs, B_col_ind
+        auto num_entries_in_row = 0UL;
+        for (auto i_constraint = 0U; i_constraint < constraint_row_range.extent(0); ++i_constraint) {
+            const auto num_columns = constraint_row_range(i_constraint).second - constraint_row_range(i_constraint).first;
+            if(this_node_dof_index == constraint_base_node_freedom_table(i_constraint, 0) && (base_active_dofs(i_constraint) != 0UL)) {
+                    num_entries_in_row += num_columns;
+            }
+            else if(this_node_dof_index == constraint_target_node_freedom_table(i_constraint, 0) && (target_active_dofs(i_constraint) != 0UL)) {
+                    num_entries_in_row += num_columns;
+            }
         }
-    );
 
-    const auto B_values = ValuesType("B values", B_num_non_zero);
-    KokkosSparse::sort_crs_matrix(B_row_ptrs, B_col_ind, B_values);
-
-    const auto B_t_num_rows = num_system_dofs;
-    const auto B_t_num_non_zero = B_num_non_zero;
-
-    auto col_count = IndicesType("col_count", B_num_columns);
-    auto tmp_row_ptrs = RowPtrType("tmp_row_ptrs", B_t_num_rows + 1);
-    auto B_t_row_ptrs = RowPtrType("b_t_row_ptrs", B_t_num_rows + 1);
-    auto B_t_col_inds = IndicesType("B_t_indices", B_t_num_non_zero);
-    auto B_t_values = ValuesType("B_t values", B_t_num_non_zero);
-    Kokkos::parallel_for(
-        "PopulateSparseRowPtrsColInds_Transpose", 1,
-        PopulateSparseRowPtrsColInds_Transpose<RowPtrType, IndicesType>{
-            B_num_rows, B_num_columns, B_row_ptrs, B_col_ind, col_count, tmp_row_ptrs, B_t_row_ptrs,
-            B_t_col_inds
+        for (auto j = 0U; j < this_node_num_dof; ++j) {
+            constraints_row_entries(this_node_dof_index + j) = num_entries_in_row;
         }
-    );
-    KokkosSparse::sort_crs_matrix(B_t_row_ptrs, B_t_col_inds, B_t_values);
+    });
 
-    auto transpose_matrix_full_row_ptrs = RowPtrType("transpose_matrix_full_row_ptrs", num_dofs + 1);
-    Kokkos::parallel_for(
-        "FillUnshiftedRowPtrs", num_dofs + 1,
-        FillUnshiftedRowPtrs<RowPtrType>{
-            num_system_dofs, B_t_row_ptrs, transpose_matrix_full_row_ptrs
+    Kokkos::parallel_scan("ComputeTransposeConstraintsRowPtrs", num_dofs, KOKKOS_LAMBDA(size_t i, size_t& update, bool is_final) {
+        update += constraints_row_entries(i);
+        if (is_final) {
+            constraints_row_ptrs(i + 1) = update;
         }
-    );
-    auto transpose_matrix_full_indices = IndicesType("transpose_matrix_full_indices", B_t_num_non_zero);
-    Kokkos::deep_copy(transpose_matrix_full_indices, static_cast<int>(num_system_dofs));
-    KokkosBlas::axpy(1, B_t_col_inds, transpose_matrix_full_indices);
+    });
+
+    auto constraints_num_non_zero = typename RowPtrType::value_type{};
+    Kokkos::deep_copy(constraints_num_non_zero, Kokkos::subview(constraints_row_ptrs, num_dofs));
+
+    auto constraints_col_inds = IndicesType("col_inds", constraints_num_non_zero);
+
+    Kokkos::parallel_for("ComputeTransposeConstraintsColInds", active_dofs.extent(0), KOKKOS_LAMBDA(size_t i) {
+        const auto this_node_num_dof = active_dofs(i);
+        const auto this_node_dof_index = node_freedom_map_table(i);
+        auto current_col = Kokkos::Array<typename RowPtrType::value_type, 6>{};
+
+        for (auto i_constraint = 0U; i_constraint < constraint_row_range.extent(0); ++i_constraint) {
+            if(this_node_dof_index == constraint_base_node_freedom_table(i_constraint, 0) && (base_active_dofs(i_constraint) != 0UL)) {
+                for (auto j = 0U; j < this_node_num_dof; ++j) {
+                    const auto current_dof_index = constraints_row_ptrs(this_node_dof_index + j) + current_col[j];
+                    auto new_dof_index = current_dof_index;;
+                    for (auto k = constraint_row_range(i_constraint).first; k < constraint_row_range(i_constraint).second; ++k, ++new_dof_index) {
+                        constraints_col_inds(new_dof_index) = static_cast<typename IndicesType::value_type>(num_system_dofs + k);
+                    }
+                    current_col[j] += new_dof_index - current_dof_index;
+                }
+            }
+            if(this_node_dof_index == constraint_target_node_freedom_table(i_constraint, 0) && (target_active_dofs(i_constraint) != 0UL)) {
+                for (auto j = 0U; j < this_node_num_dof; ++j) {
+                    const auto current_dof_index = constraints_row_ptrs(this_node_dof_index + j) + current_col[j];
+                    auto new_dof_index = current_dof_index;;
+                    for (auto k = constraint_row_range(i_constraint).first; k < constraint_row_range(i_constraint).second; ++k, ++new_dof_index) {
+                        constraints_col_inds(new_dof_index) = static_cast<typename IndicesType::value_type>(num_system_dofs + k);
+                    }
+                    current_col[j] += new_dof_index - current_dof_index;
+                }
+            }
+        
+        }
+    });
+
+    const auto constraints_values = ValuesType("constraints_values", constraints_num_non_zero);
+
+    KokkosSparse::sort_crs_matrix(constraints_row_ptrs, constraints_col_inds, constraints_values);
+
     return CrsMatrixType(
-        "transpose_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs), B_t_num_non_zero,
-        B_t_values, transpose_matrix_full_row_ptrs, transpose_matrix_full_indices
+        "transpose_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs), constraints_num_non_zero,
+        constraints_values, constraints_row_ptrs, constraints_col_inds
     );
 }
 
