@@ -8,7 +8,7 @@ template <typename RowPtrType, typename IndicesType>
 struct ComputeConstraintsColInds {
     using RowPtrValueType = typename RowPtrType::value_type;
     using IndicesValueType = typename IndicesType::value_type;
-    size_t num_system_dofs;
+    size_t num_system_dofs{};
     Kokkos::View<size_t*>::const_type base_active_dofs;
     Kokkos::View<size_t*>::const_type target_active_dofs;
     Kokkos::View<size_t* [6]>::const_type base_node_freedom_table;

@@ -8,7 +8,7 @@ template <typename RowPtrType, typename IndicesType>
 struct ComputeSystemColInds {
     using RowPtrValueType = typename RowPtrType::value_type;
     using IndicesValueType = typename IndicesType::value_type;
-    size_t num_system_dofs;
+    size_t num_system_dofs{};
     Kokkos::View<size_t*>::const_type active_dofs;
     Kokkos::View<size_t*>::const_type node_freedom_map_table;
     Kokkos::View<size_t*>::const_type num_nodes_per_element;
@@ -25,8 +25,9 @@ struct ComputeSystemColInds {
     bool ElementContainsNode(size_t element, size_t node) const {
         const auto num_nodes = num_nodes_per_element(element);
         for (auto n = 0U; n < num_nodes; ++n) {
-            if (node_state_indices(element, n) == node)
+            if (node_state_indices(element, n) == node) {
                 return true;
+            }
         }
         return false;
     }

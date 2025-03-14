@@ -22,8 +22,9 @@ struct ComputeSystemRowEntries {
     bool ElementContainsNode(size_t element, size_t node) const {
         const auto num_nodes = num_nodes_per_element(element);
         for (auto n = 0U; n < num_nodes; ++n) {
-            if (node_state_indices(element, n) == node)
+            if (node_state_indices(element, n) == node) {
                 return true;
+            }
         }
         return false;
     }
