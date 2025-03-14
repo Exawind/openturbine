@@ -5,8 +5,8 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
-#include "compute_row_ptrs.hpp"
 #include "compute_col_inds.hpp"
+#include "compute_row_ptrs.hpp"
 
 namespace openturbine {
 
@@ -36,14 +36,22 @@ template <typename GlobalCrsMatrixType>
     using RowPtrValueType = typename RowPtrType::value_type;
     using IndicesValueType = typename IndicesType::value_type;
 
-    const auto row_ptrs = ComputeRowPtrs<RowPtrType>(num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table, target_node_freedom_table, row_range);
-    
+    const auto row_ptrs = ComputeRowPtrs<RowPtrType>(
+        num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
+        node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
+        target_node_freedom_table, row_range
+    );
+
     auto num_non_zero = RowPtrValueType{};
     Kokkos::deep_copy(num_non_zero, Kokkos::subview(row_ptrs, num_dofs));
 
-    const auto col_inds = ComputeColInds<RowPtrType, IndicesType>(num_non_zero, num_system_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table, target_node_freedom_table, row_range, row_ptrs);
+    const auto col_inds = ComputeColInds<RowPtrType, IndicesType>(
+        num_non_zero, num_system_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
+        node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
+        target_node_freedom_table, row_range, row_ptrs
+    );
 
-    KokkosSparse::sort_crs_graph(row_ptrs, col_inds, static_cast<IndicesValueType>(num_dofs));  
+    KokkosSparse::sort_crs_graph(row_ptrs, col_inds, static_cast<IndicesValueType>(num_dofs));
 
     // clang-format off
     return Teuchos::make_rcp<GlobalCrsMatrixType>(

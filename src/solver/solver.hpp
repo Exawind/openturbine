@@ -83,11 +83,10 @@ struct Solver {
           num_system_dofs(ComputeNumSystemDofs(active_dofs)),
           num_dofs(num_system_dofs + num_constraint_dofs),
           A(CreateFullMatrix<GlobalCrsMatrixType>(
-              num_system_dofs, num_dofs, 
-              base_active_dofs, target_active_dofs,
+              num_system_dofs, num_dofs, base_active_dofs, target_active_dofs,
               constraint_base_node_freedom_table, constraint_target_node_freedom_table,
-              constraint_row_range, active_dofs, node_freedom_map_table,
-              num_nodes_per_element, node_state_indices
+              constraint_row_range, active_dofs, node_freedom_map_table, num_nodes_per_element,
+              node_state_indices
           )),
           b(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getRangeMap(), 1)),
           x(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),

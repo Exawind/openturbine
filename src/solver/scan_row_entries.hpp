@@ -19,4 +19,4 @@ struct ScanRowEntries {
     }
 };
 
-}
+}  // namespace openturbine

@@ -49,4 +49,4 @@ struct ComputeConstraintsColInds {
     }
 };
 
-}
+}  // namespace openturbine

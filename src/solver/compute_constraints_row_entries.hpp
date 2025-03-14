@@ -25,4 +25,4 @@ struct ComputeConstraintsRowEntries {
     }
 };
 
-}
+}  // namespace openturbine

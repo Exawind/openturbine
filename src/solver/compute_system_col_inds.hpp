@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include <Kokkos_Core.hpp>
 
@@ -25,19 +25,22 @@ struct ComputeSystemColInds {
     bool ElementContainsNode(size_t element, size_t node) const {
         const auto num_nodes = num_nodes_per_element(element);
         for (auto n = 0U; n < num_nodes; ++n) {
-            if(node_state_indices(element, n) == node) return true;
+            if (node_state_indices(element, n) == node)
+                return true;
         }
         return false;
     }
 
     KOKKOS_FUNCTION
     bool BaseContainsNode(size_t constraint, size_t dof_index) const {
-        return dof_index == base_node_freedom_table(constraint, 0) && base_active_dofs(constraint) != 0UL;
+        return dof_index == base_node_freedom_table(constraint, 0) &&
+               base_active_dofs(constraint) != 0UL;
     }
 
     KOKKOS_FUNCTION
     bool TargetContainsNode(size_t constraint, size_t dof_index) const {
-        return dof_index == target_node_freedom_table(constraint, 0) && target_active_dofs(constraint) != 0UL;
+        return dof_index == target_node_freedom_table(constraint, 0) &&
+               target_active_dofs(constraint) != 0UL;
     }
 
     KOKKOS_FUNCTION
@@ -71,7 +74,6 @@ struct ComputeSystemColInds {
             col_inds(index) = static_cast<IndicesValueType>(col_index);
         }
         return index;
-
     }
 
     KOKKOS_FUNCTION
@@ -105,7 +107,7 @@ struct ComputeSystemColInds {
         }
 
         for (auto constraint = 0U; constraint < num_constraints; ++constraint) {
-            if(!ConstraintContainsNode(constraint, dof_index)) {
+            if (!ConstraintContainsNode(constraint, dof_index)) {
                 continue;
             }
             for (auto j = 0U; j < num_dof; ++j) {
@@ -114,8 +116,7 @@ struct ComputeSystemColInds {
                 current_col[j] += new_index - index;
             }
         }
-
     }
 };
 
-}
+}  // namespace openturbine

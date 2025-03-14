@@ -32,11 +32,15 @@ TEST(ComputeColInds, OneElementOneNode) {
 
     const auto base_active_dofs = Kokkos::View<size_t*>("base_active_dofs", 0);
     const auto target_active_dofs = Kokkos::View<size_t*>("target_active_dofs", 0);
-    const auto base_node_freedom_table = Kokkos::View<size_t*[6]>("base_node_freedom_table", 0);
-    const auto target_node_freedom_table = Kokkos::View<size_t*[6]>("target_node_freedom_table", 0);
+    const auto base_node_freedom_table = Kokkos::View<size_t* [6]>("base_node_freedom_table", 0);
+    const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto col_inds = ComputeColInds<Kokkos::View<int[7]>, Kokkos::View<int*>>(num_non_zero, num_system_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table, target_node_freedom_table, row_range, row_ptrs);
+    const auto col_inds = ComputeColInds<Kokkos::View<int[7]>, Kokkos::View<int*>>(
+        num_non_zero, num_system_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
+        node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
+        target_node_freedom_table, row_range, row_ptrs
+    );
 
     const auto col_inds_mirror = Kokkos::create_mirror_view(col_inds);
     Kokkos::deep_copy(col_inds_mirror, col_inds);
@@ -87,11 +91,15 @@ TEST(ComputeColInds, OneElementTwoNodes) {
 
     const auto base_active_dofs = Kokkos::View<size_t*>("base_active_dofs", 0);
     const auto target_active_dofs = Kokkos::View<size_t*>("target_active_dofs", 0);
-    const auto base_node_freedom_table = Kokkos::View<size_t*[6]>("base_node_freedom_table", 0);
-    const auto target_node_freedom_table = Kokkos::View<size_t*[6]>("target_node_freedom_table", 0);
+    const auto base_node_freedom_table = Kokkos::View<size_t* [6]>("base_node_freedom_table", 0);
+    const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto col_inds = ComputeColInds<Kokkos::View<int[13]>, Kokkos::View<int*>>(num_non_zero, num_system_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table, target_node_freedom_table, row_range, row_ptrs);
+    const auto col_inds = ComputeColInds<Kokkos::View<int[13]>, Kokkos::View<int*>>(
+        num_non_zero, num_system_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
+        node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
+        target_node_freedom_table, row_range, row_ptrs
+    );
 
     KokkosSparse::sort_crs_graph(row_ptrs, col_inds);
 
@@ -145,11 +153,15 @@ TEST(ComputeColInds, TwoElementsTwoNodesNoOverlap) {
 
     const auto base_active_dofs = Kokkos::View<size_t*>("base_active_dofs", 0);
     const auto target_active_dofs = Kokkos::View<size_t*>("target_active_dofs", 0);
-    const auto base_node_freedom_table = Kokkos::View<size_t*[6]>("base_node_freedom_table", 0);
-    const auto target_node_freedom_table = Kokkos::View<size_t*[6]>("target_node_freedom_table", 0);
+    const auto base_node_freedom_table = Kokkos::View<size_t* [6]>("base_node_freedom_table", 0);
+    const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto col_inds = ComputeColInds<Kokkos::View<int[25]>, Kokkos::View<int*>>(num_non_zero, num_system_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table, target_node_freedom_table, row_range, row_ptrs);
+    const auto col_inds = ComputeColInds<Kokkos::View<int[25]>, Kokkos::View<int*>>(
+        num_non_zero, num_system_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
+        node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
+        target_node_freedom_table, row_range, row_ptrs
+    );
 
     KokkosSparse::sort_crs_graph(row_ptrs, col_inds);
 
@@ -198,9 +210,8 @@ TEST(ComputeColInds, TwoElementsTwoNodesOverlap) {
     Kokkos::deep_copy(node_state_indices, node_state_indices_mirror);
 
     const auto row_ptrs = Kokkos::View<int[19]>("row_ptrs");
-    constexpr auto row_ptrs_host_data =
-        std::array{0,   12,  24,  36,  48,  60,  72,  90,  108, 126,
-                   144, 162, 180, 192, 204, 216, 228, 240, 252};
+    constexpr auto row_ptrs_host_data = std::array{0,   12,  24,  36,  48,  60,  72,  90,  108, 126,
+                                                   144, 162, 180, 192, 204, 216, 228, 240, 252};
     const auto row_ptrs_host =
         Kokkos::View<int[19], Kokkos::HostSpace>::const_type(row_ptrs_host_data.data());
     const auto row_ptrs_mirror = Kokkos::create_mirror_view(row_ptrs);
@@ -209,11 +220,15 @@ TEST(ComputeColInds, TwoElementsTwoNodesOverlap) {
 
     const auto base_active_dofs = Kokkos::View<size_t*>("base_active_dofs", 0);
     const auto target_active_dofs = Kokkos::View<size_t*>("target_active_dofs", 0);
-    const auto base_node_freedom_table = Kokkos::View<size_t*[6]>("base_node_freedom_table", 0);
-    const auto target_node_freedom_table = Kokkos::View<size_t*[6]>("target_node_freedom_table", 0);
+    const auto base_node_freedom_table = Kokkos::View<size_t* [6]>("base_node_freedom_table", 0);
+    const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto col_inds = ComputeColInds<Kokkos::View<int[19]>, Kokkos::View<int*>>(num_non_zero, num_system_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table, target_node_freedom_table, row_range, row_ptrs);
+    const auto col_inds = ComputeColInds<Kokkos::View<int[19]>, Kokkos::View<int*>>(
+        num_non_zero, num_system_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
+        node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
+        target_node_freedom_table, row_range, row_ptrs
+    );
 
     KokkosSparse::sort_crs_graph(row_ptrs, col_inds);
 

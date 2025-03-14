@@ -120,9 +120,12 @@ inline void assemble_node_freedom_allocation_table(
 
     const auto active_dofs = state.active_dofs;
     const auto node_freedom_allocation_table = state.node_freedom_allocation_table;
-    Kokkos::parallel_for("ComputeActiveDofs", state.num_system_nodes, KOKKOS_LAMBDA(size_t i) {
-        active_dofs(i) = count_active_dofs(node_freedom_allocation_table(i));
-    });
+    Kokkos::parallel_for(
+        "ComputeActiveDofs", state.num_system_nodes,
+        KOKKOS_LAMBDA(size_t i) {
+            active_dofs(i) = count_active_dofs(node_freedom_allocation_table(i));
+        }
+    );
 }
 
 }  // namespace openturbine

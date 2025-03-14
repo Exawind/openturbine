@@ -23,11 +23,15 @@ TEST(ComputeRowPtrs, OneElementOneNode) {
 
     const auto base_active_dofs = Kokkos::View<size_t*>("base_active_dofs", 0);
     const auto target_active_dofs = Kokkos::View<size_t*>("target_active_dofs", 0);
-    const auto base_node_freedom_table = Kokkos::View<size_t*[6]>("base_node_freedom_table", 0);
-    const auto target_node_freedom_table = Kokkos::View<size_t*[6]>("target_node_freedom_table", 0);
+    const auto base_node_freedom_table = Kokkos::View<size_t* [6]>("base_node_freedom_table", 0);
+    const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table, target_node_freedom_table, row_range);
+    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(
+        num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
+        node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
+        target_node_freedom_table, row_range
+    );
 
     const auto row_ptrs_mirror = Kokkos::create_mirror_view(row_ptrs);
     Kokkos::deep_copy(row_ptrs_mirror, row_ptrs);
@@ -67,11 +71,15 @@ TEST(ComputeRowPtrs, OneElementTwoNodes) {
 
     const auto base_active_dofs = Kokkos::View<size_t*>("base_active_dofs", 0);
     const auto target_active_dofs = Kokkos::View<size_t*>("target_active_dofs", 0);
-    const auto base_node_freedom_table = Kokkos::View<size_t*[6]>("base_node_freedom_table", 0);
-    const auto target_node_freedom_table = Kokkos::View<size_t*[6]>("target_node_freedom_table", 0);
+    const auto base_node_freedom_table = Kokkos::View<size_t* [6]>("base_node_freedom_table", 0);
+    const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table, target_node_freedom_table, row_range);
+    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(
+        num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
+        node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
+        target_node_freedom_table, row_range
+    );
 
     const auto row_ptrs_mirror = Kokkos::create_mirror_view(row_ptrs);
     Kokkos::deep_copy(row_ptrs_mirror, row_ptrs);
@@ -111,11 +119,15 @@ TEST(ComputeRowPtrs, TwoElementTwoNodesNoOverlap) {
 
     const auto base_active_dofs = Kokkos::View<size_t*>("base_active_dofs", 0);
     const auto target_active_dofs = Kokkos::View<size_t*>("target_active_dofs", 0);
-    const auto base_node_freedom_table = Kokkos::View<size_t*[6]>("base_node_freedom_table", 0);
-    const auto target_node_freedom_table = Kokkos::View<size_t*[6]>("target_node_freedom_table", 0);
+    const auto base_node_freedom_table = Kokkos::View<size_t* [6]>("base_node_freedom_table", 0);
+    const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table, target_node_freedom_table, row_range);
+    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(
+        num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
+        node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
+        target_node_freedom_table, row_range
+    );
 
     const auto row_ptrs_mirror = Kokkos::create_mirror_view(row_ptrs);
     Kokkos::deep_copy(row_ptrs_mirror, row_ptrs);
@@ -155,11 +167,15 @@ TEST(ComputeRowPtrs, TwoElementTwoNodesOverlap) {
 
     const auto base_active_dofs = Kokkos::View<size_t*>("base_active_dofs", 0);
     const auto target_active_dofs = Kokkos::View<size_t*>("target_active_dofs", 0);
-    const auto base_node_freedom_table = Kokkos::View<size_t*[6]>("base_node_freedom_table", 0);
-    const auto target_node_freedom_table = Kokkos::View<size_t*[6]>("target_node_freedom_table", 0);
+    const auto base_node_freedom_table = Kokkos::View<size_t* [6]>("base_node_freedom_table", 0);
+    const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table, target_node_freedom_table, row_range);
+    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(
+        num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
+        node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
+        target_node_freedom_table, row_range
+    );
 
     const auto row_ptrs_mirror = Kokkos::create_mirror_view(row_ptrs);
     Kokkos::deep_copy(row_ptrs_mirror, row_ptrs);

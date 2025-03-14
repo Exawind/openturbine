@@ -13,9 +13,7 @@ namespace openturbine {
 
 template <typename CrsMatrixType>
 [[nodiscard]] inline CrsMatrixType CreateSystemMatrixFull(
-    size_t num_system_dofs,
-    size_t num_dofs,
-    const Kokkos::View<size_t*>::const_type& active_dofs,
+    size_t num_system_dofs, size_t num_dofs, const Kokkos::View<size_t*>::const_type& active_dofs,
     const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
     const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
     const Kokkos::View<size_t**>::const_type& node_state_indices
@@ -29,8 +27,7 @@ template <typename CrsMatrixType>
     const auto K_num_rows = num_dofs;
 
     const auto K_row_ptrs = ComputeKRowPtrs<RowPtrType>(
-        K_num_rows, active_dofs, node_freedom_map_table, num_nodes_per_element,
-        node_state_indices
+        K_num_rows, active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices
     );
 
     auto K_num_non_zero = typename RowPtrType::value_type{};
@@ -45,9 +42,8 @@ template <typename CrsMatrixType>
     KokkosSparse::sort_crs_matrix(K_row_ptrs, K_col_inds, K_values);
 
     return CrsMatrixType(
-        "system_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs),
-        K_num_non_zero, K_values, K_row_ptrs,
-        K_col_inds
+        "system_matrix_full", static_cast<int>(num_dofs), static_cast<int>(num_dofs), K_num_non_zero,
+        K_values, K_row_ptrs, K_col_inds
     );
 }
 
