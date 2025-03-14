@@ -69,26 +69,24 @@ struct Solver {
      */
     Solver(
         const Kokkos::View<size_t*>::const_type& node_IDs,
-        const Kokkos::View<FreedomSignature*>::const_type& node_freedom_allocation_table,
+        const Kokkos::View<size_t*>::const_type& active_dofs,
         const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
         const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
         const Kokkos::View<size_t**>::const_type& node_state_indices, size_t num_constraint_dofs,
-        const Kokkos::View<ConstraintType*>::const_type& constraint_type,
-        const Kokkos::View<FreedomSignature*>::const_type& base_node_freedom_signature,
-        const Kokkos::View<FreedomSignature*>::const_type& target_node_freedom_signature,
+        const Kokkos::View<size_t*>::const_type& base_active_dofs,
+        const Kokkos::View<size_t*>::const_type& target_active_dofs,
         const Kokkos::View<size_t* [6]>::const_type& constraint_base_node_freedom_table,
         const Kokkos::View<size_t* [6]>::const_type& constraint_target_node_freedom_table,
         const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
     )
         : num_system_nodes(node_IDs.extent(0)),
-          num_system_dofs(ComputeNumSystemDofs(node_freedom_allocation_table)),
+          num_system_dofs(ComputeNumSystemDofs(active_dofs)),
           num_dofs(num_system_dofs + num_constraint_dofs),
           A(CreateFullMatrix<GlobalCrsMatrixType>(
-              num_system_dofs, num_dofs, num_constraint_dofs, constraint_type,
-              base_node_freedom_signature, target_node_freedom_signature,
+              num_system_dofs, num_dofs, base_active_dofs, target_active_dofs,
               constraint_base_node_freedom_table, constraint_target_node_freedom_table,
-              constraint_row_range, node_freedom_allocation_table, node_freedom_map_table,
-              num_nodes_per_element, node_state_indices
+              constraint_row_range, active_dofs, node_freedom_map_table, num_nodes_per_element,
+              node_state_indices
           )),
           b(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getRangeMap(), 1)),
           x(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),
