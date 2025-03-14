@@ -23,6 +23,19 @@ else()
   set(YAML_CPP_TARGET yaml-cpp)
 endif()
 
+#----------------------------------------
+# NetCDF
+#----------------------------------------
+if(TARGET netCDF::netcdf)
+  set(NETCDF_TARGET netCDF::netcdf)
+elseif(TARGET NetCDF::NetCDF)
+  set(NETCDF_TARGET NetCDF::NetCDF)
+elseif(TARGET netcdf)
+  set(NETCDF_TARGET netcdf)
+else()
+  message(FATAL_ERROR "NetCDF library not found")
+endif()
+
 target_link_system_libraries(openturbine_regression_tests PRIVATE
   KokkosKernels::kokkoskernels
   Amesos2::amesos2

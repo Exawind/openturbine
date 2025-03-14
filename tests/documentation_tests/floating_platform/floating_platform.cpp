@@ -3,6 +3,7 @@
 
 #include <Kokkos_Core.hpp>
 #include <interfaces/cfd/interface.hpp>
+#include <interfaces/cfd/interface_builder.hpp>
 
 int main() {
     Kokkos::initialize();
@@ -37,61 +38,28 @@ int main() {
         constexpr auto mooring_line_initial_length{55.432};  // m
 
         // Create cfd interface
-        auto interface = openturbine::cfd::Interface(openturbine::cfd::InterfaceInput{
-            gravity,
-            time_step,  // time step
-            rho_inf,    // rho infinity (numerical damping)
-            max_iter,   // max convergence iterations
-            openturbine::cfd::TurbineInput{
-                openturbine::cfd::FloatingPlatformInput{
-                    true,  // enable
-                    {
-                        platform_cm_position[0],
-                        platform_cm_position[1],
-                        platform_cm_position[2],
-                        1.,
-                        0.,
-                        0.,
-                        0.,
-                    },                         // position
-                    {0., 0., 0., 0., 0., 0.},  // velocity
-                    {0., 0., 0., 0., 0., 0.},  // acceleration
-                    platform_mass_matrix,
-                    {
-                        {
-                            mooring_line_stiffness,
-                            mooring_line_initial_length,
-                            {-40.87, 0.0, -14.},    // Fairlead node coordinates
-                            {0., 0., 0.},           // Fairlead node velocity
-                            {0., 0., 0.},           // Fairlead node acceleration
-                            {-105.47, 0.0, -58.4},  // Anchor node coordinates
-                            {0., 0., 0.},           // Anchor node velocity
-                            {0., 0., 0.},           // Anchor node acceleration
-                        },
-                        {
-                            mooring_line_stiffness,
-                            mooring_line_initial_length,
-                            {20.43, -35.39, -14.},   // Fairlead node coordinates
-                            {0., 0., 0.},            // Fairlead node velocity
-                            {0., 0., 0.},            // Fairlead node acceleration
-                            {52.73, -91.34, -58.4},  // Anchor node coordinates
-                            {0., 0., 0.},            // Anchor node velocity
-                            {0., 0., 0.},            // Anchor node acceleration
-                        },
-                        {
-                            mooring_line_stiffness,
-                            mooring_line_initial_length,
-                            {20.43, 35.39, -14.},   // Fairlead node coordinates
-                            {0., 0., 0.},           // Fairlead node velocity
-                            {0., 0., 0.},           // Fairlead node acceleration
-                            {52.73, 91.34, -58.4},  // Anchor node coordinates
-                            {0., 0., 0.},           // Anchor node velocity
-                            {0., 0., 0.},           // Anchor node acceleration
-                        },
-                    },
-                },
-            },
-        });
+        auto interface = openturbine::cfd::InterfaceBuilder{}
+                             .SetGravity(gravity)
+                             .SetTimeStep(time_step)
+                             .SetDampingFactor(rho_inf)
+                             .SetMaximumNonlinearIterations(max_iter)
+                             .EnableFloatingPlatform(true)
+                             .SetFloatingPlatformPosition({0., 0., -7.53, 1., 0., 0., 0.})
+                             .SetFloatingPlatformMassMatrix(platform_mass_matrix)
+                             .SetNumberOfMooringLines(3)
+                             .SetMooringLineStiffness(0, mooring_line_stiffness)
+                             .SetMooringLineUndeformedLength(0, mooring_line_initial_length)
+                             .SetMooringLineFairleadPosition(0, {-40.87, 0.0, -14.})
+                             .SetMooringLineAnchorPosition(0, {-105.47, 0.0, -58.4})
+                             .SetMooringLineStiffness(1, mooring_line_stiffness)
+                             .SetMooringLineUndeformedLength(1, mooring_line_initial_length)
+                             .SetMooringLineFairleadPosition(1, {20.43, -35.39, -14.})
+                             .SetMooringLineAnchorPosition(1, {52.73, -91.34, -58.4})
+                             .SetMooringLineStiffness(2, mooring_line_stiffness)
+                             .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
+                             .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
+                             .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4})
+                             .Build();
 
         // Calculate buoyancy force as percentage of gravitational force plus spring forces times
         const auto initial_spring_force = 1907514.4912628897;

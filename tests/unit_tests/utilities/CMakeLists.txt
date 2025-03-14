@@ -1,4 +1,5 @@
-# Specify the source files for the unit test executable
+add_subdirectory(netcdf)
+
 target_sources(
     openturbine_unit_tests
     PRIVATE

@@ -188,7 +188,8 @@ Interface::Interface(const InterfaceInput& input)
       host_state_x("host_state_x", state.num_system_nodes),
       host_state_q("host_state_q", state.num_system_nodes),
       host_state_v("host_state_v", state.num_system_nodes),
-      host_state_vd("host_state_vd", state.num_system_nodes) {
+      host_state_vd("host_state_vd", state.num_system_nodes),
+      output_writer_(nullptr) {
     // Copy state motion members from device to host
     Kokkos::deep_copy(this->host_state_x, this->state.x);
     Kokkos::deep_copy(this->host_state_q, this->state.q);
@@ -200,6 +201,12 @@ Interface::Interface(const InterfaceInput& input)
         this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
         this->host_state_vd
     );
+
+    // Initialize NetCDF writer if output file is specified
+    if (!input.output_file.empty()) {
+        this->output_writer_ =
+            std::make_unique<util::NodeStateWriter>(input.output_file, true, state.num_system_nodes);
+    }
 }
 
 void Interface::WriteRestart(const std::filesystem::path& filename) const {
@@ -246,6 +253,12 @@ bool Interface::Step() {
         this->host_state_vd
     );
 
+    // Write outputs and increment timestep counter
+    if (this->output_writer_) {
+        WriteOutputs();
+    }
+    this->current_timestep_++;
+
     return true;
 }
 
@@ -267,6 +280,66 @@ void Interface::RestoreState() {
         this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
         this->host_state_vd
     );
+}
+
+//------------------------------------------------------------------------------
+// Write outputs
+//------------------------------------------------------------------------------
+void Interface::WriteOutputs() const {
+    const size_t num_nodes = state.num_system_nodes;
+    std::vector<double> x(num_nodes);
+    std::vector<double> y(num_nodes);
+    std::vector<double> z(num_nodes);
+    std::vector<double> i(num_nodes);
+    std::vector<double> j(num_nodes);
+    std::vector<double> k(num_nodes);
+    std::vector<double> w(num_nodes);
+
+    // position
+    for (size_t node = 0; node < num_nodes; ++node) {
+        x[node] = this->host_state_x(node, 0);
+        y[node] = this->host_state_x(node, 1);
+        z[node] = this->host_state_x(node, 2);
+        w[node] = this->host_state_x(node, 3);
+        i[node] = this->host_state_x(node, 4);
+        j[node] = this->host_state_x(node, 5);
+        k[node] = this->host_state_x(node, 6);
+    }
+    output_writer_->WriteStateDataAtTimestep(this->current_timestep_, "x", x, y, z, i, j, k, w);
+
+    // displacement
+    for (size_t node = 0; node < num_nodes; ++node) {
+        x[node] = this->host_state_q(node, 0);
+        y[node] = this->host_state_q(node, 1);
+        z[node] = this->host_state_q(node, 2);
+        w[node] = this->host_state_q(node, 3);
+        i[node] = this->host_state_q(node, 4);
+        j[node] = this->host_state_q(node, 5);
+        k[node] = this->host_state_q(node, 6);
+    }
+    output_writer_->WriteStateDataAtTimestep(this->current_timestep_, "u", x, y, z, i, j, k, w);
+
+    // velocity
+    for (size_t node = 0; node < num_nodes; ++node) {
+        x[node] = this->host_state_v(node, 0);
+        y[node] = this->host_state_v(node, 1);
+        z[node] = this->host_state_v(node, 2);
+        i[node] = this->host_state_v(node, 3);
+        j[node] = this->host_state_v(node, 4);
+        k[node] = this->host_state_v(node, 5);
+    }
+    output_writer_->WriteStateDataAtTimestep(this->current_timestep_, "v", x, y, z, i, j, k);
+
+    // acceleration
+    for (size_t node = 0; node < num_nodes; ++node) {
+        x[node] = this->host_state_vd(node, 0);
+        y[node] = this->host_state_vd(node, 1);
+        z[node] = this->host_state_vd(node, 2);
+        i[node] = this->host_state_vd(node, 3);
+        j[node] = this->host_state_vd(node, 4);
+        k[node] = this->host_state_vd(node, 5);
+    }
+    output_writer_->WriteStateDataAtTimestep(this->current_timestep_, "a", x, y, z, i, j, k);
 }
 
 }  // namespace openturbine::cfd
