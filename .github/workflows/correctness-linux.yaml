@@ -36,6 +36,7 @@ jobs:
         spack install cppcheck
         spack install netcdf-c
         spack install yaml-cpp
+        spack install vtk
         spack install trilinos@master~epetra ^kokkos-kernels+blas+lapack
     - name: Clone
       uses: actions/checkout@v4
@@ -50,6 +51,7 @@ jobs:
         spack load cppcheck
         spack load netcdf-c
         spack load yaml-cpp
+        spack load vtk
         cd openturbine
         mkdir build
         cd build
@@ -62,6 +64,7 @@ jobs:
           -DOpenTurbine_WARNINGS_AS_ERRORS=ON \
           -DOpenTurbine_BUILD_OPENFAST_ADI=${{ matrix.build_external == 'all' }} \
           -DOpenTurbine_BUILD_ROSCO_CONTROLLER=${{ matrix.build_external == 'all' }} \
+          -DOpenTurbine_ENABLE_VTK=ON \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         cmake --build .
         ctest --output-on-failure
