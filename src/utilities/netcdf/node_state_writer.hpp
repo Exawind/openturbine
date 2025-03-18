@@ -68,7 +68,7 @@ public:
         const std::vector<double>& y, const std::vector<double>& z, const std::vector<double>& i,
         const std::vector<double>& j, const std::vector<double>& k,
         const std::vector<double>& w = std::vector<double>()
-    ) {
+    ) const {
         // Validate the component prefix - must be one of the valid prefixes:
         // "x" -> position
         // "u" -> displacement

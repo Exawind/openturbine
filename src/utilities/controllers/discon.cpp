@@ -147,8 +147,6 @@ inline int SetupFirstCall(const ControllerIO& swap, InternalState& state, char* 
         strncpy(
             avcMSG, "VS_RtPwr/VS_RtGnSp must not be greater than VS_MaxTq.", swap.message_array_size
         );
-    } else if (kPC_DT <= 0.0) {
-        strncpy(avcMSG, "PC_DT must be greater than zero.", swap.message_array_size);
     } else if (kPC_KI <= 0.0) {
         strncpy(avcMSG, "PC_KI must be greater than zero.", swap.message_array_size);
     } else if (kPC_KK <= 0.0) {
@@ -157,8 +155,6 @@ inline int SetupFirstCall(const ControllerIO& swap, InternalState& state, char* 
         strncpy(avcMSG, "PC_RefSpd must be greater than zero.", swap.message_array_size);
     } else if (kPC_MaxRat <= 0.0) {
         strncpy(avcMSG, "PC_MaxRat must be greater than zero.", swap.message_array_size);
-    } else if (kPC_MinPit >= kPC_MaxPit) {
-        strncpy(avcMSG, "PC_MinPit must be less than PC_MaxPit.", swap.message_array_size);
     } else {
         aviFAIL = 0;
         memset(avcMSG, 0, swap.message_array_size);

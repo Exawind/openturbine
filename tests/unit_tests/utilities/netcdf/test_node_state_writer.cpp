@@ -80,7 +80,7 @@ TEST_F(NodeStateWriterTest, ConstructorCreatesExpectedDimensionsAndVariables) {
 }
 
 TEST_F(NodeStateWriterTest, WriteStateDataAtTimestepForPosition) {
-    util::NodeStateWriter writer(test_file, true, num_nodes);
+    const util::NodeStateWriter writer(test_file, true, num_nodes);
 
     const std::vector<double> x = {1., 2., 3.};
     const std::vector<double> y = {4., 5., 6.};
@@ -118,7 +118,7 @@ TEST_F(NodeStateWriterTest, WriteStateDataAtTimestepForPosition) {
 }
 
 TEST_F(NodeStateWriterTest, WriteStateDataAtTimestepForVelocity) {
-    util::NodeStateWriter writer(test_file, true, num_nodes);
+    const util::NodeStateWriter writer(test_file, true, num_nodes);
 
     const std::vector<double> x = {1., 2., 3.};
     const std::vector<double> y = {4., 5., 6.};
@@ -154,7 +154,7 @@ TEST_F(NodeStateWriterTest, WriteStateDataAtTimestepForVelocity) {
 }
 
 TEST_F(NodeStateWriterTest, ThrowsOnInvalidComponentPrefix) {
-    util::NodeStateWriter writer(test_file, true, num_nodes);
+    const util::NodeStateWriter writer(test_file, true, num_nodes);
     const std::vector<double> data(num_nodes, 1.);
 
     EXPECT_THROW(
@@ -164,7 +164,7 @@ TEST_F(NodeStateWriterTest, ThrowsOnInvalidComponentPrefix) {
 }
 
 TEST_F(NodeStateWriterTest, ThrowsOnMismatchedVectorSizes) {
-    util::NodeStateWriter writer(test_file, true, num_nodes);
+    const util::NodeStateWriter writer(test_file, true, num_nodes);
 
     const std::vector<double> correct_size(num_nodes, 1.);    // write data to 3 nodes
     const std::vector<double> wrong_size(num_nodes + 1, 1.);  // write data to 4 nodes

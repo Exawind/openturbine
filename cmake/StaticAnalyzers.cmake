@@ -15,6 +15,7 @@ macro(openturbine_enable_cppcheck WARNINGS_AS_ERRORS CPPCHECK_OPTIONS)
         --template=${CPPCHECK_TEMPLATE}
         --enable=style,performance,warning,portability
         --inline-suppr
+        --check-level=exhaustive
         --inconclusive
         --suppress=cppcheckError  # Suppress cppcheck errors
         --suppress=internalAstError # Suppress internal AST errors
