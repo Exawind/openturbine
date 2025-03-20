@@ -35,11 +35,7 @@ void PITCH_CONTROLLER(
         static_cast<typename std::iterator_traits<char*>::difference_type>(io.message_array_size) - 1
     ) = 0;
 
-    // If this is the first call, output the controller input and output file names
-    if (first_call) {
-        // Set first call to false
-        first_call = false;
-    }
+    first_call = false;
 
     io.CopyToSwapArray(swap_array);
     std::copy(swap_array.cbegin(), swap_array.cend(), avrSWAP);
