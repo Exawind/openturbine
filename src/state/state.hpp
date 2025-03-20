@@ -18,6 +18,7 @@ struct State {
     size_t num_system_nodes;
     Kokkos::View<size_t*> ID;
     Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
+    Kokkos::View<size_t*> active_dofs;
     Kokkos::View<size_t*> node_freedom_map_table;
 
     View_Nx7 x0;                                   //< Initial global position/rotation
@@ -36,6 +37,7 @@ struct State {
         : num_system_nodes(num_system_nodes_),
           ID("ID", num_system_nodes),
           node_freedom_allocation_table("node_freedom_allocation_table", num_system_nodes),
+          active_dofs("active_dofs", num_system_nodes),
           node_freedom_map_table("node_freedom_map_table", num_system_nodes),
           x0("x0", num_system_nodes),
           x("x", num_system_nodes),
