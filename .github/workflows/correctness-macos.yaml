@@ -47,6 +47,7 @@ jobs:
       run: |
         # Find the gfortran compiler and set the FC environment variable
         export FC=$(find /opt/homebrew/ -name gfortran | tr ' ' '\n' | grep "/gcc/.*gfortran")
+        brew install vtk
         source spack/share/spack/setup-env.sh
         spack load llvm
         spack load cppcheck
@@ -54,7 +55,6 @@ jobs:
         spack load googletest
         spack load netcdf-c~mpi
         spack load yaml-cpp
-        brew install vtk
         cd openturbine
         mkdir build
         cd build
