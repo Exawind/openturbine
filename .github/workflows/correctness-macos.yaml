@@ -47,7 +47,7 @@ jobs:
       run: |
         # Find the gfortran compiler and set the FC environment variable
         export FC=$(find /opt/homebrew/ -name gfortran | tr ' ' '\n' | grep "/gcc/.*gfortran")
-        brew install vtk
+        python3 -m pip install vtk
         source spack/share/spack/setup-env.sh
         spack load llvm
         spack load cppcheck
