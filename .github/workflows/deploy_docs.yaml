@@ -30,7 +30,8 @@ jobs:
         spack install cppcheck
         spack install netcdf-c
         spack install yaml-cpp
-        spack install trilinos@master~epetra ^kokkos-kernels+blas+lapack
+        spack install suite-sparse
+        spack install kokkos-kernels+blas+lapack
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -48,7 +49,7 @@ jobs:
     - name: Build OpenTurbine with documentation
       run: |
         source spack/share/spack/setup-env.sh
-        spack load trilinos yaml-cpp netcdf-c
+        spack load kokkos-kernels yaml-cpp netcdf-c suite-sparse
         cd openturbine
         mkdir build
         cd build

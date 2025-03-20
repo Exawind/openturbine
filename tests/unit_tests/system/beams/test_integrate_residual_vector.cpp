@@ -33,8 +33,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fc) {
         "IntegrateResidualVectorElement", number_of_nodes,
         beams::IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
-        }
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms}
     );
 
     constexpr auto resid_exact_data =
@@ -73,8 +72,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fd) {
         "IntegrateResidualVectorElement", number_of_nodes,
         beams::IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
-        }
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms}
     );
 
     constexpr auto resid_exact_data =
@@ -113,8 +111,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fi) {
         "IntegrateResidualVectorElement", number_of_nodes,
         beams::IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
-        }
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms}
     );
 
     constexpr auto resid_exact_data =
@@ -153,8 +150,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fe) {
         "IntegrateResidualVectorElement", number_of_nodes,
         beams::IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
-        }
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms}
     );
 
     constexpr auto resid_exact_data =
@@ -193,8 +189,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fg) {
         "IntegrateResidualVectorElement", number_of_nodes,
         beams::IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
-        }
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms}
     );
 
     constexpr auto resid_exact_data =
@@ -232,8 +227,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_FX) {
         "IntegrateResidualVectorElement", number_of_nodes,
         beams::IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
-        }
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms}
     );
 
     constexpr auto resid_exact_data =
@@ -273,21 +267,18 @@ TEST(IntegrateResidualVector, TwoElementsOneNodeOneQP) {
         "IntegrateResidualVectorElement", number_of_nodes,
         beams::IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc_1,
-            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
-        }
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms}
     );
 
     Kokkos::parallel_for(
         "IntegrateResidualVectorElement", number_of_nodes,
         beams::IntegrateResidualVectorElement{
             1U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc_2,
-            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
-        }
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms}
     );
 
-    constexpr auto resid_exact_data =
-        std::array<double, 2 * number_of_nodes * 6>{6.,  12., 18., 24., 30., 36.,
-                                                    12., 24., 36., 48., 60., 72.};
+    constexpr auto resid_exact_data = std::array<double, 2 * number_of_nodes * 6>{
+        6., 12., 18., 24., 30., 36., 12., 24., 36., 48., 60., 72.};
     const auto resid_exact =
         Kokkos::View<const double[2][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
         );
@@ -322,8 +313,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeTwoQPs) {
         "IntegrateResidualVectorElement", number_of_nodes,
         beams::IntegrateResidualVectorElement{
             0U, number_of_qps, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc,
-            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
-        }
+            qp_Fd, qp_Fi, qp_Fe, qp_Fg, residual_vector_terms}
     );
 
     constexpr auto resid_exact_data =
@@ -357,7 +347,6 @@ TEST(IntegrateResidualVector, OneElementTwoNodesOneQP) {
 
     const auto residual_vector_terms =
         Kokkos::View<double[1][number_of_nodes][6]>("residual_vector_terms");
-
     Kokkos::parallel_for(
         "IntegrateResidualVectorElement", number_of_nodes,
         beams::IntegrateResidualVectorElement{
@@ -366,8 +355,8 @@ TEST(IntegrateResidualVector, OneElementTwoNodesOneQP) {
         }
     );
 
-    constexpr auto resid_exact_data =
-        std::array<double, number_of_nodes * 6>{6., 12., 18., 24., 30., 36.};
+    const auto resid_exact_data =
+        std::array<double, 12>{6., 12., 18., 24., 30., 36., 0., 0., 0., 0., 0., 0.};
     const auto resid_exact =
         Kokkos::View<const double[1][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
         );
