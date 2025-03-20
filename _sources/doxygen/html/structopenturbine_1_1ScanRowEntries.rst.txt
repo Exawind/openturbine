@@ -1,0 +1,14 @@
+.. meta::aab20dc0eabc45d133f946d1bcf49e86ba0f5d62036fa65e36d6ea7067f91984cfc661753f410897da28d6fbf5810b5621e4810f107d444d56e0561d139fb792
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::ScanRowEntries&lt; RowPtrType &gt; Struct Template Reference
+
+ScanRowEntries&lt; RowPtrType &gt; Struct Template Reference
+============================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1ScanRowEntries.html

@@ -1,0 +1,14 @@
+.. meta::3712449a7e7af8b126ac0f8f956a081f519dc2b0fd57789351fff7ff4ebe5319dac10da268568c11e7980b765e33abd621b3d5b5a2fc7d6c9d217df9f9abbaff
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::ComputeConstraintsColInds&lt; RowPtrType, IndicesType &gt; Struct Template Reference
+
+ComputeConstraintsColInds&lt; RowPtrType, IndicesType &gt; Struct Template Reference
+====================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1ComputeConstraintsColInds.html

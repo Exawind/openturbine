@@ -15,7 +15,7 @@ var searchData=
   ['mass_5felement_5fid_12',['mass_element_id',['../structopenturbine_1_1cfd_1_1FloatingPlatform.html#a69a6e8ac4d6cd73440807dc4e4f95b9b',1,'openturbine::cfd::FloatingPlatform']]],
   ['mass_5fmatrix_13',['mass_matrix',['../structopenturbine_1_1cfd_1_1FloatingPlatformInput.html#adf221bafa0aa3e2e4215272046fe9d42',1,'openturbine::cfd::FloatingPlatformInput']]],
   ['masselement_14',['masselement',['../structopenturbine_1_1MassElement.html',1,'openturbine::MassElement'],['../structopenturbine_1_1MassElement.html#ad00c86d3b7ca9cf36b9a62353021f982',1,'openturbine::MassElement::MassElement()']]],
-  ['masses_15',['masses',['../structopenturbine_1_1Masses.html',1,'openturbine::Masses'],['../structopenturbine_1_1Elements.html#a27f60651f4679b1c2501f7f6a2db16aa',1,'openturbine::Elements::masses'],['../structopenturbine_1_1Masses.html#af67b1c81a51cfe4a2809a4b481c7faf0',1,'openturbine::Masses::Masses()']]],
+  ['masses_15',['masses',['../structopenturbine_1_1Masses.html',1,'openturbine::Masses'],['../structopenturbine_1_1Masses.html#af67b1c81a51cfe4a2809a4b481c7faf0',1,'openturbine::Masses::Masses()'],['../structopenturbine_1_1Elements.html#a27f60651f4679b1c2501f7f6a2db16aa',1,'openturbine::Elements::masses']]],
   ['masses_2ehpp_16',['masses.hpp',['../masses_8hpp.html',1,'']]],
   ['masses_5finput_2ehpp_17',['masses_input.hpp',['../masses__input_8hpp.html',1,'']]],
   ['massesinput_18',['massesinput',['../structopenturbine_1_1MassesInput.html#a326399872ec836517c5a111690ab42f7',1,'openturbine::MassesInput::MassesInput()'],['../structopenturbine_1_1MassesInput.html',1,'openturbine::MassesInput']]],
