@@ -35,9 +35,8 @@ jobs:
         spack install googletest
         spack install llvm@18
         spack install cppcheck
-        spack install netcdf-c~mpi
         spack install yaml-cpp
-        spack install trilinos@master~mpi~epetra ^kokkos-kernels+blas+lapack
+        spack install trilinos@master~epetra ^kokkos-kernels+blas+lapack
     - name: Clone
       uses: actions/checkout@v4
       with:
@@ -47,14 +46,12 @@ jobs:
       run: |
         # Find the gfortran compiler and set the FC environment variable
         export FC=$(find /opt/homebrew/ -name gfortran | tr ' ' '\n' | grep "/gcc/.*gfortran")
-        brew install --cask anaconda
-        /opt/homebrew/anaconda3/bin/conda install anaconda::vtk -y
+        brew install vtk
         source spack/share/spack/setup-env.sh
         spack load llvm
         spack load cppcheck
         spack load trilinos
         spack load googletest
-        spack load netcdf-c~mpi
         spack load yaml-cpp
         cd openturbine
         mkdir build
