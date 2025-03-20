@@ -91,7 +91,8 @@ struct ComputeSystemColInds {
             auto index = row_ptrs(dof_index + j);
 
             for (auto k = 0U; k < num_dof; ++k, ++index) {
-                col_inds(index) = static_cast<IndicesValueType>(dof_index + k);
+                col_inds(index) =
+                    static_cast<IndicesValueType>(dof_index) + static_cast<IndicesValueType>(k);
             }
             current_col[j] = static_cast<RowPtrValueType>(num_dof);
         }

@@ -92,3 +92,9 @@ endif()
 if(OpenTurbine_ENABLE_DOCUMENTATION)
   add_subdirectory(docs)
 endif()
+
+configure_file(cmake/OpenTurbine_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/src/OpenTurbine_config.h)
+install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/src/OpenTurbine_config.h
+        DESTINATION include/OpenTurbine/
+)

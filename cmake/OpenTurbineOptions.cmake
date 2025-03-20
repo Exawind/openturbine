@@ -37,6 +37,12 @@ macro(openturbine_setup_options)
   #----------------------------------------
   # External dependencies
   #----------------------------------------
+  option(OpenTurbine_ENABLE_CUSOLVERSP "Use cuSolverSP for the sparse linear solver when running on CUDA Devices" OFF)
+  option(OpenTurbine_ENABLE_CUDSS "Use cuDSS for the sparse linear solver when running on CUDA Devices" OFF)
+  option(OpenTurbine_ENABLE_MKL "Use MKL for sparse linear solver when running on CPU" OFF)
+  option(OpenTurbine_ENABLE_KLU "Use MKL for sparse linear solver when running on CPU" OFF)
+  option(OpenTurbine_ENABLE_UMFPACK "Use MKL for sparse linear solver when running on CPU" OFF)
+  option(OpenTurbine_ENABLE_SUPERLU "Use MKL for sparse linear solver when running on CPU" OFF)
   option(OpenTurbine_ENABLE_VTK "Use VTK for visualization" OFF)
   option(OpenTurbine_BUILD_OPENFAST_ADI "Build the OpenFAST ADI external project" OFF)
   option(OpenTurbine_BUILD_ROSCO_CONTROLLER "Build the ROSCO controller external project" OFF)

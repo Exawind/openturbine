@@ -357,7 +357,6 @@ TEST(IntegrateResidualVector, OneElementTwoNodesOneQP) {
 
     const auto residual_vector_terms =
         Kokkos::View<double[1][number_of_nodes][6]>("residual_vector_terms");
-
     Kokkos::parallel_for(
         "IntegrateResidualVectorElement", number_of_nodes,
         beams::IntegrateResidualVectorElement{
@@ -367,7 +366,8 @@ TEST(IntegrateResidualVector, OneElementTwoNodesOneQP) {
     );
 
     constexpr auto resid_exact_data =
-        std::array<double, number_of_nodes * 6>{6., 12., 18., 24., 30., 36.};
+        std::array<double, 2 * number_of_nodes * 6>{6., 12., 18., 24., 30., 36.,
+                                                    0., 0.,  0.,  0.,  0.,  0.};
     const auto resid_exact =
         Kokkos::View<const double[1][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
         );

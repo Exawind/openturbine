@@ -84,7 +84,7 @@ inline auto SetUpSpringMassSystem() {
         // Simulation at time T / 2
         if (time_step == num_steps / 2) {
             Kokkos::deep_copy(q, state.q);
-            EXPECT_EQ(q(0, 0), 0.);  // First node is fixed
+            EXPECT_NEAR(q(0, 0), 0., 1.e-14);  // First node is fixed
             EXPECT_NEAR(
                 q(1, 0), -3.9999199193098396, 1.e-12
             );  // Second node should have displacement close to -4.0 after T/2
@@ -92,7 +92,7 @@ inline auto SetUpSpringMassSystem() {
         // Simulation at time T
         if (time_step == num_steps) {
             Kokkos::deep_copy(q, state.q);
-            EXPECT_EQ(q(0, 0), 0.);  // First node is fixed
+            EXPECT_NEAR(q(0, 0), 0., 1.e-14);  // First node is fixed
             EXPECT_NEAR(
                 q(1, 0), -8.1226588438437419e-05, 1.e-12
             );  // Second node should have displacement close to 0. after T
@@ -177,7 +177,7 @@ inline auto SetUpSpringMassChainSystem() {
         EXPECT_TRUE(converged);
         Kokkos::deep_copy(q, state.q);
         for (auto node = 0U; node < q.extent(0); ++node) {
-            EXPECT_EQ(q(node, 0), 0.);
+            EXPECT_NEAR(q(node, 0), 0., 1.e-14);
         }
     }
 }

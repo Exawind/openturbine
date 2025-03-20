@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Amesos2.hpp>
 #include <KokkosSparse.hpp>
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
@@ -10,8 +9,8 @@
 
 namespace openturbine {
 
-template <typename GlobalCrsMatrixType>
-[[nodiscard]] inline Teuchos::RCP<GlobalCrsMatrixType> CreateFullMatrix(
+template <typename CrsMatrixType>
+[[nodiscard]] inline CrsMatrixType CreateFullMatrix(
     size_t num_system_dofs, size_t num_dofs,
     const Kokkos::View<size_t*>::const_type& base_active_dofs,
     const Kokkos::View<size_t*>::const_type& target_active_dofs,
@@ -24,10 +23,6 @@ template <typename GlobalCrsMatrixType>
     const Kokkos::View<size_t**>::const_type& node_state_indices
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Create Full Matrix");
-
-    using CrsMatrixType = typename GlobalCrsMatrixType::local_matrix_device_type;
-    using LocalOrdinalType = typename GlobalCrsMatrixType::local_ordinal_type;
-    using GlobalOrdinalType = typename GlobalCrsMatrixType::global_ordinal_type;
 
     using ValuesType = typename CrsMatrixType::values_type::non_const_type;
     using RowPtrType = typename CrsMatrixType::staticcrsgraph_type::row_map_type::non_const_type;
@@ -54,24 +49,14 @@ template <typename GlobalCrsMatrixType>
     KokkosSparse::sort_crs_graph(row_ptrs, col_inds);
 
     // clang-format off
-    return Teuchos::make_rcp<GlobalCrsMatrixType>(
-               Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(
-                   num_dofs, 
-                   Teuchos::createSerialComm<LocalOrdinalType>()
-               ),
-               Tpetra::createLocalMap<LocalOrdinalType, GlobalOrdinalType>(
-                   num_dofs,
-                   Teuchos::createSerialComm<LocalOrdinalType>()
-               ), 
-               CrsMatrixType(
-                   "full_matrix",
-                   static_cast<IndicesValueType>(num_dofs),
-                   static_cast<IndicesValueType>(num_dofs),
-                   num_non_zero,
-                   ValuesType("values", num_non_zero),
-                   row_ptrs,
-                   col_inds
-               )
+    return CrsMatrixType(
+               "full_matrix",
+               static_cast<IndicesValueType>(num_dofs),
+               static_cast<IndicesValueType>(num_dofs),
+               num_non_zero,
+               ValuesType("values", static_cast<size_t>(num_non_zero)),
+               row_ptrs,
+               col_inds
            );
     // clang-format on
 }

@@ -1,5 +1,7 @@
 target_sources(openturbine_library PRIVATE)
 
+add_subdirectory(linear_solver)
+
 install(FILES
         calculate_error_sum_squares.hpp
         compute_col_inds.hpp
@@ -23,7 +25,6 @@ install(FILES
         copy_constraints_to_sparse_matrix.hpp
         copy_constraints_transpose_to_sparse_matrix.hpp
         create_full_matrix.hpp
-        create_sparse_dense_solver.hpp
         scan_row_entries.hpp
         solver.hpp
         DESTINATION include/OpenTurbine/solver/

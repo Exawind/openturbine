@@ -19,18 +19,20 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/spack
-        key: linux-spack
+        key: linux-spack_v2
     - name: Install Dependencies
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
-        git clone https://github.com/spack/spack.git
+        git clone -b before-compiler-dependencies https://github.com/spack/spack.git
         source spack/share/spack/setup-env.sh
         spack compiler find
         spack install googletest
         spack install cppcheck
         spack install netcdf-c
         spack install yaml-cpp
-        spack install trilinos@master~epetra ^kokkos-kernels+blas+lapack
+        spack install suite-sparse
+        spack install superlu
+        spack install kokkos-kernels+blas+lapack
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -48,13 +50,16 @@ jobs:
     - name: Build OpenTurbine with documentation
       run: |
         source spack/share/spack/setup-env.sh
-        spack load trilinos yaml-cpp netcdf-c
+        spack load kokkos-kernels yaml-cpp netcdf-c suite-sparse superlu
         cd openturbine
         mkdir build
         cd build
         cmake .. \
           -DOpenTurbine_ENABLE_TESTS=OFF \
           -DOpenTurbine_ENABLE_DOCUMENTATION=ON \
+          -DOpenTurbine_ENABLE_KLU=ON \
+          -DOpenTurbine_ENABLE_UMFPACK=ON \
+          -DOpenTurbine_ENABLE_SUPERLU=ON \
           -DCMAKE_BUILD_TYPE=Release
         cmake --build .
     - name: Deploy documentation

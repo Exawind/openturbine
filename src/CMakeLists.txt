@@ -51,19 +51,39 @@ endif()
 #--------------------------------------------------------------------------
 target_link_system_libraries(openturbine_library PUBLIC
   KokkosKernels::kokkoskernels
-  Amesos2::amesos2
   ${YAML_CPP_TARGET}
   ${FS_LIB}
   ${NETCDF_TARGET}
 )
 
-#----------------------------------------
-# Link MPI if it is defined by TPLs
-#----------------------------------------
-if(TARGET MPI::MPI_CXX)
-  target_link_system_libraries(openturbine_library PUBLIC
-    MPI::MPI_CXX
-  )
+if(OpenTurbine_ENABLE_CUDSS)
+target_link_system_libraries(openturbine_library PUBLIC
+  cudss
+)
+endif()
+
+if(OpenTurbine_ENABLE_MKL)
+target_link_system_libraries(openturbine_library PUBLIC
+  MKL::MKL
+)
+endif()
+
+if(OpenTurbine_ENABLE_SUPERLU)
+target_link_system_libraries(openturbine_library PUBLIC
+  superlu::superlu
+)
+endif()
+
+if(OpenTurbine_ENABLE_KLU)
+target_link_system_libraries(openturbine_library PUBLIC
+  SuiteSparse::KLU
+)
+endif()
+
+if(OpenTurbine_ENABLE_UMFPACK)
+target_link_system_libraries(openturbine_library PUBLIC
+  SuiteSparse::UMFPACK
+)
 endif()
 
 #--------------------------------------------------------------------------
@@ -82,6 +102,7 @@ add_shared_library(DISCON_ROTOR_TEST_CONTROLLER)
 #----------------------------------------
 target_include_directories(openturbine_library
   PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
   $<INSTALL_INTERFACE:include/OpenTurbine>
 )

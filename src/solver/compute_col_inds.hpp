@@ -9,7 +9,7 @@ namespace openturbine {
 
 template <typename RowPtrType, typename IndicesType>
 [[nodiscard]] inline IndicesType ComputeColInds(
-    size_t num_non_zero, size_t num_system_dofs,
+    typename RowPtrType::value_type num_non_zero, size_t num_system_dofs,
     const Kokkos::View<size_t*>::const_type& active_dofs,
     const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
     const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
@@ -21,7 +21,7 @@ template <typename RowPtrType, typename IndicesType>
     const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& row_range,
     const typename RowPtrType::const_type& row_ptrs
 ) {
-    const auto col_inds = IndicesType("col_inds", num_non_zero);
+    const auto col_inds = IndicesType("col_inds", static_cast<size_t>(num_non_zero));
 
     const auto num_nodes = active_dofs.extent(0);
     const auto num_constraints = row_range.extent(0);

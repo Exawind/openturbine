@@ -253,7 +253,8 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     auto m = constraints.num_dofs / 2;
 
     // Check that R vector is the same for both beams
-    auto b = solver.b->getLocalViewHost(Tpetra::Access::ReadOnly);
+    auto b = Kokkos::create_mirror_view(solver.b);
+    Kokkos::deep_copy(b, solver.b);
     for (auto i = 0U; i < n; ++i) {
         EXPECT_NEAR(b(i, 0), b(n + i, 0), 1.e-10);
     }
