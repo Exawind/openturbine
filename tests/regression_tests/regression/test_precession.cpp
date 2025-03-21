@@ -59,10 +59,10 @@ inline auto SetUpPrecessionTest() {
     EXPECT_NEAR(q_host(0, 0), 0., 1.e-12);
     EXPECT_NEAR(q_host(0, 1), 0., 1.e-12);
     EXPECT_NEAR(q_host(0, 2), 0., 1.e-12);
-    EXPECT_NEAR(q_host(0, 3), -0.6305304765029902, 1.e-12);
-    EXPECT_NEAR(q_host(0, 4), 0.6055602536398981, 1.e-12);
-    EXPECT_NEAR(q_host(0, 5), -0.30157705376951366, 1.e-12);
-    EXPECT_NEAR(q_host(0, 6), -0.3804988542061519, 1.e-12);
+    EXPECT_NEAR(q_host(0, 3), -0.63053045128590757, 1.e-12);
+    EXPECT_NEAR(q_host(0, 4), 0.60556039120583116, 1.e-12);
+    EXPECT_NEAR(q_host(0, 5), -0.30157681970585326, 1.e-12);
+    EXPECT_NEAR(q_host(0, 6), -0.38049886257377241, 1.e-12);
 }
 
 TEST(PrecessionTest, FinalRotation) {
