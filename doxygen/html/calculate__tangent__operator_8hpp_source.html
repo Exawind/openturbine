@@ -224,7 +224,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            1., m1, Kokkos::subview(T, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6))</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        );</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        KokkosBatched::SerialCopy&lt;&gt;::invoke(</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        KokkosBatched::SerialCopy&lt;KokkosBatched::Trans::Transpose&gt;::invoke(</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            T, Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1CalculateTangentOperator.html#ab7936bca61931235596424c984f9698b">T_gbl</a>, i_node, Kokkos::ALL, Kokkos::ALL)</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        );</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    }</div>
