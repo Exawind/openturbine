@@ -35,9 +35,8 @@ jobs:
         spack install googletest
         spack install llvm@18
         spack install cppcheck
-        spack install netcdf-c~mpi
         spack install yaml-cpp
-        spack install trilinos@master~mpi~epetra ^kokkos-kernels+blas+lapack
+        spack install trilinos@master~epetra ^kokkos-kernels+blas+lapack
     - name: Clone
       uses: actions/checkout@v4
       with:
@@ -47,12 +46,12 @@ jobs:
       run: |
         # Find the gfortran compiler and set the FC environment variable
         export FC=$(find /opt/homebrew/ -name gfortran | tr ' ' '\n' | grep "/gcc/.*gfortran")
+        brew install vtk
         source spack/share/spack/setup-env.sh
         spack load llvm
         spack load cppcheck
         spack load trilinos
         spack load googletest
-        spack load netcdf-c~mpi
         spack load yaml-cpp
         cd openturbine
         mkdir build
@@ -62,6 +61,7 @@ jobs:
           -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=${{ matrix.build_external == 'none' }} \
           -DOpenTurbine_ENABLE_CPPCHECK=ON \
           -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
+          -DOpenTurbine_ENABLE_VTK=ON \
           -DOpenTurbine_WARNINGS_AS_ERRORS=ON \
           -DOpenTurbine_BUILD_OPENFAST_ADI=${{ matrix.build_external == 'all' }} \
           -DOpenTurbine_BUILD_ROSCO_CONTROLLER=${{ matrix.build_external == 'all' }} \

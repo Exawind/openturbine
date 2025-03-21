@@ -2,12 +2,13 @@ target_sources(openturbine_library PRIVATE)
 
 install(FILES
         calculate_error_sum_squares.hpp
-        compute_b_num_non_zero.hpp
-        compute_k_col_inds.hpp
-        compute_k_num_non_zero.hpp
-        compute_k_row_ptrs.hpp
-        compute_number_of_non_zeros_constraints.hpp
+        compute_col_inds.hpp
+        compute_constraints_col_inds.hpp
+        compute_constraints_row_entries.hpp
         compute_num_system_dofs.hpp
+        compute_row_ptrs.hpp
+        compute_system_col_inds.hpp
+        compute_system_row_entries.hpp
         condition_system.hpp
         contribute_beams_to_sparse_matrix.hpp
         contribute_beams_to_vector.hpp
@@ -21,18 +22,9 @@ install(FILES
         copy_constraints_residual_to_vector.hpp
         copy_constraints_to_sparse_matrix.hpp
         copy_constraints_transpose_to_sparse_matrix.hpp
-        create_b_matrix.hpp
-        create_b_t_matrix.hpp
-        create_constraints_matrix_full.hpp
         create_full_matrix.hpp
-        create_k_matrix.hpp
-        create_matrix_spadd.hpp
         create_sparse_dense_solver.hpp
-        create_system_matrix_full.hpp
-        create_transpose_matrix_full.hpp
-        fill_unshifted_row_ptrs.hpp
-        populate_sparse_row_ptrs_col_inds_constraints.hpp
-        populate_sparse_row_ptrs_col_inds_transpose.hpp
+        scan_row_entries.hpp
         solver.hpp
         DESTINATION include/OpenTurbine/solver/
 )
