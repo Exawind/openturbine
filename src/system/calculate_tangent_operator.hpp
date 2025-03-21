@@ -46,7 +46,7 @@ struct CalculateTangentOperator {
             1., m1, Kokkos::subview(T, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6))
         );
 
-        KokkosBatched::SerialCopy<>::invoke(
+        KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>::invoke(
             T, Kokkos::subview(T_gbl, i_node, Kokkos::ALL, Kokkos::ALL)
         );
     }

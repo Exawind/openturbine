@@ -37,10 +37,10 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[0], 0., 1.e-12);
     EXPECT_NEAR(platform_node.displacement[1], 0., 1.e-12);
     EXPECT_NEAR(platform_node.displacement[2], 0., 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[3], -0.6305304765029902, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[4], 0.6055602536398981, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[5], -0.30157705376951366, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[6], -0.3804988542061519, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[3], -0.63053045128590757, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[4], 0.60556039120583116, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[5], -0.30157681970585326, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[6], -0.38049886257377241, 1.e-12);
 
     // Verify NetCDF output file exists and contains expected data
     const std::string output_file = "precession_test.nc";
@@ -64,16 +64,16 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(displacements[0], 0., 1.e-12);
 
     file.ReadVariableAt("u_w", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], -0.6305304765029902, 1.e-12);
+    EXPECT_NEAR(displacements[0], -0.63053045128590757, 1.e-12);
 
     file.ReadVariableAt("u_i", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], 0.6055602536398981, 1.e-12);
+    EXPECT_NEAR(displacements[0], 0.60556039120583116, 1.e-12);
 
     file.ReadVariableAt("u_j", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], -0.30157705376951366, 1.e-12);
+    EXPECT_NEAR(displacements[0], -0.30157681970585326, 1.e-12);
 
     file.ReadVariableAt("u_k", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], -0.3804988542061519, 1.e-12);
+    EXPECT_NEAR(displacements[0], -0.38049886257377241, 1.e-12);
 
     // Save the current state
     interface.SaveState();
@@ -87,10 +87,10 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[0], 0., 1.e-12);
     EXPECT_NEAR(platform_node.displacement[1], 0., 1.e-12);
     EXPECT_NEAR(platform_node.displacement[2], 0., 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[3], -0.35839726967749647, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[4], 0.31963473392384162, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[5], -0.2758730482813182, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[6], -0.83263383019736148, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[3], -0.35839735533217154, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[4], 0.31963488733920042, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[5], -0.27587277763126217, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[6], -0.83263382410791731, 1.e-12);
 
     // Restore to saved state at 500 steps
     interface.RestoreState();
@@ -99,10 +99,10 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[0], 0., 1.e-12);
     EXPECT_NEAR(platform_node.displacement[1], 0., 1.e-12);
     EXPECT_NEAR(platform_node.displacement[2], 0., 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[3], -0.6305304765029902, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[4], 0.6055602536398981, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[5], -0.30157705376951366, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[6], -0.3804988542061519, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[3], -0.63053045128590757, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[4], 0.60556039120583116, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[5], -0.30157681970585326, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[6], -0.38049886257377241, 1.e-12);
 
     // Run simulation from 500 to 600 steps
     for (size_t i = 500; i < 600; ++i) {
@@ -113,10 +113,10 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[0], 0., 1.e-12);
     EXPECT_NEAR(platform_node.displacement[1], 0., 1.e-12);
     EXPECT_NEAR(platform_node.displacement[2], 0., 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[3], -0.35839726967749647, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[4], 0.31963473392384162, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[5], -0.2758730482813182, 1.e-12);
-    EXPECT_NEAR(platform_node.displacement[6], -0.83263383019736148, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[3], -0.35839735533217154, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[4], 0.31963488733920042, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[5], -0.27587277763126217, 1.e-12);
+    EXPECT_NEAR(platform_node.displacement[6], -0.83263382410791731, 1.e-12);
 
     std::filesystem::remove(output_file);
 }
