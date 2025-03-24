@@ -13,6 +13,8 @@ project(
   LANGUAGES CXX
 )
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 find_package(OpenTurbine REQUIRED)
 find_package(KokkosKernels REQUIRED)
 find_package(Amesos2 REQUIRED)
