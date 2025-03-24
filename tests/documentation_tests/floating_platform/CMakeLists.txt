@@ -20,6 +20,7 @@ find_package(yaml-cpp REQUIRED)
 if(Amesos2_Enable_MPI)
   find_package(MPI REQUIRED)
 endif()
+find_package(NetCDF REQUIRED)
 
 add_executable(floating_platform)
 target_link_libraries(floating_platform PRIVATE OpenTurbine::openturbine_library)
