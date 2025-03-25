@@ -77,6 +77,64 @@ TEST(InterpolationTest, LagrangePolynomialInterpWeight_SecondOrder) {
     EXPECT_NEAR(weights[2], 1., tol);
 }
 
+TEST(InterpolationTest, LagrangePolynomialInterpWeight_SecondOrder_AtSpecifiedQuadraturePoints) {
+    // 3 nodes at GLL points for second order polynomial
+    const std::vector<double> xs = {-1., 0., 1.};
+    std::vector<double> weights;
+
+    // We need to calculate shape function weights at following 7 Gauss quadrature pts:
+    // -0.9491079123427585,-0.7415311855993945,-0.4058451513773972,0.,0.4058451513773972,0.7415311855993945,0.9491079123427585
+
+    // Test point at -0.9491079123427585 (on first QP)
+    LagrangePolynomialInterpWeights(-0.9491079123427585, xs, weights);
+    ASSERT_EQ(weights.size(), 3);
+    EXPECT_NEAR(weights[0], 0.924956870807, tol);
+    EXPECT_NEAR(weights[1], 0.0991941707284, tol);
+    EXPECT_NEAR(weights[2], -0.0241510415356, tol);
+
+    // Test point at -0.7415311855993945 (on second QP)
+    LagrangePolynomialInterpWeights(-0.7415311855993945, xs, weights);
+    ASSERT_EQ(weights.size(), 3);
+    EXPECT_NEAR(weights[0], 0.645699842408, tol);
+    EXPECT_NEAR(weights[1], 0.450131500784, tol);
+    EXPECT_NEAR(weights[2], -0.0958313431915, tol);
+
+    // Test point at -0.4058451513773972 (on third QP)
+    LagrangePolynomialInterpWeights(-0.4058451513773972, xs, weights);
+    ASSERT_EQ(weights.size(), 3);
+    EXPECT_NEAR(weights[0], 0.285277719137, tol);
+    EXPECT_NEAR(weights[1], 0.835289713103, tol);
+    EXPECT_NEAR(weights[2], -0.12056743224, tol);
+
+    // Test point at 0. (on fourth QP)
+    LagrangePolynomialInterpWeights(0., xs, weights);
+    ASSERT_EQ(weights.size(), 3);
+    EXPECT_NEAR(weights[0], 0., tol);
+    EXPECT_NEAR(weights[1], 1., tol);
+    EXPECT_NEAR(weights[2], 0., tol);
+
+    // Test point at 0.4058451513773972 (on fifth QP)
+    LagrangePolynomialInterpWeights(0.4058451513773972, xs, weights);
+    ASSERT_EQ(weights.size(), 3);
+    EXPECT_NEAR(weights[0], -0.12056743224, tol);
+    EXPECT_NEAR(weights[1], 0.835289713103, tol);
+    EXPECT_NEAR(weights[2], 0.285277719137, tol);
+
+    // Test point at 0.7415311855993945 (on sixth QP)
+    LagrangePolynomialInterpWeights(0.7415311855993945, xs, weights);
+    ASSERT_EQ(weights.size(), 3);
+    EXPECT_NEAR(weights[0], -0.0958313431915, tol);
+    EXPECT_NEAR(weights[1], 0.450131500784, tol);
+    EXPECT_NEAR(weights[2], 0.645699842408, tol);
+
+    // Test point at 0.9491079123427585 (on seventh QP)
+    LagrangePolynomialInterpWeights(0.9491079123427585, xs, weights);
+    ASSERT_EQ(weights.size(), 3);
+    EXPECT_NEAR(weights[0], -0.0241510415356, tol);
+    EXPECT_NEAR(weights[1], 0.0991941707284, tol);
+    EXPECT_NEAR(weights[2], 0.924956870807, tol);
+}
+
 TEST(InterpolationTest, LagrangePolynomialInterpWeight_FourthOrder) {
     // 5 nodes at GLL points for fourth order polynomial
     const std::vector<double> xs = {-1., -0.6546536707079771, 0., 0.6546536707079771, 1.};
