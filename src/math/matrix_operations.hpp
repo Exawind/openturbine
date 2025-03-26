@@ -2,6 +2,11 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "math/quaternion_operations.hpp"
+#include "types.hpp"
+
+namespace openturbine {
+
 /**
  * @brief Computes AX(A) of a square matrix
  * @details AX(A) = tr(A)/2 * I - A/2, where I is the identity matrix
@@ -42,3 +47,41 @@ KOKKOS_INLINE_FUNCTION void AxialVectorOfMatrix(const Matrix& m, const Vector& v
     v(1) = (m(0, 2) - m(2, 0)) / 2.;
     v(2) = (m(1, 0) - m(0, 1)) / 2.;
 }
+
+inline Array_6x6 RotateMatrix6(const Array_6x6& m, const Array_4& q) {
+    const auto rm = QuaternionToRotationMatrix(q);
+    Array_6x6 r{{
+        {rm[0][0], rm[0][1], rm[0][2], 0., 0., 0.},
+        {rm[1][0], rm[1][1], rm[1][2], 0., 0., 0.},
+        {rm[2][0], rm[2][1], rm[2][2], 0., 0., 0.},
+        {0., 0., 0., rm[0][0], rm[0][1], rm[0][2]},
+        {0., 0., 0., rm[1][0], rm[1][1], rm[1][2]},
+        {0., 0., 0., rm[2][0], rm[2][1], rm[2][2]},
+    }};
+
+    // matmul(r,m)
+    Array_6x6 mt;
+    for (auto i = 0U; i < 6; ++i) {
+        for (auto j = 0U; j < 6; ++j) {
+            mt[i][j] = 0.;
+            for (auto k = 0U; k < 6; ++k) {
+                mt[i][j] += r[i][k] * m[k][j];
+            }
+        }
+    }
+
+    // matmul(matmul(r,m),r^T)
+    Array_6x6 mo;
+    for (auto i = 0U; i < 6; ++i) {
+        for (auto j = 0U; j < 6; ++j) {
+            mo[i][j] = 0.;
+            for (auto k = 0U; k < 6; ++k) {
+                mo[i][j] += mt[i][k] * r[j][k];
+            }
+        }
+    }
+
+    return mo;
+}
+
+}  // namespace openturbine

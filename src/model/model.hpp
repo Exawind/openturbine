@@ -156,6 +156,85 @@ public:
         return openturbine::CreateBeams(this->CreateBeamsInput(), this->nodes_);
     }
 
+    /// Translate all beam nodes by given displacement
+    void TranslateBeam(size_t beam_elem_id, const Array_3& displacement) {
+        const auto& beam_elem = this->beam_elements_[beam_elem_id];
+        for (const auto& node_id : beam_elem.node_ids) {
+            this->GetNode(node_id).Translate(displacement);
+        }
+    }
+
+    /// Rotate all beam nodes by given displacement quaternion about origin point
+    void RotateBeamAboutPoint(
+        size_t beam_elem_id, const Array_4& displacement_quaternion, const Array_3& point
+    ) {
+        const auto& beam_elem = this->beam_elements_[beam_elem_id];
+        for (const auto& node_id : beam_elem.node_ids) {
+            this->GetNode(node_id).RotateAboutPoint(displacement_quaternion, point);
+        }
+    }
+
+    void SetBeamVelocityAboutPoint(
+        size_t beam_elem_id, const Array_6& velocity, const Array_3& point
+    ) {
+        const auto& beam_elem = this->beam_elements_[beam_elem_id];
+        for (const auto& node_id : beam_elem.node_ids) {
+            // Get node
+            auto& node = this->GetNode(node_id);
+
+            // Get distance from reference point to node
+            const Array_3 r{node.x[0] - point[0], node.x[1] - point[1], node.x[2] - point[2]};
+
+            // Get angular velocity
+            const Array_3 omega{velocity[3], velocity[4], velocity[5]};
+
+            // Calculate velocity contribution from angular velocity
+            const auto omega_cross_r = CrossProduct(omega, r);
+
+            // Set node translation velocity
+            node.v[0] = velocity[0] + omega_cross_r[0];
+            node.v[1] = velocity[1] + omega_cross_r[1];
+            node.v[2] = velocity[2] + omega_cross_r[2];
+
+            // Set node angular velocity
+            node.v[3] = velocity[3];
+            node.v[4] = velocity[4];
+            node.v[5] = velocity[5];
+        }
+    }
+
+    void SetBeamAccelerationAboutPoint(
+        size_t beam_elem_id, const Array_6& acceleration, const Array_3& omega, const Array_3& point
+    ) {
+        const auto& beam_elem = this->beam_elements_[beam_elem_id];
+        for (const auto& node_id : beam_elem.node_ids) {
+            // Get node
+            auto& node = this->GetNode(node_id);
+
+            // Get distance from reference point to node
+            const Array_3 r{node.x[0] - point[0], node.x[1] - point[1], node.x[2] - point[2]};
+
+            // Get angular acceleration
+            const Array_3 alpha{acceleration[3], acceleration[4], acceleration[5]};
+
+            // Calculate translational acceleration contribution from angular acceleration
+            const auto alpha_cross_r = CrossProduct(alpha, r);
+
+            // Calculate translational acceleration contribution from angular velocity
+            const auto omega_cross_omega_cross_r = CrossProduct(omega, CrossProduct(omega, r));
+
+            // Set node translation acceleration
+            node.vd[0] = acceleration[0] + alpha_cross_r[0] + omega_cross_omega_cross_r[0];
+            node.vd[1] = acceleration[1] + alpha_cross_r[1] + omega_cross_omega_cross_r[1];
+            node.vd[2] = acceleration[2] + alpha_cross_r[2] + omega_cross_omega_cross_r[2];
+
+            // Set node angular acceleration
+            node.vd[3] = alpha[3];
+            node.vd[4] = alpha[4];
+            node.vd[5] = alpha[5];
+        }
+    }
+
     //--------------------------------------------------------------------------
     // Mass Elements
     //--------------------------------------------------------------------------

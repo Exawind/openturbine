@@ -142,9 +142,13 @@ struct Constraints {
             start_row += n_rows;
 
             // Calculate initial relative position (X0)
-            const auto x0 = CalculateX0(c, nodes[target_node_id], nodes[base_node_id]);
-            for (size_t j = 0; j < 3; ++j) {
-                host_X0(i, j) = x0[j];
+            Array_3 x0{0., 0., 0.};
+            if (c.type != ConstraintType::kPrescribedBC &&
+                c.type != ConstraintType::kPrescribedBC3DOFs) {
+                x0 = CalculateX0(c, nodes[target_node_id], nodes[base_node_id]);
+                for (size_t j = 0; j < 3; ++j) {
+                    host_X0(i, j) = x0[j];
+                }
             }
 
             // Calculate rotation axes

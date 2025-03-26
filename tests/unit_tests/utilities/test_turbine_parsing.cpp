@@ -10,7 +10,7 @@ TEST(ParserTest, ParseIEA15MW_Name) {
         name: IEA 15MW Offshore Reference Turbine, with taped chord tip design
     )";
     const YAML::Node config = YAML::Load(input);
-    Turbine turbine;
+    wind_io::Turbine turbine;
     turbine.parse(config);
 
     ASSERT_EQ(turbine.name, "IEA 15MW Offshore Reference Turbine, with taped chord tip design");
@@ -30,7 +30,7 @@ TEST(ParserTest, ParseIEA15MW_Assembly) {
             lifetime: 25
     )";
     const YAML::Node config = YAML::Load(input);
-    Turbine turbine;
+    wind_io::Turbine turbine;
     turbine.parse(config);
 
     ASSERT_EQ(turbine.assembly.turbine_class, "I");
@@ -51,7 +51,7 @@ TEST(ParserTest, ParseIEA15MW_MultipleMaterials) {
             - name: second
         )";
     const YAML::Node config = YAML::Load(input);
-    Turbine turbine;
+    wind_io::Turbine turbine;
     turbine.parse(config);
 
     EXPECT_EQ(turbine.materials.size(), 2);
