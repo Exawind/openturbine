@@ -36,6 +36,8 @@ struct Constraints {
     Kokkos::View<Kokkos::pair<size_t, size_t>*> row_range;
     Kokkos::View<FreedomSignature*> base_node_freedom_signature;
     Kokkos::View<FreedomSignature*> target_node_freedom_signature;
+    Kokkos::View<size_t*> base_active_dofs;
+    Kokkos::View<size_t*> target_active_dofs;
     Kokkos::View<size_t* [6]> base_node_freedom_table;
     Kokkos::View<size_t* [6]> target_node_freedom_table;
 
@@ -77,6 +79,8 @@ struct Constraints {
           row_range("row_range", num_constraints),
           base_node_freedom_signature("base_node_freedom_signature", num_constraints),
           target_node_freedom_signature("target_node_freedom_signature", num_constraints),
+          base_active_dofs("base_active_dofs", num_constraints),
+          target_active_dofs("target_active_dofs", num_constraints),
           base_node_freedom_table("base_node_freedom_table", num_constraints),
           target_node_freedom_table("target_node_freedom_table", num_constraints),
           X0("X0", num_constraints),
@@ -100,6 +104,8 @@ struct Constraints {
         auto host_target_node_index = Kokkos::create_mirror(target_node_index);
         auto host_base_freedom = Kokkos::create_mirror(base_node_freedom_signature);
         auto host_target_freedom = Kokkos::create_mirror(target_node_freedom_signature);
+        auto host_base_active_dofs = Kokkos::create_mirror(base_active_dofs);
+        auto host_target_active_dofs = Kokkos::create_mirror(target_active_dofs);
         auto host_X0 = Kokkos::create_mirror(X0);
         auto host_axes = Kokkos::create_mirror(axes);
 
@@ -116,18 +122,30 @@ struct Constraints {
             if (c.type == ConstraintType::kFixedBC || c.type == ConstraintType::kPrescribedBC) {
                 host_base_freedom(i) = FreedomSignature::NoComponents;
                 host_target_freedom(i) = FreedomSignature::AllComponents;
+
+                host_base_active_dofs(i) = 0UL;
+                host_target_active_dofs(i) = 6UL;
             } else if (c.type == ConstraintType::kRigidJoint ||
                        c.type == ConstraintType::kRevoluteJoint ||
                        c.type == ConstraintType::kRotationControl) {
                 host_base_freedom(i) = FreedomSignature::AllComponents;
                 host_target_freedom(i) = FreedomSignature::AllComponents;
+
+                host_base_active_dofs(i) = 6UL;
+                host_target_active_dofs(i) = 6UL;
             } else if (c.type == ConstraintType::kFixedBC3DOFs ||
                        c.type == ConstraintType::kPrescribedBC3DOFs) {
                 host_base_freedom(i) = FreedomSignature::NoComponents;
                 host_target_freedom(i) = FreedomSignature::JustPosition;
+
+                host_base_active_dofs(i) = 0UL;
+                host_target_active_dofs(i) = 3UL;
             } else if (c.type == ConstraintType::kRigidJoint6DOFsTo3DOFs) {
                 host_base_freedom(i) = FreedomSignature::AllComponents;
                 host_target_freedom(i) = FreedomSignature::JustPosition;
+
+                host_base_active_dofs(i) = 6UL;
+                host_target_active_dofs(i) = 3UL;
             }
 
             control_signal[i] = c.control;
@@ -166,6 +184,8 @@ struct Constraints {
         Kokkos::deep_copy(target_node_index, host_target_node_index);
         Kokkos::deep_copy(base_node_freedom_signature, host_base_freedom);
         Kokkos::deep_copy(target_node_freedom_signature, host_target_freedom);
+        Kokkos::deep_copy(base_active_dofs, host_base_active_dofs);
+        Kokkos::deep_copy(target_active_dofs, host_target_active_dofs);
         Kokkos::deep_copy(X0, host_X0);
         Kokkos::deep_copy(axes, host_axes);
 
