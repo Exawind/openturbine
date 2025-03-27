@@ -17,6 +17,7 @@
 #include "elements/beams/calculate_QP_deformation.hpp"
 #include "elements/beams/interpolate_to_quadrature_points.hpp"
 #include "math/quaternion_operations.hpp"
+#include "state/state.hpp"
 #include "system/beams/update_node_state.hpp"
 #include "test_utilities.hpp"
 
@@ -258,7 +259,7 @@ inline void WriteVTKBeamsQP(State& state, Beams& beams, const std::string& filen
 
 inline void WriteVTKBeamsNodes(State& state, Beams& beams, const std::string& filename) {
     // Compute value of state at beam nodes
-    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems, Kokkos::AUTO());
+    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     const auto smem = 3 * Kokkos::View<double* [7]>::shmem_size(beams.max_elem_nodes);
     range_policy.set_scratch_size(1, Kokkos::PerTeam(smem));
 
