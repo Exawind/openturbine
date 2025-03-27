@@ -15,12 +15,37 @@
 
 #include "elements/beams/beams.hpp"
 #include "elements/beams/calculate_QP_deformation.hpp"
+#include "elements/beams/interpolate_to_quadrature_points.hpp"
 #include "math/quaternion_operations.hpp"
+#include "system/beams/update_node_state.hpp"
 #include "test_utilities.hpp"
 
 namespace openturbine::tests {
 
-inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
+inline void WriteVTKBeamsQP(State& state, Beams& beams, const std::string& filename) {
+    // Compute state values at quadrature points
+    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems, Kokkos::AUTO());
+    const auto smem = 3 * Kokkos::View<double* [7]>::shmem_size(beams.max_elem_nodes);
+    range_policy.set_scratch_size(1, Kokkos::PerTeam(smem));
+
+    Kokkos::parallel_for(
+        "UpdateNodeState", range_policy,
+        UpdateNodeState{
+            state.q, state.v, state.vd, beams.node_state_indices, beams.num_nodes_per_element,
+            beams.node_u, beams.node_u_dot, beams.node_u_ddot
+        }
+    );
+
+    Kokkos::parallel_for(
+        "InterpolateToQuadraturePoints", range_policy,
+        InterpolateToQuadraturePoints{
+            beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
+            beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.node_u_dot, beams.node_u_ddot,
+            beams.qp_x0, beams.qp_r0, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime,
+            beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot, beams.qp_omega_dot, beams.qp_x
+        }
+    )
+
     // Get a copy of the beam element indices in the host space
     auto num_qps_per_element = Kokkos::create_mirror(beams.num_qps_per_element);
     Kokkos::deep_copy(num_qps_per_element, beams.num_qps_per_element);
@@ -232,6 +257,13 @@ inline void WriteVTKBeamsQP(Beams& beams, const std::string& filename) {
 }
 
 inline void WriteVTKBeamsNodes(Beams& beams, const std::string& filename) {
+    // Compute value of state at beam nodes
+    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems, Kokkos::AUTO());
+    const auto smem = 3 * Kokkos::View<double* [7]>::shmem_size(beams.max_elem_nodes);
+    range_policy.set_scratch_size(1, Kokkos::PerTeam(smem));
+
+    Kokkos::parallel_for("UpdateNodeState", range_policy, UpdateNodeState{state.q, state.v, state.vd, beams.node_state_indices, beams.num_nodes_per_element, beams.node_u, beams.node_u_dot, beams.node_u_ddot});
+
     // Get a copy of the beam element indices in the host space
     auto num_nodes_per_element = Kokkos::create_mirror(beams.num_nodes_per_element);
     Kokkos::deep_copy(num_nodes_per_element, beams.num_nodes_per_element);
