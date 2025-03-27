@@ -1,5 +1,6 @@
 #pragma once
 
+#include <KokkosBatched_Copy_Decl.hpp>
 #include <Kokkos_Core.hpp>
 
 namespace openturbine::beams {
