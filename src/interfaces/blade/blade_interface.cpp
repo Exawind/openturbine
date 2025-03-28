@@ -87,11 +87,11 @@ void BladeInterface::UpdateNodeMotion() {
     this->host_state.CopyFromState(this->state);
 
     // Set blade root node motion
-    this->host_state.SetNodeMotion(this->blade.root_node);
+    this->blade.root_node.UpdateMotion(this->host_state);
 
     // Loop through blade nodes and set node motion
     for (auto& node : this->blade.nodes) {
-        this->host_state.SetNodeMotion(node);
+        node.UpdateMotion(this->host_state);
     }
 }
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "interfaces/node_data.hpp"
 #include "state/state.hpp"
 #include "types.hpp"
 
@@ -43,20 +42,6 @@ struct HostState {
         Kokkos::deep_copy(this->q, state.q);
         Kokkos::deep_copy(this->v, state.v);
         Kokkos::deep_copy(this->vd, state.vd);
-    }
-
-    /// @brief Populates node position, displacement, velocity, acceleration from state data
-    /// @param node
-    // NOLINT(functionStatic)
-    void SetNodeMotion(NodeData& node) const {
-        for (auto i = 0U; i < kLieGroupComponents; ++i) {
-            node.position[i] = this->x(node.id, i);
-            node.displacement[i] = this->q(node.id, i);
-        }
-        for (auto i = 0U; i < kLieAlgebraComponents; ++i) {
-            node.velocity[i] = this->v(node.id, i);
-            node.acceleration[i] = this->vd(node.id, i);
-        }
     }
 };
 
