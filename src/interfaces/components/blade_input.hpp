@@ -29,7 +29,7 @@ struct Section {
     Array_6x6 stiffness_matrix;
 
     Section(double loc, Array_6x6 m, Array_6x6 k)
-        : location(loc), mass_matrix(std::move(m)), stiffness_matrix(std::move(k)) {}
+        : location(loc), mass_matrix(m), stiffness_matrix(k) {}
 };
 
 struct Root {
@@ -47,7 +47,7 @@ struct Root {
 };
 
 struct BladeInput {
-    enum class NodeSpacing {
+    enum class NodeSpacing : std::uint8_t {
         GaussLobattoLegendre = 1,
         Linear = 2,
     };

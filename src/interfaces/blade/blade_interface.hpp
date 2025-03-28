@@ -12,7 +12,7 @@ namespace openturbine::interfaces {
 class BladeInterface {
 public:
     explicit BladeInterface(
-        components::SolutionInput solution_input, components::BladeInput blade_input
+        const components::SolutionInput& solution_input, const components::BladeInput& blade_input
     );
 
     /// @brief Step forward in time
@@ -25,7 +25,7 @@ public:
     void RestoreState();
 
     /// @brief Set root node displacement if `prescribe_root_motion` input was true
-    void SetRootDisplacement(const Array_7& u);
+    void SetRootDisplacement(const Array_7& u) const;
 
     void WriteOutputVTK();
 

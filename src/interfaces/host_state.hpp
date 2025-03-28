@@ -38,7 +38,7 @@ struct HostState {
 
     /// @brief Copy state data to host state
     /// @param state
-    void CopyFromState(const State& state) {
+    void CopyFromState(const State& state) const {
         Kokkos::deep_copy(this->x, state.x);
         Kokkos::deep_copy(this->q, state.q);
         Kokkos::deep_copy(this->v, state.v);
@@ -47,7 +47,7 @@ struct HostState {
 
     /// @brief Populates node position, displacement, velocity, acceleration from state data
     /// @param node
-    void SetNodeMotion(NodeData& node) {
+    void SetNodeMotion(NodeData& node) const {
         for (auto i = 0U; i < kLieGroupComponents; ++i) {
             node.position[i] = this->x(node.id, i);
             node.displacement[i] = this->q(node.id, i);

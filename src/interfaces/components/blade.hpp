@@ -125,14 +125,14 @@ struct Blade {
 
     /// @brief Return a vector of weights for distributing a point load to the nodes
     /// based on the position [0,1] of the point along the blade
-    std::vector<double> GetNodeWeights(double s) {
+    std::vector<double> GetNodeWeights(double s) const {
         std::vector<double> weights(this->node_xi.size());
         auto xi = 2. * s - 1.;
         LagrangePolynomialDerivWeights(xi, this->node_xi, weights);
         return weights;
     }
 
-    std::vector<Array_3> CalcNodeTangents(const std::vector<Array_3>& node_coordinates) {
+    std::vector<Array_3> CalcNodeTangents(const std::vector<Array_3>& node_coordinates) const {
         const auto n_nodes{node_coordinates.size()};
 
         // Calculate the derivative shape function matrix for the nodes
@@ -148,7 +148,7 @@ struct Blade {
             }
         }
         for (auto& node_tangent : node_tangents) {
-            double norm = Norm(node_tangent);
+            const auto norm = Norm(node_tangent);
             for (auto& v : node_tangent) {
                 v /= norm;
             }
@@ -157,12 +157,11 @@ struct Blade {
         return node_tangents;
     }
 
-    std::vector<BeamSection> BuildBeamSections(const BladeInput& input) {
+    static std::vector<BeamSection> BuildBeamSections(const BladeInput& input) {
         // Extraction section stiffness and mass matrices from blade definition
         std::vector<BeamSection> sections;
 
         // Add first section after rotating matrices to account for twist
-        std::vector<double> section_grid{input.sections[0].location};
         auto twist = LinearInterp(
             input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist
         );
