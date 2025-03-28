@@ -36,10 +36,14 @@ struct SolutionInput {
     /// @brief  Construct step parameters from inputs
     /// @return Step parameters struct
     StepParameters Parameters() {
-        return StepParameters(
-            this->dynamic_solve, this->max_iter, this->time_step, this->rho_inf,
-            this->absolute_error_tolerance, this->relative_error_tolerance
-        );
+        return {
+            this->dynamic_solve,
+            this->max_iter,
+            this->time_step,
+            this->rho_inf,
+            this->absolute_error_tolerance,
+            this->relative_error_tolerance
+        };
     }
 };
 

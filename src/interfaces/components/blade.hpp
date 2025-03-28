@@ -53,24 +53,7 @@ struct Blade {
         const auto node_coordinates =
             PerformLeastSquaresFitting(n_nodes, phi_kn, input.ref_axis.coordinates);
 
-        // Calculate the derivative shape function matrix for the nodes
-        const auto [phi_nn, phi_prime_nn] = ShapeFunctionMatrices(this->node_xi, this->node_xi);
-
-        // Calculate tangent vectors for each node
-        std::vector<Array_3> node_tangents(n_nodes, {0., 0., 0.});
-        for (auto i = 0U; i < n_nodes; ++i) {
-            for (auto j = 0U; j < 3; ++j) {
-                for (auto k = 0U; k < n_nodes; ++k) {
-                    node_tangents[i][j] += phi_prime_nn[k][i] * node_coordinates[k][j];
-                }
-            }
-        }
-        for (auto& node_tangent : node_tangents) {
-            double norm = Norm(node_tangent);
-            for (auto& v : node_tangent) {
-                v /= norm;
-            }
-        }
+        const auto node_tangents = CalcNodeTangents(node_coordinates);
 
         // Add nodes to model
         std::vector<size_t> node_ids;
@@ -86,70 +69,10 @@ struct Blade {
             this->nodes.emplace_back(node_id);
         }
 
-        // Extraction section stiffness and mass matrices from blade definition
-        std::vector<BeamSection> sections;
-
-        // Add first section after rotating matrices to account for twist
-        std::vector<double> section_grid{input.sections[0].location};
-        auto twist = LinearInterp(
-            input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist
-        );
-        auto q_twist = RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
-        sections.emplace_back(
-            input.sections[0].location, RotateMatrix6(input.sections[0].mass_matrix, q_twist),
-            RotateMatrix6(input.sections[0].stiffness_matrix, q_twist)
-        );
-
-        // Loop through remaining section locations
-        for (auto i = 1U; i < input.sections.size(); ++i) {
-            // Add refinement sections if requested
-            for (auto j = 0U; j < input.section_refinement; ++j) {
-                // Calculate interpolation ratio between bounding sections
-                const auto alpha =
-                    static_cast<double>(j + 1) / static_cast<double>(input.section_refinement + 1);
-
-                // Interpolate grid location
-                const auto grid_value = (1. - alpha) * input.sections[i - 1].location +
-                                        alpha * input.sections[i].location;
-                section_grid.emplace_back(grid_value);
-
-                // Interpolate mass and stiffness matrices from bounding sections
-                Array_6x6 mass_matrix;
-                Array_6x6 stiffness_matrix;
-                for (auto mi = 0U; mi < 6; ++mi) {
-                    for (auto ni = 0U; ni < 6; ++ni) {
-                        mass_matrix[mi][ni] =
-                            (1. - alpha) * input.sections[i - 1].mass_matrix[mi][ni] +
-                            alpha * input.sections[i].mass_matrix[mi][ni];
-                        stiffness_matrix[mi][ni] =
-                            (1. - alpha) * input.sections[i - 1].stiffness_matrix[mi][ni] +
-                            alpha * input.sections[i].stiffness_matrix[mi][ni];
-                    }
-                }
-
-                // Calculate twist at current section location via linear interpolation
-                twist = LinearInterp(
-                    input.sections[i].location, input.ref_axis.twist_grid, input.ref_axis.twist
-                );
-
-                // Add refinement section
-                q_twist = RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
-                sections.emplace_back(
-                    grid_value, RotateMatrix6(mass_matrix, q_twist),
-                    RotateMatrix6(stiffness_matrix, q_twist)
-                );
-            }
-
-            // Add ending section
-            twist = LinearInterp(
-                input.sections[i].location, input.ref_axis.twist_grid, input.ref_axis.twist
-            );
-            q_twist = RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
-            sections.emplace_back(
-                input.sections[i].location, RotateMatrix6(input.sections[i].mass_matrix, q_twist),
-                RotateMatrix6(input.sections[i].stiffness_matrix, q_twist)
-            );
-            section_grid.emplace_back(input.sections[i].location);
+        const auto sections = BuildBeamSections(input);
+        std::vector<double> section_grid;
+        for (const auto& section : sections) {
+            section_grid.emplace_back(section.position);
         }
 
         // Calculate trapezoidal quadrature based on section locations
@@ -207,6 +130,99 @@ struct Blade {
         auto xi = 2. * s - 1.;
         LagrangePolynomialDerivWeights(xi, this->node_xi, weights);
         return weights;
+    }
+
+    std::vector<Array_3> CalcNodeTangents(const std::vector<Array_3>& node_coordinates) {
+        const auto n_nodes{node_coordinates.size()};
+
+        // Calculate the derivative shape function matrix for the nodes
+        const auto [phi, phi_prime] = ShapeFunctionMatrices(this->node_xi, this->node_xi);
+
+        // Calculate tangent vectors for each node
+        std::vector<Array_3> node_tangents(n_nodes, {0., 0., 0.});
+        for (auto i = 0U; i < n_nodes; ++i) {
+            for (auto j = 0U; j < 3; ++j) {
+                for (auto k = 0U; k < n_nodes; ++k) {
+                    node_tangents[i][j] += phi_prime[k][i] * node_coordinates[k][j];
+                }
+            }
+        }
+        for (auto& node_tangent : node_tangents) {
+            double norm = Norm(node_tangent);
+            for (auto& v : node_tangent) {
+                v /= norm;
+            }
+        }
+
+        return node_tangents;
+    }
+
+    std::vector<BeamSection> BuildBeamSections(const BladeInput& input) {
+        // Extraction section stiffness and mass matrices from blade definition
+        std::vector<BeamSection> sections;
+
+        // Add first section after rotating matrices to account for twist
+        std::vector<double> section_grid{input.sections[0].location};
+        auto twist = LinearInterp(
+            input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist
+        );
+        auto q_twist = RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
+        sections.emplace_back(
+            input.sections[0].location, RotateMatrix6(input.sections[0].mass_matrix, q_twist),
+            RotateMatrix6(input.sections[0].stiffness_matrix, q_twist)
+        );
+
+        // Loop through remaining section locations
+        for (auto i = 1U; i < input.sections.size(); ++i) {
+            // Add refinement sections if requested
+            for (auto j = 0U; j < input.section_refinement; ++j) {
+                // Calculate interpolation ratio between bounding sections
+                const auto alpha =
+                    static_cast<double>(j + 1) / static_cast<double>(input.section_refinement + 1);
+
+                // Interpolate grid location
+                const auto grid_value = (1. - alpha) * input.sections[i - 1].location +
+                                        alpha * input.sections[i].location;
+
+                // Interpolate mass and stiffness matrices from bounding sections
+                Array_6x6 mass_matrix;
+                Array_6x6 stiffness_matrix;
+                for (auto mi = 0U; mi < 6; ++mi) {
+                    for (auto ni = 0U; ni < 6; ++ni) {
+                        mass_matrix[mi][ni] =
+                            (1. - alpha) * input.sections[i - 1].mass_matrix[mi][ni] +
+                            alpha * input.sections[i].mass_matrix[mi][ni];
+                        stiffness_matrix[mi][ni] =
+                            (1. - alpha) * input.sections[i - 1].stiffness_matrix[mi][ni] +
+                            alpha * input.sections[i].stiffness_matrix[mi][ni];
+                    }
+                }
+
+                // Calculate twist at current section location via linear interpolation
+                twist = LinearInterp(
+                    input.sections[i].location, input.ref_axis.twist_grid, input.ref_axis.twist
+                );
+
+                // Add refinement section
+                q_twist = RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
+                sections.emplace_back(
+                    grid_value, RotateMatrix6(mass_matrix, q_twist),
+                    RotateMatrix6(stiffness_matrix, q_twist)
+                );
+            }
+
+            // Add ending section
+            twist = LinearInterp(
+                input.sections[i].location, input.ref_axis.twist_grid, input.ref_axis.twist
+            );
+            q_twist = RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
+            sections.emplace_back(
+                input.sections[i].location, RotateMatrix6(input.sections[i].mass_matrix, q_twist),
+                RotateMatrix6(input.sections[i].stiffness_matrix, q_twist)
+            );
+        }
+
+        return sections;
     }
 
     /// @brief Add a point load (Fx, Fy, Fz, Mx, My, Mz) to the blade at location 's' [0, 1]
