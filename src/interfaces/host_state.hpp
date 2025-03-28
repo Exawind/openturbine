@@ -30,7 +30,7 @@ struct HostState {
 
     /// @brief  Construct host state from state
     /// @param state
-    HostState(const State& state)
+    explicit HostState(const State& state)
         : x("host_state_x", state.num_system_nodes),
           q("host_state_q", state.num_system_nodes),
           v("host_state_v", state.num_system_nodes),

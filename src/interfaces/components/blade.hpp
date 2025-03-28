@@ -70,11 +70,13 @@ struct Blade {
         }
 
         const auto sections = BuildBeamSections(input);
-        std::vector<double> section_grid;
-        section_grid.reserve(sections.size());
-        for (const auto& section : sections) {
-            section_grid.push_back(section.position);
-        }
+        std::vector<double> section_grid(sections.size());
+        std::transform(
+            sections.begin(), sections.end(), section_grid.begin(),
+            [](const auto& section) {
+                return section.position;
+            }
+        );
 
         // Calculate trapezoidal quadrature based on section locations
         const auto trapezoidal_quadrature = CreateTrapezoidalQuadrature(section_grid);
@@ -149,12 +151,16 @@ struct Blade {
                 }
             }
         }
-        for (auto& node_tangent : node_tangents) {
-            const auto norm = Norm(node_tangent);
-            for (auto& v : node_tangent) {
-                v /= norm;
+        std::transform(
+            node_tangents.begin(), node_tangents.end(), node_tangents.begin(),
+            [](Array_3& tangent) {
+                const auto norm = Norm(tangent);
+                std::transform(tangent.begin(), tangent.end(), tangent.begin(), [norm](double v) {
+                    return v / norm;
+                });
+                return tangent;
             }
-        }
+        );
 
         return node_tangents;
     }

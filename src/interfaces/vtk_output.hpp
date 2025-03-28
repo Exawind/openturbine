@@ -26,7 +26,7 @@ struct VTKOutput {
     /// @brief Node identifier in model
     bool active;
 
-    VTKOutput(const std::filesystem::path& vtk_output_path, bool clean_dir = true)
+    explicit VTKOutput(const std::filesystem::path& vtk_output_path, bool clean_dir = true)
         : output_dir(vtk_output_path.has_parent_path() ? vtk_output_path.parent_path() : "."),
           file_name_template(vtk_output_path.filename().string()),
           active(!vtk_output_path.empty()) {
