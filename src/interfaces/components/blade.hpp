@@ -71,8 +71,9 @@ struct Blade {
 
         const auto sections = BuildBeamSections(input);
         std::vector<double> section_grid;
+        section_grid.reserve(sections.size());
         for (const auto& section : sections) {
-            section_grid.emplace_back(section.position);
+            section_grid.push_back(section.position);
         }
 
         // Calculate trapezoidal quadrature based on section locations

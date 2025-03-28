@@ -50,20 +50,20 @@ struct VTKOutput {
         }
     }
 
-    void WriteNodes(const std::vector<NodeData>& nodes) const {
-        if (this->active) {
+    void WriteNodes([[maybe_unused]] const std::vector<NodeData>& nodes) const {
 #ifdef OpenTurbine_ENABLE_VTK
+        if (this->active) {
             WriteNodesVTK(nodes, this->BuildFilePath() + ".vtp");
-#endif
         }
+#endif
     }
 
-    void WriteBeam(const std::vector<NodeData>& nodes) const {
-        if (this->active) {
+    void WriteBeam([[maybe_unused]] const std::vector<NodeData>& nodes) const {
 #ifdef OpenTurbine_ENABLE_VTK
+        if (this->active) {
             WriteBeamVTK(nodes, this->BuildFilePath() + ".vtu");
-#endif
         }
+#endif
     }
 
     [[nodiscard]] std::string BuildFilePath() const {
