@@ -27,7 +27,7 @@ var searchData=
   ['beam_5fsection_2ehpp_24',['beam_section.hpp',['../beam__section_8hpp.html',1,'']]],
   ['beamelement_25',['beamelement',['../structopenturbine_1_1BeamElement.html',1,'openturbine::BeamElement'],['../structopenturbine_1_1BeamElement.html#aaa80fe745db767ae4ceda1f8dc7d5297',1,'openturbine::BeamElement::BeamElement()']]],
   ['beamquadrature_26',['BeamQuadrature',['../namespaceopenturbine.html#a1c94c5b16b1d9c6c62dc82988f8d3e81',1,'openturbine']]],
-  ['beams_27',['beams',['../structopenturbine_1_1Beams.html#a4025a9f28712c088a27d9d783c4d3609',1,'openturbine::Beams::Beams()'],['../structopenturbine_1_1Elements.html#a9fa144cd5d35b7c16f14df1f944ed036',1,'openturbine::Elements::beams'],['../structopenturbine_1_1Beams.html',1,'openturbine::Beams']]],
+  ['beams_27',['beams',['../structopenturbine_1_1Elements.html#a9fa144cd5d35b7c16f14df1f944ed036',1,'openturbine::Elements::beams'],['../structopenturbine_1_1Beams.html#a4025a9f28712c088a27d9d783c4d3609',1,'openturbine::Beams::Beams()'],['../structopenturbine_1_1Beams.html',1,'openturbine::Beams']]],
   ['beams_2ehpp_28',['beams.hpp',['../beams_8hpp.html',1,'']]],
   ['beams_5finput_2ehpp_29',['beams_input.hpp',['../beams__input_8hpp.html',1,'']]],
   ['beamsection_30',['beamsection',['../structopenturbine_1_1BeamSection.html#a1254cca42d1bbdff45d0ecd419138896',1,'openturbine::BeamSection::BeamSection()'],['../structopenturbine_1_1BeamSection.html',1,'openturbine::BeamSection']]],
