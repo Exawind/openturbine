@@ -37,7 +37,7 @@ public:
     /// @brief Blade model input/output data
     components::Blade blade;
 
-private:
+public:
     /// @brief  OpenTurbine class for storing system state
     State state;
 

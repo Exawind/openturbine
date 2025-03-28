@@ -53,13 +53,13 @@ struct VTKOutput {
 #ifdef OpenTurbine_ENABLE_VTK
     void WriteNodes(const std::vector<NodeData>& nodes) {
         if (this->active) {
-            WriteNodesVTK(nodes, this->BuildFilePath());
+            WriteNodesVTK(nodes, this->BuildFilePath() + ".vtp");
         }
     }
 
     void WriteBeam(const std::vector<NodeData>& nodes) {
         if (this->active) {
-            WriteBeamVTK(nodes, this->BuildFilePath());
+            WriteBeamVTK(nodes, this->BuildFilePath() + ".vtu");
         }
     }
 #else

@@ -10,7 +10,7 @@ struct SolutionInput {
     Array_3 gravity{0., 0., 0.};
 
     /// @brief Flag to toggle between static and dynamic solve
-    bool dynamic_solve{false};
+    bool dynamic_solve{true};
 
     /// @brief Solver time step
     double time_step{0.01};

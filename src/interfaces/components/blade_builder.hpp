@@ -97,21 +97,15 @@ struct BladeBuilder {
         return *this;
     }
 
-    // BladeBuilder& SetTimeStep(double time_step) {
-    //     if (time_step < 0.) {
-    //         throw std::out_of_range("time_step must be positive");
-    //     }
-    //     input.time_step = time_step;
-    //     return *this;
-    // }
+    BladeBuilder& SetNodeSpacingLinear() {
+        input.node_spacing = BladeInput::NodeSpacing::Linear;
+        return *this;
+    }
 
-    // BladeBuilder& SetDampingFactor(double rho_inf) {
-    //     if (rho_inf < 0. || rho_inf > 1.) {
-    //         throw std::out_of_range("rho_inf must be in range [0., 1.]");
-    //     }
-    //     input.rho_inf = rho_inf;
-    //     return *this;
-    // }
+    BladeBuilder& SetNodeSpacingGaussLobattoLegendre() {
+        input.node_spacing = BladeInput::NodeSpacing::GaussLobattoLegendre;
+        return *this;
+    }
 
     [[nodiscard]] Blade Build(Model& model) const { return Blade(this->input, model); }
 

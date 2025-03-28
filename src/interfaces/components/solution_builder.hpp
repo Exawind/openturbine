@@ -8,12 +8,12 @@ namespace openturbine::interfaces::components {
 
 struct SolutionBuilder {
     SolutionBuilder& EnableStaticSolve() {
-        input.dynamic_solve = true;
+        input.dynamic_solve = false;
         return *this;
     }
 
     SolutionBuilder& EnableDynamicSolve() {
-        input.dynamic_solve = false;
+        input.dynamic_solve = true;
         return *this;
     }
 

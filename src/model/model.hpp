@@ -228,9 +228,9 @@ public:
             node.vd[2] = acceleration[2] + alpha_cross_r[2] + omega_cross_omega_cross_r[2];
 
             // Set node angular acceleration
-            node.vd[3] = alpha[3];
-            node.vd[4] = alpha[4];
-            node.vd[5] = alpha[5];
+            node.vd[3] = alpha[0];
+            node.vd[4] = alpha[1];
+            node.vd[5] = alpha[2];
         }
     }
 

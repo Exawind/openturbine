@@ -176,6 +176,18 @@ struct Constraints {
                     host_axes(i, j, k) = rotation_matrix[j][k];
                 }
             }
+
+            // Initialize displacement to zero if prescribed BC
+            if (c.type == ConstraintType::kPrescribedBC ||
+                c.type == ConstraintType::kPrescribedBC3DOFs) {
+                host_input(i, 0) = 0.;
+                host_input(i, 1) = 0.;
+                host_input(i, 2) = 0.;
+                host_input(i, 3) = 1.;
+                host_input(i, 4) = 0.;
+                host_input(i, 5) = 0.;
+                host_input(i, 6) = 0.;
+            }
         }
 
         Kokkos::deep_copy(type, host_type);

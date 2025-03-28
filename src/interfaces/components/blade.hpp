@@ -35,7 +35,18 @@ struct Blade {
         const auto n_nodes = input.element_order + 1;
 
         // Generate node locations within element [-1,1]
-        this->node_xi = GenerateGLLPoints(input.element_order);
+        if (input.node_spacing == BladeInput::NodeSpacing::GaussLobattoLegendre) {
+            this->node_xi = GenerateGLLPoints(input.element_order);
+        } else if (input.node_spacing == BladeInput::NodeSpacing::Linear) {
+            this->node_xi.clear();
+            for (auto i = 0U; i <= input.element_order; ++i) {
+                this->node_xi.emplace_back(
+                    2. * static_cast<double>(i) / static_cast<double>(input.element_order) - 1.
+                );
+            }
+        } else {
+            throw("invalid node spacing option");
+        }
 
         // Fit node coordinates to key points
         std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));

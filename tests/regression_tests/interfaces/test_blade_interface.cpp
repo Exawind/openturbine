@@ -9,13 +9,30 @@ namespace openturbine::tests {
 using namespace openturbine::interfaces;
 using namespace openturbine::interfaces::components;
 
-BladeInterfaceBuilder BuilderFromWindIO() {
+TEST(BladeInterfaceTest, BladeWindIO) {
+    // Read WindIO yaml file
     const YAML::Node windio = YAML::LoadFile("interfaces_test_files/IEA-15-240-RWT.yaml");
 
     // Create interface builder
     auto builder = BladeInterfaceBuilder{};
 
-    // Add reference axis coordinates and twist
+    // Set solution parameters
+    const double time_step{0.01};
+    builder.Solution()
+        .EnableDynamicSolve()
+        .SetTimeStep(time_step)
+        .SetDampingFactor(0.0)
+        .SetMaximumNonlinearIterations(6)
+        .SetAbsoluteErrorTolerance(1e-6)
+        .SetRelativeErrorTolerance(1e-4)
+        .SetVTKOutputPath("BladeInterfaceTest.BladeWindIO/blade_####");
+
+    // Set blade parameters
+    // Use prescribed root motion to fix root rotation
+    const auto n_nodes{11};
+    builder.Blade().SetElementOrder(n_nodes - 1).PrescribedRootMotion(true);
+
+    // Add reference axis coordinates
     const auto blade_axis = windio["components"]["blade"]["reference_axis"];
     const auto ref_axis_n_coord_points = blade_axis["grid"].size();
     for (auto i = 0U; i < ref_axis_n_coord_points; ++i) {
@@ -28,6 +45,8 @@ BladeInterfaceBuilder BuilderFromWindIO() {
             }
         );
     }
+
+    // Add reference axis twist
     const auto twist = windio["components"]["blade"]["outer_shape"]["twist"];
     const auto ref_axis_n_twist_points = twist["grid"].size();
     for (auto i = 0U; i < ref_axis_n_twist_points; ++i) {
@@ -102,81 +121,110 @@ BladeInterfaceBuilder BuilderFromWindIO() {
         );
     }
 
-    return builder;
-}
-
-TEST(BladeInterfaceTest, TestBuilder) {
-    auto builder = BuilderFromWindIO();
-    builder.Blade().PrescribedRootMotion(true);
-
+    // Build blade interface
     auto interface = builder.Build();
 
-    for (auto i = 0U; i < 5; ++i) {
+    // Write initial vtk output
+    interface.WriteOutputVTK();
+
+    // Get reference to tip node
+    auto& tip_node = interface.blade.nodes.back();
+
+    // Loop through solution iterations
+    for (auto i = 1U; i < 20U; ++i) {
+        // Calculate time
+        const auto t{static_cast<double>(i) * time_step};
+
+        // Apply oscillating moment about z axis to tip
+        tip_node.loads[1] = 2.0e5 * sin(2. * M_PI * 0.05 * t);
+
+        // Take step
         auto converged = interface.Step();
+
+        // Check convergence
         ASSERT_EQ(converged, true);
-    }
-}
 
-TEST(BladeInterfaceTest, RotatingBlade1) {
-    const Array_3 omega{0., 1., 0.};
-    const auto time_step{0.01};
-
-    auto builder = BuilderFromWindIO();
-    builder.Blade().PrescribedRootMotion(true).SetRootVelocity(
-        {0., 0., 0., omega[0], omega[1], omega[2]}
-    );
-
-    builder.Solution()
-        .SetTimeStep(time_step)
-        .EnableDynamicSolve()
-        .SetDampingFactor(0.0)
-        .SetMaximumNonlinearIterations(5);
-
-    auto interface = builder.Build();
-
-    for (auto i = 1U; i < 5U; ++i) {
-        auto u_rot = RotationVectorToQuaternion(
-            {omega[0] * i * time_step, omega[1] * i * time_step, omega[2] * i * time_step}
-        );
-        interface.SetRootDisplacement({0., 0., 0., u_rot[0], u_rot[1], u_rot[2], u_rot[3]});
-        auto converged = interface.Step();
-        ASSERT_EQ(converged, true);
+        // Write vtk output
+        interface.WriteOutputVTK();
     }
 
-    ASSERT_DOUBLE_EQ(interface.blade.root_node.position[0], 0.);
-    ASSERT_DOUBLE_EQ(interface.blade.root_node.position[1], 0.);
-    ASSERT_DOUBLE_EQ(interface.blade.root_node.position[2], 0.);
-    ASSERT_DOUBLE_EQ(interface.blade.root_node.position[3], 0.99980000666657776);
-    ASSERT_DOUBLE_EQ(interface.blade.root_node.position[4], 0.);
-    ASSERT_DOUBLE_EQ(interface.blade.root_node.position[5], 0.01999866669333308);
-    ASSERT_DOUBLE_EQ(interface.blade.root_node.position[6], 0.);
+    ASSERT_DOUBLE_EQ(tip_node.position[0], 117.00015677507447);
+    ASSERT_DOUBLE_EQ(tip_node.position[1], 0.17029757162527367);
+    ASSERT_DOUBLE_EQ(tip_node.position[2], 4.0018470825686112);
+    ASSERT_DOUBLE_EQ(tip_node.position[3], 0.99867645870262833);
+    ASSERT_DOUBLE_EQ(tip_node.position[4], -0.0017331183376092);
+    ASSERT_DOUBLE_EQ(tip_node.position[5], -0.051119189822748511);
+    ASSERT_DOUBLE_EQ(tip_node.position[6], 0.005399589417025623);
 }
 
-TEST(BladeInterfaceTest, RotatingBlade2) {
+TEST(BladeInterfaceTest, RotatingBeam) {
     const auto time_step{0.01};
     const Array_3 omega{0., 0., 1.};
-    const Array_3 x0_root{0., 0., 0.};
+    const Array_3 x0_root{2., 0., 0.};
     const auto root_vel = CrossProduct(omega, x0_root);
 
-    auto builder = BuilderFromWindIO();
-
-    builder.Blade()
-        .PrescribedRootMotion(true)
-        .SetRootPosition({x0_root[0], x0_root[1], x0_root[2], 1., 0., 0., 0.})
-        .SetRootVelocity({root_vel[0], root_vel[1], root_vel[2], omega[0], omega[1], omega[2]});
+    // Create interface builder
+    auto builder = BladeInterfaceBuilder{};
 
     builder.Solution()
-        .SetTimeStep(time_step)
         .EnableDynamicSolve()
+        .SetTimeStep(time_step)
         .SetDampingFactor(0.0)
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
         .SetRelativeErrorTolerance(1e-4)
-        .SetVTKOutputPath("BladeInterfaceTest.RotatingBlade2/step_####.vtu");
+        .SetVTKOutputPath("BladeInterfaceTest.RotatingBeam/beam_####");
+
+    // Node locations (GLL quadrature)
+    const auto node_s = std::vector{
+        0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.
+    };
+
+    builder.Blade()
+        .SetElementOrder(5)
+        .PrescribedRootMotion(true)
+        .SetRootPosition({x0_root[0], x0_root[1], x0_root[2], 1., 0., 0., 0.})
+        .SetRootVelocity({root_vel[0], root_vel[1], root_vel[2], omega[0], omega[1], omega[2]})
+        .AddRefAxisTwist(0., 0.)
+        .AddRefAxisTwist(1., 0.);
+
+    // Add reference axis coordinates and twist
+    for (const auto s : node_s) {
+        builder.Blade().AddRefAxisPointX(s, {10. * s, 0., 0.});
+    }
+
+    // Beam section locations
+    const std::vector<double> section_s{
+        0.0254460438286208, 0.1292344072003028, 0.2970774243113015, 0.5,
+        0.7029225756886985, 0.8707655927996972, 0.9745539561713792,
+    };
+
+    // Add reference axis coordinates and twist
+    for (const auto s : section_s) {
+        builder.Blade().AddSectionRefX(
+            s,
+            std::array{
+                std::array{8.538e-2, 0., 0., 0., 0., 0.},
+                std::array{0., 8.538e-2, 0., 0., 0., 0.},
+                std::array{0., 0., 8.538e-2, 0., 0., 0.},
+                std::array{0., 0., 0., 1.4433e-2, 0., 0.},
+                std::array{0., 0., 0., 0., 0.40972e-2, 0.},
+                std::array{0., 0., 0., 0., 0., 1.0336e-2},
+            },
+            std::array{
+                std::array{1368.17e3, 0., 0., 0., 0., 0.},
+                std::array{0., 88.56e3, 0., 0., 0., 0.},
+                std::array{0., 0., 38.78e3, 0., 0., 0.},
+                std::array{0., 0., 0., 16.9600e3, 17.6100e3, -0.3510e3},
+                std::array{0., 0., 0., 17.6100e3, 59.1200e3, -0.3700e3},
+                std::array{0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
+            }
+        );
+    }
 
     auto interface = builder.Build();
 
-    for (auto i = 1U; i < 1000U; ++i) {
+    for (auto i = 1U; i < 10U; ++i) {
         const auto t{static_cast<double>(i) * time_step};
         auto u_rot = RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
         auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
@@ -189,13 +237,185 @@ TEST(BladeInterfaceTest, RotatingBlade2) {
         interface.WriteOutputVTK();
     }
 
-    // ASSERT_DOUBLE_EQ(interface.blade.root_node.position[0], 1.9800166611121033);
-    // ASSERT_DOUBLE_EQ(interface.blade.root_node.position[1], 0.39933366658731262);
-    // ASSERT_DOUBLE_EQ(interface.blade.root_node.position[2], 0.);
-    // ASSERT_DOUBLE_EQ(interface.blade.root_node.position[3], 0.99875026039496628);
-    // ASSERT_DOUBLE_EQ(interface.blade.root_node.position[4], 0.);
-    // ASSERT_DOUBLE_EQ(interface.blade.root_node.position[5], 0.);
-    // ASSERT_DOUBLE_EQ(interface.blade.root_node.position[6], 0.049979169270678331);
+    //--------------------------------------------------------------------------
+    // Root Node
+    //--------------------------------------------------------------------------
+
+    EXPECT_NEAR(interface.blade.root_node.position[0], 1.9919054660239885, 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.position[1], 0.17975709839602211, 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.position[2], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.position[3], 0.99898767084784234, 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.position[4], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.position[5], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.position[6], 0.044984814037660227, 1e-10);
+
+    EXPECT_NEAR(interface.blade.root_node.displacement[0], -0.0080945339760114532, 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.displacement[1], 0.17975709839602211, 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.displacement[2], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.displacement[3], 0.99898767084784234, 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.displacement[4], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.displacement[5], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.displacement[6], 0.044984814037660227, 1e-10);
+
+    EXPECT_NEAR(interface.blade.root_node.velocity[0], -0.17976259212149071, 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.velocity[1], 1.9919719054875213, 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.velocity[2], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.velocity[3], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.velocity[4], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.velocity[5], 1., 1e-10);
+
+    EXPECT_NEAR(interface.blade.root_node.acceleration[0], -1.9920882238788629, 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.acceleration[1], -0.17977158309645525, 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.acceleration[2], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.acceleration[3], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.acceleration[4], 0., 1e-10);
+    EXPECT_NEAR(interface.blade.root_node.acceleration[5], 0., 1e-10);
+
+    //--------------------------------------------------------------------------
+    // Tip Node
+    //--------------------------------------------------------------------------
+
+    EXPECT_NEAR(interface.blade.nodes[5].position[0], 11.951460424343411, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].position[1], 1.0785463019560009, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].position[2], 2.2845605555050727E-10, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].position[3], 0.99898766738195299, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].position[4], 2.6570959740959799E-9, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].position[5], -1.0123941616837804E-10, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].position[6], 0.044984891005365443, 1e-10);
+
+    EXPECT_NEAR(interface.blade.nodes[5].displacement[0], -0.048539575656588806, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].displacement[1], 1.0785463019560009, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].displacement[2], 2.2845605555050727E-10, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].displacement[3], 0.99898766738195299, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].displacement[4], 2.6570959740959799E-9, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].displacement[5], -1.0123941616837804E-10, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].displacement[6], 0.044984891005365443, 1e-10);
+
+    EXPECT_NEAR(interface.blade.nodes[5].velocity[0], -1.0786835619583102, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].velocity[1], 11.95303967174639, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].velocity[2], -6.3862048021175104E-8, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].velocity[3], 0.000003159329892760129, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].velocity[4], 2.5866107917084571E-7, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].velocity[5], 1.0001562024381443, 1e-10);
+
+    EXPECT_NEAR(interface.blade.nodes[5].acceleration[0], -11.955952417551353, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].acceleration[1], -1.0800839943831992, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].acceleration[2], -0.000013544534439173783, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].acceleration[3], -0.000046709402446003812, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].acceleration[4], 0.000008256203749646939, 1e-10);
+    EXPECT_NEAR(interface.blade.nodes[5].acceleration[5], 0.00020635762959181575, 1e-10);
+}
+
+TEST(BladeInterfaceTest, StaticCurledBeam) {
+    // Create interface builder
+    auto builder = BladeInterfaceBuilder{};
+
+    builder.Solution()
+        .EnableStaticSolve()
+        .SetTimeStep(1.)
+        .SetDampingFactor(1.)
+        .SetMaximumNonlinearIterations(10)
+        .SetAbsoluteErrorTolerance(1e-5)
+        .SetRelativeErrorTolerance(1e-3)
+        .SetVTKOutputPath("BladeInterfaceTest.StaticCurledBeam/step_####");
+
+    // Node locations
+    const auto n_kps{21};
+    std::vector<double> kp_s;
+    for (auto i = 0U; i < n_kps; ++i) {
+        kp_s.emplace_back(static_cast<double>(i) / static_cast<double>(n_kps - 1));
+    }
+
+    builder.Blade()
+        .SetElementOrder(10)
+        .SetNodeSpacingLinear()
+        .SetSectionRefinement(1)
+        .PrescribedRootMotion(true)
+        .AddRefAxisTwist(0., 0.)
+        .AddRefAxisTwist(1., 0.);
+
+    for (const auto s : kp_s) {
+        builder.Blade().AddRefAxisPointX(s, {s * 10., 0., 0.});
+    }
+
+    // Beam section locations
+    const std::vector<double> section_s{0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.};
+
+    // Add reference axis coordinates and twist
+    for (const auto s : section_s) {
+        builder.Blade().AddSectionRefX(
+            s,
+            std::array{
+                std::array{1., 0., 0., 0., 0., 0.},
+                std::array{0., 1., 0., 0., 0., 0.},
+                std::array{0., 0., 1., 0., 0., 0.},
+                std::array{0., 0., 0., 1., 0., 0.},
+                std::array{0., 0., 0., 0., 1., 0.},
+                std::array{0., 0., 0., 0., 0., 1.},
+            },
+            std::array{
+                std::array{1770e3, 0., 0., 0., 0., 0.},
+                std::array{0., 1770e3, 0., 0., 0., 0.},
+                std::array{0., 0., 1770e3, 0., 0., 0.},
+                std::array{0., 0., 0., 8.16e3, 0., 0.},
+                std::array{0., 0., 0., 0., 86.9e3, 0.},
+                std::array{0., 0., 0., 0., 0., 215.e3},
+            }
+        );
+    }
+
+    auto interface = builder.Build();
+
+    // Create vector to store deformed tip positions
+    std::vector<Array_3> tip_positions;
+
+    // Get reference to tip node
+    auto& tip_node = interface.blade.nodes[interface.blade.nodes.size() - 1];
+
+    // Loop through moments to apply to tip
+    const std::vector<double> moments{0., 10920.0, 21840.0, 32761.0, 43681.0, 54601.0};
+    for (const auto m : moments) {
+        // Apply moment to tip about y axis
+        tip_node.loads[4] = -m;
+
+        // Static step
+        auto converged = interface.Step();
+
+        // Write beam visualization output
+        interface.WriteOutputVTK();
+
+        // Check convergence
+        ASSERT_EQ(converged, true);
+
+        // Add tip position
+        tip_positions.emplace_back(
+            Array_3{tip_node.position[0], tip_node.position[1], tip_node.position[2]}
+        );
+    }
+
+    EXPECT_NEAR(tip_positions[0][0], 10., 1e-12);
+    EXPECT_NEAR(tip_positions[0][1], 0., 1e-12);
+    EXPECT_NEAR(tip_positions[0][2], 0., 1e-12);
+
+    EXPECT_NEAR(tip_positions[1][0], 7.5353117904309216, 1e-12);
+    EXPECT_NEAR(tip_positions[1][1], 0., 1e-12);
+    EXPECT_NEAR(tip_positions[1][2], 5.5406541545431187, 1e-12);
+
+    EXPECT_NEAR(tip_positions[2][0], 2.2747128775224663, 1e-12);
+    EXPECT_NEAR(tip_positions[2][1], 0., 1e-12);
+    EXPECT_NEAR(tip_positions[2][2], 7.2169136787384982, 1e-12);
+
+    EXPECT_NEAR(tip_positions[3][0], -1.614379006780613, 1e-12);
+    EXPECT_NEAR(tip_positions[3][1], 0., 1e-12);
+    EXPECT_NEAR(tip_positions[3][2], 4.7774238337109498, 1e-12);
+
+    EXPECT_NEAR(tip_positions[4][0], -1.9031340843824651, 1e-12);
+    EXPECT_NEAR(tip_positions[4][1], 0., 1e-12);
+    EXPECT_NEAR(tip_positions[4][2], 1.3327034304088525, 1e-12);
+
+    EXPECT_NEAR(tip_positions[5][0], 0.025236057024605074, 1e-12);
+    EXPECT_NEAR(tip_positions[5][1], 0., 1e-12);
+    EXPECT_NEAR(tip_positions[5][2], 0.0019647592579388196, 1e-12);
 }
 
 }  // namespace openturbine::tests

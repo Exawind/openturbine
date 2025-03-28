@@ -44,6 +44,8 @@ bool BladeInterface::Step() {
     auto converged = openturbine::Step(
         this->parameters, this->solver, this->elements, this->state, this->constraints
     );
+
+    // If not converged, return false
     if (!converged) {
         return false;
     }
@@ -84,13 +86,13 @@ void BladeInterface::UpdateNodeMotion() {
     // Copy state motion members from device to host
     this->host_state.CopyFromState(this->state);
 
+    // Set blade root node motion
+    this->host_state.SetNodeMotion(this->blade.root_node);
+
     // Loop through blade nodes and set node motion
     for (auto& node : this->blade.nodes) {
         this->host_state.SetNodeMotion(node);
     }
-
-    // Set blade root node motion
-    this->host_state.SetNodeMotion(this->blade.root_node);
 }
 
 }  // namespace openturbine::interfaces
