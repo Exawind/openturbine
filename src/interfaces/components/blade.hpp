@@ -7,7 +7,6 @@
 #include "math/matrix_operations.hpp"
 #include "math/quaternion_operations.hpp"
 #include "model/model.hpp"
-#include "utilities/scripts/windio_mapped_structs.hpp"
 
 namespace openturbine::interfaces::components {
 
