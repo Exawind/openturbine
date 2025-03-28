@@ -7,6 +7,7 @@
 #include "elements/beams/calculate_jacobian.hpp"
 #include "elements/beams/interpolation.hpp"
 #include "system/beams/calculate_force_FC.hpp"
+#include "system/beams/calculate_force_FD.hpp"
 #include "system/beams/integrate_residual_vector.hpp"
 #include "test_calculate.hpp"
 #include "test_integrate_matrix.hpp"
@@ -173,6 +174,46 @@ TEST(CurvedBeamTests, CalculateForceFcForCurvedBeam) {
     // Validate against expected values from Mathematica script
     for (size_t i = 0; i < 6; ++i) {
         EXPECT_NEAR(Fc_host(i), kExpectedFc[i], 1e-6) << "Force Fc mismatch at component " << i;
+    }
+}
+
+TEST(CurvedBeamTests, CalculateForceFdForCurvedBeam) {
+    const auto x0pupSS = Kokkos::View<double[3][3]>("x0pupSS");
+    const auto Fc = Kokkos::View<double[6]>("Fc");
+    const auto Fd = Kokkos::View<double[6]>("Fd");
+
+    const auto x0pupSS_host = Kokkos::create_mirror_view(x0pupSS);
+    const auto Fc_host = Kokkos::create_mirror_view(Fc);
+    const auto Fd_host = Kokkos::create_mirror_view(Fd);
+
+    // Set x0pupSS values
+    x0pupSS_host(0, 0) = 0.;
+    x0pupSS_host(0, 1) = -kStrainInterpolationHolder[2];
+    x0pupSS_host(0, 2) = kStrainInterpolationHolder[1];
+    x0pupSS_host(1, 0) = kStrainInterpolationHolder[2];
+    x0pupSS_host(1, 1) = 0.;
+    x0pupSS_host(1, 2) = -kStrainInterpolationHolder[0];
+    x0pupSS_host(2, 0) = -kStrainInterpolationHolder[1];
+    x0pupSS_host(2, 1) = kStrainInterpolationHolder[0];
+    x0pupSS_host(2, 2) = 0.;
+
+    // Set Fc values
+    for (size_t i = 0; i < 6; ++i) {
+        Fc_host(i) = kExpectedFc[i];
+    }
+
+    Kokkos::deep_copy(x0pupSS, x0pupSS_host);
+    Kokkos::deep_copy(Fc, Fc_host);
+
+    Kokkos::parallel_for(
+        "CalculateForceFd", 1, KOKKOS_LAMBDA(size_t) { beams::CalculateForceFD(x0pupSS, Fc, Fd); }
+    );
+
+    Kokkos::deep_copy(Fd_host, Fd);
+
+    // Validate results against expected values from Mathematica script
+    for (size_t i = 0; i < 6; ++i) {
+        EXPECT_NEAR(Fd_host(i), kExpectedFd[i], 1e-6) << "Force Fd mismatch at component " << i;
     }
 }
 

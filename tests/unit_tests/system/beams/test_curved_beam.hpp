@@ -91,4 +91,24 @@ constexpr std::array<double, 6> kExpectedFc = {
     -854.6894329742  // Mz
 };
 
+// Strain interpolation holder (einterphold from Mathematica)
+constexpr std::array<double, 6> kStrainInterpolationHolder = {
+    0.9549992533551,   // ex
+    -0.3059615881351,  // ey
+    0.167475028213,    // ez
+    0.09666498438782,  // gxy
+    0.09665741323766,  // gxz
+    0.001532568414933  // gyz
+};
+
+// Expected Fd forces for curved beam (from Mathematica script)
+constexpr std::array<double, 6> kExpectedFd = {
+    0.,               // Fx
+    0.,               // Fy
+    0.,               // Fz
+    -413.0521579912,  // Mx
+    176.1330689806,   // My
+    2677.142143344    // Mz
+};
+
 }  // namespace openturbine::tests
