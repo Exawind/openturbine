@@ -107,7 +107,7 @@ struct BladeBuilder {
         return *this;
     }
 
-    [[nodiscard]] Blade Build(Model& model) const { return Blade(this->input, model); }
+    [[nodiscard]] Blade Build(Model& model) const { return {this->input, model}; }
 
     [[nodiscard]] const BladeInput& Input() const { return this->input; }
 

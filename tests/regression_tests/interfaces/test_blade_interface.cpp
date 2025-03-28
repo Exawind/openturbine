@@ -321,10 +321,10 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
 
     // Node locations
     const auto n_kps{21};
-    std::vector<double> kp_s;
-    for (auto i = 0U; i < n_kps; ++i) {
-        kp_s.emplace_back(static_cast<double>(i) / static_cast<double>(n_kps - 1));
-    }
+    std::vector<double> kp_s(n_kps);
+    std::transform(kp_s.begin(), kp_s.end(), kp_s.begin(), [n_kps, i = 0U](double) mutable {
+        return static_cast<double>(i++) / static_cast<double>(n_kps - 1);
+    });
 
     builder.Blade()
         .SetElementOrder(10)
