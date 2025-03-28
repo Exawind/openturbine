@@ -61,4 +61,34 @@ constexpr std::array<double, 7> kExpectedJacobians = {
     3.34571483248    // QP 7
 };
 
+/// Material properties for curved beam (from Mathemtica script)
+constexpr std::array<std::array<double, 6>, 6> kCurvedBeamCuu = {
+    std::array<double, 6>{1.252405841673e6, -316160.8714634, 190249.1405163, 0., 0., 0.},
+    std::array<double, 6>{-316160.8714634, 174443.0134269, -51312.45787663, 0., 0., 0.},
+    std::array<double, 6>{190249.1405163, -51312.45787663, 68661.14489973, 0., 0., 0.},
+    std::array<double, 6>{0.0, 0.0, 0.0, 31406.91734868, 25085.26404619, -17572.20634725},
+    std::array<double, 6>{0.0, 0.0, 0.0, 25085.26404619, 47547.80267146, 6533.599954035},
+    std::array<double, 6>{0.0, 0.0, 0.0, -17572.20634725, 6533.599954035, 138595.2799799}
+};
+
+/// Expected strain for curved beam (from Mathematica script)
+constexpr std::array<double, 6> kCurvedBeamStrain = {
+    0.002691499530001,  // ex
+    -0.04310062503412,  // ey
+    0.01251033519481,   // ez
+    0.09666498438782,   // gxy
+    0.09665741323766,   // gxz
+    0.001532568414933   // gyz
+};
+
+// Expected Fc forces for curved beam (from Mathematica script)
+constexpr std::array<double, 6> kExpectedFc = {
+    19377.66142402,  // Fx
+    -9011.48579619,  // Fy
+    3582.628416357,  // Fz
+    5433.695299839,  // Mx
+    7030.727457672,  // My
+    -854.6894329742  // Mz
+};
+
 }  // namespace openturbine::tests

@@ -6,6 +6,7 @@
 #include "elements/beams/beams.hpp"
 #include "elements/beams/calculate_jacobian.hpp"
 #include "elements/beams/interpolation.hpp"
+#include "system/beams/calculate_force_FC.hpp"
 #include "system/beams/integrate_residual_vector.hpp"
 #include "test_calculate.hpp"
 #include "test_integrate_matrix.hpp"
@@ -116,7 +117,7 @@ TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
     Kokkos::parallel_for("calculate_jacobian", 1, calculate_jacobian);
     Kokkos::deep_copy(host_qp_jacobian, qp_jacobian);
 
-    // Validate the calculated jacobians against expected values
+    // Validate the calculated jacobians against expected values from Mathematica script
     ASSERT_EQ(host_qp_jacobian.extent(0), num_elems);  // 1 element
     ASSERT_EQ(host_qp_jacobian.extent(1), num_qps);    // 7 quadrature points
 
@@ -138,6 +139,40 @@ TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
             host_qp_position_derivative(0, qp, 2) * host_qp_position_derivative(0, qp, 2)
         );
         EXPECT_NEAR(magnitude, 1., 1e-12);  // unit vector
+    }
+}
+
+TEST(CurvedBeamTests, CalculateForceFcForCurvedBeam) {
+    const auto Cuu = Kokkos::View<double[6][6]>("Cuu");
+    const auto strain = Kokkos::View<double[6]>("strain");
+    const auto Fc = Kokkos::View<double[6]>("Fc");
+
+    const auto Cuu_host = Kokkos::create_mirror_view(Cuu);
+    const auto strain_host = Kokkos::create_mirror_view(strain);
+    const auto Fc_host = Kokkos::create_mirror_view(Fc);
+
+    // Stiffness matrix
+    for (size_t i = 0; i < 6; ++i) {
+        for (size_t j = 0; j < 6; ++j) {
+            Cuu_host(i, j) = kCurvedBeamCuu[i][j];
+        }
+    }
+    // Strain
+    for (size_t i = 0; i < 6; ++i) {
+        strain_host(i) = kCurvedBeamStrain[i];
+    }
+
+    Kokkos::deep_copy(Cuu, Cuu_host);
+    Kokkos::deep_copy(strain, strain_host);
+
+    Kokkos::parallel_for(
+        "CalculateForceFc", 1, KOKKOS_LAMBDA(size_t) { beams::CalculateForceFC(Cuu, strain, Fc); }
+    );
+    Kokkos::deep_copy(Fc_host, Fc);
+
+    // Validate against expected values from Mathematica script
+    for (size_t i = 0; i < 6; ++i) {
+        EXPECT_NEAR(Fc_host(i), kExpectedFc[i], 1e-6) << "Force Fc mismatch at component " << i;
     }
 }
 
