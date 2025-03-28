@@ -1,3 +1,5 @@
+#include "test_curved_beam.hpp"
+
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
@@ -36,124 +38,30 @@
 
 namespace openturbine::tests {
 
-constexpr auto tol = 1.e-12;
-
 TEST(CurvedBeamTests, LagrangePolynomialInterpWeight_SecondOrder_AtSpecifiedQuadraturePoints) {
-    // 3 nodes at GLL points for second order polynomial
-    const std::vector<double> xs = {-1., 0., 1.};
     std::vector<double> weights;
 
-    // We need to calculate shape function weights at following 7 Gauss quadrature pts:
-    // -0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
-    // 0.7415311855993945, 0.9491079123427585
-
-    // Test point at -0.9491079123427585 (on first QP)
-    LagrangePolynomialInterpWeights(-0.9491079123427585, xs, weights);
-    ASSERT_EQ(weights.size(), 3);
-    EXPECT_NEAR(weights[0], 0.924956870807, tol);
-    EXPECT_NEAR(weights[1], 0.0991941707284, tol);
-    EXPECT_NEAR(weights[2], -0.0241510415356, tol);
-
-    // Test point at -0.7415311855993945 (on second QP)
-    LagrangePolynomialInterpWeights(-0.7415311855993945, xs, weights);
-    ASSERT_EQ(weights.size(), 3);
-    EXPECT_NEAR(weights[0], 0.645699842408, tol);
-    EXPECT_NEAR(weights[1], 0.450131500784, tol);
-    EXPECT_NEAR(weights[2], -0.0958313431915, tol);
-
-    // Test point at -0.4058451513773972 (on third QP)
-    LagrangePolynomialInterpWeights(-0.4058451513773972, xs, weights);
-    ASSERT_EQ(weights.size(), 3);
-    EXPECT_NEAR(weights[0], 0.285277719137, tol);
-    EXPECT_NEAR(weights[1], 0.835289713103, tol);
-    EXPECT_NEAR(weights[2], -0.12056743224, tol);
-
-    // Test point at 0. (on fourth QP)
-    LagrangePolynomialInterpWeights(0., xs, weights);
-    ASSERT_EQ(weights.size(), 3);
-    EXPECT_NEAR(weights[0], 0., tol);
-    EXPECT_NEAR(weights[1], 1., tol);
-    EXPECT_NEAR(weights[2], 0., tol);
-
-    // Test point at 0.4058451513773972 (on fifth QP)
-    LagrangePolynomialInterpWeights(0.4058451513773972, xs, weights);
-    ASSERT_EQ(weights.size(), 3);
-    EXPECT_NEAR(weights[0], -0.12056743224, tol);
-    EXPECT_NEAR(weights[1], 0.835289713103, tol);
-    EXPECT_NEAR(weights[2], 0.285277719137, tol);
-
-    // Test point at 0.7415311855993945 (on sixth QP)
-    LagrangePolynomialInterpWeights(0.7415311855993945, xs, weights);
-    ASSERT_EQ(weights.size(), 3);
-    EXPECT_NEAR(weights[0], -0.0958313431915, tol);
-    EXPECT_NEAR(weights[1], 0.450131500784, tol);
-    EXPECT_NEAR(weights[2], 0.645699842408, tol);
-
-    // Test point at 0.9491079123427585 (on seventh QP)
-    LagrangePolynomialInterpWeights(0.9491079123427585, xs, weights);
-    ASSERT_EQ(weights.size(), 3);
-    EXPECT_NEAR(weights[0], -0.0241510415356, tol);
-    EXPECT_NEAR(weights[1], 0.0991941707284, tol);
-    EXPECT_NEAR(weights[2], 0.924956870807, tol);
+    // Test interpolation weights at each quadrature point
+    for (size_t qp = 0; qp < kGaussQuadraturePoints.size(); ++qp) {
+        LagrangePolynomialInterpWeights(kGaussQuadraturePoints[qp], kGLLNodes, weights);
+        ASSERT_EQ(weights.size(), 3);
+        EXPECT_NEAR(weights[0], kExpectedInterpWeights[qp][0], kTolerance);
+        EXPECT_NEAR(weights[1], kExpectedInterpWeights[qp][1], kTolerance);
+        EXPECT_NEAR(weights[2], kExpectedInterpWeights[qp][2], kTolerance);
+    }
 }
 
 TEST(CurvedBeamTests, LagrangePolynomialDerivWeight_SecondOrder_AtSpecifiedQuadraturePoints) {
-    // 3 nodes at GLL points for second order polynomial
-    const std::vector<double> xs = {-1., 0., 1.};
     std::vector<double> deriv_weights;
 
-    // We need to calculate shape function derivative weights at following 7 Gauss quadrature pts:
-    // -0.9491079123427585, -0.7415311855993945, -0.4058451513773972, 0., 0.4058451513773972,
-    // 0.7415311855993945, 0.9491079123427585
-
-    // Test point at -0.9491079123427585 (on first QP)
-    LagrangePolynomialDerivWeights(-0.9491079123427585, xs, deriv_weights);
-    ASSERT_EQ(deriv_weights.size(), 3);
-    EXPECT_NEAR(deriv_weights[0], -1.449107912343, tol);
-    EXPECT_NEAR(deriv_weights[1], 1.898215824686, tol);
-    EXPECT_NEAR(deriv_weights[2], -0.4491079123428, tol);
-
-    // Test point at -0.7415311855993945 (on second QP)
-    LagrangePolynomialDerivWeights(-0.7415311855993945, xs, deriv_weights);
-    ASSERT_EQ(deriv_weights.size(), 3);
-    EXPECT_NEAR(deriv_weights[0], -1.241531185599, tol);
-    EXPECT_NEAR(deriv_weights[1], 1.483062371199, tol);
-    EXPECT_NEAR(deriv_weights[2], -0.2415311855994, tol);
-
-    // Test point at -0.4058451513773972 (on third QP)
-    LagrangePolynomialDerivWeights(-0.4058451513773972, xs, deriv_weights);
-    ASSERT_EQ(deriv_weights.size(), 3);
-    EXPECT_NEAR(deriv_weights[0], -0.9058451513774, tol);
-    EXPECT_NEAR(deriv_weights[1], 0.8116903027548, tol);
-    EXPECT_NEAR(deriv_weights[2], 0.0941548486226, tol);
-
-    // Test point at 0. (on fourth QP)
-    LagrangePolynomialDerivWeights(0., xs, deriv_weights);
-    ASSERT_EQ(deriv_weights.size(), 3);
-    EXPECT_NEAR(deriv_weights[0], -0.5, tol);
-    EXPECT_NEAR(deriv_weights[1], 0., tol);
-    EXPECT_NEAR(deriv_weights[2], 0.5, tol);
-
-    // Test point at 0.4058451513773972 (on fifth QP)
-    LagrangePolynomialDerivWeights(0.4058451513773972, xs, deriv_weights);
-    ASSERT_EQ(deriv_weights.size(), 3);
-    EXPECT_NEAR(deriv_weights[0], -0.0941548486226, tol);
-    EXPECT_NEAR(deriv_weights[1], -0.8116903027548, tol);
-    EXPECT_NEAR(deriv_weights[2], 0.9058451513774, tol);
-
-    // Test point at 0.7415311855993945 (on sixth QP)
-    LagrangePolynomialDerivWeights(0.7415311855993945, xs, deriv_weights);
-    ASSERT_EQ(deriv_weights.size(), 3);
-    EXPECT_NEAR(deriv_weights[0], 0.2415311855994, tol);
-    EXPECT_NEAR(deriv_weights[1], -1.483062371199, tol);
-    EXPECT_NEAR(deriv_weights[2], 1.241531185599, tol);
-
-    // Test point at 0.9491079123427585 (on seventh QP)
-    LagrangePolynomialDerivWeights(0.9491079123427585, xs, deriv_weights);
-    ASSERT_EQ(deriv_weights.size(), 3);
-    EXPECT_NEAR(deriv_weights[0], 0.4491079123428, tol);
-    EXPECT_NEAR(deriv_weights[1], -1.898215824686, tol);
-    EXPECT_NEAR(deriv_weights[2], 1.449107912343, tol);
+    // Test derivative weights at each quadrature point
+    for (size_t qp = 0; qp < kGaussQuadraturePoints.size(); ++qp) {
+        LagrangePolynomialDerivWeights(kGaussQuadraturePoints[qp], kGLLNodes, deriv_weights);
+        ASSERT_EQ(deriv_weights.size(), 3);
+        EXPECT_NEAR(deriv_weights[0], kExpectedDerivWeights[qp][0], kTolerance);
+        EXPECT_NEAR(deriv_weights[1], kExpectedDerivWeights[qp][1], kTolerance);
+        EXPECT_NEAR(deriv_weights[2], kExpectedDerivWeights[qp][2], kTolerance);
+    }
 }
 
 TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
@@ -178,31 +86,17 @@ TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
     const auto host_qp_position_derivative = Kokkos::create_mirror_view(qp_position_derivative);
     const auto host_qp_jacobian = Kokkos::create_mirror_view(qp_jacobian);
 
-    // Node positions at GLL points (from Mathematica script)
-    // Node 1
-    host_node_position_rotation(0, 0, 0) = 0.;  // x
-    host_node_position_rotation(0, 0, 1) = 0.;  // y
-    host_node_position_rotation(0, 0, 2) = 0.;  // z
-    // Node 2
-    host_node_position_rotation(0, 1, 0) = 2.5;     // x
-    host_node_position_rotation(0, 1, 1) = -0.125;  // y
-    host_node_position_rotation(0, 1, 2) = 0.;      // z
-    // Node 3
-    host_node_position_rotation(0, 2, 0) = 5.;   // x
-    host_node_position_rotation(0, 2, 1) = 1.;   // y
-    host_node_position_rotation(0, 2, 2) = -1.;  // z
-
-    // Define the quadrature points for 7-point Gauss quadrature
-    constexpr std::array<double, 7> qp_locations = {-0.9491079123427585, -0.7415311855993945,
-                                                    -0.4058451513773972, 0.,
-                                                    0.4058451513773972,  0.7415311855993945,
-                                                    0.9491079123427585};
+    // Set node positions
+    for (size_t node = 0; node < num_nodes; ++node) {
+        host_node_position_rotation(0, node, 0) = kCurvedBeamNodes[node][0];
+        host_node_position_rotation(0, node, 1) = kCurvedBeamNodes[node][1];
+        host_node_position_rotation(0, node, 2) = kCurvedBeamNodes[node][2];
+    }
 
     // Calculate shape function derivatives at each quadrature point
-    const std::vector<double> nodes = {-1., 0., 1.};
     for (size_t qp = 0; qp < num_qps; ++qp) {
         std::vector<double> weights{};
-        LagrangePolynomialDerivWeights(qp_locations[qp], nodes, weights);
+        LagrangePolynomialDerivWeights(kGaussQuadraturePoints[qp], kGLLNodes, weights);
         for (size_t node = 0; node < num_nodes; ++node) {
             host_shape_derivative(0, node, qp) = weights[node];
         }
@@ -222,24 +116,12 @@ TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
     Kokkos::parallel_for("calculate_jacobian", 1, calculate_jacobian);
     Kokkos::deep_copy(host_qp_jacobian, qp_jacobian);
 
-    // Expected jacobians at each quadrature point (from Mathematica script)
-    constexpr std::array<double, 7> expected_jacobians = {
-        2.631125640242,  // jacobian at QP 1
-        2.54766419719,   // jacobian at QP 2
-        2.501783068048,  // jacobian at QP 3
-        2.598076211353,  // jacobian at QP 4
-        2.843452426325,  // jacobian at QP 5
-        3.134881687854,  // jacobian at QP 6
-        3.34571483248    // jacobian at QP 7
-    };
-
     // Validate the calculated jacobians against expected values
     ASSERT_EQ(host_qp_jacobian.extent(0), num_elems);  // 1 element
     ASSERT_EQ(host_qp_jacobian.extent(1), num_qps);    // 7 quadrature points
 
-    const double tolerance = 1e-10;
     for (size_t qp = 0; qp < num_qps; ++qp) {
-        EXPECT_NEAR(host_qp_jacobian(0, qp), expected_jacobians[qp], tolerance)
+        EXPECT_NEAR(host_qp_jacobian(0, qp), kExpectedJacobians[qp], kTolerance)
             << "Jacobian mismatch at quadrature point " << qp;
     }
 
