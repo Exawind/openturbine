@@ -7,7 +7,7 @@
 
 namespace openturbine::tests {
 
-TEST(Model, AddNodeToModel) {
+TEST(ModelTest, AddNodeToModel) {
     Model model;
     ASSERT_EQ(model.NumNodes(), 0);
 
@@ -29,7 +29,7 @@ TEST(Model, AddNodeToModel) {
     ASSERT_EQ(nodes.size(), 1);
 }
 
-TEST(Model, TranslateModelNode) {
+TEST(ModelTest, TranslateModelNode) {
     Model model;
 
     constexpr auto pos = std::array{0., 0., 0.};
@@ -57,7 +57,7 @@ TEST(Model, TranslateModelNode) {
     ASSERT_EQ(node_0.x[2], pos[2] + displacement[2]);  // 3.
 }
 
-TEST(Model, RotateModelNode) {
+TEST(ModelTest, RotateModelNode) {
     Model model;
 
     constexpr auto pos = std::array{0., 0., 0.};
@@ -75,7 +75,7 @@ TEST(Model, RotateModelNode) {
     node_0.Translate({1., 0., 0.});
 
     // Now rotate the node 90 degrees around the z-axis
-    node_0.Rotate({0., 0., 1.}, M_PI / 2.);
+    node_0.RotateAboutPoint(Array_3{0., 0., M_PI / 2.}, {0., 0., 0.});
     ASSERT_NEAR(node_0.x[0], 0., 1e-12);
     ASSERT_NEAR(node_0.x[1], 1., 1e-12);
     ASSERT_NEAR(node_0.x[2], 0., 1e-12);
@@ -84,13 +84,13 @@ TEST(Model, RotateModelNode) {
     node_0.Translate({1., -1., 0.});
 
     // Now rotate the node 45 degrees around the z-axis using a quaternion
-    node_0.Rotate({0.92388, 0., 0., 0.382683});
+    node_0.RotateAboutPoint({0.92388, 0., 0., 0.382683}, {0., 0., 0.});
     ASSERT_NEAR(node_0.x[0], 0.707107, 1e-6);
     ASSERT_NEAR(node_0.x[1], 0.707107, 1e-6);
     ASSERT_NEAR(node_0.x[2], 0., 1e-6);
 }
 
-TEST(Model, AddBeamElementToModel) {
+TEST(ModelTest, AddBeamElementToModel) {
     Model model;
 
     constexpr auto pos = std::array{0., 0., 0.};
@@ -122,7 +122,7 @@ TEST(Model, AddBeamElementToModel) {
     ASSERT_EQ(elements.size(), 1);
 }
 
-TEST(Model, AddMassElementToModel) {
+TEST(ModelTest, AddMassElementToModel) {
     Model model;
     auto node_id = model.AddNode().Build();
     auto mass_matrix = std::array<std::array<double, 6>, 6>{};
@@ -134,7 +134,7 @@ TEST(Model, AddMassElementToModel) {
     ASSERT_EQ(elements.size(), 1);
 }
 
-TEST(Model, ModelConstructorWithDefaults) {
+TEST(ModelTest, ModelConstructorWithDefaults) {
     const Model model;
     ASSERT_EQ(model.NumNodes(), 0);
     ASSERT_EQ(model.NumBeamElements(), 0);
@@ -142,7 +142,7 @@ TEST(Model, ModelConstructorWithDefaults) {
     ASSERT_EQ(model.NumConstraints(), 0);
 }
 
-TEST(Model, ModelCreateState) {
+TEST(ModelTest, ModelCreateState) {
     Model model;
 
     // Rotation of 1 radian around x
@@ -184,7 +184,7 @@ TEST(Model, ModelCreateState) {
     }
 }
 
-TEST(Model, ModelCreateSystem) {
+TEST(ModelTest, ModelCreateSystem) {
     Model model;
 
     // Rotation of 1 radian around x

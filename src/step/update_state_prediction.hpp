@@ -35,8 +35,6 @@ inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solv
             "UpdateStaticPrediction", solver.num_system_nodes,
             UpdateStaticPrediction{
                 parameters.h,
-                parameters.beta_prime,
-                parameters.gamma_prime,
                 state.node_freedom_allocation_table,
                 state.node_freedom_map_table,
                 x,

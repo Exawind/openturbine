@@ -160,9 +160,13 @@ struct Constraints {
             start_row += n_rows;
 
             // Calculate initial relative position (X0)
-            const auto x0 = CalculateX0(c, nodes[target_node_id], nodes[base_node_id]);
-            for (size_t j = 0; j < 3; ++j) {
-                host_X0(i, j) = x0[j];
+            Array_3 x0{0., 0., 0.};
+            if (c.type != ConstraintType::kPrescribedBC &&
+                c.type != ConstraintType::kPrescribedBC3DOFs) {
+                x0 = CalculateX0(c, nodes[target_node_id], nodes[base_node_id]);
+                for (size_t j = 0; j < 3; ++j) {
+                    host_X0(i, j) = x0[j];
+                }
             }
 
             // Calculate rotation axes
@@ -171,6 +175,18 @@ struct Constraints {
                 for (size_t k = 0; k < 3; ++k) {
                     host_axes(i, j, k) = rotation_matrix[j][k];
                 }
+            }
+
+            // Initialize displacement to zero if prescribed BC
+            if (c.type == ConstraintType::kPrescribedBC ||
+                c.type == ConstraintType::kPrescribedBC3DOFs) {
+                host_input(i, 0) = 0.;
+                host_input(i, 1) = 0.;
+                host_input(i, 2) = 0.;
+                host_input(i, 3) = 1.;
+                host_input(i, 4) = 0.;
+                host_input(i, 5) = 0.;
+                host_input(i, 6) = 0.;
             }
         }
 

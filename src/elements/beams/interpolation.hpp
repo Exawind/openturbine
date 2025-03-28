@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cmath>
+#include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace openturbine {
@@ -36,6 +38,26 @@ inline void LinearInterpWeights(
     const auto weight_upper = (x - lower_loc) / (upper_loc - lower_loc);
     weights[index - 1] = 1. - weight_upper;
     weights[index] = weight_upper;
+}
+
+/**
+ * @brief Computes linear interpolation
+ *
+ * @param x Evaluation point
+ * @param xs Value locations
+ * @param values Values at given locations
+ * @return Interpolated value at evaluation point
+ */
+inline double LinearInterp(
+    double x, const std::vector<double>& xs, const std::vector<double>& values
+) {
+    std::vector<double> weights(xs.size());
+    LinearInterpWeights(x, xs, weights);
+    auto x_interp = 0.;
+    for (auto i = 0U; i < xs.size(); ++i) {
+        x_interp += weights[i] * values[i];
+    }
+    return x_interp;
 }
 
 /**

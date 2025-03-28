@@ -38,6 +38,8 @@ inline void SetUpSolverAndAssemble() {
     // Gravity vector
     model.SetGravity(0., 0., 0.);
 
+    const Array_3 x0_root{2., 0., 0.};
+
     // Node locations (GLL quadrature)
     constexpr auto node_s = std::array{
         0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.
@@ -51,7 +53,7 @@ inline void SetUpSolverAndAssemble() {
     std::transform(
         std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
         [&](auto s) {
-            const auto x = 10 * s + 2.;
+            const auto x = 10 * s + x0_root[0];
             return model.AddNode()
                 .SetElemLocation(s)
                 .SetPosition(x, 0., 0., 1., 0., 0., 0.)
@@ -92,8 +94,12 @@ inline void SetUpSolverAndAssemble() {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
-    auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
-    constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+    auto u_rot = RotationVectorToQuaternion({0., 0., omega * step_size});
+    auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
+    Array_3 u_trans{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
+    constraints.UpdateDisplacement(
+        0, {u_trans[0], u_trans[1], u_trans[2], u_rot[0], u_rot[1], u_rot[2], u_rot[3]}
+    );
 
     // Predict the next state for the solver
     PredictNextState(parameters, state);
@@ -271,11 +277,12 @@ inline void SetupAndTakeNoSteps() {
     // Calculate displacement, velocity, acceleration assuming a
     // 0.1 rad/s angular velocity around the z axis
     constexpr auto omega = 0.1;
+    const Array_3 x0_root{2., 0., 0.};
     std::vector<size_t> beam_node_ids;
     std::transform(
         std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
         [&](auto s) {
-            const auto x = 10 * s + 2.;
+            const auto x = 10 * s + x0_root[0];
             return model.AddNode()
                 .SetElemLocation(s)
                 .SetPosition(x, 0., 0., 1., 0., 0., 0.)
@@ -316,8 +323,12 @@ inline void SetupAndTakeNoSteps() {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
-    auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
-    constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+    auto u_rot = RotationVectorToQuaternion({0., 0., omega * step_size});
+    auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
+    Array_3 u_trans{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
+    constraints.UpdateDisplacement(
+        0, {u_trans[0], u_trans[1], u_trans[2], u_rot[0], u_rot[1], u_rot[2], u_rot[3]}
+    );
 
     Step(parameters, solver, elements, state, constraints);
 
@@ -469,7 +480,7 @@ inline auto SetupAndTakeTwoSteps() {
     std::transform(
         std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
         [&](auto s) {
-            const auto x = 10 * s + 2.;
+            const auto x = 10 * s;
             return model.AddNode()
                 .SetElemLocation(s)
                 .SetPosition(x, 0., 0., 1., 0., 0., 0.)

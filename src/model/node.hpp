@@ -39,29 +39,28 @@ struct Node {
         this->x[2] += displacement[2];
     }
 
-    /// Rotate node by a quaternion
-    void Rotate(const Array_4& q) {
+    /// Rotate node by a quaternion about the given point
+    void RotateAboutPoint(const Array_4& q, const Array_3& point) {
         // Rotate position
-        auto x_rot = RotateVectorByQuaternion(q, {x[0], x[1], x[2]});
-        this->x[0] = x_rot[0];
-        this->x[1] = x_rot[1];
-        this->x[2] = x_rot[2];
+        auto x_new = RotateVectorByQuaternion(
+            q, {this->x[0] - point[0], this->x[1] - point[1], this->x[2] - point[2]}
+        );
+        this->x[0] = x_new[0] + point[0];
+        this->x[1] = x_new[1] + point[1];
+        this->x[2] = x_new[2] + point[2];
 
         // Rotate orientation
-        auto q_rot = QuaternionCompose(q, {x[3], x[4], x[5], x[6]});
-        this->x[3] = q_rot[0];
-        this->x[4] = q_rot[1];
-        this->x[5] = q_rot[2];
-        this->x[6] = q_rot[3];
+        auto q_new = QuaternionCompose(q, {this->x[3], this->x[4], this->x[5], this->x[6]});
+        this->x[3] = q_new[0];
+        this->x[4] = q_new[1];
+        this->x[5] = q_new[2];
+        this->x[6] = q_new[3];
     }
 
-    /// Rotate node by a rotation axis and angle
-    void Rotate(const Array_3& axis, double angle) {
-        auto q = Array_4{
-            cos(angle / 2.), sin(angle / 2.) * axis[0], sin(angle / 2.) * axis[1],
-            sin(angle / 2.) * axis[2]
-        };
-        this->Rotate(q);
+    /// Rotate node by a rotation vector about the given point
+    void RotateAboutPoint(const Array_3& rv, const Array_3& point) {
+        const auto q = RotationVectorToQuaternion(rv);
+        this->RotateAboutPoint(q, point);
     }
 };
 

@@ -7,39 +7,53 @@ Script to convert a YAML schema to C++ structs. The schema is read from the wind
 
 Definitions = dict[str, yaml.Node]
 
+definitions = {}
+
+
 class Schema:
-    def __init__(self, data):
-        self.description = data.get('description', '')
-        self.type = data.get('type', '')
-        self.properties = {k: Schema(v) for k, v in data.get('properties', {}).items()}
-        self.items = Schema(data['items']) if 'items' in data else None
-        self.reference = data.get('$ref', '')
-        self.one_of = [Schema(i) for i in data.get('oneOf', [])]
-        self.default = data.get('default', None)
-        self.unit = data.get('unit', '')
-        self.required = data.get('required', [])
-        self.optional = data.get('optional', [])
-        self.specification = data.get('$schema', '')
-        self.id = data.get('$id', '')
-        self.title = data.get('title', '')
+    def __init__(self, data, path):
+        self.description = data.get("description", "")
+        self.type = data.get("type", "")
+        self.properties = {
+            k: Schema(v, path + "/" + k) for k, v in data.get("properties", {}).items()
+        }
+        self.items = Schema(data["items"], path + "/items") if "items" in data else None
+        self.reference = data.get("$ref", "")
+        self.one_of = [
+            Schema(item, path + f"/{i+1}")
+            for i, item in enumerate(data.get("oneOf", []), 1)
+        ]
+        self.default = data.get("default", None)
+        self.unit = data.get("unit", "")
+        self.required = data.get("required", [])
+        self.optional = data.get("optional", [])
+        self.specification = data.get("$schema", "")
+        self.id = data.get("$id", "")
+        self.title = data.get("title", "")
         # Get definitions as yaml.Node
-        self.definitions = {k: v for k, v in data.get('definitions', {}).items()}
+        self.definitions = data.get("definitions", {})
         self.generated = False
+        self.path = path
 
 
 class Field:
-    def __init__(self, name, name_yaml, type, desc):
+    def __init__(self, name, name_yaml, type, desc, path=""):
         self.name = name
         self.name_yaml = name_yaml
         self.type = type
         self.desc = desc
+        self.path = path
 
     def __eq__(self, other):
-        return self.name == other.name and self.type == other.type and self.desc == other.desc
+        return (
+            self.name == other.name
+            and self.type == other.type
+            and self.desc == other.desc
+        )
 
 
 class Struct:
-    def __init__(self, name, desc=''):
+    def __init__(self, name, desc=""):
         self.name = name
         self.name_yaml = name
         self.desc = desc
@@ -58,33 +72,39 @@ def modify_name(snake_str: str) -> str:
         str: The camelCase string
     """
     # snake_case to PascalCase
-    components = snake_str.split('_')
-    modified = ''.join(x.title() for x in components)
+    components = snake_str.split("_")
+    modified = "".join(x.title() for x in components)
 
     # remove spaces
-    modified = modified.replace(' ', '')
+    modified = modified.replace(" ", "")
 
     # replace forward slashes with 'DividedBy'
-    if '/' in modified:
-        modified = modified.replace('/', 'DividedBy')
+    if "/" in modified:
+        modified = modified.replace("/", "DividedBy")
 
     return modified
+
 
 def modify_variable_name(snake_str: str) -> str:
     # get it to lower case
     snake_str = snake_str.lower()
 
     # remove spaces
-    modified = snake_str.replace(' ', '')
+    modified = snake_str.replace(" ", "")
 
     # replace forward slashes with 'DividedBy'
-    if '/' in modified:
-        modified = modified.replace('/', '_divided_by_')
+    if "/" in modified:
+        modified = modified.replace("/", "_divided_by_")
 
     return modified
 
 
-def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct_map: dict[str, Struct]) -> None:
+def build_structs(
+    s: Struct,
+    struct_schema: Schema,
+    definition_map: dict,
+    struct_map: dict[str, Struct],
+) -> None:
     """
     Builds the struct based on the schema
 
@@ -152,17 +172,21 @@ def build_structs(s: Struct, struct_schema: Schema, definition_map: dict, struct
     struct_map[s.name] = s
 
 
-def get_ref(ref: str, definitions: Definitions, struct_map: dict[str, Struct]) -> tuple[str, Schema]:
-    ref = ref.removeprefix("#/definitions/")
-    parts = ref.split("/")
-    name = parts[0]
-    node = definitions[name]
-    definition_map = {k: Schema(v) for k, v in node.items()}
-    schema = definition_map[parts[1]]
-    return name, schema
+def get_ref(
+    ref: str, definitions: Definitions, struct_map: dict[str, Struct], path: str
+) -> tuple[str, Schema]:
+    sub_schema = definitions
+    path_parts = ref.removeprefix("#/definitions/").split("/")
+    for path_part in path_parts:
+        sub_schema = sub_schema.get(path_part, None)
+    if sub_schema == None:
+        raise Exception(f"invalid ref {ref}")
+    return path_parts[-1], Schema(sub_schema, path + "/" + path_parts[-1])
 
 
-def set_type(field: Field, schema: Schema, definition_map: dict, struct_map: dict[str, Struct]) -> None:
+def set_type(
+    field: Field, schema: Schema, definition_map: dict, struct_map: dict[str, Struct]
+) -> None:
     """
     Sets the type of a field based on the schema type
 
@@ -175,21 +199,21 @@ def set_type(field: Field, schema: Schema, definition_map: dict, struct_map: dic
     Returns:
         None
     """
-    if schema.type == 'object':
+    if schema.type == "object":
         field.type = field.name
         s = Struct(field.name, schema.description)
         build_structs(s, schema, definition_map, struct_map)
         if s.name != field.type:
             field.type = s.name
-    elif schema.type == 'string':
-        field.type = 'std::string'
-    elif schema.type == 'number':
-        field.type = 'double'
-    elif schema.type == 'integer':
-        field.type = 'int'
-    elif schema.type == 'boolean':
-        field.type = 'bool'
-    elif schema.type == 'array':
+    elif schema.type == "string":
+        field.type = "std::string"
+    elif schema.type == "number":
+        field.type = "double"
+    elif schema.type == "integer":
+        field.type = "int"
+    elif schema.type == "boolean":
+        field.type = "bool"
+    elif schema.type == "array":
         if not schema.items:
             raise ValueError(f"{field.name}: array without item spec")
         field.type = schema.items.type
@@ -199,7 +223,9 @@ def set_type(field: Field, schema: Schema, definition_map: dict, struct_map: dic
         raise ValueError(f"Unknown type '{schema.type} - {schema}'")
 
 
-def build_type(field: Field, schema: Schema, definition_map: dict, struct_map: dict[str, Struct]) -> None:
+def build_type(
+    field: Field, schema: Schema, definition_map: dict, struct_map: dict[str, Struct]
+) -> None:
     """
     Determines the type of a field based on the schema and builds the Struct/Class if necessary.
     - If the field is an object, a new Struct is created for it
@@ -220,13 +246,13 @@ def build_type(field: Field, schema: Schema, definition_map: dict, struct_map: d
     """
     # If this field is a reference to a definition we need to get the schema for that definition
     if schema.reference:
-        if schema.type: # If the field specifies both $ref and type, raise an error
+        if schema.type:  # If the field specifies both $ref and type, raise an error
             raise ValueError(f"{field.name} specifies $ref and type")
-        _, schema = get_ref(schema.reference, definition_map, struct_map)
+        _, schema = get_ref(schema.reference, definition_map, struct_map, schema.path)
 
     # Set the type to object if no type is specified but properties are present
     if not schema.type and schema.properties:
-        schema.type = 'object'
+        schema.type = "object"
 
     # If the schema has multiple types, use std::variant to represent them
     if schema.one_of:
@@ -254,41 +280,44 @@ def set_parse_function(field: Field) -> str:
     Returns:
         str: The parse function as a string
     """
+    s = ""
     if field.type == "double":
-        return f"    {field.name_yaml} = node[\"{field.name_yaml}\"] ? node[\"{field.name_yaml}\"].as<double>() : 0.;\n"
+        s = f'{field.name_yaml} = node["{field.name_yaml}"] ? node["{field.name_yaml}"].as<double>() : 0.;\n'
     elif field.type == "int":
-        return f"    {field.name_yaml} = node[\"{field.name_yaml}\"] ? node[\"{field.name_yaml}\"].as<int>() : 0;\n"
+        s = f'{field.name_yaml} = node["{field.name_yaml}"] ? node["{field.name_yaml}"].as<int>() : 0;\n'
     elif field.type == "bool":
-        return f"    {field.name_yaml} = node[\"{field.name_yaml}\"] ? node[\"{field.name_yaml}\"].as<bool>() : false;\n"
+        s = f'{field.name_yaml} = node["{field.name_yaml}"] ? node["{field.name_yaml}"].as<bool>() : false;\n'
     elif field.type == "std::string":
-        return f"    {field.name_yaml} = node[\"{field.name_yaml}\"] ? node[\"{field.name_yaml}\"].as<std::string>() : \"\";\n"
+        s = f'{field.name_yaml} = node["{field.name_yaml}"] ? node["{field.name_yaml}"].as<std::string>() : "";\n'
     elif field.type.startswith("std::vector"):
         # We need to handle the case where the field is an array of objects
-        if field.type.removeprefix("std::vector<").removesuffix(">") not in ["double", "int", "bool", "std::string"]:
-            # if the field type starts with std::vector and is not an object, we can parse it directly
-            if "std::vector" in field.type.removeprefix("std::vector<").removesuffix(">"):
-                parse_string = ""
-                parse_string += f"    if (node[\"{field.name_yaml}\"]) {{\n"
-                parse_string += f"        for (const auto& item : node[\"{field.name_yaml}\"]) {{\n"
-                parse_string += f"            {field.name_yaml}.push_back(item.as<{field.type.removeprefix('std::vector<').removesuffix('>')}>());\n"
-                parse_string += f"        }}\n"
-                parse_string += f"    }}\n"
-                return parse_string
-            # Assume the field is an array of objects and we need to parse each object
-            parse_string = ""
-            parse_string += f"    if (node[\"{field.name_yaml}\"]) {{\n"
-            parse_string += f"        for (const auto& item : node[\"{field.name_yaml}\"]) {{\n"
-            parse_string += f"            {field.type.removeprefix('std::vector<').removesuffix('>')} x;\n"
-            parse_string += f"            x.parse(item);\n"
-            parse_string += f"            {field.name_yaml}.push_back(x);\n"
-            parse_string += f"        }}\n"
-            parse_string += f"    }}\n"
-            return parse_string
+        elem_type = field.type.removeprefix("std::vector<").removesuffix(">")
+        if elem_type in ["double", "int", "bool", "std::string"]:
+            s = f'{field.name_yaml} = node["{field.name_yaml}"] ? node["{field.name_yaml}"].as<{field.type}>() : {field.type}();\n'
         else:
-            return f"    {field.name_yaml} = node[\"{field.name_yaml}\"] ? node[\"{field.name_yaml}\"].as<{field.type}>() : {field.type}();\n"
+            # if the field type starts with std::vector and is not an object, we can parse it directly
+            if "std::vector" in elem_type:
+                s += f'if (node["{field.name_yaml}"]) {{\n'
+                s += f'    for (const auto& item : node["{field.name_yaml}"]) {{\n'
+                s += f"        {field.name_yaml}.push_back(item.as<{elem_type}>());\n"
+                s += f"    }}\n"
+                s += f"}}\n"
+            else:
+                # Assume the field is an array of objects and we need to parse each object
+                s += f'if (node["{field.name_yaml}"]) {{\n'
+                s += f'    for (const auto& item : node["{field.name_yaml}"]) {{\n'
+                s += f"        {elem_type} x;\n"
+                s += f"        x.parse(item);\n"
+                s += f"        {field.name_yaml}.push_back(x);\n"
+                s += f"    }}\n"
+                s += f"}}\n"
+
     # Assume everything else is an object
     else:
-        return f"    if (node[\"{field.name_yaml}\"]) {{\n        {field.name_yaml}.parse(node[\"{field.name_yaml}\"]);\n    }}\n"
+        s += f'if (node["{field.name_yaml}"]) {{\n'
+        s += f'    {field.name_yaml}.parse(node["{field.name_yaml}"]);\n'
+        s += f"}}\n"
+    return "\n        " + "\n        ".join(s.splitlines())
 
 
 def build_parse_function(s: Struct) -> str:
@@ -301,7 +330,7 @@ def build_parse_function(s: Struct) -> str:
     Returns:
         str: The parse function as a string
     """
-    parse_function = f"void parse(const YAML::Node& node) {{\n"
+    parse_function = "void parse(const YAML::Node& node) {"
     for field in s.fields:
         if field.type.startswith("std::variant"):
             # TODO
@@ -310,24 +339,62 @@ def build_parse_function(s: Struct) -> str:
 
             # if field is either of [E, G, nu, alpha, Xt, Xc, Xy, S] then it depends on "orth" field
             if field.name_yaml in ["E", "G", "nu", "alpha", "Xt", "Xc", "Xy", "S"]:
-                parse_function += f"    if (!orth) {{\n"
-                for i, s in enumerate(field.type.removeprefix("std::variant<").removesuffix(">").split(", ")):
+                parse_function += "        if (!orth) {"
+                for i, s in enumerate(
+                    field.type.removeprefix("std::variant<")
+                    .removesuffix(">")
+                    .split(", ")
+                ):
                     field_dummy = Field("", "", "", "")
                     field_dummy.type = s
                     field_dummy.name_yaml = f"{field.name_yaml}"
-                    parse_function += set_parse_function(field_dummy)
-                    if i < len(field.type.removeprefix("std::variant<").removesuffix(">").split(", ")) - 1:
-                        parse_function += f"    }}\n"
-                        parse_function += f"    else {{\n"
-                parse_function += "    }\n"
+                    parse_function += "    " + "\n    ".join(
+                        set_parse_function(field_dummy).splitlines()
+                    )
+                    if (
+                        i
+                        < len(
+                            field.type.removeprefix("std::variant<")
+                            .removesuffix(">")
+                            .split(", ")
+                        )
+                        - 1
+                    ):
+                        parse_function += "\n        } else {"
+                parse_function += "\n        }"
             # Field does not depend on "orth" field - parse as a double
             else:
-                parse_function += f"    {field.name_yaml} = node[\"{field.name_yaml}\"] ? node[\"{field.name_yaml}\"].as<double>() : 0.;\n"
+                parse_function += f'\n        {field.name_yaml} = node["{field.name_yaml}"] ? node["{field.name_yaml}"].as<double>() : 0.;'
         else:
             parse_function += set_parse_function(field)
 
-    parse_function += "}\n"
-    return parse_function
+    return parse_function + "\n    }"
+
+
+FILE_HEADER = """
+#pragma once
+
+#include <string>
+#include <variant>
+#include <vector>
+
+#include <yaml-cpp/yaml.h>
+
+namespace openturbine::wind_io {
+
+"""
+
+FILE_FOOTER = """
+struct WindIO {
+    Turbine turbine;
+    WindIO(std::string file_path) {
+        const YAML::Node config = YAML::Load(file_path);
+        turbine.parse(config);
+    }
+};
+
+}  // namespace openturbine::wind_io
+"""
 
 
 def main():
@@ -335,14 +402,24 @@ def main():
     Main function to build the structs from the schema
     """
     parser = argparse.ArgumentParser(description="Convert a YAML schema to C++ structs")
-    parser.add_argument("input_file", type=argparse.FileType('r'), help="The YAML schema file e.g. IEAontology_schema.yaml")
-    parser.add_argument("output_file", type=argparse.FileType('w'), help="The output C++ file e.g. IEAontology_structs.cpp")
+    parser.add_argument(
+        "input_file",
+        type=argparse.FileType("r"),
+        help="The YAML schema file e.g. IEAontology_schema.yaml",
+        default="IEAontology_schema.yaml",
+    )
+    parser.add_argument(
+        "output_file",
+        type=argparse.FileType("w"),
+        help="The output C++ file e.g. IEAontology_structs.cpp",
+        default="windio_structs.hpp",
+    )
     args = parser.parse_args()
 
-    with open(args.input_file.name, 'r') as file:
+    with open(args.input_file.name, "r") as file:
         data = yaml.safe_load(file)
 
-    root = Schema(data)
+    root = Schema(data, "root")
 
     # Build the structs from the schema
     struct_map = {}
@@ -351,24 +428,29 @@ def main():
     struct_names = struct_map.keys()
 
     # Write structs to file
-    with open(args.output_file.name, 'w') as file:
+    with open(args.output_file.name, "w") as file:
         # Write includes
-        file.write("#include <string>\n#include <vector>\n\n")
+        file.write(FILE_HEADER)
 
         # Write structs
         for struct_name in struct_names:
             s = struct_map[struct_name]
             file.write(f"// {s.desc}\n" if s.desc else f"// {s.name}\n")
-            file.write(f"struct {s.name} {{\n") # Write struct name
+            file.write(f"struct {s.name} {{\n")  # Write struct name
 
             # Write fields
             for f in s.fields:
-                file.write(f"    {f.type} {f.name_yaml};{f' // {f.desc}' if f.desc else ''}\n")
+                file.write(
+                    f"    {f.type} {f.name_yaml};{f' // {f.desc}' if f.desc else ''}\n"
+                )
 
             # Write the parse function
             file.write(f"\n    {build_parse_function(s)}\n")
 
             file.write("};\n\n")
+
+        file.write(FILE_FOOTER)
+
 
 if __name__ == "__main__":
     main()
