@@ -37,4 +37,5 @@ struct IntegrateResidualVectorElement {
         }
     }
 };
+
 }  // namespace openturbine::beams
