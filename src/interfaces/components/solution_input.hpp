@@ -35,7 +35,7 @@ struct SolutionInput {
 
     /// @brief  Construct step parameters from inputs
     /// @return Step parameters struct
-    StepParameters Parameters() const {
+    [[nodiscard]] StepParameters Parameters() const {
         return {
             this->dynamic_solve,
             this->max_iter,

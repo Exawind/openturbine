@@ -48,7 +48,7 @@ struct Blade {
         }
 
         // Fit node coordinates to key points
-        std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));
+        const std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));
         const auto [phi_kn, phi_prime_kn] = ShapeFunctionMatrices(kp_xi, this->node_xi);
         const auto node_coordinates =
             PerformLeastSquaresFitting(n_nodes, phi_kn, input.ref_axis.coordinates);
@@ -125,14 +125,15 @@ struct Blade {
 
     /// @brief Return a vector of weights for distributing a point load to the nodes
     /// based on the position [0,1] of the point along the blade
-    std::vector<double> GetNodeWeights(double s) const {
+    [[nodiscard]] std::vector<double> GetNodeWeights(double s) const {
         std::vector<double> weights(this->node_xi.size());
         auto xi = 2. * s - 1.;
         LagrangePolynomialDerivWeights(xi, this->node_xi, weights);
         return weights;
     }
 
-    std::vector<Array_3> CalcNodeTangents(const std::vector<Array_3>& node_coordinates) const {
+    [[nodiscard]] std::vector<Array_3> CalcNodeTangents(const std::vector<Array_3>& node_coordinates
+    ) const {
         const auto n_nodes{node_coordinates.size()};
 
         // Calculate the derivative shape function matrix for the nodes
