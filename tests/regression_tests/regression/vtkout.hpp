@@ -31,7 +31,7 @@ inline void WriteVTKBeamsQP(State& state, Beams& beams, const std::string& filen
 
     Kokkos::parallel_for(
         "UpdateNodeState", range_policy,
-        UpdateNodeState{
+        beams::UpdateNodeState{
             state.q, state.v, state.vd, beams.node_state_indices, beams.num_nodes_per_element,
             beams.node_u, beams.node_u_dot, beams.node_u_ddot
         }
@@ -265,7 +265,7 @@ inline void WriteVTKBeamsNodes(State& state, Beams& beams, const std::string& fi
 
     Kokkos::parallel_for(
         "UpdateNodeState", range_policy,
-        UpdateNodeState{
+        beams::UpdateNodeState{
             state.q, state.v, state.vd, beams.node_state_indices, beams.num_nodes_per_element,
             beams.node_u, beams.node_u_dot, beams.node_u_ddot
         }
