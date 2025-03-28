@@ -47,6 +47,7 @@ struct HostState {
 
     /// @brief Populates node position, displacement, velocity, acceleration from state data
     /// @param node
+    // NOLINT(functionStatic)
     void SetNodeMotion(NodeData& node) const {
         for (auto i = 0U; i < kLieGroupComponents; ++i) {
             node.position[i] = this->x(node.id, i);
