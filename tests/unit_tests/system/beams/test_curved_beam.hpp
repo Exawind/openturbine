@@ -5,6 +5,16 @@
 
 namespace openturbine::tests {
 
+/// Number of elements
+constexpr size_t num_elems{1};
+
+/// Number of nodes
+constexpr size_t num_nodes{3};
+
+/// Number of quadrature points
+constexpr size_t num_qps{7};
+
+/// Tolerance for floating point comparisons (unless otherwise stated)
 constexpr double kTolerance = 1e-12;
 
 /// Second order polynomial GLL nodes
@@ -81,7 +91,7 @@ constexpr std::array<double, 6> kCurvedBeamStrain = {
     0.001532568414933   // gyz
 };
 
-// Expected Fc forces for curved beam (from Mathematica script)
+/// Expected Fc forces for curved beam (from Mathematica script)
 constexpr std::array<double, 6> kExpectedFc = {
     19377.66142402,  // Fx
     -9011.48579619,  // Fy
@@ -91,7 +101,7 @@ constexpr std::array<double, 6> kExpectedFc = {
     -854.6894329742  // Mz
 };
 
-// Strain interpolation holder (einterphold from Mathematica)
+/// Strain interpolation holder (einterphold from Mathematica)
 constexpr std::array<double, 6> kStrainInterpolationHolder = {
     0.9549992533551,   // ex
     -0.3059615881351,  // ey
@@ -101,7 +111,7 @@ constexpr std::array<double, 6> kStrainInterpolationHolder = {
     0.001532568414933  // gyz
 };
 
-// Expected Fd forces for curved beam (from Mathematica script)
+/// Expected Fd forces for curved beam (from Mathematica script)
 constexpr std::array<double, 6> kExpectedFd = {
     0.,               // Fx
     0.,               // Fy
