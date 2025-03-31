@@ -35,6 +35,10 @@ struct VTKOutput {
             return;
         }
 
+#ifndef OpenTurbine_ENABLE_VTK
+        throw("VTK output requested, but VTK not enabled");
+#endif
+
         // Create output directory if it does not exist
         if (!std::filesystem::exists(output_dir)) {
             std::filesystem::create_directories(output_dir);
@@ -51,19 +55,19 @@ struct VTKOutput {
     }
 
     void WriteNodes([[maybe_unused]] const std::vector<NodeData>& nodes) const {
-#ifdef OpenTurbine_ENABLE_VTK
         if (this->active) {
+#ifdef OpenTurbine_ENABLE_VTK
             WriteNodesVTK(nodes, this->BuildFilePath() + ".vtp");
-        }
 #endif
+        }
     }
 
     void WriteBeam([[maybe_unused]] const std::vector<NodeData>& nodes) const {
-#ifdef OpenTurbine_ENABLE_VTK
         if (this->active) {
+#ifdef OpenTurbine_ENABLE_VTK
             WriteBeamVTK(nodes, this->BuildFilePath() + ".vtu");
-        }
 #endif
+        }
     }
 
     [[nodiscard]] std::string BuildFilePath() const {
