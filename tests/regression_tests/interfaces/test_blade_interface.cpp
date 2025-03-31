@@ -21,8 +21,11 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         .SetDampingFactor(0.0)
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
-        .SetRelativeErrorTolerance(1e-4)
-        .SetVTKOutputPath("BladeInterfaceTest.BladeWindIO/blade_####");
+        .SetRelativeErrorTolerance(1e-4);
+
+#ifdef OpenTurbine_ENABLE_VTK
+    builder.Solution().SetVTKOutputPath("BladeInterfaceTest.BladeWindIO/blade_####");
+#endif
 
     // Set blade parameters
     // Use prescribed root motion to fix root rotation
@@ -169,8 +172,11 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         .SetDampingFactor(0.0)
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
-        .SetRelativeErrorTolerance(1e-4)
-        .SetVTKOutputPath("BladeInterfaceTest.RotatingBeam/beam_####");
+        .SetRelativeErrorTolerance(1e-4);
+
+#ifdef OpenTurbine_ENABLE_VTK
+    builder.Solution().SetVTKOutputPath("BladeInterfaceTest.RotatingBeam/step_####");
+#endif
 
     // Node locations (GLL quadrature)
     const auto node_s = std::vector{
@@ -313,8 +319,11 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
         .SetDampingFactor(1.)
         .SetMaximumNonlinearIterations(10)
         .SetAbsoluteErrorTolerance(1e-5)
-        .SetRelativeErrorTolerance(1e-3)
-        .SetVTKOutputPath("BladeInterfaceTest.StaticCurledBeam/step_####");
+        .SetRelativeErrorTolerance(1e-3);
+
+#ifdef OpenTurbine_ENABLE_VTK
+    builder.Solution().SetVTKOutputPath("BladeInterfaceTest.StaticCurledBeam/step_####");
+#endif
 
     // Node locations
     const auto n_kps{21};
