@@ -30,10 +30,10 @@ struct HostState {
     /// @brief  Construct host state from state
     /// @param state
     explicit HostState(const State& state)
-        : x("host_state_x", state.num_system_nodes),
-          q("host_state_q", state.num_system_nodes),
-          v("host_state_v", state.num_system_nodes),
-          vd("host_state_vd", state.num_system_nodes) {}
+        : x(Kokkos::create_mirror_view(state.x)),
+          q(Kokkos::create_mirror_view(state.q)),
+          v(Kokkos::create_mirror_view(state.v)),
+          vd(Kokkos::create_mirror_view(state.vd)) {}
 
     /// @brief Copy state data to host state
     /// @param state
