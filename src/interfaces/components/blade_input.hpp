@@ -9,7 +9,7 @@ struct ReferenceAxis {
     std::vector<double> coordinate_grid;
 
     /// @brief X,Y,Z coordinates of reference axis points
-    std::vector<Array_3> coordinates;
+    std::vector<std::array<double, 3>> coordinates;
 
     /// @brief Twist locations [0, 1]
     std::vector<double> twist_grid;
@@ -37,13 +37,13 @@ struct Root {
     bool prescribe_root_motion{false};
 
     /// @brief Inital position/orientation
-    Array_7 position{0., 0., 0., 1., 0., 0., 0.};
+    std::array<double, 7> position{0., 0., 0., 1., 0., 0., 0.};
 
     /// @brief Initial translation/rotational velocity
-    Array_6 velocity{0., 0., 0., 0., 0., 0.};
+    std::array<double, 6> velocity{0., 0., 0., 0., 0., 0.};
 
     /// @brief Initial translation/rotational acceleration
-    Array_6 acceleration{0., 0., 0., 0., 0., 0.};
+    std::array<double, 6> acceleration{0., 0., 0., 0., 0., 0.};
 };
 
 struct BladeInput {

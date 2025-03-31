@@ -11,9 +11,9 @@
 
 namespace openturbine::interfaces {
 
-using namespace openturbine::interfaces::components;
-
-BladeInterface::BladeInterface(const SolutionInput& solution_input, const BladeInput& blade_input)
+BladeInterface::BladeInterface(
+    const components::SolutionInput& solution_input, const components::BladeInput& blade_input
+)
     : model(Model(solution_input.gravity)),
       blade(blade_input, model),
       state(model.CreateState()),
@@ -69,7 +69,7 @@ void BladeInterface::RestoreState() {
     UpdateNodeMotion();
 }
 
-void BladeInterface::SetRootDisplacement(const Array_7& u) const {
+void BladeInterface::SetRootDisplacement(const std::array<double, 7>& u) const {
     if (this->blade.prescribed_root_constraint_id == kInvalidID) {
         throw("prescribed root motion was not enabled");
     }

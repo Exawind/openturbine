@@ -7,7 +7,7 @@ namespace openturbine::interfaces::components {
 
 struct SolutionInput {
     /// @brief Array of gravity components (XYZ)
-    Array_3 gravity{0., 0., 0.};
+    std::array<double, 3> gravity{0., 0., 0.};
 
     /// @brief Flag to toggle between static and dynamic solve
     bool dynamic_solve{true};

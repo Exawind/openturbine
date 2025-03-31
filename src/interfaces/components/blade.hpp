@@ -88,14 +88,14 @@ struct Blade {
         // Position beam and apply root velocity and acceleration
         //----------------------------------------------------------------------
 
-        const Array_3 root_location{
+        const std::array<double, 3> root_location{
             input.root.position[0], input.root.position[1], input.root.position[2]
         };
         const Array_4 root_orientation{
             input.root.position[3], input.root.position[4], input.root.position[5],
             input.root.position[6]
         };
-        const Array_3 root_omega{
+        const std::array<double, 3> root_omega{
             input.root.velocity[3], input.root.velocity[4], input.root.velocity[5]
         };
 
@@ -135,7 +135,8 @@ struct Blade {
         return weights;
     }
 
-    [[nodiscard]] std::vector<Array_3> CalcNodeTangents(const std::vector<Array_3>& node_coordinates
+    [[nodiscard]] std::vector<std::array<double, 3>> CalcNodeTangents(
+        const std::vector<std::array<double, 3>>& node_coordinates
     ) const {
         const auto n_nodes{node_coordinates.size()};
 
@@ -143,7 +144,7 @@ struct Blade {
         const auto [phi, phi_prime] = ShapeFunctionMatrices(this->node_xi, this->node_xi);
 
         // Calculate tangent vectors for each node
-        std::vector<Array_3> node_tangents(n_nodes, {0., 0., 0.});
+        std::vector<std::array<double, 3>> node_tangents(n_nodes, {0., 0., 0.});
         for (auto i = 0U; i < n_nodes; ++i) {
             for (auto j = 0U; j < 3; ++j) {
                 for (auto k = 0U; k < n_nodes; ++k) {
@@ -153,7 +154,7 @@ struct Blade {
         }
         std::transform(
             node_tangents.begin(), node_tangents.end(), node_tangents.begin(),
-            [](Array_3& tangent) {
+            [](std::array<double, 3>& tangent) {
                 const auto norm = Norm(tangent);
                 std::transform(tangent.begin(), tangent.end(), tangent.begin(), [norm](double v) {
                     return v / norm;
@@ -234,7 +235,7 @@ struct Blade {
 
     /// @brief Add a point load (Fx, Fy, Fz, Mx, My, Mz) to the blade at location 's' [0, 1]
     /// along the material axis
-    void AddPointLoad(double s, Array_6 loads) {
+    void AddPointLoad(double s, std::array<double, 6> loads) {
         const auto weights = this->GetNodeWeights(s);
         for (size_t i = 0U; i < this->nodes.size(); ++i) {
             for (size_t j = 0U; j < 6; ++j) {

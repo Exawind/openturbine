@@ -6,15 +6,12 @@
 
 namespace openturbine::tests {
 
-using namespace openturbine::interfaces;
-using namespace openturbine::interfaces::components;
-
 TEST(BladeInterfaceTest, BladeWindIO) {
     // Read WindIO yaml file
     const YAML::Node windio = YAML::LoadFile("interfaces_test_files/IEA-15-240-RWT.yaml");
 
     // Create interface builder
-    auto builder = BladeInterfaceBuilder{};
+    auto builder = interfaces::BladeInterfaceBuilder{};
 
     // Set solution parameters
     const double time_step{0.01};
@@ -164,7 +161,7 @@ TEST(BladeInterfaceTest, RotatingBeam) {
     const auto root_vel = CrossProduct(omega, x0_root);
 
     // Create interface builder
-    auto builder = BladeInterfaceBuilder{};
+    auto builder = interfaces::BladeInterfaceBuilder{};
 
     builder.Solution()
         .EnableDynamicSolve()
@@ -308,7 +305,7 @@ TEST(BladeInterfaceTest, RotatingBeam) {
 
 TEST(BladeInterfaceTest, StaticCurledBeam) {
     // Create interface builder
-    auto builder = BladeInterfaceBuilder{};
+    auto builder = interfaces::BladeInterfaceBuilder{};
 
     builder.Solution()
         .EnableStaticSolve()
@@ -322,7 +319,7 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
     // Node locations
     const auto n_kps{21};
     std::vector<double> kp_s(n_kps);
-    std::transform(kp_s.begin(), kp_s.end(), kp_s.begin(), [n_kps, i = 0U](double) mutable {
+    std::transform(kp_s.begin(), kp_s.end(), kp_s.begin(), [i = 0U](double) mutable {
         return static_cast<double>(i++) / static_cast<double>(n_kps - 1);
     });
 

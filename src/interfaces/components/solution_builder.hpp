@@ -17,7 +17,7 @@ struct SolutionBuilder {
         return *this;
     }
 
-    SolutionBuilder& SetGravity(const Array_3& gravity) {
+    SolutionBuilder& SetGravity(const std::array<double, 3>& gravity) {
         input.gravity = gravity;
         return *this;
     }

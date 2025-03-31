@@ -1,7 +1,6 @@
 #pragma once
 
 #include "host_state.hpp"
-#include "types.hpp"
 
 namespace openturbine::interfaces {
 
@@ -10,19 +9,19 @@ struct NodeData {
     size_t id;
 
     /// @brief Absolute position of node in global coordinates
-    Array_7 position{0., 0., 0., 1., 0., 0., 0.};
+    std::array<double, 7> position{0., 0., 0., 1., 0., 0., 0.};
 
     /// @brief Displacement from reference position
-    Array_7 displacement{0., 0., 0., 1., 0., 0., 0.};
+    std::array<double, 7> displacement{0., 0., 0., 1., 0., 0., 0.};
 
     /// @brief Velocity of node in global coordinates
-    Array_6 velocity{0., 0., 0., 0., 0., 0.};
+    std::array<double, 6> velocity{0., 0., 0., 0., 0., 0.};
 
     /// @brief Acceleration of node in global coordinates
-    Array_6 acceleration{0., 0., 0., 0., 0., 0.};
+    std::array<double, 6> acceleration{0., 0., 0., 0., 0., 0.};
 
     /// @brief Point loads/moment applied to node in global coordinates
-    Array_6 loads{0., 0., 0., 0., 0., 0.};
+    std::array<double, 6> loads{0., 0., 0., 0., 0., 0.};
 
     /// @brief Node data constructor
     /// @param id Node identifier in model

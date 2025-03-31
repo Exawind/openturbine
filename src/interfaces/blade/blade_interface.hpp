@@ -25,7 +25,7 @@ public:
     void RestoreState();
 
     /// @brief Set root node displacement if `prescribe_root_motion` input was true
-    void SetRootDisplacement(const Array_7& u) const;
+    void SetRootDisplacement(const std::array<double, 7>& u) const;
 
     void WriteOutputVTK();
 
