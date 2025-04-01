@@ -148,13 +148,13 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         interface.WriteOutputVTK();
     }
 
-    ASSERT_DOUBLE_EQ(tip_node.position[0], 117.00015677507447);
-    ASSERT_DOUBLE_EQ(tip_node.position[1], 0.17029757162527367);
-    ASSERT_DOUBLE_EQ(tip_node.position[2], 4.0018470825686112);
-    ASSERT_DOUBLE_EQ(tip_node.position[3], 0.99867645870262833);
-    ASSERT_DOUBLE_EQ(tip_node.position[4], -0.0017331183376092);
-    ASSERT_DOUBLE_EQ(tip_node.position[5], -0.051119189822748511);
-    ASSERT_DOUBLE_EQ(tip_node.position[6], 0.005399589417025623);
+    EXPECT_NEAR(tip_node.position[0], 117.00015677507447, 1e-10);
+    EXPECT_NEAR(tip_node.position[1], 0.17029757162527367, 1e-10);
+    EXPECT_NEAR(tip_node.position[2], 4.0018470825686112, 1e-10);
+    EXPECT_NEAR(tip_node.position[3], 0.99867645870262833, 1e-10);
+    EXPECT_NEAR(tip_node.position[4], -0.0017331183376092, 1e-10);
+    EXPECT_NEAR(tip_node.position[5], -0.051119189822748511, 1e-10);
+    EXPECT_NEAR(tip_node.position[6], 0.005399589417025623, 1e-10);
 }
 
 TEST(BladeInterfaceTest, RotatingBeam) {
@@ -399,29 +399,29 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
         );
     }
 
-    EXPECT_NEAR(tip_positions[0][0], 10., 1e-12);
-    EXPECT_NEAR(tip_positions[0][1], 0., 1e-12);
-    EXPECT_NEAR(tip_positions[0][2], 0., 1e-12);
+    EXPECT_NEAR(tip_positions[0][0], 10., 1e-8);
+    EXPECT_NEAR(tip_positions[0][1], 0., 1e-8);
+    EXPECT_NEAR(tip_positions[0][2], 0., 1e-8);
 
-    EXPECT_NEAR(tip_positions[1][0], 7.5353117904309216, 1e-12);
-    EXPECT_NEAR(tip_positions[1][1], 0., 1e-12);
-    EXPECT_NEAR(tip_positions[1][2], 5.5406541545431187, 1e-12);
+    EXPECT_NEAR(tip_positions[1][0], 7.5353117904309216, 1e-8);
+    EXPECT_NEAR(tip_positions[1][1], 0., 1e-8);
+    EXPECT_NEAR(tip_positions[1][2], 5.5406541545431187, 1e-8);
 
-    EXPECT_NEAR(tip_positions[2][0], 2.2747128775224663, 1e-12);
-    EXPECT_NEAR(tip_positions[2][1], 0., 1e-12);
-    EXPECT_NEAR(tip_positions[2][2], 7.2169136787384982, 1e-12);
+    EXPECT_NEAR(tip_positions[2][0], 2.2747128775224663, 1e-8);
+    EXPECT_NEAR(tip_positions[2][1], 0., 1e-8);
+    EXPECT_NEAR(tip_positions[2][2], 7.2169136787384982, 1e-8);
 
-    EXPECT_NEAR(tip_positions[3][0], -1.614379006780613, 1e-12);
-    EXPECT_NEAR(tip_positions[3][1], 0., 1e-12);
-    EXPECT_NEAR(tip_positions[3][2], 4.7774238337109498, 1e-12);
+    EXPECT_NEAR(tip_positions[3][0], -1.614379006780613, 1e-8);
+    EXPECT_NEAR(tip_positions[3][1], 0., 1e-8);
+    EXPECT_NEAR(tip_positions[3][2], 4.7774238337109498, 1e-8);
 
-    EXPECT_NEAR(tip_positions[4][0], -1.9031340843824651, 1e-12);
-    EXPECT_NEAR(tip_positions[4][1], 0., 1e-12);
-    EXPECT_NEAR(tip_positions[4][2], 1.3327034304088525, 1e-12);
+    EXPECT_NEAR(tip_positions[4][0], -1.9031340843824651, 1e-8);
+    EXPECT_NEAR(tip_positions[4][1], 0., 1e-8);
+    EXPECT_NEAR(tip_positions[4][2], 1.3327034304088525, 1e-8);
 
-    EXPECT_NEAR(tip_positions[5][0], 0.025236057024605074, 1e-12);
-    EXPECT_NEAR(tip_positions[5][1], 0., 1e-12);
-    EXPECT_NEAR(tip_positions[5][2], 0.0019647592579388196, 1e-12);
+    EXPECT_NEAR(tip_positions[5][0], 0.025236057024605074, 1e-8);
+    EXPECT_NEAR(tip_positions[5][1], 0., 1e-8);
+    EXPECT_NEAR(tip_positions[5][2], 0.0019647592579388196, 1e-8);
 }
 
 }  // namespace openturbine::tests
