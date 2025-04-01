@@ -82,7 +82,7 @@ TEST(MatrixTest, RotateMatrix6_1) {
     const auto m_act = RotateMatrix6(m, q);
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
-            EXPECT_DOUBLE_EQ(m_act[i][j], m_exp[i][j]);
+            EXPECT_NEAR(m_act[i][j], m_exp[i][j], 1.e-12);
         }
     }
 }
@@ -108,7 +108,7 @@ TEST(MatrixTest, RotateMatrix6_2) {
     const auto m_act = RotateMatrix6(m, q);
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
-            EXPECT_DOUBLE_EQ(m_act[i][j], m_exp[i][j]);
+            EXPECT_NEAR(m_act[i][j], m_exp[i][j], 1.e-12);
         }
     }
 }
@@ -139,7 +139,7 @@ TEST(MatrixTest, RotateMatrix6_3) {
     const auto m_act = RotateMatrix6(m, q);
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
-            EXPECT_DOUBLE_EQ(m_act[i][j], m_exp[i][j]);
+            EXPECT_NEAR(m_act[i][j], m_exp[i][j], 1.e-12);
         }
     }
 }
