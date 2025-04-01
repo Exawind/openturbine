@@ -31,6 +31,8 @@
  * - Lagrange polynomial/shape function -> LagrangePolynomialInterpWeights
  *   and derivative weights -> LagrangePolynomialDerivWeights
  * - Jacobian calculation -> CalculateJacobian
+ * - Elastic forces calculation -> CalculateForceFc
+ * - Damping forces calculation -> CalculateForceFd
  * - Residul vector integrtion -> beams::IntegrateResidualVectorElement
  * - Stiffness matrix integration -> beams::IntegrateStiffnessMatrixElement
  * - Inertia matrix integration -> beams::IntegrateInertiaMatrixElement
@@ -40,103 +42,105 @@
 
 namespace openturbine::tests {
 
-TEST(CurvedBeamTests, LagrangePolynomialInterpWeight_SecondOrder_AtSpecifiedQuadraturePoints) {
-    std::vector<double> weights;
+using NodeVectorView = Kokkos::View<double[kNumNodes][6]>;  // 3 nodes, 6 components each
+using QpVectorView = Kokkos::View<double[kNumQPs][6]>;      // 7 QPs, 6 components each
 
+TEST(CurvedBeamTests, LagrangePolynomialInterpWeight_SecondOrder_AtSpecifiedQPs) {
+    std::vector<double> weights;
     // Test interpolation weights at each QP against expected data from Mathematica script
-    for (size_t qp = 0; qp < kGaussQuadraturePoints.size(); ++qp) {
+    for (size_t qp = 0; qp < kNumQPs; ++qp) {
         LagrangePolynomialInterpWeights(kGaussQuadraturePoints[qp], kGLLNodes, weights);
-        ASSERT_EQ(weights.size(), 3);
-        EXPECT_NEAR(weights[0], kExpectedInterpWeights[qp][0], kTolerance);
-        EXPECT_NEAR(weights[1], kExpectedInterpWeights[qp][1], kTolerance);
-        EXPECT_NEAR(weights[2], kExpectedInterpWeights[qp][2], kTolerance);
+        ASSERT_EQ(weights.size(), kNumNodes);
+        EXPECT_NEAR(weights[0], kExpectedInterpWeights[qp][0], kDefaultTolerance);
+        EXPECT_NEAR(weights[1], kExpectedInterpWeights[qp][1], kDefaultTolerance);
+        EXPECT_NEAR(weights[2], kExpectedInterpWeights[qp][2], kDefaultTolerance);
     }
 }
 
-TEST(CurvedBeamTests, LagrangePolynomialDerivWeight_SecondOrder_AtSpecifiedQuadraturePoints) {
+TEST(CurvedBeamTests, LagrangePolynomialDerivWeight_SecondOrder_AtSpecifiedQPs) {
     std::vector<double> deriv_weights;
-
     // Test derivative weights at each QP against expected data from Mathematica script
-    for (size_t qp = 0; qp < kGaussQuadraturePoints.size(); ++qp) {
+    for (size_t qp = 0; qp < kNumQPs; ++qp) {
         LagrangePolynomialDerivWeights(kGaussQuadraturePoints[qp], kGLLNodes, deriv_weights);
-        ASSERT_EQ(deriv_weights.size(), 3);
-        EXPECT_NEAR(deriv_weights[0], kExpectedDerivWeights[qp][0], kTolerance);
-        EXPECT_NEAR(deriv_weights[1], kExpectedDerivWeights[qp][1], kTolerance);
-        EXPECT_NEAR(deriv_weights[2], kExpectedDerivWeights[qp][2], kTolerance);
+        ASSERT_EQ(deriv_weights.size(), kNumNodes);
+        EXPECT_NEAR(deriv_weights[0], kExpectedDerivWeights[qp][0], kDefaultTolerance);
+        EXPECT_NEAR(deriv_weights[1], kExpectedDerivWeights[qp][1], kDefaultTolerance);
+        EXPECT_NEAR(deriv_weights[2], kExpectedDerivWeights[qp][2], kDefaultTolerance);
     }
 }
 
 TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
-    const auto num_nodes_per_elem = Kokkos::View<size_t*>("num_nodes", num_elems);
-    const auto num_qps_per_elem = Kokkos::View<size_t*>("num_qps", num_elems);
+    const auto kNumNodes_per_elem = Kokkos::View<size_t*>("number_of_nodes_per_element", kNumElems);
+    const auto kNumQPs_per_elem =
+        Kokkos::View<size_t*>("number_of_quadrature_points_per_element", kNumElems);
     const auto shape_derivative =
-        Kokkos::View<double***>("shape_derivative", num_elems, num_nodes, num_qps);
+        Kokkos::View<double***>("shape_derivative", kNumElems, kNumNodes, kNumQPs);
     const auto node_position_rotation =
-        Kokkos::View<double** [7]>("node_position_rotation", num_elems, num_nodes);
+        Kokkos::View<double** [7]>("node_position_rotation", kNumElems, kNumNodes);
     const auto qp_position_derivative =
-        Kokkos::View<double** [3]>("position_derivative", num_elems, num_qps);
-    const auto qp_jacobian = Kokkos::View<double**>("jacobian", num_elems, num_qps);
+        Kokkos::View<double** [3]>("position_derivative", kNumElems, kNumQPs);
+    const auto qp_jacobian = Kokkos::View<double**>("jacobian", kNumElems, kNumQPs);
 
-    const auto num_nodes_host = Kokkos::create_mirror_view(num_nodes_per_elem);
-    const auto num_qps_host = Kokkos::create_mirror_view(num_qps_per_elem);
+    const auto kNumNodes_host = Kokkos::create_mirror_view(kNumNodes_per_elem);
+    const auto kNumQPs_host = Kokkos::create_mirror_view(kNumQPs_per_elem);
     const auto shape_derivative_host = Kokkos::create_mirror_view(shape_derivative);
     const auto node_position_rotation_host = Kokkos::create_mirror_view(node_position_rotation);
     const auto qp_position_derivative_host = Kokkos::create_mirror_view(qp_position_derivative);
     const auto qp_jacobian_host = Kokkos::create_mirror_view(qp_jacobian);
 
     // Set node positions
-    for (size_t node = 0; node < num_nodes; ++node) {
+    for (size_t node = 0; node < kNumNodes; ++node) {
         node_position_rotation_host(0, node, 0) = kCurvedBeamNodes[node][0];
         node_position_rotation_host(0, node, 1) = kCurvedBeamNodes[node][1];
         node_position_rotation_host(0, node, 2) = kCurvedBeamNodes[node][2];
     }
 
     // Calculate shape function derivatives at each quadrature point
-    for (size_t qp = 0; qp < num_qps; ++qp) {
+    for (size_t qp = 0; qp < kNumQPs; ++qp) {
         std::vector<double> weights{};
         LagrangePolynomialDerivWeights(kGaussQuadraturePoints[qp], kGLLNodes, weights);
-        for (size_t node = 0; node < num_nodes; ++node) {
+        for (size_t node = 0; node < kNumNodes; ++node) {
             shape_derivative_host(0, node, qp) = weights[node];
         }
     }
 
     // Set number of nodes and quadrature points
-    num_nodes_host(0) = num_nodes;
-    num_qps_host(0) = num_qps;
+    kNumNodes_host(0) = kNumNodes;
+    kNumQPs_host(0) = kNumQPs;
 
-    Kokkos::deep_copy(num_nodes_per_elem, num_nodes_host);
-    Kokkos::deep_copy(num_qps_per_elem, num_qps_host);
+    Kokkos::deep_copy(kNumNodes_per_elem, kNumNodes_host);
+    Kokkos::deep_copy(kNumQPs_per_elem, kNumQPs_host);
     Kokkos::deep_copy(shape_derivative, shape_derivative_host);
     Kokkos::deep_copy(node_position_rotation, node_position_rotation_host);
 
-    CalculateJacobian calculate_jacobian{num_nodes_per_elem,     num_qps_per_elem,
+    CalculateJacobian calculate_jacobian{kNumNodes_per_elem,     kNumQPs_per_elem,
                                          shape_derivative,       node_position_rotation,
                                          qp_position_derivative, qp_jacobian};
     Kokkos::parallel_for("calculate_jacobian", 1, calculate_jacobian);
     Kokkos::deep_copy(qp_jacobian_host, qp_jacobian);
 
     // Validate the calculated jacobians against expected values from Mathematica script
-    ASSERT_EQ(qp_jacobian_host.extent(0), num_elems);  // 1 element
-    ASSERT_EQ(qp_jacobian_host.extent(1), num_qps);    // 7 quadrature points
+    ASSERT_EQ(qp_jacobian_host.extent(0), kNumElems);  // 1 element
+    ASSERT_EQ(qp_jacobian_host.extent(1), kNumQPs);    // 7 quadrature points
 
-    for (size_t qp = 0; qp < num_qps; ++qp) {
-        EXPECT_NEAR(qp_jacobian_host(0, qp), kExpectedJacobians[qp], kTolerance)
+    for (size_t qp = 0; qp < kNumQPs; ++qp) {
+        EXPECT_NEAR(qp_jacobian_host(0, qp), kExpectedJacobians[qp], kDefaultTolerance)
             << "Jacobian mismatch at quadrature point " << qp;
     }
 
     // Verify that position derivatives are unit vectors
-    ASSERT_EQ(qp_position_derivative_host.extent(0), num_elems);  // 1 element
-    ASSERT_EQ(qp_position_derivative_host.extent(1), num_qps);    // 7 quadrature points
+    ASSERT_EQ(qp_position_derivative_host.extent(0), kNumElems);  // 1 element
+    ASSERT_EQ(qp_position_derivative_host.extent(1), kNumQPs);    // 7 quadrature points
     ASSERT_EQ(qp_position_derivative_host.extent(2), 3);          // 3 dimensions
 
     Kokkos::deep_copy(qp_position_derivative, qp_position_derivative_host);
-    for (size_t qp = 0; qp < num_qps; ++qp) {
+    for (size_t qp = 0; qp < kNumQPs; ++qp) {
         const auto magnitude = std::sqrt(
             qp_position_derivative_host(0, qp, 0) * qp_position_derivative_host(0, qp, 0) +
             qp_position_derivative_host(0, qp, 1) * qp_position_derivative_host(0, qp, 1) +
             qp_position_derivative_host(0, qp, 2) * qp_position_derivative_host(0, qp, 2)
         );
-        EXPECT_NEAR(magnitude, 1., 1e-12);  // unit vector
+        EXPECT_NEAR(magnitude, 1., kDefaultTolerance);  // unit vector
     }
 }
 
@@ -149,7 +153,7 @@ TEST(CurvedBeamTests, CalculateForceFcForCurvedBeam) {
     const auto strain_host = Kokkos::create_mirror_view(strain);
     const auto Fc_host = Kokkos::create_mirror_view(Fc);
 
-    // Set stiffness matrix i.e. Cuu matrix
+    // Set stiffness matrix in global frame i.e. Cuu matrix
     for (size_t i = 0; i < 6; ++i) {
         for (size_t j = 0; j < 6; ++j) {
             Cuu_host(i, j) = kCurvedBeamCuu[i][j];

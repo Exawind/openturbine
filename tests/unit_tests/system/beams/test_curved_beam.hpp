@@ -6,22 +6,22 @@
 namespace openturbine::tests {
 
 /// Number of elements
-constexpr size_t num_elems{1};
+constexpr size_t kNumElems{1};
 
 /// Number of nodes
-constexpr size_t num_nodes{3};
+constexpr size_t kNumNodes{3};
 
 /// Number of quadrature points
-constexpr size_t num_qps{7};
+constexpr size_t kNumQPs{7};
 
 /// Tolerance for floating point comparisons (unless otherwise stated)
-constexpr double kTolerance = 1e-12;
+constexpr double kDefaultTolerance{1e-12};
 
 /// Second order polynomial GLL nodes
-const std::vector<double> kGLLNodes = {-1., 0., 1.};
+const std::vector<double> kGLLNodes{-1., 0., 1.};
 
 /// Node positions for curved beam test (from Mathematica script)
-const std::array<std::array<double, 3>, 3> kCurvedBeamNodes = {{
+constexpr std::array<std::array<double, 3>, 3> kCurvedBeamNodes = {{
     {0., 0., 0.},       // Node 1
     {2.5, -0.125, 0.},  // Node 2
     {5., 1., -1.}       // Node 3
@@ -38,8 +38,19 @@ constexpr std::array<double, 7> kGaussQuadraturePoints = {
     0.9491079123427585    // point 7
 };
 
+/// 7-point Gauss quadrature weights
+constexpr std::array<double, 7> kGaussQuadratureWeights = {
+    0.1294849661688697,  // weight 1
+    0.2797053914892766,  // weight 2
+    0.3818300505051189,  // weight 3
+    0.4179591836734694,  // weight 4
+    0.3818300505051189,  // weight 5
+    0.2797053914892766,  // weight 6
+    0.1294849661688697   // weight 7
+};
+
 /// Expected Lagrange polynomial interpolation weights at quadrature points (from Mathemtica script)
-const std::array<std::array<double, 3>, 7> kExpectedInterpWeights = {{
+constexpr std::array<std::array<double, 3>, 7> kExpectedInterpWeights = {{
     {0.924956870807, 0.0991941707284, -0.0241510415356},  // QP 1
     {0.645699842408, 0.450131500784, -0.0958313431915},   // QP 2
     {0.285277719137, 0.835289713103, -0.12056743224},     // QP 3
@@ -50,7 +61,7 @@ const std::array<std::array<double, 3>, 7> kExpectedInterpWeights = {{
 }};
 
 /// Expected Lagrange polynomial derivative weights at quadrature points (from Mathemtica script)
-const std::array<std::array<double, 3>, 7> kExpectedDerivWeights = {{
+constexpr std::array<std::array<double, 3>, 7> kExpectedDerivWeights = {{
     {-1.449107912343, 1.898215824686, -0.4491079123428},    // QP 1
     {-1.241531185599, 1.483062371199, -0.2415311855994},    // QP 2
     {-0.9058451513774, 0.8116903027548, 0.0941548486226},   // QP 3
@@ -91,7 +102,7 @@ constexpr std::array<double, 6> kCurvedBeamStrain = {
     0.001532568414933   // gyz
 };
 
-/// Expected Fc forces for curved beam (from Mathematica script)
+/// Expected Fc i.e. elastic forces for curved beam (from Mathematica script)
 constexpr std::array<double, 6> kExpectedFc = {
     19377.66142402,  // Fx
     -9011.48579619,  // Fy
@@ -111,7 +122,7 @@ constexpr std::array<double, 6> kStrainInterpolationHolder = {
     0.001532568414933  // gyz
 };
 
-/// Expected Fd forces for curved beam (from Mathematica script)
+/// Expected Fd i.e. damping forces for curved beam (from Mathematica script)
 constexpr std::array<double, 6> kExpectedFd = {
     0.,               // Fx
     0.,               // Fy
