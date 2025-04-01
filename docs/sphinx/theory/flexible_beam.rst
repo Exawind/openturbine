@@ -597,3 +597,15 @@ Iteration matrix:
    \underline{\underline{B}}\,\underline{\underline{T}}(h \Delta q)                     & \underline{\underline{0}}
    \end{bmatrix}
    , \quad \underline{\underline{S}}_{t} \in \mathbb{R}^{\{6(N+1)+6\} \times \{6(N+1)+6\}}
+
+Implementation
+--------------
+
+To maximize performance in assembling the iteration matrix, the tangent matrix is applied to the stiffness matrix and constraints matrix by exploiting the block-diagonal structure of the tangent matrix.  In particular, the tangent matrix can be represented as a block-diagonal matrix where each block is a :math: '6x6' matrix corresponding to the degrees of freedom at each node.  Similarly, the system matrix can be interpreted as a block matrix of :math: '(N+1)x(N+1)' blocks of each size :math: '6x6'. To multiply these matrices together efficiently, you can multiply the jth block-column in the ith block-row by the jth block-diagonal entry of the tangent matrix, with each block-multiplication being a 6x6 matrix multiplication.
+
+.. math::
+
+   \left(\left(\underline{\underline{K}}^{FE} + \underline{\underline{K}}^C\right) \underline{\underline{T}}(h \Delta q)\right)_{i,j} =
+   \left(underline{\underline{K}}^{Block}\right)_{i,j} \left(\underline{\underline{T}}^{Block}\right)_{j, j}
+
+The performance of this simplification is further improved by only applying the multiplication for the blocks which are non-zero in the stiffness matrix.  Specifically, these are the block-columns corresponding to the nodes which share a beam element with the node corresponding to the current block row.  A similar technique is utilized when applying the tangent matrix to the constraints matrix
