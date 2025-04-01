@@ -62,7 +62,7 @@ TEST(MatrixTest, AxialVectorOfMatrix) {
 }
 
 TEST(MatrixTest, RotateMatrix6_1) {
-    Array_6x6 m{{
+    const Array_6x6 m{{
         {1., 2., 3., 4., 5., 6.},
         {7., 8., 9., 10., 11., 12.},
         {13., 14., 15., 16., 17., 18.},
@@ -70,7 +70,7 @@ TEST(MatrixTest, RotateMatrix6_1) {
         {25., 26., 27., 28., 29., 30.},
         {31., 32., 33., 34., 35., 36.},
     }};
-    Array_6x6 m_exp{{
+    const Array_6x6 m_exp{{
         {1., 2., 3., 4., 5., 6.},
         {7., 8., 9., 10., 11., 12.},
         {13., 14., 15., 16., 17., 18.},
@@ -78,8 +78,8 @@ TEST(MatrixTest, RotateMatrix6_1) {
         {25., 26., 27., 28., 29., 30.},
         {31., 32., 33., 34., 35., 36.},
     }};
-    Array_4 q{1., 0., 0., 0.};
-    auto m_act = RotateMatrix6(m, q);
+    const Array_4 q{1., 0., 0., 0.};
+    const auto m_act = RotateMatrix6(m, q);
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
             EXPECT_DOUBLE_EQ(m_act[i][j], m_exp[i][j]);
@@ -88,7 +88,7 @@ TEST(MatrixTest, RotateMatrix6_1) {
 }
 
 TEST(MatrixTest, RotateMatrix6_2) {
-    Array_6x6 m{{
+    const Array_6x6 m{{
         {1., 2., 3., 4., 5., 6.},
         {7., 8., 9., 10., 11., 12.},
         {13., 14., 15., 16., 17., 18.},
@@ -96,7 +96,7 @@ TEST(MatrixTest, RotateMatrix6_2) {
         {25., 26., 27., 28., 29., 30.},
         {31., 32., 33., 34., 35., 36.},
     }};
-    Array_6x6 m_exp{{
+    const Array_6x6 m_exp{{
         {1, -2, -3, 4, -5, -6},
         {-7, 8, 9, -10, 11, 12},
         {-13, 14, 15, -16, 17, 18},
@@ -104,8 +104,8 @@ TEST(MatrixTest, RotateMatrix6_2) {
         {-25, 26, 27, -28, 29, 30},
         {-31, 32, 33, -34, 35, 36},
     }};
-    Array_4 q{0., 1., 0., 0.};
-    auto m_act = RotateMatrix6(m, q);
+    const Array_4 q{0., 1., 0., 0.};
+    const auto m_act = RotateMatrix6(m, q);
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
             EXPECT_DOUBLE_EQ(m_act[i][j], m_exp[i][j]);
@@ -114,7 +114,7 @@ TEST(MatrixTest, RotateMatrix6_2) {
 }
 
 TEST(MatrixTest, RotateMatrix6_3) {
-    Array_6x6 m{{
+    const Array_6x6 m{{
         {1., 2., 3., 4., 5., 6.},
         {7., 8., 9., 10., 11., 12.},
         {13., 14., 15., 16., 17., 18.},
@@ -122,7 +122,7 @@ TEST(MatrixTest, RotateMatrix6_3) {
         {25., 26., 27., 28., 29., 30.},
         {31., 32., 33., 34., 35., 36.},
     }};
-    Array_6x6 m_exp{{
+    const Array_6x6 m_exp{{
         {16, 11.313708498984761, 1.9999999999999982, 22.000000000000004, 15.556349186104047,
          1.9999999999999987},
         {11.313708498984759, 8, 1.4142135623730945, 15.556349186104045, 11, 1.414213562373094},
@@ -135,8 +135,8 @@ TEST(MatrixTest, RotateMatrix6_3) {
          8.4852813742385678, -1.7996050059948887E-15},
 
     }};
-    Array_4 q{RotationVectorToQuaternion({0., M_PI / 4., 0.})};
-    auto m_act = RotateMatrix6(m, q);
+    const Array_4 q{RotationVectorToQuaternion({0., M_PI / 4., 0.})};
+    const auto m_act = RotateMatrix6(m, q);
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
             EXPECT_DOUBLE_EQ(m_act[i][j], m_exp[i][j]);

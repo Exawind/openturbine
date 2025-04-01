@@ -139,7 +139,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         tip_node.loads[1] = 2.0e5 * sin(2. * M_PI * 0.05 * t);
 
         // Take step
-        auto converged = interface.Step();
+        const auto converged = interface.Step();
 
         // Check convergence
         ASSERT_EQ(converged, true);
@@ -166,6 +166,7 @@ TEST(BladeInterfaceTest, RotatingBeam) {
     // Create interface builder
     auto builder = interfaces::BladeInterfaceBuilder{};
 
+    // Set solution options
     builder.Solution()
         .EnableDynamicSolve()
         .SetTimeStep(time_step)
@@ -225,18 +226,31 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         );
     }
 
+    // Create the interface
     auto interface = builder.Build();
 
+    // Loop through time steps
     for (auto i = 1U; i < 10U; ++i) {
+        // Calculate time at end of step
         const auto t{static_cast<double>(i) * time_step};
-        auto u_rot = RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
-        auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
-        Array_3 u_trans{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
+
+        // Calculate root displacement from initial position and apply
+        const auto u_rot = RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
+        const auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
+        const Array_3 u_trans{
+            x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]
+        };
         interface.SetRootDisplacement(
             {u_trans[0], u_trans[1], u_trans[2], u_rot[0], u_rot[1], u_rot[2], u_rot[3]}
         );
-        auto converged = interface.Step();
+
+        // Calculate state at end of step
+        const auto converged = interface.Step();
+
+        // Check for convergence
         ASSERT_EQ(converged, true);
+
+        // Write VTK file for end of step
         interface.WriteOutputVTK();
     }
 
@@ -385,7 +399,7 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
         tip_node.loads[4] = -m;
 
         // Static step
-        auto converged = interface.Step();
+        const auto converged = interface.Step();
 
         // Write beam visualization output
         interface.WriteOutputVTK();
