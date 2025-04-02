@@ -217,4 +217,37 @@ TEST(CurvedBeamTests, CalculateForceFdForCurvedBeam) {
     }
 }
 
+TEST(CurvedBeamTests, IntegrateResidualVectorForCurvedBeam) {
+    const auto qp_weights = get_qp_weights<kNumQPs>(kGaussQuadratureWeights);
+    const auto qp_jacobian = get_qp_jacobian<kNumQPs>(kExpectedJacobians);
+    const auto shape_interp = get_shape_interp<kNumNodes, kNumQPs>(kInterpWeightsFlat);
+    const auto shape_deriv = get_shape_interp_deriv<kNumNodes, kNumQPs>(kDerivWeightsFlat);
+
+    const auto node_FX = NodeVectorView("node_FX");
+    const auto qp_Fc = get_qp_Fc<kNumQPs>(kFc);
+    const auto qp_Fd = get_qp_Fd<kNumQPs>(kFd);
+    const auto qp_Fi = get_qp_Fi<kNumQPs>(kFi);
+    const auto qp_Fe = QpVectorView("qp_Fe");
+    const auto qp_Fg = QpVectorView("qp_Fg");
+
+    const auto residual_vector_terms =
+        Kokkos::View<double[kNumElems][kNumNodes][6]>("residual_vector_terms");
+
+    Kokkos::parallel_for(
+        "IntegrateResidualVectorElement", kNumNodes,
+        beams::IntegrateResidualVectorElement{
+            0U, kNumQPs, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc, qp_Fd,
+            qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
+        }
+    );
+
+    const auto resid_exact = Kokkos::View<const double[kNumElems][kNumNodes][6], Kokkos::HostSpace>(
+        kExpectedResidualVector.data()
+    );
+
+    const auto residual_vector_terms_mirror = Kokkos::create_mirror(residual_vector_terms);
+    Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
+    CompareWithExpected(residual_vector_terms_mirror, resid_exact, 1e-8);
+}
+
 }  // namespace openturbine::tests
