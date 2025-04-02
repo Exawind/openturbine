@@ -48,9 +48,9 @@ TEST(CalculateJacobian, LinearElement) {
     Kokkos::deep_copy(shape_derivative, host_shape_derivative);
     Kokkos::deep_copy(node_position_rotation, host_node_position_rotation);
 
-    CalculateJacobian calculate_jacobian{num_nodes_per_elem,     num_qps_per_elem,
-                                         shape_derivative,       node_position_rotation,
-                                         qp_position_derivative, qp_jacobian};
+    const auto calculate_jacobian = CalculateJacobian{num_nodes_per_elem,     num_qps_per_elem,
+                                                      shape_derivative,       node_position_rotation,
+                                                      qp_position_derivative, qp_jacobian};
     Kokkos::parallel_for("calculate_jacobian", 1, calculate_jacobian);
 
     auto host_jacobian = Kokkos::create_mirror_view(qp_jacobian);
@@ -139,7 +139,7 @@ TEST(CalculateJacobian, FourthOrderElement) {
     Kokkos::deep_copy(shape_derivative, host_shape_derivative);
     Kokkos::deep_copy(node_position_rotation, host_node_position_rotation);
 
-    openturbine::CalculateJacobian calculate_jacobian{num_nodes_per_elem,     num_qps_per_elem,
+    const auto calculate_jacobian = CalculateJacobian{num_nodes_per_elem,     num_qps_per_elem,
                                                       shape_derivative,       node_position_rotation,
                                                       qp_position_derivative, qp_jacobian};
     Kokkos::parallel_for("calculate_jacobian", 1, calculate_jacobian);
