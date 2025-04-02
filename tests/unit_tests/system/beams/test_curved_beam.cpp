@@ -113,9 +113,9 @@ TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
     Kokkos::deep_copy(shape_derivative, shape_derivative_host);
     Kokkos::deep_copy(node_position_rotation, node_position_rotation_host);
 
-    const auto calculate_jacobian = CalculateJacobian{kNumNodes_per_elem,     kNumQPs_per_elem,
-                                         shape_derivative,       node_position_rotation,
-                                         qp_position_derivative, qp_jacobian};
+    const auto calculate_jacobian =
+        CalculateJacobian{kNumNodes_per_elem,     kNumQPs_per_elem,       shape_derivative,
+                          node_position_rotation, qp_position_derivative, qp_jacobian};
     Kokkos::parallel_for("calculate_jacobian", 1, calculate_jacobian);
     Kokkos::deep_copy(qp_jacobian_host, qp_jacobian);
 
