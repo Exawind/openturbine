@@ -1,0 +1,47 @@
+#include <Kokkos_Core.hpp>
+#include <gtest/gtest.h>
+
+#include "math/project_points_to_target_polynomial.hpp"
+
+namespace openturbine::tests {
+
+TEST(ProjectPointsToTargetPolynomialTest, Project2ndOrderTo4thOrderPolynomial) {
+    const size_t num_input_pts = 3;
+    const size_t num_output_pts = 5;
+    const auto input_points = std::vector<std::array<double, 3>>{
+        {0., 0., 0.},      // pt 1
+        {2.5, -0.25, 0.},  // pt 2
+        {5., 1., -1.}      // pt 3
+    };
+
+    const auto [gll_points, output_points] =
+        ProjectPointsToTargetPolynomial(num_input_pts, num_output_pts, input_points);
+
+    // Expected GLL points
+    const std::vector<double> expected_gll_points = {-1., -0.654654, 0., 0.654654, 1.};
+
+    ASSERT_EQ(gll_points.size(), expected_gll_points.size());
+    for (size_t i = 0; i < gll_points.size(); ++i) {
+        EXPECT_NEAR(gll_points[i], expected_gll_points[i], 1e-6)
+            << "Mismatch at GLL point [" << i << "]";
+    }
+
+    // Expected projected points from Mathematica
+    const std::vector<std::array<double, 3>> expected_projected_points = {
+        {0., 0., 0.},  // First point - same as input pt 1
+        {0.8633658232300573, -0.2558982639254172, 0.11304112106827431},  // Interior point 1
+        {2.5, -0.25, 0.},  // Second point - same as input pt 2
+        {4.1366341767699435, 0.39875540678255994, -0.5416125496397028},  // Interior point 2
+        {5., 1., -1.}  // Last point - same as input pt 3
+    };
+
+    ASSERT_EQ(output_points.size(), expected_projected_points.size());
+    for (size_t i = 0; i < output_points.size(); ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            EXPECT_NEAR(output_points[i][j], expected_projected_points[i][j], 1e-6)
+                << "Mismatch at projected point [" << i << "][" << j << "]";
+        }
+    }
+}
+
+}  // namespace openturbine::tests
