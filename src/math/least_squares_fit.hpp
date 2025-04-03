@@ -91,10 +91,10 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
         throw std::invalid_argument("shape_functions rows do not match order p.");
     }
     const size_t n = shape_functions[0].size();
-    for (const auto& row : shape_functions) {
-        if (row.size() != n) {
-            throw std::invalid_argument("Inconsistent number of columns in shape_functions.");
-        }
+    if (std::any_of(shape_functions.begin(), shape_functions.end(), [n](const auto& row) {
+            return row.size() != n;
+        })) {
+        throw std::invalid_argument("Inconsistent number of columns in shape_functions.");
     }
 
     // Construct matrix A in LHS (p x p)
