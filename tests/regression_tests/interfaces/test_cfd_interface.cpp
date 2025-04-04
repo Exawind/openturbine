@@ -3,7 +3,9 @@
 #include "interfaces/cfd/interface.hpp"
 #include "interfaces/cfd/interface_builder.hpp"
 #include "regression/test_utilities.hpp"
+#ifdef OpenTurbine_ENABLE_VTK
 #include "viz/vtk_lines.hpp"
+#endif
 
 namespace openturbine::tests {
 
@@ -157,9 +159,6 @@ void OutputLines(const FloatingPlatform& platform, size_t step_num, const std::s
         output_dir + "/mooring_" + step_num_str
     );
 }
-#else
-void OutputLines(const FloatingPlatform&, size_t, const std::string&) {
-}
 #endif
 
 TEST(CFDInterfaceTest, FloatingPlatform) {
@@ -225,8 +224,10 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
         // Calculate current time
         const auto t = static_cast<double>(i) * time_step;
 
+#ifdef OpenTurbine_ENABLE_VTK
         // Write VTK visualization output
         OutputLines(interface.turbine.floating_platform, i, output_dir);
+#endif
 
         // Apply load in y direction
         interface.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
@@ -304,7 +305,6 @@ TEST(CFDInterfaceTest, Restart) {
                        .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4});
 
     auto interface1 = builder.Build();
-    ;
 
     // Take 10 initial steps
     for (auto i = 0U; i < 100U; ++i) {

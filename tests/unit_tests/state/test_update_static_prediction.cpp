@@ -7,8 +7,6 @@
 namespace openturbine::tests {
 TEST(UpdateStaticPrediction, TwoNodes) {
     constexpr auto h = 2.;
-    constexpr auto beta_prime = 20.;
-    constexpr auto gamma_prime = 50.;
 
     constexpr auto node_freedom_allocation_table_host_data =
         std::array{FreedomSignature::AllComponents, FreedomSignature::AllComponents};
@@ -45,8 +43,7 @@ TEST(UpdateStaticPrediction, TwoNodes) {
     Kokkos::parallel_for(
         "UpdateStaticPrediction", 2,
         UpdateStaticPrediction{
-            h, beta_prime, gamma_prime, node_freedom_allocation_table, node_freedom_map_table,
-            x_delta, q_delta
+            h, node_freedom_allocation_table, node_freedom_map_table, x_delta, q_delta
         }
     );
 

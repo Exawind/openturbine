@@ -1,7 +1,6 @@
 #pragma once
 
-#include <array>
-#include <cstddef>
+#include "types.hpp"
 
 namespace openturbine::cfd {
 

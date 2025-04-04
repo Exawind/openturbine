@@ -11,6 +11,8 @@ static constexpr size_t kLieGroupComponents = 7;
 static constexpr double kTolerance = 1.e-16;
 static constexpr double kTestTolerance = 1.e-6;
 
+static constexpr size_t kInvalidID{9999999};
+
 // Create some type aliases for Kokkos views to improve readability
 // 1D views
 using View_3 = Kokkos::View<double[3]>;
