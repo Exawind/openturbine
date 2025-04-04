@@ -104,6 +104,8 @@ TEST(RotatingBeamTest, StepConvergence) {
     // Set gravity
     model.SetGravity(0., 0., 0.);
 
+    const Array_3 x0_root{2., 0., 0.};
+
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 0.1 rad/s angular velocity around the z axis
@@ -112,7 +114,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     std::transform(
         std::cbegin(node_s), std::cend(node_s), std::back_inserter(node_ids),
         [&](auto s) {
-            const auto x = 10 * s + 2.;
+            const auto x = 10 * s + x0_root[0];
             return model.AddNode()
                 .SetElemLocation(s)
                 .SetPosition(x, 0., 0., 1., 0., 0., 0.)
@@ -143,7 +145,11 @@ TEST(RotatingBeamTest, StepConvergence) {
     for (int i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
-        constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+        const auto x_root = RotateVectorByQuaternion(q, x0_root);
+        const Array_3 u_root = {
+            x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]
+        };
+        constraints.UpdateDisplacement(0, {u_root[0], u_root[1], u_root[2], q[0], q[1], q[2], q[3]});
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
@@ -151,24 +157,23 @@ TEST(RotatingBeamTest, StepConvergence) {
     expect_kokkos_view_2D_equal(
         state.q,
         {
-            {-0.000099661884299369481, 0.019999672917628962, -3.6608854058480302E-25,
-             0.99998750002604175, -1.5971376141505654E-26, 3.1592454262792375E-25,
-             0.004999979166692714},
-            {-0.00015838391157346692, 0.031746709275713193, -2.8155520815870626E-13,
-             0.99998750002143066, 2.7244338869052949E-12, 1.989181042516661E-12,
-             0.0049999800888738608},
-            {-0.00027859681974392133, 0.055737500699772298, 2.815269319303426E-12,
-             0.9999875000205457, 7.3510877107173739E-12, 1.0550370096863904E-12,
-             0.0049999802658924715},
-            {-0.00042131446700509681, 0.08426017738413949, 8.2854411551089936E-12,
-             0.99998750002161218, 3.7252296525466957E-11, -5.26890056047209E-14,
-             0.0049999800525935617},
-            {-0.00054093210652801399, 0.10825097509997549, -9.3934322245617647E-12,
-             0.99998750002142056, 4.0321076018153484E-11, 5.2579938812420674E-12,
-             0.0049999800909203019},
-            {-0.00059944528351138049, 0.11999801747595988, -2.6207280972097857E-11,
-             0.99998750002237801, 3.4435006114567926E-11, 6.4250095159262128E-12,
-             0.0049999798994432168},
+            {-0.000099999166669473282, 0.019999666668333329, 0., 0.99998750002604219, 0., 0.,
+             0.0049999791666927116},
+            {-0.00015873054129883523, 0.031746705307316693, 5.3452180213890101E-13,
+             0.99998750002475689, 6.9132808328819882E-12, -1.2067607167192481E-13,
+             0.0049999794236664759},
+            {-0.00027867990247669591, 0.055737498222589707, 2.7206029385761709E-12,
+             0.99998750002344106, 1.6236092075463668E-11, -1.0204079036815215E-13,
+             0.004999979686833151},
+            {-0.00042128940140729969, 0.084260177944726039, 2.2262966672810607E-12,
+             0.99998750002292091, 2.3329848595908065E-11, 8.6195395416293551E-13,
+             0.0049999797908453587},
+            {-0.0005412402267101781, 0.10825097167135142, -5.7646870281175913E-12,
+             0.99998750002269443, 2.5986319594619517E-11, 1.8229927487844355E-12,
+             0.0049999798361397927},
+            {-0.0005999751384186499, 0.11999801130335846, -1.0588553074456064E-11,
+             0.99998750002267489, 2.6230990329572291E-11, 1.8800830187025051E-12,
+             0.0049999798400182259},
         }
     );
 }
@@ -611,7 +616,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     UpdateSystemVariables(parameters, elements, state);
     RemoveDirectoryWithRetries("steps");
     std::filesystem::create_directory("steps");
-    WriteVTKBeamsQP(elements.beams, "steps/step_0000.vtu");
+    WriteVTKBeamsQP(state, elements.beams, "steps/step_0000.vtu");
 #endif
 
     // Run 10 steps
@@ -621,7 +626,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
 #ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i + 1);
         auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-        WriteVTKBeamsQP(elements.beams, file_name + ".vtu");
+        WriteVTKBeamsQP(state, elements.beams, file_name + ".vtu");
 #endif
     }
 
@@ -716,7 +721,7 @@ void GeneratorTorqueWithAxisTilt(
     UpdateSystemVariables(parameters, elements, state);
     RemoveDirectoryWithRetries("steps");
     std::filesystem::create_directory("steps");
-    WriteVTKBeamsQP(elements.beams, "steps/step_0000.vtu");
+    WriteVTKBeamsQP(state, elements.beams, "steps/step_0000.vtu");
 #endif
 
     // Run 10 steps
@@ -726,7 +731,7 @@ void GeneratorTorqueWithAxisTilt(
 #ifdef OpenTurbine_ENABLE_VTK
         auto tmp = std::to_string(i + 1);
         auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-        WriteVTKBeamsQP(elements.beams, file_name + ".vtu");
+        WriteVTKBeamsQP(state, elements.beams, file_name + ".vtu");
 #endif
     }
 

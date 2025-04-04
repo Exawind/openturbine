@@ -51,7 +51,7 @@ template <typename GlobalCrsMatrixType>
         target_node_freedom_table, row_range, row_ptrs
     );
 
-    KokkosSparse::sort_crs_graph(row_ptrs, col_inds, static_cast<IndicesValueType>(num_dofs));
+    KokkosSparse::sort_crs_graph(row_ptrs, col_inds);
 
     // clang-format off
     return Teuchos::make_rcp<GlobalCrsMatrixType>(

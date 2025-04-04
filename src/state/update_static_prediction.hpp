@@ -8,8 +8,6 @@ namespace openturbine {
 
 struct UpdateStaticPrediction {
     double h;
-    double beta_prime;
-    double gamma_prime;
     Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
     Kokkos::View<size_t*> node_freedom_map_table;
     Kokkos::View<double* [1], Kokkos::LayoutLeft>::const_type x_delta;
