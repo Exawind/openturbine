@@ -14,7 +14,6 @@ namespace openturbine {
 
 inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solver, State& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
-    const auto x = solver.x->getLocalViewDevice(Tpetra::Access::ReadOnly);
     if (parameters.is_dynamic_solve) {
         Kokkos::parallel_for(
             "UpdateDynamicPrediction", solver.num_system_nodes,
@@ -24,7 +23,7 @@ inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solv
                 parameters.gamma_prime,
                 state.node_freedom_allocation_table,
                 state.node_freedom_map_table,
-                x,
+                solver.x,
                 state.q_delta,
                 state.v,
                 state.vd,
@@ -37,7 +36,7 @@ inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solv
                 parameters.h,
                 state.node_freedom_allocation_table,
                 state.node_freedom_map_table,
-                x,
+                solver.x,
                 state.q_delta,
             }
         );
