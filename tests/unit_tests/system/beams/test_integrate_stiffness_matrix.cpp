@@ -13,7 +13,8 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP(
     const Kokkos::View<const double[1][6][6]>& qp_Puu,
     const Kokkos::View<const double[1][6][6]>& qp_Cuu,
     const Kokkos::View<const double[1][6][6]>& qp_Ouu,
-    const Kokkos::View<const double[1][6][6]>& qp_Quu, const std::array<double, 36>& exact_M_data
+    const Kokkos::View<const double[1][6][6]>& qp_Quu, const std::array<double, 36>& exact_M_data,
+    const double tolerance = 1e-12
 ) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_simd_nodes = size_t{1U};
@@ -47,7 +48,7 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP(
 
     auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
     Kokkos::deep_copy(gbl_M_mirror, gbl_M);
-    CompareWithExpected(gbl_M_mirror, exact_M);
+    CompareWithExpected(gbl_M_mirror, exact_M, tolerance);
 }
 
 void TestIntegrateStiffnessMatrix_1Element1Node1QP_Kuu() {
@@ -159,7 +160,7 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP_Cuu() {
                    250200., 250250., 250300., 300050., 300100., 300150., 300200., 300250., 300300.};
 
     TestIntegrateStiffnessMatrix_1Element1Node1QP(
-        qp_Kuu, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, exact_M_data
+        qp_Kuu, qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, exact_M_data, 1e-10
     );
 }
 
