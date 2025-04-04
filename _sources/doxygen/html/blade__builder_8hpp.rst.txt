@@ -1,0 +1,14 @@
+.. meta::644fe878c6db5b2d94e4f4cf4aef4518d8f5163d88680ae6ef526ff374de98f8913445052a9983929049078fd5e05288df7c54eb645c874ff81fd763e0d40d1d
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/blade_builder.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/blade\_builder.hpp File Reference
+=================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: blade__builder_8hpp.html

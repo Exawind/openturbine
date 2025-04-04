@@ -1,0 +1,14 @@
+.. meta::29e43aeb0db405799a909c1442f250372cebd3970ed7567e344431e226080aa7368260e165b3d534683921d23e5393cce202c6494bc1ea222d14061f7eb1c2ba
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/blade_input.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/blade\_input.hpp File Reference
+===============================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: blade__input_8hpp.html

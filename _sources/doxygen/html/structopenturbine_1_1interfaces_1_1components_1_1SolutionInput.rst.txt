@@ -1,0 +1,14 @@
+.. meta::1f9f823f879e509265f62b345d1bb5d18d2154b7e05c38899e4e15746c7726883c6df84870b563da7aaaae27ea1c89e31f72e71597ec053a9e814db691990265
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::components::SolutionInput Struct Reference
+
+SolutionInput Struct Reference
+==============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html

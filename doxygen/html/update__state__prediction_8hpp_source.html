@@ -212,29 +212,27 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            <span class="stringliteral">&quot;UpdateStaticPrediction&quot;</span>, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a330036d3be15c2d1606fde9d27efeb4e">num_system_nodes</a>,</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <a class="code hl_struct" href="structopenturbine_1_1UpdateStaticPrediction.html">UpdateStaticPrediction</a>{</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                parameters.h,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                parameters.beta_prime,</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                parameters.gamma_prime,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                state.node_freedom_allocation_table,</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                state.node_freedom_map_table,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                x,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                state.q_delta,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            }</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        );</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    }</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    Kokkos::parallel_for(</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="stringliteral">&quot;CalculateDisplacement&quot;</span>, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a330036d3be15c2d1606fde9d27efeb4e">num_system_nodes</a>,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <a class="code hl_struct" href="structopenturbine_1_1CalculateDisplacement.html">CalculateDisplacement</a>{</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            parameters.h,</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            state.q_delta,</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            state.q_prev,</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            state.q,</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    );</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                state.node_freedom_allocation_table,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                state.node_freedom_map_table,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                x,</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                state.q_delta,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            }</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        );</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    Kokkos::parallel_for(</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="stringliteral">&quot;CalculateDisplacement&quot;</span>, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a330036d3be15c2d1606fde9d27efeb4e">num_system_nodes</a>,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <a class="code hl_struct" href="structopenturbine_1_1CalculateDisplacement.html">CalculateDisplacement</a>{</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            parameters.h,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            state.q_delta,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            state.q_prev,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            state.q,</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    );</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>}</div>
 </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="acalculate__displacement_8hpp_html"><div class="ttname"><a href="calculate__displacement_8hpp.html">calculate_displacement.hpp</a></div></div>
 <div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
 <div class="ttc" id="anamespaceopenturbine_html_a21787f4e3260becd73eb7c3497e2e0e3"><div class="ttname"><a href="namespaceopenturbine.html#a21787f4e3260becd73eb7c3497e2e0e3">openturbine::UpdateStatePrediction</a></div><div class="ttdeci">void UpdateStatePrediction(StepParameters &amp;parameters, const Solver &amp;solver, State &amp;state)</div><div class="ttdef"><b>Definition</b> update_state_prediction.hpp:15</div></div>
@@ -246,8 +244,8 @@ $(document).ready(function() { init_codefold(0); });
 <div class="ttc" id="astructopenturbine_1_1Solver_html_a330036d3be15c2d1606fde9d27efeb4e"><div class="ttname"><a href="structopenturbine_1_1Solver.html#a330036d3be15c2d1606fde9d27efeb4e">openturbine::Solver::num_system_nodes</a></div><div class="ttdeci">size_t num_system_nodes</div><div class="ttdef"><b>Definition</b> solver.hpp:41</div></div>
 <div class="ttc" id="astructopenturbine_1_1Solver_html_a4bc0725cc36c7d50f91a971f05580737"><div class="ttname"><a href="structopenturbine_1_1Solver.html#a4bc0725cc36c7d50f91a971f05580737">openturbine::Solver::x</a></div><div class="ttdeci">Teuchos::RCP&lt; GlobalMultiVectorType &gt; x</div><div class="ttdef"><b>Definition</b> solver.hpp:47</div></div>
 <div class="ttc" id="astructopenturbine_1_1State_html"><div class="ttname"><a href="structopenturbine_1_1State.html">openturbine::State</a></div><div class="ttdef"><b>Definition</b> state.hpp:17</div></div>
-<div class="ttc" id="astructopenturbine_1_1StepParameters_html"><div class="ttname"><a href="structopenturbine_1_1StepParameters.html">openturbine::StepParameters</a></div><div class="ttdef"><b>Definition</b> step_parameters.hpp:5</div></div>
-<div class="ttc" id="astructopenturbine_1_1StepParameters_html_a17db32936a726c2d8a5ad6e2b9a3b3c2"><div class="ttname"><a href="structopenturbine_1_1StepParameters.html#a17db32936a726c2d8a5ad6e2b9a3b3c2">openturbine::StepParameters::is_dynamic_solve</a></div><div class="ttdeci">bool is_dynamic_solve</div><div class="ttdef"><b>Definition</b> step_parameters.hpp:6</div></div>
+<div class="ttc" id="astructopenturbine_1_1StepParameters_html"><div class="ttname"><a href="structopenturbine_1_1StepParameters.html">openturbine::StepParameters</a></div><div class="ttdef"><b>Definition</b> step_parameters.hpp:7</div></div>
+<div class="ttc" id="astructopenturbine_1_1StepParameters_html_a17db32936a726c2d8a5ad6e2b9a3b3c2"><div class="ttname"><a href="structopenturbine_1_1StepParameters.html#a17db32936a726c2d8a5ad6e2b9a3b3c2">openturbine::StepParameters::is_dynamic_solve</a></div><div class="ttdeci">bool is_dynamic_solve</div><div class="ttdef"><b>Definition</b> step_parameters.hpp:8</div></div>
 <div class="ttc" id="astructopenturbine_1_1UpdateDynamicPrediction_html"><div class="ttname"><a href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a></div><div class="ttdef"><b>Definition</b> update_dynamic_prediction.hpp:9</div></div>
 <div class="ttc" id="astructopenturbine_1_1UpdateStaticPrediction_html"><div class="ttname"><a href="structopenturbine_1_1UpdateStaticPrediction.html">openturbine::UpdateStaticPrediction</a></div><div class="ttdef"><b>Definition</b> update_static_prediction.hpp:9</div></div>
 <div class="ttc" id="aupdate__dynamic__prediction_8hpp_html"><div class="ttname"><a href="update__dynamic__prediction_8hpp.html">update_dynamic_prediction.hpp</a></div></div>

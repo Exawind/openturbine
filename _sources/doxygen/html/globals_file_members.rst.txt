@@ -13,7 +13,6 @@ File Members
       :maxdepth: 4
 
       All <globals>
-      Functions <globals_func>
       Macros <globals_defs>
 
    .. raw:: html

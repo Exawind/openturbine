@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/host_state.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/host_state.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/host__state_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-interfaces-host-state-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/host_state.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-interfaces-host-state-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/host_state.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ee3f1a7951c308657a65f8199076c1d6.html">interfaces</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">host_state.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="host__state_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="state_8hpp.html">state/state.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="types_8hpp.html">types.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1interfaces.html">openturbine::interfaces</a> {</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">/* @brief Container for storing the complete system state of the simulation at a given</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * time increment</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * @details This struct maintains all state variables required for the dynamic simulation,</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * including:</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> * - Node configuration and freedom allocation</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> * - Position and rotation states (current, previous, and initial)</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"> * - Velocity and acceleration states</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment"> * - Tangent matrix</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1HostState.html">   17</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a> {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1HostState.html#a65256ae0a407413d2a8432dc3ba8c048">   19</a></span>    Kokkos::View&lt;double* [7]&gt;::HostMirror <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#a65256ae0a407413d2a8432dc3ba8c048">x</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1HostState.html#a872a6cba6b9476f8d5e04646971bad4f">   22</a></span>    Kokkos::View&lt;double* [7]&gt;::HostMirror <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#a872a6cba6b9476f8d5e04646971bad4f">q</a>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1HostState.html#ab9a11d0a9bbb1dab84fd9261fcca9706">   25</a></span>    Kokkos::View&lt;double* [6]&gt;::HostMirror <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#ab9a11d0a9bbb1dab84fd9261fcca9706">v</a>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1HostState.html#ad7d543815e2f708bb53d08adbe97fa94">   28</a></span>    Kokkos::View&lt;double* [6]&gt;::HostMirror <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#ad7d543815e2f708bb53d08adbe97fa94">vd</a>;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="foldopen" id="foldopen00032" data-start="{" data-end="}">
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1HostState.html#afb3eff409026205365633a34e0f3e73e">   32</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="structopenturbine_1_1interfaces_1_1HostState.html#afb3eff409026205365633a34e0f3e73e">HostState</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1State.html">State</a>&amp; state)</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        : <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#a65256ae0a407413d2a8432dc3ba8c048">x</a>(Kokkos::create_mirror_view(state.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#a65256ae0a407413d2a8432dc3ba8c048">x</a>)),</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>          <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#a872a6cba6b9476f8d5e04646971bad4f">q</a>(Kokkos::create_mirror_view(state.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#a872a6cba6b9476f8d5e04646971bad4f">q</a>)),</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>          <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#ab9a11d0a9bbb1dab84fd9261fcca9706">v</a>(Kokkos::create_mirror_view(state.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#ab9a11d0a9bbb1dab84fd9261fcca9706">v</a>)),</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>          <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#ad7d543815e2f708bb53d08adbe97fa94">vd</a>(Kokkos::create_mirror_view(state.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1HostState.html#ad7d543815e2f708bb53d08adbe97fa94">vd</a>)) {}</div>
+</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="foldopen" id="foldopen00040" data-start="{" data-end="}">
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1HostState.html#af4b5e70c935ca9fdcf86b30d911c10b9">   40</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1interfaces_1_1HostState.html#af4b5e70c935ca9fdcf86b30d911c10b9">CopyFromState</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1State.html">State</a>&amp; state)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        Kokkos::deep_copy(this-&gt;x, state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a82a6f50ab798d8d96ff09995c49fdbf5">x</a>);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        Kokkos::deep_copy(this-&gt;q, state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a384c36a867c840e2b40bea15330fae43">q</a>);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        Kokkos::deep_copy(this-&gt;v, state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a4beb492d74a3431dca64ac497e110833">v</a>);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        Kokkos::deep_copy(this-&gt;vd, state.<a class="code hl_variable" href="structopenturbine_1_1State.html#ac0b5fc9db54d00fe88fa8d91d8725f87">vd</a>);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    }</div>
+</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
+</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}  <span class="comment">// namespace openturbine::interfaces</span></div>
+<div class="ttc" id="anamespaceopenturbine_1_1interfaces_html"><div class="ttname"><a href="namespaceopenturbine_1_1interfaces.html">openturbine::interfaces</a></div><div class="ttdef"><b>Definition</b> blade_interface.hpp:13</div></div>
+<div class="ttc" id="astate_8hpp_html"><div class="ttname"><a href="state_8hpp.html">state.hpp</a></div></div>
+<div class="ttc" id="astructopenturbine_1_1State_html"><div class="ttname"><a href="structopenturbine_1_1State.html">openturbine::State</a></div><div class="ttdef"><b>Definition</b> state.hpp:17</div></div>
+<div class="ttc" id="astructopenturbine_1_1State_html_a384c36a867c840e2b40bea15330fae43"><div class="ttname"><a href="structopenturbine_1_1State.html#a384c36a867c840e2b40bea15330fae43">openturbine::State::q</a></div><div class="ttdeci">View_Nx7 q</div><div class="ttdef"><b>Definition</b> state.hpp:28</div></div>
+<div class="ttc" id="astructopenturbine_1_1State_html_a4beb492d74a3431dca64ac497e110833"><div class="ttname"><a href="structopenturbine_1_1State.html#a4beb492d74a3431dca64ac497e110833">openturbine::State::v</a></div><div class="ttdeci">View_Nx6 v</div><div class="ttdef"><b>Definition</b> state.hpp:29</div></div>
+<div class="ttc" id="astructopenturbine_1_1State_html_a82a6f50ab798d8d96ff09995c49fdbf5"><div class="ttname"><a href="structopenturbine_1_1State.html#a82a6f50ab798d8d96ff09995c49fdbf5">openturbine::State::x</a></div><div class="ttdeci">View_Nx7 x</div><div class="ttdef"><b>Definition</b> state.hpp:25</div></div>
+<div class="ttc" id="astructopenturbine_1_1State_html_ac0b5fc9db54d00fe88fa8d91d8725f87"><div class="ttname"><a href="structopenturbine_1_1State.html#ac0b5fc9db54d00fe88fa8d91d8725f87">openturbine::State::vd</a></div><div class="ttdeci">View_Nx6 vd</div><div class="ttdef"><b>Definition</b> state.hpp:30</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1HostState_html"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a></div><div class="ttdef"><b>Definition</b> host_state.hpp:17</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1HostState_html_a65256ae0a407413d2a8432dc3ba8c048"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1HostState.html#a65256ae0a407413d2a8432dc3ba8c048">openturbine::interfaces::HostState::x</a></div><div class="ttdeci">Kokkos::View&lt; double *[7]&gt;::HostMirror x</div><div class="ttdoc">Host local copy of current position.</div><div class="ttdef"><b>Definition</b> host_state.hpp:19</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1HostState_html_a872a6cba6b9476f8d5e04646971bad4f"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1HostState.html#a872a6cba6b9476f8d5e04646971bad4f">openturbine::interfaces::HostState::q</a></div><div class="ttdeci">Kokkos::View&lt; double *[7]&gt;::HostMirror q</div><div class="ttdoc">Host local copy of current displacement.</div><div class="ttdef"><b>Definition</b> host_state.hpp:22</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1HostState_html_ab9a11d0a9bbb1dab84fd9261fcca9706"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1HostState.html#ab9a11d0a9bbb1dab84fd9261fcca9706">openturbine::interfaces::HostState::v</a></div><div class="ttdeci">Kokkos::View&lt; double *[6]&gt;::HostMirror v</div><div class="ttdoc">Host local copy of current velocity.</div><div class="ttdef"><b>Definition</b> host_state.hpp:25</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1HostState_html_ad7d543815e2f708bb53d08adbe97fa94"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1HostState.html#ad7d543815e2f708bb53d08adbe97fa94">openturbine::interfaces::HostState::vd</a></div><div class="ttdeci">Kokkos::View&lt; double *[6]&gt;::HostMirror vd</div><div class="ttdoc">Host local copy of current acceleration.</div><div class="ttdef"><b>Definition</b> host_state.hpp:28</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1HostState_html_af4b5e70c935ca9fdcf86b30d911c10b9"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1HostState.html#af4b5e70c935ca9fdcf86b30d911c10b9">openturbine::interfaces::HostState::CopyFromState</a></div><div class="ttdeci">void CopyFromState(const State &amp;state) const</div><div class="ttdoc">Copy state data to host state.</div><div class="ttdef"><b>Definition</b> host_state.hpp:40</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1HostState_html_afb3eff409026205365633a34e0f3e73e"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1HostState.html#afb3eff409026205365633a34e0f3e73e">openturbine::interfaces::HostState::HostState</a></div><div class="ttdeci">HostState(const State &amp;state)</div><div class="ttdoc">Construct host state from state.</div><div class="ttdef"><b>Definition</b> host_state.hpp:32</div></div>
+<div class="ttc" id="atypes_8hpp_html"><div class="ttname"><a href="types_8hpp.html">types.hpp</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

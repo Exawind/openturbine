@@ -1,0 +1,14 @@
+.. meta::26ef8c786739cc3dcb821f2f60588a2703cf4e36d6c5f50e6ba67c0cccd79b0030dae4718a712335d1787250709a3ab8d88a31d309f2bee13d9a245f72814341
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::components::BladeInput Struct Reference
+
+BladeInput Struct Reference
+===========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html

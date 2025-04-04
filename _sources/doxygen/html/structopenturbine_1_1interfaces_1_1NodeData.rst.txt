@@ -1,0 +1,14 @@
+.. meta::5f33ff5e7b9818ef50cda44e9f02c2cb2575e1ac87073a20a0833097252f98de6445b7327b2506421f448fa2824bfa4bb944fedcc2070935458fe40bc0ef647e
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::NodeData Struct Reference
+
+NodeData Struct Reference
+=========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1interfaces_1_1NodeData.html

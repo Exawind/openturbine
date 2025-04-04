@@ -186,12 +186,12 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>[[nodiscard]] <span class="keyword">inline</span> Teuchos::RCP&lt;Amesos2::Solver&lt;GlobalCrsMatrixType, GlobalMultiVectorType&gt;&gt;</div>
 <div class="foldopen" id="foldopen00011" data-start="{" data-end="}">
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a07a856d693f3f09d39d447894826785a">   11</a></span><a class="code hl_function" href="namespaceopenturbine.html#a07a856d693f3f09d39d447894826785a">CreateSparseDenseSolver</a>(</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    Teuchos::RCP&lt;GlobalCrsMatrixType&gt;&amp; <a class="code hl_struct" href="structA.html">A</a>, Teuchos::RCP&lt;GlobalMultiVectorType&gt;&amp; x_mv,</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    Teuchos::RCP&lt;GlobalCrsMatrixType&gt;&amp; A, Teuchos::RCP&lt;GlobalMultiVectorType&gt;&amp; x_mv,</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    Teuchos::RCP&lt;GlobalMultiVectorType&gt;&amp; b</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>) {</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">const</span> <span class="keyword">auto</span> solver_name = std::string{<span class="stringliteral">&quot;klu2&quot;</span>};</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">auto</span> amesos_solver =</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        Amesos2::create&lt;GlobalCrsMatrixType, GlobalMultiVectorType&gt;(solver_name, <a class="code hl_struct" href="structA.html">A</a>, x_mv, b);</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        Amesos2::create&lt;GlobalCrsMatrixType, GlobalMultiVectorType&gt;(solver_name, A, x_mv, b);</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    amesos_solver-&gt;symbolicFactorization();</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keywordflow">return</span> amesos_solver;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}</div>
@@ -200,7 +200,6 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
 <div class="ttc" id="anamespaceopenturbine_html_a07a856d693f3f09d39d447894826785a"><div class="ttname"><a href="namespaceopenturbine.html#a07a856d693f3f09d39d447894826785a">openturbine::CreateSparseDenseSolver</a></div><div class="ttdeci">Teuchos::RCP&lt; Amesos2::Solver&lt; GlobalCrsMatrixType, GlobalMultiVectorType &gt; &gt; CreateSparseDenseSolver(Teuchos::RCP&lt; GlobalCrsMatrixType &gt; &amp;A, Teuchos::RCP&lt; GlobalMultiVectorType &gt; &amp;x_mv, Teuchos::RCP&lt; GlobalMultiVectorType &gt; &amp;b)</div><div class="ttdef"><b>Definition</b> create_sparse_dense_solver.hpp:11</div></div>
-<div class="ttc" id="astructA_html"><div class="ttname"><a href="structA.html">A</a></div><div class="ttdef"><b>Definition</b> windio_mapped_structs.hpp:237</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

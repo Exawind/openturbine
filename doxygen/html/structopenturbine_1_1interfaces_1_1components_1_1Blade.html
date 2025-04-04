@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::interfaces::components::Blade Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::interfaces::components::Blade Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1interfaces_1_1components_1_1Blade.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="blade-struct-reference">
+<h1>Blade Struct Reference<a class="headerlink" href="#blade-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::interfaces::components::Blade Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces.html">interfaces</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html">components</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html">Blade</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1interfaces_1_1components_1_1Blade-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::interfaces::components::Blade Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="blade_8hpp_source.html">blade.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a63160e4ca144efec53eefb4df45f6163" id="r_a63160e4ca144efec53eefb4df45f6163"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#a63160e4ca144efec53eefb4df45f6163">Blade</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html">BladeInput</a> &amp;input, <a class="el" href="classopenturbine_1_1Model.html">Model</a> &amp;model)</td></tr>
+<tr class="separator:a63160e4ca144efec53eefb4df45f6163"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a488bfdbb1197739ccbf0500c48192458" id="r_a488bfdbb1197739ccbf0500c48192458"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#a488bfdbb1197739ccbf0500c48192458">GetNodeWeights</a> (double s) const</td></tr>
+<tr class="memdesc:a488bfdbb1197739ccbf0500c48192458"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a vector of weights for distributing a point load to the nodes based on the position [0,1] of the point along the blade.  <br /></td></tr>
+<tr class="separator:a488bfdbb1197739ccbf0500c48192458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1afac7c639f2a9eec3b3294c46c4256a" id="r_a1afac7c639f2a9eec3b3294c46c4256a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; double, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#a1afac7c639f2a9eec3b3294c46c4256a">CalcNodeTangents</a> (const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;node_coordinates) const</td></tr>
+<tr class="separator:a1afac7c639f2a9eec3b3294c46c4256a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a032554196a32167cd1f5d15d2f0ee14f" id="r_a032554196a32167cd1f5d15d2f0ee14f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#a032554196a32167cd1f5d15d2f0ee14f">AddPointLoad</a> (double s, std::array&lt; double, 6 &gt; loads)</td></tr>
+<tr class="memdesc:a032554196a32167cd1f5d15d2f0ee14f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a point load (Fx, Fy, Fz, Mx, My, Mz) to the blade at location 's' [0, 1] along the material axis.  <br /></td></tr>
+<tr class="separator:a032554196a32167cd1f5d15d2f0ee14f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad17fbc5e5b3d82d57e97ce3307330ac0" id="r_ad17fbc5e5b3d82d57e97ce3307330ac0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#ad17fbc5e5b3d82d57e97ce3307330ac0">ClearLoads</a> ()</td></tr>
+<tr class="memdesc:ad17fbc5e5b3d82d57e97ce3307330ac0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set blade point loads to zero.  <br /></td></tr>
+<tr class="separator:ad17fbc5e5b3d82d57e97ce3307330ac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a29be3991a7ec77f08a1078271443eba9" id="r_a29be3991a7ec77f08a1078271443eba9"><td class="memItemLeft" align="right" valign="top">static std::vector&lt; <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#a29be3991a7ec77f08a1078271443eba9">BuildBeamSections</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html">BladeInput</a> &amp;input)</td></tr>
+<tr class="separator:a29be3991a7ec77f08a1078271443eba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a696774be592f1951ec7cb44581563835" id="r_a696774be592f1951ec7cb44581563835"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#a696774be592f1951ec7cb44581563835">beam_element_id</a> {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td></tr>
+<tr class="memdesc:a696774be592f1951ec7cb44581563835"><td class="mdescLeft">&#160;</td><td class="mdescRight">Beam element ID.  <br /></td></tr>
+<tr class="separator:a696774be592f1951ec7cb44581563835"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fcefeac13ef4eda749f954ba5866800" id="r_a7fcefeac13ef4eda749f954ba5866800"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#a7fcefeac13ef4eda749f954ba5866800">nodes</a></td></tr>
+<tr class="memdesc:a7fcefeac13ef4eda749f954ba5866800"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html">Blade</a> node data.  <br /></td></tr>
+<tr class="separator:a7fcefeac13ef4eda749f954ba5866800"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7488e6f9e8ab261e5f2ac3b5082fa8ac" id="r_a7488e6f9e8ab261e5f2ac3b5082fa8ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#a7488e6f9e8ab261e5f2ac3b5082fa8ac">root_node</a></td></tr>
+<tr class="memdesc:a7488e6f9e8ab261e5f2ac3b5082fa8ac"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html">Blade</a> root node.  <br /></td></tr>
+<tr class="separator:a7488e6f9e8ab261e5f2ac3b5082fa8ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5948d466104a23f84cb099624246f6e3" id="r_a5948d466104a23f84cb099624246f6e3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#a5948d466104a23f84cb099624246f6e3">root_blade_constraint_id</a> {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td></tr>
+<tr class="memdesc:a5948d466104a23f84cb099624246f6e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">ID of constraint connecting root node to first blade node.  <br /></td></tr>
+<tr class="separator:a5948d466104a23f84cb099624246f6e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8aec1850b8bbc32a6a019264291e1f41" id="r_a8aec1850b8bbc32a6a019264291e1f41"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#a8aec1850b8bbc32a6a019264291e1f41">prescribed_root_constraint_id</a> {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td></tr>
+<tr class="memdesc:a8aec1850b8bbc32a6a019264291e1f41"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1Constraint.html" title="Defines a constraint between two nodes or enforces a boundary condition at a single node.">Constraint</a> ID of prescribed root displacement.  <br /></td></tr>
+<tr class="separator:a8aec1850b8bbc32a6a019264291e1f41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab18b1a42014a85a96155e13aec1c7da4" id="r_ab18b1a42014a85a96155e13aec1c7da4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html#ab18b1a42014a85a96155e13aec1c7da4">node_xi</a></td></tr>
+<tr class="memdesc:ab18b1a42014a85a96155e13aec1c7da4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Location of nodes in blade element [-1, 1].  <br /></td></tr>
+<tr class="separator:ab18b1a42014a85a96155e13aec1c7da4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a63160e4ca144efec53eefb4df45f6163" name="a63160e4ca144efec53eefb4df45f6163"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63160e4ca144efec53eefb4df45f6163">&#9670;&#160;</a></span>Blade()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::interfaces::components::Blade::Blade </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html">BladeInput</a> &amp;&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classopenturbine_1_1Model.html">Model</a> &amp;&#160;</td>
+          <td class="paramname"><em>model</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a032554196a32167cd1f5d15d2f0ee14f" name="a032554196a32167cd1f5d15d2f0ee14f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a032554196a32167cd1f5d15d2f0ee14f">&#9670;&#160;</a></span>AddPointLoad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::interfaces::components::Blade::AddPointLoad </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::array&lt; double, 6 &gt;&#160;</td>
+          <td class="paramname"><em>loads</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Add a point load (Fx, Fy, Fz, Mx, My, Mz) to the blade at location 's' [0, 1] along the material axis. </p>
+
+</div>
+</div>
+<a id="a29be3991a7ec77f08a1078271443eba9" name="a29be3991a7ec77f08a1078271443eba9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29be3991a7ec77f08a1078271443eba9">&#9670;&#160;</a></span>BuildBeamSections()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::vector&lt; <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> &gt; openturbine::interfaces::components::Blade::BuildBeamSections </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html">BladeInput</a> &amp;&#160;</td>
+          <td class="paramname"><em>input</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1afac7c639f2a9eec3b3294c46c4256a" name="a1afac7c639f2a9eec3b3294c46c4256a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1afac7c639f2a9eec3b3294c46c4256a">&#9670;&#160;</a></span>CalcNodeTangents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::array&lt; double, 3 &gt; &gt; openturbine::interfaces::components::Blade::CalcNodeTangents </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>node_coordinates</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad17fbc5e5b3d82d57e97ce3307330ac0" name="ad17fbc5e5b3d82d57e97ce3307330ac0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad17fbc5e5b3d82d57e97ce3307330ac0">&#9670;&#160;</a></span>ClearLoads()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::interfaces::components::Blade::ClearLoads </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set blade point loads to zero. </p>
+
+</div>
+</div>
+<a id="a488bfdbb1197739ccbf0500c48192458" name="a488bfdbb1197739ccbf0500c48192458"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a488bfdbb1197739ccbf0500c48192458">&#9670;&#160;</a></span>GetNodeWeights()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; double &gt; openturbine::interfaces::components::Blade::GetNodeWeights </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return a vector of weights for distributing a point load to the nodes based on the position [0,1] of the point along the blade. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a696774be592f1951ec7cb44581563835" name="a696774be592f1951ec7cb44581563835"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a696774be592f1951ec7cb44581563835">&#9670;&#160;</a></span>beam_element_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::interfaces::components::Blade::beam_element_id {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Beam element ID. </p>
+
+</div>
+</div>
+<a id="ab18b1a42014a85a96155e13aec1c7da4" name="ab18b1a42014a85a96155e13aec1c7da4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab18b1a42014a85a96155e13aec1c7da4">&#9670;&#160;</a></span>node_xi</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; openturbine::interfaces::components::Blade::node_xi</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Location of nodes in blade element [-1, 1]. </p>
+
+</div>
+</div>
+<a id="a7fcefeac13ef4eda749f954ba5866800" name="a7fcefeac13ef4eda749f954ba5866800"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7fcefeac13ef4eda749f954ba5866800">&#9670;&#160;</a></span>nodes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a>&gt; openturbine::interfaces::components::Blade::nodes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html">Blade</a> node data. </p>
+
+</div>
+</div>
+<a id="a8aec1850b8bbc32a6a019264291e1f41" name="a8aec1850b8bbc32a6a019264291e1f41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8aec1850b8bbc32a6a019264291e1f41">&#9670;&#160;</a></span>prescribed_root_constraint_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::interfaces::components::Blade::prescribed_root_constraint_id {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structopenturbine_1_1Constraint.html" title="Defines a constraint between two nodes or enforces a boundary condition at a single node.">Constraint</a> ID of prescribed root displacement. </p>
+
+</div>
+</div>
+<a id="a5948d466104a23f84cb099624246f6e3" name="a5948d466104a23f84cb099624246f6e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5948d466104a23f84cb099624246f6e3">&#9670;&#160;</a></span>root_blade_constraint_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::interfaces::components::Blade::root_blade_constraint_id {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ID of constraint connecting root node to first blade node. </p>
+
+</div>
+</div>
+<a id="a7488e6f9e8ab261e5f2ac3b5082fa8ac" name="a7488e6f9e8ab261e5f2ac3b5082fa8ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7488e6f9e8ab261e5f2ac3b5082fa8ac">&#9670;&#160;</a></span>root_node</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> openturbine::interfaces::components::Blade::root_node</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html">Blade</a> root node. </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/<a class="el" href="blade_8hpp_source.html">blade.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+.. meta::ed4fb0f47089b3ec6b29deafba36f1429added32b0fafed8e2811352959cbc5d6d87deef252ce2aebc2356217e2de747dc61b0a6a9d827dad3ca4c889a765ea3
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::BladeInterfaceBuilder Struct Reference
+
+BladeInterfaceBuilder Struct Reference
+======================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1interfaces_1_1BladeInterfaceBuilder.html

@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['pitch_0',['Pitch',['../structPitch.html',1,'']]],
-  ['pitch_5f1_1',['Pitch_1',['../structPitch__1.html',1,'']]],
-  ['pitchaxis_2',['PitchAxis',['../structPitchAxis.html',1,'']]],
-  ['polars_3',['Polars',['../structPolars.html',1,'']]]
+  ['vtkoutput_0',['VTKOutput',['../structopenturbine_1_1interfaces_1_1VTKOutput.html',1,'openturbine::interfaces']]],
+  ['vtksettings_1',['VTKSettings',['../structopenturbine_1_1util_1_1VTKSettings.html',1,'openturbine::util']]]
 ];

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::interfaces::components::SolutionBuilder Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::interfaces::components::SolutionBuilder Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="solutionbuilder-struct-reference">
+<h1>SolutionBuilder Struct Reference<a class="headerlink" href="#solutionbuilder-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::interfaces::components::SolutionBuilder Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces.html">interfaces</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html">components</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::interfaces::components::SolutionBuilder Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="solution__builder_8hpp_source.html">solution_builder.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a1811b45859e4fda4ddfa34e5ced3c368" id="r_a1811b45859e4fda4ddfa34e5ced3c368"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html#a1811b45859e4fda4ddfa34e5ced3c368">EnableStaticSolve</a> ()</td></tr>
+<tr class="separator:a1811b45859e4fda4ddfa34e5ced3c368"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f21b47ecbbd444f6cb1902a9ab137b0" id="r_a4f21b47ecbbd444f6cb1902a9ab137b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html#a4f21b47ecbbd444f6cb1902a9ab137b0">EnableDynamicSolve</a> ()</td></tr>
+<tr class="separator:a4f21b47ecbbd444f6cb1902a9ab137b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a330207a8910969ef3c37867c6db31832" id="r_a330207a8910969ef3c37867c6db31832"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html#a330207a8910969ef3c37867c6db31832">SetGravity</a> (const std::array&lt; double, 3 &gt; &amp;gravity)</td></tr>
+<tr class="separator:a330207a8910969ef3c37867c6db31832"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5597c631f4d0b1c564e808ed2e1df726" id="r_a5597c631f4d0b1c564e808ed2e1df726"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html#a5597c631f4d0b1c564e808ed2e1df726">SetRelativeErrorTolerance</a> (double rtol)</td></tr>
+<tr class="separator:a5597c631f4d0b1c564e808ed2e1df726"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a780e0982397a09db2ea79a69eb91014b" id="r_a780e0982397a09db2ea79a69eb91014b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html#a780e0982397a09db2ea79a69eb91014b">SetAbsoluteErrorTolerance</a> (double atol)</td></tr>
+<tr class="separator:a780e0982397a09db2ea79a69eb91014b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b3a16dc4992b33619686cdce0f2ac75" id="r_a8b3a16dc4992b33619686cdce0f2ac75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html#a8b3a16dc4992b33619686cdce0f2ac75">SetMaximumNonlinearIterations</a> (size_t max_iter)</td></tr>
+<tr class="separator:a8b3a16dc4992b33619686cdce0f2ac75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f845c6577b9191e0b2c53feda6a5bf6" id="r_a3f845c6577b9191e0b2c53feda6a5bf6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html#a3f845c6577b9191e0b2c53feda6a5bf6">SetTimeStep</a> (double time_step)</td></tr>
+<tr class="separator:a3f845c6577b9191e0b2c53feda6a5bf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaab6534f9c52d112046712908152a199" id="r_aaab6534f9c52d112046712908152a199"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html#aaab6534f9c52d112046712908152a199">SetDampingFactor</a> (double rho_inf)</td></tr>
+<tr class="separator:aaab6534f9c52d112046712908152a199"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98ceeafa5cb08dc1d47a4c12289eb6c8" id="r_a98ceeafa5cb08dc1d47a4c12289eb6c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html#a98ceeafa5cb08dc1d47a4c12289eb6c8">SetOutputFile</a> (const std::string &amp;output_file_path)</td></tr>
+<tr class="separator:a98ceeafa5cb08dc1d47a4c12289eb6c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dba9c017e0f25b8134f44d99897970e" id="r_a0dba9c017e0f25b8134f44d99897970e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html#a0dba9c017e0f25b8134f44d99897970e">SetVTKOutputPath</a> (const std::string &amp;vtk_output_path)</td></tr>
+<tr class="separator:a0dba9c017e0f25b8134f44d99897970e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6076aeb7ca9e23911af7e30b5edd9793" id="r_a6076aeb7ca9e23911af7e30b5edd9793"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">SolutionInput</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html#a6076aeb7ca9e23911af7e30b5edd9793">Input</a> () const</td></tr>
+<tr class="separator:a6076aeb7ca9e23911af7e30b5edd9793"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a4f21b47ecbbd444f6cb1902a9ab137b0" name="a4f21b47ecbbd444f6cb1902a9ab137b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f21b47ecbbd444f6cb1902a9ab137b0">&#9670;&#160;</a></span>EnableDynamicSolve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp; openturbine::interfaces::components::SolutionBuilder::EnableDynamicSolve </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1811b45859e4fda4ddfa34e5ced3c368" name="a1811b45859e4fda4ddfa34e5ced3c368"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1811b45859e4fda4ddfa34e5ced3c368">&#9670;&#160;</a></span>EnableStaticSolve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp; openturbine::interfaces::components::SolutionBuilder::EnableStaticSolve </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6076aeb7ca9e23911af7e30b5edd9793" name="a6076aeb7ca9e23911af7e30b5edd9793"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6076aeb7ca9e23911af7e30b5edd9793">&#9670;&#160;</a></span>Input()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">SolutionInput</a> &amp; openturbine::interfaces::components::SolutionBuilder::Input </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a780e0982397a09db2ea79a69eb91014b" name="a780e0982397a09db2ea79a69eb91014b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a780e0982397a09db2ea79a69eb91014b">&#9670;&#160;</a></span>SetAbsoluteErrorTolerance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp; openturbine::interfaces::components::SolutionBuilder::SetAbsoluteErrorTolerance </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>atol</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaab6534f9c52d112046712908152a199" name="aaab6534f9c52d112046712908152a199"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaab6534f9c52d112046712908152a199">&#9670;&#160;</a></span>SetDampingFactor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp; openturbine::interfaces::components::SolutionBuilder::SetDampingFactor </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>rho_inf</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a330207a8910969ef3c37867c6db31832" name="a330207a8910969ef3c37867c6db31832"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a330207a8910969ef3c37867c6db31832">&#9670;&#160;</a></span>SetGravity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp; openturbine::interfaces::components::SolutionBuilder::SetGravity </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>gravity</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b3a16dc4992b33619686cdce0f2ac75" name="a8b3a16dc4992b33619686cdce0f2ac75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b3a16dc4992b33619686cdce0f2ac75">&#9670;&#160;</a></span>SetMaximumNonlinearIterations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp; openturbine::interfaces::components::SolutionBuilder::SetMaximumNonlinearIterations </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>max_iter</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a98ceeafa5cb08dc1d47a4c12289eb6c8" name="a98ceeafa5cb08dc1d47a4c12289eb6c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98ceeafa5cb08dc1d47a4c12289eb6c8">&#9670;&#160;</a></span>SetOutputFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp; openturbine::interfaces::components::SolutionBuilder::SetOutputFile </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>output_file_path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5597c631f4d0b1c564e808ed2e1df726" name="a5597c631f4d0b1c564e808ed2e1df726"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5597c631f4d0b1c564e808ed2e1df726">&#9670;&#160;</a></span>SetRelativeErrorTolerance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp; openturbine::interfaces::components::SolutionBuilder::SetRelativeErrorTolerance </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>rtol</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3f845c6577b9191e0b2c53feda6a5bf6" name="a3f845c6577b9191e0b2c53feda6a5bf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f845c6577b9191e0b2c53feda6a5bf6">&#9670;&#160;</a></span>SetTimeStep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp; openturbine::interfaces::components::SolutionBuilder::SetTimeStep </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>time_step</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0dba9c017e0f25b8134f44d99897970e" name="a0dba9c017e0f25b8134f44d99897970e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dba9c017e0f25b8134f44d99897970e">&#9670;&#160;</a></span>SetVTKOutputPath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionBuilder.html">SolutionBuilder</a> &amp; openturbine::interfaces::components::SolutionBuilder::SetVTKOutputPath </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>vtk_output_path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/<a class="el" href="solution__builder_8hpp_source.html">solution_builder.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

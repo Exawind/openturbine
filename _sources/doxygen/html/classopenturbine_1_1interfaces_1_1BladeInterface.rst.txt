@@ -1,0 +1,14 @@
+.. meta::d2f6b5d597b9647850811bf895497db371eb62d1c1c5807c74b871ae905c6d30c0d3cf866c3f0a455a3bccf5ca932bcf97e3253e9327d6d43277c5b81ce3b674
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::BladeInterface Class Reference
+
+BladeInterface Class Reference
+==============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classopenturbine_1_1interfaces_1_1BladeInterface.html

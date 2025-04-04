@@ -167,105 +167,35 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">matrix_operations.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;Kokkos_Core.hpp&gt;</code><br />
+<code>#include &quot;<a class="el" href="quaternion__operations_8hpp_source.html">math/quaternion_operations.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="types_8hpp_source.html">types.hpp</a>&quot;</code><br />
 </div>
 <p><a href="matrix__operations_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespaceopenturbine" id="r_namespaceopenturbine"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html">openturbine</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a367fda764f427cc89a0c6d7e1f5a23c8" id="r_a367fda764f427cc89a0c6d7e1f5a23c8"><td class="memTemplParams" colspan="2">template&lt;typename Matrix &gt; </td></tr>
-<tr class="memitem:a367fda764f427cc89a0c6d7e1f5a23c8"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="matrix__operations_8hpp.html#a367fda764f427cc89a0c6d7e1f5a23c8">AX_Matrix</a> (const Matrix &amp;<a class="el" href="structA.html">A</a>, const Matrix &amp;AX_A)</td></tr>
-<tr class="memdesc:a367fda764f427cc89a0c6d7e1f5a23c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes AX(A) of a square matrix.  <br /></td></tr>
-<tr class="separator:a367fda764f427cc89a0c6d7e1f5a23c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3d4b6c7c695faebbfe38e1e9e307828" id="r_ac3d4b6c7c695faebbfe38e1e9e307828"><td class="memTemplParams" colspan="2">template&lt;typename Matrix , typename Vector &gt; </td></tr>
-<tr class="memitem:ac3d4b6c7c695faebbfe38e1e9e307828"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="matrix__operations_8hpp.html#ac3d4b6c7c695faebbfe38e1e9e307828">AxialVectorOfMatrix</a> (const Matrix &amp;m, const Vector &amp;v)</td></tr>
-<tr class="memdesc:ac3d4b6c7c695faebbfe38e1e9e307828"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the axial vector (also known as the vector representation) of a 3x3 skew-symmetric matrix.  <br /></td></tr>
-<tr class="separator:ac3d4b6c7c695faebbfe38e1e9e307828"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a498f87995034d11d49febc2ade533d52" id="r_a498f87995034d11d49febc2ade533d52"><td class="memTemplParams" colspan="2">template&lt;typename <a class="el" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">Matrix</a> &gt; </td></tr>
+<tr class="memitem:a498f87995034d11d49febc2ade533d52"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a498f87995034d11d49febc2ade533d52">openturbine::AX_Matrix</a> (const <a class="el" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">Matrix</a> &amp;A, const <a class="el" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">Matrix</a> &amp;AX_A)</td></tr>
+<tr class="memdesc:a498f87995034d11d49febc2ade533d52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes AX(A) of a square matrix.  <br /></td></tr>
+<tr class="separator:a498f87995034d11d49febc2ade533d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af11ae3045eb70cfa713334bbfdb9221b" id="r_af11ae3045eb70cfa713334bbfdb9221b"><td class="memTemplParams" colspan="2">template&lt;typename <a class="el" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">Matrix</a> , typename Vector &gt; </td></tr>
+<tr class="memitem:af11ae3045eb70cfa713334bbfdb9221b"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#af11ae3045eb70cfa713334bbfdb9221b">openturbine::AxialVectorOfMatrix</a> (const <a class="el" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">Matrix</a> &amp;m, const Vector &amp;v)</td></tr>
+<tr class="memdesc:af11ae3045eb70cfa713334bbfdb9221b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the axial vector (also known as the vector representation) of a 3x3 skew-symmetric matrix.  <br /></td></tr>
+<tr class="separator:af11ae3045eb70cfa713334bbfdb9221b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad19d7b7244cc18f631e0cd4d7a5e4fc" id="r_aad19d7b7244cc18f631e0cd4d7a5e4fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">openturbine::RotateMatrix6</a> (const <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> &amp;m, const <a class="el" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a> &amp;q)</td></tr>
+<tr class="separator:aad19d7b7244cc18f631e0cd4d7a5e4fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a367fda764f427cc89a0c6d7e1f5a23c8" name="a367fda764f427cc89a0c6d7e1f5a23c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a367fda764f427cc89a0c6d7e1f5a23c8">&#9670;&#160;</a></span>AX_Matrix()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Matrix &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">KOKKOS_INLINE_FUNCTION void AX_Matrix </td>
-          <td>(</td>
-          <td class="paramtype">const Matrix &amp;&#160;</td>
-          <td class="paramname"><em>A</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const Matrix &amp;&#160;</td>
-          <td class="paramname"><em>AX_A</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Computes AX(A) of a square matrix. </p>
-<p>AX(A) = tr(A)/2 * I - A/2, where I is the identity matrix </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname"><a class="el" href="structA.html">A</a></td><td>Input square matrix </td></tr>
-    <tr><td class="paramname">AX_A</td><td>Output matrix containing the result </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ac3d4b6c7c695faebbfe38e1e9e307828" name="ac3d4b6c7c695faebbfe38e1e9e307828"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3d4b6c7c695faebbfe38e1e9e307828">&#9670;&#160;</a></span>AxialVectorOfMatrix()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Matrix , typename Vector &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">KOKKOS_INLINE_FUNCTION void AxialVectorOfMatrix </td>
-          <td>(</td>
-          <td class="paramtype">const Matrix &amp;&#160;</td>
-          <td class="paramname"><em>m</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const Vector &amp;&#160;</td>
-          <td class="paramname"><em>v</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Computes the axial vector (also known as the vector representation) of a 3x3 skew-symmetric matrix. </p>
-<p>The axial vector is defined as [w₁, w₂, w₃]ᵀ where: w₁ = (m₃₂ - m₂₃)/2 w₂ = (m₁₃ - m₃₁)/2 w₃ = (m₂₁ - m₁₂)/2 </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">m</td><td>Input 3x3 rotation matrix </td></tr>
-    <tr><td class="paramname">v</td><td>Output vector to store the result </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section pre"><dt>Precondition</dt><dd>Matrix m must be 3x3 and vector v must have size 3 </dd></dl>
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

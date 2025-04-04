@@ -22,7 +22,6 @@ All
       g <functions_g>
       h <functions_h>
       i <functions_i>
-      j <functions_j>
       k <functions_k>
       l <functions_l>
       m <functions_m>
@@ -38,7 +37,6 @@ All
       w <functions_w>
       x <functions_x>
       y <functions_y>
-      z <functions_z>
       ~ <functions_~>
 
    .. raw:: html

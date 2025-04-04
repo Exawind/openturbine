@@ -224,6 +224,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adc00d72518a7b03eb70e93b2e7ab2f83" id="r_adc00d72518a7b03eb70e93b2e7ab2f83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Beams.html">Beams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#adc00d72518a7b03eb70e93b2e7ab2f83">CreateBeams</a> () const</td></tr>
 <tr class="memdesc:adc00d72518a7b03eb70e93b2e7ab2f83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <a class="el" href="structopenturbine_1_1Beams.html" title="Contains the field variables needed to compute the per-element contributions to the residual vector a...">Beams</a> struct initialized with beams.  <br /></td></tr>
 <tr class="separator:adc00d72518a7b03eb70e93b2e7ab2f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa81e6507f8b8c50614a1fd6fb193775" id="r_aaa81e6507f8b8c50614a1fd6fb193775"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#aaa81e6507f8b8c50614a1fd6fb193775">TranslateBeam</a> (size_t beam_elem_id, const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;displacement)</td></tr>
+<tr class="memdesc:aaa81e6507f8b8c50614a1fd6fb193775"><td class="mdescLeft">&#160;</td><td class="mdescRight">Translate all beam nodes by given displacement.  <br /></td></tr>
+<tr class="separator:aaa81e6507f8b8c50614a1fd6fb193775"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afddd81b6a84a5a11d5bcdea3d7fa0c76" id="r_afddd81b6a84a5a11d5bcdea3d7fa0c76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#afddd81b6a84a5a11d5bcdea3d7fa0c76">RotateBeamAboutPoint</a> (size_t beam_elem_id, const <a class="el" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a> &amp;displacement_quaternion, const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;point)</td></tr>
+<tr class="memdesc:afddd81b6a84a5a11d5bcdea3d7fa0c76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotate all beam nodes by given displacement quaternion about origin point.  <br /></td></tr>
+<tr class="separator:afddd81b6a84a5a11d5bcdea3d7fa0c76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fab6b07bdb4eecaab969589364e39c4" id="r_a4fab6b07bdb4eecaab969589364e39c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a4fab6b07bdb4eecaab969589364e39c4">SetBeamVelocityAboutPoint</a> (size_t beam_elem_id, const <a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a> &amp;velocity, const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;point)</td></tr>
+<tr class="separator:a4fab6b07bdb4eecaab969589364e39c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3d84c79d681cba5fb749030c352f56b" id="r_af3d84c79d681cba5fb749030c352f56b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#af3d84c79d681cba5fb749030c352f56b">SetBeamAccelerationAboutPoint</a> (size_t beam_elem_id, const <a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a> &amp;acceleration, const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;omega, const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;point)</td></tr>
+<tr class="separator:af3d84c79d681cba5fb749030c352f56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefc0f439534dc2288c5d9a9d59bda1de" id="r_aefc0f439534dc2288c5d9a9d59bda1de"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#aefc0f439534dc2288c5d9a9d59bda1de">AddMassElement</a> (const size_t node_id, const std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; &amp;mass)</td></tr>
 <tr class="memdesc:aefc0f439534dc2288c5d9a9d59bda1de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a mass element to the model and returns the index of the element.  <br /></td></tr>
 <tr class="separator:aefc0f439534dc2288c5d9a9d59bda1de"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -299,8 +309,8 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct to define a turbine model with nodes, elements, and constraints. </p>
-<p><a class="el" href="structA.html">A</a> model is a collection of nodes, elements, and constraints that define the geometry and relationships between components in a turbine</p><ul>
-<li><a class="el" href="structNodes.html">Nodes</a> represent points in space with position, displacement, velocity, and acceleration</li>
+<p>A model is a collection of nodes, elements, and constraints that define the geometry and relationships between components in a turbine</p><ul>
+<li>Nodes represent points in space with position, displacement, velocity, and acceleration</li>
 <li><a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a> represent components in the turbine with mass (beams, rigid bodies) and stiffness matrices (beams)</li>
 <li><a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> represent relationships between nodes that restrict their relative motion in some way </li>
 </ul>
@@ -1481,6 +1491,140 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="afddd81b6a84a5a11d5bcdea3d7fa0c76" name="afddd81b6a84a5a11d5bcdea3d7fa0c76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afddd81b6a84a5a11d5bcdea3d7fa0c76">&#9670;&#160;</a></span>RotateBeamAboutPoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::Model::RotateBeamAboutPoint </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>beam_elem_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a> &amp;&#160;</td>
+          <td class="paramname"><em>displacement_quaternion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;&#160;</td>
+          <td class="paramname"><em>point</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Rotate all beam nodes by given displacement quaternion about origin point. </p>
+
+</div>
+</div>
+<a id="af3d84c79d681cba5fb749030c352f56b" name="af3d84c79d681cba5fb749030c352f56b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3d84c79d681cba5fb749030c352f56b">&#9670;&#160;</a></span>SetBeamAccelerationAboutPoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::Model::SetBeamAccelerationAboutPoint </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>beam_elem_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a> &amp;&#160;</td>
+          <td class="paramname"><em>acceleration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;&#160;</td>
+          <td class="paramname"><em>omega</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;&#160;</td>
+          <td class="paramname"><em>point</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4fab6b07bdb4eecaab969589364e39c4" name="a4fab6b07bdb4eecaab969589364e39c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fab6b07bdb4eecaab969589364e39c4">&#9670;&#160;</a></span>SetBeamVelocityAboutPoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::Model::SetBeamVelocityAboutPoint </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>beam_elem_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#aad69ee5233ca52ab6a81f136be17aaef">Array_6</a> &amp;&#160;</td>
+          <td class="paramname"><em>velocity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;&#160;</td>
+          <td class="paramname"><em>point</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a83224515c60f384d296919b758204ad7" name="a83224515c60f384d296919b758204ad7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a83224515c60f384d296919b758204ad7">&#9670;&#160;</a></span>SetGravity()</h2>
 
@@ -1524,12 +1668,50 @@ Public Member Functions</h2></td></tr>
 <p>Sets the gravity components for the model. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x</td><td><a class="el" href="structX.html">X</a> gravity component </td></tr>
-    <tr><td class="paramname">y</td><td><a class="el" href="structY.html">Y</a> gravity component </td></tr>
-    <tr><td class="paramname">z</td><td><a class="el" href="structZ.html">Z</a> gravity component </td></tr>
+    <tr><td class="paramname">x</td><td>X gravity component </td></tr>
+    <tr><td class="paramname">y</td><td>Y gravity component </td></tr>
+    <tr><td class="paramname">z</td><td>Z gravity component </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aaa81e6507f8b8c50614a1fd6fb193775" name="aaa81e6507f8b8c50614a1fd6fb193775"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa81e6507f8b8c50614a1fd6fb193775">&#9670;&#160;</a></span>TranslateBeam()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::Model::TranslateBeam </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>beam_elem_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;&#160;</td>
+          <td class="paramname"><em>displacement</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Translate all beam nodes by given displacement. </p>
 
 </div>
 </div>

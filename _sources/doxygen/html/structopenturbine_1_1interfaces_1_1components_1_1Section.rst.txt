@@ -1,0 +1,14 @@
+.. meta::211ba45d7a433519e910e4b6917a8a60602788333d8f108c5cee946d52577b5a710e15375f246b4a6c71f17ce8cd72d2c5136a93998ad0d162acd3cc12b5282a
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::components::Section Struct Reference
+
+Section Struct Reference
+========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1interfaces_1_1components_1_1Section.html

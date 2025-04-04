@@ -1,0 +1,14 @@
+.. meta::2416324245f622c2e43ffd0b2574917f3ae0b7b9506250b065d3c770164597aa2c8d86ee4fa18c766990a44617abe1509e5c1ca5a8e9a031aff702f8c42ab062
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::HostState Struct Reference
+
+HostState Struct Reference
+==========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1interfaces_1_1HostState.html
