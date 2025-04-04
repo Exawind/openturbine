@@ -73,6 +73,44 @@ inline std::tuple<Matrix, Matrix, std::vector<double>> ShapeFunctionMatrices(
 }
 
 /**
+ * @brief Computes shape function matrices ϕg and their derivatives dϕg relating points ξb to ξg
+ *
+ * @param input_pts Input points, ξb, in [-1, 1] (2 <= input_pts.size() <= output_pts.size())
+ * @param output_pts Output points, ξg, in [-1, 1]
+ * @return Tuple containing shape function matrix and shape derivative matrix
+ */
+inline std::tuple<Matrix, Matrix> ShapeFunctionMatrices(
+    const std::vector<double>& input_pts, const std::vector<double>& output_pts
+) {
+    // Number of points in input and output arrays
+    const auto n_input = input_pts.size();
+    const auto n_output = output_pts.size();
+
+    // Compute weights for the shape functions and its derivatives at the evaluation points
+    std::vector<double> weights(n_output, 0.);
+
+    // Create shape function interpolation matrix
+    Matrix shape_functions(n_output, std::vector<double>(n_input, 0.));
+    for (size_t j = 0; j < n_input; ++j) {
+        LagrangePolynomialInterpWeights(input_pts[j], output_pts, weights);
+        for (size_t k = 0; k < n_output; ++k) {
+            shape_functions[k][j] = weights[k];
+        }
+    }
+
+    // Create shape function derivative matrix
+    Matrix derivative_functions(n_output, std::vector<double>(n_input, 0.));
+    for (size_t j = 0; j < n_input; ++j) {
+        LagrangePolynomialDerivWeights(input_pts[j], output_pts, weights);
+        for (size_t k = 0; k < n_output; ++k) {
+            derivative_functions[k][j] = weights[k];
+        }
+    }
+
+    return {shape_functions, derivative_functions};
+}
+
+/**
  * @brief Performs least squares fitting to determine interpolation coefficients
  * @details Performs least squares fitting to determine interpolation coefficients
  *          by solving a dense linear system [A][X] = [B], where [A] is the shape

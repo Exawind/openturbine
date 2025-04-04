@@ -4,6 +4,7 @@
 
 #include "beam_element.hpp"
 #include "interpolation.hpp"
+#include "model/node.hpp"
 
 namespace openturbine {
 

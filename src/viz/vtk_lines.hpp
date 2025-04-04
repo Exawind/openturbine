@@ -3,19 +3,13 @@
 #include <array>
 #include <vector>
 
-#ifdef OpenTurbine_ENABLE_VTK
-
 #include <vtkLine.h>
 #include <vtkPoints.h>
 #include <vtkPolyData.h>
 #include <vtkSmartPointer.h>
 #include <vtkXMLPolyDataWriter.h>
 
-#endif
-
 namespace openturbine {
-
-#ifdef OpenTurbine_ENABLE_VTK
 
 inline void WriteLinesVTK(
     const std::vector<std::array<size_t, 2>>& lines_data,
@@ -50,13 +44,5 @@ inline void WriteLinesVTK(
     writer->SetDataModeToAscii();
     writer->Write();
 }
-
-#else
-
-inline void
-WriteLinesVTK(const std::vector<std::array<size_t, 2>>&, const std::vector<std::array<double, 7>>&, const std::string&) {
-}
-
-#endif
 
 }  // namespace openturbine
