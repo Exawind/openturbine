@@ -182,34 +182,20 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a13adc760a63b9e8751758d38bfaa35e1" id="r_a13adc760a63b9e8751758d38bfaa35e1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a13adc760a63b9e8751758d38bfaa35e1">GlobalCrsMatrixType</a> = Tpetra::CrsMatrix&lt;&gt;</td></tr>
-<tr class="separator:a13adc760a63b9e8751758d38bfaa35e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d18513ab415a6b1e146b56446b7ffcb" id="r_a6d18513ab415a6b1e146b56446b7ffcb"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a6d18513ab415a6b1e146b56446b7ffcb">ExecutionSpace</a> = GlobalCrsMatrixType::execution_space</td></tr>
-<tr class="separator:a6d18513ab415a6b1e146b56446b7ffcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a027dfd83d4b63164754efd2e31d7df30" id="r_a027dfd83d4b63164754efd2e31d7df30"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a027dfd83d4b63164754efd2e31d7df30">MemorySpace</a> = GlobalCrsMatrixType::memory_space</td></tr>
-<tr class="separator:a027dfd83d4b63164754efd2e31d7df30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af542cae6ed23cd5a9a6a1a943c0ae198" id="r_af542cae6ed23cd5a9a6a1a943c0ae198"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#af542cae6ed23cd5a9a6a1a943c0ae198">GlobalMultiVectorType</a> = Tpetra::MultiVector&lt;&gt;</td></tr>
-<tr class="separator:af542cae6ed23cd5a9a6a1a943c0ae198"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7a0f88cf347a868a7d33afedf0dd903" id="r_aa7a0f88cf347a868a7d33afedf0dd903"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#aa7a0f88cf347a868a7d33afedf0dd903">CrsMatrixType</a> = GlobalCrsMatrixType::local_matrix_device_type</td></tr>
-<tr class="separator:aa7a0f88cf347a868a7d33afedf0dd903"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a694b771d99f52e589929b3bde689d14a" id="r_a694b771d99f52e589929b3bde689d14a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a694b771d99f52e589929b3bde689d14a">KernelHandle</a> = typename KokkosKernels::Experimental::KokkosKernelsHandle&lt; CrsMatrixType::const_size_type, CrsMatrixType::const_ordinal_type, CrsMatrixType::const_value_type, <a class="el" href="structopenturbine_1_1Solver.html#a6d18513ab415a6b1e146b56446b7ffcb">ExecutionSpace</a>, <a class="el" href="structopenturbine_1_1Solver.html#a027dfd83d4b63164754efd2e31d7df30">MemorySpace</a>, <a class="el" href="structopenturbine_1_1Solver.html#a027dfd83d4b63164754efd2e31d7df30">MemorySpace</a> &gt;</td></tr>
-<tr class="separator:a694b771d99f52e589929b3bde689d14a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85cb574ede3a2aa3035f1cc7c2d804d3" id="r_a85cb574ede3a2aa3035f1cc7c2d804d3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a85cb574ede3a2aa3035f1cc7c2d804d3">DeviceType</a> = Kokkos::Device&lt; Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space &gt;</td></tr>
+<tr class="separator:a85cb574ede3a2aa3035f1cc7c2d804d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf5a8404d835684b58091d34894e1e4f" id="r_adf5a8404d835684b58091d34894e1e4f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a> = double</td></tr>
+<tr class="separator:adf5a8404d835684b58091d34894e1e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1b1597783dd7725efda2dd19fd65520" id="r_ae1b1597783dd7725efda2dd19fd65520"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">IndexType</a> = int</td></tr>
+<tr class="separator:ae1b1597783dd7725efda2dd19fd65520"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15f307b4fb34ad362c8084061c10b97c" id="r_a15f307b4fb34ad362c8084061c10b97c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a15f307b4fb34ad362c8084061c10b97c">CrsMatrixType</a> = KokkosSparse::CrsMatrix&lt; <a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a>, <a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">IndexType</a>, <a class="el" href="structopenturbine_1_1Solver.html#a85cb574ede3a2aa3035f1cc7c2d804d3">DeviceType</a>, void, <a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">IndexType</a> &gt;</td></tr>
+<tr class="separator:a15f307b4fb34ad362c8084061c10b97c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a08f06bb93a37ed10d9f15e8208f87136" id="r_a08f06bb93a37ed10d9f15e8208f87136"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a08f06bb93a37ed10d9f15e8208f87136">Solver</a> (const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_IDs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_freedom_map_table, const Kokkos::View&lt; size_t * &gt;::const_type &amp;num_nodes_per_element, const Kokkos::View&lt; size_t ** &gt;::const_type &amp;node_state_indices, size_t num_constraint_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;base_active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;target_active_dofs, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_row_range)</td></tr>
 <tr class="memdesc:a08f06bb93a37ed10d9f15e8208f87136"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a sparse linear systems solver for OpenTurbine.  <br /></td></tr>
 <tr class="separator:a08f06bb93a37ed10d9f15e8208f87136"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4dedc7056264efe3c8439cb92bfde5b" id="r_aa4dedc7056264efe3c8439cb92bfde5b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#aa4dedc7056264efe3c8439cb92bfde5b">Solver</a> (const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp;other)</td></tr>
-<tr class="separator:aa4dedc7056264efe3c8439cb92bfde5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc46ca32139ba015bfc756213bc599f9" id="r_afc46ca32139ba015bfc756213bc599f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#afc46ca32139ba015bfc756213bc599f9">Solver</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp;&amp;other) noexcept=delete</td></tr>
-<tr class="separator:afc46ca32139ba015bfc756213bc599f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ae95114c548bc74372a21fd9e627e0e" id="r_a8ae95114c548bc74372a21fd9e627e0e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a8ae95114c548bc74372a21fd9e627e0e">~Solver</a> ()=default</td></tr>
-<tr class="separator:a8ae95114c548bc74372a21fd9e627e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61843fedb35af21015a06be489b2c9fd" id="r_a61843fedb35af21015a06be489b2c9fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a61843fedb35af21015a06be489b2c9fd">operator=</a> (const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp;other)</td></tr>
-<tr class="separator:a61843fedb35af21015a06be489b2c9fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a4d2c001ee554ead24ec3b2a27ab85b" id="r_a2a4d2c001ee554ead24ec3b2a27ab85b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a2a4d2c001ee554ead24ec3b2a27ab85b">operator=</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp;&amp;other) noexcept=delete</td></tr>
-<tr class="separator:a2a4d2c001ee554ead24ec3b2a27ab85b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -219,16 +205,16 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a08fe489aaabd31d024466fb2c303d337"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e82c81b713283dafbec92334277d596" id="r_a9e82c81b713283dafbec92334277d596"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a9e82c81b713283dafbec92334277d596">num_dofs</a></td></tr>
 <tr class="separator:a9e82c81b713283dafbec92334277d596"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4840cb5d0801921d94c87c7157b9551d" id="r_a4840cb5d0801921d94c87c7157b9551d"><td class="memItemLeft" align="right" valign="top">Teuchos::RCP&lt; <a class="el" href="structopenturbine_1_1Solver.html#a13adc760a63b9e8751758d38bfaa35e1">GlobalCrsMatrixType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a4840cb5d0801921d94c87c7157b9551d">A</a></td></tr>
-<tr class="separator:a4840cb5d0801921d94c87c7157b9551d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29b89f77500235772ffc3eea8583b614" id="r_a29b89f77500235772ffc3eea8583b614"><td class="memItemLeft" align="right" valign="top">Teuchos::RCP&lt; <a class="el" href="structopenturbine_1_1Solver.html#af542cae6ed23cd5a9a6a1a943c0ae198">GlobalMultiVectorType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a29b89f77500235772ffc3eea8583b614">b</a></td></tr>
-<tr class="separator:a29b89f77500235772ffc3eea8583b614"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bc0725cc36c7d50f91a971f05580737" id="r_a4bc0725cc36c7d50f91a971f05580737"><td class="memItemLeft" align="right" valign="top">Teuchos::RCP&lt; <a class="el" href="structopenturbine_1_1Solver.html#af542cae6ed23cd5a9a6a1a943c0ae198">GlobalMultiVectorType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a4bc0725cc36c7d50f91a971f05580737">x</a></td></tr>
-<tr class="separator:a4bc0725cc36c7d50f91a971f05580737"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5ba11a3dca6e62957d1b8c5b8b53ac1" id="r_ae5ba11a3dca6e62957d1b8c5b8b53ac1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html#a15f307b4fb34ad362c8084061c10b97c">CrsMatrixType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#ae5ba11a3dca6e62957d1b8c5b8b53ac1">A</a></td></tr>
+<tr class="separator:ae5ba11a3dca6e62957d1b8c5b8b53ac1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad99221c6c6665c6a050c4c20b1d01cd6" id="r_ad99221c6c6665c6a050c4c20b1d01cd6"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a> *[1], Kokkos::LayoutLeft &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#ad99221c6c6665c6a050c4c20b1d01cd6">b</a></td></tr>
+<tr class="separator:ad99221c6c6665c6a050c4c20b1d01cd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41a3d388aacd79a9a81a22f67e726797" id="r_a41a3d388aacd79a9a81a22f67e726797"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a> *[1], Kokkos::LayoutLeft &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a41a3d388aacd79a9a81a22f67e726797">x</a></td></tr>
+<tr class="separator:a41a3d388aacd79a9a81a22f67e726797"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9d6ffd3cceae22c4ae0b1782650af2c" id="r_aa9d6ffd3cceae22c4ae0b1782650af2c"><td class="memItemLeft" align="right" valign="top">HandleType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#aa9d6ffd3cceae22c4ae0b1782650af2c">handle</a></td></tr>
+<tr class="separator:aa9d6ffd3cceae22c4ae0b1782650af2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc295db202d6cbae3d3fc190a4e9a530" id="r_acc295db202d6cbae3d3fc190a4e9a530"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#acc295db202d6cbae3d3fc190a4e9a530">convergence_err</a></td></tr>
 <tr class="separator:acc295db202d6cbae3d3fc190a4e9a530"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af137769c4fb1e4cc96addd200b556020" id="r_af137769c4fb1e4cc96addd200b556020"><td class="memItemLeft" align="right" valign="top">Teuchos::RCP&lt; Amesos2::Solver&lt; <a class="el" href="structopenturbine_1_1Solver.html#a13adc760a63b9e8751758d38bfaa35e1">GlobalCrsMatrixType</a>, <a class="el" href="structopenturbine_1_1Solver.html#af542cae6ed23cd5a9a6a1a943c0ae198">GlobalMultiVectorType</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#af137769c4fb1e4cc96addd200b556020">amesos_solver</a></td></tr>
-<tr class="separator:af137769c4fb1e4cc96addd200b556020"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A linear systems solver for assembling and solving system matrices and constraints in OpenTurbine. This wraps Trilinos packages (Tpetra, Amesos2) for handling sparse matrix operations and linear systems solution. </p>
@@ -239,84 +225,56 @@ Public Attributes</h2></td></tr>
 <li>Combined system matrices for the complete structural problem </li>
 </ul>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="aa7a0f88cf347a868a7d33afedf0dd903" name="aa7a0f88cf347a868a7d33afedf0dd903"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7a0f88cf347a868a7d33afedf0dd903">&#9670;&#160;</a></span>CrsMatrixType</h2>
+<a id="a15f307b4fb34ad362c8084061c10b97c" name="a15f307b4fb34ad362c8084061c10b97c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15f307b4fb34ad362c8084061c10b97c">&#9670;&#160;</a></span>CrsMatrixType</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#aa7a0f88cf347a868a7d33afedf0dd903">openturbine::Solver::CrsMatrixType</a> =  GlobalCrsMatrixType::local_matrix_device_type</td>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#a15f307b4fb34ad362c8084061c10b97c">openturbine::Solver::CrsMatrixType</a> =  KokkosSparse::CrsMatrix&lt;<a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a>, <a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">IndexType</a>, <a class="el" href="structopenturbine_1_1Solver.html#a85cb574ede3a2aa3035f1cc7c2d804d3">DeviceType</a>, void, <a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">IndexType</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a6d18513ab415a6b1e146b56446b7ffcb" name="a6d18513ab415a6b1e146b56446b7ffcb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d18513ab415a6b1e146b56446b7ffcb">&#9670;&#160;</a></span>ExecutionSpace</h2>
+<a id="a85cb574ede3a2aa3035f1cc7c2d804d3" name="a85cb574ede3a2aa3035f1cc7c2d804d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85cb574ede3a2aa3035f1cc7c2d804d3">&#9670;&#160;</a></span>DeviceType</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#a6d18513ab415a6b1e146b56446b7ffcb">openturbine::Solver::ExecutionSpace</a> =  GlobalCrsMatrixType::execution_space</td>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#a85cb574ede3a2aa3035f1cc7c2d804d3">openturbine::Solver::DeviceType</a> =  Kokkos::Device&lt;Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a13adc760a63b9e8751758d38bfaa35e1" name="a13adc760a63b9e8751758d38bfaa35e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13adc760a63b9e8751758d38bfaa35e1">&#9670;&#160;</a></span>GlobalCrsMatrixType</h2>
+<a id="ae1b1597783dd7725efda2dd19fd65520" name="ae1b1597783dd7725efda2dd19fd65520"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1b1597783dd7725efda2dd19fd65520">&#9670;&#160;</a></span>IndexType</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#a13adc760a63b9e8751758d38bfaa35e1">openturbine::Solver::GlobalCrsMatrixType</a> =  Tpetra::CrsMatrix&lt;&gt;</td>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">openturbine::Solver::IndexType</a> =  int</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="af542cae6ed23cd5a9a6a1a943c0ae198" name="af542cae6ed23cd5a9a6a1a943c0ae198"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af542cae6ed23cd5a9a6a1a943c0ae198">&#9670;&#160;</a></span>GlobalMultiVectorType</h2>
+<a id="adf5a8404d835684b58091d34894e1e4f" name="adf5a8404d835684b58091d34894e1e4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf5a8404d835684b58091d34894e1e4f">&#9670;&#160;</a></span>ValueType</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#af542cae6ed23cd5a9a6a1a943c0ae198">openturbine::Solver::GlobalMultiVectorType</a> =  Tpetra::MultiVector&lt;&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a694b771d99f52e589929b3bde689d14a" name="a694b771d99f52e589929b3bde689d14a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a694b771d99f52e589929b3bde689d14a">&#9670;&#160;</a></span>KernelHandle</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#a694b771d99f52e589929b3bde689d14a">openturbine::Solver::KernelHandle</a> =  typename KokkosKernels::Experimental::KokkosKernelsHandle&lt; CrsMatrixType::const_size_type, CrsMatrixType::const_ordinal_type, CrsMatrixType::const_value_type, <a class="el" href="structopenturbine_1_1Solver.html#a6d18513ab415a6b1e146b56446b7ffcb">ExecutionSpace</a>, <a class="el" href="structopenturbine_1_1Solver.html#a027dfd83d4b63164754efd2e31d7df30">MemorySpace</a>, <a class="el" href="structopenturbine_1_1Solver.html#a027dfd83d4b63164754efd2e31d7df30">MemorySpace</a>&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a027dfd83d4b63164754efd2e31d7df30" name="a027dfd83d4b63164754efd2e31d7df30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a027dfd83d4b63164754efd2e31d7df30">&#9670;&#160;</a></span>MemorySpace</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#a027dfd83d4b63164754efd2e31d7df30">openturbine::Solver::MemorySpace</a> =  GlobalCrsMatrixType::memory_space</td>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">openturbine::Solver::ValueType</a> =  double</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -325,7 +283,7 @@ Public Attributes</h2></td></tr>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a08f06bb93a37ed10d9f15e8208f87136" name="a08f06bb93a37ed10d9f15e8208f87136"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08f06bb93a37ed10d9f15e8208f87136">&#9670;&#160;</a></span>Solver() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a08f06bb93a37ed10d9f15e8208f87136">&#9670;&#160;</a></span>Solver()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -433,173 +391,29 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa4dedc7056264efe3c8439cb92bfde5b" name="aa4dedc7056264efe3c8439cb92bfde5b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa4dedc7056264efe3c8439cb92bfde5b">&#9670;&#160;</a></span>Solver() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">openturbine::Solver::Solver </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp;&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afc46ca32139ba015bfc756213bc599f9" name="afc46ca32139ba015bfc756213bc599f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc46ca32139ba015bfc756213bc599f9">&#9670;&#160;</a></span>Solver() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">openturbine::Solver::Solver </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp;&amp;&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">delete</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8ae95114c548bc74372a21fd9e627e0e" name="a8ae95114c548bc74372a21fd9e627e0e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ae95114c548bc74372a21fd9e627e0e">&#9670;&#160;</a></span>~Solver()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">openturbine::Solver::~Solver </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a61843fedb35af21015a06be489b2c9fd" name="a61843fedb35af21015a06be489b2c9fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61843fedb35af21015a06be489b2c9fd">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp; openturbine::Solver::operator= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp;&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2a4d2c001ee554ead24ec3b2a27ab85b" name="a2a4d2c001ee554ead24ec3b2a27ab85b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a4d2c001ee554ead24ec3b2a27ab85b">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp; openturbine::Solver::operator= </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &amp;&amp;&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">delete</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a4840cb5d0801921d94c87c7157b9551d" name="a4840cb5d0801921d94c87c7157b9551d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4840cb5d0801921d94c87c7157b9551d">&#9670;&#160;</a></span>A</h2>
+<a id="ae5ba11a3dca6e62957d1b8c5b8b53ac1" name="ae5ba11a3dca6e62957d1b8c5b8b53ac1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5ba11a3dca6e62957d1b8c5b8b53ac1">&#9670;&#160;</a></span>A</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Teuchos::RCP&lt;<a class="el" href="structopenturbine_1_1Solver.html#a13adc760a63b9e8751758d38bfaa35e1">GlobalCrsMatrixType</a>&gt; openturbine::Solver::A</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html#a15f307b4fb34ad362c8084061c10b97c">CrsMatrixType</a> openturbine::Solver::A</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="af137769c4fb1e4cc96addd200b556020" name="af137769c4fb1e4cc96addd200b556020"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af137769c4fb1e4cc96addd200b556020">&#9670;&#160;</a></span>amesos_solver</h2>
+<a id="ad99221c6c6665c6a050c4c20b1d01cd6" name="ad99221c6c6665c6a050c4c20b1d01cd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad99221c6c6665c6a050c4c20b1d01cd6">&#9670;&#160;</a></span>b</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Teuchos::RCP&lt;Amesos2::Solver&lt;<a class="el" href="structopenturbine_1_1Solver.html#a13adc760a63b9e8751758d38bfaa35e1">GlobalCrsMatrixType</a>, <a class="el" href="structopenturbine_1_1Solver.html#af542cae6ed23cd5a9a6a1a943c0ae198">GlobalMultiVectorType</a>&gt; &gt; openturbine::Solver::amesos_solver</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a29b89f77500235772ffc3eea8583b614" name="a29b89f77500235772ffc3eea8583b614"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29b89f77500235772ffc3eea8583b614">&#9670;&#160;</a></span>b</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Teuchos::RCP&lt;<a class="el" href="structopenturbine_1_1Solver.html#af542cae6ed23cd5a9a6a1a943c0ae198">GlobalMultiVectorType</a>&gt; openturbine::Solver::b</td>
+          <td class="memname">Kokkos::View&lt;<a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a>* [1], Kokkos::LayoutLeft&gt; openturbine::Solver::b</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -614,6 +428,20 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">std::vector&lt;double&gt; openturbine::Solver::convergence_err</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa9d6ffd3cceae22c4ae0b1782650af2c" name="aa9d6ffd3cceae22c4ae0b1782650af2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9d6ffd3cceae22c4ae0b1782650af2c">&#9670;&#160;</a></span>handle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HandleType openturbine::Solver::handle</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -662,14 +490,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a4bc0725cc36c7d50f91a971f05580737" name="a4bc0725cc36c7d50f91a971f05580737"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4bc0725cc36c7d50f91a971f05580737">&#9670;&#160;</a></span>x</h2>
+<a id="a41a3d388aacd79a9a81a22f67e726797" name="a41a3d388aacd79a9a81a22f67e726797"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41a3d388aacd79a9a81a22f67e726797">&#9670;&#160;</a></span>x</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Teuchos::RCP&lt;<a class="el" href="structopenturbine_1_1Solver.html#af542cae6ed23cd5a9a6a1a943c0ae198">GlobalMultiVectorType</a>&gt; openturbine::Solver::x</td>
+          <td class="memname">Kokkos::View&lt;<a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a>* [1], Kokkos::LayoutLeft&gt; openturbine::Solver::x</td>
         </tr>
       </table>
 </div><div class="memdoc">

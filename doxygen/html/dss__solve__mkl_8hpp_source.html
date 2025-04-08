@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/linear_solver/dss_solve_mkl.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/linear_solver/dss_solve_mkl.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/dss__solve__mkl_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-solver-linear-solver-dss-solve-mkl-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/solver/linear_solver/dss_solve_mkl.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-solver-linear-solver-dss-solve-mkl-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/linear_solver/dss_solve_mkl.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_88a9270723faeb8bf79f02d1b0e5175f.html">linear_solver</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">dss_solve_mkl.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="dss__solve__mkl_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;mkl_dss.h&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="dss__handle__mkl_8hpp.html">dss_handle_mkl.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> CrsMatrixType, <span class="keyword">typename</span> MultiVectorType&gt;</div>
+<div class="foldopen" id="foldopen00009" data-start="{" data-end="};">
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="structopenturbine_1_1DSSSolveFunction_3_01DSSHandle_3_01DSSAlgorithm_1_1MKL_01_4_00_01CrsMatrixType_00_01MultiVectorType_01_4.html">    9</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1DSSSolveFunction.html">DSSSolveFunction</a>&lt;<a class="code hl_class" href="classopenturbine_1_1DSSHandle.html">DSSHandle</a>&lt;<a class="code hl_enumeration" href="namespaceopenturbine.html#ac0b08ab0fe95ca731068f06eae062b5b">DSSAlgorithm</a>::<a class="code hl_enumvalue" href="namespaceopenturbine.html#ac0b08ab0fe95ca731068f06eae062b5ba6a8f79dd53a94059a5cdcd066199a06f">MKL</a>&gt;, CrsMatrixType, MultiVectorType&gt; {</div>
+<div class="foldopen" id="foldopen00010" data-start="{" data-end="}">
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="structopenturbine_1_1DSSSolveFunction_3_01DSSHandle_3_01DSSAlgorithm_1_1MKL_01_4_00_01CrsMatrixType_00_01MultiVectorType_01_4.html#a1410d123ecfe568c6fd44b51096e4239">   10</a></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1DSSSolveFunction_3_01DSSHandle_3_01DSSAlgorithm_1_1MKL_01_4_00_01CrsMatrixType_00_01MultiVectorType_01_4.html#a1410d123ecfe568c6fd44b51096e4239">solve</a>(</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        <a class="code hl_class" href="classopenturbine_1_1DSSHandle.html">DSSHandle&lt;DSSAlgorithm::MKL&gt;</a>&amp; dss_handle, CrsMatrixType&amp;, MultiVectorType&amp; b,</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        MultiVectorType&amp; x</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    ) {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <span class="keyword">auto</span>&amp; handle = dss_handle.get_handle();</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        <span class="keyword">constexpr</span> MKL_INT opt = 0;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keyword">const</span> <span class="keyword">auto</span> nrhs = <span class="keyword">static_cast&lt;</span>MKL_INT<span class="keyword">&gt;</span>(b.extent(1));</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        dss_solve_real(handle, opt, b.data(), nrhs, x.data());</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    }</div>
+</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>};</div>
+</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="ttc" id="aclassopenturbine_1_1DSSHandle_html"><div class="ttname"><a href="classopenturbine_1_1DSSHandle.html">openturbine::DSSHandle</a></div><div class="ttdef"><b>Definition</b> dss_handle.hpp:17</div></div>
+<div class="ttc" id="adss__handle__mkl_8hpp_html"><div class="ttname"><a href="dss__handle__mkl_8hpp.html">dss_handle_mkl.hpp</a></div></div>
+<div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac0b08ab0fe95ca731068f06eae062b5b"><div class="ttname"><a href="namespaceopenturbine.html#ac0b08ab0fe95ca731068f06eae062b5b">openturbine::DSSAlgorithm</a></div><div class="ttdeci">DSSAlgorithm</div><div class="ttdef"><b>Definition</b> dss_handle.hpp:7</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac0b08ab0fe95ca731068f06eae062b5ba6a8f79dd53a94059a5cdcd066199a06f"><div class="ttname"><a href="namespaceopenturbine.html#ac0b08ab0fe95ca731068f06eae062b5ba6a8f79dd53a94059a5cdcd066199a06f">openturbine::DSSAlgorithm::MKL</a></div><div class="ttdeci">@ MKL</div></div>
+<div class="ttc" id="astructopenturbine_1_1DSSSolveFunction_3_01DSSHandle_3_01DSSAlgorithm_1_1MKL_01_4_00_01CrsMatrixType_00_01MultiVectorType_01_4_html_a1410d123ecfe568c6fd44b51096e4239"><div class="ttname"><a href="structopenturbine_1_1DSSSolveFunction_3_01DSSHandle_3_01DSSAlgorithm_1_1MKL_01_4_00_01CrsMatrixType_00_01MultiVectorType_01_4.html#a1410d123ecfe568c6fd44b51096e4239">openturbine::DSSSolveFunction&lt; DSSHandle&lt; DSSAlgorithm::MKL &gt;, CrsMatrixType, MultiVectorType &gt;::solve</a></div><div class="ttdeci">static void solve(DSSHandle&lt; DSSAlgorithm::MKL &gt; &amp;dss_handle, CrsMatrixType &amp;, MultiVectorType &amp;b, MultiVectorType &amp;x)</div><div class="ttdef"><b>Definition</b> dss_solve_mkl.hpp:10</div></div>
+<div class="ttc" id="astructopenturbine_1_1DSSSolveFunction_html"><div class="ttname"><a href="structopenturbine_1_1DSSSolveFunction.html">openturbine::DSSSolveFunction</a></div><div class="ttdef"><b>Definition</b> dss_solve.hpp:8</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -15,6 +15,5 @@ var searchData=
   ['error_5fstatus_12',['error_status',['../structopenturbine_1_1util_1_1ErrorHandling.html#a592945920cd161313392a2489978b866',1,'openturbine::util::ErrorHandling']]],
   ['errorhandling_13',['ErrorHandling',['../structopenturbine_1_1util_1_1ErrorHandling.html',1,'openturbine::util']]],
   ['errorlevel_14',['ErrorLevel',['../structopenturbine_1_1util_1_1ErrorHandling.html#ab23ec7239ee96f0457f272754b87a856',1,'openturbine::util::ErrorHandling']]],
-  ['exception_15',['exception',['../classopenturbine_1_1util_1_1dylib_1_1exception.html',1,'openturbine::util::dylib']]],
-  ['executionspace_16',['ExecutionSpace',['../structopenturbine_1_1Solver.html#a6d18513ab415a6b1e146b56446b7ffcb',1,'openturbine::Solver']]]
+  ['exception_15',['exception',['../classopenturbine_1_1util_1_1dylib_1_1exception.html',1,'openturbine::util::dylib']]]
 ];

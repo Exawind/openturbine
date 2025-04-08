@@ -281,38 +281,39 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            <span class="keyword">auto</span> index = <a class="code hl_variable" href="structopenturbine_1_1ComputeSystemColInds.html#a8b5a79b3d5b3c4ed107f1c8b35ca2163">row_ptrs</a>(dof_index + j);</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; num_dof; ++k, ++index) {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                <a class="code hl_variable" href="structopenturbine_1_1ComputeSystemColInds.html#a12f12e5f68f61c5be09bde69b178217a">col_inds</a>(index) = <span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="structopenturbine_1_1ComputeSystemColInds.html#a965cd61a967a502583d2cde53d6a29ce">IndicesValueType</a><span class="keyword">&gt;</span>(dof_index + k);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            }</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            current_col[j] = <span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="structopenturbine_1_1ComputeSystemColInds.html#a1c4131efcf4e10450ca82de90d4fe044">RowPtrValueType</a><span class="keyword">&gt;</span>(num_dof);</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        }</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> element = 0U; element &lt; num_elements; ++element) {</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            <span class="keywordflow">if</span> (!<a class="code hl_function" href="structopenturbine_1_1ComputeSystemColInds.html#a3a727fc950f8d2b00f8488ca34231b2e">ElementContainsNode</a>(element, node)) {</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            }</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; num_dof; ++j) {</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                <span class="keyword">const</span> <span class="keyword">auto</span> index = <a class="code hl_variable" href="structopenturbine_1_1ComputeSystemColInds.html#a8b5a79b3d5b3c4ed107f1c8b35ca2163">row_ptrs</a>(dof_index + j) + current_col[j];</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                <span class="keyword">const</span> <span class="keyword">auto</span> new_index = <a class="code hl_function" href="structopenturbine_1_1ComputeSystemColInds.html#a9067a71e9fa88eb464e6dd293873e330">ComputeColIndsInElement</a>(element, node, index);</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                current_col[j] += new_index - index;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            }</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        }</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> constraint = 0U; constraint &lt; num_constraints; ++constraint) {</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            <span class="keywordflow">if</span> (!<a class="code hl_function" href="structopenturbine_1_1ComputeSystemColInds.html#a68d29bdbef4eaca4cdc999c3006273cc">ConstraintContainsNode</a>(constraint, dof_index)) {</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            }</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; num_dof; ++j) {</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                <span class="keyword">const</span> <span class="keyword">auto</span> index = <a class="code hl_variable" href="structopenturbine_1_1ComputeSystemColInds.html#a8b5a79b3d5b3c4ed107f1c8b35ca2163">row_ptrs</a>(dof_index + j) + current_col[j];</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                <span class="keyword">const</span> <span class="keyword">auto</span> new_index = <a class="code hl_function" href="structopenturbine_1_1ComputeSystemColInds.html#a34dd11e6fef37de3c64673a89fab7bb2">ComputeColIndsInConstraint</a>(constraint, index);</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                current_col[j] += new_index - index;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            }</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        }</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    }</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                <a class="code hl_variable" href="structopenturbine_1_1ComputeSystemColInds.html#a12f12e5f68f61c5be09bde69b178217a">col_inds</a>(index) =</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                    <span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="structopenturbine_1_1ComputeSystemColInds.html#a965cd61a967a502583d2cde53d6a29ce">IndicesValueType</a><span class="keyword">&gt;</span>(dof_index) + <span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="structopenturbine_1_1ComputeSystemColInds.html#a965cd61a967a502583d2cde53d6a29ce">IndicesValueType</a><span class="keyword">&gt;</span>(k);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            }</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            current_col[j] = <span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="structopenturbine_1_1ComputeSystemColInds.html#a1c4131efcf4e10450ca82de90d4fe044">RowPtrValueType</a><span class="keyword">&gt;</span>(num_dof);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        }</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> element = 0U; element &lt; num_elements; ++element) {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            <span class="keywordflow">if</span> (!<a class="code hl_function" href="structopenturbine_1_1ComputeSystemColInds.html#a3a727fc950f8d2b00f8488ca34231b2e">ElementContainsNode</a>(element, node)) {</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            }</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; num_dof; ++j) {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                <span class="keyword">const</span> <span class="keyword">auto</span> index = <a class="code hl_variable" href="structopenturbine_1_1ComputeSystemColInds.html#a8b5a79b3d5b3c4ed107f1c8b35ca2163">row_ptrs</a>(dof_index + j) + current_col[j];</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                <span class="keyword">const</span> <span class="keyword">auto</span> new_index = <a class="code hl_function" href="structopenturbine_1_1ComputeSystemColInds.html#a9067a71e9fa88eb464e6dd293873e330">ComputeColIndsInElement</a>(element, node, index);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                current_col[j] += new_index - index;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            }</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        }</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> constraint = 0U; constraint &lt; num_constraints; ++constraint) {</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            <span class="keywordflow">if</span> (!<a class="code hl_function" href="structopenturbine_1_1ComputeSystemColInds.html#a68d29bdbef4eaca4cdc999c3006273cc">ConstraintContainsNode</a>(constraint, dof_index)) {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            }</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; num_dof; ++j) {</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                <span class="keyword">const</span> <span class="keyword">auto</span> index = <a class="code hl_variable" href="structopenturbine_1_1ComputeSystemColInds.html#a8b5a79b3d5b3c4ed107f1c8b35ca2163">row_ptrs</a>(dof_index + j) + current_col[j];</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                <span class="keyword">const</span> <span class="keyword">auto</span> new_index = <a class="code hl_function" href="structopenturbine_1_1ComputeSystemColInds.html#a34dd11e6fef37de3c64673a89fab7bb2">ComputeColIndsInConstraint</a>(constraint, index);</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                current_col[j] += new_index - index;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            }</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        }</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    }</div>
 </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>};</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>};</div>
 </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
 <div class="ttc" id="astructopenturbine_1_1ComputeSystemColInds_html"><div class="ttname"><a href="structopenturbine_1_1ComputeSystemColInds.html">openturbine::ComputeSystemColInds</a></div><div class="ttdef"><b>Definition</b> compute_system_col_inds.hpp:8</div></div>
 <div class="ttc" id="astructopenturbine_1_1ComputeSystemColInds_html_a12f12e5f68f61c5be09bde69b178217a"><div class="ttname"><a href="structopenturbine_1_1ComputeSystemColInds.html#a12f12e5f68f61c5be09bde69b178217a">openturbine::ComputeSystemColInds::col_inds</a></div><div class="ttdeci">IndicesType col_inds</div><div class="ttdef"><b>Definition</b> compute_system_col_inds.hpp:22</div></div>

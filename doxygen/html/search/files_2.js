@@ -27,7 +27,7 @@ var searchData=
   ['calculate_5fpuu_2ehpp_24',['calculate_Puu.hpp',['../calculate__Puu_8hpp.html',1,'']]],
   ['calculate_5fqp_5fdeformation_2ehpp_25',['calculate_QP_deformation.hpp',['../calculate__QP__deformation_8hpp.html',1,'']]],
   ['calculate_5fqp_5fposition_2ehpp_26',['calculate_QP_position.hpp',['../calculate__QP__position_8hpp.html',1,'']]],
-  ['calculate_5fquadrature_5fpoint_5fvalues_2ehpp_27',['calculate_quadrature_point_values.hpp',['../beams_2calculate__quadrature__point__values_8hpp.html',1,'(Global Namespace)'],['../springs_2calculate__quadrature__point__values_8hpp.html',1,'(Global Namespace)'],['../masses_2calculate__quadrature__point__values_8hpp.html',1,'(Global Namespace)']]],
+  ['calculate_5fquadrature_5fpoint_5fvalues_2ehpp_27',['calculate_quadrature_point_values.hpp',['../springs_2calculate__quadrature__point__values_8hpp.html',1,'(Global Namespace)'],['../beams_2calculate__quadrature__point__values_8hpp.html',1,'(Global Namespace)'],['../masses_2calculate__quadrature__point__values_8hpp.html',1,'(Global Namespace)']]],
   ['calculate_5fquu_2ehpp_28',['calculate_Quu.hpp',['../calculate__Quu_8hpp.html',1,'']]],
   ['calculate_5frevolute_5fjoint_5fconstraint_2ehpp_29',['calculate_revolute_joint_constraint.hpp',['../calculate__revolute__joint__constraint_8hpp.html',1,'']]],
   ['calculate_5frevolute_5fjoint_5fforce_2ehpp_30',['calculate_revolute_joint_force.hpp',['../calculate__revolute__joint__force_8hpp.html',1,'']]],
@@ -74,7 +74,6 @@ var searchData=
   ['create_5felement_5ffreedom_5ftable_2ehpp_71',['create_element_freedom_table.hpp',['../create__element__freedom__table_8hpp.html',1,'']]],
   ['create_5ffull_5fmatrix_2ehpp_72',['create_full_matrix.hpp',['../create__full__matrix_8hpp.html',1,'']]],
   ['create_5fmasses_2ehpp_73',['create_masses.hpp',['../create__masses_8hpp.html',1,'']]],
-  ['create_5fsparse_5fdense_5fsolver_2ehpp_74',['create_sparse_dense_solver.hpp',['../create__sparse__dense__solver_8hpp.html',1,'']]],
-  ['create_5fsprings_2ehpp_75',['create_springs.hpp',['../create__springs_8hpp.html',1,'']]],
-  ['create_5fsystem_5fmatrix_5ffull_2ehpp_76',['create_system_matrix_full.hpp',['../create__system__matrix__full_8hpp.html',1,'']]]
+  ['create_5fsprings_2ehpp_74',['create_springs.hpp',['../create__springs_8hpp.html',1,'']]],
+  ['create_5fsystem_5fmatrix_5ffull_2ehpp_75',['create_system_matrix_full.hpp',['../create__system__matrix__full_8hpp.html',1,'']]]
 ];

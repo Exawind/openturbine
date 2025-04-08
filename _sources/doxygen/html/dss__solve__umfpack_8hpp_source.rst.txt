@@ -1,0 +1,14 @@
+.. meta::95fccda1c786c27cf2613f35297c1d3ca9c13f1f19517419b67be9373117f710e9d9350a829f2039a3067036a03d933e6a1adf2f42e7a2adbe0b5c65283811e8
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/linear_solver/dss_solve_umfpack.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/solver/linear\_solver/dss\_solve\_umfpack.hpp Source File
+===================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: dss__solve__umfpack_8hpp_source.html

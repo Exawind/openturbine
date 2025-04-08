@@ -1,0 +1,14 @@
+.. meta::3b6766260f8efd6c57fe558214d5d6dd6417c3d6ea764ed4c4e37d926a723cd6232d60921253fa9c95b3afbc635a56b47327e02a47c92e69c5329f21d8741d12
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::DSSNumericFunction&lt; DSSHandle&lt; DSSAlgorithm::MKL &gt;, CrsMatrixType &gt; Struct Template Reference
+
+MKL &gt;, CrsMatrixType &gt; Struct Template Reference
+======================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1DSSNumericFunction_3_01DSSHandle_3_01DSSAlgorithm_1_1MKL_01_4_00_01CrsMatrixType_01_4.html

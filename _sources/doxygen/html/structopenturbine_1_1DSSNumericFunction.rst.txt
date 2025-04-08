@@ -1,0 +1,14 @@
+.. meta::20659c007de3aed82e8bcc23f96485d948e27f55e60e459f26d6f1acd8424fb483b84944bf73087732f7cbe8460be90c8764c07e9af177f5e9a82e1a1117da19
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::DSSNumericFunction&lt; DSHandleType, CrsMatrixType &gt; Struct Template Reference
+
+DSSNumericFunction&lt; DSHandleType, CrsMatrixType &gt; Struct Template Reference
+=================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1DSSNumericFunction.html

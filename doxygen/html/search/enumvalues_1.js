@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['gausslobattolegendre_0',['GaussLobattoLegendre',['../structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#a45b5d2d58ef1a9e59428082b1d76d2efadd8badeb6215292fa219d4d43f4d1b2b',1,'openturbine::interfaces::components::BladeInput']]]
+  ['cudss_0',['CUDSS',['../namespaceopenturbine.html#ac0b08ab0fe95ca731068f06eae062b5ba3283f7ef1b1d9ecc3d65af213a0a8338',1,'openturbine']]],
+  ['cusolver_5fsp_1',['CUSOLVER_SP',['../namespaceopenturbine.html#ac0b08ab0fe95ca731068f06eae062b5bae58d2e3a739d6b1f6bdd0daff2288ece',1,'openturbine']]]
 ];
