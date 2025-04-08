@@ -6,6 +6,8 @@
 #include "elements/beams/beams.hpp"
 #include "elements/beams/calculate_jacobian.hpp"
 #include "elements/beams/interpolation.hpp"
+#include "system/beams/calculate_Ouu.hpp"
+#include "system/beams/calculate_Puu.hpp"
 #include "system/beams/calculate_force_FC.hpp"
 #include "system/beams/calculate_force_FD.hpp"
 #include "system/beams/integrate_residual_vector.hpp"
@@ -248,6 +250,126 @@ TEST(CurvedBeamTests, IntegrateResidualVectorForCurvedBeam) {
     const auto residual_vector_terms_mirror = Kokkos::create_mirror(residual_vector_terms);
     Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
     CompareWithExpected(residual_vector_terms_mirror, resid_exact, 1e-8);
+}
+
+TEST(CurvedBeamTests, CalculateOuuMatrixForCurvedBeam) {
+    const auto Cuu = Kokkos::View<double[6][6]>("Cuu");
+    const auto x0pupSS = Kokkos::View<double[3][3]>("x0pupSS");
+    const auto M_tilde = Kokkos::View<double[3][3]>("M_tilde");
+    const auto N_tilde = Kokkos::View<double[3][3]>("N_tilde");
+    const auto Ouu = Kokkos::View<double[6][6]>("Ouu");
+
+    const auto Cuu_host = Kokkos::create_mirror_view(Cuu);
+    const auto x0pupSS_host = Kokkos::create_mirror_view(x0pupSS);
+    const auto M_tilde_host = Kokkos::create_mirror_view(M_tilde);
+    const auto N_tilde_host = Kokkos::create_mirror_view(N_tilde);
+
+    // Set stiffness matrix in global frame i.e. Cuu matrix
+    for (size_t i = 0; i < 6; ++i) {
+        for (size_t j = 0; j < 6; ++j) {
+            Cuu_host(i, j) = kCurvedBeamCuu[i][j];
+        }
+    }
+
+    // Set x0pupSS values
+    x0pupSS_host(0, 0) = 0.;
+    x0pupSS_host(0, 1) = -kStrainInterpolationHolder[2];
+    x0pupSS_host(0, 2) = kStrainInterpolationHolder[1];
+    x0pupSS_host(1, 0) = kStrainInterpolationHolder[2];
+    x0pupSS_host(1, 1) = 0.;
+    x0pupSS_host(1, 2) = -kStrainInterpolationHolder[0];
+    x0pupSS_host(2, 0) = -kStrainInterpolationHolder[1];
+    x0pupSS_host(2, 1) = kStrainInterpolationHolder[0];
+    x0pupSS_host(2, 2) = 0.;
+
+    // Set M_tilde values
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            M_tilde_host(i, j) = kCurvedBeamM_tilde[i][j];
+        }
+    }
+
+    // Set N_tilde values
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            N_tilde_host(i, j) = kCurvedBeamN_tilde[i][j];
+        }
+    }
+
+    Kokkos::deep_copy(Cuu, Cuu_host);
+    Kokkos::deep_copy(x0pupSS, x0pupSS_host);
+    Kokkos::deep_copy(M_tilde, M_tilde_host);
+
+    Kokkos::parallel_for(
+        "CalculateOuu", 1,
+        KOKKOS_LAMBDA(size_t) { beams::CalculateOuu(Cuu, x0pupSS, M_tilde, N_tilde, Ouu); }
+    );
+
+    const auto Ouu_host = Kokkos::create_mirror_view(Ouu);
+    Kokkos::deep_copy(Ouu_host, Ouu);
+
+    // Validate against expected values from Mathematica script
+    for (size_t i = 0; i < 6; ++i) {
+        for (size_t j = 0; j < 6; ++j) {
+            EXPECT_NEAR(Ouu_host(i, j), kExpectedOuu[i][j], 1e-6)
+                << "Ouu mismatch at component (" << i << ", " << j << ")";
+        }
+    }
+}
+
+TEST(CurvedBeamTests, CalculatePuuMatrixForCurvedBeam) {
+    const auto Cuu = Kokkos::View<double[6][6]>("Cuu");
+    const auto x0pupSS = Kokkos::View<double[3][3]>("x0pupSS");
+    const auto N_tilde = Kokkos::View<double[3][3]>("N_tilde");
+    const auto Puu = Kokkos::View<double[6][6]>("Puu");
+
+    const auto Cuu_host = Kokkos::create_mirror_view(Cuu);
+    const auto x0pupSS_host = Kokkos::create_mirror_view(x0pupSS);
+    const auto N_tilde_host = Kokkos::create_mirror_view(N_tilde);
+
+    // Set stiffness matrix in global frame i.e. Cuu matrix
+    for (size_t i = 0; i < 6; ++i) {
+        for (size_t j = 0; j < 6; ++j) {
+            Cuu_host(i, j) = kCurvedBeamCuu[i][j];
+        }
+    }
+
+    // Set x0pupSS values
+    x0pupSS_host(0, 0) = 0.;
+    x0pupSS_host(0, 1) = -kStrainInterpolationHolder[2];
+    x0pupSS_host(0, 2) = kStrainInterpolationHolder[1];
+    x0pupSS_host(1, 0) = kStrainInterpolationHolder[2];
+    x0pupSS_host(1, 1) = 0.;
+    x0pupSS_host(1, 2) = -kStrainInterpolationHolder[0];
+    x0pupSS_host(2, 0) = -kStrainInterpolationHolder[1];
+    x0pupSS_host(2, 1) = kStrainInterpolationHolder[0];
+    x0pupSS_host(2, 2) = 0.;
+
+    // Set N_tilde values
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            N_tilde_host(i, j) = kCurvedBeamN_tilde[i][j];
+        }
+    }
+
+    Kokkos::deep_copy(Cuu, Cuu_host);
+    Kokkos::deep_copy(x0pupSS, x0pupSS_host);
+    Kokkos::deep_copy(N_tilde, N_tilde_host);
+
+    Kokkos::parallel_for(
+        "CalculatePuu", 1, KOKKOS_LAMBDA(size_t) { beams::CalculatePuu(Cuu, x0pupSS, N_tilde, Puu); }
+    );
+
+    const auto Puu_host = Kokkos::create_mirror_view(Puu);
+    Kokkos::deep_copy(Puu_host, Puu);
+
+    // Validate against expected values from Mathematica script
+    for (size_t i = 0; i < 6; ++i) {
+        for (size_t j = 0; j < 6; ++j) {
+            EXPECT_NEAR(Puu_host(i, j), kExpectedPuu[i][j], 1e-6)
+                << "Puu mismatch at component (" << i << ", " << j << ")";
+        }
+    }
 }
 
 }  // namespace openturbine::tests
