@@ -282,6 +282,15 @@ constexpr std::array<std::array<double, 6>, 6> kExpectedPuu = {
     std::array<double, 6>{-72243.1983242, -50482.20381259, -9205.570213707, 0., 0., 0.}
 };
 
+constexpr std::array<std::array<double, 6>, 6> kExpectedQuu = {
+    std::array<double, 6>{0., 0., 0., 0., 0., 0.},
+    std::array<double, 6>{0., 0., 0., 0., 0., 0.},
+    std::array<double, 6>{0., 0., 0., 0., 0., 0.},
+    std::array<double, 6>{0., 0., 0., 2704.533593359, 5045.754713661, -11271.05939004},
+    std::array<double, 6>{0., 0., 0., 2368.612570317, 17785.93033178, 3307.618996744},
+    std::array<double, 6>{0., 0., 0., -11094.92632106, 3720.671154735, 70314.11063997}
+};
+
 //--------------------------------------------------------------------------
 // Stiffness matrix calculation: inputs and expected values
 //--------------------------------------------------------------------------
