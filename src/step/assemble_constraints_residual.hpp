@@ -18,12 +18,10 @@ inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints
         return;
     }
 
-    const auto b = solver.b->getLocalViewDevice(Tpetra::Access::ReadWrite);
-
     Kokkos::parallel_for(
         "ContributeConstraintsSystemResidualToVector", constraints.num_constraints,
         ContributeConstraintsSystemResidualToVector{
-            constraints.target_node_freedom_table, constraints.system_residual_terms, b
+            constraints.target_node_freedom_table, constraints.system_residual_terms, solver.b
         }
     );
 
@@ -32,14 +30,15 @@ inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints
         ContributeLambdaToVector{
             constraints.base_node_freedom_signature, constraints.target_node_freedom_signature,
             constraints.base_node_freedom_table, constraints.target_node_freedom_table,
-            constraints.base_lambda_residual_terms, constraints.target_lambda_residual_terms, b
+            constraints.base_lambda_residual_terms, constraints.target_lambda_residual_terms,
+            solver.b
         }
     );
 
     Kokkos::parallel_for(
         "CopyConstraintsResidualToVector", constraints.num_constraints,
         CopyConstraintsResidualToVector{
-            solver.num_system_dofs, constraints.row_range, constraints.residual_terms, b
+            solver.num_system_dofs, constraints.row_range, constraints.residual_terms, solver.b
         }
     );
 }

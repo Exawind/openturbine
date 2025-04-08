@@ -1,0 +1,8 @@
+#pragma once
+
+#cmakedefine OpenTurbine_ENABLE_CUSOLVERSP
+#cmakedefine OpenTurbine_ENABLE_CUDSS
+#cmakedefine OpenTurbine_ENABLE_MKL
+#cmakedefine OpenTurbine_ENABLE_KLU
+#cmakedefine OpenTurbine_ENABLE_UMFPACK
+#cmakedefine OpenTurbine_ENABLE_SUPERLU

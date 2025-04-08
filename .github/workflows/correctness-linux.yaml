@@ -25,18 +25,20 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/spack
-        key: linux-spack
+        key: linux-spack_v2
     - name: Install Dependencies
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
-        git clone https://github.com/spack/spack.git
+        git clone -b before-compiler-dependencies https://github.com/spack/spack.git
         source spack/share/spack/setup-env.sh
         spack compiler find
         spack install googletest
         spack install cppcheck
         spack install netcdf-c
         spack install yaml-cpp
-        spack install trilinos@master~epetra ^kokkos-kernels+blas+lapack
+        spack install suite-sparse
+        spack install superlu
+        spack install kokkos-kernels+blas+lapack
     - name: Clone
       uses: actions/checkout@v4
       with:
@@ -45,7 +47,9 @@ jobs:
     - name: Test OpenTurbine
       run: |
         source spack/share/spack/setup-env.sh
-        spack load trilinos
+        spack load kokkos-kernels
+        spack load suite-sparse
+        spack load superlu
         spack load googletest
         spack load cppcheck
         spack load netcdf-c
@@ -62,6 +66,10 @@ jobs:
           -DOpenTurbine_WARNINGS_AS_ERRORS=ON \
           -DOpenTurbine_BUILD_OPENFAST_ADI=${{ matrix.build_external == 'all' }} \
           -DOpenTurbine_BUILD_ROSCO_CONTROLLER=${{ matrix.build_external == 'all' }} \
+          -DOpenTurbine_ENABLE_KLU=ON \
+          -DOpenTurbine_ENABLE_UMFPACK=ON \
+          -DOpenTurbine_ENABLE_SUPERLU=ON \
+          -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} \
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         cmake --build .
         ctest --output-on-failure

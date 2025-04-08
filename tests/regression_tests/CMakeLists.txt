@@ -38,7 +38,6 @@ endif()
 
 target_link_system_libraries(openturbine_regression_tests PRIVATE
   KokkosKernels::kokkoskernels
-  Amesos2::amesos2
   ${YAML_CPP_TARGET}
   GTest::gtest
   GTest::gtest_main

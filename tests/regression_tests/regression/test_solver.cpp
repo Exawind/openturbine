@@ -190,9 +190,8 @@ inline void SetUpSolverAndAssemble() {
                                         0.,
                                     }}
     );
-    const auto b = solver.b->getLocalViewDevice(Tpetra::Access::ReadOnly);
     expect_kokkos_view_1D_equal(
-        Kokkos::subview(b, Kokkos::ALL, 0),
+        Kokkos::subview(solver.b, Kokkos::ALL, 0),
         {
             -0.68408451644565105,
             -0.00065456473269251652,
@@ -332,9 +331,10 @@ inline void SetupAndTakeNoSteps() {
 
     Step(parameters, solver, elements, state, constraints);
 
-    const auto x = solver.x->getLocalViewDevice(Tpetra::Access::ReadOnly);
+    const auto x = Kokkos::create_mirror_view(solver.x);
+    Kokkos::deep_copy(x, solver.x);
     expect_kokkos_view_1D_equal(
-        Kokkos::subview(x, Kokkos::ALL, 0),
+        Kokkos::subview(solver.x, Kokkos::ALL, 0),
         {
             -9.9999991642894645E-7,    -3.3333331667800779E-10, -2.7693137528041648E-28,
             -6.5954208494030506E-30,   1.3190840599775882E-26,  7.7898219222917266E-24,
@@ -536,9 +536,8 @@ inline auto SetupAndTakeTwoSteps() {
                                         0.0,
                                     }}
     );
-    const auto b = solver.b->getLocalViewDevice(Tpetra::Access::ReadOnly);
     expect_kokkos_view_1D_equal(
-        Kokkos::subview(b, Kokkos::ALL, 0),
+        Kokkos::subview(solver.b, Kokkos::ALL, 0),
         {
             -1.6976609407260757e-15,
             -5.288375554255456E-9,
@@ -584,9 +583,10 @@ inline auto SetupAndTakeTwoSteps() {
             0,
         }
     );
-    const auto x = solver.x->getLocalViewDevice(Tpetra::Access::ReadOnly);
+    const auto x = Kokkos::create_mirror_view(solver.x);
+    Kokkos::deep_copy(x, solver.x);
     expect_kokkos_view_1D_equal(
-        Kokkos::subview(x, Kokkos::ALL, 0),
+        Kokkos::subview(solver.x, Kokkos::ALL, 0),
         {
             2.0701786547467534E-22,  -9.7804349489591981E-26, 2.7272832797488856E-28,
             2.0547315819961114E-29,  -1.4712947016254835E-26, 5.4331648183819847E-25,
