@@ -12,12 +12,13 @@
 #include "system/beams/calculate_force_FC.hpp"
 #include "system/beams/calculate_force_FD.hpp"
 #include "system/beams/integrate_residual_vector.hpp"
+#include "system/beams/integrate_stiffness_matrix.hpp"
 #include "test_calculate.hpp"
 #include "test_integrate_matrix.hpp"
 
 /**
  * @file test_curved_beam.cpp
- * @brief Unit tests for S_t matrix, Residual, O, P, Q etc. matrices of a beam element
+ * @brief Unit tests for S_t matrix, Residual, O, P, Q matrices, etc., of a beam element
  *
  * This file contains a series of unit tests that validate a curved beam problem consisting of
  * 3 nodes at GLL points (for second order polynomial). The validation dataset was created in
@@ -36,9 +37,11 @@
  * - Jacobian calculation -> CalculateJacobian
  * - Elastic forces calculation -> CalculateForceFc
  * - Damping forces calculation -> CalculateForceFd
- * - Residul vector integrtion -> beams::IntegrateResidualVectorElement
+ * - Residual vector integration -> beams::IntegrateResidualVectorElement
+ * - O matrix calculation -> CalculateOuu
+ * - P matrix calculation -> CalculatePuu
+ * - Q matrix calculation -> CalculateQuu
  * - Stiffness matrix integration -> beams::IntegrateStiffnessMatrixElement
- * - Inertia matrix integration -> beams::IntegrateInertiaMatrixElement
  *
  * Ref: https://github.com/michaelasprague/OpenTurbineTheory/tree/main/mathematica
  */
@@ -426,6 +429,43 @@ TEST(CurvedBeamTests, CalculateQuuMatrixForCurvedBeam) {
                 << "Quu mismatch at component (" << i << ", " << j << ")";
         }
     }
+}
+
+TEST(CurvedBeamTests, IntegrateStiffnessMatrixForCurvedBeam) {
+    const auto qp_weights = get_qp_weights<kNumQPs>(kGaussQuadratureWeights);
+    const auto qp_jacobian = get_qp_jacobian<kNumQPs>(kExpectedJacobians);
+    const auto shape_interp = get_shape_interp<kNumNodes, kNumQPs>(kInterpWeightsFlat);
+    const auto shape_deriv = get_shape_interp_deriv<kNumNodes, kNumQPs>(kDerivWeightsFlat);
+
+    const auto qp_Kuu = get_qp_Kuu<kNumQPs>(kKuu);
+    const auto qp_Puu = get_qp_Puu<kNumQPs>(kPuu);
+    const auto qp_Cuu = get_qp_Cuu<kNumQPs>(kCuu);
+    const auto qp_Ouu = get_qp_Ouu<kNumQPs>(kOuu);
+    const auto qp_Quu = get_qp_Quu<kNumQPs>(kQuu);
+
+    const auto stiffness_matrix_terms =
+        Kokkos::View<double[kNumNodes][kNumNodes][6][6]>("stiffness_matrix_terms");
+
+    constexpr auto simd_width = Kokkos::Experimental::native_simd<double>::size();
+    constexpr auto extra_component = kNumNodes % simd_width == 0U ? 0U : 1U;
+    constexpr auto simd_nodes = kNumNodes / simd_width + extra_component;
+    const auto policy = Kokkos::RangePolicy(0, kNumNodes * simd_nodes);
+    Kokkos::parallel_for(
+        "IntegrateStiffnessMatrixElement", policy,
+        beams::IntegrateStiffnessMatrixElement{
+            0U, kNumNodes, kNumQPs, qp_weights, qp_jacobian, shape_interp, shape_deriv, qp_Kuu,
+            qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, stiffness_matrix_terms
+        }
+    );
+
+    const auto stiffness_matrix_exact =
+        Kokkos::View<const double[kNumNodes][kNumNodes][6][6], Kokkos::HostSpace>(
+            kExpectedStiffnessMatrix.data()
+        );
+
+    const auto stiffness_matrix_terms_mirror = Kokkos::create_mirror(stiffness_matrix_terms);
+    Kokkos::deep_copy(stiffness_matrix_terms_mirror, stiffness_matrix_terms);
+    CompareWithExpected(stiffness_matrix_terms_mirror, stiffness_matrix_exact, 1e-7);
 }
 
 }  // namespace openturbine::tests
