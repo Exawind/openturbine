@@ -1570,7 +1570,7 @@ constexpr std::array<double, kNumQPs * 6 * 6> kCuu = {
     79690.04229982  // QP 7
 };
 
-constexpr std::array<double, 3 * 3 * 6 * 6> kExpectedStiffnessMatrix = {
+constexpr std::array<double, kNumNodes * kNumNodes * 6 * 6> kExpectedStiffnessMatrix = {
     // Node 1, Node 1
     569689.3362162, -38777.68238139, -34112.74014376, 4530.690247065, 69230.6811403, 36866.75913868,
 
