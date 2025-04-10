@@ -308,6 +308,60 @@ constexpr std::array<double, 18> kExpectedResidualVector = {
 // Linearization matrices calculations: inputs and expected values
 //--------------------------------------------------------------------------
 
+constexpr auto xr_data = std::array{0.8628070705148, 0., 0., 0.5055333412048};
+const Kokkos::View<double[4], Kokkos::HostSpace>::const_type kCurvedBeamXr(xr_data.data());
+
+constexpr auto Cstar_data = std::array{
+    1.36817e6, 0.,     0.,     0.,     0.,     0.,      // row 1
+    0.,        88560., 0.,     0.,     0.,     0.,      // row 2
+    0.,        0.,     38780., 0.,     0.,     0.,      // row 3
+    0.,        0.,     0.,     16960., 17610., -351.,   // row 4
+    0.,        0.,     0.,     17610., 59120., -370.,   // row 5
+    0.,        0.,     0.,     -351.,  -370.,  141470.  // row 6
+};
+const Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type kCurvedBeamCstar(Cstar_data.data());
+
+constexpr auto kExpectedCuu_data = std::array{
+    394381.5594951,
+    545715.5847999,
+    0.,
+    0.,
+    0.,
+    0.,  // row 1
+    545715.5847999,
+    1.062348440505e6,
+    0.,
+    0.,
+    0.,
+    0.,  // row 2
+    0.,
+    0.,
+    38780.,
+    0.,
+    0.,
+    0.,  // row 3
+    0.,
+    0.,
+    0.,
+    34023.65045212,
+    -27172.54931561,
+    151.1774277346,  // row 4
+    0.,
+    0.,
+    0.,
+    -27172.54931561,
+    42056.34954788,
+    -487.0794445915,  // row 5
+    0.,
+    0.,
+    0.,
+    151.1774277346,
+    -487.0794445915,
+    141470.  // row 6
+};
+const Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type kExpectedCuu(kExpectedCuu_data.data()
+);
+
 constexpr std::array<double, 9> kCurvedBeamM_tilde_data = {
     0, 854.6894329742,  7030.727457672,  -854.6894329742,
     0, -5433.695299839, -7030.727457672, 5433.695299839,

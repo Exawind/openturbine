@@ -13,6 +13,7 @@
 #include "system/beams/calculate_force_FD.hpp"
 #include "system/beams/integrate_residual_vector.hpp"
 #include "system/beams/integrate_stiffness_matrix.hpp"
+#include "system/beams/rotate_section_matrix.hpp"
 #include "test_calculate.hpp"
 #include "test_integrate_matrix.hpp"
 
@@ -38,6 +39,7 @@
  * - Elastic forces calculation -> CalculateForceFc
  * - Damping forces calculation -> CalculateForceFd
  * - Residual vector integration -> beams::IntegrateResidualVectorElement
+ * - Rotate sectional stiffness matrix -> beams::RotateSectionMatrix
  * - O matrix calculation -> CalculateOuu
  * - P matrix calculation -> CalculatePuu
  * - Q matrix calculation -> CalculateQuu
@@ -241,6 +243,41 @@ TEST(CurvedBeamTests, IntegrateResidualVectorForCurvedBeam) {
     auto residual_vector_terms_mirror = Kokkos::create_mirror_view(residual_vector_terms);
     Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
     CompareWithExpected(residual_vector_terms_mirror, residual_vector_exact, 1e-8);
+}
+
+void TestRotateSectionMatrixForCurvedBeam() {
+    const auto xr = Kokkos::View<double[4]>("xr");
+    const auto Cstar = Kokkos::View<double[6][6]>("Cstar");
+    const auto Cuu = Kokkos::View<double[6][6]>("Cuu");
+
+    // Set quaternion data
+    const auto xr_host = Kokkos::View<double[4]>("xr");
+    Kokkos::deep_copy(xr_host, kCurvedBeamXr);
+    const auto xr_mirror = Kokkos::create_mirror_view(xr);
+    Kokkos::deep_copy(xr_mirror, xr_host);
+    Kokkos::deep_copy(xr, xr_mirror);
+
+    // Set material stiffness matrix data
+    const auto Cstar_host = Kokkos::View<double[6][6]>("Cstar");
+    Kokkos::deep_copy(Cstar_host, kCurvedBeamCstar);
+    const auto Cstar_mirror = Kokkos::create_mirror_view(Cstar);
+    Kokkos::deep_copy(Cstar_mirror, Cstar_host);
+    Kokkos::deep_copy(Cstar, Cstar_mirror);
+
+    Kokkos::parallel_for(
+        "RotateSectionMatrix", 1,
+        KOKKOS_LAMBDA(size_t) { beams::RotateSectionMatrix(xr, Cstar, Cuu); }
+    );
+
+    const auto Cuu_exact = Kokkos::View<double[6][6]>("Cuu");
+    Kokkos::deep_copy(Cuu_exact, kExpectedCuu);
+    const auto Cuu_mirror = Kokkos::create_mirror_view(Cuu);
+    Kokkos::deep_copy(Cuu_mirror, Cuu);
+    CompareWithExpected(Cuu_mirror, Cuu_exact, 1e-6);
+}
+
+TEST(CurvedBeamTests, CalculateRotatedStiffnessMatrixForCurvedBeam) {
+    TestRotateSectionMatrixForCurvedBeam();
 }
 
 void TestCalculateOuu() {
