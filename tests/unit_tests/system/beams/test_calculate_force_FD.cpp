@@ -37,6 +37,7 @@ void TestCalculateForceFD() {
     Kokkos::deep_copy(FD_mirror, FD);
     openturbine::tests::CompareWithExpected(FD_mirror, FD_exact);
 }
+
 }  // namespace
 
 namespace openturbine::tests {

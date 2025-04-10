@@ -3,7 +3,9 @@
 #include <array>
 #include <vector>
 
-namespace openturbine::tests {
+#include <Kokkos_Core.hpp>
+
+namespace openturbine::tests::curved_beam {
 
 //--------------------------------------------------------------------------
 // FEA inputs/settings for curved beam
@@ -25,11 +27,14 @@ constexpr double kDefaultTolerance{1e-12};
 const std::vector<double> kGLLNodes{-1., 0., 1.};
 
 /// Node positions for curved beam test (from Mathematica script)
-constexpr std::array<std::array<double, 3>, 3> kCurvedBeamNodes = {{
-    {0., 0., 0.},       // Node 1
-    {2.5, -0.125, 0.},  // Node 2
-    {5., 1., -1.}       // Node 3
-}};
+constexpr std::array<double, 9> kCurvedBeamNodes_data = {
+    0.,  0.,     0.,  // Node 1
+    2.5, -0.125, 0.,  // Node 2
+    5.,  1.,     -1.  // Node 3
+};
+const Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type kCurvedBeamNodes(
+    kCurvedBeamNodes_data.data()
+);
 
 /// 7-point Gauss quadrature locations (high order quadrature rule)
 constexpr std::array<double, 7> kGaussQuadraturePoints = {
@@ -95,17 +100,50 @@ constexpr std::array<double, 7> kExpectedJacobians = {
 //--------------------------------------------------------------------------
 
 /// Material properties for curved beam (from Mathemtica script)
-constexpr std::array<std::array<double, 6>, 6> kCurvedBeamCuu = {
-    std::array<double, 6>{1.252405841673e6, -316160.8714634, 190249.1405163, 0., 0., 0.},
-    std::array<double, 6>{-316160.8714634, 174443.0134269, -51312.45787663, 0., 0., 0.},
-    std::array<double, 6>{190249.1405163, -51312.45787663, 68661.14489973, 0., 0., 0.},
-    std::array<double, 6>{0., 0., 0., 31406.91734868, 25085.26404619, -17572.20634725},
-    std::array<double, 6>{0., 0., 0., 25085.26404619, 47547.80267146, 6533.599954035},
-    std::array<double, 6>{0., 0., 0., -17572.20634725, 6533.599954035, 138595.2799799}
+constexpr std::array<double, 36> kCurvedBeamCuu_data = {
+    1.252405841673e6,
+    -316160.8714634,
+    190249.1405163,
+    0.,
+    0.,
+    0.,
+    -316160.8714634,
+    174443.0134269,
+    -51312.45787663,
+    0.,
+    0.,
+    0.,
+    190249.1405163,
+    -51312.45787663,
+    68661.14489973,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    31406.91734868,
+    25085.26404619,
+    -17572.20634725,
+    0.,
+    0.,
+    0.,
+    25085.26404619,
+    47547.80267146,
+    6533.599954035,
+    0.,
+    0.,
+    0.,
+    -17572.20634725,
+    6533.599954035,
+    138595.2799799
 };
+const Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type kCurvedBeamCuu(
+    kCurvedBeamCuu_data.data()
+);
 
 /// Expected strain for curved beam (from Mathematica script)
-constexpr std::array<double, 6> kCurvedBeamStrain = {
+constexpr std::array<double, 6> kCurvedBeamStrain_data = {
     0.002691499530001,  // ex
     -0.04310062503412,  // ey
     0.01251033519481,   // ez
@@ -113,9 +151,12 @@ constexpr std::array<double, 6> kCurvedBeamStrain = {
     0.09665741323766,   // gxz
     0.001532568414933   // gyz
 };
+const Kokkos::View<double[6], Kokkos::HostSpace>::const_type kCurvedBeamStrain(
+    kCurvedBeamStrain_data.data()
+);
 
 /// Expected Fc i.e. elastic forces for curved beam (from Mathematica script)
-constexpr std::array<double, 6> kExpectedFc = {
+constexpr std::array<double, 6> kExpectedFc_data = {
     19377.66142402,  // Fx
     -9011.48579619,  // Fy
     3582.628416357,  // Fz
@@ -123,6 +164,7 @@ constexpr std::array<double, 6> kExpectedFc = {
     7030.727457672,  // My
     -854.6894329742  // Mz
 };
+const Kokkos::View<double[6], Kokkos::HostSpace>::const_type kExpectedFc(kExpectedFc_data.data());
 
 /// Strain interpolation holder (einterphold from Mathematica)
 constexpr std::array<double, 6> kStrainInterpolationHolder = {
@@ -134,8 +176,21 @@ constexpr std::array<double, 6> kStrainInterpolationHolder = {
     0.001532568414933  // gyz
 };
 
+constexpr std::array<double, 9> kX0pupSS_data = {
+    0.,  //
+    -kStrainInterpolationHolder[2],
+    kStrainInterpolationHolder[1],
+    kStrainInterpolationHolder[2],
+    0.,
+    -kStrainInterpolationHolder[0],
+    -kStrainInterpolationHolder[1],
+    kStrainInterpolationHolder[0],
+    0.
+};
+const Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type kX0pupSS(kX0pupSS_data.data());
+
 /// Expected Fd i.e. damping forces for curved beam (from Mathematica script)
-constexpr std::array<double, 6> kExpectedFd = {
+constexpr std::array<double, 6> kExpectedFd_data = {
     0.,               // Fx
     0.,               // Fy
     0.,               // Fz
@@ -143,6 +198,7 @@ constexpr std::array<double, 6> kExpectedFd = {
     176.1330689806,   // My
     2677.142143344    // Mz
 };
+const Kokkos::View<double[6], Kokkos::HostSpace>::const_type kExpectedFd(kExpectedFd_data.data());
 
 //--------------------------------------------------------------------------
 // Residual calculation: inputs and expected values
@@ -252,44 +308,146 @@ constexpr std::array<double, 18> kExpectedResidualVector = {
 // Linearization matrices calculations: inputs and expected values
 //--------------------------------------------------------------------------
 
-constexpr std::array<std::array<double, 3>, 3> kCurvedBeamM_tilde = {
-    std::array<double, 3>{0, 854.6894329742, 7030.727457672},
-    std::array<double, 3>{-854.6894329742, 0, -5433.695299839},
-    std::array<double, 3>{-7030.727457672, 5433.695299839, 0}
+constexpr std::array<double, 9> kCurvedBeamM_tilde_data = {
+    0, 854.6894329742,  7030.727457672,  -854.6894329742,
+    0, -5433.695299839, -7030.727457672, 5433.695299839,
+    0
 };
+const Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type kCurvedBeamM_tilde(
+    kCurvedBeamM_tilde_data.data()
+);
 
-constexpr std::array<std::array<double, 3>, 3> kCurvedBeamN_tilde = {
-    std::array<double, 3>{0, -3582.628416357, -9011.48579619},
-    std::array<double, 3>{3582.628416357, 0, -19377.66142402},
-    std::array<double, 3>{9011.48579619, 19377.66142402, 0}
+constexpr std::array<double, 9> kCurvedBeamN_tilde_data = {
+    0, -3582.628416357, -9011.48579619, 3582.628416357,
+    0, -19377.66142402, 9011.48579619,  19377.66142402,
+    0
 };
+const Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type kCurvedBeamN_tilde(
+    kCurvedBeamN_tilde_data.data()
+);
 
-constexpr std::array<std::array<double, 6>, 6> kExpectedOuu = {
-    std::array<double, 6>{0., 0., 0., 5259.878305537, -24476.28810745, -72243.1983242},
-    std::array<double, 6>{0., 0., 0., 9932.579075823, 3945.69190817, -50482.20381259},
-    std::array<double, 6>{0., 0., 0., 3402.631809939, 14331.70051426, -9205.570213707},
-    std::array<double, 6>{0., 0., 0., 0., -854.6894329742, -7030.727457672},
-    std::array<double, 6>{0., 0., 0., 854.6894329742, 0., 5433.695299839},
-    std::array<double, 6>{0., 0., 0., 7030.727457672, -5433.695299839, 0.}
+constexpr std::array<double, 36> kExpectedOuu_data = {
+    0.,
+    0.,
+    0.,
+    5259.878305537,
+    -24476.28810745,
+    -72243.1983242,
+    0.,
+    0.,
+    0.,
+    9932.579075823,
+    3945.69190817,
+    -50482.20381259,
+    0.,
+    0.,
+    0.,
+    3402.631809939,
+    14331.70051426,
+    -9205.570213707,
+    0.,
+    0.,
+    0.,
+    0.,
+    -854.6894329742,
+    -7030.727457672,
+    0.,
+    0.,
+    0.,
+    854.6894329742,
+    0.,
+    5433.695299839,
+    0.,
+    0.,
+    0.,
+    7030.727457672,
+    -5433.695299839,
+    0.
 };
+const Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type kExpectedOuu(kExpectedOuu_data.data()
+);
 
-constexpr std::array<std::array<double, 6>, 6> kExpectedPuu = {
-    std::array<double, 6>{0., 0., 0., 0., 0., 0.},
-    std::array<double, 6>{0., 0., 0., 0., 0., 0.},
-    std::array<double, 6>{0., 0., 0., 0., 0., 0.},
-    std::array<double, 6>{5259.878305537, 9932.579075823, 3402.631809939, 0., 0., 0.},
-    std::array<double, 6>{-24476.28810745, 3945.69190817, 14331.70051426, 0., 0., 0.},
-    std::array<double, 6>{-72243.1983242, -50482.20381259, -9205.570213707, 0., 0., 0.}
+constexpr std::array<double, 36> kExpectedPuu_data = {
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    5259.878305537,
+    9932.579075823,
+    3402.631809939,
+    0.,
+    0.,
+    0.,
+    -24476.28810745,
+    3945.69190817,
+    14331.70051426,
+    0.,
+    0.,
+    0.,
+    -72243.1983242,
+    -50482.20381259,
+    -9205.570213707,
+    0.,
+    0.,
+    0.
 };
+const Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type kExpectedPuu(kExpectedPuu_data.data()
+);
 
-constexpr std::array<std::array<double, 6>, 6> kExpectedQuu = {
-    std::array<double, 6>{0., 0., 0., 0., 0., 0.},
-    std::array<double, 6>{0., 0., 0., 0., 0., 0.},
-    std::array<double, 6>{0., 0., 0., 0., 0., 0.},
-    std::array<double, 6>{0., 0., 0., 2704.533593359, 5045.754713661, -11271.05939004},
-    std::array<double, 6>{0., 0., 0., 2368.612570317, 17785.93033178, 3307.618996744},
-    std::array<double, 6>{0., 0., 0., -11094.92632106, 3720.671154735, 70314.11063997}
+constexpr std::array<double, 36> kExpectedQuu_data = {
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    0.,
+    2704.533593359,
+    5045.754713661,
+    -11271.05939004,
+    0.,
+    0.,
+    0.,
+    2368.612570317,
+    17785.93033178,
+    3307.618996744,
+    0.,
+    0.,
+    0.,
+    -11094.92632106,
+    3720.671154735,
+    70314.11063997
 };
+const Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type kExpectedQuu(kExpectedQuu_data.data()
+);
 
 //--------------------------------------------------------------------------
 // Stiffness matrix calculation: inputs and expected values
@@ -1714,4 +1872,4 @@ constexpr std::array<double, kNumNodes * kNumNodes * 6 * 6> kExpectedStiffnessMa
     -93172.82283483, -214693.03116, 95131.76620372, 45440.96931327, 114661.6391408, 311150.0817408
 };
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::tests::curved_beam
