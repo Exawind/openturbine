@@ -27,4 +27,5 @@ inline void CalculateOuu(
     KokkosBlas::serial_axpy(1., M_tilde, Ouu_22);
     Gemm::invoke(1., C21, x0pupSS, -1., Ouu_22);
 }
+
 }  // namespace openturbine::beams

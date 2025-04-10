@@ -20,21 +20,23 @@ struct IntegrateResidualVectorElement {
     Kokkos::View<double** [6]> residual_vector_terms_;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i_index) const {
+    void operator()(size_t i_node) const {
         auto local_residual = Kokkos::Array<double, 6>{};
-        for (auto j_index = 0U; j_index < num_qps; ++j_index) {  // QPs
-            const auto weight = qp_weight_(j_index);
-            const auto coeff_c = weight * shape_deriv_(i_index, j_index);
-            const auto coeff_dig = weight * qp_jacobian_(j_index) * shape_interp_(i_index, j_index);
-            for (auto k = 0U; k < 6U; ++k) {
-                local_residual[k] += coeff_c * qp_Fc_(j_index, k) +
-                                     coeff_dig * (qp_Fd_(j_index, k) + qp_Fi_(j_index, k) -
-                                                  qp_Fe_(j_index, k) - qp_Fg_(j_index, k));
+        for (auto j_qp = 0U; j_qp < num_qps; ++j_qp) {
+            const auto weight = qp_weight_(j_qp);
+            const auto coeff_c = weight * shape_deriv_(i_node, j_qp);
+            const auto coeff_dig = weight * qp_jacobian_(j_qp) * shape_interp_(i_node, j_qp);
+            for (auto k_dof = 0U; k_dof < 6U; ++k_dof) {
+                local_residual[k_dof] += coeff_c * qp_Fc_(j_qp, k_dof) +
+                                         coeff_dig * (qp_Fd_(j_qp, k_dof) + qp_Fi_(j_qp, k_dof) -
+                                                      qp_Fe_(j_qp, k_dof) - qp_Fg_(j_qp, k_dof));
             }
         }
-        for (auto k = 0U; k < 6U; ++k) {
-            residual_vector_terms_(i_elem, i_index, k) = local_residual[k] - node_FX_(i_index, k);
+        for (auto k_dof = 0U; k_dof < 6U; ++k_dof) {
+            residual_vector_terms_(i_elem, i_node, k_dof) =
+                local_residual[k_dof] - node_FX_(i_node, k_dof);
         }
     }
 };
+
 }  // namespace openturbine::beams
