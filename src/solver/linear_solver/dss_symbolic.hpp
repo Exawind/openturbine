@@ -35,6 +35,10 @@ struct DSSSymbolicFunction {
 #include "dss_symbolic_superlu.hpp"
 #endif
 
+#ifdef OpenTurbine_ENABLE_SUPERLU_MT
+#include "dss_symbolic_superlu_mt.hpp"
+#endif
+
 namespace openturbine {
 
 template <typename DSSHandleType, typename CrsMatrixType>
