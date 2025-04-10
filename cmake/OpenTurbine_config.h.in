@@ -6,3 +6,4 @@
 #cmakedefine OpenTurbine_ENABLE_KLU
 #cmakedefine OpenTurbine_ENABLE_UMFPACK
 #cmakedefine OpenTurbine_ENABLE_SUPERLU
+#cmakedefine OpenTurbine_ENABLE_SUPERLU_MT

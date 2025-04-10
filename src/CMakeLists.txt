@@ -82,6 +82,12 @@ target_link_system_libraries(openturbine_library PUBLIC
 )
 endif()
 
+if(OpenTurbine_ENABLE_SUPERLU_MT)
+target_link_system_libraries(openturbine_library PUBLIC
+  superlu_mt::superlu_mt
+)
+endif()
+
 if(OpenTurbine_ENABLE_KLU)
 target_link_system_libraries(openturbine_library PUBLIC
   SuiteSparse::KLU

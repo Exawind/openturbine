@@ -17,6 +17,10 @@ function(openturbine_setup_dependencies)
     find_package(superlu REQUIRED)
   endif()
 
+  if(OpenTurbine_ENABLE_SUPERLU_MT)
+    find_package(superlu_mt REQUIRED)
+  endif()
+
   if(OpenTurbine_ENABLE_KLU)
     find_package(KLU REQUIRED)
   endif()

@@ -10,6 +10,7 @@ enum class DSSAlgorithm : std::uint8_t {
     KLU,
     UMFPACK,
     SUPERLU,
+    SUPERLU_MT,
     MKL,
 };
 
@@ -42,4 +43,8 @@ public:
 
 #ifdef OpenTurbine_ENABLE_SUPERLU
 #include "dss_handle_superlu.hpp"
+#endif
+
+#ifdef OpenTurbine_ENABLE_SUPERLU_MT
+#include "dss_handle_superlu_mt.hpp"
 #endif

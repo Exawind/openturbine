@@ -35,6 +35,10 @@ struct DSSSolveFunction {
 #include "dss_solve_superlu.hpp"
 #endif
 
+#ifdef OpenTurbine_ENABLE_SUPERLU_MT
+#include "dss_solve_superlu_mt.hpp"
+#endif
+
 namespace openturbine {
 
 template <typename DSSHandleType, typename CrsMatrixType, typename MultiVectorType>
