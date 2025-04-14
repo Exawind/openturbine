@@ -128,7 +128,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     interface.WriteOutputVTK();
 
     // Get reference to tip node
-    auto& tip_node = interface.blade.nodes.back();
+    auto& tip_node = interface.Blade().nodes.back();
 
     // Loop through solution iterations
     for (auto i = 1U; i < 20U; ++i) {
@@ -258,69 +258,69 @@ TEST(BladeInterfaceTest, RotatingBeam) {
     // Root Node
     //--------------------------------------------------------------------------
 
-    EXPECT_NEAR(interface.blade.root_node.position[0], 1.9919054660239885, 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.position[1], 0.17975709839602211, 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.position[2], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.position[3], 0.99898767084784234, 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.position[4], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.position[5], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.position[6], 0.044984814037660227, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.position[0], 1.9919054660239885, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.position[1], 0.17975709839602211, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.position[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.position[3], 0.99898767084784234, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.position[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.position[5], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.position[6], 0.044984814037660227, 1e-10);
 
-    EXPECT_NEAR(interface.blade.root_node.displacement[0], -0.0080945339760114532, 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.displacement[1], 0.17975709839602211, 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.displacement[2], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.displacement[3], 0.99898767084784234, 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.displacement[4], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.displacement[5], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.displacement[6], 0.044984814037660227, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.displacement[0], -0.0080945339760114532, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.displacement[1], 0.17975709839602211, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.displacement[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.displacement[3], 0.99898767084784234, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.displacement[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.displacement[5], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.displacement[6], 0.044984814037660227, 1e-10);
 
-    EXPECT_NEAR(interface.blade.root_node.velocity[0], -0.17976259212149071, 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.velocity[1], 1.9919719054875213, 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.velocity[2], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.velocity[3], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.velocity[4], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.velocity[5], 1., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.velocity[0], -0.17976259212149071, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.velocity[1], 1.9919719054875213, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.velocity[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.velocity[3], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.velocity[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.velocity[5], 1., 1e-10);
 
-    EXPECT_NEAR(interface.blade.root_node.acceleration[0], -1.9920882238788629, 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.acceleration[1], -0.17977158309645525, 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.acceleration[2], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.acceleration[3], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.acceleration[4], 0., 1e-10);
-    EXPECT_NEAR(interface.blade.root_node.acceleration[5], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.acceleration[0], -1.9920882238788629, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.acceleration[1], -0.17977158309645525, 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.acceleration[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.acceleration[3], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.acceleration[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().root_node.acceleration[5], 0., 1e-10);
 
     //--------------------------------------------------------------------------
     // Tip Node
     //--------------------------------------------------------------------------
 
-    EXPECT_NEAR(interface.blade.nodes[5].position[0], 11.951460424343411, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].position[1], 1.0785463019560009, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].position[2], 2.2845605555050727E-10, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].position[3], 0.99898766738195299, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].position[4], 2.6570959740959799E-9, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].position[5], -1.0123941616837804E-10, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].position[6], 0.044984891005365443, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].position[0], 11.951460424343411, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].position[1], 1.0785463019560009, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].position[2], 2.2845605555050727E-10, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].position[3], 0.99898766738195299, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].position[4], 2.6570959740959799E-9, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].position[5], -1.0123941616837804E-10, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].position[6], 0.044984891005365443, 1e-10);
 
-    EXPECT_NEAR(interface.blade.nodes[5].displacement[0], -0.048539575656588806, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].displacement[1], 1.0785463019560009, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].displacement[2], 2.2845605555050727E-10, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].displacement[3], 0.99898766738195299, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].displacement[4], 2.6570959740959799E-9, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].displacement[5], -1.0123941616837804E-10, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].displacement[6], 0.044984891005365443, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].displacement[0], -0.048539575656588806, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].displacement[1], 1.0785463019560009, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].displacement[2], 2.2845605555050727E-10, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].displacement[3], 0.99898766738195299, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].displacement[4], 2.6570959740959799E-9, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].displacement[5], -1.0123941616837804E-10, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].displacement[6], 0.044984891005365443, 1e-10);
 
-    EXPECT_NEAR(interface.blade.nodes[5].velocity[0], -1.0786835619583102, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].velocity[1], 11.95303967174639, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].velocity[2], -6.3862048021175104E-8, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].velocity[3], 0.000003159329892760129, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].velocity[4], 2.5866107917084571E-7, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].velocity[5], 1.0001562024381443, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].velocity[0], -1.0786835619583102, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].velocity[1], 11.95303967174639, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].velocity[2], -6.3862048021175104E-8, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].velocity[3], 0.000003159329892760129, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].velocity[4], 2.5866107917084571E-7, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].velocity[5], 1.0001562024381443, 1e-10);
 
-    EXPECT_NEAR(interface.blade.nodes[5].acceleration[0], -11.955952417551353, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].acceleration[1], -1.0800839943831992, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].acceleration[2], -0.000013544534439173783, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].acceleration[3], -0.000046709402446003812, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].acceleration[4], 0.000008256203749646939, 1e-10);
-    EXPECT_NEAR(interface.blade.nodes[5].acceleration[5], 0.00020635762959181575, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].acceleration[0], -11.955952417551353, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].acceleration[1], -1.0800839943831992, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].acceleration[2], -0.000013544534439173783, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].acceleration[3], -0.000046709402446003812, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].acceleration[4], 0.000008256203749646939, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[5].acceleration[5], 0.00020635762959181575, 1e-10);
 }
 
 TEST(BladeInterfaceTest, StaticCurledBeam) {
@@ -390,7 +390,7 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
     std::vector<Array_3> tip_positions;
 
     // Get reference to tip node
-    auto& tip_node = interface.blade.nodes[interface.blade.nodes.size() - 1];
+    auto& tip_node = interface.Blade().nodes[interface.Blade().nodes.size() - 1];
 
     // Loop through moments to apply to tip
     const std::vector<double> moments{0., 10920.0, 21840.0, 32761.0, 43681.0, 54601.0};
