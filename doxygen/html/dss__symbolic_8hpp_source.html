@@ -213,25 +213,30 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;<a class="code" href="dss__symbolic__superlu_8hpp.html">dss_symbolic_superlu.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DSSHandleType, <span class="keyword">typename</span> CrsMatrixType&gt;</div>
-<div class="foldopen" id="foldopen00041" data-start="{" data-end="}">
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a5faae3763d2c59be117c6fb7a48e8289">   41</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine.html#a5faae3763d2c59be117c6fb7a48e8289">dss_symbolic</a>(DSSHandleType&amp; dss_handle, CrsMatrixType&amp; A) {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <a class="code hl_struct" href="structopenturbine_1_1DSSSymbolicFunction.html">DSSSymbolicFunction&lt;DSSHandleType, CrsMatrixType&gt;::symbolic</a>(dss_handle, A);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>}</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#ifdef OpenTurbine_ENABLE_SUPERLU_MT</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &quot;<a class="code" href="dss__symbolic__superlu__mt_8hpp.html">dss_symbolic_superlu_mt.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DSSHandleType, <span class="keyword">typename</span> CrsMatrixType&gt;</div>
+<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a5faae3763d2c59be117c6fb7a48e8289">   45</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine.html#a5faae3763d2c59be117c6fb7a48e8289">dss_symbolic</a>(DSSHandleType&amp; dss_handle, CrsMatrixType&amp; A) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <a class="code hl_struct" href="structopenturbine_1_1DSSSymbolicFunction.html">DSSSymbolicFunction&lt;DSSHandleType, CrsMatrixType&gt;::symbolic</a>(dss_handle, A);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
 </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="adss__handle_8hpp_html"><div class="ttname"><a href="dss__handle_8hpp.html">dss_handle.hpp</a></div></div>
 <div class="ttc" id="adss__symbolic__cudss_8hpp_html"><div class="ttname"><a href="dss__symbolic__cudss_8hpp.html">dss_symbolic_cudss.hpp</a></div></div>
 <div class="ttc" id="adss__symbolic__cusolversp_8hpp_html"><div class="ttname"><a href="dss__symbolic__cusolversp_8hpp.html">dss_symbolic_cusolversp.hpp</a></div></div>
 <div class="ttc" id="adss__symbolic__klu_8hpp_html"><div class="ttname"><a href="dss__symbolic__klu_8hpp.html">dss_symbolic_klu.hpp</a></div></div>
 <div class="ttc" id="adss__symbolic__mkl_8hpp_html"><div class="ttname"><a href="dss__symbolic__mkl_8hpp.html">dss_symbolic_mkl.hpp</a></div></div>
 <div class="ttc" id="adss__symbolic__superlu_8hpp_html"><div class="ttname"><a href="dss__symbolic__superlu_8hpp.html">dss_symbolic_superlu.hpp</a></div></div>
+<div class="ttc" id="adss__symbolic__superlu__mt_8hpp_html"><div class="ttname"><a href="dss__symbolic__superlu__mt_8hpp.html">dss_symbolic_superlu_mt.hpp</a></div></div>
 <div class="ttc" id="adss__symbolic__umfpack_8hpp_html"><div class="ttname"><a href="dss__symbolic__umfpack_8hpp.html">dss_symbolic_umfpack.hpp</a></div></div>
 <div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
-<div class="ttc" id="anamespaceopenturbine_html_a5faae3763d2c59be117c6fb7a48e8289"><div class="ttname"><a href="namespaceopenturbine.html#a5faae3763d2c59be117c6fb7a48e8289">openturbine::dss_symbolic</a></div><div class="ttdeci">void dss_symbolic(DSSHandleType &amp;dss_handle, CrsMatrixType &amp;A)</div><div class="ttdef"><b>Definition</b> dss_symbolic.hpp:41</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a5faae3763d2c59be117c6fb7a48e8289"><div class="ttname"><a href="namespaceopenturbine.html#a5faae3763d2c59be117c6fb7a48e8289">openturbine::dss_symbolic</a></div><div class="ttdeci">void dss_symbolic(DSSHandleType &amp;dss_handle, CrsMatrixType &amp;A)</div><div class="ttdef"><b>Definition</b> dss_symbolic.hpp:45</div></div>
 <div class="ttc" id="astructopenturbine_1_1DSSSymbolicFunction_html"><div class="ttname"><a href="structopenturbine_1_1DSSSymbolicFunction.html">openturbine::DSSSymbolicFunction</a></div><div class="ttdef"><b>Definition</b> dss_symbolic.hpp:8</div></div>
 <div class="ttc" id="astructopenturbine_1_1DSSSymbolicFunction_html_a02a05d8de814a8ba94b92d2ff392009d"><div class="ttname"><a href="structopenturbine_1_1DSSSymbolicFunction.html#a02a05d8de814a8ba94b92d2ff392009d">openturbine::DSSSymbolicFunction::DSSSymbolicFunction</a></div><div class="ttdeci">DSSSymbolicFunction()=delete</div></div>
 </div><!-- fragment --></div><!-- contents -->
