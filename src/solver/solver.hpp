@@ -3,15 +3,16 @@
 #include <array>
 #include <vector>
 
-#include <Amesos2.hpp>
 #include <KokkosSparse.hpp>
-#include <KokkosSparse_spadd.hpp>
 #include <Kokkos_Core.hpp>
 
 #include "compute_num_system_dofs.hpp"
 #include "constraints/constraint_type.hpp"
 #include "create_full_matrix.hpp"
-#include "create_sparse_dense_solver.hpp"
+#include "linear_solver/dss_handle.hpp"
+#include "linear_solver/dss_symbolic.hpp"
+
+#include "OpenTurbine_config.h"
 
 namespace openturbine {
 
@@ -29,26 +30,46 @@ namespace openturbine {
  */
 struct Solver {
     // Define some types for the solver to make the code more readable
-    using GlobalCrsMatrixType = Tpetra::CrsMatrix<>;
-    using ExecutionSpace = GlobalCrsMatrixType::execution_space;
-    using MemorySpace = GlobalCrsMatrixType::memory_space;
-    using GlobalMultiVectorType = Tpetra::MultiVector<>;
-    using CrsMatrixType = GlobalCrsMatrixType::local_matrix_device_type;
-    using KernelHandle = typename KokkosKernels::Experimental::KokkosKernelsHandle<
-        CrsMatrixType::const_size_type, CrsMatrixType::const_ordinal_type,
-        CrsMatrixType::const_value_type, ExecutionSpace, MemorySpace, MemorySpace>;
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    using ValueType = double;
+#if defined(OpenTurbine_ENABLE_MKL) && !defined(KOKKOS_ENABLE_CUDA)
+    using IndexType = MKL_INT;
+#else
+    using IndexType = int;
+#endif
+    using CrsMatrixType = KokkosSparse::CrsMatrix<ValueType, IndexType, DeviceType, void, IndexType>;
+#ifdef KOKKOS_ENABLE_CUDA
+#if defined(OpenTurbine_ENABLE_CUDSS)
+    using HandleType = DSSHandle<DSSAlgorithm::CUDSS>;
+#elif defined(OpenTurbine_ENABLE_CUSOLVERSP)
+    using HandleType = DSSHandle<DSSAlgorithm::CUSOLVER_SP>;
+#endif
+#else
+#if defined(OpenTurbine_ENABLE_MKL)
+    using HandleType = DSSHandle<DSSAlgorithm::MKL>;
+#elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
+    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU_MT>;
+#elif defined(OpenTurbine_ENABLE_KLU)
+    using HandleType = DSSHandle<DSSAlgorithm::KLU>;
+#elif defined(OpenTurbine_ENABLE_UMFPACK)
+    using HandleType = DSSHandle<DSSAlgorithm::UMFPACK>;
+#elif defined(OpenTurbine_ENABLE_SUPERLU)
+    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU>;
+#endif
+#endif
 
     size_t num_system_nodes;  //< Number of system nodes
     size_t num_system_dofs;   //< Number of system degrees of freedom
     size_t num_dofs;          //< Number of degrees of freedom
 
-    Teuchos::RCP<GlobalCrsMatrixType> A;    //< System matrix
-    Teuchos::RCP<GlobalMultiVectorType> b;  //< System RHS
-    Teuchos::RCP<GlobalMultiVectorType> x;  //< System solution
+    CrsMatrixType A;                                     //< System matrix
+    Kokkos::View<ValueType* [1], Kokkos::LayoutLeft> b;  //< System RHS
+    Kokkos::View<ValueType* [1], Kokkos::LayoutLeft> x;  //< System solution
+
+    HandleType handle;
 
     std::vector<double> convergence_err;
-
-    Teuchos::RCP<Amesos2::Solver<GlobalCrsMatrixType, GlobalMultiVectorType>> amesos_solver;
 
     /** @brief Constructs a sparse linear systems solver for OpenTurbine
      *
@@ -82,29 +103,20 @@ struct Solver {
         : num_system_nodes(node_IDs.extent(0)),
           num_system_dofs(ComputeNumSystemDofs(active_dofs)),
           num_dofs(num_system_dofs + num_constraint_dofs),
-          A(CreateFullMatrix<GlobalCrsMatrixType>(
+          A(CreateFullMatrix<CrsMatrixType>(
               num_system_dofs, num_dofs, base_active_dofs, target_active_dofs,
               constraint_base_node_freedom_table, constraint_target_node_freedom_table,
               constraint_row_range, active_dofs, node_freedom_map_table, num_nodes_per_element,
               node_state_indices
           )),
-          b(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getRangeMap(), 1)),
-          x(Tpetra::createMultiVector<GlobalCrsMatrixType::scalar_type>(A->getDomainMap(), 1)),
-          amesos_solver(CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x, b)
-          ) {}
+          b("b", num_dofs),
+          x("x", num_dofs) {
+        dss_symbolic(handle, A);
+    }
 
     // cppcheck-suppress missingMemberCopy
-    Solver(const Solver& other)
-        : num_system_nodes(other.num_system_nodes),
-          num_system_dofs(other.num_system_dofs),
-          num_dofs(other.num_dofs),
-          A(other.A),
-          b(other.b),
-          x(other.x),
-          convergence_err(other.convergence_err),
-          amesos_solver(CreateSparseDenseSolver<GlobalCrsMatrixType, GlobalMultiVectorType>(A, x, b)
-          ) {}
-
+    /*
+    Solver(const Solver& other) = default;
     Solver(Solver&& other) noexcept = delete;
     ~Solver() = default;
 
@@ -120,12 +132,13 @@ struct Solver {
         std::swap(A, tmp.A);
         std::swap(b, tmp.b);
         std::swap(x, tmp.x);
+        std::swap(handle, tmp.handle);
         std::swap(convergence_err, tmp.convergence_err);
-        std::swap(amesos_solver, tmp.amesos_solver);
         return *this;
     }
 
     Solver& operator=(Solver&& other) noexcept = delete;
+    */
 };
 
 }  // namespace openturbine

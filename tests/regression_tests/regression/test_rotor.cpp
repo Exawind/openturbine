@@ -1,3 +1,4 @@
+#include <array>
 #include <filesystem>
 #include <fstream>
 #include <initializer_list>
@@ -56,7 +57,8 @@ TEST(RotorTest, IEA15Rotor) {
     constexpr double rho_inf(0.0);
     constexpr double t_end(0.1);
     constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.0);
-    constexpr auto num_nodes = node_xi.size();
+    //    constexpr auto num_nodes = node_xi.size();
+    constexpr auto num_nodes = 11UL;
 
     // Node location [0, 1]
     auto node_loc = std::array<double, num_nodes>{};
@@ -201,6 +203,7 @@ TEST(RotorTest, IEA15RotorHub) {
     constexpr double t_end(0.1);
     constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.0);
     constexpr auto num_nodes = node_xi.size();
+    //    constexpr auto num_nodes = 11UL;
 
     // Node location [0, 1]
     auto node_loc = std::array<double, num_nodes>{};

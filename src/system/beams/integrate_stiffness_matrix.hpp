@@ -77,4 +77,5 @@ struct IntegrateStiffnessMatrixElement {
         }
     }
 };
+
 }  // namespace openturbine::beams

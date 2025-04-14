@@ -4,6 +4,8 @@
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 
 #include "solver/condition_system.hpp"
+#include "solver/linear_solver/dss_numeric.hpp"
+#include "solver/linear_solver/dss_solve.hpp"
 #include "solver/solver.hpp"
 #include "step_parameters.hpp"
 
@@ -13,25 +15,20 @@ inline void SolveSystem(StepParameters& parameters, Solver& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Solve System");
 
     Kokkos::parallel_for(
-        "ConditionR", solver.num_system_dofs,
-        ConditionR{parameters.conditioner, solver.b->getLocalViewDevice(Tpetra::Access::ReadWrite)}
+        "ConditionR", solver.num_system_dofs, ConditionR{parameters.conditioner, solver.b}
     );
 
-    solver.b->scale(-1.);
+    KokkosBlas::scal(solver.b, -1., solver.b);
 
     {
         auto solve_region = Kokkos::Profiling::ScopedRegion("Linear Solve");
-        solver.amesos_solver->numericFactorization();
-        solver.amesos_solver->solve();
+        dss_numeric(solver.handle, solver.A);
+        dss_solve(solver.handle, solver.A, solver.b, solver.x);
     }
 
     Kokkos::parallel_for(
         "UnconditionSolution", solver.num_dofs - solver.num_system_dofs,
-        UnconditionSolution{
-            solver.num_system_dofs,
-            parameters.conditioner,
-            solver.x->getLocalViewDevice(Tpetra::Access::ReadWrite),
-        }
+        UnconditionSolution{solver.num_system_dofs, parameters.conditioner, solver.x}
     );
 }
 

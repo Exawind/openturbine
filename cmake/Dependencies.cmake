@@ -3,7 +3,6 @@ function(openturbine_setup_dependencies)
   # Required packages
   #--------------------------------------------------------------------------
   find_package(KokkosKernels REQUIRED)
-  find_package(Amesos2 REQUIRED)
   find_package(yaml-cpp REQUIRED)
   find_package(HDF5 REQUIRED)
   find_package(NetCDF REQUIRED)
@@ -12,17 +11,39 @@ function(openturbine_setup_dependencies)
   # Optional packages
   #--------------------------------------------------------------------------
   #----------------------------------------
-  # MKL
+  # Sparse Direct Linear Solvers
   #----------------------------------------
-  if(TARGET Kokkos::MKL)
+  if(OpenTurbine_ENABLE_SUPERLU)
+    find_package(superlu REQUIRED)
+  endif()
+
+  if(OpenTurbine_ENABLE_SUPERLU_MT)
+    find_package(superlu_mt REQUIRED)
+  endif()
+
+  if(OpenTurbine_ENABLE_KLU)
+    find_package(KLU REQUIRED)
+  endif()
+
+  if(OpenTurbine_ENABLE_UMFPACK)
+    find_package(UMFPACK REQUIRED)
+  endif()
+
+  if(OpenTurbine_ENABLE_MKL)
     find_package(MKL REQUIRED)
   endif()
 
-  #----------------------------------------
-  # MPI
-  #----------------------------------------
-  if(Amesos2_ENABLE_MPI)
-    find_package(MPI REQUIRED)
+  if(OpenTurbine_ENABLE_CUSOLVERSP)
+    if(NOT DEFINED Kokkos_ENABLE_CUDA)
+      message(FATAL_ERROR "When OpenTurbine_ENABLE_CUSOLVERSP is enabled, Kokkos must also be built with CUDA")
+    endif()
+  endif()
+
+  if(OpenTurbine_ENABLE_CUDSS)
+    if(NOT DEFINED Kokkos_ENABLE_CUDA)
+      message(FATAL_ERROR "When OpenTurbine_ENABLE_CUDSS is enabled, Kokkos must also be built with CUDA")
+    endif()
+    find_package(cudss REQUIRED)
   endif()
 
   #----------------------------------------
