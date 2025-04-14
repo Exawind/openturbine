@@ -48,6 +48,8 @@ struct Solver {
 #else
 #if defined(OpenTurbine_ENABLE_MKL)
     using HandleType = DSSHandle<DSSAlgorithm::MKL>;
+#elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
+    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU_MT>;
 #elif defined(OpenTurbine_ENABLE_KLU)
     using HandleType = DSSHandle<DSSAlgorithm::KLU>;
 #elif defined(OpenTurbine_ENABLE_UMFPACK)
