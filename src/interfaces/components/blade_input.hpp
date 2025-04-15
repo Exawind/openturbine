@@ -47,16 +47,8 @@ struct Root {
 };
 
 struct BladeInput {
-    enum class NodeSpacing : std::uint8_t {
-        GaussLobattoLegendre = 1,
-        Linear = 2,
-    };
-
     /// @brief Spectral element order (num nodes - 1)
     size_t element_order{10};
-
-    /// @brief Node spacing specification
-    NodeSpacing node_spacing{NodeSpacing::GaussLobattoLegendre};
 
     /// @brief Trapezoidal quadrature point refinement (0 = none)
     size_t section_refinement{0};

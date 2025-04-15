@@ -97,16 +97,6 @@ struct BladeBuilder {
         return *this;
     }
 
-    BladeBuilder& SetNodeSpacingLinear() {
-        input.node_spacing = BladeInput::NodeSpacing::Linear;
-        return *this;
-    }
-
-    BladeBuilder& SetNodeSpacingGaussLobattoLegendre() {
-        input.node_spacing = BladeInput::NodeSpacing::GaussLobattoLegendre;
-        return *this;
-    }
-
     [[nodiscard]] Blade Build(Model& model) const { return {this->input, model}; }
 
     [[nodiscard]] const BladeInput& Input() const { return this->input; }

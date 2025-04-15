@@ -348,7 +348,6 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
 
     builder.Blade()
         .SetElementOrder(10)
-        .SetNodeSpacingLinear()
         .SetSectionRefinement(1)
         .PrescribedRootMotion(true)
         .AddRefAxisTwist(0., 0.)
@@ -417,25 +416,25 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
     EXPECT_NEAR(tip_positions[0][1], 0., 1e-8);
     EXPECT_NEAR(tip_positions[0][2], 0., 1e-8);
 
-    EXPECT_NEAR(tip_positions[1][0], 7.5353117904309216, 1e-8);
+    EXPECT_NEAR(tip_positions[1][0], 7.535457547469286, 1e-8);
     EXPECT_NEAR(tip_positions[1][1], 0., 1e-8);
-    EXPECT_NEAR(tip_positions[1][2], 5.5406541545431187, 1e-8);
+    EXPECT_NEAR(tip_positions[1][2], 5.5405833775092788, 1e-8);
 
-    EXPECT_NEAR(tip_positions[2][0], 2.2747128775224663, 1e-8);
+    EXPECT_NEAR(tip_positions[2][0], 2.275140291113245, 1e-8);
     EXPECT_NEAR(tip_positions[2][1], 0., 1e-8);
-    EXPECT_NEAR(tip_positions[2][2], 7.2169136787384982, 1e-8);
+    EXPECT_NEAR(tip_positions[2][2], 7.2175190489085246, 1e-8);
 
-    EXPECT_NEAR(tip_positions[3][0], -1.614379006780613, 1e-8);
+    EXPECT_NEAR(tip_positions[3][0], -1.6157938054255538, 1e-8);
     EXPECT_NEAR(tip_positions[3][1], 0., 1e-8);
-    EXPECT_NEAR(tip_positions[3][2], 4.7774238337109498, 1e-8);
+    EXPECT_NEAR(tip_positions[3][2], 4.7783647698451075, 1e-8);
 
-    EXPECT_NEAR(tip_positions[4][0], -1.9031340843824651, 1e-8);
+    EXPECT_NEAR(tip_positions[4][0], -1.9061447828587319, 1e-8);
     EXPECT_NEAR(tip_positions[4][1], 0., 1e-8);
-    EXPECT_NEAR(tip_positions[4][2], 1.3327034304088525, 1e-8);
+    EXPECT_NEAR(tip_positions[4][2], 1.332200967141842, 1e-8);
 
-    EXPECT_NEAR(tip_positions[5][0], 0.025236057024605074, 1e-8);
+    EXPECT_NEAR(tip_positions[5][0], 0.022656037313893762, 1e-8);
     EXPECT_NEAR(tip_positions[5][1], 0., 1e-8);
-    EXPECT_NEAR(tip_positions[5][2], 0.0019647592579388196, 1e-8);
+    EXPECT_NEAR(tip_positions[5][2], 0.0022466646330885354, 1e-8);
 }
 
 }  // namespace openturbine::tests
