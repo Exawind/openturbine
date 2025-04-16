@@ -13,7 +13,7 @@
 namespace openturbine::interfaces {
 
 /**
- * @brief Interface for blade simulation that manages state, solver and components
+ * @brief Interface for blade simulation that manages state, solver, and components
  *
  * This class represents the primary interface for simulating a WT blade, connecting
  * the blade components with the solver and state management.
@@ -22,8 +22,8 @@ class BladeInterface {
 public:
     /**
      * @brief Constructs a BladeInterface from solution and blade inputs
-     * @param solution_input Configuration parameters for the solver and solution
-     * @param blade_input Configuration parameters for the blade geometry
+     * @param solution_input Configuration parameters for solver and solution
+     * @param blade_input Configuration parameters for blade geometry
      */
     explicit BladeInterface(
         const components::SolutionInput& solution_input, const components::BladeInput& blade_input
@@ -66,13 +66,8 @@ public:
             this->parameters, this->solver, this->elements, this->state, this->constraints
         );
 
-        if (!converged) {
-            return false;
-        }
-
-        // Update the blade motion
-        UpdateNodeMotion();
-        return true;
+        // Update the blade motion if there was convergence
+        return converged ? (UpdateNodeMotion(), true) : false;
     }
 
     /// @brief Saves the current state for potential restoration (in correction step)
@@ -119,10 +114,8 @@ private:
         // Copy state motion members from device to host
         this->host_state.CopyFromState(this->state);
 
-        // Update blade root node motion
+        // Update all node motion
         this->blade.root_node.UpdateMotion(this->host_state);
-
-        // Update blade node motion
         for (auto& node : this->blade.nodes) {
             node.UpdateMotion(this->host_state);
         }
