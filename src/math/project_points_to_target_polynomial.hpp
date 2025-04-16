@@ -13,7 +13,7 @@ namespace openturbine {
  * polynomial representation
  *
  * This function maps a set of 3D points defined at nodes of a polynomial of order source_order
- * to corresponding points at nodes of a polynomial of order target_order (which is typically higher
+ * to corresponding points at nodes of a polynomial of order target_order (typically higher
  * than the source order) using Least-Squares Finite Element (LSFE) shape functions.
  *
  * Primary use case: The primary application of this function is to increase the number of

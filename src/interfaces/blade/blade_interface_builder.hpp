@@ -13,9 +13,9 @@ namespace openturbine::interfaces {
  * interface for constructing a complete blade model while keeping the configuration of
  * individual components separate and maintainable.
  *
+ * - SolutionBuilder: Configures solver type, tolerances, time steps, and output settings
  * - BladeBuilder: Configures blade geometry, reference axes, section properties, and structural
  *                 matrices
- * - SolutionBuilder: Configures solver type, tolerances, time steps, and output settings
  */
 class BladeInterfaceBuilder {
 public:
