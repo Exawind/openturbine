@@ -101,7 +101,7 @@ private:
      * @param input Blade input configuration
      * @throws std::invalid_argument If configuration is invalid
      */
-    void ValidateInput(const BladeInput& input) {
+    static void ValidateInput(const BladeInput& input) {
         if (input.ref_axis.coordinate_grid.empty() || input.ref_axis.coordinates.empty()) {
             throw std::invalid_argument("At least one reference axis point is required");
         }
@@ -134,7 +134,7 @@ private:
      */
     void CreateNodeGeometry(const BladeInput& input) {
         const auto n_nodes = input.element_order + 1;
-        size_t n_geometry_pts = std::min(input.ref_axis.coordinate_grid.size(), n_nodes);
+        const auto n_geometry_pts = std::min(input.ref_axis.coordinate_grid.size(), n_nodes);
 
         if (n_geometry_pts < n_nodes) {
             // We need to project from n_geometry_pts -> element_order
@@ -180,7 +180,7 @@ private:
         }
 
         // Build beam sections
-        const auto sections = this->BuildBeamSections(input);
+        const auto sections = BuildBeamSections(input);
         std::vector<double> section_grid(sections.size());
         std::transform(
             sections.begin(), sections.end(), section_grid.begin(),
@@ -201,7 +201,7 @@ private:
      * @param input Blade input configuration
      * @param model Model containing the blade
      */
-    void PositionBladeInSpace(const BladeInput& input, Model& model) {
+    void PositionBladeInSpace(const BladeInput& input, Model& model) const {
         // Extract root location, orientation, and velocity
         const std::array<double, 3> root_location{
             input.root.position[0], input.root.position[1], input.root.position[2]
