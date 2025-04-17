@@ -4,59 +4,82 @@
 
 namespace openturbine::interfaces::components {
 
+/**
+ * @brief Reference axis definition for a turbine blade
+ *
+ * Defines the centerline of the blade with position and twist information
+ */
 struct ReferenceAxis {
-    /// @brief Coordinate locations [0, 1]
+    /// @brief Normalized coordinate locations [0, 1] along the blade
     std::vector<double> coordinate_grid;
 
     /// @brief X,Y,Z coordinates of reference axis points
     std::vector<std::array<double, 3>> coordinates;
 
-    /// @brief Twist locations [0, 1]
+    /// @brief Normalized twist locations [0, 1] along the blade
     std::vector<double> twist_grid;
 
-    /// @brief Structural twist
+    /// @brief Structural twist values (in radians)
     std::vector<double> twist;
 };
 
+/**
+ * @brief Sectional structural properties of the blade
+ *
+ * Defines the section properties at a given location along the blade
+ */
 struct Section {
-    /// @brief Section locations [0, 1]
+    /// @brief Normalized section location [0, 1] along the blade
     double location;
 
-    /// @brief Mass matrix
+    /// @brief Mass matrix (6x6) at the section
     Array_6x6 mass_matrix;
 
-    /// @brief Stiffness matrix
+    /// @brief Stiffness matrix (6x6) at the section
     Array_6x6 stiffness_matrix;
 
+    /**
+     * @brief Construct a new Section
+     * @param loc Normalized location [0,1] along the blade
+     * @param m Mass matrix
+     * @param k Stiffness matrix
+     */
     Section(double loc, Array_6x6 m, Array_6x6 k)
-        : location(loc), mass_matrix(m), stiffness_matrix(k) {}
+        : location(loc), mass_matrix(m), stiffness_matrix(k) {
+        // Check that the section location is in range [0,1]
+        if (loc < 0. || loc > 1.) {
+            throw std::invalid_argument("Section location must be in range [0, 1]");
+        }
+    }
 };
 
+/**
+ * @brief Root definition for a turbine blade
+ *
+ * Defines the root properties of the blade
+ */
 struct Root {
     /// @brief Flag to use root motion as an input to the model
     bool prescribe_root_motion{false};
 
-    /// @brief Inital position/orientation
+    /// @brief Inital position/orientation [x, y, z, qw, qx, qy, qz]
     std::array<double, 7> position{0., 0., 0., 1., 0., 0., 0.};
 
-    /// @brief Initial translation/rotational velocity
+    /// @brief Initial translation/rotational velocity [vx, vy, vz, wx, wy, wz]
     std::array<double, 6> velocity{0., 0., 0., 0., 0., 0.};
 
-    /// @brief Initial translation/rotational acceleration
+    /// @brief Initial translation/rotational acceleration [ax, ay, az, αx, αy, αz]
     std::array<double, 6> acceleration{0., 0., 0., 0., 0., 0.};
 };
 
+/**
+ * @brief Complete input specification for a blade
+ *
+ * Defines the input configuration for a turbine blade
+ */
 struct BladeInput {
-    enum class NodeSpacing : std::uint8_t {
-        GaussLobattoLegendre = 1,
-        Linear = 2,
-    };
-
     /// @brief Spectral element order (num nodes - 1)
     size_t element_order{10};
-
-    /// @brief Node spacing specification
-    NodeSpacing node_spacing{NodeSpacing::GaussLobattoLegendre};
 
     /// @brief Trapezoidal quadrature point refinement (0 = none)
     size_t section_refinement{0};
