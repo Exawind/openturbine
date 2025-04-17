@@ -67,7 +67,11 @@ public:
         );
 
         // Update the blade motion if there was convergence
-        return converged ? (UpdateNodeMotion(), true) : false;
+        if (converged) {
+            UpdateNodeMotion();
+            return true;
+        }
+        return false;
     }
 
     /// @brief Saves the current state for potential restoration (in correction step)

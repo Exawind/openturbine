@@ -196,7 +196,7 @@ TEST(BladeInterfaceTest, RotatingBeam) {
 
     // Add reference axis coordinates and twist
     for (const auto s : node_s) {
-        builder.Blade().AddRefAxisPoint(s, {10. * s, 0., 0.});
+        builder.Blade().AddRefAxisPoint(s, {10. * s, 0., 0.}, 'X');
     }
 
     // Beam section locations
@@ -352,7 +352,7 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
         .AddRefAxisTwist(1., 0.);
 
     for (const auto s : kp_s) {
-        builder.Blade().AddRefAxisPoint(s, {s * 10., 0., 0.});
+        builder.Blade().AddRefAxisPoint(s, {s * 10., 0., 0.}, 'X');
     }
 
     // Beam section locations

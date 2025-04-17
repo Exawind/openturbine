@@ -14,17 +14,8 @@ TEST(ProjectPointsToTargetPolynomialTest, Project2ndOrderTo4thOrderPolynomial) {
         {5., 1., -1.}      // pt 3
     };
 
-    const auto [gll_points, output_points] =
+    const auto output_points =
         ProjectPointsToTargetPolynomial(num_input_pts, num_output_pts, input_points);
-
-    // Expected GLL points
-    const std::vector<double> expected_gll_points = {-1., -0.654654, 0., 0.654654, 1.};
-
-    ASSERT_EQ(gll_points.size(), expected_gll_points.size());
-    for (size_t i = 0; i < gll_points.size(); ++i) {
-        EXPECT_NEAR(gll_points[i], expected_gll_points[i], 1e-6)
-            << "Mismatch at GLL point [" << i << "]";
-    }
 
     // Expected projected points from Mathematica
     const std::vector<std::array<double, 3>> expected_projected_points = {
