@@ -8,7 +8,7 @@ namespace openturbine::interfaces::components {
 /**
  * @brief Enum to represent reference axis orientation
  */
-enum class ReferenceAxisOrientation {
+enum class ReferenceAxisOrientation : std::uint8_t {
     X,  // X-axis
     Z   // Z-axis
 };
