@@ -150,13 +150,13 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         interface.WriteOutputVTK();
     }
 
-    EXPECT_NEAR(tip_node.position[0], 117.00015677507447, 1e-10);
-    EXPECT_NEAR(tip_node.position[1], 0.17029757162527367, 1e-10);
-    EXPECT_NEAR(tip_node.position[2], 4.0018470825686112, 1e-10);
-    EXPECT_NEAR(tip_node.position[3], 0.99867645870262833, 1e-10);
-    EXPECT_NEAR(tip_node.position[4], -0.0017331183376092, 1e-10);
-    EXPECT_NEAR(tip_node.position[5], -0.051119189822748511, 1e-10);
-    EXPECT_NEAR(tip_node.position[6], 0.005399589417025623, 1e-10);
+    EXPECT_NEAR(tip_node.position[0], 117.00012960730839, 1e-10);
+    EXPECT_NEAR(tip_node.position[1], 0.1703315069675968, 1e-10);
+    EXPECT_NEAR(tip_node.position[2], 4.0021291879233418, 1e-10);
+    EXPECT_NEAR(tip_node.position[3], 0.9987613005270843, 1e-10);
+    EXPECT_NEAR(tip_node.position[4], -0.001514812181144, 1e-10);
+    EXPECT_NEAR(tip_node.position[5], -0.049439491482141, 1e-10);
+    EXPECT_NEAR(tip_node.position[6], 0.0054135566396299, 1e-10);
 }
 
 TEST(BladeInterfaceTest, RotatingBeam) {

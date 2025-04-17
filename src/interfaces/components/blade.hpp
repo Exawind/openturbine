@@ -20,6 +20,9 @@ namespace openturbine::interfaces::components {
  */
 class Blade {
 public:
+    /// @brief Maximum number of points allowed in blade geometry definition
+    static constexpr size_t kMaxGeometryPoints{10};
+
     /// @brief Beam element ID
     size_t beam_element_id{kInvalidID};
 
@@ -133,7 +136,8 @@ private:
      */
     void CreateNodeGeometry(const BladeInput& input) {
         const auto n_nodes = input.element_order + 1;
-        const auto n_geometry_pts = std::min(input.ref_axis.coordinate_grid.size(), n_nodes);
+        const auto n_geometry_pts =
+            std::min({input.ref_axis.coordinate_grid.size(), n_nodes, kMaxGeometryPoints});
 
         if (n_geometry_pts < n_nodes) {
             // We need to project from n_geometry_pts -> element_order
