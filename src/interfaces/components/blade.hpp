@@ -144,9 +144,14 @@ private:
             const auto geometry_points = PerformLeastSquaresFitting(
                 n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates
             );
-            [[maybe_unused]] const auto [gll_points, node_coords] =
+            const auto [gll_points, node_coords] =
                 ProjectPointsToTargetPolynomial(n_geometry_pts, n_nodes, geometry_points);
-            this->node_coordinates = node_coords;
+
+            this->node_coordinates.clear();
+            this->node_coordinates.reserve(node_coords.size());
+            std::copy(
+                node_coords.begin(), node_coords.end(), std::back_inserter(this->node_coordinates)
+            );
         } else {
             // Fit node coordinates to key points
             const std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));
