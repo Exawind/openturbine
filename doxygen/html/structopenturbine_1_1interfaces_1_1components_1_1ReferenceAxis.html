@@ -173,24 +173,30 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Reference axis definition for a turbine blade.  
+ <a href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="blade__input_8hpp_source.html">blade_input.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a113359e46817a2feff0467fdf2b71aa6" id="r_a113359e46817a2feff0467fdf2b71aa6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a113359e46817a2feff0467fdf2b71aa6">coordinate_grid</a></td></tr>
-<tr class="memdesc:a113359e46817a2feff0467fdf2b71aa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Coordinate locations [0, 1].  <br /></td></tr>
+<tr class="memdesc:a113359e46817a2feff0467fdf2b71aa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalized coordinate locations [0, 1] along the blade.  <br /></td></tr>
 <tr class="separator:a113359e46817a2feff0467fdf2b71aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abeda368d7fc537a7672dfdd3987cefa3" id="r_abeda368d7fc537a7672dfdd3987cefa3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; double, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#abeda368d7fc537a7672dfdd3987cefa3">coordinates</a></td></tr>
 <tr class="memdesc:abeda368d7fc537a7672dfdd3987cefa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">X,Y,Z coordinates of reference axis points.  <br /></td></tr>
 <tr class="separator:abeda368d7fc537a7672dfdd3987cefa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a957ed2660726f39a8f20157d24cff635" id="r_a957ed2660726f39a8f20157d24cff635"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a957ed2660726f39a8f20157d24cff635">twist_grid</a></td></tr>
-<tr class="memdesc:a957ed2660726f39a8f20157d24cff635"><td class="mdescLeft">&#160;</td><td class="mdescRight">Twist locations [0, 1].  <br /></td></tr>
+<tr class="memdesc:a957ed2660726f39a8f20157d24cff635"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalized twist locations [0, 1] along the blade.  <br /></td></tr>
 <tr class="separator:a957ed2660726f39a8f20157d24cff635"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ea4bb92e2cbc3171549bde9937b0858" id="r_a5ea4bb92e2cbc3171549bde9937b0858"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a5ea4bb92e2cbc3171549bde9937b0858">twist</a></td></tr>
-<tr class="memdesc:a5ea4bb92e2cbc3171549bde9937b0858"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structural twist.  <br /></td></tr>
+<tr class="memdesc:a5ea4bb92e2cbc3171549bde9937b0858"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structural twist values (in radians)  <br /></td></tr>
 <tr class="separator:a5ea4bb92e2cbc3171549bde9937b0858"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Reference axis definition for a turbine blade. </p>
+<p>Defines the centerline of the blade with position and twist information </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a113359e46817a2feff0467fdf2b71aa6" name="a113359e46817a2feff0467fdf2b71aa6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a113359e46817a2feff0467fdf2b71aa6">&#9670;&#160;</a></span>coordinate_grid</h2>
 
@@ -203,7 +209,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Coordinate locations [0, 1]. </p>
+<p>Normalized coordinate locations [0, 1] along the blade. </p>
 
 </div>
 </div>
@@ -235,7 +241,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Structural twist. </p>
+<p>Structural twist values (in radians) </p>
 
 </div>
 </div>
@@ -251,7 +257,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Twist locations [0, 1]. </p>
+<p>Normalized twist locations [0, 1] along the blade. </p>
 
 </div>
 </div>

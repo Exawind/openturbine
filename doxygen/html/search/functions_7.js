@@ -43,7 +43,7 @@ var searchData=
   ['getnode_40',['getnode',['../classopenturbine_1_1Model.html#adb5504c6fa8eb80c5f4a793534ce30fc',1,'openturbine::Model::GetNode(size_t id) const'],['../classopenturbine_1_1Model.html#ae80bcfcb0c3a7e78d402fc8b469fb64b',1,'openturbine::Model::GetNode(size_t id)']]],
   ['getnodemotion_41',['GetNodeMotion',['../namespaceopenturbine_1_1cfd.html#ae354ce949bbec29579e9841d118fb170',1,'openturbine::cfd']]],
   ['getnodes_42',['GetNodes',['../classopenturbine_1_1Model.html#ac66dfe301af95faec86629d28615dbfa',1,'openturbine::Model']]],
-  ['getnodeweights_43',['GetNodeWeights',['../structopenturbine_1_1interfaces_1_1components_1_1Blade.html#a488bfdbb1197739ccbf0500c48192458',1,'openturbine::interfaces::components::Blade']]],
+  ['getnodeweights_43',['GetNodeWeights',['../classopenturbine_1_1interfaces_1_1components_1_1Blade.html#a488bfdbb1197739ccbf0500c48192458',1,'openturbine::interfaces::components::Blade']]],
   ['getnumberofdimensions_44',['GetNumberOfDimensions',['../classopenturbine_1_1util_1_1NetCDFFile.html#a47bf975979d50a4a91af97b4bab27ffe',1,'openturbine::util::NetCDFFile']]],
   ['getnumberofnodes_45',['GetNumberOfNodes',['../namespaceopenturbine.html#a382b442cac8b0bcc950d5b66d3268f53',1,'openturbine']]],
   ['getnumnodes_46',['GetNumNodes',['../classopenturbine_1_1util_1_1NodeStateWriter.html#ac882fd92984409bf2b1d28ecf0ab4259',1,'openturbine::util::NodeStateWriter']]],

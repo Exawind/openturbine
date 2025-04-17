@@ -15,5 +15,6 @@ var searchData=
   ['preinitialize_12',['PreInitialize',['../classopenturbine_1_1util_1_1AeroDynInflowLibrary.html#a02c3354eeddb8fb8401a897ec53dcb07',1,'openturbine::util::AeroDynInflowLibrary']]],
   ['prescribedbc_13',['PrescribedBC',['../structopenturbine_1_1CalculateConstraintResidualGradient.html#a60267856b05e3a8474b578001f7c92f4',1,'openturbine::CalculateConstraintResidualGradient']]],
   ['prescribedbc3dof_14',['PrescribedBC3DOF',['../structopenturbine_1_1CalculateConstraintResidualGradient.html#a833e63ac3f28fa4132b20f8e0169c06b',1,'openturbine::CalculateConstraintResidualGradient']]],
-  ['prescribedrootmotion_15',['PrescribedRootMotion',['../structopenturbine_1_1interfaces_1_1components_1_1BladeBuilder.html#a609d1899906478f7799a2b1264096606',1,'openturbine::interfaces::components::BladeBuilder']]]
+  ['prescribedrootmotion_15',['PrescribedRootMotion',['../classopenturbine_1_1interfaces_1_1components_1_1BladeBuilder.html#a609d1899906478f7799a2b1264096606',1,'openturbine::interfaces::components::BladeBuilder']]],
+  ['projectpointstotargetpolynomial_16',['ProjectPointsToTargetPolynomial',['../namespaceopenturbine.html#ac477866f341264e321869bc6d75c0852',1,'openturbine']]]
 ];

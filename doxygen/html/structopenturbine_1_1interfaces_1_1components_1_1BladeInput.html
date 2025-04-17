@@ -167,30 +167,22 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">openturbine::interfaces::components::BladeInput Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
+<p>Complete input specification for a blade.  
+ <a href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="blade__input_8hpp_source.html">blade_input.hpp</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a45b5d2d58ef1a9e59428082b1d76d2ef" id="r_a45b5d2d58ef1a9e59428082b1d76d2ef"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#a45b5d2d58ef1a9e59428082b1d76d2ef">NodeSpacing</a> : std::uint8_t { <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#a45b5d2d58ef1a9e59428082b1d76d2efadd8badeb6215292fa219d4d43f4d1b2b">GaussLobattoLegendre</a> = 1
-, <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#a45b5d2d58ef1a9e59428082b1d76d2efa32a843da6ea40ab3b17a3421ccdf671b">Linear</a> = 2
- }</td></tr>
-<tr class="separator:a45b5d2d58ef1a9e59428082b1d76d2ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ab0adee3ac8199ac488de1049b0441ece" id="r_ab0adee3ac8199ac488de1049b0441ece"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#ab0adee3ac8199ac488de1049b0441ece">element_order</a> {10}</td></tr>
 <tr class="memdesc:ab0adee3ac8199ac488de1049b0441ece"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spectral element order (num nodes - 1)  <br /></td></tr>
 <tr class="separator:ab0adee3ac8199ac488de1049b0441ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab390ba568734dc9aa3b20aa9f969eeaa" id="r_ab390ba568734dc9aa3b20aa9f969eeaa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#a45b5d2d58ef1a9e59428082b1d76d2ef">NodeSpacing</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#ab390ba568734dc9aa3b20aa9f969eeaa">node_spacing</a> {<a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#a45b5d2d58ef1a9e59428082b1d76d2efadd8badeb6215292fa219d4d43f4d1b2b">NodeSpacing::GaussLobattoLegendre</a>}</td></tr>
-<tr class="memdesc:ab390ba568734dc9aa3b20aa9f969eeaa"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1Node.html">Node</a> spacing specification.  <br /></td></tr>
-<tr class="separator:ab390ba568734dc9aa3b20aa9f969eeaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24314df1ce7944cbf1c6a4f98b1a9c0f" id="r_a24314df1ce7944cbf1c6a4f98b1a9c0f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#a24314df1ce7944cbf1c6a4f98b1a9c0f">section_refinement</a> {0}</td></tr>
 <tr class="memdesc:a24314df1ce7944cbf1c6a4f98b1a9c0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trapezoidal quadrature point refinement (0 = none)  <br /></td></tr>
 <tr class="separator:a24314df1ce7944cbf1c6a4f98b1a9c0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -198,40 +190,16 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a1ee1f95b2a01271fc671926c8bf006bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structural reference axis data.  <br /></td></tr>
 <tr class="separator:a1ee1f95b2a01271fc671926c8bf006bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14646935fe6973135d50dc777323a355" id="r_a14646935fe6973135d50dc777323a355"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html">Root</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#a14646935fe6973135d50dc777323a355">root</a></td></tr>
-<tr class="memdesc:a14646935fe6973135d50dc777323a355"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html">Blade</a> root.  <br /></td></tr>
+<tr class="memdesc:a14646935fe6973135d50dc777323a355"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Blade.html" title="Represents a turbine blade with nodes, elements, and constraints.">Blade</a> root.  <br /></td></tr>
 <tr class="separator:a14646935fe6973135d50dc777323a355"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5953c1022eca4e0d8a254b8d59873d1" id="r_ae5953c1022eca4e0d8a254b8d59873d1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html">Section</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#ae5953c1022eca4e0d8a254b8d59873d1">sections</a></td></tr>
-<tr class="memdesc:ae5953c1022eca4e0d8a254b8d59873d1"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html">Section</a> properties.  <br /></td></tr>
+<tr class="memdesc:ae5953c1022eca4e0d8a254b8d59873d1"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html" title="Sectional structural properties of the blade.">Section</a> properties.  <br /></td></tr>
 <tr class="separator:ae5953c1022eca4e0d8a254b8d59873d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="a45b5d2d58ef1a9e59428082b1d76d2ef" name="a45b5d2d58ef1a9e59428082b1d76d2ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45b5d2d58ef1a9e59428082b1d76d2ef">&#9670;&#160;</a></span>NodeSpacing</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#a45b5d2d58ef1a9e59428082b1d76d2ef">openturbine::interfaces::components::BladeInput::NodeSpacing</a> : std::uint8_t</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a45b5d2d58ef1a9e59428082b1d76d2efadd8badeb6215292fa219d4d43f4d1b2b" name="a45b5d2d58ef1a9e59428082b1d76d2efadd8badeb6215292fa219d4d43f4d1b2b"></a>GaussLobattoLegendre&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a45b5d2d58ef1a9e59428082b1d76d2efa32a843da6ea40ab3b17a3421ccdf671b" name="a45b5d2d58ef1a9e59428082b1d76d2efa32a843da6ea40ab3b17a3421ccdf671b"></a>Linear&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Complete input specification for a blade. </p>
+<p>Defines the input configuration for a turbine blade </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="ab0adee3ac8199ac488de1049b0441ece" name="ab0adee3ac8199ac488de1049b0441ece"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab0adee3ac8199ac488de1049b0441ece">&#9670;&#160;</a></span>element_order</h2>
 
@@ -245,22 +213,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Spectral element order (num nodes - 1) </p>
-
-</div>
-</div>
-<a id="ab390ba568734dc9aa3b20aa9f969eeaa" name="ab390ba568734dc9aa3b20aa9f969eeaa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab390ba568734dc9aa3b20aa9f969eeaa">&#9670;&#160;</a></span>node_spacing</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#a45b5d2d58ef1a9e59428082b1d76d2ef">NodeSpacing</a> openturbine::interfaces::components::BladeInput::node_spacing {<a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html#a45b5d2d58ef1a9e59428082b1d76d2efadd8badeb6215292fa219d4d43f4d1b2b">NodeSpacing::GaussLobattoLegendre</a>}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><a class="el" href="structopenturbine_1_1Node.html">Node</a> spacing specification. </p>
 
 </div>
 </div>
@@ -292,7 +244,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html">Blade</a> root. </p>
+<p><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Blade.html" title="Represents a turbine blade with nodes, elements, and constraints.">Blade</a> root. </p>
 
 </div>
 </div>
@@ -324,7 +276,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html">Section</a> properties. </p>
+<p><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html" title="Sectional structural properties of the blade.">Section</a> properties. </p>
 
 </div>
 </div>

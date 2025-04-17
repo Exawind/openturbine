@@ -168,40 +168,44 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classopenturbine_1_1interfaces_1_1BladeInterface-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">openturbine::interfaces::BladeInterface Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Interface for blade simulation that manages state, solver, and components.  
+ <a href="classopenturbine_1_1interfaces_1_1BladeInterface.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="blade__interface_8hpp_source.html">blade_interface.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a57c578defbe211cf934ed551d9f7be40" id="r_a57c578defbe211cf934ed551d9f7be40"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html#a57c578defbe211cf934ed551d9f7be40">BladeInterface</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">components::SolutionInput</a> &amp;solution_input, const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html">components::BladeInput</a> &amp;blade_input)</td></tr>
+<tr class="memdesc:a57c578defbe211cf934ed551d9f7be40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html" title="Interface for blade simulation that manages state, solver, and components.">BladeInterface</a> from solution and blade inputs.  <br /></td></tr>
 <tr class="separator:a57c578defbe211cf934ed551d9f7be40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c3b06101963815c0e186e0f69b6cc86" id="r_a3c3b06101963815c0e186e0f69b6cc86"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Blade.html">components::Blade</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html#a3c3b06101963815c0e186e0f69b6cc86">Blade</a> ()</td></tr>
+<tr class="memdesc:a3c3b06101963815c0e186e0f69b6cc86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the blade model.  <br /></td></tr>
+<tr class="separator:a3c3b06101963815c0e186e0f69b6cc86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83cce539ad0d5fdd1d0d62b09d7ae3d6" id="r_a83cce539ad0d5fdd1d0d62b09d7ae3d6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html#a83cce539ad0d5fdd1d0d62b09d7ae3d6">Step</a> ()</td></tr>
-<tr class="memdesc:a83cce539ad0d5fdd1d0d62b09d7ae3d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Step forward in time.  <br /></td></tr>
+<tr class="memdesc:a83cce539ad0d5fdd1d0d62b09d7ae3d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Steps forward in time.  <br /></td></tr>
 <tr class="separator:a83cce539ad0d5fdd1d0d62b09d7ae3d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82923dd5616bb24f47bd9bc199f0aa43" id="r_a82923dd5616bb24f47bd9bc199f0aa43"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html#a82923dd5616bb24f47bd9bc199f0aa43">SaveState</a> ()</td></tr>
-<tr class="memdesc:a82923dd5616bb24f47bd9bc199f0aa43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save state for correction step.  <br /></td></tr>
+<tr class="memdesc:a82923dd5616bb24f47bd9bc199f0aa43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the current state for potential restoration (in correction step)  <br /></td></tr>
 <tr class="separator:a82923dd5616bb24f47bd9bc199f0aa43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3875e84c3643ccc222888b7e93445703" id="r_a3875e84c3643ccc222888b7e93445703"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html#a3875e84c3643ccc222888b7e93445703">RestoreState</a> ()</td></tr>
-<tr class="memdesc:a3875e84c3643ccc222888b7e93445703"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore state for correction step.  <br /></td></tr>
+<tr class="memdesc:a3875e84c3643ccc222888b7e93445703"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restores the previously saved state (in correction step)  <br /></td></tr>
 <tr class="separator:a3875e84c3643ccc222888b7e93445703"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1066435c1aeb7cbd96ea16391cea4ca0" id="r_a1066435c1aeb7cbd96ea16391cea4ca0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html#a1066435c1aeb7cbd96ea16391cea4ca0">SetRootDisplacement</a> (const std::array&lt; double, 7 &gt; &amp;u) const</td></tr>
-<tr class="memdesc:a1066435c1aeb7cbd96ea16391cea4ca0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set root node displacement if <code>prescribe_root_motion</code> input was true.  <br /></td></tr>
+<tr class="memdesc:a1066435c1aeb7cbd96ea16391cea4ca0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the displacement for the root node.  <br /></td></tr>
 <tr class="separator:a1066435c1aeb7cbd96ea16391cea4ca0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f444023c7efcaee85d67d04985a6cef" id="r_a9f444023c7efcaee85d67d04985a6cef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html#a9f444023c7efcaee85d67d04985a6cef">WriteOutputVTK</a> ()</td></tr>
+<tr class="memdesc:a9f444023c7efcaee85d67d04985a6cef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the current blade state to VTK output files.  <br /></td></tr>
 <tr class="separator:a9f444023c7efcaee85d67d04985a6cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:af426b6993046c48b7ea97c8110bf0c33" id="r_af426b6993046c48b7ea97c8110bf0c33"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html">components::Blade</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html#af426b6993046c48b7ea97c8110bf0c33">blade</a></td></tr>
-<tr class="memdesc:af426b6993046c48b7ea97c8110bf0c33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blade model input/output data.  <br /></td></tr>
-<tr class="separator:af426b6993046c48b7ea97c8110bf0c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Interface for blade simulation that manages state, solver, and components. </p>
+<p>This class represents the primary interface for simulating a WT blade, connecting the blade components with the solver and state management. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a57c578defbe211cf934ed551d9f7be40" name="a57c578defbe211cf934ed551d9f7be40"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a57c578defbe211cf934ed551d9f7be40">&#9670;&#160;</a></span>BladeInterface()</h2>
 
@@ -236,9 +240,45 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Constructs a <a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html" title="Interface for blade simulation that manages state, solver, and components.">BladeInterface</a> from solution and blade inputs. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">solution_input</td><td>Configuration parameters for solver and solution </td></tr>
+    <tr><td class="paramname">blade_input</td><td>Configuration parameters for blade geometry </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3c3b06101963815c0e186e0f69b6cc86" name="a3c3b06101963815c0e186e0f69b6cc86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c3b06101963815c0e186e0f69b6cc86">&#9670;&#160;</a></span>Blade()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Blade.html">components::Blade</a> &amp; openturbine::interfaces::BladeInterface::Blade </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a reference to the blade model. </p>
+
+</div>
+</div>
 <a id="a3875e84c3643ccc222888b7e93445703" name="a3875e84c3643ccc222888b7e93445703"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3875e84c3643ccc222888b7e93445703">&#9670;&#160;</a></span>RestoreState()</h2>
 
@@ -262,7 +302,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Restore state for correction step. </p>
+<p>Restores the previously saved state (in correction step) </p>
 
 </div>
 </div>
@@ -289,7 +329,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Save state for correction step. </p>
+<p>Saves the current state for potential restoration (in correction step) </p>
 
 </div>
 </div>
@@ -317,7 +357,19 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Set root node displacement if <code>prescribe_root_motion</code> input was true. </p>
+<p>Sets the displacement for the root node. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">u</td><td>Displacement array (7 components) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::runtime_error</td><td>if prescribed root motion was not enabled </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -344,7 +396,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Step forward in time. </p>
+<p>Steps forward in time. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if solver converged, false otherwise </dd></dl>
 
 </div>
 </div>
@@ -371,22 +424,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="af426b6993046c48b7ea97c8110bf0c33" name="af426b6993046c48b7ea97c8110bf0c33"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af426b6993046c48b7ea97c8110bf0c33">&#9670;&#160;</a></span>blade</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Blade.html">components::Blade</a> openturbine::interfaces::BladeInterface::blade</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Blade model input/output data. </p>
+<p>Writes the current blade state to VTK output files. </p>
 
 </div>
 </div>

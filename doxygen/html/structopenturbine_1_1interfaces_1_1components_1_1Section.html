@@ -174,26 +174,33 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Sectional structural properties of the blade.  
+ <a href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="blade__input_8hpp_source.html">blade_input.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a3fc94775736d0c1c9a8f329c4e3b13fa" id="r_a3fc94775736d0c1c9a8f329c4e3b13fa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a3fc94775736d0c1c9a8f329c4e3b13fa">Section</a> (double loc, <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> m, <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> k)</td></tr>
+<tr class="memdesc:a3fc94775736d0c1c9a8f329c4e3b13fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html" title="Sectional structural properties of the blade.">Section</a>.  <br /></td></tr>
 <tr class="separator:a3fc94775736d0c1c9a8f329c4e3b13fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a2a88ed6ac70bd485a292e66761022b0a" id="r_a2a88ed6ac70bd485a292e66761022b0a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a2a88ed6ac70bd485a292e66761022b0a">location</a></td></tr>
-<tr class="memdesc:a2a88ed6ac70bd485a292e66761022b0a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html">Section</a> locations [0, 1].  <br /></td></tr>
+<tr class="memdesc:a2a88ed6ac70bd485a292e66761022b0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalized section location [0, 1] along the blade.  <br /></td></tr>
 <tr class="separator:a2a88ed6ac70bd485a292e66761022b0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ce24fb2e3c070d3a02efb209e5927cf" id="r_a2ce24fb2e3c070d3a02efb209e5927cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a2ce24fb2e3c070d3a02efb209e5927cf">mass_matrix</a></td></tr>
-<tr class="memdesc:a2ce24fb2e3c070d3a02efb209e5927cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mass matrix.  <br /></td></tr>
+<tr class="memdesc:a2ce24fb2e3c070d3a02efb209e5927cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mass matrix (6x6) at the section.  <br /></td></tr>
 <tr class="separator:a2ce24fb2e3c070d3a02efb209e5927cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a932d22d782741ae4963e80d0b2be3225" id="r_a932d22d782741ae4963e80d0b2be3225"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a932d22d782741ae4963e80d0b2be3225">stiffness_matrix</a></td></tr>
-<tr class="memdesc:a932d22d782741ae4963e80d0b2be3225"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stiffness matrix.  <br /></td></tr>
+<tr class="memdesc:a932d22d782741ae4963e80d0b2be3225"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stiffness matrix (6x6) at the section.  <br /></td></tr>
 <tr class="separator:a932d22d782741ae4963e80d0b2be3225"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Sectional structural properties of the blade. </p>
+<p>Defines the section properties at a given location along the blade </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3fc94775736d0c1c9a8f329c4e3b13fa" name="a3fc94775736d0c1c9a8f329c4e3b13fa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3fc94775736d0c1c9a8f329c4e3b13fa">&#9670;&#160;</a></span>Section()</h2>
 
@@ -234,6 +241,16 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Construct a new <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html" title="Sectional structural properties of the blade.">Section</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loc</td><td>Normalized location [0,1] along the blade </td></tr>
+    <tr><td class="paramname">m</td><td>Mass matrix </td></tr>
+    <tr><td class="paramname">k</td><td>Stiffness matrix </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -249,7 +266,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html">Section</a> locations [0, 1]. </p>
+<p>Normalized section location [0, 1] along the blade. </p>
 
 </div>
 </div>
@@ -265,7 +282,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Mass matrix. </p>
+<p>Mass matrix (6x6) at the section. </p>
 
 </div>
 </div>
@@ -281,7 +298,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Stiffness matrix. </p>
+<p>Stiffness matrix (6x6) at the section. </p>
 
 </div>
 </div>

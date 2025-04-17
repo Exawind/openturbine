@@ -173,6 +173,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html" title="Root definition for a turbine blade.">Root</a> definition for a turbine blade.  
+ <a href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="blade__input_8hpp_source.html">blade_input.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -181,16 +184,19 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:adf39595258eeda83f826bae392bb9ccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to use root motion as an input to the model.  <br /></td></tr>
 <tr class="separator:adf39595258eeda83f826bae392bb9ccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c74ea2d44c267230e07a421eed28843" id="r_a5c74ea2d44c267230e07a421eed28843"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 7 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a5c74ea2d44c267230e07a421eed28843">position</a> {0., 0., 0., 1., 0., 0., 0.}</td></tr>
-<tr class="memdesc:a5c74ea2d44c267230e07a421eed28843"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inital position/orientation.  <br /></td></tr>
+<tr class="memdesc:a5c74ea2d44c267230e07a421eed28843"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inital position/orientation [x, y, z, qw, qx, qy, qz].  <br /></td></tr>
 <tr class="separator:a5c74ea2d44c267230e07a421eed28843"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0616a7773d8511f3a6920ce2fdb6555c" id="r_a0616a7773d8511f3a6920ce2fdb6555c"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a0616a7773d8511f3a6920ce2fdb6555c">velocity</a> {0., 0., 0., 0., 0., 0.}</td></tr>
-<tr class="memdesc:a0616a7773d8511f3a6920ce2fdb6555c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial translation/rotational velocity.  <br /></td></tr>
+<tr class="memdesc:a0616a7773d8511f3a6920ce2fdb6555c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial translation/rotational velocity [vx, vy, vz, wx, wy, wz].  <br /></td></tr>
 <tr class="separator:a0616a7773d8511f3a6920ce2fdb6555c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a714d497800a8d31fc2b131e67982048c" id="r_a714d497800a8d31fc2b131e67982048c"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a714d497800a8d31fc2b131e67982048c">acceleration</a> {0., 0., 0., 0., 0., 0.}</td></tr>
-<tr class="memdesc:a714d497800a8d31fc2b131e67982048c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial translation/rotational acceleration.  <br /></td></tr>
+<tr class="memdesc:a714d497800a8d31fc2b131e67982048c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial translation/rotational acceleration [ax, ay, az, αx, αy, αz].  <br /></td></tr>
 <tr class="separator:a714d497800a8d31fc2b131e67982048c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html" title="Root definition for a turbine blade.">Root</a> definition for a turbine blade. </p>
+<p>Defines the root properties of the blade </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a714d497800a8d31fc2b131e67982048c" name="a714d497800a8d31fc2b131e67982048c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a714d497800a8d31fc2b131e67982048c">&#9670;&#160;</a></span>acceleration</h2>
 
@@ -203,7 +209,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initial translation/rotational acceleration. </p>
+<p>Initial translation/rotational acceleration [ax, ay, az, αx, αy, αz]. </p>
 
 </div>
 </div>
@@ -219,7 +225,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Inital position/orientation. </p>
+<p>Inital position/orientation [x, y, z, qw, qx, qy, qz]. </p>
 
 </div>
 </div>
@@ -251,7 +257,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initial translation/rotational velocity. </p>
+<p>Initial translation/rotational velocity [vx, vy, vz, wx, wy, wz]. </p>
 
 </div>
 </div>

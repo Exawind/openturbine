@@ -641,6 +641,9 @@ Functions</h2></td></tr>
 <tr class="separator:af11ae3045eb70cfa713334bbfdb9221b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad19d7b7244cc18f631e0cd4d7a5e4fc" id="r_aad19d7b7244cc18f631e0cd4d7a5e4fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">RotateMatrix6</a> (const <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> &amp;m, const <a class="el" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a> &amp;q)</td></tr>
 <tr class="separator:aad19d7b7244cc18f631e0cd4d7a5e4fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac477866f341264e321869bc6d75c0852" id="r_ac477866f341264e321869bc6d75c0852"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; double, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ac477866f341264e321869bc6d75c0852">ProjectPointsToTargetPolynomial</a> (size_t num_inputs, size_t num_outputs, const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;input_points)</td></tr>
+<tr class="memdesc:ac477866f341264e321869bc6d75c0852"><td class="mdescLeft">&#160;</td><td class="mdescRight">Projects 3D points from a given (lower) polynomial representation to a target (higher) polynomial representation.  <br /></td></tr>
+<tr class="separator:ac477866f341264e321869bc6d75c0852"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6031a1228dd8c9d2d5340a579a2b7c8c" id="r_a6031a1228dd8c9d2d5340a579a2b7c8c"><td class="memTemplParams" colspan="2">template&lt;typename Quaternion , typename RotationMatrix &gt; </td></tr>
 <tr class="memitem:a6031a1228dd8c9d2d5340a579a2b7c8c"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6031a1228dd8c9d2d5340a579a2b7c8c">QuaternionToRotationMatrix</a> (const Quaternion &amp;q, const RotationMatrix &amp;R)</td></tr>
 <tr class="memdesc:a6031a1228dd8c9d2d5340a579a2b7c8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result.  <br /></td></tr>
@@ -4303,6 +4306,64 @@ template&lt;typename shape_matrix_type , typename jacobian_type , typename node_
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac477866f341264e321869bc6d75c0852" name="ac477866f341264e321869bc6d75c0852"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac477866f341264e321869bc6d75c0852">&#9670;&#160;</a></span>ProjectPointsToTargetPolynomial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::array&lt; double, 3 &gt; &gt; openturbine::ProjectPointsToTargetPolynomial </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_inputs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_outputs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>input_points</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Projects 3D points from a given (lower) polynomial representation to a target (higher) polynomial representation. </p>
+<p>This function maps a set of 3D points defined at nodes of a polynomial of order source_order to corresponding points at nodes of a polynomial of order target_order (typically higher than the source order) using Least-Squares Finite Element (LSFE) shape functions.</p>
+<p>Primary use case: The primary application of this function is to increase the number of points from a lower-order geometric representation to the higher-order representation required for spectral finite element analysis. This enables the use of high-order methods while allowing geometry to be defined with fewer points initially.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">num_inputs</td><td>Number of points in the source polynomial representation </td></tr>
+    <tr><td class="paramname">num_outputs</td><td>Number of points in the target polynomial representation </td></tr>
+    <tr><td class="paramname">input_points</td><td>3D coordinates of points in the source representation </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;std::array&lt;double, 3&gt;&gt;<ul>
+<li>Coordinates of the projected 3D points at the target polynomial nodes </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
