@@ -13,19 +13,22 @@ inline void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Muu() {
     constexpr auto number_of_simd_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({5.});
-    const auto qp_Muu =
-        get_qp_Muu<number_of_qps>({0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003.,
-                                   1004., 1005., 1006., 2001., 2002., 2003., 2004., 2005., 2006.,
-                                   3001., 3002., 3003., 3004., 3005., 3006., 4001., 4002., 4003.,
-                                   4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.});
-    const auto qp_Guu =
-        get_qp_Guu<number_of_qps>({1001., 1002., 1003., 1004., 1005., 1006., 2001., 2002., 2003.,
-                                   2004., 2005., 2006., 4001., 4002., 4003., 4004., 4005., 4006.,
-                                   5001., 5002., 5003., 5004., 5005., 5006., 6001., 6002., 6003.,
-                                   6004., 6005., 6006., 7001., 7002., 7003., 7004., 7005., 7006.});
+    const auto qp_weights = CreateView<double[number_of_qps]>("weights", std::array{2.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("jacobian", std::array{3.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{5.});
+    const auto qp_Muu = CreateView<double[number_of_qps][6][6]>(
+        "qp_Muu", std::array{0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003.,
+                             1004., 1005., 1006., 2001., 2002., 2003., 2004., 2005., 2006.,
+                             3001., 3002., 3003., 3004., 3005., 3006., 4001., 4002., 4003.,
+                             4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.}
+    );
+    const auto qp_Guu = CreateView<double[number_of_qps][6][6]>(
+        "qp_Guu", std::array{1001., 1002., 1003., 1004., 1005., 1006., 2001., 2002., 2003.,
+                             2004., 2005., 2006., 4001., 4002., 4003., 4004., 4005., 4006.,
+                             5001., 5002., 5003., 5004., 5005., 5006., 6001., 6002., 6003.,
+                             6004., 6005., 6006., 7001., 7002., 7003., 7004., 7005., 7006.}
+    );
 
     const auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
 
@@ -46,8 +49,7 @@ inline void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Muu() {
     const auto exact_M =
         Kokkos::View<double[1][1][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
-    auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
-    Kokkos::deep_copy(gbl_M_mirror, gbl_M);
+    auto gbl_M_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), gbl_M);
     CompareWithExpected(gbl_M_mirror, exact_M);
 }
 
@@ -60,19 +62,22 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Guu() {
     constexpr auto number_of_simd_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({5.});
-    const auto qp_Muu =
-        get_qp_Muu<number_of_qps>({0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003.,
-                                   1004., 1005., 1006., 2001., 2002., 2003., 2004., 2005., 2006.,
-                                   3001., 3002., 3003., 3004., 3005., 3006., 4001., 4002., 4003.,
-                                   4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.});
-    const auto qp_Guu =
-        get_qp_Guu<number_of_qps>({1001., 1002., 1003., 1004., 1005., 1006., 2001., 2002., 2003.,
-                                   2004., 2005., 2006., 3001., 3002., 3003., 3004., 3005., 3006.,
-                                   4001., 4002., 4003., 4004., 4005., 4006., 5001., 5002., 5003.,
-                                   5004., 5005., 5006., 6001., 6002., 6003., 6004., 6005., 6006.});
+    const auto qp_weights = CreateView<double[number_of_qps]>("weights", std::array{2.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("jacobian", std::array{3.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{5.});
+    const auto qp_Muu = CreateView<double[number_of_qps][6][6]>(
+        "qp_Muu", std::array{0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003.,
+                             1004., 1005., 1006., 2001., 2002., 2003., 2004., 2005., 2006.,
+                             3001., 3002., 3003., 3004., 3005., 3006., 4001., 4002., 4003.,
+                             4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.}
+    );
+    const auto qp_Guu = CreateView<double[number_of_qps][6][6]>(
+        "qp_Guu", std::array{1001., 1002., 1003., 1004., 1005., 1006., 2001., 2002., 2003.,
+                             2004., 2005., 2006., 3001., 3002., 3003., 3004., 3005., 3006.,
+                             4001., 4002., 4003., 4004., 4005., 4006., 5001., 5002., 5003.,
+                             5004., 5005., 5006., 6001., 6002., 6003., 6004., 6005., 6006.}
+    );
 
     const auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
 
@@ -92,7 +97,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Guu() {
     const auto exact_M =
         Kokkos::View<double[1][1][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
-    auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
+    auto gbl_M_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), gbl_M);
     Kokkos::deep_copy(gbl_M_mirror, gbl_M);
     CompareWithExpected(gbl_M_mirror, exact_M);
 }
@@ -107,16 +112,16 @@ void IntegrateInertiaMatrix_TestOneElementTwoNodesOneQP() {
     constexpr auto number_of_simd_nodes = (simd_width == 1) ? size_t{2U} : size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({1.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({1.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({1., 2.});
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Muu =
-        get_qp_Muu<number_of_qps>({0001., 0002., 0003., 0004., 0005., 0006., 0101., 0102., 0103.,
-                                   0104., 0105., 0106., 0201., 0202., 0203., 0204., 0205., 0206.,
-                                   0301., 0302., 0303., 0304., 0305., 0306., 0401., 0402., 0403.,
-                                   0404., 0405., 0406., 0501., 0502., 0503., 0504., 0505., 0506.});
-    const auto qp_Guu = QpMatrixView("Guu");
+    const auto qp_weights = CreateView<double[number_of_qps]>("weights", std::array{1.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("jacobian", std::array{1.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{1., 2.});
+    const auto qp_Muu = CreateView<double[number_of_qps][6][6]>(
+        "qp_Muu", std::array{001., 002., 003., 004., 005., 006., 101., 102., 103., 104., 105., 106.,
+                             201., 202., 203., 204., 205., 206., 301., 302., 303., 304., 305., 306.,
+                             401., 402., 403., 404., 405., 406., 501., 502., 503., 504., 505., 506.}
+    );
+    const auto qp_Guu = Kokkos::View<double[number_of_qps][6][6]>("Guu");
 
     const auto gbl_M = Kokkos::View<double[2][2][6][6]>("global_M");
 
@@ -146,8 +151,7 @@ void IntegrateInertiaMatrix_TestOneElementTwoNodesOneQP() {
     const auto exact_M =
         Kokkos::View<double[2][2][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
-    auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
-    Kokkos::deep_copy(gbl_M_mirror, gbl_M);
+    auto gbl_M_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), gbl_M);
     CompareWithExpected(gbl_M_mirror, exact_M);
 }
 
@@ -160,22 +164,22 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeTwoQPs() {
     constexpr auto number_of_simd_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{2U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({9., 1.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({1., 4.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({1. / 3., 1. / 2.});
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Muu = get_qp_Muu<number_of_qps>(
-        {00001., 00002., 00003., 00004., 00005., 00006., 00011., 00012., 00013.,
-         00014., 00015., 00016., 00021., 00022., 00023., 00024., 00025., 00026.,
-         00031., 00032., 00033., 00034., 00035., 00036., 00041., 00042., 00043.,
-         00044., 00045., 00046., 00051., 00052., 00053., 00054., 00055., 00056.,
-
-         01000., 02000., 03000., 04000., 05000., 06000., 11000., 12000., 13000.,
-         14000., 15000., 16000., 21000., 22000., 23000., 24000., 25000., 26000.,
-         31000., 32000., 33000., 34000., 35000., 36000., 41000., 42000., 43000.,
-         44000., 45000., 46000., 51000., 52000., 53000., 54000., 55000., 56000.}
+    const auto qp_weights = CreateView<double[number_of_qps]>("weights", std::array{9., 1.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("jacobian", std::array{1., 4.});
+    const auto shape_interp = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_interp", std::array{1. / 3., 1. / 2.}
     );
-    const auto qp_Guu = QpMatrixView("Guu");
+    const auto qp_Muu = CreateView<double[number_of_qps][6][6]>(
+        "qp_Muu", std::array{00001., 00002., 00003., 00004., 00005., 00006., 00011., 00012., 00013.,
+                             00014., 00015., 00016., 00021., 00022., 00023., 00024., 00025., 00026.,
+                             00031., 00032., 00033., 00034., 00035., 00036., 00041., 00042., 00043.,
+                             00044., 00045., 00046., 00051., 00052., 00053., 00054., 00055., 00056.,
+                             01000., 02000., 03000., 04000., 05000., 06000., 11000., 12000., 13000.,
+                             14000., 15000., 16000., 21000., 22000., 23000., 24000., 25000., 26000.,
+                             31000., 32000., 33000., 34000., 35000., 36000., 41000., 42000., 43000.,
+                             44000., 45000., 46000., 51000., 52000., 53000., 54000., 55000., 56000.}
+    );
+    const auto qp_Guu = Kokkos::View<double[number_of_qps][6][6]>("Guu");
 
     const auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
 
@@ -195,8 +199,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeTwoQPs() {
     const auto exact_M =
         Kokkos::View<double[1][1][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
-    auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
-    Kokkos::deep_copy(gbl_M_mirror, gbl_M);
+    auto gbl_M_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), gbl_M);
     CompareWithExpected(gbl_M_mirror, exact_M);
 }
 
@@ -209,16 +212,18 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_WithMultiplicationFactor(
     constexpr auto number_of_simd_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({1.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({1.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({1.});
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Muu =
-        get_qp_Muu<number_of_qps>({0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003.,
-                                   1004., 1005., 1006., 2001., 2002., 2003., 2004., 2005., 2006.,
-                                   3001., 3002., 3003., 3004., 3005., 3006., 4001., 4002., 4003.,
-                                   4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.});
-    const auto qp_Guu = QpMatrixView("Guu");
+    const auto qp_weights = CreateView<double[number_of_qps]>("weights", std::array{1.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("jacobian", std::array{1.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{1.});
+    const auto qp_Muu = CreateView<double[number_of_qps][6][6]>(
+        "qp_Muu", std::array{0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003.,
+                             1004., 1005., 1006., 2001., 2002., 2003., 2004., 2005., 2006.,
+                             3001., 3002., 3003., 3004., 3005., 3006., 4001., 4002., 4003.,
+                             4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.}
+    );
+    const auto qp_Guu = Kokkos::View<double[number_of_qps][6][6]>("Guu");
+
     const auto multiplication_factor = 5.;
 
     const auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
@@ -238,8 +243,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_WithMultiplicationFactor(
     const auto exact_M =
         Kokkos::View<double[1][1][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
-    auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
-    Kokkos::deep_copy(gbl_M_mirror, gbl_M);
+    auto gbl_M_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), gbl_M);
     CompareWithExpected(gbl_M_mirror, exact_M);
 }
 

@@ -10,8 +10,8 @@ TEST(TestComputeNodeFreedomMapTable, OneNode) {
 
     compute_node_freedom_map_table(state);
 
-    const auto host_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
-    Kokkos::deep_copy(host_node_freedom_map_table, state.node_freedom_map_table);
+    const auto host_node_freedom_map_table =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.node_freedom_map_table);
 
     EXPECT_EQ(host_node_freedom_map_table(0), 0);
 }
@@ -27,14 +27,14 @@ TEST(TestComputeNodeFreedomMapTable, FourNodes) {
             host_node_freedom_allocation_table_data.data()
         );
     const auto mirror_node_freedom_allocation_table =
-        Kokkos::create_mirror(state.node_freedom_allocation_table);
+        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.node_freedom_allocation_table);
     Kokkos::deep_copy(mirror_node_freedom_allocation_table, host_node_freedom_allocation_table);
     Kokkos::deep_copy(state.node_freedom_allocation_table, mirror_node_freedom_allocation_table);
 
     compute_node_freedom_map_table(state);
 
-    const auto host_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
-    Kokkos::deep_copy(host_node_freedom_map_table, state.node_freedom_map_table);
+    const auto host_node_freedom_map_table =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.node_freedom_map_table);
 
     EXPECT_EQ(host_node_freedom_map_table(0), 0);
     EXPECT_EQ(host_node_freedom_map_table(1), 6);

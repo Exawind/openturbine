@@ -14,8 +14,7 @@ TEST(CopyNodesToState, OneNode_ID) {
 
     CopyNodesToState(state, nodes);
 
-    const auto id = Kokkos::create_mirror(state.ID);
-    Kokkos::deep_copy(id, state.ID);
+    const auto id = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.ID);
     EXPECT_EQ(id(0), 1234U);
 }
 
@@ -29,17 +28,11 @@ TEST(CopyNodesToState, OneNode_Position) {
 
     CopyNodesToState(state, nodes);
 
-    const auto x0 = Kokkos::create_mirror(state.x0);
-    Kokkos::deep_copy(x0, state.x0);
+    const auto x0 = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x0);
+    const auto q = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.q);
+    const auto q_prev = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.q_prev);
+    const auto x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x);
 
-    const auto q = Kokkos::create_mirror(state.q);
-    Kokkos::deep_copy(q, state.q);
-
-    const auto q_prev = Kokkos::create_mirror(state.q_prev);
-    Kokkos::deep_copy(q_prev, state.q_prev);
-
-    const auto x = Kokkos::create_mirror(state.x);
-    Kokkos::deep_copy(x, state.x);
     const auto x_exact = std::array{9., 11., 13., -192., 110., 104., 140.};
 
     for (auto i = 0U; i < 7U; ++i) {
@@ -60,11 +53,8 @@ TEST(CopyNodesToState, OneNode_Velocity) {
 
     CopyNodesToState(state, nodes);
 
-    const auto v = Kokkos::create_mirror(state.v);
-    Kokkos::deep_copy(v, state.v);
-
-    const auto vd = Kokkos::create_mirror(state.vd);
-    Kokkos::deep_copy(vd, state.vd);
+    const auto v = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.v);
+    const auto vd = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.vd);
 
     for (auto i = 0U; i < 6U; ++i) {
         EXPECT_EQ(v(0, i), v_exact[i]);
