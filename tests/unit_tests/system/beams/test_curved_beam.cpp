@@ -162,11 +162,9 @@ void TestCalculateForceFc() {
         "CalculateForceFc", 1, KOKKOS_LAMBDA(size_t) { beams::CalculateForceFC(Cuu, strain, Fc); }
     );
 
-    const auto Fc_exact = Kokkos::View<double[6]>("Fc");
-    Kokkos::deep_copy(Fc_exact, kExpectedFc);
     const auto Fc_mirror = Kokkos::create_mirror_view(Fc);
     Kokkos::deep_copy(Fc_mirror, Fc);
-    CompareWithExpected(Fc_mirror, Fc_exact, 1e-6);
+    CompareWithExpected(Fc_mirror, kExpectedFc, 1e-6);
 }
 
 TEST(CurvedBeamTests, CalculateForceFcForCurvedBeam) {
@@ -192,11 +190,9 @@ void TestCalculateForceFd() {
         "CalculateForceFd", 1, KOKKOS_LAMBDA(size_t) { beams::CalculateForceFD(x0pupSS, Fc, Fd); }
     );
 
-    const auto Fd_exact = Kokkos::View<double[6]>("Fd");
-    Kokkos::deep_copy(Fd_exact, kExpectedFd);
     const auto Fd_mirror = Kokkos::create_mirror_view(Fd);
     Kokkos::deep_copy(Fd_mirror, Fd);
-    CompareWithExpected(Fd_mirror, Fd_exact, 1e-6);
+    CompareWithExpected(Fd_mirror, kExpectedFd, 1e-6);
 }
 
 TEST(CurvedBeamTests, CalculateForceFdForCurvedBeam) {
@@ -257,11 +253,9 @@ void TestRotateSectionMatrixForCurvedBeam() {
         KOKKOS_LAMBDA(size_t) { beams::RotateSectionMatrix(xr, Cstar, Cuu); }
     );
 
-    const auto Cuu_exact = Kokkos::View<double[6][6]>("Cuu");
-    Kokkos::deep_copy(Cuu_exact, kExpectedCuu);
     const auto Cuu_mirror = Kokkos::create_mirror_view(Cuu);
     Kokkos::deep_copy(Cuu_mirror, Cuu);
-    CompareWithExpected(Cuu_mirror, Cuu_exact, 1e-6);
+    CompareWithExpected(Cuu_mirror, kExpectedCuu, 1e-6);
 }
 
 TEST(CurvedBeamTests, CalculateRotatedStiffnessMatrixForCurvedBeam) {
@@ -300,11 +294,9 @@ void TestCalculateOuu() {
         KOKKOS_LAMBDA(size_t) { beams::CalculateOuu(Cuu, x0pupSS, M_tilde, N_tilde, Ouu); }
     );
 
-    const auto Ouu_exact = Kokkos::View<double[6][6]>("Ouu");
-    Kokkos::deep_copy(Ouu_exact, kExpectedOuu);
     const auto Ouu_mirror = Kokkos::create_mirror_view(Ouu);
     Kokkos::deep_copy(Ouu_mirror, Ouu);
-    CompareWithExpected(Ouu_mirror, Ouu_exact, 1e-6);
+    CompareWithExpected(Ouu_mirror, kExpectedOuu, 1e-6);
 }
 
 TEST(CurvedBeamTests, CalculateOuuMatrixForCurvedBeam) {
@@ -336,11 +328,9 @@ void TestCalculatePuuForCurvedBeam() {
         "CalculatePuu", 1, KOKKOS_LAMBDA(size_t) { beams::CalculatePuu(Cuu, x0pupSS, N_tilde, Puu); }
     );
 
-    const auto Puu_exact = Kokkos::View<double[6][6]>("Puu");
-    Kokkos::deep_copy(Puu_exact, kExpectedPuu);
     const auto Puu_mirror = Kokkos::create_mirror_view(Puu);
     Kokkos::deep_copy(Puu_mirror, Puu);
-    CompareWithExpected(Puu_mirror, Puu_exact, 1e-6);
+    CompareWithExpected(Puu_mirror, kExpectedPuu, 1e-6);
 }
 
 TEST(CurvedBeamTests, CalculatePuuMatrixForCurvedBeam) {
@@ -372,11 +362,9 @@ void TestCalculateQuuForCurvedBeam() {
         "CalculateQuu", 1, KOKKOS_LAMBDA(size_t) { beams::CalculateQuu(Cuu, x0pupSS, N_tilde, Quu); }
     );
 
-    const auto Quu_exact = Kokkos::View<double[6][6]>("Quu");
-    Kokkos::deep_copy(Quu_exact, kExpectedQuu);
     const auto Quu_mirror = Kokkos::create_mirror_view(Quu);
     Kokkos::deep_copy(Quu_mirror, Quu);
-    CompareWithExpected(Quu_mirror, Quu_exact, 1e-6);
+    CompareWithExpected(Quu_mirror, kExpectedQuu, 1e-6);
 }
 
 TEST(CurvedBeamTests, CalculateQuuMatrixForCurvedBeam) {
@@ -410,14 +398,9 @@ TEST(CurvedBeamTests, IntegrateStiffnessMatrixForCurvedBeam) {
         }
     );
 
-    const auto stiffness_matrix_exact =
-        Kokkos::View<double[kNumNodes][kNumNodes][6][6], Kokkos::HostSpace>::const_type(
-            kExpectedStiffnessMatrix.data()
-        );
-
     const auto stiffness_matrix_terms_mirror = Kokkos::create_mirror_view(stiffness_matrix_terms);
     Kokkos::deep_copy(stiffness_matrix_terms_mirror, stiffness_matrix_terms);
-    CompareWithExpected(stiffness_matrix_terms_mirror, stiffness_matrix_exact, 1e-7);
+    CompareWithExpected(stiffness_matrix_terms_mirror, kExpectedStiffnessMatrix, 1e-7);
 }
 
 }  // namespace openturbine::tests::curved_beam

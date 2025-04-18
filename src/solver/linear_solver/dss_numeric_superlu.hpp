@@ -11,9 +11,9 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::SUPERLU>, CrsMatrixType> {
         auto num_cols = A.numCols();
         auto num_non_zero = A.nnz();
 
-        auto* values = A.values.data();
-        auto* row_ptrs = A.graph.row_map.data();
-        auto* col_inds = A.graph.entries.data();
+        auto values = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.values);
+        auto row_ptrs = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.row_map);
+        auto col_inds = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.entries);
 
         auto& options = dss_handle.get_options();
         auto& stat = dss_handle.get_stat();
@@ -27,8 +27,8 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::SUPERLU>, CrsMatrixType> {
 
         SuperMatrix Amatrix;
         dCreate_CompCol_Matrix(
-            &Amatrix, num_rows, num_cols, num_non_zero, values, col_inds, const_cast<int*>(row_ptrs),
-            SLU_NC, SLU_D, SLU_GE
+            &Amatrix, num_rows, num_cols, num_non_zero, values.data(), col_inds.data(),
+            const_cast<int*>(row_ptrs.data()), SLU_NC, SLU_D, SLU_GE
         );
         constexpr auto relax = 1;
         constexpr auto panel_size = 1;
@@ -36,7 +36,6 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::SUPERLU>, CrsMatrixType> {
 
         SuperMatrix AC;
         sp_preorder(&options, &Amatrix, perm_c.data(), etree.data(), &AC);
-
         dgstrf(
             &options, &AC, relax, panel_size, etree.data(), work.data(),
             static_cast<int>(work.size()), perm_c.data(), perm_r.data(), &L, &U, &Glu, &stat, &info

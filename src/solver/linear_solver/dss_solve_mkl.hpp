@@ -16,7 +16,12 @@ struct DSSSolveFunction<DSSHandle<DSSAlgorithm::MKL>, CrsMatrixType, MultiVector
 
         const auto nrhs = static_cast<MKL_INT>(b.extent(1));
 
-        dss_solve_real(handle, opt, b.data(), nrhs, x.data());
+        auto x_host = Kokkos::create_mirror_view(Kokkos::HostSpace(), x);
+        auto b_host = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), b);
+
+        dss_solve_real(handle, opt, b_host.data(), nrhs, x_host.data());
+
+        Kokkos::deep_copy(x, x_host);
     }
 };
 }  // namespace openturbine

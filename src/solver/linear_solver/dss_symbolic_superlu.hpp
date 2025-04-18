@@ -11,9 +11,9 @@ struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::SUPERLU>, CrsMatrixType> {
         auto num_cols = A.numCols();
         auto num_non_zero = A.nnz();
 
-        auto* values = A.values.data();
-        auto* row_ptrs = A.graph.row_map.data();
-        auto* col_inds = A.graph.entries.data();
+        auto values = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.values);
+        auto row_ptrs = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.row_map);
+        auto col_inds = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.entries);
 
         auto& options = dss_handle.get_options();
         options.Fact = DOFACT;
@@ -32,8 +32,8 @@ struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::SUPERLU>, CrsMatrixType> {
 
         SuperMatrix Amatrix;
         dCreate_CompCol_Matrix(
-            &Amatrix, num_rows, num_cols, num_non_zero, values, col_inds, const_cast<int*>(row_ptrs),
-            SLU_NC, SLU_D, SLU_GE
+            &Amatrix, num_rows, num_cols, num_non_zero, values.data(), col_inds.data(),
+            const_cast<int*>(row_ptrs.data()), SLU_NC, SLU_D, SLU_GE
         );
         get_perm_c(options.ColPerm, &Amatrix, perm_c.data());
 

@@ -11,13 +11,14 @@ struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::UMFPACK>, CrsMatrixType> {
         const auto num_rows = A.numRows();
         const auto num_cols = A.numCols();
 
-        auto* row_ptrs = A.graph.row_map.data();
-        auto* col_inds = A.graph.entries.data();
+        auto row_ptrs = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.row_map);
+        auto col_inds = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.entries);
 
         auto*& symbolic = dss_handle.get_symbolic();
 
         umfpack_di_symbolic(
-            num_rows, num_cols, row_ptrs, col_inds, nullptr, &symbolic, nullptr, nullptr
+            num_rows, num_cols, row_ptrs.data(), col_inds.data(), nullptr, &symbolic, nullptr,
+            nullptr
         );
     }
 };

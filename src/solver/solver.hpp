@@ -44,6 +44,28 @@ struct Solver {
     using HandleType = DSSHandle<DSSAlgorithm::CUDSS>;
 #elif defined(OpenTurbine_ENABLE_CUSOLVERSP)
     using HandleType = DSSHandle<DSSAlgorithm::CUSOLVER_SP>;
+#elif defined(OpenTurbine_ENABLE_MKL)
+    using HandleType = DSSHandle<DSSAlgorithm::MKL>;
+#elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
+    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU_MT>;
+#elif defined(OpenTurbine_ENABLE_KLU)
+    using HandleType = DSSHandle<DSSAlgorithm::KLU>;
+#elif defined(OpenTurbine_ENABLE_UMFPACK)
+    using HandleType = DSSHandle<DSSAlgorithm::UMFPACK>;
+#elif defined(OpenTurbine_ENABLE_SUPERLU)
+    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU>;
+#endif
+#elif defined(KOKKOS_ENABLE_HIP)
+#if defined(OpenTurbine_ENABLE_MKL)
+    using HandleType = DSSHandle<DSSAlgorithm::MKL>;
+#elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
+    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU_MT>;
+#elif defined(OpenTurbine_ENABLE_KLU)
+    using HandleType = DSSHandle<DSSAlgorithm::KLU>;
+#elif defined(OpenTurbine_ENABLE_UMFPACK)
+    using HandleType = DSSHandle<DSSAlgorithm::UMFPACK>;
+#elif defined(OpenTurbine_ENABLE_SUPERLU)
+    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU>;
 #endif
 #else
 #if defined(OpenTurbine_ENABLE_MKL)

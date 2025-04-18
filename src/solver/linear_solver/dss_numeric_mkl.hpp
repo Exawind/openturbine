@@ -10,9 +10,9 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::MKL>, CrsMatrixType> {
         auto& handle = dss_handle.get_handle();
         constexpr MKL_INT opt = MKL_DSS_INDEFINITE;
 
-        const auto* values = A.values.data();
+        auto values = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.values);
 
-        dss_factor_real(handle, opt, values);
+        dss_factor_real(handle, opt, values.data());
     }
 };
 

@@ -6,9 +6,9 @@ namespace openturbine {
 template <typename CrsMatrixType>
 struct DSSNumericFunction<DSSHandle<DSSAlgorithm::KLU>, CrsMatrixType> {
     static void numeric(DSSHandle<DSSAlgorithm::KLU>& dss_handle, CrsMatrixType& A) {
-        auto* values = A.values.data();
-        auto* row_ptrs = A.graph.row_map.data();
-        auto* col_inds = A.graph.entries.data();
+        auto values = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.values);
+        auto row_ptrs = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.row_map);
+        auto col_inds = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.entries);
 
         auto*& symbolic = dss_handle.get_symbolic();
         auto*& numeric = dss_handle.get_numeric();
@@ -17,7 +17,9 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::KLU>, CrsMatrixType> {
         if (numeric != nullptr) {
             klu_free_numeric(&numeric, &common);
         }
-        numeric = klu_factor(const_cast<int*>(row_ptrs), col_inds, values, symbolic, &common);
+        numeric = klu_factor(
+            const_cast<int*>(row_ptrs.data()), col_inds.data(), values.data(), symbolic, &common
+        );
     }
 };
 
