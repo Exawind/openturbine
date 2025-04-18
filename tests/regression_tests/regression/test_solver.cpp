@@ -331,8 +331,7 @@ inline void SetupAndTakeNoSteps() {
 
     Step(parameters, solver, elements, state, constraints);
 
-    const auto x = Kokkos::create_mirror_view(solver.x);
-    Kokkos::deep_copy(x, solver.x);
+    const auto x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), solver.x);
     expect_kokkos_view_1D_equal(
         Kokkos::subview(solver.x, Kokkos::ALL, 0),
         {
