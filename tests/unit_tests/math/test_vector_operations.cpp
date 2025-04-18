@@ -24,8 +24,7 @@ TEST(VectorTest, VecTilde) {
     auto v = Create1DView<3>({1., 2., 3.});
     const auto m = TestVecTilde(v);
 
-    const auto m_mirror = Kokkos::create_mirror(m);
-    Kokkos::deep_copy(m_mirror, m);
+    const auto m_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), m);
 
     constexpr auto expected_data = std::array{0., -3., 2., 3., 0., -1., -2., 1., 0.};
     const auto expected =

@@ -27,12 +27,12 @@ constexpr double kDefaultTolerance{1e-12};
 const std::vector<double> kGLLNodes{-1., 0., 1.};
 
 /// Node positions for curved beam test (from Mathematica script)
-constexpr std::array<double, 9> kCurvedBeamNodes_data = {
-    0.,  0.,     0.,  // Node 1
-    2.5, -0.125, 0.,  // Node 2
-    5.,  1.,     -1.  // Node 3
+constexpr std::array<double, 21> kCurvedBeamNodes_data = {
+    0.,  0.,     0.,  0., 0., 0., 0.,  // Node 1
+    2.5, -0.125, 0.,  0., 0., 0., 0.,  // Node 2
+    5.,  1.,     -1., 0., 0., 0., 0.   // Node 3
 };
-const Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type kCurvedBeamNodes(
+const Kokkos::View<double[1][3][7], Kokkos::HostSpace>::const_type kCurvedBeamNodes(
     kCurvedBeamNodes_data.data()
 );
 

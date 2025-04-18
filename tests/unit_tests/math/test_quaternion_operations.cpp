@@ -30,8 +30,7 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutXAxi
 
     const auto R_from_q = TestQuaternionToRotationMatrix(rotation_x_axis);
 
-    const auto R_from_q_mirror = Kokkos::create_mirror(R_from_q);
-    Kokkos::deep_copy(R_from_q_mirror, R_from_q);
+    const auto R_from_q_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), R_from_q);
     constexpr auto expected_data = std::array{1., 0., 0., 0., 0., -1., 0., 1., 0.};
     const auto expected = Kokkos::View<const double[3][3], Kokkos::HostSpace>(expected_data.data());
 
@@ -48,8 +47,7 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutYAxi
 
     const auto R_from_q = TestQuaternionToRotationMatrix(rotation_x_axis);
 
-    const auto R_from_q_mirror = Kokkos::create_mirror(R_from_q);
-    Kokkos::deep_copy(R_from_q_mirror, R_from_q);
+    const auto R_from_q_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), R_from_q);
     constexpr auto expected_data = std::array{0., 0., 1., 0., 1., 0., -1., 0., 0.};
     const auto expected = Kokkos::View<const double[3][3], Kokkos::HostSpace>(expected_data.data());
 
@@ -66,8 +64,7 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutZAxi
 
     const auto R_from_q = TestQuaternionToRotationMatrix(rotation_x_axis);
 
-    const auto R_from_q_mirror = Kokkos::create_mirror(R_from_q);
-    Kokkos::deep_copy(R_from_q_mirror, R_from_q);
+    const auto R_from_q_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), R_from_q);
     constexpr auto expected_data = std::array{0., -1., 0., 1., 0., 0., 0., 0., 1.};
     const auto expected = Kokkos::View<const double[3][3], Kokkos::HostSpace>(expected_data.data());
 
@@ -111,8 +108,7 @@ TEST(QuaternionTest, RotateYAxisByIdentity) {
 
     const auto v_rot = TestRotateVectorByQuaternion(rotation_identity, y_axis);
 
-    const auto v_rot_mirror = Kokkos::create_mirror(v_rot);
-    Kokkos::deep_copy(v_rot_mirror, v_rot);
+    const auto v_rot_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), v_rot);
 
     constexpr auto expected_data = std::array{0., 1., 0.};
     const auto expected =
@@ -129,7 +125,7 @@ TEST(QuaternionTest, RotateXAxis90DegreesAboutYAxis) {
     auto x_axis = Create1DView<3>({1., 0., 0.});
     const auto v_rot = TestRotateVectorByQuaternion(rotation_y_axis, x_axis);
 
-    const auto v_rot_mirror = Kokkos::create_mirror(v_rot);
+    const auto v_rot_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), v_rot);
     Kokkos::deep_copy(v_rot_mirror, v_rot);
 
     constexpr auto expected_data = std::array{0., 0., -1.};
@@ -147,8 +143,7 @@ TEST(QuaternionTest, RotateZAxis90DegreesAboutXAxis) {
     auto z_axis = Create1DView<3>({0., 0., 1.});
     const auto v_rot = TestRotateVectorByQuaternion(rotation_x_axis, z_axis);
 
-    const auto v_rot_mirror = Kokkos::create_mirror(v_rot);
-    Kokkos::deep_copy(v_rot_mirror, v_rot);
+    const auto v_rot_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), v_rot);
 
     constexpr auto expected_data = std::array{0., -1., 0.};
     const auto expected =
@@ -167,7 +162,7 @@ TEST(QuaternionTest, RotateXAxis45DegreesAboutZAxis) {
     auto x_axis = Create1DView<3>({1., 0., 0.});
     const auto v_rot = TestRotateVectorByQuaternion(rotation_z_axis, x_axis);
 
-    const auto v_rot_mirror = Kokkos::create_mirror(v_rot);
+    const auto v_rot_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), v_rot);
     Kokkos::deep_copy(v_rot_mirror, v_rot);
 
     const auto expected_data = std::array{inv_sqrt2, inv_sqrt2, 0.};
@@ -187,7 +182,7 @@ TEST(QuaternionTest, RotateXAxisNeg45DegreesAboutZAxis) {
     auto x_axis = Create1DView<3>({1., 0., 0.});
     const auto v_rot = TestRotateVectorByQuaternion(rotation_z_axis, x_axis);
 
-    const auto v_rot_mirror = Kokkos::create_mirror(v_rot);
+    const auto v_rot_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), v_rot);
     Kokkos::deep_copy(v_rot_mirror, v_rot);
 
     const auto expected_data = std::array{inv_sqrt2, -inv_sqrt2, 0.};
@@ -211,7 +206,7 @@ TEST(QuaternionTest, QuaternionDerivative) {
     const auto q = Create1DView<4>({1., 2., 3., 4.});
     const auto derivative = TestQuaternionDerivative(q);
 
-    const auto derivative_mirror = Kokkos::create_mirror(derivative);
+    const auto derivative_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), derivative);
     Kokkos::deep_copy(derivative_mirror, derivative);
 
     constexpr auto expected_data = std::array{-2., 1., -4., 3., -3., 4., 1., -2., -4., -3., 2., 1.};
@@ -239,7 +234,7 @@ TEST(QuaternionTest, GetInverse) {
 
     const auto q_inv = TestQuaternionInverse(q);
 
-    const auto q_inv_mirror = Kokkos::create_mirror(q_inv);
+    const auto q_inv_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), q_inv);
     Kokkos::deep_copy(q_inv_mirror, q_inv);
 
     const auto expected_data = std::array{1. / coeff, -2. / coeff, -3. / coeff, -4. / coeff};
@@ -266,7 +261,7 @@ TEST(QuaternionTest, MultiplicationOfTwoQuaternions_Set1) {
     const auto q2 = Create1DView<4>({2., -1., 2., 3.});
     const auto qn = TestQuaternionCompose(q1, q2);
 
-    const auto qn_mirror = Kokkos::create_mirror(qn);
+    const auto qn_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qn);
     Kokkos::deep_copy(qn_mirror, qn);
 
     constexpr auto expected_data = std::array{8., -9., -2., 11.};
@@ -283,7 +278,7 @@ TEST(QuaternionTest, MultiplicationOfTwoQuaternions_Set2) {
     auto q2 = Create1DView<4>({5., 6., 7., 8.});
     const auto qn = TestQuaternionCompose(q1, q2);
 
-    const auto qn_mirror = Kokkos::create_mirror(qn);
+    const auto qn_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qn);
     Kokkos::deep_copy(qn_mirror, qn);
 
     constexpr auto expected_data = std::array{-60., 12., 30., 24.};
@@ -309,7 +304,7 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set0) {
     const auto phi = Create1DView<3>({M_PI / 2., 0., 0.});
     const auto quaternion = TestRotationToQuaternion(phi);
 
-    const auto quaternion_mirror = Kokkos::create_mirror(quaternion);
+    const auto quaternion_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), quaternion);
     Kokkos::deep_copy(quaternion_mirror, quaternion);
 
     const auto expected_data = std::array{inv_sqrt2, inv_sqrt2, 0., 0.};
@@ -326,7 +321,7 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set1) {
     const auto phi = Create1DView<3>({0., M_PI / 2., 0.});
     const auto quaternion = TestRotationToQuaternion(phi);
 
-    const auto quaternion_mirror = Kokkos::create_mirror(quaternion);
+    const auto quaternion_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), quaternion);
     Kokkos::deep_copy(quaternion_mirror, quaternion);
 
     const auto expected_data = std::array{inv_sqrt2, 0., inv_sqrt2, 0.};
@@ -343,7 +338,7 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
     const auto phi = Create1DView<3>({0., 0., M_PI / 2.});
     const auto quaternion = TestRotationToQuaternion(phi);
 
-    const auto quaternion_mirror = Kokkos::create_mirror(quaternion);
+    const auto quaternion_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), quaternion);
     Kokkos::deep_copy(quaternion_mirror, quaternion);
 
     const auto expected_data = std::array{inv_sqrt2, 0., 0., inv_sqrt2};
@@ -372,7 +367,7 @@ void test_quaternion_to_rotation_vector_2() {
             KOKKOS_LAMBDA(int) { QuaternionToRotationVector(q, phi2); }
         );
 
-        const auto phi2_mirror = Kokkos::create_mirror(phi2);
+        const auto phi2_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), phi2);
         Kokkos::deep_copy(phi2_mirror, phi2);
         for (auto j = 0U; j < 3U; ++j) {
             EXPECT_NEAR(phi2_mirror(j), rot_vec[j], 1.e-14);

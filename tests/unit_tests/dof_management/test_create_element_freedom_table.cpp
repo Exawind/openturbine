@@ -20,8 +20,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_NoMassNoSpring) {
 
     create_element_freedom_table(elements, state);
 
-    const auto host_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
-    Kokkos::deep_copy(host_element_freedom_table, beams.element_freedom_table);
+    const auto host_element_freedom_table = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
 
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
@@ -45,8 +44,7 @@ TEST(TestCreateElementFreedomTable, OneMassElementWithOneNode_NoBeamNoSpring) {
 
     create_element_freedom_table(elements, state);
 
-    const auto host_element_freedom_table = Kokkos::create_mirror(masses.element_freedom_table);
-    Kokkos::deep_copy(host_element_freedom_table, masses.element_freedom_table);
+    const auto host_element_freedom_table = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), masses.element_freedom_table);
 
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
@@ -61,7 +59,7 @@ TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
-    const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
+    const auto mirror_node_freedom_map_table = Kokkos::create_mirror_view(state.node_freedom_map_table);
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
@@ -72,7 +70,7 @@ TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
     const auto host_node_state_indices =
         Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
         );
-    const auto mirror_node_state_indices = Kokkos::create_mirror(springs.node_state_indices);
+    const auto mirror_node_state_indices = Kokkos::create_mirror_view(springs.node_state_indices);
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(springs.node_state_indices, mirror_node_state_indices);
     auto elements =
@@ -82,8 +80,7 @@ TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
 
     create_element_freedom_table(elements, state);
 
-    const auto host_element_freedom_table = Kokkos::create_mirror(springs.element_freedom_table);
-    Kokkos::deep_copy(host_element_freedom_table, springs.element_freedom_table);
+    const auto host_element_freedom_table = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), springs.element_freedom_table);
 
     for (auto k = 0U; k < 3U; ++k) {
         EXPECT_EQ(host_element_freedom_table(0, 0, k), k);  // Spring Element 1 Nodes 1 DOFs: 0, 1, 2
@@ -101,7 +98,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
-    const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
+    const auto mirror_node_freedom_map_table = Kokkos::create_mirror_view(state.node_freedom_map_table);
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
@@ -110,7 +107,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
     const auto host_node_state_indices =
         Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
         );
-    const auto mirror_node_state_indices = Kokkos::create_mirror(beams.node_state_indices);
+    const auto mirror_node_state_indices = Kokkos::create_mirror_view(beams.node_state_indices);
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
@@ -123,8 +120,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
 
     create_element_freedom_table(elements, state);
 
-    const auto host_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
-    Kokkos::deep_copy(host_element_freedom_table, beams.element_freedom_table);
+    const auto host_element_freedom_table = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
 
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
@@ -144,7 +140,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
-    const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
+    const auto mirror_node_freedom_map_table = Kokkos::create_mirror_view(state.node_freedom_map_table);
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
@@ -161,8 +157,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
 
     create_element_freedom_table(elements, state);
 
-    const auto host_beams_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
-    Kokkos::deep_copy(host_beams_element_freedom_table, beams.element_freedom_table);
+    const auto host_beams_element_freedom_table = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
             host_beams_element_freedom_table(0, 0, k), k
@@ -170,8 +165,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
     }
 
     const auto host_masses_element_freedom_table =
-        Kokkos::create_mirror(masses.element_freedom_table);
-    Kokkos::deep_copy(host_masses_element_freedom_table, masses.element_freedom_table);
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), masses.element_freedom_table);
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
             host_masses_element_freedom_table(0, k), k + 6U
@@ -185,7 +179,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
-    const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
+    const auto mirror_node_freedom_map_table = Kokkos::create_mirror_view(state.node_freedom_map_table);
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
@@ -194,7 +188,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
     const auto host_node_state_indices =
         Kokkos::View<size_t[2][1], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
         );
-    const auto mirror_node_state_indices = Kokkos::create_mirror(beams.node_state_indices);
+    const auto mirror_node_state_indices = Kokkos::create_mirror_view(beams.node_state_indices);
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
@@ -207,8 +201,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
 
     create_element_freedom_table(elements, state);
 
-    const auto host_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
-    Kokkos::deep_copy(host_element_freedom_table, beams.element_freedom_table);
+    const auto host_element_freedom_table = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
 
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
@@ -228,7 +221,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSp
     const auto host_node_freedom_map_table = Kokkos::View<size_t[3], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
-    const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
+    const auto mirror_node_freedom_map_table = Kokkos::create_mirror_view(state.node_freedom_map_table);
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
@@ -237,7 +230,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSp
     const auto host_node_state_indices =
         Kokkos::View<size_t[2][2], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
         );
-    const auto mirror_node_state_indices = Kokkos::create_mirror(beams.node_state_indices);
+    const auto mirror_node_state_indices = Kokkos::create_mirror_view(beams.node_state_indices);
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
@@ -250,8 +243,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSp
 
     create_element_freedom_table(elements, state);
 
-    const auto host_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
-    Kokkos::deep_copy(host_element_freedom_table, beams.element_freedom_table);
+    const auto host_element_freedom_table = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
 
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
@@ -281,7 +273,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_No
     const auto host_node_freedom_map_table = Kokkos::View<size_t[3], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
-    const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
+    const auto mirror_node_freedom_map_table = Kokkos::create_mirror_view(state.node_freedom_map_table);
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
@@ -290,7 +282,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_No
     const auto host_node_state_indices =
         Kokkos::View<size_t[2][2], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
         );
-    const auto mirror_node_state_indices = Kokkos::create_mirror(beams.node_state_indices);
+    const auto mirror_node_state_indices = Kokkos::create_mirror_view(beams.node_state_indices);
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
@@ -303,8 +295,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_No
 
     create_element_freedom_table(elements, state);
 
-    const auto host_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
-    Kokkos::deep_copy(host_element_freedom_table, beams.element_freedom_table);
+    const auto host_element_freedom_table = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
 
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
@@ -334,7 +325,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
     const auto host_node_freedom_map_table = Kokkos::View<size_t[3], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
-    const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
+    const auto mirror_node_freedom_map_table = Kokkos::create_mirror_view(state.node_freedom_map_table);
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
@@ -343,7 +334,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
     const auto host_node_state_indices =
         Kokkos::View<size_t[2][1], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
         );
-    const auto mirror_node_state_indices = Kokkos::create_mirror(beams.node_state_indices);
+    const auto mirror_node_state_indices = Kokkos::create_mirror_view(beams.node_state_indices);
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
@@ -357,8 +348,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
 
     create_element_freedom_table(elements, state);
 
-    const auto host_beams_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
-    Kokkos::deep_copy(host_beams_element_freedom_table, beams.element_freedom_table);
+    const auto host_beams_element_freedom_table = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
             host_beams_element_freedom_table(0, 0, k), k
@@ -371,8 +361,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
     }
 
     const auto host_masses_element_freedom_table =
-        Kokkos::create_mirror(masses.element_freedom_table);
-    Kokkos::deep_copy(host_masses_element_freedom_table, masses.element_freedom_table);
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), masses.element_freedom_table);
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
             host_masses_element_freedom_table(0, k), k + 12U
@@ -389,7 +378,7 @@ TEST(
     const auto host_node_freedom_map_table = Kokkos::View<size_t[4], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
-    const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
+    const auto mirror_node_freedom_map_table = Kokkos::create_mirror_view(state.node_freedom_map_table);
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
@@ -405,7 +394,7 @@ TEST(
     const auto host_spring_node_indices = Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(
         host_spring_node_indices_data.data()
     );
-    const auto mirror_spring_node_indices = Kokkos::create_mirror(springs.node_state_indices);
+    const auto mirror_spring_node_indices = Kokkos::create_mirror_view(springs.node_state_indices);
     Kokkos::deep_copy(mirror_spring_node_indices, host_spring_node_indices);
     Kokkos::deep_copy(springs.node_state_indices, mirror_spring_node_indices);
 
@@ -415,8 +404,7 @@ TEST(
 
     create_element_freedom_table(elements, state);
 
-    const auto host_beams_element_freedom_table = Kokkos::create_mirror(beams.element_freedom_table);
-    Kokkos::deep_copy(host_beams_element_freedom_table, beams.element_freedom_table);
+    const auto host_beams_element_freedom_table = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
             host_beams_element_freedom_table(0, 0, k), k
@@ -424,8 +412,7 @@ TEST(
     }
 
     const auto host_masses_element_freedom_table =
-        Kokkos::create_mirror(masses.element_freedom_table);
-    Kokkos::deep_copy(host_masses_element_freedom_table, masses.element_freedom_table);
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), masses.element_freedom_table);
     for (auto k = 0U; k < 6U; ++k) {
         EXPECT_EQ(
             host_masses_element_freedom_table(0, k), k + 6U
@@ -433,8 +420,7 @@ TEST(
     }
 
     const auto host_springs_element_freedom_table =
-        Kokkos::create_mirror(springs.element_freedom_table);
-    Kokkos::deep_copy(host_springs_element_freedom_table, springs.element_freedom_table);
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), springs.element_freedom_table);
     for (auto k = 0U; k < 3U; ++k) {
         EXPECT_EQ(
             host_springs_element_freedom_table(0, 0, k), k + 12U
