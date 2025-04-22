@@ -3,7 +3,6 @@
 #include "elements/elements.hpp"
 #include "elements/masses/create_masses.hpp"
 #include "model/model.hpp"
-#include "state/set_node_external_loads.hpp"
 #include "state/state.hpp"
 #include "step/step.hpp"
 #include "step/update_system_variables.hpp"
@@ -117,7 +116,10 @@ TEST(MassesTest, ExternalForce) {
 
     const auto force_x = 5.;
     const auto torque_y = 3.;
-    SetNodeExternalLoads(state, node_id, {force_x, 0., 0., 0., torque_y, 0.});
+    auto host_f = Kokkos::create_mirror_view(state.f);
+    host_f(node_id, 0) = force_x;
+    host_f(node_id, 4) = torque_y;
+    Kokkos::deep_copy(state.f, host_f);
 
     // Run simulation for 1000 steps
     const auto n_steps = 1000;

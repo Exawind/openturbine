@@ -8,10 +8,11 @@ namespace openturbine {
 inline Springs CreateSprings(const SpringsInput& springs_input, const std::vector<Node>& nodes) {
     Springs springs(springs_input.NumElements());
 
-    auto host_node_state_indices = Kokkos::create_mirror_view(springs.node_state_indices);
-    auto host_x0 = Kokkos::create_mirror_view(springs.x0);
-    auto host_l_ref = Kokkos::create_mirror_view(springs.l_ref);
-    auto host_k = Kokkos::create_mirror_view(springs.k);
+    auto host_node_state_indices =
+        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, springs.node_state_indices);
+    auto host_x0 = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, springs.x0);
+    auto host_l_ref = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, springs.l_ref);
+    auto host_k = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, springs.k);
 
     for (size_t i_elem = 0; i_elem < springs_input.NumElements(); i_elem++) {
         const auto& element = springs_input.elements[i_elem];

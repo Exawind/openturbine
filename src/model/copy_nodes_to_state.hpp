@@ -10,11 +10,11 @@
 namespace openturbine {
 
 inline void CopyNodesToState(State& state, const std::vector<Node>& nodes) {
-    auto host_id = Kokkos::create_mirror_view(state.ID);
-    auto host_x0 = Kokkos::create_mirror_view(state.x0);
-    auto host_q = Kokkos::create_mirror_view(state.q);
-    auto host_v = Kokkos::create_mirror_view(state.v);
-    auto host_vd = Kokkos::create_mirror_view(state.vd);
+    auto host_id = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.ID);
+    auto host_x0 = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.x0);
+    auto host_q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
+    auto host_v = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.v);
+    auto host_vd = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.vd);
 
     for (auto i = 0U; i < nodes.size(); ++i) {
         const auto& node = nodes[i];
@@ -36,6 +36,7 @@ inline void CopyNodesToState(State& state, const std::vector<Node>& nodes) {
     Kokkos::deep_copy(state.v, host_v);
     Kokkos::deep_copy(state.vd, host_vd);
     Kokkos::deep_copy(state.a, state.vd);  // initialize algorithmic acceleration to acceleration
+    Kokkos::deep_copy(state.f, 0.);
 
     // Set previous state to current state
     Kokkos::deep_copy(state.q_prev, state.q);

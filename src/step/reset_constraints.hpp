@@ -10,6 +10,7 @@ namespace openturbine {
 inline void ResetConstraints(Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Reset Constraints");
     Kokkos::deep_copy(constraints.lambda, 0.);
+    Kokkos::deep_copy(constraints.system_residual_terms, 0.);
 }
 
 }  // namespace openturbine

@@ -33,16 +33,18 @@ public:
           vtk_output(solution_input.vtk_output_path) {
         // Update the blade motion to match state
         UpdateNodeMotion();
+        Kokkos::deep_copy(this->host_state.f, 0.);
     }
 
     /// @brief Step forward in time
     [[nodiscard]] bool Step() {
         // Transfer node loads to state
         for (const auto& node : this->blade.nodes) {
-            for (auto j = 0U; j < 6; ++j) {
-                state.host_f(node.id, j) = node.loads[j];
+            for (auto i = 0U; i < 6; ++i) {
+                this->host_state.f(node.id, i) = node.loads[i];
             }
         }
+        Kokkos::deep_copy(this->state.f, this->host_state.f);
 
         // Solve for state at end of step
         auto converged = openturbine::Step(
@@ -115,7 +117,7 @@ private:
     /// @brief  OpenTurbine class state class for temporarily saving state
     State state_save;
 
-    /// @brief  Host local copy of node position, displacement, velocity, acceleration
+    /// @brief  Host local copy of State
     HostState host_state;
 
     /// @brief  VTK output manager

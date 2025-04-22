@@ -27,13 +27,17 @@ struct HostState {
     /// @brief Host local copy of current acceleration
     Kokkos::View<double* [6]>::HostMirror vd;
 
+    /// @brief Host local copy of external forces
+    Kokkos::View<double* [6]>::HostMirror f;
+
     /// @brief  Construct host state from state
     /// @param state
     explicit HostState(const State& state)
-        : x(Kokkos::create_mirror_view(state.x)),
-          q(Kokkos::create_mirror_view(state.q)),
-          v(Kokkos::create_mirror_view(state.v)),
-          vd(Kokkos::create_mirror_view(state.vd)) {}
+        : x(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.x)),
+          q(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q)),
+          v(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.v)),
+          vd(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.vd)),
+          f(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.f)) {}
 
     /// @brief Copy state data to host state
     /// @param state
