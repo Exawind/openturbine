@@ -5,12 +5,24 @@
 #include "interfaces/node_data.hpp"
 #include "math/least_squares_fit.hpp"
 #include "math/matrix_operations.hpp"
+#include "math/project_points_to_target_polynomial.hpp"
 #include "math/quaternion_operations.hpp"
 #include "model/model.hpp"
 
 namespace openturbine::interfaces::components {
 
-struct Blade {
+/**
+ * @brief Represents a turbine blade with nodes, elements, and constraints
+ *
+ * This class is responsible for creating and managing a blade based on input
+ * specifications. It handles the creation of nodes, beam elements, and constraints
+ * within the provided model.
+ */
+class Blade {
+public:
+    /// @brief Maximum number of points allowed in blade geometry definition
+    static constexpr size_t kMaxGeometryPoints{10};
+
     /// @brief Beam element ID
     size_t beam_element_id{kInvalidID};
 
@@ -29,37 +41,143 @@ struct Blade {
     /// @brief Location of nodes in blade element [-1, 1]
     std::vector<double> node_xi;
 
+    /**
+     * @brief Construct a new Blade using the provided input and model
+     * @param input Configuration for the blade
+     * @param model Model to which the blade elements and nodes will be added
+     * @throws std::invalid_argument If the input configuration is invalid
+     */
     Blade(const BladeInput& input, Model& model) : root_node(kInvalidID) {
-        // Number of nodes in blade
-        const auto n_nodes = input.element_order + 1;
+        ValidateInput(input);
+        SetupNodeLocations(input);
+        CreateNodeGeometry(input);
+        CreateBeamElement(input, model);
+        PositionBladeInSpace(input, model);
+        SetupRootNode(input, model);
+    }
 
-        // Generate node locations within element [-1,1]
-        if (input.node_spacing == BladeInput::NodeSpacing::GaussLobattoLegendre) {
-            this->node_xi = GenerateGLLPoints(input.element_order);
-        } else if (input.node_spacing == BladeInput::NodeSpacing::Linear) {
-            this->node_xi.clear();
-            for (auto i = 0U; i <= input.element_order; ++i) {
-                this->node_xi.emplace_back(
-                    2. * static_cast<double>(i) / static_cast<double>(input.element_order) - 1.
-                );
-            }
-        } else {
-            throw("invalid node spacing option");
+    /**
+     * @brief Returns a vector of weights for distributing a point load to the nodes
+     * @param s Position [0,1] along the blade
+     * @return Vector of weights for each node
+     */
+    [[nodiscard]] std::vector<double> GetNodeWeights(double s) const {
+        std::vector<double> weights(this->node_xi.size());
+        auto xi = 2. * s - 1.;
+        LagrangePolynomialDerivWeights(xi, this->node_xi, weights);
+        return weights;
+    }
+
+    /**
+     * @brief Adds a point load (Fx, Fy, Fz, Mx, My, Mz) to the blade at location 's' [0, 1]
+     * along the material axis
+     * @param s Position [0,1] along the blade material axis
+     * @param loads Forces and moments (Fx, Fy, Fz, Mx, My, Mz)
+     * @throws std::invalid_argument If position is outside valid range
+     */
+    void AddPointLoad(double s, std::array<double, 6> loads) {
+        if (s < 0. || s > 1.) {
+            throw std::invalid_argument("Invalid position: " + std::to_string(s));
         }
 
-        // Fit node coordinates to key points
-        const std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));
-        const auto [phi_kn, phi_prime_kn] = ShapeFunctionMatrices(kp_xi, this->node_xi);
-        const auto node_coordinates =
-            PerformLeastSquaresFitting(n_nodes, phi_kn, input.ref_axis.coordinates);
+        const auto weights = this->GetNodeWeights(s);
+        for (size_t i = 0U; i < this->nodes.size(); ++i) {
+            for (size_t j = 0U; j < 6; ++j) {
+                this->nodes[i].loads[j] += weights[i] * loads[j];
+            }
+        }
+    }
 
-        const auto node_tangents = CalcNodeTangents(node_coordinates);
+    /// @brief Sets blade point loads to zero
+    void ClearLoads() {
+        for (auto& node : this->nodes) {
+            node.ClearLoads();
+        }
+    }
 
+private:
+    std::vector<std::array<double, 3>> node_coordinates;  ///< Node coordinates
+    std::vector<std::array<double, 3>> node_tangents;     ///< Node tangents
+
+    /**
+     * @brief Validate the input configuration
+     * @param input Blade input configuration
+     * @throws std::invalid_argument If configuration is invalid
+     */
+    static void ValidateInput(const BladeInput& input) {
+        if (input.ref_axis.coordinate_grid.size() < 2 || input.ref_axis.coordinates.size() < 2) {
+            throw std::invalid_argument("At least two reference axis points are required");
+        }
+        if (input.ref_axis.coordinate_grid.size() != input.ref_axis.coordinates.size()) {
+            throw std::invalid_argument("Mismatch between coordinate_grid and coordinates sizes");
+        }
+        if (input.sections.empty()) {
+            throw std::invalid_argument("At least one section is required");
+        }
+        if (input.element_order < 1) {
+            throw std::invalid_argument(
+                "Element order must be at least 1 i.e. linear element for discretization"
+            );
+        }
+    }
+
+    /**
+     * @brief Setup node locations based on input configuration
+     * @param input Blade input configuration
+     */
+    void SetupNodeLocations(const BladeInput& input) {
+        // Generate node locations within element [-1,1]
+        this->node_xi = GenerateGLLPoints(input.element_order);
+    }
+
+    /**
+     * @brief Create node geometry from reference axis points
+     * @param input Blade input configuration
+     */
+    void CreateNodeGeometry(const BladeInput& input) {
+        const auto n_nodes = input.element_order + 1;
+        const auto n_geometry_pts =
+            std::min({input.ref_axis.coordinate_grid.size(), n_nodes, kMaxGeometryPoints});
+
+        if (n_geometry_pts < n_nodes) {
+            // We need to project from n_geometry_pts -> element_order
+            const std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));
+            const auto [phi_kn_geometry, phi_prime_kn_geometry] =
+                ShapeFunctionMatrices(kp_xi, GenerateGLLPoints(n_geometry_pts - 1));
+            const auto geometry_points = PerformLeastSquaresFitting(
+                n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates
+            );
+            const auto node_coords =
+                ProjectPointsToTargetPolynomial(n_geometry_pts, n_nodes, geometry_points);
+
+            this->node_coordinates.clear();
+            this->node_coordinates.reserve(node_coords.size());
+            std::copy(
+                node_coords.begin(), node_coords.end(), std::back_inserter(this->node_coordinates)
+            );
+        } else {
+            // Fit node coordinates to key points
+            const std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));
+            const auto [phi_kn, phi_prime_kn] = ShapeFunctionMatrices(kp_xi, this->node_xi);
+            this->node_coordinates =
+                PerformLeastSquaresFitting(n_nodes, phi_kn, input.ref_axis.coordinates);
+        }
+
+        // Calculate tangent vectors at each node
+        this->CalcNodeTangents();
+    }
+
+    /**
+     * @brief Create beam element in the model
+     * @param input Blade input configuration
+     * @param model Model to which the beam element will be added
+     */
+    void CreateBeamElement(const BladeInput& input, Model& model) {
         // Add nodes to model
         std::vector<size_t> node_ids;
         for (auto i = 0U; i < this->node_xi.size(); ++i) {
-            const auto& pos = node_coordinates[i];
-            const auto q_rot = TangentTwistToQuaternion(node_tangents[i], 0.);
+            const auto& pos = this->node_coordinates[i];
+            const auto q_rot = TangentTwistToQuaternion(this->node_tangents[i], 0.);
             const auto node_id =
                 model.AddNode()
                     .SetElemLocation((this->node_xi[i] + 1.) / 2.)
@@ -69,6 +187,7 @@ struct Blade {
             this->nodes.emplace_back(node_id);
         }
 
+        // Build beam sections
         const auto sections = BuildBeamSections(input);
         std::vector<double> section_grid(sections.size());
         std::transform(
@@ -83,11 +202,15 @@ struct Blade {
 
         // Add beam element and get ID
         this->beam_element_id = model.AddBeamElement(node_ids, sections, trapezoidal_quadrature);
+    }
 
-        //----------------------------------------------------------------------
-        // Position beam and apply root velocity and acceleration
-        //----------------------------------------------------------------------
-
+    /**
+     * @brief Position the blade in space according to root properties
+     * @param input Blade input configuration
+     * @param model Model containing the blade
+     */
+    void PositionBladeInSpace(const BladeInput& input, Model& model) const {
+        // Extract root location, orientation, and velocity
         const std::array<double, 3> root_location{
             input.root.position[0], input.root.position[1], input.root.position[2]
         };
@@ -99,17 +222,27 @@ struct Blade {
             input.root.velocity[3], input.root.velocity[4], input.root.velocity[5]
         };
 
+        // Translate beam element to root location
         model.TranslateBeam(this->beam_element_id, root_location);
+
+        // Rotate beam element about root location
         model.RotateBeamAboutPoint(this->beam_element_id, root_orientation, root_location);
+
+        // Set beam velocity about root location
         model.SetBeamVelocityAboutPoint(this->beam_element_id, input.root.velocity, root_location);
+
+        // Set beam acceleration about root location
         model.SetBeamAccelerationAboutPoint(
             this->beam_element_id, input.root.acceleration, root_omega, root_location
         );
+    }
 
-        //----------------------------------------------------------------------
-        // Add blade root node and connect to first blade node
-        //----------------------------------------------------------------------
-
+    /**
+     * @brief Setup the root node and constraints
+     * @param input Blade input configuration
+     * @param model Model to which constraints will be added
+     */
+    void SetupRootNode(const BladeInput& input, Model& model) {
         // Add root node
         this->root_node.id = model.AddNode().SetPosition(input.root.position).Build();
 
@@ -117,43 +250,34 @@ struct Blade {
         this->root_blade_constraint_id =
             model.AddRigidJointConstraint({this->root_node.id, this->nodes[0].id});
 
-        //----------------------------------------------------------------------
         // Add prescribed displacement constraint to root node if requested
-        //----------------------------------------------------------------------
-
         if (input.root.prescribe_root_motion) {
             this->prescribed_root_constraint_id = model.AddPrescribedBC(this->root_node.id);
         }
     }
 
-    /// @brief Return a vector of weights for distributing a point load to the nodes
-    /// based on the position [0,1] of the point along the blade
-    [[nodiscard]] std::vector<double> GetNodeWeights(double s) const {
-        std::vector<double> weights(this->node_xi.size());
-        auto xi = 2. * s - 1.;
-        LagrangePolynomialDerivWeights(xi, this->node_xi, weights);
-        return weights;
-    }
-
-    [[nodiscard]] std::vector<std::array<double, 3>> CalcNodeTangents(
-        const std::vector<std::array<double, 3>>& node_coordinates
-    ) const {
-        const auto n_nodes{node_coordinates.size()};
+    /**
+     * @brief Calculate tangent vectors at each node
+     */
+    void CalcNodeTangents() {
+        const auto n_nodes{this->node_coordinates.size()};
 
         // Calculate the derivative shape function matrix for the nodes
         const auto [phi, phi_prime] = ShapeFunctionMatrices(this->node_xi, this->node_xi);
 
         // Calculate tangent vectors for each node
-        std::vector<std::array<double, 3>> node_tangents(n_nodes, {0., 0., 0.});
+        this->node_tangents.resize(n_nodes, {0., 0., 0.});
         for (auto i = 0U; i < n_nodes; ++i) {
             for (auto j = 0U; j < 3; ++j) {
                 for (auto k = 0U; k < n_nodes; ++k) {
-                    node_tangents[i][j] += phi_prime[k][i] * node_coordinates[k][j];
+                    this->node_tangents[i][j] += phi_prime[k][i] * this->node_coordinates[k][j];
                 }
             }
         }
+
+        // Normalize tangent vectors
         std::transform(
-            node_tangents.begin(), node_tangents.end(), node_tangents.begin(),
+            this->node_tangents.begin(), this->node_tangents.end(), this->node_tangents.begin(),
             [](std::array<double, 3>& tangent) {
                 const auto norm = Norm(tangent);
                 std::transform(tangent.begin(), tangent.end(), tangent.begin(), [norm](double v) {
@@ -162,10 +286,13 @@ struct Blade {
                 return tangent;
             }
         );
-
-        return node_tangents;
     }
 
+    /**
+     * @brief Create beam sections from input configuration
+     * @param input Blade input configuration
+     * @return Vector of beam sections
+     */
     static std::vector<BeamSection> BuildBeamSections(const BladeInput& input) {
         // Extraction section stiffness and mass matrices from blade definition
         std::vector<BeamSection> sections;
@@ -231,24 +358,6 @@ struct Blade {
         }
 
         return sections;
-    }
-
-    /// @brief Add a point load (Fx, Fy, Fz, Mx, My, Mz) to the blade at location 's' [0, 1]
-    /// along the material axis
-    void AddPointLoad(double s, std::array<double, 6> loads) {
-        const auto weights = this->GetNodeWeights(s);
-        for (size_t i = 0U; i < this->nodes.size(); ++i) {
-            for (size_t j = 0U; j < 6; ++j) {
-                this->nodes[i].loads[j] += weights[i] * loads[j];
-            }
-        }
-    }
-
-    /// @brief Set blade point loads to zero
-    void ClearLoads() {
-        for (auto& node : this->nodes) {
-            node.ClearLoads();
-        }
     }
 };
 

@@ -1,12 +1,11 @@
 #pragma once
 
-#include <iostream>
-
 #include <Kokkos_Core.hpp>
 
 #include "constraints/constraints.hpp"
 #include "freedom_signature.hpp"
 #include "state/state.hpp"
+
 namespace openturbine {
 
 struct CreateConstraintFreedomTable {
