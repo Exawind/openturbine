@@ -9,6 +9,7 @@
 #include "state/clone_state.hpp"
 #include "state/copy_state_data.hpp"
 #include "step/step.hpp"
+#include "utilities/netcdf/node_state_writer.hpp"
 
 namespace openturbine::interfaces {
 
@@ -44,6 +45,13 @@ public:
           vtk_output(solution_input.vtk_output_path) {
         // Update the blade motion to match state
         UpdateNodeMotion();
+
+        // Initialize NetCDF writer if output file is specified
+        if (!solution_input.output_file_path.empty()) {
+            this->output_writer_ = std::make_unique<util::NodeStateWriter>(
+                solution_input.output_file_path, true, state.num_system_nodes
+            );
+        }
     }
 
     /// @brief Returns a reference to the blade model
@@ -65,13 +73,20 @@ public:
         auto converged = openturbine::Step(
             this->parameters, this->solver, this->elements, this->state, this->constraints
         );
+        if (!converged) {
+            return false;
+        }
 
         // Update the blade motion if there was convergence
-        if (converged) {
-            UpdateNodeMotion();
-            return true;
+        UpdateNodeMotion();
+
+        // Write outputs and increment timestep counter
+        if (this->output_writer_) {
+            WriteOutputs();
         }
-        return false;
+        this->current_timestep_++;
+
+        return true;
     }
 
     /// @brief Saves the current state for potential restoration (in correction step)
@@ -113,6 +128,12 @@ private:
     HostState host_state;       ///< Host local copy of node state data
     VTKOutput vtk_output;       ///< VTK output manager
 
+    /// @brief Current timestep index
+    size_t current_timestep_{0};
+
+    /// @brief Optional NetCDF output writer
+    std::unique_ptr<util::NodeStateWriter> output_writer_;
+
     /// @brief  Updates motion data for all nodes (root and blade) in the interface
     void UpdateNodeMotion() {
         // Copy state motion members from device to host
@@ -123,6 +144,66 @@ private:
         for (auto& node : this->blade.nodes) {
             node.UpdateMotion(this->host_state);
         }
+    }
+
+    //------------------------------------------------------------------------------
+    // Write outputs
+    //------------------------------------------------------------------------------
+    void WriteOutputs() const {
+        const size_t num_nodes = this->state.num_system_nodes;
+        std::vector<double> x(num_nodes);
+        std::vector<double> y(num_nodes);
+        std::vector<double> z(num_nodes);
+        std::vector<double> i(num_nodes);
+        std::vector<double> j(num_nodes);
+        std::vector<double> k(num_nodes);
+        std::vector<double> w(num_nodes);
+
+        // write position
+        for (size_t node = 0; node < num_nodes; ++node) {
+            x[node] = this->host_state.x(node, 0);
+            y[node] = this->host_state.x(node, 1);
+            z[node] = this->host_state.x(node, 2);
+            i[node] = this->host_state.x(node, 3);
+            j[node] = this->host_state.x(node, 4);
+            k[node] = this->host_state.x(node, 5);
+            w[node] = this->host_state.x(node, 6);
+        }
+        output_writer_->WriteStateDataAtTimestep(current_timestep_, "x", x, y, z, i, j, k, w);
+
+        // write displacement
+        for (size_t node = 0; node < num_nodes; ++node) {
+            x[node] = this->host_state.q(node, 0);
+            y[node] = this->host_state.q(node, 1);
+            z[node] = this->host_state.q(node, 2);
+            w[node] = this->host_state.q(node, 3);
+            i[node] = this->host_state.q(node, 4);
+            j[node] = this->host_state.q(node, 5);
+            k[node] = this->host_state.q(node, 6);
+        }
+        output_writer_->WriteStateDataAtTimestep(current_timestep_, "u", x, y, z, i, j, k, w);
+
+        // write velocity
+        for (size_t node = 0; node < num_nodes; ++node) {
+            x[node] = this->host_state.v(node, 0);
+            y[node] = this->host_state.v(node, 1);
+            z[node] = this->host_state.v(node, 2);
+            i[node] = this->host_state.v(node, 3);
+            j[node] = this->host_state.v(node, 4);
+            k[node] = this->host_state.v(node, 5);
+        }
+        output_writer_->WriteStateDataAtTimestep(current_timestep_, "v", x, y, z, i, j, k);
+
+        // write acceleration
+        for (size_t node = 0; node < num_nodes; ++node) {
+            x[node] = this->host_state.vd(node, 0);
+            y[node] = this->host_state.vd(node, 1);
+            z[node] = this->host_state.vd(node, 2);
+            i[node] = this->host_state.vd(node, 3);
+            j[node] = this->host_state.vd(node, 4);
+            k[node] = this->host_state.vd(node, 5);
+        }
+        output_writer_->WriteStateDataAtTimestep(current_timestep_, "a", x, y, z, i, j, k);
     }
 };
 
