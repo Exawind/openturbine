@@ -15,22 +15,22 @@ inline Beams CreateBeams(const BeamsInput& beams_input, const std::vector<Node>&
         beams_input.NumElements(), beams_input.MaxElemNodes(), beams_input.MaxElemQuadraturePoints()
     );
 
-    auto host_gravity = Kokkos::create_mirror(beams.gravity);
+    auto host_gravity = Kokkos::create_mirror_view(beams.gravity);
 
-    auto host_num_nodes_per_element = Kokkos::create_mirror(beams.num_nodes_per_element);
-    auto host_num_qps_per_element = Kokkos::create_mirror(beams.num_qps_per_element);
-    auto host_node_state_indices = Kokkos::create_mirror(beams.node_state_indices);
-    auto host_node_x0 = Kokkos::create_mirror(beams.node_x0);
-    auto host_node_u = Kokkos::create_mirror(beams.node_u);
-    auto host_node_u_dot = Kokkos::create_mirror(beams.node_u_dot);
-    auto host_node_u_ddot = Kokkos::create_mirror(beams.node_u_ddot);
+    auto host_num_nodes_per_element = Kokkos::create_mirror_view(beams.num_nodes_per_element);
+    auto host_num_qps_per_element = Kokkos::create_mirror_view(beams.num_qps_per_element);
+    auto host_node_state_indices = Kokkos::create_mirror_view(beams.node_state_indices);
+    auto host_node_x0 = Kokkos::create_mirror_view(beams.node_x0);
+    auto host_node_u = Kokkos::create_mirror_view(beams.node_u);
+    auto host_node_u_dot = Kokkos::create_mirror_view(beams.node_u_dot);
+    auto host_node_u_ddot = Kokkos::create_mirror_view(beams.node_u_ddot);
 
-    auto host_qp_weight = Kokkos::create_mirror(beams.qp_weight);
-    auto host_qp_Mstar = Kokkos::create_mirror(beams.qp_Mstar);
-    auto host_qp_Cstar = Kokkos::create_mirror(beams.qp_Cstar);
+    auto host_qp_weight = Kokkos::create_mirror_view(beams.qp_weight);
+    auto host_qp_Mstar = Kokkos::create_mirror_view(beams.qp_Mstar);
+    auto host_qp_Cstar = Kokkos::create_mirror_view(beams.qp_Cstar);
 
-    auto host_shape_interp = Kokkos::create_mirror(beams.shape_interp);
-    auto host_shape_deriv = Kokkos::create_mirror(beams.shape_deriv);
+    auto host_shape_interp = Kokkos::create_mirror_view(beams.shape_interp);
+    auto host_shape_deriv = Kokkos::create_mirror_view(beams.shape_deriv);
 
     host_gravity(0) = beams_input.gravity[0];
     host_gravity(1) = beams_input.gravity[1];

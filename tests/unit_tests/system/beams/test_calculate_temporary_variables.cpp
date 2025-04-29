@@ -7,21 +7,10 @@
 namespace {
 
 void TestCalculateTemporaryVariables() {
-    const auto x0_prime = Kokkos::View<double[3]>("x0_prime");
-    constexpr auto x0_prime_data = std::array{1., 2., 3.};
-    const auto x0_prime_host =
-        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(x0_prime_data.data());
-    const auto x0_prime_mirror = Kokkos::create_mirror(x0_prime);
-    Kokkos::deep_copy(x0_prime_mirror, x0_prime_host);
-    Kokkos::deep_copy(x0_prime, x0_prime_mirror);
-
-    const auto u_prime = Kokkos::View<double[3]>("u_prime");
-    constexpr auto u_prime_data = std::array{4., 5., 6.};
-    const auto u_prime_host =
-        Kokkos::View<double[3], Kokkos::HostSpace>::const_type(u_prime_data.data());
-    const auto u_prime_mirror = Kokkos::create_mirror(u_prime);
-    Kokkos::deep_copy(u_prime_mirror, u_prime_host);
-    Kokkos::deep_copy(u_prime, u_prime_mirror);
+    const auto x0_prime =
+        openturbine::tests::CreateView<double[3]>("x0_prime", std::array{1., 2., 3.});
+    const auto u_prime =
+        openturbine::tests::CreateView<double[3]>("u_prime", std::array{4., 5., 6.});
 
     const auto x0pupSS = Kokkos::View<double[3][3]>("x0pupSS");
 
@@ -36,8 +25,7 @@ void TestCalculateTemporaryVariables() {
     const auto x0pupSS_exact =
         Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type(x0pupSS_exact_data.data());
 
-    const auto x0pupSS_mirror = Kokkos::create_mirror(x0pupSS);
-    Kokkos::deep_copy(x0pupSS_mirror, x0pupSS);
+    const auto x0pupSS_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), x0pupSS);
     openturbine::tests::CompareWithExpected(x0pupSS_mirror, x0pupSS_exact);
 }
 

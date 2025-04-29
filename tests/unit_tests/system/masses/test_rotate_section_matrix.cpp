@@ -16,22 +16,12 @@ struct ExecuteRotateSectionMatrix {
 };
 
 TEST(RotateSectionMatrixMassesTests, OneNode) {
-    const auto xr = Kokkos::View<double[4]>("xr");
-    constexpr auto xr_data = std::array{1., 2., 3., 4.};
-    const auto xr_host = Kokkos::View<const double[4], Kokkos::HostSpace>(xr_data.data());
-    const auto xr_mirror = Kokkos::create_mirror(xr);
-    Kokkos::deep_copy(xr_mirror, xr_host);
-    Kokkos::deep_copy(xr, xr_mirror);
-
-    const auto Cstar = Kokkos::View<double[6][6]>("Cstar");
-    constexpr auto Cstar_data =
-        std::array{1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,  10., 11., 12.,
-                   13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24.,
-                   25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36.};
-    const auto Cstar_host = Kokkos::View<const double[6][6], Kokkos::HostSpace>(Cstar_data.data());
-    const auto Cstar_mirror = Kokkos::create_mirror(Cstar);
-    Kokkos::deep_copy(Cstar_mirror, Cstar_host);
-    Kokkos::deep_copy(Cstar, Cstar_mirror);
+    const auto xr = CreateView<double[4]>("xr", std::array{1., 2., 3., 4.});
+    const auto Cstar =
+        CreateView<double[6][6]>("Cstar", std::array{1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,
+                                                     10., 11., 12., 13., 14., 15., 16., 17., 18.,
+                                                     19., 20., 21., 22., 23., 24., 25., 26., 27.,
+                                                     28., 29., 30., 31., 32., 33., 34., 35., 36.});
 
     const auto Cuu = Kokkos::View<double[6][6]>("Cuu");
 
@@ -43,10 +33,9 @@ TEST(RotateSectionMatrixMassesTests, OneNode) {
                    2700., 12240., 17100., 2808., 12780., 17856., 5940., 23400., 32580.,
                    6480., 26100., 36360., 8100., 31680., 44100., 8856., 35460., 49392.};
     const auto Cuu_exact =
-        Kokkos::View<const double[6][6], Kokkos::HostSpace>(Cuu_exact_data.data());
+        Kokkos::View<double[6][6], Kokkos::HostSpace>::const_type(Cuu_exact_data.data());
 
-    const auto Cuu_mirror = Kokkos::create_mirror(Cuu);
-    Kokkos::deep_copy(Cuu_mirror, Cuu);
+    const auto Cuu_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), Cuu);
     CompareWithExpected(Cuu_mirror, Cuu_exact);
 }
 
