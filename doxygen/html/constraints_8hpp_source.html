@@ -265,16 +265,16 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>          target_gradient_terms(<span class="stringliteral">&quot;target_gradient_terms&quot;</span>, num_constraints),</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>          base_gradient_transpose_terms(<span class="stringliteral">&quot;base_gradient_transpose_terms&quot;</span>, num_constraints),</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>          target_gradient_transpose_terms(<span class="stringliteral">&quot;target_gradient_transpose_terms&quot;</span>, num_constraints) {</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="keyword">auto</span> host_type = Kokkos::create_mirror(type);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keyword">auto</span> host_row_range = Kokkos::create_mirror(row_range);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keyword">auto</span> host_base_node_index = Kokkos::create_mirror(base_node_index);</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keyword">auto</span> host_target_node_index = Kokkos::create_mirror(target_node_index);</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keyword">auto</span> host_base_freedom = Kokkos::create_mirror(base_node_freedom_signature);</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="keyword">auto</span> host_target_freedom = Kokkos::create_mirror(target_node_freedom_signature);</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="keyword">auto</span> host_base_active_dofs = Kokkos::create_mirror(base_active_dofs);</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keyword">auto</span> host_target_active_dofs = Kokkos::create_mirror(target_active_dofs);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="keyword">auto</span> host_X0 = Kokkos::create_mirror(X0);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="keyword">auto</span> host_axes = Kokkos::create_mirror(axes);</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="keyword">auto</span> host_type = Kokkos::create_mirror_view(type);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keyword">auto</span> host_row_range = Kokkos::create_mirror_view(row_range);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keyword">auto</span> host_base_node_index = Kokkos::create_mirror_view(base_node_index);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keyword">auto</span> host_target_node_index = Kokkos::create_mirror_view(target_node_index);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keyword">auto</span> host_base_freedom = Kokkos::create_mirror_view(base_node_freedom_signature);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="keyword">auto</span> host_target_freedom = Kokkos::create_mirror_view(target_node_freedom_signature);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="keyword">auto</span> host_base_active_dofs = Kokkos::create_mirror_view(base_active_dofs);</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keyword">auto</span> host_target_active_dofs = Kokkos::create_mirror_view(target_active_dofs);</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="keyword">auto</span> host_X0 = Kokkos::create_mirror_view(X0);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="keyword">auto</span> host_axes = Kokkos::create_mirror_view(axes);</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keyword">auto</span> start_row = <span class="keywordtype">size_t</span>{0U};</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; num_constraints; ++i) {</div>
