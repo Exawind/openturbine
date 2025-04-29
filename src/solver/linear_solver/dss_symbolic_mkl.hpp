@@ -15,10 +15,12 @@ struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::MKL>, CrsMatrixType> {
         const MKL_INT num_cols = A.numCols();
         const MKL_INT num_non_zeros = A.nnz();
 
-        const auto* row_ptrs = A.graph.row_map.data();
-        const auto* col_inds = A.graph.entries.data();
+        auto row_ptrs = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.row_map);
+        auto col_inds = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.entries);
 
-        dss_define_structure(handle, opt, row_ptrs, num_rows, num_cols, col_inds, num_non_zeros);
+        dss_define_structure(
+            handle, opt, row_ptrs.data(), num_rows, num_cols, col_inds.data(), num_non_zeros
+        );
 
         auto& perm = dss_handle.get_perm();
         perm.resize(static_cast<size_t>(num_rows));

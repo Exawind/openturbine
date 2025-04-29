@@ -18,7 +18,10 @@ struct DSSSolveFunction<DSSHandle<DSSAlgorithm::KLU>, CrsMatrixType, MultiVector
         auto& common = dss_handle.get_common();
 
         Kokkos::deep_copy(x, b);
-        klu_tsolve(symbolic, numeric, num_rows, 1, x.data(), &common);
+        auto x_host = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), x);
+
+        klu_tsolve(symbolic, numeric, num_rows, 1, x_host.data(), &common);
+        Kokkos::deep_copy(x, x_host);
     }
 };
 

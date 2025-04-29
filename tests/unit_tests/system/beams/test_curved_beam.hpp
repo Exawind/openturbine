@@ -1782,7 +1782,7 @@ constexpr std::array<double, kNumQPs * 6 * 6> kCuu = {
     79690.04229982  // QP 7
 };
 
-constexpr std::array<double, kNumNodes * kNumNodes * 6 * 6> kExpectedStiffnessMatrix = {
+constexpr std::array<double, kNumNodes * kNumNodes * 6 * 6> kExpectedStiffnessMatrix_data = {
     // Node 1, Node 1
     569689.3362162, -38777.68238139, -34112.74014376, 4530.690247065, 69230.6811403, 36866.75913868,
 
@@ -1925,5 +1925,7 @@ constexpr std::array<double, kNumNodes * kNumNodes * 6 * 6> kExpectedStiffnessMa
 
     -93172.82283483, -214693.03116, 95131.76620372, 45440.96931327, 114661.6391408, 311150.0817408
 };
+const Kokkos::View<double[kNumNodes][kNumNodes][6][6], Kokkos::HostSpace>::const_type
+    kExpectedStiffnessMatrix(kExpectedStiffnessMatrix_data.data());
 
 }  // namespace openturbine::tests::curved_beam
