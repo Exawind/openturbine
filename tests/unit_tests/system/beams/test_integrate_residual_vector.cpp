@@ -321,7 +321,7 @@ TEST(IntegrateResidualVector, OneElementOneNodeTwoQPs) {
         CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{3., 2.});
 
     const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
-    //Note: using std::vector because of compiler bug in nvcc
+    // Note: using std::vector because of compiler bug in nvcc
     const auto qp_Fc = CreateView<double[number_of_qps][6]>(
         "qp_FC", std::vector{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12.}
     );

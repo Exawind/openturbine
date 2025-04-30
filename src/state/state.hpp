@@ -21,16 +21,16 @@ struct State {
     Kokkos::View<size_t*> active_dofs;
     Kokkos::View<size_t*> node_freedom_map_table;
 
-    Kokkos::View<double* [7]> x0;                  //< Initial global position/rotation
-    Kokkos::View<double* [7]> x;                   //< Current global position/rotation
-    Kokkos::View<double* [6]> q_delta;             //< Displacement increment
-    Kokkos::View<double* [7]> q_prev;              //< Previous state
-    Kokkos::View<double* [7]> q;                   //< Current state
-    Kokkos::View<double* [6]> v;                   //< Velocity
-    Kokkos::View<double* [6]> vd;                  //< Acceleration
-    Kokkos::View<double* [6]> a;                   //< Algorithmic acceleration
-    Kokkos::View<double* [6]> f;                   //< External forces
-    Kokkos::View<double* [6][6]> tangent;          //< Tangent matrix
+    Kokkos::View<double* [7]> x0;          //< Initial global position/rotation
+    Kokkos::View<double* [7]> x;           //< Current global position/rotation
+    Kokkos::View<double* [6]> q_delta;     //< Displacement increment
+    Kokkos::View<double* [7]> q_prev;      //< Previous state
+    Kokkos::View<double* [7]> q;           //< Current state
+    Kokkos::View<double* [6]> v;           //< Velocity
+    Kokkos::View<double* [6]> vd;          //< Acceleration
+    Kokkos::View<double* [6]> a;           //< Algorithmic acceleration
+    Kokkos::View<double* [6]> f;           //< External forces
+    Kokkos::View<double* [6][6]> tangent;  //< Tangent matrix
 
     explicit State(size_t num_system_nodes_)
         : num_system_nodes(num_system_nodes_),

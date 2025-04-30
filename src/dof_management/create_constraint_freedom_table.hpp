@@ -32,8 +32,7 @@ struct CreateConstraintFreedomTable {
             for (auto k = 0U; k < num_active_dofs; ++k) {
                 base_node_freedom_table(i, k) = node_freedom_map_table(node_index) + k;
             }
-        }
-        else {
+        } else {
             for (auto k = 0U; k < 6U; ++k) {
                 base_node_freedom_table(i, k) = 0UL;
             }
@@ -47,7 +46,8 @@ inline void create_constraint_freedom_table(Constraints& constraints, const Stat
         CreateConstraintFreedomTable{
             constraints.type, constraints.target_node_index, constraints.base_node_index,
             state.active_dofs, state.node_freedom_map_table, constraints.target_node_freedom_table,
-            constraints.base_node_freedom_table}
+            constraints.base_node_freedom_table
+        }
     );
 }
 
