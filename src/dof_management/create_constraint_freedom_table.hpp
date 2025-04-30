@@ -33,6 +33,11 @@ struct CreateConstraintFreedomTable {
                 base_node_freedom_table(i, k) = node_freedom_map_table(node_index) + k;
             }
         }
+        else {
+            for (auto k = 0U; k < 6U; ++k) {
+                base_node_freedom_table(i, k) = 0UL;
+            }
+        }
     }
 };
 
