@@ -141,8 +141,8 @@ TEST(ElementsTest, NumberOfNodesPerElementBeamsMasses) {
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(2U, 4U, 2U);  // 2 beam elements with 4 nodes each
     Kokkos::deep_copy(beams.num_nodes_per_element, 4U);
-    auto masses = Masses<DeviceType>(2U);    // 2 mass elements
-    auto springs = Springs(0U);              // 0 spring elements
+    auto masses = Masses<DeviceType>(2U);  // 2 mass elements
+    auto springs = Springs(0U);            // 0 spring elements
     const auto elements = Elements<DeviceType>{beams, masses, springs};
 
     EXPECT_EQ(elements.NumElementsInSystem(), 4);
