@@ -12,6 +12,8 @@ namespace openturbine::cfd {
 
 class Interface {
 public:
+    using DeviceType = Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+
     explicit Interface(const InterfaceInput& input);
 
     /// @brief Step forward in time
@@ -51,7 +53,7 @@ public:
     StepParameters parameters;
 
     /// @brief  OpenTurbine class for solving the dynamic system
-    Solver solver;
+    Solver<DeviceType> solver;
 
     /// @brief  OpenTurbine class state class for temporarily saving state
     State state_save;

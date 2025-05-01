@@ -7,7 +7,8 @@
 
 namespace openturbine {
 
-inline void ResetSolver(Solver& solver) {
+template <typename DeviceType>
+inline void ResetSolver(Solver<DeviceType>& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Reset Solver");
     Kokkos::deep_copy(solver.A.values, 0.);
     Kokkos::deep_copy(solver.b, 0.);

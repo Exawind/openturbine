@@ -9,14 +9,15 @@
 #include "solver/solver.hpp"
 
 namespace openturbine {
-inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) {
+template <typename DeviceType>
+inline void AssembleConstraintsMatrix(Solver<DeviceType>& solver, Constraints& constraints) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Matrix");
     auto constraint_policy =
         Kokkos::TeamPolicy<>(static_cast<int>(constraints.num_constraints), Kokkos::AUTO());
 
     Kokkos::parallel_for(
         "CopyConstraintsToSparseMatrix", constraint_policy,
-        CopyConstraintsToSparseMatrix<Solver::CrsMatrixType>{
+        CopyConstraintsToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
             solver.num_system_dofs, constraints.row_range, constraints.base_node_freedom_signature,
             constraints.target_node_freedom_signature, constraints.base_node_freedom_table,
             constraints.target_node_freedom_table, constraints.base_gradient_terms,
@@ -26,7 +27,7 @@ inline void AssembleConstraintsMatrix(Solver& solver, Constraints& constraints) 
 
     Kokkos::parallel_for(
         "CopyConstraintsTransposeToSparseMatrix", constraint_policy,
-        CopyConstraintsTransposeToSparseMatrix<Solver::CrsMatrixType>{
+        CopyConstraintsTransposeToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
             solver.num_system_dofs, constraints.row_range, constraints.base_node_freedom_signature,
             constraints.target_node_freedom_signature, constraints.base_node_freedom_table,
             constraints.target_node_freedom_table, constraints.base_gradient_transpose_terms,

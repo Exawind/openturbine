@@ -20,6 +20,8 @@ namespace openturbine::interfaces {
  */
 class BladeInterface {
 public:
+    using DeviceType = Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+
     /**
      * @brief Constructs a BladeInterface from solution and blade inputs
      * @param solution_input Configuration parameters for solver and solution
@@ -38,7 +40,7 @@ public:
               solution_input.rho_inf, solution_input.absolute_error_tolerance,
               solution_input.relative_error_tolerance
           ),
-          solver(CreateSolver(state, elements, constraints)),
+          solver(CreateSolver<DeviceType>(state, elements, constraints)),
           state_save(CloneState(state)),
           host_state(state),
           vtk_output(solution_input.vtk_output_path) {
@@ -110,7 +112,7 @@ private:
     Elements elements;          ///< OpenTurbine class for model elements (beams, masses, springs)
     Constraints constraints;    ///< OpenTurbine class for constraints tying elements together
     StepParameters parameters;  ///< OpenTurbine class containing solution parameters
-    Solver solver;              ///< OpenTurbine class for solving the dynamic system
+    Solver<DeviceType> solver;              ///< OpenTurbine class for solving the dynamic system
     State state_save;           ///< OpenTurbine class state class for temporarily saving state
     HostState host_state;       ///< Host local copy of node state data
     VTKOutput vtk_output;       ///< VTK output manager

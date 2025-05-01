@@ -61,7 +61,7 @@ inline auto SetUpHeavyTopTest() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf, a_tol, r_tol);
 
     // Create solver, elements, constraints, and state
-    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
+    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Run simulation for 0.8 seconds
     for (size_t i = 0; i < 400; ++i) {

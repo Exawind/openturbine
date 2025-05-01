@@ -28,10 +28,9 @@ namespace openturbine {
  *   - Constraint matrices (B and B_t)
  *   - Combined system matrices for the complete structural problem
  */
+template <typename DeviceType>
 struct Solver {
     // Define some types for the solver to make the code more readable
-    using DeviceType =
-        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     using ValueType = double;
 #if defined(OpenTurbine_ENABLE_MKL) && !defined(KOKKOS_ENABLE_CUDA)
     using IndexType = MKL_INT;
@@ -39,6 +38,7 @@ struct Solver {
     using IndexType = int;
 #endif
     using CrsMatrixType = KokkosSparse::CrsMatrix<ValueType, IndexType, DeviceType, void, IndexType>;
+    using MultiVectorType = Kokkos::View<ValueType* [1], Kokkos::LayoutLeft, DeviceType>;
 #ifdef KOKKOS_ENABLE_CUDA
 #if defined(OpenTurbine_ENABLE_CUDSS)
     using HandleType = DSSHandle<DSSAlgorithm::CUDSS>;
@@ -86,8 +86,8 @@ struct Solver {
     size_t num_dofs;          //< Number of degrees of freedom
 
     CrsMatrixType A;                                     //< System matrix
-    Kokkos::View<ValueType* [1], Kokkos::LayoutLeft> b;  //< System RHS
-    Kokkos::View<ValueType* [1], Kokkos::LayoutLeft> x;  //< System solution
+    MultiVectorType b;  //< System RHS
+    MultiVectorType x;  //< System solution
 
     HandleType handle;
 
