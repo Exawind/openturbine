@@ -301,8 +301,9 @@ public:
     [[nodiscard]] size_t NumSpringElements() const { return this->spring_elements_.size(); }
 
     /// Returns Springs struct initialized from spring elements
-    [[nodiscard]] Springs CreateSprings() const {
-        return openturbine::CreateSprings(SpringsInput(this->spring_elements_), this->nodes_);
+    template <typename DeviceType>
+    [[nodiscard]] Springs<DeviceType> CreateSprings() const {
+        return openturbine::CreateSprings<DeviceType>(SpringsInput(this->spring_elements_), this->nodes_);
     }
 
     //--------------------------------------------------------------------------
@@ -315,7 +316,7 @@ public:
         return {
             this->CreateBeams<DeviceType>(),
             this->CreateMasses<DeviceType>(),
-            this->CreateSprings(),
+            this->CreateSprings<DeviceType>(),
         };
     }
 
