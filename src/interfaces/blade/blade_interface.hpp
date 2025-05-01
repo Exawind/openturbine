@@ -107,17 +107,17 @@ public:
     }
 
 private:
-    Model model;                          ///< OpenTurbine class for model construction
-    components::Blade blade;              ///< Blade model input/output data
-    State<DeviceType> state;              ///< OpenTurbine class for storing system state
+    Model model;              ///< OpenTurbine class for model construction
+    components::Blade blade;  ///< Blade model input/output data
+    State<DeviceType> state;  ///< OpenTurbine class for storing system state
     Elements<DeviceType>
-        elements;                           ///< OpenTurbine class for model elements (beams, masses, springs)
-    Constraints constraints;                ///< OpenTurbine class for constraints tying elements together
-    StepParameters parameters;              ///< OpenTurbine class containing solution parameters
-    Solver<DeviceType> solver;              ///< OpenTurbine class for solving the dynamic system
-    State<DeviceType> state_save;           ///< OpenTurbine class state class for temporarily saving state
-    HostState<DeviceType> host_state;       ///< Host local copy of node state data
-    VTKOutput vtk_output;                   ///< VTK output manager
+        elements;                  ///< OpenTurbine class for model elements (beams, masses, springs)
+    Constraints constraints;       ///< OpenTurbine class for constraints tying elements together
+    StepParameters parameters;     ///< OpenTurbine class containing solution parameters
+    Solver<DeviceType> solver;     ///< OpenTurbine class for solving the dynamic system
+    State<DeviceType> state_save;  ///< OpenTurbine class state class for temporarily saving state
+    HostState<DeviceType> host_state;  ///< Host local copy of node state data
+    VTKOutput vtk_output;              ///< VTK output manager
 
     /// @brief  Updates motion data for all nodes (root and blade) in the interface
     void UpdateNodeMotion() {

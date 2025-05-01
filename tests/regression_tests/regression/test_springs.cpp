@@ -21,10 +21,10 @@ inline auto SetUpSprings() {
     const auto l0 = 1.;  // Undeformed length
     model.AddSpringElement(node1_id, node2_id, k, l0);
 
-    using DeviceType = Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
 
-    auto springs = model.CreateSprings<DeviceType>(
-    );
+    auto springs = model.CreateSprings<DeviceType>();
     auto state = model.CreateState<DeviceType>();
 
     return std::make_tuple(springs, state);

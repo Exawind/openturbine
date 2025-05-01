@@ -14,8 +14,8 @@ namespace openturbine {
 /// @brief Calculation based on Table 1 of DOI: 10.1115/1.4033441
 template <typename DeviceType>
 inline double CalculateConvergenceError(
-    const StepParameters& parameters, const Solver<DeviceType>& solver, const State<DeviceType>& state,
-    const Constraints& constraints
+    const StepParameters& parameters, const Solver<DeviceType>& solver,
+    const State<DeviceType>& state, const Constraints& constraints
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Calculate Convergence Error");
     double sum_error_squared = 0.;

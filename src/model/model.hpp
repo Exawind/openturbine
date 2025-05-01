@@ -421,15 +421,19 @@ public:
     template <
         typename DeviceType = Kokkos::Device<
             Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
-    [[nodiscard]] std::tuple<State<DeviceType>, Elements<DeviceType>, Constraints> CreateSystem() const {
-        return {this->CreateState<DeviceType>(), this->CreateElements<DeviceType>(), this->CreateConstraints()};
+    [[nodiscard]] std::tuple<State<DeviceType>, Elements<DeviceType>, Constraints> CreateSystem(
+    ) const {
+        return {
+            this->CreateState<DeviceType>(), this->CreateElements<DeviceType>(),
+            this->CreateConstraints()};
     }
 
     // Returns a State, Elements, Constraints, and Solver object initialized from the model
     template <
         typename DeviceType = Kokkos::Device<
             Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
-    [[nodiscard]] std::tuple<State<DeviceType>, Elements<DeviceType>, Constraints, Solver<DeviceType>>
+    [[nodiscard]] std::tuple<
+        State<DeviceType>, Elements<DeviceType>, Constraints, Solver<DeviceType>>
     CreateSystemWithSolver() const {
         auto [state, elements, constraints] = this->CreateSystem<DeviceType>();
         auto solver = CreateSolver<DeviceType>(state, elements, constraints);

@@ -163,7 +163,8 @@ Turbine CreateTurbine(const TurbineInput& input, Model& model) {
 
 template <typename DeviceType>
 void SetTurbineLoads(
-    const Turbine& turbine, openturbine::interfaces::HostState<DeviceType>& host_state, State<DeviceType>& state
+    const Turbine& turbine, openturbine::interfaces::HostState<DeviceType>& host_state,
+    State<DeviceType>& state
 ) {
     SetPlatformLoads(turbine.floating_platform, host_state);
     Kokkos::deep_copy(state.f, host_state.f);

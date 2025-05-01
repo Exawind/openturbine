@@ -41,7 +41,9 @@ struct CreateConstraintFreedomTable {
 };
 
 template <typename DeviceType>
-inline void create_constraint_freedom_table(Constraints& constraints, const State<DeviceType>& state) {
+inline void create_constraint_freedom_table(
+    Constraints& constraints, const State<DeviceType>& state
+) {
     Kokkos::parallel_for(
         "Create Constraint Node Freedom Table", constraints.num_constraints,
         CreateConstraintFreedomTable{

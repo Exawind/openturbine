@@ -33,7 +33,9 @@ void Compare(const T& field_1, const T& field_2) {
 }
 
 template <typename DeviceType>
-void CompareStates(const openturbine::State<DeviceType>& state_1, const openturbine::State<DeviceType>& state_2) {
+void CompareStates(
+    const openturbine::State<DeviceType>& state_1, const openturbine::State<DeviceType>& state_2
+) {
     EXPECT_EQ(state_1.num_system_nodes, state_2.num_system_nodes);
     Compare(state_1.ID, state_2.ID);
     Compare(state_1.node_freedom_allocation_table, state_2.node_freedom_allocation_table);
@@ -75,7 +77,8 @@ openturbine::State<DeviceType> CreateTestState() {
 namespace openturbine::tests {
 
 TEST(CloneState, CloneState) {
-    using DeviceType = Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto state_1 = CreateTestState<DeviceType>();
     auto state_2 = CloneState(state_1);
 

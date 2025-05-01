@@ -10,7 +10,9 @@
 namespace openturbine {
 
 template <typename DeviceType>
-inline void UpdateSystemVariablesSprings(const Springs<DeviceType>& springs, State<DeviceType>& state) {
+inline void UpdateSystemVariablesSprings(
+    const Springs<DeviceType>& springs, State<DeviceType>& state
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Update System Variables Springs");
 
     // Calculate system variables and perform assembly
