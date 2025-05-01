@@ -6,7 +6,9 @@
 namespace openturbine {
 
 template <typename DeviceType>
-inline Springs<DeviceType> CreateSprings(const SpringsInput& springs_input, const std::vector<Node>& nodes) {
+inline Springs<DeviceType> CreateSprings(
+    const SpringsInput& springs_input, const std::vector<Node>& nodes
+) {
     Springs<DeviceType> springs(springs_input.NumElements());
 
     auto host_node_state_indices =
