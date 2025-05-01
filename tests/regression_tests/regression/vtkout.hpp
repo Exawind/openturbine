@@ -254,7 +254,8 @@ inline void WriteVTKBeamsQP(State& state, Beams<DeviceType>& beams, const std::s
     writer->Write();
 }
 
-inline void WriteVTKBeamsNodes(State& state, Beams& beams, const std::string& filename) {
+template <typename DeviceType>
+inline void WriteVTKBeamsNodes(State& state, Beams<DeviceType>& beams, const std::string& filename) {
     // Compute value of state at beam nodes
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     const auto smem = 3 * Kokkos::View<double* [7]>::shmem_size(beams.max_elem_nodes);
