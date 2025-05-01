@@ -10,8 +10,11 @@
 #include "dof_management/compute_node_freedom_map_table.hpp"
 #include "dof_management/create_constraint_freedom_table.hpp"
 #include "dof_management/create_element_freedom_table.hpp"
+#include "elements/beams/beams.hpp"
 #include "elements/beams/beams_input.hpp"
+#include "elements/beams/calculate_QP_deformation.hpp"
 #include "elements/beams/create_beams.hpp"
+#include "elements/beams/interpolate_to_quadrature_points.hpp"
 #include "elements/elements.hpp"
 #include "elements/masses/create_masses.hpp"
 #include "elements/masses/masses_input.hpp"
@@ -21,7 +24,9 @@
 #include "solver/solver.hpp"
 #include "state/state.hpp"
 #include "step/step_parameters.hpp"
+#include "system/beams/update_node_state.hpp"
 #include "types.hpp"
+#include "utilities/netcdf/node_state_writer.hpp"
 
 namespace openturbine {
 
@@ -419,6 +424,139 @@ public:
         return {state, elements, constraints, solver};
     }
 
+    //--------------------------------------------------------------------------
+    // Outputs
+    //--------------------------------------------------------------------------
+
+    /// @brief Set up the NetCDF output writer
+    void SetOutputWriter(const std::string& output_file, size_t num_qps) {
+        this->output_writer_ = std::make_unique<util::NodeStateWriter>(output_file, true, num_qps);
+    }
+
+    void WriteQPOutputsAtTimestep(State& state, Beams& beams, size_t timestep) const {
+        if (!this->output_writer_) {
+            return;
+        }
+
+        // Compute state values at quadrature points if not already done
+        auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
+        const auto smem = 3 * Kokkos::View<double* [7]>::shmem_size(beams.max_elem_nodes);
+        range_policy.set_scratch_size(1, Kokkos::PerTeam(smem));
+
+        // Update node state from global state vectors
+        Kokkos::parallel_for(
+            "UpdateNodeState", range_policy,
+            beams::UpdateNodeState{
+                state.q, state.v, state.vd, beams.node_state_indices, beams.num_nodes_per_element,
+                beams.node_u, beams.node_u_dot, beams.node_u_ddot
+            }
+        );
+
+        // Interpolate nodal values to quadrature points
+        Kokkos::parallel_for(
+            "InterpolateToQuadraturePoints", range_policy,
+            InterpolateToQuadraturePoints{
+                beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
+                beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.node_u_dot,
+                beams.node_u_ddot, beams.qp_x0, beams.qp_r0, beams.qp_u, beams.qp_u_prime,
+                beams.qp_r, beams.qp_r_prime, beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot,
+                beams.qp_omega_dot, beams.qp_x
+            }
+        );
+
+        // Calculate deformation at quadrature points
+        Kokkos::parallel_for(
+            "CalculateQPDeformation",
+            Kokkos::MDRangePolicy<Kokkos::Rank<2>>({0, 0}, {beams.num_elems, beams.max_elem_qps}),
+            CalculateQPDeformation{
+                beams.num_qps_per_element,
+                beams.qp_x0,
+                beams.qp_r,
+                beams.qp_x,
+                beams.qp_deformation,
+            }
+        );
+
+        // Get number of quadrature points across all beam elements
+        size_t total_qps = 0;
+        auto num_qps_per_element = Kokkos::create_mirror(beams.num_qps_per_element);
+        Kokkos::deep_copy(num_qps_per_element, beams.num_qps_per_element);
+
+        for (size_t i = 0; i < beams.num_elems; ++i) {
+            total_qps += num_qps_per_element(i);
+        }
+
+        // Allocate vectors for QP data
+        std::vector<double> x(total_qps);
+        std::vector<double> y(total_qps);
+        std::vector<double> z(total_qps);
+        std::vector<double> i(total_qps);
+        std::vector<double> j(total_qps);
+        std::vector<double> k(total_qps);
+        std::vector<double> w(total_qps);
+
+        // Copy data from device to host views
+        auto qp_pos = Kokkos::create_mirror_view(beams.qp_x);
+        Kokkos::deep_copy(qp_pos, beams.qp_x);
+
+        auto qp_u_dot = Kokkos::create_mirror_view(beams.qp_u_dot);
+        Kokkos::deep_copy(qp_u_dot, beams.qp_u_dot);
+
+        auto qp_omega = Kokkos::create_mirror_view(beams.qp_omega);
+        Kokkos::deep_copy(qp_omega, beams.qp_omega);
+
+        auto qp_fe = Kokkos::create_mirror_view(beams.qp_Fe);
+        Kokkos::deep_copy(qp_fe, beams.qp_Fe);
+
+        // Fill data vectors
+        // position
+        size_t qp_index = 0;
+        for (size_t i_elem = 0; i_elem < beams.num_elems; ++i_elem) {
+            for (size_t i_qp = 0; i_qp < num_qps_per_element(i_elem); ++i_qp) {
+                // Calculate qp_index based on element and qp indices
+                x[qp_index] = qp_pos(i_elem, i_qp, 0);
+                y[qp_index] = qp_pos(i_elem, i_qp, 1);
+                z[qp_index] = qp_pos(i_elem, i_qp, 2);
+                w[qp_index] = qp_pos(i_elem, i_qp, 3);
+                i[qp_index] = qp_pos(i_elem, i_qp, 4);
+                j[qp_index] = qp_pos(i_elem, i_qp, 5);
+                k[qp_index] = qp_pos(i_elem, i_qp, 6);
+                ++qp_index;
+            }
+        }
+        this->output_writer_->WriteStateDataAtTimestep(timestep, "x", x, y, z, i, j, k, w);
+
+        // velocity
+        qp_index = 0;
+        for (size_t i_elem = 0; i_elem < beams.num_elems; ++i_elem) {
+            for (size_t i_qp = 0; i_qp < num_qps_per_element(i_elem); ++i_qp) {
+                x[qp_index] = qp_u_dot(i_elem, i_qp, 0);
+                y[qp_index] = qp_u_dot(i_elem, i_qp, 1);
+                z[qp_index] = qp_u_dot(i_elem, i_qp, 2);
+                i[qp_index] = qp_omega(i_elem, i_qp, 0);
+                j[qp_index] = qp_omega(i_elem, i_qp, 1);
+                k[qp_index] = qp_omega(i_elem, i_qp, 2);
+                ++qp_index;
+            }
+        }
+        this->output_writer_->WriteStateDataAtTimestep(timestep, "v", x, y, z, i, j, k);
+
+        // forces
+        qp_index = 0;
+        for (size_t i_elem = 0; i_elem < beams.num_elems; ++i_elem) {
+            for (size_t i_qp = 0; i_qp < num_qps_per_element(i_elem); ++i_qp) {
+                x[qp_index] = qp_fe(i_elem, i_qp, 0);
+                y[qp_index] = qp_fe(i_elem, i_qp, 1);
+                z[qp_index] = qp_fe(i_elem, i_qp, 2);
+                i[qp_index] = qp_fe(i_elem, i_qp, 3);
+                j[qp_index] = qp_fe(i_elem, i_qp, 4);
+                k[qp_index] = qp_fe(i_elem, i_qp, 5);
+                ++qp_index;
+            }
+        }
+        this->output_writer_->WriteStateDataAtTimestep(timestep, "f", x, y, z, i, j, k);
+    }
+
 private:
     Array_3 gravity_ = {0., 0., 0.};              //< Gravity components
     std::vector<Node> nodes_;                     //< Nodes in the model
@@ -426,6 +564,7 @@ private:
     std::vector<MassElement> mass_elements_;      //< Mass elements in the model
     std::vector<SpringElement> spring_elements_;  //< Spring elements in the model
     std::vector<Constraint> constraints_;         //< Constraints in the model
+    std::unique_ptr<util::NodeStateWriter> output_writer_;
 };
 
 }  // namespace openturbine

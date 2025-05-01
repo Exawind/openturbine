@@ -23,44 +23,21 @@
 
 namespace openturbine::tests {
 
-template <typename T>
-void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
-    std::ofstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Unable to open file: " << filename << "\n";
-        return;
-    }
-    file << std::setprecision(16);
-    for (const auto& innerVector : data) {
-        for (const auto& element : innerVector) {
-            file << element << ",";
-        }
-        file << "\n";
-    }
-    file.close();
-}
-
-TEST(RotorTest, IEA15Rotor) {
-    // Flag to write output
-    constexpr bool write_output{false};
-
-    // Gravity vector
+TEST(RotorTest, IEA15RotorOnly) {
+    constexpr bool write_output{true};
     constexpr auto gravity = std::array{-9.81, 0., 0.};
-
-    // Rotor angular velocity in rad/s
-    constexpr auto omega = std::array{0., 0., -0.79063415025};
+    constexpr auto omega = std::array{0., 0., -0.79063415025};  // rotor angular velocity (rad/s)
 
     // Solution parameters
     constexpr bool is_dynamic_solve(true);
     constexpr size_t max_iter(6);
     constexpr double step_size(0.01);  // seconds
-    constexpr double rho_inf(0.0);
+    constexpr double rho_inf(0.);
     constexpr double t_end(0.1);
-    constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.0);
-    //    constexpr auto num_nodes = node_xi.size();
-    constexpr auto num_nodes = 11UL;
+    constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.);
+    constexpr auto num_nodes = 11UL;  // 11 nodes per blade
 
-    // Node location [0, 1]
+    // Node locations [0, 1]
     auto node_loc = std::array<double, num_nodes>{};
     std::transform(
         std::cbegin(node_xi), std::cend(node_xi), std::begin(node_loc),
@@ -71,20 +48,18 @@ TEST(RotorTest, IEA15Rotor) {
 
     // Create model for adding nodes and constraints
     auto model = Model();
-
-    // Set gravity in model
     model.SetGravity(gravity[0], gravity[1], gravity[2]);
 
-    // Build vector of nodes (straight along x axis, no rotation)
-    // Calculate displacement, velocity, acceleration assuming a
-    // 1 rad/s angular velocity around the z axis
-    constexpr size_t num_blades = 3;
+    // Create array of blade indices [0,1,2] for iterating over the 3 blades
+    constexpr size_t num_blades{3};
     auto blade_list = std::array<size_t, num_blades>{};
     std::iota(std::begin(blade_list), std::end(blade_list), 0);
 
-    // Hub radius (meters)
-    constexpr double hub_rad{3.97};
-
+    // Create nodes for each blade by:
+    // 1. Calculating node positions by rotating blade coordinates around hub by 120° per blade
+    // 2. Setting node orientations by composing blade root rotation with local node rotation
+    // 3. Setting node velocities based on prescribed rotor angular velocity (omega)
+    constexpr double hub_radius{3.97};  // meters
     std::vector<size_t> beam_elem_ids;
     std::transform(
         std::cbegin(blade_list), std::cend(blade_list), std::back_inserter(beam_elem_ids),
@@ -94,7 +69,6 @@ TEST(RotorTest, IEA15Rotor) {
                 {0., 0., -2. * M_PI * static_cast<double>(i) / static_cast<double>(num_blades)}
             );
 
-            // Declare vector of beam nodes
             std::vector<size_t> beam_node_ids;
 
             auto node_list = std::array<size_t, num_nodes>{};
@@ -104,7 +78,8 @@ TEST(RotorTest, IEA15Rotor) {
                 [&](const size_t j) {
                     // Calculate node position and orientation for this blade
                     const auto pos = RotateVectorByQuaternion(
-                        q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
+                        q_root,
+                        {node_coords[j][0] + hub_radius, node_coords[j][1], node_coords[j][2]}
                     );
                     const auto rot = QuaternionCompose(q_root, node_rotation[j]);
                     const auto v = CrossProduct(omega, pos);
@@ -138,6 +113,11 @@ TEST(RotorTest, IEA15Rotor) {
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
+    // Set NetCDF output writer
+    size_t total_qps = num_blades * trapz_quadrature.size();
+    model.SetOutputWriter("rotor_test_1.nc", total_qps);
+    model.WriteQPOutputsAtTimestep(state, elements.beams, 0);
+
     // Remove output directory for writing step data
     if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
@@ -169,11 +149,10 @@ TEST(RotorTest, IEA15Rotor) {
 
         // Take step
         auto converged = Step(parameters, solver, elements, state, constraints);
-
-        // Verify that step converged
         EXPECT_EQ(converged, true);
 
-        // If flag set, write quadrature point glob position to file
+        // Write outputs and viz files
+        model.WriteQPOutputsAtTimestep(state, elements.beams, i);
         if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
             // Write VTK output to file
@@ -226,7 +205,7 @@ TEST(RotorTest, IEA15RotorHub) {
     std::iota(std::begin(blade_list), std::end(blade_list), 0);
 
     // Hub radius (meters)
-    constexpr double hub_rad{3.97};
+    constexpr double hub_radius{3.97};
 
     std::vector<size_t> beam_elem_ids;
     std::transform(
@@ -247,7 +226,8 @@ TEST(RotorTest, IEA15RotorHub) {
                 [&](const size_t j) {
                     // Calculate node position and orientation for this blade
                     const auto pos = RotateVectorByQuaternion(
-                        q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
+                        q_root,
+                        {node_coords[j][0] + hub_radius, node_coords[j][1], node_coords[j][2]}
                     );
                     const auto rot = QuaternionCompose(q_root, node_rotation[j]);
                     const auto v = CrossProduct(omega, pos);
@@ -365,7 +345,7 @@ TEST(RotorTest, IEA15RotorController) {
     std::iota(std::begin(blade_list), std::end(blade_list), 0);
 
     // Hub radius (meters)
-    constexpr double hub_rad{3.97};
+    constexpr double hub_radius{3.97};
 
     std::vector<size_t> beam_elem_ids;
     std::transform(
@@ -386,7 +366,8 @@ TEST(RotorTest, IEA15RotorController) {
                 [&](const size_t j) {
                     // Calculate node position and orientation for this blade
                     const auto pos = RotateVectorByQuaternion(
-                        q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
+                        q_root,
+                        {node_coords[j][0] + hub_radius, node_coords[j][1], node_coords[j][2]}
                     );
                     const auto rot = QuaternionCompose(q_root, node_rotation[j]);
                     const auto v = CrossProduct(omega, pos);
