@@ -18,7 +18,8 @@ struct Springs {
     Kokkos::View<size_t*, DeviceType> num_nodes_per_element;  //< This is always 2 for springs
     Kokkos::View<size_t* [2], DeviceType> node_state_indices;
     Kokkos::View<FreedomSignature* [2], DeviceType> element_freedom_signature;
-    Kokkos::View<size_t* [2][3], DeviceType> element_freedom_table;  //< Only translational DOFs for springs
+    Kokkos::View<size_t* [2][3], DeviceType>
+        element_freedom_table;  //< Only translational DOFs for springs
 
     Kokkos::View<double* [3], DeviceType> x0;  //< Initial distance vector between nodes
     Kokkos::View<double*, DeviceType> l_ref;   //< Initial length of springs

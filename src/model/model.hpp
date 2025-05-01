@@ -303,7 +303,9 @@ public:
     /// Returns Springs struct initialized from spring elements
     template <typename DeviceType>
     [[nodiscard]] Springs<DeviceType> CreateSprings() const {
-        return openturbine::CreateSprings<DeviceType>(SpringsInput(this->spring_elements_), this->nodes_);
+        return openturbine::CreateSprings<DeviceType>(
+            SpringsInput(this->spring_elements_), this->nodes_
+        );
     }
 
     //--------------------------------------------------------------------------
