@@ -34,7 +34,7 @@ template <
     typename DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
 [[nodiscard]] inline Solver<DeviceType> CreateSolver(
-    State<DeviceType>& state, Elements<DeviceType>& elements, Constraints& constraints
+    State<DeviceType>& state, Elements<DeviceType>& elements, Constraints<DeviceType>& constraints
 ) {
     assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
@@ -413,19 +413,20 @@ public:
     [[nodiscard]] size_t NumConstraints() const { return this->constraints_.size(); }
 
     /// Returns a Constraints object initialized from the model constraints
-    [[nodiscard]] Constraints CreateConstraints() const {
-        return Constraints(this->constraints_, this->nodes_);
+    template <typename DeviceType>
+    [[nodiscard]] Constraints<DeviceType> CreateConstraints() const {
+        return Constraints<DeviceType>(this->constraints_, this->nodes_);
     }
 
     // Returns a State, Elements, and Constraints object initialized from the model
     template <
         typename DeviceType = Kokkos::Device<
             Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
-    [[nodiscard]] std::tuple<State<DeviceType>, Elements<DeviceType>, Constraints> CreateSystem(
+    [[nodiscard]] std::tuple<State<DeviceType>, Elements<DeviceType>, Constraints<DeviceType>> CreateSystem(
     ) const {
         return {
             this->CreateState<DeviceType>(), this->CreateElements<DeviceType>(),
-            this->CreateConstraints()
+            this->CreateConstraints<DeviceType>()
         };
     }
 
@@ -434,7 +435,7 @@ public:
         typename DeviceType = Kokkos::Device<
             Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
     [[nodiscard]] std::tuple<
-        State<DeviceType>, Elements<DeviceType>, Constraints, Solver<DeviceType>>
+        State<DeviceType>, Elements<DeviceType>, Constraints<DeviceType>, Solver<DeviceType>>
     CreateSystemWithSolver() const {
         auto [state, elements, constraints] = this->CreateSystem<DeviceType>();
         auto solver = CreateSolver<DeviceType>(state, elements, constraints);
