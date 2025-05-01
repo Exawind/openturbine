@@ -49,7 +49,7 @@ public:
         // Initialize NetCDF writer if output file is specified
         if (!solution_input.output_file_path.empty()) {
             this->output_writer_ = std::make_unique<util::NodeStateWriter>(
-                solution_input.output_file_path, true, state.num_system_nodes
+                solution_input.output_file_path, true, blade.nodes.size()
             );
         }
     }
@@ -150,58 +150,62 @@ private:
     // Write outputs
     //------------------------------------------------------------------------------
     void WriteOutputs() const {
-        const size_t num_nodes = this->state.num_system_nodes;
-        std::vector<double> x(num_nodes);
-        std::vector<double> y(num_nodes);
-        std::vector<double> z(num_nodes);
-        std::vector<double> i(num_nodes);
-        std::vector<double> j(num_nodes);
-        std::vector<double> k(num_nodes);
-        std::vector<double> w(num_nodes);
+        const size_t num_blade_nodes = this->blade.nodes.size();
+        std::vector<double> x(num_blade_nodes);
+        std::vector<double> y(num_blade_nodes);
+        std::vector<double> z(num_blade_nodes);
+        std::vector<double> i(num_blade_nodes);
+        std::vector<double> j(num_blade_nodes);
+        std::vector<double> k(num_blade_nodes);
+        std::vector<double> w(num_blade_nodes);
 
         // write position
-        for (size_t node = 0; node < num_nodes; ++node) {
-            x[node] = this->host_state.x(node, 0);
-            y[node] = this->host_state.x(node, 1);
-            z[node] = this->host_state.x(node, 2);
-            i[node] = this->host_state.x(node, 3);
-            j[node] = this->host_state.x(node, 4);
-            k[node] = this->host_state.x(node, 5);
-            w[node] = this->host_state.x(node, 6);
+        for (size_t idx = 0; idx < num_blade_nodes; ++idx) {
+            const auto& node = this->blade.nodes[idx];
+            x[idx] = this->host_state.x(node.id, 0);
+            y[idx] = this->host_state.x(node.id, 1);
+            z[idx] = this->host_state.x(node.id, 2);
+            i[idx] = this->host_state.x(node.id, 3);
+            j[idx] = this->host_state.x(node.id, 4);
+            k[idx] = this->host_state.x(node.id, 5);
+            w[idx] = this->host_state.x(node.id, 6);
         }
         output_writer_->WriteStateDataAtTimestep(current_timestep_, "x", x, y, z, i, j, k, w);
 
         // write displacement
-        for (size_t node = 0; node < num_nodes; ++node) {
-            x[node] = this->host_state.q(node, 0);
-            y[node] = this->host_state.q(node, 1);
-            z[node] = this->host_state.q(node, 2);
-            w[node] = this->host_state.q(node, 3);
-            i[node] = this->host_state.q(node, 4);
-            j[node] = this->host_state.q(node, 5);
-            k[node] = this->host_state.q(node, 6);
+        for (size_t idx = 0; idx < num_blade_nodes; ++idx) {
+            const auto& node = this->blade.nodes[idx];
+            x[idx] = this->host_state.q(node.id, 0);
+            y[idx] = this->host_state.q(node.id, 1);
+            z[idx] = this->host_state.q(node.id, 2);
+            w[idx] = this->host_state.q(node.id, 3);
+            i[idx] = this->host_state.q(node.id, 4);
+            j[idx] = this->host_state.q(node.id, 5);
+            k[idx] = this->host_state.q(node.id, 6);
         }
         output_writer_->WriteStateDataAtTimestep(current_timestep_, "u", x, y, z, i, j, k, w);
 
         // write velocity
-        for (size_t node = 0; node < num_nodes; ++node) {
-            x[node] = this->host_state.v(node, 0);
-            y[node] = this->host_state.v(node, 1);
-            z[node] = this->host_state.v(node, 2);
-            i[node] = this->host_state.v(node, 3);
-            j[node] = this->host_state.v(node, 4);
-            k[node] = this->host_state.v(node, 5);
+        for (size_t idx = 0; idx < num_blade_nodes; ++idx) {
+            const auto& node = this->blade.nodes[idx];
+            x[idx] = this->host_state.v(node.id, 0);
+            y[idx] = this->host_state.v(node.id, 1);
+            z[idx] = this->host_state.v(node.id, 2);
+            i[idx] = this->host_state.v(node.id, 3);
+            j[idx] = this->host_state.v(node.id, 4);
+            k[idx] = this->host_state.v(node.id, 5);
         }
         output_writer_->WriteStateDataAtTimestep(current_timestep_, "v", x, y, z, i, j, k);
 
         // write acceleration
-        for (size_t node = 0; node < num_nodes; ++node) {
-            x[node] = this->host_state.vd(node, 0);
-            y[node] = this->host_state.vd(node, 1);
-            z[node] = this->host_state.vd(node, 2);
-            i[node] = this->host_state.vd(node, 3);
-            j[node] = this->host_state.vd(node, 4);
-            k[node] = this->host_state.vd(node, 5);
+        for (size_t idx = 0; idx < num_blade_nodes; ++idx) {
+            const auto& node = this->blade.nodes[idx];
+            x[idx] = this->host_state.vd(node.id, 0);
+            y[idx] = this->host_state.vd(node.id, 1);
+            z[idx] = this->host_state.vd(node.id, 2);
+            i[idx] = this->host_state.vd(node.id, 3);
+            j[idx] = this->host_state.vd(node.id, 4);
+            k[idx] = this->host_state.vd(node.id, 5);
         }
         output_writer_->WriteStateDataAtTimestep(current_timestep_, "a", x, y, z, i, j, k);
     }

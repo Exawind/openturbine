@@ -25,6 +25,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
 
 #ifdef OpenTurbine_ENABLE_VTK
     builder.Solution().SetVTKOutputPath("BladeInterfaceTest.BladeWindIO/blade_####");
+    builder.Solution().SetOutputFile("BladeInterfaceTest.BladeWindIO/blade_interface.nc");
 #endif
 
     // Set blade parameters
@@ -179,6 +180,7 @@ TEST(BladeInterfaceTest, RotatingBeam) {
 
 #ifdef OpenTurbine_ENABLE_VTK
     builder.Solution().SetVTKOutputPath("BladeInterfaceTest.RotatingBeam/step_####");
+    builder.Solution().SetOutputFile("BladeInterfaceTest.RotatingBeam/blade_interface.nc");
 #endif
 
     // Node locations (GLL quadrature)
@@ -342,6 +344,7 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
 
 #ifdef OpenTurbine_ENABLE_VTK
     builder.Solution().SetVTKOutputPath("BladeInterfaceTest.StaticCurledBeam/step_####");
+    builder.Solution().SetOutputFile("BladeInterfaceTest.StaticCurledBeam/blade_interface.nc");
 #endif
 
     // Node locations
