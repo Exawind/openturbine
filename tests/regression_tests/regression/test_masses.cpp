@@ -34,7 +34,7 @@ inline auto SetUpMasses() {
     );
 
     // Initialize masses
-    auto masses = model.CreateMasses();
+    auto masses = model.CreateMasses<Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>();
 
     // Create state
     auto state = model.CreateState();
@@ -100,7 +100,7 @@ TEST(MassesTest, ExternalForce) {
     );
 
     // Initialize masses
-    auto masses = model.CreateMasses();
+    auto masses = model.CreateMasses<Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>();
 
     // Create state
     auto state = model.CreateState();

@@ -266,8 +266,9 @@ public:
     [[nodiscard]] size_t NumMassElements() const { return this->mass_elements_.size(); }
 
     /// Returns Masses struct initialized from mass elements
-    [[nodiscard]] Masses CreateMasses() const {
-        return openturbine::CreateMasses(
+    template <typename DeviceType>
+    [[nodiscard]] Masses<DeviceType> CreateMasses() const {
+        return openturbine::CreateMasses<DeviceType>(
             MassesInput(this->mass_elements_, this->gravity_), this->nodes_
         );
     }
@@ -313,7 +314,7 @@ public:
     [[nodiscard]] Elements<DeviceType> CreateElements() const {
         return {
             this->CreateBeams<DeviceType>(),
-            this->CreateMasses(),
+            this->CreateMasses<DeviceType>(),
             this->CreateSprings(),
         };
     }

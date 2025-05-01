@@ -19,12 +19,12 @@ namespace openturbine {
 template <typename DeviceType>
 struct Elements {
     Beams<DeviceType> beams;
-    Masses masses;
+    Masses<DeviceType> masses;
     Springs springs;
 
     Elements() : beams(0U, 0U, 0U), masses(0U), springs(0U) {}
 
-    Elements(Beams<DeviceType> b, Masses m, Springs s)
+    Elements(Beams<DeviceType> b, Masses<DeviceType> m, Springs s)
         : beams(std::move(b)), masses(std::move(m)), springs(std::move(s)) {}
 
     /// Returns the total number of elements across all types in the system
