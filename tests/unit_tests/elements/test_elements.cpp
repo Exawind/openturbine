@@ -19,8 +19,8 @@ TEST(ElementsTest, ConstructorWithBeams) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(1U, 2U, 2U);  // 1 beam element with 2 nodes, 2 qps
-    auto masses = Masses(0U);        // 0 mass elements
-    auto springs = Springs(0U);      // 0 spring elements
+    auto masses = Masses(0U);                    // 0 mass elements
+    auto springs = Springs(0U);                  // 0 spring elements
     const auto elements = Elements<DeviceType>(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams.num_elems, 1);
@@ -32,8 +32,8 @@ TEST(ElementsTest, ConstructorWithMasses) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(0U, 0U, 0U);  // 0 beam elements
-    auto masses = Masses(1U);        // 1 mass element
-    auto springs = Springs(0U);      // 0 spring elements
+    auto masses = Masses(1U);                    // 1 mass element
+    auto springs = Springs(0U);                  // 0 spring elements
     const auto elements = Elements<DeviceType>(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams.num_elems, 0);
@@ -45,8 +45,8 @@ TEST(ElementsTest, ConstructorWithSprings) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(0U, 0U, 0U);  // 0 beam elements
-    auto masses = Masses(0U);        // 0 mass elements
-    auto springs = Springs(1U);      // 1 spring element
+    auto masses = Masses(0U);                    // 0 mass elements
+    auto springs = Springs(1U);                  // 1 spring element
     const auto elements = Elements<DeviceType>(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams.num_elems, 0);
@@ -58,8 +58,8 @@ TEST(ElementsTest, ConstructorWithBeamsMasses) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(1, 2, 2);  // 1 beam element with 2 nodes, 2 qps
-    auto masses = Masses(1);      // 1 mass element
-    auto springs = Springs(0U);   // 0 spring elements
+    auto masses = Masses(1);                  // 1 mass element
+    auto springs = Springs(0U);               // 0 spring elements
     const auto elements = Elements<DeviceType>(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
     EXPECT_EQ(elements.beams.num_elems, 1);
@@ -71,8 +71,8 @@ TEST(ElementsTest, ConstructorWithBeamsMassesSprings) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(1U, 2U, 2U);  // 1 beam element with 2 nodes, 2 qps
-    auto masses = Masses(1U);        // 1 mass element
-    auto springs = Springs(1U);      // 1 spring element
+    auto masses = Masses(1U);                    // 1 mass element
+    auto springs = Springs(1U);                  // 1 spring element
     const auto elements = Elements<DeviceType>(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 3U);
     EXPECT_EQ(elements.beams.num_elems, 1);
@@ -241,8 +241,8 @@ TEST(ElementsTest, NodeStateIndicesBeamsMassesSprings) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(1U, 2U, 2U);  // 1 beam element with 2 nodes
-    auto masses = Masses(2U);        // 2 mass elements
-    auto springs = Springs(1U);      // 1 spring element
+    auto masses = Masses(2U);                    // 2 mass elements
+    auto springs = Springs(1U);                  // 1 spring element
 
     // Set up state indices for beam nodes: [0, 1]
     auto host_beam_indices = Kokkos::create_mirror_view(beams.node_state_indices);
