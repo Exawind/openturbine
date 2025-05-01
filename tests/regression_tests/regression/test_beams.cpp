@@ -123,7 +123,9 @@ inline auto SetUpBeams() {
         }
     );
 
-    auto beams = model.CreateBeams();
+    auto beams = model.CreateBeams<
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>(
+    );
 
     return beams;
 }

@@ -85,8 +85,9 @@ struct AssembleNodeFreedomMapTable_Constraints {
     }
 };
 
+template <typename DeviceType>
 inline void assemble_node_freedom_allocation_table(
-    State& state, const Elements& elements, const Constraints& constraints
+    State& state, const Elements<DeviceType>& elements, const Constraints& constraints
 ) {
     Kokkos::deep_copy(state.node_freedom_allocation_table, FreedomSignature::NoComponents);
 
