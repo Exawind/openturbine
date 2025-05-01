@@ -14,7 +14,8 @@ struct ContributeBeamsToVector {
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
         const auto i_elem = static_cast<size_t>(member.league_rank());
         const auto num_nodes = num_nodes_per_element(i_elem);
-        constexpr auto force_atomic = !std::is_same_v<Kokkos::TeamPolicy<>::execution_space, Kokkos::Serial>;
+        constexpr auto force_atomic =
+            !std::is_same_v<Kokkos::TeamPolicy<>::execution_space, Kokkos::Serial>;
 
         Kokkos::parallel_for(Kokkos::TeamThreadRange(member, num_nodes), [&](size_t i_node) {
             for (auto j = 0U; j < element_freedom_table.extent(2); ++j) {

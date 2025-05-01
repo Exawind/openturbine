@@ -85,7 +85,7 @@ struct Solver {
     size_t num_system_dofs;   //< Number of system degrees of freedom
     size_t num_dofs;          //< Number of degrees of freedom
 
-    CrsMatrixType A;                                     //< System matrix
+    CrsMatrixType A;    //< System matrix
     MultiVectorType b;  //< System RHS
     MultiVectorType x;  //< System solution
 

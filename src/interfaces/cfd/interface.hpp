@@ -12,7 +12,8 @@ namespace openturbine::cfd {
 
 class Interface {
 public:
-    using DeviceType = Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
 
     explicit Interface(const InterfaceInput& input);
 

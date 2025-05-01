@@ -13,7 +13,9 @@
 namespace openturbine {
 
 template <typename DeviceType>
-inline void AssembleSystemMatrix(StepParameters& parameters, Solver<DeviceType>& solver, Elements& elements) {
+inline void AssembleSystemMatrix(
+    StepParameters& parameters, Solver<DeviceType>& solver, Elements& elements
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System Matrix");
 
     auto beams_sparse_matrix_policy =

@@ -13,7 +13,9 @@
 namespace openturbine {
 
 template <typename DeviceType>
-inline void UpdateStatePrediction(StepParameters& parameters, const Solver<DeviceType>& solver, State& state) {
+inline void UpdateStatePrediction(
+    StepParameters& parameters, const Solver<DeviceType>& solver, State& state
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
     if (parameters.is_dynamic_solve) {
         Kokkos::parallel_for(
