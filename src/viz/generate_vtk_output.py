@@ -249,7 +249,6 @@ class VTKOutput:
             structure_name = "beam"
 
         elif structure_type == 'lines':
-            print(f"line_connectivity: {line_connectivity}")
             if line_connectivity is None:
                 raise ValueError("line_connectivity must be provided when structure_type is 'lines'")
 
@@ -312,8 +311,6 @@ class VTKOutput:
         # ------------------------------------------------------------
         platform_nodes = [platform_node_idx] + fairlead_indices
 
-        print(f"platform_nodes: {platform_nodes}")
-
         # Create platform-to-fairleads connections
         platform_connections = []
         for i, _ in enumerate(fairlead_indices):
@@ -322,8 +319,6 @@ class VTKOutput:
             # If there are 3 fairleads, there will be 3 connections, and the connections will be:
             # {0, 1}, {0, 2}, {0, 3}
             platform_connections.append((0, i + 1))
-
-        print(f"platform_connections: {platform_connections}")
 
         # Generate and write platform visualization
         platform_file = os.path.join(output_dir, f"platform_t{timestep:05d}.vtp")
@@ -343,8 +338,6 @@ class VTKOutput:
             mooring_nodes.append(fairlead_indices[i])
             mooring_nodes.append(anchor_indices[i])
 
-        print(f"mooring_nodes: {mooring_nodes}")
-
         # Create fairlead-to-anchor connections
         mooring_connections = []
         for i in range(len(fairlead_indices)):
@@ -352,8 +345,6 @@ class VTKOutput:
             # i.e. if there are 3 fairleads, there will be 3 anchors, and the connections will be:
             # 0-1, 2-3, 4-5
             mooring_connections.append((2 * i, 2 * i + 1))
-
-        print(f"mooring_connections: {mooring_connections}")
 
         # Generate and write mooring visualization
         mooring_file = os.path.join(output_dir, f"mooring_t{timestep:05d}.vtp")
@@ -447,12 +438,16 @@ def main():
     """
     parser = argparse.ArgumentParser(description='Generate VTK files from OpenTurbine NetCDF output')
 
-    # input file argument
+    # ------------------------------------------------------------
+    # Input arguments
+    # ------------------------------------------------------------
+
     parser.add_argument(
         'netcdf_file',
         type=str,
         help='Path to OpenTurbine NetCDF output file e.g. blade_interface.nc'
     )
+
     # output directory argument
     parser.add_argument(
         '--output_dir',
@@ -460,6 +455,7 @@ def main():
         default='vtk_output',
         help='Directory for writing the vtk output files'
     )
+
     # type of visualization argument
     parser.add_argument(
         '--type',
@@ -467,6 +463,7 @@ def main():
         default='beam',
         help='Type of visualization to generate: beam, nodes, lines, or platform'
     )
+
     # line connectivity argument
     parser.add_argument(
         '--connectivity',
@@ -474,7 +471,8 @@ def main():
         nargs='+',
         help='Line connectivity in format "start,end" (space separated list). Required for type=lines'
     )
-    # Platform visualization arguments
+
+    # Platform visualization arguments -- hardcoding some defaults from CFD interface floating platform
     parser.add_argument(
         '--platform_node',
         type=int,
@@ -494,6 +492,10 @@ def main():
         help='Comma-separated list of anchor node indices (e.g., "2,4,6"). Required for type=platform'
     )
     args = parser.parse_args()
+
+    # ------------------------------------------------------------
+    # Create animation based on simulation type
+    # ------------------------------------------------------------
 
     # Issue warning before overwriting files
     if os.path.exists(args.output_dir):
