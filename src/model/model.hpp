@@ -425,7 +425,8 @@ public:
     ) const {
         return {
             this->CreateState<DeviceType>(), this->CreateElements<DeviceType>(),
-            this->CreateConstraints()};
+            this->CreateConstraints()
+        };
     }
 
     // Returns a State, Elements, Constraints, and Solver object initialized from the model
