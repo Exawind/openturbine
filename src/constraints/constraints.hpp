@@ -28,10 +28,12 @@ struct Constraints {
     size_t num_dofs;         //< Total number of degrees of freedom controlled by constraints
 
     // Constraint properties
-    Kokkos::View<ConstraintType*, DeviceType> type;       //< Type of each constraint
+    Kokkos::View<ConstraintType*, DeviceType> type;  //< Type of each constraint
     std::vector<double*> control_signal;      //< Control signal for each constraint
-    Kokkos::View<size_t*, DeviceType> base_node_index;    //< Index of the base node for each constraint
-    Kokkos::View<size_t*, DeviceType> target_node_index;  //< Index of the target node for each constraint
+    Kokkos::View<size_t*, DeviceType>
+        base_node_index;  //< Index of the base node for each constraint
+    Kokkos::View<size_t*, DeviceType>
+        target_node_index;  //< Index of the target node for each constraint
 
     // DOF management
     Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType> row_range;
