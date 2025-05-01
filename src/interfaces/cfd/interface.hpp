@@ -42,7 +42,7 @@ public:
     Turbine turbine;
 
     /// @brief  OpenTurbine class for storing system state
-    State state;
+    State<DeviceType> state;
 
     /// @brief  OpenTurbine class for model elements (beams, masses, springs)
     Elements<DeviceType> elements;
@@ -57,10 +57,10 @@ public:
     Solver<DeviceType> solver;
 
     /// @brief  OpenTurbine class state class for temporarily saving state
-    State state_save;
+    State<DeviceType> state_save;
 
     /// @brief Host local copy of State
-    openturbine::interfaces::HostState host_state;
+    openturbine::interfaces::HostState<DeviceType> host_state;
 
     /// @brief Current timestep index
     size_t current_timestep_{0};

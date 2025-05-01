@@ -16,7 +16,7 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_FixedBC) {
     auto constraints = Constraints({fixed_bc}, {invalid_node, node_1});
 
     auto elements = Elements<DeviceType>();
-    auto state = State(2U);  // 2 nodes in the system
+    auto state = State<DeviceType>(2U);  // 2 nodes in the system
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 17UL};
@@ -57,7 +57,7 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_PrescribedBC) {
     auto constraints = Constraints({prescribed_bc}, {invalid_node, node_1});
 
     auto elements = Elements<DeviceType>();
-    auto state = State(2U);  // 2 nodes in the system
+    auto state = State<DeviceType>(2U);  // 2 nodes in the system
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 24UL};
@@ -98,7 +98,7 @@ TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RigidBC) {
     auto constraints = Constraints({rigid_bc}, {node_1, node_2});
 
     auto elements = Elements<DeviceType>();
-    auto state = State(2U);  // 2 nodes in the system
+    auto state = State<DeviceType>(2U);  // 2 nodes in the system
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL};

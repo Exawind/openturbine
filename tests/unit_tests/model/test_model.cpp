@@ -155,8 +155,9 @@ TEST(ModelTest, ModelCreateState) {
                           .SetDisplacement(3., 2., 1., R2[0], R2[1], R2[2], R2[3])
                           .Build());
 
+    using DeviceType = Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     // Create state object from model
-    auto state = model.CreateState();
+    auto state = model.CreateState<DeviceType>();
 
     // Verify initial position
     const auto x0 = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x0);
