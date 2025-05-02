@@ -359,6 +359,69 @@ class VTKOutput:
         print(f"Wrote floating platform visualization for timestep {timestep} to {output_dir}")
 
 
+    def _visualize_rotor(
+            self,
+            timestep: int,
+            output_path: str,
+            beam_elements: Optional[List[List[int]]] = None
+        ):
+        """
+        Generate visualization of rotor at quadrature points.
+
+        Args:
+            timestep (int): Timestep to visualize
+            output_path (str): Path to save the VTK file
+            beam_elements (Optional[List[List[int]]]): List of node indices that form each beam element.
+                If None, assumes all nodes form a single beam element.
+        """
+        # Extract data for the specified timestep
+        nodes = self._extract_node_data_at_timestep(timestep)
+
+        # Create points for all nodes
+        points = vtk.vtkPoints()
+        for node in nodes:
+            position = node['position']
+            points.InsertNextPoint(position[0], position[1], position[2])
+
+        # Create unstructured grid for beam visualization
+        grid = vtk.vtkUnstructuredGrid()
+        grid.SetPoints(points)
+
+        # If beam_elements not provided, use default for IEA 15 MW turbine or create single beam
+        if beam_elements is None:
+            # Check if we have 153 nodes (3 blades × 51 QPs each), which is likely an IEA 15 MW turbine
+            if len(nodes) == 153:
+                beam_elements = [list(range(51)), list(range(51, 102)), list(range(102, 153))]
+            # Create a single beam
+            else:
+                beam_elements = [list(range(len(nodes)))]
+
+        # Add beam elements as Lagrange curves
+        for beam in beam_elements:
+            # Create connectivity for Lagrange curve
+            point_ids = vtk.vtkIdList()
+            point_ids.InsertNextId(beam[0])  # first point
+            point_ids.InsertNextId(beam[-1])  # last point
+
+            # Add intermediate points
+            for j in range(1, len(beam)-1):
+                point_ids.InsertNextId(beam[j])
+
+            grid.InsertNextCell(vtk.VTK_LAGRANGE_CURVE, point_ids)
+
+        # Add common node data (orientation, velocity, acceleration)
+        self._add_node_data_to_vtk_object(grid, nodes)
+
+        # Write the file
+        writer = vtk.vtkXMLUnstructuredGridWriter()
+        writer.SetFileName(output_path)
+        writer.SetInputData(grid)
+        writer.SetDataModeToAscii()
+        writer.Write()
+
+        print(f"Wrote beam visualization with quadrature points to {output_path}")
+
+
     def create_animation(self, output_dir: str, type: str, line_connectivity: Optional[List[Tuple[int, int]]] = None):
         """Creates an animation by generating a series of VTK files at provided timesteps.
 
@@ -417,6 +480,22 @@ class VTKOutput:
         print(f"Generated floating platform animation in {output_dir}")
 
 
+    def create_rotor_animation(self, output_dir: str, beam_elements: Optional[List[List[int]]] = None):
+        """Creates an animation of beams visualized at quadrature points.
+
+        Args:
+            output_dir (str): Directory to save output files
+            beam_elements (Optional[List[List[int]]]): List of node indices for each beam element
+        """
+        os.makedirs(output_dir, exist_ok=True)
+
+        for timestep in range(0, self.num_timesteps):
+            output_path = os.path.join(output_dir, f"rotor_t{timestep:04d}.vtu")
+            self._visualize_rotor(timestep, output_path, beam_elements)
+
+        print(f"Generated beam quadrature point animation in {output_dir}")
+
+
 def main():
     """Main function to parse arguments and generate VTK files.
 
@@ -461,7 +540,7 @@ def main():
         '--type',
         type=str,
         default='beam',
-        help='Type of visualization to generate: beam, nodes, lines, or platform'
+        help='Type of visualization to generate: beam, nodes, lines, platform, or rotor'
     )
 
     # line connectivity argument
@@ -490,6 +569,13 @@ def main():
         type=str,
         default='2,4,6',
         help='Comma-separated list of anchor node indices (e.g., "2,4,6"). Required for type=platform'
+    )
+
+    # Rotor visualization arguments
+    parser.add_argument(
+        '--beam_elements',
+        type=str,
+        help='Comma-separated list of beam elements to visualize (e.g., "0,1,2 3,4,5"). Required for type=rotor'
     )
     args = parser.parse_args()
 
@@ -539,6 +625,20 @@ def main():
             )
         except ValueError:
             parser.error("Invalid format for fairleads or anchors. Expected comma-separated integers.")
+
+    elif args.type == 'rotor':
+        # Parse beam elements if provided
+        beam_elements = None
+        if args.beam_elements:
+            try:
+                # Format should be like "0,1,2 3,4,5" where each space-separated group is a beam
+                beam_elements = []
+                for beam in args.beam_elements.split():
+                    beam_elements.append([int(idx) for idx in beam.split(',')])
+            except ValueError:
+                parser.error("Invalid format for beam elements")
+
+        visualizer.create_rotor_animation(args.output_dir, beam_elements)
 
     else:
         raise ValueError(f"Unknown type: {args.type}")
