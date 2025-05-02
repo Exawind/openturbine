@@ -426,7 +426,8 @@ public:
     CreateSystem() const {
         return {
             this->CreateState<DeviceType>(), this->CreateElements<DeviceType>(),
-            this->CreateConstraints<DeviceType>()};
+            this->CreateConstraints<DeviceType>()
+        };
     }
 
     // Returns a State, Elements, Constraints, and Solver object initialized from the model

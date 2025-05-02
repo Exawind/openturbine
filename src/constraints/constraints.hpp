@@ -29,7 +29,7 @@ struct Constraints {
 
     // Constraint properties
     Kokkos::View<ConstraintType*, DeviceType> type;  //< Type of each constraint
-    std::vector<double*> control_signal;      //< Control signal for each constraint
+    std::vector<double*> control_signal;             //< Control signal for each constraint
     Kokkos::View<size_t*, DeviceType>
         base_node_index;  //< Index of the base node for each constraint
     Kokkos::View<size_t*, DeviceType>
