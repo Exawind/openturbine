@@ -24,7 +24,7 @@
 namespace openturbine::tests {
 
 template <typename DeviceType>
-inline void WriteVTKBeamsQP(State& state, Beams<DeviceType>& beams, const std::string& filename) {
+inline void WriteVTKBeamsQP(State<DeviceType>& state, Beams<DeviceType>& beams, const std::string& filename) {
     // Compute state values at quadrature points
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     const auto smem = 3 * Kokkos::View<double* [7]>::shmem_size(beams.max_elem_nodes);
@@ -255,7 +255,7 @@ inline void WriteVTKBeamsQP(State& state, Beams<DeviceType>& beams, const std::s
 }
 
 template <typename DeviceType>
-inline void WriteVTKBeamsNodes(State& state, Beams<DeviceType>& beams, const std::string& filename) {
+inline void WriteVTKBeamsNodes(State<DeviceType>& state, Beams<DeviceType>& beams, const std::string& filename) {
     // Compute value of state at beam nodes
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     const auto smem = 3 * Kokkos::View<double* [7]>::shmem_size(beams.max_elem_nodes);
