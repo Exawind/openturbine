@@ -259,6 +259,11 @@ TEST(RotorTest, IEA15RotorHub) {
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
+    // Set NetCDF output writer
+    size_t total_qps = num_blades * trapz_quadrature.size();
+    model.SetOutputWriter("rotor_test_2.nc", total_qps);
+    model.WriteQPOutputsAtTimestep(state, elements.beams, 0);
+
     // Remove output directory for writing step data
     if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
@@ -293,6 +298,7 @@ TEST(RotorTest, IEA15RotorHub) {
         EXPECT_EQ(converged, true);
 
         // If flag set, write quadrature point glob position to file
+        model.WriteQPOutputsAtTimestep(state, elements.beams, i);
         if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
             // Write VTK output to file
@@ -420,6 +426,11 @@ TEST(RotorTest, IEA15RotorController) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
+    // Set NetCDF output writer
+    size_t total_qps = num_blades * trapz_quadrature.size();
+    model.SetOutputWriter("rotor_test_3.nc", total_qps);
+    model.WriteQPOutputsAtTimestep(state, elements.beams, 0);
+
     // Remove output directory for writing step data
     if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
@@ -457,6 +468,7 @@ TEST(RotorTest, IEA15RotorController) {
         EXPECT_EQ(converged, true);
 
         // If flag set, write quadrature point glob position to file
+        model.WriteQPOutputsAtTimestep(state, elements.beams, i);
         if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
             // Write VTK output to file
