@@ -48,17 +48,18 @@ class VTKOutput:
         if timestep >= self.num_timesteps:
             raise ValueError(f"Timestep {timestep} out of range (max: {self.num_timesteps-1})")
 
-        # If no specific nodes requested, use all nodes
-        if node_indices is None:
-            indices_to_extract = range(self.num_nodes)
-        else:
-            # Validate that all requested indices are within range
+        # Validate that all requested indices are within range
+        if node_indices is not None:
             for idx in node_indices:
                 if idx < 0 or idx >= self.num_nodes:
                     raise ValueError(f"Node index {idx} out of range (max: {self.num_nodes-1})")
             indices_to_extract = node_indices
 
-        # Read all data from NetCDF at once for the requested timestep
+        # If no specific nodes requested, use all nodes
+        if node_indices is None:
+            indices_to_extract = range(self.num_nodes)
+
+        # Read all data from NetCDF file at once for the requested timestep
         position = [
             self.data.variables['x_x'][timestep, :],
             self.data.variables['x_y'][timestep, :],
@@ -101,7 +102,7 @@ class VTKOutput:
     def _quaternion_to_rotation_matrix(self, quaternion: List[float]) -> np.ndarray:
         """Converts a 4x1 quaternion [w, i, j, k] to a 3x3 rotation matrix.
 
-        The rotation matrix is computed using the following formula:
+        The rotation matrix is computed using the following formula (used in OpenTurbine):
         R = | 1 - 2(j^2 + k^2)  2(i*j - w*k)  2(i*k + w*j) |
             | 2(i*j + w*k)  1 - 2(i^2 + k^2)  2(j*k - w*i) |
             | 2(i*k - w*j)  2(j*k + w*i)  1 - 2(i^2 + j^2) |
@@ -112,12 +113,15 @@ class VTKOutput:
         Returns:
             np.ndarray: A 3x3 rotation matrix
         """
+        # Unpack components from quaternion
         w, i, j, k = quaternion
 
+        # Compute intermediate products
         ii, jj, kk = i*i, j*j, k*k
         ij, ik, jk = i*j, i*k, j*k
         wi, wj, wk = w*i, w*j, w*k
 
+        # Create rotation matrix
         R = np.zeros((3, 3))
 
         R[0, 0] = 1. - 2. * (jj + kk)
@@ -134,16 +138,30 @@ class VTKOutput:
 
         return R
 
-    def _create_vector_array(self, name: str, components: int = 3):
-        """Create a VTK double array with the given name and number of components."""
+    def _create_vector_array(self, name: str, num_components: int = 3):
+        """Creates a VTK double array with the given name and number of components.
+
+        Args:
+            name (str): Name of the array
+            num_components (int): Number of components in the array
+
+        Returns:
+            vtk.vtkDoubleArray: A VTK double array with the given name and number of components
+        """
         array = vtk.vtkDoubleArray()
-        array.SetNumberOfComponents(components)
+        array.SetNumberOfComponents(num_components)
         array.SetName(name)
+
         return array
 
 
     def _add_node_data_to_vtk_object(self, vtk_object: vtk.vtkObject, nodes: List[Dict[str, List[float]]]):
-        """Add common node data to a VTK object (polydata or unstructured grid).
+        """Adds common node data to a VTK object (polydata or unstructured grid).
+
+        Following data are added to the VTK object:
+        - Orientation (as 3x3 rotation matrix)
+        - Velocity (as 6x1 vector)
+        - Acceleration (as 6x1 vector)
 
         Args:
             vtk_object: VTK object to add data to
@@ -203,17 +221,22 @@ class VTKOutput:
         line_connectivity: Optional[List[Tuple[int, int]]] = None,
         node_indices: Optional[List[int]] = None
     ):
-        """Enhanced version of _visualize_structure that supports extracting only specific nodes.
+        """Generic method to visualize different structures such as nodes, beams, or lines
+        at a given timestep.
+
+        Following types of structures are supported:
+        - 'nodes': Visualize nodes as points
+        - 'beam': Visualize single beam element as a Lagrange curve
+        - 'lines': Visualize lines connecting node pairs
 
         Args:
             timestep (int): Timestep to visualize
             output_path (str): Path to save the output file to
             structure_type (str): Type of structure to visualize ('nodes', 'beam', or 'lines')
             line_connectivity (list[tuple[int, int]], optional): List of node index pairs to connect with lines.
-                                                        Required when structure_type is 'lines'.
+                                                                 Required when structure_type is 'lines'.
             node_indices (Optional[List[int]]): If provided, only use these specific node indices.
         """
-        # Extract only the requested nodes
         nodes = self._extract_node_data_at_timestep(timestep, node_indices)
 
         # Create points for the structure
@@ -221,8 +244,11 @@ class VTKOutput:
         for node in nodes:
             points.InsertNextPoint(node['position'][0], node['position'][1], node['position'][2])
 
+        # ------------------------------------------------------------
+        # Nodes
+        # ------------------------------------------------------------
         if structure_type == 'nodes':
-            # Create polydata for nodes
+            # Create polydata to visualize nodes
             vtk_object = vtk.vtkPolyData()
             vtk_object.SetPoints(points)
 
@@ -230,8 +256,11 @@ class VTKOutput:
             writer = vtk.vtkXMLPolyDataWriter()
             structure_name = "nodes"
 
+        # ------------------------------------------------------------
+        # Beam
+        # ------------------------------------------------------------
         elif structure_type == 'beam':
-            # Create unstructured grid for beam
+            # Create unstructured grid to visualize the beam element
             vtk_object = vtk.vtkUnstructuredGrid()
             vtk_object.SetPoints(points)
 
@@ -248,6 +277,9 @@ class VTKOutput:
             writer = vtk.vtkXMLUnstructuredGridWriter()
             structure_name = "beam"
 
+        # ------------------------------------------------------------
+        # Lines
+        # ------------------------------------------------------------
         elif structure_type == 'lines':
             if line_connectivity is None:
                 raise ValueError("line_connectivity must be provided when structure_type is 'lines'")
@@ -260,7 +292,7 @@ class VTKOutput:
                 line.GetPointIds().SetId(1, end_idx)
                 lines.InsertNextCell(line)
 
-            # Create polydata for lines
+            # Create polydata to visualize lines
             vtk_object = vtk.vtkPolyData()
             vtk_object.SetPoints(points)
             vtk_object.SetLines(lines)
@@ -284,7 +316,44 @@ class VTKOutput:
         print(f"Wrote {structure_name} visualization to {output_path}")
 
 
-    def visualize_floating_platform(
+    def create_animation(self, output_dir: str, type: str, line_connectivity: Optional[List[Tuple[int, int]]] = None):
+        """Creates an animation by generating a series of VTK files at provided timesteps.
+
+        Following types of structures are supported:
+        - 'beam': Visualize beam element as a Lagrange curve
+        - 'nodes': Visualize nodes as points
+        - 'lines': Visualize lines connecting node pairs
+
+        Args:
+            output_dir (str): Directory to save the output files to
+            type (str): Type of visualization to generate ('beam', 'nodes', or 'lines')
+            line_connectivity (Optional[List[Tuple[int, int]]]):
+                List of tuples for line connectivity. Required for type='lines'.
+        """
+        os.makedirs(output_dir, exist_ok=True)
+
+        for timestep in range(0, self.num_timesteps):
+            if type == 'beam':
+                beam_file = os.path.join(output_dir, f"beam_t{timestep:04d}.vtu")
+                self._visualize_structure(timestep, beam_file, 'beam')
+
+            elif type == 'nodes':
+                nodes_file = os.path.join(output_dir, f"nodes_t{timestep:04d}.vtp")
+                self._visualize_structure(timestep, nodes_file, 'nodes')
+
+            elif type == 'lines':
+                if line_connectivity is None:
+                    raise ValueError("Line connectivity must be provided for 'lines' visualization type")
+                lines_file = os.path.join(output_dir, f"lines_t{timestep:04d}.vtp")
+                self._visualize_structure(timestep, lines_file, 'lines', line_connectivity)
+
+            else:
+                raise ValueError(f"Unknown type: {type}")
+
+        print(f"Generated animation frames in {output_dir}")
+
+
+    def _visualize_floating_platform(
         self,
         timestep: int,
         output_dir: str,
@@ -292,7 +361,19 @@ class VTKOutput:
         fairlead_indices: List[int],
         anchor_indices: List[int]
     ):
-        """Visualizes a floating platform with mooring lines at a given timestep.
+        r"""Visualizes a floating platform with mooring lines at a given timestep.
+
+        Following ASCII figure shows the platform and mooring line layout for a 3-point mooring system:
+
+            Platform Node
+                  o
+                / | \
+               /  |  \      <-- Fairlead connections
+              /   |   \
+             o    o    o    <-- Fairlead nodes
+             |    |    |    <-- Mooring lines
+             |    |    |
+             o    o    o    <-- Anchor nodes
 
         Args:
             timestep (int): Timestep to visualize
@@ -359,22 +440,51 @@ class VTKOutput:
         print(f"Wrote floating platform visualization for timestep {timestep} to {output_dir}")
 
 
+    def create_platform_animation(
+        self,
+        output_dir: str,
+        platform_node_idx: int,
+        fairlead_indices: List[int],
+        anchor_indices: List[int]
+    ):
+        """Creates an animation of a floating platform with mooring lines.
+
+        Args:
+            output_dir (str): Directory to save output files
+            platform_node_idx (int): Index of the platform node
+            fairlead_indices (List[int]): Indices of fairlead nodes
+            anchor_indices (List[int]): Indices of anchor nodes, must match fairlead_indices order
+        """
+        for timestep in range(0, self.num_timesteps):
+            self._visualize_floating_platform(
+                timestep,
+                output_dir,
+                platform_node_idx,
+                fairlead_indices,
+                anchor_indices
+            )
+
+        print(f"Generated floating platform animation in {output_dir}")
+
+
     def _visualize_rotor(
             self,
             timestep: int,
             output_path: str,
             beam_elements: Optional[List[List[int]]] = None
         ):
-        """
-        Generate visualization of rotor at quadrature points.
+        """Generates visualization of wind turbine rotor at node/quadrature points.
+
+        Multiple beam elements can be used to visualize a multi-blade rotor,
+        e.g. for a 3-bladed rotor with 51 QPs per blade:
+        beam_elements = [[0, 1, 2, ..., 50], [51, 52, 53, ..., 101], [102, 103, 104, ..., 152]]
 
         Args:
             timestep (int): Timestep to visualize
             output_path (str): Path to save the VTK file
             beam_elements (Optional[List[List[int]]]): List of node indices that form each beam element.
-                If None, assumes all nodes form a single beam element.
+                                                       If None, assumes all nodes form a single beam element.
         """
-        # Extract data for the specified timestep
         nodes = self._extract_node_data_at_timestep(timestep)
 
         # Create points for all nodes
@@ -389,12 +499,13 @@ class VTKOutput:
 
         # If beam_elements not provided, use default for IEA 15 MW turbine or create single beam
         if beam_elements is None:
-            # Check if we have 153 nodes (3 blades × 51 QPs each), which is likely an IEA 15 MW turbine
+            # Create a single beam
+            beam_elements = [list(range(len(nodes)))]
+
+            # hack: hardcoding IEA 15 MW rotor to support OpenTurbine regression tests
+            # check if we have 153 nodes (3 blades × 51 QPs each), which is likely an IEA 15 MW turbine
             if len(nodes) == 153:
                 beam_elements = [list(range(51)), list(range(51, 102)), list(range(102, 153))]
-            # Create a single beam
-            else:
-                beam_elements = [list(range(len(nodes)))]
 
         # Add beam elements as Lagrange curves
         for beam in beam_elements:
@@ -419,69 +530,11 @@ class VTKOutput:
         writer.SetDataModeToAscii()
         writer.Write()
 
-        print(f"Wrote beam visualization with quadrature points to {output_path}")
-
-
-    def create_animation(self, output_dir: str, type: str, line_connectivity: Optional[List[Tuple[int, int]]] = None):
-        """Creates an animation by generating a series of VTK files at provided timesteps.
-
-        Args:
-            output_dir (str): Directory to save the output files to
-            type (str): Type of visualization to generate ('beam', 'nodes', or 'lines')
-            line_connectivity (Optional[List[Tuple[int, int]]]):
-                List of tuples for line connectivity. Required for type='lines'.
-        """
-        os.makedirs(output_dir, exist_ok=True)
-
-        for timestep in range(0, self.num_timesteps):
-            if type == 'beam':
-                beam_file = os.path.join(output_dir, f"beam_t{timestep:04d}.vtu")
-                self._visualize_structure(timestep, beam_file, 'beam')
-
-            elif type == 'nodes':
-                nodes_file = os.path.join(output_dir, f"nodes_t{timestep:04d}.vtp")
-                self._visualize_structure(timestep, nodes_file, 'nodes')
-
-            elif type == 'lines':
-                if line_connectivity is None:
-                    raise ValueError("Line connectivity must be provided for 'lines' visualization type")
-                lines_file = os.path.join(output_dir, f"lines_t{timestep:04d}.vtp")
-                self._visualize_structure(timestep, lines_file, 'lines', line_connectivity)
-
-            else:
-                raise ValueError(f"Unknown type: {type}")
-
-        print(f"Generated animation frames in {output_dir}")
-
-    def create_platform_animation(
-        self,
-        output_dir: str,
-        platform_node_idx: int,
-        fairlead_indices: List[int],
-        anchor_indices: List[int]
-    ):
-        """Creates an animation of a floating platform with mooring lines.
-
-        Args:
-            output_dir (str): Directory to save output files
-            platform_node_idx (int): Index of the platform node
-            fairlead_indices (List[int]): Indices of fairlead nodes
-            anchor_indices (List[int]): Indices of anchor nodes, must match fairlead_indices order
-        """
-        for timestep in range(0, self.num_timesteps):
-            self.visualize_floating_platform(
-                timestep,
-                output_dir,
-                platform_node_idx,
-                fairlead_indices,
-                anchor_indices
-            )
-
-        print(f"Generated floating platform animation in {output_dir}")
+        print(f"Wrote rotor visualization at nodes/quadrature points to {output_path}")
 
 
     def create_rotor_animation(self, output_dir: str, beam_elements: Optional[List[List[int]]] = None):
-        """Creates an animation of beams visualized at quadrature points.
+        """Creates an animation of beams visualized at nodes/quadrature points.
 
         Args:
             output_dir (str): Directory to save output files
@@ -493,7 +546,7 @@ class VTKOutput:
             output_path = os.path.join(output_dir, f"rotor_t{timestep:04d}.vtu")
             self._visualize_rotor(timestep, output_path, beam_elements)
 
-        print(f"Generated beam quadrature point animation in {output_dir}")
+        print(f"Generated rotor animation in {output_dir}")
 
 
 def main():
@@ -521,13 +574,18 @@ def main():
     # Input arguments
     # ------------------------------------------------------------
 
+    # -------------------------------
+    # Netcdf input file
+    # -------------------------------
     parser.add_argument(
         'netcdf_file',
         type=str,
         help='Path to OpenTurbine NetCDF output file e.g. blade_interface.nc'
     )
 
-    # output directory argument
+    # -------------------------------
+    # Output directory
+    # -------------------------------
     parser.add_argument(
         '--output_dir',
         type=str,
@@ -535,7 +593,9 @@ def main():
         help='Directory for writing the vtk output files'
     )
 
-    # type of visualization argument
+    # -------------------------------
+    # Type of visualization
+    # -------------------------------
     parser.add_argument(
         '--type',
         type=str,
@@ -543,7 +603,9 @@ def main():
         help='Type of visualization to generate: beam, nodes, lines, platform, or rotor'
     )
 
-    # line connectivity argument
+    # -------------------------------
+    # Line connectivity
+    # -------------------------------
     parser.add_argument(
         '--connectivity',
         type=str,
@@ -551,7 +613,9 @@ def main():
         help='Line connectivity in format "start,end" (space separated list). Required for type=lines'
     )
 
-    # Platform visualization arguments -- hardcoding some defaults from CFD interface floating platform
+    # -------------------------------
+    # Floating Platform args
+    # -------------------------------
     parser.add_argument(
         '--platform_node',
         type=int,
@@ -571,7 +635,9 @@ def main():
         help='Comma-separated list of anchor node indices (e.g., "2,4,6"). Required for type=platform'
     )
 
-    # Rotor visualization arguments
+    # -------------------------------
+    # Rotor visualization args
+    # -------------------------------
     parser.add_argument(
         '--beam_elements',
         type=str,
@@ -590,9 +656,15 @@ def main():
 
     visualizer = VTKOutput(args.netcdf_file)
 
+    # -------------------------------
+    # Type: Beam/Nodes
+    # -------------------------------
     if args.type == 'beam' or args.type == 'nodes':
         visualizer.create_animation(args.output_dir, args.type)
 
+    # -------------------------------
+    # Type: Lines
+    # -------------------------------
     elif args.type == 'lines':
         # Parse line connectivity if provided
         if not args.connectivity:
@@ -606,6 +678,11 @@ def main():
             except (ValueError, TypeError):
                 parser.error(f"Invalid connectivity format: {conn}. Expected format: 'start,end'")
 
+        visualizer.create_animation(args.output_dir, args.type, line_connectivity)
+
+    # -------------------------------
+    # Type: Floating Platform
+    # -------------------------------
     elif args.type == 'platform':
         if not args.fairleads or not args.anchors:
             parser.error("--fairleads and --anchors are required when --type=platform")
@@ -626,12 +703,16 @@ def main():
         except ValueError:
             parser.error("Invalid format for fairleads or anchors. Expected comma-separated integers.")
 
+    # -------------------------------
+    # Type: Rotor
+    # -------------------------------
     elif args.type == 'rotor':
         # Parse beam elements if provided
         beam_elements = None
         if args.beam_elements:
             try:
-                # Format should be like "0,1,2 3,4,5" where each space-separated group is a beam
+                # Format should be like "0,1,2 3,4,5" where each space-separated group
+                # are the node indices for a beam element
                 beam_elements = []
                 for beam in args.beam_elements.split():
                     beam_elements.append([int(idx) for idx in beam.split(',')])
