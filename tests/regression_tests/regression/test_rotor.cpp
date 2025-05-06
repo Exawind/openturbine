@@ -114,7 +114,7 @@ TEST(RotorTest, IEA15RotorOnly) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
     // Set NetCDF output writer
-    size_t total_qps = num_blades * trapz_quadrature.size();
+    const size_t total_qps = num_blades * trapz_quadrature.size();
     model.SetOutputWriter("rotor_test_1.nc", total_qps);
     model.WriteQPOutputsAtTimestep(state, elements.beams, 0);
 
@@ -260,7 +260,7 @@ TEST(RotorTest, IEA15RotorHub) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
     // Set NetCDF output writer
-    size_t total_qps = num_blades * trapz_quadrature.size();
+    const size_t total_qps = num_blades * trapz_quadrature.size();
     model.SetOutputWriter("rotor_test_2.nc", total_qps);
     model.WriteQPOutputsAtTimestep(state, elements.beams, 0);
 
@@ -427,7 +427,7 @@ TEST(RotorTest, IEA15RotorController) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
     // Set NetCDF output writer
-    size_t total_qps = num_blades * trapz_quadrature.size();
+    const size_t total_qps = num_blades * trapz_quadrature.size();
     model.SetOutputWriter("rotor_test_3.nc", total_qps);
     model.WriteQPOutputsAtTimestep(state, elements.beams, 0);
 
