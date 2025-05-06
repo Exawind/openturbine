@@ -508,6 +508,9 @@ public:
         auto qp_fe = Kokkos::create_mirror_view(beams.qp_Fe);
         Kokkos::deep_copy(qp_fe, beams.qp_Fe);
 
+        auto qp_deformation = Kokkos::create_mirror_view(beams.qp_deformation);
+        Kokkos::deep_copy(qp_deformation, beams.qp_deformation);
+
         // Fill data vectors
         // position
         size_t qp_index = 0;
@@ -541,7 +544,7 @@ public:
         }
         this->output_writer_->WriteStateDataAtTimestep(timestep, "v", x, y, z, i, j, k);
 
-        // forces
+        // loads/forces
         qp_index = 0;
         for (size_t i_elem = 0; i_elem < beams.num_elems; ++i_elem) {
             for (size_t i_qp = 0; i_qp < num_qps_per_element(i_elem); ++i_qp) {
@@ -555,6 +558,18 @@ public:
             }
         }
         this->output_writer_->WriteStateDataAtTimestep(timestep, "f", x, y, z, i, j, k);
+
+        // deformation
+        qp_index = 0;
+        for (size_t i_elem = 0; i_elem < beams.num_elems; ++i_elem) {
+            for (size_t i_qp = 0; i_qp < num_qps_per_element(i_elem); ++i_qp) {
+                x[qp_index] = qp_deformation(i_elem, i_qp, 0);
+                y[qp_index] = qp_deformation(i_elem, i_qp, 1);
+                z[qp_index] = qp_deformation(i_elem, i_qp, 2);
+                ++qp_index;
+            }
+        }
+        this->output_writer_->WriteDeformationDataAtTimestep(timestep, x, y, z);
     }
 
 private:
