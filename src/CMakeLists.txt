@@ -117,9 +117,13 @@ add_shared_library(DISCON_ROTOR_TEST_CONTROLLER)
 # Set include directories
 #----------------------------------------
 find_path(LAPACKE_INCLUDE_DIRS lapacke.h)
-target_include_directories(openturbine_library
+target_include_directories(openturbine_library SYSTEM
   PUBLIC
   ${LAPACKE_INCLUDE_DIRS}
+)
+
+target_include_directories(openturbine_library
+  PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
   $<INSTALL_INTERFACE:include/OpenTurbine>
