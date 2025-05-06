@@ -5,6 +5,71 @@ import vtk
 from netCDF4 import Dataset
 from typing import Dict, List, Optional, Tuple
 
+#-------------------------------------------------------------------------------
+# Helper functions
+#-------------------------------------------------------------------------------
+
+def quaternion_to_rotation_matrix(quaternion: List[float]) -> np.ndarray:
+    """Converts a 4x1 quaternion [w, i, j, k] to a 3x3 rotation matrix.
+
+    The rotation matrix is computed using the following formula (used in OpenTurbine):
+    R = | 1 - 2(j^2 + k^2)  2(i*j - w*k)  2(i*k + w*j) |
+        | 2(i*j + w*k)  1 - 2(i^2 + k^2)  2(j*k - w*i) |
+        | 2(i*k - w*j)  2(j*k + w*i)  1 - 2(i^2 + j^2) |
+
+    Args:
+        quaternion (list[float]): A list of 4 floats representing the quaternion
+
+    Returns:
+        np.ndarray: A 3x3 rotation matrix
+    """
+    # Unpack components from quaternion
+    w, i, j, k = quaternion
+
+    # Compute intermediate products
+    ii, jj, kk = i*i, j*j, k*k
+    ij, ik, jk = i*j, i*k, j*k
+    wi, wj, wk = w*i, w*j, w*k
+
+    # Create rotation matrix
+    R = np.zeros((3, 3))
+
+    R[0, 0] = 1. - 2. * (jj + kk)
+    R[0, 1] = 2. * (ij - wk)
+    R[0, 2] = 2. * (ik + wj)
+
+    R[1, 0] = 2. * (ij + wk)
+    R[1, 1] = 1. - 2. * (ii + kk)
+    R[1, 2] = 2. * (jk - wi)
+
+    R[2, 0] = 2. * (ik - wj)
+    R[2, 1] = 2. * (jk + wi)
+    R[2, 2] = 1. - 2. * (ii + jj)
+
+    return R
+
+
+def create_vector_array(name: str, num_components: int = 3):
+    """Creates a VTK double array with the given name and number of components.
+
+    Args:
+        name (str): Name of the array
+        num_components (int): Number of components in the array
+
+    Returns:
+        vtk.vtkDoubleArray: A VTK double array with the given name and number of components
+    """
+    array = vtk.vtkDoubleArray()
+    array.SetNumberOfComponents(num_components)
+    array.SetName(name)
+
+    return array
+
+
+#-------------------------------------------------------------------------------
+# VTK output logic
+#-------------------------------------------------------------------------------
+
 class VTKOutput:
     """Class to generate VTK files from OpenTurbine (NetCDF-based) outputs."""
 
@@ -99,62 +164,6 @@ class VTKOutput:
         return nodes
 
 
-    def _quaternion_to_rotation_matrix(self, quaternion: List[float]) -> np.ndarray:
-        """Converts a 4x1 quaternion [w, i, j, k] to a 3x3 rotation matrix.
-
-        The rotation matrix is computed using the following formula (used in OpenTurbine):
-        R = | 1 - 2(j^2 + k^2)  2(i*j - w*k)  2(i*k + w*j) |
-            | 2(i*j + w*k)  1 - 2(i^2 + k^2)  2(j*k - w*i) |
-            | 2(i*k - w*j)  2(j*k + w*i)  1 - 2(i^2 + j^2) |
-
-        Args:
-            quaternion (list[float]): A list of 4 floats representing the quaternion
-
-        Returns:
-            np.ndarray: A 3x3 rotation matrix
-        """
-        # Unpack components from quaternion
-        w, i, j, k = quaternion
-
-        # Compute intermediate products
-        ii, jj, kk = i*i, j*j, k*k
-        ij, ik, jk = i*j, i*k, j*k
-        wi, wj, wk = w*i, w*j, w*k
-
-        # Create rotation matrix
-        R = np.zeros((3, 3))
-
-        R[0, 0] = 1. - 2. * (jj + kk)
-        R[0, 1] = 2. * (ij - wk)
-        R[0, 2] = 2. * (ik + wj)
-
-        R[1, 0] = 2. * (ij + wk)
-        R[1, 1] = 1. - 2. * (ii + kk)
-        R[1, 2] = 2. * (jk - wi)
-
-        R[2, 0] = 2. * (ik - wj)
-        R[2, 1] = 2. * (jk + wi)
-        R[2, 2] = 1. - 2. * (ii + jj)
-
-        return R
-
-    def _create_vector_array(self, name: str, num_components: int = 3):
-        """Creates a VTK double array with the given name and number of components.
-
-        Args:
-            name (str): Name of the array
-            num_components (int): Number of components in the array
-
-        Returns:
-            vtk.vtkDoubleArray: A VTK double array with the given name and number of components
-        """
-        array = vtk.vtkDoubleArray()
-        array.SetNumberOfComponents(num_components)
-        array.SetName(name)
-
-        return array
-
-
     def _add_node_data_to_vtk_object(self, vtk_object: vtk.vtkObject, nodes: List[Dict[str, List[float]]]):
         """Adds common node data to a VTK object (polydata or unstructured grid).
 
@@ -169,7 +178,7 @@ class VTKOutput:
         """
         # Add orientation data
         orientation_arrays = {
-            axis: self._create_vector_array(f"Orientation{axis}")
+            axis: create_vector_array(f"Orientation{axis}")
             for axis in ["X", "Y", "Z"]
         }
 
@@ -181,7 +190,7 @@ class VTKOutput:
                 node['position'][5],  # j
                 node['position'][6]   # k
             ]
-            R = self._quaternion_to_rotation_matrix(quaternion)
+            R = quaternion_to_rotation_matrix(quaternion)
 
             orientation_arrays["X"].InsertNextTuple3(R[0, 0], R[1, 0], R[2, 0])
             orientation_arrays["Y"].InsertNextTuple3(R[0, 1], R[1, 1], R[2, 1])
@@ -191,8 +200,8 @@ class VTKOutput:
             vtk_object.GetPointData().AddArray(orientation_arrays[axis])
 
         # Add velocity data
-        translation_velocity = self._create_vector_array("TranslationalVelocity")
-        rotation_velocity = self._create_vector_array("RotationalVelocity")
+        translation_velocity = create_vector_array("TranslationalVelocity")
+        rotation_velocity = create_vector_array("RotationalVelocity")
 
         for node in nodes:
             translation_velocity.InsertNextTuple3(*node['velocity'][0:3])
@@ -202,8 +211,8 @@ class VTKOutput:
         vtk_object.GetPointData().AddArray(rotation_velocity)
 
         # Add acceleration data
-        trans_accel = self._create_vector_array("TranslationalAcceleration")
-        rot_accel = self._create_vector_array("RotationalAcceleration")
+        trans_accel = create_vector_array("TranslationalAcceleration")
+        rot_accel = create_vector_array("RotationalAcceleration")
 
         for node in nodes:
             trans_accel.InsertNextTuple3(*node['acceleration'][0:3])
@@ -523,6 +532,10 @@ class VTKOutput:
         # Add common node data (orientation, velocity, acceleration)
         self._add_node_data_to_vtk_object(grid, nodes)
 
+        # Add optional data (forces, deformation) if available
+        self._add_optional_force_moment_data(grid, nodes, timestep)
+        self._add_optional_deformation_data(grid, nodes, timestep)
+
         # Write the file
         writer = vtk.vtkXMLUnstructuredGridWriter()
         writer.SetFileName(output_path)
@@ -531,6 +544,57 @@ class VTKOutput:
         writer.Write()
 
         print(f"Wrote rotor visualization at nodes/quadrature points to {output_path}")
+
+
+    def _add_optional_force_moment_data(self, vtk_object, nodes, timestep):
+        """Add force and moment data to VTK object if available in the NetCDF file."""
+        # Check if force data is available
+        force_available = all(f'f_{comp}' in self.data.variables for comp in ['x', 'y', 'z'])
+        if force_available:
+            force = create_vector_array("Force")
+
+            # Read force data from NetCDF
+            f_x = self.data.variables['f_x'][timestep, :]
+            f_y = self.data.variables['f_y'][timestep, :]
+            f_z = self.data.variables['f_z'][timestep, :]
+
+            for i in range(len(nodes)):
+                force.InsertNextTuple3(f_x[i], f_y[i], f_z[i])
+
+            vtk_object.GetPointData().AddArray(force)
+
+        # Check if moment data is available
+        moment_available = all(f'f_{comp}' in self.data.variables for comp in ['i', 'j', 'k'])
+        if moment_available:
+            moment = create_vector_array("Moment")
+
+            # Read moment data from NetCDF
+            m_i = self.data.variables['f_i'][timestep, :]
+            m_j = self.data.variables['f_j'][timestep, :]
+            m_k = self.data.variables['f_k'][timestep, :]
+
+            for i in range(len(nodes)):
+                moment.InsertNextTuple3(m_i[i], m_j[i], m_k[i])
+
+            vtk_object.GetPointData().AddArray(moment)
+
+
+    def _add_optional_deformation_data(self, vtk_object, nodes, timestep):
+        """Add deformation data to VTK object if available in the NetCDF file."""
+        deformation_available = all(f'deformation_{comp}' in self.data.variables for comp in ['x', 'y', 'z'])
+
+        if deformation_available:
+            deformation_vector = create_vector_array("DeformationVector")
+
+            # Read deformation data from NetCDF
+            u_x = self.data.variables['deformation_x'][timestep, :]
+            u_y = self.data.variables['deformation_y'][timestep, :]
+            u_z = self.data.variables['deformation_z'][timestep, :]
+
+            for i in range(len(nodes)):
+                deformation_vector.InsertNextTuple3(u_x[i], u_y[i], u_z[i])
+
+            vtk_object.GetPointData().AddArray(deformation_vector)
 
 
     def create_rotor_animation(self, output_dir: str, beam_elements: Optional[List[List[int]]] = None):
@@ -548,6 +612,10 @@ class VTKOutput:
 
         print(f"Generated rotor animation in {output_dir}")
 
+
+#-------------------------------------------------------------------------------
+# Main function
+#-------------------------------------------------------------------------------
 
 def main():
     """Main function to parse arguments and generate VTK files.
