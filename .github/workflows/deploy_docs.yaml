@@ -32,7 +32,7 @@ jobs:
         spack install yaml-cpp
         spack install suite-sparse
         spack install superlu
-        spack install lapacke
+        spack install lapack
         spack install kokkos-kernels
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -51,7 +51,7 @@ jobs:
     - name: Build OpenTurbine with documentation
       run: |
         source spack/share/spack/setup-env.sh
-        spack load kokkos-kernels yaml-cpp netcdf-c suite-sparse superlu lapacke
+        spack load kokkos-kernels yaml-cpp netcdf-c suite-sparse superlu lapack
         cd openturbine
         mkdir build
         cd build

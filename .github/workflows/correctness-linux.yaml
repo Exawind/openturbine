@@ -38,7 +38,7 @@ jobs:
         spack install yaml-cpp
         spack install suite-sparse
         spack install superlu
-        spack install lapacke
+        spack install lapack
         spack install kokkos-kernels
     - name: Clone
       uses: actions/checkout@v4
@@ -55,7 +55,7 @@ jobs:
         spack load cppcheck
         spack load netcdf-c
         spack load yaml-cpp
-        spack load lapacke
+        spack load lapack
         cd openturbine
         mkdir build
         cd build

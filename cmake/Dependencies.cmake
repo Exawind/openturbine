@@ -6,7 +6,7 @@ function(openturbine_setup_dependencies)
   find_package(yaml-cpp REQUIRED)
   find_package(HDF5 REQUIRED)
   find_package(NetCDF REQUIRED)
-  find_package(LAPACKE REQUIRED)
+  find_package(LAPACK REQUIRED)
 
   #--------------------------------------------------------------------------
   # Optional packages

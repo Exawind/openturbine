@@ -59,7 +59,8 @@ endif()
 #--------------------------------------------------------------------------
 target_link_system_libraries(openturbine_library PUBLIC
   KokkosKernels::kokkoskernels
-  lapacke
+  LAPACK::LAPACK
+  -llapacke
   ${YAML_CPP_TARGET}
   ${FS_LIB}
   ${NETCDF_TARGET}
@@ -115,8 +116,10 @@ add_shared_library(DISCON_ROTOR_TEST_CONTROLLER)
 #----------------------------------------
 # Set include directories
 #----------------------------------------
+find_path(LAPACKE_INCLUDE_DIRS lapacke.h)
 target_include_directories(openturbine_library
   PUBLIC
+  ${LAPACKE_INCLUDE_DIRS}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
   $<INSTALL_INTERFACE:include/OpenTurbine>
