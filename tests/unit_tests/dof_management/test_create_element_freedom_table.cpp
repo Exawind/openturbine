@@ -13,7 +13,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_NoMassNoSpring) {
     auto beams = Beams<DeviceType>(1U, 1U, 1U);
     Kokkos::deep_copy(beams.node_state_indices, 0U);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
-    auto masses = Masses(0U);
+    auto masses = Masses<DeviceType>(0U);
     auto springs = Springs(0U);
     auto elements = Elements<DeviceType>{
         beams, masses, springs
@@ -40,7 +40,7 @@ TEST(TestCreateElementFreedomTable, OneMassElementWithOneNode_NoBeamNoSpring) {
     Kokkos::deep_copy(state.node_freedom_map_table, 0U);
 
     auto beams = Beams<DeviceType>(0U, 0U, 0U);
-    auto masses = Masses(1U);
+    auto masses = Masses<DeviceType>(1U);
     Kokkos::deep_copy(masses.state_indices, 0U);
     auto springs = Springs(0U);
     auto elements = Elements<DeviceType>{
@@ -75,7 +75,7 @@ TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
     auto beams = Beams<DeviceType>(0U, 0U, 0U);
-    auto masses = Masses(0U);
+    auto masses = Masses<DeviceType>(0U);
     auto springs = Springs(1U);
     constexpr auto host_node_state_indices_data = std::array{0UL, 1UL};
     const auto host_node_state_indices =
@@ -129,7 +129,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
-    auto masses = Masses(0U);
+    auto masses = Masses<DeviceType>(0U);
     auto springs = Springs(0U);
     auto elements = Elements<DeviceType>{
         beams, masses, springs
@@ -170,7 +170,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
     auto beams = Beams<DeviceType>(1U, 1U, 1U);
     Kokkos::deep_copy(beams.node_state_indices, 0U);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
-    auto masses = Masses(1U);
+    auto masses = Masses<DeviceType>(1U);
     Kokkos::deep_copy(masses.state_indices, 1U);
     auto springs = Springs(0U);
     auto elements = Elements<DeviceType>{
@@ -221,7 +221,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
-    auto masses = Masses(0U);
+    auto masses = Masses<DeviceType>(0U);
     auto springs = Springs(0U);
     auto elements = Elements<DeviceType>{
         beams, masses, springs
@@ -269,7 +269,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSp
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
-    auto masses = Masses(0U);
+    auto masses = Masses<DeviceType>(0U);
     auto springs = Springs(0U);
     auto elements = Elements<DeviceType>{
         beams, masses, springs
@@ -327,7 +327,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_No
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
-    auto masses = Masses(0U);
+    auto masses = Masses<DeviceType>(0U);
     auto springs = Springs(0U);
     auto elements = Elements<DeviceType>{
         beams, masses, springs
@@ -385,7 +385,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
-    auto masses = Masses(1U);
+    auto masses = Masses<DeviceType>(1U);
     Kokkos::deep_copy(masses.state_indices, 2U);
     auto springs = Springs(0U);
     auto elements = Elements<DeviceType>{
@@ -438,7 +438,7 @@ TEST(
     Kokkos::deep_copy(beams.node_state_indices, 0U);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
 
-    auto masses = Masses(1U);
+    auto masses = Masses<DeviceType>(1U);
     Kokkos::deep_copy(masses.state_indices, 1U);
 
     auto springs = Springs(1U);
