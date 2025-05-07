@@ -38,7 +38,7 @@ struct CalculateQuadraturePointValues {
 
     KOKKOS_FUNCTION
     void operator()(Kokkos::TeamPolicy<>::member_type member) const {
-        using simd_type = Kokkos::Experimental::native_simd<double>;
+        using simd_type = Kokkos::Experimental::simd<double>;
         const auto i_elem = static_cast<size_t>(member.league_rank());
         const auto num_nodes = num_nodes_per_element(i_elem);
         const auto num_qps = num_qps_per_element(i_elem);
