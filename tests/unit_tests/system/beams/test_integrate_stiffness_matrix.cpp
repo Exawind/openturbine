@@ -202,7 +202,7 @@ void TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
     const std::array<double, 144>& exact_M_data
 ) {
     constexpr auto number_of_nodes = size_t{2U};
-    constexpr auto simd_width = Kokkos::Experimental::native_simd<double>::size();
+    constexpr auto simd_width = Kokkos::Experimental::simd<double>::size();
     constexpr auto number_of_simd_nodes = (simd_width == 1) ? size_t{2U} : size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
