@@ -23,7 +23,7 @@ jobs:
     - name: Install Dependencies
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
-        git clone -b before-compiler-dependencies https://github.com/spack/spack.git
+        git clone https://github.com/spack/spack.git
         source spack/share/spack/setup-env.sh
         spack compiler find
         spack install googletest
