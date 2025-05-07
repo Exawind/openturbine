@@ -275,7 +275,7 @@ TEST(CurvedBeamTests, IntegrateStiffnessMatrixForCurvedBeam) {
     const auto stiffness_matrix_terms =
         Kokkos::View<double[kNumNodes][kNumNodes][6][6]>("stiffness_matrix_terms");
 
-    constexpr auto simd_width = Kokkos::Experimental::native_simd<double>::size();
+    constexpr auto simd_width = Kokkos::Experimental::simd<double>::size();
     constexpr auto extra_component = kNumNodes % simd_width == 0U ? 0U : 1U;
     constexpr auto simd_nodes = kNumNodes / simd_width + extra_component;
     const auto policy = Kokkos::RangePolicy(0, kNumNodes * simd_nodes);
