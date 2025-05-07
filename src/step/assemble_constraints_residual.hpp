@@ -12,7 +12,9 @@
 namespace openturbine {
 
 template <typename DeviceType>
-inline void AssembleConstraintsResidual(Solver<DeviceType>& solver, Constraints& constraints) {
+inline void AssembleConstraintsResidual(
+    Solver<DeviceType>& solver, Constraints<DeviceType>& constraints
+) {
     auto resid_region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Residual");
 
     if (constraints.num_constraints == 0) {

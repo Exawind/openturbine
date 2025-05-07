@@ -48,7 +48,7 @@ public:
     Elements<DeviceType> elements;
 
     /// @brief  OpenTurbine class for constraints tying elements together
-    Constraints constraints;
+    Constraints<DeviceType> constraints;
 
     /// @brief  OpenTurbine class containing solution parameters
     StepParameters parameters;

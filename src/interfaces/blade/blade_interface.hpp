@@ -35,7 +35,7 @@ public:
           blade(blade_input, model),
           state(model.CreateState<DeviceType>()),
           elements(model.CreateElements<DeviceType>()),
-          constraints(model.CreateConstraints()),
+          constraints(model.CreateConstraints<DeviceType>()),
           parameters(
               solution_input.dynamic_solve, solution_input.max_iter, solution_input.time_step,
               solution_input.rho_inf, solution_input.absolute_error_tolerance,
@@ -111,8 +111,9 @@ private:
     components::Blade blade;  ///< Blade model input/output data
     State<DeviceType> state;  ///< OpenTurbine class for storing system state
     Elements<DeviceType>
-        elements;                  ///< OpenTurbine class for model elements (beams, masses, springs)
-    Constraints constraints;       ///< OpenTurbine class for constraints tying elements together
+        elements;  ///< OpenTurbine class for model elements (beams, masses, springs)
+    Constraints<DeviceType>
+        constraints;               ///< OpenTurbine class for constraints tying elements together
     StepParameters parameters;     ///< OpenTurbine class containing solution parameters
     Solver<DeviceType> solver;     ///< OpenTurbine class for solving the dynamic system
     State<DeviceType> state_save;  ///< OpenTurbine class state class for temporarily saving state

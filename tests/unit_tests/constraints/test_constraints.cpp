@@ -7,7 +7,9 @@
 namespace openturbine::tests {
 
 TEST(ConstraintsTest, EmptyConstructor) {
-    const auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    const auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
     EXPECT_EQ(constraints.num_constraints, 0);
     EXPECT_EQ(constraints.num_dofs, 0);
 }
@@ -17,7 +19,9 @@ TEST(ConstraintsTest, SingleConstraintConstructorWithFixedBC) {
     auto node2 = Node(1, Array_7{1., 0., 0., 1., 0., 0., 0.});
     auto constraint = Constraint(0, ConstraintType::kFixedBC, {0, 1});
 
-    const auto constraints = Constraints({constraint}, {node1, node2});
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    const auto constraints = Constraints<DeviceType>({constraint}, {node1, node2});
     EXPECT_EQ(constraints.num_constraints, 1);
     EXPECT_EQ(constraints.num_dofs, 6);  // Fixed constraint has 6 DOFs
 
@@ -39,8 +43,10 @@ TEST(ConstraintsTest, MultipleConstraintsConstructor) {
     auto revolute_constraint =
         Constraint(1, ConstraintType::kRevoluteJoint, {1, 2}, Array_3{0., 1., 0.});
 
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     const auto constraints =
-        Constraints({fixed_constraint, revolute_constraint}, {node1, node2, node3});
+        Constraints<DeviceType>({fixed_constraint, revolute_constraint}, {node1, node2, node3});
     EXPECT_EQ(constraints.num_constraints, 2);
     EXPECT_EQ(constraints.num_dofs, 11);  // Fixed (6) + Revolute (5) = 11 DOFs
 }
@@ -50,7 +56,9 @@ TEST(ConstraintsTest, UpdateDisplacementAndUpdateViews) {
     auto node2 = Node(1, Array_7{1., 0., 0., 1., 0., 0., 0.});
     auto constraint = Constraint(0, ConstraintType::kFixedBC, {0, 1});
 
-    auto constraints = Constraints({constraint}, {node1, node2});
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto constraints = Constraints<DeviceType>({constraint}, {node1, node2});
 
     const Array_7 new_displacement{0.1, 0.2, 0.3, 1., 0., 0., 0.};
     constraints.UpdateDisplacement(0, new_displacement);
@@ -70,7 +78,9 @@ TEST(ConstraintsTest, UpdateViewsWithControlSignal) {
         0, ConstraintType::kRotationControl, {0, 0}, Array_3{1., 0., 0.}, &control_signal
     );
 
-    auto constraints = Constraints({constraint}, {node1});
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto constraints = Constraints<DeviceType>({constraint}, {node1});
     constraints.UpdateViews();
 
     auto host_input = Kokkos::create_mirror_view(constraints.input);
