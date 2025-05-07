@@ -14,23 +14,24 @@ namespace openturbine {
  * - Velocity and acceleration states
  * - Tangent matrix
  */
+template <typename DeviceType>
 struct State {
     size_t num_system_nodes;
-    Kokkos::View<size_t*> ID;
-    Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
-    Kokkos::View<size_t*> active_dofs;
-    Kokkos::View<size_t*> node_freedom_map_table;
+    Kokkos::View<size_t*, DeviceType> ID;
+    Kokkos::View<FreedomSignature*, DeviceType> node_freedom_allocation_table;
+    Kokkos::View<size_t*, DeviceType> active_dofs;
+    Kokkos::View<size_t*, DeviceType> node_freedom_map_table;
 
-    Kokkos::View<double* [7]> x0;          //< Initial global position/rotation
-    Kokkos::View<double* [7]> x;           //< Current global position/rotation
-    Kokkos::View<double* [6]> q_delta;     //< Displacement increment
-    Kokkos::View<double* [7]> q_prev;      //< Previous state
-    Kokkos::View<double* [7]> q;           //< Current state
-    Kokkos::View<double* [6]> v;           //< Velocity
-    Kokkos::View<double* [6]> vd;          //< Acceleration
-    Kokkos::View<double* [6]> a;           //< Algorithmic acceleration
-    Kokkos::View<double* [6]> f;           //< External forces
-    Kokkos::View<double* [6][6]> tangent;  //< Tangent matrix
+    Kokkos::View<double* [7], DeviceType> x0;          //< Initial global position/rotation
+    Kokkos::View<double* [7], DeviceType> x;           //< Current global position/rotation
+    Kokkos::View<double* [6], DeviceType> q_delta;     //< Displacement increment
+    Kokkos::View<double* [7], DeviceType> q_prev;      //< Previous state
+    Kokkos::View<double* [7], DeviceType> q;           //< Current state
+    Kokkos::View<double* [6], DeviceType> v;           //< Velocity
+    Kokkos::View<double* [6], DeviceType> vd;          //< Acceleration
+    Kokkos::View<double* [6], DeviceType> a;           //< Algorithmic acceleration
+    Kokkos::View<double* [6], DeviceType> f;           //< External forces
+    Kokkos::View<double* [6][6], DeviceType> tangent;  //< Tangent matrix
 
     explicit State(size_t num_system_nodes_)
         : num_system_nodes(num_system_nodes_),

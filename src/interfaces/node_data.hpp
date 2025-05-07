@@ -32,7 +32,8 @@ struct NodeData {
 
     /// @brief Populates node position, displacement, velocity, acceleration from state data
     /// @param node
-    void UpdateMotion(const HostState& host_state) {
+    template <typename DeviceType>
+    void UpdateMotion(const HostState<DeviceType>& host_state) {
         for (auto i = 0U; i < kLieGroupComponents; ++i) {
             this->position[i] = host_state.x(this->id, i);
             this->displacement[i] = host_state.q(this->id, i);
