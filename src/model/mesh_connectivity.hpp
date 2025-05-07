@@ -30,19 +30,19 @@ public:
     /**
      * @brief Adds a mass element's node connectivity
      * @param elem_id The mass element ID
-     * @param node_ids The vector of node IDs connected to this mass
+     * @param node_id The node ID connected to this mass
      */
-    void AddMassElementConnectivity(size_t elem_id, const std::vector<size_t>& node_ids) {
-        masses_[elem_id] = node_ids;
+    void AddMassElementConnectivity(size_t elem_id, size_t node_id) {
+        masses_[elem_id] = std::vector<size_t>{node_id};
     }
 
     /**
      * @brief Adds a spring element's node connectivity
      * @param elem_id The spring element ID
-     * @param node_ids The vector of node IDs connected to this spring
+     * @param node_ids The array of node IDs connected to this spring
      */
-    void AddSpringElementConnectivity(size_t elem_id, const std::vector<size_t>& node_ids) {
-        springs_[elem_id] = node_ids;
+    void AddSpringElementConnectivity(size_t elem_id, const std::array<size_t, 2>& node_ids) {
+        springs_[elem_id] = std::vector<size_t>{node_ids[0], node_ids[1]};
     }
 
     /**
@@ -94,7 +94,7 @@ public:
      * @brief Export mesh connectivity information to a YAML file
      * @param filename Path to the output YAML file
      */
-    void ExportToYAML(const std::string& filename = "mesh_connectivity.yaml") const {
+    void ExportToYAML(const std::string& filename) const {
         YAML::Node root;
 
         ExportElementTypeToYAML(root, "beams", beams_);
@@ -152,9 +152,9 @@ public:
     }
 
 private:
+    std::unordered_map<size_t, std::vector<size_t>> beams_;
     std::unordered_map<size_t, std::vector<size_t>> masses_;
     std::unordered_map<size_t, std::vector<size_t>> springs_;
-    std::unordered_map<size_t, std::vector<size_t>> beams_;
     std::unordered_map<size_t, std::vector<size_t>> constraints_;
 
     /**

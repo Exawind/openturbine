@@ -17,10 +17,10 @@ protected:
         mesh_connectivity.AddBeamElementConnectivity(2, {9, 10, 11, 12, 13});
 
         // Mass connectivity
-        mesh_connectivity.AddMassElementConnectivity(1, {0});
+        mesh_connectivity.AddMassElementConnectivity(1, 0);
 
         // Spring connectivity
-        mesh_connectivity.AddSpringElementConnectivity(1, {1, 2});
+        mesh_connectivity.AddSpringElementConnectivity(1, std::array<size_t, 2>{1, 2});
 
         // Constraint connectivity
         mesh_connectivity.AddConstraintConnectivity(1, {0, 1});
@@ -69,7 +69,7 @@ TEST_F(MeshConnectivityTest, MassConnectivity) {
     EXPECT_EQ(nodes[0], 0);
 
     // Add new mass element connectivity
-    mesh_connectivity.AddMassElementConnectivity(2, {5});
+    mesh_connectivity.AddMassElementConnectivity(2, 5);
     nodes = mesh_connectivity.GetMassElementConnectivity(2);
     ASSERT_EQ(nodes.size(), 1);
     EXPECT_EQ(nodes[0], 5);
@@ -83,7 +83,7 @@ TEST_F(MeshConnectivityTest, SpringConnectivity) {
     EXPECT_EQ(nodes[1], 2);
 
     // Add new spring element connectivity
-    mesh_connectivity.AddSpringElementConnectivity(2, {3, 4});
+    mesh_connectivity.AddSpringElementConnectivity(2, std::array<size_t, 2>{3, 4});
     nodes = mesh_connectivity.GetSpringElementConnectivity(2);
     ASSERT_EQ(nodes.size(), 2);
     EXPECT_EQ(nodes[0], 3);
