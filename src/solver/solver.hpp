@@ -131,36 +131,10 @@ struct Solver {
               constraint_row_range, active_dofs, node_freedom_map_table, num_nodes_per_element,
               node_state_indices
           )),
-          b("b", num_dofs),
-          x("x", num_dofs) {
+          b(Kokkos::view_alloc("b", Kokkos::WithoutInitializing), num_dofs),
+          x(Kokkos::view_alloc("x", Kokkos::WithoutInitializing), num_dofs) {
         dss_symbolic(handle, A);
     }
-
-    // cppcheck-suppress missingMemberCopy
-    /*
-    Solver(const Solver& other) = default;
-    Solver(Solver&& other) noexcept = delete;
-    ~Solver() = default;
-
-    Solver& operator=(const Solver& other) {
-        if (this == &other) {
-            return *this;
-        }
-
-        auto tmp = other;
-        std::swap(num_system_nodes, tmp.num_system_nodes);
-        std::swap(num_system_dofs, tmp.num_system_dofs);
-        std::swap(num_dofs, tmp.num_dofs);
-        std::swap(A, tmp.A);
-        std::swap(b, tmp.b);
-        std::swap(x, tmp.x);
-        std::swap(handle, tmp.handle);
-        std::swap(convergence_err, tmp.convergence_err);
-        return *this;
-    }
-
-    Solver& operator=(Solver&& other) noexcept = delete;
-    */
 };
 
 }  // namespace openturbine

@@ -4,6 +4,7 @@
 
 #include "interfaces/cfd/interface_input.hpp"
 #include "interfaces/cfd/turbine.hpp"
+#include "interfaces/host_state.hpp"
 #include "model/model.hpp"
 #include "utilities/netcdf/node_state_writer.hpp"
 
@@ -55,10 +56,8 @@ public:
     /// @brief  OpenTurbine class state class for temporarily saving state
     State state_save;
 
-    Kokkos::View<double* [7]>::HostMirror host_state_x;
-    Kokkos::View<double* [7]>::HostMirror host_state_q;
-    Kokkos::View<double* [6]>::HostMirror host_state_v;
-    Kokkos::View<double* [6]>::HostMirror host_state_vd;
+    /// @brief Host local copy of State
+    openturbine::interfaces::HostState host_state;
 
     /// @brief Current timestep index
     size_t current_timestep_{0};

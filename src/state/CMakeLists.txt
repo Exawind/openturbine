@@ -5,7 +5,6 @@ install(FILES
         calculate_next_state.hpp
         clone_state.hpp
         copy_state_data.hpp
-        set_node_external_loads.hpp
         state.hpp
         update_algorithmic_acceleration.hpp
         update_dynamic_prediction.hpp

@@ -73,43 +73,106 @@ struct Beams {
           max_elem_nodes(max_e_nodes),
           max_elem_qps(max_e_qps),
           // Element Data
-          num_nodes_per_element("num_nodes_per_element", num_elems),
-          num_qps_per_element("num_qps_per_element", num_elems),
-          node_state_indices("node_state_indices", num_elems, max_elem_nodes),
-          element_freedom_signature("element_freedom_signature", num_elems, max_elem_nodes),
-          element_freedom_table("element_freedom_table", num_elems, max_elem_nodes),
-          gravity("gravity"),
+          num_nodes_per_element(
+              Kokkos::view_alloc("num_nodes_per_element", Kokkos::WithoutInitializing), num_elems
+          ),
+          num_qps_per_element(
+              Kokkos::view_alloc("num_qps_per_element", Kokkos::WithoutInitializing), num_elems
+          ),
+          node_state_indices(
+              Kokkos::view_alloc("node_state_indices", Kokkos::WithoutInitializing), num_elems,
+              max_elem_nodes
+          ),
+          element_freedom_signature(
+              Kokkos::view_alloc("element_freedom_signature", Kokkos::WithoutInitializing),
+              num_elems, max_elem_nodes
+          ),
+          element_freedom_table(
+              Kokkos::view_alloc("element_freedom_table", Kokkos::WithoutInitializing), num_elems,
+              max_elem_nodes
+          ),
+          gravity(Kokkos::view_alloc("gravity", Kokkos::WithoutInitializing)),
           // Node Data
-          node_x0("node_x0", num_elems, max_elem_nodes),
-          node_u("node_u", num_elems, max_elem_nodes),
-          node_u_dot("node_u_dot", num_elems, max_elem_nodes),
-          node_u_ddot("node_u_ddot", num_elems, max_elem_nodes),
-          node_FX("node_force_external", num_elems, max_elem_nodes),
+          node_x0(
+              Kokkos::view_alloc("node_x0", Kokkos::WithoutInitializing), num_elems, max_elem_nodes
+          ),
+          node_u(
+              Kokkos::view_alloc("node_u", Kokkos::WithoutInitializing), num_elems, max_elem_nodes
+          ),
+          node_u_dot(
+              Kokkos::view_alloc("node_u_dot", Kokkos::WithoutInitializing), num_elems,
+              max_elem_nodes
+          ),
+          node_u_ddot(
+              Kokkos::view_alloc("node_u_ddot", Kokkos::WithoutInitializing), num_elems,
+              max_elem_nodes
+          ),
+          node_FX(
+              Kokkos::view_alloc("node_force_external", Kokkos::WithoutInitializing), num_elems,
+              max_elem_nodes
+          ),
           // Quadrature Point data
-          qp_weight("qp_weight", num_elems, max_elem_qps),
-          qp_jacobian("qp_jacobian", num_elems, max_elem_qps),
-          qp_Mstar("qp_Mstar", num_elems, max_elem_qps),
-          qp_Cstar("qp_Cstar", num_elems, max_elem_qps),
-          qp_x("qp_x", num_elems, max_elem_qps),
-          qp_x0("qp_x0", num_elems, max_elem_qps),
-          qp_x0_prime("qp_x0_prime", num_elems, max_elem_qps),
-          qp_r0("qp_r0", num_elems, max_elem_qps),
-          qp_u("qp_u", num_elems, max_elem_qps),
-          qp_u_prime("qp_u_prime", num_elems, max_elem_qps),
-          qp_u_dot("qp_u_dot", num_elems, max_elem_qps),
-          qp_u_ddot("qp_u_ddot", num_elems, max_elem_qps),
-          qp_r("qp_r", num_elems, max_elem_qps),
-          qp_r_prime("qp_r_prime", num_elems, max_elem_qps),
-          qp_omega("qp_omega", num_elems, max_elem_qps),
-          qp_omega_dot("qp_omega_dot", num_elems, max_elem_qps),
-          qp_deformation("qp_deformation", num_elems, max_elem_qps),
-          qp_E("qp_E", num_elems, max_elem_qps),
-          qp_Fe("qp_Fe", num_elems, max_elem_qps),
-          residual_vector_terms("residual_vector_terms", num_elems, max_elem_nodes),
-          system_matrix_terms("system_matrix_terms", num_elems, max_elem_nodes, max_elem_nodes),
+          qp_weight(
+              Kokkos::view_alloc("qp_weight", Kokkos::WithoutInitializing), num_elems, max_elem_qps
+          ),
+          qp_jacobian(
+              Kokkos::view_alloc("qp_jacobian", Kokkos::WithoutInitializing), num_elems, max_elem_qps
+          ),
+          qp_Mstar(
+              Kokkos::view_alloc("qp_Mstar", Kokkos::WithoutInitializing), num_elems, max_elem_qps
+          ),
+          qp_Cstar(
+              Kokkos::view_alloc("qp_Cstar", Kokkos::WithoutInitializing), num_elems, max_elem_qps
+          ),
+          qp_x(Kokkos::view_alloc("qp_x", Kokkos::WithoutInitializing), num_elems, max_elem_qps),
+          qp_x0(Kokkos::view_alloc("qp_x0", Kokkos::WithoutInitializing), num_elems, max_elem_qps),
+          qp_x0_prime(
+              Kokkos::view_alloc("qp_x0_prime", Kokkos::WithoutInitializing), num_elems, max_elem_qps
+          ),
+          qp_r0(Kokkos::view_alloc("qp_r0", Kokkos::WithoutInitializing), num_elems, max_elem_qps),
+          qp_u(Kokkos::view_alloc("qp_u", Kokkos::WithoutInitializing), num_elems, max_elem_qps),
+          qp_u_prime(
+              Kokkos::view_alloc("qp_u_prime", Kokkos::WithoutInitializing), num_elems, max_elem_qps
+          ),
+          qp_u_dot(
+              Kokkos::view_alloc("qp_u_dot", Kokkos::WithoutInitializing), num_elems, max_elem_qps
+          ),
+          qp_u_ddot(
+              Kokkos::view_alloc("qp_u_ddot", Kokkos::WithoutInitializing), num_elems, max_elem_qps
+          ),
+          qp_r(Kokkos::view_alloc("qp_r", Kokkos::WithoutInitializing), num_elems, max_elem_qps),
+          qp_r_prime(
+              Kokkos::view_alloc("qp_r_prime", Kokkos::WithoutInitializing), num_elems, max_elem_qps
+          ),
+          qp_omega(
+              Kokkos::view_alloc("qp_omega", Kokkos::WithoutInitializing), num_elems, max_elem_qps
+          ),
+          qp_omega_dot(
+              Kokkos::view_alloc("qp_omega_dot", Kokkos::WithoutInitializing), num_elems,
+              max_elem_qps
+          ),
+          qp_deformation(
+              Kokkos::view_alloc("qp_deformation", Kokkos::WithoutInitializing), num_elems,
+              max_elem_qps
+          ),
+          qp_Fe(Kokkos::view_alloc("qp_Fe", Kokkos::WithoutInitializing), num_elems, max_elem_qps),
+          residual_vector_terms(
+              Kokkos::view_alloc("residual_vector_terms", Kokkos::WithoutInitializing), num_elems,
+              max_elem_nodes
+          ),
+          system_matrix_terms(
+              Kokkos::view_alloc("system_matrix_terms", Kokkos::WithoutInitializing), num_elems,
+              max_elem_nodes, max_elem_nodes
+          ),
           // Shape Function data
-          shape_interp("shape_interp", num_elems, max_elem_nodes, max_elem_qps),
-          shape_deriv("deriv_interp", num_elems, max_elem_nodes, max_elem_qps) {
+          shape_interp(
+              Kokkos::view_alloc("shape_interp", Kokkos::WithoutInitializing), num_elems,
+              max_elem_nodes, max_elem_qps
+          ),
+          shape_deriv(
+              Kokkos::view_alloc("deriv_interp", Kokkos::WithoutInitializing), num_elems,
+              max_elem_nodes, max_elem_qps
+          ) {
         Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
     }
 };

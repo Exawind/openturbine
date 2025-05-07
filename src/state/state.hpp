@@ -21,35 +21,41 @@ struct State {
     Kokkos::View<size_t*> active_dofs;
     Kokkos::View<size_t*> node_freedom_map_table;
 
-    View_Nx7 x0;                                   //< Initial global position/rotation
-    View_Nx7 x;                                    //< Current global position/rotation
-    View_Nx6 q_delta;                              //< Displacement increment
-    View_Nx7 q_prev;                               //< Previous state
-    View_Nx7 q;                                    //< Current state
-    View_Nx6 v;                                    //< Velocity
-    View_Nx6 vd;                                   //< Acceleration
-    View_Nx6 a;                                    //< Algorithmic acceleration
-    View_Nx6 f;                                    //< External forces
-    Kokkos::View<double* [6]>::HostMirror host_f;  //< External forces mirror on host
-    Kokkos::View<double* [6][6]> tangent;          //< Tangent matrix
+    Kokkos::View<double* [7]> x0;          //< Initial global position/rotation
+    Kokkos::View<double* [7]> x;           //< Current global position/rotation
+    Kokkos::View<double* [6]> q_delta;     //< Displacement increment
+    Kokkos::View<double* [7]> q_prev;      //< Previous state
+    Kokkos::View<double* [7]> q;           //< Current state
+    Kokkos::View<double* [6]> v;           //< Velocity
+    Kokkos::View<double* [6]> vd;          //< Acceleration
+    Kokkos::View<double* [6]> a;           //< Algorithmic acceleration
+    Kokkos::View<double* [6]> f;           //< External forces
+    Kokkos::View<double* [6][6]> tangent;  //< Tangent matrix
 
     explicit State(size_t num_system_nodes_)
         : num_system_nodes(num_system_nodes_),
-          ID("ID", num_system_nodes),
-          node_freedom_allocation_table("node_freedom_allocation_table", num_system_nodes),
-          active_dofs("active_dofs", num_system_nodes),
-          node_freedom_map_table("node_freedom_map_table", num_system_nodes),
-          x0("x0", num_system_nodes),
-          x("x", num_system_nodes),
-          q_delta("q_delta", num_system_nodes),
-          q_prev("q_prev", num_system_nodes),
-          q("q", num_system_nodes),
-          v("v", num_system_nodes),
-          vd("vd", num_system_nodes),
-          a("a", num_system_nodes),
-          f("f", num_system_nodes),
-          host_f("host_f", num_system_nodes),
-          tangent("tangent", num_system_nodes) {
+          ID(Kokkos::view_alloc("ID", Kokkos::WithoutInitializing), num_system_nodes),
+          node_freedom_allocation_table(
+              Kokkos::view_alloc("node_freedom_allocation_table", Kokkos::WithoutInitializing),
+              num_system_nodes
+          ),
+          active_dofs(
+              Kokkos::view_alloc("active_dofs", Kokkos::WithoutInitializing), num_system_nodes
+          ),
+          node_freedom_map_table(
+              Kokkos::view_alloc("node_freedom_map_table", Kokkos::WithoutInitializing),
+              num_system_nodes
+          ),
+          x0(Kokkos::view_alloc("x0", Kokkos::WithoutInitializing), num_system_nodes),
+          x(Kokkos::view_alloc("x", Kokkos::WithoutInitializing), num_system_nodes),
+          q_delta(Kokkos::view_alloc("q_delta", Kokkos::WithoutInitializing), num_system_nodes),
+          q_prev(Kokkos::view_alloc("q_prev", Kokkos::WithoutInitializing), num_system_nodes),
+          q(Kokkos::view_alloc("q", Kokkos::WithoutInitializing), num_system_nodes),
+          v(Kokkos::view_alloc("v", Kokkos::WithoutInitializing), num_system_nodes),
+          vd(Kokkos::view_alloc("vd", Kokkos::WithoutInitializing), num_system_nodes),
+          a(Kokkos::view_alloc("a", Kokkos::WithoutInitializing), num_system_nodes),
+          f(Kokkos::view_alloc("f", Kokkos::WithoutInitializing), num_system_nodes),
+          tangent(Kokkos::view_alloc("tangent", Kokkos::WithoutInitializing), num_system_nodes) {
         // Initialize q and q_prev rotation to identity
         Kokkos::deep_copy(Kokkos::subview(this->q_prev, Kokkos::ALL, 3), 1.);
         Kokkos::deep_copy(Kokkos::subview(this->q, Kokkos::ALL, 3), 1.);

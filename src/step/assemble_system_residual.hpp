@@ -24,7 +24,6 @@ inline void AssembleSystemResidual(Solver& solver, Elements& elements, State& st
     auto springs_vector_policy =
         Kokkos::RangePolicy<>(0, static_cast<int>(elements.springs.num_elems));
 
-    Kokkos::deep_copy(state.f, state.host_f);
     Kokkos::parallel_for(
         "ContributeForcesToVector", forces_vector_policy,
         ContributeForcesToVector{

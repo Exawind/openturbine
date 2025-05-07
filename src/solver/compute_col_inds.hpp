@@ -21,7 +21,10 @@ template <typename RowPtrType, typename IndicesType>
     const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& row_range,
     const typename RowPtrType::const_type& row_ptrs
 ) {
-    const auto col_inds = IndicesType("col_inds", static_cast<size_t>(num_non_zero));
+    const auto col_inds = IndicesType(
+        Kokkos::view_alloc("col_inds", Kokkos::WithoutInitializing),
+        static_cast<size_t>(num_non_zero)
+    );
 
     const auto num_nodes = active_dofs.extent(0);
     const auto num_constraints = row_range.extent(0);
