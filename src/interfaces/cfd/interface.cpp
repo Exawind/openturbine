@@ -186,7 +186,7 @@ Interface::Interface(const InterfaceInput& input)
     : model(input.gravity),
       turbine(CreateTurbine(input.turbine, model)),
       state(model.CreateState()),
-      elements(model.CreateElements()),
+      elements(model.CreateElements<DeviceType>()),
       constraints(model.CreateConstraints()),
       parameters(true, input.max_iter, input.time_step, input.rho_inf),
       solver(CreateSolver<DeviceType>(state, elements, constraints)),

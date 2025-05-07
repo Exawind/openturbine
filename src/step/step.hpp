@@ -42,8 +42,8 @@ namespace openturbine {
  */
 template <typename DeviceType>
 inline bool Step(
-    StepParameters& parameters, Solver<DeviceType>& solver, Elements& elements, State& state,
-    Constraints& constraints
+    StepParameters& parameters, Solver<DeviceType>& solver, Elements<DeviceType>& elements,
+    State& state, Constraints& constraints
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Step");
 

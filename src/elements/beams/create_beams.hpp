@@ -10,8 +10,9 @@
 
 namespace openturbine {
 
-inline Beams CreateBeams(const BeamsInput& beams_input, const std::vector<Node>& nodes) {
-    Beams beams(
+template <typename DeviceType>
+inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::vector<Node>& nodes) {
+    Beams<DeviceType> beams(
         beams_input.NumElements(), beams_input.MaxElemNodes(), beams_input.MaxElemQuadraturePoints()
     );
 

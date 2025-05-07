@@ -110,7 +110,9 @@ TEST(MassesTest, ExternalForce) {
     auto parameters = StepParameters(true, 5, time_step, 0.0);
 
     auto constraints = model.CreateConstraints();
-    auto elements = model.CreateElements();
+    auto elements = model.CreateElements<
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>(
+    );
 
     auto solver = CreateSolver<>(state, elements, constraints);
 
