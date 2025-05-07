@@ -60,7 +60,6 @@ endif()
 target_link_system_libraries(openturbine_library PUBLIC
   KokkosKernels::kokkoskernels
   LAPACK::LAPACK
-  lapacke
   ${YAML_CPP_TARGET}
   ${FS_LIB}
   ${NETCDF_TARGET}
