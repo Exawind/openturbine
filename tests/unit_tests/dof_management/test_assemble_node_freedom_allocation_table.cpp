@@ -13,7 +13,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithOneNode_NoMassNoS
     Kokkos::deep_copy(beams.node_state_indices, 0U);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
     auto masses = Masses<DeviceType>(0U);
-    auto springs = Springs(0U);
+    auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
     auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
@@ -35,7 +35,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneMassElementWithOneNode_NoBeamNoS
     auto beams = Beams<DeviceType>(0U, 0U, 0U);
     auto masses = Masses<DeviceType>(1U);  // 1 mass element with 1 node
     Kokkos::deep_copy(masses.state_indices, 0U);
-    auto springs = Springs(0U);
+    auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
     auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
@@ -56,7 +56,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneSpringElementWithTwoNodes_NoBeam
 
     auto beams = Beams<DeviceType>(0U, 0U, 0U);
     auto masses = Masses<DeviceType>(0U);
-    auto springs = Springs(1U);  // 1 spring element with 2 nodes
+    auto springs = Springs<DeviceType>(1U);  // 1 spring element with 2 nodes
     constexpr auto host_node_state_indices_data = std::array{0UL, 1UL};
     const auto host_node_state_indices =
         Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
@@ -92,7 +92,7 @@ TEST(
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
     auto masses = Masses<DeviceType>(1U);  // 1 mass element with 1 node
     Kokkos::deep_copy(masses.state_indices, 1U);
-    auto springs = Springs(0U);
+    auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
     auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
@@ -123,7 +123,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithTwoNodes_NoMassNo
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
     auto masses = Masses<DeviceType>(0U);
-    auto springs = Springs(0U);
+    auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
     auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
@@ -154,7 +154,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, TwoBeamElementsWithOneNode_NoMassNo
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
     auto masses = Masses<DeviceType>(0U);
-    auto springs = Springs(0U);
+    auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
     auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
@@ -192,7 +192,7 @@ TEST(
     auto masses = Masses<DeviceType>(1U);  // 1 mass element with 1 node
     Kokkos::deep_copy(masses.state_indices, 2U);
 
-    auto springs = Springs(1U);  // 1 spring element with 2 nodes
+    auto springs = Springs<DeviceType>(1U);  // 1 spring element with 2 nodes
     constexpr auto host_node_state_indices_data_springs = std::array{3UL, 4UL};
     const auto host_node_state_indices_springs =
         Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(
