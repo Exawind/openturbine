@@ -181,7 +181,7 @@ private:
         }
         std::sort(keys.begin(), keys.end());
 
-        // Add each element in sorted order i.e. from lowest to highest
+        // Add each element in sorted order of id
         for (const auto& id : keys) {
             YAML::Node array_node;
             for (const auto& node_id : map.at(id)) {

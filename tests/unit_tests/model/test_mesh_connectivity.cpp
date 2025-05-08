@@ -62,7 +62,7 @@ TEST_F(MeshConnectivityTest, BeamElementConnectivity) {
     EXPECT_EQ(nodes[2], 22);
 }
 
-TEST_F(MeshConnectivityTest, MassConnectivity) {
+TEST_F(MeshConnectivityTest, MassElementConnectivity) {
     // Retrieve existing mass element connectivity
     auto nodes = mesh_connectivity.GetMassElementConnectivity(1);
     ASSERT_EQ(nodes.size(), 1);
@@ -75,7 +75,7 @@ TEST_F(MeshConnectivityTest, MassConnectivity) {
     EXPECT_EQ(nodes[0], 5);
 }
 
-TEST_F(MeshConnectivityTest, SpringConnectivity) {
+TEST_F(MeshConnectivityTest, SpringElementConnectivity) {
     // Retrieve existing spring element connectivity
     auto nodes = mesh_connectivity.GetSpringElementConnectivity(1);
     ASSERT_EQ(nodes.size(), 2);

@@ -345,9 +345,7 @@ public:
         this->constraints_.emplace_back(
             id, ConstraintType::kFixedBC, std::array{InvalidNodeID, node_id}
         );
-        this->mesh_connectivity_.AddConstraintConnectivity(
-            id, std::vector<size_t>{InvalidNodeID, node_id}
-        );
+        this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;
     }
 
@@ -357,9 +355,7 @@ public:
         this->constraints_.emplace_back(
             id, ConstraintType::kPrescribedBC, std::array{InvalidNodeID, node_id}, ref_position
         );
-        this->mesh_connectivity_.AddConstraintConnectivity(
-            id, std::vector<size_t>{InvalidNodeID, node_id}
-        );
+        this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;
     }
 
@@ -405,9 +401,7 @@ public:
         this->constraints_.emplace_back(
             id, ConstraintType::kFixedBC3DOFs, std::array{InvalidNodeID, node_id}
         );
-        this->mesh_connectivity_.AddConstraintConnectivity(
-            id, std::vector<size_t>{InvalidNodeID, node_id}
-        );
+        this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;
     }
 
@@ -418,9 +412,7 @@ public:
         this->constraints_.emplace_back(
             id, ConstraintType::kPrescribedBC3DOFs, std::array{InvalidNodeID, node_id}, ref_position
         );
-        this->mesh_connectivity_.AddConstraintConnectivity(
-            id, std::vector<size_t>{InvalidNodeID, node_id}
-        );
+        this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;
     }
 
