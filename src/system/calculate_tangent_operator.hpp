@@ -9,10 +9,11 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct CalculateTangentOperator {
     double h;
-    View_Nx6::const_type q_delta;
-    View_Nx6x6 T_gbl;
+    typename Kokkos::View<double* [6], DeviceType>::const_type q_delta;
+    Kokkos::View<double* [6][6], DeviceType> T_gbl;
 
     KOKKOS_FUNCTION
     void operator()(const int i_node) const {
