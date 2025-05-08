@@ -89,7 +89,7 @@ TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
         Kokkos::View<double[kNumElems][kNumQPs][3]>("position_derivative");
     const auto qp_jacobian = Kokkos::View<double[kNumElems][kNumQPs]>("jacobian");
     const auto calculate_jacobian =
-        CalculateJacobian{kNumNodes_per_elem,     kNumQPs_per_elem,       shape_derivative,
+        CalculateJacobian<Kokkos::DefaultExecutionSpace>{kNumNodes_per_elem,     kNumQPs_per_elem,       shape_derivative,
                           node_position_rotation, qp_position_derivative, qp_jacobian};
     Kokkos::parallel_for("calculate_jacobian", 1, calculate_jacobian);
     const auto qp_jacobian_mirror =

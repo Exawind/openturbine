@@ -25,7 +25,7 @@ TEST(CalculateJacobian, LinearElement) {
     const auto qp_jacobian = Kokkos::View<double[1][1]>("qp_jacobian");
 
     const auto calculate_jacobian =
-        CalculateJacobian{num_nodes_per_elem,     num_qps_per_elem,       shape_derivative,
+        CalculateJacobian<Kokkos::DefaultExecutionSpace>{num_nodes_per_elem,     num_qps_per_elem,       shape_derivative,
                           node_position_rotation, qp_position_derivative, qp_jacobian};
     Kokkos::parallel_for("calculate_jacobian", 1, calculate_jacobian);
 
@@ -115,7 +115,7 @@ TEST(CalculateJacobian, FourthOrderElement) {
     const auto qp_jacobian = Kokkos::View<double[num_elems][num_nodes]>("qp_jacobian");
 
     const auto calculate_jacobian =
-        CalculateJacobian{num_nodes_per_elem,     num_qps_per_elem,       shape_derivative,
+        CalculateJacobian<Kokkos::DefaultExecutionSpace>{num_nodes_per_elem,     num_qps_per_elem,       shape_derivative,
                           node_position_rotation, qp_position_derivative, qp_jacobian};
     Kokkos::parallel_for("calculate_jacobian", 1, calculate_jacobian);
 
