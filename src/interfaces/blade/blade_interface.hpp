@@ -4,7 +4,6 @@
 #include "interfaces/components/blade_input.hpp"
 #include "interfaces/components/solution_input.hpp"
 #include "interfaces/host_state.hpp"
-#include "interfaces/vtk_output.hpp"
 #include "model/model.hpp"
 #include "state/clone_state.hpp"
 #include "state/copy_state_data.hpp"
@@ -41,15 +40,18 @@ public:
           ),
           solver(CreateSolver(state, elements, constraints)),
           state_save(CloneState(state)),
-          host_state(state),
-          vtk_output(solution_input.vtk_output_path) {
+          host_state(state) {
         // Update the blade motion to match state
         UpdateNodeMotion();
 
-        // Initialize NetCDF writer if output file is specified
+        // Initialize NetCDF writer and write mesh connectivity if output path is specified
         if (!solution_input.output_file_path.empty()) {
             this->output_writer_ = std::make_unique<util::NodeStateWriter>(
-                solution_input.output_file_path, true, blade.nodes.size()
+                solution_input.output_file_path + "/blade_interface.nc", true, blade.nodes.size()
+            );
+
+            model.ExportMeshConnectivityToYAML(
+                solution_input.output_file_path + "/mesh_connectivity.yaml"
             );
         }
     }
@@ -110,29 +112,18 @@ public:
         this->constraints.UpdateDisplacement(this->blade.prescribed_root_constraint_id, u);
     }
 
-    ///@brief Writes the current blade state to VTK output files
-    void WriteOutputVTK() {
-        this->vtk_output.WriteBeam(this->blade.nodes);
-        this->vtk_output.IncrementFileIndex();
-    }
-
 private:
-    Model model;                ///< OpenTurbine class for model construction
-    components::Blade blade;    ///< Blade model input/output data
-    State state;                ///< OpenTurbine class for storing system state
-    Elements elements;          ///< OpenTurbine class for model elements (beams, masses, springs)
-    Constraints constraints;    ///< OpenTurbine class for constraints tying elements together
-    StepParameters parameters;  ///< OpenTurbine class containing solution parameters
-    Solver solver;              ///< OpenTurbine class for solving the dynamic system
-    State state_save;           ///< OpenTurbine class state class for temporarily saving state
-    HostState host_state;       ///< Host local copy of node state data
-    VTKOutput vtk_output;       ///< VTK output manager
-
-    /// @brief Current timestep index
-    size_t current_timestep_{0};
-
-    /// @brief Optional NetCDF output writer
-    std::unique_ptr<util::NodeStateWriter> output_writer_;
+    Model model;                  ///< OpenTurbine class for model construction
+    components::Blade blade;      ///< Blade model input/output data
+    State state;                  ///< OpenTurbine class for storing system state
+    Elements elements;            ///< OpenTurbine class for model elements (beams, masses, springs)
+    Constraints constraints;      ///< OpenTurbine class for constraints tying elements together
+    StepParameters parameters;    ///< OpenTurbine class containing solution parameters
+    Solver solver;                ///< OpenTurbine class for solving the dynamic system
+    State state_save;             ///< OpenTurbine class state class for temporarily saving state
+    HostState host_state;         ///< Host local copy of node state data
+    size_t current_timestep_{0};  ///< Current timestep index
+    std::unique_ptr<util::NodeStateWriter> output_writer_;  ///< NetCDF output writer
 
     /// @brief  Updates motion data for all nodes (root and blade) in the interface
     void UpdateNodeMotion() {
