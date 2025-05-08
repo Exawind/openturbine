@@ -3,9 +3,6 @@
 #include "interfaces/cfd/interface.hpp"
 #include "interfaces/cfd/interface_builder.hpp"
 #include "regression/test_utilities.hpp"
-#ifdef OpenTurbine_ENABLE_VTK
-#include "viz/vtk_lines.hpp"
-#endif
 
 namespace openturbine::tests {
 
@@ -24,7 +21,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
                          .EnableFloatingPlatform(true)
                          .SetFloatingPlatformVelocity({0., 0., 0., 0.5, 0.5, 1.})
                          .SetFloatingPlatformMassMatrix(mass_matrix)
-                         .SetOutputFile("precession_test.nc")
+                         .SetOutputFile("CFDInterfaceTest.PrecessionTest")
                          .Build();
 
     // Create reference to platform node in interface
@@ -44,12 +41,8 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[5], -0.30157681970585326, 1.e-12);
     EXPECT_NEAR(platform_node.displacement[6], -0.38049886257377241, 1.e-12);
 
-    // Verify NetCDF output file exists and contains expected data
-    const std::string output_file = "precession_test.nc";
-    EXPECT_TRUE(std::filesystem::exists(output_file));
-
     // Read and verify data from NetCDF file
-    const util::NetCDFFile file(output_file, false);
+    const util::NetCDFFile file("CFDInterfaceTest.PrecessionTest/cfd_interface.nc", false);
     std::vector<double> displacements(1);
 
     // Check displacement at step 500, platform node
@@ -119,47 +112,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[4], 0.31963488733920042, 1.e-12);
     EXPECT_NEAR(platform_node.displacement[5], -0.27587277763126217, 1.e-12);
     EXPECT_NEAR(platform_node.displacement[6], -0.83263382410791731, 1.e-12);
-
-    std::filesystem::remove(output_file);
 }
-
-#ifdef OpenTurbine_ENABLE_VTK
-void OutputLines(const FloatingPlatform& platform, size_t step_num, const std::string& output_dir) {
-    auto tmp = std::to_string(step_num);
-    auto step_num_str = std::string(5 - tmp.size(), '0') + tmp;
-    WriteLinesVTK(
-        {
-            {0, 1},
-            {0, 2},
-            {0, 3},
-        },
-        {
-            platform.node.position,
-            platform.mooring_lines[0].fairlead_node.position,
-            platform.mooring_lines[1].fairlead_node.position,
-            platform.mooring_lines[2].fairlead_node.position,
-        },
-        output_dir + "/platform_" + step_num_str
-    );
-
-    WriteLinesVTK(
-        {
-            {0, 1},
-            {2, 3},
-            {4, 5},
-        },
-        {
-            platform.mooring_lines[0].fairlead_node.position,
-            platform.mooring_lines[0].anchor_node.position,
-            platform.mooring_lines[1].fairlead_node.position,
-            platform.mooring_lines[1].anchor_node.position,
-            platform.mooring_lines[2].fairlead_node.position,
-            platform.mooring_lines[2].anchor_node.position,
-        },
-        output_dir + "/mooring_" + step_num_str
-    );
-}
-#endif
 
 TEST(CFDInterfaceTest, FloatingPlatform) {
     // Solution parameters
@@ -208,7 +161,7 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
                          .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
                          .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
                          .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4})
-                         .SetOutputFile("FloatingPlatform.nc")
+                         .SetOutputFile("CFDInterfaceTest.FloatingPlatform")
                          .Build();
 
     // Calculate buoyancy force as percentage of gravitational force plus spring forces times
@@ -216,19 +169,10 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     const auto platform_gravity_force = -gravity[2] * platform_mass;
     const auto buoyancy_force = initial_spring_force + platform_gravity_force;
 
-    const std::string output_dir{"FloatingPlatform"};
-    RemoveDirectoryWithRetries(output_dir);
-    std::filesystem::create_directory(output_dir);
-
     // Iterate through time steps
     for (size_t i = 0U; i < n_steps; ++i) {
         // Calculate current time
         const auto t = static_cast<double>(i) * time_step;
-
-#ifdef OpenTurbine_ENABLE_VTK
-        // Write VTK visualization output
-        OutputLines(interface.turbine.floating_platform, i, output_dir);
-#endif
 
         // Apply load in y direction
         interface.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);

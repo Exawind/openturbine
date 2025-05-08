@@ -46,10 +46,15 @@ public:
 
         // Initialize NetCDF writer and write mesh connectivity if output path is specified
         if (!solution_input.output_file_path.empty()) {
+            // Create output directory if it doesn't exist
+            std::filesystem::create_directories(solution_input.output_file_path);
+
+            // Initialize NetCDF writer
             this->output_writer_ = std::make_unique<util::NodeStateWriter>(
                 solution_input.output_file_path + "/blade_interface.nc", true, blade.nodes.size()
             );
 
+            // Write mesh connectivity to YAML file
             model.ExportMeshConnectivityToYAML(
                 solution_input.output_file_path + "/mesh_connectivity.yaml"
             );
