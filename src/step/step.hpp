@@ -94,8 +94,8 @@ inline bool Step(
     );
 
     Kokkos::parallel_for(
-        "UpdateGlobalPosition", solver.num_system_nodes,
-        UpdateGlobalPosition{
+        "UpdateGlobalPosition", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes),
+        UpdateGlobalPosition<DeviceType>{
             state.q,
             state.x0,
             state.x,

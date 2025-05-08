@@ -6,10 +6,11 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct UpdateGlobalPosition {
-    Kokkos::View<double* [7]>::const_type q;
-    Kokkos::View<double* [7]>::const_type x0;
-    Kokkos::View<double* [7]> x;
+    typename Kokkos::View<double* [7], DeviceType>::const_type q;
+    typename Kokkos::View<double* [7], DeviceType>::const_type x0;
+    Kokkos::View<double* [7], DeviceType> x;
 
     KOKKOS_FUNCTION
     void operator()(int i) const {
