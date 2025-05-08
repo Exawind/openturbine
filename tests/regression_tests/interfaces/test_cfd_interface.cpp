@@ -208,6 +208,7 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
                          .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
                          .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
                          .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4})
+                         .SetOutputFile("FloatingPlatform.nc")
                          .Build();
 
     // Calculate buoyancy force as percentage of gravitational force plus spring forces times

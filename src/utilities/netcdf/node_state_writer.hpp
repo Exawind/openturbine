@@ -19,6 +19,7 @@ namespace openturbine::util {
  *   - Velocity (x, y, z, i, j, k)
  *   - Acceleration (x, y, z, i, j, k)
  *   - Force (x, y, z, i, j, k)
+ *   - Deformation (x, y, z)
  *
  * Each item is stored as a separate variable in the NetCDF file, organized by timestep
  * and node index. The file structure uses an unlimited time dimension to allow for
@@ -48,6 +49,9 @@ public:
         this->DefineStateVariables("v", dimensions, false);  // Velocity (x, y, z, i, j, k)
         this->DefineStateVariables("a", dimensions, false);  // Acceleration (x, y, z, i, j, k)
         this->DefineStateVariables("f", dimensions, false);  // Force (x, y, z, i, j, k)
+
+        // Define variables for deformation
+        this->DefineStateVariables("deformation", dimensions, true);  // Deformation (x, y, z)
     }
 
     /**
@@ -105,6 +109,34 @@ public:
         if (!w.empty() && (component_prefix == "x" || component_prefix == "u")) {
             file_.WriteVariableAt(component_prefix + "_w", start, count, w);
         }
+    }
+
+    /**
+     * @brief Write deformation data for all nodes at a timestep
+     *
+     * @param timestep Current timestep index
+     * @param x Data for x component of deformation
+     * @param y Data for y component of deformation
+     * @param z Data for z component of deformation
+     */
+    void WriteDeformationDataAtTimestep(
+        size_t timestep, const std::vector<double>& x, const std::vector<double>& y,
+        const std::vector<double>& z
+    ) const {
+        // Validate vector sizes - must be the same for all components
+        const size_t size = x.size();
+        if (y.size() != size || z.size() != size) {
+            throw std::invalid_argument("All vectors must have the same size");
+        }
+
+        // Write data to variables
+        const std::vector<size_t> start = {timestep, 0};  // start at the current timestep and node 0
+        const std::vector<size_t> count = {
+            1, x.size()
+        };  // write one timestep worth of data for all nodes
+        file_.WriteVariableAt("deformation_x", start, count, x);
+        file_.WriteVariableAt("deformation_y", start, count, y);
+        file_.WriteVariableAt("deformation_z", start, count, z);
     }
 
     /// @brief Get the NetCDF file object
