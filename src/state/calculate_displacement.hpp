@@ -6,11 +6,12 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct CalculateDisplacement {
     double h;
-    Kokkos::View<double* [6]>::const_type q_delta;
-    Kokkos::View<double* [7]>::const_type q_prev;
-    Kokkos::View<double* [7]> q;
+    typename Kokkos::View<double* [6], DeviceType>::const_type q_delta;
+    typename Kokkos::View<double* [7], DeviceType>::const_type q_prev;
+    Kokkos::View<double* [7], DeviceType> q;
 
     KOKKOS_FUNCTION
     void operator()(const int i_node) const {
