@@ -17,14 +17,9 @@
 #include "utilities/controllers/turbine_controller.hpp"
 #include "vendor/dylib/dylib.hpp"
 
-#ifdef OpenTurbine_ENABLE_VTK
-#include "vtkout.hpp"
-#endif
-
 namespace openturbine::tests {
 
 TEST(RotorTest, IEA15RotorOnly) {
-    constexpr bool write_output{true};
     constexpr auto gravity = std::array{-9.81, 0., 0.};
     constexpr auto omega = std::array{0., 0., -0.79063415025};  // rotor angular velocity (rad/s)
 
@@ -113,22 +108,18 @@ TEST(RotorTest, IEA15RotorOnly) {
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
-    // Set NetCDF output writer
-    const size_t total_qps = num_blades * trapz_quadrature.size();
-    model.SetOutputWriter("rotor_test_1.nc", total_qps);
-    model.WriteQPOutputsAtTimestep(state, elements.beams, 0);
-
-    // Remove output directory for writing step data
-    if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
-        RemoveDirectoryWithRetries("steps");
-        std::filesystem::create_directory("steps");
+    // Create output directory if it doesn't exist
+    auto output_dir = std::string("RotorTest.IEA15RotorOnly");
+    std::filesystem::create_directories(output_dir);
 
-        // Write quadrature point global positions to file and VTK
-        // Write vtk visualization file
-        WriteVTKBeamsQP(state, elements.beams, "steps/step_0000.vtu");
+    // Export mesh connectivity to yaml
+    model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
+
+    // Set NetCDF output writer
+    model.SetOutputWriter(output_dir + "/rotor_test.nc", num_blades * num_nodes);
+    model.WriteNodeOutputsAtTimestep(state, 0);
 #endif
-    }
 
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
@@ -151,23 +142,13 @@ TEST(RotorTest, IEA15RotorOnly) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
 
-        // Write outputs and viz files
-        model.WriteQPOutputsAtTimestep(state, elements.beams, i);
-        if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
-            // Write VTK output to file
-            auto tmp = std::to_string(i + 1);
-            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-            WriteVTKBeamsQP(state, elements.beams, file_name + ".vtu");
+        model.WriteNodeOutputsAtTimestep(state, i + 1);
 #endif
-        }
     }
 }
 
 TEST(RotorTest, IEA15RotorHub) {
-    // Flag to write output
-    constexpr bool write_output(false);
-
     // Gravity vector
     constexpr auto gravity = std::array{-9.81, 0., 0.};
 
@@ -259,22 +240,19 @@ TEST(RotorTest, IEA15RotorHub) {
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
-    // Set NetCDF output writer
-    const size_t total_qps = num_blades * trapz_quadrature.size();
-    model.SetOutputWriter("rotor_test_2.nc", total_qps);
-    model.WriteQPOutputsAtTimestep(state, elements.beams, 0);
-
-    // Remove output directory for writing step data
-    if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
-        RemoveDirectoryWithRetries("steps");
-        std::filesystem::create_directory("steps");
+    // Create output directory if it doesn't exist
+    auto output_dir = std::string("RotorTest.IEA15RotorHub");
+    std::filesystem::create_directories(output_dir);
 
-        // Write quadrature point global positions to file and VTK
-        // Write vtk visualization file
-        WriteVTKBeamsQP(state, elements.beams, "steps/step_0000.vtu");
+    // Export mesh connectivity to yaml
+    model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
+
+    // Set NetCDF output writer
+    auto total_num_nodes = num_blades * num_nodes + 1;  // +1 for hub node
+    model.SetOutputWriter(output_dir + "/rotor_test.nc", total_num_nodes);
+    model.WriteNodeOutputsAtTimestep(state, 0);
 #endif
-    }
 
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
@@ -297,23 +275,13 @@ TEST(RotorTest, IEA15RotorHub) {
         // Verify that step converged
         EXPECT_EQ(converged, true);
 
-        // If flag set, write quadrature point glob position to file
-        model.WriteQPOutputsAtTimestep(state, elements.beams, i);
-        if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
-            // Write VTK output to file
-            auto tmp = std::to_string(i + 1);
-            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-            WriteVTKBeamsQP(state, elements.beams, file_name + ".vtu");
+        model.WriteNodeOutputsAtTimestep(state, i + 1);
 #endif
-        }
     }
 }
 
 TEST(RotorTest, IEA15RotorController) {
-    // Flag to write output
-    constexpr bool write_output(true);
-
     // Gravity vector
     constexpr auto gravity = std::array{-9.81, 0., 0.};
 
@@ -409,39 +377,36 @@ TEST(RotorTest, IEA15RotorController) {
     };
 
     // Define hub node and associated constraints
-    auto hub_node_d = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
+    auto hub_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
     for (size_t i = 0; i < beam_elem_ids.size(); ++i) {
         const auto q_root = RotationVectorToQuaternion(
             {0., 0., -2. * M_PI * static_cast<double>(i) / static_cast<double>(num_blades)}
         );
         const auto pitch_axis = RotateVectorByQuaternion(q_root, {1., 0., 0.});
         model.AddRotationControl(
-            {hub_node_d, model.GetBeamElement(beam_elem_ids[i]).node_ids[0]}, pitch_axis,
+            {hub_node_id, model.GetBeamElement(beam_elem_ids[i]).node_ids[0]}, pitch_axis,
             blade_pitch_command[i]
         );
     }
-    auto hub_bc_id = model.AddPrescribedBC(hub_node_d);
+    auto hub_bc_id = model.AddPrescribedBC(hub_node_id);
 
     // Create solver, elements, constraints, and state
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
-    // Set NetCDF output writer
-    const size_t total_qps = num_blades * trapz_quadrature.size();
-    model.SetOutputWriter("rotor_test_3.nc", total_qps);
-    model.WriteQPOutputsAtTimestep(state, elements.beams, 0);
-
-    // Remove output directory for writing step data
-    if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
-        RemoveDirectoryWithRetries("steps");
-        std::filesystem::create_directory("steps");
+    // Create output directory if it doesn't exist
+    auto output_dir = std::string("RotorTest.IEA15RotorController");
+    std::filesystem::create_directories(output_dir);
 
-        // Write quadrature point global positions to file and VTK
-        // Write vtk visualization file
-        WriteVTKBeamsQP(state, elements.beams, "steps/step_0000.vtu");
+    // Export mesh connectivity to yaml
+    model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
+
+    // Set NetCDF output writer
+    auto total_num_nodes = num_blades * num_nodes + 1;  // +1 for hub node
+    model.SetOutputWriter(output_dir + "/rotor_test.nc", total_num_nodes);
+    model.WriteNodeOutputsAtTimestep(state, 0);
 #endif
-    }
 
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
@@ -467,16 +432,9 @@ TEST(RotorTest, IEA15RotorController) {
         // Verify that step converged
         EXPECT_EQ(converged, true);
 
-        // If flag set, write quadrature point glob position to file
-        model.WriteQPOutputsAtTimestep(state, elements.beams, i);
-        if (write_output) {
 #ifdef OpenTurbine_ENABLE_VTK
-            // Write VTK output to file
-            auto tmp = std::to_string(i + 1);
-            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-            WriteVTKBeamsQP(state, elements.beams, file_name + ".vtu");
+        model.WriteNodeOutputsAtTimestep(state, i + 1);
 #endif
-        }
     }
 }
 

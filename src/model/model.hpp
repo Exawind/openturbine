@@ -468,147 +468,81 @@ public:
     //--------------------------------------------------------------------------
 
     /// @brief Set up the NetCDF output writer
-    void SetOutputWriter(const std::string& output_file, size_t num_qps) {
-        this->output_writer_ = std::make_unique<util::NodeStateWriter>(output_file, true, num_qps);
+    void SetOutputWriter(const std::string& output_file, size_t num_nodes) {
+        this->output_writer_ = std::make_unique<util::NodeStateWriter>(output_file, true, num_nodes);
     }
 
-    void WriteQPOutputsAtTimestep(State& state, Beams& beams, size_t timestep) const {
+    void WriteNodeOutputsAtTimestep(State& state, size_t timestep) const {
         if (!this->output_writer_) {
             return;
         }
 
-        // Compute state values at quadrature points if not already done
-        auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
-        const auto smem = 3 * Kokkos::View<double* [7]>::shmem_size(beams.max_elem_nodes);
-        range_policy.set_scratch_size(1, Kokkos::PerTeam(smem));
+        const size_t num_nodes = state.num_system_nodes;
+        std::vector<double> x(num_nodes);
+        std::vector<double> y(num_nodes);
+        std::vector<double> z(num_nodes);
+        std::vector<double> i(num_nodes);
+        std::vector<double> j(num_nodes);
+        std::vector<double> k(num_nodes);
+        std::vector<double> w(num_nodes);
 
-        // Update node state from global state vectors
-        Kokkos::parallel_for(
-            "UpdateNodeState", range_policy,
-            beams::UpdateNodeState{
-                state.q, state.v, state.vd, beams.node_state_indices, beams.num_nodes_per_element,
-                beams.node_u, beams.node_u_dot, beams.node_u_ddot
-            }
-        );
+        // Create host mirrors of device views
+        auto host_q = Kokkos::create_mirror_view(state.q);
+        auto host_v = Kokkos::create_mirror_view(state.v);
+        auto host_vd = Kokkos::create_mirror_view(state.vd);
+        auto host_x = Kokkos::create_mirror_view(state.x);
 
-        // Interpolate nodal values to quadrature points
-        Kokkos::parallel_for(
-            "InterpolateToQuadraturePoints", range_policy,
-            InterpolateToQuadraturePoints{
-                beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
-                beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.node_u_dot,
-                beams.node_u_ddot, beams.qp_x0, beams.qp_r0, beams.qp_u, beams.qp_u_prime,
-                beams.qp_r, beams.qp_r_prime, beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot,
-                beams.qp_omega_dot, beams.qp_x
-            }
-        );
+        // Copy data from device to host
+        Kokkos::deep_copy(host_q, state.q);
+        Kokkos::deep_copy(host_v, state.v);
+        Kokkos::deep_copy(host_vd, state.vd);
+        Kokkos::deep_copy(host_x, state.x);
 
-        // Calculate deformation at quadrature points
-        Kokkos::parallel_for(
-            "CalculateQPDeformation",
-            Kokkos::MDRangePolicy<Kokkos::Rank<2>>({0, 0}, {beams.num_elems, beams.max_elem_qps}),
-            CalculateQPDeformation{
-                beams.num_qps_per_element,
-                beams.qp_x0,
-                beams.qp_r,
-                beams.qp_x,
-                beams.qp_deformation,
-            }
-        );
-
-        // Get number of quadrature points across all beam elements
-        size_t total_qps = 0;
-        auto num_qps_per_element = Kokkos::create_mirror(beams.num_qps_per_element);
-        Kokkos::deep_copy(num_qps_per_element, beams.num_qps_per_element);
-
-        for (size_t i = 0; i < beams.num_elems; ++i) {
-            total_qps += num_qps_per_element(i);
-        }
-
-        // Allocate vectors for QP data
-        std::vector<double> x(total_qps);
-        std::vector<double> y(total_qps);
-        std::vector<double> z(total_qps);
-        std::vector<double> i(total_qps);
-        std::vector<double> j(total_qps);
-        std::vector<double> k(total_qps);
-        std::vector<double> w(total_qps);
-
-        // Copy data from device to host views
-        auto qp_pos = Kokkos::create_mirror_view(beams.qp_x);
-        Kokkos::deep_copy(qp_pos, beams.qp_x);
-
-        auto qp_u_dot = Kokkos::create_mirror_view(beams.qp_u_dot);
-        Kokkos::deep_copy(qp_u_dot, beams.qp_u_dot);
-
-        auto qp_omega = Kokkos::create_mirror_view(beams.qp_omega);
-        Kokkos::deep_copy(qp_omega, beams.qp_omega);
-
-        auto qp_fe = Kokkos::create_mirror_view(beams.qp_Fe);
-        Kokkos::deep_copy(qp_fe, beams.qp_Fe);
-
-        auto qp_deformation = Kokkos::create_mirror_view(beams.qp_deformation);
-        Kokkos::deep_copy(qp_deformation, beams.qp_deformation);
-
-        // Fill data vectors
-        // position
-        size_t qp_index = 0;
-        for (size_t i_elem = 0; i_elem < beams.num_elems; ++i_elem) {
-            for (size_t i_qp = 0; i_qp < num_qps_per_element(i_elem); ++i_qp) {
-                // Calculate qp_index based on element and qp indices
-                x[qp_index] = qp_pos(i_elem, i_qp, 0);
-                y[qp_index] = qp_pos(i_elem, i_qp, 1);
-                z[qp_index] = qp_pos(i_elem, i_qp, 2);
-                w[qp_index] = qp_pos(i_elem, i_qp, 3);
-                i[qp_index] = qp_pos(i_elem, i_qp, 4);
-                j[qp_index] = qp_pos(i_elem, i_qp, 5);
-                k[qp_index] = qp_pos(i_elem, i_qp, 6);
-                ++qp_index;
-            }
+        // Position data
+        for (size_t node = 0; node < num_nodes; ++node) {
+            x[node] = host_x(node, 0);
+            y[node] = host_x(node, 1);
+            z[node] = host_x(node, 2);
+            w[node] = host_x(node, 3);
+            i[node] = host_x(node, 4);
+            j[node] = host_x(node, 5);
+            k[node] = host_x(node, 6);
         }
         this->output_writer_->WriteStateDataAtTimestep(timestep, "x", x, y, z, i, j, k, w);
 
-        // velocity
-        qp_index = 0;
-        for (size_t i_elem = 0; i_elem < beams.num_elems; ++i_elem) {
-            for (size_t i_qp = 0; i_qp < num_qps_per_element(i_elem); ++i_qp) {
-                x[qp_index] = qp_u_dot(i_elem, i_qp, 0);
-                y[qp_index] = qp_u_dot(i_elem, i_qp, 1);
-                z[qp_index] = qp_u_dot(i_elem, i_qp, 2);
-                i[qp_index] = qp_omega(i_elem, i_qp, 0);
-                j[qp_index] = qp_omega(i_elem, i_qp, 1);
-                k[qp_index] = qp_omega(i_elem, i_qp, 2);
-                ++qp_index;
-            }
+        // Displacement data
+        for (size_t node = 0; node < num_nodes; ++node) {
+            x[node] = host_q(node, 0);
+            y[node] = host_q(node, 1);
+            z[node] = host_q(node, 2);
+            w[node] = host_q(node, 3);
+            i[node] = host_q(node, 4);
+            j[node] = host_q(node, 5);
+            k[node] = host_q(node, 6);
+        }
+        this->output_writer_->WriteStateDataAtTimestep(timestep, "u", x, y, z, i, j, k, w);
+
+        // Velocity data
+        for (size_t node = 0; node < num_nodes; ++node) {
+            x[node] = host_v(node, 0);
+            y[node] = host_v(node, 1);
+            z[node] = host_v(node, 2);
+            i[node] = host_v(node, 3);
+            j[node] = host_v(node, 4);
+            k[node] = host_v(node, 5);
         }
         this->output_writer_->WriteStateDataAtTimestep(timestep, "v", x, y, z, i, j, k);
 
-        // loads/forces
-        qp_index = 0;
-        for (size_t i_elem = 0; i_elem < beams.num_elems; ++i_elem) {
-            for (size_t i_qp = 0; i_qp < num_qps_per_element(i_elem); ++i_qp) {
-                x[qp_index] = qp_fe(i_elem, i_qp, 0);
-                y[qp_index] = qp_fe(i_elem, i_qp, 1);
-                z[qp_index] = qp_fe(i_elem, i_qp, 2);
-                i[qp_index] = qp_fe(i_elem, i_qp, 3);
-                j[qp_index] = qp_fe(i_elem, i_qp, 4);
-                k[qp_index] = qp_fe(i_elem, i_qp, 5);
-                ++qp_index;
-            }
+        // Acceleration data
+        for (size_t node = 0; node < num_nodes; ++node) {
+            x[node] = host_vd(node, 0);
+            y[node] = host_vd(node, 1);
+            z[node] = host_vd(node, 2);
+            i[node] = host_vd(node, 3);
+            j[node] = host_vd(node, 4);
+            k[node] = host_vd(node, 5);
         }
-        this->output_writer_->WriteStateDataAtTimestep(timestep, "f", x, y, z, i, j, k);
-
-        // deformation
-        qp_index = 0;
-        for (size_t i_elem = 0; i_elem < beams.num_elems; ++i_elem) {
-            for (size_t i_qp = 0; i_qp < num_qps_per_element(i_elem); ++i_qp) {
-                x[qp_index] = qp_deformation(i_elem, i_qp, 0);
-                y[qp_index] = qp_deformation(i_elem, i_qp, 1);
-                z[qp_index] = qp_deformation(i_elem, i_qp, 2);
-                ++qp_index;
-            }
-        }
-        this->output_writer_->WriteDeformationDataAtTimestep(timestep, x, y, z);
+        this->output_writer_->WriteStateDataAtTimestep(timestep, "a", x, y, z, i, j, k);
     }
 
 private:
