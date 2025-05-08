@@ -12,15 +12,15 @@ namespace openturbine {
 template <typename CrsMatrixType>
 [[nodiscard]] inline CrsMatrixType CreateFullMatrix(
     size_t num_system_dofs, size_t num_dofs,
-    const Kokkos::View<size_t*>::const_type& base_active_dofs,
-    const Kokkos::View<size_t*>::const_type& target_active_dofs,
-    const Kokkos::View<size_t* [6]>::const_type& base_node_freedom_table,
-    const Kokkos::View<size_t* [6]>::const_type& target_node_freedom_table,
-    const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& row_range,
-    const Kokkos::View<size_t*>::const_type& active_dofs,
-    const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
-    const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
-    const Kokkos::View<size_t**>::const_type& node_state_indices
+    const typename Kokkos::View<size_t*, typename CrsMatrixType::device_type>::const_type& base_active_dofs,
+    const typename Kokkos::View<size_t*, typename CrsMatrixType::device_type>::const_type& target_active_dofs,
+    const typename Kokkos::View<size_t* [6], typename CrsMatrixType::device_type>::const_type& base_node_freedom_table,
+    const typename Kokkos::View<size_t* [6], typename CrsMatrixType::device_type>::const_type& target_node_freedom_table,
+    const typename Kokkos::View<Kokkos::pair<size_t, size_t>*, typename CrsMatrixType::device_type>::const_type& row_range,
+    const typename Kokkos::View<size_t*, typename CrsMatrixType::device_type>::const_type& active_dofs,
+    const typename Kokkos::View<size_t*, typename CrsMatrixType::device_type>::const_type& node_freedom_map_table,
+    const typename Kokkos::View<size_t*, typename CrsMatrixType::device_type>::const_type& num_nodes_per_element,
+    const typename Kokkos::View<size_t**, typename CrsMatrixType::device_type>::const_type& node_state_indices
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Create Full Matrix");
 
