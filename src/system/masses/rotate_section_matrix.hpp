@@ -8,10 +8,12 @@
 
 namespace openturbine::masses {
 
-KOKKOS_FUNCTION
-inline void RotateSectionMatrix(
-    const Kokkos::View<double[4]>::const_type& xr,
-    const Kokkos::View<double[6][6]>::const_type& Cstar, const Kokkos::View<double[6][6]>& Cuu
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION
+void RotateSectionMatrix(
+    const typename Kokkos::View<double[4], DeviceType>::const_type& xr,
+    const typename Kokkos::View<double[6][6], DeviceType>::const_type& Cstar,
+    const Kokkos::View<double[6][6], DeviceType>& Cuu
 ) {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
     using Transpose = KokkosBatched::Trans::Transpose;

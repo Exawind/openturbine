@@ -5,10 +5,13 @@
 
 namespace openturbine::masses {
 
-KOKKOS_FUNCTION
-inline void CalculateGravityForce(
-    double mass, const Kokkos::View<double[3]>::const_type& gravity,
-    const Kokkos::View<double[3][3]>::const_type& eta_tilde, const Kokkos::View<double[6]>& FG
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION
+void CalculateGravityForce(
+    double mass,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& gravity,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& eta_tilde,
+    const Kokkos::View<double[6], DeviceType>& FG
 ) {
     using NoTranspose = KokkosBlas::Trans::NoTranspose;
     using Default = KokkosBlas::Algo::Gemv::Default;

@@ -5,18 +5,19 @@
 
 namespace openturbine::beams {
 
+template <typename DeviceType>
 struct IntegrateInertiaMatrixElement {
     size_t i_elem;
     size_t num_nodes;
     size_t num_qps;
-    Kokkos::View<double*>::const_type qp_weight_;
-    Kokkos::View<double*>::const_type qp_jacobian_;
-    Kokkos::View<double**, Kokkos::LayoutLeft>::const_type shape_interp_;
-    Kokkos::View<double* [6][6]>::const_type qp_Muu_;
-    Kokkos::View<double* [6][6]>::const_type qp_Guu_;
+    typename Kokkos::View<double*, DeviceType>::const_type qp_weight_;
+    typename Kokkos::View<double*, DeviceType>::const_type qp_jacobian_;
+    typename Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>::const_type shape_interp_;
+    typename Kokkos::View<double* [6][6], DeviceType>::const_type qp_Muu_;
+    typename Kokkos::View<double* [6][6], DeviceType>::const_type qp_Guu_;
     double beta_prime_;
     double gamma_prime_;
-    Kokkos::View<double** [6][6]> gbl_M_;
+    Kokkos::View<double** [6][6], DeviceType> gbl_M_;
 
     KOKKOS_FUNCTION
     void operator()(size_t ij_index) const {

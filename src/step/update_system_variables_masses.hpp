@@ -14,9 +14,10 @@ inline void UpdateSystemVariablesMasses(
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Update System Variables Masses");
 
+    auto range_policy = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, masses.num_elems);
     Kokkos::parallel_for(
-        "masses::CalculateQuadraturePointValues", masses.num_elems,
-        masses::CalculateQuadraturePointValues{
+        "masses::CalculateQuadraturePointValues", range_policy,
+        masses::CalculateQuadraturePointValues<DeviceType>{
             parameters.beta_prime, parameters.gamma_prime, state.q, state.v, state.vd, state.tangent,
             masses.state_indices, masses.gravity, masses.qp_Mstar, masses.node_x0,
             masses.residual_vector_terms, masses.system_matrix_terms

@@ -21,7 +21,7 @@ void TestCalculateForceFC() {
 
     Kokkos::parallel_for(
         "CalculateForceFC", 1,
-        KOKKOS_LAMBDA(size_t) { openturbine::beams::CalculateForceFC(Cuu, strain, FC); }
+        KOKKOS_LAMBDA(size_t) { openturbine::beams::CalculateForceFC<Kokkos::DefaultExecutionSpace>(Cuu, strain, FC); }
     );
 
     constexpr auto FC_exact_data = std::array{847., 2269., 3691., 5113., 6535., 7957.};

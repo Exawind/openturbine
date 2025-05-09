@@ -4,20 +4,22 @@
 #include <Kokkos_SIMD.hpp>
 
 namespace openturbine::beams {
+
+template <typename DeviceType>
 struct IntegrateStiffnessMatrixElement {
     size_t i_elem;
     size_t num_nodes;
     size_t num_qps;
-    Kokkos::View<double*>::const_type qp_weight_;
-    Kokkos::View<double*>::const_type qp_jacobian_;
-    Kokkos::View<double**, Kokkos::LayoutLeft>::const_type shape_interp_;
-    Kokkos::View<double**, Kokkos::LayoutLeft>::const_type shape_deriv_;
-    Kokkos::View<double* [6][6]>::const_type qp_Kuu_;
-    Kokkos::View<double* [6][6]>::const_type qp_Puu_;
-    Kokkos::View<double* [6][6]>::const_type qp_Cuu_;
-    Kokkos::View<double* [6][6]>::const_type qp_Ouu_;
-    Kokkos::View<double* [6][6]>::const_type qp_Quu_;
-    Kokkos::View<double** [6][6]> gbl_M_;
+    typename Kokkos::View<double*, DeviceType>::const_type qp_weight_;
+    typename Kokkos::View<double*, DeviceType>::const_type qp_jacobian_;
+    typename Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>::const_type shape_interp_;
+    typename Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>::const_type shape_deriv_;
+    typename Kokkos::View<double* [6][6], DeviceType>::const_type qp_Kuu_;
+    typename Kokkos::View<double* [6][6], DeviceType>::const_type qp_Puu_;
+    typename Kokkos::View<double* [6][6], DeviceType>::const_type qp_Cuu_;
+    typename Kokkos::View<double* [6][6], DeviceType>::const_type qp_Ouu_;
+    typename Kokkos::View<double* [6][6], DeviceType>::const_type qp_Quu_;
+    Kokkos::View<double** [6][6], DeviceType> gbl_M_;
 
     KOKKOS_FUNCTION
     void operator()(size_t ij_index) const {

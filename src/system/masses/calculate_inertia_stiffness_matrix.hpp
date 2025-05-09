@@ -9,16 +9,18 @@
 
 namespace openturbine::masses {
 
-KOKKOS_FUNCTION
-inline void CalculateInertiaStiffnessMatrix(
-    double mass, const Kokkos::View<double[3]>::const_type& u_ddot,
-    const Kokkos::View<double[3]>::const_type& omega,
-    const Kokkos::View<double[3]>::const_type& omega_dot,
-    const Kokkos::View<double[3]>::const_type& eta,
-    const Kokkos::View<double[3][3]>::const_type& rho,
-    const Kokkos::View<double[3][3]>::const_type& omega_tilde,
-    const Kokkos::View<double[3][3]>::const_type& omega_dot_tilde,
-    const Kokkos::View<double[6][6]>& Kuu
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION
+void CalculateInertiaStiffnessMatrix(
+    double mass,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& u_ddot,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& omega,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& omega_dot,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& eta,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& rho,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& omega_tilde,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& omega_dot_tilde,
+    const Kokkos::View<double[6][6], DeviceType>& Kuu
 ) {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
     using Transpose = KokkosBatched::Trans::Transpose;

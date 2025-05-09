@@ -7,11 +7,14 @@
 #include "math/quaternion_operations.hpp"
 
 namespace openturbine::beams {
-KOKKOS_FUNCTION
-inline void CalculateStrain(
-    const Kokkos::View<double[3]>::const_type& x0_prime,
-    const Kokkos::View<double[3]>::const_type& u_prime, const Kokkos::View<double[4]>::const_type& r,
-    const Kokkos::View<double[4]>::const_type& r_prime, const Kokkos::View<double[6]>& strain
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION
+void CalculateStrain(
+    const typename Kokkos::View<double[3], DeviceType>::const_type& x0_prime,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& u_prime,
+    const typename Kokkos::View<double[4], DeviceType>::const_type& r,
+    const typename Kokkos::View<double[4], DeviceType>::const_type& r_prime,
+    const Kokkos::View<double[6], DeviceType>& strain
 ) {
     using NoTranspose = KokkosBlas::Trans::NoTranspose;
     using Default = KokkosBlas::Algo::Gemv::Default;

@@ -7,10 +7,13 @@
 
 namespace openturbine::springs {
 
-KOKKOS_FUNCTION
-inline void CalculateDistanceComponents(
-    const Kokkos::View<double[3]>::const_type& x0, const Kokkos::View<double[3]>::const_type& u1,
-    const Kokkos::View<double[3]>::const_type& u2, const Kokkos::View<double[3]>& r
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION
+void CalculateDistanceComponents(
+    const typename Kokkos::View<double[3], DeviceType>::const_type& x0,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& u1,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& u2,
+    const Kokkos::View<double[3], DeviceType>& r
 ) {
     for (auto i = 0U; i < 3U; ++i) {
         r(i) = x0(i) + u2(i) - u1(i);
