@@ -8,18 +8,19 @@
 namespace openturbine {
 template <typename CrsMatrixType>
 struct ContributeSpringsToSparseMatrix {
+    using DeviceType = typename CrsMatrixType::device_type;
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
     double conditioner{};
-    Kokkos::View<FreedomSignature* [2]>::const_type element_freedom_signature;
-    Kokkos::View<size_t* [2][3]>::const_type element_freedom_table;
-    Kokkos::View<double* [2][2][3][3]>::const_type dense;  //< Element Stiffness matrices
+    typename Kokkos::View<FreedomSignature* [2], DeviceType>::const_type element_freedom_signature;
+    typename Kokkos::View<size_t* [2][3], DeviceType>::const_type element_freedom_table;
+    typename Kokkos::View<double* [2][2][3][3], DeviceType>::const_type dense;  //< Element Stiffness matrices
     CrsMatrixType sparse;                                  //< Global sparse stiffness matrix
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
         constexpr auto is_sorted = true;
-        constexpr auto force_atomic = !std::is_same_v<Kokkos::DefaultExecutionSpace, Kokkos::Serial>;
+        constexpr auto force_atomic = !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
 
         for (auto node_1 = 0U; node_1 < 2U; ++node_1) {
             auto row_data_data = Kokkos::Array<typename RowDataType::value_type, 3U>{};

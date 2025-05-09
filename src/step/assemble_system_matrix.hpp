@@ -19,11 +19,11 @@ inline void AssembleSystemMatrix(
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System Matrix");
 
     auto beams_sparse_matrix_policy =
-        Kokkos::TeamPolicy<>(static_cast<int>(elements.beams.num_elems), Kokkos::AUTO());
+        Kokkos::TeamPolicy<typename DeviceType::execution_space>(static_cast<int>(elements.beams.num_elems), Kokkos::AUTO());
     auto masses_sparse_matrix_policy =
-        Kokkos::RangePolicy<>(0, static_cast<int>(elements.masses.num_elems));
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, static_cast<int>(elements.masses.num_elems));
     auto springs_sparse_matrix_policy =
-        Kokkos::RangePolicy<>(0, static_cast<int>(elements.springs.num_elems));
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, static_cast<int>(elements.springs.num_elems));
 
     Kokkos::parallel_for(
         "ContributeBeamsToSparseMatrix", beams_sparse_matrix_policy,
