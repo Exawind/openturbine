@@ -4,6 +4,7 @@ import os
 import vtk
 from netCDF4 import Dataset
 from typing import Dict, List, Optional, Tuple
+import yaml
 
 #-------------------------------------------------------------------------------
 # Helper functions
@@ -71,22 +72,59 @@ def create_vector_array(name: str, num_components: int = 3):
 #-------------------------------------------------------------------------------
 
 class VTKOutput:
-    """Class to generate VTK files from OpenTurbine (NetCDF-based) outputs."""
+    """Class to generate VTK files from OpenTurbine (NetCDF-based) outputs and mesh connectivity (YAML-based)."""
 
-    def __init__(self, netcdf_path: str):
-        """Initializes the visualizer with the path to the NetCDF file.
+    def __init__(self, netcdf_path: str, connectivity_path: Optional[str] = None):
+        """Initializes the visualizer with the path to the NetCDF file and optional connectivity file.
 
         Args:
             netcdf_path (str): Path to the NetCDF output file
+            connectivity_path (Optional[str]): Path to the mesh connectivity YAML file
         """
         self.netcdf_path = netcdf_path
         self.data = Dataset(netcdf_path, 'r')
+
+        # Initialize mesh connectivity data
+        self.mesh_connectivity = {
+            'beams': {},
+            'masses': {},
+            'springs': {},
+            'constraints': {}
+        }
+        if connectivity_path:
+            self.load_connectivity(connectivity_path)
 
         # Get dimensions from the NetCDF file
         self.num_nodes = len(self.data.dimensions['nodes'])
         self.num_timesteps = len(self.data.dimensions['time'])
 
         print(f"Loaded data with {self.num_nodes} nodes and {self.num_timesteps} timesteps")
+
+
+    def load_connectivity(self, connectivity_path: str):
+        """Loads mesh connectivity information from a YAML file.
+
+        Args:
+            connectivity_path (str): Path to the connectivity YAML file
+        """
+        try:
+            with open(connectivity_path, 'r') as file:
+                data = yaml.safe_load(file)
+
+                # Process all element types
+                for elem_type in ['beams', 'masses', 'springs', 'constraints']:
+                    if elem_type in data:
+                        for elem_id, node_ids in data[elem_type].items():
+                            self.mesh_connectivity[elem_type][int(elem_id)] = node_ids
+
+            print(f"Loaded connectivity data from {connectivity_path}")
+            print(f"  Beams: {len(self.mesh_connectivity['beams'])}")
+            print(f"  Masses: {len(self.mesh_connectivity['masses'])}")
+            print(f"  Springs: {len(self.mesh_connectivity['springs'])}")
+            print(f"  Constraints: {len(self.mesh_connectivity['constraints'])}")
+
+        except Exception as e:
+            print(f"Error loading connectivity data: {e}")
 
 
     def _extract_node_data_at_timestep(
@@ -222,395 +260,219 @@ class VTKOutput:
         vtk_object.GetPointData().AddArray(rot_accel)
 
 
-    def _visualize_structure(
-        self,
-        timestep: int,
-        output_path: str,
-        structure_type: str,
-        line_connectivity: Optional[List[Tuple[int, int]]] = None,
-        node_indices: Optional[List[int]] = None
-    ):
-        """Generic method to visualize different structures such as nodes, beams, or lines
-        at a given timestep.
+    def generate_visualization(self, timestep: int, output_dir: str):
+        """Generates visualization for the specified timestep based on mesh connectivity.
 
-        Following types of structures are supported:
-        - 'nodes': Visualize nodes as points
-        - 'beam': Visualize single beam element as a Lagrange curve
-        - 'lines': Visualize lines connecting node pairs
+        This method automatically determines what elements to create based on the
+        available connectivity data.
 
         Args:
             timestep (int): Timestep to visualize
-            output_path (str): Path to save the output file to
-            structure_type (str): Type of structure to visualize ('nodes', 'beam', or 'lines')
-            line_connectivity (list[tuple[int, int]], optional): List of node index pairs to connect with lines.
-                                                                 Required when structure_type is 'lines'.
-            node_indices (Optional[List[int]]): If provided, only use these specific node indices.
-        """
-        nodes = self._extract_node_data_at_timestep(timestep, node_indices)
-
-        # Create points for the structure
-        points = vtk.vtkPoints()
-        for node in nodes:
-            points.InsertNextPoint(node['position'][0], node['position'][1], node['position'][2])
-
-        # ------------------------------------------------------------
-        # Nodes
-        # ------------------------------------------------------------
-        if structure_type == 'nodes':
-            # Create polydata to visualize nodes
-            vtk_object = vtk.vtkPolyData()
-            vtk_object.SetPoints(points)
-
-            # Create the writer
-            writer = vtk.vtkXMLPolyDataWriter()
-            structure_name = "nodes"
-
-        # ------------------------------------------------------------
-        # Beam
-        # ------------------------------------------------------------
-        elif structure_type == 'beam':
-            # Create unstructured grid to visualize the beam element
-            vtk_object = vtk.vtkUnstructuredGrid()
-            vtk_object.SetPoints(points)
-
-            # Create a Lagrange curve connecting all points
-            pts_ids = vtk.vtkIdList()
-            pts_ids.InsertNextId(0)
-            pts_ids.InsertNextId(len(nodes) - 1)
-            for j in range(1, len(nodes) - 1):
-                pts_ids.InsertNextId(j)
-
-            vtk_object.InsertNextCell(vtk.VTK_LAGRANGE_CURVE, pts_ids)
-
-            # Create the writer
-            writer = vtk.vtkXMLUnstructuredGridWriter()
-            structure_name = "beam"
-
-        # ------------------------------------------------------------
-        # Lines
-        # ------------------------------------------------------------
-        elif structure_type == 'lines':
-            if line_connectivity is None:
-                raise ValueError("line_connectivity must be provided when structure_type is 'lines'")
-
-            # Create lines
-            lines = vtk.vtkCellArray()
-            for start_idx, end_idx in line_connectivity:
-                line = vtk.vtkLine()
-                line.GetPointIds().SetId(0, start_idx)
-                line.GetPointIds().SetId(1, end_idx)
-                lines.InsertNextCell(line)
-
-            # Create polydata to visualize lines
-            vtk_object = vtk.vtkPolyData()
-            vtk_object.SetPoints(points)
-            vtk_object.SetLines(lines)
-
-            # Create the writer
-            writer = vtk.vtkXMLPolyDataWriter()
-            structure_name = "lines"
-
-        else:
-            raise ValueError(f"Unknown structure type: {structure_type}")
-
-        # Add common data to the VTK object
-        self._add_node_data_to_vtk_object(vtk_object, nodes)
-
-        # Write the file
-        writer.SetFileName(output_path)
-        writer.SetInputData(vtk_object)
-        writer.SetDataModeToAscii()
-        writer.Write()
-
-        print(f"Wrote {structure_name} visualization to {output_path}")
-
-
-    def create_animation(self, output_dir: str, type: str, line_connectivity: Optional[List[Tuple[int, int]]] = None):
-        """Creates an animation by generating a series of VTK files at provided timesteps.
-
-        Following types of structures are supported:
-        - 'beam': Visualize beam element as a Lagrange curve
-        - 'nodes': Visualize nodes as points
-        - 'lines': Visualize lines connecting node pairs
-
-        Args:
-            output_dir (str): Directory to save the output files to
-            type (str): Type of visualization to generate ('beam', 'nodes', or 'lines')
-            line_connectivity (Optional[List[Tuple[int, int]]]):
-                List of tuples for line connectivity. Required for type='lines'.
+            output_dir (str): Directory to save the output files
         """
         os.makedirs(output_dir, exist_ok=True)
 
-        for timestep in range(0, self.num_timesteps):
-            if type == 'beam':
-                beam_file = os.path.join(output_dir, f"beam_t{timestep:04d}.vtu")
-                self._visualize_structure(timestep, beam_file, 'beam')
-
-            elif type == 'nodes':
-                nodes_file = os.path.join(output_dir, f"nodes_t{timestep:04d}.vtp")
-                self._visualize_structure(timestep, nodes_file, 'nodes')
-
-            elif type == 'lines':
-                if line_connectivity is None:
-                    raise ValueError("Line connectivity must be provided for 'lines' visualization type")
-                lines_file = os.path.join(output_dir, f"lines_t{timestep:04d}.vtp")
-                self._visualize_structure(timestep, lines_file, 'lines', line_connectivity)
-
-            else:
-                raise ValueError(f"Unknown type: {type}")
-
-        print(f"Generated animation frames in {output_dir}")
-
-
-    def _visualize_floating_platform(
-        self,
-        timestep: int,
-        output_dir: str,
-        platform_node_idx: int,
-        fairlead_indices: List[int],
-        anchor_indices: List[int]
-    ):
-        r"""Visualizes a floating platform with mooring lines at a given timestep.
-
-        Following ASCII figure shows the platform and mooring line layout for a 3-point mooring system:
-
-            Platform Node
-                  o
-                / | \
-               /  |  \      <-- Fairlead connections
-              /   |   \
-             o    o    o    <-- Fairlead nodes
-             |    |    |    <-- Mooring lines
-             |    |    |
-             o    o    o    <-- Anchor nodes
-
-        Args:
-            timestep (int): Timestep to visualize
-            output_dir (str): Directory to save output files
-            platform_node_idx (int): Index of the platform node
-            fairlead_indices (List[int]): Indices for fairlead nodes of mooring lines
-            anchor_indices (List[int]): Indices for anchor nodes of mooring lines
-        """
-        if len(fairlead_indices) != len(anchor_indices):
-            raise ValueError("Number of fairlead indices must match number of anchor indices")
-
-        os.makedirs(output_dir, exist_ok=True)
-
-        # ------------------------------------------------------------
-        # platform visualization
-        # ------------------------------------------------------------
-        platform_nodes = [platform_node_idx] + fairlead_indices
-
-        # Create platform-to-fairleads connections
-        platform_connections = []
-        for i, _ in enumerate(fairlead_indices):
-            # Since we're extracting a subset of nodes, we need to map the original indices
-            # The platform node is at index 0, fairleads start at index 1
-            # If there are 3 fairleads, there will be 3 connections, and the connections will be:
-            # {0, 1}, {0, 2}, {0, 3}
-            platform_connections.append((0, i + 1))
-
-        # Generate and write platform visualization
-        platform_file = os.path.join(output_dir, f"platform_t{timestep:05d}.vtp")
-        self._visualize_structure(
-            timestep,
-            platform_file,
-            'lines',
-            platform_connections,
-            platform_nodes
-        )
-
-        # ------------------------------------------------------------
-        # mooring lines visualization
-        # ------------------------------------------------------------
-        mooring_nodes = []
-        for i in range(len(fairlead_indices)):
-            mooring_nodes.append(fairlead_indices[i])
-            mooring_nodes.append(anchor_indices[i])
-
-        # Create fairlead-to-anchor connections
-        mooring_connections = []
-        for i in range(len(fairlead_indices)):
-            # Map to the new indices: fairleads start at 0, anchors start at 1 and they alternate
-            # i.e. if there are 3 fairleads, there will be 3 anchors, and the connections will be:
-            # 0-1, 2-3, 4-5
-            mooring_connections.append((2 * i, 2 * i + 1))
-
-        # Generate and write mooring visualization
-        mooring_file = os.path.join(output_dir, f"mooring_t{timestep:05d}.vtp")
-        self._visualize_structure(
-            timestep,
-            mooring_file,
-            'lines',
-            mooring_connections,
-            mooring_nodes
-        )
-
-        print(f"Wrote floating platform visualization for timestep {timestep} to {output_dir}")
-
-
-    def create_platform_animation(
-        self,
-        output_dir: str,
-        platform_node_idx: int,
-        fairlead_indices: List[int],
-        anchor_indices: List[int]
-    ):
-        """Creates an animation of a floating platform with mooring lines.
-
-        Args:
-            output_dir (str): Directory to save output files
-            platform_node_idx (int): Index of the platform node
-            fairlead_indices (List[int]): Indices of fairlead nodes
-            anchor_indices (List[int]): Indices of anchor nodes, must match fairlead_indices order
-        """
-        for timestep in range(0, self.num_timesteps):
-            self._visualize_floating_platform(
-                timestep,
-                output_dir,
-                platform_node_idx,
-                fairlead_indices,
-                anchor_indices
-            )
-
-        print(f"Generated floating platform animation in {output_dir}")
-
-
-    def _visualize_rotor(
-            self,
-            timestep: int,
-            output_path: str,
-            beam_elements: Optional[List[List[int]]] = None
-        ):
-        """Generates visualization of wind turbine rotor at node/quadrature points.
-
-        Multiple beam elements can be used to visualize a multi-blade rotor,
-        e.g. for a 3-bladed rotor with 51 QPs per blade:
-        beam_elements = [[0, 1, 2, ..., 50], [51, 52, 53, ..., 101], [102, 103, 104, ..., 152]]
-
-        Args:
-            timestep (int): Timestep to visualize
-            output_path (str): Path to save the VTK file
-            beam_elements (Optional[List[List[int]]]): List of node indices that form each beam element.
-                                                       If None, assumes all nodes form a single beam element.
-        """
         nodes = self._extract_node_data_at_timestep(timestep)
-
-        # Create points for all nodes
-        points = vtk.vtkPoints()
-        for node in nodes:
-            position = node['position']
-            points.InsertNextPoint(position[0], position[1], position[2])
-
-        # Create unstructured grid for beam visualization
         grid = vtk.vtkUnstructuredGrid()
+
+        # Create points and add node IDs
+        points = vtk.vtkPoints()
+        node_id_array = create_vector_array("NodeID", 1)
+        for i in range(len(nodes)):
+            position = nodes[i]['position'][0:3]
+            points.InsertNextPoint(position)
+            node_id_array.InsertNextValue(i)  # Add node ID
+
         grid.SetPoints(points)
+        grid.GetPointData().AddArray(node_id_array)  # Add node IDs to point data
 
-        # If beam_elements not provided, use default for IEA 15 MW turbine or create single beam
-        if beam_elements is None:
-            # Create a single beam
-            beam_elements = [list(range(len(nodes)))]
-
-            # hack: hardcoding IEA 15 MW rotor to support OpenTurbine regression tests
-            # check if we have 153 nodes (3 blades × 51 QPs each), which is likely an IEA 15 MW turbine
-            if len(nodes) == 153:
-                beam_elements = [list(range(51)), list(range(51, 102)), list(range(102, 153))]
-
-        # Add beam elements as Lagrange curves
-        for beam in beam_elements:
-            # Create connectivity for Lagrange curve
-            point_ids = vtk.vtkIdList()
-            point_ids.InsertNextId(beam[0])  # first point
-            point_ids.InsertNextId(beam[-1])  # last point
-
-            # Add intermediate points
-            for j in range(1, len(beam)-1):
-                point_ids.InsertNextId(beam[j])
-
-            grid.InsertNextCell(vtk.VTK_LAGRANGE_CURVE, point_ids)
-
-        # Add common node data (orientation, velocity, acceleration)
+        # Add node data to the grid
         self._add_node_data_to_vtk_object(grid, nodes)
 
-        # Add optional data (forces, deformation) if available
-        self._add_optional_force_moment_data(grid, nodes, timestep)
-        self._add_optional_deformation_data(grid, nodes, timestep)
+        # Process each element type based on connectivity
+        cell_types = {}
+        element_ids = {}
+        element_type_names = {}
+
+        # Add beam elements to the grid
+        if self.mesh_connectivity['beams']:
+            self._add_beams_to_grid(grid, cell_types, element_ids, element_type_names)
+
+        # Add mass nodes to the grid
+        if self.mesh_connectivity['masses']:
+            self._add_masses_to_grid(grid, cell_types, element_ids, element_type_names)
+
+        # Add spring elements to the grid
+        if self.mesh_connectivity['springs']:
+            self._add_springs_to_grid(grid, cell_types, element_ids, element_type_names)
+
+        # Add constraints to the grid
+        if self.mesh_connectivity['constraints']:
+            self._add_constraints_to_grid(grid, cell_types, element_ids, element_type_names)
+
+        # Add element type array
+        type_array = create_vector_array("ElementType", 1)
+        type_name_array = vtk.vtkStringArray()
+        type_name_array.SetName("ElementTypeName")
+
+        # Add element ID array
+        element_id_array = create_vector_array("ElementID", 1)
+        for cell_id in range(grid.GetNumberOfCells()):
+            type_array.InsertNextValue(cell_types.get(cell_id, 0))
+            type_name_array.InsertNextValue(element_type_names.get(cell_id, "Unknown"))
+            element_id_array.InsertNextValue(element_ids.get(cell_id, -1))
+
+        grid.GetCellData().AddArray(type_array)
+        grid.GetCellData().AddArray(type_name_array)
+        grid.GetCellData().AddArray(element_id_array)
 
         # Write the file
+        filename = os.path.join(output_dir, f"timestep_{timestep:04d}.vtu")
         writer = vtk.vtkXMLUnstructuredGridWriter()
-        writer.SetFileName(output_path)
+        writer.SetFileName(filename)
         writer.SetInputData(grid)
-        writer.SetDataModeToAscii()
         writer.Write()
 
-        print(f"Wrote rotor visualization at nodes/quadrature points to {output_path}")
+        print(f"Wrote visualization to {filename}")
+
+        return filename
 
 
-    def _add_optional_force_moment_data(self, vtk_object, nodes, timestep):
-        """Add force and moment data to VTK object if available in the NetCDF file."""
-        # Check if force data is available
-        force_available = all(f'f_{comp}' in self.data.variables for comp in ['x', 'y', 'z'])
-        if force_available:
-            force = create_vector_array("Force")
-
-            # Read force data from NetCDF
-            f_x = self.data.variables['f_x'][timestep, :]
-            f_y = self.data.variables['f_y'][timestep, :]
-            f_z = self.data.variables['f_z'][timestep, :]
-
-            for i in range(len(nodes)):
-                force.InsertNextTuple3(f_x[i], f_y[i], f_z[i])
-
-            vtk_object.GetPointData().AddArray(force)
-
-        # Check if moment data is available
-        moment_available = all(f'f_{comp}' in self.data.variables for comp in ['i', 'j', 'k'])
-        if moment_available:
-            moment = create_vector_array("Moment")
-
-            # Read moment data from NetCDF
-            m_i = self.data.variables['f_i'][timestep, :]
-            m_j = self.data.variables['f_j'][timestep, :]
-            m_k = self.data.variables['f_k'][timestep, :]
-
-            for i in range(len(nodes)):
-                moment.InsertNextTuple3(m_i[i], m_j[i], m_k[i])
-
-            vtk_object.GetPointData().AddArray(moment)
-
-
-    def _add_optional_deformation_data(self, vtk_object, nodes, timestep):
-        """Add deformation data to VTK object if available in the NetCDF file."""
-        deformation_available = all(f'deformation_{comp}' in self.data.variables for comp in ['x', 'y', 'z'])
-
-        if deformation_available:
-            deformation_vector = create_vector_array("DeformationVector")
-
-            # Read deformation data from NetCDF
-            u_x = self.data.variables['deformation_x'][timestep, :]
-            u_y = self.data.variables['deformation_y'][timestep, :]
-            u_z = self.data.variables['deformation_z'][timestep, :]
-
-            for i in range(len(nodes)):
-                deformation_vector.InsertNextTuple3(u_x[i], u_y[i], u_z[i])
-
-            vtk_object.GetPointData().AddArray(deformation_vector)
-
-
-    def create_rotor_animation(self, output_dir: str, beam_elements: Optional[List[List[int]]] = None):
-        """Creates an animation of beams visualized at nodes/quadrature points.
+    def _add_beams_to_grid(self, grid, cell_types, element_ids, element_type_names):
+        """Adds beam elements to the unstructured grid.
 
         Args:
-            output_dir (str): Directory to save output files
-            beam_elements (Optional[List[List[int]]]): List of node indices for each beam element
+            grid (vtk.vtkUnstructuredGrid): Grid to add beams to
+            cell_types (Dict[int, int]): Dictionary to track cell types
+            element_ids (Dict[int, int]): Dictionary to track original element IDs
+            element_type_names (Dict[int, str]): Dictionary to track element type names
         """
+        beam_type_id = 1  # ID for beam elements -> 1
+
+        for beam_id, node_ids in self.mesh_connectivity['beams'].items():
+            if len(node_ids) < 2:
+                continue  # Skip invalid beams
+
+            # Create polyline cell
+            line = vtk.vtkPolyLine()
+            line.GetPointIds().SetNumberOfIds(len(node_ids))
+
+            for i, node_id in enumerate(node_ids):
+                line.GetPointIds().SetId(i, node_id)
+
+            cell_id = grid.InsertNextCell(line.GetCellType(), line.GetPointIds())
+            cell_types[cell_id] = beam_type_id
+            element_ids[cell_id] = beam_id  # Store original beam ID
+            element_type_names[cell_id] = "Beam"
+
+
+    def _add_masses_to_grid(self, grid, cell_types, element_ids, element_type_names):
+        """Adds mass elements to the unstructured grid.
+
+        Args:
+            grid (vtk.vtkUnstructuredGrid): Grid to add masses to
+            cell_types (Dict[int, int]): Dictionary to track cell types
+            element_ids (Dict[int, int]): Dictionary to track original element IDs
+            element_type_names (Dict[int, str]): Dictionary to track element type names
+        """
+        mass_type_id = 2  # ID for mass elements -> 2
+
+        for mass_id, node_ids in self.mesh_connectivity['masses'].items():
+            if len(node_ids) != 1:
+                continue  # Masses should have exactly one node
+
+            vertex = vtk.vtkVertex()
+            vertex.GetPointIds().SetId(0, node_ids[0])
+
+            cell_id = grid.InsertNextCell(vertex.GetCellType(), vertex.GetPointIds())
+            cell_types[cell_id] = mass_type_id
+            element_ids[cell_id] = mass_id  # Store original mass ID
+            element_type_names[cell_id] = "Mass"
+
+
+    def _add_springs_to_grid(self, grid, cell_types, element_ids, element_type_names):
+        """Adds spring elements to the unstructured grid.
+
+        Args:
+            grid (vtk.vtkUnstructuredGrid): Grid to add springs to
+            cell_types (Dict[int, int]): Dictionary to track cell types
+            element_ids (Dict[int, int]): Dictionary to track original element IDs
+            element_type_names (Dict[int, str]): Dictionary to track element type names
+        """
+        spring_type_id = 3  # ID for spring elements -> 3
+        for spring_id, node_ids in self.mesh_connectivity['springs'].items():
+            if len(node_ids) != 2:
+                continue  # Springs should have exactly two nodes
+
+            line = vtk.vtkLine()
+            line.GetPointIds().SetId(0, node_ids[0])
+            line.GetPointIds().SetId(1, node_ids[1])
+
+            cell_id = grid.InsertNextCell(line.GetCellType(), line.GetPointIds())
+            cell_types[cell_id] = spring_type_id
+            element_ids[cell_id] = spring_id  # Store original spring ID
+            element_type_names[cell_id] = "Spring"
+
+
+    def _add_constraints_to_grid(self, grid, cell_types, element_ids, element_type_names):
+        """Adds constraint elements to the unstructured grid.
+
+        Args:
+            grid (vtk.vtkUnstructuredGrid): Grid to add constraints to
+            cell_types (Dict[int, int]): Dictionary to track cell types
+            element_ids (Dict[int, int]): Dictionary to track original element IDs
+            element_type_names (Dict[int, str]): Dictionary to track element type names
+        """
+        constraint_type_id = 4  # ID for constraint elements -> 4
+
+        for constraint_id, node_ids in self.mesh_connectivity['constraints'].items():
+            if len(node_ids) != 2:
+                continue  # Constraints should have exactly two nodes
+
+            line = vtk.vtkLine()
+
+            line = vtk.vtkLine()
+            line.GetPointIds().SetId(0, node_ids[0])
+            line.GetPointIds().SetId(1, node_ids[1])
+
+            cell_id = grid.InsertNextCell(line.GetCellType(), line.GetPointIds())
+            cell_types[cell_id] = constraint_type_id
+            element_ids[cell_id] = constraint_id  # Store original constraint ID
+            element_type_names[cell_id] = "Constraint"
+
+
+    def visualize_all_timesteps(self, output_dir: str):
+        """Generates visualization for all timesteps.
+
+        Args:
+            output_dir (str): Directory to save the output files
+        """
+        # Create output directory if it doesn't exist
         os.makedirs(output_dir, exist_ok=True)
 
-        for timestep in range(0, self.num_timesteps):
-            output_path = os.path.join(output_dir, f"rotor_t{timestep:04d}.vtu")
-            self._visualize_rotor(timestep, output_path, beam_elements)
+        # Create PVD file to group all timesteps
+        pvd_filename = os.path.join(output_dir, "simulation.pvd")
+        with open(pvd_filename, 'w') as pvd_file:
+            pvd_file.write('<?xml version="1.0"?>\n')
+            pvd_file.write('<VTKFile type="Collection" version="0.1">\n')
+            pvd_file.write('  <Collection>\n')
 
-        print(f"Generated rotor animation in {output_dir}")
+            # Get time values
+            times = np.arange(self.num_timesteps, dtype=float)
+
+            # Generate visualization for each timestep
+            for timestep in range(self.num_timesteps):
+                vtu_file = self.generate_visualization(timestep, output_dir)
+                vtu_basename = os.path.basename(vtu_file)
+
+                # Add to collection
+                time_value = times[timestep]
+                pvd_file.write(f'    <DataSet timestep="{time_value}" file="{vtu_basename}"/>\n')
+
+            pvd_file.write('  </Collection>\n')
+            pvd_file.write('</VTKFile>\n')
+
+        print(f"Wrote PVD file to {pvd_filename}")
 
 
 #-------------------------------------------------------------------------------
@@ -620,19 +482,9 @@ class VTKOutput:
 def main():
     """Main function to parse arguments and generate VTK files.
 
-    Default arguments:
-        output_dir: vtk_output
-        type: beam
-
     Example usage:
-        - beam
-        python generate_vtk_output.py --netcdf_file blade_interface.nc --output_dir vtk_output --type beam
-
-        - lines
-        python generate_vtk_output.py --netcdf_file blade_interface.nc --output_dir vtk_output --type lines --connectivity 0,1 1,2 2,3
-
-        - platform
-        python generate_vtk_output.py --netcdf_file platform.nc --output_dir vtk_output --type platform --platform_node 0 --fairleads 1,2,3 --anchors 4,5,6
+        python generate_vtk_output.py --netcdf_file blade_interface.nc
+            --connectivity_file mesh_connectivity.yaml --output_dir vtk_output
 
     NOTE: Files are overwritten in the output directory if they already exist.
     """
@@ -642,18 +494,21 @@ def main():
     # Input arguments
     # ------------------------------------------------------------
 
-    # -------------------------------
-    # Netcdf input file
-    # -------------------------------
+    # NetCDF input file
     parser.add_argument(
         'netcdf_file',
         type=str,
         help='Path to OpenTurbine NetCDF output file e.g. blade_interface.nc'
     )
 
-    # -------------------------------
+    # Mesh connectivity file
+    parser.add_argument(
+        '--connectivity_file',
+        type=str,
+        help='Path to mesh connectivity YAML file e.g. mesh_connectivity.yaml'
+    )
+
     # Output directory
-    # -------------------------------
     parser.add_argument(
         '--output_dir',
         type=str,
@@ -661,60 +516,18 @@ def main():
         help='Directory for writing the vtk output files'
     )
 
-    # -------------------------------
-    # Type of visualization
-    # -------------------------------
+    # Specific timestep to visualize
     parser.add_argument(
-        '--type',
-        type=str,
-        default='beam',
-        help='Type of visualization to generate: beam, nodes, lines, platform, or rotor'
-    )
-
-    # -------------------------------
-    # Line connectivity
-    # -------------------------------
-    parser.add_argument(
-        '--connectivity',
-        type=str,
-        nargs='+',
-        help='Line connectivity in format "start,end" (space separated list). Required for type=lines'
-    )
-
-    # -------------------------------
-    # Floating Platform args
-    # -------------------------------
-    parser.add_argument(
-        '--platform_node',
+        '--timestep',
         type=int,
-        default=0,
-        help='Node index for platform center. Used with type=platform'
-    )
-    parser.add_argument(
-        '--fairleads',
-        type=str,
-        default='1,3,5',
-        help='Comma-separated list of fairlead node indices (e.g., "1,3,5"). Required for type=platform'
-    )
-    parser.add_argument(
-        '--anchors',
-        type=str,
-        default='2,4,6',
-        help='Comma-separated list of anchor node indices (e.g., "2,4,6"). Required for type=platform'
+        default=None,
+        help='Specific timestep to visualize (if not specified, all timesteps will be visualized)'
     )
 
-    # -------------------------------
-    # Rotor visualization args
-    # -------------------------------
-    parser.add_argument(
-        '--beam_elements',
-        type=str,
-        help='Comma-separated list of beam elements to visualize (e.g., "0,1,2 3,4,5"). Required for type=rotor'
-    )
     args = parser.parse_args()
 
     # ------------------------------------------------------------
-    # Create animation based on simulation type
+    # Generate VTK output
     # ------------------------------------------------------------
 
     # Issue warning before overwriting files
@@ -722,75 +535,16 @@ def main():
         print(f"* Warning: {args.output_dir} already exists -- files will be overwritten")
         os.makedirs(args.output_dir, exist_ok=True)
 
-    visualizer = VTKOutput(args.netcdf_file)
+    # Create the VTK output object
+    vtk_output = VTKOutput(args.netcdf_file, args.connectivity_file)
 
-    # -------------------------------
-    # Type: Beam/Nodes
-    # -------------------------------
-    if args.type == 'beam' or args.type == 'nodes':
-        visualizer.create_animation(args.output_dir, args.type)
+    # Generate visualization
+    if args.timestep is not None:
+        vtk_output.generate_visualization(args.timestep, args.output_dir)
 
-    # -------------------------------
-    # Type: Lines
-    # -------------------------------
-    elif args.type == 'lines':
-        # Parse line connectivity if provided
-        if not args.connectivity:
-            parser.error("--connectivity is required when --type=lines")
+    # Generate visualization for all timesteps
+    vtk_output.visualize_all_timesteps(args.output_dir)
 
-        line_connectivity = []
-        for conn in args.connectivity:
-            try:
-                start, end = map(int, conn.split(','))
-                line_connectivity.append((start, end))
-            except (ValueError, TypeError):
-                parser.error(f"Invalid connectivity format: {conn}. Expected format: 'start,end'")
-
-        visualizer.create_animation(args.output_dir, args.type, line_connectivity)
-
-    # -------------------------------
-    # Type: Floating Platform
-    # -------------------------------
-    elif args.type == 'platform':
-        if not args.fairleads or not args.anchors:
-            parser.error("--fairleads and --anchors are required when --type=platform")
-
-        try:
-            fairlead_indices = [int(idx) for idx in args.fairleads.split(',')]
-            anchor_indices = [int(idx) for idx in args.anchors.split(',')]
-
-            if len(fairlead_indices) != len(anchor_indices):
-                parser.error("Number of fairlead indices must match number of anchor indices")
-
-            visualizer.create_platform_animation(
-                args.output_dir,
-                args.platform_node,
-                fairlead_indices,
-                anchor_indices
-            )
-        except ValueError:
-            parser.error("Invalid format for fairleads or anchors. Expected comma-separated integers.")
-
-    # -------------------------------
-    # Type: Rotor
-    # -------------------------------
-    elif args.type == 'rotor':
-        # Parse beam elements if provided
-        beam_elements = None
-        if args.beam_elements:
-            try:
-                # Format should be like "0,1,2 3,4,5" where each space-separated group
-                # are the node indices for a beam element
-                beam_elements = []
-                for beam in args.beam_elements.split():
-                    beam_elements.append([int(idx) for idx in beam.split(',')])
-            except ValueError:
-                parser.error("Invalid format for beam elements")
-
-        visualizer.create_rotor_animation(args.output_dir, beam_elements)
-
-    else:
-        raise ValueError(f"Unknown type: {args.type}")
 
 if __name__ == "__main__":
     main()
