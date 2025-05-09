@@ -121,7 +121,7 @@ public:
         // Import masses
         if (root["masses"]) {
             for (const auto& entry : root["masses"]) {
-                size_t id = std::stoul(entry.first.as<std::string>());
+                const size_t id = std::stoul(entry.first.as<std::string>());
                 masses_[id] = entry.second.as<std::vector<size_t>>();
             }
         }
@@ -129,7 +129,7 @@ public:
         // Import springs
         if (root["springs"]) {
             for (const auto& entry : root["springs"]) {
-                size_t id = std::stoul(entry.first.as<std::string>());
+                const size_t id = std::stoul(entry.first.as<std::string>());
                 springs_[id] = entry.second.as<std::vector<size_t>>();
             }
         }
@@ -137,7 +137,7 @@ public:
         // Import beams
         if (root["beams"]) {
             for (const auto& entry : root["beams"]) {
-                size_t id = std::stoul(entry.first.as<std::string>());
+                const size_t id = std::stoul(entry.first.as<std::string>());
                 beams_[id] = entry.second.as<std::vector<size_t>>();
             }
         }
@@ -145,7 +145,7 @@ public:
         // Import constraints
         if (root["constraints"]) {
             for (const auto& entry : root["constraints"]) {
-                size_t id = std::stoul(entry.first.as<std::string>());
+                const size_t id = std::stoul(entry.first.as<std::string>());
                 constraints_[id] = entry.second.as<std::vector<size_t>>();
             }
         }
@@ -164,9 +164,9 @@ private:
      * @param map The map containing the element data
      */
     template <typename MapType>
-    void ExportElementTypeToYAML(
+    static void ExportElementTypeToYAML(
         YAML::Node& root, const std::string& element_type, const MapType& map
-    ) const {
+    ) {
         if (map.empty()) {
             return;
         }
@@ -184,9 +184,9 @@ private:
         // Add each element in sorted order of id
         for (const auto& id : keys) {
             YAML::Node array_node;
-            for (const auto& node_id : map.at(id)) {
+            std::for_each(map.at(id).begin(), map.at(id).end(), [&array_node](const auto& node_id) {
                 array_node.push_back(node_id);
-            }
+            });
 
             array_node.SetStyle(YAML::EmitterStyle::Flow);
             element_node[std::to_string(id)] = array_node;
