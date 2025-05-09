@@ -16,7 +16,7 @@ struct ExecuteCalculateRigidJointConstraint {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        CalculateRigidJointConstraint(
+        CalculateRigidJointConstraint<Kokkos::DefaultExecutionSpace>(
             X0, base_node_u, target_node_u, residual_terms, base_gradient_terms,
             target_gradient_terms
         );
