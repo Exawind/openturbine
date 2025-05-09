@@ -4,14 +4,15 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct ContributeSpringsToVector {
-    Kokkos::View<size_t* [2][3]>::const_type element_freedom_table;
-    Kokkos::View<double* [2][3]>::const_type elements;
-    Kokkos::View<double* [1], Kokkos::LayoutLeft> vector;
+    typename Kokkos::View<size_t* [2][3], DeviceType>::const_type element_freedom_table;
+    typename Kokkos::View<double* [2][3], DeviceType>::const_type elements;
+    Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType> vector;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
-        constexpr auto force_atomic = !std::is_same_v<Kokkos::DefaultExecutionSpace, Kokkos::Serial>;
+        constexpr auto force_atomic = !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
         for (auto j = 0U; j < element_freedom_table.extent(2); ++j) {
             if constexpr (force_atomic) {
                 Kokkos::atomic_add(
