@@ -537,7 +537,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     auto rotor_speed = rotor_speed_init;
     auto azimuth = azimuth_init;
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
     // Create output directory if it doesn't exist
     auto output_dir = std::string("IEA15RotorAeroController");
     std::filesystem::create_directories(output_dir);
@@ -553,7 +553,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         auto time_step_region = Kokkos::Profiling::ScopedRegion("Time Step");
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
         model.WriteNodeOutputsAtTimestep(state, i + 1);
 #endif
 

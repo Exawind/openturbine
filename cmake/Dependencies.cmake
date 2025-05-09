@@ -47,13 +47,6 @@ function(openturbine_setup_dependencies)
   endif()
 
   #----------------------------------------
-  # VTK
-  #----------------------------------------
-  if(OpenTurbine_ENABLE_VTK)
-    find_package(VTK REQUIRED COMPONENTS IOXML)
-  endif()
-
-  #----------------------------------------
   # GTest
   #----------------------------------------
   if(OpenTurbine_ENABLE_TESTS)

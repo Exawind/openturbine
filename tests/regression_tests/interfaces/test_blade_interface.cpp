@@ -23,7 +23,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         .SetAbsoluteErrorTolerance(1e-6)
         .SetRelativeErrorTolerance(1e-4);
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
     builder.Solution().SetOutputFile("BladeInterfaceTest.BladeWindIO");
 #endif
 
@@ -171,7 +171,7 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         .SetAbsoluteErrorTolerance(1e-6)
         .SetRelativeErrorTolerance(1e-4);
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
     builder.Solution().SetOutputFile("BladeInterfaceTest.RotatingBeam");
 #endif
 
@@ -331,7 +331,7 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
         .SetAbsoluteErrorTolerance(1e-5)
         .SetRelativeErrorTolerance(1e-3);
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
     builder.Solution().SetOutputFile("BladeInterfaceTest.StaticCurledBeam");
 #endif
 

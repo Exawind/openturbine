@@ -46,14 +46,6 @@ else()
   message(FATAL_ERROR "NetCDF library not found")
 endif()
 
-#----------------------------------------
-# VTK
-#----------------------------------------
-if(OpenTurbine_ENABLE_VTK)
-  target_link_system_libraries(openturbine_library PRIVATE VTK::IOXML)
-  target_compile_definitions(openturbine_library PRIVATE OpenTurbine_ENABLE_VTK)
-endif()
-
 #--------------------------------------------------------------------------
 # Include directories for system libraries
 #--------------------------------------------------------------------------

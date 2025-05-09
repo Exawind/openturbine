@@ -108,7 +108,7 @@ TEST(RotorTest, IEA15RotorOnly) {
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
     // Create output directory if it doesn't exist
     auto output_dir = std::string("RotorTest.IEA15RotorOnly");
     std::filesystem::create_directories(output_dir);
@@ -142,7 +142,7 @@ TEST(RotorTest, IEA15RotorOnly) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
         model.WriteNodeOutputsAtTimestep(state, i + 1);
 #endif
     }
@@ -240,7 +240,7 @@ TEST(RotorTest, IEA15RotorHub) {
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
     // Create output directory if it doesn't exist
     auto output_dir = std::string("RotorTest.IEA15RotorHub");
     std::filesystem::create_directories(output_dir);
@@ -275,7 +275,7 @@ TEST(RotorTest, IEA15RotorHub) {
         // Verify that step converged
         EXPECT_EQ(converged, true);
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
         model.WriteNodeOutputsAtTimestep(state, i + 1);
 #endif
     }
@@ -394,7 +394,7 @@ TEST(RotorTest, IEA15RotorController) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
     // Create output directory if it doesn't exist
     auto output_dir = std::string("RotorTest.IEA15RotorController");
     std::filesystem::create_directories(output_dir);
@@ -432,7 +432,7 @@ TEST(RotorTest, IEA15RotorController) {
         // Verify that step converged
         EXPECT_EQ(converged, true);
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
         model.WriteNodeOutputsAtTimestep(state, i + 1);
 #endif
     }

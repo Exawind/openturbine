@@ -608,7 +608,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
     // Create output directory if it doesn't exist
     auto output_dir = std::string("RotatingBeamTest.RevoluteJointConstraint");
     std::filesystem::create_directories(output_dir);
@@ -625,7 +625,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     for (size_t i = 0; i < 5; ++i) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
         model.WriteNodeOutputsAtTimestep(state, i + 1);
 #endif
     }
@@ -717,7 +717,7 @@ void GeneratorTorqueWithAxisTilt(
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver(state, elements, constraints);
 
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
     // Create output directory if it doesn't exist
     auto output_dir =
         std::string("RotatingBeamTest.GeneratorTorqueWithAxisTilt_" + std::to_string(tilt));
@@ -737,7 +737,7 @@ void GeneratorTorqueWithAxisTilt(
     for (size_t i = 0; i < 10; ++i) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
-#ifdef OpenTurbine_ENABLE_VTK
+#ifdef OpenTurbine_WRITE_OUTPUTS
         model.WriteNodeOutputsAtTimestep(state, i + 1);
 #endif
     }

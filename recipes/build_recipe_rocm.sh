@@ -53,16 +53,15 @@ install_if_missing yaml-cpp
 install_if_missing "trilinos@16.0.0~mpi~epetra+rocm+basker ^kokkos-kernels+blas+lapack"
 #install_if_missing cppcheck # add if CppCheck is needed
 #install_if_missing llvm # add if clang-tidy is needed
-#install_if_missing "vtk~mpi~opengl2" # add if VTK is needed
 
-spack load trilinos googletest yaml-cpp #llvm vtk cppcheck
+spack load trilinos googletest yaml-cpp #llvm cppcheck
 
 # Build OpenTurbine with the specified options
 mkdir -p build-from-script
 cd build-from-script
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
-  -DOpenTurbine_ENABLE_VTK=ON \
+  -DOpenTurbine_WRITE_OUTPUTS=ON \
   -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
   -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
   -DCMAKE_BUILD_TYPE="Release"

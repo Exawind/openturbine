@@ -47,7 +47,6 @@ jobs:
       run: |
         # Find the gfortran compiler and set the FC environment variable
         export FC=$(find /opt/homebrew/ -name gfortran | tr ' ' '\n' | grep "/gcc/.*gfortran")
-        brew install vtk
         brew install llvm
         source spack/share/spack/setup-env.sh
         spack load kokkos-kernels
@@ -64,7 +63,7 @@ jobs:
           -DOpenTurbine_ENABLE_SANITIZER_UNDEFINED=${{ matrix.build_external == 'none' }} \
           -DOpenTurbine_ENABLE_CPPCHECK=ON \
           -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
-          -DOpenTurbine_ENABLE_VTK=ON \
+          -DOpenTurbine_WRITE_OUTPUTS=ON \
           -DOpenTurbine_WARNINGS_AS_ERRORS=ON \
           -DOpenTurbine_BUILD_OPENFAST_ADI=${{ matrix.build_external == 'all' }} \
           -DOpenTurbine_BUILD_ROSCO_CONTROLLER=${{ matrix.build_external == 'all' }} \
