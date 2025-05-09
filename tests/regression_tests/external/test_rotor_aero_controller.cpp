@@ -20,10 +20,6 @@
 #include "utilities/controllers/turbine_controller.hpp"
 #include "vendor/dylib/dylib.hpp"
 
-#ifdef OpenTurbine_ENABLE_VTK
-#include "regression/vtkout.hpp"
-#endif
-
 namespace openturbine::tests {
 
 constexpr bool use_node_loads = true;
@@ -541,16 +537,24 @@ TEST(Milestone, IEA15RotorAeroController) {
     auto rotor_speed = rotor_speed_init;
     auto azimuth = azimuth_init;
 
+#ifdef OpenTurbine_ENABLE_VTK
+    // Create output directory if it doesn't exist
+    auto output_dir = std::string("IEA15RotorAeroController");
+    std::filesystem::create_directories(output_dir);
+
+    // Export mesh connectivity to yaml
+    model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
+
+    // Set NetCDF output writer
+    model.SetOutputWriter(output_dir + "/iea15_rotor_aero_controller.nc", state.num_system_nodes);
+    model.WriteNodeOutputsAtTimestep(state, 0);
+#endif
+
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         auto time_step_region = Kokkos::Profiling::ScopedRegion("Time Step");
 #ifdef OpenTurbine_ENABLE_VTK
-        auto tmp = std::to_string(i);
-        tmp.insert(0, 5 - tmp.size(), '0');
-        WriteVTKBeamsQP(state, elements.beams, step_dir / (std::string("step_qp.") + tmp + ".vtu"));
-        WriteVTKBeamsNodes(
-            state, elements.beams, step_dir / (std::string("step_node.") + tmp + ".vtu")
-        );
+        model.WriteNodeOutputsAtTimestep(state, i + 1);
 #endif
 
         // Get current time and next time
