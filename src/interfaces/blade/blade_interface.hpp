@@ -1,5 +1,7 @@
 #pragma once
 
+#include <filesystem>
+
 #include "interfaces/components/blade.hpp"
 #include "interfaces/components/blade_input.hpp"
 #include "interfaces/components/solution_input.hpp"

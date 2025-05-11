@@ -719,8 +719,7 @@ void GeneratorTorqueWithAxisTilt(
 
 #ifdef OpenTurbine_WRITE_OUTPUTS
     // Create output directory if it doesn't exist
-    auto output_dir =
-        std::string("RotatingBeamTest.GeneratorTorqueWithAxisTilt_" + std::to_string(tilt));
+    auto output_dir = "RotatingBeamTest.GeneratorTorqueWithAxisTilt_" + std::to_string(tilt);
     std::filesystem::create_directories(output_dir);
 
     // Export mesh connectivity to yaml
