@@ -14,6 +14,11 @@ macro(openturbine_setup_options)
   option(OpenTurbine_WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
 
   #----------------------------------------
+  # Utilities options
+  #----------------------------------------
+  option(OpenTurbine_WRITE_OUTPUTS "Write outputs to NetCDF files and export mesh connectivity to YAML file" OFF)
+
+  #----------------------------------------
   # Sanitizer options
   #----------------------------------------
   option(OpenTurbine_ENABLE_SANITIZER_ADDRESS "Enable address sanitizer" OFF)
@@ -43,7 +48,6 @@ macro(openturbine_setup_options)
   option(OpenTurbine_ENABLE_KLU "Use MKL for sparse linear solver when running on CPU" OFF)
   option(OpenTurbine_ENABLE_UMFPACK "Use MKL for sparse linear solver when running on CPU" OFF)
   option(OpenTurbine_ENABLE_SUPERLU "Use MKL for sparse linear solver when running on CPU" OFF)
-  option(OpenTurbine_WRITE_OUTPUTS "Write outputs to NetCDF files and export mesh connectivity to YAML file" OFF)
   option(OpenTurbine_BUILD_OPENFAST_ADI "Build the OpenFAST ADI external project" OFF)
   option(OpenTurbine_BUILD_ROSCO_CONTROLLER "Build the ROSCO controller external project" OFF)
 endmacro()

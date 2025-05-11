@@ -21,6 +21,13 @@ target_link_libraries(openturbine_library PRIVATE
   openturbine_warnings
 )
 
+#----------------------------------------
+# Add compile definitions
+#----------------------------------------
+if(OpenTurbine_WRITE_OUTPUTS)
+  target_compile_definitions(openturbine_library PRIVATE OpenTurbine_WRITE_OUTPUTS)
+endif()
+
 #--------------------------------------------------------------------------
 # Link system libraries
 #--------------------------------------------------------------------------
