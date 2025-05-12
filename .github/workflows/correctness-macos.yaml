@@ -47,6 +47,7 @@ jobs:
       run: |
         # Find the gfortran compiler and set the FC environment variable
         export FC=$(find /opt/homebrew/ -name gfortran | tr ' ' '\n' | grep "/gcc/.*gfortran")
+        brew install hdf5
         brew install llvm
         source spack/share/spack/setup-env.sh
         spack load kokkos-kernels
