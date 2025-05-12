@@ -49,7 +49,7 @@ TEST(NetCDFOutputsWriterTest, SpringMassSystemOutputs) {
 
     // Create solver and system
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
-    auto q = Kokkos::create_mirror(state.q);
+    auto q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
 
     // Set up NodeStateWriter with 2 nodes
     const std::string output_file = "spring_mass_system.nc";

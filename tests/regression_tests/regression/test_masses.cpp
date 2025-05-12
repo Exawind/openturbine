@@ -127,8 +127,7 @@ TEST(MassesTest, ExternalForce) {
     }
 
     // Get velocity
-    auto v_host = Kokkos::create_mirror(state.v);
-    Kokkos::deep_copy(v_host, state.v);
+    auto v_host = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.v);
 
     EXPECT_NEAR(v_host(0, 0), 4.9975, 1.e-12);
     EXPECT_NEAR(v_host(0, 1), 0., 1.e-12);

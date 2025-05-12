@@ -54,8 +54,7 @@ inline auto SetUpPrecessionTest() {
         EXPECT_TRUE(converged);
     }
 
-    auto q_host = Kokkos::create_mirror(state.q);
-    Kokkos::deep_copy(q_host, state.q);
+    auto q_host = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.q);
     EXPECT_NEAR(q_host(0, 0), 0., 1.e-12);
     EXPECT_NEAR(q_host(0, 1), 0., 1.e-12);
     EXPECT_NEAR(q_host(0, 2), 0., 1.e-12);

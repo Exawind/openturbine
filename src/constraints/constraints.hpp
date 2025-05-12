@@ -98,16 +98,16 @@ struct Constraints {
           target_gradient_terms("target_gradient_terms", num_constraints),
           base_gradient_transpose_terms("base_gradient_transpose_terms", num_constraints),
           target_gradient_transpose_terms("target_gradient_transpose_terms", num_constraints) {
-        auto host_type = Kokkos::create_mirror(type);
-        auto host_row_range = Kokkos::create_mirror(row_range);
-        auto host_base_node_index = Kokkos::create_mirror(base_node_index);
-        auto host_target_node_index = Kokkos::create_mirror(target_node_index);
-        auto host_base_freedom = Kokkos::create_mirror(base_node_freedom_signature);
-        auto host_target_freedom = Kokkos::create_mirror(target_node_freedom_signature);
-        auto host_base_active_dofs = Kokkos::create_mirror(base_active_dofs);
-        auto host_target_active_dofs = Kokkos::create_mirror(target_active_dofs);
-        auto host_X0 = Kokkos::create_mirror(X0);
-        auto host_axes = Kokkos::create_mirror(axes);
+        auto host_type = Kokkos::create_mirror_view(type);
+        auto host_row_range = Kokkos::create_mirror_view(row_range);
+        auto host_base_node_index = Kokkos::create_mirror_view(base_node_index);
+        auto host_target_node_index = Kokkos::create_mirror_view(target_node_index);
+        auto host_base_freedom = Kokkos::create_mirror_view(base_node_freedom_signature);
+        auto host_target_freedom = Kokkos::create_mirror_view(target_node_freedom_signature);
+        auto host_base_active_dofs = Kokkos::create_mirror_view(base_active_dofs);
+        auto host_target_active_dofs = Kokkos::create_mirror_view(target_active_dofs);
+        auto host_X0 = Kokkos::create_mirror_view(X0);
+        auto host_axes = Kokkos::create_mirror_view(axes);
 
         auto start_row = size_t{0U};
         for (auto i = 0U; i < num_constraints; ++i) {

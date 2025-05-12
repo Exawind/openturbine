@@ -21,19 +21,19 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_FixedBC) {
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
-    const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
+    const auto mirror_node_freedom_map_table =
+        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.node_freedom_map_table);
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
     create_constraint_freedom_table(constraints, state);
 
-    const auto host_target_node_index = create_mirror(constraints.target_node_index);
-    Kokkos::deep_copy(host_target_node_index, constraints.target_node_index);
+    const auto host_target_node_index =
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.target_node_index);
     const auto host_target_node_freedom_signature =
-        create_mirror(constraints.target_node_freedom_signature);
-    Kokkos::deep_copy(host_target_node_freedom_signature, constraints.target_node_freedom_signature);
-    const auto host_target_node_freedom_table = create_mirror(constraints.target_node_freedom_table);
-    Kokkos::deep_copy(host_target_node_freedom_table, constraints.target_node_freedom_table);
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.target_node_freedom_signature);
+    const auto host_target_node_freedom_table =
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.target_node_freedom_table);
 
     EXPECT_EQ(host_target_node_index(0), 1);  // target node index is 1
     EXPECT_EQ(
@@ -60,19 +60,19 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_PrescribedBC) {
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
-    const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
+    const auto mirror_node_freedom_map_table =
+        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.node_freedom_map_table);
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
     create_constraint_freedom_table(constraints, state);
 
-    const auto host_target_node_index = create_mirror(constraints.target_node_index);
-    Kokkos::deep_copy(host_target_node_index, constraints.target_node_index);
+    const auto host_target_node_index =
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.target_node_index);
     const auto host_target_node_freedom_signature =
-        create_mirror(constraints.target_node_freedom_signature);
-    Kokkos::deep_copy(host_target_node_freedom_signature, constraints.target_node_freedom_signature);
-    const auto host_target_node_freedom_table = create_mirror(constraints.target_node_freedom_table);
-    Kokkos::deep_copy(host_target_node_freedom_table, constraints.target_node_freedom_table);
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.target_node_freedom_signature);
+    const auto host_target_node_freedom_table =
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.target_node_freedom_table);
 
     EXPECT_EQ(host_target_node_index(0), 1);  // target node index is 4
     EXPECT_EQ(
@@ -99,26 +99,25 @@ TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RigidBC) {
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
     );
-    const auto mirror_node_freedom_map_table = Kokkos::create_mirror(state.node_freedom_map_table);
+    const auto mirror_node_freedom_map_table =
+        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.node_freedom_map_table);
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
     create_constraint_freedom_table(constraints, state);
 
-    const auto host_base_node_index = create_mirror(constraints.base_node_index);
-    Kokkos::deep_copy(host_base_node_index, constraints.base_node_index);
-    const auto host_target_node_index = create_mirror(constraints.target_node_index);
-    Kokkos::deep_copy(host_target_node_index, constraints.target_node_index);
+    const auto host_base_node_index =
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.base_node_index);
+    const auto host_target_node_index =
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.target_node_index);
     const auto host_base_node_freedom_signature =
-        create_mirror(constraints.base_node_freedom_signature);
-    Kokkos::deep_copy(host_base_node_freedom_signature, constraints.base_node_freedom_signature);
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.base_node_freedom_signature);
     const auto host_target_node_freedom_signature =
-        create_mirror(constraints.target_node_freedom_signature);
-    Kokkos::deep_copy(host_target_node_freedom_signature, constraints.target_node_freedom_signature);
-    const auto host_base_node_freedom_table = create_mirror(constraints.base_node_freedom_table);
-    Kokkos::deep_copy(host_base_node_freedom_table, constraints.base_node_freedom_table);
-    const auto host_target_node_freedom_table = create_mirror(constraints.target_node_freedom_table);
-    Kokkos::deep_copy(host_target_node_freedom_table, constraints.target_node_freedom_table);
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.target_node_freedom_signature);
+    const auto host_base_node_freedom_table =
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.base_node_freedom_table);
+    const auto host_target_node_freedom_table =
+        create_mirror_view_and_copy(Kokkos::HostSpace(), constraints.target_node_freedom_table);
 
     EXPECT_EQ(host_base_node_index(0), 0);    // base node index is 0
     EXPECT_EQ(host_target_node_index(0), 1);  // target node index is 1

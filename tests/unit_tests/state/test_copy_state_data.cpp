@@ -9,10 +9,8 @@ namespace {
 
 template <typename T>
 void Compare(const T& field_1, const T& field_2) {
-    const auto mirror_1 = Kokkos::create_mirror(field_1);
-    Kokkos::deep_copy(mirror_1, field_1);
-    const auto mirror_2 = Kokkos::create_mirror(field_2);
-    Kokkos::deep_copy(mirror_2, field_2);
+    const auto mirror_1 = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), field_1);
+    const auto mirror_2 = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), field_2);
 
     if constexpr (T::rank() == 1) {
         for (auto i = 0U; i < field_1.extent(0); ++i) {
