@@ -2,9 +2,10 @@ import argparse
 import numpy as np
 import os
 import vtk
+import yaml
+
 from netCDF4 import Dataset
 from typing import Dict, List, Optional, Tuple
-import yaml
 
 #-------------------------------------------------------------------------------
 # Helper functions
@@ -92,7 +93,7 @@ class VTKOutput:
             'constraints': {}
         }
         if connectivity_path:
-            self.load_connectivity(connectivity_path)
+            self._load_mesh_connectivity(connectivity_path)
 
         # Get dimensions from the NetCDF file
         self.num_nodes = len(self.data.dimensions['nodes'])
@@ -101,7 +102,7 @@ class VTKOutput:
         print(f"Loaded data with {self.num_nodes} nodes and {self.num_timesteps} timesteps")
 
 
-    def load_connectivity(self, connectivity_path: str):
+    def _load_mesh_connectivity(self, connectivity_path: str):
         """Loads mesh connectivity information from a YAML file.
 
         Args:
@@ -138,6 +139,9 @@ class VTKOutput:
         - Position: x_x, x_y, x_z, x_w, x_i, x_j, x_k
         - Velocity: v_x, v_y, v_z, v_i, v_j, v_k
         - Acceleration: a_x, a_y, a_z, a_i, a_j, a_k
+        - Force (if available): f_x, f_y, f_z
+        - Moment (if available): f_i, f_j, f_k
+        - Deformation (if available): deformation_x, deformation_y, deformation_z
 
         Args:
             timestep (int): The timestep to extract node data from
@@ -161,6 +165,10 @@ class VTKOutput:
         # If no specific nodes requested, use all nodes
         if node_indices is None:
             indices_to_extract = range(self.num_nodes)
+
+        # ------------------------------------------------------------
+        # Extract data that are always available
+        # ------------------------------------------------------------
 
         # Read all data from NetCDF file at once for the requested timestep
         position = [
@@ -189,13 +197,46 @@ class VTKOutput:
             self.data.variables['a_k'][timestep, :]
         ]
 
+        # ------------------------------------------------------------
+        # Read optional force/moment and deformation data if available
+        # ------------------------------------------------------------
+
+        force = None
+        moment = None
+        deformation = None
+
+        force_available = all(f'f_{comp}' in self.data.variables for comp in ['x', 'y', 'z'])
+        if force_available:
+            force = [
+                self.data.variables['f_x'][timestep, :],
+                self.data.variables['f_y'][timestep, :],
+                self.data.variables['f_z'][timestep, :]
+            ]
+        moment_available = all(f'f_{comp}' in self.data.variables for comp in ['i', 'j', 'k'])
+        if moment_available:
+            moment = [
+                self.data.variables['f_i'][timestep, :],
+                self.data.variables['f_j'][timestep, :],
+                self.data.variables['f_k'][timestep, :]
+            ]
+        deformation_available = all(f'deformation_{comp}' in self.data.variables for comp in ['x', 'y', 'z'])
+        if deformation_available:
+            deformation = [
+                self.data.variables['deformation_x'][timestep, :],
+                self.data.variables['deformation_y'][timestep, :],
+                self.data.variables['deformation_z'][timestep, :]
+            ]
+
         # Create node data dictionaries only for the requested indices
         nodes = []
         for i_node in indices_to_extract:
             node = {
                 'position': [position[j_comp][i_node] for j_comp in range(7)],
                 'velocity': [velocity[j_comp][i_node] for j_comp in range(6)],
-                'acceleration': [acceleration[j_comp][i_node] for j_comp in range(6)]
+                'acceleration': [acceleration[j_comp][i_node] for j_comp in range(6)],
+                'force': [force[j_comp][i_node] for j_comp in range(3)] if force is not None else None,
+                'moment': [moment[j_comp][i_node] for j_comp in range(3)] if moment is not None else None,
+                'deformation': [deformation[j_comp][i_node] for j_comp in range(3)] if deformation is not None else None
             }
             nodes.append(node)
 
@@ -339,7 +380,7 @@ class VTKOutput:
 
 
     def _add_beams_to_grid(self, grid, cell_types, element_ids, element_type_names):
-        """Adds beam elements to the unstructured grid.
+        """Adds beam elements to the unstructured grid. Represented as polyline cells.
 
         Args:
             grid (vtk.vtkUnstructuredGrid): Grid to add beams to
@@ -350,8 +391,9 @@ class VTKOutput:
         beam_type_id = 1  # ID for beam elements -> 1
 
         for beam_id, node_ids in self.mesh_connectivity['beams'].items():
+            # Beams should have at least two nodes i.e. be linear element
             if len(node_ids) < 2:
-                continue  # Skip invalid beams
+                continue
 
             # Create polyline cell
             line = vtk.vtkPolyLine()
@@ -362,12 +404,12 @@ class VTKOutput:
 
             cell_id = grid.InsertNextCell(line.GetCellType(), line.GetPointIds())
             cell_types[cell_id] = beam_type_id
-            element_ids[cell_id] = beam_id  # Store original beam ID
+            element_ids[cell_id] = beam_id
             element_type_names[cell_id] = "Beam"
 
 
     def _add_masses_to_grid(self, grid, cell_types, element_ids, element_type_names):
-        """Adds mass elements to the unstructured grid.
+        """Adds mass elements to the unstructured grid. Represented as vertices.
 
         Args:
             grid (vtk.vtkUnstructuredGrid): Grid to add masses to
@@ -378,20 +420,22 @@ class VTKOutput:
         mass_type_id = 2  # ID for mass elements -> 2
 
         for mass_id, node_ids in self.mesh_connectivity['masses'].items():
+            # Masses should have exactly one node i.e. be point element
             if len(node_ids) != 1:
-                continue  # Masses should have exactly one node
+                continue
 
+            # Create vertex cell
             vertex = vtk.vtkVertex()
             vertex.GetPointIds().SetId(0, node_ids[0])
 
             cell_id = grid.InsertNextCell(vertex.GetCellType(), vertex.GetPointIds())
             cell_types[cell_id] = mass_type_id
-            element_ids[cell_id] = mass_id  # Store original mass ID
+            element_ids[cell_id] = mass_id
             element_type_names[cell_id] = "Mass"
 
 
     def _add_springs_to_grid(self, grid, cell_types, element_ids, element_type_names):
-        """Adds spring elements to the unstructured grid.
+        """Adds spring elements to the unstructured grid. Represented as line cells.
 
         Args:
             grid (vtk.vtkUnstructuredGrid): Grid to add springs to
@@ -401,21 +445,23 @@ class VTKOutput:
         """
         spring_type_id = 3  # ID for spring elements -> 3
         for spring_id, node_ids in self.mesh_connectivity['springs'].items():
+            # Springs should have exactly two nodes i.e. be linear element
             if len(node_ids) != 2:
-                continue  # Springs should have exactly two nodes
+                continue
 
+            # Create line cell
             line = vtk.vtkLine()
             line.GetPointIds().SetId(0, node_ids[0])
             line.GetPointIds().SetId(1, node_ids[1])
 
             cell_id = grid.InsertNextCell(line.GetCellType(), line.GetPointIds())
             cell_types[cell_id] = spring_type_id
-            element_ids[cell_id] = spring_id  # Store original spring ID
+            element_ids[cell_id] = spring_id
             element_type_names[cell_id] = "Spring"
 
 
     def _add_constraints_to_grid(self, grid, cell_types, element_ids, element_type_names):
-        """Adds constraint elements to the unstructured grid.
+        """Adds constraint elements to the unstructured grid. Represented as line cells.
 
         Args:
             grid (vtk.vtkUnstructuredGrid): Grid to add constraints to
@@ -426,18 +472,18 @@ class VTKOutput:
         constraint_type_id = 4  # ID for constraint elements -> 4
 
         for constraint_id, node_ids in self.mesh_connectivity['constraints'].items():
+            # NOTE: We are not considering single node constraints for viz
             if len(node_ids) != 2:
-                continue  # Constraints should have exactly two nodes
+                continue
 
-            line = vtk.vtkLine()
-
+            # Create line cell
             line = vtk.vtkLine()
             line.GetPointIds().SetId(0, node_ids[0])
             line.GetPointIds().SetId(1, node_ids[1])
 
             cell_id = grid.InsertNextCell(line.GetCellType(), line.GetPointIds())
             cell_types[cell_id] = constraint_type_id
-            element_ids[cell_id] = constraint_id  # Store original constraint ID
+            element_ids[cell_id] = constraint_id
             element_type_names[cell_id] = "Constraint"
 
 
