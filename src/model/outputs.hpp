@@ -15,7 +15,7 @@ namespace openturbine {
 class Outputs {
 public:
     /// @brief Enum for selecting where on elements to write the outputs
-    enum class OutputLocation {
+    enum class OutputLocation : std::uint8_t {
         kNodes = 0,  ///< Write outputs at node locations
         kQPs = 1     ///< Write outputs at quadrature points
     };
