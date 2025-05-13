@@ -36,7 +36,7 @@ inline void WriteVTKBeamsQP(
 
     Kokkos::parallel_for(
         "UpdateNodeState", range_policy,
-        beams::UpdateNodeStatei<DeviceType>{
+        beams::UpdateNodeState<DeviceType>{
             state.q, state.v, state.vd, beams.node_state_indices, beams.num_nodes_per_element,
             beams.node_u, beams.node_u_dot, beams.node_u_ddot
         }
