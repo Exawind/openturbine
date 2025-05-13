@@ -22,7 +22,7 @@ void RotateSectionMatrix(
     using GemmNT = KokkosBatched::SerialGemm<NoTranspose, Transpose, Default>;
 
     auto RR0_data = Kokkos::Array<double, 9>{};
-    auto RR0 = Kokkos::View<double[3][3]>(RR0_data.data());
+    auto RR0 = Kokkos::View<double[3][3], DeviceType>(RR0_data.data());
     QuaternionToRotationMatrix(xr, RR0);
 
     const auto Cstar_top = Kokkos::subview(Cstar, Kokkos::make_pair(0, 3), Kokkos::ALL);
@@ -31,7 +31,7 @@ void RotateSectionMatrix(
     const auto Cuu_right = Kokkos::subview(Cuu, Kokkos::ALL, Kokkos::make_pair(3, 6));
 
     auto ctmp_data = Kokkos::Array<double, 36>{};
-    const auto Ctmp = Kokkos::View<double[6][6]>(ctmp_data.data());
+    const auto Ctmp = Kokkos::View<double[6][6], DeviceType>(ctmp_data.data());
     const auto Ctmp_top = Kokkos::subview(Ctmp, Kokkos::make_pair(0, 3), Kokkos::ALL);
     const auto Ctmp_bottom = Kokkos::subview(Ctmp, Kokkos::make_pair(3, 6), Kokkos::ALL);
     const auto Ctmp_left = Kokkos::subview(Ctmp, Kokkos::ALL, Kokkos::make_pair(0, 3));

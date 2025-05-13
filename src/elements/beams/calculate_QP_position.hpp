@@ -39,7 +39,7 @@ struct CalculateQPPosition {
 
         // Calculate current orientation
         auto RR0_data = Kokkos::Array<double, 4>{};
-        auto RR0 = Kokkos::View<double[4]>(RR0_data.data());
+        auto RR0 = Kokkos::View<double[4], DeviceType>(RR0_data.data());
         QuaternionCompose(
             Kokkos::subview(qp_r_, i_elem, i_qp, Kokkos::ALL),
             Kokkos::subview(qp_r0_, i_elem, i_qp, Kokkos::ALL), RR0

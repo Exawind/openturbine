@@ -60,8 +60,8 @@ struct CalculateStiffnessQuadraturePointValues {
         auto Puu_data = Kokkos::Array<double, 36>{};
         auto Quu_data = Kokkos::Array<double, 36>{};
 
-        const auto r0 = Kokkos::View<double[4], DeviceType>::const_type(r0_data.data());
-        const auto x0_prime = Kokkos::View<double[3], DeviceType>::const_type(x0_prime_data.data());
+        const auto r0 = typename Kokkos::View<double[4], DeviceType>::const_type(r0_data.data());
+        const auto x0_prime = typename Kokkos::View<double[3], DeviceType>::const_type(x0_prime_data.data());
         const auto xr = Kokkos::View<double[4], DeviceType>(xr_data.data());
         const auto u = Kokkos::View<double[3], DeviceType>(u_data.data());
         const auto u_prime = Kokkos::View<double[3], DeviceType>(u_prime_data.data());

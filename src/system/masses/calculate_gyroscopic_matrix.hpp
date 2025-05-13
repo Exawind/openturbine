@@ -27,11 +27,11 @@ void CalculateGyroscopicMatrix(
     using GemmNT = KokkosBatched::SerialGemm<NoTranspose, Transpose, GemmDefault>;
     using Gemv = KokkosBlas::SerialGemv<NoTranspose, GemvDefault>;
     auto v1 = Kokkos::Array<double, 3>{};
-    auto V1 = Kokkos::View<double[3]>(v1.data());
+    auto V1 = Kokkos::View<double[3], DeviceType>(v1.data());
     auto v2 = Kokkos::Array<double, 3>{};
-    auto V2 = Kokkos::View<double[3]>(v2.data());
+    auto V2 = Kokkos::View<double[3], DeviceType>(v2.data());
     auto m1 = Kokkos::Array<double, 9>{};
-    auto M1 = Kokkos::View<double[3][3]>(m1.data());
+    auto M1 = Kokkos::View<double[3][3], DeviceType>(m1.data());
 
     // omega.tilde() * m * eta.tilde().t() + (omega.tilde() * m * eta).tilde().t()
     auto Guu_12 = Kokkos::subview(Guu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));

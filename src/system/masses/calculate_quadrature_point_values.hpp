@@ -67,9 +67,9 @@ struct CalculateQuadraturePointValues {
         const auto u = typename Kokkos::View<double[3], DeviceType>::const_type(u_data.data());
         const auto r = typename Kokkos::View<double[4], DeviceType>::const_type(r_data.data());
         const auto xr = Kokkos::View<double[4], DeviceType>(xr_data.data());
-        const auto u_ddot = Kokkos::View<double[3], DeviceType>::const_type(u_ddot_data.data());
-        const auto omega = Kokkos::View<double[3], DeviceType>::const_type(omega_data.data());
-        const auto omega_dot = Kokkos::View<double[3], DeviceType>::const_type(omega_dot_data.data());
+        const auto u_ddot = typename Kokkos::View<double[3], DeviceType>::const_type(u_ddot_data.data());
+        const auto omega = typename Kokkos::View<double[3], DeviceType>::const_type(omega_data.data());
+        const auto omega_dot = typename Kokkos::View<double[3], DeviceType>::const_type(omega_dot_data.data());
         auto Muu = Kokkos::View<double[6][6], DeviceType>(Muu_data.data());
         auto Fg = Kokkos::View<double[6], DeviceType>(Fg_data.data());
         auto eta = Kokkos::View<double[3], DeviceType>(eta_data.data());

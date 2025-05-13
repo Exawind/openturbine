@@ -58,7 +58,7 @@ struct CalculateInertialQuadraturePointValues {
         auto Guu_data = Kokkos::Array<double, 36>{};
         auto Kuu_data = Kokkos::Array<double, 36>{};
 
-        const auto r0 = Kokkos::View<double[4], DeviceType>::const_type(r0_data.data());
+        const auto r0 = typename Kokkos::View<double[4], DeviceType>::const_type(r0_data.data());
         const auto r = Kokkos::View<double[4], DeviceType>(r_data.data());
         const auto xr = Kokkos::View<double[4], DeviceType>(xr_data.data());
         const auto u_ddot = Kokkos::View<double[3], DeviceType>(u_ddot_data.data());

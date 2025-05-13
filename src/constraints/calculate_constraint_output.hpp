@@ -7,20 +7,21 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct CalculateConstraintOutput {
-    Kokkos::View<ConstraintType*>::const_type type;
-    Kokkos::View<size_t*>::const_type target_node_index;
-    View_Nx3x3::const_type axes;
-    View_Nx7::const_type node_x0;     // Initial position
-    View_Nx7::const_type node_u;      // Displacement
-    View_Nx6::const_type node_udot;   // Velocity
-    View_Nx6::const_type node_uddot;  // Acceleration
-    View_Nx3 outputs;
+    typename Kokkos::View<ConstraintType*, DeviceType>::const_type type;
+    typename Kokkos::View<size_t*, DeviceType>::const_type target_node_index;
+    typename Kokkos::View<double* [3][3], DeviceType>::const_type axes;
+    typename Kokkos::View<double* [7], DeviceType>::const_type node_x0;     // Initial position
+    typename Kokkos::View<double* [7], DeviceType>::const_type node_u;      // Displacement
+    typename Kokkos::View<double* [6], DeviceType>::const_type node_udot;   // Velocity
+    typename Kokkos::View<double* [6], DeviceType>::const_type node_uddot;  // Acceleration
+    Kokkos::View<double* [3], DeviceType> outputs;
 
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
         if (type(i_constraint) == ConstraintType::kRevoluteJoint) {
-            CalculateRevoluteJointOutput{i_constraint, target_node_index, axes,       node_x0,
+            CalculateRevoluteJointOutput<DeviceType>{i_constraint, target_node_index, axes,       node_x0,
                                          node_u,       node_udot,         node_uddot, outputs}();
             return;
         }

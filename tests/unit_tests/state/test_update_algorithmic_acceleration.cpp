@@ -15,7 +15,7 @@ TEST(UpdateAlgorithmicAcceleration, OneNode) {
 
     Kokkos::parallel_for(
         "UpdateAlgorithmicAcceleration", 1,
-        UpdateAlgorithmicAcceleration{acceleration, vd, alpha_f, alpha_m}
+        UpdateAlgorithmicAcceleration<Kokkos::DefaultExecutionSpace>{acceleration, vd, alpha_f, alpha_m}
     );
 
     constexpr auto acceleration_exact_data = std::array{14., 16., 18., 20., 22., 24.};

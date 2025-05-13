@@ -21,7 +21,7 @@ struct UpdateGlobalPosition {
 
         // Calculate global orientation
         auto node_x_data = Kokkos::Array<double, 4>{};
-        const auto node_x = Kokkos::View<double[4]>{node_x_data.data()};
+        const auto node_x = Kokkos::View<double[4], DeviceType>{node_x_data.data()};
         QuaternionCompose(
             Kokkos::subview(q, i, Kokkos::make_pair(3, 7)),
             Kokkos::subview(x0, i, Kokkos::make_pair(3, 7)), node_x

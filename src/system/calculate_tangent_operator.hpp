@@ -18,15 +18,15 @@ struct CalculateTangentOperator {
     KOKKOS_FUNCTION
     void operator()(const int i_node) const {
         auto T_data = Kokkos::Array<double, 36>{};
-        const auto T = Kokkos::View<double[6][6]>(T_data.data());
+        const auto T = Kokkos::View<double[6][6], DeviceType>(T_data.data());
 
         auto rv_data = Kokkos::Array<double, 3>{};
-        auto rv = Kokkos::View<double[3]>{rv_data.data()};
+        auto rv = Kokkos::View<double[3], DeviceType>{rv_data.data()};
 
         auto m1_data = Kokkos::Array<double, 9>{};
-        auto m1 = Kokkos::View<double[3][3]>(m1_data.data());
+        auto m1 = Kokkos::View<double[3][3], DeviceType>(m1_data.data());
         auto m2_data = Kokkos::Array<double, 9>{};
-        auto m2 = Kokkos::View<double[3][3]>(m2_data.data());
+        auto m2 = Kokkos::View<double[3][3], DeviceType>(m2_data.data());
 
         for (auto k = 0U; k < 6U; ++k) {
             T(k, k) = 1.;

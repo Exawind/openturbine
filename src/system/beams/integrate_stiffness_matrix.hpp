@@ -36,7 +36,7 @@ struct IntegrateStiffnessMatrixElement {
             return j_index + lane < final_nodes;
         });
         auto local_M_data = Kokkos::Array<simd_type, 36>{};
-        const auto local_M = Kokkos::View<simd_type[6][6]>(local_M_data.data());
+        const auto local_M = Kokkos::View<simd_type[6][6], DeviceType>(local_M_data.data());
         for (auto k = 0U; k < num_qps; ++k) {
             const auto w = simd_type(qp_weight_(k));
             const auto jacobian = simd_type(qp_jacobian_(k));

@@ -26,9 +26,9 @@ struct CalculateSystemMatrix {
         auto T_data = Kokkos::Array<double, 36>{};
         auto STpI_data = Kokkos::Array<double, 36>{};
 
-        const auto S = Kokkos::View<double[6][6]>(S_data.data());
-        const auto T = Kokkos::View<double[6][6]>(T_data.data());
-        const auto STpI = Kokkos::View<double[6][6]>(STpI_data.data());
+        const auto S = Kokkos::View<double[6][6], DeviceType>(S_data.data());
+        const auto T = Kokkos::View<double[6][6], DeviceType>(T_data.data());
+        const auto STpI = Kokkos::View<double[6][6], DeviceType>(STpI_data.data());
 
         KokkosBatched::SerialCopy<>::invoke(
             Kokkos::subview(stiffness_matrix_terms, i_node, j_node, Kokkos::ALL, Kokkos::ALL), S

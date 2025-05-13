@@ -380,7 +380,8 @@ TEST(RotorTest, IEA15RotorHost) {
     constexpr size_t num_blades = 3;
     auto model = CreateIEA15Blades<num_blades>(omega);
 
-    auto prescribed_bc_ids = std::array<size_t, num_blades>{};
+//    auto prescribed_bc_ids = std::array<size_t, num_blades>{};
+    auto prescribed_bc_ids = std::vector<size_t>(num_blades);
     std::transform(
         std::cbegin(model.GetBeamElements()), std::cend(model.GetBeamElements()),
         std::begin(prescribed_bc_ids),

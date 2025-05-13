@@ -84,8 +84,8 @@ inline bool Step(
     }
 
     Kokkos::parallel_for(
-        "UpdateAlgorithmicAcceleration", solver.num_system_nodes,
-        UpdateAlgorithmicAcceleration{
+        "UpdateAlgorithmicAcceleration", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes),
+        UpdateAlgorithmicAcceleration<DeviceType>{
             state.a,
             state.vd,
             parameters.alpha_f,
@@ -103,8 +103,8 @@ inline bool Step(
     );
 
     Kokkos::parallel_for(
-        "CalculateConstraintOutput", constraints.num_constraints,
-        CalculateConstraintOutput{
+        "CalculateConstraintOutput", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints),
+        CalculateConstraintOutput<DeviceType>{
             constraints.type,
             constraints.target_node_index,
             constraints.axes,

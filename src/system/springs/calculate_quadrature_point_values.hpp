@@ -35,9 +35,9 @@ struct CalculateQuadraturePointValues {
         auto f_data = Kokkos::Array<double, 3>{};
         auto a_data = Kokkos::Array<double, 9>{};
 
-        const auto x0 = Kokkos::View<double[3], DeviceType>::const_type(x0_data.data());
-        const auto u1 = Kokkos::View<double[3], DeviceType>::const_type(u1_data.data());
-        const auto u2 = Kokkos::View<double[3], DeviceType>::const_type(u2_data.data());
+        const auto x0 = typename Kokkos::View<double[3], DeviceType>::const_type(x0_data.data());
+        const auto u1 = typename Kokkos::View<double[3], DeviceType>::const_type(u1_data.data());
+        const auto u2 = typename Kokkos::View<double[3], DeviceType>::const_type(u2_data.data());
         const auto r = Kokkos::View<double[3], DeviceType>(r_data.data());
         const auto f = Kokkos::View<double[3], DeviceType>(f_data.data());
         const auto a = Kokkos::View<double[3][3], DeviceType>(a_data.data());

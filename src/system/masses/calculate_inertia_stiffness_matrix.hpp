@@ -31,11 +31,11 @@ void CalculateInertiaStiffnessMatrix(
     using Gemv = KokkosBlas::SerialGemv<NoTranspose, GemvDefault>;
 
     auto v1 = Kokkos::Array<double, 3>{};
-    auto V1 = View_3(v1.data());
+    auto V1 = Kokkos::View<double[3], DeviceType>(v1.data());
     auto m1 = Kokkos::Array<double, 9>{};
-    auto M1 = View_3x3(m1.data());
+    auto M1 = Kokkos::View<double[3][3], DeviceType>(m1.data());
     auto m2 = Kokkos::Array<double, 9>{};
-    auto M2 = View_3x3(m2.data());
+    auto M2 = Kokkos::View<double[3][3], DeviceType>(m2.data());
 
     KokkosBlas::serial_axpy(1., omega_dot_tilde, M1);
     GemmNN::invoke(1., omega_tilde, omega_tilde, 1., M1);
