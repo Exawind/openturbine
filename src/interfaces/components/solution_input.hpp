@@ -30,9 +30,6 @@ struct SolutionInput {
     /// @brief Output file path for NetCDF results (empty = no outputs will be written)
     std::string output_file_path;
 
-    /// @brief Output path for VTK visualization files (empty = no files will be written)
-    std::string vtk_output_path;
-
     /// @brief  Construct step parameters from inputs
     /// @return Step parameters struct
     [[nodiscard]] StepParameters Parameters() const {

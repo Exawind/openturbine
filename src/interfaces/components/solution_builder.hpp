@@ -58,11 +58,6 @@ struct SolutionBuilder {
         return *this;
     }
 
-    SolutionBuilder& SetVTKOutputPath(const std::string& vtk_output_path) {
-        input.vtk_output_path = vtk_output_path;
-        return *this;
-    }
-
     [[nodiscard]] const SolutionInput& Input() const { return this->input; }
 
 private:

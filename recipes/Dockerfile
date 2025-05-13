@@ -34,15 +34,14 @@ RUN git clone https://github.com/spack/spack.git && \
     spack install googletest && \
     spack --insecure install cppcheck && \
     spack install yaml-cpp && \
-    spack --insecure install trilinos@16.0.0~mpi~epetra && \
-    spack --insecure install vtk~mpi~opengl2
+    spack --insecure install trilinos@16.0.0~mpi~epetra
 
 # Step 3: Set up the working directory and copy the OpenTurbine repository
 WORKDIR /projects/openturbine
 COPY . .
 
 # Step 4: Load necessary libraries and build the project
-ARG CMAKE_OPTIONS="-DOpenTurbine_ENABLE_VTK=ON \
+ARG CMAKE_OPTIONS="-DOpenTurbine_WRITE_OUTPUTS=ON \
     -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
     -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
     -DCMAKE_BUILD_TYPE=Release"
@@ -50,7 +49,7 @@ ARG CMAKE_OPTIONS="-DOpenTurbine_ENABLE_VTK=ON \
 ARG N_PARALLEL_JOBS=4
 
 RUN . /spack/share/spack/setup-env.sh && \
-    spack load cppcheck googletest trilinos vtk yaml-cpp && \
+    spack load cppcheck googletest trilinos yaml-cpp && \
     mkdir docker-build && \
     cd docker-build && \
     cmake .. ${CMAKE_OPTIONS} && \

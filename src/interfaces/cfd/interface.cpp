@@ -202,10 +202,18 @@ Interface::Interface(const InterfaceInput& input)
         this->host_state_vd
     );
 
-    // Initialize NetCDF writer if output file is specified
+    // Initialize NetCDF writer and write mesh connectivity if output path is specified
     if (!input.output_file.empty()) {
-        this->output_writer_ =
-            std::make_unique<util::NodeStateWriter>(input.output_file, true, state.num_system_nodes);
+        // Create output directory if it doesn't exist
+        std::filesystem::create_directories(input.output_file);
+
+        // Initialize NetCDF writer
+        this->output_writer_ = std::make_unique<util::NodeStateWriter>(
+            input.output_file + "/cfd_interface.nc", true, state.num_system_nodes
+        );
+
+        // Write mesh connectivity to YAML file
+        model.ExportMeshConnectivityToYAML(input.output_file + "/mesh_connectivity.yaml");
     }
 }
 

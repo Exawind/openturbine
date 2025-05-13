@@ -23,8 +23,8 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         .SetAbsoluteErrorTolerance(1e-6)
         .SetRelativeErrorTolerance(1e-4);
 
-#ifdef OpenTurbine_ENABLE_VTK
-    builder.Solution().SetVTKOutputPath("BladeInterfaceTest.BladeWindIO/blade_####");
+#ifdef OpenTurbine_WRITE_OUTPUTS
+    builder.Solution().SetOutputFile("BladeInterfaceTest.BladeWindIO");
 #endif
 
     // Set blade parameters
@@ -126,9 +126,6 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     // Build blade interface
     auto interface = builder.Build();
 
-    // Write initial vtk output
-    interface.WriteOutputVTK();
-
     // Get reference to tip node
     auto& tip_node = interface.Blade().nodes.back();
 
@@ -145,9 +142,6 @@ TEST(BladeInterfaceTest, BladeWindIO) {
 
         // Check convergence
         ASSERT_EQ(converged, true);
-
-        // Write vtk output
-        interface.WriteOutputVTK();
     }
 
     EXPECT_NEAR(tip_node.position[0], 117.00012960730839, 1e-10);
@@ -177,8 +171,8 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         .SetAbsoluteErrorTolerance(1e-6)
         .SetRelativeErrorTolerance(1e-4);
 
-#ifdef OpenTurbine_ENABLE_VTK
-    builder.Solution().SetVTKOutputPath("BladeInterfaceTest.RotatingBeam/step_####");
+#ifdef OpenTurbine_WRITE_OUTPUTS
+    builder.Solution().SetOutputFile("BladeInterfaceTest.RotatingBeam");
 #endif
 
     // Node locations (GLL quadrature)
@@ -254,9 +248,6 @@ TEST(BladeInterfaceTest, RotatingBeam) {
 
         // Check for convergence
         ASSERT_EQ(converged, true);
-
-        // Write VTK file for end of step
-        interface.WriteOutputVTK();
     }
 
     //--------------------------------------------------------------------------
@@ -340,8 +331,8 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
         .SetAbsoluteErrorTolerance(1e-5)
         .SetRelativeErrorTolerance(1e-3);
 
-#ifdef OpenTurbine_ENABLE_VTK
-    builder.Solution().SetVTKOutputPath("BladeInterfaceTest.StaticCurledBeam/step_####");
+#ifdef OpenTurbine_WRITE_OUTPUTS
+    builder.Solution().SetOutputFile("BladeInterfaceTest.StaticCurledBeam");
 #endif
 
     // Node locations
@@ -403,9 +394,6 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
 
         // Static step
         const auto converged = interface.Step();
-
-        // Write beam visualization output
-        interface.WriteOutputVTK();
 
         // Check convergence
         ASSERT_EQ(converged, true);

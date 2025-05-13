@@ -21,6 +21,13 @@ target_link_libraries(openturbine_library PRIVATE
   openturbine_warnings
 )
 
+#----------------------------------------
+# Add compile definitions
+#----------------------------------------
+if(OpenTurbine_WRITE_OUTPUTS)
+  target_compile_definitions(openturbine_library PRIVATE OpenTurbine_WRITE_OUTPUTS)
+endif()
+
 #--------------------------------------------------------------------------
 # Link system libraries
 #--------------------------------------------------------------------------
@@ -44,14 +51,6 @@ elseif(TARGET netcdf)
   set(NETCDF_TARGET netcdf)
 else()
   message(FATAL_ERROR "NetCDF library not found")
-endif()
-
-#----------------------------------------
-# VTK
-#----------------------------------------
-if(OpenTurbine_ENABLE_VTK)
-  target_link_system_libraries(openturbine_library PRIVATE VTK::IOXML)
-  target_compile_definitions(openturbine_library PRIVATE OpenTurbine_ENABLE_VTK)
 endif()
 
 #--------------------------------------------------------------------------
