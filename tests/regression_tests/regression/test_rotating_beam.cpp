@@ -616,8 +616,8 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
 
     // Set NetCDF output writer
-    model.SetOutputWriter(output_dir + "/revolute_joint_constraint.nc", state.num_system_nodes);
-    model.WriteNodeOutputsAtTimestep(state, 0);
+    model.SetupOutputs(output_dir + "/revolute_joint_constraint.nc", state.num_system_nodes);
+    model.WriteOutputsAtTimestep(state, 0);
 #endif
 
     // Run 10 steps
@@ -625,7 +625,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
 #ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteNodeOutputsAtTimestep(state, i + 1);
+        model.WriteOutputsAtTimestep(state, i + 1);
 #endif
     }
 
@@ -725,10 +725,8 @@ void GeneratorTorqueWithAxisTilt(
     model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
 
     // Set NetCDF output writer
-    model.SetOutputWriter(
-        output_dir + "/generator_torque_with_axis_tilt.nc", state.num_system_nodes
-    );
-    model.WriteNodeOutputsAtTimestep(state, 0);
+    model.SetupOutputs(output_dir + "/generator_torque_with_axis_tilt.nc", state.num_system_nodes);
+    model.WriteOutputsAtTimestep(state, 0);
 #endif
 
     // Run 10 steps
@@ -736,7 +734,7 @@ void GeneratorTorqueWithAxisTilt(
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
 #ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteNodeOutputsAtTimestep(state, i + 1);
+        model.WriteOutputsAtTimestep(state, i + 1);
 #endif
     }
 

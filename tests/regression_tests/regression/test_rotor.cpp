@@ -117,8 +117,8 @@ TEST(RotorTest, IEA15RotorOnly) {
     model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
 
     // Set NetCDF output writer
-    model.SetOutputWriter(output_dir + "/rotor_test.nc", num_blades * num_nodes);
-    model.WriteNodeOutputsAtTimestep(state, 0);
+    model.SetupOutputs(output_dir + "/rotor_test.nc", num_blades * num_nodes);
+    model.WriteOutputsAtTimestep(state, 0);
 #endif
 
     // Perform time steps and check for convergence within max_iter iterations
@@ -143,7 +143,7 @@ TEST(RotorTest, IEA15RotorOnly) {
         EXPECT_EQ(converged, true);
 
 #ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteNodeOutputsAtTimestep(state, i + 1);
+        model.WriteOutputsAtTimestep(state, i + 1);
 #endif
     }
 }
@@ -250,8 +250,8 @@ TEST(RotorTest, IEA15RotorHub) {
 
     // Set NetCDF output writer
     auto total_num_nodes = num_blades * num_nodes + 1;  // +1 for hub node
-    model.SetOutputWriter(output_dir + "/rotor_test.nc", total_num_nodes);
-    model.WriteNodeOutputsAtTimestep(state, 0);
+    model.SetupOutputs(output_dir + "/rotor_test.nc", total_num_nodes);
+    model.WriteOutputsAtTimestep(state, 0);
 #endif
 
     // Perform time steps and check for convergence within max_iter iterations
@@ -276,7 +276,7 @@ TEST(RotorTest, IEA15RotorHub) {
         EXPECT_EQ(converged, true);
 
 #ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteNodeOutputsAtTimestep(state, i + 1);
+        model.WriteOutputsAtTimestep(state, i + 1);
 #endif
     }
 }
@@ -404,8 +404,8 @@ TEST(RotorTest, IEA15RotorController) {
 
     // Set NetCDF output writer
     auto total_num_nodes = num_blades * num_nodes + 1;  // +1 for hub node
-    model.SetOutputWriter(output_dir + "/rotor_test.nc", total_num_nodes);
-    model.WriteNodeOutputsAtTimestep(state, 0);
+    model.SetupOutputs(output_dir + "/rotor_test.nc", total_num_nodes);
+    model.WriteOutputsAtTimestep(state, 0);
 #endif
 
     // Perform time steps and check for convergence within max_iter iterations
@@ -433,7 +433,7 @@ TEST(RotorTest, IEA15RotorController) {
         EXPECT_EQ(converged, true);
 
 #ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteNodeOutputsAtTimestep(state, i + 1);
+        model.WriteOutputsAtTimestep(state, i + 1);
 #endif
     }
 }

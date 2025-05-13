@@ -545,15 +545,15 @@ TEST(Milestone, IEA15RotorAeroController) {
     model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
 
     // Set NetCDF output writer
-    model.SetOutputWriter(output_dir + "/iea15_rotor_aero_controller.nc", state.num_system_nodes);
-    model.WriteNodeOutputsAtTimestep(state, 0);
+    model.SetupOutputs(output_dir + "/iea15_rotor_aero_controller.nc", state.num_system_nodes);
+    model.WriteOutputsAtTimestep(state, 0);
 #endif
 
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         auto time_step_region = Kokkos::Profiling::ScopedRegion("Time Step");
 #ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteNodeOutputsAtTimestep(state, i + 1);
+        model.WriteOutputsAtTimestep(state, i + 1);
 #endif
 
         // Get current time and next time

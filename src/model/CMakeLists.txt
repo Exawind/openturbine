@@ -5,5 +5,6 @@ install(FILES
         mesh_connectivity.hpp
         model.hpp
         node.hpp
+        outputs.hpp
         DESTINATION include/OpenTurbine/model/
 )
