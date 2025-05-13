@@ -8,8 +8,7 @@
 
 namespace openturbine::beams {
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateStrain(
+KOKKOS_INLINE_FUNCTION void CalculateStrain(
     const typename Kokkos::View<double[3], DeviceType>::const_type& x0_prime,
     const typename Kokkos::View<double[3], DeviceType>::const_type& u_prime,
     const typename Kokkos::View<double[4], DeviceType>::const_type& r,

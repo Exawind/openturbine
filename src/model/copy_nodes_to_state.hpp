@@ -44,7 +44,8 @@ inline void CopyNodesToState(State<DeviceType>& state, const std::vector<Node>& 
 
     // Calculate current global position from initial position and displacement
     Kokkos::parallel_for(
-        "UpdateGlobalPosition", Kokkos::RangePolicy<typename DeviceType::execution_space>(0UL, state.num_system_nodes),
+        "UpdateGlobalPosition",
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0UL, state.num_system_nodes),
         UpdateGlobalPosition<DeviceType>{
             state.q,
             state.x0,

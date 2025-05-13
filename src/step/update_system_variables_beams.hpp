@@ -16,7 +16,9 @@ inline void UpdateSystemVariablesBeams(
     const auto num_nodes = beams.max_elem_nodes;
     const auto num_qps = beams.max_elem_qps;
 
-    auto range_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
+    auto range_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
+        static_cast<int>(beams.num_elems), Kokkos::AUTO()
+    );
     const auto shape_size = Kokkos::View<double**>::shmem_size(num_nodes, num_qps);
     const auto weight_size = Kokkos::View<double*>::shmem_size(num_qps);
     const auto node_variable_size = Kokkos::View<double* [7]>::shmem_size(num_nodes);
@@ -52,8 +54,7 @@ inline void UpdateSystemVariablesBeams(
             beams.qp_Cstar,
             beams.qp_Fe,
             beams.residual_vector_terms,
-            beams.system_matrix_terms
-        }
+            beams.system_matrix_terms}
     );
 }
 

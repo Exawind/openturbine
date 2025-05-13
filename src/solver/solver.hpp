@@ -119,9 +119,12 @@ struct Solver {
         size_t num_constraint_dofs,
         const typename Kokkos::View<size_t*, DeviceType>::const_type& base_active_dofs,
         const typename Kokkos::View<size_t*, DeviceType>::const_type& target_active_dofs,
-        const typename Kokkos::View<size_t* [6], DeviceType>::const_type& constraint_base_node_freedom_table,
-        const typename Kokkos::View<size_t* [6], DeviceType>::const_type& constraint_target_node_freedom_table,
-        const typename Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType>::const_type& constraint_row_range
+        const typename Kokkos::View<size_t* [6], DeviceType>::const_type&
+            constraint_base_node_freedom_table,
+        const typename Kokkos::View<size_t* [6], DeviceType>::const_type&
+            constraint_target_node_freedom_table,
+        const typename Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType>::const_type&
+            constraint_row_range
     )
         : num_system_nodes(node_IDs.extent(0)),
           num_system_dofs(ComputeNumSystemDofs<DeviceType>(active_dofs)),

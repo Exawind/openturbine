@@ -9,10 +9,8 @@
 namespace openturbine::masses {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateInertialForce(
-    double mass,
-    const typename Kokkos::View<double[3], DeviceType>::const_type& u_ddot,
+KOKKOS_INLINE_FUNCTION void CalculateInertialForce(
+    double mass, const typename Kokkos::View<double[3], DeviceType>::const_type& u_ddot,
     const typename Kokkos::View<double[3], DeviceType>::const_type& omega,
     const typename Kokkos::View<double[3], DeviceType>::const_type& omega_dot,
     const typename Kokkos::View<double[3], DeviceType>::const_type& eta,

@@ -16,9 +16,10 @@ void TestCalculateForceCoefficient1_ThreeElements() {
     Kokkos::parallel_for(
         "CalculateForceCoefficients", 3,
         KOKKOS_LAMBDA(const size_t i_elem) {
-            c1(i_elem) = openturbine::springs::CalculateForceCoefficient1<Kokkos::DefaultExecutionSpace>(
-                k(i_elem), l_ref(i_elem), l(i_elem)
-            );
+            c1(i_elem) =
+                openturbine::springs::CalculateForceCoefficient1<Kokkos::DefaultExecutionSpace>(
+                    k(i_elem), l_ref(i_elem), l(i_elem)
+                );
         }
     );
 
@@ -40,9 +41,10 @@ void TestCalculateForceCoefficient2_ThreeElements() {
     Kokkos::parallel_for(
         "CalculateForceCoefficients", 3,
         KOKKOS_LAMBDA(const size_t i_elem) {
-            c2(i_elem) = openturbine::springs::CalculateForceCoefficient2<Kokkos::DefaultExecutionSpace>(
-                k(i_elem), l_ref(i_elem), l(i_elem)
-            );
+            c2(i_elem) =
+                openturbine::springs::CalculateForceCoefficient2<Kokkos::DefaultExecutionSpace>(
+                    k(i_elem), l_ref(i_elem), l(i_elem)
+                );
         }
     );
 

@@ -96,43 +96,44 @@ inline void assemble_node_freedom_allocation_table(
 ) {
     Kokkos::deep_copy(state.node_freedom_allocation_table, FreedomSignature::NoComponents);
 
-    auto beams_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.beams.num_elems);
+    auto beams_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.beams.num_elems);
     Kokkos::parallel_for(
         "AssembleNodeFreedomMapTable_Beams", beams_range,
         AssembleNodeFreedomMapTable_Beams<DeviceType>{
             elements.beams.num_nodes_per_element, elements.beams.node_state_indices,
-            elements.beams.element_freedom_signature, state.node_freedom_allocation_table
-        }
+            elements.beams.element_freedom_signature, state.node_freedom_allocation_table}
     );
-    auto masses_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.masses.num_elems);
+    auto masses_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.masses.num_elems);
     Kokkos::parallel_for(
         "AssembleNodeFreedomMapTable_Masses", masses_range,
         AssembleNodeFreedomMapTable_Masses<DeviceType>{
             elements.masses.state_indices, elements.masses.element_freedom_signature,
-            state.node_freedom_allocation_table
-        }
+            state.node_freedom_allocation_table}
     );
-    auto springs_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.springs.num_elems);
+    auto springs_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.springs.num_elems);
     Kokkos::parallel_for(
         "AssembleNodeFreedomMapTable_Springs", springs_range,
         AssembleNodeFreedomMapTable_Springs<DeviceType>{
             elements.springs.node_state_indices, elements.springs.element_freedom_signature,
-            state.node_freedom_allocation_table
-        }
+            state.node_freedom_allocation_table}
     );
-    auto constraints_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
+    auto constraints_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
     Kokkos::parallel_for(
         "AssembleNodeFreedomMapTable_Constraints", constraints_range,
         AssembleNodeFreedomMapTable_Constraints<DeviceType>{
             constraints.type, constraints.target_node_index, constraints.base_node_index,
             constraints.target_node_freedom_signature, constraints.base_node_freedom_signature,
-            state.node_freedom_allocation_table
-        }
+            state.node_freedom_allocation_table}
     );
 
     const auto active_dofs = state.active_dofs;
     const auto node_freedom_allocation_table = state.node_freedom_allocation_table;
-    auto system_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, state.num_system_nodes);
+    auto system_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, state.num_system_nodes);
     Kokkos::parallel_for(
         "ComputeActiveDofs", system_range,
         KOKKOS_LAMBDA(size_t i) {

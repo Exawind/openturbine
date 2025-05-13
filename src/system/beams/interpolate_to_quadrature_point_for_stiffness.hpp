@@ -5,14 +5,12 @@
 namespace openturbine::beams {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void InterpolateToQuadraturePointForStiffness(
+KOKKOS_INLINE_FUNCTION void InterpolateToQuadraturePointForStiffness(
     double jacobian,
     const typename Kokkos::View<double*, Kokkos::LayoutLeft, DeviceType>::const_type& shape_interp,
     const typename Kokkos::View<double*, Kokkos::LayoutLeft, DeviceType>::const_type& shape_deriv,
     const typename Kokkos::View<double* [7], DeviceType>::const_type& node_u,
-    const Kokkos::View<double[3], DeviceType>& u,
-    const Kokkos::View<double[4], DeviceType>& r,
+    const Kokkos::View<double[3], DeviceType>& u, const Kokkos::View<double[4], DeviceType>& r,
     const Kokkos::View<double[3], DeviceType>& u_prime,
     const Kokkos::View<double[4], DeviceType>& r_prime
 ) {

@@ -45,14 +45,14 @@ template <typename DeviceType>
 inline void create_constraint_freedom_table(
     Constraints<DeviceType>& constraints, const State<DeviceType>& state
 ) {
-    auto constraints_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
+    auto constraints_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
     Kokkos::parallel_for(
         "Create Constraint Node Freedom Table", constraints_range,
         CreateConstraintFreedomTable<DeviceType>{
             constraints.type, constraints.target_node_index, constraints.base_node_index,
             state.active_dofs, state.node_freedom_map_table, constraints.target_node_freedom_table,
-            constraints.base_node_freedom_table
-        }
+            constraints.base_node_freedom_table}
     );
 }
 

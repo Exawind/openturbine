@@ -8,8 +8,7 @@
 namespace openturbine::springs {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateDistanceComponents(
+KOKKOS_INLINE_FUNCTION void CalculateDistanceComponents(
     const typename Kokkos::View<double[3], DeviceType>::const_type& x0,
     const typename Kokkos::View<double[3], DeviceType>::const_type& u1,
     const typename Kokkos::View<double[3], DeviceType>::const_type& u2,

@@ -21,8 +21,9 @@ struct CalculateConstraintOutput {
     KOKKOS_FUNCTION
     void operator()(const int i_constraint) const {
         if (type(i_constraint) == ConstraintType::kRevoluteJoint) {
-            CalculateRevoluteJointOutput<DeviceType>{i_constraint, target_node_index, axes,       node_x0,
-                                         node_u,       node_udot,         node_uddot, outputs}();
+            CalculateRevoluteJointOutput<DeviceType>{
+                i_constraint, target_node_index, axes,       node_x0,
+                node_u,       node_udot,         node_uddot, outputs}();
             return;
         }
     }

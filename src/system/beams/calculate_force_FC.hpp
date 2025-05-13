@@ -8,8 +8,7 @@
 namespace openturbine::beams {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateForceFC(
+KOKKOS_INLINE_FUNCTION void CalculateForceFC(
     const typename Kokkos::View<double[6][6], DeviceType>::const_type& Cuu,
     const typename Kokkos::View<double[6], DeviceType>::const_type& strain,
     const Kokkos::View<double[6], DeviceType>& FC

@@ -14,7 +14,9 @@ struct ExecuteCalculateFixedBCConstraint {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        CalculateFixedBCConstraint<Kokkos::DefaultExecutionSpace>(X0, node_u, residual_terms, target_gradient_terms);
+        CalculateFixedBCConstraint<Kokkos::DefaultExecutionSpace>(
+            X0, node_u, residual_terms, target_gradient_terms
+        );
     }
 };
 

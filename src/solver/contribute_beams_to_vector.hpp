@@ -6,7 +6,8 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct ContributeBeamsToVector {
-    using member_type = typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
+    using member_type =
+        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
     typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
     typename Kokkos::View<size_t** [6], DeviceType>::const_type element_freedom_table;
     typename Kokkos::View<double** [6], DeviceType>::const_type elements;

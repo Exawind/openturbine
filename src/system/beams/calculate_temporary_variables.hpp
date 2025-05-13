@@ -8,8 +8,7 @@
 namespace openturbine::beams {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateTemporaryVariables(
+KOKKOS_INLINE_FUNCTION void CalculateTemporaryVariables(
     const typename Kokkos::View<double[3], DeviceType>::const_type& x0_prime,
     const typename Kokkos::View<double[3], DeviceType>::const_type& u_prime,
     const Kokkos::View<double[3][3], DeviceType>& x0pupSS

@@ -23,10 +23,13 @@ template <typename DeviceType>
 struct CalculateJacobian {
     typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
     typename Kokkos::View<size_t*, DeviceType>::const_type num_qps_per_element;
-    typename Kokkos::View<double***, DeviceType>::const_type shape_derivative;  //< num_elems x num_nodes x num_qps
-    typename Kokkos::View<double** [7], DeviceType>::const_type node_position_rotation;  //< num_elems x num_nodes x 7
-    Kokkos::View<double** [3], DeviceType> qp_position_derivative;  //< output: num_elems x num_qps x 3
-    Kokkos::View<double**, DeviceType> qp_jacobian;                 //< output: num_elems x num_qps
+    typename Kokkos::View<double***, DeviceType>::const_type
+        shape_derivative;  //< num_elems x num_nodes x num_qps
+    typename Kokkos::View<double** [7], DeviceType>::const_type
+        node_position_rotation;  //< num_elems x num_nodes x 7
+    Kokkos::View<double** [3], DeviceType>
+        qp_position_derivative;                      //< output: num_elems x num_qps x 3
+    Kokkos::View<double**, DeviceType> qp_jacobian;  //< output: num_elems x num_qps
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {

@@ -17,7 +17,9 @@ void TestCalculateForceFD() {
 
     Kokkos::parallel_for(
         "CalculateForceFD", 1,
-        KOKKOS_LAMBDA(size_t) { openturbine::beams::CalculateForceFD<Kokkos::DefaultExecutionSpace>(x0pupSS, FC, FD); }
+        KOKKOS_LAMBDA(size_t) {
+            openturbine::beams::CalculateForceFD<Kokkos::DefaultExecutionSpace>(x0pupSS, FC, FD);
+        }
     );
 
     constexpr auto FD_exact_data = std::array{0., 0., 0., 138., 171., 204.};

@@ -9,8 +9,7 @@
 namespace openturbine {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateRevoluteJointConstraint(
+KOKKOS_INLINE_FUNCTION void CalculateRevoluteJointConstraint(
     const typename Kokkos::View<double[3], DeviceType>::const_type& X0,
     const typename Kokkos::View<double[3][3], DeviceType>::const_type& axes,
     const typename Kokkos::View<double[7], DeviceType>::const_type& base_node_u,

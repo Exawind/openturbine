@@ -10,8 +10,7 @@
 namespace openturbine {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateRigidJoint3DOFConstraint(
+KOKKOS_INLINE_FUNCTION void CalculateRigidJoint3DOFConstraint(
     const typename Kokkos::View<double[3], DeviceType>::const_type& X0,
     const typename Kokkos::View<double[7], DeviceType>::const_type& base_node_u,
     const typename Kokkos::View<double[7], DeviceType>::const_type& target_node_u,

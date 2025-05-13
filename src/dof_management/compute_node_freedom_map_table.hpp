@@ -26,12 +26,12 @@ template <typename DeviceType>
 inline void compute_node_freedom_map_table(State<DeviceType>& state) {
     Kokkos::deep_copy(state.node_freedom_map_table, 0UL);
     auto result = 0UL;
-    auto scan_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, state.num_system_nodes - 1UL);
+    auto scan_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, state.num_system_nodes - 1UL);
     Kokkos::parallel_scan(
         "Compute Node Freedom Map Table", scan_range,
         ComputeNodeFreedomMapTable<DeviceType>{
-            state.node_freedom_allocation_table, state.node_freedom_map_table
-        },
+            state.node_freedom_allocation_table, state.node_freedom_map_table},
         result
     );
 }

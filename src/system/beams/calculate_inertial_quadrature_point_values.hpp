@@ -69,7 +69,8 @@ struct CalculateInertialQuadraturePointValues {
         const auto eta_tilde = Kokkos::View<double[3][3], DeviceType>(eta_tilde_data.data());
         const auto rho = Kokkos::View<double[3][3], DeviceType>(rho_data.data());
         const auto omega_tilde = Kokkos::View<double[3][3], DeviceType>(omega_tilde_data.data());
-        const auto omega_dot_tilde = Kokkos::View<double[3][3], DeviceType>(omega_dot_tilde_data.data());
+        const auto omega_dot_tilde =
+            Kokkos::View<double[3][3], DeviceType>(omega_dot_tilde_data.data());
         const auto FI = Kokkos::View<double[6], DeviceType>(FI_data.data());
         const auto FG = Kokkos::View<double[6], DeviceType>(FG_data.data());
         const auto Mstar = Kokkos::View<double[6][6], DeviceType>(Mstar_data.data());

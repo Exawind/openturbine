@@ -9,8 +9,7 @@
 namespace openturbine::masses {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void RotateSectionMatrix(
+KOKKOS_INLINE_FUNCTION void RotateSectionMatrix(
     const typename Kokkos::View<double[4], DeviceType>::const_type& xr,
     const typename Kokkos::View<double[6][6], DeviceType>::const_type& Cstar,
     const Kokkos::View<double[6][6], DeviceType>& Cuu

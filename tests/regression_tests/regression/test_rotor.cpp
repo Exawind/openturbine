@@ -380,7 +380,7 @@ TEST(RotorTest, IEA15RotorHost) {
     constexpr size_t num_blades = 3;
     auto model = CreateIEA15Blades<num_blades>(omega);
 
-//    auto prescribed_bc_ids = std::array<size_t, num_blades>{};
+    //    auto prescribed_bc_ids = std::array<size_t, num_blades>{};
     auto prescribed_bc_ids = std::vector<size_t>(num_blades);
     std::transform(
         std::cbegin(model.GetBeamElements()), std::cend(model.GetBeamElements()),
@@ -394,7 +394,8 @@ TEST(RotorTest, IEA15RotorHost) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    using Device = Kokkos::Device<Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultHostExecutionSpace::memory_space>;
+    using Device = Kokkos::Device<
+        Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultHostExecutionSpace::memory_space>;
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<Device>();
 
     // Remove output directory for writing step data

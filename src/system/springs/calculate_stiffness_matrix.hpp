@@ -10,13 +10,9 @@
 namespace openturbine::springs {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateStiffnessMatrix(
-    double c1,
-    double c2,
-    const typename Kokkos::View<double[3], DeviceType>::const_type& r,
-    double l,
-    const Kokkos::View<double[3][3], DeviceType>& a
+KOKKOS_INLINE_FUNCTION void CalculateStiffnessMatrix(
+    double c1, double c2, const typename Kokkos::View<double[3], DeviceType>::const_type& r,
+    double l, const Kokkos::View<double[3][3], DeviceType>& a
 ) {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
     using GemmDefault = KokkosBatched::Algo::Gemm::Default;

@@ -25,7 +25,8 @@ struct CalculateRevoluteJointOutput {
         const auto joint_axis0_data = Kokkos::Array<double, 3>{
             axes(i_constraint, 0, 0), axes(i_constraint, 0, 1), axes(i_constraint, 0, 2)
         };
-        const auto joint_axis0 = typename Kokkos::View<double[3], DeviceType>::const_type{joint_axis0_data.data()};
+        const auto joint_axis0 =
+            typename Kokkos::View<double[3], DeviceType>::const_type{joint_axis0_data.data()};
 
         // Target node index
         auto i_node = target_node_index(i_constraint);

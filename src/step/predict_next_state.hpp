@@ -17,7 +17,8 @@ inline void PredictNextState(StepParameters& parameters, State<DeviceType>& stat
     Kokkos::deep_copy(state.q_prev, state.q);
 
     Kokkos::parallel_for(
-        "CalculateNextState", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, state.v.extent(0)),
+        "CalculateNextState",
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, state.v.extent(0)),
         CalculateNextState<DeviceType>{
             parameters.h,
             parameters.alpha_f,
@@ -32,7 +33,8 @@ inline void PredictNextState(StepParameters& parameters, State<DeviceType>& stat
     );
 
     Kokkos::parallel_for(
-        "CalculateDisplacement", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, state.q.extent(0)),
+        "CalculateDisplacement",
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, state.q.extent(0)),
         CalculateDisplacement<DeviceType>{
             parameters.h,
             state.q_delta,

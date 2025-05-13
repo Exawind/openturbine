@@ -8,8 +8,7 @@
 namespace openturbine::beams {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateOuu(
+KOKKOS_INLINE_FUNCTION void CalculateOuu(
     const typename Kokkos::View<double[6][6], DeviceType>::const_type& Cuu,
     const typename Kokkos::View<double[3][3], DeviceType>::const_type& x0pupSS,
     const typename Kokkos::View<double[3][3], DeviceType>::const_type& M_tilde,

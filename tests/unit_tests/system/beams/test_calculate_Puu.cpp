@@ -13,7 +13,9 @@ struct TestFunctionObject {
     Kokkos::View<double[6][6]> Puu;
 
     KOKKOS_FUNCTION
-    void operator()(size_t) const { openturbine::beams::CalculatePuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, N_tilde, Puu); }
+    void operator()(size_t) const {
+        openturbine::beams::CalculatePuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, N_tilde, Puu);
+    }
 };
 
 void TestCalculatePuu() {

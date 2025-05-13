@@ -6,10 +6,8 @@
 namespace openturbine::masses {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateGravityForce(
-    double mass,
-    const typename Kokkos::View<double[3], DeviceType>::const_type& gravity,
+KOKKOS_INLINE_FUNCTION void CalculateGravityForce(
+    double mass, const typename Kokkos::View<double[3], DeviceType>::const_type& gravity,
     const typename Kokkos::View<double[3][3], DeviceType>::const_type& eta_tilde,
     const Kokkos::View<double[6], DeviceType>& FG
 ) {

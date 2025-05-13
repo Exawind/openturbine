@@ -32,7 +32,8 @@ struct UpdateNodeStateElement {
 
 template <typename DeviceType>
 struct UpdateNodeState {
-    using member_type = typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
+    using member_type =
+        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
     typename Kokkos::View<double* [7]>::const_type Q;
     typename Kokkos::View<double* [6]>::const_type V;
     typename Kokkos::View<double* [6]>::const_type A;
@@ -49,12 +50,13 @@ struct UpdateNodeState {
         const auto node_range = Kokkos::TeamThreadRange(member, num_nodes);
 
         const auto node_u = Kokkos::View<double* [7], DeviceType>(member.team_scratch(1), num_nodes);
-        const auto node_u_dot = Kokkos::View<double* [6], DeviceType>(member.team_scratch(1), num_nodes);
-        const auto node_u_ddot = Kokkos::View<double* [6], DeviceType>(member.team_scratch(1), num_nodes);
+        const auto node_u_dot =
+            Kokkos::View<double* [6], DeviceType>(member.team_scratch(1), num_nodes);
+        const auto node_u_ddot =
+            Kokkos::View<double* [6], DeviceType>(member.team_scratch(1), num_nodes);
 
         const auto node_state_updater = beams::UpdateNodeStateElement<DeviceType>{
-            i_elem, node_state_indices, node_u, node_u_dot, node_u_ddot, Q, V, A
-        };
+            i_elem, node_state_indices, node_u, node_u_dot, node_u_ddot, Q, V, A};
         Kokkos::parallel_for(node_range, node_state_updater);
 
         KokkosBatched::TeamVectorCopy<Kokkos::TeamPolicy<>::member_type>::invoke(

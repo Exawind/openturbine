@@ -9,7 +9,8 @@ struct CopyConstraintsToSparseMatrix {
     using DeviceType = typename CrsMatrixType::device_type;
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
-    using member_type = typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
+    using member_type =
+        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
     size_t num_system_rows{};
     typename Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType>::const_type row_range;
     typename Kokkos::View<FreedomSignature*, DeviceType>::const_type base_node_freedom_signature;

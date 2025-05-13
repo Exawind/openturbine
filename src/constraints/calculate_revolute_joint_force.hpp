@@ -10,8 +10,7 @@
 namespace openturbine {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateRevoluteJointForce(
+KOKKOS_INLINE_FUNCTION void CalculateRevoluteJointForce(
     const typename Kokkos::View<double[3][3], DeviceType>::const_type& axes,
     const typename Kokkos::View<double[7], DeviceType>::const_type& inputs,
     const typename Kokkos::View<double[7], DeviceType>::const_type& node_u,

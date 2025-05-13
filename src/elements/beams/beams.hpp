@@ -41,25 +41,26 @@ struct Beams {
     Kokkos::View<double** [6], DeviceType> node_FX;      // External forces
 
     // Quadrature point data
-    Kokkos::View<double**, DeviceType> qp_weight;           // Integration weights
-    Kokkos::View<double**, DeviceType> qp_jacobian;         // Jacobian vector
-    Kokkos::View<double** [6][6], DeviceType> qp_Mstar;     // Mass matrix in material frame
-    Kokkos::View<double** [6][6], DeviceType> qp_Cstar;     // Stiffness matrix in material frame
-    Kokkos::View<double** [7], DeviceType> qp_x;            // Current position/orientation
-    Kokkos::View<double** [3], DeviceType> qp_x0;           // Initial position
-    Kokkos::View<double** [3], DeviceType> qp_x0_prime;     // Initial position derivative
-    Kokkos::View<double** [4], DeviceType> qp_r0;           // Initial rotation
-    Kokkos::View<double** [3], DeviceType> qp_u;            // State: translation displacement
-    Kokkos::View<double** [3], DeviceType> qp_u_prime;      // State: translation displacement derivative
-    Kokkos::View<double** [3], DeviceType> qp_u_dot;        // State: translation velocity
-    Kokkos::View<double** [3], DeviceType> qp_u_ddot;       // State: translation acceleration
-    Kokkos::View<double** [4], DeviceType> qp_r;            // State: rotation
-    Kokkos::View<double** [4], DeviceType> qp_r_prime;      // State: rotation derivative
-    Kokkos::View<double** [3], DeviceType> qp_omega;        // State: angular velocity
-    Kokkos::View<double** [3], DeviceType> qp_omega_dot;    // State: position/rotation
-    Kokkos::View<double** [3], DeviceType> qp_deformation;  // Deformation relative to rigid body motion
-    Kokkos::View<double** [3][4], DeviceType> qp_E;         // Quaternion derivative
-    Kokkos::View<double** [6], DeviceType> qp_Fe;           // External force
+    Kokkos::View<double**, DeviceType> qp_weight;        // Integration weights
+    Kokkos::View<double**, DeviceType> qp_jacobian;      // Jacobian vector
+    Kokkos::View<double** [6][6], DeviceType> qp_Mstar;  // Mass matrix in material frame
+    Kokkos::View<double** [6][6], DeviceType> qp_Cstar;  // Stiffness matrix in material frame
+    Kokkos::View<double** [7], DeviceType> qp_x;         // Current position/orientation
+    Kokkos::View<double** [3], DeviceType> qp_x0;        // Initial position
+    Kokkos::View<double** [3], DeviceType> qp_x0_prime;  // Initial position derivative
+    Kokkos::View<double** [4], DeviceType> qp_r0;        // Initial rotation
+    Kokkos::View<double** [3], DeviceType> qp_u;         // State: translation displacement
+    Kokkos::View<double** [3], DeviceType> qp_u_prime;  // State: translation displacement derivative
+    Kokkos::View<double** [3], DeviceType> qp_u_dot;    // State: translation velocity
+    Kokkos::View<double** [3], DeviceType> qp_u_ddot;   // State: translation acceleration
+    Kokkos::View<double** [4], DeviceType> qp_r;        // State: rotation
+    Kokkos::View<double** [4], DeviceType> qp_r_prime;  // State: rotation derivative
+    Kokkos::View<double** [3], DeviceType> qp_omega;    // State: angular velocity
+    Kokkos::View<double** [3], DeviceType> qp_omega_dot;  // State: position/rotation
+    Kokkos::View<double** [3], DeviceType>
+        qp_deformation;                              // Deformation relative to rigid body motion
+    Kokkos::View<double** [3][4], DeviceType> qp_E;  // Quaternion derivative
+    Kokkos::View<double** [6], DeviceType> qp_Fe;    // External force
 
     Kokkos::View<double** [6], DeviceType> residual_vector_terms;
     Kokkos::View<double*** [6][6], DeviceType> system_matrix_terms;

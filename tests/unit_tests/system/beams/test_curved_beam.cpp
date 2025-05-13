@@ -88,9 +88,9 @@ TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
     const auto qp_position_derivative =
         Kokkos::View<double[kNumElems][kNumQPs][3]>("position_derivative");
     const auto qp_jacobian = Kokkos::View<double[kNumElems][kNumQPs]>("jacobian");
-    const auto calculate_jacobian =
-        CalculateJacobian<Kokkos::DefaultExecutionSpace>{kNumNodes_per_elem,     kNumQPs_per_elem,       shape_derivative,
-                          node_position_rotation, qp_position_derivative, qp_jacobian};
+    const auto calculate_jacobian = CalculateJacobian<Kokkos::DefaultExecutionSpace>{
+        kNumNodes_per_elem,     kNumQPs_per_elem,       shape_derivative,
+        node_position_rotation, qp_position_derivative, qp_jacobian};
     Kokkos::parallel_for("calculate_jacobian", 1, calculate_jacobian);
     const auto qp_jacobian_mirror =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_jacobian);
@@ -120,7 +120,10 @@ void TestCalculateForceFc() {
 
     const auto Fc = Kokkos::View<double[6]>("Fc");
     Kokkos::parallel_for(
-        "CalculateForceFc", 1, KOKKOS_LAMBDA(size_t) { beams::CalculateForceFC<Kokkos::DefaultExecutionSpace>(Cuu, strain, Fc); }
+        "CalculateForceFc", 1,
+        KOKKOS_LAMBDA(size_t) {
+            beams::CalculateForceFC<Kokkos::DefaultExecutionSpace>(Cuu, strain, Fc);
+        }
     );
 
     const auto Fc_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), Fc);
@@ -137,7 +140,10 @@ void TestCalculateForceFd() {
 
     const auto Fd = Kokkos::View<double[6]>("Fd");
     Kokkos::parallel_for(
-        "CalculateForceFd", 1, KOKKOS_LAMBDA(size_t) { beams::CalculateForceFD<Kokkos::DefaultExecutionSpace>(x0pupSS, Fc, Fd); }
+        "CalculateForceFd", 1,
+        KOKKOS_LAMBDA(size_t) {
+            beams::CalculateForceFD<Kokkos::DefaultExecutionSpace>(x0pupSS, Fc, Fd);
+        }
     );
 
     const auto Fd_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), Fd);
@@ -170,8 +176,7 @@ TEST(CurvedBeamTests, IntegrateResidualVectorForCurvedBeam) {
         "IntegrateResidualVectorElement", kNumNodes,
         beams::IntegrateResidualVectorElement<Kokkos::DefaultExecutionSpace>{
             0U, kNumQPs, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc, qp_Fd,
-            qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
-        }
+            qp_Fi, qp_Fe, qp_Fg, residual_vector_terms}
     );
 
     const auto residual_vector_exact =
@@ -211,7 +216,9 @@ void TestCalculateOuu() {
     const auto Ouu = Kokkos::View<double[6][6]>("Ouu");
     Kokkos::parallel_for(
         "CalculateOuu", 1,
-        KOKKOS_LAMBDA(size_t) { beams::CalculateOuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, M_tilde, N_tilde, Ouu); }
+        KOKKOS_LAMBDA(size_t) {
+            beams::CalculateOuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, M_tilde, N_tilde, Ouu);
+        }
     );
 
     const auto Ouu_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), Ouu);
@@ -229,7 +236,10 @@ void TestCalculatePuuForCurvedBeam() {
 
     const auto Puu = Kokkos::View<double[6][6]>("Puu");
     Kokkos::parallel_for(
-        "CalculatePuu", 1, KOKKOS_LAMBDA(size_t) { beams::CalculatePuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, N_tilde, Puu); }
+        "CalculatePuu", 1,
+        KOKKOS_LAMBDA(size_t) {
+            beams::CalculatePuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, N_tilde, Puu);
+        }
     );
 
     const auto Puu_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), Puu);
@@ -247,7 +257,10 @@ void TestCalculateQuuForCurvedBeam() {
 
     const auto Quu = Kokkos::View<double[6][6]>("Quu");
     Kokkos::parallel_for(
-        "CalculateQuu", 1, KOKKOS_LAMBDA(size_t) { beams::CalculateQuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, N_tilde, Quu); }
+        "CalculateQuu", 1,
+        KOKKOS_LAMBDA(size_t) {
+            beams::CalculateQuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, N_tilde, Quu);
+        }
     );
 
     const auto Quu_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), Quu);
@@ -283,8 +296,7 @@ TEST(CurvedBeamTests, IntegrateStiffnessMatrixForCurvedBeam) {
         "IntegrateStiffnessMatrixElement", policy,
         beams::IntegrateStiffnessMatrixElement<Kokkos::DefaultExecutionSpace>{
             0U, kNumNodes, kNumQPs, qp_weights, qp_jacobian, shape_interp, shape_deriv, qp_Kuu,
-            qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, stiffness_matrix_terms
-        }
+            qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, stiffness_matrix_terms}
     );
 
     const auto stiffness_matrix_terms_mirror =

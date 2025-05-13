@@ -18,10 +18,12 @@ template <typename DeviceType>
 struct InterpolateQPPosition {
     typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
     typename Kokkos::View<size_t*, DeviceType>::const_type num_qps_per_element;
-    typename Kokkos::View<double***, DeviceType>::const_type shape_interpolation;  //< num_elem x num_nodes x num_qps
+    typename Kokkos::View<double***, DeviceType>::const_type
+        shape_interpolation;  //< num_elem x num_nodes x num_qps
     typename Kokkos::View<double** [7], DeviceType>::const_type
         node_position_rotation;  //< node position vector/generalized coordinates in global csys
-    Kokkos::View<double** [3], DeviceType> qp_position;  //< quadrature point position - x, y, z (computed)
+    Kokkos::View<double** [3], DeviceType>
+        qp_position;  //< quadrature point position - x, y, z (computed)
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {

@@ -10,9 +10,11 @@ template <typename DeviceType>
 struct InterpolateQPRotation {
     typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
     typename Kokkos::View<size_t*, DeviceType>::const_type num_qps_per_element;
-    typename Kokkos::View<double***, DeviceType>::const_type shape_interpolation;  // Num Nodes x Num Quadrature points
-    typename Kokkos::View<double** [7], DeviceType>::const_type node_position_rotation;  // Node global position vector
-    Kokkos::View<double** [4], DeviceType> qp_rotation;                         // quadrature point rotation
+    typename Kokkos::View<double***, DeviceType>::const_type
+        shape_interpolation;  // Num Nodes x Num Quadrature points
+    typename Kokkos::View<double** [7], DeviceType>::const_type
+        node_position_rotation;                          // Node global position vector
+    Kokkos::View<double** [4], DeviceType> qp_rotation;  // quadrature point rotation
 
     KOKKOS_FUNCTION
     void operator()(const int i_elem) const {

@@ -5,14 +5,12 @@
 namespace openturbine::beams {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void InterpolateToQuadraturePointForInertia(
+KOKKOS_INLINE_FUNCTION void InterpolateToQuadraturePointForInertia(
     const typename Kokkos::View<double*, Kokkos::LayoutLeft, DeviceType>::const_type& shape_interp,
     const typename Kokkos::View<double* [7], DeviceType>::const_type& node_u,
     const typename Kokkos::View<double* [6], DeviceType>::const_type& node_u_dot,
     const typename Kokkos::View<double* [6], DeviceType>::const_type& node_u_ddot,
-    const Kokkos::View<double[4], DeviceType>& r,
-    const Kokkos::View<double[3], DeviceType>& u_ddot,
+    const Kokkos::View<double[4], DeviceType>& r, const Kokkos::View<double[3], DeviceType>& u_ddot,
     const Kokkos::View<double[3], DeviceType>& omega,
     const Kokkos::View<double[3], DeviceType>& omega_dot
 ) {

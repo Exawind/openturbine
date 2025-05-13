@@ -26,7 +26,11 @@ void TestCalculateQuu() {
 
     Kokkos::parallel_for(
         "CalculateQuu", 1,
-        KOKKOS_LAMBDA(size_t) { openturbine::beams::CalculateQuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, N_tilde, Quu); }
+        KOKKOS_LAMBDA(size_t) {
+            openturbine::beams::CalculateQuu<Kokkos::DefaultExecutionSpace>(
+                Cuu, x0pupSS, N_tilde, Quu
+            );
+        }
     );
 
     constexpr auto Quu_exact_data =

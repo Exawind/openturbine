@@ -69,7 +69,8 @@ struct CalculateConstraintResidualGradient {
         const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
         const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
         const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto target_tangent = Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
+        const auto target_tangent =
+            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
         const auto target_node_index = target_node_index_(i);
@@ -114,7 +115,8 @@ struct CalculateConstraintResidualGradient {
         const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
         const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
         const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto target_tangent = Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
+        const auto target_tangent =
+            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
         const auto target_node_index = target_node_index_(i);
@@ -161,7 +163,8 @@ struct CalculateConstraintResidualGradient {
         const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
         const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
         const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto target_tangent = Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
+        const auto target_tangent =
+            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
         const auto target_node_index = target_node_index_(i);
@@ -209,7 +212,8 @@ struct CalculateConstraintResidualGradient {
         const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
         const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
         const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto target_tangent = Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
+        const auto target_tangent =
+            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
         const auto target_node_index = target_node_index_(i);
@@ -266,7 +270,8 @@ struct CalculateConstraintResidualGradient {
         const auto b_grad_trans = Kokkos::View<double[6][6], DeviceType>(b_grad_trans_data.data());
         const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
         const auto base_tangent = Kokkos::View<double[6][6], DeviceType>(base_tangent_data.data());
-        const auto target_tangent = Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
+        const auto target_tangent =
+            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
@@ -332,7 +337,8 @@ struct CalculateConstraintResidualGradient {
         const auto b_grad_trans = Kokkos::View<double[6][6], DeviceType>(b_grad_trans_data.data());
         const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
         const auto base_tangent = Kokkos::View<double[6][6], DeviceType>(base_tangent_data.data());
-        const auto target_tangent = Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
+        const auto target_tangent =
+            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
@@ -404,7 +410,8 @@ struct CalculateConstraintResidualGradient {
         const auto b_grad_trans = Kokkos::View<double[6][6], DeviceType>(b_grad_trans_data.data());
         const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
         const auto base_tangent = Kokkos::View<double[6][6], DeviceType>(base_tangent_data.data());
-        const auto target_tangent = Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
+        const auto target_tangent =
+            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
@@ -478,7 +485,8 @@ struct CalculateConstraintResidualGradient {
         const auto b_grad_trans = Kokkos::View<double[6][6], DeviceType>(b_grad_trans_data.data());
         const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
         const auto base_tangent = Kokkos::View<double[6][6], DeviceType>(base_tangent_data.data());
-        const auto target_tangent = Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
+        const auto target_tangent =
+            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 

@@ -10,8 +10,7 @@
 namespace openturbine {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION
-void CalculateFixedBCConstraint(
+KOKKOS_INLINE_FUNCTION void CalculateFixedBCConstraint(
     const typename Kokkos::View<double[3], DeviceType>::const_type& X0,
     const typename Kokkos::View<double[7], DeviceType>::const_type& node_u,
     const typename Kokkos::View<double[6], DeviceType>& residual_terms,

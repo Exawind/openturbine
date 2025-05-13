@@ -10,14 +10,19 @@ struct ComputeSystemColInds {
     using IndicesValueType = typename IndicesType::value_type;
     size_t num_system_dofs{};
     typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type active_dofs;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type node_freedom_map_table;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type num_nodes_per_element;
+    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type
+        node_freedom_map_table;
+    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type
+        num_nodes_per_element;
     typename Kokkos::View<size_t**, typename RowPtrType::device_type>::const_type node_state_indices;
     typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type base_active_dofs;
     typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type target_active_dofs;
-    typename Kokkos::View<size_t* [6], typename RowPtrType::device_type>::const_type base_node_freedom_table;
-    typename Kokkos::View<size_t* [6], typename RowPtrType::device_type>::const_type target_node_freedom_table;
-    typename Kokkos::View<Kokkos::pair<size_t, size_t>*, typename RowPtrType::device_type>::const_type row_range;
+    typename Kokkos::View<size_t* [6], typename RowPtrType::device_type>::const_type
+        base_node_freedom_table;
+    typename Kokkos::View<size_t* [6], typename RowPtrType::device_type>::const_type
+        target_node_freedom_table;
+    typename Kokkos::View<
+        Kokkos::pair<size_t, size_t>*, typename RowPtrType::device_type>::const_type row_range;
     typename RowPtrType::const_type row_ptrs;
     IndicesType col_inds;
 

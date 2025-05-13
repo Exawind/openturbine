@@ -12,7 +12,8 @@ struct ContributeSpringsToVector {
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
-        constexpr auto force_atomic = !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
+        constexpr auto force_atomic =
+            !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
         for (auto j = 0U; j < element_freedom_table.extent(2); ++j) {
             if constexpr (force_atomic) {
                 Kokkos::atomic_add(

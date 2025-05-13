@@ -17,7 +17,8 @@ inline void UpdateStatePrediction(
     StepParameters& parameters, const Solver<DeviceType>& solver, State<DeviceType>& state
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
-    auto range_policy = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes);
+    auto range_policy =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes);
     if (parameters.is_dynamic_solve) {
         Kokkos::parallel_for(
             "UpdateDynamicPrediction", range_policy,

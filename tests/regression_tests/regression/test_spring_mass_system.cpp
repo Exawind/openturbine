@@ -102,7 +102,8 @@ inline auto SetUpSpringMassSystem() {
 }
 
 TEST(SpringMassSystemTest, FinalDisplacement) {
-    using DeviceType = Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     SetUpSpringMassSystem<DeviceType>();
 }
 
