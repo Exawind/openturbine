@@ -10,16 +10,17 @@
 
 namespace openturbine::springs {
 
+template <typename DeviceType>
 struct CalculateQuadraturePointValues {
-    Kokkos::View<double* [7]>::const_type Q;
+    typename Kokkos::View<double* [7], DeviceType>::const_type Q;
 
-    Kokkos::View<size_t* [2]>::const_type node_state_indices;
-    Kokkos::View<double* [3]>::const_type x0_;
-    Kokkos::View<double*>::const_type l_ref_;
-    Kokkos::View<double*>::const_type k_;
+    typename Kokkos::View<size_t* [2], DeviceType>::const_type node_state_indices;
+    typename Kokkos::View<double* [3], DeviceType>::const_type x0_;
+    typename Kokkos::View<double*, DeviceType>::const_type l_ref_;
+    typename Kokkos::View<double*, DeviceType>::const_type k_;
 
-    Kokkos::View<double* [2][3]> residual_vector_terms;
-    Kokkos::View<double* [2][2][3][3]> stiffness_matrix_terms;
+    Kokkos::View<double* [2][3], DeviceType> residual_vector_terms;
+    Kokkos::View<double* [2][2][3][3], DeviceType> stiffness_matrix_terms;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
@@ -34,22 +35,22 @@ struct CalculateQuadraturePointValues {
         auto f_data = Kokkos::Array<double, 3>{};
         auto a_data = Kokkos::Array<double, 9>{};
 
-        const auto x0 = Kokkos::View<double[3]>::const_type(x0_data.data());
-        const auto u1 = Kokkos::View<double[3]>::const_type(u1_data.data());
-        const auto u2 = Kokkos::View<double[3]>::const_type(u2_data.data());
-        const auto r = Kokkos::View<double[3]>(r_data.data());
-        const auto f = Kokkos::View<double[3]>(f_data.data());
-        const auto a = Kokkos::View<double[3][3]>(a_data.data());
+        const auto x0 = typename Kokkos::View<double[3], DeviceType>::const_type(x0_data.data());
+        const auto u1 = typename Kokkos::View<double[3], DeviceType>::const_type(u1_data.data());
+        const auto u2 = typename Kokkos::View<double[3], DeviceType>::const_type(u2_data.data());
+        const auto r = Kokkos::View<double[3], DeviceType>(r_data.data());
+        const auto f = Kokkos::View<double[3], DeviceType>(f_data.data());
+        const auto a = Kokkos::View<double[3][3], DeviceType>(a_data.data());
 
         const auto l_ref = l_ref_(i_elem);
         const auto k = k_(i_elem);
 
         springs::CalculateDistanceComponents(x0, u1, u2, r);
-        const auto l = springs::CalculateLength(r);
-        const auto c1 = springs::CalculateForceCoefficient1(k, l_ref, l);
-        const auto c2 = springs::CalculateForceCoefficient2(k, l_ref, l);
-        CalculateForceVectors(r, c1, f);
-        CalculateStiffnessMatrix(c1, c2, r, l, a);
+        const auto l = springs::CalculateLength<DeviceType>(r);
+        const auto c1 = springs::CalculateForceCoefficient1<DeviceType>(k, l_ref, l);
+        const auto c2 = springs::CalculateForceCoefficient2<DeviceType>(k, l_ref, l);
+        springs::CalculateForceVectors(r, c1, f);
+        springs::CalculateStiffnessMatrix(c1, c2, r, l, a);
 
         for (auto i = 0U; i < 3U; ++i) {
             residual_vector_terms(i_elem, 0, i) = f(i);

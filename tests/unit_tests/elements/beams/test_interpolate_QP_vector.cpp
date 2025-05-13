@@ -18,7 +18,7 @@ TEST(InterpolateQPVectorTests, OneNodeOneQP) {
     auto qp_u_dot = Kokkos::View<double[1][num_qp][3]>("qp_u_dot");
     Kokkos::parallel_for(
         num_qp,
-        InterpolateQPVector{
+        InterpolateQPVector<Kokkos::DefaultExecutionSpace>{
             0U, num_nodes, shape_interp,
             Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot
         }
@@ -38,7 +38,7 @@ TEST(InterpolateQPVectorTests, OneNodeTwoQP) {
     auto qp_u_dot = Kokkos::View<double[1][num_qp][3]>("qp_u_dot");
     Kokkos::parallel_for(
         num_qp,
-        InterpolateQPVector{
+        InterpolateQPVector<Kokkos::DefaultExecutionSpace>{
             0, num_nodes, shape_interp,
             Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot
         }
@@ -68,7 +68,7 @@ TEST(InterpolateQPVectorTests, TwoNodeTwoQP) {
     auto qp_u_dot = Kokkos::View<double[1][num_qp][3]>("qp_u_dot");
     Kokkos::parallel_for(
         num_qp,
-        InterpolateQPVector{
+        InterpolateQPVector<Kokkos::DefaultExecutionSpace>{
             0U, num_nodes, shape_interp,
             Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot
         }

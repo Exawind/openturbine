@@ -4,16 +4,17 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct CalculateNextState {
     double h;
     double alpha_f;
     double alpha_m;
     double beta;
     double gamma;
-    Kokkos::View<double* [6]> q_delta;
-    Kokkos::View<double* [6]> v;
-    Kokkos::View<double* [6]> vd;
-    Kokkos::View<double* [6]> a;
+    Kokkos::View<double* [6], DeviceType> q_delta;
+    Kokkos::View<double* [6], DeviceType> v;
+    Kokkos::View<double* [6], DeviceType> vd;
+    Kokkos::View<double* [6], DeviceType> a;
 
     KOKKOS_FUNCTION
     void operator()(const size_t i) const {

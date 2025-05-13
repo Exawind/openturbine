@@ -13,7 +13,7 @@ void TestCalclateLength_1() {
             constexpr auto r0_data = Kokkos::Array<double, 3>{1., 0., 0.};
             const auto r0 = Kokkos::View<double[3]>::const_type(r0_data.data());
 
-            length = openturbine::springs::CalculateLength(r0);
+            length = openturbine::springs::CalculateLength<Kokkos::DefaultExecutionSpace>(r0);
         },
         l
     );
@@ -29,7 +29,7 @@ void TestCalclateLength_2() {
             constexpr auto r0_data = Kokkos::Array<double, 3>{3., 4., 0.};
             const auto r0 = Kokkos::View<double[3]>::const_type(r0_data.data());
 
-            length = openturbine::springs::CalculateLength(r0);
+            length = openturbine::springs::CalculateLength<Kokkos::DefaultExecutionSpace>(r0);
         },
         l
     );
@@ -45,7 +45,7 @@ void TestCalclateLength_3() {
             constexpr auto r0_data = Kokkos::Array<double, 3>{1., 2., 2.};
             const auto r0 = Kokkos::View<double[3]>::const_type(r0_data.data());
 
-            length = openturbine::springs::CalculateLength(r0);
+            length = openturbine::springs::CalculateLength<Kokkos::DefaultExecutionSpace>(r0);
         },
         l
     );

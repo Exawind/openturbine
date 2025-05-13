@@ -13,8 +13,9 @@ template <typename DeviceType>
 inline void UpdateTangentOperator(StepParameters& parameters, State<DeviceType>& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Tangent Operator");
     Kokkos::parallel_for(
-        "CalculateTangentOperator", state.num_system_nodes,
-        CalculateTangentOperator{
+        "CalculateTangentOperator",
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, state.num_system_nodes),
+        CalculateTangentOperator<DeviceType>{
             parameters.h,
             state.q_delta,
             state.tangent,

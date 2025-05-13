@@ -14,23 +14,24 @@
 
 namespace openturbine::beams {
 
+template <typename DeviceType>
 struct CalculateStiffnessQuadraturePointValues {
     size_t i_elem;
 
-    Kokkos::View<double*>::const_type qp_jacobian;
-    Kokkos::View<double**, Kokkos::LayoutLeft>::const_type shape_interp;
-    Kokkos::View<double**, Kokkos::LayoutLeft>::const_type shape_deriv;
-    Kokkos::View<double** [4]>::const_type qp_r0;
-    Kokkos::View<double** [3]>::const_type qp_x0_prime;
-    Kokkos::View<double** [6][6]>::const_type qp_Cstar;
-    Kokkos::View<double* [7]>::const_type node_u;
+    typename Kokkos::View<double*, DeviceType>::const_type qp_jacobian;
+    typename Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>::const_type shape_interp;
+    typename Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>::const_type shape_deriv;
+    typename Kokkos::View<double** [4], DeviceType>::const_type qp_r0;
+    typename Kokkos::View<double** [3], DeviceType>::const_type qp_x0_prime;
+    typename Kokkos::View<double** [6][6], DeviceType>::const_type qp_Cstar;
+    typename Kokkos::View<double* [7], DeviceType>::const_type node_u;
 
-    Kokkos::View<double* [6]> qp_Fc;
-    Kokkos::View<double* [6]> qp_Fd;
-    Kokkos::View<double* [6][6]> qp_Cuu;
-    Kokkos::View<double* [6][6]> qp_Ouu;
-    Kokkos::View<double* [6][6]> qp_Puu;
-    Kokkos::View<double* [6][6]> qp_Quu;
+    Kokkos::View<double* [6], DeviceType> qp_Fc;
+    Kokkos::View<double* [6], DeviceType> qp_Fd;
+    Kokkos::View<double* [6][6], DeviceType> qp_Cuu;
+    Kokkos::View<double* [6][6], DeviceType> qp_Ouu;
+    Kokkos::View<double* [6][6], DeviceType> qp_Puu;
+    Kokkos::View<double* [6][6], DeviceType> qp_Quu;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_qp) const {
@@ -59,49 +60,50 @@ struct CalculateStiffnessQuadraturePointValues {
         auto Puu_data = Kokkos::Array<double, 36>{};
         auto Quu_data = Kokkos::Array<double, 36>{};
 
-        const auto r0 = Kokkos::View<double[4]>::const_type(r0_data.data());
-        const auto x0_prime = Kokkos::View<double[3]>::const_type(x0_prime_data.data());
-        const auto xr = Kokkos::View<double[4]>(xr_data.data());
-        const auto u = Kokkos::View<double[3]>(u_data.data());
-        const auto u_prime = Kokkos::View<double[3]>(u_prime_data.data());
-        const auto r = Kokkos::View<double[4]>(r_data.data());
-        const auto r_prime = Kokkos::View<double[4]>(r_prime_data.data());
+        const auto r0 = typename Kokkos::View<double[4], DeviceType>::const_type(r0_data.data());
+        const auto x0_prime =
+            typename Kokkos::View<double[3], DeviceType>::const_type(x0_prime_data.data());
+        const auto xr = Kokkos::View<double[4], DeviceType>(xr_data.data());
+        const auto u = Kokkos::View<double[3], DeviceType>(u_data.data());
+        const auto u_prime = Kokkos::View<double[3], DeviceType>(u_prime_data.data());
+        const auto r = Kokkos::View<double[4], DeviceType>(r_data.data());
+        const auto r_prime = Kokkos::View<double[4], DeviceType>(r_prime_data.data());
 
-        const auto strain = Kokkos::View<double[6]>(strain_data.data());
-        const auto x0pupSS = Kokkos::View<double[3][3]>(x0pupSS_data.data());
-        const auto M_tilde = Kokkos::View<double[3][3]>(M_tilde_data.data());
-        const auto N_tilde = Kokkos::View<double[3][3]>(N_tilde_data.data());
-        const auto FC = Kokkos::View<double[6]>(FC_data.data());
-        const auto FD = Kokkos::View<double[6]>(FD_data.data());
-        const auto Cstar = Kokkos::View<double[6][6]>(Cstar_data.data());
-        const auto Cuu = Kokkos::View<double[6][6]>(Cuu_data.data());
-        const auto Ouu = Kokkos::View<double[6][6]>(Ouu_data.data());
-        const auto Puu = Kokkos::View<double[6][6]>(Puu_data.data());
-        const auto Quu = Kokkos::View<double[6][6]>(Quu_data.data());
+        const auto strain = Kokkos::View<double[6], DeviceType>(strain_data.data());
+        const auto x0pupSS = Kokkos::View<double[3][3], DeviceType>(x0pupSS_data.data());
+        const auto M_tilde = Kokkos::View<double[3][3], DeviceType>(M_tilde_data.data());
+        const auto N_tilde = Kokkos::View<double[3][3], DeviceType>(N_tilde_data.data());
+        const auto FC = Kokkos::View<double[6], DeviceType>(FC_data.data());
+        const auto FD = Kokkos::View<double[6], DeviceType>(FD_data.data());
+        const auto Cstar = Kokkos::View<double[6][6], DeviceType>(Cstar_data.data());
+        const auto Cuu = Kokkos::View<double[6][6], DeviceType>(Cuu_data.data());
+        const auto Ouu = Kokkos::View<double[6][6], DeviceType>(Ouu_data.data());
+        const auto Puu = Kokkos::View<double[6][6], DeviceType>(Puu_data.data());
+        const auto Quu = Kokkos::View<double[6][6], DeviceType>(Quu_data.data());
 
         KokkosBatched::SerialCopy<>::invoke(
             Kokkos::subview(qp_Cstar, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL), Cstar
         );
 
-        beams::InterpolateToQuadraturePointForStiffness(
+        beams::InterpolateToQuadraturePointForStiffness<DeviceType>(
             qp_jacobian(i_qp), Kokkos::subview(shape_interp, Kokkos::ALL, i_qp),
             Kokkos::subview(shape_deriv, Kokkos::ALL, i_qp), node_u, u, r, u_prime, r_prime
         );
         QuaternionCompose(r, r0, xr);
 
-        masses::RotateSectionMatrix(xr, Cstar, Cuu);
+        masses::RotateSectionMatrix<DeviceType>(xr, Cstar, Cuu);
 
-        beams::CalculateStrain(x0_prime, u_prime, r, r_prime, strain);
-        beams::CalculateTemporaryVariables(x0_prime, u_prime, x0pupSS);
-        beams::CalculateForceFC(Cuu, strain, FC);
-        beams::CalculateForceFD(x0pupSS, FC, FD);
+        beams::CalculateStrain<DeviceType>(x0_prime, u_prime, r, r_prime, strain);
+        beams::CalculateTemporaryVariables<DeviceType>(x0_prime, u_prime, x0pupSS);
+        beams::CalculateForceFC<DeviceType>(Cuu, strain, FC);
+        beams::CalculateForceFD<DeviceType>(x0pupSS, FC, FD);
 
         VecTilde(Kokkos::subview(FC, Kokkos::make_pair(0, 3)), N_tilde);
         VecTilde(Kokkos::subview(FC, Kokkos::make_pair(3, 6)), M_tilde);
 
-        beams::CalculateOuu(Cuu, x0pupSS, M_tilde, N_tilde, Ouu);
-        beams::CalculatePuu(Cuu, x0pupSS, N_tilde, Puu);
-        beams::CalculateQuu(Cuu, x0pupSS, N_tilde, Quu);
+        beams::CalculateOuu<DeviceType>(Cuu, x0pupSS, M_tilde, N_tilde, Ouu);
+        beams::CalculatePuu<DeviceType>(Cuu, x0pupSS, N_tilde, Puu);
+        beams::CalculateQuu<DeviceType>(Cuu, x0pupSS, N_tilde, Quu);
 
         KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>::invoke(
             FC, Kokkos::subview(qp_Fc, i_qp, Kokkos::ALL)

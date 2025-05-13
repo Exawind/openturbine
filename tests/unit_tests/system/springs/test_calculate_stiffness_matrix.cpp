@@ -19,7 +19,9 @@ void TestCalculateStiffnessMatrixTests_OneElement() {
             constexpr auto r_data = Kokkos::Array<double, 3>{1., 2., 3.};
             const auto r = Kokkos::View<double[3]>::const_type(r_data.data());
 
-            openturbine::springs::CalculateStiffnessMatrix(c1, c2, r, l, a);
+            openturbine::springs::CalculateStiffnessMatrix<Kokkos::DefaultExecutionSpace>(
+                c1, c2, r, l, a
+            );
         }
     );
 

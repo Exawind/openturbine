@@ -6,17 +6,18 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct ContributeLambdaToVector {
-    Kokkos::View<FreedomSignature*>::const_type base_node_freedom_signature;
-    Kokkos::View<FreedomSignature*>::const_type target_node_freedom_signature;
+    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type base_node_freedom_signature;
+    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type target_node_freedom_signature;
 
-    Kokkos::View<size_t* [6]>::const_type base_node_freedom_table;
-    Kokkos::View<size_t* [6]>::const_type target_node_freedom_table;
+    typename Kokkos::View<size_t* [6], DeviceType>::const_type base_node_freedom_table;
+    typename Kokkos::View<size_t* [6], DeviceType>::const_type target_node_freedom_table;
 
-    Kokkos::View<double* [6]>::const_type base_lambda_residual_terms;
-    Kokkos::View<double* [6]>::const_type target_lambda_residual_terms;
+    typename Kokkos::View<double* [6], DeviceType>::const_type base_lambda_residual_terms;
+    typename Kokkos::View<double* [6], DeviceType>::const_type target_lambda_residual_terms;
 
-    Kokkos::View<double* [1], Kokkos::LayoutLeft> R;
+    Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType> R;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_constraint) const {

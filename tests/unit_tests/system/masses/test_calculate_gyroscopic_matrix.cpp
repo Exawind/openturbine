@@ -16,7 +16,9 @@ struct ExecuteCalculateGyroscopicMatrix {
 
     KOKKOS_FUNCTION
     void operator()(size_t) const {
-        masses::CalculateGyroscopicMatrix(mass, omega, eta, rho, omega_tilde, Guu);
+        masses::CalculateGyroscopicMatrix<Kokkos::DefaultExecutionSpace>(
+            mass, omega, eta, rho, omega_tilde, Guu
+        );
     }
 };
 

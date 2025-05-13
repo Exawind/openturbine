@@ -4,20 +4,21 @@
 
 namespace openturbine::beams {
 
+template <typename DeviceType>
 struct IntegrateResidualVectorElement {
     size_t i_elem;
     size_t num_qps;
-    Kokkos::View<double*>::const_type qp_weight_;
-    Kokkos::View<double*>::const_type qp_jacobian_;
-    Kokkos::View<double**, Kokkos::LayoutLeft>::const_type shape_interp_;
-    Kokkos::View<double**, Kokkos::LayoutLeft>::const_type shape_deriv_;
-    Kokkos::View<double* [6]>::const_type node_FX_;
-    Kokkos::View<double* [6]>::const_type qp_Fc_;
-    Kokkos::View<double* [6]>::const_type qp_Fd_;
-    Kokkos::View<double* [6]>::const_type qp_Fi_;
-    Kokkos::View<double* [6]>::const_type qp_Fe_;
-    Kokkos::View<double* [6]>::const_type qp_Fg_;
-    Kokkos::View<double** [6]> residual_vector_terms_;
+    typename Kokkos::View<double*, DeviceType>::const_type qp_weight_;
+    typename Kokkos::View<double*, DeviceType>::const_type qp_jacobian_;
+    typename Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>::const_type shape_interp_;
+    typename Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>::const_type shape_deriv_;
+    typename Kokkos::View<double* [6], DeviceType>::const_type node_FX_;
+    typename Kokkos::View<double* [6], DeviceType>::const_type qp_Fc_;
+    typename Kokkos::View<double* [6], DeviceType>::const_type qp_Fd_;
+    typename Kokkos::View<double* [6], DeviceType>::const_type qp_Fi_;
+    typename Kokkos::View<double* [6], DeviceType>::const_type qp_Fe_;
+    typename Kokkos::View<double* [6], DeviceType>::const_type qp_Fg_;
+    Kokkos::View<double** [6], DeviceType> residual_vector_terms_;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_node) const {

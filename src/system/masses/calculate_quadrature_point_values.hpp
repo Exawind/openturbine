@@ -11,22 +11,23 @@
 
 namespace openturbine::masses {
 
+template <typename DeviceType>
 struct CalculateQuadraturePointValues {
     double beta_prime;
     double gamma_prime;
 
-    Kokkos::View<double* [7]>::const_type Q;
-    Kokkos::View<double* [6]>::const_type V;
-    Kokkos::View<double* [6]>::const_type A;
+    typename Kokkos::View<double* [7], DeviceType>::const_type Q;
+    typename Kokkos::View<double* [6], DeviceType>::const_type V;
+    typename Kokkos::View<double* [6], DeviceType>::const_type A;
 
-    Kokkos::View<double* [6][6]>::const_type tangent;
-    Kokkos::View<size_t*>::const_type node_state_indices;
-    Kokkos::View<double[3]>::const_type gravity;
-    Kokkos::View<double* [6][6]>::const_type qp_Mstar;
-    Kokkos::View<double* [7]>::const_type node_x0;
+    typename Kokkos::View<double* [6][6], DeviceType>::const_type tangent;
+    typename Kokkos::View<size_t*, DeviceType>::const_type node_state_indices;
+    typename Kokkos::View<double[3], DeviceType>::const_type gravity;
+    typename Kokkos::View<double* [6][6], DeviceType>::const_type qp_Mstar;
+    typename Kokkos::View<double* [7], DeviceType>::const_type node_x0;
 
-    Kokkos::View<double* [6]> residual_vector_terms;
-    Kokkos::View<double* [6][6]> system_matrix_terms;
+    Kokkos::View<double* [6], DeviceType> residual_vector_terms;
+    Kokkos::View<double* [6][6], DeviceType> system_matrix_terms;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
@@ -60,27 +61,30 @@ struct CalculateQuadraturePointValues {
         auto STpI_data = Kokkos::Array<double, 36>{};
 
         // Set up Views
-        const auto Mstar = Kokkos::View<double[6][6]>(Mstar_data.data());
-        const auto x0 = Kokkos::View<double[3]>::const_type(x0_data.data());
-        const auto r0 = Kokkos::View<double[4]>::const_type(r0_data.data());
-        const auto u = Kokkos::View<double[3]>::const_type(u_data.data());
-        const auto r = Kokkos::View<double[4]>::const_type(r_data.data());
-        const auto xr = Kokkos::View<double[4]>(xr_data.data());
-        const auto u_ddot = Kokkos::View<double[3]>::const_type(u_ddot_data.data());
-        const auto omega = Kokkos::View<double[3]>::const_type(omega_data.data());
-        const auto omega_dot = Kokkos::View<double[3]>::const_type(omega_dot_data.data());
-        auto Muu = Kokkos::View<double[6][6]>(Muu_data.data());
-        auto Fg = Kokkos::View<double[6]>(Fg_data.data());
-        auto eta = Kokkos::View<double[3]>(eta_data.data());
-        auto eta_tilde = Kokkos::View<double[3][3]>(eta_tilde_data.data());
-        auto rho = Kokkos::View<double[3][3]>(rho_data.data());
-        auto omega_tilde = Kokkos::View<double[3][3]>(omega_tilde_data.data());
-        auto omega_dot_tilde = Kokkos::View<double[3][3]>(omega_dot_tilde_data.data());
-        auto Fi = Kokkos::View<double[6]>(Fi_data.data());
-        auto Guu = Kokkos::View<double[6][6]>(Guu_data.data());
-        auto Kuu = Kokkos::View<double[6][6]>(Kuu_data.data());
-        auto T = Kokkos::View<double[6][6]>(T_data.data());
-        auto STpI = Kokkos::View<double[6][6]>(STpI_data.data());
+        const auto Mstar = Kokkos::View<double[6][6], DeviceType>(Mstar_data.data());
+        const auto x0 = typename Kokkos::View<double[3], DeviceType>::const_type(x0_data.data());
+        const auto r0 = typename Kokkos::View<double[4], DeviceType>::const_type(r0_data.data());
+        const auto u = typename Kokkos::View<double[3], DeviceType>::const_type(u_data.data());
+        const auto r = typename Kokkos::View<double[4], DeviceType>::const_type(r_data.data());
+        const auto xr = Kokkos::View<double[4], DeviceType>(xr_data.data());
+        const auto u_ddot =
+            typename Kokkos::View<double[3], DeviceType>::const_type(u_ddot_data.data());
+        const auto omega =
+            typename Kokkos::View<double[3], DeviceType>::const_type(omega_data.data());
+        const auto omega_dot =
+            typename Kokkos::View<double[3], DeviceType>::const_type(omega_dot_data.data());
+        auto Muu = Kokkos::View<double[6][6], DeviceType>(Muu_data.data());
+        auto Fg = Kokkos::View<double[6], DeviceType>(Fg_data.data());
+        auto eta = Kokkos::View<double[3], DeviceType>(eta_data.data());
+        auto eta_tilde = Kokkos::View<double[3][3], DeviceType>(eta_tilde_data.data());
+        auto rho = Kokkos::View<double[3][3], DeviceType>(rho_data.data());
+        auto omega_tilde = Kokkos::View<double[3][3], DeviceType>(omega_tilde_data.data());
+        auto omega_dot_tilde = Kokkos::View<double[3][3], DeviceType>(omega_dot_tilde_data.data());
+        auto Fi = Kokkos::View<double[6], DeviceType>(Fi_data.data());
+        auto Guu = Kokkos::View<double[6][6], DeviceType>(Guu_data.data());
+        auto Kuu = Kokkos::View<double[6][6], DeviceType>(Kuu_data.data());
+        auto T = Kokkos::View<double[6][6], DeviceType>(T_data.data());
+        auto STpI = Kokkos::View<double[6][6], DeviceType>(STpI_data.data());
 
         // Do the math
         KokkosBatched::SerialCopy<>::invoke(
@@ -90,20 +94,20 @@ struct CalculateQuadraturePointValues {
         VecTilde(omega, omega_tilde);
         VecTilde(omega_dot, omega_dot_tilde);
 
-        RotateSectionMatrix(xr, Mstar, Muu);
+        RotateSectionMatrix<DeviceType>(xr, Mstar, Muu);
 
         const auto mass = Muu(0, 0);
-        CalculateEta(Muu, eta);
+        CalculateEta<DeviceType>(Muu, eta);
         VecTilde(eta, eta_tilde);
-        CalculateRho(Muu, rho);
+        CalculateRho<DeviceType>(Muu, rho);
 
-        CalculateGravityForce(mass, gravity, eta_tilde, Fg);
-        CalculateInertialForce(
+        CalculateGravityForce<DeviceType>(mass, gravity, eta_tilde, Fg);
+        CalculateInertialForce<DeviceType>(
             mass, u_ddot, omega, omega_dot, eta, eta_tilde, rho, omega_tilde, omega_dot_tilde, Fi
         );
 
-        CalculateGyroscopicMatrix(mass, omega, eta, rho, omega_tilde, Guu);
-        CalculateInertiaStiffnessMatrix(
+        CalculateGyroscopicMatrix<DeviceType>(mass, omega, eta, rho, omega_tilde, Guu);
+        CalculateInertiaStiffnessMatrix<DeviceType>(
             mass, u_ddot, omega, omega_dot, eta, rho, omega_tilde, omega_dot_tilde, Kuu
         );
 

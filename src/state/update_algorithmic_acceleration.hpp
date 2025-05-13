@@ -4,9 +4,10 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct UpdateAlgorithmicAcceleration {
-    Kokkos::View<double* [6]> acceleration;
-    Kokkos::View<double* [6]>::const_type vd;
+    typename Kokkos::View<double* [6], DeviceType> acceleration;
+    typename Kokkos::View<double* [6], DeviceType>::const_type vd;
     double alpha_f;
     double alpha_m;
 

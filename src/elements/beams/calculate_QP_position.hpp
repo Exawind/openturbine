@@ -22,13 +22,14 @@ namespace openturbine {
  * @param qp_x_ Output current positions and orientations (num_elems x num_qps x 7)
  *              where [0:3] = position, [3:7] = orientation quaternion
  */
+template <typename DeviceType>
 struct CalculateQPPosition {
     size_t i_elem;
-    Kokkos::View<double** [3]>::const_type qp_x0_;
-    Kokkos::View<double** [3]>::const_type qp_u_;
-    Kokkos::View<double** [4]>::const_type qp_r0_;
-    Kokkos::View<double** [4]>::const_type qp_r_;
-    Kokkos::View<double** [7]> qp_x_;
+    typename Kokkos::View<double** [3], DeviceType>::const_type qp_x0_;
+    typename Kokkos::View<double** [3], DeviceType>::const_type qp_u_;
+    typename Kokkos::View<double** [4], DeviceType>::const_type qp_r0_;
+    typename Kokkos::View<double** [4], DeviceType>::const_type qp_r_;
+    Kokkos::View<double** [7], DeviceType> qp_x_;
 
     KOKKOS_FUNCTION void operator()(const int i_qp) const {
         // Calculate current position
@@ -38,7 +39,7 @@ struct CalculateQPPosition {
 
         // Calculate current orientation
         auto RR0_data = Kokkos::Array<double, 4>{};
-        auto RR0 = Kokkos::View<double[4]>(RR0_data.data());
+        auto RR0 = Kokkos::View<double[4], DeviceType>(RR0_data.data());
         QuaternionCompose(
             Kokkos::subview(qp_r_, i_elem, i_qp, Kokkos::ALL),
             Kokkos::subview(qp_r0_, i_elem, i_qp, Kokkos::ALL), RR0

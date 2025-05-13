@@ -6,12 +6,13 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct UpdateStaticPrediction {
     double h;
-    Kokkos::View<FreedomSignature*>::const_type node_freedom_allocation_table;
-    Kokkos::View<size_t*>::const_type node_freedom_map_table;
-    Kokkos::View<double* [1], Kokkos::LayoutLeft>::const_type x_delta;
-    Kokkos::View<double* [6]> q_delta;
+    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type node_freedom_allocation_table;
+    typename Kokkos::View<size_t*, DeviceType>::const_type node_freedom_map_table;
+    typename Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType>::const_type x_delta;
+    Kokkos::View<double* [6], DeviceType> q_delta;
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_node) const {

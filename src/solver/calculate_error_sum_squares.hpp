@@ -4,15 +4,16 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct CalculateSystemErrorSumSquares {
     using value_type = double;
     double atol;
     double rtol;
     double h;
-    Kokkos::View<FreedomSignature*>::const_type node_freedom_allocation_table;
-    Kokkos::View<size_t*>::const_type node_freedom_map_table;
-    Kokkos::View<double* [6]>::const_type q_delta;
-    Kokkos::View<double* [1], Kokkos::LayoutLeft>::const_type x;
+    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type node_freedom_allocation_table;
+    typename Kokkos::View<size_t*, DeviceType>::const_type node_freedom_map_table;
+    typename Kokkos::View<double* [6], DeviceType>::const_type q_delta;
+    typename Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType>::const_type x;
 
     KOKKOS_INLINE_FUNCTION
     void operator()(const size_t i_node, double& err) const {
@@ -26,14 +27,15 @@ struct CalculateSystemErrorSumSquares {
     }
 };
 
+template <typename DeviceType>
 struct CalculateConstraintsErrorSumSquares {
     using value_type = double;
     double atol;
     double rtol;
     size_t num_system_dofs;
-    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
-    Kokkos::View<double* [6]>::const_type lambda;
-    Kokkos::View<double* [1], Kokkos::LayoutLeft>::const_type x;
+    typename Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType>::const_type row_range;
+    typename Kokkos::View<double* [6], DeviceType>::const_type lambda;
+    typename Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType>::const_type x;
 
     KOKKOS_INLINE_FUNCTION
     void operator()(const size_t i_constraint, double& err) const {

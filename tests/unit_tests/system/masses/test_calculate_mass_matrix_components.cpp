@@ -13,8 +13,8 @@ struct ExecuteCalculateMassMatrixComponents {
 
     KOKKOS_FUNCTION
     void operator()(size_t) const {
-        masses::CalculateEta(Muu, eta);
-        masses::CalculateRho(Muu, rho);
+        masses::CalculateEta<Kokkos::DefaultExecutionSpace>(Muu, eta);
+        masses::CalculateRho<Kokkos::DefaultExecutionSpace>(Muu, rho);
     }
 };
 

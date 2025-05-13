@@ -6,20 +6,23 @@
 namespace openturbine {
 template <typename CrsMatrixType>
 struct CopyConstraintsTransposeToSparseMatrix {
+    using DeviceType = typename CrsMatrixType::device_type;
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
+    using member_type =
+        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
     size_t num_system_cols{};
-    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
-    Kokkos::View<FreedomSignature*> base_node_freedom_signature;
-    Kokkos::View<FreedomSignature*> target_node_freedom_signature;
-    Kokkos::View<size_t* [6]>::const_type base_node_freedom_table;
-    Kokkos::View<size_t* [6]>::const_type target_node_freedom_table;
-    Kokkos::View<double* [6][6]>::const_type base_dense;
-    Kokkos::View<double* [6][6]>::const_type target_dense;
+    typename Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType>::const_type row_range;
+    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type base_node_freedom_signature;
+    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type target_node_freedom_signature;
+    typename Kokkos::View<size_t* [6], DeviceType>::const_type base_node_freedom_table;
+    typename Kokkos::View<size_t* [6], DeviceType>::const_type target_node_freedom_table;
+    typename Kokkos::View<double* [6][6], DeviceType>::const_type base_dense;
+    typename Kokkos::View<double* [6][6], DeviceType>::const_type target_dense;
     CrsMatrixType sparse;
 
     KOKKOS_FUNCTION
-    void operator()(Kokkos::TeamPolicy<>::member_type member) const {
+    void operator()(member_type member) const {
         const auto i_constraint = member.league_rank();
         constexpr bool is_sorted = true;
         const auto num_cols = row_range(i_constraint).second - row_range(i_constraint).first;

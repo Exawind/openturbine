@@ -9,16 +9,16 @@
 
 namespace openturbine::masses {
 
-KOKKOS_FUNCTION
-inline void CalculateInertiaStiffnessMatrix(
-    double mass, const Kokkos::View<double[3]>::const_type& u_ddot,
-    const Kokkos::View<double[3]>::const_type& omega,
-    const Kokkos::View<double[3]>::const_type& omega_dot,
-    const Kokkos::View<double[3]>::const_type& eta,
-    const Kokkos::View<double[3][3]>::const_type& rho,
-    const Kokkos::View<double[3][3]>::const_type& omega_tilde,
-    const Kokkos::View<double[3][3]>::const_type& omega_dot_tilde,
-    const Kokkos::View<double[6][6]>& Kuu
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION void CalculateInertiaStiffnessMatrix(
+    double mass, const typename Kokkos::View<double[3], DeviceType>::const_type& u_ddot,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& omega,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& omega_dot,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& eta,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& rho,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& omega_tilde,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& omega_dot_tilde,
+    const Kokkos::View<double[6][6], DeviceType>& Kuu
 ) {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
     using Transpose = KokkosBatched::Trans::Transpose;
@@ -29,11 +29,11 @@ inline void CalculateInertiaStiffnessMatrix(
     using Gemv = KokkosBlas::SerialGemv<NoTranspose, GemvDefault>;
 
     auto v1 = Kokkos::Array<double, 3>{};
-    auto V1 = View_3(v1.data());
+    auto V1 = Kokkos::View<double[3], DeviceType>(v1.data());
     auto m1 = Kokkos::Array<double, 9>{};
-    auto M1 = View_3x3(m1.data());
+    auto M1 = Kokkos::View<double[3][3], DeviceType>(m1.data());
     auto m2 = Kokkos::Array<double, 9>{};
-    auto M2 = View_3x3(m2.data());
+    auto M2 = Kokkos::View<double[3][3], DeviceType>(m2.data());
 
     KokkosBlas::serial_axpy(1., omega_dot_tilde, M1);
     GemmNN::invoke(1., omega_tilde, omega_tilde, 1., M1);

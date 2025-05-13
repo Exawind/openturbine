@@ -7,10 +7,11 @@
 
 namespace openturbine::beams {
 
-KOKKOS_FUNCTION
-inline void CalculateForceFD(
-    const Kokkos::View<double[3][3]>::const_type& x0pupSS,
-    const Kokkos::View<double[6]>::const_type& FC, const Kokkos::View<double[6]>& FD
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION void CalculateForceFD(
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& x0pupSS,
+    const typename Kokkos::View<double[6], DeviceType>::const_type& FC,
+    const Kokkos::View<double[6], DeviceType>& FD
 ) {
     using Transpose = KokkosBlas::Trans::Transpose;
     using Default = KokkosBlas::Algo::Gemv::Default;

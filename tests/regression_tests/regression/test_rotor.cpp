@@ -362,4 +362,86 @@ TEST(RotorTest, IEA15RotorController) {
     }
 }
 
+TEST(RotorTest, IEA15RotorHost) {
+    // Flag to write output
+    constexpr bool write_output{false};
+
+    // Rotor angular velocity in rad/s
+    constexpr auto omega = std::array{0., 0., -0.79063415025};
+
+    // Solution parameters
+    constexpr bool is_dynamic_solve(true);
+    constexpr size_t max_iter(6);
+    constexpr double step_size(0.01);  // seconds
+    constexpr double rho_inf(0.0);
+    constexpr double t_end(0.1);
+    constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.0);
+
+    constexpr size_t num_blades = 3;
+    auto model = CreateIEA15Blades<num_blades>(omega);
+
+    //    auto prescribed_bc_ids = std::array<size_t, num_blades>{};
+    auto prescribed_bc_ids = std::vector<size_t>(num_blades);
+    std::transform(
+        std::cbegin(model.GetBeamElements()), std::cend(model.GetBeamElements()),
+        std::begin(prescribed_bc_ids),
+        [&model](const auto& beam_elem) {
+            return model.AddPrescribedBC(beam_elem.node_ids[0]);
+        }
+    );
+
+    // Create solver with initial node state
+    auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+
+    // Create solver, elements, constraints, and state
+    using Device = Kokkos::Device<
+        Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultHostExecutionSpace::memory_space>;
+    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<Device>();
+
+    // Remove output directory for writing step data
+    if (write_output) {
+#ifdef OpenTurbine_ENABLE_VTK
+        RemoveDirectoryWithRetries("steps");
+        std::filesystem::create_directory("steps");
+
+        // Write quadrature point global positions to file and VTK
+        // Write vtk visualization file
+        WriteVTKBeamsQP(state, elements.beams, "steps/step_0000.vtu");
+#endif
+    }
+
+    // Perform time steps and check for convergence within max_iter iterations
+    for (size_t i = 0; i < num_steps; ++i) {
+        // Calculate hub rotation for this time step
+        const auto q_hub = RotationVectorToQuaternion(
+            {omega[0] * step_size * static_cast<double>(i + 1),
+             omega[1] * step_size * static_cast<double>(i + 1),
+             omega[2] * step_size * static_cast<double>(i + 1)}
+        );
+
+        // Define hub translation/rotation displacement
+        const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
+
+        // Update prescribed displacement constraint on beam root nodes
+        for (const auto bc_id : prescribed_bc_ids) {
+            constraints.UpdateDisplacement(bc_id, u_hub);
+        }
+
+        // Take step
+        auto converged = Step(parameters, solver, elements, state, constraints);
+
+        // Verify that step converged
+        EXPECT_EQ(converged, true);
+
+        // If flag set, write quadrature point glob position to file
+        if (write_output) {
+#ifdef OpenTurbine_ENABLE_VTK
+            // Write VTK output to file
+            auto tmp = std::to_string(i + 1);
+            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
+            WriteVTKBeamsQP(state, elements.beams, file_name + ".vtu");
+#endif
+        }
+    }
+}
 }  // namespace openturbine::tests

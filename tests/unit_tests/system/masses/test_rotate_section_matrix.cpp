@@ -12,7 +12,9 @@ struct ExecuteRotateSectionMatrix {
     Kokkos::View<double[6][6]> Cuu;
 
     KOKKOS_FUNCTION
-    void operator()(size_t) const { masses::RotateSectionMatrix(xr, Cstar, Cuu); };
+    void operator()(size_t) const {
+        masses::RotateSectionMatrix<Kokkos::DefaultExecutionSpace>(xr, Cstar, Cuu);
+    };
 };
 
 TEST(RotateSectionMatrixMassesTests, OneNode) {

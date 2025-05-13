@@ -4,11 +4,12 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct CopyConstraintsResidualToVector {
     size_t start_row;
-    Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type row_range;
-    Kokkos::View<double* [6]>::const_type constraint_residual_terms;
-    Kokkos::View<double* [1], Kokkos::LayoutLeft> residual;
+    typename Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType>::const_type row_range;
+    typename Kokkos::View<double* [6], DeviceType>::const_type constraint_residual_terms;
+    Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType> residual;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_constraint) const {

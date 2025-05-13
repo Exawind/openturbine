@@ -5,16 +5,17 @@
 
 namespace openturbine::beams {
 
+template <typename DeviceType>
 struct UpdateNodeStateElement {
     size_t i_elem{};
-    Kokkos::View<size_t**>::const_type node_state_indices;
-    Kokkos::View<double* [7]> node_u;
-    Kokkos::View<double* [6]> node_u_dot;
-    Kokkos::View<double* [6]> node_u_ddot;
+    typename Kokkos::View<size_t**, DeviceType>::const_type node_state_indices;
+    Kokkos::View<double* [7], DeviceType> node_u;
+    Kokkos::View<double* [6], DeviceType> node_u_dot;
+    Kokkos::View<double* [6], DeviceType> node_u_ddot;
 
-    Kokkos::View<double* [7]>::const_type Q;
-    Kokkos::View<double* [6]>::const_type V;
-    Kokkos::View<double* [6]>::const_type A;
+    typename Kokkos::View<double* [7], DeviceType>::const_type Q;
+    typename Kokkos::View<double* [6], DeviceType>::const_type V;
+    typename Kokkos::View<double* [6], DeviceType>::const_type A;
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_node) const {
@@ -29,27 +30,32 @@ struct UpdateNodeStateElement {
     }
 };
 
+template <typename DeviceType>
 struct UpdateNodeState {
-    Kokkos::View<double* [7]>::const_type Q;
-    Kokkos::View<double* [6]>::const_type V;
-    Kokkos::View<double* [6]>::const_type A;
-    Kokkos::View<size_t**>::const_type node_state_indices;
-    Kokkos::View<size_t*>::const_type num_nodes_per_element;
+    using member_type =
+        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
+    typename Kokkos::View<double* [7]>::const_type Q;
+    typename Kokkos::View<double* [6]>::const_type V;
+    typename Kokkos::View<double* [6]>::const_type A;
+    typename Kokkos::View<size_t**>::const_type node_state_indices;
+    typename Kokkos::View<size_t*>::const_type num_nodes_per_element;
     Kokkos::View<double** [7]> node_u_;
     Kokkos::View<double** [6]> node_u_dot_;
     Kokkos::View<double** [6]> node_u_ddot_;
 
     KOKKOS_FUNCTION
-    void operator()(Kokkos::TeamPolicy<>::member_type member) const {
+    void operator()(member_type member) const {
         const auto i_elem = static_cast<size_t>(member.league_rank());
         const auto num_nodes = num_nodes_per_element(i_elem);
         const auto node_range = Kokkos::TeamThreadRange(member, num_nodes);
 
-        const auto node_u = Kokkos::View<double* [7]>(member.team_scratch(1), num_nodes);
-        const auto node_u_dot = Kokkos::View<double* [6]>(member.team_scratch(1), num_nodes);
-        const auto node_u_ddot = Kokkos::View<double* [6]>(member.team_scratch(1), num_nodes);
+        const auto node_u = Kokkos::View<double* [7], DeviceType>(member.team_scratch(1), num_nodes);
+        const auto node_u_dot =
+            Kokkos::View<double* [6], DeviceType>(member.team_scratch(1), num_nodes);
+        const auto node_u_ddot =
+            Kokkos::View<double* [6], DeviceType>(member.team_scratch(1), num_nodes);
 
-        const auto node_state_updater = beams::UpdateNodeStateElement{
+        const auto node_state_updater = beams::UpdateNodeStateElement<DeviceType>{
             i_elem, node_state_indices, node_u, node_u_dot, node_u_ddot, Q, V, A
         };
         Kokkos::parallel_for(node_range, node_state_updater);
