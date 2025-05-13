@@ -127,14 +127,14 @@ struct CalculateQuadraturePointValues {
             beams::CalculateInertialQuadraturePointValues<DeviceType>{
                 i_elem,      shape_interp, gravity_, qp_r0_, qp_Mstar_, node_u, node_u_dot,
                 node_u_ddot, qp_Fi,        qp_Fg,    qp_Muu, qp_Guu,    qp_Kuu
-        };
+            };
         Kokkos::parallel_for(qp_range, inertia_quad_point_calculator);
 
         const auto stiffness_quad_point_calculator =
             beams::CalculateStiffnessQuadraturePointValues<DeviceType>{
                 i_elem, qp_jacobian, shape_interp, shape_deriv, qp_r0_, qp_x0_prime_, qp_Cstar_,
                 node_u, qp_Fc,       qp_Fd,        qp_Cuu,      qp_Ouu, qp_Puu,       qp_Quu
-        };
+            };
         Kokkos::parallel_for(qp_range, stiffness_quad_point_calculator);
         member.team_barrier();
 

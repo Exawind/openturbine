@@ -92,8 +92,7 @@ struct InterpolateToQuadraturePoints {
             Kokkos::TeamThreadRange(member, num_qps),
             InterpolateQPVector<DeviceType>{
                 i_elem, num_nodes, shape_interp,
-                Kokkos::subview(node_u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)),
-                qp_u_ddot
+                Kokkos::subview(node_u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_ddot
             }
         );
         Kokkos::parallel_for(
