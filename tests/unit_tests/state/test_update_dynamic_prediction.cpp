@@ -35,7 +35,8 @@ TEST(UpdateDynamicPrediction, OneNode) {
         "UpdateDynamicPrediction", 1,
         UpdateDynamicPrediction<Kokkos::DefaultExecutionSpace>{
             h, beta_prime, gamma_prime, node_freedom_allocation_table, node_freedom_map_table,
-            x_delta, q_delta, v, vd}
+            x_delta, q_delta, v, vd
+        }
     );
 
     constexpr auto q_delta_exact_data = std::array{2., 4., 6., 8., 10., 12.};

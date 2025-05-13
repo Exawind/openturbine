@@ -118,36 +118,42 @@ struct CalculateQuadraturePointValues {
         );
 
         const auto node_state_updater = beams::UpdateNodeStateElement<DeviceType>{
-            i_elem, node_state_indices, node_u, node_u_dot, node_u_ddot, Q, V, A};
+            i_elem, node_state_indices, node_u, node_u_dot, node_u_ddot, Q, V, A
+        };
         Kokkos::parallel_for(node_range, node_state_updater);
         member.team_barrier();
 
         const auto inertia_quad_point_calculator =
             beams::CalculateInertialQuadraturePointValues<DeviceType>{
                 i_elem,      shape_interp, gravity_, qp_r0_, qp_Mstar_, node_u, node_u_dot,
-                node_u_ddot, qp_Fi,        qp_Fg,    qp_Muu, qp_Guu,    qp_Kuu};
+                node_u_ddot, qp_Fi,        qp_Fg,    qp_Muu, qp_Guu,    qp_Kuu
+        };
         Kokkos::parallel_for(qp_range, inertia_quad_point_calculator);
 
         const auto stiffness_quad_point_calculator =
             beams::CalculateStiffnessQuadraturePointValues<DeviceType>{
                 i_elem, qp_jacobian, shape_interp, shape_deriv, qp_r0_, qp_x0_prime_, qp_Cstar_,
-                node_u, qp_Fc,       qp_Fd,        qp_Cuu,      qp_Ouu, qp_Puu,       qp_Quu};
+                node_u, qp_Fc,       qp_Fd,        qp_Cuu,      qp_Ouu, qp_Puu,       qp_Quu
+        };
         Kokkos::parallel_for(qp_range, stiffness_quad_point_calculator);
         member.team_barrier();
 
         const auto residual_integrator = beams::IntegrateResidualVectorElement<DeviceType>{
             i_elem, num_qps, qp_weight, qp_jacobian, shape_interp, shape_deriv,           node_FX,
-            qp_Fc,  qp_Fd,   qp_Fi,     qp_Fe,       qp_Fg,        residual_vector_terms_};
+            qp_Fc,  qp_Fd,   qp_Fi,     qp_Fe,       qp_Fg,        residual_vector_terms_
+        };
         Kokkos::parallel_for(node_range, residual_integrator);
 
         const auto stiffness_matrix_integrator = beams::IntegrateStiffnessMatrixElement<DeviceType>{
             i_elem, num_nodes, num_qps, qp_weight, qp_jacobian, shape_interp,          shape_deriv,
-            qp_Kuu, qp_Puu,    qp_Cuu,  qp_Ouu,    qp_Quu,      stiffness_matrix_terms};
+            qp_Kuu, qp_Puu,    qp_Cuu,  qp_Ouu,    qp_Quu,      stiffness_matrix_terms
+        };
         Kokkos::parallel_for(node_squared_simd_range, stiffness_matrix_integrator);
 
         const auto inertia_matrix_integrator = beams::IntegrateInertiaMatrixElement<DeviceType>{
             i_elem, num_nodes, num_qps,     qp_weight,    qp_jacobian,         shape_interp,
-            qp_Muu, qp_Guu,    beta_prime_, gamma_prime_, inertia_matrix_terms};
+            qp_Muu, qp_Guu,    beta_prime_, gamma_prime_, inertia_matrix_terms
+        };
         Kokkos::parallel_for(node_squared_simd_range, inertia_matrix_integrator);
         member.team_barrier();
 
@@ -158,7 +164,8 @@ struct CalculateQuadraturePointValues {
             node_state_indices,
             stiffness_matrix_terms,
             inertia_matrix_terms,
-            system_matrix_terms_};
+            system_matrix_terms_
+        };
         Kokkos::parallel_for(node_squared_range, system_matrix_calculator);
     }
 };

@@ -56,7 +56,8 @@ struct UpdateNodeState {
             Kokkos::View<double* [6], DeviceType>(member.team_scratch(1), num_nodes);
 
         const auto node_state_updater = beams::UpdateNodeStateElement<DeviceType>{
-            i_elem, node_state_indices, node_u, node_u_dot, node_u_ddot, Q, V, A};
+            i_elem, node_state_indices, node_u, node_u_dot, node_u_ddot, Q, V, A
+        };
         Kokkos::parallel_for(node_range, node_state_updater);
 
         KokkosBatched::TeamVectorCopy<Kokkos::TeamPolicy<>::member_type>::invoke(

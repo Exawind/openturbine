@@ -117,14 +117,16 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         "InterpolateQPPosition", range_policy,
         InterpolateQPPosition<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
-            beams.node_x0, beams.qp_x0}
+            beams.node_x0, beams.qp_x0
+        }
     );
 
     Kokkos::parallel_for(
         "InterpolateQPRotation", range_policy,
         InterpolateQPRotation<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
-            beams.node_x0, beams.qp_r0}
+            beams.node_x0, beams.qp_r0
+        }
     );
 
     Kokkos::parallel_for(
@@ -148,7 +150,8 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
             beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.node_u_dot, beams.node_u_ddot,
             beams.qp_x0, beams.qp_r0, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime,
-            beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot, beams.qp_omega_dot, beams.qp_x}
+            beams.qp_u_dot, beams.qp_omega, beams.qp_u_ddot, beams.qp_omega_dot, beams.qp_x
+        }
     );
 
     return beams;

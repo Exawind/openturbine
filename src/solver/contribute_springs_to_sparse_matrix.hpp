@@ -15,8 +15,8 @@ struct ContributeSpringsToSparseMatrix {
     typename Kokkos::View<FreedomSignature* [2], DeviceType>::const_type element_freedom_signature;
     typename Kokkos::View<size_t* [2][3], DeviceType>::const_type element_freedom_table;
     typename Kokkos::View<double* [2][2][3][3], DeviceType>::const_type
-        dense;                                             //< Element Stiffness matrices
-    CrsMatrixType sparse;                                  //< Global sparse stiffness matrix
+        dense;             //< Element Stiffness matrices
+    CrsMatrixType sparse;  //< Global sparse stiffness matrix
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {

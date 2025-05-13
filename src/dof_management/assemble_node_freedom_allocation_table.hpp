@@ -102,7 +102,8 @@ inline void assemble_node_freedom_allocation_table(
         "AssembleNodeFreedomMapTable_Beams", beams_range,
         AssembleNodeFreedomMapTable_Beams<DeviceType>{
             elements.beams.num_nodes_per_element, elements.beams.node_state_indices,
-            elements.beams.element_freedom_signature, state.node_freedom_allocation_table}
+            elements.beams.element_freedom_signature, state.node_freedom_allocation_table
+        }
     );
     auto masses_range =
         Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.masses.num_elems);
@@ -110,7 +111,8 @@ inline void assemble_node_freedom_allocation_table(
         "AssembleNodeFreedomMapTable_Masses", masses_range,
         AssembleNodeFreedomMapTable_Masses<DeviceType>{
             elements.masses.state_indices, elements.masses.element_freedom_signature,
-            state.node_freedom_allocation_table}
+            state.node_freedom_allocation_table
+        }
     );
     auto springs_range =
         Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.springs.num_elems);
@@ -118,7 +120,8 @@ inline void assemble_node_freedom_allocation_table(
         "AssembleNodeFreedomMapTable_Springs", springs_range,
         AssembleNodeFreedomMapTable_Springs<DeviceType>{
             elements.springs.node_state_indices, elements.springs.element_freedom_signature,
-            state.node_freedom_allocation_table}
+            state.node_freedom_allocation_table
+        }
     );
     auto constraints_range =
         Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
@@ -127,7 +130,8 @@ inline void assemble_node_freedom_allocation_table(
         AssembleNodeFreedomMapTable_Constraints<DeviceType>{
             constraints.type, constraints.target_node_index, constraints.base_node_index,
             constraints.target_node_freedom_signature, constraints.base_node_freedom_signature,
-            state.node_freedom_allocation_table}
+            state.node_freedom_allocation_table
+        }
     );
 
     const auto active_dofs = state.active_dofs;

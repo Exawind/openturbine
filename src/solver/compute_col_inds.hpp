@@ -43,7 +43,8 @@ template <typename RowPtrType, typename IndicesType>
         ComputeSystemColInds<RowPtrType, IndicesType>{
             num_system_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
             node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
-            target_node_freedom_table, row_range, row_ptrs, col_inds}
+            target_node_freedom_table, row_range, row_ptrs, col_inds
+        }
     );
 
     Kokkos::parallel_for(
@@ -51,7 +52,8 @@ template <typename RowPtrType, typename IndicesType>
         Kokkos::RangePolicy<typename RowPtrType::execution_space>(0, num_constraints),
         ComputeConstraintsColInds<RowPtrType, IndicesType>{
             num_system_dofs, base_active_dofs, target_active_dofs, base_node_freedom_table,
-            target_node_freedom_table, row_range, row_ptrs, col_inds}
+            target_node_freedom_table, row_range, row_ptrs, col_inds
+        }
     );
 
     return col_inds;
