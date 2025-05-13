@@ -21,6 +21,7 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct InterpolateToQuadraturePoints {
+    using member_type = typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
     typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;  //< Number of nodes per element
     typename Kokkos::View<size_t*, DeviceType>::const_type num_qps_per_element;    //< Number of QPs per element
     typename Kokkos::View<double***, DeviceType>::const_type shape_interp;         //< shape functions at QPs
@@ -43,7 +44,7 @@ struct InterpolateToQuadraturePoints {
     Kokkos::View<double** [7], DeviceType> qp_x;          //< Final positions of quadrature points
 
     KOKKOS_FUNCTION
-    void operator()(typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type member) const {
+    void operator()(member_type member) const {
         const auto i_elem = static_cast<size_t>(member.league_rank());
         const auto num_nodes = num_nodes_per_element(i_elem);
         const auto num_qps = num_qps_per_element(i_elem);

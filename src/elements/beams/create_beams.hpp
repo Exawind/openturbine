@@ -111,8 +111,9 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
     Kokkos::deep_copy(beams.node_FX, 0.);
     Kokkos::deep_copy(beams.qp_Fe, 0.);
 
+    auto range_policy = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, beams.num_elems);
     Kokkos::parallel_for(
-        "InterpolateQPPosition", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, beams.num_elems),
+        "InterpolateQPPosition", range_policy,
         InterpolateQPPosition<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
             beams.node_x0, beams.qp_x0
@@ -120,7 +121,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
     );
 
     Kokkos::parallel_for(
-        "InterpolateQPRotation", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, beams.num_elems),
+        "InterpolateQPRotation", range_policy,
         InterpolateQPRotation<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
             beams.node_x0, beams.qp_r0
@@ -128,7 +129,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
     );
 
     Kokkos::parallel_for(
-        "CalculateJacobian", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, beams.num_elems),
+        "CalculateJacobian", range_policy,
         CalculateJacobian<DeviceType>{
             beams.num_nodes_per_element,
             beams.num_qps_per_element,
@@ -139,9 +140,9 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         }
     );
 
-    auto range_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
+    auto team_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     Kokkos::parallel_for(
-        "InterpolateToQuadraturePoints", range_policy,
+        "InterpolateToQuadraturePoints", team_policy,
         InterpolateToQuadraturePoints<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
             beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.node_u_dot, beams.node_u_ddot,

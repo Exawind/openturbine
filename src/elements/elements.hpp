@@ -43,16 +43,18 @@ struct Elements {
 
         // Beams
         auto beams_num_nodes_per_element = beams.num_nodes_per_element;
+        auto beams_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, beams.num_elems);
         Kokkos::parallel_for(
-            Kokkos::RangePolicy<typename DeviceType::execution_space>(0, beams.num_elems),
+            beams_range,
             KOKKOS_LAMBDA(size_t i_elem) { result(i_elem) = beams_num_nodes_per_element(i_elem); }
         );
 
         // Masses
         auto beams_offset = beams.num_elems;
         auto masses_num_nodes_per_element = masses.num_nodes_per_element;
+        auto masses_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, masses.num_elems);
         Kokkos::parallel_for(
-            Kokkos::RangePolicy<typename DeviceType::execution_space>(0, masses.num_elems),
+            masses_range,
             KOKKOS_LAMBDA(size_t i_elem) {
                 result(i_elem + beams_offset) = masses_num_nodes_per_element(i_elem);
             }
@@ -61,8 +63,9 @@ struct Elements {
         // Springs
         auto beams_and_masses_offset = beams_offset + masses.num_elems;
         auto springs_num_nodes_per_element = springs.num_nodes_per_element;
+        auto springs_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, springs.num_elems);
         Kokkos::parallel_for(
-            Kokkos::RangePolicy<typename DeviceType::execution_space>(0, springs.num_elems),
+            springs_range,
             KOKKOS_LAMBDA(size_t i_elem) {
                 result(i_elem + beams_and_masses_offset) = springs_num_nodes_per_element(i_elem);
             }
@@ -84,8 +87,9 @@ struct Elements {
         // Beams
         auto beams_num_nodes_per_element = beams.num_nodes_per_element;
         auto beams_node_state_indices = beams.node_state_indices;
+        auto beams_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, beams.num_elems);
         Kokkos::parallel_for(
-            Kokkos::RangePolicy<typename DeviceType::execution_space>(0, beams.num_elems),
+            beams_range,
             KOKKOS_LAMBDA(size_t i_elem) {
                 const auto num_nodes = beams_num_nodes_per_element(i_elem);
                 for (auto j = 0U; j < num_nodes; ++j) {
@@ -97,8 +101,9 @@ struct Elements {
         // Masses
         const auto beams_offset = beams.num_elems;
         auto masses_state_indices = masses.state_indices;
+        auto masses_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, masses.num_elems);
         Kokkos::parallel_for(
-            Kokkos::RangePolicy<typename DeviceType::execution_space>(0, masses.num_elems),
+            masses_range,
             KOKKOS_LAMBDA(size_t i_elem) {
                 // Masses always have one node per element
                 result(i_elem + beams_offset, 0) = masses_state_indices(i_elem);
@@ -108,8 +113,9 @@ struct Elements {
         // Springs
         auto beams_and_masses_offset = beams_offset + masses.num_elems;
         auto springs_node_state_indices = springs.node_state_indices;
+        auto springs_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, springs.num_elems);
         Kokkos::parallel_for(
-            Kokkos::RangePolicy<typename DeviceType::execution_space>(0, springs.num_elems),
+            springs_range,
             KOKKOS_LAMBDA(size_t i_elem) {
                 // Springs always have two nodes per element
                 result(i_elem + beams_and_masses_offset, 0) = springs_node_state_indices(i_elem, 0);

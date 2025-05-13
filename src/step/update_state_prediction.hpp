@@ -17,9 +17,10 @@ inline void UpdateStatePrediction(
     StepParameters& parameters, const Solver<DeviceType>& solver, State<DeviceType>& state
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
+    auto range_policy = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes);
     if (parameters.is_dynamic_solve) {
         Kokkos::parallel_for(
-            "UpdateDynamicPrediction", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes),
+            "UpdateDynamicPrediction", range_policy,
             UpdateDynamicPrediction<DeviceType>{
                 parameters.h,
                 parameters.beta_prime,
@@ -34,7 +35,7 @@ inline void UpdateStatePrediction(
         );
     } else {
         Kokkos::parallel_for(
-            "UpdateStaticPrediction", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes),
+            "UpdateStaticPrediction", range_policy,
             UpdateStaticPrediction<DeviceType>{
                 parameters.h,
                 state.node_freedom_allocation_table,
@@ -46,7 +47,7 @@ inline void UpdateStatePrediction(
     }
 
     Kokkos::parallel_for(
-        "CalculateDisplacement", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes),
+        "CalculateDisplacement", range_policy,
         CalculateDisplacement<DeviceType>{
             parameters.h,
             state.q_delta,

@@ -68,22 +68,25 @@ template <typename DeviceType>
 inline void create_element_freedom_table(
     Elements<DeviceType>& elements, const State<DeviceType>& state
 ) {
+    auto beams_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.beams.num_elems);
     Kokkos::parallel_for(
-        "CreateElementFreedomTable_Beams", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.beams.num_elems),
+        "CreateElementFreedomTable_Beams", beams_range,
         CreateElementFreedomTable_Beams<DeviceType>{
             elements.beams.num_nodes_per_element, elements.beams.node_state_indices,
             state.node_freedom_map_table, elements.beams.element_freedom_table
         }
     );
+    auto masses_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.masses.num_elems);
     Kokkos::parallel_for(
-        "CreateElementFreedomTable_Masses", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.masses.num_elems),
+        "CreateElementFreedomTable_Masses", masses_range,
         CreateElementFreedomTable_Masses<DeviceType>{
             elements.masses.state_indices, state.node_freedom_map_table,
             elements.masses.element_freedom_table
         }
     );
+    auto springs_range = Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.springs.num_elems);
     Kokkos::parallel_for(
-        "CreateElementFreedomTable_Springs", Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.springs.num_elems),
+        "CreateElementFreedomTable_Springs", springs_range,
         CreateElementFreedomTable_Springs<DeviceType>{
             elements.springs.num_nodes_per_element, elements.springs.node_state_indices,
             state.node_freedom_map_table, elements.springs.element_freedom_table
