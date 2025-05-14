@@ -111,6 +111,12 @@ Before building OpenTurbine, you'll need the following:
   performance portability
 - `KokkosKernels <https://github.com/kokkos/kokkoskernels>`_: performance
   portable linear algebra library
+- `netCDF <https://github.com/Unidata/netcdf-c>`_: I/O data Format
+- `Suite-Sparse <https://github.com/DrTimothyAldenDavis/SuiteSparse>`_: 
+  For the KLU sparse direct solver.  Other solvers, such as SuperLU are also
+  possible to use.
+- A LAPACK implementation, such as `OpenBLAS <https://github.com/OpenMathLib/OpenBLAS>`_ 
+  or `netlib-lapack <https://github.com/Reference-LAPACK/lapack>`_
 - `Trilinos <https://github.com/trilinos/Trilinos>`_: primarily for the
   Amesos2 sparse direct linear solver package
 - `GoogleTest <https://github.com/google/googletest>`_: unit testing package
@@ -135,47 +141,46 @@ Clone the spack repository, load the spack environment, and let spack learn abou
     spack compiler find
     spack external find
 
-Install GoogleTest
-~~~~~~~~~~~~~~~~~~
+Install GoogleTest, netCDF, Suite-Sparse, and LAPACK
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
     spack install googletest
+    spack install netcdf-c
+    spack install lapack
+    spack install suite-sparse
 
-Install Trilinos
-~~~~~~~~~~~~~~~~
-
-To build OpenTurbine, Kokkos Kernels must be configured to use the LAPACK
-and BLAS TPLs. For GPU builds, Trilinos should be compiled with support for
-the Basker linear solver. Additionally, we typically disable EPetra to avoid
-deprecation warnings. As of this writing, OpenTurbine is compatible with
-Trilinos version 16.0.0, which is the latest and default version in spack.
+Install Kokkos and Kokkos Kernels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For a simple serial build
+.. code-block:: bash
+
+    spack install kokkos
+    spack install kokkos-kernels
+
+
+To compile with OpenMP support for parallelism on CPU based machines
 
 .. code-block:: bash
 
-    spack install trilinos~epetra ^kokkos-kernels+blas+lapack
+    spack install kokkos+openmp
+    spack install kokkos-kernels+openmp
 
-Trilinos can also be compiled with OpenMP support for parallelism on CPU based machines
-
-.. code-block:: bash
-
-    spack install trilinos~epetra+openmp ^kokkos-kernels+blas+lapack
-
-If building for CUDA platforms, Trilinos must be configured with CUDA support
+To compile with CUDA support
 
 .. code-block:: bash
 
-    spack install trilinos~epetra+basker+cuda ^kokkos-kernels+blas+lapack
+    spack install kokkos+cuda+wrapper
+    spack install kokkos-kernels+cuda+cublas
 
-If building for ROCm platforms, Trilinos must be configured with ROCm support
+To compile with ROCm support
 
 .. code-block:: bash
 
-    spack install trilinos~epetra+basker+rocm ^kokkos-kernels+blas+lapack
-
-Trilinos can be built with or without MPI support.
+    spack install kokkos+rocm
+    spack install kokkos-kernels+rocblas
 
 Load the TPLs into your environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -183,16 +188,11 @@ Load the TPLs into your environment
 .. code-block:: bash
 
     spack load googletest
-    spack load trilinos
-
-Trilinos can be compiled with support for various platforms. While it is
-assumed that OpenTurbine will inherit compatibility with these platforms,
-they have not been tested at the time of writing.
-
-If you choose not to use Spack, you must manually build all dependencies.
-Please ensure that the ``Amesos2_DIR``, ``GTest_DIR``, and ``KokkosKernels_DIR``
-environment variables are correctly set for these packages. Alternatively,
-make sure that CMake's ``find_package`` utility can locate them.
+    spack load suite-sparse
+    spack load netcdf-c
+    spack load lapack
+    spack load kokkos
+    spack load kokkos-kernels
 
 Building OpenTurbine
 --------------------
@@ -213,25 +213,42 @@ Clone OpenTurbine and setup a build directory
 Configure cmake
 ~~~~~~~~~~~~~~~
 
-For a CPU-based build which includes building unit tests, use
+When building OpenTurbine, you must specify which sparse direct solver
+package you want to use.  We support many options here, but the default
+recommendation is to use suite-sparse's KLU solver for CPU builds.
+
+For a CPU-based build which includes building unit tests, you can configure with
+KLU using the command
 
 .. code-block:: bash
 
-    cmake ../
+    cmake ../ -DOpenTurbine_ENABLE_KLU=ON
 
-If Trilinos was built with CUDA support, you will need to use the nvcc_wrapper
-for compilation
-
-.. code-block:: bash
-
-    cmake ../ -DCMAKE_CXX_COMPILER=nvcc_wrapper
-
-If Trilinos was built with ROCm support, you will need to use the hipcc program
-for compilation
+If Kokkos was built with CUDA support, you will need to use the nvcc_wrapper
+for compilation.  You will also get your choice of native CUDA solvers (CUDSS
+or cuSolverSP).  For best performance, CUDSS is currently recommended.
 
 .. code-block:: bash
 
-    cmake ../ -DCMAKE_CXX_COMPILER=hipcc
+    cmake ../ -DCMAKE_CXX_COMPILER=nvcc_wrapper -DOpenTurbine_ENABLE_CUDSS=ON
+
+You can also use any CPU-based direct solver with a CUDA build.  You may want to do
+this to reduce memory usage on device, or it may be faster for your problem.  In
+this case, the system matrix and residual are calculated on GPU, copied to host for
+the solve step, and then the solution is copied back to GPU.  For this mode of operation,
+simply configure OpenTurbine as
+
+.. code-block:: bash
+
+    cmake ../ -DCMAKE_CXX_COMPILER=nvcc_wrapper -DOpenTurbine_ENABLE_KLU=ON
+
+If Kokkos was built with ROCm support, you will need to use the hipcc program
+for compilation.  Currently, we do not support any native solvers for ROCm, so a CPU
+based solver (such as KLU) must be used.
+
+.. code-block:: bash
+
+    cmake ../ -DCMAKE_CXX_COMPILER=hipcc -DOpenTurbine_ENABLE_KLU=ON
 
 Build and Test
 ~~~~~~~~~~~~~~
@@ -282,3 +299,16 @@ CMake from the command line or through a GUI such as ccmake.
   visualization in tests. Will need the VTK TPL to be properly configured
 - ``OpenTurbine_WARNINGS_AS_ERRORS`` treats warnings as errors, including
   warnings from static analysis tools
+- ``OpenTurbine_ENALE_KLU`` builds OpenTurbine with support for Suite-Sparse's KLU
+solver.  In our experience, this is solver is fast and robust for many of our problems.
+- ``OpenTurbine_ENALE_UMFPACK`` builds OpenTurbine with support for Suite-Sparse's UMFPACK
+solver.
+- ``OpenTurbine_ENALE_SUPERLU`` builds OpenTurbine with support forthe  SuperLU solver
+- ``OpenTurbine_ENALE_SUPERLU_MT`` builds OpenTurbine with support for SuperLU-mt, a
+threaded version of SuperLU which may be configured to run in parallel on CPU.
+- ``OpenTurbine_ENALE_MKL`` builds OpenTurbine with MKL's sparse direct solver, which can take advantage
+of multiple threads to run in parallel on CPU.
+- ``OpenTurbine_ENALE_CUDSS`` builds OpenTurbine with CUDSS, the next generation 
+sparse direct solver of CUDA.  Still in pre-release at the time of writing, it is the preferred CUDA
+based solver if the platform supports it.
+- ``OpenTurbine_ENALE_CUSOLVERSP`` builds OpenTurbine with the cuSolver-sp sparse direct solver.
