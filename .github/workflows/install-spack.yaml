@@ -27,7 +27,7 @@ jobs:
         spack develop openturbine@main
         spack concretize -f
         cd openturbine
-        git checkout ${{ BRANCHNAME }}
+        git checkout ${{ BRANCH_NAME }}
         spack install
         cd openturbine/tests/documentation_tests/floating_platform
         mkdir build
