@@ -23,7 +23,6 @@ jobs:
         spack env create -d .
         spack env activate .
         spack add openturbine
-        spack install
         spack develop openturbine@main
         spack concretize -f
         cd openturbine
