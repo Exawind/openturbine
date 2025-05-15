@@ -300,15 +300,15 @@ CMake from the command line or through a GUI such as ccmake.
 - ``OpenTurbine_WARNINGS_AS_ERRORS`` treats warnings as errors, including
   warnings from static analysis tools
 - ``OpenTurbine_ENALE_KLU`` builds OpenTurbine with support for Suite-Sparse's KLU
-solver.  In our experience, this is solver is fast and robust for many of our problems.
+  solver.  In our experience, this is solver is fast and robust for many of our problems.
 - ``OpenTurbine_ENALE_UMFPACK`` builds OpenTurbine with support for Suite-Sparse's UMFPACK
-solver.
+  solver.
 - ``OpenTurbine_ENALE_SUPERLU`` builds OpenTurbine with support forthe  SuperLU solver
 - ``OpenTurbine_ENALE_SUPERLU_MT`` builds OpenTurbine with support for SuperLU-mt, a
-threaded version of SuperLU which may be configured to run in parallel on CPU.
+  threaded version of SuperLU which may be configured to run in parallel on CPU.
 - ``OpenTurbine_ENALE_MKL`` builds OpenTurbine with MKL's sparse direct solver, which can take advantage
-of multiple threads to run in parallel on CPU.
+  of multiple threads to run in parallel on CPU.
 - ``OpenTurbine_ENALE_CUDSS`` builds OpenTurbine with CUDSS, the next generation 
-sparse direct solver of CUDA.  Still in pre-release at the time of writing, it is the preferred CUDA
-based solver if the platform supports it.
+  sparse direct solver of CUDA.  Still in pre-release at the time of writing, it is the preferred CUDA
+  based solver if the platform supports it.
 - ``OpenTurbine_ENALE_CUSOLVERSP`` builds OpenTurbine with the cuSolver-sp sparse direct solver.
