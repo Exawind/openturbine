@@ -225,14 +225,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a383f3952d7f04972148d0bacb0984ca4" id="r_a383f3952d7f04972148d0bacb0984ca4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a383f3952d7f04972148d0bacb0984ca4">state_save</a></td></tr>
 <tr class="memdesc:a383f3952d7f04972148d0bacb0984ca4"><td class="mdescLeft">&#160;</td><td class="mdescRight">OpenTurbine class state class for temporarily saving state.  <br /></td></tr>
 <tr class="separator:a383f3952d7f04972148d0bacb0984ca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ad4b209ff40e62740ffee4d6cb135ee" id="r_a8ad4b209ff40e62740ffee4d6cb135ee"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7]&gt;::HostMirror&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a8ad4b209ff40e62740ffee4d6cb135ee">host_state_x</a></td></tr>
-<tr class="separator:a8ad4b209ff40e62740ffee4d6cb135ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16a375f25888ff6f3a880b7e10e5dbb2" id="r_a16a375f25888ff6f3a880b7e10e5dbb2"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7]&gt;::HostMirror&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a16a375f25888ff6f3a880b7e10e5dbb2">host_state_q</a></td></tr>
-<tr class="separator:a16a375f25888ff6f3a880b7e10e5dbb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0554a17000eead27c42b864eb152d5bc" id="r_a0554a17000eead27c42b864eb152d5bc"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;::HostMirror&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a0554a17000eead27c42b864eb152d5bc">host_state_v</a></td></tr>
-<tr class="separator:a0554a17000eead27c42b864eb152d5bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7905d0a8f1d707e61d10df6eb8681f8" id="r_ae7905d0a8f1d707e61d10df6eb8681f8"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6]&gt;::HostMirror&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#ae7905d0a8f1d707e61d10df6eb8681f8">host_state_vd</a></td></tr>
-<tr class="separator:ae7905d0a8f1d707e61d10df6eb8681f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c12ace3e706791a2181a5cb733a18ce" id="r_a6c12ace3e706791a2181a5cb733a18ce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a6c12ace3e706791a2181a5cb733a18ce">host_state</a></td></tr>
+<tr class="memdesc:a6c12ace3e706791a2181a5cb733a18ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of <a class="el" href="structopenturbine_1_1State.html">State</a>.  <br /></td></tr>
+<tr class="separator:a6c12ace3e706791a2181a5cb733a18ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a957db056642e90260c7b5e7c4e4638ad" id="r_a957db056642e90260c7b5e7c4e4638ad"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a957db056642e90260c7b5e7c4e4638ad">current_timestep_</a> {0}</td></tr>
 <tr class="memdesc:a957db056642e90260c7b5e7c4e4638ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current timestep index.  <br /></td></tr>
 <tr class="separator:a957db056642e90260c7b5e7c4e4638ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -433,59 +428,19 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a16a375f25888ff6f3a880b7e10e5dbb2" name="a16a375f25888ff6f3a880b7e10e5dbb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a16a375f25888ff6f3a880b7e10e5dbb2">&#9670;&#160;</a></span>host_state_q</h2>
+<a id="a6c12ace3e706791a2181a5cb733a18ce" name="a6c12ace3e706791a2181a5cb733a18ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c12ace3e706791a2181a5cb733a18ce">&#9670;&#160;</a></span>host_state</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[7]&gt;::HostMirror openturbine::cfd::Interface::host_state_q</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a> openturbine::cfd::Interface::host_state</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a0554a17000eead27c42b864eb152d5bc" name="a0554a17000eead27c42b864eb152d5bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0554a17000eead27c42b864eb152d5bc">&#9670;&#160;</a></span>host_state_v</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Kokkos::View&lt;double*[6]&gt;::HostMirror openturbine::cfd::Interface::host_state_v</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae7905d0a8f1d707e61d10df6eb8681f8" name="ae7905d0a8f1d707e61d10df6eb8681f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7905d0a8f1d707e61d10df6eb8681f8">&#9670;&#160;</a></span>host_state_vd</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Kokkos::View&lt;double*[6]&gt;::HostMirror openturbine::cfd::Interface::host_state_vd</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8ad4b209ff40e62740ffee4d6cb135ee" name="a8ad4b209ff40e62740ffee4d6cb135ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ad4b209ff40e62740ffee4d6cb135ee">&#9670;&#160;</a></span>host_state_x</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Kokkos::View&lt;double*[7]&gt;::HostMirror openturbine::cfd::Interface::host_state_x</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Host local copy of <a class="el" href="structopenturbine_1_1State.html">State</a>. </p>
 
 </div>
 </div>

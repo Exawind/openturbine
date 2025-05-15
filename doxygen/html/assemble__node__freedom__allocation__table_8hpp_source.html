@@ -281,48 +281,50 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a73df7db3151390957bb059cad4aaacc6">   88</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine.html#a73df7db3151390957bb059cad4aaacc6">assemble_node_freedom_allocation_table</a>(</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <a class="code hl_struct" href="structopenturbine_1_1State.html">State</a>&amp; state, <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1Elements.html">Elements</a>&amp; elements, <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1Constraints.html">Constraints</a>&amp; constraints</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>) {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    Kokkos::parallel_for(</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="stringliteral">&quot;AssembleNodeFreedomMapTable_Beams&quot;</span>, elements.<a class="code hl_variable" href="structopenturbine_1_1Elements.html#a9fa144cd5d35b7c16f14df1f944ed036">beams</a>.<a class="code hl_variable" href="structopenturbine_1_1Beams.html#a14099a8214e363aca1681f2de065aa5c">num_elems</a>,</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <a class="code hl_struct" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Beams.html">AssembleNodeFreedomMapTable_Beams</a>{</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            elements.beams.num_nodes_per_element, elements.beams.node_state_indices,</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            elements.beams.element_freedom_signature, state.node_freedom_allocation_table</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        }</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    );</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    Kokkos::parallel_for(</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="stringliteral">&quot;AssembleNodeFreedomMapTable_Masses&quot;</span>, elements.<a class="code hl_variable" href="structopenturbine_1_1Elements.html#a27f60651f4679b1c2501f7f6a2db16aa">masses</a>.<a class="code hl_variable" href="structopenturbine_1_1Masses.html#ae8f20e0e96e36b174202d17e756e0d98">num_elems</a>,</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <a class="code hl_struct" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Masses.html">AssembleNodeFreedomMapTable_Masses</a>{</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            elements.masses.state_indices, elements.masses.element_freedom_signature,</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            state.node_freedom_allocation_table</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        }</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    );</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    Kokkos::parallel_for(</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="stringliteral">&quot;AssembleNodeFreedomMapTable_Springs&quot;</span>, elements.<a class="code hl_variable" href="structopenturbine_1_1Elements.html#a2efb7484226097b1c4e931372bae5d91">springs</a>.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#a9d1a26001f1180ac8032cd447e83d9ec">num_elems</a>,</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <a class="code hl_struct" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Springs.html">AssembleNodeFreedomMapTable_Springs</a>{</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            elements.springs.node_state_indices, elements.springs.element_freedom_signature,</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            state.node_freedom_allocation_table</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        }</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    );</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    Kokkos::parallel_for(</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="stringliteral">&quot;AssembleNodeFreedomMapTable_Constraints&quot;</span>, constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a08128be1c729d94fb2ad4dfcf6433b64">num_constraints</a>,</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <a class="code hl_struct" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Constraints.html">AssembleNodeFreedomMapTable_Constraints</a>{</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            constraints.type, constraints.target_node_index, constraints.base_node_index,</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            constraints.target_node_freedom_signature, constraints.base_node_freedom_signature,</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            state.node_freedom_allocation_table</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        }</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    );</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">const</span> <span class="keyword">auto</span> active_dofs = state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a1da03610f182f3e2417213257225f8d7">active_dofs</a>;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">const</span> <span class="keyword">auto</span> node_freedom_allocation_table = state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a4aa65abe329a5b16aa68b49151fea445">node_freedom_allocation_table</a>;</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    Kokkos::parallel_for(</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="stringliteral">&quot;ComputeActiveDofs&quot;</span>, state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a960d8342d18caa715a7cddf4251d6a98">num_system_nodes</a>,</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        KOKKOS_LAMBDA(<span class="keywordtype">size_t</span> i) {</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            active_dofs(i) = <a class="code hl_function" href="namespaceopenturbine.html#ac49461f4e15c88f90f8383dffa5ac51b">count_active_dofs</a>(node_freedom_allocation_table(i));</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        }</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    );</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>}</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    Kokkos::deep_copy(state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a4aa65abe329a5b16aa68b49151fea445">node_freedom_allocation_table</a>, <a class="code hl_enumvalue" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15cad777bc3d604905978e7e68786d91dd67">FreedomSignature::NoComponents</a>);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    Kokkos::parallel_for(</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="stringliteral">&quot;AssembleNodeFreedomMapTable_Beams&quot;</span>, elements.<a class="code hl_variable" href="structopenturbine_1_1Elements.html#a9fa144cd5d35b7c16f14df1f944ed036">beams</a>.<a class="code hl_variable" href="structopenturbine_1_1Beams.html#a14099a8214e363aca1681f2de065aa5c">num_elems</a>,</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <a class="code hl_struct" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Beams.html">AssembleNodeFreedomMapTable_Beams</a>{</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            elements.beams.num_nodes_per_element, elements.beams.node_state_indices,</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            elements.beams.element_freedom_signature, state.node_freedom_allocation_table</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        }</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    );</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    Kokkos::parallel_for(</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="stringliteral">&quot;AssembleNodeFreedomMapTable_Masses&quot;</span>, elements.<a class="code hl_variable" href="structopenturbine_1_1Elements.html#a27f60651f4679b1c2501f7f6a2db16aa">masses</a>.<a class="code hl_variable" href="structopenturbine_1_1Masses.html#ae8f20e0e96e36b174202d17e756e0d98">num_elems</a>,</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <a class="code hl_struct" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Masses.html">AssembleNodeFreedomMapTable_Masses</a>{</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            elements.masses.state_indices, elements.masses.element_freedom_signature,</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            state.node_freedom_allocation_table</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        }</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    );</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    Kokkos::parallel_for(</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="stringliteral">&quot;AssembleNodeFreedomMapTable_Springs&quot;</span>, elements.<a class="code hl_variable" href="structopenturbine_1_1Elements.html#a2efb7484226097b1c4e931372bae5d91">springs</a>.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#a9d1a26001f1180ac8032cd447e83d9ec">num_elems</a>,</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <a class="code hl_struct" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Springs.html">AssembleNodeFreedomMapTable_Springs</a>{</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>            elements.springs.node_state_indices, elements.springs.element_freedom_signature,</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            state.node_freedom_allocation_table</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        }</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    );</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    Kokkos::parallel_for(</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="stringliteral">&quot;AssembleNodeFreedomMapTable_Constraints&quot;</span>, constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a08128be1c729d94fb2ad4dfcf6433b64">num_constraints</a>,</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <a class="code hl_struct" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Constraints.html">AssembleNodeFreedomMapTable_Constraints</a>{</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            constraints.type, constraints.target_node_index, constraints.base_node_index,</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            constraints.target_node_freedom_signature, constraints.base_node_freedom_signature,</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            state.node_freedom_allocation_table</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        }</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    );</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">const</span> <span class="keyword">auto</span> active_dofs = state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a1da03610f182f3e2417213257225f8d7">active_dofs</a>;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keyword">const</span> <span class="keyword">auto</span> node_freedom_allocation_table = state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a4aa65abe329a5b16aa68b49151fea445">node_freedom_allocation_table</a>;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    Kokkos::parallel_for(</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        <span class="stringliteral">&quot;ComputeActiveDofs&quot;</span>, state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a960d8342d18caa715a7cddf4251d6a98">num_system_nodes</a>,</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        KOKKOS_LAMBDA(<span class="keywordtype">size_t</span> i) {</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            active_dofs(i) = <a class="code hl_function" href="namespaceopenturbine.html#ac49461f4e15c88f90f8383dffa5ac51b">count_active_dofs</a>(node_freedom_allocation_table(i));</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        }</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    );</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>}</div>
 </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="aconstraints_8hpp_html"><div class="ttname"><a href="constraints_8hpp.html">constraints.hpp</a></div></div>
 <div class="ttc" id="aelements_8hpp_html"><div class="ttname"><a href="elements_8hpp.html">elements.hpp</a></div></div>
 <div class="ttc" id="afreedom__signature_8hpp_html"><div class="ttname"><a href="freedom__signature_8hpp.html">freedom_signature.hpp</a></div></div>
@@ -330,6 +332,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="ttc" id="anamespaceopenturbine_html_a382b442cac8b0bcc950d5b66d3268f53"><div class="ttname"><a href="namespaceopenturbine.html#a382b442cac8b0bcc950d5b66d3268f53">openturbine::GetNumberOfNodes</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION constexpr size_t GetNumberOfNodes(ConstraintType t)</div><div class="ttdoc">Returns the number of nodes used/required by the constraint type.</div><div class="ttdef"><b>Definition</b> constraint_type.hpp:29</div></div>
 <div class="ttc" id="anamespaceopenturbine_html_a73df7db3151390957bb059cad4aaacc6"><div class="ttname"><a href="namespaceopenturbine.html#a73df7db3151390957bb059cad4aaacc6">openturbine::assemble_node_freedom_allocation_table</a></div><div class="ttdeci">void assemble_node_freedom_allocation_table(State &amp;state, const Elements &amp;elements, const Constraints &amp;constraints)</div><div class="ttdef"><b>Definition</b> assemble_node_freedom_allocation_table.hpp:88</div></div>
 <div class="ttc" id="anamespaceopenturbine_html_ac49461f4e15c88f90f8383dffa5ac51b"><div class="ttname"><a href="namespaceopenturbine.html#ac49461f4e15c88f90f8383dffa5ac51b">openturbine::count_active_dofs</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION size_t count_active_dofs(FreedomSignature x)</div><div class="ttdoc">Counts the number of active degrees of freedom in a signature.</div><div class="ttdef"><b>Definition</b> freedom_signature.hpp:45</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac4a0c4b14f459d6be7082dd819d5e15cad777bc3d604905978e7e68786d91dd67"><div class="ttname"><a href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15cad777bc3d604905978e7e68786d91dd67">openturbine::FreedomSignature::NoComponents</a></div><div class="ttdeci">@ NoComponents</div></div>
 <div class="ttc" id="astate_8hpp_html"><div class="ttname"><a href="state_8hpp.html">state.hpp</a></div></div>
 <div class="ttc" id="astructopenturbine_1_1AssembleNodeFreedomMapTable__Beams_html"><div class="ttname"><a href="structopenturbine_1_1AssembleNodeFreedomMapTable__Beams.html">openturbine::AssembleNodeFreedomMapTable_Beams</a></div><div class="ttdef"><b>Definition</b> assemble_node_freedom_allocation_table.hpp:12</div></div>
 <div class="ttc" id="astructopenturbine_1_1AssembleNodeFreedomMapTable__Beams_html_a44dcaac794b98573801a400f8268a10b"><div class="ttname"><a href="structopenturbine_1_1AssembleNodeFreedomMapTable__Beams.html#a44dcaac794b98573801a400f8268a10b">openturbine::AssembleNodeFreedomMapTable_Beams::node_state_indices</a></div><div class="ttdeci">Kokkos::View&lt; size_t ** &gt;::const_type node_state_indices</div><div class="ttdef"><b>Definition</b> assemble_node_freedom_allocation_table.hpp:14</div></div>
