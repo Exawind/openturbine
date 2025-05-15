@@ -30,7 +30,10 @@ static const size_t InvalidNodeID(0U);
 
 /// @brief Compute freedom tables for state, elements, and constraints, then construct and return
 /// solver.
-[[nodiscard]] inline Solver CreateSolver(
+template <
+    typename DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
+[[nodiscard]] inline Solver<DeviceType> CreateSolver(
     State& state, Elements& elements, Constraints& constraints
 ) {
     assemble_node_freedom_allocation_table(state, elements, constraints);
@@ -413,9 +416,13 @@ public:
     }
 
     // Returns a State, Elements, Constraints, and Solver object initialized from the model
-    [[nodiscard]] std::tuple<State, Elements, Constraints, Solver> CreateSystemWithSolver() const {
+    template <
+        typename DeviceType = Kokkos::Device<
+            Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
+    [[nodiscard]] std::tuple<State, Elements, Constraints, Solver<DeviceType>>
+    CreateSystemWithSolver() const {
         auto [state, elements, constraints] = this->CreateSystem();
-        auto solver = CreateSolver(state, elements, constraints);
+        auto solver = CreateSolver<DeviceType>(state, elements, constraints);
         return {state, elements, constraints, solver};
     }
 

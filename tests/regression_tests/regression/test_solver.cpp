@@ -93,7 +93,7 @@ inline void SetUpSolverAndAssemble() {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     auto u_rot = RotationVectorToQuaternion({0., 0., omega * step_size});
     auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
@@ -323,7 +323,7 @@ inline void SetupAndTakeNoSteps() {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     auto u_rot = RotationVectorToQuaternion({0., 0., omega * step_size});
     auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
@@ -521,7 +521,7 @@ inline auto SetupAndTakeTwoSteps() {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
     constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});

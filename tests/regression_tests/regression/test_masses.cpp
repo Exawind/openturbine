@@ -112,7 +112,7 @@ TEST(MassesTest, ExternalForce) {
     auto constraints = model.CreateConstraints();
     auto elements = model.CreateElements();
 
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     const auto force_x = 5.;
     const auto torque_y = 3.;
