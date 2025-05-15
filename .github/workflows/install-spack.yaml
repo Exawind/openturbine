@@ -28,7 +28,7 @@ jobs:
         cd openturbine
         git checkout ${{ github.head_ref || github.ref_name}}
         spack install
-        cd openturbine/tests/documentation_tests/floating_platform
+        cd tests/documentation_tests/floating_platform
         mkdir build
         cd build
         spack build-env openturbine -- bash
