@@ -34,7 +34,7 @@ public:
         : model(Model(solution_input.gravity)),
           blade(blade_input, model),
           state(model.CreateState()),
-          elements(model.CreateElements()),
+          elements(model.CreateElements<DeviceType>()),
           constraints(model.CreateConstraints()),
           parameters(
               solution_input.dynamic_solve, solution_input.max_iter, solution_input.time_step,
@@ -107,10 +107,11 @@ public:
     }
 
 private:
-    Model model;                ///< OpenTurbine class for model construction
-    components::Blade blade;    ///< Blade model input/output data
-    State state;                ///< OpenTurbine class for storing system state
-    Elements elements;          ///< OpenTurbine class for model elements (beams, masses, springs)
+    Model model;              ///< OpenTurbine class for model construction
+    components::Blade blade;  ///< Blade model input/output data
+    State state;              ///< OpenTurbine class for storing system state
+    Elements<DeviceType>
+        elements;               ///< OpenTurbine class for model elements (beams, masses, springs)
     Constraints constraints;    ///< OpenTurbine class for constraints tying elements together
     StepParameters parameters;  ///< OpenTurbine class containing solution parameters
     Solver<DeviceType> solver;  ///< OpenTurbine class for solving the dynamic system

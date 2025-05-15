@@ -14,7 +14,7 @@ namespace openturbine {
 
 template <typename DeviceType>
 inline void AssembleSystemMatrix(
-    StepParameters& parameters, Solver<DeviceType>& solver, Elements& elements
+    StepParameters& parameters, Solver<DeviceType>& solver, Elements<DeviceType>& elements
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System Matrix");
 

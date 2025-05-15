@@ -45,7 +45,7 @@ public:
     State state;
 
     /// @brief  OpenTurbine class for model elements (beams, masses, springs)
-    Elements elements;
+    Elements<DeviceType> elements;
 
     /// @brief  OpenTurbine class for constraints tying elements together
     Constraints constraints;
