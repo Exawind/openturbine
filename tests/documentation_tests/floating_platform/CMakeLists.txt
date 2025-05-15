@@ -18,6 +18,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package(OpenTurbine REQUIRED)
 find_package(KokkosKernels REQUIRED)
 find_package(KLU REQUIRED)
+find_package(LAPACK REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(NetCDF REQUIRED)
 
