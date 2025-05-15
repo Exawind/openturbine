@@ -6,6 +6,7 @@
 #include "solver/solver.hpp"
 #include "state/state.hpp"
 #include "step/predict_next_state.hpp"
+#include "step/reset_constraints.hpp"
 #include "step/step.hpp"
 #include "step/step_parameters.hpp"
 #include "step/update_constraint_variables.hpp"
@@ -103,6 +104,8 @@ inline void SetUpSolverAndAssemble() {
 
     // Predict the next state for the solver
     PredictNextState(parameters, state);
+    ResetConstraints(constraints);
+    ResetSolver(solver);
 
     // Update beam elements state from solvers
     UpdateSystemVariables(parameters, elements, state);

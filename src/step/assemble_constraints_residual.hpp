@@ -21,7 +21,8 @@ inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints
     Kokkos::parallel_for(
         "ContributeConstraintsSystemResidualToVector", constraints.num_constraints,
         ContributeConstraintsSystemResidualToVector{
-            constraints.target_node_freedom_table, constraints.system_residual_terms, solver.b
+            constraints.target_node_freedom_table, constraints.target_active_dofs,
+            constraints.system_residual_terms, solver.b
         }
     );
 
