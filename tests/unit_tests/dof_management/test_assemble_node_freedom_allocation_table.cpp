@@ -7,7 +7,7 @@ namespace openturbine::tests {
 TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithOneNode_NoMassNoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(1U);  // 1 node in the system
+    auto state = State<DeviceType>(1U);  // 1 node in the system
 
     auto beams = Beams<DeviceType>(1U, 1U, 1U);  // 1 beam element with 1 node per element
     Kokkos::deep_copy(beams.node_state_indices, 0U);
@@ -16,7 +16,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithOneNode_NoMassNoS
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -30,7 +30,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithOneNode_NoMassNoS
 TEST(TestAssembleNodeFreedomAllocationTable, OneMassElementWithOneNode_NoBeamNoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(1U);  // 1 node in the system
+    auto state = State<DeviceType>(1U);  // 1 node in the system
 
     auto beams = Beams<DeviceType>(0U, 0U, 0U);
     auto masses = Masses<DeviceType>(1U);  // 1 mass element with 1 node
@@ -38,7 +38,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneMassElementWithOneNode_NoBeamNoS
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -52,7 +52,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneMassElementWithOneNode_NoBeamNoS
 TEST(TestAssembleNodeFreedomAllocationTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(2U);  // 2 nodes in the system
+    auto state = State<DeviceType>(2U);  // 2 nodes in the system
 
     auto beams = Beams<DeviceType>(0U, 0U, 0U);
     auto masses = Masses<DeviceType>(0U);
@@ -67,7 +67,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneSpringElementWithTwoNodes_NoBeam
     Kokkos::deep_copy(springs.node_state_indices, mirror_node_state_indices);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -85,7 +85,7 @@ TEST(
 ) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(2U);  // 2 nodes in the system
+    auto state = State<DeviceType>(2U);  // 2 nodes in the system
 
     auto beams = Beams<DeviceType>(1U, 1U, 1U);  // 1 beam element with 1 node per element
     Kokkos::deep_copy(beams.node_state_indices, 0U);
@@ -95,7 +95,7 @@ TEST(
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -110,7 +110,7 @@ TEST(
 TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(2U);  // 2 nodes in the system
+    auto state = State<DeviceType>(2U);  // 2 nodes in the system
 
     auto beams = Beams<DeviceType>(1U, 2U, 1U);  // 1 beam element with 2 nodes per element
     constexpr auto host_node_state_indices_data = std::array{0UL, 1UL};
@@ -126,7 +126,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithTwoNodes_NoMassNo
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -141,7 +141,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithTwoNodes_NoMassNo
 TEST(TestAssembleNodeFreedomAllocationTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(2U);  // 2 nodes in the system
+    auto state = State<DeviceType>(2U);  // 2 nodes in the system
 
     auto beams = Beams<DeviceType>(2U, 1U, 1U);  // 2 beam elements with 1 node per element
     constexpr auto host_node_state_indices_data = std::array{0UL, 1UL};
@@ -157,7 +157,7 @@ TEST(TestAssembleNodeFreedomAllocationTable, TwoBeamElementsWithOneNode_NoMassNo
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -175,7 +175,7 @@ TEST(
 ) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(5U);  // 5 nodes in the system
+    auto state = State<DeviceType>(5U);  // 5 nodes in the system
 
     auto beams = Beams<DeviceType>(1U, 2U, 1U);  // 1 beam element with 2 nodes per element
     constexpr auto host_node_state_indices_data_beams = std::array{0UL, 1UL};
@@ -205,7 +205,7 @@ TEST(
 
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 

@@ -7,7 +7,7 @@ namespace openturbine::tests {
 TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_NoMassNoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(1U);
+    auto state = State<DeviceType>(1U);
     Kokkos::deep_copy(state.node_freedom_map_table, 0U);
 
     auto beams = Beams<DeviceType>(1U, 1U, 1U);
@@ -36,7 +36,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_NoMassNoSpring) {
 TEST(TestCreateElementFreedomTable, OneMassElementWithOneNode_NoBeamNoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(1U);
+    auto state = State<DeviceType>(1U);
     Kokkos::deep_copy(state.node_freedom_map_table, 0U);
 
     auto beams = Beams<DeviceType>(0U, 0U, 0U);
@@ -64,7 +64,7 @@ TEST(TestCreateElementFreedomTable, OneMassElementWithOneNode_NoBeamNoSpring) {
 TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(2U);
+    auto state = State<DeviceType>(2U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 3UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -109,7 +109,7 @@ TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
 TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(2U);
+    auto state = State<DeviceType>(2U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -157,7 +157,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
 TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWithOneNode_NoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(2U);
+    auto state = State<DeviceType>(2U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -201,7 +201,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
 TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(2U);
+    auto state = State<DeviceType>(2U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -249,7 +249,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
 TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(3U);
+    auto state = State<DeviceType>(3U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL, 12UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[3], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -307,7 +307,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSp
 TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_NoMassNoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(3U);
+    auto state = State<DeviceType>(3U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL, 12UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[3], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -365,7 +365,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_No
 TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWithOneNode_NoSpring) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(3U);
+    auto state = State<DeviceType>(3U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL, 12UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[3], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -424,7 +424,7 @@ TEST(
 ) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto state = State(4U);
+    auto state = State<DeviceType>(4U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL, 12UL, 15UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[4], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()

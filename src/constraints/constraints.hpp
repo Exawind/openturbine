@@ -22,47 +22,50 @@ namespace openturbine {
  * - Handling control signals and prescribed displacements
  * - Maintaining computational views for residuals and gradients
  */
+template <typename DeviceType>
 struct Constraints {
     size_t num_constraints;  //< Total number of constraints in the system
     size_t num_dofs;         //< Total number of degrees of freedom controlled by constraints
 
     // Constraint properties
-    Kokkos::View<ConstraintType*> type;       //< Type of each constraint
-    std::vector<double*> control_signal;      //< Control signal for each constraint
-    Kokkos::View<size_t*> base_node_index;    //< Index of the base node for each constraint
-    Kokkos::View<size_t*> target_node_index;  //< Index of the target node for each constraint
+    Kokkos::View<ConstraintType*, DeviceType> type;  //< Type of each constraint
+    std::vector<double*> control_signal;             //< Control signal for each constraint
+    Kokkos::View<size_t*, DeviceType>
+        base_node_index;  //< Index of the base node for each constraint
+    Kokkos::View<size_t*, DeviceType>
+        target_node_index;  //< Index of the target node for each constraint
 
     // DOF management
-    Kokkos::View<Kokkos::pair<size_t, size_t>*> row_range;
-    Kokkos::View<FreedomSignature*> base_node_freedom_signature;
-    Kokkos::View<FreedomSignature*> target_node_freedom_signature;
-    Kokkos::View<size_t*> base_active_dofs;
-    Kokkos::View<size_t*> target_active_dofs;
-    Kokkos::View<size_t* [6]> base_node_freedom_table;
-    Kokkos::View<size_t* [6]> target_node_freedom_table;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType> row_range;
+    Kokkos::View<FreedomSignature*, DeviceType> base_node_freedom_signature;
+    Kokkos::View<FreedomSignature*, DeviceType> target_node_freedom_signature;
+    Kokkos::View<size_t*, DeviceType> base_active_dofs;
+    Kokkos::View<size_t*, DeviceType> target_active_dofs;
+    Kokkos::View<size_t* [6], DeviceType> base_node_freedom_table;
+    Kokkos::View<size_t* [6], DeviceType> target_node_freedom_table;
 
     // Geometric configuration
-    Kokkos::View<double* [3]> X0;       //< Initial relative position
-    Kokkos::View<double* [3][3]> axes;  //< Rotation axes
+    Kokkos::View<double* [3], DeviceType> X0;       //< Initial relative position
+    Kokkos::View<double* [3][3], DeviceType> axes;  //< Rotation axes
 
     // State variables
-    Kokkos::View<double* [7]> input;   //< Current state input
-    Kokkos::View<double* [3]> output;  //< Current state output
-    Kokkos::View<double* [6]> lambda;
+    Kokkos::View<double* [7], DeviceType> input;   //< Current state input
+    Kokkos::View<double* [3], DeviceType> output;  //< Current state output
+    Kokkos::View<double* [6], DeviceType> lambda;
 
     // Host mirrors for CPU access
-    Kokkos::View<double* [7]>::HostMirror host_input;
-    Kokkos::View<double* [3]>::HostMirror host_output;
+    typename Kokkos::View<double* [7], DeviceType>::HostMirror host_input;
+    typename Kokkos::View<double* [3], DeviceType>::HostMirror host_output;
 
     // System contributions
-    Kokkos::View<double* [6]> residual_terms;
-    Kokkos::View<double* [6]> base_lambda_residual_terms;
-    Kokkos::View<double* [6]> target_lambda_residual_terms;
-    Kokkos::View<double* [6]> system_residual_terms;
-    Kokkos::View<double* [6][6]> base_gradient_terms;
-    Kokkos::View<double* [6][6]> target_gradient_terms;
-    Kokkos::View<double* [6][6]> base_gradient_transpose_terms;
-    Kokkos::View<double* [6][6]> target_gradient_transpose_terms;
+    Kokkos::View<double* [6], DeviceType> residual_terms;
+    Kokkos::View<double* [6], DeviceType> base_lambda_residual_terms;
+    Kokkos::View<double* [6], DeviceType> target_lambda_residual_terms;
+    Kokkos::View<double* [6], DeviceType> system_residual_terms;
+    Kokkos::View<double* [6][6], DeviceType> base_gradient_terms;
+    Kokkos::View<double* [6][6], DeviceType> target_gradient_terms;
+    Kokkos::View<double* [6][6], DeviceType> base_gradient_transpose_terms;
+    Kokkos::View<double* [6][6], DeviceType> target_gradient_transpose_terms;
 
     explicit Constraints(const std::vector<Constraint>& constraints, const std::vector<Node>& nodes)
         : num_constraints{constraints.size()},
