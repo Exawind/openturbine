@@ -10,7 +10,9 @@
 namespace openturbine {
 
 template <typename DeviceType>
-inline void UpdateConstraintVariables(State<DeviceType>& state, Constraints& constraints) {
+inline void UpdateConstraintVariables(
+    State<DeviceType>& state, Constraints<DeviceType>& constraints
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Constraint Variables");
 
     if (constraints.num_constraints == 0) {

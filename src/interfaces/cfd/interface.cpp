@@ -190,7 +190,7 @@ Interface::Interface(const InterfaceInput& input)
       turbine(CreateTurbine(input.turbine, model)),
       state(model.CreateState<DeviceType>()),
       elements(model.CreateElements<DeviceType>()),
-      constraints(model.CreateConstraints()),
+      constraints(model.CreateConstraints<DeviceType>()),
       parameters(true, input.max_iter, input.time_step, input.rho_inf),
       solver(CreateSolver<DeviceType>(state, elements, constraints)),
       state_save(CloneState(state)),
