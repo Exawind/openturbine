@@ -111,8 +111,9 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
     return platform;
 }
 
+template <typename DeviceType>
 void SetPlatformLoads(
-    const FloatingPlatform& platform, openturbine::interfaces::HostState& host_state
+    const FloatingPlatform& platform, openturbine::interfaces::HostState<DeviceType>& host_state
 ) {
     // Return if platform is not active
     if (!platform.active) {
@@ -160,8 +161,10 @@ Turbine CreateTurbine(const TurbineInput& input, Model& model) {
     };
 }
 
+template <typename DeviceType>
 void SetTurbineLoads(
-    const Turbine& turbine, openturbine::interfaces::HostState& host_state, State& state
+    const Turbine& turbine, openturbine::interfaces::HostState<DeviceType>& host_state,
+    State<DeviceType>& state
 ) {
     SetPlatformLoads(turbine.floating_platform, host_state);
     Kokkos::deep_copy(state.f, host_state.f);
@@ -185,9 +188,9 @@ void GetTurbineMotion(
 Interface::Interface(const InterfaceInput& input)
     : model(input.gravity),
       turbine(CreateTurbine(input.turbine, model)),
-      state(model.CreateState()),
+      state(model.CreateState<DeviceType>()),
       elements(model.CreateElements<DeviceType>()),
-      constraints(model.CreateConstraints()),
+      constraints(model.CreateConstraints<DeviceType>()),
       parameters(true, input.max_iter, input.time_step, input.rho_inf),
       solver(CreateSolver<DeviceType>(state, elements, constraints)),
       state_save(CloneState(state)),

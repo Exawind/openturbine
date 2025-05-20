@@ -11,7 +11,7 @@ namespace openturbine {
 
 template <typename DeviceType>
 inline void UpdateSystemVariablesBeams(
-    StepParameters& parameters, const Beams<DeviceType>& beams, State& state
+    StepParameters& parameters, const Beams<DeviceType>& beams, State<DeviceType>& state
 ) {
     const auto num_nodes = beams.max_elem_nodes;
     const auto num_qps = beams.max_elem_qps;

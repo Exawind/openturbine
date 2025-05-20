@@ -8,7 +8,8 @@
 
 namespace openturbine {
 
-inline void WriteStateToFile(std::ostream& output, const State& state) {
+template <typename DeviceType>
+inline void WriteStateToFile(std::ostream& output, const State<DeviceType>& state) {
     auto num_system_nodes = state.num_system_nodes;
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     output.write(reinterpret_cast<char*>(&num_system_nodes), sizeof(size_t));

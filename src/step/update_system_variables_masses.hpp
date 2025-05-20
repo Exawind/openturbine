@@ -10,7 +10,7 @@ namespace openturbine {
 
 template <typename DeviceType>
 inline void UpdateSystemVariablesMasses(
-    const StepParameters& parameters, const Masses<DeviceType>& masses, State& state
+    const StepParameters& parameters, const Masses<DeviceType>& masses, State<DeviceType>& state
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Update System Variables Masses");
 

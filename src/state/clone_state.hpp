@@ -4,8 +4,9 @@
 
 namespace openturbine {
 
-inline State CloneState(const State& old) {
-    auto clone = State(old.num_system_nodes);
+template <typename DeviceType>
+inline State<DeviceType> CloneState(const State<DeviceType>& old) {
+    auto clone = State<DeviceType>(old.num_system_nodes);
     Kokkos::deep_copy(clone.ID, old.ID);
     Kokkos::deep_copy(clone.node_freedom_allocation_table, old.node_freedom_allocation_table);
     Kokkos::deep_copy(clone.node_freedom_map_table, old.node_freedom_map_table);

@@ -15,7 +15,7 @@ namespace openturbine {
 
 template <typename DeviceType>
 inline void AssembleSystemResidual(
-    Solver<DeviceType>& solver, Elements<DeviceType>& elements, State& state
+    Solver<DeviceType>& solver, Elements<DeviceType>& elements, State<DeviceType>& state
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System Residual");
 

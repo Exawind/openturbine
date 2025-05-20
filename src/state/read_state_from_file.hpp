@@ -8,7 +8,8 @@
 
 namespace openturbine {
 
-inline void ReadStateFromFile(std::istream& input, State& state) {
+template <typename DeviceType>
+inline void ReadStateFromFile(std::istream& input, State<DeviceType>& state) {
     auto num_system_nodes = size_t{};
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     input.read(reinterpret_cast<char*>(&num_system_nodes), sizeof(size_t));
