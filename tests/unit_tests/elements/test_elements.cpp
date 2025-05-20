@@ -19,8 +19,8 @@ TEST(ElementsTest, ConstructorWithBeams) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(1U, 2U, 2U);  // 1 beam element with 2 nodes, 2 qps
-    auto masses = Masses(0U);                    // 0 mass elements
-    auto springs = Springs(0U);                  // 0 spring elements
+    auto masses = Masses<DeviceType>(0U);        // 0 mass elements
+    auto springs = Springs<DeviceType>(0U);      // 0 spring elements
     const auto elements = Elements<DeviceType>(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams.num_elems, 1);
@@ -32,8 +32,8 @@ TEST(ElementsTest, ConstructorWithMasses) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(0U, 0U, 0U);  // 0 beam elements
-    auto masses = Masses(1U);                    // 1 mass element
-    auto springs = Springs(0U);                  // 0 spring elements
+    auto masses = Masses<DeviceType>(1U);        // 1 mass element
+    auto springs = Springs<DeviceType>(0U);      // 0 spring elements
     const auto elements = Elements<DeviceType>(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams.num_elems, 0);
@@ -45,8 +45,8 @@ TEST(ElementsTest, ConstructorWithSprings) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(0U, 0U, 0U);  // 0 beam elements
-    auto masses = Masses(0U);                    // 0 mass elements
-    auto springs = Springs(1U);                  // 1 spring element
+    auto masses = Masses<DeviceType>(0U);        // 0 mass elements
+    auto springs = Springs<DeviceType>(1U);      // 1 spring element
     const auto elements = Elements<DeviceType>(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
     EXPECT_EQ(elements.beams.num_elems, 0);
@@ -58,8 +58,8 @@ TEST(ElementsTest, ConstructorWithBeamsMasses) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(1, 2, 2);  // 1 beam element with 2 nodes, 2 qps
-    auto masses = Masses(1);                  // 1 mass element
-    auto springs = Springs(0U);               // 0 spring elements
+    auto masses = Masses<DeviceType>(1);      // 1 mass element
+    auto springs = Springs<DeviceType>(0U);   // 0 spring elements
     const auto elements = Elements<DeviceType>(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
     EXPECT_EQ(elements.beams.num_elems, 1);
@@ -71,8 +71,8 @@ TEST(ElementsTest, ConstructorWithBeamsMassesSprings) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(1U, 2U, 2U);  // 1 beam element with 2 nodes, 2 qps
-    auto masses = Masses(1U);                    // 1 mass element
-    auto springs = Springs(1U);                  // 1 spring element
+    auto masses = Masses<DeviceType>(1U);        // 1 mass element
+    auto springs = Springs<DeviceType>(1U);      // 1 spring element
     const auto elements = Elements<DeviceType>(beams, masses, springs);
     EXPECT_EQ(elements.NumElementsInSystem(), 3U);
     EXPECT_EQ(elements.beams.num_elems, 1);
@@ -85,8 +85,8 @@ TEST(ElementsTest, NumberOfNodesPerElementBeams) {
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(2U, 3U, 2U);  // 2 beam elements with 3 nodes each
     Kokkos::deep_copy(beams.num_nodes_per_element, 3U);
-    auto masses = Masses(0U);
-    auto springs = Springs(0U);
+    auto masses = Masses<DeviceType>(0U);
+    auto springs = Springs<DeviceType>(0U);
     const auto elements = Elements<DeviceType>{beams, masses, springs};
 
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
@@ -102,8 +102,8 @@ TEST(ElementsTest, NumberOfNodesPerElementMasses) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(0U, 0U, 0U);
-    auto masses = Masses(3U);  // 3 mass elements
-    auto springs = Springs(0U);
+    auto masses = Masses<DeviceType>(3U);  // 3 mass elements
+    auto springs = Springs<DeviceType>(0U);
     const auto elements = Elements<DeviceType>{beams, masses, springs};
 
     EXPECT_EQ(elements.NumElementsInSystem(), 3);
@@ -121,8 +121,8 @@ TEST(ElementsTest, NumberofNodesPerElementSprings) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(0U, 0U, 0U);
-    auto masses = Masses(0U);
-    auto springs = Springs(3U);  // 3 spring elements
+    auto masses = Masses<DeviceType>(0U);
+    auto springs = Springs<DeviceType>(3U);  // 3 spring elements
     const auto elements = Elements<DeviceType>{beams, masses, springs};
 
     EXPECT_EQ(elements.NumElementsInSystem(), 3);
@@ -141,8 +141,8 @@ TEST(ElementsTest, NumberOfNodesPerElementBeamsMasses) {
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(2U, 4U, 2U);  // 2 beam elements with 4 nodes each
     Kokkos::deep_copy(beams.num_nodes_per_element, 4U);
-    auto masses = Masses(2U);    // 2 mass elements
-    auto springs = Springs(0U);  // 0 spring elements
+    auto masses = Masses<DeviceType>(2U);    // 2 mass elements
+    auto springs = Springs<DeviceType>(0U);  // 0 spring elements
     const auto elements = Elements<DeviceType>{beams, masses, springs};
 
     EXPECT_EQ(elements.NumElementsInSystem(), 4);
@@ -163,8 +163,8 @@ TEST(ElementsTest, NodeStateIndicesBeams) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(2U, 3U, 2U);  // 2 beam elements with 3 nodes each
-    auto masses = Masses(0U);
-    auto springs = Springs(0U);
+    auto masses = Masses<DeviceType>(0U);
+    auto springs = Springs<DeviceType>(0U);
 
     // Set up state indices for beam nodes: element 1: [0,1,2], element 2: [2,3,4]
     auto host_beam_indices = Kokkos::create_mirror_view(beams.node_state_indices);
@@ -195,8 +195,8 @@ TEST(ElementsTest, NodeStateIndicesMasses) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(0U, 0U, 0U);
-    auto masses = Masses(3U);  // 3 mass elements
-    auto springs = Springs(0U);
+    auto masses = Masses<DeviceType>(3U);  // 3 mass elements
+    auto springs = Springs<DeviceType>(0U);
 
     // Set up state indices for masses: [10, 20, 30]
     auto host_mass_indices = Kokkos::create_mirror_view(masses.state_indices);
@@ -220,8 +220,8 @@ TEST(ElementsTest, NodeStateIndicesSprings) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(0U, 0U, 0U);
-    auto masses = Masses(0U);
-    auto springs = Springs(1U);  // 1 spring element
+    auto masses = Masses<DeviceType>(0U);
+    auto springs = Springs<DeviceType>(1U);  // 1 spring element
 
     // Set up state indices for springs: [0,1]
     auto host_spring_indices = Kokkos::create_mirror_view(springs.node_state_indices);
@@ -241,8 +241,8 @@ TEST(ElementsTest, NodeStateIndicesBeamsMassesSprings) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto beams = Beams<DeviceType>(1U, 2U, 2U);  // 1 beam element with 2 nodes
-    auto masses = Masses(2U);                    // 2 mass elements
-    auto springs = Springs(1U);                  // 1 spring element
+    auto masses = Masses<DeviceType>(2U);        // 2 mass elements
+    auto springs = Springs<DeviceType>(1U);      // 1 spring element
 
     // Set up state indices for beam nodes: [0, 1]
     auto host_beam_indices = Kokkos::create_mirror_view(beams.node_state_indices);

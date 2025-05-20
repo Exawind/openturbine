@@ -9,7 +9,8 @@
 
 namespace openturbine {
 
-inline void CopyNodesToState(State& state, const std::vector<Node>& nodes) {
+template <typename DeviceType>
+inline void CopyNodesToState(State<DeviceType>& state, const std::vector<Node>& nodes) {
     auto host_id = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.ID);
     auto host_x0 = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.x0);
     auto host_q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);

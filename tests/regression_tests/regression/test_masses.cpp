@@ -33,11 +33,13 @@ inline auto SetUpMasses() {
                  }}
     );
 
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     // Initialize masses
-    auto masses = model.CreateMasses();
+    auto masses = model.CreateMasses<DeviceType>();
 
     // Create state
-    auto state = model.CreateState();
+    auto state = model.CreateState<DeviceType>();
 
     auto parameters = StepParameters(false, 0, 0., 0.);
     UpdateSystemVariablesMasses(parameters, masses, state);
@@ -99,17 +101,19 @@ TEST(MassesTest, ExternalForce) {
                  }}
     );
 
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     // Initialize masses
-    auto masses = model.CreateMasses();
+    auto masses = model.CreateMasses<DeviceType>();
 
     // Create state
-    auto state = model.CreateState();
+    auto state = model.CreateState<DeviceType>();
 
     // Create solution parameters
     const auto time_step = 0.001;
     auto parameters = StepParameters(true, 5, time_step, 0.0);
 
-    auto constraints = model.CreateConstraints();
+    auto constraints = model.CreateConstraints<DeviceType>();
     auto elements = model.CreateElements<
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>(
     );

@@ -32,7 +32,10 @@ void Compare(const T& field_1, const T& field_2) {
     }
 }
 
-void CompareStates(const openturbine::State& state_1, const openturbine::State& state_2) {
+template <typename DeviceType>
+void CompareStates(
+    const openturbine::State<DeviceType>& state_1, const openturbine::State<DeviceType>& state_2
+) {
     EXPECT_EQ(state_1.num_system_nodes, state_2.num_system_nodes);
     Compare(state_1.ID, state_2.ID);
     Compare(state_1.node_freedom_allocation_table, state_2.node_freedom_allocation_table);
@@ -48,9 +51,10 @@ void CompareStates(const openturbine::State& state_1, const openturbine::State& 
     Compare(state_1.tangent, state_2.tangent);
 }
 
-openturbine::State CreateTestState() {
+template <typename DeviceType>
+openturbine::State<DeviceType> CreateTestState() {
     constexpr auto num_system_nodes = 2UL;
-    auto state = openturbine::State(num_system_nodes);
+    auto state = openturbine::State<DeviceType>(num_system_nodes);
     Kokkos::deep_copy(state.ID, 1UL);
     Kokkos::deep_copy(
         state.node_freedom_allocation_table, openturbine::FreedomSignature::AllComponents
@@ -73,7 +77,9 @@ openturbine::State CreateTestState() {
 namespace openturbine::tests {
 
 TEST(CloneState, CloneState) {
-    auto state_1 = CreateTestState();
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state_1 = CreateTestState<DeviceType>();
     auto state_2 = CloneState(state_1);
 
     CompareStates(state_1, state_2);
