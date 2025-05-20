@@ -1,7 +1,7 @@
 var searchData=
 [
   ['packinternalstatetofile_0',['PackInternalStateToFile',['../namespaceopenturbine_1_1util.html#a200656442bd337d1e7ae645ccbf8d0d9',1,'openturbine::util']]],
-  ['parameters_1',['parameters',['../structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html#abadb7132493730a0f3851c8d8c39b17d',1,'openturbine::interfaces::components::SolutionInput::Parameters()'],['../classopenturbine_1_1cfd_1_1Interface.html#a5164868dbd5935dfd637a5a990e8877b',1,'openturbine::cfd::Interface::parameters']]],
+  ['parameters_1',['parameters',['../classopenturbine_1_1cfd_1_1Interface.html#a5164868dbd5935dfd637a5a990e8877b',1,'openturbine::cfd::Interface::parameters'],['../structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html#abadb7132493730a0f3851c8d8c39b17d',1,'openturbine::interfaces::components::SolutionInput::Parameters()']]],
   ['path_2',['path',['../classwindio_1_1Schema.html#a1583d4418da3ccccbcd8d15379e3a5fd',1,'windio.Schema.path'],['../classwindio_1_1Field.html#aeec042a40c37ba82c69f39672c1b96c7',1,'windio.Field.path']]],
   ['performleastsquaresfitting_3',['PerformLeastSquaresFitting',['../namespaceopenturbine.html#ad8684936dbf65ffcd95d6d760e5808f5',1,'openturbine']]],
   ['pitch_5factuator_5ftype_5freq_4',['pitch_actuator_type_req',['../structopenturbine_1_1util_1_1ControllerIO.html#a2399ee85baf71ed3ec563a44a7a19a9e',1,'openturbine::util::ControllerIO']]],

@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classopenturbine_1_1cfd_1_1Interface-members.html">List of all members</a>  </div>
@@ -176,6 +177,11 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="interface_8hpp_source.html">interface.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a81b75a0f31878f35234b3675d3659195" id="r_a81b75a0f31878f35234b3675d3659195"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a81b75a0f31878f35234b3675d3659195">DeviceType</a> = Kokkos::Device&lt; Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space &gt;</td></tr>
+<tr class="separator:a81b75a0f31878f35234b3675d3659195"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae4781e76ce13e8bf2a296e06e72a4467" id="r_ae4781e76ce13e8bf2a296e06e72a4467"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#ae4781e76ce13e8bf2a296e06e72a4467">Interface</a> (const <a class="el" href="structopenturbine_1_1cfd_1_1InterfaceInput.html">InterfaceInput</a> &amp;input)</td></tr>
@@ -219,9 +225,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a5164868dbd5935dfd637a5a990e8877b" id="r_a5164868dbd5935dfd637a5a990e8877b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a5164868dbd5935dfd637a5a990e8877b">parameters</a></td></tr>
 <tr class="memdesc:a5164868dbd5935dfd637a5a990e8877b"><td class="mdescLeft">&#160;</td><td class="mdescRight">OpenTurbine class containing solution parameters.  <br /></td></tr>
 <tr class="separator:a5164868dbd5935dfd637a5a990e8877b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d8e51ef3f08ceaa56b123cd7249911a" id="r_a8d8e51ef3f08ceaa56b123cd7249911a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a8d8e51ef3f08ceaa56b123cd7249911a">solver</a></td></tr>
-<tr class="memdesc:a8d8e51ef3f08ceaa56b123cd7249911a"><td class="mdescLeft">&#160;</td><td class="mdescRight">OpenTurbine class for solving the dynamic system.  <br /></td></tr>
-<tr class="separator:a8d8e51ef3f08ceaa56b123cd7249911a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1120ba6ba2a6da980d8385f203cb6cf8" id="r_a1120ba6ba2a6da980d8385f203cb6cf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; <a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a81b75a0f31878f35234b3675d3659195">DeviceType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a1120ba6ba2a6da980d8385f203cb6cf8">solver</a></td></tr>
+<tr class="memdesc:a1120ba6ba2a6da980d8385f203cb6cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">OpenTurbine class for solving the dynamic system.  <br /></td></tr>
+<tr class="separator:a1120ba6ba2a6da980d8385f203cb6cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a383f3952d7f04972148d0bacb0984ca4" id="r_a383f3952d7f04972148d0bacb0984ca4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a383f3952d7f04972148d0bacb0984ca4">state_save</a></td></tr>
 <tr class="memdesc:a383f3952d7f04972148d0bacb0984ca4"><td class="mdescLeft">&#160;</td><td class="mdescRight">OpenTurbine class state class for temporarily saving state.  <br /></td></tr>
 <tr class="separator:a383f3952d7f04972148d0bacb0984ca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -235,6 +241,21 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a9d2bf69b7af4f20e4b9c268a61378c14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional NetCDF output writer.  <br /></td></tr>
 <tr class="separator:a9d2bf69b7af4f20e4b9c268a61378c14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a81b75a0f31878f35234b3675d3659195" name="a81b75a0f31878f35234b3675d3659195"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81b75a0f31878f35234b3675d3659195">&#9670;&#160;</a></span>DeviceType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a81b75a0f31878f35234b3675d3659195">openturbine::cfd::Interface::DeviceType</a> =  Kokkos::Device&lt;Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae4781e76ce13e8bf2a296e06e72a4467" name="ae4781e76ce13e8bf2a296e06e72a4467"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae4781e76ce13e8bf2a296e06e72a4467">&#9670;&#160;</a></span>Interface()</h2>
@@ -492,14 +513,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a8d8e51ef3f08ceaa56b123cd7249911a" name="a8d8e51ef3f08ceaa56b123cd7249911a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d8e51ef3f08ceaa56b123cd7249911a">&#9670;&#160;</a></span>solver</h2>
+<a id="a1120ba6ba2a6da980d8385f203cb6cf8" name="a1120ba6ba2a6da980d8385f203cb6cf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1120ba6ba2a6da980d8385f203cb6cf8">&#9670;&#160;</a></span>solver</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a> openturbine::cfd::Interface::solver</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt;<a class="el" href="classopenturbine_1_1cfd_1_1Interface.html#a81b75a0f31878f35234b3675d3659195">DeviceType</a>&gt; openturbine::cfd::Interface::solver</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -304,8 +304,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6e450377b432a1de074a31957bf2baa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a897bac2b9e4f16426294fc9876e9ebdc" id="r_a897bac2b9e4f16426294fc9876e9ebdc"><td class="memItemLeft" align="right" valign="top">std::tuple&lt; <a class="el" href="structopenturbine_1_1State.html">State</a>, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a897bac2b9e4f16426294fc9876e9ebdc">CreateSystem</a> () const</td></tr>
 <tr class="separator:a897bac2b9e4f16426294fc9876e9ebdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13d9214ffc69a6fa6a2cf2881127a95c" id="r_a13d9214ffc69a6fa6a2cf2881127a95c"><td class="memItemLeft" align="right" valign="top">std::tuple&lt; <a class="el" href="structopenturbine_1_1State.html">State</a>, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a13d9214ffc69a6fa6a2cf2881127a95c">CreateSystemWithSolver</a> () const</td></tr>
-<tr class="separator:a13d9214ffc69a6fa6a2cf2881127a95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01c0ba7d7795c706029b4e5263f6f5b0" id="r_a01c0ba7d7795c706029b4e5263f6f5b0"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;&gt; </td></tr>
+<tr class="memitem:a01c0ba7d7795c706029b4e5263f6f5b0"><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; <a class="el" href="structopenturbine_1_1State.html">State</a>, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a01c0ba7d7795c706029b4e5263f6f5b0">CreateSystemWithSolver</a> () const</td></tr>
+<tr class="separator:a01c0ba7d7795c706029b4e5263f6f5b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct to define a turbine model with nodes, elements, and constraints. </p>
@@ -1026,17 +1027,19 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a13d9214ffc69a6fa6a2cf2881127a95c" name="a13d9214ffc69a6fa6a2cf2881127a95c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13d9214ffc69a6fa6a2cf2881127a95c">&#9670;&#160;</a></span>CreateSystemWithSolver()</h2>
+<a id="a01c0ba7d7795c706029b4e5263f6f5b0" name="a01c0ba7d7795c706029b4e5263f6f5b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01c0ba7d7795c706029b4e5263f6f5b0">&#9670;&#160;</a></span>CreateSystemWithSolver()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::tuple&lt; <a class="el" href="structopenturbine_1_1State.html">State</a>, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a> &gt; openturbine::Model::CreateSystemWithSolver </td>
+          <td class="memname">std::tuple&lt; <a class="el" href="structopenturbine_1_1State.html">State</a>, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &gt; openturbine::Model::CreateSystemWithSolver </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>

@@ -1,11 +1,11 @@
-.. meta::00d28e4170af3f51bc1cc0f89712a7818f97840f03e879dadab862dff7f5d8cd62b7b7eaae4b2f1ec834c99dc1ee92dfc8b0fb93f05c9f9bdc4d1b45b13892eb
+.. meta::0f92f46b934030abe23cc17cc628286dbd997e641db3fb6f3a9d25715ce3283807f36d1a6c0183445cbf8aa4f610b0402a2b0e39e8de23883d2e43a269e17f67
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::Solver Struct Reference
+.. title:: OpenTurbine API: openturbine::Solver&lt; DeviceType &gt; Struct Template Reference
 
-Solver Struct Reference
-=======================
+Solver&lt; DeviceType &gt; Struct Template Reference
+====================================================
 
 .. container:: doxygen-content
 

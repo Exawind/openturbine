@@ -11,7 +11,7 @@ var searchData=
   ['mass_5felement_5fid_8',['mass_element_id',['../structopenturbine_1_1cfd_1_1FloatingPlatform.html#a69a6e8ac4d6cd73440807dc4e4f95b9b',1,'openturbine::cfd::FloatingPlatform']]],
   ['mass_5fmatrix_9',['mass_matrix',['../structopenturbine_1_1interfaces_1_1components_1_1Section.html#a2ce24fb2e3c070d3a02efb209e5927cf',1,'openturbine::interfaces::components::Section::mass_matrix'],['../structopenturbine_1_1cfd_1_1FloatingPlatformInput.html#adf221bafa0aa3e2e4215272046fe9d42',1,'openturbine::cfd::FloatingPlatformInput::mass_matrix']]],
   ['masselement_10',['masselement',['../structopenturbine_1_1MassElement.html',1,'openturbine::MassElement'],['../structopenturbine_1_1MassElement.html#ad00c86d3b7ca9cf36b9a62353021f982',1,'openturbine::MassElement::MassElement()']]],
-  ['masses_11',['masses',['../structopenturbine_1_1Masses.html',1,'openturbine::Masses'],['../structopenturbine_1_1Elements.html#a27f60651f4679b1c2501f7f6a2db16aa',1,'openturbine::Elements::masses'],['../structopenturbine_1_1Masses.html#af67b1c81a51cfe4a2809a4b481c7faf0',1,'openturbine::Masses::Masses()']]],
+  ['masses_11',['masses',['../structopenturbine_1_1Masses.html',1,'openturbine::Masses'],['../structopenturbine_1_1Masses.html#af67b1c81a51cfe4a2809a4b481c7faf0',1,'openturbine::Masses::Masses()'],['../structopenturbine_1_1Elements.html#a27f60651f4679b1c2501f7f6a2db16aa',1,'openturbine::Elements::masses']]],
   ['masses_2ehpp_12',['masses.hpp',['../masses_8hpp.html',1,'']]],
   ['masses_5finput_2ehpp_13',['masses_input.hpp',['../masses__input_8hpp.html',1,'']]],
   ['massesinput_14',['massesinput',['../structopenturbine_1_1MassesInput.html',1,'openturbine::MassesInput'],['../structopenturbine_1_1MassesInput.html#a326399872ec836517c5a111690ab42f7',1,'openturbine::MassesInput::MassesInput()']]],
@@ -28,7 +28,7 @@ var searchData=
   ['meshdata_25',['meshdata',['../structopenturbine_1_1util_1_1MeshData.html',1,'openturbine::util::MeshData'],['../structopenturbine_1_1util_1_1MeshData.html#a6435a5c1fca2ac373c8e2eb65b5b4955',1,'openturbine::util::MeshData::MeshData(size_t n_nodes)'],['../structopenturbine_1_1util_1_1MeshData.html#a268591030ec3b56d608750160c8fb809',1,'openturbine::util::MeshData::MeshData(size_t n_mesh_pts, const std::vector&lt; Array_7 &gt; &amp;pos, const std::vector&lt; std::array&lt; float, 6 &gt; &gt; &amp;vel, const std::vector&lt; std::array&lt; float, 6 &gt; &gt; &amp;acc, const std::vector&lt; std::array&lt; float, 6 &gt; &gt; &amp;ld)']]],
   ['message_5farray_5fsize_26',['message_array_size',['../structopenturbine_1_1util_1_1ControllerIO.html#a0d1ed3eea697499f996f645f6e071059',1,'openturbine::util::ControllerIO']]],
   ['mkl_27',['MKL',['../namespaceopenturbine.html#ac0b08ab0fe95ca731068f06eae062b5ba6a8f79dd53a94059a5cdcd066199a06f',1,'openturbine']]],
-  ['model_28',['model',['../classopenturbine_1_1Model.html',1,'openturbine::Model'],['../classopenturbine_1_1cfd_1_1Interface.html#aed5e24cd06403b631820d65fe74d02a6',1,'openturbine::cfd::Interface::model'],['../classopenturbine_1_1Model.html#a3bccca2ab9795e08cc7ba7f12c0566d1',1,'openturbine::Model::Model(std::array&lt; double, 3 &gt; gravity)'],['../classopenturbine_1_1Model.html#a78cd86c47d200dcd53c357b66c9c4418',1,'openturbine::Model::Model()=default']]],
+  ['model_28',['model',['../classopenturbine_1_1Model.html',1,'openturbine::Model'],['../classopenturbine_1_1Model.html#a3bccca2ab9795e08cc7ba7f12c0566d1',1,'openturbine::Model::Model(std::array&lt; double, 3 &gt; gravity)'],['../classopenturbine_1_1Model.html#a78cd86c47d200dcd53c357b66c9c4418',1,'openturbine::Model::Model()=default'],['../classopenturbine_1_1cfd_1_1Interface.html#aed5e24cd06403b631820d65fe74d02a6',1,'openturbine::cfd::Interface::model']]],
   ['model_2ehpp_29',['model.hpp',['../model_8hpp.html',1,'']]],
   ['modify_5fname_30',['modify_name',['../namespacewindio.html#aec699dc0b2bc8bf889172a21d52bd5b4',1,'windio']]],
   ['modify_5fvariable_5fname_31',['modify_variable_name',['../namespacewindio.html#ae911df8d11908da457209829e84c7671',1,'windio']]],
@@ -37,5 +37,6 @@ var searchData=
   ['mooring_5flines_34',['mooring_lines',['../structopenturbine_1_1cfd_1_1FloatingPlatformInput.html#a4883a5484fcebe47c9e6dff57623d702',1,'openturbine::cfd::FloatingPlatformInput::mooring_lines'],['../structopenturbine_1_1cfd_1_1FloatingPlatform.html#a34467cbbcfefe54ff4c519abf93884f3',1,'openturbine::cfd::FloatingPlatform::mooring_lines']]],
   ['mooringline_35',['MooringLine',['../structopenturbine_1_1cfd_1_1MooringLine.html',1,'openturbine::cfd']]],
   ['mooringlineinput_36',['MooringLineInput',['../structopenturbine_1_1cfd_1_1MooringLineInput.html',1,'openturbine::cfd']]],
-  ['msl_5foffset_37',['msl_offset',['../structopenturbine_1_1util_1_1EnvironmentalConditions.html#a091889c051b6844b4ca24ea164ac1e8c',1,'openturbine::util::EnvironmentalConditions']]]
+  ['msl_5foffset_37',['msl_offset',['../structopenturbine_1_1util_1_1EnvironmentalConditions.html#a091889c051b6844b4ca24ea164ac1e8c',1,'openturbine::util::EnvironmentalConditions']]],
+  ['multivectortype_38',['MultiVectorType',['../structopenturbine_1_1Solver.html#a958fed469e2e4a1552848f6f3d1d20dc',1,'openturbine::Solver']]]
 ];

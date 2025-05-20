@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenTurbine API: openturbine::Solver Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>OpenTurbine API: openturbine::Solver&amp;lt; DeviceType &amp;gt; Struct Template Reference &mdash; OpenTurbine 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -70,7 +70,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">OpenTurbine API: openturbine::Solver Struct Reference</li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::Solver&amp;lt; DeviceType &amp;gt; Struct Template Reference</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/doxygen/html/structopenturbine_1_1Solver.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -80,8 +80,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="solver-struct-reference">
-<h1>Solver Struct Reference<a class="headerlink" href="#solver-struct-reference" title="Permalink to this heading"></a></h1>
+  <div class="section" id="solver-lt-devicetype-gt-struct-template-reference">
+<h1>Solver&amp;lt; DeviceType &amp;gt; Struct Template Reference<a class="headerlink" href="#solver-lt-devicetype-gt-struct-template-reference" title="Permalink to this heading"></a></h1>
 <div class="doxygen-content docutils container">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
@@ -90,7 +90,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>OpenTurbine API: openturbine::Solver Struct Reference</title>
+<title>OpenTurbine API: openturbine::Solver&lt; DeviceType &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -171,7 +171,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1Solver-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">openturbine::Solver Struct Reference</div></div>
+  <div class="headertitle"><div class="title">openturbine::Solver&lt; DeviceType &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -182,42 +182,43 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a85cb574ede3a2aa3035f1cc7c2d804d3" id="r_a85cb574ede3a2aa3035f1cc7c2d804d3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a85cb574ede3a2aa3035f1cc7c2d804d3">DeviceType</a> = Kokkos::Device&lt; Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space &gt;</td></tr>
-<tr class="separator:a85cb574ede3a2aa3035f1cc7c2d804d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf5a8404d835684b58091d34894e1e4f" id="r_adf5a8404d835684b58091d34894e1e4f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a> = double</td></tr>
-<tr class="separator:adf5a8404d835684b58091d34894e1e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1b1597783dd7725efda2dd19fd65520" id="r_ae1b1597783dd7725efda2dd19fd65520"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">IndexType</a> = int</td></tr>
-<tr class="separator:ae1b1597783dd7725efda2dd19fd65520"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15f307b4fb34ad362c8084061c10b97c" id="r_a15f307b4fb34ad362c8084061c10b97c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a15f307b4fb34ad362c8084061c10b97c">CrsMatrixType</a> = KokkosSparse::CrsMatrix&lt; <a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a>, <a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">IndexType</a>, <a class="el" href="structopenturbine_1_1Solver.html#a85cb574ede3a2aa3035f1cc7c2d804d3">DeviceType</a>, void, <a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">IndexType</a> &gt;</td></tr>
-<tr class="separator:a15f307b4fb34ad362c8084061c10b97c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f1b67aec4b0632e1a46dcec51ded3ce" id="r_a7f1b67aec4b0632e1a46dcec51ded3ce"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a7f1b67aec4b0632e1a46dcec51ded3ce">ValueType</a> = double</td></tr>
+<tr class="separator:a7f1b67aec4b0632e1a46dcec51ded3ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb3e4cd0314449d84d2f6681d20ed695" id="r_aeb3e4cd0314449d84d2f6681d20ed695"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#aeb3e4cd0314449d84d2f6681d20ed695">IndexType</a> = int</td></tr>
+<tr class="separator:aeb3e4cd0314449d84d2f6681d20ed695"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c7f1a00705835a68662269e9873d42b" id="r_a7c7f1a00705835a68662269e9873d42b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a7c7f1a00705835a68662269e9873d42b">CrsMatrixType</a> = KokkosSparse::CrsMatrix&lt; <a class="el" href="structopenturbine_1_1Solver.html#a7f1b67aec4b0632e1a46dcec51ded3ce">ValueType</a>, <a class="el" href="structopenturbine_1_1Solver.html#aeb3e4cd0314449d84d2f6681d20ed695">IndexType</a>, DeviceType, void, <a class="el" href="structopenturbine_1_1Solver.html#aeb3e4cd0314449d84d2f6681d20ed695">IndexType</a> &gt;</td></tr>
+<tr class="separator:a7c7f1a00705835a68662269e9873d42b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a958fed469e2e4a1552848f6f3d1d20dc" id="r_a958fed469e2e4a1552848f6f3d1d20dc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a958fed469e2e4a1552848f6f3d1d20dc">MultiVectorType</a> = Kokkos::View&lt; <a class="el" href="structopenturbine_1_1Solver.html#a7f1b67aec4b0632e1a46dcec51ded3ce">ValueType</a> *[1], Kokkos::LayoutLeft, DeviceType &gt;</td></tr>
+<tr class="separator:a958fed469e2e4a1552848f6f3d1d20dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a08f06bb93a37ed10d9f15e8208f87136" id="r_a08f06bb93a37ed10d9f15e8208f87136"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a08f06bb93a37ed10d9f15e8208f87136">Solver</a> (const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_IDs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_freedom_map_table, const Kokkos::View&lt; size_t * &gt;::const_type &amp;num_nodes_per_element, const Kokkos::View&lt; size_t ** &gt;::const_type &amp;node_state_indices, size_t num_constraint_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;base_active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;target_active_dofs, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_row_range)</td></tr>
-<tr class="memdesc:a08f06bb93a37ed10d9f15e8208f87136"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a sparse linear systems solver for OpenTurbine.  <br /></td></tr>
-<tr class="separator:a08f06bb93a37ed10d9f15e8208f87136"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae87c54a5079acccc809dffabe940a03d" id="r_ae87c54a5079acccc809dffabe940a03d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#ae87c54a5079acccc809dffabe940a03d">Solver</a> (const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_IDs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_freedom_map_table, const Kokkos::View&lt; size_t * &gt;::const_type &amp;num_nodes_per_element, const Kokkos::View&lt; size_t ** &gt;::const_type &amp;node_state_indices, size_t num_constraint_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;base_active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;target_active_dofs, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_row_range)</td></tr>
+<tr class="memdesc:ae87c54a5079acccc809dffabe940a03d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a sparse linear systems solver for OpenTurbine.  <br /></td></tr>
+<tr class="separator:ae87c54a5079acccc809dffabe940a03d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a330036d3be15c2d1606fde9d27efeb4e" id="r_a330036d3be15c2d1606fde9d27efeb4e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a330036d3be15c2d1606fde9d27efeb4e">num_system_nodes</a></td></tr>
-<tr class="separator:a330036d3be15c2d1606fde9d27efeb4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08fe489aaabd31d024466fb2c303d337" id="r_a08fe489aaabd31d024466fb2c303d337"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a08fe489aaabd31d024466fb2c303d337">num_system_dofs</a></td></tr>
-<tr class="separator:a08fe489aaabd31d024466fb2c303d337"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e82c81b713283dafbec92334277d596" id="r_a9e82c81b713283dafbec92334277d596"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a9e82c81b713283dafbec92334277d596">num_dofs</a></td></tr>
-<tr class="separator:a9e82c81b713283dafbec92334277d596"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5ba11a3dca6e62957d1b8c5b8b53ac1" id="r_ae5ba11a3dca6e62957d1b8c5b8b53ac1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html#a15f307b4fb34ad362c8084061c10b97c">CrsMatrixType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#ae5ba11a3dca6e62957d1b8c5b8b53ac1">A</a></td></tr>
-<tr class="separator:ae5ba11a3dca6e62957d1b8c5b8b53ac1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad99221c6c6665c6a050c4c20b1d01cd6" id="r_ad99221c6c6665c6a050c4c20b1d01cd6"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a> *[1], Kokkos::LayoutLeft &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#ad99221c6c6665c6a050c4c20b1d01cd6">b</a></td></tr>
-<tr class="separator:ad99221c6c6665c6a050c4c20b1d01cd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41a3d388aacd79a9a81a22f67e726797" id="r_a41a3d388aacd79a9a81a22f67e726797"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a> *[1], Kokkos::LayoutLeft &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a41a3d388aacd79a9a81a22f67e726797">x</a></td></tr>
-<tr class="separator:a41a3d388aacd79a9a81a22f67e726797"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9d6ffd3cceae22c4ae0b1782650af2c" id="r_aa9d6ffd3cceae22c4ae0b1782650af2c"><td class="memItemLeft" align="right" valign="top">HandleType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#aa9d6ffd3cceae22c4ae0b1782650af2c">handle</a></td></tr>
-<tr class="separator:aa9d6ffd3cceae22c4ae0b1782650af2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc295db202d6cbae3d3fc190a4e9a530" id="r_acc295db202d6cbae3d3fc190a4e9a530"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#acc295db202d6cbae3d3fc190a4e9a530">convergence_err</a></td></tr>
-<tr class="separator:acc295db202d6cbae3d3fc190a4e9a530"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55cb5e131453f3bc96cc0e774490ea8a" id="r_a55cb5e131453f3bc96cc0e774490ea8a"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a55cb5e131453f3bc96cc0e774490ea8a">num_system_nodes</a></td></tr>
+<tr class="separator:a55cb5e131453f3bc96cc0e774490ea8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cf96e14a7db65ee6bfe5e06a8efcbe5" id="r_a8cf96e14a7db65ee6bfe5e06a8efcbe5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a8cf96e14a7db65ee6bfe5e06a8efcbe5">num_system_dofs</a></td></tr>
+<tr class="separator:a8cf96e14a7db65ee6bfe5e06a8efcbe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f988dbc135915d928cefaf731fc4eec" id="r_a1f988dbc135915d928cefaf731fc4eec"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a1f988dbc135915d928cefaf731fc4eec">num_dofs</a></td></tr>
+<tr class="separator:a1f988dbc135915d928cefaf731fc4eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9010f358f89b5bb033be8affdced9ebf" id="r_a9010f358f89b5bb033be8affdced9ebf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html#a7c7f1a00705835a68662269e9873d42b">CrsMatrixType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a9010f358f89b5bb033be8affdced9ebf">A</a></td></tr>
+<tr class="separator:a9010f358f89b5bb033be8affdced9ebf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac73acaf2c31e2738f5e7ff737af0fdaf" id="r_ac73acaf2c31e2738f5e7ff737af0fdaf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html#a958fed469e2e4a1552848f6f3d1d20dc">MultiVectorType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#ac73acaf2c31e2738f5e7ff737af0fdaf">b</a></td></tr>
+<tr class="separator:ac73acaf2c31e2738f5e7ff737af0fdaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dd414eb0cd88db9ffe1e9d66670d5f0" id="r_a5dd414eb0cd88db9ffe1e9d66670d5f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html#a958fed469e2e4a1552848f6f3d1d20dc">MultiVectorType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a5dd414eb0cd88db9ffe1e9d66670d5f0">x</a></td></tr>
+<tr class="separator:a5dd414eb0cd88db9ffe1e9d66670d5f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bbf8bb8568e70fe91acc748f734fd1e" id="r_a3bbf8bb8568e70fe91acc748f734fd1e"><td class="memItemLeft" align="right" valign="top">HandleType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a3bbf8bb8568e70fe91acc748f734fd1e">handle</a></td></tr>
+<tr class="separator:a3bbf8bb8568e70fe91acc748f734fd1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54c589c877dc63dfab2029dc0f826889" id="r_a54c589c877dc63dfab2029dc0f826889"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#a54c589c877dc63dfab2029dc0f826889">convergence_err</a></td></tr>
+<tr class="separator:a54c589c877dc63dfab2029dc0f826889"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A linear systems solver for assembling and solving system matrices and constraints in OpenTurbine. This wraps Trilinos packages (Tpetra, Amesos2) for handling sparse matrix operations and linear systems solution. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename DeviceType&gt;<br />
+struct openturbine::Solver&lt; DeviceType &gt;</div><p>A linear systems solver for assembling and solving system matrices and constraints in OpenTurbine. This wraps Trilinos packages (Tpetra, Amesos2) for handling sparse matrix operations and linear systems solution. </p>
 <p>This solver manages the assembly and solution of linear systems arising from the generalized-alpha based time integration of the dynamic structural problem. The linear systems include:</p><ul>
 <li>System stiffness matrix (K)</li>
 <li>Tangent operator matrix (T)</li>
@@ -225,56 +226,64 @@ Public Attributes</h2></td></tr>
 <li>Combined system matrices for the complete structural problem </li>
 </ul>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a15f307b4fb34ad362c8084061c10b97c" name="a15f307b4fb34ad362c8084061c10b97c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15f307b4fb34ad362c8084061c10b97c">&#9670;&#160;</a></span>CrsMatrixType</h2>
+<a id="a7c7f1a00705835a68662269e9873d42b" name="a7c7f1a00705835a68662269e9873d42b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c7f1a00705835a68662269e9873d42b">&#9670;&#160;</a></span>CrsMatrixType</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#a15f307b4fb34ad362c8084061c10b97c">openturbine::Solver::CrsMatrixType</a> =  KokkosSparse::CrsMatrix&lt;<a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a>, <a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">IndexType</a>, <a class="el" href="structopenturbine_1_1Solver.html#a85cb574ede3a2aa3035f1cc7c2d804d3">DeviceType</a>, void, <a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">IndexType</a>&gt;</td>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::CrsMatrixType =  KokkosSparse::CrsMatrix&lt;<a class="el" href="structopenturbine_1_1Solver.html#a7f1b67aec4b0632e1a46dcec51ded3ce">ValueType</a>, <a class="el" href="structopenturbine_1_1Solver.html#aeb3e4cd0314449d84d2f6681d20ed695">IndexType</a>, DeviceType, void, <a class="el" href="structopenturbine_1_1Solver.html#aeb3e4cd0314449d84d2f6681d20ed695">IndexType</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a85cb574ede3a2aa3035f1cc7c2d804d3" name="a85cb574ede3a2aa3035f1cc7c2d804d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85cb574ede3a2aa3035f1cc7c2d804d3">&#9670;&#160;</a></span>DeviceType</h2>
+<a id="aeb3e4cd0314449d84d2f6681d20ed695" name="aeb3e4cd0314449d84d2f6681d20ed695"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb3e4cd0314449d84d2f6681d20ed695">&#9670;&#160;</a></span>IndexType</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#a85cb574ede3a2aa3035f1cc7c2d804d3">openturbine::Solver::DeviceType</a> =  Kokkos::Device&lt;Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;</td>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::IndexType =  int</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ae1b1597783dd7725efda2dd19fd65520" name="ae1b1597783dd7725efda2dd19fd65520"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1b1597783dd7725efda2dd19fd65520">&#9670;&#160;</a></span>IndexType</h2>
+<a id="a958fed469e2e4a1552848f6f3d1d20dc" name="a958fed469e2e4a1552848f6f3d1d20dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a958fed469e2e4a1552848f6f3d1d20dc">&#9670;&#160;</a></span>MultiVectorType</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#ae1b1597783dd7725efda2dd19fd65520">openturbine::Solver::IndexType</a> =  int</td>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::MultiVectorType =  Kokkos::View&lt;<a class="el" href="structopenturbine_1_1Solver.html#a7f1b67aec4b0632e1a46dcec51ded3ce">ValueType</a>* [1], Kokkos::LayoutLeft, DeviceType&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="adf5a8404d835684b58091d34894e1e4f" name="adf5a8404d835684b58091d34894e1e4f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf5a8404d835684b58091d34894e1e4f">&#9670;&#160;</a></span>ValueType</h2>
+<a id="a7f1b67aec4b0632e1a46dcec51ded3ce" name="a7f1b67aec4b0632e1a46dcec51ded3ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f1b67aec4b0632e1a46dcec51ded3ce">&#9670;&#160;</a></span>ValueType</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">openturbine::Solver::ValueType</a> =  double</td>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::ValueType =  double</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -282,17 +291,19 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a08f06bb93a37ed10d9f15e8208f87136" name="a08f06bb93a37ed10d9f15e8208f87136"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08f06bb93a37ed10d9f15e8208f87136">&#9670;&#160;</a></span>Solver()</h2>
+<a id="ae87c54a5079acccc809dffabe940a03d" name="ae87c54a5079acccc809dffabe940a03d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae87c54a5079acccc809dffabe940a03d">&#9670;&#160;</a></span>Solver()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">openturbine::Solver::Solver </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::Solver </td>
           <td>(</td>
           <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_IDs</em>, </td>
@@ -392,112 +403,128 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ae5ba11a3dca6e62957d1b8c5b8b53ac1" name="ae5ba11a3dca6e62957d1b8c5b8b53ac1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae5ba11a3dca6e62957d1b8c5b8b53ac1">&#9670;&#160;</a></span>A</h2>
+<a id="a9010f358f89b5bb033be8affdced9ebf" name="a9010f358f89b5bb033be8affdced9ebf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9010f358f89b5bb033be8affdced9ebf">&#9670;&#160;</a></span>A</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html#a15f307b4fb34ad362c8084061c10b97c">CrsMatrixType</a> openturbine::Solver::A</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html#a7c7f1a00705835a68662269e9873d42b">CrsMatrixType</a> <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::A</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ad99221c6c6665c6a050c4c20b1d01cd6" name="ad99221c6c6665c6a050c4c20b1d01cd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad99221c6c6665c6a050c4c20b1d01cd6">&#9670;&#160;</a></span>b</h2>
+<a id="ac73acaf2c31e2738f5e7ff737af0fdaf" name="ac73acaf2c31e2738f5e7ff737af0fdaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac73acaf2c31e2738f5e7ff737af0fdaf">&#9670;&#160;</a></span>b</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a>* [1], Kokkos::LayoutLeft&gt; openturbine::Solver::b</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html#a958fed469e2e4a1552848f6f3d1d20dc">MultiVectorType</a> <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::b</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="acc295db202d6cbae3d3fc190a4e9a530" name="acc295db202d6cbae3d3fc190a4e9a530"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc295db202d6cbae3d3fc190a4e9a530">&#9670;&#160;</a></span>convergence_err</h2>
+<a id="a54c589c877dc63dfab2029dc0f826889" name="a54c589c877dc63dfab2029dc0f826889"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54c589c877dc63dfab2029dc0f826889">&#9670;&#160;</a></span>convergence_err</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;double&gt; openturbine::Solver::convergence_err</td>
+          <td class="memname">std::vector&lt;double&gt; <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::convergence_err</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aa9d6ffd3cceae22c4ae0b1782650af2c" name="aa9d6ffd3cceae22c4ae0b1782650af2c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9d6ffd3cceae22c4ae0b1782650af2c">&#9670;&#160;</a></span>handle</h2>
+<a id="a3bbf8bb8568e70fe91acc748f734fd1e" name="a3bbf8bb8568e70fe91acc748f734fd1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bbf8bb8568e70fe91acc748f734fd1e">&#9670;&#160;</a></span>handle</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">HandleType openturbine::Solver::handle</td>
+          <td class="memname">HandleType <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::handle</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a9e82c81b713283dafbec92334277d596" name="a9e82c81b713283dafbec92334277d596"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e82c81b713283dafbec92334277d596">&#9670;&#160;</a></span>num_dofs</h2>
+<a id="a1f988dbc135915d928cefaf731fc4eec" name="a1f988dbc135915d928cefaf731fc4eec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f988dbc135915d928cefaf731fc4eec">&#9670;&#160;</a></span>num_dofs</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t openturbine::Solver::num_dofs</td>
+          <td class="memname">size_t <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::num_dofs</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a08fe489aaabd31d024466fb2c303d337" name="a08fe489aaabd31d024466fb2c303d337"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08fe489aaabd31d024466fb2c303d337">&#9670;&#160;</a></span>num_system_dofs</h2>
+<a id="a8cf96e14a7db65ee6bfe5e06a8efcbe5" name="a8cf96e14a7db65ee6bfe5e06a8efcbe5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cf96e14a7db65ee6bfe5e06a8efcbe5">&#9670;&#160;</a></span>num_system_dofs</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t openturbine::Solver::num_system_dofs</td>
+          <td class="memname">size_t <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::num_system_dofs</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a330036d3be15c2d1606fde9d27efeb4e" name="a330036d3be15c2d1606fde9d27efeb4e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a330036d3be15c2d1606fde9d27efeb4e">&#9670;&#160;</a></span>num_system_nodes</h2>
+<a id="a55cb5e131453f3bc96cc0e774490ea8a" name="a55cb5e131453f3bc96cc0e774490ea8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55cb5e131453f3bc96cc0e774490ea8a">&#9670;&#160;</a></span>num_system_nodes</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t openturbine::Solver::num_system_nodes</td>
+          <td class="memname">size_t <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::num_system_nodes</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a41a3d388aacd79a9a81a22f67e726797" name="a41a3d388aacd79a9a81a22f67e726797"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41a3d388aacd79a9a81a22f67e726797">&#9670;&#160;</a></span>x</h2>
+<a id="a5dd414eb0cd88db9ffe1e9d66670d5f0" name="a5dd414eb0cd88db9ffe1e9d66670d5f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5dd414eb0cd88db9ffe1e9d66670d5f0">&#9670;&#160;</a></span>x</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="structopenturbine_1_1Solver.html#adf5a8404d835684b58091d34894e1e4f">ValueType</a>* [1], Kokkos::LayoutLeft&gt; openturbine::Solver::x</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html#a958fed469e2e4a1552848f6f3d1d20dc">MultiVectorType</a> <a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::x</td>
         </tr>
       </table>
 </div><div class="memdoc">

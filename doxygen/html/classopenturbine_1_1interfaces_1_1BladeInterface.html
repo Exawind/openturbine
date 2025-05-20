@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classopenturbine_1_1interfaces_1_1BladeInterface-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">openturbine::interfaces::BladeInterface Class Reference</div></div>
@@ -178,6 +179,11 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="blade__interface_8hpp_source.html">blade_interface.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ab0088f328b82d67e74574857ef87ede4" id="r_ab0088f328b82d67e74574857ef87ede4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html#ab0088f328b82d67e74574857ef87ede4">DeviceType</a> = Kokkos::Device&lt; Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space &gt;</td></tr>
+<tr class="separator:ab0088f328b82d67e74574857ef87ede4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a57c578defbe211cf934ed551d9f7be40" id="r_a57c578defbe211cf934ed551d9f7be40"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html#a57c578defbe211cf934ed551d9f7be40">BladeInterface</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">components::SolutionInput</a> &amp;solution_input, const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BladeInput.html">components::BladeInput</a> &amp;blade_input)</td></tr>
@@ -205,7 +211,22 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface for blade simulation that manages state, solver, and components. </p>
 <p>This class represents the primary interface for simulating a WT blade, connecting the blade components with the solver and state management. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="ab0088f328b82d67e74574857ef87ede4" name="ab0088f328b82d67e74574857ef87ede4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0088f328b82d67e74574857ef87ede4">&#9670;&#160;</a></span>DeviceType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html#ab0088f328b82d67e74574857ef87ede4">openturbine::interfaces::BladeInterface::DeviceType</a> =  Kokkos::Device&lt;Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a57c578defbe211cf934ed551d9f7be40" name="a57c578defbe211cf934ed551d9f7be40"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a57c578defbe211cf934ed551d9f7be40">&#9670;&#160;</a></span>BladeInterface()</h2>
 

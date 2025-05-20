@@ -2,7 +2,7 @@ var searchData=
 [
   ['calculateaxes_0',['CalculateAxes',['../structopenturbine_1_1Constraints.html#ab77c274fe17eeb1116f550e29ad1e055',1,'openturbine::Constraints']]],
   ['calculatebaseinds_1',['CalculateBaseInds',['../structopenturbine_1_1ComputeConstraintsColInds.html#a27870815423bbea924090eafc2f25ac9',1,'openturbine::ComputeConstraintsColInds']]],
-  ['calculateconvergenceerror_2',['CalculateConvergenceError',['../namespaceopenturbine.html#a8b80f50a888bccb49c6c41a85044a4ca',1,'openturbine']]],
+  ['calculateconvergenceerror_2',['CalculateConvergenceError',['../namespaceopenturbine.html#abcd44d000e14079511d0f93d31ac82c9',1,'openturbine']]],
   ['calculatedistancecomponents_3',['CalculateDistanceComponents',['../namespaceopenturbine_1_1springs.html#a5834961918b01e68694918672a051e75',1,'openturbine::springs']]],
   ['calculateeta_4',['CalculateEta',['../namespaceopenturbine_1_1masses.html#adf8a1387f77bae207996f568f1b4260c',1,'openturbine::masses']]],
   ['calculatefixedbc3dofconstraint_5',['CalculateFixedBC3DOFConstraint',['../namespaceopenturbine.html#a7dbbbc9ec8fb3dc16dcba1e5b9feae96',1,'openturbine']]],
@@ -71,12 +71,12 @@ var searchData=
   ['createfloatingplatform_68',['CreateFloatingPlatform',['../namespaceopenturbine_1_1cfd.html#a9475283f20e477e14c9fed45f33528e4',1,'openturbine::cfd']]],
   ['createfullmatrix_69',['CreateFullMatrix',['../namespaceopenturbine.html#a8e904e4f4364f057d3dc3bd118408ab5',1,'openturbine']]],
   ['createmasses_70',['createmasses',['../classopenturbine_1_1Model.html#aa51349b556fe8e672d31f6c648c6f170',1,'openturbine::Model::CreateMasses()'],['../namespaceopenturbine.html#a6ca207a510f1203f25828fcac23e58dd',1,'openturbine::CreateMasses(const MassesInput &amp;masses_input, const std::vector&lt; Node &gt; &amp;nodes)']]],
-  ['createsolver_71',['CreateSolver',['../namespaceopenturbine.html#a42af80d85ffd0f7fc1f3ea81928540af',1,'openturbine']]],
+  ['createsolver_71',['CreateSolver',['../namespaceopenturbine.html#a5c8d4345db2af01b8ac8bd66be15679b',1,'openturbine']]],
   ['createsprings_72',['createsprings',['../classopenturbine_1_1Model.html#a7c75ce26779f671b45c67ecf358cd838',1,'openturbine::Model::CreateSprings()'],['../namespaceopenturbine.html#a5fa5ad5bb401e044e23069c2eebd4100',1,'openturbine::CreateSprings()']]],
   ['createstate_73',['CreateState',['../classopenturbine_1_1Model.html#a3673adf4c73fdd802f69d3063610f3af',1,'openturbine::Model']]],
   ['createsystem_74',['CreateSystem',['../classopenturbine_1_1Model.html#a897bac2b9e4f16426294fc9876e9ebdc',1,'openturbine::Model']]],
   ['createsystemmatrixfull_75',['CreateSystemMatrixFull',['../namespaceopenturbine.html#ad828f748bcad650272c61f59cd247669',1,'openturbine']]],
-  ['createsystemwithsolver_76',['CreateSystemWithSolver',['../classopenturbine_1_1Model.html#a13d9214ffc69a6fa6a2cf2881127a95c',1,'openturbine::Model']]],
+  ['createsystemwithsolver_76',['CreateSystemWithSolver',['../classopenturbine_1_1Model.html#a01c0ba7d7795c706029b4e5263f6f5b0',1,'openturbine::Model']]],
   ['createtrapezoidalquadrature_77',['CreateTrapezoidalQuadrature',['../namespaceopenturbine.html#abf227a76a63e51fdd3f8c22aae66bce3',1,'openturbine']]],
   ['createturbine_78',['CreateTurbine',['../namespaceopenturbine_1_1cfd.html#a82ac195aae999409d37792a37ae7f1f5',1,'openturbine::cfd']]],
   ['crossproduct_79',['crossproduct',['../namespaceopenturbine.html#a11e9b029e366a7f2939f8e4b6368e6f1',1,'openturbine::CrossProduct(const VectorType &amp;a, const VectorType &amp;b, const VectorType &amp;c)'],['../namespaceopenturbine.html#a2bfd501aea850989cf0b595ef1f1ff43',1,'openturbine::CrossProduct(const Array_3 &amp;a, const Array_3 &amp;b)']]]
