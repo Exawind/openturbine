@@ -136,7 +136,7 @@ TEST(RotorTest, IEA15Rotor) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
+    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Remove output directory for writing step data
     if (write_output) {
@@ -277,7 +277,7 @@ TEST(RotorTest, IEA15RotorHub) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
+    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Remove output directory for writing step data
     if (write_output) {
@@ -437,7 +437,7 @@ TEST(RotorTest, IEA15RotorController) {
 
     // Create solver, elements, constraints, and state
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
-    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
+    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Remove output directory for writing step data
     if (write_output) {

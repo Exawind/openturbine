@@ -189,7 +189,7 @@ Interface::Interface(const InterfaceInput& input)
       elements(model.CreateElements()),
       constraints(model.CreateConstraints()),
       parameters(true, input.max_iter, input.time_step, input.rho_inf),
-      solver(CreateSolver(state, elements, constraints)),
+      solver(CreateSolver<DeviceType>(state, elements, constraints)),
       state_save(CloneState(state)),
       host_state(state),
       output_writer_(nullptr) {
