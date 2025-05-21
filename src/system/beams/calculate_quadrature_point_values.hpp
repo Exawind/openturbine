@@ -46,10 +46,10 @@ struct CalculateQuadraturePointValues {
         const auto extra_component = num_nodes % width == 0U ? 0U : 1U;
         const auto simd_nodes = num_nodes / width + extra_component;
 
-        const auto qp_range = Kokkos::TeamThreadRange(member, num_qps);
-        const auto node_range = Kokkos::TeamThreadRange(member, num_nodes);
-        const auto node_squared_range = Kokkos::TeamThreadRange(member, num_nodes * num_nodes);
-        const auto node_squared_simd_range = Kokkos::TeamThreadRange(member, num_nodes * simd_nodes);
+        const auto qp_range = Kokkos::TeamVectorRange(member, num_qps);
+        const auto node_range = Kokkos::TeamVectorRange(member, num_nodes);
+        const auto node_squared_range = Kokkos::TeamVectorRange(member, num_nodes * num_nodes);
+        const auto node_squared_simd_range = Kokkos::TeamVectorRange(member, num_nodes * simd_nodes);
 
         const auto shape_interp =
             Kokkos::View<double**, Kokkos::LayoutLeft>(member.team_scratch(1), num_nodes, num_qps);
