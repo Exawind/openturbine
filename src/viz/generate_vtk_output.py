@@ -529,7 +529,7 @@ def main():
     """Main function to parse arguments and generate VTK files.
 
     Example usage:
-        python generate_vtk_output.py --netcdf_file blade_interface.nc
+        python generate_vtk_output.py blade_interface.nc
             --connectivity_file mesh_connectivity.yaml --output_dir vtk_output
 
     NOTE: Files are overwritten in the output directory if they already exist.
