@@ -16,11 +16,6 @@ project(
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 find_package(OpenTurbine REQUIRED)
-find_package(KokkosKernels REQUIRED)
-find_package(Amesos2 REQUIRED)
-find_package(yaml-cpp REQUIRED)
-find_package(MPI REQUIRED)
-find_package(NetCDF REQUIRED)
 
 add_executable(floating_platform)
 target_link_libraries(floating_platform PRIVATE OpenTurbine::openturbine_library)

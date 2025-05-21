@@ -19,28 +19,33 @@ namespace openturbine::interfaces {
  * efficient data transfer between device and host memory. It's primarily used for
  * the interfaces, I/O operations etc.
  */
+template <typename DeviceType>
 struct HostState {
     /// @brief Host local copy of current position
-    Kokkos::View<double* [7]>::HostMirror x;
+    typename Kokkos::View<double* [7], DeviceType>::HostMirror x;
 
     /// @brief Host local copy of current displacement
-    Kokkos::View<double* [7]>::HostMirror q;
+    typename Kokkos::View<double* [7], DeviceType>::HostMirror q;
 
     /// @brief Host local copy of current velocity
-    Kokkos::View<double* [6]>::HostMirror v;
+    typename Kokkos::View<double* [6], DeviceType>::HostMirror v;
 
     /// @brief Host local copy of current acceleration
-    Kokkos::View<double* [6]>::HostMirror vd;
+    typename Kokkos::View<double* [6], DeviceType>::HostMirror vd;
 
-    /// @brief Construct host state from state
-    explicit HostState(const State& state)
-        : x(Kokkos::create_mirror_view(state.x)),
-          q(Kokkos::create_mirror_view(state.q)),
-          v(Kokkos::create_mirror_view(state.v)),
-          vd(Kokkos::create_mirror_view(state.vd)) {}
+    /// @brief Host local copy of external forces
+    typename Kokkos::View<double* [6], DeviceType>::HostMirror f;
+
+    /// @brief  Construct host state from state
+    explicit HostState(const State<DeviceType>& state)
+        : x(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.x)),
+          q(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q)),
+          v(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.v)),
+          vd(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.vd)),
+          f(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.f)) {}
 
     /// @brief Copy state data to host state
-    void CopyFromState(const State& state) const {
+    void CopyFromState(const State<DeviceType>& state) const {
         Kokkos::deep_copy(this->x, state.x);
         Kokkos::deep_copy(this->q, state.q);
         Kokkos::deep_copy(this->v, state.v);

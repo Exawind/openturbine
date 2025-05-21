@@ -33,7 +33,8 @@ public:
     [[nodiscard]] OutputLocation GetLocation() const { return this->location_; }
 
     /// @brief Write node state outputs to NetCDF file at specified timestep
-    void WriteNodeOutputsAtTimestep(const HostState& host_state, size_t timestep) const {
+    template <typename DeviceType>
+    void WriteNodeOutputsAtTimestep(const HostState<DeviceType>& host_state, size_t timestep) const {
         if (!this->output_writer_) {
             return;
         }

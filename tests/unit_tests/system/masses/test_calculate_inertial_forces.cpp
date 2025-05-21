@@ -20,7 +20,7 @@ struct ExecuteCalculateInertialForces {
 
     KOKKOS_FUNCTION
     void operator()(size_t) const {
-        masses::CalculateInertialForce(
+        masses::CalculateInertialForce<Kokkos::DefaultExecutionSpace>(
             mass, u_ddot, omega, omega_dot, eta, eta_tilde, rho, omega_tilde, omega_dot_tilde, FI
         );
     }

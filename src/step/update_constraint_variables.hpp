@@ -9,7 +9,10 @@
 
 namespace openturbine {
 
-inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
+template <typename DeviceType>
+inline void UpdateConstraintVariables(
+    State<DeviceType>& state, Constraints<DeviceType>& constraints
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Constraint Variables");
 
     if (constraints.num_constraints == 0) {
@@ -18,9 +21,11 @@ inline void UpdateConstraintVariables(State& state, Constraints& constraints) {
 
     constraints.UpdateViews();
 
+    auto range_policy =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
     Kokkos::parallel_for(
-        "CalculateConstraintResidualGradient", constraints.num_constraints,
-        CalculateConstraintResidualGradient{
+        "CalculateConstraintResidualGradient", range_policy,
+        CalculateConstraintResidualGradient<DeviceType>{
             constraints.type, constraints.base_node_index, constraints.target_node_index,
             constraints.X0, constraints.axes, constraints.input, constraints.lambda, state.tangent,
             state.q, constraints.residual_terms, constraints.base_lambda_residual_terms,

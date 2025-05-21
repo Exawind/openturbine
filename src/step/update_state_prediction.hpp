@@ -12,12 +12,17 @@
 
 namespace openturbine {
 
-inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solver, State& state) {
+template <typename DeviceType>
+inline void UpdateStatePrediction(
+    StepParameters& parameters, const Solver<DeviceType>& solver, State<DeviceType>& state
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Update State Prediction");
+    auto range_policy =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes);
     if (parameters.is_dynamic_solve) {
         Kokkos::parallel_for(
-            "UpdateDynamicPrediction", solver.num_system_nodes,
-            UpdateDynamicPrediction{
+            "UpdateDynamicPrediction", range_policy,
+            UpdateDynamicPrediction<DeviceType>{
                 parameters.h,
                 parameters.beta_prime,
                 parameters.gamma_prime,
@@ -31,8 +36,8 @@ inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solv
         );
     } else {
         Kokkos::parallel_for(
-            "UpdateStaticPrediction", solver.num_system_nodes,
-            UpdateStaticPrediction{
+            "UpdateStaticPrediction", range_policy,
+            UpdateStaticPrediction<DeviceType>{
                 parameters.h,
                 state.node_freedom_allocation_table,
                 state.node_freedom_map_table,
@@ -43,8 +48,8 @@ inline void UpdateStatePrediction(StepParameters& parameters, const Solver& solv
     }
 
     Kokkos::parallel_for(
-        "CalculateDisplacement", solver.num_system_nodes,
-        CalculateDisplacement{
+        "CalculateDisplacement", range_policy,
+        CalculateDisplacement<DeviceType>{
             parameters.h,
             state.q_delta,
             state.q_prev,

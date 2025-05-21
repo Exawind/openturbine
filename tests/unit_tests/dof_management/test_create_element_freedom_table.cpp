@@ -5,16 +5,19 @@
 namespace openturbine::tests {
 
 TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_NoMassNoSpring) {
-    auto state = State(1U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(1U);
     Kokkos::deep_copy(state.node_freedom_map_table, 0U);
 
-    auto beams = Beams(1U, 1U, 1U);
+    auto beams = Beams<DeviceType>(1U, 1U, 1U);
     Kokkos::deep_copy(beams.node_state_indices, 0U);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
-    auto masses = Masses(0U);
-    auto springs = Springs(0U);
-    auto elements =
-        Elements{beams, masses, springs};  // 1 beam element + 0 mass elements + 0 spring elements
+    auto masses = Masses<DeviceType>(0U);
+    auto springs = Springs<DeviceType>(0U);
+    auto elements = Elements<DeviceType>{
+        beams, masses, springs
+    };  // 1 beam element + 0 mass elements + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
 
@@ -31,15 +34,18 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_NoMassNoSpring) {
 }
 
 TEST(TestCreateElementFreedomTable, OneMassElementWithOneNode_NoBeamNoSpring) {
-    auto state = State(1U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(1U);
     Kokkos::deep_copy(state.node_freedom_map_table, 0U);
 
-    auto beams = Beams(0U, 0U, 0U);
-    auto masses = Masses(1U);
+    auto beams = Beams<DeviceType>(0U, 0U, 0U);
+    auto masses = Masses<DeviceType>(1U);
     Kokkos::deep_copy(masses.state_indices, 0U);
-    auto springs = Springs(0U);
-    auto elements =
-        Elements{beams, masses, springs};  // 0 beam elements + 1 mass element + 0 spring elements
+    auto springs = Springs<DeviceType>(0U);
+    auto elements = Elements<DeviceType>{
+        beams, masses, springs
+    };  // 0 beam elements + 1 mass element + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
 
@@ -56,7 +62,9 @@ TEST(TestCreateElementFreedomTable, OneMassElementWithOneNode_NoBeamNoSpring) {
 }
 
 TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
-    auto state = State(2U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(2U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 3UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -66,9 +74,9 @@ TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
-    auto beams = Beams(0U, 0U, 0U);
-    auto masses = Masses(0U);
-    auto springs = Springs(1U);
+    auto beams = Beams<DeviceType>(0U, 0U, 0U);
+    auto masses = Masses<DeviceType>(0U);
+    auto springs = Springs<DeviceType>(1U);
     constexpr auto host_node_state_indices_data = std::array{0UL, 1UL};
     const auto host_node_state_indices =
         Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
@@ -77,8 +85,9 @@ TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
         Kokkos::create_mirror_view(Kokkos::WithoutInitializing, springs.node_state_indices);
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(springs.node_state_indices, mirror_node_state_indices);
-    auto elements =
-        Elements{beams, masses, springs};  // 0 beam elements + 0 mass elements + 1 spring element
+    auto elements = Elements<DeviceType>{
+        beams, masses, springs
+    };  // 0 beam elements + 0 mass elements + 1 spring element
 
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
 
@@ -98,7 +107,9 @@ TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
 }
 
 TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
-    auto state = State(2U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(2U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -108,7 +119,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
-    auto beams = Beams(1U, 2U, 1U);
+    auto beams = Beams<DeviceType>(1U, 2U, 1U);
     constexpr auto host_node_state_indices_data = std::array{0UL, 1UL};
     const auto host_node_state_indices =
         Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
@@ -118,10 +129,11 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
-    auto masses = Masses(0U);
-    auto springs = Springs(0U);
-    auto elements =
-        Elements{beams, masses, springs};  // 1 beam element + 0 mass elements + 0 spring elements
+    auto masses = Masses<DeviceType>(0U);
+    auto springs = Springs<DeviceType>(0U);
+    auto elements = Elements<DeviceType>{
+        beams, masses, springs
+    };  // 1 beam element + 0 mass elements + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
 
@@ -143,7 +155,9 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
 }
 
 TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWithOneNode_NoSpring) {
-    auto state = State(2U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(2U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -153,14 +167,15 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
-    auto beams = Beams(1U, 1U, 1U);
+    auto beams = Beams<DeviceType>(1U, 1U, 1U);
     Kokkos::deep_copy(beams.node_state_indices, 0U);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
-    auto masses = Masses(1U);
+    auto masses = Masses<DeviceType>(1U);
     Kokkos::deep_copy(masses.state_indices, 1U);
-    auto springs = Springs(0U);
-    auto elements =
-        Elements{beams, masses, springs};  // 1 beam element + 1 mass element + 0 spring elements
+    auto springs = Springs<DeviceType>(0U);
+    auto elements = Elements<DeviceType>{
+        beams, masses, springs
+    };  // 1 beam element + 1 mass element + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
 
@@ -184,7 +199,9 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
 }
 
 TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
-    auto state = State(2U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(2U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[2], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -194,7 +211,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
-    auto beams = Beams(2U, 1U, 1U);
+    auto beams = Beams<DeviceType>(2U, 1U, 1U);
     constexpr auto host_node_state_indices_data = std::array{0UL, 1UL};
     const auto host_node_state_indices =
         Kokkos::View<size_t[2][1], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
@@ -204,10 +221,11 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
-    auto masses = Masses(0U);
-    auto springs = Springs(0U);
-    auto elements =
-        Elements{beams, masses, springs};  // 2 beam elements + 0 mass elements + 0 spring elements
+    auto masses = Masses<DeviceType>(0U);
+    auto springs = Springs<DeviceType>(0U);
+    auto elements = Elements<DeviceType>{
+        beams, masses, springs
+    };  // 2 beam elements + 0 mass elements + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
 
@@ -229,7 +247,9 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
 }
 
 TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSpring) {
-    auto state = State(3U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(3U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL, 12UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[3], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -239,7 +259,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSp
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
-    auto beams = Beams(2U, 2U, 1U);
+    auto beams = Beams<DeviceType>(2U, 2U, 1U);
     constexpr auto host_node_state_indices_data = std::array{0UL, 1UL, 1UL, 2UL};
     const auto host_node_state_indices =
         Kokkos::View<size_t[2][2], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
@@ -249,10 +269,11 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSp
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
-    auto masses = Masses(0U);
-    auto springs = Springs(0U);
-    auto elements =
-        Elements{beams, masses, springs};  // 2 beam elements + 0 mass elements + 0 spring elements
+    auto masses = Masses<DeviceType>(0U);
+    auto springs = Springs<DeviceType>(0U);
+    auto elements = Elements<DeviceType>{
+        beams, masses, springs
+    };  // 2 beam elements + 0 mass elements + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
 
@@ -284,7 +305,9 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSp
 }
 
 TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_NoMassNoSpring) {
-    auto state = State(3U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(3U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL, 12UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[3], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -294,7 +317,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_No
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
-    auto beams = Beams(2U, 2U, 1U);
+    auto beams = Beams<DeviceType>(2U, 2U, 1U);
     constexpr auto host_node_state_indices_data = std::array{1UL, 2UL, 0UL, 1UL};
     const auto host_node_state_indices =
         Kokkos::View<size_t[2][2], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
@@ -304,10 +327,11 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_No
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 2U);
-    auto masses = Masses(0U);
-    auto springs = Springs(0U);
-    auto elements =
-        Elements{beams, masses, springs};  // 2 beam elements + 0 mass elements + 0 spring elements
+    auto masses = Masses<DeviceType>(0U);
+    auto springs = Springs<DeviceType>(0U);
+    auto elements = Elements<DeviceType>{
+        beams, masses, springs
+    };  // 2 beam elements + 0 mass elements + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
 
@@ -339,7 +363,9 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_No
 }
 
 TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWithOneNode_NoSpring) {
-    auto state = State(3U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(3U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL, 12UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[3], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -349,7 +375,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
-    auto beams = Beams(2U, 1U, 1U);
+    auto beams = Beams<DeviceType>(2U, 1U, 1U);
     constexpr auto host_node_state_indices_data = std::array{0UL, 1UL};
     const auto host_node_state_indices =
         Kokkos::View<size_t[2][1], Kokkos::HostSpace>::const_type(host_node_state_indices_data.data()
@@ -359,11 +385,12 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(beams.node_state_indices, mirror_node_state_indices);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
-    auto masses = Masses(1U);
+    auto masses = Masses<DeviceType>(1U);
     Kokkos::deep_copy(masses.state_indices, 2U);
-    auto springs = Springs(0U);
-    auto elements =
-        Elements{beams, masses, springs};  // 2 beam elements + 1 mass element + 0 spring elements
+    auto springs = Springs<DeviceType>(0U);
+    auto elements = Elements<DeviceType>{
+        beams, masses, springs
+    };  // 2 beam elements + 1 mass element + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 3);
 
@@ -395,7 +422,9 @@ TEST(
     TestCreateElementFreedomTable,
     OneBeamElementWithOneNode_OneMassElementWithOneNode_OneSpringElementWithTwoNodes
 ) {
-    auto state = State(4U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(4U);
     constexpr auto host_node_freedom_map_table_data = std::array{0UL, 6UL, 12UL, 15UL};
     const auto host_node_freedom_map_table = Kokkos::View<size_t[4], Kokkos::HostSpace>::const_type(
         host_node_freedom_map_table_data.data()
@@ -405,14 +434,14 @@ TEST(
     Kokkos::deep_copy(mirror_node_freedom_map_table, host_node_freedom_map_table);
     Kokkos::deep_copy(state.node_freedom_map_table, mirror_node_freedom_map_table);
 
-    auto beams = Beams(1U, 1U, 1U);
+    auto beams = Beams<DeviceType>(1U, 1U, 1U);
     Kokkos::deep_copy(beams.node_state_indices, 0U);
     Kokkos::deep_copy(beams.num_nodes_per_element, 1U);
 
-    auto masses = Masses(1U);
+    auto masses = Masses<DeviceType>(1U);
     Kokkos::deep_copy(masses.state_indices, 1U);
 
-    auto springs = Springs(1U);
+    auto springs = Springs<DeviceType>(1U);
     constexpr auto host_spring_node_indices_data = std::array{2UL, 3UL};
     const auto host_spring_node_indices = Kokkos::View<size_t[1][2], Kokkos::HostSpace>::const_type(
         host_spring_node_indices_data.data()
@@ -422,7 +451,8 @@ TEST(
     Kokkos::deep_copy(mirror_spring_node_indices, host_spring_node_indices);
     Kokkos::deep_copy(springs.node_state_indices, mirror_spring_node_indices);
 
-    auto elements = Elements{beams, masses, springs};  // 1 beam + 1 mass + 1 spring element
+    auto elements =
+        Elements<DeviceType>{beams, masses, springs};  // 1 beam + 1 mass + 1 spring element
 
     EXPECT_EQ(elements.NumElementsInSystem(), 3);
 

@@ -7,7 +7,7 @@
 # Note that many systems have CUDA already built and properly configured.  If this
 # is the case for you, make sure that all modules are loaded and paths set correctly.
 # You may have to manually set some of this for Spack configuration.
-# You may also need to add the cuda_arch option for your platform to the Spack spec 
+# You may also need to add the cuda_arch option for your platform to the Spack spec
 # for Trilinos.
 # -----------------------------------------------------------------------------
 
@@ -50,11 +50,14 @@ install_if_missing() {
 
 install_if_missing googletest
 install_if_missing yaml-cpp
-install_if_missing "trilinos@16.0.0~mpi~epetra+cuda+basker ^kokkos-kernels+blas+lapack"
+install_if_missing kokkos+cuda
+install_if_missing kokkos-kernels+cuda+cusparse+cublas
+install_if_missing netcdf-c
+install_if_missing lapack
 #install_if_missing cppcheck # add if CppCheck is needed
 #install_if_missing llvm # add if clang-tidy is needed
 
-spack load trilinos googletest yaml-cpp #llvm cppcheck
+spack load kokkos kokkos-kernels netdcf-c suite-sparse lapack googletest yaml-cpp #llvm vtk cppcheck
 
 # Build OpenTurbine with the specified options
 mkdir -p build-from-script
@@ -64,6 +67,7 @@ cmake .. \
   -DOpenTurbine_WRITE_OUTPUTS=ON \
   -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
   -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
+  -DOpenTurbine_ENABLE_CUSOLVERSP=ON \
   -DCMAKE_BUILD_TYPE="Release"
 
 cmake --build .

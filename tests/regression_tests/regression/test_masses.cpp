@@ -3,7 +3,6 @@
 #include "elements/elements.hpp"
 #include "elements/masses/create_masses.hpp"
 #include "model/model.hpp"
-#include "state/set_node_external_loads.hpp"
 #include "state/state.hpp"
 #include "step/step.hpp"
 #include "step/update_system_variables.hpp"
@@ -34,11 +33,13 @@ inline auto SetUpMasses() {
                  }}
     );
 
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     // Initialize masses
-    auto masses = model.CreateMasses();
+    auto masses = model.CreateMasses<DeviceType>();
 
     // Create state
-    auto state = model.CreateState();
+    auto state = model.CreateState<DeviceType>();
 
     auto parameters = StepParameters(false, 0, 0., 0.);
     UpdateSystemVariablesMasses(parameters, masses, state);
@@ -100,24 +101,31 @@ TEST(MassesTest, ExternalForce) {
                  }}
     );
 
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     // Initialize masses
-    auto masses = model.CreateMasses();
+    auto masses = model.CreateMasses<DeviceType>();
 
     // Create state
-    auto state = model.CreateState();
+    auto state = model.CreateState<DeviceType>();
 
     // Create solution parameters
     const auto time_step = 0.001;
     auto parameters = StepParameters(true, 5, time_step, 0.0);
 
-    auto constraints = model.CreateConstraints();
-    auto elements = model.CreateElements();
+    auto constraints = model.CreateConstraints<DeviceType>();
+    auto elements = model.CreateElements<
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>(
+    );
 
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     const auto force_x = 5.;
     const auto torque_y = 3.;
-    SetNodeExternalLoads(state, node_id, {force_x, 0., 0., 0., torque_y, 0.});
+    auto host_f = Kokkos::create_mirror_view(state.f);
+    host_f(node_id, 0) = force_x;
+    host_f(node_id, 4) = torque_y;
+    Kokkos::deep_copy(state.f, host_f);
 
     // Run simulation for 1000 steps
     const auto n_steps = 1000;

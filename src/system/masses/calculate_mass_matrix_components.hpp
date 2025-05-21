@@ -6,9 +6,10 @@
 
 namespace openturbine::masses {
 
-KOKKOS_FUNCTION
-inline void CalculateEta(
-    const Kokkos::View<double[6][6]>::const_type& Muu, const Kokkos::View<double[3]>& eta
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION void CalculateEta(
+    const typename Kokkos::View<double[6][6], DeviceType>::const_type& Muu,
+    const Kokkos::View<double[3], DeviceType>& eta
 ) {
     const auto m = Muu(0, 0);
 
@@ -17,9 +18,10 @@ inline void CalculateEta(
     eta(2) = Muu(4, 0) / m;
 }
 
-KOKKOS_FUNCTION
-inline void CalculateRho(
-    const Kokkos::View<double[6][6]>::const_type& Muu, const Kokkos::View<double[3][3]>& rho
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION void CalculateRho(
+    const typename Kokkos::View<double[6][6], DeviceType>::const_type& Muu,
+    const Kokkos::View<double[3][3], DeviceType>& rho
 ) {
     for (auto i = 0U; i < 3U; ++i) {
         for (auto j = 0U; j < 3U; ++j) {

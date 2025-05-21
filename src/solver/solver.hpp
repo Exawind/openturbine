@@ -28,10 +28,9 @@ namespace openturbine {
  *   - Constraint matrices (B and B_t)
  *   - Combined system matrices for the complete structural problem
  */
+template <typename DeviceType>
 struct Solver {
     // Define some types for the solver to make the code more readable
-    using DeviceType =
-        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     using ValueType = double;
 #if defined(OpenTurbine_ENABLE_MKL) && !defined(KOKKOS_ENABLE_CUDA)
     using IndexType = MKL_INT;
@@ -39,6 +38,7 @@ struct Solver {
     using IndexType = int;
 #endif
     using CrsMatrixType = KokkosSparse::CrsMatrix<ValueType, IndexType, DeviceType, void, IndexType>;
+    using MultiVectorType = Kokkos::View<ValueType* [1], Kokkos::LayoutLeft, DeviceType>;
 #ifdef KOKKOS_ENABLE_CUDA
 #if defined(OpenTurbine_ENABLE_CUDSS)
     using HandleType = DSSHandle<DSSAlgorithm::CUDSS>;
@@ -85,9 +85,9 @@ struct Solver {
     size_t num_system_dofs;   //< Number of system degrees of freedom
     size_t num_dofs;          //< Number of degrees of freedom
 
-    CrsMatrixType A;                                     //< System matrix
-    Kokkos::View<ValueType* [1], Kokkos::LayoutLeft> b;  //< System RHS
-    Kokkos::View<ValueType* [1], Kokkos::LayoutLeft> x;  //< System solution
+    CrsMatrixType A;    //< System matrix
+    MultiVectorType b;  //< System RHS
+    MultiVectorType x;  //< System solution
 
     HandleType handle;
 
@@ -111,19 +111,23 @@ struct Solver {
      * @param constraint_row_range View containing row ranges for each constraint
      */
     Solver(
-        const Kokkos::View<size_t*>::const_type& node_IDs,
-        const Kokkos::View<size_t*>::const_type& active_dofs,
-        const Kokkos::View<size_t*>::const_type& node_freedom_map_table,
-        const Kokkos::View<size_t*>::const_type& num_nodes_per_element,
-        const Kokkos::View<size_t**>::const_type& node_state_indices, size_t num_constraint_dofs,
-        const Kokkos::View<size_t*>::const_type& base_active_dofs,
-        const Kokkos::View<size_t*>::const_type& target_active_dofs,
-        const Kokkos::View<size_t* [6]>::const_type& constraint_base_node_freedom_table,
-        const Kokkos::View<size_t* [6]>::const_type& constraint_target_node_freedom_table,
-        const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& constraint_row_range
+        const typename Kokkos::View<size_t*, DeviceType>::const_type& node_IDs,
+        const typename Kokkos::View<size_t*, DeviceType>::const_type& active_dofs,
+        const typename Kokkos::View<size_t*, DeviceType>::const_type& node_freedom_map_table,
+        const typename Kokkos::View<size_t*, DeviceType>::const_type& num_nodes_per_element,
+        const typename Kokkos::View<size_t**, DeviceType>::const_type& node_state_indices,
+        size_t num_constraint_dofs,
+        const typename Kokkos::View<size_t*, DeviceType>::const_type& base_active_dofs,
+        const typename Kokkos::View<size_t*, DeviceType>::const_type& target_active_dofs,
+        const typename Kokkos::View<size_t* [6], DeviceType>::const_type&
+            constraint_base_node_freedom_table,
+        const typename Kokkos::View<size_t* [6], DeviceType>::const_type&
+            constraint_target_node_freedom_table,
+        const typename Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType>::const_type&
+            constraint_row_range
     )
         : num_system_nodes(node_IDs.extent(0)),
-          num_system_dofs(ComputeNumSystemDofs(active_dofs)),
+          num_system_dofs(ComputeNumSystemDofs<DeviceType>(active_dofs)),
           num_dofs(num_system_dofs + num_constraint_dofs),
           A(CreateFullMatrix<CrsMatrixType>(
               num_system_dofs, num_dofs, base_active_dofs, target_active_dofs,
@@ -131,36 +135,10 @@ struct Solver {
               constraint_row_range, active_dofs, node_freedom_map_table, num_nodes_per_element,
               node_state_indices
           )),
-          b("b", num_dofs),
-          x("x", num_dofs) {
+          b(Kokkos::view_alloc("b", Kokkos::WithoutInitializing), num_dofs),
+          x(Kokkos::view_alloc("x", Kokkos::WithoutInitializing), num_dofs) {
         dss_symbolic(handle, A);
     }
-
-    // cppcheck-suppress missingMemberCopy
-    /*
-    Solver(const Solver& other) = default;
-    Solver(Solver&& other) noexcept = delete;
-    ~Solver() = default;
-
-    Solver& operator=(const Solver& other) {
-        if (this == &other) {
-            return *this;
-        }
-
-        auto tmp = other;
-        std::swap(num_system_nodes, tmp.num_system_nodes);
-        std::swap(num_system_dofs, tmp.num_system_dofs);
-        std::swap(num_dofs, tmp.num_dofs);
-        std::swap(A, tmp.A);
-        std::swap(b, tmp.b);
-        std::swap(x, tmp.x);
-        std::swap(handle, tmp.handle);
-        std::swap(convergence_err, tmp.convergence_err);
-        return *this;
-    }
-
-    Solver& operator=(Solver&& other) noexcept = delete;
-    */
 };
 
 }  // namespace openturbine

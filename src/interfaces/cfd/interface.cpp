@@ -9,7 +9,6 @@
 #include "state/clone_state.hpp"
 #include "state/copy_state_data.hpp"
 #include "state/read_state_from_file.hpp"
-#include "state/set_node_external_loads.hpp"
 #include "state/state.hpp"
 #include "state/write_state_to_file.hpp"
 #include "step/step.hpp"
@@ -113,14 +112,19 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
     return platform;
 }
 
-void SetPlatformLoads(const FloatingPlatform& platform, State& state) {
+template <typename DeviceType>
+void SetPlatformLoads(
+    const FloatingPlatform& platform, openturbine::interfaces::HostState<DeviceType>& host_state
+) {
     // Return if platform is not active
     if (!platform.active) {
         return;
     }
 
     // Set external loads on platform node
-    SetNodeExternalLoads(state, platform.node.id, platform.node.loads);
+    for (auto i = 0U; i < 6; ++i) {
+        host_state.f(platform.node.id, i) = platform.node.loads[i];
+    }
 }
 
 void GetFloatingPlatformMotion(
@@ -158,8 +162,13 @@ Turbine CreateTurbine(const TurbineInput& input, Model& model) {
     };
 }
 
-void SetTurbineLoads(const Turbine& turbine, State& state) {
-    SetPlatformLoads(turbine.floating_platform, state);
+template <typename DeviceType>
+void SetTurbineLoads(
+    const Turbine& turbine, openturbine::interfaces::HostState<DeviceType>& host_state,
+    State<DeviceType>& state
+) {
+    SetPlatformLoads(turbine.floating_platform, host_state);
+    Kokkos::deep_copy(state.f, host_state.f);
 }
 
 void GetTurbineMotion(
@@ -180,27 +189,22 @@ void GetTurbineMotion(
 Interface::Interface(const InterfaceInput& input)
     : model(input.gravity),
       turbine(CreateTurbine(input.turbine, model)),
-      state(model.CreateState()),
-      elements(model.CreateElements()),
-      constraints(model.CreateConstraints()),
+      state(model.CreateState<DeviceType>()),
+      elements(model.CreateElements<DeviceType>()),
+      constraints(model.CreateConstraints<DeviceType>()),
       parameters(true, input.max_iter, input.time_step, input.rho_inf),
-      solver(CreateSolver(state, elements, constraints)),
+      solver(CreateSolver<DeviceType>(state, elements, constraints)),
       state_save(CloneState(state)),
-      host_state_x("host_state_x", state.num_system_nodes),
-      host_state_q("host_state_q", state.num_system_nodes),
-      host_state_v("host_state_v", state.num_system_nodes),
-      host_state_vd("host_state_vd", state.num_system_nodes),
+      host_state(state),
       outputs_(nullptr) {
     // Copy state motion members from device to host
-    Kokkos::deep_copy(this->host_state_x, this->state.x);
-    Kokkos::deep_copy(this->host_state_q, this->state.q);
-    Kokkos::deep_copy(this->host_state_v, this->state.v);
-    Kokkos::deep_copy(this->host_state_vd, this->state.vd);
+    this->host_state.CopyFromState(this->state);
+    Kokkos::deep_copy(this->host_state.f, 0.);
 
     // Update the turbine motion to match restored state
     GetTurbineMotion(
-        this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
-        this->host_state_vd
+        this->turbine, this->host_state.x, this->host_state.q, this->host_state.v,
+        this->host_state.vd
     );
 
     // Initialize NetCDF writer and write mesh connectivity if output path is specified
@@ -227,20 +231,17 @@ void Interface::ReadRestart(const std::filesystem::path& filename) {
     auto input = std::ifstream(filename);
     ReadStateFromFile(input, state);
 
-    Kokkos::deep_copy(this->host_state_x, this->state.x);
-    Kokkos::deep_copy(this->host_state_q, this->state.q);
-    Kokkos::deep_copy(this->host_state_v, this->state.v);
-    Kokkos::deep_copy(this->host_state_vd, this->state.vd);
+    this->host_state.CopyFromState(state);
 
     GetTurbineMotion(
-        this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
-        this->host_state_vd
+        this->turbine, this->host_state.x, this->host_state.q, this->host_state.v,
+        this->host_state.vd
     );
 }
 
 bool Interface::Step() {
     // Transfer loads to solver
-    SetTurbineLoads(this->turbine, this->state);
+    SetTurbineLoads(this->turbine, this->host_state, this->state);
 
     // Solve for state at end of step
     auto converged = openturbine::Step(
@@ -251,15 +252,12 @@ bool Interface::Step() {
     }
 
     // Copy state motion members from device to host
-    Kokkos::deep_copy(this->host_state_x, this->state.x);
-    Kokkos::deep_copy(this->host_state_q, this->state.q);
-    Kokkos::deep_copy(this->host_state_v, this->state.v);
-    Kokkos::deep_copy(this->host_state_vd, this->state.vd);
+    this->host_state.CopyFromState(this->state);
 
     // Update the turbine motion
     GetTurbineMotion(
-        this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
-        this->host_state_vd
+        this->turbine, this->host_state.x, this->host_state.q, this->host_state.v,
+        this->host_state.vd
     );
 
     // Write outputs and increment timestep counter
@@ -279,15 +277,12 @@ void Interface::RestoreState() {
     CopyStateData(this->state, this->state_save);
 
     // Copy state motion members from device to host
-    Kokkos::deep_copy(this->host_state_x, this->state.x);
-    Kokkos::deep_copy(this->host_state_q, this->state.q);
-    Kokkos::deep_copy(this->host_state_v, this->state.v);
-    Kokkos::deep_copy(this->host_state_vd, this->state.vd);
+    this->host_state.CopyFromState(this->state);
 
     // Update the turbine motion to match restored state
     GetTurbineMotion(
-        this->turbine, this->host_state_x, this->host_state_q, this->host_state_v,
-        this->host_state_vd
+        this->turbine, this->host_state.x, this->host_state.q, this->host_state.v,
+        this->host_state.vd
     );
 }
 

@@ -112,9 +112,9 @@ void SetRotorMotion(
     }
 }
 
-template <typename T1, typename T2>
+template <typename DeviceType, typename T1, typename T2>
 void SetAeroLoads(
-    Beams& beams, const size_t n_blades, const size_t n_nodes, const size_t n_qps,
+    Beams<DeviceType>& beams, const size_t n_blades, const size_t n_nodes, const size_t n_qps,
     const util::TurbineData& turbine, const T1& host_node_FX, const T2& host_qp_Fe
 ) {
     if (use_node_loads) {

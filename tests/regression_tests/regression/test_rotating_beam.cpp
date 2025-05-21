@@ -127,7 +127,7 @@ TEST(RotatingBeamTest, StepConvergence) {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     // Create solver parameters
     const bool is_dynamic_solve(true);
@@ -230,7 +230,7 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     // Calculate hub rotation for this time step
     const auto q_hub =
@@ -328,7 +328,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
@@ -394,7 +394,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (int i = 0; i < 10; ++i) {
@@ -461,7 +461,7 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (auto i = 0; i < 10; ++i) {
@@ -532,7 +532,7 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     double azimuth = 0.;
 
@@ -605,7 +605,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
 #ifdef OpenTurbine_WRITE_OUTPUTS
     // Create output directory if it doesn't exist
@@ -714,7 +714,7 @@ void GeneratorTorqueWithAxisTilt(
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
 #ifdef OpenTurbine_WRITE_OUTPUTS
     // Create output directory if it doesn't exist

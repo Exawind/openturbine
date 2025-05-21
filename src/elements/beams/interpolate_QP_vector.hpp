@@ -4,12 +4,13 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct InterpolateQPVector {
     size_t i_elem;
     size_t num_nodes;
-    Kokkos::View<double***>::const_type shape_interp;
-    Kokkos::View<double** [3], Kokkos::LayoutStride>::const_type node_vector;
-    Kokkos::View<double** [3]> qp_vector;
+    typename Kokkos::View<double***, DeviceType>::const_type shape_interp;
+    typename Kokkos::View<double** [3], Kokkos::LayoutStride, DeviceType>::const_type node_vector;
+    Kokkos::View<double** [3], DeviceType> qp_vector;
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {

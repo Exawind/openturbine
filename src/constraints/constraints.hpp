@@ -22,47 +22,50 @@ namespace openturbine {
  * - Handling control signals and prescribed displacements
  * - Maintaining computational views for residuals and gradients
  */
+template <typename DeviceType>
 struct Constraints {
     size_t num_constraints;  //< Total number of constraints in the system
     size_t num_dofs;         //< Total number of degrees of freedom controlled by constraints
 
     // Constraint properties
-    Kokkos::View<ConstraintType*> type;       //< Type of each constraint
-    std::vector<double*> control_signal;      //< Control signal for each constraint
-    Kokkos::View<size_t*> base_node_index;    //< Index of the base node for each constraint
-    Kokkos::View<size_t*> target_node_index;  //< Index of the target node for each constraint
+    Kokkos::View<ConstraintType*, DeviceType> type;  //< Type of each constraint
+    std::vector<double*> control_signal;             //< Control signal for each constraint
+    Kokkos::View<size_t*, DeviceType>
+        base_node_index;  //< Index of the base node for each constraint
+    Kokkos::View<size_t*, DeviceType>
+        target_node_index;  //< Index of the target node for each constraint
 
     // DOF management
-    Kokkos::View<Kokkos::pair<size_t, size_t>*> row_range;
-    Kokkos::View<FreedomSignature*> base_node_freedom_signature;
-    Kokkos::View<FreedomSignature*> target_node_freedom_signature;
-    Kokkos::View<size_t*> base_active_dofs;
-    Kokkos::View<size_t*> target_active_dofs;
-    Kokkos::View<size_t* [6]> base_node_freedom_table;
-    Kokkos::View<size_t* [6]> target_node_freedom_table;
+    Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType> row_range;
+    Kokkos::View<FreedomSignature*, DeviceType> base_node_freedom_signature;
+    Kokkos::View<FreedomSignature*, DeviceType> target_node_freedom_signature;
+    Kokkos::View<size_t*, DeviceType> base_active_dofs;
+    Kokkos::View<size_t*, DeviceType> target_active_dofs;
+    Kokkos::View<size_t* [6], DeviceType> base_node_freedom_table;
+    Kokkos::View<size_t* [6], DeviceType> target_node_freedom_table;
 
     // Geometric configuration
-    Kokkos::View<double* [3]> X0;       //< Initial relative position
-    Kokkos::View<double* [3][3]> axes;  //< Rotation axes
+    Kokkos::View<double* [3], DeviceType> X0;       //< Initial relative position
+    Kokkos::View<double* [3][3], DeviceType> axes;  //< Rotation axes
 
     // State variables
-    Kokkos::View<double* [7]> input;   //< Current state input
-    Kokkos::View<double* [3]> output;  //< Current state output
-    Kokkos::View<double* [6]> lambda;
+    Kokkos::View<double* [7], DeviceType> input;   //< Current state input
+    Kokkos::View<double* [3], DeviceType> output;  //< Current state output
+    Kokkos::View<double* [6], DeviceType> lambda;
 
     // Host mirrors for CPU access
-    Kokkos::View<double* [7]>::HostMirror host_input;
-    Kokkos::View<double* [3]>::HostMirror host_output;
+    typename Kokkos::View<double* [7], DeviceType>::HostMirror host_input;
+    typename Kokkos::View<double* [3], DeviceType>::HostMirror host_output;
 
     // System contributions
-    Kokkos::View<double* [6]> residual_terms;
-    Kokkos::View<double* [6]> base_lambda_residual_terms;
-    Kokkos::View<double* [6]> target_lambda_residual_terms;
-    Kokkos::View<double* [6]> system_residual_terms;
-    Kokkos::View<double* [6][6]> base_gradient_terms;
-    Kokkos::View<double* [6][6]> target_gradient_terms;
-    Kokkos::View<double* [6][6]> base_gradient_transpose_terms;
-    Kokkos::View<double* [6][6]> target_gradient_transpose_terms;
+    Kokkos::View<double* [6], DeviceType> residual_terms;
+    Kokkos::View<double* [6], DeviceType> base_lambda_residual_terms;
+    Kokkos::View<double* [6], DeviceType> target_lambda_residual_terms;
+    Kokkos::View<double* [6], DeviceType> system_residual_terms;
+    Kokkos::View<double* [6][6], DeviceType> base_gradient_terms;
+    Kokkos::View<double* [6][6], DeviceType> target_gradient_terms;
+    Kokkos::View<double* [6][6], DeviceType> base_gradient_transpose_terms;
+    Kokkos::View<double* [6][6], DeviceType> target_gradient_transpose_terms;
 
     explicit Constraints(const std::vector<Constraint>& constraints, const std::vector<Node>& nodes)
         : num_constraints{constraints.size()},
@@ -72,42 +75,92 @@ struct Constraints {
                   return NumRowsForConstraint(c.type);
               }
           )},
-          type("type", num_constraints),
+          type(Kokkos::view_alloc("type", Kokkos::WithoutInitializing), num_constraints),
           control_signal(num_constraints),
-          base_node_index("base_node_index", num_constraints),
-          target_node_index("target_node_index", num_constraints),
-          row_range("row_range", num_constraints),
-          base_node_freedom_signature("base_node_freedom_signature", num_constraints),
-          target_node_freedom_signature("target_node_freedom_signature", num_constraints),
-          base_active_dofs("base_active_dofs", num_constraints),
-          target_active_dofs("target_active_dofs", num_constraints),
-          base_node_freedom_table("base_node_freedom_table", num_constraints),
-          target_node_freedom_table("target_node_freedom_table", num_constraints),
-          X0("X0", num_constraints),
-          axes("axes", num_constraints),
-          input("inputs", num_constraints),
-          output("outputs", num_constraints),
-          lambda("lambda", num_constraints),
-          host_input("host_input", num_constraints),
-          host_output("host_output", num_constraints),
-          residual_terms("residual_terms", num_constraints),
-          base_lambda_residual_terms("base_lambda_residual_terms", num_constraints),
-          target_lambda_residual_terms("target_lambda_residual_terms", num_constraints),
-          system_residual_terms("system_residual_terms", num_constraints),
-          base_gradient_terms("base_gradient_terms", num_constraints),
-          target_gradient_terms("target_gradient_terms", num_constraints),
-          base_gradient_transpose_terms("base_gradient_transpose_terms", num_constraints),
-          target_gradient_transpose_terms("target_gradient_transpose_terms", num_constraints) {
-        auto host_type = Kokkos::create_mirror_view(type);
-        auto host_row_range = Kokkos::create_mirror_view(row_range);
-        auto host_base_node_index = Kokkos::create_mirror_view(base_node_index);
-        auto host_target_node_index = Kokkos::create_mirror_view(target_node_index);
-        auto host_base_freedom = Kokkos::create_mirror_view(base_node_freedom_signature);
-        auto host_target_freedom = Kokkos::create_mirror_view(target_node_freedom_signature);
-        auto host_base_active_dofs = Kokkos::create_mirror_view(base_active_dofs);
-        auto host_target_active_dofs = Kokkos::create_mirror_view(target_active_dofs);
-        auto host_X0 = Kokkos::create_mirror_view(X0);
-        auto host_axes = Kokkos::create_mirror_view(axes);
+          base_node_index(
+              Kokkos::view_alloc("base_node_index", Kokkos::WithoutInitializing), num_constraints
+          ),
+          target_node_index(
+              Kokkos::view_alloc("target_node_index", Kokkos::WithoutInitializing), num_constraints
+          ),
+          row_range(Kokkos::view_alloc("row_range", Kokkos::WithoutInitializing), num_constraints),
+          base_node_freedom_signature(
+              Kokkos::view_alloc("base_node_freedom_signature", Kokkos::WithoutInitializing),
+              num_constraints
+          ),
+          target_node_freedom_signature(
+              Kokkos::view_alloc("target_node_freedom_signature", Kokkos::WithoutInitializing),
+              num_constraints
+          ),
+          base_active_dofs(
+              Kokkos::view_alloc("base_active_dofs", Kokkos::WithoutInitializing), num_constraints
+          ),
+          target_active_dofs(
+              Kokkos::view_alloc("target_active_dofs", Kokkos::WithoutInitializing), num_constraints
+          ),
+          base_node_freedom_table(
+              Kokkos::view_alloc("base_node_freedom_table", Kokkos::WithoutInitializing),
+              num_constraints
+          ),
+          target_node_freedom_table(
+              Kokkos::view_alloc("target_node_freedom_table", Kokkos::WithoutInitializing),
+              num_constraints
+          ),
+          X0(Kokkos::view_alloc("X0", Kokkos::WithoutInitializing), num_constraints),
+          axes(Kokkos::view_alloc("axes", Kokkos::WithoutInitializing), num_constraints),
+          input(Kokkos::view_alloc("inputs", Kokkos::WithoutInitializing), num_constraints),
+          output(Kokkos::view_alloc("outputs", Kokkos::WithoutInitializing), num_constraints),
+          lambda(Kokkos::view_alloc("lambda", Kokkos::WithoutInitializing), num_constraints),
+          host_input(Kokkos::view_alloc("host_input", Kokkos::WithoutInitializing), num_constraints),
+          host_output(
+              Kokkos::view_alloc("host_output", Kokkos::WithoutInitializing), num_constraints
+          ),
+          residual_terms(
+              Kokkos::view_alloc("residual_terms", Kokkos::WithoutInitializing), num_constraints
+          ),
+          base_lambda_residual_terms(
+              Kokkos::view_alloc("base_lambda_residual_terms", Kokkos::WithoutInitializing),
+              num_constraints
+          ),
+          target_lambda_residual_terms(
+              Kokkos::view_alloc("target_lambda_residual_terms", Kokkos::WithoutInitializing),
+              num_constraints
+          ),
+          system_residual_terms(
+              Kokkos::view_alloc("system_residual_terms", Kokkos::WithoutInitializing),
+              num_constraints
+          ),
+          base_gradient_terms(
+              Kokkos::view_alloc("base_gradient_terms", Kokkos::WithoutInitializing), num_constraints
+          ),
+          target_gradient_terms(
+              Kokkos::view_alloc("target_gradient_terms", Kokkos::WithoutInitializing),
+              num_constraints
+          ),
+          base_gradient_transpose_terms(
+              Kokkos::view_alloc("base_gradient_transpose_terms", Kokkos::WithoutInitializing),
+              num_constraints
+          ),
+          target_gradient_transpose_terms(
+              Kokkos::view_alloc("target_gradient_transpose_terms", Kokkos::WithoutInitializing),
+              num_constraints
+          ) {
+        auto host_type = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, type);
+        auto host_row_range = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, row_range);
+        auto host_base_node_index =
+            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, base_node_index);
+        auto host_target_node_index =
+            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, target_node_index);
+        auto host_base_freedom =
+            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, base_node_freedom_signature);
+        auto host_target_freedom =
+            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, target_node_freedom_signature);
+        auto host_base_active_dofs =
+            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, base_active_dofs);
+        auto host_target_active_dofs =
+            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, target_active_dofs);
+        auto host_X0 = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, X0);
+        auto host_axes = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, axes);
 
         auto start_row = size_t{0U};
         for (auto i = 0U; i < num_constraints; ++i) {
@@ -164,9 +217,9 @@ struct Constraints {
             if (c.type != ConstraintType::kPrescribedBC &&
                 c.type != ConstraintType::kPrescribedBC3DOFs) {
                 x0 = CalculateX0(c, nodes[target_node_id], nodes[base_node_id]);
-                for (size_t j = 0; j < 3; ++j) {
-                    host_X0(i, j) = x0[j];
-                }
+            }
+            for (size_t j = 0; j < 3; ++j) {
+                host_X0(i, j) = x0[j];
             }
 
             // Calculate rotation axes

@@ -42,7 +42,11 @@ install_if_missing() {
 
 install_if_missing googletest
 install_if_missing yaml-cpp
-install_if_missing "trilinos@16.0.0~mpi~epetra ^kokkos-kernels+blas+lapack"
+install_if_missing kokkos
+install_if_missing kokkos-kernels
+install_if_missing netcdf-c
+install_if_missing suite-sparse
+install_if_missing lapack
 #install_if_missing cppcheck # add if CppCheck is needed
 #install_if_missing llvm # add if clang-tidy is needed
 
@@ -55,6 +59,7 @@ cmake .. \
   -DOpenTurbine_WRITE_OUTPUTS=ON \
   -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
   -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
+  -DOpenTurbine_ENABLE_KLU=ON \
   -DCMAKE_BUILD_TYPE="Release"
 
 cmake --build .

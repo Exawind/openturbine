@@ -5,7 +5,9 @@
 namespace openturbine::tests {
 
 TEST(TestComputeNodeFreedomMapTable, OneNode) {
-    auto state = State(1U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(1U);
     Kokkos::deep_copy(state.node_freedom_allocation_table, FreedomSignature::AllComponents);
 
     compute_node_freedom_map_table(state);
@@ -17,7 +19,9 @@ TEST(TestComputeNodeFreedomMapTable, OneNode) {
 }
 
 TEST(TestComputeNodeFreedomMapTable, FourNodes) {
-    auto state = State(4U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(4U);
     constexpr auto host_node_freedom_allocation_table_data = std::array{
         FreedomSignature::AllComponents, FreedomSignature::JustPosition,
         FreedomSignature::JustRotation, FreedomSignature::NoComponents
